@@ -50,6 +50,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Chapter")
     int32 NextChapterQuestStage = 0;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Story")
+    FName StoryBeatId = NAME_None;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
     FText ObjectiveMessage;
 
