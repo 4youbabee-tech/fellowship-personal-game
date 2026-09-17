@@ -31,6 +31,9 @@ protected:
     void Interact();
     void QuickSave();
     void QuickLoad();
+    void DebugPreviousChapter();
+    void DebugNextChapter();
+    void DebugStartChapterByIndex(int32 ChapterIndex);
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
     USpringArmComponent* CameraBoom;
