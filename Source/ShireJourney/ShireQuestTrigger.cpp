@@ -51,7 +51,11 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
         }
     }
 
-    if (NextQuestId != NAME_None)
+    if (NextChapterId != NAME_None)
+    {
+        Quests->StartChapter(NextChapterId, NextChapterQuestId, NextChapterQuestStage);
+    }
+    else if (NextQuestId != NAME_None)
     {
         Quests->StartQuest(NextQuestId, NextQuestStage);
     }
