@@ -60,6 +60,9 @@ public:
     UFUNCTION(BlueprintCallable, Category="Story")
     void TriggerStoryBeat(FName StoryBeatId);
 
+    UFUNCTION(BlueprintPure, Category="Story")
+    bool HasStoryBeatTriggered(FName StoryBeatId) const;
+
     UFUNCTION(BlueprintPure, Category="Quest")
     FName GetActiveQuestId() const { return ActiveQuestId; }
 
@@ -76,7 +79,9 @@ public:
     FName GetCurrentChapterId() const { return CurrentChapterId; }
 
     const TMap<FName, int32>& GetAllQuestStages() const { return QuestStages; }
-    void RestoreQuestState(const TMap<FName, int32>& InStages, FName InActiveQuestId, FName InCurrentChapterId);
+    const TArray<FName>& GetCompletedStoryBeats() const { return CompletedStoryBeats; }
+    void RestoreQuestState(const TMap<FName, int32>& InStages, FName InActiveQuestId,
+        FName InCurrentChapterId, const TArray<FName>& InCompletedStoryBeats);
 
 private:
     UPROPERTY()
@@ -87,6 +92,9 @@ private:
 
     UPROPERTY()
     FName CurrentChapterId = TEXT("P1C01");
+
+    UPROPERTY()
+    TArray<FName> CompletedStoryBeats;
 
     UPROPERTY()
     TMap<FName, FShireQuestDefinition> QuestDefinitions;
