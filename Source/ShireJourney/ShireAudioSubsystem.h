@@ -55,4 +55,16 @@ private:
 
     UPROPERTY()
     FName ActiveMusicCue = NAME_None;
+
+    UFUNCTION()
+    void HandleAmbienceRequest(FName CueId);
+
+    UFUNCTION()
+    void HandleMusicRequest(FName CueId);
+
+    UFUNCTION()
+    void HandleSfxRequest(FName CueId);
+
+    UFUNCTION()
+    void HandleVoiceRequest(FName CueId);
 };
