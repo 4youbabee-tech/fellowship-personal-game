@@ -63,16 +63,19 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* QuestSubsystem = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
 
-    if (QuestSubsystem && QuestId != NAME_None && QuestSubsystem->GetQuestStage(QuestId) < RequiredQuestStage)
+    if (QuestSubsystem && QuestId != NAME_None)
     {
-        if (APlayerController* PC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr)
+        if (QuestSubsystem->GetActiveQuestId() != QuestId || QuestSubsystem->GetQuestStage(QuestId) < RequiredQuestStage)
         {
-            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+            if (APlayerController* PC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr)
             {
-                HUD->ShowDialogue(DisplayName, FText::FromString(TEXT("Not now. There is something you must do first.")), 3.5f);
+                if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+                {
+                    HUD->ShowDialogue(DisplayName, FText::FromString(TEXT("Not now. There is something you must do first.")), 3.5f);
+                }
             }
+            return;
         }
-        return;
     }
 
     if (DialogueLines.Num() > 0)
@@ -98,10 +101,9 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
 
     if (QuestSubsystem && NextQuestId != NAME_None)
     {
-        if (QuestSubsystem->GetQuestStage(NextQuestId) < NextQuestStage)
-        {
-            QuestSubsystem->SetQuestStage(NextQuestId, NextQuestStage);
-        }
+        // StartQuest is required here (rather than only setting a stage) so the HUD/objective
+        // and future triggers follow the new story beat immediately.
+        QuestSubsystem->StartQuest(NextQuestId, NextQuestStage);
     }
 
     if (bFollowPlayerAfterInteraction)
