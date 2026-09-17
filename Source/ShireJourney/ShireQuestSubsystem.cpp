@@ -67,8 +67,8 @@ void UShireQuestSubsystem::BuildQuestDefinitions()
         TEXT("The Shire is behind you. Bree lies ahead.")
     });
 
-    // Chapter 2 data is available before its world is loaded so the transition at
-    // Bucklebury Ferry can be tested without spawning Bree assets into the Shire.
+    // Chapter 2 — Bree. These definitions are kept in the shared subsystem so the
+    // Shire can transition cleanly without loading Bree geometry in the same chapter.
     AddQuestDefinition(TEXT("RoadToBree"), TEXT("The East Road"), {
         TEXT("Follow the road east with Sam, Merry and Pippin."),
         TEXT("Travel carefully as evening closes in."),
@@ -83,8 +83,28 @@ void UShireQuestSubsystem::BuildQuestDefinitions()
 
     AddQuestDefinition(TEXT("MeetStrider"), TEXT("Strider"), {
         TEXT("Speak with the Ranger who calls himself Strider."),
-        TEXT("Decide whether to follow his warning upstairs."),
-        TEXT("Prepare to leave Bree before the Riders return.")
+        TEXT("Follow his warning away from the common room."),
+        TEXT("Prepare for the danger moving through Bree tonight.")
+    });
+
+    AddQuestDefinition(TEXT("NightAttack"), TEXT("The Nazgul"), {
+        TEXT("Stay out of sight while Strider prepares a safer room."),
+        TEXT("The Riders have struck the decoy beds. Remain hidden until dawn."),
+        TEXT("Leave Bree with Strider before the Riders can return.")
+    });
+
+    // Chapter 3 data is prepared early so Chapter 2 can finish with a verified hand-off.
+    AddQuestDefinition(TEXT("RoadToWeathertop"), TEXT("Into the Wild"), {
+        TEXT("Follow Strider away from the roads most travelers use."),
+        TEXT("Cross the wet lowlands and keep the company together."),
+        TEXT("Reach the high ground below Weathertop.")
+    });
+
+    AddQuestDefinition(TEXT("WeathertopAttack"), TEXT("A Knife in the Dark"), {
+        TEXT("Climb the ruined watchtower and make a cautious camp."),
+        TEXT("The Riders are near. Stay close to the fire and your companions."),
+        TEXT("Survive the attack long enough for Strider to drive them back."),
+        TEXT("Frodo is wounded. The journey must turn toward Rivendell.")
     });
 }
 
@@ -145,6 +165,14 @@ void UShireQuestSubsystem::StartChapter(FName ChapterId, FName StartingQuestId, 
     if (StartingQuestId != NAME_None)
     {
         StartQuest(StartingQuestId, StartingQuestStage);
+    }
+}
+
+void UShireQuestSubsystem::TriggerStoryBeat(FName StoryBeatId)
+{
+    if (StoryBeatId != NAME_None)
+    {
+        OnStoryBeatTriggered.Broadcast(StoryBeatId);
     }
 }
 
