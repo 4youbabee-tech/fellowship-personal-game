@@ -96,6 +96,14 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
         }
     }
 
+    if (QuestSubsystem && NextQuestId != NAME_None)
+    {
+        if (QuestSubsystem->GetQuestStage(NextQuestId) < NextQuestStage)
+        {
+            QuestSubsystem->SetQuestStage(NextQuestId, NextQuestStage);
+        }
+    }
+
     if (bFollowPlayerAfterInteraction)
     {
         bFollowingPlayer = true;
