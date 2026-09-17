@@ -314,4 +314,8 @@ void UShireQuestSubsystem::RestoreQuestState(const TMap<FName, int32>& InStages,
     {
         OnQuestStageChanged.Broadcast(Pair.Key, Pair.Value);
     }
+
+    // Dedicated compatibility hook. This fires after normal restore broadcasts so
+    // safety systems can repair a legacy terminal state without affecting fresh play.
+    OnQuestStateRestored.Broadcast();
 }
