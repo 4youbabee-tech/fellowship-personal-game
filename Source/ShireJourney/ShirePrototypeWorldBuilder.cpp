@@ -58,6 +58,8 @@ AStaticMeshActor* AShirePrototypeWorldBuilder::SpawnShape(
         return nullptr;
     }
 
+    Actor->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+
     UStaticMeshComponent* MeshComponent = Actor->GetStaticMeshComponent();
     MeshComponent->SetStaticMesh(Mesh);
     MeshComponent->SetMobility(EComponentMobility::Static);
@@ -89,6 +91,8 @@ void AShirePrototypeWorldBuilder::SpawnLabel(const FString& Text, const FVector&
     {
         return;
     }
+
+    Label->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
 
     UTextRenderComponent* TextComponent = Label->GetTextRender();
     TextComponent->SetText(FText::FromString(Text));
@@ -205,7 +209,18 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
         return;
     }
 
-    // Gandalf on the Shire road: first story beat.
+    // Opening beat is separated from quest progression so presentation can establish
+    // the Shire before the player reaches Gandalf.
+    AShireQuestTrigger* OpeningBeat = GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(-2320.0f, -120.0f, 90.0f), FRotator::ZeroRotator);
+    if (OpeningBeat)
+    {
+        OpeningBeat->QuestId = TEXT("ShireArrival");
+        OpeningBeat->RequiredStage = 0;
+        OpeningBeat->StageAfterTrigger = -1;
+        OpeningBeat->StoryBeatId = TEXT("ShireOpening");
+    }
+
+    // Gandalf on the Shire road: first story interaction.
     AShireNPC* GandalfRoad = GetWorld()->SpawnActor<AShireNPC>(FVector(-1950.0f, -40.0f, 70.0f), FRotator(0.0f, 180.0f, 0.0f));
     if (GandalfRoad)
     {
@@ -226,6 +241,7 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
         BridgeTrigger->QuestId = TEXT("ShireArrival");
         BridgeTrigger->RequiredStage = 1;
         BridgeTrigger->StageAfterTrigger = 2;
+        BridgeTrigger->StoryBeatId = TEXT("GandalfArrival");
         BridgeTrigger->ObjectiveMessage = FText::FromString(TEXT("The road bends toward Hobbiton and the party field."));
     }
 
@@ -235,6 +251,7 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
         PartyApproach->QuestId = TEXT("ShireArrival");
         PartyApproach->RequiredStage = 2;
         PartyApproach->StageAfterTrigger = 3;
+        PartyApproach->StoryBeatId = TEXT("PartyArrival");
         PartyApproach->ObjectiveMessage = FText::FromString(TEXT("Music and lanterns carry across the field."));
     }
 
@@ -262,7 +279,18 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
         BagEndReturn->StageAfterTrigger = 2;
         BagEndReturn->NextQuestId = TEXT("RingSecret");
         BagEndReturn->NextQuestStage = 0;
+        BagEndReturn->StoryBeatId = TEXT("BilboDisappearance");
         BagEndReturn->ObjectiveMessage = FText::FromString(TEXT("Bag End is quiet now. Gandalf is waiting inside."));
+    }
+
+    // Dedicated presentation beat before Gandalf's Ring warning. It does not progress the quest.
+    AShireQuestTrigger* RingWarningBeat = GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(-2160.0f, -555.0f, 80.0f), FRotator::ZeroRotator);
+    if (RingWarningBeat)
+    {
+        RingWarningBeat->QuestId = TEXT("RingSecret");
+        RingWarningBeat->RequiredStage = 0;
+        RingWarningBeat->StageAfterTrigger = -1;
+        RingWarningBeat->StoryBeatId = TEXT("RingWarning");
     }
 
     AShireNPC* GandalfBagEnd = GetWorld()->SpawnActor<AShireNPC>(FVector(-2160.0f, -610.0f, 70.0f), FRotator(0.0f, 30.0f, 0.0f));
@@ -301,6 +329,7 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
         LeaveHobbiton->StageAfterTrigger = 2;
         LeaveHobbiton->NextQuestId = TEXT("Shortcut");
         LeaveHobbiton->NextQuestStage = 0;
+        LeaveHobbiton->StoryBeatId = TEXT("LeavingHomeRoad");
         LeaveHobbiton->ObjectiveMessage = FText::FromString(TEXT("The lanes of Hobbiton fall behind you."));
     }
 
@@ -347,6 +376,7 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
         WoodedRoad->StageAfterTrigger = 2;
         WoodedRoad->NextQuestId = TEXT("KeepOffRoad");
         WoodedRoad->NextQuestStage = 0;
+        WoodedRoad->StoryBeatId = TEXT("BlackRiderApproach");
         WoodedRoad->ObjectiveMessage = FText::FromString(TEXT("Hoofbeats. Something is coming along the road."));
     }
 
@@ -365,6 +395,7 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
         HideUnderRoad->QuestId = TEXT("KeepOffRoad");
         HideUnderRoad->RequiredStage = 0;
         HideUnderRoad->StageAfterTrigger = 1;
+        HideUnderRoad->StoryBeatId = TEXT("RootHide");
         HideUnderRoad->ObjectiveMessage = FText::FromString(TEXT("Stay low and keep out of the Rider's sight."));
     }
 
@@ -385,6 +416,7 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
         FerryNearSide->QuestId = TEXT("FerryEscape");
         FerryNearSide->RequiredStage = 0;
         FerryNearSide->StageAfterTrigger = 1;
+        FerryNearSide->StoryBeatId = TEXT("FerryEscape");
         FerryNearSide->ObjectiveMessage = FText::FromString(TEXT("Push off and get across the Brandywine."));
     }
 
@@ -394,6 +426,9 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
         FerryFarSide->QuestId = TEXT("FerryEscape");
         FerryFarSide->RequiredStage = 1;
         FerryFarSide->StageAfterTrigger = 2;
+        FerryFarSide->NextChapterId = TEXT("P1C02");
+        FerryFarSide->NextChapterQuestId = TEXT("RoadToBree");
+        FerryFarSide->NextChapterQuestStage = 0;
         FerryFarSide->ObjectiveMessage = FText::FromString(TEXT("Across the river. The road to Bree begins here."));
     }
 }
