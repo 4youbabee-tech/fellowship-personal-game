@@ -4,6 +4,7 @@ void UShireQuestSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
     BuildQuestDefinitions();
+    CurrentChapterId = TEXT("P1C01");
     StartQuest(TEXT("ShireArrival"), 0);
 }
 
@@ -65,6 +66,26 @@ void UShireQuestSubsystem::BuildQuestDefinitions()
         TEXT("Reach the far side of the Brandywine."),
         TEXT("The Shire is behind you. Bree lies ahead.")
     });
+
+    // Chapter 2 data is available before its world is loaded so the transition at
+    // Bucklebury Ferry can be tested without spawning Bree assets into the Shire.
+    AddQuestDefinition(TEXT("RoadToBree"), TEXT("The East Road"), {
+        TEXT("Follow the road east with Sam, Merry and Pippin."),
+        TEXT("Travel carefully as evening closes in."),
+        TEXT("Reach the gates of Bree.")
+    });
+
+    AddQuestDefinition(TEXT("BreeArrival"), TEXT("At the Sign of the Prancing Pony"), {
+        TEXT("Enter Bree and find the Prancing Pony."),
+        TEXT("Ask after Gandalf without drawing attention."),
+        TEXT("Remain alert. Someone is watching the room.")
+    });
+
+    AddQuestDefinition(TEXT("MeetStrider"), TEXT("Strider"), {
+        TEXT("Speak with the Ranger who calls himself Strider."),
+        TEXT("Decide whether to follow his warning upstairs."),
+        TEXT("Prepare to leave Bree before the Riders return.")
+    });
 }
 
 int32 UShireQuestSubsystem::GetQuestStage(FName QuestId) const
@@ -106,6 +127,27 @@ void UShireQuestSubsystem::StartQuest(FName QuestId, int32 InitialStage)
     OnQuestStageChanged.Broadcast(QuestId, GetQuestStage(QuestId));
 }
 
+void UShireQuestSubsystem::StartChapter(FName ChapterId, FName StartingQuestId, int32 StartingQuestStage)
+{
+    if (ChapterId == NAME_None)
+    {
+        return;
+    }
+
+    const FName PreviousChapterId = CurrentChapterId;
+    CurrentChapterId = ChapterId;
+
+    if (PreviousChapterId != CurrentChapterId)
+    {
+        OnChapterChanged.Broadcast(PreviousChapterId, CurrentChapterId);
+    }
+
+    if (StartingQuestId != NAME_None)
+    {
+        StartQuest(StartingQuestId, StartingQuestStage);
+    }
+}
+
 int32 UShireQuestSubsystem::GetActiveQuestStage() const
 {
     return GetQuestStage(ActiveQuestId);
@@ -133,16 +175,18 @@ FText UShireQuestSubsystem::GetActiveObjective() const
     return FText::FromString(TEXT("Explore the road ahead."));
 }
 
-void UShireQuestSubsystem::RestoreQuestState(const TMap<FName, int32>& InStages, FName InActiveQuestId)
+void UShireQuestSubsystem::RestoreQuestState(const TMap<FName, int32>& InStages, FName InActiveQuestId, FName InCurrentChapterId)
 {
     QuestStages = InStages;
     ActiveQuestId = InActiveQuestId;
+    CurrentChapterId = InCurrentChapterId == NAME_None ? FName(TEXT("P1C01")) : InCurrentChapterId;
 
     if (QuestDefinitions.Num() == 0)
     {
         BuildQuestDefinitions();
     }
 
+    OnChapterChanged.Broadcast(NAME_None, CurrentChapterId);
     OnActiveQuestChanged.Broadcast(ActiveQuestId);
     for (const TPair<FName, int32>& Pair : QuestStages)
     {
