@@ -68,6 +68,27 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
 {
     CueLibrary.Empty();
 
+    // Chapter 1 vertical-slice presentation. These are logical cue IDs only; final
+    // camera sequences and audio assets are resolved in Unreal once the content pass begins.
+    AddCue(TEXT("ShireOpening"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_ShireOpening"), NAME_None, TEXT("Amb_ShireMorning"), TEXT("Mus_ShireWarmth"), TEXT("Sfx_WagonDistant"), 5.0f);
+    AddCue(TEXT("GandalfArrival"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_GandalfRoad"), NAME_None, TEXT("Amb_ShireRoad"), TEXT("Mus_ShireWarmth"), TEXT("Sfx_WagonWheels"), 5.0f);
+    AddCue(TEXT("PartyArrival"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_PartyFieldReveal"), NAME_None, TEXT("Amb_PartyField"), TEXT("Mus_ShireCelebration"), TEXT("Sfx_DistantFireworks"), 6.0f);
+    AddCue(TEXT("BilboDisappearance"), EShireStoryPresentationMode::Cinematic,
+        TEXT("Cam_PartyAftermath"), NAME_None, TEXT("Amb_PartyReaction"), TEXT("Mus_RingUnease"), TEXT("Sfx_CrowdDrop"), 7.0f);
+    AddCue(TEXT("RingWarning"), EShireStoryPresentationMode::Cinematic,
+        TEXT("Cam_BagEndRingWarning"), NAME_None, TEXT("Amb_BagEndInterior"), TEXT("Mus_RingLowPulse"), TEXT("Sfx_FireplaceLow"), 8.0f);
+    AddCue(TEXT("LeavingHomeRoad"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_LeavingHobbiton"), NAME_None, TEXT("Amb_ShireEvening"), TEXT("Mus_LeavingHome"), TEXT("Sfx_FootstepsPath"), 5.0f);
+    AddCue(TEXT("BlackRiderApproach"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_BlackRiderApproach"), NAME_None, TEXT("Amb_ShadowedRoad"), TEXT("Mus_BlackRiderThreat"), TEXT("Sfx_DistantHooves"), 5.0f);
+    AddCue(TEXT("RootHide"), EShireStoryPresentationMode::Gameplay,
+        TEXT("Cam_PlayerStealth"), NAME_None, TEXT("Amb_RootHide"), TEXT("Mus_BlackRiderLowPulse"), TEXT("Sfx_HoovesNear"), 4.0f);
+    AddCue(TEXT("FerryEscape"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_FerryEscape"), NAME_None, TEXT("Amb_Brandywine"), TEXT("Mus_FerryEscape"), TEXT("Sfx_FerryWoodWater"), 6.0f);
+
     AddCue(TEXT("BreeRoadNightfall"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_BreeRoadNightfall"), NAME_None, TEXT("Amb_RainRoad"), TEXT("Mus_BreeUnease"), TEXT("Sfx_DistantHooves"), 5.0f);
     AddCue(TEXT("PrancingPonyExterior"), EShireStoryPresentationMode::GameplayBlend,
