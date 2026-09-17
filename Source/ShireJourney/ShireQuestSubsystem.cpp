@@ -252,10 +252,18 @@ void UShireQuestSubsystem::StartChapter(FName ChapterId, FName StartingQuestId, 
 
 void UShireQuestSubsystem::TriggerStoryBeat(FName StoryBeatId)
 {
-    if (StoryBeatId != NAME_None)
+    if (StoryBeatId == NAME_None || CompletedStoryBeats.Contains(StoryBeatId))
     {
-        OnStoryBeatTriggered.Broadcast(StoryBeatId);
+        return;
     }
+
+    CompletedStoryBeats.Add(StoryBeatId);
+    OnStoryBeatTriggered.Broadcast(StoryBeatId);
+}
+
+bool UShireQuestSubsystem::HasStoryBeatTriggered(FName StoryBeatId) const
+{
+    return StoryBeatId != NAME_None && CompletedStoryBeats.Contains(StoryBeatId);
 }
 
 int32 UShireQuestSubsystem::GetActiveQuestStage() const
@@ -285,17 +293,21 @@ FText UShireQuestSubsystem::GetActiveObjective() const
     return FText::FromString(TEXT("Explore the road ahead."));
 }
 
-void UShireQuestSubsystem::RestoreQuestState(const TMap<FName, int32>& InStages, FName InActiveQuestId, FName InCurrentChapterId)
+void UShireQuestSubsystem::RestoreQuestState(const TMap<FName, int32>& InStages, FName InActiveQuestId,
+    FName InCurrentChapterId, const TArray<FName>& InCompletedStoryBeats)
 {
     QuestStages = InStages;
     ActiveQuestId = InActiveQuestId;
     CurrentChapterId = InCurrentChapterId == NAME_None ? FName(TEXT("P1C01")) : InCurrentChapterId;
+    CompletedStoryBeats = InCompletedStoryBeats;
 
     if (QuestDefinitions.Num() == 0)
     {
         BuildQuestDefinitions();
     }
 
+    // Rebuild world/UI state, but do not rebroadcast completed story beats: cinematics should
+    // remain one-time events after loading a save.
     OnChapterChanged.Broadcast(NAME_None, CurrentChapterId);
     OnActiveQuestChanged.Broadcast(ActiveQuestId);
     for (const TPair<FName, int32>& Pair : QuestStages)
