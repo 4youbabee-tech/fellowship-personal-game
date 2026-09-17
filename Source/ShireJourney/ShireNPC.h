@@ -31,6 +31,14 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
     int32 QuestStageAfterInteraction = -1;
 
+    // Optional transition used by story NPCs when an interaction completes one beat
+    // and immediately activates the next film-continuity mission.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
+    FName NextQuestId = NAME_None;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
+    int32 NextQuestStage = 0;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
     bool bFollowPlayerAfterInteraction = false;
 
