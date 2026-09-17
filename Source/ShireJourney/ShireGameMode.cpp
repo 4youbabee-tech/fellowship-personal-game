@@ -1,7 +1,7 @@
 #include "ShireGameMode.h"
+#include "ChapterWorldRouter.h"
 #include "ShireHUD.h"
 #include "ShirePlayerCharacter.h"
-#include "ShirePrototypeWorldBuilder.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/PlayerController.h"
 
@@ -15,8 +15,9 @@ void AShireGameMode::BeginPlay()
 {
     Super::BeginPlay();
 
-    // This lets the starter run on an Engine template map before a final .umap exists.
-    GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(FVector::ZeroVector, FRotator::ZeroRotator);
+    // Prototype chapter worlds are spawned through a router so Chapter 1 can hand off
+    // to Bree without loading both regions at the same time.
+    GetWorld()->SpawnActor<AChapterWorldRouter>(FVector::ZeroVector, FRotator::ZeroRotator);
 
     APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
     if (PC)
