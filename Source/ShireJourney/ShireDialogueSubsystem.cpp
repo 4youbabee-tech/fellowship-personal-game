@@ -48,6 +48,11 @@ void UShireDialogueSubsystem::BuildDialogueLibrary()
         { FText::FromString(TEXT("Strider")), FText::FromString(TEXT("Then we leave at first light. Until then, trust no easy answer.")), TEXT("VO_Strider_Warn_02"), 5.2f }
     });
 
+    AddSequence(TEXT("Dlg_StriderDeparture"), {
+        { FText::FromString(TEXT("Strider")), FText::FromString(TEXT("We leave before Bree wakes. Stay off the main road and keep close to me.")), TEXT("VO_Strider_Depart_01"), 5.3f },
+        { FText::FromString(TEXT("Sam")), FText::FromString(TEXT("I liked the Shire roads better, but I suppose that is the point.")), TEXT("VO_Sam_Depart_01"), 4.2f }
+    });
+
     AddSequence(TEXT("Dlg_WeathertopCamp"), {
         { FText::FromString(TEXT("Aragorn")), FText::FromString(TEXT("Keep the fire small and your voices lower. This hill remembers danger.")), TEXT("VO_Aragorn_Weathertop_01"), 5.0f },
         { FText::FromString(TEXT("Merry")), FText::FromString(TEXT("That is not the sort of thing one hopes to hear before supper.")), TEXT("VO_Merry_Weathertop_01"), 4.5f }
@@ -81,6 +86,12 @@ void UShireDialogueSubsystem::BuildDialogueLibrary()
 
     AddSequence(TEXT("Dlg_RivendellFarewell"), {
         { FText::FromString(TEXT("Elrond")), FText::FromString(TEXT("Travel lightly. The strength of your company will matter more than speed.")), TEXT("VO_Elrond_Departure_01"), 5.2f }
+    });
+
+    AddSequence(TEXT("Dlg_FellowshipTravel"), {
+        { FText::FromString(TEXT("Boromir")), FText::FromString(TEXT("We have open country ahead. Better to cross it while the weather still favors us.")), TEXT("VO_Boromir_Travel_01"), 5.0f },
+        { FText::FromString(TEXT("Gimli")), FText::FromString(TEXT("Open country is only pleasant until the wind discovers you.")), TEXT("VO_Gimli_Travel_01"), 4.5f },
+        { FText::FromString(TEXT("Legolas")), FText::FromString(TEXT("The birds are moving strangely. We should keep our eyes above as well as ahead.")), TEXT("VO_Legolas_Travel_01"), 5.2f }
     });
 
     AddSequence(TEXT("Dlg_CaradhrasOriginal"), {
