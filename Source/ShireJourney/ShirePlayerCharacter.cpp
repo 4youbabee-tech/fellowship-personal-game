@@ -190,6 +190,7 @@ void AShirePlayerCharacter::QuickSave()
         {
             Save->QuestStages = QuestSubsystem->GetAllQuestStages();
             Save->ActiveQuestId = QuestSubsystem->GetActiveQuestId();
+            Save->CurrentChapterId = QuestSubsystem->GetCurrentChapterId();
         }
     }
 
@@ -230,7 +231,7 @@ void AShirePlayerCharacter::QuickLoad()
     {
         if (UShireQuestSubsystem* QuestSubsystem = GI->GetSubsystem<UShireQuestSubsystem>())
         {
-            QuestSubsystem->RestoreQuestState(Save->QuestStages, Save->ActiveQuestId);
+            QuestSubsystem->RestoreQuestState(Save->QuestStages, Save->ActiveQuestId, Save->CurrentChapterId);
         }
     }
 
