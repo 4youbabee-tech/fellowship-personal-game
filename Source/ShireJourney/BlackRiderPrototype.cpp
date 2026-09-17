@@ -4,6 +4,7 @@
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/GameInstance.h"
+#include "Engine/World.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/PlayerController.h"
 #include "UObject/ConstructorHelpers.h"
@@ -49,13 +50,26 @@ void ABlackRiderPrototype::BeginPlay()
         PatrolA = GetActorLocation();
         PatrolB = GetActorLocation() + FVector(900.0f, 0.0f, 0.0f);
     }
+
+    NextDetectionCheckTime = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
 }
 
 void ABlackRiderPrototype::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
     UpdatePatrol(DeltaSeconds);
-    CheckPlayerDetection();
+
+    if (!GetWorld())
+    {
+        return;
+    }
+
+    const float Now = GetWorld()->GetTimeSeconds();
+    if (Now >= NextDetectionCheckTime)
+    {
+        NextDetectionCheckTime = Now + FMath::Max(0.05f, DetectionCheckInterval);
+        CheckPlayerDetection();
+    }
 }
 
 void ABlackRiderPrototype::UpdatePatrol(float DeltaSeconds)
@@ -71,6 +85,30 @@ void ABlackRiderPrototype::UpdatePatrol(float DeltaSeconds)
     const FVector Direction = ToTarget.GetSafeNormal2D();
     AddActorWorldOffset(Direction * PatrolSpeed * DeltaSeconds, true);
     SetActorRotation(Direction.Rotation());
+}
+
+bool ABlackRiderPrototype::HasLineOfSightToPlayer(ACharacter* Player) const
+{
+    if (!Player || !GetWorld())
+    {
+        return false;
+    }
+
+    const FVector Start = GetActorLocation() + FVector(0.0f, 0.0f, 165.0f);
+    const FVector End = Player->GetActorLocation() + FVector(0.0f, 0.0f, 45.0f);
+
+    FCollisionQueryParams Params(SCENE_QUERY_STAT(BlackRiderSight), true, this);
+    Params.AddIgnoredActor(this);
+
+    FHitResult Hit;
+    const bool bHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Params);
+    if (!bHit)
+    {
+        // Nothing blocks the trace before the target point.
+        return true;
+    }
+
+    return Hit.GetActor() == Player;
 }
 
 void ABlackRiderPrototype::CheckPlayerDetection()
@@ -95,32 +133,38 @@ void ABlackRiderPrototype::CheckPlayerDetection()
     }
 
     const float Radius = Player->bIsCrouched ? CrouchedDetectionRadius : DetectionRadius;
-    const FVector ToPlayer = Player->GetActorLocation() - GetActorLocation();
-    if (ToPlayer.Size2D() > Radius)
+    FVector ToPlayer = Player->GetActorLocation() - GetActorLocation();
+    ToPlayer.Z = 0.0f;
+    if (ToPlayer.SizeSquared() > FMath::Square(Radius))
     {
         return;
     }
 
-    const float Facing = FVector::DotProduct(GetActorForwardVector().GetSafeNormal2D(), ToPlayer.GetSafeNormal2D());
-    if (Facing < -0.1f)
+    const FVector DirectionToPlayer = ToPlayer.GetSafeNormal();
+    const float Facing = FVector::DotProduct(GetActorForwardVector().GetSafeNormal2D(), DirectionToPlayer);
+    if (Facing < MinimumFacingDot)
     {
         return;
     }
 
-    if (GetWorld()->GetTimeSeconds() >= NextAlertTime)
+    if (!HasLineOfSightToPlayer(Player))
+    {
+        return;
+    }
+
+    const float Now = GetWorld()->GetTimeSeconds();
+    if (Now >= NextAlertTime)
     {
         if (Quests->GetQuestStage(TEXT("KeepOffRoad")) == 0)
         {
             Quests->SetQuestStage(TEXT("KeepOffRoad"), 1);
         }
 
-        if (PC)
+        if (AShireHUD* HUD = PC ? Cast<AShireHUD>(PC->GetHUD()) : nullptr)
         {
-            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
-            {
-                HUD->ShowAlert(FText::FromString(TEXT("The Rider has noticed movement. Stay low and break line of sight.")), 3.0f);
-            }
+            HUD->ShowAlert(FText::FromString(TEXT("The Rider has noticed movement. Stay low and break line of sight.")), 3.0f);
         }
-        NextAlertTime = GetWorld()->GetTimeSeconds() + 5.0f;
+
+        NextAlertTime = Now + 5.0f;
     }
 }
