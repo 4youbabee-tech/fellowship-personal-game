@@ -13,11 +13,7 @@ void UShireStoryFlowSubsystem::Initialize(FSubsystemCollectionBase& Collection)
         QuestSubsystem = GI->GetSubsystem<UShireQuestSubsystem>();
         if (QuestSubsystem)
         {
-            QuestSubsystem->OnQuestStageChanged.AddDynamic(this, &UShireStoryFlowSubsystem::HandleQuestStageChanged);
-
-            // Repair critical end-of-region states from a restored save as soon as
-            // the subsystem becomes active. Normal fresh games remain unchanged.
-            EvaluateCriticalHandoff(QuestSubsystem->GetActiveQuestId(), QuestSubsystem->GetActiveQuestStage());
+            QuestSubsystem->OnQuestStateRestored.AddDynamic(this, &UShireStoryFlowSubsystem::HandleQuestStateRestored);
         }
     }
 }
@@ -26,31 +22,59 @@ void UShireStoryFlowSubsystem::Deinitialize()
 {
     if (QuestSubsystem)
     {
-        QuestSubsystem->OnQuestStageChanged.RemoveDynamic(this, &UShireStoryFlowSubsystem::HandleQuestStageChanged);
+        QuestSubsystem->OnQuestStateRestored.RemoveDynamic(this, &UShireStoryFlowSubsystem::HandleQuestStateRestored);
         QuestSubsystem = nullptr;
     }
 
     Super::Deinitialize();
 }
 
-void UShireStoryFlowSubsystem::HandleQuestStageChanged(FName QuestId, int32 NewStage)
+void UShireStoryFlowSubsystem::HandleQuestStateRestored()
 {
-    EvaluateCriticalHandoff(QuestId, NewStage);
+    RepairRestoredTerminalState();
 }
 
-void UShireStoryFlowSubsystem::EvaluateCriticalHandoff(FName QuestId, int32 NewStage)
+void UShireStoryFlowSubsystem::RepairRestoredTerminalState()
 {
     if (!QuestSubsystem)
     {
         return;
     }
 
-    // Chapter 1 terminal state: crossing to the far bank of Bucklebury Ferry.
-    // The physical trigger sets FerryEscape to stage 2; the guard then performs
-    // the chapter hand-off even if an older save or an incomplete trigger config
-    // reaches this exact state.
-    if (QuestId == TEXT("FerryEscape") && NewStage >= 2 && QuestSubsystem->GetCurrentChapterId() == TEXT("P1C01"))
+    const FName ChapterId = QuestSubsystem->GetCurrentChapterId();
+    const FName QuestId = QuestSubsystem->GetActiveQuestId();
+    const int32 Stage = QuestSubsystem->GetActiveQuestStage();
+
+    // These states are the terminal authored stages immediately before a chapter
+    // hand-off. A normal playthrough transitions through the world trigger itself.
+    // If an older/incomplete save captured the terminal state first, resume safely
+    // at the opening quest of the next chapter instead of leaving the player stranded.
+    if (ChapterId == TEXT("P1C01") && QuestId == TEXT("FerryEscape") && Stage >= 2)
     {
         QuestSubsystem->StartChapter(TEXT("P1C02"), TEXT("RoadToBree"), 0);
+    }
+    else if (ChapterId == TEXT("P1C02") && QuestId == TEXT("NightAttack") && Stage >= 2)
+    {
+        QuestSubsystem->StartChapter(TEXT("P1C03"), TEXT("RoadToWeathertop"), 0);
+    }
+    else if (ChapterId == TEXT("P1C03") && QuestId == TEXT("FlightToFord") && Stage >= 2)
+    {
+        QuestSubsystem->StartChapter(TEXT("P1C04"), TEXT("RivendellRecovery"), 0);
+    }
+    else if (ChapterId == TEXT("P1C04") && QuestId == TEXT("FellowshipForms") && Stage >= 2)
+    {
+        QuestSubsystem->StartChapter(TEXT("P1C05"), TEXT("SouthwardJourney"), 0);
+    }
+    else if (ChapterId == TEXT("P1C05") && QuestId == TEXT("WestGate") && Stage >= 2)
+    {
+        QuestSubsystem->StartChapter(TEXT("P1C06"), TEXT("MoriaDark"), 0);
+    }
+    else if (ChapterId == TEXT("P1C06") && QuestId == TEXT("BridgeOfKhazadDum") && Stage >= 3)
+    {
+        QuestSubsystem->StartChapter(TEXT("P1C07"), TEXT("LothlorienRest"), 0);
+    }
+    else if (ChapterId == TEXT("P1C07") && QuestId == TEXT("GaladrielFarewell") && Stage >= 2)
+    {
+        QuestSubsystem->StartChapter(TEXT("P1C08"), TEXT("AnduinJourney"), 0);
     }
 }
