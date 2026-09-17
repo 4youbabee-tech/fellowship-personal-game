@@ -7,6 +7,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestStageChanged, FName, QuestId, int32, NewStage);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActiveQuestChanged, FName, QuestId);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnChapterChanged, FName, PreviousChapterId, FName, NewChapterId);
 
 USTRUCT(BlueprintType)
 struct FShireQuestDefinition
@@ -34,6 +35,9 @@ public:
     UPROPERTY(BlueprintAssignable, Category="Quest")
     FOnActiveQuestChanged OnActiveQuestChanged;
 
+    UPROPERTY(BlueprintAssignable, Category="Chapter")
+    FOnChapterChanged OnChapterChanged;
+
     UFUNCTION(BlueprintCallable, Category="Quest")
     int32 GetQuestStage(FName QuestId) const;
 
@@ -45,6 +49,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category="Quest")
     void StartQuest(FName QuestId, int32 InitialStage = 0);
+
+    UFUNCTION(BlueprintCallable, Category="Chapter")
+    void StartChapter(FName ChapterId, FName StartingQuestId = NAME_None, int32 StartingQuestStage = 0);
 
     UFUNCTION(BlueprintPure, Category="Quest")
     FName GetActiveQuestId() const { return ActiveQuestId; }
@@ -58,8 +65,11 @@ public:
     UFUNCTION(BlueprintPure, Category="Quest")
     FText GetActiveObjective() const;
 
+    UFUNCTION(BlueprintPure, Category="Chapter")
+    FName GetCurrentChapterId() const { return CurrentChapterId; }
+
     const TMap<FName, int32>& GetAllQuestStages() const { return QuestStages; }
-    void RestoreQuestState(const TMap<FName, int32>& InStages, FName InActiveQuestId);
+    void RestoreQuestState(const TMap<FName, int32>& InStages, FName InActiveQuestId, FName InCurrentChapterId);
 
 private:
     UPROPERTY()
@@ -67,6 +77,9 @@ private:
 
     UPROPERTY()
     FName ActiveQuestId = NAME_None;
+
+    UPROPERTY()
+    FName CurrentChapterId = TEXT("P1C01");
 
     UPROPERTY()
     TMap<FName, FShireQuestDefinition> QuestDefinitions;
