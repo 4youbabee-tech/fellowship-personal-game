@@ -24,4 +24,7 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
     FName CurrentChapterId = TEXT("P1C01");
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
+    TArray<FName> CompletedStoryBeats;
 };
