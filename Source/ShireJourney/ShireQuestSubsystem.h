@@ -9,6 +9,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestStageChanged, FName, QuestI
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActiveQuestChanged, FName, QuestId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnChapterChanged, FName, PreviousChapterId, FName, NewChapterId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStoryBeatTriggered, FName, StoryBeatId);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQuestStateRestored);
 
 USTRUCT(BlueprintType)
 struct FShireQuestDefinition
@@ -41,6 +42,12 @@ public:
 
     UPROPERTY(BlueprintAssignable, Category="Story")
     FOnStoryBeatTriggered OnStoryBeatTriggered;
+
+    // Emitted only after a save-state restore has rebuilt quest/chapter state. Runtime
+    // story guards use this event so they can repair legacy/incomplete terminal states
+    // without interfering with normal trigger-driven cinematics or chapter hand-offs.
+    UPROPERTY(BlueprintAssignable, Category="Save")
+    FOnQuestStateRestored OnQuestStateRestored;
 
     UFUNCTION(BlueprintCallable, Category="Quest")
     int32 GetQuestStage(FName QuestId) const;
