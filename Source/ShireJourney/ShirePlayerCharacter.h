@@ -24,6 +24,8 @@ protected:
     void MoveRight(float Value);
     void TurnAtRate(float Value);
     void LookUpAtRate(float Value);
+    void StartJump();
+    void StopJump();
     void StartSprint();
     void StopSprint();
     void StartCrouch();
@@ -34,6 +36,9 @@ protected:
     void DebugPreviousChapter();
     void DebugNextChapter();
     void DebugStartChapterByIndex(int32 ChapterIndex);
+
+    UFUNCTION()
+    void HandleCinematicStateChanged(bool bLocked);
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
     USpringArmComponent* CameraBoom;
@@ -61,4 +66,7 @@ protected:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
     float BaseLookUpRate = 45.0f;
+
+private:
+    bool bCinematicInputLocked = false;
 };
