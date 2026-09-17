@@ -32,6 +32,14 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Detection")
     float CrouchedDetectionRadius = 340.0f;
 
+    // Detection is intentionally throttled for the low-spec target; patrol movement still ticks smoothly.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Detection", meta=(ClampMin="0.05", ClampMax="1.0"))
+    float DetectionCheckInterval = 0.15f;
+
+    // Dot-product threshold for the Rider's forward vision cone. Lower values widen the cone.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Detection", meta=(ClampMin="-1.0", ClampMax="1.0"))
+    float MinimumFacingDot = -0.05f;
+
 private:
     UPROPERTY()
     USceneComponent* Root;
@@ -47,7 +55,9 @@ private:
 
     bool bHeadingToB = true;
     float NextAlertTime = 0.0f;
+    float NextDetectionCheckTime = 0.0f;
 
     void UpdatePatrol(float DeltaSeconds);
     void CheckPlayerDetection();
+    bool HasLineOfSightToPlayer(class ACharacter* Player) const;
 };
