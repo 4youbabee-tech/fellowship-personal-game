@@ -76,7 +76,9 @@ protected:
 
 private:
     bool bFollowingPlayer = false;
+    bool bCompanionFollowStateResolved = false;
 
     int32 ResolveCompanionSlot() const;
     FVector GetFormationTarget(const APawn* PlayerPawn) const;
+    void RestoreCompanionFollowState();
 };
