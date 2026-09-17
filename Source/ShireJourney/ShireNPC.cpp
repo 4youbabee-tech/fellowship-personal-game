@@ -71,9 +71,47 @@ FVector AShireNPC::GetFormationTarget(const APawn* PlayerPawn) const
     return Target;
 }
 
+void AShireNPC::RestoreCompanionFollowState()
+{
+    bCompanionFollowStateResolved = true;
+
+    if (!bFollowPlayerAfterInteraction)
+    {
+        return;
+    }
+
+    // Runtime builders assign quest/follow properties immediately after SpawnActor. Resolve on
+    // the first Tick instead of BeginPlay so those assigned values are already available.
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* QuestSubsystem = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!QuestSubsystem)
+    {
+        return;
+    }
+
+    if (QuestId == NAME_None)
+    {
+        bFollowingPlayer = true;
+        return;
+    }
+
+    // Quest stages are persisted. If the interaction's resulting stage has already been reached,
+    // this companion was recruited before a save/load or chapter-world rebuild and should resume
+    // the cheap formation-follow behavior without requiring the player to repeat dialogue.
+    if (QuestStageAfterInteraction >= 0 && QuestSubsystem->GetQuestStage(QuestId) >= QuestStageAfterInteraction)
+    {
+        bFollowingPlayer = true;
+    }
+}
+
 void AShireNPC::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+
+    if (!bCompanionFollowStateResolved)
+    {
+        RestoreCompanionFollowState();
+    }
 
     if (!bFollowingPlayer || !GetWorld())
     {
@@ -166,5 +204,6 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
     if (bFollowPlayerAfterInteraction)
     {
         bFollowingPlayer = true;
+        bCompanionFollowStateResolved = true;
     }
 }
