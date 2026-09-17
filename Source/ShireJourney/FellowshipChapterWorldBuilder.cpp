@@ -51,9 +51,11 @@ AStaticMeshActor* AFellowshipChapterWorldBuilder::SpawnShape(
         return nullptr;
     }
 
+    Actor->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+
     UStaticMeshComponent* MeshComponent = Actor->GetStaticMeshComponent();
     MeshComponent->SetStaticMesh(Mesh);
-    MeshComponent->SetMobility(EComponentMobility::Static);
+    MeshComponent->SetMobility(EComponentMobility::Movable);
     MeshComponent->SetCollisionEnabled(bCollision ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
     Actor->SetActorScale3D(Scale);
 
@@ -80,6 +82,7 @@ void AFellowshipChapterWorldBuilder::SpawnLabel(const FString& Text, const FVect
     ATextRenderActor* Label = GetWorld()->SpawnActor<ATextRenderActor>(Location, FRotator(0.0f, 180.0f, 0.0f));
     if (Label && Label->GetTextRender())
     {
+        Label->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
         Label->GetTextRender()->SetText(FText::FromString(Text));
         Label->GetTextRender()->SetHorizontalAlignment(EHorizTextAligment::EHTA_Center);
         Label->GetTextRender()->SetWorldSize(40.0f);
