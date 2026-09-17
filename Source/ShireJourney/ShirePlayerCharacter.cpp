@@ -3,6 +3,7 @@
 #include "ShireQuestSubsystem.h"
 #include "ShireSaveGame.h"
 #include "ShireHUD.h"
+#include "ShireStoryPresentationSubsystem.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -85,6 +86,14 @@ void AShirePlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
     GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+
+    if (UGameInstance* GI = GetGameInstance())
+    {
+        if (UShireStoryPresentationSubsystem* Presentation = GI->GetSubsystem<UShireStoryPresentationSubsystem>())
+        {
+            Presentation->OnCinematicStateChanged.AddDynamic(this, &AShirePlayerCharacter::HandleCinematicStateChanged);
+        }
+    }
 }
 
 void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -96,8 +105,8 @@ void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAxis(TEXT("Turn"), this, &AShirePlayerCharacter::TurnAtRate);
     PlayerInputComponent->BindAxis(TEXT("LookUp"), this, &AShirePlayerCharacter::LookUpAtRate);
 
-    PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &ACharacter::Jump);
-    PlayerInputComponent->BindAction(TEXT("Jump"), IE_Released, this, &ACharacter::StopJumping);
+    PlayerInputComponent->BindAction(TEXT("Jump"), IE_Pressed, this, &AShirePlayerCharacter::StartJump);
+    PlayerInputComponent->BindAction(TEXT("Jump"), IE_Released, this, &AShirePlayerCharacter::StopJump);
     PlayerInputComponent->BindAction(TEXT("Crouch"), IE_Pressed, this, &AShirePlayerCharacter::StartCrouch);
     PlayerInputComponent->BindAction(TEXT("Crouch"), IE_Released, this, &AShirePlayerCharacter::StopCrouch);
     PlayerInputComponent->BindAction(TEXT("Sprint"), IE_Pressed, this, &AShirePlayerCharacter::StartSprint);
@@ -109,9 +118,28 @@ void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("DebugNextChapter"), IE_Pressed, this, &AShirePlayerCharacter::DebugNextChapter);
 }
 
+void AShirePlayerCharacter::HandleCinematicStateChanged(bool bLocked)
+{
+    bCinematicInputLocked = bLocked;
+
+    if (APlayerController* PC = Cast<APlayerController>(Controller))
+    {
+        PC->SetIgnoreMoveInput(bLocked);
+        PC->SetIgnoreLookInput(bLocked);
+    }
+
+    if (bLocked)
+    {
+        StopJumping();
+        UnCrouch();
+        GetCharacterMovement()->StopMovementImmediately();
+        GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+    }
+}
+
 void AShirePlayerCharacter::MoveForward(float Value)
 {
-    if (Controller && !FMath::IsNearlyZero(Value))
+    if (!bCinematicInputLocked && Controller && !FMath::IsNearlyZero(Value))
     {
         const FRotator Rotation = Controller->GetControlRotation();
         const FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
@@ -121,7 +149,7 @@ void AShirePlayerCharacter::MoveForward(float Value)
 
 void AShirePlayerCharacter::MoveRight(float Value)
 {
-    if (Controller && !FMath::IsNearlyZero(Value))
+    if (!bCinematicInputLocked && Controller && !FMath::IsNearlyZero(Value))
     {
         const FRotator Rotation = Controller->GetControlRotation();
         const FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
@@ -131,17 +159,39 @@ void AShirePlayerCharacter::MoveRight(float Value)
 
 void AShirePlayerCharacter::TurnAtRate(float Value)
 {
-    AddControllerYawInput(Value * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+    if (!bCinematicInputLocked && GetWorld())
+    {
+        AddControllerYawInput(Value * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+    }
 }
 
 void AShirePlayerCharacter::LookUpAtRate(float Value)
 {
-    AddControllerPitchInput(Value * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+    if (!bCinematicInputLocked && GetWorld())
+    {
+        AddControllerPitchInput(Value * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+    }
+}
+
+void AShirePlayerCharacter::StartJump()
+{
+    if (!bCinematicInputLocked)
+    {
+        Jump();
+    }
+}
+
+void AShirePlayerCharacter::StopJump()
+{
+    StopJumping();
 }
 
 void AShirePlayerCharacter::StartSprint()
 {
-    GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+    if (!bCinematicInputLocked)
+    {
+        GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+    }
 }
 
 void AShirePlayerCharacter::StopSprint()
@@ -151,7 +201,10 @@ void AShirePlayerCharacter::StopSprint()
 
 void AShirePlayerCharacter::StartCrouch()
 {
-    Crouch();
+    if (!bCinematicInputLocked)
+    {
+        Crouch();
+    }
 }
 
 void AShirePlayerCharacter::StopCrouch()
@@ -161,7 +214,7 @@ void AShirePlayerCharacter::StopCrouch()
 
 void AShirePlayerCharacter::Interact()
 {
-    if (!FollowCamera || !GetWorld())
+    if (bCinematicInputLocked || !FollowCamera || !GetWorld())
     {
         return;
     }
@@ -268,7 +321,7 @@ void AShirePlayerCharacter::QuickLoad()
 
 void AShirePlayerCharacter::DebugStartChapterByIndex(int32 ChapterIndex)
 {
-    if (ChapterIndex < 0 || ChapterIndex >= ShireDebugChapters::Count)
+    if (bCinematicInputLocked || ChapterIndex < 0 || ChapterIndex >= ShireDebugChapters::Count)
     {
         return;
     }
