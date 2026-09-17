@@ -32,6 +32,45 @@ AShireNPC::AShireNPC()
     if (SphereMesh.Succeeded()) PrototypeHead->SetStaticMesh(SphereMesh.Object);
 }
 
+int32 AShireNPC::ResolveCompanionSlot() const
+{
+    if (CompanionSlotIndex >= 0)
+    {
+        return CompanionSlotIndex;
+    }
+
+    const FString Name = DisplayName.ToString();
+    if (Name.Equals(TEXT("Sam"), ESearchCase::IgnoreCase)) return 0;
+    if (Name.Equals(TEXT("Merry"), ESearchCase::IgnoreCase)) return 1;
+    if (Name.Equals(TEXT("Pippin"), ESearchCase::IgnoreCase)) return 2;
+    if (Name.Equals(TEXT("Aragorn"), ESearchCase::IgnoreCase) || Name.Equals(TEXT("Strider"), ESearchCase::IgnoreCase)) return 3;
+    if (Name.Equals(TEXT("Boromir"), ESearchCase::IgnoreCase)) return 4;
+    if (Name.Equals(TEXT("Legolas"), ESearchCase::IgnoreCase)) return 5;
+    if (Name.Equals(TEXT("Gimli"), ESearchCase::IgnoreCase)) return 6;
+    if (Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase)) return 7;
+    return 8;
+}
+
+FVector AShireNPC::GetFormationTarget(const APawn* PlayerPawn) const
+{
+    if (!PlayerPawn)
+    {
+        return GetActorLocation();
+    }
+
+    const int32 Slot = ResolveCompanionSlot();
+    const int32 Row = Slot / 2;
+    const float Side = (Slot % 2 == 0) ? -1.0f : 1.0f;
+    const float BackDistance = FollowDistance + Row * (FormationSpacing * 0.85f);
+    const float SideDistance = FormationSpacing * (1.0f + 0.15f * Row) * Side;
+
+    const FVector Forward = PlayerPawn->GetActorForwardVector().GetSafeNormal2D();
+    const FVector Right = PlayerPawn->GetActorRightVector().GetSafeNormal2D();
+    FVector Target = PlayerPawn->GetActorLocation() - Forward * BackDistance + Right * SideDistance;
+    Target.Z = PlayerPawn->GetActorLocation().Z;
+    return Target;
+}
+
 void AShireNPC::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
@@ -48,13 +87,33 @@ void AShireNPC::Tick(float DeltaSeconds)
         return;
     }
 
-    const FVector ToPlayer = PlayerPawn->GetActorLocation() - GetActorLocation();
-    const float Distance = ToPlayer.Size2D();
-    if (Distance > FollowDistance)
+    const FVector Target = GetFormationTarget(PlayerPawn);
+    FVector ToTarget = Target - GetActorLocation();
+    ToTarget.Z = 0.0f;
+    const float Distance = ToTarget.Size();
+
+    if (Distance > TeleportCatchUpDistance)
     {
-        const FVector Step = ToPlayer.GetSafeNormal2D() * FollowSpeed * DeltaSeconds;
-        AddActorWorldOffset(Step, true);
-        SetActorRotation(ToPlayer.Rotation());
+        FVector SafeTarget = Target;
+        SafeTarget.Z = PlayerPawn->GetActorLocation().Z;
+        SetActorLocation(SafeTarget, false, nullptr, ETeleportType::TeleportPhysics);
+        return;
+    }
+
+    if (Distance <= FollowAcceptanceRadius)
+    {
+        return;
+    }
+
+    const float EffectiveSpeed = Distance > CatchUpDistance ? FollowSpeed * 2.0f : FollowSpeed;
+    const float MaxStep = EffectiveSpeed * DeltaSeconds;
+    const FVector Step = ToTarget.GetSafeNormal() * FMath::Min(MaxStep, Distance - FollowAcceptanceRadius);
+    AddActorWorldOffset(Step, true);
+
+    if (!Step.IsNearlyZero())
+    {
+        const FRotator DesiredRotation = Step.Rotation();
+        SetActorRotation(FMath::RInterpTo(GetActorRotation(), DesiredRotation, DeltaSeconds, 7.0f));
     }
 }
 
@@ -101,8 +160,6 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
 
     if (QuestSubsystem && NextQuestId != NAME_None)
     {
-        // StartQuest is required here (rather than only setting a stage) so the HUD/objective
-        // and future triggers follow the new story beat immediately.
         QuestSubsystem->StartQuest(NextQuestId, NextQuestStage);
     }
 
