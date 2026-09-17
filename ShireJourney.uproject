@@ -1,0 +1,13 @@
+{
+  "FileVersion": 3,
+  "EngineAssociation": "4.27",
+  "Category": "Games",
+  "Description": "Personal cinematic third-person fantasy journey prototype - Shire vertical slice, optimized for modest hardware.",
+  "Modules": [
+    {
+      "Name": "ShireJourney",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ]
+}
