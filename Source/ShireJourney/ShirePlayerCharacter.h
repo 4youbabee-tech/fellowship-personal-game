@@ -16,6 +16,7 @@ class SHIREJOURNEY_API AShirePlayerCharacter : public ACharacter
 public:
     AShirePlayerCharacter();
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+    virtual void Tick(float DeltaSeconds) override;
 
 protected:
     virtual void BeginPlay() override;
@@ -53,6 +54,27 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
     UStaticMeshComponent* PrototypeHead;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeHair;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeLeftArm;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeRightArm;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeLeftLeg;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeRightLeg;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeLeftFoot;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeRightFoot;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
     float WalkSpeed = 310.0f;
 
@@ -70,4 +92,8 @@ protected:
 
 private:
     bool bCinematicInputLocked = false;
+    float PrototypeWalkPhase = 0.0f;
+
+    void ApplyPrototypeStyle();
+    void UpdatePrototypeAnimation(float DeltaSeconds);
 };
