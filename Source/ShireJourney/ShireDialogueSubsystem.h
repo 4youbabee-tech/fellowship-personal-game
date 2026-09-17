@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include <initializer_list>
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "TimerManager.h"
 #include "ShireDialogueSubsystem.generated.h"
 
 USTRUCT(BlueprintType)
