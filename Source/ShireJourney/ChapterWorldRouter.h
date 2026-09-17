@@ -21,4 +21,6 @@ private:
 
     void LoadChapterWorld(FName ChapterId);
     void ClearPrototypeBuilders();
+    FVector GetChapterSpawnLocation(FName ChapterId) const;
+    void MovePlayerToChapterStart(FName ChapterId);
 };
