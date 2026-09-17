@@ -71,13 +71,32 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
     UStaticMeshComponent* PrototypeHead;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeHair;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeLeftArm;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeRightArm;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeLeftLeg;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeRightLeg;
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Dialogue")
     int32 CurrentDialogueIndex = 0;
 
 private:
     bool bFollowingPlayer = false;
     bool bCompanionFollowStateResolved = false;
+    bool bVisualStyleApplied = false;
+    float PrototypeWalkPhase = 0.0f;
 
+    void ApplyPrototypeStyle();
+    void UpdatePrototypeAnimation(float DeltaSeconds);
     int32 ResolveCompanionSlot() const;
     FVector GetFormationTarget(const APawn* PlayerPawn) const;
     void RestoreCompanionFollowState();
