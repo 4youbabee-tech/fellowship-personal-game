@@ -191,6 +191,7 @@ void AShirePlayerCharacter::QuickSave()
             Save->QuestStages = QuestSubsystem->GetAllQuestStages();
             Save->ActiveQuestId = QuestSubsystem->GetActiveQuestId();
             Save->CurrentChapterId = QuestSubsystem->GetCurrentChapterId();
+            Save->CompletedStoryBeats = QuestSubsystem->GetCompletedStoryBeats();
         }
     }
 
@@ -225,15 +226,22 @@ void AShirePlayerCharacter::QuickLoad()
         return;
     }
 
-    SetActorLocationAndRotation(Save->PlayerLocation, Save->PlayerRotation, false, nullptr, ETeleportType::TeleportPhysics);
-
+    // Restore story/world state before the exact player transform. The chapter router may
+    // move the pawn to its safe chapter spawn while rebuilding the region; the saved transform
+    // is applied last so a normal quick-load returns to the precise saved position.
     if (UGameInstance* GI = GetGameInstance())
     {
         if (UShireQuestSubsystem* QuestSubsystem = GI->GetSubsystem<UShireQuestSubsystem>())
         {
-            QuestSubsystem->RestoreQuestState(Save->QuestStages, Save->ActiveQuestId, Save->CurrentChapterId);
+            QuestSubsystem->RestoreQuestState(
+                Save->QuestStages,
+                Save->ActiveQuestId,
+                Save->CurrentChapterId,
+                Save->CompletedStoryBeats);
         }
     }
+
+    SetActorLocationAndRotation(Save->PlayerLocation, Save->PlayerRotation, false, nullptr, ETeleportType::TeleportPhysics);
 
     if (APlayerController* PC = Cast<APlayerController>(Controller))
     {
