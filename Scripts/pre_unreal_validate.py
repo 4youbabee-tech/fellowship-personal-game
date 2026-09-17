@@ -145,7 +145,6 @@ for path in sorted(SOURCE.glob("*.cpp")):
         continue
     text = read(path)
     story_beat_refs.update(re.findall(r'StoryBeatId\s*=\s*TEXT\("([^"]+)"\)', text))
-    # The shared builder passes story beats as the fifth textual argument to SpawnQuestTrigger.
     story_beat_refs.update(re.findall(
         r'SpawnQuestTrigger\s*\([^;]*?TEXT\("([A-Za-z0-9_]+)"\)\s*(?:,\s*TEXT\("[A-Za-z0-9_]+"\)|,\s*NAME_None)',
         text,
@@ -158,7 +157,6 @@ missing_presentation = sorted(story_beat_refs - presentation_beats)
 if missing_presentation:
     fail("Story beats without presentation cues: " + ", ".join(missing_presentation))
 
-# Catch duplicate AddCue entries, which would silently overwrite earlier cues in TMap.
 all_cues = re.findall(r'AddCue\s*\(\s*TEXT\("([^"]+)"\)', presentation_cpp)
 duplicate_cues = sorted({cue for cue in all_cues if all_cues.count(cue) > 1})
 if duplicate_cues:
@@ -174,10 +172,16 @@ if "ShireGameMode" not in engine_ini:
 if "r.DefaultFeature.MotionBlur=False" not in engine_ini:
     warn("Motion blur low-spec default is not explicitly disabled")
 
+# Input mappings must match the names bound by ShirePlayerCharacter. This catches
+# harmless-looking renames that would otherwise break quick save/load or PIE chapter jumps.
 input_ini = read(ROOT / "Config" / "DefaultInput.ini")
-for action in ["QuickSave", "QuickLoad", "NextChapterTest", "PreviousChapterTest"]:
+player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
+required_actions = ["QuickSave", "QuickLoad", "DebugNextChapter", "DebugPreviousChapter"]
+for action in required_actions:
     if f'ActionName="{action}"' not in input_ini:
         fail(f"DefaultInput.ini missing action mapping: {action}")
+    if f'BindAction(TEXT("{action}")' not in player_cpp:
+        fail(f"ShirePlayerCharacter.cpp missing action binding: {action}")
 
 print(
     f"Validated {len(list(SOURCE.glob('*.cpp')))} cpp files, "
