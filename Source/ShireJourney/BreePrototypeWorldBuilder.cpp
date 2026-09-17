@@ -57,9 +57,11 @@ AStaticMeshActor* ABreePrototypeWorldBuilder::SpawnShape(
         return nullptr;
     }
 
+    Actor->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+
     UStaticMeshComponent* MeshComponent = Actor->GetStaticMeshComponent();
     MeshComponent->SetStaticMesh(Mesh);
-    MeshComponent->SetMobility(EComponentMobility::Static);
+    MeshComponent->SetMobility(EComponentMobility::Movable);
     MeshComponent->SetCollisionEnabled(bCollision ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
     Actor->SetActorScale3D(Scale);
 
@@ -88,6 +90,8 @@ void ABreePrototypeWorldBuilder::SpawnLabel(const FString& Text, const FVector& 
     {
         return;
     }
+
+    Label->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
 
     UTextRenderComponent* TextComponent = Label->GetTextRender();
     TextComponent->SetText(FText::FromString(Text));
