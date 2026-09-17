@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+from collections import defaultdict, deque
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -57,6 +58,8 @@ required_files = [
     SOURCE / "FellowshipChapterWorldBuilder.cpp",
     SOURCE / "ShireStoryPresentationSubsystem.h",
     SOURCE / "ShireStoryPresentationSubsystem.cpp",
+    SOURCE / "ShireDialogueSubsystem.h",
+    SOURCE / "ShireDialogueSubsystem.cpp",
 ]
 
 for path in required_files:
@@ -138,7 +141,6 @@ unknown_chapters = sorted(ref for ref in chapter_refs if ref not in expected_cha
 if unknown_chapters:
     fail("Unknown runtime chapter references: " + ", ".join(unknown_chapters))
 
-# Story presentation coverage: every story beat referenced by runtime builders must have a cue.
 story_beat_refs: set[str] = set()
 for path in sorted(SOURCE.glob("*.cpp")):
     if path.name == "ShireStoryPresentationSubsystem.cpp":
@@ -162,6 +164,96 @@ duplicate_cues = sorted({cue for cue in all_cues if all_cues.count(cue) > 1})
 if duplicate_cues:
     fail("Duplicate story presentation cues: " + ", ".join(duplicate_cues))
 
+# Every non-empty dialogue cue referenced by a presentation cue must exist in the runtime dialogue library.
+dialogue_cpp = read(SOURCE / "ShireDialogueSubsystem.cpp")
+dialogue_sequences = set(re.findall(r'AddSequence\s*\(\s*TEXT\("([^"]+)"\)', dialogue_cpp))
+presentation_dialogue_refs = set()
+for match in re.finditer(
+    r'AddCue\s*\(\s*TEXT\("([^"]+)"\)\s*,\s*EShireStoryPresentationMode::[A-Za-z]+\s*,\s*'
+    r'(?:TEXT\("[^"]+"\)|NAME_None)\s*,\s*(TEXT\("([^"]+)"\)|NAME_None)',
+    presentation_cpp,
+    flags=re.S,
+):
+    if match.group(2):
+        presentation_dialogue_refs.add(match.group(2))
+
+missing_dialogue = sorted(presentation_dialogue_refs - dialogue_sequences)
+if missing_dialogue:
+    fail("Presentation dialogue cues without runtime sequences: " + ", ".join(missing_dialogue))
+
+all_dialogue_sequences = re.findall(r'AddSequence\s*\(\s*TEXT\("([^"]+)"\)', dialogue_cpp)
+duplicate_dialogue = sorted({cue for cue in all_dialogue_sequences if all_dialogue_sequences.count(cue) > 1})
+if duplicate_dialogue:
+    fail("Duplicate runtime dialogue sequences: " + ", ".join(duplicate_dialogue))
+
+# Quest/chapter reachability safety net. We model transitions explicitly enough to catch isolated
+# quests and broken chapter starting quests without pretending to simulate gameplay conditions.
+chapter_start_quests = {
+    "P1C01": "ShireArrival",
+    "P1C02": "RoadToBree",
+    "P1C03": "RoadToWeathertop",
+    "P1C04": "RivendellRecovery",
+    "P1C05": "SouthwardJourney",
+    "P1C06": "MoriaDark",
+    "P1C07": "LothlorienRest",
+    "P1C08": "AnduinJourney",
+}
+for chapter, quest in chapter_start_quests.items():
+    if quest not in definitions:
+        fail(f"Chapter {chapter} starts with undefined quest: {quest}")
+
+transition_graph: dict[str, set[str]] = defaultdict(set)
+for path in sorted(SOURCE.glob("*.cpp")):
+    text = read(path)
+
+    # NPC/trigger assignment style: QuestId ... NextQuestId
+    for match in re.finditer(
+        r'(?:QuestId\s*=|->QuestId\s*=)\s*TEXT\("([^"]+)"\)(.*?)(?=(?:QuestId\s*=|->QuestId\s*=|\n\s*}\n|\Z))',
+        text,
+        flags=re.S,
+    ):
+        source_quest = match.group(1)
+        block = match.group(2)
+        for target in re.findall(r'NextQuestId\s*=\s*TEXT\("([^"]+)"\)', block):
+            transition_graph[source_quest].add(target)
+        for target in re.findall(r'NextChapterQuestId\s*=\s*TEXT\("([^"]+)"\)', block):
+            transition_graph[source_quest].add(target)
+
+    # Shared builder calls where source and next quest are positional arguments.
+    for match in re.finditer(
+        r'SpawnQuestTrigger\s*\(\s*FVector\([^)]*\)\s*,\s*TEXT\("([^"]+)"\)\s*,.*?'
+        r'(?:TEXT\("([A-Za-z0-9_]+)"\)\s*,\s*\d+\s*,\s*TEXT\("(P1C\d+)"\)\s*,\s*TEXT\("([A-Za-z0-9_]+)"\)|'
+        r'TEXT\("([A-Za-z0-9_]+)"\)\s*,\s*\d+\s*\))',
+        text,
+        flags=re.S,
+    ):
+        source_quest = match.group(1)
+        next_quest = match.group(2) or match.group(5)
+        next_chapter_quest = match.group(4)
+        if next_quest and next_quest in definitions and next_quest != source_quest:
+            transition_graph[source_quest].add(next_quest)
+        if next_chapter_quest:
+            transition_graph[source_quest].add(next_chapter_quest)
+
+reachable: set[str] = set()
+queue = deque([chapter_start_quests["P1C01"]])
+while queue:
+    quest = queue.popleft()
+    if quest in reachable:
+        continue
+    reachable.add(quest)
+    for next_quest in transition_graph.get(quest, set()):
+        if next_quest not in reachable:
+            queue.append(next_quest)
+
+# Some branch-local helper quests are intentionally entered by chapter starts rather than a same-world transition.
+for quest in chapter_start_quests.values():
+    reachable.add(quest)
+
+important_unreachable = sorted(q for q in definitions if q not in reachable)
+if important_unreachable:
+    warn("Quest definitions not proven reachable by static graph: " + ", ".join(important_unreachable))
+
 for dirname in ["Binaries", "DerivedDataCache", "Intermediate", "Saved", ".vs"]:
     if (ROOT / dirname).exists():
         fail(f"Generated directory should not be committed: {dirname}")
@@ -172,8 +264,6 @@ if "ShireGameMode" not in engine_ini:
 if "r.DefaultFeature.MotionBlur=False" not in engine_ini:
     warn("Motion blur low-spec default is not explicitly disabled")
 
-# Input mappings must match the names bound by ShirePlayerCharacter. This catches
-# harmless-looking renames that would otherwise break quick save/load or PIE chapter jumps.
 input_ini = read(ROOT / "Config" / "DefaultInput.ini")
 player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
 required_actions = ["QuickSave", "QuickLoad", "DebugNextChapter", "DebugPreviousChapter"]
@@ -183,10 +273,19 @@ for action in required_actions:
     if f'BindAction(TEXT("{action}")' not in player_cpp:
         fail(f"ShirePlayerCharacter.cpp missing action binding: {action}")
 
+# Cinematic safety: a cinematic request must have both lock and release code paths.
+if "OnCinematicStateChanged.Broadcast(true)" not in presentation_cpp:
+    fail("Story presentation subsystem never broadcasts cinematic lock")
+if "ReleaseCinematicLock" not in presentation_cpp or "OnCinematicStateChanged.Broadcast(false)" not in presentation_cpp:
+    fail("Story presentation subsystem lacks a cinematic unlock path")
+if "CinematicReleaseTimer" not in presentation_cpp:
+    fail("Story presentation subsystem lacks automatic cinematic lock release")
+
 print(
     f"Validated {len(list(SOURCE.glob('*.cpp')))} cpp files, "
     f"{len(list(SOURCE.glob('*.h')))} headers, {len(definitions)} quest definitions, "
-    f"{len(expected_chapters)} runtime chapters, {len(presentation_beats)} presentation cues."
+    f"{len(expected_chapters)} runtime chapters, {len(presentation_beats)} presentation cues, "
+    f"{len(dialogue_sequences)} dialogue sequences."
 )
 for message in warnings:
     print(f"WARNING: {message}")
