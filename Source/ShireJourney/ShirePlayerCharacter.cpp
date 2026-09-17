@@ -14,6 +14,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/GameInstance.h"
+#include "Materials/MaterialInstanceDynamic.h"
+#include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
 
 namespace ShireSaveConstants
@@ -39,7 +41,7 @@ namespace ShireDebugChapters
 
 AShirePlayerCharacter::AShirePlayerCharacter()
 {
-    PrimaryActorTick.bCanEverTick = false;
+    PrimaryActorTick.bCanEverTick = true;
     GetCapsuleComponent()->SetCapsuleRadius(28.0f);
     GetCapsuleComponent()->SetCapsuleHalfHeight(60.0f);
 
@@ -67,25 +69,177 @@ AShirePlayerCharacter::AShirePlayerCharacter()
     PrototypeTorso = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeTorso"));
     PrototypeTorso->SetupAttachment(GetCapsuleComponent());
     PrototypeTorso->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    PrototypeTorso->SetRelativeLocation(FVector(0.0f, 0.0f, -14.0f));
-    PrototypeTorso->SetRelativeScale3D(FVector(0.34f, 0.34f, 0.58f));
+    PrototypeTorso->SetRelativeLocation(FVector(0.0f, 0.0f, -4.0f));
+    PrototypeTorso->SetRelativeScale3D(FVector(0.30f, 0.22f, 0.36f));
 
     PrototypeHead = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeHead"));
     PrototypeHead->SetupAttachment(GetCapsuleComponent());
     PrototypeHead->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    PrototypeHead->SetRelativeLocation(FVector(0.0f, 0.0f, 38.0f));
-    PrototypeHead->SetRelativeScale3D(FVector(0.25f));
+    PrototypeHead->SetRelativeLocation(FVector(0.0f, 0.0f, 39.0f));
+    PrototypeHead->SetRelativeScale3D(FVector(0.23f));
 
+    PrototypeHair = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeHair"));
+    PrototypeHair->SetupAttachment(GetCapsuleComponent());
+    PrototypeHair->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeHair->SetRelativeLocation(FVector(-1.0f, 0.0f, 47.0f));
+    PrototypeHair->SetRelativeScale3D(FVector(0.235f, 0.235f, 0.11f));
+
+    PrototypeLeftArm = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeLeftArm"));
+    PrototypeLeftArm->SetupAttachment(GetCapsuleComponent());
+    PrototypeLeftArm->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeLeftArm->SetRelativeLocation(FVector(0.0f, -24.0f, -3.0f));
+    PrototypeLeftArm->SetRelativeScale3D(FVector(0.08f, 0.08f, 0.34f));
+
+    PrototypeRightArm = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeRightArm"));
+    PrototypeRightArm->SetupAttachment(GetCapsuleComponent());
+    PrototypeRightArm->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeRightArm->SetRelativeLocation(FVector(0.0f, 24.0f, -3.0f));
+    PrototypeRightArm->SetRelativeScale3D(FVector(0.08f, 0.08f, 0.34f));
+
+    PrototypeLeftLeg = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeLeftLeg"));
+    PrototypeLeftLeg->SetupAttachment(GetCapsuleComponent());
+    PrototypeLeftLeg->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeLeftLeg->SetRelativeLocation(FVector(0.0f, -10.0f, -43.0f));
+    PrototypeLeftLeg->SetRelativeScale3D(FVector(0.10f, 0.10f, 0.30f));
+
+    PrototypeRightLeg = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeRightLeg"));
+    PrototypeRightLeg->SetupAttachment(GetCapsuleComponent());
+    PrototypeRightLeg->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeRightLeg->SetRelativeLocation(FVector(0.0f, 10.0f, -43.0f));
+    PrototypeRightLeg->SetRelativeScale3D(FVector(0.10f, 0.10f, 0.30f));
+
+    PrototypeLeftFoot = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeLeftFoot"));
+    PrototypeLeftFoot->SetupAttachment(GetCapsuleComponent());
+    PrototypeLeftFoot->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeLeftFoot->SetRelativeLocation(FVector(8.0f, -10.0f, -57.0f));
+    PrototypeLeftFoot->SetRelativeScale3D(FVector(0.22f, 0.12f, 0.08f));
+
+    PrototypeRightFoot = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeRightFoot"));
+    PrototypeRightFoot->SetupAttachment(GetCapsuleComponent());
+    PrototypeRightFoot->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeRightFoot->SetRelativeLocation(FVector(8.0f, 10.0f, -57.0f));
+    PrototypeRightFoot->SetRelativeScale3D(FVector(0.22f, 0.12f, 0.08f));
+
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMesh(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
-    if (CylinderMesh.Succeeded()) PrototypeTorso->SetStaticMesh(CylinderMesh.Object);
-    if (SphereMesh.Succeeded()) PrototypeHead->SetStaticMesh(SphereMesh.Object);
+
+    if (CubeMesh.Succeeded()) PrototypeTorso->SetStaticMesh(CubeMesh.Object);
+    if (CylinderMesh.Succeeded())
+    {
+        PrototypeLeftArm->SetStaticMesh(CylinderMesh.Object);
+        PrototypeRightArm->SetStaticMesh(CylinderMesh.Object);
+        PrototypeLeftLeg->SetStaticMesh(CylinderMesh.Object);
+        PrototypeRightLeg->SetStaticMesh(CylinderMesh.Object);
+    }
+    if (SphereMesh.Succeeded())
+    {
+        PrototypeHead->SetStaticMesh(SphereMesh.Object);
+        PrototypeHair->SetStaticMesh(SphereMesh.Object);
+        PrototypeLeftFoot->SetStaticMesh(SphereMesh.Object);
+        PrototypeRightFoot->SetStaticMesh(SphereMesh.Object);
+    }
+
+void AShirePlayerCharacter::ApplyPrototypeStyle()
+{
+    UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
+        nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
+    if (!BasicMaterial)
+    {
+        return;
+    }
+
+    auto ApplyColor = [this, BasicMaterial](UStaticMeshComponent* Component, const FLinearColor& Color)
+    {
+        if (!Component)
+        {
+            return;
+        }
+
+        UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, this);
+        if (MID)
+        {
+            MID->SetVectorParameterValue(TEXT("Color"), Color);
+            Component->SetMaterial(0, MID);
+        }
+    };
+
+    ApplyColor(PrototypeTorso, FLinearColor(0.20f, 0.34f, 0.15f));
+    ApplyColor(PrototypeHead, FLinearColor(0.74f, 0.52f, 0.34f));
+    ApplyColor(PrototypeHair, FLinearColor(0.12f, 0.055f, 0.025f));
+    ApplyColor(PrototypeLeftArm, FLinearColor(0.25f, 0.40f, 0.18f));
+    ApplyColor(PrototypeRightArm, FLinearColor(0.25f, 0.40f, 0.18f));
+    ApplyColor(PrototypeLeftLeg, FLinearColor(0.30f, 0.20f, 0.10f));
+    ApplyColor(PrototypeRightLeg, FLinearColor(0.30f, 0.20f, 0.10f));
+    ApplyColor(PrototypeLeftFoot, FLinearColor(0.24f, 0.12f, 0.055f));
+    ApplyColor(PrototypeRightFoot, FLinearColor(0.24f, 0.12f, 0.055f));
+}
+
+void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
+{
+    const float Speed = GetVelocity().Size2D();
+    const bool bMoving = Speed > 5.0f && !bCinematicInputLocked;
+
+    float Swing = 0.0f;
+    float Bob = 0.0f;
+    if (bMoving)
+    {
+        const float SpeedRatio = FMath::Clamp(Speed / FMath::Max(1.0f, WalkSpeed), 0.55f, 1.8f);
+        PrototypeWalkPhase += DeltaSeconds * 8.0f * SpeedRatio;
+        Swing = FMath::Sin(PrototypeWalkPhase) * 28.0f;
+        Bob = FMath::Abs(FMath::Sin(PrototypeWalkPhase * 2.0f)) * 1.5f;
+    }
+
+    const float BlendSpeed = 10.0f;
+    if (PrototypeLeftArm)
+    {
+        PrototypeLeftArm->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeLeftArm->GetRelativeRotation(), FRotator(Swing, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+    }
+    if (PrototypeRightArm)
+    {
+        PrototypeRightArm->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeRightArm->GetRelativeRotation(), FRotator(-Swing, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+    }
+    if (PrototypeLeftLeg)
+    {
+        PrototypeLeftLeg->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeLeftLeg->GetRelativeRotation(), FRotator(-Swing * 0.65f, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+    }
+    if (PrototypeRightLeg)
+    {
+        PrototypeRightLeg->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeRightLeg->GetRelativeRotation(), FRotator(Swing * 0.65f, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+    }
+
+    if (PrototypeTorso)
+    {
+        PrototypeTorso->SetRelativeLocation(FMath::VInterpTo(
+            PrototypeTorso->GetRelativeLocation(), FVector(0.0f, 0.0f, -4.0f + Bob), DeltaSeconds, 12.0f));
+    }
+    if (PrototypeHead)
+    {
+        PrototypeHead->SetRelativeLocation(FMath::VInterpTo(
+            PrototypeHead->GetRelativeLocation(), FVector(0.0f, 0.0f, 39.0f + Bob), DeltaSeconds, 12.0f));
+    }
+    if (PrototypeHair)
+    {
+        PrototypeHair->SetRelativeLocation(FMath::VInterpTo(
+            PrototypeHair->GetRelativeLocation(), FVector(-1.0f, 0.0f, 47.0f + Bob), DeltaSeconds, 12.0f));
+    }
+}
+
+void AShirePlayerCharacter::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
+    UpdatePrototypeAnimation(DeltaSeconds);
 }
 
 void AShirePlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
     GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+    ApplyPrototypeStyle();
 
     if (UGameInstance* GI = GetGameInstance())
     {
