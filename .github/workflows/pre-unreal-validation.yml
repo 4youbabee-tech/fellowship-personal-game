@@ -8,6 +8,8 @@ on:
     branches:
       - main
       - develop
+  schedule:
+    - cron: '*/20 * * * *'
 
 jobs:
   validate:
@@ -16,6 +18,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: develop
 
       - name: Set up Python
         uses: actions/setup-python@v5
