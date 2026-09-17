@@ -43,6 +43,11 @@ struct FShireStoryPresentationCue
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStoryPresentationRequested, FShireStoryPresentationCue, Cue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStoryCameraCueRequested, FName, CameraCue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStoryAmbienceCueRequested, FName, AmbienceCue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStoryMusicCueRequested, FName, MusicCue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStorySfxCueRequested, FName, SfxCue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStoryCinematicStateChanged, bool, bLocked);
 
 UCLASS()
 class SHIREJOURNEY_API UShireStoryPresentationSubsystem : public UGameInstanceSubsystem
@@ -56,11 +61,29 @@ public:
     UPROPERTY(BlueprintAssignable, Category="Story Presentation")
     FOnStoryPresentationRequested OnStoryPresentationRequested;
 
+    UPROPERTY(BlueprintAssignable, Category="Story Presentation")
+    FOnStoryCameraCueRequested OnCameraCueRequested;
+
+    UPROPERTY(BlueprintAssignable, Category="Story Presentation")
+    FOnStoryAmbienceCueRequested OnAmbienceCueRequested;
+
+    UPROPERTY(BlueprintAssignable, Category="Story Presentation")
+    FOnStoryMusicCueRequested OnMusicCueRequested;
+
+    UPROPERTY(BlueprintAssignable, Category="Story Presentation")
+    FOnStorySfxCueRequested OnSfxCueRequested;
+
+    UPROPERTY(BlueprintAssignable, Category="Story Presentation")
+    FOnStoryCinematicStateChanged OnCinematicStateChanged;
+
     UFUNCTION(BlueprintPure, Category="Story Presentation")
     bool FindCue(FName StoryBeatId, FShireStoryPresentationCue& OutCue) const;
 
     UFUNCTION(BlueprintPure, Category="Story Presentation")
     FShireStoryPresentationCue GetActiveCue() const { return ActiveCue; }
+
+    UFUNCTION(BlueprintCallable, Category="Story Presentation")
+    void ReleaseCinematicLock();
 
 private:
     UPROPERTY()
@@ -68,6 +91,9 @@ private:
 
     UPROPERTY()
     FShireStoryPresentationCue ActiveCue;
+
+    bool bCinematicLocked = false;
+    FTimerHandle CinematicReleaseTimer;
 
     UFUNCTION()
     void HandleStoryBeat(FName StoryBeatId);
