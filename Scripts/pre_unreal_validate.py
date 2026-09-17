@@ -30,13 +30,12 @@ def warn(message: str) -> None:
 def read(path: Path) -> str:
     try:
         return path.read_text(encoding="utf-8")
-    except Exception as exc:  # pragma: no cover - diagnostic path
+    except Exception as exc:
         fail(f"Cannot read {path.relative_to(ROOT)}: {exc}")
         return ""
 
 
 def strip_comments_and_strings(text: str) -> str:
-    # Good enough for structural brace checks; preserves newlines for readable diagnostics.
     text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
     text = re.sub(r"//[^\n]*", "", text)
     text = re.sub(r'"(?:\\.|[^"\\])*"', '""', text)
@@ -56,13 +55,14 @@ required_files = [
     SOURCE / "ShirePrototypeWorldBuilder.cpp",
     SOURCE / "BreePrototypeWorldBuilder.cpp",
     SOURCE / "FellowshipChapterWorldBuilder.cpp",
+    SOURCE / "ShireStoryPresentationSubsystem.h",
+    SOURCE / "ShireStoryPresentationSubsystem.cpp",
 ]
 
 for path in required_files:
     if not path.exists():
         fail(f"Required file missing: {path.relative_to(ROOT)}")
 
-# Project descriptor must be valid JSON and stay pinned to UE4.27.
 uproject = ROOT / "ShireJourney.uproject"
 if uproject.exists():
     try:
@@ -75,7 +75,6 @@ if uproject.exists():
     except json.JSONDecodeError as exc:
         fail(f"Invalid ShireJourney.uproject JSON: {exc}")
 
-# Basic C++ structure checks.
 for path in sorted(SOURCE.glob("*.[ch]pp")) + sorted(SOURCE.glob("*.h")):
     text = read(path)
     cleaned = strip_comments_and_strings(text)
@@ -91,7 +90,6 @@ for path in sorted(SOURCE.glob("*.[ch]pp")) + sorted(SOURCE.glob("*.h")):
     if balance != 0:
         fail(f"Unbalanced braces in {path.name}: balance={balance}")
 
-# UnrealHeaderTool requires *.generated.h to be the last include in reflected headers.
 for path in sorted(SOURCE.glob("*.h")):
     lines = read(path).splitlines()
     generated_indexes = [i for i, line in enumerate(lines) if ".generated.h\"" in line]
@@ -124,7 +122,6 @@ undefined = sorted(ref for ref in references if ref not in definitions)
 if undefined:
     fail("Quest references without definitions: " + ", ".join(undefined))
 
-# The current runtime architecture intentionally groups the whole film into eight low-memory worlds.
 router_cpp = read(SOURCE / "ChapterWorldRouter.cpp")
 expected_chapters = {f"P1C{i:02d}" for i in range(1, 9)}
 router_chapters = set(re.findall(r'ChapterId\s*==\s*TEXT\("(P1C\d+)"\)', router_cpp))
@@ -132,7 +129,6 @@ missing_chapters = sorted(expected_chapters - router_chapters)
 if missing_chapters:
     fail("ChapterWorldRouter is missing runtime chapters: " + ", ".join(missing_chapters))
 
-# Every generated world transition should target a known runtime chapter.
 chapter_refs: set[str] = set()
 for path in sorted(SOURCE.glob("*.cpp")):
     text = read(path)
@@ -142,20 +138,52 @@ unknown_chapters = sorted(ref for ref in chapter_refs if ref not in expected_cha
 if unknown_chapters:
     fail("Unknown runtime chapter references: " + ", ".join(unknown_chapters))
 
-# Catch accidentally committed generated/cache folders.
+# Story presentation coverage: every story beat referenced by runtime builders must have a cue.
+story_beat_refs: set[str] = set()
+for path in sorted(SOURCE.glob("*.cpp")):
+    if path.name == "ShireStoryPresentationSubsystem.cpp":
+        continue
+    text = read(path)
+    story_beat_refs.update(re.findall(r'StoryBeatId\s*=\s*TEXT\("([^"]+)"\)', text))
+    # The shared builder passes story beats as the fifth textual argument to SpawnQuestTrigger.
+    story_beat_refs.update(re.findall(
+        r'SpawnQuestTrigger\s*\([^;]*?TEXT\("([A-Za-z0-9_]+)"\)\s*(?:,\s*TEXT\("[A-Za-z0-9_]+"\)|,\s*NAME_None)',
+        text,
+        flags=re.S,
+    ))
+
+presentation_cpp = read(SOURCE / "ShireStoryPresentationSubsystem.cpp")
+presentation_beats = set(re.findall(r'AddCue\s*\(\s*TEXT\("([^"]+)"\)', presentation_cpp))
+missing_presentation = sorted(story_beat_refs - presentation_beats)
+if missing_presentation:
+    fail("Story beats without presentation cues: " + ", ".join(missing_presentation))
+
+# Catch duplicate AddCue entries, which would silently overwrite earlier cues in TMap.
+all_cues = re.findall(r'AddCue\s*\(\s*TEXT\("([^"]+)"\)', presentation_cpp)
+duplicate_cues = sorted({cue for cue in all_cues if all_cues.count(cue) > 1})
+if duplicate_cues:
+    fail("Duplicate story presentation cues: " + ", ".join(duplicate_cues))
+
 for dirname in ["Binaries", "DerivedDataCache", "Intermediate", "Saved", ".vs"]:
     if (ROOT / dirname).exists():
         fail(f"Generated directory should not be committed: {dirname}")
 
-# Configuration sanity checks for the intended game mode and low-spec rendering path.
 engine_ini = read(ROOT / "Config" / "DefaultEngine.ini")
 if "ShireGameMode" not in engine_ini:
     fail("DefaultEngine.ini does not reference ShireGameMode")
 if "r.DefaultFeature.MotionBlur=False" not in engine_ini:
     warn("Motion blur low-spec default is not explicitly disabled")
 
-print(f"Validated {len(list(SOURCE.glob('*.cpp')))} cpp files, {len(list(SOURCE.glob('*.h')))} headers, "
-      f"{len(definitions)} quest definitions, {len(expected_chapters)} runtime chapters.")
+input_ini = read(ROOT / "Config" / "DefaultInput.ini")
+for action in ["QuickSave", "QuickLoad", "NextChapterTest", "PreviousChapterTest"]:
+    if f'ActionName="{action}"' not in input_ini:
+        fail(f"DefaultInput.ini missing action mapping: {action}")
+
+print(
+    f"Validated {len(list(SOURCE.glob('*.cpp')))} cpp files, "
+    f"{len(list(SOURCE.glob('*.h')))} headers, {len(definitions)} quest definitions, "
+    f"{len(expected_chapters)} runtime chapters, {len(presentation_beats)} presentation cues."
+)
 for message in warnings:
     print(f"WARNING: {message}")
 for message in errors:
