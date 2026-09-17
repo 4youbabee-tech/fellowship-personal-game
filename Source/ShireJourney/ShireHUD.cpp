@@ -19,7 +19,7 @@ void AShireHUD::DrawHUD()
     UFont* MediumFont = GEngine ? GEngine->GetMediumFont() : SmallFont;
 
     DrawRect(FLinearColor(0.02f, 0.03f, 0.02f, 0.65f), 22.0f, 20.0f, FMath::Min(510.0f, W - 44.0f), 92.0f);
-    DrawText(TEXT("SHIRE JOURNEY  |  Personal Prototype"), FLinearColor(0.95f, 0.90f, 0.68f), 38.0f, 32.0f, MediumFont, 1.0f, false);
+    DrawText(TEXT("SHIRE JOURNEY  |  VISUAL PROXY R1"), FLinearColor(0.95f, 0.90f, 0.68f), 38.0f, 32.0f, MediumFont, 1.0f, false);
 
     UShireQuestSubsystem* Quests = nullptr;
     UShireDialogueSubsystem* Dialogue = nullptr;
