@@ -51,7 +51,29 @@ void ABlackRiderPrototype::BeginPlay()
         PatrolB = GetActorLocation() + FVector(900.0f, 0.0f, 0.0f);
     }
 
-    NextDetectionCheckTime = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
+    UGameInstance* GI = GetGameInstance();
+    QuestSubsystem = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (QuestSubsystem)
+    {
+        QuestSubsystem->OnActiveQuestChanged.AddDynamic(this, &ABlackRiderPrototype::HandleActiveQuestChanged);
+        HandleActiveQuestChanged(QuestSubsystem->GetActiveQuestId());
+    }
+    else
+    {
+        bDetectionQuestActive = false;
+        NextDetectionCheckTime = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
+    }
+}
+
+void ABlackRiderPrototype::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    if (QuestSubsystem)
+    {
+        QuestSubsystem->OnActiveQuestChanged.RemoveDynamic(this, &ABlackRiderPrototype::HandleActiveQuestChanged);
+        QuestSubsystem = nullptr;
+    }
+
+    Super::EndPlay(EndPlayReason);
 }
 
 void ABlackRiderPrototype::Tick(float DeltaSeconds)
@@ -59,7 +81,7 @@ void ABlackRiderPrototype::Tick(float DeltaSeconds)
     Super::Tick(DeltaSeconds);
     UpdatePatrol(DeltaSeconds);
 
-    if (!GetWorld())
+    if (!bDetectionQuestActive || !GetWorld())
     {
         return;
     }
@@ -69,6 +91,17 @@ void ABlackRiderPrototype::Tick(float DeltaSeconds)
     {
         NextDetectionCheckTime = Now + FMath::Max(0.05f, DetectionCheckInterval);
         CheckPlayerDetection();
+    }
+}
+
+void ABlackRiderPrototype::HandleActiveQuestChanged(FName QuestId)
+{
+    bDetectionQuestActive = QuestId == TEXT("KeepOffRoad");
+    ResetDetectionConfidence();
+
+    if (GetWorld())
+    {
+        NextDetectionCheckTime = GetWorld()->GetTimeSeconds();
     }
 }
 
@@ -97,7 +130,9 @@ bool ABlackRiderPrototype::HasLineOfSightToPlayer(ACharacter* Player) const
     const FVector Start = GetActorLocation() + FVector(0.0f, 0.0f, 165.0f);
     const FVector End = Player->GetActorLocation() + FVector(0.0f, 0.0f, 45.0f);
 
-    FCollisionQueryParams Params(SCENE_QUERY_STAT(BlackRiderSight), true, this);
+    // Greybox cover uses simple collision, so a simple visibility trace is both sufficient and cheaper
+    // than a complex triangle trace on the low-spec target.
+    FCollisionQueryParams Params(SCENE_QUERY_STAT(BlackRiderSight), false, this);
     Params.AddIgnoredActor(this);
 
     FHitResult Hit;
@@ -111,10 +146,16 @@ bool ABlackRiderPrototype::HasLineOfSightToPlayer(ACharacter* Player) const
     return Hit.GetActor() == Player;
 }
 
+void ABlackRiderPrototype::ResetDetectionConfidence()
+{
+    ConsecutiveVisibleChecks = 0;
+}
+
 void ABlackRiderPrototype::CheckPlayerDetection()
 {
-    if (!GetWorld())
+    if (!GetWorld() || !QuestSubsystem || !bDetectionQuestActive)
     {
+        ResetDetectionConfidence();
         return;
     }
 
@@ -122,13 +163,7 @@ void ABlackRiderPrototype::CheckPlayerDetection()
     ACharacter* Player = PC ? Cast<ACharacter>(PC->GetPawn()) : nullptr;
     if (!Player)
     {
-        return;
-    }
-
-    UGameInstance* GI = GetGameInstance();
-    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
-    if (!Quests || Quests->GetActiveQuestId() != TEXT("KeepOffRoad"))
-    {
+        ResetDetectionConfidence();
         return;
     }
 
@@ -137,6 +172,7 @@ void ABlackRiderPrototype::CheckPlayerDetection()
     ToPlayer.Z = 0.0f;
     if (ToPlayer.SizeSquared() > FMath::Square(Radius))
     {
+        ResetDetectionConfidence();
         return;
     }
 
@@ -144,10 +180,19 @@ void ABlackRiderPrototype::CheckPlayerDetection()
     const float Facing = FVector::DotProduct(GetActorForwardVector().GetSafeNormal2D(), DirectionToPlayer);
     if (Facing < MinimumFacingDot)
     {
+        ResetDetectionConfidence();
         return;
     }
 
     if (!HasLineOfSightToPlayer(Player))
+    {
+        ResetDetectionConfidence();
+        return;
+    }
+
+    const int32 RequiredChecks = FMath::Max(1, RequiredVisibleChecks);
+    ConsecutiveVisibleChecks = FMath::Min(ConsecutiveVisibleChecks + 1, RequiredChecks);
+    if (ConsecutiveVisibleChecks < RequiredChecks)
     {
         return;
     }
@@ -155,9 +200,9 @@ void ABlackRiderPrototype::CheckPlayerDetection()
     const float Now = GetWorld()->GetTimeSeconds();
     if (Now >= NextAlertTime)
     {
-        if (Quests->GetQuestStage(TEXT("KeepOffRoad")) == 0)
+        if (QuestSubsystem->GetQuestStage(TEXT("KeepOffRoad")) == 0)
         {
-            Quests->SetQuestStage(TEXT("KeepOffRoad"), 1);
+            QuestSubsystem->SetQuestStage(TEXT("KeepOffRoad"), 1);
         }
 
         if (AShireHUD* HUD = PC ? Cast<AShireHUD>(PC->GetHUD()) : nullptr)

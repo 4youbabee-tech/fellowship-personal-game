@@ -6,6 +6,7 @@
 
 class USceneComponent;
 class UStaticMeshComponent;
+class UShireQuestSubsystem;
 
 UCLASS()
 class SHIREJOURNEY_API ABlackRiderPrototype : public AActor
@@ -15,6 +16,7 @@ class SHIREJOURNEY_API ABlackRiderPrototype : public AActor
 public:
     ABlackRiderPrototype();
     virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
     virtual void Tick(float DeltaSeconds) override;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Patrol")
@@ -40,6 +42,10 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Detection", meta=(ClampMin="-1.0", ClampMax="1.0"))
     float MinimumFacingDot = -0.05f;
 
+    // Requiring more than one visible sample prevents one-frame edge cases from feeling like instant detection.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Detection", meta=(ClampMin="1", ClampMax="4"))
+    int32 RequiredVisibleChecks = 2;
+
 private:
     UPROPERTY()
     USceneComponent* Root;
@@ -53,11 +59,20 @@ private:
     UPROPERTY()
     UStaticMeshComponent* RiderHead;
 
+    UPROPERTY()
+    UShireQuestSubsystem* QuestSubsystem = nullptr;
+
     bool bHeadingToB = true;
+    bool bDetectionQuestActive = false;
+    int32 ConsecutiveVisibleChecks = 0;
     float NextAlertTime = 0.0f;
     float NextDetectionCheckTime = 0.0f;
 
+    UFUNCTION()
+    void HandleActiveQuestChanged(FName QuestId);
+
     void UpdatePatrol(float DeltaSeconds);
     void CheckPlayerDetection();
+    void ResetDetectionConfidence();
     bool HasLineOfSightToPlayer(class ACharacter* Player) const;
 };

@@ -67,16 +67,27 @@
 - Added `Scripts/pre_unreal_validate.py` to check required files, `.uproject` JSON/UE4.27 target, C++ brace balance, Unreal `generated.h` include ordering, quest-definition coverage, chapter routing and generated-folder hygiene.
 - Added GitHub Actions workflow `Pre-Unreal Validation` on pushes to `develop` and pull requests.
 
+## CP11 — Companion Restore Continuity
+- Recruited lightweight companions now recover their follow state after a save/load or runtime world rebuild by checking persisted quest-stage progress.
+- Follow restoration is delayed until the first NPC tick so runtime world builders have already assigned each companion's quest and follow configuration.
+- Repeating recruitment dialogue is no longer required just to make Sam, Merry or Pippin resume following after restored Shire state.
+
+## CP12 — Black Rider LOS + Low-Spec Detection Pass
+- Black Rider detection now subscribes to active-quest changes and performs detection work only while `KeepOffRoad` is active; inactive Shire play no longer polls the quest subsystem every detection interval.
+- Line-of-sight uses simple `ECC_Visibility` collision instead of complex triangle tracing, matching the primitive greybox cover and lowering trace cost on the low-spec target.
+- Detection now requires configurable consecutive visible samples before alerting, reducing one-frame edge/occlusion false positives while preserving crouch radius and forward-cone checks.
+- Quest-change handling resets detection confidence immediately and save-state restoration remains compatible because the quest subsystem rebroadcasts the active quest during restore.
+
 ## Current gate
-- Repository-side architecture/story validation is now automated on GitHub.
+- Repository-side architecture/story validation is automated on GitHub.
 - The remaining hard gate is a real Unreal Engine 4.27 compile + UnrealHeaderTool pass + Play In Editor runtime test. No static checker can honestly replace those engine tests.
 
 ## Next before Unreal
 1. Watch and fix every failure from `Pre-Unreal Validation` until the branch is green.
-2. Continue UE4.27 API/static audit of world builders, save/load and chapter transitions.
-3. Improve companion formation/follow behavior and Black Rider line-of-sight logic without increasing the hardware target.
+2. Continue UE4.27 API/static audit of world builders, save/load, delegates and chapter transitions.
+3. Continue low-cost companion formation/follow tuning without raising the hardware target.
 4. Add a small developer chapter-jump/debug path for fast PIE testing once Unreal is available.
-5. Prepare an Unreal test checklist covering Chapter 1 through Part I completion, save/load, transitions and 720p performance.
+5. Prepare an Unreal test checklist covering Chapter 1 through Part I completion, save/load, restored companions, Black Rider stealth, transitions and 720p performance.
 
 ## Once Unreal is installed
 1. Generate project files and compile Development Editor.
