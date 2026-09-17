@@ -31,8 +31,6 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
     int32 QuestStageAfterInteraction = -1;
 
-    // Optional transition used by story NPCs when an interaction completes one beat
-    // and immediately activates the next film-continuity mission.
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
     FName NextQuestId = NAME_None;
 
@@ -42,11 +40,27 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
     bool bFollowPlayerAfterInteraction = false;
 
+    // -1 means choose a stable slot automatically from the companion name.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
+    int32 CompanionSlotIndex = -1;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
     float FollowDistance = 190.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
+    float FormationSpacing = 120.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
+    float FollowAcceptanceRadius = 70.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
     float FollowSpeed = 240.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
+    float CatchUpDistance = 760.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
+    float TeleportCatchUpDistance = 2400.0f;
 
     virtual void Interact_Implementation(AActor* Interactor) override;
 
@@ -62,4 +76,7 @@ protected:
 
 private:
     bool bFollowingPlayer = false;
+
+    int32 ResolveCompanionSlot() const;
+    FVector GetFormationTarget(const APawn* PlayerPawn) const;
 };
