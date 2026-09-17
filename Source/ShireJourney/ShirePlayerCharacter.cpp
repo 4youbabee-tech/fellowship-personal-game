@@ -139,6 +139,7 @@ AShirePlayerCharacter::AShirePlayerCharacter()
         PrototypeLeftFoot->SetStaticMesh(SphereMesh.Object);
         PrototypeRightFoot->SetStaticMesh(SphereMesh.Object);
     }
+}
 
 void AShirePlayerCharacter::ApplyPrototypeStyle()
 {
