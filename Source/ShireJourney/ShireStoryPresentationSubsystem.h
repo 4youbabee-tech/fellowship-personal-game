@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "TimerManager.h"
 #include "ShireStoryPresentationSubsystem.generated.h"
 
 UENUM(BlueprintType)
