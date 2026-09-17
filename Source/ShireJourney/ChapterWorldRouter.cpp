@@ -66,15 +66,33 @@ void AChapterWorldRouter::ClearPrototypeBuilders()
         }
     };
 
-    // Runtime chapter worlds are generated entirely from these prototype actor classes.
-    // Clear them before constructing the next chapter so geometry, NPCs and quest triggers
-    // cannot accumulate across chapter transitions on the low-memory target laptop.
+    auto DestroyTaggedOfClass = [this](UClass* ActorClass, FName RequiredTag)
+    {
+        if (!ActorClass)
+        {
+            return;
+        }
+
+        TArray<AActor*> Actors;
+        UGameplayStatics::GetAllActorsOfClass(this, ActorClass, Actors);
+        for (AActor* Actor : Actors)
+        {
+            if (Actor && Actor != this && Actor->ActorHasTag(RequiredTag))
+            {
+                Actor->Destroy();
+            }
+        }
+    };
+
+    // Runtime-only gameplay actors use dedicated prototype classes, so they are always safe
+    // to clear. Generic StaticMesh/Text actors are different: the template level may contain
+    // its own floor/lights/helpers, so only destroy geometry explicitly tagged by our builders.
     DestroyAllOfClass(AShireQuestTrigger::StaticClass());
     DestroyAllOfClass(AShireNPC::StaticClass());
     DestroyAllOfClass(AShireAmbientNPC::StaticClass());
     DestroyAllOfClass(ABlackRiderPrototype::StaticClass());
-    DestroyAllOfClass(AStaticMeshActor::StaticClass());
-    DestroyAllOfClass(ATextRenderActor::StaticClass());
+    DestroyTaggedOfClass(AStaticMeshActor::StaticClass(), TEXT("RuntimePrototypeGenerated"));
+    DestroyTaggedOfClass(ATextRenderActor::StaticClass(), TEXT("RuntimePrototypeGenerated"));
     DestroyAllOfClass(AShirePrototypeWorldBuilder::StaticClass());
     DestroyAllOfClass(ABreePrototypeWorldBuilder::StaticClass());
     DestroyAllOfClass(AFellowshipChapterWorldBuilder::StaticClass());
