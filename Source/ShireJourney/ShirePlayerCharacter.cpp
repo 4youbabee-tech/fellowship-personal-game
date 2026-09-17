@@ -96,6 +96,19 @@ void AShirePlayerCharacter::BeginPlay()
     }
 }
 
+void AShirePlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    if (UGameInstance* GI = GetGameInstance())
+    {
+        if (UShireStoryPresentationSubsystem* Presentation = GI->GetSubsystem<UShireStoryPresentationSubsystem>())
+        {
+            Presentation->OnCinematicStateChanged.RemoveDynamic(this, &AShirePlayerCharacter::HandleCinematicStateChanged);
+        }
+    }
+
+    Super::EndPlay(EndPlayReason);
+}
+
 void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -296,19 +309,31 @@ void AShirePlayerCharacter::QuickLoad()
         return;
     }
 
+    bool bApplyExactSavedTransform = true;
     if (UGameInstance* GI = GetGameInstance())
     {
         if (UShireQuestSubsystem* QuestSubsystem = GI->GetSubsystem<UShireQuestSubsystem>())
         {
+            const FName SavedChapterId = Save->CurrentChapterId == NAME_None ? FName(TEXT("P1C01")) : Save->CurrentChapterId;
+
             QuestSubsystem->RestoreQuestState(
                 Save->QuestStages,
                 Save->ActiveQuestId,
                 Save->CurrentChapterId,
                 Save->CompletedStoryBeats);
+
+            // A compatibility repair may advance a legacy terminal save into the next
+            // runtime chapter. In that case the router has already placed the pawn at the
+            // safe chapter spawn, so restoring coordinates from the previous region would
+            // put the player outside the newly generated world.
+            bApplyExactSavedTransform = QuestSubsystem->GetCurrentChapterId() == SavedChapterId;
         }
     }
 
-    SetActorLocationAndRotation(Save->PlayerLocation, Save->PlayerRotation, false, nullptr, ETeleportType::TeleportPhysics);
+    if (bApplyExactSavedTransform)
+    {
+        SetActorLocationAndRotation(Save->PlayerLocation, Save->PlayerRotation, false, nullptr, ETeleportType::TeleportPhysics);
+    }
 
     if (APlayerController* PC = Cast<APlayerController>(Controller))
     {
