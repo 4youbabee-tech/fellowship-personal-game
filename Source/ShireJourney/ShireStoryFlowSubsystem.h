@@ -7,9 +7,9 @@
 class UShireQuestSubsystem;
 
 // Defensive story-flow guardrails for chapter hand-offs that must never leave the
-// player stranded at the end of a playable region. This does not replace normal
-// world triggers; it verifies critical terminal quest states at runtime and also
-// repairs compatible older save states when they are restored.
+// player stranded at the end of a playable region. Normal gameplay still uses the
+// authored world triggers; this subsystem only repairs compatible restored saves
+// that ended at a terminal quest stage before the next chapter was activated.
 UCLASS()
 class SHIREJOURNEY_API UShireStoryFlowSubsystem : public UGameInstanceSubsystem
 {
@@ -24,7 +24,7 @@ private:
     UShireQuestSubsystem* QuestSubsystem = nullptr;
 
     UFUNCTION()
-    void HandleQuestStageChanged(FName QuestId, int32 NewStage);
+    void HandleQuestStateRestored();
 
-    void EvaluateCriticalHandoff(FName QuestId, int32 NewStage);
+    void RepairRestoredTerminalState();
 };
