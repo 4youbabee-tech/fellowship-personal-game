@@ -44,11 +44,19 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
         {
             return;
         }
+    }
 
-        if (StageAfterTrigger >= 0)
-        {
-            Quests->SetQuestStage(QuestId, StageAfterTrigger);
-        }
+    // Lock this trigger before broadcasting any quest/chapter delegates. A chapter
+    // transition can destroy the generated trigger immediately through the world router,
+    // so no trigger-owned state is intentionally mutated after the hand-off begins.
+    if (bTriggerOnce)
+    {
+        bHasTriggered = true;
+    }
+
+    if (QuestId != NAME_None && StageAfterTrigger >= 0)
+    {
+        Quests->SetQuestStage(QuestId, StageAfterTrigger);
     }
 
     if (StoryBeatId != NAME_None)
@@ -56,17 +64,7 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
         Quests->TriggerStoryBeat(StoryBeatId);
     }
 
-    if (NextChapterId != NAME_None)
-    {
-        Quests->StartChapter(NextChapterId, NextChapterQuestId, NextChapterQuestStage);
-    }
-    else if (NextQuestId != NAME_None)
-    {
-        Quests->StartQuest(NextQuestId, NextQuestStage);
-    }
-
-    bHasTriggered = true;
-
+    // Show the authored objective before a chapter hand-off can destroy this actor.
     if (!ObjectiveMessage.IsEmpty())
     {
         if (APlayerController* PC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr)
@@ -76,5 +74,21 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
                 HUD->ShowAlert(ObjectiveMessage, 3.5f);
             }
         }
+    }
+
+    // Transitions are deliberately last: StartChapter synchronously notifies the router,
+    // which may destroy this generated trigger as part of rebuilding the next region.
+    if (NextChapterId != NAME_None)
+    {
+        const FName ChapterId = NextChapterId;
+        const FName ChapterQuestId = NextChapterQuestId;
+        const int32 ChapterQuestStage = NextChapterQuestStage;
+        Quests->StartChapter(ChapterId, ChapterQuestId, ChapterQuestStage);
+        return;
+    }
+
+    if (NextQuestId != NAME_None)
+    {
+        Quests->StartQuest(NextQuestId, NextQuestStage);
     }
 }
