@@ -13,6 +13,7 @@
 #include "Engine/StaticMeshActor.h"
 #include "Engine/TextRenderActor.h"
 #include "Engine/World.h"
+#include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
 
 AChapterWorldRouter::AChapterWorldRouter()
@@ -79,6 +80,60 @@ void AChapterWorldRouter::ClearPrototypeBuilders()
     DestroyAllOfClass(AFellowshipChapterWorldBuilder::StaticClass());
 }
 
+FVector AChapterWorldRouter::GetChapterSpawnLocation(FName ChapterId) const
+{
+    if (ChapterId == TEXT("P1C01"))
+    {
+        return FVector(-2410.0f, -120.0f, 130.0f);
+    }
+    if (ChapterId == TEXT("P1C02"))
+    {
+        return FVector(-2380.0f, 0.0f, 130.0f);
+    }
+    if (ChapterId == TEXT("P1C03"))
+    {
+        return FVector(-2350.0f, 0.0f, 130.0f);
+    }
+    if (ChapterId == TEXT("P1C04"))
+    {
+        return FVector(-1900.0f, 0.0f, 130.0f);
+    }
+    if (ChapterId == TEXT("P1C05"))
+    {
+        return FVector(-2400.0f, 0.0f, 130.0f);
+    }
+    if (ChapterId == TEXT("P1C06"))
+    {
+        return FVector(-2350.0f, 0.0f, 130.0f);
+    }
+    if (ChapterId == TEXT("P1C07"))
+    {
+        return FVector(-2050.0f, 0.0f, 130.0f);
+    }
+    if (ChapterId == TEXT("P1C08"))
+    {
+        return FVector(-1950.0f, 0.0f, 130.0f);
+    }
+
+    return FVector(-2410.0f, -120.0f, 130.0f);
+}
+
+void AChapterWorldRouter::MovePlayerToChapterStart(FName ChapterId)
+{
+    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+    if (!PlayerPawn)
+    {
+        return;
+    }
+
+    PlayerPawn->SetActorLocationAndRotation(
+        GetChapterSpawnLocation(ChapterId),
+        FRotator::ZeroRotator,
+        false,
+        nullptr,
+        ETeleportType::TeleportPhysics);
+}
+
 void AChapterWorldRouter::LoadChapterWorld(FName ChapterId)
 {
     if (!GetWorld())
@@ -91,12 +146,14 @@ void AChapterWorldRouter::LoadChapterWorld(FName ChapterId)
     if (ChapterId == TEXT("P1C01"))
     {
         GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(FVector::ZeroVector, FRotator::ZeroRotator);
+        MovePlayerToChapterStart(ChapterId);
         return;
     }
 
     if (ChapterId == TEXT("P1C02"))
     {
         GetWorld()->SpawnActor<ABreePrototypeWorldBuilder>(FVector::ZeroVector, FRotator::ZeroRotator);
+        MovePlayerToChapterStart(ChapterId);
         return;
     }
 
@@ -109,9 +166,11 @@ void AChapterWorldRouter::LoadChapterWorld(FName ChapterId)
         {
             Builder->BuildChapter(ChapterId);
         }
+        MovePlayerToChapterStart(ChapterId);
         return;
     }
 
     // Unknown chapter IDs fall back to the first chapter rather than leaving the player in an empty world.
     GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(FVector::ZeroVector, FRotator::ZeroRotator);
+    MovePlayerToChapterStart(TEXT("P1C01"));
 }
