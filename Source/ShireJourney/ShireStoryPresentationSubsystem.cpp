@@ -1,12 +1,16 @@
 #include "ShireStoryPresentationSubsystem.h"
 
+#include "ShireDialogueSubsystem.h"
 #include "ShireQuestSubsystem.h"
 #include "Engine/GameInstance.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 void UShireStoryPresentationSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
     Collection.InitializeDependency<UShireQuestSubsystem>();
+    Collection.InitializeDependency<UShireDialogueSubsystem>();
     BuildCueLibrary();
 
     if (UGameInstance* GI = GetGameInstance())
@@ -20,6 +24,11 @@ void UShireStoryPresentationSubsystem::Initialize(FSubsystemCollectionBase& Coll
 
 void UShireStoryPresentationSubsystem::Deinitialize()
 {
+    if (UWorld* World = GetWorld())
+    {
+        World->GetTimerManager().ClearTimer(CinematicReleaseTimer);
+    }
+
     if (UGameInstance* GI = GetGameInstance())
     {
         if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
@@ -30,6 +39,7 @@ void UShireStoryPresentationSubsystem::Deinitialize()
 
     CueLibrary.Empty();
     ActiveCue = FShireStoryPresentationCue();
+    bCinematicLocked = false;
     Super::Deinitialize();
 }
 
@@ -58,7 +68,6 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
 {
     CueLibrary.Empty();
 
-    // Bree / Prancing Pony
     AddCue(TEXT("BreeRoadNightfall"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_BreeRoadNightfall"), NAME_None, TEXT("Amb_RainRoad"), TEXT("Mus_BreeUnease"), TEXT("Sfx_DistantHooves"), 5.0f);
     AddCue(TEXT("PrancingPonyExterior"), EShireStoryPresentationMode::GameplayBlend,
@@ -72,7 +81,6 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
     AddCue(TEXT("DepartBree"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_DepartBree"), TEXT("Dlg_StriderDeparture"), TEXT("Amb_BreeDawn"), TEXT("Mus_RoadEast"), TEXT("Sfx_DawnBirds"), 5.0f);
 
-    // Weathertop / Ford
     AddCue(TEXT("MidgewaterRoad"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_MidgewaterWide"), NAME_None, TEXT("Amb_MarshWind"), TEXT("Mus_WildernessLow"), TEXT("Sfx_Midges"), 4.0f);
     AddCue(TEXT("WeathertopReveal"), EShireStoryPresentationMode::GameplayBlend,
@@ -88,7 +96,6 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
     AddCue(TEXT("FordEscape"), EShireStoryPresentationMode::Cinematic,
         TEXT("Cam_FordEscape"), NAME_None, TEXT("Amb_RiverCrash"), TEXT("Mus_RivendellRelief"), TEXT("Sfx_FloodSurge"), 10.0f);
 
-    // Rivendell
     AddCue(TEXT("RivendellAwakening"), EShireStoryPresentationMode::Cinematic,
         TEXT("Cam_RivendellAwakening"), TEXT("Dlg_RivendellAwakening"), TEXT("Amb_RivendellWater"), TEXT("Mus_RivendellThemeOriginal"), TEXT("Sfx_SoftBirds"), 10.0f);
     AddCue(TEXT("CouncilBegins"), EShireStoryPresentationMode::Cinematic,
@@ -98,7 +105,6 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
     AddCue(TEXT("RivendellDeparture"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_RivendellDeparture"), TEXT("Dlg_RivendellFarewell"), TEXT("Amb_RivendellMorning"), TEXT("Mus_JourneyBegins"), TEXT("Sfx_GearAndSteps"), 8.0f);
 
-    // Southward / Caradhras / Moria gate
     AddCue(TEXT("FellowshipMarch"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_FellowshipMarch"), TEXT("Dlg_FellowshipTravel"), TEXT("Amb_OpenCountry"), TEXT("Mus_SouthwardTravel"), NAME_None, 6.0f);
     AddCue(TEXT("CaradhrasApproach"), EShireStoryPresentationMode::GameplayBlend,
@@ -110,7 +116,6 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
     AddCue(TEXT("MoriaDoorOpens"), EShireStoryPresentationMode::Cinematic,
         TEXT("Cam_MoriaDoorOpen"), TEXT("Dlg_MoriaDoorOriginal"), TEXT("Amb_MoriaEntrance"), TEXT("Mus_EnterMoria"), TEXT("Sfx_StoneDoor"), 10.0f);
 
-    // Moria
     AddCue(TEXT("MoriaEntry"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_MoriaEntry"), NAME_None, TEXT("Amb_MoriaDeep"), TEXT("Mus_MoriaLow"), TEXT("Sfx_DistantDrips"), 5.0f);
     AddCue(TEXT("MoriaUnease"), EShireStoryPresentationMode::GameplayBlend,
@@ -126,7 +131,6 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
     AddCue(TEXT("MoriaEscape"), EShireStoryPresentationMode::Cinematic,
         TEXT("Cam_MoriaEscape"), TEXT("Dlg_MoriaAftermath"), TEXT("Amb_OutsideMoria"), TEXT("Mus_GriefAfterMoria"), TEXT("Sfx_WindOutside"), 12.0f);
 
-    // Lothlorien
     AddCue(TEXT("LorienEntry"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_LorienEntry"), TEXT("Dlg_LorienFirstContact"), TEXT("Amb_LorienForest"), TEXT("Mus_LorienMysteryOriginal"), TEXT("Sfx_ForestChimes"), 8.0f);
     AddCue(TEXT("LorienFarewell"), EShireStoryPresentationMode::Cinematic,
@@ -134,7 +138,6 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
     AddCue(TEXT("LorienDeparture"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_LorienDeparture"), NAME_None, TEXT("Amb_AnduinUpper"), TEXT("Mus_RiverJourney"), TEXT("Sfx_Paddles"), 6.0f);
 
-    // Anduin / Amon Hen
     AddCue(TEXT("AnduinDeparture"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_AnduinDeparture"), TEXT("Dlg_AnduinTravel"), TEXT("Amb_AnduinRiver"), TEXT("Mus_AnduinTravel"), TEXT("Sfx_Paddles"), 6.0f);
     AddCue(TEXT("ArgonathReveal"), EShireStoryPresentationMode::Cinematic,
@@ -172,13 +175,73 @@ void UShireStoryPresentationSubsystem::HandleStoryBeat(FName StoryBeatId)
 
     if (!FindCue(StoryBeatId, ActiveCue))
     {
-        // Runtime-safe fallback: unknown story beats still notify presentation listeners
-        // without requiring a hard asset reference or crashing a prototype chapter.
         ActiveCue.StoryBeatId = StoryBeatId;
         ActiveCue.Mode = EShireStoryPresentationMode::GameplayBlend;
         ActiveCue.CameraCue = TEXT("Cam_DefaultStoryBeat");
         ActiveCue.AmbienceCue = TEXT("Amb_DefaultRegion");
     }
 
+    if (UGameInstance* GI = GetGameInstance())
+    {
+        if (UShireDialogueSubsystem* Dialogue = GI->GetSubsystem<UShireDialogueSubsystem>())
+        {
+            if (ActiveCue.DialogueCue != NAME_None)
+            {
+                Dialogue->PlayDialogueCue(ActiveCue.DialogueCue);
+            }
+        }
+    }
+
+    if (ActiveCue.CameraCue != NAME_None)
+    {
+        OnCameraCueRequested.Broadcast(ActiveCue.CameraCue);
+    }
+    if (ActiveCue.AmbienceCue != NAME_None)
+    {
+        OnAmbienceCueRequested.Broadcast(ActiveCue.AmbienceCue);
+    }
+    if (ActiveCue.MusicCue != NAME_None)
+    {
+        OnMusicCueRequested.Broadcast(ActiveCue.MusicCue);
+    }
+    if (ActiveCue.SfxCue != NAME_None)
+    {
+        OnSfxCueRequested.Broadcast(ActiveCue.SfxCue);
+    }
+
+    if (ActiveCue.Mode == EShireStoryPresentationMode::Cinematic)
+    {
+        if (!bCinematicLocked)
+        {
+            bCinematicLocked = true;
+            OnCinematicStateChanged.Broadcast(true);
+        }
+
+        if (UWorld* World = GetWorld())
+        {
+            World->GetTimerManager().ClearTimer(CinematicReleaseTimer);
+            World->GetTimerManager().SetTimer(
+                CinematicReleaseTimer,
+                this,
+                &UShireStoryPresentationSubsystem::ReleaseCinematicLock,
+                FMath::Max(1.0f, ActiveCue.SuggestedDuration),
+                false);
+        }
+    }
+
     OnStoryPresentationRequested.Broadcast(ActiveCue);
+}
+
+void UShireStoryPresentationSubsystem::ReleaseCinematicLock()
+{
+    if (UWorld* World = GetWorld())
+    {
+        World->GetTimerManager().ClearTimer(CinematicReleaseTimer);
+    }
+
+    if (bCinematicLocked)
+    {
+        bCinematicLocked = false;
+        OnCinematicStateChanged.Broadcast(false);
+    }
 }
