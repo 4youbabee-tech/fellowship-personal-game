@@ -41,6 +41,15 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
     int32 NextQuestStage = 0;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Chapter")
+    FName NextChapterId = NAME_None;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Chapter")
+    FName NextChapterQuestId = NAME_None;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Chapter")
+    int32 NextChapterQuestStage = 0;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
     FText ObjectiveMessage;
 
