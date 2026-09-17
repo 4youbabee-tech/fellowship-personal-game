@@ -167,16 +167,14 @@ if duplicate_cues:
 # Every non-empty dialogue cue referenced by a presentation cue must exist in the runtime dialogue library.
 dialogue_cpp = read(SOURCE / "ShireDialogueSubsystem.cpp")
 dialogue_sequences = set(re.findall(r'AddSequence\s*\(\s*TEXT\("([^"]+)"\)', dialogue_cpp))
-presentation_dialogue_refs = set()
-for match in re.finditer(
-    r'AddCue\s*\(\s*TEXT\("([^"]+)"\)\s*,\s*EShireStoryPresentationMode::[A-Za-z]+\s*,\s*'
-    r'(?:TEXT\("[^"]+"\)|NAME_None)\s*,\s*(TEXT\("([^"]+)"\)|NAME_None)',
-    presentation_cpp,
-    flags=re.S,
-):
-    if match.group(2):
-        presentation_dialogue_refs.add(match.group(2))
-
+presentation_dialogue_refs = set(
+    re.findall(
+        r'AddCue\s*\(\s*TEXT\("[^"]+"\)\s*,\s*EShireStoryPresentationMode::[A-Za-z]+\s*,\s*'
+        r'(?:TEXT\("[^"]+"\)|NAME_None)\s*,\s*TEXT\("([^"]+)"\)',
+        presentation_cpp,
+        flags=re.S,
+    )
+)
 missing_dialogue = sorted(presentation_dialogue_refs - dialogue_sequences)
 if missing_dialogue:
     fail("Presentation dialogue cues without runtime sequences: " + ", ".join(missing_dialogue))
@@ -206,7 +204,6 @@ transition_graph: dict[str, set[str]] = defaultdict(set)
 for path in sorted(SOURCE.glob("*.cpp")):
     text = read(path)
 
-    # NPC/trigger assignment style: QuestId ... NextQuestId
     for match in re.finditer(
         r'(?:QuestId\s*=|->QuestId\s*=)\s*TEXT\("([^"]+)"\)(.*?)(?=(?:QuestId\s*=|->QuestId\s*=|\n\s*}\n|\Z))',
         text,
@@ -219,7 +216,6 @@ for path in sorted(SOURCE.glob("*.cpp")):
         for target in re.findall(r'NextChapterQuestId\s*=\s*TEXT\("([^"]+)"\)', block):
             transition_graph[source_quest].add(target)
 
-    # Shared builder calls where source and next quest are positional arguments.
     for match in re.finditer(
         r'SpawnQuestTrigger\s*\(\s*FVector\([^)]*\)\s*,\s*TEXT\("([^"]+)"\)\s*,.*?'
         r'(?:TEXT\("([A-Za-z0-9_]+)"\)\s*,\s*\d+\s*,\s*TEXT\("(P1C\d+)"\)\s*,\s*TEXT\("([A-Za-z0-9_]+)"\)|'
@@ -246,7 +242,6 @@ while queue:
         if next_quest not in reachable:
             queue.append(next_quest)
 
-# Some branch-local helper quests are intentionally entered by chapter starts rather than a same-world transition.
 for quest in chapter_start_quests.values():
     reachable.add(quest)
 
@@ -273,7 +268,6 @@ for action in required_actions:
     if f'BindAction(TEXT("{action}")' not in player_cpp:
         fail(f"ShirePlayerCharacter.cpp missing action binding: {action}")
 
-# Cinematic safety: a cinematic request must have both lock and release code paths.
 if "OnCinematicStateChanged.Broadcast(true)" not in presentation_cpp:
     fail("Story presentation subsystem never broadcasts cinematic lock")
 if "ReleaseCinematicLock" not in presentation_cpp or "OnCinematicStateChanged.Broadcast(false)" not in presentation_cpp:
