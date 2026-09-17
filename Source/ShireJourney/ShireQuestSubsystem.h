@@ -8,6 +8,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestStageChanged, FName, QuestId, int32, NewStage);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActiveQuestChanged, FName, QuestId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnChapterChanged, FName, PreviousChapterId, FName, NewChapterId);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStoryBeatTriggered, FName, StoryBeatId);
 
 USTRUCT(BlueprintType)
 struct FShireQuestDefinition
@@ -38,6 +39,9 @@ public:
     UPROPERTY(BlueprintAssignable, Category="Chapter")
     FOnChapterChanged OnChapterChanged;
 
+    UPROPERTY(BlueprintAssignable, Category="Story")
+    FOnStoryBeatTriggered OnStoryBeatTriggered;
+
     UFUNCTION(BlueprintCallable, Category="Quest")
     int32 GetQuestStage(FName QuestId) const;
 
@@ -52,6 +56,9 @@ public:
 
     UFUNCTION(BlueprintCallable, Category="Chapter")
     void StartChapter(FName ChapterId, FName StartingQuestId = NAME_None, int32 StartingQuestStage = 0);
+
+    UFUNCTION(BlueprintCallable, Category="Story")
+    void TriggerStoryBeat(FName StoryBeatId);
 
     UFUNCTION(BlueprintPure, Category="Quest")
     FName GetActiveQuestId() const { return ActiveQuestId; }
