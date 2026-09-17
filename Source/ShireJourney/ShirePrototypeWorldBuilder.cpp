@@ -62,7 +62,7 @@ AStaticMeshActor* AShirePrototypeWorldBuilder::SpawnShape(
 
     UStaticMeshComponent* MeshComponent = Actor->GetStaticMeshComponent();
     MeshComponent->SetStaticMesh(Mesh);
-    MeshComponent->SetMobility(EComponentMobility::Static);
+    MeshComponent->SetMobility(EComponentMobility::Movable);
     MeshComponent->SetCollisionEnabled(bCollision ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
     Actor->SetActorScale3D(Scale);
 
