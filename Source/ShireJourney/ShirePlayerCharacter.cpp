@@ -21,6 +21,21 @@ namespace ShireSaveConstants
     static const int32 UserIndex = 0;
 }
 
+namespace ShireDebugChapters
+{
+    static const FName ChapterIds[] = {
+        TEXT("P1C01"), TEXT("P1C02"), TEXT("P1C03"), TEXT("P1C04"),
+        TEXT("P1C05"), TEXT("P1C06"), TEXT("P1C07"), TEXT("P1C08")
+    };
+
+    static const FName StartQuests[] = {
+        TEXT("ShireArrival"), TEXT("RoadToBree"), TEXT("RoadToWeathertop"), TEXT("RivendellRecovery"),
+        TEXT("SouthwardJourney"), TEXT("MoriaDark"), TEXT("LothlorienRest"), TEXT("AnduinJourney")
+    };
+
+    static const int32 Count = UE_ARRAY_COUNT(ChapterIds);
+}
+
 AShirePlayerCharacter::AShirePlayerCharacter()
 {
     PrimaryActorTick.bCanEverTick = false;
@@ -90,6 +105,8 @@ void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("Interact"), IE_Pressed, this, &AShirePlayerCharacter::Interact);
     PlayerInputComponent->BindAction(TEXT("QuickSave"), IE_Pressed, this, &AShirePlayerCharacter::QuickSave);
     PlayerInputComponent->BindAction(TEXT("QuickLoad"), IE_Pressed, this, &AShirePlayerCharacter::QuickLoad);
+    PlayerInputComponent->BindAction(TEXT("DebugPreviousChapter"), IE_Pressed, this, &AShirePlayerCharacter::DebugPreviousChapter);
+    PlayerInputComponent->BindAction(TEXT("DebugNextChapter"), IE_Pressed, this, &AShirePlayerCharacter::DebugNextChapter);
 }
 
 void AShirePlayerCharacter::MoveForward(float Value)
@@ -226,9 +243,6 @@ void AShirePlayerCharacter::QuickLoad()
         return;
     }
 
-    // Restore story/world state before the exact player transform. The chapter router may
-    // move the pawn to its safe chapter spawn while rebuilding the region; the saved transform
-    // is applied last so a normal quick-load returns to the precise saved position.
     if (UGameInstance* GI = GetGameInstance())
     {
         if (UShireQuestSubsystem* QuestSubsystem = GI->GetSubsystem<UShireQuestSubsystem>())
@@ -250,4 +264,78 @@ void AShirePlayerCharacter::QuickLoad()
             HUD->ShowAlert(FText::FromString(TEXT("Journey restored.")), 1.8f);
         }
     }
+}
+
+void AShirePlayerCharacter::DebugStartChapterByIndex(int32 ChapterIndex)
+{
+    if (ChapterIndex < 0 || ChapterIndex >= ShireDebugChapters::Count)
+    {
+        return;
+    }
+
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* QuestSubsystem = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!QuestSubsystem)
+    {
+        return;
+    }
+
+    QuestSubsystem->StartChapter(
+        ShireDebugChapters::ChapterIds[ChapterIndex],
+        ShireDebugChapters::StartQuests[ChapterIndex],
+        0);
+
+    if (APlayerController* PC = Cast<APlayerController>(Controller))
+    {
+        if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+        {
+            HUD->ShowAlert(FText::FromString(FString::Printf(TEXT("Developer jump: %s"), *ShireDebugChapters::ChapterIds[ChapterIndex].ToString())), 2.0f);
+        }
+    }
+}
+
+void AShirePlayerCharacter::DebugPreviousChapter()
+{
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* QuestSubsystem = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!QuestSubsystem)
+    {
+        return;
+    }
+
+    const FName Current = QuestSubsystem->GetCurrentChapterId();
+    int32 CurrentIndex = 0;
+    for (int32 Index = 0; Index < ShireDebugChapters::Count; ++Index)
+    {
+        if (ShireDebugChapters::ChapterIds[Index] == Current)
+        {
+            CurrentIndex = Index;
+            break;
+        }
+    }
+
+    DebugStartChapterByIndex(FMath::Max(0, CurrentIndex - 1));
+}
+
+void AShirePlayerCharacter::DebugNextChapter()
+{
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* QuestSubsystem = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!QuestSubsystem)
+    {
+        return;
+    }
+
+    const FName Current = QuestSubsystem->GetCurrentChapterId();
+    int32 CurrentIndex = 0;
+    for (int32 Index = 0; Index < ShireDebugChapters::Count; ++Index)
+    {
+        if (ShireDebugChapters::ChapterIds[Index] == Current)
+        {
+            CurrentIndex = Index;
+            break;
+        }
+    }
+
+    DebugStartChapterByIndex(FMath::Min(ShireDebugChapters::Count - 1, CurrentIndex + 1));
 }
