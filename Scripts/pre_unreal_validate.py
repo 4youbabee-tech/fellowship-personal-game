@@ -60,6 +60,10 @@ required_files = [
     SOURCE / "ShireStoryPresentationSubsystem.cpp",
     SOURCE / "ShireDialogueSubsystem.h",
     SOURCE / "ShireDialogueSubsystem.cpp",
+    SOURCE / "ShireAudioSubsystem.h",
+    SOURCE / "ShireAudioSubsystem.cpp",
+    SOURCE / "ShireStoryFlowSubsystem.h",
+    SOURCE / "ShireStoryFlowSubsystem.cpp",
 ]
 
 for path in required_files:
@@ -116,6 +120,7 @@ for path in sorted(SOURCE.glob("*.cpp")):
         r'\bNextQuestId\s*=\s*TEXT\("([^"]+)"\)',
         r'\bNextChapterQuestId\s*=\s*TEXT\("([^"]+)"\)',
         r'StartQuest\s*\(\s*TEXT\("([^"]+)"\)',
+        r'StartChapter\s*\(\s*TEXT\("P1C\d+"\)\s*,\s*TEXT\("([^"]+)"\)',
         r'SpawnQuestTrigger\s*\(\s*FVector\([^)]*\)\s*,\s*TEXT\("([^"]+)"\)',
         r'SpawnNPC\s*\(\s*TEXT\("[^"]+"\)\s*,\s*FVector\([^)]*\)\s*,\s*FRotator\([^)]*\)\s*,\s*TEXT\("([^"]+)"\)',
     ]:
@@ -136,6 +141,7 @@ chapter_refs: set[str] = set()
 for path in sorted(SOURCE.glob("*.cpp")):
     text = read(path)
     chapter_refs.update(re.findall(r'NextChapterId\s*=\s*TEXT\("(P1C\d+)"\)', text))
+    chapter_refs.update(re.findall(r'StartChapter\s*\(\s*TEXT\("(P1C\d+)"\)', text))
     chapter_refs.update(re.findall(r'TEXT\("(P1C\d+)"\)\s*,\s*TEXT\("[A-Za-z0-9_]+"\)\s*,\s*\d+\s*\)', text))
 unknown_chapters = sorted(ref for ref in chapter_refs if ref not in expected_chapters)
 if unknown_chapters:
@@ -184,8 +190,7 @@ duplicate_dialogue = sorted({cue for cue in all_dialogue_sequences if all_dialog
 if duplicate_dialogue:
     fail("Duplicate runtime dialogue sequences: " + ", ".join(duplicate_dialogue))
 
-# Quest/chapter reachability safety net. We model transitions explicitly enough to catch isolated
-# quests and broken chapter starting quests without pretending to simulate gameplay conditions.
+# Quest/chapter reachability safety net. We model explicit transitions and runtime handoff guards.
 chapter_start_quests = {
     "P1C01": "ShireArrival",
     "P1C02": "RoadToBree",
@@ -231,6 +236,14 @@ for path in sorted(SOURCE.glob("*.cpp")):
         if next_chapter_quest:
             transition_graph[source_quest].add(next_chapter_quest)
 
+# Critical runtime handoff guard must explicitly bridge the Shire terminal quest to Bree.
+story_flow_cpp = read(SOURCE / "ShireStoryFlowSubsystem.cpp")
+if 'QuestId == TEXT("FerryEscape")' not in story_flow_cpp:
+    fail("Story-flow guard does not monitor FerryEscape terminal state")
+if 'StartChapter(TEXT("P1C02"), TEXT("RoadToBree"), 0)' not in story_flow_cpp:
+    fail("Story-flow guard does not hand off Shire terminal state to P1C02 / RoadToBree")
+transition_graph["FerryEscape"].add("RoadToBree")
+
 reachable: set[str] = set()
 queue = deque([chapter_start_quests["P1C01"]])
 while queue:
@@ -242,6 +255,7 @@ while queue:
         if next_quest not in reachable:
             queue.append(next_quest)
 
+# Chapter starts are independently testable through debug navigation even when the parser cannot prove every positional call.
 for quest in chapter_start_quests.values():
     reachable.add(quest)
 
@@ -268,12 +282,36 @@ for action in required_actions:
     if f'BindAction(TEXT("{action}")' not in player_cpp:
         fail(f"ShirePlayerCharacter.cpp missing action binding: {action}")
 
+# Cinematic safety: lock and automatic release are both mandatory.
 if "OnCinematicStateChanged.Broadcast(true)" not in presentation_cpp:
     fail("Story presentation subsystem never broadcasts cinematic lock")
 if "ReleaseCinematicLock" not in presentation_cpp or "OnCinematicStateChanged.Broadcast(false)" not in presentation_cpp:
     fail("Story presentation subsystem lacks a cinematic unlock path")
 if "CinematicReleaseTimer" not in presentation_cpp:
     fail("Story presentation subsystem lacks automatic cinematic lock release")
+
+# Audio runtime wiring: story ambience/music/SFX and queued voice cues must converge on one subsystem.
+audio_h = read(SOURCE / "ShireAudioSubsystem.h")
+audio_cpp = read(SOURCE / "ShireAudioSubsystem.cpp")
+for required_symbol in ["OnAmbienceChanged", "OnMusicChanged", "OnSfxRequested", "OnVoiceRequested"]:
+    if required_symbol not in audio_h:
+        fail(f"Audio subsystem missing event: {required_symbol}")
+for binding in [
+    "OnAmbienceCueRequested.AddDynamic",
+    "OnMusicCueRequested.AddDynamic",
+    "OnSfxCueRequested.AddDynamic",
+    "OnVoiceCueRequested.AddDynamic",
+]:
+    if binding not in audio_cpp:
+        fail(f"Audio subsystem missing runtime binding: {binding}")
+for unbinding in [
+    "OnAmbienceCueRequested.RemoveDynamic",
+    "OnMusicCueRequested.RemoveDynamic",
+    "OnSfxCueRequested.RemoveDynamic",
+    "OnVoiceCueRequested.RemoveDynamic",
+]:
+    if unbinding not in audio_cpp:
+        fail(f"Audio subsystem missing cleanup binding: {unbinding}")
 
 print(
     f"Validated {len(list(SOURCE.glob('*.cpp')))} cpp files, "
