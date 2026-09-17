@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include <initializer_list>
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "ShireDialogueSubsystem.generated.h"
 
@@ -8,6 +9,16 @@ USTRUCT(BlueprintType)
 struct FShireDialogueLine
 {
     GENERATED_BODY()
+
+    FShireDialogueLine() = default;
+
+    FShireDialogueLine(const FText& InSpeaker, const FText& InSubtitle, FName InVoiceCue, float InDuration)
+        : Speaker(InSpeaker)
+        , Subtitle(InSubtitle)
+        , VoiceCue(InVoiceCue)
+        , Duration(InDuration)
+    {
+    }
 
     UPROPERTY(BlueprintReadOnly, Category="Dialogue")
     FText Speaker;
