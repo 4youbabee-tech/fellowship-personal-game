@@ -755,6 +755,54 @@
       ],
       "checkpoint": "CP31",
       "notes": "This is an intermediate modular-static-mesh character production pass, not final skeletal character animation."
+    },
+    {
+      "id": "REQ-CHAR-002",
+      "title": "Part I world must be populated with the full core cast and believable regional inhabitants",
+      "category": "CharacterProduction",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User explicitly required that all major characters, Fellowship companions and NPC populations be present so the world feels full rather than Frodo traveling alone",
+      "intent": "Physically represent the Part I core cast in the chapters where each character belongs, keep companions present during travel, populate social hubs with regional inhabitants, and progressively replace generic proxies with dedicated production-quality character assets.",
+      "evidence": [
+        "Data/CharacterPopulationPlan.json",
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+        "Source/ShireJourney/BreePrototypeWorldBuilder.cpp",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
+        "Source/ShireJourney/ShireNPC.cpp",
+        "Source/ShireJourney/ShireAmbientNPC.cpp"
+      ],
+      "implementation_refs": [
+        "Sam, Merry and Pippin now remain present through Bree and Weathertop travel",
+        "Rivendell includes the Fellowship core cast plus Bilbo, Arwen and Elrond",
+        "Fellowship members populate road, Moria, Lothlorien and Anduin chapters with story-aware formation release at authored split beats",
+        "Bree ambient population uses human-townsperson silhouettes instead of Hobbit visuals",
+        "Rivendell and Lothlorien have moving Elf ambient residents",
+        "Data/CharacterPopulationPlan.json records chapter cast coverage and visual tiers"
+      ],
+      "missing_work": [
+        "Dedicated production meshes/rigged characters for Sam, Merry, Pippin, Aragorn, Boromir, Legolas, Gimli and other non-Frodo/Gandalf major characters",
+        "Dedicated character animation/rigging beyond procedural modular proxy motion",
+        "Named enemy production characters beyond current prototypes",
+        "PIE visual review for cast duplication, formation spacing, chapter presence and story separation",
+        "target-device population/performance validation"
+      ],
+      "acceptance_criteria": [
+        "Every Part I chapter/route contains its required core named cast",
+        "Fellowship companions are visibly present during travel instead of Frodo appearing alone",
+        "Authored separation/capture/loss beats stop the appropriate companions from following",
+        "Regional ambient inhabitants use region-appropriate silhouettes",
+        "No population pass breaks story, save, route or target-device performance",
+        "Dedicated-production visual tier replaces proxy tier progressively and is tracked explicitly"
+      ],
+      "dependencies": [
+        "REQ-CHAR-001",
+        "REQ-NPC-001",
+        "REQ-PERF-001",
+        "REQ-VISION-001"
+      ],
+      "checkpoint": "CP32",
+      "notes": "Runtime presence is being implemented now. Visual completion is not claimed for characters still using procedural distinct proxies."
     }
   ],
   "hard_invariants": [
@@ -885,6 +933,24 @@
       "evidence": [
         "Data/ProjectGovernor.json",
         "Source/ShireJourney/ShirePlayerCharacter.cpp"
+      ]
+    },
+    {
+      "id": "DEC-005",
+      "title": "Expand visible character production from player avatars to the full Part I core cast",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-CHAR-001",
+        "REQ-CHAR-002",
+        "REQ-PERF-001",
+        "REQ-VISION-001"
+      ],
+      "resolution": "Populate each Part I chapter with its required named cast and regional inhabitants now, while keeping expensive simulation near-player only and preserving film chronology. Use distinct proxies where dedicated production assets do not yet exist, and track those proxies as unfinished rather than pretending the cast is visually complete.",
+      "rationale": "The user explicitly wants the world to start feeling inhabited and playable now; chapter-appropriate cast presence gives immediate experiential value without waiting for every final character asset.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/CharacterPopulationPlan.json",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp"
       ]
     }
   ],
@@ -1181,7 +1247,8 @@
     "Data/NPCMemoryPlan.json",
     "Data/LivingWorldEventPlan.json",
     "Data/BoundedDialoguePlan.json",
-    "Data/PlayerExperiencePacingPlan.json"
+    "Data/PlayerExperiencePacingPlan.json",
+    "Data/CharacterPopulationPlan.json"
   ],
   "update_protocol": [
     "Treat Data/ProjectGovernor.json as the first-read/last-write coordination record for any meaningful project change.",
@@ -1208,13 +1275,20 @@
   "work_queue": [
     {
       "order": 1,
+      "id": "WORK-CHAR-002",
+      "title": "Populate Part I with the full core cast and region-appropriate inhabitants",
+      "status": "ACTIVE",
+      "rationale": "User explicitly requested that the Fellowship, friends and NPC populations visibly fill the world. Runtime presence is active now; dedicated visual production follows by tracked visual tier."
+    },
+    {
+      "order": 2,
       "id": "WORK-CHAR-001",
       "title": "Playable Frodo/Gandalf character production motion pass",
       "status": "ACTIVE",
       "rationale": "User explicitly wants visible playable-game progress now; scope is bounded to character presentation/motion and must preserve story/save architecture."
     },
     {
-      "order": 2,
+      "order": 3,
       "id": "WORK-GATE-001",
       "title": "Finish current functional hard gate",
       "status": "ACTIVE",
@@ -1229,42 +1303,42 @@
       ]
     },
     {
-      "order": 3,
+      "order": 4,
       "id": "WORK-MAINT-001",
       "title": "Perform physical Source/ShireJourney Public/Private domain migration",
       "status": "BLOCKED_BY_WORK-GATE-001",
       "rationale": "Architecture map is ready; do the path/include refactor only after the current gameplay baseline is proven."
     },
     {
-      "order": 4,
+      "order": 5,
       "id": "WORK-SAVE-001",
       "title": "Implement automatic safe checkpoint/respawn runtime",
       "status": "BLOCKED_BY_WORK-GATE-001",
       "rationale": "WorldCheckpointPlan exists; runtime automatic checkpoint behavior is still missing."
     },
     {
-      "order": 5,
+      "order": 6,
       "id": "WORK-LW-001",
       "title": "Build living-world NPC identity/schedule/relationship data model",
       "status": "PARTIAL",
       "rationale": "The Part I data model now exists in Data/NPCSocialModel.json; runtime scheduler/relationship consumption remains pending and should wait behind the active functional gate."
     },
     {
-      "order": 6,
+      "order": 7,
       "id": "WORK-LW-002",
       "title": "Implement NPC-to-NPC contextual conversations",
       "status": "PARTIAL",
       "rationale": "NPC conversation eligibility, intent, knowledge, priority, cooldown and repetition contracts are data-defined; runtime playback remains gated."
     },
     {
-      "order": 7,
+      "order": 8,
       "id": "WORK-LW-003",
       "title": "Implement persistent named-NPC memory and bounded dialogue intelligence",
       "status": "PARTIAL",
       "rationale": "NPC memory and bounded dialogue contracts are data-defined; runtime memory/save/dialogue integration remains gated."
     },
     {
-      "order": 8,
+      "order": 9,
       "id": "WORK-WORLD-001",
       "title": "Expand environmental micro-life and production polish chapter by chapter",
       "status": "PARTIAL",
@@ -1273,12 +1347,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "User explicitly moved project from governance preparation into visible playable character production",
+    "reason": "User explicitly requested full cast/world population after the playable Frodo/Gandalf motion pass",
     "summary": [
-      "Opened CP31 as a bounded Frodo/Gandalf character motion pass.",
-      "Recorded DEC-004 so the temporary sequencing exception is explicit rather than silently violating the hard gate.",
-      "No story/save/route architecture changes are allowed in this pass.",
-      "Static, UE4.27.2 build and later PIE visual review remain required."
+      "Opened CP32 for Part I character population.",
+      "Added chapter-by-chapter core cast contract and visual-tier tracking.",
+      "Expanded runtime companion presence through Bree, Weathertop, Rivendell, Fellowship road, Moria, Lothlorien and Anduin.",
+      "Added region-aware ambient human/Elf silhouettes and moving residents in social hubs.",
+      "Dedicated production assets are still missing for many major characters; proxy presence is not visual completion."
     ]
   }
 }
