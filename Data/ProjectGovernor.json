@@ -663,11 +663,11 @@
         "Pre-Unreal validation exists",
         "self-hosted UE4.27.2 build/import workflow exists",
         "exact-commit acquisition uses retrying GitHub API archive download",
-        "failure logs are printed directly so artifact quota cannot mask the primary error",
-        "superseded develop Unreal runs are configured to cancel so the latest head can validate"
+        "PowerShell checkout uses explicit execution-policy bypass for the target runner",
+        "superseded develop Unreal runs cancel so the latest head can validate"
       ],
       "missing_work": [
-        "Validate the hardened self-hosted workflow on the latest develop head",
+        "Validate the hardened self-hosted workflow through UE4.27.2 compile/import on the latest develop head",
         "GitHub develop/main branch protection or ruleset is not currently enabled",
         "Require relevant status checks before protected integration"
       ],
