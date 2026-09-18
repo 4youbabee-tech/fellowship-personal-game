@@ -57,6 +57,11 @@ AShireAmbientNPC::AShireAmbientNPC()
     RightLeg->SetRelativeLocation(FVector(0.0f, 9.0f, 20.0f));
     RightLeg->SetRelativeScale3D(FVector(0.09f, 0.09f, 0.28f));
 
+    ActivityProp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ActivityProp"));
+    ActivityProp->SetupAttachment(Root);
+    ActivityProp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    ActivityProp->SetVisibility(false);
+
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMesh(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
@@ -64,6 +69,7 @@ AShireAmbientNPC::AShireAmbientNPC()
     if (CubeMesh.Succeeded())
     {
         Torso->SetStaticMesh(CubeMesh.Object);
+        ActivityProp->SetStaticMesh(CubeMesh.Object);
     }
     if (CylinderMesh.Succeeded())
     {
@@ -291,6 +297,67 @@ void AShireAmbientNPC::ApplyVisualStyle()
     ApplyColor(RightArm, Coat * 0.95f);
     ApplyColor(LeftLeg, Trousers);
     ApplyColor(RightLeg, Trousers);
+
+    ActivityProp->SetVisibility(false);
+    if (!bBird && ActivityPropType != NAME_None)
+    {
+        FLinearColor PropColor(0.28f, 0.17f, 0.08f);
+        FVector PropScale(0.18f, 0.18f, 0.18f);
+        ActivityPropBase = FVector(5.0f, bElf || bBreeTownsperson ? 28.0f : 22.0f, VisualTorsoBaseZ - 3.0f);
+        ActivityPropBaseRotation = FRotator::ZeroRotator;
+
+        if (ActivityPropType == TEXT("Mug"))
+        {
+            TryMesh(ActivityProp, TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
+            PropScale = FVector(0.07f, 0.07f, 0.11f);
+            PropColor = FLinearColor(0.38f, 0.24f, 0.10f);
+            ActivityPropBase = FVector(12.0f, bElf || bBreeTownsperson ? 28.0f : 21.0f, VisualTorsoBaseZ + 5.0f);
+        }
+        else if (ActivityPropType == TEXT("Satchel"))
+        {
+            TryMesh(ActivityProp, TEXT("/Engine/BasicShapes/Cube.Cube"));
+            PropScale = FVector(0.13f, 0.20f, 0.18f);
+            PropColor = FLinearColor(0.17f, 0.09f, 0.045f);
+            ActivityPropBase = FVector(-5.0f, bElf || bBreeTownsperson ? 27.0f : 21.0f, VisualTorsoBaseZ - 8.0f);
+            ActivityPropBaseRotation = FRotator(0.0f, 10.0f, 8.0f);
+        }
+        else if (ActivityPropType == TEXT("Basket"))
+        {
+            TryMesh(ActivityProp, TEXT("/Engine/BasicShapes/Cube.Cube"));
+            PropScale = FVector(0.20f, 0.16f, 0.13f);
+            PropColor = FLinearColor(0.34f, 0.20f, 0.08f);
+            ActivityPropBase = FVector(12.0f, bElf || bBreeTownsperson ? 27.0f : 22.0f, VisualTorsoBaseZ - 7.0f);
+        }
+        else if (ActivityPropType == TEXT("Crate"))
+        {
+            TryMesh(ActivityProp, TEXT("/Engine/BasicShapes/Cube.Cube"));
+            PropScale = FVector(0.24f, 0.20f, 0.18f);
+            PropColor = FLinearColor(0.28f, 0.16f, 0.07f);
+            ActivityPropBase = FVector(16.0f, 0.0f, VisualTorsoBaseZ - 10.0f);
+        }
+        else if (ActivityPropType == TEXT("Book"))
+        {
+            TryMesh(ActivityProp, TEXT("/Engine/BasicShapes/Cube.Cube"));
+            PropScale = FVector(0.19f, 0.14f, 0.035f);
+            PropColor = FLinearColor(0.20f, 0.10f, 0.05f);
+            ActivityPropBase = FVector(16.0f, bElf || bBreeTownsperson ? 24.0f : 19.0f, VisualTorsoBaseZ + 3.0f);
+            ActivityPropBaseRotation = FRotator(0.0f, 0.0f, -18.0f);
+        }
+        else if (ActivityPropType == TEXT("Lantern"))
+        {
+            TryMesh(ActivityProp, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+            PropScale = FVector(0.10f);
+            PropColor = FLinearColor(0.72f, 0.50f, 0.15f);
+            ActivityPropBase = FVector(6.0f, bElf || bBreeTownsperson ? 29.0f : 23.0f, VisualTorsoBaseZ - 10.0f);
+        }
+
+        ActivityProp->SetRelativeLocation(ActivityPropBase);
+        ActivityProp->SetRelativeRotation(ActivityPropBaseRotation);
+        ActivityProp->SetRelativeScale3D(PropScale);
+        ActivityProp->SetVisibility(true);
+        ApplyColor(ActivityProp, PropColor);
+    }
+
     AppliedVisualRole = RoutineRole;
 }
 
@@ -298,6 +365,7 @@ void AShireAmbientNPC::UpdateWalkAnimation(float DeltaSeconds, bool bMoving)
 {
     float Swing = 0.0f;
     float Bob = 0.0f;
+    ActivityPhase += DeltaSeconds * (bSocializing ? 4.2f : 2.8f);
     if (bMoving)
     {
         WalkPhase += DeltaSeconds * 6.5f;
@@ -305,10 +373,24 @@ void AShireAmbientNPC::UpdateWalkAnimation(float DeltaSeconds, bool bMoving)
         Bob = FMath::Abs(FMath::Sin(WalkPhase * 2.0f)) * 1.0f;
     }
 
+    float LeftArmTarget = Swing;
+    float RightArmTarget = -Swing;
+    if (!bMoving && bSocializing)
+    {
+        LeftArmTarget = -12.0f + FMath::Sin(ActivityPhase) * 9.0f;
+        RightArmTarget = -24.0f + FMath::Sin(ActivityPhase + 1.1f) * 12.0f;
+    }
+    else if (!bMoving && ActivityProp && ActivityProp->IsVisible())
+    {
+        const float WorkGesture = FMath::Sin(ActivityPhase) * 7.0f;
+        LeftArmTarget = -20.0f + WorkGesture;
+        RightArmTarget = -28.0f - WorkGesture;
+    }
+
     LeftArm->SetRelativeRotation(FMath::RInterpTo(
-        LeftArm->GetRelativeRotation(), FRotator(Swing, 0.0f, 0.0f), DeltaSeconds, 9.0f));
+        LeftArm->GetRelativeRotation(), FRotator(LeftArmTarget, 0.0f, 0.0f), DeltaSeconds, 9.0f));
     RightArm->SetRelativeRotation(FMath::RInterpTo(
-        RightArm->GetRelativeRotation(), FRotator(-Swing, 0.0f, 0.0f), DeltaSeconds, 9.0f));
+        RightArm->GetRelativeRotation(), FRotator(RightArmTarget, 0.0f, 0.0f), DeltaSeconds, 9.0f));
     LeftLeg->SetRelativeRotation(FMath::RInterpTo(
         LeftLeg->GetRelativeRotation(), FRotator(-Swing * 0.65f, 0.0f, 0.0f), DeltaSeconds, 9.0f));
     RightLeg->SetRelativeRotation(FMath::RInterpTo(
@@ -320,6 +402,22 @@ void AShireAmbientNPC::UpdateWalkAnimation(float DeltaSeconds, bool bMoving)
         Head->GetRelativeLocation(), FVector(0.0f, 0.0f, VisualHeadBaseZ + Bob), DeltaSeconds, 10.0f));
     Hair->SetRelativeLocation(FMath::VInterpTo(
         Hair->GetRelativeLocation(), FVector(-1.0f, 0.0f, VisualHairBaseZ + Bob), DeltaSeconds, 10.0f));
+
+    if (ActivityProp && ActivityProp->IsVisible())
+    {
+        const float CarryBob = Bob * 0.55f;
+        const float Gesture = !bMoving ? FMath::Sin(ActivityPhase) * 2.5f : 0.0f;
+        ActivityProp->SetRelativeLocation(FMath::VInterpTo(
+            ActivityProp->GetRelativeLocation(),
+            ActivityPropBase + FVector(0.0f, 0.0f, CarryBob + Gesture),
+            DeltaSeconds,
+            9.0f));
+        ActivityProp->SetRelativeRotation(FMath::RInterpTo(
+            ActivityProp->GetRelativeRotation(),
+            ActivityPropBaseRotation + FRotator(0.0f, 0.0f, bMoving ? Swing * 0.05f : Gesture),
+            DeltaSeconds,
+            7.0f));
+    }
 }
 
 void AShireAmbientNPC::BeginPlay()

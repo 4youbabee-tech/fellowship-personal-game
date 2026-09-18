@@ -409,6 +409,41 @@ for symbol in ["VisualTorsoBaseZ", "VisualHeadBaseZ", "VisualHairBaseZ"]:
     if symbol not in ambient_cpp_for_population:
         fail(f"PG-032 ambient role-specific visual base missing: {symbol}")
 
+# PG-036: ambient micro-life must remain role-driven and reuse the cheap ambient actor.
+ambient_life_cpp = read(SOURCE / "ShireAmbientNPC.cpp")
+ambient_life_h = read(SOURCE / "ShireAmbientNPC.h")
+shire_life_cpp = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
+bree_life_cpp = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
+fellowship_life_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+
+for symbol in [
+    "ActivityPropType",
+    "ActivityProp",
+    "ActivityPhase",
+    "ActivityPropBase",
+    "bSocializing",
+]:
+    if symbol not in ambient_life_cpp and symbol not in ambient_life_h:
+        fail(f"PG-036 ambient micro-life invariant missing: {symbol}")
+
+for prop in ["Basket", "Crate", "Satchel", "Mug", "Book", "Lantern"]:
+    if f'TEXT("{prop}")' not in ambient_life_cpp:
+        fail(f"PG-036 ambient activity prop style missing: {prop}")
+
+for role_marker in [
+    'ActivityPropType=TEXT("Mug")',
+    'ActivityPropType=TEXT("Satchel")',
+    'ActivityPropType=TEXT("Basket")',
+    'ActivityPropType=TEXT("Crate")',
+]:
+    if role_marker not in shire_life_cpp:
+        fail(f"PG-036 Shire role activity assignment missing: {role_marker}")
+
+if "Townsperson->ActivityPropType" not in bree_life_cpp:
+    fail("PG-036 Bree townspeople lost visible activity assignments")
+if "Resident->ActivityPropType" not in fellowship_life_cpp:
+    fail("PG-036 Elven residents lost visible activity assignments")
+
 # PG-035: lightweight world motion must remain cheap, 3D and region-aware.
 ambient_motion_cpp = read(SOURCE / "ShireAmbientNPC.cpp")
 shire_world_motion_cpp = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")

@@ -147,11 +147,14 @@
       "features": [
         {
           "id": "WORLD-MICRO-EVENTS",
-          "status": "PARTIAL",
+          "status": "RUNTIME_PARTIAL",
           "evidence": [
-            "Data/LivingWorldEventPlan.json"
+            "Source/ShireJourney/ShireAmbientNPC.cpp",
+            "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+            "Source/ShireJourney/BreePrototypeWorldBuilder.cpp",
+            "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp"
           ],
-          "notes": "Authored event categories/templates and chapter eligibility are data-defined; runtime event director pending."
+          "notes": "Ambient roles now carry low-cost visible activity props and use small work/social gestures; full authored micro-event director remains pending."
         },
         {
           "id": "WORLD-FAUNA",

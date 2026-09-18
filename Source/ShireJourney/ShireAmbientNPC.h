@@ -35,6 +35,11 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Routine")
     FName RoutineRole = TEXT("Villager");
 
+    // Optional cheap visual activity carried by this ambient actor.
+    // Examples: Basket, Crate, Satchel, Mug, Book, Lantern.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Routine")
+    FName ActivityPropType = NAME_None;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Awareness")
     bool bCanNoticePlayer = true;
 
@@ -84,10 +89,16 @@ private:
     UPROPERTY()
     UStaticMeshComponent* RightLeg;
 
+    UPROPERTY()
+    UStaticMeshComponent* ActivityProp;
+
     bool bHeadingToB = true;
     bool bObservingPlayer = false;
     float WaitRemaining = 0.0f;
     float WalkPhase = 0.0f;
+    float ActivityPhase = 0.0f;
+    FVector ActivityPropBase = FVector::ZeroVector;
+    FRotator ActivityPropBaseRotation = FRotator::ZeroRotator;
     float SenseAccumulator = 0.0f;
     float ObserveRemaining = 0.0f;
     float NoticeCooldownRemaining = 0.0f;
