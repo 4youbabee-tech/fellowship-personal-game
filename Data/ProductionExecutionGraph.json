@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "authority_id": "FELLOWSHIP_ENGINEERING_EXECUTION_GRAPH_V1",
+  "purpose": "Machine-readable dependency and proof map for finishing the game without losing requirements, duplicating systems or confusing implementation with acceptance.",
+  "status_values": [
+    "ACTIVE",
+    "IMPLEMENTED_PENDING_VALIDATION",
+    "PARTIAL",
+    "BLOCKED_BY_ACCEPTANCE",
+    "DEFERRED",
+    "COMPLETE"
+  ],
+  "proof_levels": [
+    "STATIC_VALIDATED",
+    "COMPILE_TESTED",
+    "ASSET_IMPORT_TESTED",
+    "PIE_TESTED",
+    "DEVICE_TESTED",
+    "VISUALLY_ACCEPTED"
+  ],
+  "invariants": [
+    "ProjectGovernor remains the single requirement/decision authority.",
+    "ExecutionGraph orders work but never overrides ProjectGovernor status or canon.",
+    "A workstream may be implementation-complete while still blocked by PIE/device/visual acceptance.",
+    "Backend and living-world intelligence remain bounded and deterministic on the target laptop; no always-on cloud AI dependency.",
+    "World/character production may advance in large batches, but story/save/route invariants cannot be traded away.",
+    "Every new runtime source file must be registered in SourceArchitecturePlan."
+  ],
+  "workstreams": [
+    {
+      "id": "WS_BACKEND_CORE",
+      "name": "Backend core and persistence",
+      "status": "IMPLEMENTED_PENDING_VALIDATION",
+      "depends_on": [],
+      "delivered": [
+        "quest/chapter/route state",
+        "save/load/checkpoint/respawn",
+        "schema-versioned save sanitation",
+        "NPC memory/relationships",
+        "bounded dialogue context"
+      ],
+      "remaining_proof": [
+        "PIE save-load round trip",
+        "F8 route round trip",
+        "target-device checkpoint hitch observation"
+      ]
+    },
+    {
+      "id": "WS_LIVING_WORLD_AI",
+      "name": "Living-world AI and micro-events",
+      "status": "IMPLEMENTED_PENDING_VALIDATION",
+      "depends_on": [
+        "WS_BACKEND_CORE"
+      ],
+      "delivered": [
+        "NPC identity/knowledge/schedules",
+        "ambient awareness/social life",
+        "NPC-to-NPC conversations",
+        "two-way Fellowship banter",
+        "named NPC memory",
+        "chapter-aware danger/weather reactions",
+        "data-driven capped micro-event director"
+      ],
+      "remaining_proof": [
+        "PIE event density/pacing",
+        "target-device CPU/frame-time observation",
+        "visual review of event placement"
+      ]
+    },
+    {
+      "id": "WS_CHARACTER_PRODUCTION",
+      "name": "Named cast and threat production identity",
+      "status": "PARTIAL",
+      "depends_on": [
+        "WS_BACKEND_CORE"
+      ],
+      "delivered": [
+        "dedicated modular identities for named Part I cast",
+        "production archetypes",
+        "major threat production meshes"
+      ],
+      "remaining_work": [
+        "skeletal rigs",
+        "facial rigs",
+        "cloth/hair shading",
+        "bespoke locomotion/combat acting",
+        "final voice assets"
+      ],
+      "remaining_proof": [
+        "PIE animation integration",
+        "device performance",
+        "visual acceptance"
+      ]
+    },
+    {
+      "id": "WS_WORLD_PRODUCTION",
+      "name": "Villages mountains geography interiors and environmental detail",
+      "status": "PARTIAL",
+      "depends_on": [
+        "WS_BACKEND_CORE"
+      ],
+      "delivered": [
+        "Shire production settlement kit",
+        "Bree production architecture",
+        "P1C03-P1C08 landmark kits",
+        "reusable production hills/cliffs/river banks/boulders",
+        "chapter-aware terrain silhouette overlays"
+      ],
+      "remaining_work": [
+        "final terrain materials",
+        "dense vegetation layers",
+        "weather visuals",
+        "dedicated interiors",
+        "water polish",
+        "licensed external asset batches where useful"
+      ],
+      "remaining_proof": [
+        "chapter-by-chapter PIE traversal",
+        "target-device performance",
+        "visual acceptance"
+      ]
+    },
+    {
+      "id": "WS_STORY_MISSIONS",
+      "name": "Part I story missions",
+      "status": "IMPLEMENTED_PENDING_VALIDATION",
+      "depends_on": [
+        "WS_BACKEND_CORE"
+      ],
+      "delivered": [
+        "P1C01-P1C08 quest/story spine",
+        "Gandalf Isengard parallel route",
+        "story handoffs",
+        "quest triggers",
+        "major encounter gates"
+      ],
+      "remaining_proof": [
+        "P1C01-P1C08 smoke traversal",
+        "mission pacing review",
+        "Frodo/Gandalf continuity"
+      ]
+    },
+    {
+      "id": "WS_AUDIO_PRESENTATION",
+      "name": "Audio dialogue and cinematic presentation",
+      "status": "PARTIAL",
+      "depends_on": [
+        "WS_BACKEND_CORE",
+        "WS_STORY_MISSIONS"
+      ],
+      "delivered": [
+        "ambience/music/SFX/voice routing",
+        "subtitles",
+        "logical voice cues",
+        "dialogue ducking",
+        "story presentation hooks"
+      ],
+      "remaining_work": [
+        "final recorded voice",
+        "final authored music/SFX library",
+        "mixing pass",
+        "lip sync/facial integration"
+      ],
+      "remaining_proof": [
+        "PIE audio coverage",
+        "device mix/performance",
+        "presentation acceptance"
+      ]
+    },
+    {
+      "id": "WS_ACCEPTANCE",
+      "name": "Integration and acceptance",
+      "status": "BLOCKED_BY_ACCEPTANCE",
+      "depends_on": [
+        "WS_BACKEND_CORE",
+        "WS_LIVING_WORLD_AI",
+        "WS_CHARACTER_PRODUCTION",
+        "WS_WORLD_PRODUCTION",
+        "WS_STORY_MISSIONS",
+        "WS_AUDIO_PRESENTATION"
+      ],
+      "delivered": [
+        "self-hosted UE4.27.2 build/import validation"
+      ],
+      "remaining_work": [
+        "full PIE smoke suite",
+        "target-device performance passes",
+        "visual/pacing review",
+        "defect repair loop"
+      ],
+      "remaining_proof": [
+        "PIE_TESTED",
+        "DEVICE_TESTED",
+        "VISUALLY_ACCEPTED"
+      ]
+    }
+  ],
+  "active_order": [
+    "Continue large world/character/audio production batches while preserving green compile/import gates.",
+    "Use licensed external resources only through ExternalAssetManifest and rights policy.",
+    "After each major batch, run Pre-Unreal and real UE4.27.2 build/import.",
+    "When a representative production slice is visually meaningful, execute the deferred PIE/device acceptance suite and fix defects.",
+    "Promote statuses to VALIDATED only from actual evidence."
+  ]
+}

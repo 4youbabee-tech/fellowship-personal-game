@@ -508,6 +508,17 @@
 - Expanded the resource provider manifest with Poly Haven, ambientCG, Adobe Mixamo, ActorCore/Reallusion and Kenney.
 - Added PG-048 so future sourcing cannot confuse a service provider, stock-resource site, reference site and actual rights holder.
 
+## CP49 — Living-World Director + Production Terrain + Engineering Path
+- Added `ALivingWorldDirector`, a persistent low-cost runtime coordinator that reads `Data/LivingWorldEventPlan.json`.
+- The director creates capped disposable work/traveler/market/social/fauna/danger/aftermath micro-events around the player, avoids immediate repetition, culls distant/expired events and suppresses peaceful events during story danger.
+- Route isolation prevents Frodo-world ambient event injection from contaminating the authored Gandalf/Isengard parallel route.
+- Existing NPC schedule/weather/danger context is reused rather than creating a second AI authority.
+- Added six reusable project-owned production terrain meshes: mountain ridge, cliff wall, terraced hill, river bank, village slope and boulder cluster.
+- Shire and P1C03-P1C08 now overlay those terrain forms to strengthen villages, valleys, mountains, Moria enclosure and Anduin canyon silhouettes without changing quest/story anchors.
+- Added `Data/ProductionExecutionGraph.json` and `Docs/ENGINEERING_EXECUTION_PATH.md` so backend, AI, character, world, missions, audio and acceptance dependencies remain explicit without relying on chat memory.
+- Reconciled stale LivingWorldFeaturePlan entries with the CP44/CP49 runtime.
+- Added PG-049. PIE/device density, placement, performance and visual acceptance remain required.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
