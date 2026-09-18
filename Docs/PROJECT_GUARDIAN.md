@@ -272,6 +272,17 @@ This converts failures into permanent project knowledge.
 
 **Proof rule:** this is runtime micro-life foundation only; final event variety, animation quality and target-device performance remain for the later integration pass.
 
+### PG-037 — Automatic checkpoints must never overwrite manual saves or capture the wrong world
+**Risk:** an automatic checkpoint can destroy a user's F5 save, capture a transform from the old chapter during a synchronous world hand-off, or claim runtime coverage while a planned checkpoint has no code binding.
+
+**Contract:** manual save uses `ShireJourney_Auto`; automatic recovery uses the separate `ShireJourney_Checkpoint` slot. Safe/pre-danger story checkpoints are written after quest/story state mutates. Chapter-transition checkpoints are deferred until the next player Tick so the destination world/router transform is authoritative.
+
+**Respawn rule:** combat defeat restores the latest automatic checkpoint at full health when available. It may not silently modify the manual save slot.
+
+**Guard:** Pre-Unreal Validation requires every non-PLANNED `WorldCheckpointPlan` ID to appear in runtime checkpoint code and protects the separate-slot/save/restore/pending-transition invariants.
+
+**Proof rule:** `FOUNDATION` means runtime implementation exists. It does not mean checkpoint placement, respawn, hitching or story continuity has been PIE/device verified.
+
 ## What Guardian must never do automatically
 
 - change canon,

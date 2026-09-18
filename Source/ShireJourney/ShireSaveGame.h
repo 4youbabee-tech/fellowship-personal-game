@@ -42,5 +42,8 @@ public:
     FName PlayableCharacterId = TEXT("Frodo");
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
+    FName CheckpointId = NAME_None;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
     TMap<FName, FShireRouteProgress> RouteProgress;
 };

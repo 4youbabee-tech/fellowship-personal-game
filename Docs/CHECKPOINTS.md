@@ -390,7 +390,17 @@
 - Unreal Build Validation #27 reached UE4.27.2 C++ compilation and failed in `ShireAmbientNPC.cpp` because the Bird path referenced `PrototypeWalkPhase`, a player-character field that does not exist on `AShireAmbientNPC`.
 - Replaced those references with the ambient actor's existing `WalkPhase`.
 - Updated PG-035 static validation so the wrong field name cannot be reintroduced unnoticed.
-- This was a compile-only regression repair; no intended Bird/world-motion behavior changed.
+- Unreal Build Validation #28 then passed on develop; no intended Bird/world-motion behavior changed.
+
+## CP37 — Automatic Safe Checkpoint / Respawn Runtime Foundation
+- Added a separate `ShireJourney_Checkpoint` SaveGame slot; automatic saves never overwrite the user's F5 manual save.
+- Refactored F5/F9 and checkpoint recovery through shared snapshot/restore helpers so quest, chapter, story beats, route, episode, playable character, route snapshots, transform and health use one persistence path.
+- Added authored story-beat checkpoint bindings for safe/pre-danger checkpoints in `WorldCheckpointPlan.csv`.
+- Added post-world-rebuild chapter-transition checkpoint queuing so transition transforms belong to the destination region rather than the destroyed source region.
+- Added an initial `WC_P1C01_START` checkpoint when a new Frodo/Shire session has no checkpoint yet.
+- Combat defeat now restores the most recent automatic safe checkpoint at full health when one exists.
+- Advanced `WorldCheckpointPlan.csv` runtime statuses from `PLANNED` to `FOUNDATION`; this records implementation only and does not claim PIE/device verification.
+- Added PG-037 to protect manual/automatic slot separation and reject checkpoint-plan/runtime drift.
 
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
