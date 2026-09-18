@@ -233,7 +233,12 @@ void ABlackRiderPrototype::CheckPlayerDetection()
         return;
     }
 
-    const float Radius = Player->bIsCrouched ? CrouchedDetectionRadius : DetectionRadius;
+    float Radius = Player->bIsCrouched ? CrouchedDetectionRadius : DetectionRadius;
+    if (!Player->bIsCrouched && Player->GetVelocity().Size2D() > 260.0f)
+    {
+        Radius *= RunningDetectionMultiplier;
+    }
+
     FVector ToPlayer = Player->GetActorLocation() - GetActorLocation();
     ToPlayer.Z = 0.0f;
     if (ToPlayer.SizeSquared() > FMath::Square(Radius))

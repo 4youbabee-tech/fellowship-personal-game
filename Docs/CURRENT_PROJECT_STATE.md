@@ -69,6 +69,13 @@ Additional PIE evidence on 2026-09-18:
 - That warning was traced to `ConfigureMorningAtmosphere`, fixed by setting mobility before actor rotation, and recorded as Guardian regression PG-012.
 - Quick Load (F9) is still pending verification.
 
+CP22 milestone evidence on 2026-09-18:
+- the enlarged Shire world-scale commit was pulled to the target laptop,
+- UE4.27.2 Build completed successfully,
+- no compile error was reported by the user,
+- CP22 is therefore COMPILE-TESTED on the target laptop,
+- the enlarged traversal itself still needs a focused PIE traversal/performance review.
+
 The remaining hard gate is now the functional smoke-test layer: movement/interactions, F9 load round-trip, F8 route round-trip, chapter smoke tests and target-device performance observation.
 
 ## Authoritative runtime chapter IDs
@@ -188,6 +195,7 @@ The audio subsystem routes named ambience/music/SFX/voice events.
 - lightweight ambient NPC awareness.
 - CP21 Shire mega-pass source adds a mill/stream landmark, market detail, denser party preparation, crop rows, wooded-road cover, richer ferry geometry, more ambient residents/optional talkers and Black Rider last-known-position investigation behavior.
 - CP22 Shire world-scale source pass expands Bag End-to-Ferry travel from roughly 50m to roughly 260m, separates Hobbiton/fields/wooded road/ferry with occlusion hills, introduces continuous curved roads and exploration loops, redistributes story/side-story actors to the larger geography, expands instanced ground cover and adds distance-adaptive ambient-NPC tick rates for the low-spec target.
+- CP23 living-world source pass adds story-reactive atmosphere, reusable story-aware dialogue variants, persisted landmark discoveries, lightweight NPC-to-NPC social pauses near the player, running-sensitive Black Rider detection, and extra route/playable-character repair for restored saves.
 
 ## Story/data source hierarchy
 

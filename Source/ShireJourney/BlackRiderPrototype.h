@@ -52,6 +52,9 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Investigation", meta=(ClampMin="1.0", ClampMax="2.0"))
     float InvestigationSpeedMultiplier = 1.20f;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Detection", meta=(ClampMin="1.0", ClampMax="2.0"))
+    float RunningDetectionMultiplier = 1.30f;
+
 private:
     UPROPERTY()
     USceneComponent* Root;

@@ -45,6 +45,36 @@ void UShireStoryFlowSubsystem::RepairRestoredTerminalState()
     const FName QuestId = QuestSubsystem->GetActiveQuestId();
     const int32 Stage = QuestSubsystem->GetActiveQuestStage();
 
+    // Route identity is repairable because the currently implemented routes each have
+    // one canonical playable character. This prevents a malformed/legacy save from
+    // loading Frodo into Isengard or Gandalf into the Frodo main route.
+    if (QuestSubsystem->GetCurrentRouteId() == TEXT("GandalfParallel"))
+    {
+        if (QuestSubsystem->GetPlayableCharacterId() != TEXT("Gandalf"))
+        {
+            QuestSubsystem->StartExperience(
+                TEXT("GandalfParallel"),
+                TEXT("P1G01_Isengard"),
+                TEXT("Gandalf"),
+                TEXT("P1C01"),
+                QuestId,
+                Stage);
+            return;
+        }
+    }
+    else if (QuestSubsystem->GetCurrentRouteId() == TEXT("FrodoMain") &&
+        QuestSubsystem->GetPlayableCharacterId() != TEXT("Frodo"))
+    {
+        QuestSubsystem->StartExperience(
+            TEXT("FrodoMain"),
+            QuestSubsystem->GetCurrentEpisodeId(),
+            TEXT("Frodo"),
+            ChapterId,
+            QuestId,
+            Stage);
+        return;
+    }
+
     // These states are the terminal authored stages immediately before a chapter
     // hand-off. A normal playthrough transitions through the world trigger itself.
     // If an older/incomplete save captured the terminal state first, resume safely

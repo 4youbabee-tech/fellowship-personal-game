@@ -91,10 +91,15 @@ private:
     float SenseAccumulator = 0.0f;
     float ObserveRemaining = 0.0f;
     float NoticeCooldownRemaining = 0.0f;
+    float SocialCheckRemaining = 0.0f;
+    float SocialRemaining = 0.0f;
+    bool bSocializing = false;
     TWeakObjectPtr<APawn> ObservedPlayer;
+    TWeakObjectPtr<AShireAmbientNPC> SocialPartner;
     FRandomStream Random;
 
     void ApplyVisualStyle();
     void UpdateWalkAnimation(float DeltaSeconds, bool bMoving);
     void UpdateAwareness(float DeltaSeconds);
+    void UpdateSocialLife(float DeltaSeconds);
 };

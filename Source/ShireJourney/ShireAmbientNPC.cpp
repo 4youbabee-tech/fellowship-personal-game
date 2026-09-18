@@ -5,6 +5,7 @@
 #include "Materials/MaterialInterface.h"
 #include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
+#include "EngineUtils.h"
 #include "UObject/ConstructorHelpers.h"
 
 AShireAmbientNPC::AShireAmbientNPC()
@@ -170,6 +171,7 @@ void AShireAmbientNPC::BeginPlay()
 
     WaitRemaining = Random.FRandRange(0.0f, 1.5f);
     SenseAccumulator = Random.FRandRange(0.0f, 0.35f);
+    SocialCheckRemaining = Random.FRandRange(1.0f, 3.0f);
 }
 
 void AShireAmbientNPC::UpdateAwareness(float DeltaSeconds)
@@ -242,6 +244,95 @@ void AShireAmbientNPC::UpdateAwareness(float DeltaSeconds)
     }
 }
 
+
+void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
+{
+    if (RoutineRole == TEXT("Courier") || RoutineRole == TEXT("RoadWalker"))
+    {
+        bSocializing = false;
+        SocialPartner.Reset();
+        return;
+    }
+
+    if (bSocializing)
+    {
+        SocialRemaining -= DeltaSeconds;
+        AShireAmbientNPC* Partner = SocialPartner.Get();
+
+        if (!Partner ||
+            FVector::DistSquared2D(GetActorLocation(), Partner->GetActorLocation()) > FMath::Square(280.0f))
+        {
+            SocialRemaining = 0.0f;
+        }
+        else
+        {
+            FVector ToPartner = Partner->GetActorLocation() - GetActorLocation();
+            ToPartner.Z = 0.0f;
+            if (!ToPartner.IsNearlyZero())
+            {
+                SetActorRotation(FMath::RInterpTo(
+                    GetActorRotation(), ToPartner.Rotation(), DeltaSeconds, 3.5f));
+            }
+        }
+
+        if (SocialRemaining <= 0.0f)
+        {
+            bSocializing = false;
+            SocialPartner.Reset();
+            SocialCheckRemaining = Random.FRandRange(6.0f, 11.0f);
+            WaitRemaining = FMath::Max(WaitRemaining, Random.FRandRange(0.3f, 0.9f));
+        }
+        return;
+    }
+
+    SocialCheckRemaining -= DeltaSeconds;
+    if (SocialCheckRemaining > 0.0f)
+    {
+        return;
+    }
+
+    SocialCheckRemaining = Random.FRandRange(4.0f, 8.0f);
+
+    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+    if (!PlayerPawn ||
+        FVector::DistSquared2D(PlayerPawn->GetActorLocation(), GetActorLocation()) > FMath::Square(1800.0f))
+    {
+        return;
+    }
+
+    AShireAmbientNPC* BestPartner = nullptr;
+    float BestDistanceSq = FMath::Square(240.0f);
+
+    for (TActorIterator<AShireAmbientNPC> It(GetWorld()); It; ++It)
+    {
+        AShireAmbientNPC* Candidate = *It;
+        if (!Candidate || Candidate == this || Candidate->bSocializing || Candidate->bObservingPlayer)
+        {
+            continue;
+        }
+
+        if (Candidate->RoutineRole == TEXT("Courier") || Candidate->RoutineRole == TEXT("RoadWalker"))
+        {
+            continue;
+        }
+
+        const float DistanceSq =
+            FVector::DistSquared2D(GetActorLocation(), Candidate->GetActorLocation());
+        if (DistanceSq < BestDistanceSq)
+        {
+            BestDistanceSq = DistanceSq;
+            BestPartner = Candidate;
+        }
+    }
+
+    if (BestPartner)
+    {
+        bSocializing = true;
+        SocialPartner = BestPartner;
+        SocialRemaining = Random.FRandRange(1.6f, 3.4f);
+    }
+}
+
 void AShireAmbientNPC::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
@@ -256,6 +347,13 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
     UpdateAwareness(DeltaSeconds);
 
     if (bObservingPlayer)
+    {
+        UpdateWalkAnimation(DeltaSeconds, false);
+        return;
+    }
+
+    UpdateSocialLife(DeltaSeconds);
+    if (bSocializing)
     {
         UpdateWalkAnimation(DeltaSeconds, false);
         return;

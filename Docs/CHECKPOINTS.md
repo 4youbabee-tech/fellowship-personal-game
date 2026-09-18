@@ -145,6 +145,17 @@
 - Added distance-adaptive ambient-NPC tick intervals to protect the 30 FPS target.
 - Requires the next milestone build/PIE pass before being marked compile/PIE/device tested.
 
+## CP23 — Living Shire / Story-Reactive World
+- Shire atmosphere can now react to active story phase through sun/sky/post-process changes.
+- Added reusable contextual dialogue variants driven by persisted story beats and quest stage.
+- Optional residents can change what they say after major local events.
+- Ambient residents can enter short low-cost social pauses with nearby residents while the player is close.
+- Running increases Black Rider detection range while crouching/cover remain meaningful.
+- Added one-time persisted landmark discoveries for major Shire locations.
+- Restored saves receive an additional route/playable-character identity repair.
+- CP22 world-scale build was confirmed successful on UE4.27.2 target hardware before this pass.
+- CP23 still requires the next milestone build/PIE test before compile/device acceptance.
+
 ## Current hard gate
 The current runtime-code baseline has passed static validation, real UE4.27 compile and basic Shire PIE boot.
 
