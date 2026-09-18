@@ -131,14 +131,15 @@
         "NPC social pauses",
         "story-reactive Shire atmosphere",
         "landmark discovery",
-        "instanced foliage and ambient audio foundations"
+        "instanced foliage and ambient audio foundations",
+        "Data/LivingWorldEventPlan.json defines per-chapter micro-event/fauna/weather/prop-motion categories, density targets and performance caps"
       ],
       "missing_work": [
-        "micro-event system",
-        "fauna/animal life where appropriate",
-        "broader work/market/traveler activity",
-        "environment motion pass",
-        "chapter-by-chapter exploration-density acceptance"
+        "runtime micro-event director",
+        "runtime fauna presentation",
+        "broader worker/market/traveler activity",
+        "environment motion implementation",
+        "chapter-by-chapter exploration-density PIE/device acceptance"
       ],
       "acceptance_criteria": [
         "Ordinary traversal repeatedly reveals believable activity or environmental storytelling",
@@ -204,11 +205,6 @@
         "Source/ShireJourney/ShireNPC.cpp"
       ],
       "implementation_refs": [
-        "walking/waiting routines",
-        "player awareness/look-at",
-        "running-sensitive notice behavior",
-        "near-player NPC social pauses",
-        "proxy gaze/blink/mouth acting",
         "Data/NPCSocialModel.json defines Part I NPC identities, roles, knowledge tags, schedule templates and initial relationships",
         "walking/waiting routines",
         "player awareness/look-at",
@@ -244,14 +240,16 @@
       "evidence": [
         "Current source only proves social pauses; no complete NPC-to-NPC dialogue exchange is claimed"
       ],
-      "implementation_refs": [],
+      "implementation_refs": [
+        "Data/NPCConversationPlan.json defines participant eligibility, intent categories, knowledge/story gates, priority, cooldowns and repetition policy"
+      ],
       "missing_work": [
-        "conversation participant selection",
-        "dialogue intent catalog",
-        "turn-taking/runtime playback",
-        "cooldown/repetition suppression",
-        "story-critical dialogue priority",
-        "audio/subtitle integration"
+        "runtime conversation selection",
+        "turn-taking/playback",
+        "speaker/listener gaze integration",
+        "subtitle/audio bridge",
+        "runtime cooldown/history tracking",
+        "PIE/device/performance validation"
       ],
       "acceptance_criteria": [
         "Two eligible NPCs can exchange context-appropriate lines",
@@ -281,15 +279,15 @@
         "Source/ShireJourney/ShireDialogueSubsystem.cpp"
       ],
       "implementation_refs": [
-        "authored dialogue intents and story-aware dialogue foundations"
+        "authored dialogue intents and story-aware dialogue foundations",
+        "Data/BoundedDialoguePlan.json defines allowed variation modes, knowledge/canon guards, word/cache limits and deterministic fallback"
       ],
       "missing_work": [
-        "NPC knowledge profiles",
-        "allowed intent/variation policy",
-        "bounded generation/selection layer",
-        "deterministic fallback",
-        "cache/repetition controls",
-        "performance strategy"
+        "runtime knowledge guard enforcement",
+        "runtime template/variant selection",
+        "optional cached bounded-generation adapter",
+        "runtime cache/repetition integration",
+        "PIE/device/performance validation"
       ],
       "acceptance_criteria": [
         "NPC never reveals knowledge it should not know",
@@ -316,14 +314,15 @@
         "Current route/story persistence exists, but no general named-NPC memory/relationship system is claimed"
       ],
       "implementation_refs": [
-        "existing save architecture can provide integration foundation"
+        "Data/NPCMemoryPlan.json defines bounded memory tiers, expiry, per-profile budgets, alias identity sharing and route-partitioned save contract"
       ],
       "missing_work": [
-        "memory schema",
-        "relationship schema",
-        "save/load integration",
-        "forget/expiry policy",
-        "ambient-vs-named NPC cost tiers"
+        "runtime NPC memory store",
+        "ShireSaveGame integration",
+        "relationship-memory application",
+        "schema migration code",
+        "PIE save/load validation",
+        "target-device save/performance validation"
       ],
       "acceptance_criteria": [
         "Important memories persist through save/load",
@@ -1119,7 +1118,11 @@
     "Data/DialogueIntent.csv",
     "Data/MusicCuePlan.csv",
     "Data/VoiceCuePlan.csv",
-    "Data/NPCSocialModel.json"
+    "Data/NPCSocialModel.json",
+    "Data/NPCConversationPlan.json",
+    "Data/NPCMemoryPlan.json",
+    "Data/LivingWorldEventPlan.json",
+    "Data/BoundedDialoguePlan.json"
   ],
   "update_protocol": [
     "Treat Data/ProjectGovernor.json as the first-read/last-write coordination record for any meaningful project change.",
@@ -1184,32 +1187,33 @@
       "order": 5,
       "id": "WORK-LW-002",
       "title": "Implement NPC-to-NPC contextual conversations",
-      "status": "PLANNED",
-      "rationale": "Requires the NPC identity/knowledge/social model first."
+      "status": "PARTIAL",
+      "rationale": "NPC conversation eligibility, intent, knowledge, priority, cooldown and repetition contracts are data-defined; runtime playback remains gated."
     },
     {
       "order": 6,
       "id": "WORK-LW-003",
       "title": "Implement persistent named-NPC memory and bounded dialogue intelligence",
-      "status": "PLANNED",
-      "rationale": "Must follow knowledge, relationship and save-budget design."
+      "status": "PARTIAL",
+      "rationale": "NPC memory and bounded dialogue contracts are data-defined; runtime memory/save/dialogue integration remains gated."
     },
     {
       "order": 7,
       "id": "WORK-WORLD-001",
       "title": "Expand environmental micro-life and production polish chapter by chapter",
-      "status": "PLANNED",
-      "rationale": "Fauna, workers, travelers, environmental motion, richer terrain/assets and exploration density should propagate after the Shire vertical slice is accepted."
+      "status": "PARTIAL",
+      "rationale": "Per-chapter micro-life/fauna/motion/density contracts are data-defined; runtime rollout and visual/device acceptance remain gated."
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Unreal Build #14 infrastructure failure",
+    "reason": "Complete remote-safe living-world contracts while device/PIE functional gate remains open",
     "summary": [
-      "Classified Build #14 as network/checkout failure before Unreal compilation.",
-      "Hardened exact-commit acquisition with retrying archive download.",
-      "Removed artifact-upload dependency from the failure path.",
-      "No gameplay/C++ regression was inferred from Build #14."
+      "LW2 NPC conversation contract prepared.",
+      "LW3 bounded NPC memory/save contract prepared.",
+      "LW4 environmental micro-event/fauna/motion contract prepared.",
+      "LW5 bounded dialogue intelligence contract prepared.",
+      "No new runtime gameplay behavior enabled; device-dependent proof remains gated."
     ]
   }
 }
