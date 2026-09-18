@@ -87,6 +87,32 @@ void UShireDialogueSubsystem::BuildDialogueLibrary()
         { FText::FromString(TEXT("Pippin")), FText::FromString(TEXT("I was hoping the dangerous part ended before the river.")), TEXT("VO_Pippin_Ferry_01"), 4.0f }
     });
 
+    AddSequence(TEXT("Dlg_IsengardArrival"), {
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("Saruman asked for counsel to be shared. The silence here feels more like a warning.")), TEXT("VO_Gandalf_Isengard_01"), 5.4f },
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("Orthanc has always been severe. Today it feels watchful.")), TEXT("VO_Gandalf_Isengard_02"), 4.5f }
+    });
+
+    AddSequence(TEXT("Dlg_OrthancBetrayal"), {
+        { FText::FromString(TEXT("Saruman")), FText::FromString(TEXT("The old order is ending. You can either understand that change or be crushed beneath it.")), TEXT("VO_Saruman_Betrayal_01"), 6.1f },
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("Wisdom that kneels to fear is only another kind of surrender.")), TEXT("VO_Gandalf_Betrayal_01"), 5.5f },
+        { FText::FromString(TEXT("Saruman")), FText::FromString(TEXT("Then you have chosen isolation over influence.")), TEXT("VO_Saruman_Betrayal_02"), 4.6f }
+    });
+
+    AddSequence(TEXT("Dlg_OrthancPrison"), {
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("The trees are falling. He is not preparing for war someday; he has already begun it.")), TEXT("VO_Gandalf_Prison_01"), 6.0f },
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("If I cannot stop this from here, I must survive long enough to warn those who still can.")), TEXT("VO_Gandalf_Prison_02"), 6.0f }
+    });
+
+    AddSequence(TEXT("Dlg_IsengardIndustry"), {
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("Pits, furnaces, chains. Isengard is being remade into a weapon.")), TEXT("VO_Gandalf_Industry_01"), 5.1f },
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("Saruman has traded patience for production. That makes him dangerous, but not invincible.")), TEXT("VO_Gandalf_Industry_02"), 5.8f }
+    });
+
+    AddSequence(TEXT("Dlg_OrthancEscape"), {
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("At last. One chance is enough.")), TEXT("VO_Gandalf_Escape_01"), 3.2f },
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("The warning must reach Rivendell before Saruman's armies do.")), TEXT("VO_Gandalf_Escape_02"), 4.8f }
+    });
+
     // All lines are newly written for the game and intentionally avoid copying screenplay dialogue.
     AddSequence(TEXT("Dlg_BreeRingIncident"), {
         { FText::FromString(TEXT("Sam")), FText::FromString(TEXT("Frodo! Everyone is looking this way.")), TEXT("VO_Sam_BreeRing_01"), 3.2f },

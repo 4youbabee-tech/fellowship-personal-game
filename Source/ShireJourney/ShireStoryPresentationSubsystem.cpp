@@ -89,6 +89,17 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
     AddCue(TEXT("FerryEscape"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_FerryEscape"), TEXT("Dlg_ShireFerry"), TEXT("Amb_Brandywine"), TEXT("Mus_FerryEscape"), TEXT("Sfx_FerryWoodWater"), 12.0f);
 
+    AddCue(TEXT("IsengardArrival"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_IsengardArrival"), TEXT("Dlg_IsengardArrival"), TEXT("Amb_IsengardApproach"), TEXT("Mus_IsengardSuspicion"), TEXT("Sfx_OrthancWind"), 10.0f);
+    AddCue(TEXT("OrthancBetrayal"), EShireStoryPresentationMode::Cinematic,
+        TEXT("Cam_OrthancBetrayal"), TEXT("Dlg_OrthancBetrayal"), TEXT("Amb_OrthancInterior"), TEXT("Mus_OrthancBetrayal"), TEXT("Sfx_ForceImpact"), 18.0f);
+    AddCue(TEXT("OrthancPrison"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_OrthancPrison"), TEXT("Dlg_OrthancPrison"), TEXT("Amb_OrthancRoof"), TEXT("Mus_OrthancPrison"), TEXT("Sfx_HighWind"), 12.0f);
+    AddCue(TEXT("IsengardIndustry"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_IsengardIndustry"), TEXT("Dlg_IsengardIndustry"), TEXT("Amb_IsengardIndustry"), TEXT("Mus_IsengardIndustry"), TEXT("Sfx_ForgesDistant"), 12.0f);
+    AddCue(TEXT("OrthancEscape"), EShireStoryPresentationMode::Cinematic,
+        TEXT("Cam_OrthancEscape"), TEXT("Dlg_OrthancEscape"), TEXT("Amb_OrthancNight"), TEXT("Mus_OrthancEscape"), TEXT("Sfx_WindRush"), 12.0f);
+
     AddCue(TEXT("BreeRoadNightfall"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_BreeRoadNightfall"), NAME_None, TEXT("Amb_RainRoad"), TEXT("Mus_BreeUnease"), TEXT("Sfx_DistantHooves"), 5.0f);
     AddCue(TEXT("PrancingPonyExterior"), EShireStoryPresentationMode::GameplayBlend,
