@@ -1315,14 +1315,14 @@
       "id": "WORK-WORLD-002",
       "title": "Part I world density and landmark detail pass",
       "status": "ACTIVE",
-      "rationale": "Fill traversal spaces with readable landmarks, props, settlement detail, architectural depth and low-cost environmental storytelling before the later integration/playtest pass."
+      "rationale": "Primary visual-production workstream: replace blockout readability with dense imported/original production architecture, terrain dressing, props, vegetation and lighting."
     },
     {
       "order": 2,
       "id": "WORK-CHAR-003",
       "title": "Distinct visual identity pass for the Part I core cast",
       "status": "ACTIVE",
-      "rationale": "Differentiate the visible cast now using low-cost modular silhouettes/accessories while final dedicated rigged characters remain a later production step."
+      "rationale": "Primary visual-production workstream: replace engine-primitives with production body/gear archetypes now, then dedicated hero rigs."
     },
     {
       "order": 3,
@@ -1398,25 +1398,28 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Build-first named-NPC memory runtime foundation after CP38",
+    "reason": "Visual-production-first expansion after user requested complete world/characters/life build",
     "summary": [
-      "Added route-partitioned named-NPC memory buckets to the quest runtime.",
-      "Persisted compact event IDs and bounded relationship deltas through manual saves and automatic checkpoints.",
-      "Enforced 12-event and 8-relationship hard caps with restore-time sanitization.",
-      "Kept raw dialogue text out of persistent memory and preserved route isolation.",
-      "Memory-aware dialogue selection, alias resolution, expiry and PIE/device proof remain later layers."
+      "Added 12 original Shire architecture/prop production meshes including cottages, mill, bridge, well, market stalls, walls, gates, hay, flower boxes, lamp posts, tables and loaded carts.",
+      "Added 19 reusable original production character/gear meshes for human, elf and dwarf body archetypes plus cloak/sword/shield/axe/bow gear.",
+      "Added a dense Shire production settlement overlay without moving quest/story anchors.",
+      "Promoted Bree and Elven ambient residents plus most non-Hobbit named cast from engine primitive bodies to reusable production archetypes.",
+      "Switched project mode from BUILD_FIRST_BATCH_MODE to VISUAL_PRODUCTION_FIRST while keeping UE4.27.2 build/import validation mandatory."
     ]
   },
   "development_mode": {
-    "id": "BUILD_FIRST_BATCH_MODE",
+    "id": "VISUAL_PRODUCTION_FIRST",
     "status": "ACTIVE",
     "entered_on": "2026-09-18",
+    "supersedes": "BUILD_FIRST_BATCH_MODE",
+    "reason": "User explicitly requested full world/character/life production and authorized broad project work; visible production quality now outranks additional backend feature expansion.",
     "rules": [
       "Keep Pre-Unreal validation mandatory for every merge.",
-      "Keep real UE4.27.2 compile/import validation mandatory for runtime/source changes.",
-      "Continue character/world/content construction without waiting for PIE after every small batch.",
+      "Keep real UE4.27.2 compile/import validation mandatory for runtime/source or production-asset changes.",
+      "Prioritize visible world, character, lighting, vegetation, architecture, props and animation production over new backend systems unless a system is required by the visible build.",
+      "Use original project-owned assets or clearly licensed reusable assets with provenance; do not rely on ripped or unauthorized film/game assets.",
       "Do not mark PIE, device, pacing, performance or visual gates PASSED without real evidence.",
-      "After substantial build-out, run a dedicated integration/playtest/repair phase and fix regressions systematically."
+      "Build region by region at production density, starting with the Shire vertical slice while preserving all Part I story/runtime systems."
     ]
   }
 }

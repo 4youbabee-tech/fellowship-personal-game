@@ -143,6 +143,18 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionBenchMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShBench.SM_ShBench"));
     ProductionMillWheelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShMillWheel.SM_ShMillWheel"));
     ProductionLanternMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShLantern.SM_ShLantern"));
+    ProductionCottageHouseMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShCottageHouse.SM_ShCottageHouse"));
+    ProductionMillHouseMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShMillHouse.SM_ShMillHouse"));
+    ProductionStoneBridgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShStoneBridge.SM_ShStoneBridge"));
+    ProductionWellMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShWell.SM_ShWell"));
+    ProductionMarketStallMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShMarketStall.SM_ShMarketStall"));
+    ProductionStoneWallMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShStoneWall.SM_ShStoneWall"));
+    ProductionFarmGateMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShFarmGate.SM_ShFarmGate"));
+    ProductionHaystackMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShHaystack.SM_ShHaystack"));
+    ProductionFlowerBoxMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShFlowerBox.SM_ShFlowerBox"));
+    ProductionLampPostMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShLampPost.SM_ShLampPost"));
+    ProductionPicnicTableMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShPicnicTable.SM_ShPicnicTable"));
+    ProductionLoadedCartMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShCartLoaded.SM_ShCartLoaded"));
 
     if (ProductionTreeTrunkMesh) DistantTreeTrunkInstances->SetStaticMesh(ProductionTreeTrunkMesh);
     if (ProductionTreeCanopyMesh) DistantTreeCanopyInstances->SetStaticMesh(ProductionTreeCanopyMesh);
@@ -811,7 +823,7 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(HillCenters); ++Index)
     {
         const float XY = 12.0f + 2.0f * static_cast<float>(Index % 3);
-        SpawnShape(SphereMesh, HillCenters[Index], FVector(XY, XY * 0.72f, 6.8f + 0.6f * (Index % 2)),
+        SpawnShape(ProductionTurfMoundMesh ? ProductionTurfMoundMesh : SphereMesh, HillCenters[Index], FVector(XY, XY * 0.72f, 6.8f + 0.6f * (Index % 2)),
             Index % 2 == 0 ? FLinearColor(0.13f,0.33f,0.09f) : FLinearColor(0.15f,0.37f,0.10f),
             FRotator::ZeroRotator, false);
     }
@@ -1518,6 +1530,119 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
 }
 
 
+
+void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
+{
+    // CP40 visual-production layer. This pass deliberately prefers imported original
+    // project meshes and skips a detail when its production asset is unavailable.
+    // It overlays the earlier traversal-safe blockout without changing quest anchors.
+
+    auto SpawnProd = [this](UStaticMesh* Mesh, const FVector& Location, const FVector& Scale,
+        const FRotator& Rotation = FRotator::ZeroRotator, bool bCollision = true)
+    {
+        if (Mesh)
+        {
+            SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, bCollision);
+        }
+    };
+
+    // Above-ground cottages make Hobbiton read as a lived-in settlement rather than
+    // only a line of turf mounds.
+    const struct FCottagePlacement
+    {
+        FVector Location;
+        float Scale;
+        float Yaw;
+    } Cottages[] = {
+        { FVector(-1840, 420, 0), 0.72f, 12.0f },
+        { FVector(-1320, -330, 0), 0.78f, -18.0f },
+        { FVector(-760, 760, 0), 0.66f, 25.0f },
+        { FVector(120, 540, 0), 0.72f, -12.0f },
+        { FVector(840, -420, 0), 0.76f, 18.0f },
+        { FVector(1540, 520, 0), 0.70f, -28.0f }
+    };
+    for (const FCottagePlacement& P : Cottages)
+    {
+        SpawnProd(ProductionCottageHouseMesh, P.Location, FVector(P.Scale),
+            FRotator(0.0f, P.Yaw, 0.0f), true);
+        SpawnProd(ProductionFlowerBoxMesh, P.Location + FVector(-55.0f, -155.0f, 0.0f),
+            FVector(P.Scale * 0.65f), FRotator(0.0f, P.Yaw, 0.0f), false);
+    }
+
+    // Green Dragon visual shell and village social yard.
+    SpawnProd(ProductionCottageHouseMesh, FVector(-520, 360, 0), FVector(1.28f, 1.15f, 1.18f),
+        FRotator(0.0f, -8.0f, 0.0f), true);
+    SpawnProd(ProductionWellMesh, FVector(-120, 300, 0), FVector(0.82f), FRotator::ZeroRotator, true);
+
+    const FVector Market[] = {
+        FVector(-830,205,0), FVector(-650,170,0), FVector(-470,165,0),
+        FVector(-285,230,0), FVector(-95,180,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(Market); ++Index)
+    {
+        SpawnProd(ProductionMarketStallMesh, Market[Index], FVector(0.62f),
+            FRotator(0.0f, -8.0f + 4.0f * Index, 0.0f), true);
+    }
+
+    // Replace the visual read of the primitive mill/bridge with authored production shells.
+    SpawnProd(ProductionMillHouseMesh, FVector(-1250, 330, 0), FVector(0.90f),
+        FRotator(0.0f, 0.0f, 0.0f), true);
+    SpawnProd(ProductionStoneBridgeMesh, FVector(-1050, 90, 0), FVector(0.82f),
+        FRotator(0.0f, 0.0f, 0.0f), true);
+
+    // Dry-stone boundaries and timber gates establish fields and property edges.
+    const FVector WallCenters[] = {
+        FVector(-2070,-930,0), FVector(-1600,-930,0), FVector(-1110,-930,0),
+        FVector(320,430,0), FVector(790,430,0), FVector(6080,-1900,0),
+        FVector(6510,-1900,0), FVector(6940,-1900,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(WallCenters); ++Index)
+    {
+        SpawnProd(ProductionStoneWallMesh, WallCenters[Index], FVector(0.78f),
+            FRotator(0.0f, Index < 5 ? 0.0f : 4.0f, 0.0f), true);
+    }
+    SpawnProd(ProductionFarmGateMesh, FVector(-1350,-930,0), FVector(0.78f), FRotator::ZeroRotator, true);
+    SpawnProd(ProductionFarmGateMesh, FVector(6750,-1885,0), FVector(0.92f), FRotator::ZeroRotator, true);
+
+    // Farming clutter gives the East Fields visible work history.
+    const FVector Hay[] = {
+        FVector(5980,-1480,0), FVector(6280,-1320,0), FVector(7050,-1180,0),
+        FVector(8050,-780,0), FVector(8450,-560,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(Hay); ++Index)
+    {
+        SpawnProd(ProductionHaystackMesh, Hay[Index], FVector(0.70f + 0.06f * (Index % 3)),
+            FRotator(0.0f, static_cast<float>((Index * 37) % 180), 0.0f), true);
+    }
+    SpawnProd(ProductionLoadedCartMesh, FVector(6200,-1570,0), FVector(0.72f),
+        FRotator(0.0f, 16.0f, 0.0f), true);
+    SpawnProd(ProductionLoadedCartMesh, FVector(8750,-1080,0), FVector(0.78f),
+        FRotator(0.0f, -12.0f, 0.0f), true);
+
+    // Party Field gets real tables and warm lamp-post silhouettes.
+    const FVector PartyCenter(280.0f,1320.0f,0.0f);
+    const FVector PartyTables[] = {
+        PartyCenter + FVector(-420,-150,0), PartyCenter + FVector(-100,-190,0),
+        PartyCenter + FVector(240,-160,0), PartyCenter + FVector(-310,170,0),
+        PartyCenter + FVector(40,210,0), PartyCenter + FVector(380,150,0)
+    };
+    for (const FVector& Table : PartyTables)
+    {
+        SpawnProd(ProductionPicnicTableMesh, Table, FVector(0.72f), FRotator::ZeroRotator, true);
+    }
+
+    const FVector Lamps[] = {
+        PartyCenter + FVector(-520,-300,0), PartyCenter + FVector(520,-300,0),
+        PartyCenter + FVector(-520,320,0), PartyCenter + FVector(520,320,0),
+        FVector(-920, 120, 0), FVector(-620, 110, 0), FVector(-300, 125, 0),
+        FVector(20, 140, 0), FVector(340, 110, 0)
+    };
+    for (const FVector& Lamp : Lamps)
+    {
+        SpawnProd(ProductionLampPostMesh, Lamp, FVector(0.76f), FRotator::ZeroRotator, false);
+    }
+}
+
 void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
 {
     if (!DistantTreeTrunkInstances || !DistantTreeCanopyInstances || !RockInstances || !PathStoneInstances)
@@ -1751,6 +1876,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     ConfigureMorningAtmosphere();
     ConfigureFoliageInstances();
     SpawnVillage();
+    SpawnProductionVillageDetailLayer();
     SpawnFoliagePass();
     SpawnScenicDetailPass();
     SpawnSideStories();

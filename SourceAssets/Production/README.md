@@ -15,3 +15,18 @@ Current Shire production set includes:
 The one-click launcher and the editor commandlet import textures before OBJ meshes so OBJ/MTL material references can resolve. Engine BasicShapes remain fallbacks only when a production asset is missing.
 
 These assets are an intermediate game-production layer, not a claim of final photorealistic character/environment art.
+
+## CP40 visual-production expansion
+
+The production source tree now also includes an original reusable Shire architecture/prop kit:
+- cottage house, mill house and stone bridge,
+- village well, market stall, dry-stone wall and farm gate,
+- haystack, flower box, lamp post, picnic table and loaded farm cart.
+
+`Characters/Common` adds reusable original production archetypes for:
+- human body parts,
+- elf body parts,
+- dwarf body/beard parts,
+- cloak, sword, shield, axe and bow gear.
+
+These source meshes are intentionally repository-owned and import through the same UE4.27.2 commandlet. They are a visible step beyond engine primitive proxies, while final dedicated skeletal rigs, facial rigs, cloth simulation and hero-quality materials remain later production work.
