@@ -442,6 +442,15 @@
 - Existing Bree residents now benefit from the CP40 production human body archetype.
 - Added PG-041. This is not yet final rainy-night lighting/interior art/PIE visual acceptance.
 
+## CP42 — Part I Regional Production Landmark Rollout
+- Added original production landmark kits for P1C03-P1C08: Weathertop, Rivendell, Fellowship road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen.
+- Added 21 meshes: Weathertop ruin arch/pillars/camp ring; Rivendell pavilions/arches/bridge/lanterns; road tents/supplies/Caradhras rocks; Moria pillars/door/braziers/bridge; Lothlorien talans/lanterns/mirror; Anduin boats/Amon Hen stairs/ruin/monumental sentinels.
+- Added lazy production-mesh loading to `FellowshipChapterWorldBuilder` and a chapter-aware `SpawnProductionChapterLayer`.
+- Production overlays are added after each existing chapter build so story actors, triggers, route transitions and chapter logic remain intact.
+- Production meshes preserve imported materials; engine BasicShapes remain fallback/support geometry.
+- Prototype world-space debug labels are hidden by default throughout P1C03-P1C08.
+- Added PG-042. Final landscapes, interiors, skeletal character rigs, film-quality materials and PIE/device visual acceptance remain unfinished.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 

@@ -1315,7 +1315,7 @@
       "id": "WORK-WORLD-002",
       "title": "Part I world density and landmark detail pass",
       "status": "ACTIVE",
-      "rationale": "Visual-production-first rollout is active: Shire CP40 followed by Bree CP41, replacing dominant blockout silhouettes with imported/original architecture and props while preserving story anchors."
+      "rationale": "Production landmark rollout now covers Shire, Bree and P1C03-P1C08 with source-controlled original meshes; next visual layers are terrain/material/lighting density, dedicated interiors and hero-quality characters."
     },
     {
       "order": 2,
@@ -1398,13 +1398,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Visual-production-first Bree architecture replacement after CP40 Shire production expansion",
+    "reason": "Visual-production-first Part I regional landmark rollout after Shire and Bree",
     "summary": [
-      "Added an original Bree architecture kit with house, Prancing Pony inn, west gate, market stall, street lantern, hitching post, common-room table and crate stack.",
-      "Added a runtime Bree production detail layer that overlays the existing chapter blockout without moving any quest or story trigger.",
-      "Production meshes preserve imported materials while engine primitives remain fallback geometry only.",
-      "Prototype world labels are hidden by default in Bree so the playable view reads as a world rather than a debug map.",
-      "Bree population continues using the new human production archetype from CP40."
+      "Added original production kits for Weathertop, Rivendell, Fellowship road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen.",
+      "Added 21 regional production meshes including ruins, pavilions, bridges, lanterns, camp gear, Moria architecture, talans, boats, Amon Hen ruins and monumental river sentinels.",
+      "FellowshipChapterWorldBuilder now loads and overlays production region landmarks by chapter while preserving all authored story/quest logic.",
+      "Production meshes preserve imported materials; engine primitives remain fallback/support geometry only.",
+      "Prototype world labels are hidden by default across P1C03-P1C08."
     ]
   },
   "development_mode": {

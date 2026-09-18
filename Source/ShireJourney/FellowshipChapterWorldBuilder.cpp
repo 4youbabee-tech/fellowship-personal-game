@@ -14,6 +14,11 @@
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
 
+namespace FellowshipVisual
+{
+    constexpr bool ShowPrototypeWorldLabels = false;
+}
+
 AFellowshipChapterWorldBuilder::AFellowshipChapterWorldBuilder()
 {
     PrimaryActorTick.bCanEverTick = false;
@@ -61,7 +66,9 @@ AStaticMeshActor* AFellowshipChapterWorldBuilder::SpawnShape(
     MeshComponent->SetCollisionEnabled(bCollision ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
     Actor->SetActorScale3D(Scale);
 
-    if (BasicMaterial)
+    const bool bFallbackPrimitive =
+        Mesh == CubeMesh || Mesh == SphereMesh || Mesh == CylinderMesh || Mesh == ConeMesh;
+    if (BasicMaterial && bFallbackPrimitive)
     {
         UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, Actor);
         if (MID)
@@ -76,6 +83,11 @@ AStaticMeshActor* AFellowshipChapterWorldBuilder::SpawnShape(
 
 void AFellowshipChapterWorldBuilder::SpawnLabel(const FString& Text, const FVector& Location, const FLinearColor& Color)
 {
+    if (!FellowshipVisual::ShowPrototypeWorldLabels)
+    {
+        return;
+    }
+
     if (!GetWorld())
     {
         return;
@@ -217,6 +229,125 @@ void AFellowshipChapterWorldBuilder::SpawnQuestTrigger(
     Trigger->NextChapterQuestStage = NextChapterQuestStage;
 }
 
+
+void AFellowshipChapterWorldBuilder::EnsureProductionMeshes()
+{
+    if (bProductionMeshesLoaded)
+    {
+        return;
+    }
+    bProductionMeshesLoaded = true;
+
+    WeathertopArchMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Weathertop/SM_WeathertopRuinedArch.SM_WeathertopRuinedArch"));
+    WeathertopPillarMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Weathertop/SM_WeathertopBrokenPillar.SM_WeathertopBrokenPillar"));
+    WeathertopCampRingMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Weathertop/SM_WeathertopCampRing.SM_WeathertopCampRing"));
+
+    RivendellPavilionMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Rivendell/SM_RivendellPavilion.SM_RivendellPavilion"));
+    RivendellArchMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Rivendell/SM_RivendellArch.SM_RivendellArch"));
+    RivendellBridgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Rivendell/SM_RivendellBridge.SM_RivendellBridge"));
+    RivendellLanternMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Rivendell/SM_RivendellLantern.SM_RivendellLantern"));
+
+    RoadCampTentMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Road/SM_RoadCampTent.SM_RoadCampTent"));
+    RoadSupplyRackMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Road/SM_RoadSupplyRack.SM_RoadSupplyRack"));
+    CaradhrasRockMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Road/SM_CaradhrasRock.SM_CaradhrasRock"));
+
+    MoriaPillarMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaPillar.SM_MoriaPillar"));
+    MoriaDoorMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaDoor.SM_MoriaDoor"));
+    MoriaBrazierMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBrazier.SM_MoriaBrazier"));
+    MoriaBridgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBridgeSegment.SM_MoriaBridgeSegment"));
+
+    LorienTalanMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Lothlorien/SM_LorienTalan.SM_LorienTalan"));
+    LorienLanternMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Lothlorien/SM_LorienLantern.SM_LorienLantern"));
+    LorienMirrorMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Lothlorien/SM_LorienMirror.SM_LorienMirror"));
+
+    AnduinBoatMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinBoat.SM_AnduinBoat"));
+    AmonHenStairMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AmonHenStair.SM_AmonHenStair"));
+    AmonHenRuinMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AmonHenRuin.SM_AmonHenRuin"));
+    ArgonathSentinelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_ArgonathSentinel.SM_ArgonathSentinel"));
+}
+
+void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId)
+{
+    auto SpawnProd = [this](UStaticMesh* Mesh, const FVector& Location, const FVector& Scale,
+        const FRotator& Rotation = FRotator::ZeroRotator, bool bCollision = true)
+    {
+        if (Mesh)
+        {
+            SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, bCollision);
+        }
+    };
+
+    if (ChapterId == TEXT("P1C03"))
+    {
+        SpawnProd(WeathertopArchMesh, FVector(1350, 0, 405), FVector(0.92f), FRotator(0, 8, 0), true);
+        for (int32 I = 0; I < 6; ++I)
+        {
+            const float A = FMath::DegreesToRadians(I * 60.0f);
+            SpawnProd(WeathertopPillarMesh,
+                FVector(1350 + FMath::Cos(A) * 245.0f, FMath::Sin(A) * 245.0f, 390.0f),
+                FVector(0.72f + 0.05f * (I % 2)), FRotator(0, I * 27.0f, I % 2 ? 7.0f : -4.0f), true);
+        }
+        SpawnProd(WeathertopCampRingMesh, FVector(1250, -260, 420), FVector(0.72f), FRotator::ZeroRotator, false);
+    }
+    else if (ChapterId == TEXT("P1C04"))
+    {
+        const FVector Pavilions[] = { FVector(-850,-420,0), FVector(150,-520,0), FVector(1080,-360,0) };
+        for (int32 I = 0; I < UE_ARRAY_COUNT(Pavilions); ++I)
+        {
+            SpawnProd(RivendellPavilionMesh, Pavilions[I], FVector(0.78f + 0.05f * I),
+                FRotator(0, I * 12.0f - 8.0f, 0), true);
+        }
+        SpawnProd(RivendellBridgeMesh, FVector(200,720,15), FVector(0.82f), FRotator::ZeroRotator, true);
+        const FVector Arches[] = { FVector(-1350,120,0), FVector(-450,160,0), FVector(650,160,0), FVector(1450,120,0) };
+        for (int32 I = 0; I < UE_ARRAY_COUNT(Arches); ++I)
+            SpawnProd(RivendellArchMesh, Arches[I], FVector(0.82f), FRotator(0,0,0), true);
+        const FVector Lamps[] = { FVector(-1000,-200,0), FVector(-250,-250,0), FVector(500,-220,0), FVector(1200,-180,0) };
+        for (const FVector& P : Lamps) SpawnProd(RivendellLanternMesh, P, FVector(0.78f), FRotator::ZeroRotator, false);
+    }
+    else if (ChapterId == TEXT("P1C05"))
+    {
+        const FVector Tents[] = { FVector(-1550,-360,0), FVector(-1200,360,0), FVector(-820,-300,0) };
+        for (int32 I = 0; I < UE_ARRAY_COUNT(Tents); ++I)
+            SpawnProd(RoadCampTentMesh, Tents[I], FVector(0.78f), FRotator(0, I * 18.0f - 12.0f,0), true);
+        SpawnProd(RoadSupplyRackMesh, FVector(-1080,120,0), FVector(0.82f), FRotator::ZeroRotator, true);
+        for (int32 I = 0; I < 9; ++I)
+            SpawnProd(CaradhrasRockMesh, FVector(180 + I * 270.0f, (I % 2 ? 610.0f : -590.0f), 40.0f),
+                FVector(0.65f + 0.08f * (I % 3)), FRotator(I * 5.0f, I * 31.0f, 0), true);
+    }
+    else if (ChapterId == TEXT("P1C06"))
+    {
+        for (int32 I = 0; I < 14; ++I)
+        {
+            const float X = -1900.0f + (I % 7) * 600.0f;
+            const float Y = I < 7 ? -760.0f : 760.0f;
+            SpawnProd(MoriaPillarMesh, FVector(X,Y,0), FVector(0.88f), FRotator::ZeroRotator, true);
+        }
+        SpawnProd(MoriaDoorMesh, FVector(-2200,0,0), FVector(0.92f), FRotator(0,90,0), true);
+        const FVector Braziers[] = { FVector(-1200,-400,0), FVector(-450,420,0), FVector(350,-420,0), FVector(1150,420,0) };
+        for (const FVector& P : Braziers) SpawnProd(MoriaBrazierMesh, P, FVector(0.82f), FRotator::ZeroRotator, false);
+        SpawnProd(MoriaBridgeMesh, FVector(2450,0,40), FVector(0.92f), FRotator::ZeroRotator, true);
+    }
+    else if (ChapterId == TEXT("P1C07"))
+    {
+        const FVector Talans[] = { FVector(-1450,-720,0), FVector(-750,720,0), FVector(-50,-720,0), FVector(650,720,0), FVector(1350,-720,0) };
+        for (int32 I = 0; I < UE_ARRAY_COUNT(Talans); ++I)
+            SpawnProd(LorienTalanMesh, Talans[I], FVector(0.78f + 0.04f * (I % 2)), FRotator(0,I*19.0f,0), true);
+        const FVector Lamps[] = { FVector(-1100,-250,0), FVector(-500,280,0), FVector(100,-260,0), FVector(700,270,0), FVector(1300,-220,0) };
+        for (const FVector& P : Lamps) SpawnProd(LorienLanternMesh, P, FVector(0.82f), FRotator::ZeroRotator, false);
+        SpawnProd(LorienMirrorMesh, FVector(1000,420,0), FVector(0.90f), FRotator::ZeroRotator, true);
+    }
+    else if (ChapterId == TEXT("P1C08"))
+    {
+        const FVector Boats[] = { FVector(-1900,-120,0), FVector(-1500,130,0), FVector(-1080,-80,0) };
+        for (int32 I = 0; I < UE_ARRAY_COUNT(Boats); ++I)
+            SpawnProd(AnduinBoatMesh, Boats[I], FVector(0.82f), FRotator(0,I*3.0f,0), false);
+        SpawnProd(ArgonathSentinelMesh, FVector(-450,-1150,0), FVector(1.65f), FRotator(0,8,0), true);
+        SpawnProd(ArgonathSentinelMesh, FVector(-450,1150,0), FVector(1.65f), FRotator(0,172,0), true);
+        SpawnProd(AmonHenStairMesh, FVector(1320,0,0), FVector(0.86f), FRotator(0,0,0), true);
+        SpawnProd(AmonHenRuinMesh, FVector(1900,0,175), FVector(0.90f), FRotator(0,-6,0), true);
+    }
+}
+
 void AFellowshipChapterWorldBuilder::BuildChapter(FName ChapterId)
 {
     if (bBuilt || !GetWorld())
@@ -225,6 +356,7 @@ void AFellowshipChapterWorldBuilder::BuildChapter(FName ChapterId)
     }
 
     bBuilt = true;
+    EnsureProductionMeshes();
 
     if (ChapterId == TEXT("P1C03"))
     {
@@ -250,6 +382,8 @@ void AFellowshipChapterWorldBuilder::BuildChapter(FName ChapterId)
     {
         BuildAnduinAmonHen();
     }
+
+    SpawnProductionChapterLayer(ChapterId);
 }
 
 void AFellowshipChapterWorldBuilder::BuildWeathertop()

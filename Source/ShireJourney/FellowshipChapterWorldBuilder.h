@@ -28,8 +28,30 @@ private:
     UPROPERTY() UStaticMesh* CylinderMesh;
     UPROPERTY() UStaticMesh* ConeMesh;
     UPROPERTY() UMaterialInterface* BasicMaterial;
+    UPROPERTY() UStaticMesh* WeathertopArchMesh = nullptr;
+    UPROPERTY() UStaticMesh* WeathertopPillarMesh = nullptr;
+    UPROPERTY() UStaticMesh* WeathertopCampRingMesh = nullptr;
+    UPROPERTY() UStaticMesh* RivendellPavilionMesh = nullptr;
+    UPROPERTY() UStaticMesh* RivendellArchMesh = nullptr;
+    UPROPERTY() UStaticMesh* RivendellBridgeMesh = nullptr;
+    UPROPERTY() UStaticMesh* RivendellLanternMesh = nullptr;
+    UPROPERTY() UStaticMesh* RoadCampTentMesh = nullptr;
+    UPROPERTY() UStaticMesh* RoadSupplyRackMesh = nullptr;
+    UPROPERTY() UStaticMesh* CaradhrasRockMesh = nullptr;
+    UPROPERTY() UStaticMesh* MoriaPillarMesh = nullptr;
+    UPROPERTY() UStaticMesh* MoriaDoorMesh = nullptr;
+    UPROPERTY() UStaticMesh* MoriaBrazierMesh = nullptr;
+    UPROPERTY() UStaticMesh* MoriaBridgeMesh = nullptr;
+    UPROPERTY() UStaticMesh* LorienTalanMesh = nullptr;
+    UPROPERTY() UStaticMesh* LorienLanternMesh = nullptr;
+    UPROPERTY() UStaticMesh* LorienMirrorMesh = nullptr;
+    UPROPERTY() UStaticMesh* AnduinBoatMesh = nullptr;
+    UPROPERTY() UStaticMesh* AmonHenStairMesh = nullptr;
+    UPROPERTY() UStaticMesh* AmonHenRuinMesh = nullptr;
+    UPROPERTY() UStaticMesh* ArgonathSentinelMesh = nullptr;
 
     bool bBuilt = false;
+    bool bProductionMeshesLoaded = false;
 
     AStaticMeshActor* SpawnShape(UStaticMesh* Mesh, const FVector& Location, const FVector& Scale,
         const FLinearColor& Color, const FRotator& Rotation = FRotator::ZeroRotator, bool bCollision = true);
@@ -47,6 +69,8 @@ private:
         int32 NextQuestStage = 0, FName NextChapterId = NAME_None, FName NextChapterQuestId = NAME_None,
         int32 NextChapterQuestStage = 0);
 
+    void EnsureProductionMeshes();
+    void SpawnProductionChapterLayer(FName ChapterId);
     void BuildWeathertop();
     void BuildRivendell();
     void BuildFellowshipRoad();

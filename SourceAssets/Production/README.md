@@ -44,3 +44,15 @@ These source meshes are intentionally repository-owned and import through the sa
 - stacked goods/crates.
 
 The runtime Bree builder places these as a production overlay while preserving all existing story trigger coordinates.
+
+## CP42 Part I regional production expansion
+
+Production world source now includes original chapter-specific landmark kits for:
+- Weathertop,
+- Rivendell,
+- Fellowship road / Caradhras,
+- Moria,
+- Lothlorien,
+- Anduin / Amon Hen.
+
+These are imported by the standard production commandlet and overlaid by `FellowshipChapterWorldBuilder` without changing story trigger topology.
