@@ -186,6 +186,17 @@
 - Guardian checks the combat input, enemy profiles, health persistence and region cleanup.
 - This commit still requires real UE4.27 compile/PIE before COMPILE-TESTED or PIE-TESTED status.
 
+## CP26 — Part I Biome / Geography Mega Pass
+- Added Data/BiomePlan.csv as a machine-checked identity contract for every runtime chapter.
+- Weathertop now has distant broken ridges, wet lowlands/marsh pools and a readable Ford river approach.
+- Rivendell now has enclosing valley walls, layered terraces and waterfall ribbons.
+- Caradhras now has a stronger mountain silhouette and layered snow sheets along the pass.
+- Moria now reads as one route through a much larger underground city with side walls, ceiling ribs, rubble and a deeper bridge abyss.
+- Lothlorien now has a distinct golden canopy and leaf-bed palette rather than generic green forest language.
+- Anduin/Amon Hen now has canyon walls and river islands to enlarge the Argonath/river scale.
+- These are low-cost runtime prototype biomes using basic shapes; final authored terrain/material/vegetation assets are still pending.
+- Guardian now fails if any P1C01-P1C08 chapter lacks a complete biome contract.
+
 ## Current hard gate
 The current runtime-code baseline has passed static validation, real UE4.27 compile and basic Shire PIE boot.
 

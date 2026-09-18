@@ -129,6 +129,11 @@ voice_rows = read_csv_rows("Data/VoiceCuePlan.csv", {
     "VoiceCue", "Speaker", "VoiceDirection", "SpatialMode", "AssetPath", "Status", "OriginalityRule"
 })
 
+biome_rows = read_csv_rows("Data/BiomePlan.csv", {
+    "Chapter", "Region", "TerrainIdentity", "VegetationIdentity", "WaterIdentity",
+    "WeatherAtmosphere", "TraversalIdentity", "StoryHazards", "AudioIdentity", "PerformanceRule"
+})
+
 def validate_route_rows(relative: str, rows: list[dict[str, str]], check_canon: bool = False) -> None:
     for index, row in enumerate(rows, start=2):
         route = (row.get("Route") or "").strip()
@@ -153,6 +158,20 @@ def validate_route_rows(relative: str, rows: list[dict[str, str]], check_canon: 
 validate_route_rows("Data/DialogueIntent.csv", dialogue_rows, check_canon=True)
 validate_route_rows("Data/StoryBeatPlan.csv", story_rows, check_canon=True)
 validate_route_rows("Data/MusicCuePlan.csv", music_rows, check_canon=False)
+
+biome_chapters = {(row.get("Chapter") or "").strip() for row in biome_rows}
+missing_biome_chapters = sorted(approved_chapters - biome_chapters)
+unknown_biome_chapters = sorted(biome_chapters - approved_chapters)
+if missing_biome_chapters:
+    fail("BiomePlan missing runtime chapters: " + ", ".join(missing_biome_chapters))
+if unknown_biome_chapters:
+    fail("BiomePlan contains unknown runtime chapters: " + ", ".join(unknown_biome_chapters))
+for index, row in enumerate(biome_rows, start=2):
+    for field in ["Region", "TerrainIdentity", "VegetationIdentity", "WaterIdentity",
+                  "WeatherAtmosphere", "TraversalIdentity", "StoryHazards",
+                  "AudioIdentity", "PerformanceRule"]:
+        if not (row.get(field) or "").strip():
+            fail(f"Data/BiomePlan.csv:{index} has empty {field}")
 
 dialogue_keys: set[tuple[str, str, str, str, str]] = set()
 for index, row in enumerate(dialogue_rows, start=2):

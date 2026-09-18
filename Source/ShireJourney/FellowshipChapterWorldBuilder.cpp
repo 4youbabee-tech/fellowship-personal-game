@@ -229,6 +229,26 @@ void AFellowshipChapterWorldBuilder::BuildWeathertop()
 {
     SpawnShape(CubeMesh, FVector(0, 0, -70), FVector(38, 24, 0.7f), FLinearColor(0.12f, 0.14f, 0.09f));
 
+    // Distant broken ridges hide the map edge and make the lone hill feel exposed.
+    for (int32 I = 0; I < 9; ++I)
+    {
+        const float X = -2800.0f + I * 760.0f;
+        const float Y = (I % 2 == 0 ? 1750.0f : -1750.0f);
+        SpawnShape(SphereMesh, FVector(X, Y, -170.0f), FVector(4.8f, 3.2f, 2.2f + 0.25f * (I % 3)),
+            FLinearColor(0.11f, 0.13f, 0.10f), FRotator::ZeroRotator, false);
+    }
+
+    // Midgewater-style wet ground and stepping islands keep the approach visually distinct.
+    for (int32 I = 0; I < 6; ++I)
+    {
+        const float X = -1950.0f + I * 430.0f;
+        const float Y = (I % 2 == 0 ? 280.0f : -340.0f);
+        SpawnShape(CubeMesh, FVector(X, Y, -18.0f), FVector(1.9f, 1.25f, 0.045f),
+            FLinearColor(0.055f, 0.16f, 0.17f), FRotator(0.0f, I * 11.0f, 0.0f), false);
+        SpawnShape(SphereMesh, FVector(X + 120.0f, Y + 90.0f, 8.0f), FVector(0.52f, 0.38f, 0.14f),
+            FLinearColor(0.18f, 0.19f, 0.14f), FRotator::ZeroRotator, true);
+    }
+
     for (int32 I = 0; I < 10; ++I)
     {
         SpawnShape(CubeMesh, FVector(-2350.0f + I * 360.0f, 0.0f, 10.0f), FVector(2.2f, 0.75f, 0.1f),
@@ -289,6 +309,15 @@ void AFellowshipChapterWorldBuilder::BuildWeathertop()
 
     SpawnNPC(TEXT("Arwen"), FVector(2200, -160, 70), FRotator(0, 180, 0), TEXT("FlightToFord"), 0, 1,
         TEXT("There is no time to lose. I can carry him faster than the road will allow."));
+    // Ford approach: visible water, banks and scattered stones make the chase destination readable.
+    SpawnShape(CubeMesh, FVector(3000, 0, -18), FVector(5.6f, 13.0f, 0.12f),
+        FLinearColor(0.055f, 0.23f, 0.38f), FRotator::ZeroRotator, false);
+    for (int32 I = 0; I < 7; ++I)
+    {
+        SpawnShape(SphereMesh, FVector(2760.0f + I * 85.0f, (I % 2 == 0 ? 110.0f : -90.0f), 8.0f),
+            FVector(0.34f, 0.28f, 0.12f), FLinearColor(0.34f, 0.35f, 0.31f), FRotator::ZeroRotator, true);
+    }
+
     SpawnQuestTrigger(FVector(2750, 0, 90), TEXT("FlightToFord"), 1, 2,
         TEXT("The river crossing is ahead. Reach the far bank before the Riders."), TEXT("FordChase"));
     SpawnQuestTrigger(FVector(3200, 0, 90), TEXT("FlightToFord"), 2, 2,
@@ -299,6 +328,28 @@ void AFellowshipChapterWorldBuilder::BuildWeathertop()
 void AFellowshipChapterWorldBuilder::BuildRivendell()
 {
     SpawnShape(CubeMesh, FVector(0, 0, -80), FVector(38, 30, 0.8f), FLinearColor(0.12f, 0.22f, 0.14f));
+
+    // High valley walls and layered green terraces create enclosure without expensive landscape assets.
+    for (int32 I = 0; I < 8; ++I)
+    {
+        const float X = -2400.0f + I * 720.0f;
+        SpawnShape(SphereMesh, FVector(X, -2100.0f, -140.0f), FVector(5.2f, 3.0f, 3.0f + 0.25f * (I % 3)),
+            FLinearColor(0.16f, 0.25f, 0.17f), FRotator::ZeroRotator, false);
+        SpawnShape(SphereMesh, FVector(X + 220.0f, 2150.0f, -160.0f), FVector(5.0f, 3.2f, 2.8f + 0.20f * (I % 2)),
+            FLinearColor(0.14f, 0.23f, 0.16f), FRotator::ZeroRotator, false);
+    }
+
+    // Waterfall ribbons from the valley walls into the river.
+    const FVector Waterfalls[] = {
+        FVector(-1800, 1720, 310), FVector(-200, -1760, 360), FVector(1520, 1760, 330)
+    };
+    for (const FVector& P : Waterfalls)
+    {
+        SpawnShape(CubeMesh, P, FVector(0.22f, 0.10f, 3.2f),
+            FLinearColor(0.62f, 0.78f, 0.86f), FRotator::ZeroRotator, false);
+        SpawnShape(CubeMesh, P - FVector(0, 0, 300), FVector(1.5f, 0.75f, 0.04f),
+            FLinearColor(0.08f, 0.30f, 0.42f), FRotator::ZeroRotator, false);
+    }
 
     // Valley terraces, water and layered gardens.
     SpawnShape(CubeMesh, FVector(0, 720, -20), FVector(34, 2.0f, 0.2f), FLinearColor(0.06f, 0.28f, 0.42f), FRotator::ZeroRotator, false);
@@ -356,6 +407,26 @@ void AFellowshipChapterWorldBuilder::BuildFellowshipRoad()
 {
     SpawnShape(CubeMesh, FVector(0, 0, -75), FVector(46, 28, 0.75f), FLinearColor(0.19f, 0.20f, 0.17f));
 
+    // Mountain walls build toward Caradhras, while lower foothills remain visible behind the company.
+    for (int32 I = 0; I < 10; ++I)
+    {
+        const float X = -1200.0f + I * 560.0f;
+        const float Z = 120.0f + FMath::Max(0, I - 2) * 55.0f;
+        SpawnShape(ConeMesh, FVector(X, 1700.0f, Z), FVector(4.0f, 4.0f, 5.2f + 0.35f * I),
+            FLinearColor(0.42f, 0.44f, 0.45f), FRotator::ZeroRotator, false);
+        SpawnShape(ConeMesh, FVector(X + 260.0f, -1750.0f, Z - 25.0f), FVector(3.7f, 3.7f, 4.8f + 0.30f * I),
+            FLinearColor(0.39f, 0.41f, 0.42f), FRotator::ZeroRotator, false);
+    }
+
+    // Snow sheets thicken along the pass rather than appearing as one white block.
+    for (int32 I = 0; I < 9; ++I)
+    {
+        const float X = -100.0f + I * 270.0f;
+        const float Z = 60.0f + I * 23.0f;
+        SpawnShape(CubeMesh, FVector(X, (I % 2 == 0 ? 160.0f : -180.0f), Z), FVector(1.9f, 2.1f, 0.035f),
+            FLinearColor(0.82f, 0.86f, 0.88f), FRotator(0.0f, I * 7.0f, 0.0f), false);
+    }
+
     for (int32 I = 0; I < 14; ++I)
     {
         const float X = -2600.0f + I * 390.0f;
@@ -410,6 +481,27 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
 {
     SpawnShape(CubeMesh, FVector(0, 0, -80), FVector(48, 24, 0.8f), FLinearColor(0.08f, 0.085f, 0.09f));
 
+    // Massive side walls and ceiling ribs give the mine a readable scale beyond the playable corridor.
+    for (int32 I = 0; I < 10; ++I)
+    {
+        const float X = -2300.0f + I * 560.0f;
+        SpawnShape(CubeMesh, FVector(X, -1250.0f, 360.0f), FVector(2.8f, 0.65f, 4.4f),
+            FLinearColor(0.12f, 0.12f, 0.13f), FRotator::ZeroRotator, true);
+        SpawnShape(CubeMesh, FVector(X, 1250.0f, 360.0f), FVector(2.8f, 0.65f, 4.4f),
+            FLinearColor(0.12f, 0.12f, 0.13f), FRotator::ZeroRotator, true);
+        SpawnShape(CubeMesh, FVector(X, 0.0f, 760.0f), FVector(2.6f, 12.0f, 0.28f),
+            FLinearColor(0.10f, 0.10f, 0.11f), FRotator::ZeroRotator, true);
+    }
+
+    // Rubble and side-door silhouettes make the route feel like one path through a much larger city.
+    for (int32 I = 0; I < 14; ++I)
+    {
+        const float X = -1850.0f + I * 320.0f;
+        const float Y = (I % 2 == 0 ? 690.0f : -720.0f);
+        SpawnShape(CubeMesh, FVector(X, Y, 24.0f), FVector(0.42f + 0.08f * (I % 3), 0.50f, 0.32f),
+            FLinearColor(0.20f, 0.20f, 0.21f), FRotator(I * 7.0f, I * 13.0f, 0.0f), true);
+    }
+
     // Collapsed entrance / lake-side threshold carried over from the West Gate.
     SpawnShape(CubeMesh, FVector(-2350, 0, 40), FVector(3.0f, 3.0f, 0.20f), FLinearColor(0.18f, 0.19f, 0.19f));
     SpawnShape(SphereMesh, FVector(-2250, 480, 90), FVector(1.6f, 0.30f, 0.26f), FLinearColor(0.10f, 0.18f, 0.16f), FRotator(0, 30, 0), false);
@@ -436,7 +528,10 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
     SpawnShape(SphereMesh, FVector(1050, 180, 315), FVector(0.52f), FLinearColor(0.18f, 0.20f, 0.16f), FRotator::ZeroRotator, false);
     SpawnLabel(TEXT("Cave Troll Threat"), FVector(1050, 180, 440), FLinearColor(0.72f, 0.68f, 0.58f));
 
+    // Black abyss under the bridge and broken approaches on either side.
     SpawnShape(CubeMesh, FVector(2450, 0, -35), FVector(7.0f, 9.0f, 0.15f), FLinearColor(0.02f, 0.02f, 0.025f), FRotator::ZeroRotator, false);
+    SpawnShape(CubeMesh, FVector(2450, -930, 80), FVector(8.0f, 0.45f, 2.2f), FLinearColor(0.11f, 0.10f, 0.10f));
+    SpawnShape(CubeMesh, FVector(2450, 930, 80), FVector(8.0f, 0.45f, 2.2f), FLinearColor(0.11f, 0.10f, 0.10f));
     SpawnShape(CubeMesh, FVector(2450, 0, 40), FVector(5.6f, 0.38f, 0.12f), FLinearColor(0.27f, 0.26f, 0.24f));
     SpawnLabel(TEXT("Bridge of Khazad-dum"), FVector(2450, 0, 300), FLinearColor(0.82f, 0.72f, 0.52f));
 
@@ -474,6 +569,24 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
 void AFellowshipChapterWorldBuilder::BuildLothlorien()
 {
     SpawnShape(CubeMesh, FVector(0, 0, -75), FVector(40, 30, 0.75f), FLinearColor(0.08f, 0.20f, 0.09f));
+
+    // Golden canopy layers distinguish Lothlorien from the Shire/Rivendell forests.
+    for (int32 I = 0; I < 18; ++I)
+    {
+        const float X = -2450.0f + (I % 9) * 620.0f;
+        const float Y = (I < 9 ? -1180.0f : 1180.0f);
+        SpawnShape(CylinderMesh, FVector(X, Y, 210.0f), FVector(0.22f, 0.22f, 2.1f),
+            FLinearColor(0.25f, 0.16f, 0.07f), FRotator::ZeroRotator, true);
+        SpawnShape(SphereMesh, FVector(X, Y, 430.0f), FVector(1.20f, 1.20f, 0.78f),
+            FLinearColor(0.60f, 0.54f, 0.19f), FRotator::ZeroRotator, false);
+    }
+
+    // Silver-gold leaf beds in quiet clearings.
+    for (int32 I = 0; I < 10; ++I)
+    {
+        SpawnShape(SphereMesh, FVector(-1600.0f + I * 360.0f, (I % 2 == 0 ? 380.0f : -420.0f), 18.0f),
+            FVector(0.34f, 0.28f, 0.10f), FLinearColor(0.67f, 0.61f, 0.27f), FRotator::ZeroRotator, false);
+    }
 
     for (int32 I = 0; I < 20; ++I)
     {
@@ -515,6 +628,23 @@ void AFellowshipChapterWorldBuilder::BuildAnduinAmonHen()
 {
     SpawnShape(CubeMesh, FVector(0, 0, -75), FVector(48, 32, 0.75f), FLinearColor(0.12f, 0.23f, 0.11f));
     SpawnShape(CubeMesh, FVector(-650, 0, -15), FVector(24.0f, 3.4f, 0.25f), FLinearColor(0.05f, 0.25f, 0.40f), FRotator::ZeroRotator, false);
+
+    // River canyon walls frame the Argonath approach and hide the map boundary.
+    for (int32 I = 0; I < 9; ++I)
+    {
+        const float X = -2650.0f + I * 520.0f;
+        SpawnShape(SphereMesh, FVector(X, -1500.0f, 180.0f), FVector(3.8f, 2.4f, 3.4f),
+            FLinearColor(0.24f, 0.27f, 0.23f), FRotator::ZeroRotator, true);
+        SpawnShape(SphereMesh, FVector(X + 140.0f, 1500.0f, 160.0f), FVector(3.6f, 2.5f, 3.2f),
+            FLinearColor(0.22f, 0.25f, 0.22f), FRotator::ZeroRotator, true);
+    }
+
+    // Small river islands and reeds create scale between the boats and the banks.
+    for (int32 I = 0; I < 7; ++I)
+    {
+        SpawnShape(SphereMesh, FVector(-1900.0f + I * 420.0f, (I % 2 == 0 ? 120.0f : -150.0f), -2.0f),
+            FVector(0.70f, 0.42f, 0.12f), FLinearColor(0.24f, 0.28f, 0.15f), FRotator::ZeroRotator, false);
+    }
 
     SpawnShape(CylinderMesh, FVector(-250, -520, 470), FVector(1.1f, 1.1f, 4.7f), FLinearColor(0.36f, 0.37f, 0.35f));
     SpawnShape(CylinderMesh, FVector(-250, 520, 470), FVector(1.1f, 1.1f, 4.7f), FLinearColor(0.36f, 0.37f, 0.35f));

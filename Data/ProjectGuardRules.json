@@ -38,7 +38,8 @@
     "Data/StoryBeatPlan.csv",
     "Data/DialogueIntent.csv",
     "Data/MusicCuePlan.csv",
-    "Data/VoiceCuePlan.csv"
+    "Data/VoiceCuePlan.csv",
+    "Data/BiomePlan.csv"
   ],
   "required_debug_actions": [
     "QuickSave",

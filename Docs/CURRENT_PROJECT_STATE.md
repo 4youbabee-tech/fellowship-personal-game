@@ -213,6 +213,7 @@ Use all of these, with this priority for their purpose:
 6. `Data/StoryBeatPlan.csv` — presentation beat plan.
 7. `Data/DialogueIntent.csv` — dialogue intent.
 8. `Data/MusicCuePlan.csv` — original music direction.
+9. `Data/BiomePlan.csv` — chapter terrain/vegetation/water/weather/traversal/hazard/audio/performance contract.
 9. Runtime C++ — actual implementation.
 
 If runtime and documentation disagree, stop and reconcile them in the same change.
