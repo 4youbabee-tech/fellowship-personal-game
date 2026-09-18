@@ -322,6 +322,13 @@
 - Unreal Engine 4.27.2 was detected, UnrealHeaderTool/C++ build completed, and the production importer reported `50 files, 0 failures`.
 - This closes the CI infrastructure regression from Builds #14/#18. It does not replace the still-pending gameplay PIE/device hard gate.
 
+## CP30M — Governor Work Reminders + Pacing Review Contract
+- Added `Data/PlayerExperiencePacingPlan.json` with human-review dimensions and chapter-specific pacing focus/risk flags for P1C01-P1C08 plus Gandalf/Isengard.
+- Updated `Scripts/project_governor.py` so every validation run prints the active gate and unfinished CRITICAL/HIGH requirements with the next recorded missing-work item.
+- Updated `REQ-MEM-002` to IMPLEMENTED for project-session reminders.
+- Updated `REQ-QUALITY-002` to PARTIAL: pacing criteria are structured, but human play review/tuning is still pending.
+- CI validates coverage of the pacing-review contract but does not claim that any chapter is fun or accepted.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
