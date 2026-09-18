@@ -18,7 +18,7 @@ Purpose:
 - survive lost chats and developer handoffs.
 
 Machine-readable source:
-- `Data/ProjectRequirements.json`
+- `Data/ProjectGovernor.json`
 
 Human recovery entry points:
 - `Docs/CURRENT_PROJECT_STATE.md`
@@ -55,7 +55,7 @@ static/build/PIE/device/visual proof.
 
 ## 3. Required fields for every request
 
-Each entry in `Data/ProjectRequirements.json` records:
+Each entry in `Data/ProjectGovernor.json` records:
 
 - stable requirement ID,
 - title,
@@ -99,7 +99,7 @@ When implementation lands:
 A new human or automated programmer should:
 
 1. read `Docs/CURRENT_PROJECT_STATE.md`,
-2. read `Data/ProjectRequirements.json`,
+2. read `Data/ProjectGovernor.json`,
 3. read `Docs/CHECKPOINTS.md`,
 4. read `Source/ShireJourney/README.md`,
 5. inspect the latest `develop` head and CI,
@@ -123,10 +123,8 @@ The purpose of this ledger is to ensure future requests do leave that trace.
 Permanent memory is not enough by itself. The project also uses a deterministic Governor:
 
 - `Docs/PROJECT_GOVERNOR.md` — human-readable rules.
-- `Data/ProjectGovernorPolicy.json` — hard invariants and priority order.
-- `Data/ProjectDecisions.json` — accepted decisions and unresolved conflicts.
-- `Data/ExperienceQualityGates.json` — region-by-region technical and experiential proof.
-- `Scripts/project_governor.py` — CI validation of the structured control layer.
+- `Data/ProjectGovernor.json` — the single authority containing requirements, decisions, conflicts, priorities, active gate and region quality state.
+- `Scripts/project_governor.py` — CI validation of that single authority.
 
 When two requests conflict, do not silently choose one. Record both, create a conflict/decision, and preserve the reason for the resolution.
 
