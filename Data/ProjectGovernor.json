@@ -669,7 +669,8 @@
         "exact-commit acquisition uses retrying GitHub API archive download",
         "PowerShell checkout uses explicit execution-policy bypass",
         "superseded develop Unreal runs cancel so the latest head can validate",
-        "Unreal Build Validation #19 succeeded on exact commit 0936f2e779c6a6d1b4d209628d206f5d11ca3f9c with UE4.27.2 compile and production import 50 files / 0 failures"
+        "Unreal Build Validation #19 succeeded on exact commit 0936f2e779c6a6d1b4d209628d206f5d11ca3f9c with UE4.27.2 compile and production import 50 files / 0 failures",
+        "Build #27 reached UE4.27.2 C++ compilation and exposed a real ShireAmbientNPC compile regression: Bird motion referenced PrototypeWalkPhase instead of the class's WalkPhase field; fix prepared in the smallest source/guard layer"
       ],
       "missing_work": [
         "GitHub develop/main branch protection or ruleset is not currently enabled",
@@ -1386,12 +1387,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Build-first ambient micro-life pass after CP35 sky motion",
+    "reason": "UE4.27.2 Build #27 compile regression repair",
     "summary": [
-      "Added reusable ActivityPropType to ambient residents.",
-      "Added baskets, crates, satchels, mugs, books and lanterns by role/region.",
-      "Added small work/social arm gestures and carried-prop motion.",
-      "Kept the feature on the existing distance-throttled ambient actor instead of adding a heavy new AI system."
+      "Build #27 reached Unreal C++ compilation; infrastructure checkout and UE detection were working.",
+      "ShireAmbientNPC Bird motion referenced nonexistent PrototypeWalkPhase at lines around 631-637.",
+      "Replaced the stale player-character field name with the ambient actor's existing WalkPhase.",
+      "Updated PG-035 static guard to require the real field name.",
+      "No gameplay design or data scope changed."
     ]
   },
   "development_mode": {
