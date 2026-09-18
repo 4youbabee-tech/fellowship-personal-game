@@ -236,6 +236,15 @@
 - Follow-up `bd3d0be...` derived the checkpoint story-beat set directly from the already-loaded story rows; Pre-Unreal Validation #112 then succeeded.
 - Unreal Build Validation #10 also succeeded on exact head `bd3d0be...`: UE4.27.2 C++ build passed and the production import reported `50 files, 0 failures`.
 
+## CP30A — Source Architecture / Handoff Contract
+- Added `Source/ShireJourney/README.md` as the runtime-code handoff entry point so recovery does not depend on chat history.
+- Added `Data/SourceArchitecturePlan.json` with one explicit domain/role/current path/target path record for every runtime module `.h`, `.cpp` and `.cs` file.
+- Defined the controlled target layout as `Public/<Domain>` and `Private/<Domain>` across Core, Characters, World, Subsystems, UI, SaveGame and Prototypes.
+- Added Project Guardian PG-019 so untracked, duplicate, stale or misclassified runtime source files fail Pre-Unreal Validation.
+- Updated the production completeness matrix through CP28-CP30 and documented CP29 self-hosted UE4.27.2 build/import evidence separately from gameplay/visual maturity.
+- This is a governance/maintenance checkpoint only. It does **not** claim the physical source-folder migration has happened and it does not change gameplay.
+- Physical migration remains a dedicated follow-up maintenance change after the current functional smoke-test gate is healthy.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
