@@ -92,7 +92,7 @@
       "aliases": [
         "Strider"
       ],
-      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
       "runtime_role": "COMPANION",
       "chapters": [
         "P1C02",
@@ -107,7 +107,7 @@
     {
       "id": "BOROMIR",
       "display_name": "Boromir",
-      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
       "runtime_role": "COMPANION",
       "chapters": [
         "P1C04",
@@ -120,7 +120,7 @@
     {
       "id": "LEGOLAS",
       "display_name": "Legolas",
-      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
       "runtime_role": "COMPANION",
       "chapters": [
         "P1C04",
@@ -133,7 +133,7 @@
     {
       "id": "GIMLI",
       "display_name": "Gimli",
-      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
       "runtime_role": "COMPANION",
       "chapters": [
         "P1C04",
@@ -156,7 +156,7 @@
     {
       "id": "ARWEN",
       "display_name": "Arwen",
-      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1C03",
@@ -166,7 +166,7 @@
     {
       "id": "ELROND",
       "display_name": "Elrond",
-      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1C04"
@@ -175,7 +175,7 @@
     {
       "id": "HALDIR",
       "display_name": "Haldir",
-      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1C07"
@@ -184,7 +184,7 @@
     {
       "id": "GALADRIEL",
       "display_name": "Galadriel",
-      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1C07"
@@ -193,7 +193,7 @@
     {
       "id": "SARUMAN",
       "display_name": "Saruman",
-      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1G01"
@@ -202,7 +202,7 @@
     {
       "id": "BARLIMAN",
       "display_name": "Barliman Butterbur",
-      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1C02"
@@ -211,7 +211,7 @@
     {
       "id": "GATE_KEEPER",
       "display_name": "Gate Keeper",
-      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1C02"
@@ -293,21 +293,21 @@
       "region": "Bree",
       "archetype": "BREE_TOWNSPERSON",
       "runtime_state": "PRESENT",
-      "visual_tier": "PROCEDURAL_DISTINCT_PROXY"
+      "visual_tier": "PRODUCTION_ARCHETYPE"
     },
     {
       "chapter": "P1C04",
       "region": "Rivendell",
       "archetype": "ELF",
       "runtime_state": "PRESENT",
-      "visual_tier": "PROCEDURAL_DISTINCT_PROXY"
+      "visual_tier": "PRODUCTION_ARCHETYPE"
     },
     {
       "chapter": "P1C07",
       "region": "Lothlorien",
       "archetype": "ELF",
       "runtime_state": "PRESENT",
-      "visual_tier": "PROCEDURAL_DISTINCT_PROXY"
+      "visual_tier": "PRODUCTION_ARCHETYPE"
     }
   ],
   "chapter_cast_contracts": [
@@ -451,7 +451,7 @@
     "major enemies"
   ],
   "visual_identity_pass": {
-    "status": "RUNTIME_IMPLEMENTED_PENDING_BUILD",
+    "status": "PRODUCTION_ARCHETYPE_EXPANDED_PENDING_BUILD",
     "purpose": "Make core cast immediately distinguishable during the batch-build phase using low-cost modular pieces before dedicated rigged production characters exist.",
     "features": [
       "Sam satchel identity",
@@ -461,8 +461,32 @@
       "Legolas cloak/bow/quiver silhouette",
       "Gimli beard/axe silhouette",
       "Gandalf/Saruman staff and beard silhouette",
-      "Arwen/Elrond/Galadriel cloak/headpiece silhouette"
+      "Arwen/Elrond/Galadriel cloak/headpiece silhouette",
+      "reusable production human body archetype",
+      "reusable production elf body archetype",
+      "reusable production dwarf body archetype",
+      "production cloak/sword/bow/axe/shield gear meshes",
+      "Bree and Elven ambient residents promoted from engine primitives to production body meshes"
     ],
-    "proof_limit": "This is a procedural visual-identity pass, not final character art or visual acceptance."
+    "proof_limit": "Production archetypes remove engine primitive bodies for most visible Part I cast, but they are still modular static-mesh characters rather than final rigged film-quality character art."
+  },
+  "production_archetype_expansion": {
+    "status": "RUNTIME_IMPLEMENTED_PENDING_BUILD",
+    "scope": [
+      "Aragorn",
+      "Boromir",
+      "Legolas",
+      "Gimli",
+      "Arwen",
+      "Elrond",
+      "Haldir",
+      "Galadriel",
+      "Saruman",
+      "Bree named residents",
+      "Bree ambient residents",
+      "Elven ambient residents"
+    ],
+    "source_root": "SourceAssets/Production/Characters/Common",
+    "notes": "Original procedural project-owned meshes. Dedicated hero rigs, facial rigs, cloth and final animation remain future visual-production layers."
   }
 }

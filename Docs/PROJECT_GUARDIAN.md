@@ -303,6 +303,15 @@ This converts failures into permanent project knowledge.
 
 **Guard:** Pre-Unreal Validation protects the structs, caps, route key, save/restore wiring and explicit partial-scope declaration.
 
+### PG-040 — Visual production must replace blockout without breaking story/runtime
+**Risk:** a large art pass can accidentally move story anchors, reintroduce engine primitives as the primary visual language, or add assets that never import on the real UE4.27.2 machine.
+
+**Contract:** production visual layers may replace or overlay blockout geometry, but quest/story trigger coordinates and mandatory story routing remain unchanged unless separately reviewed. New production meshes live under `SourceAssets/Production`, are imported by `ShireProductionImport`, and are referenced through `/Game/Production`.
+
+**Asset rule:** project-owned original assets and clearly licensed reusable assets are allowed. Ripped or unauthorized film/game assets are not part of the production pipeline.
+
+**Proof rule:** source + Pre-Unreal + UE build/import success proves assets are loadable, not that final visual quality, PIE composition or device performance is accepted.
+
 ## What Guardian must never do automatically
 
 - change canon,

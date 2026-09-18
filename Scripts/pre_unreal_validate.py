@@ -776,6 +776,76 @@ knowledge_guard = bounded_dialogue.get("knowledge_guard", {})
 if knowledge_guard.get("default") != "DENY_UNLISTED" or knowledge_guard.get("cross_route_knowledge_default") != "DENY":
     fail("BoundedDialoguePlan knowledge guard must default-deny unlisted and cross-route knowledge")
 
+# PG-040: visual-production-first assets must stay source-controlled, importable and runtime-referenced.
+shire_asset_root = ROOT / "SourceAssets" / "Production" / "World" / "Shire"
+common_character_root = ROOT / "SourceAssets" / "Production" / "Characters" / "Common"
+for asset_name in [
+    "SM_ShCottageHouse.obj",
+    "SM_ShMillHouse.obj",
+    "SM_ShStoneBridge.obj",
+    "SM_ShWell.obj",
+    "SM_ShMarketStall.obj",
+    "SM_ShStoneWall.obj",
+    "SM_ShFarmGate.obj",
+    "SM_ShHaystack.obj",
+    "SM_ShFlowerBox.obj",
+    "SM_ShLampPost.obj",
+    "SM_ShPicnicTable.obj",
+    "SM_ShCartLoaded.obj",
+]:
+    if not (shire_asset_root / asset_name).exists():
+        fail(f"PG-040 Shire production asset missing: {asset_name}")
+
+for asset_name in [
+    "SM_Human_Torso.obj",
+    "SM_Human_Head.obj",
+    "SM_Human_Hair.obj",
+    "SM_Human_Arm.obj",
+    "SM_Human_Leg.obj",
+    "SM_Elf_Torso.obj",
+    "SM_Elf_Head.obj",
+    "SM_Elf_Hair.obj",
+    "SM_Dwarf_Torso.obj",
+    "SM_Dwarf_Head.obj",
+    "SM_Dwarf_Beard.obj",
+    "SM_Dwarf_Arm.obj",
+    "SM_Dwarf_Leg.obj",
+    "SM_ProductionCloak.obj",
+    "SM_ProductionSword.obj",
+    "SM_ProductionShield.obj",
+    "SM_ProductionAxe.obj",
+    "SM_ProductionBow.obj",
+]:
+    if not (common_character_root / asset_name).exists():
+        fail(f"PG-040 common production character asset missing: {asset_name}")
+
+shire_visual_cpp = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
+named_visual_cpp = read(SOURCE / "ShireNPC.cpp")
+ambient_visual_cpp = read(SOURCE / "ShireAmbientNPC.cpp")
+for symbol in [
+    "SpawnProductionVillageDetailLayer",
+    "ProductionCottageHouseMesh",
+    "ProductionMillHouseMesh",
+    "ProductionStoneBridgeMesh",
+    "ProductionMarketStallMesh",
+]:
+    if symbol not in shire_visual_cpp:
+        fail(f"PG-040 Shire visual-production runtime reference missing: {symbol}")
+
+for symbol in [
+    "SM_Human_Torso",
+    "SM_Elf_Torso",
+    "SM_Dwarf_Torso",
+    "SM_ProductionCloak",
+    "SM_ProductionSword",
+]:
+    if symbol not in named_visual_cpp:
+        fail(f"PG-040 named-character production archetype reference missing: {symbol}")
+
+for symbol in ["SM_Human_Torso", "SM_Elf_Torso"]:
+    if symbol not in ambient_visual_cpp:
+        fail(f"PG-040 ambient production archetype reference missing: {symbol}")
+
 # PG-039: named-NPC memory must remain compact, bounded, route-partitioned and save-backed.
 memory_route_h = read(SOURCE / "ShireRouteState.h")
 memory_quest_h = read(SOURCE / "ShireQuestSubsystem.h")

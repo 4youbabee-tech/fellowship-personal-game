@@ -423,6 +423,16 @@
 - Alias resolution, NAMED_LIGHT four-memory budgets, expiry, automatic event writers and memory-aware dialogue remain pending.
 - Added PG-039. No PIE/device/save-performance acceptance is claimed.
 
+## CP40 — Visual Production First: Shire + Reusable Character Archetypes
+- Switched the project sequencing mode from `BUILD_FIRST_BATCH_MODE` to `VISUAL_PRODUCTION_FIRST` by explicit user direction.
+- Added 12 original production Shire meshes: cottage, mill house, stone bridge, well, market stall, dry-stone wall, farm gate, haystack, flower box, lamp post, picnic table and loaded farm cart.
+- Added a new Shire production detail layer that places cottages, market infrastructure, mill/bridge shells, wells, boundaries, farm clutter and party-field furniture without moving story/quest anchors.
+- Horizon hills now prefer the imported turf-mound production mesh instead of an engine sphere when available.
+- Added reusable original human, elf and dwarf production body archetypes plus cloak/sword/shield/axe/bow meshes.
+- Upgraded Aragorn/Boromir/Legolas/Gimli/Arwen/Elrond/Haldir/Galadriel/Saruman/Bree named residents and Bree/Elf ambient residents to production archetype bodies where assets resolve.
+- This is a major visible replacement of engine primitives, but it is not yet final skeletal rig/facial/cloth/photoreal character production.
+- Added PG-040 and kept real UE4.27.2 compile/import validation mandatory.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
