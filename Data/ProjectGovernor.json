@@ -319,13 +319,17 @@
         "Current route/story persistence exists, but no general named-NPC memory/relationship system is claimed"
       ],
       "implementation_refs": [
-        "Data/NPCMemoryPlan.json defines bounded memory tiers, expiry, per-profile budgets, alias identity sharing and route-partitioned save contract"
+        "Data/NPCMemoryPlan.json defines bounded memory tiers, expiry, per-profile budgets, alias identity sharing and route-partitioned save contract",
+        "FShireNPCMemoryBucket stores compact route-partitioned event IDs and bounded relationship deltas",
+        "UShireQuestSubsystem provides bounded remember/query/relationship APIs and sanitizes restored state",
+        "UShireSaveGame persists NPCMemoryState through manual saves and automatic checkpoints"
       ],
       "missing_work": [
-        "runtime NPC memory store",
-        "ShireSaveGame integration",
-        "relationship-memory application",
-        "schema migration code",
+        "canonical alias resolution from NPCSocialModel at runtime",
+        "NAMED_LIGHT four-memory budget enforcement",
+        "chapter-expiry pruning",
+        "automatic named-NPC event writers and relationship consumers",
+        "memory-aware dialogue selection",
         "PIE save/load validation",
         "target-device save/performance validation"
       ],
@@ -1382,7 +1386,7 @@
       "id": "WORK-LW-003",
       "title": "Implement persistent named-NPC memory and bounded dialogue intelligence",
       "status": "PARTIAL",
-      "rationale": "NPC memory and bounded dialogue contracts are data-defined; runtime memory/save/dialogue integration remains gated."
+      "rationale": "Bounded route-partitioned named-NPC memory now persists through save/checkpoint snapshots; alias resolution, expiry, automatic writers and memory-aware dialogue remain pending."
     },
     {
       "order": 11,
@@ -1394,14 +1398,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Build-first ambient NPC-to-NPC conversation runtime integrated after CP37",
+    "reason": "Build-first named-NPC memory runtime foundation after CP38",
     "summary": [
-      "Preserved CP37 automatic checkpoint/respawn foundation and CP35A Bird compile repair from current develop.",
-      "Added world-space two-turn social captions for ambient residents near the player.",
-      "Added original role-specific Shire, Bree and Elven ambient dialogue.",
-      "Capped simultaneous conversations to two and added 90-second same-pair cooldown.",
-      "Excluded Bird/Courier/RoadWalker roles from social dialogue.",
-      "Named Fellowship/story-reactive conversations remain a later layer; no PIE/device acceptance claimed."
+      "Added route-partitioned named-NPC memory buckets to the quest runtime.",
+      "Persisted compact event IDs and bounded relationship deltas through manual saves and automatic checkpoints.",
+      "Enforced 12-event and 8-relationship hard caps with restore-time sanitization.",
+      "Kept raw dialogue text out of persistent memory and preserved route isolation.",
+      "Memory-aware dialogue selection, alias resolution, expiry and PIE/device proof remain later layers."
     ]
   },
   "development_mode": {

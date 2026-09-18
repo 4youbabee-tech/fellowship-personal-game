@@ -412,6 +412,17 @@
 - Named Fellowship banter, story-reactive named dialogue, voice/audio and persistent named-NPC conversation memory remain pending.
 - Added PG-038. No PIE/device/visual dialogue acceptance is claimed.
 
+## CP39 — Bounded Named-NPC Memory Runtime Foundation
+- Added compact named-NPC memory records with event ID, chapter and priority only; raw dialogue transcripts are never persisted.
+- Added route-partitioned memory buckets so FrodoMain and GandalfParallel memory do not leak into each other.
+- Added a hard cap of 12 remembered events and 8 relationship deltas per named-NPC route bucket, with relationship values clamped to -100..100.
+- Added remember/query/relationship APIs to `UShireQuestSubsystem`.
+- Added `NPCMemoryState` to `UShireSaveGame` and wired it through the shared manual-save/automatic-checkpoint snapshot and restore path.
+- Restore sanitizes oversized future/legacy memory state back to the hard budgets.
+- Updated `NPCMemoryPlan` and the single Project Governor to `RUNTIME_FOUNDATION`.
+- Alias resolution, NAMED_LIGHT four-memory budgets, expiry, automatic event writers and memory-aware dialogue remain pending.
+- Added PG-039. No PIE/device/save-performance acceptance is claimed.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
