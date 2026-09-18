@@ -242,6 +242,9 @@ void ABreePrototypeWorldBuilder::SpawnBreeTown()
             Townsperson->RoutinePointA = BreeCrowd[Index];
             Townsperson->RoutinePointB = BreeCrowd[Index] + FVector(170.0f + 15.0f * (Index % 3), (Index % 2 ? 95.0f : -95.0f), 0.0f);
             Townsperson->RoutineRole = TEXT("BreeTownsperson");
+            Townsperson->ActivityPropType =
+                Index % 3 == 0 ? TEXT("Basket") :
+                (Index % 3 == 1 ? TEXT("Crate") : TEXT("Mug"));
             Townsperson->WalkSpeed = 42.0f + 4.0f * (Index % 3);
         }
     }
