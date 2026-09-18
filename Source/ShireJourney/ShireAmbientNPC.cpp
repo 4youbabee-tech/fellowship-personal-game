@@ -246,6 +246,13 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
+    if (APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0))
+    {
+        const float Distance = FVector::Dist2D(PlayerPawn->GetActorLocation(), GetActorLocation());
+        PrimaryActorTick.TickInterval = Distance > DormantTickDistance ? 0.75f :
+            (Distance > ReducedTickDistance ? 0.22f : 0.0f);
+    }
+
     UpdateAwareness(DeltaSeconds);
 
     if (bObservingPlayer)

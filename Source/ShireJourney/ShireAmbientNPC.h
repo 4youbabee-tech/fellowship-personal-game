@@ -53,6 +53,12 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Awareness", meta=(ClampMin="1.0", ClampMax="2.0"))
     float RunningNoticeMultiplier = 1.35f;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance")
+    float ReducedTickDistance = 3500.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Performance")
+    float DormantTickDistance = 9000.0f;
+
 private:
     UPROPERTY()
     USceneComponent* Root;

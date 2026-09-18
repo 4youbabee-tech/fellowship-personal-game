@@ -187,6 +187,7 @@ The audio subsystem routes named ambience/music/SFX/voice events.
 - Amon Hen Boromir pressure / defense / Fellowship break.
 - lightweight ambient NPC awareness.
 - CP21 Shire mega-pass source adds a mill/stream landmark, market detail, denser party preparation, crop rows, wooded-road cover, richer ferry geometry, more ambient residents/optional talkers and Black Rider last-known-position investigation behavior.
+- CP22 Shire world-scale source pass expands Bag End-to-Ferry travel from roughly 50m to roughly 260m, separates Hobbiton/fields/wooded road/ferry with occlusion hills, introduces continuous curved roads and exploration loops, redistributes story/side-story actors to the larger geography, expands instanced ground cover and adds distance-adaptive ambient-NPC tick rates for the low-spec target.
 
 ## Story/data source hierarchy
 

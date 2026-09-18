@@ -135,6 +135,16 @@
 - Current HUD rendered Frodo / P1C01_Main and the opening objective correctly.
 - This proves compile + basic PIE boot only; save/load, route round-trip and chapter smoke tests remain pending.
 
+## CP22 — Shire World Scale & Traversal Mega Pass
+- Expanded the Shire travel footprint so Bag End-to-Ferry is roughly 260m instead of one compressed arena.
+- Kept Hobbiton socially dense while separating eastern fields, wooded road and ferry into distinct travel regions.
+- Added terrain/hill occlusion so later landmarks are discovered through travel rather than visible from spawn.
+- Rebuilt the main lane as a continuous curved road and added field/exploration loops.
+- Redistributed Merry/Pippin, Black Rider, side stories and ferry progression to the new geography.
+- Expanded HISM foliage across the larger world rather than multiplying ground-cover actors.
+- Added distance-adaptive ambient-NPC tick intervals to protect the 30 FPS target.
+- Requires the next milestone build/PIE pass before being marked compile/PIE/device tested.
+
 ## Current hard gate
 The current runtime-code baseline has passed static validation, real UE4.27 compile and basic Shire PIE boot.
 
