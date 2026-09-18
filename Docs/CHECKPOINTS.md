@@ -293,6 +293,13 @@
 - Updated LW1 planning and the single Project Governor to record the data layer as PARTIAL while runtime scheduler/social-context consumption remains pending.
 - No runtime gameplay behavior changed; this was deliberately selected as remote-safe work while the F9/F8/chapter/device gate remains open.
 
+## CP30G — LW2 NPC Conversation Contract
+- Added `Data/NPCConversationPlan.json` as the data-first contract for bounded NPC-to-NPC contextual conversations.
+- Defined participant eligibility, conversation sets, intent types, story/knowledge gating, priority, story-critical/danger preemption, conversation caps, cooldowns and repetition fallback.
+- Added PG-025 validation for intent/set uniqueness, valid NPC profile references, required sets and mandatory preemption/cap rules.
+- Updated LW2 planning and the single Project Governor to show that selection/repetition contracts are PARTIAL while actual runtime conversation playback remains pending.
+- No runtime conversation behavior was enabled; this remains remote-safe preparatory work while the F9/F8/chapter/device hard gate is open.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
