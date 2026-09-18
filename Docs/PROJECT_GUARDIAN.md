@@ -105,6 +105,15 @@ This converts failures into permanent project knowledge.
 
 **Guard:** static validation rejects `Task->bAsync` / `->bAsync` in the production import commandlet.
 
+### PG-014 — Editor commandlet module must load before commandlet discovery
+**Observed failure:** the 2026-09-18 target-machine asset-import run exited with `Failed to find commandlet class ShireProductionImportCommandlet` even though the editor-tools module and generated commandlet code had compiled.
+
+**Root cause:** `ShireJourneyEditorTools` was configured with `LoadingPhase: PostEngineInit`. UE4.27 resolves the requested `-run=` commandlet before that phase, so the class was not registered when lookup occurred.
+
+**Fix pattern:** keep `ShireJourneyEditorTools` as an `Editor` module but load it at the `Default` phase.
+
+**Guard:** static validation requires the editor-tools module to remain `Type: Editor` with `LoadingPhase: Default`.
+
 ## What Guardian must never do automatically
 
 - change canon,

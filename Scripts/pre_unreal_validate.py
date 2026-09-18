@@ -226,6 +226,18 @@ if uproject.exists():
         modules = descriptor.get("Modules") or []
         if not any(module.get("Name") == "ShireJourney" for module in modules if isinstance(module, dict)):
             fail("ShireJourney module missing from .uproject")
+        editor_tools = next(
+            (module for module in modules if isinstance(module, dict)
+             and module.get("Name") == "ShireJourneyEditorTools"),
+            None,
+        )
+        if not editor_tools:
+            fail("ShireJourneyEditorTools module missing from .uproject")
+        else:
+            if editor_tools.get("Type") != "Editor":
+                fail("PG-014: ShireJourneyEditorTools must remain an Editor module")
+            if editor_tools.get("LoadingPhase") != "Default":
+                fail("PG-014: ShireJourneyEditorTools must load at Default phase so commandlets are discoverable")
     except json.JSONDecodeError as exc:
         fail(f"Invalid ShireJourney.uproject JSON: {exc}")
 
