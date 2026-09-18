@@ -1,0 +1,889 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_NPC_SOCIAL_MODEL_V1",
+  "purpose": "Data-first identity, role, knowledge, schedule and relationship contract for Part I NPC intelligence. This file defines bounded context; runtime behavior is a separate implementation step.",
+  "status_values": [
+    "FOUNDATION_ONLY",
+    "DATA_DEFINED",
+    "RUNTIME_PARTIAL",
+    "RUNTIME_VALIDATED"
+  ],
+  "profile_types": [
+    "NAMED",
+    "AMBIENT_ARCHETYPE"
+  ],
+  "knowledge_tags": [
+    "SHIRE_LOCAL",
+    "BREE_LOCAL",
+    "RIVENDELL_LOCAL",
+    "FELLOWSHIP_MEMBER",
+    "RANGER_CONTEXT",
+    "WIZARD_CONTEXT",
+    "ISENGARD_CONTEXT",
+    "LORIEN_CONTEXT",
+    "MAIN_STORY_CONTEXT"
+  ],
+  "schedule_phase_types": [
+    "HOME",
+    "WORK",
+    "TRAVEL",
+    "SOCIAL",
+    "REST",
+    "STORY_OVERRIDE",
+    "DANGER_OVERRIDE"
+  ],
+  "relationship_types": [
+    "FAMILY",
+    "FRIEND",
+    "COMMUNITY",
+    "ALLY",
+    "AUTHORITY",
+    "TRUST",
+    "DISTRUST",
+    "RIVAL",
+    "UNKNOWN"
+  ],
+  "runtime_rules": [
+    "Profiles provide context and limits; they do not generate dialogue by themselves.",
+    "An NPC may only use dialogue knowledge allowed by its knowledge_tags plus story-state gates.",
+    "STORY_OVERRIDE and DANGER_OVERRIDE always outrank ambient schedule phases.",
+    "Named NPC schedules may be sparse when film-story placement controls their location.",
+    "Ambient archetypes may use cheap aggregate schedules and must not require persistent per-instance memory.",
+    "Aliases refer to the same identity and must not create duplicate persistent memories.",
+    "Relationship data cannot alter mandatory film story outcomes."
+  ],
+  "external_actor_ids": [
+    "PLAYER_FRODO"
+  ],
+  "profiles": [
+    {
+      "id": "NPC_HAMFAST_GAMGEE",
+      "display_name": "Hamfast Gamgee",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C01"
+      ],
+      "roles": [
+        "GARDENER",
+        "SHIRE_ELDER"
+      ],
+      "community": "HOBBITON",
+      "temperament_tags": [
+        "PRACTICAL",
+        "LOCAL",
+        "CAUTIOUS"
+      ],
+      "knowledge_tags": [
+        "SHIRE_LOCAL"
+      ],
+      "persistence_tier": "NAMED_LIGHT",
+      "anchors": [
+        "HOBBITON_HOME",
+        "HOBBITON_GARDEN"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_ROSIE_COTTON",
+      "display_name": "Rosie Cotton",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C01"
+      ],
+      "roles": [
+        "SHIRE_RESIDENT",
+        "SOCIAL_CONTACT"
+      ],
+      "community": "HOBBITON",
+      "temperament_tags": [
+        "WARM",
+        "SOCIABLE"
+      ],
+      "knowledge_tags": [
+        "SHIRE_LOCAL"
+      ],
+      "persistence_tier": "NAMED_LIGHT",
+      "anchors": [
+        "HOBBITON_SOCIAL"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_FARMER_MAGGOT",
+      "display_name": "Farmer Maggot",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C01"
+      ],
+      "roles": [
+        "FARMER",
+        "SHIRE_RESIDENT"
+      ],
+      "community": "EASTFARTHING",
+      "temperament_tags": [
+        "DIRECT",
+        "PROTECTIVE",
+        "PRACTICAL"
+      ],
+      "knowledge_tags": [
+        "SHIRE_LOCAL"
+      ],
+      "persistence_tier": "NAMED_LIGHT",
+      "anchors": [
+        "MAGGOT_FARM"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_GANDALF",
+      "display_name": "Gandalf",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C01",
+        "P1C04",
+        "P1C05",
+        "P1C06"
+      ],
+      "roles": [
+        "WIZARD",
+        "GUIDE",
+        "FELLOWSHIP_MEMBER"
+      ],
+      "community": "FELLOWSHIP",
+      "temperament_tags": [
+        "OBSERVANT",
+        "GUIDING",
+        "URGENT_WHEN_NEEDED"
+      ],
+      "knowledge_tags": [
+        "WIZARD_CONTEXT",
+        "MAIN_STORY_CONTEXT",
+        "FELLOWSHIP_MEMBER"
+      ],
+      "persistence_tier": "NAMED_STORY",
+      "anchors": [
+        "STORY_DRIVEN"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_BILBO",
+      "display_name": "Bilbo",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C01",
+        "P1C04"
+      ],
+      "roles": [
+        "SHIRE_RESIDENT",
+        "STORY_ELDER"
+      ],
+      "community": "HOBBITON",
+      "temperament_tags": [
+        "WARM",
+        "RESTLESS",
+        "REFLECTIVE"
+      ],
+      "knowledge_tags": [
+        "SHIRE_LOCAL",
+        "MAIN_STORY_CONTEXT",
+        "RIVENDELL_LOCAL"
+      ],
+      "persistence_tier": "NAMED_STORY",
+      "anchors": [
+        "BAG_END",
+        "RIVENDELL_STORY"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_SAM",
+      "display_name": "Sam",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C01",
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "roles": [
+        "COMPANION",
+        "FELLOWSHIP_MEMBER"
+      ],
+      "community": "FELLOWSHIP",
+      "temperament_tags": [
+        "LOYAL",
+        "PRACTICAL",
+        "PROTECTIVE"
+      ],
+      "knowledge_tags": [
+        "SHIRE_LOCAL",
+        "FELLOWSHIP_MEMBER",
+        "MAIN_STORY_CONTEXT"
+      ],
+      "persistence_tier": "NAMED_STORY",
+      "anchors": [
+        "PLAYER_PARTY"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_MERRY",
+      "display_name": "Merry",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C01",
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "roles": [
+        "COMPANION",
+        "FELLOWSHIP_MEMBER"
+      ],
+      "community": "FELLOWSHIP",
+      "temperament_tags": [
+        "CURIOUS",
+        "SOCIABLE",
+        "BOLD"
+      ],
+      "knowledge_tags": [
+        "SHIRE_LOCAL",
+        "FELLOWSHIP_MEMBER",
+        "MAIN_STORY_CONTEXT"
+      ],
+      "persistence_tier": "NAMED_STORY",
+      "anchors": [
+        "PLAYER_PARTY"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_PIPPIN",
+      "display_name": "Pippin",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C01",
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "roles": [
+        "COMPANION",
+        "FELLOWSHIP_MEMBER"
+      ],
+      "community": "FELLOWSHIP",
+      "temperament_tags": [
+        "CURIOUS",
+        "IMPULSIVE",
+        "SOCIABLE"
+      ],
+      "knowledge_tags": [
+        "SHIRE_LOCAL",
+        "FELLOWSHIP_MEMBER",
+        "MAIN_STORY_CONTEXT"
+      ],
+      "persistence_tier": "NAMED_STORY",
+      "anchors": [
+        "PLAYER_PARTY"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_BREE_GATEKEEPER",
+      "display_name": "Gate Keeper",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C02"
+      ],
+      "roles": [
+        "GATEKEEPER",
+        "TOWNSPERSON"
+      ],
+      "community": "BREE",
+      "temperament_tags": [
+        "WATCHFUL",
+        "LOCAL"
+      ],
+      "knowledge_tags": [
+        "BREE_LOCAL"
+      ],
+      "persistence_tier": "NAMED_LIGHT",
+      "anchors": [
+        "BREE_GATE"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_BARLIMAN_BUTTERBUR",
+      "display_name": "Barliman Butterbur",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C02"
+      ],
+      "roles": [
+        "INNKEEPER",
+        "SOCIAL_HUB"
+      ],
+      "community": "BREE",
+      "temperament_tags": [
+        "BUSY",
+        "SOCIABLE",
+        "LOCAL"
+      ],
+      "knowledge_tags": [
+        "BREE_LOCAL"
+      ],
+      "persistence_tier": "NAMED_LIGHT",
+      "anchors": [
+        "PRANCING_PONY"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_ARAGORN",
+      "display_name": "Aragorn",
+      "aliases": [
+        "Strider"
+      ],
+      "type": "NAMED",
+      "regions": [
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "roles": [
+        "RANGER",
+        "GUIDE",
+        "FELLOWSHIP_MEMBER"
+      ],
+      "community": "FELLOWSHIP",
+      "temperament_tags": [
+        "WATCHFUL",
+        "RESERVED",
+        "PROTECTIVE"
+      ],
+      "knowledge_tags": [
+        "RANGER_CONTEXT",
+        "FELLOWSHIP_MEMBER",
+        "MAIN_STORY_CONTEXT"
+      ],
+      "persistence_tier": "NAMED_STORY",
+      "anchors": [
+        "STORY_DRIVEN"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_ARWEN",
+      "display_name": "Arwen",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C03",
+        "P1C04"
+      ],
+      "roles": [
+        "RIVENDELL_ALLY"
+      ],
+      "community": "RIVENDELL",
+      "temperament_tags": [
+        "CALM",
+        "DECISIVE"
+      ],
+      "knowledge_tags": [
+        "RIVENDELL_LOCAL",
+        "MAIN_STORY_CONTEXT"
+      ],
+      "persistence_tier": "NAMED_STORY",
+      "anchors": [
+        "STORY_DRIVEN"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_ELROND",
+      "display_name": "Elrond",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C04"
+      ],
+      "roles": [
+        "RIVENDELL_LEADER",
+        "COUNCIL_AUTHORITY"
+      ],
+      "community": "RIVENDELL",
+      "temperament_tags": [
+        "FORMAL",
+        "OBSERVANT",
+        "AUTHORITATIVE"
+      ],
+      "knowledge_tags": [
+        "RIVENDELL_LOCAL",
+        "MAIN_STORY_CONTEXT"
+      ],
+      "persistence_tier": "NAMED_STORY",
+      "anchors": [
+        "RIVENDELL_COUNCIL"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_BOROMIR",
+      "display_name": "Boromir",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "roles": [
+        "FELLOWSHIP_MEMBER",
+        "WARRIOR"
+      ],
+      "community": "FELLOWSHIP",
+      "temperament_tags": [
+        "PROUD",
+        "PROTECTIVE",
+        "CONFLICTED"
+      ],
+      "knowledge_tags": [
+        "FELLOWSHIP_MEMBER",
+        "MAIN_STORY_CONTEXT"
+      ],
+      "persistence_tier": "NAMED_STORY",
+      "anchors": [
+        "PLAYER_PARTY"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_LEGOLAS",
+      "display_name": "Legolas",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "roles": [
+        "FELLOWSHIP_MEMBER",
+        "SCOUT"
+      ],
+      "community": "FELLOWSHIP",
+      "temperament_tags": [
+        "ALERT",
+        "PRECISE",
+        "RESERVED"
+      ],
+      "knowledge_tags": [
+        "FELLOWSHIP_MEMBER",
+        "MAIN_STORY_CONTEXT"
+      ],
+      "persistence_tier": "NAMED_STORY",
+      "anchors": [
+        "PLAYER_PARTY"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_GIMLI",
+      "display_name": "Gimli",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "roles": [
+        "FELLOWSHIP_MEMBER",
+        "WARRIOR"
+      ],
+      "community": "FELLOWSHIP",
+      "temperament_tags": [
+        "DIRECT",
+        "PROUD",
+        "LOYAL"
+      ],
+      "knowledge_tags": [
+        "FELLOWSHIP_MEMBER",
+        "MAIN_STORY_CONTEXT"
+      ],
+      "persistence_tier": "NAMED_STORY",
+      "anchors": [
+        "PLAYER_PARTY"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_HALDIR",
+      "display_name": "Haldir",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C07"
+      ],
+      "roles": [
+        "LORIEN_GUARD"
+      ],
+      "community": "LOTHLORIEN",
+      "temperament_tags": [
+        "WATCHFUL",
+        "FORMAL"
+      ],
+      "knowledge_tags": [
+        "LORIEN_CONTEXT"
+      ],
+      "persistence_tier": "NAMED_LIGHT",
+      "anchors": [
+        "LORIEN_ENTRY"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_GALADRIEL",
+      "display_name": "Galadriel",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1C07"
+      ],
+      "roles": [
+        "LORIEN_LEADER",
+        "STORY_GUIDE"
+      ],
+      "community": "LOTHLORIEN",
+      "temperament_tags": [
+        "CALM",
+        "PERCEPTIVE",
+        "FORMAL"
+      ],
+      "knowledge_tags": [
+        "LORIEN_CONTEXT",
+        "MAIN_STORY_CONTEXT"
+      ],
+      "persistence_tier": "NAMED_STORY",
+      "anchors": [
+        "LORIEN_STORY"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "NPC_SARUMAN",
+      "display_name": "Saruman",
+      "aliases": [],
+      "type": "NAMED",
+      "regions": [
+        "P1G01"
+      ],
+      "roles": [
+        "WIZARD",
+        "ANTAGONIST"
+      ],
+      "community": "ISENGARD",
+      "temperament_tags": [
+        "FORMAL",
+        "CONTROLLING",
+        "DECEPTIVE"
+      ],
+      "knowledge_tags": [
+        "WIZARD_CONTEXT",
+        "ISENGARD_CONTEXT",
+        "MAIN_STORY_CONTEXT"
+      ],
+      "persistence_tier": "NAMED_STORY",
+      "anchors": [
+        "ORTHANC"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "ARCH_SHIRE_RESIDENT",
+      "display_name": "Shire Resident",
+      "aliases": [],
+      "type": "AMBIENT_ARCHETYPE",
+      "regions": [
+        "P1C01"
+      ],
+      "roles": [
+        "RESIDENT"
+      ],
+      "community": "SHIRE",
+      "temperament_tags": [
+        "PEACEFUL",
+        "LOCAL"
+      ],
+      "knowledge_tags": [
+        "SHIRE_LOCAL"
+      ],
+      "persistence_tier": "AMBIENT_AGGREGATE",
+      "anchors": [
+        "REGION_DRIVEN"
+      ],
+      "status": "DATA_DEFINED"
+    },
+    {
+      "id": "ARCH_BREE_TOWNSPERSON",
+      "display_name": "Bree Townsperson",
+      "aliases": [],
+      "type": "AMBIENT_ARCHETYPE",
+      "regions": [
+        "P1C02"
+      ],
+      "roles": [
+        "TOWNSPERSON"
+      ],
+      "community": "BREE",
+      "temperament_tags": [
+        "BUSY",
+        "LOCAL",
+        "WATCHFUL"
+      ],
+      "knowledge_tags": [
+        "BREE_LOCAL"
+      ],
+      "persistence_tier": "AMBIENT_AGGREGATE",
+      "anchors": [
+        "REGION_DRIVEN"
+      ],
+      "status": "DATA_DEFINED"
+    }
+  ],
+  "schedule_templates": [
+    {
+      "id": "SCHED_SHIRE_RESIDENT",
+      "applies_to": [
+        "ARCH_SHIRE_RESIDENT",
+        "NPC_HAMFAST_GAMGEE",
+        "NPC_ROSIE_COTTON",
+        "NPC_FARMER_MAGGOT"
+      ],
+      "phases": [
+        {
+          "phase": "HOME",
+          "weight": 0.2,
+          "anchor_policy": "PROFILE_ANCHOR"
+        },
+        {
+          "phase": "WORK",
+          "weight": 0.35,
+          "anchor_policy": "PROFILE_ANCHOR"
+        },
+        {
+          "phase": "TRAVEL",
+          "weight": 0.15,
+          "anchor_policy": "LOCAL_ROUTE"
+        },
+        {
+          "phase": "SOCIAL",
+          "weight": 0.2,
+          "anchor_policy": "LOCAL_SOCIAL"
+        },
+        {
+          "phase": "REST",
+          "weight": 0.1,
+          "anchor_policy": "PROFILE_ANCHOR"
+        }
+      ],
+      "overrides": [
+        "STORY_OVERRIDE",
+        "DANGER_OVERRIDE"
+      ]
+    },
+    {
+      "id": "SCHED_BREE_TOWNSPERSON",
+      "applies_to": [
+        "ARCH_BREE_TOWNSPERSON",
+        "NPC_BREE_GATEKEEPER",
+        "NPC_BARLIMAN_BUTTERBUR"
+      ],
+      "phases": [
+        {
+          "phase": "WORK",
+          "weight": 0.45,
+          "anchor_policy": "PROFILE_ANCHOR"
+        },
+        {
+          "phase": "TRAVEL",
+          "weight": 0.15,
+          "anchor_policy": "LOCAL_ROUTE"
+        },
+        {
+          "phase": "SOCIAL",
+          "weight": 0.25,
+          "anchor_policy": "LOCAL_SOCIAL"
+        },
+        {
+          "phase": "REST",
+          "weight": 0.15,
+          "anchor_policy": "PROFILE_ANCHOR"
+        }
+      ],
+      "overrides": [
+        "STORY_OVERRIDE",
+        "DANGER_OVERRIDE"
+      ]
+    },
+    {
+      "id": "SCHED_STORY_DRIVEN",
+      "applies_to": [
+        "NPC_GANDALF",
+        "NPC_BILBO",
+        "NPC_SAM",
+        "NPC_MERRY",
+        "NPC_PIPPIN",
+        "NPC_ARAGORN",
+        "NPC_ARWEN",
+        "NPC_ELROND",
+        "NPC_BOROMIR",
+        "NPC_LEGOLAS",
+        "NPC_GIMLI",
+        "NPC_HALDIR",
+        "NPC_GALADRIEL",
+        "NPC_SARUMAN"
+      ],
+      "phases": [
+        {
+          "phase": "STORY_OVERRIDE",
+          "weight": 1,
+          "anchor_policy": "CHAPTER_STORY"
+        }
+      ],
+      "overrides": [
+        "DANGER_OVERRIDE"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "from": "NPC_HAMFAST_GAMGEE",
+      "to": "NPC_SAM",
+      "type": "FAMILY",
+      "strength": "STRONG",
+      "story_mutable": false
+    },
+    {
+      "from": "NPC_ROSIE_COTTON",
+      "to": "NPC_SAM",
+      "type": "COMMUNITY",
+      "strength": "POSITIVE",
+      "story_mutable": true
+    },
+    {
+      "from": "NPC_GANDALF",
+      "to": "NPC_BILBO",
+      "type": "FRIEND",
+      "strength": "STRONG",
+      "story_mutable": false
+    },
+    {
+      "from": "NPC_SAM",
+      "to": "PLAYER_FRODO",
+      "type": "ALLY",
+      "strength": "STRONG",
+      "story_mutable": false
+    },
+    {
+      "from": "NPC_MERRY",
+      "to": "PLAYER_FRODO",
+      "type": "ALLY",
+      "strength": "POSITIVE",
+      "story_mutable": false
+    },
+    {
+      "from": "NPC_PIPPIN",
+      "to": "PLAYER_FRODO",
+      "type": "ALLY",
+      "strength": "POSITIVE",
+      "story_mutable": false
+    },
+    {
+      "from": "NPC_ARAGORN",
+      "to": "PLAYER_FRODO",
+      "type": "ALLY",
+      "strength": "STRONG",
+      "story_mutable": false
+    },
+    {
+      "from": "NPC_GANDALF",
+      "to": "NPC_SARUMAN",
+      "type": "DISTRUST",
+      "strength": "STORY_DEPENDENT",
+      "story_mutable": true
+    },
+    {
+      "from": "NPC_BOROMIR",
+      "to": "PLAYER_FRODO",
+      "type": "ALLY",
+      "strength": "STORY_DEPENDENT",
+      "story_mutable": true
+    },
+    {
+      "from": "NPC_ELROND",
+      "to": "NPC_ARWEN",
+      "type": "FAMILY",
+      "strength": "STRONG",
+      "story_mutable": false
+    },
+    {
+      "from": "NPC_HALDIR",
+      "to": "NPC_GALADRIEL",
+      "type": "AUTHORITY",
+      "strength": "STRONG",
+      "story_mutable": false
+    }
+  ],
+  "knowledge_policy": {
+    "default_rule": "DENY_UNLISTED",
+    "story_state_inputs": [
+      "RouteId",
+      "EpisodeId",
+      "ChapterId",
+      "ActiveQuestId",
+      "QuestStage",
+      "CompletedStoryBeats"
+    ],
+    "forbidden_behaviors": [
+      "Reveal future mandatory story outcomes before the speaker should know them",
+      "Invent a major relationship not represented by authored data",
+      "Contradict a recorded film-core outcome",
+      "Treat ambient archetype memory as a named persistent identity"
+    ]
+  }
+}
