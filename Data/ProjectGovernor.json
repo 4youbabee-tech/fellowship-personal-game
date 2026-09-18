@@ -316,14 +316,15 @@
         "Current route/story persistence exists, but no general named-NPC memory/relationship system is claimed"
       ],
       "implementation_refs": [
-        "existing save architecture can provide integration foundation"
+        "Data/NPCMemoryPlan.json defines bounded memory tiers, expiry, per-profile budgets, alias identity sharing and route-partitioned save contract"
       ],
       "missing_work": [
-        "memory schema",
-        "relationship schema",
-        "save/load integration",
-        "forget/expiry policy",
-        "ambient-vs-named NPC cost tiers"
+        "runtime NPC memory store",
+        "ShireSaveGame integration",
+        "relationship-memory application",
+        "schema migration code",
+        "PIE save/load validation",
+        "target-device save/performance validation"
       ],
       "acceptance_criteria": [
         "Important memories persist through save/load",
@@ -1119,7 +1120,8 @@
     "Data/DialogueIntent.csv",
     "Data/MusicCuePlan.csv",
     "Data/VoiceCuePlan.csv",
-    "Data/NPCSocialModel.json"
+    "Data/NPCSocialModel.json",
+    "Data/NPCMemoryPlan.json"
   ],
   "update_protocol": [
     "Treat Data/ProjectGovernor.json as the first-read/last-write coordination record for any meaningful project change.",
@@ -1191,8 +1193,8 @@
       "order": 6,
       "id": "WORK-LW-003",
       "title": "Implement persistent named-NPC memory and bounded dialogue intelligence",
-      "status": "PLANNED",
-      "rationale": "Must follow knowledge, relationship and save-budget design."
+      "status": "PARTIAL",
+      "rationale": "NPC memory/save contract is data-defined; runtime memory store and save integration remain blocked behind the active functional gate."
     },
     {
       "order": 7,
