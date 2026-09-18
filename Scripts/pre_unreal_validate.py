@@ -234,7 +234,8 @@ for index, item in enumerate(requirements_data.get("requirements", []), start=1)
 for required_req in [
     "REQ-MEM-001", "REQ-WORLD-001", "REQ-WORLD-002", "REQ-NPC-001", "REQ-NPC-002",
     "REQ-NPC-003", "REQ-SAVE-001", "REQ-PERF-001",
-    "REQ-VISION-001", "REQ-EXP-001", "REQ-EXP-002", "REQ-COVERAGE-001"
+    "REQ-VISION-001", "REQ-EXP-001", "REQ-EXP-002", "REQ-COVERAGE-001",
+    "REQ-GOV-001", "REQ-QUALITY-001", "REQ-QUALITY-002"
 ]:
     if required_req not in requirement_ids:
         fail(f"Permanent requirement ledger missing critical requirement: {required_req}")
