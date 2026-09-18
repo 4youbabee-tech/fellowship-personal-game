@@ -8,6 +8,7 @@ class UStaticMesh;
 class UMaterialInterface;
 class AStaticMeshActor;
 class AFellowshipEnemyPrototype;
+class AShireNPC;
 enum class EFellowshipEnemyType : uint8;
 
 UCLASS()
@@ -34,9 +35,11 @@ private:
         const FLinearColor& Color, const FRotator& Rotation = FRotator::ZeroRotator, bool bCollision = true);
     void SpawnLabel(const FString& Text, const FVector& Location, const FLinearColor& Color = FLinearColor::White);
     void SpawnTree(const FVector& Location, float Scale = 1.0f);
-    void SpawnNPC(const FString& Name, const FVector& Location, const FRotator& Rotation,
+    AShireNPC* SpawnNPC(const FString& Name, const FVector& Location, const FRotator& Rotation,
         FName QuestId, int32 RequiredStage, int32 StageAfter, const FString& Line,
         FName NextQuestId = NAME_None, int32 NextQuestStage = 0, bool bFollow = false);
+    AShireNPC* SpawnTravelCompanion(const FString& Name, const FVector& Location,
+        const FString& Line, FName StopFollowingStoryBeat = NAME_None);
     AFellowshipEnemyPrototype* SpawnEnemy(EFellowshipEnemyType Type, const FVector& Location,
         const FRotator& Rotation, FName RequiredQuestId, int32 RequiredMinStage = 0);
     void SpawnQuestTrigger(const FVector& Location, FName QuestId, int32 RequiredStage, int32 StageAfter,
