@@ -164,6 +164,19 @@ The project no longer treats chat history as the authoritative record of user re
 
 Recovered/reaffirmed living-world intent is currently **PARTIAL/PLANNED**, not complete: ambient routines, awareness and social pauses exist, while full NPC-to-NPC dialogue, bounded dialogue creativity, persistent named-NPC memory/relationships and broader environmental micro-life remain future work.
 
+## Project Governor / quality control
+
+The project now has a deterministic internal control layer in addition to memory:
+
+- `Data/ProjectGovernorPolicy.json` — hard invariants and priority order.
+- `Data/ProjectDecisions.json` — recorded resolutions for conflicting requirements.
+- `Data/ExperienceQualityGates.json` — STATIC / COMPILE / BOOT / TRAVERSAL / PERSISTENCE / PERFORMANCE / PACING / VISUAL state per Part I region.
+- `Scripts/project_governor.py` — CI validation of governor data.
+
+This layer is specifically meant to stop silent requirement contradictions, false completion claims, inaccessible required routes, target-device performance regressions and acceptance of boring/frustrating sections without human pacing review.
+
+It does not promise zero bugs. It enforces evidence and prevents known uncertainty from being hidden.
+
 ## Current architecture map
 
 ### Story / quest
@@ -358,15 +371,16 @@ A new developer/assistant should:
 2. confirm repo and `develop`,
 3. inspect latest `develop` commit and both validation workflows,
 4. read `Data/ProjectRequirements.json` so no recorded user request is lost,
-5. read `Docs/PROJECT_MEMORY_SYSTEM.md`,
-6. open `Source/ShireJourney/README.md` before changing runtime code,
-7. inspect `Data/SourceArchitecturePlan.json` for ownership and planned file location,
-8. read `Docs/LIVING_WORLD_AI_BLUEPRINT.md` and `Data/LivingWorldFeaturePlan.json` before NPC/world-life work,
-9. read `Docs/DEVELOPMENT_GATES.md` and `Docs/PROJECT_GUARDIAN.md`,
-10. read `Docs/STORY_CANON_BIBLE.md` before story changes,
-11. inspect the relevant StoryBeat/Dialogue/Music/Biome/Checkpoint data files,
-12. never claim engine testing without a real UE4.27 result,
-13. resume from "Exact next hard gate".
+5. read `Docs/PROJECT_MEMORY_SYSTEM.md` and `Docs/PROJECT_GOVERNOR.md`,
+6. inspect `Data/ProjectDecisions.json` and `Data/ExperienceQualityGates.json` for conflicts/blockers,
+7. open `Source/ShireJourney/README.md` before changing runtime code,
+8. inspect `Data/SourceArchitecturePlan.json` for ownership and planned file location,
+9. read `Docs/LIVING_WORLD_AI_BLUEPRINT.md` and `Data/LivingWorldFeaturePlan.json` before NPC/world-life work,
+10. read `Docs/DEVELOPMENT_GATES.md` and `Docs/PROJECT_GUARDIAN.md`,
+11. read `Docs/STORY_CANON_BIBLE.md` before story changes,
+12. inspect the relevant StoryBeat/Dialogue/Music/Biome/Checkpoint data files,
+13. never claim engine testing without a real UE4.27 result,
+14. resume from "Exact next hard gate".
 
 ## Temporary developer controls
 
