@@ -1,0 +1,292 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_NPC_CONVERSATION_CONTRACT_V1",
+  "purpose": "Data-first contract for bounded NPC-to-NPC ambient conversations. Defines eligibility, intent categories, knowledge/story gating, cooldowns, repetition control and priority. Runtime playback is a separate implementation step.",
+  "status_values": [
+    "PLANNED",
+    "DATA_DEFINED",
+    "RUNTIME_PARTIAL",
+    "RUNTIME_VALIDATED"
+  ],
+  "intent_types": [
+    "GREETING",
+    "WORK_TALK",
+    "LOCAL_NEWS",
+    "STORY_REACTION",
+    "DANGER_WARNING",
+    "TRAVEL_COMMENT",
+    "COMPANION_BANTER",
+    "FAREWELL",
+    "SILENT_ACKNOWLEDGEMENT"
+  ],
+  "priority_levels": [
+    "STORY_CRITICAL",
+    "STORY_REACTIVE",
+    "AMBIENT_HIGH",
+    "AMBIENT_NORMAL",
+    "AMBIENT_LOW"
+  ],
+  "speaker_rules": {
+    "max_active_conversations_near_player": 2,
+    "max_participants_per_conversation": 2,
+    "minimum_player_distance_for_audible_ambient": 120,
+    "maximum_player_distance_for_audible_ambient": 1200,
+    "ambient_start_cooldown_seconds": 18,
+    "same_pair_repeat_cooldown_seconds": 90,
+    "same_intent_repeat_cooldown_seconds": 60,
+    "story_critical_preempts_ambient": true,
+    "danger_override_preempts_social": true,
+    "allow_offscreen_simulation": false
+  },
+  "selection_rules": [
+    "Both participants must resolve to valid NPCSocialModel profiles or ambient archetypes.",
+    "Participants must share a current region and be within the runtime social-distance budget.",
+    "Intent required_knowledge_tags must be a subset of each speaker's allowed knowledge when the speaker contributes a line.",
+    "Required story beats/quest stages gate STORY_REACTION and DANGER_WARNING intents.",
+    "A conversation cannot reveal future film-core outcomes or knowledge unavailable to either speaker.",
+    "Named story NPCs may participate in ambient talk only when no story-critical interaction is active.",
+    "Ambient archetypes use short low-cost exchanges and do not receive persistent individual memory.",
+    "Conversation choice is deterministic from eligible intent IDs plus cooldown history; free runtime generation is not required.",
+    "Dialogue text remains original project-authored content or bounded variation; screenplay text is not copied."
+  ],
+  "repetition_policy": {
+    "remember_recent_intent_ids_per_named_npc": 6,
+    "remember_recent_partner_ids_per_named_npc": 4,
+    "ambient_archetype_history_scope": "LOCAL_SESSION",
+    "named_npc_history_scope": "SAVE_OPTIONAL_FUTURE",
+    "fallback_when_no_fresh_intent": "SILENT_ACKNOWLEDGEMENT"
+  },
+  "conversation_sets": [
+    {
+      "id": "CONV_SHIRE_RESIDENT_SOCIAL",
+      "regions": [
+        "P1C01"
+      ],
+      "participant_filters": {
+        "allowed_profiles": [
+          "ARCH_SHIRE_RESIDENT",
+          "NPC_HAMFAST_GAMGEE",
+          "NPC_ROSIE_COTTON",
+          "NPC_FARMER_MAGGOT"
+        ],
+        "allowed_communities": [
+          "SHIRE",
+          "HOBBITON",
+          "EASTFARTHING"
+        ]
+      },
+      "intents": [
+        "GREETING",
+        "WORK_TALK",
+        "LOCAL_NEWS",
+        "FAREWELL",
+        "SILENT_ACKNOWLEDGEMENT"
+      ],
+      "priority": "AMBIENT_NORMAL",
+      "required_knowledge_tags": [
+        "SHIRE_LOCAL"
+      ],
+      "max_exchange_turns": 2,
+      "notes": "Short local social life; no main-story spoilers."
+    },
+    {
+      "id": "CONV_BREE_TOWNSPERSON_SOCIAL",
+      "regions": [
+        "P1C02"
+      ],
+      "participant_filters": {
+        "allowed_profiles": [
+          "ARCH_BREE_TOWNSPERSON",
+          "NPC_BREE_GATEKEEPER",
+          "NPC_BARLIMAN_BUTTERBUR"
+        ],
+        "allowed_communities": [
+          "BREE"
+        ]
+      },
+      "intents": [
+        "GREETING",
+        "WORK_TALK",
+        "LOCAL_NEWS",
+        "DANGER_WARNING",
+        "FAREWELL"
+      ],
+      "priority": "AMBIENT_NORMAL",
+      "required_knowledge_tags": [
+        "BREE_LOCAL"
+      ],
+      "max_exchange_turns": 2,
+      "notes": "Bree local chatter remains subordinate to Prancing Pony/main-story interactions."
+    },
+    {
+      "id": "CONV_FELLOWSHIP_TRAVEL",
+      "regions": [
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "participant_filters": {
+        "allowed_profiles": [
+          "NPC_GANDALF",
+          "NPC_SAM",
+          "NPC_MERRY",
+          "NPC_PIPPIN",
+          "NPC_ARAGORN",
+          "NPC_BOROMIR",
+          "NPC_LEGOLAS",
+          "NPC_GIMLI"
+        ]
+      },
+      "intents": [
+        "TRAVEL_COMMENT",
+        "COMPANION_BANTER",
+        "STORY_REACTION",
+        "DANGER_WARNING",
+        "SILENT_ACKNOWLEDGEMENT"
+      ],
+      "priority": "STORY_REACTIVE",
+      "required_knowledge_tags": [
+        "FELLOWSHIP_MEMBER"
+      ],
+      "max_exchange_turns": 2,
+      "notes": "Contextual companion exchanges only when current story state permits; mandatory authored scenes outrank this set."
+    },
+    {
+      "id": "CONV_ISENGARD_COUNSEL",
+      "regions": [
+        "P1G01"
+      ],
+      "participant_filters": {
+        "allowed_profiles": [
+          "NPC_GANDALF",
+          "NPC_SARUMAN"
+        ]
+      },
+      "intents": [
+        "STORY_REACTION",
+        "DANGER_WARNING",
+        "SILENT_ACKNOWLEDGEMENT"
+      ],
+      "priority": "STORY_CRITICAL",
+      "required_knowledge_tags": [
+        "WIZARD_CONTEXT"
+      ],
+      "max_exchange_turns": 2,
+      "notes": "This set is a gating contract only; actual Saruman/Gandalf story dialogue remains authored and story-controlled."
+    }
+  ],
+  "intent_contracts": [
+    {
+      "id": "GREETING",
+      "required_knowledge_tags": [],
+      "allowed_priority": [
+        "AMBIENT_NORMAL",
+        "AMBIENT_LOW"
+      ],
+      "can_start_conversation": true
+    },
+    {
+      "id": "WORK_TALK",
+      "required_knowledge_tags": [],
+      "allowed_priority": [
+        "AMBIENT_NORMAL"
+      ],
+      "can_start_conversation": true
+    },
+    {
+      "id": "LOCAL_NEWS",
+      "required_knowledge_tags": [],
+      "allowed_priority": [
+        "AMBIENT_NORMAL",
+        "AMBIENT_HIGH"
+      ],
+      "can_start_conversation": true
+    },
+    {
+      "id": "STORY_REACTION",
+      "required_knowledge_tags": [
+        "MAIN_STORY_CONTEXT"
+      ],
+      "allowed_priority": [
+        "STORY_REACTIVE",
+        "STORY_CRITICAL"
+      ],
+      "can_start_conversation": true
+    },
+    {
+      "id": "DANGER_WARNING",
+      "required_knowledge_tags": [],
+      "allowed_priority": [
+        "STORY_REACTIVE",
+        "STORY_CRITICAL",
+        "AMBIENT_HIGH",
+        "AMBIENT_NORMAL"
+      ],
+      "can_start_conversation": true
+    },
+    {
+      "id": "TRAVEL_COMMENT",
+      "required_knowledge_tags": [],
+      "allowed_priority": [
+        "STORY_REACTIVE",
+        "AMBIENT_NORMAL"
+      ],
+      "can_start_conversation": true
+    },
+    {
+      "id": "COMPANION_BANTER",
+      "required_knowledge_tags": [
+        "FELLOWSHIP_MEMBER"
+      ],
+      "allowed_priority": [
+        "STORY_REACTIVE"
+      ],
+      "can_start_conversation": true
+    },
+    {
+      "id": "FAREWELL",
+      "required_knowledge_tags": [],
+      "allowed_priority": [
+        "AMBIENT_NORMAL",
+        "AMBIENT_LOW"
+      ],
+      "can_start_conversation": false
+    },
+    {
+      "id": "SILENT_ACKNOWLEDGEMENT",
+      "required_knowledge_tags": [],
+      "allowed_priority": [
+        "STORY_REACTIVE",
+        "AMBIENT_NORMAL",
+        "AMBIENT_LOW"
+      ],
+      "can_start_conversation": false
+    }
+  ],
+  "runtime_inputs": [
+    "RouteId",
+    "EpisodeId",
+    "ChapterId",
+    "ActiveQuestId",
+    "QuestStage",
+    "CompletedStoryBeats",
+    "speaker_profile_id",
+    "listener_profile_id",
+    "distance_to_player",
+    "distance_between_participants",
+    "recent_intent_history",
+    "recent_partner_history",
+    "story_interaction_active",
+    "danger_state"
+  ],
+  "runtime_outputs": [
+    "conversation_set_id",
+    "intent_id",
+    "speaker_id",
+    "listener_id",
+    "priority",
+    "max_exchange_turns",
+    "fallback_to_silence"
+  ]
+}
