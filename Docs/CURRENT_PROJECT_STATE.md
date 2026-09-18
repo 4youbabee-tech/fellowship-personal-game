@@ -19,11 +19,18 @@
 - Hardware floor: Intel i7 6th gen, 8 GB RAM, AMD GPU around 2 GB VRAM
 - Local update/build/launch entry point: `SHIRE_UPDATE_BUILD_LAUNCH.bat`
 
-Latest validated production head recorded here:
+Latest validated runtime/production content head recorded here:
 - `8b0c13fe4b88b0382bf7e7af4fcc04173dd4eef4` — `visual: densify Shire lanes and preserve production materials`
 - Pre-Unreal Validation #110: **SUCCESS**
 - Unreal Build Validation #8: **SUCCESS**, including UE4.27.2 production asset import
 - New visual content still requires focused PIE/device review before VISUALLY-ACCEPTED.
+
+Latest validated CP30 contract/validator head before this documentation reconciliation:
+- `bd3d0be70912552c2cf5525a9731968f6ecab71a` — `fix: validate world checkpoint plan deterministically`
+- Pre-Unreal Validation #112: **SUCCESS**
+- Unreal Build Validation #10: **SUCCESS** on the exact commit with Unreal Engine 4.27.2; the C++ build succeeded and `ShireProductionImport` reported **50 files, 0 failures**.
+- Develop 20-Min Validation #6 subsequently checked out `develop` and passed the same static validation.
+- This newer head changes the checkpoint contract/validator layer, not the pending PIE/device/visual acceptance state.
 
 Runtime-code baseline documented by this handoff:
 `177f6cdbd073eaf0e2fd2c39da4a80fc82acf4ae`
@@ -93,12 +100,15 @@ CP23 milestone evidence on 2026-09-18:
 - CP23 is therefore COMPILE-TESTED and BASIC PIE-TESTED on the target laptop.
 
 Current post-CP23 source status:
-- CP24A/CP24B voice/performance foundations: STATIC-VALIDATED.
-- CP25 combat foundation: STATIC-VALIDATED.
-- CP26 biome/geography pass: STATIC-VALIDATED.
-- CP27 runtime audio mix/proxy acting: STATIC-VALIDATED.
-- Latest Pre-Unreal Validation: #95 SUCCESS.
-- CP24-CP27 are NOT yet claimed COMPILE-TESTED or PIE-TESTED.
+- CP24A/CP24B voice/performance foundations: STATIC-VALIDATED and COMPILE-TESTED as part of the current exact UE4.27.2 build.
+- CP25 combat foundation: STATIC-VALIDATED and COMPILE-TESTED as part of the current exact UE4.27.2 build.
+- CP26 biome/geography pass: STATIC-VALIDATED and COMPILE-TESTED as part of the current exact UE4.27.2 build.
+- CP27 runtime audio mix/proxy acting: STATIC-VALIDATED and COMPILE-TESTED as part of the current exact UE4.27.2 build.
+- CP28 production asset pipeline: STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED; current import evidence is 50 files / 0 failures.
+- CP29 self-hosted compile/import gate: operational.
+- CP30 world-engineering/player-checkpoint contract: STATIC-VALIDATED; its validator/data head also passed the exact UE4.27.2 build/import workflow.
+- Latest recorded evidence before this documentation reconciliation: Pre-Unreal Validation #112 SUCCESS and Unreal Build Validation #10 SUCCESS at `bd3d0be70912552c2cf5525a9731968f6ecab71a`.
+- CP24-CP30 are still NOT claimed PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED beyond the earlier basic-boot evidence explicitly recorded above.
 
 The remaining hard gate is now the functional smoke-test layer: movement/interactions, F9 load round-trip, F8 route round-trip, chapter smoke tests and target-device performance observation.
 
