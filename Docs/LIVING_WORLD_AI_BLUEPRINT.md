@@ -132,6 +132,20 @@ When runtime consumption is opened, the game should read this contract rather th
 
 The model uses aliases so one character identity (for example a story alias) cannot accidentally receive duplicate persistent memories.
 
+## 3B. Bounded NPC memory contract
+
+`Data/NPCMemoryPlan.json` defines a compact memory model for important NPC continuity:
+- immediate, local-story, relationship and persistent-named tiers,
+- per-profile memory budgets,
+- expiry rules,
+- alias-to-canonical identity sharing,
+- route-partitioned save intent,
+- compact event IDs instead of raw dialogue transcripts.
+
+Ambient archetypes remain aggregate/session-level only. Memory may influence contextual reactions, but it cannot rewrite mandatory film outcomes or reveal future story knowledge.
+
+This is a data contract only; runtime storage and `ShireSaveGame` integration remain pending.
+
 ## 4. Living-world target
 
 ### 4.1 Geography
