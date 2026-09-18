@@ -168,6 +168,20 @@ for relative in governor.get("deprecated_secondary_authority_files", []):
 if not governor.get("worker_contract"):
     fail("Governor has no worker_contract")
 
+# Player-experience pacing contract is required, but human review remains the authority for PACING.
+PACING_PATH = ROOT / "Data" / "PlayerExperiencePacingPlan.json"
+try:
+    pacing = json.loads(PACING_PATH.read_text(encoding="utf-8"))
+except Exception as exc:
+    fail(f"Cannot parse Data/PlayerExperiencePacingPlan.json: {exc}")
+    pacing = {}
+
+pacing_chapters = {str(item.get("chapter") or "").strip() for item in pacing.get("chapter_reviews", [])}
+required_pacing = {"P1C01","P1C02","P1C03","P1C04","P1C05","P1C06","P1C07","P1C08","P1G01"}
+missing_pacing = sorted(required_pacing - pacing_chapters)
+if missing_pacing:
+    fail("Pacing plan missing chapters/routes: " + ", ".join(missing_pacing))
+
 print(
     f"Single Project Governor checked {len(req_ids)} requirements, "
     f"{len(decision_ids)} decisions, {len(open_conflicts)} open conflicts, "
@@ -181,3 +195,27 @@ if errors:
     sys.exit(1)
 
 print("PROJECT GOVERNOR PASSED")
+
+# Work-start reminder: surface unfinished high-priority commitments every validation run.
+open_statuses = {"REQUESTED", "PLANNED", "PARTIAL", "DEFERRED"}
+reminders = [
+    item for item in reqs
+    if str(item.get("status") or "") in open_statuses
+    and str(item.get("priority") or "") in {"CRITICAL", "HIGH"}
+]
+priority_rank = {"CRITICAL": 0, "HIGH": 1}
+reminders.sort(key=lambda item: (priority_rank.get(str(item.get("priority") or ""), 9), str(item.get("id") or "")))
+
+print("PROJECT GOVERNOR WORK REMINDER")
+print(
+    f"Active gate: {active_gate.get('id', 'UNKNOWN')} | "
+    f"status={active_gate.get('status', 'UNKNOWN')} | "
+    f"blocks_major_feature_expansion={active_gate.get('blocks_major_feature_expansion', False)}"
+)
+for item in reminders:
+    missing = item.get("missing_work", [])
+    next_item = str(missing[0]) if missing else "Review acceptance criteria/evidence."
+    print(
+        f"REMINDER [{item.get('priority')}] {item.get('id')} "
+        f"{item.get('title')} | status={item.get('status')} | next={next_item}"
+    )
