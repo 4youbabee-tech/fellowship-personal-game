@@ -668,6 +668,14 @@ void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
 void AShirePlayerCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+
+    if (PendingChapterCheckpointId != NAME_None)
+    {
+        const FName CheckpointId = PendingChapterCheckpointId;
+        PendingChapterCheckpointId = NAME_None;
+        SaveAutomaticCheckpoint(CheckpointId, true);
+    }
+
     AttackCooldownRemaining = FMath::Max(0.0f, AttackCooldownRemaining - DeltaSeconds);
     AttackVisualRemaining = FMath::Max(0.0f, AttackVisualRemaining - DeltaSeconds);
     UpdatePrototypeAnimation(DeltaSeconds);
@@ -764,6 +772,38 @@ void AShirePlayerCharacter::HandleChapterChanged(FName PreviousChapterId, FName 
 {
     CurrentHealth = FMath::Clamp(CurrentHealth, 1.0f, MaxHealth);
     ApplyPrototypeStyle();
+
+    // Queue transition checkpoints until the next player Tick. StartChapter broadcasts
+    // synchronously while the world router rebuilds the generated region, so waiting one
+    // Tick ensures the checkpoint transform belongs to the new authoritative chapter.
+    if (PreviousChapterId == TEXT("P1C01") && NewChapterId == TEXT("P1C02"))
+    {
+        PendingChapterCheckpointId = TEXT("WC_P1C01_FERRY");
+    }
+    else if (PreviousChapterId == TEXT("P1C02") && NewChapterId == TEXT("P1C03"))
+    {
+        PendingChapterCheckpointId = TEXT("WC_P1C02_DEPART");
+    }
+    else if (PreviousChapterId == TEXT("P1C03") && NewChapterId == TEXT("P1C04"))
+    {
+        PendingChapterCheckpointId = TEXT("WC_P1C03_FORD");
+    }
+    else if (PreviousChapterId == TEXT("P1C04") && NewChapterId == TEXT("P1C05"))
+    {
+        PendingChapterCheckpointId = TEXT("WC_P1C04_DEPART");
+    }
+    else if (PreviousChapterId == TEXT("P1C05") && NewChapterId == TEXT("P1C06"))
+    {
+        PendingChapterCheckpointId = TEXT("WC_P1C05_MORIA_GATE");
+    }
+    else if (PreviousChapterId == TEXT("P1C06") && NewChapterId == TEXT("P1C07"))
+    {
+        PendingChapterCheckpointId = TEXT("WC_P1C06_EXIT");
+    }
+    else if (PreviousChapterId == TEXT("P1C07") && NewChapterId == TEXT("P1C08"))
+    {
+        PendingChapterCheckpointId = TEXT("WC_P1C07_DEPART");
+    }
 }
 
 void AShirePlayerCharacter::HandleCinematicStateChanged(bool bLocked)
