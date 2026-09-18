@@ -1,6 +1,7 @@
 #include "IsengardPrototypeWorldBuilder.h"
 
 #include "ShireNPC.h"
+#include "ShireAmbientNPC.h"
 #include "ShireQuestTrigger.h"
 
 #include "Components/StaticMeshComponent.h"
@@ -159,6 +160,23 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
     SpawnShape(CubeMesh, FVector(1450, -520, 720), FVector(2.3f, 1.8f, 0.12f),
         FLinearColor(0.09f, 0.09f, 0.10f), FRotator::ZeroRotator, true);
     SpawnLabel(TEXT("Orthanc Prison Overlook"), FVector(1450, -520, 940), FLinearColor::White);
+
+    // Sparse dark birds over the stripped valley add motion without softening Isengard's hostile mood.
+    const FVector IsengardBirds[] = {
+        FVector(-950, -1050, 640), FVector(150, 1080, 720), FVector(1120, -980, 780)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(IsengardBirds); ++Index)
+    {
+        AShireAmbientNPC* Bird = GetWorld()->SpawnActor<AShireAmbientNPC>(IsengardBirds[Index], FRotator::ZeroRotator);
+        if (!Bird) continue;
+        Bird->RoutineRole = TEXT("Bird");
+        Bird->RoutinePointA = IsengardBirds[Index];
+        Bird->RoutinePointB = IsengardBirds[Index] + FVector(
+            720.0f, Index % 2 == 0 ? 460.0f : -460.0f, 100.0f);
+        Bird->WalkSpeed = 170.0f + 15.0f * Index;
+        Bird->MinWait = 0.0f;
+        Bird->MaxWait = 0.0f;
+    }
 
     AShireQuestTrigger* Arrival = GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(-1700, 0, 90), FRotator::ZeroRotator);
     if (Arrival)
