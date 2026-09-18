@@ -58,7 +58,8 @@
   "required_engineering_data": [
     "Data/SourceArchitecturePlan.json",
     "Data/ProjectRequirements.json",
-    "Data/LivingWorldFeaturePlan.json"
+    "Data/LivingWorldFeaturePlan.json",
+    "Data/FilmExperiencePlan.json"
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -84,5 +85,19 @@
     "LW4",
     "LW5",
     "LW6"
+  ],
+  "film_experience_required_chapters": [
+    "P1C01",
+    "P1C02",
+    "P1C03",
+    "P1C04",
+    "P1C05",
+    "P1C06",
+    "P1C07",
+    "P1C08"
+  ],
+  "film_experience_required_routes": [
+    "FrodoMain",
+    "GandalfParallel"
   ]
 }
