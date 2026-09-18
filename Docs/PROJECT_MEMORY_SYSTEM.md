@@ -118,6 +118,18 @@ The purpose of this ledger is to ensure future requests do leave that trace.
 - Keep performance constraints visible: UE4.27.2, target laptop, DX11, 720p, Low/Medium, 30 FPS floor.
 - Story/world intelligence must remain compatible with the project's canon rules and route/save architecture.
 
+## 6A. Project Governor / conflict and quality control
+
+Permanent memory is not enough by itself. The project also uses a deterministic Governor:
+
+- `Docs/PROJECT_GOVERNOR.md` — human-readable rules.
+- `Data/ProjectGovernorPolicy.json` — hard invariants and priority order.
+- `Data/ProjectDecisions.json` — accepted decisions and unresolved conflicts.
+- `Data/ExperienceQualityGates.json` — region-by-region technical and experiential proof.
+- `Scripts/project_governor.py` — CI validation of the structured control layer.
+
+When two requests conflict, do not silently choose one. Record both, create a conflict/decision, and preserve the reason for the resolution.
+
 ## 7. Current recovered high-level user intent
 
 The repository now explicitly records these long-lived directions:
