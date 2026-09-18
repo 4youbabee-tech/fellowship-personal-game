@@ -715,6 +715,46 @@
       ],
       "checkpoint": "GOVERNANCE_HARDENING",
       "notes": "Project-session reminder behavior is implemented; background notifications would require a separate automation outside repository CI."
+    },
+    {
+      "id": "REQ-CHAR-001",
+      "title": "Playable Frodo and Gandalf should feel like real characters in motion",
+      "category": "CharacterProduction",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User explicitly directed development to move from project organization into visible playable character/game experience work",
+      "intent": "Turn the existing production Frodo/Gandalf modular meshes into coherent, readable playable characters with distinct movement feel so walking, sprinting, crouching, jumping and attacking feel like controlling a character rather than moving static prototype parts.",
+      "evidence": [
+        "SourceAssets/Production/Characters/Frodo",
+        "SourceAssets/Production/Characters/Gandalf",
+        "Source/ShireJourney/ShirePlayerCharacter.cpp"
+      ],
+      "implementation_refs": [
+        "production Frodo/Gandalf modular meshes are imported under /Game/Production/Characters",
+        "playable route already switches between Frodo and Gandalf",
+        "character motion pass adds gait, sprint lean, crouch pose, airborne pose, foot lift, accessory sway and attack motion"
+      ],
+      "missing_work": [
+        "UE4.27.2 compile/import validation for the character motion pass",
+        "PIE visual review of Frodo walk/sprint/crouch/jump/attack",
+        "PIE visual review of Gandalf route and staff motion",
+        "future skeletal/rigged animation pipeline for production-grade character deformation and facial/body animation",
+        "target-device performance and visual acceptance"
+      ],
+      "acceptance_criteria": [
+        "Frodo production mesh loads and remains visually coherent during idle/walk/sprint/crouch/jump/attack",
+        "Gandalf production mesh loads and has visibly distinct scale/motion/staff behavior",
+        "route switching does not corrupt character visual state",
+        "movement motion does not break collision/camera/save state",
+        "UE4.27.2 build remains green",
+        "human PIE review confirms the character feels materially more alive than the prior prototype motion"
+      ],
+      "dependencies": [
+        "REQ-EXP-001",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "CP31",
+      "notes": "This is an intermediate modular-static-mesh character production pass, not final skeletal character animation."
     }
   ],
   "hard_invariants": [
@@ -828,6 +868,23 @@
       "evidence": [
         "Data/SourceArchitecturePlan.json",
         "Source/ShireJourney/README.md"
+      ]
+    },
+    {
+      "id": "DEC-004",
+      "title": "Begin a bounded visible character-production pass before the full functional hard gate is manually closed",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-CHAR-001",
+        "REQ-SAVE-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Proceed with a small reversible Frodo/Gandalf visual-motion pass now because the user explicitly wants the game to start feeling playable. Do not change story/save architecture or add a large new subsystem; require static and UE4.27.2 build validation, then return to PIE/device gate evidence.",
+      "rationale": "This satisfies the user's explicit current direction while limiting regression risk and preserving the existing hard-gate discipline.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/ProjectGovernor.json",
+        "Source/ShireJourney/ShirePlayerCharacter.cpp"
       ]
     }
   ],
@@ -1151,6 +1208,13 @@
   "work_queue": [
     {
       "order": 1,
+      "id": "WORK-CHAR-001",
+      "title": "Playable Frodo/Gandalf character production motion pass",
+      "status": "ACTIVE",
+      "rationale": "User explicitly wants visible playable-game progress now; scope is bounded to character presentation/motion and must preserve story/save architecture."
+    },
+    {
+      "order": 2,
       "id": "WORK-GATE-001",
       "title": "Finish current functional hard gate",
       "status": "ACTIVE",
@@ -1165,42 +1229,42 @@
       ]
     },
     {
-      "order": 2,
+      "order": 3,
       "id": "WORK-MAINT-001",
       "title": "Perform physical Source/ShireJourney Public/Private domain migration",
       "status": "BLOCKED_BY_WORK-GATE-001",
       "rationale": "Architecture map is ready; do the path/include refactor only after the current gameplay baseline is proven."
     },
     {
-      "order": 3,
+      "order": 4,
       "id": "WORK-SAVE-001",
       "title": "Implement automatic safe checkpoint/respawn runtime",
       "status": "BLOCKED_BY_WORK-GATE-001",
       "rationale": "WorldCheckpointPlan exists; runtime automatic checkpoint behavior is still missing."
     },
     {
-      "order": 4,
+      "order": 5,
       "id": "WORK-LW-001",
       "title": "Build living-world NPC identity/schedule/relationship data model",
       "status": "PARTIAL",
       "rationale": "The Part I data model now exists in Data/NPCSocialModel.json; runtime scheduler/relationship consumption remains pending and should wait behind the active functional gate."
     },
     {
-      "order": 5,
+      "order": 6,
       "id": "WORK-LW-002",
       "title": "Implement NPC-to-NPC contextual conversations",
       "status": "PARTIAL",
       "rationale": "NPC conversation eligibility, intent, knowledge, priority, cooldown and repetition contracts are data-defined; runtime playback remains gated."
     },
     {
-      "order": 6,
+      "order": 7,
       "id": "WORK-LW-003",
       "title": "Implement persistent named-NPC memory and bounded dialogue intelligence",
       "status": "PARTIAL",
       "rationale": "NPC memory and bounded dialogue contracts are data-defined; runtime memory/save/dialogue integration remains gated."
     },
     {
-      "order": 7,
+      "order": 8,
       "id": "WORK-WORLD-001",
       "title": "Expand environmental micro-life and production polish chapter by chapter",
       "status": "PARTIAL",
@@ -1209,12 +1273,12 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Self-hosted CI recovered and remote-safe LW2-LW5 contracts completed",
+    "reason": "User explicitly moved project from governance preparation into visible playable character production",
     "summary": [
-      "Unreal Build Validation #19 validated the resilient exact-SHA checkout and PowerShell bypass on the target UE4.27.2 runner.",
-      "UE4.27.2 C++/UHT build succeeded.",
-      "Production import reported 50 files, 0 failures.",
-      "LW2-LW5 data/validation contracts are prepared without enabling new runtime gameplay behavior."
+      "Opened CP31 as a bounded Frodo/Gandalf character motion pass.",
+      "Recorded DEC-004 so the temporary sequencing exception is explicit rather than silently violating the hard gate.",
+      "No story/save/route architecture changes are allowed in this pass.",
+      "Static, UE4.27.2 build and later PIE visual review remain required."
     ]
   }
 }
