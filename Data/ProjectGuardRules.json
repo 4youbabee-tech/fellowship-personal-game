@@ -61,7 +61,8 @@
     "Data/SourceArchitecturePlan.json",
     "Data/LivingWorldFeaturePlan.json",
     "Data/FilmExperiencePlan.json",
-    "Data/NPCSocialModel.json"
+    "Data/NPCSocialModel.json",
+    "Data/NPCMemoryPlan.json"
   ],
   "living_world_phase_ids": [
     "LW0",
@@ -101,5 +102,10 @@
     "NPC_HALDIR",
     "NPC_GALADRIEL",
     "NPC_SARUMAN"
+  ],
+  "npc_memory_required_templates": [
+    "MEM_PLAYER_MET",
+    "MEM_STORY_BEAT_WITNESSED",
+    "MEM_RELATIONSHIP_SHIFT"
   ]
 }
