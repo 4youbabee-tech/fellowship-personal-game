@@ -35,3 +35,36 @@ struct FShireRouteProgress
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Route")
     FRotator PlayerRotation = FRotator::ZeroRotator;
 };
+
+USTRUCT(BlueprintType)
+struct FShireNPCMemoryEvent
+{
+    GENERATED_BODY()
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPCMemory")
+    FName EventId = NAME_None;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPCMemory")
+    FName ChapterId = NAME_None;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPCMemory")
+    int32 Priority = 0;
+};
+
+USTRUCT(BlueprintType)
+struct FShireNPCMemoryBucket
+{
+    GENERATED_BODY()
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPCMemory")
+    FName CanonicalProfileId = NAME_None;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPCMemory")
+    FName RouteId = NAME_None;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPCMemory")
+    TArray<FShireNPCMemoryEvent> Events;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPCMemory")
+    TMap<FName, int32> RelationshipDeltas;
+};

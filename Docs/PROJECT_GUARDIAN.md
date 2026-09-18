@@ -292,6 +292,17 @@ This converts failures into permanent project knowledge.
 
 **Guard:** Pre-Unreal Validation protects the caption runtime, pair cap/cooldown, role exclusions, authored local lines and explicit partial-scope declaration.
 
+### PG-039 — Named-NPC memory must stay compact, bounded and route-partitioned
+**Risk:** persistent NPC memory can grow without limit, leak knowledge between Frodo/Gandalf routes, serialize dialogue transcripts, or corrupt save/checkpoint compatibility.
+
+**Contract:** runtime memory stores compact event IDs plus small relationship deltas only. Each named-NPC route bucket is capped at 12 events and 8 relationship entries, relationship values are clamped, and route ID is part of the memory key.
+
+**Persistence rule:** the same bounded `NPCMemoryState` travels through manual save and automatic checkpoint snapshots. Restore sanitizes oversized records before use.
+
+**Scope rule:** this is `RUNTIME_FOUNDATION`. Alias resolution, tier-specific budgets, expiry and memory-aware dialogue selection are still unfinished.
+
+**Guard:** Pre-Unreal Validation protects the structs, caps, route key, save/restore wiring and explicit partial-scope declaration.
+
 ## What Guardian must never do automatically
 
 - change canon,

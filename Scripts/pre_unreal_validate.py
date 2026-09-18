@@ -776,6 +776,40 @@ knowledge_guard = bounded_dialogue.get("knowledge_guard", {})
 if knowledge_guard.get("default") != "DENY_UNLISTED" or knowledge_guard.get("cross_route_knowledge_default") != "DENY":
     fail("BoundedDialoguePlan knowledge guard must default-deny unlisted and cross-route knowledge")
 
+# PG-039: named-NPC memory must remain compact, bounded, route-partitioned and save-backed.
+memory_route_h = read(SOURCE / "ShireRouteState.h")
+memory_quest_h = read(SOURCE / "ShireQuestSubsystem.h")
+memory_quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
+memory_save_h = read(SOURCE / "ShireSaveGame.h")
+memory_player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
+
+for symbol in [
+    "FShireNPCMemoryEvent",
+    "FShireNPCMemoryBucket",
+    "RememberNamedNPCEvent",
+    "HasNamedNPCMemory",
+    "AdjustNamedNPCRelationship",
+    "RestoreNPCMemoryState",
+    "while (Bucket.Events.Num() > 12)",
+    "Bucket.RelationshipDeltas.Num() >= 8",
+    'TEXT("%s|%s")',
+]:
+    if symbol not in (memory_route_h + memory_quest_h + memory_quest_cpp):
+        fail(f"PG-039 named-NPC memory invariant missing: {symbol}")
+
+if "TMap<FName, FShireNPCMemoryBucket> NPCMemoryState" not in memory_save_h:
+    fail("PG-039 SaveGame lost NPCMemoryState")
+if "Save->NPCMemoryState = QuestSubsystem->GetNPCMemorySnapshot()" not in memory_player_cpp:
+    fail("PG-039 save snapshot no longer captures NPC memory")
+if "QuestSubsystem->RestoreNPCMemoryState(Save->NPCMemoryState)" not in memory_player_cpp:
+    fail("PG-039 restore path no longer restores NPC memory")
+
+memory_runtime = npc_memory.get("runtime_implementation", {}) if npc_memory else {}
+if memory_runtime.get("status") != "RUNTIME_FOUNDATION":
+    fail("PG-039 NPCMemoryPlan runtime status must remain RUNTIME_FOUNDATION until memory-aware dialogue is integrated")
+if memory_runtime.get("proof_limit") is None:
+    fail("PG-039 NPCMemoryPlan must keep its proof limit explicit")
+
 # PG-038: ambient NPC-to-NPC conversation runtime must stay bounded and near-player.
 ambient_conversation_cpp = read(SOURCE / "ShireAmbientNPC.cpp")
 ambient_conversation_h = read(SOURCE / "ShireAmbientNPC.h")

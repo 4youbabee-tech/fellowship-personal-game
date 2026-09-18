@@ -165,5 +165,26 @@
     "relationship_deltas",
     "eligible_context_tags",
     "expired_memory_ids"
-  ]
+  ],
+  "runtime_implementation": {
+    "status": "RUNTIME_FOUNDATION",
+    "implementation": [
+      "route-partitioned named-NPC memory buckets stored in UShireQuestSubsystem",
+      "compact event IDs with chapter and bounded priority only; no raw dialogue transcripts",
+      "maximum 12 remembered events per named-NPC route bucket",
+      "maximum 8 relationship deltas per named-NPC route bucket",
+      "relationship values clamped to -100..100",
+      "memory snapshot persisted through both manual saves and automatic checkpoints",
+      "load path sanitizes event and relationship budgets before restoring runtime state"
+    ],
+    "not_yet_implemented": [
+      "canonical alias resolution from NPCSocialModel at runtime",
+      "NAMED_LIGHT four-memory tier enforcement",
+      "chapter-expiry pruning policy",
+      "automatic story/local interaction writers for all named NPCs",
+      "dialogue variant selection driven by remembered context",
+      "PIE/device save-load and performance verification"
+    ],
+    "proof_limit": "RUNTIME_FOUNDATION proves bounded storage/persistence code exists; it does not claim full memory-aware dialogue or integration acceptance."
+  }
 }
