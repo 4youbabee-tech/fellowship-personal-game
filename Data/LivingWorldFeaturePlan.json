@@ -91,13 +91,15 @@
     {
       "id": "LW2",
       "name": "NPC-to-NPC contextual conversation",
-      "status": "PLANNED",
+      "status": "PARTIAL",
       "features": [
         {
           "id": "NPC-CONVERSATION-SELECTION",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Eligibility, intent and participant selection."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/NPCConversationPlan.json"
+          ],
+          "notes": "Eligibility, priority, knowledge/story gating and conversation sets are data-defined; runtime selection is pending."
         },
         {
           "id": "NPC-CONVERSATION-RUNTIME",
@@ -107,9 +109,11 @@
         },
         {
           "id": "NPC-CONVERSATION-REPETITION",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Cooldown/history and anti-loop rules."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/NPCConversationPlan.json"
+          ],
+          "notes": "Cooldown/history/fallback policy is data-defined; runtime history tracking is pending."
         }
       ]
     },
