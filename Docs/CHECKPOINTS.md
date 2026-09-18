@@ -232,10 +232,12 @@
 - Added `Data/WorldCheckpointPlan.csv` with safe checkpoint intent for every P1C01-P1C08 chapter.
 - Guardian now requires both files and validates unique checkpoint IDs, approved chapters, known story beats and supported save/status values.
 - Dedicated automatic checkpoint/respawn runtime behavior remains pending implementation; this checkpoint establishes the non-ambiguous contract first.
+- Initial CP30 commit `10ac91e...` passed Unreal Build Validation #9 but Pre-Unreal Validation #111 failed because the new checkpoint validator referenced `story_plan_ids` before that value existed.
+- Follow-up `bd3d0be...` derived the checkpoint story-beat set directly from the already-loaded story rows; Pre-Unreal Validation #112 then succeeded.
+- Unreal Build Validation #10 also succeeded on exact head `bd3d0be...`: UE4.27.2 C++ build passed and the production import reported `50 files, 0 failures`.
 
 ## Current hard gate
-The earlier CP23 baseline passed real UE4.27 compile and basic Shire PIE boot.
-The current CP24-CP27 head is STATIC-VALIDATED through Pre-Unreal Validation #95 but still requires a fresh real UE4.27 compile before its new audio/combat/biome/acting code can inherit COMPILE-TESTED status.
+Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
 It must still pass:
 1. Shire movement / interaction / NPC-awareness smoke test,

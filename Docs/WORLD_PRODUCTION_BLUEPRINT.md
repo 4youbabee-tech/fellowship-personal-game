@@ -83,8 +83,9 @@ A region is not “done” because it looks better or because CI is green. Each 
 `PLANNED → BUILT → STATIC-VALIDATED → COMPILE-TESTED → ASSET-IMPORT-TESTED → PIE-TESTED → DEVICE-TESTED → VISUALLY-ACCEPTED`
 
 For the current Shire production branch:
-- static validation is green through Pre-Unreal Validation #110;
-- UE4.27.2 C++ build and production-asset import are green through Unreal Build Validation #8;
+- static validation is green through Pre-Unreal Validation #112 on `bd3d0be...`;
+- UE4.27.2 C++ build and production-asset import are green through Unreal Build Validation #10 on the same exact head;
+- the import gate reported `50 files, 0 failures`;
 - the new visual pass still requires focused PIE/device visual review before VISUALLY-ACCEPTED.
 
 ## 7. Current construction rule

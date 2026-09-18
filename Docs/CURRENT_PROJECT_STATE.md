@@ -20,10 +20,12 @@
 - Local update/build/launch entry point: `SHIRE_UPDATE_BUILD_LAUNCH.bat`
 
 Latest validated production head recorded here:
-- `8b0c13fe4b88b0382bf7e7af4fcc04173dd4eef4` — `visual: densify Shire lanes and preserve production materials`
-- Pre-Unreal Validation #110: **SUCCESS**
-- Unreal Build Validation #8: **SUCCESS**, including UE4.27.2 production asset import
-- New visual content still requires focused PIE/device review before VISUALLY-ACCEPTED.
+- `bd3d0be70912552c2cf5525a9731968f6ecab71a` — `fix: validate world checkpoint plan deterministically`
+- Pre-Unreal Validation #112: **SUCCESS**.
+- Unreal Build Validation #10: **SUCCESS** on the exact commit with UE4.27.2 C++ build and production asset import (`50 files, 0 failures`).
+- CP30 world/checkpoint engineering is therefore STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. Dedicated automatic checkpoint/respawn runtime behavior remains planned, not implemented.
+- The Shire visual content introduced at `8b0c13f...` still requires focused PIE/device review before VISUALLY-ACCEPTED.
+- Intermediate CP30 commit `10ac91e...` had Pre-Unreal Validation #111 fail with `NameError: story_plan_ids is not defined`; `bd3d0be...` fixed that validator-order bug and restored both green gates.
 
 Runtime-code baseline documented by this handoff:
 `177f6cdbd073eaf0e2fd2c39da4a80fc82acf4ae`
@@ -37,6 +39,7 @@ Never say a feature is simply "ready". Record what was actually proven:
 
 - **STATIC-VALIDATED**: GitHub Pre-Unreal Validation is green.
 - **COMPILE-TESTED**: UE4.27.2 C++ build + UnrealHeaderTool succeeded.
+- **ASSET-IMPORT-TESTED**: the UE4.27 production import commandlet completed successfully for the planned source assets.
 - **PIE-TESTED**: relevant gameplay was exercised in Play In Editor.
 - **DEVICE-TESTED**: relevant gameplay was exercised on the target laptop.
 - **VISUALLY-ACCEPTED**: the user reviewed and accepted the visual/gameplay direction.
@@ -93,14 +96,12 @@ CP23 milestone evidence on 2026-09-18:
 - CP23 is therefore COMPILE-TESTED and BASIC PIE-TESTED on the target laptop.
 
 Current post-CP23 source status:
-- CP24A/CP24B voice/performance foundations: STATIC-VALIDATED.
-- CP25 combat foundation: STATIC-VALIDATED.
-- CP26 biome/geography pass: STATIC-VALIDATED.
-- CP27 runtime audio mix/proxy acting: STATIC-VALIDATED.
-- Latest Pre-Unreal Validation: #95 SUCCESS.
-- CP24-CP27 are NOT yet claimed COMPILE-TESTED or PIE-TESTED.
+- CP24A/CP24B voice/performance foundations, CP25 combat, CP26 biome/geography, CP27 runtime audio/proxy acting, CP28 production assets, CP29 self-hosted UE4 validation and CP30 world/checkpoint engineering are present in the current source.
+- Current head `bd3d0be...` is STATIC-VALIDATED through Pre-Unreal Validation #112.
+- Current head `bd3d0be...` is COMPILE-TESTED and ASSET-IMPORT-TESTED through Unreal Build Validation #10 on UE4.27.2 (`50 files, 0 failures`).
+- The current head is NOT yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
-The remaining hard gate is now the functional smoke-test layer: movement/interactions, F9 load round-trip, F8 route round-trip, chapter smoke tests and target-device performance observation.
+The remaining hard gate is now the functional smoke-test layer: movement/interactions, F9 load round-trip, F8 route round-trip, chapter smoke tests and target-device performance/visual observation.
 
 ## Authoritative runtime chapter IDs
 

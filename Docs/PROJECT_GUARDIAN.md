@@ -141,6 +141,15 @@ This converts failures into permanent project knowledge.
 
 **Guard:** static validation rejects raw production binaries using extensions managed by the repository's current LFS policy.
 
+### PG-018 — Checkpoint validation must use initialized story data
+**Observed failure:** Pre-Unreal Validation #111 on CP30 commit `10ac91e...` crashed with `NameError: name 'story_plan_ids' is not defined` while validating `Data/WorldCheckpointPlan.csv`.
+
+**Root cause:** the new checkpoint-validation block depended on a derived variable that was initialized later in `pre_unreal_validate.py`, so the validator failed before it could evaluate project data.
+
+**Fix pattern:** derive checkpoint story-beat membership directly from the already-loaded `story_rows` at the point of validation, or otherwise ensure every derived dependency is initialized before first use.
+
+**Guard:** Pre-Unreal Validation executes `Scripts/pre_unreal_validate.py` on every `develop` push, and the default-branch 20-minute workflow independently checks the current `develop` tree. A validator crash is a hard gate failure and must be fixed before feature expansion.
+
 ## What Guardian must never do automatically
 
 - change canon,
