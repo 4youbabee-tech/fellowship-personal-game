@@ -61,7 +61,8 @@
     "Data/SourceArchitecturePlan.json",
     "Data/LivingWorldFeaturePlan.json",
     "Data/FilmExperiencePlan.json",
-    "Data/NPCSocialModel.json"
+    "Data/NPCSocialModel.json",
+    "Data/NPCConversationPlan.json"
   ],
   "living_world_phase_ids": [
     "LW0",
@@ -101,5 +102,11 @@
     "NPC_HALDIR",
     "NPC_GALADRIEL",
     "NPC_SARUMAN"
+  ],
+  "npc_conversation_required_sets": [
+    "CONV_SHIRE_RESIDENT_SOCIAL",
+    "CONV_BREE_TOWNSPERSON_SOCIAL",
+    "CONV_FELLOWSHIP_TRAVEL",
+    "CONV_ISENGARD_COUNSEL"
   ]
 }
