@@ -42,7 +42,26 @@ private:
     UPROPERTY()
     UStaticMeshComponent* Head;
 
+    UPROPERTY()
+    UStaticMeshComponent* Hair;
+
+    UPROPERTY()
+    UStaticMeshComponent* LeftArm;
+
+    UPROPERTY()
+    UStaticMeshComponent* RightArm;
+
+    UPROPERTY()
+    UStaticMeshComponent* LeftLeg;
+
+    UPROPERTY()
+    UStaticMeshComponent* RightLeg;
+
     bool bHeadingToB = true;
     float WaitRemaining = 0.0f;
+    float WalkPhase = 0.0f;
     FRandomStream Random;
+
+    void ApplyVisualStyle();
+    void UpdateWalkAnimation(float DeltaSeconds, bool bMoving);
 };

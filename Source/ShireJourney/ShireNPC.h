@@ -93,6 +93,7 @@ private:
     bool bFollowingPlayer = false;
     bool bCompanionFollowStateResolved = false;
     bool bVisualStyleApplied = false;
+    bool bPrototypeMoving = false;
     float PrototypeWalkPhase = 0.0f;
 
     void ApplyPrototypeStyle();

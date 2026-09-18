@@ -5,6 +5,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/GameInstance.h"
 #include "GameFramework/PlayerController.h"
+#include "Materials/MaterialInstanceDynamic.h"
+#include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
 
 AShireNPC::AShireNPC()
@@ -17,19 +19,194 @@ AShireNPC::AShireNPC()
     PrototypeTorso = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeTorso"));
     PrototypeTorso->SetupAttachment(GetCapsuleComponent());
     PrototypeTorso->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    PrototypeTorso->SetRelativeLocation(FVector(0.0f, 0.0f, -15.0f));
-    PrototypeTorso->SetRelativeScale3D(FVector(0.32f, 0.32f, 0.55f));
+    PrototypeTorso->SetRelativeLocation(FVector(0.0f, 0.0f, -4.0f));
+    PrototypeTorso->SetRelativeScale3D(FVector(0.30f, 0.22f, 0.36f));
 
     PrototypeHead = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeHead"));
     PrototypeHead->SetupAttachment(GetCapsuleComponent());
     PrototypeHead->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-    PrototypeHead->SetRelativeLocation(FVector(0.0f, 0.0f, 36.0f));
-    PrototypeHead->SetRelativeScale3D(FVector(0.24f));
+    PrototypeHead->SetRelativeLocation(FVector(0.0f, 0.0f, 39.0f));
+    PrototypeHead->SetRelativeScale3D(FVector(0.23f));
 
+    PrototypeHair = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeHair"));
+    PrototypeHair->SetupAttachment(GetCapsuleComponent());
+    PrototypeHair->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeHair->SetRelativeLocation(FVector(-1.0f, 0.0f, 47.0f));
+    PrototypeHair->SetRelativeScale3D(FVector(0.235f, 0.235f, 0.11f));
+
+    PrototypeLeftArm = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeLeftArm"));
+    PrototypeLeftArm->SetupAttachment(GetCapsuleComponent());
+    PrototypeLeftArm->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeLeftArm->SetRelativeLocation(FVector(0.0f, -24.0f, -3.0f));
+    PrototypeLeftArm->SetRelativeScale3D(FVector(0.08f, 0.08f, 0.34f));
+
+    PrototypeRightArm = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeRightArm"));
+    PrototypeRightArm->SetupAttachment(GetCapsuleComponent());
+    PrototypeRightArm->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeRightArm->SetRelativeLocation(FVector(0.0f, 24.0f, -3.0f));
+    PrototypeRightArm->SetRelativeScale3D(FVector(0.08f, 0.08f, 0.34f));
+
+    PrototypeLeftLeg = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeLeftLeg"));
+    PrototypeLeftLeg->SetupAttachment(GetCapsuleComponent());
+    PrototypeLeftLeg->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeLeftLeg->SetRelativeLocation(FVector(0.0f, -10.0f, -43.0f));
+    PrototypeLeftLeg->SetRelativeScale3D(FVector(0.10f, 0.10f, 0.30f));
+
+    PrototypeRightLeg = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeRightLeg"));
+    PrototypeRightLeg->SetupAttachment(GetCapsuleComponent());
+    PrototypeRightLeg->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeRightLeg->SetRelativeLocation(FVector(0.0f, 10.0f, -43.0f));
+    PrototypeRightLeg->SetRelativeScale3D(FVector(0.10f, 0.10f, 0.30f));
+
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMesh(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
-    if (CylinderMesh.Succeeded()) PrototypeTorso->SetStaticMesh(CylinderMesh.Object);
-    if (SphereMesh.Succeeded()) PrototypeHead->SetStaticMesh(SphereMesh.Object);
+
+    if (CubeMesh.Succeeded())
+    {
+        PrototypeTorso->SetStaticMesh(CubeMesh.Object);
+    }
+    if (CylinderMesh.Succeeded())
+    {
+        PrototypeLeftArm->SetStaticMesh(CylinderMesh.Object);
+        PrototypeRightArm->SetStaticMesh(CylinderMesh.Object);
+        PrototypeLeftLeg->SetStaticMesh(CylinderMesh.Object);
+        PrototypeRightLeg->SetStaticMesh(CylinderMesh.Object);
+    }
+    if (SphereMesh.Succeeded())
+    {
+        PrototypeHead->SetStaticMesh(SphereMesh.Object);
+        PrototypeHair->SetStaticMesh(SphereMesh.Object);
+    }
+}
+
+void AShireNPC::ApplyPrototypeStyle()
+{
+    UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
+        nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
+    if (!BasicMaterial)
+    {
+        bVisualStyleApplied = true;
+        return;
+    }
+
+    const FString Name = DisplayName.ToString();
+
+    FLinearColor Coat(0.24f, 0.34f, 0.17f);
+    FLinearColor Trousers(0.27f, 0.18f, 0.10f);
+    FLinearColor Hair(0.12f, 0.055f, 0.025f);
+    FLinearColor Skin(0.74f, 0.52f, 0.34f);
+
+    if (Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase))
+    {
+        Coat = FLinearColor(0.30f, 0.31f, 0.29f);
+        Trousers = FLinearColor(0.20f, 0.21f, 0.20f);
+        Hair = FLinearColor(0.72f, 0.70f, 0.64f);
+        PrototypeTorso->SetRelativeScale3D(FVector(0.31f, 0.23f, 0.48f));
+        PrototypeTorso->SetRelativeLocation(FVector(0.0f, 0.0f, 5.0f));
+        PrototypeHead->SetRelativeLocation(FVector(0.0f, 0.0f, 58.0f));
+        PrototypeHair->SetRelativeLocation(FVector(-1.0f, 0.0f, 66.0f));
+        PrototypeLeftArm->SetRelativeLocation(FVector(0.0f, -25.0f, 7.0f));
+        PrototypeRightArm->SetRelativeLocation(FVector(0.0f, 25.0f, 7.0f));
+        PrototypeLeftArm->SetRelativeScale3D(FVector(0.08f, 0.08f, 0.43f));
+        PrototypeRightArm->SetRelativeScale3D(FVector(0.08f, 0.08f, 0.43f));
+        PrototypeLeftLeg->SetRelativeLocation(FVector(0.0f, -10.0f, -43.0f));
+        PrototypeRightLeg->SetRelativeLocation(FVector(0.0f, 10.0f, -43.0f));
+        PrototypeLeftLeg->SetRelativeScale3D(FVector(0.10f, 0.10f, 0.40f));
+        PrototypeRightLeg->SetRelativeScale3D(FVector(0.10f, 0.10f, 0.40f));
+    }
+    else if (Name.Equals(TEXT("Bilbo"), ESearchCase::IgnoreCase))
+    {
+        Coat = FLinearColor(0.42f, 0.22f, 0.12f);
+        Trousers = FLinearColor(0.34f, 0.27f, 0.14f);
+        Hair = FLinearColor(0.48f, 0.39f, 0.28f);
+    }
+    else if (Name.Equals(TEXT("Sam"), ESearchCase::IgnoreCase))
+    {
+        Coat = FLinearColor(0.34f, 0.43f, 0.18f);
+        Trousers = FLinearColor(0.31f, 0.22f, 0.12f);
+        Hair = FLinearColor(0.35f, 0.20f, 0.08f);
+    }
+    else if (Name.Equals(TEXT("Merry"), ESearchCase::IgnoreCase))
+    {
+        Coat = FLinearColor(0.42f, 0.30f, 0.12f);
+        Trousers = FLinearColor(0.24f, 0.17f, 0.09f);
+        Hair = FLinearColor(0.20f, 0.10f, 0.04f);
+    }
+    else if (Name.Equals(TEXT("Pippin"), ESearchCase::IgnoreCase))
+    {
+        Coat = FLinearColor(0.24f, 0.36f, 0.22f);
+        Trousers = FLinearColor(0.30f, 0.20f, 0.11f);
+        Hair = FLinearColor(0.30f, 0.18f, 0.08f);
+    }
+
+    auto ApplyColor = [this, BasicMaterial](UStaticMeshComponent* Component, const FLinearColor& Color)
+    {
+        if (!Component)
+        {
+            return;
+        }
+
+        UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, this);
+        if (MID)
+        {
+            MID->SetVectorParameterValue(TEXT("Color"), Color);
+            Component->SetMaterial(0, MID);
+        }
+    };
+
+    ApplyColor(PrototypeTorso, Coat);
+    ApplyColor(PrototypeHead, Skin);
+    ApplyColor(PrototypeHair, Hair);
+    ApplyColor(PrototypeLeftArm, Coat * 0.95f);
+    ApplyColor(PrototypeRightArm, Coat * 0.95f);
+    ApplyColor(PrototypeLeftLeg, Trousers);
+    ApplyColor(PrototypeRightLeg, Trousers);
+
+    bVisualStyleApplied = true;
+}
+
+void AShireNPC::UpdatePrototypeAnimation(float DeltaSeconds)
+{
+    float Swing = 0.0f;
+    float Bob = 0.0f;
+    if (bPrototypeMoving)
+    {
+        PrototypeWalkPhase += DeltaSeconds * 8.0f;
+        Swing = FMath::Sin(PrototypeWalkPhase) * 25.0f;
+        Bob = FMath::Abs(FMath::Sin(PrototypeWalkPhase * 2.0f)) * 1.2f;
+    }
+
+    const float BlendSpeed = 10.0f;
+    if (PrototypeLeftArm)
+    {
+        PrototypeLeftArm->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeLeftArm->GetRelativeRotation(), FRotator(Swing, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+    }
+    if (PrototypeRightArm)
+    {
+        PrototypeRightArm->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeRightArm->GetRelativeRotation(), FRotator(-Swing, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+    }
+    if (PrototypeLeftLeg)
+    {
+        PrototypeLeftLeg->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeLeftLeg->GetRelativeRotation(), FRotator(-Swing * 0.65f, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+    }
+    if (PrototypeRightLeg)
+    {
+        PrototypeRightLeg->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeRightLeg->GetRelativeRotation(), FRotator(Swing * 0.65f, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+    }
+
+    if (PrototypeTorso)
+    {
+        FVector Target = PrototypeTorso->GetRelativeLocation();
+        const FString Name = DisplayName.ToString();
+        Target.Z = Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase) ? 5.0f + Bob : -4.0f + Bob;
+        PrototypeTorso->SetRelativeLocation(FMath::VInterpTo(
+            PrototypeTorso->GetRelativeLocation(), Target, DeltaSeconds, 12.0f));
+    }
 }
 
 int32 AShireNPC::ResolveCompanionSlot() const
@@ -108,51 +285,53 @@ void AShireNPC::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
+    if (!bVisualStyleApplied)
+    {
+        ApplyPrototypeStyle();
+    }
+
     if (!bCompanionFollowStateResolved)
     {
         RestoreCompanionFollowState();
     }
 
-    if (!bFollowingPlayer || !GetWorld())
+    bPrototypeMoving = false;
+
+    if (bFollowingPlayer && GetWorld())
     {
-        return;
+        APlayerController* PC = GetWorld()->GetFirstPlayerController();
+        APawn* PlayerPawn = PC ? PC->GetPawn() : nullptr;
+        if (PlayerPawn)
+        {
+            const FVector Target = GetFormationTarget(PlayerPawn);
+            FVector ToTarget = Target - GetActorLocation();
+            ToTarget.Z = 0.0f;
+            const float Distance = ToTarget.Size();
+
+            if (Distance > TeleportCatchUpDistance)
+            {
+                FVector SafeTarget = Target;
+                SafeTarget.Z = PlayerPawn->GetActorLocation().Z;
+                SetActorLocation(SafeTarget, false, nullptr, ETeleportType::TeleportPhysics);
+            }
+            else if (Distance > FollowAcceptanceRadius)
+            {
+                const float EffectiveSpeed = Distance > CatchUpDistance ? FollowSpeed * 2.0f : FollowSpeed;
+                const float MaxStep = EffectiveSpeed * DeltaSeconds;
+                const FVector Step = ToTarget.GetSafeNormal() * FMath::Min(MaxStep, Distance - FollowAcceptanceRadius);
+                AddActorWorldOffset(Step, true);
+                bPrototypeMoving = !Step.IsNearlyZero();
+
+                if (bPrototypeMoving)
+                {
+                    const FRotator DesiredRotation = Step.Rotation();
+                    SetActorRotation(FMath::RInterpTo(GetActorRotation(), DesiredRotation, DeltaSeconds, 7.0f));
+                }
+            }
+        }
     }
 
-    APlayerController* PC = GetWorld()->GetFirstPlayerController();
-    APawn* PlayerPawn = PC ? PC->GetPawn() : nullptr;
-    if (!PlayerPawn)
-    {
-        return;
-    }
-
-    const FVector Target = GetFormationTarget(PlayerPawn);
-    FVector ToTarget = Target - GetActorLocation();
-    ToTarget.Z = 0.0f;
-    const float Distance = ToTarget.Size();
-
-    if (Distance > TeleportCatchUpDistance)
-    {
-        FVector SafeTarget = Target;
-        SafeTarget.Z = PlayerPawn->GetActorLocation().Z;
-        SetActorLocation(SafeTarget, false, nullptr, ETeleportType::TeleportPhysics);
-        return;
-    }
-
-    if (Distance <= FollowAcceptanceRadius)
-    {
-        return;
-    }
-
-    const float EffectiveSpeed = Distance > CatchUpDistance ? FollowSpeed * 2.0f : FollowSpeed;
-    const float MaxStep = EffectiveSpeed * DeltaSeconds;
-    const FVector Step = ToTarget.GetSafeNormal() * FMath::Min(MaxStep, Distance - FollowAcceptanceRadius);
-    AddActorWorldOffset(Step, true);
-
-    if (!Step.IsNearlyZero())
-    {
-        const FRotator DesiredRotation = Step.Rotation();
-        SetActorRotation(FMath::RInterpTo(GetActorRotation(), DesiredRotation, DeltaSeconds, 7.0f));
-    }
+    UpdatePrototypeAnimation(DeltaSeconds);
 }
 
 void AShireNPC::Interact_Implementation(AActor* Interactor)
