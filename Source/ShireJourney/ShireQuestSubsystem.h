@@ -110,6 +110,9 @@ public:
     bool RememberNamedNPCEvent(FName CanonicalProfileId, FName EventId, int32 Priority = 50);
     bool HasNamedNPCMemory(FName CanonicalProfileId, FName EventId) const;
     int32 AdjustNamedNPCRelationship(FName CanonicalProfileId, FName OtherProfileId, int32 Delta);
+    int32 GetNamedNPCRelationship(FName CanonicalProfileId, FName OtherProfileId) const;
+    bool HasRecentNPCDialogueVariant(FName CanonicalProfileId, FName VariantId) const;
+    void RecordNamedNPCDialogueUse(FName CanonicalProfileId, FName VariantId, FName PartnerProfileId, int32 MaxRecentVariants = 12);
     TMap<FName, FShireNPCMemoryBucket> GetNPCMemorySnapshot() const { return NPCMemoryState; }
     void RestoreNPCMemoryState(const TMap<FName, FShireNPCMemoryBucket>& InState);
     void RestoreQuestState(const TMap<FName, int32>& InStages, FName InActiveQuestId,
@@ -153,4 +156,10 @@ private:
     FShireRouteProgress CaptureCurrentRouteProgress(bool bCapturePlayerTransform) const;
     void ApplyRouteProgress(const FShireRouteProgress& Progress);
     FName MakeNPCMemoryKey(FName CanonicalProfileId) const;
+    FName ResolveCanonicalNPCProfile(FName ProfileHint) const;
+    int32 ResolvePersistentMemoryBudget(FName ProfileHint) const;
+    int32 ResolveRelationshipBudget(FName ProfileHint) const;
+    static int32 ChapterOrdinal(FName ChapterId);
+    void PruneNPCMemoryForCurrentChapter();
+    void RecordStoryBeatForEligibleNPCs(FName StoryBeatId);
 };

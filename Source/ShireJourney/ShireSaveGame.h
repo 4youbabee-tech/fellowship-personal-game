@@ -11,6 +11,14 @@ class SHIREJOURNEY_API UShireSaveGame : public USaveGame
     GENERATED_BODY()
 
 public:
+    static constexpr int32 CurrentSchemaVersion = 3;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
+    int32 SaveSchemaVersion = CurrentSchemaVersion;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
+    int64 SnapshotCreatedUnixSeconds = 0;
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
     FVector PlayerLocation = FVector::ZeroVector;
 

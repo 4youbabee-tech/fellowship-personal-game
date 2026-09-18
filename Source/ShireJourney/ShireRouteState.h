@@ -67,4 +67,10 @@ struct FShireNPCMemoryBucket
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPCMemory")
     TMap<FName, int32> RelationshipDeltas;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPCMemory")
+    TArray<FName> RecentDialogueVariantIds;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="NPCMemory")
+    TArray<FName> RecentPartnerIds;
 };
