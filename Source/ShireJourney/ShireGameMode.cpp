@@ -1,5 +1,6 @@
 #include "ShireGameMode.h"
 #include "ChapterWorldRouter.h"
+#include "LivingWorldDirector.h"
 #include "ShireHUD.h"
 #include "ShirePlayerCharacter.h"
 #include "Kismet/GameplayStatics.h"
@@ -18,6 +19,7 @@ void AShireGameMode::BeginPlay()
     // Prototype chapter worlds are spawned through a router so Chapter 1 can hand off
     // to Bree without loading both regions at the same time.
     GetWorld()->SpawnActor<AChapterWorldRouter>(FVector::ZeroVector, FRotator::ZeroRotator);
+    GetWorld()->SpawnActor<ALivingWorldDirector>(FVector::ZeroVector, FRotator::ZeroRotator);
 
     APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
     if (PC)
