@@ -46,6 +46,18 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
         }
     }
 
+    if (RequiredSideStoryBeat != NAME_None && !Quests->HasStoryBeatTriggered(RequiredSideStoryBeat))
+    {
+        return;
+    }
+
+    // Optional side-story completion must stay one-time even after a save/load rebuild.
+    if (QuestId == NAME_None && SideStoryBeatAfterTrigger != NAME_None &&
+        Quests->HasStoryBeatTriggered(SideStoryBeatAfterTrigger))
+    {
+        return;
+    }
+
     // Lock this trigger before broadcasting any quest/chapter delegates. A chapter
     // transition can destroy the generated trigger immediately through the world router,
     // so no trigger-owned state is intentionally mutated after the hand-off begins.
@@ -62,6 +74,11 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
     if (StoryBeatId != NAME_None)
     {
         Quests->TriggerStoryBeat(StoryBeatId);
+    }
+
+    if (SideStoryBeatAfterTrigger != NAME_None)
+    {
+        Quests->TriggerStoryBeat(SideStoryBeatAfterTrigger);
     }
 
     // Show the authored objective before a chapter hand-off can destroy this actor.

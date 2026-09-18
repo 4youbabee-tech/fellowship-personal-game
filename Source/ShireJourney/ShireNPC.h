@@ -22,6 +22,17 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue", meta=(MultiLine="true"))
     TArray<FText> DialogueLines;
 
+    // Optional side-story flags reuse the persisted story-beat store without replacing
+    // the currently active main quest. This keeps exploration optional and save-safe.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="SideStory")
+    FName RequiredSideStoryBeat = NAME_None;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="SideStory")
+    FName SideStoryBeatAfterInteraction = NAME_None;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="SideStory")
+    FText SideStoryStartMessage;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
     FName QuestId = NAME_None;
 

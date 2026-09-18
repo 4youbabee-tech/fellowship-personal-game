@@ -339,6 +339,20 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* QuestSubsystem = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
 
+    if (QuestSubsystem && RequiredSideStoryBeat != NAME_None &&
+        !QuestSubsystem->HasStoryBeatTriggered(RequiredSideStoryBeat))
+    {
+        if (APlayerController* PC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr)
+        {
+            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+            {
+                HUD->ShowDialogue(DisplayName,
+                    FText::FromString(TEXT("There is something else to see before this part of the story continues.")), 4.0f);
+            }
+        }
+        return;
+    }
+
     if (QuestSubsystem && QuestId != NAME_None)
     {
         if (QuestSubsystem->GetActiveQuestId() != QuestId || QuestSubsystem->GetQuestStage(QuestId) < RequiredQuestStage)
@@ -365,6 +379,23 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
             }
         }
         CurrentDialogueIndex = (CurrentDialogueIndex + 1) % DialogueLines.Num();
+    }
+
+    if (QuestSubsystem && SideStoryBeatAfterInteraction != NAME_None)
+    {
+        const bool bAlreadyTriggered = QuestSubsystem->HasStoryBeatTriggered(SideStoryBeatAfterInteraction);
+        QuestSubsystem->TriggerStoryBeat(SideStoryBeatAfterInteraction);
+
+        if (!bAlreadyTriggered && !SideStoryStartMessage.IsEmpty())
+        {
+            if (APlayerController* PC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr)
+            {
+                if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+                {
+                    HUD->ShowAlert(SideStoryStartMessage, 4.0f);
+                }
+            }
+        }
     }
 
     if (QuestSubsystem && QuestId != NAME_None && QuestStageAfterInteraction >= 0)

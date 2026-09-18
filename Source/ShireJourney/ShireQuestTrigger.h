@@ -53,6 +53,14 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Story")
     FName StoryBeatId = NAME_None;
 
+    // Lightweight optional exploration progression. These flags are persisted through
+    // the existing story-beat save data but do not replace the active main quest.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="SideStory")
+    FName RequiredSideStoryBeat = NAME_None;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="SideStory")
+    FName SideStoryBeatAfterTrigger = NAME_None;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
     FText ObjectiveMessage;
 

@@ -34,6 +34,9 @@ private:
     void SpawnLabel(const FString& Text, const FVector& Location, const FLinearColor& Color = FLinearColor::White);
     void SpawnTree(const FVector& Location, float Scale = 1.0f);
     void SpawnHobbitHole(const FVector& Location, float Scale = 1.0f);
+    void SpawnFenceLine(const FVector& Start, const FVector& End, int32 Sections);
+    void SpawnGardenPatch(const FVector& Center, float Scale = 1.0f);
     void SpawnVillage();
+    void SpawnSideStories();
     void SpawnStoryActors();
 };
