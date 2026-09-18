@@ -24,6 +24,53 @@ jobs:
     timeout-minutes: 45
 
     steps:
+      - name: Bootstrap Windows runner tools
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+
+          where git.exe >nul 2>nul
+          if not errorlevel 1 (
+            for /f "delims=" %%G in ('where git.exe') do (
+              echo Found Git: %%G
+              goto :git_ready
+            )
+          )
+
+          for %%G in ("C:\Program Files\Git\cmd\git.exe" "C:\Program Files (x86)\Git\cmd\git.exe") do (
+            if exist "%%~G" (
+              set "GITDIR=%%~dpG"
+              echo Found Git: %%~G
+              echo !GITDIR!>>"%GITHUB_PATH%"
+              set "PATH=!GITDIR!;%PATH%"
+              goto :git_ready
+            )
+          )
+
+          for /f "delims=" %%G in ('dir /b /s "C:\Users\*\AppData\Local\GitHubDesktop\app-*\resources\app\git\cmd\git.exe" 2^>nul') do (
+            set "GITDIR=%%~dpG"
+            echo Found GitHub Desktop Git: %%G
+            echo !GITDIR!>>"%GITHUB_PATH%"
+            set "PATH=!GITDIR!;%PATH%"
+            goto :git_ready
+          )
+
+          echo ERROR: Git was not found for the self-hosted runner service.
+          exit /b 20
+
+          :git_ready
+          git --version
+          if errorlevel 1 exit /b 21
+
+          git lfs version
+          if errorlevel 1 (
+            echo ERROR: Git LFS is not available to the runner.
+            exit /b 22
+          )
+
+          echo Runner bootstrap succeeded.
+
       - name: Checkout exact commit
         uses: actions/checkout@v4
         with:
@@ -32,82 +79,87 @@ jobs:
           lfs: true
           clean: true
 
-      - name: Verify Unreal and project
-        shell: powershell
+      - name: Verify Unreal 4.27.2 and project
+        shell: cmd
         run: |
-          $ErrorActionPreference = "Stop"
+          @echo off
+          set "PROJECT=%GITHUB_WORKSPACE%\ShireJourney.uproject"
+          set "UEROOT=C:\Program Files\Epic Games\UE_4.27"
+          set "BUILDBAT=C:\Program Files\Epic Games\UE_4.27\Engine\Build\BatchFiles\Build.bat"
+          set "BUILDVERSION=C:\Program Files\Epic Games\UE_4.27\Engine\Build\Build.version"
 
-          $Project = Join-Path $env:GITHUB_WORKSPACE "ShireJourney.uproject"
-          $UERoot = "C:\Program Files\Epic Games\UE_4.27"
-          $BuildBat = Join-Path $UERoot "Engine\Build\BatchFiles\Build.bat"
-          $BuildVersion = Join-Path $UERoot "Engine\Build\Build.version"
+          if not exist "%PROJECT%" (
+            echo ERROR: ShireJourney.uproject was not found at "%PROJECT%"
+            exit /b 30
+          )
+          if not exist "%BUILDBAT%" (
+            echo ERROR: UE4 Build.bat was not found at "%BUILDBAT%"
+            exit /b 31
+          )
+          if not exist "%BUILDVERSION%" (
+            echo ERROR: UE4 Build.version was not found at "%BUILDVERSION%"
+            exit /b 32
+          )
 
-          if (-not (Test-Path $Project)) {
-              throw "ShireJourney.uproject was not found at $Project"
-          }
-          if (-not (Test-Path $BuildBat)) {
-              throw "UE4 Build.bat was not found at $BuildBat"
-          }
-          if (-not (Test-Path $BuildVersion)) {
-              throw "UE4 Build.version was not found at $BuildVersion"
-          }
-
-          $Version = Get-Content $BuildVersion -Raw | ConvertFrom-Json
-          Write-Host "Detected Unreal Engine $($Version.MajorVersion).$($Version.MinorVersion).$($Version.PatchVersion)"
-
-          if ($Version.MajorVersion -ne 4 -or $Version.MinorVersion -ne 27 -or $Version.PatchVersion -ne 2) {
-              throw "Expected Unreal Engine 4.27.2 but found $($Version.MajorVersion).$($Version.MinorVersion).$($Version.PatchVersion)"
-          }
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$v = Get-Content '%BUILDVERSION%' -Raw | ConvertFrom-Json; Write-Host ('Detected Unreal Engine {0}.{1}.{2}' -f $v.MajorVersion,$v.MinorVersion,$v.PatchVersion); if ($v.MajorVersion -ne 4 -or $v.MinorVersion -ne 27 -or $v.PatchVersion -ne 2) { exit 33 }"
+          if errorlevel 1 (
+            echo ERROR: Expected Unreal Engine 4.27.2.
+            exit /b 33
+          )
 
       - name: Refuse build while Unreal Editor is open
-        shell: powershell
+        shell: cmd
         run: |
-          $Editor = Get-Process UE4Editor -ErrorAction SilentlyContinue
-          if ($Editor) {
-              throw "UE4Editor.exe is currently running. Close the editor before automated validation so the game DLL is not locked."
-          }
+          @echo off
+          tasklist /FI "IMAGENAME eq UE4Editor.exe" | find /I "UE4Editor.exe" >nul
+          if not errorlevel 1 (
+            echo ERROR: UE4Editor.exe is open. Close Unreal Editor before automated validation.
+            exit /b 40
+          )
+          echo Unreal Editor is closed.
 
       - name: Build ShireJourneyEditor
-        shell: powershell
+        shell: cmd
         run: |
-          $ErrorActionPreference = "Continue"
+          @echo off
+          setlocal EnableExtensions
+          set "PROJECT=%GITHUB_WORKSPACE%\ShireJourney.uproject"
+          set "BUILDBAT=C:\Program Files\Epic Games\UE_4.27\Engine\Build\BatchFiles\Build.bat"
+          set "LOGDIR=%GITHUB_WORKSPACE%\Saved\Logs"
+          set "BUILDLOG=%GITHUB_WORKSPACE%\Saved\Logs\CI-UnrealBuild.log"
 
-          $Project = Join-Path $env:GITHUB_WORKSPACE "ShireJourney.uproject"
-          $BuildBat = "C:\Program Files\Epic Games\UE_4.27\Engine\Build\BatchFiles\Build.bat"
-          $LogDir = Join-Path $env:GITHUB_WORKSPACE "Saved\Logs"
-          $BuildLog = Join-Path $LogDir "CI-UnrealBuild.log"
+          if not exist "%LOGDIR%" mkdir "%LOGDIR%"
 
-          New-Item -ItemType Directory -Path $LogDir -Force | Out-Null
+          echo Building exact commit: %GITHUB_SHA%
+          echo Project: %PROJECT%
+          echo Build log: %BUILDLOG%
 
-          Write-Host "Building exact commit: $env:GITHUB_SHA"
-          Write-Host "Project: $Project"
-          Write-Host "Log: $BuildLog"
+          call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE > "%BUILDLOG%" 2>&1
+          set "BUILD_EXIT=%ERRORLEVEL%"
 
-          & $BuildBat ShireJourneyEditor Win64 Development $Project -WaitMutex -NoHotReloadFromIDE 2>&1 |
-              Tee-Object -FilePath $BuildLog
+          type "%BUILDLOG%"
 
-          $ExitCode = $LASTEXITCODE
-          if ($ExitCode -ne 0) {
-              Write-Error "UE4.27.2 build failed with exit code $ExitCode"
-              exit $ExitCode
-          }
+          if not "%BUILD_EXIT%"=="0" (
+            echo ERROR: UE4.27.2 build failed with exit code %BUILD_EXIT%.
+            exit /b %BUILD_EXIT%
+          )
 
-          Write-Host "UE4.27.2 build succeeded."
+          echo UE4.27.2 build succeeded.
 
       - name: Collect Unreal build logs
         if: always()
-        shell: powershell
+        shell: cmd
         run: |
-          $LogDir = Join-Path $env:GITHUB_WORKSPACE "Saved\Logs"
-          New-Item -ItemType Directory -Path $LogDir -Force | Out-Null
+          @echo off
+          set "LOGDIR=%GITHUB_WORKSPACE%\Saved\Logs"
+          if not exist "%LOGDIR%" mkdir "%LOGDIR%"
 
-          $UBTLog = Join-Path $env:LOCALAPPDATA "UnrealBuildTool\Log.txt"
-          if (Test-Path $UBTLog) {
-              Copy-Item $UBTLog (Join-Path $LogDir "CI-UnrealBuildTool.log") -Force
-          }
+          if exist "%LOCALAPPDATA%\UnrealBuildTool\Log.txt" (
+            copy /Y "%LOCALAPPDATA%\UnrealBuildTool\Log.txt" "%LOGDIR%\CI-UnrealBuildTool.log" >nul
+          )
 
-          "UE4.27.2 build job status: ${{ job.status }}" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
-          "Commit: $env:GITHUB_SHA" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+          echo UE4.27.2 build job status: ${{ job.status }}>>"%GITHUB_STEP_SUMMARY%"
+          echo Commit: %GITHUB_SHA%>>"%GITHUB_STEP_SUMMARY%"
 
       - name: Upload build logs on failure
         if: failure()
