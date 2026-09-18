@@ -302,6 +302,13 @@ void AFellowshipChapterWorldBuilder::BuildWeathertop()
     }
     SpawnLabel(TEXT("Weathertop"), FVector(1350, 0, 690), FLinearColor(0.85f, 0.82f, 0.70f));
 
+    SpawnTravelCompanion(TEXT("Sam"), FVector(-2020, -180, 70),
+        TEXT("I do not like this country, Mr. Frodo, but I am staying close."));
+    SpawnTravelCompanion(TEXT("Merry"), FVector(-2110, 120, 70),
+        TEXT("We have come too far to lose each other in a marsh."));
+    SpawnTravelCompanion(TEXT("Pippin"), FVector(-2180, -20, 70),
+        TEXT("I would prefer a dry road, but I suppose we have run out of those."));
+
     SpawnQuestTrigger(FVector(-1850, 0, 90), TEXT("RoadToWeathertop"), 0, 1,
         TEXT("The road gives way to wet country. Strider leads you off the obvious path."), TEXT("MidgewaterRoad"));
     SpawnQuestTrigger(FVector(-250, 0, 90), TEXT("RoadToWeathertop"), 1, 2,
@@ -415,6 +422,13 @@ void AFellowshipChapterWorldBuilder::BuildRivendell()
     SpawnNPC(TEXT("Aragorn"), FVector(-260, -420, 70), FRotator(0, 30, 0), NAME_None, 0, -1,
         TEXT("There are roads here I have known since youth. None of them make the next choice easier."));
 
+    SpawnNPC(TEXT("Sam"), FVector(-120, 360, 65), FRotator(0, 210, 0), NAME_None, 0, -1,
+        TEXT("It is a fair place, but I will feel better when I know what road we are taking."));
+    SpawnNPC(TEXT("Merry"), FVector(80, 420, 65), FRotator(0, 205, 0), NAME_None, 0, -1,
+        TEXT("There are more paths in this valley than I can count. Pippin has already tried."));
+    SpawnNPC(TEXT("Pippin"), FVector(260, 460, 65), FRotator(0, 200, 0), NAME_None, 0, -1,
+        TEXT("I only wanted to see where the stairs went. There were more stairs."));
+
     SpawnQuestTrigger(FVector(1050, 0, 90), TEXT("CouncilOfElrond"), 0, 1,
         TEXT("Representatives gather. The fate of the Ring will be decided here."), TEXT("CouncilBegins"));
     SpawnNPC(TEXT("Elrond"), FVector(1250, 180, 70), FRotator(0, 210, 0), TEXT("CouncilOfElrond"), 1, 2,
@@ -472,6 +486,15 @@ void AFellowshipChapterWorldBuilder::BuildFellowshipRoad()
     SpawnShape(CubeMesh, FVector(2920, 0, 320), FVector(1.1f, 7.0f, 3.2f), FLinearColor(0.20f, 0.22f, 0.22f));
     SpawnShape(CylinderMesh, FVector(2810, 0, 170), FVector(1.0f, 1.0f, 1.7f), FLinearColor(0.35f, 0.38f, 0.37f), FRotator(0, 90, 0));
     SpawnLabel(TEXT("West Gate of Moria"), FVector(2700, 0, 540), FLinearColor(0.78f, 0.82f, 0.80f));
+
+    SpawnTravelCompanion(TEXT("Sam"), FVector(-2200, -190, 70),
+        TEXT("I will keep an eye on the packs. You keep an eye on the road."));
+    SpawnTravelCompanion(TEXT("Aragorn"), FVector(-2270, 150, 70),
+        TEXT("The mountains make their own weather. We should not waste the clear hours."));
+    SpawnTravelCompanion(TEXT("Legolas"), FVector(-2360, -330, 70),
+        TEXT("There is movement far above us, but it is too distant to name."));
+    SpawnTravelCompanion(TEXT("Gimli"), FVector(-2450, 300, 70),
+        TEXT("A road under the mountain would be better than a road over it."));
 
     SpawnQuestTrigger(FVector(-2050, 0, 90), TEXT("SouthwardJourney"), 0, 1,
         TEXT("Travel south with the Fellowship. Keep pace and watch the ridges."), TEXT("FellowshipMarch"));
@@ -561,6 +584,22 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
     SpawnShape(CubeMesh, FVector(2450, 0, 40), FVector(5.6f, 0.38f, 0.12f), FLinearColor(0.27f, 0.26f, 0.24f));
     SpawnLabel(TEXT("Bridge of Khazad-dum"), FVector(2450, 0, 300), FLinearColor(0.82f, 0.72f, 0.52f));
 
+    SpawnTravelCompanion(TEXT("Sam"), FVector(-2440, -210, 70),
+        TEXT("Stay where I can see you, Mr. Frodo. This place swallows the light."));
+    SpawnTravelCompanion(TEXT("Merry"), FVector(-2520, 120, 70),
+        TEXT("Every passage looks older than the last one."));
+    SpawnTravelCompanion(TEXT("Pippin"), FVector(-2600, -40, 70),
+        TEXT("I am trying very hard not to touch anything."));
+    SpawnTravelCompanion(TEXT("Aragorn"), FVector(-2680, 250, 70),
+        TEXT("Keep the company close. Sound travels farther than sight down here."));
+    SpawnTravelCompanion(TEXT("Boromir"), FVector(-2760, -310, 70),
+        TEXT("If something comes through these halls, we meet it together."));
+    SpawnTravelCompanion(TEXT("Legolas"), FVector(-2840, 90, 70),
+        TEXT("The air is still, but the stone carries echoes."));
+    SpawnTravelCompanion(TEXT("Gandalf"), FVector(-2920, -150, 70),
+        TEXT("Do not wander. The road is difficult enough when we remain together."),
+        TEXT("MoriaEscape"));
+
     SpawnQuestTrigger(FVector(-2250, 0, 90), TEXT("MoriaDark"), 0, 1,
         TEXT("Something from the lake strikes at the entrance. Get inside before the doors are lost."), TEXT("WatcherAttack"));
     SpawnQuestTrigger(FVector(-1750, 0, 90), TEXT("MoriaDark"), 1, 2,
@@ -632,6 +671,21 @@ void AFellowshipChapterWorldBuilder::BuildLothlorien()
 
     SpawnShape(CubeMesh, FVector(2400, 0, -10), FVector(7.0f, 18.0f, 0.2f), FLinearColor(0.05f, 0.24f, 0.34f), FRotator::ZeroRotator, false);
 
+    SpawnTravelCompanion(TEXT("Sam"), FVector(-2380, -200, 70),
+        TEXT("It is quiet here. I cannot decide whether that helps."));
+    SpawnTravelCompanion(TEXT("Merry"), FVector(-2460, 120, 70),
+        TEXT("We should stay close. None of us is ready to lose anyone else."));
+    SpawnTravelCompanion(TEXT("Pippin"), FVector(-2540, -40, 70),
+        TEXT("I keep expecting to hear his voice behind us."));
+    SpawnTravelCompanion(TEXT("Aragorn"), FVector(-2620, 250, 70),
+        TEXT("We carry grief with us, but we still have a road to finish."));
+    SpawnTravelCompanion(TEXT("Boromir"), FVector(-2700, -310, 70),
+        TEXT("Rest while there is shelter. The south will ask much of us."));
+    SpawnTravelCompanion(TEXT("Legolas"), FVector(-2780, 90, 70),
+        TEXT("These trees are ancient even by the measure of my people."));
+    SpawnTravelCompanion(TEXT("Gimli"), FVector(-2860, -150, 70),
+        TEXT("I have had enough of dark stone. I will not complain about trees today."));
+
     SpawnQuestTrigger(FVector(-2200, 0, 90), TEXT("LothlorienRest"), 0, 0,
         TEXT("No one speaks much after Moria. The forest receives the Fellowship in silence."), TEXT("LorienGrief"));
     SpawnQuestTrigger(FVector(-1850, 0, 90), TEXT("LothlorienRest"), 0, 1,
@@ -691,6 +745,24 @@ void AFellowshipChapterWorldBuilder::BuildAnduinAmonHen()
     {
         SpawnTree(FVector(2050.0f + I * 190.0f, (I % 2 == 0 ? 520.0f : -520.0f), 0), 0.80f);
     }
+
+    SpawnTravelCompanion(TEXT("Sam"), FVector(-2080, -190, 70),
+        TEXT("I will stay with you, whatever shore we end up on."));
+    SpawnTravelCompanion(TEXT("Merry"), FVector(-2160, 130, 70),
+        TEXT("The river is easier on the feet, but it gives a fellow too much time to think."),
+        TEXT("BoromirFall"));
+    SpawnTravelCompanion(TEXT("Pippin"), FVector(-2240, -20, 70),
+        TEXT("I thought boats would feel faster than walking."),
+        TEXT("BoromirFall"));
+    SpawnTravelCompanion(TEXT("Aragorn"), FVector(-2320, 260, 70),
+        TEXT("We cannot remain on the river forever. A choice is coming."),
+        TEXT("FrodoSamDeparture"));
+    SpawnTravelCompanion(TEXT("Legolas"), FVector(-2400, -300, 70),
+        TEXT("There are signs of pursuit along the banks."),
+        TEXT("FrodoSamDeparture"));
+    SpawnTravelCompanion(TEXT("Gimli"), FVector(-2480, 80, 70),
+        TEXT("Give me firm ground and an enemy I can see."),
+        TEXT("FrodoSamDeparture"));
 
     SpawnQuestTrigger(FVector(-1900, 0, 90), TEXT("AnduinJourney"), 0, 1,
         TEXT("Travel down the Anduin and keep the boats together."), TEXT("AnduinDeparture"));
