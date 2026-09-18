@@ -184,6 +184,15 @@ This converts failures into permanent project knowledge.
 
 **Guard:** `Scripts/project_governor.py` fails if deprecated secondary authority files reappear. Supporting docs/plans remain references only.
 
+### PG-026 — Self-hosted checkout must survive transient GitHub network failures
+**Observed failure:** Unreal Build Validation #14 on `e98186dc...` never reached UE4.27 compilation. `actions/checkout` retried Git fetches but the target runner repeatedly hit `RPC failed`, connection reset, `early EOF` and `invalid index-pack output`. The failure path then also hit the repository artifact-storage quota.
+
+**Root cause class:** infrastructure/network acquisition failure, not a C++ or Unreal regression.
+
+**Fix pattern:** the Windows self-hosted build downloads the exact `GITHUB_SHA` repository archive directly from the GitHub API with explicit retry/all-error handling, extracts it into the workspace, verifies `ShireJourney.uproject`, and continues with the same UE4.27.2 build/import gate. Failure logs are printed in the workflow and kept locally instead of depending on artifact upload.
+
+**Guard:** static validation rejects reintroducing `actions/checkout` or `actions/upload-artifact` into the self-hosted Unreal workflow, and requires exact-SHA archive download with resilient retries.
+
 ## What Guardian must never do automatically
 
 - change canon,
