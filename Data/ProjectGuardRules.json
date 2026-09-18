@@ -60,7 +60,8 @@
     "Data/ProjectGovernor.json",
     "Data/SourceArchitecturePlan.json",
     "Data/LivingWorldFeaturePlan.json",
-    "Data/FilmExperiencePlan.json"
+    "Data/FilmExperiencePlan.json",
+    "Data/NPCSocialModel.json"
   ],
   "living_world_phase_ids": [
     "LW0",
@@ -84,5 +85,21 @@
   "film_experience_required_routes": [
     "FrodoMain",
     "GandalfParallel"
+  ],
+  "npc_social_required_named_ids": [
+    "NPC_GANDALF",
+    "NPC_BILBO",
+    "NPC_SAM",
+    "NPC_MERRY",
+    "NPC_PIPPIN",
+    "NPC_ARAGORN",
+    "NPC_ARWEN",
+    "NPC_ELROND",
+    "NPC_BOROMIR",
+    "NPC_LEGOLAS",
+    "NPC_GIMLI",
+    "NPC_HALDIR",
+    "NPC_GALADRIEL",
+    "NPC_SARUMAN"
   ]
 }
