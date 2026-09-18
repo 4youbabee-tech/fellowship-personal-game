@@ -9,6 +9,10 @@ class UMaterialInterface;
 class USceneComponent;
 class UHierarchicalInstancedStaticMeshComponent;
 class AStaticMeshActor;
+class ADirectionalLight;
+class ASkyLight;
+class APostProcessVolume;
+class UShireQuestSubsystem;
 
 UCLASS()
 class SHIREJOURNEY_API AShirePrototypeWorldBuilder : public AActor
@@ -18,6 +22,7 @@ class SHIREJOURNEY_API AShirePrototypeWorldBuilder : public AActor
 public:
     AShirePrototypeWorldBuilder();
     virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
     UFUNCTION(BlueprintCallable, Category="Prototype")
     void BuildPrototypeWorld();
@@ -33,6 +38,10 @@ private:
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GrassInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* FlowerInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* ShrubInstances;
+    UPROPERTY() ADirectionalLight* RuntimeSun = nullptr;
+    UPROPERTY() ASkyLight* RuntimeSky = nullptr;
+    UPROPERTY() APostProcessVolume* RuntimePostProcess = nullptr;
+    UPROPERTY() UShireQuestSubsystem* QuestSubsystem = nullptr;
 
     bool bBuilt = false;
 
@@ -49,4 +58,14 @@ private:
     void SpawnVillage();
     void SpawnSideStories();
     void SpawnStoryActors();
+    void ApplyStoryAtmosphere();
+
+    UFUNCTION()
+    void HandleActiveQuestChanged(FName QuestId);
+
+    UFUNCTION()
+    void HandleQuestStageChanged(FName QuestId, int32 NewStage);
+
+    UFUNCTION()
+    void HandleStoryBeatTriggered(FName StoryBeatId);
 };

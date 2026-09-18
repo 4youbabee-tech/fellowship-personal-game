@@ -3,6 +3,7 @@
 #include "BlackRiderPrototype.h"
 #include "ShireAmbientNPC.h"
 #include "ShireNPC.h"
+#include "ShireQuestSubsystem.h"
 #include "ShireQuestTrigger.h"
 
 #include "Components/DirectionalLightComponent.h"
@@ -83,6 +84,32 @@ void AShirePrototypeWorldBuilder::BeginPlay()
 {
     Super::BeginPlay();
     BuildPrototypeWorld();
+
+    if (UGameInstance* GI = GetGameInstance())
+    {
+        QuestSubsystem = GI->GetSubsystem<UShireQuestSubsystem>();
+        if (QuestSubsystem)
+        {
+            QuestSubsystem->OnActiveQuestChanged.AddDynamic(this, &AShirePrototypeWorldBuilder::HandleActiveQuestChanged);
+            QuestSubsystem->OnQuestStageChanged.AddDynamic(this, &AShirePrototypeWorldBuilder::HandleQuestStageChanged);
+            QuestSubsystem->OnStoryBeatTriggered.AddDynamic(this, &AShirePrototypeWorldBuilder::HandleStoryBeatTriggered);
+        }
+    }
+
+    ApplyStoryAtmosphere();
+}
+
+void AShirePrototypeWorldBuilder::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    if (QuestSubsystem)
+    {
+        QuestSubsystem->OnActiveQuestChanged.RemoveDynamic(this, &AShirePrototypeWorldBuilder::HandleActiveQuestChanged);
+        QuestSubsystem->OnQuestStageChanged.RemoveDynamic(this, &AShirePrototypeWorldBuilder::HandleQuestStageChanged);
+        QuestSubsystem->OnStoryBeatTriggered.RemoveDynamic(this, &AShirePrototypeWorldBuilder::HandleStoryBeatTriggered);
+        QuestSubsystem = nullptr;
+    }
+
+    Super::EndPlay(EndPlayReason);
 }
 
 AStaticMeshActor* AShirePrototypeWorldBuilder::SpawnShape(
@@ -345,6 +372,8 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         }
     }
 
+    RuntimeSun = Sun;
+
     if (Sun)
     {
         if (UDirectionalLightComponent* SunComponent = Cast<UDirectionalLightComponent>(Sun->GetLightComponent()))
@@ -373,6 +402,8 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
             Sky->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
         }
     }
+
+    RuntimeSky = Sky;
 
     if (Sky)
     {
@@ -405,6 +436,8 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         }
     }
 
+    RuntimePostProcess = PostProcess;
+
     if (PostProcess)
     {
         PostProcess->bUnbound = true;
@@ -422,6 +455,116 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         PostProcess->Settings.bOverride_VignetteIntensity = true;
         PostProcess->Settings.VignetteIntensity = 0.12f;
     }
+}
+
+
+void AShirePrototypeWorldBuilder::HandleActiveQuestChanged(FName QuestId)
+{
+    ApplyStoryAtmosphere();
+}
+
+void AShirePrototypeWorldBuilder::HandleQuestStageChanged(FName QuestId, int32 NewStage)
+{
+    ApplyStoryAtmosphere();
+}
+
+void AShirePrototypeWorldBuilder::HandleStoryBeatTriggered(FName StoryBeatId)
+{
+    ApplyStoryAtmosphere();
+}
+
+void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
+{
+    if (!QuestSubsystem || !RuntimeSun || !RuntimeSky || !RuntimePostProcess)
+    {
+        return;
+    }
+
+    UDirectionalLightComponent* SunComponent =
+        Cast<UDirectionalLightComponent>(RuntimeSun->GetLightComponent());
+    USkyLightComponent* SkyComponent =
+        Cast<USkyLightComponent>(RuntimeSky->GetLightComponent());
+    if (!SunComponent || !SkyComponent)
+    {
+        return;
+    }
+
+    const FName QuestId = QuestSubsystem->GetActiveQuestId();
+
+    FRotator SunRotation(-38.0f, -28.0f, 0.0f);
+    float SunIntensity = 3.4f;
+    FLinearColor SunColor(1.0f, 0.82f, 0.63f);
+    float SkyIntensity = 0.78f;
+    float ExposureBias = 0.10f;
+    float Bloom = 0.25f;
+    float Vignette = 0.12f;
+
+    if (QuestId == TEXT("LongExpectedParty"))
+    {
+        SunRotation = FRotator(-22.0f, -42.0f, 0.0f);
+        SunIntensity = 2.45f;
+        SunColor = FLinearColor(1.0f, 0.67f, 0.42f);
+        SkyIntensity = 0.66f;
+        ExposureBias = 0.02f;
+        Bloom = 0.34f;
+        Vignette = 0.14f;
+    }
+    else if (QuestId == TEXT("RingSecret"))
+    {
+        SunRotation = FRotator(-10.0f, -58.0f, 0.0f);
+        SunIntensity = 1.15f;
+        SunColor = FLinearColor(0.64f, 0.70f, 0.88f);
+        SkyIntensity = 0.44f;
+        ExposureBias = -0.18f;
+        Bloom = 0.18f;
+        Vignette = 0.22f;
+    }
+    else if (QuestId == TEXT("LeavingHome") || QuestId == TEXT("Shortcut"))
+    {
+        SunRotation = FRotator(-16.0f, -66.0f, 0.0f);
+        SunIntensity = 1.75f;
+        SunColor = FLinearColor(0.78f, 0.76f, 0.72f);
+        SkyIntensity = 0.52f;
+        ExposureBias = -0.08f;
+        Bloom = 0.18f;
+        Vignette = 0.18f;
+    }
+    else if (QuestId == TEXT("KeepOffRoad"))
+    {
+        SunRotation = FRotator(-13.0f, -75.0f, 0.0f);
+        SunIntensity = 1.05f;
+        SunColor = FLinearColor(0.52f, 0.58f, 0.68f);
+        SkyIntensity = 0.34f;
+        ExposureBias = -0.28f;
+        Bloom = 0.12f;
+        Vignette = 0.30f;
+    }
+    else if (QuestId == TEXT("FerryEscape"))
+    {
+        SunRotation = FRotator(-18.0f, -84.0f, 0.0f);
+        SunIntensity = 1.45f;
+        SunColor = FLinearColor(0.62f, 0.68f, 0.78f);
+        SkyIntensity = 0.42f;
+        ExposureBias = -0.16f;
+        Bloom = 0.14f;
+        Vignette = 0.24f;
+    }
+
+    SunComponent->SetMobility(EComponentMobility::Movable);
+    RuntimeSun->SetActorRotation(SunRotation);
+    SunComponent->SetIntensity(SunIntensity);
+    SunComponent->SetLightColor(SunColor);
+
+    SkyComponent->SetMobility(EComponentMobility::Movable);
+    SkyComponent->SetIntensity(SkyIntensity);
+    SkyComponent->RecaptureSky();
+
+    RuntimePostProcess->Settings.bOverride_AutoExposureBias = true;
+    RuntimePostProcess->Settings.AutoExposureBias = ExposureBias;
+    RuntimePostProcess->Settings.bOverride_BloomIntensity = true;
+    RuntimePostProcess->Settings.BloomIntensity = Bloom;
+    RuntimePostProcess->Settings.bOverride_VignetteIntensity = true;
+    RuntimePostProcess->Settings.VignetteIntensity = Vignette;
 }
 
 void AShirePrototypeWorldBuilder::SpawnVillage()
@@ -814,8 +957,77 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
         {
             NPC->DisplayName=FText::FromString(Talker.Name);
             NPC->DialogueLines={FText::FromString(Talker.LineA),FText::FromString(Talker.LineB)};
+
+            const FString TalkerName(Talker.Name);
+            if (TalkerName == TEXT("Old Noakes"))
+            {
+                FShireDialogueVariant AfterParty;
+                AfterParty.RequiredStoryBeat = TEXT("BilboDisappearance");
+                AfterParty.Lines = {
+                    FText::FromString(TEXT("I have seen strange departures before, but vanishing in front of half the Shire is showing off.")),
+                    FText::FromString(TEXT("Everyone will have a version of the story by breakfast. None of them will agree."))
+                };
+                NPC->DialogueVariants.Add(AfterParty);
+            }
+            else if (TalkerName == TEXT("Hobbiton Miller"))
+            {
+                FShireDialogueVariant Leaving;
+                Leaving.RequiredStoryBeat = TEXT("LeavingHomeRoad");
+                Leaving.Lines = {
+                    FText::FromString(TEXT("You are a long way from the party road now. Keep your provisions dry and your feet on the path.")),
+                    FText::FromString(TEXT("The mill sounds farther away out here. That is how you know home is behind you."))
+                };
+                NPC->DialogueVariants.Add(Leaving);
+            }
+            else if (TalkerName == TEXT("Boundary Farmer"))
+            {
+                FShireDialogueVariant RiderSeen;
+                RiderSeen.RequiredStoryBeat = TEXT("BlackRiderApproach");
+                RiderSeen.Lines = {
+                    FText::FromString(TEXT("That rider came through again. Never gave a name, only asked which road the Baggins folk had taken.")),
+                    FText::FromString(TEXT("I would not stand in the open if you hear hoofbeats."))
+                };
+                NPC->DialogueVariants.Add(RiderSeen);
+            }
+            else if (TalkerName == TEXT("Ferry Keeper"))
+            {
+                FShireDialogueVariant DangerNear;
+                DangerNear.RequiredQuestId = TEXT("FerryEscape");
+                DangerNear.MinQuestStage = 0;
+                DangerNear.Lines = {
+                    FText::FromString(TEXT("No questions. Get the rope loose and keep the boat straight.")),
+                    FText::FromString(TEXT("Whatever is behind you can argue with the river."))
+                };
+                NPC->DialogueVariants.Add(DangerNear);
+            }
         }
     }
+    struct FDiscovery
+    {
+        FVector Location;
+        FName Beat;
+        const TCHAR* Message;
+    };
+
+    const FDiscovery Discoveries[] = {
+        { FVector(-1250,330,75), TEXT("Discover_ShireMill"), TEXT("Discovered: The Mill beside the Water.") },
+        { FVector(-520,360,75), TEXT("Discover_GreenDragon"), TEXT("Discovered: The Green Dragon and Bywater market.") },
+        { FVector(280,1320,75), TEXT("Discover_PartyField"), TEXT("Discovered: Bilbo's Party Field.") },
+        { FVector(10150,-1500,75), TEXT("Discover_OldBoundary"), TEXT("Discovered: the old eastern boundary and orchard.") },
+        { FVector(14500,1180,75), TEXT("Discover_RootHide"), TEXT("Discovered: a hollow root beneath the wooded road.") },
+        { FVector(ShireLayout::FerryX-700,-500,75), TEXT("Discover_BuckleburyFerry"), TEXT("Discovered: Bucklebury Ferry on the Brandywine.") }
+    };
+
+    for (const FDiscovery& Discovery : Discoveries)
+    {
+        AShireQuestTrigger* Trigger = GetWorld()->SpawnActor<AShireQuestTrigger>(Discovery.Location, FRotator::ZeroRotator);
+        if (Trigger)
+        {
+            Trigger->SideStoryBeatAfterTrigger = Discovery.Beat;
+            Trigger->ObjectiveMessage = FText::FromString(Discovery.Message);
+        }
+    }
+
 }
 
 
