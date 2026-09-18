@@ -150,6 +150,15 @@ This converts failures into permanent project knowledge.
 
 **Guard:** Pre-Unreal Validation executes `Scripts/pre_unreal_validate.py` on every `develop` push, and the default-branch 20-minute workflow independently checks the current `develop` tree. A validator crash is a hard gate failure and must be fixed before feature expansion.
 
+### PG-019 — Runtime source architecture drift
+**Risk:** the game grows across many C++ files, a chat/handoff is lost, or a new programmer adds/moves files without knowing module ownership and validator assumptions.
+
+**Contract:** `Source/ShireJourney/README.md` is the code-level handoff entry point and `Data/SourceArchitecturePlan.json` maps every runtime `.h`, `.cpp` and module `.cs` file to an engineering domain and controlled target path.
+
+**Guard:** Pre-Unreal Validation compares the runtime module's actual source files with the architecture plan, rejects missing/duplicate/stale entries, validates approved domains/status values and enforces the planned Public/Private target-path convention.
+
+**Migration rule:** physical folder migration must be a dedicated maintenance change. It must update include paths, validator path lookups and the architecture manifest together, then pass static validation and the real UE4.27.2 self-hosted build before acceptance.
+
 ## What Guardian must never do automatically
 
 - change canon,
