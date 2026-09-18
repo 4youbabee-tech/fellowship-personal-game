@@ -368,6 +368,15 @@
 - Added PG-034 and updated the single Project Governor.
 - This is a low-cost procedural world-density pass for build-first mode, not final environment-art or visual acceptance.
 
+## CP35 — Lightweight Outdoor World Motion
+- Added a low-cost `Bird` visual/motion role to the existing `AShireAmbientNPC` instead of introducing a separate heavy fauna system.
+- Bird actors use 3D point-to-point motion, procedural wing flap and the existing distance-based tick throttling.
+- Added sparse sky-life groups to Shire, Bree, Weathertop/Ford, Rivendell, Fellowship road/Caradhras, Lothlorien, Anduin/Amon Hen and Isengard.
+- Moria intentionally receives no natural fauna so its dead-city atmosphere remains distinct.
+- Updated LW4 runtime evidence and the single Project Governor.
+- Added PG-035 to preserve the low-cost movement/performance contract.
+- This is a runtime world-motion foundation, not final fauna art, final density or device/performance acceptance.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 

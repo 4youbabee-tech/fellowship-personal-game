@@ -254,6 +254,15 @@ This converts failures into permanent project knowledge.
 
 **Guard:** static validation checks the chapter-specific detail markers remain present. Real UE4.27.2 build is mandatory; traversal/performance/visual acceptance remains deferred to the later batch integration pass.
 
+### PG-035 — Lightweight fauna motion must not become expensive ambient AI
+**Risk:** adding movement everywhere can turn a visual-life feature into many always-active actors that hurt the target laptop, or generic fauna can appear in chapters where it breaks the mood.
+
+**Contract:** outdoor sky life uses the existing distance-throttled `AShireAmbientNPC` with a special `Bird` role, simple 3D point-to-point motion and procedural wing movement. Moria intentionally receives no natural bird population.
+
+**Guard:** Pre-Unreal Validation requires the Bird role, 3D movement, distance-throttled tick contract and outdoor-region spawn coverage across Shire, Bree, Fellowship outdoor chapters and Isengard.
+
+**Proof rule:** compile success proves integration only; final population density/performance/visual quality remains part of the later batch integration pass.
+
 ## What Guardian must never do automatically
 
 - change canon,

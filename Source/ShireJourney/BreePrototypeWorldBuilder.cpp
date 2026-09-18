@@ -213,6 +213,22 @@ void ABreePrototypeWorldBuilder::SpawnBreeTown()
             FLinearColor(0.24f, 0.15f, 0.07f), FRotator(0.0f, Index * 17.0f, 0.0f), true);
     }
 
+    // A few dark birds circle rooflines and the western gate; cheap motion helps rainy Bree feel occupied.
+    const FVector BreeBirds[] = {
+        FVector(-780, -340, 430), FVector(120, 520, 470), FVector(980, -420, 500)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(BreeBirds); ++Index)
+    {
+        AShireAmbientNPC* Bird = GetWorld()->SpawnActor<AShireAmbientNPC>(BreeBirds[Index], FRotator::ZeroRotator);
+        if (!Bird) continue;
+        Bird->RoutineRole = TEXT("Bird");
+        Bird->RoutinePointA = BreeBirds[Index];
+        Bird->RoutinePointB = BreeBirds[Index] + FVector(520.0f, Index % 2 == 0 ? 360.0f : -360.0f, 70.0f);
+        Bird->WalkSpeed = 145.0f + 10.0f * Index;
+        Bird->MinWait = 0.0f;
+        Bird->MaxWait = 0.0f;
+    }
+
     // Lightweight Bree crowd. Fewer agents than final art; enough for navigation and crowd-flow tests.
     const FVector BreeCrowd[] = {
         FVector(-420, 120, 20), FVector(-160, -120, 20), FVector(180, 160, 20), FVector(420, -80, 20),

@@ -316,6 +316,21 @@ void AFellowshipChapterWorldBuilder::BuildWeathertop()
     SpawnShape(CylinderMesh, FVector(1250, -260, 438), FVector(0.18f, 0.18f, 0.035f),
         FLinearColor(0.56f, 0.20f, 0.05f), FRotator::ZeroRotator, false);
 
+    const FVector WeathertopBirds[] = {
+        FVector(-1400, -520, 520), FVector(-200, 620, 580), FVector(1350, -740, 650)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(WeathertopBirds); ++Index)
+    {
+        AShireAmbientNPC* Bird = GetWorld()->SpawnActor<AShireAmbientNPC>(WeathertopBirds[Index], FRotator::ZeroRotator);
+        if (!Bird) continue;
+        Bird->RoutineRole = TEXT("Bird");
+        Bird->RoutinePointA = WeathertopBirds[Index];
+        Bird->RoutinePointB = WeathertopBirds[Index] + FVector(620.0f, Index % 2 == 0 ? 420.0f : -420.0f, 90.0f);
+        Bird->WalkSpeed = 150.0f + 12.0f * Index;
+        Bird->MinWait = 0.0f;
+        Bird->MaxWait = 0.0f;
+    }
+
     // Weathertop hill and broken crown.
     SpawnShape(CylinderMesh, FVector(1350, 0, 130), FVector(5.2f, 5.2f, 1.3f),
         FLinearColor(0.19f, 0.18f, 0.14f), FRotator::ZeroRotator, true);
@@ -443,6 +458,21 @@ void AFellowshipChapterWorldBuilder::BuildRivendell()
             FRotator::ZeroRotator, false);
     }
 
+    const FVector RivendellBirds[] = {
+        FVector(-1600, -880, 620), FVector(-700, 900, 680), FVector(420, -860, 640), FVector(1450, 880, 700)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(RivendellBirds); ++Index)
+    {
+        AShireAmbientNPC* Bird = GetWorld()->SpawnActor<AShireAmbientNPC>(RivendellBirds[Index], FRotator::ZeroRotator);
+        if (!Bird) continue;
+        Bird->RoutineRole = TEXT("Bird");
+        Bird->RoutinePointA = RivendellBirds[Index];
+        Bird->RoutinePointB = RivendellBirds[Index] + FVector(540.0f, Index % 2 == 0 ? 390.0f : -390.0f, 75.0f);
+        Bird->WalkSpeed = 132.0f + 8.0f * Index;
+        Bird->MinWait = 0.0f;
+        Bird->MaxWait = 0.0f;
+    }
+
     // House of Elrond, bridges and council terrace.
     SpawnShape(CubeMesh, FVector(-650, 0, 95), FVector(4.2f, 3.2f, 0.95f), FLinearColor(0.62f, 0.55f, 0.42f));
     SpawnShape(ConeMesh, FVector(-650, 0, 240), FVector(4.6f, 3.6f, 0.65f), FLinearColor(0.32f, 0.24f, 0.16f), FRotator::ZeroRotator, false);
@@ -568,6 +598,21 @@ void AFellowshipChapterWorldBuilder::BuildFellowshipRoad()
                 FVector(0.28f - Layer * 0.04f), FLinearColor(0.32f, 0.31f, 0.29f),
                 FRotator::ZeroRotator, false);
         }
+    }
+
+    const FVector MountainBirds[] = {
+        FVector(-1450, -900, 720), FVector(250, 980, 860), FVector(1650, -920, 980)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(MountainBirds); ++Index)
+    {
+        AShireAmbientNPC* Bird = GetWorld()->SpawnActor<AShireAmbientNPC>(MountainBirds[Index], FRotator::ZeroRotator);
+        if (!Bird) continue;
+        Bird->RoutineRole = TEXT("Bird");
+        Bird->RoutinePointA = MountainBirds[Index];
+        Bird->RoutinePointB = MountainBirds[Index] + FVector(720.0f, Index % 2 == 0 ? 520.0f : -520.0f, 120.0f);
+        Bird->WalkSpeed = 175.0f + 15.0f * Index;
+        Bird->MinWait = 0.0f;
+        Bird->MaxWait = 0.0f;
     }
 
     // Fellowship camp / training clearing.
@@ -788,6 +833,22 @@ void AFellowshipChapterWorldBuilder::BuildLothlorien()
         SpawnTree(FVector(X, Y, 0), 1.15f + 0.08f * (I % 3));
     }
 
+    const FVector LorienBirds[] = {
+        FVector(-1700, -500, 620), FVector(-900, 650, 700), FVector(-100, -620, 670),
+        FVector(750, 620, 740), FVector(1550, -520, 690)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(LorienBirds); ++Index)
+    {
+        AShireAmbientNPC* Bird = GetWorld()->SpawnActor<AShireAmbientNPC>(LorienBirds[Index], FRotator::ZeroRotator);
+        if (!Bird) continue;
+        Bird->RoutineRole = TEXT("Bird");
+        Bird->RoutinePointA = LorienBirds[Index];
+        Bird->RoutinePointB = LorienBirds[Index] + FVector(480.0f, Index % 2 == 0 ? 330.0f : -330.0f, 65.0f);
+        Bird->WalkSpeed = 125.0f + 7.0f * Index;
+        Bird->MinWait = 0.0f;
+        Bird->MaxWait = 0.0f;
+    }
+
     // Talan platforms, rope-bridge proxies and warm lights make the canopy feel inhabited vertically.
     for (int32 I = 0; I < 5; ++I)
     {
@@ -892,6 +953,22 @@ void AFellowshipChapterWorldBuilder::BuildAnduinAmonHen()
     {
         SpawnShape(SphereMesh, FVector(-1900.0f + I * 420.0f, (I % 2 == 0 ? 120.0f : -150.0f), -2.0f),
             FVector(0.70f, 0.42f, 0.12f), FLinearColor(0.24f, 0.28f, 0.15f), FRotator::ZeroRotator, false);
+    }
+
+    const FVector AnduinBirds[] = {
+        FVector(-2200, -680, 520), FVector(-1350, 720, 560), FVector(-480, -650, 500),
+        FVector(500, 700, 590), FVector(1450, -620, 540)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(AnduinBirds); ++Index)
+    {
+        AShireAmbientNPC* Bird = GetWorld()->SpawnActor<AShireAmbientNPC>(AnduinBirds[Index], FRotator::ZeroRotator);
+        if (!Bird) continue;
+        Bird->RoutineRole = TEXT("Bird");
+        Bird->RoutinePointA = AnduinBirds[Index];
+        Bird->RoutinePointB = AnduinBirds[Index] + FVector(650.0f, Index % 2 == 0 ? 440.0f : -440.0f, 80.0f);
+        Bird->WalkSpeed = 155.0f + 8.0f * Index;
+        Bird->MinWait = 0.0f;
+        Bird->MaxWait = 0.0f;
     }
 
     // Boat silhouettes, reeds and shoreline camps make the river journey feel travelled rather than empty.

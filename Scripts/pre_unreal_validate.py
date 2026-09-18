@@ -409,6 +409,33 @@ for symbol in ["VisualTorsoBaseZ", "VisualHeadBaseZ", "VisualHairBaseZ"]:
     if symbol not in ambient_cpp_for_population:
         fail(f"PG-032 ambient role-specific visual base missing: {symbol}")
 
+# PG-035: lightweight world motion must remain cheap, 3D and region-aware.
+ambient_motion_cpp = read(SOURCE / "ShireAmbientNPC.cpp")
+shire_world_motion_cpp = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
+bree_world_motion_cpp = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
+fellowship_world_motion_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+isengard_world_motion_cpp = read(SOURCE / "IsengardPrototypeWorldBuilder.cpp")
+
+for symbol in [
+    'RoutineRole == TEXT("Bird")',
+    "AddActorWorldOffset(Direction * WalkSpeed * DeltaSeconds, false)",
+    "PrototypeWalkPhase += DeltaSeconds * 9.0f",
+]:
+    if symbol not in ambient_motion_cpp:
+        fail(f"PG-035 lightweight bird-motion invariant missing: {symbol}")
+
+for source_name, source_text in [
+    ("Shire", shire_world_motion_cpp),
+    ("Bree", bree_world_motion_cpp),
+    ("Fellowship outdoor regions", fellowship_world_motion_cpp),
+    ("Isengard", isengard_world_motion_cpp),
+]:
+    if 'RoutineRole = TEXT("Bird")' not in source_text:
+        fail(f"PG-035 {source_name} lost lightweight outdoor sky-life population")
+
+if "Distance > DormantTickDistance ? 0.75f" not in ambient_motion_cpp:
+    fail("PG-035 Bird role must continue using the distance-throttled ambient actor tick budget")
+
 # PG-034: Part I batch-build world detail must keep chapter-specific visual-density markers.
 bree_world_cpp = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
 fellowship_world_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")

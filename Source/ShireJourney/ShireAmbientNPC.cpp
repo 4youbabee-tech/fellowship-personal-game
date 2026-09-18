@@ -101,7 +101,16 @@ void AShireAmbientNPC::ApplyVisualStyle()
 
     const bool bBreeTownsperson = RoutineRole == TEXT("BreeTownsperson");
     const bool bElf = RoutineRole == TEXT("Elf");
-    const bool bHobbitResident = !bBreeTownsperson && !bElf;
+    const bool bBird = RoutineRole == TEXT("Bird");
+    const bool bHobbitResident = !bBreeTownsperson && !bElf && !bBird;
+
+    Torso->SetVisibility(true);
+    Head->SetVisibility(true);
+    Hair->SetVisibility(true);
+    LeftArm->SetVisibility(true);
+    RightArm->SetVisibility(true);
+    LeftLeg->SetVisibility(true);
+    RightLeg->SetVisibility(true);
 
     if (!bHobbitResident)
     {
@@ -127,7 +136,26 @@ void AShireAmbientNPC::ApplyVisualStyle()
         TryMesh(RightLeg, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg"));
     }
 
-    if (bProductionHobbit)
+    if (bBird)
+    {
+        VisualTorsoBaseZ = 10.0f;
+        VisualHeadBaseZ = 15.0f;
+        VisualHairBaseZ = 15.0f;
+        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, VisualTorsoBaseZ));
+        Torso->SetRelativeScale3D(FVector(0.16f, 0.08f, 0.07f));
+        Head->SetRelativeLocation(FVector(13.0f, 0.0f, VisualHeadBaseZ));
+        Head->SetRelativeScale3D(FVector(0.07f));
+        Hair->SetVisibility(false);
+        LeftArm->SetRelativeLocation(FVector(0.0f, -13.0f, 12.0f));
+        RightArm->SetRelativeLocation(FVector(0.0f, 13.0f, 12.0f));
+        LeftArm->SetRelativeScale3D(FVector(0.025f, 0.025f, 0.22f));
+        RightArm->SetRelativeScale3D(FVector(0.025f, 0.025f, 0.22f));
+        LeftArm->SetRelativeRotation(FRotator(0.0f, 0.0f, 65.0f));
+        RightArm->SetRelativeRotation(FRotator(0.0f, 0.0f, -65.0f));
+        LeftLeg->SetVisibility(false);
+        RightLeg->SetVisibility(false);
+    }
+    else if (bProductionHobbit)
     {
         Torso->SetRelativeScale3D(FVector(1));
         Head->SetRelativeScale3D(FVector(1));
@@ -189,7 +217,14 @@ void AShireAmbientNPC::ApplyVisualStyle()
     FLinearColor HairColor;
     FLinearColor Skin;
 
-    if (bElf)
+    if (bBird)
+    {
+        Coat = FLinearColor(0.16f, 0.17f, 0.16f);
+        Trousers = FLinearColor(0.10f, 0.10f, 0.10f);
+        HairColor = FLinearColor(0.08f, 0.08f, 0.08f);
+        Skin = FLinearColor(0.34f, 0.30f, 0.22f);
+    }
+    else if (bElf)
     {
         Coat = FLinearColor(
             Random.FRandRange(0.20f, 0.34f),
@@ -477,6 +512,32 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
         const float Distance = FVector::Dist2D(PlayerPawn->GetActorLocation(), GetActorLocation());
         PrimaryActorTick.TickInterval = Distance > DormantTickDistance ? 0.75f :
             (Distance > ReducedTickDistance ? 0.22f : 0.0f);
+    }
+
+    if (RoutineRole == TEXT("Bird"))
+    {
+        const FVector Target = bHeadingToB ? RoutinePointB : RoutinePointA;
+        const FVector ToTarget = Target - GetActorLocation();
+        if (ToTarget.Size() < 45.0f)
+        {
+            bHeadingToB = !bHeadingToB;
+        }
+
+        const FVector Direction = ToTarget.GetSafeNormal();
+        AddActorWorldOffset(Direction * WalkSpeed * DeltaSeconds, false);
+        if (!Direction.IsNearlyZero())
+        {
+            SetActorRotation(FMath::RInterpTo(GetActorRotation(), Direction.Rotation(), DeltaSeconds, 4.0f));
+        }
+
+        PrototypeWalkPhase += DeltaSeconds * 9.0f;
+        const float Wing = FMath::Sin(PrototypeWalkPhase) * 42.0f;
+        LeftArm->SetRelativeRotation(FMath::RInterpTo(
+            LeftArm->GetRelativeRotation(), FRotator(0.0f, 0.0f, 58.0f + Wing), DeltaSeconds, 10.0f));
+        RightArm->SetRelativeRotation(FMath::RInterpTo(
+            RightArm->GetRelativeRotation(), FRotator(0.0f, 0.0f, -58.0f - Wing), DeltaSeconds, 10.0f));
+        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, VisualTorsoBaseZ + FMath::Sin(PrototypeWalkPhase * 0.5f) * 1.5f));
+        return;
     }
 
     UpdateAwareness(DeltaSeconds);
