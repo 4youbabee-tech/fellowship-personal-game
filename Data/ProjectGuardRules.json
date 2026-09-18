@@ -57,29 +57,10 @@
     "Source/ShireJourney/README.md"
   ],
   "required_engineering_data": [
+    "Data/ProjectGovernor.json",
     "Data/SourceArchitecturePlan.json",
-    "Data/ProjectRequirements.json",
     "Data/LivingWorldFeaturePlan.json",
-    "Data/FilmExperiencePlan.json",
-    "Data/ProjectGovernorPolicy.json",
-    "Data/ProjectDecisions.json",
-    "Data/ExperienceQualityGates.json"
-  ],
-  "requirement_status_values": [
-    "REQUESTED",
-    "PLANNED",
-    "PARTIAL",
-    "IMPLEMENTED",
-    "VALIDATED",
-    "DEFERRED",
-    "REJECTED",
-    "SUPERSEDED"
-  ],
-  "requirement_priority_values": [
-    "CRITICAL",
-    "HIGH",
-    "MEDIUM",
-    "LOW"
+    "Data/FilmExperiencePlan.json"
   ],
   "living_world_phase_ids": [
     "LW0",
