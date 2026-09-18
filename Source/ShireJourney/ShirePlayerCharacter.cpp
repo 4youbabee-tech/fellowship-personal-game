@@ -165,15 +165,37 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
         }
     };
 
-    ApplyColor(PrototypeTorso, FLinearColor(0.20f, 0.34f, 0.15f));
+    FName CharacterId = TEXT("Frodo");
+    if (UGameInstance* GI = GetGameInstance())
+    {
+        if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
+        {
+            CharacterId = Quests->GetPlayableCharacterId();
+        }
+    }
+
+    const bool bGandalf = CharacterId == TEXT("Gandalf");
+
+    GetCapsuleComponent()->SetCapsuleHalfHeight(bGandalf ? 86.0f : 60.0f);
+
+    PrototypeTorso->SetRelativeLocation(FVector(0.0f, 0.0f, bGandalf ? 10.0f : -4.0f));
+    PrototypeTorso->SetRelativeScale3D(bGandalf ? FVector(0.31f, 0.23f, 0.50f) : FVector(0.30f, 0.22f, 0.36f));
+    PrototypeHead->SetRelativeLocation(FVector(0.0f, 0.0f, bGandalf ? 66.0f : 39.0f));
+    PrototypeHair->SetRelativeLocation(FVector(-1.0f, 0.0f, bGandalf ? 74.0f : 47.0f));
+    PrototypeLeftArm->SetRelativeLocation(FVector(0.0f, -24.0f, bGandalf ? 10.0f : -3.0f));
+    PrototypeRightArm->SetRelativeLocation(FVector(0.0f, 24.0f, bGandalf ? 10.0f : -3.0f));
+    PrototypeLeftLeg->SetRelativeLocation(FVector(0.0f, -10.0f, -43.0f));
+    PrototypeRightLeg->SetRelativeLocation(FVector(0.0f, 10.0f, -43.0f));
+
+    ApplyColor(PrototypeTorso, bGandalf ? FLinearColor(0.30f, 0.31f, 0.29f) : FLinearColor(0.20f, 0.34f, 0.15f));
     ApplyColor(PrototypeHead, FLinearColor(0.74f, 0.52f, 0.34f));
-    ApplyColor(PrototypeHair, FLinearColor(0.12f, 0.055f, 0.025f));
-    ApplyColor(PrototypeLeftArm, FLinearColor(0.25f, 0.40f, 0.18f));
-    ApplyColor(PrototypeRightArm, FLinearColor(0.25f, 0.40f, 0.18f));
-    ApplyColor(PrototypeLeftLeg, FLinearColor(0.30f, 0.20f, 0.10f));
-    ApplyColor(PrototypeRightLeg, FLinearColor(0.30f, 0.20f, 0.10f));
-    ApplyColor(PrototypeLeftFoot, FLinearColor(0.24f, 0.12f, 0.055f));
-    ApplyColor(PrototypeRightFoot, FLinearColor(0.24f, 0.12f, 0.055f));
+    ApplyColor(PrototypeHair, bGandalf ? FLinearColor(0.72f, 0.70f, 0.64f) : FLinearColor(0.12f, 0.055f, 0.025f));
+    ApplyColor(PrototypeLeftArm, bGandalf ? FLinearColor(0.28f, 0.29f, 0.27f) : FLinearColor(0.25f, 0.40f, 0.18f));
+    ApplyColor(PrototypeRightArm, bGandalf ? FLinearColor(0.28f, 0.29f, 0.27f) : FLinearColor(0.25f, 0.40f, 0.18f));
+    ApplyColor(PrototypeLeftLeg, bGandalf ? FLinearColor(0.20f, 0.21f, 0.20f) : FLinearColor(0.30f, 0.20f, 0.10f));
+    ApplyColor(PrototypeRightLeg, bGandalf ? FLinearColor(0.20f, 0.21f, 0.20f) : FLinearColor(0.30f, 0.20f, 0.10f));
+    ApplyColor(PrototypeLeftFoot, bGandalf ? FLinearColor(0.12f, 0.12f, 0.12f) : FLinearColor(0.24f, 0.12f, 0.055f));
+    ApplyColor(PrototypeRightFoot, bGandalf ? FLinearColor(0.12f, 0.12f, 0.12f) : FLinearColor(0.24f, 0.12f, 0.055f));
 }
 
 void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
@@ -248,6 +270,10 @@ void AShirePlayerCharacter::BeginPlay()
         {
             Presentation->OnCinematicStateChanged.AddDynamic(this, &AShirePlayerCharacter::HandleCinematicStateChanged);
         }
+        if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
+        {
+            Quests->OnExperienceChanged.AddDynamic(this, &AShirePlayerCharacter::HandleExperienceChanged);
+        }
     }
 }
 
@@ -258,6 +284,10 @@ void AShirePlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
         if (UShireStoryPresentationSubsystem* Presentation = GI->GetSubsystem<UShireStoryPresentationSubsystem>())
         {
             Presentation->OnCinematicStateChanged.RemoveDynamic(this, &AShirePlayerCharacter::HandleCinematicStateChanged);
+        }
+        if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
+        {
+            Quests->OnExperienceChanged.RemoveDynamic(this, &AShirePlayerCharacter::HandleExperienceChanged);
         }
     }
 
@@ -284,6 +314,23 @@ void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("QuickLoad"), IE_Pressed, this, &AShirePlayerCharacter::QuickLoad);
     PlayerInputComponent->BindAction(TEXT("DebugPreviousChapter"), IE_Pressed, this, &AShirePlayerCharacter::DebugPreviousChapter);
     PlayerInputComponent->BindAction(TEXT("DebugNextChapter"), IE_Pressed, this, &AShirePlayerCharacter::DebugNextChapter);
+    PlayerInputComponent->BindAction(TEXT("DebugAlternateRoute"), IE_Pressed, this, &AShirePlayerCharacter::DebugToggleParallelRoute);
+}
+
+void AShirePlayerCharacter::HandleExperienceChanged(FName RouteId, FName EpisodeId, FName InPlayableCharacterId)
+{
+    ApplyPrototypeStyle();
+
+    if (APlayerController* PC = Cast<APlayerController>(Controller))
+    {
+        if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+        {
+            HUD->ShowAlert(FText::FromString(FString::Printf(
+                TEXT("Now playing: %s  |  %s"),
+                *InPlayableCharacterId.ToString(),
+                *EpisodeId.ToString())), 3.0f);
+        }
+    }
 }
 
 void AShirePlayerCharacter::HandleCinematicStateChanged(bool bLocked)
@@ -504,6 +551,32 @@ void AShirePlayerCharacter::QuickLoad()
         {
             HUD->ShowAlert(FText::FromString(TEXT("Journey restored.")), 1.8f);
         }
+    }
+}
+
+
+void AShirePlayerCharacter::DebugToggleParallelRoute()
+{
+    if (bCinematicInputLocked)
+    {
+        return;
+    }
+
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests)
+    {
+        return;
+    }
+
+    if (Quests->GetCurrentRouteId() == TEXT("GandalfParallel"))
+    {
+        Quests->StartExperience(TEXT("FrodoMain"), NAME_None, TEXT("Frodo"), NAME_None);
+    }
+    else
+    {
+        Quests->StartExperience(TEXT("GandalfParallel"), TEXT("P1G01_Isengard"), TEXT("Gandalf"),
+            TEXT("P1C01"), TEXT("IsengardCounsel"), 0);
     }
 }
 

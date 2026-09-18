@@ -37,10 +37,14 @@ protected:
     void QuickLoad();
     void DebugPreviousChapter();
     void DebugNextChapter();
+    void DebugToggleParallelRoute();
     void DebugStartChapterByIndex(int32 ChapterIndex);
 
     UFUNCTION()
     void HandleCinematicStateChanged(bool bLocked);
+
+    UFUNCTION()
+    void HandleExperienceChanged(FName RouteId, FName EpisodeId, FName PlayableCharacterId);
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
     USpringArmComponent* CameraBoom;

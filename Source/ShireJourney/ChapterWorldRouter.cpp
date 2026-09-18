@@ -3,6 +3,7 @@
 #include "BlackRiderPrototype.h"
 #include "BreePrototypeWorldBuilder.h"
 #include "FellowshipChapterWorldBuilder.h"
+#include "IsengardPrototypeWorldBuilder.h"
 #include "ShireAmbientNPC.h"
 #include "ShireNPC.h"
 #include "ShirePrototypeWorldBuilder.h"
@@ -33,12 +34,23 @@ void AChapterWorldRouter::BeginPlay()
     }
 
     Quests->OnChapterChanged.AddDynamic(this, &AChapterWorldRouter::HandleChapterChanged);
+    Quests->OnExperienceChanged.AddDynamic(this, &AChapterWorldRouter::HandleExperienceChanged);
     LoadChapterWorld(Quests->GetCurrentChapterId());
 }
 
 void AChapterWorldRouter::HandleChapterChanged(FName PreviousChapterId, FName NewChapterId)
 {
     LoadChapterWorld(NewChapterId);
+}
+
+void AChapterWorldRouter::HandleExperienceChanged(FName RouteId, FName EpisodeId, FName PlayableCharacterId)
+{
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (Quests)
+    {
+        LoadChapterWorld(Quests->GetCurrentChapterId(), true);
+    }
 }
 
 void AChapterWorldRouter::ClearPrototypeBuilders()
@@ -96,6 +108,7 @@ void AChapterWorldRouter::ClearPrototypeBuilders()
     DestroyAllOfClass(AShirePrototypeWorldBuilder::StaticClass());
     DestroyAllOfClass(ABreePrototypeWorldBuilder::StaticClass());
     DestroyAllOfClass(AFellowshipChapterWorldBuilder::StaticClass());
+    DestroyAllOfClass(AIsengardPrototypeWorldBuilder::StaticClass());
 }
 
 FVector AChapterWorldRouter::GetChapterSpawnLocation(FName ChapterId) const
@@ -136,7 +149,7 @@ FVector AChapterWorldRouter::GetChapterSpawnLocation(FName ChapterId) const
     return FVector(-2410.0f, -120.0f, 130.0f);
 }
 
-void AChapterWorldRouter::MovePlayerToChapterStart(FName ChapterId)
+void AChapterWorldRouter::MovePlayerToChapterStart(FName ChapterId, bool bRestoreRouteTransform)
 {
     APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
     if (!PlayerPawn)
@@ -144,34 +157,76 @@ void AChapterWorldRouter::MovePlayerToChapterStart(FName ChapterId)
         return;
     }
 
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+
+    if (bRestoreRouteTransform && Quests)
+    {
+        FVector SavedLocation;
+        FRotator SavedRotation;
+        if (Quests->GetCurrentRouteSavedTransform(SavedLocation, SavedRotation))
+        {
+            PlayerPawn->SetActorLocationAndRotation(
+                SavedLocation, SavedRotation, false, nullptr, ETeleportType::TeleportPhysics);
+            return;
+        }
+    }
+
+    FVector Spawn = GetChapterSpawnLocation(ChapterId);
+    if (Quests && Quests->GetCurrentRouteId() == TEXT("GandalfParallel"))
+    {
+        Spawn = FVector(-2400.0f, 0.0f, 130.0f);
+    }
+
     PlayerPawn->SetActorLocationAndRotation(
-        GetChapterSpawnLocation(ChapterId),
+        Spawn,
         FRotator::ZeroRotator,
         false,
         nullptr,
         ETeleportType::TeleportPhysics);
 }
 
-void AChapterWorldRouter::LoadChapterWorld(FName ChapterId)
+void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTransform)
 {
     if (!GetWorld())
     {
         return;
     }
 
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    const FName RouteId = Quests ? Quests->GetCurrentRouteId() : FName(TEXT("FrodoMain"));
+    const FName EpisodeId = Quests ? Quests->GetCurrentEpisodeId() : FName(*FString::Printf(TEXT("%s_Main"), *ChapterId.ToString()));
+
+    if (LastLoadedRouteId == RouteId && LastLoadedEpisodeId == EpisodeId && LastLoadedChapterId == ChapterId)
+    {
+        return;
+    }
+
+    LastLoadedRouteId = RouteId;
+    LastLoadedEpisodeId = EpisodeId;
+    LastLoadedChapterId = ChapterId;
+
     ClearPrototypeBuilders();
+
+    if (RouteId == TEXT("GandalfParallel"))
+    {
+        GetWorld()->SpawnActor<AIsengardPrototypeWorldBuilder>(FVector::ZeroVector, FRotator::ZeroRotator);
+        MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
+        return;
+    }
 
     if (ChapterId == TEXT("P1C01"))
     {
         GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(FVector::ZeroVector, FRotator::ZeroRotator);
-        MovePlayerToChapterStart(ChapterId);
+        MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
         return;
     }
 
     if (ChapterId == TEXT("P1C02"))
     {
         GetWorld()->SpawnActor<ABreePrototypeWorldBuilder>(FVector::ZeroVector, FRotator::ZeroRotator);
-        MovePlayerToChapterStart(ChapterId);
+        MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
         return;
     }
 
@@ -184,7 +239,7 @@ void AChapterWorldRouter::LoadChapterWorld(FName ChapterId)
         {
             Builder->BuildChapter(ChapterId);
         }
-        MovePlayerToChapterStart(ChapterId);
+        MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
         return;
     }
 

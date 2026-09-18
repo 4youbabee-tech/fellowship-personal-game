@@ -19,8 +19,14 @@ private:
     UFUNCTION()
     void HandleChapterChanged(FName PreviousChapterId, FName NewChapterId);
 
-    void LoadChapterWorld(FName ChapterId);
+    UFUNCTION()
+    void HandleExperienceChanged(FName RouteId, FName EpisodeId, FName PlayableCharacterId);
+
+    void LoadChapterWorld(FName ChapterId, bool bRestoreRouteTransform = false);
     void ClearPrototypeBuilders();
     FVector GetChapterSpawnLocation(FName ChapterId) const;
-    void MovePlayerToChapterStart(FName ChapterId);
+    void MovePlayerToChapterStart(FName ChapterId, bool bRestoreRouteTransform);
+    FName LastLoadedRouteId = NAME_None;
+    FName LastLoadedEpisodeId = NAME_None;
+    FName LastLoadedChapterId = NAME_None;
 };

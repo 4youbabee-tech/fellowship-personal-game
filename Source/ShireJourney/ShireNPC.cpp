@@ -148,6 +148,9 @@ void AShireNPC::ApplyPrototypeStyle()
     const bool bRanger =
         Name.Equals(TEXT("Aragorn"), ESearchCase::IgnoreCase) ||
         Name.Equals(TEXT("Strider"), ESearchCase::IgnoreCase);
+    const bool bWizard =
+        Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase) ||
+        Name.Equals(TEXT("Saruman"), ESearchCase::IgnoreCase);
     const bool bHuman =
         bRanger ||
         Name.Equals(TEXT("Boromir"), ESearchCase::IgnoreCase) ||
@@ -160,7 +163,7 @@ void AShireNPC::ApplyPrototypeStyle()
         Name.Equals(TEXT("Galadriel"), ESearchCase::IgnoreCase) ||
         Name.Equals(TEXT("Legolas"), ESearchCase::IgnoreCase);
 
-    if (Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase))
+    if (bWizard)
     {
         ConfigureTallFigure(1.02f);
         PrototypeTorsoBaseZ = 8.0f;
@@ -169,9 +172,10 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeTorso->SetRelativeLocation(FVector(0.0f, 0.0f, PrototypeTorsoBaseZ));
         PrototypeHead->SetRelativeLocation(FVector(0.0f, 0.0f, PrototypeHeadBaseZ));
         PrototypeHair->SetRelativeLocation(FVector(-1.0f, 0.0f, PrototypeHairBaseZ));
-        Coat = FLinearColor(0.30f, 0.31f, 0.29f);
-        Trousers = FLinearColor(0.20f, 0.21f, 0.20f);
-        Hair = FLinearColor(0.72f, 0.70f, 0.64f);
+        const bool bSaruman = Name.Equals(TEXT("Saruman"), ESearchCase::IgnoreCase);
+        Coat = bSaruman ? FLinearColor(0.70f, 0.69f, 0.64f) : FLinearColor(0.30f, 0.31f, 0.29f);
+        Trousers = bSaruman ? FLinearColor(0.50f, 0.49f, 0.45f) : FLinearColor(0.20f, 0.21f, 0.20f);
+        Hair = bSaruman ? FLinearColor(0.82f, 0.80f, 0.74f) : FLinearColor(0.72f, 0.70f, 0.64f);
     }
     else if (Name.Equals(TEXT("Gimli"), ESearchCase::IgnoreCase))
     {
