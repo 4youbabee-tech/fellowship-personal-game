@@ -10,16 +10,28 @@
 Read these in order:
 
 1. `Docs/CURRENT_PROJECT_STATE.md` — exact operational state, proof level, and next hard gate.
-2. `Docs/CHECKPOINTS.md` — chronological development checkpoints and what each one proved.
-3. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
-4. `Docs/PRODUCTION_COMPLETENESS_MATRIX.md` — what exists versus what is still incomplete across production pillars.
-5. `Docs/DEVELOPMENT_GATES.md` — mandatory build/PIE/device discipline.
-6. `Docs/PROJECT_GUARDIAN.md` — regression memory and permanent lessons from failures.
-7. `Docs/STORY_CANON_BIBLE.md` — story/canon authority before story changes.
-8. `Data/SourceArchitecturePlan.json` — machine-readable ownership and target folder for every runtime module source file.
-9. `Data/WorldCheckpointPlan.csv` — machine-readable player/world checkpoint intent.
+2. `Data/ProjectRequirements.json` — permanent user-request ledger; never rely on chat memory instead of this.
+3. `Docs/PROJECT_MEMORY_SYSTEM.md` — rules for updating user requests, decisions and evidence.
+4. `Docs/CHECKPOINTS.md` — chronological development checkpoints and what each one proved.
+5. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
+6. `Docs/LIVING_WORLD_AI_BLUEPRINT.md` — NPC/world-life intelligence design.
+7. `Data/LivingWorldFeaturePlan.json` — living-world implementation/status phases.
+8. `Docs/PRODUCTION_COMPLETENESS_MATRIX.md` — what exists versus what is still incomplete across production pillars.
+9. `Docs/DEVELOPMENT_GATES.md` — mandatory build/PIE/device discipline.
+10. `Docs/PROJECT_GUARDIAN.md` — regression memory and permanent lessons from failures.
+11. `Docs/STORY_CANON_BIBLE.md` — story/canon authority before story changes.
+12. `Data/SourceArchitecturePlan.json` — machine-readable ownership and target folder for every runtime module source file.
+13. `Data/WorldCheckpointPlan.csv` — machine-readable player/world checkpoint intent.
 
 If code, data, and documentation disagree, stop and reconcile them in the same logical change.
+
+
+## User-request rule
+
+Before implementing a meaningful feature request, find or create its stable ID in `Data/ProjectRequirements.json`.
+After implementation, update the same entry with repository evidence, remaining gaps and actual proof level.
+Never mark a request complete merely because the conversation moved on.
+
 
 ## Current runtime module state
 
