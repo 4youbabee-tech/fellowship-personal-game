@@ -1494,6 +1494,40 @@ for path in sorted(SOURCE.glob("*.h")):
     if later_includes:
         fail(f"{path.name}: generated.h is not the last include ({later_includes[0]})")
 
+# PG-048: resource sources, service partners and rights holders must not be conflated.
+rights_plan_path = ROOT / "Data" / "RightsHolderContactPlan.json"
+rights_plan = {}
+if not rights_plan_path.exists():
+    fail("PG-048 rights-holder contact plan missing")
+else:
+    try:
+        rights_plan = json.loads(read(rights_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-048 invalid RightsHolderContactPlan.json: {exc}")
+
+if rights_plan and rights_plan.get("authority_id") != "FELLOWSHIP_RIGHTS_HOLDER_CONTACT_PLAN_V1":
+    fail("PG-048 rights-holder contact plan has unexpected authority_id")
+
+contact_roles = {
+    str(item.get("id") or ""): str(item.get("role") or "")
+    for item in rights_plan.get("contacts", [])
+    if isinstance(item, dict)
+}
+for required_contact in [
+    "MIDDLE_EARTH_ENTERPRISES",
+    "WETA_WORKSHOP",
+    "WARNER_BROS_NEW_LINE",
+    "TOLKIEN_ESTATE",
+    "HARPERCOLLINS_PERMISSIONS",
+]:
+    if required_contact not in contact_roles:
+        fail(f"PG-048 missing rights/service contact: {required_contact}")
+
+if contact_roles.get("WETA_WORKSHOP") == "PRIMARY_GAME_AND_LOTR_HOBBIT_LICENSING_RIGHTS_CONTACT":
+    fail("PG-048 Weta Workshop must not be classified as the primary Tolkien game-rights licensor")
+if contact_roles.get("MIDDLE_EARTH_ENTERPRISES") != "PRIMARY_GAME_AND_LOTR_HOBBIT_LICENSING_RIGHTS_CONTACT":
+    fail("PG-048 Middle-earth Enterprises must remain the primary recorded LOTR/Hobbit game licensing contact")
+
 # PG-047: external production assets must remain license/provenance gated.
 external_manifest_path = ROOT / "Data" / "ExternalAssetManifest.json"
 external_manifest = {}
@@ -1520,6 +1554,17 @@ for provider_id in ["FAB", "QUixel_MEGASCANS", "SKETCHFAB", "TURBOSQUID", "SONNI
 for reference_provider in ["ARTSTATION", "TOLKIEN_GATEWAY", "LOTR_WIKI"]:
     if provider_modes.get(reference_provider) != "REFERENCE_ONLY":
         fail(f"PG-047 reference-only provider drifted: {reference_provider}")
+
+resource_provider_modes = {
+    str(p.get("id") or ""): str(p.get("mode") or "")
+    for p in external_manifest.get("providers", [])
+    if isinstance(p, dict)
+}
+for provider_id in ["WETA_WORKSHOP", "POLY_HAVEN", "AMBIENTCG", "ADOBE_MIXAMO", "ACTORCORE_REALLUSION", "KENNEY"]:
+    if provider_id not in resource_provider_modes:
+        fail(f"PG-048 expanded resource provider missing: {provider_id}")
+if resource_provider_modes.get("WETA_WORKSHOP") != "SERVICE_OR_COMMISSION_ONLY":
+    fail("PG-048 Weta Workshop provider mode must remain SERVICE_OR_COMMISSION_ONLY")
 
 blocked_license_tokens = {"EDITORIAL", "CC_BY_NC", "CC_BY_ND", "UNKNOWN"}
 approved_external_root = ROOT / "SourceAssets" / "ExternalLicensed" / "Approved"

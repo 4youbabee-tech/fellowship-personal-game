@@ -379,6 +379,17 @@ This converts failures into permanent project knowledge.
 
 **Guard:** Pre-Unreal Validation checks provider policy, blocked license classes and one-to-one manifest coverage for every file placed in the Approved external asset tree.
 
+### PG-048 — Service providers, resource libraries and rights holders are different roles
+**Risk:** the project may mistake a famous production company or reference site for an IP licensor, or assume that a personal/private project automatically authorizes use of protected Tolkien/film material.
+
+**Contract:** Weta Workshop is recorded as a design/game-development/private-commission partner. Middle-earth Enterprises is the primary recorded LOTR/Hobbit game/franchise licensing contact. Warner Bros/New Line, Tolkien Estate and HarperCollins are separate rights channels for film-specific, Estate-controlled and published-text material.
+
+**Private-project rule:** personal, non-commercial and non-distributed status may be stated in a permission request, but it is not treated by the project as automatic permission to copy protected assets, actor likenesses, film props/costumes, maps, artwork, soundtrack, screenplay or book text.
+
+**Resource rule:** CC0/generic libraries such as Poly Haven and ambientCG can accelerate production under their licenses; animation/character libraries such as Mixamo or ActorCore retain their own distribution terms.
+
+**Guard:** Pre-Unreal Validation protects the rights-holder map, Weta service classification and expanded provider list.
+
 ## What Guardian must never do automatically
 
 - change canon,

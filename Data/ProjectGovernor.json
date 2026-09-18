@@ -842,6 +842,42 @@
       ],
       "checkpoint": "CP47",
       "notes": "Pipeline is implemented; actual third-party acquisitions are intentionally item-by-item and license-gated."
+    },
+    {
+      "id": "REQ-RIGHTS-001",
+      "title": "Rights-holder and professional-partner outreach map",
+      "category": "ProjectGovernance",
+      "priority": "HIGH",
+      "status": "IMPLEMENTED",
+      "origin": "User asked to exploit worldwide resources including Weta Workshop and official rights holders for a personal non-distributed project",
+      "intent": "Maximize useful external resources while clearly separating stock-asset licenses, professional services, research references and franchise rights permissions.",
+      "evidence": [
+        "Data/RightsHolderContactPlan.json",
+        "Docs/RIGHTS_AND_REFERENCE_OUTREACH.md",
+        "Data/ExternalAssetManifest.json",
+        "Docs/PROJECT_GUARDIAN.md PG-048"
+      ],
+      "implementation_refs": [
+        "Weta Workshop service/commission role recorded",
+        "Middle-earth Enterprises licensing route recorded",
+        "Warner Bros/New Line film-specific route recorded",
+        "Tolkien Estate and HarperCollins rights boundaries recorded",
+        "additional CC0/animation sources added to provider manifest"
+      ],
+      "missing_work": [
+        "No rights-holder outreach has been sent yet",
+        "Any granted permission must be archived before protected material is imported"
+      ],
+      "acceptance_criteria": [
+        "No source is mistaken for a rights holder it is not",
+        "Private-project status is never treated as automatic franchise permission",
+        "Every protected third-party asset has written rights evidence before production import"
+      ],
+      "dependencies": [
+        "REQ-ASSET-001"
+      ],
+      "checkpoint": "CP48",
+      "notes": "Research and project policy are implemented; permissions themselves are not granted."
     }
   ],
   "hard_invariants": [
@@ -1420,14 +1456,14 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Adopted programmer-recommended professional asset sources through a license/provenance gate",
+    "reason": "Expanded external-resource strategy to Weta Workshop, official rights holders and additional global production libraries",
     "summary": [
-      "Created a provider-aware external asset manifest covering Fab, Megascans, Sketchfab, commercial model libraries, audio libraries and research-only sources.",
-      "Added a local-only Inbox and an Approved staging contract so downloads cannot silently become production dependencies.",
-      "Blocked editorial, non-commercial, no-derivatives, unknown-license and franchise-ripped assets.",
-      "Recorded UE4.27-specific Fab handling: Launcher project operations are usable while the in-editor Fab integration is UE5.3+.",
-      "Kept Tolkien Gateway/LOTR Wiki and ArtStation as research/reference sources unless a specific item has separate rights.",
-      "Added PG-047 so future contributors cannot bypass provenance and license metadata."
+      "Added Weta Workshop as a professional design/game-development/private-commission partner rather than a stock-asset or blanket IP licensor.",
+      "Mapped Middle-earth Enterprises/Embracer as the primary official game/franchise licensing contact for The Lord of the Rings/The Hobbit.",
+      "Mapped Warner Bros/New Line for Peter Jackson film-specific material, Tolkien Estate for Estate-controlled works/marks, and HarperCollins for published-text permissions.",
+      "Recorded that a personal, private, non-distributed project is relevant context but not automatic permission to copy protected franchise material.",
+      "Expanded the resource manifest with Poly Haven, ambientCG, Adobe Mixamo, ActorCore/Reallusion and Kenney so environment, rigging, animation and utility sourcing is broader than the first recommendation list.",
+      "Added PG-048 to prevent service providers, research sites and rights holders from being conflated."
     ]
   },
   "development_mode": {
