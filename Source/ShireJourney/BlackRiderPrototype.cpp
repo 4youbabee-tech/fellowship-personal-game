@@ -46,6 +46,23 @@ ABlackRiderPrototype::ABlackRiderPrototype()
 
 void ABlackRiderPrototype::ApplyPrototypeStyle()
 {
+    auto TryMesh = [](UStaticMeshComponent* Component, const TCHAR* AssetPath) -> bool
+    {
+        if (!Component) return false;
+        if (UStaticMesh* Mesh = LoadObject<UStaticMesh>(nullptr, AssetPath))
+        {
+            Component->SetStaticMesh(Mesh);
+            Component->SetRelativeScale3D(FVector(1.0f));
+            return true;
+        }
+        return false;
+    };
+
+    const bool bProductionVisual =
+        TryMesh(HorseBody, TEXT("/Game/Production/Enemies/BlackRider/SM_BlackRider_Horse.SM_BlackRider_Horse")) &&
+        TryMesh(RiderBody, TEXT("/Game/Production/Enemies/BlackRider/SM_BlackRider_Rider.SM_BlackRider_Rider")) &&
+        TryMesh(RiderHead, TEXT("/Game/Production/Enemies/BlackRider/SM_BlackRider_Head.SM_BlackRider_Head"));
+
     UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
         nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
     if (!BasicMaterial)
