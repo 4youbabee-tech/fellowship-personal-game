@@ -1084,6 +1084,26 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
             Hobbit->WalkSpeed=38.0f;
         }
     }
+
+    // Lightweight sky life: a few cheap ambient birds keep Hobbiton/fields moving without heavy AI.
+    const FVector BirdStarts[] = {
+        FVector(-1500, -600, 420), FVector(-200, 850, 520), FVector(1900, -720, 460),
+        FVector(6900, -900, 560), FVector(12600, 820, 500), FVector(20500, -640, 540)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(BirdStarts); ++Index)
+    {
+        AShireAmbientNPC* Bird = GetWorld()->SpawnActor<AShireAmbientNPC>(BirdStarts[Index], FRotator::ZeroRotator);
+        if (!Bird) continue;
+        Bird->RoutineRole = TEXT("Bird");
+        Bird->RoutinePointA = BirdStarts[Index];
+        Bird->RoutinePointB = BirdStarts[Index] + FVector(
+            650.0f + 90.0f * (Index % 3),
+            Index % 2 == 0 ? 420.0f : -420.0f,
+            80.0f + 35.0f * (Index % 2));
+        Bird->WalkSpeed = 135.0f + 12.0f * (Index % 3);
+        Bird->MinWait = 0.0f;
+        Bird->MaxWait = 0.0f;
+    }
 }
 
 
