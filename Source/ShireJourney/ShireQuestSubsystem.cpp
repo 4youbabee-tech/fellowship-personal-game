@@ -1,4 +1,5 @@
 #include "ShireQuestSubsystem.h"
+#include "ShireNPCContextSubsystem.h"
 
 #include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
@@ -270,6 +271,7 @@ void UShireQuestSubsystem::StartChapter(FName ChapterId, FName StartingQuestId, 
 
     if (PreviousChapterId != CurrentChapterId)
     {
+        PruneNPCMemoryForCurrentChapter();
         OnChapterChanged.Broadcast(PreviousChapterId, CurrentChapterId);
     }
 
@@ -397,6 +399,7 @@ void UShireQuestSubsystem::TriggerStoryBeat(FName StoryBeatId)
     }
 
     CompletedStoryBeats.Add(StoryBeatId);
+    RecordStoryBeatForEligibleNPCs(StoryBeatId);
     OnStoryBeatTriggered.Broadcast(StoryBeatId);
 }
 
@@ -464,9 +467,65 @@ void UShireQuestSubsystem::RestoreQuestState(const TMap<FName, int32>& InStages,
     OnQuestStateRestored.Broadcast();
 }
 
+FName UShireQuestSubsystem::ResolveCanonicalNPCProfile(FName ProfileHint) const
+{
+    if (ProfileHint == NAME_None)
+    {
+        return NAME_None;
+    }
+
+    const UGameInstance* GI = GetGameInstance();
+    const UShireNPCContextSubsystem* Context =
+        GI ? GI->GetSubsystem<UShireNPCContextSubsystem>() : nullptr;
+    if (Context)
+    {
+        const FName Canonical = Context->ResolveCanonicalProfileId(ProfileHint);
+        if (Canonical != NAME_None)
+        {
+            return Canonical;
+        }
+    }
+    return ProfileHint;
+}
+
+int32 UShireQuestSubsystem::ResolvePersistentMemoryBudget(FName ProfileHint) const
+{
+    const UGameInstance* GI = GetGameInstance();
+    const UShireNPCContextSubsystem* Context =
+        GI ? GI->GetSubsystem<UShireNPCContextSubsystem>() : nullptr;
+    if (Context)
+    {
+        return Context->GetPersistentMemoryBudget(ProfileHint);
+    }
+    return 12;
+}
+
+int32 UShireQuestSubsystem::ResolveRelationshipBudget(FName ProfileHint) const
+{
+    const UGameInstance* GI = GetGameInstance();
+    const UShireNPCContextSubsystem* Context =
+        GI ? GI->GetSubsystem<UShireNPCContextSubsystem>() : nullptr;
+    if (Context)
+    {
+        return Context->GetRelationshipBudget(ProfileHint);
+    }
+    return 8;
+}
+
+int32 UShireQuestSubsystem::ChapterOrdinal(FName ChapterId)
+{
+    const FString Value = ChapterId.ToString();
+    if (Value.StartsWith(TEXT("P1C")) && Value.Len() >= 5)
+    {
+        return FCString::Atoi(*Value.Mid(3));
+    }
+    return -1;
+}
+
 FName UShireQuestSubsystem::MakeNPCMemoryKey(FName CanonicalProfileId) const
 {
-    if (CanonicalProfileId == NAME_None || CurrentRouteId == NAME_None)
+    const FName ResolvedProfileId = ResolveCanonicalNPCProfile(CanonicalProfileId);
+    if (ResolvedProfileId == NAME_None || CurrentRouteId == NAME_None)
     {
         return NAME_None;
     }
@@ -474,7 +533,7 @@ FName UShireQuestSubsystem::MakeNPCMemoryKey(FName CanonicalProfileId) const
     return FName(*FString::Printf(
         TEXT("%s|%s"),
         *CurrentRouteId.ToString(),
-        *CanonicalProfileId.ToString()));
+        *ResolvedProfileId.ToString()));
 }
 
 bool UShireQuestSubsystem::RememberNamedNPCEvent(
@@ -482,14 +541,16 @@ bool UShireQuestSubsystem::RememberNamedNPCEvent(
     FName EventId,
     int32 Priority)
 {
-    const FName Key = MakeNPCMemoryKey(CanonicalProfileId);
-    if (Key == NAME_None || EventId == NAME_None)
+    const FName ResolvedProfileId = ResolveCanonicalNPCProfile(CanonicalProfileId);
+    const int32 Budget = ResolvePersistentMemoryBudget(ResolvedProfileId);
+    const FName Key = MakeNPCMemoryKey(ResolvedProfileId);
+    if (Key == NAME_None || EventId == NAME_None || Budget <= 0)
     {
         return false;
     }
 
     FShireNPCMemoryBucket& Bucket = NPCMemoryState.FindOrAdd(Key);
-    Bucket.CanonicalProfileId = CanonicalProfileId;
+    Bucket.CanonicalProfileId = ResolvedProfileId;
     Bucket.RouteId = CurrentRouteId;
 
     for (FShireNPCMemoryEvent& Existing : Bucket.Events)
@@ -497,7 +558,7 @@ bool UShireQuestSubsystem::RememberNamedNPCEvent(
         if (Existing.EventId == EventId)
         {
             Existing.ChapterId = CurrentChapterId;
-            Existing.Priority = FMath::Max(Existing.Priority, Priority);
+            Existing.Priority = FMath::Max(Existing.Priority, FMath::Clamp(Priority, 0, 100));
             return true;
         }
     }
@@ -508,7 +569,7 @@ bool UShireQuestSubsystem::RememberNamedNPCEvent(
     Memory.Priority = FMath::Clamp(Priority, 0, 100);
     Bucket.Events.Add(Memory);
 
-    while (Bucket.Events.Num() > 12)
+    while (Bucket.Events.Num() > Budget)
     {
         int32 LowestIndex = 0;
         for (int32 Index = 1; Index < Bucket.Events.Num(); ++Index)
@@ -550,25 +611,139 @@ int32 UShireQuestSubsystem::AdjustNamedNPCRelationship(
     FName OtherProfileId,
     int32 Delta)
 {
-    const FName Key = MakeNPCMemoryKey(CanonicalProfileId);
-    if (Key == NAME_None || OtherProfileId == NAME_None || Delta == 0)
+    const FName ResolvedProfileId = ResolveCanonicalNPCProfile(CanonicalProfileId);
+    const FName ResolvedOtherId = ResolveCanonicalNPCProfile(OtherProfileId);
+    const int32 Budget = ResolveRelationshipBudget(ResolvedProfileId);
+    const FName Key = MakeNPCMemoryKey(ResolvedProfileId);
+    if (Key == NAME_None || ResolvedOtherId == NAME_None || Delta == 0 || Budget <= 0)
     {
         return 0;
     }
 
     FShireNPCMemoryBucket& Bucket = NPCMemoryState.FindOrAdd(Key);
-    Bucket.CanonicalProfileId = CanonicalProfileId;
+    Bucket.CanonicalProfileId = ResolvedProfileId;
     Bucket.RouteId = CurrentRouteId;
 
-    if (!Bucket.RelationshipDeltas.Contains(OtherProfileId) &&
-        Bucket.RelationshipDeltas.Num() >= 8)
+    if (!Bucket.RelationshipDeltas.Contains(ResolvedOtherId) &&
+        Bucket.RelationshipDeltas.Num() >= Budget)
     {
         return 0;
     }
 
-    int32& Value = Bucket.RelationshipDeltas.FindOrAdd(OtherProfileId);
+    int32& Value = Bucket.RelationshipDeltas.FindOrAdd(ResolvedOtherId);
     Value = FMath::Clamp(Value + Delta, -100, 100);
     return Value;
+}
+
+int32 UShireQuestSubsystem::GetNamedNPCRelationship(
+    FName CanonicalProfileId,
+    FName OtherProfileId) const
+{
+    const FName ResolvedOtherId = ResolveCanonicalNPCProfile(OtherProfileId);
+    const FName Key = MakeNPCMemoryKey(CanonicalProfileId);
+    const FShireNPCMemoryBucket* Bucket = NPCMemoryState.Find(Key);
+    if (!Bucket || ResolvedOtherId == NAME_None)
+    {
+        return 0;
+    }
+
+    if (const int32* Value = Bucket->RelationshipDeltas.Find(ResolvedOtherId))
+    {
+        return *Value;
+    }
+    return 0;
+}
+
+bool UShireQuestSubsystem::HasRecentNPCDialogueVariant(
+    FName CanonicalProfileId,
+    FName VariantId) const
+{
+    const FName Key = MakeNPCMemoryKey(CanonicalProfileId);
+    const FShireNPCMemoryBucket* Bucket = NPCMemoryState.Find(Key);
+    return Bucket && VariantId != NAME_None && Bucket->RecentDialogueVariantIds.Contains(VariantId);
+}
+
+void UShireQuestSubsystem::RecordNamedNPCDialogueUse(
+    FName CanonicalProfileId,
+    FName VariantId,
+    FName PartnerProfileId,
+    int32 MaxRecentVariants)
+{
+    const FName ResolvedProfileId = ResolveCanonicalNPCProfile(CanonicalProfileId);
+    const FName Key = MakeNPCMemoryKey(ResolvedProfileId);
+    if (Key == NAME_None || ResolvePersistentMemoryBudget(ResolvedProfileId) <= 0)
+    {
+        return;
+    }
+
+    FShireNPCMemoryBucket& Bucket = NPCMemoryState.FindOrAdd(Key);
+    Bucket.CanonicalProfileId = ResolvedProfileId;
+    Bucket.RouteId = CurrentRouteId;
+
+    if (VariantId != NAME_None)
+    {
+        Bucket.RecentDialogueVariantIds.Remove(VariantId);
+        Bucket.RecentDialogueVariantIds.Add(VariantId);
+        while (Bucket.RecentDialogueVariantIds.Num() > FMath::Clamp(MaxRecentVariants, 4, 24))
+        {
+            Bucket.RecentDialogueVariantIds.RemoveAt(0);
+        }
+    }
+
+    const FName ResolvedPartner = ResolveCanonicalNPCProfile(PartnerProfileId);
+    if (ResolvedPartner != NAME_None)
+    {
+        Bucket.RecentPartnerIds.Remove(ResolvedPartner);
+        Bucket.RecentPartnerIds.Add(ResolvedPartner);
+        while (Bucket.RecentPartnerIds.Num() > 4)
+        {
+            Bucket.RecentPartnerIds.RemoveAt(0);
+        }
+    }
+}
+
+void UShireQuestSubsystem::PruneNPCMemoryForCurrentChapter()
+{
+    const int32 CurrentOrdinal = ChapterOrdinal(CurrentChapterId);
+    if (CurrentOrdinal < 0)
+    {
+        return;
+    }
+
+    for (TPair<FName, FShireNPCMemoryBucket>& Pair : NPCMemoryState)
+    {
+        FShireNPCMemoryBucket& Bucket = Pair.Value;
+        for (int32 Index = Bucket.Events.Num() - 1; Index >= 0; --Index)
+        {
+            const FShireNPCMemoryEvent& Event = Bucket.Events[Index];
+            const int32 EventOrdinal = ChapterOrdinal(Event.ChapterId);
+            const bool bProtected = Event.Priority >= 80;
+            if (!bProtected && EventOrdinal >= 0 && CurrentOrdinal - EventOrdinal > 2)
+            {
+                Bucket.Events.RemoveAt(Index);
+            }
+        }
+    }
+}
+
+void UShireQuestSubsystem::RecordStoryBeatForEligibleNPCs(FName StoryBeatId)
+{
+    UGameInstance* GI = GetGameInstance();
+    UShireNPCContextSubsystem* Context =
+        GI ? GI->GetSubsystem<UShireNPCContextSubsystem>() : nullptr;
+    if (!Context || StoryBeatId == NAME_None)
+    {
+        return;
+    }
+
+    const TArray<FName> ProfilesInChapter = Context->GetNamedProfilesForCurrentChapter();
+    for (const FName ProfileId : ProfilesInChapter)
+    {
+        if (Context->HasKnowledgeTag(ProfileId, TEXT("MAIN_STORY_CONTEXT")))
+        {
+            RememberNamedNPCEvent(ProfileId, StoryBeatId, 90);
+        }
+    }
 }
 
 void UShireQuestSubsystem::RestoreNPCMemoryState(
@@ -579,12 +754,21 @@ void UShireQuestSubsystem::RestoreNPCMemoryState(
     for (const TPair<FName, FShireNPCMemoryBucket>& Pair : InState)
     {
         FShireNPCMemoryBucket Bucket = Pair.Value;
-        if (Bucket.CanonicalProfileId == NAME_None || Bucket.RouteId == NAME_None)
+        const FName CanonicalProfileId = ResolveCanonicalNPCProfile(Bucket.CanonicalProfileId);
+        if (CanonicalProfileId == NAME_None || Bucket.RouteId == NAME_None)
         {
             continue;
         }
 
-        while (Bucket.Events.Num() > 12)
+        Bucket.CanonicalProfileId = CanonicalProfileId;
+        const int32 EventBudget = ResolvePersistentMemoryBudget(CanonicalProfileId);
+        const int32 RelationshipBudget = ResolveRelationshipBudget(CanonicalProfileId);
+        if (EventBudget <= 0)
+        {
+            continue;
+        }
+
+        while (Bucket.Events.Num() > EventBudget)
         {
             int32 LowestIndex = 0;
             for (int32 Index = 1; Index < Bucket.Events.Num(); ++Index)
@@ -597,20 +781,30 @@ void UShireQuestSubsystem::RestoreNPCMemoryState(
             Bucket.Events.RemoveAt(LowestIndex);
         }
 
-        if (Bucket.RelationshipDeltas.Num() > 8)
+        TMap<FName, int32> CanonicalRelationships;
+        for (const TPair<FName, int32>& Relationship : Bucket.RelationshipDeltas)
         {
-            TMap<FName, int32> BoundedRelationships;
-            for (const TPair<FName, int32>& Relationship : Bucket.RelationshipDeltas)
+            if (CanonicalRelationships.Num() >= RelationshipBudget)
             {
-                if (BoundedRelationships.Num() >= 8)
-                {
-                    break;
-                }
-                BoundedRelationships.Add(
-                    Relationship.Key,
+                break;
+            }
+            const FName CanonicalOther = ResolveCanonicalNPCProfile(Relationship.Key);
+            if (CanonicalOther != NAME_None)
+            {
+                CanonicalRelationships.Add(
+                    CanonicalOther,
                     FMath::Clamp(Relationship.Value, -100, 100));
             }
-            Bucket.RelationshipDeltas = MoveTemp(BoundedRelationships);
+        }
+        Bucket.RelationshipDeltas = MoveTemp(CanonicalRelationships);
+
+        while (Bucket.RecentDialogueVariantIds.Num() > 12)
+        {
+            Bucket.RecentDialogueVariantIds.RemoveAt(0);
+        }
+        while (Bucket.RecentPartnerIds.Num() > 4)
+        {
+            Bucket.RecentPartnerIds.RemoveAt(0);
         }
 
         const FName SanitizedKey(*FString::Printf(
@@ -619,4 +813,6 @@ void UShireQuestSubsystem::RestoreNPCMemoryState(
             *Bucket.CanonicalProfileId.ToString()));
         NPCMemoryState.Add(SanitizedKey, MoveTemp(Bucket));
     }
+
+    PruneNPCMemoryForCurrentChapter();
 }

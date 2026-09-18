@@ -111,6 +111,9 @@ private:
     float SocialCaptionDelay = 0.0f;
     float SocialCaptionRemaining = 0.0f;
     float LastPartnerCooldownRemaining = 0.0f;
+    float ScheduleCheckRemaining = 0.0f;
+    float BaseWalkSpeed = 55.0f;
+    FName RuntimeSchedulePhase = NAME_None;
     bool bSocializing = false;
     FText PendingSocialCaption;
     float VisualTorsoBaseZ = 58.0f;
@@ -129,4 +132,6 @@ private:
     void UpdateSocialCaption(float DeltaSeconds);
     void BeginSocialCaption(const FText& Text, float Delay, float Duration);
     FText ResolveAmbientConversationLine(bool bResponse) const;
+    FName ResolveRuntimeProfileHint() const;
+    void UpdateScheduleContext(float DeltaSeconds);
 };

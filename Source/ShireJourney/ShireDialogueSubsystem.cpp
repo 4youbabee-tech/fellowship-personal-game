@@ -310,6 +310,52 @@ bool UShireDialogueSubsystem::PlayDialogueCue(FName DialogueCue)
     return true;
 }
 
+bool UShireDialogueSubsystem::PlayDynamicLine(
+    const FShireDialogueLine& Line,
+    FName DynamicCueId)
+{
+    TArray<FShireDialogueLine> Lines;
+    Lines.Add(Line);
+    return PlayDynamicSequence(Lines, DynamicCueId);
+}
+
+bool UShireDialogueSubsystem::PlayDynamicSequence(
+    const TArray<FShireDialogueLine>& Lines,
+    FName DynamicCueId)
+{
+    PendingLines.Empty();
+    for (const FShireDialogueLine& Line : Lines)
+    {
+        if (!Line.Subtitle.IsEmpty())
+        {
+            PendingLines.Add(Line);
+        }
+    }
+    if (PendingLines.Num() == 0)
+    {
+        return false;
+    }
+
+    StopDialogue();
+    ActiveDialogueCue = DynamicCueId == NAME_None ? FName(TEXT("DynamicNPCSequence")) : DynamicCueId;
+    PendingLines = Lines;
+    for (int32 Index = PendingLines.Num() - 1; Index >= 0; --Index)
+    {
+        if (PendingLines[Index].Subtitle.IsEmpty())
+        {
+            PendingLines.RemoveAt(Index);
+        }
+    }
+    bPlaying = PendingLines.Num() > 0;
+    if (!bPlaying)
+    {
+        return false;
+    }
+    OnDialogueStateChanged.Broadcast(true);
+    AdvanceQueue();
+    return true;
+}
+
 void UShireDialogueSubsystem::StopDialogue()
 {
     if (UWorld* World = GetWorld())

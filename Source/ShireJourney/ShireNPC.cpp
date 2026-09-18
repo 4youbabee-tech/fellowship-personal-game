@@ -1,9 +1,12 @@
 #include "ShireNPC.h"
 #include "ShireQuestSubsystem.h"
+#include "ShireNPCContextSubsystem.h"
+#include "ShireDialogueSubsystem.h"
 #include "ShireHUD.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/GameInstance.h"
+#include "EngineUtils.h"
 #include "GameFramework/PlayerController.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
@@ -865,6 +868,143 @@ void AShireNPC::RestoreCompanionFollowState()
     }
 }
 
+FName AShireNPC::ResolveCanonicalProfileId() const
+{
+    const UGameInstance* GI = GetGameInstance();
+    const UShireNPCContextSubsystem* Context =
+        GI ? GI->GetSubsystem<UShireNPCContextSubsystem>() : nullptr;
+    if (!Context)
+    {
+        return NAME_None;
+    }
+
+    return Context->ResolveCanonicalProfileId(FName(*DisplayName.ToString()));
+}
+
+void AShireNPC::UpdateCompanionBanter(float DeltaSeconds)
+{
+    if (!bFollowingPlayer || !GetWorld())
+    {
+        return;
+    }
+
+    if (BanterCooldownRemaining < 0.0f)
+    {
+        BanterCooldownRemaining = 42.0f + ResolveCompanionSlot() * 11.0f;
+    }
+    else
+    {
+        BanterCooldownRemaining = FMath::Max(0.0f, BanterCooldownRemaining - DeltaSeconds);
+    }
+
+    if (BanterCooldownRemaining > 0.0f)
+    {
+        return;
+    }
+
+    UGameInstance* GI = GetGameInstance();
+    UShireNPCContextSubsystem* Context =
+        GI ? GI->GetSubsystem<UShireNPCContextSubsystem>() : nullptr;
+    UShireDialogueSubsystem* Dialogue =
+        GI ? GI->GetSubsystem<UShireDialogueSubsystem>() : nullptr;
+    UShireQuestSubsystem* Quests =
+        GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+
+    if (!Context || !Dialogue || !Quests || Dialogue->IsDialoguePlaying() ||
+        Context->IsDangerStateActive())
+    {
+        BanterCooldownRemaining = 8.0f;
+        return;
+    }
+
+    APawn* PlayerPawn = GetWorld()->GetFirstPlayerController()
+        ? GetWorld()->GetFirstPlayerController()->GetPawn()
+        : nullptr;
+    if (!PlayerPawn || FVector::DistSquared2D(GetActorLocation(), PlayerPawn->GetActorLocation()) >
+        FMath::Square(950.0f))
+    {
+        BanterCooldownRemaining = 10.0f;
+        return;
+    }
+
+    const FName ProfileId = ResolveCanonicalProfileId();
+    if (ProfileId == NAME_None || !Context->HasKnowledgeTag(ProfileId, TEXT("FELLOWSHIP_MEMBER")))
+    {
+        BanterCooldownRemaining = 90.0f;
+        return;
+    }
+
+    AShireNPC* BestPartner = nullptr;
+    float BestDistanceSq = FMath::Square(700.0f);
+    for (TActorIterator<AShireNPC> It(GetWorld()); It; ++It)
+    {
+        AShireNPC* Candidate = *It;
+        if (!Candidate || Candidate == this || !Candidate->bFollowingPlayer)
+        {
+            continue;
+        }
+        const FName CandidateProfile = Candidate->ResolveCanonicalProfileId();
+        if (CandidateProfile == NAME_None ||
+            !Context->HasKnowledgeTag(CandidateProfile, TEXT("FELLOWSHIP_MEMBER")))
+        {
+            continue;
+        }
+
+        const float DistanceSq = FVector::DistSquared2D(GetActorLocation(), Candidate->GetActorLocation());
+        if (DistanceSq < BestDistanceSq)
+        {
+            BestDistanceSq = DistanceSq;
+            BestPartner = Candidate;
+        }
+    }
+
+    const FName ListenerProfileId =
+        BestPartner ? BestPartner->ResolveCanonicalProfileId() : FName(TEXT("PLAYER_FRODO"));
+    const FShireBoundedDialogueResult First = Context->SelectBoundedDialogue(
+        ProfileId,
+        ListenerProfileId,
+        TEXT("COMPANION_BANTER"),
+        Quests->GetCurrentChapterId());
+
+    TArray<FShireDialogueLine> Lines;
+    if (First.bValid)
+    {
+        FShireDialogueLine Line;
+        Line.Speaker = DisplayName;
+        Line.Subtitle = First.Text;
+        Line.VoiceCue = First.VoiceCue;
+        Line.Duration = 4.0f;
+        Lines.Add(Line);
+    }
+
+    if (BestPartner && First.bValid)
+    {
+        const FShireBoundedDialogueResult Response = Context->SelectBoundedDialogue(
+            ListenerProfileId,
+            ProfileId,
+            TEXT("COMPANION_BANTER"),
+            Quests->GetCurrentChapterId());
+        if (Response.bValid)
+        {
+            FShireDialogueLine Line;
+            Line.Speaker = BestPartner->DisplayName;
+            Line.Subtitle = Response.Text;
+            Line.VoiceCue = Response.VoiceCue;
+            Line.Duration = 4.0f;
+            Lines.Add(Line);
+            BestPartner->DialogueActingRemaining = 7.5f;
+        }
+    }
+
+    if (Lines.Num() > 0)
+    {
+        Dialogue->PlayDynamicSequence(Lines, First.VariantId);
+        DialogueActingRemaining = Lines.Num() > 1 ? 7.5f : 4.0f;
+    }
+
+    BanterCooldownRemaining = 68.0f + ResolveCompanionSlot() * 13.0f;
+}
+
 void AShireNPC::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
@@ -925,6 +1065,7 @@ void AShireNPC::Tick(float DeltaSeconds)
         }
     }
 
+    UpdateCompanionBanter(DeltaSeconds);
     UpdatePrototypeAnimation(DeltaSeconds);
     UpdatePrototypeActing(DeltaSeconds);
 }
@@ -1012,19 +1153,69 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
         }
     }
 
-    const TArray<FText>* ActiveDialogue = ResolveDialogueLines(QuestSubsystem);
-    if (ActiveDialogue && ActiveDialogue->Num() > 0)
+    bool bUsedBoundedDialogue = false;
+    const FName CanonicalProfileId = ResolveCanonicalProfileId();
+    UShireNPCContextSubsystem* Context =
+        GI ? GI->GetSubsystem<UShireNPCContextSubsystem>() : nullptr;
+    UShireDialogueSubsystem* Dialogue =
+        GI ? GI->GetSubsystem<UShireDialogueSubsystem>() : nullptr;
+
+    // Story/quest-authored lines remain authoritative. Free-standing and companion
+    // interactions may consume bounded memory-aware variants.
+    if (QuestSubsystem && Context && Dialogue && CanonicalProfileId != NAME_None &&
+        (QuestId == NAME_None || QuestStageAfterInteraction < 0))
     {
-        const FText& Line = (*ActiveDialogue)[CurrentDialogueIndex % ActiveDialogue->Num()];
-        if (APlayerController* PC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr)
+        FName Intent = TEXT("GREETING");
+        if (Context->IsDangerStateActive())
         {
-            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
-            {
-                HUD->ShowDialogue(DisplayName, Line, 6.0f);
-                DialogueActingRemaining = 5.5f;
-            }
+            Intent = TEXT("DANGER_WARNING");
         }
-        CurrentDialogueIndex = (CurrentDialogueIndex + 1) % ActiveDialogue->Num();
+        else if (QuestSubsystem->HasNamedNPCMemory(CanonicalProfileId, TEXT("PLAYER_INTERACTED")))
+        {
+            Intent = Context->HasKnowledgeTag(CanonicalProfileId, TEXT("MAIN_STORY_CONTEXT"))
+                ? FName(TEXT("STORY_REACTION"))
+                : FName(TEXT("GREETING"));
+        }
+
+        const FShireBoundedDialogueResult Result = Context->SelectBoundedDialogue(
+            CanonicalProfileId,
+            TEXT("PLAYER_FRODO"),
+            Intent,
+            QuestSubsystem->GetCurrentChapterId());
+        if (Result.bValid)
+        {
+            FShireDialogueLine DynamicLine;
+            DynamicLine.Speaker = DisplayName;
+            DynamicLine.Subtitle = Result.Text;
+            DynamicLine.VoiceCue = Result.VoiceCue;
+            DynamicLine.Duration = 5.0f;
+            bUsedBoundedDialogue = Dialogue->PlayDynamicLine(DynamicLine, Result.VariantId);
+            DialogueActingRemaining = bUsedBoundedDialogue ? 4.8f : DialogueActingRemaining;
+        }
+    }
+
+    if (!bUsedBoundedDialogue)
+    {
+        const TArray<FText>* ActiveDialogue = ResolveDialogueLines(QuestSubsystem);
+        if (ActiveDialogue && ActiveDialogue->Num() > 0)
+        {
+            const FText& Line = (*ActiveDialogue)[CurrentDialogueIndex % ActiveDialogue->Num()];
+            if (APlayerController* PC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr)
+            {
+                if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+                {
+                    HUD->ShowDialogue(DisplayName, Line, 6.0f);
+                    DialogueActingRemaining = 5.5f;
+                }
+            }
+            CurrentDialogueIndex = (CurrentDialogueIndex + 1) % ActiveDialogue->Num();
+        }
+    }
+
+    if (QuestSubsystem && CanonicalProfileId != NAME_None)
+    {
+        QuestSubsystem->RememberNamedNPCEvent(CanonicalProfileId, TEXT("PLAYER_INTERACTED"), 55);
+        QuestSubsystem->AdjustNamedNPCRelationship(CanonicalProfileId, TEXT("PLAYER_FRODO"), 1);
     }
 
     if (QuestSubsystem && SideStoryBeatAfterInteraction != NAME_None)

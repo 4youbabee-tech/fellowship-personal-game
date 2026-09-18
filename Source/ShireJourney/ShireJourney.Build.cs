@@ -11,7 +11,14 @@ public class ShireJourney : ModuleRules
             "Core",
             "CoreUObject",
             "Engine",
-            "InputCore"
+            "InputCore",
+            "Json",
+            "JsonUtilities"
         });
+
+        RuntimeDependencies.Add("$(ProjectDir)/Data/NPCSocialModel.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/NPCConversationPlan.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/NPCMemoryPlan.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/BoundedDialoguePlan.json");
     }
 }

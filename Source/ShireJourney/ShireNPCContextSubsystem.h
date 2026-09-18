@@ -1,0 +1,187 @@
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Subsystems/GameInstanceSubsystem.h"
+#include "ShireNPCContextSubsystem.generated.h"
+
+USTRUCT(BlueprintType)
+struct FShireNPCProfileRuntime
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    FName ProfileId = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    FString DisplayName;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    FName ProfileType = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    FName PersistenceTier = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    FName Community = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    TArray<FName> Aliases;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    TArray<FName> Regions;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    TArray<FName> Roles;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    TArray<FName> KnowledgeTags;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    TArray<FName> Anchors;
+};
+
+USTRUCT(BlueprintType)
+struct FShireBoundedDialogueResult
+{
+    GENERATED_BODY()
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    bool bValid = false;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    FName SpeakerProfileId = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    FName ListenerProfileId = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    FName IntentId = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    FName VariantId = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    FText Text;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    FName VoiceCue = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    FName ProvenanceMode = TEXT("SILENT_FALLBACK");
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    bool bMemoryInfluenced = false;
+};
+
+UCLASS()
+class SHIREJOURNEY_API UShireNPCContextSubsystem : public UGameInstanceSubsystem
+{
+    GENERATED_BODY()
+
+public:
+    virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+    virtual void Deinitialize() override;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    bool IsDataReady() const { return bDataReady; }
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    FName ResolveCanonicalProfileId(FName IdAliasOrDisplayName) const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    FName GetPersistenceTier(FName ProfileHint) const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    int32 GetPersistentMemoryBudget(FName ProfileHint) const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    int32 GetRelationshipBudget(FName ProfileHint) const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    bool HasKnowledgeTag(FName ProfileHint, FName KnowledgeTag) const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    bool CanUseIntent(FName ProfileHint, FName IntentId) const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    FName ResolveSchedulePhase(FName ProfileHint, float NormalizedDay, bool bDangerOverride, bool bStoryOverride) const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    FName GetPreferredAnchor(FName ProfileHint, FName SchedulePhase) const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    TArray<FName> GetNamedProfilesForCurrentChapter() const;
+
+    UFUNCTION(BlueprintCallable, Category="NPCDialogue")
+    FShireBoundedDialogueResult SelectBoundedDialogue(
+        FName SpeakerHint,
+        FName ListenerHint,
+        FName IntentId = NAME_None,
+        FName LocationTag = NAME_None);
+
+    UFUNCTION(BlueprintCallable, Category="NPCContext")
+    void SetWeatherState(FName InWeatherState);
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    FName GetWeatherState() const { return WeatherState; }
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    bool IsDangerStateActive() const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    bool IsInclementWeather() const;
+
+private:
+    struct FScheduleEntry
+    {
+        FName Phase = NAME_None;
+        float Weight = 0.0f;
+        FName AnchorPolicy = NAME_None;
+    };
+
+    struct FDialogueVariantRuntime
+    {
+        FName VariantId = NAME_None;
+        FName SpeakerProfileId = NAME_None;
+        FName IntentId = NAME_None;
+        FString Text;
+        FName VoiceCue = NAME_None;
+        FName RequiredStoryBeat = NAME_None;
+        FName RequiredMemory = NAME_None;
+        int32 MaxWords = 24;
+    };
+
+    UPROPERTY()
+    TMap<FName, FShireNPCProfileRuntime> Profiles;
+
+    TMap<FString, FName> CanonicalLookup;
+    TMap<FName, TArray<FScheduleEntry>> ProfileSchedules;
+    TMap<FName, TArray<FName>> IntentRequiredKnowledge;
+    TMap<FName, TArray<FDialogueVariantRuntime>> DialogueVariants;
+
+    bool bDataReady = false;
+    int32 MaxWordsAmbient = 24;
+    int32 MaxWordsStoryReactive = 38;
+    int32 MaxRecentLineIds = 12;
+    FName WeatherState = TEXT("CLEAR");
+
+    static FString NormalizeLookupKey(const FString& Value);
+    static FName MakeDialogueKey(FName SpeakerProfileId, FName IntentId);
+    static void ParseNameArray(const TSharedPtr<class FJsonObject>& Object, const TCHAR* Field, TArray<FName>& OutNames);
+    bool LoadJsonObject(const FString& RelativePath, TSharedPtr<class FJsonObject>& OutRoot) const;
+    bool LoadSocialModel();
+    bool LoadConversationPlan();
+    bool LoadBoundedDialoguePlan();
+    void BuildDialogueVariantLibrary();
+    void AddDialogueVariant(
+        FName SpeakerProfileId,
+        FName IntentId,
+        FName VariantId,
+        const TCHAR* Text,
+        FName VoiceCue = NAME_None,
+        FName RequiredStoryBeat = NAME_None,
+        FName RequiredMemory = NAME_None);
+    bool ProfileAvailableInCurrentChapter(const FShireNPCProfileRuntime& Profile) const;
+    bool IsFellowshipProfile(const FShireNPCProfileRuntime& Profile) const;
+    int32 CountWords(const FString& Text) const;
+};

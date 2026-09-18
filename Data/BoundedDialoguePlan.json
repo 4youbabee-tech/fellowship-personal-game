@@ -129,5 +129,26 @@
         "SILENT_FALLBACK"
       ]
     }
-  ]
+  ],
+  "runtime_implementation": {
+    "status": "RUNTIME_COMPLETE_PENDING_VALIDATION",
+    "subsystem": "UShireNPCContextSubsystem",
+    "implementation": [
+      "loads social/conversation/bounded-dialogue JSON at runtime",
+      "DENY_UNLISTED intent knowledge enforcement",
+      "chapter/profile availability gates",
+      "completed-story-beat and remembered-event gates",
+      "ambient/story-reactive word caps",
+      "deterministic selection from eligible authored variants",
+      "persistent recent-variant repetition guard",
+      "relationship context included in deterministic selection seed",
+      "authored fallback remains authoritative when bounded result is invalid"
+    ],
+    "excluded_by_design": [
+      "unrestricted runtime text generation",
+      "always-on remote language model dependency",
+      "canon-changing dialogue invention"
+    ],
+    "proof_limit": "Backend selection logic is implemented; final content breadth, VO assets and PIE pacing are acceptance work."
+  }
 }

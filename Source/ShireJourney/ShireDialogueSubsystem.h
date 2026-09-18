@@ -71,6 +71,12 @@ public:
     bool PlayDialogueCue(FName DialogueCue);
 
     UFUNCTION(BlueprintCallable, Category="Dialogue")
+    bool PlayDynamicLine(const FShireDialogueLine& Line, FName DynamicCueId = NAME_None);
+
+    UFUNCTION(BlueprintCallable, Category="Dialogue")
+    bool PlayDynamicSequence(const TArray<FShireDialogueLine>& Lines, FName DynamicCueId = NAME_None);
+
+    UFUNCTION(BlueprintCallable, Category="Dialogue")
     void StopDialogue();
 
     UFUNCTION(BlueprintPure, Category="Dialogue")

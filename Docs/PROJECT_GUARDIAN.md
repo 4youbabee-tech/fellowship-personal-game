@@ -339,6 +339,17 @@ This converts failures into permanent project knowledge.
 
 **Proof rule:** dedicated modular meshes are production progress, not final skeletal rigs, facial animation, cloth/hair shading or animation acceptance.
 
+### PG-044 — Backend completion must stay bounded, canonical and save-safe
+**Risk:** finishing the backend in one pass can create alias-split memory, unbounded save growth, NPC knowledge leaks, repetitive dialogue, story-overriding banter, or incompatible saves.
+
+**Contract:** NPC identity is canonicalized before persistent access. Persistence budgets derive from profile tier. Low-priority memory expires. Story memory only records already-completed beats for eligible profiles. Bounded dialogue is deterministic, knowledge-gated and always subordinate to authored story interactions.
+
+**Conversation rule:** Fellowship banter may run only outside danger/story dialogue conflicts and uses the same logical voice-cue transport as authored dialogue. Ambient schedules remain cheap and react to danger/weather without creating per-instance persistent state.
+
+**Save rule:** new snapshots are schema-versioned. Future unsupported schemas and invalid numeric state are rejected instead of partially restoring corrupt state. Legacy snapshots remain loadable through defaulted fields and restore sanitation.
+
+**Proof rule:** IMPLEMENTED is not VALIDATED. Static checks and UE4.27.2 compilation prove integration; PIE/device round trips remain mandatory acceptance evidence.
+
 ## What Guardian must never do automatically
 
 - change canon,

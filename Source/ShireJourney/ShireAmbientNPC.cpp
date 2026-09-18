@@ -1,4 +1,5 @@
 #include "ShireAmbientNPC.h"
+#include "ShireNPCContextSubsystem.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
@@ -465,9 +466,97 @@ void AShireAmbientNPC::BeginPlay()
         RoutinePointB = GetActorLocation() + FVector(350.0f, 0.0f, 0.0f);
     }
 
+    BaseWalkSpeed = FMath::Max(1.0f, WalkSpeed);
     WaitRemaining = Random.FRandRange(0.0f, 1.5f);
     SenseAccumulator = Random.FRandRange(0.0f, 0.35f);
     SocialCheckRemaining = Random.FRandRange(1.0f, 3.0f);
+    ScheduleCheckRemaining = Random.FRandRange(0.5f, 2.0f);
+}
+
+FName AShireAmbientNPC::ResolveRuntimeProfileHint() const
+{
+    if (RoutineRole == TEXT("BreeTownsperson"))
+    {
+        return TEXT("ARCH_BREE_TOWNSPERSON");
+    }
+
+    if (RoutineRole == TEXT("Villager") ||
+        RoutineRole == TEXT("PartyGuest") ||
+        RoutineRole == TEXT("FieldWorker") ||
+        RoutineRole == TEXT("FerryWorker"))
+    {
+        return TEXT("ARCH_SHIRE_RESIDENT");
+    }
+
+    return NAME_None;
+}
+
+void AShireAmbientNPC::UpdateScheduleContext(float DeltaSeconds)
+{
+    ScheduleCheckRemaining -= DeltaSeconds;
+    if (ScheduleCheckRemaining > 0.0f || !GetWorld())
+    {
+        return;
+    }
+    ScheduleCheckRemaining = Random.FRandRange(4.0f, 7.0f);
+
+    UGameInstance* GI = GetGameInstance();
+    UShireNPCContextSubsystem* Context =
+        GI ? GI->GetSubsystem<UShireNPCContextSubsystem>() : nullptr;
+    if (!Context)
+    {
+        WalkSpeed = BaseWalkSpeed;
+        return;
+    }
+
+    const bool bDanger = Context->IsDangerStateActive();
+    const bool bBadWeather = Context->IsInclementWeather();
+    const FName ProfileHint = ResolveRuntimeProfileHint();
+
+    const float NormalizedDay = FMath::Frac(GetWorld()->GetTimeSeconds() / 900.0f);
+    RuntimeSchedulePhase = ProfileHint != NAME_None
+        ? Context->ResolveSchedulePhase(ProfileHint, NormalizedDay, bDanger, false)
+        : (bDanger ? FName(TEXT("DANGER_OVERRIDE")) : NAME_None);
+
+    if (bDanger)
+    {
+        WalkSpeed = BaseWalkSpeed * 1.35f;
+        WaitRemaining = 0.0f;
+        SocialCheckRemaining = FMath::Max(SocialCheckRemaining, 12.0f);
+        if (bSocializing)
+        {
+            bSocializing = false;
+            SocialPartner.Reset();
+        }
+        return;
+    }
+
+    if (bBadWeather)
+    {
+        WalkSpeed = BaseWalkSpeed * 0.78f;
+        WaitRemaining = FMath::Max(WaitRemaining, Random.FRandRange(1.5f, 3.5f));
+        SocialCheckRemaining = FMath::Max(SocialCheckRemaining, 6.0f);
+        return;
+    }
+
+    if (RuntimeSchedulePhase == TEXT("SOCIAL"))
+    {
+        WalkSpeed = BaseWalkSpeed * 0.70f;
+        SocialCheckRemaining = FMath::Min(SocialCheckRemaining, Random.FRandRange(0.5f, 1.8f));
+    }
+    else if (RuntimeSchedulePhase == TEXT("REST") || RuntimeSchedulePhase == TEXT("HOME"))
+    {
+        WalkSpeed = BaseWalkSpeed * 0.45f;
+        WaitRemaining = FMath::Max(WaitRemaining, Random.FRandRange(2.0f, 5.0f));
+    }
+    else if (RuntimeSchedulePhase == TEXT("TRAVEL"))
+    {
+        WalkSpeed = BaseWalkSpeed * 1.10f;
+    }
+    else
+    {
+        WalkSpeed = BaseWalkSpeed;
+    }
 }
 
 void AShireAmbientNPC::UpdateAwareness(float DeltaSeconds)
@@ -788,6 +877,7 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
     Super::Tick(DeltaSeconds);
 
     UpdateSocialCaption(DeltaSeconds);
+    UpdateScheduleContext(DeltaSeconds);
 
     if (AppliedVisualRole != RoutineRole)
     {

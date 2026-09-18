@@ -373,6 +373,22 @@
       "kind": "Source",
       "role": "Orc Uruk-hai Cave Troll lightweight combat prototype",
       "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireNPCContextSubsystem.h",
+      "target_path": "Source/ShireJourney/Public/Subsystems/ShireNPCContextSubsystem.h",
+      "domain": "Subsystems",
+      "kind": "Header",
+      "role": "Runtime NPC identity alias knowledge schedule and bounded-dialogue context contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireNPCContextSubsystem.cpp",
+      "target_path": "Source/ShireJourney/Private/Subsystems/ShireNPCContextSubsystem.cpp",
+      "domain": "Subsystems",
+      "kind": "Source",
+      "role": "Runtime social-model loading canonical identity schedules knowledge guards and bounded dialogue selection",
+      "migration_status": "CURRENT_FLAT"
     }
   ]
 }
