@@ -22,6 +22,7 @@
 namespace ShireSaveConstants
 {
     static const FString SlotName(TEXT("ShireJourney_Auto"));
+    static const FString CheckpointSlotName(TEXT("ShireJourney_Checkpoint"));
     static const int32 UserIndex = 0;
 }
 
@@ -688,6 +689,15 @@ void AShirePlayerCharacter::BeginPlay()
         {
             Quests->OnExperienceChanged.AddDynamic(this, &AShirePlayerCharacter::HandleExperienceChanged);
             Quests->OnChapterChanged.AddDynamic(this, &AShirePlayerCharacter::HandleChapterChanged);
+
+            if (Quests->GetCurrentRouteId() == TEXT("FrodoMain") &&
+                Quests->GetCurrentChapterId() == TEXT("P1C01") &&
+                !UGameplayStatics::DoesSaveGameExist(
+                    ShireSaveConstants::CheckpointSlotName,
+                    ShireSaveConstants::UserIndex))
+            {
+                SaveAutomaticCheckpoint(TEXT("WC_P1C01_START"), false);
+            }
         }
     }
 }
@@ -885,7 +895,26 @@ float AShirePlayerCharacter::TakeDamage(
         return Applied;
     }
 
-    CurrentHealth = FMath::Max(1.0f, CurrentHealth - DamageAmount);
+    CurrentHealth = FMath::Max(0.0f, CurrentHealth - DamageAmount);
+
+    if (CurrentHealth <= 0.0f)
+    {
+        if (RestoreAutomaticCheckpoint(false))
+        {
+            if (APlayerController* PC = Cast<APlayerController>(Controller))
+            {
+                if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+                {
+                    HUD->ShowAlert(
+                        FText::FromString(TEXT("You fell. Restoring the last safe checkpoint.")),
+                        2.4f);
+                }
+            }
+            return DamageAmount;
+        }
+
+        CurrentHealth = 1.0f;
+    }
 
     if (APlayerController* PC = Cast<APlayerController>(Controller))
     {
@@ -965,16 +994,21 @@ void AShirePlayerCharacter::Interact()
     }
 }
 
-void AShirePlayerCharacter::QuickSave()
+UShireSaveGame* AShirePlayerCharacter::CreateSaveSnapshot(
+    FName CheckpointId,
+    bool bCheckpointSnapshot) const
 {
-    UShireSaveGame* Save = Cast<UShireSaveGame>(UGameplayStatics::CreateSaveGameObject(UShireSaveGame::StaticClass()));
+    UShireSaveGame* Save = Cast<UShireSaveGame>(
+        UGameplayStatics::CreateSaveGameObject(UShireSaveGame::StaticClass()));
     if (!Save)
     {
-        return;
+        return nullptr;
     }
 
     Save->PlayerLocation = GetActorLocation();
     Save->PlayerRotation = GetActorRotation();
+    Save->CheckpointId = CheckpointId;
+    Save->PlayerHealth = bCheckpointSnapshot ? MaxHealth : CurrentHealth;
 
     if (UGameInstance* GI = GetGameInstance())
     {
@@ -988,39 +1022,19 @@ void AShirePlayerCharacter::QuickSave()
             Save->CurrentEpisodeId = QuestSubsystem->GetCurrentEpisodeId();
             Save->PlayableCharacterId = QuestSubsystem->GetPlayableCharacterId();
             Save->RouteProgress = QuestSubsystem->GetRouteProgressSnapshot();
-            Save->PlayerHealth = CurrentHealth;
         }
     }
 
-    const bool bSaved = UGameplayStatics::SaveGameToSlot(Save, ShireSaveConstants::SlotName, ShireSaveConstants::UserIndex);
-    if (APlayerController* PC = Cast<APlayerController>(Controller))
-    {
-        if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
-        {
-            HUD->ShowAlert(FText::FromString(bSaved ? TEXT("Journey saved.") : TEXT("Save failed.")), 1.8f);
-        }
-    }
+    return Save;
 }
 
-void AShirePlayerCharacter::QuickLoad()
+bool AShirePlayerCharacter::RestoreSaveSnapshot(
+    UShireSaveGame* Save,
+    const FText& SuccessMessage)
 {
-    if (!UGameplayStatics::DoesSaveGameExist(ShireSaveConstants::SlotName, ShireSaveConstants::UserIndex))
-    {
-        if (APlayerController* PC = Cast<APlayerController>(Controller))
-        {
-            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
-            {
-                HUD->ShowAlert(FText::FromString(TEXT("No save found yet.")), 1.8f);
-            }
-        }
-        return;
-    }
-
-    UShireSaveGame* Save = Cast<UShireSaveGame>(UGameplayStatics::LoadGameFromSlot(
-        ShireSaveConstants::SlotName, ShireSaveConstants::UserIndex));
     if (!Save)
     {
-        return;
+        return false;
     }
 
     bool bApplyExactSavedTransform = true;
@@ -1028,7 +1042,8 @@ void AShirePlayerCharacter::QuickLoad()
     {
         if (UShireQuestSubsystem* QuestSubsystem = GI->GetSubsystem<UShireQuestSubsystem>())
         {
-            const FName SavedChapterId = Save->CurrentChapterId == NAME_None ? FName(TEXT("P1C01")) : Save->CurrentChapterId;
+            const FName SavedChapterId =
+                Save->CurrentChapterId == NAME_None ? FName(TEXT("P1C01")) : Save->CurrentChapterId;
 
             QuestSubsystem->RestoreQuestState(
                 Save->QuestStages,
@@ -1040,11 +1055,8 @@ void AShirePlayerCharacter::QuickLoad()
                 Save->PlayableCharacterId,
                 Save->RouteProgress);
 
-            // A compatibility repair may advance a legacy terminal save into the next
-            // runtime chapter. In that case the router has already placed the pawn at the
-            // safe chapter spawn, so restoring coordinates from the previous region would
-            // put the player outside the newly generated world.
-            bApplyExactSavedTransform = QuestSubsystem->GetCurrentChapterId() == SavedChapterId;
+            bApplyExactSavedTransform =
+                QuestSubsystem->GetCurrentChapterId() == SavedChapterId;
         }
     }
 
@@ -1052,18 +1064,155 @@ void AShirePlayerCharacter::QuickLoad()
 
     if (bApplyExactSavedTransform)
     {
-        SetActorLocationAndRotation(Save->PlayerLocation, Save->PlayerRotation, false, nullptr, ETeleportType::TeleportPhysics);
+        SetActorLocationAndRotation(
+            Save->PlayerLocation,
+            Save->PlayerRotation,
+            false,
+            nullptr,
+            ETeleportType::TeleportPhysics);
     }
 
+    GetCharacterMovement()->StopMovementImmediately();
     ApplyPrototypeStyle();
+
+    if (!SuccessMessage.IsEmpty())
+    {
+        if (APlayerController* PC = Cast<APlayerController>(Controller))
+        {
+            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+            {
+                HUD->ShowAlert(SuccessMessage, 1.8f);
+            }
+        }
+    }
+
+    return true;
+}
+
+bool AShirePlayerCharacter::SaveAutomaticCheckpoint(FName CheckpointId, bool bShowHUD)
+{
+    if (CheckpointId == NAME_None)
+    {
+        return false;
+    }
+
+    UShireSaveGame* Save = CreateSaveSnapshot(CheckpointId, true);
+    if (!Save)
+    {
+        return false;
+    }
+
+    const bool bSaved = UGameplayStatics::SaveGameToSlot(
+        Save,
+        ShireSaveConstants::CheckpointSlotName,
+        ShireSaveConstants::UserIndex);
+
+    if (bSaved)
+    {
+        CurrentHealth = MaxHealth;
+    }
+
+    if (bShowHUD)
+    {
+        if (APlayerController* PC = Cast<APlayerController>(Controller))
+        {
+            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+            {
+                HUD->ShowAlert(
+                    FText::FromString(bSaved ? TEXT("Checkpoint reached.") : TEXT("Checkpoint failed.")),
+                    1.4f);
+            }
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("SafeCheckpoint: id=%s saved=%s"),
+        *CheckpointId.ToString(),
+        bSaved ? TEXT("yes") : TEXT("no"));
+
+    return bSaved;
+}
+
+bool AShirePlayerCharacter::RestoreAutomaticCheckpoint(bool bShowHUD)
+{
+    if (!UGameplayStatics::DoesSaveGameExist(
+        ShireSaveConstants::CheckpointSlotName,
+        ShireSaveConstants::UserIndex))
+    {
+        return false;
+    }
+
+    UShireSaveGame* Save = Cast<UShireSaveGame>(
+        UGameplayStatics::LoadGameFromSlot(
+            ShireSaveConstants::CheckpointSlotName,
+            ShireSaveConstants::UserIndex));
+    if (!Save)
+    {
+        return false;
+    }
+
+    const FText Message = bShowHUD
+        ? FText::FromString(TEXT("Safe checkpoint restored."))
+        : FText::GetEmpty();
+
+    const bool bRestored = RestoreSaveSnapshot(Save, Message);
+    if (bRestored)
+    {
+        CurrentHealth = MaxHealth;
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("SafeCheckpoint: restored id=%s"),
+            *Save->CheckpointId.ToString());
+    }
+    return bRestored;
+}
+
+void AShirePlayerCharacter::QuickSave()
+{
+    UShireSaveGame* Save = CreateSaveSnapshot(NAME_None, false);
+    const bool bSaved = Save && UGameplayStatics::SaveGameToSlot(
+        Save,
+        ShireSaveConstants::SlotName,
+        ShireSaveConstants::UserIndex);
 
     if (APlayerController* PC = Cast<APlayerController>(Controller))
     {
         if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
         {
-            HUD->ShowAlert(FText::FromString(TEXT("Journey restored.")), 1.8f);
+            HUD->ShowAlert(
+                FText::FromString(bSaved ? TEXT("Journey saved.") : TEXT("Save failed.")),
+                1.8f);
         }
     }
+}
+
+void AShirePlayerCharacter::QuickLoad()
+{
+    if (!UGameplayStatics::DoesSaveGameExist(
+        ShireSaveConstants::SlotName,
+        ShireSaveConstants::UserIndex))
+    {
+        if (APlayerController* PC = Cast<APlayerController>(Controller))
+        {
+            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+            {
+                HUD->ShowAlert(FText::FromString(TEXT("No save found yet.")), 1.8f);
+            }
+        }
+        return;
+    }
+
+    UShireSaveGame* Save = Cast<UShireSaveGame>(
+        UGameplayStatics::LoadGameFromSlot(
+            ShireSaveConstants::SlotName,
+            ShireSaveConstants::UserIndex));
+
+    RestoreSaveSnapshot(
+        Save,
+        FText::FromString(TEXT("Journey restored.")));
 }
 
 
