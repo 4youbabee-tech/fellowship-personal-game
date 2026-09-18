@@ -107,6 +107,11 @@ public:
     const TArray<FName>& GetCompletedStoryBeats() const { return CompletedStoryBeats; }
     TMap<FName, FShireRouteProgress> GetRouteProgressSnapshot() const;
     bool GetCurrentRouteSavedTransform(FVector& OutLocation, FRotator& OutRotation) const;
+    bool RememberNamedNPCEvent(FName CanonicalProfileId, FName EventId, int32 Priority = 50);
+    bool HasNamedNPCMemory(FName CanonicalProfileId, FName EventId) const;
+    int32 AdjustNamedNPCRelationship(FName CanonicalProfileId, FName OtherProfileId, int32 Delta);
+    TMap<FName, FShireNPCMemoryBucket> GetNPCMemorySnapshot() const { return NPCMemoryState; }
+    void RestoreNPCMemoryState(const TMap<FName, FShireNPCMemoryBucket>& InState);
     void RestoreQuestState(const TMap<FName, int32>& InStages, FName InActiveQuestId,
         FName InCurrentChapterId, const TArray<FName>& InCompletedStoryBeats,
         FName InCurrentRouteId, FName InCurrentEpisodeId, FName InPlayableCharacterId,
@@ -140,8 +145,12 @@ private:
     UPROPERTY()
     TMap<FName, FShireQuestDefinition> QuestDefinitions;
 
+    UPROPERTY()
+    TMap<FName, FShireNPCMemoryBucket> NPCMemoryState;
+
     void BuildQuestDefinitions();
     void AddQuestDefinition(FName QuestId, const FString& Title, std::initializer_list<const TCHAR*> Objectives);
     FShireRouteProgress CaptureCurrentRouteProgress(bool bCapturePlayerTransform) const;
     void ApplyRouteProgress(const FShireRouteProgress& Progress);
+    FName MakeNPCMemoryKey(FName CanonicalProfileId) const;
 };

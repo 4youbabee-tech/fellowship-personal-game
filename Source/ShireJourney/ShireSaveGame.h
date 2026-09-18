@@ -46,4 +46,7 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
     TMap<FName, FShireRouteProgress> RouteProgress;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
+    TMap<FName, FShireNPCMemoryBucket> NPCMemoryState;
 };

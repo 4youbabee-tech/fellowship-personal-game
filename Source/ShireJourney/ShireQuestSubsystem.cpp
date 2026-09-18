@@ -463,3 +463,160 @@ void UShireQuestSubsystem::RestoreQuestState(const TMap<FName, int32>& InStages,
 
     OnQuestStateRestored.Broadcast();
 }
+
+FName UShireQuestSubsystem::MakeNPCMemoryKey(FName CanonicalProfileId) const
+{
+    if (CanonicalProfileId == NAME_None || CurrentRouteId == NAME_None)
+    {
+        return NAME_None;
+    }
+
+    return FName(*FString::Printf(
+        TEXT("%s|%s"),
+        *CurrentRouteId.ToString(),
+        *CanonicalProfileId.ToString()));
+}
+
+bool UShireQuestSubsystem::RememberNamedNPCEvent(
+    FName CanonicalProfileId,
+    FName EventId,
+    int32 Priority)
+{
+    const FName Key = MakeNPCMemoryKey(CanonicalProfileId);
+    if (Key == NAME_None || EventId == NAME_None)
+    {
+        return false;
+    }
+
+    FShireNPCMemoryBucket& Bucket = NPCMemoryState.FindOrAdd(Key);
+    Bucket.CanonicalProfileId = CanonicalProfileId;
+    Bucket.RouteId = CurrentRouteId;
+
+    for (FShireNPCMemoryEvent& Existing : Bucket.Events)
+    {
+        if (Existing.EventId == EventId)
+        {
+            Existing.ChapterId = CurrentChapterId;
+            Existing.Priority = FMath::Max(Existing.Priority, Priority);
+            return true;
+        }
+    }
+
+    FShireNPCMemoryEvent Memory;
+    Memory.EventId = EventId;
+    Memory.ChapterId = CurrentChapterId;
+    Memory.Priority = FMath::Clamp(Priority, 0, 100);
+    Bucket.Events.Add(Memory);
+
+    while (Bucket.Events.Num() > 12)
+    {
+        int32 LowestIndex = 0;
+        for (int32 Index = 1; Index < Bucket.Events.Num(); ++Index)
+        {
+            if (Bucket.Events[Index].Priority < Bucket.Events[LowestIndex].Priority)
+            {
+                LowestIndex = Index;
+            }
+        }
+        Bucket.Events.RemoveAt(LowestIndex);
+    }
+
+    return true;
+}
+
+bool UShireQuestSubsystem::HasNamedNPCMemory(
+    FName CanonicalProfileId,
+    FName EventId) const
+{
+    const FName Key = MakeNPCMemoryKey(CanonicalProfileId);
+    const FShireNPCMemoryBucket* Bucket = NPCMemoryState.Find(Key);
+    if (!Bucket || EventId == NAME_None)
+    {
+        return false;
+    }
+
+    for (const FShireNPCMemoryEvent& Memory : Bucket->Events)
+    {
+        if (Memory.EventId == EventId)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+int32 UShireQuestSubsystem::AdjustNamedNPCRelationship(
+    FName CanonicalProfileId,
+    FName OtherProfileId,
+    int32 Delta)
+{
+    const FName Key = MakeNPCMemoryKey(CanonicalProfileId);
+    if (Key == NAME_None || OtherProfileId == NAME_None || Delta == 0)
+    {
+        return 0;
+    }
+
+    FShireNPCMemoryBucket& Bucket = NPCMemoryState.FindOrAdd(Key);
+    Bucket.CanonicalProfileId = CanonicalProfileId;
+    Bucket.RouteId = CurrentRouteId;
+
+    if (!Bucket.RelationshipDeltas.Contains(OtherProfileId) &&
+        Bucket.RelationshipDeltas.Num() >= 8)
+    {
+        return 0;
+    }
+
+    int32& Value = Bucket.RelationshipDeltas.FindOrAdd(OtherProfileId);
+    Value = FMath::Clamp(Value + Delta, -100, 100);
+    return Value;
+}
+
+void UShireQuestSubsystem::RestoreNPCMemoryState(
+    const TMap<FName, FShireNPCMemoryBucket>& InState)
+{
+    NPCMemoryState.Empty();
+
+    for (const TPair<FName, FShireNPCMemoryBucket>& Pair : InState)
+    {
+        FShireNPCMemoryBucket Bucket = Pair.Value;
+        if (Bucket.CanonicalProfileId == NAME_None || Bucket.RouteId == NAME_None)
+        {
+            continue;
+        }
+
+        while (Bucket.Events.Num() > 12)
+        {
+            int32 LowestIndex = 0;
+            for (int32 Index = 1; Index < Bucket.Events.Num(); ++Index)
+            {
+                if (Bucket.Events[Index].Priority < Bucket.Events[LowestIndex].Priority)
+                {
+                    LowestIndex = Index;
+                }
+            }
+            Bucket.Events.RemoveAt(LowestIndex);
+        }
+
+        if (Bucket.RelationshipDeltas.Num() > 8)
+        {
+            TMap<FName, int32> BoundedRelationships;
+            for (const TPair<FName, int32>& Relationship : Bucket.RelationshipDeltas)
+            {
+                if (BoundedRelationships.Num() >= 8)
+                {
+                    break;
+                }
+                BoundedRelationships.Add(
+                    Relationship.Key,
+                    FMath::Clamp(Relationship.Value, -100, 100));
+            }
+            Bucket.RelationshipDeltas = MoveTemp(BoundedRelationships);
+        }
+
+        const FName SanitizedKey(*FString::Printf(
+            TEXT("%s|%s"),
+            *Bucket.RouteId.ToString(),
+            *Bucket.CanonicalProfileId.ToString()));
+        NPCMemoryState.Add(SanitizedKey, MoveTemp(Bucket));
+    }
+}
