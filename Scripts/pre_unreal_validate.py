@@ -331,6 +331,108 @@ missing_film_routes = sorted(expected_film_routes - covered_routes)
 if missing_film_routes:
     fail("FilmExperiencePlan missing required routes: " + ", ".join(missing_film_routes))
 
+# PG-024: NPC identity/schedule/relationship data must stay coherent before runtime intelligence consumes it.
+npc_social_path = ROOT / "Data" / "NPCSocialModel.json"
+npc_social = {}
+if not npc_social_path.exists():
+    fail("NPC social model missing: Data/NPCSocialModel.json")
+else:
+    try:
+        npc_social = json.loads(read(npc_social_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/NPCSocialModel.json: {exc}")
+
+profile_ids: set[str] = set()
+profile_aliases: set[str] = set()
+for index, profile in enumerate(npc_social.get("profiles", []), start=1):
+    profile_id = str(profile.get("id") or "").strip()
+    display_name = str(profile.get("display_name") or "").strip()
+    profile_type = str(profile.get("type") or "").strip()
+    regions = profile.get("regions", [])
+    roles = profile.get("roles", [])
+    knowledge_tags = profile.get("knowledge_tags", [])
+
+    if not profile_id or not display_name or not profile_type:
+        fail(f"NPCSocialModel profile entry {index} is missing id/display_name/type")
+        continue
+    if profile_id in profile_ids:
+        fail(f"Duplicate NPCSocialModel profile id: {profile_id}")
+    profile_ids.add(profile_id)
+
+    if profile_type not in set(npc_social.get("profile_types", [])):
+        fail(f"NPCSocialModel profile {profile_id} uses unknown type '{profile_type}'")
+    if not isinstance(regions, list) or not regions:
+        fail(f"NPCSocialModel profile {profile_id} has no region coverage")
+    if not isinstance(roles, list) or not roles:
+        fail(f"NPCSocialModel profile {profile_id} has no roles")
+    if not isinstance(knowledge_tags, list):
+        fail(f"NPCSocialModel profile {profile_id} knowledge_tags must be a list")
+
+    for alias in profile.get("aliases", []):
+        alias_key = str(alias).strip().lower()
+        if not alias_key:
+            fail(f"NPCSocialModel profile {profile_id} contains empty alias")
+        elif alias_key in profile_aliases:
+            fail(f"Duplicate NPCSocialModel alias: {alias}")
+        else:
+            profile_aliases.add(alias_key)
+
+required_named_profiles = set(guard_rules.get("npc_social_required_named_ids", []))
+missing_named_profiles = sorted(required_named_profiles - profile_ids)
+if missing_named_profiles:
+    fail("NPCSocialModel missing required named profiles: " + ", ".join(missing_named_profiles))
+
+valid_actor_ids = profile_ids | set(npc_social.get("external_actor_ids", []))
+relationship_pairs: set[tuple[str, str, str]] = set()
+for rel in npc_social.get("relationships", []):
+    source = str(rel.get("from") or "").strip()
+    target = str(rel.get("to") or "").strip()
+    rel_type = str(rel.get("type") or "").strip()
+    if source not in valid_actor_ids:
+        fail(f"NPCSocialModel relationship references unknown source: {source}")
+    if target not in valid_actor_ids:
+        fail(f"NPCSocialModel relationship references unknown target: {target}")
+    if rel_type not in set(npc_social.get("relationship_types", [])):
+        fail(f"NPCSocialModel relationship {source}->{target} uses unknown type '{rel_type}'")
+    key = (source, target, rel_type)
+    if key in relationship_pairs:
+        fail(f"Duplicate NPCSocialModel relationship: {source}->{target} ({rel_type})")
+    relationship_pairs.add(key)
+
+schedule_ids: set[str] = set()
+scheduled_profiles: set[str] = set()
+for schedule in npc_social.get("schedule_templates", []):
+    schedule_id = str(schedule.get("id") or "").strip()
+    if not schedule_id:
+        fail("NPCSocialModel schedule template missing id")
+        continue
+    if schedule_id in schedule_ids:
+        fail(f"Duplicate NPCSocialModel schedule template id: {schedule_id}")
+    schedule_ids.add(schedule_id)
+
+    total_weight = 0.0
+    for phase in schedule.get("phases", []):
+        phase_id = str(phase.get("phase") or "").strip()
+        if phase_id not in set(npc_social.get("schedule_phase_types", [])):
+            fail(f"NPCSocialModel schedule {schedule_id} uses unknown phase '{phase_id}'")
+        try:
+            total_weight += float(phase.get("weight", 0.0))
+        except (TypeError, ValueError):
+            fail(f"NPCSocialModel schedule {schedule_id} has invalid phase weight")
+    if abs(total_weight - 1.0) > 0.001:
+        fail(f"NPCSocialModel schedule {schedule_id} phase weights must sum to 1.0 (got {total_weight:.3f})")
+
+    for profile_id in schedule.get("applies_to", []):
+        if profile_id not in profile_ids:
+            fail(f"NPCSocialModel schedule {schedule_id} references unknown profile {profile_id}")
+        if profile_id in scheduled_profiles:
+            fail(f"NPCSocialModel profile {profile_id} appears in multiple schedule templates")
+        scheduled_profiles.add(profile_id)
+
+unscheduled_profiles = sorted(profile_ids - scheduled_profiles)
+if unscheduled_profiles:
+    fail("NPCSocialModel profiles missing schedule assignment: " + ", ".join(unscheduled_profiles))
+
 approved_chapters = set(guard_rules.get("runtime_chapters", []))
 approved_routes = set(guard_rules.get("approved_routes", []))
 approved_canon_classes = set(guard_rules.get("canon_classes", []))
