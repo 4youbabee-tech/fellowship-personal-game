@@ -134,15 +134,16 @@
         "instanced foliage and ambient audio foundations",
         "Data/LivingWorldEventPlan.json defines per-chapter micro-event/fauna/weather/prop-motion categories, density targets and performance caps",
         "CP34 adds runtime environmental detail across Bree, Weathertop, Rivendell, Fellowship road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen using low-cost static primitives",
-        "Lightweight Bird ambient role now provides 3D sky motion across Shire, Bree, Weathertop, Rivendell, Caradhras/Fellowship road, Lothlorien, Anduin/Amon Hen and Isengard with distance-throttled ticks"
+        "Lightweight Bird ambient role now provides 3D sky motion across Shire, Bree, Weathertop, Rivendell, Caradhras/Fellowship road, Lothlorien, Anduin/Amon Hen and Isengard with distance-throttled ticks",
+        "Ambient residents now use role-specific activity props and low-cost work/social gestures: Shire baskets/satchels/mugs/crates, Bree goods/mugs, and Elven books/lanterns"
       ],
       "missing_work": [
         "production-quality terrain/material/art replacement beyond current procedural detail",
         "runtime micro-event director",
-        "broader worker/market/traveler activity",
         "environment motion implementation beyond static/procedural proxies",
         "batch integration PIE/device/performance/visual review",
-        "broader fauna beyond current lightweight bird motion"
+        "broader fauna beyond current lightweight bird motion",
+        "full authored/dynamic micro-event director beyond current role-based activities"
       ],
       "acceptance_criteria": [
         "Ordinary traversal repeatedly reveals believable activity or environmental storytelling",
@@ -1380,17 +1381,17 @@
       "id": "WORK-WORLD-001",
       "title": "Expand environmental micro-life and production polish chapter by chapter",
       "status": "PARTIAL",
-      "rationale": "Per-chapter micro-life contracts plus lightweight runtime sky motion now exist; broader fauna, micro-event directing and final integration/visual/performance acceptance remain pending."
+      "rationale": "Lightweight sky motion plus role-specific resident activities/social gestures now run in-world; full event director, broader fauna and later integration acceptance remain pending."
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Build-first lightweight world-motion pass after CP34 environment density",
+    "reason": "Build-first ambient micro-life pass after CP35 sky motion",
     "summary": [
-      "Added Bird as a low-cost 3D moving ambient role using the existing distance-throttled ambient actor.",
-      "Added sparse sky-life groups to all appropriate outdoor Part I regions including Isengard.",
-      "Moria intentionally remains without natural fauna to preserve its dead-city threat atmosphere.",
-      "No device/performance/visual acceptance claimed; static and UE4.27.2 compile/import remain required."
+      "Added reusable ActivityPropType to ambient residents.",
+      "Added baskets, crates, satchels, mugs, books and lanterns by role/region.",
+      "Added small work/social arm gestures and carried-prop motion.",
+      "Kept the feature on the existing distance-throttled ambient actor instead of adding a heavy new AI system."
     ]
   },
   "development_mode": {
