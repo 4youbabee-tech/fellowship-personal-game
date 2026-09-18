@@ -18,6 +18,9 @@ public:
     FRotator PlayerRotation = FRotator::ZeroRotator;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
+    float PlayerHealth = 100.0f;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
     TMap<FName, int32> QuestStages;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")

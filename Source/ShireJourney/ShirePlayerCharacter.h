@@ -17,6 +17,17 @@ public:
     AShirePlayerCharacter();
     virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
     virtual void Tick(float DeltaSeconds) override;
+    virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent,
+        class AController* EventInstigator, AActor* DamageCauser) override;
+
+    UFUNCTION(BlueprintPure, Category="Combat")
+    float GetCurrentHealth() const { return CurrentHealth; }
+
+    UFUNCTION(BlueprintPure, Category="Combat")
+    float GetMaxHealth() const { return MaxHealth; }
+
+    UFUNCTION(BlueprintPure, Category="Combat")
+    bool IsCombatAvailable() const;
 
 protected:
     virtual void BeginPlay() override;
@@ -33,6 +44,7 @@ protected:
     void StartCrouch();
     void StopCrouch();
     void Interact();
+    void PrimaryAttack();
     void QuickSave();
     void QuickLoad();
     void DebugPreviousChapter();
@@ -45,6 +57,9 @@ protected:
 
     UFUNCTION()
     void HandleExperienceChanged(FName RouteId, FName EpisodeId, FName PlayableCharacterId);
+
+    UFUNCTION()
+    void HandleChapterChanged(FName PreviousChapterId, FName NewChapterId);
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
     USpringArmComponent* CameraBoom;
@@ -79,6 +94,21 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
     UStaticMeshComponent* PrototypeRightFoot;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeWeapon;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+    float MaxHealth = 100.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+    float AttackDamage = 26.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+    float AttackRange = 175.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+    float AttackCooldown = 0.55f;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
     float WalkSpeed = 310.0f;
 
@@ -97,6 +127,9 @@ protected:
 private:
     bool bCinematicInputLocked = false;
     float PrototypeWalkPhase = 0.0f;
+    float CurrentHealth = 100.0f;
+    float AttackCooldownRemaining = 0.0f;
+    float AttackVisualRemaining = 0.0f;
 
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);

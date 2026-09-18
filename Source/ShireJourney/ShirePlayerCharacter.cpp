@@ -4,6 +4,7 @@
 #include "ShireSaveGame.h"
 #include "ShireHUD.h"
 #include "ShireStoryPresentationSubsystem.h"
+#include "FellowshipEnemyPrototype.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -120,11 +121,22 @@ AShirePlayerCharacter::AShirePlayerCharacter()
     PrototypeRightFoot->SetRelativeLocation(FVector(8.0f, 10.0f, -57.0f));
     PrototypeRightFoot->SetRelativeScale3D(FVector(0.22f, 0.12f, 0.08f));
 
+    PrototypeWeapon = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeWeapon"));
+    PrototypeWeapon->SetupAttachment(GetCapsuleComponent());
+    PrototypeWeapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeWeapon->SetRelativeLocation(FVector(8.0f, 29.0f, -4.0f));
+    PrototypeWeapon->SetRelativeRotation(FRotator(-10.0f, 0.0f, 8.0f));
+    PrototypeWeapon->SetRelativeScale3D(FVector(0.05f, 0.05f, 0.48f));
+
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMesh(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
 
-    if (CubeMesh.Succeeded()) PrototypeTorso->SetStaticMesh(CubeMesh.Object);
+    if (CubeMesh.Succeeded())
+    {
+        PrototypeTorso->SetStaticMesh(CubeMesh.Object);
+        PrototypeWeapon->SetStaticMesh(CubeMesh.Object);
+    }
     if (CylinderMesh.Succeeded())
     {
         PrototypeLeftArm->SetStaticMesh(CylinderMesh.Object);
@@ -196,6 +208,13 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
     ApplyColor(PrototypeRightLeg, bGandalf ? FLinearColor(0.20f, 0.21f, 0.20f) : FLinearColor(0.30f, 0.20f, 0.10f));
     ApplyColor(PrototypeLeftFoot, bGandalf ? FLinearColor(0.12f, 0.12f, 0.12f) : FLinearColor(0.24f, 0.12f, 0.055f));
     ApplyColor(PrototypeRightFoot, bGandalf ? FLinearColor(0.12f, 0.12f, 0.12f) : FLinearColor(0.24f, 0.12f, 0.055f));
+
+    const bool bCombatAvailable = IsCombatAvailable();
+    PrototypeWeapon->SetVisibility(bGandalf || bCombatAvailable, true);
+    PrototypeWeapon->SetRelativeLocation(bGandalf ? FVector(4.0f, 34.0f, 0.0f) : FVector(8.0f, 29.0f, -4.0f));
+    PrototypeWeapon->SetRelativeScale3D(bGandalf ? FVector(0.06f, 0.06f, 0.90f) : FVector(0.05f, 0.05f, 0.48f));
+    PrototypeWeapon->SetRelativeRotation(bGandalf ? FRotator::ZeroRotator : FRotator(-10.0f, 0.0f, 8.0f));
+    ApplyColor(PrototypeWeapon, bGandalf ? FLinearColor(0.25f, 0.16f, 0.08f) : FLinearColor(0.52f, 0.54f, 0.55f));
 }
 
 void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
@@ -221,8 +240,9 @@ void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
     }
     if (PrototypeRightArm)
     {
+        const float RightArmPitch = AttackVisualRemaining > 0.0f ? -82.0f : -Swing;
         PrototypeRightArm->SetRelativeRotation(FMath::RInterpTo(
-            PrototypeRightArm->GetRelativeRotation(), FRotator(-Swing, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+            PrototypeRightArm->GetRelativeRotation(), FRotator(RightArmPitch, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
     }
     if (PrototypeLeftLeg)
     {
@@ -255,6 +275,8 @@ void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
 void AShirePlayerCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+    AttackCooldownRemaining = FMath::Max(0.0f, AttackCooldownRemaining - DeltaSeconds);
+    AttackVisualRemaining = FMath::Max(0.0f, AttackVisualRemaining - DeltaSeconds);
     UpdatePrototypeAnimation(DeltaSeconds);
 }
 
@@ -273,6 +295,7 @@ void AShirePlayerCharacter::BeginPlay()
         if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
         {
             Quests->OnExperienceChanged.AddDynamic(this, &AShirePlayerCharacter::HandleExperienceChanged);
+            Quests->OnChapterChanged.AddDynamic(this, &AShirePlayerCharacter::HandleChapterChanged);
         }
     }
 }
@@ -288,6 +311,7 @@ void AShirePlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
         if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
         {
             Quests->OnExperienceChanged.RemoveDynamic(this, &AShirePlayerCharacter::HandleExperienceChanged);
+            Quests->OnChapterChanged.RemoveDynamic(this, &AShirePlayerCharacter::HandleChapterChanged);
         }
     }
 
@@ -310,6 +334,7 @@ void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("Sprint"), IE_Pressed, this, &AShirePlayerCharacter::StartSprint);
     PlayerInputComponent->BindAction(TEXT("Sprint"), IE_Released, this, &AShirePlayerCharacter::StopSprint);
     PlayerInputComponent->BindAction(TEXT("Interact"), IE_Pressed, this, &AShirePlayerCharacter::Interact);
+    PlayerInputComponent->BindAction(TEXT("PrimaryAttack"), IE_Pressed, this, &AShirePlayerCharacter::PrimaryAttack);
     PlayerInputComponent->BindAction(TEXT("QuickSave"), IE_Pressed, this, &AShirePlayerCharacter::QuickSave);
     PlayerInputComponent->BindAction(TEXT("QuickLoad"), IE_Pressed, this, &AShirePlayerCharacter::QuickLoad);
     PlayerInputComponent->BindAction(TEXT("DebugPreviousChapter"), IE_Pressed, this, &AShirePlayerCharacter::DebugPreviousChapter);
@@ -331,6 +356,12 @@ void AShirePlayerCharacter::HandleExperienceChanged(FName RouteId, FName Episode
                 *EpisodeId.ToString())), 3.0f);
         }
     }
+}
+
+void AShirePlayerCharacter::HandleChapterChanged(FName PreviousChapterId, FName NewChapterId)
+{
+    CurrentHealth = FMath::Clamp(CurrentHealth, 1.0f, MaxHealth);
+    ApplyPrototypeStyle();
 }
 
 void AShirePlayerCharacter::HandleCinematicStateChanged(bool bLocked)
@@ -427,6 +458,87 @@ void AShirePlayerCharacter::StopCrouch()
     UnCrouch();
 }
 
+
+bool AShirePlayerCharacter::IsCombatAvailable() const
+{
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests)
+    {
+        return false;
+    }
+
+    if (Quests->GetPlayableCharacterId() == TEXT("Gandalf"))
+    {
+        return true;
+    }
+
+    const FName Chapter = Quests->GetCurrentChapterId();
+    return Chapter == TEXT("P1C03") || Chapter == TEXT("P1C05") ||
+        Chapter == TEXT("P1C06") || Chapter == TEXT("P1C08");
+}
+
+float AShirePlayerCharacter::TakeDamage(
+    float DamageAmount,
+    FDamageEvent const& DamageEvent,
+    AController* EventInstigator,
+    AActor* DamageCauser)
+{
+    const float Applied = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+    if (DamageAmount <= 0.0f || !IsCombatAvailable())
+    {
+        return Applied;
+    }
+
+    CurrentHealth = FMath::Max(1.0f, CurrentHealth - DamageAmount);
+
+    if (APlayerController* PC = Cast<APlayerController>(Controller))
+    {
+        if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+        {
+            HUD->ShowAlert(
+                CurrentHealth <= MaxHealth * 0.25f
+                    ? FText::FromString(TEXT("Health critical. Break contact and recover."))
+                    : FText::FromString(TEXT("Hit!")),
+                0.9f);
+        }
+    }
+
+    return DamageAmount;
+}
+
+void AShirePlayerCharacter::PrimaryAttack()
+{
+    if (bCinematicInputLocked || AttackCooldownRemaining > 0.0f || !IsCombatAvailable() || !GetWorld())
+    {
+        return;
+    }
+
+    AttackCooldownRemaining = AttackCooldown;
+    AttackVisualRemaining = 0.22f;
+
+    const FVector Start = GetActorLocation() + FVector(0.0f, 0.0f, 32.0f);
+    const FVector End = Start + GetActorForwardVector() * AttackRange;
+
+    TArray<FHitResult> Hits;
+    FCollisionQueryParams Params(SCENE_QUERY_STAT(PlayerMeleeAttack), false, this);
+    Params.AddIgnoredActor(this);
+
+    const FCollisionShape Shape = FCollisionShape::MakeSphere(52.0f);
+    if (GetWorld()->SweepMultiByChannel(Hits, Start, End, FQuat::Identity, ECC_Pawn, Shape, Params))
+    {
+        for (const FHitResult& Hit : Hits)
+        {
+            AFellowshipEnemyPrototype* Enemy = Cast<AFellowshipEnemyPrototype>(Hit.GetActor());
+            if (Enemy && !Enemy->IsDefeated())
+            {
+                UGameplayStatics::ApplyDamage(Enemy, AttackDamage, Controller, this, nullptr);
+                break;
+            }
+        }
+    }
+}
+
 void AShirePlayerCharacter::Interact()
 {
     if (bCinematicInputLocked || !FollowCamera || !GetWorld())
@@ -481,6 +593,7 @@ void AShirePlayerCharacter::QuickSave()
             Save->CurrentEpisodeId = QuestSubsystem->GetCurrentEpisodeId();
             Save->PlayableCharacterId = QuestSubsystem->GetPlayableCharacterId();
             Save->RouteProgress = QuestSubsystem->GetRouteProgressSnapshot();
+            Save->PlayerHealth = CurrentHealth;
         }
     }
 
@@ -540,10 +653,14 @@ void AShirePlayerCharacter::QuickLoad()
         }
     }
 
+    CurrentHealth = FMath::Clamp(Save->PlayerHealth, 1.0f, MaxHealth);
+
     if (bApplyExactSavedTransform)
     {
         SetActorLocationAndRotation(Save->PlayerLocation, Save->PlayerRotation, false, nullptr, ETeleportType::TeleportPhysics);
     }
+
+    ApplyPrototypeStyle();
 
     if (APlayerController* PC = Cast<APlayerController>(Controller))
     {
