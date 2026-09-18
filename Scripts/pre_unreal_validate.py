@@ -1528,17 +1528,6 @@ if contact_roles.get("WETA_WORKSHOP") == "PRIMARY_GAME_AND_LOTR_HOBBIT_LICENSING
 if contact_roles.get("MIDDLE_EARTH_ENTERPRISES") != "PRIMARY_GAME_AND_LOTR_HOBBIT_LICENSING_RIGHTS_CONTACT":
     fail("PG-048 Middle-earth Enterprises must remain the primary recorded LOTR/Hobbit game licensing contact")
 
-resource_provider_modes = {
-    str(p.get("id") or ""): str(p.get("mode") or "")
-    for p in external_manifest.get("providers", [])
-    if isinstance(p, dict)
-}
-for provider_id in ["WETA_WORKSHOP", "POLY_HAVEN", "AMBIENTCG", "ADOBE_MIXAMO", "ACTORCORE_REALLUSION", "KENNEY"]:
-    if provider_id not in resource_provider_modes:
-        fail(f"PG-048 expanded resource provider missing: {provider_id}")
-if resource_provider_modes.get("WETA_WORKSHOP") != "SERVICE_OR_COMMISSION_ONLY":
-    fail("PG-048 Weta Workshop provider mode must remain SERVICE_OR_COMMISSION_ONLY")
-
 # PG-047: external production assets must remain license/provenance gated.
 external_manifest_path = ROOT / "Data" / "ExternalAssetManifest.json"
 external_manifest = {}
@@ -1565,6 +1554,17 @@ for provider_id in ["FAB", "QUixel_MEGASCANS", "SKETCHFAB", "TURBOSQUID", "SONNI
 for reference_provider in ["ARTSTATION", "TOLKIEN_GATEWAY", "LOTR_WIKI"]:
     if provider_modes.get(reference_provider) != "REFERENCE_ONLY":
         fail(f"PG-047 reference-only provider drifted: {reference_provider}")
+
+resource_provider_modes = {
+    str(p.get("id") or ""): str(p.get("mode") or "")
+    for p in external_manifest.get("providers", [])
+    if isinstance(p, dict)
+}
+for provider_id in ["WETA_WORKSHOP", "POLY_HAVEN", "AMBIENTCG", "ADOBE_MIXAMO", "ACTORCORE_REALLUSION", "KENNEY"]:
+    if provider_id not in resource_provider_modes:
+        fail(f"PG-048 expanded resource provider missing: {provider_id}")
+if resource_provider_modes.get("WETA_WORKSHOP") != "SERVICE_OR_COMMISSION_ONLY":
+    fail("PG-048 Weta Workshop provider mode must remain SERVICE_OR_COMMISSION_ONLY")
 
 blocked_license_tokens = {"EDITORIAL", "CC_BY_NC", "CC_BY_ND", "UNKNOWN"}
 approved_external_root = ROOT / "SourceAssets" / "ExternalLicensed" / "Approved"
