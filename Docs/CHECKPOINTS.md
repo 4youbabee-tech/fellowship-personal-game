@@ -143,7 +143,8 @@
 - Redistributed Merry/Pippin, Black Rider, side stories and ferry progression to the new geography.
 - Expanded HISM foliage across the larger world rather than multiplying ground-cover actors.
 - Added distance-adaptive ambient-NPC tick intervals to protect the 30 FPS target.
-- Requires the next milestone build/PIE pass before being marked compile/PIE/device tested.
+- UE4.27.2 build was later confirmed successful on the target laptop.
+- Focused traversal/performance acceptance is still pending.
 
 ## CP23 — Living Shire / Story-Reactive World
 - Shire atmosphere can now react to active story phase through sun/sky/post-process changes.
@@ -154,7 +155,9 @@
 - Added one-time persisted landmark discoveries for major Shire locations.
 - Restored saves receive an additional route/playable-character identity repair.
 - CP22 world-scale build was confirmed successful on UE4.27.2 target hardware before this pass.
-- CP23 still requires the next milestone build/PIE test before compile/device acceptance.
+- CP23 was later pulled, built and launched into PIE successfully on the target laptop.
+- Basic PIE evidence showed Frodo / P1C01_Main, the opening objective, the enlarged Shire and The Mill landmark.
+- Focused functional/performance acceptance is still pending.
 
 
 ## CP24A — Character Performance + Voice Completeness Guard
@@ -208,7 +211,8 @@
 - Final audio assets and final facial animation remain pending production.
 
 ## Current hard gate
-The current runtime-code baseline has passed static validation, real UE4.27 compile and basic Shire PIE boot.
+The earlier CP23 baseline passed real UE4.27 compile and basic Shire PIE boot.
+The current CP24-CP27 head is STATIC-VALIDATED through Pre-Unreal Validation #95 but still requires a fresh real UE4.27 compile before its new audio/combat/biome/acting code can inherit COMPILE-TESTED status.
 
 It must still pass:
 1. Shire movement / interaction / NPC-awareness smoke test,

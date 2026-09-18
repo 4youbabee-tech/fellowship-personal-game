@@ -76,6 +76,22 @@ CP22 milestone evidence on 2026-09-18:
 - CP22 is therefore COMPILE-TESTED on the target laptop,
 - the enlarged traversal itself still needs a focused PIE traversal/performance review.
 
+CP23 milestone evidence on 2026-09-18:
+- the living-world commits were pulled to the target laptop,
+- UE4.27.2 launched into PIE successfully,
+- the Shire rendered with Frodo / P1C01_Main, the opening objective and the enlarged world,
+- The Mill landmark was visible,
+- no compile/runtime error was reported for that launch,
+- CP23 is therefore COMPILE-TESTED and BASIC PIE-TESTED on the target laptop.
+
+Current post-CP23 source status:
+- CP24A/CP24B voice/performance foundations: STATIC-VALIDATED.
+- CP25 combat foundation: STATIC-VALIDATED.
+- CP26 biome/geography pass: STATIC-VALIDATED.
+- CP27 runtime audio mix/proxy acting: STATIC-VALIDATED.
+- Latest Pre-Unreal Validation: #95 SUCCESS.
+- CP24-CP27 are NOT yet claimed COMPILE-TESTED or PIE-TESTED.
+
 The remaining hard gate is now the functional smoke-test layer: movement/interactions, F9 load round-trip, F8 route round-trip, chapter smoke tests and target-device performance observation.
 
 ## Authoritative runtime chapter IDs
@@ -214,7 +230,7 @@ Use all of these, with this priority for their purpose:
 7. `Data/DialogueIntent.csv` — dialogue intent.
 8. `Data/MusicCuePlan.csv` — original music direction.
 9. `Data/BiomePlan.csv` — chapter terrain/vegetation/water/weather/traversal/hazard/audio/performance contract.
-9. Runtime C++ — actual implementation.
+10. Runtime C++ — actual implementation.
 
 If runtime and documentation disagree, stop and reconcile them in the same change.
 
