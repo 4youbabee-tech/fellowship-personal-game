@@ -779,6 +779,42 @@ knowledge_guard = bounded_dialogue.get("knowledge_guard", {})
 if knowledge_guard.get("default") != "DENY_UNLISTED" or knowledge_guard.get("cross_route_knowledge_default") != "DENY":
     fail("BoundedDialoguePlan knowledge guard must default-deny unlisted and cross-route knowledge")
 
+# PG-041: Bree production layer must replace dominant blockout visuals without moving story flow.
+bree_asset_root = ROOT / "SourceAssets" / "Production" / "World" / "Bree"
+for asset_name in [
+    "SM_BreeHouse.obj",
+    "SM_BreeInn.obj",
+    "SM_BreeGate.obj",
+    "SM_BreeStall.obj",
+    "SM_BreeLantern.obj",
+    "SM_BreeHitchingPost.obj",
+    "SM_BreeTable.obj",
+    "SM_BreeCrateStack.obj",
+]:
+    if not (bree_asset_root / asset_name).exists():
+        fail(f"PG-041 Bree production asset missing: {asset_name}")
+
+bree_visual_cpp = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
+for symbol in [
+    "SpawnProductionBreeDetailLayer",
+    "ProductionHouseMesh",
+    "ProductionInnMesh",
+    "ProductionGateMesh",
+    "ProductionLanternMesh",
+    "ShowPrototypeWorldLabels = false",
+]:
+    if symbol not in bree_visual_cpp:
+        fail(f"PG-041 Bree production runtime invariant missing: {symbol}")
+
+for story_marker in [
+    'FVector(-2050.0f, 0.0f, 90.0f)',
+    'FVector(-1250.0f, 0.0f, 90.0f)',
+    'FVector(850.0f, 90.0f, 90.0f)',
+    'FVector(1640.0f, 1030.0f, 90.0f)',
+]:
+    if story_marker not in bree_visual_cpp:
+        fail(f"PG-041 Bree story anchor moved or missing: {story_marker}")
+
 # PG-040: visual-production-first assets must stay source-controlled, importable and runtime-referenced.
 shire_asset_root = ROOT / "SourceAssets" / "Production" / "World" / "Shire"
 common_character_root = ROOT / "SourceAssets" / "Production" / "Characters" / "Common"

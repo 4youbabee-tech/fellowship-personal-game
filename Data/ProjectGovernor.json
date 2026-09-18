@@ -1315,7 +1315,7 @@
       "id": "WORK-WORLD-002",
       "title": "Part I world density and landmark detail pass",
       "status": "ACTIVE",
-      "rationale": "Primary visual-production workstream: replace blockout readability with dense imported/original production architecture, terrain dressing, props, vegetation and lighting."
+      "rationale": "Visual-production-first rollout is active: Shire CP40 followed by Bree CP41, replacing dominant blockout silhouettes with imported/original architecture and props while preserving story anchors."
     },
     {
       "order": 2,
@@ -1398,13 +1398,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Visual-production-first expansion after user requested complete world/characters/life build",
+    "reason": "Visual-production-first Bree architecture replacement after CP40 Shire production expansion",
     "summary": [
-      "Added 12 original Shire architecture/prop production meshes including cottages, mill, bridge, well, market stalls, walls, gates, hay, flower boxes, lamp posts, tables and loaded carts.",
-      "Added 19 reusable original production character/gear meshes for human, elf and dwarf body archetypes plus cloak/sword/shield/axe/bow gear.",
-      "Added a dense Shire production settlement overlay without moving quest/story anchors.",
-      "Promoted Bree and Elven ambient residents plus most non-Hobbit named cast from engine primitive bodies to reusable production archetypes.",
-      "Switched project mode from BUILD_FIRST_BATCH_MODE to VISUAL_PRODUCTION_FIRST while keeping UE4.27.2 build/import validation mandatory."
+      "Added an original Bree architecture kit with house, Prancing Pony inn, west gate, market stall, street lantern, hitching post, common-room table and crate stack.",
+      "Added a runtime Bree production detail layer that overlays the existing chapter blockout without moving any quest or story trigger.",
+      "Production meshes preserve imported materials while engine primitives remain fallback geometry only.",
+      "Prototype world labels are hidden by default in Bree so the playable view reads as a world rather than a debug map.",
+      "Bree population continues using the new human production archetype from CP40."
     ]
   },
   "development_mode": {

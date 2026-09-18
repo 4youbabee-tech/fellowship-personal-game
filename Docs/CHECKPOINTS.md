@@ -433,6 +433,15 @@
 - This is a major visible replacement of engine primitives, but it is not yet final skeletal rig/facial/cloth/photoreal character production.
 - Added PG-040 and kept real UE4.27.2 compile/import validation mandatory.
 
+## CP41 — Bree Production Architecture Pass
+- Added an original Bree production kit: narrow timber/plaster house, large Prancing Pony inn shell, West Gate, market stall, street lantern, hitching post, common-room table and crate stack.
+- Added `SpawnProductionBreeDetailLayer` so Chapter P1C02 now overlays its blockout with imported production architecture and street furniture.
+- Hid prototype world-space labels by default in Bree.
+- Production meshes keep imported materials; Engine BasicShapes are colorized only as fallbacks.
+- Preserved every existing P1C02 quest/story trigger coordinate and chapter hand-off.
+- Existing Bree residents now benefit from the CP40 production human body archetype.
+- Added PG-041. This is not yet final rainy-night lighting/interior art/PIE visual acceptance.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 

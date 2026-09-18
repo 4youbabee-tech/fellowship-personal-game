@@ -25,6 +25,14 @@ private:
     UPROPERTY() UStaticMesh* SphereMesh;
     UPROPERTY() UStaticMesh* CylinderMesh;
     UPROPERTY() UStaticMesh* ConeMesh;
+    UPROPERTY() UStaticMesh* ProductionHouseMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionInnMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionGateMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionStallMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionLanternMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionHitchingPostMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionTableMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCrateStackMesh = nullptr;
     UPROPERTY() UMaterialInterface* BasicMaterial;
 
     bool bBuilt = false;
@@ -33,5 +41,6 @@ private:
         const FLinearColor& Color, const FRotator& Rotation = FRotator::ZeroRotator, bool bCollision = true);
     void SpawnLabel(const FString& Text, const FVector& Location, const FLinearColor& Color = FLinearColor::White);
     void SpawnBreeTown();
+    void SpawnProductionBreeDetailLayer();
     void SpawnStoryFlow();
 };

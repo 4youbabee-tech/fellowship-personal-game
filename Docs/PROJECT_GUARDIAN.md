@@ -312,6 +312,15 @@ This converts failures into permanent project knowledge.
 
 **Proof rule:** source + Pre-Unreal + UE build/import success proves assets are loadable, not that final visual quality, PIE composition or device performance is accepted.
 
+### PG-041 — Bree production art must preserve Chapter 2 story coordinates
+**Risk:** replacing the Bree greybox can visually improve the town while accidentally burying, moving or disconnecting the gate, inn, Strider, night-attack and departure story flow.
+
+**Contract:** the production Bree layer overlays the current runtime layout. The existing chapter trigger coordinates remain authoritative until a separately reviewed world-layout migration updates both story data and validation together.
+
+**Visual rule:** imported production meshes keep their materials. Engine primitives may remain only as fallback/support geometry, and prototype world labels are hidden by default.
+
+**Guard:** Pre-Unreal Validation checks the Bree production source assets, runtime production-mesh references and key story-anchor coordinates.
+
 ## What Guardian must never do automatically
 
 - change canon,
