@@ -157,7 +157,7 @@ The physical folder migration has **not** happened yet. It must be a dedicated m
 
 The project no longer treats chat history as the authoritative record of user requests.
 
-- `Data/ProjectRequirements.json` records persistent requirements with stable IDs, current status, evidence, missing work and acceptance criteria.
+- `Data/ProjectGovernor.json` records persistent requirements with stable IDs, current status, evidence, missing work and acceptance criteria.
 - `Docs/PROJECT_MEMORY_SYSTEM.md` defines how every meaningful future request must be captured and updated.
 - `Docs/LIVING_WORLD_AI_BLUEPRINT.md` and `Data/LivingWorldFeaturePlan.json` preserve the user's living-world/NPC intelligence direction separately from current implementation status.
 - Project Guardian validates the required memory artifacts and critical requirement/phase IDs.
@@ -168,10 +168,8 @@ Recovered/reaffirmed living-world intent is currently **PARTIAL/PLANNED**, not c
 
 The project now has a deterministic internal control layer in addition to memory:
 
-- `Data/ProjectGovernorPolicy.json` — hard invariants and priority order.
-- `Data/ProjectDecisions.json` — recorded resolutions for conflicting requirements.
-- `Data/ExperienceQualityGates.json` — STATIC / COMPILE / BOOT / TRAVERSAL / PERSISTENCE / PERFORMANCE / PACING / VISUAL state per Part I region.
-- `Scripts/project_governor.py` — CI validation of governor data.
+- `Data/ProjectGovernor.json` — the single authoritative source for requirements, priorities, conflicts, decisions, active gate and region quality states.
+- `Scripts/project_governor.py` — CI validation of the single Governor.
 
 This layer is specifically meant to stop silent requirement contradictions, false completion claims, inaccessible required routes, target-device performance regressions and acceptance of boring/frustrating sections without human pacing review.
 
@@ -266,7 +264,7 @@ Runtime voice playback now resolves `/Game/Audio/Voice/<Speaker>/<VO_ID>`, plays
 Use all of these, with this priority for their purpose:
 
 1. `Docs/CURRENT_PROJECT_STATE.md` — implementation/handoff truth and current hard gate.
-2. `Data/ProjectRequirements.json` — permanent user-requirement ledger: requested / partial / implemented / validated / deferred.
+2. `Data/ProjectGovernor.json` — single authority for user requirements, decisions, conflicts, active gate and region quality.
 3. `Docs/PROJECT_MEMORY_SYSTEM.md` — rules for preserving requests and decisions across lost chats/developer changes.
 4. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
 5. `Docs/LIVING_WORLD_AI_BLUEPRINT.md` — living-world/NPC intelligence design authority.
@@ -370,9 +368,8 @@ A new developer/assistant should:
 1. open this file first,
 2. confirm repo and `develop`,
 3. inspect latest `develop` commit and both validation workflows,
-4. read `Data/ProjectRequirements.json` so no recorded user request is lost,
-5. read `Docs/PROJECT_MEMORY_SYSTEM.md` and `Docs/PROJECT_GOVERNOR.md`,
-6. inspect `Data/ProjectDecisions.json` and `Data/ExperienceQualityGates.json` for conflicts/blockers,
+4. read `Data/ProjectGovernor.json` so no recorded user request is lost,
+5. read `Data/ProjectGovernor.json`, then `Docs/PROJECT_MEMORY_SYSTEM.md` and `Docs/PROJECT_GOVERNOR.md`,
 7. open `Source/ShireJourney/README.md` before changing runtime code,
 8. inspect `Data/SourceArchitecturePlan.json` for ownership and planned file location,
 9. read `Docs/LIVING_WORLD_AI_BLUEPRINT.md` and `Data/LivingWorldFeaturePlan.json` before NPC/world-life work,
