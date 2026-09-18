@@ -73,21 +73,21 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
     AddCue(TEXT("ShireOpening"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_ShireOpening"), NAME_None, TEXT("Amb_ShireMorning"), TEXT("Mus_ShireWarmth"), TEXT("Sfx_WagonDistant"), 5.0f);
     AddCue(TEXT("GandalfArrival"), EShireStoryPresentationMode::GameplayBlend,
-        TEXT("Cam_GandalfRoad"), NAME_None, TEXT("Amb_ShireRoad"), TEXT("Mus_ShireWarmth"), TEXT("Sfx_WagonWheels"), 5.0f);
+        TEXT("Cam_GandalfRoad"), TEXT("Dlg_ShireGandalfRoad"), TEXT("Amb_ShireRoad"), TEXT("Mus_ShireWarmth"), TEXT("Sfx_WagonWheels"), 14.0f);
     AddCue(TEXT("PartyArrival"), EShireStoryPresentationMode::GameplayBlend,
-        TEXT("Cam_PartyFieldReveal"), NAME_None, TEXT("Amb_PartyField"), TEXT("Mus_ShireCelebration"), TEXT("Sfx_DistantFireworks"), 6.0f);
+        TEXT("Cam_PartyFieldReveal"), TEXT("Dlg_ShirePartyArrival"), TEXT("Amb_PartyField"), TEXT("Mus_ShireCelebration"), TEXT("Sfx_DistantFireworks"), 14.0f);
     AddCue(TEXT("BilboDisappearance"), EShireStoryPresentationMode::Cinematic,
-        TEXT("Cam_PartyAftermath"), NAME_None, TEXT("Amb_PartyReaction"), TEXT("Mus_RingUnease"), TEXT("Sfx_CrowdDrop"), 7.0f);
+        TEXT("Cam_PartyAftermath"), TEXT("Dlg_ShireBilboAftermath"), TEXT("Amb_PartyReaction"), TEXT("Mus_RingUnease"), TEXT("Sfx_CrowdDrop"), 14.0f);
     AddCue(TEXT("RingWarning"), EShireStoryPresentationMode::Cinematic,
-        TEXT("Cam_BagEndRingWarning"), NAME_None, TEXT("Amb_BagEndInterior"), TEXT("Mus_RingLowPulse"), TEXT("Sfx_FireplaceLow"), 8.0f);
+        TEXT("Cam_BagEndRingWarning"), TEXT("Dlg_ShireRingWarning"), TEXT("Amb_BagEndInterior"), TEXT("Mus_RingLowPulse"), TEXT("Sfx_FireplaceLow"), 27.0f);
     AddCue(TEXT("LeavingHomeRoad"), EShireStoryPresentationMode::GameplayBlend,
-        TEXT("Cam_LeavingHobbiton"), NAME_None, TEXT("Amb_ShireEvening"), TEXT("Mus_LeavingHome"), TEXT("Sfx_FootstepsPath"), 5.0f);
+        TEXT("Cam_LeavingHobbiton"), TEXT("Dlg_ShireLeavingHome"), TEXT("Amb_ShireEvening"), TEXT("Mus_LeavingHome"), TEXT("Sfx_FootstepsPath"), 15.0f);
     AddCue(TEXT("BlackRiderApproach"), EShireStoryPresentationMode::GameplayBlend,
-        TEXT("Cam_BlackRiderApproach"), NAME_None, TEXT("Amb_ShadowedRoad"), TEXT("Mus_BlackRiderThreat"), TEXT("Sfx_DistantHooves"), 5.0f);
+        TEXT("Cam_BlackRiderApproach"), TEXT("Dlg_ShireBlackRider"), TEXT("Amb_ShadowedRoad"), TEXT("Mus_BlackRiderThreat"), TEXT("Sfx_DistantHooves"), 12.0f);
     AddCue(TEXT("RootHide"), EShireStoryPresentationMode::Gameplay,
-        TEXT("Cam_PlayerStealth"), NAME_None, TEXT("Amb_RootHide"), TEXT("Mus_BlackRiderLowPulse"), TEXT("Sfx_HoovesNear"), 4.0f);
+        TEXT("Cam_PlayerStealth"), TEXT("Dlg_ShireRootHide"), TEXT("Amb_RootHide"), TEXT("Mus_BlackRiderLowPulse"), TEXT("Sfx_HoovesNear"), 7.0f);
     AddCue(TEXT("FerryEscape"), EShireStoryPresentationMode::GameplayBlend,
-        TEXT("Cam_FerryEscape"), NAME_None, TEXT("Amb_Brandywine"), TEXT("Mus_FerryEscape"), TEXT("Sfx_FerryWoodWater"), 6.0f);
+        TEXT("Cam_FerryEscape"), TEXT("Dlg_ShireFerry"), TEXT("Amb_Brandywine"), TEXT("Mus_FerryEscape"), TEXT("Sfx_FerryWoodWater"), 12.0f);
 
     AddCue(TEXT("BreeRoadNightfall"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_BreeRoadNightfall"), NAME_None, TEXT("Amb_RainRoad"), TEXT("Mus_BreeUnease"), TEXT("Sfx_DistantHooves"), 5.0f);

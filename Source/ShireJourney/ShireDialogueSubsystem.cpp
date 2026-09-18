@@ -36,6 +36,57 @@ void UShireDialogueSubsystem::BuildDialogueLibrary()
 {
     DialogueLibrary.Empty();
 
+    // Chapter 1 - The Shire. These lines are original game dialogue written to preserve
+    // the story beats without reproducing screenplay text.
+    AddSequence(TEXT("Dlg_ShireGandalfRoad"), {
+        { FText::FromString(TEXT("Frodo")), FText::FromString(TEXT("Bilbo has been restless for weeks. I thought the party might settle him.")), TEXT("VO_Frodo_ShireRoad_01"), 4.4f },
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("A celebration can hide many things, but it cannot make a restless heart stay put.")), TEXT("VO_Gandalf_ShireRoad_01"), 5.2f },
+        { FText::FromString(TEXT("Frodo")), FText::FromString(TEXT("Then I suppose I should enjoy Hobbiton while it is still quiet.")), TEXT("VO_Frodo_ShireRoad_02"), 4.3f }
+    });
+
+    AddSequence(TEXT("Dlg_ShirePartyArrival"), {
+        { FText::FromString(TEXT("Sam")), FText::FromString(TEXT("They have lanterns all the way to the far hedge. Half the Shire must be coming.")), TEXT("VO_Sam_Party_01"), 4.8f },
+        { FText::FromString(TEXT("Frodo")), FText::FromString(TEXT("Bilbo never does anything by halves when he has an audience.")), TEXT("VO_Frodo_Party_01"), 4.4f },
+        { FText::FromString(TEXT("Bilbo")), FText::FromString(TEXT("Then do not stand at the edge, my boy. A party is wasted on spectators.")), TEXT("VO_Bilbo_Party_01"), 4.8f }
+    });
+
+    AddSequence(TEXT("Dlg_ShireBilboAftermath"), {
+        { FText::FromString(TEXT("Frodo")), FText::FromString(TEXT("He was there a moment ago. Everyone saw him, and then nothing.")), TEXT("VO_Frodo_AfterParty_01"), 4.8f },
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("Bilbo has chosen his own manner of leaving. What matters now is what he left behind.")), TEXT("VO_Gandalf_AfterParty_01"), 5.5f },
+        { FText::FromString(TEXT("Frodo")), FText::FromString(TEXT("I will go back to Bag End.")), TEXT("VO_Frodo_AfterParty_02"), 3.2f }
+    });
+
+    AddSequence(TEXT("Dlg_ShireRingWarning"), {
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("The thing Bilbo left you is not an ordinary heirloom. I have feared that for longer than I wished to admit.")), TEXT("VO_Gandalf_RingWarn_01"), 6.4f },
+        { FText::FromString(TEXT("Frodo")), FText::FromString(TEXT("He carried it for years. Why should it become dangerous now?")), TEXT("VO_Frodo_RingWarn_01"), 4.5f },
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("Because dangerous things are patient. Keep it hidden while I learn whose shadow is following it.")), TEXT("VO_Gandalf_RingWarn_02"), 6.2f },
+        { FText::FromString(TEXT("Frodo")), FText::FromString(TEXT("And if that shadow reaches the Shire first?")), TEXT("VO_Frodo_RingWarn_02"), 4.2f },
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("Then leave quietly. Trust Sam, and do not give strangers a reason to remember your name.")), TEXT("VO_Gandalf_RingWarn_03"), 5.8f }
+    });
+
+    AddSequence(TEXT("Dlg_ShireLeavingHome"), {
+        { FText::FromString(TEXT("Sam")), FText::FromString(TEXT("It feels strange to walk past the last gardens and not know when we will see them again.")), TEXT("VO_Sam_Leaving_01"), 5.1f },
+        { FText::FromString(TEXT("Frodo")), FText::FromString(TEXT("We are only going as far as we must. I would rather keep the Shire out of whatever this becomes.")), TEXT("VO_Frodo_Leaving_01"), 5.7f },
+        { FText::FromString(TEXT("Sam")), FText::FromString(TEXT("Then I will make sure you do not have to do that alone.")), TEXT("VO_Sam_Leaving_02"), 4.3f }
+    });
+
+    AddSequence(TEXT("Dlg_ShireBlackRider"), {
+        { FText::FromString(TEXT("Pippin")), FText::FromString(TEXT("That rider has passed the same stretch twice. No traveler does that by accident.")), TEXT("VO_Pippin_Rider_01"), 4.9f },
+        { FText::FromString(TEXT("Merry")), FText::FromString(TEXT("Then we stop being where he expects us to be.")), TEXT("VO_Merry_Rider_01"), 4.0f },
+        { FText::FromString(TEXT("Sam")), FText::FromString(TEXT("Off the road. Now.")), TEXT("VO_Sam_Rider_01"), 2.6f }
+    });
+
+    AddSequence(TEXT("Dlg_ShireRootHide"), {
+        { FText::FromString(TEXT("Sam")), FText::FromString(TEXT("Do not move. Let it pass.")), TEXT("VO_Sam_RootHide_01"), 3.0f },
+        { FText::FromString(TEXT("Frodo")), FText::FromString(TEXT("I can feel it searching.")), TEXT("VO_Frodo_RootHide_01"), 3.3f }
+    });
+
+    AddSequence(TEXT("Dlg_ShireFerry"), {
+        { FText::FromString(TEXT("Merry")), FText::FromString(TEXT("Get the rope loose. We can argue about directions on the other bank.")), TEXT("VO_Merry_Ferry_01"), 4.5f },
+        { FText::FromString(TEXT("Sam")), FText::FromString(TEXT("Frodo, get aboard. I am right behind you.")), TEXT("VO_Sam_Ferry_01"), 3.8f },
+        { FText::FromString(TEXT("Pippin")), FText::FromString(TEXT("I was hoping the dangerous part ended before the river.")), TEXT("VO_Pippin_Ferry_01"), 4.0f }
+    });
+
     // All lines are newly written for the game and intentionally avoid copying screenplay dialogue.
     AddSequence(TEXT("Dlg_BreeRingIncident"), {
         { FText::FromString(TEXT("Sam")), FText::FromString(TEXT("Frodo! Everyone is looking this way.")), TEXT("VO_Sam_BreeRing_01"), 3.2f },
