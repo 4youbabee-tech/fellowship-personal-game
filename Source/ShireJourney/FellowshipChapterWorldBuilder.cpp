@@ -422,6 +422,9 @@ void AFellowshipChapterWorldBuilder::BuildRivendell()
     SpawnNPC(TEXT("Aragorn"), FVector(-260, -420, 70), FRotator(0, 30, 0), NAME_None, 0, -1,
         TEXT("There are roads here I have known since youth. None of them make the next choice easier."));
 
+    SpawnNPC(TEXT("Arwen"), FVector(-520, 420, 70), FRotator(0, 320, 0), NAME_None, 0, -1,
+        TEXT("You have time to breathe here. Do not mistake that for the end of the danger."));
+
     SpawnNPC(TEXT("Sam"), FVector(-120, 360, 65), FRotator(0, 210, 0), NAME_None, 0, -1,
         TEXT("It is a fair place, but I will feel better when I know what road we are taking."));
     SpawnNPC(TEXT("Merry"), FVector(80, 420, 65), FRotator(0, 205, 0), NAME_None, 0, -1,
@@ -502,11 +505,11 @@ void AFellowshipChapterWorldBuilder::BuildFellowshipRoad()
     SpawnQuestTrigger(FVector(-1150, 260, 90), TEXT("SouthwardJourney"), 1, 1,
         TEXT("The company pauses. Boromir turns the stop into training for Merry and Pippin."), TEXT("FellowshipCamp"));
     SpawnNPC(TEXT("Boromir"), FVector(-980, 500, 70), FRotator(0, 200, 0), TEXT("SouthwardJourney"), 1, -1,
-        TEXT("A sword is no help if your feet are in the wrong place. Again."));
+        TEXT("A sword is no help if your feet are in the wrong place. Again."), NAME_None, 0, true);
     SpawnNPC(TEXT("Merry"), FVector(-860, 390, 65), FRotator(0, 20, 0), TEXT("SouthwardJourney"), 1, -1,
-        TEXT("I am beginning to suspect he enjoys correcting us."));
+        TEXT("I am beginning to suspect he enjoys correcting us."), NAME_None, 0, true);
     SpawnNPC(TEXT("Pippin"), FVector(-830, 500, 65), FRotator(0, 20, 0), TEXT("SouthwardJourney"), 1, -1,
-        TEXT("I would learn faster if training came with second breakfast."));
+        TEXT("I would learn faster if training came with second breakfast."), NAME_None, 0, true);
 
     SpawnQuestTrigger(FVector(-620, 0, 110), TEXT("SouthwardJourney"), 1, 1,
         TEXT("Black birds cross the sky in an unnatural mass. Get the company under cover."), TEXT("CrebainWarning"));
