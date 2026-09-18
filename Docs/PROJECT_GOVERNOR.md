@@ -102,6 +102,18 @@ Each worker:
 
 The Governor is the project lead / traffic controller.
 
+## Reminder / pacing behavior
+
+Every Pre-Unreal validation run now prints a **PROJECT GOVERNOR WORK REMINDER**:
+- the active hard gate,
+- whether it blocks major feature expansion,
+- every unfinished CRITICAL/HIGH requirement,
+- the first recorded missing-work item for each.
+
+This is the repository-level reminder the user requested after the lost chat. It works whenever project validation/work review runs; it is not an autonomous phone notification.
+
+`Data/PlayerExperiencePacingPlan.json` defines the chapter-by-chapter human review contract for boredom, repetition, waiting, clarity, discovery and story/combat/dialogue rhythm. CI may validate that the review contract exists, but only actual human play can mark PACING accepted.
+
 ## Current rule
 
 The current functional hard gate remains open:
