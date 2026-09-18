@@ -778,7 +778,8 @@
         "Fellowship members populate road, Moria, Lothlorien and Anduin chapters with story-aware formation release at authored split beats",
         "Bree ambient population uses human-townsperson silhouettes instead of Hobbit visuals",
         "Rivendell and Lothlorien have moving Elf ambient residents",
-        "Data/CharacterPopulationPlan.json records chapter cast coverage and visual tiers"
+        "Data/CharacterPopulationPlan.json records chapter cast coverage and visual tiers",
+        "Major named proxies now carry modular identity pieces such as cloaks, weapons, shields, quivers, beards and headpieces so the cast is visually distinguishable before final rigged assets."
       ],
       "missing_work": [
         "Dedicated production meshes/rigged characters for Sam, Merry, Pippin, Aragorn, Boromir, Legolas, Gimli and other non-Frodo/Gandalf major characters",
@@ -951,6 +952,25 @@
       "evidence": [
         "Data/CharacterPopulationPlan.json",
         "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp"
+      ]
+    },
+    {
+      "id": "DEC-006",
+      "title": "Build first in larger batches, then perform a dedicated integration/playtest repair pass",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-CHAR-001",
+        "REQ-CHAR-002",
+        "REQ-WORLD-001",
+        "REQ-QUALITY-001",
+        "REQ-QUALITY-002",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Continue substantial character/world/runtime construction now while requiring Pre-Unreal and real UE4.27.2 compile/import gates for each merged batch. Defer detailed PIE, device, pacing and visual acceptance into a later dedicated integration/playtest/repair pass instead of stopping after every small visible feature.",
+      "rationale": "The user explicitly wants to see a much more complete game when returning to the laptop and prefers building a larger playable body of work before manual testing.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/ProjectGovernor.json"
       ]
     }
   ],
@@ -1214,8 +1234,8 @@
   ],
   "active_gate": {
     "id": "CURRENT_FUNCTIONAL_HARD_GATE",
-    "status": "OPEN",
-    "blocks_major_feature_expansion": true,
+    "status": "DEFERRED_TO_BATCH_INTEGRATION",
+    "blocks_major_feature_expansion": false,
     "required_evidence": [
       "Shire functional traversal: movement/camera/sprint/crouch/interact/HUD/quest/NPC awareness/dialogue",
       "F9 save/load round-trip restores expected transform and story state",
@@ -1223,7 +1243,8 @@
       "P1C02-P1C08 developer chapter smoke tests",
       "Target-laptop traversal/performance observation for crash/freeze/hitch/memory/FPS",
       "Human pacing/clarity observations where applicable"
-    ]
+    ],
+    "note": "User explicitly selected BUILD_FIRST_BATCH_MODE. Evidence requirements remain open and will be executed in a dedicated integration/playtest pass; compile/static gates remain mandatory now."
   },
   "reference_only_files": [
     "Docs/CURRENT_PROJECT_STATE.md",
@@ -1275,20 +1296,27 @@
   "work_queue": [
     {
       "order": 1,
+      "id": "WORK-CHAR-003",
+      "title": "Distinct visual identity pass for the Part I core cast",
+      "status": "ACTIVE",
+      "rationale": "Differentiate the visible cast now using low-cost modular silhouettes/accessories while final dedicated rigged characters remain a later production step."
+    },
+    {
+      "order": 2,
       "id": "WORK-CHAR-002",
       "title": "Populate Part I with the full core cast and region-appropriate inhabitants",
       "status": "ACTIVE",
       "rationale": "User explicitly requested that the Fellowship, friends and NPC populations visibly fill the world. Runtime presence is active now; dedicated visual production follows by tracked visual tier."
     },
     {
-      "order": 2,
+      "order": 3,
       "id": "WORK-CHAR-001",
       "title": "Playable Frodo/Gandalf character production motion pass",
       "status": "ACTIVE",
       "rationale": "User explicitly wants visible playable-game progress now; scope is bounded to character presentation/motion and must preserve story/save architecture."
     },
     {
-      "order": 3,
+      "order": 4,
       "id": "WORK-GATE-001",
       "title": "Finish current functional hard gate",
       "status": "ACTIVE",
@@ -1303,42 +1331,42 @@
       ]
     },
     {
-      "order": 4,
+      "order": 5,
       "id": "WORK-MAINT-001",
       "title": "Perform physical Source/ShireJourney Public/Private domain migration",
       "status": "BLOCKED_BY_WORK-GATE-001",
       "rationale": "Architecture map is ready; do the path/include refactor only after the current gameplay baseline is proven."
     },
     {
-      "order": 5,
+      "order": 6,
       "id": "WORK-SAVE-001",
       "title": "Implement automatic safe checkpoint/respawn runtime",
       "status": "BLOCKED_BY_WORK-GATE-001",
       "rationale": "WorldCheckpointPlan exists; runtime automatic checkpoint behavior is still missing."
     },
     {
-      "order": 6,
+      "order": 7,
       "id": "WORK-LW-001",
       "title": "Build living-world NPC identity/schedule/relationship data model",
       "status": "PARTIAL",
       "rationale": "The Part I data model now exists in Data/NPCSocialModel.json; runtime scheduler/relationship consumption remains pending and should wait behind the active functional gate."
     },
     {
-      "order": 7,
+      "order": 8,
       "id": "WORK-LW-002",
       "title": "Implement NPC-to-NPC contextual conversations",
       "status": "PARTIAL",
       "rationale": "NPC conversation eligibility, intent, knowledge, priority, cooldown and repetition contracts are data-defined; runtime playback remains gated."
     },
     {
-      "order": 8,
+      "order": 9,
       "id": "WORK-LW-003",
       "title": "Implement persistent named-NPC memory and bounded dialogue intelligence",
       "status": "PARTIAL",
       "rationale": "NPC memory and bounded dialogue contracts are data-defined; runtime memory/save/dialogue integration remains gated."
     },
     {
-      "order": 9,
+      "order": 10,
       "id": "WORK-WORLD-001",
       "title": "Expand environmental micro-life and production polish chapter by chapter",
       "status": "PARTIAL",
@@ -1347,13 +1375,24 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "User explicitly requested full cast/world population after the playable Frodo/Gandalf motion pass",
+    "reason": "User explicitly requested build-first world/character expansion before returning to the laptop for a broad test-and-fix pass",
     "summary": [
-      "Opened CP32 for Part I character population.",
-      "Added chapter-by-chapter core cast contract and visual-tier tracking.",
-      "Expanded runtime companion presence through Bree, Weathertop, Rivendell, Fellowship road, Moria, Lothlorien and Anduin.",
-      "Added region-aware ambient human/Elf silhouettes and moving residents in social hubs.",
-      "Dedicated production assets are still missing for many major characters; proxy presence is not visual completion."
+      "Activated BUILD_FIRST_BATCH_MODE.",
+      "Static + real UE compile/import remain mandatory for merged runtime batches.",
+      "PIE/device/pacing/visual acceptance remain open and are deferred to a dedicated integration pass.",
+      "Started distinct modular visual identity work for the Part I core cast."
+    ]
+  },
+  "development_mode": {
+    "id": "BUILD_FIRST_BATCH_MODE",
+    "status": "ACTIVE",
+    "entered_on": "2026-09-18",
+    "rules": [
+      "Keep Pre-Unreal validation mandatory for every merge.",
+      "Keep real UE4.27.2 compile/import validation mandatory for runtime/source changes.",
+      "Continue character/world/content construction without waiting for PIE after every small batch.",
+      "Do not mark PIE, device, pacing, performance or visual gates PASSED without real evidence.",
+      "After substantial build-out, run a dedicated integration/playtest/repair phase and fix regressions systematically."
     ]
   }
 }
