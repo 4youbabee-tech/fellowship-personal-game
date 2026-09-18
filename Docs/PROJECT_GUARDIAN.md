@@ -222,6 +222,15 @@ This converts failures into permanent project knowledge.
 
 **Guard:** require deny-unlisted knowledge, deny cross-route leakage, deterministic fallback, bounded line/cache sizes and zero required runtime-generation latency.
 
+### PG-031 — Production character motion must preserve production transforms
+**Risk:** modular production Frodo/Gandalf meshes load correctly, but the per-frame prototype animation reuses fallback-only face/hat/beard coordinates and visually tears the character apart as soon as Tick begins.
+
+**Contract:** runtime character motion must know whether production meshes are active and must use production-aware face/accessory transforms. Frodo/Gandalf motion may add gait, lean, crouch, airborne, foot, cloak/satchel and weapon motion, but must not modify quest/save/route state.
+
+**Guard:** Pre-Unreal Validation checks that the player character records production-character state, logs the resolved production/fallback visual path, and keeps production-aware face/hat/beard animation branches.
+
+**Acceptance:** static/build success is not visual acceptance. Frodo and Gandalf still require PIE visual review on the target build.
+
 ## What Guardian must never do automatically
 
 - change canon,

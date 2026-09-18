@@ -155,6 +155,9 @@ private:
     float PrototypeHeadBaseZ = 39.0f;
     float PrototypeHairBaseZ = 47.0f;
     bool bPrototypeIsGandalf = false;
+    bool bUsingProductionCharacter = false;
+    bool bSprintRequested = false;
+    float PrototypeIdlePhase = 0.0f;
 
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);

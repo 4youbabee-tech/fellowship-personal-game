@@ -267,6 +267,14 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
         TryMesh(PrototypeWeapon, TEXT("/Game/Production/Characters/Frodo/SM_Frodo_Sword.SM_Frodo_Sword"));
     }
 
+    bUsingProductionCharacter = bProductionCharacter;
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("CharacterVisual: %s production=%s"),
+        *CharacterId.ToString(),
+        bUsingProductionCharacter ? TEXT("yes") : TEXT("fallback"));
+
     GetCapsuleComponent()->SetCapsuleHalfHeight(bGandalf ? 86.0f : 60.0f);
     if (CameraBoom)
     {
@@ -366,87 +374,292 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
 
 void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
 {
-    const float Speed = GetVelocity().Size2D();
+    UCharacterMovementComponent* Movement = GetCharacterMovement();
+    if (!Movement)
+    {
+        return;
+    }
+
+    const FVector Velocity = GetVelocity();
+    const float Speed = Velocity.Size2D();
     const bool bMoving = Speed > 5.0f && !bCinematicInputLocked;
+    const bool bCrouching = bIsCrouched;
+    const bool bFalling = Movement->IsFalling();
+    const bool bSprinting = bMoving && bSprintRequested && !bCrouching &&
+        Speed > WalkSpeed * 1.05f;
+
+    PrototypeIdlePhase += DeltaSeconds * (bPrototypeIsGandalf ? 1.05f : 1.35f);
+
+    const FVector LocalVelocity = GetActorTransform().InverseTransformVectorNoScale(Velocity);
+    const float SideRatio = FMath::Clamp(
+        LocalVelocity.Y / FMath::Max(1.0f, SprintSpeed), -1.0f, 1.0f);
 
     float Swing = 0.0f;
     float Bob = 0.0f;
-    if (bMoving)
+    float StepLift = 0.0f;
+
+    if (bMoving && !bFalling)
     {
-        const float SpeedRatio = FMath::Clamp(Speed / FMath::Max(1.0f, WalkSpeed), 0.55f, 1.8f);
-        PrototypeWalkPhase += DeltaSeconds * 8.0f * SpeedRatio;
-        Swing = FMath::Sin(PrototypeWalkPhase) * 28.0f;
-        Bob = FMath::Abs(FMath::Sin(PrototypeWalkPhase * 2.0f)) * 1.5f;
+        const float SpeedRatio = FMath::Clamp(
+            Speed / FMath::Max(1.0f, WalkSpeed), 0.45f, 1.85f);
+        const float GaitRate = bSprinting ? 10.5f : 7.8f;
+        const float GaitAmplitude = bPrototypeIsGandalf
+            ? (bSprinting ? 30.0f : 22.0f)
+            : (bSprinting ? 38.0f : 29.0f);
+
+        PrototypeWalkPhase += DeltaSeconds * GaitRate * SpeedRatio;
+        const float StepSin = FMath::Sin(PrototypeWalkPhase);
+        Swing = StepSin * GaitAmplitude;
+        Bob = FMath::Abs(FMath::Sin(PrototypeWalkPhase * 2.0f)) *
+            (bSprinting ? 2.4f : 1.4f);
+        StepLift = FMath::Max(0.0f, StepSin) * (bSprinting ? 3.0f : 1.6f);
     }
 
-    const float BlendSpeed = 10.0f;
+    const float IdleBreath = (!bMoving && !bFalling)
+        ? FMath::Sin(PrototypeIdlePhase) * (bPrototypeIsGandalf ? 0.55f : 0.75f)
+        : 0.0f;
+    const float CrouchDrop = bCrouching ? (bPrototypeIsGandalf ? 11.0f : 8.0f) : 0.0f;
+    const float SprintLean = bSprinting ? (bPrototypeIsGandalf ? -4.0f : -7.0f) : 0.0f;
+    const float SideLean = -SideRatio * 5.0f;
+    const float BlendSpeed = bSprinting ? 14.0f : 10.0f;
+
+    float LeftArmPitch = Swing;
+    float RightArmPitch = -Swing;
+    float LeftLegPitch = -Swing * 0.66f;
+    float RightLegPitch = Swing * 0.66f;
+
+    if (bCrouching)
+    {
+        LeftArmPitch *= 0.35f;
+        RightArmPitch *= 0.35f;
+        LeftLegPitch = 18.0f + LeftLegPitch * 0.22f;
+        RightLegPitch = 18.0f + RightLegPitch * 0.22f;
+    }
+    else if (bFalling)
+    {
+        LeftArmPitch = bPrototypeIsGandalf ? -10.0f : -18.0f;
+        RightArmPitch = bPrototypeIsGandalf ? -18.0f : -28.0f;
+        LeftLegPitch = 12.0f;
+        RightLegPitch = -10.0f;
+    }
+
+    if (AttackVisualRemaining > 0.0f)
+    {
+        RightArmPitch = bPrototypeIsGandalf ? -68.0f : -88.0f;
+    }
+
     if (PrototypeLeftArm)
     {
         PrototypeLeftArm->SetRelativeRotation(FMath::RInterpTo(
-            PrototypeLeftArm->GetRelativeRotation(), FRotator(Swing, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+            PrototypeLeftArm->GetRelativeRotation(),
+            FRotator(LeftArmPitch, 0.0f, SideLean * 0.35f),
+            DeltaSeconds,
+            BlendSpeed));
     }
     if (PrototypeRightArm)
     {
-        const float RightArmPitch = AttackVisualRemaining > 0.0f ? -82.0f : -Swing;
         PrototypeRightArm->SetRelativeRotation(FMath::RInterpTo(
-            PrototypeRightArm->GetRelativeRotation(), FRotator(RightArmPitch, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+            PrototypeRightArm->GetRelativeRotation(),
+            FRotator(RightArmPitch, 0.0f, SideLean * 0.35f),
+            DeltaSeconds,
+            BlendSpeed));
     }
     if (PrototypeLeftLeg)
     {
         PrototypeLeftLeg->SetRelativeRotation(FMath::RInterpTo(
-            PrototypeLeftLeg->GetRelativeRotation(), FRotator(-Swing * 0.65f, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+            PrototypeLeftLeg->GetRelativeRotation(),
+            FRotator(LeftLegPitch, 0.0f, 0.0f),
+            DeltaSeconds,
+            BlendSpeed));
     }
     if (PrototypeRightLeg)
     {
         PrototypeRightLeg->SetRelativeRotation(FMath::RInterpTo(
-            PrototypeRightLeg->GetRelativeRotation(), FRotator(Swing * 0.65f, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+            PrototypeRightLeg->GetRelativeRotation(),
+            FRotator(RightLegPitch, 0.0f, 0.0f),
+            DeltaSeconds,
+            BlendSpeed));
     }
 
+    const float MotionZ = Bob + IdleBreath - CrouchDrop;
     if (PrototypeTorso)
     {
         PrototypeTorso->SetRelativeLocation(FMath::VInterpTo(
-            PrototypeTorso->GetRelativeLocation(), FVector(0.0f, 0.0f, PrototypeTorsoBaseZ + Bob), DeltaSeconds, 12.0f));
+            PrototypeTorso->GetRelativeLocation(),
+            FVector(0.0f, 0.0f, PrototypeTorsoBaseZ + MotionZ),
+            DeltaSeconds,
+            12.0f));
+        PrototypeTorso->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeTorso->GetRelativeRotation(),
+            FRotator(SprintLean, 0.0f, SideLean),
+            DeltaSeconds,
+            8.0f));
     }
     if (PrototypeHead)
     {
         PrototypeHead->SetRelativeLocation(FMath::VInterpTo(
-            PrototypeHead->GetRelativeLocation(), FVector(0.0f, 0.0f, PrototypeHeadBaseZ + Bob), DeltaSeconds, 12.0f));
+            PrototypeHead->GetRelativeLocation(),
+            FVector(0.0f, 0.0f, PrototypeHeadBaseZ + MotionZ),
+            DeltaSeconds,
+            12.0f));
+        PrototypeHead->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeHead->GetRelativeRotation(),
+            FRotator(
+                bSprinting ? 3.0f : 0.0f,
+                SideRatio * 3.0f + FMath::Sin(PrototypeIdlePhase * 0.55f) * 1.2f,
+                -SideLean * 0.3f),
+            DeltaSeconds,
+            5.0f));
     }
     if (PrototypeHair)
     {
         PrototypeHair->SetRelativeLocation(FMath::VInterpTo(
-            PrototypeHair->GetRelativeLocation(), FVector(-2.0f, 0.0f, PrototypeHairBaseZ + Bob), DeltaSeconds, 12.0f));
+            PrototypeHair->GetRelativeLocation(),
+            FVector(-2.0f, 0.0f, PrototypeHairBaseZ + MotionZ),
+            DeltaSeconds,
+            12.0f));
+    }
+
+    const float FootBaseZ = bPrototypeIsGandalf ? -80.0f : -58.0f;
+    const float LeftLift = bMoving && !bFalling
+        ? FMath::Max(0.0f, FMath::Sin(PrototypeWalkPhase)) * (bSprinting ? 3.0f : 1.7f)
+        : 0.0f;
+    const float RightLift = bMoving && !bFalling
+        ? FMath::Max(0.0f, -FMath::Sin(PrototypeWalkPhase)) * (bSprinting ? 3.0f : 1.7f)
+        : 0.0f;
+    const float FootCrouchDrop = bCrouching ? 3.0f : 0.0f;
+
+    if (PrototypeLeftFoot)
+    {
+        PrototypeLeftFoot->SetRelativeLocation(FMath::VInterpTo(
+            PrototypeLeftFoot->GetRelativeLocation(),
+            FVector(9.0f, -10.0f, FootBaseZ + LeftLift - FootCrouchDrop),
+            DeltaSeconds,
+            14.0f));
+        PrototypeLeftFoot->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeLeftFoot->GetRelativeRotation(),
+            FRotator(-LeftLegPitch * 0.22f, 0.0f, 0.0f),
+            DeltaSeconds,
+            12.0f));
+    }
+    if (PrototypeRightFoot)
+    {
+        PrototypeRightFoot->SetRelativeLocation(FMath::VInterpTo(
+            PrototypeRightFoot->GetRelativeLocation(),
+            FVector(9.0f, 10.0f, FootBaseZ + RightLift - FootCrouchDrop),
+            DeltaSeconds,
+            14.0f));
+        PrototypeRightFoot->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeRightFoot->GetRelativeRotation(),
+            FRotator(-RightLegPitch * 0.22f, 0.0f, 0.0f),
+            DeltaSeconds,
+            12.0f));
     }
 
     if (PrototypeCloak)
     {
-        const float CloakPitch = bMoving ? -4.0f - Swing * 0.07f : -2.0f;
+        const float CloakPitch = bFalling
+            ? -12.0f
+            : (bMoving ? -4.0f - FMath::Abs(Swing) * 0.09f - (bSprinting ? 4.0f : 0.0f) : -2.0f);
+        const float CloakYaw = bMoving ? SideRatio * 5.0f : FMath::Sin(PrototypeIdlePhase * 0.45f) * 1.0f;
         PrototypeCloak->SetRelativeRotation(FMath::RInterpTo(
-            PrototypeCloak->GetRelativeRotation(), FRotator(CloakPitch,0.0f,0.0f), DeltaSeconds, 5.0f));
+            PrototypeCloak->GetRelativeRotation(),
+            FRotator(CloakPitch, CloakYaw, -SideLean * 0.45f),
+            DeltaSeconds,
+            5.5f));
     }
 
-    const float FaceZ = PrototypeHeadBaseZ + 1.5f + Bob;
+    if (PrototypeWeapon)
+    {
+        const FVector WeaponBaseLocation = bPrototypeIsGandalf
+            ? FVector(4.0f, 34.0f, 0.0f)
+            : FVector(8.0f, 29.0f, -4.0f);
+        FRotator WeaponTarget = bPrototypeIsGandalf
+            ? FRotator::ZeroRotator
+            : FRotator(-12.0f, 0.0f, 8.0f);
+
+        if (AttackVisualRemaining > 0.0f)
+        {
+            WeaponTarget = bPrototypeIsGandalf
+                ? FRotator(-42.0f, 0.0f, 18.0f)
+                : FRotator(-78.0f, 0.0f, 32.0f);
+        }
+        else if (bSprinting)
+        {
+            WeaponTarget += bPrototypeIsGandalf
+                ? FRotator(-5.0f, 0.0f, 4.0f)
+                : FRotator(7.0f, 0.0f, -5.0f);
+        }
+
+        PrototypeWeapon->SetRelativeLocation(FMath::VInterpTo(
+            PrototypeWeapon->GetRelativeLocation(),
+            WeaponBaseLocation + FVector(0.0f, 0.0f, MotionZ * 0.35f),
+            DeltaSeconds,
+            12.0f));
+        PrototypeWeapon->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeWeapon->GetRelativeRotation(),
+            WeaponTarget,
+            DeltaSeconds,
+            AttackVisualRemaining > 0.0f ? 18.0f : 9.0f));
+    }
+
+    if (PrototypeSatchel && !bPrototypeIsGandalf)
+    {
+        const float SatchelY = bUsingProductionCharacter ? 19.0f : 22.0f;
+        PrototypeSatchel->SetRelativeLocation(FMath::VInterpTo(
+            PrototypeSatchel->GetRelativeLocation(),
+            FVector(-2.0f, SatchelY, -5.0f + MotionZ * 0.45f),
+            DeltaSeconds,
+            10.0f));
+        PrototypeSatchel->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeSatchel->GetRelativeRotation(),
+            FRotator(0.0f, 12.0f + SideRatio * 3.0f, 8.0f + Swing * 0.08f),
+            DeltaSeconds,
+            7.0f));
+    }
+
+    const float FaceX = bUsingProductionCharacter ? 17.0f : 10.5f;
+    const float FaceY = bUsingProductionCharacter ? 6.5f : 5.2f;
+    const float FaceZ = PrototypeHeadBaseZ + (bUsingProductionCharacter ? 3.0f : 1.5f) + MotionZ;
+
     if (PrototypeLeftEye)
     {
-        PrototypeLeftEye->SetRelativeLocation(FVector(10.5f,-5.2f,FaceZ+2.0f));
+        PrototypeLeftEye->SetRelativeLocation(FVector(FaceX, -FaceY, FaceZ + 2.0f));
     }
     if (PrototypeRightEye)
     {
-        PrototypeRightEye->SetRelativeLocation(FVector(10.5f,5.2f,FaceZ+2.0f));
+        PrototypeRightEye->SetRelativeLocation(FVector(FaceX, FaceY, FaceZ + 2.0f));
     }
     if (PrototypeMouth)
     {
-        PrototypeMouth->SetRelativeLocation(FVector(10.7f,0.0f,FaceZ-5.0f));
+        PrototypeMouth->SetRelativeLocation(FVector(FaceX + 0.5f, 0.0f, FaceZ - 6.0f));
     }
+
     if (bPrototypeIsGandalf)
     {
         if (PrototypeHat)
         {
-            PrototypeHat->SetRelativeLocation(FVector(-1.0f,0.0f,101.0f + Bob));
+            const float HatBaseZ = bUsingProductionCharacter ? 91.0f : 101.0f;
+            PrototypeHat->SetRelativeLocation(FVector(-1.0f, 0.0f, HatBaseZ + MotionZ));
+            PrototypeHat->SetRelativeRotation(FMath::RInterpTo(
+                PrototypeHat->GetRelativeRotation(),
+                FRotator(0.0f, SideRatio * 2.0f, -SideLean * 0.25f),
+                DeltaSeconds,
+                5.0f));
         }
         if (PrototypeBeard)
         {
-            PrototypeBeard->SetRelativeLocation(FVector(10.0f,0.0f,48.0f + Bob));
+            const float BeardX = bUsingProductionCharacter ? 14.0f : 10.0f;
+            const float BeardZ = bUsingProductionCharacter ? 62.0f : 48.0f;
+            const FRotator BeardBaseRotation = bUsingProductionCharacter
+                ? FRotator::ZeroRotator
+                : FRotator(180.0f, 0.0f, 0.0f);
+            PrototypeBeard->SetRelativeLocation(FVector(BeardX, 0.0f, BeardZ + MotionZ));
+            PrototypeBeard->SetRelativeRotation(FMath::RInterpTo(
+                PrototypeBeard->GetRelativeRotation(),
+                BeardBaseRotation + FRotator(bMoving ? Swing * 0.04f : 0.0f, 0.0f, SideRatio * 2.0f),
+                DeltaSeconds,
+                5.0f));
         }
     }
 }
@@ -555,6 +768,7 @@ void AShirePlayerCharacter::HandleCinematicStateChanged(bool bLocked)
 
     if (bLocked)
     {
+        bSprintRequested = false;
         StopJumping();
         UnCrouch();
         GetCharacterMovement()->StopMovementImmediately();
@@ -615,12 +829,14 @@ void AShirePlayerCharacter::StartSprint()
 {
     if (!bCinematicInputLocked)
     {
+        bSprintRequested = true;
         GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
     }
 }
 
 void AShirePlayerCharacter::StopSprint()
 {
+    bSprintRequested = false;
     GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 

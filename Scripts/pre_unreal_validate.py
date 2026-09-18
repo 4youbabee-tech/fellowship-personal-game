@@ -235,7 +235,7 @@ for required_req in [
     "REQ-MEM-001", "REQ-GOV-001", "REQ-WORLD-001", "REQ-WORLD-002",
     "REQ-NPC-001", "REQ-NPC-002", "REQ-NPC-003", "REQ-SAVE-001", "REQ-PERF-001",
     "REQ-VISION-001", "REQ-EXP-001", "REQ-EXP-002", "REQ-COVERAGE-001",
-    "REQ-QUALITY-001", "REQ-QUALITY-002"
+    "REQ-QUALITY-001", "REQ-QUALITY-002", "REQ-CHAR-001"
 ]:
     if required_req not in requirement_ids:
         fail(f"Single ProjectGovernor missing critical requirement: {required_req}")
@@ -1014,6 +1014,26 @@ if "SpawnSoundAttached" not in audio_cpp or "SpawnSound2D" not in audio_cpp:
 
 player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
 player_h = read(SOURCE / "ShirePlayerCharacter.h")
+
+# PG-031: production character motion must preserve production-aware transforms.
+for symbol in [
+    "bUsingProductionCharacter",
+    "CharacterVisual:",
+    "HatBaseZ = bUsingProductionCharacter ? 91.0f : 101.0f",
+    "BeardX = bUsingProductionCharacter ? 14.0f : 10.0f",
+    "FaceX = bUsingProductionCharacter ? 17.0f : 10.5f",
+    "bSprintRequested",
+    "bIsCrouched",
+    "Movement->IsFalling()",
+]:
+    if symbol not in player_cpp and symbol not in player_h:
+        fail(f"PG-031 production character motion invariant missing: {symbol}")
+
+if "/Game/Production/Characters/Frodo/" not in player_cpp:
+    fail("PG-031 player character lost Frodo production asset path")
+if "/Game/Production/Characters/Gandalf/" not in player_cpp:
+    fail("PG-031 player character lost Gandalf production asset path")
+
 enemy_cpp = read(SOURCE / "FellowshipEnemyPrototype.cpp")
 save_h = read(SOURCE / "ShireSaveGame.h")
 for symbol in ["PrimaryAttack", "TakeDamage", "GetCurrentHealth", "IsCombatAvailable"]:

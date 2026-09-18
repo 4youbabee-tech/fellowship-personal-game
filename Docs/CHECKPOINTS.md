@@ -329,6 +329,15 @@
 - Updated `REQ-QUALITY-002` to PARTIAL: pacing criteria are structured, but human play review/tuning is still pending.
 - CI validates coverage of the pacing-review contract but does not claim that any chapter is fun or accepted.
 
+## CP31 — Playable Character Production Motion Pass
+- Began visible gameplay production work with the existing imported Frodo/Gandalf modular character meshes rather than another planning-only checkpoint.
+- Added explicit production-character runtime state so per-frame animation no longer assumes fallback BasicShape face/accessory coordinates.
+- Added distinct movement presentation for idle, walk, sprint, crouch and airborne states.
+- Added torso/head lean, foot lift/rotation, cloak sway, Frodo satchel motion, Gandalf hat/beard follow-through and character-specific attack/weapon motion.
+- Added a runtime `CharacterVisual` log showing whether Frodo/Gandalf resolved production meshes or fell back to prototype shapes.
+- Recorded `REQ-CHAR-001` and `DEC-004` in the single Project Governor. This is a bounded user-directed exception to the normal hard-gate order: no story/save/route architecture is changed.
+- This pass is **not yet accepted** until Pre-Unreal is green, UE4.27.2 compile/import is green, and Frodo/Gandalf receive PIE visual review.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
