@@ -687,6 +687,14 @@ unreal_ci = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 editor_probe_marker = "echo Unreal Editor is closed.\n          exit /b 0"
 if editor_probe_marker not in unreal_ci:
     fail("PG-015: Unreal self-hosted editor-closed probe must explicitly exit /b 0")
+if "uses: actions/checkout@v4" in unreal_ci:
+    fail("PG-026: Unreal self-hosted build must not depend on actions/checkout for exact-commit acquisition")
+if "zipball/$env:GITHUB_SHA" not in unreal_ci:
+    fail("PG-026: Unreal self-hosted build must download the exact GITHUB_SHA archive")
+if "--retry 6" not in unreal_ci or "--retry-all-errors" not in unreal_ci:
+    fail("PG-026: exact-commit archive download must use resilient retries")
+if "uses: actions/upload-artifact@v4" in unreal_ci:
+    fail("PG-026: failure logging must not depend on artifact upload while storage quota can mask the primary error")
 
 quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
 definitions = set(re.findall(r'AddQuestDefinition\s*\(\s*TEXT\("([^"]+)"\)', quest_cpp))

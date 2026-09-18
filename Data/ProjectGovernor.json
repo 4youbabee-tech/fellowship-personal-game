@@ -652,7 +652,7 @@
       "title": "Protected integration path with required validation checks",
       "category": "ProjectGovernance",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "PARTIAL",
       "origin": "Large-team engineering discipline adopted for this project",
       "intent": "Prevent unvalidated changes from becoming the shared development baseline by requiring the project validation gates on integration branches.",
       "evidence": [
@@ -660,9 +660,13 @@
         ".github/workflows/unreal-build-validation.yml"
       ],
       "implementation_refs": [
-        "Pre-Unreal and self-hosted UE4.27.2 build/import workflows exist"
+        "Pre-Unreal validation exists",
+        "self-hosted UE4.27.2 build/import workflow exists",
+        "exact-commit acquisition is being hardened to use retrying GitHub API archive download instead of actions/checkout",
+        "failure logs are printed directly so artifact quota cannot mask the primary error"
       ],
       "missing_work": [
+        "Validate the hardened self-hosted workflow on develop",
         "GitHub develop/main branch protection or ruleset is not currently enabled",
         "Require relevant status checks before protected integration",
         "Keep emergency override exceptional and explicitly recorded"
@@ -1200,11 +1204,12 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Remote-safe LW1 data foundation started while gameplay/device gate remains open",
+    "reason": "Unreal Build #14 infrastructure failure",
     "summary": [
-      "Added Part I NPC identity/schedule/relationship data contract.",
-      "No gameplay behavior changed.",
-      "Runtime NPC scheduler/social-context consumption remains blocked behind the active functional gate."
+      "Classified Build #14 as network/checkout failure before Unreal compilation.",
+      "Hardened exact-commit acquisition with retrying archive download.",
+      "Removed artifact-upload dependency from the failure path.",
+      "No gameplay/C++ regression was inferred from Build #14."
     ]
   }
 }
