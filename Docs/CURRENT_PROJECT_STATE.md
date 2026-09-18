@@ -2,7 +2,8 @@
 
 > **START HERE after a lost chat, a new developer handoff, or a long break.**
 >
-> This file is the operational source of truth for where the project is now.
+> This file is the operational snapshot of where the project is now.
+> **Project-management authority lives only in `Data/ProjectGovernor.json`.**
 > Story canon lives in `Docs/STORY_CANON_BIBLE.md`.
 > Development rules live in `Docs/DEVELOPMENT_GATES.md`.
 > Automated regression rules live in `Data/ProjectGuardRules.json`.
