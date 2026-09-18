@@ -283,6 +283,16 @@
 - Recorded large-team integration discipline as `REQ-CI-001`: required checks/branch protection should guard shared integration; repository administration enforcement is still pending because the current connection does not expose admin-write access.
 - This checkpoint is governance-only; current gameplay hard gate remains F9/F8/chapter/device validation.
 
+## CP30F — LW1 NPC Social Data Foundation
+- Added `Data/NPCSocialModel.json` as the Part I data-first identity/schedule/relationship contract.
+- Added stable named NPC identities plus Shire/Bree ambient archetypes, including alias handling so one character cannot accidentally split into duplicate persistent identities.
+- Added roles, communities, temperament tags, bounded knowledge tags, persistence tiers and location/anchor intent.
+- Added low-cost Shire/Bree/story-driven schedule templates with STORY_OVERRIDE/DANGER_OVERRIDE precedence.
+- Added an initial authored relationship graph and external player-actor reference support.
+- Added PG-024 static validation for required named profiles, identity uniqueness, aliases, relationship endpoints/types, schedule assignment and normalized schedule weights.
+- Updated LW1 planning and the single Project Governor to record the data layer as PARTIAL while runtime scheduler/social-context consumption remains pending.
+- No runtime gameplay behavior changed; this was deliberately selected as remote-safe work while the F9/F8/chapter/device gate remains open.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
