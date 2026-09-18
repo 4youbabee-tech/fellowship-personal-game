@@ -110,6 +110,7 @@ private:
     float SocialRemaining = 0.0f;
     float SocialCaptionDelay = 0.0f;
     float SocialCaptionRemaining = 0.0f;
+    float LastPartnerCooldownRemaining = 0.0f;
     bool bSocializing = false;
     FText PendingSocialCaption;
     float VisualTorsoBaseZ = 58.0f;
@@ -118,6 +119,7 @@ private:
     FName AppliedVisualRole = NAME_None;
     TWeakObjectPtr<APawn> ObservedPlayer;
     TWeakObjectPtr<AShireAmbientNPC> SocialPartner;
+    TWeakObjectPtr<AShireAmbientNPC> LastSocialPartner;
     FRandomStream Random;
 
     void ApplyVisualStyle();
