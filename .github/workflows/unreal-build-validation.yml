@@ -1,0 +1,123 @@
+name: Unreal Build Validation
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: unreal-build-develop
+  cancel-in-progress: false
+
+jobs:
+  unreal-build:
+    name: UE4.27.2 C++ Build
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout exact commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+          lfs: true
+          clean: true
+
+      - name: Verify Unreal and project
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $Project = Join-Path $env:GITHUB_WORKSPACE "ShireJourney.uproject"
+          $UERoot = "C:\Program Files\Epic Games\UE_4.27"
+          $BuildBat = Join-Path $UERoot "Engine\Build\BatchFiles\Build.bat"
+          $BuildVersion = Join-Path $UERoot "Engine\Build\Build.version"
+
+          if (-not (Test-Path $Project)) {
+              throw "ShireJourney.uproject was not found at $Project"
+          }
+          if (-not (Test-Path $BuildBat)) {
+              throw "UE4 Build.bat was not found at $BuildBat"
+          }
+          if (-not (Test-Path $BuildVersion)) {
+              throw "UE4 Build.version was not found at $BuildVersion"
+          }
+
+          $Version = Get-Content $BuildVersion -Raw | ConvertFrom-Json
+          Write-Host "Detected Unreal Engine $($Version.MajorVersion).$($Version.MinorVersion).$($Version.PatchVersion)"
+
+          if ($Version.MajorVersion -ne 4 -or $Version.MinorVersion -ne 27 -or $Version.PatchVersion -ne 2) {
+              throw "Expected Unreal Engine 4.27.2 but found $($Version.MajorVersion).$($Version.MinorVersion).$($Version.PatchVersion)"
+          }
+
+      - name: Refuse build while Unreal Editor is open
+        shell: powershell
+        run: |
+          $Editor = Get-Process UE4Editor -ErrorAction SilentlyContinue
+          if ($Editor) {
+              throw "UE4Editor.exe is currently running. Close the editor before automated validation so the game DLL is not locked."
+          }
+
+      - name: Build ShireJourneyEditor
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Continue"
+
+          $Project = Join-Path $env:GITHUB_WORKSPACE "ShireJourney.uproject"
+          $BuildBat = "C:\Program Files\Epic Games\UE_4.27\Engine\Build\BatchFiles\Build.bat"
+          $LogDir = Join-Path $env:GITHUB_WORKSPACE "Saved\Logs"
+          $BuildLog = Join-Path $LogDir "CI-UnrealBuild.log"
+
+          New-Item -ItemType Directory -Path $LogDir -Force | Out-Null
+
+          Write-Host "Building exact commit: $env:GITHUB_SHA"
+          Write-Host "Project: $Project"
+          Write-Host "Log: $BuildLog"
+
+          & $BuildBat ShireJourneyEditor Win64 Development $Project -WaitMutex -NoHotReloadFromIDE 2>&1 |
+              Tee-Object -FilePath $BuildLog
+
+          $ExitCode = $LASTEXITCODE
+          if ($ExitCode -ne 0) {
+              Write-Error "UE4.27.2 build failed with exit code $ExitCode"
+              exit $ExitCode
+          }
+
+          Write-Host "UE4.27.2 build succeeded."
+
+      - name: Collect Unreal build logs
+        if: always()
+        shell: powershell
+        run: |
+          $LogDir = Join-Path $env:GITHUB_WORKSPACE "Saved\Logs"
+          New-Item -ItemType Directory -Path $LogDir -Force | Out-Null
+
+          $UBTLog = Join-Path $env:LOCALAPPDATA "UnrealBuildTool\Log.txt"
+          if (Test-Path $UBTLog) {
+              Copy-Item $UBTLog (Join-Path $LogDir "CI-UnrealBuildTool.log") -Force
+          }
+
+          "UE4.27.2 build job status: ${{ job.status }}" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+          "Commit: $env:GITHUB_SHA" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+
+      - name: Upload build logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ue4-build-logs-${{ github.run_number }}
+          path: |
+            Saved/Logs/CI-UnrealBuild.log
+            Saved/Logs/CI-UnrealBuildTool.log
+            Saved/Logs/*.log
+            Saved/Logs/*.txt
+          if-no-files-found: warn
+          retention-days: 14
