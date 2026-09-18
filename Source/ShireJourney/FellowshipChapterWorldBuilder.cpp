@@ -288,6 +288,34 @@ void AFellowshipChapterWorldBuilder::BuildWeathertop()
         SpawnTree(FVector(-1850.0f + I * 330.0f, (I % 2 == 0 ? 560.0f : -520.0f), 0.0f), 0.75f);
     }
 
+    // Reeds, low rocks and abandoned camp remains keep the marsh approach from feeling empty.
+    for (int32 I = 0; I < 16; ++I)
+    {
+        const float X = -2050.0f + I * 210.0f;
+        const float Y = (I % 3 - 1) * 420.0f;
+        SpawnShape(CylinderMesh, FVector(X, Y, 24.0f), FVector(0.025f, 0.025f, 0.24f + 0.03f * (I % 4)),
+            FLinearColor(0.28f, 0.31f, 0.12f), FRotator(0.0f, I * 19.0f, 0.0f), false);
+    }
+    for (int32 I = 0; I < 9; ++I)
+    {
+        SpawnShape(SphereMesh, FVector(-1450.0f + I * 320.0f, (I % 2 == 0 ? 680.0f : -650.0f), 24.0f),
+            FVector(0.38f + 0.06f * (I % 3), 0.30f, 0.22f),
+            FLinearColor(0.22f, 0.22f, 0.18f), FRotator(0.0f, I * 27.0f, 0.0f), true);
+    }
+    // Small fire ring / bedroll proxies near the summit camp.
+    for (int32 I = 0; I < 7; ++I)
+    {
+        const float Angle = I * (360.0f / 7.0f);
+        const FVector Offset(
+            FMath::Cos(FMath::DegreesToRadians(Angle)) * 82.0f,
+            FMath::Sin(FMath::DegreesToRadians(Angle)) * 82.0f,
+            0.0f);
+        SpawnShape(SphereMesh, FVector(1250, -260, 425) + Offset,
+            FVector(0.15f, 0.12f, 0.10f), FLinearColor(0.25f, 0.22f, 0.18f), FRotator::ZeroRotator, false);
+    }
+    SpawnShape(CylinderMesh, FVector(1250, -260, 438), FVector(0.18f, 0.18f, 0.035f),
+        FLinearColor(0.56f, 0.20f, 0.05f), FRotator::ZeroRotator, false);
+
     // Weathertop hill and broken crown.
     SpawnShape(CylinderMesh, FVector(1350, 0, 130), FVector(5.2f, 5.2f, 1.3f),
         FLinearColor(0.19f, 0.18f, 0.14f), FRotator::ZeroRotator, true);
@@ -390,6 +418,29 @@ void AFellowshipChapterWorldBuilder::BuildRivendell()
     for (int32 I = 0; I < 14; ++I)
     {
         SpawnTree(FVector(-2200.0f + (I % 7) * 700.0f, (I < 7 ? -760.0f : 760.0f), 0.0f), 0.88f + 0.06f * (I % 3));
+    }
+
+    // Garden paths, arcades and resting places make the valley read as an inhabited refuge.
+    for (int32 I = 0; I < 8; ++I)
+    {
+        const float X = -1500.0f + I * 390.0f;
+        SpawnShape(CylinderMesh, FVector(X, -360.0f, 115.0f), FVector(0.16f, 0.16f, 1.15f),
+            FLinearColor(0.58f, 0.54f, 0.44f), FRotator::ZeroRotator, true);
+        SpawnShape(CylinderMesh, FVector(X, 360.0f, 115.0f), FVector(0.16f, 0.16f, 1.15f),
+            FLinearColor(0.58f, 0.54f, 0.44f), FRotator::ZeroRotator, true);
+    }
+    for (int32 I = 0; I < 6; ++I)
+    {
+        SpawnShape(CubeMesh, FVector(-1280.0f + I * 500.0f, (I % 2 == 0 ? -560.0f : 560.0f), 30.0f),
+            FVector(0.70f, 0.20f, 0.12f), FLinearColor(0.32f, 0.24f, 0.14f),
+            FRotator(0.0f, I % 2 == 0 ? 8.0f : -8.0f, 0.0f), true);
+    }
+    for (int32 I = 0; I < 7; ++I)
+    {
+        const float X = -1350.0f + I * 450.0f;
+        SpawnShape(SphereMesh, FVector(X, 520.0f, 34.0f), FVector(0.28f, 0.22f, 0.18f),
+            I % 2 == 0 ? FLinearColor(0.48f, 0.18f, 0.22f) : FLinearColor(0.72f, 0.62f, 0.28f),
+            FRotator::ZeroRotator, false);
     }
 
     // House of Elrond, bridges and council terrace.
@@ -498,9 +549,43 @@ void AFellowshipChapterWorldBuilder::BuildFellowshipRoad()
             I < 7 ? FLinearColor(0.28f, 0.25f, 0.18f) : FLinearColor(0.72f, 0.74f, 0.76f));
     }
 
+    // Loose scree, cairns and route markers increase mountain scale without expensive simulation.
+    for (int32 I = 0; I < 18; ++I)
+    {
+        const float X = -2200.0f + I * 290.0f;
+        const float Y = (I % 2 == 0 ? 720.0f : -760.0f);
+        SpawnShape(SphereMesh, FVector(X, Y, 24.0f + (I % 3) * 7.0f),
+            FVector(0.42f + 0.05f * (I % 4), 0.33f, 0.22f),
+            I < 9 ? FLinearColor(0.31f, 0.30f, 0.27f) : FLinearColor(0.68f, 0.70f, 0.72f),
+            FRotator(0.0f, I * 23.0f, 0.0f), true);
+    }
+    for (int32 I = 0; I < 4; ++I)
+    {
+        const FVector Cairn(-1750.0f + I * 780.0f, I % 2 == 0 ? 520.0f : -520.0f, 0.0f);
+        for (int32 Layer = 0; Layer < 3; ++Layer)
+        {
+            SpawnShape(SphereMesh, Cairn + FVector(0, 0, 18.0f + Layer * 24.0f),
+                FVector(0.28f - Layer * 0.04f), FLinearColor(0.32f, 0.31f, 0.29f),
+                FRotator::ZeroRotator, false);
+        }
+    }
+
     // Fellowship camp / training clearing.
     SpawnShape(CubeMesh, FVector(-1050, 420, 18), FVector(4.0f, 3.0f, 0.08f), FLinearColor(0.24f, 0.25f, 0.18f));
     SpawnShape(CylinderMesh, FVector(-1050, 420, 42), FVector(0.24f, 0.24f, 0.08f), FLinearColor(0.45f, 0.20f, 0.06f), FRotator::ZeroRotator, false);
+    for (int32 I = 0; I < 7; ++I)
+    {
+        const float Angle = I * (360.0f / 7.0f);
+        const FVector Offset(FMath::Cos(FMath::DegreesToRadians(Angle)) * 190.0f,
+            FMath::Sin(FMath::DegreesToRadians(Angle)) * 190.0f, 0.0f);
+        SpawnShape(CubeMesh, FVector(-1050, 420, 28) + Offset, FVector(0.58f, 0.18f, 0.08f),
+            I % 2 == 0 ? FLinearColor(0.28f, 0.20f, 0.10f) : FLinearColor(0.20f, 0.24f, 0.14f),
+            FRotator(0.0f, Angle, 0.0f), false);
+    }
+    SpawnShape(CubeMesh, FVector(-1290, 560, 42), FVector(0.38f, 0.32f, 0.34f),
+        FLinearColor(0.25f, 0.16f, 0.08f), FRotator(0, 18, 0), true);
+    SpawnShape(CubeMesh, FVector(-810, 560, 42), FVector(0.34f, 0.28f, 0.30f),
+        FLinearColor(0.25f, 0.16f, 0.08f), FRotator(0, -16, 0), true);
     SpawnLabel(TEXT("Fellowship Camp"), FVector(-1050, 420, 220), FLinearColor(0.86f, 0.82f, 0.68f));
 
     SpawnShape(CubeMesh, FVector(500, 580, 470), FVector(12, 2.4f, 4.8f), FLinearColor(0.50f, 0.52f, 0.54f));
@@ -564,6 +649,25 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
             FLinearColor(0.12f, 0.12f, 0.13f), FRotator::ZeroRotator, true);
         SpawnShape(CubeMesh, FVector(X, 0.0f, 760.0f), FVector(2.6f, 12.0f, 0.28f),
             FLinearColor(0.10f, 0.10f, 0.11f), FRotator::ZeroRotator, true);
+    }
+
+    // Pillar forest and cold braziers make the halls feel architectural rather than a single tunnel.
+    for (int32 I = 0; I < 16; ++I)
+    {
+        const float X = -2100.0f + (I % 8) * 600.0f;
+        const float Y = I < 8 ? -760.0f : 760.0f;
+        SpawnShape(CylinderMesh, FVector(X, Y, 250.0f), FVector(0.32f, 0.32f, 2.5f),
+            FLinearColor(0.18f, 0.18f, 0.19f), FRotator::ZeroRotator, true);
+        SpawnShape(CubeMesh, FVector(X, Y, 510.0f), FVector(0.52f, 0.52f, 0.16f),
+            FLinearColor(0.20f, 0.20f, 0.21f), FRotator::ZeroRotator, true);
+    }
+    for (int32 I = 0; I < 6; ++I)
+    {
+        const float X = -1450.0f + I * 720.0f;
+        SpawnShape(CylinderMesh, FVector(X, (I % 2 == 0 ? -420.0f : 420.0f), 46.0f),
+            FVector(0.18f, 0.18f, 0.14f), FLinearColor(0.28f, 0.22f, 0.15f), FRotator::ZeroRotator, false);
+        SpawnShape(SphereMesh, FVector(X, (I % 2 == 0 ? -420.0f : 420.0f), 72.0f),
+            FVector(0.16f), FLinearColor(0.42f, 0.17f, 0.045f), FRotator::ZeroRotator, false);
     }
 
     // Rubble and side-door silhouettes make the route feel like one path through a much larger city.
@@ -684,6 +788,26 @@ void AFellowshipChapterWorldBuilder::BuildLothlorien()
         SpawnTree(FVector(X, Y, 0), 1.15f + 0.08f * (I % 3));
     }
 
+    // Talan platforms, rope-bridge proxies and warm lights make the canopy feel inhabited vertically.
+    for (int32 I = 0; I < 5; ++I)
+    {
+        const float X = -1450.0f + I * 700.0f;
+        const float Y = I % 2 == 0 ? -720.0f : 720.0f;
+        const float Z = 280.0f + (I % 3) * 45.0f;
+        SpawnShape(CylinderMesh, FVector(X, Y, Z), FVector(1.05f, 1.05f, 0.10f),
+            FLinearColor(0.36f, 0.27f, 0.12f), FRotator::ZeroRotator, true);
+        SpawnShape(CylinderMesh, FVector(X, Y, Z - 120.0f), FVector(0.18f, 0.18f, 1.20f),
+            FLinearColor(0.24f, 0.14f, 0.06f), FRotator::ZeroRotator, true);
+        SpawnShape(SphereMesh, FVector(X + 85.0f, Y, Z + 45.0f), FVector(0.11f),
+            FLinearColor(0.72f, 0.62f, 0.20f), FRotator::ZeroRotator, false);
+    }
+    for (int32 I = 0; I < 4; ++I)
+    {
+        SpawnShape(CubeMesh, FVector(-1100.0f + I * 720.0f, 0.0f, 190.0f + I * 18.0f),
+            FVector(2.2f, 0.11f, 0.055f), FLinearColor(0.30f, 0.22f, 0.10f),
+            FRotator(0.0f, I % 2 == 0 ? 4.0f : -4.0f, 0.0f), true);
+    }
+
     SpawnShape(CylinderMesh, FVector(250, 0, 260), FVector(4.2f, 4.2f, 0.22f), FLinearColor(0.38f, 0.33f, 0.18f));
     SpawnShape(CylinderMesh, FVector(250, 0, 135), FVector(0.8f, 0.8f, 2.6f), FLinearColor(0.20f, 0.12f, 0.05f));
     SpawnLabel(TEXT("Caras Galadhon"), FVector(250, 0, 520), FLinearColor(0.88f, 0.82f, 0.52f));
@@ -770,9 +894,52 @@ void AFellowshipChapterWorldBuilder::BuildAnduinAmonHen()
             FVector(0.70f, 0.42f, 0.12f), FLinearColor(0.24f, 0.28f, 0.15f), FRotator::ZeroRotator, false);
     }
 
+    // Boat silhouettes, reeds and shoreline camps make the river journey feel travelled rather than empty.
+    const FVector BoatCenters[] = {
+        FVector(-1900, -120, 10), FVector(-1500, 130, 10), FVector(-1080, -80, 10)
+    };
+    for (int32 I = 0; I < UE_ARRAY_COUNT(BoatCenters); ++I)
+    {
+        SpawnShape(CubeMesh, BoatCenters[I], FVector(1.15f, 0.28f, 0.10f),
+            FLinearColor(0.30f, 0.18f, 0.08f), FRotator(0.0f, 3.0f * I, 0.0f), false);
+        SpawnShape(CubeMesh, BoatCenters[I] + FVector(0, 0, 22), FVector(0.82f, 0.05f, 0.035f),
+            FLinearColor(0.42f, 0.29f, 0.14f), FRotator(0.0f, 3.0f * I, 0.0f), false);
+    }
+    for (int32 I = 0; I < 18; ++I)
+    {
+        const float X = -2300.0f + I * 260.0f;
+        const float Y = I % 2 == 0 ? -510.0f : 520.0f;
+        SpawnShape(CylinderMesh, FVector(X, Y, 28.0f), FVector(0.022f, 0.022f, 0.28f),
+            FLinearColor(0.24f, 0.32f, 0.12f), FRotator(0.0f, I * 11.0f, 0.0f), false);
+    }
+    SpawnShape(CylinderMesh, FVector(-520, 720, 42), FVector(0.22f, 0.22f, 0.08f),
+        FLinearColor(0.42f, 0.17f, 0.045f), FRotator::ZeroRotator, false);
+    for (int32 I = 0; I < 4; ++I)
+    {
+        SpawnShape(CubeMesh, FVector(-700.0f + I * 120.0f, 820.0f, 26.0f),
+            FVector(0.42f, 0.14f, 0.08f), FLinearColor(0.26f, 0.17f, 0.08f),
+            FRotator(0.0f, I * 18.0f, 0.0f), false);
+    }
+
     SpawnShape(CylinderMesh, FVector(-250, -520, 470), FVector(1.1f, 1.1f, 4.7f), FLinearColor(0.36f, 0.37f, 0.35f));
     SpawnShape(CylinderMesh, FVector(-250, 520, 470), FVector(1.1f, 1.1f, 4.7f), FLinearColor(0.36f, 0.37f, 0.35f));
     SpawnLabel(TEXT("Argonath Passage"), FVector(-250, 0, 720), FLinearColor(0.82f, 0.82f, 0.76f));
+
+    // Amon Hen stair fragments and broken lookout stones make the final arena readable from the river.
+    for (int32 I = 0; I < 8; ++I)
+    {
+        SpawnShape(CubeMesh, FVector(1120.0f + I * 95.0f, 0.0f, 32.0f + I * 28.0f),
+            FVector(0.62f, 1.05f, 0.11f), FLinearColor(0.33f, 0.34f, 0.31f),
+            FRotator::ZeroRotator, true);
+    }
+    for (int32 I = 0; I < 6; ++I)
+    {
+        const float Angle = I * 60.0f;
+        const FVector Offset(FMath::Cos(FMath::DegreesToRadians(Angle)) * 360.0f,
+            FMath::Sin(FMath::DegreesToRadians(Angle)) * 360.0f, 0.0f);
+        SpawnShape(CubeMesh, FVector(1750, 0, 250) + Offset, FVector(0.28f, 0.42f, 1.15f),
+            FLinearColor(0.31f, 0.32f, 0.30f), FRotator(0.0f, Angle, 7.0f), true);
+    }
 
     SpawnShape(CylinderMesh, FVector(1750, 0, 170), FVector(5.0f, 5.0f, 1.7f), FLinearColor(0.18f, 0.22f, 0.16f));
     for (int32 I = 0; I < 6; ++I)

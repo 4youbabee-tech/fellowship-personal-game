@@ -409,6 +409,22 @@ for symbol in ["VisualTorsoBaseZ", "VisualHeadBaseZ", "VisualHairBaseZ"]:
     if symbol not in ambient_cpp_for_population:
         fail(f"PG-032 ambient role-specific visual base missing: {symbol}")
 
+# PG-034: Part I batch-build world detail must keep chapter-specific visual-density markers.
+bree_world_cpp = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
+fellowship_world_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+for symbol in [
+    "Street-life pass: stalls, rain puddles, lantern posts, crates and hitching details.",
+    "Reeds, low rocks and abandoned camp remains keep the marsh approach from feeling empty.",
+    "Garden paths, arcades and resting places make the valley read as an inhabited refuge.",
+    "Loose scree, cairns and route markers increase mountain scale without expensive simulation.",
+    "Pillar forest and cold braziers make the halls feel architectural rather than a single tunnel.",
+    "Talan platforms, rope-bridge proxies and warm lights make the canopy feel inhabited vertically.",
+    "Boat silhouettes, reeds and shoreline camps make the river journey feel travelled rather than empty.",
+    "Amon Hen stair fragments and broken lookout stones make the final arena readable from the river.",
+]:
+    if symbol not in bree_world_cpp and symbol not in fellowship_world_cpp:
+        fail(f"PG-034 Part I world-detail marker missing: {symbol}")
+
 # PG-033: core-cast visual identity must remain distinct without pretending proxies are final art.
 npc_visual_cpp = read(SOURCE / "ShireNPC.cpp")
 npc_visual_h = read(SOURCE / "ShireNPC.h")

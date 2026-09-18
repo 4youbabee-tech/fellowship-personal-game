@@ -132,14 +132,16 @@
         "story-reactive Shire atmosphere",
         "landmark discovery",
         "instanced foliage and ambient audio foundations",
-        "Data/LivingWorldEventPlan.json defines per-chapter micro-event/fauna/weather/prop-motion categories, density targets and performance caps"
+        "Data/LivingWorldEventPlan.json defines per-chapter micro-event/fauna/weather/prop-motion categories, density targets and performance caps",
+        "CP34 adds runtime environmental detail across Bree, Weathertop, Rivendell, Fellowship road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen using low-cost static primitives"
       ],
       "missing_work": [
+        "production-quality terrain/material/art replacement beyond current procedural detail",
         "runtime micro-event director",
         "runtime fauna presentation",
         "broader worker/market/traveler activity",
-        "environment motion implementation",
-        "chapter-by-chapter exploration-density PIE/device acceptance"
+        "environment motion implementation beyond static/procedural proxies",
+        "batch integration PIE/device/performance/visual review"
       ],
       "acceptance_criteria": [
         "Ordinary traversal repeatedly reveals believable activity or environmental storytelling",
@@ -1296,27 +1298,34 @@
   "work_queue": [
     {
       "order": 1,
+      "id": "WORK-WORLD-002",
+      "title": "Part I world density and landmark detail pass",
+      "status": "ACTIVE",
+      "rationale": "Fill traversal spaces with readable landmarks, props, settlement detail, architectural depth and low-cost environmental storytelling before the later integration/playtest pass."
+    },
+    {
+      "order": 2,
       "id": "WORK-CHAR-003",
       "title": "Distinct visual identity pass for the Part I core cast",
       "status": "ACTIVE",
       "rationale": "Differentiate the visible cast now using low-cost modular silhouettes/accessories while final dedicated rigged characters remain a later production step."
     },
     {
-      "order": 2,
+      "order": 3,
       "id": "WORK-CHAR-002",
       "title": "Populate Part I with the full core cast and region-appropriate inhabitants",
       "status": "ACTIVE",
       "rationale": "User explicitly requested that the Fellowship, friends and NPC populations visibly fill the world. Runtime presence is active now; dedicated visual production follows by tracked visual tier."
     },
     {
-      "order": 3,
+      "order": 4,
       "id": "WORK-CHAR-001",
       "title": "Playable Frodo/Gandalf character production motion pass",
       "status": "ACTIVE",
       "rationale": "User explicitly wants visible playable-game progress now; scope is bounded to character presentation/motion and must preserve story/save architecture."
     },
     {
-      "order": 4,
+      "order": 5,
       "id": "WORK-GATE-001",
       "title": "Finish current functional hard gate",
       "status": "ACTIVE",
@@ -1331,42 +1340,42 @@
       ]
     },
     {
-      "order": 5,
+      "order": 6,
       "id": "WORK-MAINT-001",
       "title": "Perform physical Source/ShireJourney Public/Private domain migration",
       "status": "BLOCKED_BY_WORK-GATE-001",
       "rationale": "Architecture map is ready; do the path/include refactor only after the current gameplay baseline is proven."
     },
     {
-      "order": 6,
+      "order": 7,
       "id": "WORK-SAVE-001",
       "title": "Implement automatic safe checkpoint/respawn runtime",
       "status": "BLOCKED_BY_WORK-GATE-001",
       "rationale": "WorldCheckpointPlan exists; runtime automatic checkpoint behavior is still missing."
     },
     {
-      "order": 7,
+      "order": 8,
       "id": "WORK-LW-001",
       "title": "Build living-world NPC identity/schedule/relationship data model",
       "status": "PARTIAL",
       "rationale": "The Part I data model now exists in Data/NPCSocialModel.json; runtime scheduler/relationship consumption remains pending and should wait behind the active functional gate."
     },
     {
-      "order": 8,
+      "order": 9,
       "id": "WORK-LW-002",
       "title": "Implement NPC-to-NPC contextual conversations",
       "status": "PARTIAL",
       "rationale": "NPC conversation eligibility, intent, knowledge, priority, cooldown and repetition contracts are data-defined; runtime playback remains gated."
     },
     {
-      "order": 9,
+      "order": 10,
       "id": "WORK-LW-003",
       "title": "Implement persistent named-NPC memory and bounded dialogue intelligence",
       "status": "PARTIAL",
       "rationale": "NPC memory and bounded dialogue contracts are data-defined; runtime memory/save/dialogue integration remains gated."
     },
     {
-      "order": 10,
+      "order": 11,
       "id": "WORK-WORLD-001",
       "title": "Expand environmental micro-life and production polish chapter by chapter",
       "status": "PARTIAL",
@@ -1375,12 +1384,12 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "User explicitly requested build-first world/character expansion before returning to the laptop for a broad test-and-fix pass",
+    "reason": "Build-first Part I world detail expansion after full-cast population and visual identity",
     "summary": [
-      "Activated BUILD_FIRST_BATCH_MODE.",
-      "Static + real UE compile/import remain mandatory for merged runtime batches.",
-      "PIE/device/pacing/visual acceptance remain open and are deferred to a dedicated integration pass.",
-      "Started distinct modular visual identity work for the Part I core cast."
+      "Deepened Bree streets/inn surroundings with stalls, puddles, lanterns and crates.",
+      "Deepened Weathertop, Rivendell, Fellowship road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen with chapter-specific low-cost environmental detail.",
+      "No PIE/device/visual acceptance claimed; those remain deferred to the batch integration pass.",
+      "Static and UE4.27.2 compile/import remain mandatory before merge."
     ]
   },
   "development_mode": {
