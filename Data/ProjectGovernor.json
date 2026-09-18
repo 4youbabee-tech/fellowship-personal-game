@@ -662,14 +662,14 @@
       "implementation_refs": [
         "Pre-Unreal validation exists",
         "self-hosted UE4.27.2 build/import workflow exists",
-        "exact-commit acquisition is being hardened to use retrying GitHub API archive download instead of actions/checkout",
-        "failure logs are printed directly so artifact quota cannot mask the primary error"
+        "exact-commit acquisition uses retrying GitHub API archive download",
+        "failure logs are printed directly so artifact quota cannot mask the primary error",
+        "superseded develop Unreal runs are configured to cancel so the latest head can validate"
       ],
       "missing_work": [
-        "Validate the hardened self-hosted workflow on develop",
+        "Validate the hardened self-hosted workflow on the latest develop head",
         "GitHub develop/main branch protection or ruleset is not currently enabled",
-        "Require relevant status checks before protected integration",
-        "Keep emergency override exceptional and explicitly recorded"
+        "Require relevant status checks before protected integration"
       ],
       "acceptance_criteria": [
         "develop/main integration policy prevents normal merge when required checks fail",
