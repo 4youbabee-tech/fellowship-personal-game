@@ -6,6 +6,8 @@
 > Story canon lives in `Docs/STORY_CANON_BIBLE.md`.
 > Development rules live in `Docs/DEVELOPMENT_GATES.md`.
 > Automated regression rules live in `Data/ProjectGuardRules.json`.
+> World/chapter/checkpoint engineering lives in `Docs/WORLD_PRODUCTION_BLUEPRINT.md`.
+> Machine-readable player checkpoint intent lives in `Data/WorldCheckpointPlan.csv`.
 
 ## Repository
 
@@ -16,6 +18,12 @@
 - Target: Windows / DX11 / 720p / 30 FPS / Low-Medium
 - Hardware floor: Intel i7 6th gen, 8 GB RAM, AMD GPU around 2 GB VRAM
 - Local update/build/launch entry point: `SHIRE_UPDATE_BUILD_LAUNCH.bat`
+
+Latest validated production head recorded here:
+- `8b0c13fe4b88b0382bf7e7af4fcc04173dd4eef4` — `visual: densify Shire lanes and preserve production materials`
+- Pre-Unreal Validation #110: **SUCCESS**
+- Unreal Build Validation #8: **SUCCESS**, including UE4.27.2 production asset import
+- New visual content still requires focused PIE/device review before VISUALLY-ACCEPTED.
 
 Runtime-code baseline documented by this handoff:
 `177f6cdbd073eaf0e2fd2c39da4a80fc82acf4ae`
@@ -222,7 +230,8 @@ Runtime voice playback now resolves `/Game/Audio/Voice/<Speaker>/<VO_ID>`, plays
 Use all of these, with this priority for their purpose:
 
 1. `Docs/CURRENT_PROJECT_STATE.md` — implementation/handoff truth.
-2. `Docs/DEVELOPMENT_GATES.md` — process and acceptance rules.
+2. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
+3. `Docs/DEVELOPMENT_GATES.md` — process and acceptance rules.
 3. `Docs/PROJECT_GUARDIAN.md` — regression-memory model.
 4. `Docs/STORY_CANON_BIBLE.md` — film-first canon and route vision.
 5. `Docs/PART1_FELLOWSHIP_MASTERPLAN.md` — Part I production plan.

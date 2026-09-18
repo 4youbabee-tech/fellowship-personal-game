@@ -210,6 +210,29 @@
 - Guardian checks runtime audio categories, dialogue ducking and the proxy acting foundation.
 - Final audio assets and final facial animation remain pending production.
 
+## CP28 — Production Asset Pipeline + Shire Environment Pass
+- Added original project-managed production source assets under `SourceAssets/Production`.
+- Added automatic UE4.27 editor import through `ShireProductionImport`.
+- Shire runtime now prefers imported production meshes and keeps BasicShapes as fallbacks.
+- Added production ground/road, Hobbit facade, fences, vegetation/rocks and lived-in props such as carts, benches, lanterns and mill-wheel geometry.
+- Added original project-generated surface maps/material references for Shire environment assets.
+- Fixed UE4.27 import/build regressions and recorded them in Project Guardian.
+- This checkpoint is compile/import validated but still needs focused PIE/device visual acceptance.
+
+## CP29 — Self-Hosted UE4 Compile + Asset-Import Gate
+- Repository-level Windows self-hosted runner is active on the UE4.27.2 target laptop.
+- `Unreal Build Validation` checks the exact pushed commit.
+- The workflow verifies UE4.27.2, compiles `ShireJourneyEditor`, and runs the production asset import commandlet.
+- Pre-Unreal Validation #110 succeeded for `8b0c13f...`.
+- Unreal Build Validation #8 succeeded for the same head, including production asset import.
+- A green build/import gate still does not replace PIE/device/visual acceptance.
+
+## CP30 — World Engineering / Player Checkpoint Contract
+- Added `Docs/WORLD_PRODUCTION_BLUEPRINT.md` as the project-wide world engineering map.
+- Added `Data/WorldCheckpointPlan.csv` with safe checkpoint intent for every P1C01-P1C08 chapter.
+- Guardian now requires both files and validates unique checkpoint IDs, approved chapters, known story beats and supported save/status values.
+- Dedicated automatic checkpoint/respawn runtime behavior remains pending implementation; this checkpoint establishes the non-ambiguous contract first.
+
 ## Current hard gate
 The earlier CP23 baseline passed real UE4.27 compile and basic Shire PIE boot.
 The current CP24-CP27 head is STATIC-VALIDATED through Pre-Unreal Validation #95 but still requires a fresh real UE4.27 compile before its new audio/combat/biome/acting code can inherit COMPILE-TESTED status.

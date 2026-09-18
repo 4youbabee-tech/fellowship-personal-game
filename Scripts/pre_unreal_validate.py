@@ -143,6 +143,11 @@ biome_rows = read_csv_rows("Data/BiomePlan.csv", {
     "WeatherAtmosphere", "TraversalIdentity", "StoryHazards", "AudioIdentity", "PerformanceRule"
 })
 
+checkpoint_rows = read_csv_rows("Data/WorldCheckpointPlan.csv", {
+    "CheckpointId", "Chapter", "Region", "StoryBeat", "CheckpointType",
+    "WorldAnchorStatus", "RuntimeCheckpointStatus", "SavePolicy", "RespawnPolicy", "Notes"
+})
+
 def validate_route_rows(relative: str, rows: list[dict[str, str]], check_canon: bool = False) -> None:
     for index, row in enumerate(rows, start=2):
         route = (row.get("Route") or "").strip()
@@ -167,6 +172,38 @@ def validate_route_rows(relative: str, rows: list[dict[str, str]], check_canon: 
 validate_route_rows("Data/DialogueIntent.csv", dialogue_rows, check_canon=True)
 validate_route_rows("Data/StoryBeatPlan.csv", story_rows, check_canon=True)
 validate_route_rows("Data/MusicCuePlan.csv", music_rows, check_canon=False)
+
+checkpoint_ids: set[str] = set()
+checkpoint_chapters: set[str] = set()
+story_plan_id_set = {value for value in story_plan_ids if value}
+for index, row in enumerate(checkpoint_rows, start=2):
+    checkpoint_id = (row.get("CheckpointId") or "").strip()
+    chapter = (row.get("Chapter") or "").strip()
+    story_beat = (row.get("StoryBeat") or "").strip()
+    runtime_status = (row.get("RuntimeCheckpointStatus") or "").strip()
+    save_policy = (row.get("SavePolicy") or "").strip()
+
+    if not checkpoint_id:
+        fail(f"Data/WorldCheckpointPlan.csv:{index} has empty CheckpointId")
+    elif checkpoint_id in checkpoint_ids:
+        fail(f"Data/WorldCheckpointPlan.csv:{index} duplicates CheckpointId '{checkpoint_id}'")
+    checkpoint_ids.add(checkpoint_id)
+
+    if approved_chapters and chapter not in approved_chapters:
+        fail(f"Data/WorldCheckpointPlan.csv:{index} uses non-runtime Chapter '{chapter}'")
+    checkpoint_chapters.add(chapter)
+
+    if story_beat and story_beat not in story_plan_id_set:
+        fail(f"Data/WorldCheckpointPlan.csv:{index} references unknown StoryBeat '{story_beat}'")
+
+    if runtime_status not in {"PLANNED", "FOUNDATION", "FUNCTIONAL", "VERIFIED"}:
+        fail(f"Data/WorldCheckpointPlan.csv:{index} has unsupported RuntimeCheckpointStatus '{runtime_status}'")
+    if save_policy not in {"AUTO_SAFE", "MANUAL_ONLY", "TRANSITION"}:
+        fail(f"Data/WorldCheckpointPlan.csv:{index} has unsupported SavePolicy '{save_policy}'")
+
+missing_checkpoint_chapters = sorted(approved_chapters - checkpoint_chapters)
+if missing_checkpoint_chapters:
+    fail("WorldCheckpointPlan missing runtime chapters: " + ", ".join(missing_checkpoint_chapters))
 
 biome_chapters = {(row.get("Chapter") or "").strip() for row in biome_rows}
 missing_biome_chapters = sorted(approved_chapters - biome_chapters)

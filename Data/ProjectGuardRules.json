@@ -32,14 +32,16 @@
     "Docs/STORY_CANON_BIBLE.md",
     "Docs/PART1_FELLOWSHIP_MASTERPLAN.md",
     "Docs/CHARACTER_PERFORMANCE_STANDARD.md",
-    "Docs/PRODUCTION_COMPLETENESS_MATRIX.md"
+    "Docs/PRODUCTION_COMPLETENESS_MATRIX.md",
+    "Docs/WORLD_PRODUCTION_BLUEPRINT.md"
   ],
   "required_story_data": [
     "Data/StoryBeatPlan.csv",
     "Data/DialogueIntent.csv",
     "Data/MusicCuePlan.csv",
     "Data/VoiceCuePlan.csv",
-    "Data/BiomePlan.csv"
+    "Data/BiomePlan.csv",
+    "Data/WorldCheckpointPlan.csv"
   ],
   "required_debug_actions": [
     "QuickSave",
