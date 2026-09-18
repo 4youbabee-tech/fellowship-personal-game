@@ -3,6 +3,7 @@
 #include "BlackRiderPrototype.h"
 #include "FellowshipEnemyPrototype.h"
 #include "ShireNPC.h"
+#include "ShireAmbientNPC.h"
 #include "ShireQuestTrigger.h"
 
 #include "Components/StaticMeshComponent.h"
@@ -402,6 +403,26 @@ void AFellowshipChapterWorldBuilder::BuildRivendell()
     SpawnLabel(TEXT("Council Terrace"), FVector(1250, 0, 220), FLinearColor::White);
     SpawnLabel(TEXT("Bilbo's Garden"), FVector(-1450, 380, 240), FLinearColor(0.86f, 0.83f, 0.68f));
 
+    const FVector RivendellResidents[] = {
+        FVector(-1180, -520, 70), FVector(-980, 520, 70), FVector(-320, 620, 70),
+        FVector(280, -620, 70), FVector(760, 520, 70), FVector(1520, -430, 70)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(RivendellResidents); ++Index)
+    {
+        AShireAmbientNPC* Resident = GetWorld()->SpawnActor<AShireAmbientNPC>(
+            RivendellResidents[Index], FRotator::ZeroRotator);
+        if (Resident)
+        {
+            Resident->RoutineRole = TEXT("Elf");
+            Resident->RoutinePointA = RivendellResidents[Index];
+            Resident->RoutinePointB = RivendellResidents[Index] +
+                FVector(180.0f + 20.0f * (Index % 3), (Index % 2 == 0 ? 120.0f : -120.0f), 0.0f);
+            Resident->WalkSpeed = 48.0f + 3.0f * (Index % 3);
+            Resident->MinWait = 2.5f;
+            Resident->MaxWait = 7.0f;
+        }
+    }
+
     SpawnQuestTrigger(FVector(-1850, 0, 90), TEXT("RivendellRecovery"), 0, 1,
         TEXT("Frodo wakes in safety. Explore the valley and find Gandalf."), TEXT("RivendellAwakening"));
     SpawnNPC(TEXT("Gandalf"), FVector(-820, -180, 70), FRotator(0, 120, 0), TEXT("RivendellRecovery"), 1, 2,
@@ -671,6 +692,26 @@ void AFellowshipChapterWorldBuilder::BuildLothlorien()
     SpawnShape(CylinderMesh, FVector(1000, 420, 55), FVector(0.70f, 0.70f, 0.14f), FLinearColor(0.36f, 0.38f, 0.31f));
     SpawnShape(CylinderMesh, FVector(1000, 420, 95), FVector(0.52f, 0.52f, 0.05f), FLinearColor(0.08f, 0.24f, 0.32f), FRotator::ZeroRotator, false);
     SpawnLabel(TEXT("Mirror Glade"), FVector(1000, 420, 260), FLinearColor(0.84f, 0.86f, 0.68f));
+
+    const FVector LorienResidents[] = {
+        FVector(-1500, -420, 70), FVector(-1180, 500, 70), FVector(-520, -560, 70),
+        FVector(120, 520, 70), FVector(720, -480, 70), FVector(1320, 220, 70)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(LorienResidents); ++Index)
+    {
+        AShireAmbientNPC* Resident = GetWorld()->SpawnActor<AShireAmbientNPC>(
+            LorienResidents[Index], FRotator::ZeroRotator);
+        if (Resident)
+        {
+            Resident->RoutineRole = TEXT("Elf");
+            Resident->RoutinePointA = LorienResidents[Index];
+            Resident->RoutinePointB = LorienResidents[Index] +
+                FVector(150.0f + 20.0f * (Index % 2), (Index % 2 == 0 ? 100.0f : -100.0f), 0.0f);
+            Resident->WalkSpeed = 44.0f + 2.0f * (Index % 3);
+            Resident->MinWait = 3.0f;
+            Resident->MaxWait = 8.0f;
+        }
+    }
 
     SpawnShape(CubeMesh, FVector(2400, 0, -10), FVector(7.0f, 18.0f, 0.2f), FLinearColor(0.05f, 0.24f, 0.34f), FRotator::ZeroRotator, false);
 
