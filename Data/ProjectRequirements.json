@@ -1,0 +1,377 @@
+{
+  "schema_version": 1,
+  "ledger_id": "FELLOWSHIP_PROJECT_REQUIREMENTS_V1",
+  "status_values": [
+    "REQUESTED",
+    "PLANNED",
+    "PARTIAL",
+    "IMPLEMENTED",
+    "VALIDATED",
+    "DEFERRED",
+    "REJECTED",
+    "SUPERSEDED"
+  ],
+  "priority_values": [
+    "CRITICAL",
+    "HIGH",
+    "MEDIUM",
+    "LOW"
+  ],
+  "rules": [
+    "Every meaningful user request must have a stable requirement ID.",
+    "Original user intent must not be silently deleted when implementation details change.",
+    "IMPLEMENTED requires repository evidence; VALIDATED requires explicit test evidence.",
+    "A green compile does not imply PIE, device, performance or visual acceptance.",
+    "Open requirements remain in the ledger across developer/chat handoffs."
+  ],
+  "requirements": [
+    {
+      "id": "REQ-MEM-001",
+      "title": "Permanent repository-based project memory",
+      "category": "ProjectGovernance",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User requirement recovered and reaffirmed after lost/deleted chat",
+      "intent": "Record requests, decisions, completed work, incomplete work, validation state and next actions so the project survives forgotten details, deleted chats and programmer changes.",
+      "evidence": [
+        "Docs/CURRENT_PROJECT_STATE.md",
+        "Docs/CHECKPOINTS.md",
+        "Docs/PROJECT_GUARDIAN.md",
+        "Source/ShireJourney/README.md",
+        "Data/SourceArchitecturePlan.json"
+      ],
+      "implementation_refs": [
+        "Project Guardian regression memory",
+        "source architecture handoff",
+        "development checkpoint history"
+      ],
+      "missing_work": [
+        "Requirement ledger itself must become mandatory CI input",
+        "Every future meaningful user request must be added/updated",
+        "Need periodic reconciliation between ledger, checkpoints and current state"
+      ],
+      "acceptance_criteria": [
+        "New programmer can identify all open high-priority requirements without reading chat",
+        "Each implemented requirement links to code/data/checkpoint evidence",
+        "Unfinished user requests remain visible",
+        "CI rejects missing core memory artifacts"
+      ],
+      "dependencies": [],
+      "checkpoint": "CP30B",
+      "notes": "This entry intentionally distinguishes existing recovery docs from the stronger all-user-requests ledger."
+    },
+    {
+      "id": "REQ-ORG-001",
+      "title": "Large-project source organization and handoff map",
+      "category": "Architecture",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User requirement for long-term organization",
+      "intent": "Keep source ownership and target structure explicit so the runtime module can scale and another developer can continue safely.",
+      "evidence": [
+        "Source/ShireJourney/README.md",
+        "Data/SourceArchitecturePlan.json",
+        "Docs/PROJECT_GUARDIAN.md PG-019"
+      ],
+      "implementation_refs": [
+        "43 runtime module source/build files are mapped to domains and target Public/Private paths"
+      ],
+      "missing_work": [
+        "Physical Public/Private domain migration is not yet performed"
+      ],
+      "acceptance_criteria": [
+        "All runtime source files represented exactly once in architecture manifest",
+        "Physical migration passes static validation and real UE4.27.2 build",
+        "No gameplay redesign mixed into migration"
+      ],
+      "dependencies": [
+        "REQ-MEM-001"
+      ],
+      "checkpoint": "CP30A",
+      "notes": "Current layout remains flat but guarded."
+    },
+    {
+      "id": "REQ-WORLD-001",
+      "title": "World must feel continuously alive during traversal",
+      "category": "LivingWorld",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User requirement reaffirmed after lost chat",
+      "intent": "Wherever the player moves, encounter believable life, activity, ambience, discoveries and environmental motion instead of empty travel space.",
+      "evidence": [
+        "Source/ShireJourney/ShireAmbientNPC.cpp",
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+        "Data/BiomePlan.csv",
+        "Docs/WORLD_PRODUCTION_BLUEPRINT.md"
+      ],
+      "implementation_refs": [
+        "ambient NPC routines and player awareness",
+        "NPC social pauses",
+        "story-reactive Shire atmosphere",
+        "landmark discovery",
+        "instanced foliage and ambient audio foundations"
+      ],
+      "missing_work": [
+        "micro-event system",
+        "fauna/animal life where appropriate",
+        "broader work/market/traveler activity",
+        "environment motion pass",
+        "chapter-by-chapter exploration-density acceptance"
+      ],
+      "acceptance_criteria": [
+        "Ordinary traversal repeatedly reveals believable activity or environmental storytelling",
+        "Activity responds to region/story state",
+        "Target laptop performance remains acceptable",
+        "Each chapter records living-world acceptance separately"
+      ],
+      "dependencies": [
+        "REQ-WORLD-002",
+        "REQ-NPC-001"
+      ],
+      "checkpoint": "LIVING_WORLD_ROADMAP",
+      "notes": "Full requirement is not satisfied by current social pauses alone."
+    },
+    {
+      "id": "REQ-WORLD-002",
+      "title": "Rich cinematic geography and biome identity",
+      "category": "WorldDesign",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User requirement for mountains valleys water beauty and film-like travel",
+      "intent": "Worlds need strong geography: hills, valleys, rivers, forests, mountains, landmarks, occlusion, vistas and chapter-specific atmosphere.",
+      "evidence": [
+        "Data/BiomePlan.csv",
+        "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp"
+      ],
+      "implementation_refs": [
+        "Shire rolling hills/fields/stream/ferry scale pass",
+        "prototype ridges/marsh/Ford",
+        "Rivendell valley/waterfalls",
+        "Caradhras snow pass",
+        "Moria large-scale halls/abyss",
+        "Lothlorien golden canopy",
+        "Anduin river canyon"
+      ],
+      "missing_work": [
+        "Most non-Shire regions remain prototype geometry",
+        "Final terrain/material/vegetation production assets",
+        "focused PIE/device/visual acceptance",
+        "environment motion/weather depth"
+      ],
+      "acceptance_criteria": [
+        "Each chapter has recognizable physical identity",
+        "Traversal uses elevation, occlusion and reveal rather than flat arenas",
+        "Production visuals pass device/performance and visual acceptance"
+      ],
+      "dependencies": [],
+      "checkpoint": "CP26_PLUS_PRODUCTION",
+      "notes": "Biome plan exists but final production quality is incomplete."
+    },
+    {
+      "id": "REQ-NPC-001",
+      "title": "NPCs need believable routines awareness and social life",
+      "category": "NPC",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Recovered/reaffirmed user requirement",
+      "intent": "NPCs should feel like inhabitants with purpose rather than static quest markers.",
+      "evidence": [
+        "Source/ShireJourney/ShireAmbientNPC.cpp",
+        "Source/ShireJourney/ShireNPC.cpp"
+      ],
+      "implementation_refs": [
+        "walking/waiting routines",
+        "player awareness/look-at",
+        "running-sensitive notice behavior",
+        "near-player NPC social pauses",
+        "proxy gaze/blink/mouth acting"
+      ],
+      "missing_work": [
+        "data-driven jobs/schedules",
+        "home/work/social anchors",
+        "relationship graph",
+        "danger/weather reactions",
+        "persistent named-NPC continuity beyond current story state"
+      ],
+      "acceptance_criteria": [
+        "NPC behavior varies by role/location/story state",
+        "Named NPC continuity survives save/load where required",
+        "Distant simulation remains cheap",
+        "Behavior passes target-device performance"
+      ],
+      "dependencies": [],
+      "checkpoint": "LIVING_WORLD_LW1",
+      "notes": "Existing ambient behavior is a foundation, not the final intelligence system."
+    },
+    {
+      "id": "REQ-NPC-002",
+      "title": "NPC-to-NPC contextual conversations",
+      "category": "NPCDialogue",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "origin": "User explicitly requested NPCs converse with each other",
+      "intent": "NPCs should greet, gossip, work-talk and react to local/story events with short context-aware conversations.",
+      "evidence": [
+        "Current source only proves social pauses; no complete NPC-to-NPC dialogue exchange is claimed"
+      ],
+      "implementation_refs": [],
+      "missing_work": [
+        "conversation participant selection",
+        "dialogue intent catalog",
+        "turn-taking/runtime playback",
+        "cooldown/repetition suppression",
+        "story-critical dialogue priority",
+        "audio/subtitle integration"
+      ],
+      "acceptance_criteria": [
+        "Two eligible NPCs can exchange context-appropriate lines",
+        "Conversation does not repeat excessively",
+        "Story knowledge boundaries are respected",
+        "Main quest dialogue always has priority",
+        "Performance is bounded"
+      ],
+      "dependencies": [
+        "REQ-NPC-001",
+        "REQ-NPC-003"
+      ],
+      "checkpoint": "LIVING_WORLD_LW2",
+      "notes": "Do not confuse existing face-to-face social pause with implemented conversation."
+    },
+    {
+      "id": "REQ-NPC-003",
+      "title": "Bounded NPC dialogue creativity and knowledge limits",
+      "category": "NPCDialogue",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "origin": "User requested a limited degree of NPC creativity and dialogue intelligence",
+      "intent": "NPC dialogue may vary and react intelligently, but only inside authored identity, knowledge, canon and story boundaries.",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Data/DialogueIntent.csv",
+        "Source/ShireJourney/ShireDialogueSubsystem.cpp"
+      ],
+      "implementation_refs": [
+        "authored dialogue intents and story-aware dialogue foundations"
+      ],
+      "missing_work": [
+        "NPC knowledge profiles",
+        "allowed intent/variation policy",
+        "bounded generation/selection layer",
+        "deterministic fallback",
+        "cache/repetition controls",
+        "performance strategy"
+      ],
+      "acceptance_criteria": [
+        "NPC never reveals knowledge it should not know",
+        "No canon-changing invention",
+        "No verbatim screenplay reproduction",
+        "Variation remains coherent with speaker/location/story state",
+        "System works without requiring an always-on expensive model on target laptop"
+      ],
+      "dependencies": [
+        "REQ-NPC-001"
+      ],
+      "checkpoint": "LIVING_WORLD_LW5",
+      "notes": "Preferred design is bounded intelligence with deterministic fallback, not unrestricted free generation."
+    },
+    {
+      "id": "REQ-NPC-004",
+      "title": "Persistent named-NPC memory and relationships",
+      "category": "NPCMemory",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "origin": "Recovered from user's desire for persistent intelligent inhabitants",
+      "intent": "Important NPCs should remember selected interactions/events and maintain bounded relationship context when it improves continuity.",
+      "evidence": [
+        "Current route/story persistence exists, but no general named-NPC memory/relationship system is claimed"
+      ],
+      "implementation_refs": [
+        "existing save architecture can provide integration foundation"
+      ],
+      "missing_work": [
+        "memory schema",
+        "relationship schema",
+        "save/load integration",
+        "forget/expiry policy",
+        "ambient-vs-named NPC cost tiers"
+      ],
+      "acceptance_criteria": [
+        "Important memories persist through save/load",
+        "Memory cannot alter mandatory story outcomes",
+        "Save footprint remains controlled",
+        "Ambient crowds use cheaper aggregate state"
+      ],
+      "dependencies": [
+        "REQ-NPC-001"
+      ],
+      "checkpoint": "LIVING_WORLD_LW3",
+      "notes": "Not implemented yet."
+    },
+    {
+      "id": "REQ-SAVE-001",
+      "title": "Reliable save load and route continuity",
+      "category": "Persistence",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Existing project requirement",
+      "intent": "Player progress, location, story and parallel-route state must survive save/load and Frodo/Gandalf switching.",
+      "evidence": [
+        "Source/ShireJourney/ShireSaveGame.h",
+        "Source/ShireJourney/ShireQuestSubsystem.cpp",
+        "Source/ShireJourney/ShirePlayerCharacter.cpp",
+        "Docs/CURRENT_PROJECT_STATE.md"
+      ],
+      "implementation_refs": [
+        "F5 save verified historically; route snapshots implemented"
+      ],
+      "missing_work": [
+        "F9 round-trip verification on current build",
+        "F8 Gandalf-Isengard-Frodo round-trip verification",
+        "automatic checkpoint/respawn runtime implementation"
+      ],
+      "acceptance_criteria": [
+        "F9 restores expected transform/story state",
+        "F8 preserves Frodo state through Gandalf route",
+        "automatic checkpoints cannot skip required story results"
+      ],
+      "dependencies": [],
+      "checkpoint": "CURRENT_HARD_GATE",
+      "notes": "This remains a blocker before major new gameplay features."
+    },
+    {
+      "id": "REQ-PERF-001",
+      "title": "Large living world must remain playable on target laptop",
+      "category": "Performance",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Long-standing project hardware requirement",
+      "intent": "All world/NPC intelligence and visual ambition must respect the low-spec target rather than becoming an unbounded simulation.",
+      "evidence": [
+        "Config/DefaultScalability.ini",
+        "Docs/DEVELOPMENT_GATES.md",
+        "Data/BiomePlan.csv",
+        "Source/ShireJourney/ShireAmbientNPC.cpp"
+      ],
+      "implementation_refs": [
+        "distance-adaptive NPC ticks",
+        "instanced ground cover",
+        "one major generated region at a time",
+        "low/medium 720p target"
+      ],
+      "missing_work": [
+        "focused target-device traversal/performance observation for current production Shire"
+      ],
+      "acceptance_criteria": [
+        "30 FPS floor target at 720p Low/Medium without severe memory pressure or unplayable hitching"
+      ],
+      "dependencies": [
+        "REQ-WORLD-001",
+        "REQ-NPC-001"
+      ],
+      "checkpoint": "CURRENT_HARD_GATE",
+      "notes": "Performance evidence must accompany living-world expansion."
+    }
+  ]
+}
