@@ -779,6 +779,40 @@ knowledge_guard = bounded_dialogue.get("knowledge_guard", {})
 if knowledge_guard.get("default") != "DENY_UNLISTED" or knowledge_guard.get("cross_route_knowledge_default") != "DENY":
     fail("BoundedDialoguePlan knowledge guard must default-deny unlisted and cross-route knowledge")
 
+# PG-042: Part I regional production overlays must stay source-controlled and story-safe.
+regional_assets = {
+    "Weathertop": ["SM_WeathertopRuinedArch.obj", "SM_WeathertopBrokenPillar.obj", "SM_WeathertopCampRing.obj"],
+    "Rivendell": ["SM_RivendellPavilion.obj", "SM_RivendellArch.obj", "SM_RivendellBridge.obj", "SM_RivendellLantern.obj"],
+    "Road": ["SM_RoadCampTent.obj", "SM_RoadSupplyRack.obj", "SM_CaradhrasRock.obj"],
+    "Moria": ["SM_MoriaPillar.obj", "SM_MoriaDoor.obj", "SM_MoriaBrazier.obj", "SM_MoriaBridgeSegment.obj"],
+    "Lothlorien": ["SM_LorienTalan.obj", "SM_LorienLantern.obj", "SM_LorienMirror.obj"],
+    "Anduin": ["SM_AnduinBoat.obj", "SM_AmonHenStair.obj", "SM_AmonHenRuin.obj", "SM_ArgonathSentinel.obj"],
+}
+for region_name, asset_names in regional_assets.items():
+    region_root = ROOT / "SourceAssets" / "Production" / "World" / region_name
+    for asset_name in asset_names:
+        if not (region_root / asset_name).exists():
+            fail(f"PG-042 regional production asset missing: {region_name}/{asset_name}")
+
+regional_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+for symbol in [
+    "EnsureProductionMeshes",
+    "SpawnProductionChapterLayer",
+    "WeathertopArchMesh",
+    "RivendellPavilionMesh",
+    "MoriaPillarMesh",
+    "LorienTalanMesh",
+    "AnduinBoatMesh",
+    "ArgonathSentinelMesh",
+    "ShowPrototypeWorldLabels = false",
+]:
+    if symbol not in regional_cpp:
+        fail(f"PG-042 regional production runtime invariant missing: {symbol}")
+
+for chapter_id in ["P1C03", "P1C04", "P1C05", "P1C06", "P1C07", "P1C08"]:
+    if f'ChapterId == TEXT("{chapter_id}")' not in regional_cpp:
+        fail(f"PG-042 lost chapter production branch: {chapter_id}")
+
 # PG-041: Bree production layer must replace dominant blockout visuals without moving story flow.
 bree_asset_root = ROOT / "SourceAssets" / "Production" / "World" / "Bree"
 for asset_name in [

@@ -321,6 +321,15 @@ This converts failures into permanent project knowledge.
 
 **Guard:** Pre-Unreal Validation checks the Bree production source assets, runtime production-mesh references and key story-anchor coordinates.
 
+### PG-042 — Regional production overlays must not rewrite story topology
+**Risk:** rapidly replacing greybox landmarks across six chapters can break authored trigger corridors, chapter transitions or imported-material behavior.
+
+**Contract:** P1C03-P1C08 production landmarks are a visual overlay invoked by chapter ID after the existing chapter build. Existing story actors, quest triggers and transition code remain authoritative.
+
+**Material rule:** imported production meshes retain their source materials. Engine BasicShapes may still provide collision/support/fallback geometry but are not the intended dominant visual layer.
+
+**Guard:** Pre-Unreal Validation requires every regional production source asset, the chapter-aware loader/overlay, hidden prototype labels and all six chapter branches.
+
 ## What Guardian must never do automatically
 
 - change canon,
