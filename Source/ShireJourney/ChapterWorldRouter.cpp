@@ -3,6 +3,7 @@
 #include "BlackRiderPrototype.h"
 #include "BreePrototypeWorldBuilder.h"
 #include "FellowshipChapterWorldBuilder.h"
+#include "FellowshipEnemyPrototype.h"
 #include "IsengardPrototypeWorldBuilder.h"
 #include "ShireAmbientNPC.h"
 #include "ShireNPC.h"
@@ -103,6 +104,7 @@ void AChapterWorldRouter::ClearPrototypeBuilders()
     DestroyAllOfClass(AShireNPC::StaticClass());
     DestroyAllOfClass(AShireAmbientNPC::StaticClass());
     DestroyAllOfClass(ABlackRiderPrototype::StaticClass());
+    DestroyAllOfClass(AFellowshipEnemyPrototype::StaticClass());
     DestroyTaggedOfClass(AStaticMeshActor::StaticClass(), TEXT("RuntimePrototypeGenerated"));
     DestroyTaggedOfClass(ATextRenderActor::StaticClass(), TEXT("RuntimePrototypeGenerated"));
     DestroyAllOfClass(AShirePrototypeWorldBuilder::StaticClass());

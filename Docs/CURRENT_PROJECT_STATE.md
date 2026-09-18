@@ -153,7 +153,9 @@ A parallel route must not overwrite Frodo's main-route progress.
 `ShirePlayerCharacter.*`
 - movement / interaction / quick save-load,
 - prototype appearance by playable character,
-- temporary F8 route toggle.
+- temporary F8 route toggle,
+- story-gated melee foundation for dangerous Part I chapters,
+- persistent prototype health with a story-safe nonlethal floor until checkpoint/respawn UX is authored.
 
 `ShireHUD.*`
 - playable character / episode,

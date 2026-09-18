@@ -1,6 +1,7 @@
 #include "FellowshipChapterWorldBuilder.h"
 
 #include "BlackRiderPrototype.h"
+#include "FellowshipEnemyPrototype.h"
 #include "ShireNPC.h"
 #include "ShireQuestTrigger.h"
 
@@ -129,6 +130,28 @@ void AFellowshipChapterWorldBuilder::SpawnNPC(
     NPC->NextQuestId = NextQuestId;
     NPC->NextQuestStage = NextQuestStage;
     NPC->bFollowPlayerAfterInteraction = bFollow;
+}
+
+
+AFellowshipEnemyPrototype* AFellowshipChapterWorldBuilder::SpawnEnemy(
+    EFellowshipEnemyType Type,
+    const FVector& Location,
+    const FRotator& Rotation,
+    FName RequiredQuestId,
+    int32 RequiredMinStage)
+{
+    if (!GetWorld())
+    {
+        return nullptr;
+    }
+
+    AFellowshipEnemyPrototype* Enemy =
+        GetWorld()->SpawnActor<AFellowshipEnemyPrototype>(Location, Rotation);
+    if (Enemy)
+    {
+        Enemy->ConfigureEnemy(Type, RequiredQuestId, RequiredMinStage);
+    }
+    return Enemy;
 }
 
 void AFellowshipChapterWorldBuilder::SpawnQuestTrigger(
@@ -430,8 +453,14 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
         TEXT("This hall was meant to be a home. We cannot remain here now."));
     SpawnQuestTrigger(FVector(820, 0, 90), TEXT("BalinsTomb"), 2, 3,
         TEXT("Drums answer from the deep. Orcs flood toward the chamber."), TEXT("MoriaAttack"));
+
+    SpawnEnemy(EFellowshipEnemyType::Orc, FVector(980, -260, 75), FRotator(0, 170, 0), TEXT("BalinsTomb"), 3);
+    SpawnEnemy(EFellowshipEnemyType::Orc, FVector(1080, 260, 75), FRotator(0, 195, 0), TEXT("BalinsTomb"), 3);
+    SpawnEnemy(EFellowshipEnemyType::Orc, FVector(1260, -80, 75), FRotator(0, 180, 0), TEXT("BalinsTomb"), 3);
     SpawnQuestTrigger(FVector(1120, 0, 90), TEXT("BalinsTomb"), 3, 4,
         TEXT("A cave troll smashes into the fight. Keep moving and protect the hobbits."), TEXT("CaveTrollAttack"), TEXT("BridgeOfKhazadDum"), 0);
+
+    SpawnEnemy(EFellowshipEnemyType::CaveTroll, FVector(1450, 260, 95), FRotator(0, 190, 0), TEXT("BridgeOfKhazadDum"), 0);
 
     SpawnQuestTrigger(FVector(2000, 0, 90), TEXT("BridgeOfKhazadDum"), 0, 1,
         TEXT("Run for the bridge. Something greater than the orcs is coming."), TEXT("BalrogApproach"));
@@ -520,6 +549,11 @@ void AFellowshipChapterWorldBuilder::BuildAnduinAmonHen()
         TEXT("The Ring presses on Boromir's fear for Gondor. Frodo realizes he must choose alone."), TEXT("BoromirPressure"));
     SpawnQuestTrigger(FVector(1800, 0, 310), TEXT("AmonHen"), 1, 2,
         TEXT("The Fellowship scatters as enemies enter the woods."), TEXT("UrukAttack"), TEXT("BreakingFellowship"), 0);
+
+    SpawnEnemy(EFellowshipEnemyType::UrukHai, FVector(2050, -420, 75), FRotator(0, 160, 0), TEXT("BreakingFellowship"), 0);
+    SpawnEnemy(EFellowshipEnemyType::UrukHai, FVector(2200, 480, 75), FRotator(0, 205, 0), TEXT("BreakingFellowship"), 0);
+    SpawnEnemy(EFellowshipEnemyType::UrukHai, FVector(2380, -180, 75), FRotator(0, 180, 0), TEXT("BreakingFellowship"), 0);
+    SpawnEnemy(EFellowshipEnemyType::UrukHai, FVector(2500, 360, 75), FRotator(0, 195, 0), TEXT("BreakingFellowship"), 1);
 
     SpawnNPC(TEXT("Boromir"), FVector(2220, 260, 70), FRotator(0, 200, 0), TEXT("BreakingFellowship"), 0, 1,
         TEXT("Find the others. Do not let the enemy take the hobbits."));

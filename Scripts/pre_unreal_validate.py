@@ -65,6 +65,8 @@ required_files = [
     SOURCE / "ShireAudioSubsystem.cpp",
     SOURCE / "ShireStoryFlowSubsystem.h",
     SOURCE / "ShireStoryFlowSubsystem.cpp",
+    SOURCE / "FellowshipEnemyPrototype.h",
+    SOURCE / "FellowshipEnemyPrototype.cpp",
 ]
 
 for path in required_files:
@@ -387,6 +389,21 @@ if "ResolveVoiceAsset" not in audio_cpp or "/Game/Audio/Voice/" not in audio_cpp
 if "SpawnSoundAtLocation" not in audio_cpp or "SpawnSound2D" not in audio_cpp:
     fail("Runtime voice playback must support spatial world voice and controlled 2D fallback")
 
+player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
+player_h = read(SOURCE / "ShirePlayerCharacter.h")
+enemy_cpp = read(SOURCE / "FellowshipEnemyPrototype.cpp")
+save_h = read(SOURCE / "ShireSaveGame.h")
+for symbol in ["PrimaryAttack", "TakeDamage", "GetCurrentHealth", "IsCombatAvailable"]:
+    if symbol not in player_cpp and symbol not in player_h:
+        fail(f"Combat foundation missing player symbol: {symbol}")
+if "PlayerHealth" not in save_h:
+    fail("Combat foundation health is not persisted in ShireSaveGame")
+for profile in ["EFellowshipEnemyType::Orc", "EFellowshipEnemyType::UrukHai", "EFellowshipEnemyType::CaveTroll"]:
+    if profile not in enemy_cpp:
+        fail(f"Combat foundation missing enemy profile: {profile}")
+if "AFellowshipEnemyPrototype::StaticClass()" not in router_cpp:
+    fail("ChapterWorldRouter does not clear combat enemies between runtime regions")
+
 # Quest/chapter reachability safety net. We model explicit transitions and runtime handoff guards.
 chapter_start_quests = {
     "P1C01": "ShireArrival",
@@ -476,6 +493,7 @@ required_actions = guard_rules.get(
     "required_debug_actions",
     ["QuickSave", "QuickLoad", "DebugNextChapter", "DebugPreviousChapter"]
 )
+required_actions = list(required_actions) + ["PrimaryAttack"]
 for action in required_actions:
     if f'ActionName="{action}"' not in input_ini:
         fail(f"DefaultInput.ini missing action mapping: {action}")

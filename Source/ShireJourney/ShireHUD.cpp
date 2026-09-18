@@ -1,6 +1,7 @@
 #include "ShireHUD.h"
 #include "ShireDialogueSubsystem.h"
 #include "ShireQuestSubsystem.h"
+#include "ShirePlayerCharacter.h"
 #include "Engine/Canvas.h"
 #include "Engine/Engine.h"
 #include "Engine/GameInstance.h"
@@ -39,7 +40,26 @@ void AShireHUD::DrawHUD()
         DrawText(Quests->GetActiveObjective().ToString(), FLinearColor(0.84f, 0.88f, 0.77f), 38.0f, 101.0f, SmallFont, 0.92f, false);
     }
 
-    DrawText(TEXT("WASD Move  |  Shift Sprint  |  Ctrl Crouch  |  E Interact  |  F5 Save  |  F9 Load  |  F6/F7 Chapter  |  F8 Route"),
+    AShirePlayerCharacter* Player =
+        PlayerOwner ? Cast<AShirePlayerCharacter>(PlayerOwner->GetPawn()) : nullptr;
+    const bool bCombat = Player && Player->IsCombatAvailable();
+
+    if (bCombat)
+    {
+        const float HealthRatio = FMath::Clamp(
+            Player->GetCurrentHealth() / FMath::Max(1.0f, Player->GetMaxHealth()), 0.0f, 1.0f);
+        DrawRect(FLinearColor(0.03f, 0.03f, 0.03f, 0.78f), 24.0f, H - 72.0f, 220.0f, 18.0f);
+        DrawRect(FLinearColor(0.52f, 0.08f, 0.055f, 0.94f), 26.0f, H - 70.0f, 216.0f * HealthRatio, 14.0f);
+        DrawText(FString::Printf(TEXT("Health %d / %d"),
+            FMath::RoundToInt(Player->GetCurrentHealth()),
+            FMath::RoundToInt(Player->GetMaxHealth())),
+            FLinearColor::White, 254.0f, H - 75.0f, SmallFont, 0.82f, false);
+    }
+
+    DrawText(
+        bCombat
+            ? TEXT("WASD Move  |  LMB Attack  |  Shift Sprint  |  Ctrl Crouch  |  E Interact  |  F5 Save  |  F9 Load")
+            : TEXT("WASD Move  |  Shift Sprint  |  Ctrl Crouch  |  E Interact  |  F5 Save  |  F9 Load  |  F6/F7 Chapter  |  F8 Route"),
         FLinearColor(0.85f, 0.85f, 0.85f, 0.85f), 24.0f, H - 34.0f, SmallFont, 0.85f, false);
 
     const float Now = GetWorld()->GetTimeSeconds();

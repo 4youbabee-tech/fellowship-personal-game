@@ -173,6 +173,19 @@
 - Pre-Unreal Validation now enforces a one-to-one contract between runtime VO_* identifiers and Data/VoiceCuePlan.csv.
 - Actual SoundWave/SoundCue files remain ASSET_PENDING until authored/imported.
 
+## CP25 — Part I Combat Foundation
+- Added reusable lightweight Orc, Uruk-hai and Cave Troll enemy profiles.
+- Enemy activation follows current quest/stage so threats do not leak into unrelated story moments.
+- Low-cost enemy behavior covers range/LOS/chase/attack/home return with distance-adaptive ticking.
+- Player melee is mapped to left mouse only when the current route/chapter permits combat; the Shire remains non-combat.
+- Player health is visible during combat and persisted through F5/F9 save/load.
+- Prototype health intentionally stops at 1 HP until death/checkpoint/respawn UX is authored, preventing story deadlocks.
+- Moria now contains quest-gated Orc/Cave Troll combat pressure.
+- Amon Hen now contains quest-gated Uruk-hai combat pressure.
+- Chapter routing explicitly clears combat enemies between generated regions.
+- Guardian checks the combat input, enemy profiles, health persistence and region cleanup.
+- This commit still requires real UE4.27 compile/PIE before COMPILE-TESTED or PIE-TESTED status.
+
 ## Current hard gate
 The current runtime-code baseline has passed static validation, real UE4.27 compile and basic Shire PIE boot.
 

@@ -7,6 +7,8 @@
 class UStaticMesh;
 class UMaterialInterface;
 class AStaticMeshActor;
+class AFellowshipEnemyPrototype;
+enum class EFellowshipEnemyType : uint8;
 
 UCLASS()
 class SHIREJOURNEY_API AFellowshipChapterWorldBuilder : public AActor
@@ -35,6 +37,8 @@ private:
     void SpawnNPC(const FString& Name, const FVector& Location, const FRotator& Rotation,
         FName QuestId, int32 RequiredStage, int32 StageAfter, const FString& Line,
         FName NextQuestId = NAME_None, int32 NextQuestStage = 0, bool bFollow = false);
+    AFellowshipEnemyPrototype* SpawnEnemy(EFellowshipEnemyType Type, const FVector& Location,
+        const FRotator& Rotation, FName RequiredQuestId, int32 RequiredMinStage = 0);
     void SpawnQuestTrigger(const FVector& Location, FName QuestId, int32 RequiredStage, int32 StageAfter,
         const FString& Message, FName StoryBeatId = NAME_None, FName NextQuestId = NAME_None,
         int32 NextQuestStage = 0, FName NextChapterId = NAME_None, FName NextChapterQuestId = NAME_None,
