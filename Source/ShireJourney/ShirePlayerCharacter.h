@@ -7,6 +7,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UStaticMeshComponent;
+class UShireSaveGame;
 
 UCLASS()
 class SHIREJOURNEY_API AShirePlayerCharacter : public ACharacter
@@ -28,6 +29,12 @@ public:
 
     UFUNCTION(BlueprintPure, Category="Combat")
     bool IsCombatAvailable() const;
+
+    UFUNCTION(BlueprintCallable, Category="Save")
+    bool SaveAutomaticCheckpoint(FName CheckpointId, bool bShowHUD = true);
+
+    UFUNCTION(BlueprintCallable, Category="Save")
+    bool RestoreAutomaticCheckpoint(bool bShowHUD = true);
 
 protected:
     virtual void BeginPlay() override;
@@ -159,6 +166,8 @@ private:
     bool bSprintRequested = false;
     float PrototypeIdlePhase = 0.0f;
 
+    UShireSaveGame* CreateSaveSnapshot(FName CheckpointId, bool bCheckpointSnapshot) const;
+    bool RestoreSaveSnapshot(UShireSaveGame* Save, const FText& SuccessMessage);
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);
 };
