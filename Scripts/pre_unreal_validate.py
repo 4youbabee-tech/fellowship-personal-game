@@ -695,6 +695,8 @@ if "--retry 6" not in unreal_ci or "--retry-all-errors" not in unreal_ci:
     fail("PG-026: exact-commit archive download must use resilient retries")
 if "uses: actions/upload-artifact@v4" in unreal_ci:
     fail("PG-026: failure logging must not depend on artifact upload while storage quota can mask the primary error")
+if "cancel-in-progress: true" not in unreal_ci:
+    fail("PG-026: superseded develop Unreal builds must not block the latest validation run")
 
 quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
 definitions = set(re.findall(r'AddQuestDefinition\s*\(\s*TEXT\("([^"]+)"\)', quest_cpp))
