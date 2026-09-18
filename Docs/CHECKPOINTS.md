@@ -127,15 +127,24 @@
 - ProjectGuardRules.json makes chapter/route/canon/document rules machine-readable.
 - Pre-Unreal Validation is extended to detect story/data drift automatically.
 
-## Current hard gate
-The current runtime-code baseline is STATIC-VALIDATED but must now pass:
-1. real UE4.27.2 compile + UnrealHeaderTool,
-2. Shire PIE smoke test,
-3. Gandalf/Isengard F8 round-trip test,
-4. save/load round-trip,
-5. chapter smoke tests P1C02-P1C08,
-6. target-device performance observation.
+## CP20 — Current UE4.27 Compile + Basic PIE Boot
+- Pre-Unreal Validation #80 is green.
+- UE4.27.2 + UnrealHeaderTool completed successfully on the target laptop after PG-010/PG-011 fixes.
+- Unreal Editor launched successfully.
+- PIE entered the Shire.
+- Current HUD rendered Frodo / P1C01_Main and the opening objective correctly.
+- This proves compile + basic PIE boot only; save/load, route round-trip and chapter smoke tests remain pending.
 
-No new major feature checkpoint should open before this gate is healthy.
+## Current hard gate
+The current runtime-code baseline has passed static validation, real UE4.27 compile and basic Shire PIE boot.
+
+It must still pass:
+1. Shire movement / interaction / NPC-awareness smoke test,
+2. save/load round-trip,
+3. Gandalf/Isengard F8 round-trip,
+4. chapter smoke tests P1C02-P1C08,
+5. target-device performance observation.
+
+No new major feature checkpoint should open before this functional gate is healthy.
 
 See `Docs/CURRENT_PROJECT_STATE.md` for the exact current test checklist.

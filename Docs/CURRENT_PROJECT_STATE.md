@@ -42,22 +42,28 @@ Historically, an earlier project baseline:
 - ran PIE,
 - showed working movement, quest flow and HUD.
 
-The current runtime-code baseline includes substantial changes after that test and is currently:
-- **STATIC-VALIDATED** through Pre-Unreal Validation #78 before the latest compile-fix commit.
-- **NOT YET claimed COMPILE-TESTED**.
-- **NOT YET claimed PIE-TESTED**.
-- **NOT YET claimed DEVICE-TESTED**.
+The current runtime-code baseline is now:
+- **STATIC-VALIDATED** through Pre-Unreal Validation #80.
+- **COMPILE-TESTED** on the target machine with UE4.27.2 after the PG-010/PG-011 fixes.
+- **PIE-TESTED (BASIC BOOT ONLY)**: the Shire entered PIE successfully and rendered the current HUD.
+- **DEVICE-TESTED (BASIC BOOT ONLY)** on the target laptop; full gameplay/performance acceptance is still pending.
 
-A real UE4.27.2 target-machine build was attempted on 2026-09-18:
+Real UE4.27.2 validation history on 2026-09-18:
 - Git update succeeded.
 - UnrealHeaderTool completed successfully and generated reflection code.
-- C++ compilation exposed two concrete regressions:
+- The first C++ build exposed:
   - C2660: one stale one-argument `MovePlayerToChapterStart` call.
   - C2440: direct base-to-derived light component pointer assignment from `GetLightComponent()`.
-- Both source issues were fixed immediately and converted into Project Guardian regression checks PG-010 and PG-011.
-- A fresh target-machine build is still required before claiming COMPILE-TESTED.
+- Both source issues were fixed and converted into Project Guardian regression checks PG-010 and PG-011.
+- A fresh build after those fixes completed successfully.
+- Unreal Editor launched.
+- PIE entered the Shire successfully.
+- The HUD visibly showed:
+  - `Frodo | P1C01_Main`
+  - `An Unexpected Arrival`
+  - `Reach the Shire lane and meet Gandalf.`
 
-That engine/device validation remains the current hard gate.
+The remaining hard gate is now the functional smoke-test layer: movement/interactions, save/load, F8 route round-trip, chapter smoke tests and target-device performance observation.
 
 ## Authoritative runtime chapter IDs
 
@@ -216,18 +222,7 @@ Active production order:
 
 ## Exact next hard gate
 
-Run on the target machine:
-
-```text
-SHIRE_UPDATE_BUILD_LAUNCH.bat
-```
-
-Required after successful build:
-
-### Build
-- UE4.27.2 C++ build succeeds.
-- UnrealHeaderTool succeeds.
-- editor launches.
+The current build/editor/PIE boot gate has passed. Continue with functional smoke testing in the already working build.
 
 ### Shire smoke test
 - PIE starts in Shire.
