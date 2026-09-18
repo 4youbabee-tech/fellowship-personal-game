@@ -1045,6 +1045,8 @@ UShireSaveGame* AShirePlayerCharacter::CreateSaveSnapshot(
         return nullptr;
     }
 
+    Save->SaveSchemaVersion = UShireSaveGame::CurrentSchemaVersion;
+    Save->SnapshotCreatedUnixSeconds = FDateTime::UtcNow().ToUnixTimestamp();
     Save->PlayerLocation = GetActorLocation();
     Save->PlayerRotation = GetActorRotation();
     Save->CheckpointId = CheckpointId;
@@ -1076,6 +1078,40 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
     if (!Save)
     {
         return false;
+    }
+
+    if (Save->SaveSchemaVersion > UShireSaveGame::CurrentSchemaVersion)
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("Save snapshot schema is newer than this build: save=%d supported=%d"),
+            Save->SaveSchemaVersion,
+            UShireSaveGame::CurrentSchemaVersion);
+        return false;
+    }
+
+    if (!FMath::IsFinite(Save->PlayerLocation.X) ||
+        !FMath::IsFinite(Save->PlayerLocation.Y) ||
+        !FMath::IsFinite(Save->PlayerLocation.Z) ||
+        !FMath::IsFinite(Save->PlayerHealth))
+    {
+        UE_LOG(LogTemp, Error, TEXT("Save snapshot rejected: invalid numeric state."));
+        return false;
+    }
+
+    if (Save->CurrentRouteId == NAME_None)
+    {
+        Save->CurrentRouteId = TEXT("FrodoMain");
+    }
+    if (Save->CurrentChapterId == NAME_None)
+    {
+        Save->CurrentChapterId = TEXT("P1C01");
+    }
+    if (Save->PlayableCharacterId == NAME_None)
+    {
+        Save->PlayableCharacterId =
+            Save->CurrentRouteId == TEXT("GandalfParallel") ? FName(TEXT("Gandalf")) : FName(TEXT("Frodo"));
     }
 
     bool bApplyExactSavedTransform = true;
