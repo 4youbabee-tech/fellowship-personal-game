@@ -87,7 +87,7 @@ private:
     bool bVoiceActive = false;
 
     USoundBase* ResolveVoiceAsset(FName CueId);
-    USoundBase* ResolveCategorizedAsset(FName CueId, const TCHAR* Category, TMap<FName, USoundBase*>& Cache);
+    USoundBase* ResolveCategorizedAsset(FName CueId, const TCHAR* FolderPrefix, TMap<FName, USoundBase*>& Cache);
     void ApplyMusicDuck(bool bDuck);
     AActor* ResolveVoiceSpeakerActor(FName CueId) const;
 

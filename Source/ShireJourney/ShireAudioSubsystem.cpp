@@ -13,6 +13,14 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 
+namespace ShireAudioAssetPaths
+{
+    static const TCHAR* Ambience = TEXT("/Game/Audio/Ambience/");
+    static const TCHAR* Music = TEXT("/Game/Audio/Music/");
+    static const TCHAR* SFX = TEXT("/Game/Audio/SFX/");
+}
+
+
 void UShireAudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
@@ -72,7 +80,7 @@ void UShireAudioSubsystem::Deinitialize()
 
 USoundBase* UShireAudioSubsystem::ResolveCategorizedAsset(
     FName CueId,
-    const TCHAR* Category,
+    const TCHAR* FolderPrefix,
     TMap<FName, USoundBase*>& Cache)
 {
     if (CueId == NAME_None)
@@ -87,8 +95,8 @@ USoundBase* UShireAudioSubsystem::ResolveCategorizedAsset(
 
     const FString Cue = CueId.ToString();
     const FString AssetPath = FString::Printf(
-        TEXT("/Game/Audio/%s/%s.%s"),
-        Category,
+        TEXT("%s%s.%s"),
+        FolderPrefix,
         *Cue,
         *Cue);
 
@@ -125,7 +133,7 @@ void UShireAudioSubsystem::SetAmbienceCue(FName CueId)
 
     if (CueId != NAME_None)
     {
-        if (USoundBase* Sound = ResolveCategorizedAsset(CueId, TEXT("Ambience"), AmbienceCache))
+        if (USoundBase* Sound = ResolveCategorizedAsset(CueId, ShireAudioAssetPaths::Ambience, AmbienceCache))
         {
             ActiveAmbienceComponent = UGameplayStatics::SpawnSound2D(
                 this, Sound, 1.0f, 1.0f, 0.0f, nullptr, false, false);
@@ -152,7 +160,7 @@ void UShireAudioSubsystem::SetMusicCue(FName CueId)
 
     if (CueId != NAME_None)
     {
-        if (USoundBase* Sound = ResolveCategorizedAsset(CueId, TEXT("Music"), MusicCache))
+        if (USoundBase* Sound = ResolveCategorizedAsset(CueId, ShireAudioAssetPaths::Music, MusicCache))
         {
             ActiveMusicComponent = UGameplayStatics::SpawnSound2D(
                 this, Sound, bVoiceActive ? 0.36f : 1.0f, 1.0f, 0.0f, nullptr, false, false);
@@ -169,7 +177,7 @@ void UShireAudioSubsystem::PlaySfxCue(FName CueId)
 
     OnSfxRequested.Broadcast(CueId);
 
-    if (USoundBase* Sound = ResolveCategorizedAsset(CueId, TEXT("SFX"), SfxCache))
+    if (USoundBase* Sound = ResolveCategorizedAsset(CueId, ShireAudioAssetPaths::SFX, SfxCache))
     {
         UGameplayStatics::SpawnSound2D(this, Sound, 1.0f, 1.0f, 0.0f, nullptr, false, true);
     }
