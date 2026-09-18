@@ -56,12 +56,17 @@ Story, chapter, route, dialogue or music changes must update matching reference 
 Relevant files:
 - `Docs/CURRENT_PROJECT_STATE.md`
 - `Docs/WORLD_PRODUCTION_BLUEPRINT.md`
+- `Docs/PRODUCTION_COMPLETENESS_MATRIX.md`
+- `Source/ShireJourney/README.md`
+- `Data/SourceArchitecturePlan.json`
 - `Docs/STORY_CANON_BIBLE.md`
 - `Docs/PART1_FELLOWSHIP_MASTERPLAN.md`
 - `Data/WorldCheckpointPlan.csv`
 - `Data/StoryBeatPlan.csv`
 - `Data/DialogueIntent.csv`
 - `Data/MusicCuePlan.csv`
+
+Source-layout changes must update the source handoff README, architecture plan and static-validator path assumptions in the same logical change.
 
 Do not knowingly create "we will fix docs later" debt.
 

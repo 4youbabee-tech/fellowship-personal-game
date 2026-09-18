@@ -1,0 +1,378 @@
+{
+  "schema_version": 1,
+  "plan_id": "SHIREJOURNEY_SOURCE_ARCHITECTURE_V1",
+  "module": "ShireJourney",
+  "engine": "Unreal Engine 4.27.2",
+  "purpose": "Machine-readable runtime source ownership and controlled migration plan so developer handoffs do not depend on chat memory.",
+  "current_layout": "FLAT_GUARDED",
+  "target_layout": "PUBLIC_PRIVATE_BY_DOMAIN",
+  "allowed_domains": [
+    "ModuleRoot",
+    "Core",
+    "Characters",
+    "World",
+    "Subsystems",
+    "UI",
+    "SaveGame",
+    "Prototypes"
+  ],
+  "migration_status_values": [
+    "CURRENT_FLAT",
+    "MIGRATED",
+    "STABLE_ROOT"
+  ],
+  "rules": [
+    "Every runtime .h/.cpp/.cs file under Source/ShireJourney must be represented exactly once.",
+    "Gameplay changes and physical source-layout migration must not be mixed in one logical change.",
+    "Headers migrate to Public/<Domain>; implementation files migrate to Private/<Domain>.",
+    "ShireJourney.Build.cs remains at module root.",
+    "All module-local include paths and static-validator path lookups must be updated in the migration change.",
+    "Source-layout changes require green Pre-Unreal Validation and a real UE4.27.2 self-hosted build before acceptance."
+  ],
+  "files": [
+    {
+      "current_path": "Source/ShireJourney/ShireJourney.Build.cs",
+      "target_path": "Source/ShireJourney/ShireJourney.Build.cs",
+      "domain": "ModuleRoot",
+      "kind": "Build",
+      "role": "Unreal module build rules",
+      "migration_status": "STABLE_ROOT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireJourney.h",
+      "target_path": "Source/ShireJourney/Public/Core/ShireJourney.h",
+      "domain": "Core",
+      "kind": "Header",
+      "role": "Runtime module public header",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireJourney.cpp",
+      "target_path": "Source/ShireJourney/Private/Core/ShireJourney.cpp",
+      "domain": "Core",
+      "kind": "Source",
+      "role": "Runtime module implementation/registration",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireGameMode.h",
+      "target_path": "Source/ShireJourney/Public/Core/ShireGameMode.h",
+      "domain": "Core",
+      "kind": "Header",
+      "role": "Game mode declaration",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireGameMode.cpp",
+      "target_path": "Source/ShireJourney/Private/Core/ShireGameMode.cpp",
+      "domain": "Core",
+      "kind": "Source",
+      "role": "Game mode startup and chapter-router bootstrap",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireInteractable.h",
+      "target_path": "Source/ShireJourney/Public/Core/ShireInteractable.h",
+      "domain": "Core",
+      "kind": "Header",
+      "role": "Interaction interface contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShirePlayerCharacter.h",
+      "target_path": "Source/ShireJourney/Public/Characters/ShirePlayerCharacter.h",
+      "domain": "Characters",
+      "kind": "Header",
+      "role": "Playable character contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShirePlayerCharacter.cpp",
+      "target_path": "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp",
+      "domain": "Characters",
+      "kind": "Source",
+      "role": "Movement interaction save-load route toggle and combat input",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireNPC.h",
+      "target_path": "Source/ShireJourney/Public/Characters/ShireNPC.h",
+      "domain": "Characters",
+      "kind": "Header",
+      "role": "Story NPC contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireNPC.cpp",
+      "target_path": "Source/ShireJourney/Private/Characters/ShireNPC.cpp",
+      "domain": "Characters",
+      "kind": "Source",
+      "role": "Story NPC interaction follow and proxy acting",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireAmbientNPC.h",
+      "target_path": "Source/ShireJourney/Public/Characters/ShireAmbientNPC.h",
+      "domain": "Characters",
+      "kind": "Header",
+      "role": "Ambient resident contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireAmbientNPC.cpp",
+      "target_path": "Source/ShireJourney/Private/Characters/ShireAmbientNPC.cpp",
+      "domain": "Characters",
+      "kind": "Source",
+      "role": "Ambient routine awareness and low-cost social life",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ChapterWorldRouter.h",
+      "target_path": "Source/ShireJourney/Public/World/ChapterWorldRouter.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Runtime chapter/route world router contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ChapterWorldRouter.cpp",
+      "target_path": "Source/ShireJourney/Private/World/ChapterWorldRouter.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Runtime chapter/route world switching and cleanup",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShirePrototypeWorldBuilder.h",
+      "target_path": "Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Shire runtime world builder contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+      "target_path": "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Shire vertical-slice runtime world generation",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/BreePrototypeWorldBuilder.h",
+      "target_path": "Source/ShireJourney/Public/World/BreePrototypeWorldBuilder.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Bree runtime world builder contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/BreePrototypeWorldBuilder.cpp",
+      "target_path": "Source/ShireJourney/Private/World/BreePrototypeWorldBuilder.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Bree prototype world generation",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/FellowshipChapterWorldBuilder.h",
+      "target_path": "Source/ShireJourney/Public/World/FellowshipChapterWorldBuilder.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Shared P1C03-P1C08 world builder contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
+      "target_path": "Source/ShireJourney/Private/World/FellowshipChapterWorldBuilder.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Shared Part I chapter prototype generation",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/IsengardPrototypeWorldBuilder.h",
+      "target_path": "Source/ShireJourney/Public/World/IsengardPrototypeWorldBuilder.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Gandalf/Isengard world builder contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/IsengardPrototypeWorldBuilder.cpp",
+      "target_path": "Source/ShireJourney/Private/World/IsengardPrototypeWorldBuilder.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Gandalf/Isengard parallel-route world generation",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireQuestTrigger.h",
+      "target_path": "Source/ShireJourney/Public/World/ShireQuestTrigger.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Spatial quest/chapter trigger contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireQuestTrigger.cpp",
+      "target_path": "Source/ShireJourney/Private/World/ShireQuestTrigger.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Quest/chapter trigger progression implementation",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireQuestSubsystem.h",
+      "target_path": "Source/ShireJourney/Public/Subsystems/ShireQuestSubsystem.h",
+      "domain": "Subsystems",
+      "kind": "Header",
+      "role": "Quest chapter route episode and per-route state contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireQuestSubsystem.cpp",
+      "target_path": "Source/ShireJourney/Private/Subsystems/ShireQuestSubsystem.cpp",
+      "domain": "Subsystems",
+      "kind": "Source",
+      "role": "Quest definitions story state and route snapshots",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireDialogueSubsystem.h",
+      "target_path": "Source/ShireJourney/Public/Subsystems/ShireDialogueSubsystem.h",
+      "domain": "Subsystems",
+      "kind": "Header",
+      "role": "Dialogue runtime contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireDialogueSubsystem.cpp",
+      "target_path": "Source/ShireJourney/Private/Subsystems/ShireDialogueSubsystem.cpp",
+      "domain": "Subsystems",
+      "kind": "Source",
+      "role": "Dialogue sequence and voice-cue runtime library",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireAudioSubsystem.h",
+      "target_path": "Source/ShireJourney/Public/Subsystems/ShireAudioSubsystem.h",
+      "domain": "Subsystems",
+      "kind": "Header",
+      "role": "Audio runtime contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireAudioSubsystem.cpp",
+      "target_path": "Source/ShireJourney/Private/Subsystems/ShireAudioSubsystem.cpp",
+      "domain": "Subsystems",
+      "kind": "Source",
+      "role": "Ambience music SFX voice routing and ducking",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireStoryFlowSubsystem.h",
+      "target_path": "Source/ShireJourney/Public/Subsystems/ShireStoryFlowSubsystem.h",
+      "domain": "Subsystems",
+      "kind": "Header",
+      "role": "Story handoff safety contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireStoryFlowSubsystem.cpp",
+      "target_path": "Source/ShireJourney/Private/Subsystems/ShireStoryFlowSubsystem.cpp",
+      "domain": "Subsystems",
+      "kind": "Source",
+      "role": "Terminal quest/chapter flow guard",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireStoryPresentationSubsystem.h",
+      "target_path": "Source/ShireJourney/Public/Subsystems/ShireStoryPresentationSubsystem.h",
+      "domain": "Subsystems",
+      "kind": "Header",
+      "role": "Story presentation/cinematic cue contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireStoryPresentationSubsystem.cpp",
+      "target_path": "Source/ShireJourney/Private/Subsystems/ShireStoryPresentationSubsystem.cpp",
+      "domain": "Subsystems",
+      "kind": "Source",
+      "role": "Story presentation dialogue audio and cinematic cue orchestration",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireHUD.h",
+      "target_path": "Source/ShireJourney/Public/UI/ShireHUD.h",
+      "domain": "UI",
+      "kind": "Header",
+      "role": "Runtime HUD contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireHUD.cpp",
+      "target_path": "Source/ShireJourney/Private/UI/ShireHUD.cpp",
+      "domain": "UI",
+      "kind": "Source",
+      "role": "Quest dialogue alert combat and developer HUD",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireSaveGame.h",
+      "target_path": "Source/ShireJourney/Public/SaveGame/ShireSaveGame.h",
+      "domain": "SaveGame",
+      "kind": "Header",
+      "role": "Quick-save serialized state contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireSaveGame.cpp",
+      "target_path": "Source/ShireJourney/Private/SaveGame/ShireSaveGame.cpp",
+      "domain": "SaveGame",
+      "kind": "Source",
+      "role": "SaveGame implementation unit",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireRouteState.h",
+      "target_path": "Source/ShireJourney/Public/SaveGame/ShireRouteState.h",
+      "domain": "SaveGame",
+      "kind": "Header",
+      "role": "Per-route progress snapshot structure",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/BlackRiderPrototype.h",
+      "target_path": "Source/ShireJourney/Public/Prototypes/BlackRiderPrototype.h",
+      "domain": "Prototypes",
+      "kind": "Header",
+      "role": "Black Rider stealth prototype contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/BlackRiderPrototype.cpp",
+      "target_path": "Source/ShireJourney/Private/Prototypes/BlackRiderPrototype.cpp",
+      "domain": "Prototypes",
+      "kind": "Source",
+      "role": "Black Rider patrol detection and investigation prototype",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/FellowshipEnemyPrototype.h",
+      "target_path": "Source/ShireJourney/Public/Prototypes/FellowshipEnemyPrototype.h",
+      "domain": "Prototypes",
+      "kind": "Header",
+      "role": "Part I enemy prototype contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/FellowshipEnemyPrototype.cpp",
+      "target_path": "Source/ShireJourney/Private/Prototypes/FellowshipEnemyPrototype.cpp",
+      "domain": "Prototypes",
+      "kind": "Source",
+      "role": "Orc Uruk-hai Cave Troll lightweight combat prototype",
+      "migration_status": "CURRENT_FLAT"
+    }
+  ]
+}

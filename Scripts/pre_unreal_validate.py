@@ -101,6 +101,98 @@ for relative in guard_rules.get("required_story_data", []):
     if not (ROOT / relative).exists():
         fail(f"Required story data missing: {relative}")
 
+for relative in guard_rules.get("required_source_docs", []):
+    if not (ROOT / relative).exists():
+        fail(f"Required source handoff document missing: {relative}")
+
+for relative in guard_rules.get("required_engineering_data", []):
+    if not (ROOT / relative).exists():
+        fail(f"Required engineering data missing: {relative}")
+
+# PG-019: source architecture must be explicit and complete so a lost chat or
+# developer handoff never leaves runtime ownership implicit.
+source_architecture_path = ROOT / "Data" / "SourceArchitecturePlan.json"
+source_architecture = {}
+if not source_architecture_path.exists():
+    fail("Source architecture plan missing: Data/SourceArchitecturePlan.json")
+else:
+    try:
+        source_architecture = json.loads(read(source_architecture_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/SourceArchitecturePlan.json: {exc}")
+
+architecture_entries = source_architecture.get("files", [])
+allowed_source_domains = set(source_architecture.get("allowed_domains", []))
+allowed_migration_statuses = set(source_architecture.get("migration_status_values", []))
+seen_current_paths: set[str] = set()
+seen_target_paths: set[str] = set()
+expected_active_source_paths: set[str] = set()
+
+if source_architecture and source_architecture.get("module") != "ShireJourney":
+    fail("SourceArchitecturePlan module must be ShireJourney")
+
+for index, entry in enumerate(architecture_entries, start=1):
+    current_path = str(entry.get("current_path") or "").strip()
+    target_path = str(entry.get("target_path") or "").strip()
+    domain = str(entry.get("domain") or "").strip()
+    kind = str(entry.get("kind") or "").strip()
+    role = str(entry.get("role") or "").strip()
+    migration_status = str(entry.get("migration_status") or "").strip()
+
+    if not current_path or not target_path or not domain or not kind or not role or not migration_status:
+        fail(f"SourceArchitecturePlan entry {index} is incomplete")
+        continue
+
+    if current_path in seen_current_paths:
+        fail(f"SourceArchitecturePlan duplicates current_path: {current_path}")
+    seen_current_paths.add(current_path)
+
+    if target_path in seen_target_paths:
+        fail(f"SourceArchitecturePlan duplicates target_path: {target_path}")
+    seen_target_paths.add(target_path)
+
+    if not current_path.startswith("Source/ShireJourney/"):
+        fail(f"SourceArchitecturePlan current_path escapes runtime module: {current_path}")
+    if not target_path.startswith("Source/ShireJourney/"):
+        fail(f"SourceArchitecturePlan target_path escapes runtime module: {target_path}")
+
+    if allowed_source_domains and domain not in allowed_source_domains:
+        fail(f"SourceArchitecturePlan entry {current_path} uses unknown domain '{domain}'")
+    if allowed_migration_statuses and migration_status not in allowed_migration_statuses:
+        fail(f"SourceArchitecturePlan entry {current_path} uses unknown migration status '{migration_status}'")
+
+    filename = Path(current_path).name
+    if domain == "ModuleRoot":
+        if target_path != current_path:
+            fail(f"Module-root file must remain at its current path: {current_path}")
+    elif kind == "Header":
+        expected_target = f"Source/ShireJourney/Public/{domain}/{filename}"
+        if target_path != expected_target:
+            fail(f"Header target path must be {expected_target}: {current_path}")
+    elif kind == "Source":
+        expected_target = f"Source/ShireJourney/Private/{domain}/{filename}"
+        if target_path != expected_target:
+            fail(f"Source target path must be {expected_target}: {current_path}")
+    elif kind != "Build":
+        fail(f"SourceArchitecturePlan entry {current_path} uses unknown kind '{kind}'")
+
+    active_path = target_path if migration_status == "MIGRATED" else current_path
+    expected_active_source_paths.add(active_path)
+    if not (ROOT / active_path).exists():
+        fail(f"SourceArchitecturePlan active file is missing: {active_path}")
+
+actual_runtime_source_paths = {
+    str(path.relative_to(ROOT)).replace("\\", "/")
+    for path in SOURCE.rglob("*")
+    if path.is_file() and path.suffix.lower() in {".h", ".cpp", ".cs"}
+}
+missing_architecture_entries = sorted(actual_runtime_source_paths - expected_active_source_paths)
+stale_architecture_entries = sorted(expected_active_source_paths - actual_runtime_source_paths)
+if missing_architecture_entries:
+    fail("Runtime source files missing from SourceArchitecturePlan: " + ", ".join(missing_architecture_entries))
+if stale_architecture_entries:
+    fail("SourceArchitecturePlan references inactive/missing runtime files: " + ", ".join(stale_architecture_entries))
+
 approved_chapters = set(guard_rules.get("runtime_chapters", []))
 approved_routes = set(guard_rules.get("approved_routes", []))
 approved_canon_classes = set(guard_rules.get("canon_classes", []))
@@ -679,10 +771,10 @@ if "GandalfParallel" not in router_cpp or "AIsengardPrototypeWorldBuilder" not i
     fail("ChapterWorldRouter lost the Gandalf/Isengard parallel-route branch")
 
 print(
-    f"Validated {len(list(SOURCE.glob('*.cpp')))} cpp files, "
-    f"{len(list(SOURCE.glob('*.h')))} headers, {len(definitions)} quest definitions, "
-    f"{len(expected_chapters)} runtime chapters, {len(presentation_beats)} presentation cues, "
-    f"{len(dialogue_sequences)} dialogue sequences."
+    f"Validated {len(list(SOURCE.rglob('*.cpp')))} cpp files, "
+    f"{len(list(SOURCE.rglob('*.h')))} headers, {len(architecture_entries)} architecture entries, "
+    f"{len(definitions)} quest definitions, {len(expected_chapters)} runtime chapters, "
+    f"{len(presentation_beats)} presentation cues, {len(dialogue_sequences)} dialogue sequences."
 )
 for message in warnings:
     print(f"WARNING: {message}")

@@ -19,10 +19,10 @@
 - Hardware floor: Intel i7 6th gen, 8 GB RAM, AMD GPU around 2 GB VRAM
 - Local update/build/launch entry point: `SHIRE_UPDATE_BUILD_LAUNCH.bat`
 
-Latest validated production head recorded here:
-- `bd3d0be70912552c2cf5525a9731968f6ecab71a` — `fix: validate world checkpoint plan deterministically`
-- Pre-Unreal Validation #112: **SUCCESS**.
-- Unreal Build Validation #10: **SUCCESS** on the exact commit with UE4.27.2 C++ build and production asset import (`50 files, 0 failures`).
+Latest validated baseline before the current source-handoff governance maintenance:
+- `e739ba6e364d0316cf5b7fe10c1f8ecaa13d417e` — `docs: sync CP30 handoff to validated head`
+- Pre-Unreal Validation #113: **SUCCESS**.
+- Unreal Build Validation #11: **SUCCESS** on the exact commit with UE4.27.2 C++ build and production asset import (`50 files, 0 failures`).
 - CP30 world/checkpoint engineering is therefore STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. Dedicated automatic checkpoint/respawn runtime behavior remains planned, not implemented.
 - The Shire visual content introduced at `8b0c13f...` still requires focused PIE/device review before VISUALLY-ACCEPTED.
 - Intermediate CP30 commit `10ac91e...` had Pre-Unreal Validation #111 fail with `NameError: story_plan_ids is not defined`; `bd3d0be...` fixed that validator-order bug and restored both green gates.
@@ -141,6 +141,17 @@ Per-route state is intended to preserve:
 - player transform.
 
 A parallel route must not overwrite Frodo's main-route progress.
+
+## Source-level handoff / architecture memory
+
+The runtime module now has a code-local recovery entry point:
+- `Source/ShireJourney/README.md` — start here when entering the runtime source tree.
+- `Data/SourceArchitecturePlan.json` — machine-readable ownership/domain/target-path map for every runtime `.h`, `.cpp` and module `.cs` file.
+- Project Guardian PG-019 requires the source handoff and architecture plan, and Pre-Unreal Validation rejects runtime source files that are missing from the manifest.
+
+Current physical layout remains the guarded flat UE4.27 module. The planned maintenance layout is `Public/<Domain>` + `Private/<Domain>` with domains for Core, Characters, World, Subsystems, UI, SaveGame and Prototypes.
+
+The physical folder migration has **not** happened yet. It must be a dedicated maintenance change, not mixed with gameplay, and must update includes plus static-validator path assumptions before a real UE4.27.2 build is accepted.
 
 ## Current architecture map
 
@@ -330,14 +341,15 @@ Local one-click build failure log:
 A new developer/assistant should:
 1. open this file first,
 2. confirm repo and `develop`,
-3. inspect latest `develop` commit,
-4. read `Docs/DEVELOPMENT_GATES.md`,
-5. read `Docs/PROJECT_GUARDIAN.md`,
-6. read `Docs/STORY_CANON_BIBLE.md` before story changes,
-7. inspect StoryBeat/Dialogue/Music CSVs for relevant content changes,
-8. inspect latest GitHub Pre-Unreal Validation,
-9. never claim engine testing without a real UE4.27 result,
-10. resume from "Exact next hard gate".
+3. inspect latest `develop` commit and both validation workflows,
+4. open `Source/ShireJourney/README.md` before changing runtime code,
+5. inspect `Data/SourceArchitecturePlan.json` for ownership and planned file location,
+6. read `Docs/DEVELOPMENT_GATES.md`,
+7. read `Docs/PROJECT_GUARDIAN.md`,
+8. read `Docs/STORY_CANON_BIBLE.md` before story changes,
+9. inspect the relevant StoryBeat/Dialogue/Music/Biome/Checkpoint data files,
+10. never claim engine testing without a real UE4.27 result,
+11. resume from "Exact next hard gate".
 
 ## Temporary developer controls
 
