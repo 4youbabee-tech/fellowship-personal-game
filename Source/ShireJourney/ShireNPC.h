@@ -111,6 +111,15 @@ protected:
     UStaticMeshComponent* PrototypeHair;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeLeftEye;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeRightEye;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeMouth;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
     UStaticMeshComponent* PrototypeLeftArm;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
@@ -134,9 +143,14 @@ private:
     float PrototypeTorsoBaseZ = -4.0f;
     float PrototypeHeadBaseZ = 39.0f;
     float PrototypeHairBaseZ = 47.0f;
+    float BlinkCooldownRemaining = 0.0f;
+    float BlinkRemaining = 0.0f;
+    float DialogueActingRemaining = 0.0f;
+    float ActingPhase = 0.0f;
 
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);
+    void UpdatePrototypeActing(float DeltaSeconds);
     const TArray<FText>* ResolveDialogueLines(const UShireQuestSubsystem* QuestSubsystem) const;
     int32 ResolveCompanionSlot() const;
     FVector GetFormationTarget(const APawn* PlayerPawn) const;

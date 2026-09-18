@@ -34,6 +34,24 @@ AShireNPC::AShireNPC()
     PrototypeHair->SetRelativeLocation(FVector(-1.0f, 0.0f, 47.0f));
     PrototypeHair->SetRelativeScale3D(FVector(0.235f, 0.235f, 0.11f));
 
+    PrototypeLeftEye = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeLeftEye"));
+    PrototypeLeftEye->SetupAttachment(PrototypeHead);
+    PrototypeLeftEye->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeLeftEye->SetRelativeLocation(FVector(43.0f, -16.0f, 8.0f));
+    PrototypeLeftEye->SetRelativeScale3D(FVector(0.12f, 0.09f, 0.13f));
+
+    PrototypeRightEye = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeRightEye"));
+    PrototypeRightEye->SetupAttachment(PrototypeHead);
+    PrototypeRightEye->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeRightEye->SetRelativeLocation(FVector(43.0f, 16.0f, 8.0f));
+    PrototypeRightEye->SetRelativeScale3D(FVector(0.12f, 0.09f, 0.13f));
+
+    PrototypeMouth = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeMouth"));
+    PrototypeMouth->SetupAttachment(PrototypeHead);
+    PrototypeMouth->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeMouth->SetRelativeLocation(FVector(44.0f, 0.0f, -16.0f));
+    PrototypeMouth->SetRelativeScale3D(FVector(0.11f, 0.16f, 0.045f));
+
     PrototypeLeftArm = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeLeftArm"));
     PrototypeLeftArm->SetupAttachment(GetCapsuleComponent());
     PrototypeLeftArm->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -77,6 +95,9 @@ AShireNPC::AShireNPC()
     {
         PrototypeHead->SetStaticMesh(SphereMesh.Object);
         PrototypeHair->SetStaticMesh(SphereMesh.Object);
+        PrototypeLeftEye->SetStaticMesh(SphereMesh.Object);
+        PrototypeRightEye->SetStaticMesh(SphereMesh.Object);
+        PrototypeMouth->SetStaticMesh(SphereMesh.Object);
     }
 }
 
@@ -268,6 +289,9 @@ void AShireNPC::ApplyPrototypeStyle()
     ApplyColor(PrototypeRightArm, Coat * 0.95f);
     ApplyColor(PrototypeLeftLeg, Trousers);
     ApplyColor(PrototypeRightLeg, Trousers);
+    ApplyColor(PrototypeLeftEye, FLinearColor(0.045f, 0.035f, 0.025f));
+    ApplyColor(PrototypeRightEye, FLinearColor(0.045f, 0.035f, 0.025f));
+    ApplyColor(PrototypeMouth, FLinearColor(0.20f, 0.055f, 0.045f));
 
     bVisualStyleApplied = true;
 }
@@ -323,6 +347,72 @@ void AShireNPC::UpdatePrototypeAnimation(float DeltaSeconds)
             PrototypeHair->GetRelativeLocation(),
             FVector(-1.0f, 0.0f, PrototypeHairBaseZ + Bob), DeltaSeconds, 12.0f));
     }
+}
+
+
+void AShireNPC::UpdatePrototypeActing(float DeltaSeconds)
+{
+    if (!PrototypeHead || !PrototypeLeftEye || !PrototypeRightEye || !PrototypeMouth)
+    {
+        return;
+    }
+
+    if (BlinkCooldownRemaining <= 0.0f && BlinkRemaining <= 0.0f)
+    {
+        BlinkCooldownRemaining = 2.2f + FMath::Fmod(static_cast<float>(GetUniqueID()) * 0.173f, 2.1f);
+    }
+
+    BlinkCooldownRemaining = FMath::Max(0.0f, BlinkCooldownRemaining - DeltaSeconds);
+    if (BlinkCooldownRemaining <= 0.0f && BlinkRemaining <= 0.0f)
+    {
+        BlinkRemaining = 0.10f;
+    }
+    if (BlinkRemaining > 0.0f)
+    {
+        BlinkRemaining = FMath::Max(0.0f, BlinkRemaining - DeltaSeconds);
+    }
+
+    const float EyeZ = BlinkRemaining > 0.0f ? 0.025f : 0.13f;
+    PrototypeLeftEye->SetRelativeScale3D(FVector(0.12f, 0.09f, EyeZ));
+    PrototypeRightEye->SetRelativeScale3D(FVector(0.12f, 0.09f, EyeZ));
+
+    DialogueActingRemaining = FMath::Max(0.0f, DialogueActingRemaining - DeltaSeconds);
+    if (DialogueActingRemaining > 0.0f)
+    {
+        ActingPhase += DeltaSeconds * 13.0f;
+        const float MouthOpen = 0.045f + FMath::Abs(FMath::Sin(ActingPhase)) * 0.085f;
+        PrototypeMouth->SetRelativeScale3D(FVector(0.11f, 0.16f, MouthOpen));
+    }
+    else
+    {
+        PrototypeMouth->SetRelativeScale3D(FVector(0.11f, 0.16f, 0.045f));
+    }
+
+    if (!bPrototypeMoving && GetWorld())
+    {
+        APlayerController* PC = GetWorld()->GetFirstPlayerController();
+        APawn* PlayerPawn = PC ? PC->GetPawn() : nullptr;
+        if (PlayerPawn)
+        {
+            FVector ToPlayer = PlayerPawn->GetActorLocation() - GetActorLocation();
+            ToPlayer.Z = 0.0f;
+            if (ToPlayer.SizeSquared2D() <= FMath::Square(520.0f) && !ToPlayer.IsNearlyZero())
+            {
+                const float RelativeYaw = FMath::FindDeltaAngleDegrees(
+                    GetActorRotation().Yaw, ToPlayer.Rotation().Yaw);
+                const float ClampedYaw = FMath::Clamp(RelativeYaw, -38.0f, 38.0f);
+                PrototypeHead->SetRelativeRotation(FMath::RInterpTo(
+                    PrototypeHead->GetRelativeRotation(),
+                    FRotator(0.0f, ClampedYaw, 0.0f),
+                    DeltaSeconds,
+                    DialogueActingRemaining > 0.0f ? 7.0f : 3.0f));
+                return;
+            }
+        }
+    }
+
+    PrototypeHead->SetRelativeRotation(FMath::RInterpTo(
+        PrototypeHead->GetRelativeRotation(), FRotator::ZeroRotator, DeltaSeconds, 3.0f));
 }
 
 int32 AShireNPC::ResolveCompanionSlot() const
@@ -448,6 +538,7 @@ void AShireNPC::Tick(float DeltaSeconds)
     }
 
     UpdatePrototypeAnimation(DeltaSeconds);
+    UpdatePrototypeActing(DeltaSeconds);
 }
 
 
@@ -499,6 +590,8 @@ const TArray<FText>* AShireNPC::ResolveDialogueLines(const UShireQuestSubsystem*
 
 void AShireNPC::Interact_Implementation(AActor* Interactor)
 {
+    DialogueActingRemaining = 2.5f;
+
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* QuestSubsystem = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
 
@@ -540,6 +633,7 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
             if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
             {
                 HUD->ShowDialogue(DisplayName, Line, 6.0f);
+                DialogueActingRemaining = 5.5f;
             }
         }
         CurrentDialogueIndex = (CurrentDialogueIndex + 1) % ActiveDialogue->Num();

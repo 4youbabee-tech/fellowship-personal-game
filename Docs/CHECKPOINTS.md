@@ -197,6 +197,16 @@
 - These are low-cost runtime prototype biomes using basic shapes; final authored terrain/material/vegetation assets are still pending.
 - Guardian now fails if any P1C01-P1C08 chapter lacks a complete biome contract.
 
+## CP27 — Runtime Audio Mix + Proxy Acting Foundation
+- Runtime ambience, music and SFX now resolve deterministic asset paths under /Game/Audio/.
+- Persistent ambience/music components stop and replace cleanly when story cues change.
+- Voiced dialogue ducks music to roughly 36% and restores it when the line finishes.
+- World voice is attached to the matching speaker actor instead of remaining at the initial location.
+- Current NPC proxies now have temporary eye/mouth geometry, natural-offset blinking, near-player head gaze and approximate mouth motion during direct dialogue.
+- This acting layer is a development bridge only; it does not replace final skeletal face rigs, visemes or authored animation.
+- Guardian checks runtime audio categories, dialogue ducking and the proxy acting foundation.
+- Final audio assets and final facial animation remain pending production.
+
 ## Current hard gate
 The current runtime-code baseline has passed static validation, real UE4.27 compile and basic Shire PIE boot.
 

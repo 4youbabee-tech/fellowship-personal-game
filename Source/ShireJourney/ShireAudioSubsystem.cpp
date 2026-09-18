@@ -62,9 +62,48 @@ void UShireAudioSubsystem::Deinitialize()
         ActiveVoiceComponent = nullptr;
     }
     VoiceCache.Empty();
+    AmbienceCache.Empty();
+    MusicCache.Empty();
+    SfxCache.Empty();
 
     ClearPersistentAudio();
     Super::Deinitialize();
+}
+
+USoundBase* UShireAudioSubsystem::ResolveCategorizedAsset(
+    FName CueId,
+    const TCHAR* Category,
+    TMap<FName, USoundBase*>& Cache)
+{
+    if (CueId == NAME_None)
+    {
+        return nullptr;
+    }
+
+    if (USoundBase** Cached = Cache.Find(CueId))
+    {
+        return *Cached;
+    }
+
+    const FString Cue = CueId.ToString();
+    const FString AssetPath = FString::Printf(
+        TEXT("/Game/Audio/%s/%s.%s"),
+        Category,
+        *Cue,
+        *Cue);
+
+    USoundBase* Sound = LoadObject<USoundBase>(nullptr, *AssetPath);
+    Cache.Add(CueId, Sound);
+    return Sound;
+}
+
+void UShireAudioSubsystem::ApplyMusicDuck(bool bDuck)
+{
+    bVoiceActive = bDuck;
+    if (ActiveMusicComponent)
+    {
+        ActiveMusicComponent->SetVolumeMultiplier(bDuck ? 0.36f : 1.0f);
+    }
 }
 
 void UShireAudioSubsystem::SetAmbienceCue(FName CueId)
@@ -74,9 +113,24 @@ void UShireAudioSubsystem::SetAmbienceCue(FName CueId)
         return;
     }
 
+    if (ActiveAmbienceComponent)
+    {
+        ActiveAmbienceComponent->Stop();
+        ActiveAmbienceComponent = nullptr;
+    }
+
     const FName Previous = ActiveAmbienceCue;
     ActiveAmbienceCue = CueId;
     OnAmbienceChanged.Broadcast(Previous, ActiveAmbienceCue);
+
+    if (CueId != NAME_None)
+    {
+        if (USoundBase* Sound = ResolveCategorizedAsset(CueId, TEXT("Ambience"), AmbienceCache))
+        {
+            ActiveAmbienceComponent = UGameplayStatics::SpawnSound2D(
+                this, Sound, 1.0f, 1.0f, 0.0f, nullptr, false, false);
+        }
+    }
 }
 
 void UShireAudioSubsystem::SetMusicCue(FName CueId)
@@ -86,16 +140,38 @@ void UShireAudioSubsystem::SetMusicCue(FName CueId)
         return;
     }
 
+    if (ActiveMusicComponent)
+    {
+        ActiveMusicComponent->Stop();
+        ActiveMusicComponent = nullptr;
+    }
+
     const FName Previous = ActiveMusicCue;
     ActiveMusicCue = CueId;
     OnMusicChanged.Broadcast(Previous, ActiveMusicCue);
+
+    if (CueId != NAME_None)
+    {
+        if (USoundBase* Sound = ResolveCategorizedAsset(CueId, TEXT("Music"), MusicCache))
+        {
+            ActiveMusicComponent = UGameplayStatics::SpawnSound2D(
+                this, Sound, bVoiceActive ? 0.36f : 1.0f, 1.0f, 0.0f, nullptr, false, false);
+        }
+    }
 }
 
 void UShireAudioSubsystem::PlaySfxCue(FName CueId)
 {
-    if (CueId != NAME_None)
+    if (CueId == NAME_None)
     {
-        OnSfxRequested.Broadcast(CueId);
+        return;
+    }
+
+    OnSfxRequested.Broadcast(CueId);
+
+    if (USoundBase* Sound = ResolveCategorizedAsset(CueId, TEXT("SFX"), SfxCache))
+    {
+        UGameplayStatics::SpawnSound2D(this, Sound, 1.0f, 1.0f, 0.0f, nullptr, false, true);
     }
 }
 
@@ -198,6 +274,7 @@ void UShireAudioSubsystem::HandleVoiceFinished()
         ActiveVoiceComponent = nullptr;
     }
 
+    ApplyMusicDuck(false);
     OnVoicePlaybackStateChanged.Broadcast(false);
 }
 
@@ -227,11 +304,13 @@ void UShireAudioSubsystem::PlayVoiceCue(FName CueId)
 
     if (AActor* SpeakerActor = ResolveVoiceSpeakerActor(CueId))
     {
-        ActiveVoiceComponent = UGameplayStatics::SpawnSoundAtLocation(
-            this,
+        ActiveVoiceComponent = UGameplayStatics::SpawnSoundAttached(
             Sound,
-            SpeakerActor->GetActorLocation(),
-            SpeakerActor->GetActorRotation(),
+            SpeakerActor->GetRootComponent(),
+            NAME_None,
+            FVector::ZeroVector,
+            EAttachLocation::KeepRelativeOffset,
+            false,
             1.0f,
             1.0f,
             0.0f,
@@ -255,6 +334,7 @@ void UShireAudioSubsystem::PlayVoiceCue(FName CueId)
     if (ActiveVoiceComponent)
     {
         ActiveVoiceComponent->OnAudioFinished.AddDynamic(this, &UShireAudioSubsystem::HandleVoiceFinished);
+        ApplyMusicDuck(true);
         OnVoicePlaybackStateChanged.Broadcast(true);
     }
 }

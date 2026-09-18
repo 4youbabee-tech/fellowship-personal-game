@@ -405,8 +405,8 @@ if dead_voice_plan:
 audio_cpp = read(SOURCE / "ShireAudioSubsystem.cpp")
 if "ResolveVoiceAsset" not in audio_cpp or "/Game/Audio/Voice/" not in audio_cpp:
     fail("Runtime voice asset resolver missing from ShireAudioSubsystem")
-if "SpawnSoundAtLocation" not in audio_cpp or "SpawnSound2D" not in audio_cpp:
-    fail("Runtime voice playback must support spatial world voice and controlled 2D fallback")
+if "SpawnSoundAttached" not in audio_cpp or "SpawnSound2D" not in audio_cpp:
+    fail("Runtime voice playback must support attached spatial world voice and controlled 2D fallback")
 
 player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
 player_h = read(SOURCE / "ShirePlayerCharacter.h")
@@ -422,6 +422,16 @@ for profile in ["EFellowshipEnemyType::Orc", "EFellowshipEnemyType::UrukHai", "E
         fail(f"Combat foundation missing enemy profile: {profile}")
 if "AFellowshipEnemyPrototype::StaticClass()" not in router_cpp:
     fail("ChapterWorldRouter does not clear combat enemies between runtime regions")
+
+for category in ["/Game/Audio/Ambience/", "/Game/Audio/Music/", "/Game/Audio/SFX/"]:
+    if category not in audio_cpp:
+        fail(f"Runtime audio category resolver missing: {category}")
+if "ApplyMusicDuck" not in audio_cpp:
+    fail("Runtime audio mix missing dialogue music ducking")
+npc_cpp = read(SOURCE / "ShireNPC.cpp")
+for acting_symbol in ["PrototypeLeftEye", "PrototypeRightEye", "PrototypeMouth", "UpdatePrototypeActing"]:
+    if acting_symbol not in npc_cpp:
+        fail(f"Proxy acting foundation missing: {acting_symbol}")
 
 # Quest/chapter reachability safety net. We model explicit transitions and runtime handoff guards.
 chapter_start_quests = {

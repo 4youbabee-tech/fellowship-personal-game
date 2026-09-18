@@ -67,9 +67,28 @@ private:
     UAudioComponent* ActiveVoiceComponent = nullptr;
 
     UPROPERTY(Transient)
+    UAudioComponent* ActiveAmbienceComponent = nullptr;
+
+    UPROPERTY(Transient)
+    UAudioComponent* ActiveMusicComponent = nullptr;
+
+    UPROPERTY(Transient)
     TMap<FName, USoundBase*> VoiceCache;
 
+    UPROPERTY(Transient)
+    TMap<FName, USoundBase*> AmbienceCache;
+
+    UPROPERTY(Transient)
+    TMap<FName, USoundBase*> MusicCache;
+
+    UPROPERTY(Transient)
+    TMap<FName, USoundBase*> SfxCache;
+
+    bool bVoiceActive = false;
+
     USoundBase* ResolveVoiceAsset(FName CueId);
+    USoundBase* ResolveCategorizedAsset(FName CueId, const TCHAR* Category, TMap<FName, USoundBase*>& Cache);
+    void ApplyMusicDuck(bool bDuck);
     AActor* ResolveVoiceSpeakerActor(FName CueId) const;
 
     UFUNCTION()
