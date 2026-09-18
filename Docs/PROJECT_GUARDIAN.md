@@ -231,6 +231,15 @@ This converts failures into permanent project knowledge.
 
 **Acceptance:** static/build success is not visual acceptance. Frodo and Gandalf still require PIE visual review on the target build.
 
+### PG-032 — Part I cast population must not silently thin out or fake visual completion
+**Risk:** later edits remove companions from travel chapters, make Frodo appear alone, reuse Hobbit silhouettes in Bree/Elven regions, or call a procedural proxy a finished production character.
+
+**Contract:** `Data/CharacterPopulationPlan.json` defines the required Part I core cast per chapter/route and records each character's visual tier. Film/story separation beats may release companions, but chapter population cannot silently omit the required cast.
+
+**Guard:** Pre-Unreal Validation checks required cast IDs, chapter contracts, runtime source representation, story-aware companion release, Bree/Elf ambient roles, and role-specific ambient visual bases.
+
+**Proof rule:** `PROCEDURAL_DISTINCT_PROXY` means runtime presence only. It is not final visual acceptance. Dedicated meshes/rigging/animation and PIE/device review remain required.
+
 ## What Guardian must never do automatically
 
 - change canon,
