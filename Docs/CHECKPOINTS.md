@@ -307,6 +307,15 @@
 - Added PG-027 so the self-hosted workflow cannot silently return to the blocked shell form.
 - This remains CI infrastructure work only; a new green UE4.27.2 compile/import run is still required.
 
+## CP30K — LW2-LW5 Remote-Safe Intelligence Contracts
+- Added `Data/NPCConversationPlan.json` for bounded NPC-to-NPC conversation eligibility, intents, knowledge/story gates, priority, cooldowns and repetition policy.
+- Added `Data/NPCMemoryPlan.json` for compact named-NPC memory tiers, expiry, route partitioning, save budgets and alias identity sharing.
+- Added `Data/LivingWorldEventPlan.json` for chapter-specific workers/travelers/social moments/fauna/weather/prop motion/danger reactions and low-spec activity caps.
+- Added `Data/BoundedDialoguePlan.json` for authored/template/cached dialogue variation, default-deny knowledge, canon safety, line/cache limits and deterministic fallback.
+- Added static guards PG-025/PG-028/PG-029/PG-030 so these contracts cannot silently drift or become unbounded.
+- Updated LW2-LW5 planning and the single Project Governor to record data-contract progress while leaving runtime behavior gated.
+- No new gameplay runtime system was enabled by this checkpoint.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
