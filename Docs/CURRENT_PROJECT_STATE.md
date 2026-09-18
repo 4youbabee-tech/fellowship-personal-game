@@ -176,6 +176,19 @@ This layer is specifically meant to stop silent requirement contradictions, fals
 
 It does not promise zero bugs. It enforces evidence and prevents known uncertainty from being hidden.
 
+## Active visible-gameplay work: CP31-CP32 characters
+
+The project has moved from governance-only preparation into visible character/gameplay production.
+
+Current character state:
+- Frodo and Gandalf have dedicated imported modular production meshes and the CP31 production-aware motion pass.
+- Sam, Merry, Pippin and Bilbo use the imported Hobbit production archetype with character-specific color/proportion treatment.
+- Aragorn/Strider, Boromir, Legolas, Gimli, Arwen, Elrond, Haldir, Galadriel, Saruman and other non-Hobbit named cast are runtime-present distinct procedural proxies; these are **not** final character art.
+- `Data/CharacterPopulationPlan.json` is the implementation map for required cast presence by Part I chapter/route.
+- Bree, Rivendell and Lothlorien now carry region-aware moving ambient populations rather than one Hobbit silhouette everywhere.
+
+Next character-production work after compile/PIE proof is dedicated visual asset/rigging production in the order recorded by the population plan.
+
 ## Current architecture map
 
 ### Story / quest
