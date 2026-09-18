@@ -779,6 +779,134 @@ knowledge_guard = bounded_dialogue.get("knowledge_guard", {})
 if knowledge_guard.get("default") != "DENY_UNLISTED" or knowledge_guard.get("cross_route_knowledge_default") != "DENY":
     fail("BoundedDialoguePlan knowledge guard must default-deny unlisted and cross-route knowledge")
 
+# PG-044: backend hardening must keep NPC context, memory, dialogue and save contracts connected.
+backend_context_h = read(SOURCE / "ShireNPCContextSubsystem.h")
+backend_context_cpp = read(SOURCE / "ShireNPCContextSubsystem.cpp")
+backend_quest_h = read(SOURCE / "ShireQuestSubsystem.h")
+backend_quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
+backend_npc_cpp = read(SOURCE / "ShireNPC.cpp")
+backend_ambient_cpp = read(SOURCE / "ShireAmbientNPC.cpp")
+backend_dialogue_h = read(SOURCE / "ShireDialogueSubsystem.h")
+backend_dialogue_cpp = read(SOURCE / "ShireDialogueSubsystem.cpp")
+backend_save_h = read(SOURCE / "ShireSaveGame.h")
+backend_player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
+backend_build_cs = read(SOURCE / "ShireJourney.Build.cs")
+
+for symbol in [
+    "ResolveCanonicalProfileId",
+    "GetPersistentMemoryBudget",
+    "GetRelationshipBudget",
+    "ResolveSchedulePhase",
+    "SelectBoundedDialogue",
+    "IsDangerStateActive",
+    "IsInclementWeather",
+]:
+    if symbol not in backend_context_h or symbol not in backend_context_cpp:
+        fail(f"PG-044 NPC context runtime missing symbol: {symbol}")
+
+for symbol in [
+    "ResolveCanonicalNPCProfile",
+    "PruneNPCMemoryForCurrentChapter",
+    "RecordStoryBeatForEligibleNPCs",
+    "HasRecentNPCDialogueVariant",
+    "RecordNamedNPCDialogueUse",
+    "GetNamedNPCRelationship",
+]:
+    if symbol not in backend_quest_h or symbol not in backend_quest_cpp:
+        fail(f"PG-044 NPC memory hardening missing symbol: {symbol}")
+
+for invariant in [
+    'Tier == TEXT("NAMED_STORY")',
+    'Tier == TEXT("NAMED_LIGHT")',
+    "return 12;",
+    "return 4;",
+    "return 8;",
+    "return 3;",
+    "CurrentOrdinal - EventOrdinal > 2",
+    "Event.Priority >= 80",
+]:
+    if invariant not in (backend_context_cpp + backend_quest_cpp):
+        fail(f"PG-044 memory budget/expiry invariant missing: {invariant}")
+
+for symbol in [
+    "PlayDynamicLine",
+    "PlayDynamicSequence",
+]:
+    if symbol not in backend_dialogue_h or symbol not in backend_dialogue_cpp:
+        fail(f"PG-044 dynamic dialogue transport missing: {symbol}")
+
+for symbol in [
+    "UpdateCompanionBanter",
+    "COMPANION_BANTER",
+    "TActorIterator<AShireNPC>",
+    "PLAYER_INTERACTED",
+    "AdjustNamedNPCRelationship",
+]:
+    if symbol not in backend_npc_cpp:
+        fail(f"PG-044 named NPC integration missing: {symbol}")
+
+for symbol in [
+    "UpdateScheduleContext",
+    "ResolveRuntimeProfileHint",
+    "DANGER_OVERRIDE",
+    "IsInclementWeather",
+]:
+    if symbol not in backend_ambient_cpp:
+        fail(f"PG-044 ambient schedule/reaction runtime missing: {symbol}")
+
+for symbol in [
+    "CurrentSchemaVersion = 3",
+    "SaveSchemaVersion",
+    "SnapshotCreatedUnixSeconds",
+]:
+    if symbol not in backend_save_h:
+        fail(f"PG-044 versioned save contract missing: {symbol}")
+
+for symbol in [
+    "Save->SaveSchemaVersion = UShireSaveGame::CurrentSchemaVersion",
+    "Save snapshot schema is newer than this build",
+    "invalid numeric state",
+]:
+    if symbol not in backend_player_cpp:
+        fail(f"PG-044 save hardening runtime missing: {symbol}")
+
+for module_name in ["\"Json\"", "\"JsonUtilities\""]:
+    if module_name not in backend_build_cs:
+        fail(f"PG-044 JSON runtime dependency missing: {module_name}")
+
+profiles = npc_social.get("profiles", []) if npc_social else []
+profile_ids = {str(p.get("id") or "") for p in profiles}
+aliases = {}
+for profile in profiles:
+    pid = str(profile.get("id") or "")
+    display = str(profile.get("display_name") or "")
+    for alias in [display, *profile.get("aliases", [])]:
+        key = str(alias).strip().lower()
+        if not key:
+            continue
+        if key in aliases and aliases[key] != pid:
+            fail(f"PG-044 duplicate NPC alias/display mapping: {alias}")
+        aliases[key] = pid
+
+if aliases.get("strider") != "NPC_ARAGORN":
+    fail("PG-044 Strider must canonically resolve to NPC_ARAGORN")
+
+memory_policies = {
+    p.get("profile_selector"): p for p in npc_memory.get("profile_memory_policy", [])
+} if npc_memory else {}
+if memory_policies.get("persistence_tier=NAMED_STORY", {}).get("persistent_budget") != 12:
+    fail("PG-044 NAMED_STORY persistent budget drifted from 12")
+if memory_policies.get("persistence_tier=NAMED_LIGHT", {}).get("persistent_budget") != 4:
+    fail("PG-044 NAMED_LIGHT persistent budget drifted from 4")
+if memory_policies.get("persistence_tier=AMBIENT_AGGREGATE", {}).get("persistent_budget") != 0:
+    fail("PG-044 ambient archetypes must never receive persistent per-instance memory")
+
+for conversation_set in npc_conversation.get("conversation_sets", []) if npc_conversation else []:
+    allowed_profiles = conversation_set.get("participant_filters", {}).get("allowed_profiles", [])
+    for profile_id in allowed_profiles:
+        if profile_id not in profile_ids:
+            fail(f"PG-044 conversation set references unknown profile: {profile_id}")
+
 # PG-043: dedicated hero identity meshes must remain distinct and runtime-wired.
 dedicated_characters = {
     "Sam": ["SM_Sam_Torso.obj", "SM_Sam_Head.obj", "SM_Sam_Hair.obj"],

@@ -885,5 +885,21 @@
       "Contradict a recorded film-core outcome",
       "Treat ambient archetype memory as a named persistent identity"
     ]
+  },
+  "runtime_implementation": {
+    "status": "RUNTIME_COMPLETE_PENDING_VALIDATION",
+    "subsystem": "UShireNPCContextSubsystem",
+    "implementation": [
+      "profile/alias/display-name canonical lookup",
+      "knowledge-tag lookup",
+      "persistence-tier lookup",
+      "schedule-template consumption",
+      "chapter availability checks",
+      "danger override",
+      "weather-aware ambient reaction",
+      "ambient Shire/Bree schedule phase runtime",
+      "named story profiles remain story-driven by authored placement"
+    ],
+    "proof_limit": "Data consumption is implemented; authored anchor placement density and device behavior remain acceptance/content-production concerns."
   }
 }

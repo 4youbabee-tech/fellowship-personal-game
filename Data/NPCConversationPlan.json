@@ -290,24 +290,25 @@
     "fallback_to_silence"
   ],
   "runtime_implementation": {
-    "status": "RUNTIME_PARTIAL",
-    "scope": "AMBIENT_ROLE_CONVERSATIONS",
+    "status": "RUNTIME_COMPLETE_PENDING_VALIDATION",
+    "scope": "AMBIENT_AND_NAMED_BOUNDED_CONVERSATIONS",
     "implementation": [
-      "two-turn world-space text captions near the player",
-      "role-specific original ambient lines for Shire/Bree/Elf residents",
-      "symmetric face-to-face social pause",
-      "maximum two simultaneous near-player conversations",
+      "existing two-turn world-space ambient resident conversations",
+      "maximum two simultaneous near-player ambient pairs",
       "90-second same-pair cooldown",
-      "18-28 second post-conversation social cooldown",
-      "Bird/Courier/RoadWalker roles excluded"
+      "Bird/Courier/RoadWalker exclusions",
+      "data-driven intent knowledge guards from NPCConversationPlan",
+      "deterministic bounded variant selection with recent-line repetition history",
+      "two-way Fellowship companion banter near the player",
+      "story/danger intent preconditions and authored story dialogue priority",
+      "memory and relationship context can influence bounded selection",
+      "logical voice cue dispatch through UShireDialogueSubsystem"
     ],
-    "not_yet_implemented": [
-      "named Fellowship companion banter runtime",
-      "story/quest-reactive named-NPC conversation selection",
-      "audio/voice playback",
-      "persistent named-NPC conversation memory",
-      "full intent-history variation beyond pair cooldown"
+    "not_yet_validated": [
+      "PIE pacing/overlap review",
+      "final voice asset playback",
+      "target-device performance and subtitle readability"
     ],
-    "proof_limit": "RUNTIME_PARTIAL means code exists and static/build validation may pass; it is not PIE/device/visual dialogue acceptance."
+    "proof_limit": "Conversation backend is source-complete but remains pending integration/visual/audio acceptance."
   }
 }

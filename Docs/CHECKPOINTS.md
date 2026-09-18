@@ -460,6 +460,20 @@
 - CharacterPopulationPlan promotes Sam, Merry, Pippin and Aragorn to `PRODUCTION_DEDICATED`.
 - Added PG-043. These are dedicated modular static-mesh characters, not final skeletal/facial/cloth/animation production.
 
+## CP44 — Backend Completion and Hardening Pass
+- Added `UShireNPCContextSubsystem` to consume NPC identity, alias, knowledge, schedule and bounded-dialogue data at runtime.
+- Canonical alias resolution now occurs before persistent NPC memory/relationship access; `Strider` and `Aragorn` share `NPC_ARAGORN` memory.
+- Enforced persistence tiers at runtime: NAMED_STORY = 12 events / 8 relationships, NAMED_LIGHT = 4 / 3, ambient archetypes = no per-instance persistent memory.
+- Added two-chapter expiry for low-priority memories while story/relationship memories at priority 80+ are retained.
+- Completed story beats are written only to eligible named NPCs with MAIN_STORY_CONTEXT; named NPC interactions write compact PLAYER_INTERACTED memory and bounded relationship deltas.
+- Added persistent recent dialogue-variant and partner history for repetition control.
+- Added deterministic, knowledge-gated, memory-aware bounded dialogue selection with authored fallback.
+- Added two-way Fellowship companion banter near the player and logical voice-cue dispatch through the dialogue subsystem.
+- Ambient Shire/Bree residents now consume schedule phases and react to danger/inclement weather.
+- Save snapshots now carry schema version/timestamp and reject unsupported future schema or invalid numeric state before restore.
+- Backend requirements are now IMPLEMENTED. They are not promoted to VALIDATED until Pre-Unreal, real UE4.27.2 build/import, PIE round trips and target-device checks pass.
+- Added PG-044.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
