@@ -162,7 +162,7 @@ This converts failures into permanent project knowledge.
 ### PG-020 — User requirements must survive lost chats and developer handoffs
 **Risk:** a meaningful user request exists only in conversation memory, then disappears when a chat is deleted, context is truncated or a new programmer takes over.
 
-**Contract:** `Data/ProjectRequirements.json` is the permanent machine-readable requirement ledger. Each meaningful request has a stable ID, intent, priority, status, evidence, missing work and acceptance criteria.
+**Contract:** `Data/ProjectGovernor.json` is the single authoritative machine-readable project governor containing the permanent requirement ledger. Each meaningful request has a stable ID, intent, priority, status, evidence, missing work and acceptance criteria.
 
 **Guard:** Pre-Unreal Validation validates unique requirement IDs, approved statuses/priorities and required acceptance criteria. Critical long-lived requirements such as project memory, living world, NPC intelligence, save continuity and performance must remain present.
 
@@ -176,6 +176,13 @@ This converts failures into permanent project knowledge.
 **Guard:** Pre-Unreal Validation requires all living-world phases and critical feature contracts including routines, NPC conversation runtime, memory schema, micro-events, fauna/environment motion and knowledge guards.
 
 **Acceptance rule:** current ambient routines/awareness/social pauses are foundations only. NPC-to-NPC dialogue, persistent named-NPC memory/relationships and bounded dialogue intelligence may not be called implemented until runtime evidence exists.
+
+### PG-023 — Secondary project authority is forbidden
+**Risk:** multiple requirements/decision/quality files evolve independently and different programmers follow different project managers.
+
+**Contract:** `Data/ProjectGovernor.json` is the sole authority for requirements, priorities, conflicts, decisions, active gate and region acceptance state.
+
+**Guard:** `Scripts/project_governor.py` fails if deprecated secondary authority files reappear. Supporting docs/plans remain references only.
 
 ## What Guardian must never do automatically
 
