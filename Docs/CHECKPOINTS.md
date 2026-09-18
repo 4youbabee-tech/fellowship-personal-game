@@ -301,6 +301,13 @@
 - Added PG-026 to prevent returning to the flaky acquisition/log-upload pattern.
 - This checkpoint changes CI infrastructure only. A new green self-hosted run is required before claiming the hardened path validated.
 
+## CP30G — LW2 NPC Conversation Contract
+- Added `Data/NPCConversationPlan.json` as the data-first contract for bounded NPC-to-NPC contextual conversations.
+- Defined participant eligibility, conversation sets, intent types, story/knowledge gating, priority, story-critical/danger preemption, conversation caps, cooldowns and repetition fallback.
+- Added PG-025 validation for intent/set uniqueness, valid NPC profile references, required sets and mandatory preemption/cap rules.
+- Updated LW2 planning and the single Project Governor to show that selection/repetition contracts are PARTIAL while actual runtime conversation playback remains pending.
+- No runtime conversation behavior was enabled; this remains remote-safe preparatory work while the F9/F8/chapter/device hard gate is open.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
