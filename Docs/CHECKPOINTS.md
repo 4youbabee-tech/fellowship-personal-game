@@ -301,6 +301,14 @@
 - Added PG-026 to prevent returning to the flaky acquisition/log-upload pattern.
 - This checkpoint changes CI infrastructure only. A new green self-hosted run is required before claiming the hardened path validated.
 
+## CP30J — LW3 Bounded NPC Memory Contract
+- Added `Data/NPCMemoryPlan.json` with immediate/local-story/relationship/persistent-named memory tiers.
+- Added compact event-ID records, expiry policies, named-NPC budgets, ambient aggregate-only policy, alias identity sharing and route-partitioned save intent.
+- Added a soft save budget and versioned-schema requirement so NPC memory cannot grow without bound.
+- Added PG-028 static validation for required memory templates, allowed tiers/scopes, compact-storage rules, story immutability, route partitioning and save-budget bounds.
+- Updated LW3 planning and the single Project Governor; runtime memory storage/save integration remains pending.
+- No gameplay runtime behavior changed.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
