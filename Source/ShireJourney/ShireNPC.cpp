@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/GameInstance.h"
+#include "EngineUtils.h"
 #include "GameFramework/PlayerController.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
@@ -933,21 +934,72 @@ void AShireNPC::UpdateCompanionBanter(float DeltaSeconds)
         return;
     }
 
-    const FShireBoundedDialogueResult Result = Context->SelectBoundedDialogue(
+    AShireNPC* BestPartner = nullptr;
+    float BestDistanceSq = FMath::Square(700.0f);
+    for (TActorIterator<AShireNPC> It(GetWorld()); It; ++It)
+    {
+        AShireNPC* Candidate = *It;
+        if (!Candidate || Candidate == this || !Candidate->bFollowingPlayer)
+        {
+            continue;
+        }
+        const FName CandidateProfile = Candidate->ResolveCanonicalProfileId();
+        if (CandidateProfile == NAME_None ||
+            !Context->HasKnowledgeTag(CandidateProfile, TEXT("FELLOWSHIP_MEMBER")))
+        {
+            continue;
+        }
+
+        const float DistanceSq = FVector::DistSquared2D(GetActorLocation(), Candidate->GetActorLocation());
+        if (DistanceSq < BestDistanceSq)
+        {
+            BestDistanceSq = DistanceSq;
+            BestPartner = Candidate;
+        }
+    }
+
+    const FName ListenerProfileId =
+        BestPartner ? BestPartner->ResolveCanonicalProfileId() : FName(TEXT("PLAYER_FRODO"));
+    const FShireBoundedDialogueResult First = Context->SelectBoundedDialogue(
         ProfileId,
-        TEXT("PLAYER_FRODO"),
+        ListenerProfileId,
         TEXT("COMPANION_BANTER"),
         Quests->GetCurrentChapterId());
 
-    if (Result.bValid)
+    TArray<FShireDialogueLine> Lines;
+    if (First.bValid)
     {
         FShireDialogueLine Line;
         Line.Speaker = DisplayName;
-        Line.Subtitle = Result.Text;
-        Line.VoiceCue = Result.VoiceCue;
-        Line.Duration = 4.2f;
-        Dialogue->PlayDynamicLine(Line, Result.VariantId);
-        DialogueActingRemaining = 4.0f;
+        Line.Subtitle = First.Text;
+        Line.VoiceCue = First.VoiceCue;
+        Line.Duration = 4.0f;
+        Lines.Add(Line);
+    }
+
+    if (BestPartner && First.bValid)
+    {
+        const FShireBoundedDialogueResult Response = Context->SelectBoundedDialogue(
+            ListenerProfileId,
+            ProfileId,
+            TEXT("COMPANION_BANTER"),
+            Quests->GetCurrentChapterId());
+        if (Response.bValid)
+        {
+            FShireDialogueLine Line;
+            Line.Speaker = BestPartner->DisplayName;
+            Line.Subtitle = Response.Text;
+            Line.VoiceCue = Response.VoiceCue;
+            Line.Duration = 4.0f;
+            Lines.Add(Line);
+            BestPartner->DialogueActingRemaining = 7.5f;
+        }
+    }
+
+    if (Lines.Num() > 0)
+    {
+        Dialogue->PlayDynamicSequence(Lines, First.VariantId);
+        DialogueActingRemaining = Lines.Num() > 1 ? 7.5f : 4.0f;
     }
 
     BanterCooldownRemaining = 68.0f + ResolveCompanionSlot() * 13.0f;

@@ -90,15 +90,28 @@ void UShireNPCContextSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
     bDataReady = bSocialLoaded && bConversationLoaded && bBoundedLoaded && Profiles.Num() > 0;
 
-    UE_LOG(
-        LogTemp,
-        bDataReady ? Display : Error,
-        TEXT("NPCContext: ready=%s profiles=%d scheduleBindings=%d intentContracts=%d dialogueKeys=%d"),
-        bDataReady ? TEXT("yes") : TEXT("no"),
-        Profiles.Num(),
-        ProfileSchedules.Num(),
-        IntentRequiredKnowledge.Num(),
-        DialogueVariants.Num());
+    if (bDataReady)
+    {
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("NPCContext: ready=yes profiles=%d scheduleBindings=%d intentContracts=%d dialogueKeys=%d"),
+            Profiles.Num(),
+            ProfileSchedules.Num(),
+            IntentRequiredKnowledge.Num(),
+            DialogueVariants.Num());
+    }
+    else
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("NPCContext: ready=no profiles=%d scheduleBindings=%d intentContracts=%d dialogueKeys=%d"),
+            Profiles.Num(),
+            ProfileSchedules.Num(),
+            IntentRequiredKnowledge.Num(),
+            DialogueVariants.Num());
+    }
 }
 
 void UShireNPCContextSubsystem::Deinitialize()
@@ -751,11 +764,16 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
     Seed = HashCombine(Seed, GetTypeHash(ListenerId));
     Seed = HashCombine(Seed, GetTypeHash(IntentId));
     Seed = HashCombine(Seed, GetTypeHash(LocationTag));
+    int32 RelationshipContext = 0;
     if (Quests)
     {
         Seed = HashCombine(Seed, GetTypeHash(Quests->GetCurrentChapterId()));
         Seed = HashCombine(Seed, GetTypeHash(Quests->GetActiveQuestId()));
         Seed = HashCombine(Seed, static_cast<uint32>(Quests->GetActiveQuestStage()));
+        RelationshipContext = Quests->GetNamedNPCRelationship(
+            SpeakerId,
+            ListenerId == NAME_None ? FName(TEXT("PLAYER_FRODO")) : ListenerId);
+        Seed = HashCombine(Seed, static_cast<uint32>(RelationshipContext + 100));
     }
 
     const FDialogueVariantRuntime* Selected = Pool[Seed % static_cast<uint32>(Pool.Num())];
@@ -768,7 +786,9 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
     Result.VoiceCue = Selected->VoiceCue;
     Result.ProvenanceMode = TEXT("AUTHORED_VARIANT");
     Result.bMemoryInfluenced =
-        Selected->RequiredMemory != NAME_None || Selected->RequiredStoryBeat != NAME_None;
+        Selected->RequiredMemory != NAME_None ||
+        Selected->RequiredStoryBeat != NAME_None ||
+        RelationshipContext != 0;
 
     if (Quests)
     {
