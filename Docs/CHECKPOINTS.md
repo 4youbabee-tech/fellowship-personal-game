@@ -338,6 +338,17 @@
 - Recorded `REQ-CHAR-001` and `DEC-004` in the single Project Governor. This is a bounded user-directed exception to the normal hard-gate order: no story/save/route architecture is changed.
 - This pass is **not yet accepted** until Pre-Unreal is green, UE4.27.2 compile/import is green, and Frodo/Gandalf receive PIE visual review.
 
+## CP32 — Part I Character Population Pass
+- Added `Data/CharacterPopulationPlan.json` with 20 core named characters, threat cast, ambient population roles, chapter-by-chapter cast requirements and explicit visual tiers.
+- Kept Sam, Merry and Pippin physically present through Bree and P1C03 travel instead of leaving Frodo visually alone.
+- Completed the Rivendell social/council cast with Sam, Merry, Pippin and Arwen alongside Gandalf, Aragorn, Boromir, Legolas, Gimli, Bilbo and Elrond.
+- Added Fellowship travel presence across P1C05-P1C08, including story-aware formation release so authored separation/capture beats stop the appropriate companions from following.
+- Added region-aware ambient silhouettes: Shire residents remain Hobbit production archetypes, Bree crowds become human-townsperson proxies, and Rivendell/Lothlorien receive moving Elf residents.
+- Fixed post-spawn ambient role assignment so the visual style reapplies when a builder changes `RoutineRole`.
+- Added PG-032 and `REQ-CHAR-002` / `DEC-005` so full-cast population and unfinished visual tiers remain explicit.
+- This checkpoint does **not** claim final character art. Frodo/Gandalf have dedicated production meshes; Hobbit companions currently share the Hobbit production archetype; many other named characters remain distinct procedural proxies pending dedicated character production.
+- Requires Pre-Unreal + real UE4.27.2 build before merge, followed by PIE visual/population/performance review.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
