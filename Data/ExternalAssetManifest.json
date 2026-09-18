@@ -125,6 +125,52 @@
       "mode": "REFERENCE_ONLY",
       "allowed_license_classes": [],
       "notes": "Use for secondary research only; verify important canon facts against primary/authorized sources where practical."
+    },
+    {
+      "id": "WETA_WORKSHOP",
+      "mode": "SERVICE_OR_COMMISSION_ONLY",
+      "allowed_license_classes": [],
+      "notes": "Weta Workshop is a world-class design/game-development/private-commission partner, not a blanket stock-asset license for Middle-earth. Any use of project imagery/designs still requires rights clearance; Weta itself notes some project material is not its IP."
+    },
+    {
+      "id": "POLY_HAVEN",
+      "mode": "APPROVED_CC0",
+      "allowed_license_classes": [
+        "CC0"
+      ],
+      "notes": "HDRIs, textures and 3D models are CC0; strong low-friction source for environments and lighting."
+    },
+    {
+      "id": "AMBIENTCG",
+      "mode": "APPROVED_CC0",
+      "allowed_license_classes": [
+        "CC0"
+      ],
+      "notes": "Materials/textures are CC0; suitable for terrain, stone, wood, plaster and environmental surfaces."
+    },
+    {
+      "id": "ADOBE_MIXAMO",
+      "mode": "APPROVED_WITH_TERMS",
+      "allowed_license_classes": [
+        "MIXAMO_CURRENT_TERMS"
+      ],
+      "notes": "Useful for auto-rigging and animation. Game use is permitted under current terms; raw character/animation files must not be redistributed as standalone assets."
+    },
+    {
+      "id": "ACTORCORE_REALLUSION",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [
+        "ACTORCORE_STANDARD_OR_EXTENDED_WITH_REQUIRED_DISTRIBUTION_RIGHTS"
+      ],
+      "notes": "Useful for actors/motions/props and Unreal export; exact content license and any required mass-distribution rights must be verified per purchase."
+    },
+    {
+      "id": "KENNEY",
+      "mode": "APPROVED_CC0",
+      "allowed_license_classes": [
+        "CC0"
+      ],
+      "notes": "Good for UI/prototyping/development assets; use item license metadata and prefer CC0 packs."
     }
   ],
   "assets": []

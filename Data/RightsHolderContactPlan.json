@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "authority_id": "FELLOWSHIP_RIGHTS_HOLDER_CONTACT_PLAN_V1",
+  "project_mode": "PERSONAL_PRIVATE_NON_DISTRIBUTED",
+  "legal_position_note": "Private/non-distributed status reduces distribution exposure but is not treated as automatic permission to copy protected Tolkien, film, actor-likeness, prop, costume, map, dialogue or trademark material. Explicit permission/clearance is required before importing protected third-party material.",
+  "contacts": [
+    {
+      "id": "MIDDLE_EARTH_ENTERPRISES",
+      "role": "PRIMARY_GAME_AND_LOTR_HOBBIT_LICENSING_RIGHTS_CONTACT",
+      "organization": "Middle-earth Enterprises / Embracer",
+      "official_contact": "me@middleearth.com",
+      "scope": "The Lord of the Rings and The Hobbit licensing, including video-game-related rights handled by Middle-earth Enterprises.",
+      "project_use": "Ask whether any private, non-distributed, non-monetized game-project permission or limited development license is available; do not assume approval.",
+      "status": "RESEARCHED_NOT_CONTACTED"
+    },
+    {
+      "id": "WETA_WORKSHOP",
+      "role": "DESIGN_GAME_STUDIO_PRIVATE_COMMISSION_PARTNER",
+      "organization": "Weta Workshop",
+      "official_contacts": {
+        "game_concept_design": "services.enquiries@wetaworkshop.co.nz",
+        "game_development": "enquiries.gamestudio@wetaworkshop.co.nz",
+        "private_commissions": "services.enquiries@wetaworkshop.co.nz",
+        "image_use": "press@wetaworkshop.co.nz"
+      },
+      "scope": "Concept design, game development and private commissions. Weta is not treated as the owner of all Middle-earth IP or film material.",
+      "project_use": "Potential paid professional help/reference/commission if budget allows and underlying IP permissions are separately satisfied.",
+      "status": "RESEARCHED_NOT_CONTACTED"
+    },
+    {
+      "id": "WARNER_BROS_NEW_LINE",
+      "role": "PETER_JACKSON_FILM_SPECIFIC_MATERIAL",
+      "organization": "Warner Bros. Discovery / New Line Cinema",
+      "official_route": "Warner Bros. clip & still licensing; film-related enquiries are directed by Tolkien Estate/Middle-earth Enterprises to Warner Bros/New Line.",
+      "scope": "Peter Jackson film-specific clips/stills and other film-derived material; exact interactive/game rights may require additional licensing coordination.",
+      "project_use": "Do not copy film screenshots, actor likenesses, exact costumes/props or film audio into production without applicable permission.",
+      "status": "RESEARCHED_NOT_CONTACTED"
+    },
+    {
+      "id": "TOLKIEN_ESTATE",
+      "role": "TOLKIEN_COPYRIGHT_AND_ESTATE_RIGHTS",
+      "organization": "The Tolkien Estate",
+      "official_route": "Tolkien Estate FAQ/contact channels",
+      "scope": "Tolkien writings, original artwork, maps, scripts, names/marks and other Estate-controlled material.",
+      "project_use": "Use as a rights-policy reference. Do not interpret a private project as permission to reproduce protected Estate material.",
+      "status": "RESEARCHED_NOT_CONTACTED"
+    },
+    {
+      "id": "HARPERCOLLINS_PERMISSIONS",
+      "role": "PUBLISHED_TEXT_PERMISSIONS",
+      "organization": "HarperCollins Publishers",
+      "official_route": "HarperCollins Permissions Department",
+      "scope": "Permission requests for published Tolkien text/quotes and related publishing rights.",
+      "project_use": "We should continue using original dialogue rather than reproducing book text unless explicit permission is obtained.",
+      "status": "RESEARCHED_NOT_CONTACTED"
+    }
+  ],
+  "outreach_message_template": {
+    "subject": "Private non-distributed Middle-earth game project permissions inquiry",
+    "body_points": [
+      "State that the project is personal, private, non-commercial, not publicly distributed and not monetized.",
+      "State that no ripped film/game assets, soundtrack, actor scans or copied screenplay/book dialogue will be used without permission.",
+      "Describe the requested permission narrowly: private interactive prototype, specific names/locations/visual references or specific licensed material.",
+      "Ask whether the organization offers a non-commercial/private development permission, limited license or approved resource route.",
+      "Ask which rights holder must approve any film-specific or literary-specific material outside their scope.",
+      "Do not send proprietary creative ideas unless requested; Middle-earth Enterprises explicitly advises against this in initial licensing submissions."
+    ]
+  },
+  "decision_rules": [
+    "No response is not approval.",
+    "Weta Workshop approval/help does not replace Middle-earth Enterprises, Warner Bros/New Line, Tolkien Estate or HarperCollins permission where those rights apply.",
+    "Use original project-owned art and properly licensed generic assets as the default production route.",
+    "If permission is granted, store the written permission/license evidence beside the external asset manifest before importing protected material."
+  ]
+}

@@ -500,6 +500,14 @@
 - ArtStation, Tolkien Gateway and LOTR Wiki are reference/research sources only unless a specific item has separate rights.
 - Added PG-047 so future external asset batches must carry provenance/license metadata before they can become production dependencies.
 
+## CP48 — Weta + Rights-Holder + Global Resource Map
+- Added Weta Workshop as a professional concept-design/game-development/private-commission partner, not as a blanket Middle-earth asset licensor.
+- Added a machine-readable rights-holder map covering Middle-earth Enterprises/Embracer, Warner Bros/New Line, Tolkien Estate and HarperCollins permissions.
+- Recorded the project as personal/private/non-distributed while explicitly refusing to treat that status as automatic permission to copy protected franchise material.
+- Added an outreach template asking narrowly about private non-commercial development permission without sending proprietary creative ideas.
+- Expanded the resource provider manifest with Poly Haven, ambientCG, Adobe Mixamo, ActorCore/Reallusion and Kenney.
+- Added PG-048 so future sourcing cannot confuse a service provider, stock-resource site, reference site and actual rights holder.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
