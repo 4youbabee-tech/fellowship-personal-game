@@ -247,6 +247,13 @@ This converts failures into permanent project knowledge.
 
 **Build-first rule:** Pre-Unreal + real UE4.27.2 compile/import remain mandatory for merged runtime batches. PIE/device/performance/pacing/visual evidence may be deferred to the later integration pass but may not be marked passed early.
 
+### PG-034 — Batch-built world detail must stay chapter-specific and low-cost
+**Risk:** world fill becomes generic repeated clutter, erases chapter identity, blocks traversal, or grows into expensive always-active simulation.
+
+**Contract:** Bree, Weathertop/Ford, Rivendell, Fellowship road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen each receive region-specific low-cost static/procedural environmental detail. Detail must support readability/atmosphere and remain separate from unproven final art claims.
+
+**Guard:** static validation checks the chapter-specific detail markers remain present. Real UE4.27.2 build is mandatory; traversal/performance/visual acceptance remains deferred to the later batch integration pass.
+
 ## What Guardian must never do automatically
 
 - change canon,
