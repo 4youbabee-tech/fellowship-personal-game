@@ -231,11 +231,13 @@
 - Added `Docs/WORLD_PRODUCTION_BLUEPRINT.md` as the project-wide world engineering map.
 - Added `Data/WorldCheckpointPlan.csv` with safe checkpoint intent for every P1C01-P1C08 chapter.
 - Guardian now requires both files and validates unique checkpoint IDs, approved chapters, known story beats and supported save/status values.
+- The deterministic checkpoint-plan validator fix at `bd3d0be70912552c2cf5525a9731968f6ecab71a` passed Pre-Unreal Validation #112 and Unreal Build Validation #10.
+- Build #10 verified Unreal Engine 4.27.2, compiled the exact commit, and imported 50 production source assets with 0 failures.
 - Dedicated automatic checkpoint/respawn runtime behavior remains pending implementation; this checkpoint establishes the non-ambiguous contract first.
 
 ## Current hard gate
 The earlier CP23 baseline passed real UE4.27 compile and basic Shire PIE boot.
-The current CP24-CP27 head is STATIC-VALIDATED through Pre-Unreal Validation #95 but still requires a fresh real UE4.27 compile before its new audio/combat/biome/acting code can inherit COMPILE-TESTED status.
+The current repository content through CP30 is STATIC-VALIDATED and COMPILE-TESTED by the exact-head evidence above; the production asset pipeline is also ASSET-IMPORT-TESTED. The remaining uncertainty is functional PIE/device behavior, not C++ compilation.
 
 It must still pass:
 1. Shire movement / interaction / NPC-awareness smoke test,
