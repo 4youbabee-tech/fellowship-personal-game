@@ -316,6 +316,12 @@
 - Updated LW2-LW5 planning and the single Project Governor to record data-contract progress while leaving runtime behavior gated.
 - No new gameplay runtime system was enabled by this checkpoint.
 
+## CP30L — Self-Hosted Runner Resilience Validated
+- Unreal Build Validation #19 succeeded on exact commit `0936f2e779c6a6d1b4d209628d206f5d11ca3f9c`.
+- The runner successfully used the resilient exact-SHA archive checkout with PowerShell execution-policy bypass.
+- Unreal Engine 4.27.2 was detected, UnrealHeaderTool/C++ build completed, and the production importer reported `50 files, 0 failures`.
+- This closes the CI infrastructure regression from Builds #14/#18. It does not replace the still-pending gameplay PIE/device hard gate.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
