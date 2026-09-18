@@ -316,3 +316,16 @@ A new developer/assistant should:
 - F8 — temporary Frodo/Gandalf route toggle
 
 These are developer controls, not final player-facing menu design.
+
+
+## Character / voice completeness rule
+
+Character quality is now governed by:
+- `Docs/CHARACTER_PERFORMANCE_STANDARD.md`
+- `Docs/PRODUCTION_COMPLETENESS_MATRIX.md`
+- `Data/VoiceCuePlan.csv`
+
+These files are required Project Guardian inputs.
+They explicitly cover facial acting, gaze, blink behavior, lip-sync, voice, body language, locomotion,
+interaction animation, environmental reaction, combat reaction, crowd behavior, continuity and low-spec LOD/performance.
+Current proxy characters do not satisfy final character quality; final rigs/animations/voice assets remain future production work.

@@ -30,12 +30,15 @@
     "Docs/DEVELOPMENT_GATES.md",
     "Docs/PROJECT_GUARDIAN.md",
     "Docs/STORY_CANON_BIBLE.md",
-    "Docs/PART1_FELLOWSHIP_MASTERPLAN.md"
+    "Docs/PART1_FELLOWSHIP_MASTERPLAN.md",
+    "Docs/CHARACTER_PERFORMANCE_STANDARD.md",
+    "Docs/PRODUCTION_COMPLETENESS_MATRIX.md"
   ],
   "required_story_data": [
     "Data/StoryBeatPlan.csv",
     "Data/DialogueIntent.csv",
-    "Data/MusicCuePlan.csv"
+    "Data/MusicCuePlan.csv",
+    "Data/VoiceCuePlan.csv"
   ],
   "required_debug_actions": [
     "QuickSave",

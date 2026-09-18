@@ -156,6 +156,14 @@
 - CP22 world-scale build was confirmed successful on UE4.27.2 target hardware before this pass.
 - CP23 still requires the next milestone build/PIE test before compile/device acceptance.
 
+
+## CP24A — Character Performance + Voice Completeness Guard
+- Added a permanent Character Performance Standard covering face, eyes, gaze, blink, brows, lip-sync, voice, body language, locomotion, interactions, combat reactions, environmental reactions and continuity.
+- Added a Production Completeness Matrix so a chapter cannot be treated as complete while major pillars are missing.
+- Added Data/VoiceCuePlan.csv generated from all current runtime VO_* identifiers.
+- Voice direction explicitly requires original performance and forbids cloning or deliberate imitation of a specific film actor.
+- Current authored voice assets remain ASSET_PENDING; this checkpoint creates the contract and guardrails, not fake completion.
+
 ## Current hard gate
 The current runtime-code baseline has passed static validation, real UE4.27 compile and basic Shire PIE boot.
 
