@@ -43,12 +43,21 @@ Historically, an earlier project baseline:
 - showed working movement, quest flow and HUD.
 
 The current runtime-code baseline includes substantial changes after that test and is currently:
-- **STATIC-VALIDATED** through Pre-Unreal Validation #77.
+- **STATIC-VALIDATED** through Pre-Unreal Validation #78 before the latest compile-fix commit.
 - **NOT YET claimed COMPILE-TESTED**.
 - **NOT YET claimed PIE-TESTED**.
 - **NOT YET claimed DEVICE-TESTED**.
 
-That engine/device validation is the current hard gate.
+A real UE4.27.2 target-machine build was attempted on 2026-09-18:
+- Git update succeeded.
+- UnrealHeaderTool completed successfully and generated reflection code.
+- C++ compilation exposed two concrete regressions:
+  - C2660: one stale one-argument `MovePlayerToChapterStart` call.
+  - C2440: direct base-to-derived light component pointer assignment from `GetLightComponent()`.
+- Both source issues were fixed immediately and converted into Project Guardian regression checks PG-010 and PG-011.
+- A fresh target-machine build is still required before claiming COMPILE-TESTED.
+
+That engine/device validation remains the current hard gate.
 
 ## Authoritative runtime chapter IDs
 

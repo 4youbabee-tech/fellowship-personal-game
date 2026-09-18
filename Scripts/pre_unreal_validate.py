@@ -237,11 +237,27 @@ if undefined:
     fail("Quest references without definitions: " + ", ".join(undefined))
 
 router_cpp = read(SOURCE / "ChapterWorldRouter.cpp")
+
+# Guardian regression PG-010: route helper takes (ChapterId, bRestoreRouteTransform).
+# Catch the exact stale one-argument forms that escaped earlier static validation.
+if re.search(r'MovePlayerToChapterStart\s*\(\s*ChapterId\s*\)\s*;', router_cpp):
+    fail("PG-010: MovePlayerToChapterStart called with ChapterId only; pass restore-route flag too")
+if re.search(r'MovePlayerToChapterStart\s*\(\s*TEXT\("P1C\d+"\)\s*\)\s*;', router_cpp):
+    fail("PG-010: MovePlayerToChapterStart called with literal chapter only; pass restore-route flag too")
+
 expected_chapters = {f"P1C{i:02d}" for i in range(1, 9)}
 router_chapters = set(re.findall(r'ChapterId\s*==\s*TEXT\("(P1C\d+)"\)', router_cpp))
 missing_chapters = sorted(expected_chapters - router_chapters)
 if missing_chapters:
     fail("ChapterWorldRouter is missing runtime chapters: " + ", ".join(missing_chapters))
+
+# Guardian regression PG-011: UE4.27 GetLightComponent returns a base pointer.
+# Direct assignment to a derived light component pointer fails real C++ compilation.
+shire_world_cpp = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
+if re.search(r'UDirectionalLightComponent\s*\*\s*\w+\s*=\s*[^;\n]*GetLightComponent\s*\(\s*\)', shire_world_cpp):
+    fail("PG-011: direct GetLightComponent assignment to UDirectionalLightComponent*; use Cast<>")
+if re.search(r'USkyLightComponent\s*\*\s*\w+\s*=\s*[^;\n]*GetLightComponent\s*\(\s*\)', shire_world_cpp):
+    fail("PG-011: direct GetLightComponent assignment to USkyLightComponent*; use Cast<>")
 
 chapter_refs: set[str] = set()
 for path in sorted(SOURCE.glob("*.cpp")):

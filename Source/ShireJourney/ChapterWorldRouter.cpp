@@ -245,5 +245,5 @@ void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTr
 
     // Unknown chapter IDs fall back to the first chapter rather than leaving the player in an empty world.
     GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(FVector::ZeroVector, FRotator::ZeroRotator);
-    MovePlayerToChapterStart(TEXT("P1C01"));
+    MovePlayerToChapterStart(TEXT("P1C01"), false);
 }

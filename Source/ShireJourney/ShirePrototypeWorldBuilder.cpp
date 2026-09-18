@@ -341,7 +341,7 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
     if (Sun)
     {
         Sun->SetActorRotation(FRotator(-38.0f, -28.0f, 0.0f));
-        if (UDirectionalLightComponent* SunComponent = Sun->GetLightComponent())
+        if (UDirectionalLightComponent* SunComponent = Cast<UDirectionalLightComponent>(Sun->GetLightComponent()))
         {
             SunComponent->SetMobility(EComponentMobility::Movable);
             SunComponent->SetIntensity(3.4f);
@@ -368,7 +368,7 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
 
     if (Sky)
     {
-        if (USkyLightComponent* SkyComponent = Sky->GetLightComponent())
+        if (USkyLightComponent* SkyComponent = Cast<USkyLightComponent>(Sky->GetLightComponent()))
         {
             SkyComponent->SetMobility(EComponentMobility::Movable);
             SkyComponent->SetIntensity(0.78f);

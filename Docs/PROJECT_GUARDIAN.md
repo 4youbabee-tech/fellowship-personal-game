@@ -75,6 +75,18 @@ This converts failures into permanent project knowledge.
 
 **Guard:** existing validator checks runtime dialogue sequence coverage and audio subsystem event wiring.
 
+### PG-010 — Route helper signature drift
+**Observed failure:** the 2026-09-18 target-machine UE4.27 build reached C++ compilation and failed with C2660 because one fallback call still invoked `MovePlayerToChapterStart` with one argument after the helper was changed to require `(ChapterId, bRestoreRouteTransform)`.
+
+**Guard:** static validation rejects known one-argument `MovePlayerToChapterStart` call forms.
+
+### PG-011 — UE4.27 light-component downcast
+**Observed failure:** the same real UE4.27 build failed with C2440 because `ADirectionalLight::GetLightComponent()` was assigned directly to `UDirectionalLightComponent*`. The static type in UE4.27 is a base light component pointer.
+
+**Fix pattern:** use an explicit Unreal `Cast<UDirectionalLightComponent>(...)` or `Cast<USkyLightComponent>(...)` before using subclass APIs.
+
+**Guard:** static validation rejects direct subclass-pointer assignment from `GetLightComponent()`.
+
 ## What Guardian must never do automatically
 
 - change canon,
