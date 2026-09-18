@@ -10,12 +10,10 @@
 Read these in order:
 
 1. `Docs/CURRENT_PROJECT_STATE.md` — exact operational state, proof level, and next hard gate.
-2. `Data/ProjectRequirements.json` — permanent user-request ledger; never rely on chat memory instead of this.
-3. `Docs/PROJECT_MEMORY_SYSTEM.md` — rules for updating user requests, decisions and evidence.
-4. `Docs/PROJECT_GOVERNOR.md` — conflict resolution, hard invariants, quality gates and pacing control.
-5. `Data/ProjectDecisions.json` — accepted decisions and unresolved conflicts.
-6. `Data/ExperienceQualityGates.json` — region-level stability/traversal/performance/pacing/visual proof.
-7. `Docs/CHECKPOINTS.md` — chronological development checkpoints and what each one proved.
+2. `Data/ProjectGovernor.json` — **single project authority** for requirements, priorities, conflicts, decisions, active gate and region quality.
+3. `Docs/PROJECT_GOVERNOR.md` — explains how the single authority is used.
+4. `Docs/PROJECT_MEMORY_SYSTEM.md` — explains persistence/recovery rules.
+5. `Docs/CHECKPOINTS.md` — chronological development checkpoints and what each one proved.
 8. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
 9. `Docs/LIVING_WORLD_AI_BLUEPRINT.md` — NPC/world-life intelligence design.
 10. `Data/LivingWorldFeaturePlan.json` — living-world implementation/status phases.
@@ -31,8 +29,8 @@ If code, data, and documentation disagree, stop and reconcile them in the same l
 
 ## User-request rule
 
-Before implementing a meaningful feature request, find or create its stable ID in `Data/ProjectRequirements.json`.
-After implementation, update the same entry with repository evidence, remaining gaps and actual proof level.
+Before implementing a meaningful feature request, find or create its stable ID in `Data/ProjectGovernor.json`.
+After implementation, update the same Governor entry with repository evidence, remaining gaps and actual proof level.
 Never mark a request complete merely because the conversation moved on.
 
 
