@@ -48,24 +48,38 @@ jobs:
             )
           )
 
-          for /f "delims=" %%G in ('dir /b /s "C:\Users\*\AppData\Local\GitHubDesktop\app-*\resources\app\git\cmd\git.exe" 2^>nul') do (
-            set "GITDIR=%%~dpG"
-            echo Found GitHub Desktop Git: %%G
-            echo !GITDIR!>>"%GITHUB_PATH%"
-            set "PATH=!GITDIR!;%PATH%"
-            goto :git_ready
+          echo Git is not visible to the Windows service. Bootstrapping a private MinGit copy for CI...
+          set "MINGIT_ROOT=%RUNNER_TEMP%\mingit-2.55.0.5"
+          set "MINGIT_ZIP=%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip"
+          set "MINGIT_URL=https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.5/MinGit-2.55.0.5-64-bit.zip"
+
+          if not exist "!MINGIT_ROOT!\cmd\git.exe" (
+            if exist "!MINGIT_ROOT!" rmdir /S /Q "!MINGIT_ROOT!"
+            if exist "!MINGIT_ZIP!" del /Q "!MINGIT_ZIP!"
+
+            curl.exe -L --retry 3 --retry-delay 3 -o "!MINGIT_ZIP!" "!MINGIT_URL!"
+            if errorlevel 1 (
+              echo ERROR: Failed to download MinGit.
+              exit /b 20
+            )
+
+            powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath '!MINGIT_ZIP!' -DestinationPath '!MINGIT_ROOT!' -Force"
+            if errorlevel 1 (
+              echo ERROR: Failed to extract MinGit.
+              exit /b 21
+            )
           )
 
-          echo ERROR: Git was not found for the self-hosted runner service.
-          exit /b 20
+          set "GITDIR=!MINGIT_ROOT!\cmd"
+          set "GITBIN=!MINGIT_ROOT!\mingw64\bin"
+          echo !GITDIR!>>"%GITHUB_PATH%"
+          echo !GITBIN!>>"%GITHUB_PATH%"
+          set "PATH=!GITDIR!;!GITBIN!;%PATH%"
 
           :git_ready
           git --version
-          if errorlevel 1 exit /b 21
-
-          git lfs version
           if errorlevel 1 (
-            echo ERROR: Git LFS is not available to the runner.
+            echo ERROR: Git bootstrap did not produce a working git.exe.
             exit /b 22
           )
 
@@ -76,7 +90,7 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 1
-          lfs: true
+          lfs: false
           clean: true
 
       - name: Verify Unreal 4.27.2 and project
