@@ -629,6 +629,9 @@ void AShireAmbientNPC::UpdateSocialCaption(float DeltaSeconds)
 
 void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
 {
+    LastPartnerCooldownRemaining = FMath::Max(
+        0.0f, LastPartnerCooldownRemaining - DeltaSeconds);
+
     if (RoutineRole == TEXT("Courier") || RoutineRole == TEXT("RoadWalker") ||
         RoutineRole == TEXT("Bird"))
     {
@@ -662,7 +665,7 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
         {
             bSocializing = false;
             SocialPartner.Reset();
-            SocialCheckRemaining = Random.FRandRange(6.0f, 11.0f);
+            SocialCheckRemaining = Random.FRandRange(18.0f, 28.0f);
             WaitRemaining = FMath::Max(WaitRemaining, Random.FRandRange(0.3f, 0.9f));
         }
         return;
@@ -683,6 +686,22 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
         return;
     }
 
+    int32 NearbySocialActors = 0;
+    for (TActorIterator<AShireAmbientNPC> It(GetWorld()); It; ++It)
+    {
+        const AShireAmbientNPC* Candidate = *It;
+        if (Candidate && Candidate->bSocializing &&
+            FVector::DistSquared2D(PlayerPawn->GetActorLocation(), Candidate->GetActorLocation()) <=
+                FMath::Square(1800.0f))
+        {
+            ++NearbySocialActors;
+        }
+    }
+    if (NearbySocialActors >= 4)
+    {
+        return;
+    }
+
     AShireAmbientNPC* BestPartner = nullptr;
     float BestDistanceSq = FMath::Square(240.0f);
 
@@ -690,6 +709,12 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
     {
         AShireAmbientNPC* Candidate = *It;
         if (!Candidate || Candidate == this || Candidate->bSocializing || Candidate->bObservingPlayer)
+        {
+            continue;
+        }
+
+        if ((LastSocialPartner.Get() == Candidate && LastPartnerCooldownRemaining > 0.0f) ||
+            (Candidate->LastSocialPartner.Get() == this && Candidate->LastPartnerCooldownRemaining > 0.0f))
         {
             continue;
         }
@@ -719,7 +744,12 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
         BestPartner->bSocializing = true;
         BestPartner->SocialPartner = this;
         BestPartner->SocialRemaining = SocialRemaining;
-        BestPartner->SocialCheckRemaining = Random.FRandRange(7.0f, 12.0f);
+        BestPartner->SocialCheckRemaining = Random.FRandRange(18.0f, 28.0f);
+
+        LastSocialPartner = BestPartner;
+        LastPartnerCooldownRemaining = 90.0f;
+        BestPartner->LastSocialPartner = this;
+        BestPartner->LastPartnerCooldownRemaining = 90.0f;
 
         BeginSocialCaption(ResolveAmbientConversationLine(false), 0.0f, 1.25f);
         BestPartner->BeginSocialCaption(
