@@ -964,19 +964,21 @@ for character_name, asset_names in dedicated_characters.items():
 
 hero_visual_cpp = read(SOURCE / "ShireNPC.cpp")
 for symbol in [
-    "bSamDedicated",
-    "bMerryDedicated",
-    "bPippinDedicated",
-    "bAragornDedicated",
-    "CharacterFolder",
+    "DedicatedFolder",
+    'DedicatedFolder = TEXT("Sam")',
+    'DedicatedFolder = TEXT("Merry")',
+    'DedicatedFolder = TEXT("Pippin")',
+    'DedicatedFolder = TEXT("Aragorn")',
     '/Game/Production/Characters/%s/SM_%s_Torso.SM_%s_Torso',
-    "SM_Aragorn_Torso",
 ]:
     if symbol not in hero_visual_cpp:
         fail(f"PG-043 dedicated hero runtime reference missing: {symbol}")
 
 dedicated_pass = population_plan.get("dedicated_modular_character_pass", {}) if population_plan else {}
-if dedicated_pass.get("status") != "RUNTIME_IMPLEMENTED_PENDING_BUILD":
+if dedicated_pass.get("status") not in {
+    "RUNTIME_IMPLEMENTED_PENDING_BUILD",
+    "FULL_NAMED_CAST_RUNTIME_IMPLEMENTED_PENDING_BUILD",
+}:
     fail("PG-043 dedicated modular character pass must stay explicitly build-pending until UE validation")
 if "skeletal" not in str(dedicated_pass.get("proof_limit") or "").lower():
     fail("PG-043 dedicated character pass must preserve the skeletal/final-art proof boundary")
