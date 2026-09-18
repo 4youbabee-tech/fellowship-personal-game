@@ -67,6 +67,7 @@ required_files = [
     SOURCE / "ShireStoryFlowSubsystem.cpp",
     SOURCE / "FellowshipEnemyPrototype.h",
     SOURCE / "FellowshipEnemyPrototype.cpp",
+    ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp",
 ]
 
 for path in required_files:
@@ -252,6 +253,15 @@ for path in sorted(SOURCE.glob("*.h")):
     later_includes = [line.strip() for line in lines[generated_index + 1 :] if line.strip().startswith("#include")]
     if later_includes:
         fail(f"{path.name}: generated.h is not the last include ({later_includes[0]})")
+
+# PG-013: UE4.27 UAssetImportTask does not expose bAsync. Keep the production
+# import commandlet on the UE4.27-compatible task API so the real editor build
+# cannot regress to C2039 before asset import even begins.
+production_import_cpp = read(
+    ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp"
+)
+if "Task->bAsync" in production_import_cpp or "->bAsync" in production_import_cpp:
+    fail("PG-013: UE4.27 UAssetImportTask must not use unsupported bAsync")
 
 quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
 definitions = set(re.findall(r'AddQuestDefinition\s*\(\s*TEXT\("([^"]+)"\)', quest_cpp))

@@ -51,7 +51,6 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         Task->bAutomated = true;
         Task->bSave = true;
         Task->bReplaceExisting = true;
-        Task->bAsync = false;
 
         TArray<UAssetImportTask*> Tasks;
         Tasks.Add(Task);

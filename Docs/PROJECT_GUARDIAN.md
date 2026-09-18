@@ -96,6 +96,15 @@ This converts failures into permanent project knowledge.
 
 **Guard:** static validation checks this ordering inside `ConfigureMorningAtmosphere`.
 
+### PG-013 — UE4.27 AssetImportTask API compatibility
+**Observed failure:** the 2026-09-18 target-machine build of the CP28 production-asset importer failed with C2039 because `UAssetImportTask` in UE4.27 does not expose a `bAsync` member.
+
+**Root cause:** the editor import commandlet used a newer-engine task property while the project is locked to UE4.27.2.
+
+**Fix pattern:** use only the UE4.27-supported `UAssetImportTask` fields and let `ImportAssetTasks` run without assigning `bAsync`.
+
+**Guard:** static validation rejects `Task->bAsync` / `->bAsync` in the production import commandlet.
+
 ## What Guardian must never do automatically
 
 - change canon,
