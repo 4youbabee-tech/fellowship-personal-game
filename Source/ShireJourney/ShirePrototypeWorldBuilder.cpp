@@ -405,9 +405,19 @@ void AShirePrototypeWorldBuilder::ConfigureFoliageInstances()
         return;
     }
 
-    auto ApplyInstanceColor = [this](UHierarchicalInstancedStaticMeshComponent* Component, const FLinearColor& Color)
+    auto ApplyInstanceColor = [this](
+        UHierarchicalInstancedStaticMeshComponent* Component,
+        UStaticMesh* ProductionMesh,
+        const FLinearColor& Color)
     {
         if (!Component)
+        {
+            return;
+        }
+
+        // Imported production meshes already carry authored materials/textures.
+        // Do not flatten them back to BasicShapeMaterial.
+        if (ProductionMesh && Component->GetStaticMesh() == ProductionMesh)
         {
             return;
         }
@@ -420,13 +430,13 @@ void AShirePrototypeWorldBuilder::ConfigureFoliageInstances()
         }
     };
 
-    ApplyInstanceColor(GrassInstances, FLinearColor(0.105f, 0.34f, 0.065f));
-    ApplyInstanceColor(FlowerInstances, FLinearColor(0.92f, 0.69f, 0.24f));
-    ApplyInstanceColor(ShrubInstances, FLinearColor(0.085f, 0.285f, 0.055f));
-    ApplyInstanceColor(DistantTreeTrunkInstances, FLinearColor(0.15f, 0.075f, 0.03f));
-    ApplyInstanceColor(DistantTreeCanopyInstances, FLinearColor(0.07f, 0.25f, 0.045f));
-    ApplyInstanceColor(RockInstances, FLinearColor(0.34f, 0.35f, 0.31f));
-    ApplyInstanceColor(PathStoneInstances, FLinearColor(0.43f, 0.40f, 0.32f));
+    ApplyInstanceColor(GrassInstances, ProductionGrassClumpMesh, FLinearColor(0.105f, 0.34f, 0.065f));
+    ApplyInstanceColor(FlowerInstances, nullptr, FLinearColor(0.92f, 0.69f, 0.24f));
+    ApplyInstanceColor(ShrubInstances, ProductionShrubMesh, FLinearColor(0.085f, 0.285f, 0.055f));
+    ApplyInstanceColor(DistantTreeTrunkInstances, ProductionTreeTrunkMesh, FLinearColor(0.15f, 0.075f, 0.03f));
+    ApplyInstanceColor(DistantTreeCanopyInstances, ProductionTreeCanopyMesh, FLinearColor(0.07f, 0.25f, 0.045f));
+    ApplyInstanceColor(RockInstances, ProductionRockMesh, FLinearColor(0.34f, 0.35f, 0.31f));
+    ApplyInstanceColor(PathStoneInstances, ProductionPathStoneMesh, FLinearColor(0.43f, 0.40f, 0.32f));
 }
 
 void AShirePrototypeWorldBuilder::SpawnFoliagePass()
@@ -918,8 +928,15 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     };
     for(const FVector& Post:LanternPosts)
     {
-        SpawnShape(CylinderMesh,Post+FVector(0,0,105),FVector(0.045f,0.045f,1.05f),FLinearColor(0.24f,0.13f,0.06f),FRotator::ZeroRotator,false);
-        SpawnShape(SphereMesh,Post+FVector(0,0,208),FVector(0.11f),FLinearColor(0.92f,0.62f,0.18f),FRotator::ZeroRotator,false);
+        if (ProductionLanternMesh)
+        {
+            SpawnShape(ProductionLanternMesh, Post, FVector(0.88f), FLinearColor::White, FRotator::ZeroRotator, false);
+        }
+        else
+        {
+            SpawnShape(CylinderMesh,Post+FVector(0,0,105),FVector(0.045f,0.045f,1.05f),FLinearColor(0.24f,0.13f,0.06f),FRotator::ZeroRotator,false);
+            SpawnShape(SphereMesh,Post+FVector(0,0,208),FVector(0.11f),FLinearColor(0.92f,0.62f,0.18f),FRotator::ZeroRotator,false);
+        }
     }
 
     // A long pastoral approach separates Hobbiton from the eastern farms.
@@ -1594,6 +1611,54 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
             ProductionCrateMesh ? FVector(0.58f) : FVector(0.28f,0.28f,0.28f),
             Index % 2 == 0 ? FLinearColor(0.34f,0.19f,0.075f) : FLinearColor(0.42f,0.27f,0.11f),
             FRotator(0.0f, static_cast<float>((Index * 23) % 45), 0.0f), false);
+    }
+
+    // Dense production hedgerows give Hobbiton and the wooded road the layered,
+    // enclosed lane composition missing from the earlier open prototype.
+    if (ProductionHedgeMesh)
+    {
+        struct FHedgePlacement
+        {
+            FVector Location;
+            FVector Scale;
+            float Yaw;
+        };
+
+        const FHedgePlacement Hedges[] = {
+            { FVector(-2140,-900,35), FVector(1.9f,0.95f,1.15f), 8.0f },
+            { FVector(-1650,-930,35), FVector(2.1f,0.95f,1.20f), -6.0f },
+            { FVector(-1080,-900,35), FVector(2.0f,0.90f,1.10f), 5.0f },
+            { FVector(-420,560,35), FVector(1.8f,0.90f,1.05f), 2.0f },
+            { FVector(280,560,35), FVector(1.8f,0.90f,1.05f), -3.0f },
+            { FVector(850,560,35), FVector(1.7f,0.90f,1.05f), 4.0f },
+
+            { FVector(5850,-1910,35), FVector(2.3f,1.00f,1.20f), 0.0f },
+            { FVector(6450,-1910,35), FVector(2.3f,1.00f,1.20f), 0.0f },
+            { FVector(7050,-1910,35), FVector(2.3f,1.00f,1.20f), 0.0f },
+
+            { FVector(12400,-520,42), FVector(2.5f,1.05f,1.35f), -7.0f },
+            { FVector(13250,-630,42), FVector(2.5f,1.05f,1.35f), -7.0f },
+            { FVector(14100,-745,42), FVector(2.5f,1.05f,1.35f), -7.0f },
+            { FVector(14950,-860,42), FVector(2.5f,1.05f,1.35f), -7.0f },
+            { FVector(15800,-975,42), FVector(2.5f,1.05f,1.35f), -7.0f },
+
+            { FVector(12450,1420,42), FVector(2.5f,1.05f,1.35f), 7.0f },
+            { FVector(13300,1315,42), FVector(2.5f,1.05f,1.35f), 7.0f },
+            { FVector(14150,1210,42), FVector(2.5f,1.05f,1.35f), 7.0f },
+            { FVector(15000,1105,42), FVector(2.5f,1.05f,1.35f), 7.0f },
+            { FVector(15850,1000,42), FVector(2.5f,1.05f,1.35f), 7.0f }
+        };
+
+        for (const FHedgePlacement& Hedge : Hedges)
+        {
+            SpawnShape(
+                ProductionHedgeMesh,
+                Hedge.Location,
+                Hedge.Scale,
+                FLinearColor::White,
+                FRotator(0.0f, Hedge.Yaw, 0.0f),
+                false);
+        }
     }
 
     // Production props create readable lived-in spaces instead of bare primitive staging.
