@@ -103,6 +103,17 @@ void AShireAmbientNPC::ApplyVisualStyle()
     const bool bElf = RoutineRole == TEXT("Elf");
     const bool bHobbitResident = !bBreeTownsperson && !bElf;
 
+    if (!bHobbitResident)
+    {
+        TryMesh(Torso, TEXT("/Engine/BasicShapes/Cube.Cube"));
+        TryMesh(Head, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+        TryMesh(Hair, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+        TryMesh(LeftArm, TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
+        TryMesh(RightArm, TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
+        TryMesh(LeftLeg, TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
+        TryMesh(RightLeg, TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
+    }
+
     bool bProductionHobbit = false;
     if (bHobbitResident)
     {
@@ -245,6 +256,7 @@ void AShireAmbientNPC::ApplyVisualStyle()
     ApplyColor(RightArm, Coat * 0.95f);
     ApplyColor(LeftLeg, Trousers);
     ApplyColor(RightLeg, Trousers);
+    AppliedVisualRole = RoutineRole;
 }
 
 void AShireAmbientNPC::UpdateWalkAnimation(float DeltaSeconds, bool bMoving)
@@ -454,6 +466,11 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
 void AShireAmbientNPC::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+
+    if (AppliedVisualRole != RoutineRole)
+    {
+        ApplyVisualStyle();
+    }
 
     if (APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0))
     {
