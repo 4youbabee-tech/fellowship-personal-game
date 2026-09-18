@@ -1083,6 +1083,7 @@ for symbol in ["SM_Human_Torso", "SM_Elf_Torso"]:
 memory_route_h = read(SOURCE / "ShireRouteState.h")
 memory_quest_h = read(SOURCE / "ShireQuestSubsystem.h")
 memory_quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
+memory_context_cpp = read(SOURCE / "ShireNPCContextSubsystem.cpp")
 memory_save_h = read(SOURCE / "ShireSaveGame.h")
 memory_player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
 
@@ -1093,12 +1094,25 @@ for symbol in [
     "HasNamedNPCMemory",
     "AdjustNamedNPCRelationship",
     "RestoreNPCMemoryState",
-    "while (Bucket.Events.Num() > 12)",
-    "Bucket.RelationshipDeltas.Num() >= 8",
+    "ResolveCanonicalNPCProfile",
+    "ResolvePersistentMemoryBudget",
+    "ResolveRelationshipBudget",
+    "PruneNPCMemoryForCurrentChapter",
     'TEXT("%s|%s")',
 ]:
     if symbol not in (memory_route_h + memory_quest_h + memory_quest_cpp):
         fail(f"PG-039 named-NPC memory invariant missing: {symbol}")
+
+for symbol in [
+    'Tier == TEXT("NAMED_STORY")',
+    'Tier == TEXT("NAMED_LIGHT")',
+    "return 12;",
+    "return 4;",
+    "return 8;",
+    "return 3;",
+]:
+    if symbol not in memory_context_cpp:
+        fail(f"PG-039 tiered memory budget invariant missing: {symbol}")
 
 if "TMap<FName, FShireNPCMemoryBucket> NPCMemoryState" not in memory_save_h:
     fail("PG-039 SaveGame lost NPCMemoryState")
@@ -1108,8 +1122,17 @@ if "QuestSubsystem->RestoreNPCMemoryState(Save->NPCMemoryState)" not in memory_p
     fail("PG-039 restore path no longer restores NPC memory")
 
 memory_runtime = npc_memory.get("runtime_implementation", {}) if npc_memory else {}
-if memory_runtime.get("status") != "RUNTIME_FOUNDATION":
-    fail("PG-039 NPCMemoryPlan runtime status must remain RUNTIME_FOUNDATION until memory-aware dialogue is integrated")
+if memory_runtime.get("status") not in {"RUNTIME_FOUNDATION", "RUNTIME_COMPLETE_PENDING_VALIDATION"}:
+    fail("PG-039 NPCMemoryPlan runtime status is unsupported")
+if memory_runtime.get("status") == "RUNTIME_COMPLETE_PENDING_VALIDATION":
+    for requirement in [
+        "canonical alias resolution through UShireNPCContextSubsystem before read/write",
+        "NAMED_LIGHT 4-event/3-relationship budgets",
+        "low-priority memory expires after two chapters while priority >=80 story/relationship memories survive",
+        "recent dialogue variant and partner histories persist for repetition control",
+    ]:
+        if requirement not in memory_runtime.get("implementation", []):
+            fail(f"PG-039 completed NPC memory runtime declaration missing: {requirement}")
 if memory_runtime.get("proof_limit") is None:
     fail("PG-039 NPCMemoryPlan must keep its proof limit explicit")
 
@@ -1138,10 +1161,27 @@ for authored_line in [
         fail(f"PG-038 role-specific ambient line missing: {authored_line}")
 
 conversation_runtime = npc_conversation.get("runtime_implementation", {}) if npc_conversation else {}
-if conversation_runtime.get("status") != "RUNTIME_PARTIAL":
-    fail("PG-038 NPCConversationPlan runtime status must remain RUNTIME_PARTIAL until named/story dialogue is implemented")
-if "named Fellowship companion banter runtime" not in conversation_runtime.get("not_yet_implemented", []):
-    fail("PG-038 NPCConversationPlan must keep named Fellowship conversation gap explicit")
+conversation_status = conversation_runtime.get("status")
+if conversation_status not in {"RUNTIME_PARTIAL", "RUNTIME_COMPLETE_PENDING_VALIDATION"}:
+    fail("PG-038 NPCConversationPlan runtime status is unsupported")
+
+if conversation_status == "RUNTIME_PARTIAL":
+    if "named Fellowship companion banter runtime" not in conversation_runtime.get("not_yet_implemented", []):
+        fail("PG-038 partial NPC conversation runtime must keep named Fellowship conversation gap explicit")
+else:
+    named_npc_cpp = read(SOURCE / "ShireNPC.cpp")
+    dialogue_h = read(SOURCE / "ShireDialogueSubsystem.h")
+    dialogue_cpp = read(SOURCE / "ShireDialogueSubsystem.cpp")
+    context_cpp = read(SOURCE / "ShireNPCContextSubsystem.cpp")
+    for symbol in [
+        "UpdateCompanionBanter",
+        "COMPANION_BANTER",
+        "TActorIterator<AShireNPC>",
+        "PlayDynamicSequence",
+        "SelectBoundedDialogue",
+    ]:
+        if symbol not in (named_npc_cpp + dialogue_h + dialogue_cpp + context_cpp):
+            fail(f"PG-038 completed named conversation runtime missing: {symbol}")
 
 approved_chapters = set(guard_rules.get("runtime_chapters", []))
 approved_routes = set(guard_rules.get("approved_routes", []))
