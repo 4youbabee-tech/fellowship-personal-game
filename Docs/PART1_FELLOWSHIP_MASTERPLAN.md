@@ -1,5 +1,22 @@
 # PART I — THE FELLOWSHIP OF THE RING
 
+> **RUNTIME-ID NOTE**
+>
+> This document preserves twelve **narrative segments** for planning readability.
+> They are **not** twelve runtime chapter IDs.
+>
+> Current runtime mapping:
+> - narrative segments 01-02 -> P1C01 Shire
+> - segment 03 -> P1C02 Bree
+> - segment 04 -> P1C03 Weathertop/Ford
+> - segment 05 -> P1C04 Rivendell
+> - segments 06-07 -> P1C05 Road/Caradhras/West Gate
+> - segments 08-09 -> P1C06 Moria
+> - segment 10 -> P1C07 Lothlorien
+> - segments 11-12 -> P1C08 Anduin/Amon Hen
+>
+> For current implementation status, always use `Docs/CURRENT_PROJECT_STATE.md`.
+
 ## Product vision
 Part I covers the full narrative arc of *The Fellowship of the Ring* from the Shire to the breaking of the Fellowship.
 

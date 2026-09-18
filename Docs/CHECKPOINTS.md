@@ -78,20 +78,64 @@
 - Detection now requires configurable consecutive visible samples before alerting, reducing one-frame edge/occlusion false positives while preserving crouch radius and forward-cone checks.
 - Quest-change handling resets detection confidence immediately and save-state restoration remains compatible because the quest subsystem rebroadcasts the active quest during restore.
 
-## Current gate
-- Repository-side architecture/story validation is automated on GitHub.
-- The remaining hard gate is a real Unreal Engine 4.27 compile + UnrealHeaderTool pass + Play In Editor runtime test. No static checker can honestly replace those engine tests.
+## CP13 — Real UE4.27 Baseline
+- An earlier source baseline compiled and opened successfully in Unreal Engine 4.27.2.
+- PIE was observed working on that earlier baseline.
+- Movement, quests and HUD were observed working.
+- Later C++ changes must be revalidated; historical engine success is not inherited automatically.
 
-## Next before Unreal
-1. Watch and fix every failure from `Pre-Unreal Validation` until the branch is green.
-2. Continue UE4.27 API/static audit of world builders, save/load, delegates and chapter transitions.
-3. Continue low-cost companion formation/follow tuning without raising the hardware target.
-4. Add a small developer chapter-jump/debug path for fast PIE testing once Unreal is available.
-5. Prepare an Unreal test checklist covering Chapter 1 through Part I completion, save/load, restored companions, Black Rider stealth, transitions and 720p performance.
+## CP14 — Shire Vertical-Slice Expansion
+- Humanoid story/ambient proxies, richer paths/homes/gardens/fences/population and instanced foliage.
+- Optional Shire side stories that do not replace the main quest.
+- Warm morning presentation and deeper original Shire dialogue.
+- Low-cost ambient population remains the target.
 
-## Once Unreal is installed
-1. Generate project files and compile Development Editor.
-2. Fix every compiler/UnrealHeaderTool error before PIE.
-3. Run Chapter 1 end-to-end, then each chapter handoff through Part I completion.
-4. Validate save/load at chapter boundaries and after one-time story beats.
-5. Benchmark 720p/DX11/Low-Medium on the target laptop and tune until stable enough for the intended 30 FPS target.
+## CP15 — Canon / Data Alignment
+- Added the Story Canon Bible.
+- Runtime chapter truth standardized to P1C01-P1C08.
+- DialogueIntent and StoryBeatPlan aligned with current runtime buckets.
+- Added MusicCuePlan for original music direction.
+
+## CP16 — Persistent Multi-Route State
+- Added RouteId / EpisodeId / PlayableCharacterId.
+- Added per-route quest/story/transform progress.
+- Quick save/load persists route state.
+- Parallel-route state is designed not to overwrite Frodo's main route.
+
+## CP17 — Gandalf / Isengard Parallel Prototype
+- Added Gandalf parallel route.
+- Added Isengard/Orthanc runtime prototype.
+- Added Saruman, prison, industry and escape progression.
+- Added original dialogue and presentation/audio cue wiring.
+- F8 is the temporary developer route toggle.
+- Pre-Unreal Validation #74 caught missing presentation cues immediately after the world commit.
+- The following presentation commit fixed the gap and #75 returned green.
+
+## CP18 — Part I Depth + Ambient Awareness
+- Rivendell expanded with Bilbo and wider Fellowship social presence.
+- Fellowship road expanded with camp/training and Crebain.
+- Moria expanded with Watcher, Orc/Troll escalation and stronger bridge approach.
+- Lothlorien expanded with grief and Mirror material.
+- Amon Hen expanded with Boromir pressure/defense before the split.
+- Ambient Shire residents can notice/face the nearby player briefly, then resume routines.
+- Runtime-code baseline reached Pre-Unreal Validation #77 successfully.
+
+## CP19 — Project Memory / Guardian
+- CURRENT_PROJECT_STATE is the recovery/handoff entry point.
+- DEVELOPMENT_GATES defines build/PIE/device acceptance.
+- PROJECT_GUARDIAN records repeatable regressions.
+- ProjectGuardRules.json makes chapter/route/canon/document rules machine-readable.
+- Pre-Unreal Validation is extended to detect story/data drift automatically.
+
+## Current hard gate
+The current runtime-code baseline is STATIC-VALIDATED but must now pass:
+1. real UE4.27.2 compile + UnrealHeaderTool,
+2. Shire PIE smoke test,
+3. Gandalf/Isengard F8 round-trip test,
+4. save/load round-trip,
+5. chapter smoke tests P1C02-P1C08,
+6. target-device performance observation.
+
+No new major feature checkpoint should open before this gate is healthy.
+
+See `Docs/CURRENT_PROJECT_STATE.md` for the exact current test checklist.

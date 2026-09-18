@@ -1,0 +1,100 @@
+# PROJECT GUARDIAN
+
+Project Guardian is the project's regression memory.
+
+It is intentionally deterministic. It does not use an LLM to rewrite story, code or design.
+Its job is to catch known classes of mistakes early and force a human/developer to make an explicit decision.
+
+## What "learning from mistakes" means here
+
+When a meaningful error appears:
+1. identify the invariant that was violated,
+2. fix the immediate bug,
+3. encode the invariant in automated validation when possible,
+4. record the incident below,
+5. require future commits to pass that guard.
+
+This converts failures into permanent project knowledge.
+
+## Machine-readable policy
+
+`Data/ProjectGuardRules.json` stores rules such as:
+- allowed runtime chapter IDs,
+- approved current route IDs,
+- allowed canon classes,
+- required governance docs,
+- required story/dialogue/music datasets,
+- route episode naming rules.
+
+`Scripts/pre_unreal_validate.py` consumes these rules on every CI run.
+
+## Current hard guards
+
+### PG-001 — Runtime chapter drift
+**Past risk:** old design files used P1C09-P1C12 while runtime moved to eight chapter buckets.
+
+**Guard:** StoryBeatPlan, DialogueIntent and MusicCuePlan may only use approved runtime chapter IDs from ProjectGuardRules.
+
+### PG-002 — Story beat exists in one layer only
+**Observed failure:** Isengard world beats landed before their presentation cues, causing Pre-Unreal Validation #74 to fail.
+
+**Guard:** runtime presentation cue IDs and StoryBeatPlan story-beat IDs must match exactly; runtime story beat references must have presentation cues.
+
+### PG-003 — Music plan drifts from runtime
+**Risk:** presentation could reference music that is absent from the music plan, or the plan could describe dead cues.
+
+**Guard:** non-empty runtime music cue references and MusicCuePlan cue IDs must match exactly.
+
+### PG-004 — Unapproved route silently appears
+**Risk:** adding parallel routes casually can overwrite scope and save assumptions.
+
+**Guard:** CSV route IDs must be explicitly approved in ProjectGuardRules. Adding a future route requires consciously updating the rules.
+
+### PG-005 — Canon class ambiguity
+**Risk:** film, extended-film, lore-only and original gap-fill content can be mixed without labeling.
+
+**Guard:** planning CSV CanonClass values are restricted to approved classes.
+
+### PG-006 — Missing project memory
+**Risk:** a lost conversation or a new programmer resumes from outdated assumptions.
+
+**Guard:** CI requires CURRENT_PROJECT_STATE, DEVELOPMENT_GATES, PROJECT_GUARDIAN and STORY_CANON_BIBLE.
+
+### PG-007 — Static green mistaken for playable
+**Risk:** repository checks pass while C++/UHT/PIE has not been exercised.
+
+**Guard:** this cannot be fully machine-proven by GitHub CI. The process guard is explicit acceptance labels and the hard UE4.27 gate in CURRENT_PROJECT_STATE.
+
+### PG-008 — Route/save architecture disappears
+**Risk:** future refactors accidentally remove route identity or per-route persistence.
+
+**Guard:** validator checks for key route-state symbols in QuestSubsystem, SaveGame and ChapterWorldRouter.
+
+### PG-009 — Audio/dialogue presentation dangling references
+**Risk:** story cues reference dialogue/audio paths that do not exist.
+
+**Guard:** existing validator checks runtime dialogue sequence coverage and audio subsystem event wiring.
+
+## What Guardian must never do automatically
+
+- change canon,
+- invent a replacement scene,
+- rewrite dialogue,
+- auto-merge branches,
+- silently alter quest results,
+- "fix" a compile error by deleting gameplay,
+- expand scope,
+- mark a feature PIE-tested without a real PIE test.
+
+Guardian detects and blocks. Humans/developers decide the correction.
+
+## Adding a new regression rule
+
+When a new repeatable failure is found, add a new PG entry with:
+- symptom,
+- root invariant,
+- automated check if possible,
+- manual test if automation is impossible,
+- commit/run that exposed it when useful.
+
+Then update ProjectGuardRules or pre_unreal_validate.py in the same fix when practical.

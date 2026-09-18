@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "policy_name": "Fellowship Project Guardian",
+  "runtime_chapters": [
+    "P1C01",
+    "P1C02",
+    "P1C03",
+    "P1C04",
+    "P1C05",
+    "P1C06",
+    "P1C07",
+    "P1C08"
+  ],
+  "approved_routes": [
+    "FrodoMain",
+    "GandalfParallel"
+  ],
+  "route_episode_patterns": {
+    "FrodoMain": "^P1C0[1-8]_Main$",
+    "GandalfParallel": "^P1G01_Isengard$"
+  },
+  "canon_classes": [
+    "FILM_CORE",
+    "FILM_EXTENDED",
+    "LORE_COMPATIBLE",
+    "ORIGINAL_GAP_FILL"
+  ],
+  "required_governance_docs": [
+    "Docs/CURRENT_PROJECT_STATE.md",
+    "Docs/DEVELOPMENT_GATES.md",
+    "Docs/PROJECT_GUARDIAN.md",
+    "Docs/STORY_CANON_BIBLE.md",
+    "Docs/PART1_FELLOWSHIP_MASTERPLAN.md"
+  ],
+  "required_story_data": [
+    "Data/StoryBeatPlan.csv",
+    "Data/DialogueIntent.csv",
+    "Data/MusicCuePlan.csv"
+  ],
+  "required_debug_actions": [
+    "QuickSave",
+    "QuickLoad",
+    "DebugPreviousChapter",
+    "DebugNextChapter",
+    "DebugAlternateRoute"
+  ]
+}

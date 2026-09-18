@@ -1,40 +1,56 @@
-# Shire Journey — UE4.27 Personal Game Project
+# Fellowship Personal Game — UE4.27
 
-A low-spec-targeted personal 3D game project that treats Peter Jackson's *The Fellowship of the Ring* as the primary continuity reference for **Part I**.
+A low-spec-targeted personal 3D game project using Peter Jackson's *The Lord of the Rings* film continuity as the primary Part I story spine, expanded with exploration, living-world behavior and original game dialogue/music direction.
 
-## Current state
-This package is a C++/greybox starter, not the final visual game. It currently contains:
-- third-person movement and camera,
-- interaction + lightweight dialogue HUD,
-- quest progression,
-- quick save/load,
-- cheap companion-follow prototype,
-- Black Rider stealth prototype,
-- low-cost ambient Hobbit routines,
-- a generated Shire greybox reorganized around film-visible continuity,
-- a complete Part I production bible from the Shire through Amon Hen,
-- chapter, mission, location, character and dialogue-intent datasets.
+## Start here
 
-## Active build scope
-Chapter 01 — **The Shire**.
+If you are a new programmer, a new ChatGPT session, or returning after a long break:
 
-The whole film is planned as Part I, but production remains chapter-by-chapter so the project stays performant and finishable.
+1. read `Docs/CURRENT_PROJECT_STATE.md`,
+2. read `Docs/DEVELOPMENT_GATES.md`,
+3. read `Docs/PROJECT_GUARDIAN.md`,
+4. inspect the latest `develop` commit,
+5. do not work directly on `main`.
+
+## Current production rule
+
+The current source must pass real UE4.27.2 compile + PIE + target-device smoke testing before another major feature checkpoint is opened.
+
+GitHub static validation is useful but is not a substitute for engine testing.
+
+## Active quality target
+
+The Shire is the first vertical slice and quality bar.
+
+The broader Part I skeleton and Gandalf/Isengard parallel prototype exist, but production remains chapter-by-chapter.
 
 ## Hardware target
+
 - Intel Core i7 6th gen
-- 8 GB DDR3 RAM
-- AMD GPU with about 2 GB VRAM
+- 8 GB RAM
+- AMD GPU around 2 GB VRAM
 - Windows / DirectX 11
-- 720p / 30 FPS initial target
+- 720p / 30 FPS initial floor
+- Low/Medium scalability
 
 ## Engine
-Designed for Unreal Engine **4.27** because the target laptop is well below current UE5 recommended hardware.
 
-## Film-reference rule
-See `Docs/FILM_REFERENCE_POLICY.md`.
+Unreal Engine 4.27.2.
 
-## Full Part I plan
-See `Docs/PART1_FELLOWSHIP_MASTERPLAN.md` and `Data/Part1MissionFlow.csv`.
+## Key references
 
-## Important
-No final copyrighted film/game assets are included. The project uses original placeholder geometry and newly written game dialogue while using film continuity as design reference.
+- current handoff: `Docs/CURRENT_PROJECT_STATE.md`
+- development gates: `Docs/DEVELOPMENT_GATES.md`
+- regression memory: `Docs/PROJECT_GUARDIAN.md`
+- story/canon: `Docs/STORY_CANON_BIBLE.md`
+- Part I plan: `Docs/PART1_FELLOWSHIP_MASTERPLAN.md`
+- story beats: `Data/StoryBeatPlan.csv`
+- dialogue intent: `Data/DialogueIntent.csv`
+- original music direction: `Data/MusicCuePlan.csv`
+
+## Content policy inside the project
+
+Major film-story outcomes are preserved.
+Exploration and side content fill believable gaps without rewriting those outcomes.
+Dialogue is newly written for the game.
+Music direction is original and must not reproduce copyrighted film themes.

@@ -1,5 +1,8 @@
 # Fellowship Personal Game - Story & Canon Bible
 
+> **Implementation status note:** this file defines story/canon intent, not current completion status.
+> For what is actually implemented and tested, use `Docs/CURRENT_PROJECT_STATE.md`.
+
 Status: living design reference
 Primary branch: develop
 Target engine: Unreal Engine 4.27.2

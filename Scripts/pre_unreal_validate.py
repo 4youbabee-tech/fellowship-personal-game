@@ -7,6 +7,7 @@ installation. A green result does NOT replace a real UE4.27 compile or PIE run.
 
 from __future__ import annotations
 
+import csv
 import json
 import re
 import sys
@@ -69,6 +70,111 @@ required_files = [
 for path in required_files:
     if not path.exists():
         fail(f"Required file missing: {path.relative_to(ROOT)}")
+
+# Project Guardian: machine-readable project memory.
+guard_rules_path = ROOT / "Data" / "ProjectGuardRules.json"
+guard_rules = {}
+if not guard_rules_path.exists():
+    fail("Project Guardian rules missing: Data/ProjectGuardRules.json")
+else:
+    try:
+        guard_rules = json.loads(read(guard_rules_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/ProjectGuardRules.json: {exc}")
+
+for relative in guard_rules.get("required_governance_docs", []):
+    if not (ROOT / relative).exists():
+        fail(f"Required governance document missing: {relative}")
+
+for relative in guard_rules.get("required_story_data", []):
+    if not (ROOT / relative).exists():
+        fail(f"Required story data missing: {relative}")
+
+approved_chapters = set(guard_rules.get("runtime_chapters", []))
+approved_routes = set(guard_rules.get("approved_routes", []))
+approved_canon_classes = set(guard_rules.get("canon_classes", []))
+route_episode_patterns = guard_rules.get("route_episode_patterns", {})
+
+def read_csv_rows(relative: str, required_columns: set[str]) -> list[dict[str, str]]:
+    path = ROOT / relative
+    if not path.exists():
+        return []
+    try:
+        with path.open("r", encoding="utf-8", newline="") as handle:
+            reader = csv.DictReader(handle)
+            columns = set(reader.fieldnames or [])
+            missing = sorted(required_columns - columns)
+            if missing:
+                fail(f"{relative} missing columns: {', '.join(missing)}")
+                return []
+            return [dict(row) for row in reader]
+    except Exception as exc:
+        fail(f"Cannot parse {relative}: {exc}")
+        return []
+
+dialogue_rows = read_csv_rows("Data/DialogueIntent.csv", {
+    "Route", "Chapter", "Episode", "Scene", "Character", "Intent", "Tone", "CanonClass", "OriginalDialogueRule"
+})
+story_rows = read_csv_rows("Data/StoryBeatPlan.csv", {
+    "Route", "Chapter", "Episode", "StoryBeatId", "SequenceType", "CameraIntent", "AudioIntent",
+    "MusicIntent", "GameplayLock", "CanonClass", "Notes"
+})
+music_rows = read_csv_rows("Data/MusicCuePlan.csv", {
+    "Route", "Chapter", "Region", "MusicCue", "StoryFunction", "Palette", "Intensity", "Looping", "OriginalityRule"
+})
+
+def validate_route_rows(relative: str, rows: list[dict[str, str]], check_canon: bool = False) -> None:
+    for index, row in enumerate(rows, start=2):
+        route = (row.get("Route") or "").strip()
+        chapter = (row.get("Chapter") or "").strip()
+        episode = (row.get("Episode") or "").strip()
+
+        if approved_routes and route not in approved_routes:
+            fail(f"{relative}:{index} uses unapproved Route '{route}'")
+
+        if approved_chapters and chapter not in approved_chapters:
+            fail(f"{relative}:{index} uses non-runtime Chapter '{chapter}'")
+
+        pattern = route_episode_patterns.get(route)
+        if pattern and episode and not re.match(pattern, episode):
+            fail(f"{relative}:{index} Episode '{episode}' does not match route policy for {route}")
+
+        if check_canon:
+            canon_class = (row.get("CanonClass") or "").strip()
+            if approved_canon_classes and canon_class not in approved_canon_classes:
+                fail(f"{relative}:{index} uses unapproved CanonClass '{canon_class}'")
+
+validate_route_rows("Data/DialogueIntent.csv", dialogue_rows, check_canon=True)
+validate_route_rows("Data/StoryBeatPlan.csv", story_rows, check_canon=True)
+validate_route_rows("Data/MusicCuePlan.csv", music_rows, check_canon=False)
+
+dialogue_keys: set[tuple[str, str, str, str, str]] = set()
+for index, row in enumerate(dialogue_rows, start=2):
+    key = tuple((row.get(name) or "").strip() for name in ["Route", "Chapter", "Episode", "Scene", "Character"])
+    if key in dialogue_keys:
+        fail(f"Data/DialogueIntent.csv:{index} duplicates route/chapter/episode/scene/character key: {key}")
+    dialogue_keys.add(key)
+    if not (row.get("Intent") or "").strip():
+        fail(f"Data/DialogueIntent.csv:{index} has empty Intent")
+    if not (row.get("OriginalDialogueRule") or "").strip():
+        fail(f"Data/DialogueIntent.csv:{index} has empty OriginalDialogueRule")
+
+story_plan_ids = [(row.get("StoryBeatId") or "").strip() for row in story_rows]
+empty_story_ids = [index for index, value in enumerate(story_plan_ids, start=2) if not value]
+if empty_story_ids:
+    fail("Data/StoryBeatPlan.csv has empty StoryBeatId rows: " + ", ".join(map(str, empty_story_ids)))
+duplicate_story_plan_ids = sorted({value for value in story_plan_ids if value and story_plan_ids.count(value) > 1})
+if duplicate_story_plan_ids:
+    fail("Duplicate StoryBeatPlan StoryBeatId values: " + ", ".join(duplicate_story_plan_ids))
+
+music_plan_ids = [(row.get("MusicCue") or "").strip() for row in music_rows]
+duplicate_music_plan_ids = sorted({value for value in music_plan_ids if value and music_plan_ids.count(value) > 1})
+if duplicate_music_plan_ids:
+    fail("Duplicate MusicCuePlan MusicCue values: " + ", ".join(duplicate_music_plan_ids))
+for index, row in enumerate(music_rows, start=2):
+    if not (row.get("OriginalityRule") or "").strip():
+        fail(f"Data/MusicCuePlan.csv:{index} has empty OriginalityRule")
+
 
 uproject = ROOT / "ShireJourney.uproject"
 if uproject.exists():
@@ -169,6 +275,32 @@ all_cues = re.findall(r'AddCue\s*\(\s*TEXT\("([^"]+)"\)', presentation_cpp)
 duplicate_cues = sorted({cue for cue in all_cues if all_cues.count(cue) > 1})
 if duplicate_cues:
     fail("Duplicate story presentation cues: " + ", ".join(duplicate_cues))
+
+# Guardian: the authored story plan and runtime presentation layer must describe the same beat set.
+planned_story_beats = {value for value in story_plan_ids if value}
+missing_from_plan = sorted(presentation_beats - planned_story_beats)
+missing_from_runtime = sorted(planned_story_beats - presentation_beats)
+if missing_from_plan:
+    fail("Runtime presentation cues missing from StoryBeatPlan: " + ", ".join(missing_from_plan))
+if missing_from_runtime:
+    fail("StoryBeatPlan beats missing from runtime presentation: " + ", ".join(missing_from_runtime))
+
+# Guardian: the original music plan and runtime presentation music refs must stay synchronized.
+presentation_music_refs = set(re.findall(
+    r'AddCue\s*\(\s*TEXT\("[^"]+"\)\s*,\s*EShireStoryPresentationMode::[A-Za-z]+\s*,\s*'
+    r'(?:TEXT\("[^"]+"\)|NAME_None)\s*,\s*'
+    r'(?:TEXT\("[^"]+"\)|NAME_None)\s*,\s*'
+    r'(?:TEXT\("[^"]+"\)|NAME_None)\s*,\s*TEXT\("([^"]+)"\)',
+    presentation_cpp,
+    flags=re.S,
+))
+planned_music_cues = {value for value in music_plan_ids if value}
+missing_music_plan = sorted(presentation_music_refs - planned_music_cues)
+dead_music_plan = sorted(planned_music_cues - presentation_music_refs)
+if missing_music_plan:
+    fail("Runtime music cues missing from MusicCuePlan: " + ", ".join(missing_music_plan))
+if dead_music_plan:
+    fail("MusicCuePlan cues missing from runtime presentation: " + ", ".join(dead_music_plan))
 
 # Every non-empty dialogue cue referenced by a presentation cue must exist in the runtime dialogue library.
 dialogue_cpp = read(SOURCE / "ShireDialogueSubsystem.cpp")
@@ -275,7 +407,10 @@ if "r.DefaultFeature.MotionBlur=False" not in engine_ini:
 
 input_ini = read(ROOT / "Config" / "DefaultInput.ini")
 player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
-required_actions = ["QuickSave", "QuickLoad", "DebugNextChapter", "DebugPreviousChapter"]
+required_actions = guard_rules.get(
+    "required_debug_actions",
+    ["QuickSave", "QuickLoad", "DebugNextChapter", "DebugPreviousChapter"]
+)
 for action in required_actions:
     if f'ActionName="{action}"' not in input_ini:
         fail(f"DefaultInput.ini missing action mapping: {action}")
@@ -312,6 +447,21 @@ for unbinding in [
 ]:
     if unbinding not in audio_cpp:
         fail(f"Audio subsystem missing cleanup binding: {unbinding}")
+
+# Guardian: key multi-route persistence symbols must remain present after refactors.
+save_h = read(SOURCE / "ShireSaveGame.h")
+route_h = read(SOURCE / "ShireRouteState.h")
+for symbol in ["CurrentRouteId", "CurrentEpisodeId", "PlayableCharacterId", "RouteProgress", "StartExperience"]:
+    if symbol not in quest_cpp and symbol != "RouteProgress":
+        fail(f"Quest subsystem missing route-state symbol: {symbol}")
+for symbol in ["CurrentRouteId", "CurrentEpisodeId", "PlayableCharacterId", "RouteProgress"]:
+    if symbol not in save_h:
+        fail(f"Save game missing route persistence symbol: {symbol}")
+for symbol in ["FShireRouteProgress", "PlayerLocation", "PlayerRotation", "CompletedStoryBeats"]:
+    if symbol not in route_h:
+        fail(f"Route state definition missing symbol: {symbol}")
+if "GandalfParallel" not in router_cpp or "AIsengardPrototypeWorldBuilder" not in router_cpp:
+    fail("ChapterWorldRouter lost the Gandalf/Isengard parallel-route branch")
 
 print(
     f"Validated {len(list(SOURCE.glob('*.cpp')))} cpp files, "
