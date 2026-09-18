@@ -354,12 +354,18 @@
         "Docs/CURRENT_PROJECT_STATE.md"
       ],
       "implementation_refs": [
-        "F5 save verified historically; route snapshots implemented"
+        "F5 manual save and F9 manual load share one snapshot/restore path",
+        "route snapshots preserve Frodo/Gandalf route progress",
+        "automatic safe checkpoints use a separate ShireJourney_Checkpoint slot so manual F5 saves are never overwritten",
+        "authored story beats write mapped safe checkpoints after quest/story mutation",
+        "chapter transitions queue a checkpoint until the next player Tick so the saved transform belongs to the rebuilt destination region",
+        "combat defeat restores the latest automatic safe checkpoint at full health"
       ],
       "missing_work": [
-        "F9 round-trip verification on current build",
+        "F9 round-trip verification on current integrated build",
         "F8 Gandalf-Isengard-Frodo round-trip verification",
-        "automatic checkpoint/respawn runtime implementation"
+        "PIE verification of automatic checkpoint placement/respawn across representative chapters",
+        "device verification that checkpoint writes/restores do not create noticeable hitching"
       ],
       "acceptance_criteria": [
         "F9 restores expected transform/story state",
@@ -368,7 +374,7 @@
       ],
       "dependencies": [],
       "checkpoint": "CURRENT_HARD_GATE",
-      "notes": "This remains a blocker before major new gameplay features."
+      "notes": "Automatic checkpoint/respawn runtime foundation is implemented in build-first mode; manual PIE/device verification remains deferred to the batch integration pass."
     },
     {
       "id": "REQ-PERF-001",
@@ -1351,8 +1357,8 @@
       "order": 7,
       "id": "WORK-SAVE-001",
       "title": "Implement automatic safe checkpoint/respawn runtime",
-      "status": "BLOCKED_BY_WORK-GATE-001",
-      "rationale": "WorldCheckpointPlan exists; runtime automatic checkpoint behavior is still missing."
+      "status": "PARTIAL",
+      "rationale": "Automatic safe checkpoint/respawn runtime is implemented as a FOUNDATION with a separate checkpoint slot and story-aware mappings; compile plus later PIE/device integration proof remain pending."
     },
     {
       "order": 8,
@@ -1385,12 +1391,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Build-first lightweight world-motion pass after CP34 environment density",
+    "reason": "Build-first automatic safe checkpoint and respawn implementation",
     "summary": [
-      "Added Bird as a low-cost 3D moving ambient role using the existing distance-throttled ambient actor.",
-      "Added sparse sky-life groups to all appropriate outdoor Part I regions including Isengard.",
-      "Moria intentionally remains without natural fauna to preserve its dead-city threat atmosphere.",
-      "No device/performance/visual acceptance claimed; static and UE4.27.2 compile/import remain required."
+      "Added a separate automatic checkpoint save slot so F5 manual saves remain independent.",
+      "Mapped authored safe/pre-danger story beats to WorldCheckpointPlan checkpoint IDs.",
+      "Queued chapter-transition checkpoints until after the destination world rebuild.",
+      "Combat defeat now restores the last automatic safe checkpoint at full health when available.",
+      "WorldCheckpointPlan runtime status advanced from PLANNED to FOUNDATION only; no PIE/device verification is claimed."
     ]
   },
   "development_mode": {
