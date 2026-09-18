@@ -6,6 +6,28 @@
 #include "ShireNPC.generated.h"
 
 class UStaticMeshComponent;
+class UShireQuestSubsystem;
+
+USTRUCT(BlueprintType)
+struct FShireDialogueVariant
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue")
+    FName RequiredStoryBeat = NAME_None;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue")
+    FName ExcludedStoryBeat = NAME_None;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue")
+    FName RequiredQuestId = NAME_None;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue")
+    int32 MinQuestStage = -1;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue", meta=(MultiLine="true"))
+    TArray<FText> Lines;
+};
 
 UCLASS()
 class SHIREJOURNEY_API AShireNPC : public ACharacter, public IShireInteractable
@@ -21,6 +43,9 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue", meta=(MultiLine="true"))
     TArray<FText> DialogueLines;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Dialogue")
+    TArray<FShireDialogueVariant> DialogueVariants;
 
     // Optional side-story flags reuse the persisted story-beat store without replacing
     // the currently active main quest. This keeps exploration optional and save-safe.
@@ -112,6 +137,7 @@ private:
 
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);
+    const TArray<FText>* ResolveDialogueLines(const UShireQuestSubsystem* QuestSubsystem) const;
     int32 ResolveCompanionSlot() const;
     FVector GetFormationTarget(const APawn* PlayerPawn) const;
     void RestoreCompanionFollowState();

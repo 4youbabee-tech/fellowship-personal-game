@@ -450,6 +450,53 @@ void AShireNPC::Tick(float DeltaSeconds)
     UpdatePrototypeAnimation(DeltaSeconds);
 }
 
+
+const TArray<FText>* AShireNPC::ResolveDialogueLines(const UShireQuestSubsystem* QuestSubsystem) const
+{
+    const TArray<FText>* Selected = &DialogueLines;
+    if (!QuestSubsystem)
+    {
+        return Selected;
+    }
+
+    for (const FShireDialogueVariant& Variant : DialogueVariants)
+    {
+        bool bMatches = true;
+
+        if (Variant.RequiredStoryBeat != NAME_None &&
+            !QuestSubsystem->HasStoryBeatTriggered(Variant.RequiredStoryBeat))
+        {
+            bMatches = false;
+        }
+
+        if (Variant.ExcludedStoryBeat != NAME_None &&
+            QuestSubsystem->HasStoryBeatTriggered(Variant.ExcludedStoryBeat))
+        {
+            bMatches = false;
+        }
+
+        if (Variant.RequiredQuestId != NAME_None)
+        {
+            if (QuestSubsystem->GetActiveQuestId() != Variant.RequiredQuestId)
+            {
+                bMatches = false;
+            }
+            else if (Variant.MinQuestStage >= 0 &&
+                QuestSubsystem->GetQuestStage(Variant.RequiredQuestId) < Variant.MinQuestStage)
+            {
+                bMatches = false;
+            }
+        }
+
+        if (bMatches && Variant.Lines.Num() > 0)
+        {
+            Selected = &Variant.Lines;
+        }
+    }
+
+    return Selected;
+}
+
 void AShireNPC::Interact_Implementation(AActor* Interactor)
 {
     UGameInstance* GI = GetGameInstance();
@@ -484,9 +531,10 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
         }
     }
 
-    if (DialogueLines.Num() > 0)
+    const TArray<FText>* ActiveDialogue = ResolveDialogueLines(QuestSubsystem);
+    if (ActiveDialogue && ActiveDialogue->Num() > 0)
     {
-        const FText& Line = DialogueLines[CurrentDialogueIndex % DialogueLines.Num()];
+        const FText& Line = (*ActiveDialogue)[CurrentDialogueIndex % ActiveDialogue->Num()];
         if (APlayerController* PC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr)
         {
             if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
@@ -494,7 +542,7 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
                 HUD->ShowDialogue(DisplayName, Line, 6.0f);
             }
         }
-        CurrentDialogueIndex = (CurrentDialogueIndex + 1) % DialogueLines.Num();
+        CurrentDialogueIndex = (CurrentDialogueIndex + 1) % ActiveDialogue->Num();
     }
 
     if (QuestSubsystem && SideStoryBeatAfterInteraction != NAME_None)
