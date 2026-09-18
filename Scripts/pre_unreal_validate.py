@@ -454,7 +454,7 @@ isengard_world_motion_cpp = read(SOURCE / "IsengardPrototypeWorldBuilder.cpp")
 for symbol in [
     'RoutineRole == TEXT("Bird")',
     "AddActorWorldOffset(Direction * WalkSpeed * DeltaSeconds, false)",
-    "PrototypeWalkPhase += DeltaSeconds * 9.0f",
+    "WalkPhase += DeltaSeconds * 9.0f",
 ]:
     if symbol not in ambient_motion_cpp:
         fail(f"PG-035 lightweight bird-motion invariant missing: {symbol}")
@@ -909,6 +909,30 @@ for index, row in enumerate(checkpoint_rows, start=2):
 missing_checkpoint_chapters = sorted(approved_chapters - checkpoint_chapters)
 if missing_checkpoint_chapters:
     fail("WorldCheckpointPlan missing runtime chapters: " + ", ".join(missing_checkpoint_chapters))
+
+# PG-037: any checkpoint promoted beyond PLANNED must have a concrete runtime binding.
+checkpoint_runtime_source = "\n".join([
+    read(SOURCE / "ShirePlayerCharacter.cpp"),
+    read(SOURCE / "ShirePlayerCharacter.h"),
+    read(SOURCE / "ShireQuestTrigger.cpp"),
+    read(SOURCE / "ShireSaveGame.h"),
+])
+for index, row in enumerate(checkpoint_rows, start=2):
+    checkpoint_id = (row.get("CheckpointId") or "").strip()
+    runtime_status = (row.get("RuntimeCheckpointStatus") or "").strip()
+    if runtime_status != "PLANNED" and checkpoint_id and checkpoint_id not in checkpoint_runtime_source:
+        fail(f"PG-037 checkpoint {checkpoint_id} is {runtime_status} but has no runtime binding")
+
+for symbol in [
+    'CheckpointSlotName(TEXT("ShireJourney_Checkpoint"))',
+    "SaveAutomaticCheckpoint",
+    "RestoreAutomaticCheckpoint",
+    "PendingChapterCheckpointId",
+    "SafeCheckpoint: id=%s saved=%s",
+    "SafeCheckpoint: restored id=%s",
+]:
+    if symbol not in checkpoint_runtime_source:
+        fail(f"PG-037 automatic checkpoint runtime invariant missing: {symbol}")
 
 biome_chapters = {(row.get("Chapter") or "").strip() for row in biome_rows}
 missing_biome_chapters = sorted(approved_chapters - biome_chapters)

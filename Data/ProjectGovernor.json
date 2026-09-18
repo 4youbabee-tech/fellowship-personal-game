@@ -356,12 +356,18 @@
         "Docs/CURRENT_PROJECT_STATE.md"
       ],
       "implementation_refs": [
-        "F5 save verified historically; route snapshots implemented"
+        "F5 manual save and F9 manual load share one snapshot/restore path",
+        "route snapshots preserve Frodo/Gandalf route progress",
+        "automatic safe checkpoints use a separate ShireJourney_Checkpoint slot so manual F5 saves are never overwritten",
+        "authored story beats write mapped safe checkpoints after quest/story mutation",
+        "chapter transitions queue a checkpoint until the next player Tick so the saved transform belongs to the rebuilt destination region",
+        "combat defeat restores the latest automatic safe checkpoint at full health"
       ],
       "missing_work": [
-        "F9 round-trip verification on current build",
+        "F9 round-trip verification on current integrated build",
         "F8 Gandalf-Isengard-Frodo round-trip verification",
-        "automatic checkpoint/respawn runtime implementation"
+        "PIE verification of automatic checkpoint placement/respawn across representative chapters",
+        "device verification that checkpoint writes/restores do not create noticeable hitching"
       ],
       "acceptance_criteria": [
         "F9 restores expected transform/story state",
@@ -370,7 +376,7 @@
       ],
       "dependencies": [],
       "checkpoint": "CURRENT_HARD_GATE",
-      "notes": "This remains a blocker before major new gameplay features."
+      "notes": "Automatic checkpoint/respawn runtime foundation is implemented in build-first mode; manual PIE/device verification remains deferred to the batch integration pass."
     },
     {
       "id": "REQ-PERF-001",
@@ -670,7 +676,8 @@
         "exact-commit acquisition uses retrying GitHub API archive download",
         "PowerShell checkout uses explicit execution-policy bypass",
         "superseded develop Unreal runs cancel so the latest head can validate",
-        "Unreal Build Validation #19 succeeded on exact commit 0936f2e779c6a6d1b4d209628d206f5d11ca3f9c with UE4.27.2 compile and production import 50 files / 0 failures"
+        "Unreal Build Validation #19 succeeded on exact commit 0936f2e779c6a6d1b4d209628d206f5d11ca3f9c with UE4.27.2 compile and production import 50 files / 0 failures",
+        "Build #27 reached UE4.27.2 C++ compilation and exposed a real ShireAmbientNPC compile regression: Bird motion referenced PrototypeWalkPhase instead of the class's WalkPhase field; repaired on develop before CP37 integration"
       ],
       "missing_work": [
         "GitHub develop/main branch protection or ruleset is not currently enabled",
@@ -1353,8 +1360,8 @@
       "order": 7,
       "id": "WORK-SAVE-001",
       "title": "Implement automatic safe checkpoint/respawn runtime",
-      "status": "BLOCKED_BY_WORK-GATE-001",
-      "rationale": "WorldCheckpointPlan exists; runtime automatic checkpoint behavior is still missing."
+      "status": "PARTIAL",
+      "rationale": "Automatic safe checkpoint/respawn runtime is implemented as a FOUNDATION with a separate checkpoint slot and story-aware mappings; compile plus later PIE/device integration proof remain pending."
     },
     {
       "order": 8,
@@ -1387,8 +1394,9 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Build-first ambient NPC-to-NPC conversation runtime",
+    "reason": "Build-first ambient NPC-to-NPC conversation runtime integrated after CP37",
     "summary": [
+      "Preserved CP37 automatic checkpoint/respawn foundation and CP35A Bird compile repair from current develop.",
       "Added world-space two-turn social captions for ambient residents near the player.",
       "Added original role-specific Shire, Bree and Elven ambient dialogue.",
       "Capped simultaneous conversations to two and added 90-second same-pair cooldown.",

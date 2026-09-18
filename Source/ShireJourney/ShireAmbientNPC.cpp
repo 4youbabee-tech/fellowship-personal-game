@@ -793,13 +793,13 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
             SetActorRotation(FMath::RInterpTo(GetActorRotation(), Direction.Rotation(), DeltaSeconds, 4.0f));
         }
 
-        PrototypeWalkPhase += DeltaSeconds * 9.0f;
-        const float Wing = FMath::Sin(PrototypeWalkPhase) * 42.0f;
+        WalkPhase += DeltaSeconds * 9.0f;
+        const float Wing = FMath::Sin(WalkPhase) * 42.0f;
         LeftArm->SetRelativeRotation(FMath::RInterpTo(
             LeftArm->GetRelativeRotation(), FRotator(0.0f, 0.0f, 58.0f + Wing), DeltaSeconds, 10.0f));
         RightArm->SetRelativeRotation(FMath::RInterpTo(
             RightArm->GetRelativeRotation(), FRotator(0.0f, 0.0f, -58.0f - Wing), DeltaSeconds, 10.0f));
-        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, VisualTorsoBaseZ + FMath::Sin(PrototypeWalkPhase * 0.5f) * 1.5f));
+        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, VisualTorsoBaseZ + FMath::Sin(WalkPhase * 0.5f) * 1.5f));
         return;
     }
 
