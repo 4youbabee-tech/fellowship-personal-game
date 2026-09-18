@@ -12,6 +12,11 @@
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
 
+namespace BreeVisual
+{
+    constexpr bool ShowPrototypeWorldLabels = false;
+}
+
 ABreePrototypeWorldBuilder::ABreePrototypeWorldBuilder()
 {
     PrimaryActorTick.bCanEverTick = false;
@@ -32,6 +37,16 @@ ABreePrototypeWorldBuilder::ABreePrototypeWorldBuilder()
 void ABreePrototypeWorldBuilder::BeginPlay()
 {
     Super::BeginPlay();
+
+    ProductionHouseMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Bree/SM_BreeHouse.SM_BreeHouse"));
+    ProductionInnMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Bree/SM_BreeInn.SM_BreeInn"));
+    ProductionGateMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Bree/SM_BreeGate.SM_BreeGate"));
+    ProductionStallMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Bree/SM_BreeStall.SM_BreeStall"));
+    ProductionLanternMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Bree/SM_BreeLantern.SM_BreeLantern"));
+    ProductionHitchingPostMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Bree/SM_BreeHitchingPost.SM_BreeHitchingPost"));
+    ProductionTableMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Bree/SM_BreeTable.SM_BreeTable"));
+    ProductionCrateStackMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Bree/SM_BreeCrateStack.SM_BreeCrateStack"));
+
     BuildPrototypeWorld();
 }
 
@@ -65,7 +80,9 @@ AStaticMeshActor* ABreePrototypeWorldBuilder::SpawnShape(
     MeshComponent->SetCollisionEnabled(bCollision ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
     Actor->SetActorScale3D(Scale);
 
-    if (BasicMaterial)
+    const bool bFallbackPrimitive =
+        Mesh == CubeMesh || Mesh == SphereMesh || Mesh == CylinderMesh || Mesh == ConeMesh;
+    if (BasicMaterial && bFallbackPrimitive)
     {
         UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, Actor);
         if (MID)
@@ -80,6 +97,11 @@ AStaticMeshActor* ABreePrototypeWorldBuilder::SpawnShape(
 
 void ABreePrototypeWorldBuilder::SpawnLabel(const FString& Text, const FVector& Location, const FLinearColor& Color)
 {
+    if (!BreeVisual::ShowPrototypeWorldLabels)
+    {
+        return;
+    }
+
     if (!GetWorld())
     {
         return;
@@ -250,6 +272,91 @@ void ABreePrototypeWorldBuilder::SpawnBreeTown()
     }
 }
 
+
+void ABreePrototypeWorldBuilder::SpawnProductionBreeDetailLayer()
+{
+    auto SpawnProd = [this](UStaticMesh* Mesh, const FVector& Location, const FVector& Scale,
+        const FRotator& Rotation = FRotator::ZeroRotator, bool bCollision = true)
+    {
+        if (Mesh)
+        {
+            SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, bCollision);
+        }
+    };
+
+    // Replace the dominant street silhouette with production architecture while keeping
+    // all quest trigger positions and traversal coordinates untouched.
+    SpawnProd(ProductionGateMesh, FVector(-980.0f, 0.0f, 0.0f), FVector(0.92f), FRotator::ZeroRotator, true);
+
+    const struct FHousePlacement
+    {
+        FVector Location;
+        float Scale;
+        float Yaw;
+    } Houses[] = {
+        { FVector(-560,-450,0), 0.72f, 5.0f },
+        { FVector(-150,-510,0), 0.76f, -4.0f },
+        { FVector(290,-475,0), 0.74f, 4.0f },
+        { FVector(700,-405,0), 0.80f, -7.0f },
+        { FVector(-555,445,0), 0.70f, -6.0f },
+        { FVector(-130,520,0), 0.78f, 5.0f },
+        { FVector(335,480,0), 0.74f, -5.0f },
+        { FVector(770,430,0), 0.82f, 8.0f }
+    };
+    for (const FHousePlacement& P : Houses)
+    {
+        SpawnProd(ProductionHouseMesh, P.Location, FVector(P.Scale), FRotator(0.0f, P.Yaw, 0.0f), true);
+    }
+
+    SpawnProd(ProductionInnMesh, FVector(1120.0f,130.0f,0.0f), FVector(0.94f),
+        FRotator(0.0f,-4.0f,0.0f), true);
+
+    const FVector Stalls[] = {
+        FVector(-260,250,0), FVector(140,-270,0), FVector(520,260,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(Stalls); ++Index)
+    {
+        SpawnProd(ProductionStallMesh, Stalls[Index], FVector(0.72f),
+            FRotator(0.0f, Index == 1 ? 180.0f : 0.0f, 0.0f), true);
+    }
+
+    const FVector Lamps[] = {
+        FVector(-760,-260,0), FVector(-360,270,0), FVector(80,-260,0),
+        FVector(520,280,0), FVector(940,-180,0), FVector(1280,420,0)
+    };
+    for (const FVector& P : Lamps)
+    {
+        SpawnProd(ProductionLanternMesh, P, FVector(0.72f), FRotator::ZeroRotator, false);
+    }
+
+    const FVector Hitching[] = {
+        FVector(-820,340,0), FVector(900,-330,0), FVector(1320,430,0)
+    };
+    for (const FVector& P : Hitching)
+    {
+        SpawnProd(ProductionHitchingPostMesh, P, FVector(0.78f), FRotator::ZeroRotator, true);
+    }
+
+    const FVector CommonTables[] = {
+        FVector(1220,650,0), FVector(1400,650,0), FVector(1580,650,0),
+        FVector(1220,840,0), FVector(1400,840,0), FVector(1580,840,0)
+    };
+    for (const FVector& P : CommonTables)
+    {
+        SpawnProd(ProductionTableMesh, P, FVector(0.72f), FRotator::ZeroRotator, true);
+    }
+
+    const FVector Goods[] = {
+        FVector(930,490,0), FVector(1080,500,0), FVector(1240,500,0),
+        FVector(1460,560,0), FVector(1600,590,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(Goods); ++Index)
+    {
+        SpawnProd(ProductionCrateStackMesh, Goods[Index], FVector(0.58f + 0.05f * (Index % 2)),
+            FRotator(0.0f, 17.0f * Index, 0.0f), true);
+    }
+}
+
 void ABreePrototypeWorldBuilder::SpawnStoryFlow()
 {
     if (!GetWorld())
@@ -403,5 +510,6 @@ void ABreePrototypeWorldBuilder::BuildPrototypeWorld()
 
     bBuilt = true;
     SpawnBreeTown();
+    SpawnProductionBreeDetailLayer();
     SpawnStoryFlow();
 }
