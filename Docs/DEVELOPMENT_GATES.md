@@ -70,6 +70,11 @@ Source-layout changes must update the source handoff README, architecture plan a
 
 Do not knowingly create "we will fix docs later" debt.
 
+Requirement memory rule:
+- meaningful user feature/design requests must be added or updated in `Data/ProjectRequirements.json`;
+- living-world/NPC scope changes must update `Docs/LIVING_WORLD_AI_BLUEPRINT.md` and `Data/LivingWorldFeaturePlan.json`;
+- a feature checkpoint must not silently mark an open requirement complete.
+
 ## Gate 6 — Vertical-slice priority
 The Shire is the current quality bar.
 
