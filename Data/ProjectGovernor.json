@@ -133,15 +133,16 @@
         "landmark discovery",
         "instanced foliage and ambient audio foundations",
         "Data/LivingWorldEventPlan.json defines per-chapter micro-event/fauna/weather/prop-motion categories, density targets and performance caps",
-        "CP34 adds runtime environmental detail across Bree, Weathertop, Rivendell, Fellowship road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen using low-cost static primitives"
+        "CP34 adds runtime environmental detail across Bree, Weathertop, Rivendell, Fellowship road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen using low-cost static primitives",
+        "Lightweight Bird ambient role now provides 3D sky motion across Shire, Bree, Weathertop, Rivendell, Caradhras/Fellowship road, Lothlorien, Anduin/Amon Hen and Isengard with distance-throttled ticks"
       ],
       "missing_work": [
         "production-quality terrain/material/art replacement beyond current procedural detail",
         "runtime micro-event director",
-        "runtime fauna presentation",
         "broader worker/market/traveler activity",
         "environment motion implementation beyond static/procedural proxies",
-        "batch integration PIE/device/performance/visual review"
+        "batch integration PIE/device/performance/visual review",
+        "broader fauna beyond current lightweight bird motion"
       ],
       "acceptance_criteria": [
         "Ordinary traversal repeatedly reveals believable activity or environmental storytelling",
@@ -1379,17 +1380,17 @@
       "id": "WORK-WORLD-001",
       "title": "Expand environmental micro-life and production polish chapter by chapter",
       "status": "PARTIAL",
-      "rationale": "Per-chapter micro-life/fauna/motion/density contracts are data-defined; runtime rollout and visual/device acceptance remain gated."
+      "rationale": "Per-chapter micro-life contracts plus lightweight runtime sky motion now exist; broader fauna, micro-event directing and final integration/visual/performance acceptance remain pending."
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Build-first Part I world detail expansion after full-cast population and visual identity",
+    "reason": "Build-first lightweight world-motion pass after CP34 environment density",
     "summary": [
-      "Deepened Bree streets/inn surroundings with stalls, puddles, lanterns and crates.",
-      "Deepened Weathertop, Rivendell, Fellowship road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen with chapter-specific low-cost environmental detail.",
-      "No PIE/device/visual acceptance claimed; those remain deferred to the batch integration pass.",
-      "Static and UE4.27.2 compile/import remain mandatory before merge."
+      "Added Bird as a low-cost 3D moving ambient role using the existing distance-throttled ambient actor.",
+      "Added sparse sky-life groups to all appropriate outdoor Part I regions including Isengard.",
+      "Moria intentionally remains without natural fauna to preserve its dead-city threat atmosphere.",
+      "No device/performance/visual acceptance claimed; static and UE4.27.2 compile/import remain required."
     ]
   },
   "development_mode": {
