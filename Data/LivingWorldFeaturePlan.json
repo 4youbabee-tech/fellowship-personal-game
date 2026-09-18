@@ -155,19 +155,28 @@
         },
         {
           "id": "WORLD-FAUNA",
-          "status": "PARTIAL",
+          "status": "RUNTIME_PARTIAL",
           "evidence": [
-            "Data/LivingWorldEventPlan.json"
+            "Data/LivingWorldEventPlan.json",
+            "Source/ShireJourney/ShireAmbientNPC.cpp",
+            "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+            "Source/ShireJourney/BreePrototypeWorldBuilder.cpp",
+            "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
+            "Source/ShireJourney/IsengardPrototypeWorldBuilder.cpp"
           ],
-          "notes": "Low-cost fauna templates/budgets are defined; runtime fauna presentation pending."
+          "notes": "Lightweight Bird role now moves in 3D across outdoor Part I regions using distance-throttled ambient actor ticks. Broader fauna types remain pending."
         },
         {
           "id": "WORLD-MOTION",
-          "status": "PARTIAL",
+          "status": "RUNTIME_PARTIAL",
           "evidence": [
-            "Data/LivingWorldEventPlan.json"
+            "Source/ShireJourney/ShireAmbientNPC.cpp",
+            "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+            "Source/ShireJourney/BreePrototypeWorldBuilder.cpp",
+            "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
+            "Source/ShireJourney/IsengardPrototypeWorldBuilder.cpp"
           ],
-          "notes": "Prop/weather motion categories and caps are defined; runtime presentation pending."
+          "notes": "Outdoor regions now contain cheap moving sky-life actors; prop/weather motion beyond existing procedural movement remains pending."
         },
         {
           "id": "WORLD-EXPLORATION-DENSITY",
