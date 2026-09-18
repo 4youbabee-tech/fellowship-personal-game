@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_BOUNDED_DIALOGUE_INTELLIGENCE_V1",
+  "purpose": "Bounded dialogue variation/selection contract. It allows contextual variation without unrestricted runtime invention, canon drift or heavy always-on AI.",
+  "modes": [
+    "AUTHORED_EXACT",
+    "AUTHORED_VARIANT",
+    "TEMPLATE_FILL",
+    "CACHED_BOUNDED_GENERATION",
+    "SILENT_FALLBACK"
+  ],
+  "default_mode": "AUTHORED_VARIANT",
+  "safety_rules": [
+    "Film-core outcomes and chronology are immutable.",
+    "Speaker may only use knowledge allowed by NPCSocialModel plus current story-state gates.",
+    "Never reproduce screenplay dialogue verbatim.",
+    "Never invent a major relationship, quest, death, allegiance or story outcome.",
+    "Never reveal future story beats.",
+    "If context is ambiguous or validation fails, use authored fallback or silence.",
+    "Runtime must not require an always-on remote/large language model to remain playable.",
+    "Generated/varied text is cacheable and bounded by repetition policy."
+  ],
+  "context_inputs": [
+    "profile_id",
+    "temperament_tags",
+    "roles",
+    "community",
+    "knowledge_tags",
+    "relationship_context",
+    "RouteId",
+    "ChapterId",
+    "ActiveQuestId",
+    "QuestStage",
+    "CompletedStoryBeats",
+    "location_tag",
+    "recent_intent_history"
+  ],
+  "output_contract": [
+    "intent_id",
+    "line_variant_id",
+    "text_or_localization_key",
+    "speaker_id",
+    "listener_id",
+    "provenance_mode",
+    "knowledge_tags_used",
+    "story_gate_id"
+  ],
+  "limits": {
+    "max_words_ambient_line": 24,
+    "max_words_story_reactive_line": 38,
+    "max_variants_per_intent_per_profile": 8,
+    "max_cached_generated_lines_per_profile": 24,
+    "max_recent_line_ids_for_repetition_guard": 12,
+    "generation_timeout_ms_target": 0,
+    "deterministic_fallback_required": true
+  },
+  "knowledge_guard": {
+    "default": "DENY_UNLISTED",
+    "require_all_declared_tags": true,
+    "story_beat_must_be_completed_for_reaction": true,
+    "cross_route_knowledge_default": "DENY",
+    "alias_resolves_to_canonical_profile": true
+  },
+  "provenance_priority": [
+    "AUTHORED_EXACT",
+    "AUTHORED_VARIANT",
+    "TEMPLATE_FILL",
+    "CACHED_BOUNDED_GENERATION",
+    "SILENT_FALLBACK"
+  ],
+  "intent_policies": [
+    {
+      "intent": "GREETING",
+      "allowed_modes": [
+        "AUTHORED_VARIANT",
+        "TEMPLATE_FILL",
+        "SILENT_FALLBACK"
+      ]
+    },
+    {
+      "intent": "WORK_TALK",
+      "allowed_modes": [
+        "AUTHORED_VARIANT",
+        "TEMPLATE_FILL",
+        "SILENT_FALLBACK"
+      ]
+    },
+    {
+      "intent": "LOCAL_NEWS",
+      "allowed_modes": [
+        "AUTHORED_VARIANT",
+        "TEMPLATE_FILL",
+        "CACHED_BOUNDED_GENERATION",
+        "SILENT_FALLBACK"
+      ]
+    },
+    {
+      "intent": "STORY_REACTION",
+      "allowed_modes": [
+        "AUTHORED_EXACT",
+        "AUTHORED_VARIANT",
+        "TEMPLATE_FILL",
+        "SILENT_FALLBACK"
+      ]
+    },
+    {
+      "intent": "DANGER_WARNING",
+      "allowed_modes": [
+        "AUTHORED_EXACT",
+        "AUTHORED_VARIANT",
+        "TEMPLATE_FILL",
+        "SILENT_FALLBACK"
+      ]
+    },
+    {
+      "intent": "TRAVEL_COMMENT",
+      "allowed_modes": [
+        "AUTHORED_VARIANT",
+        "TEMPLATE_FILL",
+        "CACHED_BOUNDED_GENERATION",
+        "SILENT_FALLBACK"
+      ]
+    },
+    {
+      "intent": "COMPANION_BANTER",
+      "allowed_modes": [
+        "AUTHORED_VARIANT",
+        "TEMPLATE_FILL",
+        "SILENT_FALLBACK"
+      ]
+    }
+  ]
+}
