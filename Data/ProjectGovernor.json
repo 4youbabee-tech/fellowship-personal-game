@@ -21,6 +21,7 @@
     "Prefer player enjoyment, clarity, stable traversal, save continuity and reliable performance over uncontrolled feature quantity."
   ],
   "operating_rules": [
+    "Global project-management changes go through the single Governor and a validation branch/PR; workers must not create competing authority files.",
     "One governor, one decision authority. No secondary file may independently redefine requirement status, priority, conflict resolution, active gate, or region acceptance.",
     "Every meaningful user request receives a stable requirement ID here before or with implementation.",
     "New requests never silently delete older requests; contradictions become explicit conflicts/decisions here.",
@@ -638,6 +639,38 @@
       ],
       "checkpoint": "EXPERIENCE_ACCEPTANCE",
       "notes": "Fun cannot be inferred from compile/CI; human play evidence is mandatory."
+    },
+    {
+      "id": "REQ-CI-001",
+      "title": "Protected integration path with required validation checks",
+      "category": "ProjectGovernance",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "origin": "Large-team engineering discipline adopted for this project",
+      "intent": "Prevent unvalidated changes from becoming the shared development baseline by requiring the project validation gates on integration branches.",
+      "evidence": [
+        ".github/workflows/pre-unreal-validation.yml",
+        ".github/workflows/unreal-build-validation.yml"
+      ],
+      "implementation_refs": [
+        "Pre-Unreal and self-hosted UE4.27.2 build/import workflows exist"
+      ],
+      "missing_work": [
+        "GitHub develop/main branch protection or ruleset is not currently enabled",
+        "Require relevant status checks before protected integration",
+        "Keep emergency override exceptional and explicitly recorded"
+      ],
+      "acceptance_criteria": [
+        "develop/main integration policy prevents normal merge when required checks fail",
+        "Pre-Unreal Project Governor validation is a required check",
+        "UE4.27.2 build/import is required for relevant integration changes",
+        "Any bypass is explicitly recorded rather than silent"
+      ],
+      "dependencies": [
+        "REQ-GOV-001"
+      ],
+      "checkpoint": "GOVERNANCE_HARDENING",
+      "notes": "Current repository reports develop as unprotected; tool connection does not expose administration write access."
     }
   ],
   "hard_invariants": [
@@ -1044,6 +1077,7 @@
     "Data/VoiceCuePlan.csv"
   ],
   "update_protocol": [
+    "Treat Data/ProjectGovernor.json as the first-read/last-write coordination record for any meaningful project change.",
     "Read this file first before any meaningful gameplay, architecture, story or quality decision.",
     "For a new user request: add/update one requirement here, then inspect dependencies/conflicts before implementation.",
     "For a contradiction: preserve both requirements and add/update one decision/open conflict here.",
