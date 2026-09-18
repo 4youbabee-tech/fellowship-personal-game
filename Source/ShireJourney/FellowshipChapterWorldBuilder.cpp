@@ -99,7 +99,7 @@ void AFellowshipChapterWorldBuilder::SpawnTree(const FVector& Location, float Sc
         FLinearColor(0.09f, 0.26f, 0.08f), FRotator::ZeroRotator, false);
 }
 
-void AFellowshipChapterWorldBuilder::SpawnNPC(
+AShireNPC* AFellowshipChapterWorldBuilder::SpawnNPC(
     const FString& Name,
     const FVector& Location,
     const FRotator& Rotation,
@@ -113,13 +113,13 @@ void AFellowshipChapterWorldBuilder::SpawnNPC(
 {
     if (!GetWorld())
     {
-        return;
+        return nullptr;
     }
 
     AShireNPC* NPC = GetWorld()->SpawnActor<AShireNPC>(Location, Rotation);
     if (!NPC)
     {
-        return;
+        return nullptr;
     }
 
     NPC->DisplayName = FText::FromString(Name);
@@ -130,6 +130,32 @@ void AFellowshipChapterWorldBuilder::SpawnNPC(
     NPC->NextQuestId = NextQuestId;
     NPC->NextQuestStage = NextQuestStage;
     NPC->bFollowPlayerAfterInteraction = bFollow;
+    return NPC;
+}
+
+AShireNPC* AFellowshipChapterWorldBuilder::SpawnTravelCompanion(
+    const FString& Name,
+    const FVector& Location,
+    const FString& Line,
+    FName StopFollowingStoryBeat)
+{
+    AShireNPC* Companion = SpawnNPC(
+        Name,
+        Location,
+        FRotator(0.0f, 0.0f, 0.0f),
+        NAME_None,
+        0,
+        -1,
+        Line,
+        NAME_None,
+        0,
+        true);
+
+    if (Companion)
+    {
+        Companion->StopFollowingStoryBeat = StopFollowingStoryBeat;
+    }
+    return Companion;
 }
 
 
