@@ -235,7 +235,7 @@ for required_req in [
     "REQ-MEM-001", "REQ-GOV-001", "REQ-WORLD-001", "REQ-WORLD-002",
     "REQ-NPC-001", "REQ-NPC-002", "REQ-NPC-003", "REQ-SAVE-001", "REQ-PERF-001",
     "REQ-VISION-001", "REQ-EXP-001", "REQ-EXP-002", "REQ-COVERAGE-001",
-    "REQ-QUALITY-001", "REQ-QUALITY-002", "REQ-CHAR-001"
+    "REQ-QUALITY-001", "REQ-QUALITY-002", "REQ-CHAR-001", "REQ-CHAR-002"
 ]:
     if required_req not in requirement_ids:
         fail(f"Single ProjectGovernor missing critical requirement: {required_req}")
@@ -330,6 +330,84 @@ expected_film_routes = set(guard_rules.get("film_experience_required_routes", []
 missing_film_routes = sorted(expected_film_routes - covered_routes)
 if missing_film_routes:
     fail("FilmExperiencePlan missing required routes: " + ", ".join(missing_film_routes))
+
+# PG-032: Part I character population and visual-tier contract must stay complete.
+population_plan_path = ROOT / "Data" / "CharacterPopulationPlan.json"
+population_plan = {}
+if not population_plan_path.exists():
+    fail("Character population plan missing: Data/CharacterPopulationPlan.json")
+else:
+    try:
+        population_plan = json.loads(read(population_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/CharacterPopulationPlan.json: {exc}")
+
+population_ids: set[str] = set()
+allowed_visual_tiers = set(population_plan.get("visual_tiers", []))
+for index, item in enumerate(population_plan.get("core_cast", []), start=1):
+    cast_id = str(item.get("id") or "").strip()
+    display_name = str(item.get("display_name") or "").strip()
+    visual_tier = str(item.get("visual_tier") or "").strip()
+    chapters = item.get("chapters", [])
+    if not cast_id or not display_name or not visual_tier or not chapters:
+        fail(f"CharacterPopulationPlan core cast entry {index} is incomplete")
+        continue
+    if cast_id in population_ids:
+        fail(f"Duplicate CharacterPopulationPlan cast id: {cast_id}")
+    population_ids.add(cast_id)
+    if visual_tier not in allowed_visual_tiers:
+        fail(f"CharacterPopulationPlan {cast_id} uses unknown visual tier '{visual_tier}'")
+
+missing_population_ids = sorted(set(guard_rules.get("character_population_required_ids", [])) - population_ids)
+if missing_population_ids:
+    fail("CharacterPopulationPlan missing required cast ids: " + ", ".join(missing_population_ids))
+
+chapter_contracts = population_plan.get("chapter_cast_contracts", [])
+population_chapters = {str(item.get("chapter") or "").strip() for item in chapter_contracts}
+missing_population_chapters = sorted(
+    set(guard_rules.get("character_population_required_chapters", [])) - population_chapters
+)
+if missing_population_chapters:
+    fail("CharacterPopulationPlan missing chapter contracts: " + ", ".join(missing_population_chapters))
+
+for entry in chapter_contracts:
+    chapter = str(entry.get("chapter") or "").strip()
+    required_named = entry.get("required_named", [])
+    if not required_named:
+        fail(f"CharacterPopulationPlan chapter {chapter} has no required_named cast")
+    for cast_id in required_named:
+        if cast_id not in population_ids:
+            fail(f"CharacterPopulationPlan chapter {chapter} references unknown cast id {cast_id}")
+
+population_runtime_source = "\n".join([
+    read(SOURCE / "ShirePlayerCharacter.cpp"),
+    read(SOURCE / "ShirePrototypeWorldBuilder.cpp"),
+    read(SOURCE / "BreePrototypeWorldBuilder.cpp"),
+    read(SOURCE / "FellowshipChapterWorldBuilder.cpp"),
+    read(SOURCE / "IsengardPrototypeWorldBuilder.cpp"),
+])
+for item in population_plan.get("core_cast", []):
+    display_name = str(item.get("display_name") or "").strip()
+    aliases = [str(value).strip() for value in item.get("aliases", []) if str(value).strip()]
+    names = [display_name] + aliases
+    if not any(f'TEXT("{name}")' in population_runtime_source for name in names):
+        fail(f"CharacterPopulationPlan cast has no runtime source representation: {display_name}")
+
+npc_cpp_for_population = read(SOURCE / "ShireNPC.cpp")
+npc_h_for_population = read(SOURCE / "ShireNPC.h")
+ambient_cpp_for_population = read(SOURCE / "ShireAmbientNPC.cpp")
+bree_cpp_for_population = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
+fellowship_cpp_for_population = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+for symbol in ["StopFollowingStoryBeat", "HasStoryBeatTriggered(StopFollowingStoryBeat)"]:
+    if symbol not in npc_cpp_for_population and symbol not in npc_h_for_population:
+        fail(f"PG-032 story-aware companion release missing: {symbol}")
+if 'RoutineRole = TEXT("BreeTownsperson")' not in bree_cpp_for_population:
+    fail("PG-032 Bree ambient population lost BreeTownsperson role")
+if 'RoutineRole = TEXT("Elf")' not in fellowship_cpp_for_population:
+    fail("PG-032 Rivendell/Lothlorien ambient population lost Elf role")
+for symbol in ["VisualTorsoBaseZ", "VisualHeadBaseZ", "VisualHairBaseZ"]:
+    if symbol not in ambient_cpp_for_population:
+        fail(f"PG-032 ambient role-specific visual base missing: {symbol}")
 
 # PG-024: NPC identity/schedule/relationship data must stay coherent before runtime intelligence consumes it.
 npc_social_path = ROOT / "Data" / "NPCSocialModel.json"

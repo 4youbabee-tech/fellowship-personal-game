@@ -1,0 +1,453 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_CHARACTER_POPULATION_V1",
+  "purpose": "Runtime population/visual-tier map for the Part I cast. Ensures major named characters are physically represented in the chapters where they matter and makes unfinished visual production explicit.",
+  "visual_tiers": [
+    "PRODUCTION_DEDICATED",
+    "PRODUCTION_ARCHETYPE",
+    "PROCEDURAL_DISTINCT_PROXY",
+    "ENEMY_PROTOTYPE"
+  ],
+  "core_cast": [
+    {
+      "id": "FRODO",
+      "display_name": "Frodo",
+      "visual_tier": "PRODUCTION_DEDICATED",
+      "runtime_role": "PLAYER",
+      "chapters": [
+        "P1C01",
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ]
+    },
+    {
+      "id": "SAM",
+      "display_name": "Sam",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "runtime_role": "COMPANION",
+      "chapters": [
+        "P1C01",
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ]
+    },
+    {
+      "id": "MERRY",
+      "display_name": "Merry",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "runtime_role": "COMPANION",
+      "chapters": [
+        "P1C01",
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ]
+    },
+    {
+      "id": "PIPPIN",
+      "display_name": "Pippin",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "runtime_role": "COMPANION",
+      "chapters": [
+        "P1C01",
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ]
+    },
+    {
+      "id": "GANDALF",
+      "display_name": "Gandalf",
+      "visual_tier": "PRODUCTION_DEDICATED",
+      "runtime_role": "PLAYER_AND_NPC",
+      "chapters": [
+        "P1C01",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1G01"
+      ]
+    },
+    {
+      "id": "ARAGORN",
+      "display_name": "Aragorn",
+      "aliases": [
+        "Strider"
+      ],
+      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "runtime_role": "COMPANION",
+      "chapters": [
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ]
+    },
+    {
+      "id": "BOROMIR",
+      "display_name": "Boromir",
+      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "runtime_role": "COMPANION",
+      "chapters": [
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ]
+    },
+    {
+      "id": "LEGOLAS",
+      "display_name": "Legolas",
+      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "runtime_role": "COMPANION",
+      "chapters": [
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ]
+    },
+    {
+      "id": "GIMLI",
+      "display_name": "Gimli",
+      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "runtime_role": "COMPANION",
+      "chapters": [
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ]
+    },
+    {
+      "id": "BILBO",
+      "display_name": "Bilbo",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "runtime_role": "STORY_NPC",
+      "chapters": [
+        "P1C01",
+        "P1C04"
+      ]
+    },
+    {
+      "id": "ARWEN",
+      "display_name": "Arwen",
+      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "runtime_role": "STORY_NPC",
+      "chapters": [
+        "P1C03",
+        "P1C04"
+      ]
+    },
+    {
+      "id": "ELROND",
+      "display_name": "Elrond",
+      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "runtime_role": "STORY_NPC",
+      "chapters": [
+        "P1C04"
+      ]
+    },
+    {
+      "id": "HALDIR",
+      "display_name": "Haldir",
+      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "runtime_role": "STORY_NPC",
+      "chapters": [
+        "P1C07"
+      ]
+    },
+    {
+      "id": "GALADRIEL",
+      "display_name": "Galadriel",
+      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "runtime_role": "STORY_NPC",
+      "chapters": [
+        "P1C07"
+      ]
+    },
+    {
+      "id": "SARUMAN",
+      "display_name": "Saruman",
+      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "runtime_role": "STORY_NPC",
+      "chapters": [
+        "P1G01"
+      ]
+    },
+    {
+      "id": "BARLIMAN",
+      "display_name": "Barliman Butterbur",
+      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "runtime_role": "STORY_NPC",
+      "chapters": [
+        "P1C02"
+      ]
+    },
+    {
+      "id": "GATE_KEEPER",
+      "display_name": "Gate Keeper",
+      "visual_tier": "PROCEDURAL_DISTINCT_PROXY",
+      "runtime_role": "STORY_NPC",
+      "chapters": [
+        "P1C02"
+      ]
+    },
+    {
+      "id": "HAMFAST",
+      "display_name": "Hamfast Gamgee",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "runtime_role": "LOCAL_NPC",
+      "chapters": [
+        "P1C01"
+      ]
+    },
+    {
+      "id": "ROSIE",
+      "display_name": "Rosie Cotton",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "runtime_role": "LOCAL_NPC",
+      "chapters": [
+        "P1C01"
+      ]
+    },
+    {
+      "id": "MAGGOT",
+      "display_name": "Farmer Maggot",
+      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "runtime_role": "LOCAL_NPC",
+      "chapters": [
+        "P1C01"
+      ]
+    }
+  ],
+  "threat_cast": [
+    {
+      "id": "BLACK_RIDERS",
+      "display_name": "Black Riders",
+      "visual_tier": "ENEMY_PROTOTYPE",
+      "chapters": [
+        "P1C01",
+        "P1C03"
+      ]
+    },
+    {
+      "id": "ORCS",
+      "display_name": "Orcs",
+      "visual_tier": "ENEMY_PROTOTYPE",
+      "chapters": [
+        "P1C06"
+      ]
+    },
+    {
+      "id": "CAVE_TROLL",
+      "display_name": "Cave Troll",
+      "visual_tier": "ENEMY_PROTOTYPE",
+      "chapters": [
+        "P1C06"
+      ]
+    },
+    {
+      "id": "URUK_HAI",
+      "display_name": "Uruk-hai",
+      "visual_tier": "ENEMY_PROTOTYPE",
+      "chapters": [
+        "P1C08"
+      ]
+    }
+  ],
+  "ambient_population": [
+    {
+      "chapter": "P1C01",
+      "region": "Shire",
+      "archetype": "HOBBIT",
+      "runtime_state": "PRESENT",
+      "visual_tier": "PRODUCTION_ARCHETYPE"
+    },
+    {
+      "chapter": "P1C02",
+      "region": "Bree",
+      "archetype": "BREE_TOWNSPERSON",
+      "runtime_state": "PRESENT",
+      "visual_tier": "PROCEDURAL_DISTINCT_PROXY"
+    },
+    {
+      "chapter": "P1C04",
+      "region": "Rivendell",
+      "archetype": "ELF",
+      "runtime_state": "PRESENT",
+      "visual_tier": "PROCEDURAL_DISTINCT_PROXY"
+    },
+    {
+      "chapter": "P1C07",
+      "region": "Lothlorien",
+      "archetype": "ELF",
+      "runtime_state": "PRESENT",
+      "visual_tier": "PROCEDURAL_DISTINCT_PROXY"
+    }
+  ],
+  "chapter_cast_contracts": [
+    {
+      "chapter": "P1C01",
+      "required_named": [
+        "FRODO",
+        "SAM",
+        "MERRY",
+        "PIPPIN",
+        "GANDALF",
+        "BILBO",
+        "HAMFAST",
+        "ROSIE",
+        "MAGGOT"
+      ]
+    },
+    {
+      "chapter": "P1C02",
+      "required_named": [
+        "FRODO",
+        "SAM",
+        "MERRY",
+        "PIPPIN",
+        "ARAGORN",
+        "BARLIMAN",
+        "GATE_KEEPER"
+      ]
+    },
+    {
+      "chapter": "P1C03",
+      "required_named": [
+        "FRODO",
+        "SAM",
+        "MERRY",
+        "PIPPIN",
+        "ARAGORN",
+        "ARWEN"
+      ]
+    },
+    {
+      "chapter": "P1C04",
+      "required_named": [
+        "FRODO",
+        "SAM",
+        "MERRY",
+        "PIPPIN",
+        "GANDALF",
+        "ARAGORN",
+        "BOROMIR",
+        "LEGOLAS",
+        "GIMLI",
+        "BILBO",
+        "ARWEN",
+        "ELROND"
+      ]
+    },
+    {
+      "chapter": "P1C05",
+      "required_named": [
+        "FRODO",
+        "SAM",
+        "MERRY",
+        "PIPPIN",
+        "GANDALF",
+        "ARAGORN",
+        "BOROMIR",
+        "LEGOLAS",
+        "GIMLI"
+      ]
+    },
+    {
+      "chapter": "P1C06",
+      "required_named": [
+        "FRODO",
+        "SAM",
+        "MERRY",
+        "PIPPIN",
+        "GANDALF",
+        "ARAGORN",
+        "BOROMIR",
+        "LEGOLAS",
+        "GIMLI"
+      ]
+    },
+    {
+      "chapter": "P1C07",
+      "required_named": [
+        "FRODO",
+        "SAM",
+        "MERRY",
+        "PIPPIN",
+        "ARAGORN",
+        "BOROMIR",
+        "LEGOLAS",
+        "GIMLI",
+        "HALDIR",
+        "GALADRIEL"
+      ]
+    },
+    {
+      "chapter": "P1C08",
+      "required_named": [
+        "FRODO",
+        "SAM",
+        "MERRY",
+        "PIPPIN",
+        "ARAGORN",
+        "BOROMIR",
+        "LEGOLAS",
+        "GIMLI"
+      ]
+    },
+    {
+      "chapter": "P1G01",
+      "required_named": [
+        "GANDALF",
+        "SARUMAN"
+      ]
+    }
+  ],
+  "rules": [
+    "A character listed in required_named must have a runtime representation in that chapter/route.",
+    "Film/story separation beats may stop companions from following; population presence must not override canon outcomes.",
+    "Dedicated production assets replace proxies incrementally; proxy presence is not visual completion.",
+    "Ambient population density must remain compatible with the target laptop and distance-adaptive ticking.",
+    "Do not duplicate a canonical identity as two simultaneous persistent-memory identities; aliases resolve to one profile."
+  ],
+  "next_visual_production_order": [
+    "Sam",
+    "Merry",
+    "Pippin",
+    "Aragorn",
+    "Boromir",
+    "Legolas",
+    "Gimli",
+    "Arwen",
+    "Elrond",
+    "Galadriel",
+    "Saruman",
+    "major enemies"
+  ]
+}

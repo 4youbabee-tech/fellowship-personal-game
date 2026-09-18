@@ -181,6 +181,7 @@ void ABreePrototypeWorldBuilder::SpawnBreeTown()
         {
             Townsperson->RoutinePointA = BreeCrowd[Index];
             Townsperson->RoutinePointB = BreeCrowd[Index] + FVector(170.0f + 15.0f * (Index % 3), (Index % 2 ? 95.0f : -95.0f), 0.0f);
+            Townsperson->RoutineRole = TEXT("BreeTownsperson");
             Townsperson->WalkSpeed = 42.0f + 4.0f * (Index % 3);
         }
     }
@@ -211,6 +212,26 @@ void ABreePrototypeWorldBuilder::SpawnStoryFlow()
         GateApproach->StageAfterTrigger = 2;
         GateApproach->ObjectiveMessage = FText::FromString(TEXT("The western gate of Bree rises ahead in the rain."));
     }
+
+    auto SpawnHobbitCompanion = [this](const TCHAR* Name, const FVector& Location, const TCHAR* Line)
+    {
+        AShireNPC* Companion = GetWorld()->SpawnActor<AShireNPC>(Location, FRotator(0.0f, 0.0f, 0.0f));
+        if (!Companion)
+        {
+            return;
+        }
+
+        Companion->DisplayName = FText::FromString(Name);
+        Companion->DialogueLines = { FText::FromString(Line) };
+        Companion->bFollowPlayerAfterInteraction = true;
+    };
+
+    SpawnHobbitCompanion(TEXT("Sam"), FVector(-1190.0f, -180.0f, 70.0f),
+        TEXT("Bree is bigger than I expected. I am not letting you out of sight in here."));
+    SpawnHobbitCompanion(TEXT("Merry"), FVector(-1280.0f, 240.0f, 70.0f),
+        TEXT("We should find the inn, find Gandalf, and avoid attracting attention. In that order."));
+    SpawnHobbitCompanion(TEXT("Pippin"), FVector(-1370.0f, -40.0f, 70.0f),
+        TEXT("I can manage not attracting attention. Probably."));
 
     AShireNPC* GateKeeper = GetWorld()->SpawnActor<AShireNPC>(FVector(-1030.0f, 120.0f, 70.0f), FRotator(0.0f, 180.0f, 0.0f));
     if (GateKeeper)

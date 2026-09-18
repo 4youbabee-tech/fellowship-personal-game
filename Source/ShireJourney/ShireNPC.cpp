@@ -522,7 +522,7 @@ void AShireNPC::RestoreCompanionFollowState()
         return;
     }
 
-    if (QuestId == NAME_None)
+    if (QuestId == NAME_None || QuestStageAfterInteraction < 0)
     {
         bFollowingPlayer = true;
         return;
@@ -552,6 +552,16 @@ void AShireNPC::Tick(float DeltaSeconds)
     }
 
     bPrototypeMoving = false;
+
+    if (bFollowingPlayer && StopFollowingStoryBeat != NAME_None)
+    {
+        UGameInstance* GI = GetGameInstance();
+        UShireQuestSubsystem* QuestSubsystem = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+        if (QuestSubsystem && QuestSubsystem->HasStoryBeatTriggered(StopFollowingStoryBeat))
+        {
+            bFollowingPlayer = false;
+        }
+    }
 
     if (bFollowingPlayer && GetWorld())
     {

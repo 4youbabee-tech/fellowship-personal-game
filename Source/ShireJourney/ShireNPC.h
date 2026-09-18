@@ -98,6 +98,12 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
     float TeleportCatchUpDistance = 2400.0f;
 
+    // Optional film/story beat that releases this actor from the player's formation.
+    // Used when the company splits so a companion cannot keep following Frodo past
+    // an authored separation/capture moment.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
+    FName StopFollowingStoryBeat = NAME_None;
+
     virtual void Interact_Implementation(AActor* Interactor) override;
 
 protected:

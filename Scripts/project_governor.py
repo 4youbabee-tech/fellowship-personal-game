@@ -67,7 +67,8 @@ for required in [
     "REQ-MEM-001", "REQ-GOV-001", "REQ-VISION-001", "REQ-EXP-001",
     "REQ-WORLD-001", "REQ-WORLD-002", "REQ-NPC-001", "REQ-NPC-002",
     "REQ-NPC-003", "REQ-SAVE-001", "REQ-PERF-001",
-    "REQ-QUALITY-001", "REQ-QUALITY-002", "REQ-CI-001", "REQ-CHAR-001"
+    "REQ-QUALITY-001", "REQ-QUALITY-002", "REQ-CI-001", "REQ-CHAR-001",
+    "REQ-CHAR-002"
 ]:
     if required not in req_ids:
         fail(f"Governor is missing critical requirement {required}")

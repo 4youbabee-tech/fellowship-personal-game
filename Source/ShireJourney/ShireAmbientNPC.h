@@ -94,6 +94,10 @@ private:
     float SocialCheckRemaining = 0.0f;
     float SocialRemaining = 0.0f;
     bool bSocializing = false;
+    float VisualTorsoBaseZ = 58.0f;
+    float VisualHeadBaseZ = 101.0f;
+    float VisualHairBaseZ = 109.0f;
+    FName AppliedVisualRole = NAME_None;
     TWeakObjectPtr<APawn> ObservedPlayer;
     TWeakObjectPtr<AShireAmbientNPC> SocialPartner;
     FRandomStream Random;
