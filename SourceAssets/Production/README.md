@@ -30,3 +30,17 @@ The production source tree now also includes an original reusable Shire architec
 - cloak, sword, shield, axe and bow gear.
 
 These source meshes are intentionally repository-owned and import through the same UE4.27.2 commandlet. They are a visible step beyond engine primitive proxies, while final dedicated skeletal rigs, facial rigs, cloth simulation and hero-quality materials remain later production work.
+
+## CP41 Bree production expansion
+
+`World/Bree` adds original production meshes for the Chapter 2 visual pass:
+- timber/plaster town house,
+- Prancing Pony inn shell,
+- West Gate,
+- market stall,
+- street lantern,
+- hitching post,
+- common-room table,
+- stacked goods/crates.
+
+The runtime Bree builder places these as a production overlay while preserving all existing story trigger coordinates.
