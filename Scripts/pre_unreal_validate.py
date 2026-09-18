@@ -798,9 +798,8 @@ for symbol in [
     "bMerryDedicated",
     "bPippinDedicated",
     "bAragornDedicated",
-    "SM_Sam_Torso",
-    "SM_Merry_Torso",
-    "SM_Pippin_Torso",
+    "CharacterFolder",
+    '/Game/Production/Characters/%s/SM_%s_Torso.SM_%s_Torso',
     "SM_Aragorn_Torso",
 ]:
     if symbol not in hero_visual_cpp:
