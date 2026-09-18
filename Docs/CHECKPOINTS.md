@@ -357,6 +357,17 @@
 - Updated `Data/CharacterPopulationPlan.json` with an explicit visual-identity pass and a proof limit: procedural identity is not final character art.
 - Added PG-033 to preserve distinct cast identity and prevent build-first mode from falsely marking manual evidence as passed.
 
+## CP34 — Part I World Density / Landmark Detail Pass
+- Deepened Bree streets and Prancing Pony surroundings with market stalls, puddles, lantern posts and crate/prop clusters.
+- Deepened the P1C03 marsh/Weathertop approach with reeds, route-edge rocks and summit camp remains.
+- Deepened Rivendell with arcades/columns, garden detail and resting places.
+- Deepened the Fellowship road/Caradhras with scree, cairns, route markers, camp bedrolls and packs.
+- Deepened Moria with a pillar forest, architectural caps and cold brazier/fire-color proxies.
+- Deepened Lothlorien with elevated talan platforms, path spans and warm canopy lights.
+- Deepened Anduin/Amon Hen with boat silhouettes, reeds, shoreline camp details, ascending stair fragments and broken lookout stones.
+- Added PG-034 and updated the single Project Governor.
+- This is a low-cost procedural world-density pass for build-first mode, not final environment-art or visual acceptance.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
