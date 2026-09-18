@@ -1,0 +1,303 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_LIVING_WORLD_EVENT_CONTRACT_V1",
+  "purpose": "Low-cost environmental life/micro-event contract for Part I traversal. Defines authored event categories, eligibility, density and performance caps; runtime spawning is separate.",
+  "status_values": [
+    "PLANNED",
+    "DATA_DEFINED",
+    "RUNTIME_PARTIAL",
+    "RUNTIME_VALIDATED"
+  ],
+  "event_types": [
+    "WORK_ACTIVITY",
+    "TRAVELER_PASSING",
+    "MARKET_ACTIVITY",
+    "SOCIAL_MOMENT",
+    "FAUNA",
+    "WEATHER_REACTION",
+    "PROP_MOTION",
+    "DANGER_REACTION",
+    "STORY_AFTERMATH"
+  ],
+  "region_budgets": {
+    "max_active_micro_events_near_player": 3,
+    "max_active_fauna_groups_near_player": 2,
+    "max_persistent_micro_event_actors": 0,
+    "min_seconds_between_event_starts": 12,
+    "event_cull_distance_cm": 5000,
+    "fauna_cull_distance_cm": 4200,
+    "offscreen_simulation": "STATE_ONLY"
+  },
+  "rules": [
+    "Micro-events never block main story progression.",
+    "Story-critical interactions preempt ambient micro-events.",
+    "Events must match current region, chapter and story state.",
+    "Ambient actors/events are disposable and must not require persistent transforms.",
+    "Use pooled/instanced/lightweight presentation where possible.",
+    "Fauna and prop motion are optional under performance pressure.",
+    "Danger chapters may suppress peaceful events.",
+    "Event selection should avoid repeating the same event type back-to-back when alternatives exist."
+  ],
+  "chapter_contracts": [
+    {
+      "chapter": "P1C01",
+      "region": "Shire",
+      "allowed": [
+        "WORK_ACTIVITY",
+        "TRAVELER_PASSING",
+        "MARKET_ACTIVITY",
+        "SOCIAL_MOMENT",
+        "FAUNA",
+        "WEATHER_REACTION",
+        "PROP_MOTION",
+        "DANGER_REACTION"
+      ],
+      "target_density": "HIGH",
+      "notes": "Village/fields/road should feel inhabited; Black Rider state suppresses casual life locally."
+    },
+    {
+      "chapter": "P1C02",
+      "region": "Bree",
+      "allowed": [
+        "WORK_ACTIVITY",
+        "TRAVELER_PASSING",
+        "MARKET_ACTIVITY",
+        "SOCIAL_MOMENT",
+        "WEATHER_REACTION",
+        "PROP_MOTION",
+        "DANGER_REACTION"
+      ],
+      "target_density": "MEDIUM_HIGH",
+      "notes": "Night town/inn activity with guarded mood."
+    },
+    {
+      "chapter": "P1C03",
+      "region": "WeathertopFord",
+      "allowed": [
+        "TRAVELER_PASSING",
+        "FAUNA",
+        "WEATHER_REACTION",
+        "PROP_MOTION",
+        "DANGER_REACTION"
+      ],
+      "target_density": "LOW",
+      "notes": "Wilderness life is sparse; danger/urgency dominates."
+    },
+    {
+      "chapter": "P1C04",
+      "region": "Rivendell",
+      "allowed": [
+        "WORK_ACTIVITY",
+        "SOCIAL_MOMENT",
+        "FAUNA",
+        "WEATHER_REACTION",
+        "PROP_MOTION"
+      ],
+      "target_density": "MEDIUM",
+      "notes": "Refuge should feel calm, cultured and inhabited."
+    },
+    {
+      "chapter": "P1C05",
+      "region": "CaradhrasWestGate",
+      "allowed": [
+        "SOCIAL_MOMENT",
+        "FAUNA",
+        "WEATHER_REACTION",
+        "PROP_MOTION",
+        "DANGER_REACTION"
+      ],
+      "target_density": "LOW_MEDIUM",
+      "notes": "Companion activity and weather carry most life."
+    },
+    {
+      "chapter": "P1C06",
+      "region": "Moria",
+      "allowed": [
+        "PROP_MOTION",
+        "DANGER_REACTION",
+        "STORY_AFTERMATH"
+      ],
+      "target_density": "LOW",
+      "notes": "Dead-city atmosphere; life means threat, echoes and aftermath rather than civilians."
+    },
+    {
+      "chapter": "P1C07",
+      "region": "Lothlorien",
+      "allowed": [
+        "SOCIAL_MOMENT",
+        "FAUNA",
+        "WEATHER_REACTION",
+        "PROP_MOTION"
+      ],
+      "target_density": "MEDIUM",
+      "notes": "Subtle living forest/refuge activity."
+    },
+    {
+      "chapter": "P1C08",
+      "region": "AnduinAmonHen",
+      "allowed": [
+        "FAUNA",
+        "WEATHER_REACTION",
+        "PROP_MOTION",
+        "DANGER_REACTION",
+        "STORY_AFTERMATH"
+      ],
+      "target_density": "LOW_MEDIUM",
+      "notes": "River/wilderness life gives way to threat at Amon Hen."
+    }
+  ],
+  "event_templates": [
+    {
+      "id": "EVT_WORK_CARRY_GOODS",
+      "type": "WORK_ACTIVITY",
+      "regions": [
+        "P1C01",
+        "P1C02",
+        "P1C04"
+      ],
+      "duration_seconds": [
+        6,
+        16
+      ],
+      "story_safe": true
+    },
+    {
+      "id": "EVT_TRAVELER_PASS",
+      "type": "TRAVELER_PASSING",
+      "regions": [
+        "P1C01",
+        "P1C02",
+        "P1C03"
+      ],
+      "duration_seconds": [
+        8,
+        20
+      ],
+      "story_safe": true
+    },
+    {
+      "id": "EVT_MARKET_EXCHANGE",
+      "type": "MARKET_ACTIVITY",
+      "regions": [
+        "P1C01",
+        "P1C02"
+      ],
+      "duration_seconds": [
+        8,
+        18
+      ],
+      "story_safe": true
+    },
+    {
+      "id": "EVT_SOCIAL_GREETING",
+      "type": "SOCIAL_MOMENT",
+      "regions": [
+        "P1C01",
+        "P1C02",
+        "P1C04",
+        "P1C05",
+        "P1C07"
+      ],
+      "duration_seconds": [
+        4,
+        10
+      ],
+      "story_safe": true
+    },
+    {
+      "id": "EVT_FAUNA_BIRDS",
+      "type": "FAUNA",
+      "regions": [
+        "P1C01",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C07",
+        "P1C08"
+      ],
+      "duration_seconds": [
+        5,
+        14
+      ],
+      "story_safe": true
+    },
+    {
+      "id": "EVT_FAUNA_SMALL_ANIMAL",
+      "type": "FAUNA",
+      "regions": [
+        "P1C01",
+        "P1C03",
+        "P1C07"
+      ],
+      "duration_seconds": [
+        5,
+        12
+      ],
+      "story_safe": true
+    },
+    {
+      "id": "EVT_WEATHER_REACTION",
+      "type": "WEATHER_REACTION",
+      "regions": [
+        "P1C01",
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C07",
+        "P1C08"
+      ],
+      "duration_seconds": [
+        4,
+        12
+      ],
+      "story_safe": true
+    },
+    {
+      "id": "EVT_PROP_SMOKE_FIRE",
+      "type": "PROP_MOTION",
+      "regions": [
+        "P1C01",
+        "P1C02",
+        "P1C04",
+        "P1C06",
+        "P1C07"
+      ],
+      "duration_seconds": [
+        10,
+        30
+      ],
+      "story_safe": true
+    },
+    {
+      "id": "EVT_DANGER_SCATTER",
+      "type": "DANGER_REACTION",
+      "regions": [
+        "P1C01",
+        "P1C02",
+        "P1C03",
+        "P1C05",
+        "P1C06",
+        "P1C08"
+      ],
+      "duration_seconds": [
+        4,
+        12
+      ],
+      "story_safe": true
+    },
+    {
+      "id": "EVT_STORY_AFTERMATH",
+      "type": "STORY_AFTERMATH",
+      "regions": [
+        "P1C06",
+        "P1C08"
+      ],
+      "duration_seconds": [
+        8,
+        24
+      ],
+      "story_safe": true
+    }
+  ]
+}

@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_NPC_MEMORY_CONTRACT_V1",
+  "purpose": "Bounded persistent memory contract for important NPC continuity without unbounded simulation or save growth. Runtime/save integration is a separate implementation step.",
+  "memory_tiers": [
+    "IMMEDIATE",
+    "LOCAL_STORY",
+    "RELATIONSHIP",
+    "PERSISTENT_NAMED"
+  ],
+  "persistence_scopes": [
+    "SESSION_ONLY",
+    "CHAPTER",
+    "ROUTE_SAVE",
+    "GLOBAL_SAVE"
+  ],
+  "memory_kinds": [
+    "PLAYER_INTERACTION",
+    "NPC_INTERACTION",
+    "STORY_EVENT",
+    "LOCAL_EVENT",
+    "RELATIONSHIP_CHANGE",
+    "DISCOVERY_REACTION",
+    "DANGER_REACTION"
+  ],
+  "policies": {
+    "max_persistent_memories_per_story_named_npc": 12,
+    "max_persistent_memories_per_light_named_npc": 4,
+    "max_session_memories_per_named_npc": 8,
+    "ambient_archetype_persistence": "AGGREGATE_ONLY",
+    "max_saved_relationship_deltas_per_named_npc": 8,
+    "expiry_default_chapters": 2,
+    "never_persist_raw_dialogue_text": true,
+    "store_compact_event_ids_only": true,
+    "aliases_share_one_identity_memory": true,
+    "mandatory_story_outcomes_are_immutable": true
+  },
+  "rules": [
+    "Memory stores compact event IDs/tags and small numeric state, never arbitrary conversation transcripts.",
+    "Only NAMED_STORY profiles may use the full persistent tier by default.",
+    "NAMED_LIGHT profiles use a smaller persistent budget.",
+    "AMBIENT_ARCHETYPE profiles never receive per-instance persistent memory.",
+    "Alias names resolve to the canonical NPC profile ID before memory read/write.",
+    "A memory can affect dialogue/ambient reaction but cannot rewrite mandatory film outcomes or quest completion.",
+    "Route-local memories cannot leak between FrodoMain and GandalfParallel unless explicitly marked GLOBAL_SAVE.",
+    "Story event memories derive from already-completed beats; memory cannot reveal future beats.",
+    "Expired low-priority memories are discarded before higher-priority story/relationship memories."
+  ],
+  "memory_templates": [
+    {
+      "id": "MEM_PLAYER_MET",
+      "kind": "PLAYER_INTERACTION",
+      "tier": "IMMEDIATE",
+      "default_scope": "SESSION_ONLY",
+      "priority": 20,
+      "expiry_policy": "SESSION_END",
+      "payload_fields": [
+        "actor_id",
+        "location_tag"
+      ]
+    },
+    {
+      "id": "MEM_PLAYER_HELPED_LOCAL",
+      "kind": "PLAYER_INTERACTION",
+      "tier": "RELATIONSHIP",
+      "default_scope": "ROUTE_SAVE",
+      "priority": 55,
+      "expiry_policy": "CHAPTERS_2",
+      "payload_fields": [
+        "actor_id",
+        "event_id",
+        "relationship_delta"
+      ]
+    },
+    {
+      "id": "MEM_STORY_BEAT_WITNESSED",
+      "kind": "STORY_EVENT",
+      "tier": "LOCAL_STORY",
+      "default_scope": "ROUTE_SAVE",
+      "priority": 90,
+      "expiry_policy": "NEVER_WHILE_RELEVANT",
+      "payload_fields": [
+        "story_beat_id",
+        "chapter_id"
+      ]
+    },
+    {
+      "id": "MEM_LOCAL_DANGER",
+      "kind": "DANGER_REACTION",
+      "tier": "IMMEDIATE",
+      "default_scope": "CHAPTER",
+      "priority": 70,
+      "expiry_policy": "DANGER_CLEARED_OR_CHAPTER_END",
+      "payload_fields": [
+        "event_id",
+        "location_tag"
+      ]
+    },
+    {
+      "id": "MEM_RELATIONSHIP_SHIFT",
+      "kind": "RELATIONSHIP_CHANGE",
+      "tier": "PERSISTENT_NAMED",
+      "default_scope": "ROUTE_SAVE",
+      "priority": 85,
+      "expiry_policy": "NEVER_UNLESS_SUPERSEDED",
+      "payload_fields": [
+        "other_actor_id",
+        "relationship_type",
+        "relationship_delta"
+      ]
+    },
+    {
+      "id": "MEM_DISCOVERY_REACTION",
+      "kind": "DISCOVERY_REACTION",
+      "tier": "LOCAL_STORY",
+      "default_scope": "ROUTE_SAVE",
+      "priority": 45,
+      "expiry_policy": "CHAPTERS_2",
+      "payload_fields": [
+        "landmark_or_event_id",
+        "chapter_id"
+      ]
+    }
+  ],
+  "profile_memory_policy": [
+    {
+      "profile_selector": "persistence_tier=NAMED_STORY",
+      "persistent_budget": 12,
+      "relationship_delta_budget": 8,
+      "allow_persistent_named": true
+    },
+    {
+      "profile_selector": "persistence_tier=NAMED_LIGHT",
+      "persistent_budget": 4,
+      "relationship_delta_budget": 3,
+      "allow_persistent_named": true
+    },
+    {
+      "profile_selector": "persistence_tier=AMBIENT_AGGREGATE",
+      "persistent_budget": 0,
+      "relationship_delta_budget": 0,
+      "allow_persistent_named": false
+    }
+  ],
+  "save_contract": {
+    "future_container_name": "NPCMemoryState",
+    "serialization_strategy": "compact_id_records",
+    "route_partitioned": true,
+    "preserve_unknown_future_fields": false,
+    "versioned_schema": true,
+    "migration_required_on_schema_change": true,
+    "estimated_soft_budget_kb": 64
+  },
+  "runtime_inputs": [
+    "canonical_profile_id",
+    "RouteId",
+    "EpisodeId",
+    "ChapterId",
+    "CompletedStoryBeats",
+    "current_relationships",
+    "recent_local_events"
+  ],
+  "runtime_outputs": [
+    "remembered_event_ids",
+    "relationship_deltas",
+    "eligible_context_tags",
+    "expired_memory_ids"
+  ]
+}

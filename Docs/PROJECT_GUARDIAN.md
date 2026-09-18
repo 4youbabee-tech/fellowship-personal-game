@@ -202,6 +202,26 @@ This converts failures into permanent project knowledge.
 
 **Guard:** static validation requires the explicit bypass shell declaration in the self-hosted Unreal workflow.
 
+### PG-025 — NPC conversation contract drift
+**Risk:** ambient conversation expands without story priority, knowledge limits or repetition controls.
+
+**Guard:** validate required conversation sets, known NPC profiles/intents, two-participant cap, and story/danger preemption.
+
+### PG-028 — NPC memory becomes unbounded or story-breaking
+**Risk:** persistent NPC memory bloats saves, splits alias identities, leaks route knowledge or changes mandatory story outcomes.
+
+**Guard:** require compact event IDs, no raw transcript persistence, canonical alias sharing, route-partitioned/versioned save intent and a bounded soft save budget.
+
+### PG-029 — Living-world micro-events exceed low-spec/story budget
+**Risk:** ambient events become expensive, repetitive or block story traversal.
+
+**Guard:** require P1C01-P1C08 event contracts, story-safe templates, strict near-player caps and state-only offscreen simulation.
+
+### PG-030 — Dialogue intelligence escapes authored/canon bounds
+**Risk:** dialogue variation invents knowledge, future events or relationships, or introduces runtime model latency as a hard dependency.
+
+**Guard:** require deny-unlisted knowledge, deny cross-route leakage, deterministic fallback, bounded line/cache sizes and zero required runtime-generation latency.
+
 ## What Guardian must never do automatically
 
 - change canon,

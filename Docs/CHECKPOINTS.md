@@ -307,6 +307,21 @@
 - Added PG-027 so the self-hosted workflow cannot silently return to the blocked shell form.
 - This remains CI infrastructure work only; a new green UE4.27.2 compile/import run is still required.
 
+## CP30K — LW2-LW5 Remote-Safe Intelligence Contracts
+- Added `Data/NPCConversationPlan.json` for bounded NPC-to-NPC conversation eligibility, intents, knowledge/story gates, priority, cooldowns and repetition policy.
+- Added `Data/NPCMemoryPlan.json` for compact named-NPC memory tiers, expiry, route partitioning, save budgets and alias identity sharing.
+- Added `Data/LivingWorldEventPlan.json` for chapter-specific workers/travelers/social moments/fauna/weather/prop motion/danger reactions and low-spec activity caps.
+- Added `Data/BoundedDialoguePlan.json` for authored/template/cached dialogue variation, default-deny knowledge, canon safety, line/cache limits and deterministic fallback.
+- Added static guards PG-025/PG-028/PG-029/PG-030 so these contracts cannot silently drift or become unbounded.
+- Updated LW2-LW5 planning and the single Project Governor to record data-contract progress while leaving runtime behavior gated.
+- No new gameplay runtime system was enabled by this checkpoint.
+
+## CP30L — Self-Hosted Runner Resilience Validated
+- Unreal Build Validation #19 succeeded on exact commit `0936f2e779c6a6d1b4d209628d206f5d11ca3f9c`.
+- The runner successfully used the resilient exact-SHA archive checkout with PowerShell execution-policy bypass.
+- Unreal Engine 4.27.2 was detected, UnrealHeaderTool/C++ build completed, and the production importer reported `50 files, 0 failures`.
+- This closes the CI infrastructure regression from Builds #14/#18. It does not replace the still-pending gameplay PIE/device hard gate.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 

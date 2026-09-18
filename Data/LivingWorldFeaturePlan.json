@@ -91,13 +91,15 @@
     {
       "id": "LW2",
       "name": "NPC-to-NPC contextual conversation",
-      "status": "PLANNED",
+      "status": "PARTIAL",
       "features": [
         {
           "id": "NPC-CONVERSATION-SELECTION",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Eligibility, intent and participant selection."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/NPCConversationPlan.json"
+          ],
+          "notes": "Eligibility, priority, knowledge/story gating and conversation sets are data-defined; runtime selection pending."
         },
         {
           "id": "NPC-CONVERSATION-RUNTIME",
@@ -107,84 +109,104 @@
         },
         {
           "id": "NPC-CONVERSATION-REPETITION",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Cooldown/history and anti-loop rules."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/NPCConversationPlan.json"
+          ],
+          "notes": "Cooldown/history/fallback policy is data-defined; runtime tracking pending."
         }
       ]
     },
     {
       "id": "LW3",
       "name": "Persistent named-NPC memory",
-      "status": "PLANNED",
+      "status": "PARTIAL",
       "features": [
         {
           "id": "NPC-MEMORY-SCHEMA",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Immediate/local/persistent tiers."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/NPCMemoryPlan.json"
+          ],
+          "notes": "Memory tiers/templates/expiry/budgets are data-defined; runtime store pending."
         },
         {
           "id": "NPC-MEMORY-SAVE",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Integrate with save while controlling footprint."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/NPCMemoryPlan.json"
+          ],
+          "notes": "Compact route-partitioned save contract is defined; SaveGame integration pending."
         }
       ]
     },
     {
       "id": "LW4",
       "name": "Environmental life and micro-events",
-      "status": "PLANNED",
+      "status": "PARTIAL",
       "features": [
         {
           "id": "WORLD-MICRO-EVENTS",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Workers, travelers, markets, reactions."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/LivingWorldEventPlan.json"
+          ],
+          "notes": "Authored event categories/templates and chapter eligibility are data-defined; runtime event director pending."
         },
         {
           "id": "WORLD-FAUNA",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Low-cost region-appropriate animal/insect/bird activity."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/LivingWorldEventPlan.json"
+          ],
+          "notes": "Low-cost fauna templates/budgets are defined; runtime fauna presentation pending."
         },
         {
           "id": "WORLD-MOTION",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Wind/water/smoke/props/weather motion budget."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/LivingWorldEventPlan.json"
+          ],
+          "notes": "Prop/weather motion categories and caps are defined; runtime presentation pending."
         },
         {
           "id": "WORLD-EXPLORATION-DENSITY",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Ensure ordinary traversal regularly reveals life/detail."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/LivingWorldEventPlan.json"
+          ],
+          "notes": "Per-chapter activity-density targets are defined; PIE/device acceptance pending."
         }
       ]
     },
     {
       "id": "LW5",
       "name": "Bounded dialogue intelligence",
-      "status": "PLANNED",
+      "status": "PARTIAL",
       "features": [
         {
           "id": "NPC-KNOWLEDGE-GUARD",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Speaker knowledge/canon boundary."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/BoundedDialoguePlan.json"
+          ],
+          "notes": "Deny-unlisted knowledge/canon/cross-route rules are data-defined; runtime enforcement pending."
         },
         {
           "id": "NPC-DIALOGUE-VARIATION",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Bounded selection/generation with deterministic fallback."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/BoundedDialoguePlan.json"
+          ],
+          "notes": "Allowed authored/template/cached variation modes and limits are data-defined; runtime variation pending."
         },
         {
           "id": "NPC-DIALOGUE-CACHE",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Repetition/performance control."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/BoundedDialoguePlan.json"
+          ],
+          "notes": "Cache/repetition budgets and deterministic fallback are data-defined; runtime cache pending."
         }
       ]
     },
