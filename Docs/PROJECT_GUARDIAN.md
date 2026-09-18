@@ -288,7 +288,7 @@ This converts failures into permanent project knowledge.
 
 **Contract:** ambient Shire/Bree/Elf residents may run short original two-turn conversations only near the player. Captions render in world space rather than taking over the main HUD. At most two pairs may converse near the player, the same pair has a 90-second cooldown, and Bird/Courier/RoadWalker roles are excluded.
 
-**Scope rule:** this runtime is `RUNTIME_PARTIAL`. Fellowship companion banter, named story-reactive selection, voice/audio and persistent named-NPC dialogue memory remain separate unfinished work.
+**Scope rule:** ambient conversation remains bounded and local; CP44 adds named Fellowship/story-reactive bounded dialogue and persistent memory without changing this ambient-pair cap.
 
 **Guard:** Pre-Unreal Validation protects the caption runtime, pair cap/cooldown, role exclusions, authored local lines and explicit partial-scope declaration.
 
@@ -299,7 +299,7 @@ This converts failures into permanent project knowledge.
 
 **Persistence rule:** the same bounded `NPCMemoryState` travels through manual save and automatic checkpoint snapshots. Restore sanitizes oversized records before use.
 
-**Scope rule:** this is `RUNTIME_FOUNDATION`. Alias resolution, tier-specific budgets, expiry and memory-aware dialogue selection are still unfinished.
+**Scope rule:** CP44 completed alias resolution, tier-specific budgets, expiry, repetition history and memory-aware selection. PIE/device acceptance remains separate.
 
 **Guard:** Pre-Unreal Validation protects the structs, caps, route key, save/restore wiring and explicit partial-scope declaration.
 
@@ -349,6 +349,15 @@ This converts failures into permanent project knowledge.
 **Save rule:** new snapshots are schema-versioned. Future unsupported schemas and invalid numeric state are rejected instead of partially restoring corrupt state. Legacy snapshots remain loadable through defaulted fields and restore sanitation.
 
 **Proof rule:** IMPLEMENTED is not VALIDATED. Static checks and UE4.27.2 compilation prove integration; PIE/device round trips remain mandatory acceptance evidence.
+
+### PG-045 — Named cast must keep dedicated identity before generic fallback
+**Risk:** a large cast can silently collapse back to shared Hobbit/Human/Elf/Dwarf bodies even when source assets exist, making major characters visually interchangeable again.
+
+**Contract:** every named Part I cast entry resolves to a dedicated project-owned torso/head/hair folder before generic archetype fallback. Shared limbs and gear are allowed where useful, but the primary silhouette identity must remain character-specific.
+
+**Dialogue companion rule:** named local/story characters added in this pass must retain bounded authored dialogue coverage under the same CP44 knowledge, memory, canon and repetition guards.
+
+**Proof rule:** dedicated modular identity does not equal final rigged character art. Skeletal rigs, facial rigs, cloth/hair shading and bespoke animation remain separate production milestones.
 
 ## What Guardian must never do automatically
 

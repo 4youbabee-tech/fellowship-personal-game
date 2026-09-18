@@ -107,7 +107,7 @@
     {
       "id": "BOROMIR",
       "display_name": "Boromir",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "COMPANION",
       "chapters": [
         "P1C04",
@@ -120,7 +120,7 @@
     {
       "id": "LEGOLAS",
       "display_name": "Legolas",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "COMPANION",
       "chapters": [
         "P1C04",
@@ -133,7 +133,7 @@
     {
       "id": "GIMLI",
       "display_name": "Gimli",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "COMPANION",
       "chapters": [
         "P1C04",
@@ -146,7 +146,7 @@
     {
       "id": "BILBO",
       "display_name": "Bilbo",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1C01",
@@ -156,7 +156,7 @@
     {
       "id": "ARWEN",
       "display_name": "Arwen",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1C03",
@@ -166,7 +166,7 @@
     {
       "id": "ELROND",
       "display_name": "Elrond",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1C04"
@@ -175,7 +175,7 @@
     {
       "id": "HALDIR",
       "display_name": "Haldir",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1C07"
@@ -184,7 +184,7 @@
     {
       "id": "GALADRIEL",
       "display_name": "Galadriel",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1C07"
@@ -193,7 +193,7 @@
     {
       "id": "SARUMAN",
       "display_name": "Saruman",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1G01"
@@ -202,7 +202,7 @@
     {
       "id": "BARLIMAN",
       "display_name": "Barliman Butterbur",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1C02"
@@ -211,7 +211,7 @@
     {
       "id": "GATE_KEEPER",
       "display_name": "Gate Keeper",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "STORY_NPC",
       "chapters": [
         "P1C02"
@@ -220,7 +220,7 @@
     {
       "id": "HAMFAST",
       "display_name": "Hamfast Gamgee",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "LOCAL_NPC",
       "chapters": [
         "P1C01"
@@ -229,7 +229,7 @@
     {
       "id": "ROSIE",
       "display_name": "Rosie Cotton",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "LOCAL_NPC",
       "chapters": [
         "P1C01"
@@ -238,7 +238,7 @@
     {
       "id": "MAGGOT",
       "display_name": "Farmer Maggot",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "LOCAL_NPC",
       "chapters": [
         "P1C01"
@@ -437,21 +437,17 @@
     "Do not duplicate a canonical identity as two simultaneous persistent-memory identities; aliases resolve to one profile."
   ],
   "next_visual_production_order": [
-    "Sam",
-    "Merry",
-    "Pippin",
-    "Aragorn",
-    "Boromir",
-    "Legolas",
-    "Gimli",
-    "Arwen",
-    "Elrond",
-    "Galadriel",
-    "Saruman",
-    "major enemies"
+    "Black Riders",
+    "Orcs",
+    "Cave Troll",
+    "Uruk-hai",
+    "skeletal rigs",
+    "facial rigs",
+    "cloth and hair shading",
+    "bespoke locomotion and combat animation"
   ],
   "visual_identity_pass": {
-    "status": "PRODUCTION_ARCHETYPE_EXPANDED_PENDING_BUILD",
+    "status": "FULL_NAMED_CAST_DEDICATED_MODULAR_PENDING_BUILD",
     "purpose": "Make core cast immediately distinguishable during the batch-build phase using low-cost modular pieces before dedicated rigged production characters exist.",
     "features": [
       "Sam satchel identity",
@@ -466,9 +462,13 @@
       "reusable production elf body archetype",
       "reusable production dwarf body archetype",
       "production cloak/sword/bow/axe/shield gear meshes",
-      "Bree and Elven ambient residents promoted from engine primitives to production body meshes"
+      "Bree and Elven ambient residents promoted from engine primitives to production body meshes",
+      "every named Part I cast member now resolves to a dedicated torso/head/hair identity set",
+      "local Shire named residents have dedicated modular meshes",
+      "Bree named residents have dedicated modular meshes",
+      "Rivendell/Lothlorien/Isengard named cast have dedicated modular meshes"
     ],
-    "proof_limit": "Production archetypes remove engine primitive bodies for most visible Part I cast, but they are still modular static-mesh characters rather than final rigged film-quality character art."
+    "proof_limit": "All named Part I cast now has dedicated modular source identity, but this is still not final skeletal rigs, facial rigs, cloth simulation, skin/hair shading or performance-captured animation."
   },
   "production_archetype_expansion": {
     "status": "RUNTIME_IMPLEMENTED_PENDING_BUILD",
@@ -490,25 +490,36 @@
     "notes": "Original procedural project-owned meshes. Dedicated hero rigs, facial rigs, cloth and final animation remain future visual-production layers."
   },
   "dedicated_modular_character_pass": {
-    "status": "RUNTIME_IMPLEMENTED_PENDING_BUILD",
+    "status": "FULL_NAMED_CAST_RUNTIME_IMPLEMENTED_PENDING_BUILD",
     "dedicated_characters": [
+      "Frodo",
       "Sam",
       "Merry",
       "Pippin",
-      "Aragorn/Strider"
-    ],
-    "source_assets": [
-      "SourceAssets/Production/Characters/Sam",
-      "SourceAssets/Production/Characters/Merry",
-      "SourceAssets/Production/Characters/Pippin",
-      "SourceAssets/Production/Characters/Aragorn"
+      "Gandalf",
+      "Aragorn",
+      "Boromir",
+      "Legolas",
+      "Gimli",
+      "Bilbo",
+      "Arwen",
+      "Elrond",
+      "Haldir",
+      "Galadriel",
+      "Saruman",
+      "Barliman Butterbur",
+      "Gate Keeper",
+      "Hamfast Gamgee",
+      "Rosie Cotton",
+      "Farmer Maggot"
     ],
     "implementation": [
-      "unique torso/head/hair silhouettes per character",
-      "shared production limb archetypes where appropriate",
-      "existing character-specific cloak/gear identity preserved",
-      "Strider alias resolves to Aragorn dedicated visual"
+      "unique project-owned torso/head/hair source meshes for every named Part I cast entry",
+      "shared production limbs only where it does not erase character identity",
+      "existing character-specific cloak/weapon/headpiece styling preserved",
+      "canonical aliases such as Strider continue to resolve to the dedicated Aragorn identity",
+      "named Shire/Bree/Rivendell/Lothlorien/Isengard residents no longer rely on the generic body archetype as their first visual path"
     ],
-    "proof_limit": "Dedicated modular production meshes provide visibly distinct character identity, but are not yet final skeletal rigs, facial rigs, cloth simulation, skin/hair shading or performance-captured animation."
+    "proof_limit": "Dedicated modular production identity is complete for named cast, but final skeletal/facial/cloth/hair/animation production remains a separate art milestone."
   }
 }

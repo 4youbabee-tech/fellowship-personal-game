@@ -1304,15 +1304,15 @@
       "order": 2,
       "id": "WORK-CHAR-003",
       "title": "Distinct visual identity pass for the Part I core cast",
-      "status": "ACTIVE",
-      "rationale": "Sam, Merry, Pippin and Aragorn now have dedicated project-owned modular production meshes; remaining Fellowship heroes and final skeletal/facial/cloth/animation production continue next."
+      "status": "IMPLEMENTED",
+      "rationale": "All named Part I cast now has dedicated project-owned modular torso/head/hair identity and runtime resolution; final skeletal/facial/cloth/animation production remains the next art layer."
     },
     {
       "order": 3,
       "id": "WORK-CHAR-002",
       "title": "Populate Part I with the full core cast and region-appropriate inhabitants",
-      "status": "ACTIVE",
-      "rationale": "User explicitly requested that the Fellowship, friends and NPC populations visibly fill the world. Runtime presence is active now; dedicated visual production follows by tracked visual tier."
+      "status": "IMPLEMENTED",
+      "rationale": "Full named cast and regional inhabitants are already populated; this batch upgrades all named cast to dedicated modular identity."
     },
     {
       "order": 4,
@@ -1381,18 +1381,14 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "User requested one-pass backend completion and hardening before further visual production",
+    "reason": "User authorized uninterrupted large-batch backend and character production work",
     "summary": [
-      "Added UShireNPCContextSubsystem to consume NPCSocialModel, NPCConversationPlan and BoundedDialoguePlan at runtime.",
-      "Canonical aliases such as Strider -> NPC_ARAGORN now resolve before memory and relationship read/write.",
-      "Persistent NPC memory now enforces NAMED_STORY/NAMED_LIGHT budgets, chapter expiry, relationship budgets and repetition history.",
-      "Completed story beats automatically become high-priority memories only for eligible named NPCs with MAIN_STORY_CONTEXT.",
-      "Named NPC interactions write compact PLAYER_INTERACTED memory and relationship deltas.",
-      "Bounded dialogue selection enforces knowledge tags, chapter availability, word caps, story/memory gates and deterministic repetition control.",
-      "Fellowship companions can now perform bounded two-way NPC-to-NPC banter with logical voice-cue dispatch.",
-      "Ambient Shire/Bree residents now consume schedule phases and react to danger/inclement weather without unbounded simulation.",
-      "Save snapshots are schema-versioned and reject newer/invalid numeric state before restore.",
-      "Backend feature requirements are IMPLEMENTED; acceptance remains separate and cannot be called VALIDATED before build plus PIE/device proof."
+      "Added 42 dedicated project-owned modular source meshes for 14 previously archetype-based named characters: Bilbo, Boromir, Legolas, Gimli, Arwen, Elrond, Haldir, Galadriel, Saruman, Butterbur, Gate Keeper, Hamfast, Rosie and Farmer Maggot.",
+      "AShireNPC now resolves every named Part I cast member through a dedicated character folder before generic archetype fallback.",
+      "Expanded bounded dialogue coverage for Bilbo, Arwen, Elrond, Saruman, Hamfast, Rosie, Farmer Maggot, Butterbur, Gate Keeper, Haldir and Galadriel.",
+      "CharacterPopulationPlan now marks the full named Part I cast as PRODUCTION_DEDICATED.",
+      "Backend remains implementation-complete from CP44; this pass deepens authored bounded content without relaxing memory, canon or save guards.",
+      "Final skeletal rigs, facial animation, cloth/hair shading, bespoke animation and enemy production remain next visual layers."
     ]
   },
   "development_mode": {
