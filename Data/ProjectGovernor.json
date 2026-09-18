@@ -675,7 +675,8 @@
         "exact-commit acquisition uses retrying GitHub API archive download",
         "PowerShell checkout uses explicit execution-policy bypass",
         "superseded develop Unreal runs cancel so the latest head can validate",
-        "Unreal Build Validation #19 succeeded on exact commit 0936f2e779c6a6d1b4d209628d206f5d11ca3f9c with UE4.27.2 compile and production import 50 files / 0 failures"
+        "Unreal Build Validation #19 succeeded on exact commit 0936f2e779c6a6d1b4d209628d206f5d11ca3f9c with UE4.27.2 compile and production import 50 files / 0 failures",
+        "Build #27 reached UE4.27.2 C++ compilation and exposed a real ShireAmbientNPC compile regression: Bird motion referenced PrototypeWalkPhase instead of the class's WalkPhase field; repaired on develop before CP37 integration"
       ],
       "missing_work": [
         "GitHub develop/main branch protection or ruleset is not currently enabled",
@@ -1398,7 +1399,8 @@
       "Mapped authored safe/pre-danger story beats to WorldCheckpointPlan checkpoint IDs.",
       "Queued chapter-transition checkpoints until after destination world rebuild.",
       "Combat defeat restores the latest automatic safe checkpoint at full health when available.",
-      "WorldCheckpointPlan is FOUNDATION only; no PIE/device verification is claimed."
+      "WorldCheckpointPlan is FOUNDATION only; no PIE/device verification is claimed.",
+      "Integrated CP35A Bird compile repair from develop: ambient Bird motion and PG-035 now use WalkPhase, preserving the real UE4.27.2 Build #28 fix."
     ]
   },
   "development_mode": {

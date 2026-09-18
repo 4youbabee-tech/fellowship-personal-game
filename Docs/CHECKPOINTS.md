@@ -386,6 +386,12 @@
 - Added PG-036 so resident activity variety cannot silently regress.
 - This is not final authored animation or full micro-event direction; those remain future batch work and integration review.
 
+## CP35A — Bird Motion Compile Repair
+- Unreal Build Validation #27 reached UE4.27.2 C++ compilation and failed in `ShireAmbientNPC.cpp` because the Bird path referenced `PrototypeWalkPhase`, a player-character field that does not exist on `AShireAmbientNPC`.
+- Replaced those references with the ambient actor's existing `WalkPhase`.
+- Updated PG-035 static validation so the wrong field name cannot be reintroduced unnoticed.
+- Unreal Build Validation #28 then passed on develop; no intended Bird/world-motion behavior changed.
+
 ## CP37 — Automatic Safe Checkpoint / Respawn Runtime Foundation
 - Added a separate `ShireJourney_Checkpoint` SaveGame slot; automatic saves never overwrite the user's F5 manual save.
 - Refactored F5/F9 and checkpoint recovery through shared snapshot/restore helpers so quest, chapter, story beats, route, episode, playable character, route snapshots, transform and health use one persistence path.
