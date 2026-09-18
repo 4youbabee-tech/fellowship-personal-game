@@ -23,7 +23,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     TArray<FString> SourceFiles;
     TArray<FString> TextureFiles;
     TArray<FString> MeshFiles;
-    IFileManager::Get().FindFilesRecursive(TextureFiles, *SourceRoot, TEXT("*.tga"), true, false, false);
+    IFileManager::Get().FindFilesRecursive(TextureFiles, *SourceRoot, TEXT("*.bmp"), true, false, false);
     IFileManager::Get().FindFilesRecursive(MeshFiles, *SourceRoot, TEXT("*.obj"), true, false, false);
     TextureFiles.Sort();
     MeshFiles.Sort();

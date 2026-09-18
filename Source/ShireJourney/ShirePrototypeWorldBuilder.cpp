@@ -14,7 +14,6 @@
 #include "Components/SkyLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
-#include "Engine/AtmosphericFog.h"
 #include "Engine/DirectionalLight.h"
 #include "Engine/ExponentialHeightFog.h"
 #include "Engine/PostProcessVolume.h"
@@ -548,11 +547,13 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
 
     // The template map may still contain legacy AtmosphericFog. Running it together
     // with SkyAtmosphere produces a visible UE4.27 warning and conflicting sky models.
-    for (TActorIterator<AAtmosphericFog> It(GetWorld()); It; ++It)
+    for (TActorIterator<AActor> It(GetWorld()); It; ++It)
     {
-        if (AAtmosphericFog* LegacyFog = *It)
+        AActor* Candidate = *It;
+        if (Candidate && Candidate != this &&
+            Candidate->GetClass() && Candidate->GetClass()->GetName().Contains(TEXT("AtmosphericFog")))
         {
-            LegacyFog->Destroy();
+            Candidate->Destroy();
         }
     }
 

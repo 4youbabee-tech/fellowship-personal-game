@@ -37,6 +37,14 @@ def read(path: Path) -> str:
         return ""
 
 
+def is_git_lfs_pointer(path: Path) -> bool:
+    try:
+        return path.read_bytes().startswith(b"version https://git-lfs.github.com/spec/v1\n")
+    except Exception as exc:
+        fail(f"Cannot inspect {path.relative_to(ROOT)} for Git LFS pointer: {exc}")
+        return False
+
+
 def strip_comments_and_strings(text: str) -> str:
     text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
     text = re.sub(r"//[^\n]*", "", text)
@@ -265,6 +273,27 @@ for path in sorted(SOURCE.glob("*.h")):
     later_includes = [line.strip() for line in lines[generated_index + 1 :] if line.strip().startswith("#include")]
     if later_includes:
         fail(f"{path.name}: generated.h is not the last include ({later_includes[0]})")
+
+# PG-016: the installed UE4.27.2 build does not expose Engine/AtmosphericFog.h
+# as a public include. Cleanup of a legacy AtmosphericFog actor must avoid a direct
+# dependency on that header/class so real Windows compilation cannot regress to C1083.
+shire_world_for_headers = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
+if '#include "Engine/AtmosphericFog.h"' in shire_world_for_headers:
+    fail("PG-016: do not include Engine/AtmosphericFog.h on the locked UE4.27.2 toolchain")
+
+# PG-017: files covered by .gitattributes LFS rules must be actual LFS pointers in Git.
+# Raw binary blobs under an LFS-tracked extension make checkout report "should have been
+# pointers, but weren't" and make the self-hosted workspace nondeterministic.
+production_root = ROOT / "SourceAssets" / "Production"
+lfs_extensions = {".uasset", ".umap", ".fbx", ".wav", ".png", ".tga", ".exr"}
+if production_root.exists():
+    for asset_path in production_root.rglob("*"):
+        if asset_path.is_file() and asset_path.suffix.lower() in lfs_extensions:
+            if not is_git_lfs_pointer(asset_path):
+                fail(
+                    "PG-017: LFS-tracked production asset is committed as a raw blob: "
+                    + str(asset_path.relative_to(ROOT))
+                )
 
 # PG-013: UE4.27 UAssetImportTask does not expose bAsync. Keep the production
 # import commandlet on the UE4.27-compatible task API so the real editor build

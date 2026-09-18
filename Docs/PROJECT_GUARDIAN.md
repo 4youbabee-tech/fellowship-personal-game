@@ -123,6 +123,24 @@ This converts failures into permanent project knowledge.
 
 **Guard:** static validation requires the self-hosted workflow's editor-closed success branch to explicitly return zero.
 
+### PG-016 — UE4.27 AtmosphericFog public-header compatibility
+**Observed failure:** Unreal Build Validation #5 compiled the new Shire production pass on the self-hosted UE4.27.2 machine and failed with C1083 because `Engine/AtmosphericFog.h` is not available as a public include in that installed engine build.
+
+**Root cause:** the atmosphere cleanup referenced a legacy fog class/header directly instead of using an engine-version-neutral actor cleanup path.
+
+**Fix pattern:** do not include `Engine/AtmosphericFog.h`; locate the legacy actor generically and remove it without a compile-time dependency on that unavailable header.
+
+**Guard:** static validation rejects that direct include.
+
+### PG-017 — LFS-tracked binaries must be Git LFS pointers
+**Observed failure:** the same run reported seven texture files that “should have been pointers, but weren't” because raw TGA blobs were committed through the GitHub contents/Git-data path while `.gitattributes` routes `.tga` through Git LFS.
+
+**Root cause:** the file extension was LFS-managed, but the stored Git object was the raw binary instead of an LFS pointer.
+
+**Fix pattern:** assets with LFS-managed extensions must enter Git through a real LFS upload. Small generated source textures that do not need LFS may use an Unreal-supported non-LFS extension such as BMP.
+
+**Guard:** static validation rejects raw production binaries using extensions managed by the repository's current LFS policy.
+
 ## What Guardian must never do automatically
 
 - change canon,
