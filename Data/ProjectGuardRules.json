@@ -49,5 +49,11 @@
     "DebugPreviousChapter",
     "DebugNextChapter",
     "DebugAlternateRoute"
+  ],
+  "required_source_docs": [
+    "Source/ShireJourney/README.md"
+  ],
+  "required_engineering_data": [
+    "Data/SourceArchitecturePlan.json"
   ]
 }
