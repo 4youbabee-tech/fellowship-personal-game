@@ -33,7 +33,9 @@
     "Docs/PART1_FELLOWSHIP_MASTERPLAN.md",
     "Docs/CHARACTER_PERFORMANCE_STANDARD.md",
     "Docs/PRODUCTION_COMPLETENESS_MATRIX.md",
-    "Docs/WORLD_PRODUCTION_BLUEPRINT.md"
+    "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
+    "Docs/PROJECT_MEMORY_SYSTEM.md",
+    "Docs/LIVING_WORLD_AI_BLUEPRINT.md"
   ],
   "required_story_data": [
     "Data/StoryBeatPlan.csv",
@@ -54,6 +56,33 @@
     "Source/ShireJourney/README.md"
   ],
   "required_engineering_data": [
-    "Data/SourceArchitecturePlan.json"
+    "Data/SourceArchitecturePlan.json",
+    "Data/ProjectRequirements.json",
+    "Data/LivingWorldFeaturePlan.json"
+  ],
+  "requirement_status_values": [
+    "REQUESTED",
+    "PLANNED",
+    "PARTIAL",
+    "IMPLEMENTED",
+    "VALIDATED",
+    "DEFERRED",
+    "REJECTED",
+    "SUPERSEDED"
+  ],
+  "requirement_priority_values": [
+    "CRITICAL",
+    "HIGH",
+    "MEDIUM",
+    "LOW"
+  ],
+  "living_world_phase_ids": [
+    "LW0",
+    "LW1",
+    "LW2",
+    "LW3",
+    "LW4",
+    "LW5",
+    "LW6"
   ]
 }
