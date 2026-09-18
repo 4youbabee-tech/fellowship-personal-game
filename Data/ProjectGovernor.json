@@ -244,14 +244,16 @@
       "evidence": [
         "Current source only proves social pauses; no complete NPC-to-NPC dialogue exchange is claimed"
       ],
-      "implementation_refs": [],
+      "implementation_refs": [
+        "Data/NPCConversationPlan.json defines participant eligibility, intent categories, knowledge/story gates, priority, cooldowns and repetition policy"
+      ],
       "missing_work": [
-        "conversation participant selection",
-        "dialogue intent catalog",
-        "turn-taking/runtime playback",
-        "cooldown/repetition suppression",
-        "story-critical dialogue priority",
-        "audio/subtitle integration"
+        "runtime conversation selection",
+        "turn-taking/playback",
+        "speaker/listener gaze integration",
+        "subtitle/audio bridge",
+        "runtime cooldown/history tracking",
+        "PIE/device/performance validation"
       ],
       "acceptance_criteria": [
         "Two eligible NPCs can exchange context-appropriate lines",
@@ -1115,7 +1117,8 @@
     "Data/DialogueIntent.csv",
     "Data/MusicCuePlan.csv",
     "Data/VoiceCuePlan.csv",
-    "Data/NPCSocialModel.json"
+    "Data/NPCSocialModel.json",
+    "Data/NPCConversationPlan.json"
   ],
   "update_protocol": [
     "Treat Data/ProjectGovernor.json as the first-read/last-write coordination record for any meaningful project change.",
@@ -1180,8 +1183,8 @@
       "order": 5,
       "id": "WORK-LW-002",
       "title": "Implement NPC-to-NPC contextual conversations",
-      "status": "PLANNED",
-      "rationale": "Requires the NPC identity/knowledge/social model first."
+      "status": "PARTIAL",
+      "rationale": "Conversation selection/repetition contracts now exist in Data/NPCConversationPlan.json; runtime conversation behavior remains pending behind the active functional gate."
     },
     {
       "order": 6,
