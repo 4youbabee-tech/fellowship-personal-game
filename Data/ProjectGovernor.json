@@ -1,0 +1,1054 @@
+{
+  "schema_version": 2,
+  "authority_id": "FELLOWSHIP_SINGLE_PROJECT_GOVERNOR_V2",
+  "authority_rule": "This file is the sole authoritative project-management decision source. Other docs/data may describe implementation details but must not override requirements, priorities, decisions, conflicts, active gate, or quality status recorded here.",
+  "repository": "4youbabee-tech/fellowship-personal-game",
+  "active_branch": "develop",
+  "engine": "Unreal Engine 4.27.2",
+  "target_profile": {
+    "platform": "Windows",
+    "renderer": "DX11",
+    "resolution": "720p",
+    "quality": "Low-Medium",
+    "fps_floor_target": 30,
+    "ram_gb": 8,
+    "gpu_vram_class_gb": 2
+  },
+  "product_north_star": [
+    "Let the player live the Peter Jackson film story as a playable adventure rather than inventing a replacement main story.",
+    "Make the world feel alive, beautiful, explorable and responsive while preserving story chronology and low-spec performance.",
+    "Preserve every meaningful user request and decision so chat loss or developer changes never erase project intent.",
+    "Prefer player enjoyment, clarity, stable traversal, save continuity and reliable performance over uncontrolled feature quantity."
+  ],
+  "operating_rules": [
+    "One governor, one decision authority. No secondary file may independently redefine requirement status, priority, conflict resolution, active gate, or region acceptance.",
+    "Every meaningful user request receives a stable requirement ID here before or with implementation.",
+    "New requests never silently delete older requests; contradictions become explicit conflicts/decisions here.",
+    "The film story spine, build/save/story integrity, target-device performance and required traversal cannot be silently traded away.",
+    "A feature is never called accepted from compile/static evidence alone.",
+    "If a previously passed critical gate fails, stop feature expansion, repair the smallest failing layer, and rerun the exact failed gate.",
+    "Human pacing and visual review are mandatory for enjoyment/acceptance; CI cannot infer fun."
+  ],
+  "requirement_status_values": [
+    "REQUESTED",
+    "PLANNED",
+    "PARTIAL",
+    "IMPLEMENTED",
+    "VALIDATED",
+    "DEFERRED",
+    "REJECTED",
+    "SUPERSEDED"
+  ],
+  "priority_values": [
+    "CRITICAL",
+    "HIGH",
+    "MEDIUM",
+    "LOW"
+  ],
+  "requirements": [
+    {
+      "id": "REQ-MEM-001",
+      "title": "Permanent repository-based project memory",
+      "category": "ProjectGovernance",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User requirement recovered and reaffirmed after lost/deleted chat",
+      "intent": "Record requests, decisions, completed work, incomplete work, validation state and next actions so the project survives forgotten details, deleted chats and programmer changes.",
+      "evidence": [
+        "Docs/CURRENT_PROJECT_STATE.md",
+        "Docs/CHECKPOINTS.md",
+        "Docs/PROJECT_GUARDIAN.md",
+        "Source/ShireJourney/README.md",
+        "Data/SourceArchitecturePlan.json"
+      ],
+      "implementation_refs": [
+        "Project Guardian regression memory",
+        "source architecture handoff",
+        "development checkpoint history"
+      ],
+      "missing_work": [
+        "Requirement ledger itself must become mandatory CI input",
+        "Every future meaningful user request must be added/updated",
+        "Need periodic reconciliation between ledger, checkpoints and current state"
+      ],
+      "acceptance_criteria": [
+        "New programmer can identify all open high-priority requirements without reading chat",
+        "Each implemented requirement links to code/data/checkpoint evidence",
+        "Unfinished user requests remain visible",
+        "CI rejects missing core memory artifacts"
+      ],
+      "dependencies": [],
+      "checkpoint": "CP30B",
+      "notes": "This entry intentionally distinguishes existing recovery docs from the stronger all-user-requests ledger."
+    },
+    {
+      "id": "REQ-ORG-001",
+      "title": "Large-project source organization and handoff map",
+      "category": "Architecture",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User requirement for long-term organization",
+      "intent": "Keep source ownership and target structure explicit so the runtime module can scale and another developer can continue safely.",
+      "evidence": [
+        "Source/ShireJourney/README.md",
+        "Data/SourceArchitecturePlan.json",
+        "Docs/PROJECT_GUARDIAN.md PG-019"
+      ],
+      "implementation_refs": [
+        "43 runtime module source/build files are mapped to domains and target Public/Private paths"
+      ],
+      "missing_work": [
+        "Physical Public/Private domain migration is not yet performed"
+      ],
+      "acceptance_criteria": [
+        "All runtime source files represented exactly once in architecture manifest",
+        "Physical migration passes static validation and real UE4.27.2 build",
+        "No gameplay redesign mixed into migration"
+      ],
+      "dependencies": [
+        "REQ-MEM-001"
+      ],
+      "checkpoint": "CP30A",
+      "notes": "Current layout remains flat but guarded."
+    },
+    {
+      "id": "REQ-WORLD-001",
+      "title": "World must feel continuously alive during traversal",
+      "category": "LivingWorld",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User requirement reaffirmed after lost chat",
+      "intent": "Wherever the player moves, encounter believable life, activity, ambience, discoveries and environmental motion instead of empty travel space.",
+      "evidence": [
+        "Source/ShireJourney/ShireAmbientNPC.cpp",
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+        "Data/BiomePlan.csv",
+        "Docs/WORLD_PRODUCTION_BLUEPRINT.md"
+      ],
+      "implementation_refs": [
+        "ambient NPC routines and player awareness",
+        "NPC social pauses",
+        "story-reactive Shire atmosphere",
+        "landmark discovery",
+        "instanced foliage and ambient audio foundations"
+      ],
+      "missing_work": [
+        "micro-event system",
+        "fauna/animal life where appropriate",
+        "broader work/market/traveler activity",
+        "environment motion pass",
+        "chapter-by-chapter exploration-density acceptance"
+      ],
+      "acceptance_criteria": [
+        "Ordinary traversal repeatedly reveals believable activity or environmental storytelling",
+        "Activity responds to region/story state",
+        "Target laptop performance remains acceptable",
+        "Each chapter records living-world acceptance separately"
+      ],
+      "dependencies": [
+        "REQ-WORLD-002",
+        "REQ-NPC-001"
+      ],
+      "checkpoint": "LIVING_WORLD_ROADMAP",
+      "notes": "Full requirement is not satisfied by current social pauses alone."
+    },
+    {
+      "id": "REQ-WORLD-002",
+      "title": "Rich cinematic geography and biome identity",
+      "category": "WorldDesign",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User requirement for mountains valleys water beauty and film-like travel",
+      "intent": "Worlds need strong geography: hills, valleys, rivers, forests, mountains, landmarks, occlusion, vistas and chapter-specific atmosphere.",
+      "evidence": [
+        "Data/BiomePlan.csv",
+        "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp"
+      ],
+      "implementation_refs": [
+        "Shire rolling hills/fields/stream/ferry scale pass",
+        "prototype ridges/marsh/Ford",
+        "Rivendell valley/waterfalls",
+        "Caradhras snow pass",
+        "Moria large-scale halls/abyss",
+        "Lothlorien golden canopy",
+        "Anduin river canyon"
+      ],
+      "missing_work": [
+        "Most non-Shire regions remain prototype geometry",
+        "Final terrain/material/vegetation production assets",
+        "focused PIE/device/visual acceptance",
+        "environment motion/weather depth"
+      ],
+      "acceptance_criteria": [
+        "Each chapter has recognizable physical identity",
+        "Traversal uses elevation, occlusion and reveal rather than flat arenas",
+        "Production visuals pass device/performance and visual acceptance"
+      ],
+      "dependencies": [],
+      "checkpoint": "CP26_PLUS_PRODUCTION",
+      "notes": "Biome plan exists but final production quality is incomplete."
+    },
+    {
+      "id": "REQ-NPC-001",
+      "title": "NPCs need believable routines awareness and social life",
+      "category": "NPC",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Recovered/reaffirmed user requirement",
+      "intent": "NPCs should feel like inhabitants with purpose rather than static quest markers.",
+      "evidence": [
+        "Source/ShireJourney/ShireAmbientNPC.cpp",
+        "Source/ShireJourney/ShireNPC.cpp"
+      ],
+      "implementation_refs": [
+        "walking/waiting routines",
+        "player awareness/look-at",
+        "running-sensitive notice behavior",
+        "near-player NPC social pauses",
+        "proxy gaze/blink/mouth acting"
+      ],
+      "missing_work": [
+        "data-driven jobs/schedules",
+        "home/work/social anchors",
+        "relationship graph",
+        "danger/weather reactions",
+        "persistent named-NPC continuity beyond current story state"
+      ],
+      "acceptance_criteria": [
+        "NPC behavior varies by role/location/story state",
+        "Named NPC continuity survives save/load where required",
+        "Distant simulation remains cheap",
+        "Behavior passes target-device performance"
+      ],
+      "dependencies": [],
+      "checkpoint": "LIVING_WORLD_LW1",
+      "notes": "Existing ambient behavior is a foundation, not the final intelligence system."
+    },
+    {
+      "id": "REQ-NPC-002",
+      "title": "NPC-to-NPC contextual conversations",
+      "category": "NPCDialogue",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "origin": "User explicitly requested NPCs converse with each other",
+      "intent": "NPCs should greet, gossip, work-talk and react to local/story events with short context-aware conversations.",
+      "evidence": [
+        "Current source only proves social pauses; no complete NPC-to-NPC dialogue exchange is claimed"
+      ],
+      "implementation_refs": [],
+      "missing_work": [
+        "conversation participant selection",
+        "dialogue intent catalog",
+        "turn-taking/runtime playback",
+        "cooldown/repetition suppression",
+        "story-critical dialogue priority",
+        "audio/subtitle integration"
+      ],
+      "acceptance_criteria": [
+        "Two eligible NPCs can exchange context-appropriate lines",
+        "Conversation does not repeat excessively",
+        "Story knowledge boundaries are respected",
+        "Main quest dialogue always has priority",
+        "Performance is bounded"
+      ],
+      "dependencies": [
+        "REQ-NPC-001",
+        "REQ-NPC-003"
+      ],
+      "checkpoint": "LIVING_WORLD_LW2",
+      "notes": "Do not confuse existing face-to-face social pause with implemented conversation."
+    },
+    {
+      "id": "REQ-NPC-003",
+      "title": "Bounded NPC dialogue creativity and knowledge limits",
+      "category": "NPCDialogue",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "origin": "User requested a limited degree of NPC creativity and dialogue intelligence",
+      "intent": "NPC dialogue may vary and react intelligently, but only inside authored identity, knowledge, canon and story boundaries.",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Data/DialogueIntent.csv",
+        "Source/ShireJourney/ShireDialogueSubsystem.cpp"
+      ],
+      "implementation_refs": [
+        "authored dialogue intents and story-aware dialogue foundations"
+      ],
+      "missing_work": [
+        "NPC knowledge profiles",
+        "allowed intent/variation policy",
+        "bounded generation/selection layer",
+        "deterministic fallback",
+        "cache/repetition controls",
+        "performance strategy"
+      ],
+      "acceptance_criteria": [
+        "NPC never reveals knowledge it should not know",
+        "No canon-changing invention",
+        "No verbatim screenplay reproduction",
+        "Variation remains coherent with speaker/location/story state",
+        "System works without requiring an always-on expensive model on target laptop"
+      ],
+      "dependencies": [
+        "REQ-NPC-001"
+      ],
+      "checkpoint": "LIVING_WORLD_LW5",
+      "notes": "Preferred design is bounded intelligence with deterministic fallback, not unrestricted free generation."
+    },
+    {
+      "id": "REQ-NPC-004",
+      "title": "Persistent named-NPC memory and relationships",
+      "category": "NPCMemory",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "origin": "Recovered from user's desire for persistent intelligent inhabitants",
+      "intent": "Important NPCs should remember selected interactions/events and maintain bounded relationship context when it improves continuity.",
+      "evidence": [
+        "Current route/story persistence exists, but no general named-NPC memory/relationship system is claimed"
+      ],
+      "implementation_refs": [
+        "existing save architecture can provide integration foundation"
+      ],
+      "missing_work": [
+        "memory schema",
+        "relationship schema",
+        "save/load integration",
+        "forget/expiry policy",
+        "ambient-vs-named NPC cost tiers"
+      ],
+      "acceptance_criteria": [
+        "Important memories persist through save/load",
+        "Memory cannot alter mandatory story outcomes",
+        "Save footprint remains controlled",
+        "Ambient crowds use cheaper aggregate state"
+      ],
+      "dependencies": [
+        "REQ-NPC-001"
+      ],
+      "checkpoint": "LIVING_WORLD_LW3",
+      "notes": "Not implemented yet."
+    },
+    {
+      "id": "REQ-SAVE-001",
+      "title": "Reliable save load and route continuity",
+      "category": "Persistence",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Existing project requirement",
+      "intent": "Player progress, location, story and parallel-route state must survive save/load and Frodo/Gandalf switching.",
+      "evidence": [
+        "Source/ShireJourney/ShireSaveGame.h",
+        "Source/ShireJourney/ShireQuestSubsystem.cpp",
+        "Source/ShireJourney/ShirePlayerCharacter.cpp",
+        "Docs/CURRENT_PROJECT_STATE.md"
+      ],
+      "implementation_refs": [
+        "F5 save verified historically; route snapshots implemented"
+      ],
+      "missing_work": [
+        "F9 round-trip verification on current build",
+        "F8 Gandalf-Isengard-Frodo round-trip verification",
+        "automatic checkpoint/respawn runtime implementation"
+      ],
+      "acceptance_criteria": [
+        "F9 restores expected transform/story state",
+        "F8 preserves Frodo state through Gandalf route",
+        "automatic checkpoints cannot skip required story results"
+      ],
+      "dependencies": [],
+      "checkpoint": "CURRENT_HARD_GATE",
+      "notes": "This remains a blocker before major new gameplay features."
+    },
+    {
+      "id": "REQ-PERF-001",
+      "title": "Large living world must remain playable on target laptop",
+      "category": "Performance",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Long-standing project hardware requirement",
+      "intent": "All world/NPC intelligence and visual ambition must respect the low-spec target rather than becoming an unbounded simulation.",
+      "evidence": [
+        "Config/DefaultScalability.ini",
+        "Docs/DEVELOPMENT_GATES.md",
+        "Data/BiomePlan.csv",
+        "Source/ShireJourney/ShireAmbientNPC.cpp"
+      ],
+      "implementation_refs": [
+        "distance-adaptive NPC ticks",
+        "instanced ground cover",
+        "one major generated region at a time",
+        "low/medium 720p target"
+      ],
+      "missing_work": [
+        "focused target-device traversal/performance observation for current production Shire"
+      ],
+      "acceptance_criteria": [
+        "30 FPS floor target at 720p Low/Medium without severe memory pressure or unplayable hitching"
+      ],
+      "dependencies": [
+        "REQ-WORLD-001",
+        "REQ-NPC-001"
+      ],
+      "checkpoint": "CURRENT_HARD_GATE",
+      "notes": "Performance evidence must accompany living-world expansion."
+    },
+    {
+      "id": "REQ-VISION-001",
+      "title": "Film trilogy is the authoritative story spine",
+      "category": "ProductVision",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User reaffirmed that the project is an experiential adaptation of the films, not a newly invented story",
+      "intent": "Use the established film chronology, major characters, locations, conflicts and required outcomes as the primary narrative blueprint. The game may enrich gaps but must not replace the film story with a different one.",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Docs/PART1_FELLOWSHIP_MASTERPLAN.md",
+        "Data/StoryBeatPlan.csv"
+      ],
+      "implementation_refs": [
+        "Film-first canon policy already exists",
+        "P1C01-P1C08 Part I route follows the film continuity",
+        "Gandalf/Isengard parallel route fills a film-canon event outside Frodo's viewpoint"
+      ],
+      "missing_work": [
+        "Make film-to-game coverage machine-readable for all Part I runtime chapters",
+        "Continue chapter-by-chapter implementation and acceptance",
+        "Part II and Part III remain roadmap/design rather than production-complete"
+      ],
+      "acceptance_criteria": [
+        "Every major implemented story beat maps to film continuity or an explicitly tagged compatible gap-fill",
+        "No game-authored side content changes required film outcomes",
+        "Chapter handoffs preserve the known chronology",
+        "Part I coverage gaps are visible in repository data rather than hidden in chat"
+      ],
+      "dependencies": [],
+      "checkpoint": "FILM_EXPERIENCE_CONTRACT",
+      "notes": "Books/lore may enrich the world only when they do not silently overwrite film continuity."
+    },
+    {
+      "id": "REQ-EXP-001",
+      "title": "Player should live the film as a playable adventure",
+      "category": "PlayerExperience",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User explicitly described the goal as feeling personally inside the film and living the adventure",
+      "intent": "Translate major film moments into player experience: traversal, exploration, interaction, stealth, combat, social scenes or interactive cinematic presentation instead of reducing the project to passive cutscenes or a generic quest list.",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Docs/PART1_FELLOWSHIP_MASTERPLAN.md",
+        "Source/ShireJourney/ShirePlayerCharacter.cpp",
+        "Source/ShireJourney/ShireStoryPresentationSubsystem.cpp"
+      ],
+      "implementation_refs": [
+        "Shire traversal/party/Black Rider/ferry skeleton",
+        "Bree through Amon Hen runtime greybox skeleton",
+        "temporary playable Gandalf/Isengard route",
+        "story-presentation hooks"
+      ],
+      "missing_work": [
+        "Chapter-by-chapter film-experience coverage and treatment audit",
+        "Many major scenes are still prototype or compressed",
+        "Final cinematic/gameplay blends, character performances and production environments",
+        "Focused PIE/device/visual acceptance"
+      ],
+      "acceptance_criteria": [
+        "Major film anchors are experienced through appropriate gameplay or interactive presentation",
+        "Player agency exists where it does not contradict required story outcomes",
+        "Important emotional/story moments are not skipped merely to connect quests",
+        "Each chapter records which film anchors are covered, partial or missing"
+      ],
+      "dependencies": [
+        "REQ-VISION-001"
+      ],
+      "checkpoint": "FILM_EXPERIENCE_CONTRACT",
+      "notes": "The goal is experiential fidelity, not verbatim screenplay reproduction."
+    },
+    {
+      "id": "REQ-EXP-002",
+      "title": "Exploration freedom between fixed film story anchors",
+      "category": "PlayerExperience",
+      "priority": "HIGH",
+      "status": "PARTIAL",
+      "origin": "Derived directly from the user's request to adventure and explore while remaining inside the film story",
+      "intent": "Let the player wander, discover life, talk to characters, use side routes and encounter optional details between mandatory film anchors, while the major chronology and outcomes remain stable.",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
+        "Data/BiomePlan.csv",
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp"
+      ],
+      "implementation_refs": [
+        "Shire exploration loops and side stories",
+        "optional conversations",
+        "landmark discoveries",
+        "film-compatible chapter progression"
+      ],
+      "missing_work": [
+        "Define exploration envelopes around each chapter's fixed anchors",
+        "Add more optional discoveries and living-world activity outside Shire",
+        "Verify exploration cannot skip or invalidate mandatory story results"
+      ],
+      "acceptance_criteria": [
+        "Player can meaningfully explore between mandatory story beats",
+        "Optional content does not overwrite film chronology",
+        "Returning to the main route remains readable",
+        "No free-roam shortcut can silently bypass a required story outcome"
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-WORLD-001"
+      ],
+      "checkpoint": "FILM_EXPERIENCE_CONTRACT",
+      "notes": "Freedom belongs between anchors, not instead of anchors."
+    },
+    {
+      "id": "REQ-COVERAGE-001",
+      "title": "Machine-readable film-to-game scene coverage",
+      "category": "StoryGovernance",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Inferred from the user's requirement that the known film story should be systematically applied rather than forgotten",
+      "intent": "Maintain a machine-readable Part I coverage map that records the important film anchors for each runtime chapter, intended game treatment and current coverage state.",
+      "evidence": [
+        "Data/FilmExperiencePlan.json",
+        "Docs/STORY_CANON_BIBLE.md",
+        "Docs/PART1_FELLOWSHIP_MASTERPLAN.md"
+      ],
+      "implementation_refs": [
+        "FilmExperiencePlan created for P1C01-P1C08 plus GandalfParallel"
+      ],
+      "missing_work": [
+        "Keep coverage states synchronized as chapter implementation changes",
+        "Expand anchors only when useful without turning the file into a copied screenplay",
+        "Add Part II/III coverage only when those production scopes open"
+      ],
+      "acceptance_criteria": [
+        "Every P1C01-P1C08 runtime chapter has film anchors in the plan",
+        "Every anchor declares treatment and coverage state",
+        "Missing/partial film anchors remain visible to future developers",
+        "Guardian rejects loss of required chapter/parallel-route coverage"
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-EXP-001"
+      ],
+      "checkpoint": "FILM_EXPERIENCE_CONTRACT",
+      "notes": "Coverage uses high-level scene intent and event labels, never screenplay text."
+    },
+    {
+      "id": "REQ-GOV-001",
+      "title": "Internal project governor for conflicts quality and pacing",
+      "category": "ProjectGovernance",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User explicitly requested an internal intelligent system that records requests, resolves contradictions, controls errors/lag and keeps development coordinated",
+      "intent": "Maintain a deterministic project governor that reconciles requirement conflicts, protects hard invariants, tracks region-level quality gates and blocks false completion claims.",
+      "evidence": [
+        "Docs/PROJECT_GOVERNOR.md",
+        "Data/ProjectGovernorPolicy.json",
+        "Data/ProjectDecisions.json",
+        "Data/ExperienceQualityGates.json",
+        "Scripts/project_governor.py"
+      ],
+      "implementation_refs": [
+        "Governor policy/decision/quality maps and CI validator exist"
+      ],
+      "missing_work": [
+        "Future meaningful requests must be translated into structured requirements/conflicts/decisions",
+        "Quality-gate statuses must be updated from actual PIE/device/human evidence",
+        "Automated gameplay traversal testing is not yet implemented"
+      ],
+      "acceptance_criteria": [
+        "CI fails on malformed governor data or unresolved declared conflicts",
+        "New conflicting requirements produce an explicit decision/open-conflict record",
+        "Region acceptance reflects actual proof levels",
+        "Previously passed critical regressions stop feature expansion"
+      ],
+      "dependencies": [
+        "REQ-MEM-001"
+      ],
+      "checkpoint": "CP30D",
+      "notes": "The governor is deterministic repository intelligence; it does not replace human product decisions or real gameplay tests."
+    },
+    {
+      "id": "REQ-QUALITY-001",
+      "title": "No inaccessible or broken required gameplay spaces",
+      "category": "Quality",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User explicitly requested that areas not become inaccessible, broken or error-prone",
+      "intent": "Every required route and story anchor must be enterable and traversable without crash, trap, collision blocker or progression dead end before the region is accepted.",
+      "evidence": [
+        "Data/ExperienceQualityGates.json",
+        "Docs/CURRENT_PROJECT_STATE.md"
+      ],
+      "implementation_refs": [
+        "Static chapter reachability and world routing guards exist"
+      ],
+      "missing_work": [
+        "PIE/device traversal proof for Shire and P1C02-P1C08",
+        "Future automated traversal probes where practical"
+      ],
+      "acceptance_criteria": [
+        "Required region boots",
+        "Intended route is traversable",
+        "No required anchor is unreachable",
+        "No story deadlock or collision trap remains",
+        "Regression is retested after fixes"
+      ],
+      "dependencies": [
+        "REQ-GOV-001",
+        "REQ-SAVE-001"
+      ],
+      "checkpoint": "CURRENT_HARD_GATE",
+      "notes": "Cannot be fully validated by static CI alone."
+    },
+    {
+      "id": "REQ-QUALITY-002",
+      "title": "Player experience should minimize boredom frustration and unnecessary waiting",
+      "category": "PlayerExperience",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "origin": "User explicitly said the final player should enjoy the game rather than struggle or get bored",
+      "intent": "Review each region for objective clarity, travel rhythm, repetition, unnecessary waiting, empty stretches, frustrating blockers and reward for exploration.",
+      "evidence": [
+        "Docs/PROJECT_GOVERNOR.md",
+        "Data/ExperienceQualityGates.json"
+      ],
+      "implementation_refs": [
+        "PACING gate defined for every Part I region"
+      ],
+      "missing_work": [
+        "Human pacing reviews chapter by chapter",
+        "Record findings and fixes",
+        "Tune travel/combat/dialogue rhythm from play evidence"
+      ],
+      "acceptance_criteria": [
+        "Human play review finds objectives understandable",
+        "No major section is dominated by repetitive empty travel or needless waiting",
+        "Failure/retry friction is reasonable",
+        "Exploration regularly provides meaningful discovery or atmosphere"
+      ],
+      "dependencies": [
+        "REQ-GOV-001",
+        "REQ-EXP-001",
+        "REQ-WORLD-001"
+      ],
+      "checkpoint": "EXPERIENCE_ACCEPTANCE",
+      "notes": "Fun cannot be inferred from compile/CI; human play evidence is mandatory."
+    }
+  ],
+  "hard_invariants": [
+    {
+      "id": "INV-MEMORY",
+      "description": "Meaningful user requirements and decisions must be persisted in repository data; chat history is never the sole source of truth.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-STORY",
+      "description": "Peter Jackson film continuity remains the primary story spine unless the user explicitly records a product-direction override.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-INTEGRITY",
+      "description": "A change must not knowingly introduce build failure, crash, save corruption, story deadlock or route-state loss.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-TRAVERSAL",
+      "description": "Intended playable routes and required story anchors must not be accepted while blocked, trapping the player, or unreachable.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-PERFORMANCE",
+      "description": "Features must remain compatible with the target laptop profile: Windows DX11, 720p, Low/Medium, 30 FPS floor target, 8 GB RAM, roughly 2 GB VRAM-class GPU.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-PROOF",
+      "description": "Static/compile success must never be presented as PIE, device, performance, pacing or visual acceptance.",
+      "auto_override": false
+    }
+  ],
+  "conflict_status_values": [
+    "OPEN",
+    "RESOLVED",
+    "WAIVED"
+  ],
+  "decision_status_values": [
+    "PROPOSED",
+    "ACCEPTED",
+    "SUPERSEDED"
+  ],
+  "conflict_rules": [
+    "A new request never silently deletes or rewrites an older requirement.",
+    "If two active requirements conflict, the conflict must be explicitly recorded and resolved before either can be treated as fully accepted.",
+    "Hard invariants cannot be silently overridden by implementation convenience.",
+    "A user may explicitly change product direction; that override must be recorded as a decision and linked to affected requirements.",
+    "When no explicit user override exists, prefer preserving story/progress integrity and target-device playability over visual scope or feature quantity.",
+    "Prefer the smallest change that satisfies the request without destabilizing already validated behavior."
+  ],
+  "decision_priority_order": [
+    "USER_EXPLICIT_DIRECTION",
+    "BUILD_SAVE_STORY_INTEGRITY",
+    "FILM_CANON_AND_CHRONOLOGY",
+    "TARGET_DEVICE_PERFORMANCE",
+    "PLAYABILITY_AND_TRAVERSAL",
+    "PLAYER_CLARITY_AND_PACING",
+    "LIVING_WORLD_DEPTH",
+    "VISUAL_POLISH",
+    "OPTIONAL_SCOPE"
+  ],
+  "decisions": [
+    {
+      "id": "DEC-001",
+      "title": "Film story anchors versus player exploration freedom",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-VISION-001",
+        "REQ-EXP-001",
+        "REQ-EXP-002",
+        "REQ-WORLD-001"
+      ],
+      "resolution": "Major film chronology/outcomes remain fixed; exploration, side routes, optional conversations and living-world activity belong primarily between required story anchors.",
+      "rationale": "Preserves the user's goal of living the film while allowing meaningful adventure and discovery.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Data/FilmExperiencePlan.json"
+      ]
+    },
+    {
+      "id": "DEC-002",
+      "title": "Living-world richness versus target-laptop performance",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-NPC-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Use rich near-player simulation and cheaper distance-adaptive/offscreen simulation; do not require always-on expensive AI for ambient life.",
+      "rationale": "The world should feel alive without sacrificing the low-spec device target.",
+      "authority": "BUILD_SAVE_STORY_INTEGRITY",
+      "evidence": [
+        "Docs/LIVING_WORLD_AI_BLUEPRINT.md",
+        "Source/ShireJourney/ShireAmbientNPC.cpp"
+      ]
+    },
+    {
+      "id": "DEC-003",
+      "title": "Source reorganization versus current functional validation gate",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-ORG-001",
+        "REQ-SAVE-001"
+      ],
+      "resolution": "Define and guard the target Public/Private source architecture now, but perform the physical move as a dedicated maintenance pass after the current F9/F8/chapter/device functional gate is healthy.",
+      "rationale": "Preserves organization without mixing a large path/include refactor into unresolved gameplay validation.",
+      "authority": "BUILD_SAVE_STORY_INTEGRITY",
+      "evidence": [
+        "Data/SourceArchitecturePlan.json",
+        "Source/ShireJourney/README.md"
+      ]
+    }
+  ],
+  "open_conflicts": [],
+  "quality_gate_status_values": [
+    "NOT_TESTED",
+    "PARTIAL",
+    "PASSED",
+    "FAILED",
+    "BLOCKED"
+  ],
+  "quality_gate_definitions": [
+    {
+      "id": "STATIC",
+      "meaning": "Repository/static validation covers required contracts."
+    },
+    {
+      "id": "COMPILE",
+      "meaning": "Real UE4.27.2 C++/UHT build succeeds on exact relevant head."
+    },
+    {
+      "id": "BOOT",
+      "meaning": "Region can be entered in PIE/device without crash/freeze or immediate blocker."
+    },
+    {
+      "id": "TRAVERSAL",
+      "meaning": "Required intended route/anchors are reachable; no collision trap, dead end or inaccessible required space."
+    },
+    {
+      "id": "PERSISTENCE",
+      "meaning": "Save/load and route/chapter continuity preserve required player/story state."
+    },
+    {
+      "id": "PERFORMANCE",
+      "meaning": "Target-device traversal shows no severe hitching, memory pressure or unplayable frame-rate behavior against the project target."
+    },
+    {
+      "id": "PACING",
+      "meaning": "Human play review finds objectives readable and travel/combat/dialogue rhythm not excessively repetitive, empty, frustrating or boring."
+    },
+    {
+      "id": "VISUAL",
+      "meaning": "User has reviewed and accepted the region's current visual/gameplay direction."
+    }
+  ],
+  "required_quality_gate_ids": [
+    "STATIC",
+    "COMPILE",
+    "BOOT",
+    "TRAVERSAL",
+    "PERSISTENCE",
+    "PERFORMANCE",
+    "PACING",
+    "VISUAL"
+  ],
+  "required_regions": [
+    "P1C01_ShIre",
+    "P1C02_Bree",
+    "P1C03_WeathertopFord",
+    "P1C04_Rivendell",
+    "P1C05_CaradhrasWestGate",
+    "P1C06_Moria",
+    "P1C07_Lothlorien",
+    "P1C08_AnduinAmonHen",
+    "P1G01_Isengard"
+  ],
+  "region_quality": [
+    {
+      "id": "P1C01_ShIre",
+      "chapter": "P1C01",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "PARTIAL",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "PARTIAL",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Docs/CURRENT_PROJECT_STATE.md",
+        "F5 quick save historically verified; F9 round-trip remains pending"
+      ],
+      "blockers": [
+        "Focused Shire traversal",
+        "F9 round-trip",
+        "target-device performance observation",
+        "user pacing/visual review"
+      ]
+    },
+    {
+      "id": "P1C02_Bree",
+      "chapter": "P1C02",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Part I runtime greybox and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "PIE chapter smoke and all experiential gates"
+      ]
+    },
+    {
+      "id": "P1C03_WeathertopFord",
+      "chapter": "P1C03",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Part I runtime greybox and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "PIE chapter smoke and all experiential gates"
+      ]
+    },
+    {
+      "id": "P1C04_Rivendell",
+      "chapter": "P1C04",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Part I runtime greybox and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "PIE chapter smoke and all experiential gates"
+      ]
+    },
+    {
+      "id": "P1C05_CaradhrasWestGate",
+      "chapter": "P1C05",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Part I runtime greybox and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "PIE chapter smoke and all experiential gates"
+      ]
+    },
+    {
+      "id": "P1C06_Moria",
+      "chapter": "P1C06",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Part I runtime greybox/combat foundation and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "PIE chapter smoke and all experiential gates"
+      ]
+    },
+    {
+      "id": "P1C07_Lothlorien",
+      "chapter": "P1C07",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Part I runtime greybox and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "PIE chapter smoke and all experiential gates"
+      ]
+    },
+    {
+      "id": "P1C08_AnduinAmonHen",
+      "chapter": "P1C08",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Part I runtime greybox/combat foundation and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "PIE chapter smoke and all experiential gates"
+      ]
+    },
+    {
+      "id": "P1G01_Isengard",
+      "chapter": "P1C01",
+      "route": "GandalfParallel",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Gandalf/Isengard prototype and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "F8 round-trip and Isengard functional traversal"
+      ]
+    }
+  ],
+  "active_gate": {
+    "id": "CURRENT_FUNCTIONAL_HARD_GATE",
+    "status": "OPEN",
+    "blocks_major_feature_expansion": true,
+    "required_evidence": [
+      "Shire functional traversal: movement/camera/sprint/crouch/interact/HUD/quest/NPC awareness/dialogue",
+      "F9 save/load round-trip restores expected transform and story state",
+      "F8 Frodo -> Gandalf/Isengard -> Frodo round-trip preserves Frodo progress/location",
+      "P1C02-P1C08 developer chapter smoke tests",
+      "Target-laptop traversal/performance observation for crash/freeze/hitch/memory/FPS",
+      "Human pacing/clarity observations where applicable"
+    ]
+  },
+  "reference_only_files": [
+    "Docs/CURRENT_PROJECT_STATE.md",
+    "Docs/CHECKPOINTS.md",
+    "Docs/PROJECT_GOVERNOR.md",
+    "Docs/PROJECT_MEMORY_SYSTEM.md",
+    "Docs/STORY_CANON_BIBLE.md",
+    "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
+    "Docs/LIVING_WORLD_AI_BLUEPRINT.md",
+    "Data/SourceArchitecturePlan.json",
+    "Data/FilmExperiencePlan.json",
+    "Data/LivingWorldFeaturePlan.json",
+    "Data/WorldCheckpointPlan.csv",
+    "Data/BiomePlan.csv",
+    "Data/StoryBeatPlan.csv",
+    "Data/DialogueIntent.csv",
+    "Data/MusicCuePlan.csv",
+    "Data/VoiceCuePlan.csv"
+  ],
+  "update_protocol": [
+    "Read this file first before any meaningful gameplay, architecture, story or quality decision.",
+    "For a new user request: add/update one requirement here, then inspect dependencies/conflicts before implementation.",
+    "For a contradiction: preserve both requirements and add/update one decision/open conflict here.",
+    "For implementation: update evidence/missing_work/status here only after repository evidence exists.",
+    "For testing: update region_quality and active_gate only from actual static/compile/PIE/device/human evidence.",
+    "If any reference file conflicts with this governor, reconcile that file to this governor in the same logical change."
+  ]
+}
