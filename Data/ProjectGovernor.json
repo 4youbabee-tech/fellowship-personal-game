@@ -1114,7 +1114,8 @@
     "Data/StoryBeatPlan.csv",
     "Data/DialogueIntent.csv",
     "Data/MusicCuePlan.csv",
-    "Data/VoiceCuePlan.csv"
+    "Data/VoiceCuePlan.csv",
+    "Data/NPCSocialModel.json"
   ],
   "update_protocol": [
     "Treat Data/ProjectGovernor.json as the first-read/last-write coordination record for any meaningful project change.",
