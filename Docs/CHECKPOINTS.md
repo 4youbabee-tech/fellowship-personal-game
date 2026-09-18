@@ -255,6 +255,15 @@
 - Existing ambient NPC routines, awareness, social pauses and proxy acting are recorded as foundations only; full NPC conversation/memory/intelligence is **not** falsely claimed implemented.
 - This checkpoint is governance/design memory. It does not open a new gameplay feature while the current functional F9/F8/chapter/device gate remains pending.
 
+## CP30C — Film-First Playable Experience Contract
+- Reaffirmed the product vision: the Peter Jackson film continuity is the story spine to be lived through, not replaced by a newly invented main plot.
+- Added `REQ-VISION-001`, `REQ-EXP-001`, `REQ-EXP-002` and `REQ-COVERAGE-001` to the permanent requirement ledger.
+- Added `Data/FilmExperiencePlan.json` with high-level Part I film anchors for P1C01-P1C08 plus the Gandalf/Isengard parallel route.
+- Each anchor records canon class, intended gameplay/presentation treatment and current coverage state without copying screenplay dialogue.
+- Added Guardian PG-022 so every runtime Part I chapter and required route must remain represented in the coverage plan.
+- Clarified the design rule that player freedom/exploration lives mainly between fixed story anchors and must not erase or reorder required film outcomes without an explicit recorded decision.
+- This checkpoint is a story/product-governance contract, not a claim that all film scenes are already implemented or visually accepted.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
