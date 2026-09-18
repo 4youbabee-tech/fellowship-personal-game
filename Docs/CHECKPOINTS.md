@@ -264,6 +264,16 @@
 - Clarified the design rule that player freedom/exploration lives mainly between fixed story anchors and must not erase or reorder required film outcomes without an explicit recorded decision.
 - This checkpoint is a story/product-governance contract, not a claim that all film scenes are already implemented or visually accepted.
 
+## CP30D — Project Governor / Quality and Conflict Control
+- Added `Docs/PROJECT_GOVERNOR.md` as the human-readable control contract.
+- Added `Data/ProjectGovernorPolicy.json` with hard invariants for project memory, film story, integrity, traversal, target-device performance and proof-level honesty.
+- Added `Data/ProjectDecisions.json` so conflicting requests are resolved explicitly rather than one silently replacing another.
+- Recorded current accepted tradeoffs for film anchors versus exploration freedom, living-world richness versus low-spec performance, and source reorganization versus the active functional gate.
+- Added `Data/ExperienceQualityGates.json` for P1C01-P1C08 plus Gandalf/Isengard with STATIC, COMPILE, BOOT, TRAVERSAL, PERSISTENCE, PERFORMANCE, PACING and VISUAL evidence states.
+- Added `Scripts/project_governor.py` and wired it into Pre-Unreal Validation.
+- Added permanent requirements for governor continuity, accessible required gameplay spaces and human pacing/enjoyment review.
+- The Governor does not claim zero bugs or automatically judge fun; it forces uncertainty, conflicts and missing evidence to remain visible and blocks malformed/contradictory structured state.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
