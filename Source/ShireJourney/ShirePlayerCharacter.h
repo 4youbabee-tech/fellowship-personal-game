@@ -165,6 +165,7 @@ private:
     bool bUsingProductionCharacter = false;
     bool bSprintRequested = false;
     float PrototypeIdlePhase = 0.0f;
+    FName PendingChapterCheckpointId = NAME_None;
 
     UShireSaveGame* CreateSaveSnapshot(FName CheckpointId, bool bCheckpointSnapshot) const;
     bool RestoreSaveSnapshot(UShireSaveGame* Save, const FText& SuccessMessage);
