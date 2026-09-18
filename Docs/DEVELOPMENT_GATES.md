@@ -70,14 +70,19 @@ Source-layout changes must update the source handoff README, architecture plan a
 
 Do not knowingly create "we will fix docs later" debt.
 
+Single-authority rule:
+- `Data/ProjectGovernor.json` is the only project-management decision authority;
+- supporting plans/docs may add implementation detail but cannot independently change priorities, conflicts, active gate or acceptance state;
+- reintroducing secondary authority files is a CI failure.
+
 Governor rule:
-- every major region tracks STATIC / COMPILE / BOOT / TRAVERSAL / PERSISTENCE / PERFORMANCE / PACING / VISUAL in `Data/ExperienceQualityGates.json`;
+- every major region tracks STATIC / COMPILE / BOOT / TRAVERSAL / PERSISTENCE / PERFORMANCE / PACING / VISUAL in `Data/ProjectGovernor.json`;
 - declared requirement conflicts must have an explicit decision or open-conflict record;
 - a FAILED previously-passed critical gate blocks feature expansion until repaired/retested;
 - PACING and VISUAL require human evidence and cannot be inferred from CI.
 
 Requirement memory rule:
-- meaningful user feature/design requests must be added or updated in `Data/ProjectRequirements.json`;
+- meaningful user feature/design requests must be added or updated in `Data/ProjectGovernor.json`;
 - living-world/NPC scope changes must update `Docs/LIVING_WORLD_AI_BLUEPRINT.md` and `Data/LivingWorldFeaturePlan.json`;
 - a feature checkpoint must not silently mark an open requirement complete.
 
