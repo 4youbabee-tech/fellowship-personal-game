@@ -430,6 +430,10 @@ void AShirePlayerCharacter::QuickSave()
             Save->ActiveQuestId = QuestSubsystem->GetActiveQuestId();
             Save->CurrentChapterId = QuestSubsystem->GetCurrentChapterId();
             Save->CompletedStoryBeats = QuestSubsystem->GetCompletedStoryBeats();
+            Save->CurrentRouteId = QuestSubsystem->GetCurrentRouteId();
+            Save->CurrentEpisodeId = QuestSubsystem->GetCurrentEpisodeId();
+            Save->PlayableCharacterId = QuestSubsystem->GetPlayableCharacterId();
+            Save->RouteProgress = QuestSubsystem->GetRouteProgressSnapshot();
         }
     }
 
@@ -475,7 +479,11 @@ void AShirePlayerCharacter::QuickLoad()
                 Save->QuestStages,
                 Save->ActiveQuestId,
                 Save->CurrentChapterId,
-                Save->CompletedStoryBeats);
+                Save->CompletedStoryBeats,
+                Save->CurrentRouteId,
+                Save->CurrentEpisodeId,
+                Save->PlayableCharacterId,
+                Save->RouteProgress);
 
             // A compatibility repair may advance a legacy terminal save into the next
             // runtime chapter. In that case the router has already placed the pawn at the

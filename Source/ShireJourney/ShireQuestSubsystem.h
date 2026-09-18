@@ -3,12 +3,14 @@
 #include "CoreMinimal.h"
 #include <initializer_list>
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "ShireRouteState.h"
 #include "ShireQuestSubsystem.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnQuestStageChanged, FName, QuestId, int32, NewStage);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActiveQuestChanged, FName, QuestId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnChapterChanged, FName, PreviousChapterId, FName, NewChapterId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStoryBeatTriggered, FName, StoryBeatId);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnExperienceChanged, FName, RouteId, FName, EpisodeId, FName, PlayableCharacterId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQuestStateRestored);
 
 USTRUCT(BlueprintType)
@@ -43,6 +45,9 @@ public:
     UPROPERTY(BlueprintAssignable, Category="Story")
     FOnStoryBeatTriggered OnStoryBeatTriggered;
 
+    UPROPERTY(BlueprintAssignable, Category="Route")
+    FOnExperienceChanged OnExperienceChanged;
+
     // Emitted only after a save-state restore has rebuilt quest/chapter state. Runtime
     // story guards use this event so they can repair legacy/incomplete terminal states
     // without interfering with normal trigger-driven cinematics or chapter hand-offs.
@@ -63,6 +68,10 @@ public:
 
     UFUNCTION(BlueprintCallable, Category="Chapter")
     void StartChapter(FName ChapterId, FName StartingQuestId = NAME_None, int32 StartingQuestStage = 0);
+
+    UFUNCTION(BlueprintCallable, Category="Route")
+    void StartExperience(FName RouteId, FName EpisodeId, FName InPlayableCharacterId,
+        FName ChapterId, FName StartingQuestId = NAME_None, int32 StartingQuestStage = 0);
 
     UFUNCTION(BlueprintCallable, Category="Story")
     void TriggerStoryBeat(FName StoryBeatId);
@@ -85,10 +94,23 @@ public:
     UFUNCTION(BlueprintPure, Category="Chapter")
     FName GetCurrentChapterId() const { return CurrentChapterId; }
 
+    UFUNCTION(BlueprintPure, Category="Route")
+    FName GetCurrentRouteId() const { return CurrentRouteId; }
+
+    UFUNCTION(BlueprintPure, Category="Route")
+    FName GetCurrentEpisodeId() const { return CurrentEpisodeId; }
+
+    UFUNCTION(BlueprintPure, Category="Route")
+    FName GetPlayableCharacterId() const { return PlayableCharacterId; }
+
     const TMap<FName, int32>& GetAllQuestStages() const { return QuestStages; }
     const TArray<FName>& GetCompletedStoryBeats() const { return CompletedStoryBeats; }
+    TMap<FName, FShireRouteProgress> GetRouteProgressSnapshot() const;
+    bool GetCurrentRouteSavedTransform(FVector& OutLocation, FRotator& OutRotation) const;
     void RestoreQuestState(const TMap<FName, int32>& InStages, FName InActiveQuestId,
-        FName InCurrentChapterId, const TArray<FName>& InCompletedStoryBeats);
+        FName InCurrentChapterId, const TArray<FName>& InCompletedStoryBeats,
+        FName InCurrentRouteId, FName InCurrentEpisodeId, FName InPlayableCharacterId,
+        const TMap<FName, FShireRouteProgress>& InRouteProgress);
 
 private:
     UPROPERTY()
@@ -101,11 +123,25 @@ private:
     FName CurrentChapterId = TEXT("P1C01");
 
     UPROPERTY()
+    FName CurrentRouteId = TEXT("FrodoMain");
+
+    UPROPERTY()
+    FName CurrentEpisodeId = TEXT("P1C01_Main");
+
+    UPROPERTY()
+    FName PlayableCharacterId = TEXT("Frodo");
+
+    UPROPERTY()
     TArray<FName> CompletedStoryBeats;
+
+    UPROPERTY()
+    TMap<FName, FShireRouteProgress> RouteProgress;
 
     UPROPERTY()
     TMap<FName, FShireQuestDefinition> QuestDefinitions;
 
     void BuildQuestDefinitions();
     void AddQuestDefinition(FName QuestId, const FString& Title, std::initializer_list<const TCHAR*> Objectives);
+    FShireRouteProgress CaptureCurrentRouteProgress(bool bCapturePlayerTransform) const;
+    void ApplyRouteProgress(const FShireRouteProgress& Progress);
 };

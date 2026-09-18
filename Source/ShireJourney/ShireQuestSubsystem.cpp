@@ -1,10 +1,16 @@
 #include "ShireQuestSubsystem.h"
 
+#include "GameFramework/Pawn.h"
+#include "Kismet/GameplayStatics.h"
+
 void UShireQuestSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
     BuildQuestDefinitions();
     CurrentChapterId = TEXT("P1C01");
+    CurrentRouteId = TEXT("FrodoMain");
+    CurrentEpisodeId = TEXT("P1C01_Main");
+    PlayableCharacterId = TEXT("Frodo");
     StartQuest(TEXT("ShireArrival"), 0);
 }
 
@@ -60,6 +66,23 @@ void UShireQuestSubsystem::BuildQuestDefinitions()
         TEXT("Stay together and run for the ferry."),
         TEXT("Reach the far side of the Brandywine."),
         TEXT("The Shire is behind you. Bree lies ahead.")
+    });
+
+    // Parallel Part I route — Gandalf / Isengard
+    AddQuestDefinition(TEXT("IsengardCounsel"), TEXT("The Road to Isengard"), {
+        TEXT("Approach Orthanc and seek Saruman's counsel."),
+        TEXT("Enter the tower and confront what Saruman has become."),
+        TEXT("The alliance is broken. Survive the betrayal.")
+    });
+    AddQuestDefinition(TEXT("OrthancCaptive"), TEXT("The Tower of Orthanc"), {
+        TEXT("Imprisoned above Isengard, study what is happening below."),
+        TEXT("The valley is being remade for war. Look for a chance to escape."),
+        TEXT("Hold out until an escape becomes possible.")
+    });
+    AddQuestDefinition(TEXT("OrthancEscape"), TEXT("Escape from Isengard"), {
+        TEXT("Reach the open edge of the tower."),
+        TEXT("Escape Orthanc and carry warning back to the free peoples."),
+        TEXT("The road now turns back toward the Ring-bearer.")
     });
 
     // Chapter 2 — Bree
@@ -239,6 +262,12 @@ void UShireQuestSubsystem::StartChapter(FName ChapterId, FName StartingQuestId, 
     const FName PreviousChapterId = CurrentChapterId;
     CurrentChapterId = ChapterId;
 
+    if (CurrentRouteId == TEXT("FrodoMain"))
+    {
+        CurrentEpisodeId = FName(*FString::Printf(TEXT("%s_Main"), *ChapterId.ToString()));
+        PlayableCharacterId = TEXT("Frodo");
+    }
+
     if (PreviousChapterId != CurrentChapterId)
     {
         OnChapterChanged.Broadcast(PreviousChapterId, CurrentChapterId);
@@ -248,6 +277,116 @@ void UShireQuestSubsystem::StartChapter(FName ChapterId, FName StartingQuestId, 
     {
         StartQuest(StartingQuestId, StartingQuestStage);
     }
+}
+
+FShireRouteProgress UShireQuestSubsystem::CaptureCurrentRouteProgress(bool bCapturePlayerTransform) const
+{
+    FShireRouteProgress Progress;
+    Progress.QuestStages = QuestStages;
+    Progress.ActiveQuestId = ActiveQuestId;
+    Progress.CurrentChapterId = CurrentChapterId;
+    Progress.EpisodeId = CurrentEpisodeId;
+    Progress.PlayableCharacterId = PlayableCharacterId;
+    Progress.CompletedStoryBeats = CompletedStoryBeats;
+
+    if (bCapturePlayerTransform)
+    {
+        if (APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0))
+        {
+            Progress.bHasPlayerTransform = true;
+            Progress.PlayerLocation = PlayerPawn->GetActorLocation();
+            Progress.PlayerRotation = PlayerPawn->GetActorRotation();
+        }
+    }
+
+    return Progress;
+}
+
+void UShireQuestSubsystem::ApplyRouteProgress(const FShireRouteProgress& Progress)
+{
+    QuestStages = Progress.QuestStages;
+    ActiveQuestId = Progress.ActiveQuestId;
+    CurrentChapterId = Progress.CurrentChapterId == NAME_None ? FName(TEXT("P1C01")) : Progress.CurrentChapterId;
+    CurrentEpisodeId = Progress.EpisodeId;
+    PlayableCharacterId = Progress.PlayableCharacterId == NAME_None ? FName(TEXT("Frodo")) : Progress.PlayableCharacterId;
+    CompletedStoryBeats = Progress.CompletedStoryBeats;
+}
+
+void UShireQuestSubsystem::StartExperience(FName RouteId, FName EpisodeId, FName InPlayableCharacterId,
+    FName ChapterId, FName StartingQuestId, int32 StartingQuestStage)
+{
+    if (RouteId == NAME_None)
+    {
+        return;
+    }
+
+    if (CurrentRouteId != NAME_None)
+    {
+        RouteProgress.Add(CurrentRouteId, CaptureCurrentRouteProgress(true));
+    }
+
+    CurrentRouteId = RouteId;
+
+    if (const FShireRouteProgress* Existing = RouteProgress.Find(RouteId))
+    {
+        ApplyRouteProgress(*Existing);
+    }
+    else
+    {
+        QuestStages.Empty();
+        CompletedStoryBeats.Empty();
+        ActiveQuestId = NAME_None;
+        CurrentChapterId = ChapterId == NAME_None ? FName(TEXT("P1C01")) : ChapterId;
+        CurrentEpisodeId = EpisodeId;
+        PlayableCharacterId = InPlayableCharacterId == NAME_None ? FName(TEXT("Frodo")) : InPlayableCharacterId;
+
+        if (StartingQuestId != NAME_None)
+        {
+            ActiveQuestId = StartingQuestId;
+            QuestStages.Add(StartingQuestId, FMath::Max(0, StartingQuestStage));
+        }
+    }
+
+    if (EpisodeId != NAME_None)
+    {
+        CurrentEpisodeId = EpisodeId;
+    }
+    if (InPlayableCharacterId != NAME_None)
+    {
+        PlayableCharacterId = InPlayableCharacterId;
+    }
+
+    OnExperienceChanged.Broadcast(CurrentRouteId, CurrentEpisodeId, PlayableCharacterId);
+    OnActiveQuestChanged.Broadcast(ActiveQuestId);
+    for (const TPair<FName, int32>& Pair : QuestStages)
+    {
+        OnQuestStageChanged.Broadcast(Pair.Key, Pair.Value);
+    }
+}
+
+TMap<FName, FShireRouteProgress> UShireQuestSubsystem::GetRouteProgressSnapshot() const
+{
+    TMap<FName, FShireRouteProgress> Snapshot = RouteProgress;
+    if (CurrentRouteId != NAME_None)
+    {
+        Snapshot.Add(CurrentRouteId, CaptureCurrentRouteProgress(true));
+    }
+    return Snapshot;
+}
+
+bool UShireQuestSubsystem::GetCurrentRouteSavedTransform(FVector& OutLocation, FRotator& OutRotation) const
+{
+    if (const FShireRouteProgress* Progress = RouteProgress.Find(CurrentRouteId))
+    {
+        if (Progress->bHasPlayerTransform)
+        {
+            OutLocation = Progress->PlayerLocation;
+            OutRotation = Progress->PlayerRotation;
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void UShireQuestSubsystem::TriggerStoryBeat(FName StoryBeatId)
@@ -294,20 +433,27 @@ FText UShireQuestSubsystem::GetActiveObjective() const
 }
 
 void UShireQuestSubsystem::RestoreQuestState(const TMap<FName, int32>& InStages, FName InActiveQuestId,
-    FName InCurrentChapterId, const TArray<FName>& InCompletedStoryBeats)
+    FName InCurrentChapterId, const TArray<FName>& InCompletedStoryBeats,
+    FName InCurrentRouteId, FName InCurrentEpisodeId, FName InPlayableCharacterId,
+    const TMap<FName, FShireRouteProgress>& InRouteProgress)
 {
     QuestStages = InStages;
     ActiveQuestId = InActiveQuestId;
     CurrentChapterId = InCurrentChapterId == NAME_None ? FName(TEXT("P1C01")) : InCurrentChapterId;
     CompletedStoryBeats = InCompletedStoryBeats;
+    CurrentRouteId = InCurrentRouteId == NAME_None ? FName(TEXT("FrodoMain")) : InCurrentRouteId;
+    CurrentEpisodeId = InCurrentEpisodeId == NAME_None
+        ? FName(*FString::Printf(TEXT("%s_Main"), *CurrentChapterId.ToString()))
+        : InCurrentEpisodeId;
+    PlayableCharacterId = InPlayableCharacterId == NAME_None ? FName(TEXT("Frodo")) : InPlayableCharacterId;
+    RouteProgress = InRouteProgress;
 
     if (QuestDefinitions.Num() == 0)
     {
         BuildQuestDefinitions();
     }
 
-    // Rebuild world/UI state, but do not rebroadcast completed story beats: cinematics should
-    // remain one-time events after loading a save.
+    OnExperienceChanged.Broadcast(CurrentRouteId, CurrentEpisodeId, PlayableCharacterId);
     OnChapterChanged.Broadcast(NAME_None, CurrentChapterId);
     OnActiveQuestChanged.Broadcast(ActiveQuestId);
     for (const TPair<FName, int32>& Pair : QuestStages)
@@ -315,7 +461,5 @@ void UShireQuestSubsystem::RestoreQuestState(const TMap<FName, int32>& InStages,
         OnQuestStageChanged.Broadcast(Pair.Key, Pair.Value);
     }
 
-    // Dedicated compatibility hook. This fires after normal restore broadcasts so
-    // safety systems can repair a legacy terminal state without affecting fresh play.
     OnQuestStateRestored.Broadcast();
 }

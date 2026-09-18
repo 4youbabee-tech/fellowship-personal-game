@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
+#include "ShireRouteState.h"
 #include "ShireSaveGame.generated.h"
 
 UCLASS()
@@ -27,4 +28,16 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
     TArray<FName> CompletedStoryBeats;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
+    FName CurrentRouteId = TEXT("FrodoMain");
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
+    FName CurrentEpisodeId = TEXT("P1C01_Main");
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
+    FName PlayableCharacterId = TEXT("Frodo");
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
+    TMap<FName, FShireRouteProgress> RouteProgress;
 };
