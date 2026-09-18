@@ -103,7 +103,16 @@ void AFellowshipEnemyPrototype::ApplyTypeProfile()
     float HeightScale = 1.0f;
     float WidthScale = 1.0f;
 
-    if (EnemyType == EFellowshipEnemyType::UrukHai)
+    if (EnemyType == EFellowshipEnemyType::Orc)
+    {
+        MaxHealth = 55.0f;
+        DetectionRadius = 900.0f;
+        AttackRange = 135.0f;
+        AttackDamage = 8.0f;
+        AttackInterval = 1.25f;
+        MoveSpeed = 185.0f;
+    }
+    else if (EnemyType == EFellowshipEnemyType::UrukHai)
     {
         MaxHealth = 85.0f;
         DetectionRadius = 1050.0f;
