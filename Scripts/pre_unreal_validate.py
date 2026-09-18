@@ -254,9 +254,9 @@ if missing_chapters:
 # Guardian regression PG-011: UE4.27 GetLightComponent returns a base pointer.
 # Direct assignment to a derived light component pointer fails real C++ compilation.
 shire_world_cpp = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
-if re.search(r'UDirectionalLightComponent\s*\*\s*\w+\s*=\s*[^;\n]*GetLightComponent\s*\(\s*\)', shire_world_cpp):
+if re.search(r'UDirectionalLightComponent\s*\*\s*\w+\s*=\s*\w+->GetLightComponent\s*\(\s*\)\s*;', shire_world_cpp):
     fail("PG-011: direct GetLightComponent assignment to UDirectionalLightComponent*; use Cast<>")
-if re.search(r'USkyLightComponent\s*\*\s*\w+\s*=\s*[^;\n]*GetLightComponent\s*\(\s*\)', shire_world_cpp):
+if re.search(r'USkyLightComponent\s*\*\s*\w+\s*=\s*\w+->GetLightComponent\s*\(\s*\)\s*;', shire_world_cpp):
     fail("PG-011: direct GetLightComponent assignment to USkyLightComponent*; use Cast<>")
 
 chapter_refs: set[str] = set()
