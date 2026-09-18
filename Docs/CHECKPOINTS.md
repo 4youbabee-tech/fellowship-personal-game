@@ -402,6 +402,16 @@
 - Advanced `WorldCheckpointPlan.csv` runtime statuses from `PLANNED` to `FOUNDATION`; this records implementation only and does not claim PIE/device verification.
 - Added PG-037 to protect manual/automatic slot separation and reject checkpoint-plan/runtime drift.
 
+## CP38 — Ambient NPC-to-NPC Conversation Runtime
+- Upgraded the existing social-pause behavior into actual two-turn world-space text conversations for ambient residents near the player.
+- Added original role-specific lines for Shire villagers/party guests/field workers/ferry workers, Bree townspeople and Elven residents.
+- Added a world-space `SocialCaption` instead of reusing the main HUD, so ambient chatter does not overwrite objectives/story alerts.
+- Added a two-conversation near-player cap, 90-second same-pair cooldown and longer post-conversation social cooldown.
+- Bird, Courier and RoadWalker roles are explicitly excluded from social conversation.
+- Updated `NPCConversationPlan`, LW2 and the single Project Governor to `RUNTIME_PARTIAL`.
+- Named Fellowship banter, story-reactive named dialogue, voice/audio and persistent named-NPC conversation memory remain pending.
+- Added PG-038. No PIE/device/visual dialogue acceptance is claimed.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 

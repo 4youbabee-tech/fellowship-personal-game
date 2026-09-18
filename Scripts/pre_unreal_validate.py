@@ -776,6 +776,36 @@ knowledge_guard = bounded_dialogue.get("knowledge_guard", {})
 if knowledge_guard.get("default") != "DENY_UNLISTED" or knowledge_guard.get("cross_route_knowledge_default") != "DENY":
     fail("BoundedDialoguePlan knowledge guard must default-deny unlisted and cross-route knowledge")
 
+# PG-038: ambient NPC-to-NPC conversation runtime must stay bounded and near-player.
+ambient_conversation_cpp = read(SOURCE / "ShireAmbientNPC.cpp")
+ambient_conversation_h = read(SOURCE / "ShireAmbientNPC.h")
+for symbol in [
+    "SocialCaption",
+    "BeginSocialCaption",
+    "UpdateSocialCaption",
+    "ResolveAmbientConversationLine",
+    "NearbySocialActors >= 4",
+    "LastPartnerCooldownRemaining = 90.0f",
+    'RoutineRole == TEXT("Bird")',
+]:
+    if symbol not in ambient_conversation_cpp and symbol not in ambient_conversation_h:
+        fail(f"PG-038 ambient conversation invariant missing: {symbol}")
+
+for authored_line in [
+    "Have you seen the lanterns?",
+    "The field will not tend itself.",
+    "The road is busy tonight.",
+    "The wind changed beyond the trees.",
+]:
+    if authored_line not in ambient_conversation_cpp:
+        fail(f"PG-038 role-specific ambient line missing: {authored_line}")
+
+conversation_runtime = npc_conversation.get("runtime_implementation", {}) if npc_conversation else {}
+if conversation_runtime.get("status") != "RUNTIME_PARTIAL":
+    fail("PG-038 NPCConversationPlan runtime status must remain RUNTIME_PARTIAL until named/story dialogue is implemented")
+if "named Fellowship companion banter runtime" not in conversation_runtime.get("not_yet_implemented", []):
+    fail("PG-038 NPCConversationPlan must keep named Fellowship conversation gap explicit")
+
 approved_chapters = set(guard_rules.get("runtime_chapters", []))
 approved_routes = set(guard_rules.get("approved_routes", []))
 approved_canon_classes = set(guard_rules.get("canon_classes", []))

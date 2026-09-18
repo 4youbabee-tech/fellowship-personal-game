@@ -6,6 +6,7 @@
 
 class USceneComponent;
 class UStaticMeshComponent;
+class UTextRenderComponent;
 
 UCLASS()
 class SHIREJOURNEY_API AShireAmbientNPC : public AActor
@@ -92,6 +93,9 @@ private:
     UPROPERTY()
     UStaticMeshComponent* ActivityProp;
 
+    UPROPERTY()
+    UTextRenderComponent* SocialCaption;
+
     bool bHeadingToB = true;
     bool bObservingPlayer = false;
     float WaitRemaining = 0.0f;
@@ -104,17 +108,25 @@ private:
     float NoticeCooldownRemaining = 0.0f;
     float SocialCheckRemaining = 0.0f;
     float SocialRemaining = 0.0f;
+    float SocialCaptionDelay = 0.0f;
+    float SocialCaptionRemaining = 0.0f;
+    float LastPartnerCooldownRemaining = 0.0f;
     bool bSocializing = false;
+    FText PendingSocialCaption;
     float VisualTorsoBaseZ = 58.0f;
     float VisualHeadBaseZ = 101.0f;
     float VisualHairBaseZ = 109.0f;
     FName AppliedVisualRole = NAME_None;
     TWeakObjectPtr<APawn> ObservedPlayer;
     TWeakObjectPtr<AShireAmbientNPC> SocialPartner;
+    TWeakObjectPtr<AShireAmbientNPC> LastSocialPartner;
     FRandomStream Random;
 
     void ApplyVisualStyle();
     void UpdateWalkAnimation(float DeltaSeconds, bool bMoving);
     void UpdateAwareness(float DeltaSeconds);
     void UpdateSocialLife(float DeltaSeconds);
+    void UpdateSocialCaption(float DeltaSeconds);
+    void BeginSocialCaption(const FText& Text, float Delay, float Duration);
+    FText ResolveAmbientConversationLine(bool bResponse) const;
 };

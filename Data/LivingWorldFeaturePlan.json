@@ -103,17 +103,22 @@
         },
         {
           "id": "NPC-CONVERSATION-RUNTIME",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Turn-taking, gaze, subtitle/audio bridge."
+          "status": "RUNTIME_PARTIAL",
+          "evidence": [
+            "Source/ShireJourney/ShireAmbientNPC.cpp",
+            "Source/ShireJourney/ShireAmbientNPC.h",
+            "Data/NPCConversationPlan.json"
+          ],
+          "notes": "Ambient Shire/Bree/Elf residents now perform capped two-turn world-space text conversations. Named Fellowship/story-reactive dialogue runtime and audio remain pending."
         },
         {
           "id": "NPC-CONVERSATION-REPETITION",
-          "status": "PARTIAL",
+          "status": "RUNTIME_PARTIAL",
           "evidence": [
+            "Source/ShireJourney/ShireAmbientNPC.cpp",
             "Data/NPCConversationPlan.json"
           ],
-          "notes": "Cooldown/history/fallback policy is data-defined; runtime tracking pending."
+          "notes": "Runtime enforces a 90-second same-pair cooldown plus longer post-conversation cooldown; richer intent/line history remains pending."
         }
       ]
     },

@@ -288,5 +288,26 @@
     "priority",
     "max_exchange_turns",
     "fallback_to_silence"
-  ]
+  ],
+  "runtime_implementation": {
+    "status": "RUNTIME_PARTIAL",
+    "scope": "AMBIENT_ROLE_CONVERSATIONS",
+    "implementation": [
+      "two-turn world-space text captions near the player",
+      "role-specific original ambient lines for Shire/Bree/Elf residents",
+      "symmetric face-to-face social pause",
+      "maximum two simultaneous near-player conversations",
+      "90-second same-pair cooldown",
+      "18-28 second post-conversation social cooldown",
+      "Bird/Courier/RoadWalker roles excluded"
+    ],
+    "not_yet_implemented": [
+      "named Fellowship companion banter runtime",
+      "story/quest-reactive named-NPC conversation selection",
+      "audio/voice playback",
+      "persistent named-NPC conversation memory",
+      "full intent-history variation beyond pair cooldown"
+    ],
+    "proof_limit": "RUNTIME_PARTIAL means code exists and static/build validation may pass; it is not PIE/device/visual dialogue acceptance."
+  }
 }

@@ -1,6 +1,7 @@
 #include "ShireAmbientNPC.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/TextRenderComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "GameFramework/Pawn.h"
@@ -61,6 +62,14 @@ AShireAmbientNPC::AShireAmbientNPC()
     ActivityProp->SetupAttachment(Root);
     ActivityProp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     ActivityProp->SetVisibility(false);
+
+    SocialCaption = CreateDefaultSubobject<UTextRenderComponent>(TEXT("SocialCaption"));
+    SocialCaption->SetupAttachment(Root);
+    SocialCaption->SetRelativeLocation(FVector(0.0f, 0.0f, 145.0f));
+    SocialCaption->SetHorizontalAlignment(EHorizTextAligment::EHTA_Center);
+    SocialCaption->SetWorldSize(18.0f);
+    SocialCaption->SetTextRenderColor(FColor(235, 228, 205));
+    SocialCaption->SetVisibility(false);
 
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMesh(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
@@ -508,9 +517,123 @@ void AShireAmbientNPC::UpdateAwareness(float DeltaSeconds)
 }
 
 
+FText AShireAmbientNPC::ResolveAmbientConversationLine(bool bResponse) const
+{
+    if (RoutineRole == TEXT("PartyGuest"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("Nearly ready for the dancing.")
+            : TEXT("Have you seen the lanterns?"));
+    }
+    if (RoutineRole == TEXT("FieldWorker"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("Best finish before the weather turns.")
+            : TEXT("The field will not tend itself."));
+    }
+    if (RoutineRole == TEXT("FerryWorker"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("Then keep the rope tight.")
+            : TEXT("The water is running fast today."));
+    }
+    if (RoutineRole == TEXT("BreeTownsperson"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("Aye. Keep your purse close after dark.")
+            : TEXT("The road is busy tonight."));
+    }
+    if (RoutineRole == TEXT("Elf"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("The valley has heard it too.")
+            : TEXT("The wind changed beyond the trees."));
+    }
+    if (RoutineRole == TEXT("Villager"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("Aye. Plenty still to do.")
+            : TEXT("Fine weather for the lane."));
+    }
+
+    return FText::FromString(bResponse ? TEXT("And to you.") : TEXT("Good day."));
+}
+
+void AShireAmbientNPC::BeginSocialCaption(const FText& Text, float Delay, float Duration)
+{
+    PendingSocialCaption = Text;
+    SocialCaptionDelay = FMath::Max(0.0f, Delay);
+    SocialCaptionRemaining = FMath::Max(0.0f, Duration);
+    if (SocialCaption)
+    {
+        SocialCaption->SetVisibility(false);
+    }
+}
+
+void AShireAmbientNPC::UpdateSocialCaption(float DeltaSeconds)
+{
+    if (!SocialCaption)
+    {
+        return;
+    }
+
+    if (SocialCaptionDelay > 0.0f)
+    {
+        SocialCaptionDelay -= DeltaSeconds;
+        if (SocialCaptionDelay > 0.0f)
+        {
+            SocialCaption->SetVisibility(false);
+            return;
+        }
+
+        SocialCaption->SetText(PendingSocialCaption);
+    }
+
+    if (SocialCaptionRemaining <= 0.0f || PendingSocialCaption.IsEmpty())
+    {
+        SocialCaption->SetVisibility(false);
+        return;
+    }
+
+    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+    if (!PlayerPawn)
+    {
+        SocialCaption->SetVisibility(false);
+        return;
+    }
+
+    const float DistanceSq = FVector::DistSquared(
+        PlayerPawn->GetActorLocation(), GetActorLocation());
+    if (DistanceSq > FMath::Square(1200.0f))
+    {
+        SocialCaption->SetVisibility(false);
+        return;
+    }
+
+    SocialCaptionRemaining -= DeltaSeconds;
+    if (SocialCaptionRemaining <= 0.0f)
+    {
+        SocialCaption->SetVisibility(false);
+        PendingSocialCaption = FText::GetEmpty();
+        return;
+    }
+
+    SocialCaption->SetRelativeLocation(FVector(0.0f, 0.0f, VisualHeadBaseZ + 38.0f));
+    const FVector ToPlayer = PlayerPawn->GetActorLocation() - SocialCaption->GetComponentLocation();
+    if (!ToPlayer.IsNearlyZero())
+    {
+        SocialCaption->SetWorldRotation(FRotator(0.0f, ToPlayer.Rotation().Yaw + 180.0f, 0.0f));
+    }
+    SocialCaption->SetVisibility(true);
+}
+
 void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
 {
-    if (RoutineRole == TEXT("Courier") || RoutineRole == TEXT("RoadWalker"))
+    LastPartnerCooldownRemaining = FMath::Max(
+        0.0f, LastPartnerCooldownRemaining - DeltaSeconds);
+
+    if (RoutineRole == TEXT("Courier") || RoutineRole == TEXT("RoadWalker") ||
+        RoutineRole == TEXT("Bird"))
     {
         bSocializing = false;
         SocialPartner.Reset();
@@ -542,7 +665,7 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
         {
             bSocializing = false;
             SocialPartner.Reset();
-            SocialCheckRemaining = Random.FRandRange(6.0f, 11.0f);
+            SocialCheckRemaining = Random.FRandRange(18.0f, 28.0f);
             WaitRemaining = FMath::Max(WaitRemaining, Random.FRandRange(0.3f, 0.9f));
         }
         return;
@@ -563,6 +686,22 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
         return;
     }
 
+    int32 NearbySocialActors = 0;
+    for (TActorIterator<AShireAmbientNPC> It(GetWorld()); It; ++It)
+    {
+        const AShireAmbientNPC* Candidate = *It;
+        if (Candidate && Candidate->bSocializing &&
+            FVector::DistSquared2D(PlayerPawn->GetActorLocation(), Candidate->GetActorLocation()) <=
+                FMath::Square(1800.0f))
+        {
+            ++NearbySocialActors;
+        }
+    }
+    if (NearbySocialActors >= 4)
+    {
+        return;
+    }
+
     AShireAmbientNPC* BestPartner = nullptr;
     float BestDistanceSq = FMath::Square(240.0f);
 
@@ -574,7 +713,15 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
             continue;
         }
 
-        if (Candidate->RoutineRole == TEXT("Courier") || Candidate->RoutineRole == TEXT("RoadWalker"))
+        if ((LastSocialPartner.Get() == Candidate && LastPartnerCooldownRemaining > 0.0f) ||
+            (Candidate->LastSocialPartner.Get() == this && Candidate->LastPartnerCooldownRemaining > 0.0f))
+        {
+            continue;
+        }
+
+        if (Candidate->RoutineRole == TEXT("Courier") ||
+            Candidate->RoutineRole == TEXT("RoadWalker") ||
+            Candidate->RoutineRole == TEXT("Bird"))
         {
             continue;
         }
@@ -592,13 +739,31 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
     {
         bSocializing = true;
         SocialPartner = BestPartner;
-        SocialRemaining = Random.FRandRange(1.6f, 3.4f);
+        SocialRemaining = Random.FRandRange(3.0f, 4.2f);
+
+        BestPartner->bSocializing = true;
+        BestPartner->SocialPartner = this;
+        BestPartner->SocialRemaining = SocialRemaining;
+        BestPartner->SocialCheckRemaining = Random.FRandRange(18.0f, 28.0f);
+
+        LastSocialPartner = BestPartner;
+        LastPartnerCooldownRemaining = 90.0f;
+        BestPartner->LastSocialPartner = this;
+        BestPartner->LastPartnerCooldownRemaining = 90.0f;
+
+        BeginSocialCaption(ResolveAmbientConversationLine(false), 0.0f, 1.25f);
+        BestPartner->BeginSocialCaption(
+            BestPartner->ResolveAmbientConversationLine(true),
+            1.15f,
+            1.35f);
     }
 }
 
 void AShireAmbientNPC::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+
+    UpdateSocialCaption(DeltaSeconds);
 
     if (AppliedVisualRole != RoutineRole)
     {
