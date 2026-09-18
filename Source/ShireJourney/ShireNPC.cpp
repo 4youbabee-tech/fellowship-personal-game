@@ -312,14 +312,28 @@ void AShireNPC::ApplyPrototypeStyle()
     };
 
     const bool bGandalfVisual = Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase);
-    const bool bSamDedicated = Name.Equals(TEXT("Sam"), ESearchCase::IgnoreCase);
-    const bool bMerryDedicated = Name.Equals(TEXT("Merry"), ESearchCase::IgnoreCase);
-    const bool bPippinDedicated = Name.Equals(TEXT("Pippin"), ESearchCase::IgnoreCase);
-    const bool bAragornDedicated =
-        Name.Equals(TEXT("Aragorn"), ESearchCase::IgnoreCase) ||
-        Name.Equals(TEXT("Strider"), ESearchCase::IgnoreCase);
     const bool bHobbitVisual =
         !bWizard && !bHuman && !bElf && !Name.Equals(TEXT("Gimli"), ESearchCase::IgnoreCase);
+
+    FString DedicatedFolder;
+    if (Name.Equals(TEXT("Sam"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Sam");
+    else if (Name.Equals(TEXT("Merry"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Merry");
+    else if (Name.Equals(TEXT("Pippin"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Pippin");
+    else if (Name.Equals(TEXT("Aragorn"), ESearchCase::IgnoreCase) || Name.Equals(TEXT("Strider"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Aragorn");
+    else if (Name.Equals(TEXT("Bilbo"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Bilbo");
+    else if (Name.Equals(TEXT("Boromir"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Boromir");
+    else if (Name.Equals(TEXT("Legolas"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Legolas");
+    else if (Name.Equals(TEXT("Gimli"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Gimli");
+    else if (Name.Equals(TEXT("Arwen"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Arwen");
+    else if (Name.Equals(TEXT("Elrond"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Elrond");
+    else if (Name.Equals(TEXT("Haldir"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Haldir");
+    else if (Name.Equals(TEXT("Galadriel"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Galadriel");
+    else if (Name.Equals(TEXT("Saruman"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Saruman");
+    else if (Name.Equals(TEXT("Barliman Butterbur"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Butterbur");
+    else if (Name.Equals(TEXT("Gate Keeper"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("GateKeeper");
+    else if (Name.Equals(TEXT("Hamfast Gamgee"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Hamfast");
+    else if (Name.Equals(TEXT("Rosie Cotton"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("Rosie");
+    else if (Name.Equals(TEXT("Farmer Maggot"), ESearchCase::IgnoreCase)) DedicatedFolder = TEXT("FarmerMaggot");
 
     bool bProductionVisual = false;
     if (bGandalfVisual)
@@ -333,29 +347,47 @@ void AShireNPC::ApplyPrototypeStyle()
         TryMesh(PrototypeRightArm, TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Arm.SM_Gandalf_Arm"));
         TryMesh(PrototypeRightLeg, TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Leg.SM_Gandalf_Leg"));
     }
-    else if (bSamDedicated || bMerryDedicated || bPippinDedicated)
+    else if (!DedicatedFolder.IsEmpty())
     {
-        const TCHAR* CharacterFolder =
-            bSamDedicated ? TEXT("Sam") :
-            (bMerryDedicated ? TEXT("Merry") : TEXT("Pippin"));
         const FString TorsoPath = FString::Printf(
             TEXT("/Game/Production/Characters/%s/SM_%s_Torso.SM_%s_Torso"),
-            CharacterFolder, CharacterFolder, CharacterFolder);
+            *DedicatedFolder, *DedicatedFolder, *DedicatedFolder);
         const FString HeadPath = FString::Printf(
             TEXT("/Game/Production/Characters/%s/SM_%s_Head.SM_%s_Head"),
-            CharacterFolder, CharacterFolder, CharacterFolder);
+            *DedicatedFolder, *DedicatedFolder, *DedicatedFolder);
         const FString HairPath = FString::Printf(
             TEXT("/Game/Production/Characters/%s/SM_%s_Hair.SM_%s_Hair"),
-            CharacterFolder, CharacterFolder, CharacterFolder);
+            *DedicatedFolder, *DedicatedFolder, *DedicatedFolder);
+
+        const bool bDedicatedHobbit =
+            DedicatedFolder == TEXT("Sam") ||
+            DedicatedFolder == TEXT("Merry") ||
+            DedicatedFolder == TEXT("Pippin") ||
+            DedicatedFolder == TEXT("Bilbo") ||
+            DedicatedFolder == TEXT("Hamfast") ||
+            DedicatedFolder == TEXT("Rosie") ||
+            DedicatedFolder == TEXT("FarmerMaggot");
+        const bool bDedicatedDwarf = DedicatedFolder == TEXT("Gimli");
+
+        const TCHAR* ArmPath = bDedicatedHobbit
+            ? TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm")
+            : (bDedicatedDwarf
+                ? TEXT("/Game/Production/Characters/Common/SM_Dwarf_Arm.SM_Dwarf_Arm")
+                : TEXT("/Game/Production/Characters/Common/SM_Human_Arm.SM_Human_Arm"));
+        const TCHAR* LegPath = bDedicatedHobbit
+            ? TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg")
+            : (bDedicatedDwarf
+                ? TEXT("/Game/Production/Characters/Common/SM_Dwarf_Leg.SM_Dwarf_Leg")
+                : TEXT("/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg"));
 
         bProductionVisual =
             TryMesh(PrototypeTorso, *TorsoPath) &&
             TryMesh(PrototypeHead, *HeadPath) &&
             TryMesh(PrototypeHair, *HairPath) &&
-            TryMesh(PrototypeLeftArm, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm")) &&
-            TryMesh(PrototypeLeftLeg, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg"));
-        TryMesh(PrototypeRightArm, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm"));
-        TryMesh(PrototypeRightLeg, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg"));
+            TryMesh(PrototypeLeftArm, ArmPath) &&
+            TryMesh(PrototypeLeftLeg, LegPath);
+        TryMesh(PrototypeRightArm, ArmPath);
+        TryMesh(PrototypeRightLeg, LegPath);
     }
     else if (bHobbitVisual)
     {
@@ -389,17 +421,6 @@ void AShireNPC::ApplyPrototypeStyle()
         TryMesh(PrototypeRightArm, TEXT("/Game/Production/Characters/Common/SM_Dwarf_Arm.SM_Dwarf_Arm"));
         TryMesh(PrototypeRightLeg, TEXT("/Game/Production/Characters/Common/SM_Dwarf_Leg.SM_Dwarf_Leg"));
         TryMesh(PrototypeHair, TEXT("/Game/Production/Characters/Common/SM_Human_Hair.SM_Human_Hair"));
-    }
-    else if (bAragornDedicated)
-    {
-        bProductionVisual =
-            TryMesh(PrototypeTorso, TEXT("/Game/Production/Characters/Aragorn/SM_Aragorn_Torso.SM_Aragorn_Torso")) &&
-            TryMesh(PrototypeHead, TEXT("/Game/Production/Characters/Aragorn/SM_Aragorn_Head.SM_Aragorn_Head")) &&
-            TryMesh(PrototypeHair, TEXT("/Game/Production/Characters/Aragorn/SM_Aragorn_Hair.SM_Aragorn_Hair")) &&
-            TryMesh(PrototypeLeftArm, TEXT("/Game/Production/Characters/Common/SM_Human_Arm.SM_Human_Arm")) &&
-            TryMesh(PrototypeLeftLeg, TEXT("/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg"));
-        TryMesh(PrototypeRightArm, TEXT("/Game/Production/Characters/Common/SM_Human_Arm.SM_Human_Arm"));
-        TryMesh(PrototypeRightLeg, TEXT("/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg"));
     }
     else if (bHuman || bWizard)
     {

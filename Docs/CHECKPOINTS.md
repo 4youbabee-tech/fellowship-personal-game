@@ -474,6 +474,15 @@
 - Backend requirements are now IMPLEMENTED. They are not promoted to VALIDATED until Pre-Unreal, real UE4.27.2 build/import, PIE round trips and target-device checks pass.
 - Added PG-044.
 
+## CP45 — Full Named-Cast Dedicated Modular Identity + Dialogue Expansion
+- Added 42 original dedicated source meshes for 14 previously archetype-based named characters: Bilbo, Boromir, Legolas, Gimli, Arwen, Elrond, Haldir, Galadriel, Saruman, Barliman Butterbur, Gate Keeper, Hamfast Gamgee, Rosie Cotton and Farmer Maggot.
+- Combined with Frodo, Gandalf, Sam, Merry, Pippin and Aragorn/Strider, every named Part I cast entry now has a dedicated modular production identity path.
+- Reworked `AShireNPC` visual resolution so dedicated character folders are checked before generic Hobbit/Human/Elf/Dwarf fallback while shared limbs remain reusable where appropriate.
+- Promoted the entire named cast in `CharacterPopulationPlan` to `PRODUCTION_DEDICATED`.
+- Expanded bounded authored dialogue for Bilbo, Arwen, Elrond, Saruman, Hamfast, Rosie, Farmer Maggot, Butterbur, Gate Keeper, Haldir and Galadriel.
+- Existing CP44 memory/knowledge/canon/repetition/save constraints remain authoritative.
+- Added PG-045. This completes dedicated modular identity, not final skeletal/facial/cloth/hair/animation production.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 

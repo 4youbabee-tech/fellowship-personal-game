@@ -435,6 +435,69 @@ void UShireNPCContextSubsystem::BuildDialogueVariantLibrary()
     AddDialogueVariant(TEXT("NPC_GALADRIEL"), TEXT("STORY_REACTION"), TEXT("GALADRIEL_MEMORY_01"),
         TEXT("Memory can guide a choice, but it cannot make the choice for you."),
         TEXT("VO_Memory_Galadriel_01"), NAME_None, TEXT("PLAYER_INTERACTED"));
+
+    AddDialogueVariant(TEXT("NPC_BILBO"), TEXT("GREETING"), TEXT("BILBO_GREETING_01"),
+        TEXT("You have arrived at just the right moment, which usually means something unexpected is about to happen."),
+        TEXT("VO_Greeting_Bilbo_01"));
+    AddDialogueVariant(TEXT("NPC_BILBO"), TEXT("STORY_REACTION"), TEXT("BILBO_MEMORY_01"),
+        TEXT("Some journeys begin long before anyone is willing to admit they have started."),
+        TEXT("VO_Memory_Bilbo_01"), NAME_None, TEXT("PLAYER_INTERACTED"));
+
+    AddDialogueVariant(TEXT("NPC_ARWEN"), TEXT("GREETING"), TEXT("ARWEN_GREETING_01"),
+        TEXT("Rest while you can. The road ahead will ask more of you than the last one did."),
+        TEXT("VO_Greeting_Arwen_01"));
+    AddDialogueVariant(TEXT("NPC_ARWEN"), TEXT("STORY_REACTION"), TEXT("ARWEN_MEMORY_01"),
+        TEXT("What you remember can steady you, if you do not let fear choose what it means."),
+        TEXT("VO_Memory_Arwen_01"), NAME_None, TEXT("PLAYER_INTERACTED"));
+
+    AddDialogueVariant(TEXT("NPC_ELROND"), TEXT("GREETING"), TEXT("ELROND_GREETING_01"),
+        TEXT("There is safety here for a time, and work to be done before that time ends."),
+        TEXT("VO_Greeting_Elrond_01"));
+    AddDialogueVariant(TEXT("NPC_ELROND"), TEXT("STORY_REACTION"), TEXT("ELROND_MEMORY_01"),
+        TEXT("A decision gains weight when its consequences are understood and accepted."),
+        TEXT("VO_Memory_Elrond_01"), NAME_None, TEXT("PLAYER_INTERACTED"));
+
+    AddDialogueVariant(TEXT("NPC_SARUMAN"), TEXT("GREETING"), TEXT("SARUMAN_GREETING_01"),
+        TEXT("You mistake resistance for strength. It is often only delay wearing a proud face."),
+        TEXT("VO_Greeting_Saruman_01"));
+    AddDialogueVariant(TEXT("NPC_SARUMAN"), TEXT("STORY_REACTION"), TEXT("SARUMAN_MEMORY_01"),
+        TEXT("Past choices are useful only to those willing to turn them into leverage."),
+        TEXT("VO_Memory_Saruman_01"), NAME_None, TEXT("PLAYER_INTERACTED"));
+
+    AddDialogueVariant(TEXT("NPC_HAMFAST_GAMGEE"), TEXT("GREETING"), TEXT("HAMFAST_GREETING_01"),
+        TEXT("A garden tells you plenty, if you learn to notice what changed since yesterday."),
+        TEXT("VO_Greeting_Hamfast_01"));
+    AddDialogueVariant(TEXT("NPC_HAMFAST_GAMGEE"), TEXT("LOCAL_NEWS"), TEXT("HAMFAST_NEWS_01"),
+        TEXT("More folk are taking the lane today. I would keep an eye on who comes back."),
+        TEXT("VO_News_Hamfast_01"));
+
+    AddDialogueVariant(TEXT("NPC_ROSIE_COTTON"), TEXT("GREETING"), TEXT("ROSIE_GREETING_01"),
+        TEXT("If you are staying, make yourself useful. If you are leaving, at least eat first."),
+        TEXT("VO_Greeting_Rosie_01"));
+    AddDialogueVariant(TEXT("NPC_ROSIE_COTTON"), TEXT("LOCAL_NEWS"), TEXT("ROSIE_NEWS_01"),
+        TEXT("Everyone hears something different, but they all agree the roads feel busier."),
+        TEXT("VO_News_Rosie_01"));
+
+    AddDialogueVariant(TEXT("NPC_FARMER_MAGGOT"), TEXT("GREETING"), TEXT("MAGGOT_GREETING_01"),
+        TEXT("Keep to the path and leave the fields as you found them, and we will get along."),
+        TEXT("VO_Greeting_Maggot_01"));
+    AddDialogueVariant(TEXT("NPC_FARMER_MAGGOT"), TEXT("LOCAL_NEWS"), TEXT("MAGGOT_NEWS_01"),
+        TEXT("Strangers have passed nearby. Quiet ones. That usually worries me more than loud ones."),
+        TEXT("VO_News_Maggot_01"));
+
+    AddDialogueVariant(TEXT("NPC_BARLIMAN_BUTTERBUR"), TEXT("LOCAL_NEWS"), TEXT("BUTTERBUR_NEWS_01"),
+        TEXT("Half the room has a rumor and the other half has already improved it."),
+        TEXT("VO_News_Butterbur_01"));
+    AddDialogueVariant(TEXT("NPC_BREE_GATEKEEPER"), TEXT("DANGER_WARNING"), TEXT("GATEKEEPER_DANGER_01"),
+        TEXT("Inside the gate, now. Questions can wait until the road is quiet again."),
+        TEXT("VO_Danger_Gatekeeper_01"));
+
+    AddDialogueVariant(TEXT("NPC_HALDIR"), TEXT("DANGER_WARNING"), TEXT("HALDIR_DANGER_01"),
+        TEXT("Do not leave the marked way. The forest is already listening."),
+        TEXT("VO_Danger_Haldir_01"));
+    AddDialogueVariant(TEXT("NPC_GALADRIEL"), TEXT("GREETING"), TEXT("GALADRIEL_GREETING_01"),
+        TEXT("You have carried much farther than distance alone can measure."),
+        TEXT("VO_Greeting_Galadriel_01"));
 }
 
 FName UShireNPCContextSubsystem::ResolveCanonicalProfileId(FName IdAliasOrDisplayName) const

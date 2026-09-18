@@ -779,6 +779,48 @@ knowledge_guard = bounded_dialogue.get("knowledge_guard", {})
 if knowledge_guard.get("default") != "DENY_UNLISTED" or knowledge_guard.get("cross_route_knowledge_default") != "DENY":
     fail("BoundedDialoguePlan knowledge guard must default-deny unlisted and cross-route knowledge")
 
+# PG-045: every named Part I cast member must keep a dedicated modular visual identity.
+dedicated_named_assets = {
+    "Bilbo": ["SM_Bilbo_Torso.obj", "SM_Bilbo_Head.obj", "SM_Bilbo_Hair.obj"],
+    "Boromir": ["SM_Boromir_Torso.obj", "SM_Boromir_Head.obj", "SM_Boromir_Hair.obj"],
+    "Legolas": ["SM_Legolas_Torso.obj", "SM_Legolas_Head.obj", "SM_Legolas_Hair.obj"],
+    "Gimli": ["SM_Gimli_Torso.obj", "SM_Gimli_Head.obj", "SM_Gimli_Hair.obj"],
+    "Arwen": ["SM_Arwen_Torso.obj", "SM_Arwen_Head.obj", "SM_Arwen_Hair.obj"],
+    "Elrond": ["SM_Elrond_Torso.obj", "SM_Elrond_Head.obj", "SM_Elrond_Hair.obj"],
+    "Haldir": ["SM_Haldir_Torso.obj", "SM_Haldir_Head.obj", "SM_Haldir_Hair.obj"],
+    "Galadriel": ["SM_Galadriel_Torso.obj", "SM_Galadriel_Head.obj", "SM_Galadriel_Hair.obj"],
+    "Saruman": ["SM_Saruman_Torso.obj", "SM_Saruman_Head.obj", "SM_Saruman_Hair.obj"],
+    "Butterbur": ["SM_Butterbur_Torso.obj", "SM_Butterbur_Head.obj", "SM_Butterbur_Hair.obj"],
+    "GateKeeper": ["SM_GateKeeper_Torso.obj", "SM_GateKeeper_Head.obj", "SM_GateKeeper_Hair.obj"],
+    "Hamfast": ["SM_Hamfast_Torso.obj", "SM_Hamfast_Head.obj", "SM_Hamfast_Hair.obj"],
+    "Rosie": ["SM_Rosie_Torso.obj", "SM_Rosie_Head.obj", "SM_Rosie_Hair.obj"],
+    "FarmerMaggot": ["SM_FarmerMaggot_Torso.obj", "SM_FarmerMaggot_Head.obj", "SM_FarmerMaggot_Hair.obj"],
+}
+for folder_name, asset_names in dedicated_named_assets.items():
+    character_root = ROOT / "SourceAssets" / "Production" / "Characters" / folder_name
+    for asset_name in asset_names:
+        if not (character_root / asset_name).exists():
+            fail(f"PG-045 dedicated named character asset missing: {folder_name}/{asset_name}")
+
+named_visual_cpp = read(SOURCE / "ShireNPC.cpp")
+for folder_name in dedicated_named_assets:
+    if f'DedicatedFolder = TEXT("{folder_name}")' not in named_visual_cpp:
+        fail(f"PG-045 runtime dedicated-folder mapping missing: {folder_name}")
+
+character_plan_core = population_plan.get("core_cast", []) if population_plan else []
+for character in character_plan_core:
+    if character.get("visual_tier") != "PRODUCTION_DEDICATED":
+        fail(f"PG-045 named cast not promoted to PRODUCTION_DEDICATED: {character.get('id')}")
+
+dialogue_context_cpp = read(SOURCE / "ShireNPCContextSubsystem.cpp")
+for profile_id in [
+    "NPC_BILBO","NPC_ARWEN","NPC_ELROND","NPC_SARUMAN",
+    "NPC_HAMFAST_GAMGEE","NPC_ROSIE_COTTON","NPC_FARMER_MAGGOT",
+    "NPC_BARLIMAN_BUTTERBUR","NPC_BREE_GATEKEEPER","NPC_HALDIR","NPC_GALADRIEL"
+]:
+    if profile_id not in dialogue_context_cpp:
+        fail(f"PG-045 expanded named dialogue coverage missing: {profile_id}")
+
 # PG-044: backend hardening must keep NPC context, memory, dialogue and save contracts connected.
 backend_context_h = read(SOURCE / "ShireNPCContextSubsystem.h")
 backend_context_cpp = read(SOURCE / "ShireNPCContextSubsystem.cpp")
@@ -922,19 +964,21 @@ for character_name, asset_names in dedicated_characters.items():
 
 hero_visual_cpp = read(SOURCE / "ShireNPC.cpp")
 for symbol in [
-    "bSamDedicated",
-    "bMerryDedicated",
-    "bPippinDedicated",
-    "bAragornDedicated",
-    "CharacterFolder",
+    "DedicatedFolder",
+    'DedicatedFolder = TEXT("Sam")',
+    'DedicatedFolder = TEXT("Merry")',
+    'DedicatedFolder = TEXT("Pippin")',
+    'DedicatedFolder = TEXT("Aragorn")',
     '/Game/Production/Characters/%s/SM_%s_Torso.SM_%s_Torso',
-    "SM_Aragorn_Torso",
 ]:
     if symbol not in hero_visual_cpp:
         fail(f"PG-043 dedicated hero runtime reference missing: {symbol}")
 
 dedicated_pass = population_plan.get("dedicated_modular_character_pass", {}) if population_plan else {}
-if dedicated_pass.get("status") != "RUNTIME_IMPLEMENTED_PENDING_BUILD":
+if dedicated_pass.get("status") not in {
+    "RUNTIME_IMPLEMENTED_PENDING_BUILD",
+    "FULL_NAMED_CAST_RUNTIME_IMPLEMENTED_PENDING_BUILD",
+}:
     fail("PG-043 dedicated modular character pass must stay explicitly build-pending until UE validation")
 if "skeletal" not in str(dedicated_pass.get("proof_limit") or "").lower():
     fail("PG-043 dedicated character pass must preserve the skeletal/final-art proof boundary")
