@@ -28,7 +28,7 @@
     {
       "id": "SAM",
       "display_name": "Sam",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "COMPANION",
       "chapters": [
         "P1C01",
@@ -44,7 +44,7 @@
     {
       "id": "MERRY",
       "display_name": "Merry",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "COMPANION",
       "chapters": [
         "P1C01",
@@ -60,7 +60,7 @@
     {
       "id": "PIPPIN",
       "display_name": "Pippin",
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "COMPANION",
       "chapters": [
         "P1C01",
@@ -92,7 +92,7 @@
       "aliases": [
         "Strider"
       ],
-      "visual_tier": "PRODUCTION_ARCHETYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "runtime_role": "COMPANION",
       "chapters": [
         "P1C02",
@@ -488,5 +488,27 @@
     ],
     "source_root": "SourceAssets/Production/Characters/Common",
     "notes": "Original procedural project-owned meshes. Dedicated hero rigs, facial rigs, cloth and final animation remain future visual-production layers."
+  },
+  "dedicated_modular_character_pass": {
+    "status": "RUNTIME_IMPLEMENTED_PENDING_BUILD",
+    "dedicated_characters": [
+      "Sam",
+      "Merry",
+      "Pippin",
+      "Aragorn/Strider"
+    ],
+    "source_assets": [
+      "SourceAssets/Production/Characters/Sam",
+      "SourceAssets/Production/Characters/Merry",
+      "SourceAssets/Production/Characters/Pippin",
+      "SourceAssets/Production/Characters/Aragorn"
+    ],
+    "implementation": [
+      "unique torso/head/hair silhouettes per character",
+      "shared production limb archetypes where appropriate",
+      "existing character-specific cloak/gear identity preserved",
+      "Strider alias resolves to Aragorn dedicated visual"
+    ],
+    "proof_limit": "Dedicated modular production meshes provide visibly distinct character identity, but are not yet final skeletal rigs, facial rigs, cloth simulation, skin/hair shading or performance-captured animation."
   }
 }

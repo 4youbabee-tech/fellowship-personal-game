@@ -309,6 +309,12 @@ void AShireNPC::ApplyPrototypeStyle()
     };
 
     const bool bGandalfVisual = Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase);
+    const bool bSamDedicated = Name.Equals(TEXT("Sam"), ESearchCase::IgnoreCase);
+    const bool bMerryDedicated = Name.Equals(TEXT("Merry"), ESearchCase::IgnoreCase);
+    const bool bPippinDedicated = Name.Equals(TEXT("Pippin"), ESearchCase::IgnoreCase);
+    const bool bAragornDedicated =
+        Name.Equals(TEXT("Aragorn"), ESearchCase::IgnoreCase) ||
+        Name.Equals(TEXT("Strider"), ESearchCase::IgnoreCase);
     const bool bHobbitVisual =
         !bWizard && !bHuman && !bElf && !Name.Equals(TEXT("Gimli"), ESearchCase::IgnoreCase);
 
@@ -323,6 +329,30 @@ void AShireNPC::ApplyPrototypeStyle()
             TryMesh(PrototypeLeftLeg, TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Leg.SM_Gandalf_Leg"));
         TryMesh(PrototypeRightArm, TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Arm.SM_Gandalf_Arm"));
         TryMesh(PrototypeRightLeg, TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Leg.SM_Gandalf_Leg"));
+    }
+    else if (bSamDedicated || bMerryDedicated || bPippinDedicated)
+    {
+        const TCHAR* CharacterFolder =
+            bSamDedicated ? TEXT("Sam") :
+            (bMerryDedicated ? TEXT("Merry") : TEXT("Pippin"));
+        const FString TorsoPath = FString::Printf(
+            TEXT("/Game/Production/Characters/%s/SM_%s_Torso.SM_%s_Torso"),
+            CharacterFolder, CharacterFolder, CharacterFolder);
+        const FString HeadPath = FString::Printf(
+            TEXT("/Game/Production/Characters/%s/SM_%s_Head.SM_%s_Head"),
+            CharacterFolder, CharacterFolder, CharacterFolder);
+        const FString HairPath = FString::Printf(
+            TEXT("/Game/Production/Characters/%s/SM_%s_Hair.SM_%s_Hair"),
+            CharacterFolder, CharacterFolder, CharacterFolder);
+
+        bProductionVisual =
+            TryMesh(PrototypeTorso, *TorsoPath) &&
+            TryMesh(PrototypeHead, *HeadPath) &&
+            TryMesh(PrototypeHair, *HairPath) &&
+            TryMesh(PrototypeLeftArm, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm")) &&
+            TryMesh(PrototypeLeftLeg, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg"));
+        TryMesh(PrototypeRightArm, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm"));
+        TryMesh(PrototypeRightLeg, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg"));
     }
     else if (bHobbitVisual)
     {
@@ -356,6 +386,17 @@ void AShireNPC::ApplyPrototypeStyle()
         TryMesh(PrototypeRightArm, TEXT("/Game/Production/Characters/Common/SM_Dwarf_Arm.SM_Dwarf_Arm"));
         TryMesh(PrototypeRightLeg, TEXT("/Game/Production/Characters/Common/SM_Dwarf_Leg.SM_Dwarf_Leg"));
         TryMesh(PrototypeHair, TEXT("/Game/Production/Characters/Common/SM_Human_Hair.SM_Human_Hair"));
+    }
+    else if (bAragornDedicated)
+    {
+        bProductionVisual =
+            TryMesh(PrototypeTorso, TEXT("/Game/Production/Characters/Aragorn/SM_Aragorn_Torso.SM_Aragorn_Torso")) &&
+            TryMesh(PrototypeHead, TEXT("/Game/Production/Characters/Aragorn/SM_Aragorn_Head.SM_Aragorn_Head")) &&
+            TryMesh(PrototypeHair, TEXT("/Game/Production/Characters/Aragorn/SM_Aragorn_Hair.SM_Aragorn_Hair")) &&
+            TryMesh(PrototypeLeftArm, TEXT("/Game/Production/Characters/Common/SM_Human_Arm.SM_Human_Arm")) &&
+            TryMesh(PrototypeLeftLeg, TEXT("/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg"));
+        TryMesh(PrototypeRightArm, TEXT("/Game/Production/Characters/Common/SM_Human_Arm.SM_Human_Arm"));
+        TryMesh(PrototypeRightLeg, TEXT("/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg"));
     }
     else if (bHuman || bWizard)
     {
@@ -459,9 +500,10 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeCloak->SetVisibility(true);
         PrototypeCloakBase = FVector(-10.0f, 0.0f, -5.0f);
         PrototypeCloak->SetRelativeLocation(PrototypeCloakBase);
-        PrototypeCloak->SetRelativeScale3D(bMerry
-            ? FVector(0.12f, 0.34f, 0.42f)
-            : FVector(0.11f, 0.32f, 0.38f));
+        PrototypeCloak->SetRelativeScale3D(
+            bProductionCloakMesh
+                ? FVector(0.72f)
+                : (bMerry ? FVector(0.12f, 0.34f, 0.42f) : FVector(0.11f, 0.32f, 0.38f)));
         ApplyColor(PrototypeCloak, bMerry
             ? FLinearColor(0.26f, 0.20f, 0.08f)
             : FLinearColor(0.12f, 0.26f, 0.16f));

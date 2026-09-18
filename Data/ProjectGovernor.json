@@ -1322,7 +1322,7 @@
       "id": "WORK-CHAR-003",
       "title": "Distinct visual identity pass for the Part I core cast",
       "status": "ACTIVE",
-      "rationale": "Primary visual-production workstream: replace engine-primitives with production body/gear archetypes now, then dedicated hero rigs."
+      "rationale": "Sam, Merry, Pippin and Aragorn now have dedicated project-owned modular production meshes; remaining Fellowship heroes and final skeletal/facial/cloth/animation production continue next."
     },
     {
       "order": 3,
@@ -1398,13 +1398,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Visual-production-first Part I regional landmark rollout after Shire and Bree",
+    "reason": "Visual-production-first dedicated hero identity pass after CP42 regional rollout",
     "summary": [
-      "Added original production kits for Weathertop, Rivendell, Fellowship road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen.",
-      "Added 21 regional production meshes including ruins, pavilions, bridges, lanterns, camp gear, Moria architecture, talans, boats, Amon Hen ruins and monumental river sentinels.",
-      "FellowshipChapterWorldBuilder now loads and overlays production region landmarks by chapter while preserving all authored story/quest logic.",
-      "Production meshes preserve imported materials; engine primitives remain fallback/support geometry only.",
-      "Prototype world labels are hidden by default across P1C03-P1C08."
+      "Added 12 original dedicated character meshes for Sam, Merry, Pippin and Aragorn/Strider.",
+      "Each of the four now has a unique torso, head and hair silhouette rather than relying solely on a shared archetype.",
+      "Dedicated hero meshes are wired into ShireNPC with shared production limbs and existing identity gear preserved.",
+      "Strider and Aragorn resolve to the same dedicated Aragorn visual path.",
+      "Final skeletal rigs, facial animation, cloth, hair shading and bespoke locomotion remain future production layers."
     ]
   },
   "development_mode": {
