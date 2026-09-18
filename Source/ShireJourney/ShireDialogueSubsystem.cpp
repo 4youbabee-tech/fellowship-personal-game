@@ -145,6 +145,53 @@ void UShireDialogueSubsystem::BuildDialogueLibrary()
         { FText::FromString(TEXT("Frodo")), FText::FromString(TEXT("Do not let them take me.")), TEXT("VO_Frodo_Ford_01"), 3.2f }
     });
 
+    AddSequence(TEXT("Dlg_BilboReunion"), {
+        { FText::FromString(TEXT("Bilbo")), FText::FromString(TEXT("You look taller than when I left, though perhaps that is only what worry does to an old hobbit's eyes.")), TEXT("VO_Bilbo_Rivendell_01"), 5.4f },
+        { FText::FromString(TEXT("Frodo")), FText::FromString(TEXT("I thought finding you would make the road feel smaller.")), TEXT("VO_Frodo_RivendellBilbo_01"), 4.4f },
+        { FText::FromString(TEXT("Bilbo")), FText::FromString(TEXT("Roads rarely shrink after we understand where they lead.")), TEXT("VO_Bilbo_Rivendell_02"), 4.8f }
+    });
+
+    AddSequence(TEXT("Dlg_FellowshipCamp"), {
+        { FText::FromString(TEXT("Boromir")), FText::FromString(TEXT("Again. Keep your balance before you worry about striking hard.")), TEXT("VO_Boromir_Training_01"), 4.5f },
+        { FText::FromString(TEXT("Merry")), FText::FromString(TEXT("I was balanced perfectly until the sword arrived.")), TEXT("VO_Merry_Training_01"), 4.0f },
+        { FText::FromString(TEXT("Pippin")), FText::FromString(TEXT("Does surviving lunch count as training?")), TEXT("VO_Pippin_Training_01"), 3.6f }
+    });
+
+    AddSequence(TEXT("Dlg_CrebainWarning"), {
+        { FText::FromString(TEXT("Aragorn")), FText::FromString(TEXT("Down. Those birds are not moving like a wild flock.")), TEXT("VO_Aragorn_Crebain_01"), 4.2f },
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("Keep still until they pass. We have been noticed.")), TEXT("VO_Gandalf_Crebain_01"), 4.5f }
+    });
+
+    AddSequence(TEXT("Dlg_WatcherAttack"), {
+        { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("Inside! Leave the lake behind us.")), TEXT("VO_Gandalf_Watcher_01"), 3.4f },
+        { FText::FromString(TEXT("Aragorn")), FText::FromString(TEXT("Stay together. Do not let it pull anyone back to the water.")), TEXT("VO_Aragorn_Watcher_01"), 4.6f }
+    });
+
+    AddSequence(TEXT("Dlg_CaveTrollAttack"), {
+        { FText::FromString(TEXT("Boromir")), FText::FromString(TEXT("Keep it away from the hobbits. Make it turn.")), TEXT("VO_Boromir_Troll_01"), 4.2f },
+        { FText::FromString(TEXT("Gimli")), FText::FromString(TEXT("At last, something in here large enough to hit without searching for it.")), TEXT("VO_Gimli_Troll_01"), 4.9f }
+    });
+
+    AddSequence(TEXT("Dlg_LorienGrief"), {
+        { FText::FromString(TEXT("Aragorn")), FText::FromString(TEXT("We cannot pretend the mountain did not take something from us.")), TEXT("VO_Aragorn_LorienGrief_01"), 4.9f },
+        { FText::FromString(TEXT("Sam")), FText::FromString(TEXT("Then let us remember him before the road asks us to move again.")), TEXT("VO_Sam_LorienGrief_01"), 4.8f }
+    });
+
+    AddSequence(TEXT("Dlg_MirrorOriginal"), {
+        { FText::FromString(TEXT("Galadriel")), FText::FromString(TEXT("Water can show what is feared, what is possible, and what may never come to pass.")), TEXT("VO_Galadriel_Mirror_01"), 6.1f },
+        { FText::FromString(TEXT("Frodo")), FText::FromString(TEXT("Then I do not know which part frightens me most.")), TEXT("VO_Frodo_Mirror_01"), 4.2f }
+    });
+
+    AddSequence(TEXT("Dlg_BoromirPressure"), {
+        { FText::FromString(TEXT("Boromir")), FText::FromString(TEXT("Every mile south brings the danger closer to my people, and still we carry power we refuse to use.")), TEXT("VO_Boromir_Pressure_01"), 6.1f },
+        { FText::FromString(TEXT("Frodo")), FText::FromString(TEXT("The Ring does not offer help without taking something back.")), TEXT("VO_Frodo_Pressure_01"), 5.0f }
+    });
+
+    AddSequence(TEXT("Dlg_BoromirDefense"), {
+        { FText::FromString(TEXT("Boromir")), FText::FromString(TEXT("Merry! Pippin! Stay behind me and keep moving toward the river.")), TEXT("VO_Boromir_Defense_01"), 4.7f },
+        { FText::FromString(TEXT("Merry")), FText::FromString(TEXT("We are not leaving you to hold them alone.")), TEXT("VO_Merry_Defense_01"), 4.1f }
+    });
+
     AddSequence(TEXT("Dlg_RivendellAwakening"), {
         { FText::FromString(TEXT("Gandalf")), FText::FromString(TEXT("You are safe for the moment. Rest has done what the road could not.")), TEXT("VO_Gandalf_Rivendell_01"), 5.2f },
         { FText::FromString(TEXT("Frodo")), FText::FromString(TEXT("I thought I had lost all of you.")), TEXT("VO_Frodo_Rivendell_01"), 4.0f }

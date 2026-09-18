@@ -130,6 +130,8 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
 
     AddCue(TEXT("RivendellAwakening"), EShireStoryPresentationMode::Cinematic,
         TEXT("Cam_RivendellAwakening"), TEXT("Dlg_RivendellAwakening"), TEXT("Amb_RivendellWater"), TEXT("Mus_RivendellThemeOriginal"), TEXT("Sfx_SoftBirds"), 10.0f);
+    AddCue(TEXT("BilboReunion"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_BilboGarden"), TEXT("Dlg_BilboReunion"), TEXT("Amb_RivendellGarden"), TEXT("Mus_RivendellThemeOriginal"), NAME_None, 14.0f);
     AddCue(TEXT("CouncilBegins"), EShireStoryPresentationMode::Cinematic,
         TEXT("Cam_CouncilBegins"), TEXT("Dlg_CouncilOriginal"), TEXT("Amb_RivendellCourtyard"), TEXT("Mus_CouncilGravity"), NAME_None, 18.0f);
     AddCue(TEXT("FellowshipAssembled"), EShireStoryPresentationMode::Cinematic,
@@ -139,6 +141,10 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
 
     AddCue(TEXT("FellowshipMarch"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_FellowshipMarch"), TEXT("Dlg_FellowshipTravel"), TEXT("Amb_OpenCountry"), TEXT("Mus_SouthwardTravel"), NAME_None, 6.0f);
+    AddCue(TEXT("FellowshipCamp"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_FellowshipCamp"), TEXT("Dlg_FellowshipCamp"), TEXT("Amb_OpenCountryCamp"), TEXT("Mus_SouthwardTravel"), TEXT("Sfx_PracticeBlades"), 12.0f);
+    AddCue(TEXT("CrebainWarning"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_CrebainWarning"), TEXT("Dlg_CrebainWarning"), TEXT("Amb_OpenCountry"), TEXT("Mus_CaradhrasWarning"), TEXT("Sfx_WingsMass"), 9.0f);
     AddCue(TEXT("CaradhrasApproach"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_CaradhrasApproach"), NAME_None, TEXT("Amb_MountainWind"), TEXT("Mus_CaradhrasWarning"), TEXT("Sfx_DistantSnowFall"), 6.0f);
     AddCue(TEXT("CaradhrasStorm"), EShireStoryPresentationMode::Cinematic,
@@ -147,6 +153,8 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
         TEXT("Cam_MoriaLake"), TEXT("Dlg_MoriaGateSearch"), TEXT("Amb_StillWater"), TEXT("Mus_MoriaThreshold"), TEXT("Sfx_WaterLap"), 7.0f);
     AddCue(TEXT("MoriaDoorOpens"), EShireStoryPresentationMode::Cinematic,
         TEXT("Cam_MoriaDoorOpen"), TEXT("Dlg_MoriaDoorOriginal"), TEXT("Amb_MoriaEntrance"), TEXT("Mus_EnterMoria"), TEXT("Sfx_StoneDoor"), 10.0f);
+    AddCue(TEXT("WatcherAttack"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_WatcherAttack"), TEXT("Dlg_WatcherAttack"), TEXT("Amb_MoriaLakeThreat"), TEXT("Mus_MoriaThreshold"), TEXT("Sfx_WaterCrash"), 10.0f);
 
     AddCue(TEXT("MoriaEntry"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_MoriaEntry"), NAME_None, TEXT("Amb_MoriaDeep"), TEXT("Mus_MoriaLow"), TEXT("Sfx_DistantDrips"), 5.0f);
@@ -156,6 +164,8 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
         TEXT("Cam_BalinsTombReveal"), TEXT("Dlg_BalinTombOriginal"), TEXT("Amb_TombStillness"), TEXT("Mus_MoriaGrief"), NAME_None, 12.0f);
     AddCue(TEXT("MoriaAttack"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_MoriaAttackStart"), TEXT("Dlg_MoriaAttack"), TEXT("Amb_MoriaBattle"), TEXT("Mus_MoriaCombat"), TEXT("Sfx_DrumsDeep"), 8.0f);
+    AddCue(TEXT("CaveTrollAttack"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_CaveTrollAttack"), TEXT("Dlg_CaveTrollAttack"), TEXT("Amb_MoriaBattle"), TEXT("Mus_MoriaCombat"), TEXT("Sfx_TrollImpact"), 10.0f);
     AddCue(TEXT("BalrogApproach"), EShireStoryPresentationMode::Cinematic,
         TEXT("Cam_BalrogApproach"), TEXT("Dlg_BalrogApproach"), TEXT("Amb_MoriaFireDeep"), TEXT("Mus_BalrogDread"), TEXT("Sfx_BalrogRoar"), 12.0f);
     AddCue(TEXT("BridgeConfrontation"), EShireStoryPresentationMode::Cinematic,
@@ -165,6 +175,10 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
 
     AddCue(TEXT("LorienEntry"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_LorienEntry"), TEXT("Dlg_LorienFirstContact"), TEXT("Amb_LorienForest"), TEXT("Mus_LorienMysteryOriginal"), TEXT("Sfx_ForestChimes"), 8.0f);
+    AddCue(TEXT("LorienGrief"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_LorienGrief"), TEXT("Dlg_LorienGrief"), TEXT("Amb_LorienForest"), TEXT("Mus_GriefAfterMoria"), NAME_None, 10.0f);
+    AddCue(TEXT("Mirror"), EShireStoryPresentationMode::Cinematic,
+        TEXT("Cam_Mirror"), TEXT("Dlg_MirrorOriginal"), TEXT("Amb_MirrorGlade"), TEXT("Mus_LorienMysteryOriginal"), TEXT("Sfx_MirrorWater"), 12.0f);
     AddCue(TEXT("LorienFarewell"), EShireStoryPresentationMode::Cinematic,
         TEXT("Cam_LorienFarewell"), TEXT("Dlg_LorienGiftsOriginal"), TEXT("Amb_LorienRiver"), TEXT("Mus_LorienFarewellOriginal"), NAME_None, 14.0f);
     AddCue(TEXT("LorienDeparture"), EShireStoryPresentationMode::GameplayBlend,
@@ -176,8 +190,12 @@ void UShireStoryPresentationSubsystem::BuildCueLibrary()
         TEXT("Cam_ArgonathReveal"), TEXT("Dlg_ArgonathReaction"), TEXT("Amb_AnduinCliffs"), TEXT("Mus_ArgonathAweOriginal"), NAME_None, 12.0f);
     AddCue(TEXT("AmonHenArrival"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_AmonHenArrival"), TEXT("Dlg_ParthGalenCamp"), TEXT("Amb_ParthGalen"), TEXT("Mus_AmonHenUnease"), NAME_None, 6.0f);
+    AddCue(TEXT("BoromirPressure"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_BoromirPressure"), TEXT("Dlg_BoromirPressure"), TEXT("Amb_AmonHenForest"), TEXT("Mus_AmonHenUnease"), TEXT("Sfx_RingLowPulse"), 12.0f);
     AddCue(TEXT("UrukAttack"), EShireStoryPresentationMode::GameplayBlend,
         TEXT("Cam_UrukAttack"), TEXT("Dlg_UrukAttack"), TEXT("Amb_AmonHenBattle"), TEXT("Mus_AmonHenCombat"), TEXT("Sfx_UrukHorns"), 8.0f);
+    AddCue(TEXT("BoromirDefense"), EShireStoryPresentationMode::GameplayBlend,
+        TEXT("Cam_BoromirDefense"), TEXT("Dlg_BoromirDefense"), TEXT("Amb_AmonHenBattle"), TEXT("Mus_AmonHenCombat"), TEXT("Sfx_BattleShouts"), 12.0f);
     AddCue(TEXT("BoromirFall"), EShireStoryPresentationMode::Cinematic,
         TEXT("Cam_BoromirFall"), TEXT("Dlg_BoromirFinalOriginal"), TEXT("Amb_BattleFades"), TEXT("Mus_BoromirFarewellOriginal"), NAME_None, 16.0f);
     AddCue(TEXT("FrodoSamDeparture"), EShireStoryPresentationMode::Cinematic,

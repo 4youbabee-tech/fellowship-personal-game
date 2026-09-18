@@ -275,27 +275,45 @@ void AFellowshipChapterWorldBuilder::BuildWeathertop()
 
 void AFellowshipChapterWorldBuilder::BuildRivendell()
 {
-    SpawnShape(CubeMesh, FVector(0, 0, -80), FVector(34, 26, 0.8f), FLinearColor(0.12f, 0.22f, 0.14f));
+    SpawnShape(CubeMesh, FVector(0, 0, -80), FVector(38, 30, 0.8f), FLinearColor(0.12f, 0.22f, 0.14f));
 
-    // Valley terraces and water.
-    SpawnShape(CubeMesh, FVector(0, 720, -20), FVector(30, 2.0f, 0.2f), FLinearColor(0.06f, 0.28f, 0.42f), FRotator::ZeroRotator, false);
-    for (int32 I = 0; I < 10; ++I)
+    // Valley terraces, water and layered gardens.
+    SpawnShape(CubeMesh, FVector(0, 720, -20), FVector(34, 2.0f, 0.2f), FLinearColor(0.06f, 0.28f, 0.42f), FRotator::ZeroRotator, false);
+    for (int32 I = 0; I < 14; ++I)
     {
-        SpawnTree(FVector(-1900.0f + I * 420.0f, (I % 2 == 0 ? 620.0f : -620.0f), 0.0f), 0.9f);
+        SpawnTree(FVector(-2200.0f + (I % 7) * 700.0f, (I < 7 ? -760.0f : 760.0f), 0.0f), 0.88f + 0.06f * (I % 3));
     }
 
-    // Elven house terraces / bridges.
-    SpawnShape(CubeMesh, FVector(-650, 0, 95), FVector(3.8f, 2.8f, 0.95f), FLinearColor(0.62f, 0.55f, 0.42f));
-    SpawnShape(ConeMesh, FVector(-650, 0, 240), FVector(4.2f, 3.2f, 0.65f), FLinearColor(0.32f, 0.24f, 0.16f), FRotator::ZeroRotator, false);
-    SpawnShape(CubeMesh, FVector(450, 0, 25), FVector(4.0f, 0.45f, 0.18f), FLinearColor(0.48f, 0.42f, 0.32f));
-    SpawnShape(CylinderMesh, FVector(1250, 0, 35), FVector(3.0f, 3.0f, 0.35f), FLinearColor(0.56f, 0.52f, 0.44f));
+    // House of Elrond, bridges and council terrace.
+    SpawnShape(CubeMesh, FVector(-650, 0, 95), FVector(4.2f, 3.2f, 0.95f), FLinearColor(0.62f, 0.55f, 0.42f));
+    SpawnShape(ConeMesh, FVector(-650, 0, 240), FVector(4.6f, 3.6f, 0.65f), FLinearColor(0.32f, 0.24f, 0.16f), FRotator::ZeroRotator, false);
+    SpawnShape(CubeMesh, FVector(450, 0, 25), FVector(4.5f, 0.45f, 0.18f), FLinearColor(0.48f, 0.42f, 0.32f));
+    SpawnShape(CylinderMesh, FVector(1250, 0, 35), FVector(3.2f, 3.2f, 0.35f), FLinearColor(0.56f, 0.52f, 0.44f));
+    SpawnShape(CubeMesh, FVector(-1450, 380, 35), FVector(2.3f, 1.6f, 0.35f), FLinearColor(0.48f, 0.40f, 0.30f));
+    SpawnShape(CylinderMesh, FVector(-1550, 470, 170), FVector(0.35f, 0.35f, 1.7f), FLinearColor(0.26f, 0.17f, 0.10f));
     SpawnLabel(TEXT("Rivendell"), FVector(-650, 0, 420), FLinearColor(0.92f, 0.88f, 0.72f));
     SpawnLabel(TEXT("Council Terrace"), FVector(1250, 0, 220), FLinearColor::White);
+    SpawnLabel(TEXT("Bilbo's Garden"), FVector(-1450, 380, 240), FLinearColor(0.86f, 0.83f, 0.68f));
 
     SpawnQuestTrigger(FVector(-1850, 0, 90), TEXT("RivendellRecovery"), 0, 1,
         TEXT("Frodo wakes in safety. Explore the valley and find Gandalf."), TEXT("RivendellAwakening"));
     SpawnNPC(TEXT("Gandalf"), FVector(-820, -180, 70), FRotator(0, 120, 0), TEXT("RivendellRecovery"), 1, 2,
         TEXT("You are safe for the moment, but the Ring cannot remain here forever."), TEXT("CouncilOfElrond"), 0);
+
+    // Optional social space before the Council.
+    SpawnNPC(TEXT("Bilbo"), FVector(-1450, 320, 70), FRotator(0, 40, 0), NAME_None, 0, -1,
+        TEXT("Rivendell is kind to old bones, but memory travels farther than any road."));
+    SpawnQuestTrigger(FVector(-1360, 360, 90), NAME_None, 0, -1,
+        TEXT("Bilbo has found a quiet corner of Rivendell, but the journey still weighs on him."), TEXT("BilboReunion"));
+
+    SpawnNPC(TEXT("Boromir"), FVector(700, -330, 70), FRotator(0, 80, 0), NAME_None, 0, -1,
+        TEXT("Gondor has stood beneath the shadow for years. I did not come here for riddles."));
+    SpawnNPC(TEXT("Legolas"), FVector(820, 300, 70), FRotator(0, 220, 0), NAME_None, 0, -1,
+        TEXT("The valley is peaceful, but news from the wider world does not stop at its borders."));
+    SpawnNPC(TEXT("Gimli"), FVector(520, 420, 70), FRotator(0, 210, 0), NAME_None, 0, -1,
+        TEXT("Fair place. Too many stairs. I will decide which matters more after supper."));
+    SpawnNPC(TEXT("Aragorn"), FVector(-260, -420, 70), FRotator(0, 30, 0), NAME_None, 0, -1,
+        TEXT("There are roads here I have known since youth. None of them make the next choice easier."));
 
     SpawnQuestTrigger(FVector(1050, 0, 90), TEXT("CouncilOfElrond"), 0, 1,
         TEXT("Representatives gather. The fate of the Ring will be decided here."), TEXT("CouncilBegins"));
@@ -303,7 +321,7 @@ void AFellowshipChapterWorldBuilder::BuildRivendell()
         TEXT("The Ring must be carried beyond the reach of those who would claim it."), TEXT("FellowshipForms"), 0);
 
     SpawnQuestTrigger(FVector(1490, -120, 90), TEXT("FellowshipForms"), 0, 1,
-        TEXT("Nine companions stand together. Prepare to leave the valley."), TEXT("FellowshipAssembled"));
+        TEXT("Nine companions stand together. Meet them before the road south."), TEXT("FellowshipAssembled"));
     SpawnNPC(TEXT("Aragorn"), FVector(1720, 80, 70), FRotator(0, 200, 0), TEXT("FellowshipForms"), 1, 2,
         TEXT("We leave with the first clear light. Keep only what you can carry."));
     SpawnQuestTrigger(FVector(2300, 0, 90), TEXT("FellowshipForms"), 2, 2,
@@ -313,27 +331,43 @@ void AFellowshipChapterWorldBuilder::BuildRivendell()
 
 void AFellowshipChapterWorldBuilder::BuildFellowshipRoad()
 {
-    SpawnShape(CubeMesh, FVector(0, 0, -75), FVector(42, 25, 0.75f), FLinearColor(0.19f, 0.20f, 0.17f));
+    SpawnShape(CubeMesh, FVector(0, 0, -75), FVector(46, 28, 0.75f), FLinearColor(0.19f, 0.20f, 0.17f));
 
-    for (int32 I = 0; I < 12; ++I)
+    for (int32 I = 0; I < 14; ++I)
     {
-        const float X = -2400.0f + I * 420.0f;
-        SpawnShape(CubeMesh, FVector(X, 0, 20 + FMath::Max(0, I - 4) * 25), FVector(2.5f, 0.9f, 0.12f),
-            I < 6 ? FLinearColor(0.28f, 0.25f, 0.18f) : FLinearColor(0.72f, 0.74f, 0.76f));
+        const float X = -2600.0f + I * 390.0f;
+        SpawnShape(CubeMesh, FVector(X, 0, 20 + FMath::Max(0, I - 6) * 22), FVector(2.4f, 0.9f, 0.12f),
+            I < 7 ? FLinearColor(0.28f, 0.25f, 0.18f) : FLinearColor(0.72f, 0.74f, 0.76f));
     }
 
-    // Caradhras wall.
+    // Fellowship camp / training clearing.
+    SpawnShape(CubeMesh, FVector(-1050, 420, 18), FVector(4.0f, 3.0f, 0.08f), FLinearColor(0.24f, 0.25f, 0.18f));
+    SpawnShape(CylinderMesh, FVector(-1050, 420, 42), FVector(0.24f, 0.24f, 0.08f), FLinearColor(0.45f, 0.20f, 0.06f), FRotator::ZeroRotator, false);
+    SpawnLabel(TEXT("Fellowship Camp"), FVector(-1050, 420, 220), FLinearColor(0.86f, 0.82f, 0.68f));
+
     SpawnShape(CubeMesh, FVector(500, 580, 470), FVector(12, 2.4f, 4.8f), FLinearColor(0.50f, 0.52f, 0.54f));
     SpawnLabel(TEXT("Caradhras"), FVector(500, 0, 620), FLinearColor::White);
 
-    // West-gate lake and door wall.
     SpawnShape(CubeMesh, FVector(2300, 0, -15), FVector(5.5f, 10.0f, 0.2f), FLinearColor(0.05f, 0.17f, 0.22f), FRotator::ZeroRotator, false);
     SpawnShape(CubeMesh, FVector(2920, 0, 320), FVector(1.1f, 7.0f, 3.2f), FLinearColor(0.20f, 0.22f, 0.22f));
     SpawnShape(CylinderMesh, FVector(2810, 0, 170), FVector(1.0f, 1.0f, 1.7f), FLinearColor(0.35f, 0.38f, 0.37f), FRotator(0, 90, 0));
     SpawnLabel(TEXT("West Gate of Moria"), FVector(2700, 0, 540), FLinearColor(0.78f, 0.82f, 0.80f));
 
-    SpawnQuestTrigger(FVector(-1850, 0, 90), TEXT("SouthwardJourney"), 0, 1,
+    SpawnQuestTrigger(FVector(-2050, 0, 90), TEXT("SouthwardJourney"), 0, 1,
         TEXT("Travel south with the Fellowship. Keep pace and watch the ridges."), TEXT("FellowshipMarch"));
+
+    SpawnQuestTrigger(FVector(-1150, 260, 90), TEXT("SouthwardJourney"), 1, 1,
+        TEXT("The company pauses. Boromir turns the stop into training for Merry and Pippin."), TEXT("FellowshipCamp"));
+    SpawnNPC(TEXT("Boromir"), FVector(-980, 500, 70), FRotator(0, 200, 0), TEXT("SouthwardJourney"), 1, -1,
+        TEXT("A sword is no help if your feet are in the wrong place. Again."));
+    SpawnNPC(TEXT("Merry"), FVector(-860, 390, 65), FRotator(0, 20, 0), TEXT("SouthwardJourney"), 1, -1,
+        TEXT("I am beginning to suspect he enjoys correcting us."));
+    SpawnNPC(TEXT("Pippin"), FVector(-830, 500, 65), FRotator(0, 20, 0), TEXT("SouthwardJourney"), 1, -1,
+        TEXT("I would learn faster if training came with second breakfast."));
+
+    SpawnQuestTrigger(FVector(-620, 0, 110), TEXT("SouthwardJourney"), 1, 1,
+        TEXT("Black birds cross the sky in an unnatural mass. Get the company under cover."), TEXT("CrebainWarning"));
+
     SpawnQuestTrigger(FVector(-250, 0, 120), TEXT("SouthwardJourney"), 1, 2,
         TEXT("The mountain pass rises ahead. Snow thickens underfoot."), TEXT("CaradhrasApproach"), TEXT("CaradhrasPass"), 0);
     SpawnQuestTrigger(FVector(700, 0, 250), TEXT("CaradhrasPass"), 0, 1,
@@ -345,81 +379,102 @@ void AFellowshipChapterWorldBuilder::BuildFellowshipRoad()
     SpawnNPC(TEXT("Gandalf"), FVector(2730, -160, 70), FRotator(0, 90, 0), TEXT("WestGate"), 1, 2,
         TEXT("The door will open, but the answer is simpler than our fear makes it."));
     SpawnQuestTrigger(FVector(3050, 0, 90), TEXT("WestGate"), 2, 2,
-        TEXT("The company passes beneath the mountain."), TEXT("MoriaDoorOpens"), NAME_None, 0,
+        TEXT("The company passes beneath the mountain as the lake erupts behind them."), TEXT("MoriaDoorOpens"), NAME_None, 0,
         TEXT("P1C06"), TEXT("MoriaDark"), 0);
 }
 
 void AFellowshipChapterWorldBuilder::BuildMoria()
 {
-    SpawnShape(CubeMesh, FVector(0, 0, -80), FVector(44, 22, 0.8f), FLinearColor(0.08f, 0.085f, 0.09f));
+    SpawnShape(CubeMesh, FVector(0, 0, -80), FVector(48, 24, 0.8f), FLinearColor(0.08f, 0.085f, 0.09f));
 
-    // Main halls.
+    // Collapsed entrance / lake-side threshold carried over from the West Gate.
+    SpawnShape(CubeMesh, FVector(-2350, 0, 40), FVector(3.0f, 3.0f, 0.20f), FLinearColor(0.18f, 0.19f, 0.19f));
+    SpawnShape(SphereMesh, FVector(-2250, 480, 90), FVector(1.6f, 0.30f, 0.26f), FLinearColor(0.10f, 0.18f, 0.16f), FRotator(0, 30, 0), false);
+    SpawnShape(SphereMesh, FVector(-2180, -470, 95), FVector(1.5f, 0.28f, 0.25f), FLinearColor(0.10f, 0.18f, 0.16f), FRotator(0, -25, 0), false);
+
     for (int32 I = 0; I < 12; ++I)
     {
-        SpawnShape(CubeMesh, FVector(-2400.0f + I * 430.0f, 0, 15), FVector(2.6f, 1.2f, 0.12f),
+        SpawnShape(CubeMesh, FVector(-1900.0f + I * 430.0f, 0, 15), FVector(2.6f, 1.2f, 0.12f),
             FLinearColor(0.17f, 0.17f, 0.18f));
     }
     for (int32 I = 0; I < 10; ++I)
     {
-        const float X = -1300.0f + I * 290.0f;
+        const float X = -1100.0f + I * 290.0f;
         SpawnShape(CylinderMesh, FVector(X, -520, 250), FVector(0.45f, 0.45f, 2.5f), FLinearColor(0.24f, 0.24f, 0.25f));
         SpawnShape(CylinderMesh, FVector(X, 520, 250), FVector(0.45f, 0.45f, 2.5f), FLinearColor(0.24f, 0.24f, 0.25f));
     }
 
-    // Balin's tomb chamber.
     SpawnShape(CubeMesh, FVector(450, 0, 20), FVector(4.0f, 3.5f, 0.15f), FLinearColor(0.19f, 0.19f, 0.20f));
     SpawnShape(CubeMesh, FVector(450, 0, 75), FVector(1.2f, 0.7f, 0.45f), FLinearColor(0.30f, 0.30f, 0.31f));
     SpawnLabel(TEXT("Balin's Tomb"), FVector(450, 0, 270), FLinearColor(0.75f, 0.76f, 0.78f));
 
-    // Bridge and chasm.
-    SpawnShape(CubeMesh, FVector(2350, 0, -35), FVector(7.0f, 9.0f, 0.15f), FLinearColor(0.02f, 0.02f, 0.025f), FRotator::ZeroRotator, false);
-    SpawnShape(CubeMesh, FVector(2350, 0, 40), FVector(5.6f, 0.38f, 0.12f), FLinearColor(0.27f, 0.26f, 0.24f));
-    SpawnLabel(TEXT("Bridge of Khazad-dum"), FVector(2350, 0, 300), FLinearColor(0.82f, 0.72f, 0.52f));
+    // Cave troll proxy silhouette in the chamber.
+    SpawnShape(CubeMesh, FVector(1050, 180, 150), FVector(0.75f, 0.65f, 1.5f), FLinearColor(0.20f, 0.22f, 0.18f), FRotator::ZeroRotator, false);
+    SpawnShape(SphereMesh, FVector(1050, 180, 315), FVector(0.52f), FLinearColor(0.18f, 0.20f, 0.16f), FRotator::ZeroRotator, false);
+    SpawnLabel(TEXT("Cave Troll Threat"), FVector(1050, 180, 440), FLinearColor(0.72f, 0.68f, 0.58f));
 
-    SpawnQuestTrigger(FVector(-1900, 0, 90), TEXT("MoriaDark"), 0, 1,
+    SpawnShape(CubeMesh, FVector(2450, 0, -35), FVector(7.0f, 9.0f, 0.15f), FLinearColor(0.02f, 0.02f, 0.025f), FRotator::ZeroRotator, false);
+    SpawnShape(CubeMesh, FVector(2450, 0, 40), FVector(5.6f, 0.38f, 0.12f), FLinearColor(0.27f, 0.26f, 0.24f));
+    SpawnLabel(TEXT("Bridge of Khazad-dum"), FVector(2450, 0, 300), FLinearColor(0.82f, 0.72f, 0.52f));
+
+    SpawnQuestTrigger(FVector(-2250, 0, 90), TEXT("MoriaDark"), 0, 1,
+        TEXT("Something from the lake strikes at the entrance. Get inside before the doors are lost."), TEXT("WatcherAttack"));
+    SpawnQuestTrigger(FVector(-1750, 0, 90), TEXT("MoriaDark"), 1, 2,
         TEXT("The doors close behind you. Follow Gandalf through the dark halls."), TEXT("MoriaEntry"));
-    SpawnQuestTrigger(FVector(-650, 0, 90), TEXT("MoriaDark"), 1, 2,
+    SpawnQuestTrigger(FVector(-650, 0, 90), TEXT("MoriaDark"), 2, 3,
         TEXT("The air changes. Evidence of battle lies ahead."), TEXT("MoriaUnease"), TEXT("BalinsTomb"), 0);
+
     SpawnQuestTrigger(FVector(250, 0, 90), TEXT("BalinsTomb"), 0, 1,
         TEXT("Enter the chamber and search for what happened here."), TEXT("BalinsTombReveal"));
     SpawnNPC(TEXT("Gimli"), FVector(520, -140, 70), FRotator(0, 170, 0), TEXT("BalinsTomb"), 1, 2,
         TEXT("This hall was meant to be a home. We cannot remain here now."));
-    SpawnQuestTrigger(FVector(900, 0, 90), TEXT("BalinsTomb"), 2, 2,
-        TEXT("Drums answer from the deep. Fight your way out of the chamber."), TEXT("MoriaAttack"), TEXT("BridgeOfKhazadDum"), 0);
-    SpawnQuestTrigger(FVector(1950, 0, 90), TEXT("BridgeOfKhazadDum"), 0, 1,
+    SpawnQuestTrigger(FVector(820, 0, 90), TEXT("BalinsTomb"), 2, 3,
+        TEXT("Drums answer from the deep. Orcs flood toward the chamber."), TEXT("MoriaAttack"));
+    SpawnQuestTrigger(FVector(1120, 0, 90), TEXT("BalinsTomb"), 3, 4,
+        TEXT("A cave troll smashes into the fight. Keep moving and protect the hobbits."), TEXT("CaveTrollAttack"), TEXT("BridgeOfKhazadDum"), 0);
+
+    SpawnQuestTrigger(FVector(2000, 0, 90), TEXT("BridgeOfKhazadDum"), 0, 1,
         TEXT("Run for the bridge. Something greater than the orcs is coming."), TEXT("BalrogApproach"));
-    SpawnQuestTrigger(FVector(2420, 0, 90), TEXT("BridgeOfKhazadDum"), 1, 2,
+    SpawnQuestTrigger(FVector(2520, 0, 90), TEXT("BridgeOfKhazadDum"), 1, 2,
         TEXT("Cross the bridge while Gandalf holds the passage."), TEXT("BridgeConfrontation"));
-    SpawnQuestTrigger(FVector(2900, 0, 90), TEXT("BridgeOfKhazadDum"), 2, 3,
+    SpawnQuestTrigger(FVector(3000, 0, 90), TEXT("BridgeOfKhazadDum"), 2, 3,
         TEXT("The Fellowship escapes the mountain, but Gandalf is gone."), TEXT("MoriaEscape"), NAME_None, 0,
         TEXT("P1C07"), TEXT("LothlorienRest"), 0);
 }
 
 void AFellowshipChapterWorldBuilder::BuildLothlorien()
 {
-    SpawnShape(CubeMesh, FVector(0, 0, -75), FVector(36, 26, 0.75f), FLinearColor(0.08f, 0.20f, 0.09f));
+    SpawnShape(CubeMesh, FVector(0, 0, -75), FVector(40, 30, 0.75f), FLinearColor(0.08f, 0.20f, 0.09f));
 
-    for (int32 I = 0; I < 16; ++I)
+    for (int32 I = 0; I < 20; ++I)
     {
-        const float X = -2100.0f + (I % 8) * 600.0f;
-        const float Y = (I < 8 ? -700.0f : 700.0f);
-        SpawnTree(FVector(X, Y, 0), 1.25f);
+        const float X = -2300.0f + (I % 10) * 520.0f;
+        const float Y = (I < 10 ? -760.0f : 760.0f);
+        SpawnTree(FVector(X, Y, 0), 1.15f + 0.08f * (I % 3));
     }
 
-    // Elevated flets / central glade.
     SpawnShape(CylinderMesh, FVector(250, 0, 260), FVector(4.2f, 4.2f, 0.22f), FLinearColor(0.38f, 0.33f, 0.18f));
     SpawnShape(CylinderMesh, FVector(250, 0, 135), FVector(0.8f, 0.8f, 2.6f), FLinearColor(0.20f, 0.12f, 0.05f));
-    SpawnLabel(TEXT("Caras Galadhon Prototype"), FVector(250, 0, 520), FLinearColor(0.88f, 0.82f, 0.52f));
+    SpawnLabel(TEXT("Caras Galadhon"), FVector(250, 0, 520), FLinearColor(0.88f, 0.82f, 0.52f));
 
-    // River departure area.
+    // Mirror glade.
+    SpawnShape(CylinderMesh, FVector(1000, 420, 55), FVector(0.70f, 0.70f, 0.14f), FLinearColor(0.36f, 0.38f, 0.31f));
+    SpawnShape(CylinderMesh, FVector(1000, 420, 95), FVector(0.52f, 0.52f, 0.05f), FLinearColor(0.08f, 0.24f, 0.32f), FRotator::ZeroRotator, false);
+    SpawnLabel(TEXT("Mirror Glade"), FVector(1000, 420, 260), FLinearColor(0.84f, 0.86f, 0.68f));
+
     SpawnShape(CubeMesh, FVector(2400, 0, -10), FVector(7.0f, 18.0f, 0.2f), FLinearColor(0.05f, 0.24f, 0.34f), FRotator::ZeroRotator, false);
 
+    SpawnQuestTrigger(FVector(-2200, 0, 90), TEXT("LothlorienRest"), 0, 0,
+        TEXT("No one speaks much after Moria. The forest receives the Fellowship in silence."), TEXT("LorienGrief"));
     SpawnQuestTrigger(FVector(-1850, 0, 90), TEXT("LothlorienRest"), 0, 1,
         TEXT("The woods close around the grieving Fellowship. Follow the hidden path."), TEXT("LorienEntry"));
     SpawnNPC(TEXT("Haldir"), FVector(-900, -120, 70), FRotator(0, 170, 0), TEXT("LothlorienRest"), 1, 2,
         TEXT("You may pass, but tread carefully. These woods do not welcome careless feet."));
     SpawnNPC(TEXT("Galadriel"), FVector(250, 120, 320), FRotator(0, 200, 0), TEXT("LothlorienRest"), 2, 3,
         TEXT("Rest while you can. Each of you will carry a different burden from this place."), TEXT("GaladrielFarewell"), 0);
+
+    SpawnQuestTrigger(FVector(950, 420, 90), TEXT("GaladrielFarewell"), 0, 0,
+        TEXT("Still water becomes a window into fear, possibility and choice."), TEXT("Mirror"));
     SpawnQuestTrigger(FVector(1450, 0, 90), TEXT("GaladrielFarewell"), 0, 1,
         TEXT("Gather the boats and supplies prepared for the journey south."), TEXT("LorienFarewell"));
     SpawnQuestTrigger(FVector(2250, 0, 90), TEXT("GaladrielFarewell"), 1, 2,
@@ -429,15 +484,13 @@ void AFellowshipChapterWorldBuilder::BuildLothlorien()
 
 void AFellowshipChapterWorldBuilder::BuildAnduinAmonHen()
 {
-    SpawnShape(CubeMesh, FVector(0, 0, -75), FVector(44, 28, 0.75f), FLinearColor(0.12f, 0.23f, 0.11f));
+    SpawnShape(CubeMesh, FVector(0, 0, -75), FVector(48, 32, 0.75f), FLinearColor(0.12f, 0.23f, 0.11f));
     SpawnShape(CubeMesh, FVector(-650, 0, -15), FVector(24.0f, 3.4f, 0.25f), FLinearColor(0.05f, 0.25f, 0.40f), FRotator::ZeroRotator, false);
 
-    // Argonath proxy statues.
     SpawnShape(CylinderMesh, FVector(-250, -520, 470), FVector(1.1f, 1.1f, 4.7f), FLinearColor(0.36f, 0.37f, 0.35f));
     SpawnShape(CylinderMesh, FVector(-250, 520, 470), FVector(1.1f, 1.1f, 4.7f), FLinearColor(0.36f, 0.37f, 0.35f));
     SpawnLabel(TEXT("Argonath Passage"), FVector(-250, 0, 720), FLinearColor(0.82f, 0.82f, 0.76f));
 
-    // Amon Hen hill / ruins.
     SpawnShape(CylinderMesh, FVector(1750, 0, 170), FVector(5.0f, 5.0f, 1.7f), FLinearColor(0.18f, 0.22f, 0.16f));
     for (int32 I = 0; I < 6; ++I)
     {
@@ -448,6 +501,12 @@ void AFellowshipChapterWorldBuilder::BuildAnduinAmonHen()
     }
     SpawnLabel(TEXT("Amon Hen"), FVector(1750, 0, 650), FLinearColor::White);
 
+    // Battle lanes for Boromir / Merry / Pippin defense.
+    for (int32 I = 0; I < 7; ++I)
+    {
+        SpawnTree(FVector(2050.0f + I * 190.0f, (I % 2 == 0 ? 520.0f : -520.0f), 0), 0.80f);
+    }
+
     SpawnQuestTrigger(FVector(-1900, 0, 90), TEXT("AnduinJourney"), 0, 1,
         TEXT("Travel down the Anduin and keep the boats together."), TEXT("AnduinDeparture"));
     SpawnQuestTrigger(FVector(-300, 0, 90), TEXT("AnduinJourney"), 1, 2,
@@ -457,14 +516,19 @@ void AFellowshipChapterWorldBuilder::BuildAnduinAmonHen()
 
     SpawnNPC(TEXT("Boromir"), FVector(1450, -180, 180), FRotator(0, 120, 0), TEXT("AmonHen"), 0, 1,
         TEXT("We are running out of roads that do not end in danger. I need a moment to think."));
+    SpawnQuestTrigger(FVector(1580, -80, 240), TEXT("AmonHen"), 1, 1,
+        TEXT("The Ring presses on Boromir's fear for Gondor. Frodo realizes he must choose alone."), TEXT("BoromirPressure"));
     SpawnQuestTrigger(FVector(1800, 0, 310), TEXT("AmonHen"), 1, 2,
         TEXT("The Fellowship scatters as enemies enter the woods."), TEXT("UrukAttack"), TEXT("BreakingFellowship"), 0);
+
     SpawnNPC(TEXT("Boromir"), FVector(2220, 260, 70), FRotator(0, 200, 0), TEXT("BreakingFellowship"), 0, 1,
         TEXT("Find the others. Do not let the enemy take the hobbits."));
-    SpawnQuestTrigger(FVector(2500, -220, 90), TEXT("BreakingFellowship"), 1, 2,
+    SpawnQuestTrigger(FVector(2350, 120, 90), TEXT("BreakingFellowship"), 1, 1,
+        TEXT("Boromir turns back toward Merry and Pippin and fights to protect them."), TEXT("BoromirDefense"));
+    SpawnQuestTrigger(FVector(2550, -220, 90), TEXT("BreakingFellowship"), 1, 2,
         TEXT("Merry and Pippin are taken while Aragorn turns to Boromir."), TEXT("BoromirFall"));
-    SpawnQuestTrigger(FVector(2750, 520, 90), TEXT("BreakingFellowship"), 2, 3,
+    SpawnQuestTrigger(FVector(2800, 520, 90), TEXT("BreakingFellowship"), 2, 3,
         TEXT("Frodo chooses the eastern shore. Sam refuses to let him go alone."), TEXT("FrodoSamDeparture"), TEXT("Part1Complete"), 0);
-    SpawnQuestTrigger(FVector(3150, 520, 90), TEXT("Part1Complete"), 0, 1,
+    SpawnQuestTrigger(FVector(3200, 520, 90), TEXT("Part1Complete"), 0, 1,
         TEXT("Part I complete: the Fellowship has broken, but the journey continues."), TEXT("Part1End"));
 }
