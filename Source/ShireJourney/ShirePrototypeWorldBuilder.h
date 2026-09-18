@@ -51,6 +51,18 @@ private:
     UPROPERTY() UStaticMesh* ProductionBenchMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionMillWheelMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionLanternMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCottageHouseMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionMillHouseMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionStoneBridgeMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionWellMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionMarketStallMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionStoneWallMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionFarmGateMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionHaystackMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionFlowerBoxMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionLampPostMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionPicnicTableMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionLoadedCartMesh = nullptr;
     UPROPERTY() UMaterialInterface* BasicMaterial;
 
     UPROPERTY() USceneComponent* RuntimeRoot;
@@ -80,6 +92,7 @@ private:
     void SpawnFoliagePass();
     void SpawnScenicDetailPass();
     void SpawnVillage();
+    void SpawnProductionVillageDetailLayer();
     void SpawnSideStories();
     void SpawnStoryActors();
     void ApplyStoryAtmosphere();
