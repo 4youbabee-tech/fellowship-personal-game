@@ -113,6 +113,25 @@ Planned NPC memory tiers:
 
 Ambient crowd NPCs should use cheaper aggregate memory to protect save size and CPU.
 
+## 3A. Part I NPC social data contract
+
+`Data/NPCSocialModel.json` is now the data-first contract for Part I NPC intelligence.
+
+It defines:
+- stable NPC identity IDs and aliases,
+- named versus ambient archetype profiles,
+- roles/community/temperament tags,
+- bounded knowledge tags,
+- low-cost schedule templates,
+- initial authored relationship edges,
+- persistence tiers,
+- story/danger override precedence.
+
+This is intentionally **not** the runtime AI implementation. The active functional hard gate still blocks a large behavior rollout.
+When runtime consumption is opened, the game should read this contract rather than hard-code a second identity/relationship model.
+
+The model uses aliases so one character identity (for example a story alias) cannot accidentally receive duplicate persistent memories.
+
 ## 4. Living-world target
 
 ### 4.1 Geography
