@@ -779,6 +779,39 @@ knowledge_guard = bounded_dialogue.get("knowledge_guard", {})
 if knowledge_guard.get("default") != "DENY_UNLISTED" or knowledge_guard.get("cross_route_knowledge_default") != "DENY":
     fail("BoundedDialoguePlan knowledge guard must default-deny unlisted and cross-route knowledge")
 
+# PG-043: dedicated hero identity meshes must remain distinct and runtime-wired.
+dedicated_characters = {
+    "Sam": ["SM_Sam_Torso.obj", "SM_Sam_Head.obj", "SM_Sam_Hair.obj"],
+    "Merry": ["SM_Merry_Torso.obj", "SM_Merry_Head.obj", "SM_Merry_Hair.obj"],
+    "Pippin": ["SM_Pippin_Torso.obj", "SM_Pippin_Head.obj", "SM_Pippin_Hair.obj"],
+    "Aragorn": ["SM_Aragorn_Torso.obj", "SM_Aragorn_Head.obj", "SM_Aragorn_Hair.obj"],
+}
+for character_name, asset_names in dedicated_characters.items():
+    character_root = ROOT / "SourceAssets" / "Production" / "Characters" / character_name
+    for asset_name in asset_names:
+        if not (character_root / asset_name).exists():
+            fail(f"PG-043 dedicated character asset missing: {character_name}/{asset_name}")
+
+hero_visual_cpp = read(SOURCE / "ShireNPC.cpp")
+for symbol in [
+    "bSamDedicated",
+    "bMerryDedicated",
+    "bPippinDedicated",
+    "bAragornDedicated",
+    "SM_Sam_Torso",
+    "SM_Merry_Torso",
+    "SM_Pippin_Torso",
+    "SM_Aragorn_Torso",
+]:
+    if symbol not in hero_visual_cpp:
+        fail(f"PG-043 dedicated hero runtime reference missing: {symbol}")
+
+dedicated_pass = population_plan.get("dedicated_modular_character_pass", {}) if population_plan else {}
+if dedicated_pass.get("status") != "RUNTIME_IMPLEMENTED_PENDING_BUILD":
+    fail("PG-043 dedicated modular character pass must stay explicitly build-pending until UE validation")
+if "skeletal" not in str(dedicated_pass.get("proof_limit") or "").lower():
+    fail("PG-043 dedicated character pass must preserve the skeletal/final-art proof boundary")
+
 # PG-042: Part I regional production overlays must stay source-controlled and story-safe.
 regional_assets = {
     "Weathertop": ["SM_WeathertopRuinedArch.obj", "SM_WeathertopBrokenPillar.obj", "SM_WeathertopCampRing.obj"],

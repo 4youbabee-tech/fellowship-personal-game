@@ -451,6 +451,15 @@
 - Prototype world-space debug labels are hidden by default throughout P1C03-P1C08.
 - Added PG-042. Final landscapes, interiors, skeletal character rigs, film-quality materials and PIE/device visual acceptance remain unfinished.
 
+## CP43 — Dedicated Sam, Merry, Pippin and Aragorn Visuals
+- Added 12 original dedicated production meshes: unique torso, head and hair for Sam, Merry, Pippin and Aragorn.
+- `AShireNPC` now resolves those four characters to their dedicated visual source before falling back to Hobbit/Human archetypes.
+- Strider and Aragorn share the same dedicated Aragorn visual path.
+- Existing production limbs, cloaks and character-specific props remain reusable so this pass adds identity without duplicating every mesh.
+- Merry/Pippin production cloaks now use production-aware scale instead of the old primitive-proxy scale.
+- CharacterPopulationPlan promotes Sam, Merry, Pippin and Aragorn to `PRODUCTION_DEDICATED`.
+- Added PG-043. These are dedicated modular static-mesh characters, not final skeletal/facial/cloth/animation production.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 

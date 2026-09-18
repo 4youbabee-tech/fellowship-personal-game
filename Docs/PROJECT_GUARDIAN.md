@@ -330,6 +330,15 @@ This converts failures into permanent project knowledge.
 
 **Guard:** Pre-Unreal Validation requires every regional production source asset, the chapter-aware loader/overlay, hidden prototype labels and all six chapter branches.
 
+### PG-043 — Dedicated heroes must not silently fall back to one shared visual identity
+**Risk:** named companions can remain technically present while looking interchangeable, undermining the production pass even when world art improves.
+
+**Contract:** Sam, Merry, Pippin and Aragorn/Strider each have dedicated project-owned torso/head/hair source meshes and runtime resolution before generic archetype fallback.
+
+**Reuse rule:** common limbs and gear may remain shared to control scope, but dedicated identity meshes and character-specific styling must remain distinct.
+
+**Proof rule:** dedicated modular meshes are production progress, not final skeletal rigs, facial animation, cloth/hair shading or animation acceptance.
+
 ## What Guardian must never do automatically
 
 - change canon,
