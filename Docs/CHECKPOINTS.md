@@ -293,6 +293,14 @@
 - Updated LW1 planning and the single Project Governor to record the data layer as PARTIAL while runtime scheduler/social-context consumption remains pending.
 - No runtime gameplay behavior changed; this was deliberately selected as remote-safe work while the F9/F8/chapter/device gate remains open.
 
+## CP30H — Self-Hosted Runner Network Resilience
+- Investigated Unreal Build Validation #14 and confirmed it failed before UE compilation because the Windows runner's Git fetch repeatedly suffered connection resets / early EOF / invalid pack data.
+- The failure path also hit GitHub artifact-storage quota, which was secondary noise rather than the primary build failure.
+- Replaced `actions/checkout` in the Unreal self-hosted workflow with exact-`GITHUB_SHA` GitHub API archive download using explicit retry/all-error handling.
+- Removed failure-path dependency on `actions/upload-artifact`; UE build/import logs remain printed in the workflow and available in the local self-hosted workspace.
+- Added PG-026 to prevent returning to the flaky acquisition/log-upload pattern.
+- This checkpoint changes CI infrastructure only. A new green self-hosted run is required before claiming the hardened path validated.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
