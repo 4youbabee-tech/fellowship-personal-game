@@ -208,14 +208,20 @@
         "player awareness/look-at",
         "running-sensitive notice behavior",
         "near-player NPC social pauses",
+        "proxy gaze/blink/mouth acting",
+        "Data/NPCSocialModel.json defines Part I NPC identities, roles, knowledge tags, schedule templates and initial relationships",
+        "walking/waiting routines",
+        "player awareness/look-at",
+        "running-sensitive notice behavior",
+        "near-player NPC social pauses",
         "proxy gaze/blink/mouth acting"
       ],
       "missing_work": [
-        "data-driven jobs/schedules",
-        "home/work/social anchors",
-        "relationship graph",
-        "danger/weather reactions",
-        "persistent named-NPC continuity beyond current story state"
+        "runtime consumption of NPC profile/schedule/relationship data",
+        "home/work/social anchor placement and scheduler behavior",
+        "danger/weather reaction runtime",
+        "persistent named-NPC memory beyond current story state",
+        "target-device behavior/performance validation"
       ],
       "acceptance_criteria": [
         "NPC behavior varies by role/location/story state",
@@ -1166,8 +1172,8 @@
       "order": 4,
       "id": "WORK-LW-001",
       "title": "Build living-world NPC identity/schedule/relationship data model",
-      "status": "PLANNED",
-      "rationale": "This is the foundation for deeper social behavior and memory."
+      "status": "PARTIAL",
+      "rationale": "The Part I data model now exists in Data/NPCSocialModel.json; runtime scheduler/relationship consumption remains pending and should wait behind the active functional gate."
     },
     {
       "order": 5,
@@ -1193,13 +1199,11 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Final pre-continuation audit after lost chat and single-governor consolidation",
+    "reason": "Remote-safe LW1 data foundation started while gameplay/device gate remains open",
     "summary": [
-      "Reconciled stale requirement states with current repository implementation.",
-      "Marked permanent repository memory and single Governor as implemented.",
-      "Marked Part I machine-readable film coverage as implemented.",
-      "Added explicit reminder requirement REQ-MEM-002.",
-      "Added ordered work_queue so the Governor acts as one pacing/controller authority."
+      "Added Part I NPC identity/schedule/relationship data contract.",
+      "No gameplay behavior changed.",
+      "Runtime NPC scheduler/social-context consumption remains blocked behind the active functional gate."
     ]
   }
 }
