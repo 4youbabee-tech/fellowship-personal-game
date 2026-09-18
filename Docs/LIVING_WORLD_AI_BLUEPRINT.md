@@ -104,6 +104,20 @@ Target behavior:
 
 Current source has social pauses but not a complete NPC-to-NPC dialogue system.
 
+### 3.5A Conversation selection contract
+
+`Data/NPCConversationPlan.json` defines the bounded data contract for ambient NPC-to-NPC conversations:
+- participant/profile eligibility,
+- intent categories,
+- story/knowledge gating,
+- story-critical and danger preemption,
+- active-conversation caps,
+- pair/intent cooldowns,
+- repetition history,
+- deterministic silent fallback.
+
+This does **not** mean NPC-to-NPC dialogue is running in gameplay. Runtime selection, turn-taking, subtitles/audio and gaze integration remain pending behind the active functional gate.
+
 ### 3.6 Memory
 Planned NPC memory tiers:
 - immediate memory: recent player/NPC encounter,
