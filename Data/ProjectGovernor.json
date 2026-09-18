@@ -617,7 +617,7 @@
       "title": "Player experience should minimize boredom frustration and unnecessary waiting",
       "category": "PlayerExperience",
       "priority": "HIGH",
-      "status": "PLANNED",
+      "status": "PARTIAL",
       "origin": "User explicitly said the final player should enjoy the game rather than struggle or get bored",
       "intent": "Review each region for objective clarity, travel rhythm, repetition, unnecessary waiting, empty stretches, frustrating blockers and reward for exploration.",
       "evidence": [
@@ -625,11 +625,12 @@
         "Data/ExperienceQualityGates.json"
       ],
       "implementation_refs": [
-        "PACING gate defined for every Part I region"
+        "PACING gate exists for every Part I region",
+        "Data/PlayerExperiencePacingPlan.json defines chapter-specific pacing focus/risk review criteria"
       ],
       "missing_work": [
         "Human pacing reviews chapter by chapter",
-        "Record findings and fixes",
+        "Record findings against actual build SHA/device profile",
         "Tune travel/combat/dialogue rhythm from play evidence"
       ],
       "acceptance_criteria": [
@@ -687,7 +688,7 @@
       "title": "Open-request reminder before new project work",
       "category": "ProjectGovernance",
       "priority": "HIGH",
-      "status": "PARTIAL",
+      "status": "IMPLEMENTED",
       "origin": "User explicitly asked the intelligent project manager to remind them of earlier requests because they may forget",
       "intent": "At the start of a work session or before opening a new major checkpoint, review the Governor and surface important unfinished prior requests so forgotten work is not silently abandoned.",
       "evidence": [
@@ -696,11 +697,11 @@
         "Docs/CURRENT_PROJECT_STATE.md"
       ],
       "implementation_refs": [
-        "Open requirements, active gate and missing work are stored centrally and can be reviewed on demand"
+        "ProjectGovernor stores stable open requirements, missing work, active gate and work queue",
+        "Scripts/project_governor.py prints a WORK REMINDER summary of the active gate and unfinished CRITICAL/HIGH requirements on every Pre-Unreal run"
       ],
       "missing_work": [
-        "No autonomous background notification exists; reminders currently happen when the project session/work review is opened",
-        "Add a standard work-start summary step to the handoff protocol"
+        "No autonomous background/phone notification exists; reminders occur when project validation/work review runs"
       ],
       "acceptance_criteria": [
         "Before a new major checkpoint, open CRITICAL/HIGH unfinished requirements are summarized",
@@ -713,7 +714,7 @@
         "REQ-GOV-001"
       ],
       "checkpoint": "GOVERNANCE_HARDENING",
-      "notes": "This is a project-work reminder, not an autonomous phone/background reminder."
+      "notes": "Project-session reminder behavior is implemented; background notifications would require a separate automation outside repository CI."
     }
   ],
   "hard_invariants": [
@@ -1122,7 +1123,8 @@
     "Data/NPCConversationPlan.json",
     "Data/NPCMemoryPlan.json",
     "Data/LivingWorldEventPlan.json",
-    "Data/BoundedDialoguePlan.json"
+    "Data/BoundedDialoguePlan.json",
+    "Data/PlayerExperiencePacingPlan.json"
   ],
   "update_protocol": [
     "Treat Data/ProjectGovernor.json as the first-read/last-write coordination record for any meaningful project change.",
