@@ -1050,5 +1050,18 @@
     "For implementation: update evidence/missing_work/status here only after repository evidence exists.",
     "For testing: update region_quality and active_gate only from actual static/compile/PIE/device/human evidence.",
     "If any reference file conflicts with this governor, reconcile that file to this governor in the same logical change."
+  ],
+  "deprecated_secondary_authority_files": [
+    "Data/ProjectRequirements.json",
+    "Data/ProjectGovernorPolicy.json",
+    "Data/ProjectDecisions.json",
+    "Data/ExperienceQualityGates.json"
+  ],
+  "worker_contract": [
+    "Workers may modify code/assets/plans only within the Governor's recorded direction.",
+    "Workers do not independently change global requirement priority, acceptance state, active gate, or conflict resolution.",
+    "Any global direction change must be recorded in this Governor in the same logical change.",
+    "A worker discovering a contradiction records it here rather than choosing silently.",
+    "No major feature starts while active_gate.blocks_major_feature_expansion is true."
   ]
 }
