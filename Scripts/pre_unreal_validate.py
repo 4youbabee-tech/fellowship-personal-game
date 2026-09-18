@@ -281,6 +281,15 @@ if "Task->Result.Num() > 0" not in production_import_cpp:
 if "LoadObject<UObject>(nullptr, *ExpectedObjectPath)" not in production_import_cpp:
     fail("Production importer must verify the expected imported object path")
 
+# PG-015: cmd.exe preserves the previous command's ERRORLEVEL. The self-hosted
+# runner's "editor is closed" probe uses tasklist/find, which leaves ERRORLEVEL=1
+# when no editor exists. The success branch must explicitly return 0 or Actions
+# reports a false failure and skips the actual UE build.
+unreal_ci = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+editor_probe_marker = "echo Unreal Editor is closed.\n          exit /b 0"
+if editor_probe_marker not in unreal_ci:
+    fail("PG-015: Unreal self-hosted editor-closed probe must explicitly exit /b 0")
+
 quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
 definitions = set(re.findall(r'AddQuestDefinition\s*\(\s*TEXT\("([^"]+)"\)', quest_cpp))
 if not definitions:

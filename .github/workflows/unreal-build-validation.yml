@@ -131,6 +131,7 @@ jobs:
             exit /b 40
           )
           echo Unreal Editor is closed.
+          exit /b 0
 
       - name: Build ShireJourneyEditor
         shell: cmd

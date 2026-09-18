@@ -114,6 +114,15 @@ This converts failures into permanent project knowledge.
 
 **Guard:** static validation requires the editor-tools module to remain `Type: Editor` with `LoadingPhase: Default`.
 
+### PG-015 — Windows cmd success branch must clear stale ERRORLEVEL
+**Observed failure:** Unreal Build Validation #3 reached the target machine, bootstrapped Git, checked out the exact commit, verified UE4.27.2, and correctly reported `Unreal Editor is closed.`, but the step still exited with code 1 and skipped the real build.
+
+**Root cause:** `tasklist | find` intentionally returns 1 when UE4Editor is absent. In `cmd.exe`, the following `echo` does not clear that stale ERRORLEVEL, so the otherwise-successful step inherited exit code 1.
+
+**Fix pattern:** after confirming the editor is closed, explicitly `exit /b 0`.
+
+**Guard:** static validation requires the self-hosted workflow's editor-closed success branch to explicitly return zero.
+
 ## What Guardian must never do automatically
 
 - change canon,
