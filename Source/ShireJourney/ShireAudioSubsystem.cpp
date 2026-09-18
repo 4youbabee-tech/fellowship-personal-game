@@ -1,8 +1,17 @@
 #include "ShireAudioSubsystem.h"
 
 #include "ShireDialogueSubsystem.h"
+#include "ShireNPC.h"
+#include "ShireQuestSubsystem.h"
 #include "ShireStoryPresentationSubsystem.h"
+
+#include "Components/AudioComponent.h"
 #include "Engine/GameInstance.h"
+#include "Engine/World.h"
+#include "GameFramework/Pawn.h"
+#include "GameFramework/PlayerController.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundBase.h"
 
 void UShireAudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -46,6 +55,14 @@ void UShireAudioSubsystem::Deinitialize()
         }
     }
 
+    if (ActiveVoiceComponent)
+    {
+        ActiveVoiceComponent->OnAudioFinished.RemoveDynamic(this, &UShireAudioSubsystem::HandleVoiceFinished);
+        ActiveVoiceComponent->Stop();
+        ActiveVoiceComponent = nullptr;
+    }
+    VoiceCache.Empty();
+
     ClearPersistentAudio();
     Super::Deinitialize();
 }
@@ -82,11 +99,163 @@ void UShireAudioSubsystem::PlaySfxCue(FName CueId)
     }
 }
 
+USoundBase* UShireAudioSubsystem::ResolveVoiceAsset(FName CueId)
+{
+    if (CueId == NAME_None)
+    {
+        return nullptr;
+    }
+
+    if (USoundBase** Cached = VoiceCache.Find(CueId))
+    {
+        return *Cached;
+    }
+
+    const FString Cue = CueId.ToString();
+    TArray<FString> Parts;
+    Cue.ParseIntoArray(Parts, TEXT("_"), true);
+    if (Parts.Num() < 2)
+    {
+        VoiceCache.Add(CueId, nullptr);
+        return nullptr;
+    }
+
+    const FString& Speaker = Parts[1];
+    const FString AssetPath = FString::Printf(
+        TEXT("/Game/Audio/Voice/%s/%s.%s"),
+        *Speaker,
+        *Cue,
+        *Cue);
+
+    USoundBase* Sound = LoadObject<USoundBase>(nullptr, *AssetPath);
+    VoiceCache.Add(CueId, Sound);
+    return Sound;
+}
+
+AActor* UShireAudioSubsystem::ResolveVoiceSpeakerActor(FName CueId) const
+{
+    if (!GetWorld() || CueId == NAME_None)
+    {
+        return nullptr;
+    }
+
+    const FString Cue = CueId.ToString();
+    TArray<FString> Parts;
+    Cue.ParseIntoArray(Parts, TEXT("_"), true);
+    if (Parts.Num() < 2)
+    {
+        return nullptr;
+    }
+
+    const FString Speaker = Parts[1];
+
+    APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
+    APawn* PlayerPawn = PC ? PC->GetPawn() : nullptr;
+
+    if (UGameInstance* GI = GetGameInstance())
+    {
+        if (const UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
+        {
+            if (PlayerPawn && Quests->GetPlayableCharacterId().ToString().Equals(Speaker, ESearchCase::IgnoreCase))
+            {
+                return PlayerPawn;
+            }
+        }
+    }
+
+    TArray<AActor*> NPCs;
+    UGameplayStatics::GetAllActorsOfClass(this, AShireNPC::StaticClass(), NPCs);
+
+    AActor* Best = nullptr;
+    float BestDistanceSq = TNumericLimits<float>::Max();
+    for (AActor* Actor : NPCs)
+    {
+        AShireNPC* NPC = Cast<AShireNPC>(Actor);
+        if (!NPC || !NPC->DisplayName.ToString().Equals(Speaker, ESearchCase::IgnoreCase))
+        {
+            continue;
+        }
+
+        const float DistanceSq = PlayerPawn
+            ? FVector::DistSquared(PlayerPawn->GetActorLocation(), NPC->GetActorLocation())
+            : 0.0f;
+
+        if (DistanceSq < BestDistanceSq)
+        {
+            BestDistanceSq = DistanceSq;
+            Best = NPC;
+        }
+    }
+
+    return Best;
+}
+
+void UShireAudioSubsystem::HandleVoiceFinished()
+{
+    if (ActiveVoiceComponent)
+    {
+        ActiveVoiceComponent->OnAudioFinished.RemoveDynamic(this, &UShireAudioSubsystem::HandleVoiceFinished);
+        ActiveVoiceComponent = nullptr;
+    }
+
+    OnVoicePlaybackStateChanged.Broadcast(false);
+}
+
 void UShireAudioSubsystem::PlayVoiceCue(FName CueId)
 {
-    if (CueId != NAME_None)
+    if (CueId == NAME_None)
     {
-        OnVoiceRequested.Broadcast(CueId);
+        return;
+    }
+
+    // Keep the logical event even when the actual SoundWave/SoundCue has not been authored yet.
+    // Dialogue subtitles therefore remain functional while production voice assets are filled in.
+    OnVoiceRequested.Broadcast(CueId);
+
+    USoundBase* Sound = ResolveVoiceAsset(CueId);
+    if (!Sound || !GetWorld())
+    {
+        return;
+    }
+
+    if (ActiveVoiceComponent)
+    {
+        ActiveVoiceComponent->OnAudioFinished.RemoveDynamic(this, &UShireAudioSubsystem::HandleVoiceFinished);
+        ActiveVoiceComponent->Stop();
+        ActiveVoiceComponent = nullptr;
+    }
+
+    if (AActor* SpeakerActor = ResolveVoiceSpeakerActor(CueId))
+    {
+        ActiveVoiceComponent = UGameplayStatics::SpawnSoundAtLocation(
+            this,
+            Sound,
+            SpeakerActor->GetActorLocation(),
+            SpeakerActor->GetActorRotation(),
+            1.0f,
+            1.0f,
+            0.0f,
+            nullptr,
+            nullptr,
+            true);
+    }
+    else
+    {
+        ActiveVoiceComponent = UGameplayStatics::SpawnSound2D(
+            this,
+            Sound,
+            1.0f,
+            1.0f,
+            0.0f,
+            nullptr,
+            false,
+            true);
+    }
+
+    if (ActiveVoiceComponent)
+    {
+        ActiveVoiceComponent->OnAudioFinished.AddDynamic(this, &UShireAudioSubsystem::HandleVoiceFinished);
+        OnVoicePlaybackStateChanged.Broadcast(true);
     }
 }
 

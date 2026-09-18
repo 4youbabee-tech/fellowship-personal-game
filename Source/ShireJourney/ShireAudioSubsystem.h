@@ -4,8 +4,12 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "ShireAudioSubsystem.generated.h"
 
+class UAudioComponent;
+class USoundBase;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnShireAudioCueChanged, FName, PreviousCue, FName, NewCue);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShireOneShotAudioRequested, FName, CueId);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnShireVoicePlaybackStateChanged, bool, bSpeaking);
 
 UCLASS()
 class SHIREJOURNEY_API UShireAudioSubsystem : public UGameInstanceSubsystem
@@ -27,6 +31,9 @@ public:
 
     UPROPERTY(BlueprintAssignable, Category="Audio")
     FOnShireOneShotAudioRequested OnVoiceRequested;
+
+    UPROPERTY(BlueprintAssignable, Category="Audio")
+    FOnShireVoicePlaybackStateChanged OnVoicePlaybackStateChanged;
 
     UFUNCTION(BlueprintCallable, Category="Audio")
     void SetAmbienceCue(FName CueId);
@@ -55,6 +62,18 @@ private:
 
     UPROPERTY()
     FName ActiveMusicCue = NAME_None;
+
+    UPROPERTY(Transient)
+    UAudioComponent* ActiveVoiceComponent = nullptr;
+
+    UPROPERTY(Transient)
+    TMap<FName, USoundBase*> VoiceCache;
+
+    USoundBase* ResolveVoiceAsset(FName CueId);
+    AActor* ResolveVoiceSpeakerActor(FName CueId) const;
+
+    UFUNCTION()
+    void HandleVoiceFinished();
 
     UFUNCTION()
     void HandleAmbienceRequest(FName CueId);

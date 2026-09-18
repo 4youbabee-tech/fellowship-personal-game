@@ -166,7 +166,9 @@ A parallel route must not overwrite Frodo's main-route progress.
 - `ShireAudioSubsystem.*`
 
 The audio subsystem routes named ambience/music/SFX/voice events.
-`Data/MusicCuePlan.csv` defines original music direction; final authored music assets are not claimed complete.
+Runtime voice playback now resolves `/Game/Audio/Voice/<Speaker>/<VO_ID>`, plays from the matching world actor when available, falls back to controlled 2D playback, and preserves subtitles when an asset is still missing.
+`Data/VoiceCuePlan.csv` is statically synchronized with all runtime `VO_*` identifiers.
+`Data/MusicCuePlan.csv` defines original music direction; final authored music and voice assets are not falsely claimed complete.
 
 ### Ambient life
 `ShireAmbientNPC.*`

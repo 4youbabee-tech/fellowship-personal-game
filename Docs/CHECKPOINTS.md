@@ -164,6 +164,15 @@
 - Voice direction explicitly requires original performance and forbids cloning or deliberate imitation of a specific film actor.
 - Current authored voice assets remain ASSET_PENDING; this checkpoint creates the contract and guardrails, not fake completion.
 
+## CP24B — Runtime Voice Bridge
+- Added deterministic runtime voice asset resolution using /Game/Audio/Voice/<Speaker>/<VO_ID>.
+- Voice lines play spatially from the matching playable/NPC actor when available.
+- Offscreen/unresolved speakers use controlled 2D fallback.
+- Missing authored audio never breaks subtitles or quest progression.
+- Added voice playback-state events so music ducking/facial-performance systems can react later without changing dialogue data.
+- Pre-Unreal Validation now enforces a one-to-one contract between runtime VO_* identifiers and Data/VoiceCuePlan.csv.
+- Actual SoundWave/SoundCue files remain ASSET_PENDING until authored/imported.
+
 ## Current hard gate
 The current runtime-code baseline has passed static validation, real UE4.27 compile and basic Shire PIE boot.
 

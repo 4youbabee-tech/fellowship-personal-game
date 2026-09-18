@@ -123,6 +123,10 @@ music_rows = read_csv_rows("Data/MusicCuePlan.csv", {
     "Route", "Chapter", "Region", "MusicCue", "StoryFunction", "Palette", "Intensity", "Looping", "OriginalityRule"
 })
 
+voice_rows = read_csv_rows("Data/VoiceCuePlan.csv", {
+    "VoiceCue", "Speaker", "VoiceDirection", "SpatialMode", "AssetPath", "Status", "OriginalityRule"
+})
+
 def validate_route_rows(relative: str, rows: list[dict[str, str]], check_canon: bool = False) -> None:
     for index, row in enumerate(rows, start=2):
         route = (row.get("Route") or "").strip()
@@ -174,6 +178,21 @@ if duplicate_music_plan_ids:
 for index, row in enumerate(music_rows, start=2):
     if not (row.get("OriginalityRule") or "").strip():
         fail(f"Data/MusicCuePlan.csv:{index} has empty OriginalityRule")
+
+voice_plan_ids = [(row.get("VoiceCue") or "").strip() for row in voice_rows]
+duplicate_voice_plan_ids = sorted({value for value in voice_plan_ids if value and voice_plan_ids.count(value) > 1})
+if duplicate_voice_plan_ids:
+    fail("Duplicate VoiceCuePlan VoiceCue values: " + ", ".join(duplicate_voice_plan_ids))
+
+for index, row in enumerate(voice_rows, start=2):
+    for field in ["VoiceCue", "Speaker", "VoiceDirection", "SpatialMode", "AssetPath", "Status", "OriginalityRule"]:
+        if not (row.get(field) or "").strip():
+            fail(f"Data/VoiceCuePlan.csv:{index} has empty {field}")
+    if (row.get("Status") or "").strip() not in {"ASSET_PENDING", "READY"}:
+        fail(f"Data/VoiceCuePlan.csv:{index} has unsupported Status")
+    originality = (row.get("OriginalityRule") or "").lower()
+    if "do not clone" not in originality or "specific film actor" not in originality:
+        fail(f"Data/VoiceCuePlan.csv:{index} must prohibit cloning a specific film actor voice")
 
 
 uproject = ROOT / "ShireJourney.uproject"
@@ -352,6 +371,21 @@ all_dialogue_sequences = re.findall(r'AddSequence\s*\(\s*TEXT\("([^"]+)"\)', dia
 duplicate_dialogue = sorted({cue for cue in all_dialogue_sequences if all_dialogue_sequences.count(cue) > 1})
 if duplicate_dialogue:
     fail("Duplicate runtime dialogue sequences: " + ", ".join(duplicate_dialogue))
+
+runtime_voice_cues = set(re.findall(r'TEXT\("(VO_[A-Za-z0-9_]+)"\)', dialogue_cpp))
+planned_voice_cues = {value for value in voice_plan_ids if value}
+missing_voice_plan = sorted(runtime_voice_cues - planned_voice_cues)
+dead_voice_plan = sorted(planned_voice_cues - runtime_voice_cues)
+if missing_voice_plan:
+    fail("Runtime voice cues missing from VoiceCuePlan: " + ", ".join(missing_voice_plan))
+if dead_voice_plan:
+    fail("VoiceCuePlan cues missing from runtime dialogue: " + ", ".join(dead_voice_plan))
+
+audio_cpp = read(SOURCE / "ShireAudioSubsystem.cpp")
+if "ResolveVoiceAsset" not in audio_cpp or "/Game/Audio/Voice/" not in audio_cpp:
+    fail("Runtime voice asset resolver missing from ShireAudioSubsystem")
+if "SpawnSoundAtLocation" not in audio_cpp or "SpawnSound2D" not in audio_cpp:
+    fail("Runtime voice playback must support spatial world voice and controlled 2D fallback")
 
 # Quest/chapter reachability safety net. We model explicit transitions and runtime handoff guards.
 chapter_start_quests = {
