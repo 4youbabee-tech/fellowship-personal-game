@@ -106,6 +106,9 @@ private:
     bool bVisualStyleApplied = false;
     bool bPrototypeMoving = false;
     float PrototypeWalkPhase = 0.0f;
+    float PrototypeTorsoBaseZ = -4.0f;
+    float PrototypeHeadBaseZ = 39.0f;
+    float PrototypeHairBaseZ = 47.0f;
 
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);

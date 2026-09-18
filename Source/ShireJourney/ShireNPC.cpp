@@ -97,23 +97,125 @@ void AShireNPC::ApplyPrototypeStyle()
     FLinearColor Hair(0.12f, 0.055f, 0.025f);
     FLinearColor Skin(0.74f, 0.52f, 0.34f);
 
+    PrototypeTorsoBaseZ = -4.0f;
+    PrototypeHeadBaseZ = 39.0f;
+    PrototypeHairBaseZ = 47.0f;
+
+    auto ConfigureTallFigure = [this](float WidthScale)
+    {
+        PrototypeTorsoBaseZ = 6.0f;
+        PrototypeHeadBaseZ = 61.0f;
+        PrototypeHairBaseZ = 69.0f;
+
+        PrototypeTorso->SetRelativeLocation(FVector(0.0f, 0.0f, PrototypeTorsoBaseZ));
+        PrototypeTorso->SetRelativeScale3D(FVector(0.31f * WidthScale, 0.23f * WidthScale, 0.50f));
+        PrototypeHead->SetRelativeLocation(FVector(0.0f, 0.0f, PrototypeHeadBaseZ));
+        PrototypeHead->SetRelativeScale3D(FVector(0.225f));
+        PrototypeHair->SetRelativeLocation(FVector(-1.0f, 0.0f, PrototypeHairBaseZ));
+        PrototypeHair->SetRelativeScale3D(FVector(0.23f, 0.23f, 0.11f));
+        PrototypeLeftArm->SetRelativeLocation(FVector(0.0f, -25.0f * WidthScale, 8.0f));
+        PrototypeRightArm->SetRelativeLocation(FVector(0.0f, 25.0f * WidthScale, 8.0f));
+        PrototypeLeftArm->SetRelativeScale3D(FVector(0.08f, 0.08f, 0.44f));
+        PrototypeRightArm->SetRelativeScale3D(FVector(0.08f, 0.08f, 0.44f));
+        PrototypeLeftLeg->SetRelativeLocation(FVector(0.0f, -10.0f, -43.0f));
+        PrototypeRightLeg->SetRelativeLocation(FVector(0.0f, 10.0f, -43.0f));
+        PrototypeLeftLeg->SetRelativeScale3D(FVector(0.10f, 0.10f, 0.41f));
+        PrototypeRightLeg->SetRelativeScale3D(FVector(0.10f, 0.10f, 0.41f));
+    };
+
+    auto ConfigureDwarfFigure = [this]()
+    {
+        PrototypeTorsoBaseZ = -1.0f;
+        PrototypeHeadBaseZ = 45.0f;
+        PrototypeHairBaseZ = 53.0f;
+
+        PrototypeTorso->SetRelativeLocation(FVector(0.0f, 0.0f, PrototypeTorsoBaseZ));
+        PrototypeTorso->SetRelativeScale3D(FVector(0.39f, 0.30f, 0.40f));
+        PrototypeHead->SetRelativeLocation(FVector(0.0f, 0.0f, PrototypeHeadBaseZ));
+        PrototypeHead->SetRelativeScale3D(FVector(0.25f));
+        PrototypeHair->SetRelativeLocation(FVector(-1.0f, 0.0f, PrototypeHairBaseZ));
+        PrototypeHair->SetRelativeScale3D(FVector(0.255f, 0.255f, 0.14f));
+        PrototypeLeftArm->SetRelativeLocation(FVector(0.0f, -29.0f, -1.0f));
+        PrototypeRightArm->SetRelativeLocation(FVector(0.0f, 29.0f, -1.0f));
+        PrototypeLeftArm->SetRelativeScale3D(FVector(0.095f, 0.095f, 0.34f));
+        PrototypeRightArm->SetRelativeScale3D(FVector(0.095f, 0.095f, 0.34f));
+        PrototypeLeftLeg->SetRelativeLocation(FVector(0.0f, -11.0f, -42.0f));
+        PrototypeRightLeg->SetRelativeLocation(FVector(0.0f, 11.0f, -42.0f));
+        PrototypeLeftLeg->SetRelativeScale3D(FVector(0.12f, 0.12f, 0.29f));
+        PrototypeRightLeg->SetRelativeScale3D(FVector(0.12f, 0.12f, 0.29f));
+    };
+
+    const bool bRanger =
+        Name.Equals(TEXT("Aragorn"), ESearchCase::IgnoreCase) ||
+        Name.Equals(TEXT("Strider"), ESearchCase::IgnoreCase);
+    const bool bHuman =
+        bRanger ||
+        Name.Equals(TEXT("Boromir"), ESearchCase::IgnoreCase) ||
+        Name.Equals(TEXT("Gate Keeper"), ESearchCase::IgnoreCase) ||
+        Name.Equals(TEXT("Barliman Butterbur"), ESearchCase::IgnoreCase);
+    const bool bElf =
+        Name.Equals(TEXT("Arwen"), ESearchCase::IgnoreCase) ||
+        Name.Equals(TEXT("Elrond"), ESearchCase::IgnoreCase) ||
+        Name.Equals(TEXT("Haldir"), ESearchCase::IgnoreCase) ||
+        Name.Equals(TEXT("Galadriel"), ESearchCase::IgnoreCase) ||
+        Name.Equals(TEXT("Legolas"), ESearchCase::IgnoreCase);
+
     if (Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase))
     {
+        ConfigureTallFigure(1.02f);
+        PrototypeTorsoBaseZ = 8.0f;
+        PrototypeHeadBaseZ = 64.0f;
+        PrototypeHairBaseZ = 72.0f;
+        PrototypeTorso->SetRelativeLocation(FVector(0.0f, 0.0f, PrototypeTorsoBaseZ));
+        PrototypeHead->SetRelativeLocation(FVector(0.0f, 0.0f, PrototypeHeadBaseZ));
+        PrototypeHair->SetRelativeLocation(FVector(-1.0f, 0.0f, PrototypeHairBaseZ));
         Coat = FLinearColor(0.30f, 0.31f, 0.29f);
         Trousers = FLinearColor(0.20f, 0.21f, 0.20f);
         Hair = FLinearColor(0.72f, 0.70f, 0.64f);
-        PrototypeTorso->SetRelativeScale3D(FVector(0.31f, 0.23f, 0.48f));
-        PrototypeTorso->SetRelativeLocation(FVector(0.0f, 0.0f, 5.0f));
-        PrototypeHead->SetRelativeLocation(FVector(0.0f, 0.0f, 58.0f));
-        PrototypeHair->SetRelativeLocation(FVector(-1.0f, 0.0f, 66.0f));
-        PrototypeLeftArm->SetRelativeLocation(FVector(0.0f, -25.0f, 7.0f));
-        PrototypeRightArm->SetRelativeLocation(FVector(0.0f, 25.0f, 7.0f));
-        PrototypeLeftArm->SetRelativeScale3D(FVector(0.08f, 0.08f, 0.43f));
-        PrototypeRightArm->SetRelativeScale3D(FVector(0.08f, 0.08f, 0.43f));
-        PrototypeLeftLeg->SetRelativeLocation(FVector(0.0f, -10.0f, -43.0f));
-        PrototypeRightLeg->SetRelativeLocation(FVector(0.0f, 10.0f, -43.0f));
-        PrototypeLeftLeg->SetRelativeScale3D(FVector(0.10f, 0.10f, 0.40f));
-        PrototypeRightLeg->SetRelativeScale3D(FVector(0.10f, 0.10f, 0.40f));
+    }
+    else if (Name.Equals(TEXT("Gimli"), ESearchCase::IgnoreCase))
+    {
+        ConfigureDwarfFigure();
+        Coat = FLinearColor(0.30f, 0.20f, 0.12f);
+        Trousers = FLinearColor(0.20f, 0.15f, 0.10f);
+        Hair = FLinearColor(0.44f, 0.20f, 0.07f);
+    }
+    else if (bElf)
+    {
+        ConfigureTallFigure(0.90f);
+        Coat = Name.Equals(TEXT("Galadriel"), ESearchCase::IgnoreCase)
+            ? FLinearColor(0.62f, 0.66f, 0.60f)
+            : FLinearColor(0.25f, 0.36f, 0.28f);
+        Trousers = FLinearColor(0.20f, 0.26f, 0.20f);
+        Hair = (Name.Equals(TEXT("Galadriel"), ESearchCase::IgnoreCase) ||
+                Name.Equals(TEXT("Haldir"), ESearchCase::IgnoreCase) ||
+                Name.Equals(TEXT("Legolas"), ESearchCase::IgnoreCase))
+            ? FLinearColor(0.78f, 0.68f, 0.42f)
+            : FLinearColor(0.10f, 0.065f, 0.04f);
+        Skin = FLinearColor(0.78f, 0.61f, 0.46f);
+    }
+    else if (bHuman)
+    {
+        const float Width = Name.Equals(TEXT("Barliman Butterbur"), ESearchCase::IgnoreCase) ? 1.18f : 1.0f;
+        ConfigureTallFigure(Width);
+        if (bRanger)
+        {
+            Coat = FLinearColor(0.16f, 0.22f, 0.14f);
+            Trousers = FLinearColor(0.16f, 0.13f, 0.09f);
+            Hair = FLinearColor(0.10f, 0.055f, 0.025f);
+        }
+        else if (Name.Equals(TEXT("Boromir"), ESearchCase::IgnoreCase))
+        {
+            Coat = FLinearColor(0.36f, 0.16f, 0.12f);
+            Trousers = FLinearColor(0.22f, 0.16f, 0.11f);
+            Hair = FLinearColor(0.30f, 0.19f, 0.08f);
+        }
+        else
+        {
+            Coat = FLinearColor(0.31f, 0.25f, 0.18f);
+            Trousers = FLinearColor(0.22f, 0.18f, 0.13f);
+            Hair = FLinearColor(0.18f, 0.10f, 0.045f);
+        }
     }
     else if (Name.Equals(TEXT("Bilbo"), ESearchCase::IgnoreCase))
     {
@@ -201,11 +303,21 @@ void AShireNPC::UpdatePrototypeAnimation(float DeltaSeconds)
 
     if (PrototypeTorso)
     {
-        FVector Target = PrototypeTorso->GetRelativeLocation();
-        const FString Name = DisplayName.ToString();
-        Target.Z = Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase) ? 5.0f + Bob : -4.0f + Bob;
         PrototypeTorso->SetRelativeLocation(FMath::VInterpTo(
-            PrototypeTorso->GetRelativeLocation(), Target, DeltaSeconds, 12.0f));
+            PrototypeTorso->GetRelativeLocation(),
+            FVector(0.0f, 0.0f, PrototypeTorsoBaseZ + Bob), DeltaSeconds, 12.0f));
+    }
+    if (PrototypeHead)
+    {
+        PrototypeHead->SetRelativeLocation(FMath::VInterpTo(
+            PrototypeHead->GetRelativeLocation(),
+            FVector(0.0f, 0.0f, PrototypeHeadBaseZ + Bob), DeltaSeconds, 12.0f));
+    }
+    if (PrototypeHair)
+    {
+        PrototypeHair->SetRelativeLocation(FMath::VInterpTo(
+            PrototypeHair->GetRelativeLocation(),
+            FVector(-1.0f, 0.0f, PrototypeHairBaseZ + Bob), DeltaSeconds, 12.0f));
     }
 }
 
