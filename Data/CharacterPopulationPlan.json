@@ -449,5 +449,20 @@
     "Galadriel",
     "Saruman",
     "major enemies"
-  ]
+  ],
+  "visual_identity_pass": {
+    "status": "RUNTIME_IMPLEMENTED_PENDING_BUILD",
+    "purpose": "Make core cast immediately distinguishable during the batch-build phase using low-cost modular pieces before dedicated rigged production characters exist.",
+    "features": [
+      "Sam satchel identity",
+      "Merry/Pippin differentiated cloaks",
+      "Aragorn ranger cloak and sword",
+      "Boromir cloak/sword/shield silhouette",
+      "Legolas cloak/bow/quiver silhouette",
+      "Gimli beard/axe silhouette",
+      "Gandalf/Saruman staff and beard silhouette",
+      "Arwen/Elrond/Galadriel cloak/headpiece silhouette"
+    ],
+    "proof_limit": "This is a procedural visual-identity pass, not final character art or visual acceptance."
+  }
 }
