@@ -263,6 +263,15 @@ This converts failures into permanent project knowledge.
 
 **Proof rule:** compile success proves integration only; final population density/performance/visual quality remains part of the later batch integration pass.
 
+### PG-036 — Ambient micro-life must stay cheap, role-driven and visually readable
+**Risk:** world-life implementation can grow into a heavy per-NPC AI system, or role activity can disappear so residents return to identical walkers.
+
+**Contract:** ambient residents reuse `AShireAmbientNPC` and may carry a single lightweight activity prop selected by role/region. Work/social gestures are procedural and local. Expensive persistent simulation is not required for ambient archetypes.
+
+**Guard:** Pre-Unreal Validation requires the activity-prop contract, all approved prop styles, Shire role assignments, Bree town activity assignments and Elven resident activity assignments.
+
+**Proof rule:** this is runtime micro-life foundation only; final event variety, animation quality and target-device performance remain for the later integration pass.
+
 ## What Guardian must never do automatically
 
 - change canon,
