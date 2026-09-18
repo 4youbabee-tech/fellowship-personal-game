@@ -60,25 +60,31 @@
     {
       "id": "LW1",
       "name": "NPC identity schedules relationships data",
-      "status": "PLANNED",
+      "status": "PARTIAL",
       "features": [
         {
           "id": "NPC-PROFILE-DATA",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Identity role knowledge temperament anchor."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/NPCSocialModel.json"
+          ],
+          "notes": "Part I named/ambient identities, roles, temperament, knowledge boundaries and anchors are data-defined; runtime consumption is pending."
         },
         {
           "id": "NPC-SCHEDULE-DATA",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Home/work/travel/social/story override."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/NPCSocialModel.json"
+          ],
+          "notes": "Low-cost Shire/Bree/story-driven schedule templates and override precedence are data-defined; runtime scheduler is pending."
         },
         {
           "id": "NPC-RELATIONSHIP-DATA",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Authored bounded social links."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/NPCSocialModel.json"
+          ],
+          "notes": "Initial authored relationship graph is data-defined; runtime relationship/context consumption is pending."
         }
       ]
     },
