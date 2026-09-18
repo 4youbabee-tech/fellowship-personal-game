@@ -125,17 +125,23 @@ void AShireAmbientNPC::ApplyVisualStyle()
         RightArm->SetRelativeScale3D(FVector(1));
         LeftLeg->SetRelativeScale3D(FVector(1));
         RightLeg->SetRelativeScale3D(FVector(1));
-        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, 58.0f));
-        Head->SetRelativeLocation(FVector(0.0f, 0.0f, 101.0f));
-        Hair->SetRelativeLocation(FVector(-2.0f, 0.0f, 111.0f));
+        VisualTorsoBaseZ = 58.0f;
+        VisualHeadBaseZ = 101.0f;
+        VisualHairBaseZ = 111.0f;
+        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, VisualTorsoBaseZ));
+        Head->SetRelativeLocation(FVector(0.0f, 0.0f, VisualHeadBaseZ));
+        Hair->SetRelativeLocation(FVector(-2.0f, 0.0f, VisualHairBaseZ));
     }
     else if (bElf)
     {
-        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, 78.0f));
+        VisualTorsoBaseZ = 78.0f;
+        VisualHeadBaseZ = 139.0f;
+        VisualHairBaseZ = 149.0f;
+        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, VisualTorsoBaseZ));
         Torso->SetRelativeScale3D(FVector(0.27f, 0.19f, 0.52f));
-        Head->SetRelativeLocation(FVector(0.0f, 0.0f, 139.0f));
+        Head->SetRelativeLocation(FVector(0.0f, 0.0f, VisualHeadBaseZ));
         Head->SetRelativeScale3D(FVector(0.205f));
-        Hair->SetRelativeLocation(FVector(-1.0f, 0.0f, 149.0f));
+        Hair->SetRelativeLocation(FVector(-1.0f, 0.0f, VisualHairBaseZ));
         Hair->SetRelativeScale3D(FVector(0.21f, 0.20f, 0.13f));
         LeftArm->SetRelativeLocation(FVector(0.0f, -22.0f, 78.0f));
         RightArm->SetRelativeLocation(FVector(0.0f, 22.0f, 78.0f));
@@ -148,11 +154,14 @@ void AShireAmbientNPC::ApplyVisualStyle()
     }
     else if (bBreeTownsperson)
     {
-        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, 72.0f));
+        VisualTorsoBaseZ = 72.0f;
+        VisualHeadBaseZ = 128.0f;
+        VisualHairBaseZ = 138.0f;
+        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, VisualTorsoBaseZ));
         Torso->SetRelativeScale3D(FVector(0.31f, 0.23f, 0.48f));
-        Head->SetRelativeLocation(FVector(0.0f, 0.0f, 128.0f));
+        Head->SetRelativeLocation(FVector(0.0f, 0.0f, VisualHeadBaseZ));
         Head->SetRelativeScale3D(FVector(0.22f));
-        Hair->SetRelativeLocation(FVector(-1.0f, 0.0f, 138.0f));
+        Hair->SetRelativeLocation(FVector(-1.0f, 0.0f, VisualHairBaseZ));
         Hair->SetRelativeScale3D(FVector(0.225f, 0.225f, 0.11f));
         LeftArm->SetRelativeLocation(FVector(0.0f, -25.0f, 72.0f));
         RightArm->SetRelativeLocation(FVector(0.0f, 25.0f, 72.0f));
@@ -259,11 +268,11 @@ void AShireAmbientNPC::UpdateWalkAnimation(float DeltaSeconds, bool bMoving)
         RightLeg->GetRelativeRotation(), FRotator(Swing * 0.65f, 0.0f, 0.0f), DeltaSeconds, 9.0f));
 
     Torso->SetRelativeLocation(FMath::VInterpTo(
-        Torso->GetRelativeLocation(), FVector(0.0f, 0.0f, 58.0f + Bob), DeltaSeconds, 10.0f));
+        Torso->GetRelativeLocation(), FVector(0.0f, 0.0f, VisualTorsoBaseZ + Bob), DeltaSeconds, 10.0f));
     Head->SetRelativeLocation(FMath::VInterpTo(
-        Head->GetRelativeLocation(), FVector(0.0f, 0.0f, 101.0f + Bob), DeltaSeconds, 10.0f));
+        Head->GetRelativeLocation(), FVector(0.0f, 0.0f, VisualHeadBaseZ + Bob), DeltaSeconds, 10.0f));
     Hair->SetRelativeLocation(FMath::VInterpTo(
-        Hair->GetRelativeLocation(), FVector(-1.0f, 0.0f, 109.0f + Bob), DeltaSeconds, 10.0f));
+        Hair->GetRelativeLocation(), FVector(-1.0f, 0.0f, VisualHairBaseZ + Bob), DeltaSeconds, 10.0f));
 }
 
 void AShireAmbientNPC::BeginPlay()
