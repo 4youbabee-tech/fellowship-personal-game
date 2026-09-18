@@ -372,6 +372,149 @@
       ],
       "checkpoint": "CURRENT_HARD_GATE",
       "notes": "Performance evidence must accompany living-world expansion."
+    },
+    {
+      "id": "REQ-VISION-001",
+      "title": "Film trilogy is the authoritative story spine",
+      "category": "ProductVision",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User reaffirmed that the project is an experiential adaptation of the films, not a newly invented story",
+      "intent": "Use the established film chronology, major characters, locations, conflicts and required outcomes as the primary narrative blueprint. The game may enrich gaps but must not replace the film story with a different one.",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Docs/PART1_FELLOWSHIP_MASTERPLAN.md",
+        "Data/StoryBeatPlan.csv"
+      ],
+      "implementation_refs": [
+        "Film-first canon policy already exists",
+        "P1C01-P1C08 Part I route follows the film continuity",
+        "Gandalf/Isengard parallel route fills a film-canon event outside Frodo's viewpoint"
+      ],
+      "missing_work": [
+        "Make film-to-game coverage machine-readable for all Part I runtime chapters",
+        "Continue chapter-by-chapter implementation and acceptance",
+        "Part II and Part III remain roadmap/design rather than production-complete"
+      ],
+      "acceptance_criteria": [
+        "Every major implemented story beat maps to film continuity or an explicitly tagged compatible gap-fill",
+        "No game-authored side content changes required film outcomes",
+        "Chapter handoffs preserve the known chronology",
+        "Part I coverage gaps are visible in repository data rather than hidden in chat"
+      ],
+      "dependencies": [],
+      "checkpoint": "FILM_EXPERIENCE_CONTRACT",
+      "notes": "Books/lore may enrich the world only when they do not silently overwrite film continuity."
+    },
+    {
+      "id": "REQ-EXP-001",
+      "title": "Player should live the film as a playable adventure",
+      "category": "PlayerExperience",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User explicitly described the goal as feeling personally inside the film and living the adventure",
+      "intent": "Translate major film moments into player experience: traversal, exploration, interaction, stealth, combat, social scenes or interactive cinematic presentation instead of reducing the project to passive cutscenes or a generic quest list.",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Docs/PART1_FELLOWSHIP_MASTERPLAN.md",
+        "Source/ShireJourney/ShirePlayerCharacter.cpp",
+        "Source/ShireJourney/ShireStoryPresentationSubsystem.cpp"
+      ],
+      "implementation_refs": [
+        "Shire traversal/party/Black Rider/ferry skeleton",
+        "Bree through Amon Hen runtime greybox skeleton",
+        "temporary playable Gandalf/Isengard route",
+        "story-presentation hooks"
+      ],
+      "missing_work": [
+        "Chapter-by-chapter film-experience coverage and treatment audit",
+        "Many major scenes are still prototype or compressed",
+        "Final cinematic/gameplay blends, character performances and production environments",
+        "Focused PIE/device/visual acceptance"
+      ],
+      "acceptance_criteria": [
+        "Major film anchors are experienced through appropriate gameplay or interactive presentation",
+        "Player agency exists where it does not contradict required story outcomes",
+        "Important emotional/story moments are not skipped merely to connect quests",
+        "Each chapter records which film anchors are covered, partial or missing"
+      ],
+      "dependencies": [
+        "REQ-VISION-001"
+      ],
+      "checkpoint": "FILM_EXPERIENCE_CONTRACT",
+      "notes": "The goal is experiential fidelity, not verbatim screenplay reproduction."
+    },
+    {
+      "id": "REQ-EXP-002",
+      "title": "Exploration freedom between fixed film story anchors",
+      "category": "PlayerExperience",
+      "priority": "HIGH",
+      "status": "PARTIAL",
+      "origin": "Derived directly from the user's request to adventure and explore while remaining inside the film story",
+      "intent": "Let the player wander, discover life, talk to characters, use side routes and encounter optional details between mandatory film anchors, while the major chronology and outcomes remain stable.",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
+        "Data/BiomePlan.csv",
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp"
+      ],
+      "implementation_refs": [
+        "Shire exploration loops and side stories",
+        "optional conversations",
+        "landmark discoveries",
+        "film-compatible chapter progression"
+      ],
+      "missing_work": [
+        "Define exploration envelopes around each chapter's fixed anchors",
+        "Add more optional discoveries and living-world activity outside Shire",
+        "Verify exploration cannot skip or invalidate mandatory story results"
+      ],
+      "acceptance_criteria": [
+        "Player can meaningfully explore between mandatory story beats",
+        "Optional content does not overwrite film chronology",
+        "Returning to the main route remains readable",
+        "No free-roam shortcut can silently bypass a required story outcome"
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-WORLD-001"
+      ],
+      "checkpoint": "FILM_EXPERIENCE_CONTRACT",
+      "notes": "Freedom belongs between anchors, not instead of anchors."
+    },
+    {
+      "id": "REQ-COVERAGE-001",
+      "title": "Machine-readable film-to-game scene coverage",
+      "category": "StoryGovernance",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Inferred from the user's requirement that the known film story should be systematically applied rather than forgotten",
+      "intent": "Maintain a machine-readable Part I coverage map that records the important film anchors for each runtime chapter, intended game treatment and current coverage state.",
+      "evidence": [
+        "Data/FilmExperiencePlan.json",
+        "Docs/STORY_CANON_BIBLE.md",
+        "Docs/PART1_FELLOWSHIP_MASTERPLAN.md"
+      ],
+      "implementation_refs": [
+        "FilmExperiencePlan created for P1C01-P1C08 plus GandalfParallel"
+      ],
+      "missing_work": [
+        "Keep coverage states synchronized as chapter implementation changes",
+        "Expand anchors only when useful without turning the file into a copied screenplay",
+        "Add Part II/III coverage only when those production scopes open"
+      ],
+      "acceptance_criteria": [
+        "Every P1C01-P1C08 runtime chapter has film anchors in the plan",
+        "Every anchor declares treatment and coverage state",
+        "Missing/partial film anchors remain visible to future developers",
+        "Guardian rejects loss of required chapter/parallel-route coverage"
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-EXP-001"
+      ],
+      "checkpoint": "FILM_EXPERIENCE_CONTRACT",
+      "notes": "Coverage uses high-level scene intent and event labels, never screenplay text."
     }
   ]
 }
