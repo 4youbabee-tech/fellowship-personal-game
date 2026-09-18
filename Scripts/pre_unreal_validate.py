@@ -433,6 +433,55 @@ unscheduled_profiles = sorted(profile_ids - scheduled_profiles)
 if unscheduled_profiles:
     fail("NPCSocialModel profiles missing schedule assignment: " + ", ".join(unscheduled_profiles))
 
+# PG-028: bounded NPC memory contract must stay compact and canon-safe before runtime integration.
+npc_memory_path = ROOT / "Data" / "NPCMemoryPlan.json"
+npc_memory = {}
+if not npc_memory_path.exists():
+    fail("NPC memory plan missing: Data/NPCMemoryPlan.json")
+else:
+    try:
+        npc_memory = json.loads(read(npc_memory_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/NPCMemoryPlan.json: {exc}")
+
+memory_template_ids: set[str] = set()
+for item in npc_memory.get("memory_templates", []):
+    memory_id = str(item.get("id") or "").strip()
+    tier = str(item.get("tier") or "").strip()
+    scope = str(item.get("default_scope") or "").strip()
+    if not memory_id:
+        fail("NPCMemoryPlan memory template missing id")
+        continue
+    if memory_id in memory_template_ids:
+        fail(f"Duplicate NPCMemoryPlan memory template id: {memory_id}")
+    memory_template_ids.add(memory_id)
+    if tier not in set(npc_memory.get("memory_tiers", [])):
+        fail(f"NPCMemoryPlan {memory_id} uses unknown tier '{tier}'")
+    if scope not in set(npc_memory.get("persistence_scopes", [])):
+        fail(f"NPCMemoryPlan {memory_id} uses unknown scope '{scope}'")
+
+missing_memory_templates = sorted(set(guard_rules.get("npc_memory_required_templates", [])) - memory_template_ids)
+if missing_memory_templates:
+    fail("NPCMemoryPlan missing required templates: " + ", ".join(missing_memory_templates))
+
+memory_policies = npc_memory.get("policies", {})
+if not memory_policies.get("store_compact_event_ids_only", False):
+    fail("NPCMemoryPlan must store compact event IDs only")
+if not memory_policies.get("never_persist_raw_dialogue_text", False):
+    fail("NPCMemoryPlan must forbid raw dialogue transcript persistence")
+if not memory_policies.get("aliases_share_one_identity_memory", False):
+    fail("NPCMemoryPlan aliases must share one canonical identity memory")
+if not memory_policies.get("mandatory_story_outcomes_are_immutable", False):
+    fail("NPCMemoryPlan must not permit memory to change mandatory story outcomes")
+
+save_contract = npc_memory.get("save_contract", {})
+if int(save_contract.get("estimated_soft_budget_kb", 0)) <= 0 or int(save_contract.get("estimated_soft_budget_kb", 0)) > 256:
+    fail("NPCMemoryPlan save soft budget must be within 1..256 KB")
+if not save_contract.get("route_partitioned", False):
+    fail("NPCMemoryPlan save state must be route-partitioned")
+if not save_contract.get("versioned_schema", False):
+    fail("NPCMemoryPlan save schema must be versioned")
+
 approved_chapters = set(guard_rules.get("runtime_chapters", []))
 approved_routes = set(guard_rules.get("approved_routes", []))
 approved_canon_classes = set(guard_rules.get("canon_classes", []))
