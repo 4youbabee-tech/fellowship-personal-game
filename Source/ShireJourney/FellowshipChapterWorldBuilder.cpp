@@ -495,6 +495,7 @@ void AFellowshipChapterWorldBuilder::BuildRivendell()
         if (Resident)
         {
             Resident->RoutineRole = TEXT("Elf");
+            Resident->ActivityPropType = Index % 2 == 0 ? TEXT("Book") : TEXT("Lantern");
             Resident->RoutinePointA = RivendellResidents[Index];
             Resident->RoutinePointB = RivendellResidents[Index] +
                 FVector(180.0f + 20.0f * (Index % 3), (Index % 2 == 0 ? 120.0f : -120.0f), 0.0f);
@@ -889,6 +890,7 @@ void AFellowshipChapterWorldBuilder::BuildLothlorien()
         if (Resident)
         {
             Resident->RoutineRole = TEXT("Elf");
+            Resident->ActivityPropType = Index % 3 == 0 ? TEXT("Lantern") : TEXT("Book");
             Resident->RoutinePointA = LorienResidents[Index];
             Resident->RoutinePointB = LorienResidents[Index] +
                 FVector(150.0f + 20.0f * (Index % 2), (Index % 2 == 0 ? 100.0f : -100.0f), 0.0f);
