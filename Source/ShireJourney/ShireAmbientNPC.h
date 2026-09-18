@@ -97,6 +97,7 @@ private:
     float VisualTorsoBaseZ = 58.0f;
     float VisualHeadBaseZ = 101.0f;
     float VisualHairBaseZ = 109.0f;
+    FName AppliedVisualRole = NAME_None;
     TWeakObjectPtr<APawn> ObservedPlayer;
     TWeakObjectPtr<AShireAmbientNPC> SocialPartner;
     FRandomStream Random;
