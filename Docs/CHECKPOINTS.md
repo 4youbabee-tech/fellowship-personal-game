@@ -377,6 +377,15 @@
 - Added PG-035 to preserve the low-cost movement/performance contract.
 - This is a runtime world-motion foundation, not final fauna art, final density or device/performance acceptance.
 
+## CP36 — Ambient Resident Micro-Life
+- Added `ActivityPropType` and a single cheap `ActivityProp` component to `AShireAmbientNPC`.
+- Added role-driven visible activities: Shire party mugs, courier satchels, field-worker baskets, ferry crates, mixed Bree goods/mugs/crates and Elven books/lanterns.
+- Added lightweight work/social arm gestures and carried-prop bob/sway using the existing ambient tick.
+- Reused the existing distance-throttled ambient actor rather than adding a separate expensive AI/runtime system.
+- Updated LW4 runtime evidence and the single Project Governor.
+- Added PG-036 so resident activity variety cannot silently regress.
+- This is not final authored animation or full micro-event direction; those remain future batch work and integration review.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
