@@ -57,15 +57,18 @@ AShirePlayerCharacter::AShirePlayerCharacter()
 
     CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
     CameraBoom->SetupAttachment(RootComponent);
-    CameraBoom->TargetArmLength = 315.0f;
+    CameraBoom->TargetArmLength = 260.0f;
     CameraBoom->bUsePawnControlRotation = true;
     CameraBoom->bEnableCameraLag = true;
-    CameraBoom->CameraLagSpeed = 11.0f;
-    CameraBoom->SetRelativeLocation(FVector(0.0f, 0.0f, 58.0f));
+    CameraBoom->CameraLagSpeed = 8.5f;
+    CameraBoom->CameraLagMaxDistance = 65.0f;
+    CameraBoom->SetRelativeLocation(FVector(0.0f, 0.0f, 52.0f));
+    CameraBoom->SocketOffset = FVector(0.0f, 28.0f, 10.0f);
 
     FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
     FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
     FollowCamera->bUsePawnControlRotation = false;
+    FollowCamera->SetFieldOfView(78.0f);
 
     PrototypeTorso = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeTorso"));
     PrototypeTorso->SetupAttachment(GetCapsuleComponent());
@@ -229,6 +232,12 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
     const bool bGandalf = bPrototypeIsGandalf;
 
     GetCapsuleComponent()->SetCapsuleHalfHeight(bGandalf ? 86.0f : 60.0f);
+    if (CameraBoom)
+    {
+        CameraBoom->TargetArmLength = bGandalf ? 300.0f : 260.0f;
+        CameraBoom->SetRelativeLocation(FVector(0.0f, 0.0f, bGandalf ? 77.0f : 52.0f));
+        CameraBoom->SocketOffset = FVector(0.0f, bGandalf ? 32.0f : 28.0f, 10.0f);
+    }
 
     PrototypeTorsoBaseZ = bGandalf ? 10.0f : -4.0f;
     PrototypeHeadBaseZ = bGandalf ? 66.0f : 39.0f;

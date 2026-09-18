@@ -7,12 +7,15 @@
 #include "ShireQuestTrigger.h"
 
 #include "Components/DirectionalLightComponent.h"
+#include "Components/ExponentialHeightFogComponent.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
 #include "Components/SceneComponent.h"
+#include "Components/SkyAtmosphereComponent.h"
 #include "Components/SkyLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Engine/DirectionalLight.h"
+#include "Engine/ExponentialHeightFog.h"
 #include "Engine/PostProcessVolume.h"
 #include "Engine/SkyLight.h"
 #include "Engine/StaticMeshActor.h"
@@ -473,9 +476,55 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
             // UE4.27 requires the light to be movable before changing the actor rotation in PIE.
             SunComponent->SetMobility(EComponentMobility::Movable);
             Sun->SetActorRotation(FRotator(-38.0f, -28.0f, 0.0f));
-            SunComponent->SetIntensity(3.4f);
-            SunComponent->SetLightColor(FLinearColor(1.0f, 0.82f, 0.63f));
+            SunComponent->SetIntensity(2.55f);
+            SunComponent->SetLightColor(FLinearColor(1.0f, 0.86f, 0.70f));
             SunComponent->SetCastShadows(true);
+            SunComponent->SetAtmosphereSunLight(true);
+            SunComponent->SetAtmosphereSunLightIndex(0);
+        }
+    }
+
+    ASkyAtmosphere* Atmosphere = nullptr;
+    for (TActorIterator<ASkyAtmosphere> It(GetWorld()); It; ++It)
+    {
+        Atmosphere = *It;
+        break;
+    }
+    if (!Atmosphere)
+    {
+        Atmosphere = GetWorld()->SpawnActor<ASkyAtmosphere>(FVector::ZeroVector, FRotator::ZeroRotator);
+        if (Atmosphere)
+        {
+            Atmosphere->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        }
+    }
+
+    AExponentialHeightFog* HeightFog = nullptr;
+    for (TActorIterator<AExponentialHeightFog> It(GetWorld()); It; ++It)
+    {
+        HeightFog = *It;
+        break;
+    }
+    if (!HeightFog)
+    {
+        HeightFog = GetWorld()->SpawnActor<AExponentialHeightFog>(
+            FVector(0.0f, 0.0f, -80.0f), FRotator::ZeroRotator);
+        if (HeightFog)
+        {
+            HeightFog->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        }
+    }
+    if (HeightFog)
+    {
+        if (UExponentialHeightFogComponent* FogComponent = HeightFog->GetComponent())
+        {
+            FogComponent->SetFogDensity(0.0085f);
+            FogComponent->SetFogHeightFalloff(0.17f);
+            FogComponent->SetFogInscatteringColor(FLinearColor(0.62f, 0.70f, 0.61f));
+            FogComponent->SetDirectionalInscatteringColor(FLinearColor(1.0f, 0.82f, 0.60f));
+            FogComponent->SetStartDistance(850.0f);
+            FogComponent->SetFogMaxOpacity(0.72f);
+            FogComponent->SetVolumetricFog(false);
         }
     }
 
@@ -502,7 +551,7 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         if (USkyLightComponent* SkyComponent = Cast<USkyLightComponent>(Sky->GetLightComponent()))
         {
             SkyComponent->SetMobility(EComponentMobility::Movable);
-            SkyComponent->SetIntensity(0.78f);
+            SkyComponent->SetIntensity(0.60f);
             SkyComponent->bLowerHemisphereIsBlack = false;
             SkyComponent->RecaptureSky();
         }
@@ -536,16 +585,16 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         PostProcess->BlendWeight = 1.0f;
 
         PostProcess->Settings.bOverride_AutoExposureMinBrightness = true;
-        PostProcess->Settings.AutoExposureMinBrightness = 0.80f;
+        PostProcess->Settings.AutoExposureMinBrightness = 0.68f;
         PostProcess->Settings.bOverride_AutoExposureMaxBrightness = true;
-        PostProcess->Settings.AutoExposureMaxBrightness = 1.20f;
+        PostProcess->Settings.AutoExposureMaxBrightness = 0.98f;
         PostProcess->Settings.bOverride_AutoExposureBias = true;
-        PostProcess->Settings.AutoExposureBias = 0.10f;
+        PostProcess->Settings.AutoExposureBias = -0.12f;
 
         PostProcess->Settings.bOverride_BloomIntensity = true;
-        PostProcess->Settings.BloomIntensity = 0.25f;
+        PostProcess->Settings.BloomIntensity = 0.16f;
         PostProcess->Settings.bOverride_VignetteIntensity = true;
-        PostProcess->Settings.VignetteIntensity = 0.12f;
+        PostProcess->Settings.VignetteIntensity = 0.17f;
     }
 }
 
@@ -584,20 +633,20 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
     const FName QuestId = QuestSubsystem->GetActiveQuestId();
 
     FRotator SunRotation(-38.0f, -28.0f, 0.0f);
-    float SunIntensity = 3.4f;
-    FLinearColor SunColor(1.0f, 0.82f, 0.63f);
-    float SkyIntensity = 0.78f;
-    float ExposureBias = 0.10f;
-    float Bloom = 0.25f;
-    float Vignette = 0.12f;
+    float SunIntensity = 2.55f;
+    FLinearColor SunColor(1.0f, 0.86f, 0.70f);
+    float SkyIntensity = 0.60f;
+    float ExposureBias = -0.12f;
+    float Bloom = 0.16f;
+    float Vignette = 0.17f;
 
     if (QuestId == TEXT("LongExpectedParty"))
     {
         SunRotation = FRotator(-22.0f, -42.0f, 0.0f);
-        SunIntensity = 2.45f;
+        SunIntensity = 2.05f;
         SunColor = FLinearColor(1.0f, 0.67f, 0.42f);
-        SkyIntensity = 0.66f;
-        ExposureBias = 0.02f;
+        SkyIntensity = 0.56f;
+        ExposureBias = -0.10f;
         Bloom = 0.34f;
         Vignette = 0.14f;
     }
@@ -614,7 +663,7 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
     else if (QuestId == TEXT("LeavingHome") || QuestId == TEXT("Shortcut"))
     {
         SunRotation = FRotator(-16.0f, -66.0f, 0.0f);
-        SunIntensity = 1.75f;
+        SunIntensity = 1.55f;
         SunColor = FLinearColor(0.78f, 0.76f, 0.72f);
         SkyIntensity = 0.52f;
         ExposureBias = -0.08f;

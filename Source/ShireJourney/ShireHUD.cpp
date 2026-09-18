@@ -19,8 +19,10 @@ void AShireHUD::DrawHUD()
     UFont* SmallFont = GEngine ? GEngine->GetSmallFont() : nullptr;
     UFont* MediumFont = GEngine ? GEngine->GetMediumFont() : SmallFont;
 
-    DrawRect(FLinearColor(0.02f, 0.03f, 0.02f, 0.65f), 22.0f, 20.0f, FMath::Min(560.0f, W - 44.0f), 114.0f);
-    DrawText(TEXT("MIDDLE-EARTH JOURNEY  |  PROTOTYPE"), FLinearColor(0.95f, 0.90f, 0.68f), 38.0f, 32.0f, MediumFont, 1.0f, false);
+    const float QuestCardW = FMath::Min(520.0f, W - 44.0f);
+    DrawRect(FLinearColor(0.015f, 0.020f, 0.015f, 0.76f), 22.0f, 20.0f, QuestCardW, 106.0f);
+    DrawRect(FLinearColor(0.76f, 0.57f, 0.22f, 0.92f), 22.0f, 20.0f, 4.0f, 106.0f);
+    DrawText(TEXT("MIDDLE-EARTH JOURNEY"), FLinearColor(0.94f, 0.86f, 0.62f), 38.0f, 30.0f, MediumFont, 0.92f, false);
 
     UShireQuestSubsystem* Quests = nullptr;
     UShireDialogueSubsystem* Dialogue = nullptr;
@@ -35,9 +37,9 @@ void AShireHUD::DrawHUD()
         const FString Context = FString::Printf(TEXT("%s  |  %s"),
             *Quests->GetPlayableCharacterId().ToString(),
             *Quests->GetCurrentEpisodeId().ToString());
-        DrawText(Context, FLinearColor(0.78f, 0.82f, 0.68f), 38.0f, 58.0f, SmallFont, 0.90f, false);
-        DrawText(Quests->GetActiveQuestTitle().ToString(), FLinearColor::White, 38.0f, 79.0f, SmallFont, 1.0f, false);
-        DrawText(Quests->GetActiveObjective().ToString(), FLinearColor(0.84f, 0.88f, 0.77f), 38.0f, 101.0f, SmallFont, 0.92f, false);
+        DrawText(Context, FLinearColor(0.70f, 0.76f, 0.63f), 38.0f, 54.0f, SmallFont, 0.82f, false);
+        DrawText(Quests->GetActiveQuestTitle().ToString(), FLinearColor::White, 38.0f, 73.0f, SmallFont, 0.96f, false);
+        DrawText(Quests->GetActiveObjective().ToString(), FLinearColor(0.82f, 0.86f, 0.76f), 38.0f, 95.0f, SmallFont, 0.86f, false);
     }
 
     AShirePlayerCharacter* Player =
@@ -60,7 +62,7 @@ void AShireHUD::DrawHUD()
         bCombat
             ? TEXT("WASD Move  |  LMB Attack  |  Shift Sprint  |  Ctrl Crouch  |  E Interact  |  F5 Save  |  F9 Load")
             : TEXT("WASD Move  |  Shift Sprint  |  Ctrl Crouch  |  E Interact  |  F5 Save  |  F9 Load  |  F6/F7 Chapter  |  F8 Route"),
-        FLinearColor(0.85f, 0.85f, 0.85f, 0.85f), 24.0f, H - 34.0f, SmallFont, 0.85f, false);
+        FLinearColor(0.78f, 0.80f, 0.76f, 0.46f), 24.0f, H - 28.0f, SmallFont, 0.72f, false);
 
     const float Now = GetWorld()->GetTimeSeconds();
 
