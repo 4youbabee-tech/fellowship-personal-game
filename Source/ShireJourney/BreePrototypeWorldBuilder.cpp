@@ -169,6 +169,50 @@ void ABreePrototypeWorldBuilder::SpawnBreeTown()
     SpawnShape(CubeMesh, FVector(1710.0f, 920.0f, 65.0f), FVector(1.35f, 0.35f, 0.65f),
         FLinearColor(0.30f, 0.18f, 0.09f), FRotator::ZeroRotator, true);
 
+    // Street-life pass: stalls, rain puddles, lantern posts, crates and hitching details.
+    const FVector StallCenters[] = {
+        FVector(-260, 250, 55), FVector(140, -270, 55), FVector(520, 260, 55)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(StallCenters); ++Index)
+    {
+        const FVector P = StallCenters[Index];
+        SpawnShape(CubeMesh, P, FVector(0.95f, 0.55f, 0.55f),
+            FLinearColor(0.31f, 0.20f, 0.10f), FRotator::ZeroRotator, true);
+        SpawnShape(CubeMesh, P + FVector(0, 0, 85), FVector(1.10f, 0.70f, 0.05f),
+            Index % 2 == 0 ? FLinearColor(0.34f, 0.14f, 0.10f) : FLinearColor(0.16f, 0.23f, 0.12f),
+            FRotator(0, 0, Index % 2 == 0 ? 5.0f : -5.0f), false);
+    }
+
+    for (int32 Index = 0; Index < 7; ++Index)
+    {
+        const float X = -720.0f + Index * 250.0f;
+        const float Y = Index % 2 == 0 ? -140.0f : 155.0f;
+        SpawnShape(CubeMesh, FVector(X, Y, 3.0f), FVector(0.55f, 0.26f, 0.015f),
+            FLinearColor(0.055f, 0.11f, 0.13f), FRotator(0.0f, Index * 13.0f, 0.0f), false);
+    }
+
+    const FVector LanternPosts[] = {
+        FVector(-760, -260, 80), FVector(-360, 270, 80), FVector(80, -260, 80),
+        FVector(520, 280, 80), FVector(940, -180, 80), FVector(1280, 420, 80)
+    };
+    for (const FVector& P : LanternPosts)
+    {
+        SpawnShape(CylinderMesh, P, FVector(0.055f, 0.055f, 0.78f),
+            FLinearColor(0.16f, 0.10f, 0.055f), FRotator::ZeroRotator, false);
+        SpawnShape(SphereMesh, P + FVector(0, 0, 95), FVector(0.10f),
+            FLinearColor(0.78f, 0.52f, 0.14f), FRotator::ZeroRotator, false);
+    }
+
+    for (int32 Index = 0; Index < 10; ++Index)
+    {
+        const FVector P(
+            900.0f + (Index % 5) * 150.0f,
+            480.0f + (Index / 5) * 250.0f,
+            34.0f);
+        SpawnShape(CubeMesh, P, FVector(0.25f + 0.05f * (Index % 2), 0.25f, 0.30f),
+            FLinearColor(0.24f, 0.15f, 0.07f), FRotator(0.0f, Index * 17.0f, 0.0f), true);
+    }
+
     // Lightweight Bree crowd. Fewer agents than final art; enough for navigation and crowd-flow tests.
     const FVector BreeCrowd[] = {
         FVector(-420, 120, 20), FVector(-160, -120, 20), FVector(180, 160, 20), FVector(420, -80, 20),
