@@ -132,6 +132,17 @@ When runtime consumption is opened, the game should read this contract rather th
 
 The model uses aliases so one character identity (for example a story alias) cannot accidentally receive duplicate persistent memories.
 
+## 3C. Remote-safe intelligence contracts
+
+The following contracts are now defined before runtime rollout:
+
+- `Data/NPCConversationPlan.json` — participant eligibility, intent types, knowledge/story gates, priority, cooldowns and repetition fallback.
+- `Data/NPCMemoryPlan.json` — bounded memory tiers, expiry, route partitioning, per-profile/save budgets and alias identity rules.
+- `Data/LivingWorldEventPlan.json` — per-chapter micro-events, fauna, weather/prop motion, activity density and low-spec caps.
+- `Data/BoundedDialoguePlan.json` — authored/template/cached variation modes, deny-unlisted knowledge guard, canon safety, word/cache limits and deterministic fallback.
+
+These are deliberately data/validation contracts only. Runtime conversation playback, memory storage, event directing and dialogue variation remain behind the current functional/device gate.
+
 ## 4. Living-world target
 
 ### 4.1 Geography
