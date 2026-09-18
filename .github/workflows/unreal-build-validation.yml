@@ -86,7 +86,7 @@ jobs:
           echo Runner bootstrap succeeded.
 
       - name: Checkout exact commit with resilient archive download
-        shell: powershell
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

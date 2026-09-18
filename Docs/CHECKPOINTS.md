@@ -301,6 +301,12 @@
 - Added PG-026 to prevent returning to the flaky acquisition/log-upload pattern.
 - This checkpoint changes CI infrastructure only. A new green self-hosted run is required before claiming the hardened path validated.
 
+## CP30I — Self-Hosted PowerShell Policy Fix
+- Unreal Build Validation #18 reached the resilient exact-commit checkout step but failed before download because Windows PowerShell blocked the generated Actions script under the target machine execution policy.
+- Updated the checkout shell to run with `-NoProfile -ExecutionPolicy Bypass`.
+- Added PG-027 so the self-hosted workflow cannot silently return to the blocked shell form.
+- This remains CI infrastructure work only; a new green UE4.27.2 compile/import run is still required.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
