@@ -272,6 +272,15 @@ This converts failures into permanent project knowledge.
 
 **Proof rule:** this is runtime micro-life foundation only; final event variety, animation quality and target-device performance remain for the later integration pass.
 
+### PG-038 — Ambient conversations must remain bounded, local and subordinate to story
+**Risk:** world chatter can spam the player, repeat constantly, include non-social actors, overwhelm the HUD, or be mistaken for the still-unimplemented named/story-reactive conversation system.
+
+**Contract:** ambient Shire/Bree/Elf residents may run short original two-turn conversations only near the player. Captions render in world space rather than taking over the main HUD. At most two pairs may converse near the player, the same pair has a 90-second cooldown, and Bird/Courier/RoadWalker roles are excluded.
+
+**Scope rule:** this runtime is `RUNTIME_PARTIAL`. Fellowship companion banter, named story-reactive selection, voice/audio and persistent named-NPC dialogue memory remain separate unfinished work.
+
+**Guard:** Pre-Unreal Validation protects the caption runtime, pair cap/cooldown, role exclusions, authored local lines and explicit partial-scope declaration.
+
 ## What Guardian must never do automatically
 
 - change canon,
