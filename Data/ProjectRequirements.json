@@ -515,6 +515,108 @@
       ],
       "checkpoint": "FILM_EXPERIENCE_CONTRACT",
       "notes": "Coverage uses high-level scene intent and event labels, never screenplay text."
+    },
+    {
+      "id": "REQ-GOV-001",
+      "title": "Internal project governor for conflicts quality and pacing",
+      "category": "ProjectGovernance",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User explicitly requested an internal intelligent system that records requests, resolves contradictions, controls errors/lag and keeps development coordinated",
+      "intent": "Maintain a deterministic project governor that reconciles requirement conflicts, protects hard invariants, tracks region-level quality gates and blocks false completion claims.",
+      "evidence": [
+        "Docs/PROJECT_GOVERNOR.md",
+        "Data/ProjectGovernorPolicy.json",
+        "Data/ProjectDecisions.json",
+        "Data/ExperienceQualityGates.json",
+        "Scripts/project_governor.py"
+      ],
+      "implementation_refs": [
+        "Governor policy/decision/quality maps and CI validator exist"
+      ],
+      "missing_work": [
+        "Future meaningful requests must be translated into structured requirements/conflicts/decisions",
+        "Quality-gate statuses must be updated from actual PIE/device/human evidence",
+        "Automated gameplay traversal testing is not yet implemented"
+      ],
+      "acceptance_criteria": [
+        "CI fails on malformed governor data or unresolved declared conflicts",
+        "New conflicting requirements produce an explicit decision/open-conflict record",
+        "Region acceptance reflects actual proof levels",
+        "Previously passed critical regressions stop feature expansion"
+      ],
+      "dependencies": [
+        "REQ-MEM-001"
+      ],
+      "checkpoint": "CP30D",
+      "notes": "The governor is deterministic repository intelligence; it does not replace human product decisions or real gameplay tests."
+    },
+    {
+      "id": "REQ-QUALITY-001",
+      "title": "No inaccessible or broken required gameplay spaces",
+      "category": "Quality",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User explicitly requested that areas not become inaccessible, broken or error-prone",
+      "intent": "Every required route and story anchor must be enterable and traversable without crash, trap, collision blocker or progression dead end before the region is accepted.",
+      "evidence": [
+        "Data/ExperienceQualityGates.json",
+        "Docs/CURRENT_PROJECT_STATE.md"
+      ],
+      "implementation_refs": [
+        "Static chapter reachability and world routing guards exist"
+      ],
+      "missing_work": [
+        "PIE/device traversal proof for Shire and P1C02-P1C08",
+        "Future automated traversal probes where practical"
+      ],
+      "acceptance_criteria": [
+        "Required region boots",
+        "Intended route is traversable",
+        "No required anchor is unreachable",
+        "No story deadlock or collision trap remains",
+        "Regression is retested after fixes"
+      ],
+      "dependencies": [
+        "REQ-GOV-001",
+        "REQ-SAVE-001"
+      ],
+      "checkpoint": "CURRENT_HARD_GATE",
+      "notes": "Cannot be fully validated by static CI alone."
+    },
+    {
+      "id": "REQ-QUALITY-002",
+      "title": "Player experience should minimize boredom frustration and unnecessary waiting",
+      "category": "PlayerExperience",
+      "priority": "HIGH",
+      "status": "PLANNED",
+      "origin": "User explicitly said the final player should enjoy the game rather than struggle or get bored",
+      "intent": "Review each region for objective clarity, travel rhythm, repetition, unnecessary waiting, empty stretches, frustrating blockers and reward for exploration.",
+      "evidence": [
+        "Docs/PROJECT_GOVERNOR.md",
+        "Data/ExperienceQualityGates.json"
+      ],
+      "implementation_refs": [
+        "PACING gate defined for every Part I region"
+      ],
+      "missing_work": [
+        "Human pacing reviews chapter by chapter",
+        "Record findings and fixes",
+        "Tune travel/combat/dialogue rhythm from play evidence"
+      ],
+      "acceptance_criteria": [
+        "Human play review finds objectives understandable",
+        "No major section is dominated by repetitive empty travel or needless waiting",
+        "Failure/retry friction is reasonable",
+        "Exploration regularly provides meaningful discovery or atmosphere"
+      ],
+      "dependencies": [
+        "REQ-GOV-001",
+        "REQ-EXP-001",
+        "REQ-WORLD-001"
+      ],
+      "checkpoint": "EXPERIENCE_ACCEPTANCE",
+      "notes": "Fun cannot be inferred from compile/CI; human play evidence is mandatory."
     }
   ]
 }
