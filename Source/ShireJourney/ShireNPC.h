@@ -173,6 +173,7 @@ private:
     float BlinkRemaining = 0.0f;
     float DialogueActingRemaining = 0.0f;
     float ActingPhase = 0.0f;
+    float BanterCooldownRemaining = -1.0f;
 
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);
@@ -181,4 +182,6 @@ private:
     int32 ResolveCompanionSlot() const;
     FVector GetFormationTarget(const APawn* PlayerPawn) const;
     void RestoreCompanionFollowState();
+    void UpdateCompanionBanter(float DeltaSeconds);
+    FName ResolveCanonicalProfileId() const;
 };

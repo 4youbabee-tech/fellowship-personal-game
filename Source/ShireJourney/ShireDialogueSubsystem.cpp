@@ -310,6 +310,24 @@ bool UShireDialogueSubsystem::PlayDialogueCue(FName DialogueCue)
     return true;
 }
 
+bool UShireDialogueSubsystem::PlayDynamicLine(
+    const FShireDialogueLine& Line,
+    FName DynamicCueId)
+{
+    if (Line.Subtitle.IsEmpty())
+    {
+        return false;
+    }
+
+    StopDialogue();
+    ActiveDialogueCue = DynamicCueId == NAME_None ? FName(TEXT("DynamicNPCLine")) : DynamicCueId;
+    PendingLines = { Line };
+    bPlaying = true;
+    OnDialogueStateChanged.Broadcast(true);
+    AdvanceQueue();
+    return true;
+}
+
 void UShireDialogueSubsystem::StopDialogue()
 {
     if (UWorld* World = GetWorld())
