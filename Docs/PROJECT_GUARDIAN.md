@@ -240,6 +240,13 @@ This converts failures into permanent project knowledge.
 
 **Proof rule:** `PROCEDURAL_DISTINCT_PROXY` means runtime presence only. It is not final visual acceptance. Dedicated meshes/rigging/animation and PIE/device review remain required.
 
+### PG-033 — Build-first mode must keep visual identity distinct and proof labels honest
+**Risk:** batch-building many visible features makes it easy to let major characters collapse back into identical proxies or to confuse "compiled" with "looks finished".
+
+**Contract:** the Part I named cast may use low-cost modular proxy accessories during build-out, but core characters must remain visually distinguishable and the population plan must keep the explicit proxy/final-art boundary.
+
+**Build-first rule:** Pre-Unreal + real UE4.27.2 compile/import remain mandatory for merged runtime batches. PIE/device/performance/pacing/visual evidence may be deferred to the later integration pass but may not be marked passed early.
+
 ## What Guardian must never do automatically
 
 - change canon,

@@ -137,6 +137,23 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
     UStaticMeshComponent* PrototypeRightLeg;
 
+    // Lightweight modular identity pieces. These keep the main cast visually distinct
+    // until dedicated rigged production characters replace the procedural proxies.
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeCloak;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypePrimaryProp;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeSecondaryProp;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeBeard;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeHeadpiece;
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Dialogue")
     int32 CurrentDialogueIndex = 0;
 
@@ -149,6 +166,9 @@ private:
     float PrototypeTorsoBaseZ = -4.0f;
     float PrototypeHeadBaseZ = 39.0f;
     float PrototypeHairBaseZ = 47.0f;
+    FVector PrototypePrimaryPropBase = FVector::ZeroVector;
+    FRotator PrototypePrimaryPropRotation = FRotator::ZeroRotator;
+    FVector PrototypeCloakBase = FVector::ZeroVector;
     float BlinkCooldownRemaining = 0.0f;
     float BlinkRemaining = 0.0f;
     float DialogueActingRemaining = 0.0f;
