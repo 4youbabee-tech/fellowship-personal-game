@@ -264,6 +264,12 @@ void AFellowshipChapterWorldBuilder::EnsureProductionMeshes()
     AmonHenStairMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AmonHenStair.SM_AmonHenStair"));
     AmonHenRuinMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AmonHenRuin.SM_AmonHenRuin"));
     ArgonathSentinelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_ArgonathSentinel.SM_ArgonathSentinel"));
+
+    CommonMountainRidgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonMountainRidge.SM_CommonMountainRidge"));
+    CommonCliffWallMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonCliffWall.SM_CommonCliffWall"));
+    CommonTerracedHillMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonTerracedHill.SM_CommonTerracedHill"));
+    CommonRiverBankMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonRiverBank.SM_CommonRiverBank"));
+    CommonBoulderClusterMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBoulderCluster.SM_CommonBoulderCluster"));
 }
 
 void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId)
@@ -277,8 +283,31 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         }
     };
 
+    // CP49 common production terrain gives each chapter a readable silhouette without
+    // replacing the established story/quest topology. These are mostly non-colliding
+    // boundary/vista forms so the current traversal remains stable.
+    auto SpawnTerrainBand = [&SpawnProd](
+        UStaticMesh* Mesh,
+        const FVector& Start,
+        const FVector& Step,
+        int32 Count,
+        const FVector& Scale,
+        float YawStep)
+    {
+        for (int32 Index = 0; Index < Count; ++Index)
+        {
+            SpawnProd(Mesh, Start + Step * static_cast<float>(Index), Scale,
+                FRotator(0.0f, YawStep * Index, 0.0f), false);
+        }
+    };
+
     if (ChapterId == TEXT("P1C03"))
     {
+        SpawnTerrainBand(CommonTerracedHillMesh, FVector(-2200,-1450,-150), FVector(650,0,15), 8,
+            FVector(1.85f,1.45f,1.15f), 9.0f);
+        SpawnTerrainBand(CommonMountainRidgeMesh, FVector(-1800,1700,-120), FVector(850,0,25), 6,
+            FVector(2.2f,1.5f,1.55f), -7.0f);
+        SpawnProd(CommonBoulderClusterMesh, FVector(650,-850,10), FVector(1.15f), FRotator(0,31,0), false);
         SpawnProd(WeathertopArchMesh, FVector(1350, 0, 405), FVector(0.92f), FRotator(0, 8, 0), true);
         for (int32 I = 0; I < 6; ++I)
         {
@@ -291,6 +320,11 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
     }
     else if (ChapterId == TEXT("P1C04"))
     {
+        SpawnTerrainBand(CommonCliffWallMesh, FVector(-2200,-1700,-80), FVector(800,0,40), 7,
+            FVector(2.5f,1.4f,2.0f), 4.0f);
+        SpawnTerrainBand(CommonCliffWallMesh, FVector(-2100,1750,-70), FVector(820,0,35), 7,
+            FVector(2.4f,1.4f,1.9f), -4.0f);
+        SpawnProd(CommonRiverBankMesh, FVector(250,760,-30), FVector(2.6f,1.25f,1.0f), FRotator::ZeroRotator, false);
         const FVector Pavilions[] = { FVector(-850,-420,0), FVector(150,-520,0), FVector(1080,-360,0) };
         for (int32 I = 0; I < UE_ARRAY_COUNT(Pavilions); ++I)
         {
@@ -306,6 +340,12 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
     }
     else if (ChapterId == TEXT("P1C05"))
     {
+        SpawnTerrainBand(CommonMountainRidgeMesh, FVector(-1900,-1900,-140), FVector(900,0,75), 7,
+            FVector(2.7f,1.65f,2.2f), 6.0f);
+        SpawnTerrainBand(CommonMountainRidgeMesh, FVector(-1700,1900,-130), FVector(900,0,65), 7,
+            FVector(2.6f,1.6f,2.1f), -5.0f);
+        SpawnProd(CommonBoulderClusterMesh, FVector(400,-720,20), FVector(1.45f), FRotator(0,22,0), false);
+        SpawnProd(CommonBoulderClusterMesh, FVector(1400,760,30), FVector(1.65f), FRotator(0,-18,0), false);
         const FVector Tents[] = { FVector(-1550,-360,0), FVector(-1200,360,0), FVector(-820,-300,0) };
         for (int32 I = 0; I < UE_ARRAY_COUNT(Tents); ++I)
             SpawnProd(RoadCampTentMesh, Tents[I], FVector(0.78f), FRotator(0, I * 18.0f - 12.0f,0), true);
@@ -316,6 +356,10 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
     }
     else if (ChapterId == TEXT("P1C06"))
     {
+        SpawnTerrainBand(CommonCliffWallMesh, FVector(-2300,-1350,-120), FVector(780,0,0), 8,
+            FVector(2.2f,1.25f,2.7f), 0.0f);
+        SpawnTerrainBand(CommonCliffWallMesh, FVector(-2300,1350,-120), FVector(780,0,0), 8,
+            FVector(2.2f,1.25f,2.7f), 180.0f);
         for (int32 I = 0; I < 14; ++I)
         {
             const float X = -1900.0f + (I % 7) * 600.0f;
@@ -329,6 +373,10 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
     }
     else if (ChapterId == TEXT("P1C07"))
     {
+        SpawnTerrainBand(CommonTerracedHillMesh, FVector(-2100,-1550,-145), FVector(800,0,20), 7,
+            FVector(1.9f,1.5f,1.25f), 11.0f);
+        SpawnTerrainBand(CommonTerracedHillMesh, FVector(-1900,1600,-140), FVector(800,0,15), 7,
+            FVector(1.8f,1.45f,1.2f), -9.0f);
         const FVector Talans[] = { FVector(-1450,-720,0), FVector(-750,720,0), FVector(-50,-720,0), FVector(650,720,0), FVector(1350,-720,0) };
         for (int32 I = 0; I < UE_ARRAY_COUNT(Talans); ++I)
             SpawnProd(LorienTalanMesh, Talans[I], FVector(0.78f + 0.04f * (I % 2)), FRotator(0,I*19.0f,0), true);
@@ -338,6 +386,12 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
     }
     else if (ChapterId == TEXT("P1C08"))
     {
+        SpawnTerrainBand(CommonCliffWallMesh, FVector(-2600,-1650,-110), FVector(760,0,30), 8,
+            FVector(2.35f,1.3f,2.0f), 3.0f);
+        SpawnTerrainBand(CommonCliffWallMesh, FVector(-2500,1650,-100), FVector(760,0,25), 8,
+            FVector(2.3f,1.3f,1.95f), -3.0f);
+        SpawnProd(CommonRiverBankMesh, FVector(-1250,-620,-25), FVector(3.1f,1.2f,1.0f), FRotator(0,0,0), false);
+        SpawnProd(CommonRiverBankMesh, FVector(-1250,620,-25), FVector(3.1f,1.2f,1.0f), FRotator(0,180,0), false);
         const FVector Boats[] = { FVector(-1900,-120,0), FVector(-1500,130,0), FVector(-1080,-80,0) };
         for (int32 I = 0; I < UE_ARRAY_COUNT(Boats); ++I)
             SpawnProd(AnduinBoatMesh, Boats[I], FVector(0.82f), FRotator(0,I*3.0f,0), false);

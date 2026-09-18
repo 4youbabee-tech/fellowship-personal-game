@@ -49,6 +49,11 @@ private:
     UPROPERTY() UStaticMesh* AmonHenStairMesh = nullptr;
     UPROPERTY() UStaticMesh* AmonHenRuinMesh = nullptr;
     UPROPERTY() UStaticMesh* ArgonathSentinelMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonMountainRidgeMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonCliffWallMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonTerracedHillMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonRiverBankMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonBoulderClusterMesh = nullptr;
 
     bool bBuilt = false;
     bool bProductionMeshesLoaded = false;

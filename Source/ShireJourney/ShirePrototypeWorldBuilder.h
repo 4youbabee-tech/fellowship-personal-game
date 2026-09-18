@@ -63,6 +63,10 @@ private:
     UPROPERTY() UStaticMesh* ProductionLampPostMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionPicnicTableMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionLoadedCartMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonTerracedHillMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonVillageSlopeMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonRiverBankMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonBoulderClusterMesh = nullptr;
     UPROPERTY() UMaterialInterface* BasicMaterial;
 
     UPROPERTY() USceneComponent* RuntimeRoot;
