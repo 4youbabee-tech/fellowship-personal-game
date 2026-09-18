@@ -193,52 +193,52 @@ if missing_architecture_entries:
 if stale_architecture_entries:
     fail("SourceArchitecturePlan references inactive/missing runtime files: " + ", ".join(stale_architecture_entries))
 
-# PG-020: permanent project requirement memory must be structured and auditable.
-requirements_path = ROOT / "Data" / "ProjectRequirements.json"
-requirements_data = {}
-if not requirements_path.exists():
-    fail("Project requirements ledger missing: Data/ProjectRequirements.json")
+# PG-020: the single Project Governor is the authoritative project-management memory.
+governor_path = ROOT / "Data" / "ProjectGovernor.json"
+governor_data = {}
+if not governor_path.exists():
+    fail("Single project governor missing: Data/ProjectGovernor.json")
 else:
     try:
-        requirements_data = json.loads(read(requirements_path))
+        governor_data = json.loads(read(governor_path))
     except json.JSONDecodeError as exc:
-        fail(f"Invalid Data/ProjectRequirements.json: {exc}")
+        fail(f"Invalid Data/ProjectGovernor.json: {exc}")
 
-allowed_requirement_statuses = set(guard_rules.get("requirement_status_values", []))
-allowed_requirement_priorities = set(guard_rules.get("requirement_priority_values", []))
+if governor_data and governor_data.get("authority_id") != "FELLOWSHIP_SINGLE_PROJECT_GOVERNOR_V2":
+    fail("Data/ProjectGovernor.json has unexpected authority_id")
+
+allowed_requirement_statuses = set(governor_data.get("requirement_status_values", []))
+allowed_requirement_priorities = set(governor_data.get("priority_values", []))
 requirement_ids: set[str] = set()
-for index, item in enumerate(requirements_data.get("requirements", []), start=1):
+for index, item in enumerate(governor_data.get("requirements", []), start=1):
     req_id = str(item.get("id") or "").strip()
     title = str(item.get("title") or "").strip()
     intent = str(item.get("intent") or "").strip()
     status = str(item.get("status") or "").strip()
     priority = str(item.get("priority") or "").strip()
     acceptance = item.get("acceptance_criteria", [])
-    missing_work = item.get("missing_work", [])
 
     if not req_id or not title or not intent:
-        fail(f"ProjectRequirements entry {index} is missing id/title/intent")
+        fail(f"ProjectGovernor requirement entry {index} is missing id/title/intent")
         continue
     if req_id in requirement_ids:
-        fail(f"Duplicate project requirement id: {req_id}")
+        fail(f"Duplicate ProjectGovernor requirement id: {req_id}")
     requirement_ids.add(req_id)
     if allowed_requirement_statuses and status not in allowed_requirement_statuses:
-        fail(f"Project requirement {req_id} uses unknown status '{status}'")
+        fail(f"ProjectGovernor requirement {req_id} uses unknown status '{status}'")
     if allowed_requirement_priorities and priority not in allowed_requirement_priorities:
-        fail(f"Project requirement {req_id} uses unknown priority '{priority}'")
+        fail(f"ProjectGovernor requirement {req_id} uses unknown priority '{priority}'")
     if not isinstance(acceptance, list) or not acceptance:
-        fail(f"Project requirement {req_id} has no acceptance criteria")
-    if status in {"REQUESTED", "PLANNED", "PARTIAL", "DEFERRED"} and not isinstance(missing_work, list):
-        fail(f"Open project requirement {req_id} must track missing_work")
+        fail(f"ProjectGovernor requirement {req_id} has no acceptance criteria")
 
 for required_req in [
-    "REQ-MEM-001", "REQ-WORLD-001", "REQ-WORLD-002", "REQ-NPC-001", "REQ-NPC-002",
-    "REQ-NPC-003", "REQ-SAVE-001", "REQ-PERF-001",
+    "REQ-MEM-001", "REQ-GOV-001", "REQ-WORLD-001", "REQ-WORLD-002",
+    "REQ-NPC-001", "REQ-NPC-002", "REQ-NPC-003", "REQ-SAVE-001", "REQ-PERF-001",
     "REQ-VISION-001", "REQ-EXP-001", "REQ-EXP-002", "REQ-COVERAGE-001",
-    "REQ-GOV-001", "REQ-QUALITY-001", "REQ-QUALITY-002"
+    "REQ-QUALITY-001", "REQ-QUALITY-002"
 ]:
     if required_req not in requirement_ids:
-        fail(f"Permanent requirement ledger missing critical requirement: {required_req}")
+        fail(f"Single ProjectGovernor missing critical requirement: {required_req}")
 
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
