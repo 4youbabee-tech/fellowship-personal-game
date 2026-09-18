@@ -36,6 +36,7 @@ private:
     void SpawnHobbitHole(const FVector& Location, float Scale = 1.0f);
     void SpawnFenceLine(const FVector& Start, const FVector& End, int32 Sections);
     void SpawnGardenPatch(const FVector& Center, float Scale = 1.0f);
+    void ConfigureMorningAtmosphere();
     void SpawnVillage();
     void SpawnSideStories();
     void SpawnStoryActors();

@@ -5,10 +5,16 @@
 #include "ShireNPC.h"
 #include "ShireQuestTrigger.h"
 
+#include "Components/DirectionalLightComponent.h"
+#include "Components/SkyLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Engine/DirectionalLight.h"
+#include "Engine/PostProcessVolume.h"
+#include "Engine/SkyLight.h"
 #include "Engine/StaticMeshActor.h"
 #include "Engine/TextRenderActor.h"
+#include "EngineUtils.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
@@ -167,6 +173,108 @@ void AShirePrototypeWorldBuilder::SpawnGardenPatch(const FVector& Center, float 
             SpawnShape(SphereMesh, PlantLocation, FVector(0.10f, 0.10f, 0.075f) * Scale,
                 Leaf, FRotator::ZeroRotator, false);
         }
+    }
+}
+
+void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
+{
+    if (!GetWorld())
+    {
+        return;
+    }
+
+    ADirectionalLight* Sun = nullptr;
+    for (TActorIterator<ADirectionalLight> It(GetWorld()); It; ++It)
+    {
+        Sun = *It;
+        break;
+    }
+
+    if (!Sun)
+    {
+        Sun = GetWorld()->SpawnActor<ADirectionalLight>(
+            FVector::ZeroVector, FRotator(-38.0f, -28.0f, 0.0f));
+        if (Sun)
+        {
+            Sun->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        }
+    }
+
+    if (Sun)
+    {
+        Sun->SetActorRotation(FRotator(-38.0f, -28.0f, 0.0f));
+        if (UDirectionalLightComponent* SunComponent = Sun->GetLightComponent())
+        {
+            SunComponent->SetMobility(EComponentMobility::Movable);
+            SunComponent->SetIntensity(3.4f);
+            SunComponent->SetLightColor(FLinearColor(1.0f, 0.82f, 0.63f));
+            SunComponent->SetCastShadows(true);
+        }
+    }
+
+    ASkyLight* Sky = nullptr;
+    for (TActorIterator<ASkyLight> It(GetWorld()); It; ++It)
+    {
+        Sky = *It;
+        break;
+    }
+
+    if (!Sky)
+    {
+        Sky = GetWorld()->SpawnActor<ASkyLight>(FVector::ZeroVector, FRotator::ZeroRotator);
+        if (Sky)
+        {
+            Sky->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        }
+    }
+
+    if (Sky)
+    {
+        if (USkyLightComponent* SkyComponent = Sky->GetLightComponent())
+        {
+            SkyComponent->SetMobility(EComponentMobility::Movable);
+            SkyComponent->SetIntensity(0.78f);
+            SkyComponent->bLowerHemisphereIsBlack = false;
+            SkyComponent->RecaptureSky();
+        }
+    }
+
+    APostProcessVolume* PostProcess = nullptr;
+    for (TActorIterator<APostProcessVolume> It(GetWorld()); It; ++It)
+    {
+        PostProcess = *It;
+        if (PostProcess->bUnbound)
+        {
+            break;
+        }
+    }
+
+    if (!PostProcess)
+    {
+        PostProcess = GetWorld()->SpawnActor<APostProcessVolume>(
+            FVector::ZeroVector, FRotator::ZeroRotator);
+        if (PostProcess)
+        {
+            PostProcess->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        }
+    }
+
+    if (PostProcess)
+    {
+        PostProcess->bUnbound = true;
+        PostProcess->BlendWeight = 1.0f;
+
+        PostProcess->Settings.bOverride_AutoExposureMinBrightness = true;
+        PostProcess->Settings.AutoExposureMinBrightness = 0.80f;
+        PostProcess->Settings.bOverride_AutoExposureMaxBrightness = true;
+        PostProcess->Settings.AutoExposureMaxBrightness = 1.20f;
+        PostProcess->Settings.bOverride_AutoExposureBias = true;
+        PostProcess->Settings.AutoExposureBias = 0.10f;
+
+        PostProcess->Settings.bOverride_BloomIntensity = true;
+        PostProcess->Settings.BloomIntensity = 0.25f;
+        PostProcess->Settings.bOverride_VignetteIntensity = true;
+        PostProcess->Settings.VignetteIntensity = 0.12f;
     }
 }
 
@@ -691,6 +799,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     }
 
     bBuilt = true;
+    ConfigureMorningAtmosphere();
     SpawnVillage();
     SpawnSideStories();
     SpawnStoryActors();
