@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "decision_log_id": "FELLOWSHIP_PROJECT_DECISIONS_V1",
+  "decisions": [
+    {
+      "id": "DEC-001",
+      "title": "Film story anchors versus player exploration freedom",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-VISION-001",
+        "REQ-EXP-001",
+        "REQ-EXP-002",
+        "REQ-WORLD-001"
+      ],
+      "resolution": "Major film chronology/outcomes remain fixed; exploration, side routes, optional conversations and living-world activity belong primarily between required story anchors.",
+      "rationale": "Preserves the user's goal of living the film while allowing meaningful adventure and discovery.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Data/FilmExperiencePlan.json"
+      ]
+    },
+    {
+      "id": "DEC-002",
+      "title": "Living-world richness versus target-laptop performance",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-NPC-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Use rich near-player simulation and cheaper distance-adaptive/offscreen simulation; do not require always-on expensive AI for ambient life.",
+      "rationale": "The world should feel alive without sacrificing the low-spec device target.",
+      "authority": "BUILD_SAVE_STORY_INTEGRITY",
+      "evidence": [
+        "Docs/LIVING_WORLD_AI_BLUEPRINT.md",
+        "Source/ShireJourney/ShireAmbientNPC.cpp"
+      ]
+    },
+    {
+      "id": "DEC-003",
+      "title": "Source reorganization versus current functional validation gate",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-ORG-001",
+        "REQ-SAVE-001"
+      ],
+      "resolution": "Define and guard the target Public/Private source architecture now, but perform the physical move as a dedicated maintenance pass after the current F9/F8/chapter/device functional gate is healthy.",
+      "rationale": "Preserves organization without mixing a large path/include refactor into unresolved gameplay validation.",
+      "authority": "BUILD_SAVE_STORY_INTEGRITY",
+      "evidence": [
+        "Data/SourceArchitecturePlan.json",
+        "Source/ShireJourney/README.md"
+      ]
+    }
+  ],
+  "open_conflicts": []
+}
