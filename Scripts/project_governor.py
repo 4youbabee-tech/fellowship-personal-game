@@ -161,6 +161,13 @@ if not active_gate.get("required_evidence"):
 if not governor.get("update_protocol"):
     fail("Governor has no update protocol")
 
+for relative in governor.get("deprecated_secondary_authority_files", []):
+    if (ROOT / relative).exists():
+        fail(f"Deprecated secondary authority file must not exist: {relative}")
+
+if not governor.get("worker_contract"):
+    fail("Governor has no worker_contract")
+
 print(
     f"Single Project Governor checked {len(req_ids)} requirements, "
     f"{len(decision_ids)} decisions, {len(open_conflicts)} open conflicts, "
