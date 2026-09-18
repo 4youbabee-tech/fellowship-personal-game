@@ -1,0 +1,21 @@
+# Original project-owned landscape materials
+newmtl Stone
+Kd 0.31 0.32 0.29
+Ks 0.03 0.03 0.03
+Ns 8
+newmtl DarkStone
+Kd 0.18 0.19 0.18
+Ks 0.025 0.025 0.025
+Ns 6
+newmtl Turf
+Kd 0.18 0.31 0.13
+Ks 0.015 0.015 0.015
+Ns 5
+newmtl Soil
+Kd 0.22 0.15 0.08
+Ks 0.01 0.01 0.01
+Ns 4
+newmtl RiverMud
+Kd 0.15 0.17 0.12
+Ks 0.02 0.02 0.02
+Ns 5
