@@ -259,6 +259,21 @@ if re.search(r'UDirectionalLightComponent\s*\*\s*\w+\s*=\s*\w+->GetLightComponen
 if re.search(r'USkyLightComponent\s*\*\s*\w+\s*=\s*\w+->GetLightComponent\s*\(\s*\)\s*;', shire_world_cpp):
     fail("PG-011: direct GetLightComponent assignment to USkyLightComponent*; use Cast<>")
 
+# Guardian regression PG-012: UE4.27 logs a PIE warning if the Directional Light is
+# rotated before the light component is made Movable.
+morning_start = shire_world_cpp.find("void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()")
+morning_end = shire_world_cpp.find("void AShirePrototypeWorldBuilder::SpawnVillage()", morning_start)
+if morning_start < 0 or morning_end < 0:
+    fail("PG-012: ConfigureMorningAtmosphere/SpawnVillage boundary not found")
+else:
+    morning_block = shire_world_cpp[morning_start:morning_end]
+    mobility_pos = morning_block.find("SunComponent->SetMobility(EComponentMobility::Movable)")
+    rotation_pos = morning_block.find("Sun->SetActorRotation(")
+    if mobility_pos < 0 or rotation_pos < 0:
+        fail("PG-012: morning atmosphere missing sun mobility or rotation step")
+    elif rotation_pos < mobility_pos:
+        fail("PG-012: Directional Light rotation occurs before mobility is set to Movable")
+
 chapter_refs: set[str] = set()
 for path in sorted(SOURCE.glob("*.cpp")):
     text = read(path)

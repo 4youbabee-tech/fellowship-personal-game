@@ -63,7 +63,13 @@ Real UE4.27.2 validation history on 2026-09-18:
   - `An Unexpected Arrival`
   - `Reach the Shire lane and meet Gandalf.`
 
-The remaining hard gate is now the functional smoke-test layer: movement/interactions, save/load, F8 route round-trip, chapter smoke tests and target-device performance observation.
+Additional PIE evidence on 2026-09-18:
+- F5 Quick Save succeeded in PIE and displayed `Journey saved.`.
+- UE4.27 emitted one runtime warning that the existing Directional Light had to be Movable before rotation.
+- That warning was traced to `ConfigureMorningAtmosphere`, fixed by setting mobility before actor rotation, and recorded as Guardian regression PG-012.
+- Quick Load (F9) is still pending verification.
+
+The remaining hard gate is now the functional smoke-test layer: movement/interactions, F9 load round-trip, F8 route round-trip, chapter smoke tests and target-device performance observation.
 
 ## Authoritative runtime chapter IDs
 

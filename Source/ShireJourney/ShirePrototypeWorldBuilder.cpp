@@ -340,10 +340,11 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
 
     if (Sun)
     {
-        Sun->SetActorRotation(FRotator(-38.0f, -28.0f, 0.0f));
         if (UDirectionalLightComponent* SunComponent = Cast<UDirectionalLightComponent>(Sun->GetLightComponent()))
         {
+            // UE4.27 requires the light to be movable before changing the actor rotation in PIE.
             SunComponent->SetMobility(EComponentMobility::Movable);
+            Sun->SetActorRotation(FRotator(-38.0f, -28.0f, 0.0f));
             SunComponent->SetIntensity(3.4f);
             SunComponent->SetLightColor(FLinearColor(1.0f, 0.82f, 0.63f));
             SunComponent->SetCastShadows(true);

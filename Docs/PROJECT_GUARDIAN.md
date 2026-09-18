@@ -87,6 +87,15 @@ This converts failures into permanent project knowledge.
 
 **Guard:** static validation rejects direct subclass-pointer assignment from `GetLightComponent()`.
 
+### PG-012 — Move a light only after setting Movable
+**Observed failure:** after the compile fixes, PIE launched successfully but UE4.27 logged: `LightComponent0 has to be 'Movable' if you'd like to move`.
+
+**Root cause:** the Shire morning-atmosphere code rotated the existing Directional Light before setting its component mobility to `Movable`.
+
+**Fix pattern:** set the Directional Light component mobility first, then change actor rotation.
+
+**Guard:** static validation checks this ordering inside `ConfigureMorningAtmosphere`.
+
 ## What Guardian must never do automatically
 
 - change canon,
