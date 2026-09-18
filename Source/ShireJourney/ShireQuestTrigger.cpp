@@ -6,6 +6,56 @@
 #include "Engine/GameInstance.h"
 #include "GameFramework/PlayerController.h"
 
+namespace ShireCheckpointBindings
+{
+    struct FStoryCheckpointBinding
+    {
+        FName StoryBeatId;
+        FName CheckpointId;
+    };
+
+    static const FStoryCheckpointBinding StoryBindings[] = {
+        { TEXT("PartyArrival"), TEXT("WC_P1C01_PARTY") },
+        { TEXT("LeavingHomeRoad"), TEXT("WC_P1C01_DEPART") },
+        { TEXT("BlackRiderApproach"), TEXT("WC_P1C01_RIDER_PRE") },
+        { TEXT("BreeRoadNightfall"), TEXT("WC_P1C02_GATE") },
+        { TEXT("StriderPrivateRoom"), TEXT("WC_P1C02_PONY") },
+        { TEXT("WeathertopReveal"), TEXT("WC_P1C03_WEATHERTOP") },
+        { TEXT("MorgulWound"), TEXT("WC_P1C03_WOUND") },
+        { TEXT("RivendellAwakening"), TEXT("WC_P1C04_WAKE") },
+        { TEXT("FellowshipAssembled"), TEXT("WC_P1C04_COUNCIL") },
+        { TEXT("FellowshipCamp"), TEXT("WC_P1C05_CAMP") },
+        { TEXT("CaradhrasApproach"), TEXT("WC_P1C05_CARADHRAS") },
+        { TEXT("MoriaLake"), TEXT("WC_P1C05_MORIA_GATE") },
+        { TEXT("MoriaEntry"), TEXT("WC_P1C06_ENTRY") },
+        { TEXT("BalinsTombReveal"), TEXT("WC_P1C06_BALIN") },
+        { TEXT("BalrogApproach"), TEXT("WC_P1C06_BRIDGE") },
+        { TEXT("LorienEntry"), TEXT("WC_P1C07_ENTRY") },
+        { TEXT("Mirror"), TEXT("WC_P1C07_MIRROR") },
+        { TEXT("AnduinDeparture"), TEXT("WC_P1C08_ANDUIN") },
+        { TEXT("AmonHenArrival"), TEXT("WC_P1C08_AMONHEN") },
+        { TEXT("BoromirFall"), TEXT("WC_P1C08_FALL") },
+        { TEXT("Part1End"), TEXT("WC_P1C08_END") },
+    };
+
+    static FName Resolve(FName StoryBeatId)
+    {
+        if (StoryBeatId == NAME_None)
+        {
+            return NAME_None;
+        }
+
+        for (const FStoryCheckpointBinding& Binding : StoryBindings)
+        {
+            if (Binding.StoryBeatId == StoryBeatId)
+            {
+                return Binding.CheckpointId;
+            }
+        }
+        return NAME_None;
+    }
+}
+
 AShireQuestTrigger::AShireQuestTrigger()
 {
     PrimaryActorTick.bCanEverTick = false;
@@ -26,7 +76,8 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
     const FHitResult& SweepResult)
 {
-    if (!OtherActor || !OtherActor->IsA<AShirePlayerCharacter>() || (bTriggerOnce && bHasTriggered))
+    AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(OtherActor);
+    if (!Player || (bTriggerOnce && bHasTriggered))
     {
         return;
     }
@@ -79,6 +130,15 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
     if (SideStoryBeatAfterTrigger != NAME_None)
     {
         Quests->TriggerStoryBeat(SideStoryBeatAfterTrigger);
+    }
+
+    // Checkpoints tied to story beats are written only after the authoritative quest/story
+    // mutations above. Chapter-transition checkpoints are queued by the player after the
+    // next chapter is rebuilt, so those transition beats are intentionally not duplicated here.
+    const FName CheckpointId = ShireCheckpointBindings::Resolve(StoryBeatId);
+    if (CheckpointId != NAME_None)
+    {
+        Player->SaveAutomaticCheckpoint(CheckpointId, true);
     }
 
     // Show the authored objective before a chapter hand-off can destroy this actor.
