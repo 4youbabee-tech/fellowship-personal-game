@@ -245,15 +245,16 @@
         "Current source only proves social pauses; no complete NPC-to-NPC dialogue exchange is claimed"
       ],
       "implementation_refs": [
-        "Data/NPCConversationPlan.json defines participant eligibility, intent categories, knowledge/story gates, priority, cooldowns and repetition policy"
+        "Data/NPCConversationPlan.json defines participant eligibility, intent categories, knowledge/story gates, priority, cooldowns and repetition policy",
+        "AShireAmbientNPC now performs bounded two-turn world-space text conversations for ambient Shire/Bree/Elf residents near the player",
+        "runtime caps conversations to two simultaneous pairs and enforces 90-second same-pair cooldown"
       ],
       "missing_work": [
-        "runtime conversation selection",
-        "turn-taking/playback",
-        "speaker/listener gaze integration",
-        "subtitle/audio bridge",
-        "runtime cooldown/history tracking",
-        "PIE/device/performance validation"
+        "named Fellowship companion banter runtime",
+        "story/quest-reactive named-NPC conversation selection",
+        "speaker/listener named-character gaze/audio integration",
+        "persistent named-NPC conversation memory",
+        "PIE/device/performance/visual dialogue validation"
       ],
       "acceptance_criteria": [
         "Two eligible NPCs can exchange context-appropriate lines",
@@ -1367,7 +1368,7 @@
       "id": "WORK-LW-002",
       "title": "Implement NPC-to-NPC contextual conversations",
       "status": "PARTIAL",
-      "rationale": "NPC conversation eligibility, intent, knowledge, priority, cooldown and repetition contracts are data-defined; runtime playback remains gated."
+      "rationale": "Ambient resident two-turn conversations now run with caps/cooldowns; named Fellowship/story-reactive conversations, audio and integration acceptance remain pending."
     },
     {
       "order": 10,
@@ -1386,12 +1387,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Build-first ambient micro-life pass after CP35 sky motion",
+    "reason": "Build-first ambient NPC-to-NPC conversation runtime",
     "summary": [
-      "Added reusable ActivityPropType to ambient residents.",
-      "Added baskets, crates, satchels, mugs, books and lanterns by role/region.",
-      "Added small work/social arm gestures and carried-prop motion.",
-      "Kept the feature on the existing distance-throttled ambient actor instead of adding a heavy new AI system."
+      "Added world-space two-turn social captions for ambient residents near the player.",
+      "Added original role-specific Shire, Bree and Elven ambient dialogue.",
+      "Capped simultaneous conversations to two and added 90-second same-pair cooldown.",
+      "Excluded Bird/Courier/RoadWalker roles from social dialogue.",
+      "Named Fellowship/story-reactive conversations remain a later layer; no PIE/device acceptance claimed."
     ]
   },
   "development_mode": {
