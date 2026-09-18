@@ -1,7 +1,36 @@
 {
-  "schema_version": 1,
-  "ledger_id": "FELLOWSHIP_PROJECT_REQUIREMENTS_V1",
-  "status_values": [
+  "schema_version": 2,
+  "authority_id": "FELLOWSHIP_SINGLE_PROJECT_GOVERNOR_V2",
+  "authority_rule": "This file is the sole authoritative project-management decision source. Other docs/data may describe implementation details but must not override requirements, priorities, decisions, conflicts, active gate, or quality status recorded here.",
+  "repository": "4youbabee-tech/fellowship-personal-game",
+  "active_branch": "develop",
+  "engine": "Unreal Engine 4.27.2",
+  "target_profile": {
+    "platform": "Windows",
+    "renderer": "DX11",
+    "resolution": "720p",
+    "quality": "Low-Medium",
+    "fps_floor_target": 30,
+    "ram_gb": 8,
+    "gpu_vram_class_gb": 2
+  },
+  "product_north_star": [
+    "Let the player live the Peter Jackson film story as a playable adventure rather than inventing a replacement main story.",
+    "Make the world feel alive, beautiful, explorable and responsive while preserving story chronology and low-spec performance.",
+    "Preserve every meaningful user request and decision so chat loss or developer changes never erase project intent.",
+    "Prefer player enjoyment, clarity, stable traversal, save continuity and reliable performance over uncontrolled feature quantity."
+  ],
+  "operating_rules": [
+    "Global project-management changes go through the single Governor and a validation branch/PR; workers must not create competing authority files.",
+    "One governor, one decision authority. No secondary file may independently redefine requirement status, priority, conflict resolution, active gate, or region acceptance.",
+    "Every meaningful user request receives a stable requirement ID here before or with implementation.",
+    "New requests never silently delete older requests; contradictions become explicit conflicts/decisions here.",
+    "The film story spine, build/save/story integrity, target-device performance and required traversal cannot be silently traded away.",
+    "A feature is never called accepted from compile/static evidence alone.",
+    "If a previously passed critical gate fails, stop feature expansion, repair the smallest failing layer, and rerun the exact failed gate.",
+    "Human pacing and visual review are mandatory for enjoyment/acceptance; CI cannot infer fun."
+  ],
+  "requirement_status_values": [
     "REQUESTED",
     "PLANNED",
     "PARTIAL",
@@ -16,13 +45,6 @@
     "HIGH",
     "MEDIUM",
     "LOW"
-  ],
-  "rules": [
-    "Every meaningful user request must have a stable requirement ID.",
-    "Original user intent must not be silently deleted when implementation details change.",
-    "IMPLEMENTED requires repository evidence; VALIDATED requires explicit test evidence.",
-    "A green compile does not imply PIE, device, performance or visual acceptance.",
-    "Open requirements remain in the ledger across developer/chat handoffs."
   ],
   "requirements": [
     {
@@ -617,6 +639,463 @@
       ],
       "checkpoint": "EXPERIENCE_ACCEPTANCE",
       "notes": "Fun cannot be inferred from compile/CI; human play evidence is mandatory."
+    },
+    {
+      "id": "REQ-CI-001",
+      "title": "Protected integration path with required validation checks",
+      "category": "ProjectGovernance",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "origin": "Large-team engineering discipline adopted for this project",
+      "intent": "Prevent unvalidated changes from becoming the shared development baseline by requiring the project validation gates on integration branches.",
+      "evidence": [
+        ".github/workflows/pre-unreal-validation.yml",
+        ".github/workflows/unreal-build-validation.yml"
+      ],
+      "implementation_refs": [
+        "Pre-Unreal and self-hosted UE4.27.2 build/import workflows exist"
+      ],
+      "missing_work": [
+        "GitHub develop/main branch protection or ruleset is not currently enabled",
+        "Require relevant status checks before protected integration",
+        "Keep emergency override exceptional and explicitly recorded"
+      ],
+      "acceptance_criteria": [
+        "develop/main integration policy prevents normal merge when required checks fail",
+        "Pre-Unreal Project Governor validation is a required check",
+        "UE4.27.2 build/import is required for relevant integration changes",
+        "Any bypass is explicitly recorded rather than silent"
+      ],
+      "dependencies": [
+        "REQ-GOV-001"
+      ],
+      "checkpoint": "GOVERNANCE_HARDENING",
+      "notes": "Current repository reports develop as unprotected; tool connection does not expose administration write access."
     }
+  ],
+  "hard_invariants": [
+    {
+      "id": "INV-MEMORY",
+      "description": "Meaningful user requirements and decisions must be persisted in repository data; chat history is never the sole source of truth.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-STORY",
+      "description": "Peter Jackson film continuity remains the primary story spine unless the user explicitly records a product-direction override.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-INTEGRITY",
+      "description": "A change must not knowingly introduce build failure, crash, save corruption, story deadlock or route-state loss.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-TRAVERSAL",
+      "description": "Intended playable routes and required story anchors must not be accepted while blocked, trapping the player, or unreachable.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-PERFORMANCE",
+      "description": "Features must remain compatible with the target laptop profile: Windows DX11, 720p, Low/Medium, 30 FPS floor target, 8 GB RAM, roughly 2 GB VRAM-class GPU.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-PROOF",
+      "description": "Static/compile success must never be presented as PIE, device, performance, pacing or visual acceptance.",
+      "auto_override": false
+    }
+  ],
+  "conflict_status_values": [
+    "OPEN",
+    "RESOLVED",
+    "WAIVED"
+  ],
+  "decision_status_values": [
+    "PROPOSED",
+    "ACCEPTED",
+    "SUPERSEDED"
+  ],
+  "conflict_rules": [
+    "A new request never silently deletes or rewrites an older requirement.",
+    "If two active requirements conflict, the conflict must be explicitly recorded and resolved before either can be treated as fully accepted.",
+    "Hard invariants cannot be silently overridden by implementation convenience.",
+    "A user may explicitly change product direction; that override must be recorded as a decision and linked to affected requirements.",
+    "When no explicit user override exists, prefer preserving story/progress integrity and target-device playability over visual scope or feature quantity.",
+    "Prefer the smallest change that satisfies the request without destabilizing already validated behavior."
+  ],
+  "decision_priority_order": [
+    "USER_EXPLICIT_DIRECTION",
+    "BUILD_SAVE_STORY_INTEGRITY",
+    "FILM_CANON_AND_CHRONOLOGY",
+    "TARGET_DEVICE_PERFORMANCE",
+    "PLAYABILITY_AND_TRAVERSAL",
+    "PLAYER_CLARITY_AND_PACING",
+    "LIVING_WORLD_DEPTH",
+    "VISUAL_POLISH",
+    "OPTIONAL_SCOPE"
+  ],
+  "decisions": [
+    {
+      "id": "DEC-001",
+      "title": "Film story anchors versus player exploration freedom",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-VISION-001",
+        "REQ-EXP-001",
+        "REQ-EXP-002",
+        "REQ-WORLD-001"
+      ],
+      "resolution": "Major film chronology/outcomes remain fixed; exploration, side routes, optional conversations and living-world activity belong primarily between required story anchors.",
+      "rationale": "Preserves the user's goal of living the film while allowing meaningful adventure and discovery.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Data/FilmExperiencePlan.json"
+      ]
+    },
+    {
+      "id": "DEC-002",
+      "title": "Living-world richness versus target-laptop performance",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-NPC-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Use rich near-player simulation and cheaper distance-adaptive/offscreen simulation; do not require always-on expensive AI for ambient life.",
+      "rationale": "The world should feel alive without sacrificing the low-spec device target.",
+      "authority": "BUILD_SAVE_STORY_INTEGRITY",
+      "evidence": [
+        "Docs/LIVING_WORLD_AI_BLUEPRINT.md",
+        "Source/ShireJourney/ShireAmbientNPC.cpp"
+      ]
+    },
+    {
+      "id": "DEC-003",
+      "title": "Source reorganization versus current functional validation gate",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-ORG-001",
+        "REQ-SAVE-001"
+      ],
+      "resolution": "Define and guard the target Public/Private source architecture now, but perform the physical move as a dedicated maintenance pass after the current F9/F8/chapter/device functional gate is healthy.",
+      "rationale": "Preserves organization without mixing a large path/include refactor into unresolved gameplay validation.",
+      "authority": "BUILD_SAVE_STORY_INTEGRITY",
+      "evidence": [
+        "Data/SourceArchitecturePlan.json",
+        "Source/ShireJourney/README.md"
+      ]
+    }
+  ],
+  "open_conflicts": [],
+  "quality_gate_status_values": [
+    "NOT_TESTED",
+    "PARTIAL",
+    "PASSED",
+    "FAILED",
+    "BLOCKED"
+  ],
+  "quality_gate_definitions": [
+    {
+      "id": "STATIC",
+      "meaning": "Repository/static validation covers required contracts."
+    },
+    {
+      "id": "COMPILE",
+      "meaning": "Real UE4.27.2 C++/UHT build succeeds on exact relevant head."
+    },
+    {
+      "id": "BOOT",
+      "meaning": "Region can be entered in PIE/device without crash/freeze or immediate blocker."
+    },
+    {
+      "id": "TRAVERSAL",
+      "meaning": "Required intended route/anchors are reachable; no collision trap, dead end or inaccessible required space."
+    },
+    {
+      "id": "PERSISTENCE",
+      "meaning": "Save/load and route/chapter continuity preserve required player/story state."
+    },
+    {
+      "id": "PERFORMANCE",
+      "meaning": "Target-device traversal shows no severe hitching, memory pressure or unplayable frame-rate behavior against the project target."
+    },
+    {
+      "id": "PACING",
+      "meaning": "Human play review finds objectives readable and travel/combat/dialogue rhythm not excessively repetitive, empty, frustrating or boring."
+    },
+    {
+      "id": "VISUAL",
+      "meaning": "User has reviewed and accepted the region's current visual/gameplay direction."
+    }
+  ],
+  "required_quality_gate_ids": [
+    "STATIC",
+    "COMPILE",
+    "BOOT",
+    "TRAVERSAL",
+    "PERSISTENCE",
+    "PERFORMANCE",
+    "PACING",
+    "VISUAL"
+  ],
+  "required_regions": [
+    "P1C01_ShIre",
+    "P1C02_Bree",
+    "P1C03_WeathertopFord",
+    "P1C04_Rivendell",
+    "P1C05_CaradhrasWestGate",
+    "P1C06_Moria",
+    "P1C07_Lothlorien",
+    "P1C08_AnduinAmonHen",
+    "P1G01_Isengard"
+  ],
+  "region_quality": [
+    {
+      "id": "P1C01_ShIre",
+      "chapter": "P1C01",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "PARTIAL",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "PARTIAL",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Docs/CURRENT_PROJECT_STATE.md",
+        "F5 quick save historically verified; F9 round-trip remains pending"
+      ],
+      "blockers": [
+        "Focused Shire traversal",
+        "F9 round-trip",
+        "target-device performance observation",
+        "user pacing/visual review"
+      ]
+    },
+    {
+      "id": "P1C02_Bree",
+      "chapter": "P1C02",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Part I runtime greybox and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "PIE chapter smoke and all experiential gates"
+      ]
+    },
+    {
+      "id": "P1C03_WeathertopFord",
+      "chapter": "P1C03",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Part I runtime greybox and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "PIE chapter smoke and all experiential gates"
+      ]
+    },
+    {
+      "id": "P1C04_Rivendell",
+      "chapter": "P1C04",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Part I runtime greybox and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "PIE chapter smoke and all experiential gates"
+      ]
+    },
+    {
+      "id": "P1C05_CaradhrasWestGate",
+      "chapter": "P1C05",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Part I runtime greybox and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "PIE chapter smoke and all experiential gates"
+      ]
+    },
+    {
+      "id": "P1C06_Moria",
+      "chapter": "P1C06",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Part I runtime greybox/combat foundation and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "PIE chapter smoke and all experiential gates"
+      ]
+    },
+    {
+      "id": "P1C07_Lothlorien",
+      "chapter": "P1C07",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Part I runtime greybox and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "PIE chapter smoke and all experiential gates"
+      ]
+    },
+    {
+      "id": "P1C08_AnduinAmonHen",
+      "chapter": "P1C08",
+      "route": "FrodoMain",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Part I runtime greybox/combat foundation and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "PIE chapter smoke and all experiential gates"
+      ]
+    },
+    {
+      "id": "P1G01_Isengard",
+      "chapter": "P1C01",
+      "route": "GandalfParallel",
+      "gates": {
+        "STATIC": "PASSED",
+        "COMPILE": "PASSED",
+        "BOOT": "NOT_TESTED",
+        "TRAVERSAL": "NOT_TESTED",
+        "PERSISTENCE": "NOT_TESTED",
+        "PERFORMANCE": "NOT_TESTED",
+        "PACING": "NOT_TESTED",
+        "VISUAL": "NOT_TESTED"
+      },
+      "evidence": [
+        "Gandalf/Isengard prototype and current exact-head compile evidence"
+      ],
+      "blockers": [
+        "F8 round-trip and Isengard functional traversal"
+      ]
+    }
+  ],
+  "active_gate": {
+    "id": "CURRENT_FUNCTIONAL_HARD_GATE",
+    "status": "OPEN",
+    "blocks_major_feature_expansion": true,
+    "required_evidence": [
+      "Shire functional traversal: movement/camera/sprint/crouch/interact/HUD/quest/NPC awareness/dialogue",
+      "F9 save/load round-trip restores expected transform and story state",
+      "F8 Frodo -> Gandalf/Isengard -> Frodo round-trip preserves Frodo progress/location",
+      "P1C02-P1C08 developer chapter smoke tests",
+      "Target-laptop traversal/performance observation for crash/freeze/hitch/memory/FPS",
+      "Human pacing/clarity observations where applicable"
+    ]
+  },
+  "reference_only_files": [
+    "Docs/CURRENT_PROJECT_STATE.md",
+    "Docs/CHECKPOINTS.md",
+    "Docs/PROJECT_GOVERNOR.md",
+    "Docs/PROJECT_MEMORY_SYSTEM.md",
+    "Docs/STORY_CANON_BIBLE.md",
+    "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
+    "Docs/LIVING_WORLD_AI_BLUEPRINT.md",
+    "Data/SourceArchitecturePlan.json",
+    "Data/FilmExperiencePlan.json",
+    "Data/LivingWorldFeaturePlan.json",
+    "Data/WorldCheckpointPlan.csv",
+    "Data/BiomePlan.csv",
+    "Data/StoryBeatPlan.csv",
+    "Data/DialogueIntent.csv",
+    "Data/MusicCuePlan.csv",
+    "Data/VoiceCuePlan.csv"
+  ],
+  "update_protocol": [
+    "Treat Data/ProjectGovernor.json as the first-read/last-write coordination record for any meaningful project change.",
+    "Read this file first before any meaningful gameplay, architecture, story or quality decision.",
+    "For a new user request: add/update one requirement here, then inspect dependencies/conflicts before implementation.",
+    "For a contradiction: preserve both requirements and add/update one decision/open conflict here.",
+    "For implementation: update evidence/missing_work/status here only after repository evidence exists.",
+    "For testing: update region_quality and active_gate only from actual static/compile/PIE/device/human evidence.",
+    "If any reference file conflicts with this governor, reconcile that file to this governor in the same logical change."
+  ],
+  "deprecated_secondary_authority_files": [
+    "Data/ProjectRequirements.json",
+    "Data/ProjectGovernorPolicy.json",
+    "Data/ProjectDecisions.json",
+    "Data/ExperienceQualityGates.json"
+  ],
+  "worker_contract": [
+    "Workers may modify code/assets/plans only within the Governor's recorded direction.",
+    "Workers do not independently change global requirement priority, acceptance state, active gate, or conflict resolution.",
+    "Any global direction change must be recorded in this Governor in the same logical change.",
+    "A worker discovering a contradiction records it here rather than choosing silently.",
+    "No major feature starts while active_gate.blocks_major_feature_expansion is true."
   ]
 }

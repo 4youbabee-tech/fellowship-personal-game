@@ -9,30 +9,28 @@
 
 Read these in order:
 
-1. `Docs/CURRENT_PROJECT_STATE.md` — exact operational state, proof level, and next hard gate.
-2. `Data/ProjectRequirements.json` — permanent user-request ledger; never rely on chat memory instead of this.
-3. `Docs/PROJECT_MEMORY_SYSTEM.md` — rules for updating user requests, decisions and evidence.
-4. `Docs/PROJECT_GOVERNOR.md` — conflict resolution, hard invariants, quality gates and pacing control.
-5. `Data/ProjectDecisions.json` — accepted decisions and unresolved conflicts.
-6. `Data/ExperienceQualityGates.json` — region-level stability/traversal/performance/pacing/visual proof.
-7. `Docs/CHECKPOINTS.md` — chronological development checkpoints and what each one proved.
-8. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
-9. `Docs/LIVING_WORLD_AI_BLUEPRINT.md` — NPC/world-life intelligence design.
-10. `Data/LivingWorldFeaturePlan.json` — living-world implementation/status phases.
-11. `Docs/PRODUCTION_COMPLETENESS_MATRIX.md` — what exists versus what is still incomplete across production pillars.
-12. `Docs/DEVELOPMENT_GATES.md` — mandatory build/PIE/device discipline.
-13. `Docs/PROJECT_GUARDIAN.md` — regression memory and permanent lessons from failures.
-14. `Docs/STORY_CANON_BIBLE.md` — story/canon authority before story changes.
-15. `Data/SourceArchitecturePlan.json` — machine-readable ownership and target folder for every runtime module source file.
-16. `Data/WorldCheckpointPlan.csv` — machine-readable player/world checkpoint intent.
+1. `Data/ProjectGovernor.json` — **single project authority** for requirements, priorities, conflicts, decisions, active gate and region quality.
+2. `Docs/CURRENT_PROJECT_STATE.md` — operational snapshot, proof level and exact next hard gate.
+3. `Docs/PROJECT_GOVERNOR.md` — explains how the single authority is used.
+4. `Docs/PROJECT_MEMORY_SYSTEM.md` — persistence/recovery rules.
+5. `Docs/CHECKPOINTS.md` — chronological development history.
+6. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
+7. `Docs/LIVING_WORLD_AI_BLUEPRINT.md` — NPC/world-life intelligence design.
+8. `Data/LivingWorldFeaturePlan.json` — living-world implementation/detail plan.
+9. `Docs/PRODUCTION_COMPLETENESS_MATRIX.md` — production-pillar completeness.
+10. `Docs/DEVELOPMENT_GATES.md` — build/PIE/device discipline.
+11. `Docs/PROJECT_GUARDIAN.md` — regression memory.
+12. `Docs/STORY_CANON_BIBLE.md` — story/canon detail.
+13. `Data/SourceArchitecturePlan.json` — runtime source ownership/target paths.
+14. `Data/WorldCheckpointPlan.csv` — player/world checkpoint detail.
 
 If code, data, and documentation disagree, stop and reconcile them in the same logical change.
 
 
 ## User-request rule
 
-Before implementing a meaningful feature request, find or create its stable ID in `Data/ProjectRequirements.json`.
-After implementation, update the same entry with repository evidence, remaining gaps and actual proof level.
+Before implementing a meaningful feature request, find or create its stable ID in `Data/ProjectGovernor.json`.
+After implementation, update the same Governor entry with repository evidence, remaining gaps and actual proof level.
 Never mark a request complete merely because the conversation moved on.
 
 

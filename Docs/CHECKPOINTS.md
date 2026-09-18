@@ -274,6 +274,15 @@
 - Added permanent requirements for governor continuity, accessible required gameplay spaces and human pacing/enjoyment review.
 - The Governor does not claim zero bugs or automatically judge fun; it forces uncertainty, conflicts and missing evidence to remain visible and blocks malformed/contradictory structured state.
 
+## CP30E — Single Project Governor Authority
+- Consolidated requirements, priorities, conflicts, decisions, active hard gate and region quality states into one authoritative file: `Data/ProjectGovernor.json`.
+- Removed the former secondary authority files `ProjectRequirements.json`, `ProjectGovernorPolicy.json`, `ProjectDecisions.json` and `ExperienceQualityGates.json`.
+- Updated `Scripts/project_governor.py` so CI rejects any attempt to reintroduce those secondary authority files.
+- Supporting story/world/source/living-world/checkpoint plans remain detailed references, not independent project managers.
+- Added a worker contract: programmers may specialize, but no worker changes global direction independently of the Governor.
+- Recorded large-team integration discipline as `REQ-CI-001`: required checks/branch protection should guard shared integration; repository administration enforcement is still pending because the current connection does not expose admin-write access.
+- This checkpoint is governance-only; current gameplay hard gate remains F9/F8/chapter/device validation.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 

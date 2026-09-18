@@ -1,85 +1,120 @@
-# PROJECT GOVERNOR — INTERNAL DEVELOPMENT CONTROL SYSTEM
+# PROJECT GOVERNOR — SINGLE PROJECT AUTHORITY
 
-> The Project Governor is the project's pacing/control layer.
-> It exists so the game does not depend on one chat, one programmer, or one person's memory.
+> **READ THIS FIRST FOR PROJECT DECISIONS.**
+>
+> `Data/ProjectGovernor.json` is the **only authoritative project-management decision source**.
+> It owns user requirements, priorities, conflicts, decisions, the active hard gate and region quality status.
+>
+> Other documents and plans may describe implementation details, story, world design or engineering,
+> but they do not independently override the Governor.
 
-## Responsibilities
+## Why one authority
 
-The Governor combines four kinds of project memory:
+This project is large, chat history can disappear, and different human/automated programmers may work on it.
 
-1. **Requirements** — `Data/ProjectRequirements.json`
-2. **Decisions/conflicts** — `Data/ProjectDecisions.json`
-3. **Hard policy / priority rules** — `Data/ProjectGovernorPolicy.json`
-4. **Region quality gates** — `Data/ExperienceQualityGates.json`
+A single authority prevents:
+- two programmers making incompatible decisions,
+- one request silently replacing another,
+- a new developer assuming an unfinished feature is complete,
+- story, save, performance or traversal rules drifting apart,
+- several "manager" files disagreeing about what is true.
 
-It works together with Project Guardian, CURRENT_PROJECT_STATE, CHECKPOINTS and the source architecture map.
+## The one authoritative file
 
-## What it must prevent
+`Data/ProjectGovernor.json`
 
-- silently forgetting a user request,
-- silently replacing an older request with a contradictory newer request,
-- changing the film story spine by accident,
-- claiming a feature complete because it compiled,
-- accepting a region that cannot be traversed,
-- accepting save/load or route switching without round-trip proof,
-- adding visual/NPC complexity that makes the target laptop unplayable,
-- continuing feature expansion while a previously passed critical gate is broken,
-- letting long empty/repetitive sections become accepted without human pacing review.
+It contains:
+- permanent user requirements,
+- requirement status and priority,
+- hard invariants,
+- conflict-resolution rules,
+- recorded decisions,
+- unresolved conflicts,
+- region quality gates,
+- the current active gate,
+- the update protocol,
+- the target hardware/profile,
+- the product north star.
 
-## Conflict resolution
+## Supporting files are references, not managers
 
-If two requests conflict:
-1. preserve both requests in the ledger,
-2. mark/record the conflict,
-3. create a decision in `Data/ProjectDecisions.json`,
-4. use the priority rules in `Data/ProjectGovernorPolicy.json`,
-5. if product direction itself must change, record the user's explicit override,
-6. never silently delete the losing/older request; mark it SUPERSEDED/DEFERRED/REJECTED with reason when appropriate.
+Examples:
+- `CURRENT_PROJECT_STATE.md` explains the current operational state.
+- `CHECKPOINTS.md` is milestone history.
+- `STORY_CANON_BIBLE.md` explains story/canon detail.
+- `WORLD_PRODUCTION_BLUEPRINT.md` explains world engineering.
+- `SourceArchitecturePlan.json` maps source ownership.
+- `FilmExperiencePlan.json`, `LivingWorldFeaturePlan.json`, biome/story/dialogue/audio/checkpoint plans give detailed implementation contracts.
 
-The Governor is deterministic in CI. It cannot magically understand every future natural-language request by itself.
-The assistant/developer must translate each meaningful request into the structured ledger. CI then enforces that the structured project memory stays coherent.
+If any of those contradict `Data/ProjectGovernor.json` on requirement status, priority, conflict resolution, active gate or acceptance state, reconcile them to the Governor.
 
-## Quality gate philosophy
+## How a new request is handled
 
-A large game cannot truthfully promise "zero bugs".
-Instead, we make bugs expensive to hide:
+1. Read `Data/ProjectGovernor.json`.
+2. Add or update one stable requirement entry.
+3. Check dependencies and conflicts.
+4. If it conflicts with an existing request, preserve both and add a decision/open conflict.
+5. Only then implement.
+6. After implementation, record repository evidence.
+7. After testing, update only the proof actually obtained.
+8. Never mark a region accepted without the required technical and human evidence.
 
-- STATIC catches contract/data regressions,
-- COMPILE proves the actual UE4.27 code builds,
-- BOOT proves a region can enter play,
-- TRAVERSAL proves intended paths/anchors are reachable and not trapping,
-- PERSISTENCE proves save/load and route continuity,
-- PERFORMANCE checks the actual target laptop,
-- PACING is human play review for boredom/friction/repetition/clarity,
-- VISUAL is explicit user acceptance.
+## Decision order
 
-A region is not accepted merely because an earlier gate passed.
+The Governor preserves this priority order:
+1. explicit current user direction,
+2. build/save/story integrity,
+3. film canon and chronology,
+4. target-device performance,
+5. playability and traversal,
+6. player clarity and pacing,
+7. living-world depth,
+8. visual polish,
+9. optional scope.
 
-## Player enjoyment rule
+A lower-priority convenience cannot silently break a higher-priority invariant.
 
-The product goal is not only technical correctness. The player should enjoy the journey.
+## Quality gates
 
-Therefore each major region needs human review for:
-- control responsiveness,
-- objective clarity,
-- travel rhythm,
-- repetition,
-- unnecessary waiting,
-- frustrating blockers,
-- empty stretches,
-- combat/dialogue pacing,
-- sense of discovery,
-- reward for exploration.
+Every major Part I region tracks:
+- STATIC
+- COMPILE
+- BOOT
+- TRAVERSAL
+- PERSISTENCE
+- PERFORMANCE
+- PACING
+- VISUAL
 
-The Governor can require that review; it cannot automatically measure "fun" from CI.
+A compile success is not a traversal test.
+A boot success is not a save/load test.
+CI cannot decide that a section is fun or visually accepted.
 
-## Current active rule
+## Team rule
 
-Until the current functional hard gate is healthy, major feature expansion remains blocked.
-The next functional evidence remains:
+Human or automated programmers may specialize in different areas, but **none of them is a second project manager**.
+
+Each worker:
+- reads the Governor,
+- works within the assigned requirement/domain,
+- updates evidence,
+- does not change global direction independently.
+
+The Governor is the project lead / traffic controller.
+
+## Current rule
+
+The current functional hard gate remains open:
+- Shire functional traversal,
 - F9 save/load round-trip,
 - F8 Frodo/Gandalf round-trip,
-- P1C02-P1C08 chapter smoke,
-- target-device traversal/performance observations.
+- P1C02-P1C08 chapter smoke tests,
+- target-laptop traversal/performance observation,
+- human pacing/clarity observations where applicable.
 
-After those gates are healthy, the Governor can permit the next planned maintenance/feature checkpoint according to the requirement ledger.
+Major feature expansion remains blocked until the recorded gate is healthy.
+
+## Important limitation
+
+The Governor reduces drift and makes bugs/contradictions hard to hide. It cannot truthfully guarantee zero bugs in a large game.
+Real UE4.27.2 compile, PIE, device tests and human play review remain mandatory.
