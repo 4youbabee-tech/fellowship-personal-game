@@ -359,6 +359,15 @@ This converts failures into permanent project knowledge.
 
 **Proof rule:** dedicated modular identity does not equal final rigged character art. Skeletal rigs, facial rigs, cloth/hair shading and bespoke animation remain separate production milestones.
 
+### PG-046 — Threat production art must not weaken encounter logic
+**Risk:** replacing primitive enemy silhouettes can accidentally bypass quest gating, detection, combat damage, defeat state or low-spec tick throttling.
+
+**Contract:** Black Rider, Orc, Uruk-hai and Cave Troll may replace their visible meshes with project-owned production assets, but encounter activation, patrol/detection, attack/health and quest progression logic remain authoritative.
+
+**Fallback rule:** engine primitives may remain only as fallback if a production asset fails to resolve; production paths are the intended primary visual route.
+
+**Proof rule:** dedicated enemy meshes are visual-production progress, not final rigged combat animation, VFX/audio or target-device combat acceptance.
+
 ## What Guardian must never do automatically
 
 - change canon,

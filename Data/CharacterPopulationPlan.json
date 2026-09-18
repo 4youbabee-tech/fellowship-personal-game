@@ -249,7 +249,7 @@
     {
       "id": "BLACK_RIDERS",
       "display_name": "Black Riders",
-      "visual_tier": "ENEMY_PROTOTYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "chapters": [
         "P1C01",
         "P1C03"
@@ -258,7 +258,7 @@
     {
       "id": "ORCS",
       "display_name": "Orcs",
-      "visual_tier": "ENEMY_PROTOTYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "chapters": [
         "P1C06"
       ]
@@ -266,7 +266,7 @@
     {
       "id": "CAVE_TROLL",
       "display_name": "Cave Troll",
-      "visual_tier": "ENEMY_PROTOTYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "chapters": [
         "P1C06"
       ]
@@ -274,7 +274,7 @@
     {
       "id": "URUK_HAI",
       "display_name": "Uruk-hai",
-      "visual_tier": "ENEMY_PROTOTYPE",
+      "visual_tier": "PRODUCTION_DEDICATED",
       "chapters": [
         "P1C08"
       ]
@@ -521,5 +521,22 @@
       "named Shire/Bree/Rivendell/Lothlorien/Isengard residents no longer rely on the generic body archetype as their first visual path"
     ],
     "proof_limit": "Dedicated modular production identity is complete for named cast, but final skeletal/facial/cloth/hair/animation production remains a separate art milestone."
+  },
+  "enemy_production_pass": {
+    "status": "RUNTIME_IMPLEMENTED_PENDING_BUILD",
+    "source_roots": [
+      "SourceAssets/Production/Enemies/BlackRider",
+      "SourceAssets/Production/Enemies/Orc",
+      "SourceAssets/Production/Enemies/UrukHai",
+      "SourceAssets/Production/Enemies/CaveTroll"
+    ],
+    "implementation": [
+      "mounted Black Rider uses dedicated horse/rider/head meshes",
+      "Orc uses dedicated torso/head/arm/leg/weapon meshes",
+      "Uruk-hai uses dedicated torso/head/arm/leg/weapon meshes",
+      "Cave Troll uses dedicated torso/head/arm/leg/weapon meshes",
+      "existing encounter gating, detection, damage and quest progression are preserved"
+    ],
+    "proof_limit": "Dedicated enemy production meshes replace engine primitive silhouettes, but final skeletal rigs, attack animations, effects and target-device combat acceptance remain future work."
   }
 }

@@ -483,6 +483,14 @@
 - Existing CP44 memory/knowledge/canon/repetition/save constraints remain authoritative.
 - Added PG-045. This completes dedicated modular identity, not final skeletal/facial/cloth/hair/animation production.
 
+## CP46 — Major Threat Production Mesh Pass
+- Added 18 original production meshes covering the four major Part I threat groups: Black Riders, Orcs, Uruk-hai and Cave Troll.
+- Black Rider runtime now prefers a dedicated horse, rider body and rider head instead of engine cube/cylinder/sphere silhouettes.
+- Orc, Uruk-hai and Cave Troll runtime now loads dedicated torso/head/arm/leg/weapon sets by `EFellowshipEnemyType`.
+- Existing quest gating, detection, patrol/investigation, attack damage, defeat state and distance-adaptive tick behavior remain intact.
+- `CharacterPopulationPlan` promotes all threat-cast entries to `PRODUCTION_DEDICATED`.
+- Added PG-046. Final skeletal rigs, bespoke attack animation, combat VFX/audio and PIE/device combat acceptance remain unfinished.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 

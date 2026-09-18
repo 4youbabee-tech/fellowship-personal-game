@@ -103,6 +103,17 @@ void AFellowshipEnemyPrototype::ApplyTypeProfile()
     float HeightScale = 1.0f;
     float WidthScale = 1.0f;
 
+    auto TryMesh = [](UStaticMeshComponent* Component, const FString& AssetPath) -> bool
+    {
+        if (!Component) return false;
+        if (UStaticMesh* Mesh = LoadObject<UStaticMesh>(nullptr, *AssetPath))
+        {
+            Component->SetStaticMesh(Mesh);
+            return true;
+        }
+        return false;
+    };
+
     if (EnemyType == EFellowshipEnemyType::Orc)
     {
         MaxHealth = 55.0f;
@@ -139,6 +150,28 @@ void AFellowshipEnemyPrototype::ApplyTypeProfile()
         WeaponColor = FLinearColor(0.24f, 0.17f, 0.09f);
     }
 
+    FString ProductionFolder;
+    if (EnemyType == EFellowshipEnemyType::Orc) ProductionFolder = TEXT("Orc");
+    else if (EnemyType == EFellowshipEnemyType::UrukHai) ProductionFolder = TEXT("UrukHai");
+    else if (EnemyType == EFellowshipEnemyType::CaveTroll) ProductionFolder = TEXT("CaveTroll");
+
+    bool bProductionVisual = false;
+    if (!ProductionFolder.IsEmpty())
+    {
+        const FString Prefix = FString::Printf(
+            TEXT("/Game/Production/Enemies/%s/SM_%s_"),
+            *ProductionFolder,
+            *ProductionFolder);
+        bProductionVisual =
+            TryMesh(Torso, Prefix + TEXT("Torso.SM_") + ProductionFolder + TEXT("_Torso")) &&
+            TryMesh(Head, Prefix + TEXT("Head.SM_") + ProductionFolder + TEXT("_Head")) &&
+            TryMesh(LeftArm, Prefix + TEXT("Arm.SM_") + ProductionFolder + TEXT("_Arm")) &&
+            TryMesh(LeftLeg, Prefix + TEXT("Leg.SM_") + ProductionFolder + TEXT("_Leg")) &&
+            TryMesh(Weapon, Prefix + TEXT("Weapon.SM_") + ProductionFolder + TEXT("_Weapon"));
+        TryMesh(RightArm, Prefix + TEXT("Arm.SM_") + ProductionFolder + TEXT("_Arm"));
+        TryMesh(RightLeg, Prefix + TEXT("Leg.SM_") + ProductionFolder + TEXT("_Leg"));
+    }
+
     GetCapsuleComponent()->SetCapsuleRadius(32.0f * WidthScale);
     GetCapsuleComponent()->SetCapsuleHalfHeight(72.0f * HeightScale);
 
@@ -160,6 +193,17 @@ void AFellowshipEnemyPrototype::ApplyTypeProfile()
         EnemyType == EFellowshipEnemyType::CaveTroll
             ? FVector(0.62f, 0.10f, 0.10f)
             : FVector(0.46f, 0.045f, 0.055f));
+
+    if (bProductionVisual)
+    {
+        Torso->SetRelativeScale3D(FVector(1.0f));
+        Head->SetRelativeScale3D(FVector(1.0f));
+        LeftArm->SetRelativeScale3D(FVector(1.0f));
+        RightArm->SetRelativeScale3D(FVector(1.0f));
+        LeftLeg->SetRelativeScale3D(FVector(1.0f));
+        RightLeg->SetRelativeScale3D(FVector(1.0f));
+        Weapon->SetRelativeScale3D(FVector(1.0f));
+    }
 
     auto ApplyColor = [this, BasicMaterial](UStaticMeshComponent* Component, const FLinearColor& Color)
     {

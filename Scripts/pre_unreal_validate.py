@@ -779,6 +779,39 @@ knowledge_guard = bounded_dialogue.get("knowledge_guard", {})
 if knowledge_guard.get("default") != "DENY_UNLISTED" or knowledge_guard.get("cross_route_knowledge_default") != "DENY":
     fail("BoundedDialoguePlan knowledge guard must default-deny unlisted and cross-route knowledge")
 
+# PG-046: major Part I threat silhouettes must use dedicated production meshes before primitive fallback.
+enemy_assets = {
+    "BlackRider": ["SM_BlackRider_Horse.obj", "SM_BlackRider_Rider.obj", "SM_BlackRider_Head.obj"],
+    "Orc": ["SM_Orc_Torso.obj", "SM_Orc_Head.obj", "SM_Orc_Arm.obj", "SM_Orc_Leg.obj", "SM_Orc_Weapon.obj"],
+    "UrukHai": ["SM_UrukHai_Torso.obj", "SM_UrukHai_Head.obj", "SM_UrukHai_Arm.obj", "SM_UrukHai_Leg.obj", "SM_UrukHai_Weapon.obj"],
+    "CaveTroll": ["SM_CaveTroll_Torso.obj", "SM_CaveTroll_Head.obj", "SM_CaveTroll_Arm.obj", "SM_CaveTroll_Leg.obj", "SM_CaveTroll_Weapon.obj"],
+}
+for folder_name, asset_names in enemy_assets.items():
+    enemy_root = ROOT / "SourceAssets" / "Production" / "Enemies" / folder_name
+    for asset_name in asset_names:
+        if not (enemy_root / asset_name).exists():
+            fail(f"PG-046 enemy production asset missing: {folder_name}/{asset_name}")
+
+black_rider_cpp = read(SOURCE / "BlackRiderPrototype.cpp")
+for symbol in ["SM_BlackRider_Horse", "SM_BlackRider_Rider", "SM_BlackRider_Head"]:
+    if symbol not in black_rider_cpp:
+        fail(f"PG-046 Black Rider production runtime missing: {symbol}")
+
+enemy_cpp = read(SOURCE / "FellowshipEnemyPrototype.cpp")
+for symbol in [
+    'ProductionFolder = TEXT("Orc")',
+    'ProductionFolder = TEXT("UrukHai")',
+    'ProductionFolder = TEXT("CaveTroll")',
+    '/Game/Production/Enemies/%s/SM_%s_',
+]:
+    if symbol not in enemy_cpp:
+        fail(f"PG-046 Fellowship enemy production runtime missing: {symbol}")
+
+threat_plan = population_plan.get("threat_cast", []) if population_plan else []
+for threat in threat_plan:
+    if threat.get("visual_tier") != "PRODUCTION_DEDICATED":
+        fail(f"PG-046 threat not promoted to PRODUCTION_DEDICATED: {threat.get('id')}")
+
 # PG-045: every named Part I cast member must keep a dedicated modular visual identity.
 dedicated_named_assets = {
     "Bilbo": ["SM_Bilbo_Torso.obj", "SM_Bilbo_Head.obj", "SM_Bilbo_Hair.obj"],

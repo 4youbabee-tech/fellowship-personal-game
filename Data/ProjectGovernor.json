@@ -778,7 +778,8 @@
         "Bree ambient population uses human-townsperson silhouettes instead of Hobbit visuals",
         "Rivendell and Lothlorien have moving Elf ambient residents",
         "Data/CharacterPopulationPlan.json records chapter cast coverage and visual tiers",
-        "Major named proxies now carry modular identity pieces such as cloaks, weapons, shields, quivers, beards and headpieces so the cast is visually distinguishable before final rigged assets."
+        "Major named proxies now carry modular identity pieces such as cloaks, weapons, shields, quivers, beards and headpieces so the cast is visually distinguishable before final rigged assets.",
+        "CP46 adds dedicated production meshes for Black Riders, Orcs, Uruk-hai and Cave Troll while preserving existing combat/quest gating"
       ],
       "missing_work": [
         "Dedicated production meshes/rigged characters for Sam, Merry, Pippin, Aragorn, Boromir, Legolas, Gimli and other non-Frodo/Gandalf major characters",
@@ -1381,14 +1382,14 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "User authorized uninterrupted large-batch backend and character production work",
+    "reason": "Uninterrupted production batch continued from full named cast into major Part I threats",
     "summary": [
-      "Added 42 dedicated project-owned modular source meshes for 14 previously archetype-based named characters: Bilbo, Boromir, Legolas, Gimli, Arwen, Elrond, Haldir, Galadriel, Saruman, Butterbur, Gate Keeper, Hamfast, Rosie and Farmer Maggot.",
-      "AShireNPC now resolves every named Part I cast member through a dedicated character folder before generic archetype fallback.",
-      "Expanded bounded dialogue coverage for Bilbo, Arwen, Elrond, Saruman, Hamfast, Rosie, Farmer Maggot, Butterbur, Gate Keeper, Haldir and Galadriel.",
-      "CharacterPopulationPlan now marks the full named Part I cast as PRODUCTION_DEDICATED.",
-      "Backend remains implementation-complete from CP44; this pass deepens authored bounded content without relaxing memory, canon or save guards.",
-      "Final skeletal rigs, facial animation, cloth/hair shading, bespoke animation and enemy production remain next visual layers."
+      "Added 18 original project-owned enemy meshes for Black Rider mount/rider and Orc, Uruk-hai and Cave Troll body/weapon sets.",
+      "BlackRiderPrototype now prefers production horse/rider/head meshes over engine primitives.",
+      "FellowshipEnemyPrototype now resolves production meshes by enemy type before primitive fallback.",
+      "Existing detection, patrol, quest-gated activation, combat damage, defeat and low-spec tick throttling remain unchanged.",
+      "CharacterPopulationPlan now marks all four major Part I threat groups as PRODUCTION_DEDICATED.",
+      "Final skeletal enemy rigs, bespoke attacks, VFX and combat acceptance remain later production layers."
     ]
   },
   "development_mode": {
