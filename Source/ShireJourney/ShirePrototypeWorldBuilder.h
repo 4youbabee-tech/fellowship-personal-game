@@ -6,6 +6,8 @@
 
 class UStaticMesh;
 class UMaterialInterface;
+class USceneComponent;
+class UHierarchicalInstancedStaticMeshComponent;
 class AStaticMeshActor;
 
 UCLASS()
@@ -27,6 +29,11 @@ private:
     UPROPERTY() UStaticMesh* ConeMesh;
     UPROPERTY() UMaterialInterface* BasicMaterial;
 
+    UPROPERTY() USceneComponent* RuntimeRoot;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GrassInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* FlowerInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* ShrubInstances;
+
     bool bBuilt = false;
 
     AStaticMeshActor* SpawnShape(UStaticMesh* Mesh, const FVector& Location, const FVector& Scale,
@@ -37,6 +44,8 @@ private:
     void SpawnFenceLine(const FVector& Start, const FVector& End, int32 Sections);
     void SpawnGardenPatch(const FVector& Center, float Scale = 1.0f);
     void ConfigureMorningAtmosphere();
+    void ConfigureFoliageInstances();
+    void SpawnFoliagePass();
     void SpawnVillage();
     void SpawnSideStories();
     void SpawnStoryActors();

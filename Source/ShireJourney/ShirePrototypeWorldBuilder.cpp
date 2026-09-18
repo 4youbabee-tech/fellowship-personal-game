@@ -6,6 +6,8 @@
 #include "ShireQuestTrigger.h"
 
 #include "Components/DirectionalLightComponent.h"
+#include "Components/HierarchicalInstancedStaticMeshComponent.h"
+#include "Components/SceneComponent.h"
 #include "Components/SkyLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
@@ -23,6 +25,27 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
 {
     PrimaryActorTick.bCanEverTick = false;
 
+    RuntimeRoot = CreateDefaultSubobject<USceneComponent>(TEXT("RuntimeRoot"));
+    RootComponent = RuntimeRoot;
+
+    GrassInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("GrassInstances"));
+    GrassInstances->SetupAttachment(RuntimeRoot);
+    GrassInstances->SetMobility(EComponentMobility::Movable);
+    GrassInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GrassInstances->SetCastShadow(false);
+
+    FlowerInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("FlowerInstances"));
+    FlowerInstances->SetupAttachment(RuntimeRoot);
+    FlowerInstances->SetMobility(EComponentMobility::Movable);
+    FlowerInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    FlowerInstances->SetCastShadow(false);
+
+    ShrubInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("ShrubInstances"));
+    ShrubInstances->SetupAttachment(RuntimeRoot);
+    ShrubInstances->SetMobility(EComponentMobility::Movable);
+    ShrubInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    ShrubInstances->SetCastShadow(false);
+
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereAsset(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderAsset(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
@@ -34,6 +57,16 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     CylinderMesh = CylinderAsset.Succeeded() ? CylinderAsset.Object : nullptr;
     ConeMesh = ConeAsset.Succeeded() ? ConeAsset.Object : nullptr;
     BasicMaterial = BasicMaterialAsset.Succeeded() ? BasicMaterialAsset.Object : nullptr;
+
+    if (ConeMesh)
+    {
+        GrassInstances->SetStaticMesh(ConeMesh);
+    }
+    if (SphereMesh)
+    {
+        FlowerInstances->SetStaticMesh(SphereMesh);
+        ShrubInstances->SetStaticMesh(SphereMesh);
+    }
 }
 
 void AShirePrototypeWorldBuilder::BeginPlay()
@@ -173,6 +206,111 @@ void AShirePrototypeWorldBuilder::SpawnGardenPatch(const FVector& Center, float 
             SpawnShape(SphereMesh, PlantLocation, FVector(0.10f, 0.10f, 0.075f) * Scale,
                 Leaf, FRotator::ZeroRotator, false);
         }
+    }
+}
+
+void AShirePrototypeWorldBuilder::ConfigureFoliageInstances()
+{
+    if (!BasicMaterial)
+    {
+        return;
+    }
+
+    auto ApplyInstanceColor = [this](UHierarchicalInstancedStaticMeshComponent* Component, const FLinearColor& Color)
+    {
+        if (!Component)
+        {
+            return;
+        }
+
+        UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, this);
+        if (MID)
+        {
+            MID->SetVectorParameterValue(TEXT("Color"), Color);
+            Component->SetMaterial(0, MID);
+        }
+    };
+
+    ApplyInstanceColor(GrassInstances, FLinearColor(0.12f, 0.38f, 0.08f));
+    ApplyInstanceColor(FlowerInstances, FLinearColor(0.90f, 0.70f, 0.28f));
+    ApplyInstanceColor(ShrubInstances, FLinearColor(0.10f, 0.31f, 0.075f));
+}
+
+void AShirePrototypeWorldBuilder::SpawnFoliagePass()
+{
+    if (!GrassInstances || !FlowerInstances || !ShrubInstances)
+    {
+        return;
+    }
+
+    GrassInstances->ClearInstances();
+    FlowerInstances->ClearInstances();
+    ShrubInstances->ClearInstances();
+
+    const FVector GrassPatches[] = {
+        FVector(-2320,-760,20), FVector(-2210,-690,20), FVector(-2110,-820,20), FVector(-2010,-720,20),
+        FVector(-1910,-620,20), FVector(-1810,-850,20), FVector(-1710,-760,20), FVector(-1600,-600,20),
+        FVector(-1510,520,20), FVector(-1410,620,20), FVector(-1320,760,20), FVector(-1210,680,20),
+        FVector(-1110,560,20), FVector(-1010,720,20), FVector(-900,610,20), FVector(-810,710,20),
+        FVector(-690,-540,20), FVector(-580,-650,20), FVector(-470,-590,20), FVector(-350,-720,20),
+        FVector(-240,-600,20), FVector(-120,-690,20), FVector(10,-610,20), FVector(140,-680,20),
+        FVector(-360,420,20), FVector(-250,520,20), FVector(-120,580,20), FVector(20,520,20),
+        FVector(160,540,20), FVector(300,470,20), FVector(430,560,20), FVector(560,440,20),
+        FVector(690,-510,20), FVector(820,-590,20), FVector(950,-530,20), FVector(1080,-610,20),
+        FVector(1180,480,20), FVector(1320,520,20), FVector(1460,470,20), FVector(1580,560,20),
+        FVector(1760,-420,20), FVector(1880,-520,20), FVector(2010,-430,20), FVector(2150,-520,20),
+        FVector(2250,480,20), FVector(2380,540,20), FVector(2490,430,20), FVector(2600,520,20)
+    };
+
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(GrassPatches); ++Index)
+    {
+        const FVector Base = GrassPatches[Index];
+        const float Size = 0.10f + 0.015f * static_cast<float>(Index % 4);
+        const float Height = 0.18f + 0.025f * static_cast<float>(Index % 5);
+        GrassInstances->AddInstance(FTransform(
+            FRotator(0.0f, static_cast<float>((Index * 37) % 360), 0.0f),
+            Base,
+            FVector(Size, Size, Height)));
+
+        GrassInstances->AddInstance(FTransform(
+            FRotator(0.0f, static_cast<float>((Index * 53 + 19) % 360), 0.0f),
+            Base + FVector(34.0f + 7.0f * (Index % 3), 22.0f - 5.0f * (Index % 2), 0.0f),
+            FVector(Size * 0.86f, Size * 0.86f, Height * 0.92f)));
+    }
+
+    const FVector FlowerBeds[] = {
+        FVector(-2140,-690,38), FVector(-2070,-720,38), FVector(-1990,-680,38),
+        FVector(-1270,-560,38), FVector(-1200,-590,38), FVector(-1130,-550,38),
+        FVector(-300,610,38), FVector(-180,650,38), FVector(-60,610,38),
+        FVector(80,650,38), FVector(220,610,38), FVector(350,650,38),
+        FVector(390,390,38), FVector(460,420,38), FVector(530,390,38)
+    };
+
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(FlowerBeds); ++Index)
+    {
+        const float Scale = 0.055f + 0.008f * static_cast<float>(Index % 3);
+        FlowerInstances->AddInstance(FTransform(
+            FRotator::ZeroRotator,
+            FlowerBeds[Index],
+            FVector(Scale, Scale, Scale * 0.75f)));
+    }
+
+    const FVector Shrubs[] = {
+        FVector(-2280,-610,42), FVector(-2200,-590,42), FVector(-2110,-600,42),
+        FVector(-1710,-470,42), FVector(-1620,-450,42), FVector(-1380,470,42),
+        FVector(-1280,450,42), FVector(-820,-500,42), FVector(-720,-480,42),
+        FVector(-440,420,42), FVector(-340,400,42), FVector(80,-470,42),
+        FVector(190,-450,42), FVector(430,500,42), FVector(540,490,42),
+        FVector(730,-560,42), FVector(830,-540,42)
+    };
+
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(Shrubs); ++Index)
+    {
+        const float Scale = 0.24f + 0.035f * static_cast<float>(Index % 4);
+        ShrubInstances->AddInstance(FTransform(
+            FRotator(0.0f, static_cast<float>((Index * 29) % 360), 0.0f),
+            Shrubs[Index],
+            FVector(Scale * 1.35f, Scale, Scale * 0.72f)));
     }
 }
 
@@ -800,7 +938,9 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
 
     bBuilt = true;
     ConfigureMorningAtmosphere();
+    ConfigureFoliageInstances();
     SpawnVillage();
+    SpawnFoliagePass();
     SpawnSideStories();
     SpawnStoryActors();
 }
