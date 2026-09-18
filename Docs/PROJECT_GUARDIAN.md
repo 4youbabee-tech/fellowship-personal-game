@@ -368,6 +368,17 @@ This converts failures into permanent project knowledge.
 
 **Proof rule:** dedicated enemy meshes are visual-production progress, not final rigged combat animation, VFX/audio or target-device combat acceptance.
 
+### PG-047 — External production assets must be licensed, attributable and reproducible
+**Risk:** high-quality marketplace/community assets can accelerate production but can also introduce editorial-only, non-commercial, no-derivatives, unknown-license, subscription-expired or franchise-ripped content that cannot safely ship or cannot be reproduced on the build machine.
+
+**Contract:** every third-party production asset must be represented in `Data/ExternalAssetManifest.json` before entering `SourceAssets/ExternalLicensed/Approved`. Provider, asset ID, source URL, acquisition date, license class, approval status and required attribution/proof are mandatory.
+
+**Blocked rule:** Editorial, NC, ND, unknown-license and ripped film/game/franchise assets are rejected. Reference-only sources such as ArtStation, Tolkien Gateway and LOTR Wiki may guide original work but are not production asset sources without separate item rights.
+
+**UE4.27 rule:** Fab in Launcher may be used for UE4 project operations. Do not make the pipeline depend on the in-editor Fab integration because Epic documents that integration for UE5.3+.
+
+**Guard:** Pre-Unreal Validation checks provider policy, blocked license classes and one-to-one manifest coverage for every file placed in the Approved external asset tree.
+
 ## What Guardian must never do automatically
 
 - change canon,

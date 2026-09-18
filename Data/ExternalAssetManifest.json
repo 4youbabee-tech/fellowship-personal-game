@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "authority_id": "FELLOWSHIP_EXTERNAL_ASSET_MANIFEST_V1",
+  "policy_status": "ACTIVE",
+  "engine": "Unreal Engine 4.27.2",
+  "source_root": "SourceAssets/ExternalLicensed",
+  "approved_root": "SourceAssets/ExternalLicensed/Approved",
+  "inbox_root": "SourceAssets/ExternalLicensed/Inbox",
+  "rules": [
+    "No external asset enters Approved without a manifest entry and license evidence.",
+    "Editorial-only, non-commercial, no-derivatives, unknown-license, ripped film/game assets, and trademark/IP copies without separate clearance are blocked.",
+    "Reference-only sites may inform original production work but their images/models/audio are not imported unless separately licensed.",
+    "Attribution-required assets must carry creator/title/source/license/attribution text in this manifest.",
+    "Paid/subscription assets require proof that the project/user account actually holds the applicable game-use entitlement.",
+    "External assets may not override story/canon guards, low-spec budgets, or Unreal 4.27.2 compatibility."
+  ],
+  "providers": [
+    {
+      "id": "FAB",
+      "mode": "APPROVED_WITH_LICENSE_EVIDENCE",
+      "allowed_license_classes": [
+        "FAB_STANDARD",
+        "CC_BY"
+      ],
+      "notes": "For UE4.27 use Fab in Launcher Add to Project/Create Project/Install Plugin where applicable. In-editor Fab integration is UE5.3+."
+    },
+    {
+      "id": "QUixel_MEGASCANS",
+      "mode": "APPROVED_WITH_LICENSE_EVIDENCE",
+      "allowed_license_classes": [
+        "FAB_STANDARD",
+        "QUixel_LEGACY_ENTITLEMENT"
+      ],
+      "notes": "Use only assets actually acquired/entitled for this project/account; legacy acquisitions keep their applicable legacy terms."
+    },
+    {
+      "id": "SKETCHFAB",
+      "mode": "APPROVED_WITH_LICENSE_EVIDENCE",
+      "allowed_license_classes": [
+        "CC0",
+        "CC_BY",
+        "SKETCHFAB_STANDARD_GAME_USE"
+      ],
+      "denied_license_classes": [
+        "CC_BY_NC",
+        "CC_BY_ND",
+        "EDITORIAL",
+        "UNKNOWN"
+      ],
+      "notes": "CC BY requires attribution; editorial/NC/ND assets are blocked for production."
+    },
+    {
+      "id": "TURBOSQUID",
+      "mode": "APPROVED_WITH_LICENSE_EVIDENCE",
+      "allowed_license_classes": [
+        "ROYALTY_FREE_GAME_USE"
+      ],
+      "denied_license_classes": [
+        "EDITORIAL",
+        "UNKNOWN"
+      ],
+      "notes": "Model must be embedded in the game and not exposed as an extractable/open stock asset."
+    },
+    {
+      "id": "CGTRADER",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Review the exact item license before acquisition; do not assume all listings permit the same game-use rights."
+    },
+    {
+      "id": "SONNISS",
+      "mode": "APPROVED_WITH_LICENSE_EVIDENCE",
+      "allowed_license_classes": [
+        "SONNISS_GDC_BUNDLE_GAME_USE"
+      ],
+      "notes": "GDC bundles are suitable for game/media use under their bundle license; keep bundle/version evidence."
+    },
+    {
+      "id": "FREESOUND",
+      "mode": "APPROVED_WITH_LICENSE_EVIDENCE",
+      "allowed_license_classes": [
+        "CC0",
+        "CC_BY"
+      ],
+      "denied_license_classes": [
+        "CC_BY_NC",
+        "UNKNOWN"
+      ],
+      "notes": "CC BY requires attribution. Prefer CC0 for low-friction production."
+    },
+    {
+      "id": "INCOMPETECH",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [
+        "CC_BY_4_0"
+      ],
+      "notes": "If used, preserve required attribution and verify the exact track license at acquisition time."
+    },
+    {
+      "id": "ARTLIST",
+      "mode": "SUBSCRIPTION_OR_ENTERPRISE_REVIEW",
+      "allowed_license_classes": [],
+      "notes": "Do not ingest until the exact game-use entitlement/subscription coverage is verified."
+    },
+    {
+      "id": "EPIDEMIC_SOUND",
+      "mode": "SUBSCRIPTION_OR_ENTERPRISE_REVIEW",
+      "allowed_license_classes": [],
+      "notes": "Game licensing is available, but entitlement must be verified for the project before ingest."
+    },
+    {
+      "id": "ARTSTATION",
+      "mode": "REFERENCE_ONLY",
+      "allowed_license_classes": [],
+      "notes": "Use concept art as inspiration/reference only unless the specific work is separately licensed."
+    },
+    {
+      "id": "TOLKIEN_GATEWAY",
+      "mode": "REFERENCE_ONLY",
+      "allowed_license_classes": [],
+      "notes": "Use for chronology/factual research and source pointers; do not import fair-use images/maps or copy protected text into the game."
+    },
+    {
+      "id": "LOTR_WIKI",
+      "mode": "REFERENCE_ONLY",
+      "allowed_license_classes": [],
+      "notes": "Use for secondary research only; verify important canon facts against primary/authorized sources where practical."
+    }
+  ],
+  "assets": []
+}

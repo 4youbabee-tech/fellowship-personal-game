@@ -804,6 +804,44 @@
       ],
       "checkpoint": "CP32",
       "notes": "Runtime presence is being implemented now. Visual completion is not claimed for characters still using procedural distinct proxies."
+    },
+    {
+      "id": "REQ-ASSET-001",
+      "title": "Licensed external production asset pipeline",
+      "category": "VisualProduction",
+      "priority": "HIGH",
+      "status": "IMPLEMENTED",
+      "origin": "User supplied programmer sourcing recommendations and asked to adopt useful assistance",
+      "intent": "Allow professional environment, model and audio libraries to accelerate production while preventing unclear, editorial, non-commercial, franchise-ripped or otherwise unsafe assets from entering the project.",
+      "evidence": [
+        "Data/ExternalAssetManifest.json",
+        "Docs/EXTERNAL_ASSET_SOURCING.md",
+        "Docs/PROJECT_GUARDIAN.md PG-047",
+        "Scripts/pre_unreal_validate.py PG-047"
+      ],
+      "implementation_refs": [
+        "provider/license allowlist and denylist",
+        "ignored acquisition inbox",
+        "approved asset manifest contract",
+        "Pre-Unreal provenance validation"
+      ],
+      "missing_work": [
+        "Acquire specific assets only when entitlement/license evidence is available",
+        "Record attributions/receipts per asset",
+        "Run UE4.27.2 import/build validation for each acquired batch"
+      ],
+      "acceptance_criteria": [
+        "Every external production asset has a manifest record and license evidence",
+        "Blocked license classes never enter Approved",
+        "Reference-only Tolkien/ArtStation material is not shipped as an asset without separate rights",
+        "External batches pass Pre-Unreal and UE4.27.2 build/import validation"
+      ],
+      "dependencies": [
+        "REQ-WORLD-002",
+        "REQ-CHAR-001"
+      ],
+      "checkpoint": "CP47",
+      "notes": "Pipeline is implemented; actual third-party acquisitions are intentionally item-by-item and license-gated."
     }
   ],
   "hard_invariants": [
@@ -1382,14 +1420,14 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Uninterrupted production batch continued from full named cast into major Part I threats",
+    "reason": "Adopted programmer-recommended professional asset sources through a license/provenance gate",
     "summary": [
-      "Added 18 original project-owned enemy meshes for Black Rider mount/rider and Orc, Uruk-hai and Cave Troll body/weapon sets.",
-      "BlackRiderPrototype now prefers production horse/rider/head meshes over engine primitives.",
-      "FellowshipEnemyPrototype now resolves production meshes by enemy type before primitive fallback.",
-      "Existing detection, patrol, quest-gated activation, combat damage, defeat and low-spec tick throttling remain unchanged.",
-      "CharacterPopulationPlan now marks all four major Part I threat groups as PRODUCTION_DEDICATED.",
-      "Final skeletal enemy rigs, bespoke attacks, VFX and combat acceptance remain later production layers."
+      "Created a provider-aware external asset manifest covering Fab, Megascans, Sketchfab, commercial model libraries, audio libraries and research-only sources.",
+      "Added a local-only Inbox and an Approved staging contract so downloads cannot silently become production dependencies.",
+      "Blocked editorial, non-commercial, no-derivatives, unknown-license and franchise-ripped assets.",
+      "Recorded UE4.27-specific Fab handling: Launcher project operations are usable while the in-editor Fab integration is UE5.3+.",
+      "Kept Tolkien Gateway/LOTR Wiki and ArtStation as research/reference sources unless a specific item has separate rights.",
+      "Added PG-047 so future contributors cannot bypass provenance and license metadata."
     ]
   },
   "development_mode": {

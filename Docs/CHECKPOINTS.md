@@ -491,6 +491,15 @@
 - `CharacterPopulationPlan` promotes all threat-cast entries to `PRODUCTION_DEDICATED`.
 - Added PG-046. Final skeletal rigs, bespoke attack animation, combat VFX/audio and PIE/device combat acceptance remain unfinished.
 
+## CP47 — Licensed External Asset Pipeline
+- Adopted the useful parts of the external sourcing recommendation without allowing untracked downloads into production.
+- Added `Data/ExternalAssetManifest.json` with provider-specific license gates for Fab/Megascans, Sketchfab, TurboSquid/CGTrader, Sonniss, Freesound, Incompetech, Artlist/Epidemic and research-only sources.
+- Added local-only `SourceAssets/ExternalLicensed/Inbox` staging and manifest-gated `Approved` production staging.
+- Blocks Editorial, CC BY-NC, CC BY-ND, unknown-license and ripped franchise assets.
+- Fab/Quixel are preferred environment sources when entitlement is documented; UE4.27 uses Launcher project operations rather than the UE5.3+ in-editor Fab integration.
+- ArtStation, Tolkien Gateway and LOTR Wiki are reference/research sources only unless a specific item has separate rights.
+- Added PG-047 so future external asset batches must carry provenance/license metadata before they can become production dependencies.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 

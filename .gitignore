@@ -14,3 +14,6 @@ Saved/
 
 # Generated locally from SourceAssets/Production by the one-click asset import pass.
 Content/Production/
+
+# Candidate third-party downloads stay local until license/provenance approval.
+SourceAssets/ExternalLicensed/Inbox/
