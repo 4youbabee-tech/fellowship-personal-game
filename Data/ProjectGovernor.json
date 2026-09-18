@@ -662,11 +662,11 @@
         "Pre-Unreal validation exists",
         "self-hosted UE4.27.2 build/import workflow exists",
         "exact-commit acquisition uses retrying GitHub API archive download",
-        "PowerShell checkout uses explicit execution-policy bypass for the target runner",
-        "superseded develop Unreal runs cancel so the latest head can validate"
+        "PowerShell checkout uses explicit execution-policy bypass",
+        "superseded develop Unreal runs cancel so the latest head can validate",
+        "Unreal Build Validation #19 succeeded on exact commit 0936f2e779c6a6d1b4d209628d206f5d11ca3f9c with UE4.27.2 compile and production import 50 files / 0 failures"
       ],
       "missing_work": [
-        "Validate the hardened self-hosted workflow through UE4.27.2 compile/import on the latest develop head",
         "GitHub develop/main branch protection or ruleset is not currently enabled",
         "Require relevant status checks before protected integration"
       ],
@@ -1207,13 +1207,12 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-18",
-    "reason": "Complete remote-safe living-world contracts while device/PIE functional gate remains open",
+    "reason": "Self-hosted CI recovered and remote-safe LW2-LW5 contracts completed",
     "summary": [
-      "LW2 NPC conversation contract prepared.",
-      "LW3 bounded NPC memory/save contract prepared.",
-      "LW4 environmental micro-event/fauna/motion contract prepared.",
-      "LW5 bounded dialogue intelligence contract prepared.",
-      "No new runtime gameplay behavior enabled; device-dependent proof remains gated."
+      "Unreal Build Validation #19 validated the resilient exact-SHA checkout and PowerShell bypass on the target UE4.27.2 runner.",
+      "UE4.27.2 C++/UHT build succeeded.",
+      "Production import reported 50 files, 0 failures.",
+      "LW2-LW5 data/validation contracts are prepared without enabling new runtime gameplay behavior."
     ]
   }
 }
