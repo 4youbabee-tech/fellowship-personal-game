@@ -116,19 +116,23 @@
     {
       "id": "LW3",
       "name": "Persistent named-NPC memory",
-      "status": "PLANNED",
+      "status": "PARTIAL",
       "features": [
         {
           "id": "NPC-MEMORY-SCHEMA",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Immediate/local/persistent tiers."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/NPCMemoryPlan.json"
+          ],
+          "notes": "Bounded memory tiers, templates, expiry and budgets are data-defined; runtime memory store is pending."
         },
         {
           "id": "NPC-MEMORY-SAVE",
-          "status": "PLANNED",
-          "evidence": [],
-          "notes": "Integrate with save while controlling footprint."
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/NPCMemoryPlan.json"
+          ],
+          "notes": "Compact route-partitioned save contract and soft budget are defined; ShireSaveGame integration is pending."
         }
       ]
     },
