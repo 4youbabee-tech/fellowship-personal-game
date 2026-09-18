@@ -35,7 +35,8 @@
     "Docs/PRODUCTION_COMPLETENESS_MATRIX.md",
     "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
     "Docs/PROJECT_MEMORY_SYSTEM.md",
-    "Docs/LIVING_WORLD_AI_BLUEPRINT.md"
+    "Docs/LIVING_WORLD_AI_BLUEPRINT.md",
+    "Docs/PROJECT_GOVERNOR.md"
   ],
   "required_story_data": [
     "Data/StoryBeatPlan.csv",
@@ -59,7 +60,10 @@
     "Data/SourceArchitecturePlan.json",
     "Data/ProjectRequirements.json",
     "Data/LivingWorldFeaturePlan.json",
-    "Data/FilmExperiencePlan.json"
+    "Data/FilmExperiencePlan.json",
+    "Data/ProjectGovernorPolicy.json",
+    "Data/ProjectDecisions.json",
+    "Data/ExperienceQualityGates.json"
   ],
   "requirement_status_values": [
     "REQUESTED",
