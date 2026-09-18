@@ -99,42 +99,120 @@ void AShireAmbientNPC::ApplyVisualStyle()
         return false;
     };
 
-    bool bProductionHobbit = true;
-    bProductionHobbit = TryMesh(Torso, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Torso.SM_Hobbit_Torso")) && bProductionHobbit;
-    bProductionHobbit = TryMesh(Head, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Head.SM_Hobbit_Head")) && bProductionHobbit;
-    bProductionHobbit = TryMesh(Hair, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Hair.SM_Hobbit_Hair")) && bProductionHobbit;
-    bProductionHobbit = TryMesh(LeftArm, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm")) && bProductionHobbit;
-    TryMesh(RightArm, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm"));
-    bProductionHobbit = TryMesh(LeftLeg, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg")) && bProductionHobbit;
-    TryMesh(RightLeg, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg"));
+    const bool bBreeTownsperson = RoutineRole == TEXT("BreeTownsperson");
+    const bool bElf = RoutineRole == TEXT("Elf");
+    const bool bHobbitResident = !bBreeTownsperson && !bElf;
+
+    bool bProductionHobbit = false;
+    if (bHobbitResident)
+    {
+        bProductionHobbit = true;
+        bProductionHobbit = TryMesh(Torso, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Torso.SM_Hobbit_Torso")) && bProductionHobbit;
+        bProductionHobbit = TryMesh(Head, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Head.SM_Hobbit_Head")) && bProductionHobbit;
+        bProductionHobbit = TryMesh(Hair, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Hair.SM_Hobbit_Hair")) && bProductionHobbit;
+        bProductionHobbit = TryMesh(LeftArm, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm")) && bProductionHobbit;
+        TryMesh(RightArm, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm"));
+        bProductionHobbit = TryMesh(LeftLeg, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg")) && bProductionHobbit;
+        TryMesh(RightLeg, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg"));
+    }
 
     if (bProductionHobbit)
     {
         Torso->SetRelativeScale3D(FVector(1));
         Head->SetRelativeScale3D(FVector(1));
         Hair->SetRelativeScale3D(FVector(1));
-        LeftArm->SetRelativeScale3D(FVector(1)); RightArm->SetRelativeScale3D(FVector(1));
-        LeftLeg->SetRelativeScale3D(FVector(1)); RightLeg->SetRelativeScale3D(FVector(1));
-        Head->SetRelativeLocation(FVector(0,0,101));
-        Hair->SetRelativeLocation(FVector(-2,0,111));
+        LeftArm->SetRelativeScale3D(FVector(1));
+        RightArm->SetRelativeScale3D(FVector(1));
+        LeftLeg->SetRelativeScale3D(FVector(1));
+        RightLeg->SetRelativeScale3D(FVector(1));
+        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, 58.0f));
+        Head->SetRelativeLocation(FVector(0.0f, 0.0f, 101.0f));
+        Hair->SetRelativeLocation(FVector(-2.0f, 0.0f, 111.0f));
+    }
+    else if (bElf)
+    {
+        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, 78.0f));
+        Torso->SetRelativeScale3D(FVector(0.27f, 0.19f, 0.52f));
+        Head->SetRelativeLocation(FVector(0.0f, 0.0f, 139.0f));
+        Head->SetRelativeScale3D(FVector(0.205f));
+        Hair->SetRelativeLocation(FVector(-1.0f, 0.0f, 149.0f));
+        Hair->SetRelativeScale3D(FVector(0.21f, 0.20f, 0.13f));
+        LeftArm->SetRelativeLocation(FVector(0.0f, -22.0f, 78.0f));
+        RightArm->SetRelativeLocation(FVector(0.0f, 22.0f, 78.0f));
+        LeftArm->SetRelativeScale3D(FVector(0.065f, 0.065f, 0.43f));
+        RightArm->SetRelativeScale3D(FVector(0.065f, 0.065f, 0.43f));
+        LeftLeg->SetRelativeLocation(FVector(0.0f, -8.5f, 27.0f));
+        RightLeg->SetRelativeLocation(FVector(0.0f, 8.5f, 27.0f));
+        LeftLeg->SetRelativeScale3D(FVector(0.075f, 0.075f, 0.40f));
+        RightLeg->SetRelativeScale3D(FVector(0.075f, 0.075f, 0.40f));
+    }
+    else if (bBreeTownsperson)
+    {
+        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, 72.0f));
+        Torso->SetRelativeScale3D(FVector(0.31f, 0.23f, 0.48f));
+        Head->SetRelativeLocation(FVector(0.0f, 0.0f, 128.0f));
+        Head->SetRelativeScale3D(FVector(0.22f));
+        Hair->SetRelativeLocation(FVector(-1.0f, 0.0f, 138.0f));
+        Hair->SetRelativeScale3D(FVector(0.225f, 0.225f, 0.11f));
+        LeftArm->SetRelativeLocation(FVector(0.0f, -25.0f, 72.0f));
+        RightArm->SetRelativeLocation(FVector(0.0f, 25.0f, 72.0f));
+        LeftArm->SetRelativeScale3D(FVector(0.075f, 0.075f, 0.40f));
+        RightArm->SetRelativeScale3D(FVector(0.075f, 0.075f, 0.40f));
+        LeftLeg->SetRelativeLocation(FVector(0.0f, -9.0f, 25.0f));
+        RightLeg->SetRelativeLocation(FVector(0.0f, 9.0f, 25.0f));
+        LeftLeg->SetRelativeScale3D(FVector(0.085f, 0.085f, 0.36f));
+        RightLeg->SetRelativeScale3D(FVector(0.085f, 0.085f, 0.36f));
     }
 
-    const FLinearColor Coat(
-        Random.FRandRange(0.18f, 0.42f),
-        Random.FRandRange(0.22f, 0.46f),
-        Random.FRandRange(0.10f, 0.24f));
-    const FLinearColor Trousers(
-        Random.FRandRange(0.18f, 0.34f),
-        Random.FRandRange(0.12f, 0.25f),
-        Random.FRandRange(0.06f, 0.14f));
-    const FLinearColor HairColor(
-        Random.FRandRange(0.08f, 0.34f),
-        Random.FRandRange(0.04f, 0.20f),
-        Random.FRandRange(0.02f, 0.10f));
-    const FLinearColor Skin(
-        Random.FRandRange(0.64f, 0.80f),
-        Random.FRandRange(0.43f, 0.58f),
-        Random.FRandRange(0.28f, 0.38f));
+    FLinearColor Coat;
+    FLinearColor Trousers;
+    FLinearColor HairColor;
+    FLinearColor Skin;
+
+    if (bElf)
+    {
+        Coat = FLinearColor(
+            Random.FRandRange(0.20f, 0.34f),
+            Random.FRandRange(0.30f, 0.46f),
+            Random.FRandRange(0.20f, 0.32f));
+        Trousers = FLinearColor(0.18f, 0.24f, 0.18f);
+        HairColor = Random.FRand() > 0.45f
+            ? FLinearColor(0.72f, 0.62f, 0.38f)
+            : FLinearColor(0.12f, 0.075f, 0.045f);
+        Skin = FLinearColor(0.78f, 0.61f, 0.47f);
+    }
+    else if (bBreeTownsperson)
+    {
+        Coat = FLinearColor(
+            Random.FRandRange(0.18f, 0.34f),
+            Random.FRandRange(0.15f, 0.28f),
+            Random.FRandRange(0.10f, 0.20f));
+        Trousers = FLinearColor(0.18f, 0.15f, 0.12f);
+        HairColor = FLinearColor(
+            Random.FRandRange(0.08f, 0.28f),
+            Random.FRandRange(0.04f, 0.16f),
+            Random.FRandRange(0.02f, 0.08f));
+        Skin = FLinearColor(0.70f, 0.50f, 0.36f);
+    }
+    else
+    {
+        Coat = FLinearColor(
+            Random.FRandRange(0.18f, 0.42f),
+            Random.FRandRange(0.22f, 0.46f),
+            Random.FRandRange(0.10f, 0.24f));
+        Trousers = FLinearColor(
+            Random.FRandRange(0.18f, 0.34f),
+            Random.FRandRange(0.12f, 0.25f),
+            Random.FRandRange(0.06f, 0.14f));
+        HairColor = FLinearColor(
+            Random.FRandRange(0.08f, 0.34f),
+            Random.FRandRange(0.04f, 0.20f),
+            Random.FRandRange(0.02f, 0.10f));
+        Skin = FLinearColor(
+            Random.FRandRange(0.64f, 0.80f),
+            Random.FRandRange(0.43f, 0.58f),
+            Random.FRandRange(0.28f, 0.38f));
+    }
 
     auto ApplyColor = [this, BasicMaterial](UStaticMeshComponent* Component, const FLinearColor& Color)
     {
