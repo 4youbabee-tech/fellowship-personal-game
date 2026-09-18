@@ -175,7 +175,7 @@ validate_route_rows("Data/MusicCuePlan.csv", music_rows, check_canon=False)
 
 checkpoint_ids: set[str] = set()
 checkpoint_chapters: set[str] = set()
-story_plan_id_set = {value for value in story_plan_ids if value}
+story_plan_id_set = {(row.get("StoryBeatId") or "").strip() for row in story_rows if (row.get("StoryBeatId") or "").strip()}
 for index, row in enumerate(checkpoint_rows, start=2):
     checkpoint_id = (row.get("CheckpointId") or "").strip()
     chapter = (row.get("Chapter") or "").strip()
