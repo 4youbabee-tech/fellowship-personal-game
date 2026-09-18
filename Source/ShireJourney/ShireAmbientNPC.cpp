@@ -151,6 +151,30 @@ void AShireAmbientNPC::ApplyVisualStyle()
         TryMesh(RightLeg, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg"));
     }
 
+    bool bProductionRegional = false;
+    if (bBreeTownsperson)
+    {
+        bProductionRegional = true;
+        bProductionRegional = TryMesh(Torso, TEXT("/Game/Production/Characters/Common/SM_Human_Torso.SM_Human_Torso")) && bProductionRegional;
+        bProductionRegional = TryMesh(Head, TEXT("/Game/Production/Characters/Common/SM_Human_Head.SM_Human_Head")) && bProductionRegional;
+        bProductionRegional = TryMesh(Hair, TEXT("/Game/Production/Characters/Common/SM_Human_Hair.SM_Human_Hair")) && bProductionRegional;
+        bProductionRegional = TryMesh(LeftArm, TEXT("/Game/Production/Characters/Common/SM_Human_Arm.SM_Human_Arm")) && bProductionRegional;
+        TryMesh(RightArm, TEXT("/Game/Production/Characters/Common/SM_Human_Arm.SM_Human_Arm"));
+        bProductionRegional = TryMesh(LeftLeg, TEXT("/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg")) && bProductionRegional;
+        TryMesh(RightLeg, TEXT("/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg"));
+    }
+    else if (bElf)
+    {
+        bProductionRegional = true;
+        bProductionRegional = TryMesh(Torso, TEXT("/Game/Production/Characters/Common/SM_Elf_Torso.SM_Elf_Torso")) && bProductionRegional;
+        bProductionRegional = TryMesh(Head, TEXT("/Game/Production/Characters/Common/SM_Elf_Head.SM_Elf_Head")) && bProductionRegional;
+        bProductionRegional = TryMesh(Hair, TEXT("/Game/Production/Characters/Common/SM_Elf_Hair.SM_Elf_Hair")) && bProductionRegional;
+        bProductionRegional = TryMesh(LeftArm, TEXT("/Game/Production/Characters/Common/SM_Human_Arm.SM_Human_Arm")) && bProductionRegional;
+        TryMesh(RightArm, TEXT("/Game/Production/Characters/Common/SM_Human_Arm.SM_Human_Arm"));
+        bProductionRegional = TryMesh(LeftLeg, TEXT("/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg")) && bProductionRegional;
+        TryMesh(RightLeg, TEXT("/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg"));
+    }
+
     if (bBird)
     {
         VisualTorsoBaseZ = 10.0f;
@@ -192,19 +216,19 @@ void AShireAmbientNPC::ApplyVisualStyle()
         VisualHeadBaseZ = 139.0f;
         VisualHairBaseZ = 149.0f;
         Torso->SetRelativeLocation(FVector(0.0f, 0.0f, VisualTorsoBaseZ));
-        Torso->SetRelativeScale3D(FVector(0.27f, 0.19f, 0.52f));
+        Torso->SetRelativeScale3D(bProductionRegional ? FVector(1.0f) : FVector(0.27f, 0.19f, 0.52f));
         Head->SetRelativeLocation(FVector(0.0f, 0.0f, VisualHeadBaseZ));
-        Head->SetRelativeScale3D(FVector(0.205f));
+        Head->SetRelativeScale3D(bProductionRegional ? FVector(1.0f) : FVector(0.205f));
         Hair->SetRelativeLocation(FVector(-1.0f, 0.0f, VisualHairBaseZ));
-        Hair->SetRelativeScale3D(FVector(0.21f, 0.20f, 0.13f));
+        Hair->SetRelativeScale3D(bProductionRegional ? FVector(1.0f) : FVector(0.21f, 0.20f, 0.13f));
         LeftArm->SetRelativeLocation(FVector(0.0f, -22.0f, 78.0f));
         RightArm->SetRelativeLocation(FVector(0.0f, 22.0f, 78.0f));
-        LeftArm->SetRelativeScale3D(FVector(0.065f, 0.065f, 0.43f));
-        RightArm->SetRelativeScale3D(FVector(0.065f, 0.065f, 0.43f));
+        LeftArm->SetRelativeScale3D(bProductionRegional ? FVector(1.0f) : FVector(0.065f, 0.065f, 0.43f));
+        RightArm->SetRelativeScale3D(bProductionRegional ? FVector(1.0f) : FVector(0.065f, 0.065f, 0.43f));
         LeftLeg->SetRelativeLocation(FVector(0.0f, -8.5f, 27.0f));
         RightLeg->SetRelativeLocation(FVector(0.0f, 8.5f, 27.0f));
-        LeftLeg->SetRelativeScale3D(FVector(0.075f, 0.075f, 0.40f));
-        RightLeg->SetRelativeScale3D(FVector(0.075f, 0.075f, 0.40f));
+        LeftLeg->SetRelativeScale3D(bProductionRegional ? FVector(1.0f) : FVector(0.075f, 0.075f, 0.40f));
+        RightLeg->SetRelativeScale3D(bProductionRegional ? FVector(1.0f) : FVector(0.075f, 0.075f, 0.40f));
     }
     else if (bBreeTownsperson)
     {
@@ -212,19 +236,19 @@ void AShireAmbientNPC::ApplyVisualStyle()
         VisualHeadBaseZ = 128.0f;
         VisualHairBaseZ = 138.0f;
         Torso->SetRelativeLocation(FVector(0.0f, 0.0f, VisualTorsoBaseZ));
-        Torso->SetRelativeScale3D(FVector(0.31f, 0.23f, 0.48f));
+        Torso->SetRelativeScale3D(bProductionRegional ? FVector(1.0f) : FVector(0.31f, 0.23f, 0.48f));
         Head->SetRelativeLocation(FVector(0.0f, 0.0f, VisualHeadBaseZ));
-        Head->SetRelativeScale3D(FVector(0.22f));
+        Head->SetRelativeScale3D(bProductionRegional ? FVector(1.0f) : FVector(0.22f));
         Hair->SetRelativeLocation(FVector(-1.0f, 0.0f, VisualHairBaseZ));
-        Hair->SetRelativeScale3D(FVector(0.225f, 0.225f, 0.11f));
+        Hair->SetRelativeScale3D(bProductionRegional ? FVector(1.0f) : FVector(0.225f, 0.225f, 0.11f));
         LeftArm->SetRelativeLocation(FVector(0.0f, -25.0f, 72.0f));
         RightArm->SetRelativeLocation(FVector(0.0f, 25.0f, 72.0f));
-        LeftArm->SetRelativeScale3D(FVector(0.075f, 0.075f, 0.40f));
-        RightArm->SetRelativeScale3D(FVector(0.075f, 0.075f, 0.40f));
+        LeftArm->SetRelativeScale3D(bProductionRegional ? FVector(1.0f) : FVector(0.075f, 0.075f, 0.40f));
+        RightArm->SetRelativeScale3D(bProductionRegional ? FVector(1.0f) : FVector(0.075f, 0.075f, 0.40f));
         LeftLeg->SetRelativeLocation(FVector(0.0f, -9.0f, 25.0f));
         RightLeg->SetRelativeLocation(FVector(0.0f, 9.0f, 25.0f));
-        LeftLeg->SetRelativeScale3D(FVector(0.085f, 0.085f, 0.36f));
-        RightLeg->SetRelativeScale3D(FVector(0.085f, 0.085f, 0.36f));
+        LeftLeg->SetRelativeScale3D(bProductionRegional ? FVector(1.0f) : FVector(0.085f, 0.085f, 0.36f));
+        RightLeg->SetRelativeScale3D(bProductionRegional ? FVector(1.0f) : FVector(0.085f, 0.085f, 0.36f));
     }
 
     FLinearColor Coat;
