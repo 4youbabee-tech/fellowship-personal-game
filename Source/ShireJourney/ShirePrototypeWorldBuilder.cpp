@@ -1057,6 +1057,7 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
         else if(Index<16)
         {
             Hobbit->RoutineRole=TEXT("PartyGuest");
+            Hobbit->ActivityPropType=TEXT("Mug");
             Hobbit->PlayerNoticeRadius=340.0f;
             Hobbit->MinWait=1.0f;
             Hobbit->MaxWait=3.0f;
@@ -1064,11 +1065,13 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
         else if(Index<18)
         {
             Hobbit->RoutineRole=TEXT("Courier");
+            Hobbit->ActivityPropType=TEXT("Satchel");
             Hobbit->WalkSpeed=70.0f;
         }
         else if(Index<24)
         {
             Hobbit->RoutineRole=TEXT("FieldWorker");
+            Hobbit->ActivityPropType=TEXT("Basket");
             Hobbit->WalkSpeed=42.0f;
             Hobbit->MinWait=2.5f;
             Hobbit->MaxWait=6.0f;
@@ -1081,6 +1084,7 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
         else
         {
             Hobbit->RoutineRole=TEXT("FerryWorker");
+            Hobbit->ActivityPropType=TEXT("Crate");
             Hobbit->WalkSpeed=38.0f;
         }
     }
