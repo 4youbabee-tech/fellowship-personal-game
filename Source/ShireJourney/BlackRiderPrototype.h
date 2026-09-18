@@ -46,6 +46,12 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Detection", meta=(ClampMin="1", ClampMax="4"))
     int32 RequiredVisibleChecks = 2;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Investigation", meta=(ClampMin="1.0", ClampMax="12.0"))
+    float InvestigationDuration = 4.5f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Investigation", meta=(ClampMin="1.0", ClampMax="2.0"))
+    float InvestigationSpeedMultiplier = 1.20f;
+
 private:
     UPROPERTY()
     USceneComponent* Root;
@@ -64,14 +70,20 @@ private:
 
     bool bHeadingToB = true;
     bool bDetectionQuestActive = false;
+    bool bInvestigating = false;
     int32 ConsecutiveVisibleChecks = 0;
     float NextAlertTime = 0.0f;
     float NextDetectionCheckTime = 0.0f;
+    float InvestigationRemaining = 0.0f;
+    float RidePhase = 0.0f;
+    FVector LastKnownPlayerLocation = FVector::ZeroVector;
 
     UFUNCTION()
     void HandleActiveQuestChanged(FName QuestId);
 
     void UpdatePatrol(float DeltaSeconds);
+    void UpdateRideMotion(float DeltaSeconds);
+    void ApplyPrototypeStyle();
     void CheckPlayerDetection();
     void ResetDetectionConfidence();
     bool HasLineOfSightToPlayer(class ACharacter* Player) const;

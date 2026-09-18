@@ -186,6 +186,7 @@ The audio subsystem routes named ambience/music/SFX/voice events.
 - Lothlorien grief / Mirror material.
 - Amon Hen Boromir pressure / defense / Fellowship break.
 - lightweight ambient NPC awareness.
+- CP21 Shire mega-pass source adds a mill/stream landmark, market detail, denser party preparation, crop rows, wooded-road cover, richer ferry geometry, more ambient residents/optional talkers and Black Rider last-known-position investigation behavior.
 
 ## Story/data source hierarchy
 

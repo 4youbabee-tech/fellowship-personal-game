@@ -174,6 +174,13 @@ void AShireAmbientNPC::BeginPlay()
 
 void AShireAmbientNPC::UpdateAwareness(float DeltaSeconds)
 {
+    if (!bCanNoticePlayer)
+    {
+        bObservingPlayer = false;
+        ObservedPlayer.Reset();
+        return;
+    }
+
     NoticeCooldownRemaining = FMath::Max(0.0f, NoticeCooldownRemaining - DeltaSeconds);
 
     if (bObservingPlayer)
@@ -185,7 +192,11 @@ void AShireAmbientNPC::UpdateAwareness(float DeltaSeconds)
         {
             FVector ToPlayer = PlayerPawn->GetActorLocation() - GetActorLocation();
             ToPlayer.Z = 0.0f;
-            if (!ToPlayer.IsNearlyZero())
+            if (ToPlayer.SizeSquared2D() > FMath::Square(PlayerNoticeRadius * 1.65f))
+            {
+                ObserveRemaining = 0.0f;
+            }
+            else if (!ToPlayer.IsNearlyZero())
             {
                 SetActorRotation(FMath::RInterpTo(
                     GetActorRotation(), ToPlayer.Rotation(), DeltaSeconds, 4.5f));
@@ -216,8 +227,14 @@ void AShireAmbientNPC::UpdateAwareness(float DeltaSeconds)
         return;
     }
 
+    float EffectiveRadius = PlayerNoticeRadius;
+    if (PlayerPawn->GetVelocity().Size2D() > 220.0f)
+    {
+        EffectiveRadius *= RunningNoticeMultiplier;
+    }
+
     const float DistanceSq = FVector::DistSquared2D(PlayerPawn->GetActorLocation(), GetActorLocation());
-    if (DistanceSq <= FMath::Square(PlayerNoticeRadius))
+    if (DistanceSq <= FMath::Square(EffectiveRadius))
     {
         bObservingPlayer = true;
         ObservedPlayer = PlayerPawn;

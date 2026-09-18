@@ -7,6 +7,8 @@
 #include "Engine/World.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/PlayerController.h"
+#include "Materials/MaterialInstanceDynamic.h"
+#include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
 
 ABlackRiderPrototype::ABlackRiderPrototype()
@@ -42,9 +44,49 @@ ABlackRiderPrototype::ABlackRiderPrototype()
     if (SphereMesh.Succeeded()) RiderHead->SetStaticMesh(SphereMesh.Object);
 }
 
+void ABlackRiderPrototype::ApplyPrototypeStyle()
+{
+    UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
+        nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
+    if (!BasicMaterial)
+    {
+        return;
+    }
+
+    auto ApplyColor = [this, BasicMaterial](UStaticMeshComponent* Component, const FLinearColor& Color)
+    {
+        if (!Component)
+        {
+            return;
+        }
+
+        if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, this))
+        {
+            MID->SetVectorParameterValue(TEXT("Color"), Color);
+            Component->SetMaterial(0, MID);
+        }
+    };
+
+    ApplyColor(HorseBody, FLinearColor(0.055f, 0.045f, 0.040f));
+    ApplyColor(RiderBody, FLinearColor(0.025f, 0.025f, 0.030f));
+    ApplyColor(RiderHead, FLinearColor(0.015f, 0.015f, 0.018f));
+}
+
+void ABlackRiderPrototype::UpdateRideMotion(float DeltaSeconds)
+{
+    RidePhase += DeltaSeconds * 6.0f;
+    const float HorseBob = FMath::Sin(RidePhase * 2.0f) * 1.8f;
+    const float RiderBob = FMath::Sin(RidePhase * 2.0f + 0.35f) * 1.4f;
+
+    HorseBody->SetRelativeLocation(FVector(0.0f, 0.0f, 55.0f + HorseBob));
+    RiderBody->SetRelativeLocation(FVector(0.0f, 0.0f, 135.0f + RiderBob));
+    RiderHead->SetRelativeLocation(FVector(0.0f, 0.0f, 205.0f + RiderBob));
+}
+
 void ABlackRiderPrototype::BeginPlay()
 {
     Super::BeginPlay();
+    ApplyPrototypeStyle();
     if (PatrolA.IsNearlyZero() && PatrolB.Equals(FVector(900.0f, 0.0f, 0.0f)))
     {
         PatrolA = GetActorLocation();
@@ -79,7 +121,18 @@ void ABlackRiderPrototype::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void ABlackRiderPrototype::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+
+    if (bInvestigating)
+    {
+        InvestigationRemaining = FMath::Max(0.0f, InvestigationRemaining - DeltaSeconds);
+        if (InvestigationRemaining <= 0.0f)
+        {
+            bInvestigating = false;
+        }
+    }
+
     UpdatePatrol(DeltaSeconds);
+    UpdateRideMotion(DeltaSeconds);
 
     if (!bDetectionQuestActive || !GetWorld())
     {
@@ -97,6 +150,8 @@ void ABlackRiderPrototype::Tick(float DeltaSeconds)
 void ABlackRiderPrototype::HandleActiveQuestChanged(FName QuestId)
 {
     bDetectionQuestActive = QuestId == TEXT("KeepOffRoad");
+    bInvestigating = false;
+    InvestigationRemaining = 0.0f;
     ResetDetectionConfidence();
 
     if (GetWorld())
@@ -107,17 +162,28 @@ void ABlackRiderPrototype::HandleActiveQuestChanged(FName QuestId)
 
 void ABlackRiderPrototype::UpdatePatrol(float DeltaSeconds)
 {
-    const FVector Target = bHeadingToB ? PatrolB : PatrolA;
+    const FVector Target = bInvestigating ? LastKnownPlayerLocation : (bHeadingToB ? PatrolB : PatrolA);
     const FVector ToTarget = Target - GetActorLocation();
-    if (ToTarget.Size2D() < 45.0f)
+
+    const float AcceptanceRadius = bInvestigating ? 70.0f : 45.0f;
+    if (ToTarget.Size2D() < AcceptanceRadius)
     {
-        bHeadingToB = !bHeadingToB;
+        if (bInvestigating)
+        {
+            bInvestigating = false;
+            InvestigationRemaining = 0.0f;
+        }
+        else
+        {
+            bHeadingToB = !bHeadingToB;
+        }
         return;
     }
 
     const FVector Direction = ToTarget.GetSafeNormal2D();
-    AddActorWorldOffset(Direction * PatrolSpeed * DeltaSeconds, true);
-    SetActorRotation(Direction.Rotation());
+    const float Speed = bInvestigating ? PatrolSpeed * InvestigationSpeedMultiplier : PatrolSpeed;
+    AddActorWorldOffset(Direction * Speed * DeltaSeconds, true);
+    SetActorRotation(FMath::RInterpTo(GetActorRotation(), Direction.Rotation(), DeltaSeconds, bInvestigating ? 4.5f : 3.0f));
 }
 
 bool ABlackRiderPrototype::HasLineOfSightToPlayer(ACharacter* Player) const
@@ -189,6 +255,10 @@ void ABlackRiderPrototype::CheckPlayerDetection()
         ResetDetectionConfidence();
         return;
     }
+
+    LastKnownPlayerLocation = Player->GetActorLocation();
+    bInvestigating = true;
+    InvestigationRemaining = InvestigationDuration;
 
     const int32 RequiredChecks = FMath::Max(1, RequiredVisibleChecks);
     ConsecutiveVisibleChecks = FMath::Min(ConsecutiveVisibleChecks + 1, RequiredChecks);

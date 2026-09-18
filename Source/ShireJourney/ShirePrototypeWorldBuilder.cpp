@@ -471,6 +471,18 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     SpawnShape(CubeMesh, FVector(-1050.0f, -5.0f, 62.0f), FVector(2.0f, 0.09f, 0.34f),
         FLinearColor(0.30f, 0.30f, 0.28f), FRotator::ZeroRotator, false);
 
+    // The Water: a narrow stream and mill landmark turn the bridge into a place rather
+    // than a quest coordinate.
+    SpawnShape(CubeMesh, FVector(-1060.0f, 310.0f, -4.0f), FVector(8.0f, 1.0f, 0.06f),
+        FLinearColor(0.055f, 0.26f, 0.38f), FRotator(0.0f, 88.0f, 0.0f), false);
+    SpawnShape(CubeMesh, FVector(-1250.0f, 330.0f, 88.0f), FVector(1.45f, 1.05f, 0.88f),
+        FLinearColor(0.52f, 0.39f, 0.23f), FRotator::ZeroRotator, true);
+    SpawnShape(ConeMesh, FVector(-1250.0f, 330.0f, 215.0f), FVector(1.65f, 1.25f, 0.52f),
+        FLinearColor(0.30f, 0.17f, 0.075f), FRotator::ZeroRotator, false);
+    SpawnShape(CylinderMesh, FVector(-1135.0f, 330.0f, 95.0f), FVector(0.74f, 0.74f, 0.09f),
+        FLinearColor(0.24f, 0.16f, 0.08f), FRotator(0.0f, 90.0f, 0.0f), false);
+    SpawnLabel(TEXT("The Mill"), FVector(-1250.0f, 330.0f, 320.0f), FLinearColor(0.86f, 0.82f, 0.66f));
+
     // Bag End and nearby Hobbiton homes.
     SpawnHobbitHole(FVector(-2210.0f, -520.0f, 0.0f), 1.25f);
     SpawnLabel(TEXT("Bag End"), FVector(-2210.0f, -520.0f, 270.0f), FLinearColor::Yellow);
@@ -484,6 +496,10 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     SpawnHobbitHole(FVector(-1160.0f, -690.0f, 0.0f), 0.78f);
     SpawnHobbitHole(FVector(430.0f, 520.0f, 0.0f), 0.82f);
     SpawnHobbitHole(FVector(760.0f, -610.0f, 0.0f), 0.80f);
+    SpawnHobbitHole(FVector(980.0f, 520.0f, 0.0f), 0.76f);
+    SpawnHobbitHole(FVector(1280.0f, 610.0f, 0.0f), 0.72f);
+    SpawnHobbitHole(FVector(1580.0f, 520.0f, 0.0f), 0.70f);
+    SpawnHobbitHole(FVector(-1780.0f, 920.0f, 0.0f), 0.72f);
 
     // Home gardens and fences make the lane read as lived-in Hobbiton rather than a
     // collection of isolated primitive shapes.
@@ -500,6 +516,32 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     SpawnShape(ConeMesh, FVector(-670.0f, 250.0f, 270.0f), FVector(2.4f, 1.8f, 0.7f),
         FLinearColor(0.28f, 0.12f, 0.05f), FRotator::ZeroRotator, false);
     SpawnLabel(TEXT("The Green Dragon"), FVector(-670.0f, 250.0f, 370.0f), FLinearColor(0.85f, 0.80f, 0.55f));
+
+    // Small market square: stalls, produce tables, benches and a cart make the village
+    // center feel used even when the player is not on a quest.
+    const FVector MarketStalls[] = {
+        FVector(-910, 130, 38), FVector(-770, 80, 38), FVector(-590, 70, 38), FVector(-450, 145, 38)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(MarketStalls); ++Index)
+    {
+        const FVector Stall = MarketStalls[Index];
+        SpawnShape(CubeMesh, Stall, FVector(0.72f, 0.38f, 0.08f),
+            FLinearColor(0.43f, 0.28f, 0.13f), FRotator::ZeroRotator, true);
+        SpawnShape(CubeMesh, Stall + FVector(0, 0, 75), FVector(0.78f, 0.44f, 0.05f),
+            Index % 2 == 0 ? FLinearColor(0.48f, 0.20f, 0.12f) : FLinearColor(0.22f, 0.39f, 0.16f),
+            FRotator::ZeroRotator, false);
+        SpawnShape(CubeMesh, Stall + FVector(-55, -28, 30), FVector(0.08f, 0.08f, 0.55f),
+            FLinearColor(0.30f, 0.18f, 0.08f), FRotator::ZeroRotator, false);
+        SpawnShape(CubeMesh, Stall + FVector(55, 28, 30), FVector(0.08f, 0.08f, 0.55f),
+            FLinearColor(0.30f, 0.18f, 0.08f), FRotator::ZeroRotator, false);
+    }
+
+    SpawnShape(CubeMesh, FVector(-350, 270, 35), FVector(1.15f, 0.42f, 0.13f),
+        FLinearColor(0.34f, 0.20f, 0.09f), FRotator(0, -18, 0), true);
+    SpawnShape(CylinderMesh, FVector(-420, 220, 38), FVector(0.22f, 0.22f, 0.10f),
+        FLinearColor(0.18f, 0.12f, 0.07f), FRotator(90, 0, 0), false);
+    SpawnShape(CylinderMesh, FVector(-280, 320, 38), FVector(0.22f, 0.22f, 0.10f),
+        FLinearColor(0.18f, 0.12f, 0.07f), FRotator(90, 0, 0), false);
 
     // Party field with central tree and simple pavilion blocks.
     SpawnTree(FVector(-50.0f, 720.0f, 0.0f), 1.35f);
@@ -521,8 +563,22 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
         SpawnShape(CubeMesh, Table + FVector(0.0f, -58.0f, -20.0f), FVector(0.75f, 0.10f, 0.11f),
             FLinearColor(0.34f, 0.20f, 0.09f), FRotator::ZeroRotator, true);
     }
+    // Hay, barrels and a small speech platform add readable party preparation.
+    const FVector PartyProps[] = {
+        FVector(-320, 735, 28), FVector(335, 735, 28), FVector(-270, 900, 28), FVector(250, 930, 28)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(PartyProps); ++Index)
+    {
+        SpawnShape(CylinderMesh, PartyProps[Index], FVector(0.28f, 0.28f, 0.30f),
+            Index % 2 == 0 ? FLinearColor(0.58f, 0.44f, 0.16f) : FLinearColor(0.28f, 0.17f, 0.08f),
+            FRotator::ZeroRotator, true);
+    }
+    SpawnShape(CubeMesh, FVector(240, 890, 25), FVector(1.15f, 0.72f, 0.12f),
+        FLinearColor(0.40f, 0.24f, 0.10f), FRotator::ZeroRotator, true);
+
     const FVector LanternPosts[] = {
-        FVector(-390, 520, 0), FVector(390, 520, 0), FVector(-390, 920, 0), FVector(390, 920, 0)
+        FVector(-390, 520, 0), FVector(390, 520, 0), FVector(-390, 920, 0), FVector(390, 920, 0),
+        FVector(0, 500, 0), FVector(0, 950, 0)
     };
     for (const FVector& Post : LanternPosts)
     {
@@ -532,11 +588,57 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
             FLinearColor(0.92f, 0.62f, 0.18f), FRotator::ZeroRotator, false);
     }
 
+    // Crop rows and field props visually prepare the later shortcut encounter.
+    for (int32 Row = 0; Row < 8; ++Row)
+    {
+        const float Y = -520.0f + Row * 115.0f;
+        SpawnShape(CubeMesh, FVector(1260.0f, Y, 8.0f), FVector(3.9f, 0.11f, 0.06f),
+            FLinearColor(0.30f, 0.22f, 0.075f), FRotator::ZeroRotator, false);
+        for (int32 Plant = 0; Plant < 6; ++Plant)
+        {
+            SpawnShape(SphereMesh, FVector(980.0f + Plant * 110.0f, Y, 26.0f), FVector(0.10f, 0.10f, 0.16f),
+                FLinearColor(0.32f, 0.46f, 0.12f), FRotator::ZeroRotator, false);
+        }
+    }
+    SpawnShape(CylinderMesh, FVector(1510, -580, 36), FVector(0.42f, 0.42f, 0.36f),
+        FLinearColor(0.64f, 0.48f, 0.16f), FRotator::ZeroRotator, true);
+    SpawnShape(CylinderMesh, FVector(1590, -540, 36), FVector(0.38f, 0.38f, 0.34f),
+        FLinearColor(0.64f, 0.48f, 0.16f), FRotator::ZeroRotator, true);
+
+    // Wooded-road cover: dense silhouettes, hedges and a fallen root/log create actual
+    // line-of-sight choices for the Black Rider encounter.
+    const FVector WoodedRoadTrees[] = {
+        FVector(1620,-520,0), FVector(1740,-650,0), FVector(1890,-540,0), FVector(2060,-620,0),
+        FVector(1700,430,0), FVector(1860,520,0), FVector(2020,430,0), FVector(2190,520,0)
+    };
+    for (const FVector& P : WoodedRoadTrees)
+    {
+        SpawnTree(P, 0.92f);
+    }
+    SpawnFenceLine(FVector(1580,-360,0), FVector(2210,-360,0), 7);
+    SpawnFenceLine(FVector(1580,340,0), FVector(2210,340,0), 7);
+    SpawnShape(CylinderMesh, FVector(1780,235,42), FVector(0.22f, 0.22f, 1.35f),
+        FLinearColor(0.20f, 0.10f, 0.045f), FRotator(0, 82, 90), true);
+    SpawnShape(SphereMesh, FVector(1745,220,48), FVector(0.95f, 0.42f, 0.30f),
+        FLinearColor(0.12f, 0.29f, 0.075f), FRotator::ZeroRotator, true);
+
     // Brandywine river and Bucklebury Ferry destination.
     SpawnShape(CubeMesh, FVector(2780.0f, 120.0f, -10.0f), FVector(2.7f, 42.0f, 0.18f),
         FLinearColor(0.06f, 0.24f, 0.42f), FRotator::ZeroRotator, false);
     SpawnShape(CubeMesh, FVector(2690.0f, 120.0f, 12.0f), FVector(1.4f, 1.8f, 0.12f),
         FLinearColor(0.34f, 0.20f, 0.09f), FRotator::ZeroRotator, true);
+    SpawnShape(CubeMesh, FVector(2940.0f, 120.0f, 12.0f), FVector(1.4f, 1.8f, 0.12f),
+        FLinearColor(0.34f, 0.20f, 0.09f), FRotator::ZeroRotator, true);
+    const FVector FerryPosts[] = {
+        FVector(2580,-20,0), FVector(2580,260,0), FVector(3060,-20,0), FVector(3060,260,0)
+    };
+    for (const FVector& Post : FerryPosts)
+    {
+        SpawnShape(CylinderMesh, Post + FVector(0,0,70), FVector(0.08f,0.08f,0.70f),
+            FLinearColor(0.26f,0.15f,0.07f), FRotator::ZeroRotator, true);
+    }
+    SpawnShape(CubeMesh, FVector(2820,120,24), FVector(1.05f,0.78f,0.10f),
+        FLinearColor(0.30f,0.18f,0.085f), FRotator::ZeroRotator, true);
     SpawnLabel(TEXT("Bucklebury Ferry"), FVector(2500.0f, 120.0f, 250.0f), FLinearColor::White);
 
     // Trees deliberately sparse in greybox; final foliage will use instancing/LODs.
@@ -569,7 +671,11 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
         FVector(-900, 330, 20), FVector(-760, -360, 20), FVector(-610, -120, 20),
         FVector(-310, 190, 20), FVector(-80, 420, 20), FVector(220, 180, 20),
         FVector(380, 610, 20), FVector(480, -40, 20), FVector(760, 150, 20),
-        FVector(980, -220, 20), FVector(1180, 220, 20), FVector(1390, -330, 20)
+        FVector(980, -220, 20), FVector(1180, 220, 20), FVector(1390, -330, 20),
+        FVector(-1180, 300, 20), FVector(-480, 250, 20), FVector(-250, 820, 20),
+        FVector(100, 900, 20), FVector(620, 620, 20), FVector(1060, -440, 20),
+        FVector(1500, 400, 20), FVector(2080, 250, 20), FVector(2440, 40, 20),
+        FVector(2520, 310, 20)
     };
 
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(HobbitStarts); ++Index)
@@ -581,6 +687,37 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
             const float Side = (Index % 2 == 0) ? 1.0f : -1.0f;
             Hobbit->RoutinePointB = HobbitStarts[Index] + FVector(240.0f + 20.0f * (Index % 3), Side * 110.0f, 0.0f);
             Hobbit->WalkSpeed = 45.0f + 5.0f * (Index % 4);
+
+            if (Index < 5)
+            {
+                Hobbit->RoutineRole = TEXT("Gardener");
+                Hobbit->MinWait = 2.5f;
+                Hobbit->MaxWait = 6.0f;
+            }
+            else if (Index < 11)
+            {
+                Hobbit->RoutineRole = TEXT("Villager");
+            }
+            else if (Index < 18)
+            {
+                Hobbit->RoutineRole = TEXT("PartyGuest");
+                Hobbit->PlayerNoticeRadius = 330.0f;
+                Hobbit->MinWait = 1.0f;
+                Hobbit->MaxWait = 3.0f;
+            }
+            else if (Index < 24)
+            {
+                Hobbit->RoutineRole = TEXT("FieldWorker");
+                Hobbit->WalkSpeed = 42.0f;
+                Hobbit->MinWait = 2.0f;
+                Hobbit->MaxWait = 5.5f;
+            }
+            else
+            {
+                Hobbit->RoutineRole = TEXT("Courier");
+                Hobbit->WalkSpeed = 68.0f;
+                Hobbit->PlayerNoticeRadius = 240.0f;
+            }
         }
     }
 }
@@ -695,6 +832,61 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
         FieldHand->DialogueLines = {
             FText::FromString(TEXT("The road is quieter past the last hedges. Nice walking, if you do not mind being far from a warm kitchen.")),
             FText::FromString(TEXT("I would stay for the fireworks before going anywhere east."))
+        };
+    }
+
+    AShireNPC* Miller = GetWorld()->SpawnActor<AShireNPC>(
+        FVector(-1210.0f, 240.0f, 65.0f), FRotator(0.0f, 140.0f, 0.0f));
+    if (Miller)
+    {
+        Miller->DisplayName = FText::FromString(TEXT("Hobbiton Miller"));
+        Miller->DialogueLines = {
+            FText::FromString(TEXT("The wheel has been turning since sunrise. Party day or not, flour does not grind itself.")),
+            FText::FromString(TEXT("Take the bridge slowly. Everyone is in too much of a hurry today."))
+        };
+    }
+
+    AShireNPC* MarketGardener = GetWorld()->SpawnActor<AShireNPC>(
+        FVector(-790.0f, 110.0f, 65.0f), FRotator(0.0f, 35.0f, 0.0f));
+    if (MarketGardener)
+    {
+        MarketGardener->DisplayName = FText::FromString(TEXT("Market Gardener"));
+        MarketGardener->DialogueLines = {
+            FText::FromString(TEXT("Fresh onions, early carrots, and not one quiet customer since breakfast.")),
+            FText::FromString(TEXT("Bilbo's party has emptied half the gardens in Hobbiton."))
+        };
+    }
+
+    AShireNPC* PartyGuest = GetWorld()->SpawnActor<AShireNPC>(
+        FVector(250.0f, 800.0f, 65.0f), FRotator(0.0f, 210.0f, 0.0f));
+    if (PartyGuest)
+    {
+        PartyGuest->DisplayName = FText::FromString(TEXT("Excited Party Guest"));
+        PartyGuest->DialogueLines = {
+            FText::FromString(TEXT("They say the fireworks came all the way from outside the Shire.")),
+            FText::FromString(TEXT("I only hope Bilbo remembered enough benches for the relatives who arrive early."))
+        };
+    }
+
+    AShireNPC* EastRoadWalker = GetWorld()->SpawnActor<AShireNPC>(
+        FVector(1710.0f, 420.0f, 65.0f), FRotator(0.0f, 270.0f, 0.0f));
+    if (EastRoadWalker)
+    {
+        EastRoadWalker->DisplayName = FText::FromString(TEXT("East Road Walker"));
+        EastRoadWalker->DialogueLines = {
+            FText::FromString(TEXT("Past those hedges the road feels different. Less laughter, more wind.")),
+            FText::FromString(TEXT("If you hear horses after dark, I would step well aside."))
+        };
+    }
+
+    AShireNPC* FerryKeeper = GetWorld()->SpawnActor<AShireNPC>(
+        FVector(2480.0f, 270.0f, 65.0f), FRotator(0.0f, 190.0f, 0.0f));
+    if (FerryKeeper)
+    {
+        FerryKeeper->DisplayName = FText::FromString(TEXT("Ferry Keeper"));
+        FerryKeeper->DialogueLines = {
+            FText::FromString(TEXT("The current is gentle now. It changes quickly when the wind turns.")),
+            FText::FromString(TEXT("Keep the landing clear and the rope where you can reach it."))
         };
     }
 }

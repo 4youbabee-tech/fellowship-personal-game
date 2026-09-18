@@ -32,6 +32,12 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Routine")
     float MaxWait = 5.0f;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Routine")
+    FName RoutineRole = TEXT("Villager");
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Awareness")
+    bool bCanNoticePlayer = true;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Awareness")
     float PlayerNoticeRadius = 280.0f;
 
@@ -43,6 +49,9 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Awareness")
     float NoticeCooldown = 7.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Awareness", meta=(ClampMin="1.0", ClampMax="2.0"))
+    float RunningNoticeMultiplier = 1.35f;
 
 private:
     UPROPERTY()
