@@ -66,7 +66,8 @@
     "Data/NPCMemoryPlan.json",
     "Data/LivingWorldEventPlan.json",
     "Data/BoundedDialoguePlan.json",
-    "Data/PlayerExperiencePacingPlan.json"
+    "Data/PlayerExperiencePacingPlan.json",
+    "Data/CharacterPopulationPlan.json"
   ],
   "living_world_phase_ids": [
     "LW0",
@@ -137,6 +138,39 @@
     "COMPANION_BANTER"
   ],
   "pacing_required_chapters": [
+    "P1C01",
+    "P1C02",
+    "P1C03",
+    "P1C04",
+    "P1C05",
+    "P1C06",
+    "P1C07",
+    "P1C08",
+    "P1G01"
+  ],
+  "character_population_required_ids": [
+    "FRODO",
+    "SAM",
+    "MERRY",
+    "PIPPIN",
+    "GANDALF",
+    "ARAGORN",
+    "BOROMIR",
+    "LEGOLAS",
+    "GIMLI",
+    "BILBO",
+    "ARWEN",
+    "ELROND",
+    "HALDIR",
+    "GALADRIEL",
+    "SARUMAN",
+    "BARLIMAN",
+    "GATE_KEEPER",
+    "HAMFAST",
+    "ROSIE",
+    "MAGGOT"
+  ],
+  "character_population_required_chapters": [
     "P1C01",
     "P1C02",
     "P1C03",
