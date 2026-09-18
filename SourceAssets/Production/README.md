@@ -1,5 +1,17 @@
-# CP28 production source meshes
+# Production source assets
 
-Original low-poly source meshes for the project. The one-click launcher builds the editor, runs the ShireProductionImport commandlet, imports these OBJ files into /Game/Production, then launches Unreal. No manual Marketplace or import work is required.
+The production source pipeline is original project work and is imported automatically by `ShireProductionImport` into `/Game/Production`.
 
-Current authored set covers Frodo, Gandalf, Shire Hobbits, and core Shire scenery. Engine primitive geometry remains only as a fallback if an import fails.
+Current Shire production set includes:
+- Frodo, Gandalf and Hobbit source meshes,
+- authored Shire trees, rocks, crates, barrels and signposts,
+- textured production ground/road blocks,
+- turf mounds, hedges, shrubs, grass clumps and path stones,
+- Hobbit-hole facade geometry,
+- production fence segments,
+- carts, benches, lanterns and a mill wheel,
+- original procedural TGA surface maps for grass, soil, bark, leaves, stone, wood and painted doors.
+
+The one-click launcher and the editor commandlet import textures before OBJ meshes so OBJ/MTL material references can resolve. Engine BasicShapes remain fallbacks only when a production asset is missing.
+
+These assets are an intermediate game-production layer, not a claim of final photorealistic character/environment art.

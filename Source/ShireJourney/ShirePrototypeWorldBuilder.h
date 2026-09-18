@@ -38,6 +38,19 @@ private:
     UPROPERTY() UStaticMesh* ProductionCrateMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionSignpostMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionBarrelMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionGroundBlockMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionRoadBlockMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionTurfMoundMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionHedgeMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionShrubMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionPathStoneMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionGrassClumpMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionFenceSegmentMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionHobbitFacadeMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCartMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionBenchMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionMillWheelMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionLanternMesh = nullptr;
     UPROPERTY() UMaterialInterface* BasicMaterial;
 
     UPROPERTY() USceneComponent* RuntimeRoot;

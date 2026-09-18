@@ -14,6 +14,7 @@
 #include "Components/SkyLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Engine/AtmosphericFog.h"
 #include "Engine/DirectionalLight.h"
 #include "Engine/ExponentialHeightFog.h"
 #include "Engine/PostProcessVolume.h"
@@ -130,10 +131,26 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionCrateMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShCrate.SM_ShCrate"));
     ProductionSignpostMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShSignpost.SM_ShSignpost"));
     ProductionBarrelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShBarrel.SM_ShBarrel"));
+    ProductionGroundBlockMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShGroundBlock.SM_ShGroundBlock"));
+    ProductionRoadBlockMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShRoadBlock.SM_ShRoadBlock"));
+    ProductionTurfMoundMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShTurfMound.SM_ShTurfMound"));
+    ProductionHedgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShHedge.SM_ShHedge"));
+    ProductionShrubMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShShrub.SM_ShShrub"));
+    ProductionPathStoneMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShPathStone.SM_ShPathStone"));
+    ProductionGrassClumpMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShGrassClump.SM_ShGrassClump"));
+    ProductionFenceSegmentMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShFenceSegment.SM_ShFenceSegment"));
+    ProductionHobbitFacadeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShHobbitFacade.SM_ShHobbitFacade"));
+    ProductionCartMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShCart.SM_ShCart"));
+    ProductionBenchMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShBench.SM_ShBench"));
+    ProductionMillWheelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShMillWheel.SM_ShMillWheel"));
+    ProductionLanternMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShLantern.SM_ShLantern"));
 
     if (ProductionTreeTrunkMesh) DistantTreeTrunkInstances->SetStaticMesh(ProductionTreeTrunkMesh);
     if (ProductionTreeCanopyMesh) DistantTreeCanopyInstances->SetStaticMesh(ProductionTreeCanopyMesh);
     if (ProductionRockMesh) RockInstances->SetStaticMesh(ProductionRockMesh);
+    if (ProductionGrassClumpMesh) GrassInstances->SetStaticMesh(ProductionGrassClumpMesh);
+    if (ProductionShrubMesh) ShrubInstances->SetStaticMesh(ProductionShrubMesh);
+    if (ProductionPathStoneMesh) PathStoneInstances->SetStaticMesh(ProductionPathStoneMesh);
 
     BuildPrototypeWorld();
 
@@ -194,7 +211,11 @@ AStaticMeshActor* AShirePrototypeWorldBuilder::SpawnShape(
     MeshComponent->SetCollisionEnabled(bCollision ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
     Actor->SetActorScale3D(Scale);
 
-    if (BasicMaterial)
+    // Preserve authored/imported materials on production meshes. Engine primitives are
+    // still colorized as deterministic fallbacks when an imported asset is unavailable.
+    const bool bFallbackPrimitive =
+        Mesh == CubeMesh || Mesh == SphereMesh || Mesh == CylinderMesh || Mesh == ConeMesh;
+    if (BasicMaterial && bFallbackPrimitive)
     {
         UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, Actor);
         if (MID)
@@ -269,11 +290,22 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
     const FLinearColor WarmGlass(0.92f, 0.67f, 0.28f);
     const FLinearColor Stone(0.42f, 0.40f, 0.34f);
 
-    // Buried turf mound and recessed timber facade.
-    SpawnShape(SphereMesh, Location + FVector(0.0f, 0.0f, 82.0f * Scale),
-        FVector(1.72f, 1.12f, 0.78f) * Scale, Turf, FRotator::ZeroRotator, true);
-    SpawnShape(CubeMesh, Location + FVector(-72.0f * Scale, 0.0f, 54.0f * Scale),
-        FVector(0.10f, 0.82f, 0.58f) * Scale, Earth, FRotator::ZeroRotator, true);
+    // Imported production mound/facade replace the toy-like primitive silhouette when
+    // available. Runtime accents below remain cheap and readable on the target laptop.
+    if (ProductionTurfMoundMesh && ProductionHobbitFacadeMesh)
+    {
+        SpawnShape(ProductionTurfMoundMesh, Location + FVector(0.0f, 0.0f, 30.0f * Scale),
+            FVector(2.45f, 2.10f, 2.10f) * Scale, Turf, FRotator::ZeroRotator, true);
+        SpawnShape(ProductionHobbitFacadeMesh, Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
+            FVector(1.0f) * Scale, Earth, FRotator::ZeroRotator, true);
+    }
+    else
+    {
+        SpawnShape(SphereMesh, Location + FVector(0.0f, 0.0f, 82.0f * Scale),
+            FVector(1.72f, 1.12f, 0.78f) * Scale, Turf, FRotator::ZeroRotator, true);
+        SpawnShape(CubeMesh, Location + FVector(-72.0f * Scale, 0.0f, 54.0f * Scale),
+            FVector(0.10f, 0.82f, 0.58f) * Scale, Earth, FRotator::ZeroRotator, true);
+    }
 
     // Round frame + inset painted door.
     SpawnShape(CylinderMesh, Location + FVector(-83.0f * Scale, 0.0f, 55.0f * Scale),
@@ -319,6 +351,18 @@ void AShirePrototypeWorldBuilder::SpawnFenceLine(const FVector& Start, const FVe
     const float SectionLength = SectionDelta.Size2D();
     const FRotator RailRotation = SectionDelta.GetSafeNormal2D().Rotation();
     const FLinearColor Wood(0.31f, 0.18f, 0.08f);
+
+    if (ProductionFenceSegmentMesh)
+    {
+        for (int32 Index = 0; Index < Sections; ++Index)
+        {
+            const FVector Mid = Start + SectionDelta * (static_cast<float>(Index) + 0.5f);
+            SpawnShape(ProductionFenceSegmentMesh, Mid,
+                FVector(FMath::Max(0.25f, SectionLength / 100.0f), 1.0f, 1.0f),
+                Wood, RailRotation, true);
+        }
+        return;
+    }
 
     for (int32 Index = 0; Index <= Sections; ++Index)
     {
@@ -499,6 +543,16 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
             SunComponent->SetCastShadows(true);
             SunComponent->SetAtmosphereSunLight(true);
             SunComponent->SetAtmosphereSunLightIndex(0);
+        }
+    }
+
+    // The template map may still contain legacy AtmosphericFog. Running it together
+    // with SkyAtmosphere produces a visible UE4.27 warning and conflicting sky models.
+    for (TActorIterator<AAtmosphericFog> It(GetWorld()); It; ++It)
+    {
+        if (AAtmosphericFog* LegacyFog = *It)
+        {
+            LegacyFog->Destroy();
         }
     }
 
@@ -730,7 +784,7 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
 {
     // The expanded terrain covers roughly 340m x 130m. One cheap slab keeps collision
     // predictable on the low-spec target while hills and vegetation break the horizon.
-    SpawnShape(CubeMesh, FVector(10800.0f, 0.0f, -70.0f), FVector(340.0f, 130.0f, 0.7f),
+    SpawnShape(ProductionGroundBlockMesh ? ProductionGroundBlockMesh : CubeMesh, FVector(10800.0f, 0.0f, -70.0f), FVector(340.0f, 130.0f, ProductionGroundBlockMesh ? 1.0f : 0.7f),
         FLinearColor(0.16f, 0.34f, 0.10f), FRotator::ZeroRotator, true);
 
     // Horizon / occlusion hills. These deliberately hide later regions so the player
@@ -767,7 +821,7 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
         const FVector B = RoadPoints[Index+1];
         const FVector Delta = B-A;
         const FVector Mid = (A+B)*0.5f;
-        SpawnShape(CubeMesh, Mid, FVector(Delta.Size2D()/100.0f, 1.15f, 0.10f),
+        SpawnShape(ProductionRoadBlockMesh ? ProductionRoadBlockMesh : CubeMesh, Mid, FVector(Delta.Size2D()/100.0f, 1.15f, ProductionRoadBlockMesh ? 0.25f : 0.10f),
             FLinearColor(0.40f,0.27f,0.14f), Delta.Rotation(), true);
     }
 
@@ -780,8 +834,8 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     for (int32 Index=0; Index<UE_ARRAY_COUNT(CoreFootpath)-1; ++Index)
     {
         const FVector D=CoreFootpath[Index+1]-CoreFootpath[Index];
-        SpawnShape(CubeMesh,(CoreFootpath[Index]+CoreFootpath[Index+1])*0.5f,
-            FVector(D.Size2D()/100.0f,0.52f,0.065f),FLinearColor(0.36f,0.25f,0.14f),D.Rotation(),true);
+        SpawnShape(ProductionRoadBlockMesh ? ProductionRoadBlockMesh : CubeMesh,(CoreFootpath[Index]+CoreFootpath[Index+1])*0.5f,
+            FVector(D.Size2D()/100.0f,0.52f,ProductionRoadBlockMesh ? 0.18f : 0.065f),FLinearColor(0.36f,0.25f,0.14f),D.Rotation(),true);
     }
 
     const FVector FieldLoop[] = {
@@ -791,8 +845,8 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     for (int32 Index=0; Index<UE_ARRAY_COUNT(FieldLoop)-1; ++Index)
     {
         const FVector D=FieldLoop[Index+1]-FieldLoop[Index];
-        SpawnShape(CubeMesh,(FieldLoop[Index]+FieldLoop[Index+1])*0.5f,
-            FVector(D.Size2D()/100.0f,0.46f,0.06f),FLinearColor(0.34f,0.24f,0.13f),D.Rotation(),true);
+        SpawnShape(ProductionRoadBlockMesh ? ProductionRoadBlockMesh : CubeMesh,(FieldLoop[Index]+FieldLoop[Index+1])*0.5f,
+            FVector(D.Size2D()/100.0f,0.46f,ProductionRoadBlockMesh ? 0.17f : 0.06f),FLinearColor(0.34f,0.24f,0.13f),D.Rotation(),true);
     }
 
     // Stone bridge, The Water and mill anchor the village center.
@@ -1520,8 +1574,11 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(Mounds); ++Index)
     {
-        SpawnShape(SphereMesh, Mounds[Index],
-            FVector(5.5f + (Index % 3), 3.0f + 0.5f * (Index % 2), 1.15f),
+        const FVector MoundScale = ProductionTurfMoundMesh
+            ? FVector(4.0f + 0.45f * (Index % 3), 3.6f + 0.35f * (Index % 2), 1.7f)
+            : FVector(5.5f + (Index % 3), 3.0f + 0.5f * (Index % 2), 1.15f);
+        SpawnShape(ProductionTurfMoundMesh ? ProductionTurfMoundMesh : SphereMesh, Mounds[Index],
+            MoundScale,
             Index % 2 == 0 ? FLinearColor(0.14f,0.34f,0.075f) : FLinearColor(0.16f,0.37f,0.085f),
             FRotator::ZeroRotator, false);
     }
@@ -1536,6 +1593,39 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
             ProductionCrateMesh ? FVector(0.58f) : FVector(0.28f,0.28f,0.28f),
             Index % 2 == 0 ? FLinearColor(0.34f,0.19f,0.075f) : FLinearColor(0.42f,0.27f,0.11f),
             FRotator(0.0f, static_cast<float>((Index * 23) % 45), 0.0f), false);
+    }
+
+    // Production props create readable lived-in spaces instead of bare primitive staging.
+    if (ProductionCartMesh)
+    {
+        SpawnShape(ProductionCartMesh, FVector(-760, 420, 0), FVector(0.82f),
+            FLinearColor::White, FRotator(0, 24, 0), false);
+        SpawnShape(ProductionCartMesh, FVector(5050, -1110, 0), FVector(0.78f),
+            FLinearColor::White, FRotator(0, -18, 0), false);
+    }
+    if (ProductionBenchMesh)
+    {
+        SpawnShape(ProductionBenchMesh, FVector(-360, 1180, 0), FVector(0.86f),
+            FLinearColor::White, FRotator(0, 12, 0), false);
+        SpawnShape(ProductionBenchMesh, FVector(420, 1120, 0), FVector(0.86f),
+            FLinearColor::White, FRotator(0, -8, 0), false);
+    }
+    if (ProductionMillWheelMesh)
+    {
+        SpawnShape(ProductionMillWheelMesh, FVector(-1135, 330, 92), FVector(0.95f),
+            FLinearColor::White, FRotator(0, 0, 90), false);
+    }
+    if (ProductionLanternMesh)
+    {
+        const FVector Lanterns[] = {
+            FVector(-520, 260, 0), FVector(-250, 1040, 0),
+            FVector(260, 1080, 0), FVector(720, 980, 0)
+        };
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(Lanterns); ++Index)
+        {
+            SpawnShape(ProductionLanternMesh, Lanterns[Index], FVector(0.82f),
+                FLinearColor::White, FRotator::ZeroRotator, false);
+        }
     }
 
     // Road sign silhouettes help the player read the space without floating text labels.

@@ -21,12 +21,18 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         FPaths::Combine(FPaths::ProjectDir(), TEXT("SourceAssets/Production")));
 
     TArray<FString> SourceFiles;
-    IFileManager::Get().FindFilesRecursive(SourceFiles, *SourceRoot, TEXT("*.obj"), true, false, false);
-    SourceFiles.Sort();
+    TArray<FString> TextureFiles;
+    TArray<FString> MeshFiles;
+    IFileManager::Get().FindFilesRecursive(TextureFiles, *SourceRoot, TEXT("*.tga"), true, false, false);
+    IFileManager::Get().FindFilesRecursive(MeshFiles, *SourceRoot, TEXT("*.obj"), true, false, false);
+    TextureFiles.Sort();
+    MeshFiles.Sort();
+    SourceFiles.Append(TextureFiles);
+    SourceFiles.Append(MeshFiles);
 
     if (SourceFiles.Num() == 0)
     {
-        UE_LOG(LogTemp, Warning, TEXT("ShireProductionImport: no OBJ assets found at %s"), *SourceRoot);
+        UE_LOG(LogTemp, Warning, TEXT("ShireProductionImport: no production assets found at %s"), *SourceRoot);
         return 0;
     }
 
