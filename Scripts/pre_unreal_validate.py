@@ -231,7 +231,11 @@ for index, item in enumerate(requirements_data.get("requirements", []), start=1)
     if status in {"REQUESTED", "PLANNED", "PARTIAL", "DEFERRED"} and not isinstance(missing_work, list):
         fail(f"Open project requirement {req_id} must track missing_work")
 
-for required_req in ["REQ-MEM-001", "REQ-WORLD-001", "REQ-WORLD-002", "REQ-NPC-001", "REQ-NPC-002", "REQ-NPC-003", "REQ-SAVE-001", "REQ-PERF-001"]:
+for required_req in [
+    "REQ-MEM-001", "REQ-WORLD-001", "REQ-WORLD-002", "REQ-NPC-001", "REQ-NPC-002",
+    "REQ-NPC-003", "REQ-SAVE-001", "REQ-PERF-001",
+    "REQ-VISION-001", "REQ-EXP-001", "REQ-EXP-002", "REQ-COVERAGE-001"
+]:
     if required_req not in requirement_ids:
         fail(f"Permanent requirement ledger missing critical requirement: {required_req}")
 
@@ -275,6 +279,56 @@ for required_feature in [
 ]:
     if required_feature not in lw_feature_ids:
         fail(f"Living world plan missing required feature contract: {required_feature}")
+
+# PG-022: film-first adaptation must keep machine-readable film-to-game coverage.
+film_plan_path = ROOT / "Data" / "FilmExperiencePlan.json"
+film_plan = {}
+if not film_plan_path.exists():
+    fail("Film experience plan missing: Data/FilmExperiencePlan.json")
+else:
+    try:
+        film_plan = json.loads(read(film_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/FilmExperiencePlan.json: {exc}")
+
+film_chapters = film_plan.get("chapters", [])
+covered_frodo_chapters: set[str] = set()
+covered_routes: set[str] = set()
+film_anchor_ids: set[str] = set()
+for index, chapter_entry in enumerate(film_chapters, start=1):
+    chapter = str(chapter_entry.get("chapter") or "").strip()
+    route = str(chapter_entry.get("route") or "").strip()
+    anchors = chapter_entry.get("anchors", [])
+    if not chapter or not route or not isinstance(anchors, list) or not anchors:
+        fail(f"FilmExperiencePlan chapter entry {index} is incomplete")
+        continue
+    covered_routes.add(route)
+    if route == "FrodoMain":
+        covered_frodo_chapters.add(chapter)
+    for anchor in anchors:
+        anchor_id = str(anchor.get("id") or "").strip()
+        label = str(anchor.get("label") or "").strip()
+        canon_class = str(anchor.get("canon_class") or "").strip()
+        coverage = str(anchor.get("coverage") or "").strip()
+        treatment = anchor.get("treatment", [])
+        if not anchor_id or not label or not canon_class or not coverage or not treatment:
+            fail(f"FilmExperiencePlan anchor in {chapter}/{route} is incomplete")
+            continue
+        if anchor_id in film_anchor_ids:
+            fail(f"Duplicate FilmExperiencePlan anchor id: {anchor_id}")
+        film_anchor_ids.add(anchor_id)
+        if canon_class not in set(guard_rules.get("canon_classes", [])):
+            fail(f"FilmExperiencePlan anchor {anchor_id} uses unknown canon class '{canon_class}'")
+
+expected_film_chapters = set(guard_rules.get("film_experience_required_chapters", []))
+missing_film_chapters = sorted(expected_film_chapters - covered_frodo_chapters)
+if missing_film_chapters:
+    fail("FilmExperiencePlan missing FrodoMain chapter coverage: " + ", ".join(missing_film_chapters))
+
+expected_film_routes = set(guard_rules.get("film_experience_required_routes", []))
+missing_film_routes = sorted(expected_film_routes - covered_routes)
+if missing_film_routes:
+    fail("FilmExperiencePlan missing required routes: " + ", ".join(missing_film_routes))
 
 approved_chapters = set(guard_rules.get("runtime_chapters", []))
 approved_routes = set(guard_rules.get("approved_routes", []))
