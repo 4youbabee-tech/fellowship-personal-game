@@ -12,16 +12,19 @@ Read these in order:
 1. `Docs/CURRENT_PROJECT_STATE.md` — exact operational state, proof level, and next hard gate.
 2. `Data/ProjectRequirements.json` — permanent user-request ledger; never rely on chat memory instead of this.
 3. `Docs/PROJECT_MEMORY_SYSTEM.md` — rules for updating user requests, decisions and evidence.
-4. `Docs/CHECKPOINTS.md` — chronological development checkpoints and what each one proved.
-5. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
-6. `Docs/LIVING_WORLD_AI_BLUEPRINT.md` — NPC/world-life intelligence design.
-7. `Data/LivingWorldFeaturePlan.json` — living-world implementation/status phases.
-8. `Docs/PRODUCTION_COMPLETENESS_MATRIX.md` — what exists versus what is still incomplete across production pillars.
-9. `Docs/DEVELOPMENT_GATES.md` — mandatory build/PIE/device discipline.
-10. `Docs/PROJECT_GUARDIAN.md` — regression memory and permanent lessons from failures.
-11. `Docs/STORY_CANON_BIBLE.md` — story/canon authority before story changes.
-12. `Data/SourceArchitecturePlan.json` — machine-readable ownership and target folder for every runtime module source file.
-13. `Data/WorldCheckpointPlan.csv` — machine-readable player/world checkpoint intent.
+4. `Docs/PROJECT_GOVERNOR.md` — conflict resolution, hard invariants, quality gates and pacing control.
+5. `Data/ProjectDecisions.json` — accepted decisions and unresolved conflicts.
+6. `Data/ExperienceQualityGates.json` — region-level stability/traversal/performance/pacing/visual proof.
+7. `Docs/CHECKPOINTS.md` — chronological development checkpoints and what each one proved.
+8. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
+9. `Docs/LIVING_WORLD_AI_BLUEPRINT.md` — NPC/world-life intelligence design.
+10. `Data/LivingWorldFeaturePlan.json` — living-world implementation/status phases.
+11. `Docs/PRODUCTION_COMPLETENESS_MATRIX.md` — what exists versus what is still incomplete across production pillars.
+12. `Docs/DEVELOPMENT_GATES.md` — mandatory build/PIE/device discipline.
+13. `Docs/PROJECT_GUARDIAN.md` — regression memory and permanent lessons from failures.
+14. `Docs/STORY_CANON_BIBLE.md` — story/canon authority before story changes.
+15. `Data/SourceArchitecturePlan.json` — machine-readable ownership and target folder for every runtime module source file.
+16. `Data/WorldCheckpointPlan.csv` — machine-readable player/world checkpoint intent.
 
 If code, data, and documentation disagree, stop and reconcile them in the same logical change.
 
