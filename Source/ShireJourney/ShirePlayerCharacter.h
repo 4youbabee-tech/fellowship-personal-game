@@ -97,6 +97,27 @@ protected:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
     UStaticMeshComponent* PrototypeWeapon;
 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeCloak;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeHat;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeBeard;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeLeftEye;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeRightEye;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeMouth;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
+    UStaticMeshComponent* PrototypeSatchel;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
     float MaxHealth = 100.0f;
 
@@ -130,6 +151,10 @@ private:
     float CurrentHealth = 100.0f;
     float AttackCooldownRemaining = 0.0f;
     float AttackVisualRemaining = 0.0f;
+    float PrototypeTorsoBaseZ = -4.0f;
+    float PrototypeHeadBaseZ = 39.0f;
+    float PrototypeHairBaseZ = 47.0f;
+    bool bPrototypeIsGandalf = false;
 
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);

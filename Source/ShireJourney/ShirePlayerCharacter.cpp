@@ -128,14 +128,45 @@ AShirePlayerCharacter::AShirePlayerCharacter()
     PrototypeWeapon->SetRelativeRotation(FRotator(-10.0f, 0.0f, 8.0f));
     PrototypeWeapon->SetRelativeScale3D(FVector(0.05f, 0.05f, 0.48f));
 
+    PrototypeCloak = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeCloak"));
+    PrototypeCloak->SetupAttachment(GetCapsuleComponent());
+    PrototypeCloak->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    PrototypeHat = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeHat"));
+    PrototypeHat->SetupAttachment(GetCapsuleComponent());
+    PrototypeHat->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    PrototypeBeard = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeBeard"));
+    PrototypeBeard->SetupAttachment(GetCapsuleComponent());
+    PrototypeBeard->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    PrototypeLeftEye = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeLeftEye"));
+    PrototypeLeftEye->SetupAttachment(GetCapsuleComponent());
+    PrototypeLeftEye->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    PrototypeRightEye = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeRightEye"));
+    PrototypeRightEye->SetupAttachment(GetCapsuleComponent());
+    PrototypeRightEye->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    PrototypeMouth = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeMouth"));
+    PrototypeMouth->SetupAttachment(GetCapsuleComponent());
+    PrototypeMouth->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+    PrototypeSatchel = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeSatchel"));
+    PrototypeSatchel->SetupAttachment(GetCapsuleComponent());
+    PrototypeSatchel->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMesh(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+    static ConstructorHelpers::FObjectFinder<UStaticMesh> ConeMesh(TEXT("/Engine/BasicShapes/Cone.Cone"));
 
     if (CubeMesh.Succeeded())
     {
         PrototypeTorso->SetStaticMesh(CubeMesh.Object);
         PrototypeWeapon->SetStaticMesh(CubeMesh.Object);
+        PrototypeMouth->SetStaticMesh(CubeMesh.Object);
+        PrototypeSatchel->SetStaticMesh(CubeMesh.Object);
     }
     if (CylinderMesh.Succeeded())
     {
@@ -150,6 +181,14 @@ AShirePlayerCharacter::AShirePlayerCharacter()
         PrototypeHair->SetStaticMesh(SphereMesh.Object);
         PrototypeLeftFoot->SetStaticMesh(SphereMesh.Object);
         PrototypeRightFoot->SetStaticMesh(SphereMesh.Object);
+        PrototypeLeftEye->SetStaticMesh(SphereMesh.Object);
+        PrototypeRightEye->SetStaticMesh(SphereMesh.Object);
+    }
+    if (ConeMesh.Succeeded())
+    {
+        PrototypeCloak->SetStaticMesh(ConeMesh.Object);
+        PrototypeHat->SetStaticMesh(ConeMesh.Object);
+        PrototypeBeard->SetStaticMesh(ConeMesh.Object);
     }
 }
 
@@ -186,35 +225,92 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
         }
     }
 
-    const bool bGandalf = CharacterId == TEXT("Gandalf");
+    bPrototypeIsGandalf = CharacterId == TEXT("Gandalf");
+    const bool bGandalf = bPrototypeIsGandalf;
 
     GetCapsuleComponent()->SetCapsuleHalfHeight(bGandalf ? 86.0f : 60.0f);
 
-    PrototypeTorso->SetRelativeLocation(FVector(0.0f, 0.0f, bGandalf ? 10.0f : -4.0f));
-    PrototypeTorso->SetRelativeScale3D(bGandalf ? FVector(0.31f, 0.23f, 0.50f) : FVector(0.30f, 0.22f, 0.36f));
-    PrototypeHead->SetRelativeLocation(FVector(0.0f, 0.0f, bGandalf ? 66.0f : 39.0f));
-    PrototypeHair->SetRelativeLocation(FVector(-1.0f, 0.0f, bGandalf ? 74.0f : 47.0f));
-    PrototypeLeftArm->SetRelativeLocation(FVector(0.0f, -24.0f, bGandalf ? 10.0f : -3.0f));
-    PrototypeRightArm->SetRelativeLocation(FVector(0.0f, 24.0f, bGandalf ? 10.0f : -3.0f));
-    PrototypeLeftLeg->SetRelativeLocation(FVector(0.0f, -10.0f, -43.0f));
-    PrototypeRightLeg->SetRelativeLocation(FVector(0.0f, 10.0f, -43.0f));
+    PrototypeTorsoBaseZ = bGandalf ? 10.0f : -4.0f;
+    PrototypeHeadBaseZ = bGandalf ? 66.0f : 39.0f;
+    PrototypeHairBaseZ = bGandalf ? 73.0f : 47.0f;
 
-    ApplyColor(PrototypeTorso, bGandalf ? FLinearColor(0.30f, 0.31f, 0.29f) : FLinearColor(0.20f, 0.34f, 0.15f));
-    ApplyColor(PrototypeHead, FLinearColor(0.74f, 0.52f, 0.34f));
-    ApplyColor(PrototypeHair, bGandalf ? FLinearColor(0.72f, 0.70f, 0.64f) : FLinearColor(0.12f, 0.055f, 0.025f));
-    ApplyColor(PrototypeLeftArm, bGandalf ? FLinearColor(0.28f, 0.29f, 0.27f) : FLinearColor(0.25f, 0.40f, 0.18f));
-    ApplyColor(PrototypeRightArm, bGandalf ? FLinearColor(0.28f, 0.29f, 0.27f) : FLinearColor(0.25f, 0.40f, 0.18f));
-    ApplyColor(PrototypeLeftLeg, bGandalf ? FLinearColor(0.20f, 0.21f, 0.20f) : FLinearColor(0.30f, 0.20f, 0.10f));
-    ApplyColor(PrototypeRightLeg, bGandalf ? FLinearColor(0.20f, 0.21f, 0.20f) : FLinearColor(0.30f, 0.20f, 0.10f));
-    ApplyColor(PrototypeLeftFoot, bGandalf ? FLinearColor(0.12f, 0.12f, 0.12f) : FLinearColor(0.24f, 0.12f, 0.055f));
-    ApplyColor(PrototypeRightFoot, bGandalf ? FLinearColor(0.12f, 0.12f, 0.12f) : FLinearColor(0.24f, 0.12f, 0.055f));
+    PrototypeTorso->SetRelativeLocation(FVector(0.0f, 0.0f, PrototypeTorsoBaseZ));
+    PrototypeTorso->SetRelativeScale3D(bGandalf ? FVector(0.29f, 0.22f, 0.52f) : FVector(0.27f, 0.20f, 0.35f));
+    PrototypeHead->SetRelativeLocation(FVector(0.0f, 0.0f, PrototypeHeadBaseZ));
+    PrototypeHead->SetRelativeScale3D(bGandalf ? FVector(0.205f,0.19f,0.235f) : FVector(0.225f,0.215f,0.235f));
+    PrototypeHair->SetRelativeLocation(FVector(-2.0f, 0.0f, PrototypeHairBaseZ));
+    PrototypeHair->SetRelativeScale3D(bGandalf ? FVector(0.22f,0.21f,0.14f) : FVector(0.235f,0.235f,0.12f));
+
+    PrototypeLeftArm->SetRelativeLocation(FVector(0.0f, -23.0f, bGandalf ? 10.0f : -3.0f));
+    PrototypeRightArm->SetRelativeLocation(FVector(0.0f, 23.0f, bGandalf ? 10.0f : -3.0f));
+    PrototypeLeftArm->SetRelativeScale3D(bGandalf ? FVector(0.075f,0.075f,0.46f) : FVector(0.075f,0.075f,0.33f));
+    PrototypeRightArm->SetRelativeScale3D(bGandalf ? FVector(0.075f,0.075f,0.46f) : FVector(0.075f,0.075f,0.33f));
+
+    PrototypeLeftLeg->SetRelativeLocation(FVector(0.0f, -9.5f, bGandalf ? -50.0f : -43.0f));
+    PrototypeRightLeg->SetRelativeLocation(FVector(0.0f, 9.5f, bGandalf ? -50.0f : -43.0f));
+    PrototypeLeftLeg->SetRelativeScale3D(bGandalf ? FVector(0.085f,0.085f,0.36f) : FVector(0.095f,0.095f,0.29f));
+    PrototypeRightLeg->SetRelativeScale3D(bGandalf ? FVector(0.085f,0.085f,0.36f) : FVector(0.095f,0.095f,0.29f));
+
+    PrototypeLeftFoot->SetRelativeLocation(FVector(8.0f, -10.0f, bGandalf ? -78.0f : -57.0f));
+    PrototypeRightFoot->SetRelativeLocation(FVector(8.0f, 10.0f, bGandalf ? -78.0f : -57.0f));
+    PrototypeLeftFoot->SetRelativeScale3D(bGandalf ? FVector(0.18f,0.105f,0.07f) : FVector(0.23f,0.135f,0.075f));
+    PrototypeRightFoot->SetRelativeScale3D(bGandalf ? FVector(0.18f,0.105f,0.07f) : FVector(0.23f,0.135f,0.075f));
+
+    // Silhouette pieces: a separate cloak, face, and wizard hat/beard make the two
+    // playable routes readable before final skeletal meshes arrive.
+    PrototypeCloak->SetRelativeLocation(FVector(-9.0f, 0.0f, bGandalf ? -1.0f : -9.0f));
+    PrototypeCloak->SetRelativeScale3D(bGandalf ? FVector(0.38f,0.33f,0.72f) : FVector(0.30f,0.27f,0.42f));
+    PrototypeCloak->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+
+    PrototypeHat->SetVisibility(bGandalf, true);
+    PrototypeHat->SetRelativeLocation(FVector(-1.0f,0.0f,101.0f));
+    PrototypeHat->SetRelativeScale3D(FVector(0.34f,0.34f,0.48f));
+
+    PrototypeBeard->SetVisibility(bGandalf, true);
+    PrototypeBeard->SetRelativeLocation(FVector(10.0f,0.0f,48.0f));
+    PrototypeBeard->SetRelativeRotation(FRotator(180.0f,0.0f,0.0f));
+    PrototypeBeard->SetRelativeScale3D(FVector(0.14f,0.13f,0.28f));
+
+    const float FaceZ = PrototypeHeadBaseZ + 1.5f;
+    PrototypeLeftEye->SetRelativeLocation(FVector(10.5f,-5.2f,FaceZ+2.0f));
+    PrototypeRightEye->SetRelativeLocation(FVector(10.5f,5.2f,FaceZ+2.0f));
+    PrototypeLeftEye->SetRelativeScale3D(FVector(0.035f,0.025f,0.045f));
+    PrototypeRightEye->SetRelativeScale3D(FVector(0.035f,0.025f,0.045f));
+    PrototypeMouth->SetRelativeLocation(FVector(10.7f,0.0f,FaceZ-5.0f));
+    PrototypeMouth->SetRelativeScale3D(FVector(0.018f,0.065f,0.012f));
+
+    PrototypeSatchel->SetVisibility(!bGandalf, true);
+    PrototypeSatchel->SetRelativeLocation(FVector(-3.0f,22.0f,-5.0f));
+    PrototypeSatchel->SetRelativeRotation(FRotator(0.0f,12.0f,8.0f));
+    PrototypeSatchel->SetRelativeScale3D(FVector(0.13f,0.06f,0.15f));
+
+    const FLinearColor Skin = bGandalf ? FLinearColor(0.72f,0.54f,0.40f) : FLinearColor(0.78f,0.57f,0.39f);
+    const FLinearColor DarkEye(0.035f,0.028f,0.020f);
+    const FLinearColor Mouth(0.23f,0.055f,0.045f);
+
+    ApplyColor(PrototypeTorso, bGandalf ? FLinearColor(0.28f,0.29f,0.27f) : FLinearColor(0.18f,0.31f,0.135f));
+    ApplyColor(PrototypeHead, Skin);
+    ApplyColor(PrototypeHair, bGandalf ? FLinearColor(0.69f,0.68f,0.63f) : FLinearColor(0.105f,0.045f,0.020f));
+    ApplyColor(PrototypeLeftArm, bGandalf ? FLinearColor(0.25f,0.26f,0.24f) : FLinearColor(0.20f,0.35f,0.15f));
+    ApplyColor(PrototypeRightArm, bGandalf ? FLinearColor(0.25f,0.26f,0.24f) : FLinearColor(0.20f,0.35f,0.15f));
+    ApplyColor(PrototypeLeftLeg, bGandalf ? FLinearColor(0.17f,0.18f,0.17f) : FLinearColor(0.27f,0.17f,0.075f));
+    ApplyColor(PrototypeRightLeg, bGandalf ? FLinearColor(0.17f,0.18f,0.17f) : FLinearColor(0.27f,0.17f,0.075f));
+    ApplyColor(PrototypeLeftFoot, bGandalf ? FLinearColor(0.095f,0.09f,0.085f) : FLinearColor(0.22f,0.105f,0.04f));
+    ApplyColor(PrototypeRightFoot, bGandalf ? FLinearColor(0.095f,0.09f,0.085f) : FLinearColor(0.22f,0.105f,0.04f));
+    ApplyColor(PrototypeCloak, bGandalf ? FLinearColor(0.24f,0.25f,0.235f) : FLinearColor(0.16f,0.24f,0.105f));
+    ApplyColor(PrototypeHat, FLinearColor(0.245f,0.25f,0.235f));
+    ApplyColor(PrototypeBeard, FLinearColor(0.68f,0.67f,0.62f));
+    ApplyColor(PrototypeLeftEye, DarkEye);
+    ApplyColor(PrototypeRightEye, DarkEye);
+    ApplyColor(PrototypeMouth, Mouth);
+    ApplyColor(PrototypeSatchel, FLinearColor(0.26f,0.13f,0.045f));
 
     const bool bCombatAvailable = IsCombatAvailable();
     PrototypeWeapon->SetVisibility(bGandalf || bCombatAvailable, true);
-    PrototypeWeapon->SetRelativeLocation(bGandalf ? FVector(4.0f, 34.0f, 0.0f) : FVector(8.0f, 29.0f, -4.0f));
-    PrototypeWeapon->SetRelativeScale3D(bGandalf ? FVector(0.06f, 0.06f, 0.90f) : FVector(0.05f, 0.05f, 0.48f));
-    PrototypeWeapon->SetRelativeRotation(bGandalf ? FRotator::ZeroRotator : FRotator(-10.0f, 0.0f, 8.0f));
-    ApplyColor(PrototypeWeapon, bGandalf ? FLinearColor(0.25f, 0.16f, 0.08f) : FLinearColor(0.52f, 0.54f, 0.55f));
+    PrototypeWeapon->SetRelativeLocation(bGandalf ? FVector(4.0f,34.0f,-1.0f) : FVector(8.0f,29.0f,-4.0f));
+    PrototypeWeapon->SetRelativeScale3D(bGandalf ? FVector(0.055f,0.055f,0.92f) : FVector(0.045f,0.045f,0.48f));
+    PrototypeWeapon->SetRelativeRotation(bGandalf ? FRotator::ZeroRotator : FRotator(-10.0f,0.0f,8.0f));
+    ApplyColor(PrototypeWeapon, bGandalf ? FLinearColor(0.22f,0.13f,0.055f) : FLinearColor(0.48f,0.50f,0.52f));
 }
 
 void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
@@ -258,17 +354,49 @@ void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
     if (PrototypeTorso)
     {
         PrototypeTorso->SetRelativeLocation(FMath::VInterpTo(
-            PrototypeTorso->GetRelativeLocation(), FVector(0.0f, 0.0f, -4.0f + Bob), DeltaSeconds, 12.0f));
+            PrototypeTorso->GetRelativeLocation(), FVector(0.0f, 0.0f, PrototypeTorsoBaseZ + Bob), DeltaSeconds, 12.0f));
     }
     if (PrototypeHead)
     {
         PrototypeHead->SetRelativeLocation(FMath::VInterpTo(
-            PrototypeHead->GetRelativeLocation(), FVector(0.0f, 0.0f, 39.0f + Bob), DeltaSeconds, 12.0f));
+            PrototypeHead->GetRelativeLocation(), FVector(0.0f, 0.0f, PrototypeHeadBaseZ + Bob), DeltaSeconds, 12.0f));
     }
     if (PrototypeHair)
     {
         PrototypeHair->SetRelativeLocation(FMath::VInterpTo(
-            PrototypeHair->GetRelativeLocation(), FVector(-1.0f, 0.0f, 47.0f + Bob), DeltaSeconds, 12.0f));
+            PrototypeHair->GetRelativeLocation(), FVector(-2.0f, 0.0f, PrototypeHairBaseZ + Bob), DeltaSeconds, 12.0f));
+    }
+
+    if (PrototypeCloak)
+    {
+        const float CloakPitch = bMoving ? -4.0f - Swing * 0.07f : -2.0f;
+        PrototypeCloak->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeCloak->GetRelativeRotation(), FRotator(CloakPitch,0.0f,0.0f), DeltaSeconds, 5.0f));
+    }
+
+    const float FaceZ = PrototypeHeadBaseZ + 1.5f + Bob;
+    if (PrototypeLeftEye)
+    {
+        PrototypeLeftEye->SetRelativeLocation(FVector(10.5f,-5.2f,FaceZ+2.0f));
+    }
+    if (PrototypeRightEye)
+    {
+        PrototypeRightEye->SetRelativeLocation(FVector(10.5f,5.2f,FaceZ+2.0f));
+    }
+    if (PrototypeMouth)
+    {
+        PrototypeMouth->SetRelativeLocation(FVector(10.7f,0.0f,FaceZ-5.0f));
+    }
+    if (bPrototypeIsGandalf)
+    {
+        if (PrototypeHat)
+        {
+            PrototypeHat->SetRelativeLocation(FVector(-1.0f,0.0f,101.0f + Bob));
+        }
+        if (PrototypeBeard)
+        {
+            PrototypeBeard->SetRelativeLocation(FVector(10.0f,0.0f,48.0f + Bob));
+        }
     }
 }
 

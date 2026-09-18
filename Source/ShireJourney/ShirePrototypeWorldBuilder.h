@@ -38,6 +38,10 @@ private:
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GrassInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* FlowerInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* ShrubInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* DistantTreeTrunkInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* DistantTreeCanopyInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* RockInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* PathStoneInstances;
     UPROPERTY() ADirectionalLight* RuntimeSun = nullptr;
     UPROPERTY() ASkyLight* RuntimeSky = nullptr;
     UPROPERTY() APostProcessVolume* RuntimePostProcess = nullptr;
@@ -55,6 +59,7 @@ private:
     void ConfigureMorningAtmosphere();
     void ConfigureFoliageInstances();
     void SpawnFoliagePass();
+    void SpawnScenicDetailPass();
     void SpawnVillage();
     void SpawnSideStories();
     void SpawnStoryActors();

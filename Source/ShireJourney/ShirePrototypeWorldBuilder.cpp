@@ -24,6 +24,9 @@
 
 namespace ShireLayout
 {
+    // CP28 starts the visual-production transition. World-space labels remain available
+    // in code for debugging, but are hidden by default so the playable view reads as a world.
+    constexpr bool ShowPrototypeWorldLabels = false;
     // UE units are centimeters. These anchors intentionally keep the village compact
     // while making the eastward journey feel like travel rather than a single arena.
     constexpr float HobbitonExitX = 1500.0f;
@@ -57,6 +60,30 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     ShrubInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     ShrubInstances->SetCastShadow(false);
 
+    DistantTreeTrunkInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("DistantTreeTrunkInstances"));
+    DistantTreeTrunkInstances->SetupAttachment(RuntimeRoot);
+    DistantTreeTrunkInstances->SetMobility(EComponentMobility::Movable);
+    DistantTreeTrunkInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    DistantTreeTrunkInstances->SetCastShadow(false);
+
+    DistantTreeCanopyInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("DistantTreeCanopyInstances"));
+    DistantTreeCanopyInstances->SetupAttachment(RuntimeRoot);
+    DistantTreeCanopyInstances->SetMobility(EComponentMobility::Movable);
+    DistantTreeCanopyInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    DistantTreeCanopyInstances->SetCastShadow(false);
+
+    RockInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("RockInstances"));
+    RockInstances->SetupAttachment(RuntimeRoot);
+    RockInstances->SetMobility(EComponentMobility::Movable);
+    RockInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    RockInstances->SetCastShadow(false);
+
+    PathStoneInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("PathStoneInstances"));
+    PathStoneInstances->SetupAttachment(RuntimeRoot);
+    PathStoneInstances->SetMobility(EComponentMobility::Movable);
+    PathStoneInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PathStoneInstances->SetCastShadow(false);
+
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereAsset(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderAsset(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
@@ -77,6 +104,16 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     {
         FlowerInstances->SetStaticMesh(SphereMesh);
         ShrubInstances->SetStaticMesh(SphereMesh);
+        DistantTreeCanopyInstances->SetStaticMesh(SphereMesh);
+        RockInstances->SetStaticMesh(SphereMesh);
+    }
+    if (CylinderMesh)
+    {
+        DistantTreeTrunkInstances->SetStaticMesh(CylinderMesh);
+    }
+    if (CubeMesh)
+    {
+        PathStoneInstances->SetStaticMesh(CubeMesh);
     }
 }
 
@@ -157,6 +194,11 @@ AStaticMeshActor* AShirePrototypeWorldBuilder::SpawnShape(
 
 void AShirePrototypeWorldBuilder::SpawnLabel(const FString& Text, const FVector& Location, const FLinearColor& Color)
 {
+    if (!ShireLayout::ShowPrototypeWorldLabels)
+    {
+        return;
+    }
+
     if (!GetWorld())
     {
         return;
@@ -179,22 +221,68 @@ void AShirePrototypeWorldBuilder::SpawnLabel(const FString& Text, const FVector&
 
 void AShirePrototypeWorldBuilder::SpawnTree(const FVector& Location, float Scale)
 {
-    SpawnShape(CylinderMesh, Location + FVector(0.0f, 0.0f, 90.0f * Scale), FVector(0.14f, 0.14f, 0.9f) * Scale,
-        FLinearColor(0.20f, 0.10f, 0.04f), FRotator::ZeroRotator, true);
-    SpawnShape(SphereMesh, Location + FVector(0.0f, 0.0f, 210.0f * Scale), FVector(1.0f, 1.0f, 0.75f) * Scale,
-        FLinearColor(0.12f, 0.38f, 0.10f), FRotator::ZeroRotator, false);
+    const FLinearColor Bark(0.18f, 0.085f, 0.035f);
+    const FLinearColor LeafDark(0.075f, 0.28f, 0.065f);
+    const FLinearColor LeafMid(0.105f, 0.37f, 0.085f);
+    const FLinearColor LeafLight(0.16f, 0.43f, 0.11f);
+
+    SpawnShape(CylinderMesh, Location + FVector(0.0f, 0.0f, 92.0f * Scale),
+        FVector(0.15f, 0.15f, 0.92f) * Scale, Bark, FRotator::ZeroRotator, true);
+
+    // Overlapping crowns give the low-cost prototype a softer broad-leaf silhouette
+    // instead of reading as one sphere on one cylinder.
+    SpawnShape(SphereMesh, Location + FVector(-20.0f, -12.0f, 205.0f) * Scale,
+        FVector(0.78f, 0.72f, 0.62f) * Scale, LeafDark, FRotator::ZeroRotator, false);
+    SpawnShape(SphereMesh, Location + FVector(28.0f, 8.0f, 222.0f) * Scale,
+        FVector(0.72f, 0.68f, 0.60f) * Scale, LeafMid, FRotator::ZeroRotator, false);
+    SpawnShape(SphereMesh, Location + FVector(0.0f, 18.0f, 250.0f) * Scale,
+        FVector(0.58f, 0.54f, 0.48f) * Scale, LeafLight, FRotator::ZeroRotator, false);
 }
 
 void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float Scale)
 {
-    SpawnShape(SphereMesh, Location + FVector(0.0f, 0.0f, 85.0f * Scale), FVector(1.55f, 1.0f, 0.72f) * Scale,
-        FLinearColor(0.25f, 0.42f, 0.12f), FRotator::ZeroRotator, true);
+    const FLinearColor Turf(0.18f, 0.40f, 0.105f);
+    const FLinearColor Earth(0.36f, 0.24f, 0.13f);
+    const FLinearColor Timber(0.32f, 0.18f, 0.075f);
+    const FLinearColor DoorGreen(0.08f, 0.34f, 0.15f);
+    const FLinearColor WarmGlass(0.92f, 0.67f, 0.28f);
+    const FLinearColor Stone(0.42f, 0.40f, 0.34f);
 
-    SpawnShape(CubeMesh, Location + FVector(-70.0f * Scale, 0.0f, 55.0f * Scale), FVector(0.10f, 0.72f, 0.55f) * Scale,
-        FLinearColor(0.48f, 0.32f, 0.17f), FRotator::ZeroRotator, true);
+    // Buried turf mound and recessed timber facade.
+    SpawnShape(SphereMesh, Location + FVector(0.0f, 0.0f, 82.0f * Scale),
+        FVector(1.72f, 1.12f, 0.78f) * Scale, Turf, FRotator::ZeroRotator, true);
+    SpawnShape(CubeMesh, Location + FVector(-72.0f * Scale, 0.0f, 54.0f * Scale),
+        FVector(0.10f, 0.82f, 0.58f) * Scale, Earth, FRotator::ZeroRotator, true);
 
-    SpawnShape(CylinderMesh, Location + FVector(-82.0f * Scale, 0.0f, 55.0f * Scale), FVector(0.44f, 0.44f, 0.06f) * Scale,
-        FLinearColor(0.14f, 0.48f, 0.20f), FRotator(0.0f, 90.0f, 0.0f), false);
+    // Round frame + inset painted door.
+    SpawnShape(CylinderMesh, Location + FVector(-83.0f * Scale, 0.0f, 55.0f * Scale),
+        FVector(0.51f, 0.51f, 0.075f) * Scale, Timber, FRotator(0.0f, 90.0f, 0.0f), false);
+    SpawnShape(CylinderMesh, Location + FVector(-88.0f * Scale, 0.0f, 55.0f * Scale),
+        FVector(0.43f, 0.43f, 0.050f) * Scale, DoorGreen, FRotator(0.0f, 90.0f, 0.0f), false);
+    SpawnShape(SphereMesh, Location + FVector(-94.0f * Scale, 21.0f * Scale, 56.0f * Scale),
+        FVector(0.045f) * Scale, FLinearColor(0.74f, 0.55f, 0.18f), FRotator::ZeroRotator, false);
+
+    // Two warm circular windows and shallow stone sills.
+    for (float Side : { -1.0f, 1.0f })
+    {
+        const FVector Window = Location + FVector(-88.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
+        SpawnShape(CylinderMesh, Window, FVector(0.22f, 0.22f, 0.035f) * Scale,
+            Timber, FRotator(0.0f, 90.0f, 0.0f), false);
+        SpawnShape(CylinderMesh, Window + FVector(-4.0f * Scale, 0.0f, 0.0f),
+            FVector(0.17f, 0.17f, 0.025f) * Scale, WarmGlass, FRotator(0.0f, 90.0f, 0.0f), false);
+        SpawnShape(CubeMesh, Window + FVector(-2.0f * Scale, 0.0f, -27.0f * Scale),
+            FVector(0.10f, 0.30f, 0.045f) * Scale, Stone, FRotator::ZeroRotator, false);
+    }
+
+    // Chimney, doorstep and planted entry soften the generated silhouette.
+    SpawnShape(CubeMesh, Location + FVector(35.0f, -45.0f, 170.0f) * Scale,
+        FVector(0.18f, 0.18f, 0.48f) * Scale, Stone, FRotator::ZeroRotator, false);
+    SpawnShape(CubeMesh, Location + FVector(-122.0f, 0.0f, 8.0f) * Scale,
+        FVector(0.42f, 0.70f, 0.10f) * Scale, Stone, FRotator::ZeroRotator, true);
+    SpawnShape(SphereMesh, Location + FVector(-105.0f, -92.0f, 24.0f) * Scale,
+        FVector(0.32f, 0.26f, 0.22f) * Scale, FLinearColor(0.10f, 0.32f, 0.08f), FRotator::ZeroRotator, false);
+    SpawnShape(SphereMesh, Location + FVector(-105.0f, 92.0f, 24.0f) * Scale,
+        FVector(0.32f, 0.26f, 0.22f) * Scale, FLinearColor(0.12f, 0.36f, 0.09f), FRotator::ZeroRotator, false);
 }
 
 
@@ -268,9 +356,13 @@ void AShirePrototypeWorldBuilder::ConfigureFoliageInstances()
         }
     };
 
-    ApplyInstanceColor(GrassInstances, FLinearColor(0.12f, 0.38f, 0.08f));
-    ApplyInstanceColor(FlowerInstances, FLinearColor(0.90f, 0.70f, 0.28f));
-    ApplyInstanceColor(ShrubInstances, FLinearColor(0.10f, 0.31f, 0.075f));
+    ApplyInstanceColor(GrassInstances, FLinearColor(0.105f, 0.34f, 0.065f));
+    ApplyInstanceColor(FlowerInstances, FLinearColor(0.92f, 0.69f, 0.24f));
+    ApplyInstanceColor(ShrubInstances, FLinearColor(0.085f, 0.285f, 0.055f));
+    ApplyInstanceColor(DistantTreeTrunkInstances, FLinearColor(0.15f, 0.075f, 0.03f));
+    ApplyInstanceColor(DistantTreeCanopyInstances, FLinearColor(0.07f, 0.25f, 0.045f));
+    ApplyInstanceColor(RockInstances, FLinearColor(0.34f, 0.35f, 0.31f));
+    ApplyInstanceColor(PathStoneInstances, FLinearColor(0.43f, 0.40f, 0.32f));
 }
 
 void AShirePrototypeWorldBuilder::SpawnFoliagePass()
@@ -298,10 +390,10 @@ void AShirePrototypeWorldBuilder::SpawnFoliagePass()
     int32 GrassIndex = 0;
     for (const FVector& Center : GrassCenters)
     {
-        for (int32 Ring = 0; Ring < 12; ++Ring)
+        for (int32 Ring = 0; Ring < 48; ++Ring)
         {
             const float Angle = FMath::DegreesToRadians(static_cast<float>((Ring * 137 + GrassIndex * 29) % 360));
-            const float Radius = 120.0f + 48.0f * static_cast<float>(Ring % 5);
+            const float Radius = 95.0f + 58.0f * static_cast<float>(Ring % 8);
             const FVector Base = Center + FVector(FMath::Cos(Angle) * Radius, FMath::Sin(Angle) * Radius, 0.0f);
             const float Size = 0.09f + 0.012f * static_cast<float>((Ring + GrassIndex) % 4);
             const float Height = 0.18f + 0.020f * static_cast<float>((Ring + GrassIndex) % 5);
@@ -1255,6 +1347,124 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
 }
 
 
+void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
+{
+    if (!DistantTreeTrunkInstances || !DistantTreeCanopyInstances || !RockInstances || !PathStoneInstances)
+    {
+        return;
+    }
+
+    DistantTreeTrunkInstances->ClearInstances();
+    DistantTreeCanopyInstances->ClearInstances();
+    RockInstances->ClearInstances();
+    PathStoneInstances->ClearInstances();
+
+    // Long tree lines close the horizon without hundreds of AStaticMeshActors.
+    // The positions are deterministic so screenshots/perf comparisons remain repeatable.
+    for (int32 Index = 0; Index < 52; ++Index)
+    {
+        const float X = -2600.0f + static_cast<float>(Index) * 560.0f;
+        const float Wave = FMath::Sin(static_cast<float>(Index) * 0.73f) * 430.0f;
+        for (int32 Side = -1; Side <= 1; Side += 2)
+        {
+            const float Y = static_cast<float>(Side) * (2450.0f + Wave * 0.35f);
+            const float S = 0.65f + 0.09f * static_cast<float>((Index + (Side > 0 ? 1 : 0)) % 4);
+            DistantTreeTrunkInstances->AddInstance(FTransform(
+                FRotator::ZeroRotator,
+                FVector(X, Y, 78.0f * S),
+                FVector(0.12f, 0.12f, 0.78f) * S));
+            DistantTreeCanopyInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 37) % 360), 0.0f),
+                FVector(X + 18.0f, Y, 190.0f * S),
+                FVector(0.70f, 0.62f, 0.58f) * S));
+            DistantTreeCanopyInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Index * 19 + 70) % 360), 0.0f),
+                FVector(X - 28.0f, Y + 22.0f, 212.0f * S),
+                FVector(0.52f, 0.48f, 0.45f) * S));
+        }
+    }
+
+    // Irregular stepping stones around Bag End, the Water and village paths.
+    const FVector StoneCenters[] = {
+        FVector(-2210,-400,8), FVector(-1950,-330,8), FVector(-1680,-210,8),
+        FVector(-1400,-40,8), FVector(-1180,95,8), FVector(-900,150,8),
+        FVector(-620,220,8), FVector(-350,310,8), FVector(-80,520,8),
+        FVector(160,800,8), FVector(300,1080,8)
+    };
+    for (int32 Segment = 0; Segment < UE_ARRAY_COUNT(StoneCenters) - 1; ++Segment)
+    {
+        const FVector A = StoneCenters[Segment];
+        const FVector B = StoneCenters[Segment + 1];
+        for (int32 Step = 0; Step < 4; ++Step)
+        {
+            const float Alpha = static_cast<float>(Step) / 4.0f;
+            FVector P = FMath::Lerp(A, B, Alpha);
+            P.Y += FMath::Sin(static_cast<float>(Segment * 4 + Step) * 1.7f) * 22.0f;
+            const float S = 0.20f + 0.035f * static_cast<float>((Segment + Step) % 3);
+            PathStoneInstances->AddInstance(FTransform(
+                FRotator(0.0f, static_cast<float>((Segment * 41 + Step * 17) % 360), 0.0f),
+                P,
+                FVector(S * 1.45f, S, 0.055f)));
+        }
+    }
+
+    // River-bank and field rocks break the perfectly clean generated edges.
+    for (int32 Index = 0; Index < 64; ++Index)
+    {
+        const bool bRiver = Index >= 34;
+        const float X = bRiver
+            ? ShireLayout::FerryX - 1100.0f + static_cast<float>((Index - 34) % 15) * 150.0f
+            : 2500.0f + static_cast<float>(Index) * 265.0f;
+        const float Y = bRiver
+            ? ((Index % 2 == 0) ? -1760.0f : 720.0f) + FMath::Sin(Index * 0.9f) * 180.0f
+            : ((Index % 2 == 0) ? -1550.0f : 1450.0f) + FMath::Sin(Index * 0.61f) * 160.0f;
+        const float S = 0.12f + 0.04f * static_cast<float>(Index % 4);
+        RockInstances->AddInstance(FTransform(
+            FRotator(0.0f, static_cast<float>((Index * 53) % 360), 0.0f),
+            FVector(X, Y, 14.0f),
+            FVector(S * 1.5f, S, S * 0.7f)));
+    }
+
+    // Foreground composition around Hobbiton: gentle turf banks, carts/crates and signposts.
+    const FVector Mounds[] = {
+        FVector(-2450,900,-75), FVector(-2050,1500,-90), FVector(-1150,1650,-95),
+        FVector(-250,1750,-90), FVector(900,1580,-85), FVector(1850,1250,-95),
+        FVector(-2550,-1250,-80), FVector(-1500,-1500,-95), FVector(-350,-1450,-90),
+        FVector(850,-1320,-90), FVector(2100,-1150,-85)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(Mounds); ++Index)
+    {
+        SpawnShape(SphereMesh, Mounds[Index],
+            FVector(5.5f + (Index % 3), 3.0f + 0.5f * (Index % 2), 1.15f),
+            Index % 2 == 0 ? FLinearColor(0.14f,0.34f,0.075f) : FLinearColor(0.16f,0.37f,0.085f),
+            FRotator::ZeroRotator, false);
+    }
+
+    const FVector Crates[] = {
+        FVector(-1370,220,34), FVector(-1320,250,34), FVector(-760,250,28),
+        FVector(-700,270,28), FVector(120,1180,28), FVector(205,1160,28)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(Crates); ++Index)
+    {
+        SpawnShape(CubeMesh, Crates[Index], FVector(0.28f,0.28f,0.28f),
+            Index % 2 == 0 ? FLinearColor(0.34f,0.19f,0.075f) : FLinearColor(0.42f,0.27f,0.11f),
+            FRotator(0.0f, static_cast<float>((Index * 23) % 45), 0.0f), false);
+    }
+
+    // Road sign silhouettes help the player read the space without floating text labels.
+    const FVector Signs[] = {
+        FVector(1450,120,0), FVector(5850,-500,0), FVector(11200,770,0), FVector(21800,-760,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(Signs); ++Index)
+    {
+        const FVector P = Signs[Index];
+        SpawnShape(CylinderMesh, P + FVector(0,0,78), FVector(0.055f,0.055f,0.78f),
+            FLinearColor(0.25f,0.13f,0.045f), FRotator::ZeroRotator, false);
+        SpawnShape(CubeMesh, P + FVector(0,0,130), FVector(0.58f,0.08f,0.14f),
+            FLinearColor(0.38f,0.22f,0.075f), FRotator(0, Index % 2 == 0 ? 18.0f : -16.0f, 0), false);
+    }
+}
+
 void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
 {
     if (bBuilt || !GetWorld())
@@ -1267,6 +1477,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     ConfigureFoliageInstances();
     SpawnVillage();
     SpawnFoliagePass();
+    SpawnScenicDetailPass();
     SpawnSideStories();
     SpawnStoryActors();
 }
