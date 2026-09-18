@@ -522,7 +522,7 @@ void AShireNPC::RestoreCompanionFollowState()
         return;
     }
 
-    if (QuestId == NAME_None)
+    if (QuestId == NAME_None || QuestStageAfterInteraction < 0)
     {
         bFollowingPlayer = true;
         return;
