@@ -433,6 +433,65 @@ unscheduled_profiles = sorted(profile_ids - scheduled_profiles)
 if unscheduled_profiles:
     fail("NPCSocialModel profiles missing schedule assignment: " + ", ".join(unscheduled_profiles))
 
+# PG-025: NPC conversation contract must stay bounded, referentially valid and non-duplicated.
+npc_conversation_path = ROOT / "Data" / "NPCConversationPlan.json"
+npc_conversation = {}
+if not npc_conversation_path.exists():
+    fail("NPC conversation plan missing: Data/NPCConversationPlan.json")
+else:
+    try:
+        npc_conversation = json.loads(read(npc_conversation_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/NPCConversationPlan.json: {exc}")
+
+npc_profile_ids = set()
+if npc_social:
+    npc_profile_ids = {str(p.get("id") or "").strip() for p in npc_social.get("profiles", [])}
+
+intent_ids: set[str] = set()
+for item in npc_conversation.get("intent_contracts", []):
+    intent_id = str(item.get("id") or "").strip()
+    if not intent_id:
+        fail("NPCConversationPlan intent contract missing id")
+        continue
+    if intent_id in intent_ids:
+        fail(f"Duplicate NPCConversationPlan intent id: {intent_id}")
+    intent_ids.add(intent_id)
+
+conversation_set_ids: set[str] = set()
+for convo in npc_conversation.get("conversation_sets", []):
+    convo_id = str(convo.get("id") or "").strip()
+    if not convo_id:
+        fail("NPCConversationPlan conversation set missing id")
+        continue
+    if convo_id in conversation_set_ids:
+        fail(f"Duplicate NPCConversationPlan conversation set id: {convo_id}")
+    conversation_set_ids.add(convo_id)
+
+    for profile_id in convo.get("participant_filters", {}).get("allowed_profiles", []):
+        if profile_id not in npc_profile_ids:
+            fail(f"NPCConversationPlan {convo_id} references unknown profile {profile_id}")
+    for intent_id in convo.get("intents", []):
+        if intent_id not in intent_ids:
+            fail(f"NPCConversationPlan {convo_id} references unknown intent {intent_id}")
+    if int(convo.get("max_exchange_turns", 0)) <= 0:
+        fail(f"NPCConversationPlan {convo_id} must have positive max_exchange_turns")
+
+required_conversation_sets = set(guard_rules.get("npc_conversation_required_sets", []))
+missing_conversation_sets = sorted(required_conversation_sets - conversation_set_ids)
+if missing_conversation_sets:
+    fail("NPCConversationPlan missing required sets: " + ", ".join(missing_conversation_sets))
+
+speaker_rules = npc_conversation.get("speaker_rules", {})
+if int(speaker_rules.get("max_active_conversations_near_player", 0)) < 1:
+    fail("NPCConversationPlan must cap at least one active near-player conversation")
+if int(speaker_rules.get("max_participants_per_conversation", 0)) != 2:
+    fail("NPCConversationPlan currently requires two-participant conversations")
+if not speaker_rules.get("story_critical_preempts_ambient", False):
+    fail("NPCConversationPlan must let story-critical dialogue preempt ambient chatter")
+if not speaker_rules.get("danger_override_preempts_social", False):
+    fail("NPCConversationPlan must let danger override ambient social chatter")
+
 approved_chapters = set(guard_rules.get("runtime_chapters", []))
 approved_routes = set(guard_rules.get("approved_routes", []))
 approved_canon_classes = set(guard_rules.get("canon_classes", []))
