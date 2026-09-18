@@ -193,6 +193,89 @@ if missing_architecture_entries:
 if stale_architecture_entries:
     fail("SourceArchitecturePlan references inactive/missing runtime files: " + ", ".join(stale_architecture_entries))
 
+# PG-020: permanent project requirement memory must be structured and auditable.
+requirements_path = ROOT / "Data" / "ProjectRequirements.json"
+requirements_data = {}
+if not requirements_path.exists():
+    fail("Project requirements ledger missing: Data/ProjectRequirements.json")
+else:
+    try:
+        requirements_data = json.loads(read(requirements_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/ProjectRequirements.json: {exc}")
+
+allowed_requirement_statuses = set(guard_rules.get("requirement_status_values", []))
+allowed_requirement_priorities = set(guard_rules.get("requirement_priority_values", []))
+requirement_ids: set[str] = set()
+for index, item in enumerate(requirements_data.get("requirements", []), start=1):
+    req_id = str(item.get("id") or "").strip()
+    title = str(item.get("title") or "").strip()
+    intent = str(item.get("intent") or "").strip()
+    status = str(item.get("status") or "").strip()
+    priority = str(item.get("priority") or "").strip()
+    acceptance = item.get("acceptance_criteria", [])
+    missing_work = item.get("missing_work", [])
+
+    if not req_id or not title or not intent:
+        fail(f"ProjectRequirements entry {index} is missing id/title/intent")
+        continue
+    if req_id in requirement_ids:
+        fail(f"Duplicate project requirement id: {req_id}")
+    requirement_ids.add(req_id)
+    if allowed_requirement_statuses and status not in allowed_requirement_statuses:
+        fail(f"Project requirement {req_id} uses unknown status '{status}'")
+    if allowed_requirement_priorities and priority not in allowed_requirement_priorities:
+        fail(f"Project requirement {req_id} uses unknown priority '{priority}'")
+    if not isinstance(acceptance, list) or not acceptance:
+        fail(f"Project requirement {req_id} has no acceptance criteria")
+    if status in {"REQUESTED", "PLANNED", "PARTIAL", "DEFERRED"} and not isinstance(missing_work, list):
+        fail(f"Open project requirement {req_id} must track missing_work")
+
+for required_req in ["REQ-MEM-001", "REQ-WORLD-001", "REQ-WORLD-002", "REQ-NPC-001", "REQ-NPC-002", "REQ-NPC-003", "REQ-SAVE-001", "REQ-PERF-001"]:
+    if required_req not in requirement_ids:
+        fail(f"Permanent requirement ledger missing critical requirement: {required_req}")
+
+# PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
+living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
+living_world_data = {}
+if not living_world_path.exists():
+    fail("Living world feature plan missing: Data/LivingWorldFeaturePlan.json")
+else:
+    try:
+        living_world_data = json.loads(read(living_world_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/LivingWorldFeaturePlan.json: {exc}")
+
+expected_lw_phases = set(guard_rules.get("living_world_phase_ids", []))
+actual_lw_phases = {str(phase.get("id") or "").strip() for phase in living_world_data.get("phases", [])}
+missing_lw_phases = sorted(expected_lw_phases - actual_lw_phases)
+if missing_lw_phases:
+    fail("LivingWorldFeaturePlan missing phases: " + ", ".join(missing_lw_phases))
+
+lw_feature_ids: set[str] = set()
+for phase in living_world_data.get("phases", []):
+    phase_id = str(phase.get("id") or "").strip()
+    for feature in phase.get("features", []):
+        feature_id = str(feature.get("id") or "").strip()
+        status = str(feature.get("status") or "").strip()
+        if not feature_id:
+            fail(f"Living world phase {phase_id} has a feature without id")
+            continue
+        if feature_id in lw_feature_ids:
+            fail(f"Duplicate living world feature id: {feature_id}")
+        lw_feature_ids.add(feature_id)
+        if not status:
+            fail(f"Living world feature {feature_id} has no status")
+
+for required_feature in [
+    "LW-AWARENESS", "LW-ROUTINES", "LW-SOCIAL-PAUSE",
+    "NPC-CONVERSATION-RUNTIME", "NPC-MEMORY-SCHEMA",
+    "WORLD-MICRO-EVENTS", "WORLD-FAUNA", "WORLD-MOTION",
+    "NPC-KNOWLEDGE-GUARD"
+]:
+    if required_feature not in lw_feature_ids:
+        fail(f"Living world plan missing required feature contract: {required_feature}")
+
 approved_chapters = set(guard_rules.get("runtime_chapters", []))
 approved_routes = set(guard_rules.get("approved_routes", []))
 approved_canon_classes = set(guard_rules.get("canon_classes", []))
