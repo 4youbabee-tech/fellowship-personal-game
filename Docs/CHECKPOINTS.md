@@ -245,6 +245,16 @@
 - This is a governance/maintenance checkpoint only. It does **not** claim the physical source-folder migration has happened and it does not change gameplay.
 - Physical migration remains a dedicated follow-up maintenance change after the current functional smoke-test gate is healthy.
 
+## CP30B — Permanent Requirement Memory + Living World Intelligence Contract
+- Added `Docs/PROJECT_MEMORY_SYSTEM.md` so project continuity no longer depends on chat history or one programmer's memory.
+- Added `Data/ProjectRequirements.json` as a stable-ID ledger for user requests, current status, evidence, missing work and acceptance criteria.
+- Recovered and explicitly recorded major long-lived requirements for living-world traversal, rich geography, NPC routines/social life, NPC-to-NPC conversation, bounded dialogue creativity, persistent named-NPC memory, save continuity and target-laptop performance.
+- Added `Docs/LIVING_WORLD_AI_BLUEPRINT.md` defining the intended living-world/NPC intelligence architecture and its low-spec boundaries.
+- Added `Data/LivingWorldFeaturePlan.json` with phases LW0-LW6 so future developers can distinguish existing foundations from planned work.
+- Added Guardian PG-020/PG-021 and static checks for requirement-ledger integrity and living-world plan completeness.
+- Existing ambient NPC routines, awareness, social pauses and proxy acting are recorded as foundations only; full NPC conversation/memory/intelligence is **not** falsely claimed implemented.
+- This checkpoint is governance/design memory. It does not open a new gameplay feature while the current functional F9/F8/chapter/device gate remains pending.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
