@@ -349,6 +349,14 @@
 - This checkpoint does **not** claim final character art. Frodo/Gandalf have dedicated production meshes; Hobbit companions currently share the Hobbit production archetype; many other named characters remain distinct procedural proxies pending dedicated character production.
 - Requires Pre-Unreal + real UE4.27.2 build before merge, followed by PIE visual/population/performance review.
 
+## CP33 — Core Cast Visual Identity + Build-First Batch Mode
+- Activated the user-directed `BUILD_FIRST_BATCH_MODE`: continue substantial construction now, keep static + real UE4.27.2 compile/import gates mandatory, and defer detailed PIE/device/pacing/visual acceptance to a later integration/repair pass.
+- Added lightweight modular identity pieces to `AShireNPC`: cloak, primary prop, secondary prop, beard and headpiece.
+- Added distinct runtime silhouettes for Sam, Merry, Pippin, Aragorn/Strider, Boromir, Legolas, Gimli, Gandalf/Saruman and major Elven story characters.
+- Accessories move with the existing procedural gait so cloaks/weapons/beards do not remain completely rigid while the NPC walks.
+- Updated `Data/CharacterPopulationPlan.json` with an explicit visual-identity pass and a proof limit: procedural identity is not final character art.
+- Added PG-033 to preserve distinct cast identity and prevent build-first mode from falsely marking manual evidence as passed.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
