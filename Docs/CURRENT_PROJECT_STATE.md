@@ -153,6 +153,17 @@ Current physical layout remains the guarded flat UE4.27 module. The planned main
 
 The physical folder migration has **not** happened yet. It must be a dedicated maintenance change, not mixed with gameplay, and must update includes plus static-validator path assumptions before a real UE4.27.2 build is accepted.
 
+## Permanent user-requirement memory
+
+The project no longer treats chat history as the authoritative record of user requests.
+
+- `Data/ProjectRequirements.json` records persistent requirements with stable IDs, current status, evidence, missing work and acceptance criteria.
+- `Docs/PROJECT_MEMORY_SYSTEM.md` defines how every meaningful future request must be captured and updated.
+- `Docs/LIVING_WORLD_AI_BLUEPRINT.md` and `Data/LivingWorldFeaturePlan.json` preserve the user's living-world/NPC intelligence direction separately from current implementation status.
+- Project Guardian validates the required memory artifacts and critical requirement/phase IDs.
+
+Recovered/reaffirmed living-world intent is currently **PARTIAL/PLANNED**, not complete: ambient routines, awareness and social pauses exist, while full NPC-to-NPC dialogue, bounded dialogue creativity, persistent named-NPC memory/relationships and broader environmental micro-life remain future work.
+
 ## Current architecture map
 
 ### Story / quest
@@ -241,17 +252,21 @@ Runtime voice playback now resolves `/Game/Audio/Voice/<Speaker>/<VO_ID>`, plays
 
 Use all of these, with this priority for their purpose:
 
-1. `Docs/CURRENT_PROJECT_STATE.md` — implementation/handoff truth.
-2. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
-3. `Docs/DEVELOPMENT_GATES.md` — process and acceptance rules.
-3. `Docs/PROJECT_GUARDIAN.md` — regression-memory model.
-4. `Docs/STORY_CANON_BIBLE.md` — film-first canon and route vision.
-5. `Docs/PART1_FELLOWSHIP_MASTERPLAN.md` — Part I production plan.
-6. `Data/StoryBeatPlan.csv` — presentation beat plan.
-7. `Data/DialogueIntent.csv` — dialogue intent.
-8. `Data/MusicCuePlan.csv` — original music direction.
-9. `Data/BiomePlan.csv` — chapter terrain/vegetation/water/weather/traversal/hazard/audio/performance contract.
-10. Runtime C++ — actual implementation.
+1. `Docs/CURRENT_PROJECT_STATE.md` — implementation/handoff truth and current hard gate.
+2. `Data/ProjectRequirements.json` — permanent user-requirement ledger: requested / partial / implemented / validated / deferred.
+3. `Docs/PROJECT_MEMORY_SYSTEM.md` — rules for preserving requests and decisions across lost chats/developer changes.
+4. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
+5. `Docs/LIVING_WORLD_AI_BLUEPRINT.md` — living-world/NPC intelligence design authority.
+6. `Data/LivingWorldFeaturePlan.json` — machine-readable living-world implementation phases.
+7. `Docs/DEVELOPMENT_GATES.md` — process and acceptance rules.
+8. `Docs/PROJECT_GUARDIAN.md` — regression-memory model.
+9. `Docs/STORY_CANON_BIBLE.md` — film-first canon and route vision.
+10. `Docs/PART1_FELLOWSHIP_MASTERPLAN.md` — Part I production plan.
+11. `Data/StoryBeatPlan.csv` — presentation beat plan.
+12. `Data/DialogueIntent.csv` — dialogue intent.
+13. `Data/MusicCuePlan.csv` — original music direction.
+14. `Data/BiomePlan.csv` — chapter terrain/vegetation/water/weather/traversal/hazard/audio/performance contract.
+15. Runtime C++ — actual implementation.
 
 If runtime and documentation disagree, stop and reconcile them in the same change.
 
@@ -342,14 +357,16 @@ A new developer/assistant should:
 1. open this file first,
 2. confirm repo and `develop`,
 3. inspect latest `develop` commit and both validation workflows,
-4. open `Source/ShireJourney/README.md` before changing runtime code,
-5. inspect `Data/SourceArchitecturePlan.json` for ownership and planned file location,
-6. read `Docs/DEVELOPMENT_GATES.md`,
-7. read `Docs/PROJECT_GUARDIAN.md`,
-8. read `Docs/STORY_CANON_BIBLE.md` before story changes,
-9. inspect the relevant StoryBeat/Dialogue/Music/Biome/Checkpoint data files,
-10. never claim engine testing without a real UE4.27 result,
-11. resume from "Exact next hard gate".
+4. read `Data/ProjectRequirements.json` so no recorded user request is lost,
+5. read `Docs/PROJECT_MEMORY_SYSTEM.md`,
+6. open `Source/ShireJourney/README.md` before changing runtime code,
+7. inspect `Data/SourceArchitecturePlan.json` for ownership and planned file location,
+8. read `Docs/LIVING_WORLD_AI_BLUEPRINT.md` and `Data/LivingWorldFeaturePlan.json` before NPC/world-life work,
+9. read `Docs/DEVELOPMENT_GATES.md` and `Docs/PROJECT_GUARDIAN.md`,
+10. read `Docs/STORY_CANON_BIBLE.md` before story changes,
+11. inspect the relevant StoryBeat/Dialogue/Music/Biome/Checkpoint data files,
+12. never claim engine testing without a real UE4.27 result,
+13. resume from "Exact next hard gate".
 
 ## Temporary developer controls
 
