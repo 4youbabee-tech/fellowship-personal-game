@@ -56,7 +56,29 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         Tasks.Add(Task);
         AssetTools.Get().ImportAssetTasks(Tasks);
 
-        if (Task->ImportedObjectPaths.Num() == 0)
+        const FString AssetName = FPaths::GetBaseFilename(Filename);
+        const FString ExpectedObjectPath = FString::Printf(
+            TEXT("%s/%s.%s"), *DestinationPath, *AssetName, *AssetName);
+        UObject* ImportedAsset = LoadObject<UObject>(nullptr, *ExpectedObjectPath);
+
+        // UE4.27 import factories are not perfectly consistent about which result
+        // collection they populate in unattended mode. Treat the import as successful
+        // when any task result is reported or the expected asset can be resolved.
+        const bool bImported =
+            Task->ImportedObjectPaths.Num() > 0 ||
+            Task->Result.Num() > 0 ||
+            ImportedAsset != nullptr;
+
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s"),
+            *Filename,
+            Task->ImportedObjectPaths.Num(),
+            Task->Result.Num(),
+            ImportedAsset ? TEXT("yes") : TEXT("no"));
+
+        if (!bImported)
         {
             ++Failed;
             UE_LOG(LogTemp, Error, TEXT("ShireProductionImport FAILED: %s"), *Filename);

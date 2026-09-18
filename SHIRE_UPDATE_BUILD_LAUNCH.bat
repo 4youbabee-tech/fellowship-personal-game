@@ -12,6 +12,7 @@ set "BUILD_BAT=%UE_ROOT%\Engine\Build\BatchFiles\Build.bat"
 set "EDITOR_EXE=%UE_ROOT%\Engine\Binaries\Win64\UE4Editor.exe"
 set "EDITOR_CMD_EXE=%UE_ROOT%\Engine\Binaries\Win64\UE4Editor-Cmd.exe"
 set "BUILD_LOG=%ROOT%\Saved\Logs\LastOneClickBuildFailure.txt"
+set "IMPORT_LOG=%ROOT%\Saved\Logs\LastProductionAssetImport.log"
 
 echo ============================================================
 echo SHIRE JOURNEY - UPDATE ^> BUILD ^> LAUNCH
@@ -74,7 +75,9 @@ if errorlevel 1 goto :build_failed
 
 echo.
 echo [3/4] Importing production 3D assets into Unreal...
-"%EDITOR_CMD_EXE%" "%PROJECT%" -run=ShireProductionImport -unattended -nop4 -nosplash -NoSound
+if not exist "%ROOT%\Saved\Logs" mkdir "%ROOT%\Saved\Logs"
+if exist "%IMPORT_LOG%" del /Q "%IMPORT_LOG%" >NUL 2>NUL
+"%EDITOR_CMD_EXE%" "%PROJECT%" -run=ShireProductionImport -unattended -nop4 -nosplash -NoSound -abslog="%IMPORT_LOG%"
 if errorlevel 1 goto :asset_import_failed
 
 echo.
@@ -106,6 +109,14 @@ exit /b 30
 :asset_import_failed
 echo.
 echo ERROR: Production asset import failed.
-echo Send this console output to ChatGPT so the import layer can be fixed.
+if exist "%IMPORT_LOG%" (
+  echo Detailed import log was saved here:
+  echo %IMPORT_LOG%
+  echo.
+  echo Last import errors:
+  findstr /I /C:"ShireProductionImport FAILED" /C:"Error:" /C:"Warning:" "%IMPORT_LOG%"
+)
+echo.
+echo Send LastProductionAssetImport.log to ChatGPT so the exact failing asset can be fixed.
 pause
 exit /b 31

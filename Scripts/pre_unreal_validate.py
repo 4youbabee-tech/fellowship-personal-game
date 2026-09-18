@@ -262,6 +262,12 @@ production_import_cpp = read(
 )
 if "Task->bAsync" in production_import_cpp or "->bAsync" in production_import_cpp:
     fail("PG-013: UE4.27 UAssetImportTask must not use unsupported bAsync")
+if "Task->ImportedObjectPaths.Num() > 0" not in production_import_cpp:
+    fail("Production importer must inspect UE4.27 task path results")
+if "Task->Result.Num() > 0" not in production_import_cpp:
+    fail("Production importer must inspect UE4.27 task object results")
+if "LoadObject<UObject>(nullptr, *ExpectedObjectPath)" not in production_import_cpp:
+    fail("Production importer must verify the expected imported object path")
 
 quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
 definitions = set(re.findall(r'AddQuestDefinition\s*\(\s*TEXT\("([^"]+)"\)', quest_cpp))
