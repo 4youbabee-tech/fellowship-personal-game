@@ -76,6 +76,31 @@ AShireNPC::AShireNPC()
     PrototypeRightLeg->SetRelativeLocation(FVector(0.0f, 10.0f, -43.0f));
     PrototypeRightLeg->SetRelativeScale3D(FVector(0.10f, 0.10f, 0.30f));
 
+    PrototypeCloak = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeCloak"));
+    PrototypeCloak->SetupAttachment(GetCapsuleComponent());
+    PrototypeCloak->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeCloak->SetVisibility(false);
+
+    PrototypePrimaryProp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypePrimaryProp"));
+    PrototypePrimaryProp->SetupAttachment(GetCapsuleComponent());
+    PrototypePrimaryProp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypePrimaryProp->SetVisibility(false);
+
+    PrototypeSecondaryProp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeSecondaryProp"));
+    PrototypeSecondaryProp->SetupAttachment(GetCapsuleComponent());
+    PrototypeSecondaryProp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeSecondaryProp->SetVisibility(false);
+
+    PrototypeBeard = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeBeard"));
+    PrototypeBeard->SetupAttachment(GetCapsuleComponent());
+    PrototypeBeard->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeBeard->SetVisibility(false);
+
+    PrototypeHeadpiece = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeHeadpiece"));
+    PrototypeHeadpiece->SetupAttachment(GetCapsuleComponent());
+    PrototypeHeadpiece->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    PrototypeHeadpiece->SetVisibility(false);
+
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMesh(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
@@ -83,6 +108,9 @@ AShireNPC::AShireNPC()
     if (CubeMesh.Succeeded())
     {
         PrototypeTorso->SetStaticMesh(CubeMesh.Object);
+        PrototypeCloak->SetStaticMesh(CubeMesh.Object);
+        PrototypeSecondaryProp->SetStaticMesh(CubeMesh.Object);
+        PrototypeHeadpiece->SetStaticMesh(CubeMesh.Object);
     }
     if (CylinderMesh.Succeeded())
     {
@@ -90,6 +118,8 @@ AShireNPC::AShireNPC()
         PrototypeRightArm->SetStaticMesh(CylinderMesh.Object);
         PrototypeLeftLeg->SetStaticMesh(CylinderMesh.Object);
         PrototypeRightLeg->SetStaticMesh(CylinderMesh.Object);
+        PrototypePrimaryProp->SetStaticMesh(CylinderMesh.Object);
+        PrototypeBeard->SetStaticMesh(CylinderMesh.Object);
     }
     if (SphereMesh.Succeeded())
     {
@@ -343,6 +373,172 @@ void AShireNPC::ApplyPrototypeStyle()
     ApplyColor(PrototypeRightEye, FLinearColor(0.045f, 0.035f, 0.025f));
     ApplyColor(PrototypeMouth, FLinearColor(0.20f, 0.055f, 0.045f));
 
+    auto HideIdentityPiece = [](UStaticMeshComponent* Component)
+    {
+        if (Component)
+        {
+            Component->SetVisibility(false);
+            Component->SetRelativeRotation(FRotator::ZeroRotator);
+        }
+    };
+
+    HideIdentityPiece(PrototypeCloak);
+    HideIdentityPiece(PrototypePrimaryProp);
+    HideIdentityPiece(PrototypeSecondaryProp);
+    HideIdentityPiece(PrototypeBeard);
+    HideIdentityPiece(PrototypeHeadpiece);
+
+    const bool bSam = Name.Equals(TEXT("Sam"), ESearchCase::IgnoreCase);
+    const bool bMerry = Name.Equals(TEXT("Merry"), ESearchCase::IgnoreCase);
+    const bool bPippin = Name.Equals(TEXT("Pippin"), ESearchCase::IgnoreCase);
+    const bool bBoromir = Name.Equals(TEXT("Boromir"), ESearchCase::IgnoreCase);
+    const bool bLegolas = Name.Equals(TEXT("Legolas"), ESearchCase::IgnoreCase);
+    const bool bGimli = Name.Equals(TEXT("Gimli"), ESearchCase::IgnoreCase);
+    const bool bSaruman = Name.Equals(TEXT("Saruman"), ESearchCase::IgnoreCase);
+    const bool bGaladriel = Name.Equals(TEXT("Galadriel"), ESearchCase::IgnoreCase);
+    const bool bElrond = Name.Equals(TEXT("Elrond"), ESearchCase::IgnoreCase);
+    const bool bArwen = Name.Equals(TEXT("Arwen"), ESearchCase::IgnoreCase);
+
+    FLinearColor Leather(0.16f, 0.09f, 0.045f);
+    FLinearColor Steel(0.34f, 0.36f, 0.37f);
+    FLinearColor Wood(0.23f, 0.12f, 0.055f);
+    FLinearColor DarkGreen(0.10f, 0.20f, 0.10f);
+    FLinearColor ElfGreen(0.18f, 0.31f, 0.20f);
+    FLinearColor WhiteCloth(0.68f, 0.69f, 0.65f);
+
+    if (bSam)
+    {
+        PrototypeSecondaryProp->SetVisibility(true);
+        PrototypeSecondaryProp->SetRelativeLocation(FVector(-4.0f, 24.0f, -5.0f));
+        PrototypeSecondaryProp->SetRelativeScale3D(FVector(0.12f, 0.18f, 0.18f));
+        PrototypeSecondaryProp->SetRelativeRotation(FRotator(0.0f, 12.0f, 8.0f));
+        ApplyColor(PrototypeSecondaryProp, Leather);
+    }
+    else if (bMerry || bPippin)
+    {
+        PrototypeCloak->SetVisibility(true);
+        PrototypeCloakBase = FVector(-10.0f, 0.0f, -5.0f);
+        PrototypeCloak->SetRelativeLocation(PrototypeCloakBase);
+        PrototypeCloak->SetRelativeScale3D(bMerry
+            ? FVector(0.12f, 0.34f, 0.42f)
+            : FVector(0.11f, 0.32f, 0.38f));
+        ApplyColor(PrototypeCloak, bMerry
+            ? FLinearColor(0.26f, 0.20f, 0.08f)
+            : FLinearColor(0.12f, 0.26f, 0.16f));
+    }
+    else if (bRanger)
+    {
+        PrototypeCloak->SetVisibility(true);
+        PrototypeCloakBase = FVector(-11.0f, 0.0f, 7.0f);
+        PrototypeCloak->SetRelativeLocation(PrototypeCloakBase);
+        PrototypeCloak->SetRelativeScale3D(FVector(0.14f, 0.45f, 0.68f));
+        ApplyColor(PrototypeCloak, DarkGreen);
+
+        PrototypePrimaryProp->SetVisibility(true);
+        PrototypePrimaryPropBase = FVector(2.0f, 31.0f, 5.0f);
+        PrototypePrimaryPropRotation = FRotator(0.0f, 0.0f, 7.0f);
+        PrototypePrimaryProp->SetRelativeLocation(PrototypePrimaryPropBase);
+        PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
+        PrototypePrimaryProp->SetRelativeScale3D(FVector(0.045f, 0.045f, 0.78f));
+        ApplyColor(PrototypePrimaryProp, Steel);
+    }
+    else if (bBoromir)
+    {
+        PrototypeCloak->SetVisibility(true);
+        PrototypeCloakBase = FVector(-12.0f, 0.0f, 8.0f);
+        PrototypeCloak->SetRelativeLocation(PrototypeCloakBase);
+        PrototypeCloak->SetRelativeScale3D(FVector(0.15f, 0.47f, 0.66f));
+        ApplyColor(PrototypeCloak, FLinearColor(0.28f, 0.10f, 0.08f));
+
+        PrototypePrimaryProp->SetVisibility(true);
+        PrototypePrimaryPropBase = FVector(2.0f, 31.0f, 6.0f);
+        PrototypePrimaryPropRotation = FRotator(0.0f, 0.0f, 5.0f);
+        PrototypePrimaryProp->SetRelativeLocation(PrototypePrimaryPropBase);
+        PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
+        PrototypePrimaryProp->SetRelativeScale3D(FVector(0.05f, 0.05f, 0.82f));
+        ApplyColor(PrototypePrimaryProp, Steel);
+
+        PrototypeSecondaryProp->SetVisibility(true);
+        PrototypeSecondaryProp->SetRelativeLocation(FVector(4.0f, -31.0f, 12.0f));
+        PrototypeSecondaryProp->SetRelativeScale3D(FVector(0.08f, 0.34f, 0.34f));
+        ApplyColor(PrototypeSecondaryProp, FLinearColor(0.30f, 0.22f, 0.14f));
+    }
+    else if (bLegolas)
+    {
+        PrototypeCloak->SetVisibility(true);
+        PrototypeCloakBase = FVector(-10.0f, 0.0f, 8.0f);
+        PrototypeCloak->SetRelativeLocation(PrototypeCloakBase);
+        PrototypeCloak->SetRelativeScale3D(FVector(0.11f, 0.40f, 0.61f));
+        ApplyColor(PrototypeCloak, ElfGreen);
+
+        PrototypePrimaryProp->SetVisibility(true);
+        PrototypePrimaryPropBase = FVector(-6.0f, 26.0f, 22.0f);
+        PrototypePrimaryPropRotation = FRotator(0.0f, 0.0f, 20.0f);
+        PrototypePrimaryProp->SetRelativeLocation(PrototypePrimaryPropBase);
+        PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
+        PrototypePrimaryProp->SetRelativeScale3D(FVector(0.035f, 0.035f, 0.72f));
+        ApplyColor(PrototypePrimaryProp, Wood);
+
+        PrototypeSecondaryProp->SetVisibility(true);
+        PrototypeSecondaryProp->SetRelativeLocation(FVector(-11.0f, -22.0f, 25.0f));
+        PrototypeSecondaryProp->SetRelativeScale3D(FVector(0.09f, 0.20f, 0.52f));
+        ApplyColor(PrototypeSecondaryProp, FLinearColor(0.20f, 0.13f, 0.07f));
+    }
+    else if (bGimli)
+    {
+        PrototypeBeard->SetVisibility(true);
+        PrototypeBeard->SetRelativeLocation(FVector(13.0f, 0.0f, 33.0f));
+        PrototypeBeard->SetRelativeScale3D(FVector(0.13f, 0.13f, 0.30f));
+        PrototypeBeard->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
+        ApplyColor(PrototypeBeard, FLinearColor(0.44f, 0.20f, 0.07f));
+
+        PrototypePrimaryProp->SetVisibility(true);
+        PrototypePrimaryPropBase = FVector(4.0f, 34.0f, -1.0f);
+        PrototypePrimaryPropRotation = FRotator(-10.0f, 0.0f, 12.0f);
+        PrototypePrimaryProp->SetRelativeLocation(PrototypePrimaryPropBase);
+        PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
+        PrototypePrimaryProp->SetRelativeScale3D(FVector(0.065f, 0.065f, 0.62f));
+        ApplyColor(PrototypePrimaryProp, FLinearColor(0.26f, 0.22f, 0.18f));
+
+        PrototypeSecondaryProp->SetVisibility(true);
+        PrototypeSecondaryProp->SetRelativeLocation(FVector(7.0f, 34.0f, 28.0f));
+        PrototypeSecondaryProp->SetRelativeScale3D(FVector(0.28f, 0.06f, 0.16f));
+        ApplyColor(PrototypeSecondaryProp, Steel);
+    }
+    else if (bWizard)
+    {
+        PrototypePrimaryProp->SetVisibility(true);
+        PrototypePrimaryPropBase = FVector(3.0f, 34.0f, 3.0f);
+        PrototypePrimaryPropRotation = FRotator::ZeroRotator;
+        PrototypePrimaryProp->SetRelativeLocation(PrototypePrimaryPropBase);
+        PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
+        PrototypePrimaryProp->SetRelativeScale3D(FVector(0.045f, 0.045f, 0.92f));
+        ApplyColor(PrototypePrimaryProp, bSaruman ? FLinearColor(0.60f, 0.58f, 0.52f) : Wood);
+
+        PrototypeBeard->SetVisibility(true);
+        PrototypeBeard->SetRelativeLocation(FVector(13.0f, 0.0f, 49.0f));
+        PrototypeBeard->SetRelativeScale3D(FVector(0.10f, 0.10f, 0.30f));
+        PrototypeBeard->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
+        ApplyColor(PrototypeBeard, bSaruman ? FLinearColor(0.84f, 0.82f, 0.76f) : FLinearColor(0.68f, 0.66f, 0.60f));
+    }
+    else if (bGaladriel || bElrond || bArwen)
+    {
+        PrototypeCloak->SetVisibility(true);
+        PrototypeCloakBase = FVector(-10.0f, 0.0f, 9.0f);
+        PrototypeCloak->SetRelativeLocation(PrototypeCloakBase);
+        PrototypeCloak->SetRelativeScale3D(FVector(0.10f, 0.40f, 0.70f));
+        ApplyColor(PrototypeCloak, bGaladriel ? WhiteCloth : ElfGreen);
+
+        PrototypeHeadpiece->SetVisibility(true);
+        PrototypeHeadpiece->SetRelativeLocation(FVector(-1.0f, 0.0f, PrototypeHairBaseZ + 7.0f));
+        PrototypeHeadpiece->SetRelativeScale3D(bGaladriel
+            ? FVector(0.12f, 0.34f, 0.055f)
+            : FVector(0.10f, 0.28f, 0.045f));
+        ApplyColor(PrototypeHeadpiece, bGaladriel
+            ? FLinearColor(0.62f, 0.66f, 0.60f)
+            : FLinearColor(0.34f, 0.42f, 0.26f));
+    }
+
     bVisualStyleApplied = true;
 }
 
@@ -396,6 +592,47 @@ void AShireNPC::UpdatePrototypeAnimation(float DeltaSeconds)
         PrototypeHair->SetRelativeLocation(FMath::VInterpTo(
             PrototypeHair->GetRelativeLocation(),
             FVector(-1.0f, 0.0f, PrototypeHairBaseZ + Bob), DeltaSeconds, 12.0f));
+    }
+
+    if (PrototypeCloak && PrototypeCloak->IsVisible())
+    {
+        const float CloakPitch = bPrototypeMoving ? -4.0f - FMath::Abs(Swing) * 0.08f : -1.5f;
+        PrototypeCloak->SetRelativeLocation(FMath::VInterpTo(
+            PrototypeCloak->GetRelativeLocation(),
+            PrototypeCloakBase + FVector(0.0f, 0.0f, Bob * 0.45f),
+            DeltaSeconds,
+            8.0f));
+        PrototypeCloak->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeCloak->GetRelativeRotation(),
+            FRotator(CloakPitch, 0.0f, bPrototypeMoving ? Swing * 0.05f : 0.0f),
+            DeltaSeconds,
+            5.0f));
+    }
+
+    if (PrototypePrimaryProp && PrototypePrimaryProp->IsVisible())
+    {
+        PrototypePrimaryProp->SetRelativeLocation(FMath::VInterpTo(
+            PrototypePrimaryProp->GetRelativeLocation(),
+            PrototypePrimaryPropBase + FVector(0.0f, 0.0f, Bob * 0.30f),
+            DeltaSeconds,
+            10.0f));
+        PrototypePrimaryProp->SetRelativeRotation(FMath::RInterpTo(
+            PrototypePrimaryProp->GetRelativeRotation(),
+            PrototypePrimaryPropRotation + FRotator(
+                bPrototypeMoving ? -Swing * 0.12f : 0.0f,
+                0.0f,
+                bPrototypeMoving ? Swing * 0.04f : 0.0f),
+            DeltaSeconds,
+            7.0f));
+    }
+
+    if (PrototypeBeard && PrototypeBeard->IsVisible())
+    {
+        PrototypeBeard->SetRelativeRotation(FMath::RInterpTo(
+            PrototypeBeard->GetRelativeRotation(),
+            FRotator(90.0f + (bPrototypeMoving ? Swing * 0.04f : 0.0f), 0.0f, 0.0f),
+            DeltaSeconds,
+            5.0f));
     }
 }
 
