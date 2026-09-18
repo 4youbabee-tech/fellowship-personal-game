@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_PLAYER_EXPERIENCE_PACING_V1",
+  "purpose": "Human-review contract for clarity, rhythm, repetition, exploration reward and frustration. These are review targets, not automatic claims that a chapter is fun.",
+  "review_status_values": [
+    "NOT_REVIEWED",
+    "ISSUES_FOUND",
+    "TUNING",
+    "ACCEPTED"
+  ],
+  "dimensions": [
+    "OBJECTIVE_CLARITY",
+    "TRAVEL_RHYTHM",
+    "DISCOVERY_DENSITY",
+    "DIALOGUE_RHYTHM",
+    "COMBAT_RHYTHM",
+    "REPETITION",
+    "WAITING_FRICTION",
+    "FAILURE_FRICTION",
+    "STORY_MOMENT_WEIGHT"
+  ],
+  "global_review_rules": [
+    "PACING cannot be marked ACCEPTED by static CI or compile success.",
+    "Flag long empty traversal when there is no story tension, vista, ambience change, interaction or discovery carrying the section.",
+    "Do not add activity merely to fill space; quiet sections may be intentional when they support emotion or suspense.",
+    "Main objectives must remain understandable without excessive HUD spam.",
+    "Repeated dialogue, micro-events and combat patterns require cooldown/variation rather than higher quantity.",
+    "Failure/retry must not force excessive replay of non-challenging travel or dialogue.",
+    "Film story anchors receive enough time and presentation weight to remain emotionally readable."
+  ],
+  "chapter_reviews": [
+    {
+      "chapter": "P1C01",
+      "region": "Shire",
+      "status": "NOT_REVIEWED",
+      "focus": [
+        "dense social opening",
+        "exploration reward",
+        "Black Rider tension contrast",
+        "party/story transitions"
+      ],
+      "risk_flags": [
+        "too much empty walking after scale expansion",
+        "ambient repetition",
+        "unclear route after exploration"
+      ]
+    },
+    {
+      "chapter": "P1C02",
+      "region": "Bree",
+      "status": "NOT_REVIEWED",
+      "focus": [
+        "arrival tension",
+        "inn social density",
+        "Ring incident escalation",
+        "Strider trust transition"
+      ],
+      "risk_flags": [
+        "too much chatter before story movement",
+        "objective ambiguity inside social hub"
+      ]
+    },
+    {
+      "chapter": "P1C03",
+      "region": "Weathertop/Ford",
+      "status": "NOT_REVIEWED",
+      "focus": [
+        "wilderness suspense",
+        "attack escalation",
+        "wounded urgency",
+        "Ford climax"
+      ],
+      "risk_flags": [
+        "empty wilderness travel",
+        "urgency undermined by optional distractions"
+      ]
+    },
+    {
+      "chapter": "P1C04",
+      "region": "Rivendell",
+      "status": "NOT_REVIEWED",
+      "focus": [
+        "recovery relief",
+        "social/exploration refuge",
+        "Council weight",
+        "departure anticipation"
+      ],
+      "risk_flags": [
+        "social overload",
+        "Council feels passive or rushed"
+      ]
+    },
+    {
+      "chapter": "P1C05",
+      "region": "Caradhras/West Gate",
+      "status": "NOT_REVIEWED",
+      "focus": [
+        "Fellowship travel chemistry",
+        "weather escalation",
+        "route failure",
+        "Moria threshold dread"
+      ],
+      "risk_flags": [
+        "repetitive travel",
+        "weather friction without meaningful choices"
+      ]
+    },
+    {
+      "chapter": "P1C06",
+      "region": "Moria",
+      "status": "NOT_REVIEWED",
+      "focus": [
+        "scale/quiet dread",
+        "Balin discovery",
+        "combat escalation",
+        "Balrog escape"
+      ],
+      "risk_flags": [
+        "combat fatigue",
+        "maze confusion",
+        "long darkness without readable landmarks"
+      ]
+    },
+    {
+      "chapter": "P1C07",
+      "region": "Lothlorien",
+      "status": "NOT_REVIEWED",
+      "focus": [
+        "grief decompression",
+        "mystery",
+        "Galadriel pressure",
+        "Mirror/farewell"
+      ],
+      "risk_flags": [
+        "too passive after Moria",
+        "slow section without meaningful exploration"
+      ]
+    },
+    {
+      "chapter": "P1C08",
+      "region": "Anduin/Amon Hen",
+      "status": "NOT_REVIEWED",
+      "focus": [
+        "river calm/tension",
+        "Argonath awe",
+        "Boromir pressure",
+        "attack/split climax"
+      ],
+      "risk_flags": [
+        "river travel repetition",
+        "too many climactic beats compressed together"
+      ]
+    },
+    {
+      "chapter": "P1G01",
+      "region": "Isengard/Orthanc",
+      "status": "NOT_REVIEWED",
+      "focus": [
+        "counsel tension",
+        "betrayal",
+        "captivity observation",
+        "escape"
+      ],
+      "risk_flags": [
+        "parallel route feels detached",
+        "captivity becomes waiting instead of playable tension"
+      ]
+    }
+  ],
+  "review_record_fields": [
+    "reviewer",
+    "date",
+    "build_sha",
+    "device_profile",
+    "chapter",
+    "minutes_played",
+    "issues",
+    "what_felt_good",
+    "what_felt_slow",
+    "what_was_confusing",
+    "recommended_tuning",
+    "status"
+  ]
+}
