@@ -454,7 +454,7 @@ isengard_world_motion_cpp = read(SOURCE / "IsengardPrototypeWorldBuilder.cpp")
 for symbol in [
     'RoutineRole == TEXT("Bird")',
     "AddActorWorldOffset(Direction * WalkSpeed * DeltaSeconds, false)",
-    "PrototypeWalkPhase += DeltaSeconds * 9.0f",
+    "WalkPhase += DeltaSeconds * 9.0f",
 ]:
     if symbol not in ambient_motion_cpp:
         fail(f"PG-035 lightweight bird-motion invariant missing: {symbol}")

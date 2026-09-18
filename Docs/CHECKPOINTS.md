@@ -386,6 +386,12 @@
 - Added PG-036 so resident activity variety cannot silently regress.
 - This is not final authored animation or full micro-event direction; those remain future batch work and integration review.
 
+## CP35A — Bird Motion Compile Repair
+- Unreal Build Validation #27 reached UE4.27.2 C++ compilation and failed in `ShireAmbientNPC.cpp` because the Bird path referenced `PrototypeWalkPhase`, a player-character field that does not exist on `AShireAmbientNPC`.
+- Replaced those references with the ambient actor's existing `WalkPhase`.
+- Updated PG-035 static validation so the wrong field name cannot be reintroduced unnoticed.
+- This was a compile-only regression repair; no intended Bird/world-motion behavior changed.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
