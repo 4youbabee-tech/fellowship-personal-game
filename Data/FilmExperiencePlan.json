@@ -1,0 +1,552 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_FILM_EXPERIENCE_PLAN_V1",
+  "purpose": "Machine-readable coverage of high-level film story anchors and intended player treatment. This is not screenplay text and does not imply implementation/acceptance.",
+  "canon_policy": "Peter Jackson film continuity is the primary Part I story spine; Extended Edition may enrich without contradicting the theatrical core; lore-compatible and original gap-fill content may not alter required film outcomes.",
+  "treatment_values": [
+    "PLAYABLE",
+    "EXPLORATION",
+    "SOCIAL_INTERACTIVE",
+    "STEALTH",
+    "COMBAT",
+    "INTERACTIVE_CINEMATIC",
+    "CINEMATIC",
+    "AMBIENT_WORLD",
+    "PARALLEL_PLAYABLE"
+  ],
+  "coverage_values": [
+    "FOUNDATION",
+    "PARTIAL",
+    "PLANNED",
+    "DEFERRED",
+    "VALIDATED"
+  ],
+  "chapters": [
+    {
+      "chapter": "P1C01",
+      "route": "FrodoMain",
+      "region": "Shire",
+      "anchors": [
+        {
+          "id": "P1C01_GANDALF_ARRIVAL",
+          "label": "Gandalf arrives in the Shire and reconnects with Frodo/Bilbo's world",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "SOCIAL_INTERACTIVE",
+            "AMBIENT_WORLD"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C01_PARTY",
+          "label": "Bilbo's birthday celebration and disappearance",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "EXPLORATION",
+            "SOCIAL_INTERACTIVE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C01_RING_WARNING",
+          "label": "The Ring threat becomes known and Frodo must leave",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C01_LEAVING_HOME",
+          "label": "Frodo leaves with Sam and the journey begins",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C01_MERRY_PIPPIN",
+          "label": "Merry and Pippin join during the Shire escape",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C01_BLACK_RIDER",
+          "label": "First Black Rider road threat and hiding/escape",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "STEALTH",
+            "PLAYABLE"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C01_FERRY",
+          "label": "Escape to Bucklebury Ferry and transition toward Bree",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        }
+      ]
+    },
+    {
+      "chapter": "P1C02",
+      "route": "FrodoMain",
+      "region": "Bree / Prancing Pony",
+      "anchors": [
+        {
+          "id": "P1C02_BREE_GATE",
+          "label": "Arrival at Bree at night and entry into town",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION",
+            "AMBIENT_WORLD"
+          ],
+          "coverage": "FOUNDATION"
+        },
+        {
+          "id": "P1C02_PRANCING_PONY",
+          "label": "Prancing Pony social sequence and Gandalf's absence",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE",
+            "EXPLORATION"
+          ],
+          "coverage": "FOUNDATION"
+        },
+        {
+          "id": "P1C02_RING_INCIDENT",
+          "label": "Public Ring incident draws dangerous attention",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "FOUNDATION"
+        },
+        {
+          "id": "P1C02_STRIDER",
+          "label": "Meeting Strider and deciding to trust him",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C02_NAZGUL_ATTACK",
+          "label": "Nazgul night attack/deception and departure",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "STEALTH",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "FOUNDATION"
+        }
+      ]
+    },
+    {
+      "chapter": "P1C03",
+      "route": "FrodoMain",
+      "region": "Weathertop / Ford",
+      "anchors": [
+        {
+          "id": "P1C03_WILDERNESS",
+          "label": "Wilderness travel under Strider's guidance",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION",
+            "AMBIENT_WORLD"
+          ],
+          "coverage": "FOUNDATION"
+        },
+        {
+          "id": "P1C03_WEATHERTOP",
+          "label": "Weathertop assault and Frodo's wound",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "COMBAT",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "FOUNDATION"
+        },
+        {
+          "id": "P1C03_WOUND",
+          "label": "Frodo's worsening condition affects the journey",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "AMBIENT_WORLD"
+          ],
+          "coverage": "PLANNED"
+        },
+        {
+          "id": "P1C03_ARWEN_FORD",
+          "label": "Arwen aids the escape to the Ford in film continuity",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "FOUNDATION"
+        }
+      ]
+    },
+    {
+      "chapter": "P1C04",
+      "route": "FrodoMain",
+      "region": "Rivendell",
+      "anchors": [
+        {
+          "id": "P1C04_RECOVERY",
+          "label": "Frodo awakens and reunites with allies",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE",
+            "EXPLORATION"
+          ],
+          "coverage": "FOUNDATION"
+        },
+        {
+          "id": "P1C04_BILBO",
+          "label": "Bilbo reunion and personal Ring history",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C04_COUNCIL",
+          "label": "Council conflict establishes the Fellowship mission",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC",
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C04_FELLOWSHIP_FORMS",
+          "label": "The Fellowship forms and prepares to depart",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C04_RIVENDELL_LIFE",
+          "label": "Rivendell functions as a social/exploration refuge rather than a corridor",
+          "canon_class": "FILM_EXTENDED",
+          "treatment": [
+            "EXPLORATION",
+            "AMBIENT_WORLD",
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PARTIAL"
+        }
+      ]
+    },
+    {
+      "chapter": "P1C05",
+      "route": "FrodoMain",
+      "region": "Fellowship road / Caradhras / West Gate",
+      "anchors": [
+        {
+          "id": "P1C05_FELLOWSHIP_TRAVEL",
+          "label": "Fellowship travel and camp relationships",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION",
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C05_CREBAIN",
+          "label": "Crebain surveillance forces concealment and changes route tension",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "STEALTH",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C05_CARADHRAS",
+          "label": "Caradhras snow passage fails under escalating danger",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "FOUNDATION"
+        },
+        {
+          "id": "P1C05_WEST_GATE",
+          "label": "Approach to Moria and the West Gate/lake threshold",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "EXPLORATION",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "FOUNDATION"
+        }
+      ]
+    },
+    {
+      "chapter": "P1C06",
+      "route": "FrodoMain",
+      "region": "Moria",
+      "anchors": [
+        {
+          "id": "P1C06_WATCHER",
+          "label": "Watcher at the West Gate seals the outside route",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "COMBAT",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C06_DARK_JOURNEY",
+          "label": "The Fellowship discovers the scale and death of Moria",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION",
+            "AMBIENT_WORLD"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C06_BALIN_TOMB",
+          "label": "Balin's Tomb discovery and escalating attack",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE",
+            "COMBAT"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C06_TROLL",
+          "label": "Cave Troll encounter during the Moria assault",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "COMBAT"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C06_BALROG",
+          "label": "Balrog reveal and desperate escape",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C06_BRIDGE",
+          "label": "Bridge of Khazad-dum loss and forced escape",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        }
+      ]
+    },
+    {
+      "chapter": "P1C07",
+      "route": "FrodoMain",
+      "region": "Lothlorien",
+      "anchors": [
+        {
+          "id": "P1C07_GRIEF",
+          "label": "The Fellowship processes the loss after Moria",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE",
+            "AMBIENT_WORLD"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C07_GALADRIEL",
+          "label": "Galadriel's psychological pressure and Ring temptation",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C07_MIRROR",
+          "label": "Mirror vision sequence deepens Frodo's burden",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C07_FAREWELL",
+          "label": "Gifts/farewell and departure by river",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE",
+            "PLAYABLE"
+          ],
+          "coverage": "PARTIAL"
+        }
+      ]
+    },
+    {
+      "chapter": "P1C08",
+      "route": "FrodoMain",
+      "region": "Anduin / Amon Hen",
+      "anchors": [
+        {
+          "id": "P1C08_ANDUIN",
+          "label": "River journey and companion tension",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION",
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C08_ARGONATH",
+          "label": "Argonath landmark reveal establishes scale and destination pressure",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "FOUNDATION"
+        },
+        {
+          "id": "P1C08_BOROMIR_PRESSURE",
+          "label": "Boromir's Ring pressure culminates in confrontation with Frodo",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "SOCIAL_INTERACTIVE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C08_URUK_ATTACK",
+          "label": "Uruk-hai attack fractures the Fellowship",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "COMBAT",
+            "PLAYABLE"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C08_BOROMIR_DEFENSE",
+          "label": "Boromir defends Merry and Pippin and falls",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "COMBAT",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C08_FRODO_SAM",
+          "label": "Frodo chooses to continue and Sam joins him",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PLAYABLE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1C08_SPLIT",
+          "label": "The Fellowship splits into the routes that lead into Part II",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        }
+      ]
+    },
+    {
+      "chapter": "P1C01",
+      "route": "GandalfParallel",
+      "region": "Isengard / Orthanc",
+      "anchors": [
+        {
+          "id": "P1G01_ISENGARD_COUNSEL",
+          "label": "Gandalf seeks Saruman's counsel",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PARALLEL_PLAYABLE",
+            "SOCIAL_INTERACTIVE"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1G01_BETRAYAL",
+          "label": "Saruman reveals his betrayal",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PARALLEL_PLAYABLE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1G01_CAPTIVITY",
+          "label": "Gandalf is imprisoned on Orthanc while Isengard changes below",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PARALLEL_PLAYABLE",
+            "EXPLORATION",
+            "AMBIENT_WORLD"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
+          "id": "P1G01_ESCAPE",
+          "label": "Gandalf escapes and the route later rejoins the main chronology",
+          "canon_class": "FILM_CORE",
+          "treatment": [
+            "PARALLEL_PLAYABLE",
+            "INTERACTIVE_CINEMATIC"
+          ],
+          "coverage": "PARTIAL"
+        }
+      ]
+    }
+  ]
+}

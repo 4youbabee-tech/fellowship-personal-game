@@ -25,6 +25,35 @@ Every authored story beat should be tagged mentally as one of:
 - LORE_COMPATIBLE: book/lore material that does not contradict the film route.
 - ORIGINAL_GAP_FILL: original game content placed in a believable unused time/location.
 
+## 1A. Experiential adaptation rule
+
+The film continuity is not only a reference for names and locations; it is the **story spine the player is meant to live through**.
+
+For every major film anchor, design should ask:
+- what does the player physically do here,
+- what can be explored before/after it,
+- which character viewpoint is appropriate,
+- whether the moment is best expressed as traversal, stealth, combat, social interaction, interactive cinematic, or a short non-playable cinematic,
+- what emotional/story information must survive the conversion into gameplay.
+
+The project should not invent a replacement main story merely because games need interaction. Instead, interaction is built **around and through** the known story.
+
+Player freedom belongs primarily between fixed story anchors:
+- explore,
+- speak with inhabitants,
+- discover optional details,
+- take side routes,
+- experience ambient life,
+- perform compatible side content.
+
+That freedom must not:
+- remove a required film outcome,
+- reorder the major chronology without an explicit design decision,
+- let optional content overwrite the Ring quest,
+- turn important emotional beats into disposable filler.
+
+`Data/FilmExperiencePlan.json` is the machine-readable coverage map for Part I high-level film anchors. It records treatment and coverage state without reproducing screenplay text.
+
 ## 2. Narrative principle
 
 Frodo is the Ring-bearer and the central line of the Ring quest, but The Lord of the Rings is an ensemble story.

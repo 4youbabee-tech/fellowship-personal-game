@@ -28,3 +28,6 @@ jobs:
 
       - name: Validate project structure
         run: python Scripts/pre_unreal_validate.py
+
+      - name: Validate project governor
+        run: python Scripts/project_governor.py

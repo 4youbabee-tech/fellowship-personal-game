@@ -193,6 +193,144 @@ if missing_architecture_entries:
 if stale_architecture_entries:
     fail("SourceArchitecturePlan references inactive/missing runtime files: " + ", ".join(stale_architecture_entries))
 
+# PG-020: permanent project requirement memory must be structured and auditable.
+requirements_path = ROOT / "Data" / "ProjectRequirements.json"
+requirements_data = {}
+if not requirements_path.exists():
+    fail("Project requirements ledger missing: Data/ProjectRequirements.json")
+else:
+    try:
+        requirements_data = json.loads(read(requirements_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/ProjectRequirements.json: {exc}")
+
+allowed_requirement_statuses = set(guard_rules.get("requirement_status_values", []))
+allowed_requirement_priorities = set(guard_rules.get("requirement_priority_values", []))
+requirement_ids: set[str] = set()
+for index, item in enumerate(requirements_data.get("requirements", []), start=1):
+    req_id = str(item.get("id") or "").strip()
+    title = str(item.get("title") or "").strip()
+    intent = str(item.get("intent") or "").strip()
+    status = str(item.get("status") or "").strip()
+    priority = str(item.get("priority") or "").strip()
+    acceptance = item.get("acceptance_criteria", [])
+    missing_work = item.get("missing_work", [])
+
+    if not req_id or not title or not intent:
+        fail(f"ProjectRequirements entry {index} is missing id/title/intent")
+        continue
+    if req_id in requirement_ids:
+        fail(f"Duplicate project requirement id: {req_id}")
+    requirement_ids.add(req_id)
+    if allowed_requirement_statuses and status not in allowed_requirement_statuses:
+        fail(f"Project requirement {req_id} uses unknown status '{status}'")
+    if allowed_requirement_priorities and priority not in allowed_requirement_priorities:
+        fail(f"Project requirement {req_id} uses unknown priority '{priority}'")
+    if not isinstance(acceptance, list) or not acceptance:
+        fail(f"Project requirement {req_id} has no acceptance criteria")
+    if status in {"REQUESTED", "PLANNED", "PARTIAL", "DEFERRED"} and not isinstance(missing_work, list):
+        fail(f"Open project requirement {req_id} must track missing_work")
+
+for required_req in [
+    "REQ-MEM-001", "REQ-WORLD-001", "REQ-WORLD-002", "REQ-NPC-001", "REQ-NPC-002",
+    "REQ-NPC-003", "REQ-SAVE-001", "REQ-PERF-001",
+    "REQ-VISION-001", "REQ-EXP-001", "REQ-EXP-002", "REQ-COVERAGE-001",
+    "REQ-GOV-001", "REQ-QUALITY-001", "REQ-QUALITY-002"
+]:
+    if required_req not in requirement_ids:
+        fail(f"Permanent requirement ledger missing critical requirement: {required_req}")
+
+# PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
+living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
+living_world_data = {}
+if not living_world_path.exists():
+    fail("Living world feature plan missing: Data/LivingWorldFeaturePlan.json")
+else:
+    try:
+        living_world_data = json.loads(read(living_world_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/LivingWorldFeaturePlan.json: {exc}")
+
+expected_lw_phases = set(guard_rules.get("living_world_phase_ids", []))
+actual_lw_phases = {str(phase.get("id") or "").strip() for phase in living_world_data.get("phases", [])}
+missing_lw_phases = sorted(expected_lw_phases - actual_lw_phases)
+if missing_lw_phases:
+    fail("LivingWorldFeaturePlan missing phases: " + ", ".join(missing_lw_phases))
+
+lw_feature_ids: set[str] = set()
+for phase in living_world_data.get("phases", []):
+    phase_id = str(phase.get("id") or "").strip()
+    for feature in phase.get("features", []):
+        feature_id = str(feature.get("id") or "").strip()
+        status = str(feature.get("status") or "").strip()
+        if not feature_id:
+            fail(f"Living world phase {phase_id} has a feature without id")
+            continue
+        if feature_id in lw_feature_ids:
+            fail(f"Duplicate living world feature id: {feature_id}")
+        lw_feature_ids.add(feature_id)
+        if not status:
+            fail(f"Living world feature {feature_id} has no status")
+
+for required_feature in [
+    "LW-AWARENESS", "LW-ROUTINES", "LW-SOCIAL-PAUSE",
+    "NPC-CONVERSATION-RUNTIME", "NPC-MEMORY-SCHEMA",
+    "WORLD-MICRO-EVENTS", "WORLD-FAUNA", "WORLD-MOTION",
+    "NPC-KNOWLEDGE-GUARD"
+]:
+    if required_feature not in lw_feature_ids:
+        fail(f"Living world plan missing required feature contract: {required_feature}")
+
+# PG-022: film-first adaptation must keep machine-readable film-to-game coverage.
+film_plan_path = ROOT / "Data" / "FilmExperiencePlan.json"
+film_plan = {}
+if not film_plan_path.exists():
+    fail("Film experience plan missing: Data/FilmExperiencePlan.json")
+else:
+    try:
+        film_plan = json.loads(read(film_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/FilmExperiencePlan.json: {exc}")
+
+film_chapters = film_plan.get("chapters", [])
+covered_frodo_chapters: set[str] = set()
+covered_routes: set[str] = set()
+film_anchor_ids: set[str] = set()
+for index, chapter_entry in enumerate(film_chapters, start=1):
+    chapter = str(chapter_entry.get("chapter") or "").strip()
+    route = str(chapter_entry.get("route") or "").strip()
+    anchors = chapter_entry.get("anchors", [])
+    if not chapter or not route or not isinstance(anchors, list) or not anchors:
+        fail(f"FilmExperiencePlan chapter entry {index} is incomplete")
+        continue
+    covered_routes.add(route)
+    if route == "FrodoMain":
+        covered_frodo_chapters.add(chapter)
+    for anchor in anchors:
+        anchor_id = str(anchor.get("id") or "").strip()
+        label = str(anchor.get("label") or "").strip()
+        canon_class = str(anchor.get("canon_class") or "").strip()
+        coverage = str(anchor.get("coverage") or "").strip()
+        treatment = anchor.get("treatment", [])
+        if not anchor_id or not label or not canon_class or not coverage or not treatment:
+            fail(f"FilmExperiencePlan anchor in {chapter}/{route} is incomplete")
+            continue
+        if anchor_id in film_anchor_ids:
+            fail(f"Duplicate FilmExperiencePlan anchor id: {anchor_id}")
+        film_anchor_ids.add(anchor_id)
+        if canon_class not in set(guard_rules.get("canon_classes", [])):
+            fail(f"FilmExperiencePlan anchor {anchor_id} uses unknown canon class '{canon_class}'")
+
+expected_film_chapters = set(guard_rules.get("film_experience_required_chapters", []))
+missing_film_chapters = sorted(expected_film_chapters - covered_frodo_chapters)
+if missing_film_chapters:
+    fail("FilmExperiencePlan missing FrodoMain chapter coverage: " + ", ".join(missing_film_chapters))
+
+expected_film_routes = set(guard_rules.get("film_experience_required_routes", []))
+missing_film_routes = sorted(expected_film_routes - covered_routes)
+if missing_film_routes:
+    fail("FilmExperiencePlan missing required routes: " + ", ".join(missing_film_routes))
+
 approved_chapters = set(guard_rules.get("runtime_chapters", []))
 approved_routes = set(guard_rules.get("approved_routes", []))
 approved_canon_classes = set(guard_rules.get("canon_classes", []))

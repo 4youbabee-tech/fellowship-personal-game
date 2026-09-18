@@ -159,6 +159,24 @@ This converts failures into permanent project knowledge.
 
 **Migration rule:** physical folder migration must be a dedicated maintenance change. It must update include paths, validator path lookups and the architecture manifest together, then pass static validation and the real UE4.27.2 self-hosted build before acceptance.
 
+### PG-020 — User requirements must survive lost chats and developer handoffs
+**Risk:** a meaningful user request exists only in conversation memory, then disappears when a chat is deleted, context is truncated or a new programmer takes over.
+
+**Contract:** `Data/ProjectRequirements.json` is the permanent machine-readable requirement ledger. Each meaningful request has a stable ID, intent, priority, status, evidence, missing work and acceptance criteria.
+
+**Guard:** Pre-Unreal Validation validates unique requirement IDs, approved statuses/priorities and required acceptance criteria. Critical long-lived requirements such as project memory, living world, NPC intelligence, save continuity and performance must remain present.
+
+**Process rule:** implementation/checkpoint changes must update the relevant requirement entry instead of silently leaving the ledger stale.
+
+### PG-021 — Living-world/NPC intelligence scope must remain explicit
+**Risk:** the project says "living world" or "smart NPCs" without distinguishing foundations from the much larger unfinished target, causing future developers to assume social pauses or authored dialogue already satisfy the requirement.
+
+**Contract:** `Docs/LIVING_WORLD_AI_BLUEPRINT.md` defines the target behavior and `Data/LivingWorldFeaturePlan.json` records phases LW0-LW6 and individual feature status.
+
+**Guard:** Pre-Unreal Validation requires all living-world phases and critical feature contracts including routines, NPC conversation runtime, memory schema, micro-events, fauna/environment motion and knowledge guards.
+
+**Acceptance rule:** current ambient routines/awareness/social pauses are foundations only. NPC-to-NPC dialogue, persistent named-NPC memory/relationships and bounded dialogue intelligence may not be called implemented until runtime evidence exists.
+
 ## What Guardian must never do automatically
 
 - change canon,

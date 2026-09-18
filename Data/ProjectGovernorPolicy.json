@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "policy_id": "FELLOWSHIP_PROJECT_GOVERNOR_V1",
+  "purpose": "Deterministic project governor for requirement memory, conflict resolution, quality gates, regression control and low-spec delivery discipline.",
+  "hard_invariants": [
+    {
+      "id": "INV-MEMORY",
+      "description": "Meaningful user requirements and decisions must be persisted in repository data; chat history is never the sole source of truth.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-STORY",
+      "description": "Peter Jackson film continuity remains the primary story spine unless the user explicitly records a product-direction override.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-INTEGRITY",
+      "description": "A change must not knowingly introduce build failure, crash, save corruption, story deadlock or route-state loss.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-TRAVERSAL",
+      "description": "Intended playable routes and required story anchors must not be accepted while blocked, trapping the player, or unreachable.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-PERFORMANCE",
+      "description": "Features must remain compatible with the target laptop profile: Windows DX11, 720p, Low/Medium, 30 FPS floor target, 8 GB RAM, roughly 2 GB VRAM-class GPU.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-PROOF",
+      "description": "Static/compile success must never be presented as PIE, device, performance, pacing or visual acceptance.",
+      "auto_override": false
+    }
+  ],
+  "conflict_status_values": [
+    "OPEN",
+    "RESOLVED",
+    "WAIVED"
+  ],
+  "decision_status_values": [
+    "PROPOSED",
+    "ACCEPTED",
+    "SUPERSEDED"
+  ],
+  "conflict_rules": [
+    "A new request never silently deletes or rewrites an older requirement.",
+    "If two active requirements conflict, the conflict must be explicitly recorded and resolved before either can be treated as fully accepted.",
+    "Hard invariants cannot be silently overridden by implementation convenience.",
+    "A user may explicitly change product direction; that override must be recorded as a decision and linked to affected requirements.",
+    "When no explicit user override exists, prefer preserving story/progress integrity and target-device playability over visual scope or feature quantity.",
+    "Prefer the smallest change that satisfies the request without destabilizing already validated behavior."
+  ],
+  "decision_priority_order": [
+    "USER_EXPLICIT_DIRECTION",
+    "BUILD_SAVE_STORY_INTEGRITY",
+    "FILM_CANON_AND_CHRONOLOGY",
+    "TARGET_DEVICE_PERFORMANCE",
+    "PLAYABILITY_AND_TRAVERSAL",
+    "PLAYER_CLARITY_AND_PACING",
+    "LIVING_WORLD_DEPTH",
+    "VISUAL_POLISH",
+    "OPTIONAL_SCOPE"
+  ],
+  "required_quality_gate_ids": [
+    "STATIC",
+    "COMPILE",
+    "BOOT",
+    "TRAVERSAL",
+    "PERSISTENCE",
+    "PERFORMANCE",
+    "PACING",
+    "VISUAL"
+  ],
+  "quality_gate_status_values": [
+    "NOT_TESTED",
+    "PARTIAL",
+    "PASSED",
+    "FAILED",
+    "BLOCKED"
+  ],
+  "acceptance_rule": "A region or feature may only be called accepted at the proof levels actually recorded. Fun/pacing and visual quality require human play/review evidence; they cannot be inferred from CI.",
+  "regression_rule": "If a previously passed gate regresses, feature expansion stops until the smallest failing layer is repaired and the failed gate is rerun."
+}

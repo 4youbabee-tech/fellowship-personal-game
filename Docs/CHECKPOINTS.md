@@ -245,6 +245,35 @@
 - This is a governance/maintenance checkpoint only. It does **not** claim the physical source-folder migration has happened and it does not change gameplay.
 - Physical migration remains a dedicated follow-up maintenance change after the current functional smoke-test gate is healthy.
 
+## CP30B — Permanent Requirement Memory + Living World Intelligence Contract
+- Added `Docs/PROJECT_MEMORY_SYSTEM.md` so project continuity no longer depends on chat history or one programmer's memory.
+- Added `Data/ProjectRequirements.json` as a stable-ID ledger for user requests, current status, evidence, missing work and acceptance criteria.
+- Recovered and explicitly recorded major long-lived requirements for living-world traversal, rich geography, NPC routines/social life, NPC-to-NPC conversation, bounded dialogue creativity, persistent named-NPC memory, save continuity and target-laptop performance.
+- Added `Docs/LIVING_WORLD_AI_BLUEPRINT.md` defining the intended living-world/NPC intelligence architecture and its low-spec boundaries.
+- Added `Data/LivingWorldFeaturePlan.json` with phases LW0-LW6 so future developers can distinguish existing foundations from planned work.
+- Added Guardian PG-020/PG-021 and static checks for requirement-ledger integrity and living-world plan completeness.
+- Existing ambient NPC routines, awareness, social pauses and proxy acting are recorded as foundations only; full NPC conversation/memory/intelligence is **not** falsely claimed implemented.
+- This checkpoint is governance/design memory. It does not open a new gameplay feature while the current functional F9/F8/chapter/device gate remains pending.
+
+## CP30C — Film-First Playable Experience Contract
+- Reaffirmed the product vision: the Peter Jackson film continuity is the story spine to be lived through, not replaced by a newly invented main plot.
+- Added `REQ-VISION-001`, `REQ-EXP-001`, `REQ-EXP-002` and `REQ-COVERAGE-001` to the permanent requirement ledger.
+- Added `Data/FilmExperiencePlan.json` with high-level Part I film anchors for P1C01-P1C08 plus the Gandalf/Isengard parallel route.
+- Each anchor records canon class, intended gameplay/presentation treatment and current coverage state without copying screenplay dialogue.
+- Added Guardian PG-022 so every runtime Part I chapter and required route must remain represented in the coverage plan.
+- Clarified the design rule that player freedom/exploration lives mainly between fixed story anchors and must not erase or reorder required film outcomes without an explicit recorded decision.
+- This checkpoint is a story/product-governance contract, not a claim that all film scenes are already implemented or visually accepted.
+
+## CP30D — Project Governor / Quality and Conflict Control
+- Added `Docs/PROJECT_GOVERNOR.md` as the human-readable control contract.
+- Added `Data/ProjectGovernorPolicy.json` with hard invariants for project memory, film story, integrity, traversal, target-device performance and proof-level honesty.
+- Added `Data/ProjectDecisions.json` so conflicting requests are resolved explicitly rather than one silently replacing another.
+- Recorded current accepted tradeoffs for film anchors versus exploration freedom, living-world richness versus low-spec performance, and source reorganization versus the active functional gate.
+- Added `Data/ExperienceQualityGates.json` for P1C01-P1C08 plus Gandalf/Isengard with STATIC, COMPILE, BOOT, TRAVERSAL, PERSISTENCE, PERFORMANCE, PACING and VISUAL evidence states.
+- Added `Scripts/project_governor.py` and wired it into Pre-Unreal Validation.
+- Added permanent requirements for governor continuity, accessible required gameplay spaces and human pacing/enjoyment review.
+- The Governor does not claim zero bugs or automatically judge fun; it forces uncertainty, conflicts and missing evidence to remain visible and blocks malformed/contradictory structured state.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
