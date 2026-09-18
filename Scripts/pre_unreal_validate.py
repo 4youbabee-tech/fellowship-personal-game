@@ -433,6 +433,163 @@ unscheduled_profiles = sorted(profile_ids - scheduled_profiles)
 if unscheduled_profiles:
     fail("NPCSocialModel profiles missing schedule assignment: " + ", ".join(unscheduled_profiles))
 
+# PG-025/028/029/030: remote-safe living-world contracts must stay bounded and coherent.
+npc_conversation_path = ROOT / "Data" / "NPCConversationPlan.json"
+npc_conversation = {}
+if not npc_conversation_path.exists():
+    fail("NPC conversation plan missing: Data/NPCConversationPlan.json")
+else:
+    try:
+        npc_conversation = json.loads(read(npc_conversation_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/NPCConversationPlan.json: {exc}")
+
+npc_profile_ids = {str(p.get("id") or "").strip() for p in npc_social.get("profiles", [])}
+intent_ids: set[str] = set()
+for item in npc_conversation.get("intent_contracts", []):
+    intent_id = str(item.get("id") or "").strip()
+    if not intent_id:
+        fail("NPCConversationPlan intent contract missing id")
+        continue
+    if intent_id in intent_ids:
+        fail(f"Duplicate NPCConversationPlan intent id: {intent_id}")
+    intent_ids.add(intent_id)
+
+conversation_set_ids: set[str] = set()
+for convo in npc_conversation.get("conversation_sets", []):
+    convo_id = str(convo.get("id") or "").strip()
+    if not convo_id:
+        fail("NPCConversationPlan conversation set missing id")
+        continue
+    if convo_id in conversation_set_ids:
+        fail(f"Duplicate NPCConversationPlan conversation set id: {convo_id}")
+    conversation_set_ids.add(convo_id)
+    for profile_id in convo.get("participant_filters", {}).get("allowed_profiles", []):
+        if profile_id not in npc_profile_ids:
+            fail(f"NPCConversationPlan {convo_id} references unknown profile {profile_id}")
+    for intent_id in convo.get("intents", []):
+        if intent_id not in intent_ids:
+            fail(f"NPCConversationPlan {convo_id} references unknown intent {intent_id}")
+    if int(convo.get("max_exchange_turns", 0)) <= 0:
+        fail(f"NPCConversationPlan {convo_id} must have positive max_exchange_turns")
+
+missing_conversation_sets = sorted(set(guard_rules.get("npc_conversation_required_sets", [])) - conversation_set_ids)
+if missing_conversation_sets:
+    fail("NPCConversationPlan missing required sets: " + ", ".join(missing_conversation_sets))
+
+speaker_rules = npc_conversation.get("speaker_rules", {})
+if int(speaker_rules.get("max_active_conversations_near_player", 0)) < 1:
+    fail("NPCConversationPlan must allow and cap near-player conversations")
+if int(speaker_rules.get("max_participants_per_conversation", 0)) != 2:
+    fail("NPCConversationPlan currently requires two-participant conversations")
+if not speaker_rules.get("story_critical_preempts_ambient", False):
+    fail("NPCConversationPlan must let story-critical dialogue preempt ambient chatter")
+if not speaker_rules.get("danger_override_preempts_social", False):
+    fail("NPCConversationPlan must let danger override ambient social chatter")
+
+npc_memory_path = ROOT / "Data" / "NPCMemoryPlan.json"
+npc_memory = {}
+if not npc_memory_path.exists():
+    fail("NPC memory plan missing: Data/NPCMemoryPlan.json")
+else:
+    try:
+        npc_memory = json.loads(read(npc_memory_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/NPCMemoryPlan.json: {exc}")
+
+memory_template_ids: set[str] = set()
+for item in npc_memory.get("memory_templates", []):
+    memory_id = str(item.get("id") or "").strip()
+    tier = str(item.get("tier") or "").strip()
+    scope = str(item.get("default_scope") or "").strip()
+    if not memory_id:
+        fail("NPCMemoryPlan memory template missing id")
+        continue
+    if memory_id in memory_template_ids:
+        fail(f"Duplicate NPCMemoryPlan memory template id: {memory_id}")
+    memory_template_ids.add(memory_id)
+    if tier not in set(npc_memory.get("memory_tiers", [])):
+        fail(f"NPCMemoryPlan {memory_id} uses unknown tier '{tier}'")
+    if scope not in set(npc_memory.get("persistence_scopes", [])):
+        fail(f"NPCMemoryPlan {memory_id} uses unknown scope '{scope}'")
+
+missing_memory_templates = sorted(set(guard_rules.get("npc_memory_required_templates", [])) - memory_template_ids)
+if missing_memory_templates:
+    fail("NPCMemoryPlan missing required templates: " + ", ".join(missing_memory_templates))
+
+memory_policies = npc_memory.get("policies", {})
+for key in ["store_compact_event_ids_only", "never_persist_raw_dialogue_text", "aliases_share_one_identity_memory", "mandatory_story_outcomes_are_immutable"]:
+    if not memory_policies.get(key, False):
+        fail(f"NPCMemoryPlan policy must remain true: {key}")
+save_contract = npc_memory.get("save_contract", {})
+soft_budget = int(save_contract.get("estimated_soft_budget_kb", 0))
+if soft_budget <= 0 or soft_budget > 256:
+    fail("NPCMemoryPlan save soft budget must be within 1..256 KB")
+if not save_contract.get("route_partitioned", False) or not save_contract.get("versioned_schema", False):
+    fail("NPCMemoryPlan save contract must be route-partitioned and versioned")
+
+living_event_path = ROOT / "Data" / "LivingWorldEventPlan.json"
+living_events = {}
+if not living_event_path.exists():
+    fail("Living world event plan missing: Data/LivingWorldEventPlan.json")
+else:
+    try:
+        living_events = json.loads(read(living_event_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/LivingWorldEventPlan.json: {exc}")
+
+event_ids: set[str] = set()
+for event in living_events.get("event_templates", []):
+    event_id = str(event.get("id") or "").strip()
+    event_type = str(event.get("type") or "").strip()
+    if not event_id:
+        fail("LivingWorldEventPlan event template missing id")
+        continue
+    if event_id in event_ids:
+        fail(f"Duplicate LivingWorldEventPlan event id: {event_id}")
+    event_ids.add(event_id)
+    if event_type not in set(living_events.get("event_types", [])):
+        fail(f"LivingWorldEventPlan {event_id} uses unknown type '{event_type}'")
+    if not event.get("story_safe", False):
+        fail(f"LivingWorldEventPlan event must be story-safe: {event_id}")
+
+covered_event_chapters = {str(item.get("chapter") or "").strip() for item in living_events.get("chapter_contracts", [])}
+missing_event_chapters = sorted(set(guard_rules.get("living_world_event_required_chapters", [])) - covered_event_chapters)
+if missing_event_chapters:
+    fail("LivingWorldEventPlan missing chapter contracts: " + ", ".join(missing_event_chapters))
+event_budget = living_events.get("region_budgets", {})
+if int(event_budget.get("max_active_micro_events_near_player", 0)) > 4:
+    fail("LivingWorldEventPlan active micro-event cap exceeds low-spec budget")
+if int(event_budget.get("max_active_fauna_groups_near_player", 0)) > 2:
+    fail("LivingWorldEventPlan fauna cap exceeds low-spec budget")
+if str(event_budget.get("offscreen_simulation") or "") != "STATE_ONLY":
+    fail("LivingWorldEventPlan offscreen simulation must remain STATE_ONLY")
+
+bounded_dialogue_path = ROOT / "Data" / "BoundedDialoguePlan.json"
+bounded_dialogue = {}
+if not bounded_dialogue_path.exists():
+    fail("Bounded dialogue plan missing: Data/BoundedDialoguePlan.json")
+else:
+    try:
+        bounded_dialogue = json.loads(read(bounded_dialogue_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/BoundedDialoguePlan.json: {exc}")
+
+bounded_intents = {str(item.get("intent") or "").strip() for item in bounded_dialogue.get("intent_policies", [])}
+missing_bounded_intents = sorted(set(guard_rules.get("bounded_dialogue_required_intents", [])) - bounded_intents)
+if missing_bounded_intents:
+    fail("BoundedDialoguePlan missing required intents: " + ", ".join(missing_bounded_intents))
+dialogue_limits = bounded_dialogue.get("limits", {})
+if int(dialogue_limits.get("max_words_ambient_line", 0)) > 30:
+    fail("BoundedDialoguePlan ambient line limit exceeds project bound")
+if not dialogue_limits.get("deterministic_fallback_required", False):
+    fail("BoundedDialoguePlan must require deterministic fallback")
+if int(dialogue_limits.get("generation_timeout_ms_target", -1)) != 0:
+    fail("BoundedDialoguePlan must not require runtime generation latency")
+knowledge_guard = bounded_dialogue.get("knowledge_guard", {})
+if knowledge_guard.get("default") != "DENY_UNLISTED" or knowledge_guard.get("cross_route_knowledge_default") != "DENY":
+    fail("BoundedDialoguePlan knowledge guard must default-deny unlisted and cross-route knowledge")
+
 approved_chapters = set(guard_rules.get("runtime_chapters", []))
 approved_routes = set(guard_rules.get("approved_routes", []))
 approved_canon_classes = set(guard_rules.get("canon_classes", []))
