@@ -123,6 +123,18 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
 void AShirePrototypeWorldBuilder::BeginPlay()
 {
     Super::BeginPlay();
+
+    ProductionTreeTrunkMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShTreeTrunk.SM_ShTreeTrunk"));
+    ProductionTreeCanopyMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShTreeCanopy.SM_ShTreeCanopy"));
+    ProductionRockMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShRock.SM_ShRock"));
+    ProductionCrateMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShCrate.SM_ShCrate"));
+    ProductionSignpostMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShSignpost.SM_ShSignpost"));
+    ProductionBarrelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShBarrel.SM_ShBarrel"));
+
+    if (ProductionTreeTrunkMesh) DistantTreeTrunkInstances->SetStaticMesh(ProductionTreeTrunkMesh);
+    if (ProductionTreeCanopyMesh) DistantTreeCanopyInstances->SetStaticMesh(ProductionTreeCanopyMesh);
+    if (ProductionRockMesh) RockInstances->SetStaticMesh(ProductionRockMesh);
+
     BuildPrototypeWorld();
 
     if (UGameInstance* GI = GetGameInstance())
@@ -229,11 +241,17 @@ void AShirePrototypeWorldBuilder::SpawnTree(const FVector& Location, float Scale
     const FLinearColor LeafMid(0.105f, 0.37f, 0.085f);
     const FLinearColor LeafLight(0.16f, 0.43f, 0.11f);
 
+    if (ProductionTreeTrunkMesh && ProductionTreeCanopyMesh)
+    {
+        SpawnShape(ProductionTreeTrunkMesh, Location, FVector(Scale), Bark, FRotator::ZeroRotator, true);
+        SpawnShape(ProductionTreeCanopyMesh, Location + FVector(0.0f, 0.0f, 205.0f * Scale),
+            FVector(Scale), LeafMid,
+            FRotator(0.0f, FMath::Fmod(Location.X * 0.011f - Location.Y * 0.019f, 360.0f), 0.0f), false);
+        return;
+    }
+
     SpawnShape(CylinderMesh, Location + FVector(0.0f, 0.0f, 92.0f * Scale),
         FVector(0.15f, 0.15f, 0.92f) * Scale, Bark, FRotator::ZeroRotator, true);
-
-    // Overlapping crowns give the low-cost prototype a softer broad-leaf silhouette
-    // instead of reading as one sphere on one cylinder.
     SpawnShape(SphereMesh, Location + FVector(-20.0f, -12.0f, 205.0f) * Scale,
         FVector(0.78f, 0.72f, 0.62f) * Scale, LeafDark, FRotator::ZeroRotator, false);
     SpawnShape(SphereMesh, Location + FVector(28.0f, 8.0f, 222.0f) * Scale,
@@ -867,8 +885,16 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
         SpawnShape(CubeMesh,FVector(ShireLayout::FieldsX,Y,8),FVector(12.0f,0.10f,0.06f),
             FLinearColor(0.30f,0.22f,0.075f),FRotator::ZeroRotator,false);
     }
-    SpawnShape(CylinderMesh,FVector(8900,-1180,36),FVector(0.48f,0.48f,0.40f),FLinearColor(0.64f,0.48f,0.16f));
-    SpawnShape(CylinderMesh,FVector(9020,-1110,36),FVector(0.44f,0.44f,0.38f),FLinearColor(0.64f,0.48f,0.16f));
+    if (ProductionBarrelMesh)
+    {
+        SpawnShape(ProductionBarrelMesh,FVector(8900,-1180,28),FVector(0.82f),FLinearColor(0.42f,0.24f,0.08f));
+        SpawnShape(ProductionBarrelMesh,FVector(9020,-1110,28),FVector(0.76f),FLinearColor(0.42f,0.24f,0.08f));
+    }
+    else
+    {
+        SpawnShape(CylinderMesh,FVector(8900,-1180,36),FVector(0.48f,0.48f,0.40f),FLinearColor(0.64f,0.48f,0.16f));
+        SpawnShape(CylinderMesh,FVector(9020,-1110,36),FVector(0.44f,0.44f,0.38f),FLinearColor(0.64f,0.48f,0.16f));
+    }
 
     // Orchard / overlook gives exploration space before the road becomes threatening.
     for(int32 Index=0; Index<9; ++Index)
@@ -1418,18 +1444,29 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
         {
             const float Y = static_cast<float>(Side) * (2450.0f + Wave * 0.35f);
             const float S = 0.65f + 0.09f * static_cast<float>((Index + (Side > 0 ? 1 : 0)) % 4);
-            DistantTreeTrunkInstances->AddInstance(FTransform(
-                FRotator::ZeroRotator,
-                FVector(X, Y, 78.0f * S),
-                FVector(0.12f, 0.12f, 0.78f) * S));
-            DistantTreeCanopyInstances->AddInstance(FTransform(
-                FRotator(0.0f, static_cast<float>((Index * 37) % 360), 0.0f),
-                FVector(X + 18.0f, Y, 190.0f * S),
-                FVector(0.70f, 0.62f, 0.58f) * S));
-            DistantTreeCanopyInstances->AddInstance(FTransform(
-                FRotator(0.0f, static_cast<float>((Index * 19 + 70) % 360), 0.0f),
-                FVector(X - 28.0f, Y + 22.0f, 212.0f * S),
-                FVector(0.52f, 0.48f, 0.45f) * S));
+            if (ProductionTreeTrunkMesh && ProductionTreeCanopyMesh)
+            {
+                DistantTreeTrunkInstances->AddInstance(FTransform(
+                    FRotator(0.0f, static_cast<float>((Index * 29) % 360), 0.0f),
+                    FVector(X, Y, 0.0f), FVector(S * 0.72f)));
+                DistantTreeCanopyInstances->AddInstance(FTransform(
+                    FRotator(0.0f, static_cast<float>((Index * 37) % 360), 0.0f),
+                    FVector(X, Y, 150.0f * S), FVector(S * 0.72f)));
+            }
+            else
+            {
+                DistantTreeTrunkInstances->AddInstance(FTransform(
+                    FRotator::ZeroRotator, FVector(X, Y, 78.0f * S),
+                    FVector(0.12f, 0.12f, 0.78f) * S));
+                DistantTreeCanopyInstances->AddInstance(FTransform(
+                    FRotator(0.0f, static_cast<float>((Index * 37) % 360), 0.0f),
+                    FVector(X + 18.0f, Y, 190.0f * S),
+                    FVector(0.70f, 0.62f, 0.58f) * S));
+                DistantTreeCanopyInstances->AddInstance(FTransform(
+                    FRotator(0.0f, static_cast<float>((Index * 19 + 70) % 360), 0.0f),
+                    FVector(X - 28.0f, Y + 22.0f, 212.0f * S),
+                    FVector(0.52f, 0.48f, 0.45f) * S));
+            }
         }
     }
 
@@ -1495,7 +1532,8 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(Crates); ++Index)
     {
-        SpawnShape(CubeMesh, Crates[Index], FVector(0.28f,0.28f,0.28f),
+        SpawnShape(ProductionCrateMesh ? ProductionCrateMesh : CubeMesh, Crates[Index],
+            ProductionCrateMesh ? FVector(0.58f) : FVector(0.28f,0.28f,0.28f),
             Index % 2 == 0 ? FLinearColor(0.34f,0.19f,0.075f) : FLinearColor(0.42f,0.27f,0.11f),
             FRotator(0.0f, static_cast<float>((Index * 23) % 45), 0.0f), false);
     }
@@ -1507,10 +1545,18 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(Signs); ++Index)
     {
         const FVector P = Signs[Index];
-        SpawnShape(CylinderMesh, P + FVector(0,0,78), FVector(0.055f,0.055f,0.78f),
-            FLinearColor(0.25f,0.13f,0.045f), FRotator::ZeroRotator, false);
-        SpawnShape(CubeMesh, P + FVector(0,0,130), FVector(0.58f,0.08f,0.14f),
-            FLinearColor(0.38f,0.22f,0.075f), FRotator(0, Index % 2 == 0 ? 18.0f : -16.0f, 0), false);
+        if (ProductionSignpostMesh)
+        {
+            SpawnShape(ProductionSignpostMesh, P, FVector(1.0f), FLinearColor(0.34f,0.20f,0.075f),
+                FRotator(0, Index % 2 == 0 ? 18.0f : -16.0f, 0), false);
+        }
+        else
+        {
+            SpawnShape(CylinderMesh, P + FVector(0,0,78), FVector(0.055f,0.055f,0.78f),
+                FLinearColor(0.25f,0.13f,0.045f), FRotator::ZeroRotator, false);
+            SpawnShape(CubeMesh, P + FVector(0,0,130), FVector(0.58f,0.08f,0.14f),
+                FLinearColor(0.38f,0.22f,0.075f), FRotator(0, Index % 2 == 0 ? 18.0f : -16.0f, 0), false);
+        }
     }
 }
 

@@ -32,6 +32,12 @@ private:
     UPROPERTY() UStaticMesh* SphereMesh;
     UPROPERTY() UStaticMesh* CylinderMesh;
     UPROPERTY() UStaticMesh* ConeMesh;
+    UPROPERTY() UStaticMesh* ProductionTreeTrunkMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionTreeCanopyMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionRockMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCrateMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionSignpostMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionBarrelMesh = nullptr;
     UPROPERTY() UMaterialInterface* BasicMaterial;
 
     UPROPERTY() USceneComponent* RuntimeRoot;

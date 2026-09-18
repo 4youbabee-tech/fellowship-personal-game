@@ -78,6 +78,7 @@ private:
     bool bProfileApplied = false;
     bool bDefeated = false;
     bool bEncounterActive = false;
+    bool bEncounterStateInitialized = false;
 
     void ApplyTypeProfile();
     bool IsEncounterAllowed() const;

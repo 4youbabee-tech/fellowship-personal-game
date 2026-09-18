@@ -11,3 +11,6 @@ Saved/
 *.suo
 *.xcodeproj
 *.xcworkspace
+
+# Generated locally from SourceAssets/Production by the one-click asset import pass.
+Content/Production/

@@ -10,6 +10,7 @@ set "PROJECT=%ROOT%\ShireJourney.uproject"
 set "UE_ROOT=C:\Program Files\Epic Games\UE_4.27"
 set "BUILD_BAT=%UE_ROOT%\Engine\Build\BatchFiles\Build.bat"
 set "EDITOR_EXE=%UE_ROOT%\Engine\Binaries\Win64\UE4Editor.exe"
+set "EDITOR_CMD_EXE=%UE_ROOT%\Engine\Binaries\Win64\UE4Editor-Cmd.exe"
 set "BUILD_LOG=%ROOT%\Saved\Logs\LastOneClickBuildFailure.txt"
 
 echo ============================================================
@@ -54,7 +55,7 @@ if not defined GIT_EXE (
 )
 
 if defined GIT_EXE (
-  echo [1/3] Updating develop from GitHub...
+  echo [1/4] Updating develop from GitHub...
   "%GIT_EXE%" fetch origin
   if errorlevel 1 goto :git_failed
   "%GIT_EXE%" checkout develop
@@ -62,17 +63,22 @@ if defined GIT_EXE (
   "%GIT_EXE%" pull --ff-only origin develop
   if errorlevel 1 goto :git_failed
 ) else (
-  echo [1/3] Git executable not found. Skipping automatic pull.
+  echo [1/4] Git executable not found. Skipping automatic pull.
   echo       Update with GitHub Desktop before the next run.
 )
 
 echo.
-echo [2/3] Building ShireJourneyEditor with UE4.27...
+echo [2/4] Building ShireJourneyEditor with UE4.27...
 call "%BUILD_BAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE
 if errorlevel 1 goto :build_failed
 
 echo.
-echo [3/3] Build succeeded. Launching Unreal Engine...
+echo [3/4] Importing production 3D assets into Unreal...
+"%EDITOR_CMD_EXE%" "%PROJECT%" -run=ShireProductionImport -unattended -nop4 -nosplash -NoSound
+if errorlevel 1 goto :asset_import_failed
+
+echo.
+echo [4/4] Build and asset import succeeded. Launching Unreal Engine...
 start "" "%EDITOR_EXE%" "%PROJECT%"
 exit /b 0
 
@@ -96,3 +102,10 @@ echo.
 echo Send LastOneClickBuildFailure.txt to ChatGPT and the source can be fixed.
 pause
 exit /b 30
+
+:asset_import_failed
+echo.
+echo ERROR: Production asset import failed.
+echo Send this console output to ChatGPT so the import layer can be fixed.
+pause
+exit /b 31

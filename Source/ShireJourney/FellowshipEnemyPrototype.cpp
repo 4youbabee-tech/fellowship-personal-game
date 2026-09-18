@@ -203,11 +203,12 @@ bool AFellowshipEnemyPrototype::IsEncounterAllowed() const
 
 void AFellowshipEnemyPrototype::SetEncounterActive(bool bActive)
 {
-    if (bEncounterActive == bActive)
+    if (bEncounterStateInitialized && bEncounterActive == bActive)
     {
         return;
     }
 
+    bEncounterStateInitialized = true;
     bEncounterActive = bActive;
     SetActorHiddenInGame(!bActive);
     SetActorEnableCollision(bActive && !bDefeated);

@@ -88,6 +88,37 @@ void AShireAmbientNPC::ApplyVisualStyle()
         return;
     }
 
+    auto TryMesh = [](UStaticMeshComponent* Component, const TCHAR* AssetPath) -> bool
+    {
+        if (!Component) return false;
+        if (UStaticMesh* Mesh = LoadObject<UStaticMesh>(nullptr, AssetPath))
+        {
+            Component->SetStaticMesh(Mesh);
+            return true;
+        }
+        return false;
+    };
+
+    bool bProductionHobbit = true;
+    bProductionHobbit = TryMesh(Torso, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Torso.SM_Hobbit_Torso")) && bProductionHobbit;
+    bProductionHobbit = TryMesh(Head, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Head.SM_Hobbit_Head")) && bProductionHobbit;
+    bProductionHobbit = TryMesh(Hair, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Hair.SM_Hobbit_Hair")) && bProductionHobbit;
+    bProductionHobbit = TryMesh(LeftArm, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm")) && bProductionHobbit;
+    TryMesh(RightArm, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm"));
+    bProductionHobbit = TryMesh(LeftLeg, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg")) && bProductionHobbit;
+    TryMesh(RightLeg, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg"));
+
+    if (bProductionHobbit)
+    {
+        Torso->SetRelativeScale3D(FVector(1));
+        Head->SetRelativeScale3D(FVector(1));
+        Hair->SetRelativeScale3D(FVector(1));
+        LeftArm->SetRelativeScale3D(FVector(1)); RightArm->SetRelativeScale3D(FVector(1));
+        LeftLeg->SetRelativeScale3D(FVector(1)); RightLeg->SetRelativeScale3D(FVector(1));
+        Head->SetRelativeLocation(FVector(0,0,101));
+        Hair->SetRelativeLocation(FVector(-2,0,111));
+    }
+
     const FLinearColor Coat(
         Random.FRandRange(0.18f, 0.42f),
         Random.FRandRange(0.22f, 0.46f),

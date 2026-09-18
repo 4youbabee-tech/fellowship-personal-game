@@ -8,5 +8,6 @@ public class ShireJourneyEditorTarget : TargetRules
         Type = TargetType.Editor;
         DefaultBuildSettings = BuildSettingsVersion.V2;
         ExtraModuleNames.Add("ShireJourney");
+        ExtraModuleNames.Add("ShireJourneyEditorTools");
     }
 }

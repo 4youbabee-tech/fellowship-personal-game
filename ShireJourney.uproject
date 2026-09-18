@@ -8,6 +8,11 @@
       "Name": "ShireJourney",
       "Type": "Runtime",
       "LoadingPhase": "Default"
+    },
+    {
+      "Name": "ShireJourneyEditorTools",
+      "Type": "Editor",
+      "LoadingPhase": "PostEngineInit"
     }
   ]
 }

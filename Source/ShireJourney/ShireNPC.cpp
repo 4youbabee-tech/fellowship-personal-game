@@ -267,6 +267,56 @@ void AShireNPC::ApplyPrototypeStyle()
         Hair = FLinearColor(0.30f, 0.18f, 0.08f);
     }
 
+    auto TryMesh = [](UStaticMeshComponent* Component, const TCHAR* AssetPath) -> bool
+    {
+        if (!Component) return false;
+        if (UStaticMesh* Mesh = LoadObject<UStaticMesh>(nullptr, AssetPath))
+        {
+            Component->SetStaticMesh(Mesh);
+            return true;
+        }
+        return false;
+    };
+
+    const bool bGandalfVisual = Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase);
+    const bool bHobbitVisual =
+        !bWizard && !bHuman && !bElf && !Name.Equals(TEXT("Gimli"), ESearchCase::IgnoreCase);
+
+    bool bProductionVisual = false;
+    if (bGandalfVisual)
+    {
+        bProductionVisual =
+            TryMesh(PrototypeTorso, TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Torso.SM_Gandalf_Torso")) &&
+            TryMesh(PrototypeHead, TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Head.SM_Gandalf_Head")) &&
+            TryMesh(PrototypeHair, TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Hair.SM_Gandalf_Hair")) &&
+            TryMesh(PrototypeLeftArm, TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Arm.SM_Gandalf_Arm")) &&
+            TryMesh(PrototypeLeftLeg, TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Leg.SM_Gandalf_Leg"));
+        TryMesh(PrototypeRightArm, TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Arm.SM_Gandalf_Arm"));
+        TryMesh(PrototypeRightLeg, TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Leg.SM_Gandalf_Leg"));
+    }
+    else if (bHobbitVisual)
+    {
+        bProductionVisual =
+            TryMesh(PrototypeTorso, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Torso.SM_Hobbit_Torso")) &&
+            TryMesh(PrototypeHead, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Head.SM_Hobbit_Head")) &&
+            TryMesh(PrototypeHair, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Hair.SM_Hobbit_Hair")) &&
+            TryMesh(PrototypeLeftArm, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm")) &&
+            TryMesh(PrototypeLeftLeg, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg"));
+        TryMesh(PrototypeRightArm, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm"));
+        TryMesh(PrototypeRightLeg, TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg"));
+    }
+
+    if (bProductionVisual)
+    {
+        PrototypeTorso->SetRelativeScale3D(FVector(1));
+        PrototypeHead->SetRelativeScale3D(FVector(1));
+        PrototypeHair->SetRelativeScale3D(FVector(1));
+        PrototypeLeftArm->SetRelativeScale3D(FVector(1));
+        PrototypeRightArm->SetRelativeScale3D(FVector(1));
+        PrototypeLeftLeg->SetRelativeScale3D(FVector(1));
+        PrototypeRightLeg->SetRelativeScale3D(FVector(1));
+    }
+
     auto ApplyColor = [this, BasicMaterial](UStaticMeshComponent* Component, const FLinearColor& Color)
     {
         if (!Component)
