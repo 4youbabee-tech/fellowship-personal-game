@@ -1494,6 +1494,62 @@ for path in sorted(SOURCE.glob("*.h")):
     if later_includes:
         fail(f"{path.name}: generated.h is not the last include ({later_includes[0]})")
 
+# PG-047: external production assets must remain license/provenance gated.
+external_manifest_path = ROOT / "Data" / "ExternalAssetManifest.json"
+external_manifest = {}
+if not external_manifest_path.exists():
+    fail("PG-047 external asset manifest missing: Data/ExternalAssetManifest.json")
+else:
+    try:
+        external_manifest = json.loads(read(external_manifest_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-047 invalid ExternalAssetManifest.json: {exc}")
+
+if external_manifest and external_manifest.get("authority_id") != "FELLOWSHIP_EXTERNAL_ASSET_MANIFEST_V1":
+    fail("PG-047 external asset manifest has unexpected authority_id")
+
+provider_modes = {
+    str(p.get("id") or ""): str(p.get("mode") or "")
+    for p in external_manifest.get("providers", [])
+    if isinstance(p, dict)
+}
+for provider_id in ["FAB", "QUixel_MEGASCANS", "SKETCHFAB", "TURBOSQUID", "SONNISS", "FREESOUND", "ARTSTATION", "TOLKIEN_GATEWAY"]:
+    if provider_id not in provider_modes:
+        fail(f"PG-047 provider policy missing: {provider_id}")
+
+for reference_provider in ["ARTSTATION", "TOLKIEN_GATEWAY", "LOTR_WIKI"]:
+    if provider_modes.get(reference_provider) != "REFERENCE_ONLY":
+        fail(f"PG-047 reference-only provider drifted: {reference_provider}")
+
+blocked_license_tokens = {"EDITORIAL", "CC_BY_NC", "CC_BY_ND", "UNKNOWN"}
+approved_external_root = ROOT / "SourceAssets" / "ExternalLicensed" / "Approved"
+asset_records = external_manifest.get("assets", [])
+record_by_path = {
+    str(item.get("relative_path") or "").replace("\\", "/"): item
+    for item in asset_records
+    if isinstance(item, dict)
+}
+for item in asset_records:
+    if not isinstance(item, dict):
+        fail("PG-047 external asset manifest contains non-object asset entry")
+        continue
+    for field in ["asset_id", "provider", "relative_path", "license_class", "acquired_on", "source_url", "approval_status"]:
+        if not str(item.get(field) or "").strip():
+            fail(f"PG-047 external asset record missing {field}: {item}")
+    license_class = str(item.get("license_class") or "").upper()
+    if any(token in license_class for token in blocked_license_tokens):
+        fail(f"PG-047 blocked license class in approved asset record: {license_class}")
+    if str(item.get("approval_status") or "") != "APPROVED":
+        fail(f"PG-047 production manifest asset is not APPROVED: {item.get('asset_id')}")
+
+if approved_external_root.exists():
+    for path in approved_external_root.rglob("*"):
+        if not path.is_file() or path.name.lower() == "readme.md":
+            continue
+        relative = str(path.relative_to(ROOT)).replace("\\", "/")
+        if relative not in record_by_path:
+            fail(f"PG-047 approved external file has no manifest record: {relative}")
+
 # PG-016: the installed UE4.27.2 build does not expose Engine/AtmosphericFog.h
 # as a public include. Cleanup of a legacy AtmosphericFog actor must avoid a direct
 # dependency on that header/class so real Windows compilation cannot regress to C1083.
