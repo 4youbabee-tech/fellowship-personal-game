@@ -135,15 +135,15 @@
         "Data/LivingWorldEventPlan.json defines per-chapter micro-event/fauna/weather/prop-motion categories, density targets and performance caps",
         "CP34 adds runtime environmental detail across Bree, Weathertop, Rivendell, Fellowship road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen using low-cost static primitives",
         "Lightweight Bird ambient role now provides 3D sky motion across Shire, Bree, Weathertop, Rivendell, Caradhras/Fellowship road, Lothlorien, Anduin/Amon Hen and Isengard with distance-throttled ticks",
-        "Ambient residents now use role-specific activity props and low-cost work/social gestures: Shire baskets/satchels/mugs/crates, Bree goods/mugs, and Elven books/lanterns"
+        "Ambient residents now use role-specific activity props and low-cost work/social gestures: Shire baskets/satchels/mugs/crates, Bree goods/mugs, and Elven books/lanterns",
+        "ALivingWorldDirector consumes Data/LivingWorldEventPlan.json and injects bounded disposable chapter-aware micro-events",
+        "CP49 common terrain kit adds production hills/cliffs/river-bank/boulder silhouettes across Part I"
       ],
       "missing_work": [
         "production-quality terrain/material/art replacement beyond current procedural detail",
-        "runtime micro-event director",
         "environment motion implementation beyond static/procedural proxies",
         "batch integration PIE/device/performance/visual review",
-        "broader fauna beyond current lightweight bird motion",
-        "full authored/dynamic micro-event director beyond current role-based activities"
+        "broader fauna beyond current lightweight bird motion"
       ],
       "acceptance_criteria": [
         "Ordinary traversal repeatedly reveals believable activity or environmental storytelling",
@@ -179,7 +179,8 @@
         "Caradhras snow pass",
         "Moria large-scale halls/abyss",
         "Lothlorien golden canopy",
-        "Anduin river canyon"
+        "Anduin river canyon",
+        "CP49 reusable production terrain kit overlays hills cliffs river banks slopes and boulders without moving story anchors"
       ],
       "missing_work": [
         "Most non-Shire regions remain prototype geometry",
@@ -878,6 +879,40 @@
       ],
       "checkpoint": "CP48",
       "notes": "Research and project policy are implemented; permissions themselves are not granted."
+    },
+    {
+      "id": "REQ-ENG-002",
+      "title": "Machine-readable engineering execution path",
+      "category": "Architecture",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "User explicitly requested recording, arranging and engineering the full path because the project is intended to be intelligently managed",
+      "intent": "Keep backend, AI, characters, world, missions, audio and acceptance work ordered by dependencies with clear proof boundaries so large batches can continue without losing the path.",
+      "evidence": [
+        "Data/ProductionExecutionGraph.json",
+        "Docs/ENGINEERING_EXECUTION_PATH.md",
+        "Data/ProjectGovernor.json",
+        "Data/SourceArchitecturePlan.json"
+      ],
+      "implementation_refs": [
+        "single Governor remains authority",
+        "execution graph records dependencies/status/proof",
+        "handoff order no longer depends on chat memory"
+      ],
+      "missing_work": [
+        "Operational: keep workstream status synchronized after each major checkpoint"
+      ],
+      "acceptance_criteria": [
+        "New developer can recover active work order without chat",
+        "Implementation and validation statuses remain separate",
+        "Every runtime source file remains architecture-mapped"
+      ],
+      "dependencies": [
+        "REQ-MEM-001",
+        "REQ-ORG-001"
+      ],
+      "checkpoint": "CP49",
+      "notes": "Execution graph organizes work but cannot override Governor decisions."
     }
   ],
   "hard_invariants": [
@@ -1456,14 +1491,15 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Expanded external-resource strategy to Weta Workshop, official rights holders and additional global production libraries",
+    "reason": "User directed uninterrupted large-scale completion with AI life, villages/mountains/missions and a rigorously recorded engineering path",
     "summary": [
-      "Added Weta Workshop as a professional design/game-development/private-commission partner rather than a stock-asset or blanket IP licensor.",
-      "Mapped Middle-earth Enterprises/Embracer as the primary official game/franchise licensing contact for The Lord of the Rings/The Hobbit.",
-      "Mapped Warner Bros/New Line for Peter Jackson film-specific material, Tolkien Estate for Estate-controlled works/marks, and HarperCollins for published-text permissions.",
-      "Recorded that a personal, private, non-distributed project is relevant context but not automatic permission to copy protected franchise material.",
-      "Expanded the resource manifest with Poly Haven, ambientCG, Adobe Mixamo, ActorCore/Reallusion and Kenney so environment, rigging, animation and utility sourcing is broader than the first recommendation list.",
-      "Added PG-048 to prevent service providers, research sites and rights holders from being conflated."
+      "Added a data-driven ALivingWorldDirector that consumes LivingWorldEventPlan and creates bounded disposable work, traveler, market, social, fauna, danger and aftermath events near the player.",
+      "Living-world director obeys chapter contracts, story danger suppression, active-event caps, cull distance, cooldowns and route isolation.",
+      "Added a reusable project-owned terrain kit for mountains, cliffs, terraced hills, river banks, village slopes and boulder clusters.",
+      "Overlaid the common terrain kit across Shire and P1C03-P1C08 without moving quest/story anchors.",
+      "Added ProductionExecutionGraph and EngineeringExecutionPath so backend, AI, characters, world, missions, audio and acceptance dependencies are machine-readable and recoverable without chat history.",
+      "Reconciled LivingWorldFeaturePlan with the actually implemented CP44/CP49 runtime instead of leaving old 'pending' descriptions.",
+      "Backend and AI implementation remain distinct from PIE/device/visual acceptance; large production batches may continue while compile/import gates remain green."
     ]
   },
   "development_mode": {

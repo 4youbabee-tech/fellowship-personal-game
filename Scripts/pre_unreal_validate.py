@@ -1494,6 +1494,71 @@ for path in sorted(SOURCE.glob("*.h")):
     if later_includes:
         fail(f"{path.name}: generated.h is not the last include ({later_includes[0]})")
 
+# PG-049: living-world director and engineering execution graph must remain bounded and architecture-tracked.
+execution_graph_path = ROOT / "Data" / "ProductionExecutionGraph.json"
+execution_graph = {}
+if not execution_graph_path.exists():
+    fail("PG-049 ProductionExecutionGraph.json missing")
+else:
+    try:
+        execution_graph = json.loads(read(execution_graph_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-049 invalid ProductionExecutionGraph.json: {exc}")
+
+if execution_graph and execution_graph.get("authority_id") != "FELLOWSHIP_ENGINEERING_EXECUTION_GRAPH_V1":
+    fail("PG-049 execution graph authority_id drifted")
+for workstream_id in [
+    "WS_BACKEND_CORE",
+    "WS_LIVING_WORLD_AI",
+    "WS_CHARACTER_PRODUCTION",
+    "WS_WORLD_PRODUCTION",
+    "WS_STORY_MISSIONS",
+    "WS_AUDIO_PRESENTATION",
+    "WS_ACCEPTANCE",
+]:
+    if workstream_id not in {str(x.get("id") or "") for x in execution_graph.get("workstreams", []) if isinstance(x, dict)}:
+        fail(f"PG-049 execution workstream missing: {workstream_id}")
+
+living_h = read(SOURCE / "LivingWorldDirector.h")
+living_cpp = read(SOURCE / "LivingWorldDirector.cpp")
+for symbol in [
+    "LoadEventContract",
+    "MaxActiveMicroEvents",
+    "MinSecondsBetweenEventStarts",
+    "EventCullDistance",
+    "TryStartMicroEvent",
+    "LivingWorldEphemeral",
+    "GetCurrentRouteId() != TEXT(\"FrodoMain\")",
+    "IsStoryDangerActive",
+]:
+    if symbol not in (living_h + living_cpp):
+        fail(f"PG-049 living-world director invariant missing: {symbol}")
+
+game_mode_cpp = read(SOURCE / "ShireGameMode.cpp")
+if "SpawnActor<ALivingWorldDirector>" not in game_mode_cpp:
+    fail("PG-049 ShireGameMode no longer bootstraps LivingWorldDirector")
+
+common_world_root = ROOT / "SourceAssets" / "Production" / "World" / "Common"
+for asset_name in [
+    "SM_CommonMountainRidge.obj",
+    "SM_CommonCliffWall.obj",
+    "SM_CommonTerracedHill.obj",
+    "SM_CommonRiverBank.obj",
+    "SM_CommonVillageSlope.obj",
+    "SM_CommonBoulderCluster.obj",
+]:
+    if not (common_world_root / asset_name).exists():
+        fail(f"PG-049 common terrain production asset missing: {asset_name}")
+
+shire_world_cpp = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
+fellowship_world_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+for symbol in ["SM_CommonTerracedHill", "SM_CommonVillageSlope", "SM_CommonRiverBank", "SM_CommonBoulderCluster"]:
+    if symbol not in shire_world_cpp:
+        fail(f"PG-049 Shire terrain runtime reference missing: {symbol}")
+for symbol in ["SM_CommonMountainRidge", "SM_CommonCliffWall", "SM_CommonRiverBank", "SpawnTerrainBand"]:
+    if symbol not in fellowship_world_cpp:
+        fail(f"PG-049 Fellowship terrain runtime reference missing: {symbol}")
+
 # PG-048: resource sources, service partners and rights holders must not be conflated.
 rights_plan_path = ROOT / "Data" / "RightsHolderContactPlan.json"
 rights_plan = {}

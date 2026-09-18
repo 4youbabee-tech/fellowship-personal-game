@@ -64,27 +64,32 @@
       "features": [
         {
           "id": "NPC-PROFILE-DATA",
-          "status": "PARTIAL",
+          "status": "FOUNDATION_PRESENT",
           "evidence": [
-            "Data/NPCSocialModel.json"
+            "Data/NPCSocialModel.json",
+            "Source/ShireJourney/ShireNPCContextSubsystem.cpp"
           ],
-          "notes": "Part I named/ambient identities, roles, temperament, knowledge boundaries and anchors are data-defined; runtime consumption is pending."
+          "notes": "Runtime consumed by UShireNPCContextSubsystem; PIE/device behavior acceptance remains pending."
         },
         {
           "id": "NPC-SCHEDULE-DATA",
-          "status": "PARTIAL",
+          "status": "FOUNDATION_PRESENT",
           "evidence": [
-            "Data/NPCSocialModel.json"
+            "Data/NPCSocialModel.json",
+            "Source/ShireJourney/ShireNPCContextSubsystem.cpp",
+            "Source/ShireJourney/ShireAmbientNPC.cpp"
           ],
-          "notes": "Low-cost Shire/Bree/story-driven schedule templates and override precedence are data-defined; runtime scheduler is pending."
+          "notes": "Runtime schedule phases are consumed by named/ambient context; device pacing acceptance remains pending."
         },
         {
           "id": "NPC-RELATIONSHIP-DATA",
-          "status": "PARTIAL",
+          "status": "FOUNDATION_PRESENT",
           "evidence": [
-            "Data/NPCSocialModel.json"
+            "Data/NPCSocialModel.json",
+            "Source/ShireJourney/ShireQuestSubsystem.cpp",
+            "Source/ShireJourney/ShireNPCContextSubsystem.cpp"
           ],
-          "notes": "Initial authored relationship graph is data-defined; runtime relationship/context consumption is pending."
+          "notes": "Bounded relationship values are runtime-backed, saved and used as dialogue context."
         }
       ]
     },
@@ -95,30 +100,32 @@
       "features": [
         {
           "id": "NPC-CONVERSATION-SELECTION",
-          "status": "PARTIAL",
+          "status": "FOUNDATION_PRESENT",
           "evidence": [
-            "Data/NPCConversationPlan.json"
+            "Data/NPCConversationPlan.json",
+            "Source/ShireJourney/ShireNPCContextSubsystem.cpp"
           ],
-          "notes": "Eligibility, priority, knowledge/story gating and conversation sets are data-defined; runtime selection pending."
+          "notes": "Knowledge/story-gated deterministic bounded selection is implemented; content breadth/PIE pacing remain acceptance work."
         },
         {
           "id": "NPC-CONVERSATION-RUNTIME",
-          "status": "RUNTIME_PARTIAL",
+          "status": "FOUNDATION_PRESENT",
           "evidence": [
             "Source/ShireJourney/ShireAmbientNPC.cpp",
-            "Source/ShireJourney/ShireAmbientNPC.h",
-            "Data/NPCConversationPlan.json"
+            "Source/ShireJourney/ShireNPC.cpp",
+            "Source/ShireJourney/ShireDialogueSubsystem.cpp"
           ],
-          "notes": "Ambient Shire/Bree/Elf residents now perform capped two-turn world-space text conversations. Named Fellowship/story-reactive dialogue runtime and audio remain pending."
+          "notes": "Ambient two-turn conversations and named Fellowship two-way banter are implemented with story/danger priority."
         },
         {
           "id": "NPC-CONVERSATION-REPETITION",
-          "status": "RUNTIME_PARTIAL",
+          "status": "FOUNDATION_PRESENT",
           "evidence": [
-            "Source/ShireJourney/ShireAmbientNPC.cpp",
-            "Data/NPCConversationPlan.json"
+            "Source/ShireJourney/ShireQuestSubsystem.cpp",
+            "Source/ShireJourney/ShireNPCContextSubsystem.cpp",
+            "Source/ShireJourney/ShireAmbientNPC.cpp"
           ],
-          "notes": "Runtime enforces a 90-second same-pair cooldown plus longer post-conversation cooldown; richer intent/line history remains pending."
+          "notes": "Persistent recent-variant and partner history plus ambient pair cooldown control repetition."
         }
       ]
     },
@@ -129,19 +136,22 @@
       "features": [
         {
           "id": "NPC-MEMORY-SCHEMA",
-          "status": "PARTIAL",
+          "status": "FOUNDATION_PRESENT",
           "evidence": [
-            "Data/NPCMemoryPlan.json"
+            "Data/NPCMemoryPlan.json",
+            "Source/ShireJourney/ShireQuestSubsystem.cpp"
           ],
-          "notes": "Memory tiers/templates/expiry/budgets are data-defined; runtime store pending."
+          "notes": "Tiered bounded memory, canonical aliases and expiry are implemented; PIE save/load acceptance remains."
         },
         {
           "id": "NPC-MEMORY-SAVE",
-          "status": "PARTIAL",
+          "status": "FOUNDATION_PRESENT",
           "evidence": [
-            "Data/NPCMemoryPlan.json"
+            "Source/ShireJourney/ShireSaveGame.h",
+            "Source/ShireJourney/ShirePlayerCharacter.cpp",
+            "Source/ShireJourney/ShireQuestSubsystem.cpp"
           ],
-          "notes": "Compact route-partitioned save contract is defined; SaveGame integration pending."
+          "notes": "NPC memory is integrated into manual saves and automatic checkpoint snapshots with restore sanitation."
         }
       ]
     },
@@ -152,14 +162,13 @@
       "features": [
         {
           "id": "WORLD-MICRO-EVENTS",
-          "status": "RUNTIME_PARTIAL",
+          "status": "FOUNDATION_PRESENT",
           "evidence": [
-            "Source/ShireJourney/ShireAmbientNPC.cpp",
-            "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
-            "Source/ShireJourney/BreePrototypeWorldBuilder.cpp",
-            "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp"
+            "Data/LivingWorldEventPlan.json",
+            "Source/ShireJourney/LivingWorldDirector.cpp",
+            "Source/ShireJourney/ShireAmbientNPC.cpp"
           ],
-          "notes": "Ambient roles now carry low-cost visible activity props and use small work/social gestures; full authored micro-event director remains pending."
+          "notes": "ALivingWorldDirector now consumes LivingWorldEventPlan at runtime, caps active events, avoids immediate repetition, suppresses peaceful events during danger and cleans disposable event actors."
         },
         {
           "id": "WORLD-FAUNA",
@@ -190,9 +199,10 @@
           "id": "WORLD-EXPLORATION-DENSITY",
           "status": "PARTIAL",
           "evidence": [
-            "Data/LivingWorldEventPlan.json"
+            "Data/LivingWorldEventPlan.json",
+            "Source/ShireJourney/LivingWorldDirector.cpp"
           ],
-          "notes": "Per-chapter activity-density targets are defined; PIE/device acceptance pending."
+          "notes": "Per-chapter density contracts now have a runtime director; PIE/device density acceptance remains pending."
         }
       ]
     },
@@ -203,27 +213,33 @@
       "features": [
         {
           "id": "NPC-KNOWLEDGE-GUARD",
-          "status": "PARTIAL",
+          "status": "FOUNDATION_PRESENT",
           "evidence": [
-            "Data/BoundedDialoguePlan.json"
+            "Data/BoundedDialoguePlan.json",
+            "Source/ShireJourney/ShireNPCContextSubsystem.cpp",
+            "Source/ShireJourney/ShireQuestSubsystem.cpp"
           ],
-          "notes": "Deny-unlisted knowledge/canon/cross-route rules are data-defined; runtime enforcement pending."
+          "notes": "Runtime bounded dialogue guard/selection/cache history is implemented; PIE/content acceptance remains."
         },
         {
           "id": "NPC-DIALOGUE-VARIATION",
-          "status": "PARTIAL",
+          "status": "FOUNDATION_PRESENT",
           "evidence": [
-            "Data/BoundedDialoguePlan.json"
+            "Data/BoundedDialoguePlan.json",
+            "Source/ShireJourney/ShireNPCContextSubsystem.cpp",
+            "Source/ShireJourney/ShireQuestSubsystem.cpp"
           ],
-          "notes": "Allowed authored/template/cached variation modes and limits are data-defined; runtime variation pending."
+          "notes": "Runtime bounded dialogue guard/selection/cache history is implemented; PIE/content acceptance remains."
         },
         {
           "id": "NPC-DIALOGUE-CACHE",
-          "status": "PARTIAL",
+          "status": "FOUNDATION_PRESENT",
           "evidence": [
-            "Data/BoundedDialoguePlan.json"
+            "Data/BoundedDialoguePlan.json",
+            "Source/ShireJourney/ShireNPCContextSubsystem.cpp",
+            "Source/ShireJourney/ShireQuestSubsystem.cpp"
           ],
-          "notes": "Cache/repetition budgets and deterministic fallback are data-defined; runtime cache pending."
+          "notes": "Runtime bounded dialogue guard/selection/cache history is implemented; PIE/content acceptance remains."
         }
       ]
     },

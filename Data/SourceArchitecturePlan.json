@@ -389,6 +389,22 @@
       "kind": "Source",
       "role": "Runtime social-model loading canonical identity schedules knowledge guards and bounded dialogue selection",
       "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/LivingWorldDirector.h",
+      "target_path": "Source/ShireJourney/Public/World/LivingWorldDirector.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Data-driven chapter-aware living-world micro-event director contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/LivingWorldDirector.cpp",
+      "target_path": "Source/ShireJourney/Private/World/LivingWorldDirector.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Micro-event scheduling spawning culling weather context and chapter reaction runtime",
+      "migration_status": "CURRENT_FLAT"
     }
   ]
 }

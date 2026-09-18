@@ -155,6 +155,10 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionLampPostMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShLampPost.SM_ShLampPost"));
     ProductionPicnicTableMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShPicnicTable.SM_ShPicnicTable"));
     ProductionLoadedCartMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Shire/SM_ShCartLoaded.SM_ShCartLoaded"));
+    ProductionCommonTerracedHillMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonTerracedHill.SM_CommonTerracedHill"));
+    ProductionCommonVillageSlopeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonVillageSlope.SM_CommonVillageSlope"));
+    ProductionCommonRiverBankMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonRiverBank.SM_CommonRiverBank"));
+    ProductionCommonBoulderClusterMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBoulderCluster.SM_CommonBoulderCluster"));
 
     if (ProductionTreeTrunkMesh) DistantTreeTrunkInstances->SetStaticMesh(ProductionTreeTrunkMesh);
     if (ProductionTreeCanopyMesh) DistantTreeCanopyInstances->SetStaticMesh(ProductionTreeCanopyMesh);
@@ -1545,6 +1549,56 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
             SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, bCollision);
         }
     };
+
+    // CP49 terrain silhouette layer: authored low-poly terrain breaks the long flat
+    // blockout horizon while preserving the established quest/traversal coordinates.
+    const FVector VillageHills[] = {
+        FVector(-2250, 1650, -145), FVector(-1200, 1900, -165),
+        FVector(150, 1880, -160), FVector(1350, 1650, -150),
+        FVector(6100, 2050, -175), FVector(7900, 2150, -180),
+        FVector(13200, 2300, -190), FVector(15100, 2180, -185),
+        FVector(20500, 2350, -195), FVector(22800, 2100, -180)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(VillageHills); ++Index)
+    {
+        SpawnProd(
+            ProductionCommonTerracedHillMesh,
+            VillageHills[Index],
+            FVector(2.8f + 0.25f * (Index % 3), 2.2f + 0.2f * (Index % 2), 1.45f),
+            FRotator(0.0f, static_cast<float>((Index * 31) % 360), 0.0f),
+            false);
+    }
+
+    const FVector VillageSlopes[] = {
+        FVector(-2450,-1550,-80), FVector(-650,-1750,-95),
+        FVector(6200,-2350,-100), FVector(8850,-2200,-95),
+        FVector(13700,-2250,-105), FVector(16000,-2100,-95)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(VillageSlopes); ++Index)
+    {
+        SpawnProd(
+            ProductionCommonVillageSlopeMesh,
+            VillageSlopes[Index],
+            FVector(2.35f, 1.85f, 1.25f),
+            FRotator(0.0f, Index % 2 == 0 ? 8.0f : -10.0f, 0.0f),
+            false);
+    }
+
+    SpawnProd(ProductionCommonRiverBankMesh, FVector(22950,-1220,-35), FVector(2.8f,1.5f,1.0f),
+        FRotator(0.0f, 2.0f, 0.0f), false);
+    SpawnProd(ProductionCommonRiverBankMesh, FVector(23600,420,-35), FVector(2.8f,1.5f,1.0f),
+        FRotator(0.0f, 178.0f, 0.0f), false);
+
+    const FVector BoulderGroups[] = {
+        FVector(10800,-1280,0), FVector(12850,1480,0), FVector(15300,-1380,0),
+        FVector(18200,1350,0), FVector(21700,-1280,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(BoulderGroups); ++Index)
+    {
+        SpawnProd(ProductionCommonBoulderClusterMesh, BoulderGroups[Index],
+            FVector(0.95f + 0.12f * (Index % 3)),
+            FRotator(0.0f, static_cast<float>((Index * 47) % 360), 0.0f), false);
+    }
 
     // Above-ground cottages make Hobbiton read as a lived-in settlement rather than
     // only a line of turf mounds.

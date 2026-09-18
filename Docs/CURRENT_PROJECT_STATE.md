@@ -1,4 +1,13 @@
-# CURRENT PROJECT STATE / HANDOFF
+# CURRENT PROJECT STATE
+
+> **Operational recovery note — reconciled 2026-09-19**
+>
+> Current production baseline now includes CP44 backend completion, CP45 named-cast dedicated modular identities, CP46 threat production art, CP47 licensed asset sourcing, CP48 Weta/rights-holder/global resource mapping, and CP49 living-world/terrain engineering on its validation branch.
+>
+> The authoritative requirement/decision source is `Data/ProjectGovernor.json`. The machine-readable execution/dependency map is `Data/ProductionExecutionGraph.json`. Use `Docs/ENGINEERING_EXECUTION_PATH.md` for the human-readable implementation order.
+>
+> Older historical sections below are retained as evidence and may mention earlier heads/checkpoints. They must not be read as the latest status when they conflict with the Governor or this recovery note.
+
 
 > **START HERE after a lost chat, a new developer handoff, or a long break.**
 >

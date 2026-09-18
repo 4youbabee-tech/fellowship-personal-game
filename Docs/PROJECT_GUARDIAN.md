@@ -390,6 +390,17 @@ This converts failures into permanent project knowledge.
 
 **Guard:** Pre-Unreal Validation protects the rights-holder map, Weta service classification and expanded provider list.
 
+### PG-049 — Living-world intelligence and engineering path must remain bounded and recoverable
+**Risk:** large uninterrupted production can create unbounded ambient simulation, story-interfering random events, duplicate AI systems or a project plan that exists only in chat memory.
+
+**Contract:** `ALivingWorldDirector` consumes the existing LivingWorldEventPlan, honors per-chapter eligibility, active-event/cull/cooldown budgets, suppresses peaceful events during danger and never persists ambient event transforms. The Frodo main route receives chapter micro-events; the authored Gandalf parallel route is not polluted by them.
+
+**World rule:** common production terrain may strengthen hills/cliffs/river silhouettes but must overlay rather than relocate established quest/story anchors.
+
+**Engineering rule:** `Data/ProductionExecutionGraph.json` records workstream dependencies and proof status. It organizes work but never overrides `Data/ProjectGovernor.json`.
+
+**Proof rule:** implementation-complete does not mean PIE/device/visual acceptance.
+
 ## What Guardian must never do automatically
 
 - change canon,
