@@ -32,6 +32,18 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Routine")
     float MaxWait = 5.0f;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Awareness")
+    float PlayerNoticeRadius = 280.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Awareness")
+    float MinObserveDuration = 1.2f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Awareness")
+    float MaxObserveDuration = 2.8f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Awareness")
+    float NoticeCooldown = 7.0f;
+
 private:
     UPROPERTY()
     USceneComponent* Root;
@@ -58,10 +70,16 @@ private:
     UStaticMeshComponent* RightLeg;
 
     bool bHeadingToB = true;
+    bool bObservingPlayer = false;
     float WaitRemaining = 0.0f;
     float WalkPhase = 0.0f;
+    float SenseAccumulator = 0.0f;
+    float ObserveRemaining = 0.0f;
+    float NoticeCooldownRemaining = 0.0f;
+    TWeakObjectPtr<APawn> ObservedPlayer;
     FRandomStream Random;
 
     void ApplyVisualStyle();
     void UpdateWalkAnimation(float DeltaSeconds, bool bMoving);
+    void UpdateAwareness(float DeltaSeconds);
 };

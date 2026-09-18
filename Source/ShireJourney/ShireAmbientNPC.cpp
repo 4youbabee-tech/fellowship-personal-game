@@ -3,6 +3,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
+#include "GameFramework/Pawn.h"
+#include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
 
 AShireAmbientNPC::AShireAmbientNPC()
@@ -165,11 +167,75 @@ void AShireAmbientNPC::BeginPlay()
         RoutinePointA = GetActorLocation();
         RoutinePointB = GetActorLocation() + FVector(350.0f, 0.0f, 0.0f);
     }
+
+    WaitRemaining = Random.FRandRange(0.0f, 1.5f);
+    SenseAccumulator = Random.FRandRange(0.0f, 0.35f);
+}
+
+void AShireAmbientNPC::UpdateAwareness(float DeltaSeconds)
+{
+    NoticeCooldownRemaining = FMath::Max(0.0f, NoticeCooldownRemaining - DeltaSeconds);
+
+    if (bObservingPlayer)
+    {
+        ObserveRemaining -= DeltaSeconds;
+
+        APawn* PlayerPawn = ObservedPlayer.Get();
+        if (PlayerPawn)
+        {
+            FVector ToPlayer = PlayerPawn->GetActorLocation() - GetActorLocation();
+            ToPlayer.Z = 0.0f;
+            if (!ToPlayer.IsNearlyZero())
+            {
+                SetActorRotation(FMath::RInterpTo(
+                    GetActorRotation(), ToPlayer.Rotation(), DeltaSeconds, 4.5f));
+            }
+        }
+
+        if (ObserveRemaining <= 0.0f)
+        {
+            bObservingPlayer = false;
+            ObservedPlayer.Reset();
+            NoticeCooldownRemaining = NoticeCooldown;
+            WaitRemaining = FMath::Max(WaitRemaining, Random.FRandRange(0.4f, 1.2f));
+        }
+        return;
+    }
+
+    SenseAccumulator -= DeltaSeconds;
+    if (SenseAccumulator > 0.0f || NoticeCooldownRemaining > 0.0f)
+    {
+        return;
+    }
+
+    SenseAccumulator = 0.45f + Random.FRandRange(0.0f, 0.20f);
+
+    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+    if (!PlayerPawn)
+    {
+        return;
+    }
+
+    const float DistanceSq = FVector::DistSquared2D(PlayerPawn->GetActorLocation(), GetActorLocation());
+    if (DistanceSq <= FMath::Square(PlayerNoticeRadius))
+    {
+        bObservingPlayer = true;
+        ObservedPlayer = PlayerPawn;
+        ObserveRemaining = Random.FRandRange(MinObserveDuration, MaxObserveDuration);
+    }
 }
 
 void AShireAmbientNPC::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+
+    UpdateAwareness(DeltaSeconds);
+
+    if (bObservingPlayer)
+    {
+        UpdateWalkAnimation(DeltaSeconds, false);
+        return;
+    }
 
     if (WaitRemaining > 0.0f)
     {
