@@ -331,36 +331,6 @@ missing_film_routes = sorted(expected_film_routes - covered_routes)
 if missing_film_routes:
     fail("FilmExperiencePlan missing required routes: " + ", ".join(missing_film_routes))
 
-# PG-033: core-cast visual identity must remain distinct without pretending proxies are final art.
-npc_visual_cpp = read(SOURCE / "ShireNPC.cpp")
-npc_visual_h = read(SOURCE / "ShireNPC.h")
-for symbol in [
-    "PrototypeCloak",
-    "PrototypePrimaryProp",
-    "PrototypeSecondaryProp",
-    "PrototypeBeard",
-    "PrototypeHeadpiece",
-    'Name.Equals(TEXT("Sam")',
-    'Name.Equals(TEXT("Merry")',
-    'Name.Equals(TEXT("Pippin")',
-    'Name.Equals(TEXT("Boromir")',
-    'Name.Equals(TEXT("Legolas")',
-    'Name.Equals(TEXT("Gimli")',
-    'Name.Equals(TEXT("Galadriel")',
-]:
-    if symbol not in npc_visual_cpp and symbol not in npc_visual_h:
-        fail(f"PG-033 core-cast visual identity invariant missing: {symbol}")
-
-population_identity = population_plan.get("visual_identity_pass", {}) if population_plan else {}
-if population_identity.get("proof_limit") != "This is a procedural visual-identity pass, not final character art or visual acceptance.":
-    fail("PG-033 CharacterPopulationPlan must preserve proxy/final-art proof boundary")
-
-governor_mode = governor_data.get("development_mode", {}) if governor_data else {}
-if governor_mode.get("id") != "BUILD_FIRST_BATCH_MODE":
-    fail("PG-033 Governor development mode must record BUILD_FIRST_BATCH_MODE")
-if "Do not mark PIE, device, pacing, performance or visual gates PASSED without real evidence." not in governor_mode.get("rules", []):
-    fail("PG-033 build-first mode must preserve manual-proof honesty")
-
 # PG-032: Part I character population and visual-tier contract must stay complete.
 population_plan_path = ROOT / "Data" / "CharacterPopulationPlan.json"
 population_plan = {}
@@ -438,6 +408,36 @@ if 'RoutineRole = TEXT("Elf")' not in fellowship_cpp_for_population:
 for symbol in ["VisualTorsoBaseZ", "VisualHeadBaseZ", "VisualHairBaseZ"]:
     if symbol not in ambient_cpp_for_population:
         fail(f"PG-032 ambient role-specific visual base missing: {symbol}")
+
+# PG-033: core-cast visual identity must remain distinct without pretending proxies are final art.
+npc_visual_cpp = read(SOURCE / "ShireNPC.cpp")
+npc_visual_h = read(SOURCE / "ShireNPC.h")
+for symbol in [
+    "PrototypeCloak",
+    "PrototypePrimaryProp",
+    "PrototypeSecondaryProp",
+    "PrototypeBeard",
+    "PrototypeHeadpiece",
+    'Name.Equals(TEXT("Sam")',
+    'Name.Equals(TEXT("Merry")',
+    'Name.Equals(TEXT("Pippin")',
+    'Name.Equals(TEXT("Boromir")',
+    'Name.Equals(TEXT("Legolas")',
+    'Name.Equals(TEXT("Gimli")',
+    'Name.Equals(TEXT("Galadriel")',
+]:
+    if symbol not in npc_visual_cpp and symbol not in npc_visual_h:
+        fail(f"PG-033 core-cast visual identity invariant missing: {symbol}")
+
+population_identity = population_plan.get("visual_identity_pass", {}) if population_plan else {}
+if population_identity.get("proof_limit") != "This is a procedural visual-identity pass, not final character art or visual acceptance.":
+    fail("PG-033 CharacterPopulationPlan must preserve proxy/final-art proof boundary")
+
+governor_mode = governor_data.get("development_mode", {}) if governor_data else {}
+if governor_mode.get("id") != "BUILD_FIRST_BATCH_MODE":
+    fail("PG-033 Governor development mode must record BUILD_FIRST_BATCH_MODE")
+if "Do not mark PIE, device, pacing, performance or visual gates PASSED without real evidence." not in governor_mode.get("rules", []):
+    fail("PG-033 build-first mode must preserve manual-proof honesty")
 
 # PG-024: NPC identity/schedule/relationship data must stay coherent before runtime intelligence consumes it.
 npc_social_path = ROOT / "Data" / "NPCSocialModel.json"
