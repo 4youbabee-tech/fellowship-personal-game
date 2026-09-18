@@ -193,6 +193,15 @@ This converts failures into permanent project knowledge.
 
 **Guard:** static validation rejects reintroducing `actions/checkout` or `actions/upload-artifact` into the self-hosted Unreal workflow, and requires exact-SHA archive download with resilient retries.
 
+### PG-027 — Self-hosted PowerShell execution policy
+**Observed failure:** Unreal Build Validation #18 reached the new exact-commit checkout step but Windows PowerShell refused to load the temporary GitHub Actions script because script execution was disabled on the target machine.
+
+**Root cause class:** runner shell policy, not game code.
+
+**Fix pattern:** invoke the checkout shell explicitly with `-NoProfile -ExecutionPolicy Bypass` for the generated Actions script.
+
+**Guard:** static validation requires the explicit bypass shell declaration in the self-hosted Unreal workflow.
+
 ## What Guardian must never do automatically
 
 - change canon,
