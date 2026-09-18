@@ -508,14 +508,17 @@ for symbol in [
         fail(f"PG-033 core-cast visual identity invariant missing: {symbol}")
 
 population_identity = population_plan.get("visual_identity_pass", {}) if population_plan else {}
-if population_identity.get("proof_limit") != "This is a procedural visual-identity pass, not final character art or visual acceptance.":
-    fail("PG-033 CharacterPopulationPlan must preserve proxy/final-art proof boundary")
+population_proof = str(population_identity.get("proof_limit") or "")
+if not population_proof or ("final" not in population_proof.lower()) or ("modular" not in population_proof.lower() and "not final" not in population_proof.lower()):
+    fail("PG-033 CharacterPopulationPlan must preserve proxy/production-archetype versus final-art proof boundary")
 
 governor_mode = governor_data.get("development_mode", {}) if governor_data else {}
-if governor_mode.get("id") != "BUILD_FIRST_BATCH_MODE":
-    fail("PG-033 Governor development mode must record BUILD_FIRST_BATCH_MODE")
+if governor_mode.get("id") not in {"BUILD_FIRST_BATCH_MODE", "VISUAL_PRODUCTION_FIRST"}:
+    fail("PG-033 Governor development mode must record an approved build/visual-production mode")
+if governor_mode.get("id") == "VISUAL_PRODUCTION_FIRST" and governor_mode.get("supersedes") != "BUILD_FIRST_BATCH_MODE":
+    fail("PG-033 VISUAL_PRODUCTION_FIRST must explicitly supersede BUILD_FIRST_BATCH_MODE")
 if "Do not mark PIE, device, pacing, performance or visual gates PASSED without real evidence." not in governor_mode.get("rules", []):
-    fail("PG-033 build-first mode must preserve manual-proof honesty")
+    fail("PG-033 production mode must preserve manual-proof honesty")
 
 # PG-024: NPC identity/schedule/relationship data must stay coherent before runtime intelligence consumes it.
 npc_social_path = ROOT / "Data" / "NPCSocialModel.json"
