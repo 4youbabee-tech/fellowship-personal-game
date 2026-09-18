@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "plan_id": "LIVING_WORLD_FEATURE_PLAN_V1",
+  "status_values": [
+    "FOUNDATION_PRESENT",
+    "PLANNED",
+    "PARTIAL",
+    "VALIDATED",
+    "DEFERRED"
+  ],
+  "phases": [
+    {
+      "id": "LW0",
+      "name": "Existing foundation",
+      "status": "PARTIAL",
+      "features": [
+        {
+          "id": "LW-AWARENESS",
+          "status": "FOUNDATION_PRESENT",
+          "evidence": [
+            "Source/ShireJourney/ShireAmbientNPC.cpp"
+          ],
+          "notes": "Player notice/look behavior exists."
+        },
+        {
+          "id": "LW-ROUTINES",
+          "status": "FOUNDATION_PRESENT",
+          "evidence": [
+            "Source/ShireJourney/ShireAmbientNPC.cpp"
+          ],
+          "notes": "Simple A/B walking and waiting exists."
+        },
+        {
+          "id": "LW-SOCIAL-PAUSE",
+          "status": "FOUNDATION_PRESENT",
+          "evidence": [
+            "Source/ShireJourney/ShireAmbientNPC.cpp"
+          ],
+          "notes": "Nearby ambient NPC social pauses exist; no dialogue exchange."
+        },
+        {
+          "id": "LW-STORY-DIALOGUE",
+          "status": "PARTIAL",
+          "evidence": [
+            "Source/ShireJourney/ShireNPC.cpp",
+            "Source/ShireJourney/ShireDialogueSubsystem.cpp"
+          ],
+          "notes": "Story/context foundations exist; bounded free variation not implemented."
+        },
+        {
+          "id": "LW-BIOMES",
+          "status": "PARTIAL",
+          "evidence": [
+            "Data/BiomePlan.csv"
+          ],
+          "notes": "Chapter identities defined; production completion varies by chapter."
+        }
+      ]
+    },
+    {
+      "id": "LW1",
+      "name": "NPC identity schedules relationships data",
+      "status": "PLANNED",
+      "features": [
+        {
+          "id": "NPC-PROFILE-DATA",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Identity role knowledge temperament anchor."
+        },
+        {
+          "id": "NPC-SCHEDULE-DATA",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Home/work/travel/social/story override."
+        },
+        {
+          "id": "NPC-RELATIONSHIP-DATA",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Authored bounded social links."
+        }
+      ]
+    },
+    {
+      "id": "LW2",
+      "name": "NPC-to-NPC contextual conversation",
+      "status": "PLANNED",
+      "features": [
+        {
+          "id": "NPC-CONVERSATION-SELECTION",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Eligibility, intent and participant selection."
+        },
+        {
+          "id": "NPC-CONVERSATION-RUNTIME",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Turn-taking, gaze, subtitle/audio bridge."
+        },
+        {
+          "id": "NPC-CONVERSATION-REPETITION",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Cooldown/history and anti-loop rules."
+        }
+      ]
+    },
+    {
+      "id": "LW3",
+      "name": "Persistent named-NPC memory",
+      "status": "PLANNED",
+      "features": [
+        {
+          "id": "NPC-MEMORY-SCHEMA",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Immediate/local/persistent tiers."
+        },
+        {
+          "id": "NPC-MEMORY-SAVE",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Integrate with save while controlling footprint."
+        }
+      ]
+    },
+    {
+      "id": "LW4",
+      "name": "Environmental life and micro-events",
+      "status": "PLANNED",
+      "features": [
+        {
+          "id": "WORLD-MICRO-EVENTS",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Workers, travelers, markets, reactions."
+        },
+        {
+          "id": "WORLD-FAUNA",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Low-cost region-appropriate animal/insect/bird activity."
+        },
+        {
+          "id": "WORLD-MOTION",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Wind/water/smoke/props/weather motion budget."
+        },
+        {
+          "id": "WORLD-EXPLORATION-DENSITY",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Ensure ordinary traversal regularly reveals life/detail."
+        }
+      ]
+    },
+    {
+      "id": "LW5",
+      "name": "Bounded dialogue intelligence",
+      "status": "PLANNED",
+      "features": [
+        {
+          "id": "NPC-KNOWLEDGE-GUARD",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Speaker knowledge/canon boundary."
+        },
+        {
+          "id": "NPC-DIALOGUE-VARIATION",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Bounded selection/generation with deterministic fallback."
+        },
+        {
+          "id": "NPC-DIALOGUE-CACHE",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Repetition/performance control."
+        }
+      ]
+    },
+    {
+      "id": "LW6",
+      "name": "Chapter acceptance",
+      "status": "PLANNED",
+      "features": [
+        {
+          "id": "P1C01-LIVING-WORLD-ACCEPTANCE",
+          "status": "PLANNED",
+          "evidence": [],
+          "notes": "Shire becomes quality bar before propagation."
+        },
+        {
+          "id": "P1C02-P1C08-LIVING-WORLD-ROLLOUT",
+          "status": "DEFERRED",
+          "evidence": [],
+          "notes": "Roll out only after Shire pattern and current hard gate are healthy."
+        }
+      ]
+    }
+  ]
+}
