@@ -52,7 +52,7 @@
       "title": "Permanent repository-based project memory",
       "category": "ProjectGovernance",
       "priority": "CRITICAL",
-      "status": "PARTIAL",
+      "status": "IMPLEMENTED",
       "origin": "User requirement recovered and reaffirmed after lost/deleted chat",
       "intent": "Record requests, decisions, completed work, incomplete work, validation state and next actions so the project survives forgotten details, deleted chats and programmer changes.",
       "evidence": [
@@ -63,14 +63,14 @@
         "Data/SourceArchitecturePlan.json"
       ],
       "implementation_refs": [
-        "Project Guardian regression memory",
-        "source architecture handoff",
-        "development checkpoint history"
+        "Data/ProjectGovernor.json is the single project authority",
+        "Scripts/project_governor.py validates the authority in CI",
+        "Source/ShireJourney/README.md and CURRENT_PROJECT_STATE provide lost-chat/developer handoff entry points",
+        "Project Guardian and checkpoint history preserve regression and milestone memory"
       ],
       "missing_work": [
-        "Requirement ledger itself must become mandatory CI input",
-        "Every future meaningful user request must be added/updated",
-        "Need periodic reconciliation between ledger, checkpoints and current state"
+        "Operational: every future meaningful user request must continue to be recorded in the Governor",
+        "Operational: reconcile Governor status against code/tests before opening a new major checkpoint"
       ],
       "acceptance_criteria": [
         "New programmer can identify all open high-priority requirements without reading chat",
@@ -80,7 +80,7 @@
       ],
       "dependencies": [],
       "checkpoint": "CP30B",
-      "notes": "This entry intentionally distinguishes existing recovery docs from the stronger all-user-requests ledger."
+      "notes": "The durable memory mechanism is implemented. Its ongoing value depends on continuing to update the single Governor."
     },
     {
       "id": "REQ-ORG-001",
@@ -414,8 +414,7 @@
         "Gandalf/Isengard parallel route fills a film-canon event outside Frodo's viewpoint"
       ],
       "missing_work": [
-        "Make film-to-game coverage machine-readable for all Part I runtime chapters",
-        "Continue chapter-by-chapter implementation and acceptance",
+        "Continue chapter-by-chapter implementation and acceptance against the existing FilmExperiencePlan",
         "Part II and Part III remain roadmap/design rather than production-complete"
       ],
       "acceptance_criteria": [
@@ -509,7 +508,7 @@
       "title": "Machine-readable film-to-game scene coverage",
       "category": "StoryGovernance",
       "priority": "CRITICAL",
-      "status": "PARTIAL",
+      "status": "IMPLEMENTED",
       "origin": "Inferred from the user's requirement that the known film story should be systematically applied rather than forgotten",
       "intent": "Maintain a machine-readable Part I coverage map that records the important film anchors for each runtime chapter, intended game treatment and current coverage state.",
       "evidence": [
@@ -518,12 +517,12 @@
         "Docs/PART1_FELLOWSHIP_MASTERPLAN.md"
       ],
       "implementation_refs": [
-        "FilmExperiencePlan created for P1C01-P1C08 plus GandalfParallel"
+        "Data/FilmExperiencePlan.json covers P1C01-P1C08 plus GandalfParallel",
+        "Pre-Unreal validation checks required film chapters/routes and anchor structure"
       ],
       "missing_work": [
         "Keep coverage states synchronized as chapter implementation changes",
-        "Expand anchors only when useful without turning the file into a copied screenplay",
-        "Add Part II/III coverage only when those production scopes open"
+        "Expand Part II/III coverage only when those production scopes open"
       ],
       "acceptance_criteria": [
         "Every P1C01-P1C08 runtime chapter has film anchors in the plan",
@@ -536,14 +535,14 @@
         "REQ-EXP-001"
       ],
       "checkpoint": "FILM_EXPERIENCE_CONTRACT",
-      "notes": "Coverage uses high-level scene intent and event labels, never screenplay text."
+      "notes": "Part I machine-readable scene coverage exists and is statically guarded; scene implementation/acceptance remains separate."
     },
     {
       "id": "REQ-GOV-001",
       "title": "Internal project governor for conflicts quality and pacing",
       "category": "ProjectGovernance",
       "priority": "CRITICAL",
-      "status": "PARTIAL",
+      "status": "IMPLEMENTED",
       "origin": "User explicitly requested an internal intelligent system that records requests, resolves contradictions, controls errors/lag and keeps development coordinated",
       "intent": "Maintain a deterministic project governor that reconciles requirement conflicts, protects hard invariants, tracks region-level quality gates and blocks false completion claims.",
       "evidence": [
@@ -554,12 +553,14 @@
         "Scripts/project_governor.py"
       ],
       "implementation_refs": [
-        "Governor policy/decision/quality maps and CI validator exist"
+        "Data/ProjectGovernor.json is the single authority",
+        "Scripts/project_governor.py validates requirements, decisions, conflicts, quality gates and secondary-authority prohibition",
+        "CI runs the Governor validator in Pre-Unreal Validation",
+        "Worker contract and active hard gate are recorded in the Governor"
       ],
       "missing_work": [
-        "Future meaningful requests must be translated into structured requirements/conflicts/decisions",
-        "Quality-gate statuses must be updated from actual PIE/device/human evidence",
-        "Automated gameplay traversal testing is not yet implemented"
+        "Operational: translate each future meaningful request into the Governor before/with implementation",
+        "Optional future enhancement: automated gameplay traversal probes where practical"
       ],
       "acceptance_criteria": [
         "CI fails on malformed governor data or unresolved declared conflicts",
@@ -571,7 +572,7 @@
         "REQ-MEM-001"
       ],
       "checkpoint": "CP30D",
-      "notes": "The governor is deterministic repository intelligence; it does not replace human product decisions or real gameplay tests."
+      "notes": "Single-manager governance is implemented; it does not replace real UE4 gameplay testing or human product judgment."
     },
     {
       "id": "REQ-QUALITY-001",
@@ -671,6 +672,39 @@
       ],
       "checkpoint": "GOVERNANCE_HARDENING",
       "notes": "Current repository reports develop as unprotected; tool connection does not expose administration write access."
+    },
+    {
+      "id": "REQ-MEM-002",
+      "title": "Open-request reminder before new project work",
+      "category": "ProjectGovernance",
+      "priority": "HIGH",
+      "status": "PARTIAL",
+      "origin": "User explicitly asked the intelligent project manager to remind them of earlier requests because they may forget",
+      "intent": "At the start of a work session or before opening a new major checkpoint, review the Governor and surface important unfinished prior requests so forgotten work is not silently abandoned.",
+      "evidence": [
+        "Data/ProjectGovernor.json",
+        "Docs/PROJECT_GOVERNOR.md",
+        "Docs/CURRENT_PROJECT_STATE.md"
+      ],
+      "implementation_refs": [
+        "Open requirements, active gate and missing work are stored centrally and can be reviewed on demand"
+      ],
+      "missing_work": [
+        "No autonomous background notification exists; reminders currently happen when the project session/work review is opened",
+        "Add a standard work-start summary step to the handoff protocol"
+      ],
+      "acceptance_criteria": [
+        "Before a new major checkpoint, open CRITICAL/HIGH unfinished requirements are summarized",
+        "The current active hard gate is surfaced first",
+        "Forgotten prior requests remain visible even after chat loss",
+        "Reminder behavior does not invent requests that are not in the Governor"
+      ],
+      "dependencies": [
+        "REQ-MEM-001",
+        "REQ-GOV-001"
+      ],
+      "checkpoint": "GOVERNANCE_HARDENING",
+      "notes": "This is a project-work reminder, not an autonomous phone/background reminder."
     }
   ],
   "hard_invariants": [
@@ -1097,5 +1131,75 @@
     "Any global direction change must be recorded in this Governor in the same logical change.",
     "A worker discovering a contradiction records it here rather than choosing silently.",
     "No major feature starts while active_gate.blocks_major_feature_expansion is true."
-  ]
+  ],
+  "work_queue": [
+    {
+      "order": 1,
+      "id": "WORK-GATE-001",
+      "title": "Finish current functional hard gate",
+      "status": "ACTIVE",
+      "rationale": "Do not stack new major features on unverified runtime behavior.",
+      "items": [
+        "Shire movement/camera/sprint/crouch/interact/HUD/quest/NPC awareness/dialogue smoke",
+        "F9 save/load round-trip",
+        "F8 Frodo-Gandalf/Isengard-Frodo round-trip",
+        "P1C02-P1C08 chapter smoke",
+        "target-laptop crash/freeze/hitch/memory/FPS observations",
+        "basic pacing/clarity notes"
+      ]
+    },
+    {
+      "order": 2,
+      "id": "WORK-MAINT-001",
+      "title": "Perform physical Source/ShireJourney Public/Private domain migration",
+      "status": "BLOCKED_BY_WORK-GATE-001",
+      "rationale": "Architecture map is ready; do the path/include refactor only after the current gameplay baseline is proven."
+    },
+    {
+      "order": 3,
+      "id": "WORK-SAVE-001",
+      "title": "Implement automatic safe checkpoint/respawn runtime",
+      "status": "BLOCKED_BY_WORK-GATE-001",
+      "rationale": "WorldCheckpointPlan exists; runtime automatic checkpoint behavior is still missing."
+    },
+    {
+      "order": 4,
+      "id": "WORK-LW-001",
+      "title": "Build living-world NPC identity/schedule/relationship data model",
+      "status": "PLANNED",
+      "rationale": "This is the foundation for deeper social behavior and memory."
+    },
+    {
+      "order": 5,
+      "id": "WORK-LW-002",
+      "title": "Implement NPC-to-NPC contextual conversations",
+      "status": "PLANNED",
+      "rationale": "Requires the NPC identity/knowledge/social model first."
+    },
+    {
+      "order": 6,
+      "id": "WORK-LW-003",
+      "title": "Implement persistent named-NPC memory and bounded dialogue intelligence",
+      "status": "PLANNED",
+      "rationale": "Must follow knowledge, relationship and save-budget design."
+    },
+    {
+      "order": 7,
+      "id": "WORK-WORLD-001",
+      "title": "Expand environmental micro-life and production polish chapter by chapter",
+      "status": "PLANNED",
+      "rationale": "Fauna, workers, travelers, environmental motion, richer terrain/assets and exploration density should propagate after the Shire vertical slice is accepted."
+    }
+  ],
+  "last_reconciliation": {
+    "date": "2026-09-18",
+    "reason": "Final pre-continuation audit after lost chat and single-governor consolidation",
+    "summary": [
+      "Reconciled stale requirement states with current repository implementation.",
+      "Marked permanent repository memory and single Governor as implemented.",
+      "Marked Part I machine-readable film coverage as implemented.",
+      "Added explicit reminder requirement REQ-MEM-002.",
+      "Added ordered work_queue so the Governor acts as one pacing/controller authority."
+    ]
+  }
 }
