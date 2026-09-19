@@ -533,6 +533,15 @@
 - Placement is deterministic and most dressing is non-colliding so story topology and target-device budgets remain stable.
 - Added PG-050. UE4.27 build/import and PIE/device visual acceptance are still required before this pass is called validated.
 
+## CP51 — Character Motion + Regional Atmosphere Foundation
+- Added `Data/CharacterMotionPlan.json` as the rig/animation handoff contract for the named Part I cast.
+- `AShireNPC` now attempts a strict skeletal-mesh + locomotion-AnimBP pair before hiding modular production visuals; incomplete rigs safely fall back to the existing modular character.
+- Modular fallback characters now have bounded profile-specific idle breathing, weight shift, walk cadence/stride variation and dialogue arm gestures so the cast reads as less static before final skeletal assets arrive.
+- Added `Data/ChapterAtmospherePlan.json` for P1C03-P1C08 lighting/fog identity.
+- `AFellowshipChapterWorldBuilder` now applies one bounded runtime sun, skylight and exponential-height-fog profile per generated chapter without moving any quest/story coordinate.
+- Hardened Pre-Unreal validation so PG-050 and new PG-051 checks participate in the final process exit status rather than running after the previous PASS print.
+- Final skeletal rigs, facial animation, cloth/hair simulation, weather VFX, cinematic grading and target-device visual/performance acceptance remain open.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
