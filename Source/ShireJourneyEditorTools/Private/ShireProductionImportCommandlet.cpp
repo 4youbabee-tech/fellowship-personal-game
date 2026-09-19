@@ -2,6 +2,7 @@
 
 #include "AssetImportTask.h"
 #include "AssetToolsModule.h"
+#include "EditorLoadingAndSavingUtils.h"
 #include "Factories/FbxImportUI.h"
 #include "HAL/FileManager.h"
 #include "Misc/FileHelper.h"
@@ -112,6 +113,16 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             UE_LOG(LogTemp, Display, TEXT("ShireProductionImport imported: %s"), *Filename);
         }
     }
+
+    // OBJ import may create secondary material packages that UE4.27 does not
+    // consistently include in UAssetImportTask::ImportedObjectPaths. Save every dirty
+    // content package once after the batch so meshes never point at transient materials.
+    const bool bSavedDirtyPackages = UEditorLoadingAndSavingUtils::SaveDirtyPackages(false, true);
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireProductionImport secondary package save: %s"),
+        bSavedDirtyPackages ? TEXT("ok") : TEXT("no-dirty-or-failed"));
 
     UE_LOG(LogTemp, Display, TEXT("ShireProductionImport: %d files, %d failures"), SourceFiles.Num(), Failed);
     return Failed == 0 ? 0 : 3;
