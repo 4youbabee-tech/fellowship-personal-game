@@ -30,5 +30,6 @@ public class ShireJourney : ModuleRules
         RuntimeDependencies.Add("$(ProjectDir)/Data/WorldResourceBankCP54.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/WorldActivityMovementPlan.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/FellowshipExperienceMegaPassCP56.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/LivingNPCIntelligencePlan.json");
     }
 }
