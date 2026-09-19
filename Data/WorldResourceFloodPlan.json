@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "plan_id": "CP53_WORLD_RESOURCE_FLOOD_V1",
+  "status": "ACTIVE_RUNTIME_IMPLEMENTATION_PENDING_BUILD",
+  "purpose": "Project-owned low-poly source resource pack created directly in-repository to massively increase visible world density without waiting on external licensing.",
+  "assets": [
+    "SM_CommonBarrel",
+    "SM_CommonCargoCrate",
+    "SM_CommonSackBale",
+    "SM_CommonLongBench",
+    "SM_CommonHayBale",
+    "SM_CommonCampTent",
+    "SM_CommonStoneArch",
+    "SM_CommonBrokenColumn",
+    "SM_CommonBrazier",
+    "SM_CommonRopePost",
+    "SM_CommonMarketCanopy",
+    "SM_CommonRiverBoat",
+    "SM_CommonCairn",
+    "SM_CommonTreeStump",
+    "SM_CommonMushroomCluster"
+  ],
+  "integration": {
+    "P1C01_ShIre": [
+      "farm goods",
+      "market canopies",
+      "social benches/barrels",
+      "river posts/boat",
+      "woodland floor clutter"
+    ],
+    "P1C02_Bree": [
+      "street trade goods",
+      "inn seating",
+      "market canopies",
+      "stable rope posts"
+    ],
+    "P1C03_Weathertop": [
+      "camp tent",
+      "cairns",
+      "crates",
+      "sacks"
+    ],
+    "P1C04_Rivendell": [
+      "garden benches",
+      "stone arches",
+      "mushroom clusters"
+    ],
+    "P1C05_Road_Caradhras": [
+      "camp tents",
+      "cargo crates",
+      "cairns"
+    ],
+    "P1C06_Moria": [
+      "broken columns",
+      "braziers",
+      "stone arches"
+    ],
+    "P1C07_Lothlorien": [
+      "benches",
+      "mushroom clusters",
+      "tree stumps"
+    ],
+    "P1C08_Anduin_AmonHen": [
+      "river boats",
+      "crates",
+      "barrels",
+      "cairns"
+    ]
+  },
+  "licensing": {
+    "ownership": "PROJECT_OWNED_GENERATED_SOURCE",
+    "external_downloads_used": false,
+    "note": "These meshes are original low-poly source geometry committed to the project and are not third-party licensed assets."
+  },
+  "performance_rules": [
+    "Decorative clutter defaults to no collision.",
+    "Resource placement remains deterministic.",
+    "Quest/story coordinates are not moved.",
+    "Production import commandlet discovers all .obj files recursively under SourceAssets/Production."
+  ]
+}
