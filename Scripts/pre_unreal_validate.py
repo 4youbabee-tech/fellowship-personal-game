@@ -2749,9 +2749,15 @@ else:
         fail(f"PG-059 invalid LivingNPCIntelligencePlan.json: {exc}")
 
 if living_npc_plan:
-    principles = " ".join(living_npc_plan.get("design_principles", []))
-    if "without an always-on remote language model" not in principles:
-        fail("PG-059 living-NPC plan must preserve offline deterministic play")
+    offline_policy = living_npc_plan.get("offline_runtime_policy", {})
+    if offline_policy.get("mode") != "OFFLINE_ONLY":
+        fail("PG-059 living-NPC runtime policy must remain OFFLINE_ONLY")
+    if offline_policy.get("network_required") is not False:
+        fail("PG-059 living-NPC runtime must not require network access")
+    if offline_policy.get("remote_llm_allowed") is not False:
+        fail("PG-059 remote/cloud LLM runtime must remain disabled")
+    if offline_policy.get("cloud_api_dependency_allowed") is not False:
+        fail("PG-059 cloud API gameplay dependency must remain disabled")
     if living_npc_plan.get("character_knowledge_policy", {}).get("default") != "DENY_UNLISTED":
         fail("PG-059 character knowledge default must remain DENY_UNLISTED")
 
