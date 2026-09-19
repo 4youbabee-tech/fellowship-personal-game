@@ -113,13 +113,17 @@ void UShireNPCContextSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     ProfileSchedules.Empty();
     IntentRequiredKnowledge.Empty();
     DialogueVariants.Empty();
+    ChapterMoodById.Empty();
+    ChapterPressureById.Empty();
 
     const bool bSocialLoaded = LoadSocialModel();
     const bool bConversationLoaded = LoadConversationPlan();
     const bool bBoundedLoaded = LoadBoundedDialoguePlan();
+    const bool bRegionalMoodLoaded = LoadRegionalMoodPlan();
     BuildDialogueVariantLibrary();
 
-    bDataReady = bSocialLoaded && bConversationLoaded && bBoundedLoaded && Profiles.Num() > 0;
+    bDataReady = bSocialLoaded && bConversationLoaded && bBoundedLoaded &&
+        bRegionalMoodLoaded && Profiles.Num() > 0;
 
     if (bDataReady)
     {
@@ -152,6 +156,8 @@ void UShireNPCContextSubsystem::Deinitialize()
     ProfileSchedules.Empty();
     IntentRequiredKnowledge.Empty();
     DialogueVariants.Empty();
+    ChapterMoodById.Empty();
+    ChapterPressureById.Empty();
     bDataReady = false;
     Super::Deinitialize();
 }
@@ -347,6 +353,48 @@ bool UShireNPCContextSubsystem::LoadBoundedDialoguePlan()
     }
 
     return true;
+}
+
+bool UShireNPCContextSubsystem::LoadRegionalMoodPlan()
+{
+    TSharedPtr<FJsonObject> Root;
+    if (!LoadJsonObject(TEXT("Data/NPCRegionalMoodPlan.json"), Root))
+    {
+        return false;
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* MoodValues = nullptr;
+    if (!Root->TryGetArrayField(TEXT("chapter_moods"), MoodValues) || !MoodValues)
+    {
+        return false;
+    }
+
+    for (const TSharedPtr<FJsonValue>& Value : *MoodValues)
+    {
+        const TSharedPtr<FJsonObject> Object = Value.IsValid() ? Value->AsObject() : nullptr;
+        if (!Object.IsValid())
+        {
+            continue;
+        }
+
+        FString ChapterString;
+        FString MoodString;
+        double Pressure = 0.0;
+        Object->TryGetStringField(TEXT("chapter"), ChapterString);
+        Object->TryGetStringField(TEXT("mood"), MoodString);
+        Object->TryGetNumberField(TEXT("pressure"), Pressure);
+
+        if (ChapterString.IsEmpty() || MoodString.IsEmpty())
+        {
+            continue;
+        }
+
+        const FName ChapterId(*ChapterString);
+        ChapterMoodById.Add(ChapterId, FName(*MoodString));
+        ChapterPressureById.Add(ChapterId, FMath::Clamp(static_cast<float>(Pressure), 0.0f, 1.0f));
+    }
+
+    return ChapterMoodById.Num() > 0;
 }
 
 void UShireNPCContextSubsystem::AddDialogueVariant(
@@ -688,7 +736,67 @@ FString UShireNPCContextSubsystem::GetProfileContextSummary(FName ProfileHint) c
         Parts.Add(FString::Printf(TEXT("attitudes=%s"), *FString::Join(Attitudes, TEXT(","))));
     }
 
+    Parts.Add(FString::Printf(TEXT("world_mood=%s"), *GetRegionalWorldMood().ToString()));
+    Parts.Add(FString::Printf(TEXT("world_pressure=%.2f"), GetRegionalPressure()));
+    if (IsDangerStateActive())
+    {
+        Parts.Add(TEXT("danger=ACTIVE"));
+    }
+    if (IsInclementWeather())
+    {
+        Parts.Add(FString::Printf(TEXT("weather=%s"), *WeatherState.ToString()));
+    }
+
     return FString::Join(Parts, TEXT("; "));
+}
+
+FName UShireNPCContextSubsystem::GetRegionalWorldMood() const
+{
+    const UGameInstance* GI = GetGameInstance();
+    const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests)
+    {
+        return TEXT("CALM_TRAVEL");
+    }
+
+    FName ChapterId = Quests->GetCurrentChapterId();
+    if (Quests->GetCurrentRouteId() == TEXT("GandalfParallel"))
+    {
+        ChapterId = TEXT("P1G01");
+    }
+
+    if (const FName* Mood = ChapterMoodById.Find(ChapterId))
+    {
+        return *Mood;
+    }
+    return TEXT("CALM_TRAVEL");
+}
+
+float UShireNPCContextSubsystem::GetRegionalPressure() const
+{
+    const UGameInstance* GI = GetGameInstance();
+    const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests)
+    {
+        return 0.25f;
+    }
+
+    FName ChapterId = Quests->GetCurrentChapterId();
+    if (Quests->GetCurrentRouteId() == TEXT("GandalfParallel"))
+    {
+        ChapterId = TEXT("P1G01");
+    }
+
+    float Pressure = 0.25f;
+    if (const float* Found = ChapterPressureById.Find(ChapterId))
+    {
+        Pressure = *Found;
+    }
+    if (IsDangerStateActive())
+    {
+        Pressure = FMath::Max(Pressure, 0.90f);
+    }
+    return FMath::Clamp(Pressure, 0.0f, 1.0f);
 }
 
 FName UShireNPCContextSubsystem::ResolveSchedulePhase(
@@ -915,6 +1023,8 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
             ListenerId == NAME_None ? FName(TEXT("PLAYER_FRODO")) : ListenerId);
         Seed = HashCombine(Seed, static_cast<uint32>(RelationshipContext + 100));
     }
+    Seed = HashCombine(Seed, GetTypeHash(GetRegionalWorldMood()));
+    Seed = HashCombine(Seed, static_cast<uint32>(FMath::RoundToInt(GetRegionalPressure() * 100.0f)));
 
     const FDialogueVariantRuntime* Selected = Pool[Seed % static_cast<uint32>(Pool.Num())];
     Result.bValid = true;
