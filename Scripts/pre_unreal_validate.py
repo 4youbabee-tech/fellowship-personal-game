@@ -2663,6 +2663,72 @@ if cp55_event_plan_path.exists():
 else:
     fail("PG-055 LivingWorldEventPlan.json missing")
 
+# PG-058: CP56 film-spine experiential enrichment must remain canon-safe, optional and runtime-wired.
+cp56_plan_path = ROOT / "Data" / "FellowshipExperienceMegaPassCP56.json"
+cp56_plan = {}
+if not cp56_plan_path.exists():
+    fail("PG-058 FellowshipExperienceMegaPassCP56.json missing")
+else:
+    try:
+        cp56_plan = json.loads(read(cp56_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-058 invalid FellowshipExperienceMegaPassCP56.json: {exc}")
+
+if cp56_plan:
+    if cp56_plan.get("status") not in {"IMPLEMENTATION_IN_PROGRESS", "IMPLEMENTED_PENDING_VALIDATION", "VALIDATED"}:
+        fail("PG-058 CP56 plan has invalid status")
+    if len(cp56_plan.get("chapters", [])) != 8:
+        fail("PG-058 CP56 must retain exactly eight Part I chapter entries")
+    canon_policy = cp56_plan.get("canon_policy", {})
+    if canon_policy.get("primary_reference") != "Peter Jackson film continuity":
+        fail("PG-058 CP56 film-continuity spine changed")
+    if "do not reproduce screenplay dialogue" not in str(canon_policy.get("dialogue_policy", "")).lower():
+        fail("PG-058 CP56 dialogue policy must reject screenplay reproduction")
+
+cp56_film_plan_path = ROOT / "Data" / "FilmExperiencePlan.json"
+if not cp56_film_plan_path.exists():
+    fail("PG-058 FilmExperiencePlan.json missing")
+else:
+    try:
+        cp56_film_plan = json.loads(read(cp56_film_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-058 invalid FilmExperiencePlan.json: {exc}")
+        cp56_film_plan = {}
+    cp56_anchor_ids = {
+        str(anchor.get("id") or "")
+        for chapter in cp56_film_plan.get("chapters", [])
+        if isinstance(chapter, dict)
+        for anchor in chapter.get("anchors", [])
+        if isinstance(anchor, dict)
+    }
+    for anchor_id in ["P1C01_SHIRE_LIFE", "P1C01_PARTY", "P1C05_COMPANIONSHIP"]:
+        if anchor_id not in cp56_anchor_ids:
+            fail(f"PG-058 film-experience anchor missing: {anchor_id}")
+
+cp56_shire_cpp = read(ROOT / "Source" / "ShireJourney" / "ShirePrototypeWorldBuilder.cpp")
+cp56_ambient_cpp = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.cpp")
+cp56_bree_cpp = read(ROOT / "Source" / "ShireJourney" / "BreePrototypeWorldBuilder.cpp")
+cp56_fellowship_cpp = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
+for runtime_symbol in [
+    "Side_GreenDragonRevelry",
+    "Side_PartyMischief",
+    "Side_SharedShireMemory",
+    'TEXT("PlayRunner")',
+    "Side_BreeCommonRoomLife",
+    "RoadCompanionship",
+    "FellowshipCompanionship",
+    "MoriaDeadCityDiscovery",
+    "LorienSharedGrief",
+    "AnduinCampTension",
+]:
+    if runtime_symbol not in (cp56_shire_cpp + cp56_ambient_cpp + cp56_bree_cpp + cp56_fellowship_cpp):
+        fail(f"PG-058 CP56 runtime enrichment missing: {runtime_symbol}")
+
+if "FellowshipExperienceMegaPassCP56.json" not in build_cs_cp52:
+    fail("PG-058 CP56 experience plan is not packaged")
+if "WorldActivityMovementPlan.json" not in build_cs_cp52:
+    fail("PG-058 CP55 activity plan lost from runtime packaging")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
