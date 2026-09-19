@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_CHARACTER_MOTION_V1",
+  "status": "ACTIVE_RUNTIME_IMPLEMENTATION_PENDING_BUILD",
+  "purpose": "Make the named Part I cast visibly alive now while establishing a safe skeletal-rig handoff path. Runtime prefers an imported skeletal mesh plus locomotion AnimBP only when both exist; otherwise the project-owned modular character remains active with deterministic low-cost procedural idle/walk/talk motion.",
+  "runtime_owner": "AShireNPC",
+  "rig_contract": {
+    "mesh_path_pattern": "/Game/Production/Characters/Rigs/{Folder}/SK_{Folder}.SK_{Folder}",
+    "anim_blueprint_class_pattern": "/Game/Production/Characters/Rigs/{Folder}/ABP_{Folder}_Locomotion.ABP_{Folder}_Locomotion_C",
+    "activation_rule": "Both skeletal mesh and AnimBP class must resolve before modular visuals are hidden.",
+    "fallback_rule": "If either rig asset is missing, keep modular production meshes visible and animate their parts procedurally.",
+    "required_states": ["IDLE", "WALK", "CATCH_UP", "DIALOGUE"],
+    "future_states": ["RUN", "COMBAT_READY", "ATTACK", "HIT_REACT", "CINEMATIC"]
+  },
+  "procedural_profiles": [
+    {
+      "id": "HOBBIT",
+      "cadence_scale": 1.08,
+      "stride_scale": 0.92,
+      "idle_scale": 0.95,
+      "notes": "Shorter, quicker steps with warm visible idle breathing."
+    },
+    {
+      "id": "HUMAN",
+      "cadence_scale": 1.0,
+      "stride_scale": 1.0,
+      "idle_scale": 0.82,
+      "notes": "Balanced locomotion for Rangers, Men and Bree adults."
+    },
+    {
+      "id": "ELF",
+      "cadence_scale": 0.9,
+      "stride_scale": 0.8,
+      "idle_scale": 0.62,
+      "notes": "Quieter body motion and smoother gait."
+    },
+    {
+      "id": "DWARF",
+      "cadence_scale": 0.96,
+      "stride_scale": 1.12,
+      "idle_scale": 0.72,
+      "notes": "Heavier arm/leg swing with reduced upper-body sway."
+    },
+    {
+      "id": "WIZARD",
+      "cadence_scale": 0.82,
+      "stride_scale": 0.86,
+      "idle_scale": 0.74,
+      "notes": "Measured gait and restrained idle motion."
+    }
+  ],
+  "named_rig_folders": [
+    "Gandalf",
+    "Sam",
+    "Merry",
+    "Pippin",
+    "Aragorn",
+    "Bilbo",
+    "Boromir",
+    "Legolas",
+    "Gimli",
+    "Arwen",
+    "Elrond",
+    "Haldir",
+    "Galadriel",
+    "Saruman",
+    "Butterbur",
+    "GateKeeper",
+    "Hamfast",
+    "Rosie",
+    "FarmerMaggot"
+  ],
+  "performance_rules": [
+    "Do not tick a second skeletal/procedural visual path at the same time.",
+    "Keep locomotion math allocation-free and bounded per character.",
+    "Dialogue gestures reuse the existing dialogue acting timer instead of spawning timeline actors.",
+    "Companion catch-up remains capped and teleports only beyond the existing safety distance.",
+    "Final skeletal/facial/cloth acceptance requires UE4.27 import, PIE and target-device evidence."
+  ],
+  "acceptance_boundary": {
+    "implemented_now": [
+      "rig asset resolution contract",
+      "modular fallback motion profiles",
+      "idle breathing and weight shift",
+      "walk/catch-up cadence variation",
+      "dialogue arm gesture layer"
+    ],
+    "not_claimed": [
+      "final skeletal rigs",
+      "motion-capture fidelity",
+      "facial animation",
+      "cloth/hair simulation",
+      "final combat animation"
+    ]
+  }
+}
