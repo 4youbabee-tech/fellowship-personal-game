@@ -2,7 +2,7 @@
 
 #include "AssetImportTask.h"
 #include "AssetToolsModule.h"
-#include "EditorLoadingAndSavingUtils.h"
+#include "FileHelpers.h"
 #include "Factories/FbxImportUI.h"
 #include "HAL/FileManager.h"
 #include "Misc/FileHelper.h"
@@ -117,7 +117,13 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     // OBJ import may create secondary material packages that UE4.27 does not
     // consistently include in UAssetImportTask::ImportedObjectPaths. Save every dirty
     // content package once after the batch so meshes never point at transient materials.
-    const bool bSavedDirtyPackages = UEditorLoadingAndSavingUtils::SaveDirtyPackages(false, true);
+    const bool bSavedDirtyPackages = FEditorFileUtils::SaveDirtyPackages(
+        false,  // bPromptUserToSave
+        false,  // bSaveMapPackages
+        true,   // bSaveContentPackages
+        true,   // bFastSave
+        false,  // bNotifyNoPackagesSaved
+        false); // bCanBeDeclined
     UE_LOG(
         LogTemp,
         Display,
