@@ -1736,6 +1736,15 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
         return;
     }
 
+    auto SpawnProd = [this](UStaticMesh* Mesh, const FVector& Location, const FVector& Scale,
+        const FRotator& Rotation = FRotator::ZeroRotator, bool bCollision = true)
+    {
+        if (Mesh)
+        {
+            SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, bCollision);
+        }
+    };
+
     DistantTreeTrunkInstances->ClearInstances();
     DistantTreeCanopyInstances->ClearInstances();
     RockInstances->ClearInstances();
