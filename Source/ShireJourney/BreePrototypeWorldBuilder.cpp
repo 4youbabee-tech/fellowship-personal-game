@@ -435,6 +435,49 @@ void ABreePrototypeWorldBuilder::SpawnProductionBreeDetailLayer()
 
     SpawnProd(CommonPathMarkerMesh, FVector(-1200,80,0), FVector(0.78f),
         FRotator(0.0f, 12.0f, 0.0f), false);
+
+    // CP53 dense town-life dressing: more imported clutter, seating and trade goods
+    // around streets and the inn, with collision disabled on decorative pieces.
+    UStaticMesh* CommonBarrel = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel"));
+    UStaticMesh* CommonCargoCrate = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate"));
+    UStaticMesh* CommonSackBale = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
+    UStaticMesh* CommonLongBench = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
+    UStaticMesh* CommonRopePost = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonRopePost.SM_CommonRopePost"));
+    UStaticMesh* CommonMarketCanopy = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
+
+    const FVector StreetGoods[] = {
+        FVector(-700,-250,0), FVector(-510,280,0), FVector(-240,-310,0), FVector(-40,300,0),
+        FVector(220,-300,0), FVector(430,300,0), FVector(700,-250,0), FVector(920,280,0),
+        FVector(1120,500,0), FVector(1330,520,0), FVector(1530,500,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(StreetGoods); ++Index)
+    {
+        UStaticMesh* Chosen = Index % 3 == 0 ? CommonBarrel :
+            (Index % 3 == 1 ? CommonCargoCrate : CommonSackBale);
+        SpawnProd(Chosen, StreetGoods[Index], FVector(0.62f + 0.04f * (Index % 2)),
+            FRotator(0.0f, static_cast<float>((Index * 33) % 360), 0.0f), false);
+    }
+
+    const FVector Benches[] = {
+        FVector(-620,120,0), FVector(-120,-140,0), FVector(420,120,0),
+        FVector(980,40,0), FVector(1240,720,0), FVector(1540,760,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(Benches); ++Index)
+    {
+        SpawnProd(CommonLongBench, Benches[Index], FVector(0.66f),
+            FRotator(0.0f, Index < 4 ? 0.0f : 90.0f, 0.0f), false);
+    }
+
+    SpawnProd(CommonMarketCanopy, FVector(-240,220,22), FVector(0.72f), FRotator(0.0f,4.0f,0.0f), false);
+    SpawnProd(CommonMarketCanopy, FVector(330,-230,22), FVector(0.70f), FRotator(0.0f,-5.0f,0.0f), false);
+
+    const FVector StablePosts[] = {
+        FVector(1020,-430,0), FVector(1130,-430,0), FVector(1240,-430,0), FVector(1350,-430,0)
+    };
+    for (const FVector& P : StablePosts)
+    {
+        SpawnProd(CommonRopePost, P, FVector(0.72f), FRotator::ZeroRotator, false);
+    }
 }
 
 void ABreePrototypeWorldBuilder::SpawnStoryFlow()

@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_WORLD_ALIVE_SATURATION_CP53",
+  "status": "ACTIVE_RUNTIME_IMPLEMENTATION_PENDING_BUILD",
+  "purpose": "Turn the Part I world from occasional ambient moments into a continuously inhabited low-cost runtime using baseline regional populations plus denser micro-events, while preserving the 30 FPS target and story topology.",
+  "runtime_owner": "ALivingWorldDirector + AShireAmbientNPC",
+  "baseline_population_targets": {
+    "P1C01": 18,
+    "P1C02": 16,
+    "P1C03": 5,
+    "P1C04": 12,
+    "P1C05": 6,
+    "P1C06": 0,
+    "P1C07": 10,
+    "P1C08": 6
+  },
+  "population_roles": {
+    "P1C01": ["Villager","FieldWorker","PartyGuest","FerryWorker","RoadWalker"],
+    "P1C02": ["BreeTownsperson","RoadWalker","Courier"],
+    "P1C03": ["RoadWalker"],
+    "P1C04": ["Elf","Courier"],
+    "P1C05": ["RoadWalker"],
+    "P1C06": [],
+    "P1C07": ["Elf","RoadWalker"],
+    "P1C08": ["RoadWalker"]
+  },
+  "activity_props": ["Basket","Crate","Satchel","Mug","Book","Lantern"],
+  "runtime_rules": [
+    "Maintain a baseline population around the player in addition to disposable micro-events.",
+    "Baseline actors are culled outside a broad radius and replenished gradually rather than spawned in one frame.",
+    "Danger state suppresses peaceful social/work events but does not freeze the entire world.",
+    "Moria remains civilian-empty; motion there comes from danger/aftermath and environment events.",
+    "Regional role mixes are deterministic enough for repeatable tests but varied enough to avoid clone crowds.",
+    "NPC tick throttling remains distance-based through AShireAmbientNPC.",
+    "No ambient actor owns story progress, save-critical state or quest coordinates."
+  ],
+  "density_profile": {
+    "max_active_micro_events_near_player": 5,
+    "min_seconds_between_event_starts": 6,
+    "baseline_spawn_interval_seconds": 0.35,
+    "baseline_inner_radius_cm": 850,
+    "baseline_outer_radius_cm": 2600,
+    "baseline_cull_radius_cm": 6200
+  },
+  "acceptance_boundary": {
+    "implemented_now": [
+      "continuous baseline regional population",
+      "regional role and prop variety",
+      "gradual replenish/cull loop",
+      "denser micro-event cadence",
+      "existing social conversations, schedules and player awareness reused by new population"
+    ],
+    "not_claimed": [
+      "final skeletal crowds",
+      "crowd navmesh avoidance",
+      "final voice audio",
+      "final fauna meshes",
+      "PIE visual acceptance",
+      "target-device performance acceptance"
+    ]
+  }
+}

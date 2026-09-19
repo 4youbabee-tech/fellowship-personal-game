@@ -555,6 +555,18 @@
 - The external licensed manifest still contains zero approved asset entries; this batch therefore integrates all currently usable project-owned resources but does not pretend unlicensed third-party downloads are approved.
 - UE4.27 compile/import, PIE P1C01-P1C08 traversal and target-device performance/visual acceptance remain required.
 
+## CP53 — World Alive Saturation
+- Shifted from occasional ambient events to a continuously inhabited runtime around the player.
+- Added `Data/WorldLifeSaturationPlan.json` with per-chapter baseline population targets: Shire 18, Bree 16, Weathertop/Ford 5, Rivendell 12, Caradhras 6, Moria 0 civilians, Lothlorien 10, Anduin/Amon Hen 6.
+- `ALivingWorldDirector` now maintains and replenishes regional baseline populations in addition to micro-events, using gradual spawn/cull budgets instead of one-frame crowd bursts.
+- Baseline roles vary by region: villagers, field workers, party guests, ferry workers, Bree townspeople, couriers, road walkers and elves.
+- Baseline actors reuse the existing ambient schedule, player awareness, social conversations, activity props and distance-based tick throttling from `AShireAmbientNPC`.
+- Micro-event capacity increases to five active events with a six-second floor between starts under the CP53 contract.
+- Moria remains civilian-empty by design; its movement continues to come from danger/aftermath/environment activity rather than fabricated settlement life.
+- Added PG-053 validation and packaged the CP53 life-saturation contract for runtime builds.
+- Added a 15-mesh project-owned common resource flood pack (barrels, crates, sacks, benches, hay, tents, arches, broken columns, braziers, rope posts, market canopies, boats, cairns, stumps and mushroom clusters) and wired it across P1C01-P1C08.
+- Final skeletal crowds, navmesh crowd avoidance, voice audio, fauna meshes and target-device performance acceptance remain open.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 

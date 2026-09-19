@@ -2022,6 +2022,65 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
         FRotator(0.0f, -14.0f, 0.0f), false);
     SpawnProd(ProductionCommonDryStoneWallMesh, FVector(18400,980,0), FVector(0.86f),
         FRotator(0.0f, 5.0f, 0.0f), false);
+
+    // CP53 resource flood: imported project-owned clutter makes every Shire zone read as worked,
+    // travelled and inhabited without touching quest anchors.
+    UStaticMesh* CommonBarrel = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel"));
+    UStaticMesh* CommonCargoCrate = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate"));
+    UStaticMesh* CommonSackBale = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
+    UStaticMesh* CommonLongBench = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
+    UStaticMesh* CommonHayBale = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonHayBale.SM_CommonHayBale"));
+    UStaticMesh* CommonRopePost = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonRopePost.SM_CommonRopePost"));
+    UStaticMesh* CommonMarketCanopy = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
+    UStaticMesh* CommonRiverBoat = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonRiverBoat.SM_CommonRiverBoat"));
+    UStaticMesh* CommonTreeStump = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonTreeStump.SM_CommonTreeStump"));
+    UStaticMesh* CommonMushrooms = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonMushroomCluster.SM_CommonMushroomCluster"));
+
+    const FVector FarmGoods[] = {
+        FVector(3880,-1120,0), FVector(4200,-1060,0), FVector(4550,-1140,0),
+        FVector(8200,1060,0), FVector(8600,1110,0), FVector(8950,1030,0),
+        FVector(16600,-960,0), FVector(17000,-900,0), FVector(17400,-980,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(FarmGoods); ++Index)
+    {
+        SpawnProd(Index % 3 == 0 ? CommonHayBale : (Index % 3 == 1 ? CommonCargoCrate : CommonSackBale),
+            FarmGoods[Index], FVector(0.68f + 0.04f * (Index % 2)),
+            FRotator(0.0f, static_cast<float>((Index * 37) % 360), 0.0f), false);
+    }
+
+    const FVector SocialProps[] = {
+        FVector(-720,410,0), FVector(-420,520,0), FVector(-120,430,0),
+        FVector(220,520,0), FVector(540,430,0), FVector(860,500,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(SocialProps); ++Index)
+    {
+        SpawnProd(Index % 2 == 0 ? CommonLongBench : CommonBarrel,
+            SocialProps[Index], FVector(0.68f),
+            FRotator(0.0f, Index % 2 == 0 ? 8.0f : -12.0f, 0.0f), false);
+    }
+
+    SpawnProd(CommonMarketCanopy, FVector(-470,80,10), FVector(0.78f), FRotator(0.0f,-6.0f,0.0f), false);
+    SpawnProd(CommonMarketCanopy, FVector(30,40,10), FVector(0.74f), FRotator(0.0f,5.0f,0.0f), false);
+
+    const FVector RiverPosts[] = {
+        FVector(22200,-760,0), FVector(22420,-740,0), FVector(23180,290,0), FVector(23400,310,0)
+    };
+    for (const FVector& P : RiverPosts)
+    {
+        SpawnProd(CommonRopePost, P, FVector(0.74f), FRotator::ZeroRotator, false);
+    }
+    SpawnProd(CommonRiverBoat, FVector(23080,-300,-10), FVector(0.62f), FRotator(0.0f,7.0f,0.0f), false);
+
+    const FVector WoodlandFloor[] = {
+        FVector(11850,-930,0), FVector(12400,-1020,0), FVector(12950,-880,0),
+        FVector(14500,940,0), FVector(15100,1010,0), FVector(15700,920,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(WoodlandFloor); ++Index)
+    {
+        SpawnProd(Index % 2 == 0 ? CommonTreeStump : CommonMushrooms,
+            WoodlandFloor[Index], FVector(0.72f + 0.05f * (Index % 3)),
+            FRotator(0.0f, static_cast<float>(Index * 43), 0.0f), false);
+    }
 }
 
 void AShirePrototypeWorldBuilder::BuildPrototypeWorld()

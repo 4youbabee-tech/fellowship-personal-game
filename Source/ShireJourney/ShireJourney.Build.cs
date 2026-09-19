@@ -25,5 +25,7 @@ public class ShireJourney : ModuleRules
         RuntimeDependencies.Add("$(ProjectDir)/Data/ChapterAtmospherePlan.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/WorldDressingPlan.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/ResourceIntegrationPlan.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/WorldLifeSaturationPlan.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/WorldResourceFloodPlan.json");
     }
 }

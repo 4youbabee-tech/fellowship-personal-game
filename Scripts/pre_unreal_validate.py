@@ -2271,6 +2271,108 @@ if resource_integration:
     if external_policy.get("current_approved_asset_count") != 0:
         fail("PG-052 external approved count must match current empty ExternalAssetManifest assets list")
 
+# PG-053: Part I must maintain continuous low-cost regional life, not only isolated micro-events.
+world_life_plan_path = ROOT / "Data" / "WorldLifeSaturationPlan.json"
+world_life_plan = {}
+if not world_life_plan_path.exists():
+    fail("PG-053 WorldLifeSaturationPlan.json missing")
+else:
+    try:
+        world_life_plan = json.loads(read(world_life_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-053 invalid WorldLifeSaturationPlan.json: {exc}")
+
+living_world_h = read(SOURCE / "LivingWorldDirector.h")
+living_world_cpp = read(SOURCE / "LivingWorldDirector.cpp")
+ambient_cpp = read(SOURCE / "ShireAmbientNPC.cpp")
+
+for symbol in [
+    "BaselinePopulation",
+    "BaselineTargetByChapter",
+    "BaselineRolesByChapter",
+    "LoadLifeSaturationContract",
+    "MaintainBaselinePopulation",
+    "CleanupBaselinePopulation",
+    "ChooseBaselineRole",
+    "ChooseBaselineProp",
+    "ChoosePopulationOrigin",
+    "LivingWorldBaseline",
+]:
+    if symbol not in (living_world_h + living_world_cpp):
+        fail(f"PG-053 continuous-life runtime symbol missing: {symbol}")
+
+for symbol in [
+    "UpdateSocialLife",
+    "UpdateScheduleContext",
+    "UpdateAwareness",
+    "ResolveAmbientConversationLine",
+]:
+    if symbol not in ambient_cpp:
+        fail(f"PG-053 ambient social-life behavior missing: {symbol}")
+
+if "WorldLifeSaturationPlan.json" not in build_cs_cp52:
+    fail("PG-053 world-life saturation plan is not packaged")
+
+if world_life_plan:
+    targets = world_life_plan.get("baseline_population_targets", {})
+    roles = world_life_plan.get("population_roles", {})
+    for chapter_id in ["P1C01","P1C02","P1C03","P1C04","P1C05","P1C06","P1C07","P1C08"]:
+        if chapter_id not in targets:
+            fail(f"PG-053 baseline population target missing: {chapter_id}")
+        if chapter_id not in roles:
+            fail(f"PG-053 population role mix missing: {chapter_id}")
+    if int(targets.get("P1C01", 0)) < 12:
+        fail("PG-053 Shire baseline population is below the dense-world floor")
+    if int(targets.get("P1C02", 0)) < 10:
+        fail("PG-053 Bree baseline population is below the dense-world floor")
+    if int(targets.get("P1C06", -1)) != 0:
+        fail("PG-053 Moria must remain civilian-empty")
+
+world_resource_flood_path = ROOT / "Data" / "WorldResourceFloodPlan.json"
+if not world_resource_flood_path.exists():
+    fail("PG-053 WorldResourceFloodPlan.json missing")
+else:
+    try:
+        world_resource_flood = json.loads(read(world_resource_flood_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-053 invalid WorldResourceFloodPlan.json: {exc}")
+        world_resource_flood = {}
+
+resource_flood_assets = [
+    "SM_CommonBarrel.obj",
+    "SM_CommonCargoCrate.obj",
+    "SM_CommonSackBale.obj",
+    "SM_CommonLongBench.obj",
+    "SM_CommonHayBale.obj",
+    "SM_CommonCampTent.obj",
+    "SM_CommonStoneArch.obj",
+    "SM_CommonBrokenColumn.obj",
+    "SM_CommonBrazier.obj",
+    "SM_CommonRopePost.obj",
+    "SM_CommonMarketCanopy.obj",
+    "SM_CommonRiverBoat.obj",
+    "SM_CommonCairn.obj",
+    "SM_CommonTreeStump.obj",
+    "SM_CommonMushroomCluster.obj",
+]
+for asset_name in resource_flood_assets:
+    if not (common_dressing_root / asset_name).exists():
+        fail(f"PG-053 resource flood asset missing: {asset_name}")
+
+for runtime_symbol in [
+    "SM_CommonBarrel",
+    "SM_CommonCargoCrate",
+    "SM_CommonCampTent",
+    "SM_CommonStoneArch",
+    "SM_CommonRiverBoat",
+    "SM_CommonMushroomCluster",
+]:
+    if runtime_symbol not in (shire_cpp_cp52 + bree_cpp_cp52 + fellowship_cpp_cp52):
+        fail(f"PG-053 resource flood runtime reference missing: {runtime_symbol}")
+
+if "WorldResourceFloodPlan.json" not in build_cs_cp52:
+    fail("PG-053 world resource flood plan is not packaged")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

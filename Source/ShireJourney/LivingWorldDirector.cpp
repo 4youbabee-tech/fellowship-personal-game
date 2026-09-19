@@ -16,7 +16,7 @@
 ALivingWorldDirector::ALivingWorldDirector()
 {
     PrimaryActorTick.bCanEverTick = true;
-    PrimaryActorTick.TickInterval = 1.0f;
+    PrimaryActorTick.TickInterval = 0.35f;
 }
 
 void ALivingWorldDirector::BeginPlay()
@@ -25,6 +25,7 @@ void ALivingWorldDirector::BeginPlay()
 
     Random.Initialize(7919);
     LoadEventContract();
+    LoadLifeSaturationContract();
 
     if (UGameInstance* GI = GetGameInstance())
     {
@@ -60,6 +61,15 @@ void ALivingWorldDirector::EndPlay(const EEndPlayReason::Type EndPlayReason)
         }
     }
     ActiveEvents.Empty();
+
+    for (TWeakObjectPtr<AShireAmbientNPC>& NPCPtr : BaselinePopulation)
+    {
+        if (AShireAmbientNPC* NPC = NPCPtr.Get())
+        {
+            NPC->Destroy();
+        }
+    }
+    BaselinePopulation.Empty();
 
     Super::EndPlay(EndPlayReason);
 }
@@ -140,6 +150,90 @@ bool ALivingWorldDirector::LoadEventContract()
     return AllowedEventTypesByChapter.Num() > 0;
 }
 
+bool ALivingWorldDirector::LoadLifeSaturationContract()
+{
+    const FString Path = FPaths::Combine(FPaths::ProjectDir(), TEXT("Data/WorldLifeSaturationPlan.json"));
+    FString JsonText;
+    if (!FFileHelper::LoadFileToString(JsonText, *Path))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("LivingWorldDirector: could not read %s; using baseline defaults."), *Path);
+        return false;
+    }
+
+    TSharedPtr<FJsonObject> Root;
+    const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonText);
+    if (!FJsonSerializer::Deserialize(Reader, Root) || !Root.IsValid())
+    {
+        UE_LOG(LogTemp, Warning, TEXT("LivingWorldDirector: invalid world-life saturation contract."));
+        return false;
+    }
+
+    BaselineTargetByChapter.Empty();
+    const TSharedPtr<FJsonObject>* Targets = nullptr;
+    if (Root->TryGetObjectField(TEXT("baseline_population_targets"), Targets) && Targets && Targets->IsValid())
+    {
+        for (const auto& Pair : (*Targets)->Values)
+        {
+            BaselineTargetByChapter.Add(FName(*Pair.Key), FMath::Clamp(static_cast<int32>(Pair.Value->AsNumber()), 0, 24));
+        }
+    }
+
+    BaselineRolesByChapter.Empty();
+    const TSharedPtr<FJsonObject>* Roles = nullptr;
+    if (Root->TryGetObjectField(TEXT("population_roles"), Roles) && Roles && Roles->IsValid())
+    {
+        for (const auto& Pair : (*Roles)->Values)
+        {
+            TArray<FName> ParsedRoles;
+            const TArray<TSharedPtr<FJsonValue>>* RoleValues = nullptr;
+            if (Pair.Value.IsValid() && Pair.Value->TryGetArray(RoleValues) && RoleValues)
+            {
+                for (const TSharedPtr<FJsonValue>& RoleValue : *RoleValues)
+                {
+                    const FString RoleString = RoleValue.IsValid() ? RoleValue->AsString() : FString();
+                    if (!RoleString.IsEmpty())
+                    {
+                        ParsedRoles.Add(FName(*RoleString));
+                    }
+                }
+            }
+            BaselineRolesByChapter.Add(FName(*Pair.Key), MoveTemp(ParsedRoles));
+        }
+    }
+
+    const TSharedPtr<FJsonObject>* Density = nullptr;
+    if (Root->TryGetObjectField(TEXT("density_profile"), Density) && Density && Density->IsValid())
+    {
+        double Value = 0.0;
+        if ((*Density)->TryGetNumberField(TEXT("max_active_micro_events_near_player"), Value))
+        {
+            MaxActiveMicroEvents = FMath::Clamp(static_cast<int32>(Value), 1, 6);
+        }
+        if ((*Density)->TryGetNumberField(TEXT("min_seconds_between_event_starts"), Value))
+        {
+            MinSecondsBetweenEventStarts = FMath::Clamp(static_cast<float>(Value), 4.0f, 30.0f);
+        }
+        if ((*Density)->TryGetNumberField(TEXT("baseline_spawn_interval_seconds"), Value))
+        {
+            PopulationSpawnInterval = FMath::Clamp(static_cast<float>(Value), 0.25f, 2.0f);
+        }
+        if ((*Density)->TryGetNumberField(TEXT("baseline_inner_radius_cm"), Value))
+        {
+            PopulationInnerRadius = FMath::Clamp(static_cast<float>(Value), 500.0f, 1800.0f);
+        }
+        if ((*Density)->TryGetNumberField(TEXT("baseline_outer_radius_cm"), Value))
+        {
+            PopulationOuterRadius = FMath::Clamp(static_cast<float>(Value), PopulationInnerRadius + 200.0f, 4200.0f);
+        }
+        if ((*Density)->TryGetNumberField(TEXT("baseline_cull_radius_cm"), Value))
+        {
+            PopulationCullRadius = FMath::Clamp(static_cast<float>(Value), PopulationOuterRadius + 800.0f, 9000.0f);
+        }
+    }
+
+    return BaselineTargetByChapter.Num() > 0;
+}
+
 void ALivingWorldDirector::HandleChapterChanged(FName PreviousChapterId, FName NewChapterId)
 {
     ActiveChapterId = NewChapterId;
@@ -171,11 +265,22 @@ void ALivingWorldDirector::ResetForCurrentChapter()
         }
     }
     ActiveEvents.Empty();
+
+    for (TWeakObjectPtr<AShireAmbientNPC>& NPCPtr : BaselinePopulation)
+    {
+        if (AShireAmbientNPC* NPC = NPCPtr.Get())
+        {
+            NPC->Destroy();
+        }
+    }
+    BaselinePopulation.Empty();
     LastEventType = NAME_None;
 
     if (GetWorld())
     {
-        NextEventTime = GetWorld()->GetTimeSeconds() + 5.0f + Random.FRandRange(0.0f, 4.0f);
+        const float Now = GetWorld()->GetTimeSeconds();
+        NextEventTime = Now + 3.0f + Random.FRandRange(0.0f, 2.0f);
+        NextPopulationSpawnTime = Now + 0.5f;
     }
 
     ApplyChapterWeatherContext();
@@ -315,6 +420,171 @@ FName ALivingWorldDirector::ResolveResidentRole(FName ChapterId) const
         return TEXT("Elf");
     }
     return TEXT("Villager");
+}
+
+FName ALivingWorldDirector::ChooseBaselineRole() const
+{
+    const TArray<FName>* Roles = BaselineRolesByChapter.Find(ActiveChapterId);
+    if (!Roles || Roles->Num() == 0)
+    {
+        return NAME_None;
+    }
+    return (*Roles)[Random.RandRange(0, Roles->Num() - 1)];
+}
+
+FName ALivingWorldDirector::ChooseBaselineProp(FName RoleName) const
+{
+    if (RoleName == TEXT("Courier") || RoleName == TEXT("RoadWalker"))
+    {
+        return TEXT("Satchel");
+    }
+    if (RoleName == TEXT("FieldWorker"))
+    {
+        return Random.FRand() > 0.45f ? FName(TEXT("Basket")) : FName(TEXT("Crate"));
+    }
+    if (RoleName == TEXT("PartyGuest"))
+    {
+        return Random.FRand() > 0.55f ? FName(TEXT("Mug")) : NAME_None;
+    }
+    if (RoleName == TEXT("FerryWorker"))
+    {
+        return Random.FRand() > 0.60f ? FName(TEXT("Lantern")) : NAME_None;
+    }
+    if (RoleName == TEXT("Elf"))
+    {
+        return Random.FRand() > 0.75f ? FName(TEXT("Book")) : NAME_None;
+    }
+    if (RoleName == TEXT("BreeTownsperson"))
+    {
+        const float Roll = Random.FRand();
+        return Roll > 0.66f ? FName(TEXT("Basket")) :
+            (Roll > 0.33f ? FName(TEXT("Mug")) : FName(TEXT("Satchel")));
+    }
+    if (RoleName == TEXT("Villager"))
+    {
+        const float Roll = Random.FRand();
+        return Roll > 0.70f ? FName(TEXT("Basket")) :
+            (Roll > 0.40f ? FName(TEXT("Crate")) : NAME_None);
+    }
+    return NAME_None;
+}
+
+FVector ALivingWorldDirector::ChoosePopulationOrigin()
+{
+    APawn* Player = UGameplayStatics::GetPlayerPawn(this, 0);
+    if (!Player)
+    {
+        return FVector::ZeroVector;
+    }
+
+    const float Angle = Random.FRandRange(0.0f, 2.0f * PI);
+    const float Radius = Random.FRandRange(PopulationInnerRadius, PopulationOuterRadius);
+    FVector Origin = Player->GetActorLocation() + FVector(
+        FMath::Cos(Angle) * Radius,
+        FMath::Sin(Angle) * Radius,
+        0.0f);
+    Origin.Z = FMath::Max(Player->GetActorLocation().Z - 60.0f, 40.0f);
+    return Origin;
+}
+
+void ALivingWorldDirector::CleanupBaselinePopulation()
+{
+    APawn* Player = UGameplayStatics::GetPlayerPawn(this, 0);
+    for (int32 Index = BaselinePopulation.Num() - 1; Index >= 0; --Index)
+    {
+        AShireAmbientNPC* NPC = BaselinePopulation[Index].Get();
+        if (!NPC)
+        {
+            BaselinePopulation.RemoveAt(Index);
+            continue;
+        }
+
+        if (Player && FVector::DistSquared2D(NPC->GetActorLocation(), Player->GetActorLocation()) >
+            FMath::Square(PopulationCullRadius))
+        {
+            NPC->Destroy();
+            BaselinePopulation.RemoveAt(Index);
+        }
+    }
+}
+
+void ALivingWorldDirector::MaintainBaselinePopulation()
+{
+    if (!GetWorld() || !QuestSubsystem || QuestSubsystem->GetCurrentRouteId() != TEXT("FrodoMain"))
+    {
+        return;
+    }
+
+    CleanupBaselinePopulation();
+
+    const int32* TargetPtr = BaselineTargetByChapter.Find(ActiveChapterId);
+    const int32 Target = TargetPtr ? *TargetPtr : 0;
+    if (Target <= 0 || BaselinePopulation.Num() >= Target)
+    {
+        return;
+    }
+
+    const float Now = GetWorld()->GetTimeSeconds();
+    if (Now < NextPopulationSpawnTime)
+    {
+        return;
+    }
+
+    const FName RoleName = ChooseBaselineRole();
+    if (RoleName == NAME_None)
+    {
+        return;
+    }
+
+    const FVector Origin = ChoosePopulationOrigin();
+    if (Origin.IsNearlyZero())
+    {
+        return;
+    }
+
+    FVector TravelOffset(
+        Random.FRandRange(260.0f, 620.0f),
+        Random.FRandRange(-360.0f, 360.0f),
+        0.0f);
+
+    float Speed = Random.FRandRange(38.0f, 68.0f);
+    float MinWait = Random.FRandRange(0.8f, 2.5f);
+    float MaxWait = Random.FRandRange(3.0f, 6.5f);
+
+    if (RoleName == TEXT("Courier") || RoleName == TEXT("RoadWalker"))
+    {
+        Speed = Random.FRandRange(68.0f, 92.0f);
+        MinWait = 0.2f;
+        MaxWait = 1.4f;
+        TravelOffset *= 1.45f;
+    }
+    else if (RoleName == TEXT("FieldWorker"))
+    {
+        Speed = Random.FRandRange(34.0f, 48.0f);
+        TravelOffset *= 0.55f;
+        MaxWait = Random.FRandRange(5.0f, 9.0f);
+    }
+    else if (RoleName == TEXT("Elf"))
+    {
+        Speed = Random.FRandRange(42.0f, 58.0f);
+        MinWait = 1.8f;
+        MaxWait = 5.5f;
+    }
+
+    if (AShireAmbientNPC* NPC = SpawnAmbientActor(
+        Origin,
+        RoleName,
+        ChooseBaselineProp(RoleName),
+        TravelOffset,
+        Speed,
+        MinWait,
+        MaxWait))
+    {
+        NPC->Tags.AddUnique(TEXT("LivingWorldBaseline"));
+        BaselinePopulation.Add(NPC);
+    }
+
+    NextPopulationSpawnTime = Now + PopulationSpawnInterval;
 }
 
 FVector ALivingWorldDirector::ChooseEventOrigin(float MinRadius, float MaxRadius)
@@ -598,6 +868,7 @@ void ALivingWorldDirector::Tick(float DeltaSeconds)
     }
 
     CleanupExpiredEvents();
+    MaintainBaselinePopulation();
 
     if (QuestSubsystem->GetCurrentChapterId() != ActiveChapterId)
     {
