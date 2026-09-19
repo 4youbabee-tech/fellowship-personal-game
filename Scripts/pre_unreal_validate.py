@@ -2477,12 +2477,27 @@ for startup_symbol in [
 for workflow_symbol in [
     "pull_request:",
     "Headless playable startup smoke",
-    "CI-PlayableStartup.log",
-    "ShirePlayableStartup: GameMode ready",
-    "ShirePlayableStartup: chapter=P1C01 route=FrodoMain",
+    "Scripts/runtime_smoke.py",
+    "--mode startup",
+    "--mode chapters",
 ]:
     if workflow_symbol not in unreal_workflow_cp52:
         fail(f"PG-052 Unreal boot validation workflow missing: {workflow_symbol}")
+
+# The extracted observer now owns the log name and readiness contract.
+runtime_observer_path = ROOT / "Scripts" / "runtime_smoke.py"
+if not runtime_observer_path.exists():
+    fail("PG-052 runtime observer missing")
+else:
+    runtime_observer = runtime_observer_path.read_text(encoding="utf-8")
+    for observer_symbol in [
+        "CI-PlayableStartup",
+        "ShirePlayableStartup: GameMode ready",
+        "ShirePlayableStartup: chapter=P1C01 route=FrodoMain",
+        "FAILURE.search(final_text)",
+    ]:
+        if observer_symbol not in runtime_observer:
+            fail(f"PG-052 runtime observer missing: {observer_symbol}")
 
 if resource_integration:
     external_policy = resource_integration.get("external_resource_policy", {})

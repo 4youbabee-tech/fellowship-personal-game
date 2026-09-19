@@ -521,3 +521,7 @@ Guards the programmer-requested Living NPC layer:
 - the game must remain playable without an always-on LLM/STT/TTS service.
 
 A future generative dialogue provider is allowed only as an optional bounded wording layer with deterministic local fallback.
+
+## Runtime observation regression — 2026-09-19
+
+Ready markers previously ended startup checking immediately; chapter checks slept four seconds after markers without reading the resulting log again. A late fatal/assert/ensure or spontaneous exit could therefore escape those checks. `Scripts/runtime_smoke.py` now observes a live process throughout that window and scans the final log after cleanup. `Scripts/test_runtime_smoke.py` reproduces these failures with subprocess fixtures in Pre-Unreal CI. This is boot stability evidence only, not traversal, save/load, performance or visual approval. Missing markers and intermittent starts fail explicitly rather than being hidden by retries.

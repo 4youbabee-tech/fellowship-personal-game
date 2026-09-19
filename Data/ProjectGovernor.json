@@ -28,7 +28,8 @@
     "The film story spine, build/save/story integrity, target-device performance and required traversal cannot be silently traded away.",
     "A feature is never called accepted from compile/static evidence alone.",
     "If a previously passed critical gate fails, stop feature expansion, repair the smallest failing layer, and rerun the exact failed gate.",
-    "Human pacing and visual review are mandatory for enjoyment/acceptance; CI cannot infer fun."
+    "Human pacing and visual review are mandatory for enjoyment/acceptance; CI cannot infer fun.",
+    "Developer-owned automation should reproduce and verify defects before asking the owner to spend play time on technical regression checks; never relabel machine checks as visual or pacing approval."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -413,7 +414,8 @@
       "evidence": [
         "Docs/STORY_CANON_BIBLE.md",
         "Docs/PART1_FELLOWSHIP_MASTERPLAN.md",
-        "Data/StoryBeatPlan.csv"
+        "Data/StoryBeatPlan.csv",
+        "Docs/AUTOMATION_FIRST_DELIVERY.md"
       ],
       "implementation_refs": [
         "Film-first canon policy already exists",
@@ -428,7 +430,8 @@
         "Every major implemented story beat maps to film continuity or an explicitly tagged compatible gap-fill",
         "No game-authored side content changes required film outcomes",
         "Chapter handoffs preserve the known chronology",
-        "Part I coverage gaps are visible in repository data rather than hidden in chat"
+        "Part I coverage gaps are visible in repository data rather than hidden in chat",
+        "Track all three films explicitly; audit the film opening/prologue and character viewpoints as well as later chapter anchors. Part II/III remain roadmap until Part I is stable."
       ],
       "dependencies": [],
       "checkpoint": "FILM_EXPERIENCE_CONTRACT",
@@ -1331,6 +1334,42 @@
       ],
       "checkpoint": "ONGOING",
       "notes": "This is an ongoing governance rule."
+    },
+    {
+      "id": "REQ-QA-001",
+      "title": "Developer-owned automated regression before owner play",
+      "category": "QualityAutomation",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner requested on 2026-09-19 to maximize programming and automatic verification so play sessions focus on enjoyment rather than repeated bug testing.",
+      "intent": "Automate reproducible failures before delivery; preserve trilogy film chronology and optional exploration without asking the owner to repeatedly rediscover defects.",
+      "evidence": [
+        "Scripts/runtime_smoke.py",
+        "Scripts/test_runtime_smoke.py",
+        "Docs/AUTOMATION_FIRST_DELIVERY.md"
+      ],
+      "implementation_refs": [
+        "Runtime observer rejects late fatal/assert/ensure messages and spontaneous exits after ready markers; requires a live observation window and final log scan.",
+        "Subprocess regression scenarios run in Pre-Unreal CI."
+      ],
+      "missing_work": [
+        "Validate this observer on the Windows UE4.27 runner.",
+        "Add engine-driven quest progression, save/load, route-return and offline NPC memory/knowledge regression scenarios.",
+        "Add rendered automated traversal captures and target-device performance reports."
+      ],
+      "acceptance_criteria": [
+        "Late startup failures cannot be marked successful.",
+        "Each automated claim links to its tested commit and evidence.",
+        "Save/load and required story progression receive engine-driven tests before being claimed verified.",
+        "Owner is not the default reproducibility tester; pacing/visual judgement remains distinct from machine verification."
+      ],
+      "dependencies": [
+        "REQ-SAVE-001",
+        "REQ-VISION-001",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "AUTOMATION_FIRST",
+      "notes": "Partial automation infrastructure only; no claim of full gameplay, visual or device acceptance."
     }
   ],
   "hard_invariants": [
@@ -2047,6 +2086,13 @@
       "title": "Offline Living NPC intelligence expansion",
       "status": "ACTIVE",
       "rationale": "Expanded scope is explicit: every Part I character participates in offline living intelligence at a cost appropriate to its tier, with biography/knowledge limits and regional peace/war mood context."
+    },
+    {
+      "order": 21,
+      "id": "WORK-QA-001",
+      "title": "Automation-first delivery and regression coverage",
+      "status": "ACTIVE",
+      "rationale": "Reduce owner test burden: harden runtime evidence now, then test actual story, persistence and offline character behavior in the engine."
     }
   ],
   "last_reconciliation": {
