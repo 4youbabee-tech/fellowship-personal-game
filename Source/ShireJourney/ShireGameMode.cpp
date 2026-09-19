@@ -81,6 +81,8 @@ void AShireGameMode::BeginPlay()
             const int32 JourneyInsightBefore = Quests->GetJourneyInsight();
             const int32 PerceptionXPBefore = Quests->GetProgressionXP(TEXT("PERCEPTION"));
             const int32 ResolveXPBefore = Quests->GetProgressionXP(TEXT("RESOLVE"));
+            const int32 ChronicleCountBefore = Quests->GetChronicleCount();
+            const int32 KnownRegionCountBefore = Quests->GetKnownRegionCount();
             const bool bFirstDiscovery =
                 Quests->RegisterJourneyDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
             const bool bRepeatDiscovery =
@@ -152,7 +154,7 @@ void AShireGameMode::BeginPlay()
             }
 
             const bool bProgressionCoreValid =
-                Quests->GetProgressionXP(TEXT("PERCEPTION")) - PerceptionXPBefore == 8 &&
+                Quests->GetProgressionXP(TEXT("PERCEPTION")) - PerceptionXPBefore == 14 &&
                 Quests->GetProgressionXP(TEXT("RESOLVE")) - ResolveXPBefore == 6;
             if (bProgressionCoreValid)
             {
@@ -173,6 +175,32 @@ void AShireGameMode::BeginPlay()
                     Quests->GetProgressionXP(TEXT("PERCEPTION")),
                     ResolveXPBefore,
                     Quests->GetProgressionXP(TEXT("RESOLVE")));
+            }
+
+            const bool bKnowledgeCoreValid =
+                Quests->GetChronicleCount() - ChronicleCountBefore == 1 &&
+                Quests->GetKnownRegionCount() - KnownRegionCountBefore == 1 &&
+                Quests->HasChronicleEntry(TEXT("CHRONICLE_WILDERNESS_TRACK_SIGNS")) &&
+                Quests->HasKnownMapRegion(TEXT("MAP_REGION_FrodoMain_P1C03"));
+            if (bKnowledgeCoreValid)
+            {
+                UE_LOG(
+                    LogTemp,
+                    Display,
+                    TEXT("ShireStateAudit: knowledge-core=PASS chronicle=%d regions=%d"),
+                    Quests->GetChronicleCount(),
+                    Quests->GetKnownRegionCount());
+            }
+            else
+            {
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireStateAudit: knowledge-core=FAIL chronicleBefore=%d chronicleAfter=%d regionsBefore=%d regionsAfter=%d"),
+                    ChronicleCountBefore,
+                    Quests->GetChronicleCount(),
+                    KnownRegionCountBefore,
+                    Quests->GetKnownRegionCount());
             }
 
             if (bRouteRestored)
