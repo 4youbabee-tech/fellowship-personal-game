@@ -3,6 +3,7 @@
 #include "ShireNPC.h"
 #include "ShireAmbientNPC.h"
 #include "ShireQuestTrigger.h"
+#include "ShireTraversalChallenge.h"
 
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
@@ -226,24 +227,26 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
         Industry->ObjectiveMessage = FText::FromString(TEXT("The valley below is being stripped and armed for war."));
     }
 
-    AShireQuestTrigger* OldCounselDiscovery =
-        GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(220, -300, 100), FRotator::ZeroRotator);
-    if (OldCounselDiscovery)
+    AShireTraversalChallenge* OldCounselMemory = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(220, -300, 100), FRotator::ZeroRotator);
+    if (OldCounselMemory)
     {
-        OldCounselDiscovery->DiscoveryId = TEXT("ORTHANC_OLD_ALLIANCE_MEMORY");
-        OldCounselDiscovery->DiscoveryDisplayName = FText::FromString(TEXT("Old Counsel at Orthanc"));
-        OldCounselDiscovery->RequiredSideStoryBeat = TEXT("IsengardArrival");
-        OldCounselDiscovery->BlockedAfterStoryBeat = TEXT("OrthancBetrayal");
+        OldCounselMemory->ConfigureActivityChallenge(
+            TEXT("ORTHANC_OLD_ALLIANCE_MEMORY"),
+            FText::FromString(TEXT("Old Counsel, Broken Trust")),
+            TEXT("SOCIAL_MEMORY"),
+            FVector(0, 0, 0), FVector(160, 110, 0), FVector(340, -30, 0));
     }
 
-    AShireQuestTrigger* ParapetDiscovery =
-        GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(1320, -760, 790), FRotator::ZeroRotator);
-    if (ParapetDiscovery)
+    AShireTraversalChallenge* ParapetSurvey = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(1320, -760, 790), FRotator::ZeroRotator);
+    if (ParapetSurvey)
     {
-        ParapetDiscovery->DiscoveryId = TEXT("ORTHANC_PARAPET_VIEW");
-        ParapetDiscovery->DiscoveryDisplayName = FText::FromString(TEXT("Orthanc Parapet View"));
-        ParapetDiscovery->RequiredSideStoryBeat = TEXT("OrthancPrison");
-        ParapetDiscovery->BlockedAfterStoryBeat = TEXT("OrthancEscape");
+        ParapetSurvey->ConfigureActivityChallenge(
+            TEXT("ORTHANC_PARAPET_VIEW"),
+            FText::FromString(TEXT("What Has Changed Below")),
+            TEXT("OBSERVATION_CHALLENGE"),
+            FVector(0, 0, 0), FVector(180, 120, 0), FVector(360, -50, 0));
     }
 
     AShireQuestTrigger* Escape = GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(1680, -520, 790), FRotator::ZeroRotator);

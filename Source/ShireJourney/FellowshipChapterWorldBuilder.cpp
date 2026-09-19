@@ -963,15 +963,29 @@ void AFellowshipChapterWorldBuilder::BuildWeathertop()
     SpawnQuestTrigger(FVector(-250, 0, 90), TEXT("RoadToWeathertop"), 1, 2,
         TEXT("The ruined hill is ahead. Keep close to the Ranger."), TEXT("WeathertopReveal"));
 
-    SpawnDiscoveryTrigger(
-        FVector(-1050, -520, 90), TEXT("WILDERNESS_TRACK_SIGNS"), TEXT("Strider's Trail Signs"),
-        TEXT("MidgewaterRoad"), TEXT("WeathertopReveal"));
+    AShireTraversalChallenge* WildernessTrackReading = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-1050, -520, 90), FRotator::ZeroRotator);
+    if (WildernessTrackReading)
+    {
+        WildernessTrackReading->ConfigureActivityChallenge(
+            TEXT("WILDERNESS_TRACK_SIGNS"),
+            FText::FromString(TEXT("Read the Trail")),
+            TEXT("TRACKING_CHALLENGE"),
+            FVector(0, 0, 0), FVector(260, 80, 0), FVector(520, -40, 0));
+    }
     SpawnDiscoveryTrigger(
         FVector(980, 300, 400), TEXT("WEATHERTOP_RUIN_MARKERS"), TEXT("Weathertop Ruin Markers"),
         TEXT("WeathertopReveal"), TEXT("WeathertopCamp"));
-    SpawnDiscoveryTrigger(
-        FVector(1100, -360, 390), TEXT("CAMP_PREPARATION"), TEXT("Weathertop Camp Preparations"),
-        TEXT("WeathertopReveal"), TEXT("NazgulCloseIn"));
+    AShireTraversalChallenge* CampPreparation = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(1100, -360, 390), FRotator::ZeroRotator);
+    if (CampPreparation)
+    {
+        CampPreparation->ConfigureActivityChallenge(
+            TEXT("CAMP_PREPARATION"),
+            FText::FromString(TEXT("Prepare the Camp")),
+            TEXT("CAMP_PREPARATION"),
+            FVector(0, 0, 0), FVector(190, 140, 0), FVector(390, -80, 0));
+    }
 
     SpawnNPC(TEXT("Strider"), FVector(760, -160, 70), FRotator(0, 180, 0), TEXT("RoadToWeathertop"), 2, 2,
         TEXT("We will rest only briefly. This place can be seen from far away."), TEXT("WeathertopAttack"), 0, true);
@@ -1150,12 +1164,26 @@ void AFellowshipChapterWorldBuilder::BuildRivendell()
     SpawnNPC(TEXT("Pippin"), FVector(260, 460, 65), FRotator(0, 200, 0), NAME_None, 0, -1,
         TEXT("I only wanted to see where the stairs went. There were more stairs."));
 
-    SpawnDiscoveryTrigger(
-        FVector(-1120, -520, 90), TEXT("RIVENDELL_LIBRARY"), TEXT("Rivendell Library"),
-        TEXT("RivendellAwakening"), TEXT("CouncilBegins"));
-    SpawnDiscoveryTrigger(
-        FVector(-1520, 520, 90), TEXT("RIVENDELL_OVERLOOK"), TEXT("Rivendell Valley Overlook"),
-        TEXT("BilboReunion"), TEXT("CouncilBegins"));
+    AShireTraversalChallenge* RivendellMapTable = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-1120, -520, 90), FRotator::ZeroRotator);
+    if (RivendellMapTable)
+    {
+        RivendellMapTable->ConfigureActivityChallenge(
+            TEXT("RIVENDELL_LIBRARY"),
+            FText::FromString(TEXT("Paths on the Map")),
+            TEXT("PATTERN_MATCH"),
+            FVector(0, 0, 0), FVector(210, 90, 0), FVector(430, -50, 0));
+    }
+    AShireTraversalChallenge* RivendellOverlookMemory = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-1520, 520, 90), FRotator::ZeroRotator);
+    if (RivendellOverlookMemory)
+    {
+        RivendellOverlookMemory->ConfigureActivityChallenge(
+            TEXT("RIVENDELL_OVERLOOK"),
+            FText::FromString(TEXT("The Valley Overlook")),
+            TEXT("SOCIAL_MEMORY"),
+            FVector(0, 0, 0), FVector(180, 120, 0), FVector(380, 40, 0));
+    }
     SpawnDiscoveryTrigger(
         FVector(1760, 520, 90), TEXT("RIVENDELL_SMITHY_PREP"), TEXT("Fellowship Departure Preparations"),
         TEXT("FellowshipAssembled"), TEXT("RivendellDeparture"));
@@ -1291,15 +1319,31 @@ void AFellowshipChapterWorldBuilder::BuildFellowshipRoad()
     SpawnNPC(TEXT("Pippin"), FVector(-830, 500, 65), FRotator(0, 20, 0), TEXT("SouthwardJourney"), 1, -1,
         TEXT("I would learn faster if training came with second breakfast."), NAME_None, 0, true);
 
-    SpawnDiscoveryTrigger(
-        FVector(-1300, 580, 90), TEXT("FELLOWSHIP_TRAINING"), TEXT("Fellowship Camp Practice"),
-        TEXT("FellowshipCamp"), TEXT("CrebainWarning"));
+    AShireTraversalChallenge* FellowshipTraining = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-1300, 580, 90), FRotator::ZeroRotator);
+    if (FellowshipTraining)
+    {
+        FellowshipTraining->ConfigureActivityChallenge(
+            TEXT("FELLOWSHIP_TRAINING"),
+            FText::FromString(TEXT("Camp Practice")),
+            TEXT("TIMING_CHALLENGE"),
+            FVector(0, 0, 0), FVector(220, 110, 0), FVector(440, -70, 0),
+            false,
+            20.0f);
+    }
     SpawnDiscoveryTrigger(
         FVector(380, 520, 180), TEXT("CARADHRAS_SHELTER_CHECK"), TEXT("Caradhras Shelter Check"),
         TEXT("CaradhrasApproach"), TEXT("CaradhrasStorm"));
-    SpawnDiscoveryTrigger(
-        FVector(2620, 460, 90), TEXT("WEST_GATE_INSCRIPTIONS"), TEXT("Marks at the West Gate"),
-        TEXT("MoriaLake"), TEXT("MoriaDoorOpens"));
+    AShireTraversalChallenge* WestGateStudy = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(2620, 460, 90), FRotator::ZeroRotator);
+    if (WestGateStudy)
+    {
+        WestGateStudy->ConfigureActivityChallenge(
+            TEXT("WEST_GATE_INSCRIPTIONS"),
+            FText::FromString(TEXT("Marks in the Stone")),
+            TEXT("OBSERVATION_CHALLENGE"),
+            FVector(0, 0, 0), FVector(190, 140, 0), FVector(390, -50, 0));
+    }
 
     SpawnQuestTrigger(FVector(-620, 0, 110), TEXT("SouthwardJourney"), 1, 1,
         TEXT("Black birds cross the sky in an unnatural mass. Get the company under cover."), TEXT("CrebainWarning"));
@@ -1436,9 +1480,16 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
             FVector(210, 90, 0),
             FVector(400, 180, 0));
     }
-    SpawnDiscoveryTrigger(
-        FVector(-720, 520, 90), TEXT("MORIA_DWARVEN_RELIEF"), TEXT("Dwarven Relief"),
-        TEXT("MoriaUnease"), TEXT("BalinsTombReveal"));
+    AShireTraversalChallenge* MoriaReliefStudy = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-720, 520, 90), FRotator::ZeroRotator);
+    if (MoriaReliefStudy)
+    {
+        MoriaReliefStudy->ConfigureActivityChallenge(
+            TEXT("MORIA_DWARVEN_RELIEF"),
+            FText::FromString(TEXT("A Dwarven Relief")),
+            TEXT("PATTERN_MATCH"),
+            FVector(0, 0, 0), FVector(180, 120, 0), FVector(360, -60, 0));
+    }
 
     SpawnQuestTrigger(FVector(-650, 0, 90), TEXT("MoriaDark"), 2, 3,
         TEXT("The air changes. Evidence of battle lies ahead."), TEXT("MoriaUnease"), TEXT("BalinsTomb"), 0);
@@ -1586,15 +1637,29 @@ void AFellowshipChapterWorldBuilder::BuildLothlorien()
         TEXT("LorienSharedGrief"));
     SpawnQuestTrigger(FVector(-1850, 0, 90), TEXT("LothlorienRest"), 0, 1,
         TEXT("The woods close around the grieving Fellowship. Follow the hidden path."), TEXT("LorienEntry"));
-    SpawnDiscoveryTrigger(
-        FVector(-1420, 620, 90), TEXT("LORIEN_GRIEF_CLEARING"), TEXT("A Quiet Grief Clearing"),
-        TEXT("LorienEntry"), TEXT("Mirror"));
+    AShireTraversalChallenge* LorienGriefMemory = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-1420, 620, 90), FRotator::ZeroRotator);
+    if (LorienGriefMemory)
+    {
+        LorienGriefMemory->ConfigureActivityChallenge(
+            TEXT("LORIEN_GRIEF_CLEARING"),
+            FText::FromString(TEXT("A Quiet Place")),
+            TEXT("SOCIAL_MEMORY"),
+            FVector(0, 0, 0), FVector(170, 120, 0), FVector(350, 10, 0));
+    }
     SpawnDiscoveryTrigger(
         FVector(-420, -620, 140), TEXT("LORIEN_CRAFT_PLATFORM"), TEXT("Galadhrim Craft Platform"),
         TEXT("LorienGrief"), TEXT("Mirror"));
-    SpawnDiscoveryTrigger(
-        FVector(1500, 420, 90), TEXT("LORIEN_RIVER_PREP"), TEXT("Lorien River Preparations"),
-        TEXT("Mirror"), TEXT("LorienDeparture"));
+    AShireTraversalChallenge* LorienRiverPreparation = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(1500, 420, 90), FRotator::ZeroRotator);
+    if (LorienRiverPreparation)
+    {
+        LorienRiverPreparation->ConfigureActivityChallenge(
+            TEXT("LORIEN_RIVER_PREP"),
+            FText::FromString(TEXT("Ready the Boats")),
+            TEXT("CAMP_PREPARATION"),
+            FVector(0, 0, 0), FVector(220, 120, 0), FVector(430, -50, 0));
+    }
 
     SpawnNPC(TEXT("Haldir"), FVector(-900, -120, 70), FRotator(0, 170, 0), TEXT("LothlorienRest"), 1, 2,
         TEXT("You may pass, but tread carefully. These woods do not welcome careless feet."));
@@ -1734,15 +1799,31 @@ void AFellowshipChapterWorldBuilder::BuildAnduinAmonHen()
     SpawnQuestTrigger(FVector(-720, 760, 90), NAME_None, 0, -1,
         TEXT("At the river camp, ordinary conversation keeps breaking against the unspoken question of where the company should go next."),
         TEXT("AnduinCampTension"));
-    SpawnDiscoveryTrigger(
-        FVector(-1380, 620, 90), TEXT("ANDUIN_BANK_WATCH"), TEXT("Watch on the Anduin Bank"),
-        TEXT("AnduinDeparture"), TEXT("ArgonathReveal"));
+    AShireTraversalChallenge* AnduinCurrentReading = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-1380, 620, 90), FRotator::ZeroRotator);
+    if (AnduinCurrentReading)
+    {
+        AnduinCurrentReading->ConfigureActivityChallenge(
+            TEXT("ANDUIN_BANK_WATCH"),
+            FText::FromString(TEXT("Read the River")),
+            TEXT("TIMING_CHALLENGE"),
+            FVector(0, 0, 0), FVector(240, 130, 0), FVector(500, -40, 0),
+            false,
+            22.0f);
+    }
     SpawnDiscoveryTrigger(
         FVector(1150, 520, 160), TEXT("AMON_HEN_FALLEN_STONE"), TEXT("A Fallen Stone of Amon Hen"),
         TEXT("AmonHenArrival"), TEXT("BoromirPressure"));
-    SpawnDiscoveryTrigger(
-        FVector(1350, -520, 180), TEXT("AMON_HEN_CAMP_DISTANCE"), TEXT("Distance in the Fellowship Camp"),
-        TEXT("AmonHenArrival"), TEXT("BoromirPressure"));
+    AShireTraversalChallenge* AmonHenCampWatch = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(1350, -520, 180), FRotator::ZeroRotator);
+    if (AmonHenCampWatch)
+    {
+        AmonHenCampWatch->ConfigureActivityChallenge(
+            TEXT("AMON_HEN_CAMP_DISTANCE"),
+            FText::FromString(TEXT("Distance in the Camp")),
+            TEXT("OBSERVATION_CHALLENGE"),
+            FVector(0, 0, 0), FVector(180, 150, 0), FVector(390, -40, 0));
+    }
 
     SpawnQuestTrigger(FVector(-300, 0, 90), TEXT("AnduinJourney"), 1, 2,
         TEXT("Ancient stone guardians rise above the river."), TEXT("ArgonathReveal"));

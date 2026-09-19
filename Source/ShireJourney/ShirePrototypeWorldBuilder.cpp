@@ -1269,14 +1269,19 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
             TEXT("The Green Dragon is loud with friends, dancing and local gossip. Stay awhile or continue to the party."));
     }
 
-    AShireQuestTrigger* MarketGardenDiscovery = GetWorld()->SpawnActor<AShireQuestTrigger>(
+    AShireTraversalChallenge* PartyPreparations = GetWorld()->SpawnActor<AShireTraversalChallenge>(
         FVector(-820, -420, 75), FRotator::ZeroRotator);
-    if (MarketGardenDiscovery)
+    if (PartyPreparations)
     {
-        MarketGardenDiscovery->RequiredSideStoryBeat = TEXT("ShireOpening");
-        MarketGardenDiscovery->BlockedAfterStoryBeat = TEXT("PartyArrival");
-        MarketGardenDiscovery->DiscoveryId = TEXT("SHIRE_MARKET_GARDEN_LOOP");
-        MarketGardenDiscovery->DiscoveryDisplayName = FText::FromString(TEXT("Hobbiton Gardens and Market Lanes"));
+        PartyPreparations->ConfigureActivityChallenge(
+            TEXT("SHIRE_MARKET_GARDEN_LOOP"),
+            FText::FromString(TEXT("Party Preparations")),
+            TEXT("TIMING_CHALLENGE"),
+            FVector(0, 0, 0),
+            FVector(250, 120, 0),
+            FVector(520, -40, 0),
+            false,
+            26.0f);
     }
 
     AShireQuestTrigger* PartyMischief = GetWorld()->SpawnActor<AShireQuestTrigger>(

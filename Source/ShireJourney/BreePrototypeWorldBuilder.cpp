@@ -3,6 +3,7 @@
 #include "ShireAmbientNPC.h"
 #include "ShireNPC.h"
 #include "ShireQuestTrigger.h"
+#include "ShireTraversalChallenge.h"
 
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
@@ -647,14 +648,32 @@ void ABreePrototypeWorldBuilder::SpawnStoryFlow()
         }
     };
 
-    SpawnBreeDiscovery(
-        FVector(-1450.0f, 380.0f, 90.0f),
-        TEXT("BREE_GATE_GOSSIP"), TEXT("Bree Gate Gossip"),
-        TEXT("BreeRoadNightfall"), TEXT("PrancingPonyExterior"));
-    SpawnBreeDiscovery(
-        FVector(520.0f, -520.0f, 90.0f),
-        TEXT("BREE_STABLE_YARD"), TEXT("Prancing Pony Stable Yard"),
-        TEXT("PrancingPonyExterior"), TEXT("RingIncident"));
+    AShireTraversalChallenge* WatchTheRoom = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(1180.0f, 650.0f, 90.0f), FRotator::ZeroRotator);
+    if (WatchTheRoom)
+    {
+        WatchTheRoom->ConfigureActivityChallenge(
+            TEXT("BREE_GATE_GOSSIP"),
+            FText::FromString(TEXT("Watch the Room")),
+            TEXT("OBSERVATION_CHALLENGE"),
+            FVector(0, 0, 0),
+            FVector(220, 80, 0),
+            FVector(420, -100, 0));
+    }
+
+    AShireTraversalChallenge* StableSigns = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(520.0f, -520.0f, 90.0f), FRotator::ZeroRotator);
+    if (StableSigns)
+    {
+        StableSigns->ConfigureActivityChallenge(
+            TEXT("BREE_STABLE_YARD"),
+            FText::FromString(TEXT("Stable Yard Signs")),
+            TEXT("TRACKING_CHALLENGE"),
+            FVector(0, 0, 0),
+            FVector(240, 100, 0),
+            FVector(470, -60, 0));
+    }
+
     SpawnBreeDiscovery(
         FVector(1520.0f, 570.0f, 90.0f),
         TEXT("BREE_INN_KITCHEN_LIFE"), TEXT("Life Behind the Prancing Pony"),
