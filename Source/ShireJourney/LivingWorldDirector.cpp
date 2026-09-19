@@ -868,6 +868,7 @@ void ALivingWorldDirector::Tick(float DeltaSeconds)
     }
 
     CleanupExpiredEvents();
+    MaintainBaselinePopulation();
 
     if (QuestSubsystem->GetCurrentChapterId() != ActiveChapterId)
     {
