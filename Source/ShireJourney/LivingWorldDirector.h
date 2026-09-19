@@ -32,12 +32,20 @@ private:
 
     TMap<FName, TArray<FName>> AllowedEventTypesByChapter;
     TArray<FActiveMicroEvent> ActiveEvents;
+    TArray<TWeakObjectPtr<AShireAmbientNPC>> BaselinePopulation;
+    TMap<FName, int32> BaselineTargetByChapter;
+    TMap<FName, TArray<FName>> BaselineRolesByChapter;
     FRandomStream Random;
     FName ActiveChapterId = NAME_None;
     FName LastEventType = NAME_None;
     float NextEventTime = 0.0f;
+    float NextPopulationSpawnTime = 0.0f;
     float MinSecondsBetweenEventStarts = 12.0f;
     float EventCullDistance = 5000.0f;
+    float PopulationInnerRadius = 850.0f;
+    float PopulationOuterRadius = 2600.0f;
+    float PopulationCullRadius = 6200.0f;
+    float PopulationSpawnInterval = 0.35f;
     int32 MaxActiveMicroEvents = 3;
 
     UFUNCTION()
@@ -47,8 +55,11 @@ private:
     void HandleExperienceChanged(FName RouteId, FName EpisodeId, FName PlayableCharacterId);
 
     bool LoadEventContract();
+    bool LoadLifeSaturationContract();
     void ResetForCurrentChapter();
     void CleanupExpiredEvents();
+    void CleanupBaselinePopulation();
+    void MaintainBaselinePopulation();
     void TryStartMicroEvent();
     bool SpawnEvent(FName EventType, FActiveMicroEvent& OutEvent);
     AShireAmbientNPC* SpawnAmbientActor(
@@ -61,7 +72,10 @@ private:
         float MaxWait);
     FName ChooseEventType() const;
     FName ResolveResidentRole(FName ChapterId) const;
+    FName ChooseBaselineRole() const;
+    FName ChooseBaselineProp(FName Role) const;
     FVector ChooseEventOrigin(float MinRadius = 700.0f, float MaxRadius = 1500.0f);
+    FVector ChoosePopulationOrigin();
     void ApplyChapterWeatherContext();
     bool IsStoryDangerActive() const;
 };
