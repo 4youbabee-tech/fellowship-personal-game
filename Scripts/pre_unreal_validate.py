@@ -2767,6 +2767,35 @@ for symbol in ["Hunger01", "Fatigue01", "SocialNeed01", "Fear01", "RuntimeEmotio
     if symbol not in (ambient_header_pg59 + ambient_cpp_pg59):
         fail(f"PG-059 living-NPC runtime symbol missing: {symbol}")
 
+social_model_pg59 = {}
+try:
+    social_model_pg59 = json.loads(read(ROOT / "Data" / "NPCSocialModel.json"))
+except json.JSONDecodeError as exc:
+    fail(f"PG-059 invalid NPCSocialModel.json: {exc}")
+
+profiles_pg59 = {
+    str(item.get("id") or ""): item
+    for item in social_model_pg59.get("profiles", [])
+    if isinstance(item, dict)
+}
+for profile_id in ["NPC_GANDALF", "NPC_SAM", "NPC_ARAGORN", "NPC_BILBO"]:
+    profile = profiles_pg59.get(profile_id)
+    if not profile:
+        fail(f"PG-059 required core living-NPC profile missing: {profile_id}")
+        continue
+    if not profile.get("biography_facts"):
+        fail(f"PG-059 biography facts missing for core profile: {profile_id}")
+    if not profile.get("knowledge_limits"):
+        fail(f"PG-059 knowledge limits missing for core profile: {profile_id}")
+    if not profile.get("attitude_tags"):
+        fail(f"PG-059 attitude tags missing for core profile: {profile_id}")
+
+npc_context_header_pg59 = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.h")
+npc_context_cpp_pg59 = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.cpp")
+for symbol in ["BiographyFacts", "KnowledgeLimits", "AttitudeTags", "GetProfileContextSummary"]:
+    if symbol not in (npc_context_header_pg59 + npc_context_cpp_pg59):
+        fail(f"PG-059 named profile runtime context missing: {symbol}")
+
 if "LivingNPCIntelligencePlan.json" not in build_cs_cp52:
     fail("PG-059 living-NPC intelligence plan is not packaged")
 
