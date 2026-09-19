@@ -33,17 +33,13 @@ jobs:
           @echo off
           setlocal EnableExtensions EnableDelayedExpansion
 
-          rem Protect the listener that owns the newest active Runner.Worker and stop
-          rem any extra listener before it can clear _work\_temp for this live job.
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue'; $w=Get-CimInstance Win32_Process -Filter \"Name='Runner.Worker.exe'\" | Sort-Object CreationDate -Descending | Select-Object -First 1; if($w){$keep=[int]$w.ParentProcessId; Get-CimInstance Win32_Process -Filter \"Name='Runner.Listener.exe'\" | Where-Object { $_.ProcessId -ne $keep } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }}; exit 0" >nul 2>nul
-
-          rem A legacy interactive watchdog can mistake an active Runner.Worker-only
-          rem phase for an offline runner, start a second listener, and let that second
-          rem listener clear _work\_temp underneath the live job. Stop only that
-          rem watchdog process before the build. This is best-effort support cleanup
-          rem and must never gate validation.
+          rem Do not terminate Runner.Listener/Runner.Worker/watchdog processes from
+          rem inside an active Actions step. A listener exit can clean _work\_temp and
+          rem delete the batch file that is currently executing, producing the
+          rem intermittent "The batch file cannot be found" bootstrap failure.
+          rem The legacy watchdog autostart/files are retired with non-destructive cmd
+          rem operations only; runner-process lifecycle stays outside the validation job.
           reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v FellowshipGitHubRunnerWatchdog /f >nul 2>nul
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue'; $me=$PID; Get-CimInstance Win32_Process -Filter \"Name='powershell.exe'\" | Where-Object { $_.ProcessId -ne $me -and $_.CommandLine -match '(?i)runner-watchdog\\.ps1' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }; exit 0" >nul 2>nul
           del /Q "C:\actions-runner\runner-watchdog.ps1" >nul 2>nul
           del /Q "C:\actions-runner\start-runner-watchdog.cmd" >nul 2>nul
 
