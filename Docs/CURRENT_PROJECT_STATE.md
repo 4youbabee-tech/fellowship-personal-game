@@ -1,3 +1,17 @@
+## Current bulk-resource status — CP54
+
+The repository now contains a much larger project-owned production bank instead of waiting for external acquisition. CP54 adds 75 new regional/common OBJ meshes, 17 procedural BMP textures, regional MTL palettes and runtime placement across all P1C01-P1C08 world builders.
+
+Machine-readable authority:
+- `Data/WorldResourceBankCP54.json`
+
+Validation boundary:
+- source bank: implemented on `mega/activity-movement-v1`,
+- PG-054: pending CI,
+- UE4.27 compile/import: pending CI,
+- headless startup: pending CI,
+- PIE/device visual and performance acceptance: pending.
+
 ## Current mass-content production status — CP50
 
 The project is now in a comprehensive visible-content phase. Backend foundations remain implemented; active work is world density, materials, character animation production, interiors, lighting and audio.

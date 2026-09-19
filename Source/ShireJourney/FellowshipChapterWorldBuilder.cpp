@@ -691,6 +691,101 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnScatter(CommonBarrel53, FVector(-1350,-280,0), 5, FVector(620,360,0), FVector(0.56f), 51.0f, 2.0f);
         SpawnScatter(CommonCairn53, FVector(1400,0,0), 7, FVector(900,700,0), FVector(0.62f), 47.0f, 4.0f);
     }
+    // CP54 region inventory flood: chapter-specific landmarks, camps and lived-in activity props.
+    auto LoadCP54 = [](const TCHAR* Path) -> UStaticMesh* { return LoadObject<UStaticMesh>(nullptr, Path); };
+    if (ChapterId == TEXT("P1C03"))
+    {
+        UStaticMesh* Wall = LoadCP54(TEXT("/Game/Production/World/Weathertop/SM_WeathertopRuinWall.SM_WeathertopRuinWall"));
+        UStaticMesh* Fire = LoadCP54(TEXT("/Game/Production/World/Weathertop/SM_WeathertopCampFire.SM_WeathertopCampFire"));
+        UStaticMesh* Banner = LoadCP54(TEXT("/Game/Production/World/Weathertop/SM_WeathertopWindBanner.SM_WeathertopWindBanner"));
+        UStaticMesh* Rubble = LoadCP54(TEXT("/Game/Production/World/Weathertop/SM_WeathertopRubblePile.SM_WeathertopRubblePile"));
+        UStaticMesh* Watch = LoadCP54(TEXT("/Game/Production/World/Weathertop/SM_WeathertopWatchStone.SM_WeathertopWatchStone"));
+        SpawnScatter(Wall, FVector(500,0,390), 7, FVector(1200,760,0), FVector(0.70f), 31.0f, 0.0f);
+        SpawnScatter(Rubble, FVector(300,0,390), 12, FVector(1500,900,0), FVector(0.58f), 43.0f, 0.0f);
+        SpawnProd(Fire, FVector(980,-180,395), FVector(0.62f), FRotator::ZeroRotator, false);
+        SpawnProd(Banner, FVector(1340,420,400), FVector(0.66f), FRotator(0,15,0), false);
+        SpawnProd(Watch, FVector(-820,520,390), FVector(0.72f), FRotator::ZeroRotator, false);
+    }
+    else if (ChapterId == TEXT("P1C04"))
+    {
+        UStaticMesh* Column = LoadCP54(TEXT("/Game/Production/World/Rivendell/SM_RivColumn.SM_RivColumn"));
+        UStaticMesh* Planter = LoadCP54(TEXT("/Game/Production/World/Rivendell/SM_RivPlanter.SM_RivPlanter"));
+        UStaticMesh* Rail = LoadCP54(TEXT("/Game/Production/World/Rivendell/SM_RivBridgeRail.SM_RivBridgeRail"));
+        UStaticMesh* Bench = LoadCP54(TEXT("/Game/Production/World/Rivendell/SM_RivGardenBench.SM_RivGardenBench"));
+        UStaticMesh* Arch = LoadCP54(TEXT("/Game/Production/World/Rivendell/SM_RivLampArch.SM_RivLampArch"));
+        UStaticMesh* Basin = LoadCP54(TEXT("/Game/Production/World/Rivendell/SM_RivWaterBasin.SM_RivWaterBasin"));
+        const FVector Columns[] = { FVector(-1200,-580,0), FVector(-1200,580,0), FVector(-300,-580,0), FVector(-300,580,0), FVector(650,-580,0), FVector(650,580,0) };
+        for (const FVector& P : Columns) SpawnProd(Column, P, FVector(0.72f), FRotator::ZeroRotator, false);
+        const FVector Gardens[] = { FVector(-850,-300,0), FVector(-350,300,0), FVector(250,-300,0), FVector(850,300,0) };
+        for (int32 I=0; I<UE_ARRAY_COUNT(Gardens); ++I) SpawnProd(I%2==0?Planter:Bench, Gardens[I], FVector(0.64f), FRotator(0,I*45.0f,0), false);
+        SpawnProd(Rail, FVector(-100,0,0), FVector(0.74f), FRotator(0,0,0), false);
+        SpawnProd(Arch, FVector(1150,0,0), FVector(0.74f), FRotator(0,90,0), false);
+        SpawnProd(Basin, FVector(520,420,0), FVector(0.66f), FRotator::ZeroRotator, false);
+    }
+    else if (ChapterId == TEXT("P1C05"))
+    {
+        UStaticMesh* Tent = LoadCP54(TEXT("/Game/Production/World/Road/SM_RoadTravelTent.SM_RoadTravelTent"));
+        UStaticMesh* Rack = LoadCP54(TEXT("/Game/Production/World/Road/SM_RoadPackRack.SM_RoadPackRack"));
+        UStaticMesh* Shrine = LoadCP54(TEXT("/Game/Production/World/Road/SM_RoadShrine.SM_RoadShrine"));
+        UStaticMesh* Marker = LoadCP54(TEXT("/Game/Production/World/Road/SM_RoadSnowMarker.SM_RoadSnowMarker"));
+        UStaticMesh* Sled = LoadCP54(TEXT("/Game/Production/World/Road/SM_RoadSupplySled.SM_RoadSupplySled"));
+        UStaticMesh* Cart = LoadCP54(TEXT("/Game/Production/World/Road/SM_RoadTravelerCart.SM_RoadTravelerCart"));
+        const FVector Camp[] = { FVector(-1250,-430,0), FVector(-880,-470,0), FVector(-500,-420,0) };
+        for (int32 I=0; I<UE_ARRAY_COUNT(Camp); ++I) SpawnProd(Tent, Camp[I], FVector(0.64f), FRotator(0,I*12.0f-10.0f,0), false);
+        SpawnProd(Rack, FVector(-980,260,0), FVector(0.62f), FRotator(0,8,0), false);
+        SpawnProd(Sled, FVector(-520,300,0), FVector(0.64f), FRotator(0,-12,0), false);
+        SpawnProd(Cart, FVector(-150,260,0), FVector(0.62f), FRotator(0,5,0), false);
+        SpawnScatter(Marker, FVector(750,0,0), 8, FVector(1700,980,0), FVector(0.58f), 41.0f, 3.0f);
+        SpawnProd(Shrine, FVector(1450,500,0), FVector(0.68f), FRotator(0,-8,0), false);
+    }
+    else if (ChapterId == TEXT("P1C06"))
+    {
+        UStaticMesh* Cart = LoadCP54(TEXT("/Game/Production/World/Moria/SM_MoriaMineCart.SM_MoriaMineCart"));
+        UStaticMesh* Anchor = LoadCP54(TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor"));
+        UStaticMesh* Pillar = LoadCP54(TEXT("/Game/Production/World/Moria/SM_MoriaRubblePillar.SM_MoriaRubblePillar"));
+        UStaticMesh* Brazier = LoadCP54(TEXT("/Game/Production/World/Moria/SM_MoriaTallBrazier.SM_MoriaTallBrazier"));
+        UStaticMesh* Stairs = LoadCP54(TEXT("/Game/Production/World/Moria/SM_MoriaBrokenStair.SM_MoriaBrokenStair"));
+        UStaticMesh* Gate = LoadCP54(TEXT("/Game/Production/World/Moria/SM_MoriaGateSegment.SM_MoriaGateSegment"));
+        SpawnScatter(Pillar, FVector(0,0,0), 14, FVector(2300,920,0), FVector(0.70f), 31.0f, 4.0f);
+        SpawnScatter(Brazier, FVector(0,0,0), 8, FVector(1900,720,0), FVector(0.66f), 47.0f, 2.0f);
+        SpawnProd(Cart, FVector(-850,-380,0), FVector(0.64f), FRotator(0,8,0), false);
+        SpawnProd(Cart, FVector(720,410,0), FVector(0.64f), FRotator(0,-6,0), false);
+        SpawnProd(Anchor, FVector(-1450,520,0), FVector(0.68f), FRotator::ZeroRotator, false);
+        SpawnProd(Stairs, FVector(1180,-520,0), FVector(0.70f), FRotator(0,90,0), false);
+        SpawnProd(Gate, FVector(1780,0,0), FVector(0.76f), FRotator(0,90,0), false);
+    }
+    else if (ChapterId == TEXT("P1C07"))
+    {
+        UStaticMesh* Ladder = LoadCP54(TEXT("/Game/Production/World/Lothlorien/SM_LorienTalanLadder.SM_LorienTalanLadder"));
+        UStaticMesh* Platform = LoadCP54(TEXT("/Game/Production/World/Lothlorien/SM_LorienTreePlatform.SM_LorienTreePlatform"));
+        UStaticMesh* Lamp = LoadCP54(TEXT("/Game/Production/World/Lothlorien/SM_LorienLeafLantern.SM_LorienLeafLantern"));
+        UStaticMesh* Rack = LoadCP54(TEXT("/Game/Production/World/Lothlorien/SM_LorienBasketRack.SM_LorienBasketRack"));
+        UStaticMesh* Bench = LoadCP54(TEXT("/Game/Production/World/Lothlorien/SM_LorienGoldenBench.SM_LorienGoldenBench"));
+        UStaticMesh* Bridge = LoadCP54(TEXT("/Game/Production/World/Lothlorien/SM_LorienRootBridge.SM_LorienRootBridge"));
+        const FVector Platforms[] = { FVector(-1300,-650,0), FVector(-500,650,0), FVector(350,-650,0), FVector(1150,650,0) };
+        for (int32 I=0; I<UE_ARRAY_COUNT(Platforms); ++I) { SpawnProd(Platform, Platforms[I], FVector(0.62f), FRotator::ZeroRotator, false); SpawnProd(Ladder, Platforms[I]+FVector(100,0,0), FVector(0.62f), FRotator(0,8,0), false); }
+        SpawnScatter(Lamp, FVector(0,0,0), 10, FVector(1900,900,0), FVector(0.58f), 37.0f, 2.0f);
+        SpawnProd(Rack, FVector(450,320,0), FVector(0.62f), FRotator(0,-12,0), false);
+        SpawnProd(Bench, FVector(980,-320,0), FVector(0.64f), FRotator(0,10,0), false);
+        SpawnProd(Bridge, FVector(-120,0,15), FVector(0.68f), FRotator(0,0,0), false);
+    }
+    else if (ChapterId == TEXT("P1C08"))
+    {
+        UStaticMesh* Pier = LoadCP54(TEXT("/Game/Production/World/Anduin/SM_AnduinDockPier.SM_AnduinDockPier"));
+        UStaticMesh* Cargo = LoadCP54(TEXT("/Game/Production/World/Anduin/SM_AnduinCargoPile.SM_AnduinCargoPile"));
+        UStaticMesh* Rack = LoadCP54(TEXT("/Game/Production/World/Anduin/SM_AnduinCampRack.SM_AnduinCampRack"));
+        UStaticMesh* Fishing = LoadCP54(TEXT("/Game/Production/World/Anduin/SM_AnduinFishingFrame.SM_AnduinFishingFrame"));
+        UStaticMesh* Marker = LoadCP54(TEXT("/Game/Production/World/Anduin/SM_AnduinRiverMarker.SM_AnduinRiverMarker"));
+        UStaticMesh* BoatRack = LoadCP54(TEXT("/Game/Production/World/Anduin/SM_AnduinBoatRack.SM_AnduinBoatRack"));
+        SpawnProd(Pier, FVector(-1980,420,-5), FVector(0.68f), FRotator(0,90,0), false);
+        SpawnProd(Pier, FVector(-1520,-430,-5), FVector(0.68f), FRotator(0,90,0), false);
+        SpawnScatter(Cargo, FVector(-1450,0,0), 8, FVector(850,520,0), FVector(0.56f), 43.0f, 2.0f);
+        SpawnProd(Rack, FVector(-900,520,0), FVector(0.62f), FRotator(0,8,0), false);
+        SpawnProd(Fishing, FVector(-1050,-520,0), FVector(0.62f), FRotator(0,-8,0), false);
+        SpawnScatter(Marker, FVector(650,0,0), 7, FVector(1300,900,0), FVector(0.58f), 31.0f, 3.0f);
+        SpawnProd(BoatRack, FVector(-1700,650,0), FVector(0.62f), FRotator(0,2,0), false);
+    }
+
 }
 
 void AFellowshipChapterWorldBuilder::BuildChapter(FName ChapterId)
