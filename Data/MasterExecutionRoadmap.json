@@ -106,7 +106,10 @@
         "lightweight modern player-life/progression systems",
         "story urgency closes inappropriate optional play",
         "runtime stamina/resolve/supplies/Fellowship Bond",
-        "persistent seven-track utility/content progression"
+        "persistent seven-track utility/content progression",
+        "persistent main-film Chronicle entries and map knowledge",
+        "in-game Chronicle & Journey progression panel",
+        "contextual side-activity type to progression bridge"
       ],
       "exit_evidence": [
         "STATIC_CANON_COVERAGE",
@@ -114,7 +117,7 @@
         "SAVE_ROUTE_CONTINUITY",
         "PIE_PACING_REVIEW"
       ],
-      "current_runtime_wave": "PLAYER_LIFE_PROGRESSION_V1"
+      "current_runtime_wave": "CHRONICLE_MAP_SIDE_ACTIVITY_PROGRESSION_V1"
     },
     {
       "id": "B2_CHARACTERS_AND_WORLD_PRODUCTION",
@@ -375,9 +378,9 @@
     "WORK-EXEC-001"
   ],
   "immediate_next_large_actions": [
-    "Finish exact-head UE4.27 validation/repair for this integrated head.",
-    "Wire QUIET_STEP/CAMPCRAFT and other progression rewards into film-safe side activities.",
-    "Implement Chronicle/map-knowledge UI plus first traversal/environmental puzzle/world-event wave.",
-    "Advance production-character waves and cinematic world waves in parallel behind the green-head gate."
+    "Finish exact-head UE4.27 compile/import/startup/chapter/state validation for the integrated branch.",
+    "Add direct STEALTH_LITE activities and first real traversal/environmental-puzzle mechanics inside verified film windows.",
+    "Add bounded player-interactive world events on top of the already-running ambient LivingWorldDirector.",
+    "Advance production-character and cinematic-world waves in parallel after the green-head gate."
   ]
 }

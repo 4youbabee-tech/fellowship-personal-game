@@ -150,7 +150,7 @@
     },
     {
       "id": "EXPLORATION",
-      "status": "RUNTIME_IMPLEMENTED_PENDING_ENGINE_PROOF",
+      "status": "RUNTIME_IMPLEMENTED_EXPANDING_PENDING_ENGINE_PROOF",
       "includes": [
         "optional discoveries",
         "side-life",
@@ -168,7 +168,11 @@
         "first-time Journey Insight",
         "save/load discovery persistence",
         "dedicated discovery HUD toast",
-        "story-window closure guards"
+        "story-window closure guards",
+        "persistent Chronicle entries",
+        "known map regions",
+        "side-activity progression bridge",
+        "Chronicle & Journey panel"
       ]
     },
     {
@@ -317,6 +321,17 @@
         "RESOLVE",
         "save/load persistence",
         "first-time discovery XP"
+      ]
+    },
+    {
+      "id": "CHRONICLE_MAP_KNOWLEDGE",
+      "status": "RUNTIME_IMPLEMENTED_PENDING_ENGINE_PROOF",
+      "includes": [
+        "first-time Chronicle unlocks",
+        "known route/chapter regions",
+        "save schema v6 persistence",
+        "C-key HUD browser",
+        "main-film continuity separation"
       ]
     }
   ]

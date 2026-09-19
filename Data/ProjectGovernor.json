@@ -361,7 +361,8 @@
         "authored story beats write mapped safe checkpoints after quest/story mutation",
         "chapter transitions queue a checkpoint until the next player Tick so the saved transform belongs to the rebuilt destination region",
         "combat defeat restores the latest automatic safe checkpoint at full health",
-        "Save schema v5 persists stamina, resolve, supplies and progression XP."
+        "Save schema v5 persists stamina, resolve, supplies and progression XP.",
+        "Save schema v6 persists ChronicleEntryIds and KnownMapRegionIds in addition to player-life/progression state."
       ],
       "missing_work": [
         "F9 round-trip verification on current integrated build",
@@ -1426,7 +1427,8 @@
         "Production asset import now operates on an ignored Saved/ working copy so one-click updates do not dirty tracked SourceAssets.",
         "Self-hosted UE4 validation now avoids fragile later temporary PowerShell scripts for checkout/warning analysis and explicitly verifies the exact PR-head SHA.",
         "Journey Discovery moved from static design into runtime triggers, persistence, HUD feedback and headless state auditing across all Part I regions.",
-        "B1 now includes actual player-life/progression runtime instead of plan-only modern-game axes."
+        "B1 now includes actual player-life/progression runtime instead of plan-only modern-game axes.",
+        "B1 now includes Chronicle/map knowledge UI, save continuity and contextual side-activity progression bridging."
       ],
       "missing_work": [
         "Get final PR #53 head through full UE4.27 validation.",
@@ -1520,7 +1522,8 @@
         "First-time-only Journey Insight, region completion bonuses and milestone state are deterministic and save/load persisted.",
         "AShireHUD now has a separate subtle discovery toast instead of reusing the red alert channel.",
         "Headless state audit requires discovery-core=PASS and proves repeat visits do not farm Insight.",
-        "First-time Journey Discovery now feeds bounded utility/content progression tracks."
+        "First-time Journey Discovery now feeds bounded utility/content progression tracks.",
+        "Discovery registration now also unlocks persistent Chronicle/map knowledge on first registration."
       ],
       "missing_work": [
         "Exact-head UE4.27 compile/import/startup/state proof for the new runtime discovery layer.",
@@ -1555,12 +1558,14 @@
       "evidence": [
         "Data/ContextualSideActivityPlan.json",
         "Data/ExplorationEnvelopePlan.json",
-        "Data/JourneyDiscoveryRewardPlan.json"
+        "Data/JourneyDiscoveryRewardPlan.json",
+        "Source/ShireJourney/ShireQuestSubsystem.cpp"
       ],
       "implementation_refs": [
         "18 contextual side activities now cover FrodoMain P1C01-P1C08 plus GandalfParallel P1C01.",
         "Every activity declares exact opening/closing story anchors, participants, film-context rationale, mechanics, reward link and urgency policy.",
-        "Activities are explicitly barred from advancing required anchors, changing canon outcomes or revealing future knowledge."
+        "Activities are explicitly barred from advancing required anchors, changing canon outcomes or revealing future knowledge.",
+        "Contextual side-activity types now bridge into bounded progression XP when their linked first-time discovery completes; CAMP_PREPARATION feeds CAMPCRAFT and future STEALTH_LITE feeds QUIET_STEP."
       ],
       "missing_work": [
         "Wire side-activity availability/completion into existing runtime quest/exploration state.",
@@ -1705,7 +1710,9 @@
         "Data/PlayerLifeProgressionPlan.json",
         "Source/ShireJourney/ShirePlayerCharacter.cpp",
         "Source/ShireJourney/ShireQuestSubsystem.cpp",
-        "Source/ShireJourney/ShireSaveGame.h"
+        "Source/ShireJourney/ShireSaveGame.h",
+        "Data/ChronicleMapKnowledgePlan.json",
+        "Source/ShireJourney/ShireHUD.cpp"
       ],
       "implementation_refs": [
         "ModernGameLayerPlan synthesizes exploration rewards, world events, semi-open chapter hubs, companion dialogue, map discovery, environmental puzzles and living-world reactivity into an original Middle-earth implementation.",
@@ -1713,13 +1720,15 @@
         "Lightweight Stamina, Ring-pressure-sensitive Resolve and capped Supplies are implemented without hunger/thirst timers.",
         "Seven progression tracks persist through save schema v5 and receive first-time discovery XP by category.",
         "Fellowship Bond is exposed from FELLOWSHIP progression; HUD/input expose the new player-life layer.",
-        "Headless state audit now requires progression-core=PASS."
+        "Headless state audit now requires progression-core=PASS.",
+        "Chronicle/map knowledge is now runtime: first-time discoveries persist a Chronicle entry and known route/chapter region.",
+        "C toggles an in-game Chronicle & Journey panel showing progression ranks, recent Chronicle entries and known map regions."
       ],
       "missing_work": [
-        "Wire QUIET_STEP and CAMPCRAFT XP to authored side activities.",
-        "Add Chronicle/map presentation for progression benefits.",
-        "Add first traversal/environmental-puzzle/world-event runtime wave.",
-        "Tune stamina/resolve/supply pacing from PIE/device evidence.",
+        "Add authored STEALTH_LITE activities so QUIET_STEP gains a direct runtime activity source.",
+        "Implement first environmental-puzzle/traversal challenge mechanics beyond discovery triggers.",
+        "Expand world-event interaction from ambient observation into bounded optional player responses.",
+        "Tune player-life/progression/Chronicle presentation from PIE/device evidence.",
         "Validate current exact head in UE4.27."
       ],
       "acceptance_criteria": [
@@ -2929,13 +2938,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Owner requested very large implementation batches; B1 advanced with player-life and persistent progression while the exact-head validation loop continues.",
+    "reason": "Continued the large B1 batch by converting Chronicle/map knowledge and contextual side-activity progression from planned presentation into persistent runtime state.",
     "summary": [
-      "Stamina, Resolve, Supplies and Fellowship Bond now exist as lightweight game-life axes around the fixed film story.",
-      "Seven progression tracks persist and receive first-time discovery awards without combat-stat inflation.",
-      "Save schema advanced to v5 and HUD/input expose the new runtime layer.",
-      "PG-079 plus progression-core state auditing protect the implementation.",
-      "UE4.27 compile/runtime proof remains pending for the new exact head."
+      "First-time discoveries now unlock main-film Chronicle entries and known map-region state.",
+      "Chronicle/map knowledge persists through save schema v6.",
+      "A C-key Chronicle & Journey HUD panel exposes recent entries, known regions and all progression ranks.",
+      "Contextual side-activity types now add bounded progression XP on the same first-time discovery event, preserving anti-farm behavior.",
+      "PG-080 and knowledge-core runtime smoke extend the exact-head validation contract; UE4.27 proof is still pending."
     ]
   },
   "development_mode": {

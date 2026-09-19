@@ -1,3 +1,11 @@
+## CHRONICLE + MAP KNOWLEDGE + SIDE-ACTIVITY PROGRESSION MEGA-SLICE — 2026-09-20
+
+B1 expanded again from plan-only into persistent runtime. First-time Journey Discoveries now create main-film Chronicle entries and mark the current route/chapter as known map knowledge. Both collections persist through save schema v6. Book Chronicles remain explicitly separate and are not inserted into this main-film runtime registry.
+
+The C key now opens a Chronicle & Journey HUD panel showing recent Chronicle entries, known regions, Journey Insight and all seven progression tracks/ranks. Contextual side activities are also parsed at runtime: when a linked first-time discovery completes, its authored activity type adds bounded XP (for example CAMP_PREPARATION -> CAMPCRAFT, TRACKING/OBSERVATION -> PERCEPTION, SOCIAL_MEMORY -> FELLOWSHIP). Anti-farm behavior remains first-time-only.
+
+State automation now requires `ShireStateAudit: knowledge-core=PASS`, and PG-080 checks save/UI/input/continuity/side-activity wiring. Exact-head UE4.27 compile/import/startup/state evidence remains required before engine validation is claimed.
+
 ## PLAYER-LIFE + PROGRESSION RUNTIME MEGA-SLICE — 2026-09-20
 
 B1 modern-game work is now runtime, not only planning. The player has lightweight Stamina, Ring-pressure-sensitive Resolve and capped travel Supplies alongside Health. Sprinting drains/rebuilds Stamina; damage and Ring pressure affect Resolve; R consumes one supply only when recovery is useful. No hunger/thirst timers, gear score or random rarity loop was introduced.
