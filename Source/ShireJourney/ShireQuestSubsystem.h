@@ -53,6 +53,10 @@ struct FShireSideActivityProgressionDefinition
     FName DiscoveryId = NAME_None;
     FName ActivityId = NAME_None;
     FName ActivityType = NAME_None;
+    FName RouteId = NAME_None;
+    FName ChapterId = NAME_None;
+    FName AvailableAfterStoryBeat = NAME_None;
+    FName EndsBeforeStoryBeat = NAME_None;
 };
 
 UCLASS()
@@ -126,6 +130,18 @@ public:
 
     UFUNCTION(BlueprintPure, Category="Exploration")
     bool HasJourneyDiscovery(FName DiscoveryId) const;
+
+    UFUNCTION(BlueprintPure, Category="SideActivity")
+    bool HasSideActivityForDiscovery(FName DiscoveryId) const;
+
+    UFUNCTION(BlueprintPure, Category="SideActivity")
+    bool IsSideActivityAvailable(FName ActivityId) const;
+
+    UFUNCTION(BlueprintPure, Category="SideActivity")
+    bool IsSideActivityDiscoveryAvailable(FName DiscoveryId) const;
+
+    UFUNCTION(BlueprintPure, Category="SideActivity")
+    FName GetSideActivityIdForDiscovery(FName DiscoveryId) const;
 
     UFUNCTION(BlueprintPure, Category="Exploration")
     int32 GetJourneyInsight() const;
@@ -265,6 +281,7 @@ private:
     TArray<FShireJourneyInsightMilestoneDefinition> JourneyInsightDefinitions;
     TArray<FShireJourneyRegionBonusDefinition> JourneyRegionBonusDefinitions;
     TMap<FName, FShireSideActivityProgressionDefinition> SideActivityProgressionDefinitions;
+    TMap<FName, FShireSideActivityProgressionDefinition> SideActivityDefinitionsById;
 
     void BuildQuestDefinitions();
     void AddQuestDefinition(FName QuestId, const FString& Title, std::initializer_list<const TCHAR*> Objectives);
@@ -279,6 +296,7 @@ private:
     void RecordStoryBeatForEligibleNPCs(FName StoryBeatId);
     bool LoadJourneyDiscoveryPlan();
     bool LoadSideActivityPlan();
+    bool IsSideActivityDefinitionAvailable(const FShireSideActivityProgressionDefinition& Definition) const;
     void RebuildJourneyInsightState();
     FName MakeJourneyRegionCompletionId(FName RouteId, FName ChapterId) const;
     void AwardDiscoveryProgression(const FShireJourneyDiscoveryDefinition& Definition);

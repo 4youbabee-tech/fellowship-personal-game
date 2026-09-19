@@ -3728,6 +3728,90 @@ if '? TEXT("Mug") : NAME_None' in read(ROOT / "Source" / "ShireJourney" / "Shire
 if '? TEXT("Mug") : NAME_None' in read(ROOT / "Source" / "ShireJourney" / "BreePrototypeWorldBuilder.cpp"):
     fail("PG-060 Bree crowd prop ternary regressed to UE4-incompatible mixed FName/string types")
 
+
+# PG-081: contextual side activities are fail-closed runtime contracts.
+pg81_side_path = ROOT / "Data" / "ContextualSideActivityPlan.json"
+pg81_journey_path = ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"
+pg81_allowed_types = {
+    "TRAVERSAL_CHALLENGE", "OBSERVATION_CHALLENGE", "TRACKING_CHALLENGE",
+    "PATTERN_MATCH", "CAMP_PREPARATION", "SOCIAL_MEMORY", "STEALTH_LITE",
+    "TIMING_CHALLENGE", "ROUTE_READING",
+}
+try:
+    pg81_side = json.loads(read(pg81_side_path))
+    pg81_journey = json.loads(read(pg81_journey_path))
+except json.JSONDecodeError as exc:
+    fail(f"PG-081 invalid side/discovery JSON: {exc}")
+    pg81_side, pg81_journey = {}, {}
+
+pg81_discoveries = {
+    str(item.get("discovery_id") or ""): item
+    for item in pg81_journey.get("discovery_rewards", [])
+    if isinstance(item, dict)
+}
+pg81_activity_ids, pg81_reward_ids = set(), set()
+pg81_count = 0
+for pg81_chapter in pg81_side.get("chapters", []):
+    if not isinstance(pg81_chapter, dict):
+        fail("PG-081 non-object chapter entry")
+        continue
+    pg81_route = str(pg81_chapter.get("route") or "")
+    pg81_chapter_id = str(pg81_chapter.get("chapter") or "")
+    if not pg81_route or not pg81_chapter_id:
+        fail("PG-081 side-activity chapter missing route/chapter")
+        continue
+    for pg81_activity in pg81_chapter.get("activities", []):
+        if not isinstance(pg81_activity, dict):
+            fail(f"PG-081 non-object activity in {pg81_route}/{pg81_chapter_id}")
+            continue
+        pg81_count += 1
+        pg81_id = str(pg81_activity.get("id") or "")
+        pg81_type = str(pg81_activity.get("type") or "")
+        pg81_reward = str(pg81_activity.get("discovery_reward_id") or "")
+        pg81_after = str(pg81_activity.get("available_after") or "")
+        pg81_before = str(pg81_activity.get("ends_before") or "")
+        if not all([pg81_id, pg81_reward, pg81_after, pg81_before]):
+            fail(f"PG-081 incomplete side-activity contract in {pg81_route}/{pg81_chapter_id}")
+        if pg81_type not in pg81_allowed_types:
+            fail(f"PG-081 unsupported activity type {pg81_type}: {pg81_id}")
+        if pg81_id in pg81_activity_ids:
+            fail(f"PG-081 duplicate side-activity id: {pg81_id}")
+        if pg81_reward in pg81_reward_ids:
+            fail(f"PG-081 duplicate side-activity reward id: {pg81_reward}")
+        pg81_activity_ids.add(pg81_id)
+        pg81_reward_ids.add(pg81_reward)
+        if pg81_activity.get("may_advance_required_anchor") is not False:
+            fail(f"PG-081 side activity may advance required anchor: {pg81_id}")
+        if pg81_activity.get("may_change_canon_outcome") is not False:
+            fail(f"PG-081 side activity may change canon outcome: {pg81_id}")
+        if pg81_activity.get("future_knowledge_allowed") is not False:
+            fail(f"PG-081 future knowledge allowed in side activity: {pg81_id}")
+        pg81_discovery = pg81_discoveries.get(pg81_reward)
+        if not pg81_discovery:
+            fail(f"PG-081 reward missing from JourneyDiscoveryRewardPlan: {pg81_reward}")
+        else:
+            if str(pg81_discovery.get("route") or "") != pg81_route:
+                fail(f"PG-081 reward route mismatch: {pg81_id}")
+            if str(pg81_discovery.get("chapter") or "") != pg81_chapter_id:
+                fail(f"PG-081 reward chapter mismatch: {pg81_id}")
+
+if pg81_count < 18:
+    fail(f"PG-081 contextual side-activity coverage regressed below 18: {pg81_count}")
+
+pg81_qh = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
+pg81_qc = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
+pg81_tc = read(ROOT / "Source" / "ShireJourney" / "ShireTraversalChallenge.cpp")
+for pg81_symbol in [
+    "AvailableAfterStoryBeat", "EndsBeforeStoryBeat", "SideActivityDefinitionsById",
+    "HasSideActivityForDiscovery", "IsSideActivityAvailable",
+    "IsSideActivityDiscoveryAvailable", "GetSideActivityIdForDiscovery",
+    "IsSideActivityDefinitionAvailable",
+]:
+    if pg81_symbol not in (pg81_qh + pg81_qc):
+        fail(f"PG-081 side-activity runtime window symbol missing: {pg81_symbol}")
+if "IsSideActivityDiscoveryAvailable(DiscoveryId)" not in pg81_tc:
+    fail("PG-081 traversal challenge bypasses central side-activity window guard")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

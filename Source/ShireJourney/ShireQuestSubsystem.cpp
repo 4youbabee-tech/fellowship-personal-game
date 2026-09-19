@@ -614,12 +614,13 @@ bool UShireQuestSubsystem::LoadJourneyDiscoveryPlan()
 bool UShireQuestSubsystem::LoadSideActivityPlan()
 {
     SideActivityProgressionDefinitions.Empty();
+    SideActivityDefinitionsById.Empty();
 
     const FString Path = FPaths::Combine(FPaths::ProjectDir(), TEXT("Data/ContextualSideActivityPlan.json"));
     FString JsonText;
     if (!FFileHelper::LoadFileToString(JsonText, *Path))
     {
-        UE_LOG(LogTemp, Error, TEXT("SideActivityProgression: failed to read %s"), *Path);
+        UE_LOG(LogTemp, Error, TEXT("SideActivityRuntime: failed to read %s"), *Path);
         return false;
     }
 
@@ -627,7 +628,7 @@ bool UShireQuestSubsystem::LoadSideActivityPlan()
     const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonText);
     if (!FJsonSerializer::Deserialize(Reader, Root) || !Root.IsValid())
     {
-        UE_LOG(LogTemp, Error, TEXT("SideActivityProgression: invalid JSON %s"), *Path);
+        UE_LOG(LogTemp, Error, TEXT("SideActivityRuntime: invalid JSON %s"), *Path);
         return false;
     }
 
@@ -639,6 +640,16 @@ bool UShireQuestSubsystem::LoadSideActivityPlan()
             const TSharedPtr<FJsonObject> Chapter = ChapterValue.IsValid() ? ChapterValue->AsObject() : nullptr;
             if (!Chapter.IsValid()) continue;
 
+            FString RouteId;
+            FString ChapterId;
+            Chapter->TryGetStringField(TEXT("route"), RouteId);
+            Chapter->TryGetStringField(TEXT("chapter"), ChapterId);
+            if (RouteId.IsEmpty() || ChapterId.IsEmpty())
+            {
+                UE_LOG(LogTemp, Error, TEXT("SideActivityRuntime: chapter entry missing route/chapter"));
+                continue;
+            }
+
             const TArray<TSharedPtr<FJsonValue>>* Activities = nullptr;
             if (!Chapter->TryGetArrayField(TEXT("activities"), Activities) || !Activities) continue;
 
@@ -647,27 +658,115 @@ bool UShireQuestSubsystem::LoadSideActivityPlan()
                 const TSharedPtr<FJsonObject> Activity = ActivityValue.IsValid() ? ActivityValue->AsObject() : nullptr;
                 if (!Activity.IsValid()) continue;
 
-                FString DiscoveryId, ActivityId, ActivityType;
+                FString DiscoveryId;
+                FString ActivityId;
+                FString ActivityType;
+                FString AvailableAfter;
+                FString EndsBefore;
                 Activity->TryGetStringField(TEXT("discovery_reward_id"), DiscoveryId);
                 Activity->TryGetStringField(TEXT("id"), ActivityId);
                 Activity->TryGetStringField(TEXT("type"), ActivityType);
-                if (DiscoveryId.IsEmpty() || ActivityId.IsEmpty() || ActivityType.IsEmpty()) continue;
+                Activity->TryGetStringField(TEXT("available_after"), AvailableAfter);
+                Activity->TryGetStringField(TEXT("ends_before"), EndsBefore);
+
+                bool bMayAdvanceRequiredAnchor = false;
+                bool bMayChangeCanonOutcome = false;
+                bool bFutureKnowledgeAllowed = false;
+                Activity->TryGetBoolField(TEXT("may_advance_required_anchor"), bMayAdvanceRequiredAnchor);
+                Activity->TryGetBoolField(TEXT("may_change_canon_outcome"), bMayChangeCanonOutcome);
+                Activity->TryGetBoolField(TEXT("future_knowledge_allowed"), bFutureKnowledgeAllowed);
+
+                if (DiscoveryId.IsEmpty() || ActivityId.IsEmpty() || ActivityType.IsEmpty() ||
+                    AvailableAfter.IsEmpty() || EndsBefore.IsEmpty())
+                {
+                    UE_LOG(LogTemp, Error, TEXT("SideActivityRuntime: incomplete activity contract route=%s chapter=%s"),
+                        *RouteId, *ChapterId);
+                    continue;
+                }
+
+                if (bMayAdvanceRequiredAnchor || bMayChangeCanonOutcome || bFutureKnowledgeAllowed)
+                {
+                    UE_LOG(LogTemp, Error, TEXT("SideActivityRuntime: rejected canon-unsafe activity id=%s"), *ActivityId);
+                    continue;
+                }
+
+                const FName DiscoveryName(*DiscoveryId);
+                const FName ActivityName(*ActivityId);
+                const FName RouteName(*RouteId);
+                const FName ChapterName(*ChapterId);
+                const FShireJourneyDiscoveryDefinition* Discovery = JourneyDiscoveryDefinitions.Find(DiscoveryName);
+                if (!Discovery || Discovery->RouteId != RouteName || Discovery->ChapterId != ChapterName)
+                {
+                    UE_LOG(LogTemp, Error,
+                        TEXT("SideActivityRuntime: reward mismatch activity=%s discovery=%s route=%s chapter=%s"),
+                        *ActivityId, *DiscoveryId, *RouteId, *ChapterId);
+                    continue;
+                }
+
+                if (SideActivityProgressionDefinitions.Contains(DiscoveryName) ||
+                    SideActivityDefinitionsById.Contains(ActivityName))
+                {
+                    UE_LOG(LogTemp, Error, TEXT("SideActivityRuntime: duplicate activity/reward id=%s discovery=%s"),
+                        *ActivityId, *DiscoveryId);
+                    continue;
+                }
 
                 FShireSideActivityProgressionDefinition Definition;
-                Definition.DiscoveryId = FName(*DiscoveryId);
-                Definition.ActivityId = FName(*ActivityId);
+                Definition.DiscoveryId = DiscoveryName;
+                Definition.ActivityId = ActivityName;
                 Definition.ActivityType = FName(*ActivityType);
+                Definition.RouteId = RouteName;
+                Definition.ChapterId = ChapterName;
+                Definition.AvailableAfterStoryBeat = FName(*AvailableAfter);
+                Definition.EndsBeforeStoryBeat = FName(*EndsBefore);
                 SideActivityProgressionDefinitions.Add(Definition.DiscoveryId, Definition);
+                SideActivityDefinitionsById.Add(Definition.ActivityId, Definition);
             }
         }
     }
 
-    UE_LOG(
-        LogTemp,
-        SideActivityProgressionDefinitions.Num() > 0 ? Display : Warning,
-        TEXT("SideActivityProgression: mapped discoveries=%d"),
+    const bool bReady = SideActivityProgressionDefinitions.Num() > 0 &&
+        SideActivityProgressionDefinitions.Num() == SideActivityDefinitionsById.Num();
+    UE_LOG(LogTemp, bReady ? Display : Error,
+        TEXT("SideActivityRuntime: ready=%s activities=%d mappedDiscoveries=%d"),
+        bReady ? TEXT("yes") : TEXT("no"),
+        SideActivityDefinitionsById.Num(),
         SideActivityProgressionDefinitions.Num());
-    return SideActivityProgressionDefinitions.Num() > 0;
+    return bReady;
+}
+
+bool UShireQuestSubsystem::IsSideActivityDefinitionAvailable(
+    const FShireSideActivityProgressionDefinition& Definition) const
+{
+    if (Definition.RouteId != CurrentRouteId || Definition.ChapterId != CurrentChapterId) return false;
+    if (Definition.AvailableAfterStoryBeat != NAME_None &&
+        !HasStoryBeatTriggered(Definition.AvailableAfterStoryBeat)) return false;
+    if (Definition.EndsBeforeStoryBeat != NAME_None &&
+        HasStoryBeatTriggered(Definition.EndsBeforeStoryBeat)) return false;
+    return !JourneyDiscoveryIds.Contains(Definition.DiscoveryId);
+}
+
+bool UShireQuestSubsystem::HasSideActivityForDiscovery(FName DiscoveryId) const
+{
+    return DiscoveryId != NAME_None && SideActivityProgressionDefinitions.Contains(DiscoveryId);
+}
+
+bool UShireQuestSubsystem::IsSideActivityAvailable(FName ActivityId) const
+{
+    const FShireSideActivityProgressionDefinition* Definition = SideActivityDefinitionsById.Find(ActivityId);
+    return Definition && IsSideActivityDefinitionAvailable(*Definition);
+}
+
+bool UShireQuestSubsystem::IsSideActivityDiscoveryAvailable(FName DiscoveryId) const
+{
+    const FShireSideActivityProgressionDefinition* Definition = SideActivityProgressionDefinitions.Find(DiscoveryId);
+    return Definition && IsSideActivityDefinitionAvailable(*Definition);
+}
+
+FName UShireQuestSubsystem::GetSideActivityIdForDiscovery(FName DiscoveryId) const
+{
+    const FShireSideActivityProgressionDefinition* Definition = SideActivityProgressionDefinitions.Find(DiscoveryId);
+    return Definition ? Definition->ActivityId : NAME_None;
 }
 
 FName UShireQuestSubsystem::MakeChronicleEntryId(FName DiscoveryId)
@@ -826,6 +925,18 @@ bool UShireQuestSubsystem::RegisterJourneyDiscovery(FName DiscoveryId)
             *DiscoveryId.ToString(),
             *Definition->RouteId.ToString(),
             *Definition->ChapterId.ToString(),
+            *CurrentRouteId.ToString(),
+            *CurrentChapterId.ToString());
+        return false;
+    }
+
+    if (HasSideActivityForDiscovery(DiscoveryId) &&
+        !IsSideActivityDiscoveryAvailable(DiscoveryId))
+    {
+        UE_LOG(LogTemp, Warning,
+            TEXT("SideActivityRuntime: rejected reward outside window activity=%s discovery=%s route=%s chapter=%s"),
+            *GetSideActivityIdForDiscovery(DiscoveryId).ToString(),
+            *DiscoveryId.ToString(),
             *CurrentRouteId.ToString(),
             *CurrentChapterId.ToString());
         return false;

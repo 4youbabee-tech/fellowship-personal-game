@@ -65,18 +65,11 @@ bool AShireTraversalChallenge::IsEligible() const
 {
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
-    if (!Quests)
-    {
-        return false;
-    }
-    if (RequiredStoryBeat != NAME_None && !Quests->HasStoryBeatTriggered(RequiredStoryBeat))
-    {
-        return false;
-    }
-    if (BlockedAfterStoryBeat != NAME_None && Quests->HasStoryBeatTriggered(BlockedAfterStoryBeat))
-    {
-        return false;
-    }
+    if (!Quests) return false;
+    if (RequiredStoryBeat != NAME_None && !Quests->HasStoryBeatTriggered(RequiredStoryBeat)) return false;
+    if (BlockedAfterStoryBeat != NAME_None && Quests->HasStoryBeatTriggered(BlockedAfterStoryBeat)) return false;
+    if (Quests->HasSideActivityForDiscovery(DiscoveryId) &&
+        !Quests->IsSideActivityDiscoveryAvailable(DiscoveryId)) return false;
     return true;
 }
 
@@ -95,10 +88,7 @@ void AShireTraversalChallenge::HandleGateOverlap(
     bool bFromSweep,
     const FHitResult& SweepResult)
 {
-    if (bCompleted || !Cast<AShirePlayerCharacter>(OtherActor) || !IsEligible())
-    {
-        return;
-    }
+    if (bCompleted || !Cast<AShirePlayerCharacter>(OtherActor) || !IsEligible()) return;
 
     int32 GateIndex = INDEX_NONE;
     if (OverlappedComponent == GateA) GateIndex = 0;
@@ -110,37 +100,32 @@ void AShireTraversalChallenge::HandleGateOverlap(
         CurrentGateIndex = 1;
         return;
     }
-    if (GateIndex != CurrentGateIndex)
-    {
-        return;
-    }
+    if (GateIndex != CurrentGateIndex) return;
 
     ++CurrentGateIndex;
-    if (CurrentGateIndex < 3)
-    {
-        return;
-    }
+    if (CurrentGateIndex < 3) return;
 
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
-    if (!Quests)
-    {
-        return;
-    }
+    if (!Quests) return;
 
     const int32 InsightBefore = Quests->GetJourneyInsight();
     const bool bNewDiscovery = Quests->RegisterJourneyDiscovery(DiscoveryId);
     if (!bNewDiscovery)
     {
-        bCompleted = true;
-        DisableChallenge();
+        if (Quests->HasJourneyDiscovery(DiscoveryId))
+        {
+            bCompleted = true;
+            DisableChallenge();
+        }
+        else
+        {
+            CurrentGateIndex = 0;
+        }
         return;
     }
 
-    if (CompletionStoryBeat != NAME_None)
-    {
-        Quests->TriggerStoryBeat(CompletionStoryBeat);
-    }
+    if (CompletionStoryBeat != NAME_None) Quests->TriggerStoryBeat(CompletionStoryBeat);
 
     bCompleted = true;
     DisableChallenge();
@@ -157,9 +142,5 @@ void AShireTraversalChallenge::HandleGateOverlap(
         }
     }
 
-    UE_LOG(
-        LogTemp,
-        Display,
-        TEXT("TraversalChallenge: PASS id=%s gates=3"),
-        *DiscoveryId.ToString());
+    UE_LOG(LogTemp, Display, TEXT("TraversalChallenge: PASS id=%s gates=3"), *DiscoveryId.ToString());
 }
