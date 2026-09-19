@@ -50,7 +50,8 @@
     "Named NPC schedules may be sparse when film-story placement controls their location.",
     "Ambient archetypes may use cheap aggregate schedules and must not require persistent per-instance memory.",
     "Aliases refer to the same identity and must not create duplicate persistent memories.",
-    "Relationship data cannot alter mandatory film story outcomes."
+    "Relationship data cannot alter mandatory film story outcomes.",
+    "Named story profiles may expose biography_facts and knowledge_limits to local dialogue context, but those fields never override story-state gates."
   ],
   "external_actor_ids": [
     "PLAYER_FRODO"
@@ -168,7 +169,25 @@
       "anchors": [
         "STORY_DRIVEN"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "origin": "WANDERING_WIZARD",
+      "occupation": "WIZARD_GUIDE",
+      "biography_facts": [
+        "Long-standing friend of Bilbo and familiar with the Shire before the Part I journey.",
+        "Investigates the Ring threat after Bilbo's departure.",
+        "Seeks Saruman at Isengard, is betrayed and imprisoned on Orthanc, then escapes.",
+        "Rejoins the main chronology at Rivendell and later travels as a Fellowship member."
+      ],
+      "knowledge_limits": [
+        "May use wizard, Ring-investigation, Isengard and completed Fellowship context only when the active story state has reached it.",
+        "Must not reveal future mandatory outcomes before the corresponding story beat is completed."
+      ],
+      "attitude_tags": [
+        "WISE",
+        "PROTECTIVE",
+        "SKEPTICAL_OF_EASY_ANSWERS",
+        "URGENT_UNDER_THREAT"
+      ]
     },
     {
       "id": "NPC_BILBO",
@@ -199,7 +218,26 @@
         "BAG_END",
         "RIVENDELL_STORY"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "origin": "HOBBITON_SHIRE",
+      "occupation": "RETIRED_ADVENTURER_WRITER",
+      "biography_facts": [
+        "Lives at Bag End and is an older friend of Gandalf.",
+        "Has a personal history with the Ring before Frodo inherits its burden.",
+        "His birthday celebration and disappearance open the Part I crisis.",
+        "Later reunites with Frodo in Rivendell."
+      ],
+      "knowledge_limits": [
+        "May speak from Shire life, his own prior adventure/Ring history and completed Rivendell context.",
+        "Must not know future Fellowship outcomes or private events he did not witness."
+      ],
+      "attitude_tags": [
+        "WARM",
+        "RESTLESS",
+        "REFLECTIVE",
+        "STORYTELLER",
+        "RING_BURDENED"
+      ]
     },
     {
       "id": "NPC_SAM",
@@ -235,7 +273,25 @@
       "anchors": [
         "PLAYER_PARTY"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "origin": "HOBBITON_SHIRE",
+      "occupation": "GARDENER_COMPANION",
+      "biography_facts": [
+        "A Shire gardener whose ordinary life is closely tied to Frodo's home and community.",
+        "Leaves the Shire with Frodo and remains his most constant companion through Part I.",
+        "Responds strongly to threats against Frodo and to memories of home."
+      ],
+      "knowledge_limits": [
+        "Strong Shire-local and direct journey knowledge; limited access to deep wizard, ancient or political lore unless learned during the journey.",
+        "Must not speak as if he knows future events or private scenes he did not witness."
+      ],
+      "attitude_tags": [
+        "LOYAL",
+        "HOME_MINDED",
+        "PROTECTIVE",
+        "PRACTICAL",
+        "COURAGE_UNDER_PRESSURE"
+      ]
     },
     {
       "id": "NPC_MERRY",
@@ -398,7 +454,26 @@
       "anchors": [
         "STORY_DRIVEN"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "origin": "RANGER_OF_THE_NORTH",
+      "occupation": "RANGER_GUIDE",
+      "biography_facts": [
+        "Known to the hobbits first as Strider in Bree.",
+        "Guides the hobbits through the wilderness toward Rivendell.",
+        "Rivendell story material connects him to Narsil heritage and to Arwen.",
+        "Takes increasing leadership responsibility during the Fellowship journey."
+      ],
+      "knowledge_limits": [
+        "May use ranger, wilderness, Rivendell, Fellowship and completed leadership context.",
+        "Must not reveal later route outcomes or information from scenes not yet reached."
+      ],
+      "attitude_tags": [
+        "RESERVED",
+        "WATCHFUL",
+        "PROTECTIVE",
+        "LEADERSHIP_BURDEN",
+        "DUTY_DRIVEN"
+      ]
     },
     {
       "id": "NPC_ARWEN",
@@ -901,5 +976,12 @@
       "named story profiles remain story-driven by authored placement"
     ],
     "proof_limit": "Data consumption is implemented; authored anchor placement density and device behavior remain acceptance/content-production concerns."
-  }
+  },
+  "profile_context_fields": [
+    "origin",
+    "occupation",
+    "biography_facts",
+    "knowledge_limits",
+    "attitude_tags"
+  ]
 }
