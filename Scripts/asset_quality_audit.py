@@ -144,17 +144,32 @@ def main() -> int:
                     f"{obj.relative_to(ROOT)} uses undefined materials: {', '.join(undefined)}"
                 )
 
+        triangulation_risk_faces = 0
         for tokens in face_tokens:
             if len(tokens) < 3:
                 malformed_faces += 1
                 continue
-            indices = [parse_face_index(token, len(vertices)) for token in tokens[:3]]
+
+            indices = [parse_face_index(token, len(vertices)) for token in tokens]
             if any(index is None or index < 0 or index >= len(vertices) for index in indices):
                 malformed_faces += 1
                 continue
-            a, b, c = (vertices[indices[0]], vertices[indices[1]], vertices[indices[2]])
-            if triangle_area(a, b, c) <= 1e-7:
+
+            polygon_area = 0.0
+            fan_areas: list[float] = []
+            for offset in range(1, len(indices) - 1):
+                area = triangle_area(
+                    vertices[indices[0]],
+                    vertices[indices[offset]],
+                    vertices[indices[offset + 1]],
+                )
+                fan_areas.append(area)
+                polygon_area += area
+
+            if polygon_area <= 1e-7:
                 zero_area_faces += 1
+            elif any(area <= 1e-7 for area in fan_areas):
+                triangulation_risk_faces += 1
 
         if malformed_faces:
             errors.append(
@@ -162,9 +177,14 @@ def main() -> int:
             )
         if zero_area_faces:
             warnings.append(
-                f"{obj.relative_to(ROOT)} has {zero_area_faces} near-zero-area faces"
+                f"{obj.relative_to(ROOT)} has {zero_area_faces} truly near-zero-area faces"
             )
             stats["obj_with_zero_area_faces"] += 1
+        if triangulation_risk_faces:
+            warnings.append(
+                f"{obj.relative_to(ROOT)} has {triangulation_risk_faces} triangulation-risk faces"
+            )
+            stats["obj_with_triangulation_risk"] += 1
 
     for bmp in bmp_files:
         stats["bmp"] += 1
@@ -193,7 +213,8 @@ def main() -> int:
         f"- OBJ without explicit normals: {stats['obj_without_normals']}",
         f"- OBJ without UV coordinates: {stats['obj_without_uvs']}",
         f"- OBJ without smoothing groups: {stats['obj_without_smoothing_groups']}",
-        f"- OBJ with near-zero-area faces: {stats['obj_with_zero_area_faces']}",
+        f"- OBJ with truly near-zero-area faces: {stats['obj_with_zero_area_faces']}",
+        f"- OBJ with triangulation-risk faces: {stats['obj_with_triangulation_risk']}",
         f"- Structural errors: {len(errors)}",
         f"- Warnings: {len(warnings)}",
     ]
