@@ -1,9 +1,9 @@
 # Programmer input — Living NPCs / Character Memory — Part 1
 
-Status: RECEIVED_UNPROCESSED
+Status: ANALYZED_AND_PROMOTED
 Date: 2026-09-19
 Source: project owner forwarding programmer guidance
-Next action: wait for Part 2, then analyze both parts together and promote durable requirements/decisions into ProjectGovernor and the relevant NPC/dialogue/memory plans.
+Disposition: the owner confirmed this was the complete combined message. The request has been analyzed and promoted into ProjectGovernor plus Data/LivingNPCIntelligencePlan.json. Existing NPC memory/social/dialogue foundations are reused rather than replaced.
 
 ## Core request
 
@@ -85,3 +85,21 @@ NPCs should admit ignorance rather than invent knowledge they should not possess
 ## Important implementation note
 
 This file stores the incoming request only. It does not approve a specific LLM vendor, API, cloud dependency, cost model, always-online requirement, voice provider, or unrestricted generative behavior. Final architecture will be decided after Part 2 and must remain compatible with the project's existing bounded-dialogue/canon/performance rules and the 8 GB RAM / ~2 GB VRAM target.
+
+## Analysis outcome
+
+Already present before this message:
+- bounded named-NPC persistent memory and relationship deltas,
+- profile/alias/knowledge tags,
+- chapter-aware schedules,
+- contextual NPC-to-NPC conversations,
+- deterministic bounded dialogue selection and story/knowledge guards.
+
+Newly promoted from this message:
+- explicit goals/needs/emotion model,
+- stronger character biography/knowledge-envelope requirement,
+- explicit ignorance behavior when knowledge is unavailable,
+- local-first architecture with optional future bounded LLM/STT/TTS layers,
+- phased rollout from Shire prototype to major characters and then regional populations.
+
+Runtime started in CP56 by adding bounded hunger/fatigue/social/fear state and goal/emotion bias to AShireAmbientNPC. This remains deliberately cheap and cannot own quest/story state.
