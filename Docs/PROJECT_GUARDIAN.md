@@ -511,3 +511,13 @@ Purpose: prevent later cleanup from silently deleting CP55 world-life movement o
 **Packaging guard:** CP55 activity and CP56 experience plans remain runtime dependencies.
 
 **Proof boundary:** static/compile/headless evidence proves regression safety only. Final cinematic quality, character acting, voice, pacing and target-device visual acceptance remain separate production proof.
+
+## PG-059 — Living NPC intelligence must remain bounded and offline-safe
+Guards the programmer-requested Living NPC layer:
+- `Data/LivingNPCIntelligencePlan.json` must exist, parse and remain packaged.
+- character knowledge remains `DENY_UNLISTED` by default.
+- ambient runtime must retain bounded hunger, fatigue, social need, fear, emotion and goal state.
+- needs/emotions may bias routine/social behavior but may not own quest progression or mandatory film outcomes.
+- the game must remain playable without an always-on LLM/STT/TTS service.
+
+A future generative dialogue provider is allowed only as an optional bounded wording layer with deterministic local fallback.
