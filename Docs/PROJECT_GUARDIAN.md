@@ -412,6 +412,47 @@ This converts failures into permanent project knowledge.
 
 **Guard:** Pre-Unreal Validation checks the common source assets, runtime mesh references, chapter branches and all eight world-dressing profiles.
 
+### PG-051 — Character motion / atmosphere handoff must stay honest
+**Risk:** rig-ready code or chapter atmosphere profiles can be mistaken for final character animation, weather, day/night or visual acceptance.
+
+**Contract:** skeletal production presentation activates only when both the named skeletal mesh and locomotion AnimBP resolve. Otherwise modular fallbacks remain visible. Chapter atmosphere remains a bounded sun/skylight/fog profile and does not imply a dynamic day/night cycle or final weather VFX.
+
+**Proof rule:** compile/import/headless startup are regression evidence only. Real PIE/device observation is required before any chapter is marked visually or behaviorally accepted.
+
+### PG-052 — Mass resource integration must preserve playable startup
+**Risk:** large asset/data batches can compile while breaking runtime packaging, initial quest state, router bootstrap or the living-world director.
+
+**Contract:** the production integration plans remain packaged runtime dependencies; startup remains FrodoMain / P1C01 / ShireArrival and spawns the chapter router plus LivingWorldDirector.
+
+**Guard:** Pre-Unreal validation and the UE4.27 headless startup smoke require the GameMode and P1C01/FrodoMain markers.
+
+### PG-053 — Continuous population must remain bounded and chapter-specific
+**Risk:** population saturation can create runaway actor counts, inappropriate civilians, or expensive behavior on the target laptop.
+
+**Contract:** chapter-specific baseline targets, cull/replenish budgets and role mixes remain bounded. Moria keeps a zero-civilian baseline. Ambient schedules/social/awareness reuse the throttled ambient actor.
+
+**Proof rule:** source/CI evidence does not establish crowd-flow or target-device FPS acceptance; those remain manual PIE/device checks.
+
+### PG-054 — Mega resource bank must remain present and runtime-wired
+**Risk:** later cleanup can silently drop regional assets or runtime references while static counts still look healthy.
+
+**Contract:** the CP54 regional/common bank, texture floor and runtime references for all Part I regions remain guarded by WorldResourceBankCP54.json and Pre-Unreal checks.
+
+**Proof rule:** successful import proves that UE4 can ingest the source bank; it does not prove correct scale, shading, materials, placement or visual quality.
+
+### PG-055 — Import warnings are evidence, not visual acceptance
+**Symptom exposed by:** current-head UE4.27.2 audit on 2026-09-19. Exact-head build/import/startup succeeded and imported **307 files with 0 import failures**, while the Unreal log still emitted substantial visual-quality warnings.
+
+**Observed warning classes:**
+- generated OBJ meshes frequently report missing smoothing-group data,
+- many meshes report degenerate tangent bases / nearly-zero binormals,
+- several modular character assets reference unresolved defaultMat material assets,
+- Shire-loaded named characters probe skeletal rig / locomotion assets that are not present yet and correctly fall back to modular presentation.
+
+**Contract:** zero import failures must never be translated into zero asset-quality problems. These warnings are non-blocking for the verification freeze unless they cause runtime failure, but they must be inspected in real PIE before visual acceptance and should be cleaned during the later material/asset-quality pass.
+
+**Manual check:** during each chapter PIE pass, inspect obvious shading corruption, missing/default materials, scale/orientation, and fallback character presentation. Record concrete findings in PRODUCTION_COMPLETENESS_MATRIX.md / CURRENT_PROJECT_STATE.md.
+
 ## What Guardian must never do automatically
 
 - change canon,
