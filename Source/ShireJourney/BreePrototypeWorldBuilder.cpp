@@ -304,7 +304,7 @@ void ABreePrototypeWorldBuilder::SpawnBreeTown()
         AShireAmbientNPC* Guest = GetWorld()->SpawnActor<AShireAmbientNPC>(InnCrowd[Index], FRotator::ZeroRotator);
         if (!Guest) continue;
         Guest->RoutineRole = TEXT("BreeTownsperson");
-        Guest->ActivityPropType = Index % 2 == 0 ? TEXT("Mug") : NAME_None;
+        Guest->ActivityPropType = Index % 2 == 0 ? FName(TEXT("Mug")) : NAME_None;
         Guest->RoutinePointA = InnCrowd[Index];
         Guest->RoutinePointB = InnCrowd[Index] + FVector(
             90.0f + 20.0f * (Index % 3), Index % 2 == 0 ? 80.0f : -80.0f, 0.0f);
