@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_RESOURCE_SATURATION_CP52",
+  "status": "ACTIVE_RUNTIME_IMPLEMENTATION_PENDING_BUILD",
+  "purpose": "Large visible-production integration pass that reuses every project-owned production family across the playable Part I runtime, increases environmental density without moving story topology, and keeps the external-license pipeline ready for future approved third-party assets.",
+  "engine": "Unreal Engine 4.27.2",
+  "target_profile": {
+    "platform": "Windows",
+    "renderer": "DX11",
+    "resolution": "720p",
+    "fps_floor": 30
+  },
+  "resource_roots": [
+    {
+      "root": "SourceAssets/Production/World/Shire",
+      "runtime_owner": "AShirePrototypeWorldBuilder",
+      "mode": "ACTIVE"
+    },
+    {
+      "root": "SourceAssets/Production/World/Bree",
+      "runtime_owner": "ABreePrototypeWorldBuilder",
+      "mode": "ACTIVE"
+    },
+    {
+      "root": "SourceAssets/Production/World/Common",
+      "runtime_owner": "ALL_PART1_WORLD_BUILDERS",
+      "mode": "ACTIVE_SHARED"
+    },
+    {
+      "root": "SourceAssets/Production/World/Weathertop",
+      "runtime_owner": "AFellowshipChapterWorldBuilder",
+      "mode": "ACTIVE"
+    },
+    {
+      "root": "SourceAssets/Production/World/Rivendell",
+      "runtime_owner": "AFellowshipChapterWorldBuilder",
+      "mode": "ACTIVE"
+    },
+    {
+      "root": "SourceAssets/Production/World/Road",
+      "runtime_owner": "AFellowshipChapterWorldBuilder",
+      "mode": "ACTIVE"
+    },
+    {
+      "root": "SourceAssets/Production/World/Moria",
+      "runtime_owner": "AFellowshipChapterWorldBuilder",
+      "mode": "ACTIVE"
+    },
+    {
+      "root": "SourceAssets/Production/World/Lothlorien",
+      "runtime_owner": "AFellowshipChapterWorldBuilder",
+      "mode": "ACTIVE"
+    },
+    {
+      "root": "SourceAssets/Production/World/Anduin",
+      "runtime_owner": "AFellowshipChapterWorldBuilder",
+      "mode": "ACTIVE"
+    },
+    {
+      "root": "SourceAssets/Production/Characters",
+      "runtime_owner": "AShireNPC + AShirePlayerCharacter + enemy prototypes",
+      "mode": "ACTIVE"
+    },
+    {
+      "root": "SourceAssets/ExternalLicensed/Approved",
+      "runtime_owner": "MANIFEST_GATED",
+      "mode": "EMPTY_UNTIL_LICENSE_EVIDENCE"
+    }
+  ],
+  "cp52_integration_goals": [
+    "Reuse the common production kit in Shire and Bree instead of limiting it to P1C03-P1C08.",
+    "Increase chapter-specific prop density with fences, wood piles, logs, path markers, foliage, reeds, bridges and ruin debris.",
+    "Keep generated story/quest coordinates unchanged.",
+    "Keep most added dressing non-colliding.",
+    "Make the first launch immediately produce P1C01, the active ShireArrival quest, the living-world director and the production world router.",
+    "Do not invent external-license approval: Data/ExternalAssetManifest.json currently has no approved asset entries."
+  ],
+  "external_resource_policy": {
+    "manifest": "Data/ExternalAssetManifest.json",
+    "current_approved_asset_count": 0,
+    "rule": "Third-party files enter runtime only after a real manifest asset entry and license evidence. Project-owned resources may be integrated immediately."
+  },
+  "acceptance_boundary": {
+    "implemented_by_cp52": [
+      "shared common-kit saturation across Part I",
+      "larger deterministic visual dressing batches",
+      "playable startup path preserved and explicitly guarded"
+    ],
+    "still_required": [
+      "UE4.27 compile/import validation",
+      "PIE traversal",
+      "target-device FPS/stability",
+      "final licensed external asset acquisition",
+      "final textures/audio/rigs/interiors"
+    ]
+  }
+}

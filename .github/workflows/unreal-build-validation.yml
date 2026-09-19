@@ -4,13 +4,16 @@ on:
   push:
     branches:
       - develop
+  pull_request:
+    branches:
+      - develop
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: unreal-build-develop
+  group: unreal-build-${{ github.event.pull_request.number || github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -21,7 +24,7 @@ jobs:
       - Windows
       - X64
       - ue4-27
-    timeout-minutes: 45
+    timeout-minutes: 55
 
     steps:
       - name: Bootstrap Windows runner tools
@@ -84,6 +87,67 @@ jobs:
           )
 
           echo Runner bootstrap succeeded.
+
+      - name: Install user-level runner autostart watchdog
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $RunnerRoot = "C:\actions-runner"
+          $Watchdog = Join-Path $RunnerRoot "runner-watchdog.ps1"
+          $Launcher = Join-Path $RunnerRoot "start-runner-watchdog.cmd"
+          $DiagDir = Join-Path $RunnerRoot "_diag"
+          $WatchdogLog = Join-Path $DiagDir "user-watchdog.log"
+
+          if (-not (Test-Path (Join-Path $RunnerRoot "run.cmd"))) {
+            throw "Expected runner launcher not found at C:\actions-runner\run.cmd"
+          }
+          if (-not (Test-Path $DiagDir)) {
+            New-Item -ItemType Directory -Path $DiagDir -Force | Out-Null
+          }
+
+          @'
+          $ErrorActionPreference = "SilentlyContinue"
+          $RunnerRoot = "C:\actions-runner"
+          $RunCmd = Join-Path $RunnerRoot "run.cmd"
+          $DiagDir = Join-Path $RunnerRoot "_diag"
+          $Log = Join-Path $DiagDir "user-watchdog.log"
+
+          function Write-WatchdogLog([string]$Message) {
+              try {
+                  Add-Content -LiteralPath $Log -Value ("{0:u} {1}" -f (Get-Date), $Message)
+              } catch {}
+          }
+
+          Write-WatchdogLog "watchdog started for interactive user $env:USERNAME"
+
+          while ($true) {
+              $listener = Get-Process -Name "Runner.Listener" -ErrorAction SilentlyContinue
+              if (-not $listener) {
+                  Write-WatchdogLog "Runner.Listener absent; starting C:\actions-runner\run.cmd"
+                  Start-Process -FilePath $RunCmd -WorkingDirectory $RunnerRoot -WindowStyle Hidden
+                  Start-Sleep -Seconds 8
+              }
+              Start-Sleep -Seconds 12
+          }
+          '@ | Set-Content -LiteralPath $Watchdog -Encoding UTF8
+
+          @'
+          @echo off
+          powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "C:\actions-runner\runner-watchdog.ps1"
+          '@ | Set-Content -LiteralPath $Launcher -Encoding ASCII
+
+          $RunKey = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
+          if (-not (Test-Path $RunKey)) {
+            New-Item -Path $RunKey -Force | Out-Null
+          }
+          New-ItemProperty -Path $RunKey -Name "FellowshipGitHubRunnerWatchdog" -PropertyType String -Value ('"' + $Launcher + '"') -Force | Out-Null
+
+          Write-Host "Installed user-level runner watchdog:"
+          Write-Host "  watchdog: $Watchdog"
+          Write-Host "  launcher:  $Launcher"
+          Write-Host "  registry:  HKCU\Software\Microsoft\Windows\CurrentVersion\Run\FellowshipGitHubRunnerWatchdog"
+          Write-Host "This requires no Windows account password and starts after the interactive user logs in."
 
       - name: Checkout exact commit with resilient archive download
         shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
@@ -226,6 +290,83 @@ jobs:
           )
 
           echo UE4.27.2 production asset import succeeded.
+
+      - name: Headless playable startup smoke
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $Project = Join-Path $env:GITHUB_WORKSPACE "ShireJourney.uproject"
+          $EditorCmd = "C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor-Cmd.exe"
+          $LogDir = Join-Path $env:GITHUB_WORKSPACE "Saved\Logs"
+          $BootLog = Join-Path $LogDir "CI-PlayableStartup.log"
+
+          if (-not (Test-Path $EditorCmd)) {
+            throw "UE4Editor-Cmd.exe missing for playable startup smoke."
+          }
+          if (-not (Test-Path $LogDir)) {
+            New-Item -ItemType Directory -Path $LogDir | Out-Null
+          }
+          if (Test-Path $BootLog) {
+            Remove-Item -LiteralPath $BootLog -Force
+          }
+
+          $Args = @(
+            $Project,
+            "/Engine/Maps/Templates/Template_Default",
+            "-game",
+            "-nullrhi",
+            "-unattended",
+            "-nop4",
+            "-nosplash",
+            "-NoSound",
+            "-abslog=$BootLog"
+          )
+
+          Write-Host "Launching headless playable startup smoke for commit $env:GITHUB_SHA"
+          $Proc = Start-Process -FilePath $EditorCmd -ArgumentList $Args -PassThru
+          $Deadline = (Get-Date).AddSeconds(45)
+          $SeenGameMode = $false
+          $SeenChapter = $false
+
+          while ((Get-Date) -lt $Deadline) {
+            if (Test-Path $BootLog) {
+              $Text = Get-Content -LiteralPath $BootLog -Raw -ErrorAction SilentlyContinue
+              if ($Text -match "ShirePlayableStartup: GameMode ready") {
+                $SeenGameMode = $true
+              }
+              if ($Text -match "ShirePlayableStartup: chapter=P1C01 route=FrodoMain") {
+                $SeenChapter = $true
+              }
+              if ($SeenGameMode -and $SeenChapter) {
+                break
+              }
+            }
+
+            if ($Proc.HasExited) {
+              break
+            }
+            Start-Sleep -Seconds 1
+          }
+
+          if (-not $Proc.HasExited) {
+            Stop-Process -Id $Proc.Id -Force -ErrorAction SilentlyContinue
+            $Proc.WaitForExit()
+          }
+
+          if (Test-Path $BootLog) {
+            Write-Host "----- Playable startup log tail -----"
+            Get-Content -LiteralPath $BootLog -Tail 180
+          }
+
+          if (-not $SeenGameMode) {
+            throw "Playable startup smoke did not observe the GameMode startup marker."
+          }
+          if (-not $SeenChapter) {
+            throw "Playable startup smoke did not observe P1C01/FrodoMain world load."
+          }
+
+          Write-Host "Headless playable startup smoke succeeded."
 
       - name: Collect Unreal build logs
         if: always()

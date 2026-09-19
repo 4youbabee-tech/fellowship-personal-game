@@ -2182,6 +2182,95 @@ for chapter_id in ["P1C03", "P1C04", "P1C05", "P1C06", "P1C07", "P1C08"]:
     if chapter_world_cpp.count(f'ChapterId == TEXT("{chapter_id}")') < 1:
         fail(f"PG-051 atmosphere/world chapter branch missing: {chapter_id}")
 
+# PG-052: resource saturation must keep all current project-owned families integrated and startup data packaged.
+resource_integration_path = ROOT / "Data" / "ResourceIntegrationPlan.json"
+resource_integration = {}
+if not resource_integration_path.exists():
+    fail("PG-052 ResourceIntegrationPlan.json missing")
+else:
+    try:
+        resource_integration = json.loads(read(resource_integration_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-052 invalid ResourceIntegrationPlan.json: {exc}")
+
+shire_h_cp52 = read(SOURCE / "ShirePrototypeWorldBuilder.h")
+shire_cpp_cp52 = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
+bree_h_cp52 = read(SOURCE / "BreePrototypeWorldBuilder.h")
+bree_cpp_cp52 = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
+fellowship_cpp_cp52 = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+build_cs_cp52 = read(SOURCE / "ShireJourney.Build.cs")
+game_mode_cpp_cp52 = read(SOURCE / "ShireGameMode.cpp")
+router_cpp_cp52 = read(SOURCE / "ChapterWorldRouter.cpp")
+quest_cpp_cp52 = read(SOURCE / "ShireQuestSubsystem.cpp")
+unreal_workflow_cp52 = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+for symbol in [
+    "ProductionCommonBroadleafTreeMesh",
+    "ProductionCommonFallenLogMesh",
+    "ProductionCommonVillageFenceMesh",
+    "ProductionCommonWoodPileMesh",
+    "ProductionCommonFernClumpMesh",
+    "ProductionCommonReedClusterMesh",
+    "ProductionCommonFootbridgeMesh",
+]:
+    if symbol not in (shire_h_cp52 + shire_cpp_cp52):
+        fail(f"PG-052 Shire shared-resource integration missing: {symbol}")
+
+for symbol in [
+    "CommonBroadleafTreeMesh",
+    "CommonDryStoneWallMesh",
+    "CommonVillageFenceMesh",
+    "CommonWoodPileMesh",
+    "CommonFernClumpMesh",
+]:
+    if symbol not in (bree_h_cp52 + bree_cpp_cp52):
+        fail(f"PG-052 Bree shared-resource integration missing: {symbol}")
+
+for symbol in [
+    "CommonWoodPileMesh",
+    "CommonPathMarkerMesh",
+    "CommonDryStoneWallMesh",
+    "CommonFallenLogMesh",
+]:
+    if symbol not in fellowship_cpp_cp52:
+        fail(f"PG-052 Fellowship shared-resource saturation missing: {symbol}")
+
+for runtime_data in [
+    "LivingWorldEventPlan.json",
+    "CharacterMotionPlan.json",
+    "ChapterAtmospherePlan.json",
+    "WorldDressingPlan.json",
+    "ResourceIntegrationPlan.json",
+]:
+    if runtime_data not in build_cs_cp52:
+        fail(f"PG-052 runtime data is not packaged: {runtime_data}")
+
+for startup_symbol in [
+    "SpawnActor<AChapterWorldRouter>",
+    "SpawnActor<ALivingWorldDirector>",
+    'CurrentChapterId = TEXT("P1C01")',
+    'StartQuest(TEXT("ShireArrival"), 0)',
+    "ShirePlayableStartup: GameMode ready",
+    "ShirePlayableStartup: chapter=P1C01 route=%s",
+]:
+    if startup_symbol not in (game_mode_cpp_cp52 + router_cpp_cp52 + quest_cpp_cp52):
+        fail(f"PG-052 playable startup invariant missing: {startup_symbol}")
+
+for workflow_symbol in [
+    "pull_request:",
+    "Headless playable startup smoke",
+    "CI-PlayableStartup.log",
+    "ShirePlayableStartup: GameMode ready",
+    "ShirePlayableStartup: chapter=P1C01 route=FrodoMain",
+]:
+    if workflow_symbol not in unreal_workflow_cp52:
+        fail(f"PG-052 Unreal boot validation workflow missing: {workflow_symbol}")
+
+if resource_integration:
+    external_policy = resource_integration.get("external_resource_policy", {})
+    if external_policy.get("current_approved_asset_count") != 0:
+        fail("PG-052 external approved count must match current empty ExternalAssetManifest assets list")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

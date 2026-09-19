@@ -27,6 +27,33 @@ Current proof boundary:
 - UE4.27 compile/import: pending,
 - PIE/device visual acceptance: pending.
 
+## Current mass-integration status — CP52
+
+CP52 is intentionally larger than the previous incremental passes. The playable runtime now reuses the shared production resource family across the Shire, Bree and P1C03-P1C08, and the build rules explicitly package the living-world/production data needed outside the editor.
+
+Machine-readable authority:
+- `Data/ResourceIntegrationPlan.json`
+
+Playable startup remains:
+- route: `FrodoMain`,
+- chapter: `P1C01`,
+- first quest: `ShireArrival`,
+- runtime world: `AChapterWorldRouter`,
+- ambient runtime: `ALivingWorldDirector`.
+
+External-resource truth boundary:
+- the sourcing pipeline supports approved/licensed resources,
+- `Data/ExternalAssetManifest.json` currently contains zero approved asset records,
+- CP52 therefore uses all currently available project-owned production resources and does not fabricate external approvals.
+
+Current proof boundary:
+- source/runtime integration: implemented on `mega/resource-saturation-playable-v1`,
+- Pre-Unreal PG-052: pending CI,
+- real UE4.27 compile/import: now triggered on the CP52 pull request,
+- headless playable boot smoke: now part of Unreal Build Validation and requires GameMode + P1C01/FrodoMain markers,
+- PIE/device playability and performance: pending.
+- runner autostart: post-reboot verification trigger issued on 2026-09-19.
+
 # CURRENT PROJECT STATE
 
 > **Operational recovery note — reconciled 2026-09-19**
