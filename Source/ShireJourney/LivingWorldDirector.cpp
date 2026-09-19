@@ -434,7 +434,7 @@ FName ALivingWorldDirector::ChooseBaselineRole() const
 
 FName ALivingWorldDirector::ChooseBaselineProp(FName RoleName) const
 {
-    if (RoleName == TEXT("Courier") || Role == TEXT("RoadWalker"))
+    if (RoleName == TEXT("Courier") || RoleName == TEXT("RoadWalker"))
     {
         return TEXT("Satchel");
     }
