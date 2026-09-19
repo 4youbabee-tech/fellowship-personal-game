@@ -38,7 +38,7 @@ jobs:
           rem listener clear _work\_temp underneath the live job. Stop only that
           rem watchdog process before the build. This is best-effort support cleanup
           rem and must never gate validation.
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue'; Get-CimInstance Win32_Process -Filter \"Name='powershell.exe'\" | Where-Object { $_.CommandLine -like '*runner-watchdog.ps1*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }; exit 0" >nul 2>nul
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue'; $me=$PID; Get-CimInstance Win32_Process -Filter \"Name='powershell.exe'\" | Where-Object { $_.ProcessId -ne $me -and $_.CommandLine -match '(?i)-File.+C:\\\\actions-runner\\\\runner-watchdog\\.ps1' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }; Remove-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' -Name 'FellowshipGitHubRunnerWatchdog' -ErrorAction SilentlyContinue; exit 0" >nul 2>nul
 
           where git.exe >nul 2>nul
           if not errorlevel 1 (
