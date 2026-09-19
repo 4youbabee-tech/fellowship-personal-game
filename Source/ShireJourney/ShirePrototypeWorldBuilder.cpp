@@ -1174,7 +1174,7 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
             RevelerStarts[Index], FRotator::ZeroRotator, AmbientSpawnParams);
         if (!Reveler) continue;
         Reveler->RoutineRole = TEXT("PartyGuest");
-        Reveler->ActivityPropType = Index % 3 == 0 ? TEXT("Mug") : NAME_None;
+        Reveler->ActivityPropType = Index % 3 == 0 ? FName(TEXT("Mug")) : NAME_None;
         Reveler->RoutinePointA = RevelerStarts[Index];
         Reveler->RoutinePointB = RevelerStarts[Index] + FVector(
             120.0f + 35.0f * (Index % 2),
