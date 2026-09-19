@@ -168,7 +168,7 @@
       "priority": "CRITICAL",
       "status": "PARTIAL",
       "origin": "User requirement for mountains valleys water beauty and film-like travel",
-      "intent": "Worlds need strong geography: hills, valleys, rivers, forests, mountains, landmarks, occlusion, vistas and chapter-specific atmosphere.",
+      "intent": "Build a distinctly beautiful, cinematic Middle-earth world rather than merely functional or generic fantasy scenery: strong vistas, layered depth, rich terrain/materials/vegetation, water, atmosphere, architecture and chapter-specific lighting, while preserving film-story geography and the low-spec performance budget.",
       "evidence": [
         "Data/BiomePlan.csv",
         "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
@@ -183,18 +183,24 @@
         "Moria large-scale halls/abyss",
         "Lothlorien golden canopy",
         "Anduin river canyon",
-        "CP49 reusable production terrain kit overlays hills cliffs river banks slopes and boulders without moving story anchors"
+        "CP49 reusable production terrain kit overlays hills cliffs river banks slopes and boulders without moving story anchors",
+        "Owner rejected the earlier plain reference-image quality as the target bar; the world visual bar is now explicitly higher and more cinematic.",
+        "Visual target emphasizes layered vistas, foreground/midground/background depth, richer materials/vegetation, landmark composition, water/fog/light atmosphere and region-specific color identity."
       ],
       "missing_work": [
-        "Most non-Shire regions remain prototype geometry",
-        "Final terrain/material/vegetation production assets",
-        "focused PIE/device/visual acceptance",
-        "environment motion/weather depth"
+        "Most non-Shire regions remain prototype geometry.",
+        "Raise Shire itself from reference vertical slice to the new higher cinematic beauty bar.",
+        "Final terrain/material/vegetation/water/architecture production assets and composition pass.",
+        "Chapter-specific hero vistas and landmark reveals.",
+        "Environment motion/weather depth.",
+        "Focused PIE/device/performance/visual acceptance."
       ],
       "acceptance_criteria": [
-        "Each chapter has recognizable physical identity",
-        "Traversal uses elevation, occlusion and reveal rather than flat arenas",
-        "Production visuals pass device/performance and visual acceptance"
+        "Each chapter has recognizable physical identity and at least one memorable cinematic vista/reveal.",
+        "Traversal uses elevation, occlusion, foreground/midground/background layering and landmark framing rather than flat arenas.",
+        "Terrain, materials, vegetation, architecture, water and atmosphere read as a cohesive production world rather than prototype geometry.",
+        "Beauty upgrades preserve the 720p Low-Medium / 30 FPS floor target through LODs, instancing, culling and selective hero detail.",
+        "Production visuals pass focused device/performance and human visual acceptance."
       ],
       "dependencies": [],
       "checkpoint": "CP26_PLUS_PRODUCTION",
@@ -1953,6 +1959,24 @@
       "evidence": [
         "Data/ContextualSideActivityPlan.json"
       ]
+    },
+    {
+      "id": "DEC-019",
+      "title": "Raise the world visual bar above the earlier plain reference examples",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-PERF-001",
+        "REQ-MEGA-001"
+      ],
+      "resolution": "Do not treat the previously shown external game screenshots as the final visual target. Aim for a more beautiful, cinematic and memorable Middle-earth presentation with strong vistas, layered terrain, richer materials/vegetation, water, atmosphere, lighting and chapter-specific visual identity. Achieve the higher beauty bar selectively and efficiently so the established 720p Low-Medium / 30 FPS target is not silently abandoned.",
+      "rationale": "The owner explicitly rejected the earlier reference-image quality as not beautiful enough and wants a substantially more attractive world.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/ProjectGovernor.json",
+        "Docs/WORLD_PRODUCTION_BLUEPRINT.md"
+      ]
     }
   ],
   "open_conflicts": [],
@@ -2420,12 +2444,11 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Owner clarified that original side games are welcome only as plausible film-context gap-fill; the film remains the mandatory story.",
+    "reason": "Owner raised the world-beauty target above the earlier plain reference screenshots.",
     "summary": [
-      "Added 18 contextual side activities across all current Part I chapters/routes.",
-      "Every side activity is bounded by exact story anchors, participant presence, knowledge limits and urgency rules.",
-      "Side activities feed Journey Discoveries/Chronicle/dialogue-memory rewards and cannot alter canon or advance required story beats.",
-      "Runtime implementation and UE4.27 validation remain pending; PR #53 exact-head gate is unchanged."
+      "World visual target is now explicitly cinematic, layered and region-specific rather than merely functional/prototype.",
+      "Hero vistas, richer terrain/materials/vegetation/water/atmosphere and landmark composition are acceptance requirements.",
+      "The 720p Low-Medium / 30 FPS target remains a hard budget; beauty must come from composition and selective detail, not uncontrolled asset density."
     ]
   },
   "development_mode": {

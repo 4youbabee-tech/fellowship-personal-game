@@ -108,3 +108,16 @@ If a new developer/assistant opens the project:
 4. inspect latest `develop` head and both GitHub validation workflows;
 5. inspect `WorldCheckpointPlan.csv`, `StoryBeatPlan.csv` and `BiomePlan.csv` for the chapter being changed;
 6. never infer acceptance from an old checkpoint or from chat history.
+
+## Visual beauty target — owner direction 2026-09-20
+
+The visual bar is higher than the plain external reference screenshots previously discussed. The target is a distinctly beautiful, cinematic Middle-earth world rather than a generic fantasy landscape.
+
+Production composition rules:
+- every chapter needs at least one memorable hero vista/reveal;
+- build foreground/midground/background depth with elevation, occlusion and landmark framing;
+- favor cohesive terrain materials, vegetation clusters, water, fog, sky and lighting over raw object count;
+- reserve the highest detail for hero landmarks and the player's near field; use LODs, instancing, culling and simpler distant silhouettes to preserve the 720p Low-Medium / 30 FPS target;
+- keep each region visually unique: Shire lush/warm, Bree wet/lamplit, Weathertop austere/windy, Rivendell luminous/layered, Caradhras severe/snowbound, Moria monumental/dark, Lothlorien golden/ethereal, Anduin grand/open, Isengard ordered-to-corrupted industrial.
+
+A region is not visually accepted merely because assets are present; it must read as beautiful and memorable in motion on the target device.
