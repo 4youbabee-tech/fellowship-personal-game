@@ -553,5 +553,241 @@
       ],
       "status": "REFERENCE_READY"
     }
+  ],
+  "original_dialogue_variants": [
+    {
+      "variant_id": "SRC_SAM_PARTY_01",
+      "speaker": "NPC_SAM",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "PartyArrival",
+      "required_mood": "PEACEFUL_HOME",
+      "context_id": "P1C01_HOME",
+      "text": "Everyone is laughing, but I keep wondering what Mr. Bilbo has planned for the speech."
+    },
+    {
+      "variant_id": "SRC_MERRY_BILBO_GONE_01",
+      "speaker": "NPC_MERRY",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BilboDisappearance",
+      "required_mood": "PEACEFUL_HOME",
+      "context_id": "P1C01_HOME",
+      "text": "That was no ordinary party trick. Frodo looks worried, and I think we should stay close."
+    },
+    {
+      "variant_id": "SRC_SAM_RING_WARNING_01",
+      "speaker": "NPC_SAM",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "RingWarning",
+      "required_mood": "PEACEFUL_HOME",
+      "context_id": "P1C01_DANGER",
+      "text": "You do not have to explain every secret. If you are leaving, I am coming."
+    },
+    {
+      "variant_id": "SRC_SAM_BREE_RING_01",
+      "speaker": "NPC_SAM",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "RingIncident",
+      "required_mood": "SUSPICIOUS_TOWN",
+      "context_id": "P1C02_AFTER_RING",
+      "text": "Too many people saw that. We should leave the common room before the questions begin."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_BREE_RING_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "RingIncident",
+      "required_mood": "SUSPICIOUS_TOWN",
+      "context_id": "P1C02_AFTER_RING",
+      "text": "The room has changed. Every curious glance is now a risk we cannot ignore."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_PRIVATE_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "StriderPrivateRoom",
+      "required_mood": "SUSPICIOUS_TOWN",
+      "context_id": "P1C02_AFTER_RING",
+      "text": "Trust can wait; survival cannot. Keep together until the road gives us a better choice."
+    },
+    {
+      "variant_id": "SRC_SAM_WOUND_01",
+      "speaker": "NPC_SAM",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "MorgulWound",
+      "required_mood": "PURSUED_WILDERNESS",
+      "context_id": "P1C03_WOUNDED",
+      "text": "Stay with us. We can slow down, but we are not leaving you behind."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_WOUND_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "MorgulWound",
+      "required_mood": "PURSUED_WILDERNESS",
+      "context_id": "P1C03_WOUNDED",
+      "text": "The wound is worsening. We need speed, shelter, and no unnecessary fights."
+    },
+    {
+      "variant_id": "SRC_GANDALF_RECOVERY_01",
+      "speaker": "NPC_GANDALF",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "RivendellAwakening",
+      "required_mood": "SAFE_REFUGE",
+      "context_id": "P1C04_REFUGE",
+      "text": "You have carried enough fear for one journey. Learn what happened before deciding what comes next."
+    },
+    {
+      "variant_id": "SRC_BILBO_REUNION_01",
+      "speaker": "NPC_BILBO",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BilboReunion",
+      "required_mood": "SAFE_REFUGE",
+      "context_id": "P1C04_REFUGE",
+      "text": "I hoped seeing you here would feel simpler. Some old choices follow us farther than expected."
+    },
+    {
+      "variant_id": "SRC_ELROND_COUNCIL_01",
+      "speaker": "NPC_ELROND",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "CouncilBegins",
+      "required_mood": "SAFE_REFUGE",
+      "context_id": "P1C04_COUNCIL",
+      "text": "Everyone here brings a different fear. We must choose despite them, not pretend they are absent."
+    },
+    {
+      "variant_id": "SRC_GIMLI_COMPANY_01",
+      "speaker": "NPC_GIMLI",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "FellowshipAssembled",
+      "required_mood": "SAFE_REFUGE",
+      "context_id": "P1C04_COUNCIL",
+      "text": "Fine company is proven on the road, not in a council chamber. We shall see soon enough."
+    },
+    {
+      "variant_id": "SRC_PIPPIN_CAMP_01",
+      "speaker": "NPC_PIPPIN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "FellowshipCamp",
+      "required_mood": "FELLOWSHIP_UNDER_PRESSURE",
+      "context_id": "P1C05_COMPANY",
+      "text": "For once nobody is chasing us. I intend to enjoy that until someone calls it irresponsible."
+    },
+    {
+      "variant_id": "SRC_GANDALF_CREBAIN_01",
+      "speaker": "NPC_GANDALF",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "CrebainWarning",
+      "required_mood": "FELLOWSHIP_UNDER_PRESSURE",
+      "context_id": "P1C05_COMPANY",
+      "text": "Whatever watched us has carried news. We should assume the road ahead is less private now."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_CARADHRAS_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "CaradhrasStorm",
+      "required_mood": "FELLOWSHIP_UNDER_PRESSURE",
+      "context_id": "P1C05_COMPANY",
+      "text": "The mountain is taking strength from the whole company. Pride is not a reason to stay exposed."
+    },
+    {
+      "variant_id": "SRC_GIMLI_BALIN_01",
+      "speaker": "NPC_GIMLI",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BalinsTombReveal",
+      "required_mood": "DEAD_CITY_DREAD",
+      "context_id": "P1C06_MORIA",
+      "text": "These names were not meant to be found in silence. Give me a moment before we move."
+    },
+    {
+      "variant_id": "SRC_GANDALF_BALIN_01",
+      "speaker": "NPC_GANDALF",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BalinsTombReveal",
+      "required_mood": "DEAD_CITY_DREAD",
+      "context_id": "P1C06_MORIA",
+      "text": "Grief must not blind us to danger. This chamber tells us more than one terrible thing."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_MORIA_ESCAPE_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "MoriaEscape",
+      "required_mood": "DEAD_CITY_DREAD",
+      "context_id": "P1C06_AFTER_LOSS",
+      "text": "Do not ask anyone to be ready. Keep them moving until we can grieve somewhere safer."
+    },
+    {
+      "variant_id": "SRC_GALADRIEL_LORIEN_01",
+      "speaker": "NPC_GALADRIEL",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "LorienEntry",
+      "required_mood": "GRIEF_AND_REFUGE",
+      "context_id": "P1C07_REFUGE",
+      "text": "This place can shelter weary travelers, but it cannot carry their burdens for them."
+    },
+    {
+      "variant_id": "SRC_GIMLI_LORIEN_01",
+      "speaker": "NPC_GIMLI",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "LorienGrief",
+      "required_mood": "GRIEF_AND_REFUGE",
+      "context_id": "P1C07_REFUGE",
+      "text": "I thought I knew what beauty looked like in stone. These woods have complicated the matter."
+    },
+    {
+      "variant_id": "SRC_GALADRIEL_MIRROR_01",
+      "speaker": "NPC_GALADRIEL",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "Mirror",
+      "required_mood": "GRIEF_AND_REFUGE",
+      "context_id": "P1C07_REFUGE",
+      "text": "Visions show possibilities and fears. What matters is what you choose when the water is still again."
+    },
+    {
+      "variant_id": "SRC_BOROMIR_ARGONATH_01",
+      "speaker": "NPC_BOROMIR",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "ArgonathReveal",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_ANDUIN",
+      "text": "Those stones speak of a kingdom I have defended all my life. I cannot look at them lightly."
+    },
+    {
+      "variant_id": "SRC_SAM_FRACTURE_01",
+      "speaker": "NPC_SAM",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BoromirPressure",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_FRACTURE",
+      "text": "Something has changed around the camp. I do not like how far apart everyone is standing."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_BOROMIR_FALL_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BoromirFall",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_FRACTURE",
+      "text": "He chose his last ground defending the others. Remember the choice, not only the mistake before it."
+    },
+    {
+      "variant_id": "SRC_GANDALF_BETRAYAL_01",
+      "speaker": "NPC_GANDALF",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "OrthancBetrayal",
+      "required_mood": "WAR_CORRUPTION",
+      "context_id": "P1G01_BETRAYAL",
+      "text": "Counsel has become coercion. I will not call surrender wisdom simply because it wears a learned face."
+    },
+    {
+      "variant_id": "SRC_SARUMAN_BETRAYAL_01",
+      "speaker": "NPC_SARUMAN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "OrthancBetrayal",
+      "required_mood": "WAR_CORRUPTION",
+      "context_id": "P1G01_BETRAYAL",
+      "text": "Old loyalties are collapsing. Refusing to adapt will not make the coming order disappear."
+    }
   ]
 }
