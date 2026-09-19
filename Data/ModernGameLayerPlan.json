@@ -1,0 +1,466 @@
+{
+  "schema_version": 1,
+  "plan_id": "MODERN_GAME_LAYER_FILM_SPINE_V1",
+  "status": "ACCEPTED_PRODUCTION_CONTRACT_RUNTIME_EXPANSION_PENDING",
+  "purpose": "Make the project a complete modern narrative adventure game built around the fixed film chronology rather than a sequence of film scenes.",
+  "canon_contract": {
+    "fixed_story": "Peter Jackson film chronology remains the mandatory spine.",
+    "side_content_rule": "Optional play lives between fixed film anchors and may deepen place, character, skill and relationships but may not replace, skip, reorder or change required film outcomes.",
+    "opening_truth": {
+      "source": "Owner-supplied Fellowship screenplay reference",
+      "order": [
+        "Ring prologue/cinematic context",
+        "Bilbo writing in Bag End",
+        "Frodo is outside in Hobbiton rather than sharing the opening study scene with Bilbo",
+        "Frodo meets Gandalf on the Shire lane",
+        "Gandalf and Frodo travel through Hobbiton",
+        "Gandalf reaches Bag End and meets Bilbo"
+      ],
+      "game_adaptation": "Player control should begin in a film-safe Frodo free-play window around the Shire before/around the Gandalf lane encounter; optional tasks may exist there but the Gandalf/Bilbo/party anchors remain mandatory."
+    }
+  },
+  "research_synthesis": [
+    {
+      "pattern": "OPTIONAL_CONTENT_REWARDS_EXPLORATION",
+      "observed_in": [
+        "God of War Ragnarök",
+        "Star Wars Jedi: Survivor"
+      ],
+      "adaptation": "Place meaningful optional rewards off the critical path; discoveries should improve knowledge, utility, relationships or bounded character capabilities instead of generic stat inflation."
+    },
+    {
+      "pattern": "BITE_SIZED_WORLD_EVENTS",
+      "observed_in": [
+        "Assassin's Creed Valhalla",
+        "Assassin's Creed Mirage"
+      ],
+      "adaptation": "Use short local events discovered naturally in the world without filling the quest log with errands. The event should usually be solved where it is found."
+    },
+    {
+      "pattern": "OPEN_EXPLORATION_INSIDE_NARRATIVE_GAME",
+      "observed_in": [
+        "Star Wars Jedi: Survivor"
+      ],
+      "adaptation": "Keep authored chapter hubs/regions semi-open rather than forcing a single corridor or attempting one giant seamless world."
+    },
+    {
+      "pattern": "COMPANION_DIALOGUE_DURING_EXPLORATION",
+      "observed_in": [
+        "God of War Ragnarök"
+      ],
+      "adaptation": "Exploration, backtracking and side tasks trigger original companion conversation and relationship texture without changing canon."
+    },
+    {
+      "pattern": "WORLD_REACTIVITY_AND_ROUTINES",
+      "observed_in": [
+        "Assassin's Creed series living-world design"
+      ],
+      "adaptation": "Residents work, travel, gossip, react to danger and continue local routines so the player feels like part of a world rather than the only active object."
+    },
+    {
+      "pattern": "MAP_KNOWLEDGE_EARNED_BY_TRAVEL",
+      "observed_in": [
+        "Assassin's Creed Shadows"
+      ],
+      "adaptation": "Reveal local map knowledge, landmarks and safe paths through actual traversal/discovery instead of showing every icon immediately."
+    },
+    {
+      "pattern": "ENVIRONMENTAL_PUZZLE_TRAVERSAL",
+      "observed_in": [
+        "God of War Ragnarök",
+        "Star Wars Jedi: Survivor"
+      ],
+      "adaptation": "Use route reading, mechanisms, runes, doors, bridges, sound/echo and terrain problems that fit Middle-earth rather than copying another game's supernatural puzzle grammar."
+    }
+  ],
+  "player_life_layer": {
+    "goal": "The character should feel alive beyond a health bar.",
+    "persistent_axes": [
+      {
+        "id": "HEALTH",
+        "role": "physical injury and danger",
+        "rule": "No arcade damage sponge scaling."
+      },
+      {
+        "id": "STAMINA",
+        "role": "sprint, climbing/traversal and bounded combat exertion",
+        "rule": "Recovers naturally; no tedious maintenance."
+      },
+      {
+        "id": "RESOLVE",
+        "role": "fear, Ring pressure and psychological strain",
+        "rule": "Presentation/context axis; never changes fixed canon outcomes."
+      },
+      {
+        "id": "FELLOWSHIP_BOND",
+        "role": "companion trust, banter and optional assistance",
+        "rule": "Unlocks content and reactions, not alternate film endings."
+      },
+      {
+        "id": "SUPPLIES",
+        "role": "food, herbs, bandages, camp preparation",
+        "rule": "Lightweight utility inventory, not survival micromanagement."
+      }
+    ],
+    "optional_positive_states": [
+      "RESTED",
+      "WELL_PREPARED",
+      "LOCAL_KNOWLEDGE",
+      "COMPANION_SUPPORT"
+    ],
+    "avoid": [
+      "hunger timers",
+      "constant thirst meters",
+      "gear-score grind",
+      "loot rarity spam",
+      "mandatory crafting chores"
+    ]
+  },
+  "progression_tracks": [
+    {
+      "id": "WAYFINDING",
+      "benefits": [
+        "better return-route hints",
+        "map memory",
+        "safer optional paths"
+      ]
+    },
+    {
+      "id": "PERCEPTION",
+      "benefits": [
+        "spot tracks, clues and hidden discoveries more easily"
+      ]
+    },
+    {
+      "id": "QUIET_STEP",
+      "benefits": [
+        "small stealth forgiveness improvements",
+        "quieter traversal options"
+      ]
+    },
+    {
+      "id": "CAMPCRAFT",
+      "benefits": [
+        "better checkpoint recovery",
+        "more efficient use of supplies"
+      ]
+    },
+    {
+      "id": "FELLOWSHIP",
+      "benefits": [
+        "extra original banter",
+        "contextual companion assistance",
+        "memory callbacks"
+      ]
+    },
+    {
+      "id": "LORE",
+      "benefits": [
+        "Chronicle depth",
+        "culture/history dialogue topics",
+        "environmental interpretation"
+      ]
+    },
+    {
+      "id": "RESOLVE",
+      "benefits": [
+        "clearer resistance feedback during fear/Ring-pressure gameplay without changing authored outcomes"
+      ]
+    }
+  ],
+  "quest_families": [
+    {
+      "id": "LOCAL_HELP",
+      "example": "help a Shire resident prepare for the party or repair a fence",
+      "reward_tracks": [
+        "FELLOWSHIP",
+        "CAMPCRAFT"
+      ]
+    },
+    {
+      "id": "WORLD_EVENT",
+      "example": "encounter a small local problem while traveling and resolve it immediately",
+      "reward_tracks": [
+        "PERCEPTION",
+        "LORE"
+      ]
+    },
+    {
+      "id": "COMPANION_MOMENT",
+      "example": "walk, race, train, cook, grieve or prepare camp with a companion",
+      "reward_tracks": [
+        "FELLOWSHIP"
+      ]
+    },
+    {
+      "id": "TRACK_AND_INVESTIGATE",
+      "example": "read hoof marks, broken brush, tracks, old stone signs or enemy traces",
+      "reward_tracks": [
+        "PERCEPTION",
+        "WAYFINDING"
+      ]
+    },
+    {
+      "id": "TRAVERSAL_CHALLENGE",
+      "example": "find a safe crossing, hidden trail, ruined stair or alternate climb",
+      "reward_tracks": [
+        "WAYFINDING",
+        "QUIET_STEP"
+      ]
+    },
+    {
+      "id": "ENVIRONMENT_PUZZLE",
+      "example": "open a forgotten passage, align a mechanism, interpret markings or follow echoes",
+      "reward_tracks": [
+        "LORE",
+        "PERCEPTION"
+      ]
+    },
+    {
+      "id": "CAMP_AND_PREPARATION",
+      "example": "gather firewood, herbs, food, rope, boats or weather shelter before moving on",
+      "reward_tracks": [
+        "CAMPCRAFT",
+        "FELLOWSHIP"
+      ]
+    },
+    {
+      "id": "STEALTH_ESCAPE",
+      "example": "avoid Riders, patrols or suspicious locals without mandatory combat",
+      "reward_tracks": [
+        "QUIET_STEP",
+        "RESOLVE"
+      ]
+    },
+    {
+      "id": "CULTURE_AND_CRAFT",
+      "example": "observe or help with Hobbit, Elven or Dwarven craft and customs",
+      "reward_tracks": [
+        "LORE",
+        "CAMPCRAFT"
+      ]
+    },
+    {
+      "id": "MEMORY_AND_CHRONICLE",
+      "example": "find a view, object, song, ruin or conversation that adds a meaningful Chronicle entry",
+      "reward_tracks": [
+        "LORE",
+        "FELLOWSHIP"
+      ]
+    }
+  ],
+  "chapter_gameplay_examples": [
+    {
+      "chapter": "P1C01",
+      "region": "Shire",
+      "fixed_anchors": [
+        "Bilbo writing",
+        "Frodo meets Gandalf",
+        "Gandalf reaches Bag End",
+        "party",
+        "Bilbo disappearance",
+        "Ring warning",
+        "departure"
+      ],
+      "side_play": [
+        "Party Business: help residents move food, lanterns, benches and barrels before the celebration.",
+        "Sam's Garden: gather or identify flowers/herbs and repair a trampled garden edge.",
+        "Old Paths: discover shortcuts, mills, orchards and the riverbank to grow Wayfinding.",
+        "Hobbit Games: race, throwing/accuracy, hide-and-seek or simple festival contests before danger enters the story.",
+        "Local Gossip: listen to bounded resident conversations that seed Chronicle context without future knowledge.",
+        "Quiet Feet: optional stealth/traversal challenge through hedges and gardens that teaches crouch/awareness before the Black Rider sequence."
+      ]
+    },
+    {
+      "chapter": "P1C02",
+      "region": "Bree",
+      "fixed_anchors": [
+        "Bree arrival",
+        "Prancing Pony",
+        "Ring incident",
+        "Strider",
+        "Nazgul attack",
+        "departure"
+      ],
+      "side_play": [
+        "Stable Yard: help recover supplies or calm/manage travel gear.",
+        "Listen Before Asking: gather local clues through observation rather than quest-marker dialogue chains.",
+        "Inn Life: dice/table game or food-service micro-activity with no gambling economy.",
+        "Suspicious Footprints: small investigation that raises Perception but cannot reveal plot knowledge early."
+      ]
+    },
+    {
+      "chapter": "P1C03",
+      "region": "Weathertop/Ford",
+      "fixed_anchors": [
+        "wilderness travel",
+        "Weathertop",
+        "Nazgul attack",
+        "Morgul wound",
+        "Ford"
+      ],
+      "side_play": [
+        "Ranger Lessons: Strider teaches tracks, wind direction, concealment and camp placement.",
+        "Herb Search: find plausible healing/support plants before/after danger without replacing canonical healing events.",
+        "Safe Fire: choose a sheltered camp position and prepare supplies.",
+        "Ruins: read old markers and find non-story chambers or viewpoints."
+      ]
+    },
+    {
+      "chapter": "P1C04",
+      "region": "Rivendell",
+      "fixed_anchors": [
+        "awakening",
+        "Council",
+        "Fellowship formation",
+        "departure"
+      ],
+      "side_play": [
+        "Library/Maps: lore and route-study activity.",
+        "Smithy/Craft Observation: learn equipment/history without turning Rivendell into a loot shop.",
+        "Companion Conversations: optional original talks with future Fellowship members.",
+        "Valley Exploration: waterfalls, terraces, gardens and viewpoints with Chronicle rewards."
+      ]
+    },
+    {
+      "chapter": "P1C05",
+      "region": "Fellowship Road/Caradhras/West Gate",
+      "fixed_anchors": [
+        "march",
+        "camp",
+        "Crebain",
+        "Caradhras",
+        "West Gate"
+      ],
+      "side_play": [
+        "Training: bounded sparring, footwork, archery observation and movement challenges.",
+        "Camp Duties: firewood, cooking, watches and gear checks.",
+        "Snow Route Reading: choose safer short paths and shelter pockets during travel.",
+        "West Gate Study: inspect markings and nearby terrain without solving required story early."
+      ]
+    },
+    {
+      "chapter": "P1C06",
+      "region": "Moria",
+      "fixed_anchors": [
+        "entry",
+        "dead halls",
+        "Balin's Tomb",
+        "attack",
+        "Balrog",
+        "bridge",
+        "escape"
+      ],
+      "side_play": [
+        "Echo Navigation: use sound/landmarks to read side corridors.",
+        "Dwarven Reliefs: lore discoveries and environmental puzzles.",
+        "Lost Stores: optional supplies with risk, never required for story.",
+        "Quiet Passage: optional stealth route around lesser enemies before mandatory encounters."
+      ]
+    },
+    {
+      "chapter": "P1C07",
+      "region": "Lothlorien",
+      "fixed_anchors": [
+        "entry",
+        "grief",
+        "Galadriel",
+        "Mirror",
+        "farewell",
+        "departure"
+      ],
+      "side_play": [
+        "Grief and Memory: companion moments that deepen Fellowship Bond.",
+        "Galadhrim Craft: observe rope, boats and local craft.",
+        "Forest Paths: quiet traversal and perception challenges.",
+        "River Preparation: optional supply/boat preparation before departure."
+      ]
+    },
+    {
+      "chapter": "P1C08",
+      "region": "Anduin/Amon Hen",
+      "fixed_anchors": [
+        "river journey",
+        "Argonath",
+        "Amon Hen",
+        "Boromir pressure",
+        "Uruk attack",
+        "Fellowship breaks",
+        "Frodo/Sam depart"
+      ],
+      "side_play": [
+        "River Reading: currents, landing sites and shore signs.",
+        "Watch Rotation: short companion duty/memory moments.",
+        "Ruined Amon Hen: lore and route exploration before the fracture window closes.",
+        "Pursuit Signs: perception/stealth events that increase tension without preventing canonical attack."
+      ]
+    },
+    {
+      "chapter": "P1G01",
+      "region": "Isengard",
+      "fixed_anchors": [
+        "arrival",
+        "Saruman betrayal",
+        "captivity",
+        "industry",
+        "escape"
+      ],
+      "side_play": [
+        "Old Alliance Memory: inspect objects/places tied to earlier trust.",
+        "Tower Observation: learn the transformed valley through clues and views.",
+        "Escape Preparation: identify wind, height, guards and possible routes without changing the fixed escape outcome."
+      ]
+    }
+  ],
+  "systemic_world_events": {
+    "rule": "Events are short, contextual, cheap, and chapter-aware. They never demand that the player abandon an urgent canonical scene.",
+    "examples": [
+      "lost animal or loose cart",
+      "resident asks for quick local help",
+      "weather forces a brief shelter decision",
+      "companion notices tracks or a landmark",
+      "small argument/gossip exchange",
+      "broken bridge/fence/door requiring alternate route",
+      "rare peaceful vista or wildlife moment",
+      "enemy scouting sign that can be observed or avoided"
+    ],
+    "cooldowns": "Use bounded cooldowns and per-region caps so the world feels alive rather than noisy."
+  },
+  "reward_rules": {
+    "allowed": [
+      "Journey Insight",
+      "progression-track XP",
+      "Chronicle entries",
+      "map memory",
+      "dialogue topics",
+      "companion memories",
+      "small supply utility",
+      "cosmetic/visual keepsakes",
+      "navigation hints"
+    ],
+    "forbidden": [
+      "canon skips",
+      "alternate film endings",
+      "Ring ownership changes",
+      "large damage/health inflation",
+      "random legendary loot treadmill",
+      "pay-to-win or microtransactions"
+    ]
+  },
+  "accessibility_and_player_choice": [
+    "Optional navigation hints can be enabled without changing story difficulty.",
+    "Story-focused difficulty should reduce combat pressure while preserving exploration and side content.",
+    "Side content should be skippable when the film story is urgent.",
+    "Conversation logs/Chronicle can preserve context for players returning after a break."
+  ],
+  "production_order": [
+    "Preserve/verify every mandatory film anchor.",
+    "Finish Journey Discovery runtime and save proof.",
+    "Add Character Life axes as lightweight state, starting Stamina/Resolve/Supplies without survival grind.",
+    "Implement progression tracks as bounded utility/content unlocks.",
+    "Expand contextual side-play chapter by chapter using the quest families above.",
+    "Add Chronicle/menu presentation and map-knowledge reveal.",
+    "Add environmental puzzles/traversal and dynamic world events.",
+    "Validate each chapter for pacing so optional content never damages film urgency."
+  ]
+}

@@ -766,6 +766,42 @@ missing_runtime_discoveries = sorted(
 if missing_runtime_discoveries:
     fail("PG-074: Journey Discovery runtime trigger coverage missing: " + ", ".join(missing_runtime_discoveries))
 
+
+# PG-075: modern game layer must preserve fixed film anchors while expanding optional play.
+modern_game_path = ROOT / "Data" / "ModernGameLayerPlan.json"
+if not modern_game_path.exists():
+    fail("PG-075: ModernGameLayerPlan.json missing")
+else:
+    modern_game = json.loads(read(modern_game_path))
+    canon = modern_game.get("canon_contract", {})
+    if "fixed" not in str(canon.get("fixed_story") or "").lower():
+        fail("PG-075: film story must remain explicitly fixed")
+    side_rule = str(canon.get("side_content_rule") or "").lower()
+    for required_phrase in ["may not replace", "skip", "reorder", "change"]:
+        if required_phrase not in side_rule:
+            fail("PG-075: side-content canon guard is incomplete")
+            break
+
+    axes = {str(x.get("id") or "") for x in modern_game.get("player_life_layer", {}).get("persistent_axes", [])}
+    for required_axis in {"HEALTH", "STAMINA", "RESOLVE", "FELLOWSHIP_BOND", "SUPPLIES"}:
+        if required_axis not in axes:
+            fail(f"PG-075: player-life layer missing {required_axis}")
+
+    tracks = {str(x.get("id") or "") for x in modern_game.get("progression_tracks", [])}
+    for required_track in {"WAYFINDING","PERCEPTION","QUIET_STEP","CAMPCRAFT","FELLOWSHIP","LORE","RESOLVE"}:
+        if required_track not in tracks:
+            fail(f"PG-075: progression track missing {required_track}")
+
+    chapters = {str(x.get("chapter") or "") for x in modern_game.get("chapter_gameplay_examples", [])}
+    expected = {f"P1C{i:02d}" for i in range(1, 9)} | {"P1G01"}
+    if expected - chapters:
+        fail("PG-075: modern game layer missing Part I/Gandalf chapter coverage")
+
+    forbidden_rewards = " ".join(modern_game.get("reward_rules", {}).get("forbidden", [])).lower()
+    for marker in ["canon", "ring ownership", "loot"]:
+        if marker not in forbidden_rewards:
+            fail(f"PG-075: reward safety contract missing {marker}")
+
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
 living_world_data = {}

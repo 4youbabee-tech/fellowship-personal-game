@@ -1684,6 +1684,48 @@
         "REQ-PERF-001"
       ],
       "checkpoint": "CINEMATIC_WORLD_MEGA"
+    },
+    {
+      "id": "REQ-GAME-001",
+      "title": "Modern game layer around the fixed film story",
+      "category": "GameplaySystems",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "origin": "Owner explicitly asked for researched modern-game systems, side missions, exploration and character-life/progression mechanics across the full game without skipping the film.",
+      "intent": "Make the project a full narrative adventure game: preserve every mandatory film anchor while adding meaningful optional exploration, world events, companion activities, traversal/puzzles, character-life state and bounded progression between those anchors.",
+      "evidence": [
+        "Data/ModernGameLayerPlan.json",
+        "Data/JourneyDiscoveryRewardPlan.json",
+        "Data/ContextualSideActivityPlan.json"
+      ],
+      "implementation_refs": [
+        "ModernGameLayerPlan synthesizes exploration rewards, world events, semi-open chapter hubs, companion dialogue, map discovery, environmental puzzles and living-world reactivity into an original Middle-earth implementation.",
+        "P1C01-P1C08 plus GandalfParallel now have chapter-specific side-play families while required film outcomes remain fixed."
+      ],
+      "missing_work": [
+        "Implement lightweight Stamina/Resolve/Supplies and progression tracks.",
+        "Implement additional side missions/world events chapter by chapter.",
+        "Add Chronicle/map-knowledge presentation.",
+        "Add environmental puzzle/traversal challenges.",
+        "UE4.27 compile/PIE/device/pacing validation for each gameplay layer."
+      ],
+      "acceptance_criteria": [
+        "Mandatory film scenes and outcomes remain reachable and unchanged.",
+        "Every Part I chapter contains optional game-like play beyond walking between film scenes.",
+        "Optional rewards improve utility, knowledge, relationships or content without stat-bloat grind.",
+        "Character experience includes stamina/resolve/companions/supplies and not only health/death.",
+        "Urgent film moments suppress or close inappropriate side content.",
+        "Target device remains at 720p Low-Medium / 30 FPS floor."
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-EXP-004",
+        "REQ-EXP-005",
+        "REQ-WORLD-001",
+        "REQ-NPC-001",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "MODERN_GAME_LAYER"
     }
   ],
   "hard_invariants": [
@@ -2144,6 +2186,23 @@
       "authority": "USER_EXPLICIT_DIRECTION",
       "evidence": [
         "Data/CinematicWorldProductionMatrix.json"
+      ]
+    },
+    {
+      "id": "DEC-023",
+      "title": "Treat the project as a modern narrative game wrapped around immutable film anchors",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-GAME-001",
+        "REQ-VISION-001",
+        "REQ-EXP-004",
+        "REQ-EXP-005"
+      ],
+      "resolution": "Mandatory Peter Jackson film anchors remain fixed. Between anchors, the game may add original plausible side missions, world events, exploration, companion activities, environmental puzzles, lightweight character-life systems and utility/content progression. These systems may deepen play but may not skip, reorder or alter film outcomes.",
+      "rationale": "Owner explicitly asked to research what modern games contain and adopt fitting game systems throughout the project while keeping the film itself intact.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/ModernGameLayerPlan.json"
       ]
     }
   ],
@@ -2629,17 +2688,24 @@
       "title": "Cinematic world beauty mega-pass",
       "status": "ACTIVE",
       "rationale": "Raise every Part I region toward the owner's cinematic benchmark while preserving target performance."
+    },
+    {
+      "order": 2,
+      "id": "WORK-GAME-001",
+      "title": "Modern game systems and side-content rollout",
+      "status": "ACTIVE",
+      "rationale": "Roll modern exploration, character-life, progression, world events and chapter-specific side play across Part I without disturbing film anchors."
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Owner said to continue immediately; the next mega slice converts Journey Discovery from plan-only into real runtime progression while the visual/character production tracks remain active.",
+    "reason": "Owner requested a broad modern-game research pass and immediate adoption of fitting mechanics throughout the film-based game.",
     "summary": [
-      "All 26 Part I Journey Discoveries are now intended to fire from actual world triggers inside story-safe opening/closing windows.",
-      "Journey Insight, region completion and milestones are first-time-only and persisted through the existing save path.",
-      "Discovery feedback uses a dedicated subtle HUD card and does not mutate mandatory story state.",
-      "Headless state audit expands to prove discovery first-time behavior across route switching.",
-      "The exact-head UE4.27 gate remains authoritative; no compile/visual acceptance is claimed before it passes."
+      "Film chronology remains the mandatory backbone; optional gameplay lives only in safe gaps between anchors.",
+      "Research synthesis now locks exploration rewards, bite-sized world events, semi-open chapter hubs, companion dialogue, map knowledge, environmental puzzles and living-world reactivity as design patterns to adapt rather than copy.",
+      "Character life expands beyond health into stamina, resolve, fellowship bonds and lightweight supplies without survival micromanagement.",
+      "Every current Part I chapter plus GandalfParallel now has defined side-play families and story-safe examples.",
+      "Runtime implementation proceeds in waves behind the exact-head validation gate."
     ]
   },
   "development_mode": {
