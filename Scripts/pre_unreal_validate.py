@@ -338,8 +338,8 @@ if film_source_data:
     mood_ids = {str(item.get("mood") or "").strip() for item in mood_data.get("chapter_moods", [])}
 
     source_variants = film_source_data.get("original_dialogue_variants", [])
-    if len(source_variants) < 20:
-        fail("Film dialogue source context must provide a substantial original dialogue set (at least 20 variants)")
+    if len(source_variants) < 40:
+        fail("Film dialogue source context must provide a substantial original dialogue set (at least 40 variants)")
 
     variant_ids = set()
     for index, variant in enumerate(source_variants, start=1):
@@ -370,6 +370,112 @@ if film_source_data:
         if len(text_value.split()) > 38:
             fail(f"Film dialogue variant {variant_id} exceeds the 38-word story-reactive limit")
 
+
+
+# PG-060: optional exploration must be explicitly bounded between mandatory story anchors.
+exploration_path = ROOT / "Data" / "ExplorationEnvelopePlan.json"
+exploration_data = {}
+if not exploration_path.exists():
+    fail("Exploration envelope plan missing: Data/ExplorationEnvelopePlan.json")
+else:
+    try:
+        exploration_data = json.loads(read(exploration_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/ExplorationEnvelopePlan.json: {exc}")
+
+if exploration_data:
+    chapter_entries = exploration_data.get("chapters", [])
+    expected_pairs = {("FrodoMain", f"P1C{i:02d}") for i in range(1, 9)}
+    expected_pairs.add(("GandalfParallel", "P1C01"))
+    found_pairs = set()
+
+    story_rows_for_exploration = []
+    story_plan_path = ROOT / "Data" / "StoryBeatPlan.csv"
+    if story_plan_path.exists():
+        with story_plan_path.open(encoding="utf-8-sig", newline="") as handle:
+            story_rows_for_exploration = list(csv.DictReader(handle))
+
+    story_order_by_pair = {}
+    for row in story_rows_for_exploration:
+        key = (str(row.get("Route") or "").strip(), str(row.get("Chapter") or "").strip())
+        story_order_by_pair.setdefault(key, []).append(str(row.get("StoryBeatId") or "").strip())
+
+    for entry in chapter_entries:
+        route = str(entry.get("route") or "").strip()
+        chapter = str(entry.get("chapter") or "").strip()
+        key = (route, chapter)
+        if not route or not chapter:
+            fail("Exploration envelope entry missing route/chapter")
+            continue
+        if key in found_pairs:
+            fail(f"Duplicate exploration envelope for {route}/{chapter}")
+        found_pairs.add(key)
+
+        declared_order = [str(x).strip() for x in entry.get("anchor_order", []) if str(x).strip()]
+        actual_order = story_order_by_pair.get(key, [])
+        if not declared_order:
+            fail(f"Exploration envelope {route}/{chapter} has no anchor_order")
+            continue
+        missing_anchors = [beat for beat in declared_order if beat not in actual_order]
+        if missing_anchors:
+            fail(f"Exploration envelope {route}/{chapter} references unknown story beats: {', '.join(missing_anchors)}")
+        positions = [actual_order.index(beat) for beat in declared_order if beat in actual_order]
+        if positions != sorted(positions):
+            fail(f"Exploration envelope {route}/{chapter} reorders mandatory story beats")
+
+        index = {beat: i for i, beat in enumerate(declared_order)}
+        for window in entry.get("free_roam_windows", []):
+            wid = str(window.get("id") or "").strip()
+            opens = str(window.get("opens_after") or "").strip()
+            closes = str(window.get("closes_before") or "").strip()
+            if not wid or opens not in index or closes not in index:
+                fail(f"Exploration window {wid or '<unnamed>'} in {route}/{chapter} has invalid anchors")
+                continue
+            if index[opens] >= index[closes]:
+                fail(f"Exploration window {wid} in {route}/{chapter} crosses/reverses mandatory anchor order")
+
+        discoveries = entry.get("optional_discoveries", [])
+        if route == "FrodoMain" and chapter != "P1C01" and len(discoveries) < 2:
+            fail(f"Exploration envelope {route}/{chapter} must define at least two non-Shire optional discoveries")
+        for discovery in discoveries:
+            did = str(discovery.get("id") or "").strip()
+            window = discovery.get("available_between", [])
+            if len(window) != 2 or window[0] not in index or window[1] not in index:
+                fail(f"Optional discovery {did or '<unnamed>'} in {route}/{chapter} has invalid availability anchors")
+                continue
+            if index[window[0]] > index[window[1]]:
+                fail(f"Optional discovery {did} in {route}/{chapter} reverses story order")
+            if discovery.get("story_effect") != "NONE":
+                fail(f"Optional discovery {did} must have story_effect NONE")
+            if discovery.get("may_advance_required_anchor") is not False:
+                fail(f"Optional discovery {did} may not advance required anchors")
+            if discovery.get("may_change_canon_outcome") is not False:
+                fail(f"Optional discovery {did} may not change canon outcomes")
+
+        if not entry.get("return_policy"):
+            fail(f"Exploration envelope {route}/{chapter} has no return_policy")
+
+    missing_pairs = sorted(expected_pairs - found_pairs)
+    if missing_pairs:
+        fail("Exploration envelope coverage missing: " + ", ".join(f"{r}/{c}" for r, c in missing_pairs))
+
+# PG-061: one-click/CI import must never normalize tracked SourceAssets in place.
+production_import_hygiene = read(
+    ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp"
+)
+for marker in [
+    "ProjectSavedDir()",
+    "ShireProductionImportWorking",
+    "CopyDirectoryTree",
+    "FindFilesRecursive(TextureFiles, *WorkingRoot",
+    "FindFilesRecursive(MeshFiles, *WorkingRoot",
+]:
+    if marker not in production_import_hygiene:
+        fail(f"PG-061: production importer missing non-destructive working-copy marker: {marker}")
+if "FindFilesRecursive(TextureFiles, *SourceRoot" in production_import_hygiene:
+    fail("PG-061: production importer must not import/normalize textures directly from tracked SourceAssets")
+if "FindFilesRecursive(MeshFiles, *SourceRoot" in production_import_hygiene:
+    fail("PG-061: production importer must not import/normalize meshes directly from tracked SourceAssets")
 
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"

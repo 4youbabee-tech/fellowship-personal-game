@@ -487,18 +487,22 @@
         "Docs/STORY_CANON_BIBLE.md",
         "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
         "Data/BiomePlan.csv",
-        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp"
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+        "Data/ExplorationEnvelopePlan.json",
+        "Scripts/pre_unreal_validate.py"
       ],
       "implementation_refs": [
         "Shire exploration loops and side stories",
         "optional conversations",
         "landmark discoveries",
-        "film-compatible chapter progression"
+        "film-compatible chapter progression",
+        "Data/ExplorationEnvelopePlan.json defines free-roam windows and return-to-story rules for FrodoMain P1C01-P1C08 plus GandalfParallel P1C01.",
+        "PG-060 machine-checks anchor ordering, optional discovery bounds and no-story-mutation rules."
       ],
       "missing_work": [
-        "Define exploration envelopes around each chapter's fixed anchors",
-        "Add more optional discoveries and living-world activity outside Shire",
-        "Verify exploration cannot skip or invalidate mandatory story results"
+        "Wire the declared optional discoveries and return guidance into chapter runtime where still absent",
+        "Prove in UE4.27 that exploration cannot skip or invalidate mandatory story results",
+        "Run chapter-by-chapter pacing/readability acceptance for the new exploration envelopes"
       ],
       "acceptance_criteria": [
         "Player can meaningfully explore between mandatory story beats",
@@ -597,7 +601,8 @@
         "Docs/CURRENT_PROJECT_STATE.md"
       ],
       "implementation_refs": [
-        "Static chapter reachability and world routing guards exist"
+        "Static chapter reachability and world routing guards exist",
+        "PG-060 statically prevents declared exploration windows/discoveries from reordering or advancing mandatory story anchors."
       ],
       "missing_work": [
         "PIE/device traversal proof for Shire and P1C02-P1C08",
@@ -1272,7 +1277,8 @@
         "Remaining named Part I cast profiles now carry biography/knowledge-limit/attitude context",
         "Data/NPCRegionalMoodPlan.json defines shared peace/suspicion/fear/grief/war-pressure context by chapter",
         "UShireNPCContextSubsystem exposes regional mood/pressure and includes it in local character context and dialogue selection",
-        "Follow-up: exact regional mood eligibility and priority replace seed-only mood influence; 30 original Moria/Lothlorien companion lines reuse existing intent, knowledge, chapter and repetition gates."
+        "Follow-up: exact regional mood eligibility and priority replace seed-only mood influence; 30 original Moria/Lothlorien companion lines reuse existing intent, knowledge, chapter and repetition gates.",
+        "FilmDialogueSourceContext now carries 53 original story-reactive variants spanning all Part I regional moods and major companion/story contexts."
       ],
       "missing_work": [
         "Feed bounded emotion/goal context into named-NPC dialogue selection",
@@ -1400,7 +1406,10 @@
       ],
       "implementation_refs": [
         "Whole-game completeness matrix now tracks all major gameplay and presentation systems.",
-        "PR #53 is the single active continuation path for CP56 mega integration."
+        "PR #53 is the single active continuation path for CP56 mega integration.",
+        "Part I exploration envelopes and optional discovery contracts now cover all active routes/chapters.",
+        "Source-grounded original dialogue bank expanded to 53 validated variants.",
+        "Production asset import now operates on an ignored Saved/ working copy so one-click updates do not dirty tracked SourceAssets."
       ],
       "missing_work": [
         "Get final PR #53 head through full UE4.27 validation.",
@@ -1806,6 +1815,25 @@
       "evidence": [
         "Data/FilmDialogueSourceContext.json",
         "Data/BoundedDialoguePlan.json"
+      ]
+    },
+    {
+      "id": "DEC-016",
+      "title": "Use shader-compile time for non-blocking static/content expansion without bypassing the merge gate",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-MEGA-001",
+        "REQ-EXP-002",
+        "REQ-NPC-005",
+        "REQ-QA-001"
+      ],
+      "resolution": "While the target machine is busy compiling shaders or otherwise unavailable for UE rebuilds, continue work that can be statically reviewed: data contracts, dialogue coverage, exploration envelopes, source hygiene and validators. Keep the same PR #53 integration path and still require the final exact head to pass full UE4.27 validation before develop merge.",
+      "rationale": "The owner explicitly asked not to sit idle while Unreal compiles shaders, but also wants broken gates repaired before integration.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/ExplorationEnvelopePlan.json",
+        "Data/FilmDialogueSourceContext.json",
+        "Scripts/pre_unreal_validate.py"
       ]
     }
   ],
@@ -2260,12 +2288,12 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Owner asked for a large implementation pass using both supplied screenplay PDFs as core conversation/context references.",
+    "reason": "Owner directed parallel progress while Unreal compiles shaders: audit older ready systems, expand safe content/contracts, and keep the final merge gate intact.",
     "summary": [
-      "Fellowship is now structured Part I dialogue context.",
-      "Two Towers is preserved as future Part II context evidence.",
-      "Runtime dialogue remains original/offline and must respect knowledge ceilings.",
-      "PR #53 remains blocked from merge until required validation is green."
+      "Added chapter-by-chapter exploration envelopes and non-Shire optional discovery contracts.",
+      "Expanded original source-grounded dialogue to 53 variants.",
+      "Added machine guards for no-skip exploration and non-destructive SourceAssets import.",
+      "PR #53 remains the only integration path and still requires full exact-head UE4.27 validation before develop merge."
     ]
   },
   "development_mode": {

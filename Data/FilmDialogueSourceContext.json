@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "FILM_DIALOGUE_SOURCE_CONTEXT_V1",
-  "status": "PART1_ACTIVE_PART2_REFERENCE_READY",
+  "status": "PART1_ACTIVE_EXPANDED_PART2_REFERENCE_READY",
   "purpose": "Derived source context from the owner's Fellowship and Two Towers screenplay PDFs for in-game dialogue grounding. Store chronology, tone, topics and knowledge ceilings; never store or ship screenplay passages.",
   "policy": {
     "reference_only": true,
@@ -72,7 +72,8 @@
       "never override canon",
       "fallback to existing bounded dialogue",
       "offline only"
-    ]
+    ],
+    "dialogue_variant_count": 53
   },
   "part1_contexts": [
     {
@@ -788,6 +789,249 @@
       "required_mood": "WAR_CORRUPTION",
       "context_id": "P1G01_BETRAYAL",
       "text": "Old loyalties are collapsing. Refusing to adapt will not make the coming order disappear."
+    },
+    {
+      "variant_id": "SRC_PIPPIN_BILBO_GONE_01",
+      "speaker": "NPC_PIPPIN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BilboDisappearance",
+      "required_mood": "PEACEFUL_HOME",
+      "context_id": "P1C01_HOME",
+      "text": "That was meant to be a party. I do not think Frodo is enjoying the surprise nearly as much as everyone else."
+    },
+    {
+      "variant_id": "SRC_MERRY_RIDER_01",
+      "speaker": "NPC_MERRY",
+      "intent": "DANGER_WARNING",
+      "required_story_beat": "BlackRiderApproach",
+      "required_mood": "PEACEFUL_HOME",
+      "context_id": "P1C01_DANGER",
+      "text": "Keep low and keep moving. Whoever is on that road is not looking for a friendly conversation."
+    },
+    {
+      "variant_id": "SRC_SAM_FERRY_01",
+      "speaker": "NPC_SAM",
+      "intent": "TRAVEL_COMMENT",
+      "required_story_beat": "FerryEscape",
+      "required_mood": "PEACEFUL_HOME",
+      "context_id": "P1C01_DANGER",
+      "text": "The river buys us distance, not safety. I would rather keep walking than wait to see who reaches the bank."
+    },
+    {
+      "variant_id": "SRC_BREE_GATEKEEPER_01",
+      "speaker": "NPC_BREE_GATEKEEPER",
+      "intent": "LOCAL_NEWS",
+      "required_story_beat": "BreeRoadNightfall",
+      "required_mood": "SUSPICIOUS_TOWN",
+      "context_id": "P1C02_BREE",
+      "text": "Travelers are welcome enough, but folk have been watching the roads more closely than usual tonight."
+    },
+    {
+      "variant_id": "SRC_BARLIMAN_COMMON_ROOM_01",
+      "speaker": "NPC_BARLIMAN_BUTTERBUR",
+      "intent": "WORK_TALK",
+      "required_story_beat": "PrancingPonyExterior",
+      "required_mood": "SUSPICIOUS_TOWN",
+      "context_id": "P1C02_BREE",
+      "text": "Busy night, too many questions, and not enough quiet corners. Stay out of trouble and the room will treat you kindly."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_DEPART_BREE_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "TRAVEL_COMMENT",
+      "required_story_beat": "DepartBree",
+      "required_mood": "SUSPICIOUS_TOWN",
+      "context_id": "P1C02_AFTER_RING",
+      "text": "Bree is behind us. From here, every obvious road is also the easiest place for an enemy to watch."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_MIDGEWATER_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "TRAVEL_COMMENT",
+      "required_story_beat": "MidgewaterRoad",
+      "required_mood": "PURSUED_WILDERNESS",
+      "context_id": "P1C03_PURSUED",
+      "text": "The uncomfortable path is sometimes the safer one. Watch the ground before you complain about the mud."
+    },
+    {
+      "variant_id": "SRC_SAM_WEATHERTOP_CAMP_01",
+      "speaker": "NPC_SAM",
+      "intent": "COMPANION_BANTER",
+      "required_story_beat": "WeathertopCamp",
+      "required_mood": "PURSUED_WILDERNESS",
+      "context_id": "P1C03_PURSUED",
+      "text": "I can make a poor camp feel almost decent, but I cannot make those shadows stop looking suspicious."
+    },
+    {
+      "variant_id": "SRC_ARWEN_FORD_01",
+      "speaker": "NPC_ARWEN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "FordEscape",
+      "required_mood": "PURSUED_WILDERNESS",
+      "context_id": "P1C03_WOUNDED",
+      "text": "The pursuit has broken for a moment. Use that moment for healing, not for pretending the danger never happened."
+    },
+    {
+      "variant_id": "SRC_BILBO_COUNCIL_WAIT_01",
+      "speaker": "NPC_BILBO",
+      "intent": "LOCAL_NEWS",
+      "required_story_beat": "RivendellAwakening",
+      "required_mood": "SAFE_REFUGE",
+      "context_id": "P1C04_REFUGE",
+      "text": "Rivendell is good at making an hour feel peaceful, even when everyone is quietly preparing for difficult news."
+    },
+    {
+      "variant_id": "SRC_ELROND_FELLOWSHIP_01",
+      "speaker": "NPC_ELROND",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "FellowshipAssembled",
+      "required_mood": "SAFE_REFUGE",
+      "context_id": "P1C04_COUNCIL",
+      "text": "A company this varied will disagree often. The test is whether disagreement weakens the purpose that brought them together."
+    },
+    {
+      "variant_id": "SRC_BOROMIR_DEPARTURE_01",
+      "speaker": "NPC_BOROMIR",
+      "intent": "TRAVEL_COMMENT",
+      "required_story_beat": "RivendellDeparture",
+      "required_mood": "SAFE_REFUGE",
+      "context_id": "P1C04_COUNCIL",
+      "text": "Councils end neatly. Roads do not. We will learn more about one another after the gates are behind us."
+    },
+    {
+      "variant_id": "SRC_LEGOLAS_CAMP_01",
+      "speaker": "NPC_LEGOLAS",
+      "intent": "COMPANION_BANTER",
+      "required_story_beat": "FellowshipCamp",
+      "required_mood": "FELLOWSHIP_UNDER_PRESSURE",
+      "context_id": "P1C05_COMPANY",
+      "text": "The camp is loud by woodland standards, but I admit the hobbits make the noise easier to forgive."
+    },
+    {
+      "variant_id": "SRC_BOROMIR_CAMP_01",
+      "speaker": "NPC_BOROMIR",
+      "intent": "COMPANION_BANTER",
+      "required_story_beat": "FellowshipCamp",
+      "required_mood": "FELLOWSHIP_UNDER_PRESSURE",
+      "context_id": "P1C05_COMPANY",
+      "text": "A little practice is worth more than another argument about the route. Come, keep your feet under you."
+    },
+    {
+      "variant_id": "SRC_GIMLI_MORIA_GATE_01",
+      "speaker": "NPC_GIMLI",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "MoriaDoorOpens",
+      "required_mood": "FELLOWSHIP_UNDER_PRESSURE",
+      "context_id": "P1C05_MORIA_GATE",
+      "text": "Stone remembers more than travelers do. Whatever waits beyond this door, we should enter with respect and open eyes."
+    },
+    {
+      "variant_id": "SRC_LEGOLAS_MORIA_UNEASE_01",
+      "speaker": "NPC_LEGOLAS",
+      "intent": "DANGER_WARNING",
+      "required_story_beat": "MoriaUnease",
+      "required_mood": "DEAD_CITY_DREAD",
+      "context_id": "P1C06_MORIA",
+      "text": "The silence is not empty. It carries every footstep farther than it should, so choose each one carefully."
+    },
+    {
+      "variant_id": "SRC_LEGOLAS_MORIA_ATTACK_01",
+      "speaker": "NPC_LEGOLAS",
+      "intent": "DANGER_WARNING",
+      "required_story_beat": "MoriaAttack",
+      "required_mood": "DEAD_CITY_DREAD",
+      "context_id": "P1C06_MORIA",
+      "text": "Do not chase an echo. Hold the group together and strike only what you can actually see."
+    },
+    {
+      "variant_id": "SRC_SAM_MORIA_ESCAPE_01",
+      "speaker": "NPC_SAM",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "MoriaEscape",
+      "required_mood": "DEAD_CITY_DREAD",
+      "context_id": "P1C06_AFTER_LOSS",
+      "text": "Nobody has to find the right words yet. Just tell me which way we are walking and I will stay close."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_LORIEN_GRIEF_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "LorienGrief",
+      "required_mood": "GRIEF_AND_REFUGE",
+      "context_id": "P1C07_REFUGE",
+      "text": "Rest does not mean forgetting. It gives us enough strength to carry what happened without letting it stop us."
+    },
+    {
+      "variant_id": "SRC_LEGOLAS_FAREWELL_01",
+      "speaker": "NPC_LEGOLAS",
+      "intent": "TRAVEL_COMMENT",
+      "required_story_beat": "LorienFarewell",
+      "required_mood": "GRIEF_AND_REFUGE",
+      "context_id": "P1C07_FAREWELL",
+      "text": "The river will change the rhythm of the journey. Stay alert even when the current makes the road feel gentle."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_ARGONATH_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "ArgonathReveal",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_ANDUIN",
+      "text": "The past stands very tall here. We still have to decide what kind of future can stand beside it."
+    },
+    {
+      "variant_id": "SRC_GIMLI_URUK_01",
+      "speaker": "NPC_GIMLI",
+      "intent": "DANGER_WARNING",
+      "required_story_beat": "UrukAttack",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_FRACTURE",
+      "text": "Let them come in numbers. Our first job is making sure our friends are not cut off from one another."
+    },
+    {
+      "variant_id": "SRC_LEGOLAS_BOROMIR_FALL_01",
+      "speaker": "NPC_LEGOLAS",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BoromirFall",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_FRACTURE",
+      "text": "There is no time to mourn as we should. We can still honor him by protecting those who remain."
+    },
+    {
+      "variant_id": "SRC_GIMLI_BOROMIR_FALL_01",
+      "speaker": "NPC_GIMLI",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BoromirFall",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_FRACTURE",
+      "text": "He fought for the little ones when it mattered most. I will remember that before I remember his mistake."
+    },
+    {
+      "variant_id": "SRC_SAM_DEPARTURE_01",
+      "speaker": "NPC_SAM",
+      "intent": "FAREWELL",
+      "required_story_beat": "FrodoSamDeparture",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_FRACTURE",
+      "text": "You may choose the road, but you do not get to choose whether I care enough to follow."
+    },
+    {
+      "variant_id": "SRC_GANDALF_PRISON_01",
+      "speaker": "NPC_GANDALF",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "OrthancPrison",
+      "required_mood": "WAR_CORRUPTION",
+      "context_id": "P1G01_BETRAYAL",
+      "text": "From this height the damage below is clearer. Power has turned the valley into an argument made of smoke and axes."
+    },
+    {
+      "variant_id": "SRC_GANDALF_ESCAPE_01",
+      "speaker": "NPC_GANDALF",
+      "intent": "TRAVEL_COMMENT",
+      "required_story_beat": "OrthancEscape",
+      "required_mood": "WAR_CORRUPTION",
+      "context_id": "P1G01_BETRAYAL",
+      "text": "Distance from the tower is not safety yet. The warning matters only if it reaches those who still have time to act."
     }
   ]
 }
