@@ -17,8 +17,9 @@
     "Never invent a major relationship, quest, death, allegiance or story outcome.",
     "Never reveal future story beats.",
     "If context is ambiguous or validation fails, use authored fallback or silence.",
-    "Runtime must not require an always-on remote/large language model to remain playable.",
-    "Generated/varied text is cacheable and bounded by repetition policy."
+    "Runtime dialogue intelligence must be fully offline; remote/cloud language-model calls are forbidden in the shipped gameplay path.",
+    "Generated/varied text is cacheable and bounded by repetition policy.",
+    "No runtime API key, internet connection or cloud inference endpoint may be required for NPC dialogue."
   ],
   "context_inputs": [
     "profile_id",
@@ -147,8 +148,17 @@
     "excluded_by_design": [
       "unrestricted runtime text generation",
       "always-on remote language model dependency",
-      "canon-changing dialogue invention"
+      "canon-changing dialogue invention",
+      "remote/cloud runtime language-model calls",
+      "internet-required dialogue generation"
     ],
     "proof_limit": "Backend selection logic is implemented; final content breadth, VO assets and PIE pacing are acceptance work."
+  },
+  "offline_policy": {
+    "mode": "OFFLINE_ONLY",
+    "remote_generation_allowed": false,
+    "local_small_model_allowed": true,
+    "local_model_must_be_optional": true,
+    "deterministic_fallback_required": true
   }
 }
