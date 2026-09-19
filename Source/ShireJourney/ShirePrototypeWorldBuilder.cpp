@@ -159,6 +159,13 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionCommonVillageSlopeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonVillageSlope.SM_CommonVillageSlope"));
     ProductionCommonRiverBankMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonRiverBank.SM_CommonRiverBank"));
     ProductionCommonBoulderClusterMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBoulderCluster.SM_CommonBoulderCluster"));
+    ProductionCommonBroadleafTreeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBroadleafTree.SM_CommonBroadleafTree"));
+    ProductionCommonFallenLogMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonFallenLog.SM_CommonFallenLog"));
+    ProductionCommonDryStoneWallMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonDryStoneWall.SM_CommonDryStoneWall"));
+    ProductionCommonVillageFenceMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence"));
+    ProductionCommonWoodPileMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile"));
+    ProductionCommonFernClumpMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump"));
+    ProductionCommonFootbridgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonFootbridge.SM_CommonFootbridge"));
 
     if (ProductionTreeTrunkMesh) DistantTreeTrunkInstances->SetStaticMesh(ProductionTreeTrunkMesh);
     if (ProductionTreeCanopyMesh) DistantTreeCanopyInstances->SetStaticMesh(ProductionTreeCanopyMesh);
@@ -1720,6 +1727,85 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
     }
 }
 
+void AShirePrototypeWorldBuilder::SpawnFullProductionActivationLayer()
+{
+    auto SpawnProd = [this](UStaticMesh* Mesh, const FVector& Location, const FVector& Scale,
+        const FRotator& Rotation = FRotator::ZeroRotator, bool bCollision = false)
+    {
+        if (Mesh)
+        {
+            SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, bCollision);
+        }
+    };
+
+    // CP52 activates the reusable common production kit across the full Shire travel corridor.
+    // This is deterministic and intentionally low-collision so the existing story route is unchanged.
+    const FVector BroadleafCenters[] = {
+        FVector(-1800,1350,0), FVector(-650,-1450,0), FVector(1100,1550,0),
+        FVector(5400,1800,0), FVector(7200,-1850,0), FVector(10300,1950,0),
+        FVector(13200,-1880,0), FVector(15800,1850,0), FVector(19100,-1750,0),
+        FVector(22000,1700,0)
+    };
+    for (int32 I = 0; I < UE_ARRAY_COUNT(BroadleafCenters); ++I)
+    {
+        SpawnProd(ProductionCommonBroadleafTreeMesh, BroadleafCenters[I],
+            FVector(0.78f + 0.06f * (I % 4)), FRotator(0.0f, static_cast<float>((I * 41) % 360), 0.0f), false);
+    }
+
+    const FVector Logs[] = {
+        FVector(3600,-920,0), FVector(8750,980,0), FVector(12100,-860,0),
+        FVector(14950,900,0), FVector(17800,-940,0), FVector(21000,920,0)
+    };
+    for (int32 I = 0; I < UE_ARRAY_COUNT(Logs); ++I)
+    {
+        SpawnProd(ProductionCommonFallenLogMesh, Logs[I], FVector(0.72f + 0.05f * (I % 3)),
+            FRotator(0.0f, static_cast<float>((I * 57) % 180), 0.0f), false);
+    }
+
+    for (int32 I = 0; I < 18; ++I)
+    {
+        const float X = 1800.0f + I * 1120.0f;
+        const float Y = (I % 2 == 0 ? 760.0f : -820.0f) + FMath::Sin(I * 0.71f) * 210.0f;
+        SpawnProd(ProductionCommonFernClumpMesh, FVector(X,Y,0.0f),
+            FVector(0.58f + 0.04f * (I % 5)), FRotator(0.0f, I * 29.0f, 0.0f), false);
+    }
+
+    const FVector StoneBoundaries[] = {
+        FVector(4700,-1380,0), FVector(5350,-1380,0), FVector(6000,-1380,0),
+        FVector(8200,1420,0), FVector(8850,1420,0), FVector(9500,1420,0)
+    };
+    for (int32 I = 0; I < UE_ARRAY_COUNT(StoneBoundaries); ++I)
+    {
+        SpawnProd(ProductionCommonDryStoneWallMesh, StoneBoundaries[I], FVector(0.82f),
+            FRotator(0.0f, I < 3 ? 0.0f : 180.0f, 0.0f), true);
+    }
+
+    const FVector Fences[] = {
+        FVector(-1950,930,0), FVector(-1450,930,0), FVector(-950,930,0),
+        FVector(6600,-1020,0), FVector(7100,-1020,0), FVector(7600,-1020,0)
+    };
+    for (int32 I = 0; I < UE_ARRAY_COUNT(Fences); ++I)
+    {
+        SpawnProd(ProductionCommonVillageFenceMesh, Fences[I], FVector(0.82f),
+            FRotator(0.0f, I < 3 ? 0.0f : 6.0f, 0.0f), true);
+    }
+
+    const FVector WorkClutter[] = {
+        FVector(-430,430,0), FVector(6200,-1510,0), FVector(8350,-1050,0),
+        FVector(14500,-620,0), FVector(18800,760,0)
+    };
+    for (int32 I = 0; I < UE_ARRAY_COUNT(WorkClutter); ++I)
+    {
+        SpawnProd(ProductionCommonWoodPileMesh, WorkClutter[I], FVector(0.68f + 0.05f * (I % 2)),
+            FRotator(0.0f, I * 33.0f, 0.0f), true);
+    }
+
+    // A second authored bridge near the ferry approach makes the Water read as a connected place.
+    SpawnProd(ProductionCommonFootbridgeMesh, FVector(22200,-520,10), FVector(0.78f),
+        FRotator(0.0f, 4.0f, 0.0f), true);
+}
+
+
 void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
 {
     if (!DistantTreeTrunkInstances || !DistantTreeCanopyInstances || !RockInstances || !PathStoneInstances)
@@ -1954,6 +2040,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     ConfigureFoliageInstances();
     SpawnVillage();
     SpawnProductionVillageDetailLayer();
+    SpawnFullProductionActivationLayer();
     SpawnFoliagePass();
     SpawnScenicDetailPass();
     SpawnSideStories();
