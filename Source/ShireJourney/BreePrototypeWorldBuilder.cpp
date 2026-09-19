@@ -46,6 +46,13 @@ void ABreePrototypeWorldBuilder::BeginPlay()
     ProductionHitchingPostMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Bree/SM_BreeHitchingPost.SM_BreeHitchingPost"));
     ProductionTableMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Bree/SM_BreeTable.SM_BreeTable"));
     ProductionCrateStackMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Bree/SM_BreeCrateStack.SM_BreeCrateStack"));
+    CommonBroadleafTreeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBroadleafTree.SM_CommonBroadleafTree"));
+    CommonFallenLogMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonFallenLog.SM_CommonFallenLog"));
+    CommonDryStoneWallMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonDryStoneWall.SM_CommonDryStoneWall"));
+    CommonPathMarkerMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonPathMarker.SM_CommonPathMarker"));
+    CommonVillageFenceMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence"));
+    CommonWoodPileMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile"));
+    CommonFernClumpMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump"));
 
     BuildPrototypeWorld();
 }
@@ -370,6 +377,64 @@ void ABreePrototypeWorldBuilder::SpawnProductionBreeDetailLayer()
         SpawnProd(ProductionCrateStackMesh, Goods[Index], FVector(0.58f + 0.05f * (Index % 2)),
             FRotator(0.0f, 17.0f * Index, 0.0f), true);
     }
+
+    // CP52: pull the shared production kit into Bree so the town reads as a complete
+    // region rather than a single architecture set. Keep this dressing non-blocking.
+    const FVector BoundaryWalls[] = {
+        FVector(-920,-620,0), FVector(-420,-650,0), FVector(120,-650,0), FVector(650,-610,0),
+        FVector(-900,640,0), FVector(-370,660,0), FVector(180,650,0), FVector(720,610,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(BoundaryWalls); ++Index)
+    {
+        SpawnProd(CommonDryStoneWallMesh, BoundaryWalls[Index], FVector(0.82f),
+            FRotator(0.0f, Index < 4 ? 0.0f : 180.0f, 0.0f), false);
+    }
+
+    const FVector FenceRuns[] = {
+        FVector(-720,-760,0), FVector(-240,-780,0), FVector(260,-770,0),
+        FVector(760,-710,0), FVector(-720,760,0), FVector(-200,790,0),
+        FVector(320,770,0), FVector(820,720,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(FenceRuns); ++Index)
+    {
+        SpawnProd(CommonVillageFenceMesh, FenceRuns[Index], FVector(0.78f),
+            FRotator(0.0f, Index < 4 ? 0.0f : 180.0f, 0.0f), false);
+    }
+
+    const FVector Trees[] = {
+        FVector(-1180,-720,0), FVector(-1040,760,0), FVector(-450,-940,0),
+        FVector(360,-920,0), FVector(920,-720,0), FVector(980,760,0),
+        FVector(1540,-520,0), FVector(1650,650,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(Trees); ++Index)
+    {
+        SpawnProd(CommonBroadleafTreeMesh, Trees[Index], FVector(0.72f + 0.05f * (Index % 3)),
+            FRotator(0.0f, static_cast<float>((Index * 47) % 360), 0.0f), false);
+    }
+
+    const FVector WorkClutter[] = {
+        FVector(-640,310,0), FVector(-120,-310,0), FVector(430,300,0),
+        FVector(900,-300,0), FVector(1200,520,0), FVector(1520,500,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(WorkClutter); ++Index)
+    {
+        SpawnProd(Index % 2 == 0 ? CommonWoodPileMesh : CommonFallenLogMesh,
+            WorkClutter[Index], FVector(0.68f + 0.04f * (Index % 3)),
+            FRotator(0.0f, static_cast<float>((Index * 59) % 360), 0.0f), false);
+    }
+
+    const FVector Ferns[] = {
+        FVector(-980,-510,0), FVector(-820,520,0), FVector(-360,-560,0),
+        FVector(260,560,0), FVector(790,-510,0), FVector(1080,500,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(Ferns); ++Index)
+    {
+        SpawnProd(CommonFernClumpMesh, Ferns[Index], FVector(0.58f + 0.04f * (Index % 2)),
+            FRotator(0.0f, static_cast<float>(Index * 61), 0.0f), false);
+    }
+
+    SpawnProd(CommonPathMarkerMesh, FVector(-1200,80,0), FVector(0.78f),
+        FRotator(0.0f, 12.0f, 0.0f), false);
 }
 
 void ABreePrototypeWorldBuilder::SpawnStoryFlow()
