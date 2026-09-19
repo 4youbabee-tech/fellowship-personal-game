@@ -1247,7 +1247,7 @@
       "priority": "CRITICAL",
       "status": "PARTIAL",
       "origin": "User forwarded programmer living-NPC requirement and explicitly asked to preserve/analyze/apply it",
-      "intent": "NPCs should feel alive through bounded goals, needs, emotions, daily routines, memory, relationships, context awareness and character-specific knowledge rather than behaving as static dialogue dispensers.",
+      "intent": "NPCs should feel alive through bounded goals, needs, emotions, daily routines, memory, relationships, context awareness and character-specific knowledge while running fully offline with no cloud/API dependency.",
       "evidence": [
         "Docs/PROGRAMMER_INPUT_LIVING_NPCS_PART1.md",
         "Data/LivingNPCIntelligencePlan.json",
@@ -1268,8 +1268,8 @@
         "Add richer biography/knowledge-envelope records for Gandalf, Sam, Aragorn, Bilbo and other named Part I characters",
         "Feed bounded emotion/goal context into named-NPC dialogue selection",
         "Validate memory-aware dialogue through save/load on current CP56 build",
-        "Decide whether to enable any remote/local LLM provider only after deterministic local stack passes",
-        "Voice/STT/TTS remain optional later production layers"
+        "Voice/STT/TTS remain optional later production layers and must be local/offline if shipped",
+        "Evaluate only small local/on-device language models after the deterministic offline stack passes; no cloud provider integration"
       ],
       "acceptance_criteria": [
         "NPC behavior visibly varies with routine, danger, weather and bounded internal state",
@@ -1277,8 +1277,10 @@
         "Named NPC responses remain inside their authored knowledge envelope",
         "NPC admits uncertainty/ignorance rather than fabricating unavailable lore",
         "No NPC intelligence path can change mandatory film outcomes",
-        "Game remains fully playable offline with no LLM/STT/TTS service",
-        "Target-laptop performance remains within the established budget"
+        "Target-laptop performance remains within the established budget",
+        "Game remains fully functional with network access disabled",
+        "No gameplay-critical NPC system requires an API key, cloud endpoint or internet connection",
+        "Any future LLM/STT/TTS implementation is local/on-device, optional and bounded by target-device performance"
       ],
       "dependencies": [
         "REQ-NPC-001",
@@ -1288,7 +1290,7 @@
         "REQ-PERF-001"
       ],
       "checkpoint": "CP56",
-      "notes": "Local bounded intelligence is authoritative. Future generative services are optional renderers of approved context, not story authorities."
+      "notes": "Offline-only is authoritative. Deterministic local intelligence is the baseline; a future small local model may assist wording, but remote/cloud AI is excluded from shipped gameplay."
     }
   ],
   "hard_invariants": [
@@ -1522,7 +1524,7 @@
     },
     {
       "id": "DEC-010",
-      "title": "Living NPC architecture is local-first and bounded",
+      "title": "Living NPC architecture is offline-only, local-first and bounded",
       "status": "ACCEPTED",
       "requirements": [
         "REQ-NPC-003",
@@ -1530,13 +1532,32 @@
         "REQ-NPC-005",
         "REQ-PERF-001"
       ],
-      "resolution": "Implement NPC identity, memory, schedules, goals, needs, emotions, relationships and knowledge limits in deterministic project systems first. A future LLM may only generate bounded wording from approved context and must have deterministic fallback. STT/TTS are optional presentation layers.",
-      "rationale": "This preserves the user's living-NPC goal while avoiding canon drift, internet dependency, API cost as a gameplay requirement and excessive load on the 8 GB / ~2 GB VRAM target.",
+      "resolution": "Implement NPC identity, memory, schedules, goals, needs, emotions, relationships and knowledge limits entirely in local deterministic project systems. If a language model is later added, it must run locally/on-device and remain optional behind strict context/performance guards. Remote/cloud LLM, STT and TTS calls are not part of the shipped gameplay architecture.",
+      "rationale": "The project owner explicitly clarified that the game is offline. This also avoids API keys, internet dependency, recurring service cost, cloud outages and uncontrolled latency while protecting the 8 GB / ~2 GB VRAM target.",
       "authority": "USER_REQUEST_PLUS_ARCHITECTURE_RECONCILIATION",
       "evidence": [
         "Docs/PROGRAMMER_INPUT_LIVING_NPCS_PART1.md",
         "Data/LivingNPCIntelligencePlan.json",
         "Data/BoundedDialoguePlan.json"
+      ]
+    },
+    {
+      "id": "DEC-011",
+      "title": "Shipped game AI must work with the internet disconnected",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-NPC-003",
+        "REQ-NPC-004",
+        "REQ-NPC-005",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Treat offline execution as a hard product constraint. NPC intelligence, memory, relationships, schedules, goals, emotions, dialogue selection and any shipped speech/AI layer must not depend on remote services. Cloud APIs may be used only as developer-side tooling outside the shipped runtime, never as a gameplay dependency.",
+      "rationale": "The project owner explicitly stated that the game is offline and that the intelligent-NPC system must be offline at its foundation.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/LivingNPCIntelligencePlan.json",
+        "Data/BoundedDialoguePlan.json",
+        "Docs/PROGRAMMER_INPUT_LIVING_NPCS_PART1.md"
       ]
     }
   ],
@@ -1955,13 +1976,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Project owner confirmed the programmer's living-NPC/character-memory message was complete and asked to analyze, preserve and apply it while continuing CP56.",
+    "reason": "Project owner clarified that the game and its intelligent-NPC foundation must be offline.",
     "summary": [
-      "Programmer living-NPC input is preserved and marked analyzed/promoted.",
-      "Existing memory/social/dialogue systems already satisfy much of the requested foundation and are reused.",
-      "CP56 adds bounded ambient needs/emotions/goals and a durable LivingNPCIntelligencePlan.",
-      "Future LLM/STT/TTS integration is optional and cannot become a hard gameplay dependency.",
-      "Character-specific biography and knowledge-envelope expansion for major named characters is the next NPC-intelligence production layer."
+      "Living NPC architecture is now explicitly OFFLINE_ONLY.",
+      "Remote/cloud LLM, STT and TTS runtime calls are excluded from the shipped game.",
+      "Deterministic local NPC systems remain authoritative and fully playable without network access.",
+      "A future small local/on-device language model may be evaluated only as an optional bounded wording layer after the deterministic stack passes.",
+      "Developer-side online research/tooling does not imply an online dependency in the shipped game."
     ]
   },
   "development_mode": {
