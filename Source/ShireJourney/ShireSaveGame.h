@@ -11,7 +11,7 @@ class SHIREJOURNEY_API UShireSaveGame : public USaveGame
     GENERATED_BODY()
 
 public:
-    static constexpr int32 CurrentSchemaVersion = 5;
+    static constexpr int32 CurrentSchemaVersion = 6;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
     int32 SaveSchemaVersion = CurrentSchemaVersion;
@@ -78,4 +78,10 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Progression")
     TMap<FName, int32> ProgressionXP;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Chronicle")
+    TArray<FName> ChronicleEntryIds;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="MapKnowledge")
+    TArray<FName> KnownMapRegionIds;
 };
