@@ -712,6 +712,11 @@ bool UShireQuestSubsystem::HasJourneyDiscovery(FName DiscoveryId) const
     return DiscoveryId != NAME_None && JourneyDiscoveryIds.Contains(DiscoveryId);
 }
 
+int32 UShireQuestSubsystem::GetJourneyInsight() const
+{
+    return JourneyInsight;
+}
+
 bool UShireQuestSubsystem::HasJourneyInsightMilestone(FName MilestoneId) const
 {
     return MilestoneId != NAME_None && JourneyInsightMilestones.Contains(MilestoneId);
