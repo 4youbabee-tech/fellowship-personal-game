@@ -292,6 +292,27 @@ void ABreePrototypeWorldBuilder::SpawnBreeTown()
             Townsperson->WalkSpeed = 42.0f + 4.0f * (Index % 3);
         }
     }
+
+    // CP56: denser inn/street social life around the Prancing Pony. This reuses
+    // existing bounded BreeTownsperson logic rather than introducing a new crowd system.
+    const FVector InnCrowd[] = {
+        FVector(980, 720, 20), FVector(1120, 850, 20), FVector(1260, 680, 20),
+        FVector(1420, 820, 20), FVector(1540, 610, 20), FVector(1660, 760, 20)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(InnCrowd); ++Index)
+    {
+        AShireAmbientNPC* Guest = GetWorld()->SpawnActor<AShireAmbientNPC>(InnCrowd[Index], FRotator::ZeroRotator);
+        if (!Guest) continue;
+        Guest->RoutineRole = TEXT("BreeTownsperson");
+        Guest->ActivityPropType = Index % 2 == 0 ? TEXT("Mug") : NAME_None;
+        Guest->RoutinePointA = InnCrowd[Index];
+        Guest->RoutinePointB = InnCrowd[Index] + FVector(
+            90.0f + 20.0f * (Index % 3), Index % 2 == 0 ? 80.0f : -80.0f, 0.0f);
+        Guest->WalkSpeed = 30.0f + 3.0f * (Index % 3);
+        Guest->MinWait = 2.0f;
+        Guest->MaxWait = 5.5f;
+        Guest->PlayerNoticeRadius = 420.0f;
+    }
 }
 
 
@@ -597,6 +618,15 @@ void ABreePrototypeWorldBuilder::SpawnStoryFlow()
         Butterbur->QuestId = TEXT("BreeArrival");
         Butterbur->RequiredQuestStage = 1;
         Butterbur->QuestStageAfterInteraction = 2;
+    }
+
+    AShireQuestTrigger* BreeCommonRoomLife = GetWorld()->SpawnActor<AShireQuestTrigger>(
+        FVector(1180.0f, 720.0f, 90.0f), FRotator::ZeroRotator);
+    if (BreeCommonRoomLife)
+    {
+        BreeCommonRoomLife->SideStoryBeatAfterTrigger = TEXT("Side_BreeCommonRoomLife");
+        BreeCommonRoomLife->ObjectiveMessage = FText::FromString(
+            TEXT("The common room is noisy with travelers, locals and too many curious glances. You can listen, mingle, or keep moving."));
     }
 
     AShireQuestTrigger* CommonRoomAttention = GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(1390.0f, 760.0f, 90.0f), FRotator::ZeroRotator);
