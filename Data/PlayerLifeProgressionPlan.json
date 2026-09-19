@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "plan_id": "PLAYER_LIFE_PROGRESSION_V1",
+  "status": "RUNTIME_FOUNDATION_IMPLEMENTED_PENDING_ENGINE_PROOF",
+  "purpose": "Add lightweight modern-game character life and progression without turning the film adventure into survival grind.",
+  "runtime_axes": [
+    {
+      "id": "HEALTH",
+      "owner": "AShirePlayerCharacter"
+    },
+    {
+      "id": "STAMINA",
+      "owner": "AShirePlayerCharacter"
+    },
+    {
+      "id": "RESOLVE",
+      "owner": "AShirePlayerCharacter",
+      "ring_pressure_link": true
+    },
+    {
+      "id": "FELLOWSHIP_BOND",
+      "owner": "UShireQuestSubsystem"
+    },
+    {
+      "id": "SUPPLIES",
+      "owner": "AShirePlayerCharacter"
+    }
+  ],
+  "progression_tracks": [
+    {
+      "id": "WAYFINDING",
+      "thresholds": [
+        25,
+        60,
+        120,
+        200
+      ]
+    },
+    {
+      "id": "PERCEPTION",
+      "thresholds": [
+        25,
+        60,
+        120,
+        200
+      ]
+    },
+    {
+      "id": "QUIET_STEP",
+      "thresholds": [
+        25,
+        60,
+        120,
+        200
+      ]
+    },
+    {
+      "id": "CAMPCRAFT",
+      "thresholds": [
+        25,
+        60,
+        120,
+        200
+      ]
+    },
+    {
+      "id": "FELLOWSHIP",
+      "thresholds": [
+        25,
+        60,
+        120,
+        200
+      ]
+    },
+    {
+      "id": "LORE",
+      "thresholds": [
+        25,
+        60,
+        120,
+        200
+      ]
+    },
+    {
+      "id": "RESOLVE",
+      "thresholds": [
+        25,
+        60,
+        120,
+        200
+      ]
+    }
+  ],
+  "discovery_awards": {
+    "ROAD_WISDOM": {
+      "WAYFINDING": 10,
+      "PERCEPTION": 4
+    },
+    "PEOPLES_AND_PLACES": {
+      "LORE": 10
+    },
+    "FELLOWSHIP_BONDS": {
+      "FELLOWSHIP": 10
+    },
+    "PERIL_SENSE": {
+      "PERCEPTION": 8,
+      "RESOLVE": 6
+    }
+  },
+  "supply_contract": {
+    "initial": 3,
+    "max": 5,
+    "use_key": "R",
+    "recovery": {
+      "health": 28,
+      "stamina": 55,
+      "resolve": 24
+    },
+    "no_waste": true
+  },
+  "save_contract": {
+    "schema_version": 5,
+    "persisted": [
+      "PlayerStamina",
+      "PlayerResolve",
+      "PlayerSupplies",
+      "ProgressionXP"
+    ]
+  },
+  "hard_rules": [
+    "No hunger timer.",
+    "No thirst timer.",
+    "No gear score.",
+    "No random loot-rarity treadmill.",
+    "Progression may improve utility, information, companionship and recovery but may not skip film scenes or alter fixed outcomes.",
+    "First-time discoveries may award progression only once."
+  ]
+}

@@ -958,6 +958,48 @@ else:
         if marker not in invariant_text:
             fail(f"PG-078: master roadmap invariant missing {marker}")
 
+
+# PG-079: player-life and progression must remain lightweight, persisted and film-safe.
+life_path = ROOT / "Data" / "PlayerLifeProgressionPlan.json"
+if not life_path.exists():
+    fail("PG-079: PlayerLifeProgressionPlan.json missing")
+else:
+    life = json.loads(read(life_path))
+    axes = {str(x.get("id") or "") for x in life.get("runtime_axes", [])}
+    for axis in {"HEALTH","STAMINA","RESOLVE","FELLOWSHIP_BOND","SUPPLIES"}:
+        if axis not in axes:
+            fail(f"PG-079: player-life axis missing {axis}")
+    tracks = {str(x.get("id") or "") for x in life.get("progression_tracks", [])}
+    for track in {"WAYFINDING","PERCEPTION","QUIET_STEP","CAMPCRAFT","FELLOWSHIP","LORE","RESOLVE"}:
+        if track not in tracks:
+            fail(f"PG-079: progression track missing {track}")
+    hard = " ".join(life.get("hard_rules", [])).lower()
+    for marker in ["no hunger", "no thirst", "no gear score", "film scenes"]:
+        if marker not in hard:
+            fail(f"PG-079: anti-grind/canon rule missing {marker}")
+player_h = read(SOURCE / "ShirePlayerCharacter.h")
+player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
+quest_h = read(SOURCE / "ShireQuestSubsystem.h")
+quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
+save_h = read(SOURCE / "ShireSaveGame.h")
+for symbol in ["GetCurrentStamina","GetCurrentResolve","GetSupplies","UseSupply","UpdatePlayerLife"]:
+    if symbol not in player_h and symbol not in player_cpp:
+        fail(f"PG-079: player-life runtime symbol missing {symbol}")
+for symbol in ["AwardProgressionXP","GetProgressionXP","GetProgressionRank","GetFellowshipBond","RestoreProgressionState"]:
+    if symbol not in quest_h or symbol not in quest_cpp:
+        fail(f"PG-079: progression runtime symbol missing {symbol}")
+for marker in ["PlayerStamina","PlayerResolve","PlayerSupplies","ProgressionXP","CurrentSchemaVersion = 5"]:
+    if marker not in save_h:
+        fail(f"PG-079: save schema missing {marker}")
+if 'ActionName="UseSupply"' not in read(ROOT / "Config" / "DefaultInput.ini"):
+    fail("PG-079: supply input mapping missing")
+if "ShireStateAudit: progression-core=PASS" not in read(SOURCE / "ShireGameMode.cpp"):
+    fail("PG-079: progression state audit missing")
+if "ShireStateAudit: progression-core=PASS" not in read(ROOT / "Scripts" / "runtime_smoke.py"):
+    fail("PG-079: runtime smoke does not require progression proof")
+if "Data/PlayerLifeProgressionPlan.json" not in read(SOURCE / "ShireJourney.Build.cs"):
+    fail("PG-079: player-life plan not packaged")
+
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
 living_world_data = {}
@@ -1658,7 +1700,7 @@ for symbol in [
         fail(f"PG-044 ambient schedule/reaction runtime missing: {symbol}")
 
 for symbol in [
-    "CurrentSchemaVersion = 4",
+    "CurrentSchemaVersion = 5",
     "SaveSchemaVersion",
     "SnapshotCreatedUnixSeconds",
 ]:
