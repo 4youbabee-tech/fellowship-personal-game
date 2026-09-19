@@ -7,6 +7,7 @@
 #include "Factories/FbxStaticMeshImportData.h"
 #include "Engine/StaticMesh.h"
 #include "HAL/FileManager.h"
+#include "HAL/PlatformFilemanager.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
 #include "Materials/MaterialInterface.h"
@@ -34,7 +35,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     // GitHub Desktop show hundreds/thousands of local changes after one-click
     // import. Work on an ignored Saved/ copy so source assets stay byte-stable.
     IFileManager::Get().DeleteDirectory(*WorkingRoot, false, true);
-    if (!IFileManager::Get().CopyDirectoryTree(*WorkingRoot, *SourceRoot, true))
+    IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+    if (!PlatformFile.CopyDirectoryTree(*WorkingRoot, *SourceRoot, true))
     {
         UE_LOG(LogTemp, Error, TEXT("ShireProductionImport: failed to create working copy %s from %s"), *WorkingRoot, *SourceRoot);
         return 4;
