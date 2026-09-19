@@ -36,7 +36,8 @@
     "Use pooled/instanced/lightweight presentation where possible.",
     "Fauna and prop motion are optional under performance pressure.",
     "Danger chapters may suppress peaceful events.",
-    "Event selection should avoid repeating the same event type back-to-back when alternatives exist."
+    "Event selection should avoid repeating the same event type back-to-back when alternatives exist.",
+    "CP55 fauna uses project-owned low-poly bird/rabbit/butterfly meshes and distance-throttled ambient actors; no new persistent AI state."
   ],
   "chapter_contracts": [
     {
@@ -63,12 +64,13 @@
         "TRAVELER_PASSING",
         "MARKET_ACTIVITY",
         "SOCIAL_MOMENT",
+        "FAUNA",
         "WEATHER_REACTION",
         "PROP_MOTION",
         "DANGER_REACTION"
       ],
       "target_density": "MEDIUM_HIGH",
-      "notes": "Night town/inn activity with guarded mood."
+      "notes": "Night town/inn activity with guarded mood; low-cost birds and occasional ground fauna keep outer Bree from feeling static."
     },
     {
       "chapter": "P1C03",
@@ -209,6 +211,7 @@
       "type": "FAUNA",
       "regions": [
         "P1C01",
+        "P1C02",
         "P1C03",
         "P1C04",
         "P1C05",
@@ -226,12 +229,13 @@
       "type": "FAUNA",
       "regions": [
         "P1C01",
-        "P1C03",
+        "P1C02",
+        "P1C04",
         "P1C07"
       ],
       "duration_seconds": [
-        5,
-        12
+        7,
+        14
       ],
       "story_safe": true
     },
@@ -296,6 +300,20 @@
       "duration_seconds": [
         8,
         24
+      ],
+      "story_safe": true
+    },
+    {
+      "id": "EVT_FAUNA_BUTTERFLIES",
+      "type": "FAUNA",
+      "regions": [
+        "P1C01",
+        "P1C04",
+        "P1C07"
+      ],
+      "duration_seconds": [
+        7,
+        14
       ],
       "story_safe": true
     }

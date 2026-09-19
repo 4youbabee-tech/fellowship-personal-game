@@ -490,3 +490,13 @@ When a new repeatable failure is found, add a new PG entry with:
 - commit/run that exposed it when useful.
 
 Then update ProjectGuardRules or pre_unreal_validate.py in the same fix when practical.
+
+## PG-055 — CP55 activity/movement contract
+Guards the post-verification fauna/activity expansion:
+- `Data/WorldActivityMovementPlan.json` must exist and parse.
+- project-owned bird/rabbit/butterfly OBJ source assets must remain present.
+- `AShireAmbientNPC` must retain Bird/Rabbit/Butterfly runtime roles and production-mesh preference.
+- `ALivingWorldDirector` must retain chapter-bounded spawning for those roles.
+- `LivingWorldEventPlan.json` must retain bird, small-animal and butterfly fauna templates.
+
+Purpose: prevent later cleanup from silently deleting CP55 world-life movement or replacing it with untracked/persistent AI scope.

@@ -745,20 +745,71 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
     }
     else if (EventType == TEXT("FAUNA"))
     {
-        const FVector SkyOrigin = Origin + FVector(0.0f, 0.0f, Random.FRandRange(360.0f, 620.0f));
-        for (int32 Index = 0; Index < 3; ++Index)
+        if (ActiveChapterId == TEXT("P1C06"))
         {
-            const FVector BirdOrigin = SkyOrigin + FVector(0.0f, Index * 90.0f - 90.0f, Index * 24.0f);
+            return false;
+        }
+
+        const bool bWoodlandChapter =
+            ActiveChapterId == TEXT("P1C01") ||
+            ActiveChapterId == TEXT("P1C02") ||
+            ActiveChapterId == TEXT("P1C04") ||
+            ActiveChapterId == TEXT("P1C07");
+        const bool bButterflyChapter =
+            ActiveChapterId == TEXT("P1C01") ||
+            ActiveChapterId == TEXT("P1C04") ||
+            ActiveChapterId == TEXT("P1C07");
+
+        const FVector SkyOrigin = Origin + FVector(0.0f, 0.0f, Random.FRandRange(360.0f, 620.0f));
+        const int32 BirdCount = bWoodlandChapter ? 2 : 3;
+        for (int32 Index = 0; Index < BirdCount; ++Index)
+        {
+            const FVector BirdOrigin = SkyOrigin + FVector(0.0f, Index * 110.0f - 70.0f, Index * 24.0f);
             if (AShireAmbientNPC* Bird = SpawnAmbientActor(
                 BirdOrigin, TEXT("Bird"), NAME_None,
-                FVector(700.0f, Random.FRandRange(-360.0f, 360.0f), Random.FRandRange(-40.0f, 80.0f)),
-                145.0f + Index * 12.0f, 0.0f, 0.0f))
+                FVector(720.0f, Random.FRandRange(-380.0f, 380.0f), Random.FRandRange(-45.0f, 90.0f)),
+                148.0f + Index * 14.0f, 0.0f, 0.0f))
             {
                 Bird->bCanNoticePlayer = false;
                 OutEvent.Actors.Add(Bird);
             }
         }
-        Duration = 12.0f;
+
+        if (bWoodlandChapter && Random.FRand() > 0.35f)
+        {
+            const FVector RabbitOrigin = Origin + FVector(
+                Random.FRandRange(-120.0f, 120.0f),
+                Random.FRandRange(-120.0f, 120.0f),
+                0.0f);
+            if (AShireAmbientNPC* Rabbit = SpawnAmbientActor(
+                RabbitOrigin, TEXT("Rabbit"), NAME_None,
+                FVector(Random.FRandRange(260.0f, 440.0f), Random.FRandRange(-220.0f, 220.0f), 0.0f),
+                Random.FRandRange(78.0f, 105.0f), 0.8f, 2.4f))
+            {
+                Rabbit->bCanNoticePlayer = false;
+                OutEvent.Actors.Add(Rabbit);
+            }
+        }
+
+        if (bButterflyChapter)
+        {
+            const FVector ButterflyOrigin = Origin + FVector(0.0f, 0.0f, Random.FRandRange(70.0f, 140.0f));
+            for (int32 Index = 0; Index < 2; ++Index)
+            {
+                if (AShireAmbientNPC* Butterfly = SpawnAmbientActor(
+                    ButterflyOrigin + FVector(0.0f, Index * 55.0f, Index * 18.0f),
+                    TEXT("Butterfly"), NAME_None,
+                    FVector(Random.FRandRange(260.0f, 420.0f), Random.FRandRange(-190.0f, 190.0f),
+                        Random.FRandRange(-30.0f, 70.0f)),
+                    Random.FRandRange(65.0f, 92.0f), 0.0f, 0.0f))
+                {
+                    Butterfly->bCanNoticePlayer = false;
+                    OutEvent.Actors.Add(Butterfly);
+                }
+            }
+        }
+
+        Duration = 14.0f;
     }
     else if (EventType == TEXT("WEATHER_REACTION"))
     {

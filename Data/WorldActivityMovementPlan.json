@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "plan_id": "CP55_WORLD_ACTIVITY_MOVEMENT_V1",
+  "status": "IMPLEMENTED_PENDING_VALIDATION",
+  "purpose": "Resume post-verification visible game construction with low-cost movement and fauna that make traversal feel more alive without changing story, save, route or chapter topology.",
+  "runtime_owners": [
+    "AShireAmbientNPC",
+    "ALivingWorldDirector"
+  ],
+  "production_assets": [
+    "/Game/Production/World/Common/SM_CommonBird",
+    "/Game/Production/World/Common/SM_CommonRabbit",
+    "/Game/Production/World/Common/SM_CommonButterfly"
+  ],
+  "movement_profiles": [
+    {
+      "role": "Bird",
+      "behavior": "3D point-to-point flight with bounded pitch/roll body motion",
+      "chapters": ["P1C01","P1C02","P1C03","P1C04","P1C05","P1C07","P1C08"]
+    },
+    {
+      "role": "Rabbit",
+      "behavior": "ground point-to-point travel with bounded hop/rest rhythm",
+      "chapters": ["P1C01","P1C02","P1C04","P1C07"]
+    },
+    {
+      "role": "Butterfly",
+      "behavior": "slow 3D flutter with small local oscillation",
+      "chapters": ["P1C01","P1C04","P1C07"]
+    }
+  ],
+  "story_safety": [
+    "Fauna never owns quest state or persistent transforms.",
+    "Fauna never blocks story-critical interactions.",
+    "Moria remains civilian/fauna-empty under the dead-city rule.",
+    "Frodo/Gandalf route state is unchanged."
+  ],
+  "performance_rules": [
+    "Reuse the existing AShireAmbientNPC distance-throttled tick path.",
+    "Spawn fauna only inside existing bounded micro-events.",
+    "No skeletal meshes, navmesh crowd simulation or physics are required for CP55 fauna.",
+    "All fauna are disposable and cleaned by the existing LivingWorldDirector event cull path.",
+    "Target remains Windows DX11 1280x720 Low-Medium with a 30 FPS floor."
+  ],
+  "proof_boundary": {
+    "implemented": [
+      "project-owned low-poly bird/rabbit/butterfly source meshes",
+      "production-mesh preference with engine-shape fallback",
+      "bird flight, rabbit hop and butterfly flutter movement",
+      "chapter-aware fauna spawning",
+      "fauna excluded from NPC social pairing"
+    ],
+    "not_claimed": [
+      "final wildlife animation quality",
+      "physics-driven flocking",
+      "final audio",
+      "final target-device performance acceptance for CP55",
+      "visual acceptance for CP55"
+    ]
+  }
+}

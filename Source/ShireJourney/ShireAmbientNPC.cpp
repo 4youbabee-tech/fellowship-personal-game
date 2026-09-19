@@ -118,7 +118,10 @@ void AShireAmbientNPC::ApplyVisualStyle()
     const bool bBreeTownsperson = RoutineRole == TEXT("BreeTownsperson");
     const bool bElf = RoutineRole == TEXT("Elf");
     const bool bBird = RoutineRole == TEXT("Bird");
-    const bool bHobbitResident = !bBreeTownsperson && !bElf && !bBird;
+    const bool bRabbit = RoutineRole == TEXT("Rabbit");
+    const bool bButterfly = RoutineRole == TEXT("Butterfly");
+    const bool bFauna = bBird || bRabbit || bButterfly;
+    const bool bHobbitResident = !bBreeTownsperson && !bElf && !bFauna;
 
     Torso->SetVisibility(true);
     Head->SetVisibility(true);
@@ -176,7 +179,39 @@ void AShireAmbientNPC::ApplyVisualStyle()
         TryMesh(RightLeg, TEXT("/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg"));
     }
 
+    bool bProductionFauna = false;
     if (bBird)
+    {
+        bProductionFauna = TryMesh(
+            Torso, TEXT("/Game/Production/World/Common/SM_CommonBird.SM_CommonBird"));
+    }
+    else if (bRabbit)
+    {
+        bProductionFauna = TryMesh(
+            Torso, TEXT("/Game/Production/World/Common/SM_CommonRabbit.SM_CommonRabbit"));
+    }
+    else if (bButterfly)
+    {
+        bProductionFauna = TryMesh(
+            Torso, TEXT("/Game/Production/World/Common/SM_CommonButterfly.SM_CommonButterfly"));
+    }
+
+    if (bProductionFauna)
+    {
+        VisualTorsoBaseZ = 0.0f;
+        VisualHeadBaseZ = 0.0f;
+        VisualHairBaseZ = 0.0f;
+        Torso->SetRelativeLocation(FVector::ZeroVector);
+        Torso->SetRelativeRotation(FRotator::ZeroRotator);
+        Torso->SetRelativeScale3D(FVector(1.0f));
+        Head->SetVisibility(false);
+        Hair->SetVisibility(false);
+        LeftArm->SetVisibility(false);
+        RightArm->SetVisibility(false);
+        LeftLeg->SetVisibility(false);
+        RightLeg->SetVisibility(false);
+    }
+    else if (bBird)
     {
         VisualTorsoBaseZ = 10.0f;
         VisualHeadBaseZ = 15.0f;
@@ -192,6 +227,33 @@ void AShireAmbientNPC::ApplyVisualStyle()
         RightArm->SetRelativeScale3D(FVector(0.025f, 0.025f, 0.22f));
         LeftArm->SetRelativeRotation(FRotator(0.0f, 0.0f, 65.0f));
         RightArm->SetRelativeRotation(FRotator(0.0f, 0.0f, -65.0f));
+        LeftLeg->SetVisibility(false);
+        RightLeg->SetVisibility(false);
+    }
+    else if (bRabbit)
+    {
+        VisualTorsoBaseZ = 10.0f;
+        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, VisualTorsoBaseZ));
+        Torso->SetRelativeScale3D(FVector(0.32f, 0.18f, 0.18f));
+        Head->SetRelativeLocation(FVector(24.0f, 0.0f, 14.0f));
+        Head->SetRelativeScale3D(FVector(0.12f));
+        Hair->SetVisibility(false);
+        LeftArm->SetVisibility(false);
+        RightArm->SetVisibility(false);
+        LeftLeg->SetVisibility(false);
+        RightLeg->SetVisibility(false);
+    }
+    else if (bButterfly)
+    {
+        VisualTorsoBaseZ = 6.0f;
+        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, VisualTorsoBaseZ));
+        Torso->SetRelativeScale3D(FVector(0.14f, 0.08f, 0.05f));
+        Head->SetVisibility(false);
+        Hair->SetVisibility(false);
+        LeftArm->SetRelativeLocation(FVector(0.0f, -10.0f, 6.0f));
+        RightArm->SetRelativeLocation(FVector(0.0f, 10.0f, 6.0f));
+        LeftArm->SetRelativeScale3D(FVector(0.02f, 0.02f, 0.18f));
+        RightArm->SetRelativeScale3D(FVector(0.02f, 0.02f, 0.18f));
         LeftLeg->SetVisibility(false);
         RightLeg->SetVisibility(false);
     }
@@ -264,6 +326,20 @@ void AShireAmbientNPC::ApplyVisualStyle()
         HairColor = FLinearColor(0.08f, 0.08f, 0.08f);
         Skin = FLinearColor(0.34f, 0.30f, 0.22f);
     }
+    else if (bRabbit)
+    {
+        Coat = FLinearColor(0.34f, 0.27f, 0.20f);
+        Trousers = Coat;
+        HairColor = Coat;
+        Skin = FLinearColor(0.48f, 0.38f, 0.28f);
+    }
+    else if (bButterfly)
+    {
+        Coat = FLinearColor(0.72f, 0.52f, 0.14f);
+        Trousers = Coat;
+        HairColor = Coat;
+        Skin = FLinearColor(0.18f, 0.12f, 0.08f);
+    }
     else if (bElf)
     {
         Coat = FLinearColor(
@@ -324,7 +400,10 @@ void AShireAmbientNPC::ApplyVisualStyle()
         }
     };
 
-    ApplyColor(Torso, Coat);
+    if (!bProductionFauna)
+    {
+        ApplyColor(Torso, Coat);
+    }
     ApplyColor(Head, Skin);
     ApplyColor(Hair, HairColor);
     ApplyColor(LeftArm, Coat * 0.95f);
@@ -333,7 +412,7 @@ void AShireAmbientNPC::ApplyVisualStyle()
     ApplyColor(RightLeg, Trousers);
 
     ActivityProp->SetVisibility(false);
-    if (!bBird && ActivityPropType != NAME_None)
+    if (!bFauna && ActivityPropType != NAME_None)
     {
         FLinearColor PropColor(0.28f, 0.17f, 0.08f);
         FVector PropScale(0.18f, 0.18f, 0.18f);
@@ -834,7 +913,9 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
 
         if (Candidate->RoutineRole == TEXT("Courier") ||
             Candidate->RoutineRole == TEXT("RoadWalker") ||
-            Candidate->RoutineRole == TEXT("Bird"))
+            Candidate->RoutineRole == TEXT("Bird") ||
+            Candidate->RoutineRole == TEXT("Rabbit") ||
+            Candidate->RoutineRole == TEXT("Butterfly"))
         {
             continue;
         }
@@ -909,11 +990,84 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
 
         WalkPhase += DeltaSeconds * 9.0f;
         const float Wing = FMath::Sin(WalkPhase) * 42.0f;
-        LeftArm->SetRelativeRotation(FMath::RInterpTo(
-            LeftArm->GetRelativeRotation(), FRotator(0.0f, 0.0f, 58.0f + Wing), DeltaSeconds, 10.0f));
-        RightArm->SetRelativeRotation(FMath::RInterpTo(
-            RightArm->GetRelativeRotation(), FRotator(0.0f, 0.0f, -58.0f - Wing), DeltaSeconds, 10.0f));
-        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, VisualTorsoBaseZ + FMath::Sin(WalkPhase * 0.5f) * 1.5f));
+        if (LeftArm->IsVisible() && RightArm->IsVisible())
+        {
+            LeftArm->SetRelativeRotation(FMath::RInterpTo(
+                LeftArm->GetRelativeRotation(), FRotator(0.0f, 0.0f, 58.0f + Wing), DeltaSeconds, 10.0f));
+            RightArm->SetRelativeRotation(FMath::RInterpTo(
+                RightArm->GetRelativeRotation(), FRotator(0.0f, 0.0f, -58.0f - Wing), DeltaSeconds, 10.0f));
+        }
+        Torso->SetRelativeLocation(FVector(
+            0.0f,
+            FMath::Sin(WalkPhase * 0.31f) * 2.0f,
+            VisualTorsoBaseZ + FMath::Sin(WalkPhase * 0.5f) * 2.5f));
+        Torso->SetRelativeRotation(FRotator(
+            FMath::Sin(WalkPhase * 0.37f) * 4.0f,
+            0.0f,
+            FMath::Sin(WalkPhase * 0.21f) * 5.0f));
+        return;
+    }
+
+    if (RoutineRole == TEXT("Butterfly"))
+    {
+        const FVector Target = bHeadingToB ? RoutinePointB : RoutinePointA;
+        const FVector ToTarget = Target - GetActorLocation();
+        if (ToTarget.Size() < 35.0f)
+        {
+            bHeadingToB = !bHeadingToB;
+        }
+
+        const FVector Direction = ToTarget.GetSafeNormal();
+        AddActorWorldOffset(Direction * WalkSpeed * DeltaSeconds, false);
+        if (!Direction.IsNearlyZero())
+        {
+            SetActorRotation(FMath::RInterpTo(GetActorRotation(), Direction.Rotation(), DeltaSeconds, 5.0f));
+        }
+
+        WalkPhase += DeltaSeconds * 11.0f;
+        const float Flutter = FMath::Sin(WalkPhase);
+        Torso->SetRelativeLocation(FVector(
+            0.0f,
+            FMath::Sin(WalkPhase * 0.43f) * 5.0f,
+            VisualTorsoBaseZ + Flutter * 5.0f));
+        Torso->SetRelativeRotation(FRotator(
+            Flutter * 10.0f,
+            0.0f,
+            FMath::Sin(WalkPhase * 0.67f) * 18.0f));
+        return;
+    }
+
+    if (RoutineRole == TEXT("Rabbit"))
+    {
+        if (WaitRemaining > 0.0f)
+        {
+            WaitRemaining -= DeltaSeconds;
+            WalkPhase += DeltaSeconds * 2.0f;
+            Torso->SetRelativeLocation(FVector(
+                0.0f, 0.0f, VisualTorsoBaseZ + FMath::Sin(WalkPhase) * 1.0f));
+            return;
+        }
+
+        const FVector Target = bHeadingToB ? RoutinePointB : RoutinePointA;
+        const FVector ToTarget = Target - GetActorLocation();
+        if (ToTarget.Size2D() < 28.0f)
+        {
+            bHeadingToB = !bHeadingToB;
+            WaitRemaining = Random.FRandRange(0.8f, 2.4f);
+            return;
+        }
+
+        const FVector Direction = ToTarget.GetSafeNormal2D();
+        AddActorWorldOffset(Direction * WalkSpeed * DeltaSeconds, false);
+        if (!Direction.IsNearlyZero())
+        {
+            SetActorRotation(FMath::RInterpTo(GetActorRotation(), Direction.Rotation(), DeltaSeconds, 7.0f));
+        }
+
+        WalkPhase += DeltaSeconds * 7.5f;
+        const float Hop = FMath::Abs(FMath::Sin(WalkPhase)) * 12.0f;
+        Torso->SetRelativeLocation(FVector(0.0f, 0.0f, VisualTorsoBaseZ + Hop));
+        Torso->SetRelativeRotation(FRotator(-Hop * 0.45f, 0.0f, 0.0f));
         return;
     }
 

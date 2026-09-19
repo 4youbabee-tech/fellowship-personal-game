@@ -175,25 +175,24 @@
           "status": "RUNTIME_PARTIAL",
           "evidence": [
             "Data/LivingWorldEventPlan.json",
+            "Data/WorldActivityMovementPlan.json",
             "Source/ShireJourney/ShireAmbientNPC.cpp",
-            "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
-            "Source/ShireJourney/BreePrototypeWorldBuilder.cpp",
-            "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
-            "Source/ShireJourney/IsengardPrototypeWorldBuilder.cpp"
+            "Source/ShireJourney/LivingWorldDirector.cpp",
+            "SourceAssets/Production/World/Common/SM_CommonBird.obj",
+            "SourceAssets/Production/World/Common/SM_CommonRabbit.obj",
+            "SourceAssets/Production/World/Common/SM_CommonButterfly.obj"
           ],
-          "notes": "Lightweight Bird role now moves in 3D across outdoor Part I regions using distance-throttled ambient actor ticks. Broader fauna types remain pending."
+          "notes": "CP55 expands lightweight fauna from bird-only motion to project-owned bird, rabbit and butterfly actors with chapter-bounded spawning and distance-throttled ticks. Additional fauna variety remains optional polish."
         },
         {
           "id": "WORLD-MOTION",
           "status": "RUNTIME_PARTIAL",
           "evidence": [
+            "Data/WorldActivityMovementPlan.json",
             "Source/ShireJourney/ShireAmbientNPC.cpp",
-            "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
-            "Source/ShireJourney/BreePrototypeWorldBuilder.cpp",
-            "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
-            "Source/ShireJourney/IsengardPrototypeWorldBuilder.cpp"
+            "Source/ShireJourney/LivingWorldDirector.cpp"
           ],
-          "notes": "Outdoor regions now contain cheap moving sky-life actors; prop/weather motion beyond existing procedural movement remains pending."
+          "notes": "CP55 adds distinct aerial flutter, bird flight and ground-hop motion on top of resident work/social gestures. Expensive weather/cloth/physics motion remains outside this low-spec baseline."
         },
         {
           "id": "WORLD-EXPLORATION-DENSITY",

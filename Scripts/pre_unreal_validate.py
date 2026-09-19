@@ -2613,6 +2613,56 @@ for runtime_symbol in ["SM_ShFarmPlough","SM_BreeStreetAwning","SM_WeathertopRui
 if "WorldResourceBankCP54.json" not in build_cs_cp52:
     fail("PG-054 mega resource bank plan is not packaged")
 
+# PG-055: post-verification activity/movement expansion must stay bounded, source-controlled and story-safe.
+cp55_plan_path = ROOT / "Data" / "WorldActivityMovementPlan.json"
+cp55_plan = {}
+if not cp55_plan_path.exists():
+    fail("PG-055 WorldActivityMovementPlan.json missing")
+else:
+    try:
+        cp55_plan = json.loads(read(cp55_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-055 invalid WorldActivityMovementPlan.json: {exc}")
+
+cp55_required_assets = [
+    ROOT / "SourceAssets" / "Production" / "World" / "Common" / "SM_CommonBird.obj",
+    ROOT / "SourceAssets" / "Production" / "World" / "Common" / "SM_CommonRabbit.obj",
+    ROOT / "SourceAssets" / "Production" / "World" / "Common" / "SM_CommonButterfly.obj",
+]
+for asset_path in cp55_required_assets:
+    if not asset_path.exists():
+        fail(f"PG-055 required fauna asset missing: {asset_path.relative_to(ROOT).as_posix()}")
+
+cp55_ambient_cpp = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.cpp")
+cp55_director_cpp = read(ROOT / "Source" / "ShireJourney" / "LivingWorldDirector.cpp")
+for role in ['TEXT("Bird")', 'TEXT("Rabbit")', 'TEXT("Butterfly")']:
+    if role not in cp55_ambient_cpp:
+        fail(f"PG-055 ambient movement role missing: {role}")
+    if role not in cp55_director_cpp:
+        fail(f"PG-055 LivingWorldDirector fauna spawn missing: {role}")
+
+for asset_name in ["SM_CommonBird", "SM_CommonRabbit", "SM_CommonButterfly"]:
+    if asset_name not in cp55_ambient_cpp:
+        fail(f"PG-055 production fauna mesh preference missing: {asset_name}")
+
+cp55_event_plan_path = ROOT / "Data" / "LivingWorldEventPlan.json"
+if cp55_event_plan_path.exists():
+    try:
+        cp55_event_plan = json.loads(read(cp55_event_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-055 invalid LivingWorldEventPlan.json: {exc}")
+        cp55_event_plan = {}
+    cp55_templates = {
+        str(item.get("id") or "")
+        for item in cp55_event_plan.get("event_templates", [])
+        if isinstance(item, dict)
+    }
+    for template_id in ["EVT_FAUNA_BIRDS", "EVT_FAUNA_SMALL_ANIMAL", "EVT_FAUNA_BUTTERFLIES"]:
+        if template_id not in cp55_templates:
+            fail(f"PG-055 fauna event template missing: {template_id}")
+else:
+    fail("PG-055 LivingWorldEventPlan.json missing")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

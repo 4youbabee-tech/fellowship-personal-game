@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "gate_id": "CURRENT_HEAD_PIE_DEVICE_VERIFICATION_FREEZE",
-  "mode": "PIE_VERIFICATION_FREEZE",
+  "mode": "EXPANSION_RESUMED",
   "baseline": {
     "content_checkpoint": "CP54",
     "max_checkpoint_number": 54,
@@ -76,25 +76,20 @@
     "P1C07",
     "P1C08"
   ],
-  "allowed_change_classes_during_freeze": [
-    "verification instrumentation",
-    "bug/crash/progression/save-load repair",
-    "performance repair",
-    "existing-asset quality repair",
-    "test and CI hardening",
-    "documentation and evidence updates"
-  ],
-  "blocked_change_classes_during_freeze": [
-    "CP55 or later feature/content checkpoint",
-    "net-new production source assets",
-    "net-new ShireJourney runtime source files",
-    "new world/chapter expansion"
-  ],
+  "allowed_change_classes_during_freeze": [],
+  "blocked_change_classes_during_freeze": [],
   "evidence_file": "Data/PIEVerificationEvidence.json",
   "lift_conditions": [
-    "All P1C01-P1C08 chapters have direct current-head PIE evidence.",
-    "No chapter has an unresolved blocking crash/progression/save-load/severe-performance failure.",
-    "Target-laptop observations are recorded at 720p Low-Medium.",
-    "Human release sign-off is explicit."
+    "Post-CP54 verification/check/fix pass explicitly confirmed complete by the project owner.",
+    "Current develop baseline is green in Pre-Unreal and real UE4.27.2 build/import/headless chapter audits.",
+    "Expansion resumes behind the existing regression gates."
+  ],
+  "status": "LIFTED",
+  "lifted_on": "2026-09-19",
+  "lift_authority": "USER_EXPLICIT_DIRECTION",
+  "lift_evidence": [
+    "Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md",
+    "Pre-Unreal Validation #264",
+    "Unreal Build Validation #99"
   ]
 }

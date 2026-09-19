@@ -593,3 +593,14 @@ Required order:
 Blocking failures are repaired before advancing. Non-blocking world/material ideas are logged in `Docs/WORLD_DETAIL_LEDGER.md` only.
 
 See `Docs/PRODUCTION_COMPLETENESS_MATRIX.md` and `Docs/CURRENT_PROJECT_STATE.md` for the live evidence record.
+
+## CP55 — Activity / Movement Expansion
+- Verification freeze lifted by explicit project-owner confirmation after the post-CP54 check/fix pass.
+- Added three project-owned low-poly fauna meshes: bird, rabbit and butterfly.
+- `AShireAmbientNPC` now prefers those imported production meshes while keeping engine-shape fallback behavior.
+- Added distinct bounded movement: bird flight, rabbit hop/rest travel and butterfly flutter.
+- `ALivingWorldDirector` now varies fauna by chapter through the existing disposable micro-event path; Moria remains fauna/civilian-empty by design.
+- Bree now permits bounded FAUNA micro-events; Shire/Rivendell/Lothlorien may include butterflies and small ground fauna.
+- Fauna are excluded from NPC social pairing and never own quest/save state.
+- Added `Data/WorldActivityMovementPlan.json` and PG-055 validation.
+- Required proof: Pre-Unreal, UE4.27.2 compile/import, startup/chapter regression audit. CP55 visual/performance acceptance remains separate.

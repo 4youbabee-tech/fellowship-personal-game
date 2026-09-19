@@ -1,12 +1,12 @@
 # PRODUCTION COMPLETENESS MATRIX
 
-## Current-head verification freeze (post-CP54)
+## Post-CP54 verification completion and expansion resume
 
-Baseline under test: `develop@ed235ff4fb332660d2af8ce1385d9ca038a6337b`.
+Verified merged baseline: `develop@f7c2b081e7b064fcf27bb4c80124b21f351331ab`.
 
-PR #44 passed Pre-Unreal #240 and Unreal Build Validation #75, including compile/import/headless startup. Those checks do **not** count as current-head PIE/device acceptance.
+Pre-Unreal Validation #264 and Unreal Build Validation #99 passed on the merged baseline, including compile/import, playable startup, all eight headless chapter audits and the warning-debt guard. The project owner then explicitly confirmed the planned verification/check/fix pass complete and directed construction/expansion to resume.
 
-Any older PIE label below is historical and must not be treated as proof for the CP54 head. The table below is the authoritative current-head manual verification record until the freeze is lifted.
+The owner sign-off is recorded in `Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md` and `Data/PIEVerificationEvidence.json`. Numeric FPS/hitch/memory values were not supplied in chat and are therefore not invented.
 
 ### Current machine verification candidate
 
@@ -16,16 +16,16 @@ Structured human evidence for any future PIE status change must also be written 
 
 | Chapter | Real PIE on CP54 head | Stability | Crash | Target laptop perf | NPC routines | NPC-to-NPC | Named memory/context | Weather/atmosphere | Notes |
 |---|---|---|---|---|---|---|---|---|---|
-| P1C01 Shire | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | First chapter to test |
-| P1C02 Bree | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | Test only after Shire blocking issues are repaired |
-| P1C03 Weathertop/Ford | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED |  |
-| P1C04 Rivendell | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED |  |
-| P1C05 Road/Caradhras/West Gate | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED |  |
-| P1C06 Moria | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | Civilian baseline is intentionally zero |
-| P1C07 Lothlorien | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED |  |
-| P1C08 Anduin/Amon Hen | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED |  |
+| P1C01 Shire | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Owner-completed verification pass; see sign-off record |
+| P1C02 Bree | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Owner-completed verification pass |
+| P1C03 Weathertop/Ford | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Owner-completed verification pass |
+| P1C04 Rivendell | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Owner-completed verification pass |
+| P1C05 Road/Caradhras/West Gate | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Owner-completed verification pass |
+| P1C06 Moria | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Civilian baseline remains intentionally zero |
+| P1C07 Lothlorien | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Owner-completed verification pass |
+| P1C08 Anduin/Amon Hen | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Owner-completed verification pass |
 
-Blocking failure means crash, progression dead-end, save/load failure, missing required runtime system, or severe target-device performance regression. Non-blocking visual ideas go to `WORLD_DETAIL_LEDGER.md` and do not expand scope during the baseline audit.
+Blocking failure means crash, progression dead-end, save/load failure, missing required runtime system, or severe target-device performance regression. The post-CP54 baseline audit is now owner-confirmed complete; CP55+ may proceed behind the existing regression gates.
 
 This file prevents major game pillars from depending on chat memory.
 
