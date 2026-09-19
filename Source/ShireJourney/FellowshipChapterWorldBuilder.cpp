@@ -491,6 +491,9 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnScatter(CommonFallenLogMesh, FVector(-300,-120,0), 6, FVector(1700,900,0), FVector(0.72f), 53.0f, 6.0f);
         SpawnScatter(CommonFernClumpMesh, FVector(0,0,0), 26, FVector(2100,1200,0), FVector(0.62f), 29.0f, 4.0f);
         SpawnProd(CommonPathMarkerMesh, FVector(-950,220,0), FVector(0.78f), FRotator(0,24,0), false);
+        SpawnScatter(CommonBoulderClusterMesh, FVector(450,-120,0), 8, FVector(1750,950,0), FVector(0.70f), 41.0f, 7.0f);
+        SpawnScatter(CommonDryStoneWallMesh, FVector(-900,-820,0), 6, FVector(1300,360,0), FVector(0.62f), 67.0f, 2.0f);
+        SpawnScatter(CommonWoodPileMesh, FVector(1100,-260,390), 4, FVector(520,340,0), FVector(0.58f), 83.0f, 2.0f);
     }
     else if (ChapterId == TEXT("P1C04"))
     {
@@ -515,6 +518,9 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnScatter(CommonFernClumpMesh, FVector(250,100,0), 42, FVector(2400,1300,0), FVector(0.70f), 17.0f, 4.0f);
         SpawnScatter(CommonReedClusterMesh, FVector(200,720,-10), 20, FVector(1350,260,0), FVector(0.72f), 19.0f, 2.0f);
         SpawnProd(CommonFootbridgeMesh, FVector(-650,690,20), FVector(0.72f), FRotator(0,4,0), true);
+        SpawnScatter(CommonFallenLogMesh, FVector(200,-250,0), 7, FVector(1900,900,0), FVector(0.62f), 59.0f, 4.0f);
+        SpawnScatter(CommonPathMarkerMesh, FVector(-100,120,0), 8, FVector(2100,650,0), FVector(0.58f), 47.0f, 2.0f);
+        SpawnScatter(CommonBoulderClusterMesh, FVector(300,500,0), 6, FVector(2100,900,0), FVector(0.62f), 71.0f, 6.0f);
     }
     else if (ChapterId == TEXT("P1C05"))
     {
@@ -531,6 +537,11 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         for (int32 I = 0; I < 9; ++I)
             SpawnProd(CaradhrasRockMesh, FVector(180 + I * 270.0f, (I % 2 ? 610.0f : -590.0f), 40.0f),
                 FVector(0.65f + 0.08f * (I % 3)), FRotator(I * 5.0f, I * 31.0f, 0), true);
+        SpawnScatter(CommonPineTreeMesh, FVector(-700,0,0), 18, FVector(2200,1200,0), FVector(0.68f), 23.0f, 10.0f);
+        SpawnScatter(CommonFallenLogMesh, FVector(-900,0,0), 6, FVector(1500,780,0), FVector(0.62f), 61.0f, 5.0f);
+        SpawnScatter(CommonDryStoneWallMesh, FVector(-1200,0,0), 8, FVector(1000,520,0), FVector(0.60f), 43.0f, 2.0f);
+        SpawnScatter(CommonPathMarkerMesh, FVector(-300,0,0), 8, FVector(2200,450,0), FVector(0.62f), 37.0f, 2.0f);
+        SpawnScatter(CommonWoodPileMesh, FVector(-1200,80,0), 5, FVector(720,420,0), FVector(0.56f), 73.0f, 2.0f);
     }
     else if (ChapterId == TEXT("P1C06"))
     {
@@ -550,6 +561,7 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnProd(MoriaBridgeMesh, FVector(2450,0,40), FVector(0.92f), FRotator::ZeroRotator, true);
         SpawnScatter(CommonRuinSlabMesh, FVector(-200,0,0), 18, FVector(2300,1050,0), FVector(0.78f), 37.0f, 2.0f);
         SpawnScatter(CommonBoulderClusterMesh, FVector(300,0,0), 14, FVector(2500,1150,0), FVector(0.85f), 31.0f, 6.0f);
+        SpawnScatter(CommonRuinSlabMesh, FVector(900,0,0), 12, FVector(2100,900,0), FVector(0.62f), 53.0f, 2.0f);
     }
     else if (ChapterId == TEXT("P1C07"))
     {
@@ -566,6 +578,9 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnScatter(CommonGoldenTreeMesh, FVector(0,0,0), 34, FVector(2600,1550,0), FVector(0.92f), 19.0f, 12.0f);
         SpawnScatter(CommonFernClumpMesh, FVector(100,0,0), 48, FVector(2500,1450,0), FVector(0.72f), 13.0f, 4.0f);
         SpawnScatter(CommonFallenLogMesh, FVector(-100,150,0), 8, FVector(2100,1200,0), FVector(0.68f), 47.0f, 4.0f);
+        SpawnScatter(CommonBroadleafTreeMesh, FVector(150,0,0), 14, FVector(2200,1300,0), FVector(0.72f), 31.0f, 8.0f);
+        SpawnScatter(CommonFootbridgeMesh, FVector(-200,250,0), 3, FVector(1450,500,0), FVector(0.60f), 97.0f, 2.0f);
+        SpawnScatter(CommonPathMarkerMesh, FVector(0,0,0), 7, FVector(1800,620,0), FVector(0.56f), 43.0f, 2.0f);
     }
     else if (ChapterId == TEXT("P1C08"))
     {
@@ -586,6 +601,10 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnScatter(CommonPineTreeMesh, FVector(1000,0,0), 14, FVector(2200,1300,0), FVector(0.82f), 29.0f, 10.0f);
         SpawnScatter(CommonReedClusterMesh, FVector(-1500,0,-10), 28, FVector(1250,520,0), FVector(0.76f), 17.0f, 2.0f);
         SpawnScatter(CommonRuinSlabMesh, FVector(1600,0,0), 10, FVector(1100,800,0), FVector(0.74f), 43.0f, 3.0f);
+        SpawnScatter(CommonFallenLogMesh, FVector(800,0,0), 7, FVector(2100,1100,0), FVector(0.66f), 47.0f, 4.0f);
+        SpawnScatter(CommonFootbridgeMesh, FVector(-1050,0,0), 2, FVector(900,380,0), FVector(0.68f), 101.0f, 2.0f);
+        SpawnScatter(CommonPathMarkerMesh, FVector(650,0,0), 8, FVector(2200,700,0), FVector(0.60f), 39.0f, 2.0f);
+        SpawnScatter(CommonBoulderClusterMesh, FVector(1350,0,0), 8, FVector(1300,900,0), FVector(0.70f), 57.0f, 5.0f);
     }
 }
 
