@@ -52,6 +52,37 @@ void UShireNPCContextSubsystem::ParseNameArray(
     }
 }
 
+void UShireNPCContextSubsystem::ParseStringArray(
+    const TSharedPtr<FJsonObject>& Object,
+    const TCHAR* Field,
+    TArray<FString>& OutStrings)
+{
+    OutStrings.Empty();
+    if (!Object.IsValid())
+    {
+        return;
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* Values = nullptr;
+    if (!Object->TryGetArrayField(Field, Values) || !Values)
+    {
+        return;
+    }
+
+    for (const TSharedPtr<FJsonValue>& Value : *Values)
+    {
+        if (Value.IsValid())
+        {
+            FString StringValue = Value->AsString();
+            StringValue.TrimStartAndEndInline();
+            if (!StringValue.IsEmpty())
+            {
+                OutStrings.Add(StringValue);
+            }
+        }
+    }
+}
+
 bool UShireNPCContextSubsystem::LoadJsonObject(
     const FString& RelativePath,
     TSharedPtr<FJsonObject>& OutRoot) const
@@ -152,11 +183,15 @@ bool UShireNPCContextSubsystem::LoadSocialModel()
         FString TypeString;
         FString PersistenceTier;
         FString Community;
+        FString Origin;
+        FString Occupation;
         Object->TryGetStringField(TEXT("id"), IdString);
         Object->TryGetStringField(TEXT("display_name"), DisplayName);
         Object->TryGetStringField(TEXT("type"), TypeString);
         Object->TryGetStringField(TEXT("persistence_tier"), PersistenceTier);
         Object->TryGetStringField(TEXT("community"), Community);
+        Object->TryGetStringField(TEXT("origin"), Origin);
+        Object->TryGetStringField(TEXT("occupation"), Occupation);
 
         if (IdString.IsEmpty())
         {
@@ -169,11 +204,16 @@ bool UShireNPCContextSubsystem::LoadSocialModel()
         Profile.ProfileType = FName(*TypeString);
         Profile.PersistenceTier = FName(*PersistenceTier);
         Profile.Community = FName(*Community);
+        Profile.Origin = Origin;
+        Profile.Occupation = Occupation;
         ParseNameArray(Object, TEXT("aliases"), Profile.Aliases);
         ParseNameArray(Object, TEXT("regions"), Profile.Regions);
         ParseNameArray(Object, TEXT("roles"), Profile.Roles);
         ParseNameArray(Object, TEXT("knowledge_tags"), Profile.KnowledgeTags);
         ParseNameArray(Object, TEXT("anchors"), Profile.Anchors);
+        ParseNameArray(Object, TEXT("attitude_tags"), Profile.AttitudeTags);
+        ParseStringArray(Object, TEXT("biography_facts"), Profile.BiographyFacts);
+        ParseStringArray(Object, TEXT("knowledge_limits"), Profile.KnowledgeLimits);
 
         Profiles.Add(Profile.ProfileId, Profile);
         CanonicalLookup.Add(NormalizeLookupKey(IdString), Profile.ProfileId);
@@ -612,6 +652,43 @@ bool UShireNPCContextSubsystem::ProfileAvailableInCurrentChapter(
     }
 
     return Profile.Regions.Num() == 0 || Profile.Regions.Contains(Region);
+}
+
+FString UShireNPCContextSubsystem::GetProfileContextSummary(FName ProfileHint) const
+{
+    const FName ProfileId = ResolveCanonicalProfileId(ProfileHint);
+    const FShireNPCProfileRuntime* Profile = Profiles.Find(ProfileId);
+    if (!Profile)
+    {
+        return FString();
+    }
+
+    TArray<FString> Parts;
+    Parts.Add(FString::Printf(TEXT("id=%s"), *Profile->ProfileId.ToString()));
+    if (!Profile->DisplayName.IsEmpty()) Parts.Add(FString::Printf(TEXT("name=%s"), *Profile->DisplayName));
+    if (!Profile->Origin.IsEmpty()) Parts.Add(FString::Printf(TEXT("origin=%s"), *Profile->Origin));
+    if (!Profile->Occupation.IsEmpty()) Parts.Add(FString::Printf(TEXT("occupation=%s"), *Profile->Occupation));
+
+    if (Profile->BiographyFacts.Num() > 0)
+    {
+        Parts.Add(FString::Printf(TEXT("history=%s"), *FString::Join(Profile->BiographyFacts, TEXT(" | "))));
+    }
+    if (Profile->KnowledgeLimits.Num() > 0)
+    {
+        Parts.Add(FString::Printf(TEXT("limits=%s"), *FString::Join(Profile->KnowledgeLimits, TEXT(" | "))));
+    }
+
+    TArray<FString> Attitudes;
+    for (const FName Tag : Profile->AttitudeTags)
+    {
+        Attitudes.Add(Tag.ToString());
+    }
+    if (Attitudes.Num() > 0)
+    {
+        Parts.Add(FString::Printf(TEXT("attitudes=%s"), *FString::Join(Attitudes, TEXT(","))));
+    }
+
+    return FString::Join(Parts, TEXT("; "));
 }
 
 FName UShireNPCContextSubsystem::ResolveSchedulePhase(
