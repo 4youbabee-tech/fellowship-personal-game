@@ -8,6 +8,12 @@ PR #44 passed Pre-Unreal #240 and Unreal Build Validation #75, including compile
 
 Any older PIE label below is historical and must not be treated as proof for the CP54 head. The table below is the authoritative current-head manual verification record until the freeze is lifted.
 
+### Current machine verification candidate
+
+PR #45 successfully boot-audited **all eight Part I runtime chapters** in UE4.27.2 headless mode, including the expected chapter builder, living-world initialization and weather-context initialization, with no fatal/assert/ensure blocker in that audit. This is stronger than the previous P1C01-only startup smoke, but it still does **not** change any Real PIE cell below from NOT_RUN.
+
+Structured human evidence for any future PIE status change must also be written to `Data/PIEVerificationEvidence.json`; PG-057 rejects unsupported claims.
+
 | Chapter | Real PIE on CP54 head | Stability | Crash | Target laptop perf | NPC routines | NPC-to-NPC | Named memory/context | Weather/atmosphere | Notes |
 |---|---|---|---|---|---|---|---|---|---|
 | P1C01 Shire | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | First chapter to test |

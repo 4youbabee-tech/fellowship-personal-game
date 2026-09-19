@@ -1,0 +1,235 @@
+#!/usr/bin/env python3
+"""Fast source-asset quality audit for the UE4.27 production bank.
+
+This is a pre-engine diagnostic. It reports structural OBJ/MTL/BMP risks quickly and
+does not pretend to replace Unreal import, PIE, or visual review.
+"""
+
+from __future__ import annotations
+
+import argparse
+import math
+import os
+import struct
+import sys
+from collections import Counter
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+PRODUCTION = ROOT / "SourceAssets" / "Production"
+
+
+def parse_face_index(token: str, vertex_count: int) -> int | None:
+    raw = token.split("/", 1)[0]
+    try:
+        index = int(raw)
+    except ValueError:
+        return None
+    if index < 0:
+        return vertex_count + index
+    return index - 1
+
+
+def triangle_area(a, b, c) -> float:
+    ab = (b[0]-a[0], b[1]-a[1], b[2]-a[2])
+    ac = (c[0]-a[0], c[1]-a[1], c[2]-a[2])
+    cross = (
+        ab[1]*ac[2] - ab[2]*ac[1],
+        ab[2]*ac[0] - ab[0]*ac[2],
+        ab[0]*ac[1] - ab[1]*ac[0],
+    )
+    return 0.5 * math.sqrt(sum(value * value for value in cross))
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--strict", action="store_true", help="Fail on structural asset defects.")
+    args = parser.parse_args()
+
+    errors: list[str] = []
+    warnings: list[str] = []
+    stats = Counter()
+    dimension_counts = Counter()
+
+    obj_files = sorted(PRODUCTION.rglob("*.obj"))
+    mtl_files = sorted(PRODUCTION.rglob("*.mtl"))
+    bmp_files = sorted(PRODUCTION.rglob("*.bmp"))
+
+    mtl_cache: dict[Path, set[str]] = {}
+
+    for mtl in mtl_files:
+        materials: set[str] = set()
+        try:
+            lines = mtl.read_text(encoding="utf-8", errors="replace").splitlines()
+        except Exception as exc:
+            errors.append(f"{mtl.relative_to(ROOT)} unreadable: {exc}")
+            continue
+        for line in lines:
+            stripped = line.strip()
+            if stripped.startswith("newmtl "):
+                name = stripped[7:].strip()
+                if name in materials:
+                    warnings.append(f"{mtl.relative_to(ROOT)} duplicates material {name}")
+                materials.add(name)
+            elif stripped.lower().startswith("map_kd "):
+                texture_ref = stripped[7:].strip()
+                texture_path = (mtl.parent / texture_ref).resolve()
+                if not texture_path.exists():
+                    warnings.append(
+                        f"{mtl.relative_to(ROOT)} references missing diffuse texture {texture_ref}"
+                    )
+        mtl_cache[mtl.resolve()] = materials
+
+    for obj in obj_files:
+        stats["obj"] += 1
+        vertices: list[tuple[float, float, float]] = []
+        material_libraries: list[str] = []
+        used_materials: set[str] = set()
+        normal_count = 0
+        uv_count = 0
+        smoothing_seen = False
+        zero_area_faces = 0
+        malformed_faces = 0
+
+        try:
+            lines = obj.read_text(encoding="utf-8", errors="replace").splitlines()
+        except Exception as exc:
+            errors.append(f"{obj.relative_to(ROOT)} unreadable: {exc}")
+            continue
+
+        face_tokens: list[list[str]] = []
+        for line in lines:
+            stripped = line.strip()
+            if stripped.startswith("v "):
+                parts = stripped.split()
+                if len(parts) >= 4:
+                    try:
+                        vertices.append((float(parts[1]), float(parts[2]), float(parts[3])))
+                    except ValueError:
+                        errors.append(f"{obj.relative_to(ROOT)} contains malformed vertex data")
+            elif stripped.startswith("vn "):
+                normal_count += 1
+            elif stripped.startswith("vt "):
+                uv_count += 1
+            elif stripped.startswith("s ") and stripped.lower() not in {"s off", "s 0"}:
+                smoothing_seen = True
+            elif stripped.startswith("mtllib "):
+                material_libraries.extend(stripped[7:].strip().split())
+            elif stripped.startswith("usemtl "):
+                used_materials.add(stripped[7:].strip())
+            elif stripped.startswith("f "):
+                face_tokens.append(stripped.split()[1:])
+
+        if normal_count == 0:
+            stats["obj_without_normals"] += 1
+        if uv_count == 0:
+            stats["obj_without_uvs"] += 1
+        if not smoothing_seen:
+            stats["obj_without_smoothing_groups"] += 1
+
+        defined_materials: set[str] = set()
+        for library in material_libraries:
+            mtl_path = (obj.parent / library).resolve()
+            if not mtl_path.exists():
+                errors.append(
+                    f"{obj.relative_to(ROOT)} references missing mtllib {library}"
+                )
+                continue
+            defined_materials.update(mtl_cache.get(mtl_path, set()))
+
+        if used_materials and material_libraries:
+            undefined = sorted(used_materials - defined_materials)
+            if undefined:
+                warnings.append(
+                    f"{obj.relative_to(ROOT)} uses undefined materials: {', '.join(undefined)}"
+                )
+
+        for tokens in face_tokens:
+            if len(tokens) < 3:
+                malformed_faces += 1
+                continue
+            indices = [parse_face_index(token, len(vertices)) for token in tokens[:3]]
+            if any(index is None or index < 0 or index >= len(vertices) for index in indices):
+                malformed_faces += 1
+                continue
+            a, b, c = (vertices[indices[0]], vertices[indices[1]], vertices[indices[2]])
+            if triangle_area(a, b, c) <= 1e-7:
+                zero_area_faces += 1
+
+        if malformed_faces:
+            errors.append(
+                f"{obj.relative_to(ROOT)} has {malformed_faces} malformed/out-of-range faces"
+            )
+        if zero_area_faces:
+            warnings.append(
+                f"{obj.relative_to(ROOT)} has {zero_area_faces} near-zero-area faces"
+            )
+            stats["obj_with_zero_area_faces"] += 1
+
+    for bmp in bmp_files:
+        stats["bmp"] += 1
+        try:
+            data = bmp.read_bytes()
+        except Exception as exc:
+            errors.append(f"{bmp.relative_to(ROOT)} unreadable: {exc}")
+            continue
+        if len(data) < 26 or data[:2] != b"BM":
+            errors.append(f"{bmp.relative_to(ROOT)} is not a valid BMP header")
+            continue
+        width = abs(struct.unpack_from("<i", data, 18)[0])
+        height = abs(struct.unpack_from("<i", data, 22)[0])
+        dimension_counts[(width, height)] += 1
+        if width > 1024 or height > 1024:
+            warnings.append(
+                f"{bmp.relative_to(ROOT)} is {width}x{height}; review target-device cost"
+            )
+
+    summary = [
+        "# Asset Quality Audit",
+        "",
+        f"- OBJ files: {len(obj_files)}",
+        f"- MTL files: {len(mtl_files)}",
+        f"- BMP files: {len(bmp_files)}",
+        f"- OBJ without explicit normals: {stats['obj_without_normals']}",
+        f"- OBJ without UV coordinates: {stats['obj_without_uvs']}",
+        f"- OBJ without smoothing groups: {stats['obj_without_smoothing_groups']}",
+        f"- OBJ with near-zero-area faces: {stats['obj_with_zero_area_faces']}",
+        f"- Structural errors: {len(errors)}",
+        f"- Warnings: {len(warnings)}",
+    ]
+    if dimension_counts:
+        summary.append(
+            "- BMP dimensions: "
+            + ", ".join(
+                f"{w}x{h}={count}"
+                for (w, h), count in sorted(dimension_counts.items())
+            )
+        )
+
+    print("\n".join(summary))
+    if warnings:
+        print("\nWarning sample:")
+        for warning in warnings[:40]:
+            print(f"WARNING: {warning}")
+        if len(warnings) > 40:
+            print(f"WARNING: ... {len(warnings)-40} more warnings omitted from console")
+
+    if errors:
+        print("\nStructural error sample:")
+        for error in errors[:40]:
+            print(f"ERROR: {error}")
+        if len(errors) > 40:
+            print(f"ERROR: ... {len(errors)-40} more errors omitted from console")
+
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if summary_path:
+        with open(summary_path, "a", encoding="utf-8") as handle:
+            handle.write("\n".join(summary) + "\n")
+
+    if args.strict and errors:
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
