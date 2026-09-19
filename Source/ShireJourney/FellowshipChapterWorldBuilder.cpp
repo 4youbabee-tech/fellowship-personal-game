@@ -930,6 +930,9 @@ void AFellowshipChapterWorldBuilder::BuildWeathertop()
 
     SpawnQuestTrigger(FVector(-1850, 0, 90), TEXT("RoadToWeathertop"), 0, 1,
         TEXT("The road gives way to wet country. Strider leads you off the obvious path."), TEXT("MidgewaterRoad"));
+    SpawnQuestTrigger(FVector(-1180, 360, 90), NAME_None, 0, -1,
+        TEXT("The hobbits pause long enough to share food, complain about the marsh and laugh before the hill ahead silences them."),
+        TEXT("RoadCompanionship"));
     SpawnQuestTrigger(FVector(-250, 0, 90), TEXT("RoadToWeathertop"), 1, 2,
         TEXT("The ruined hill is ahead. Keep close to the Ranger."), TEXT("WeathertopReveal"));
 
@@ -1231,6 +1234,9 @@ void AFellowshipChapterWorldBuilder::BuildFellowshipRoad()
 
     SpawnQuestTrigger(FVector(-1150, 260, 90), TEXT("SouthwardJourney"), 1, 1,
         TEXT("The company pauses. Boromir turns the stop into training for Merry and Pippin."), TEXT("FellowshipCamp"));
+    SpawnQuestTrigger(FVector(-1380, 720, 90), NAME_None, 0, -1,
+        TEXT("For a short while the camp feels almost ordinary: food, teasing, practice and the relief of being together."),
+        TEXT("FellowshipCompanionship"));
     SpawnNPC(TEXT("Boromir"), FVector(-980, 500, 70), FRotator(0, 200, 0), TEXT("SouthwardJourney"), 1, -1,
         TEXT("A sword is no help if your feet are in the wrong place. Again."), NAME_None, 0, true);
     SpawnNPC(TEXT("Merry"), FVector(-860, 390, 65), FRotator(0, 20, 0), TEXT("SouthwardJourney"), 1, -1,
@@ -1353,6 +1359,9 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
         TEXT("Something from the lake strikes at the entrance. Get inside before the doors are lost."), TEXT("WatcherAttack"));
     SpawnQuestTrigger(FVector(-1750, 0, 90), TEXT("MoriaDark"), 1, 2,
         TEXT("The doors close behind you. Follow Gandalf through the dark halls."), TEXT("MoriaEntry"));
+    SpawnQuestTrigger(FVector(-1120, 620, 90), NAME_None, 0, -1,
+        TEXT("Broken rooms and abandoned tools make the silence worse: this was once a city, not merely a tunnel."),
+        TEXT("MoriaDeadCityDiscovery"));
     SpawnQuestTrigger(FVector(-650, 0, 90), TEXT("MoriaDark"), 2, 3,
         TEXT("The air changes. Evidence of battle lies ahead."), TEXT("MoriaUnease"), TEXT("BalinsTomb"), 0);
 
@@ -1494,6 +1503,9 @@ void AFellowshipChapterWorldBuilder::BuildLothlorien()
 
     SpawnQuestTrigger(FVector(-2200, 0, 90), TEXT("LothlorienRest"), 0, 0,
         TEXT("No one speaks much after Moria. The forest receives the Fellowship in silence."), TEXT("LorienGrief"));
+    SpawnQuestTrigger(FVector(-1500, 520, 90), NAME_None, 0, -1,
+        TEXT("A quiet clearing gives the companions space to grieve together before duty calls them onward."),
+        TEXT("LorienSharedGrief"));
     SpawnQuestTrigger(FVector(-1850, 0, 90), TEXT("LothlorienRest"), 0, 1,
         TEXT("The woods close around the grieving Fellowship. Follow the hidden path."), TEXT("LorienEntry"));
     SpawnNPC(TEXT("Haldir"), FVector(-900, -120, 70), FRotator(0, 170, 0), TEXT("LothlorienRest"), 1, 2,
@@ -1631,6 +1643,9 @@ void AFellowshipChapterWorldBuilder::BuildAnduinAmonHen()
 
     SpawnQuestTrigger(FVector(-1900, 0, 90), TEXT("AnduinJourney"), 0, 1,
         TEXT("Travel down the Anduin and keep the boats together."), TEXT("AnduinDeparture"));
+    SpawnQuestTrigger(FVector(-720, 760, 90), NAME_None, 0, -1,
+        TEXT("At the river camp, ordinary conversation keeps breaking against the unspoken question of where the company should go next."),
+        TEXT("AnduinCampTension"));
     SpawnQuestTrigger(FVector(-300, 0, 90), TEXT("AnduinJourney"), 1, 2,
         TEXT("Ancient stone guardians rise above the river."), TEXT("ArgonathReveal"));
     SpawnQuestTrigger(FVector(900, 0, 90), TEXT("AnduinJourney"), 2, 2,
