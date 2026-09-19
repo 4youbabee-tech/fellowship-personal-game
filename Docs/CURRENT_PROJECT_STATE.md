@@ -27,6 +27,20 @@ Current proof boundary:
 - UE4.27 compile/import: pending,
 - PIE/device visual acceptance: pending.
 
+## Current full-playable production status — CP52
+
+CP52 shifts the project from adding isolated art layers to activating the complete source-controlled production resource families as one playable Part I runtime. The branch now expands production density in Shire, Bree and P1C03-P1C08 while keeping quests, routes, save/load, dialogue, living-world events, characters and enemies on the same established runtime.
+
+Machine-readable authority:
+- `Data/ProductionActivationPlan.json`
+
+Current proof boundary:
+- CP51 Pre-Unreal validation: green and merged,
+- CP52 source/runtime integration: implemented on `mega/full-playable-production-v1`,
+- CP52 Pre-Unreal validation: pending until PR CI,
+- CP52 UE4.27.2 build/import: pending until merge to `develop`,
+- full PIE/device/visual acceptance: pending.
+
 # CURRENT PROJECT STATE
 
 > **Operational recovery note — reconciled 2026-09-19**
