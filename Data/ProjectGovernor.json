@@ -1114,6 +1114,46 @@
         "REQ-PERF-001"
       ],
       "checkpoint": "CP53"
+    },
+    {
+      "id": "REQ-PROD-006",
+      "title": "Mega project-owned regional resource bank",
+      "category": "VisualProduction",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "User requested all currently producible resources be added immediately in one large batch rather than drip-fed",
+      "intent": "Create and runtime-wire a large project-owned mesh/material/texture inventory across all Part I regions before the activity/movement layer expands.",
+      "evidence": [
+        "Data/WorldResourceBankCP54.json",
+        "SourceAssets/Production/World",
+        "SourceAssets/Production/Textures",
+        "Docs/CHECKPOINTS.md CP54"
+      ],
+      "implementation_refs": [
+        "75 new regional/common OBJ production meshes",
+        "17 procedural project-owned BMP textures",
+        "regional WorldPack.mtl palettes",
+        "runtime placement across P1C01-P1C08"
+      ],
+      "missing_work": [
+        "UE4.27 compile/import validation",
+        "headless startup validation",
+        "PIE visual inspection",
+        "target-device performance tuning",
+        "later movement/activity animation layer"
+      ],
+      "acceptance_criteria": [
+        "PG-054 passes",
+        "UE4.27 imports the expanded bank",
+        "all P1C01-P1C08 runtime builders reference their regional packs",
+        "headless playable startup remains green"
+      ],
+      "dependencies": [
+        "REQ-WORLD-006",
+        "REQ-PROD-005",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "CP54"
     }
   ],
   "hard_invariants": [
@@ -1692,15 +1732,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "After CP52 build/import/headless-startup validation passed, user requested a substantial visible leap: heavily populate the game and make the world feel alive instead of continuing with small increments",
+    "reason": "Immediate bulk filling of the game with every project-owned resource the current pipeline can generate and import, while retaining continuous mid-stream validation.",
     "summary": [
-      "Created WorldLifeSaturationPlan with continuous baseline population targets for P1C01-P1C08.",
-      "LivingWorldDirector now replenishes and culls baseline regional inhabitants around the player while continuing to layer micro-events.",
-      "New baseline actors reuse AShireAmbientNPC schedules, social conversations, player awareness, role visuals and distance-based tick throttling.",
-      "Shire target is 18 nearby baseline inhabitants and Bree target is 16; Rivendell/Lothlorien receive region-appropriate elf populations while Moria remains civilian-empty.",
-      "CP53 raises active micro-event capacity to five and lowers the cadence floor to six seconds through the saturation contract.",
-      "No ambient population actor owns quest progress, story topology or save-critical state.",
-      "UE4.27 compile/import, headless startup and target-device crowd-performance acceptance remain required for CP53."
+      "Added a 75-mesh project-owned regional/common source bank plus 17 procedural project-owned diffuse BMP textures and regional MTL palettes.",
+      "Runtime-wired the new inventory throughout Shire, Bree, Weathertop, Rivendell, Road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen.",
+      "Added PG-054 resource-count and runtime-reference validation.",
+      "Kept decorative placements non-colliding and story/quest coordinates unchanged.",
+      "The next activity/movement batch may proceed only after real UE4.27 compile/import/headless-startup validation is green."
     ]
   },
   "development_mode": {

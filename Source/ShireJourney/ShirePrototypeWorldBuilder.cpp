@@ -1727,6 +1727,57 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
     {
         SpawnProd(ProductionLampPostMesh, Lamp, FVector(0.76f), FRotator::ZeroRotator, false);
     }
+    // CP54 mega inventory pass: dense farm, market, river and household activity props.
+    auto LoadCP54 = [](const TCHAR* Path) -> UStaticMesh* { return LoadObject<UStaticMesh>(nullptr, Path); };
+    UStaticMesh* CP54Bucket = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonBucket.SM_CommonBucket"));
+    UStaticMesh* CP54Wheelbarrow = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonWheelbarrow.SM_CommonWheelbarrow"));
+    UStaticMesh* CP54Table = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonMarketTable.SM_CommonMarketTable"));
+    UStaticMesh* CP54Chest = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonStorageChest.SM_CommonStorageChest"));
+    UStaticMesh* CP54Beehive = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonBeehive.SM_CommonBeehive"));
+    UStaticMesh* CP54Coop = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonChickenCoop.SM_CommonChickenCoop"));
+    UStaticMesh* CP54Scarecrow = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonScarecrow.SM_CommonScarecrow"));
+    UStaticMesh* CP54Wagon = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonWagon.SM_CommonWagon"));
+    UStaticMesh* CP54Planter = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonFlowerPlanter.SM_CommonFlowerPlanter"));
+    UStaticMesh* CP54Plough = LoadCP54(TEXT("/Game/Production/World/Shire/SM_ShFarmPlough.SM_ShFarmPlough"));
+    UStaticMesh* CP54GardenArch = LoadCP54(TEXT("/Game/Production/World/Shire/SM_ShGardenArch.SM_ShGardenArch"));
+    UStaticMesh* CP54Mailbox = LoadCP54(TEXT("/Game/Production/World/Shire/SM_ShMailbox.SM_ShMailbox"));
+    UStaticMesh* CP54WashLine = LoadCP54(TEXT("/Game/Production/World/Shire/SM_ShWashLine.SM_ShWashLine"));
+    UStaticMesh* CP54Produce = LoadCP54(TEXT("/Game/Production/World/Shire/SM_ShProduceStand.SM_ShProduceStand"));
+    UStaticMesh* CP54Well = LoadCP54(TEXT("/Game/Production/World/Shire/SM_ShPumpWell.SM_ShPumpWell"));
+    UStaticMesh* CP54Ladder = LoadCP54(TEXT("/Game/Production/World/Shire/SM_ShOrchardLadder.SM_ShOrchardLadder"));
+    UStaticMesh* CP54Canopy = LoadCP54(TEXT("/Game/Production/World/Shire/SM_ShPicnicCanopy.SM_ShPicnicCanopy"));
+    const FVector CP54FarmNodes[] = {
+        FVector(3600,-1320,0), FVector(4100,-1370,0), FVector(4700,-1300,0),
+        FVector(7900,1290,0), FVector(8500,1340,0), FVector(9100,1270,0),
+        FVector(16200,-1220,0), FVector(16800,-1280,0), FVector(17450,-1180,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(CP54FarmNodes); ++Index)
+    {
+        UStaticMesh* Choice = Index % 3 == 0 ? CP54Plough : (Index % 3 == 1 ? CP54Wheelbarrow : CP54Scarecrow);
+        SpawnProd(Choice, CP54FarmNodes[Index], FVector(0.64f + 0.04f * (Index % 2)), FRotator(0.0f, static_cast<float>((Index * 37) % 360), 0.0f), false);
+    }
+    const FVector CP54VillageNodes[] = {
+        FVector(-880,-420,0), FVector(-620,420,0), FVector(-320,-460,0), FVector(-40,440,0),
+        FVector(260,-430,0), FVector(520,450,0), FVector(810,-390,0), FVector(1030,410,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(CP54VillageNodes); ++Index)
+    {
+        UStaticMesh* Choice = Index % 4 == 0 ? CP54Mailbox : (Index % 4 == 1 ? CP54Planter : (Index % 4 == 2 ? CP54Bucket : CP54Chest));
+        SpawnProd(Choice, CP54VillageNodes[Index], FVector(0.62f), FRotator(0.0f, static_cast<float>((Index * 51) % 360), 0.0f), false);
+    }
+    SpawnProd(CP54Produce, FVector(-260,120,0), FVector(0.72f), FRotator(0,4,0), false);
+    SpawnProd(CP54Produce, FVector(340,-90,0), FVector(0.70f), FRotator(0,-5,0), false);
+    SpawnProd(CP54Table, FVector(40,250,0), FVector(0.70f), FRotator(0,8,0), false);
+    SpawnProd(CP54Canopy, FVector(40,250,0), FVector(0.78f), FRotator(0,8,0), false);
+    SpawnProd(CP54GardenArch, FVector(11900,180,0), FVector(0.74f), FRotator(0,90,0), false);
+    SpawnProd(CP54WashLine, FVector(12600,-650,0), FVector(0.68f), FRotator(0,8,0), false);
+    SpawnProd(CP54Well, FVector(13200,540,0), FVector(0.70f), FRotator::ZeroRotator, false);
+    SpawnProd(CP54Ladder, FVector(14200,-760,0), FVector(0.66f), FRotator(0,15,0), false);
+    SpawnProd(CP54Beehive, FVector(14900,780,0), FVector(0.66f), FRotator(0,-10,0), false);
+    SpawnProd(CP54Beehive, FVector(15100,820,0), FVector(0.62f), FRotator(0,12,0), false);
+    SpawnProd(CP54Coop, FVector(15650,-760,0), FVector(0.66f), FRotator(0,8,0), false);
+    SpawnProd(CP54Wagon, FVector(18400,-520,0), FVector(0.66f), FRotator(0,3,0), false);
+
 }
 
 void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()

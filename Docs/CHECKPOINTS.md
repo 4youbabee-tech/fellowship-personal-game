@@ -567,6 +567,14 @@
 - Added a 15-mesh project-owned common resource flood pack (barrels, crates, sacks, benches, hay, tents, arches, broken columns, braziers, rope posts, market canopies, boats, cairns, stumps and mushroom clusters) and wired it across P1C01-P1C08.
 - Final skeletal crowds, navmesh crowd avoidance, voice audio, fauna meshes and target-device performance acceptance remain open.
 
+## CP54 — Mega Resource Bank
+- Added 75 new project-owned low-poly OBJ production meshes across Common, Shire, Bree, Weathertop, Road, Rivendell, Moria, Lothlorien and Anduin.
+- Added 17 procedural project-owned BMP diffuse textures and regional `WorldPack.mtl` palettes.
+- Runtime-wired the bank into P1C01-P1C08 with farm, market, tavern, stable, camp, ruin, garden, mine, tree-platform, dock and river activity props.
+- Decorative placements default to no collision; quest/story topology is unchanged.
+- Added `Data/WorldResourceBankCP54.json` and PG-054 validation with explicit mesh/texture floors and runtime-reference checks.
+- Required proof before the next activity/movement batch: Pre-Unreal, UE4.27 compile, production import and headless startup.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 

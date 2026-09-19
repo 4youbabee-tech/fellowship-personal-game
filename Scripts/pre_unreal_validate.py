@@ -2373,6 +2373,38 @@ for runtime_symbol in [
 if "WorldResourceFloodPlan.json" not in build_cs_cp52:
     fail("PG-053 world resource flood plan is not packaged")
 
+# PG-054 mega resource bank: large source-controlled inventory must exist before activity/movement builds on it.
+cp54_plan_path = ROOT / "Data" / "WorldResourceBankCP54.json"
+if not cp54_plan_path.exists():
+    fail("PG-054 WorldResourceBankCP54.json missing")
+else:
+    try:
+        cp54_plan = json.loads(read(cp54_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-054 invalid WorldResourceBankCP54.json: {exc}")
+
+cp54_regions = ["Common","Shire","Bree","Weathertop","Road","Rivendell","Moria","Lothlorien","Anduin"]
+cp54_asset_files = []
+for region in cp54_regions:
+    region_root = ROOT / "SourceAssets" / "Production" / "World" / region
+    if not region_root.exists():
+        fail(f"PG-054 production region missing: {region}")
+        continue
+    cp54_asset_files.extend(region_root.glob("*.obj"))
+if len(cp54_asset_files) < 75:
+    fail(f"PG-054 mega resource bank below 75 OBJ floor: {len(cp54_asset_files)}")
+
+cp54_texture_root = ROOT / "SourceAssets" / "Production" / "Textures"
+cp54_textures = list(cp54_texture_root.glob("*.bmp")) if cp54_texture_root.exists() else []
+if len(cp54_textures) < 17:
+    fail(f"PG-054 production texture bank below 17 BMP floor: {len(cp54_textures)}")
+
+for runtime_symbol in ["SM_ShFarmPlough","SM_BreeStreetAwning","SM_WeathertopRuinWall","SM_RoadTravelTent","SM_RivColumn","SM_MoriaMineCart","SM_LorienTreePlatform","SM_AnduinDockPier"]:
+    if runtime_symbol not in (shire_cpp_cp52 + bree_cpp_cp52 + fellowship_cpp_cp52):
+        fail(f"PG-054 runtime resource integration missing: {runtime_symbol}")
+if "WorldResourceBankCP54.json" not in build_cs_cp52:
+    fail("PG-054 mega resource bank plan is not packaged")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

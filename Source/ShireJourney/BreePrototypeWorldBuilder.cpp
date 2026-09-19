@@ -478,6 +478,42 @@ void ABreePrototypeWorldBuilder::SpawnProductionBreeDetailLayer()
     {
         SpawnProd(CommonRopePost, P, FVector(0.72f), FRotator::ZeroRotator, false);
     }
+    // CP54 mega inventory pass: tavern, stable, market and alley clutter.
+    auto LoadCP54 = [](const TCHAR* Path) -> UStaticMesh* { return LoadObject<UStaticMesh>(nullptr, Path); };
+    UStaticMesh* CP54Table = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonMarketTable.SM_CommonMarketTable"));
+    UStaticMesh* CP54Stool = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonStool.SM_CommonStool"));
+    UStaticMesh* CP54Rack = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonToolRack.SM_CommonToolRack"));
+    UStaticMesh* CP54Lamp = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonLanternPost.SM_CommonLanternPost"));
+    UStaticMesh* CP54Wagon = LoadCP54(TEXT("/Game/Production/World/Common/SM_CommonWagon.SM_CommonWagon"));
+    UStaticMesh* CP54Awning = LoadCP54(TEXT("/Game/Production/World/Bree/SM_BreeStreetAwning.SM_BreeStreetAwning"));
+    UStaticMesh* CP54Bench = LoadCP54(TEXT("/Game/Production/World/Bree/SM_BreeTavernBench.SM_BreeTavernBench"));
+    UStaticMesh* CP54Casks = LoadCP54(TEXT("/Game/Production/World/Bree/SM_BreeAleCaskRack.SM_BreeAleCaskRack"));
+    UStaticMesh* CP54Stable = LoadCP54(TEXT("/Game/Production/World/Bree/SM_BreeStableRail.SM_BreeStableRail"));
+    UStaticMesh* CP54Board = LoadCP54(TEXT("/Game/Production/World/Bree/SM_BreeMarketBoard.SM_BreeMarketBoard"));
+    UStaticMesh* CP54Arch = LoadCP54(TEXT("/Game/Production/World/Bree/SM_BreeAlleyArch.SM_BreeAlleyArch"));
+    UStaticMesh* CP54TradeWagon = LoadCP54(TEXT("/Game/Production/World/Bree/SM_BreeTradeWagon.SM_BreeTradeWagon"));
+    UStaticMesh* CP54InnSign = LoadCP54(TEXT("/Game/Production/World/Bree/SM_BreeInnSign.SM_BreeInnSign"));
+    const FVector CP54Market[] = { FVector(-560,180,0), FVector(-300,-210,0), FVector(-30,190,0), FVector(260,-180,0), FVector(540,200,0), FVector(800,-170,0) };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(CP54Market); ++Index)
+        SpawnProd(Index % 2 == 0 ? CP54Table : CP54Awning, CP54Market[Index], FVector(0.66f), FRotator(0.0f, Index % 2 == 0 ? 4.0f : -5.0f, 0.0f), false);
+    const FVector CP54InnYard[] = { FVector(1040,500,0), FVector(1200,520,0), FVector(1380,520,0), FVector(1060,700,0), FVector(1240,720,0), FVector(1430,710,0) };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(CP54InnYard); ++Index)
+    {
+        UStaticMesh* Choice = Index % 3 == 0 ? CP54Bench : (Index % 3 == 1 ? CP54Casks : CP54Stool);
+        SpawnProd(Choice, CP54InnYard[Index], FVector(0.64f), FRotator(0.0f, static_cast<float>((Index * 47) % 180), 0.0f), false);
+    }
+    SpawnProd(CP54Stable, FVector(1180,-520,0), FVector(0.74f), FRotator(0,0,0), false);
+    SpawnProd(CP54Stable, FVector(1400,-520,0), FVector(0.74f), FRotator(0,0,0), false);
+    SpawnProd(CP54TradeWagon, FVector(1580,-360,0), FVector(0.66f), FRotator(0,-8,0), false);
+    SpawnProd(CP54Wagon, FVector(-1180,420,0), FVector(0.62f), FRotator(0,8,0), false);
+    SpawnProd(CP54Arch, FVector(-820,0,0), FVector(0.70f), FRotator(0,90,0), false);
+    SpawnProd(CP54Arch, FVector(760,0,0), FVector(0.70f), FRotator(0,90,0), false);
+    SpawnProd(CP54InnSign, FVector(1030,250,0), FVector(0.74f), FRotator(0,90,0), false);
+    SpawnProd(CP54Board, FVector(-400,350,0), FVector(0.68f), FRotator(0,6,0), false);
+    SpawnProd(CP54Rack, FVector(1510,480,0), FVector(0.62f), FRotator(0,-10,0), false);
+    SpawnProd(CP54Lamp, FVector(-1050,-180,0), FVector(0.62f), FRotator::ZeroRotator, false);
+    SpawnProd(CP54Lamp, FVector(1520,180,0), FVector(0.62f), FRotator::ZeroRotator, false);
+
 }
 
 void ABreePrototypeWorldBuilder::SpawnStoryFlow()
