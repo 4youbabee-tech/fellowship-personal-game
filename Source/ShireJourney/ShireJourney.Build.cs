@@ -20,5 +20,10 @@ public class ShireJourney : ModuleRules
         RuntimeDependencies.Add("$(ProjectDir)/Data/NPCConversationPlan.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/NPCMemoryPlan.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/BoundedDialoguePlan.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/LivingWorldEventPlan.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/CharacterMotionPlan.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/ChapterAtmospherePlan.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/WorldDressingPlan.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/ResourceIntegrationPlan.json");
     }
 }
