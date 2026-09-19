@@ -1,3 +1,11 @@
+## JOURNEY DISCOVERY SYSTEM — exploration now has persistent game rewards
+
+The owner requested the satisfying feeling of discovering a place and receiving a bonus, similar in spirit to exploration RPGs, but adapted to this world's tone. `Data/JourneyDiscoveryRewardPlan.json` now maps 26 declared optional discoveries to first-time Journey Insight rewards. Rewards prioritize Chronicle entries, map memory, lore/dialogue topics, companion memories and local hazard knowledge rather than generic combat-stat inflation.
+
+Four thematic tracks keep the system in-world: Road Wisdom, Peoples and Places, Fellowship Bonds and Peril Sense. Every active Part I exploration route/chapter also has a region-completion bonus. Milestones unlock subtle navigation/content benefits, never story skips or alternate canon outcomes. PG-062 enforces one-time rewards, complete discovery coverage, no canon mutation and packaging.
+
+Runtime trigger/save/HUD/Chronicle wiring is still pending; this commit is a static/game-design contract while Unreal remains busy. Full acceptance still requires UE4.27 and save/load automation on the exact final head.
+
 ## PARALLEL NON-UNREAL MEGA-PASS — shader-compile time used productively
 
 While the target machine is busy compiling shaders, CP56 continues with work that does not require interrupting the editor. `Data/ExplorationEnvelopePlan.json` now defines safe free-roam windows, optional discoveries and return-to-main-story behavior for FrodoMain P1C01-P1C08 plus GandalfParallel P1C01. PG-060 checks that optional exploration cannot reorder, advance or replace mandatory film-story anchors.

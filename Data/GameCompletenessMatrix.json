@@ -12,28 +12,265 @@
     "Owner play time should focus on experience judgement rather than routine technical reproduction."
   ],
   "systems": [
-    {"id":"PLAYER_MOVEMENT","status":"IMPLEMENTED_PENDING_CURRENT_VALIDATION","includes":["walk","sprint","crouch","jump","collision","route-safe movement"]},
-    {"id":"CAMERA","status":"IMPLEMENTED_NEEDS_POLISH","includes":["third-person follow","lag","character-scale offsets","cinematic continuity"]},
-    {"id":"INTERACTION","status":"IMPLEMENTED_EXPANDING","includes":["interact trace","quest interaction","side stories","context-aware named-character dialogue"]},
-    {"id":"COMBAT","status":"PROTOTYPE_PLAYABLE","includes":["melee","damage","enemy pursuit","chapter gating","death/checkpoint recovery"]},
-    {"id":"COMPANIONS","status":"IMPLEMENTED_EXPANDING","includes":["formation follow","catch-up","story separation","banter","pressure-sensitive cohesion"]},
-    {"id":"NAMED_CHARACTER_INTELLIGENCE","status":"IMPLEMENTED_EXPANDING","includes":["identity","biography","knowledge limits","relationships","memory","regional mood","emotional state"]},
-    {"id":"AMBIENT_NPC_INTELLIGENCE","status":"IMPLEMENTED_EXPANDING","includes":["routine","needs","emotion","fear","socializing","weather/danger context"]},
-    {"id":"DIALOGUE","status":"IMPLEMENTED_EXPANDING","includes":["authored exact","bounded variants","memory gates","knowledge gates","regional mood","repetition guard"]},
-    {"id":"OFFLINE_AI","status":"FOUNDATION_ACTIVE","includes":["deterministic local intelligence","optional future local model","no cloud/API dependency"]},
-    {"id":"WORLD_LIFE","status":"IMPLEMENTED_EXPANDING","includes":["regional inhabitants","fauna","social activity","party life","travel companionship"]},
-    {"id":"WORLD_GEOGRAPHY","status":"PARTIAL_PRODUCTION","includes":["Shire","Bree","wilderness","Rivendell","Caradhras","Moria","Lothlorien","Anduin/Amon Hen","Isengard"]},
-    {"id":"ATMOSPHERE","status":"IMPLEMENTED_EXPANDING","includes":["chapter lighting","fog","weather context","peace/fear/grief/war mood"]},
-    {"id":"EXPLORATION","status":"PARTIAL","includes":["optional discoveries","side-life","safe return to mandatory anchors","no canon bypass"]},
-    {"id":"STORY","status":"PART1_ACTIVE","includes":["opening/prologue audit","P1C01-P1C08","Gandalf parallel route","fixed outcomes","Part II/III roadmap"]},
-    {"id":"SAVE_LOAD","status":"IMPLEMENTED_NEEDS_CURRENT_ENGINE_PROOF","includes":["quick save","quick load","automatic checkpoint","route state","NPC memory"]},
-    {"id":"AUDIO","status":"INFRASTRUCTURE_READY_CONTENT_PARTIAL","includes":["ambience","music","SFX","voice cue fallback","music ducking"]},
-    {"id":"CHARACTER_MOTION","status":"PRODUCTION_INTERMEDIATE","includes":["procedural gait","idle","blink","acting","identity","future rigged animation"]},
-    {"id":"UI_HUD","status":"IMPLEMENTED_NEEDS_POLISH","includes":["objective","dialogue subtitles","alerts","combat controls","save/load feedback"]},
-    {"id":"PERFORMANCE","status":"BUDGETED_NEEDS_DEVICE_PROOF","includes":["720p Low-Medium","8GB RAM","~2GB VRAM","30 FPS floor","distance throttling"]},
-    {"id":"QA_AUTOMATION","status":"ACTIVE_EXPANSION","includes":["Pre-Unreal","UE4 compile/import","runtime observer","chapter boots","story/save roadmap","warning debt"]},
-    {"id":"CINEMATIC_PRESENTATION","status":"PARTIAL","includes":["story presentation hooks","camera continuity","lighting/color","character performance","final audio/voice later"]},
-    {"id":"ASSET_PRODUCTION","status":"PARTIAL","includes":["project-owned production bank","licensed external pipeline","final rigs/materials/textures/audio pending"]},
-    {"id":"HANDOFF_GOVERNANCE","status":"IMPLEMENTED","includes":["Governor requirements","decisions","work queue","evidence honesty","developer handoff"]}
+    {
+      "id": "PLAYER_MOVEMENT",
+      "status": "IMPLEMENTED_PENDING_CURRENT_VALIDATION",
+      "includes": [
+        "walk",
+        "sprint",
+        "crouch",
+        "jump",
+        "collision",
+        "route-safe movement"
+      ]
+    },
+    {
+      "id": "CAMERA",
+      "status": "IMPLEMENTED_NEEDS_POLISH",
+      "includes": [
+        "third-person follow",
+        "lag",
+        "character-scale offsets",
+        "cinematic continuity"
+      ]
+    },
+    {
+      "id": "INTERACTION",
+      "status": "IMPLEMENTED_EXPANDING",
+      "includes": [
+        "interact trace",
+        "quest interaction",
+        "side stories",
+        "context-aware named-character dialogue"
+      ]
+    },
+    {
+      "id": "COMBAT",
+      "status": "PROTOTYPE_PLAYABLE",
+      "includes": [
+        "melee",
+        "damage",
+        "enemy pursuit",
+        "chapter gating",
+        "death/checkpoint recovery"
+      ]
+    },
+    {
+      "id": "COMPANIONS",
+      "status": "IMPLEMENTED_EXPANDING",
+      "includes": [
+        "formation follow",
+        "catch-up",
+        "story separation",
+        "banter",
+        "pressure-sensitive cohesion"
+      ]
+    },
+    {
+      "id": "NAMED_CHARACTER_INTELLIGENCE",
+      "status": "IMPLEMENTED_EXPANDING",
+      "includes": [
+        "identity",
+        "biography",
+        "knowledge limits",
+        "relationships",
+        "memory",
+        "regional mood",
+        "emotional state"
+      ]
+    },
+    {
+      "id": "AMBIENT_NPC_INTELLIGENCE",
+      "status": "IMPLEMENTED_EXPANDING",
+      "includes": [
+        "routine",
+        "needs",
+        "emotion",
+        "fear",
+        "socializing",
+        "weather/danger context"
+      ]
+    },
+    {
+      "id": "DIALOGUE",
+      "status": "IMPLEMENTED_EXPANDING",
+      "includes": [
+        "authored exact",
+        "bounded variants",
+        "memory gates",
+        "knowledge gates",
+        "regional mood",
+        "repetition guard"
+      ]
+    },
+    {
+      "id": "OFFLINE_AI",
+      "status": "FOUNDATION_ACTIVE",
+      "includes": [
+        "deterministic local intelligence",
+        "optional future local model",
+        "no cloud/API dependency"
+      ]
+    },
+    {
+      "id": "WORLD_LIFE",
+      "status": "IMPLEMENTED_EXPANDING",
+      "includes": [
+        "regional inhabitants",
+        "fauna",
+        "social activity",
+        "party life",
+        "travel companionship"
+      ]
+    },
+    {
+      "id": "WORLD_GEOGRAPHY",
+      "status": "PARTIAL_PRODUCTION",
+      "includes": [
+        "Shire",
+        "Bree",
+        "wilderness",
+        "Rivendell",
+        "Caradhras",
+        "Moria",
+        "Lothlorien",
+        "Anduin/Amon Hen",
+        "Isengard"
+      ]
+    },
+    {
+      "id": "ATMOSPHERE",
+      "status": "IMPLEMENTED_EXPANDING",
+      "includes": [
+        "chapter lighting",
+        "fog",
+        "weather context",
+        "peace/fear/grief/war mood"
+      ]
+    },
+    {
+      "id": "EXPLORATION",
+      "status": "PARTIAL_EXPANDING",
+      "includes": [
+        "optional discoveries",
+        "side-life",
+        "safe return to mandatory anchors",
+        "no canon bypass",
+        "first-time discovery rewards",
+        "Journey Insight",
+        "Chronicle/map/knowledge unlocks",
+        "region completion bonuses"
+      ]
+    },
+    {
+      "id": "STORY",
+      "status": "PART1_ACTIVE",
+      "includes": [
+        "opening/prologue audit",
+        "P1C01-P1C08",
+        "Gandalf parallel route",
+        "fixed outcomes",
+        "Part II/III roadmap"
+      ]
+    },
+    {
+      "id": "SAVE_LOAD",
+      "status": "IMPLEMENTED_NEEDS_CURRENT_ENGINE_PROOF",
+      "includes": [
+        "quick save",
+        "quick load",
+        "automatic checkpoint",
+        "route state",
+        "NPC memory"
+      ]
+    },
+    {
+      "id": "AUDIO",
+      "status": "INFRASTRUCTURE_READY_CONTENT_PARTIAL",
+      "includes": [
+        "ambience",
+        "music",
+        "SFX",
+        "voice cue fallback",
+        "music ducking"
+      ]
+    },
+    {
+      "id": "CHARACTER_MOTION",
+      "status": "PRODUCTION_INTERMEDIATE",
+      "includes": [
+        "procedural gait",
+        "idle",
+        "blink",
+        "acting",
+        "identity",
+        "future rigged animation"
+      ]
+    },
+    {
+      "id": "UI_HUD",
+      "status": "IMPLEMENTED_NEEDS_POLISH",
+      "includes": [
+        "objective",
+        "dialogue subtitles",
+        "alerts",
+        "combat controls",
+        "save/load feedback"
+      ]
+    },
+    {
+      "id": "PERFORMANCE",
+      "status": "BUDGETED_NEEDS_DEVICE_PROOF",
+      "includes": [
+        "720p Low-Medium",
+        "8GB RAM",
+        "~2GB VRAM",
+        "30 FPS floor",
+        "distance throttling"
+      ]
+    },
+    {
+      "id": "QA_AUTOMATION",
+      "status": "ACTIVE_EXPANSION",
+      "includes": [
+        "Pre-Unreal",
+        "UE4 compile/import",
+        "runtime observer",
+        "chapter boots",
+        "story/save roadmap",
+        "warning debt"
+      ]
+    },
+    {
+      "id": "CINEMATIC_PRESENTATION",
+      "status": "PARTIAL",
+      "includes": [
+        "story presentation hooks",
+        "camera continuity",
+        "lighting/color",
+        "character performance",
+        "final audio/voice later"
+      ]
+    },
+    {
+      "id": "ASSET_PRODUCTION",
+      "status": "PARTIAL",
+      "includes": [
+        "project-owned production bank",
+        "licensed external pipeline",
+        "final rigs/materials/textures/audio pending"
+      ]
+    },
+    {
+      "id": "HANDOFF_GOVERNANCE",
+      "status": "IMPLEMENTED",
+      "includes": [
+        "Governor requirements",
+        "decisions",
+        "work queue",
+        "evidence honesty",
+        "developer handoff"
+      ]
+    }
   ]
 }

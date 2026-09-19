@@ -1,0 +1,613 @@
+{
+  "schema_version": 1,
+  "plan_id": "JOURNEY_DISCOVERY_REWARD_SYSTEM_V1",
+  "status": "STATIC_CONTRACT_IMPLEMENTED_RUNTIME_WIRING_PENDING",
+  "inspiration_note": "Uses the satisfying idea of rewarding first-time place discovery common to exploration RPGs, but the presentation and rewards are original and fitted to this project's film-spine world.",
+  "purpose": "Make exploration feel like game progression, not empty wandering, while keeping mandatory film chronology intact.",
+  "player_facing_name": "Journey Discoveries",
+  "currency_name": "Journey Insight",
+  "presentation": {
+    "discovery_toast": "Discovered: <place or memory>",
+    "secondary_line": "Journey Insight +<amount>",
+    "style": "brief, quiet, diegetic-adjacent; no giant arcade banner during emotional or cinematic moments",
+    "cinematic_behavior": "queue the toast until player control returns if discovery occurs during a locked cinematic",
+    "repeat_behavior": "no repeat Insight for the same discovery; revisits may still trigger ambient/dialogue reactions"
+  },
+  "reward_philosophy": [
+    "Reward curiosity without turning Frodo or other characters into stat-inflated superheroes.",
+    "Prefer knowledge, map memory, dialogue, companion memory and navigation quality-of-life over raw combat power.",
+    "Exploration rewards may enrich play but never skip a mandatory story beat or change a fixed film outcome.",
+    "Discoveries must remain useful even when the player ignores completionism."
+  ],
+  "categories": {
+    "ROAD_WISDOM": {
+      "description": "Paths, crossings, viewpoints and route understanding.",
+      "primary_unlocks": [
+        "MAP_MEMORY",
+        "RETURN_ROUTE_HINT"
+      ]
+    },
+    "PEOPLES_AND_PLACES": {
+      "description": "Culture, craft, history and regional identity.",
+      "primary_unlocks": [
+        "CHRONICLE_ENTRY",
+        "LORE_DIALOGUE_TOPIC"
+      ]
+    },
+    "FELLOWSHIP_BONDS": {
+      "description": "Shared moments, camp life and companion memories.",
+      "primary_unlocks": [
+        "COMPANION_MEMORY_TOPIC",
+        "CONTEXTUAL_BANTER"
+      ]
+    },
+    "PERIL_SENSE": {
+      "description": "Threat signs, dangerous terrain and survival knowledge.",
+      "primary_unlocks": [
+        "LOCAL_HAZARD_NOTE",
+        "CONTEXTUAL_WARNING"
+      ]
+    }
+  },
+  "journey_insight_milestones": [
+    {
+      "threshold": 40,
+      "id": "WAYFARER_I",
+      "reward": "Known discoveries can provide a subtle return-to-route hint inside the current exploration envelope.",
+      "power_type": "QUALITY_OF_LIFE"
+    },
+    {
+      "threshold": 90,
+      "id": "LISTENER_I",
+      "reward": "Discovered places may unlock extra bounded conversation topics with characters who plausibly know them.",
+      "power_type": "CONTENT"
+    },
+    {
+      "threshold": 150,
+      "id": "LOREKEEPER_I",
+      "reward": "Chronicle entries gain an expanded contextual note and can seed later companion remarks.",
+      "power_type": "CONTENT"
+    },
+    {
+      "threshold": 220,
+      "id": "ROADWISE_I",
+      "reward": "Previously explored regions may show one extra subtle navigation cue toward known safe landmarks, never across a locked story gate.",
+      "power_type": "QUALITY_OF_LIFE"
+    }
+  ],
+  "discovery_rewards": [
+    {
+      "discovery_id": "SHIRE_GREEN_DRAGON_MEMORY",
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "region": "Shire",
+      "category": "FELLOWSHIP_BONDS",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "COMPANION_MEMORY_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "SHIRE_MARKET_GARDEN_LOOP",
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "region": "Shire",
+      "category": "PEOPLES_AND_PLACES",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "LORE_DIALOGUE_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "SHIRE_FIELD_RACE",
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "region": "Shire",
+      "category": "FELLOWSHIP_BONDS",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "COMPANION_MEMORY_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "BREE_GATE_GOSSIP",
+      "route": "FrodoMain",
+      "chapter": "P1C02",
+      "region": "Bree / Prancing Pony",
+      "category": "PERIL_SENSE",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "LOCAL_HAZARD_NOTE"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "BREE_STABLE_YARD",
+      "route": "FrodoMain",
+      "chapter": "P1C02",
+      "region": "Bree / Prancing Pony",
+      "category": "ROAD_WISDOM",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "MAP_MEMORY"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "BREE_INN_KITCHEN_LIFE",
+      "route": "FrodoMain",
+      "chapter": "P1C02",
+      "region": "Bree / Prancing Pony",
+      "category": "FELLOWSHIP_BONDS",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "COMPANION_MEMORY_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "WILDERNESS_TRACK_SIGNS",
+      "route": "FrodoMain",
+      "chapter": "P1C03",
+      "region": "Weathertop / Ford",
+      "category": "PERIL_SENSE",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "LOCAL_HAZARD_NOTE"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "WEATHERTOP_RUIN_MARKERS",
+      "route": "FrodoMain",
+      "chapter": "P1C03",
+      "region": "Weathertop / Ford",
+      "category": "ROAD_WISDOM",
+      "first_time_only": true,
+      "journey_insight": 15,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "MAP_MEMORY"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "CAMP_PREPARATION",
+      "route": "FrodoMain",
+      "chapter": "P1C03",
+      "region": "Weathertop / Ford",
+      "category": "FELLOWSHIP_BONDS",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "COMPANION_MEMORY_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "RIVENDELL_LIBRARY",
+      "route": "FrodoMain",
+      "chapter": "P1C04",
+      "region": "Rivendell",
+      "category": "PEOPLES_AND_PLACES",
+      "first_time_only": true,
+      "journey_insight": 15,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "LORE_DIALOGUE_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "RIVENDELL_OVERLOOK",
+      "route": "FrodoMain",
+      "chapter": "P1C04",
+      "region": "Rivendell",
+      "category": "PEOPLES_AND_PLACES",
+      "first_time_only": true,
+      "journey_insight": 15,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "LORE_DIALOGUE_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "RIVENDELL_SMITHY_PREP",
+      "route": "FrodoMain",
+      "chapter": "P1C04",
+      "region": "Rivendell",
+      "category": "ROAD_WISDOM",
+      "first_time_only": true,
+      "journey_insight": 15,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "MAP_MEMORY"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "FELLOWSHIP_TRAINING",
+      "route": "FrodoMain",
+      "chapter": "P1C05",
+      "region": "Fellowship road / Caradhras / West Gate",
+      "category": "FELLOWSHIP_BONDS",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "COMPANION_MEMORY_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "CARADHRAS_SHELTER_CHECK",
+      "route": "FrodoMain",
+      "chapter": "P1C05",
+      "region": "Fellowship road / Caradhras / West Gate",
+      "category": "PERIL_SENSE",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "LOCAL_HAZARD_NOTE"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "WEST_GATE_INSCRIPTIONS",
+      "route": "FrodoMain",
+      "chapter": "P1C05",
+      "region": "Fellowship road / Caradhras / West Gate",
+      "category": "PERIL_SENSE",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "LOCAL_HAZARD_NOTE"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "MORIA_SIDE_CHAMBER",
+      "route": "FrodoMain",
+      "chapter": "P1C06",
+      "region": "Moria",
+      "category": "ROAD_WISDOM",
+      "first_time_only": true,
+      "journey_insight": 15,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "MAP_MEMORY"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "MORIA_ECHO_ROUTE",
+      "route": "FrodoMain",
+      "chapter": "P1C06",
+      "region": "Moria",
+      "category": "PERIL_SENSE",
+      "first_time_only": true,
+      "journey_insight": 15,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "LOCAL_HAZARD_NOTE"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "MORIA_DWARVEN_RELIEF",
+      "route": "FrodoMain",
+      "chapter": "P1C06",
+      "region": "Moria",
+      "category": "PEOPLES_AND_PLACES",
+      "first_time_only": true,
+      "journey_insight": 15,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "LORE_DIALOGUE_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "LORIEN_GRIEF_CLEARING",
+      "route": "FrodoMain",
+      "chapter": "P1C07",
+      "region": "Lothlorien",
+      "category": "FELLOWSHIP_BONDS",
+      "first_time_only": true,
+      "journey_insight": 15,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "COMPANION_MEMORY_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "LORIEN_CRAFT_PLATFORM",
+      "route": "FrodoMain",
+      "chapter": "P1C07",
+      "region": "Lothlorien",
+      "category": "PEOPLES_AND_PLACES",
+      "first_time_only": true,
+      "journey_insight": 15,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "LORE_DIALOGUE_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "LORIEN_RIVER_PREP",
+      "route": "FrodoMain",
+      "chapter": "P1C07",
+      "region": "Lothlorien",
+      "category": "ROAD_WISDOM",
+      "first_time_only": true,
+      "journey_insight": 15,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "MAP_MEMORY"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "ANDUIN_BANK_WATCH",
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "region": "Anduin / Amon Hen",
+      "category": "PERIL_SENSE",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "LOCAL_HAZARD_NOTE"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "AMON_HEN_FALLEN_STONE",
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "region": "Anduin / Amon Hen",
+      "category": "PEOPLES_AND_PLACES",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "LORE_DIALOGUE_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "AMON_HEN_CAMP_DISTANCE",
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "region": "Anduin / Amon Hen",
+      "category": "FELLOWSHIP_BONDS",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "COMPANION_MEMORY_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "ORTHANC_PARAPET_VIEW",
+      "route": "GandalfParallel",
+      "chapter": "P1C01",
+      "region": "Isengard / Orthanc",
+      "category": "ROAD_WISDOM",
+      "first_time_only": true,
+      "journey_insight": 15,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "MAP_MEMORY"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "ORTHANC_OLD_ALLIANCE_MEMORY",
+      "route": "GandalfParallel",
+      "chapter": "P1C01",
+      "region": "Isengard / Orthanc",
+      "category": "FELLOWSHIP_BONDS",
+      "first_time_only": true,
+      "journey_insight": 15,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "COMPANION_MEMORY_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    }
+  ],
+  "region_completion_bonuses": [
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "region": "Shire",
+      "required_discoveries": 3,
+      "bonus_journey_insight": 25,
+      "unlock": "REGION_CHRONICLE_COMPLETION",
+      "story_effect": "NONE",
+      "may_skip_story": false
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C02",
+      "region": "Bree / Prancing Pony",
+      "required_discoveries": 3,
+      "bonus_journey_insight": 25,
+      "unlock": "REGION_CHRONICLE_COMPLETION",
+      "story_effect": "NONE",
+      "may_skip_story": false
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C03",
+      "region": "Weathertop / Ford",
+      "required_discoveries": 3,
+      "bonus_journey_insight": 25,
+      "unlock": "REGION_CHRONICLE_COMPLETION",
+      "story_effect": "NONE",
+      "may_skip_story": false
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C04",
+      "region": "Rivendell",
+      "required_discoveries": 3,
+      "bonus_journey_insight": 25,
+      "unlock": "REGION_CHRONICLE_COMPLETION",
+      "story_effect": "NONE",
+      "may_skip_story": false
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C05",
+      "region": "Fellowship road / Caradhras / West Gate",
+      "required_discoveries": 3,
+      "bonus_journey_insight": 25,
+      "unlock": "REGION_CHRONICLE_COMPLETION",
+      "story_effect": "NONE",
+      "may_skip_story": false
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C06",
+      "region": "Moria",
+      "required_discoveries": 3,
+      "bonus_journey_insight": 25,
+      "unlock": "REGION_CHRONICLE_COMPLETION",
+      "story_effect": "NONE",
+      "may_skip_story": false
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C07",
+      "region": "Lothlorien",
+      "required_discoveries": 3,
+      "bonus_journey_insight": 25,
+      "unlock": "REGION_CHRONICLE_COMPLETION",
+      "story_effect": "NONE",
+      "may_skip_story": false
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "region": "Anduin / Amon Hen",
+      "required_discoveries": 3,
+      "bonus_journey_insight": 25,
+      "unlock": "REGION_CHRONICLE_COMPLETION",
+      "story_effect": "NONE",
+      "may_skip_story": false
+    },
+    {
+      "route": "GandalfParallel",
+      "chapter": "P1C01",
+      "region": "Isengard / Orthanc",
+      "required_discoveries": 2,
+      "bonus_journey_insight": 25,
+      "unlock": "REGION_CHRONICLE_COMPLETION",
+      "story_effect": "NONE",
+      "may_skip_story": false
+    }
+  ],
+  "hard_rules": {
+    "first_time_points_only": true,
+    "combat_stat_boosts": false,
+    "health_damage_armor_inflation": false,
+    "mandatory_story_skip": false,
+    "route_skip": false,
+    "canon_outcome_change": false,
+    "network_dependency": false,
+    "raw_screenplay_reward_text": false
+  },
+  "save_contract": {
+    "persist_discovered_ids": true,
+    "persist_total_journey_insight": true,
+    "persist_unlocked_milestones": true,
+    "suggested_namespace": "Exploration.Discovery",
+    "save_load_requirement": "must round-trip through the existing save system before runtime acceptance"
+  },
+  "runtime_wiring_next": [
+    "Create a lightweight discovery registry/subsystem or extend the existing exploration/quest state owner rather than creating a competing global manager.",
+    "Fire first-time discovery from chapter landmark/side-activity triggers.",
+    "Persist discovered IDs and Journey Insight in the existing save path.",
+    "Add a small HUD toast and Chronicle panel entry.",
+    "Feed unlocked discovery topics into bounded NPC dialogue and companion memory.",
+    "Add automation for first-time-only reward, save/load persistence, no-story-skip, and region completion bonus."
+  ]
+}

@@ -477,6 +477,83 @@ if "FindFilesRecursive(TextureFiles, *SourceRoot" in production_import_hygiene:
 if "FindFilesRecursive(MeshFiles, *SourceRoot" in production_import_hygiene:
     fail("PG-061: production importer must not import/normalize meshes directly from tracked SourceAssets")
 
+
+# PG-062: Journey Discovery rewards must cover declared exploration without enabling canon/story farming.
+discovery_reward_path = ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"
+discovery_reward_data = {}
+if not discovery_reward_path.exists():
+    fail("Journey discovery reward plan missing: Data/JourneyDiscoveryRewardPlan.json")
+else:
+    try:
+        discovery_reward_data = json.loads(read(discovery_reward_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/JourneyDiscoveryRewardPlan.json: {exc}")
+
+if discovery_reward_data:
+    exploration_for_rewards = {}
+    try:
+        exploration_for_rewards = json.loads(read(ROOT / "Data" / "ExplorationEnvelopePlan.json"))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid ExplorationEnvelopePlan.json while validating discovery rewards: {exc}")
+
+    declared_discoveries = {
+        str(item.get("id") or "").strip()
+        for chapter in exploration_for_rewards.get("chapters", [])
+        for item in chapter.get("optional_discoveries", [])
+        if isinstance(item, dict)
+    }
+    reward_rows = discovery_reward_data.get("discovery_rewards", [])
+    reward_ids = [str(item.get("discovery_id") or "").strip() for item in reward_rows]
+    if len(reward_ids) != len(set(reward_ids)):
+        fail("Journey discovery reward plan has duplicate discovery_id entries")
+    missing_rewards = sorted(declared_discoveries - set(reward_ids))
+    unknown_rewards = sorted(set(reward_ids) - declared_discoveries)
+    if missing_rewards:
+        fail("Journey discovery rewards missing declared discoveries: " + ", ".join(missing_rewards))
+    if unknown_rewards:
+        fail("Journey discovery rewards reference unknown discoveries: " + ", ".join(unknown_rewards))
+
+    allowed_categories = {"ROAD_WISDOM", "PEOPLES_AND_PLACES", "FELLOWSHIP_BONDS", "PERIL_SENSE"}
+    for row in reward_rows:
+        did = str(row.get("discovery_id") or "").strip()
+        if row.get("first_time_only") is not True:
+            fail(f"Journey discovery reward {did} must be first_time_only")
+        if int(row.get("journey_insight") or 0) <= 0:
+            fail(f"Journey discovery reward {did} must award positive Journey Insight")
+        if str(row.get("category") or "") not in allowed_categories:
+            fail(f"Journey discovery reward {did} has invalid category")
+        if row.get("story_effect") != "NONE":
+            fail(f"Journey discovery reward {did} may not mutate story state")
+        if row.get("may_advance_required_anchor") is not False:
+            fail(f"Journey discovery reward {did} may not advance required anchors")
+        if row.get("may_change_canon_outcome") is not False:
+            fail(f"Journey discovery reward {did} may not change canon outcomes")
+
+    hard_rules = discovery_reward_data.get("hard_rules", {})
+    for rule in ["first_time_points_only", "mandatory_story_skip", "route_skip", "canon_outcome_change", "network_dependency", "raw_screenplay_reward_text"]:
+        if rule == "first_time_points_only":
+            if hard_rules.get(rule) is not True:
+                fail("Journey discovery hard rule first_time_points_only must remain true")
+        elif hard_rules.get(rule) is not False:
+            fail(f"Journey discovery hard rule {rule} must remain false")
+    if hard_rules.get("combat_stat_boosts") is not False or hard_rules.get("health_damage_armor_inflation") is not False:
+        fail("Journey discovery rewards must not become generic combat-stat inflation")
+
+    expected_region_pairs = {
+        (str(ch.get("route") or ""), str(ch.get("chapter") or ""))
+        for ch in exploration_for_rewards.get("chapters", [])
+    }
+    actual_region_pairs = {
+        (str(item.get("route") or ""), str(item.get("chapter") or ""))
+        for item in discovery_reward_data.get("region_completion_bonuses", [])
+    }
+    if expected_region_pairs - actual_region_pairs:
+        fail("Journey discovery plan missing region-completion coverage")
+
+    build_text_pg62 = read(SOURCE / "ShireJourney.Build.cs")
+    if "Data/JourneyDiscoveryRewardPlan.json" not in build_text_pg62:
+        fail("Journey discovery reward plan is not packaged as a runtime dependency")
+
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
 living_world_data = {}

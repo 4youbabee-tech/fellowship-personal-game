@@ -1473,6 +1473,47 @@
         "REQ-MEM-004"
       ],
       "checkpoint": "CP56_SOURCE_GROUNDED_DIALOGUE"
+    },
+    {
+      "id": "REQ-EXP-004",
+      "title": "Exploration must reward discovery as game progression",
+      "category": "PlayerExperience",
+      "priority": "HIGH",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly requested a Fallout-like sense of reward when discovering areas, adapted to the tone of this game so exploration feels like a complete game system rather than only film traversal.",
+      "intent": "Reward first-time exploration with Journey Insight, Chronicle/map/knowledge unlocks, companion memory/dialogue opportunities and region-completion bonuses without adding canon-breaking power or allowing story skips.",
+      "evidence": [
+        "Data/JourneyDiscoveryRewardPlan.json",
+        "Data/ExplorationEnvelopePlan.json"
+      ],
+      "implementation_refs": [
+        "Static reward contract covers 26 existing optional discoveries.",
+        "Four thematic reward categories: Road Wisdom, Peoples and Places, Fellowship Bonds, Peril Sense.",
+        "Journey Insight milestone rewards favor content/navigation quality-of-life rather than combat stat inflation.",
+        "Region completion bonuses exist for all active Part I exploration chapters/routes."
+      ],
+      "missing_work": [
+        "Wire discovery triggers to runtime chapter landmarks/side activities.",
+        "Persist discovered IDs, Journey Insight and milestone unlocks through the existing save system.",
+        "Implement subtle HUD discovery toast and Chronicle presentation.",
+        "Feed unlocked topics into bounded NPC/companion dialogue.",
+        "Add UE4.27 automation for first-time-only rewards, save/load persistence and no-story-skip behavior."
+      ],
+      "acceptance_criteria": [
+        "Every rewarded discovery is first-time-only for Journey Insight.",
+        "Revisiting a place may create ambient/dialogue reactions but never farms points.",
+        "No discovery reward can advance or skip a mandatory story anchor.",
+        "Rewards fit the world through knowledge, memory, relationships, navigation and Chronicle content.",
+        "Discovery progress survives save/load.",
+        "The system works fully offline."
+      ],
+      "dependencies": [
+        "REQ-EXP-002",
+        "REQ-SAVE-001",
+        "REQ-NPC-005",
+        "REQ-QA-001"
+      ],
+      "checkpoint": "CP56_JOURNEY_DISCOVERY"
     }
   ],
   "hard_invariants": [
@@ -1834,6 +1875,22 @@
         "Data/ExplorationEnvelopePlan.json",
         "Data/FilmDialogueSourceContext.json",
         "Scripts/pre_unreal_validate.py"
+      ]
+    },
+    {
+      "id": "DEC-017",
+      "title": "Adopt Journey Discovery rewards instead of generic exploration XP",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-EXP-004",
+        "REQ-EXP-002",
+        "REQ-VISION-001"
+      ],
+      "resolution": "Use a first-time Journey Discovery system inspired by the satisfaction of discovery rewards in exploration RPGs, but fit it to this project's tone: brief discovery toast, Journey Insight, Chronicle/map/knowledge/companion unlocks and regional completion bonuses. Do not use raw combat-stat inflation, canon-changing rewards or story skips.",
+      "rationale": "The owner wants the project to function as a complete exploration game as well as a playable film-spine experience.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/JourneyDiscoveryRewardPlan.json"
       ]
     }
   ],
@@ -2284,16 +2341,23 @@
       "title": "Source-grounded living dialogue expansion",
       "status": "ACTIVE",
       "rationale": "Use the supplied screenplay references to deepen original in-world conversation context while the PR #53 red-to-green loop continues."
+    },
+    {
+      "order": 2,
+      "id": "WORK-EXP-004",
+      "title": "Journey Discovery rewards and exploration progression",
+      "status": "ACTIVE",
+      "rationale": "Turn optional exploration into persistent, meaningful game progression without disturbing canon anchors."
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Owner directed parallel progress while Unreal compiles shaders: audit older ready systems, expand safe content/contracts, and keep the final merge gate intact.",
+    "reason": "Owner requested a discovery-reward loop so exploration feels like a complete game system, using the satisfying discovery-bonus idea from exploration RPGs while staying in this world's tone.",
     "summary": [
-      "Added chapter-by-chapter exploration envelopes and non-Shire optional discovery contracts.",
-      "Expanded original source-grounded dialogue to 53 variants.",
-      "Added machine guards for no-skip exploration and non-destructive SourceAssets import.",
-      "PR #53 remains the only integration path and still requires full exact-head UE4.27 validation before develop merge."
+      "Journey Discovery static contract now maps 26 existing optional discoveries to first-time rewards.",
+      "Journey Insight rewards knowledge, map memory, companion/lore topics and navigation quality-of-life rather than combat stat inflation.",
+      "Every active Part I route/chapter receives a region-completion bonus.",
+      "Runtime/save/UI/automation wiring remains pending and must still pass the exact-head UE4.27 gate before develop merge."
     ]
   },
   "development_mode": {
