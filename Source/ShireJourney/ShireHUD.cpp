@@ -87,6 +87,10 @@ void AShireHUD::DrawHUD()
                 Quests->GetJourneyInsight(), Quests->GetFellowshipBond()),
                 FLinearColor(0.76f, 0.80f, 0.70f, 0.72f),
                 24.0f, LifeY - 21.0f, SmallFont, 0.70f, false);
+            DrawText(FString::Printf(TEXT("Chronicle %d  |  Regions %d"),
+                Quests->GetChronicleCount(), Quests->GetKnownRegionCount()),
+                FLinearColor(0.70f, 0.76f, 0.68f, 0.68f),
+                24.0f, LifeY - 39.0f, SmallFont, 0.68f, false);
         }
     }
 
