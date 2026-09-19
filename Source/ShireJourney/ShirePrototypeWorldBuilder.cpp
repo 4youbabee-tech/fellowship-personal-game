@@ -5,6 +5,7 @@
 #include "ShireNPC.h"
 #include "ShireQuestSubsystem.h"
 #include "ShireQuestTrigger.h"
+#include "ShireTraversalChallenge.h"
 
 #include "Components/DirectionalLightComponent.h"
 #include "Components/ExponentialHeightFogComponent.h"
@@ -1288,17 +1289,19 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
             TEXT("Laughter erupts near the fireworks wagon. Someone has clearly been where they were told not to be."));
     }
 
-    AShireQuestTrigger* FieldPlay = GetWorld()->SpawnActor<AShireQuestTrigger>(
-        FVector(1320, 1240, 75), FRotator::ZeroRotator);
-    if (FieldPlay)
+    AShireTraversalChallenge* FieldRace = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(600, 1100, 75), FRotator::ZeroRotator);
+    if (FieldRace)
     {
-        FieldPlay->RequiredSideStoryBeat = TEXT("GandalfArrival");
-        FieldPlay->BlockedAfterStoryBeat = TEXT("PartyArrival");
-        FieldPlay->SideStoryBeatAfterTrigger = TEXT("Side_SharedShireMemory");
-        FieldPlay->DiscoveryId = TEXT("SHIRE_FIELD_RACE");
-        FieldPlay->DiscoveryDisplayName = FText::FromString(TEXT("A Last Race in the Shire"));
-        FieldPlay->ObjectiveMessage = FText::FromString(
-            TEXT("A quick race along the hedge ends in laughter. For a moment, leaving the Shire feels impossible."));
+        FieldRace->ConfigureChallenge(
+            TEXT("SHIRE_FIELD_RACE"),
+            FText::FromString(TEXT("A Last Race in the Shire")),
+            TEXT("GandalfArrival"),
+            TEXT("PartyArrival"),
+            TEXT("Side_SharedShireMemory"),
+            FVector(0, 0, 0),
+            FVector(360, 120, 0),
+            FVector(720, 140, 0));
     }
 
     AShireNPC* Maggot=GetWorld()->SpawnActor<AShireNPC>(FVector(6200,-1500,65),FRotator(0,155,0));

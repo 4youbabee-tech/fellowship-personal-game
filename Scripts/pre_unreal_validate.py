@@ -1047,6 +1047,23 @@ activity_count_pg80 = sum(
 if activity_count_pg80 < 18:
     fail(f"PG-080: contextual side-activity catalog regressed below 18 entries: {activity_count_pg80}")
 
+
+# PG-081: real traversal challenge runtime must replace pure touch-to-discover for selected activities.
+traversal_h = read(SOURCE / "ShireTraversalChallenge.h")
+traversal_cpp = read(SOURCE / "ShireTraversalChallenge.cpp")
+shire_builder_pg81 = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
+fellowship_builder_pg81 = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+for symbol in ["ConfigureChallenge","HandleGateOverlap","CurrentGateIndex","RegisterJourneyDiscovery","TraversalChallenge: PASS"]:
+    if symbol not in (traversal_h + traversal_cpp):
+        fail(f"PG-081: traversal runtime symbol missing {symbol}")
+for discovery_id in ["SHIRE_FIELD_RACE","MORIA_ECHO_ROUTE"]:
+    if discovery_id not in (shire_builder_pg81 + fellowship_builder_pg81):
+        fail(f"PG-081: traversal challenge placement missing {discovery_id}")
+if "AShireTraversalChallenge* FieldRace" not in shire_builder_pg81:
+    fail("PG-081: Shire field race must use ordered traversal gates")
+if "AShireTraversalChallenge* MoriaEchoPath" not in fellowship_builder_pg81:
+    fail("PG-081: Moria echo path must use ordered traversal gates")
+
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
 living_world_data = {}

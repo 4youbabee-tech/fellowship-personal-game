@@ -5,6 +5,7 @@
 #include "ShireNPC.h"
 #include "ShireAmbientNPC.h"
 #include "ShireQuestTrigger.h"
+#include "ShireTraversalChallenge.h"
 
 #include "Components/DirectionalLightComponent.h"
 #include "Components/ExponentialHeightFogComponent.h"
@@ -1421,9 +1422,20 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
     SpawnDiscoveryTrigger(
         FVector(-1200, 650, 90), TEXT("MORIA_SIDE_CHAMBER"), TEXT("A Forgotten Moria Side Chamber"),
         TEXT("MoriaEntry"), TEXT("BalinsTombReveal"));
-    SpawnDiscoveryTrigger(
-        FVector(-1650, -520, 90), TEXT("MORIA_ECHO_ROUTE"), TEXT("Echoes in the Deep"),
-        TEXT("MoriaEntry"), TEXT("MoriaUnease"));
+    AShireTraversalChallenge* MoriaEchoPath = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-2050, -700, 90), FRotator::ZeroRotator);
+    if (MoriaEchoPath)
+    {
+        MoriaEchoPath->ConfigureChallenge(
+            TEXT("MORIA_ECHO_ROUTE"),
+            FText::FromString(TEXT("Follow the Echo")),
+            TEXT("MoriaEntry"),
+            TEXT("MoriaUnease"),
+            NAME_None,
+            FVector(0, 0, 0),
+            FVector(210, 90, 0),
+            FVector(400, 180, 0));
+    }
     SpawnDiscoveryTrigger(
         FVector(-720, 520, 90), TEXT("MORIA_DWARVEN_RELIEF"), TEXT("Dwarven Relief"),
         TEXT("MoriaUnease"), TEXT("BalinsTombReveal"));
