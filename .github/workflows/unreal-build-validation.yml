@@ -397,75 +397,112 @@ jobs:
 
           foreach ($Chapter in $Chapters) {
             $AuditLog = Join-Path $LogDir ("CI-ChapterAudit-" + $Chapter + ".log")
-            if (Test-Path $AuditLog) {
-              Remove-Item -LiteralPath $AuditLog -Force
-            }
-
-            $Args = @(
-              $Project,
-              "/Engine/Maps/Templates/Template_Default",
-              "-game",
-              "-nullrhi",
-              "-unattended",
-              "-nop4",
-              "-nosplash",
-              "-NoSound",
-              ("-AuditChapter=" + $Chapter),
-              ("-abslog=" + $AuditLog)
-            )
-
-            Write-Host "Auditing runtime chapter $Chapter on commit $env:GITHUB_SHA"
-            $Proc = Start-Process -FilePath $EditorCmd -ArgumentList $Args -PassThru
-            $Deadline = (Get-Date).AddSeconds(35)
+            $Passed = $false
             $SeenRequested = $false
             $SeenLoaded = $false
             $SeenLivingWorld = $false
             $SeenWeather = $false
 
-            while ((Get-Date) -lt $Deadline) {
+            for ($Attempt = 1; $Attempt -le 2 -and -not $Passed; $Attempt++) {
               if (Test-Path $AuditLog) {
-                $Text = Get-Content -LiteralPath $AuditLog -Raw -ErrorAction SilentlyContinue
-                if ($Text -match ("ShireChapterAudit: requested=" + [regex]::Escape($Chapter))) {
-                  $SeenRequested = $true
-                }
-                if ($Text -match ("ShireChapterAudit: loaded=" + [regex]::Escape($Chapter))) {
-                  $SeenLoaded = $true
-                }
-                if ($Text -match ("ShireChapterAudit: living-world chapter=" + [regex]::Escape($Chapter))) {
-                  $SeenLivingWorld = $true
-                }
-                if ($Text -match ("ShireChapterAudit: weather chapter=" + [regex]::Escape($Chapter))) {
-                  $SeenWeather = $true
+                Remove-Item -LiteralPath $AuditLog -Force
+              }
+
+              # A previous forced headless shutdown can leave UE helper processes alive
+              # briefly on the constrained self-hosted runner. Clear only those helpers
+              # before a retry; a chapter that reached its request marker is never retried.
+              if ($Attempt -gt 1) {
+                Get-Process -Name "CrashReportClientEditor","ShaderCompileWorker" -ErrorAction SilentlyContinue |
+                  Stop-Process -Force -ErrorAction SilentlyContinue
+                Start-Sleep -Seconds 4
+              }
+
+              $Args = @(
+                $Project,
+                "/Engine/Maps/Templates/Template_Default",
+                "-game",
+                "-nullrhi",
+                "-unattended",
+                "-nop4",
+                "-nosplash",
+                "-NoSound",
+                ("-AuditChapter=" + $Chapter),
+                ("-abslog=" + $AuditLog)
+              )
+
+              Write-Host "Auditing runtime chapter $Chapter on commit $env:GITHUB_SHA (attempt $Attempt/2)"
+              $Proc = Start-Process -FilePath $EditorCmd -ArgumentList $Args -PassThru
+              $Deadline = (Get-Date).AddSeconds(35)
+              $SeenRequested = $false
+              $SeenLoaded = $false
+              $SeenLivingWorld = $false
+              $SeenWeather = $false
+
+              while ((Get-Date) -lt $Deadline) {
+                if (Test-Path $AuditLog) {
+                  $Text = Get-Content -LiteralPath $AuditLog -Raw -ErrorAction SilentlyContinue
+                  if ($Text -match ("ShireChapterAudit: requested=" + [regex]::Escape($Chapter))) {
+                    $SeenRequested = $true
+                  }
+                  if ($Text -match ("ShireChapterAudit: loaded=" + [regex]::Escape($Chapter))) {
+                    $SeenLoaded = $true
+                  }
+                  if ($Text -match ("ShireChapterAudit: living-world chapter=" + [regex]::Escape($Chapter))) {
+                    $SeenLivingWorld = $true
+                  }
+                  if ($Text -match ("ShireChapterAudit: weather chapter=" + [regex]::Escape($Chapter))) {
+                    $SeenWeather = $true
+                  }
+
+                  if ($Text -match "Fatal error:|Assertion failed|Ensure condition failed") {
+                    throw "Runtime chapter $Chapter emitted a fatal/assert/ensure condition."
+                  }
+
+                  if ($SeenRequested -and $SeenLoaded -and $SeenLivingWorld -and $SeenWeather) {
+                    $Passed = $true
+                    Start-Sleep -Seconds 4
+                    break
+                  }
                 }
 
-                if ($Text -match "Fatal error:|Assertion failed|Ensure condition failed") {
-                  throw "Runtime chapter $Chapter emitted a fatal/assert/ensure condition."
-                }
-
-                if ($SeenRequested -and $SeenLoaded -and $SeenLivingWorld -and $SeenWeather) {
-                  Start-Sleep -Seconds 4
+                if ($Proc.HasExited) {
                   break
                 }
+                Start-Sleep -Milliseconds 750
               }
 
+              $ExitCode = $null
               if ($Proc.HasExited) {
+                $ExitCode = $Proc.ExitCode
+              }
+              else {
+                Stop-Process -Id $Proc.Id -Force -ErrorAction SilentlyContinue
+                $Proc.WaitForExit()
+                $ExitCode = $Proc.ExitCode
+              }
+
+              if (Test-Path $AuditLog) {
+                Write-Host "----- $Chapter audit log tail (attempt $Attempt) -----"
+                Get-Content -LiteralPath $AuditLog -Tail 100
+              }
+
+              if ($Passed) {
                 break
               }
-              Start-Sleep -Milliseconds 750
-            }
 
-            if (-not $Proc.HasExited) {
-              Stop-Process -Id $Proc.Id -Force -ErrorAction SilentlyContinue
-              $Proc.WaitForExit()
-            }
+              if ($SeenRequested) {
+                # Once the game accepted the requested chapter, missing downstream markers
+                # are a real chapter/runtime failure rather than a transient editor startup.
+                break
+              }
 
-            if (Test-Path $AuditLog) {
-              Write-Host "----- $Chapter audit log tail -----"
-              Get-Content -LiteralPath $AuditLog -Tail 100
+              if ($Attempt -lt 2) {
+                Write-Warning "Runtime chapter $Chapter exited before the request marker (exit code $ExitCode); retrying once after UE helper cleanup."
+              }
             }
 
             if (-not $SeenRequested) {
-              throw "Runtime chapter audit did not observe request marker for $Chapter."
+              throw "Runtime chapter audit did not observe request marker for $Chapter after a single transient-startup retry."
             }
             if (-not $SeenLoaded) {
               throw "Runtime chapter audit did not observe world-builder load marker for $Chapter."
@@ -478,6 +515,7 @@ jobs:
             }
 
             Write-Host "Runtime chapter audit passed: $Chapter"
+            Start-Sleep -Seconds 2
           }
 
           Write-Host "All eight Part I runtime chapter audits passed."
