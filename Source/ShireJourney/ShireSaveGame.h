@@ -11,7 +11,7 @@ class SHIREJOURNEY_API UShireSaveGame : public USaveGame
     GENERATED_BODY()
 
 public:
-    static constexpr int32 CurrentSchemaVersion = 4;
+    static constexpr int32 CurrentSchemaVersion = 5;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
     int32 SaveSchemaVersion = CurrentSchemaVersion;
@@ -27,6 +27,15 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
     float PlayerHealth = 100.0f;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="PlayerLife")
+    float PlayerStamina = 100.0f;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="PlayerLife")
+    float PlayerResolve = 100.0f;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="PlayerLife")
+    int32 PlayerSupplies = 3;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
     TMap<FName, int32> QuestStages;
@@ -66,4 +75,7 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Exploration")
     TArray<FName> JourneyInsightMilestones;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Progression")
+    TMap<FName, int32> ProgressionXP;
 };

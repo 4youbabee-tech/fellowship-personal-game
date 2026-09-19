@@ -30,6 +30,24 @@ public:
     UFUNCTION(BlueprintPure, Category="Combat")
     bool IsCombatAvailable() const;
 
+    UFUNCTION(BlueprintPure, Category="PlayerLife")
+    float GetCurrentStamina() const { return CurrentStamina; }
+
+    UFUNCTION(BlueprintPure, Category="PlayerLife")
+    float GetMaxStamina() const { return MaxStamina; }
+
+    UFUNCTION(BlueprintPure, Category="PlayerLife")
+    float GetCurrentResolve() const { return CurrentResolve; }
+
+    UFUNCTION(BlueprintPure, Category="PlayerLife")
+    float GetMaxResolve() const { return MaxResolve; }
+
+    UFUNCTION(BlueprintPure, Category="PlayerLife")
+    int32 GetSupplies() const { return Supplies; }
+
+    UFUNCTION(BlueprintCallable, Category="PlayerLife")
+    void GrantSupplies(int32 Amount);
+
     UFUNCTION(BlueprintCallable, Category="Save")
     bool SaveAutomaticCheckpoint(FName CheckpointId, bool bShowHUD = true);
 
@@ -52,6 +70,7 @@ protected:
     void StopCrouch();
     void Interact();
     void PrimaryAttack();
+    void UseSupply();
     void QuickSave();
     void QuickLoad();
     void DebugPreviousChapter();
@@ -143,6 +162,24 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
     float SprintSpeed = 475.0f;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayerLife")
+    float MaxStamina = 100.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayerLife")
+    float SprintStaminaDrainPerSecond = 18.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayerLife")
+    float StaminaRegenPerSecond = 16.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayerLife")
+    float MaxResolve = 100.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayerLife")
+    float ResolveRecoveryPerSecond = 7.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayerLife")
+    int32 MaxSupplies = 5;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interaction")
     float InteractionDistance = 370.0f;
 
@@ -164,6 +201,11 @@ private:
     bool bPrototypeIsGandalf = false;
     bool bUsingProductionCharacter = false;
     bool bSprintRequested = false;
+    float CurrentStamina = 100.0f;
+    float CurrentResolve = 100.0f;
+    int32 Supplies = 3;
+    float StaminaRegenDelayRemaining = 0.0f;
+    bool bStaminaExhausted = false;
     float PrototypeIdlePhase = 0.0f;
     FName PendingChapterCheckpointId = NAME_None;
 
@@ -171,4 +213,6 @@ private:
     bool RestoreSaveSnapshot(UShireSaveGame* Save, const FText& SuccessMessage);
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);
+    void UpdatePlayerLife(float DeltaSeconds);
+    float GetResolveTarget() const;
 };

@@ -58,10 +58,42 @@ void AShireHUD::DrawHUD()
             FLinearColor::White, 254.0f, H - 75.0f, SmallFont, 0.82f, false);
     }
 
+    if (Player)
+    {
+        const float StaminaRatio = FMath::Clamp(
+            Player->GetCurrentStamina() / FMath::Max(1.0f, Player->GetMaxStamina()), 0.0f, 1.0f);
+        const float ResolveRatio = FMath::Clamp(
+            Player->GetCurrentResolve() / FMath::Max(1.0f, Player->GetMaxResolve()), 0.0f, 1.0f);
+        const float LifeY = bCombat ? H - 118.0f : H - 92.0f;
+
+        DrawRect(FLinearColor(0.03f, 0.03f, 0.03f, 0.72f), 24.0f, LifeY, 180.0f, 12.0f);
+        DrawRect(FLinearColor(0.18f, 0.46f, 0.22f, 0.90f), 26.0f, LifeY + 2.0f, 176.0f * StaminaRatio, 8.0f);
+        DrawText(FString::Printf(TEXT("Stamina %d / %d"),
+            FMath::RoundToInt(Player->GetCurrentStamina()),
+            FMath::RoundToInt(Player->GetMaxStamina())),
+            FLinearColor(0.82f, 0.90f, 0.78f), 214.0f, LifeY - 4.0f, SmallFont, 0.72f, false);
+
+        DrawRect(FLinearColor(0.03f, 0.03f, 0.03f, 0.72f), 24.0f, LifeY + 18.0f, 180.0f, 12.0f);
+        DrawRect(FLinearColor(0.40f, 0.34f, 0.62f, 0.90f), 26.0f, LifeY + 20.0f, 176.0f * ResolveRatio, 8.0f);
+        DrawText(FString::Printf(TEXT("Resolve %d / %d  |  Supplies %d"),
+            FMath::RoundToInt(Player->GetCurrentResolve()),
+            FMath::RoundToInt(Player->GetMaxResolve()),
+            Player->GetSupplies()),
+            FLinearColor(0.84f, 0.82f, 0.94f), 214.0f, LifeY + 14.0f, SmallFont, 0.72f, false);
+
+        if (Quests)
+        {
+            DrawText(FString::Printf(TEXT("Journey %d  |  Fellowship %d"),
+                Quests->GetJourneyInsight(), Quests->GetFellowshipBond()),
+                FLinearColor(0.76f, 0.80f, 0.70f, 0.72f),
+                24.0f, LifeY - 21.0f, SmallFont, 0.70f, false);
+        }
+    }
+
     DrawText(
         bCombat
-            ? TEXT("WASD Move  |  LMB Attack  |  Shift Sprint  |  Ctrl Crouch  |  E Interact  |  F5 Save  |  F9 Load")
-            : TEXT("WASD Move  |  Shift Sprint  |  Ctrl Crouch  |  E Interact  |  F5 Save  |  F9 Load  |  F6/F7 Chapter  |  F8 Route"),
+            ? TEXT("WASD Move  |  LMB Attack  |  Shift Sprint  |  Ctrl Crouch  |  E Interact  |  R Supply  |  F5 Save  |  F9 Load")
+            : TEXT("WASD Move  |  Shift Sprint  |  Ctrl Crouch  |  E Interact  |  R Supply  |  F5 Save  |  F9 Load  |  F6/F7 Chapter  |  F8 Route"),
         FLinearColor(0.78f, 0.80f, 0.76f, 0.46f), 24.0f, H - 28.0f, SmallFont, 0.72f, false);
 
     const float Now = GetWorld()->GetTimeSeconds();

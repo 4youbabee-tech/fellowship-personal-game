@@ -694,6 +694,7 @@ bool UShireQuestSubsystem::RegisterJourneyDiscovery(FName DiscoveryId)
     const int32 Before = JourneyInsight;
     JourneyDiscoveryIds.Add(DiscoveryId);
     RebuildJourneyInsightState();
+    AwardDiscoveryProgression(*Definition);
 
     UE_LOG(
         LogTemp,
@@ -715,6 +716,76 @@ bool UShireQuestSubsystem::HasJourneyDiscovery(FName DiscoveryId) const
 int32 UShireQuestSubsystem::GetJourneyInsight() const
 {
     return JourneyInsight;
+}
+
+bool UShireQuestSubsystem::IsValidProgressionTrack(FName TrackId)
+{
+    return TrackId == TEXT("WAYFINDING") || TrackId == TEXT("PERCEPTION") ||
+        TrackId == TEXT("QUIET_STEP") || TrackId == TEXT("CAMPCRAFT") ||
+        TrackId == TEXT("FELLOWSHIP") || TrackId == TEXT("LORE") ||
+        TrackId == TEXT("RESOLVE");
+}
+
+void UShireQuestSubsystem::AwardProgressionXP(FName TrackId, int32 Amount)
+{
+    if (!IsValidProgressionTrack(TrackId) || Amount <= 0) return;
+    int32& XP = ProgressionXP.FindOrAdd(TrackId);
+    XP = FMath::Clamp(XP + Amount, 0, 999);
+}
+
+int32 UShireQuestSubsystem::GetProgressionXP(FName TrackId) const
+{
+    const int32* XP = ProgressionXP.Find(TrackId);
+    return XP ? FMath::Max(0, *XP) : 0;
+}
+
+int32 UShireQuestSubsystem::GetProgressionRank(FName TrackId) const
+{
+    const int32 XP = GetProgressionXP(TrackId);
+    if (XP >= 200) return 4;
+    if (XP >= 120) return 3;
+    if (XP >= 60) return 2;
+    if (XP >= 25) return 1;
+    return 0;
+}
+
+int32 UShireQuestSubsystem::GetFellowshipBond() const
+{
+    return FMath::Clamp(GetProgressionXP(TEXT("FELLOWSHIP")), 0, 100);
+}
+
+void UShireQuestSubsystem::AwardDiscoveryProgression(const FShireJourneyDiscoveryDefinition& Definition)
+{
+    if (Definition.CategoryId == TEXT("ROAD_WISDOM"))
+    {
+        AwardProgressionXP(TEXT("WAYFINDING"), 10);
+        AwardProgressionXP(TEXT("PERCEPTION"), 4);
+    }
+    else if (Definition.CategoryId == TEXT("PEOPLES_AND_PLACES"))
+    {
+        AwardProgressionXP(TEXT("LORE"), 10);
+    }
+    else if (Definition.CategoryId == TEXT("FELLOWSHIP_BONDS"))
+    {
+        AwardProgressionXP(TEXT("FELLOWSHIP"), 10);
+    }
+    else if (Definition.CategoryId == TEXT("PERIL_SENSE"))
+    {
+        AwardProgressionXP(TEXT("PERCEPTION"), 8);
+        AwardProgressionXP(TEXT("RESOLVE"), 6);
+    }
+}
+
+void UShireQuestSubsystem::RestoreProgressionState(const TMap<FName, int32>& InProgressionXP)
+{
+    ProgressionXP.Empty();
+    for (const TPair<FName, int32>& Pair : InProgressionXP)
+    {
+        if (IsValidProgressionTrack(Pair.Key) && Pair.Value > 0)
+        {
+            ProgressionXP.Add(Pair.Key, FMath::Clamp(Pair.Value, 0, 999));
+        }
+    }
 }
 
 bool UShireQuestSubsystem::HasJourneyInsightMilestone(FName MilestoneId) const

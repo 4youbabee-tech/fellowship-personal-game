@@ -678,6 +678,7 @@ void AShirePlayerCharacter::Tick(float DeltaSeconds)
 
     AttackCooldownRemaining = FMath::Max(0.0f, AttackCooldownRemaining - DeltaSeconds);
     AttackVisualRemaining = FMath::Max(0.0f, AttackVisualRemaining - DeltaSeconds);
+    UpdatePlayerLife(DeltaSeconds);
     UpdatePrototypeAnimation(DeltaSeconds);
 }
 
@@ -685,6 +686,9 @@ void AShirePlayerCharacter::BeginPlay()
 {
     Super::BeginPlay();
     GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+    CurrentStamina = FMath::Clamp(CurrentStamina, 0.0f, MaxStamina);
+    CurrentResolve = FMath::Clamp(CurrentResolve, 0.0f, MaxResolve);
+    Supplies = FMath::Clamp(Supplies, 0, MaxSupplies);
     ApplyPrototypeStyle();
 
     if (UGameInstance* GI = GetGameInstance())
@@ -744,6 +748,7 @@ void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("Sprint"), IE_Pressed, this, &AShirePlayerCharacter::StartSprint);
     PlayerInputComponent->BindAction(TEXT("Sprint"), IE_Released, this, &AShirePlayerCharacter::StopSprint);
     PlayerInputComponent->BindAction(TEXT("Interact"), IE_Pressed, this, &AShirePlayerCharacter::Interact);
+    PlayerInputComponent->BindAction(TEXT("UseSupply"), IE_Pressed, this, &AShirePlayerCharacter::UseSupply);
     PlayerInputComponent->BindAction(TEXT("PrimaryAttack"), IE_Pressed, this, &AShirePlayerCharacter::PrimaryAttack);
     PlayerInputComponent->BindAction(TEXT("QuickSave"), IE_Pressed, this, &AShirePlayerCharacter::QuickSave);
     PlayerInputComponent->BindAction(TEXT("QuickLoad"), IE_Pressed, this, &AShirePlayerCharacter::QuickLoad);
@@ -880,7 +885,10 @@ void AShirePlayerCharacter::StartSprint()
     if (!bCinematicInputLocked)
     {
         bSprintRequested = true;
-        GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+        if (!bStaminaExhausted && CurrentStamina > 5.0f)
+        {
+            GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+        }
     }
 }
 
@@ -888,6 +896,115 @@ void AShirePlayerCharacter::StopSprint()
 {
     bSprintRequested = false;
     GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+
+float AShirePlayerCharacter::GetResolveTarget() const
+{
+    int32 RingPressure = 0;
+    if (const UGameInstance* GI = GetGameInstance())
+    {
+        if (const UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
+        {
+            RingPressure = Quests->GetRingPressureTier();
+        }
+    }
+    return FMath::Clamp(MaxResolve - static_cast<float>(RingPressure) * 10.0f, MaxResolve * 0.45f, MaxResolve);
+}
+
+void AShirePlayerCharacter::UpdatePlayerLife(float DeltaSeconds)
+{
+    if (DeltaSeconds <= 0.0f || !GetCharacterMovement())
+    {
+        return;
+    }
+
+    const bool bMoving = GetVelocity().SizeSquared2D() > 100.0f;
+    const bool bCanSprint = bSprintRequested && !bCinematicInputLocked && !bStaminaExhausted && CurrentStamina > 0.0f;
+    const bool bActivelySprinting = bCanSprint && bMoving;
+
+    if (bActivelySprinting)
+    {
+        CurrentStamina = FMath::Max(0.0f, CurrentStamina - SprintStaminaDrainPerSecond * DeltaSeconds);
+        StaminaRegenDelayRemaining = 0.75f;
+        GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+        if (CurrentStamina <= 0.0f)
+        {
+            bStaminaExhausted = true;
+            GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+        }
+    }
+    else
+    {
+        StaminaRegenDelayRemaining = FMath::Max(0.0f, StaminaRegenDelayRemaining - DeltaSeconds);
+        if (StaminaRegenDelayRemaining <= 0.0f)
+        {
+            CurrentStamina = FMath::Min(MaxStamina, CurrentStamina + StaminaRegenPerSecond * DeltaSeconds);
+        }
+        if (bStaminaExhausted && CurrentStamina >= MaxStamina * 0.25f)
+        {
+            bStaminaExhausted = false;
+        }
+        GetCharacterMovement()->MaxWalkSpeed =
+            bSprintRequested && !bStaminaExhausted && CurrentStamina > 5.0f ? SprintSpeed : WalkSpeed;
+    }
+
+    const float ResolveTarget = GetResolveTarget();
+    if (CurrentResolve < ResolveTarget)
+    {
+        CurrentResolve = FMath::Min(ResolveTarget, CurrentResolve + ResolveRecoveryPerSecond * DeltaSeconds);
+    }
+    else if (CurrentResolve > ResolveTarget)
+    {
+        const float PressureRate = FMath::Max(1.5f, ResolveRecoveryPerSecond * 0.35f);
+        CurrentResolve = FMath::Max(ResolveTarget, CurrentResolve - PressureRate * DeltaSeconds);
+    }
+}
+
+void AShirePlayerCharacter::GrantSupplies(int32 Amount)
+{
+    if (Amount > 0)
+    {
+        Supplies = FMath::Clamp(Supplies + Amount, 0, MaxSupplies);
+    }
+}
+
+void AShirePlayerCharacter::UseSupply()
+{
+    if (bCinematicInputLocked)
+    {
+        return;
+    }
+    if (Supplies <= 0)
+    {
+        if (APlayerController* PC = Cast<APlayerController>(Controller))
+            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+                HUD->ShowAlert(FText::FromString(TEXT("No travel supplies left.")), 1.4f);
+        return;
+    }
+
+    const bool bNeedsRecovery =
+        CurrentHealth < MaxHealth - 0.5f ||
+        CurrentResolve < GetResolveTarget() - 0.5f ||
+        CurrentStamina < MaxStamina - 0.5f;
+    if (!bNeedsRecovery)
+    {
+        if (APlayerController* PC = Cast<APlayerController>(Controller))
+            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+                HUD->ShowAlert(FText::FromString(TEXT("You are already well prepared.")), 1.2f);
+        return;
+    }
+
+    --Supplies;
+    CurrentHealth = FMath::Min(MaxHealth, CurrentHealth + 28.0f);
+    CurrentStamina = FMath::Min(MaxStamina, CurrentStamina + 55.0f);
+    CurrentResolve = FMath::Min(GetResolveTarget(), CurrentResolve + 24.0f);
+    bStaminaExhausted = false;
+
+    if (APlayerController* PC = Cast<APlayerController>(Controller))
+        if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+            HUD->ShowAlert(
+                FText::FromString(FString::Printf(TEXT("Travel supplies used. %d remaining."), Supplies)),
+                1.5f);
 }
 
 void AShirePlayerCharacter::StartCrouch()
@@ -936,6 +1053,7 @@ float AShirePlayerCharacter::TakeDamage(
     }
 
     CurrentHealth = FMath::Max(0.0f, CurrentHealth - DamageAmount);
+    CurrentResolve = FMath::Max(0.0f, CurrentResolve - 8.0f);
 
     if (CurrentHealth <= 0.0f)
     {
@@ -1051,6 +1169,9 @@ UShireSaveGame* AShirePlayerCharacter::CreateSaveSnapshot(
     Save->PlayerRotation = GetActorRotation();
     Save->CheckpointId = CheckpointId;
     Save->PlayerHealth = bCheckpointSnapshot ? MaxHealth : CurrentHealth;
+    Save->PlayerStamina = bCheckpointSnapshot ? MaxStamina : CurrentStamina;
+    Save->PlayerResolve = bCheckpointSnapshot ? GetResolveTarget() : CurrentResolve;
+    Save->PlayerSupplies = Supplies;
 
     if (UGameInstance* GI = GetGameInstance())
     {
@@ -1068,6 +1189,7 @@ UShireSaveGame* AShirePlayerCharacter::CreateSaveSnapshot(
             Save->JourneyDiscoveryIds = QuestSubsystem->GetJourneyDiscoveryIds();
             Save->JourneyInsight = QuestSubsystem->GetJourneyInsight();
             Save->JourneyInsightMilestones = QuestSubsystem->GetJourneyInsightMilestones();
+            Save->ProgressionXP = QuestSubsystem->GetProgressionSnapshot();
         }
     }
 
@@ -1097,7 +1219,9 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
     if (!FMath::IsFinite(Save->PlayerLocation.X) ||
         !FMath::IsFinite(Save->PlayerLocation.Y) ||
         !FMath::IsFinite(Save->PlayerLocation.Z) ||
-        !FMath::IsFinite(Save->PlayerHealth))
+        !FMath::IsFinite(Save->PlayerHealth) ||
+        !FMath::IsFinite(Save->PlayerStamina) ||
+        !FMath::IsFinite(Save->PlayerResolve))
     {
         UE_LOG(LogTemp, Error, TEXT("Save snapshot rejected: invalid numeric state."));
         return false;
@@ -1140,6 +1264,7 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
                 Save->JourneyDiscoveryIds,
                 Save->JourneyInsight,
                 Save->JourneyInsightMilestones);
+            QuestSubsystem->RestoreProgressionState(Save->ProgressionXP);
 
             bApplyExactSavedTransform =
                 QuestSubsystem->GetCurrentChapterId() == SavedChapterId;
@@ -1147,6 +1272,10 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
     }
 
     CurrentHealth = FMath::Clamp(Save->PlayerHealth, 1.0f, MaxHealth);
+    CurrentStamina = FMath::Clamp(Save->PlayerStamina, 0.0f, MaxStamina);
+    CurrentResolve = FMath::Clamp(Save->PlayerResolve, 0.0f, MaxResolve);
+    Supplies = FMath::Clamp(Save->PlayerSupplies, 0, MaxSupplies);
+    bStaminaExhausted = CurrentStamina <= 0.0f;
 
     if (bApplyExactSavedTransform)
     {
@@ -1196,6 +1325,9 @@ bool AShirePlayerCharacter::SaveAutomaticCheckpoint(FName CheckpointId, bool bSh
     if (bSaved)
     {
         CurrentHealth = MaxHealth;
+        CurrentStamina = MaxStamina;
+        CurrentResolve = GetResolveTarget();
+        bStaminaExhausted = false;
     }
 
     if (bShowHUD)

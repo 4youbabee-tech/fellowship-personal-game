@@ -133,6 +133,21 @@ public:
         int32 SavedJourneyInsight,
         const TArray<FName>& InMilestones);
 
+    UFUNCTION(BlueprintCallable, Category="Progression")
+    void AwardProgressionXP(FName TrackId, int32 Amount);
+
+    UFUNCTION(BlueprintPure, Category="Progression")
+    int32 GetProgressionXP(FName TrackId) const;
+
+    UFUNCTION(BlueprintPure, Category="Progression")
+    int32 GetProgressionRank(FName TrackId) const;
+
+    UFUNCTION(BlueprintPure, Category="Progression")
+    int32 GetFellowshipBond() const;
+
+    TMap<FName, int32> GetProgressionSnapshot() const { return ProgressionXP; }
+    void RestoreProgressionState(const TMap<FName, int32>& InProgressionXP);
+
     UFUNCTION(BlueprintPure, Category="Quest")
     FName GetActiveQuestId() const { return ActiveQuestId; }
 
@@ -214,6 +229,9 @@ private:
     UPROPERTY()
     int32 JourneyInsight = 0;
 
+    UPROPERTY()
+    TMap<FName, int32> ProgressionXP;
+
     TMap<FName, FShireJourneyDiscoveryDefinition> JourneyDiscoveryDefinitions;
     TArray<FShireJourneyInsightMilestoneDefinition> JourneyInsightDefinitions;
     TArray<FShireJourneyRegionBonusDefinition> JourneyRegionBonusDefinitions;
@@ -232,4 +250,6 @@ private:
     bool LoadJourneyDiscoveryPlan();
     void RebuildJourneyInsightState();
     FName MakeJourneyRegionCompletionId(FName RouteId, FName ChapterId) const;
+    void AwardDiscoveryProgression(const FShireJourneyDiscoveryDefinition& Definition);
+    static bool IsValidProgressionTrack(FName TrackId);
 };
