@@ -149,6 +149,12 @@ jobs:
           Write-Host "  registry:  HKCU\Software\Microsoft\Windows\CurrentVersion\Run\FellowshipGitHubRunnerWatchdog"
           Write-Host "This requires no Windows account password and starts after the interactive user logs in."
 
+          # The watchdog install is support infrastructure, not a build gate. Some
+          # Windows sessions preserve a non-zero native exit code after successful
+          # registry/process operations, so normalize the step's exit state explicitly.
+          $global:LASTEXITCODE = 0
+          exit 0
+
       - name: Checkout exact commit with resilient archive download
         shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
         env:
