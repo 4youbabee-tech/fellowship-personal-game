@@ -905,6 +905,59 @@ else:
     if len(side_master.get("prototype_priority", [])) < 10:
         fail("PG-077: prototype priority set must contain at least 10 entries")
 
+
+# PG-078: master execution roadmap must cover every unfinished accepted requirement and ACTIVE work item.
+master_path = ROOT / "Data" / "MasterExecutionRoadmap.json"
+if not master_path.exists():
+    fail("PG-078: MasterExecutionRoadmap.json missing")
+else:
+    master = json.loads(read(master_path))
+    if master.get("authority") != "Data/ProjectGovernor.json":
+        fail("PG-078: master roadmap must remain subordinate to ProjectGovernor")
+
+    roadmap_req_ids = set()
+    roadmap_work_ids = set()
+    for bundle in master.get("bundles", []):
+        roadmap_req_ids.update(str(x) for x in bundle.get("requirement_ids", []))
+        roadmap_work_ids.update(str(x) for x in bundle.get("work_ids", []))
+        if not bundle.get("deliverables") or not bundle.get("exit_evidence"):
+            fail(f"PG-078: bundle {bundle.get('id')} missing deliverables or exit evidence")
+    for lane in master.get("continuous_lanes", []):
+        roadmap_req_ids.update(str(x) for x in lane.get("requirement_ids", []))
+        roadmap_work_ids.update(str(x) for x in lane.get("work_ids", []))
+
+    governor = json.loads(read(ROOT / "Data" / "ProjectGovernor.json"))
+    open_req_ids = {
+        str(req.get("id"))
+        for req in governor.get("requirements", [])
+        if req.get("status") not in {"VALIDATED","REJECTED","SUPERSEDED","DEFERRED"}
+        and req.get("missing_work")
+    }
+    active_work_ids = {
+        str(work.get("id"))
+        for work in governor.get("work_queue", [])
+        if work.get("status") == "ACTIVE"
+    }
+
+    missing_reqs = sorted(open_req_ids - roadmap_req_ids)
+    missing_work = sorted(active_work_ids - roadmap_work_ids)
+    if missing_reqs:
+        fail("PG-078: unfinished Governor requirements orphaned from master roadmap: " + ", ".join(missing_reqs))
+    if missing_work:
+        fail("PG-078: ACTIVE work items orphaned from master roadmap: " + ", ".join(missing_work))
+
+    tracked_reqs = set(str(x) for x in master.get("tracked_unfinished_requirement_ids", []))
+    tracked_work = set(str(x) for x in master.get("tracked_active_work_ids", []))
+    if tracked_reqs != open_req_ids:
+        fail("PG-078: tracked unfinished requirement snapshot is stale")
+    if tracked_work != active_work_ids:
+        fail("PG-078: tracked active work snapshot is stale")
+
+    invariant_text = " ".join(master.get("invariants", [])).lower()
+    for marker in ["film", "ring", "offline", "30 fps", "exact candidate head"]:
+        if marker not in invariant_text:
+            fail(f"PG-078: master roadmap invariant missing {marker}")
+
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
 living_world_data = {}

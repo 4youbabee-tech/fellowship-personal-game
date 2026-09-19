@@ -1,3 +1,9 @@
+## MASTER EXECUTION CONTROL — 2026-09-20
+
+The growing request set is now consolidated into `Data/MasterExecutionRoadmap.json` and the human board `Docs/MASTER_EXECUTION_BOARD.md`. The roadmap is subordinate to the Governor and maps every unfinished requirement plus every ACTIVE work item into large dependency-ordered production bundles. PG-078 makes orphan accepted work a static-validation failure.
+
+Execution order is now explicit: exact-head stability; Part I story/gameplay completeness; production characters/world; living-world/presentation; acceptance/merge; then source-verified Part II/III. Active work items have unique execution ranks/bundle labels so the project no longer behaves like a flat unordered list.
+
 ## FILM SIDE-CONTENT MASTER AUDIT — 2026-09-20
 
 The owner supplied a programmer proposal covering trilogy-wide side play and asked for one reconciled, future-proof request set. `Data/FilmSideContentMasterPlan.json` is now the side-content master taxonomy: FILM_MOMENT = verified film action turned into gameplay; FILM_EXPANDED = small plausible play around an existing film scene/place; CHRONICLE = book-only/history/past-character content kept visibly separate from Film Main Canon.

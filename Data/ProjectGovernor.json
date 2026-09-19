@@ -1804,6 +1804,41 @@
         "REQ-ENSEMBLE-001"
       ],
       "checkpoint": "SIDE_CONTENT_CANON_CATALOG"
+    },
+    {
+      "id": "REQ-EXEC-001",
+      "title": "Single master execution roadmap with zero orphan requests",
+      "category": "ProductionIntegration",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "Owner requested that the growing set of large requests be organized together and executed immediately without leaving or forgetting work behind.",
+      "intent": "Maintain one subordinate execution roadmap that maps every unfinished Governor requirement and every ACTIVE work item into a dependency-ordered production bundle, with CI rejecting orphan work.",
+      "evidence": [
+        "Data/MasterExecutionRoadmap.json",
+        "Docs/MASTER_EXECUTION_BOARD.md",
+        "Scripts/pre_unreal_validate.py"
+      ],
+      "implementation_refs": [
+        "MasterExecutionRoadmap covers all current unfinished Governor requirements and all ACTIVE work items.",
+        "PG-078 fails Pre-Unreal when a future unfinished requirement or ACTIVE work item is not assigned to the master roadmap.",
+        "Active work queue receives unique execution ranks/bundle labels so large streams no longer compete as an unordered list."
+      ],
+      "missing_work": [
+        "Operational: keep the roadmap synchronized whenever a new accepted requirement/work item is added.",
+        "Operational: close bundle exit criteria only from actual repository/engine/device evidence."
+      ],
+      "acceptance_criteria": [
+        "No unfinished Governor requirement is absent from the master roadmap.",
+        "No ACTIVE work item is absent from the master roadmap.",
+        "Each production bundle declares dependencies, concrete deliverables and exit evidence.",
+        "Pre-Unreal rejects orphan accepted work."
+      ],
+      "dependencies": [
+        "REQ-MEM-001",
+        "REQ-GOV-001",
+        "REQ-MEGA-001"
+      ],
+      "checkpoint": "MASTER_EXECUTION_CONTROL"
     }
   ],
   "hard_invariants": [
@@ -2333,6 +2368,23 @@
       "evidence": [
         "Data/SideContentCanonCatalog.json"
       ]
+    },
+    {
+      "id": "DEC-027",
+      "title": "Execute the project through one dependency-ordered master roadmap",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-EXEC-001",
+        "REQ-MEGA-001",
+        "REQ-GOV-001"
+      ],
+      "resolution": "All accepted unfinished work must be assigned to Data/MasterExecutionRoadmap.json. The roadmap is subordinate to ProjectGovernor and cannot override canon, evidence or requirement status. Large implementation continues in bundles: exact-head stability, Part I story/gameplay completeness, production characters/world, living-world/presentation polish, acceptance/performance, then source-verified Part II and Part III.",
+      "rationale": "The owner explicitly asked to consolidate the large request set and begin large-scale work immediately without forgotten workstreams.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/MasterExecutionRoadmap.json",
+        "Docs/MASTER_EXECUTION_BOARD.md"
+      ]
     }
   ],
   "open_conflicts": [],
@@ -2664,11 +2716,12 @@
   ],
   "work_queue": [
     {
-      "order": 3,
+      "order": 31,
       "id": "WORK-WORLD-002",
       "title": "Part I mass resource saturation and playable integration",
       "status": "ACTIVE",
-      "rationale": "Verification freeze lifted; continue mass resource saturation and playable integration behind existing CI/UE4 regression gates."
+      "rationale": "Verification freeze lifted; continue mass resource saturation and playable integration behind existing CI/UE4 regression gates.",
+      "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
     },
     {
       "order": 1,
@@ -2693,18 +2746,20 @@
       "rationale": "Verification freeze lifted; resume distinct visual identity and motion production after/alongside the active world/activity batch."
     },
     {
-      "order": 4,
+      "order": 21,
       "id": "WORK-CHAR-001",
       "title": "Playable Frodo/Gandalf character production motion pass",
       "status": "ACTIVE",
-      "rationale": "CP56 increases character presence/acting context now; final skeletal/voice polish remains asset-dependent."
+      "rationale": "CP56 increases character presence/acting context now; final skeletal/voice polish remains asset-dependent.",
+      "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
     },
     {
-      "order": 11,
+      "order": 32,
       "id": "WORK-WORLD-001",
       "title": "Expand environmental micro-life and production polish chapter by chapter",
       "status": "ACTIVE",
-      "rationale": "CP56 expands visible life and companionship between film-story anchors while preserving bounded simulation."
+      "rationale": "CP56 expands visible life and companionship between film-story anchors while preserving bounded simulation.",
+      "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
     },
     {
       "order": 13,
@@ -2749,106 +2804,127 @@
       "rationale": "Backend runtime implementation is complete in CP44; only integration/device acceptance remains before VALIDATED."
     },
     {
-      "order": 1,
+      "order": 10,
       "id": "WORK-EXP-003",
       "title": "CP56 Fellowship film-experience mega-pass",
       "status": "ACTIVE",
-      "rationale": "Primary production track: deepen Part I moment-to-moment play around the fixed Peter Jackson film chronology with Shire life, companionship, exploration, regional social texture and cinematic presentation, without altering canon outcomes."
+      "rationale": "Primary production track: deepen Part I moment-to-moment play around the fixed Peter Jackson film chronology with Shire life, companionship, exploration, regional social texture and cinematic presentation, without altering canon outcomes.",
+      "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
     },
     {
-      "order": 2,
+      "order": 40,
       "id": "WORK-LW-004",
       "title": "Offline Living NPC intelligence expansion",
       "status": "ACTIVE",
-      "rationale": "Expanded scope is explicit: every Part I character participates in offline living intelligence at a cost appropriate to its tier, with biography/knowledge limits and regional peace/war mood context."
+      "rationale": "Expanded scope is explicit: every Part I character participates in offline living intelligence at a cost appropriate to its tier, with biography/knowledge limits and regional peace/war mood context.",
+      "execution_bundle": "B3_LIVING_WORLD_AND_PRESENTATION"
     },
     {
-      "order": 21,
+      "order": 1,
       "id": "WORK-QA-001",
       "title": "Automation-first delivery and regression coverage",
       "status": "ACTIVE",
-      "rationale": "Reduce owner test burden: harden runtime evidence now, then test actual story, persistence and offline character behavior in the engine."
+      "rationale": "Reduce owner test burden: harden runtime evidence now, then test actual story, persistence and offline character behavior in the engine.",
+      "execution_bundle": "B0_EXACT_HEAD_STABILITY"
     },
     {
       "order": 0,
       "id": "WORK-MEGA-001",
       "title": "CP56 whole-game mega integration and green-head repair loop",
       "status": "ACTIVE",
-      "rationale": "Largest coordinated pass across gameplay, characters, living world, offline intelligence, story/persistence, presentation and automation. Current PR head must be repaired until green."
+      "rationale": "Largest coordinated pass across gameplay, characters, living world, offline intelligence, story/persistence, presentation and automation. Current PR head must be repaired until green.",
+      "execution_bundle": "B0_EXACT_HEAD_STABILITY"
     },
     {
-      "order": 1,
+      "order": 41,
       "id": "WORK-DLG-001",
       "title": "Source-grounded living dialogue expansion",
       "status": "ACTIVE",
-      "rationale": "Use the supplied screenplay references to deepen original in-world conversation context while the PR #53 red-to-green loop continues."
+      "rationale": "Use the supplied screenplay references to deepen original in-world conversation context while the PR #53 red-to-green loop continues.",
+      "execution_bundle": "B3_LIVING_WORLD_AND_PRESENTATION"
     },
     {
-      "order": 2,
+      "order": 14,
       "id": "WORK-EXP-004",
       "title": "Journey Discovery rewards and exploration progression",
       "status": "ACTIVE",
-      "rationale": "Turn optional exploration into persistent, meaningful game progression without disturbing canon anchors."
+      "rationale": "Turn optional exploration into persistent, meaningful game progression without disturbing canon anchors.",
+      "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
     },
     {
-      "order": 3,
+      "order": 15,
       "id": "WORK-EXP-005",
       "title": "Contextual side-play implementation",
       "status": "ACTIVE",
-      "rationale": "Build optional game-like activities that feel like plausible unseen moments between fixed film anchors."
+      "rationale": "Build optional game-like activities that feel like plausible unseen moments between fixed film anchors.",
+      "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
     },
     {
-      "order": 1,
+      "order": 11,
       "id": "WORK-RING-001",
       "title": "Trilogy Ring-quest systemic core",
       "status": "ACTIVE",
-      "rationale": "Keep Ring truth explicit across routes/dialogue/audits and future trilogy expansion."
+      "rationale": "Keep Ring truth explicit across routes/dialogue/audits and future trilogy expansion.",
+      "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
     },
     {
-      "order": 1,
+      "order": 20,
       "id": "WORK-CHAR-004",
       "title": "Full production-character replacement mega-pass",
       "status": "ACTIVE",
-      "rationale": "Convert core named characters from proxy/modular identity to rigged production characters in priority waves."
+      "rationale": "Convert core named characters from proxy/modular identity to rigged production characters in priority waves.",
+      "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
     },
     {
-      "order": 1,
+      "order": 30,
       "id": "WORK-WORLD-003",
       "title": "Cinematic world beauty mega-pass",
       "status": "ACTIVE",
-      "rationale": "Raise every Part I region toward the owner's cinematic benchmark while preserving target performance."
+      "rationale": "Raise every Part I region toward the owner's cinematic benchmark while preserving target performance.",
+      "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
     },
     {
-      "order": 2,
+      "order": 16,
       "id": "WORK-GAME-001",
       "title": "Modern game systems and side-content rollout",
       "status": "ACTIVE",
-      "rationale": "Roll modern exploration, character-life, progression, world events and chapter-specific side play across Part I without disturbing film anchors."
+      "rationale": "Roll modern exploration, character-life, progression, world events and chapter-specific side play across Part I without disturbing film anchors.",
+      "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
     },
     {
-      "order": 1,
+      "order": 13,
       "id": "WORK-ENSEMBLE-001",
       "title": "Film-ensemble playable mission rollout",
       "status": "ACTIVE",
-      "rationale": "Turn film-supported actions and safe gaps for Gandalf, Gimli, Aragorn, Arwen, Boromir, Legolas, Merry/Pippin and later characters into playable mission waves without changing chronology."
+      "rationale": "Turn film-supported actions and safe gaps for Gandalf, Gimli, Aragorn, Arwen, Boromir, Legolas, Merry/Pippin and later characters into playable mission waves without changing chronology.",
+      "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
     },
     {
-      "order": 1,
+      "order": 12,
       "id": "WORK-SIDE-001",
       "title": "Film-derived side-content rollout",
       "status": "ACTIVE",
-      "rationale": "Prototype high-value film moments first, then film-expanded spaces, while keeping Chronicles separate."
+      "rationale": "Prototype high-value film moments first, then film-expanded spaces, while keeping Chronicles separate.",
+      "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
+    },
+    {
+      "order": 2,
+      "id": "WORK-EXEC-001",
+      "title": "Master execution control and orphan-work prevention",
+      "status": "ACTIVE",
+      "rationale": "Keep all accepted large requests dependency-ordered, visible and guarded while implementation proceeds in large batches.",
+      "execution_bundle": "CONTINUOUS_CONTROL"
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Owner supplied a trilogy-wide programmer proposal and requested reconciliation/audit to prevent future story and implementation errors.",
+    "reason": "Owner requested immediate large-scale organization/execution so the growing request set cannot leave forgotten work behind.",
     "summary": [
-      "Unified side content under FILM_MOMENT, FILM_EXPANDED and CHRONICLE.",
-      "Corrected continuity-risk ideas so optional gameplay cannot alter canonical outcomes or causality.",
-      "Fellowship and Two Towers items were cross-checked against the supplied scripts/source pack; Return of the King high-level items were cross-checked against a published 2003 screenplay source, with remaining cut-sensitive details left source-check gated.",
-      "Book-only Tom Bombadil/Barrow-downs, Glorfindel and Scouring are explicitly barred from silent Film Main Story insertion.",
-      "Prototype priorities are recorded without overriding the current exact-head UE4.27 validation gate."
+      "Added REQ-EXEC-001 / DEC-027 / WORK-EXEC-001 for master execution control.",
+      "All current unfinished Governor requirements are mapped into Data/MasterExecutionRoadmap.json.",
+      "All ACTIVE work items now have unique execution ranks and bundle labels.",
+      "PG-078 makes orphan accepted work a Pre-Unreal failure.",
+      "Execution order is now exact-head stability -> Part I story/gameplay -> production characters/world -> living world/presentation -> acceptance/merge -> source-verified Part II/III."
     ]
   },
   "development_mode": {

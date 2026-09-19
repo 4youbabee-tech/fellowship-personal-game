@@ -280,6 +280,18 @@
         "evidence honesty",
         "developer handoff"
       ]
+    },
+    {
+      "id": "EXECUTION_ORCHESTRATION",
+      "status": "IMPLEMENTED_CONTINUOUS",
+      "includes": [
+        "single master roadmap",
+        "dependency-ordered large bundles",
+        "all unfinished Governor requirements mapped",
+        "all ACTIVE work items mapped",
+        "CI orphan-work rejection",
+        "exact-head evidence boundary"
+      ]
     }
   ]
 }
