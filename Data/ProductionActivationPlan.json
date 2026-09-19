@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "plan_id": "CP52_FULL_PLAYABLE_PRODUCTION_ACTIVATION",
+  "status": "ACTIVE_RUNTIME_IMPLEMENTATION_PENDING_BUILD",
+  "purpose": "Activate the complete source-controlled production resource set as a playable Part I runtime rather than leaving assets as disconnected repository inventory.",
+  "scope": {
+    "chapters": ["P1C01","P1C02","P1C03","P1C04","P1C05","P1C06","P1C07","P1C08"],
+    "routes": ["FrodoMain","GandalfParallel"],
+    "resource_roots": [
+      "SourceAssets/Production/Characters",
+      "SourceAssets/Production/Enemies",
+      "SourceAssets/Production/World/Shire",
+      "SourceAssets/Production/World/Bree",
+      "SourceAssets/Production/World/Weathertop",
+      "SourceAssets/Production/World/Rivendell",
+      "SourceAssets/Production/World/Road",
+      "SourceAssets/Production/World/Moria",
+      "SourceAssets/Production/World/Lothlorien",
+      "SourceAssets/Production/World/Anduin",
+      "SourceAssets/Production/World/Common"
+    ]
+  },
+  "activation_rules": [
+    "Project-owned production assets are preferred over Engine BasicShapes whenever an imported asset resolves.",
+    "Every chapter receives production architecture, terrain, vegetation and clutter appropriate to its region.",
+    "Named cast and major threats keep their production mesh resolution paths.",
+    "Fallback primitives remain only as fail-safe runtime geometry when production imports are missing.",
+    "No story or quest trigger coordinates move in this pass.",
+    "Density stays deterministic and bounded for the 720p/30fps target laptop."
+  ],
+  "external_resource_boundary": {
+    "policy": "External downloads remain governed by Data/ExternalAssetManifest.json.",
+    "rule": "Do not silently ingest unlicensed, editorial, NC, ND, unknown-license or franchise-ripped resources.",
+    "current_action": "Activate all source-controlled project-owned resources now; separately acquired licensed/CC0 packs can drop into the existing Approved pipeline later."
+  },
+  "runtime_work": [
+    "Expand Shire production terrain/vegetation/clutter activation using the common kit.",
+    "Expand Bree production perimeter/street/inn clutter using the common kit.",
+    "Increase regional production use in P1C03-P1C08 without replacing mission topology.",
+    "Keep chapter router, quests, save/load, living-world events, dialogue and enemies active as one playable runtime.",
+    "Add CP52 validation guards so resource activation cannot regress back to disconnected assets."
+  ],
+  "proof_boundary": {
+    "implementation": "source/runtime integration on mega/full-playable-production-v1",
+    "required_before_merge": ["Pre-Unreal Validation"],
+    "required_after_merge": ["UE4.27.2 build", "production asset import"],
+    "still_deferred": ["PIE full Part I traversal", "target-device performance", "visual acceptance"]
+  }
+}
