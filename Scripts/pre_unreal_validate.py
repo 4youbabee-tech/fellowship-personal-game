@@ -1851,9 +1851,12 @@ exact_checkout_markers = [
     "zipball/$env:GITHUB_SHA",
     "GET /repos/{owner}/{repo}/zipball/{ref}",
     "git fetch --no-tags --prune --depth=1 origin %GITHUB_SHA%",
+    "git fetch --no-tags --prune --depth=1 origin %TARGET_SHA%",
 ]
 if not any(marker in unreal_ci for marker in exact_checkout_markers):
-    fail("PG-026: Unreal self-hosted build must acquire the exact GITHUB_SHA")
+    fail("PG-026: Unreal self-hosted build must acquire the exact validated event SHA")
+if "TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}" not in unreal_ci:
+    fail("PG-026: pull-request Unreal validation must resolve TARGET_SHA to the PR head, not the synthetic merge commit")
 retry_contract_ok = (
     ("--retry 6" in unreal_ci and "--retry-all-errors" in unreal_ci)
     or ("attempt <= 7" in unreal_ci and "retrying in 5 seconds" in unreal_ci)
