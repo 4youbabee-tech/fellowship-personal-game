@@ -531,3 +531,7 @@ Ready markers previously ended startup checking immediately; chapter checks slep
 Unreal run 35461908616 fetched successfully on retry but checkout failed with exit 73: recreating .git left existing CI source files untracked. The dedicated runner checkout now forces only fetched tracked paths, retaining unrelated generated content and save files. No git clean is added. The retry delay uses PowerShell sleep because cmd timeout reported unsupported input redirection. This does not explain or claim to fix separate action-download cancellation during job setup.
 
 Regional mood previously altered only a random seed, permitting emotionally mismatched authored replies. Explicit mood eligibility and context priority now precede freshness/random selection. Existing story/memory/knowledge gates remain in place; five UE automation assertions guard ranking semantics. Engine validation is pending.
+
+## Interrupted build investigation — 2026-09-19
+
+Run 35463567281 proves the source checkout repair worked. Build then received Ctrl-C and exit -1073741510; no C++ compiler error was observed. The cancellation source is not proven. Review found detached lifecycle cleanup can kill listeners after its 20-minute deadline even with workers still running. Removed scheduling of this unsafe cleanup. Repository-wide Unreal concurrency now serializes PR/develop jobs on the shared device and does not cancel active builds on new pushes. These are preventive repairs, not proof of the cancellation's cause. A fresh engine run must establish success.

@@ -1732,8 +1732,10 @@ if not retry_contract_ok:
     fail("PG-026: exact-commit acquisition must use resilient retries")
 if "uses: actions/upload-artifact@v4" in unreal_ci:
     fail("PG-026: failure logging must not depend on artifact upload while storage quota can mask the primary error")
-if "cancel-in-progress: true" not in unreal_ci:
-    fail("PG-026: superseded develop Unreal builds must not block the latest validation run")
+if "group: unreal-build-${{ github.repository }}-ue4-device" not in unreal_ci or "cancel-in-progress: false" not in unreal_ci:
+    fail("PG-026: shared Unreal device builds must serialize without interrupting active validation")
+if "post-job-runner-dedupe.ps1" in unreal_ci or "delete env.RUNNER_TRACKING_ID" in unreal_ci:
+    fail("PG-026: validation must not launch detached runner lifecycle cleanup")
 if 'shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". \'{0}\'"' not in unreal_ci:
     fail("PG-027: self-hosted PowerShell steps must bypass the target machine script execution policy")
 
