@@ -1,6 +1,4 @@
-mtllib WorldPack.mtl
 o SM_CommonBird
-usemtl LeafGreen
 v -24 -10 0
 v 18 -10 0
 v 24 10 0
