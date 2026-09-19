@@ -1372,6 +1372,47 @@
       ],
       "checkpoint": "AUTOMATION_FIRST",
       "notes": "Partial automation infrastructure only; no claim of full gameplay, visual or device acceptance."
+    },
+    {
+      "id": "REQ-MEGA-001",
+      "title": "Whole-game mega integration without forgotten subsystems",
+      "category": "ProductionIntegration",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly requested the largest integrated production leap so far and asked the manager to catch gameplay details they may forget.",
+      "intent": "Advance characters, gameplay, world life, story, presentation, persistence, offline intelligence and automated validation as one coordinated production path instead of isolated demos.",
+      "evidence": [
+        "Data/GameCompletenessMatrix.json",
+        "Data/CP56MegaIntegrationPlan.json",
+        "Data/ProjectGovernor.json"
+      ],
+      "implementation_refs": [
+        "Whole-game completeness matrix now tracks all major gameplay and presentation systems.",
+        "PR #53 is the single active continuation path for CP56 mega integration."
+      ],
+      "missing_work": [
+        "Get final PR #53 head through full UE4.27 validation.",
+        "Deepen named-character intelligence and regional dialogue across all Part I moods.",
+        "Add engine-driven story/save regressions.",
+        "Continue world/character/presentation production passes.",
+        "Run target-device and human visual/pacing acceptance."
+      ],
+      "acceptance_criteria": [
+        "Current PR head is green before merge.",
+        "No critical subsystem silently disappears from the completeness matrix.",
+        "Film outcomes remain immutable with optional exploration between anchors.",
+        "Shipped game remains offline."
+      ],
+      "dependencies": [
+        "REQ-EXP-003",
+        "REQ-NPC-005",
+        "REQ-WORLD-001",
+        "REQ-CHAR-002",
+        "REQ-SAVE-001",
+        "REQ-PERF-001",
+        "REQ-QA-001"
+      ],
+      "checkpoint": "CP56_MEGA_INTEGRATION"
     }
   ],
   "hard_invariants": [
@@ -1660,6 +1701,22 @@
         "Data/NPCSocialModel.json",
         "Data/NPCRegionalMoodPlan.json",
         "Source/ShireJourney/ShireNPCContextSubsystem.cpp"
+      ]
+    },
+    {
+      "id": "DEC-013",
+      "title": "PR #53 is the single CP56 mega-integration continuation path",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-MEGA-001",
+        "REQ-CI-001",
+        "REQ-MEM-004"
+      ],
+      "resolution": "Continue CP56/Work changes on PR #53 only. Keep develop unchanged until the current PR #53 head passes required validation.",
+      "rationale": "One active integration branch prevents conflicting versions while we repair against one Actions result.",
+      "authority": "USER_EXPLICIT_DIRECTION_PLUS_REPOSITORY_RECONCILIATION",
+      "evidence": [
+        "Data/CP56MegaIntegrationPlan.json"
       ]
     }
   ],
@@ -2095,17 +2152,22 @@
       "title": "Automation-first delivery and regression coverage",
       "status": "ACTIVE",
       "rationale": "Reduce owner test burden: harden runtime evidence now, then test actual story, persistence and offline character behavior in the engine."
+    },
+    {
+      "order": 0,
+      "id": "WORK-MEGA-001",
+      "title": "CP56 whole-game mega integration and green-head repair loop",
+      "status": "ACTIVE",
+      "rationale": "Largest coordinated pass across gameplay, characters, living world, offline intelligence, story/persistence, presentation and automation. Current PR head must be repaired until green."
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "User asked to keep fixing CI until green, confirmed all characters should feel intelligent and context-aware, and asked that these requests be durably recorded in the manager.",
+    "reason": "Owner requested immediate start of the largest integrated pass and a red-to-green Actions repair loop.",
     "summary": [
-      "All Part I NPC profiles are now explicitly intelligence-enabled, mood-sensitive and offline-only.",
-      "Named cast biography/knowledge envelopes were expanded across the remaining Part I cast.",
-      "Regional world mood/pressure is now a data-driven local context layer for peace, suspicion, pursuit, refuge, grief, dead-city dread and war pressure.",
-      "A new Governor rule requires important user requests to be persisted in project files instead of relying on chat memory.",
-      "CI remains a hard blocker for merge; current runner duplicate-listener cleanup is being repaired before moving PR #52 to merge."
+      "PR #53 is the active continuation path.",
+      "Whole-game completeness is now machine-readable.",
+      "Actions failures remain blockers; develop stays untouched until green."
     ]
   },
   "development_mode": {
