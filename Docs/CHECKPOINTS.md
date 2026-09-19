@@ -542,6 +542,18 @@
 - Hardened Pre-Unreal validation so PG-050 and new PG-051 checks participate in the final process exit status rather than running after the previous PASS print.
 - Final skeletal rigs, facial animation, cloth/hair simulation, weather VFX, cinematic grading and target-device visual/performance acceptance remain open.
 
+## CP52 — Mass Resource Saturation + Playable Integration
+- Began a deliberately larger production/integration batch instead of another small isolated pass.
+- Added `Data/ResourceIntegrationPlan.json` as the machine-readable CP52 resource/integration map.
+- Reused the common production environment kit across the Shire and Bree, not only P1C03-P1C08.
+- Shire gains additional shared broadleaf trees, fences, wood/log clutter, ferns, river reeds, a secondary footbridge, path marker and dry-stone detail while preserving the existing story/traversal coordinates.
+- Bree gains shared stone boundaries, village fences, outer trees, work clutter, ferns and a road marker around the existing production architecture and story flow.
+- P1C03-P1C08 gain a second shared-resource finishing layer using common walls, logs, wood piles, path markers, vegetation, bridges and ruin debris where region-appropriate.
+- `ShireJourney.Build.cs` now packages `LivingWorldEventPlan.json` plus CP50/CP51/CP52 production plans as runtime dependencies, reducing the gap between editor validation and packaged runtime behavior.
+- Added PG-052 checks for P1C01 + `ShireArrival` startup, world-router/LivingWorldDirector bootstrap, resource saturation and runtime-data packaging.
+- The external licensed manifest still contains zero approved asset entries; this batch therefore integrates all currently usable project-owned resources but does not pretend unlicensed third-party downloads are approved.
+- UE4.27 compile/import, PIE P1C01-P1C08 traversal and target-device performance/visual acceptance remain required.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
