@@ -551,7 +551,7 @@ void ALivingWorldDirector::MaintainBaselinePopulation()
     float MinWait = Random.FRandRange(0.8f, 2.5f);
     float MaxWait = Random.FRandRange(3.0f, 6.5f);
 
-    if (RoleName == TEXT("Courier") || Role == TEXT("RoadWalker"))
+    if (RoleName == TEXT("Courier") || RoleName == TEXT("RoadWalker"))
     {
         Speed = Random.FRandRange(68.0f, 92.0f);
         MinWait = 0.2f;
