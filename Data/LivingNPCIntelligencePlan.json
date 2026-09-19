@@ -13,7 +13,7 @@
   ],
   "capabilities": {
     "identity_profile": {
-      "status": "DATA_DEFINED",
+      "status": "RUNTIME_PARTIAL",
       "sources": [
         "Data/NPCSocialModel.json"
       ],
@@ -23,7 +23,12 @@
         "temperament_tags",
         "knowledge_tags",
         "relationships",
-        "anchors"
+        "anchors",
+        "origin",
+        "occupation",
+        "biography_facts",
+        "knowledge_limits",
+        "attitude_tags"
       ]
     },
     "daily_routine": {
@@ -159,7 +164,7 @@
         "relationship memory",
         "story-reactive dialogue"
       ],
-      "status": "PLANNED"
+      "status": "IN_PROGRESS"
     },
     {
       "phase": "LW-C",
@@ -210,5 +215,11 @@
     "local_model_optional": true,
     "deterministic_non_llm_fallback_required": true,
     "rule": "Disconnecting the machine from the internet must not disable NPC routines, memory, goals, emotions, relationships, dialogue, story progression, save/load, STT/TTS if those speech layers are shipped, or any other gameplay-critical feature."
-  }
+  },
+  "current_batch_progress": [
+    "Core profiles Gandalf, Sam, Aragorn and Bilbo now carry biography facts, knowledge limits and attitude tags in NPCSocialModel.",
+    "UShireNPCContextSubsystem now loads those fields and exposes a compact local profile context summary.",
+    "Ambient needs/emotion/goal simulation remains bounded and offline-only.",
+    "PG-059 now guards both offline policy and the core character knowledge envelopes."
+  ]
 }
