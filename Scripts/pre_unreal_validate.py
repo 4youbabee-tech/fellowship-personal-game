@@ -988,7 +988,7 @@ for symbol in ["GetCurrentStamina","GetCurrentResolve","GetSupplies","UseSupply"
 for symbol in ["AwardProgressionXP","GetProgressionXP","GetProgressionRank","GetFellowshipBond","RestoreProgressionState"]:
     if symbol not in quest_h or symbol not in quest_cpp:
         fail(f"PG-079: progression runtime symbol missing {symbol}")
-for marker in ["PlayerStamina","PlayerResolve","PlayerSupplies","ProgressionXP","CurrentSchemaVersion = 5"]:
+for marker in ["PlayerStamina","PlayerResolve","PlayerSupplies","ProgressionXP","CurrentSchemaVersion = 6"]:
     if marker not in save_h:
         fail(f"PG-079: save schema missing {marker}")
 if 'ActionName="UseSupply"' not in read(ROOT / "Config" / "DefaultInput.ini"):
@@ -999,6 +999,53 @@ if "ShireStateAudit: progression-core=PASS" not in read(ROOT / "Scripts" / "runt
     fail("PG-079: runtime smoke does not require progression proof")
 if "Data/PlayerLifeProgressionPlan.json" not in read(SOURCE / "ShireJourney.Build.cs"):
     fail("PG-079: player-life plan not packaged")
+
+
+# PG-080: Chronicle/map knowledge and side-activity progression must be persistent and story-safe.
+knowledge_path = ROOT / "Data" / "ChronicleMapKnowledgePlan.json"
+if not knowledge_path.exists():
+    fail("PG-080: ChronicleMapKnowledgePlan.json missing")
+else:
+    knowledge = json.loads(read(knowledge_path))
+    if knowledge.get("main_film_continuity_only") is not True:
+        fail("PG-080: Chronicle runtime must not silently mix Book Chronicle continuity")
+    if knowledge.get("save_schema_version") != 6:
+        fail("PG-080: Chronicle/map plan save schema must be 6")
+    if knowledge.get("story_effect") != "NONE":
+        fail("PG-080: Chronicle/map knowledge must not advance story")
+
+quest_h_pg80 = read(SOURCE / "ShireQuestSubsystem.h")
+quest_cpp_pg80 = read(SOURCE / "ShireQuestSubsystem.cpp")
+save_h_pg80 = read(SOURCE / "ShireSaveGame.h")
+player_cpp_pg80 = read(SOURCE / "ShirePlayerCharacter.cpp")
+hud_cpp_pg80 = read(SOURCE / "ShireHUD.cpp")
+input_pg80 = read(ROOT / "Config" / "DefaultInput.ini")
+side_plan_pg80 = json.loads(read(ROOT / "Data" / "ContextualSideActivityPlan.json"))
+
+for symbol in ["ChronicleEntryIds","KnownMapRegionIds","RestoreKnowledgeState","LoadSideActivityPlan","AwardSideActivityProgression"]:
+    if symbol not in (quest_h_pg80 + quest_cpp_pg80):
+        fail(f"PG-080: runtime knowledge/side-progression symbol missing {symbol}")
+for marker in ["ChronicleEntryIds","KnownMapRegionIds","CurrentSchemaVersion = 6"]:
+    if marker not in save_h_pg80:
+        fail(f"PG-080: save persistence missing {marker}")
+for marker in ["GetChronicleEntryIds","GetKnownMapRegionIds","RestoreKnowledgeState"]:
+    if marker not in player_cpp_pg80:
+        fail(f"PG-080: player save/load knowledge wiring missing {marker}")
+if 'ActionName="ToggleChronicle"' not in input_pg80:
+    fail("PG-080: Chronicle panel input missing")
+if "CHRONICLE & JOURNEY" not in hud_cpp_pg80:
+    fail("PG-080: Chronicle/map HUD panel missing")
+if "ShireStateAudit: knowledge-core=PASS" not in read(SOURCE / "ShireGameMode.cpp"):
+    fail("PG-080: knowledge state audit missing")
+if "ShireStateAudit: knowledge-core=PASS" not in read(ROOT / "Scripts" / "runtime_smoke.py"):
+    fail("PG-080: runtime smoke missing knowledge proof")
+activity_count_pg80 = sum(
+    len(chapter.get("activities", []))
+    for chapter in side_plan_pg80.get("chapters", [])
+    if isinstance(chapter, dict)
+)
+if activity_count_pg80 < 18:
+    fail(f"PG-080: contextual side-activity catalog regressed below 18 entries: {activity_count_pg80}")
 
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
