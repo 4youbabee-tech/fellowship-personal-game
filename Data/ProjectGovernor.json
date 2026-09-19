@@ -814,7 +814,7 @@
       "category": "VisualProduction",
       "priority": "HIGH",
       "status": "IMPLEMENTED",
-      "origin": "User supplied programmer sourcing recommendations and asked to adopt useful assistance",
+      "origin": "User supplied programmer sourcing recommendations and explicitly asked that useful sources/requests be preserved in the Governor for future reuse",
       "intent": "Allow professional environment, model and audio libraries to accelerate production while preventing unclear, editorial, non-commercial, franchise-ripped or otherwise unsafe assets from entering the project.",
       "evidence": [
         "Data/ExternalAssetManifest.json",
@@ -826,12 +826,15 @@
         "provider/license allowlist and denylist",
         "ignored acquisition inbox",
         "approved asset manifest contract",
-        "Pre-Unreal provenance validation"
+        "Pre-Unreal provenance validation",
+        "Programmer-supplied future sourcing shortlist is persisted in Data/ExternalAssetManifest.json by category"
       ],
       "missing_work": [
         "Acquire specific assets only when entitlement/license evidence is available",
         "Record attributions/receipts per asset",
-        "Run UE4.27.2 import/build validation for each acquired batch"
+        "Run UE4.27.2 import/build validation for each acquired batch",
+        "When a listed source becomes useful, evaluate the exact item/license/UE4.27 compatibility before acquisition",
+        "Promote useful approved sources into concrete asset batches only when they improve an active world/character/audio/UI workstream"
       ],
       "acceptance_criteria": [
         "Every external production asset has a manifest record and license evidence",
@@ -844,7 +847,7 @@
         "REQ-CHAR-001"
       ],
       "checkpoint": "CP47",
-      "notes": "Keep this lightweight provenance/import-safety pipeline, but do not spend project time on formal rights-holder outreach. Future sourcing should prioritize high-quality reusable/free resources with clear provenance when practical."
+      "notes": "The source shortlist is now durable project memory. Listing a provider means 'remember/evaluate later', not automatic approval of every asset on that site."
     },
     {
       "id": "REQ-RIGHTS-001",
@@ -1155,6 +1158,40 @@
         "REQ-PERF-001"
       ],
       "checkpoint": "CP54"
+    },
+    {
+      "id": "REQ-MEM-003",
+      "title": "Persist useful external sources and user requests for future production",
+      "category": "ProjectMemory",
+      "priority": "HIGH",
+      "status": "IMPLEMENTED",
+      "origin": "User explicitly asked that useful programmer-provided sites/resources and future requests be remembered by the project manager rather than lost in chat",
+      "intent": "Keep a durable, categorized shortlist of external production sources and the rules for when they may be used, so future expansion can reuse them without depending on conversation memory.",
+      "evidence": [
+        "Data/ProjectGovernor.json",
+        "Data/ExternalAssetManifest.json",
+        "Docs/EXTERNAL_ASSET_SOURCING.md"
+      ],
+      "implementation_refs": [
+        "ExternalAssetManifest stores providers by production category and approval/review mode",
+        "ProjectGovernor records the persistence requirement as project memory",
+        "External sourcing policy defines the item-level provenance/license/import workflow"
+      ],
+      "missing_work": [
+        "Continue appending newly requested useful sources and production requests as they arise",
+        "Convert remembered sources into approved concrete assets only when an active workstream needs them"
+      ],
+      "acceptance_criteria": [
+        "A future developer can find the source shortlist without reading chat",
+        "Each remembered source is categorized by likely use",
+        "No remembered source bypasses item-level license/provenance/UE4.27 compatibility review"
+      ],
+      "dependencies": [
+        "REQ-MEM-001",
+        "REQ-ASSET-001"
+      ],
+      "checkpoint": "CP55",
+      "notes": "This requirement preserves discovery options, not blanket asset approval."
     }
   ],
   "hard_invariants": [
@@ -1788,7 +1825,8 @@
       "Current develop baseline f7c2b081e7b064fcf27bb4c80124b21f351331ab has green Pre-Unreal #264 and Unreal Build Validation #99.",
       "Human verification completion is recorded conservatively without inventing numeric FPS/memory values that were not supplied in chat.",
       "CP55 resumes large visible world/activity/movement construction while preserving CI, UE4.27 build/import, story/save integrity and target-device budgets.",
-      "CP55 implementation now adds project-owned bird/rabbit/butterfly fauna and chapter-aware low-cost movement without altering story/save/route topology."
+      "CP55 implementation now adds project-owned bird/rabbit/butterfly fauna and chapter-aware low-cost movement without altering story/save/route topology.",
+      "Programmer-supplied asset/source shortlist was promoted from chat into durable Governor + ExternalAssetManifest project memory for future world, character, animation, audio, music and UI production."
     ]
   },
   "development_mode": {
