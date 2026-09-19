@@ -1,6 +1,4 @@
-mtllib WorldPack.mtl
 o SM_CommonButterfly
-usemtl LeafGold
 v -4 -3 0
 v 8 -3 0
 v 8 3 0
