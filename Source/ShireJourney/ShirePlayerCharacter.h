@@ -51,6 +51,9 @@ public:
     UFUNCTION(BlueprintPure, Category="Chronicle")
     bool IsChronicleOpen() const { return bChronicleOpen; }
 
+    UFUNCTION(BlueprintPure, Category="Movement")
+    bool IsCrouchingForStealth() const { return bIsCrouched; }
+
     UFUNCTION(BlueprintCallable, Category="Save")
     bool SaveAutomaticCheckpoint(FName CheckpointId, bool bShowHUD = true);
 

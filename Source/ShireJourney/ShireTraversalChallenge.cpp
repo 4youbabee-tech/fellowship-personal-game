@@ -46,6 +46,39 @@ void AShireTraversalChallenge::ConfigureChallenge(
     RequiredStoryBeat = InRequiredStoryBeat;
     BlockedAfterStoryBeat = InBlockedAfterStoryBeat;
     CompletionStoryBeat = InCompletionStoryBeat;
+    ChallengeType = TEXT("TRAVERSAL_CHALLENGE");
+    bRequireCrouch = false;
+    MaxCompletionSeconds = 0.0f;
+    ChallengeStartedAtSeconds = -1.0f;
+
+    GateA->SetRelativeLocation(GateAOffset);
+    GateB->SetRelativeLocation(GateBOffset);
+    GateC->SetRelativeLocation(GateCOffset);
+}
+
+void AShireTraversalChallenge::ConfigureActivityChallenge(
+    FName InDiscoveryId,
+    const FText& InDisplayName,
+    FName InChallengeType,
+    const FVector& GateAOffset,
+    const FVector& GateBOffset,
+    const FVector& GateCOffset,
+    bool bInRequireCrouch,
+    float InMaxCompletionSeconds)
+{
+    DiscoveryId = InDiscoveryId;
+    DisplayName = InDisplayName;
+    RequiredStoryBeat = NAME_None;
+    BlockedAfterStoryBeat = NAME_None;
+    CompletionStoryBeat = NAME_None;
+    ChallengeType = InChallengeType == NAME_None ? TEXT("TRAVERSAL_CHALLENGE") : InChallengeType;
+    bRequireCrouch = bInRequireCrouch || ChallengeType == TEXT("STEALTH_LITE");
+    MaxCompletionSeconds = InMaxCompletionSeconds > 0.0f
+        ? FMath::Clamp(InMaxCompletionSeconds, 5.0f, 120.0f)
+        : (ChallengeType == TEXT("TIMING_CHALLENGE") ? 24.0f : 0.0f);
+    ChallengeStartedAtSeconds = -1.0f;
+    CurrentGateIndex = 0;
+    bCompleted = false;
 
     GateA->SetRelativeLocation(GateAOffset);
     GateB->SetRelativeLocation(GateBOffset);
@@ -88,29 +121,94 @@ void AShireTraversalChallenge::HandleGateOverlap(
     bool bFromSweep,
     const FHitResult& SweepResult)
 {
-    if (bCompleted || !Cast<AShirePlayerCharacter>(OtherActor) || !IsEligible()) return;
+    AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(OtherActor);
+    if (bCompleted || !Player || !IsEligible())
+    {
+        return;
+    }
+
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests)
+    {
+        return;
+    }
+
+    AShireHUD* HUD = nullptr;
+    if (APlayerController* PC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr)
+    {
+        HUD = Cast<AShireHUD>(PC->GetHUD());
+    }
+
+    if (bRequireCrouch && !Player->IsCrouchingForStealth())
+    {
+        CurrentGateIndex = 0;
+        ChallengeStartedAtSeconds = -1.0f;
+        if (HUD)
+        {
+            HUD->ShowAlert(FText::FromString(TEXT("Keep low and move quietly through this route.")), 1.4f);
+        }
+        return;
+    }
 
     int32 GateIndex = INDEX_NONE;
     if (OverlappedComponent == GateA) GateIndex = 0;
     else if (OverlappedComponent == GateB) GateIndex = 1;
     else if (OverlappedComponent == GateC) GateIndex = 2;
+    if (GateIndex == INDEX_NONE)
+    {
+        return;
+    }
+
+    const float Now = GetWorld() ? GetWorld()->GetTimeSeconds() : 0.0f;
+    if (CurrentGateIndex > 0 && MaxCompletionSeconds > 0.0f &&
+        ChallengeStartedAtSeconds >= 0.0f &&
+        Now - ChallengeStartedAtSeconds > MaxCompletionSeconds)
+    {
+        CurrentGateIndex = 0;
+        ChallengeStartedAtSeconds = -1.0f;
+        if (HUD)
+        {
+            HUD->ShowAlert(FText::FromString(TEXT("The sequence slipped away. Start again.")), 1.3f);
+        }
+    }
 
     if (GateIndex == 0 && CurrentGateIndex != 0)
     {
         CurrentGateIndex = 1;
+        ChallengeStartedAtSeconds = Now;
         return;
     }
-    if (GateIndex != CurrentGateIndex) return;
+    if (GateIndex != CurrentGateIndex)
+    {
+        return;
+    }
+
+    if (CurrentGateIndex == 0)
+    {
+        ChallengeStartedAtSeconds = Now;
+    }
 
     ++CurrentGateIndex;
-    if (CurrentGateIndex < 3) return;
-
-    UGameInstance* GI = GetGameInstance();
-    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
-    if (!Quests) return;
+    if (CurrentGateIndex < 3)
+    {
+        if (HUD)
+        {
+            HUD->ShowAlert(
+                FText::FromString(FString::Printf(
+                    TEXT("%s: %d / 3"),
+                    DisplayName.IsEmpty() ? *ChallengeType.ToString() : *DisplayName.ToString(),
+                    CurrentGateIndex)),
+                1.15f);
+        }
+        return;
+    }
 
     const int32 InsightBefore = Quests->GetJourneyInsight();
-    const bool bNewDiscovery = Quests->RegisterJourneyDiscovery(DiscoveryId);
+    const bool bNewDiscovery = Quests->HasSideActivityForDiscovery(DiscoveryId)
+        ? Quests->CompleteSideActivityDiscovery(DiscoveryId)
+        : Quests->RegisterJourneyDiscovery(DiscoveryId);
+
     if (!bNewDiscovery)
     {
         if (Quests->HasJourneyDiscovery(DiscoveryId))
@@ -121,26 +219,30 @@ void AShireTraversalChallenge::HandleGateOverlap(
         else
         {
             CurrentGateIndex = 0;
+            ChallengeStartedAtSeconds = -1.0f;
         }
         return;
     }
 
-    if (CompletionStoryBeat != NAME_None) Quests->TriggerStoryBeat(CompletionStoryBeat);
+    if (CompletionStoryBeat != NAME_None)
+    {
+        Quests->TriggerStoryBeat(CompletionStoryBeat);
+    }
 
     bCompleted = true;
     DisableChallenge();
 
-    if (APlayerController* PC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr)
+    if (HUD)
     {
-        if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
-        {
-            HUD->ShowDiscovery(
-                DisplayName.IsEmpty() ? FText::FromString(DiscoveryId.ToString()) : DisplayName,
-                FMath::Max(0, Quests->GetJourneyInsight() - InsightBefore),
-                Quests->GetJourneyInsight(),
-                3.2f);
-        }
+        HUD->ShowDiscovery(
+            DisplayName.IsEmpty() ? FText::FromString(DiscoveryId.ToString()) : DisplayName,
+            FMath::Max(0, Quests->GetJourneyInsight() - InsightBefore),
+            Quests->GetJourneyInsight(),
+            3.2f);
     }
 
-    UE_LOG(LogTemp, Display, TEXT("TraversalChallenge: PASS id=%s gates=3"), *DiscoveryId.ToString());
+    UE_LOG(LogTemp, Display,
+        TEXT("SideActivityChallenge: PASS id=%s type=%s gates=3"),
+        *DiscoveryId.ToString(),
+        *ChallengeType.ToString());
 }

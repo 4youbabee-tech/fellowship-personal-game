@@ -26,6 +26,16 @@ public:
         const FVector& GateBOffset,
         const FVector& GateCOffset);
 
+    void ConfigureActivityChallenge(
+        FName InDiscoveryId,
+        const FText& InDisplayName,
+        FName InChallengeType,
+        const FVector& GateAOffset,
+        const FVector& GateBOffset,
+        const FVector& GateCOffset,
+        bool bInRequireCrouch = false,
+        float InMaxCompletionSeconds = 0.0f);
+
 protected:
     virtual void BeginPlay() override;
 
@@ -47,8 +57,12 @@ private:
     FName RequiredStoryBeat = NAME_None;
     FName BlockedAfterStoryBeat = NAME_None;
     FName CompletionStoryBeat = NAME_None;
+    FName ChallengeType = TEXT("TRAVERSAL_CHALLENGE");
     int32 CurrentGateIndex = 0;
     bool bCompleted = false;
+    bool bRequireCrouch = false;
+    float MaxCompletionSeconds = 0.0f;
+    float ChallengeStartedAtSeconds = -1.0f;
 
     UFUNCTION()
     void HandleGateOverlap(

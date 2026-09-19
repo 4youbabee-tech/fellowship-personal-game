@@ -769,6 +769,19 @@ FName UShireQuestSubsystem::GetSideActivityIdForDiscovery(FName DiscoveryId) con
     return Definition ? Definition->ActivityId : NAME_None;
 }
 
+bool UShireQuestSubsystem::CompleteSideActivityDiscovery(FName DiscoveryId)
+{
+    if (!HasSideActivityForDiscovery(DiscoveryId) || !IsSideActivityDiscoveryAvailable(DiscoveryId))
+    {
+        return false;
+    }
+
+    bSideActivityRewardInProgress = true;
+    const bool bCompleted = RegisterJourneyDiscovery(DiscoveryId);
+    bSideActivityRewardInProgress = false;
+    return bCompleted;
+}
+
 FName UShireQuestSubsystem::MakeChronicleEntryId(FName DiscoveryId)
 {
     return FName(*FString::Printf(TEXT("CHRONICLE_%s"), *DiscoveryId.ToString()));
@@ -930,16 +943,27 @@ bool UShireQuestSubsystem::RegisterJourneyDiscovery(FName DiscoveryId)
         return false;
     }
 
-    if (HasSideActivityForDiscovery(DiscoveryId) &&
-        !IsSideActivityDiscoveryAvailable(DiscoveryId))
+    if (HasSideActivityForDiscovery(DiscoveryId))
     {
-        UE_LOG(LogTemp, Warning,
-            TEXT("SideActivityRuntime: rejected reward outside window activity=%s discovery=%s route=%s chapter=%s"),
-            *GetSideActivityIdForDiscovery(DiscoveryId).ToString(),
-            *DiscoveryId.ToString(),
-            *CurrentRouteId.ToString(),
-            *CurrentChapterId.ToString());
-        return false;
+        if (!bSideActivityRewardInProgress)
+        {
+            UE_LOG(LogTemp, Warning,
+                TEXT("SideActivityRuntime: rejected direct reward bypass activity=%s discovery=%s"),
+                *GetSideActivityIdForDiscovery(DiscoveryId).ToString(),
+                *DiscoveryId.ToString());
+            return false;
+        }
+
+        if (!IsSideActivityDiscoveryAvailable(DiscoveryId))
+        {
+            UE_LOG(LogTemp, Warning,
+                TEXT("SideActivityRuntime: rejected reward outside window activity=%s discovery=%s route=%s chapter=%s"),
+                *GetSideActivityIdForDiscovery(DiscoveryId).ToString(),
+                *DiscoveryId.ToString(),
+                *CurrentRouteId.ToString(),
+                *CurrentChapterId.ToString());
+            return false;
+        }
     }
 
     const int32 Before = JourneyInsight;

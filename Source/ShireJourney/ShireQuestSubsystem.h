@@ -143,6 +143,9 @@ public:
     UFUNCTION(BlueprintPure, Category="SideActivity")
     FName GetSideActivityIdForDiscovery(FName DiscoveryId) const;
 
+    UFUNCTION(BlueprintCallable, Category="SideActivity")
+    bool CompleteSideActivityDiscovery(FName DiscoveryId);
+
     UFUNCTION(BlueprintPure, Category="Exploration")
     int32 GetJourneyInsight() const;
 
@@ -282,6 +285,7 @@ private:
     TArray<FShireJourneyRegionBonusDefinition> JourneyRegionBonusDefinitions;
     TMap<FName, FShireSideActivityProgressionDefinition> SideActivityProgressionDefinitions;
     TMap<FName, FShireSideActivityProgressionDefinition> SideActivityDefinitionsById;
+    bool bSideActivityRewardInProgress = false;
 
     void BuildQuestDefinitions();
     void AddQuestDefinition(FName QuestId, const FString& Title, std::initializer_list<const TCHAR*> Objectives);
