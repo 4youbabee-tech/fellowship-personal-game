@@ -63,6 +63,46 @@ void AShireGameMode::BeginPlay()
         }
     }
 
+    if (FParse::Param(FCommandLine::Get(), TEXT("AuditState")))
+    {
+        UGameInstance* GI = GetGameInstance();
+        UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+        if (!Quests)
+        {
+            UE_LOG(LogTemp, Error, TEXT("ShireStateAudit: subsystem=missing"));
+        }
+        else
+        {
+            Quests->StartExperience(
+                TEXT("FrodoMain"), TEXT("P1C03_Main"), TEXT("Frodo"),
+                TEXT("P1C03"), TEXT("RoadToWeathertop"), 2);
+            Quests->TriggerStoryBeat(TEXT("CI_STATE_AUDIT_BEAT"));
+
+            Quests->StartExperience(
+                TEXT("GandalfParallel"), TEXT("P1G01_Isengard"), TEXT("Gandalf"),
+                TEXT("P1G01"), TEXT("IsengardCounsel"), 1);
+
+            Quests->StartExperience(
+                TEXT("FrodoMain"), TEXT("P1C03_Main"), TEXT("Frodo"),
+                TEXT("P1C03"), TEXT("RoadToWeathertop"), 0);
+
+            const bool bRouteRestored =
+                Quests->GetCurrentRouteId() == TEXT("FrodoMain") &&
+                Quests->GetCurrentChapterId() == TEXT("P1C03") &&
+                Quests->GetQuestStage(TEXT("RoadToWeathertop")) == 2 &&
+                Quests->HasStoryBeatTriggered(TEXT("CI_STATE_AUDIT_BEAT"));
+
+            UE_LOG(
+                LogTemp,
+                bRouteRestored ? Display : Error,
+                TEXT("ShireStateAudit: route-roundtrip=%s chapter=%s questStage=%d beat=%s"),
+                bRouteRestored ? TEXT("PASS") : TEXT("FAIL"),
+                *Quests->GetCurrentChapterId().ToString(),
+                Quests->GetQuestStage(TEXT("RoadToWeathertop")),
+                Quests->HasStoryBeatTriggered(TEXT("CI_STATE_AUDIT_BEAT")) ? TEXT("yes") : TEXT("no"));
+        }
+    }
+
     // Prototype chapter worlds are spawned through a router so Chapter 1 can hand off
     // to Bree without loading both regions at the same time.
     GetWorld()->SpawnActor<AChapterWorldRouter>(FVector::ZeroVector, FRotator::ZeroRotator);
