@@ -2074,7 +2074,7 @@ if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     sys.exit(1)
 
-print("PRE-UNREAL VALIDATION PASSED")
+print("PRE-UNREAL CORE VALIDATION PASSED")
 
 # PG-050: mass world dressing must remain deterministic, source-controlled and story-safe.
 world_dressing_plan_path = ROOT / "Data" / "WorldDressingPlan.json"
@@ -2135,3 +2135,57 @@ if world_dressing_plan:
         if chapter_id not in profile_ids:
             fail(f"PG-050 world dressing plan missing chapter profile: {chapter_id}")
 
+# PG-051: character motion + regional atmosphere must stay rig-ready, bounded and topology-safe.
+character_motion_plan_path = ROOT / "Data" / "CharacterMotionPlan.json"
+chapter_atmosphere_plan_path = ROOT / "Data" / "ChapterAtmospherePlan.json"
+for guarded_path, guard_name in [
+    (character_motion_plan_path, "CharacterMotionPlan.json"),
+    (chapter_atmosphere_plan_path, "ChapterAtmospherePlan.json"),
+]:
+    if not guarded_path.exists():
+        fail(f"PG-051 production plan missing: {guard_name}")
+    else:
+        try:
+            json.loads(read(guarded_path))
+        except json.JSONDecodeError as exc:
+            fail(f"PG-051 invalid {guard_name}: {exc}")
+
+npc_motion_h = read(SOURCE / "ShireNPC.h")
+npc_motion_cpp = read(SOURCE / "ShireNPC.cpp")
+for symbol in [
+    "TryApplyProductionRig",
+    "bUsingSkeletalProductionRig",
+    "MotionCadenceScale",
+    "MotionStrideScale",
+    "MotionIdleScale",
+    "DialogueGesture",
+    "ABP_%s_Locomotion",
+]:
+    if symbol not in (npc_motion_h + npc_motion_cpp):
+        fail(f"PG-051 character motion invariant missing: {symbol}")
+
+chapter_world_h = read(SOURCE / "FellowshipChapterWorldBuilder.h")
+chapter_world_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+for symbol in [
+    "ConfigureChapterAtmosphere",
+    "ADirectionalLight",
+    "ASkyLight",
+    "AExponentialHeightFog",
+    "RuntimeAtmosphereManaged",
+    "SetFogDensity",
+    "RecaptureSky",
+]:
+    if symbol not in (chapter_world_h + chapter_world_cpp):
+        fail(f"PG-051 atmosphere invariant missing: {symbol}")
+
+for chapter_id in ["P1C03", "P1C04", "P1C05", "P1C06", "P1C07", "P1C08"]:
+    if chapter_world_cpp.count(f'ChapterId == TEXT("{chapter_id}")') < 1:
+        fail(f"PG-051 atmosphere/world chapter branch missing: {chapter_id}")
+
+if errors:
+    print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
+    for message in errors:
+        print(f"ERROR: {message}")
+    sys.exit(1)
+
+print("PRE-UNREAL VALIDATION PASSED")
