@@ -6,10 +6,17 @@
 #include "ShireAmbientNPC.h"
 #include "ShireQuestTrigger.h"
 
+#include "Components/DirectionalLightComponent.h"
+#include "Components/ExponentialHeightFogComponent.h"
+#include "Components/SkyLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Engine/DirectionalLight.h"
+#include "Engine/ExponentialHeightFog.h"
+#include "Engine/SkyLight.h"
 #include "Engine/StaticMeshActor.h"
 #include "Engine/TextRenderActor.h"
+#include "EngineUtils.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
@@ -34,6 +41,124 @@ AFellowshipChapterWorldBuilder::AFellowshipChapterWorldBuilder()
     CylinderMesh = CylinderAsset.Succeeded() ? CylinderAsset.Object : nullptr;
     ConeMesh = ConeAsset.Succeeded() ? ConeAsset.Object : nullptr;
     BasicMaterial = BasicMaterialAsset.Succeeded() ? BasicMaterialAsset.Object : nullptr;
+}
+
+void AFellowshipChapterWorldBuilder::ConfigureChapterAtmosphere(FName ChapterId)
+{
+    if (!GetWorld())
+    {
+        return;
+    }
+
+    float SunIntensity = 3.0f;
+    FLinearColor SunColor(0.95f, 0.82f, 0.64f);
+    FRotator SunRotation(-26.0f, -20.0f, 0.0f);
+    float SkyIntensity = 0.76f;
+    FLinearColor SkyColor(0.54f, 0.64f, 0.72f);
+    float FogDensity = 0.010f;
+    float FogHeightFalloff = 0.18f;
+    FLinearColor FogColor(0.42f, 0.49f, 0.52f);
+
+    if (ChapterId == TEXT("P1C03"))
+    {
+        SunIntensity = 2.4f; SunColor = FLinearColor(1.0f, 0.78f, 0.60f); SunRotation = FRotator(-18.0f, -35.0f, 0.0f);
+        SkyIntensity = 0.60f; SkyColor = FLinearColor(0.48f, 0.56f, 0.62f);
+        FogDensity = 0.018f; FogHeightFalloff = 0.19f; FogColor = FLinearColor(0.28f, 0.32f, 0.34f);
+    }
+    else if (ChapterId == TEXT("P1C04"))
+    {
+        SunIntensity = 3.6f; SunColor = FLinearColor(1.0f, 0.88f, 0.68f); SunRotation = FRotator(-32.0f, 55.0f, 0.0f);
+        SkyIntensity = 1.00f; SkyColor = FLinearColor(0.65f, 0.75f, 0.82f);
+        FogDensity = 0.008f; FogHeightFalloff = 0.22f; FogColor = FLinearColor(0.58f, 0.66f, 0.70f);
+    }
+    else if (ChapterId == TEXT("P1C05"))
+    {
+        SunIntensity = 2.8f; SunColor = FLinearColor(0.82f, 0.88f, 1.0f); SunRotation = FRotator(-24.0f, -70.0f, 0.0f);
+        SkyIntensity = 0.72f; SkyColor = FLinearColor(0.48f, 0.56f, 0.68f);
+        FogDensity = 0.015f; FogHeightFalloff = 0.14f; FogColor = FLinearColor(0.36f, 0.42f, 0.48f);
+    }
+    else if (ChapterId == TEXT("P1C06"))
+    {
+        SunIntensity = 0.18f; SunColor = FLinearColor(0.48f, 0.50f, 0.55f); SunRotation = FRotator(-70.0f, 0.0f, 0.0f);
+        SkyIntensity = 0.28f; SkyColor = FLinearColor(0.16f, 0.18f, 0.22f);
+        FogDensity = 0.028f; FogHeightFalloff = 0.35f; FogColor = FLinearColor(0.08f, 0.09f, 0.11f);
+    }
+    else if (ChapterId == TEXT("P1C07"))
+    {
+        SunIntensity = 2.2f; SunColor = FLinearColor(1.0f, 0.80f, 0.42f); SunRotation = FRotator(-38.0f, 30.0f, 0.0f);
+        SkyIntensity = 0.90f; SkyColor = FLinearColor(0.72f, 0.58f, 0.30f);
+        FogDensity = 0.011f; FogHeightFalloff = 0.24f; FogColor = FLinearColor(0.50f, 0.43f, 0.23f);
+    }
+    else if (ChapterId != TEXT("P1C08"))
+    {
+        return;
+    }
+
+    ADirectionalLight* Sun = nullptr;
+    for (TActorIterator<ADirectionalLight> It(GetWorld()); It; ++It)
+    {
+        if (It->ActorHasTag(TEXT("RuntimeAtmosphereManaged")))
+        {
+            Sun = *It;
+            break;
+        }
+    }
+    if (!Sun)
+    {
+        Sun = GetWorld()->SpawnActor<ADirectionalLight>(FVector::ZeroVector, SunRotation);
+        if (Sun) Sun->Tags.AddUnique(TEXT("RuntimeAtmosphereManaged"));
+    }
+    if (Sun && Sun->GetLightComponent())
+    {
+        Sun->SetActorRotation(SunRotation);
+        Sun->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        Sun->GetLightComponent()->SetIntensity(SunIntensity);
+        Sun->GetLightComponent()->SetLightColor(SunColor);
+    }
+
+    ASkyLight* Sky = nullptr;
+    for (TActorIterator<ASkyLight> It(GetWorld()); It; ++It)
+    {
+        if (It->ActorHasTag(TEXT("RuntimeAtmosphereManaged")))
+        {
+            Sky = *It;
+            break;
+        }
+    }
+    if (!Sky)
+    {
+        Sky = GetWorld()->SpawnActor<ASkyLight>(FVector::ZeroVector, FRotator::ZeroRotator);
+        if (Sky) Sky->Tags.AddUnique(TEXT("RuntimeAtmosphereManaged"));
+    }
+    if (Sky && Sky->GetLightComponent())
+    {
+        Sky->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        Sky->GetLightComponent()->SetIntensity(SkyIntensity);
+        Sky->GetLightComponent()->SetLightColor(SkyColor);
+        Sky->GetLightComponent()->RecaptureSky();
+    }
+
+    AExponentialHeightFog* Fog = nullptr;
+    for (TActorIterator<AExponentialHeightFog> It(GetWorld()); It; ++It)
+    {
+        if (It->ActorHasTag(TEXT("RuntimeAtmosphereManaged")))
+        {
+            Fog = *It;
+            break;
+        }
+    }
+    if (!Fog)
+    {
+        Fog = GetWorld()->SpawnActor<AExponentialHeightFog>(FVector::ZeroVector, FRotator::ZeroRotator);
+        if (Fog) Fog->Tags.AddUnique(TEXT("RuntimeAtmosphereManaged"));
+    }
+    if (Fog && Fog->GetComponent())
+    {
+        Fog->GetComponent()->SetMobility(EComponentMobility::Movable);
+        Fog->GetComponent()->SetFogDensity(FogDensity);
+        Fog->GetComponent()->SetFogHeightFalloff(FogHeightFalloff);
+        Fog->GetComponent()->SetFogInscatteringColor(FogColor);
+    }
 }
 
 AStaticMeshActor* AFellowshipChapterWorldBuilder::SpawnShape(
@@ -473,6 +598,7 @@ void AFellowshipChapterWorldBuilder::BuildChapter(FName ChapterId)
 
     bBuilt = true;
     EnsureProductionMeshes();
+    ConfigureChapterAtmosphere(ChapterId);
 
     if (ChapterId == TEXT("P1C03"))
     {
