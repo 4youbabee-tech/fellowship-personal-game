@@ -99,41 +99,54 @@ jobs:
           echo Runner bootstrap succeeded.
 
       - name: Checkout exact commit with resilient archive download
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
+        uses: actions/github-script@v7
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          $ErrorActionPreference = "Stop"
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const cp = require('child_process');
 
-          $Archive = Join-Path $env:RUNNER_TEMP ("fellowship-" + $env:GITHUB_SHA + ".zip")
-          $Extract = Join-Path $env:RUNNER_TEMP ("fellowship-" + $env:GITHUB_SHA)
+            const archive = path.join(process.env.RUNNER_TEMP, `fellowship-${process.env.GITHUB_SHA}.zip`);
+            const extract = path.join(process.env.RUNNER_TEMP, `fellowship-${process.env.GITHUB_SHA}`);
+            const workspace = process.env.GITHUB_WORKSPACE;
+            const url = `https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}/zipball/${process.env.GITHUB_SHA}`;
 
-          if (Test-Path $Archive) { Remove-Item -LiteralPath $Archive -Force }
-          if (Test-Path $Extract) { Remove-Item -LiteralPath $Extract -Recurse -Force }
-          New-Item -ItemType Directory -Path $Extract | Out-Null
+            fs.rmSync(archive, { force: true });
+            fs.rmSync(extract, { recursive: true, force: true });
+            fs.mkdirSync(extract, { recursive: true });
 
-          $Url = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/zipball/$env:GITHUB_SHA"
-          & curl.exe -L --fail --retry 6 --retry-delay 5 --retry-all-errors -H "Authorization: Bearer $env:GH_TOKEN" -H "X-GitHub-Api-Version: 2022-11-28" -o $Archive $Url
-          if ($LASTEXITCODE -ne 0) {
-            throw "Exact-commit archive download failed after retries."
-          }
+            cp.execFileSync('curl.exe', [
+              '-L', '--fail', '--retry', '6', '--retry-delay', '5', '--retry-all-errors',
+              '-H', `Authorization: Bearer ${process.env.GH_TOKEN}`,
+              '-H', 'X-GitHub-Api-Version: 2022-11-28',
+              '-o', archive, url
+            ], { stdio: 'inherit' });
 
-          Expand-Archive -LiteralPath $Archive -DestinationPath $Extract -Force
-          $Root = Get-ChildItem -LiteralPath $Extract -Directory | Select-Object -First 1
-          if (-not $Root) {
-            throw "Exact-commit archive did not contain a repository root directory."
-          }
+            const escapedArchive = archive.replace(/'/g, "''");
+            const escapedExtract = extract.replace(/'/g, "''");
+            cp.execFileSync('powershell.exe', [
+              '-NoProfile', '-ExecutionPolicy', 'Bypass', '-Command',
+              `Expand-Archive -LiteralPath '${escapedArchive}' -DestinationPath '${escapedExtract}' -Force`
+            ], { stdio: 'inherit' });
 
-          Get-ChildItem -LiteralPath $env:GITHUB_WORKSPACE -Force | Remove-Item -Recurse -Force
-          Get-ChildItem -LiteralPath $Root.FullName -Force | Copy-Item -Destination $env:GITHUB_WORKSPACE -Recurse -Force
+            const roots = fs.readdirSync(extract, { withFileTypes: true }).filter(e => e.isDirectory());
+            if (!roots.length) throw new Error('Exact-commit archive did not contain a repository root directory.');
+            const root = path.join(extract, roots[0].name);
 
-          $Project = Join-Path $env:GITHUB_WORKSPACE "ShireJourney.uproject"
-          if (-not (Test-Path $Project)) {
-            throw "ShireJourney.uproject missing after exact-commit archive extraction."
-          }
+            fs.mkdirSync(workspace, { recursive: true });
+            for (const name of fs.readdirSync(workspace)) {
+              fs.rmSync(path.join(workspace, name), { recursive: true, force: true });
+            }
+            for (const name of fs.readdirSync(root)) {
+              fs.cpSync(path.join(root, name), path.join(workspace, name), { recursive: true, force: true });
+            }
 
-          Set-Content -LiteralPath (Join-Path $env:GITHUB_WORKSPACE ".ci-source-sha") -Value $env:GITHUB_SHA
-          Write-Host "Checked out exact commit $env:GITHUB_SHA without actions/checkout."
+            const project = path.join(workspace, 'ShireJourney.uproject');
+            if (!fs.existsSync(project)) throw new Error('ShireJourney.uproject missing after exact-commit archive extraction.');
+            fs.writeFileSync(path.join(workspace, '.ci-source-sha'), process.env.GITHUB_SHA + '\n', 'utf8');
+            console.log(`Checked out exact commit ${process.env.GITHUB_SHA} without a temp PowerShell step script.`);
 
       - name: Verify Unreal 4.27.2 and project
         shell: cmd
