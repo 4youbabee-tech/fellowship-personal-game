@@ -33,6 +33,13 @@ jobs:
           @echo off
           setlocal EnableExtensions EnableDelayedExpansion
 
+          rem A legacy interactive watchdog can mistake an active Runner.Worker-only
+          rem phase for an offline runner, start a second listener, and let that second
+          rem listener clear _work\_temp underneath the live job. Stop only that
+          rem watchdog process before the build. This is best-effort support cleanup
+          rem and must never gate validation.
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue'; Get-CimInstance Win32_Process -Filter \"Name='powershell.exe'\" | Where-Object { $_.CommandLine -like '*runner-watchdog.ps1*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }; exit 0" >nul 2>nul
+
           where git.exe >nul 2>nul
           if not errorlevel 1 (
             for /f "delims=" %%G in ('where git.exe') do (
@@ -87,73 +94,6 @@ jobs:
           )
 
           echo Runner bootstrap succeeded.
-
-      - name: Install user-level runner autostart watchdog
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
-        run: |
-          $ErrorActionPreference = "Stop"
-
-          $RunnerRoot = "C:\actions-runner"
-          $Watchdog = Join-Path $RunnerRoot "runner-watchdog.ps1"
-          $Launcher = Join-Path $RunnerRoot "start-runner-watchdog.cmd"
-          $DiagDir = Join-Path $RunnerRoot "_diag"
-          $WatchdogLog = Join-Path $DiagDir "user-watchdog.log"
-
-          if (-not (Test-Path (Join-Path $RunnerRoot "run.cmd"))) {
-            throw "Expected runner launcher not found at C:\actions-runner\run.cmd"
-          }
-          if (-not (Test-Path $DiagDir)) {
-            New-Item -ItemType Directory -Path $DiagDir -Force | Out-Null
-          }
-
-          @'
-          $ErrorActionPreference = "SilentlyContinue"
-          $RunnerRoot = "C:\actions-runner"
-          $RunCmd = Join-Path $RunnerRoot "run.cmd"
-          $DiagDir = Join-Path $RunnerRoot "_diag"
-          $Log = Join-Path $DiagDir "user-watchdog.log"
-
-          function Write-WatchdogLog([string]$Message) {
-              try {
-                  Add-Content -LiteralPath $Log -Value ("{0:u} {1}" -f (Get-Date), $Message)
-              } catch {}
-          }
-
-          Write-WatchdogLog "watchdog started for interactive user $env:USERNAME"
-
-          while ($true) {
-              $listener = Get-Process -Name "Runner.Listener" -ErrorAction SilentlyContinue
-              if (-not $listener) {
-                  Write-WatchdogLog "Runner.Listener absent; starting C:\actions-runner\run.cmd"
-                  Start-Process -FilePath $RunCmd -WorkingDirectory $RunnerRoot -WindowStyle Hidden
-                  Start-Sleep -Seconds 8
-              }
-              Start-Sleep -Seconds 12
-          }
-          '@ | Set-Content -LiteralPath $Watchdog -Encoding UTF8
-
-          @'
-          @echo off
-          powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "C:\actions-runner\runner-watchdog.ps1"
-          '@ | Set-Content -LiteralPath $Launcher -Encoding ASCII
-
-          $RunKey = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
-          if (-not (Test-Path $RunKey)) {
-            New-Item -Path $RunKey -Force | Out-Null
-          }
-          New-ItemProperty -Path $RunKey -Name "FellowshipGitHubRunnerWatchdog" -PropertyType String -Value ('"' + $Launcher + '"') -Force | Out-Null
-
-          Write-Host "Installed user-level runner watchdog:"
-          Write-Host "  watchdog: $Watchdog"
-          Write-Host "  launcher:  $Launcher"
-          Write-Host "  registry:  HKCU\Software\Microsoft\Windows\CurrentVersion\Run\FellowshipGitHubRunnerWatchdog"
-          Write-Host "This requires no Windows account password and starts after the interactive user logs in."
-
-          # The watchdog install is support infrastructure, not a build gate. Some
-          # Windows sessions preserve a non-zero native exit code after successful
-          # registry/process operations, so normalize the step's exit state explicitly.
-          $global:LASTEXITCODE = 0
-          exit 0
 
       - name: Checkout exact commit with resilient archive download
         shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
