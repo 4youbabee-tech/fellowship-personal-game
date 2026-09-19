@@ -13,6 +13,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
+#include "Misc/PackageName.h"
 #include "UObject/ConstructorHelpers.h"
 
 AShireNPC::AShireNPC()
@@ -144,12 +145,27 @@ bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
         return false;
     }
 
+    const FString SkeletalPackagePath = FString::Printf(
+        TEXT("/Game/Production/Characters/Rigs/%s/SK_%s"),
+        *RigFolder, *RigFolder);
+    const FString AnimPackagePath = FString::Printf(
+        TEXT("/Game/Production/Characters/Rigs/%s/ABP_%s_Locomotion"),
+        *RigFolder, *RigFolder);
+
+    // Final skeletal rigs are optional at the current production stage. Probe
+    // package existence first so the intended modular fallback does not flood
+    // verification logs with expected missing-asset warnings.
+    if (!FPackageName::DoesPackageExist(SkeletalPackagePath) ||
+        !FPackageName::DoesPackageExist(AnimPackagePath))
+    {
+        GetMesh()->SetVisibility(false, true);
+        return false;
+    }
+
     const FString SkeletalPath = FString::Printf(
-        TEXT("/Game/Production/Characters/Rigs/%s/SK_%s.SK_%s"),
-        *RigFolder, *RigFolder, *RigFolder);
+        TEXT("%s.SK_%s"), *SkeletalPackagePath, *RigFolder);
     const FString AnimClassPath = FString::Printf(
-        TEXT("/Game/Production/Characters/Rigs/%s/ABP_%s_Locomotion.ABP_%s_Locomotion_C"),
-        *RigFolder, *RigFolder, *RigFolder);
+        TEXT("%s.ABP_%s_Locomotion_C"), *AnimPackagePath, *RigFolder);
 
     USkeletalMesh* SkeletalMesh = LoadObject<USkeletalMesh>(nullptr, *SkeletalPath);
     UClass* AnimClass = LoadClass<UAnimInstance>(nullptr, *AnimClassPath);
