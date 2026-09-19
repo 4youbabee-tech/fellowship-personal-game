@@ -240,6 +240,71 @@ for required_req in [
     if required_req not in requirement_ids:
         fail(f"Single ProjectGovernor missing critical requirement: {required_req}")
 
+# PG-059: screenplay-derived dialogue source context must be complete and bounded.
+film_source_path = ROOT / "Data" / "FilmDialogueSourceContext.json"
+film_source_data = {}
+if not film_source_path.exists():
+    fail("Film dialogue source context missing: Data/FilmDialogueSourceContext.json")
+else:
+    try:
+        film_source_data = json.loads(read(film_source_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/FilmDialogueSourceContext.json: {exc}")
+
+if film_source_data:
+    source_ids = {str(item.get("id") or "").strip() for item in film_source_data.get("sources", [])}
+    for required_source in {"SRC-FOTR-2001-SCREENPLAY", "SRC-TTT-2002-SCREENPLAY"}:
+        if required_source not in source_ids:
+            fail(f"Film dialogue source context missing required source: {required_source}")
+
+    policy = film_source_data.get("policy", {})
+    if not policy.get("no_verbatim_screenplay_dialogue"):
+        fail("Film dialogue source context must explicitly forbid verbatim screenplay dialogue")
+
+    contexts = film_source_data.get("part1_contexts", [])
+    covered = set()
+    has_gandalf = False
+    seen = set()
+    for index, context in enumerate(contexts, start=1):
+        context_id = str(context.get("context_id") or "").strip()
+        source_id = str(context.get("source_id") or "").strip()
+        route = str(context.get("route") or "").strip()
+        chapter = str(context.get("chapter") or "").strip()
+        if not context_id or not source_id or not route or not chapter:
+            fail(f"Film dialogue context entry {index} is incomplete")
+            continue
+        if context_id in seen:
+            fail(f"Duplicate film dialogue context id: {context_id}")
+        seen.add(context_id)
+        if source_id not in source_ids:
+            fail(f"Film dialogue context {context_id} references unknown source {source_id}")
+        if not context.get("safe_topics"):
+            fail(f"Film dialogue context {context_id} has no safe_topics")
+        if not context.get("future_knowledge_blocks"):
+            fail(f"Film dialogue context {context_id} has no future_knowledge_blocks")
+        forbidden = {"dialogue", "dialogue_text", "screenplay_text", "verbatim_quote", "quote"}
+        if forbidden.intersection(context.keys()):
+            fail(f"Film dialogue context {context_id} contains a forbidden raw-dialogue field")
+        if route == "FrodoMain":
+            covered.add(chapter)
+        elif route == "GandalfParallel":
+            has_gandalf = True
+
+    expected = {f"P1C{i:02d}" for i in range(1, 9)}
+    missing = sorted(expected - covered)
+    if missing:
+        fail("Film dialogue source context missing Part I chapters: " + ", ".join(missing))
+    if not has_gandalf:
+        fail("Film dialogue source context missing GandalfParallel coverage")
+
+    build_text = read(SOURCE / "ShireJourney.Build.cs")
+    if "Data/FilmDialogueSourceContext.json" not in build_text:
+        fail("Film dialogue source context is not packaged as a runtime dependency")
+    npc_context_text = read(SOURCE / "ShireNPCContextSubsystem.cpp")
+    for marker in ["LoadFilmDialogueSourceContext", "GetFilmDialogueContextSummary", "SourceContextId"]:
+        if marker not in npc_context_text and marker not in read(SOURCE / "ShireNPCContextSubsystem.h"):
+            fail(f"Film dialogue runtime wiring missing marker: {marker}")
+
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
 living_world_data = {}
