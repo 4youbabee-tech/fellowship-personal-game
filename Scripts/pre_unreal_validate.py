@@ -2818,6 +2818,69 @@ for symbol in ["BiographyFacts", "KnowledgeLimits", "AttitudeTags", "GetProfileC
 if "LivingNPCIntelligencePlan.json" not in build_cs_cp52:
     fail("PG-059 living-NPC intelligence plan is not packaged")
 
+# PG-060: whole-game mega integration must remain explicit and coherent.
+mega_plan_path = ROOT / "Data" / "CP56MegaIntegrationPlan.json"
+completeness_path = ROOT / "Data" / "GameCompletenessMatrix.json"
+for path, label in [
+    (mega_plan_path, "CP56MegaIntegrationPlan.json"),
+    (completeness_path, "GameCompletenessMatrix.json"),
+]:
+    if not path.exists():
+        fail(f"PG-060 {label} missing")
+    else:
+        try:
+            json.loads(read(path))
+        except json.JSONDecodeError as exc:
+            fail(f"PG-060 invalid {label}: {exc}")
+
+if completeness_path.exists():
+    try:
+        completeness_pg60 = json.loads(read(completeness_path))
+    except json.JSONDecodeError:
+        completeness_pg60 = {}
+    required_systems_pg60 = {
+        "PLAYER_MOVEMENT", "CAMERA", "INTERACTION", "COMBAT", "COMPANIONS",
+        "NAMED_CHARACTER_INTELLIGENCE", "AMBIENT_NPC_INTELLIGENCE", "DIALOGUE",
+        "OFFLINE_AI", "WORLD_LIFE", "WORLD_GEOGRAPHY", "ATMOSPHERE",
+        "EXPLORATION", "STORY", "SAVE_LOAD", "AUDIO", "CHARACTER_MOTION",
+        "UI_HUD", "PERFORMANCE", "QA_AUTOMATION", "CINEMATIC_PRESENTATION",
+        "ASSET_PRODUCTION", "HANDOFF_GOVERNANCE",
+    }
+    actual_systems_pg60 = {
+        str(item.get("id") or "")
+        for item in completeness_pg60.get("systems", [])
+        if isinstance(item, dict)
+    }
+    missing_systems_pg60 = sorted(required_systems_pg60 - actual_systems_pg60)
+    if missing_systems_pg60:
+        fail("PG-060 completeness matrix missing systems: " + ", ".join(missing_systems_pg60))
+
+npc_h_pg60 = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.h")
+npc_cpp_pg60 = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
+ctx_h_pg60 = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.h")
+ctx_cpp_pg60 = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.cpp")
+
+for symbol in ["CachedWorldPressure", "CachedWorldMood", "CachedEmotionalState", "RefreshLivingContext"]:
+    if symbol not in (npc_h_pg60 + npc_cpp_pg60):
+        fail(f"PG-060 companion living-context symbol missing: {symbol}")
+
+for symbol in ["GetProfileEmotionalState", "WorldMood", "EmotionalState"]:
+    if symbol not in (ctx_h_pg60 + ctx_cpp_pg60):
+        fail(f"PG-060 named-character context symbol missing: {symbol}")
+
+for mood in [
+    "PEACEFUL_HOME", "SUSPICIOUS_TOWN", "PURSUED_WILDERNESS", "SAFE_REFUGE",
+    "FELLOWSHIP_UNDER_PRESSURE", "DEAD_CITY_DREAD", "GRIEF_AND_REFUGE",
+    "FELLOWSHIP_FRACTURE", "WAR_CORRUPTION",
+]:
+    if mood not in ctx_cpp_pg60:
+        fail(f"PG-060 regional dialogue/context missing mood: {mood}")
+
+if '? TEXT("Mug") : NAME_None' in read(ROOT / "Source" / "ShireJourney" / "ShirePrototypeWorldBuilder.cpp"):
+    fail("PG-060 Shire crowd prop ternary regressed to UE4-incompatible mixed FName/string types")
+if '? TEXT("Mug") : NAME_None' in read(ROOT / "Source" / "ShireJourney" / "BreePrototypeWorldBuilder.cpp"):
+    fail("PG-060 Bree crowd prop ternary regressed to UE4-incompatible mixed FName/string types")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
