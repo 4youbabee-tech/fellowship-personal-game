@@ -110,6 +110,17 @@
           "story_effect": "NONE",
           "may_advance_required_anchor": false,
           "may_change_canon_outcome": false
+        },
+        {
+          "id": "SHIRE_QUIET_FEET",
+          "label": "Quiet crouch route through Hobbiton hedges",
+          "available_between": [
+            "GandalfArrival",
+            "PartyArrival"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
         }
       ],
       "return_policy": {

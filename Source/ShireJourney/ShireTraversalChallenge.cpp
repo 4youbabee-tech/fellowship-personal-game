@@ -242,7 +242,7 @@ void AShireTraversalChallenge::HandleGateOverlap(
     }
 
     UE_LOG(LogTemp, Display,
-        TEXT("SideActivityChallenge: PASS id=%s type=%s gates=3"),
+        TEXT("TraversalChallenge: PASS id=%s type=%s gates=3"),
         *DiscoveryId.ToString(),
         *ChallengeType.ToString());
 }
