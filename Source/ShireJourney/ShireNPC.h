@@ -162,7 +162,12 @@ private:
     bool bCompanionFollowStateResolved = false;
     bool bVisualStyleApplied = false;
     bool bPrototypeMoving = false;
+    bool bUsingSkeletalProductionRig = false;
     float PrototypeWalkPhase = 0.0f;
+    float PrototypeIdlePhase = 0.0f;
+    float MotionCadenceScale = 1.0f;
+    float MotionStrideScale = 1.0f;
+    float MotionIdleScale = 1.0f;
     float PrototypeTorsoBaseZ = -4.0f;
     float PrototypeHeadBaseZ = 39.0f;
     float PrototypeHairBaseZ = 47.0f;
@@ -176,6 +181,7 @@ private:
     float BanterCooldownRemaining = -1.0f;
 
     void ApplyPrototypeStyle();
+    bool TryApplyProductionRig(const FString& RigFolder);
     void UpdatePrototypeAnimation(float DeltaSeconds);
     void UpdatePrototypeActing(float DeltaSeconds);
     const TArray<FText>* ResolveDialogueLines(const UShireQuestSubsystem* QuestSubsystem) const;

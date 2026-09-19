@@ -3,8 +3,11 @@
 #include "ShireNPCContextSubsystem.h"
 #include "ShireDialogueSubsystem.h"
 #include "ShireHUD.h"
+#include "Animation/AnimInstance.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Engine/SkeletalMesh.h"
 #include "Engine/GameInstance.h"
 #include "EngineUtils.h"
 #include "GameFramework/PlayerController.h"
@@ -134,6 +137,51 @@ AShireNPC::AShireNPC()
     }
 }
 
+bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
+{
+    if (RigFolder.IsEmpty() || !GetMesh())
+    {
+        return false;
+    }
+
+    const FString SkeletalPath = FString::Printf(
+        TEXT("/Game/Production/Characters/Rigs/%s/SK_%s.SK_%s"),
+        *RigFolder, *RigFolder, *RigFolder);
+    const FString AnimClassPath = FString::Printf(
+        TEXT("/Game/Production/Characters/Rigs/%s/ABP_%s_Locomotion.ABP_%s_Locomotion_C"),
+        *RigFolder, *RigFolder, *RigFolder);
+
+    USkeletalMesh* SkeletalMesh = LoadObject<USkeletalMesh>(nullptr, *SkeletalPath);
+    UClass* AnimClass = LoadClass<UAnimInstance>(nullptr, *AnimClassPath);
+    if (!SkeletalMesh || !AnimClass)
+    {
+        GetMesh()->SetVisibility(false, true);
+        return false;
+    }
+
+    GetMesh()->SetSkeletalMesh(SkeletalMesh);
+    GetMesh()->SetAnimInstanceClass(AnimClass);
+    GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GetMesh()->SetVisibility(true, true);
+
+    UStaticMeshComponent* ModularPieces[] = {
+        PrototypeTorso, PrototypeHead, PrototypeHair,
+        PrototypeLeftEye, PrototypeRightEye, PrototypeMouth,
+        PrototypeLeftArm, PrototypeRightArm, PrototypeLeftLeg, PrototypeRightLeg,
+        PrototypeCloak, PrototypePrimaryProp, PrototypeSecondaryProp,
+        PrototypeBeard, PrototypeHeadpiece
+    };
+    for (UStaticMeshComponent* Piece : ModularPieces)
+    {
+        if (Piece)
+        {
+            Piece->SetVisibility(false, true);
+        }
+    }
+    return true;
+}
+
+
 void AShireNPC::ApplyPrototypeStyle()
 {
     UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
@@ -216,6 +264,28 @@ void AShireNPC::ApplyPrototypeStyle()
         Name.Equals(TEXT("Haldir"), ESearchCase::IgnoreCase) ||
         Name.Equals(TEXT("Galadriel"), ESearchCase::IgnoreCase) ||
         Name.Equals(TEXT("Legolas"), ESearchCase::IgnoreCase);
+
+    // CP51: visible motion profiles keep the modular cast alive now while the same
+    // actor remains ready to hand off to an imported skeletal mesh + locomotion AnimBP.
+    MotionCadenceScale = 1.0f;
+    MotionStrideScale = 1.0f;
+    MotionIdleScale = 0.82f;
+    if (bWizard)
+    {
+        MotionCadenceScale = 0.82f; MotionStrideScale = 0.86f; MotionIdleScale = 0.74f;
+    }
+    else if (bElf)
+    {
+        MotionCadenceScale = 0.90f; MotionStrideScale = 0.80f; MotionIdleScale = 0.62f;
+    }
+    else if (Name.Equals(TEXT("Gimli"), ESearchCase::IgnoreCase))
+    {
+        MotionCadenceScale = 0.96f; MotionStrideScale = 1.12f; MotionIdleScale = 0.72f;
+    }
+    else if (!bHuman)
+    {
+        MotionCadenceScale = 1.08f; MotionStrideScale = 0.92f; MotionIdleScale = 0.95f;
+    }
 
     if (bWizard)
     {
@@ -654,30 +724,53 @@ void AShireNPC::ApplyPrototypeStyle()
             : FLinearColor(0.34f, 0.42f, 0.26f));
     }
 
+    FString RigFolder = DedicatedFolder;
+    if (RigFolder.IsEmpty() && bGandalfVisual)
+    {
+        RigFolder = TEXT("Gandalf");
+    }
+    bUsingSkeletalProductionRig = TryApplyProductionRig(RigFolder);
+
     bVisualStyleApplied = true;
 }
 
 void AShireNPC::UpdatePrototypeAnimation(float DeltaSeconds)
 {
-    float Swing = 0.0f;
-    float Bob = 0.0f;
-    if (bPrototypeMoving)
+    if (bUsingSkeletalProductionRig)
     {
-        PrototypeWalkPhase += DeltaSeconds * 8.0f;
-        Swing = FMath::Sin(PrototypeWalkPhase) * 25.0f;
-        Bob = FMath::Abs(FMath::Sin(PrototypeWalkPhase * 2.0f)) * 1.2f;
+        return;
     }
 
+    float Swing = 0.0f;
+    float Bob = 0.0f;
+    float IdleBreath = 0.0f;
+    float IdleSway = 0.0f;
+    if (bPrototypeMoving)
+    {
+        PrototypeWalkPhase += DeltaSeconds * 8.0f * MotionCadenceScale;
+        Swing = FMath::Sin(PrototypeWalkPhase) * 25.0f * MotionStrideScale;
+        Bob = FMath::Abs(FMath::Sin(PrototypeWalkPhase * 2.0f)) * 1.2f * MotionStrideScale;
+    }
+    else
+    {
+        PrototypeIdlePhase += DeltaSeconds * (1.15f + 0.04f * static_cast<float>(GetUniqueID() % 7));
+        IdleBreath = FMath::Sin(PrototypeIdlePhase) * 0.70f * MotionIdleScale;
+        IdleSway = FMath::Sin(PrototypeIdlePhase * 0.55f) * 1.6f * MotionIdleScale;
+    }
+
+    const float DialogueGesture = DialogueActingRemaining > 0.0f
+        ? FMath::Sin(ActingPhase * 0.72f) * 7.0f
+        : 0.0f;
     const float BlendSpeed = 10.0f;
     if (PrototypeLeftArm)
     {
         PrototypeLeftArm->SetRelativeRotation(FMath::RInterpTo(
-            PrototypeLeftArm->GetRelativeRotation(), FRotator(Swing, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+            PrototypeLeftArm->GetRelativeRotation(), FRotator(Swing + IdleSway, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
     }
     if (PrototypeRightArm)
     {
         PrototypeRightArm->SetRelativeRotation(FMath::RInterpTo(
-            PrototypeRightArm->GetRelativeRotation(), FRotator(-Swing, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
+            PrototypeRightArm->GetRelativeRotation(), FRotator(-Swing - IdleSway + DialogueGesture, 0.0f, 0.0f), DeltaSeconds, BlendSpeed));
     }
     if (PrototypeLeftLeg)
     {
@@ -694,19 +787,19 @@ void AShireNPC::UpdatePrototypeAnimation(float DeltaSeconds)
     {
         PrototypeTorso->SetRelativeLocation(FMath::VInterpTo(
             PrototypeTorso->GetRelativeLocation(),
-            FVector(0.0f, 0.0f, PrototypeTorsoBaseZ + Bob), DeltaSeconds, 12.0f));
+            FVector(0.0f, 0.0f, PrototypeTorsoBaseZ + Bob + IdleBreath), DeltaSeconds, 12.0f));
     }
     if (PrototypeHead)
     {
         PrototypeHead->SetRelativeLocation(FMath::VInterpTo(
             PrototypeHead->GetRelativeLocation(),
-            FVector(0.0f, 0.0f, PrototypeHeadBaseZ + Bob), DeltaSeconds, 12.0f));
+            FVector(0.0f, 0.0f, PrototypeHeadBaseZ + Bob + IdleBreath * 0.65f), DeltaSeconds, 12.0f));
     }
     if (PrototypeHair)
     {
         PrototypeHair->SetRelativeLocation(FMath::VInterpTo(
             PrototypeHair->GetRelativeLocation(),
-            FVector(-1.0f, 0.0f, PrototypeHairBaseZ + Bob), DeltaSeconds, 12.0f));
+            FVector(-1.0f, 0.0f, PrototypeHairBaseZ + Bob + IdleBreath * 0.65f), DeltaSeconds, 12.0f));
     }
 
     if (PrototypeCloak && PrototypeCloak->IsVisible())
@@ -754,6 +847,11 @@ void AShireNPC::UpdatePrototypeAnimation(float DeltaSeconds)
 
 void AShireNPC::UpdatePrototypeActing(float DeltaSeconds)
 {
+    if (bUsingSkeletalProductionRig)
+    {
+        return;
+    }
+
     if (!PrototypeHead || !PrototypeLeftEye || !PrototypeRightEye || !PrototypeMouth)
     {
         return;

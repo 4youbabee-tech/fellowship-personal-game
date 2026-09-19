@@ -951,6 +951,82 @@
         "REQ-WORLD-002"
       ],
       "checkpoint": "CP50"
+    },
+    {
+      "id": "REQ-CHAR-003",
+      "title": "Rig-ready character motion production",
+      "category": "VisualProduction",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "CP51 continuation of the user's visible-production-first direction",
+      "intent": "Make named characters visibly alive now while establishing a safe skeletal-rig and locomotion-AnimBP handoff that never hides the modular fallback unless the complete rig pair resolves.",
+      "evidence": [
+        "Data/CharacterMotionPlan.json",
+        "Source/ShireJourney/ShireNPC.h",
+        "Source/ShireJourney/ShireNPC.cpp",
+        "Docs/CHECKPOINTS.md CP51"
+      ],
+      "implementation_refs": [
+        "strict skeletal mesh + AnimBP activation pair",
+        "profile-specific modular idle/walk motion",
+        "dialogue gesture fallback"
+      ],
+      "missing_work": [
+        "final skeletal rigs",
+        "final locomotion animation assets",
+        "facial/cloth/hair animation",
+        "UE4.27 compile/import validation",
+        "PIE/device visual acceptance"
+      ],
+      "acceptance_criteria": [
+        "Incomplete rigs never suppress working modular visuals",
+        "Named modular characters show bounded idle/walk/dialogue motion",
+        "Rig path activates only when both mesh and AnimBP resolve",
+        "Target device remains playable after final rig integration"
+      ],
+      "dependencies": [
+        "REQ-CHAR-002",
+        "REQ-ASSET-001"
+      ],
+      "checkpoint": "CP51"
+    },
+    {
+      "id": "REQ-WORLD-005",
+      "title": "Regional atmosphere identity for generated Part I chapters",
+      "category": "VisualProduction",
+      "priority": "HIGH",
+      "status": "IMPLEMENTED",
+      "origin": "CP51 continuation of the user's visible-production-first direction",
+      "intent": "Give P1C03-P1C08 distinct low-cost sun, sky and fog presentation without changing story topology or relying on baked lighting.",
+      "evidence": [
+        "Data/ChapterAtmospherePlan.json",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.h",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
+        "Docs/CHECKPOINTS.md CP51"
+      ],
+      "implementation_refs": [
+        "chapter-specific movable directional light",
+        "chapter-specific movable skylight",
+        "chapter-specific exponential-height fog"
+      ],
+      "missing_work": [
+        "weather VFX",
+        "cinematic grading",
+        "final material/texture enrichment",
+        "UE4.27 compile validation",
+        "PIE/device visual acceptance"
+      ],
+      "acceptance_criteria": [
+        "P1C03-P1C08 each receives a distinct bounded atmosphere profile",
+        "No story/quest coordinate changes are introduced",
+        "Runtime lighting remains compatible with generated geometry",
+        "Target device remains playable after tuning"
+      ],
+      "dependencies": [
+        "REQ-WORLD-004",
+        "REQ-WORLD-002"
+      ],
+      "checkpoint": "CP51"
     }
   ],
   "hard_invariants": [
@@ -1446,14 +1522,14 @@
       "id": "WORK-WORLD-002",
       "title": "Part I world density and landmark detail pass",
       "status": "ACTIVE",
-      "rationale": "CP50 starts the mass-content phase: a reusable 12-mesh environment dressing kit is wired across P1C03-P1C08 with deterministic chapter-specific density while Shire/Bree retain their specialized production layers."
+      "rationale": "CP50 density remains active; CP51 adds distinct bounded sun/sky/fog atmosphere to P1C03-P1C08 while final weather, materials, interiors and visual acceptance remain open."
     },
     {
       "order": 2,
       "id": "WORK-CHAR-003",
-      "title": "Distinct visual identity pass for the Part I core cast",
-      "status": "IMPLEMENTED",
-      "rationale": "All named Part I cast now has dedicated project-owned modular torso/head/hair identity and runtime resolution; final skeletal/facial/cloth/animation production remains the next art layer."
+      "title": "Distinct visual identity and motion pass for the Part I core cast",
+      "status": "ACTIVE",
+      "rationale": "CP51 adds rig-ready skeletal handoff plus profile-specific modular idle/walk/dialogue motion; final skeletal/facial/cloth/hair animation assets and visual acceptance remain open."
     },
     {
       "order": 3,
@@ -1529,14 +1605,14 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Started comprehensive mass-content production after the user requested the visible world-building phase",
+    "reason": "Continued from CP50 into the planned character-animation and atmosphere production layer after the previous chat reached its maximum length",
     "summary": [
-      "Added 12 reusable project-owned environment meshes for forest, village, river and ruin dressing.",
-      "Expanded the common landscape material library with foliage, golden foliage, bark, wood and pale stone.",
-      "Wired deterministic production dressing across Weathertop/Ford, Rivendell, Road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen.",
-      "Each chapter now has region-specific foliage/prop density rather than landmark-only production art.",
-      "Added Data/WorldDressingPlan.json so visual density, ownership, active assets, performance rules and next production layers are machine-readable.",
-      "Story/quest topology remains unchanged; this pass is visual-content expansion only."
+      "Added CharacterMotionPlan with a strict skeletal-mesh plus locomotion-AnimBP activation contract and safe modular fallback.",
+      "AShireNPC now has profile-specific idle breathing, weight shift, gait variation and dialogue gestures while retaining existing follow/save/dialogue behavior.",
+      "Added ChapterAtmospherePlan and runtime sun, skylight and exponential-height-fog profiles for P1C03-P1C08.",
+      "No story or quest topology was moved by the CP51 presentation changes.",
+      "Hardened Pre-Unreal validation so late PG-050 and PG-051 checks participate in the final exit status.",
+      "UE4.27 compile/import, PIE visual review and target-device performance acceptance remain required."
     ]
   },
   "development_mode": {

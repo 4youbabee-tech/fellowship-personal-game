@@ -87,6 +87,7 @@ private:
         int32 NextChapterQuestStage = 0);
 
     void EnsureProductionMeshes();
+    void ConfigureChapterAtmosphere(FName ChapterId);
     void SpawnProductionChapterLayer(FName ChapterId);
     void BuildWeathertop();
     void BuildRivendell();
