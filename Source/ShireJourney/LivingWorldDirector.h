@@ -53,7 +53,7 @@ private:
     bool SpawnEvent(FName EventType, FActiveMicroEvent& OutEvent);
     AShireAmbientNPC* SpawnAmbientActor(
         const FVector& Location,
-        FName Role,
+        FName RoutineRole,
         FName ActivityProp,
         const FVector& TravelOffset,
         float Speed,

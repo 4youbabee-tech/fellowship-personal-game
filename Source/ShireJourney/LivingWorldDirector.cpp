@@ -335,7 +335,7 @@ FVector ALivingWorldDirector::ChooseEventOrigin(float MinRadius, float MaxRadius
 
 AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(
     const FVector& Location,
-    FName Role,
+    FName RoutineRole,
     FName ActivityProp,
     const FVector& TravelOffset,
     float Speed,
@@ -355,7 +355,7 @@ AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(
     }
 
     NPC->Tags.AddUnique(TEXT("LivingWorldEphemeral"));
-    NPC->RoutineRole = Role;
+    NPC->RoutineRole = RoutineRole;
     NPC->ActivityPropType = ActivityProp;
     NPC->RoutinePointA = Location;
     NPC->RoutinePointB = Location + TravelOffset;
@@ -413,10 +413,10 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
             return false;
         }
 
-        const FName Role = ActiveChapterId == TEXT("P1C02")
+        const FName TravelerRole = ActiveChapterId == TEXT("P1C02")
             ? FName(TEXT("BreeTownsperson")) : FName(TEXT("Villager"));
         if (AShireAmbientNPC* NPC = SpawnAmbientActor(
-            Origin, Role, TEXT("Satchel"), FVector(650.0f, Random.FRandRange(-180.0f, 180.0f), 0.0f),
+            Origin, TravelerRole, TEXT("Satchel"), FVector(650.0f, Random.FRandRange(-180.0f, 180.0f), 0.0f),
             72.0f, 0.3f, 1.0f))
         {
             OutEvent.Actors.Add(NPC);
