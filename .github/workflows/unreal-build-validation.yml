@@ -99,65 +99,72 @@ jobs:
           echo Runner bootstrap succeeded.
 
       - name: Checkout exact commit with resilient git fetch
-        shell: cmd
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
-          @echo off
-          setlocal EnableExtensions EnableDelayedExpansion
-          cd /d "%GITHUB_WORKSPACE%"
+          $ErrorActionPreference = "Stop"
+          Set-Location $env:GITHUB_WORKSPACE
 
-          if exist ".git" rmdir /S /Q ".git"
+          if (Test-Path ".git") {
+            Remove-Item -LiteralPath ".git" -Recurse -Force
+          }
 
-          git init .
-          if errorlevel 1 exit /b 70
+          & git init .
+          if ($LASTEXITCODE -ne 0) { exit 70 }
 
-          rem The self-hosted runner service and the interactive maintenance user can
-          rem own the workspace under different Windows SIDs. Mark only this exact
-          rem Actions workspace as safe before any repository command.
-          git config --global --add safe.directory "%GITHUB_WORKSPACE%"
-          if errorlevel 1 exit /b 76
+          # The service account and interactive maintenance account can differ.
+          & git config --global --add safe.directory $env:GITHUB_WORKSPACE
+          if ($LASTEXITCODE -ne 0) { exit 76 }
 
-          git remote add origin "https://x-access-token:%GH_TOKEN%@github.com/%GITHUB_REPOSITORY%.git"
-          if errorlevel 1 exit /b 71
+          $remote = "https://x-access-token:$env:GH_TOKEN@github.com/$env:GITHUB_REPOSITORY.git"
+          & git remote add origin $remote
+          if ($LASTEXITCODE -ne 0) { exit 71 }
 
-          set "FETCH_OK=0"
-          for /L %%A in (1,1,7) do (
-            if "!FETCH_OK!"=="0" (
-              echo Exact-commit fetch attempt %%A for %TARGET_SHA%
-              git fetch --no-tags --prune --depth=1 origin %TARGET_SHA%
-              if not errorlevel 1 (
-                set "FETCH_OK=1"
-              ) else (
-                if not "%%A"=="7" powershell.exe -NoProfile -Command "Start-Sleep -Seconds 5"
-              )
-            )
-          )
+          # Ignore any machine-global Git hooks; CI checkout must be self-contained.
+          $emptyHooks = Join-Path $env:RUNNER_TEMP "shire-ci-empty-hooks"
+          New-Item -ItemType Directory -Force -Path $emptyHooks | Out-Null
+          & git config core.hooksPath $emptyHooks
+          if ($LASTEXITCODE -ne 0) { exit 77 }
 
-          if not "!FETCH_OK!"=="1" (
-            echo ERROR: exact GITHUB_SHA fetch failed after 7 attempts.
-            exit /b 72
-          )
+          $fetchOk = $false
+          for ($attempt = 1; $attempt -le 7; $attempt++) {
+            Write-Host "Exact-commit fetch attempt $attempt for $env:TARGET_SHA"
+            & git fetch --no-tags --prune --depth=1 origin $env:TARGET_SHA
+            if ($LASTEXITCODE -eq 0) {
+              $fetchOk = $true
+              break
+            }
+            if ($attempt -lt 7) {
+              Write-Host "Fetch failed; retrying in 5 seconds."
+              Start-Sleep -Seconds 5
+            }
+          }
 
-          rem This dedicated CI workspace retains source files after .git recreation.
-          rem Force only the fetched tracked source into place; do not git clean saves/assets.
-          git checkout --force --detach FETCH_HEAD
-          if errorlevel 1 exit /b 73
+          if (-not $fetchOk) {
+            Write-Error "Exact target SHA fetch failed after 7 attempts."
+            exit 72
+          }
 
-          for /f %%S in ('git rev-parse HEAD') do set "CHECKED_SHA=%%S"
-          if /I not "!CHECKED_SHA!"=="%TARGET_SHA%" (
-            echo ERROR: checkout SHA mismatch. expected=%TARGET_SHA% actual=!CHECKED_SHA!
-            exit /b 74
-          )
+          # Force fetched tracked files into place while preserving unrelated local
+          # Saved/SourceAssets content on the dedicated validation machine.
+          & git checkout --force --detach FETCH_HEAD
+          if ($LASTEXITCODE -ne 0) { exit 73 }
 
-          > ".ci-source-sha" echo %TARGET_SHA%
-          if not exist "ShireJourney.uproject" (
-            echo ERROR: ShireJourney.uproject missing after exact checkout.
-            exit /b 75
-          )
+          $checkedSha = (& git rev-parse HEAD).Trim()
+          if ($LASTEXITCODE -ne 0 -or $checkedSha -ne $env:TARGET_SHA) {
+            Write-Error "Checkout SHA mismatch. expected=$env:TARGET_SHA actual=$checkedSha"
+            exit 74
+          }
 
-          echo Checked out exact commit %TARGET_SHA% with resilient git fetch.
+          Set-Content -LiteralPath ".ci-source-sha" -Value $env:TARGET_SHA -Encoding ascii
+          if (-not (Test-Path "ShireJourney.uproject")) {
+            Write-Error "ShireJourney.uproject missing after exact checkout."
+            exit 75
+          }
+
+          Write-Host "Checked out exact commit $env:TARGET_SHA with resilient git fetch."
 
       - name: Verify Unreal 4.27.2 and project
         shell: cmd
