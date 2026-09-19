@@ -1086,9 +1086,13 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
         FVector(11800,1050,20),FVector(12800,780,20),FVector(17200,-650,20),
         FVector(ShireLayout::FerryX-1300,-720,20),FVector(ShireLayout::FerryX-900,-250,20)
     };
+    FActorSpawnParameters AmbientSpawnParams;
+    AmbientSpawnParams.SpawnCollisionHandlingOverride =
+        ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
     for(int32 Index=0; Index<UE_ARRAY_COUNT(HobbitStarts); ++Index)
     {
-        AShireAmbientNPC* Hobbit=GetWorld()->SpawnActor<AShireAmbientNPC>(HobbitStarts[Index],FRotator::ZeroRotator);
+        AShireAmbientNPC* Hobbit=GetWorld()->SpawnActor<AShireAmbientNPC>(
+            HobbitStarts[Index],FRotator::ZeroRotator,AmbientSpawnParams);
         if(!Hobbit) continue;
 
         Hobbit->RoutinePointA=HobbitStarts[Index];
@@ -1144,7 +1148,8 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     };
     for (int32 Index = 0; Index < UE_ARRAY_COUNT(BirdStarts); ++Index)
     {
-        AShireAmbientNPC* Bird = GetWorld()->SpawnActor<AShireAmbientNPC>(BirdStarts[Index], FRotator::ZeroRotator);
+        AShireAmbientNPC* Bird = GetWorld()->SpawnActor<AShireAmbientNPC>(
+            BirdStarts[Index], FRotator::ZeroRotator, AmbientSpawnParams);
         if (!Bird) continue;
         Bird->RoutineRole = TEXT("Bird");
         Bird->RoutinePointA = BirdStarts[Index];
