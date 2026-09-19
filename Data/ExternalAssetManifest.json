@@ -171,7 +171,180 @@
         "CC0"
       ],
       "notes": "Good for UI/prototyping/development assets; use item license metadata and prefer CC0 packs."
+    },
+    {
+      "id": "MESHY_AI",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Candidate AI-assisted 3D generation source for original fantasy props/characters. Verify the plan/output terms and provenance for every generated asset before Approved; do not prompt it to reproduce protected LOTR character likenesses or copyrighted production designs."
+    },
+    {
+      "id": "FREE3D",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Candidate generic 3D-model source. License varies per item; approve only assets with clear game-use rights and provenance."
+    },
+    {
+      "id": "METAHUMAN",
+      "mode": "APPROVED_WITH_EPIC_TERMS",
+      "allowed_license_classes": [
+        "EPIC_METAHUMAN_TERMS"
+      ],
+      "notes": "Useful for original human character foundations when compatible with the project's engine/runtime pipeline. Do not use it to recreate protected actor likenesses without separate rights."
+    },
+    {
+      "id": "SHARETEXTURES",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Candidate texture/material source. Verify the current per-asset/site license at acquisition time before production import."
+    },
+    {
+      "id": "PIXABAY",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [
+        "PIXABAY_CONTENT_LICENSE_WHEN_APPLICABLE"
+      ],
+      "notes": "Candidate SFX/music/image source. Verify the exact item is covered by the current Pixabay Content License and is not an embedded third-party trademark/copyright exception."
+    },
+    {
+      "id": "ZAPSPLAT",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Candidate SFX source. Free/paid tiers and attribution obligations may differ; store the exact license/receipt for each used sound."
+    },
+    {
+      "id": "SOUNDBIBLE",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Candidate SFX source only after checking each sound's specific license. Do not assume one site-wide license."
+    },
+    {
+      "id": "BBC_SOUND_EFFECTS",
+      "mode": "REFERENCE_OR_REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Large sound-effects archive, but permitted uses depend on the applicable BBC/RemArc licensing terms. Do not place files in Approved solely because the project is private."
+    },
+    {
+      "id": "FREE_MUSIC_ARCHIVE",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Candidate music source. License varies by track; CC0/CC BY may be usable subject to exact track terms, while NC/ND/unknown entries remain blocked."
+    },
+    {
+      "id": "ARCHIVE_ORG",
+      "mode": "REFERENCE_OR_REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Discovery/archive source only. Item availability does not prove reuse rights. Original LOTR soundtrack/albums or other protected recordings are not approved merely because they are hosted there."
+    },
+    {
+      "id": "YOUTUBE_AUDIO_LIBRARY",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Candidate music/SFX source. Record the exact Audio Library license/attribution requirement for every selected track."
+    },
+    {
+      "id": "GAME_ICONS_NET",
+      "mode": "APPROVED_WITH_LICENSE_EVIDENCE",
+      "allowed_license_classes": [
+        "CC_BY_3_0_WHEN_APPLICABLE"
+      ],
+      "notes": "Useful for UI/iconography. Keep required creator/license attribution and verify any icon-specific exceptions."
+    },
+    {
+      "id": "OPENGAMEART",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [
+        "CC0",
+        "CC_BY"
+      ],
+      "denied_license_classes": [
+        "CC_BY_NC",
+        "CC_BY_ND",
+        "UNKNOWN"
+      ],
+      "notes": "Useful for generic game art/audio when the exact submission license is compatible. License varies per entry."
+    },
+    {
+      "id": "ITCH_IO_ASSETS",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Candidate free/paid asset marketplace. Each creator sets terms; record item/license/receipt before Approved."
+    },
+    {
+      "id": "GAMEDEV_MARKET",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Candidate game-asset marketplace. Verify the exact marketplace/item license and project-use entitlement."
+    },
+    {
+      "id": "UNREAL_MARKETPLACE_LEGACY",
+      "mode": "APPROVED_WITH_EPIC_TERMS",
+      "allowed_license_classes": [
+        "EPIC_MARKETPLACE_OR_FAB_ENTITLEMENT"
+      ],
+      "notes": "Legacy Unreal Marketplace/Fab acquisitions may be valuable for UE4.27. Use only assets actually entitled to the account/project and compatible with UE4.27."
+    },
+    {
+      "id": "GITHUB_REFERENCE",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Useful for finding open-source/CC0 asset repositories and tooling. Repository visibility is not a license; verify the exact LICENSE and asset provenance."
     }
   ],
-  "assets": []
+  "assets": [],
+  "discovery_sources_from_programmer_message_2026_09_19": {
+    "status": "STORED_FOR_FUTURE_USE",
+    "purpose": "Persistent shortlist of asset/tool sources supplied by the project owner for future world, character, animation, audio, music and UI production.",
+    "source_groups": {
+      "3D_and_characters": [
+        "SKETCHFAB",
+        "MESHY_AI",
+        "TURBOSQUID",
+        "CGTRADER",
+        "FREE3D",
+        "QUixel_MEGASCANS",
+        "ADOBE_MIXAMO",
+        "METAHUMAN"
+      ],
+      "environment_materials": [
+        "FAB",
+        "QUixel_MEGASCANS",
+        "POLY_HAVEN",
+        "AMBIENTCG",
+        "SHARETEXTURES"
+      ],
+      "sound_effects": [
+        "FREESOUND",
+        "PIXABAY",
+        "ZAPSPLAT",
+        "SOUNDBIBLE",
+        "BBC_SOUND_EFFECTS",
+        "SONNISS"
+      ],
+      "music": [
+        "PIXABAY",
+        "FREE_MUSIC_ARCHIVE",
+        "INCOMPETECH",
+        "ARCHIVE_ORG",
+        "YOUTUBE_AUDIO_LIBRARY"
+      ],
+      "animation": [
+        "ADOBE_MIXAMO",
+        "UNREAL_MARKETPLACE_LEGACY",
+        "ACTORCORE_REALLUSION"
+      ],
+      "ui_icons": [
+        "KENNEY",
+        "GAME_ICONS_NET",
+        "OPENGAMEART"
+      ],
+      "community_marketplaces": [
+        "GITHUB_REFERENCE",
+        "ITCH_IO_ASSETS",
+        "GAMEDEV_MARKET",
+        "UNREAL_MARKETPLACE_LEGACY"
+      ]
+    },
+    "production_rule": "A source being listed here means 'remember and evaluate when useful', not automatic approval. Every external asset still needs item-level provenance/license/compatibility review before Approved."
+  }
 }
