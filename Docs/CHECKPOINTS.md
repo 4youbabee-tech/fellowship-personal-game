@@ -542,6 +542,17 @@
 - Hardened Pre-Unreal validation so PG-050 and new PG-051 checks participate in the final process exit status rather than running after the previous PASS print.
 - Final skeletal rigs, facial animation, cloth/hair simulation, weather VFX, cinematic grading and target-device visual/performance acceptance remain open.
 
+## CP52 — Full Playable Production Activation
+- Merged the green CP51 character-motion and regional-atmosphere foundation into `develop`.
+- Added `Data/ProductionActivationPlan.json` to make the production resource set an explicit runtime-delivery contract rather than disconnected source inventory.
+- Shire now activates additional common production broadleaf trees, fallen logs, ferns, dry-stone walls, fences, wood piles and a second footbridge across the full travel corridor while preserving story coordinates.
+- Bree now activates a darker rainy atmosphere plus common production trees, walls, fences, wood piles, ferns and boulders around the town perimeter, street and inn yard.
+- P1C03-P1C08 now use a broader share of the common production kit on top of their existing region-specific landmarks: more terrain debris, camp clutter, path markers, vegetation and traversal-adjacent detail.
+- HUD chapter context now presents player-facing region names instead of internal episode identifiers.
+- External assets remain license-manifest gated; this checkpoint activates the complete source-controlled project-owned resource families and does not silently import unverified third-party content.
+- PG-052 protects the Shire/Bree/regional activation paths and full P1C01-P1C08 scope.
+- UE4.27.2 compile/import plus PIE/device/visual acceptance remain required before this checkpoint is called validated.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 
