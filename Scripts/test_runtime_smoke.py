@@ -80,6 +80,7 @@ class RuntimeSmokeTests(unittest.TestCase):
             "ShireStateAudit: route-roundtrip=PASS",
             "ShireStateAudit: ring-core=PASS",
             "ShireStateAudit: discovery-core=PASS",
+            "ShireStateAudit: progression-core=PASS",
         ])
 
     def test_utf16_unreal_log(self):
