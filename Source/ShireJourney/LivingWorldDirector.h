@@ -73,7 +73,7 @@ private:
     FName ChooseEventType() const;
     FName ResolveResidentRole(FName ChapterId) const;
     FName ChooseBaselineRole() const;
-    FName ChooseBaselineProp(FName Role) const;
+    FName ChooseBaselineProp(FName RoleName) const;
     FVector ChooseEventOrigin(float MinRadius = 700.0f, float MaxRadius = 1500.0f);
     FVector ChoosePopulationOrigin();
     void ApplyChapterWeatherContext();
