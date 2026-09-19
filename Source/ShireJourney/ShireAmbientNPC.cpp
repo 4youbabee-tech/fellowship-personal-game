@@ -557,6 +557,13 @@ void AShireAmbientNPC::BeginPlay()
     SenseAccumulator = Random.FRandRange(0.0f, 0.35f);
     SocialCheckRemaining = Random.FRandRange(1.0f, 3.0f);
     ScheduleCheckRemaining = Random.FRandRange(0.5f, 2.0f);
+    NeedsCheckRemaining = Random.FRandRange(0.6f, 1.8f);
+    Hunger01 = Random.FRandRange(0.08f, 0.34f);
+    Fatigue01 = Random.FRandRange(0.05f, 0.28f);
+    SocialNeed01 = Random.FRandRange(0.15f, 0.60f);
+    Fear01 = 0.0f;
+    RuntimeEmotion = TEXT("CALM");
+    RuntimeGoal = TEXT("ROUTINE");
 }
 
 FName AShireAmbientNPC::ResolveRuntimeProfileHint() const
@@ -643,6 +650,100 @@ void AShireAmbientNPC::UpdateScheduleContext(float DeltaSeconds)
     else
     {
         WalkSpeed = BaseWalkSpeed;
+    }
+}
+
+void AShireAmbientNPC::UpdateNeedsAndEmotion(float DeltaSeconds)
+{
+    NeedsCheckRemaining -= DeltaSeconds;
+    if (NeedsCheckRemaining > 0.0f || !GetWorld())
+    {
+        return;
+    }
+    NeedsCheckRemaining = Random.FRandRange(0.8f, 1.6f);
+
+    // Cheap bounded simulation: needs drift slowly and only bias existing
+    // routine/social behavior. They never own quest state or story outcomes.
+    const float NeedStep = FMath::Clamp(DeltaSeconds * 0.018f, 0.0f, 0.05f);
+    Hunger01 = FMath::Clamp(Hunger01 + NeedStep, 0.0f, 1.0f);
+    Fatigue01 = FMath::Clamp(Fatigue01 + NeedStep * 0.65f, 0.0f, 1.0f);
+    SocialNeed01 = FMath::Clamp(
+        SocialNeed01 + NeedStep * (bSocializing ? -2.8f : 0.9f),
+        0.0f, 1.0f);
+
+    UGameInstance* GI = GetGameInstance();
+    UShireNPCContextSubsystem* Context =
+        GI ? GI->GetSubsystem<UShireNPCContextSubsystem>() : nullptr;
+    const bool bDanger = Context && Context->IsDangerStateActive();
+    const bool bBadWeather = Context && Context->IsInclementWeather();
+
+    if (bDanger)
+    {
+        Fear01 = FMath::Clamp(Fear01 + 0.18f, 0.0f, 1.0f);
+    }
+    else
+    {
+        Fear01 = FMath::Clamp(Fear01 - 0.08f, 0.0f, 1.0f);
+    }
+
+    if (Fear01 > 0.55f)
+    {
+        RuntimeEmotion = TEXT("AFRAID");
+        RuntimeGoal = TEXT("SAFETY");
+    }
+    else if (Fatigue01 > 0.78f)
+    {
+        RuntimeEmotion = TEXT("TIRED");
+        RuntimeGoal = TEXT("REST");
+        WaitRemaining = FMath::Max(WaitRemaining, Random.FRandRange(2.5f, 5.0f));
+    }
+    else if (SocialNeed01 > 0.72f)
+    {
+        RuntimeEmotion = TEXT("SOCIALLY_SEEKING");
+        RuntimeGoal = TEXT("SOCIALIZE");
+        SocialCheckRemaining = FMath::Min(SocialCheckRemaining, Random.FRandRange(0.4f, 1.2f));
+    }
+    else if (Hunger01 > 0.78f)
+    {
+        RuntimeEmotion = TEXT("HUNGRY");
+        RuntimeGoal = TEXT("MEAL_BREAK");
+        WaitRemaining = FMath::Max(WaitRemaining, Random.FRandRange(1.5f, 3.2f));
+    }
+    else if (bBadWeather)
+    {
+        RuntimeEmotion = TEXT("UNCOMFORTABLE");
+        RuntimeGoal = TEXT("SHELTER");
+    }
+    else if (RuntimeSchedulePhase == TEXT("WORK"))
+    {
+        RuntimeEmotion = TEXT("FOCUSED");
+        RuntimeGoal = TEXT("WORK");
+    }
+    else if (RuntimeSchedulePhase == TEXT("SOCIAL"))
+    {
+        RuntimeEmotion = TEXT("SOCIABLE");
+        RuntimeGoal = TEXT("SOCIALIZE");
+    }
+    else if (RuntimeSchedulePhase == TEXT("REST") || RuntimeSchedulePhase == TEXT("HOME"))
+    {
+        RuntimeEmotion = TEXT("RELAXED");
+        RuntimeGoal = TEXT("REST");
+    }
+    else
+    {
+        RuntimeEmotion = TEXT("CALM");
+        RuntimeGoal = TEXT("ROUTINE");
+    }
+
+    // Completing a rest/meal phase satisfies the corresponding need gradually.
+    if (RuntimeSchedulePhase == TEXT("REST") || RuntimeSchedulePhase == TEXT("HOME"))
+    {
+        Fatigue01 = FMath::Clamp(Fatigue01 - 0.10f, 0.0f, 1.0f);
+        Hunger01 = FMath::Clamp(Hunger01 - 0.05f, 0.0f, 1.0f);
+    }
+    if (bSocializing)
+    {
+        SocialNeed01 = FMath::Clamp(SocialNeed01 - 0.14f, 0.0f, 1.0f);
     }
 }
 
@@ -757,6 +858,24 @@ FText AShireAmbientNPC::ResolveAmbientConversationLine(bool bResponse) const
     }
     if (RoutineRole == TEXT("Villager"))
     {
+        if (RuntimeEmotion == TEXT("TIRED"))
+        {
+            return FText::FromString(bResponse
+                ? TEXT("I will finish after a short rest.")
+                : TEXT("It has been a long morning already."));
+        }
+        if (RuntimeEmotion == TEXT("AFRAID"))
+        {
+            return FText::FromString(bResponse
+                ? TEXT("Best stay near the lane until it passes.")
+                : TEXT("Something has everyone looking over their shoulder."));
+        }
+        if (RuntimeEmotion == TEXT("HUNGRY"))
+        {
+            return FText::FromString(bResponse
+                ? TEXT("After I find something warm to eat.")
+                : TEXT("I have been thinking about second breakfast for an hour."));
+        }
         return FText::FromString(bResponse
             ? TEXT("Aye. Plenty still to do.")
             : TEXT("Fine weather for the lane."));
@@ -973,6 +1092,7 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
 
     UpdateSocialCaption(DeltaSeconds);
     UpdateScheduleContext(DeltaSeconds);
+    UpdateNeedsAndEmotion(DeltaSeconds);
 
     if (AppliedVisualRole != RoutineRole)
     {
