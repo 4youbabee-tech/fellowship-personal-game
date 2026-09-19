@@ -91,6 +91,31 @@ void AShireGameMode::BeginPlay()
                 Quests->GetCurrentChapterId() == TEXT("P1C03") &&
                 Quests->GetQuestStage(TEXT("RoadToWeathertop")) == 2 &&
                 Quests->HasStoryBeatTriggered(TEXT("CI_STATE_AUDIT_BEAT"));
+            const bool bRingCoreValid =
+                Quests->IsRingQuestActive() &&
+                Quests->GetRingBearerId() == TEXT("Frodo") &&
+                Quests->GetRingPressureTier() >= 2;
+
+            if (bRingCoreValid)
+            {
+                UE_LOG(
+                    LogTemp,
+                    Display,
+                    TEXT("ShireStateAudit: ring-core=PASS bearer=%s state=%s pressure=%d"),
+                    *Quests->GetRingBearerId().ToString(),
+                    *Quests->GetRingStateTag().ToString(),
+                    Quests->GetRingPressureTier());
+            }
+            else
+            {
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireStateAudit: ring-core=FAIL bearer=%s state=%s pressure=%d"),
+                    *Quests->GetRingBearerId().ToString(),
+                    *Quests->GetRingStateTag().ToString(),
+                    Quests->GetRingPressureTier());
+            }
 
             if (bRouteRestored)
             {

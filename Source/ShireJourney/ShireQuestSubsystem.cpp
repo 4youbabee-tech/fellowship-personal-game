@@ -408,6 +408,74 @@ bool UShireQuestSubsystem::HasStoryBeatTriggered(FName StoryBeatId) const
     return StoryBeatId != NAME_None && CompletedStoryBeats.Contains(StoryBeatId);
 }
 
+bool UShireQuestSubsystem::IsRingQuestActive() const
+{
+    if (CurrentRouteId == TEXT("GandalfParallel"))
+    {
+        return true;
+    }
+
+    const int32 Chapter = ChapterOrdinal(CurrentChapterId);
+    if (Chapter > 1)
+    {
+        return true;
+    }
+
+    return HasStoryBeatTriggered(TEXT("BilboDisappearance")) ||
+        HasStoryBeatTriggered(TEXT("RingWarning")) ||
+        ActiveQuestId == TEXT("RingSecret") ||
+        ActiveQuestId == TEXT("LeavingHome") ||
+        ActiveQuestId == TEXT("FerryEscape");
+}
+
+FName UShireQuestSubsystem::GetRingBearerId() const
+{
+    if (CurrentRouteId == TEXT("GandalfParallel"))
+    {
+        return TEXT("Frodo");
+    }
+
+    const int32 Chapter = ChapterOrdinal(CurrentChapterId);
+    return (Chapter > 1 || IsRingQuestActive()) ? FName(TEXT("Frodo")) : FName(TEXT("Bilbo"));
+}
+
+FName UShireQuestSubsystem::GetRingStateTag() const
+{
+    if (CurrentRouteId == TEXT("GandalfParallel")) return TEXT("OFF_ROUTE_WITH_FRODO");
+    if (!IsRingQuestActive()) return TEXT("PRE_TRANSFER");
+
+    const int32 Chapter = ChapterOrdinal(CurrentChapterId);
+    if (Chapter <= 1) return TEXT("HIDDEN_SECRET");
+    if (Chapter == 2) return TEXT("EXPOSED_AT_BREE");
+    if (Chapter == 3) return TEXT("WOUNDED_HUNTED_BURDEN");
+    if (Chapter == 4) return TEXT("COUNCIL_MISSION");
+    if (Chapter == 5) return TEXT("FELLOWSHIP_GUARDING_RING");
+    if (Chapter == 6) return TEXT("MORIA_BURDEN");
+    if (Chapter == 7) return TEXT("TEMPTATION_TEST");
+    return TEXT("FELLOWSHIP_FRACTURE");
+}
+
+int32 UShireQuestSubsystem::GetRingPressureTier() const
+{
+    if (!IsRingQuestActive()) return 0;
+    if (CurrentRouteId == TEXT("GandalfParallel")) return 2;
+
+    const int32 Chapter = ChapterOrdinal(CurrentChapterId);
+    if (Chapter <= 1) return 1;
+    if (Chapter == 2) return 2;
+    if (Chapter == 3) return HasStoryBeatTriggered(TEXT("MorgulWound")) ? 3 : 2;
+    if (Chapter == 4 || Chapter == 5) return 2;
+    if (Chapter == 6) return 3;
+    if (Chapter == 7) return HasStoryBeatTriggered(TEXT("Mirror")) ? 4 : 3;
+    if (Chapter >= 8)
+    {
+        return HasStoryBeatTriggered(TEXT("BoromirPressure")) ||
+            HasStoryBeatTriggered(TEXT("UrukAttack")) ||
+            HasStoryBeatTriggered(TEXT("BoromirFall")) ? 4 : 3;
+    }
+    return 1;
+}
+
 int32 UShireQuestSubsystem::GetActiveQuestStage() const
 {
     return GetQuestStage(ActiveQuestId);

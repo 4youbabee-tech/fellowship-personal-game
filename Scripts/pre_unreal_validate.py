@@ -645,6 +645,70 @@ if side_activity_data:
     if "Data/ContextualSideActivityPlan.json" not in build_text_pg63:
         fail("Contextual side activity plan is not packaged as a runtime dependency")
 
+
+# PG-070: Ring quest systemic axis must remain explicit and runtime-audited.
+ring_plan_path = ROOT / "Data" / "TrilogyRingQuestPlan.json"
+if not ring_plan_path.exists():
+    fail("PG-070: TrilogyRingQuestPlan.json missing")
+else:
+    ring_plan = json.loads(read(ring_plan_path))
+    if ring_plan.get("axis_policy") != "RING_IS_CENTRAL":
+        fail("PG-070: Ring axis policy changed")
+    windows = ring_plan.get("part1_windows", [])
+    covered = {str(x.get("chapter") or "") for x in windows if x.get("route") == "FrodoMain"}
+    if {f"P1C{i:02d}" for i in range(1, 9)} - covered:
+        fail("PG-070: Ring plan must cover P1C01-P1C08")
+    gandalf = [x for x in windows if x.get("route") == "GandalfParallel"]
+    if not gandalf or any(x.get("bearer") != "Frodo" for x in gandalf):
+        fail("PG-070: GandalfParallel must preserve Frodo as off-route Ring-bearer")
+for symbol in ["IsRingQuestActive", "GetRingBearerId", "GetRingStateTag", "GetRingPressureTier"]:
+    if symbol not in read(SOURCE / "ShireQuestSubsystem.h") or symbol not in read(SOURCE / "ShireQuestSubsystem.cpp"):
+        fail(f"PG-070: Ring runtime API missing {symbol}")
+if "ShireStateAudit: ring-core=PASS" not in read(ROOT / "Scripts" / "runtime_smoke.py"):
+    fail("PG-070: runtime state audit must require Ring continuity")
+
+# PG-071: character-production matrix must cover the Part I core cast and retain provenance rules.
+character_matrix_path = ROOT / "Data" / "CharacterProductionMatrix.json"
+if not character_matrix_path.exists():
+    fail("PG-071: CharacterProductionMatrix.json missing")
+else:
+    character_matrix = json.loads(read(character_matrix_path))
+    ids = {str(x.get("id") or "") for x in character_matrix.get("characters", [])}
+    required = {"FRODO","SAM","MERRY","PIPPIN","GANDALF","ARAGORN","BOROMIR","LEGOLAS","GIMLI","BILBO","ARWEN","ELROND","GALADRIEL","SARUMAN","NAZGUL"}
+    if required - ids:
+        fail("PG-071: character-production matrix missing core cast")
+    policy = character_matrix.get("sourcing_policy", {})
+    if "Free availability is not treated as permission by itself" not in str(policy.get("rule") or ""):
+        fail("PG-071: external-character provenance rule missing")
+
+# PG-072: cinematic world-production matrix must cover every current Part I region.
+world_matrix_path = ROOT / "Data" / "CinematicWorldProductionMatrix.json"
+if not world_matrix_path.exists():
+    fail("PG-072: CinematicWorldProductionMatrix.json missing")
+else:
+    world_matrix = json.loads(read(world_matrix_path))
+    pairs = {(str(x.get("chapter") or ""), str(x.get("region") or "")) for x in world_matrix.get("regions", [])}
+    chapters = {x[0] for x in pairs}
+    expected = {f"P1C{i:02d}" for i in range(1, 9)} | {"P1G01"}
+    if expected - chapters:
+        fail("PG-072: cinematic world matrix missing Part I chapter coverage")
+    for region in world_matrix.get("regions", []):
+        if not region.get("hero_vistas") or not region.get("foreground") or not region.get("background"):
+            fail(f"PG-072: incomplete layered composition for {region.get('chapter')}")
+
+# PG-073: owner-supplied source references must stay indexed and runtime-reference-only.
+source_index_path = ROOT / "Data" / "OwnerSourceReferenceIndex.json"
+if not source_index_path.exists():
+    fail("PG-073: OwnerSourceReferenceIndex.json missing")
+else:
+    source_index = json.loads(read(source_index_path))
+    source_ids = {str(x.get("id") or "") for x in source_index.get("sources", [])}
+    for required_id in ["SRC_FILM_FOTR_SCREENPLAY","SRC_FILM_TTT_SCREENPLAY","SRC_OWNER_MASTER_PACK","SRC_OWNER_FOREST_BEAUTY_BENCHMARK"]:
+        if required_id not in source_ids:
+            fail(f"PG-073: owner source index missing {required_id}")
+    if any(bool(x.get("runtime_ship")) for x in source_index.get("sources", [])):
+        fail("PG-073: raw owner reference sources must not be required/shipped at runtime")
+
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
 living_world_data = {}

@@ -21,7 +21,8 @@ def read_log(path):
 def required_markers(chapter, mode):
     if mode == "state":
         return ["ShirePlayableStartup: GameMode ready",
-                "ShireStateAudit: route-roundtrip=PASS"]
+                "ShireStateAudit: route-roundtrip=PASS",
+                "ShireStateAudit: ring-core=PASS"]
     if chapter is None:
         return ["ShirePlayableStartup: GameMode ready",
                 "ShirePlayableStartup: chapter=P1C01 route=FrodoMain"]

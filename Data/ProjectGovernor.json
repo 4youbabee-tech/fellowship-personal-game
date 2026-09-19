@@ -1564,6 +1564,112 @@
         "REQ-SAVE-001"
       ],
       "checkpoint": "CP56_CONTEXTUAL_SIDE_PLAY"
+    },
+    {
+      "id": "REQ-RING-001",
+      "title": "The One Ring is the systemic axis of the trilogy game",
+      "category": "StoryGameplayCore",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly reaffirmed that the Ring is the axis of the series and asked to confirm the game is built around the continuing Frodo/Sam Ring journey.",
+      "intent": "Keep Ring ownership, burden, temptation and route consequences explicit. Exploration and parallel routes enrich the journey but never displace the Ring quest.",
+      "evidence": [
+        "Data/TrilogyRingQuestPlan.json",
+        "Source/ShireJourney/ShireQuestSubsystem.h",
+        "Source/ShireJourney/ShireQuestSubsystem.cpp",
+        "Source/ShireJourney/ShireGameMode.cpp"
+      ],
+      "implementation_refs": [
+        "Derived Ring bearer/state/pressure runtime API",
+        "GandalfParallel preserves Frodo as off-route bearer",
+        "headless route-state audit requires ring-core=PASS",
+        "bounded dialogue selection includes Ring context"
+      ],
+      "missing_work": [
+        "authored Ring visual/audio presentation at film-safe beats",
+        "Frodo burden animation/audio feedback",
+        "Part II/III runtime continuation",
+        "exact-head UE4.27 validation"
+      ],
+      "acceptance_criteria": [
+        "correct bearer at every story window",
+        "parallel routes cannot overwrite Ring truth",
+        "side content cannot mutate Ring outcomes",
+        "exact-head engine audit proves continuity"
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-SAVE-001",
+        "REQ-QA-001"
+      ],
+      "checkpoint": "TRILOGY_RING_CORE"
+    },
+    {
+      "id": "REQ-CHAR-004",
+      "title": "Production character replacement pipeline for the full core cast",
+      "category": "CharacterProduction",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner directed that all proxy characters be replaced with real playable/production characters and confirmed external free/personal-use sources may be used when terms allow.",
+      "intent": "Move the whole core cast through a traceable model-material-rig-skin-animation-UE4-LOD pipeline, with fallback to project-authored/custom character creation where external assets are unavailable.",
+      "evidence": [
+        "Data/CharacterProductionMatrix.json"
+      ],
+      "implementation_refs": [
+        "full Part I core-cast matrix with visual identity, rig family, priority and current proof boundary",
+        "source/provenance policy for external assets",
+        "shared performance/LOD contract"
+      ],
+      "missing_work": [
+        "select/import legal base assets or author replacements",
+        "rig/skin and retarget core cast",
+        "replace runtime proxies",
+        "UE4 compile/import and PIE visual/motion acceptance"
+      ],
+      "acceptance_criteria": [
+        "core cast recognizable without labels",
+        "every asset has provenance",
+        "rigs animate correctly in UE4.27.2",
+        "target performance preserved"
+      ],
+      "dependencies": [
+        "REQ-ASSET-001",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "CHARACTER_PRODUCTION_MEGA"
+    },
+    {
+      "id": "REQ-WORLD-003",
+      "title": "Cinematic beauty benchmark production pass",
+      "category": "WorldDesign",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner supplied a dense cinematic forest/character reference and explicitly requested a more beautiful world than earlier game screenshots.",
+      "intent": "Raise all Part I regions to a layered cinematic beauty standard using hero vistas, rich near-field detail, regional materials/vegetation, fog/light/water and selective performance-safe detail.",
+      "evidence": [
+        "Data/CinematicWorldProductionMatrix.json",
+        "Docs/WORLD_PRODUCTION_BLUEPRINT.md"
+      ],
+      "implementation_refs": [
+        "all Part I regions now have hero vistas, foreground/midground/background targets, atmosphere and production-gap definitions",
+        "benchmark emphasizes light shafts, ground detail, layered depth and characters embedded in landscape"
+      ],
+      "missing_work": [
+        "production terrain/material/foliage/architecture replacement",
+        "hero-vista implementation",
+        "weather/water/material polish",
+        "target-device and human visual acceptance"
+      ],
+      "acceptance_criteria": [
+        "each region has at least one memorable hero reveal",
+        "world reads cohesive in motion not as blockout",
+        "30 FPS floor preserved through selective detail/LOD/culling"
+      ],
+      "dependencies": [
+        "REQ-WORLD-002",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "CINEMATIC_WORLD_MEGA"
     }
   ],
   "hard_invariants": [
@@ -1976,6 +2082,54 @@
       "evidence": [
         "Data/ProjectGovernor.json",
         "Docs/WORLD_PRODUCTION_BLUEPRINT.md"
+      ]
+    },
+    {
+      "id": "DEC-020",
+      "title": "The Ring quest is the central state line; all other routes serve or surround it",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-RING-001",
+        "REQ-VISION-001",
+        "REQ-EXP-002",
+        "REQ-EXP-005"
+      ],
+      "resolution": "Treat the One Ring as the persistent strategic/emotional axis. Frodo is the Part I bearer after Bilbo's transfer; parallel routes cannot become replacement Ring routes. The Part I split hands forward the Frodo/Sam Ring journey.",
+      "rationale": "Owner explicitly reaffirmed the Ring as the axis of the series/game.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/TrilogyRingQuestPlan.json"
+      ]
+    },
+    {
+      "id": "DEC-021",
+      "title": "Use a dual-source character pipeline with provenance instead of waiting for one perfect external model",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-CHAR-004",
+        "REQ-ASSET-001"
+      ],
+      "resolution": "For each character, prefer a usable permitted external/project-owned base when available; otherwise build the character from legally usable/custom parts. External free/personal-use assets still require source and terms to be recorded before integration.",
+      "rationale": "Owner wants immediate production and has multiple free/personal-use sources available, with custom 3D character creation as fallback.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/CharacterProductionMatrix.json"
+      ]
+    },
+    {
+      "id": "DEC-022",
+      "title": "Owner cinematic forest reference defines the higher environment beauty direction",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-002",
+        "REQ-WORLD-003",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Target the reference's dense naturalism, layered depth, strong light shafts, ground detail and embedded characters as the beauty direction, while using selective hero detail and optimization to preserve the 720p Low-Medium / 30 FPS floor.",
+      "rationale": "Owner explicitly chose the supplied image as a better visual model than prior examples.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/CinematicWorldProductionMatrix.json"
       ]
     }
   ],
@@ -2440,15 +2594,38 @@
       "title": "Contextual side-play implementation",
       "status": "ACTIVE",
       "rationale": "Build optional game-like activities that feel like plausible unseen moments between fixed film anchors."
+    },
+    {
+      "order": 1,
+      "id": "WORK-RING-001",
+      "title": "Trilogy Ring-quest systemic core",
+      "status": "ACTIVE",
+      "rationale": "Keep Ring truth explicit across routes/dialogue/audits and future trilogy expansion."
+    },
+    {
+      "order": 1,
+      "id": "WORK-CHAR-004",
+      "title": "Full production-character replacement mega-pass",
+      "status": "ACTIVE",
+      "rationale": "Convert core named characters from proxy/modular identity to rigged production characters in priority waves."
+    },
+    {
+      "order": 1,
+      "id": "WORK-WORLD-003",
+      "title": "Cinematic world beauty mega-pass",
+      "status": "ACTIVE",
+      "rationale": "Raise every Part I region toward the owner's cinematic benchmark while preserving target performance."
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Owner raised the world-beauty target above the earlier plain reference screenshots.",
+    "reason": "Owner ordered the next large production batch immediately after closing Unreal: audit sources/manager, lock the Ring as the series axis, organize full character replacement, and raise the world to the supplied cinematic benchmark.",
     "summary": [
-      "World visual target is now explicitly cinematic, layered and region-specific rather than merely functional/prototype.",
-      "Hero vistas, richer terrain/materials/vegetation/water/atmosphere and landmark composition are acceptance requirements.",
-      "The 720p Low-Medium / 30 FPS target remains a hard budget; beauty must come from composition and selective detail, not uncontrolled asset density."
+      "Ring quest promoted to a CRITICAL systemic runtime requirement with exact-head audit hooks.",
+      "Full Part I character production matrix added with rig families, priorities and provenance rules.",
+      "All current Part I regions receive cinematic hero-vista/layered-composition production targets.",
+      "Owner screenplay/source-pack/image references are indexed as reference-only inputs; derived runtime content stays original.",
+      "None of these new implementation claims are promoted to UE4-validated or visually accepted until current-head engine evidence exists."
     ]
   },
   "development_mode": {

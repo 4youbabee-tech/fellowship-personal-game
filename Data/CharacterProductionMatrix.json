@@ -1,0 +1,290 @@
+{
+  "schema_version": 1,
+  "matrix_id": "PART1_CHARACTER_PRODUCTION_MATRIX_V1",
+  "status": "PRODUCTION_PIPELINE_ACTIVE_ASSET_SELECTION_AND_RIG_VALIDATION_PENDING",
+  "target": "Replace recognizable proxy/modular stand-ins with production characters while preserving UE4.27.2 performance and each character's instantly readable silhouette.",
+  "sourcing_policy": {
+    "preferred_order": [
+      "project-owned or self-authored character base",
+      "explicitly permitted free/personal-use asset with captured source and terms",
+      "licensed marketplace asset",
+      "procedural/custom character creation from legally usable base parts"
+    ],
+    "rule": "Free availability is not treated as permission by itself. Record source URL/provider, terms snapshot/date, allowed use and modification status before integrating an external model.",
+    "private_project_context": "The project is private/personal, but provenance is still recorded so future use does not silently exceed the asset's terms.",
+    "likeness_rule": "Use film-context silhouette, wardrobe, age and role cues; do not depend on an exact unauthorized scan or actor likeness to make the character recognizable."
+  },
+  "common_pipeline": [
+    "select/source legal base mesh",
+    "clean topology and scale",
+    "author/adjust face hair clothing and equipment",
+    "UV/material pass",
+    "UE4 humanoid-compatible skeleton where practical",
+    "skin weights and deformation audit",
+    "retarget locomotion/action animations",
+    "Animation Blueprint integration",
+    "weapon/prop sockets",
+    "collision and gameplay hooks",
+    "LOD/culling/material-instance optimization",
+    "UE4 import/compile/startup validation",
+    "PIE visual and motion acceptance"
+  ],
+  "performance_contract": {
+    "target": "720p Low-Medium / 30 FPS floor",
+    "principles": [
+      "hero characters receive selective near-camera detail",
+      "secondary characters use cheaper materials and LODs",
+      "crowds reuse skeleton/material families where visually safe",
+      "hair/cloth simulation is bounded and optional on low settings",
+      "no character is called final from a static mesh or proxy silhouette alone"
+    ]
+  },
+  "characters": [
+    {
+      "id": "FRODO",
+      "tier": "HERO_PLAYABLE",
+      "status": "MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "body": "hobbit small-proportion",
+      "identity": [
+        "curly dark hair",
+        "travel clothing",
+        "cloak",
+        "Sting later",
+        "Ring-bearer acting states"
+      ],
+      "rig": "HOBBIT_HUMANOID",
+      "priority": 1
+    },
+    {
+      "id": "GANDALF",
+      "tier": "HERO_PLAYABLE",
+      "status": "MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "body": "tall elder human",
+      "identity": [
+        "grey robes",
+        "staff",
+        "hat/beard silhouette",
+        "measured locomotion"
+      ],
+      "rig": "TALL_HUMANOID",
+      "priority": 1
+    },
+    {
+      "id": "SAM",
+      "tier": "HERO_COMPANION",
+      "status": "DEDICATED_IDENTITY_PROXY_RIG_PENDING",
+      "body": "hobbit sturdy-proportion",
+      "identity": [
+        "travel pack",
+        "practical clothing",
+        "protective proximity",
+        "cooking/gardening props"
+      ],
+      "rig": "HOBBIT_HUMANOID",
+      "priority": 2
+    },
+    {
+      "id": "MERRY",
+      "tier": "CORE_COMPANION",
+      "status": "DEDICATED_IDENTITY_PROXY_RIG_PENDING",
+      "body": "hobbit slim-medium",
+      "identity": [
+        "distinct hair/clothes",
+        "confident social posture"
+      ],
+      "rig": "HOBBIT_HUMANOID",
+      "priority": 2
+    },
+    {
+      "id": "PIPPIN",
+      "tier": "CORE_COMPANION",
+      "status": "DEDICATED_IDENTITY_PROXY_RIG_PENDING",
+      "body": "hobbit youthful",
+      "identity": [
+        "lighter movement",
+        "curious posture",
+        "distinct hair/clothes"
+      ],
+      "rig": "HOBBIT_HUMANOID",
+      "priority": 2
+    },
+    {
+      "id": "ARAGORN",
+      "tier": "HERO_COMPANION",
+      "status": "DEDICATED_IDENTITY_PROXY_RIG_PENDING",
+      "body": "tall ranger",
+      "identity": [
+        "weathered ranger layers",
+        "sword",
+        "cloak",
+        "forward scout posture"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 2
+    },
+    {
+      "id": "BOROMIR",
+      "tier": "HERO_COMPANION",
+      "status": "DEDICATED_IDENTITY_PROXY_RIG_PENDING",
+      "body": "armored human",
+      "identity": [
+        "shield",
+        "sword",
+        "layered armor",
+        "soldier stance"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 2
+    },
+    {
+      "id": "LEGOLAS",
+      "tier": "HERO_COMPANION",
+      "status": "DEDICATED_IDENTITY_PROXY_RIG_PENDING",
+      "body": "slender elf",
+      "identity": [
+        "bow/quiver",
+        "light layered clothing",
+        "fast precise movement"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 2
+    },
+    {
+      "id": "GIMLI",
+      "tier": "HERO_COMPANION",
+      "status": "DEDICATED_IDENTITY_PROXY_RIG_PENDING",
+      "body": "dwarf compact-heavy",
+      "identity": [
+        "beard mass",
+        "helmet/armor",
+        "axe",
+        "heavy grounded gait"
+      ],
+      "rig": "DWARF_HUMANOID",
+      "priority": 2
+    },
+    {
+      "id": "BILBO",
+      "tier": "MAJOR_NAMED",
+      "status": "DEDICATED_IDENTITY_PROXY_RIG_PENDING",
+      "body": "older hobbit",
+      "identity": [
+        "older face/hair",
+        "waistcoat/home clothing",
+        "walking stick/travel-history cues"
+      ],
+      "rig": "HOBBIT_HUMANOID",
+      "priority": 3
+    },
+    {
+      "id": "ARWEN",
+      "tier": "MAJOR_NAMED",
+      "status": "DEDICATED_IDENTITY_PROXY_RIG_PENDING",
+      "body": "elf",
+      "identity": [
+        "riding/travel silhouette",
+        "elf wardrobe",
+        "calm decisive movement"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 3
+    },
+    {
+      "id": "ELROND",
+      "tier": "MAJOR_NAMED",
+      "status": "DEDICATED_IDENTITY_PROXY_RIG_PENDING",
+      "body": "elf elder",
+      "identity": [
+        "formal Rivendell layers",
+        "controlled posture"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 3
+    },
+    {
+      "id": "GALADRIEL",
+      "tier": "MAJOR_NAMED",
+      "status": "DEDICATED_IDENTITY_PROXY_RIG_PENDING",
+      "body": "elf",
+      "identity": [
+        "light layered gown",
+        "long pale hair",
+        "slow deliberate acting"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 3
+    },
+    {
+      "id": "SARUMAN",
+      "tier": "MAJOR_NAMED",
+      "status": "DEDICATED_IDENTITY_PROXY_RIG_PENDING",
+      "body": "tall elder human",
+      "identity": [
+        "white robes",
+        "staff",
+        "precise authoritarian posture"
+      ],
+      "rig": "TALL_HUMANOID",
+      "priority": 3
+    },
+    {
+      "id": "NAZGUL",
+      "tier": "MAJOR_THREAT",
+      "status": "DEDICATED_SILHOUETTE_EXISTS_RIG_MOTION_POLISH_PENDING",
+      "body": "wraith humanoid",
+      "identity": [
+        "hooded void",
+        "black layered cloth",
+        "long weapon",
+        "mounted variant"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 3
+    },
+    {
+      "id": "ORC_URUK_FAMILY",
+      "tier": "ENEMY_FAMILY",
+      "status": "PRODUCTION_FAMILY_VARIATION_PENDING",
+      "body": "humanoid variants",
+      "identity": [
+        "multiple heads/armor kits/weapons",
+        "shared animation family"
+      ],
+      "rig": "ENEMY_HUMANOID",
+      "priority": 4
+    },
+    {
+      "id": "REGIONAL_RESIDENT_FAMILIES",
+      "tier": "CROWD",
+      "status": "AMBIENT_RUNTIME_EXISTS_VISUAL_FAMILIES_PENDING",
+      "body": "hobbit/human/elf families",
+      "identity": [
+        "region clothing kits",
+        "role props",
+        "face/hair variations"
+      ],
+      "rig": "SHARED_FAMILY_RIGS",
+      "priority": 4
+    },
+    {
+      "id": "GOLLUM_PART2_SEED",
+      "tier": "FUTURE_HERO_NPC",
+      "status": "REFERENCE_ONLY",
+      "body": "unique crouched humanoid",
+      "identity": [
+        "unique proportions",
+        "creature locomotion",
+        "face acting requirement"
+      ],
+      "rig": "CUSTOM_UNIQUE",
+      "priority": 5
+    }
+  ],
+  "acceptance": [
+    "Core cast is recognizable by silhouette and motion without relying on floating labels.",
+    "Every production character has a recorded source/provenance or is project-authored.",
+    "Rig/animation works in UE4.27.2 and does not regress gameplay collision or chapter spawning.",
+    "LOD/material budgets preserve the target laptop floor.",
+    "Visual acceptance is recorded separately from compile/import success."
+  ]
+}

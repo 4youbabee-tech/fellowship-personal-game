@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "index_id": "OWNER_SOURCE_REFERENCE_INDEX_V1",
+  "status": "ACTIVE",
+  "policy": "Raw copyrighted reference documents/images are reference-only and are not required or shipped at runtime. Derived game data must remain original, bounded and traceable.",
+  "sources": [
+    {
+      "id": "SRC_FILM_FOTR_SCREENPLAY",
+      "name": "The Lord of the Rings: The Fellowship of the Ring screenplay PDF",
+      "kind": "SCREENPLAY_REFERENCE",
+      "sha256": "4760026562d943fde02133e681e5884ee85c7a5f466b7f3ff36d67122c60d656",
+      "use": [
+        "chronology context",
+        "speaker presence",
+        "tone",
+        "knowledge boundaries"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_FILM_TTT_SCREENPLAY",
+      "name": "The Lord of the Rings: The Two Towers screenplay PDF",
+      "kind": "SCREENPLAY_REFERENCE",
+      "sha256": "8c1c780cb94b7862cc5f15e7b451ee9a4eda1d170c503390bf75cfcd210d4e7e",
+      "use": [
+        "Part II route/context seeding",
+        "character pressure",
+        "knowledge boundaries"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_MASTER_PACK",
+      "name": "LOTR_Source_Pack_Master(1).pdf",
+      "kind": "OWNER_REFERENCE_PACK",
+      "use": [
+        "character/world reference organization",
+        "production vocabulary",
+        "visual lookup"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_IMAGES_CHARACTER_WORLD_SET",
+      "name": "Owner-uploaded character/world reference images",
+      "kind": "VISUAL_REFERENCE_SET",
+      "use": [
+        "silhouette",
+        "wardrobe cues",
+        "environment identity"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_FOREST_BEAUTY_BENCHMARK",
+      "name": "Owner-uploaded cinematic forest/character benchmark image",
+      "kind": "VISUAL_QUALITY_REFERENCE",
+      "use": [
+        "density",
+        "light shafts",
+        "layered depth",
+        "ground detail",
+        "character integration"
+      ],
+      "runtime_ship": false
+    }
+  ],
+  "derived_runtime_data": [
+    "Data/FilmDialogueSourceContext.json",
+    "Data/CharacterProductionMatrix.json",
+    "Data/CinematicWorldProductionMatrix.json",
+    "Data/TrilogyRingQuestPlan.json"
+  ]
+}

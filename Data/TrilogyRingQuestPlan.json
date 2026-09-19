@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "plan_id": "TRILOGY_RING_QUEST_CORE_V1",
+  "status": "PART1_RUNTIME_CONTEXT_IMPLEMENTED_PART2_PART3_REFERENCE_SEEDS",
+  "axis_policy": "RING_IS_CENTRAL",
+  "purpose": "Keep the One Ring as the persistent strategic and emotional axis of the game while routes, exploration and side activities remain subordinate to the fixed film chronology.",
+  "invariants": [
+    "The Ring quest is never replaced by exploration, side activities, combat loops or parallel routes.",
+    "Part I canonical transfer is Bilbo to Frodo; optional systems may not transfer ownership.",
+    "GandalfParallel never carries the Ring; the Ring remains with Frodo off-route.",
+    "The Fellowship split preserves Frodo as Ring-bearer and Sam as the companion who continues with him.",
+    "Ring use and temptation may be represented only at authored story-safe beats and may not create an alternate film outcome.",
+    "Ring state derives from authoritative route/chapter/story state instead of a competing story manager."
+  ],
+  "runtime_api": {
+    "owner": "UShireQuestSubsystem",
+    "methods": [
+      "IsRingQuestActive",
+      "GetRingBearerId",
+      "GetRingStateTag",
+      "GetRingPressureTier"
+    ],
+    "audit_marker": "ShireStateAudit: ring-core=PASS"
+  },
+  "pressure_tiers": [
+    {
+      "tier": 0,
+      "id": "DORMANT_OR_UNKNOWN"
+    },
+    {
+      "tier": 1,
+      "id": "SECRET_BURDEN"
+    },
+    {
+      "tier": 2,
+      "id": "HUNTED_BURDEN"
+    },
+    {
+      "tier": 3,
+      "id": "HEAVY_BURDEN"
+    },
+    {
+      "tier": 4,
+      "id": "FRACTURE_TEMPTATION"
+    }
+  ],
+  "part1_windows": [
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "bearer_before_transfer": "Bilbo",
+      "bearer_after_transfer": "Frodo",
+      "state": "PRE_TRANSFER_TO_HIDDEN_SECRET"
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C02",
+      "bearer": "Frodo",
+      "state": "EXPOSED_AT_BREE"
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C03",
+      "bearer": "Frodo",
+      "state": "WOUNDED_HUNTED_BURDEN"
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C04",
+      "bearer": "Frodo",
+      "state": "COUNCIL_MISSION"
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C05",
+      "bearer": "Frodo",
+      "state": "FELLOWSHIP_GUARDING_RING"
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C06",
+      "bearer": "Frodo",
+      "state": "MORIA_BURDEN"
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C07",
+      "bearer": "Frodo",
+      "state": "TEMPTATION_TEST"
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "bearer": "Frodo",
+      "state": "FELLOWSHIP_FRACTURE"
+    },
+    {
+      "route": "GandalfParallel",
+      "chapter": "P1C01",
+      "bearer": "Frodo",
+      "state": "OFF_ROUTE_WITH_FRODO"
+    }
+  ],
+  "authored_ring_use_policy": {
+    "free_toggle": false,
+    "mode": "STORY_AUTHORED_ONLY",
+    "candidate_part1_beats": [
+      "RingIncident",
+      "NazgulCloseIn",
+      "BoromirPressure"
+    ],
+    "runtime_implementation_status": "PLANNED"
+  },
+  "future_route_seeds": {
+    "part2": [
+      "Frodo/Sam/Gollum remains the direct Ring-destruction route",
+      "Rohan/Ent/Gandalf routes serve the war around the Ring quest"
+    ],
+    "part3": [
+      "Mordor crossing and Mount Doom remain the terminal Ring objective",
+      "Other routes protect time, armies and access without changing the Ring outcome"
+    ]
+  }
+}

@@ -1301,6 +1301,8 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
             SpeakerId,
             ListenerId == NAME_None ? FName(TEXT("PLAYER_FRODO")) : ListenerId);
         Seed = HashCombine(Seed, static_cast<uint32>(RelationshipContext + 100));
+        Seed = HashCombine(Seed, GetTypeHash(Quests->GetRingStateTag()));
+        Seed = HashCombine(Seed, static_cast<uint32>(Quests->GetRingPressureTier()));
     }
     Seed = HashCombine(Seed, GetTypeHash(GetRegionalWorldMood()));
     Seed = HashCombine(Seed, static_cast<uint32>(FMath::RoundToInt(GetRegionalPressure() * 100.0f)));

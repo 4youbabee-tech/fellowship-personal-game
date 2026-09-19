@@ -79,6 +79,18 @@ public:
     UFUNCTION(BlueprintPure, Category="Story")
     bool HasStoryBeatTriggered(FName StoryBeatId) const;
 
+    UFUNCTION(BlueprintPure, Category="Ring")
+    bool IsRingQuestActive() const;
+
+    UFUNCTION(BlueprintPure, Category="Ring")
+    FName GetRingBearerId() const;
+
+    UFUNCTION(BlueprintPure, Category="Ring")
+    FName GetRingStateTag() const;
+
+    UFUNCTION(BlueprintPure, Category="Ring")
+    int32 GetRingPressureTier() const;
+
     UFUNCTION(BlueprintPure, Category="Quest")
     FName GetActiveQuestId() const { return ActiveQuestId; }
 
