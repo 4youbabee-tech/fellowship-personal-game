@@ -16,7 +16,7 @@
 ALivingWorldDirector::ALivingWorldDirector()
 {
     PrimaryActorTick.bCanEverTick = true;
-    PrimaryActorTick.TickInterval = 1.0f;
+    PrimaryActorTick.TickInterval = 0.35f;
 }
 
 void ALivingWorldDirector::BeginPlay()
@@ -25,6 +25,7 @@ void ALivingWorldDirector::BeginPlay()
 
     Random.Initialize(7919);
     LoadEventContract();
+    LoadLifeSaturationContract();
 
     if (UGameInstance* GI = GetGameInstance())
     {
@@ -60,6 +61,15 @@ void ALivingWorldDirector::EndPlay(const EEndPlayReason::Type EndPlayReason)
         }
     }
     ActiveEvents.Empty();
+
+    for (TWeakObjectPtr<AShireAmbientNPC>& NPCPtr : BaselinePopulation)
+    {
+        if (AShireAmbientNPC* NPC = NPCPtr.Get())
+        {
+            NPC->Destroy();
+        }
+    }
+    BaselinePopulation.Empty();
 
     Super::EndPlay(EndPlayReason);
 }
@@ -140,6 +150,90 @@ bool ALivingWorldDirector::LoadEventContract()
     return AllowedEventTypesByChapter.Num() > 0;
 }
 
+bool ALivingWorldDirector::LoadLifeSaturationContract()
+{
+    const FString Path = FPaths::Combine(FPaths::ProjectDir(), TEXT("Data/WorldLifeSaturationPlan.json"));
+    FString JsonText;
+    if (!FFileHelper::LoadFileToString(JsonText, *Path))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("LivingWorldDirector: could not read %s; using baseline defaults."), *Path);
+        return false;
+    }
+
+    TSharedPtr<FJsonObject> Root;
+    const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonText);
+    if (!FJsonSerializer::Deserialize(Reader, Root) || !Root.IsValid())
+    {
+        UE_LOG(LogTemp, Warning, TEXT("LivingWorldDirector: invalid world-life saturation contract."));
+        return false;
+    }
+
+    BaselineTargetByChapter.Empty();
+    const TSharedPtr<FJsonObject>* Targets = nullptr;
+    if (Root->TryGetObjectField(TEXT("baseline_population_targets"), Targets) && Targets && Targets->IsValid())
+    {
+        for (const auto& Pair : (*Targets)->Values)
+        {
+            BaselineTargetByChapter.Add(FName(*Pair.Key), FMath::Clamp(static_cast<int32>(Pair.Value->AsNumber()), 0, 24));
+        }
+    }
+
+    BaselineRolesByChapter.Empty();
+    const TSharedPtr<FJsonObject>* Roles = nullptr;
+    if (Root->TryGetObjectField(TEXT("population_roles"), Roles) && Roles && Roles->IsValid())
+    {
+        for (const auto& Pair : (*Roles)->Values)
+        {
+            TArray<FName> ParsedRoles;
+            const TArray<TSharedPtr<FJsonValue>>* RoleValues = nullptr;
+            if (Pair.Value.IsValid() && Pair.Value->TryGetArray(RoleValues) && RoleValues)
+            {
+                for (const TSharedPtr<FJsonValue>& RoleValue : *RoleValues)
+                {
+                    const FString Role = RoleValue.IsValid() ? RoleValue->AsString() : FString();
+                    if (!Role.IsEmpty())
+                    {
+                        ParsedRoles.Add(FName(*Role));
+                    }
+                }
+            }
+            BaselineRolesByChapter.Add(FName(*Pair.Key), MoveTemp(ParsedRoles));
+        }
+    }
+
+    const TSharedPtr<FJsonObject>* Density = nullptr;
+    if (Root->TryGetObjectField(TEXT("density_profile"), Density) && Density && Density->IsValid())
+    {
+        double Value = 0.0;
+        if ((*Density)->TryGetNumberField(TEXT("max_active_micro_events_near_player"), Value))
+        {
+            MaxActiveMicroEvents = FMath::Clamp(static_cast<int32>(Value), 1, 6);
+        }
+        if ((*Density)->TryGetNumberField(TEXT("min_seconds_between_event_starts"), Value))
+        {
+            MinSecondsBetweenEventStarts = FMath::Clamp(static_cast<float>(Value), 4.0f, 30.0f);
+        }
+        if ((*Density)->TryGetNumberField(TEXT("baseline_spawn_interval_seconds"), Value))
+        {
+            PopulationSpawnInterval = FMath::Clamp(static_cast<float>(Value), 0.25f, 2.0f);
+        }
+        if ((*Density)->TryGetNumberField(TEXT("baseline_inner_radius_cm"), Value))
+        {
+            PopulationInnerRadius = FMath::Clamp(static_cast<float>(Value), 500.0f, 1800.0f);
+        }
+        if ((*Density)->TryGetNumberField(TEXT("baseline_outer_radius_cm"), Value))
+        {
+            PopulationOuterRadius = FMath::Clamp(static_cast<float>(Value), PopulationInnerRadius + 200.0f, 4200.0f);
+        }
+        if ((*Density)->TryGetNumberField(TEXT("baseline_cull_radius_cm"), Value))
+        {
+            PopulationCullRadius = FMath::Clamp(static_cast<float>(Value), PopulationOuterRadius + 800.0f, 9000.0f);
+        }
+    }
+
+    return BaselineTargetByChapter.Num() > 0;
+}
+
 void ALivingWorldDirector::HandleChapterChanged(FName PreviousChapterId, FName NewChapterId)
 {
     ActiveChapterId = NewChapterId;
@@ -171,11 +265,22 @@ void ALivingWorldDirector::ResetForCurrentChapter()
         }
     }
     ActiveEvents.Empty();
+
+    for (TWeakObjectPtr<AShireAmbientNPC>& NPCPtr : BaselinePopulation)
+    {
+        if (AShireAmbientNPC* NPC = NPCPtr.Get())
+        {
+            NPC->Destroy();
+        }
+    }
+    BaselinePopulation.Empty();
     LastEventType = NAME_None;
 
     if (GetWorld())
     {
-        NextEventTime = GetWorld()->GetTimeSeconds() + 5.0f + Random.FRandRange(0.0f, 4.0f);
+        const float Now = GetWorld()->GetTimeSeconds();
+        NextEventTime = Now + 3.0f + Random.FRandRange(0.0f, 2.0f);
+        NextPopulationSpawnTime = Now + 0.5f;
     }
 
     ApplyChapterWeatherContext();
