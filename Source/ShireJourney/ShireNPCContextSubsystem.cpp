@@ -628,6 +628,39 @@ void UShireNPCContextSubsystem::BuildDialogueVariantLibrary()
         { TEXT("NPC_BOROMIR"), TEXT("GRIEF_AND_REFUGE"), TEXT("There is no shame in needing rest. Even a guard must breathe."), TEXT("I will keep my voice down. The others need their peace.") },
         { TEXT("NPC_LEGOLAS"), TEXT("GRIEF_AND_REFUGE"), TEXT("Let the leaves speak for a while. We have carried enough noise."), TEXT("There is room for silence beneath these trees.") },
         { TEXT("NPC_GIMLI"), TEXT("GRIEF_AND_REFUGE"), TEXT("I have no fine words for this. You still have my company."), TEXT("Let us rest our feet. Our thoughts may take longer.") },
+
+        { TEXT("NPC_SAM"), TEXT("PEACEFUL_HOME"), TEXT("The lane feels easy today. I hope it stays that way."), TEXT("There is still time for a quiet walk before supper.") },
+        { TEXT("NPC_MERRY"), TEXT("PEACEFUL_HOME"), TEXT("If nothing goes wrong, we may have to invent our own excitement."), TEXT("The Shire is best when nobody is in a hurry.") },
+        { TEXT("NPC_PIPPIN"), TEXT("PEACEFUL_HOME"), TEXT("I was promised food somewhere nearby, and I intend to find it."), TEXT("It is hard to worry when the whole place smells like supper.") },
+        { TEXT("NPC_BILBO"), TEXT("PEACEFUL_HOME"), TEXT("A peaceful road can still hide a good story if you look closely."), TEXT("Home is comfortable, but curiosity never stays quiet for long.") },
+
+        { TEXT("NPC_SAM"), TEXT("SUSPICIOUS_TOWN"), TEXT("Too many eyes in this town. I would rather keep you close."), TEXT("This place feels crowded even when the street is empty.") },
+        { TEXT("NPC_MERRY"), TEXT("SUSPICIOUS_TOWN"), TEXT("Let us hear the room before we decide who sounds friendly."), TEXT("A closed door can be sensible when strangers keep asking questions.") },
+        { TEXT("NPC_PIPPIN"), TEXT("SUSPICIOUS_TOWN"), TEXT("I liked the Shire better when every face had a name."), TEXT("I will try not to attract attention. Try is the important word.") },
+        { TEXT("NPC_ARAGORN"), TEXT("SUSPICIOUS_TOWN"), TEXT("Keep your voices low until we leave these streets."), TEXT("Bree is safer than the wild, not safer than carelessness.") },
+
+        { TEXT("NPC_SAM"), TEXT("PURSUED_WILDERNESS"), TEXT("Do not fall behind. If you stop, I stop with you."), TEXT("Every ridge looks harmless until something moves behind it.") },
+        { TEXT("NPC_MERRY"), TEXT("PURSUED_WILDERNESS"), TEXT("Cross open ground quickly and rest where the land hides us."), TEXT("I keep counting footsteps that are not ours.") },
+        { TEXT("NPC_PIPPIN"), TEXT("PURSUED_WILDERNESS"), TEXT("I am trying not to look behind us every ten steps."), TEXT("If we find cover, I vote we breathe there for a minute.") },
+        { TEXT("NPC_ARAGORN"), TEXT("PURSUED_WILDERNESS"), TEXT("Read the ground before the horizon. Tracks tell you what distance hides."), TEXT("Stay off the obvious line. We are not the only ones here.") },
+
+        { TEXT("NPC_GANDALF"), TEXT("SAFE_REFUGE"), TEXT("Rest is part of the journey. Use it before the road asks more."), TEXT("Safety gives us time to think, not permission to forget danger.") },
+        { TEXT("NPC_BILBO"), TEXT("SAFE_REFUGE"), TEXT("A quiet room after a long road can feel like its own adventure."), TEXT("Sit a while. Stories sound different when nobody is chasing you.") },
+        { TEXT("NPC_ARWEN"), TEXT("SAFE_REFUGE"), TEXT("You are safe enough to breathe here. Let that be enough for now."), TEXT("Healing is not idleness. The road can wait while strength returns.") },
+        { TEXT("NPC_ELROND"), TEXT("SAFE_REFUGE"), TEXT("Use this refuge to see the choice clearly before movement begins again."), TEXT("Peace here is temporary, but clarity need not be.") },
+
+        { TEXT("NPC_GANDALF"), TEXT("FELLOWSHIP_UNDER_PRESSURE"), TEXT("Keep your purpose in sight when the road becomes louder than thought."), TEXT("Pressure reveals weak choices quickly. We will choose carefully.") },
+        { TEXT("NPC_SAM"), TEXT("FELLOWSHIP_UNDER_PRESSURE"), TEXT("Whatever the mountain does, you are not facing it alone."), TEXT("Cold is easier to bear when we keep moving together.") },
+        { TEXT("NPC_ARAGORN"), TEXT("FELLOWSHIP_UNDER_PRESSURE"), TEXT("Close the gaps. Weather can separate us as easily as an enemy."), TEXT("Watch the footing and the company at the same time.") },
+        { TEXT("NPC_GIMLI"), TEXT("FELLOWSHIP_UNDER_PRESSURE"), TEXT("Stone I understand. Snow pretending to be stone is another matter."), TEXT("There are roads beneath mountains as well as over them.") },
+
+        { TEXT("NPC_SAM"), TEXT("FELLOWSHIP_FRACTURE"), TEXT("Something is wrong among us. I am staying where I can see you."), TEXT("The river is quiet, but the company is not.") },
+        { TEXT("NPC_ARAGORN"), TEXT("FELLOWSHIP_FRACTURE"), TEXT("Keep the company in sight. Tension can scatter us before danger arrives."), TEXT("We need clear heads now more than quick feet.") },
+        { TEXT("NPC_BOROMIR"), TEXT("FELLOWSHIP_FRACTURE"), TEXT("Every choice feels heavier here. I need a moment to think clearly."), TEXT("Do not mistake silence for peace. There is too much at stake.") },
+        { TEXT("NPC_LEGOLAS"), TEXT("FELLOWSHIP_FRACTURE"), TEXT("The woods warn of movement, and the company is already unsettled."), TEXT("We should not remain divided while danger closes around us.") },
+
+        { TEXT("NPC_GANDALF"), TEXT("WAR_CORRUPTION"), TEXT("This place no longer feels like counsel. It feels like a trap."), TEXT("Power without restraint has changed the air here.") },
+        { TEXT("NPC_SARUMAN"), TEXT("WAR_CORRUPTION"), TEXT("The old balance is finished. Only those who adapt will shape what follows."), TEXT("Warning cannot reverse what is already in motion.") },
     };
     const FName RegionalIntents[] = {
         TEXT("GREETING"), TEXT("STORY_REACTION"),
@@ -796,6 +829,7 @@ FString UShireNPCContextSubsystem::GetProfileContextSummary(FName ProfileHint) c
 
     Parts.Add(FString::Printf(TEXT("world_mood=%s"), *GetRegionalWorldMood().ToString()));
     Parts.Add(FString::Printf(TEXT("world_pressure=%.2f"), GetRegionalPressure()));
+    Parts.Add(FString::Printf(TEXT("emotion=%s"), *GetProfileEmotionalState(ProfileId).ToString()));
     if (IsDangerStateActive())
     {
         Parts.Add(TEXT("danger=ACTIVE"));
@@ -855,6 +889,41 @@ float UShireNPCContextSubsystem::GetRegionalPressure() const
         Pressure = FMath::Max(Pressure, 0.90f);
     }
     return FMath::Clamp(Pressure, 0.0f, 1.0f);
+}
+
+FName UShireNPCContextSubsystem::GetProfileEmotionalState(FName ProfileHint) const
+{
+    const FName ProfileId = ResolveCanonicalProfileId(ProfileHint);
+    const FShireNPCProfileRuntime* Profile = Profiles.Find(ProfileId);
+    if (!Profile)
+    {
+        return TEXT("CALM");
+    }
+
+    const FName Mood = GetRegionalWorldMood();
+    if (Mood == TEXT("PEACEFUL_HOME")) return TEXT("RELAXED");
+    if (Mood == TEXT("SUSPICIOUS_TOWN")) return TEXT("WATCHFUL");
+    if (Mood == TEXT("SAFE_REFUGE")) return TEXT("RELIEVED");
+    if (Mood == TEXT("GRIEF_AND_REFUGE")) return TEXT("GRIEVING");
+    if (Mood == TEXT("PURSUED_WILDERNESS")) return TEXT("TENSE");
+    if (Mood == TEXT("FELLOWSHIP_UNDER_PRESSURE")) return TEXT("DETERMINED");
+    if (Mood == TEXT("FELLOWSHIP_FRACTURE"))
+    {
+        return ProfileId == TEXT("NPC_BOROMIR") ? FName(TEXT("CONFLICTED")) : FName(TEXT("ALARMED"));
+    }
+    if (Mood == TEXT("WAR_CORRUPTION"))
+    {
+        return ProfileId == TEXT("NPC_SARUMAN") ? FName(TEXT("HOSTILE")) : FName(TEXT("RESOLUTE"));
+    }
+    if (Mood == TEXT("DEAD_CITY_DREAD"))
+    {
+        if (ProfileId == TEXT("NPC_GIMLI")) return TEXT("GRIEVING");
+        return Profile->AttitudeTags.Contains(FName(TEXT("PROTECTIVE")))
+            ? FName(TEXT("GRAVE"))
+            : FName(TEXT("AFRAID"));
+    }
+
+    return GetRegionalPressure() >= 0.75f ? FName(TEXT("ALERT")) : FName(TEXT("CALM"));
 }
 
 FName UShireNPCContextSubsystem::ResolveSchedulePhase(
@@ -1112,6 +1181,8 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
         Selected->RequiredMemory != NAME_None ||
         Selected->RequiredStoryBeat != NAME_None ||
         RelationshipContext != 0;
+    Result.WorldMood = CurrentMood;
+    Result.EmotionalState = GetProfileEmotionalState(SpeakerId);
 
     if (Quests)
     {
