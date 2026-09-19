@@ -79,6 +79,8 @@ void AShireGameMode::BeginPlay()
             Quests->TriggerStoryBeat(TEXT("CI_STATE_AUDIT_BEAT"));
 
             const int32 JourneyInsightBefore = Quests->GetJourneyInsight();
+            const int32 PerceptionXPBefore = Quests->GetProgressionXP(TEXT("PERCEPTION"));
+            const int32 ResolveXPBefore = Quests->GetProgressionXP(TEXT("RESOLVE"));
             const bool bFirstDiscovery =
                 Quests->RegisterJourneyDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
             const bool bRepeatDiscovery =
@@ -147,6 +149,30 @@ void AShireGameMode::BeginPlay()
                     Quests->HasJourneyDiscovery(TEXT("WILDERNESS_TRACK_SIGNS")) ? TEXT("yes") : TEXT("no"),
                     JourneyInsightBefore,
                     Quests->GetJourneyInsight());
+            }
+
+            const bool bProgressionCoreValid =
+                Quests->GetProgressionXP(TEXT("PERCEPTION")) - PerceptionXPBefore == 8 &&
+                Quests->GetProgressionXP(TEXT("RESOLVE")) - ResolveXPBefore == 6;
+            if (bProgressionCoreValid)
+            {
+                UE_LOG(
+                    LogTemp,
+                    Display,
+                    TEXT("ShireStateAudit: progression-core=PASS perception=%d resolve=%d"),
+                    Quests->GetProgressionXP(TEXT("PERCEPTION")),
+                    Quests->GetProgressionXP(TEXT("RESOLVE")));
+            }
+            else
+            {
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireStateAudit: progression-core=FAIL perceptionBefore=%d perceptionAfter=%d resolveBefore=%d resolveAfter=%d"),
+                    PerceptionXPBefore,
+                    Quests->GetProgressionXP(TEXT("PERCEPTION")),
+                    ResolveXPBefore,
+                    Quests->GetProgressionXP(TEXT("RESOLVE")));
             }
 
             if (bRouteRestored)
