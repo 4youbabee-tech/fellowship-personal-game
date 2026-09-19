@@ -54,6 +54,30 @@ Current proof boundary:
 - PIE/device playability and performance: pending.
 - runner autostart: post-reboot verification trigger issued on 2026-09-19.
 
+## Current world-life status — CP53
+
+The game has moved beyond isolated ambient encounters. CP53 keeps a chapter-specific baseline population alive around the player and layers denser micro-events on top of it, while reusing the existing schedule/social/awareness runtime and distance-based tick throttling.
+
+Population targets:
+- P1C01 Shire: 18
+- P1C02 Bree: 16
+- P1C03 Weathertop/Ford: 5
+- P1C04 Rivendell: 12
+- P1C05 Caradhras/road: 6
+- P1C06 Moria: 0 civilians
+- P1C07 Lothlorien: 10
+- P1C08 Anduin/Amon Hen: 6
+
+Machine-readable authority:
+- `Data/WorldLifeSaturationPlan.json`
+
+Current proof boundary:
+- source/runtime integration: implemented on `mega/world-alive-saturation-v2`,
+- Pre-Unreal PG-053: pending CI,
+- real UE4.27 compile/import: pending CI,
+- headless startup: pending CI,
+- PIE/device crowd density and FPS acceptance: pending.
+
 # CURRENT PROJECT STATE
 
 > **Operational recovery note — reconciled 2026-09-19**
