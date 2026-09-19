@@ -121,7 +121,7 @@ public:
     bool HasJourneyDiscovery(FName DiscoveryId) const;
 
     UFUNCTION(BlueprintPure, Category="Exploration")
-    int32 GetJourneyInsight() const { return JourneyInsight; }
+    int32 GetJourneyInsight() const;
 
     UFUNCTION(BlueprintPure, Category="Exploration")
     bool HasJourneyInsightMilestone(FName MilestoneId) const;
