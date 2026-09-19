@@ -2200,7 +2200,9 @@ bree_cpp_cp52 = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
 fellowship_cpp_cp52 = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
 build_cs_cp52 = read(SOURCE / "ShireJourney.Build.cs")
 game_mode_cpp_cp52 = read(SOURCE / "ShireGameMode.cpp")
+router_cpp_cp52 = read(SOURCE / "ChapterWorldRouter.cpp")
 quest_cpp_cp52 = read(SOURCE / "ShireQuestSubsystem.cpp")
+unreal_workflow_cp52 = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 
 for symbol in [
     "ProductionCommonBroadleafTreeMesh",
@@ -2248,9 +2250,21 @@ for startup_symbol in [
     "SpawnActor<ALivingWorldDirector>",
     'CurrentChapterId = TEXT("P1C01")',
     'StartQuest(TEXT("ShireArrival"), 0)',
+    "ShirePlayableStartup: GameMode ready",
+    "ShirePlayableStartup: chapter=P1C01 route=%s",
 ]:
-    if startup_symbol not in (game_mode_cpp_cp52 + quest_cpp_cp52):
+    if startup_symbol not in (game_mode_cpp_cp52 + router_cpp_cp52 + quest_cpp_cp52):
         fail(f"PG-052 playable startup invariant missing: {startup_symbol}")
+
+for workflow_symbol in [
+    "pull_request:",
+    "Headless playable startup smoke",
+    "CI-PlayableStartup.log",
+    "ShirePlayableStartup: GameMode ready",
+    "ShirePlayableStartup: chapter=P1C01 route=FrodoMain",
+]:
+    if workflow_symbol not in unreal_workflow_cp52:
+        fail(f"PG-052 Unreal boot validation workflow missing: {workflow_symbol}")
 
 if resource_integration:
     external_policy = resource_integration.get("external_resource_policy", {})
