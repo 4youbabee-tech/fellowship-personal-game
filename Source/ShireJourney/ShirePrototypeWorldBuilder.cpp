@@ -877,13 +877,25 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     }
 
     // Stone bridge, The Water and mill anchor the village center.
-    SpawnShape(CubeMesh, FVector(-1050,90,25), FVector(2.0f,1.05f,0.16f), FLinearColor(0.34f,0.34f,0.31f));
-    SpawnShape(CubeMesh, FVector(-1050,185,62), FVector(2.0f,0.09f,0.34f), FLinearColor(0.30f,0.30f,0.28f), FRotator::ZeroRotator,false);
-    SpawnShape(CubeMesh, FVector(-1050,-5,62), FVector(2.0f,0.09f,0.34f), FLinearColor(0.30f,0.30f,0.28f), FRotator::ZeroRotator,false);
+    // In production mode, do not leave the old cube/cone landmark shells underneath
+    // the imported bridge and mill. They made the scene read like a greybox even when
+    // the production assets had imported successfully.
+    if (!ProductionStoneBridgeMesh)
+    {
+        SpawnShape(CubeMesh, FVector(-1050,90,25), FVector(2.0f,1.05f,0.16f), FLinearColor(0.34f,0.34f,0.31f));
+        SpawnShape(CubeMesh, FVector(-1050,185,62), FVector(2.0f,0.09f,0.34f), FLinearColor(0.30f,0.30f,0.28f), FRotator::ZeroRotator,false);
+        SpawnShape(CubeMesh, FVector(-1050,-5,62), FVector(2.0f,0.09f,0.34f), FLinearColor(0.30f,0.30f,0.28f), FRotator::ZeroRotator,false);
+    }
     SpawnShape(CubeMesh, FVector(-1060,310,-4), FVector(8.0f,1.0f,0.06f), FLinearColor(0.055f,0.26f,0.38f), FRotator(0,88,0),false);
-    SpawnShape(CubeMesh, FVector(-1250,330,88), FVector(1.45f,1.05f,0.88f), FLinearColor(0.52f,0.39f,0.23f));
-    SpawnShape(ConeMesh, FVector(-1250,330,215), FVector(1.65f,1.25f,0.52f), FLinearColor(0.30f,0.17f,0.075f), FRotator::ZeroRotator,false);
-    SpawnShape(CylinderMesh, FVector(-1135,330,95), FVector(0.74f,0.74f,0.09f), FLinearColor(0.24f,0.16f,0.08f), FRotator(0,90,0),false);
+    if (!ProductionMillHouseMesh)
+    {
+        SpawnShape(CubeMesh, FVector(-1250,330,88), FVector(1.45f,1.05f,0.88f), FLinearColor(0.52f,0.39f,0.23f));
+        SpawnShape(ConeMesh, FVector(-1250,330,215), FVector(1.65f,1.25f,0.52f), FLinearColor(0.30f,0.17f,0.075f), FRotator::ZeroRotator,false);
+    }
+    if (!ProductionMillWheelMesh)
+    {
+        SpawnShape(CylinderMesh, FVector(-1135,330,95), FVector(0.74f,0.74f,0.09f), FLinearColor(0.24f,0.16f,0.08f), FRotator(0,90,0),false);
+    }
     SpawnLabel(TEXT("The Mill"),FVector(-1250,330,320),FLinearColor(0.86f,0.82f,0.66f));
 
     // Hobbiton homes spread across the Hill instead of sitting in one row.
@@ -908,18 +920,26 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     SpawnFenceLine(FVector(260,520,0),FVector(900,520,0),6);
 
     // Green Dragon and market.
-    SpawnShape(CubeMesh,FVector(-520,360,115),FVector(2.1f,1.5f,1.15f),FLinearColor(0.45f,0.30f,0.17f));
-    SpawnShape(ConeMesh,FVector(-520,360,270),FVector(2.4f,1.8f,0.7f),FLinearColor(0.28f,0.12f,0.05f),FRotator::ZeroRotator,false);
-    SpawnLabel(TEXT("The Green Dragon"),FVector(-520,360,370),FLinearColor(0.85f,0.80f,0.55f));
-    const FVector MarketStalls[] = {
-        FVector(-820,220,38),FVector(-660,180,38),FVector(-480,170,38),FVector(-300,250,38),FVector(-150,190,38)
-    };
-    for(int32 Index=0; Index<UE_ARRAY_COUNT(MarketStalls); ++Index)
+    // The production layer provides the dominant building and stall silhouettes.
+    // Retain these primitives only as a fallback when imports are unavailable.
+    if (!ProductionCottageHouseMesh)
     {
-        const FVector Stall=MarketStalls[Index];
-        SpawnShape(CubeMesh,Stall,FVector(0.72f,0.38f,0.08f),FLinearColor(0.43f,0.28f,0.13f));
-        SpawnShape(CubeMesh,Stall+FVector(0,0,75),FVector(0.78f,0.44f,0.05f),
-            Index%2==0 ? FLinearColor(0.48f,0.20f,0.12f) : FLinearColor(0.22f,0.39f,0.16f),FRotator::ZeroRotator,false);
+        SpawnShape(CubeMesh,FVector(-520,360,115),FVector(2.1f,1.5f,1.15f),FLinearColor(0.45f,0.30f,0.17f));
+        SpawnShape(ConeMesh,FVector(-520,360,270),FVector(2.4f,1.8f,0.7f),FLinearColor(0.28f,0.12f,0.05f),FRotator::ZeroRotator,false);
+    }
+    SpawnLabel(TEXT("The Green Dragon"),FVector(-520,360,370),FLinearColor(0.85f,0.80f,0.55f));
+    if (!ProductionMarketStallMesh)
+    {
+        const FVector MarketStalls[] = {
+            FVector(-820,220,38),FVector(-660,180,38),FVector(-480,170,38),FVector(-300,250,38),FVector(-150,190,38)
+        };
+        for(int32 Index=0; Index<UE_ARRAY_COUNT(MarketStalls); ++Index)
+        {
+            const FVector Stall=MarketStalls[Index];
+            SpawnShape(CubeMesh,Stall,FVector(0.72f,0.38f,0.08f),FLinearColor(0.43f,0.28f,0.13f));
+            SpawnShape(CubeMesh,Stall+FVector(0,0,75),FVector(0.78f,0.44f,0.05f),
+                Index%2==0 ? FLinearColor(0.48f,0.20f,0.12f) : FLinearColor(0.22f,0.39f,0.16f),FRotator::ZeroRotator,false);
+        }
     }
 
     // Party Field is a distinct destination north of the village center.
@@ -927,15 +947,18 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     SpawnTree(PartyCenter,1.45f);
     SpawnShape(CubeMesh,PartyCenter+FVector(300,20,50),FVector(1.6f,0.9f,0.5f),FLinearColor(0.70f,0.62f,0.38f));
     SpawnLabel(TEXT("Party Field"),PartyCenter+FVector(0,0,390),FLinearColor::White);
-    const FVector PartyTables[] = {
-        PartyCenter+FVector(-420,-150,40), PartyCenter+FVector(-100,-190,40), PartyCenter+FVector(240,-160,40),
-        PartyCenter+FVector(-310,170,40), PartyCenter+FVector(40,210,40), PartyCenter+FVector(380,150,40)
-    };
-    for(const FVector& Table:PartyTables)
+    if (!ProductionPicnicTableMesh)
     {
-        SpawnShape(CubeMesh,Table,FVector(0.90f,0.36f,0.08f),FLinearColor(0.43f,0.27f,0.12f));
-        SpawnShape(CubeMesh,Table+FVector(0,62,-20),FVector(0.82f,0.10f,0.11f),FLinearColor(0.34f,0.20f,0.09f));
-        SpawnShape(CubeMesh,Table+FVector(0,-62,-20),FVector(0.82f,0.10f,0.11f),FLinearColor(0.34f,0.20f,0.09f));
+        const FVector PartyTables[] = {
+            PartyCenter+FVector(-420,-150,40), PartyCenter+FVector(-100,-190,40), PartyCenter+FVector(240,-160,40),
+            PartyCenter+FVector(-310,170,40), PartyCenter+FVector(40,210,40), PartyCenter+FVector(380,150,40)
+        };
+        for(const FVector& Table:PartyTables)
+        {
+            SpawnShape(CubeMesh,Table,FVector(0.90f,0.36f,0.08f),FLinearColor(0.43f,0.27f,0.12f));
+            SpawnShape(CubeMesh,Table+FVector(0,62,-20),FVector(0.82f,0.10f,0.11f),FLinearColor(0.34f,0.20f,0.09f));
+            SpawnShape(CubeMesh,Table+FVector(0,-62,-20),FVector(0.82f,0.10f,0.11f),FLinearColor(0.34f,0.20f,0.09f));
+        }
     }
     const FVector LanternPosts[] = {
         PartyCenter+FVector(-520,-300,0),PartyCenter+FVector(520,-300,0),

@@ -140,13 +140,16 @@ void ABreePrototypeWorldBuilder::SpawnBreeTown()
             FLinearColor(0.24f, 0.20f, 0.16f), FRotator::ZeroRotator, true);
     }
 
-    // Western gate and hedge/dike silhouette.
-    SpawnShape(CubeMesh, FVector(-980.0f, -230.0f, 130.0f), FVector(0.35f, 0.35f, 1.3f),
-        FLinearColor(0.20f, 0.12f, 0.07f), FRotator::ZeroRotator, true);
-    SpawnShape(CubeMesh, FVector(-980.0f, 230.0f, 130.0f), FVector(0.35f, 0.35f, 1.3f),
-        FLinearColor(0.20f, 0.12f, 0.07f), FRotator::ZeroRotator, true);
-    SpawnShape(CubeMesh, FVector(-980.0f, 0.0f, 265.0f), FVector(0.35f, 2.65f, 0.25f),
-        FLinearColor(0.18f, 0.10f, 0.06f), FRotator::ZeroRotator, true);
+    // Western gate and hedge/dike silhouette. Production gate replaces the old blockout.
+    if (!ProductionGateMesh)
+    {
+        SpawnShape(CubeMesh, FVector(-980.0f, -230.0f, 130.0f), FVector(0.35f, 0.35f, 1.3f),
+            FLinearColor(0.20f, 0.12f, 0.07f), FRotator::ZeroRotator, true);
+        SpawnShape(CubeMesh, FVector(-980.0f, 230.0f, 130.0f), FVector(0.35f, 0.35f, 1.3f),
+            FLinearColor(0.20f, 0.12f, 0.07f), FRotator::ZeroRotator, true);
+        SpawnShape(CubeMesh, FVector(-980.0f, 0.0f, 265.0f), FVector(0.35f, 2.65f, 0.25f),
+            FLinearColor(0.18f, 0.10f, 0.06f), FRotator::ZeroRotator, true);
+    }
     SpawnLabel(TEXT("West Gate of Bree"), FVector(-980.0f, 0.0f, 380.0f), FLinearColor(0.75f, 0.75f, 0.65f));
 
     // Dense, narrow street walls and simple roof masses.
@@ -154,20 +157,26 @@ void ABreePrototypeWorldBuilder::SpawnBreeTown()
         FVector(-520, -430, 110), FVector(-120, -500, 110), FVector(300, -470, 110), FVector(690, -400, 110),
         FVector(-520, 430, 110), FVector(-120, 510, 110), FVector(330, 470, 110), FVector(760, 420, 110)
     };
-    for (int32 Index = 0; Index < UE_ARRAY_COUNT(HouseCenters); ++Index)
+    if (!ProductionHouseMesh)
     {
-        const FVector P = HouseCenters[Index];
-        SpawnShape(CubeMesh, P, FVector(1.45f, 1.15f, 1.10f),
-            FLinearColor(0.30f, 0.24f, 0.19f), FRotator::ZeroRotator, true);
-        SpawnShape(ConeMesh, P + FVector(0, 0, 165), FVector(1.7f, 1.4f, 0.65f),
-            FLinearColor(0.16f, 0.10f, 0.08f), FRotator::ZeroRotator, false);
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(HouseCenters); ++Index)
+        {
+            const FVector P = HouseCenters[Index];
+            SpawnShape(CubeMesh, P, FVector(1.45f, 1.15f, 1.10f),
+                FLinearColor(0.30f, 0.24f, 0.19f), FRotator::ZeroRotator, true);
+            SpawnShape(ConeMesh, P + FVector(0, 0, 165), FVector(1.7f, 1.4f, 0.65f),
+                FLinearColor(0.16f, 0.10f, 0.08f), FRotator::ZeroRotator, false);
+        }
     }
 
-    // Prancing Pony silhouette and a simple open common-room gameplay area beside it.
-    SpawnShape(CubeMesh, FVector(1120.0f, 130.0f, 150.0f), FVector(2.7f, 2.2f, 1.5f),
-        FLinearColor(0.34f, 0.25f, 0.17f), FRotator::ZeroRotator, true);
-    SpawnShape(ConeMesh, FVector(1120.0f, 130.0f, 345.0f), FVector(3.0f, 2.5f, 0.8f),
-        FLinearColor(0.14f, 0.08f, 0.05f), FRotator::ZeroRotator, false);
+    // Prancing Pony production shell replaces the original cube/cone exterior.
+    if (!ProductionInnMesh)
+    {
+        SpawnShape(CubeMesh, FVector(1120.0f, 130.0f, 150.0f), FVector(2.7f, 2.2f, 1.5f),
+            FLinearColor(0.34f, 0.25f, 0.17f), FRotator::ZeroRotator, true);
+        SpawnShape(ConeMesh, FVector(1120.0f, 130.0f, 345.0f), FVector(3.0f, 2.5f, 0.8f),
+            FLinearColor(0.14f, 0.08f, 0.05f), FRotator::ZeroRotator, false);
+    }
     SpawnLabel(TEXT("The Prancing Pony"), FVector(1120.0f, 130.0f, 470.0f), FLinearColor(0.92f, 0.75f, 0.35f));
 
     // Open common room proxy so Chapter 2 can be tested before an interior .umap exists.
@@ -179,30 +188,36 @@ void ABreePrototypeWorldBuilder::SpawnBreeTown()
         FLinearColor(0.26f, 0.20f, 0.15f), FRotator::ZeroRotator, true);
     SpawnLabel(TEXT("Common Room Prototype"), FVector(1450.0f, 780.0f, 300.0f), FLinearColor::White);
 
-    // Tables / bar proxies.
-    for (int32 Row = 0; Row < 2; ++Row)
+    // Tables remain as primitive fallbacks only when the production table is unavailable.
+    if (!ProductionTableMesh)
     {
-        for (int32 Col = 0; Col < 3; ++Col)
+        for (int32 Row = 0; Row < 2; ++Row)
         {
-            SpawnShape(CubeMesh, FVector(1220.0f + Col * 180.0f, 650.0f + Row * 190.0f, 48.0f),
-                FVector(0.65f, 0.45f, 0.10f), FLinearColor(0.28f, 0.17f, 0.08f), FRotator::ZeroRotator, true);
+            for (int32 Col = 0; Col < 3; ++Col)
+            {
+                SpawnShape(CubeMesh, FVector(1220.0f + Col * 180.0f, 650.0f + Row * 190.0f, 48.0f),
+                    FVector(0.65f, 0.45f, 0.10f), FLinearColor(0.28f, 0.17f, 0.08f), FRotator::ZeroRotator, true);
+            }
         }
     }
     SpawnShape(CubeMesh, FVector(1710.0f, 920.0f, 65.0f), FVector(1.35f, 0.35f, 0.65f),
         FLinearColor(0.30f, 0.18f, 0.09f), FRotator::ZeroRotator, true);
 
     // Street-life pass: stalls, rain puddles, lantern posts, crates and hitching details.
-    const FVector StallCenters[] = {
-        FVector(-260, 250, 55), FVector(140, -270, 55), FVector(520, 260, 55)
-    };
-    for (int32 Index = 0; Index < UE_ARRAY_COUNT(StallCenters); ++Index)
+    if (!ProductionStallMesh)
     {
-        const FVector P = StallCenters[Index];
-        SpawnShape(CubeMesh, P, FVector(0.95f, 0.55f, 0.55f),
-            FLinearColor(0.31f, 0.20f, 0.10f), FRotator::ZeroRotator, true);
-        SpawnShape(CubeMesh, P + FVector(0, 0, 85), FVector(1.10f, 0.70f, 0.05f),
-            Index % 2 == 0 ? FLinearColor(0.34f, 0.14f, 0.10f) : FLinearColor(0.16f, 0.23f, 0.12f),
-            FRotator(0, 0, Index % 2 == 0 ? 5.0f : -5.0f), false);
+        const FVector StallCenters[] = {
+            FVector(-260, 250, 55), FVector(140, -270, 55), FVector(520, 260, 55)
+        };
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(StallCenters); ++Index)
+        {
+            const FVector P = StallCenters[Index];
+            SpawnShape(CubeMesh, P, FVector(0.95f, 0.55f, 0.55f),
+                FLinearColor(0.31f, 0.20f, 0.10f), FRotator::ZeroRotator, true);
+            SpawnShape(CubeMesh, P + FVector(0, 0, 85), FVector(1.10f, 0.70f, 0.05f),
+                Index % 2 == 0 ? FLinearColor(0.34f, 0.14f, 0.10f) : FLinearColor(0.16f, 0.23f, 0.12f),
+                FRotator(0, 0, Index % 2 == 0 ? 5.0f : -5.0f), false);
+        }
     }
 
     for (int32 Index = 0; Index < 7; ++Index)
