@@ -67,6 +67,15 @@ private:
     UPROPERTY() UStaticMesh* ProductionCommonVillageSlopeMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionCommonRiverBankMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionCommonBoulderClusterMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonBroadleafTreeMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonFallenLogMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonDryStoneWallMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonPathMarkerMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonVillageFenceMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonWoodPileMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonFernClumpMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonReedClusterMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionCommonFootbridgeMesh = nullptr;
     UPROPERTY() UMaterialInterface* BasicMaterial;
 
     UPROPERTY() USceneComponent* RuntimeRoot;
