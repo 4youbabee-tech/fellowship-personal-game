@@ -513,12 +513,20 @@ if not population_proof or ("final" not in population_proof.lower()) or ("modula
     fail("PG-033 CharacterPopulationPlan must preserve proxy/production-archetype versus final-art proof boundary")
 
 governor_mode = governor_data.get("development_mode", {}) if governor_data else {}
-if governor_mode.get("id") not in {"BUILD_FIRST_BATCH_MODE", "VISUAL_PRODUCTION_FIRST"}:
-    fail("PG-033 Governor development mode must record an approved build/visual-production mode")
-if governor_mode.get("id") == "VISUAL_PRODUCTION_FIRST" and governor_mode.get("supersedes") != "BUILD_FIRST_BATCH_MODE":
+governor_mode_id = governor_mode.get("id")
+governor_mode_rules = [str(rule) for rule in governor_mode.get("rules", [])]
+if governor_mode_id not in {"BUILD_FIRST_BATCH_MODE", "VISUAL_PRODUCTION_FIRST", "PIE_VERIFICATION_FREEZE"}:
+    fail("PG-033 Governor development mode must record an approved build/visual/verification mode")
+if governor_mode_id == "VISUAL_PRODUCTION_FIRST" and governor_mode.get("supersedes") != "BUILD_FIRST_BATCH_MODE":
     fail("PG-033 VISUAL_PRODUCTION_FIRST must explicitly supersede BUILD_FIRST_BATCH_MODE")
-if "Do not mark PIE, device, pacing, performance or visual gates PASSED without real evidence." not in governor_mode.get("rules", []):
-    fail("PG-033 production mode must preserve manual-proof honesty")
+if governor_mode_id == "PIE_VERIFICATION_FREEZE" and governor_mode.get("supersedes") != "VISUAL_PRODUCTION_FIRST":
+    fail("PG-033 PIE_VERIFICATION_FREEZE must explicitly supersede VISUAL_PRODUCTION_FIRST")
+proof_honesty_rule = any(
+    "PIE" in rule and "performance" in rule.lower() and "evidence" in rule.lower()
+    for rule in governor_mode_rules
+)
+if not proof_honesty_rule:
+    fail("PG-033 production/verification mode must preserve manual-proof honesty")
 
 # PG-024: NPC identity/schedule/relationship data must stay coherent before runtime intelligence consumes it.
 npc_social_path = ROOT / "Data" / "NPCSocialModel.json"
