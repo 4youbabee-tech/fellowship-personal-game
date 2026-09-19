@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_CHAPTER_ATMOSPHERE_V1",
+  "status": "ACTIVE_RUNTIME_IMPLEMENTATION_PENDING_BUILD",
+  "purpose": "Give the generated P1C03-P1C08 regions distinct low-cost lighting/fog/material response without moving any story or quest topology.",
+  "runtime_owner": "AFellowshipChapterWorldBuilder::ConfigureChapterAtmosphere",
+  "target_profile": "Windows DX11 720p Low-Medium 30fps floor",
+  "chapter_profiles": [
+    {
+      "chapter": "P1C03",
+      "region": "Weathertop/Ford",
+      "sun_intensity": 2.4,
+      "sun_color": [1.0, 0.78, 0.60],
+      "sun_rotation": [-18.0, -35.0, 0.0],
+      "sky_intensity": 0.60,
+      "sky_color": [0.48, 0.56, 0.62],
+      "fog_density": 0.018,
+      "fog_height_falloff": 0.19,
+      "fog_color": [0.28, 0.32, 0.34],
+      "material_response": "weathered stone, damp soil, muted upland foliage"
+    },
+    {
+      "chapter": "P1C04",
+      "region": "Rivendell",
+      "sun_intensity": 3.6,
+      "sun_color": [1.0, 0.88, 0.68],
+      "sun_rotation": [-32.0, 55.0, 0.0],
+      "sky_intensity": 1.00,
+      "sky_color": [0.65, 0.75, 0.82],
+      "fog_density": 0.008,
+      "fog_height_falloff": 0.22,
+      "fog_color": [0.58, 0.66, 0.70],
+      "material_response": "pale stone, bright water edge, soft leaf canopy"
+    },
+    {
+      "chapter": "P1C05",
+      "region": "Road/Caradhras",
+      "sun_intensity": 2.8,
+      "sun_color": [0.82, 0.88, 1.0],
+      "sun_rotation": [-24.0, -70.0, 0.0],
+      "sky_intensity": 0.72,
+      "sky_color": [0.48, 0.56, 0.68],
+      "fog_density": 0.015,
+      "fog_height_falloff": 0.14,
+      "fog_color": [0.36, 0.42, 0.48],
+      "material_response": "cold rock, pale snow light, dark pine"
+    },
+    {
+      "chapter": "P1C06",
+      "region": "Moria",
+      "sun_intensity": 0.18,
+      "sun_color": [0.48, 0.50, 0.55],
+      "sun_rotation": [-70.0, 0.0, 0.0],
+      "sky_intensity": 0.28,
+      "sky_color": [0.16, 0.18, 0.22],
+      "fog_density": 0.028,
+      "fog_height_falloff": 0.35,
+      "fog_color": [0.08, 0.09, 0.11],
+      "material_response": "dark stone, low diffuse fill, deep hall haze"
+    },
+    {
+      "chapter": "P1C07",
+      "region": "Lothlorien",
+      "sun_intensity": 2.2,
+      "sun_color": [1.0, 0.80, 0.42],
+      "sun_rotation": [-38.0, 30.0, 0.0],
+      "sky_intensity": 0.90,
+      "sky_color": [0.72, 0.58, 0.30],
+      "fog_density": 0.011,
+      "fog_height_falloff": 0.24,
+      "fog_color": [0.50, 0.43, 0.23],
+      "material_response": "golden foliage, warm timber, luminous pale stone"
+    },
+    {
+      "chapter": "P1C08",
+      "region": "Anduin/Amon Hen",
+      "sun_intensity": 3.0,
+      "sun_color": [0.95, 0.82, 0.64],
+      "sun_rotation": [-26.0, -20.0, 0.0],
+      "sky_intensity": 0.76,
+      "sky_color": [0.54, 0.64, 0.72],
+      "fog_density": 0.010,
+      "fog_height_falloff": 0.18,
+      "fog_color": [0.42, 0.49, 0.52],
+      "material_response": "river haze, mixed forest, weathered monument stone"
+    }
+  ],
+  "performance_rules": [
+    "Reuse the first existing directional light, skylight and exponential-height fog actor when present; spawn only when absent.",
+    "All managed lighting is movable because runtime-generated geometry cannot depend on baked lighting.",
+    "Use one sun + one skylight + one exponential-height fog profile; no unbounded dynamic point-light fields.",
+    "Keep volumetric-heavy presentation out of this baseline until target-device profiling.",
+    "Story and quest actor coordinates are untouched by atmosphere configuration."
+  ],
+  "acceptance_boundary": {
+    "implemented_now": [
+      "chapter-specific sun color/intensity/direction",
+      "chapter-specific skylight color/intensity",
+      "chapter-specific exponential-height fog"
+    ],
+    "not_claimed": [
+      "final weather FX",
+      "rain/snow particles",
+      "cinematic post-process grading",
+      "final texture set",
+      "target-device performance acceptance"
+    ]
+  }
+}
