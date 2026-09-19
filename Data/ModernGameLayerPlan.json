@@ -475,10 +475,10 @@
   "ensemble_viewpoint_rule": {
     "rule": "Frodo is the central Ring-bearer, not the mandatory controller for every scene. When the film gives another character the meaningful action, that character may become the playable viewpoint.",
     "authority": "Data/EnsembleFilmMissionPlan.json",
-    "design_priority": [
+    "priority": [
       "convert film action into gameplay",
-      "add character-specialty interaction in the same verified window",
-      "only then add small original gap-fill if the chapter still needs game depth"
+      "add character-specialty interaction",
+      "only then add small gap-fill"
     ]
   }
 }

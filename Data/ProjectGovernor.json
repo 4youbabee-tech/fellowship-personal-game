@@ -2782,12 +2782,12 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Owner clarified that the film itself contains many playable mission opportunities outside Frodo and asked to exploit the full ensemble, with only small film-compatible expansion.",
+    "reason": "Owner clarified that the film itself contains many playable mission opportunities outside Frodo and asked to exploit the full ensemble with only slight film-compatible expansion.",
     "summary": [
-      "Frodo remains the Ring-quest center but is not the default playable viewpoint for every event.",
-      "Film actions for Gandalf, Arwen, Aragorn, Boromir, Legolas, Gimli, Merry/Pippin and later characters are prioritized as gameplay before invented filler.",
-      "Original gap-fill remains small and may not pull a character away from the next required film scene.",
-      "Part III mission details stay FUTURE_SOURCE_CHECK until exact film/script verification."
+      "Frodo remains Ring-quest center but not default controller for every event.",
+      "Film-supported actions for Gandalf, Arwen, Aragorn, Boromir, Legolas, Gimli, Merry/Pippin and later characters are prioritized before invented filler.",
+      "Gap-fill cannot pull a character away from a required next film scene.",
+      "Part III mission details remain source-check-only until verified."
     ]
   },
   "development_mode": {
