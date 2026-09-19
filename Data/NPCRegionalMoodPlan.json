@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_NPC_REGIONAL_MOOD_V1",
+  "status": "IMPLEMENTED_PENDING_VALIDATION",
+  "purpose": "Give every intelligent character a cheap shared sense of the emotional climate of the current region/chapter so dialogue and behavior can feel appropriate to peace, suspicion, fear, grief, war pressure or refuge.",
+  "default_mood": "CALM_TRAVEL",
+  "chapter_moods": [
+    {"chapter":"P1C01","mood":"PEACEFUL_HOME","pressure":0.15,"tags":["SHIRE","LOCAL_LIFE","CELEBRATION","RISING_UNEASE"]},
+    {"chapter":"P1C02","mood":"SUSPICIOUS_TOWN","pressure":0.40,"tags":["BREE","RAIN","STRANGERS","WATCHFUL"]},
+    {"chapter":"P1C03","mood":"PURSUED_WILDERNESS","pressure":0.68,"tags":["WILDERNESS","PURSUIT","WOUND","URGENCY"]},
+    {"chapter":"P1C04","mood":"SAFE_REFUGE","pressure":0.20,"tags":["RIVENDELL","HEALING","COUNCIL","DECISION"]},
+    {"chapter":"P1C05","mood":"FELLOWSHIP_UNDER_PRESSURE","pressure":0.52,"tags":["TRAVEL","COMPANIONSHIP","SURVEILLANCE","MOUNTAIN"]},
+    {"chapter":"P1C06","mood":"DEAD_CITY_DREAD","pressure":0.86,"tags":["MORIA","DARKNESS","LOSS","ESCAPE"]},
+    {"chapter":"P1C07","mood":"GRIEF_AND_REFUGE","pressure":0.42,"tags":["LOTHLORIEN","GRIEF","WONDER","REST"]},
+    {"chapter":"P1C08","mood":"FELLOWSHIP_FRACTURE","pressure":0.78,"tags":["ANDUIN","TENSION","URUK_PRESSURE","SEPARATION"]},
+    {"chapter":"P1G01","mood":"WAR_CORRUPTION","pressure":0.88,"tags":["ISENGARD","BETRAYAL","INDUSTRY","CAPTIVITY"]}
+  ],
+  "runtime_rules": [
+    "Every named NPC and ambient archetype is world-mood aware.",
+    "Mood may change dialogue selection, caution, social willingness and idle behavior, but never mandatory story outcomes.",
+    "Danger state may temporarily raise fear beyond the chapter baseline.",
+    "Weather may modify presentation but cannot overwrite story truth.",
+    "The system runs fully offline and uses no network service."
+  ],
+  "performance_rule": "Resolve one compact chapter mood tag from local data and reuse it across NPCs; do not run a separate expensive world-state model per actor."
+}
