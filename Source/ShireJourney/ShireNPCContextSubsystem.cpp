@@ -37,6 +37,11 @@ FName UShireNPCContextSubsystem::MakeDialogueKey(FName SpeakerProfileId, FName I
     return FName(*FString::Printf(TEXT("%s|%s"), *SpeakerProfileId.ToString(), *IntentId.ToString()));
 }
 
+FName UShireNPCContextSubsystem::MakeFilmContextKey(FName RouteId, FName ChapterId)
+{
+    return FName(*FString::Printf(TEXT("%s|%s"), *RouteId.ToString(), *ChapterId.ToString()));
+}
+
 void UShireNPCContextSubsystem::ParseNameArray(
     const TSharedPtr<FJsonObject>& Object,
     const TCHAR* Field,
@@ -130,37 +135,41 @@ void UShireNPCContextSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     DialogueVariants.Empty();
     ChapterMoodById.Empty();
     ChapterPressureById.Empty();
+    FilmContextsByRouteChapter.Empty();
 
     const bool bSocialLoaded = LoadSocialModel();
     const bool bConversationLoaded = LoadConversationPlan();
     const bool bBoundedLoaded = LoadBoundedDialoguePlan();
     const bool bRegionalMoodLoaded = LoadRegionalMoodPlan();
+    const bool bFilmSourceLoaded = LoadFilmDialogueSourceContext();
     BuildDialogueVariantLibrary();
 
     bDataReady = bSocialLoaded && bConversationLoaded && bBoundedLoaded &&
-        bRegionalMoodLoaded && Profiles.Num() > 0;
+        bRegionalMoodLoaded && bFilmSourceLoaded && Profiles.Num() > 0;
 
     if (bDataReady)
     {
         UE_LOG(
             LogTemp,
             Display,
-            TEXT("NPCContext: ready=yes profiles=%d scheduleBindings=%d intentContracts=%d dialogueKeys=%d"),
+            TEXT("NPCContext: ready=yes profiles=%d scheduleBindings=%d intentContracts=%d dialogueKeys=%d filmContextKeys=%d"),
             Profiles.Num(),
             ProfileSchedules.Num(),
             IntentRequiredKnowledge.Num(),
-            DialogueVariants.Num());
+            DialogueVariants.Num(),
+            FilmContextsByRouteChapter.Num());
     }
     else
     {
         UE_LOG(
             LogTemp,
             Error,
-            TEXT("NPCContext: ready=no profiles=%d scheduleBindings=%d intentContracts=%d dialogueKeys=%d"),
+            TEXT("NPCContext: ready=no profiles=%d scheduleBindings=%d intentContracts=%d dialogueKeys=%d filmContextKeys=%d"),
             Profiles.Num(),
             ProfileSchedules.Num(),
             IntentRequiredKnowledge.Num(),
-            DialogueVariants.Num());
+            DialogueVariants.Num(),
+            FilmContextsByRouteChapter.Num());
     }
 }
 
@@ -173,6 +182,7 @@ void UShireNPCContextSubsystem::Deinitialize()
     DialogueVariants.Empty();
     ChapterMoodById.Empty();
     ChapterPressureById.Empty();
+    FilmContextsByRouteChapter.Empty();
     bDataReady = false;
     Super::Deinitialize();
 }
@@ -410,6 +420,54 @@ bool UShireNPCContextSubsystem::LoadRegionalMoodPlan()
     }
 
     return ChapterMoodById.Num() > 0;
+}
+
+bool UShireNPCContextSubsystem::LoadFilmDialogueSourceContext()
+{
+    TSharedPtr<FJsonObject> Root;
+    if (!LoadJsonObject(TEXT("Data/FilmDialogueSourceContext.json"), Root)) return false;
+
+    const TArray<TSharedPtr<FJsonValue>>* Values = nullptr;
+    if (!Root->TryGetArrayField(TEXT("part1_contexts"), Values) || !Values) return false;
+
+    for (const TSharedPtr<FJsonValue>& Value : *Values)
+    {
+        const TSharedPtr<FJsonObject> Object = Value.IsValid() ? Value->AsObject() : nullptr;
+        if (!Object.IsValid()) continue;
+
+        FString ContextId, SourceId, RouteId, ChapterId, BeatId, Window;
+        double Sequence = 0.0;
+        Object->TryGetStringField(TEXT("context_id"), ContextId);
+        Object->TryGetStringField(TEXT("source_id"), SourceId);
+        Object->TryGetStringField(TEXT("route"), RouteId);
+        Object->TryGetStringField(TEXT("chapter"), ChapterId);
+        Object->TryGetStringField(TEXT("required_story_beat"), BeatId);
+        Object->TryGetStringField(TEXT("source_window"), Window);
+        Object->TryGetNumberField(TEXT("sequence"), Sequence);
+        if (ContextId.IsEmpty() || SourceId.IsEmpty() || RouteId.IsEmpty() || ChapterId.IsEmpty()) continue;
+
+        FFilmDialogueContextRuntime Context;
+        Context.ContextId = FName(*ContextId);
+        Context.SourceId = FName(*SourceId);
+        Context.RouteId = FName(*RouteId);
+        Context.ChapterId = FName(*ChapterId);
+        Context.RequiredStoryBeat = BeatId.IsEmpty() ? NAME_None : FName(*BeatId);
+        Context.Sequence = static_cast<int32>(Sequence);
+        Context.SourceWindow = Window;
+        ParseNameArray(Object, TEXT("tone_tags"), Context.ToneTags);
+        ParseStringArray(Object, TEXT("safe_topics"), Context.SafeTopics);
+        ParseStringArray(Object, TEXT("future_knowledge_blocks"), Context.FutureKnowledgeBlocks);
+        FilmContextsByRouteChapter.FindOrAdd(MakeFilmContextKey(Context.RouteId, Context.ChapterId)).Add(MoveTemp(Context));
+    }
+
+    for (TPair<FName, TArray<FFilmDialogueContextRuntime>>& Pair : FilmContextsByRouteChapter)
+    {
+        Pair.Value.Sort([](const FFilmDialogueContextRuntime& A, const FFilmDialogueContextRuntime& B)
+        {
+            return A.Sequence < B.Sequence;
+        });
+    }
+    return FilmContextsByRouteChapter.Num() > 0;
 }
 
 void UShireNPCContextSubsystem::AddDialogueVariant(
@@ -830,6 +888,8 @@ FString UShireNPCContextSubsystem::GetProfileContextSummary(FName ProfileHint) c
     Parts.Add(FString::Printf(TEXT("world_mood=%s"), *GetRegionalWorldMood().ToString()));
     Parts.Add(FString::Printf(TEXT("world_pressure=%.2f"), GetRegionalPressure()));
     Parts.Add(FString::Printf(TEXT("emotion=%s"), *GetProfileEmotionalState(ProfileId).ToString()));
+    const FString FilmContext = GetFilmDialogueContextSummary();
+    if (!FilmContext.IsEmpty()) Parts.Add(FString::Printf(TEXT("film_context=%s"), *FilmContext));
     if (IsDangerStateActive())
     {
         Parts.Add(TEXT("danger=ACTIVE"));
@@ -924,6 +984,49 @@ FName UShireNPCContextSubsystem::GetProfileEmotionalState(FName ProfileHint) con
     }
 
     return GetRegionalPressure() >= 0.75f ? FName(TEXT("ALERT")) : FName(TEXT("CALM"));
+}
+
+const UShireNPCContextSubsystem::FFilmDialogueContextRuntime*
+UShireNPCContextSubsystem::GetActiveFilmDialogueContext() const
+{
+    const UGameInstance* GI = GetGameInstance();
+    const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests) return nullptr;
+
+    const TArray<FFilmDialogueContextRuntime>* Contexts =
+        FilmContextsByRouteChapter.Find(MakeFilmContextKey(Quests->GetCurrentRouteId(), Quests->GetCurrentChapterId()));
+    if (!Contexts) return nullptr;
+
+    const FFilmDialogueContextRuntime* Best = nullptr;
+    for (const FFilmDialogueContextRuntime& Context : *Contexts)
+    {
+        if (Context.RequiredStoryBeat != NAME_None && !Quests->HasStoryBeatTriggered(Context.RequiredStoryBeat)) continue;
+        if (!Best || Context.Sequence >= Best->Sequence) Best = &Context;
+    }
+    return Best;
+}
+
+FName UShireNPCContextSubsystem::GetFilmDialogueContextId() const
+{
+    const FFilmDialogueContextRuntime* Context = GetActiveFilmDialogueContext();
+    return Context ? Context->ContextId : NAME_None;
+}
+
+FString UShireNPCContextSubsystem::GetFilmDialogueContextSummary() const
+{
+    const FFilmDialogueContextRuntime* Context = GetActiveFilmDialogueContext();
+    if (!Context) return FString();
+
+    TArray<FString> Tone;
+    for (const FName Tag : Context->ToneTags) Tone.Add(Tag.ToString());
+
+    TArray<FString> Parts;
+    Parts.Add(FString::Printf(TEXT("id=%s"), *Context->ContextId.ToString()));
+    Parts.Add(FString::Printf(TEXT("source=%s"), *Context->SourceId.ToString()));
+    if (Tone.Num() > 0) Parts.Add(FString::Printf(TEXT("tone=%s"), *FString::Join(Tone, TEXT(","))));
+    if (Context->SafeTopics.Num() > 0) Parts.Add(FString::Printf(TEXT("topics=%s"), *FString::Join(Context->SafeTopics, TEXT(" | "))));
+    if (Context->FutureKnowledgeBlocks.Num() > 0) Parts.Add(FString::Printf(TEXT("future_blocks=%s"), *FString::Join(Context->FutureKnowledgeBlocks, TEXT(" | "))));
+    return FString::Join(Parts, TEXT("; "));
 }
 
 FName UShireNPCContextSubsystem::ResolveSchedulePhase(
@@ -1167,6 +1270,8 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
     }
     Seed = HashCombine(Seed, GetTypeHash(GetRegionalWorldMood()));
     Seed = HashCombine(Seed, static_cast<uint32>(FMath::RoundToInt(GetRegionalPressure() * 100.0f)));
+    const FFilmDialogueContextRuntime* FilmContext = GetActiveFilmDialogueContext();
+    if (FilmContext) Seed = HashCombine(Seed, GetTypeHash(FilmContext->ContextId));
 
     const FDialogueVariantRuntime* Selected = Pool[Seed % static_cast<uint32>(Pool.Num())];
     Result.bValid = true;
@@ -1183,6 +1288,11 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
         RelationshipContext != 0;
     Result.WorldMood = CurrentMood;
     Result.EmotionalState = GetProfileEmotionalState(SpeakerId);
+    if (FilmContext)
+    {
+        Result.SourceContextId = FilmContext->ContextId;
+        Result.SourceContextSummary = GetFilmDialogueContextSummary();
+    }
 
     if (Quests)
     {
