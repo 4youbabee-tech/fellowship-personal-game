@@ -360,7 +360,8 @@
         "automatic safe checkpoints use a separate ShireJourney_Checkpoint slot so manual F5 saves are never overwritten",
         "authored story beats write mapped safe checkpoints after quest/story mutation",
         "chapter transitions queue a checkpoint until the next player Tick so the saved transform belongs to the rebuilt destination region",
-        "combat defeat restores the latest automatic safe checkpoint at full health"
+        "combat defeat restores the latest automatic safe checkpoint at full health",
+        "Save schema v5 persists stamina, resolve, supplies and progression XP."
       ],
       "missing_work": [
         "F9 round-trip verification on current integrated build",
@@ -1424,7 +1425,8 @@
         "Source-grounded original dialogue bank expanded to 53 validated variants.",
         "Production asset import now operates on an ignored Saved/ working copy so one-click updates do not dirty tracked SourceAssets.",
         "Self-hosted UE4 validation now avoids fragile later temporary PowerShell scripts for checkout/warning analysis and explicitly verifies the exact PR-head SHA.",
-        "Journey Discovery moved from static design into runtime triggers, persistence, HUD feedback and headless state auditing across all Part I regions."
+        "Journey Discovery moved from static design into runtime triggers, persistence, HUD feedback and headless state auditing across all Part I regions.",
+        "B1 now includes actual player-life/progression runtime instead of plan-only modern-game axes."
       ],
       "missing_work": [
         "Get final PR #53 head through full UE4.27 validation.",
@@ -1517,7 +1519,8 @@
         "All 26 declared Part I discoveries are wired to chapter/world triggers with explicit opening/closing story-beat windows.",
         "First-time-only Journey Insight, region completion bonuses and milestone state are deterministic and save/load persisted.",
         "AShireHUD now has a separate subtle discovery toast instead of reusing the red alert channel.",
-        "Headless state audit requires discovery-core=PASS and proves repeat visits do not farm Insight."
+        "Headless state audit requires discovery-core=PASS and proves repeat visits do not farm Insight.",
+        "First-time Journey Discovery now feeds bounded utility/content progression tracks."
       ],
       "missing_work": [
         "Exact-head UE4.27 compile/import/startup/state proof for the new runtime discovery layer.",
@@ -1692,24 +1695,32 @@
       "title": "Modern game layer around the fixed film story",
       "category": "GameplaySystems",
       "priority": "CRITICAL",
-      "status": "PLANNED",
+      "status": "PARTIAL",
       "origin": "Owner explicitly asked for researched modern-game systems, side missions, exploration and character-life/progression mechanics across the full game without skipping the film.",
       "intent": "Make the project a full narrative adventure game: preserve every mandatory film anchor while adding meaningful optional exploration, world events, companion activities, traversal/puzzles, character-life state and bounded progression between those anchors.",
       "evidence": [
         "Data/ModernGameLayerPlan.json",
         "Data/JourneyDiscoveryRewardPlan.json",
-        "Data/ContextualSideActivityPlan.json"
+        "Data/ContextualSideActivityPlan.json",
+        "Data/PlayerLifeProgressionPlan.json",
+        "Source/ShireJourney/ShirePlayerCharacter.cpp",
+        "Source/ShireJourney/ShireQuestSubsystem.cpp",
+        "Source/ShireJourney/ShireSaveGame.h"
       ],
       "implementation_refs": [
         "ModernGameLayerPlan synthesizes exploration rewards, world events, semi-open chapter hubs, companion dialogue, map discovery, environmental puzzles and living-world reactivity into an original Middle-earth implementation.",
-        "P1C01-P1C08 plus GandalfParallel now have chapter-specific side-play families while required film outcomes remain fixed."
+        "P1C01-P1C08 plus GandalfParallel now have chapter-specific side-play families while required film outcomes remain fixed.",
+        "Lightweight Stamina, Ring-pressure-sensitive Resolve and capped Supplies are implemented without hunger/thirst timers.",
+        "Seven progression tracks persist through save schema v5 and receive first-time discovery XP by category.",
+        "Fellowship Bond is exposed from FELLOWSHIP progression; HUD/input expose the new player-life layer.",
+        "Headless state audit now requires progression-core=PASS."
       ],
       "missing_work": [
-        "Implement lightweight Stamina/Resolve/Supplies and progression tracks.",
-        "Implement additional side missions/world events chapter by chapter.",
-        "Add Chronicle/map-knowledge presentation.",
-        "Add environmental puzzle/traversal challenges.",
-        "UE4.27 compile/PIE/device/pacing validation for each gameplay layer."
+        "Wire QUIET_STEP and CAMPCRAFT XP to authored side activities.",
+        "Add Chronicle/map presentation for progression benefits.",
+        "Add first traversal/environmental-puzzle/world-event runtime wave.",
+        "Tune stamina/resolve/supply pacing from PIE/device evidence.",
+        "Validate current exact head in UE4.27."
       ],
       "acceptance_criteria": [
         "Mandatory film scenes and outcomes remain reachable and unchanged.",
@@ -2918,13 +2929,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Owner requested immediate large-scale organization/execution so the growing request set cannot leave forgotten work behind.",
+    "reason": "Owner requested very large implementation batches; B1 advanced with player-life and persistent progression while the exact-head validation loop continues.",
     "summary": [
-      "Added REQ-EXEC-001 / DEC-027 / WORK-EXEC-001 for master execution control.",
-      "All current unfinished Governor requirements are mapped into Data/MasterExecutionRoadmap.json.",
-      "All ACTIVE work items now have unique execution ranks and bundle labels.",
-      "PG-078 makes orphan accepted work a Pre-Unreal failure.",
-      "Execution order is now exact-head stability -> Part I story/gameplay -> production characters/world -> living world/presentation -> acceptance/merge -> source-verified Part II/III."
+      "Stamina, Resolve, Supplies and Fellowship Bond now exist as lightweight game-life axes around the fixed film story.",
+      "Seven progression tracks persist and receive first-time discovery awards without combat-stat inflation.",
+      "Save schema advanced to v5 and HUD/input expose the new runtime layer.",
+      "PG-079 plus progression-core state auditing protect the implementation.",
+      "UE4.27 compile/runtime proof remains pending for the new exact head."
     ]
   },
   "development_mode": {

@@ -104,14 +104,17 @@
         "26+ discovery progression and Chronicle integration",
         "contextual side play in safe gaps",
         "lightweight modern player-life/progression systems",
-        "story urgency closes inappropriate optional play"
+        "story urgency closes inappropriate optional play",
+        "runtime stamina/resolve/supplies/Fellowship Bond",
+        "persistent seven-track utility/content progression"
       ],
       "exit_evidence": [
         "STATIC_CANON_COVERAGE",
         "UE4_CHAPTER_RUNTIME",
         "SAVE_ROUTE_CONTINUITY",
         "PIE_PACING_REVIEW"
-      ]
+      ],
+      "current_runtime_wave": "PLAYER_LIFE_PROGRESSION_V1"
     },
     {
       "id": "B2_CHARACTERS_AND_WORLD_PRODUCTION",
@@ -372,10 +375,9 @@
     "WORK-EXEC-001"
   ],
   "immediate_next_large_actions": [
-    "Finish B0 exact-head Unreal validation/repair loop on the latest PR head.",
-    "In B1, implement the missing modern player-life/progression foundation and bind high-value film/ensemble side content to verified anchor windows.",
-    "In B2, move Frodo/Gandalf then Sam/Merry/Pippin then Aragorn/Boromir/Legolas/Gimli through real production character asset/rig waves.",
-    "In B2, implement Shire/Bree/Rivendell first cinematic hero-vista/material/foliage waves while preserving the performance budget.",
-    "Keep B3 dialogue/NPC intelligence and presentation upgrades behind film knowledge and offline-performance guards."
+    "Finish exact-head UE4.27 validation/repair for this integrated head.",
+    "Wire QUIET_STEP/CAMPCRAFT and other progression rewards into film-safe side activities.",
+    "Implement Chronicle/map-knowledge UI plus first traversal/environmental puzzle/world-event wave.",
+    "Advance production-character waves and cinematic world waves in parallel behind the green-head gate."
   ]
 }

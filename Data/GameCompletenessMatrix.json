@@ -292,6 +292,32 @@
         "CI orphan-work rejection",
         "exact-head evidence boundary"
       ]
+    },
+    {
+      "id": "PLAYER_LIFE",
+      "status": "RUNTIME_IMPLEMENTED_PENDING_ENGINE_PROOF",
+      "includes": [
+        "health",
+        "stamina",
+        "Ring-pressure-sensitive resolve",
+        "capped supplies",
+        "Fellowship Bond"
+      ]
+    },
+    {
+      "id": "PROGRESSION",
+      "status": "RUNTIME_IMPLEMENTED_PENDING_ENGINE_PROOF",
+      "includes": [
+        "WAYFINDING",
+        "PERCEPTION",
+        "QUIET_STEP",
+        "CAMPCRAFT",
+        "FELLOWSHIP",
+        "LORE",
+        "RESOLVE",
+        "save/load persistence",
+        "first-time discovery XP"
+      ]
     }
   ]
 }
