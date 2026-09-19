@@ -1266,9 +1266,13 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
           TEXT("Keep the landing clear and the rope where you can reach it.") }
     };
 
+    FActorSpawnParameters TalkerSpawnParams;
+    TalkerSpawnParams.SpawnCollisionHandlingOverride =
+        ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
     for(const FTalker& Talker:Talkers)
     {
-        AShireNPC* NPC=GetWorld()->SpawnActor<AShireNPC>(Talker.Location,Talker.Rotation);
+        AShireNPC* NPC=GetWorld()->SpawnActor<AShireNPC>(
+            Talker.Location,Talker.Rotation,TalkerSpawnParams);
         if(NPC)
         {
             NPC->DisplayName=FText::FromString(Talker.Name);

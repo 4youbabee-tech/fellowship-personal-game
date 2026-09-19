@@ -481,15 +481,15 @@ jobs:
           }) -join "`n"
 
           $Checks = @(
-            @{ Name = "Missing smoothing groups"; Pattern = "No smoothing group information"; Ceiling = 568 },
-            @{ Name = "Degenerate tangent bases"; Pattern = "degenerate tangent bases"; Ceiling = 390 },
-            @{ Name = "Nearly-zero binormals"; Pattern = "nearly zero bi-normals"; Ceiling = 390 },
-            @{ Name = "Missing world materials"; Pattern = "Failed to load '/Game/Production/World/[^']+'"; Ceiling = 862 },
-            @{ Name = "Missing optional audio"; Pattern = "Failed to load '/Game/Audio/"; Ceiling = 0 },
-            @{ Name = "Missing optional rigs"; Pattern = "Failed to load '/Game/Production/Characters/Rigs/"; Ceiling = 0 },
-            @{ Name = "defaultMat references"; Pattern = "defaultMat"; Ceiling = 0 },
-            @{ Name = "DirectionalLight mobility warnings"; Pattern = "DirectionalLight_0.*has to be 'Movable'"; Ceiling = 0 },
-            @{ Name = "NPC spawn collision failures"; Pattern = "SpawnActor failed because of collision.*ShireNPC"; Ceiling = 0 }
+            @{ Name = "Missing smoothing groups"; Pattern = "No smoothing group information"; Ceiling = 0; Unique = $false },
+            @{ Name = "Degenerate tangent bases"; Pattern = "degenerate tangent bases"; Ceiling = 150; Unique = $false },
+            @{ Name = "Nearly-zero binormals"; Pattern = "nearly zero bi-normals"; Ceiling = 150; Unique = $false },
+            @{ Name = "Missing world material packages"; Pattern = "Failed to load '(/Game/Production/World/[^']+)'"; Ceiling = 64; Unique = $true },
+            @{ Name = "Missing optional audio"; Pattern = "Failed to load '(/Game/Audio/[^']+)'"; Ceiling = 0; Unique = $true },
+            @{ Name = "Missing optional rigs"; Pattern = "Failed to load '(/Game/Production/Characters/Rigs/[^']+)'"; Ceiling = 0; Unique = $true },
+            @{ Name = "defaultMat references"; Pattern = "(defaultMat)"; Ceiling = 0; Unique = $true },
+            @{ Name = "DirectionalLight mobility warnings"; Pattern = "(DirectionalLight_0.*has to be 'Movable')"; Ceiling = 0; Unique = $true },
+            @{ Name = "NPC spawn collision failures"; Pattern = "SpawnActor failed because of collision at the spawn location \[([^\]]+)\] for \[ShireNPC\]"; Ceiling = 0; Unique = $true }
           )
 
           "### UE4.27 warning-debt guard" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
@@ -498,7 +498,19 @@ jobs:
 
           $Failures = @()
           foreach ($Check in $Checks) {
-            $Count = ([regex]::Matches($Text, $Check.Pattern, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)).Count
+            $RegexMatches = [regex]::Matches(
+              $Text,
+              $Check.Pattern,
+              [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+            if ($Check.Unique) {
+              $Values = @($RegexMatches | ForEach-Object {
+                if ($_.Groups.Count -gt 1) { $_.Groups[1].Value } else { $_.Value }
+              } | Sort-Object -Unique)
+              $Count = $Values.Count
+            }
+            else {
+              $Count = $RegexMatches.Count
+            }
             "| $($Check.Name) | $Count | $($Check.Ceiling) |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
             Write-Host ("Warning debt: {0} = {1} (ceiling {2})" -f $Check.Name, $Count, $Check.Ceiling)
             if ($Count -gt $Check.Ceiling) {

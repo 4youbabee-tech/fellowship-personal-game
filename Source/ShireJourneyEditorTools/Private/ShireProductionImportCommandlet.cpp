@@ -4,6 +4,7 @@
 #include "AssetToolsModule.h"
 #include "FileHelpers.h"
 #include "Factories/FbxImportUI.h"
+#include "Factories/FbxStaticMeshImportData.h"
 #include "Engine/StaticMesh.h"
 #include "HAL/FileManager.h"
 #include "Misc/FileHelper.h"
@@ -66,6 +67,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
 
         bool bBareObjMaterialImportDisabled = false;
         bool bInjectedSmoothingGroup = false;
+        bool bAuthoredMaterialImportForced = false;
         if (FPaths::GetExtension(Filename).Equals(TEXT("obj"), ESearchCase::IgnoreCase))
         {
             FString ObjSource;
@@ -73,8 +75,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             {
                 // The production bank is intentionally lightweight, but UE4.27 emits
                 // hundreds of warnings when OBJ files omit an explicit smoothing group.
-                // Normalize the working copy before import; source-controlled files are
-                // not changed by CI because the checkout is ephemeral.
+                // Normalize only the ephemeral CI/import working copy.
                 const bool bHasSmoothing =
                     ObjSource.StartsWith(TEXT("s ")) ||
                     ObjSource.Contains(TEXT("\ns "), ESearchCase::CaseSensitive);
@@ -91,14 +92,24 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     }
                 }
 
-                if (!ObjSource.Contains(TEXT("mtllib "), ESearchCase::IgnoreCase))
+                const bool bHasMaterialLibrary =
+                    ObjSource.Contains(TEXT("mtllib "), ESearchCase::IgnoreCase);
+
+                // Do not depend on factory defaults in unattended UE4.27 imports.
+                // Authored OBJ/MTL pairs must explicitly create material assets;
+                // bare character/proxy OBJ files must explicitly avoid placeholder
+                // material references.
+                UFbxImportUI* ImportOptions = NewObject<UFbxImportUI>();
+                ImportOptions->bImportMaterials = bHasMaterialLibrary;
+                ImportOptions->bImportTextures = bHasMaterialLibrary;
+                if (ImportOptions->StaticMeshImportData)
                 {
-                    UFbxImportUI* ImportOptions = NewObject<UFbxImportUI>();
-                    ImportOptions->bImportMaterials = false;
-                    ImportOptions->bImportTextures = false;
-                    Task->Options = ImportOptions;
-                    bBareObjMaterialImportDisabled = true;
+                    ImportOptions->StaticMeshImportData->bRemoveDegenerates = true;
                 }
+                Task->Options = ImportOptions;
+
+                bBareObjMaterialImportDisabled = !bHasMaterialLibrary;
+                bAuthoredMaterialImportForced = bHasMaterialLibrary;
             }
         }
 
@@ -142,12 +153,13 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         UE_LOG(
             LogTemp,
             Display,
-            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s bare-obj-materials=%s smoothing-injected=%s material-packages-marked=%d"),
+            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s bare-obj-materials=%s authored-material-import=%s smoothing-injected=%s material-packages-marked=%d"),
             *Filename,
             Task->ImportedObjectPaths.Num(),
             Task->Result.Num(),
             ImportedAsset ? TEXT("yes") : TEXT("no"),
-            bBareObjMaterialImportDisabled ? TEXT("disabled") : TEXT("authored"),
+            bBareObjMaterialImportDisabled ? TEXT("disabled") : TEXT("n/a"),
+            bAuthoredMaterialImportForced ? TEXT("forced") : TEXT("n/a"),
             bInjectedSmoothingGroup ? TEXT("yes") : TEXT("no"),
             MarkedMaterialPackages);
 
