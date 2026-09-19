@@ -2737,6 +2737,33 @@ if "FellowshipExperienceMegaPassCP56.json" not in build_cs_cp52:
 if "WorldActivityMovementPlan.json" not in build_cs_cp52:
     fail("PG-058 CP55 activity plan lost from runtime packaging")
 
+# PG-059: living-NPC intelligence must remain bounded, packaged and story-safe.
+living_npc_plan_path = ROOT / "Data" / "LivingNPCIntelligencePlan.json"
+living_npc_plan = {}
+if not living_npc_plan_path.exists():
+    fail("PG-059 LivingNPCIntelligencePlan.json missing")
+else:
+    try:
+        living_npc_plan = json.loads(read(living_npc_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-059 invalid LivingNPCIntelligencePlan.json: {exc}")
+
+if living_npc_plan:
+    principles = " ".join(living_npc_plan.get("design_principles", []))
+    if "without an always-on remote language model" not in principles:
+        fail("PG-059 living-NPC plan must preserve offline deterministic play")
+    if living_npc_plan.get("character_knowledge_policy", {}).get("default") != "DENY_UNLISTED":
+        fail("PG-059 character knowledge default must remain DENY_UNLISTED")
+
+ambient_header_pg59 = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.h")
+ambient_cpp_pg59 = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.cpp")
+for symbol in ["Hunger01", "Fatigue01", "SocialNeed01", "Fear01", "RuntimeEmotion", "RuntimeGoal", "UpdateNeedsAndEmotion"]:
+    if symbol not in (ambient_header_pg59 + ambient_cpp_pg59):
+        fail(f"PG-059 living-NPC runtime symbol missing: {symbol}")
+
+if "LivingNPCIntelligencePlan.json" not in build_cs_cp52:
+    fail("PG-059 living-NPC intelligence plan is not packaged")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
