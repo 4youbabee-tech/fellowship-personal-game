@@ -2,7 +2,9 @@
 
 #include "AssetImportTask.h"
 #include "AssetToolsModule.h"
+#include "Factories/FbxImportUI.h"
 #include "HAL/FileManager.h"
+#include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
 #include "Modules/ModuleManager.h"
 
@@ -58,6 +60,21 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         Task->bSave = true;
         Task->bReplaceExisting = true;
 
+        bool bBareObjMaterialImportDisabled = false;
+        if (FPaths::GetExtension(Filename).Equals(TEXT("obj"), ESearchCase::IgnoreCase))
+        {
+            FString ObjSource;
+            if (FFileHelper::LoadFileToString(ObjSource, *Filename) &&
+                !ObjSource.Contains(TEXT("mtllib "), ESearchCase::IgnoreCase))
+            {
+                UFbxImportUI* ImportOptions = NewObject<UFbxImportUI>();
+                ImportOptions->bImportMaterials = false;
+                ImportOptions->bImportTextures = false;
+                Task->Options = ImportOptions;
+                bBareObjMaterialImportDisabled = true;
+            }
+        }
+
         TArray<UAssetImportTask*> Tasks;
         Tasks.Add(Task);
         AssetTools.Get().ImportAssetTasks(Tasks);
@@ -78,11 +95,12 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         UE_LOG(
             LogTemp,
             Display,
-            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s"),
+            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s bare-obj-materials=%s"),
             *Filename,
             Task->ImportedObjectPaths.Num(),
             Task->Result.Num(),
-            ImportedAsset ? TEXT("yes") : TEXT("no"));
+            ImportedAsset ? TEXT("yes") : TEXT("no"),
+            bBareObjMaterialImportDisabled ? TEXT("disabled") : TEXT("authored"));
 
         if (!bImported)
         {
