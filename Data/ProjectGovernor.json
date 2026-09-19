@@ -26,6 +26,7 @@
     "Every meaningful user request receives a stable requirement ID here before or with implementation.",
     "New requests never silently delete older requests; contradictions become explicit conflicts/decisions here.",
     "The film story spine, build/save/story integrity, target-device performance and required traversal cannot be silently traded away.",
+    "Before changing or adding any FILM_CORE beat, verify the exact scene order, participating characters and outcome against the supplied film/script source; do not rely on memory when the source can be checked.",
     "A feature is never called accepted from compile/static evidence alone.",
     "If a previously passed critical gate fails, stop feature expansion, repair the smallest failing layer, and rerun the exact failed gate.",
     "Human pacing and visual review are mandatory for enjoyment/acceptance; CI cannot infer fun.",
@@ -426,7 +427,8 @@
       "implementation_refs": [
         "Film-first canon policy already exists",
         "P1C01-P1C08 Part I route follows the film continuity",
-        "Gandalf/Isengard parallel route fills a film-canon event outside Frodo's viewpoint"
+        "Gandalf/Isengard parallel route fills a film-canon event outside Frodo's viewpoint",
+        "Owner reaffirmed on 2026-09-20 that exact film scenario order/character presence/outcomes are non-negotiable; FILM_CORE changes must be source-checked rather than recalled from memory."
       ],
       "missing_work": [
         "Continue chapter-by-chapter implementation and acceptance against the existing FilmExperiencePlan",
@@ -2204,6 +2206,24 @@
       "evidence": [
         "Data/ModernGameLayerPlan.json"
       ]
+    },
+    {
+      "id": "DEC-024",
+      "title": "Film scenario is the non-negotiable story authority from beginning to end",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-VISION-001",
+        "REQ-GAME-001",
+        "REQ-RING-001"
+      ],
+      "resolution": "For every mandatory story beat, scene order, character presence and outcome must follow the Peter Jackson film continuity. When screenplay/film source material is available, it must be checked before implementation; memory or invented connective logic may not override it. Original game content is permitted only in unused gaps around fixed anchors and must close or yield when the next canonical scene begins.",
+      "rationale": "Owner explicitly reaffirmed that adherence to the film scenario from beginning to end is the highest story requirement and corrected any tendency to drift.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Data/ModernGameLayerPlan.json",
+        "Data/FilmExperiencePlan.json"
+      ]
     }
   ],
   "open_conflicts": [],
@@ -2699,13 +2719,12 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Owner requested a broad modern-game research pass and immediate adoption of fitting mechanics throughout the film-based game.",
+    "reason": "Owner explicitly reasserted that adherence to the film scenario from beginning to end is the highest story constraint.",
     "summary": [
-      "Film chronology remains the mandatory backbone; optional gameplay lives only in safe gaps between anchors.",
-      "Research synthesis now locks exploration rewards, bite-sized world events, semi-open chapter hubs, companion dialogue, map knowledge, environmental puzzles and living-world reactivity as design patterns to adapt rather than copy.",
-      "Character life expands beyond health into stamina, resolve, fellowship bonds and lightweight supplies without survival micromanagement.",
-      "Every current Part I chapter plus GandalfParallel now has defined side-play families and story-safe examples.",
-      "Runtime implementation proceeds in waves behind the exact-head validation gate."
+      "Film scene order, participating characters and mandatory outcomes are non-negotiable.",
+      "Available screenplay/film sources must be checked before implementing or correcting FILM_CORE beats.",
+      "Original side content is allowed only in story-safe gaps and must never replace or distort a film scene.",
+      "If a scene/source is uncertain, implementation pauses for source verification rather than guessing."
     ]
   },
   "development_mode": {

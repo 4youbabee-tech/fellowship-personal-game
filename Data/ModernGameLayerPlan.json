@@ -17,7 +17,16 @@
         "Gandalf reaches Bag End and meets Bilbo"
       ],
       "game_adaptation": "Player control should begin in a film-safe Frodo free-play window around the Shire before/around the Gandalf lane encounter; optional tasks may exist there but the Gandalf/Bilbo/party anchors remain mandatory."
-    }
+    },
+    "source_verification_rule": "Every FILM_CORE scene must be verified against the available screenplay/film source before implementation. Do not rely on memory for scene order, character presence or mandatory outcomes when the source can be checked.",
+    "uncertainty_rule": "If the exact film scene is not supported by the currently available source pack, mark it UNVERIFIED and do not invent the missing canonical detail. Original side content may still be designed only if it cannot conflict with the unresolved film beat.",
+    "priority_order": [
+      "Mandatory film scene/chronology",
+      "Mandatory Ring/story outcome",
+      "Character presence and knowledge at that exact point",
+      "Original game interaction inside safe gaps",
+      "Optional side content and systemic world activity"
+    ]
   },
   "research_synthesis": [
     {

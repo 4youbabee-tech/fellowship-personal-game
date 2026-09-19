@@ -782,6 +782,13 @@ else:
             fail("PG-075: side-content canon guard is incomplete")
             break
 
+    source_rule = str(canon.get("source_verification_rule") or "").lower()
+    if "verified" not in source_rule or "do not rely on memory" not in source_rule:
+        fail("PG-075: FILM_CORE source-verification rule is missing")
+    uncertainty_rule = str(canon.get("uncertainty_rule") or "").lower()
+    if "unverified" not in uncertainty_rule or "do not invent" not in uncertainty_rule:
+        fail("PG-075: unresolved film beats must remain unverified rather than invented")
+
     axes = {str(x.get("id") or "") for x in modern_game.get("player_life_layer", {}).get("persistent_axes", [])}
     for required_axis in {"HEALTH", "STAMINA", "RESOLVE", "FELLOWSHIP_BOND", "SUPPLIES"}:
         if required_axis not in axes:
