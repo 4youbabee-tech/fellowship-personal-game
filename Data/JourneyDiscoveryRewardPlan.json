@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "JOURNEY_DISCOVERY_REWARD_SYSTEM_V1",
-  "status": "STATIC_CONTRACT_IMPLEMENTED_RUNTIME_WIRING_PENDING",
+  "status": "RUNTIME_STATE_TRIGGERS_SAVE_HUD_IMPLEMENTED_PENDING_ENGINE_PROOF",
   "inspiration_note": "Uses the satisfying idea of rewarding first-time place discovery common to exploration RPGs, but the presentation and rewards are original and fitted to this project's film-spine world.",
   "purpose": "Make exploration feel like game progression, not empty wandering, while keeping mandatory film chronology intact.",
   "player_facing_name": "Journey Discoveries",
@@ -603,11 +603,28 @@
     "save_load_requirement": "must round-trip through the existing save system before runtime acceptance"
   },
   "runtime_wiring_next": [
-    "Create a lightweight discovery registry/subsystem or extend the existing exploration/quest state owner rather than creating a competing global manager.",
-    "Fire first-time discovery from chapter landmark/side-activity triggers.",
-    "Persist discovered IDs and Journey Insight in the existing save path.",
-    "Add a small HUD toast and Chronicle panel entry.",
-    "Feed unlocked discovery topics into bounded NPC dialogue and companion memory.",
-    "Add automation for first-time-only reward, save/load persistence, no-story-skip, and region completion bonus."
-  ]
+    "Add a dedicated Chronicle browser/panel rather than overloading the momentary discovery toast.",
+    "Feed specific unlocked discovery topics into bounded NPC dialogue where the speaker plausibly knows the place/event.",
+    "Add optional region-completion presentation polish after engine proof.",
+    "Run exact-head UE4.27 compile/import/startup/chapter/state validation and later PIE pacing/visual acceptance."
+  ],
+  "runtime_implementation": {
+    "owner": "UShireQuestSubsystem",
+    "trigger_owner": "AShireQuestTrigger",
+    "hud_owner": "AShireHUD",
+    "save_owner": "UShireSaveGame / AShirePlayerCharacter",
+    "implemented": [
+      "data-driven discovery registry loaded from this plan",
+      "first-time-only Journey Insight awards",
+      "route/chapter eligibility enforcement",
+      "opening and closing story-beat windows on discovery triggers",
+      "region completion bonuses",
+      "Journey Insight milestone derivation",
+      "compact save/load persistence and sanitation",
+      "subtle player-facing discovery toast",
+      "runtime trigger coverage for all 26 Part I discoveries",
+      "headless first-time/route-roundtrip audit"
+    ],
+    "proof_boundary": "Source/runtime wiring only until exact-head UE4.27 compile, import and headless state audit pass."
+  }
 }

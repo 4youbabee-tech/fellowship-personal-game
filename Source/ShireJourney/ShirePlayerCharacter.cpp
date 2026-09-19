@@ -1065,6 +1065,9 @@ UShireSaveGame* AShirePlayerCharacter::CreateSaveSnapshot(
             Save->PlayableCharacterId = QuestSubsystem->GetPlayableCharacterId();
             Save->RouteProgress = QuestSubsystem->GetRouteProgressSnapshot();
             Save->NPCMemoryState = QuestSubsystem->GetNPCMemorySnapshot();
+            Save->JourneyDiscoveryIds = QuestSubsystem->GetJourneyDiscoveryIds();
+            Save->JourneyInsight = QuestSubsystem->GetJourneyInsight();
+            Save->JourneyInsightMilestones = QuestSubsystem->GetJourneyInsightMilestones();
         }
     }
 
@@ -1133,6 +1136,10 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
                 Save->RouteProgress);
 
             QuestSubsystem->RestoreNPCMemoryState(Save->NPCMemoryState);
+            QuestSubsystem->RestoreJourneyDiscoveryState(
+                Save->JourneyDiscoveryIds,
+                Save->JourneyInsight,
+                Save->JourneyInsightMilestones);
 
             bApplyExactSavedTransform =
                 QuestSubsystem->GetCurrentChapterId() == SavedChapterId;

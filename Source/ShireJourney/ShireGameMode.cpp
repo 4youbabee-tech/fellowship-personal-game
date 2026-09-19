@@ -78,6 +78,12 @@ void AShireGameMode::BeginPlay()
                 TEXT("P1C03"), TEXT("RoadToWeathertop"), 2);
             Quests->TriggerStoryBeat(TEXT("CI_STATE_AUDIT_BEAT"));
 
+            const int32 JourneyInsightBefore = Quests->GetJourneyInsight();
+            const bool bFirstDiscovery =
+                Quests->RegisterJourneyDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
+            const bool bRepeatDiscovery =
+                Quests->RegisterJourneyDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
+
             Quests->StartExperience(
                 TEXT("GandalfParallel"), TEXT("P1G01_Isengard"), TEXT("Gandalf"),
                 TEXT("P1G01"), TEXT("IsengardCounsel"), 1);
@@ -115,6 +121,32 @@ void AShireGameMode::BeginPlay()
                     *Quests->GetRingBearerId().ToString(),
                     *Quests->GetRingStateTag().ToString(),
                     Quests->GetRingPressureTier());
+            }
+
+            const bool bDiscoveryCoreValid =
+                bFirstDiscovery &&
+                !bRepeatDiscovery &&
+                Quests->HasJourneyDiscovery(TEXT("WILDERNESS_TRACK_SIGNS")) &&
+                Quests->GetJourneyInsight() - JourneyInsightBefore == 10;
+            if (bDiscoveryCoreValid)
+            {
+                UE_LOG(
+                    LogTemp,
+                    Display,
+                    TEXT("ShireStateAudit: discovery-core=PASS id=WILDERNESS_TRACK_SIGNS total=%d"),
+                    Quests->GetJourneyInsight());
+            }
+            else
+            {
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireStateAudit: discovery-core=FAIL first=%s repeat=%s known=%s before=%d after=%d"),
+                    bFirstDiscovery ? TEXT("yes") : TEXT("no"),
+                    bRepeatDiscovery ? TEXT("yes") : TEXT("no"),
+                    Quests->HasJourneyDiscovery(TEXT("WILDERNESS_TRACK_SIGNS")) ? TEXT("yes") : TEXT("no"),
+                    JourneyInsightBefore,
+                    Quests->GetJourneyInsight());
             }
 
             if (bRouteRestored)

@@ -150,7 +150,7 @@
     },
     {
       "id": "EXPLORATION",
-      "status": "PARTIAL_EXPANDING",
+      "status": "RUNTIME_IMPLEMENTED_PENDING_ENGINE_PROOF",
       "includes": [
         "optional discoveries",
         "side-life",
@@ -162,7 +162,13 @@
         "region completion bonuses",
         "contextual side activities",
         "off-camera film-gap mini-games",
-        "urgency override to mandatory story"
+        "urgency override to mandatory story",
+        "data-driven Journey Discovery registry",
+        "26 Part I discovery triggers",
+        "first-time Journey Insight",
+        "save/load discovery persistence",
+        "dedicated discovery HUD toast",
+        "story-window closure guards"
       ]
     },
     {

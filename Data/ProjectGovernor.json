@@ -1371,7 +1371,8 @@
       "implementation_refs": [
         "Runtime observer rejects late fatal/assert/ensure messages and spontaneous exits after ready markers; requires a live observation window and final log scan.",
         "Subprocess regression scenarios run in Pre-Unreal CI.",
-        "Self-hosted UE4 validation now avoids fragile later temporary PowerShell scripts for checkout/warning analysis and explicitly verifies the exact PR-head SHA."
+        "Self-hosted UE4 validation now avoids fragile later temporary PowerShell scripts for checkout/warning analysis and explicitly verifies the exact PR-head SHA.",
+        "State-mode runtime smoke now requires Ring continuity plus Journey Discovery first-time/route-roundtrip continuity."
       ],
       "missing_work": [
         "Validate this observer on the Windows UE4.27 runner.",
@@ -1420,7 +1421,8 @@
         "Part I exploration envelopes and optional discovery contracts now cover all active routes/chapters.",
         "Source-grounded original dialogue bank expanded to 53 validated variants.",
         "Production asset import now operates on an ignored Saved/ working copy so one-click updates do not dirty tracked SourceAssets.",
-        "Self-hosted UE4 validation now avoids fragile later temporary PowerShell scripts for checkout/warning analysis and explicitly verifies the exact PR-head SHA."
+        "Self-hosted UE4 validation now avoids fragile later temporary PowerShell scripts for checkout/warning analysis and explicitly verifies the exact PR-head SHA.",
+        "Journey Discovery moved from static design into runtime triggers, persistence, HUD feedback and headless state auditing across all Part I regions."
       ],
       "missing_work": [
         "Get final PR #53 head through full UE4.27 validation.",
@@ -1496,21 +1498,30 @@
       "evidence": [
         "Data/JourneyDiscoveryRewardPlan.json",
         "Data/ExplorationEnvelopePlan.json",
-        "Data/ContextualSideActivityPlan.json"
+        "Data/ContextualSideActivityPlan.json",
+        "Source/ShireJourney/ShireQuestSubsystem.cpp",
+        "Source/ShireJourney/ShireQuestTrigger.cpp",
+        "Source/ShireJourney/ShireHUD.cpp",
+        "Source/ShireJourney/ShireSaveGame.h",
+        "Source/ShireJourney/ShirePlayerCharacter.cpp"
       ],
       "implementation_refs": [
         "Static reward contract covers 26 existing optional discoveries.",
         "Four thematic reward categories: Road Wisdom, Peoples and Places, Fellowship Bonds, Peril Sense.",
         "Journey Insight milestone rewards favor content/navigation quality-of-life rather than combat stat inflation.",
         "Region completion bonuses exist for all active Part I exploration chapters/routes.",
-        "Contextual side activities feed the existing first-time Journey Discovery reward loop instead of creating a separate XP economy."
+        "Contextual side activities feed the existing first-time Journey Discovery reward loop instead of creating a separate XP economy.",
+        "JourneyDiscoveryRewardPlan is now loaded by UShireQuestSubsystem at runtime.",
+        "All 26 declared Part I discoveries are wired to chapter/world triggers with explicit opening/closing story-beat windows.",
+        "First-time-only Journey Insight, region completion bonuses and milestone state are deterministic and save/load persisted.",
+        "AShireHUD now has a separate subtle discovery toast instead of reusing the red alert channel.",
+        "Headless state audit requires discovery-core=PASS and proves repeat visits do not farm Insight."
       ],
       "missing_work": [
-        "Wire discovery triggers to runtime chapter landmarks/side activities.",
-        "Persist discovered IDs, Journey Insight and milestone unlocks through the existing save system.",
-        "Implement subtle HUD discovery toast and Chronicle presentation.",
-        "Feed unlocked topics into bounded NPC/companion dialogue.",
-        "Add UE4.27 automation for first-time-only rewards, save/load persistence and no-story-skip behavior."
+        "Exact-head UE4.27 compile/import/startup/state proof for the new runtime discovery layer.",
+        "Dedicated Chronicle browsing UI.",
+        "Discovery-specific bounded dialogue topic unlocks.",
+        "PIE/device pacing, placement and readability review."
       ],
       "acceptance_criteria": [
         "Every rewarded discovery is first-time-only for Journey Insight.",
@@ -2622,12 +2633,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Mega-pass red-to-green repair continued immediately after implementation.",
+    "reason": "Owner said to continue immediately; the next mega slice converts Journey Discovery from plan-only into real runtime progression while the visual/character production tracks remain active.",
     "summary": [
-      "Intermediate head 5699ef0 passed Pre-Unreal Validation #348.",
-      "Unreal Build #182 exposed an actual UE4.27 incompatibility in the non-destructive importer: IFileManager::CopyDirectoryTree is unavailable in UE4.27.",
-      "Importer repair now uses IPlatformFile::CopyDirectoryTree while preserving the Saved/ working-copy safety contract.",
-      "Current exact head must rerun both Pre-Unreal and full UE4.27 validation before merge; no develop integration is claimed yet."
+      "All 26 Part I Journey Discoveries are now intended to fire from actual world triggers inside story-safe opening/closing windows.",
+      "Journey Insight, region completion and milestones are first-time-only and persisted through the existing save path.",
+      "Discovery feedback uses a dedicated subtle HUD card and does not mutate mandatory story state.",
+      "Headless state audit expands to prove discovery first-time behavior across route switching.",
+      "The exact-head UE4.27 gate remains authoritative; no compile/visual acceptance is claimed before it passes."
     ]
   },
   "development_mode": {

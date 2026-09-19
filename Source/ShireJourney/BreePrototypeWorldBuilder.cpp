@@ -629,6 +629,37 @@ void ABreePrototypeWorldBuilder::SpawnStoryFlow()
             TEXT("The common room is noisy with travelers, locals and too many curious glances. You can listen, mingle, or keep moving."));
     }
 
+    auto SpawnBreeDiscovery = [this](
+        const FVector& Location,
+        FName DiscoveryId,
+        const TCHAR* DisplayName,
+        FName OpensAfter,
+        FName ClosesBefore)
+    {
+        AShireQuestTrigger* Trigger =
+            GetWorld()->SpawnActor<AShireQuestTrigger>(Location, FRotator::ZeroRotator);
+        if (Trigger)
+        {
+            Trigger->DiscoveryId = DiscoveryId;
+            Trigger->DiscoveryDisplayName = FText::FromString(DisplayName);
+            Trigger->RequiredSideStoryBeat = OpensAfter;
+            Trigger->BlockedAfterStoryBeat = ClosesBefore;
+        }
+    };
+
+    SpawnBreeDiscovery(
+        FVector(-1450.0f, 380.0f, 90.0f),
+        TEXT("BREE_GATE_GOSSIP"), TEXT("Bree Gate Gossip"),
+        TEXT("BreeRoadNightfall"), TEXT("PrancingPonyExterior"));
+    SpawnBreeDiscovery(
+        FVector(520.0f, -520.0f, 90.0f),
+        TEXT("BREE_STABLE_YARD"), TEXT("Prancing Pony Stable Yard"),
+        TEXT("PrancingPonyExterior"), TEXT("RingIncident"));
+    SpawnBreeDiscovery(
+        FVector(1520.0f, 570.0f, 90.0f),
+        TEXT("BREE_INN_KITCHEN_LIFE"), TEXT("Life Behind the Prancing Pony"),
+        TEXT("PrancingPonyExterior"), TEXT("RingIncident"));
+
     AShireQuestTrigger* CommonRoomAttention = GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(1390.0f, 760.0f, 90.0f), FRotator::ZeroRotator);
     if (CommonRoomAttention)
     {

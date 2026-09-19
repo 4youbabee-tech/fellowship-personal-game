@@ -25,6 +25,29 @@ struct FShireQuestDefinition
     TArray<FText> Objectives;
 };
 
+struct FShireJourneyDiscoveryDefinition
+{
+    FName DiscoveryId = NAME_None;
+    FName RouteId = NAME_None;
+    FName ChapterId = NAME_None;
+    FName CategoryId = NAME_None;
+    int32 Insight = 0;
+};
+
+struct FShireJourneyInsightMilestoneDefinition
+{
+    FName MilestoneId = NAME_None;
+    int32 Threshold = 0;
+};
+
+struct FShireJourneyRegionBonusDefinition
+{
+    FName RouteId = NAME_None;
+    FName ChapterId = NAME_None;
+    int32 RequiredDiscoveries = 0;
+    int32 BonusInsight = 0;
+};
+
 UCLASS()
 class SHIREJOURNEY_API UShireQuestSubsystem : public UGameInstanceSubsystem
 {
@@ -90,6 +113,25 @@ public:
 
     UFUNCTION(BlueprintPure, Category="Ring")
     int32 GetRingPressureTier() const;
+
+    UFUNCTION(BlueprintCallable, Category="Exploration")
+    bool RegisterJourneyDiscovery(FName DiscoveryId);
+
+    UFUNCTION(BlueprintPure, Category="Exploration")
+    bool HasJourneyDiscovery(FName DiscoveryId) const;
+
+    UFUNCTION(BlueprintPure, Category="Exploration")
+    int32 GetJourneyInsight() const { return JourneyInsight; }
+
+    UFUNCTION(BlueprintPure, Category="Exploration")
+    bool HasJourneyInsightMilestone(FName MilestoneId) const;
+
+    const TArray<FName>& GetJourneyDiscoveryIds() const { return JourneyDiscoveryIds; }
+    const TArray<FName>& GetJourneyInsightMilestones() const { return JourneyInsightMilestones; }
+    void RestoreJourneyDiscoveryState(
+        const TArray<FName>& InDiscoveryIds,
+        int32 SavedJourneyInsight,
+        const TArray<FName>& InMilestones);
 
     UFUNCTION(BlueprintPure, Category="Quest")
     FName GetActiveQuestId() const { return ActiveQuestId; }
@@ -163,6 +205,19 @@ private:
     UPROPERTY()
     TMap<FName, FShireNPCMemoryBucket> NPCMemoryState;
 
+    UPROPERTY()
+    TArray<FName> JourneyDiscoveryIds;
+
+    UPROPERTY()
+    TArray<FName> JourneyInsightMilestones;
+
+    UPROPERTY()
+    int32 JourneyInsight = 0;
+
+    TMap<FName, FShireJourneyDiscoveryDefinition> JourneyDiscoveryDefinitions;
+    TArray<FShireJourneyInsightMilestoneDefinition> JourneyInsightDefinitions;
+    TArray<FShireJourneyRegionBonusDefinition> JourneyRegionBonusDefinitions;
+
     void BuildQuestDefinitions();
     void AddQuestDefinition(FName QuestId, const FString& Title, std::initializer_list<const TCHAR*> Objectives);
     FShireRouteProgress CaptureCurrentRouteProgress(bool bCapturePlayerTransform) const;
@@ -174,4 +229,7 @@ private:
     static int32 ChapterOrdinal(FName ChapterId);
     void PruneNPCMemoryForCurrentChapter();
     void RecordStoryBeatForEligibleNPCs(FName StoryBeatId);
+    bool LoadJourneyDiscoveryPlan();
+    void RebuildJourneyInsightState();
+    FName MakeJourneyRegionCompletionId(FName RouteId, FName ChapterId) const;
 };

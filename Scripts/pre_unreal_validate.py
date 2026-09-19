@@ -709,6 +709,63 @@ else:
     if any(bool(x.get("runtime_ship")) for x in source_index.get("sources", [])):
         fail("PG-073: raw owner reference sources must not be required/shipped at runtime")
 
+
+# PG-074: Journey Discovery runtime must be first-time-only, persisted and story-window bounded.
+journey_h = read(SOURCE / "ShireQuestSubsystem.h")
+journey_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
+journey_save = read(SOURCE / "ShireSaveGame.h")
+journey_player = read(SOURCE / "ShirePlayerCharacter.cpp")
+journey_trigger_h = read(SOURCE / "ShireQuestTrigger.h")
+journey_trigger_cpp = read(SOURCE / "ShireQuestTrigger.cpp")
+journey_hud_h = read(SOURCE / "ShireHUD.h")
+journey_hud_cpp = read(SOURCE / "ShireHUD.cpp")
+journey_game_mode = read(SOURCE / "ShireGameMode.cpp")
+journey_smoke = read(ROOT / "Scripts" / "runtime_smoke.py")
+
+for symbol in [
+    "RegisterJourneyDiscovery",
+    "HasJourneyDiscovery",
+    "GetJourneyInsight",
+    "RestoreJourneyDiscoveryState",
+]:
+    if symbol not in journey_h or symbol not in journey_cpp:
+        fail(f"PG-074: Journey Discovery runtime API missing {symbol}")
+
+for marker in ["JourneyDiscoveryIds", "JourneyInsight", "JourneyInsightMilestones"]:
+    if marker not in journey_save or marker not in journey_player:
+        fail(f"PG-074: Journey Discovery save/load persistence missing {marker}")
+
+for marker in ["DiscoveryId", "DiscoveryDisplayName", "BlockedAfterStoryBeat"]:
+    if marker not in journey_trigger_h or marker not in journey_trigger_cpp:
+        fail(f"PG-074: discovery trigger window/reward field missing {marker}")
+
+if "ShowDiscovery" not in journey_hud_h or "ShowDiscovery" not in journey_hud_cpp:
+    fail("PG-074: player-facing discovery toast is missing")
+
+if "ShireStateAudit: discovery-core=PASS" not in journey_game_mode:
+    fail("PG-074: engine state audit does not prove discovery first-time continuity")
+if "ShireStateAudit: discovery-core=PASS" not in journey_smoke:
+    fail("PG-074: runtime smoke does not require discovery continuity")
+
+journey_plan_runtime = json.loads(read(ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"))
+journey_reward_ids = {
+    str(item.get("discovery_id") or "").strip()
+    for item in journey_plan_runtime.get("discovery_rewards", [])
+    if isinstance(item, dict)
+}
+journey_builder_text = "\n".join([
+    read(SOURCE / "ShirePrototypeWorldBuilder.cpp"),
+    read(SOURCE / "BreePrototypeWorldBuilder.cpp"),
+    read(SOURCE / "FellowshipChapterWorldBuilder.cpp"),
+    read(SOURCE / "IsengardPrototypeWorldBuilder.cpp"),
+])
+missing_runtime_discoveries = sorted(
+    discovery_id for discovery_id in journey_reward_ids
+    if discovery_id and discovery_id not in journey_builder_text
+)
+if missing_runtime_discoveries:
+    fail("PG-074: Journey Discovery runtime trigger coverage missing: " + ", ".join(missing_runtime_discoveries))
+
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
 living_world_data = {}

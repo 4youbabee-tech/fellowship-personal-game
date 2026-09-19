@@ -102,6 +102,11 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
         return;
     }
 
+    if (BlockedAfterStoryBeat != NAME_None && Quests->HasStoryBeatTriggered(BlockedAfterStoryBeat))
+    {
+        return;
+    }
+
     // Optional side-story completion must stay one-time even after a save/load rebuild.
     if (QuestId == NAME_None && SideStoryBeatAfterTrigger != NAME_None &&
         Quests->HasStoryBeatTriggered(SideStoryBeatAfterTrigger))
@@ -132,6 +137,14 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
         Quests->TriggerStoryBeat(SideStoryBeatAfterTrigger);
     }
 
+    const int32 InsightBefore = Quests->GetJourneyInsight();
+    const bool bNewDiscovery =
+        DiscoveryId != NAME_None && Quests->RegisterJourneyDiscovery(DiscoveryId);
+    const int32 InsightAwarded = bNewDiscovery
+        ? FMath::Max(0, Quests->GetJourneyInsight() - InsightBefore)
+        : 0;
+
+
     // Checkpoints tied to story beats are written only after the authoritative quest/story
     // mutations above. Chapter-transition checkpoints are queued by the player after the
     // next chapter is rebuilt, so those transition beats are intentionally not duplicated here.
@@ -139,6 +152,20 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
     if (CheckpointId != NAME_None)
     {
         Player->SaveAutomaticCheckpoint(CheckpointId, true);
+    }
+
+    if (bNewDiscovery)
+    {
+        if (APlayerController* PC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr)
+        {
+            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+            {
+                const FText Label = DiscoveryDisplayName.IsEmpty()
+                    ? FText::FromString(DiscoveryId.ToString())
+                    : DiscoveryDisplayName;
+                HUD->ShowDiscovery(Label, InsightAwarded, Quests->GetJourneyInsight(), 3.0f);
+            }
+        }
     }
 
     // Show the authored objective before a chapter hand-off can destroy this actor.

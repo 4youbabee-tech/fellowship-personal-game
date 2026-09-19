@@ -99,6 +99,23 @@ void AShireHUD::DrawHUD()
         DrawRect(FLinearColor(0.16f, 0.01f, 0.01f, 0.82f), BoxX, 132.0f, BoxW, 48.0f);
         DrawText(AlertMessage.ToString(), FLinearColor(1.0f, 0.76f, 0.72f), BoxX + 18.0f, 146.0f, MediumFont, 0.95f, false);
     }
+
+    if (Now < DiscoveryUntilTime && !DiscoveryTitle.IsEmpty())
+    {
+        const float BoxW = FMath::Min(340.0f, W - 60.0f);
+        const float BoxX = W - BoxW - 24.0f;
+        const float BoxY = 24.0f;
+        DrawRect(FLinearColor(0.025f, 0.035f, 0.025f, 0.88f), BoxX, BoxY, BoxW, 72.0f);
+        DrawRect(FLinearColor(0.76f, 0.57f, 0.22f, 0.94f), BoxX, BoxY, 4.0f, 72.0f);
+        DrawText(
+            FString::Printf(TEXT("Discovered: %s"), *DiscoveryTitle.ToString()),
+            FLinearColor(0.96f, 0.88f, 0.66f),
+            BoxX + 16.0f, BoxY + 12.0f, SmallFont, 0.90f, false);
+        DrawText(
+            FString::Printf(TEXT("Journey Insight +%d   Total %d"), DiscoveryAwardedInsight, DiscoveryTotalInsight),
+            FLinearColor(0.76f, 0.82f, 0.72f),
+            BoxX + 16.0f, BoxY + 40.0f, SmallFont, 0.80f, false);
+    }
 }
 
 void AShireHUD::ShowDialogue(const FText& Speaker, const FText& Line, float Duration)
@@ -112,4 +129,14 @@ void AShireHUD::ShowAlert(const FText& Message, float Duration)
 {
     AlertMessage = Message;
     AlertUntilTime = GetWorld() ? GetWorld()->GetTimeSeconds() + FMath::Max(0.5f, Duration) : Duration;
+}
+
+void AShireHUD::ShowDiscovery(const FText& Title, int32 AwardedInsight, int32 TotalInsight, float Duration)
+{
+    DiscoveryTitle = Title;
+    DiscoveryAwardedInsight = FMath::Max(0, AwardedInsight);
+    DiscoveryTotalInsight = FMath::Max(0, TotalInsight);
+    DiscoveryUntilTime = GetWorld()
+        ? GetWorld()->GetTimeSeconds() + FMath::Max(0.5f, Duration)
+        : Duration;
 }

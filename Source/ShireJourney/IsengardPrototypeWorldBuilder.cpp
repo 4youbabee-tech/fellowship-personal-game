@@ -226,6 +226,26 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
         Industry->ObjectiveMessage = FText::FromString(TEXT("The valley below is being stripped and armed for war."));
     }
 
+    AShireQuestTrigger* OldCounselDiscovery =
+        GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(220, -300, 100), FRotator::ZeroRotator);
+    if (OldCounselDiscovery)
+    {
+        OldCounselDiscovery->DiscoveryId = TEXT("ORTHANC_OLD_ALLIANCE_MEMORY");
+        OldCounselDiscovery->DiscoveryDisplayName = FText::FromString(TEXT("Old Counsel at Orthanc"));
+        OldCounselDiscovery->RequiredSideStoryBeat = TEXT("IsengardArrival");
+        OldCounselDiscovery->BlockedAfterStoryBeat = TEXT("OrthancBetrayal");
+    }
+
+    AShireQuestTrigger* ParapetDiscovery =
+        GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(1320, -760, 790), FRotator::ZeroRotator);
+    if (ParapetDiscovery)
+    {
+        ParapetDiscovery->DiscoveryId = TEXT("ORTHANC_PARAPET_VIEW");
+        ParapetDiscovery->DiscoveryDisplayName = FText::FromString(TEXT("Orthanc Parapet View"));
+        ParapetDiscovery->RequiredSideStoryBeat = TEXT("OrthancPrison");
+        ParapetDiscovery->BlockedAfterStoryBeat = TEXT("OrthancEscape");
+    }
+
     AShireQuestTrigger* Escape = GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(1680, -520, 790), FRotator::ZeroRotator);
     if (Escape)
     {

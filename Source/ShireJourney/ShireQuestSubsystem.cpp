@@ -4,10 +4,17 @@
 #include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
 
+#include "Dom/JsonObject.h"
+#include "Misc/FileHelper.h"
+#include "Misc/Paths.h"
+#include "Serialization/JsonReader.h"
+#include "Serialization/JsonSerializer.h"
+
 void UShireQuestSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
     Super::Initialize(Collection);
     BuildQuestDefinitions();
+    LoadJourneyDiscoveryPlan();
     CurrentChapterId = TEXT("P1C01");
     CurrentRouteId = TEXT("FrodoMain");
     CurrentEpisodeId = TEXT("P1C01_Main");
@@ -474,6 +481,271 @@ int32 UShireQuestSubsystem::GetRingPressureTier() const
             HasStoryBeatTriggered(TEXT("BoromirFall")) ? 4 : 3;
     }
     return 1;
+}
+
+
+bool UShireQuestSubsystem::LoadJourneyDiscoveryPlan()
+{
+    JourneyDiscoveryDefinitions.Empty();
+    JourneyInsightDefinitions.Empty();
+    JourneyRegionBonusDefinitions.Empty();
+
+    const FString Path = FPaths::Combine(FPaths::ProjectDir(), TEXT("Data/JourneyDiscoveryRewardPlan.json"));
+    FString JsonText;
+    if (!FFileHelper::LoadFileToString(JsonText, *Path))
+    {
+        UE_LOG(LogTemp, Error, TEXT("JourneyDiscovery: failed to read %s"), *Path);
+        return false;
+    }
+
+    TSharedPtr<FJsonObject> Root;
+    const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonText);
+    if (!FJsonSerializer::Deserialize(Reader, Root) || !Root.IsValid())
+    {
+        UE_LOG(LogTemp, Error, TEXT("JourneyDiscovery: invalid JSON %s"), *Path);
+        return false;
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* Rewards = nullptr;
+    if (Root->TryGetArrayField(TEXT("discovery_rewards"), Rewards) && Rewards)
+    {
+        for (const TSharedPtr<FJsonValue>& Value : *Rewards)
+        {
+            const TSharedPtr<FJsonObject> Object = Value.IsValid() ? Value->AsObject() : nullptr;
+            if (!Object.IsValid())
+            {
+                continue;
+            }
+
+            FString Id, Route, Chapter, Category;
+            double InsightNumber = 0.0;
+            Object->TryGetStringField(TEXT("discovery_id"), Id);
+            Object->TryGetStringField(TEXT("route"), Route);
+            Object->TryGetStringField(TEXT("chapter"), Chapter);
+            Object->TryGetStringField(TEXT("category"), Category);
+            Object->TryGetNumberField(TEXT("journey_insight"), InsightNumber);
+            if (Id.IsEmpty() || Route.IsEmpty() || Chapter.IsEmpty() || InsightNumber <= 0.0)
+            {
+                continue;
+            }
+
+            FShireJourneyDiscoveryDefinition Definition;
+            Definition.DiscoveryId = FName(*Id);
+            Definition.RouteId = FName(*Route);
+            Definition.ChapterId = FName(*Chapter);
+            Definition.CategoryId = FName(*Category);
+            Definition.Insight = FMath::Max(1, FMath::RoundToInt(InsightNumber));
+            JourneyDiscoveryDefinitions.Add(Definition.DiscoveryId, Definition);
+        }
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* Milestones = nullptr;
+    if (Root->TryGetArrayField(TEXT("journey_insight_milestones"), Milestones) && Milestones)
+    {
+        for (const TSharedPtr<FJsonValue>& Value : *Milestones)
+        {
+            const TSharedPtr<FJsonObject> Object = Value.IsValid() ? Value->AsObject() : nullptr;
+            if (!Object.IsValid())
+            {
+                continue;
+            }
+
+            FString Id;
+            double ThresholdNumber = 0.0;
+            Object->TryGetStringField(TEXT("id"), Id);
+            Object->TryGetNumberField(TEXT("threshold"), ThresholdNumber);
+            if (!Id.IsEmpty() && ThresholdNumber > 0.0)
+            {
+                FShireJourneyInsightMilestoneDefinition Definition;
+                Definition.MilestoneId = FName(*Id);
+                Definition.Threshold = FMath::RoundToInt(ThresholdNumber);
+                JourneyInsightDefinitions.Add(Definition);
+            }
+        }
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* RegionBonuses = nullptr;
+    if (Root->TryGetArrayField(TEXT("region_completion_bonuses"), RegionBonuses) && RegionBonuses)
+    {
+        for (const TSharedPtr<FJsonValue>& Value : *RegionBonuses)
+        {
+            const TSharedPtr<FJsonObject> Object = Value.IsValid() ? Value->AsObject() : nullptr;
+            if (!Object.IsValid())
+            {
+                continue;
+            }
+
+            FString Route, Chapter;
+            double RequiredNumber = 0.0;
+            double BonusNumber = 0.0;
+            Object->TryGetStringField(TEXT("route"), Route);
+            Object->TryGetStringField(TEXT("chapter"), Chapter);
+            Object->TryGetNumberField(TEXT("required_discoveries"), RequiredNumber);
+            Object->TryGetNumberField(TEXT("bonus_journey_insight"), BonusNumber);
+            if (!Route.IsEmpty() && !Chapter.IsEmpty() && RequiredNumber > 0.0 && BonusNumber >= 0.0)
+            {
+                FShireJourneyRegionBonusDefinition Definition;
+                Definition.RouteId = FName(*Route);
+                Definition.ChapterId = FName(*Chapter);
+                Definition.RequiredDiscoveries = FMath::RoundToInt(RequiredNumber);
+                Definition.BonusInsight = FMath::RoundToInt(BonusNumber);
+                JourneyRegionBonusDefinitions.Add(Definition);
+            }
+        }
+    }
+
+    const bool bReady =
+        JourneyDiscoveryDefinitions.Num() > 0 &&
+        JourneyInsightDefinitions.Num() > 0 &&
+        JourneyRegionBonusDefinitions.Num() > 0;
+    UE_LOG(
+        LogTemp,
+        bReady ? Display : Error,
+        TEXT("JourneyDiscovery: ready=%s discoveries=%d milestones=%d regionBonuses=%d"),
+        bReady ? TEXT("yes") : TEXT("no"),
+        JourneyDiscoveryDefinitions.Num(),
+        JourneyInsightDefinitions.Num(),
+        JourneyRegionBonusDefinitions.Num());
+    return bReady;
+}
+
+FName UShireQuestSubsystem::MakeJourneyRegionCompletionId(FName RouteId, FName ChapterId) const
+{
+    return FName(*FString::Printf(
+        TEXT("REGION_COMPLETE_%s_%s"),
+        *RouteId.ToString(),
+        *ChapterId.ToString()));
+}
+
+void UShireQuestSubsystem::RebuildJourneyInsightState()
+{
+    TArray<FName> SanitizedDiscoveries;
+    SanitizedDiscoveries.Reserve(JourneyDiscoveryIds.Num());
+    JourneyInsight = 0;
+
+    for (const FName DiscoveryId : JourneyDiscoveryIds)
+    {
+        const FShireJourneyDiscoveryDefinition* Definition = JourneyDiscoveryDefinitions.Find(DiscoveryId);
+        if (Definition && !SanitizedDiscoveries.Contains(DiscoveryId))
+        {
+            SanitizedDiscoveries.Add(DiscoveryId);
+            JourneyInsight += Definition->Insight;
+        }
+    }
+    JourneyDiscoveryIds = MoveTemp(SanitizedDiscoveries);
+    JourneyInsightMilestones.Empty();
+
+    for (const FShireJourneyRegionBonusDefinition& Region : JourneyRegionBonusDefinitions)
+    {
+        int32 Found = 0;
+        for (const FName DiscoveryId : JourneyDiscoveryIds)
+        {
+            const FShireJourneyDiscoveryDefinition* Definition = JourneyDiscoveryDefinitions.Find(DiscoveryId);
+            if (Definition && Definition->RouteId == Region.RouteId && Definition->ChapterId == Region.ChapterId)
+            {
+                ++Found;
+            }
+        }
+
+        if (Found >= Region.RequiredDiscoveries)
+        {
+            JourneyInsight += Region.BonusInsight;
+            JourneyInsightMilestones.AddUnique(MakeJourneyRegionCompletionId(Region.RouteId, Region.ChapterId));
+        }
+    }
+
+    for (const FShireJourneyInsightMilestoneDefinition& Milestone : JourneyInsightDefinitions)
+    {
+        if (JourneyInsight >= Milestone.Threshold)
+        {
+            JourneyInsightMilestones.AddUnique(Milestone.MilestoneId);
+        }
+    }
+}
+
+bool UShireQuestSubsystem::RegisterJourneyDiscovery(FName DiscoveryId)
+{
+    if (DiscoveryId == NAME_None || JourneyDiscoveryIds.Contains(DiscoveryId))
+    {
+        return false;
+    }
+
+    const FShireJourneyDiscoveryDefinition* Definition = JourneyDiscoveryDefinitions.Find(DiscoveryId);
+    if (!Definition)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("JourneyDiscovery: unknown id=%s"), *DiscoveryId.ToString());
+        return false;
+    }
+
+    if (Definition->RouteId != CurrentRouteId || Definition->ChapterId != CurrentChapterId)
+    {
+        UE_LOG(
+            LogTemp,
+            Warning,
+            TEXT("JourneyDiscovery: rejected id=%s expected=%s/%s current=%s/%s"),
+            *DiscoveryId.ToString(),
+            *Definition->RouteId.ToString(),
+            *Definition->ChapterId.ToString(),
+            *CurrentRouteId.ToString(),
+            *CurrentChapterId.ToString());
+        return false;
+    }
+
+    const int32 Before = JourneyInsight;
+    JourneyDiscoveryIds.Add(DiscoveryId);
+    RebuildJourneyInsightState();
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("JourneyDiscovery: id=%s awarded=%d total=%d route=%s chapter=%s"),
+        *DiscoveryId.ToString(),
+        JourneyInsight - Before,
+        JourneyInsight,
+        *CurrentRouteId.ToString(),
+        *CurrentChapterId.ToString());
+    return true;
+}
+
+bool UShireQuestSubsystem::HasJourneyDiscovery(FName DiscoveryId) const
+{
+    return DiscoveryId != NAME_None && JourneyDiscoveryIds.Contains(DiscoveryId);
+}
+
+bool UShireQuestSubsystem::HasJourneyInsightMilestone(FName MilestoneId) const
+{
+    return MilestoneId != NAME_None && JourneyInsightMilestones.Contains(MilestoneId);
+}
+
+void UShireQuestSubsystem::RestoreJourneyDiscoveryState(
+    const TArray<FName>& InDiscoveryIds,
+    int32 SavedJourneyInsight,
+    const TArray<FName>& InMilestones)
+{
+    JourneyDiscoveryIds = InDiscoveryIds;
+    RebuildJourneyInsightState();
+
+    if (SavedJourneyInsight != JourneyInsight)
+    {
+        UE_LOG(
+            LogTemp,
+            Warning,
+            TEXT("JourneyDiscovery: sanitized saved insight from %d to derived %d"),
+            SavedJourneyInsight,
+            JourneyInsight);
+    }
+
+    for (const FName SavedMilestone : InMilestones)
+    {
+        if (SavedMilestone != NAME_None && !JourneyInsightMilestones.Contains(SavedMilestone))
+        {
+            UE_LOG(
+                LogTemp,
+                Verbose,
+                TEXT("JourneyDiscovery: ignored stale milestone %s during restore"),
+                *SavedMilestone.ToString());
+        }
+    }
 }
 
 int32 UShireQuestSubsystem::GetActiveQuestStage() const

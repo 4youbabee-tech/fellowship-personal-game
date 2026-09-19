@@ -1260,8 +1260,22 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
     if (GreenDragonLife)
     {
         GreenDragonLife->SideStoryBeatAfterTrigger = TEXT("Side_GreenDragonRevelry");
+        GreenDragonLife->RequiredSideStoryBeat = TEXT("ShireOpening");
+        GreenDragonLife->BlockedAfterStoryBeat = TEXT("PartyArrival");
+        GreenDragonLife->DiscoveryId = TEXT("SHIRE_GREEN_DRAGON_MEMORY");
+        GreenDragonLife->DiscoveryDisplayName = FText::FromString(TEXT("The Green Dragon"));
         GreenDragonLife->ObjectiveMessage = FText::FromString(
             TEXT("The Green Dragon is loud with friends, dancing and local gossip. Stay awhile or continue to the party."));
+    }
+
+    AShireQuestTrigger* MarketGardenDiscovery = GetWorld()->SpawnActor<AShireQuestTrigger>(
+        FVector(-820, -420, 75), FRotator::ZeroRotator);
+    if (MarketGardenDiscovery)
+    {
+        MarketGardenDiscovery->RequiredSideStoryBeat = TEXT("ShireOpening");
+        MarketGardenDiscovery->BlockedAfterStoryBeat = TEXT("PartyArrival");
+        MarketGardenDiscovery->DiscoveryId = TEXT("SHIRE_MARKET_GARDEN_LOOP");
+        MarketGardenDiscovery->DiscoveryDisplayName = FText::FromString(TEXT("Hobbiton Gardens and Market Lanes"));
     }
 
     AShireQuestTrigger* PartyMischief = GetWorld()->SpawnActor<AShireQuestTrigger>(
@@ -1278,8 +1292,11 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
         FVector(1320, 1240, 75), FRotator::ZeroRotator);
     if (FieldPlay)
     {
-        FieldPlay->RequiredSideStoryBeat = TEXT("Side_PartyMischief");
+        FieldPlay->RequiredSideStoryBeat = TEXT("GandalfArrival");
+        FieldPlay->BlockedAfterStoryBeat = TEXT("PartyArrival");
         FieldPlay->SideStoryBeatAfterTrigger = TEXT("Side_SharedShireMemory");
+        FieldPlay->DiscoveryId = TEXT("SHIRE_FIELD_RACE");
+        FieldPlay->DiscoveryDisplayName = FText::FromString(TEXT("A Last Race in the Shire"));
         FieldPlay->ObjectiveMessage = FText::FromString(
             TEXT("A quick race along the hedge ends in laughter. For a moment, leaving the Shire feels impossible."));
     }

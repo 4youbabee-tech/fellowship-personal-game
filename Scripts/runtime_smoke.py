@@ -22,7 +22,8 @@ def required_markers(chapter, mode):
     if mode == "state":
         return ["ShirePlayableStartup: GameMode ready",
                 "ShireStateAudit: route-roundtrip=PASS",
-                "ShireStateAudit: ring-core=PASS"]
+                "ShireStateAudit: ring-core=PASS",
+                "ShireStateAudit: discovery-core=PASS"]
     if chapter is None:
         return ["ShirePlayableStartup: GameMode ready",
                 "ShirePlayableStartup: chapter=P1C01 route=FrodoMain"]

@@ -85,6 +85,12 @@ private:
         const FString& Message, FName StoryBeatId = NAME_None, FName NextQuestId = NAME_None,
         int32 NextQuestStage = 0, FName NextChapterId = NAME_None, FName NextChapterQuestId = NAME_None,
         int32 NextChapterQuestStage = 0);
+    void SpawnDiscoveryTrigger(
+        const FVector& Location,
+        FName DiscoveryId,
+        const FString& DisplayName,
+        FName OpensAfterStoryBeat,
+        FName ClosesBeforeStoryBeat);
 
     void EnsureProductionMeshes();
     void ConfigureChapterAtmosphere(FName ChapterId);

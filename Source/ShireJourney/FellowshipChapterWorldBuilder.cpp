@@ -354,6 +354,32 @@ void AFellowshipChapterWorldBuilder::SpawnQuestTrigger(
     Trigger->NextChapterQuestStage = NextChapterQuestStage;
 }
 
+void AFellowshipChapterWorldBuilder::SpawnDiscoveryTrigger(
+    const FVector& Location,
+    FName DiscoveryId,
+    const FString& DisplayName,
+    FName OpensAfterStoryBeat,
+    FName ClosesBeforeStoryBeat)
+{
+    if (!GetWorld() || DiscoveryId == NAME_None)
+    {
+        return;
+    }
+
+    AShireQuestTrigger* Trigger =
+        GetWorld()->SpawnActor<AShireQuestTrigger>(Location, FRotator::ZeroRotator);
+    if (!Trigger)
+    {
+        return;
+    }
+
+    Trigger->DiscoveryId = DiscoveryId;
+    Trigger->DiscoveryDisplayName = FText::FromString(DisplayName);
+    Trigger->RequiredSideStoryBeat = OpensAfterStoryBeat;
+    Trigger->BlockedAfterStoryBeat = ClosesBeforeStoryBeat;
+    Trigger->bTriggerOnce = true;
+}
+
 
 void AFellowshipChapterWorldBuilder::EnsureProductionMeshes()
 {
@@ -936,6 +962,16 @@ void AFellowshipChapterWorldBuilder::BuildWeathertop()
     SpawnQuestTrigger(FVector(-250, 0, 90), TEXT("RoadToWeathertop"), 1, 2,
         TEXT("The ruined hill is ahead. Keep close to the Ranger."), TEXT("WeathertopReveal"));
 
+    SpawnDiscoveryTrigger(
+        FVector(-1050, -520, 90), TEXT("WILDERNESS_TRACK_SIGNS"), TEXT("Strider's Trail Signs"),
+        TEXT("MidgewaterRoad"), TEXT("WeathertopReveal"));
+    SpawnDiscoveryTrigger(
+        FVector(980, 300, 400), TEXT("WEATHERTOP_RUIN_MARKERS"), TEXT("Weathertop Ruin Markers"),
+        TEXT("WeathertopReveal"), TEXT("WeathertopCamp"));
+    SpawnDiscoveryTrigger(
+        FVector(1100, -360, 390), TEXT("CAMP_PREPARATION"), TEXT("Weathertop Camp Preparations"),
+        TEXT("WeathertopReveal"), TEXT("NazgulCloseIn"));
+
     SpawnNPC(TEXT("Strider"), FVector(760, -160, 70), FRotator(0, 180, 0), TEXT("RoadToWeathertop"), 2, 2,
         TEXT("We will rest only briefly. This place can be seen from far away."), TEXT("WeathertopAttack"), 0, true);
 
@@ -1113,6 +1149,16 @@ void AFellowshipChapterWorldBuilder::BuildRivendell()
     SpawnNPC(TEXT("Pippin"), FVector(260, 460, 65), FRotator(0, 200, 0), NAME_None, 0, -1,
         TEXT("I only wanted to see where the stairs went. There were more stairs."));
 
+    SpawnDiscoveryTrigger(
+        FVector(-1120, -520, 90), TEXT("RIVENDELL_LIBRARY"), TEXT("Rivendell Library"),
+        TEXT("RivendellAwakening"), TEXT("CouncilBegins"));
+    SpawnDiscoveryTrigger(
+        FVector(-1520, 520, 90), TEXT("RIVENDELL_OVERLOOK"), TEXT("Rivendell Valley Overlook"),
+        TEXT("BilboReunion"), TEXT("CouncilBegins"));
+    SpawnDiscoveryTrigger(
+        FVector(1760, 520, 90), TEXT("RIVENDELL_SMITHY_PREP"), TEXT("Fellowship Departure Preparations"),
+        TEXT("FellowshipAssembled"), TEXT("RivendellDeparture"));
+
     SpawnQuestTrigger(FVector(1050, 0, 90), TEXT("CouncilOfElrond"), 0, 1,
         TEXT("Representatives gather. The fate of the Ring will be decided here."), TEXT("CouncilBegins"));
     SpawnNPC(TEXT("Elrond"), FVector(1250, 180, 70), FRotator(0, 210, 0), TEXT("CouncilOfElrond"), 1, 2,
@@ -1244,6 +1290,16 @@ void AFellowshipChapterWorldBuilder::BuildFellowshipRoad()
     SpawnNPC(TEXT("Pippin"), FVector(-830, 500, 65), FRotator(0, 20, 0), TEXT("SouthwardJourney"), 1, -1,
         TEXT("I would learn faster if training came with second breakfast."), NAME_None, 0, true);
 
+    SpawnDiscoveryTrigger(
+        FVector(-1300, 580, 90), TEXT("FELLOWSHIP_TRAINING"), TEXT("Fellowship Camp Practice"),
+        TEXT("FellowshipCamp"), TEXT("CrebainWarning"));
+    SpawnDiscoveryTrigger(
+        FVector(380, 520, 180), TEXT("CARADHRAS_SHELTER_CHECK"), TEXT("Caradhras Shelter Check"),
+        TEXT("CaradhrasApproach"), TEXT("CaradhrasStorm"));
+    SpawnDiscoveryTrigger(
+        FVector(2620, 460, 90), TEXT("WEST_GATE_INSCRIPTIONS"), TEXT("Marks at the West Gate"),
+        TEXT("MoriaLake"), TEXT("MoriaDoorOpens"));
+
     SpawnQuestTrigger(FVector(-620, 0, 110), TEXT("SouthwardJourney"), 1, 1,
         TEXT("Black birds cross the sky in an unnatural mass. Get the company under cover."), TEXT("CrebainWarning"));
 
@@ -1362,6 +1418,16 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
     SpawnQuestTrigger(FVector(-1120, 620, 90), NAME_None, 0, -1,
         TEXT("Broken rooms and abandoned tools make the silence worse: this was once a city, not merely a tunnel."),
         TEXT("MoriaDeadCityDiscovery"));
+    SpawnDiscoveryTrigger(
+        FVector(-1200, 650, 90), TEXT("MORIA_SIDE_CHAMBER"), TEXT("A Forgotten Moria Side Chamber"),
+        TEXT("MoriaEntry"), TEXT("BalinsTombReveal"));
+    SpawnDiscoveryTrigger(
+        FVector(-1650, -520, 90), TEXT("MORIA_ECHO_ROUTE"), TEXT("Echoes in the Deep"),
+        TEXT("MoriaEntry"), TEXT("MoriaUnease"));
+    SpawnDiscoveryTrigger(
+        FVector(-720, 520, 90), TEXT("MORIA_DWARVEN_RELIEF"), TEXT("Dwarven Relief"),
+        TEXT("MoriaUnease"), TEXT("BalinsTombReveal"));
+
     SpawnQuestTrigger(FVector(-650, 0, 90), TEXT("MoriaDark"), 2, 3,
         TEXT("The air changes. Evidence of battle lies ahead."), TEXT("MoriaUnease"), TEXT("BalinsTomb"), 0);
 
@@ -1508,6 +1574,16 @@ void AFellowshipChapterWorldBuilder::BuildLothlorien()
         TEXT("LorienSharedGrief"));
     SpawnQuestTrigger(FVector(-1850, 0, 90), TEXT("LothlorienRest"), 0, 1,
         TEXT("The woods close around the grieving Fellowship. Follow the hidden path."), TEXT("LorienEntry"));
+    SpawnDiscoveryTrigger(
+        FVector(-1420, 620, 90), TEXT("LORIEN_GRIEF_CLEARING"), TEXT("A Quiet Grief Clearing"),
+        TEXT("LorienEntry"), TEXT("Mirror"));
+    SpawnDiscoveryTrigger(
+        FVector(-420, -620, 140), TEXT("LORIEN_CRAFT_PLATFORM"), TEXT("Galadhrim Craft Platform"),
+        TEXT("LorienGrief"), TEXT("Mirror"));
+    SpawnDiscoveryTrigger(
+        FVector(1500, 420, 90), TEXT("LORIEN_RIVER_PREP"), TEXT("Lorien River Preparations"),
+        TEXT("Mirror"), TEXT("LorienDeparture"));
+
     SpawnNPC(TEXT("Haldir"), FVector(-900, -120, 70), FRotator(0, 170, 0), TEXT("LothlorienRest"), 1, 2,
         TEXT("You may pass, but tread carefully. These woods do not welcome careless feet."));
     SpawnNPC(TEXT("Galadriel"), FVector(250, 120, 320), FRotator(0, 200, 0), TEXT("LothlorienRest"), 2, 3,
@@ -1646,6 +1722,16 @@ void AFellowshipChapterWorldBuilder::BuildAnduinAmonHen()
     SpawnQuestTrigger(FVector(-720, 760, 90), NAME_None, 0, -1,
         TEXT("At the river camp, ordinary conversation keeps breaking against the unspoken question of where the company should go next."),
         TEXT("AnduinCampTension"));
+    SpawnDiscoveryTrigger(
+        FVector(-1380, 620, 90), TEXT("ANDUIN_BANK_WATCH"), TEXT("Watch on the Anduin Bank"),
+        TEXT("AnduinDeparture"), TEXT("ArgonathReveal"));
+    SpawnDiscoveryTrigger(
+        FVector(1150, 520, 160), TEXT("AMON_HEN_FALLEN_STONE"), TEXT("A Fallen Stone of Amon Hen"),
+        TEXT("AmonHenArrival"), TEXT("BoromirPressure"));
+    SpawnDiscoveryTrigger(
+        FVector(1350, -520, 180), TEXT("AMON_HEN_CAMP_DISTANCE"), TEXT("Distance in the Fellowship Camp"),
+        TEXT("AmonHenArrival"), TEXT("BoromirPressure"));
+
     SpawnQuestTrigger(FVector(-300, 0, 90), TEXT("AnduinJourney"), 1, 2,
         TEXT("Ancient stone guardians rise above the river."), TEXT("ArgonathReveal"));
     SpawnQuestTrigger(FVector(900, 0, 90), TEXT("AnduinJourney"), 2, 2,
