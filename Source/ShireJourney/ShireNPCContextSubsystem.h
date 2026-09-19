@@ -38,6 +38,21 @@ struct FShireNPCProfileRuntime
 
     UPROPERTY(BlueprintReadOnly, Category="NPCContext")
     TArray<FName> Anchors;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    FString Origin;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    FString Occupation;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    TArray<FString> BiographyFacts;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    TArray<FString> KnowledgeLimits;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    TArray<FName> AttitudeTags;
 };
 
 USTRUCT(BlueprintType)
@@ -104,6 +119,9 @@ public:
     bool CanUseIntent(FName ProfileHint, FName IntentId) const;
 
     UFUNCTION(BlueprintPure, Category="NPCContext")
+    FString GetProfileContextSummary(FName ProfileHint) const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
     FName ResolveSchedulePhase(FName ProfileHint, float NormalizedDay, bool bDangerOverride, bool bStoryOverride) const;
 
     UFUNCTION(BlueprintPure, Category="NPCContext")
@@ -168,6 +186,7 @@ private:
     static FString NormalizeLookupKey(const FString& Value);
     static FName MakeDialogueKey(FName SpeakerProfileId, FName IntentId);
     static void ParseNameArray(const TSharedPtr<class FJsonObject>& Object, const TCHAR* Field, TArray<FName>& OutNames);
+    static void ParseStringArray(const TSharedPtr<class FJsonObject>& Object, const TCHAR* Field, TArray<FString>& OutStrings);
     bool LoadJsonObject(const FString& RelativePath, TSharedPtr<class FJsonObject>& OutRoot) const;
     bool LoadSocialModel();
     bool LoadConversationPlan();
