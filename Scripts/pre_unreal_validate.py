@@ -2479,12 +2479,18 @@ for startup_symbol in [
 for workflow_symbol in [
     "pull_request:",
     "Headless playable startup smoke",
-    "Scripts/runtime_smoke.py",
     "--mode startup",
     "--mode chapters",
+    "--mode state",
 ]:
     if workflow_symbol not in unreal_workflow_cp52:
         fail(f"PG-052 Unreal boot validation workflow missing: {workflow_symbol}")
+
+if (
+    "Scripts/runtime_smoke.py" not in unreal_workflow_cp52
+    and "Scripts\\runtime_smoke.py" not in unreal_workflow_cp52
+):
+    fail("PG-052 Unreal boot validation workflow missing runtime_smoke.py invocation")
 
 # The extracted observer now owns the log name and readiness contract.
 runtime_observer_path = ROOT / "Scripts" / "runtime_smoke.py"
