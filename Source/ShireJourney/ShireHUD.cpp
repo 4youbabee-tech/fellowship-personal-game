@@ -34,9 +34,19 @@ void AShireHUD::DrawHUD()
 
     if (Quests)
     {
-        const FString Context = FString::Printf(TEXT("%s  |  %s"),
-            *Quests->GetPlayableCharacterId().ToString(),
-            *Quests->GetCurrentEpisodeId().ToString());
+        FString Region = TEXT("The Road");
+        const FName ChapterId = Quests->GetCurrentChapterId();
+        if (ChapterId == TEXT("P1C01")) Region = TEXT("The Shire");
+        else if (ChapterId == TEXT("P1C02")) Region = TEXT("Bree");
+        else if (ChapterId == TEXT("P1C03")) Region = TEXT("Weathertop and the Ford");
+        else if (ChapterId == TEXT("P1C04")) Region = TEXT("Rivendell");
+        else if (ChapterId == TEXT("P1C05")) Region = TEXT("The Road South / Caradhras");
+        else if (ChapterId == TEXT("P1C06")) Region = TEXT("Moria");
+        else if (ChapterId == TEXT("P1C07")) Region = TEXT("Lothlorien");
+        else if (ChapterId == TEXT("P1C08")) Region = TEXT("Anduin / Amon Hen");
+
+        const FString Context = FString::Printf(TEXT("%s  —  %s"),
+            *Quests->GetPlayableCharacterId().ToString(), *Region);
         DrawText(Context, FLinearColor(0.70f, 0.76f, 0.63f), 38.0f, 54.0f, SmallFont, 0.82f, false);
         DrawText(Quests->GetActiveQuestTitle().ToString(), FLinearColor::White, 38.0f, 73.0f, SmallFont, 0.96f, false);
         DrawText(Quests->GetActiveObjective().ToString(), FLinearColor(0.82f, 0.86f, 0.76f), 38.0f, 95.0f, SmallFont, 0.86f, false);
