@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "plan_id": "CHRONICLE_MAP_KNOWLEDGE_V1",
+  "status": "RUNTIME_IMPLEMENTED_PENDING_ENGINE_PROOF",
+  "main_film_continuity_only": true,
+  "story_effect": "NONE",
+  "save_schema_version": 6,
+  "purpose": "Turn first-time exploration into persistent knowledge without changing the film story.",
+  "rules": [
+    "A registered Journey Discovery creates exactly one Chronicle entry ID.",
+    "A registered Journey Discovery marks its route/chapter region as known.",
+    "Repeated discovery cannot duplicate Chronicle entries or map regions.",
+    "Book Chronicles remain a separate continuity layer and are not inserted into this main-film runtime registry.",
+    "Knowledge unlocks may improve context, navigation and dialogue availability but never advance or reorder FILM_CORE."
+  ],
+  "runtime": {
+    "owner": "UShireQuestSubsystem",
+    "chronicle_id_format": "CHRONICLE_<DISCOVERY_ID>",
+    "map_region_id_format": "MAP_REGION_<ROUTE>_<CHAPTER>",
+    "side_activity_source": "Data/ContextualSideActivityPlan.json",
+    "ui": "C toggles CHRONICLE & JOURNEY HUD panel",
+    "save_fields": [
+      "ChronicleEntryIds",
+      "KnownMapRegionIds"
+    ]
+  },
+  "progression_bridge": {
+    "behavior": "If a discovery is linked to a contextual side activity, the activity type adds bounded track XP on the same first-time registration.",
+    "anti_farm": true,
+    "generic_discovery_progression_remains": true
+  },
+  "proof": [
+    "PG-080 static contract",
+    "ShireStateAudit: knowledge-core=PASS",
+    "runtime smoke requires knowledge-core marker",
+    "UE4.27 exact-head compile/startup/state proof still required"
+  ]
+}

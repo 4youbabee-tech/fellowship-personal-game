@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "CONTEXTUAL_SIDE_ACTIVITY_PLAN_V1",
-  "status": "STATIC_CONTRACT_IMPLEMENTED_RUNTIME_WIRING_PENDING",
+  "status": "STATIC_CONTRACT_PLUS_REWARD_RUNTIME_WIRING_PENDING_FULL_ACTIVITY_MECHANICS",
   "purpose": "Add optional game-like side activities that plausibly happen inside the time, place and character context of the Peter Jackson film story without creating an alternate main story.",
   "canon_rule": "The film spine is mandatory. Side activities are unseen gap-fill moments only: plausible things the player could have done between film anchors.",
   "hard_rules": [
@@ -529,5 +529,45 @@
     "Feed completion into JourneyDiscoveryRewardPlan and named-NPC memory/dialogue context.",
     "Persist only compact optional completion IDs and reward state.",
     "Add automation proving each side activity cannot mutate required story anchors."
-  ]
+  ],
+  "runtime_progression_mapping": {
+    "CAMP_PREPARATION": {
+      "track": "CAMPCRAFT",
+      "xp": 12
+    },
+    "STEALTH_LITE": {
+      "track": "QUIET_STEP",
+      "xp": 12
+    },
+    "TRAVERSAL_CHALLENGE": {
+      "track": "WAYFINDING",
+      "xp": 6
+    },
+    "ROUTE_READING": {
+      "track": "WAYFINDING",
+      "xp": 6
+    },
+    "TRACKING_CHALLENGE": {
+      "track": "PERCEPTION",
+      "xp": 6
+    },
+    "OBSERVATION_CHALLENGE": {
+      "track": "PERCEPTION",
+      "xp": 6
+    },
+    "PATTERN_MATCH": {
+      "track": "LORE",
+      "xp": 6
+    },
+    "SOCIAL_MEMORY": {
+      "track": "FELLOWSHIP",
+      "xp": 6
+    },
+    "TIMING_CHALLENGE": {
+      "track": "RESOLVE",
+      "xp": 4
+    }
+  },
+  "runtime_progression_rule": "A side-activity reward is applied only when its linked first-time Journey Discovery registers; repeating the activity/discovery cannot farm XP.",
+  "chronicle_map_rule": "Every linked first-time discovery creates a film-continuity Chronicle entry and reveals the current route/chapter in map knowledge. Neither advances mandatory story."
 }

@@ -119,12 +119,14 @@
     "no_waste": true
   },
   "save_contract": {
-    "schema_version": 5,
+    "schema_version": 6,
     "persisted": [
       "PlayerStamina",
       "PlayerResolve",
       "PlayerSupplies",
-      "ProgressionXP"
+      "ProgressionXP",
+      "ChronicleEntryIds",
+      "KnownMapRegionIds"
     ]
   },
   "hard_rules": [
@@ -134,5 +136,11 @@
     "No random loot-rarity treadmill.",
     "Progression may improve utility, information, companionship and recovery but may not skip film scenes or alter fixed outcomes.",
     "First-time discoveries may award progression only once."
-  ]
+  ],
+  "knowledge_layer": {
+    "chronicle": "First-time film-continuity discoveries create persistent Chronicle entry IDs.",
+    "map_knowledge": "First-time discoveries reveal the current route/chapter as known map knowledge.",
+    "presentation": "C toggles the in-game Chronicle & Journey panel.",
+    "story_effect": "NONE"
+  }
 }
