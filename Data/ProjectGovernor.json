@@ -1192,6 +1192,52 @@
       ],
       "checkpoint": "CP55",
       "notes": "This requirement preserves discovery options, not blanket asset approval."
+    },
+    {
+      "id": "REQ-EXP-003",
+      "title": "Moment-to-moment film-spine immersion across Part I",
+      "category": "PlayerExperience",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User explicitly requested that the player live the Fellowship film from its earliest Shire life through every major moment, while allowing fun exploration and side activity that never changes canon outcomes",
+      "intent": "Make the Peter Jackson Part I chronology the playable backbone while filling travel/social gaps with bounded friendship, humor, local life, discoveries and companion activity.",
+      "evidence": [
+        "Data/FilmExperiencePlan.json",
+        "Data/FellowshipExperienceMegaPassCP56.json",
+        "Docs/STORY_CANON_BIBLE.md",
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp"
+      ],
+      "implementation_refs": [
+        "P1C01 gains pre-adventure Shire friendship/revelry/play beats around Green Dragon/party spaces",
+        "PartyGuest and PlayRunner ambient roles create bounded visible social play using the existing cheap ambient simulation",
+        "P1C03/P1C05/P1C06/P1C07/P1C08 gain optional companionship/discovery beats between mandatory story anchors",
+        "FilmExperiencePlan gains an explicit Shire-life anchor and Fellowship companionship anchor",
+        "Original game writing preserves scene intent without reproducing screenplay dialogue"
+      ],
+      "missing_work": [
+        "Deepen P1C02 Bree social escalation and common-room life",
+        "Deepen P1C04 Rivendell pre-Council social exploration",
+        "Add final cinematic cameras/animation/voice only when production assets are ready",
+        "Run UE4.27 build/import/startup/chapter regression after the CP56 batch",
+        "Run later visual/device acceptance on the completed cinematic slice"
+      ],
+      "acceptance_criteria": [
+        "Required film events remain in correct order and retain required outcomes",
+        "The player regularly experiences optional companionship or local-life activity between major anchors",
+        "Side content never blocks main progression or alters canon outcomes",
+        "No verbatim screenplay reproduction",
+        "Expanded activity respects the target-laptop budget"
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-EXP-001",
+        "REQ-WORLD-001",
+        "REQ-NPC-001",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "CP56",
+      "notes": "CP56 is a large experiential-enrichment pass, not a rewrite of the film story."
     }
   ],
   "hard_invariants": [
@@ -1401,6 +1447,26 @@
         "Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md",
         "Pre-Unreal Validation #264 on develop",
         "Unreal Build Validation #99 on develop"
+      ]
+    },
+    {
+      "id": "DEC-009",
+      "title": "Use the film chronology as the hard spine and expand playable life between anchors",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-VISION-001",
+        "REQ-EXP-001",
+        "REQ-EXP-003",
+        "REQ-WORLD-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "For Part I, preserve Peter Jackson film chronology/outcomes as the non-negotiable main route. Expand Shire friendship, party life, companion banter, regional social texture, exploration and environmental storytelling in the spaces between those anchors. Prefer Extended Edition enrichment when compatible, but write original game dialogue and keep optional activity non-blocking.",
+      "rationale": "The project owner explicitly wants to feel present inside the film moment-to-moment while also having room to play, explore and enjoy the world.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/FellowshipExperienceMegaPassCP56.json",
+        "Data/FilmExperiencePlan.json",
+        "Docs/STORY_CANON_BIBLE.md"
       ]
     }
   ],
@@ -1764,15 +1830,15 @@
       "order": 4,
       "id": "WORK-CHAR-001",
       "title": "Playable Frodo/Gandalf character production motion pass",
-      "status": "QUEUED",
-      "rationale": "Verification freeze lifted; continue playable-character presentation/motion improvements without changing story/save invariants."
+      "status": "ACTIVE",
+      "rationale": "CP56 increases character presence/acting context now; final skeletal/voice polish remains asset-dependent."
     },
     {
       "order": 11,
       "id": "WORK-WORLD-001",
       "title": "Expand environmental micro-life and production polish chapter by chapter",
       "status": "ACTIVE",
-      "rationale": "CP55 resumes the living-world expansion with bounded project-owned fauna and distinct low-cost movement profiles; continue regional polish behind the existing regression gates."
+      "rationale": "CP56 expands visible life and companionship between film-story anchors while preserving bounded simulation."
     },
     {
       "order": 13,
@@ -1819,14 +1885,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Project owner explicitly confirmed the full verification/check/fix pass was completed and directed the project to resume game construction and expansion.",
+    "reason": "User authorized a very large Part I expansion grounded in the Fellowship film story and asked that gameplay live inside the film chronology while enriching optional exploration and friendship.",
     "summary": [
-      "Post-CP54 verification freeze is lifted.",
-      "Current develop baseline f7c2b081e7b064fcf27bb4c80124b21f351331ab has green Pre-Unreal #264 and Unreal Build Validation #99.",
-      "Human verification completion is recorded conservatively without inventing numeric FPS/memory values that were not supplied in chat.",
-      "CP55 resumes large visible world/activity/movement construction while preserving CI, UE4.27 build/import, story/save integrity and target-device budgets.",
-      "CP55 implementation now adds project-owned bird/rabbit/butterfly fauna and chapter-aware low-cost movement without altering story/save/route topology.",
-      "Programmer-supplied asset/source shortlist was promoted from chat into durable Governor + ExternalAssetManifest project memory for future world, character, animation, audio, music and UI production."
+      "Unreal Build Validation #108 passed on the CP55 branch before CP56 opened.",
+      "CP56 keeps Peter Jackson film continuity as the hard main-story spine.",
+      "Shire opening gains bounded friendship/revelry/play life before danger escalates.",
+      "Part I chapters gain additional optional companionship/discovery beats without changing required outcomes.",
+      "Final skeletal animation, voice, cinematic cameras and film-grade art remain separate production-asset work."
     ]
   },
   "development_mode": {
