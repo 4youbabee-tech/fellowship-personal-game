@@ -631,8 +631,11 @@ AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(
         return nullptr;
     }
 
+    FActorSpawnParameters SpawnParams;
+    SpawnParams.SpawnCollisionHandlingOverride =
+        ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
     AShireAmbientNPC* NPC = GetWorld()->SpawnActor<AShireAmbientNPC>(
-        Location, FRotator::ZeroRotator);
+        Location, FRotator::ZeroRotator, SpawnParams);
     if (!NPC)
     {
         return nullptr;

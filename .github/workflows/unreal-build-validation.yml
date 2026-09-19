@@ -33,6 +33,20 @@ jobs:
           @echo off
           setlocal EnableExtensions EnableDelayedExpansion
 
+          rem Protect the listener that owns the newest active Runner.Worker and stop
+          rem any extra listener before it can clear _work\_temp for this live job.
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue'; $w=Get-CimInstance Win32_Process -Filter \"Name='Runner.Worker.exe'\" | Sort-Object CreationDate -Descending | Select-Object -First 1; if($w){$keep=[int]$w.ParentProcessId; Get-CimInstance Win32_Process -Filter \"Name='Runner.Listener.exe'\" | Where-Object { $_.ProcessId -ne $keep } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }}; exit 0" >nul 2>nul
+
+          rem A legacy interactive watchdog can mistake an active Runner.Worker-only
+          rem phase for an offline runner, start a second listener, and let that second
+          rem listener clear _work\_temp underneath the live job. Stop only that
+          rem watchdog process before the build. This is best-effort support cleanup
+          rem and must never gate validation.
+          reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v FellowshipGitHubRunnerWatchdog /f >nul 2>nul
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue'; $me=$PID; Get-CimInstance Win32_Process -Filter \"Name='powershell.exe'\" | Where-Object { $_.ProcessId -ne $me -and $_.CommandLine -match '(?i)runner-watchdog\\.ps1' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }; exit 0" >nul 2>nul
+          del /Q "C:\actions-runner\runner-watchdog.ps1" >nul 2>nul
+          del /Q "C:\actions-runner\start-runner-watchdog.cmd" >nul 2>nul
+
           where git.exe >nul 2>nul
           if not errorlevel 1 (
             for /f "delims=" %%G in ('where git.exe') do (
@@ -87,67 +101,6 @@ jobs:
           )
 
           echo Runner bootstrap succeeded.
-
-      - name: Install user-level runner autostart watchdog
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
-        run: |
-          $ErrorActionPreference = "Stop"
-
-          $RunnerRoot = "C:\actions-runner"
-          $Watchdog = Join-Path $RunnerRoot "runner-watchdog.ps1"
-          $Launcher = Join-Path $RunnerRoot "start-runner-watchdog.cmd"
-          $DiagDir = Join-Path $RunnerRoot "_diag"
-          $WatchdogLog = Join-Path $DiagDir "user-watchdog.log"
-
-          if (-not (Test-Path (Join-Path $RunnerRoot "run.cmd"))) {
-            throw "Expected runner launcher not found at C:\actions-runner\run.cmd"
-          }
-          if (-not (Test-Path $DiagDir)) {
-            New-Item -ItemType Directory -Path $DiagDir -Force | Out-Null
-          }
-
-          @'
-          $ErrorActionPreference = "SilentlyContinue"
-          $RunnerRoot = "C:\actions-runner"
-          $RunCmd = Join-Path $RunnerRoot "run.cmd"
-          $DiagDir = Join-Path $RunnerRoot "_diag"
-          $Log = Join-Path $DiagDir "user-watchdog.log"
-
-          function Write-WatchdogLog([string]$Message) {
-              try {
-                  Add-Content -LiteralPath $Log -Value ("{0:u} {1}" -f (Get-Date), $Message)
-              } catch {}
-          }
-
-          Write-WatchdogLog "watchdog started for interactive user $env:USERNAME"
-
-          while ($true) {
-              $listener = Get-Process -Name "Runner.Listener" -ErrorAction SilentlyContinue
-              if (-not $listener) {
-                  Write-WatchdogLog "Runner.Listener absent; starting C:\actions-runner\run.cmd"
-                  Start-Process -FilePath $RunCmd -WorkingDirectory $RunnerRoot -WindowStyle Hidden
-                  Start-Sleep -Seconds 8
-              }
-              Start-Sleep -Seconds 12
-          }
-          '@ | Set-Content -LiteralPath $Watchdog -Encoding UTF8
-
-          @'
-          @echo off
-          powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "C:\actions-runner\runner-watchdog.ps1"
-          '@ | Set-Content -LiteralPath $Launcher -Encoding ASCII
-
-          $RunKey = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
-          if (-not (Test-Path $RunKey)) {
-            New-Item -Path $RunKey -Force | Out-Null
-          }
-          New-ItemProperty -Path $RunKey -Name "FellowshipGitHubRunnerWatchdog" -PropertyType String -Value ('"' + $Launcher + '"') -Force | Out-Null
-
-          Write-Host "Installed user-level runner watchdog:"
-          Write-Host "  watchdog: $Watchdog"
-          Write-Host "  launcher:  $Launcher"
-          Write-Host "  registry:  HKCU\Software\Microsoft\Windows\CurrentVersion\Run\FellowshipGitHubRunnerWatchdog"
-          Write-Host "This requires no Windows account password and starts after the interactive user logs in."
 
       - name: Checkout exact commit with resilient archive download
         shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
@@ -230,7 +183,7 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          setlocal EnableExtensions
+          setlocal EnableExtensions EnableDelayedExpansion
           set "PROJECT=%GITHUB_WORKSPACE%\ShireJourney.uproject"
           set "BUILDBAT=C:\Program Files\Epic Games\UE_4.27\Engine\Build\BatchFiles\Build.bat"
           set "LOGDIR=%GITHUB_WORKSPACE%\Saved\Logs"
@@ -241,15 +194,26 @@ jobs:
           echo Building exact commit: %GITHUB_SHA%
           echo Project: %PROJECT%
           echo Build log: %BUILDLOG%
+          echo Build parallelism: 2 actions, with automatic single-action retry on MSVC PCH virtual-memory exhaustion.
 
-          call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE > "%BUILDLOG%" 2>&1
-          set "BUILD_EXIT=%ERRORLEVEL%"
+          call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=2 > "%BUILDLOG%" 2>&1
+          set "BUILD_EXIT=!ERRORLEVEL!"
+
+          if not "!BUILD_EXIT!"=="0" (
+            findstr /I /C:"error C3859" /C:"fatal error C1076" "%BUILDLOG%" >nul
+            if not errorlevel 1 (
+              echo.>>"%BUILDLOG%"
+              echo CI_BUILD_RETRY: MSVC PCH memory pressure detected; retrying with MaxParallelActions=1.>>"%BUILDLOG%"
+              call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=1 >> "%BUILDLOG%" 2>&1
+              set "BUILD_EXIT=!ERRORLEVEL!"
+            )
+          )
 
           type "%BUILDLOG%"
 
-          if not "%BUILD_EXIT%"=="0" (
-            echo ERROR: UE4.27.2 build failed with exit code %BUILD_EXIT%.
-            exit /b %BUILD_EXIT%
+          if not "!BUILD_EXIT!"=="0" (
+            echo ERROR: UE4.27.2 build failed with exit code !BUILD_EXIT!.
+            exit /b !BUILD_EXIT!
           )
 
           echo UE4.27.2 build succeeded.
@@ -380,75 +344,112 @@ jobs:
 
           foreach ($Chapter in $Chapters) {
             $AuditLog = Join-Path $LogDir ("CI-ChapterAudit-" + $Chapter + ".log")
-            if (Test-Path $AuditLog) {
-              Remove-Item -LiteralPath $AuditLog -Force
-            }
-
-            $Args = @(
-              $Project,
-              "/Engine/Maps/Templates/Template_Default",
-              "-game",
-              "-nullrhi",
-              "-unattended",
-              "-nop4",
-              "-nosplash",
-              "-NoSound",
-              ("-AuditChapter=" + $Chapter),
-              ("-abslog=" + $AuditLog)
-            )
-
-            Write-Host "Auditing runtime chapter $Chapter on commit $env:GITHUB_SHA"
-            $Proc = Start-Process -FilePath $EditorCmd -ArgumentList $Args -PassThru
-            $Deadline = (Get-Date).AddSeconds(35)
+            $Passed = $false
             $SeenRequested = $false
             $SeenLoaded = $false
             $SeenLivingWorld = $false
             $SeenWeather = $false
 
-            while ((Get-Date) -lt $Deadline) {
+            for ($Attempt = 1; $Attempt -le 2 -and -not $Passed; $Attempt++) {
               if (Test-Path $AuditLog) {
-                $Text = Get-Content -LiteralPath $AuditLog -Raw -ErrorAction SilentlyContinue
-                if ($Text -match ("ShireChapterAudit: requested=" + [regex]::Escape($Chapter))) {
-                  $SeenRequested = $true
-                }
-                if ($Text -match ("ShireChapterAudit: loaded=" + [regex]::Escape($Chapter))) {
-                  $SeenLoaded = $true
-                }
-                if ($Text -match ("ShireChapterAudit: living-world chapter=" + [regex]::Escape($Chapter))) {
-                  $SeenLivingWorld = $true
-                }
-                if ($Text -match ("ShireChapterAudit: weather chapter=" + [regex]::Escape($Chapter))) {
-                  $SeenWeather = $true
+                Remove-Item -LiteralPath $AuditLog -Force
+              }
+
+              # A previous forced headless shutdown can leave UE helper processes alive
+              # briefly on the constrained self-hosted runner. Clear only those helpers
+              # before a retry; a chapter that reached its request marker is never retried.
+              if ($Attempt -gt 1) {
+                Get-Process -Name "CrashReportClientEditor","ShaderCompileWorker" -ErrorAction SilentlyContinue |
+                  Stop-Process -Force -ErrorAction SilentlyContinue
+                Start-Sleep -Seconds 4
+              }
+
+              $Args = @(
+                $Project,
+                "/Engine/Maps/Templates/Template_Default",
+                "-game",
+                "-nullrhi",
+                "-unattended",
+                "-nop4",
+                "-nosplash",
+                "-NoSound",
+                ("-AuditChapter=" + $Chapter),
+                ("-abslog=" + $AuditLog)
+              )
+
+              Write-Host "Auditing runtime chapter $Chapter on commit $env:GITHUB_SHA (attempt $Attempt/2)"
+              $Proc = Start-Process -FilePath $EditorCmd -ArgumentList $Args -PassThru
+              $Deadline = (Get-Date).AddSeconds(35)
+              $SeenRequested = $false
+              $SeenLoaded = $false
+              $SeenLivingWorld = $false
+              $SeenWeather = $false
+
+              while ((Get-Date) -lt $Deadline) {
+                if (Test-Path $AuditLog) {
+                  $Text = Get-Content -LiteralPath $AuditLog -Raw -ErrorAction SilentlyContinue
+                  if ($Text -match ("ShireChapterAudit: requested=" + [regex]::Escape($Chapter))) {
+                    $SeenRequested = $true
+                  }
+                  if ($Text -match ("ShireChapterAudit: loaded=" + [regex]::Escape($Chapter))) {
+                    $SeenLoaded = $true
+                  }
+                  if ($Text -match ("ShireChapterAudit: living-world chapter=" + [regex]::Escape($Chapter))) {
+                    $SeenLivingWorld = $true
+                  }
+                  if ($Text -match ("ShireChapterAudit: weather chapter=" + [regex]::Escape($Chapter))) {
+                    $SeenWeather = $true
+                  }
+
+                  if ($Text -match "Fatal error:|Assertion failed|Ensure condition failed") {
+                    throw "Runtime chapter $Chapter emitted a fatal/assert/ensure condition."
+                  }
+
+                  if ($SeenRequested -and $SeenLoaded -and $SeenLivingWorld -and $SeenWeather) {
+                    $Passed = $true
+                    Start-Sleep -Seconds 4
+                    break
+                  }
                 }
 
-                if ($Text -match "Fatal error:|Assertion failed|Ensure condition failed") {
-                  throw "Runtime chapter $Chapter emitted a fatal/assert/ensure condition."
-                }
-
-                if ($SeenRequested -and $SeenLoaded -and $SeenLivingWorld -and $SeenWeather) {
-                  Start-Sleep -Seconds 4
+                if ($Proc.HasExited) {
                   break
                 }
+                Start-Sleep -Milliseconds 750
               }
 
+              $ExitCode = $null
               if ($Proc.HasExited) {
+                $ExitCode = $Proc.ExitCode
+              }
+              else {
+                Stop-Process -Id $Proc.Id -Force -ErrorAction SilentlyContinue
+                $Proc.WaitForExit()
+                $ExitCode = $Proc.ExitCode
+              }
+
+              if (Test-Path $AuditLog) {
+                Write-Host "----- $Chapter audit log tail (attempt $Attempt) -----"
+                Get-Content -LiteralPath $AuditLog -Tail 100
+              }
+
+              if ($Passed) {
                 break
               }
-              Start-Sleep -Milliseconds 750
-            }
 
-            if (-not $Proc.HasExited) {
-              Stop-Process -Id $Proc.Id -Force -ErrorAction SilentlyContinue
-              $Proc.WaitForExit()
-            }
+              if ($SeenRequested) {
+                # Once the game accepted the requested chapter, missing downstream markers
+                # are a real chapter/runtime failure rather than a transient editor startup.
+                break
+              }
 
-            if (Test-Path $AuditLog) {
-              Write-Host "----- $Chapter audit log tail -----"
-              Get-Content -LiteralPath $AuditLog -Tail 100
+              if ($Attempt -lt 2) {
+                Write-Warning "Runtime chapter $Chapter exited before the request marker (exit code $ExitCode); retrying once after UE helper cleanup."
+              }
             }
 
             if (-not $SeenRequested) {
-              throw "Runtime chapter audit did not observe request marker for $Chapter."
+              throw "Runtime chapter audit did not observe request marker for $Chapter after a single transient-startup retry."
             }
             if (-not $SeenLoaded) {
               throw "Runtime chapter audit did not observe world-builder load marker for $Chapter."
@@ -461,9 +462,72 @@ jobs:
             }
 
             Write-Host "Runtime chapter audit passed: $Chapter"
+            Start-Sleep -Seconds 2
           }
 
           Write-Host "All eight Part I runtime chapter audits passed."
+
+      - name: Summarize and guard runtime warning debt
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
+        run: |
+          $ErrorActionPreference = "Stop"
+          $LogDir = Join-Path $env:GITHUB_WORKSPACE "Saved\Logs"
+          $Files = @(Get-ChildItem -LiteralPath $LogDir -Filter "CI-*.log" -File -ErrorAction SilentlyContinue)
+
+          if ($Files.Count -eq 0) {
+            throw "No CI Unreal logs found for warning-debt analysis."
+          }
+
+          $Text = ($Files | ForEach-Object {
+            Get-Content -LiteralPath $_.FullName -Raw -ErrorAction SilentlyContinue
+          }) -join "`n"
+
+          $Checks = @(
+            @{ Name = "Missing smoothing groups"; Pattern = "No smoothing group information"; Ceiling = 0; Unique = $false },
+            @{ Name = "Degenerate tangent bases"; Pattern = "degenerate tangent bases"; Ceiling = 150; Unique = $false },
+            @{ Name = "Nearly-zero binormals"; Pattern = "nearly zero bi-normals"; Ceiling = 150; Unique = $false },
+            # Baseline debt from the full eight-chapter UE4.27 validation is 71 unique
+            # world material package references. Guard regressions above that baseline;
+            # do not fail unchanged legacy debt and waste the self-hosted runner cycle.
+            @{ Name = "Missing world material packages"; Pattern = "Failed to load '(/Game/Production/World/[^']+)'"; Ceiling = 71; Unique = $true },
+            @{ Name = "Missing optional audio"; Pattern = "Failed to load '(/Game/Audio/[^']+)'"; Ceiling = 0; Unique = $true },
+            @{ Name = "Missing optional rigs"; Pattern = "Failed to load '(/Game/Production/Characters/Rigs/[^']+)'"; Ceiling = 0; Unique = $true },
+            @{ Name = "defaultMat references"; Pattern = "(defaultMat)"; Ceiling = 0; Unique = $true },
+            @{ Name = "DirectionalLight mobility warnings"; Pattern = "(DirectionalLight_0.*has to be 'Movable')"; Ceiling = 0; Unique = $true },
+            @{ Name = "NPC spawn collision failures"; Pattern = "SpawnActor failed because of collision at the spawn location \[([^\]]+)\] for \[ShireNPC\]"; Ceiling = 0; Unique = $true }
+          )
+
+          "### UE4.27 warning-debt guard" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "| Category | Count | Ceiling |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "|---|---:|---:|" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+
+          $Failures = @()
+          foreach ($Check in $Checks) {
+            $RegexMatches = [regex]::Matches(
+              $Text,
+              $Check.Pattern,
+              [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
+            if ($Check.Unique) {
+              $Values = @($RegexMatches | ForEach-Object {
+                if ($_.Groups.Count -gt 1) { $_.Groups[1].Value } else { $_.Value }
+              } | Sort-Object -Unique)
+              $Count = $Values.Count
+            }
+            else {
+              $Count = $RegexMatches.Count
+            }
+            "| $($Check.Name) | $Count | $($Check.Ceiling) |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+            Write-Host ("Warning debt: {0} = {1} (ceiling {2})" -f $Check.Name, $Count, $Check.Ceiling)
+            if ($Count -gt $Check.Ceiling) {
+              $Failures += "$($Check.Name): $Count > $($Check.Ceiling)"
+            }
+          }
+
+          if ($Failures.Count -gt 0) {
+            throw ("Warning-debt regression detected: " + ($Failures -join "; "))
+          }
+
+          Write-Host "Warning-debt guard passed."
 
       - name: Collect Unreal build logs
         if: always()
