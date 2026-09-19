@@ -960,8 +960,12 @@ FVector AShireNPC::GetFormationTarget(const APawn* PlayerPawn) const
     const int32 Slot = ResolveCompanionSlot();
     const int32 Row = Slot / 2;
     const float Side = (Slot % 2 == 0) ? -1.0f : 1.0f;
-    const float BackDistance = FollowDistance + Row * (FormationSpacing * 0.85f);
-    const float SideDistance = FormationSpacing * (1.0f + 0.15f * Row) * Side;
+    const float CohesionScale = FMath::Lerp(
+        1.12f, 0.72f, FMath::Clamp(CachedWorldPressure, 0.0f, 1.0f));
+    const float BackDistance =
+        FollowDistance * CohesionScale + Row * (FormationSpacing * 0.85f * CohesionScale);
+    const float SideDistance =
+        FormationSpacing * CohesionScale * (1.0f + 0.15f * Row) * Side;
 
     const FVector Forward = PlayerPawn->GetActorForwardVector().GetSafeNormal2D();
     const FVector Right = PlayerPawn->GetActorRightVector().GetSafeNormal2D();
@@ -1016,6 +1020,43 @@ FName AShireNPC::ResolveCanonicalProfileId() const
     return Context->ResolveCanonicalProfileId(FName(*DisplayName.ToString()));
 }
 
+void AShireNPC::RefreshLivingContext(float DeltaSeconds)
+{
+    LivingContextRefreshRemaining = FMath::Max(0.0f, LivingContextRefreshRemaining - DeltaSeconds);
+    if (LivingContextRefreshRemaining > 0.0f)
+    {
+        return;
+    }
+
+    LivingContextRefreshRemaining =
+        0.75f + 0.11f * static_cast<float>(ResolveCompanionSlot() % 5);
+
+    const UGameInstance* GI = GetGameInstance();
+    const UShireNPCContextSubsystem* Context =
+        GI ? GI->GetSubsystem<UShireNPCContextSubsystem>() : nullptr;
+    if (!Context || !Context->IsDataReady())
+    {
+        return;
+    }
+
+    const FName ProfileId = ResolveCanonicalProfileId();
+    const FName NewMood = Context->GetRegionalWorldMood();
+    CachedWorldPressure = Context->GetRegionalPressure();
+    CachedEmotionalState = ProfileId != NAME_None
+        ? Context->GetProfileEmotionalState(ProfileId)
+        : FName(TEXT("CALM"));
+
+    if (CachedWorldMood != NAME_None && NewMood != CachedWorldMood && bFollowingPlayer)
+    {
+        const float Stagger = 4.0f + 1.6f * static_cast<float>(ResolveCompanionSlot());
+        BanterCooldownRemaining = BanterCooldownRemaining < 0.0f
+            ? Stagger
+            : FMath::Min(BanterCooldownRemaining, Stagger);
+    }
+
+    CachedWorldMood = NewMood;
+}
+
 void AShireNPC::UpdateCompanionBanter(float DeltaSeconds)
 {
     if (!bFollowingPlayer || !GetWorld())
@@ -1025,7 +1066,8 @@ void AShireNPC::UpdateCompanionBanter(float DeltaSeconds)
 
     if (BanterCooldownRemaining < 0.0f)
     {
-        BanterCooldownRemaining = 42.0f + ResolveCompanionSlot() * 11.0f;
+        BanterCooldownRemaining =
+            38.0f + ResolveCompanionSlot() * 10.0f + CachedWorldPressure * 24.0f;
     }
     else
     {
@@ -1137,7 +1179,8 @@ void AShireNPC::UpdateCompanionBanter(float DeltaSeconds)
         DialogueActingRemaining = Lines.Num() > 1 ? 7.5f : 4.0f;
     }
 
-    BanterCooldownRemaining = 68.0f + ResolveCompanionSlot() * 13.0f;
+    BanterCooldownRemaining =
+        58.0f + ResolveCompanionSlot() * 12.0f + CachedWorldPressure * 30.0f;
 }
 
 void AShireNPC::Tick(float DeltaSeconds)
@@ -1154,6 +1197,7 @@ void AShireNPC::Tick(float DeltaSeconds)
         RestoreCompanionFollowState();
     }
 
+    RefreshLivingContext(DeltaSeconds);
     bPrototypeMoving = false;
 
     if (bFollowingPlayer && StopFollowingStoryBeat != NAME_None)
@@ -1177,17 +1221,23 @@ void AShireNPC::Tick(float DeltaSeconds)
             ToTarget.Z = 0.0f;
             const float Distance = ToTarget.Size();
 
+            const float Pressure = FMath::Clamp(CachedWorldPressure, 0.0f, 1.0f);
+            const float EffectiveAcceptance = FMath::Lerp(
+                FollowAcceptanceRadius * 1.15f, FollowAcceptanceRadius * 0.72f, Pressure);
+
             if (Distance > TeleportCatchUpDistance)
             {
                 FVector SafeTarget = Target;
                 SafeTarget.Z = PlayerPawn->GetActorLocation().Z;
                 SetActorLocation(SafeTarget, false, nullptr, ETeleportType::TeleportPhysics);
             }
-            else if (Distance > FollowAcceptanceRadius)
+            else if (Distance > EffectiveAcceptance)
             {
-                const float EffectiveSpeed = Distance > CatchUpDistance ? FollowSpeed * 2.0f : FollowSpeed;
+                const float PressureSpeed = FMath::Lerp(1.0f, 1.28f, Pressure);
+                const float EffectiveSpeed =
+                    FollowSpeed * PressureSpeed * (Distance > CatchUpDistance ? 2.0f : 1.0f);
                 const float MaxStep = EffectiveSpeed * DeltaSeconds;
-                const FVector Step = ToTarget.GetSafeNormal() * FMath::Min(MaxStep, Distance - FollowAcceptanceRadius);
+                const FVector Step = ToTarget.GetSafeNormal() * FMath::Min(MaxStep, Distance - EffectiveAcceptance);
                 AddActorWorldOffset(Step, true);
                 bPrototypeMoving = !Step.IsNearlyZero();
 
@@ -1301,22 +1351,47 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
         (QuestId == NAME_None || QuestStageAfterInteraction < 0))
     {
         FName Intent = TEXT("GREETING");
+        const FName Mood = Context->GetRegionalWorldMood();
+        const bool bFellowship =
+            Context->HasKnowledgeTag(CanonicalProfileId, TEXT("FELLOWSHIP_MEMBER"));
+
         if (Context->IsDangerStateActive())
         {
             Intent = TEXT("DANGER_WARNING");
         }
-        else if (QuestSubsystem->HasNamedNPCMemory(CanonicalProfileId, TEXT("PLAYER_INTERACTED")))
+        else if (Mood == TEXT("SUSPICIOUS_TOWN") ||
+                 Mood == TEXT("PURSUED_WILDERNESS") ||
+                 Mood == TEXT("DEAD_CITY_DREAD") ||
+                 Mood == TEXT("GRIEF_AND_REFUGE") ||
+                 Mood == TEXT("FELLOWSHIP_FRACTURE") ||
+                 Mood == TEXT("WAR_CORRUPTION"))
         {
-            Intent = Context->HasKnowledgeTag(CanonicalProfileId, TEXT("MAIN_STORY_CONTEXT"))
-                ? FName(TEXT("STORY_REACTION"))
-                : FName(TEXT("GREETING"));
+            Intent = TEXT("STORY_REACTION");
+        }
+        else if (bFellowship)
+        {
+            Intent = TEXT("TRAVEL_COMMENT");
+        }
+        else if (QuestSubsystem->HasNamedNPCMemory(CanonicalProfileId, TEXT("PLAYER_INTERACTED")) &&
+                 Context->HasKnowledgeTag(CanonicalProfileId, TEXT("MAIN_STORY_CONTEXT")))
+        {
+            Intent = TEXT("STORY_REACTION");
         }
 
-        const FShireBoundedDialogueResult Result = Context->SelectBoundedDialogue(
+        FShireBoundedDialogueResult Result = Context->SelectBoundedDialogue(
             CanonicalProfileId,
             TEXT("PLAYER_FRODO"),
             Intent,
             QuestSubsystem->GetCurrentChapterId());
+
+        if (!Result.bValid && Intent != TEXT("GREETING"))
+        {
+            Result = Context->SelectBoundedDialogue(
+                CanonicalProfileId,
+                TEXT("PLAYER_FRODO"),
+                TEXT("GREETING"),
+                QuestSubsystem->GetCurrentChapterId());
+        }
         if (Result.bValid)
         {
             FShireDialogueLine DynamicLine;
