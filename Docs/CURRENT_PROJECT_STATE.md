@@ -1,3 +1,11 @@
+## CP56 MEGA INTEGRATION ACTIVE — whole-game coherence pass
+
+PR #53 is the single continuation path above PR #52. The mega batch is tracked by `REQ-MEGA-001`, `WORK-MEGA-001`, `Data/CP56MegaIntegrationPlan.json` and `Data/GameCompletenessMatrix.json`.
+
+Current runtime expansion now reaches named-character behavior, not just data: companion spacing and catch-up respond to regional pressure, named profiles expose a personality-aware emotional state, free interactions choose mood-aware intents with deterministic greeting fallback, and authored regional dialogue covers Shire peace, Bree suspicion, pursued wilderness, Rivendell refuge, Fellowship pressure, Moria dread, Lothlorien grief/refuge, Anduin fracture and Isengard corruption. All shipped logic remains offline and subordinate to story, knowledge and memory gates.
+
+This does not claim final rigs, voice, materials, device performance, cinematic acceptance or trilogy completion. The merge gate is unchanged: the current PR #53 head must pass Pre-Unreal plus the complete UE4.27 compile/import/startup/chapter/warning chain before develop integration.
+
 ## CP56 continuation — contextual companion dialogue, 2026-09-19
 
 Recovered prior-session stopping point: CP56 head 3705fe4, PR52 awaiting Unreal. Its latest engine attempt failed during checkout, before compilation. Follow-up PR53 now includes the tracked-source checkout fix plus a correction to regional dialogue selection and 30 original Moria/Lothlorien companion lines. Actual engine build and gameplay validation remain pending. No new checkpoint or trilogy completion is declared.
