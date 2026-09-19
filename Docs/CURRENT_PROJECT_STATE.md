@@ -49,7 +49,8 @@ External-resource truth boundary:
 Current proof boundary:
 - source/runtime integration: implemented on `mega/resource-saturation-playable-v1`,
 - Pre-Unreal PG-052: pending CI,
-- real UE4.27 compile/import: pending,
+- real UE4.27 compile/import: now triggered on the CP52 pull request,
+- headless playable boot smoke: now part of Unreal Build Validation and requires GameMode + P1C01/FrodoMain markers,
 - PIE/device playability and performance: pending.
 
 # CURRENT PROJECT STATE
