@@ -500,3 +500,14 @@ Guards the post-verification fauna/activity expansion:
 - `LivingWorldEventPlan.json` must retain bird, small-animal and butterfly fauna templates.
 
 Purpose: prevent later cleanup from silently deleting CP55 world-life movement or replacing it with untracked/persistent AI scope.
+
+## PG-058 — Film-spine experiential expansion must remain canon-safe and optional
+**Risk:** adding more play, humor, friendship and exploration can accidentally reorder film events, alter required outcomes, bloat the low-spec simulation or turn adapted scene intent into copied screenplay material.
+
+**Contract:** `Data/FellowshipExperienceMegaPassCP56.json` must retain eight Part I chapter entries, Peter Jackson film continuity as the primary spine, original game writing, and optional/non-blocking enrichment between mandatory anchors.
+
+**Runtime guard:** Shire friendship/revelry beats, PlayRunner activity, Bree common-room life and the P1C03/P1C05/P1C06/P1C07/P1C08 companionship/discovery beats must remain wired to existing lightweight NPC/quest-trigger systems.
+
+**Packaging guard:** CP55 activity and CP56 experience plans remain runtime dependencies.
+
+**Proof boundary:** static/compile/headless evidence proves regression safety only. Final cinematic quality, character acting, voice, pacing and target-device visual acceptance remain separate production proof.
