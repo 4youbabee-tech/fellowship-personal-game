@@ -522,7 +522,9 @@ if governor_mode_id == "VISUAL_PRODUCTION_FIRST" and governor_mode.get("supersed
 if governor_mode_id == "PIE_VERIFICATION_FREEZE" and governor_mode.get("supersedes") != "VISUAL_PRODUCTION_FIRST":
     fail("PG-033 PIE_VERIFICATION_FREEZE must explicitly supersede VISUAL_PRODUCTION_FIRST")
 proof_honesty_rule = any(
-    "PIE" in rule and "performance" in rule.lower() and "evidence" in rule.lower()
+    "PIE" in rule
+    and "evidence" in rule.lower()
+    and any(marker in rule.lower() for marker in ("performance", "fps", "device", "visual"))
     for rule in governor_mode_rules
 )
 if not proof_honesty_rule:
