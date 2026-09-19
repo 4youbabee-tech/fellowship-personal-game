@@ -405,6 +405,22 @@
       "kind": "Source",
       "role": "Micro-event scheduling spawning culling weather context and chapter reaction runtime",
       "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireTraversalChallenge.h",
+      "target_path": "Source/ShireJourney/Public/World/ShireTraversalChallenge.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Ordered traversal side-activity challenge contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireTraversalChallenge.cpp",
+      "target_path": "Source/ShireJourney/Private/World/ShireTraversalChallenge.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Ordered traversal side-activity challenge implementation",
+      "migration_status": "CURRENT_FLAT"
     }
   ]
 }
