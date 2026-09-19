@@ -36,53 +36,60 @@ jobs:
           rem Runner lifecycle, watchdog files and registry configuration are
           rem managed outside this workflow. Validation never modifies them.
 
+          set "GIT_READY=0"
           where git.exe >nul 2>nul
           if not errorlevel 1 (
             for /f "delims=" %%G in ('where git.exe') do (
-              echo Found Git: %%G
-              goto :git_ready
+              if "!GIT_READY!"=="0" (
+                echo Found Git: %%G
+                set "GIT_READY=1"
+              )
             )
           )
 
-          for %%G in ("C:\Program Files\Git\cmd\git.exe" "C:\Program Files (x86)\Git\cmd\git.exe") do (
-            if exist "%%~G" (
-              set "GITDIR=%%~dpG"
-              echo Found Git: %%~G
-              echo !GITDIR!>>"%GITHUB_PATH%"
-              set "PATH=!GITDIR!;%PATH%"
-              goto :git_ready
+          if "!GIT_READY!"=="0" (
+            for %%G in ("C:\Program Files\Git\cmd\git.exe" "C:\Program Files (x86)\Git\cmd\git.exe") do (
+              if "!GIT_READY!"=="0" if exist "%%~G" (
+                set "GITDIR=%%~dpG"
+                echo Found Git: %%~G
+                echo !GITDIR!>>"%GITHUB_PATH%"
+                set "PATH=!GITDIR!;%PATH%"
+                set "GIT_READY=1"
+              )
             )
           )
 
-          echo Git is not visible to the Windows service. Bootstrapping a private MinGit copy for CI...
-          set "MINGIT_ROOT=%RUNNER_TEMP%\mingit-2.55.0.5"
-          set "MINGIT_ZIP=%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip"
-          set "MINGIT_URL=https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.5/MinGit-2.55.0.5-64-bit.zip"
+          if "!GIT_READY!"=="0" (
+            echo Git is not visible to the Windows service. Bootstrapping a private MinGit copy for CI...
+            set "MINGIT_ROOT=%RUNNER_TEMP%\mingit-2.55.0.5"
+            set "MINGIT_ZIP=%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip"
+            set "MINGIT_URL=https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.5/MinGit-2.55.0.5-64-bit.zip"
 
-          if not exist "!MINGIT_ROOT!\cmd\git.exe" (
-            if exist "!MINGIT_ROOT!" rmdir /S /Q "!MINGIT_ROOT!"
-            if exist "!MINGIT_ZIP!" del /Q "!MINGIT_ZIP!"
+            if not exist "!MINGIT_ROOT!\cmd\git.exe" (
+              if exist "!MINGIT_ROOT!" rmdir /S /Q "!MINGIT_ROOT!"
+              if exist "!MINGIT_ZIP!" del /Q "!MINGIT_ZIP!"
 
-            curl.exe -L --retry 3 --retry-delay 3 -o "!MINGIT_ZIP!" "!MINGIT_URL!"
-            if errorlevel 1 (
-              echo ERROR: Failed to download MinGit.
-              exit /b 20
+              curl.exe -L --retry 3 --retry-delay 3 -o "!MINGIT_ZIP!" "!MINGIT_URL!"
+              if errorlevel 1 (
+                echo ERROR: Failed to download MinGit.
+                exit /b 20
+              )
+
+              powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath '!MINGIT_ZIP!' -DestinationPath '!MINGIT_ROOT!' -Force"
+              if errorlevel 1 (
+                echo ERROR: Failed to extract MinGit.
+                exit /b 21
+              )
             )
 
-            powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath '!MINGIT_ZIP!' -DestinationPath '!MINGIT_ROOT!' -Force"
-            if errorlevel 1 (
-              echo ERROR: Failed to extract MinGit.
-              exit /b 21
-            )
+            set "GITDIR=!MINGIT_ROOT!\cmd"
+            set "GITBIN=!MINGIT_ROOT!\mingw64\bin"
+            echo !GITDIR!>>"%GITHUB_PATH%"
+            echo !GITBIN!>>"%GITHUB_PATH%"
+            set "PATH=!GITDIR!;!GITBIN!;%PATH%"
+            set "GIT_READY=1"
           )
 
-          set "GITDIR=!MINGIT_ROOT!\cmd"
-          set "GITBIN=!MINGIT_ROOT!\mingw64\bin"
-          echo !GITDIR!>>"%GITHUB_PATH%"
-          echo !GITBIN!>>"%GITHUB_PATH%"
-          set "PATH=!GITDIR!;!GITBIN!;%PATH%"
-
-          :git_ready
           git --version
           if errorlevel 1 (
             echo ERROR: Git bootstrap did not produce a working git.exe.
@@ -116,16 +123,17 @@ jobs:
 
           set "FETCH_OK=0"
           for /L %%A in (1,1,7) do (
-            echo Exact-commit fetch attempt %%A for %GITHUB_SHA%
-            git fetch --no-tags --prune --depth=1 origin %GITHUB_SHA%
-            if not errorlevel 1 (
-              set "FETCH_OK=1"
-              goto :fetch_done
+            if "!FETCH_OK!"=="0" (
+              echo Exact-commit fetch attempt %%A for %GITHUB_SHA%
+              git fetch --no-tags --prune --depth=1 origin %GITHUB_SHA%
+              if not errorlevel 1 (
+                set "FETCH_OK=1"
+              ) else (
+                if not "%%A"=="7" powershell.exe -NoProfile -Command "Start-Sleep -Seconds 5"
+              )
             )
-            if not "%%A"=="7" powershell.exe -NoProfile -Command "Start-Sleep -Seconds 5"
           )
 
-          :fetch_done
           if not "!FETCH_OK!"=="1" (
             echo ERROR: exact GITHUB_SHA fetch failed after 7 attempts.
             exit /b 72
