@@ -103,3 +103,15 @@ Newly promoted from this message:
 - phased rollout from Shire prototype to major characters and then regional populations.
 
 Runtime started in CP56 by adding bounded hunger/fatigue/social/fear state and goal/emotion bias to AShireAmbientNPC. This remains deliberately cheap and cannot own quest/story state.
+
+## Owner architecture override — offline only
+
+The project owner explicitly clarified that the shipped game is offline. Therefore the programmer suggestion to use OpenAI/Anthropic/cloud APIs, remote Whisper/TTS services or any internet-required runtime AI is **not** adopted for gameplay.
+
+Authoritative rule:
+- NPC intelligence runs locally/offline.
+- deterministic local memory/goals/emotions/knowledge/dialogue remain the baseline.
+- a future language model, if used, must be a small local/on-device optional layer.
+- shipped STT/TTS, if added, must also be local/offline.
+- no API key or internet connection may be required to play the game.
+- online services may still be used during development as tooling/research, but never as a runtime dependency.
