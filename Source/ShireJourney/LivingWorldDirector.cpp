@@ -190,10 +190,10 @@ bool ALivingWorldDirector::LoadLifeSaturationContract()
             {
                 for (const TSharedPtr<FJsonValue>& RoleValue : *RoleValues)
                 {
-                    const FString Role = RoleValue.IsValid() ? RoleValue->AsString() : FString();
-                    if (!Role.IsEmpty())
+                    const FString RoleString = RoleValue.IsValid() ? RoleValue->AsString() : FString();
+                    if (!RoleString.IsEmpty())
                     {
-                        ParsedRoles.Add(FName(*Role));
+                        ParsedRoles.Add(FName(*RoleString));
                     }
                 }
             }
@@ -432,35 +432,35 @@ FName ALivingWorldDirector::ChooseBaselineRole() const
     return (*Roles)[Random.RandRange(0, Roles->Num() - 1)];
 }
 
-FName ALivingWorldDirector::ChooseBaselineProp(FName Role) const
+FName ALivingWorldDirector::ChooseBaselineProp(FName RoleName) const
 {
-    if (Role == TEXT("Courier") || Role == TEXT("RoadWalker"))
+    if (RoleName == TEXT("Courier") || Role == TEXT("RoadWalker"))
     {
         return TEXT("Satchel");
     }
-    if (Role == TEXT("FieldWorker"))
+    if (RoleName == TEXT("FieldWorker"))
     {
         return Random.FRand() > 0.45f ? FName(TEXT("Basket")) : FName(TEXT("Crate"));
     }
-    if (Role == TEXT("PartyGuest"))
+    if (RoleName == TEXT("PartyGuest"))
     {
         return Random.FRand() > 0.55f ? FName(TEXT("Mug")) : NAME_None;
     }
-    if (Role == TEXT("FerryWorker"))
+    if (RoleName == TEXT("FerryWorker"))
     {
         return Random.FRand() > 0.60f ? FName(TEXT("Lantern")) : NAME_None;
     }
-    if (Role == TEXT("Elf"))
+    if (RoleName == TEXT("Elf"))
     {
         return Random.FRand() > 0.75f ? FName(TEXT("Book")) : NAME_None;
     }
-    if (Role == TEXT("BreeTownsperson"))
+    if (RoleName == TEXT("BreeTownsperson"))
     {
         const float Roll = Random.FRand();
         return Roll > 0.66f ? FName(TEXT("Basket")) :
             (Roll > 0.33f ? FName(TEXT("Mug")) : FName(TEXT("Satchel")));
     }
-    if (Role == TEXT("Villager"))
+    if (RoleName == TEXT("Villager"))
     {
         const float Roll = Random.FRand();
         return Roll > 0.70f ? FName(TEXT("Basket")) :
@@ -530,8 +530,8 @@ void ALivingWorldDirector::MaintainBaselinePopulation()
         return;
     }
 
-    const FName Role = ChooseBaselineRole();
-    if (Role == NAME_None)
+    const FName RoleName = ChooseBaselineRole();
+    if (RoleName == NAME_None)
     {
         return;
     }
@@ -551,20 +551,20 @@ void ALivingWorldDirector::MaintainBaselinePopulation()
     float MinWait = Random.FRandRange(0.8f, 2.5f);
     float MaxWait = Random.FRandRange(3.0f, 6.5f);
 
-    if (Role == TEXT("Courier") || Role == TEXT("RoadWalker"))
+    if (RoleName == TEXT("Courier") || Role == TEXT("RoadWalker"))
     {
         Speed = Random.FRandRange(68.0f, 92.0f);
         MinWait = 0.2f;
         MaxWait = 1.4f;
         TravelOffset *= 1.45f;
     }
-    else if (Role == TEXT("FieldWorker"))
+    else if (RoleName == TEXT("FieldWorker"))
     {
         Speed = Random.FRandRange(34.0f, 48.0f);
         TravelOffset *= 0.55f;
         MaxWait = Random.FRandRange(5.0f, 9.0f);
     }
-    else if (Role == TEXT("Elf"))
+    else if (RoleName == TEXT("Elf"))
     {
         Speed = Random.FRandRange(42.0f, 58.0f);
         MinWait = 1.8f;
@@ -573,8 +573,8 @@ void ALivingWorldDirector::MaintainBaselinePopulation()
 
     if (AShireAmbientNPC* NPC = SpawnAmbientActor(
         Origin,
-        Role,
-        ChooseBaselineProp(Role),
+        RoleName,
+        ChooseBaselineProp(RoleName),
         TravelOffset,
         Speed,
         MinWait,
