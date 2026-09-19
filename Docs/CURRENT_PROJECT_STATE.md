@@ -1,5 +1,18 @@
 ## POST-VERIFICATION RESUME — CP55 OPENED
 
+### CP55 activity/movement implementation
+
+CP55 now adds a bounded visible world-life layer on top of the existing LivingWorldDirector:
+- project-owned low-poly bird, rabbit and butterfly production meshes,
+- distinct flight / hop-rest / flutter motion,
+- chapter-aware fauna selection through disposable micro-events,
+- no quest/save ownership and no persistent fauna transforms,
+- Moria remains dead-city/fauna-empty by design,
+- PG-055 guards the new plan/assets/runtime wiring.
+
+Proof boundary: implemented in source/data/assets, but CP55 itself still requires its new Pre-Unreal and real UE4.27.2 compile/import/runtime regression pass before it is called validated.
+
+
 The post-CP54 current-head verification freeze is now closed by explicit project-owner confirmation.
 
 Verified merged baseline:
