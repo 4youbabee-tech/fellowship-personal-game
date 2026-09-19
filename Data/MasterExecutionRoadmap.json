@@ -112,7 +112,10 @@
         "contextual side-activity type to progression bridge",
         "reusable ordered traversal challenge runtime",
         "Shire Field Race physical challenge",
-        "Moria Echo Path physical challenge"
+        "Moria Echo Path physical challenge",
+        "19 contextual side activities with fail-closed film-window runtime gating",
+        "multi-step observation/tracking/pattern/camp/timing/social activity families",
+        "direct crouch-gated STEALTH_LITE activity feeding QUIET_STEP"
       ],
       "exit_evidence": [
         "STATIC_CANON_COVERAGE",
@@ -120,7 +123,7 @@
         "SAVE_ROUTE_CONTINUITY",
         "PIE_PACING_REVIEW"
       ],
-      "current_runtime_wave": "CHRONICLE_MAP_SIDE_ACTIVITY_TRAVERSAL_V1"
+      "current_runtime_wave": "SIDE_ACTIVITY_PHYSICALIZATION_AND_STEALTH_V3"
     },
     {
       "id": "B2_CHARACTERS_AND_WORLD_PRODUCTION",

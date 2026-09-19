@@ -11,6 +11,7 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 - Merge rule: never merge a red or untested exact head into `develop`.
 - Product rule: film scenario first; game systems expand around verified film anchors.
 - Performance rule: Windows / DX11 / 720p Low-Medium / 30 FPS floor.
+- Current B1 runtime wave: **SIDE_ACTIVITY_PHYSICALIZATION_AND_STEALTH_V3** — 19 film-windowed activities, reusable multi-step challenge families, and the first direct QUIET_STEP stealth source.
 
 ## Execution order
 

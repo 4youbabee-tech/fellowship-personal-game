@@ -1429,7 +1429,8 @@
         "Journey Discovery moved from static design into runtime triggers, persistence, HUD feedback and headless state auditing across all Part I regions.",
         "B1 now includes actual player-life/progression runtime instead of plan-only modern-game axes.",
         "B1 now includes Chronicle/map knowledge UI, save continuity and contextual side-activity progression bridging.",
-        "B1 now includes reusable traversal-challenge gameplay, not only proximity discovery triggers."
+        "B1 now includes reusable traversal-challenge gameplay, not only proximity discovery triggers.",
+        "B1 side-play physicalization now covers 19 contextual activities with centralized film-window guards and a direct stealth source."
       ],
       "missing_work": [
         "Get final PR #53 head through full UE4.27 validation.",
@@ -1513,18 +1514,19 @@
         "Source/ShireJourney/ShirePlayerCharacter.cpp"
       ],
       "implementation_refs": [
-        "Static reward contract covers 26 existing optional discoveries.",
+        "Static reward contract now covers 27 optional discoveries, including the first direct stealth-linked discovery.",
         "Four thematic reward categories: Road Wisdom, Peoples and Places, Fellowship Bonds, Peril Sense.",
         "Journey Insight milestone rewards favor content/navigation quality-of-life rather than combat stat inflation.",
         "Region completion bonuses exist for all active Part I exploration chapters/routes.",
         "Contextual side activities feed the existing first-time Journey Discovery reward loop instead of creating a separate XP economy.",
         "JourneyDiscoveryRewardPlan is now loaded by UShireQuestSubsystem at runtime.",
-        "All 26 declared Part I discoveries are wired to chapter/world triggers with explicit opening/closing story-beat windows.",
+        "All 27 declared Part I discoveries are wired to chapter/world triggers or physical activity actors with explicit film-safe route/chapter/story windows.",
         "First-time-only Journey Insight, region completion bonuses and milestone state are deterministic and save/load persisted.",
         "AShireHUD now has a separate subtle discovery toast instead of reusing the red alert channel.",
         "Headless state audit requires discovery-core=PASS and proves repeat visits do not farm Insight.",
         "First-time Journey Discovery now feeds bounded utility/content progression tracks.",
-        "Discovery registration now also unlocks persistent Chronicle/map knowledge on first registration."
+        "Discovery registration now also unlocks persistent Chronicle/map knowledge on first registration.",
+        "SHIRE_QUIET_FEET adds a first-time Journey Discovery reward without changing the Shire region-completion threshold, preserving existing save/milestone behavior."
       ],
       "missing_work": [
         "Exact-head UE4.27 compile/import/startup/state proof for the new runtime discovery layer.",
@@ -1567,16 +1569,16 @@
         "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp"
       ],
       "implementation_refs": [
-        "18 contextual side activities now cover FrodoMain P1C01-P1C08 plus GandalfParallel P1C01.",
+        "19 contextual side activities now cover FrodoMain P1C01-P1C08 plus GandalfParallel P1C01.",
         "Every activity declares exact opening/closing story anchors, participants, film-context rationale, mechanics, reward link and urgency policy.",
         "Activities are explicitly barred from advancing required anchors, changing canon outcomes or revealing future knowledge.",
         "Contextual side-activity types now bridge into bounded progression XP when their linked first-time discovery completes; CAMP_PREPARATION feeds CAMPCRAFT and future STEALTH_LITE feeds QUIET_STEP.",
-        "Shire Field Race and Moria Follow the Echo now require ordered three-gate traversal completion before their linked discovery/progression reward is granted."
+        "Shire Field Race and Moria Follow the Echo now require ordered three-gate traversal completion before their linked discovery/progression reward is granted.",
+        "All current contextual side activities now have physical multi-step runtime representation through reusable ordered challenge actors, with centralized film-window gating.",
+        "SIDE_SHIRE_QUIET_FEET is the first direct STEALTH_LITE activity and awards QUIET_STEP progression only on first completion."
       ],
       "missing_work": [
-        "Implement remaining side-activity mechanics beyond discovery/ordered traversal triggers.",
-        "Add at least one direct STEALTH_LITE activity so QUIET_STEP has an authored runtime source.",
-        "Add pattern/observation/camp interactions with actual multi-step mechanics where worthwhile.",
+        "Deepen generic ordered-gate representations into richer observation/tracking/pattern/camp/social interactions where PIE proves the extra complexity improves play.",
         "PIE/device placement, pacing and readability review."
       ],
       "acceptance_criteria": [
@@ -1729,10 +1731,11 @@
         "Headless state audit now requires progression-core=PASS.",
         "Chronicle/map knowledge is now runtime: first-time discoveries persist a Chronicle entry and known route/chapter region.",
         "C toggles an in-game Chronicle & Journey panel showing progression ranks, recent Chronicle entries and known map regions.",
-        "First ordered traversal challenge mechanic is now implemented as a reusable three-gate runtime actor, replacing touch-to-discover for selected activities."
+        "First ordered traversal challenge mechanic is now implemented as a reusable three-gate runtime actor, replacing touch-to-discover for selected activities.",
+        "Reusable side-activity challenge runtime now covers observation, tracking, pattern, camp, timing, social-memory and stealth-lite families across Part I.",
+        "Quiet Feet Through the Hedges gives QUIET_STEP a direct crouch-gated authored runtime source."
       ],
       "missing_work": [
-        "Add authored STEALTH_LITE activities so QUIET_STEP gains a direct runtime activity source.",
         "Implement first environmental-puzzle/traversal challenge mechanics beyond discovery triggers.",
         "Expand world-event interaction from ambient observation into bounded optional player responses.",
         "Tune player-life/progression/Chronicle presentation from PIE/device evidence.",
