@@ -33,6 +33,10 @@ jobs:
           @echo off
           setlocal EnableExtensions EnableDelayedExpansion
 
+          rem Protect the listener that owns the newest active Runner.Worker and stop
+          rem any extra listener before it can clear _work\_temp for this live job.
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$ErrorActionPreference='SilentlyContinue'; $w=Get-CimInstance Win32_Process -Filter \"Name='Runner.Worker.exe'\" | Sort-Object CreationDate -Descending | Select-Object -First 1; if($w){$keep=[int]$w.ParentProcessId; Get-CimInstance Win32_Process -Filter \"Name='Runner.Listener.exe'\" | Where-Object { $_.ProcessId -ne $keep } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }}; exit 0" >nul 2>nul
+
           rem A legacy interactive watchdog can mistake an active Runner.Worker-only
           rem phase for an offline runner, start a second listener, and let that second
           rem listener clear _work\_temp underneath the live job. Stop only that
