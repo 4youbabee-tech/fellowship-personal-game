@@ -122,6 +122,12 @@ public:
     FString GetProfileContextSummary(FName ProfileHint) const;
 
     UFUNCTION(BlueprintPure, Category="NPCContext")
+    FName GetRegionalWorldMood() const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    float GetRegionalPressure() const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
     FName ResolveSchedulePhase(FName ProfileHint, float NormalizedDay, bool bDangerOverride, bool bStoryOverride) const;
 
     UFUNCTION(BlueprintPure, Category="NPCContext")
@@ -176,6 +182,8 @@ private:
     TMap<FName, TArray<FScheduleEntry>> ProfileSchedules;
     TMap<FName, TArray<FName>> IntentRequiredKnowledge;
     TMap<FName, TArray<FDialogueVariantRuntime>> DialogueVariants;
+    TMap<FName, FName> ChapterMoodById;
+    TMap<FName, float> ChapterPressureById;
 
     bool bDataReady = false;
     int32 MaxWordsAmbient = 24;
@@ -191,6 +199,7 @@ private:
     bool LoadSocialModel();
     bool LoadConversationPlan();
     bool LoadBoundedDialoguePlan();
+    bool LoadRegionalMoodPlan();
     void BuildDialogueVariantLibrary();
     void AddDialogueVariant(
         FName SpeakerProfileId,
