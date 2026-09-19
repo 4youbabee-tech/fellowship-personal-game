@@ -628,6 +628,69 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnProd(CommonWoodPileMesh, FVector(-1660,320,0), FVector(0.68f), FRotator(0,-18,0), false);
         SpawnProd(CommonPathMarkerMesh, FVector(820,240,0), FVector(0.70f), FRotator(0,14,0), false);
     }
+
+    // CP53 imported common-prop flood. Assets are project-owned low-poly source meshes
+    // and are used regionally so each chapter gains visible human/elf/camp history.
+    UStaticMesh* CommonBarrel53 = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBarrel.SM_CommonBarrel"));
+    UStaticMesh* CommonCargoCrate53 = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonCargoCrate.SM_CommonCargoCrate"));
+    UStaticMesh* CommonSackBale53 = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonSackBale.SM_CommonSackBale"));
+    UStaticMesh* CommonLongBench53 = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
+    UStaticMesh* CommonCampTent53 = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonCampTent.SM_CommonCampTent"));
+    UStaticMesh* CommonStoneArch53 = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonStoneArch.SM_CommonStoneArch"));
+    UStaticMesh* CommonBrokenColumn53 = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBrokenColumn.SM_CommonBrokenColumn"));
+    UStaticMesh* CommonBrazier53 = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBrazier.SM_CommonBrazier"));
+    UStaticMesh* CommonRiverBoat53 = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonRiverBoat.SM_CommonRiverBoat"));
+    UStaticMesh* CommonCairn53 = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonCairn.SM_CommonCairn"));
+    UStaticMesh* CommonTreeStump53 = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonTreeStump.SM_CommonTreeStump"));
+    UStaticMesh* CommonMushrooms53 = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonMushroomCluster.SM_CommonMushroomCluster"));
+
+    if (ChapterId == TEXT("P1C03"))
+    {
+        SpawnProd(CommonCampTent53, FVector(980,-420,405), FVector(0.62f), FRotator(0,14,0), false);
+        SpawnProd(CommonCairn53, FVector(1450,420,410), FVector(0.72f), FRotator::ZeroRotator, false);
+        SpawnScatter(CommonCargoCrate53, FVector(1080,-180,395), 5, FVector(420,260,0), FVector(0.54f), 39.0f, 0.0f);
+        SpawnScatter(CommonSackBale53, FVector(1200,-120,395), 4, FVector(360,240,0), FVector(0.52f), 47.0f, 0.0f);
+    }
+    else if (ChapterId == TEXT("P1C04"))
+    {
+        const FVector GardenSeats53[] = { FVector(-1180,-520,0), FVector(-520,520,0), FVector(420,-520,0), FVector(1180,520,0) };
+        for (const FVector& P : GardenSeats53) SpawnProd(CommonLongBench53, P, FVector(0.66f), FRotator(0,90,0), false);
+        SpawnProd(CommonStoneArch53, FVector(-1450,0,0), FVector(0.72f), FRotator(0,0,0), true);
+        SpawnProd(CommonStoneArch53, FVector(300,0,0), FVector(0.72f), FRotator(0,0,0), true);
+        SpawnScatter(CommonMushrooms53, FVector(0,0,0), 10, FVector(2100,1050,0), FVector(0.60f), 31.0f, 3.0f);
+    }
+    else if (ChapterId == TEXT("P1C05"))
+    {
+        const FVector Camp53[] = { FVector(-1100,-420,0), FVector(-760,-460,0), FVector(-420,-430,0) };
+        for (int32 I = 0; I < UE_ARRAY_COUNT(Camp53); ++I)
+        {
+            SpawnProd(CommonCampTent53, Camp53[I], FVector(0.62f), FRotator(0,I*12.0f-10.0f,0), false);
+            SpawnProd(CommonCargoCrate53, Camp53[I] + FVector(130,70,0), FVector(0.52f), FRotator(0,I*21.0f,0), false);
+        }
+        SpawnScatter(CommonCairn53, FVector(850,0,0), 8, FVector(1900,1150,0), FVector(0.64f), 43.0f, 5.0f);
+    }
+    else if (ChapterId == TEXT("P1C06"))
+    {
+        SpawnScatter(CommonBrokenColumn53, FVector(-200,0,0), 16, FVector(2250,950,0), FVector(0.68f), 37.0f, 4.0f);
+        SpawnScatter(CommonBrazier53, FVector(0,0,0), 8, FVector(1900,720,0), FVector(0.72f), 59.0f, 2.0f);
+        SpawnProd(CommonStoneArch53, FVector(600,-680,0), FVector(1.10f), FRotator(0,90,0), true);
+        SpawnProd(CommonStoneArch53, FVector(600,680,0), FVector(1.10f), FRotator(0,90,0), true);
+    }
+    else if (ChapterId == TEXT("P1C07"))
+    {
+        const FVector LorienSeats53[] = { FVector(-1050,260,0), FVector(-250,-280,0), FVector(550,260,0), FVector(1250,-260,0) };
+        for (const FVector& P : LorienSeats53) SpawnProd(CommonLongBench53, P, FVector(0.62f), FRotator(0,12,0), false);
+        SpawnScatter(CommonMushrooms53, FVector(0,0,0), 18, FVector(2400,1250,0), FVector(0.64f), 23.0f, 3.0f);
+        SpawnScatter(CommonTreeStump53, FVector(100,0,0), 10, FVector(2200,1180,0), FVector(0.72f), 41.0f, 4.0f);
+    }
+    else if (ChapterId == TEXT("P1C08"))
+    {
+        SpawnProd(CommonRiverBoat53, FVector(-2100,350,-5), FVector(0.66f), FRotator(0,4,0), false);
+        SpawnProd(CommonRiverBoat53, FVector(-1600,-380,-5), FVector(0.66f), FRotator(0,-5,0), false);
+        SpawnScatter(CommonCargoCrate53, FVector(-1450,320,0), 5, FVector(650,380,0), FVector(0.54f), 33.0f, 2.0f);
+        SpawnScatter(CommonBarrel53, FVector(-1350,-280,0), 5, FVector(620,360,0), FVector(0.56f), 51.0f, 2.0f);
+        SpawnScatter(CommonCairn53, FVector(1400,0,0), 7, FVector(900,700,0), FVector(0.62f), 47.0f, 4.0f);
+    }
 }
 
 void AFellowshipChapterWorldBuilder::BuildChapter(FName ChapterId)
