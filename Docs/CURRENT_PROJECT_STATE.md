@@ -1,3 +1,11 @@
+## ENSEMBLE FILM-MISSION RULE — 2026-09-20
+
+The owner clarified that the film itself already supplies many mission opportunities outside Frodo. Frodo remains the Ring-quest center but is no longer treated as the default controller for every event. `Data/EnsembleFilmMissionPlan.json` now prioritizes playable film actions for Gandalf, Arwen, Aragorn, Boromir, Legolas, Gimli, Merry/Pippin and later-film characters, then allows only small source-safe gap-fill around those verified scenes.
+
+Part I now explicitly identifies Gandalf Ring investigation/Isengard, Arwen at the Ford, Boromir training and Amon Hen defense, Legolas scouting, Gimli/Moria cultural gameplay and Aragorn scouting/leadership as viewpoint opportunities. Part II maps the Three Hunters, Merry/Pippin/Fangorn, Gandalf/Rohan and source-checked Faramir/Eowyn focused episodes. Part III remains FUTURE_SOURCE_CHECK at mission-detail level until exact film/script verification is available.
+
+PG-076 protects viewpoint/source/canon rules. This is a production/design contract; runtime mission handoffs and character-specific mechanics remain pending implementation and UE4.27 proof.
+
 ## MODERN GAME LAYER LOCKED — 2026-09-20
 
 The owner explicitly requested a broad modern-game research pass and adoption of fitting game systems throughout the film-based experience. `Data/ModernGameLayerPlan.json` now locks the rule: mandatory Peter Jackson film anchors stay fixed, while optional play may expand only inside story-safe gaps.

@@ -809,6 +809,43 @@ else:
         if marker not in forbidden_rewards:
             fail(f"PG-075: reward safety contract missing {marker}")
 
+
+# PG-076: ensemble film missions must use verified film viewpoints and bounded gap-fill.
+ensemble_path = ROOT / "Data" / "EnsembleFilmMissionPlan.json"
+if not ensemble_path.exists():
+    fail("PG-076: EnsembleFilmMissionPlan.json missing")
+else:
+    ensemble = json.loads(read(ensemble_path))
+    rules = " ".join(ensemble.get("non_negotiable_rules", [])).lower()
+    for marker in ["viewpoint", "film", "required film scene", "original gap-fill"]:
+        if marker not in rules:
+            fail(f"PG-076: ensemble mission safety contract missing {marker}")
+
+    part1_ids = {str(x.get("id") or "") for x in ensemble.get("part1", [])}
+    for required_id in {
+        "P1_GANDALF_RING_INVESTIGATION",
+        "P1_GANDALF_ISENGARD",
+        "P1_ARWEN_FORD",
+        "P1_GIMLI_MORIA",
+        "P1_BOROMIR_AMON_HEN_DEFENSE",
+    }:
+        if required_id not in part1_ids:
+            fail(f"PG-076: missing Part I ensemble mission {required_id}")
+
+    for section in ["part1", "part2", "part3"]:
+        for mission in ensemble.get(section, []):
+            if not mission.get("source_basis") or not mission.get("canon_lock"):
+                fail(f"PG-076: {mission.get('id')} missing source basis or canon lock")
+
+    for mission in ensemble.get("part3", []):
+        if mission.get("tag") != "FUTURE_SOURCE_CHECK":
+            fail(f"PG-076: Part III mission {mission.get('id')} must remain FUTURE_SOURCE_CHECK until exact source verification")
+
+    forbidden = " ".join(ensemble.get("expansion_budget", {}).get("forbidden", [])).lower()
+    for marker in ["ring bearer", "war outcome", "canonical death", "required film scene"]:
+        if marker not in forbidden:
+            fail(f"PG-076: ensemble expansion guard missing {marker}")
+
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
 living_world_data = {}

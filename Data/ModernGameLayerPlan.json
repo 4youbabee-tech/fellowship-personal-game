@@ -471,5 +471,14 @@
     "Add Chronicle/menu presentation and map-knowledge reveal.",
     "Add environmental puzzles/traversal and dynamic world events.",
     "Validate each chapter for pacing so optional content never damages film urgency."
-  ]
+  ],
+  "ensemble_viewpoint_rule": {
+    "rule": "Frodo is the central Ring-bearer, not the mandatory controller for every scene. When the film gives another character the meaningful action, that character may become the playable viewpoint.",
+    "authority": "Data/EnsembleFilmMissionPlan.json",
+    "design_priority": [
+      "convert film action into gameplay",
+      "add character-specialty interaction in the same verified window",
+      "only then add small original gap-fill if the chapter still needs game depth"
+    ]
+  }
 }

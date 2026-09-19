@@ -1,0 +1,360 @@
+{
+  "schema_version": 1,
+  "plan_id": "ENSEMBLE_FILM_MISSION_PLAN_V1",
+  "status": "ACCEPTED_DESIGN_CONTRACT_PART1_PART2_SOURCE_READY_PART3_SOURCE_VERIFICATION_REQUIRED",
+  "purpose": "Exploit the film trilogy's ensemble structure so gameplay is not forced through Frodo when another character is the natural viewpoint. Direct film scenes become playable missions where useful; original expansion only fills safe gaps around those scenes.",
+  "non_negotiable_rules": [
+    "Choose the playable viewpoint from the film event, not from a rule that Frodo must always be controlled.",
+    "FILM_CORE scene order, participants and outcome are checked against available film/script sources before implementation.",
+    "A character may not be pulled into an optional mission if that would make them absent from their next required film scene.",
+    "When the film already gives a character a meaningful action, prefer turning that action into gameplay before inventing filler.",
+    "Original gap-fill may add preparation, scouting, travel, conversation, training, investigation, craft, survival or local help, but never a new major plot result.",
+    "Parallel missions may run while Frodo is off-screen, resting, separated, imprisoned, injured or simply not present in the film event.",
+    "Every optional expansion yields immediately when the next mandatory film beat begins."
+  ],
+  "content_tags": {
+    "FILM_CORE_PLAYABLE": "A required film event converted into direct player control without changing its result.",
+    "FILM_EXTENDED_PLAYABLE": "An Extended Edition film event/detail made playable when it does not conflict with the theatrical core.",
+    "FILM_INTERSTITIAL": "A plausible off-camera activity inside a verified gap between two film anchors.",
+    "CHARACTER_SPECIALTY": "Optional gameplay that expresses a character's established skill while they are already present in that story window.",
+    "FUTURE_SOURCE_CHECK": "Route opportunity is known at high level, but exact mission timing/details are not authored until the film/script source is verified."
+  },
+  "viewpoint_policy": {
+    "priority": [
+      "character who performs the film action",
+      "character whose specialty best expresses the event",
+      "Frodo only when the Ring-bearer viewpoint is actually the scene's dramatic center"
+    ],
+    "handoff_style": "Short handoffs can be automatic at chapter/scene boundaries; longer parallel routes keep their own saved route state and rejoin at a verified convergence point.",
+    "no_novelty_switching": true
+  },
+  "part1": [
+    {
+      "id": "P1_GANDALF_RING_INVESTIGATION",
+      "character": "Gandalf",
+      "tag": "FILM_CORE_PLAYABLE",
+      "source_basis": "Story Canon Bible explicitly calls for Gandalf departure, Ring investigation/research bridge, Isengard, betrayal, imprisonment and escape.",
+      "gameplay": [
+        "travel/investigation",
+        "archive or document clue interaction",
+        "lore reasoning",
+        "return-route urgency"
+      ],
+      "expansion": [
+        "small source-safe research interactions around the required discovery"
+      ],
+      "canon_lock": "Gandalf reaches the same Ring conclusion and returns to the established chronology."
+    },
+    {
+      "id": "P1_GANDALF_ISENGARD",
+      "character": "Gandalf",
+      "tag": "FILM_CORE_PLAYABLE",
+      "source_basis": "Existing GandalfParallel P1G01 covers Isengard arrival, Saruman betrayal, Orthanc imprisonment, industry and escape.",
+      "gameplay": [
+        "social tension",
+        "observation",
+        "bounded magic",
+        "captivity navigation",
+        "escape"
+      ],
+      "expansion": [
+        "observe Orthanc/industrial changes and old-counsel memories without changing betrayal or escape"
+      ],
+      "canon_lock": "Betrayal, imprisonment and escape outcomes remain fixed."
+    },
+    {
+      "id": "P1_ARWEN_FORD",
+      "character": "Arwen",
+      "tag": "FILM_CORE_PLAYABLE",
+      "source_basis": "Story Canon Bible explicitly identifies Arwen: Flight to the Ford because the film gives her this role.",
+      "gameplay": [
+        "mounted traversal",
+        "pursuit pressure",
+        "route control",
+        "protect-the-wounded-rider objective"
+      ],
+      "expansion": [
+        "short horse handling/route-reading beats only inside the verified chase window"
+      ],
+      "canon_lock": "Ford outcome remains the film outcome."
+    },
+    {
+      "id": "P1_BOROMIR_HOBBIT_TRAINING",
+      "character": "Boromir",
+      "tag": "CHARACTER_SPECIALTY",
+      "source_basis": "Fellowship travel/camp film material supports Boromir interacting with and training the hobbits; exact beat timing must be source-checked before runtime placement.",
+      "gameplay": [
+        "non-lethal sword-footwork training",
+        "timing/block practice",
+        "companion banter"
+      ],
+      "expansion": [
+        "performance changes banter or Fellowship Bond only"
+      ],
+      "canon_lock": "No combat stat grind and no change to later Boromir events."
+    },
+    {
+      "id": "P1_LEGOLAS_SCOUTING",
+      "character": "Legolas",
+      "tag": "CHARACTER_SPECIALTY",
+      "source_basis": "Film route includes Crebain/Fellowship travel and Legolas's established long-range perception role.",
+      "gameplay": [
+        "long-distance spotting",
+        "threat identification",
+        "quick cover guidance"
+      ],
+      "expansion": [
+        "optional observation points and route warnings around the verified travel beat"
+      ],
+      "canon_lock": "Threat timing and required Fellowship reaction remain fixed."
+    },
+    {
+      "id": "P1_GIMLI_MORIA",
+      "character": "Gimli",
+      "tag": "CHARACTER_SPECIALTY",
+      "source_basis": "Moria is directly tied to Gimli's people and the film's Balin/Moria sequence; exact reveal order remains protected.",
+      "gameplay": [
+        "Dwarven marker reading",
+        "stone/relief interpretation",
+        "route memory",
+        "heavy combat when the film reaches combat"
+      ],
+      "expansion": [
+        "side chambers, craft marks, damaged mechanisms and short cultural memories before the next required reveal"
+      ],
+      "canon_lock": "No optional discovery can reveal Balin's fate early or change Moria's required events."
+    },
+    {
+      "id": "P1_BOROMIR_AMON_HEN_DEFENSE",
+      "character": "Boromir",
+      "tag": "FILM_CORE_PLAYABLE",
+      "source_basis": "Story Canon Bible explicitly lists a short Boromir Amon Hen defense perspective as a valid route opportunity.",
+      "gameplay": [
+        "defend Merry/Pippin",
+        "heavy melee",
+        "positioning under pressure"
+      ],
+      "expansion": [
+        "very small combat-space choices only"
+      ],
+      "canon_lock": "Boromir's film outcome is immutable."
+    },
+    {
+      "id": "P1_ARAGORN_SCOUT_LEAD",
+      "character": "Aragorn",
+      "tag": "FILM_INTERSTITIAL",
+      "source_basis": "Story Canon Bible allows Aragorn scouting/leadership beats where Frodo is resting or separated.",
+      "gameplay": [
+        "tracking",
+        "scouting",
+        "route finding",
+        "companion command"
+      ],
+      "expansion": [
+        "short route-clearance or track-reading missions between fixed anchors"
+      ],
+      "canon_lock": "Cannot move Aragorn away from any required film scene or alter Fellowship chronology."
+    }
+  ],
+  "part2": [
+    {
+      "id": "P2_THREE_HUNTERS",
+      "characters": [
+        "Aragorn",
+        "Legolas",
+        "Gimli"
+      ],
+      "tag": "FILM_CORE_PLAYABLE",
+      "source_basis": "Story Canon Bible defines pursuit of the Uruk-hai, Riders of Rohan, Fangorn edge, Gandalf's return, Edoras, Rohan evacuation, Helm's Deep and Isengard aftermath as a major playable thread.",
+      "gameplay_by_character": {
+        "Aragorn": [
+          "tracking",
+          "leadership",
+          "sword combat",
+          "route decisions"
+        ],
+        "Legolas": [
+          "ranged combat",
+          "scouting",
+          "distant threat spotting",
+          "mobility"
+        ],
+        "Gimli": [
+          "heavy melee",
+          "breach/defense",
+          "Dwarven interaction",
+          "close-range endurance"
+        ]
+      },
+      "expansion": [
+        "brief tracking deviations",
+        "battle preparation",
+        "camp/watch moments",
+        "character-specific discoveries"
+      ],
+      "canon_lock": "Pursuit, Rohan and Helm's Deep outcomes remain film-locked."
+    },
+    {
+      "id": "P2_MERRY_PIPPIN_FANGORN",
+      "characters": [
+        "Merry",
+        "Pippin"
+      ],
+      "tag": "FILM_CORE_PLAYABLE",
+      "source_basis": "Story Canon Bible defines captivity, escape into Fangorn, Treebeard, Entmoot, march on Isengard and flooding/destruction of Isengard as a major thread.",
+      "gameplay": [
+        "escape/stealth",
+        "forest navigation",
+        "social persuasion",
+        "environment interaction"
+      ],
+      "expansion": [
+        "Ent-world exploration and small character tasks only between verified anchors"
+      ],
+      "canon_lock": "Entmoot/Isengard outcomes remain the film outcomes."
+    },
+    {
+      "id": "P2_GANDALF_ROHAN",
+      "character": "Gandalf",
+      "tag": "FILM_CORE_PLAYABLE",
+      "source_basis": "Story Canon Bible places Gandalf's return, Edoras, Rohan/Helm's Deep support and Isengard aftermath in the Aragorn/Rohan thread.",
+      "gameplay": [
+        "leadership",
+        "limited high-impact magic",
+        "urgent travel",
+        "support objectives"
+      ],
+      "expansion": [
+        "small preparation/scouting/support tasks only where source timing permits"
+      ],
+      "canon_lock": "No invented spell path or alternate Rohan outcome."
+    },
+    {
+      "id": "P2_FARAMIR_RANGER",
+      "character": "Faramir",
+      "tag": "FUTURE_SOURCE_CHECK",
+      "source_basis": "Story Canon Bible lists focused Faramir ranger missions in Ithilien as a potential episode.",
+      "gameplay": [
+        "ranger scouting",
+        "ambush planning",
+        "Ithilien patrol",
+        "moral/social interaction"
+      ],
+      "expansion": [
+        "only after exact film timing is verified from the supplied Two Towers source"
+      ],
+      "canon_lock": "Must rejoin film-continuity Faramir/Frodo/Sam outcomes."
+    },
+    {
+      "id": "P2_EOWYN_ROHAN",
+      "character": "Eowyn",
+      "tag": "FUTURE_SOURCE_CHECK",
+      "source_basis": "Story Canon Bible lists Eowyn in Rohan as a potential focused character episode.",
+      "gameplay": [
+        "civilian leadership",
+        "evacuation support",
+        "horse/travel preparation",
+        "social resolve"
+      ],
+      "expansion": [
+        "Rohan life and evacuation tasks that do not rewrite her film arc"
+      ],
+      "canon_lock": "Exact episode windows require source verification."
+    }
+  ],
+  "part3": [
+    {
+      "id": "P3_GANDALF_PIPPIN_MINAS_TIRITH",
+      "characters": [
+        "Gandalf",
+        "Pippin"
+      ],
+      "tag": "FUTURE_SOURCE_CHECK",
+      "source_basis": "Story Canon Bible defines Minas Tirith, Denethor, siege preparation and siege as a major playable thread.",
+      "gameplay": [
+        "city preparation",
+        "messages",
+        "leadership",
+        "siege survival",
+        "limited magic"
+      ],
+      "canon_lock": "Exact scene-level implementation waits for Part III film/script verification."
+    },
+    {
+      "id": "P3_ARAGORN_LEGOLAS_GIMLI",
+      "characters": [
+        "Aragorn",
+        "Legolas",
+        "Gimli"
+      ],
+      "tag": "FUTURE_SOURCE_CHECK",
+      "source_basis": "Story Canon Bible defines Dunharrow, Paths of the Dead, southern route/Corsair consequence, Pelennor arrival and Black Gate march.",
+      "gameplay": [
+        "fear/resolve traversal",
+        "combat identities",
+        "leadership",
+        "scouting",
+        "heavy melee"
+      ],
+      "canon_lock": "Route outcome and convergence remain fixed; exact gaps must be source-verified."
+    },
+    {
+      "id": "P3_MERRY_EOWYN_THEODEN",
+      "characters": [
+        "Merry",
+        "Eowyn",
+        "Theoden"
+      ],
+      "tag": "FUTURE_SOURCE_CHECK",
+      "source_basis": "Story Canon Bible defines Rohan mustering, ride to Gondor, Pelennor and Witch-king confrontation.",
+      "gameplay": [
+        "mustering/support",
+        "mounted travel",
+        "battle survival",
+        "hero confrontation"
+      ],
+      "canon_lock": "Exact film participants/order/outcomes are verified before implementation."
+    },
+    {
+      "id": "P3_SAM_RESCUE_AND_MORDOR",
+      "characters": [
+        "Sam",
+        "Frodo"
+      ],
+      "tag": "FUTURE_SOURCE_CHECK",
+      "source_basis": "Story Canon Bible defines Shelob, Sam's rescue of Frodo, Mordor crossing and Mount Doom.",
+      "gameplay": [
+        "Sam support/rescue",
+        "stealth",
+        "resource problem solving",
+        "Ring-pressure survival"
+      ],
+      "canon_lock": "Ring route and Mount Doom outcome remain immutable."
+    }
+  ],
+  "expansion_budget": {
+    "preferred_ratio": "Use the film's own events first; add only enough gap-fill to make travel, characters and regions feel like a complete game.",
+    "allowed": [
+      "investigation",
+      "scouting",
+      "training",
+      "craft/culture",
+      "camp preparation",
+      "local help",
+      "route finding",
+      "short stealth",
+      "environmental puzzle",
+      "companion conversation",
+      "battle preparation"
+    ],
+    "forbidden": [
+      "new major villain",
+      "new Ring bearer",
+      "new war outcome",
+      "new romance that changes film relationships",
+      "preventing canonical death/injury",
+      "moving a character out of a required film scene"
+    ]
+  },
+  "production_rule": "Before implementing any mission entry, bind it to verified opening/closing film anchors and record viewpoint availability. FUTURE_SOURCE_CHECK entries are not implementation authority until verified."
+}

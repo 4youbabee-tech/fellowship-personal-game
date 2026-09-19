@@ -1728,6 +1728,45 @@
         "REQ-PERF-001"
       ],
       "checkpoint": "MODERN_GAME_LAYER"
+    },
+    {
+      "id": "REQ-ENSEMBLE-001",
+      "title": "Use the full film ensemble for playable missions and side content",
+      "category": "StoryGameplay",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "origin": "Owner explicitly said the film itself contains many mission opportunities and Frodo should not monopolize gameplay while occupied with the Ring; Gandalf, Gimli and other characters should be used and expanded slightly within film context.",
+      "intent": "Convert film actions and safe off-camera gaps into character-appropriate playable missions across the ensemble, choosing the viewpoint from the event itself while preserving every film anchor and outcome.",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Data/EnsembleFilmMissionPlan.json",
+        "Data/ModernGameLayerPlan.json"
+      ],
+      "implementation_refs": [
+        "Part I identifies Gandalf investigation/Isengard, Arwen Ford, Boromir training/defense, Legolas scouting, Gimli Moria and Aragorn scouting as distinct viewpoint opportunities.",
+        "Part II maps the Three Hunters, Merry/Pippin, Gandalf/Rohan and potential Faramir/Eowyn episodes.",
+        "Part III remains high-level FUTURE_SOURCE_CHECK until exact film/script scene verification."
+      ],
+      "missing_work": [
+        "Verify exact opening/closing film anchors for each planned viewpoint mission before runtime implementation.",
+        "Implement short-route handoff/save logic where a mission needs temporary character control.",
+        "Add character-specific mechanics/animation/UI for non-Frodo viewpoints.",
+        "Run UE4.27 chapter/route/save/pacing validation after each mission wave."
+      ],
+      "acceptance_criteria": [
+        "Playable viewpoint follows the film event rather than defaulting to Frodo.",
+        "No optional mission removes a character from a required next film scene.",
+        "Film actions are converted to gameplay before invented filler is added.",
+        "Original expansion remains small, plausible and bounded by verified film anchors.",
+        "Every alternate viewpoint rejoins the same canonical chronology and outcome."
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-GAME-001",
+        "REQ-SAVE-001",
+        "REQ-CHAR-004"
+      ],
+      "checkpoint": "ENSEMBLE_FILM_MISSIONS"
     }
   ],
   "hard_invariants": [
@@ -2224,6 +2263,23 @@
         "Data/ModernGameLayerPlan.json",
         "Data/FilmExperiencePlan.json"
       ]
+    },
+    {
+      "id": "DEC-025",
+      "title": "Do not make Frodo the default viewpoint when the film gives another character the action",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-ENSEMBLE-001",
+        "REQ-VISION-001",
+        "REQ-GAME-001"
+      ],
+      "resolution": "Use Gandalf, Aragorn, Arwen, Boromir, Legolas, Gimli, Merry, Pippin, Sam and later-film characters as playable viewpoints when the film naturally centers the relevant action on them. Frodo remains the Ring-quest center, not the only playable character. Small original missions may expand verified gaps but may not displace fixed film scenes or outcomes.",
+      "rationale": "Owner explicitly wants to exploit the trilogy's many non-Frodo mission opportunities and expand them slightly as game content.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/EnsembleFilmMissionPlan.json",
+        "Docs/STORY_CANON_BIBLE.md"
+      ]
     }
   ],
   "open_conflicts": [],
@@ -2715,16 +2771,23 @@
       "title": "Modern game systems and side-content rollout",
       "status": "ACTIVE",
       "rationale": "Roll modern exploration, character-life, progression, world events and chapter-specific side play across Part I without disturbing film anchors."
+    },
+    {
+      "order": 1,
+      "id": "WORK-ENSEMBLE-001",
+      "title": "Film-ensemble playable mission rollout",
+      "status": "ACTIVE",
+      "rationale": "Turn film-supported actions and safe gaps for Gandalf, Gimli, Aragorn, Arwen, Boromir, Legolas, Merry/Pippin and later characters into playable mission waves without changing chronology."
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Owner explicitly reasserted that adherence to the film scenario from beginning to end is the highest story constraint.",
+    "reason": "Owner clarified that the film itself contains many playable mission opportunities outside Frodo and asked to exploit the full ensemble, with only small film-compatible expansion.",
     "summary": [
-      "Film scene order, participating characters and mandatory outcomes are non-negotiable.",
-      "Available screenplay/film sources must be checked before implementing or correcting FILM_CORE beats.",
-      "Original side content is allowed only in story-safe gaps and must never replace or distort a film scene.",
-      "If a scene/source is uncertain, implementation pauses for source verification rather than guessing."
+      "Frodo remains the Ring-quest center but is not the default playable viewpoint for every event.",
+      "Film actions for Gandalf, Arwen, Aragorn, Boromir, Legolas, Gimli, Merry/Pippin and later characters are prioritized as gameplay before invented filler.",
+      "Original gap-fill remains small and may not pull a character away from the next required film scene.",
+      "Part III mission details stay FUTURE_SOURCE_CHECK until exact film/script verification."
     ]
   },
   "development_mode": {
