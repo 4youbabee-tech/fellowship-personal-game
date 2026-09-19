@@ -45,6 +45,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
 
     FAssetToolsModule& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>(TEXT("AssetTools"));
     int32 Failed = 0;
+    TArray<UPackage*> ImportedMaterialPackages;
 
     for (const FString& Filename : SourceFiles)
     {
@@ -136,6 +137,10 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 if (Package && Package != GetTransientPackage())
                 {
                     Package->MarkPackageDirty();
+                    if (Package->GetName().StartsWith(TEXT("/Game/Production/")))
+                    {
+                        ImportedMaterialPackages.AddUnique(Package);
+                    }
                     ++MarkedMaterialPackages;
                 }
             }
@@ -175,8 +180,34 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     }
 
     // OBJ import may create secondary material packages that UE4.27 does not
-    // consistently include in UAssetImportTask::ImportedObjectPaths. Save every dirty
-    // content package once after the batch so meshes never point at transient materials.
+    // consistently include in UAssetImportTask::ImportedObjectPaths. Save those exact
+    // packages explicitly before the broader dirty-package pass; on unattended UE4.27
+    // the generic dirty save can report success while secondary OBJ materials remain
+    // memory-only, leaving the saved meshes with broken /Game/Production references.
+    if (ImportedMaterialPackages.Num() > 0)
+    {
+        for (UPackage* Package : ImportedMaterialPackages)
+        {
+            if (Package)
+            {
+                Package->MarkPackageDirty();
+            }
+        }
+
+        (void)FEditorFileUtils::PromptForCheckoutAndSave(
+            ImportedMaterialPackages,
+            false, // bCheckDirty
+            false  // bPromptToSave
+        );
+
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireProductionImport explicit material package save: %d packages"),
+            ImportedMaterialPackages.Num());
+    }
+
+    // Keep the broad pass for imported meshes/textures and any other secondary assets.
     const bool bSavedDirtyPackages = FEditorFileUtils::SaveDirtyPackages(
         false,  // bPromptUserToSave
         false,  // bSaveMapPackages
