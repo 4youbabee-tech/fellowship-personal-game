@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "plan_id": "CP54_MEGA_RESOURCE_BANK",
+  "status": "SOURCE_BANK_COMMITTED",
+  "source_asset_count": 75,
+  "texture_count": 17,
+  "ownership": "PROJECT_OWNED_GENERATED_SOURCE",
+  "assets_by_region": {
+    "Common": [
+      "SM_CommonBucket",
+      "SM_CommonWaterTrough",
+      "SM_CommonWheelbarrow",
+      "SM_CommonHandcart",
+      "SM_CommonMarketTable",
+      "SM_CommonStool",
+      "SM_CommonStorageChest",
+      "SM_CommonRopeCoil",
+      "SM_CommonCampfireRing",
+      "SM_CommonCookingStand",
+      "SM_CommonBedroll",
+      "SM_CommonToolRack",
+      "SM_CommonSignBoard",
+      "SM_CommonLanternPost",
+      "SM_CommonDockSegment",
+      "SM_CommonFishingRack",
+      "SM_CommonBeehive",
+      "SM_CommonChickenCoop",
+      "SM_CommonScarecrow",
+      "SM_CommonWagon",
+      "SM_CommonFenceGate",
+      "SM_CommonStonePile",
+      "SM_CommonFlowerPlanter",
+      "SM_CommonWashBasin"
+    ],
+    "Shire": [
+      "SM_ShFarmPlough",
+      "SM_ShGardenArch",
+      "SM_ShMailbox",
+      "SM_ShWashLine",
+      "SM_ShProduceStand",
+      "SM_ShPumpWell",
+      "SM_ShOrchardLadder",
+      "SM_ShPicnicCanopy"
+    ],
+    "Bree": [
+      "SM_BreeStreetAwning",
+      "SM_BreeTavernBench",
+      "SM_BreeAleCaskRack",
+      "SM_BreeStableRail",
+      "SM_BreeMarketBoard",
+      "SM_BreeAlleyArch",
+      "SM_BreeTradeWagon",
+      "SM_BreeInnSign"
+    ],
+    "Weathertop": [
+      "SM_WeathertopRuinWall",
+      "SM_WeathertopCampFire",
+      "SM_WeathertopWindBanner",
+      "SM_WeathertopRubblePile",
+      "SM_WeathertopWatchStone"
+    ],
+    "Road": [
+      "SM_RoadTravelTent",
+      "SM_RoadPackRack",
+      "SM_RoadShrine",
+      "SM_RoadSnowMarker",
+      "SM_RoadSupplySled",
+      "SM_RoadTravelerCart"
+    ],
+    "Rivendell": [
+      "SM_RivColumn",
+      "SM_RivPlanter",
+      "SM_RivBridgeRail",
+      "SM_RivGardenBench",
+      "SM_RivLampArch",
+      "SM_RivWaterBasin"
+    ],
+    "Moria": [
+      "SM_MoriaMineCart",
+      "SM_MoriaChainAnchor",
+      "SM_MoriaRubblePillar",
+      "SM_MoriaTallBrazier",
+      "SM_MoriaBrokenStair",
+      "SM_MoriaGateSegment"
+    ],
+    "Lothlorien": [
+      "SM_LorienTalanLadder",
+      "SM_LorienTreePlatform",
+      "SM_LorienLeafLantern",
+      "SM_LorienBasketRack",
+      "SM_LorienGoldenBench",
+      "SM_LorienRootBridge"
+    ],
+    "Anduin": [
+      "SM_AnduinDockPier",
+      "SM_AnduinCargoPile",
+      "SM_AnduinCampRack",
+      "SM_AnduinFishingFrame",
+      "SM_AnduinRiverMarker",
+      "SM_AnduinBoatRack"
+    ]
+  },
+  "validation_rule": "Every large resource batch must pass Pre-Unreal, UE4.27 compile, production import and headless startup before the next batch."
+}
