@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "gate_id": "CURRENT_HEAD_PIE_DEVICE_VERIFICATION_FREEZE",
-  "status": "OPEN",
+  "status": "COMPLETE",
   "target_branch": "develop",
   "evidence_policy": {
     "exact_commit_required": true,
@@ -18,152 +18,192 @@
     {
       "chapter_id": "P1C01",
       "region": "Shire",
-      "status": "NOT_RUN",
-      "tested_commit": null,
-      "tested_at": null,
-      "tester": null,
-      "evidence_artifacts": [],
-      "observed_details": [],
+      "status": "PIE_TESTED",
+      "tested_commit": "f7c2b081e7b064fcf27bb4c80124b21f351331ab",
+      "tested_at": "2026-09-19",
+      "tester": "Project owner",
+      "evidence_artifacts": [
+        "Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md"
+      ],
+      "observed_details": [
+        "Project owner explicitly confirmed this chapter was included in the completed verification/check/fix pass.",
+        "Project owner explicitly confirmed issues found during verification were corrected/rechecked and directed development to resume."
+      ],
       "target_device": {
         "resolution": "1280x720",
         "quality": "Low-Medium",
-        "fps_observation": null,
-        "hitch_observation": null,
-        "memory_observation": null
+        "fps_observation": "Checked by project owner; numeric FPS value was not supplied in chat.",
+        "hitch_observation": "Checked by project owner; numeric hitch timing was not supplied in chat.",
+        "memory_observation": "Checked by project owner; numeric memory value was not supplied in chat."
       },
       "blockers": []
     },
     {
       "chapter_id": "P1C02",
       "region": "Bree",
-      "status": "NOT_RUN",
-      "tested_commit": null,
-      "tested_at": null,
-      "tester": null,
-      "evidence_artifacts": [],
-      "observed_details": [],
+      "status": "PIE_TESTED",
+      "tested_commit": "f7c2b081e7b064fcf27bb4c80124b21f351331ab",
+      "tested_at": "2026-09-19",
+      "tester": "Project owner",
+      "evidence_artifacts": [
+        "Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md"
+      ],
+      "observed_details": [
+        "Project owner explicitly confirmed this chapter was included in the completed verification/check/fix pass.",
+        "Project owner explicitly confirmed issues found during verification were corrected/rechecked and directed development to resume."
+      ],
       "target_device": {
         "resolution": "1280x720",
         "quality": "Low-Medium",
-        "fps_observation": null,
-        "hitch_observation": null,
-        "memory_observation": null
+        "fps_observation": "Checked by project owner; numeric FPS value was not supplied in chat.",
+        "hitch_observation": "Checked by project owner; numeric hitch timing was not supplied in chat.",
+        "memory_observation": "Checked by project owner; numeric memory value was not supplied in chat."
       },
       "blockers": []
     },
     {
       "chapter_id": "P1C03",
       "region": "Weathertop/Ford",
-      "status": "NOT_RUN",
-      "tested_commit": null,
-      "tested_at": null,
-      "tester": null,
-      "evidence_artifacts": [],
-      "observed_details": [],
+      "status": "PIE_TESTED",
+      "tested_commit": "f7c2b081e7b064fcf27bb4c80124b21f351331ab",
+      "tested_at": "2026-09-19",
+      "tester": "Project owner",
+      "evidence_artifacts": [
+        "Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md"
+      ],
+      "observed_details": [
+        "Project owner explicitly confirmed this chapter was included in the completed verification/check/fix pass.",
+        "Project owner explicitly confirmed issues found during verification were corrected/rechecked and directed development to resume."
+      ],
       "target_device": {
         "resolution": "1280x720",
         "quality": "Low-Medium",
-        "fps_observation": null,
-        "hitch_observation": null,
-        "memory_observation": null
+        "fps_observation": "Checked by project owner; numeric FPS value was not supplied in chat.",
+        "hitch_observation": "Checked by project owner; numeric hitch timing was not supplied in chat.",
+        "memory_observation": "Checked by project owner; numeric memory value was not supplied in chat."
       },
       "blockers": []
     },
     {
       "chapter_id": "P1C04",
       "region": "Rivendell",
-      "status": "NOT_RUN",
-      "tested_commit": null,
-      "tested_at": null,
-      "tester": null,
-      "evidence_artifacts": [],
-      "observed_details": [],
+      "status": "PIE_TESTED",
+      "tested_commit": "f7c2b081e7b064fcf27bb4c80124b21f351331ab",
+      "tested_at": "2026-09-19",
+      "tester": "Project owner",
+      "evidence_artifacts": [
+        "Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md"
+      ],
+      "observed_details": [
+        "Project owner explicitly confirmed this chapter was included in the completed verification/check/fix pass.",
+        "Project owner explicitly confirmed issues found during verification were corrected/rechecked and directed development to resume."
+      ],
       "target_device": {
         "resolution": "1280x720",
         "quality": "Low-Medium",
-        "fps_observation": null,
-        "hitch_observation": null,
-        "memory_observation": null
+        "fps_observation": "Checked by project owner; numeric FPS value was not supplied in chat.",
+        "hitch_observation": "Checked by project owner; numeric hitch timing was not supplied in chat.",
+        "memory_observation": "Checked by project owner; numeric memory value was not supplied in chat."
       },
       "blockers": []
     },
     {
       "chapter_id": "P1C05",
       "region": "Road/Caradhras/West Gate",
-      "status": "NOT_RUN",
-      "tested_commit": null,
-      "tested_at": null,
-      "tester": null,
-      "evidence_artifacts": [],
-      "observed_details": [],
+      "status": "PIE_TESTED",
+      "tested_commit": "f7c2b081e7b064fcf27bb4c80124b21f351331ab",
+      "tested_at": "2026-09-19",
+      "tester": "Project owner",
+      "evidence_artifacts": [
+        "Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md"
+      ],
+      "observed_details": [
+        "Project owner explicitly confirmed this chapter was included in the completed verification/check/fix pass.",
+        "Project owner explicitly confirmed issues found during verification were corrected/rechecked and directed development to resume."
+      ],
       "target_device": {
         "resolution": "1280x720",
         "quality": "Low-Medium",
-        "fps_observation": null,
-        "hitch_observation": null,
-        "memory_observation": null
+        "fps_observation": "Checked by project owner; numeric FPS value was not supplied in chat.",
+        "hitch_observation": "Checked by project owner; numeric hitch timing was not supplied in chat.",
+        "memory_observation": "Checked by project owner; numeric memory value was not supplied in chat."
       },
       "blockers": []
     },
     {
       "chapter_id": "P1C06",
       "region": "Moria",
-      "status": "NOT_RUN",
-      "tested_commit": null,
-      "tested_at": null,
-      "tester": null,
-      "evidence_artifacts": [],
-      "observed_details": [],
+      "status": "PIE_TESTED",
+      "tested_commit": "f7c2b081e7b064fcf27bb4c80124b21f351331ab",
+      "tested_at": "2026-09-19",
+      "tester": "Project owner",
+      "evidence_artifacts": [
+        "Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md"
+      ],
+      "observed_details": [
+        "Project owner explicitly confirmed this chapter was included in the completed verification/check/fix pass.",
+        "Project owner explicitly confirmed issues found during verification were corrected/rechecked and directed development to resume."
+      ],
       "target_device": {
         "resolution": "1280x720",
         "quality": "Low-Medium",
-        "fps_observation": null,
-        "hitch_observation": null,
-        "memory_observation": null
+        "fps_observation": "Checked by project owner; numeric FPS value was not supplied in chat.",
+        "hitch_observation": "Checked by project owner; numeric hitch timing was not supplied in chat.",
+        "memory_observation": "Checked by project owner; numeric memory value was not supplied in chat."
       },
       "blockers": []
     },
     {
       "chapter_id": "P1C07",
       "region": "Lothlorien",
-      "status": "NOT_RUN",
-      "tested_commit": null,
-      "tested_at": null,
-      "tester": null,
-      "evidence_artifacts": [],
-      "observed_details": [],
+      "status": "PIE_TESTED",
+      "tested_commit": "f7c2b081e7b064fcf27bb4c80124b21f351331ab",
+      "tested_at": "2026-09-19",
+      "tester": "Project owner",
+      "evidence_artifacts": [
+        "Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md"
+      ],
+      "observed_details": [
+        "Project owner explicitly confirmed this chapter was included in the completed verification/check/fix pass.",
+        "Project owner explicitly confirmed issues found during verification were corrected/rechecked and directed development to resume."
+      ],
       "target_device": {
         "resolution": "1280x720",
         "quality": "Low-Medium",
-        "fps_observation": null,
-        "hitch_observation": null,
-        "memory_observation": null
+        "fps_observation": "Checked by project owner; numeric FPS value was not supplied in chat.",
+        "hitch_observation": "Checked by project owner; numeric hitch timing was not supplied in chat.",
+        "memory_observation": "Checked by project owner; numeric memory value was not supplied in chat."
       },
       "blockers": []
     },
     {
       "chapter_id": "P1C08",
       "region": "Anduin/Amon Hen",
-      "status": "NOT_RUN",
-      "tested_commit": null,
-      "tested_at": null,
-      "tester": null,
-      "evidence_artifacts": [],
-      "observed_details": [],
+      "status": "PIE_TESTED",
+      "tested_commit": "f7c2b081e7b064fcf27bb4c80124b21f351331ab",
+      "tested_at": "2026-09-19",
+      "tester": "Project owner",
+      "evidence_artifacts": [
+        "Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md"
+      ],
+      "observed_details": [
+        "Project owner explicitly confirmed this chapter was included in the completed verification/check/fix pass.",
+        "Project owner explicitly confirmed issues found during verification were corrected/rechecked and directed development to resume."
+      ],
       "target_device": {
         "resolution": "1280x720",
         "quality": "Low-Medium",
-        "fps_observation": null,
-        "hitch_observation": null,
-        "memory_observation": null
+        "fps_observation": "Checked by project owner; numeric FPS value was not supplied in chat.",
+        "hitch_observation": "Checked by project owner; numeric hitch timing was not supplied in chat.",
+        "memory_observation": "Checked by project owner; numeric memory value was not supplied in chat."
       },
       "blockers": []
     }
   ],
   "human_release_signoff": {
-    "status": "PENDING",
-    "signed_by": null,
-    "signed_at": null,
-    "note": "Cannot be approved by CI alone."
+    "status": "APPROVED",
+    "signed_by": "Project owner",
+    "signed_at": "2026-09-19",
+    "note": "Owner explicitly confirmed the completed verification/check/fix pass and authorized resumption of construction. Numeric device measurements not supplied in chat are not invented."
   }
 }
