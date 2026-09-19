@@ -1614,7 +1614,16 @@
       "Fix chapter-blocking crashes, progression breaks, save/load failures and severe performance regressions before advancing to the next chapter.",
       "Do not claim day/night cycle, transient weather FX, visual acceptance or performance acceptance without direct PIE/device evidence."
     ],
-    "note": "Post-CP54 verification freeze. No CP55 or new feature/content checkpoint opens until the current develop head is chapter-by-chapter PIE-tested and the evidence is written into PRODUCTION_COMPLETENESS_MATRIX.md and CURRENT_PROJECT_STATE.md."
+    "note": "Post-CP54 verification freeze. No CP55 or new feature/content checkpoint opens until the current develop head is chapter-by-chapter PIE-tested and the evidence is written into PRODUCTION_COMPLETENESS_MATRIX.md and CURRENT_PROJECT_STATE.md.",
+    "enforcement": {
+      "policy_file": "Data/VerificationGate.json",
+      "evidence_file": "Data/PIEVerificationEvidence.json",
+      "ci_guard_ids": [
+        "PG-056",
+        "PG-057"
+      ],
+      "behavior": "CI blocks checkpoint/runtime-source/production-asset expansion while the freeze is active, but allows repairs, verification, instrumentation and evidence work."
+    }
   },
   "reference_only_files": [
     "Docs/CURRENT_PROJECT_STATE.md",
@@ -1775,7 +1784,9 @@
       "Record non-blocking visual/content ideas in Docs/WORLD_DETAIL_LEDGER.md without implementing them during the baseline audit.",
       "Keep Pre-Unreal and UE4.27 compile/import CI as regression guards, but never substitute them for PIE/device evidence.",
       "Formal rights-holder outreach is deferred; retain the external-asset manifest/provenance pipeline for future asset quality work.",
-      "After the baseline audit is complete, resume region-by-region quality upgrades with Shire as the reference standard."
+      "After the baseline audit is complete, resume region-by-region quality upgrades with Shire as the reference standard.",
+      "PG-056 must technically block CP55+, new production source assets and new runtime source files while the freeze is active.",
+      "PG-057 must reject a current-head PIE claim unless Data/PIEVerificationEvidence.json carries exact-commit human evidence."
     ]
   },
   "backend_completion": {

@@ -31,3 +31,6 @@ jobs:
 
       - name: Validate project governor
         run: python Scripts/project_governor.py
+
+      - name: Audit production asset source quality
+        run: python Scripts/asset_quality_audit.py

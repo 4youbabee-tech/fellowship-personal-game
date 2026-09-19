@@ -2080,6 +2080,204 @@ for message in warnings:
 for message in errors:
     print(f"ERROR: {message}")
 
+# PG-056: the post-CP54 verification freeze is an executable gate, not documentation only.
+verification_gate_path = ROOT / "Data" / "VerificationGate.json"
+verification_gate = {}
+if not verification_gate_path.exists():
+    fail("PG-056 verification gate missing: Data/VerificationGate.json")
+else:
+    try:
+        verification_gate = json.loads(read(verification_gate_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-056 invalid VerificationGate.json: {exc}")
+
+if governor_mode_id == "PIE_VERIFICATION_FREEZE" and verification_gate:
+    if verification_gate.get("mode") != "PIE_VERIFICATION_FREEZE":
+        fail("PG-056 verification gate mode must match PIE_VERIFICATION_FREEZE")
+
+    baseline = verification_gate.get("baseline", {})
+    max_checkpoint = int(baseline.get("max_checkpoint_number", 54))
+
+    checkpoints_text = read(ROOT / "Docs" / "CHECKPOINTS.md")
+    checkpoint_numbers = [
+        int(match.group(1))
+        for match in re.finditer(r"^##+\s+CP(\d+)\b", checkpoints_text, flags=re.M)
+    ]
+    too_new_headings = sorted(number for number in checkpoint_numbers if number > max_checkpoint)
+    if too_new_headings:
+        fail(
+            "PG-056 verification freeze blocks new checkpoint headings above "
+            f"CP{max_checkpoint}: {too_new_headings}"
+        )
+
+    def collect_governor_checkpoint_numbers(value):
+        found = []
+        if isinstance(value, dict):
+            for key, child in value.items():
+                if key == "checkpoint" and isinstance(child, str):
+                    match = re.fullmatch(r"CP(\d+)", child.strip())
+                    if match:
+                        found.append(int(match.group(1)))
+                found.extend(collect_governor_checkpoint_numbers(child))
+        elif isinstance(value, list):
+            for child in value:
+                found.extend(collect_governor_checkpoint_numbers(child))
+        return found
+
+    too_new_governor = sorted(
+        number
+        for number in collect_governor_checkpoint_numbers(governor_data)
+        if number > max_checkpoint
+    )
+    if too_new_governor:
+        fail(
+            "PG-056 verification freeze blocks Governor checkpoints above "
+            f"CP{max_checkpoint}: {too_new_governor}"
+        )
+
+    production_root = ROOT / "SourceAssets" / "Production"
+    production_files = [path for path in production_root.rglob("*") if path.is_file()]
+    ceiling = baseline.get("production_source_ceiling", {})
+    total_ceiling = int(ceiling.get("total_files", 0))
+    if total_ceiling and len(production_files) > total_ceiling:
+        fail(
+            "PG-056 verification freeze blocks net-new production source files: "
+            f"{len(production_files)} > {total_ceiling}"
+        )
+
+    actual_extension_counts = defaultdict(int)
+    for path in production_files:
+        actual_extension_counts[path.suffix.lower().lstrip(".")] += 1
+    for extension, limit in ceiling.get("extensions", {}).items():
+        actual = actual_extension_counts.get(str(extension).lower(), 0)
+        if actual > int(limit):
+            fail(
+                "PG-056 verification freeze blocks production-source expansion for "
+                f".{extension}: {actual} > {limit}"
+            )
+
+    baseline_runtime_paths = set(baseline.get("runtime_source_paths", []))
+    actual_runtime_paths = {
+        path.relative_to(ROOT).as_posix()
+        for path in SOURCE.rglob("*")
+        if path.is_file() and path.suffix.lower() in {".h", ".cpp", ".cs"}
+    }
+    unexpected_runtime_paths = sorted(actual_runtime_paths - baseline_runtime_paths)
+    missing_runtime_paths = sorted(baseline_runtime_paths - actual_runtime_paths)
+    if unexpected_runtime_paths:
+        fail(
+            "PG-056 verification freeze blocks net-new runtime source files: "
+            + ", ".join(unexpected_runtime_paths)
+        )
+    if missing_runtime_paths:
+        fail(
+            "PG-056 verification freeze blocks source-layout/removal changes during the audit: "
+            + ", ".join(missing_runtime_paths)
+        )
+
+# PG-057: current-head PIE claims require exact-commit human evidence.
+pie_evidence_path = ROOT / "Data" / "PIEVerificationEvidence.json"
+pie_evidence = {}
+if not pie_evidence_path.exists():
+    fail("PG-057 PIE evidence file missing: Data/PIEVerificationEvidence.json")
+else:
+    try:
+        pie_evidence = json.loads(read(pie_evidence_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-057 invalid PIEVerificationEvidence.json: {exc}")
+
+if pie_evidence:
+    expected_chapters = ["P1C01","P1C02","P1C03","P1C04","P1C05","P1C06","P1C07","P1C08"]
+    evidence_rows = pie_evidence.get("chapters", [])
+    evidence_by_chapter = {
+        str(row.get("chapter_id") or ""): row
+        for row in evidence_rows
+        if isinstance(row, dict)
+    }
+    if list(evidence_by_chapter.keys()) != expected_chapters:
+        fail("PG-057 PIE evidence chapters must exist once each in P1C01-P1C08 order")
+
+    matrix_text = read(ROOT / "Docs" / "PRODUCTION_COMPLETENESS_MATRIX.md")
+    current_head_section = matrix_text.split(
+        "This file prevents major game pillars from depending on chat memory.", 1
+    )[0]
+    matrix_pie_state = {}
+    for line in current_head_section.splitlines():
+        if not line.startswith("| P1C"):
+            continue
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if len(cells) >= 2:
+            chapter_match = re.match(r"(P1C0[1-8])\b", cells[0])
+            if chapter_match:
+                matrix_pie_state[chapter_match.group(1)] = cells[1]
+
+    allowed_evidence_statuses = {
+        "NOT_RUN",
+        "BLOCKED",
+        "PIE_TESTED_WITH_ISSUES",
+        "PIE_TESTED",
+    }
+    for chapter_id in expected_chapters:
+        row = evidence_by_chapter.get(chapter_id)
+        if not row:
+            fail(f"PG-057 PIE evidence missing chapter: {chapter_id}")
+            continue
+
+        status = str(row.get("status") or "")
+        if status not in allowed_evidence_statuses:
+            fail(f"PG-057 unsupported PIE evidence status for {chapter_id}: {status}")
+            continue
+
+        matrix_state = matrix_pie_state.get(chapter_id)
+        if not matrix_state:
+            fail(f"PG-057 current-head matrix row missing for {chapter_id}")
+            continue
+
+        if status == "NOT_RUN":
+            if matrix_state != "NOT_RUN":
+                fail(
+                    f"PG-057 matrix claims PIE activity for {chapter_id} "
+                    "without matching human evidence"
+                )
+            continue
+
+        tested_commit = str(row.get("tested_commit") or "")
+        tested_at = str(row.get("tested_at") or "")
+        tester = str(row.get("tester") or "")
+        artifacts = row.get("evidence_artifacts", [])
+        observations = row.get("observed_details", [])
+
+        if not re.fullmatch(r"[0-9a-fA-F]{40}", tested_commit):
+            fail(f"PG-057 {chapter_id} PIE evidence requires an exact 40-char commit SHA")
+        if not tested_at:
+            fail(f"PG-057 {chapter_id} PIE evidence requires tested_at")
+        if not tester:
+            fail(f"PG-057 {chapter_id} PIE evidence requires tester")
+        if not isinstance(artifacts, list) or len(artifacts) < 1:
+            fail(f"PG-057 {chapter_id} PIE evidence requires at least one artifact/log reference")
+        if not isinstance(observations, list) or len(observations) < 2:
+            fail(f"PG-057 {chapter_id} PIE evidence requires at least two concrete observations")
+        if matrix_state == "NOT_RUN":
+            fail(
+                f"PG-057 {chapter_id} has human PIE evidence but the current-head matrix "
+                "was not updated"
+            )
+
+    signoff = pie_evidence.get("human_release_signoff", {})
+    if signoff.get("status") == "APPROVED":
+        incomplete = [
+            chapter_id
+            for chapter_id in expected_chapters
+            if evidence_by_chapter.get(chapter_id, {}).get("status") != "PIE_TESTED"
+        ]
+        if incomplete:
+            fail(
+                "PG-057 human release sign-off cannot be APPROVED while chapters remain "
+                "unverified/blocked/issues: " + ", ".join(incomplete)
+            )
+        if not signoff.get("signed_by") or not signoff.get("signed_at"):
+            fail("PG-057 APPROVED human release sign-off requires signer and timestamp")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     sys.exit(1)

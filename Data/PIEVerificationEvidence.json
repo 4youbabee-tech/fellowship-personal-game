@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "gate_id": "CURRENT_HEAD_PIE_DEVICE_VERIFICATION_FREEZE",
+  "status": "OPEN",
+  "target_branch": "develop",
+  "evidence_policy": {
+    "exact_commit_required": true,
+    "artifact_required": true,
+    "observed_details_minimum": 2,
+    "allowed_statuses": [
+      "NOT_RUN",
+      "BLOCKED",
+      "PIE_TESTED_WITH_ISSUES",
+      "PIE_TESTED"
+    ]
+  },
+  "chapters": [
+    {
+      "chapter_id": "P1C01",
+      "region": "Shire",
+      "status": "NOT_RUN",
+      "tested_commit": null,
+      "tested_at": null,
+      "tester": null,
+      "evidence_artifacts": [],
+      "observed_details": [],
+      "target_device": {
+        "resolution": "1280x720",
+        "quality": "Low-Medium",
+        "fps_observation": null,
+        "hitch_observation": null,
+        "memory_observation": null
+      },
+      "blockers": []
+    },
+    {
+      "chapter_id": "P1C02",
+      "region": "Bree",
+      "status": "NOT_RUN",
+      "tested_commit": null,
+      "tested_at": null,
+      "tester": null,
+      "evidence_artifacts": [],
+      "observed_details": [],
+      "target_device": {
+        "resolution": "1280x720",
+        "quality": "Low-Medium",
+        "fps_observation": null,
+        "hitch_observation": null,
+        "memory_observation": null
+      },
+      "blockers": []
+    },
+    {
+      "chapter_id": "P1C03",
+      "region": "Weathertop/Ford",
+      "status": "NOT_RUN",
+      "tested_commit": null,
+      "tested_at": null,
+      "tester": null,
+      "evidence_artifacts": [],
+      "observed_details": [],
+      "target_device": {
+        "resolution": "1280x720",
+        "quality": "Low-Medium",
+        "fps_observation": null,
+        "hitch_observation": null,
+        "memory_observation": null
+      },
+      "blockers": []
+    },
+    {
+      "chapter_id": "P1C04",
+      "region": "Rivendell",
+      "status": "NOT_RUN",
+      "tested_commit": null,
+      "tested_at": null,
+      "tester": null,
+      "evidence_artifacts": [],
+      "observed_details": [],
+      "target_device": {
+        "resolution": "1280x720",
+        "quality": "Low-Medium",
+        "fps_observation": null,
+        "hitch_observation": null,
+        "memory_observation": null
+      },
+      "blockers": []
+    },
+    {
+      "chapter_id": "P1C05",
+      "region": "Road/Caradhras/West Gate",
+      "status": "NOT_RUN",
+      "tested_commit": null,
+      "tested_at": null,
+      "tester": null,
+      "evidence_artifacts": [],
+      "observed_details": [],
+      "target_device": {
+        "resolution": "1280x720",
+        "quality": "Low-Medium",
+        "fps_observation": null,
+        "hitch_observation": null,
+        "memory_observation": null
+      },
+      "blockers": []
+    },
+    {
+      "chapter_id": "P1C06",
+      "region": "Moria",
+      "status": "NOT_RUN",
+      "tested_commit": null,
+      "tested_at": null,
+      "tester": null,
+      "evidence_artifacts": [],
+      "observed_details": [],
+      "target_device": {
+        "resolution": "1280x720",
+        "quality": "Low-Medium",
+        "fps_observation": null,
+        "hitch_observation": null,
+        "memory_observation": null
+      },
+      "blockers": []
+    },
+    {
+      "chapter_id": "P1C07",
+      "region": "Lothlorien",
+      "status": "NOT_RUN",
+      "tested_commit": null,
+      "tested_at": null,
+      "tester": null,
+      "evidence_artifacts": [],
+      "observed_details": [],
+      "target_device": {
+        "resolution": "1280x720",
+        "quality": "Low-Medium",
+        "fps_observation": null,
+        "hitch_observation": null,
+        "memory_observation": null
+      },
+      "blockers": []
+    },
+    {
+      "chapter_id": "P1C08",
+      "region": "Anduin/Amon Hen",
+      "status": "NOT_RUN",
+      "tested_commit": null,
+      "tested_at": null,
+      "tester": null,
+      "evidence_artifacts": [],
+      "observed_details": [],
+      "target_device": {
+        "resolution": "1280x720",
+        "quality": "Low-Medium",
+        "fps_observation": null,
+        "hitch_observation": null,
+        "memory_observation": null
+      },
+      "blockers": []
+    }
+  ],
+  "human_release_signoff": {
+    "status": "PENDING",
+    "signed_by": null,
+    "signed_at": null,
+    "note": "Cannot be approved by CI alone."
+  }
+}

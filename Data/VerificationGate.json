@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "gate_id": "CURRENT_HEAD_PIE_DEVICE_VERIFICATION_FREEZE",
+  "mode": "PIE_VERIFICATION_FREEZE",
+  "baseline": {
+    "content_checkpoint": "CP54",
+    "max_checkpoint_number": 54,
+    "develop_head_entering_verification_pr": "043476f4353a44c1d08bf60ab87af5c3e10543f2",
+    "cp54_content_commit": "ed235ff4fb332660d2af8ce1385d9ca038a6337b",
+    "production_source_ceiling": {
+      "total_files": 326,
+      "extensions": {
+        "obj": 283,
+        "bmp": 24,
+        "mtl": 18,
+        "md": 1
+      }
+    },
+    "runtime_source_paths": [
+      "Source/ShireJourney/BlackRiderPrototype.cpp",
+      "Source/ShireJourney/BlackRiderPrototype.h",
+      "Source/ShireJourney/BreePrototypeWorldBuilder.cpp",
+      "Source/ShireJourney/BreePrototypeWorldBuilder.h",
+      "Source/ShireJourney/ChapterWorldRouter.cpp",
+      "Source/ShireJourney/ChapterWorldRouter.h",
+      "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
+      "Source/ShireJourney/FellowshipChapterWorldBuilder.h",
+      "Source/ShireJourney/FellowshipEnemyPrototype.cpp",
+      "Source/ShireJourney/FellowshipEnemyPrototype.h",
+      "Source/ShireJourney/IsengardPrototypeWorldBuilder.cpp",
+      "Source/ShireJourney/IsengardPrototypeWorldBuilder.h",
+      "Source/ShireJourney/LivingWorldDirector.cpp",
+      "Source/ShireJourney/LivingWorldDirector.h",
+      "Source/ShireJourney/ShireAmbientNPC.cpp",
+      "Source/ShireJourney/ShireAmbientNPC.h",
+      "Source/ShireJourney/ShireAudioSubsystem.cpp",
+      "Source/ShireJourney/ShireAudioSubsystem.h",
+      "Source/ShireJourney/ShireDialogueSubsystem.cpp",
+      "Source/ShireJourney/ShireDialogueSubsystem.h",
+      "Source/ShireJourney/ShireGameMode.cpp",
+      "Source/ShireJourney/ShireGameMode.h",
+      "Source/ShireJourney/ShireHUD.cpp",
+      "Source/ShireJourney/ShireHUD.h",
+      "Source/ShireJourney/ShireInteractable.h",
+      "Source/ShireJourney/ShireJourney.Build.cs",
+      "Source/ShireJourney/ShireJourney.cpp",
+      "Source/ShireJourney/ShireJourney.h",
+      "Source/ShireJourney/ShireNPC.cpp",
+      "Source/ShireJourney/ShireNPC.h",
+      "Source/ShireJourney/ShireNPCContextSubsystem.cpp",
+      "Source/ShireJourney/ShireNPCContextSubsystem.h",
+      "Source/ShireJourney/ShirePlayerCharacter.cpp",
+      "Source/ShireJourney/ShirePlayerCharacter.h",
+      "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+      "Source/ShireJourney/ShirePrototypeWorldBuilder.h",
+      "Source/ShireJourney/ShireQuestSubsystem.cpp",
+      "Source/ShireJourney/ShireQuestSubsystem.h",
+      "Source/ShireJourney/ShireQuestTrigger.cpp",
+      "Source/ShireJourney/ShireQuestTrigger.h",
+      "Source/ShireJourney/ShireRouteState.h",
+      "Source/ShireJourney/ShireSaveGame.cpp",
+      "Source/ShireJourney/ShireSaveGame.h",
+      "Source/ShireJourney/ShireStoryFlowSubsystem.cpp",
+      "Source/ShireJourney/ShireStoryFlowSubsystem.h",
+      "Source/ShireJourney/ShireStoryPresentationSubsystem.cpp",
+      "Source/ShireJourney/ShireStoryPresentationSubsystem.h"
+    ]
+  },
+  "chapter_order": [
+    "P1C01",
+    "P1C02",
+    "P1C03",
+    "P1C04",
+    "P1C05",
+    "P1C06",
+    "P1C07",
+    "P1C08"
+  ],
+  "allowed_change_classes_during_freeze": [
+    "verification instrumentation",
+    "bug/crash/progression/save-load repair",
+    "performance repair",
+    "existing-asset quality repair",
+    "test and CI hardening",
+    "documentation and evidence updates"
+  ],
+  "blocked_change_classes_during_freeze": [
+    "CP55 or later feature/content checkpoint",
+    "net-new production source assets",
+    "net-new ShireJourney runtime source files",
+    "new world/chapter expansion"
+  ],
+  "evidence_file": "Data/PIEVerificationEvidence.json",
+  "lift_conditions": [
+    "All P1C01-P1C08 chapters have direct current-head PIE evidence.",
+    "No chapter has an unresolved blocking crash/progression/save-load/severe-performance failure.",
+    "Target-laptop observations are recorded at 720p Low-Medium.",
+    "Human release sign-off is explicit."
+  ]
+}

@@ -67,7 +67,9 @@
     "Data/LivingWorldEventPlan.json",
     "Data/BoundedDialoguePlan.json",
     "Data/PlayerExperiencePacingPlan.json",
-    "Data/CharacterPopulationPlan.json"
+    "Data/CharacterPopulationPlan.json",
+    "Data/VerificationGate.json",
+    "Data/PIEVerificationEvidence.json"
   ],
   "living_world_phase_ids": [
     "LW0",

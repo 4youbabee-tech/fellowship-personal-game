@@ -453,6 +453,20 @@ This converts failures into permanent project knowledge.
 
 **Manual check:** during each chapter PIE pass, inspect obvious shading corruption, missing/default materials, scale/orientation, and fallback character presentation. Record concrete findings in PRODUCTION_COMPLETENESS_MATRIX.md / CURRENT_PROJECT_STATE.md.
 
+### PG-056 — Verification freeze must be technically enforced
+**Risk:** a written freeze can be bypassed accidentally by opening CP55, adding more production assets, or adding new runtime files before current-head PIE/device proof exists.
+
+**Contract:** while Project Governor mode is `PIE_VERIFICATION_FREEZE`, CI enforces the CP54 ceiling, the production-source file ceiling, and the exact current runtime-source file set recorded in `Data/VerificationGate.json`. Existing files may still be repaired, instrumented and optimized.
+
+**Guard:** Pre-Unreal Validation fails on CP55+ checkpoint definitions, net-new production source files, or net-new/remapped ShireJourney runtime source files during the freeze.
+
+### PG-057 — PIE claims require exact-commit human evidence
+**Risk:** changing a matrix cell to FUNCTIONAL/PASSED can create the appearance of a playtest that never happened.
+
+**Contract:** `Data/PIEVerificationEvidence.json` is the structured evidence companion to the current-head matrix. Any chapter moved away from NOT_RUN requires a 40-character tested commit SHA, tester, timestamp, at least one artifact/log reference, and at least two concrete observations.
+
+**Guard:** CI cross-checks the structured evidence against the current-head table in `PRODUCTION_COMPLETENESS_MATRIX.md`. Human release sign-off cannot become APPROVED until all eight chapters are PIE_TESTED.
+
 ## What Guardian must never do automatically
 
 - change canon,
