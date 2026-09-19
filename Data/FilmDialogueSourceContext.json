@@ -1,0 +1,557 @@
+{
+  "schema_version": 1,
+  "plan_id": "FILM_DIALOGUE_SOURCE_CONTEXT_V1",
+  "status": "PART1_ACTIVE_PART2_REFERENCE_READY",
+  "purpose": "Derived source context from the owner's Fellowship and Two Towers screenplay PDFs for in-game dialogue grounding. Store chronology, tone, topics and knowledge ceilings; never store or ship screenplay passages.",
+  "policy": {
+    "reference_only": true,
+    "source_files_are_not_shipped_game_content": true,
+    "no_verbatim_screenplay_dialogue": true,
+    "runtime_output": "ORIGINAL_PROJECT_AUTHORED_OR_BOUNDED_OFFLINE_VARIATION",
+    "authority_order": [
+      "Data/ProjectGovernor.json",
+      "Docs/STORY_CANON_BIBLE.md",
+      "Data/FilmExperiencePlan.json",
+      "this derived source context"
+    ]
+  },
+  "sources": [
+    {
+      "id": "SRC-FOTR-2001-SCREENPLAY",
+      "part": "PART_I",
+      "title": "The Fellowship of the Ring screenplay",
+      "sha256": "4760026562d943fde02133e681e5884ee85c7a5f466b7f3ff36d67122c60d656",
+      "pages": 173,
+      "use": [
+        "scene_order",
+        "speaker_presence",
+        "tone",
+        "relationship_state",
+        "knowledge_ceiling",
+        "topic_grounding"
+      ]
+    },
+    {
+      "id": "SRC-TTT-2002-SCREENPLAY",
+      "part": "PART_II",
+      "title": "The Two Towers screenplay",
+      "sha256": "8c1c780cb94b7862cc5f15e7b451ee9a4eda1d170c503390bf75cfcd210d4e7e",
+      "pages": 222,
+      "use": [
+        "future_routes",
+        "scene_order",
+        "speaker_presence",
+        "tone",
+        "relationship_state",
+        "knowledge_ceiling",
+        "topic_grounding"
+      ]
+    }
+  ],
+  "runtime_contract": {
+    "current_scope": "PART_I",
+    "part2_status": "REFERENCE_READY_NOT_IMPLEMENTED",
+    "selection": [
+      "RouteId",
+      "ChapterId",
+      "latest_completed_story_beat"
+    ],
+    "inputs": [
+      "identity",
+      "knowledge",
+      "relationships",
+      "memory",
+      "regional mood",
+      "danger",
+      "source context",
+      "recent dialogue"
+    ],
+    "rules": [
+      "use newest eligible context",
+      "context changes topic/tone/knowledge only",
+      "never override canon",
+      "fallback to existing bounded dialogue",
+      "offline only"
+    ]
+  },
+  "part1_contexts": [
+    {
+      "context_id": "P1C01_HOME",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "sequence": 10,
+      "required_story_beat": "",
+      "source_window": "pp.9-21",
+      "tone_tags": [
+        "PEACEFUL",
+        "FAMILIAR"
+      ],
+      "safe_topics": [
+        "Shire routines",
+        "Bilbo's party",
+        "Gandalf's arrival"
+      ],
+      "future_knowledge_blocks": [
+        "Ring danger before RingWarning",
+        "Black Rider facts before discovery"
+      ]
+    },
+    {
+      "context_id": "P1C01_DANGER",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "sequence": 20,
+      "required_story_beat": "RingWarning",
+      "source_window": "pp.38-59",
+      "tone_tags": [
+        "SECRETIVE",
+        "URGENT"
+      ],
+      "safe_topics": [
+        "leaving quietly",
+        "protecting Frodo",
+        "road danger"
+      ],
+      "future_knowledge_blocks": [
+        "Bree outcomes",
+        "Weathertop outcome"
+      ]
+    },
+    {
+      "context_id": "P1C02_BREE",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C02",
+      "sequence": 10,
+      "required_story_beat": "BreeRoadNightfall",
+      "source_window": "pp.60-69",
+      "tone_tags": [
+        "SUSPICIOUS",
+        "WATCHFUL"
+      ],
+      "safe_topics": [
+        "Bree customs",
+        "the inn",
+        "strangers",
+        "Gandalf's absence"
+      ],
+      "future_knowledge_blocks": [
+        "Strider trust before private meeting",
+        "Nazgul attack outcome"
+      ]
+    },
+    {
+      "context_id": "P1C02_AFTER_RING",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C02",
+      "sequence": 20,
+      "required_story_beat": "RingIncident",
+      "source_window": "pp.62-69",
+      "tone_tags": [
+        "EXPOSED",
+        "URGENT"
+      ],
+      "safe_topics": [
+        "witnesses",
+        "leaving the room",
+        "trust",
+        "keeping a low profile"
+      ],
+      "future_knowledge_blocks": [
+        "Weathertop outcome",
+        "Rivendell council"
+      ]
+    },
+    {
+      "context_id": "P1C03_PURSUED",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C03",
+      "sequence": 10,
+      "required_story_beat": "MidgewaterRoad",
+      "source_window": "pp.69-84",
+      "tone_tags": [
+        "PURSUED",
+        "TIRED"
+      ],
+      "safe_topics": [
+        "terrain",
+        "tracks",
+        "watch duty",
+        "rest"
+      ],
+      "future_knowledge_blocks": [
+        "Morgul wound before attack",
+        "Ford outcome"
+      ]
+    },
+    {
+      "context_id": "P1C03_WOUNDED",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C03",
+      "sequence": 20,
+      "required_story_beat": "MorgulWound",
+      "source_window": "pp.74-87",
+      "tone_tags": [
+        "WOUNDED",
+        "DESPERATE"
+      ],
+      "safe_topics": [
+        "Frodo's condition",
+        "speed",
+        "reaching aid"
+      ],
+      "future_knowledge_blocks": [
+        "Council decisions",
+        "Moria events"
+      ]
+    },
+    {
+      "context_id": "P1C04_REFUGE",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C04",
+      "sequence": 10,
+      "required_story_beat": "RivendellAwakening",
+      "source_window": "pp.87-97",
+      "tone_tags": [
+        "HEALING",
+        "RELIEF"
+      ],
+      "safe_topics": [
+        "recovery",
+        "reunions",
+        "Rivendell"
+      ],
+      "future_knowledge_blocks": [
+        "Council outcome before CouncilBegins",
+        "Moria losses"
+      ]
+    },
+    {
+      "context_id": "P1C04_COUNCIL",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C04",
+      "sequence": 20,
+      "required_story_beat": "CouncilBegins",
+      "source_window": "pp.97-109",
+      "tone_tags": [
+        "BURDEN",
+        "DECISION"
+      ],
+      "safe_topics": [
+        "different priorities",
+        "mission burden",
+        "trust among peoples"
+      ],
+      "future_knowledge_blocks": [
+        "Caradhras result",
+        "Fellowship fracture"
+      ]
+    },
+    {
+      "context_id": "P1C05_COMPANY",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C05",
+      "sequence": 10,
+      "required_story_beat": "FellowshipMarch",
+      "source_window": "pp.109-116",
+      "tone_tags": [
+        "COMPANIONSHIP",
+        "PRESSURE"
+      ],
+      "safe_topics": [
+        "camp habits",
+        "watch duty",
+        "friendly teasing",
+        "route choices"
+      ],
+      "future_knowledge_blocks": [
+        "Moria discoveries",
+        "Gandalf's fate"
+      ]
+    },
+    {
+      "context_id": "P1C05_MORIA_GATE",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C05",
+      "sequence": 20,
+      "required_story_beat": "MoriaDoorOpens",
+      "source_window": "pp.116-121",
+      "tone_tags": [
+        "THRESHOLD",
+        "DREAD"
+      ],
+      "safe_topics": [
+        "the gate",
+        "the lake",
+        "entering carefully"
+      ],
+      "future_knowledge_blocks": [
+        "Balin's fate",
+        "Balrog outcome"
+      ]
+    },
+    {
+      "context_id": "P1C06_MORIA",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C06",
+      "sequence": 10,
+      "required_story_beat": "MoriaEntry",
+      "source_window": "pp.121-131",
+      "tone_tags": [
+        "DARKNESS",
+        "UNEASE"
+      ],
+      "safe_topics": [
+        "the halls",
+        "finding the route",
+        "quiet movement"
+      ],
+      "future_knowledge_blocks": [
+        "Balin's fate before reveal",
+        "Balrog identity before approach"
+      ]
+    },
+    {
+      "context_id": "P1C06_AFTER_LOSS",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C06",
+      "sequence": 20,
+      "required_story_beat": "MoriaEscape",
+      "source_window": "pp.131-134",
+      "tone_tags": [
+        "SHOCK",
+        "GRIEF"
+      ],
+      "safe_topics": [
+        "keeping moving",
+        "loss",
+        "protecting companions"
+      ],
+      "future_knowledge_blocks": [
+        "Lothlorien visions",
+        "Amon Hen fracture"
+      ]
+    },
+    {
+      "context_id": "P1C07_REFUGE",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C07",
+      "sequence": 10,
+      "required_story_beat": "LorienEntry",
+      "source_window": "pp.134-149",
+      "tone_tags": [
+        "GRIEF",
+        "WONDER"
+      ],
+      "safe_topics": [
+        "quiet recovery",
+        "strange beauty",
+        "trust"
+      ],
+      "future_knowledge_blocks": [
+        "Mirror visions before Mirror",
+        "Amon Hen outcomes"
+      ]
+    },
+    {
+      "context_id": "P1C07_FAREWELL",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C07",
+      "sequence": 20,
+      "required_story_beat": "LorienFarewell",
+      "source_window": "pp.149-155",
+      "tone_tags": [
+        "FAREWELL",
+        "HOPE"
+      ],
+      "safe_topics": [
+        "departure",
+        "river travel",
+        "strength after grief"
+      ],
+      "future_knowledge_blocks": [
+        "Amon Hen attack",
+        "Boromir's fall"
+      ]
+    },
+    {
+      "context_id": "P1C08_ANDUIN",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "sequence": 10,
+      "required_story_beat": "AnduinDeparture",
+      "source_window": "pp.155-165",
+      "tone_tags": [
+        "UNEASE",
+        "DISTANCE"
+      ],
+      "safe_topics": [
+        "river travel",
+        "watching the banks",
+        "company tension"
+      ],
+      "future_knowledge_blocks": [
+        "Boromir confrontation before BoromirPressure",
+        "Uruk attack before UrukAttack"
+      ]
+    },
+    {
+      "context_id": "P1C08_FRACTURE",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "sequence": 20,
+      "required_story_beat": "BoromirPressure",
+      "source_window": "pp.160-173",
+      "tone_tags": [
+        "CONFLICT",
+        "SEPARATION"
+      ],
+      "safe_topics": [
+        "fractured trust",
+        "protecting companions",
+        "urgent pursuit choices"
+      ],
+      "future_knowledge_blocks": [
+        "specific Part II outcomes before routes reach them"
+      ]
+    },
+    {
+      "context_id": "P1G01_COUNSEL",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "GandalfParallel",
+      "chapter": "P1C01",
+      "sequence": 10,
+      "required_story_beat": "IsengardArrival",
+      "source_window": "pp.49-53",
+      "tone_tags": [
+        "FORMAL",
+        "UNEASY"
+      ],
+      "safe_topics": [
+        "seeking counsel",
+        "changes around Isengard",
+        "old alliances"
+      ],
+      "future_knowledge_blocks": [
+        "Saruman's full betrayal before OrthancBetrayal"
+      ]
+    },
+    {
+      "context_id": "P1G01_BETRAYAL",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "GandalfParallel",
+      "chapter": "P1C01",
+      "sequence": 20,
+      "required_story_beat": "OrthancBetrayal",
+      "source_window": "pp.51-87",
+      "tone_tags": [
+        "BETRAYAL",
+        "CAPTIVITY"
+      ],
+      "safe_topics": [
+        "broken trust",
+        "power",
+        "escape urgency",
+        "warning allies"
+      ],
+      "future_knowledge_blocks": [
+        "exact escape before OrthancEscape",
+        "later Fellowship losses"
+      ]
+    }
+  ],
+  "part2_seed_contexts": [
+    {
+      "arc_id": "P2_FRODO_SAM_GOLLUM",
+      "source_id": "SRC-TTT-2002-SCREENPLAY",
+      "windows": [
+        "Emyn Muil pp.4-20",
+        "Dead Marshes pp.48-56",
+        "Black Gate pp.68-74",
+        "Ithilien/Osgiliath pp.103-218"
+      ],
+      "tone_tags": [
+        "EXHAUSTION",
+        "MISTRUST",
+        "DEPENDENCE"
+      ],
+      "status": "REFERENCE_READY"
+    },
+    {
+      "arc_id": "P2_ROHAN_HUNTERS",
+      "source_id": "SRC-TTT-2002-SCREENPLAY",
+      "windows": [
+        "Rohan pp.17-47",
+        "Fangorn pp.57-66",
+        "Edoras pp.80-101",
+        "Helm's Deep pp.113-204"
+      ],
+      "tone_tags": [
+        "PURSUIT",
+        "LOYALTY",
+        "WAR"
+      ],
+      "status": "REFERENCE_READY"
+    },
+    {
+      "arc_id": "P2_ENTS",
+      "source_id": "SRC-TTT-2002-SCREENPLAY",
+      "windows": [
+        "Fangorn pp.32-78",
+        "Entmoot pp.172-196",
+        "Isengard pp.205-212"
+      ],
+      "tone_tags": [
+        "WONDER",
+        "HUMOR",
+        "ANGER"
+      ],
+      "status": "REFERENCE_READY"
+    },
+    {
+      "arc_id": "P2_GANDALF_ROHAN",
+      "source_id": "SRC-TTT-2002-SCREENPLAY",
+      "windows": [
+        "Durin's Tower/Fangorn pp.60-66",
+        "Edoras pp.80-101",
+        "Helm's Deep pp.160-204"
+      ],
+      "tone_tags": [
+        "RETURN",
+        "AUTHORITY",
+        "HOPE"
+      ],
+      "status": "REFERENCE_READY"
+    },
+    {
+      "arc_id": "P2_SARUMAN",
+      "source_id": "SRC-TTT-2002-SCREENPLAY",
+      "windows": [
+        "Isengard pp.22-25",
+        "Orthanc pp.98-140",
+        "aftermath pp.205-212"
+      ],
+      "tone_tags": [
+        "INDUSTRY",
+        "CONTROL",
+        "COLLAPSE"
+      ],
+      "status": "REFERENCE_READY"
+    }
+  ]
+}
