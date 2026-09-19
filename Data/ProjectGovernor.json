@@ -1027,6 +1027,52 @@
         "REQ-WORLD-002"
       ],
       "checkpoint": "CP51"
+    },
+    {
+      "id": "REQ-PROD-001",
+      "title": "Full playable production resource activation",
+      "category": "ProductionIntegration",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "User requested a much larger step: pull the available resources into the game and make the game start feeling operational rather than proceeding incrementally",
+      "intent": "Activate the complete source-controlled project-owned production resource families across the playable Part I runtime while keeping quests, save/load, dialogue, living-world behavior and target-device constraints intact.",
+      "evidence": [
+        "Data/ProductionActivationPlan.json",
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+        "Source/ShireJourney/BreePrototypeWorldBuilder.cpp",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
+        "Source/ShireJourney/ShireHUD.cpp",
+        "Docs/CHECKPOINTS.md CP52"
+      ],
+      "implementation_refs": [
+        "Shire full common-production activation layer",
+        "Bree rainy atmosphere plus common-production activation layer",
+        "P1C03-P1C08 expanded common-resource use",
+        "player-facing chapter region HUD context",
+        "PG-052 production activation validation"
+      ],
+      "missing_work": [
+        "CP52 Pre-Unreal CI",
+        "UE4.27.2 compile/import on develop",
+        "full PIE Part I traversal",
+        "target-device performance tuning",
+        "final licensed/CC0 external resource batches after actual acquisition and manifest evidence",
+        "visual acceptance"
+      ],
+      "acceptance_criteria": [
+        "P1C01-P1C08 all remain playable through the existing router and story spine",
+        "Production meshes are preferred and common project-owned resources are visibly activated across regions",
+        "External unverified resources remain blocked by the license manifest",
+        "No required story/quest trigger coordinates are moved",
+        "Target laptop remains playable after tuning"
+      ],
+      "dependencies": [
+        "REQ-WORLD-004",
+        "REQ-CHAR-003",
+        "REQ-ASSET-001",
+        "REQ-ENG-002"
+      ],
+      "checkpoint": "CP52"
     }
   ],
   "hard_invariants": [
@@ -1522,14 +1568,14 @@
       "id": "WORK-WORLD-002",
       "title": "Part I world density and landmark detail pass",
       "status": "ACTIVE",
-      "rationale": "CP50 density remains active; CP51 adds distinct bounded sun/sky/fog atmosphere to P1C03-P1C08 while final weather, materials, interiors and visual acceptance remain open."
+      "rationale": "CP52 expands the source-controlled production kit into a full runtime activation across Shire, Bree and P1C03-P1C08; remaining world work is final material/weather/interior quality and acceptance rather than disconnected resource wiring."
     },
     {
       "order": 2,
       "id": "WORK-CHAR-003",
       "title": "Distinct visual identity and motion pass for the Part I core cast",
       "status": "ACTIVE",
-      "rationale": "CP51 adds rig-ready skeletal handoff plus profile-specific modular idle/walk/dialogue motion; final skeletal/facial/cloth/hair animation assets and visual acceptance remain open."
+      "rationale": "CP51 rig-ready motion is merged and CP52 keeps the named cast active inside the denser production world; final skeletal/facial/cloth/hair assets and acceptance remain open."
     },
     {
       "order": 3,
@@ -1605,14 +1651,16 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Continued from CP50 into the planned character-animation and atmosphere production layer after the previous chat reached its maximum length",
+    "reason": "Escalated from incremental visible-production passes to a full playable production activation batch after the user requested a much larger step",
     "summary": [
-      "Added CharacterMotionPlan with a strict skeletal-mesh plus locomotion-AnimBP activation contract and safe modular fallback.",
-      "AShireNPC now has profile-specific idle breathing, weight shift, gait variation and dialogue gestures while retaining existing follow/save/dialogue behavior.",
-      "Added ChapterAtmospherePlan and runtime sun, skylight and exponential-height-fog profiles for P1C03-P1C08.",
-      "No story or quest topology was moved by the CP51 presentation changes.",
-      "Hardened Pre-Unreal validation so late PG-050 and PG-051 checks participate in the final exit status.",
-      "UE4.27 compile/import, PIE visual review and target-device performance acceptance remain required."
+      "Merged green CP51 into develop before starting the next batch.",
+      "Added ProductionActivationPlan covering P1C01-P1C08, FrodoMain and GandalfParallel while preserving the external-license boundary.",
+      "Expanded Shire with the common production vegetation, walls, fences, wood piles, logs, ferns and footbridge across the full travel corridor.",
+      "Expanded Bree with a dedicated rainy atmosphere and common production perimeter/street/inn-yard resources.",
+      "Expanded P1C03-P1C08 use of the common production kit on top of existing regional landmarks.",
+      "Replaced internal episode IDs in the HUD context with player-facing region names.",
+      "Added PG-052 so the full production activation cannot silently regress back into disconnected source assets.",
+      "Compile/import, PIE traversal, device performance and visual acceptance remain separate proof gates."
     ]
   },
   "development_mode": {
