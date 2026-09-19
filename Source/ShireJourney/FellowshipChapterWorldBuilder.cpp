@@ -110,8 +110,8 @@ void AFellowshipChapterWorldBuilder::ConfigureChapterAtmosphere(FName ChapterId)
     }
     if (Sun && Sun->GetLightComponent())
     {
-        Sun->SetActorRotation(SunRotation);
         Sun->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        Sun->SetActorRotation(SunRotation);
         Sun->GetLightComponent()->SetIntensity(SunIntensity);
         Sun->GetLightComponent()->SetLightColor(SunColor);
     }

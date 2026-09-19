@@ -11,6 +11,7 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "Misc/PackageName.h"
 #include "Sound/SoundBase.h"
 
 namespace ShireAudioAssetPaths
@@ -94,10 +95,18 @@ USoundBase* UShireAudioSubsystem::ResolveCategorizedAsset(
     }
 
     const FString Cue = CueId.ToString();
+    const FString PackagePath = FString::Printf(TEXT("%s%s"), FolderPrefix, *Cue);
+    if (!FPackageName::DoesPackageExist(PackagePath))
+    {
+        // Audio cues are intentionally allowed to be un-authored during the current
+        // verification pass. Keep subtitle/story behavior without warning spam.
+        Cache.Add(CueId, nullptr);
+        return nullptr;
+    }
+
     const FString AssetPath = FString::Printf(
-        TEXT("%s%s.%s"),
-        FolderPrefix,
-        *Cue,
+        TEXT("%s.%s"),
+        *PackagePath,
         *Cue);
 
     USoundBase* Sound = LoadObject<USoundBase>(nullptr, *AssetPath);
@@ -205,10 +214,19 @@ USoundBase* UShireAudioSubsystem::ResolveVoiceAsset(FName CueId)
     }
 
     const FString& Speaker = Parts[1];
-    const FString AssetPath = FString::Printf(
-        TEXT("/Game/Audio/Voice/%s/%s.%s"),
+    const FString PackagePath = FString::Printf(
+        TEXT("/Game/Audio/Voice/%s/%s"),
         *Speaker,
-        *Cue,
+        *Cue);
+    if (!FPackageName::DoesPackageExist(PackagePath))
+    {
+        VoiceCache.Add(CueId, nullptr);
+        return nullptr;
+    }
+
+    const FString AssetPath = FString::Printf(
+        TEXT("%s.%s"),
+        *PackagePath,
         *Cue);
 
     USoundBase* Sound = LoadObject<USoundBase>(nullptr, *AssetPath);
