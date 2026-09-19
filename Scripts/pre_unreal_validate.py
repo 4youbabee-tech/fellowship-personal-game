@@ -554,6 +554,97 @@ if discovery_reward_data:
     if "Data/JourneyDiscoveryRewardPlan.json" not in build_text_pg62:
         fail("Journey discovery reward plan is not packaged as a runtime dependency")
 
+
+# PG-063: contextual side activities must remain plausible gap-fill inside film story windows.
+side_activity_path = ROOT / "Data" / "ContextualSideActivityPlan.json"
+side_activity_data = {}
+if not side_activity_path.exists():
+    fail("Contextual side activity plan missing: Data/ContextualSideActivityPlan.json")
+else:
+    try:
+        side_activity_data = json.loads(read(side_activity_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/ContextualSideActivityPlan.json: {exc}")
+
+if side_activity_data:
+    try:
+        exploration_for_side = json.loads(read(ROOT / "Data" / "ExplorationEnvelopePlan.json"))
+    except json.JSONDecodeError as exc:
+        exploration_for_side = {}
+        fail(f"Invalid ExplorationEnvelopePlan.json while checking side activities: {exc}")
+
+    try:
+        rewards_for_side = json.loads(read(ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"))
+    except json.JSONDecodeError as exc:
+        rewards_for_side = {}
+        fail(f"Invalid JourneyDiscoveryRewardPlan.json while checking side activities: {exc}")
+
+    envelope_by_pair = {
+        (str(ch.get("route") or ""), str(ch.get("chapter") or "")): ch
+        for ch in exploration_for_side.get("chapters", [])
+        if isinstance(ch, dict)
+    }
+    reward_ids = {
+        str(row.get("discovery_id") or "")
+        for row in rewards_for_side.get("discovery_rewards", [])
+        if isinstance(row, dict)
+    }
+
+    seen_side_ids = set()
+    coverage = set()
+    for chapter in side_activity_data.get("chapters", []):
+        route = str(chapter.get("route") or "")
+        chapter_id = str(chapter.get("chapter") or "")
+        pair = (route, chapter_id)
+        envelope = envelope_by_pair.get(pair)
+        if not envelope:
+            fail(f"Side activity chapter has no exploration envelope: {route}/{chapter_id}")
+            continue
+        coverage.add(pair)
+        anchor_order = [str(x) for x in envelope.get("anchor_order", [])]
+        anchor_index = {beat: i for i, beat in enumerate(anchor_order)}
+        activities = chapter.get("activities", [])
+        if route == "FrodoMain" and len(activities) < 2:
+            fail(f"Contextual side activity coverage too thin for {route}/{chapter_id}")
+
+        for activity in activities:
+            aid = str(activity.get("id") or "")
+            opens = str(activity.get("available_after") or "")
+            closes = str(activity.get("ends_before") or "")
+            reward = str(activity.get("discovery_reward_id") or "")
+            if not aid:
+                fail(f"Unnamed side activity in {route}/{chapter_id}")
+                continue
+            if aid in seen_side_ids:
+                fail(f"Duplicate contextual side activity id: {aid}")
+            seen_side_ids.add(aid)
+            if opens not in anchor_index or closes not in anchor_index or anchor_index[opens] >= anchor_index[closes]:
+                fail(f"Contextual side activity {aid} has invalid story window")
+            if activity.get("canon_effect") != "NONE":
+                fail(f"Contextual side activity {aid} may not mutate canon")
+            if activity.get("may_advance_required_anchor") is not False:
+                fail(f"Contextual side activity {aid} may not advance required story anchors")
+            if activity.get("may_change_canon_outcome") is not False:
+                fail(f"Contextual side activity {aid} may not change canon outcomes")
+            if activity.get("future_knowledge_allowed") is not False:
+                fail(f"Contextual side activity {aid} must forbid future knowledge")
+            if not activity.get("film_context"):
+                fail(f"Contextual side activity {aid} must document why it fits the film context")
+            if not activity.get("urgency_policy"):
+                fail(f"Contextual side activity {aid} must define an urgency override")
+            if reward not in reward_ids:
+                fail(f"Contextual side activity {aid} references unknown Journey Discovery reward {reward}")
+
+    expected_side_coverage = {("FrodoMain", f"P1C{i:02d}") for i in range(1, 9)}
+    expected_side_coverage.add(("GandalfParallel", "P1C01"))
+    missing_side_coverage = sorted(expected_side_coverage - coverage)
+    if missing_side_coverage:
+        fail("Contextual side activity coverage missing: " + ", ".join(f"{r}/{c}" for r, c in missing_side_coverage))
+
+    build_text_pg63 = read(SOURCE / "ShireJourney.Build.cs")
+    if "Data/ContextualSideActivityPlan.json" not in build_text_pg63:
+        fail("Contextual side activity plan is not packaged as a runtime dependency")
+
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
 living_world_data = {}

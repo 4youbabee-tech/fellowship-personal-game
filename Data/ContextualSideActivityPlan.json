@@ -1,0 +1,533 @@
+{
+  "schema_version": 1,
+  "plan_id": "CONTEXTUAL_SIDE_ACTIVITY_PLAN_V1",
+  "status": "STATIC_CONTRACT_IMPLEMENTED_RUNTIME_WIRING_PENDING",
+  "purpose": "Add optional game-like side activities that plausibly happen inside the time, place and character context of the Peter Jackson film story without creating an alternate main story.",
+  "canon_rule": "The film spine is mandatory. Side activities are unseen gap-fill moments only: plausible things the player could have done between film anchors.",
+  "hard_rules": [
+    "No side activity may replace, delay past plausibility, reorder, skip or change a mandatory film-story outcome.",
+    "No new major villain, faction, artifact, prophecy, romance, betrayal or world-changing event may be invented for side content.",
+    "Named characters may participate only when they are plausibly present and not locked in a conflicting film beat.",
+    "Side content may expand ordinary travel, preparation, friendship, observation, culture, survival and local life.",
+    "Future knowledge is forbidden. Dialogue and objectives use only what the character could know at that story point.",
+    "Rewards come from Journey Discoveries, Chronicle, dialogue/memory and navigation quality-of-life; no combat-stat inflation.",
+    "Urgent danger automatically suspends or cancels casual side activity and restores the mandatory route.",
+    "Failure in a side activity never changes canon; it only ends or restarts that optional activity."
+  ],
+  "activity_types": [
+    "TRAVERSAL_CHALLENGE",
+    "OBSERVATION_CHALLENGE",
+    "TRACKING_CHALLENGE",
+    "PATTERN_MATCH",
+    "CAMP_PREPARATION",
+    "SOCIAL_MEMORY",
+    "STEALTH_LITE",
+    "TIMING_CHALLENGE",
+    "ROUTE_READING"
+  ],
+  "chapters": [
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "region": "Shire",
+      "activities": [
+        {
+          "id": "SIDE_SHIRE_FIELD_RACE",
+          "title": "A Last Race Before the Road",
+          "type": "TRAVERSAL_CHALLENGE",
+          "available_after": "GandalfArrival",
+          "ends_before": "PartyArrival",
+          "participants": [
+            "Frodo",
+            "Sam",
+            "Merry",
+            "Pippin"
+          ],
+          "film_context": "A harmless friendship moment during the still-safe Shire period before Bilbo's party turns the story.",
+          "mechanics": [
+            "follow a short field path",
+            "hit natural checkpoint gates",
+            "optional companion banter",
+            "no hard fail; slower finish changes only banter"
+          ],
+          "discovery_reward_id": "SHIRE_FIELD_RACE",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Disabled once PartyArrival begins."
+        },
+        {
+          "id": "SIDE_SHIRE_PARTY_ERRANDS",
+          "title": "Party Preparations",
+          "type": "TIMING_CHALLENGE",
+          "available_after": "ShireOpening",
+          "ends_before": "PartyArrival",
+          "participants": [
+            "Frodo",
+            "Sam",
+            "Shire residents"
+          ],
+          "film_context": "The birthday celebration is already being prepared; the player helps with ordinary lantern, food and table errands without changing any film event.",
+          "mechanics": [
+            "carry two or three lightweight props",
+            "choose a short route through market/garden life",
+            "talk to residents during delivery"
+          ],
+          "discovery_reward_id": "SHIRE_MARKET_GARDEN_LOOP",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Completes or silently expires when the party story anchor starts."
+        }
+      ]
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C02",
+      "region": "Bree / Prancing Pony",
+      "activities": [
+        {
+          "id": "SIDE_BREE_WATCH_THE_ROOM",
+          "title": "Watch the Room",
+          "type": "OBSERVATION_CHALLENGE",
+          "available_after": "PrancingPonyExterior",
+          "ends_before": "RingIncident",
+          "participants": [
+            "Frodo",
+            "Sam",
+            "Bree patrons"
+          ],
+          "film_context": "Before the public Ring incident, the hobbits are strangers in a crowded inn and can notice local reactions without learning future events.",
+          "mechanics": [
+            "observe three social clusters",
+            "identify which conversations are merely curious versus openly suspicious",
+            "unlock bounded local gossip"
+          ],
+          "discovery_reward_id": "BREE_GATE_GOSSIP",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Immediately ends when RingIncident begins."
+        },
+        {
+          "id": "SIDE_BREE_STABLE_SIGNS",
+          "title": "Stable Yard Signs",
+          "type": "TRACKING_CHALLENGE",
+          "available_after": "BreeRoadNightfall",
+          "ends_before": "RingIncident",
+          "participants": [
+            "Frodo",
+            "Sam"
+          ],
+          "film_context": "Wet roads and a busy stable give the player small environmental clues that the road is unusually tense, without revealing the Nazgul attack outcome.",
+          "mechanics": [
+            "inspect hoof marks",
+            "compare fresh versus old tracks",
+            "return to the inn before story escalation"
+          ],
+          "discovery_reward_id": "BREE_STABLE_YARD",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Disabled after the Ring incident."
+        }
+      ]
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C03",
+      "region": "Weathertop / Ford",
+      "activities": [
+        {
+          "id": "SIDE_WILDERNESS_TRACK_READING",
+          "title": "Read the Trail",
+          "type": "TRACKING_CHALLENGE",
+          "available_after": "MidgewaterRoad",
+          "ends_before": "WeathertopReveal",
+          "participants": [
+            "Frodo",
+            "Aragorn",
+            "Sam"
+          ],
+          "film_context": "Strider is guiding the hobbits through dangerous country; a short trail-reading lesson fits naturally into travel.",
+          "mechanics": [
+            "find three subtle trail signs",
+            "choose the safer-looking path",
+            "Aragorn comments on the reasoning"
+          ],
+          "discovery_reward_id": "WILDERNESS_TRACK_SIGNS",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Ends when Weathertop becomes the immediate destination."
+        },
+        {
+          "id": "SIDE_WEATHERTOP_CAMP_PREP",
+          "title": "Prepare the Camp",
+          "type": "CAMP_PREPARATION",
+          "available_after": "WeathertopReveal",
+          "ends_before": "NazgulCloseIn",
+          "participants": [
+            "Frodo",
+            "Sam",
+            "Merry",
+            "Pippin",
+            "Aragorn"
+          ],
+          "film_context": "The group pauses before the attack; the player can gather water, check gear and choose where supplies sit, but the attack still happens exactly as required.",
+          "mechanics": [
+            "collect nearby camp items",
+            "place two supplies",
+            "optional companion comments"
+          ],
+          "discovery_reward_id": "CAMP_PREPARATION",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Force-cancels when NazgulCloseIn begins."
+        }
+      ]
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C04",
+      "region": "Rivendell",
+      "activities": [
+        {
+          "id": "SIDE_RIVENDELL_MAP_TABLE",
+          "title": "Paths on the Map",
+          "type": "PATTERN_MATCH",
+          "available_after": "RivendellAwakening",
+          "ends_before": "CouncilBegins",
+          "participants": [
+            "Frodo",
+            "Bilbo"
+          ],
+          "film_context": "During recovery and reunion, a quiet map-table activity can deepen the sense of place without deciding the Council's mission in advance.",
+          "mechanics": [
+            "match known places already visited",
+            "place two remembered route markers",
+            "unlock Chronicle context only"
+          ],
+          "discovery_reward_id": "RIVENDELL_LIBRARY",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Unavailable once CouncilBegins starts."
+        },
+        {
+          "id": "SIDE_RIVENDELL_OVERLOOK_MEMORY",
+          "title": "The Valley Overlook",
+          "type": "SOCIAL_MEMORY",
+          "available_after": "BilboReunion",
+          "ends_before": "CouncilBegins",
+          "participants": [
+            "Frodo",
+            "Bilbo"
+          ],
+          "film_context": "A short walk and reflective conversation between reunion and Council, using only memories and concerns already established.",
+          "mechanics": [
+            "reach the overlook",
+            "choose one remembered journey topic",
+            "store a bounded companion-memory flag"
+          ],
+          "discovery_reward_id": "RIVENDELL_OVERLOOK",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Ends cleanly when Council begins."
+        }
+      ]
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C05",
+      "region": "Fellowship road / Caradhras / West Gate",
+      "activities": [
+        {
+          "id": "SIDE_FELLOWSHIP_TRAINING",
+          "title": "Camp Practice",
+          "type": "TIMING_CHALLENGE",
+          "available_after": "FellowshipCamp",
+          "ends_before": "CrebainWarning",
+          "participants": [
+            "Frodo",
+            "Boromir",
+            "Merry",
+            "Pippin"
+          ],
+          "film_context": "The Fellowship has a travel-camp period where light training and banter fit the film's companionship tone.",
+          "mechanics": [
+            "three non-damaging timing prompts",
+            "optional block/dodge practice",
+            "banter changes by performance"
+          ],
+          "discovery_reward_id": "FELLOWSHIP_TRAINING",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Immediately suspends at CrebainWarning."
+        },
+        {
+          "id": "SIDE_WEST_GATE_SYMBOL_SEARCH",
+          "title": "Marks in the Stone",
+          "type": "OBSERVATION_CHALLENGE",
+          "available_after": "MoriaLake",
+          "ends_before": "MoriaDoorOpens",
+          "participants": [
+            "Frodo",
+            "Gandalf",
+            "Gimli"
+          ],
+          "film_context": "While the company is stalled at the West Gate, the player can examine worn marks and stonework without solving or changing the mandatory door outcome.",
+          "mechanics": [
+            "inspect three stone details",
+            "Gimli/Gandalf provide bounded reactions",
+            "return to the main door interaction"
+          ],
+          "discovery_reward_id": "WEST_GATE_INSCRIPTIONS",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Ends when MoriaDoorOpens begins."
+        }
+      ]
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C06",
+      "region": "Moria",
+      "activities": [
+        {
+          "id": "SIDE_MORIA_ECHO_PATH",
+          "title": "Follow the Echo",
+          "type": "ROUTE_READING",
+          "available_after": "MoriaEntry",
+          "ends_before": "BalinsTombReveal",
+          "participants": [
+            "Frodo",
+            "Gandalf",
+            "Gimli"
+          ],
+          "film_context": "Moria is vast, dark and uncertain; route-reading through echoes adds gameplay without inventing civilians or changing the required path.",
+          "mechanics": [
+            "listen at two junctions",
+            "compare echo character",
+            "choose a side alcove that loops back to the Fellowship route"
+          ],
+          "discovery_reward_id": "MORIA_ECHO_ROUTE",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "All optional routing locks once Balin's Tomb escalation begins."
+        },
+        {
+          "id": "SIDE_MORIA_RELIEF",
+          "title": "A Dwarven Relief",
+          "type": "PATTERN_MATCH",
+          "available_after": "MoriaUnease",
+          "ends_before": "BalinsTombReveal",
+          "participants": [
+            "Frodo",
+            "Gimli"
+          ],
+          "film_context": "A surviving carving gives Gimli a small cultural reaction before the Tomb reveal, without spoiling what happened to Balin.",
+          "mechanics": [
+            "inspect matching carved motifs",
+            "Gimli identifies only what he plausibly knows",
+            "unlock Chronicle/lore topic"
+          ],
+          "discovery_reward_id": "MORIA_DWARVEN_RELIEF",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Unavailable after BalinsTombReveal."
+        }
+      ]
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C07",
+      "region": "Lothlorien",
+      "activities": [
+        {
+          "id": "SIDE_LORIEN_MEMORY_CLEARING",
+          "title": "A Quiet Place",
+          "type": "SOCIAL_MEMORY",
+          "available_after": "LorienEntry",
+          "ends_before": "Mirror",
+          "participants": [
+            "Frodo",
+            "one available Fellowship companion"
+          ],
+          "film_context": "The Fellowship is grieving after Moria; an optional quiet conversation gives the loss space without changing the required Galadriel/Mirror sequence.",
+          "mechanics": [
+            "choose one companion",
+            "sit or stand in the clearing",
+            "one bounded grief conversation",
+            "store a companion-memory topic"
+          ],
+          "discovery_reward_id": "LORIEN_GRIEF_CLEARING",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Pauses when a mandatory Galadriel/Mirror beat starts."
+        },
+        {
+          "id": "SIDE_LORIEN_RIVER_PREP",
+          "title": "Ready the Boats",
+          "type": "CAMP_PREPARATION",
+          "available_after": "Mirror",
+          "ends_before": "LorienDeparture",
+          "participants": [
+            "Frodo",
+            "Sam",
+            "Lorien elves"
+          ],
+          "film_context": "The company is preparing to leave by river; checking supplies and boat balance is ordinary gap-fill that cannot alter the departure outcome.",
+          "mechanics": [
+            "inspect two boats",
+            "place light supplies",
+            "hear short departure comments"
+          ],
+          "discovery_reward_id": "LORIEN_RIVER_PREP",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Expires at LorienDeparture."
+        }
+      ]
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "region": "Anduin / Amon Hen",
+      "activities": [
+        {
+          "id": "SIDE_ANDUIN_CURRENT_READING",
+          "title": "Read the River",
+          "type": "TIMING_CHALLENGE",
+          "available_after": "AnduinDeparture",
+          "ends_before": "ArgonathReveal",
+          "participants": [
+            "Frodo",
+            "Sam",
+            "Aragorn"
+          ],
+          "film_context": "During river travel, the player can learn to read safe currents; the activity never changes the destination or film timing.",
+          "mechanics": [
+            "choose between visible current lanes",
+            "small paddle-timing sequence",
+            "Aragorn gives bounded navigation feedback"
+          ],
+          "discovery_reward_id": "ANDUIN_BANK_WATCH",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Ends before the Argonath reveal."
+        },
+        {
+          "id": "SIDE_AMON_HEN_CAMP_WATCH",
+          "title": "Distance in the Camp",
+          "type": "OBSERVATION_CHALLENGE",
+          "available_after": "AmonHenArrival",
+          "ends_before": "BoromirPressure",
+          "participants": [
+            "Frodo",
+            "Fellowship"
+          ],
+          "film_context": "The company is visibly strained at Amon Hen. The player may notice spacing, silence and mood without gaining knowledge of Boromir's next action.",
+          "mechanics": [
+            "observe three companion positions",
+            "optional short check-in with one companion",
+            "record a tension Chronicle note"
+          ],
+          "discovery_reward_id": "AMON_HEN_CAMP_DISTANCE",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Immediately ends at BoromirPressure."
+        }
+      ]
+    },
+    {
+      "route": "GandalfParallel",
+      "chapter": "P1C01",
+      "region": "Isengard / Orthanc",
+      "activities": [
+        {
+          "id": "SIDE_ORTHANC_PARAPET_SURVEY",
+          "title": "What Has Changed Below",
+          "type": "OBSERVATION_CHALLENGE",
+          "available_after": "OrthancPrison",
+          "ends_before": "OrthancEscape",
+          "participants": [
+            "Gandalf"
+          ],
+          "film_context": "From captivity, Gandalf can observe the industrial transformation below without affecting the required escape.",
+          "mechanics": [
+            "locate three visible changes",
+            "record bounded observations",
+            "unlock Chronicle context"
+          ],
+          "discovery_reward_id": "ORTHANC_PARAPET_VIEW",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Ends when OrthancEscape starts."
+        },
+        {
+          "id": "SIDE_ORTHANC_OLD_COUNSEL_MEMORY",
+          "title": "Old Counsel, Broken Trust",
+          "type": "SOCIAL_MEMORY",
+          "available_after": "IsengardArrival",
+          "ends_before": "OrthancBetrayal",
+          "participants": [
+            "Gandalf"
+          ],
+          "film_context": "A brief internal/reflection interaction can contrast the old alliance with the unease of the present without revealing Saruman's betrayal early.",
+          "mechanics": [
+            "inspect two old study/counsel details",
+            "choose one bounded reflection topic",
+            "store a non-story memory flag"
+          ],
+          "discovery_reward_id": "ORTHANC_OLD_ALLIANCE_MEMORY",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Ends automatically at OrthancBetrayal."
+        }
+      ]
+    }
+  ],
+  "reward_contract": {
+    "authority": "Data/JourneyDiscoveryRewardPlan.json",
+    "rule": "Side activities may award only the linked first-time discovery reward and bounded memory/dialogue/Chronicle effects.",
+    "repeat_policy": "Replay is allowed only for fun/banter where appropriate; Journey Insight remains first-time-only."
+  },
+  "runtime_next": [
+    "Implement a lightweight side-activity trigger/state layer by extending existing quest/exploration owners rather than creating a competing story manager.",
+    "Use existing chapter builders and story-beat gates for availability.",
+    "Feed completion into JourneyDiscoveryRewardPlan and named-NPC memory/dialogue context.",
+    "Persist only compact optional completion IDs and reward state.",
+    "Add automation proving each side activity cannot mutate required story anchors."
+  ]
+}

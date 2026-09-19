@@ -489,7 +489,8 @@
         "Data/BiomePlan.csv",
         "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
         "Data/ExplorationEnvelopePlan.json",
-        "Scripts/pre_unreal_validate.py"
+        "Scripts/pre_unreal_validate.py",
+        "Data/ContextualSideActivityPlan.json"
       ],
       "implementation_refs": [
         "Shire exploration loops and side stories",
@@ -497,7 +498,8 @@
         "landmark discoveries",
         "film-compatible chapter progression",
         "Data/ExplorationEnvelopePlan.json defines free-roam windows and return-to-story rules for FrodoMain P1C01-P1C08 plus GandalfParallel P1C01.",
-        "PG-060 machine-checks anchor ordering, optional discovery bounds and no-story-mutation rules."
+        "PG-060 machine-checks anchor ordering, optional discovery bounds and no-story-mutation rules.",
+        "ContextualSideActivityPlan defines original gap-fill mini-games between film anchors; side content is plausible within the same time/place/character context and cannot alter canon."
       ],
       "missing_work": [
         "Wire the declared optional discoveries and return guidance into chapter runtime where still absent",
@@ -1484,13 +1486,15 @@
       "intent": "Reward first-time exploration with Journey Insight, Chronicle/map/knowledge unlocks, companion memory/dialogue opportunities and region-completion bonuses without adding canon-breaking power or allowing story skips.",
       "evidence": [
         "Data/JourneyDiscoveryRewardPlan.json",
-        "Data/ExplorationEnvelopePlan.json"
+        "Data/ExplorationEnvelopePlan.json",
+        "Data/ContextualSideActivityPlan.json"
       ],
       "implementation_refs": [
         "Static reward contract covers 26 existing optional discoveries.",
         "Four thematic reward categories: Road Wisdom, Peoples and Places, Fellowship Bonds, Peril Sense.",
         "Journey Insight milestone rewards favor content/navigation quality-of-life rather than combat stat inflation.",
-        "Region completion bonuses exist for all active Part I exploration chapters/routes."
+        "Region completion bonuses exist for all active Part I exploration chapters/routes.",
+        "Contextual side activities feed the existing first-time Journey Discovery reward loop instead of creating a separate XP economy."
       ],
       "missing_work": [
         "Wire discovery triggers to runtime chapter landmarks/side activities.",
@@ -1514,6 +1518,46 @@
         "REQ-QA-001"
       ],
       "checkpoint": "CP56_JOURNEY_DISCOVERY"
+    },
+    {
+      "id": "REQ-EXP-005",
+      "title": "Original side activities must feel like unseen moments from the film journey",
+      "category": "PlayerExperience",
+      "priority": "HIGH",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly confirmed that the main story must remain the film, while optional exploration may include original side games that plausibly fit the film's context.",
+      "intent": "Create enjoyable optional mini-games, social moments, observation, survival, tracking, preparation and traversal activities in the gaps between film anchors, as if they could have happened off-camera, without inventing an alternate plot.",
+      "evidence": [
+        "Data/ContextualSideActivityPlan.json",
+        "Data/ExplorationEnvelopePlan.json",
+        "Data/JourneyDiscoveryRewardPlan.json"
+      ],
+      "implementation_refs": [
+        "18 contextual side activities now cover FrodoMain P1C01-P1C08 plus GandalfParallel P1C01.",
+        "Every activity declares exact opening/closing story anchors, participants, film-context rationale, mechanics, reward link and urgency policy.",
+        "Activities are explicitly barred from advancing required anchors, changing canon outcomes or revealing future knowledge."
+      ],
+      "missing_work": [
+        "Wire side-activity availability/completion into existing runtime quest/exploration state.",
+        "Implement HUD/interact presentation and compact save persistence.",
+        "Validate representative activities in UE4.27 for pacing, interruption and story-safety.",
+        "Add engine automation that proves side activities cannot skip mandatory film beats."
+      ],
+      "acceptance_criteria": [
+        "Main story remains Peter Jackson film chronology and outcomes.",
+        "Original side content feels plausible for the current place, time, companions and danger level.",
+        "Urgent film beats always override casual optional activities.",
+        "No side activity introduces future knowledge or alternate canon.",
+        "Optional play remains enjoyable even when the player ignores completion rewards."
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-EXP-002",
+        "REQ-EXP-004",
+        "REQ-NPC-005",
+        "REQ-SAVE-001"
+      ],
+      "checkpoint": "CP56_CONTEXTUAL_SIDE_PLAY"
     }
   ],
   "hard_invariants": [
@@ -1891,6 +1935,23 @@
       "authority": "USER_EXPLICIT_DIRECTION",
       "evidence": [
         "Data/JourneyDiscoveryRewardPlan.json"
+      ]
+    },
+    {
+      "id": "DEC-018",
+      "title": "Side content is off-camera film-context gap-fill, never an alternate story",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-VISION-001",
+        "REQ-EXP-002",
+        "REQ-EXP-004",
+        "REQ-EXP-005"
+      ],
+      "resolution": "Keep all mandatory story events and outcomes on the Peter Jackson film spine. Optional exploration may add original side games and moments only when they plausibly fit the same story window, location, available characters, knowledge state and emotional/danger context. Treat them as off-camera moments that could have happened between film scenes. They may reward exploration and deepen relationships/world knowledge, but cannot invent a competing major plot or alter canon.",
+      "rationale": "The owner wants a complete game, not a film-only corridor, while explicitly rejecting deviation from the film's main story.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/ContextualSideActivityPlan.json"
       ]
     }
   ],
@@ -2348,16 +2409,23 @@
       "title": "Journey Discovery rewards and exploration progression",
       "status": "ACTIVE",
       "rationale": "Turn optional exploration into persistent, meaningful game progression without disturbing canon anchors."
+    },
+    {
+      "order": 3,
+      "id": "WORK-EXP-005",
+      "title": "Contextual side-play implementation",
+      "status": "ACTIVE",
+      "rationale": "Build optional game-like activities that feel like plausible unseen moments between fixed film anchors."
     }
   ],
   "last_reconciliation": {
-    "date": "2026-09-19",
-    "reason": "Owner requested a discovery-reward loop so exploration feels like a complete game system, using the satisfying discovery-bonus idea from exploration RPGs while staying in this world's tone.",
+    "date": "2026-09-20",
+    "reason": "Owner clarified that original side games are welcome only as plausible film-context gap-fill; the film remains the mandatory story.",
     "summary": [
-      "Journey Discovery static contract now maps 26 existing optional discoveries to first-time rewards.",
-      "Journey Insight rewards knowledge, map memory, companion/lore topics and navigation quality-of-life rather than combat stat inflation.",
-      "Every active Part I route/chapter receives a region-completion bonus.",
-      "Runtime/save/UI/automation wiring remains pending and must still pass the exact-head UE4.27 gate before develop merge."
+      "Added 18 contextual side activities across all current Part I chapters/routes.",
+      "Every side activity is bounded by exact story anchors, participant presence, knowledge limits and urgency rules.",
+      "Side activities feed Journey Discoveries/Chronicle/dialogue-memory rewards and cannot alter canon or advance required story beats.",
+      "Runtime implementation and UE4.27 validation remain pending; PR #53 exact-head gate is unchanged."
     ]
   },
   "development_mode": {

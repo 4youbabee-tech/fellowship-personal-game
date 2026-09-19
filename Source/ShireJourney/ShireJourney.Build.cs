@@ -35,5 +35,6 @@ public class ShireJourney : ModuleRules
         RuntimeDependencies.Add("$(ProjectDir)/Data/FilmDialogueSourceContext.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/ExplorationEnvelopePlan.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/JourneyDiscoveryRewardPlan.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/ContextualSideActivityPlan.json");
     }
 }
