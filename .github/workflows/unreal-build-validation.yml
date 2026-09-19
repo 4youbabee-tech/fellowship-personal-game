@@ -100,29 +100,43 @@ jobs:
 
       - name: Checkout exact commit with resilient archive download
         uses: actions/github-script@v7
-        env:
-          GH_TOKEN: ${{ github.token }}
         with:
           script: |
             const fs = require('fs');
             const path = require('path');
             const cp = require('child_process');
 
-            const archive = path.join(process.env.RUNNER_TEMP, `fellowship-${process.env.GITHUB_SHA}.zip`);
-            const extract = path.join(process.env.RUNNER_TEMP, `fellowship-${process.env.GITHUB_SHA}`);
+            const sha = process.env.GITHUB_SHA;
+            const archive = path.join(process.env.RUNNER_TEMP, `fellowship-${sha}.zip`);
+            const extract = path.join(process.env.RUNNER_TEMP, `fellowship-${sha}`);
             const workspace = process.env.GITHUB_WORKSPACE;
-            const url = `https://api.github.com/repos/${process.env.GITHUB_REPOSITORY}/zipball/${process.env.GITHUB_SHA}`;
 
             fs.rmSync(archive, { force: true });
             fs.rmSync(extract, { recursive: true, force: true });
             fs.mkdirSync(extract, { recursive: true });
 
-            cp.execFileSync('curl.exe', [
-              '-L', '--fail', '--retry', '6', '--retry-delay', '5', '--retry-all-errors',
-              '-H', `Authorization: Bearer ${process.env.GH_TOKEN}`,
-              '-H', 'X-GitHub-Api-Version: 2022-11-28',
-              '-o', archive, url
-            ], { stdio: 'inherit' });
+            let response = null;
+            for (let attempt = 1; attempt <= 7; attempt++) {
+              try {
+                response = await github.request('GET /repos/{owner}/{repo}/zipball/{ref}', {
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: sha,
+                  request: { parseSuccessResponseBody: false }
+                });
+                break;
+              } catch (error) {
+                if (attempt >= 7) throw error;
+                console.log(`Archive attempt ${attempt} failed; retrying in 5 seconds.`);
+                await new Promise(resolve => setTimeout(resolve, 5000));
+              }
+            }
+            if (!response) throw new Error('Exact-commit archive download failed after retries.');
+
+            const body = Buffer.isBuffer(response.data)
+              ? response.data
+              : Buffer.from(await response.data.arrayBuffer?.() || response.data);
+            fs.writeFileSync(archive, body);
 
             const escapedArchive = archive.replace(/'/g, "''");
             const escapedExtract = extract.replace(/'/g, "''");
@@ -145,8 +159,8 @@ jobs:
 
             const project = path.join(workspace, 'ShireJourney.uproject');
             if (!fs.existsSync(project)) throw new Error('ShireJourney.uproject missing after exact-commit archive extraction.');
-            fs.writeFileSync(path.join(workspace, '.ci-source-sha'), process.env.GITHUB_SHA + '\n', 'utf8');
-            console.log(`Checked out exact commit ${process.env.GITHUB_SHA} without a temp PowerShell step script.`);
+            fs.writeFileSync(path.join(workspace, '.ci-source-sha'), sha + '\n', 'utf8');
+            console.log(`Checked out exact commit ${sha} via authenticated GitHub archive request.`);
 
       - name: Verify Unreal 4.27.2 and project
         shell: cmd
