@@ -844,7 +844,8 @@
         "ignored acquisition inbox",
         "approved asset manifest contract",
         "Pre-Unreal provenance validation",
-        "Programmer-supplied future sourcing shortlist is persisted in Data/ExternalAssetManifest.json by category"
+        "Programmer-supplied future sourcing shortlist is persisted in Data/ExternalAssetManifest.json by category",
+        "Production importer now copies tracked SourceAssets into Saved/ShireProductionImportWorking with UE4.27-compatible IPlatformFile::CopyDirectoryTree before any OBJ normalization/import."
       ],
       "missing_work": [
         "Acquire specific assets only when entitlement/license evidence is available",
@@ -1369,7 +1370,8 @@
       ],
       "implementation_refs": [
         "Runtime observer rejects late fatal/assert/ensure messages and spontaneous exits after ready markers; requires a live observation window and final log scan.",
-        "Subprocess regression scenarios run in Pre-Unreal CI."
+        "Subprocess regression scenarios run in Pre-Unreal CI.",
+        "Self-hosted UE4 validation now avoids fragile later temporary PowerShell scripts for checkout/warning analysis and explicitly verifies the exact PR-head SHA."
       ],
       "missing_work": [
         "Validate this observer on the Windows UE4.27 runner.",
@@ -1417,7 +1419,8 @@
         "PR #53 is the single active continuation path for CP56 mega integration.",
         "Part I exploration envelopes and optional discovery contracts now cover all active routes/chapters.",
         "Source-grounded original dialogue bank expanded to 53 validated variants.",
-        "Production asset import now operates on an ignored Saved/ working copy so one-click updates do not dirty tracked SourceAssets."
+        "Production asset import now operates on an ignored Saved/ working copy so one-click updates do not dirty tracked SourceAssets.",
+        "Self-hosted UE4 validation now avoids fragile later temporary PowerShell scripts for checkout/warning analysis and explicitly verifies the exact PR-head SHA."
       ],
       "missing_work": [
         "Get final PR #53 head through full UE4.27 validation.",
@@ -2619,13 +2622,12 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Owner ordered the next large production batch immediately after closing Unreal: audit sources/manager, lock the Ring as the series axis, organize full character replacement, and raise the world to the supplied cinematic benchmark.",
+    "reason": "Mega-pass red-to-green repair continued immediately after implementation.",
     "summary": [
-      "Ring quest promoted to a CRITICAL systemic runtime requirement with exact-head audit hooks.",
-      "Full Part I character production matrix added with rig families, priorities and provenance rules.",
-      "All current Part I regions receive cinematic hero-vista/layered-composition production targets.",
-      "Owner screenplay/source-pack/image references are indexed as reference-only inputs; derived runtime content stays original.",
-      "None of these new implementation claims are promoted to UE4-validated or visually accepted until current-head engine evidence exists."
+      "Intermediate head 5699ef0 passed Pre-Unreal Validation #348.",
+      "Unreal Build #182 exposed an actual UE4.27 incompatibility in the non-destructive importer: IFileManager::CopyDirectoryTree is unavailable in UE4.27.",
+      "Importer repair now uses IPlatformFile::CopyDirectoryTree while preserving the Saved/ working-copy safety contract.",
+      "Current exact head must rerun both Pre-Unreal and full UE4.27 validation before merge; no develop integration is claimed yet."
     ]
   },
   "development_mode": {
