@@ -1425,6 +1425,45 @@
         "REQ-QA-001"
       ],
       "checkpoint": "CP56_MEGA_INTEGRATION"
+    },
+    {
+      "id": "REQ-SOURCE-001",
+      "title": "Use owner-supplied film scripts as bounded dialogue context sources",
+      "category": "StoryDialogueSources",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly requested that the uploaded Fellowship and Two Towers screenplay PDFs become core references so conversations feel situated inside the film world without requiring exact script repetition.",
+      "intent": "Derive scene order, speaker presence, emotional pressure, relationship state, conversational topics and knowledge ceilings from the supplied film-script sources while keeping runtime dialogue original, offline, non-verbatim and subordinate to project canon/governance.",
+      "evidence": [
+        "Data/FilmDialogueSourceContext.json",
+        "Data/BoundedDialoguePlan.json",
+        "Source/ShireJourney/ShireNPCContextSubsystem.cpp"
+      ],
+      "implementation_refs": [
+        "Fellowship screenplay mapped into Part I route/chapter/story-beat contexts.",
+        "Two Towers screenplay indexed into future Part II arc seeds.",
+        "Runtime context will expose active source grounding to bounded dialogue selection."
+      ],
+      "missing_work": [
+        "Validate source-context loading in UE4.27 on PR #53.",
+        "Expand Part II route contexts when Part II runtime production begins.",
+        "Feed only bounded summaries/knowledge limits to any future local on-device language layer."
+      ],
+      "acceptance_criteria": [
+        "Part I source context is recoverable without opening PDFs at runtime.",
+        "No long or verbatim screenplay lines are stored as runtime dialogue.",
+        "NPCs cannot gain future knowledge from later screenplay events.",
+        "Two Towers remains reference-ready without falsely claiming Part II runtime implementation.",
+        "Shipped dialogue remains offline."
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-EXP-003",
+        "REQ-NPC-005",
+        "REQ-QA-001",
+        "REQ-MEM-004"
+      ],
+      "checkpoint": "CP56_SOURCE_GROUNDED_DIALOGUE"
     }
   ],
   "hard_invariants": [
@@ -1749,6 +1788,24 @@
       "evidence": [
         "Data/ProjectGovernor.json",
         "Docs/AUTOMATION_FIRST_DELIVERY.md"
+      ]
+    },
+    {
+      "id": "DEC-015",
+      "title": "Screenplays ground context, not verbatim runtime dialogue",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-SOURCE-001",
+        "REQ-VISION-001",
+        "REQ-NPC-005",
+        "REQ-QA-001"
+      ],
+      "resolution": "Treat the supplied Fellowship and Two Towers screenplay PDFs as primary scene/dialogue-context references. Store derived chronology, mood, safe topics and future-knowledge blocks. Runtime dialogue stays original and bounded; the shipped game never needs the PDFs. Part I contexts are active now and Part II contexts are reference seeds until its runtime production begins.",
+      "rationale": "The owner wants conversation to feel naturally embedded in the film world and broader than fixed scripted exchanges without requiring exact wording.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/FilmDialogueSourceContext.json",
+        "Data/BoundedDialoguePlan.json"
       ]
     }
   ],
@@ -2192,16 +2249,23 @@
       "title": "CP56 whole-game mega integration and green-head repair loop",
       "status": "ACTIVE",
       "rationale": "Largest coordinated pass across gameplay, characters, living world, offline intelligence, story/persistence, presentation and automation. Current PR head must be repaired until green."
+    },
+    {
+      "order": 1,
+      "id": "WORK-DLG-001",
+      "title": "Source-grounded living dialogue expansion",
+      "status": "ACTIVE",
+      "rationale": "Use the supplied screenplay references to deepen original in-world conversation context while the PR #53 red-to-green loop continues."
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Owner required durable recording of important agreed requests while excluding rejected/non-adopted ideas, and confirmed the reviewed automation-quality proposal belongs in project governance.",
+    "reason": "Owner asked for a large implementation pass using both supplied screenplay PDFs as core conversation/context references.",
     "summary": [
-      "Accepted/confirmed major requests are authoritative and must be recoverable from the Governor.",
-      "Rejected or merely discussed ideas do not become active scope.",
-      "Automation-first quality expansion is accepted as an extension of REQ-QA-001 with exact-SHA evidence and the existing 30 FPS target.",
-      "PR #53 remains the single active CP56 continuation path; green validation is still required before merge."
+      "Fellowship is now structured Part I dialogue context.",
+      "Two Towers is preserved as future Part II context evidence.",
+      "Runtime dialogue remains original/offline and must respect knowledge ceilings.",
+      "PR #53 remains blocked from merge until required validation is green."
     ]
   },
   "development_mode": {

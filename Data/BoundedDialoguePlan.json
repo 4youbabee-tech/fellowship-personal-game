@@ -19,7 +19,9 @@
     "If context is ambiguous or validation fails, use authored fallback or silence.",
     "Runtime dialogue intelligence must be fully offline; remote/cloud language-model calls are forbidden in the shipped gameplay path.",
     "Generated/varied text is cacheable and bounded by repetition policy.",
-    "No runtime API key, internet connection or cloud inference endpoint may be required for NPC dialogue."
+    "No runtime API key, internet connection or cloud inference endpoint may be required for NPC dialogue.",
+    "User-supplied screenplay PDFs may ground chronology, speaker presence, tone, relationship pressure and knowledge ceilings, but screenplay wording is never copied into runtime dialogue.",
+    "Film-source context is advisory and subordinate to the Project Governor, Story Canon Bible, FilmExperiencePlan and current story-state knowledge gates."
   ],
   "context_inputs": [
     "profile_id",
@@ -34,7 +36,11 @@
     "QuestStage",
     "CompletedStoryBeats",
     "location_tag",
-    "recent_intent_history"
+    "recent_intent_history",
+    "film_source_context_id",
+    "film_source_context_summary",
+    "source_context_safe_topics",
+    "source_context_future_knowledge_blocks"
   ],
   "output_contract": [
     "intent_id",
@@ -160,5 +166,11 @@
     "local_small_model_allowed": true,
     "local_model_must_be_optional": true,
     "deterministic_fallback_required": true
+  },
+  "source_grounding": {
+    "status": "PART1_RUNTIME_INTEGRATION_ACTIVE",
+    "source_plan": "Data/FilmDialogueSourceContext.json",
+    "use": "Select compact derived context from route, chapter and completed story beats. It changes topic/tone/knowledge grounding, never mandatory outcomes.",
+    "output_policy": "Original project-authored or bounded local text only; no screenplay reproduction."
   }
 }
