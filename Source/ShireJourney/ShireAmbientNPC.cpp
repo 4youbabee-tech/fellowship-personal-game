@@ -488,7 +488,14 @@ void AShireAmbientNPC::UpdateWalkAnimation(float DeltaSeconds, bool bMoving)
 
     float LeftArmTarget = Swing;
     float RightArmTarget = -Swing;
-    if (!bMoving && bSocializing)
+    if (!bMoving && RoutineRole == TEXT("PartyGuest"))
+    {
+        const float Dance = FMath::Sin(ActivityPhase * 1.35f);
+        LeftArmTarget = -34.0f + Dance * 32.0f;
+        RightArmTarget = -34.0f - Dance * 32.0f;
+        Bob = FMath::Abs(FMath::Sin(ActivityPhase * 1.35f)) * 2.4f;
+    }
+    else if (!bMoving && bSocializing)
     {
         LeftArmTarget = -12.0f + FMath::Sin(ActivityPhase) * 9.0f;
         RightArmTarget = -24.0f + FMath::Sin(ActivityPhase + 1.1f) * 12.0f;
@@ -561,6 +568,7 @@ FName AShireAmbientNPC::ResolveRuntimeProfileHint() const
 
     if (RoutineRole == TEXT("Villager") ||
         RoutineRole == TEXT("PartyGuest") ||
+        RoutineRole == TEXT("PlayRunner") ||
         RoutineRole == TEXT("FieldWorker") ||
         RoutineRole == TEXT("FerryWorker"))
     {
@@ -716,6 +724,12 @@ FText AShireAmbientNPC::ResolveAmbientConversationLine(bool bResponse) const
         return FText::FromString(bResponse
             ? TEXT("Nearly ready for the dancing.")
             : TEXT("Have you seen the lanterns?"));
+    }
+    if (RoutineRole == TEXT("PlayRunner"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("Only if you can catch me first.")
+            : TEXT("Race you to the hedge and back."));
     }
     if (RoutineRole == TEXT("FieldWorker"))
     {
