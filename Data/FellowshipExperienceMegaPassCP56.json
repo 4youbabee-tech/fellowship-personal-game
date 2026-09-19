@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "plan_id": "CP56_FELLOWSHIP_EXPERIENCE_MEGAPASS_V1",
+  "status": "IMPLEMENTATION_IN_PROGRESS",
+  "purpose": "Turn the validated Part I story spine into a denser playable film-experience without changing required outcomes: more companionship, local life, social play, travel texture, environmental reactions and optional exploration between canon anchors.",
+  "canon_policy": {
+    "primary_reference": "Peter Jackson film continuity",
+    "extended_edition_policy": "Extended-edition character/world moments may enrich pacing when they do not contradict the theatrical core.",
+    "dialogue_policy": "Preserve scene intent with original game writing; do not reproduce screenplay dialogue.",
+    "side_content_policy": "Optional play may expand unused time/space between required film anchors but may not change required outcomes."
+  },
+  "experience_rules": [
+    "The player should spend meaningful time with companions before danger escalates.",
+    "Every chapter should alternate story pressure with exploration, social texture or environmental discovery.",
+    "Named-character behavior should reflect chapter context without creating alternate canon outcomes.",
+    "Ambient life must remain bounded by the existing distance-throttled simulation and target-device budget.",
+    "No new activity may block the main quest or invalidate save/route continuity."
+  ],
+  "chapters": [
+    {
+      "chapter": "P1C01",
+      "focus": "Live in the Shire before being forced to leave it.",
+      "film_spine": [
+        "Gandalf arrival",
+        "Bilbo birthday celebration",
+        "Bilbo disappearance",
+        "Ring warning",
+        "Frodo and Sam leave",
+        "Merry and Pippin join",
+        "Black Rider threat",
+        "Bucklebury Ferry escape"
+      ],
+      "playable_enrichment": [
+        "Green Dragon revelry and friendship beat before the party",
+        "party-field dancing, food, errands and harmless mischief",
+        "firework-mischief aftermath represented as an interactive world beat without copying film dialogue",
+        "optional field-path race/play beat with Shire friends",
+        "garden, mill, market, fields and ferry discoveries",
+        "story-state ambient dialogue that turns from comic/local to uneasy as the Riders approach"
+      ]
+    },
+    {
+      "chapter": "P1C02",
+      "focus": "Make Bree feel crowded, suspicious and socially reactive.",
+      "playable_enrichment": [
+        "gate arrival observation",
+        "street/inn crowd conversations",
+        "social attention escalation around the Ring incident",
+        "quiet Strider trust-building before the night attack",
+        "dawn departure with reduced ambient activity"
+      ]
+    },
+    {
+      "chapter": "P1C03",
+      "focus": "Turn wilderness travel into companionship under rising fear.",
+      "playable_enrichment": [
+        "travel banter/discoveries under Strider",
+        "camp preparation before Weathertop",
+        "post-wound urgency cues",
+        "Ford approach pressure"
+      ]
+    },
+    {
+      "chapter": "P1C04",
+      "focus": "Use Rivendell as a real social refuge before the Council.",
+      "playable_enrichment": [
+        "Bilbo reunion",
+        "walkable companion conversations",
+        "Elf routines, books, lanterns and overlook discoveries",
+        "pre-Council social space",
+        "Fellowship assembly preparation"
+      ]
+    },
+    {
+      "chapter": "P1C05",
+      "focus": "Make the Fellowship feel like a travelling group with personalities.",
+      "playable_enrichment": [
+        "camp rest and training",
+        "Merry/Pippin humor",
+        "companion formation travel",
+        "Crebain concealment",
+        "Caradhras hardship reactions",
+        "West Gate search tension"
+      ]
+    },
+    {
+      "chapter": "P1C06",
+      "focus": "Use silence, scale and companion reactions instead of civilian life.",
+      "playable_enrichment": [
+        "dead-city discoveries",
+        "companion fear/knowledge reactions",
+        "Balin's Tomb escalation",
+        "combat aftermath beats",
+        "Balrog escape pressure"
+      ]
+    },
+    {
+      "chapter": "P1C07",
+      "focus": "Let grief and wonder coexist in Lothlorien.",
+      "playable_enrichment": [
+        "post-Moria grief conversations",
+        "quiet Elf activity",
+        "Galadriel pressure",
+        "Mirror anticipation/aftermath",
+        "farewell preparation and gifts"
+      ]
+    },
+    {
+      "chapter": "P1C08",
+      "focus": "Let ordinary camp/travel tension fracture into the breaking of the Fellowship.",
+      "playable_enrichment": [
+        "Anduin camp conversation",
+        "Argonath reveal",
+        "Boromir tension foreshadowing",
+        "Amon Hen exploration before conflict",
+        "Uruk attack pressure",
+        "post-Boromir route split"
+      ]
+    }
+  ],
+  "implementation_boundary": {
+    "this_batch": [
+      "Shire friendship/revelry activity roles and optional beats",
+      "film-experience plan expansion for all eight chapters",
+      "story-safe companion/social discovery beats using existing quest-trigger/NPC systems",
+      "machine guards for the new experience contract"
+    ],
+    "later_asset_dependent": [
+      "final skeletal animation",
+      "final facial performance and lip-sync",
+      "final voice acting",
+      "final cinematic cameras and authored cutscenes",
+      "final cloth/hair simulation",
+      "final film-grade environment art"
+    ]
+  }
+}
