@@ -92,14 +92,26 @@ void AShireGameMode::BeginPlay()
                 Quests->GetQuestStage(TEXT("RoadToWeathertop")) == 2 &&
                 Quests->HasStoryBeatTriggered(TEXT("CI_STATE_AUDIT_BEAT"));
 
-            UE_LOG(
-                LogTemp,
-                bRouteRestored ? Display : Error,
-                TEXT("ShireStateAudit: route-roundtrip=%s chapter=%s questStage=%d beat=%s"),
-                bRouteRestored ? TEXT("PASS") : TEXT("FAIL"),
-                *Quests->GetCurrentChapterId().ToString(),
-                Quests->GetQuestStage(TEXT("RoadToWeathertop")),
-                Quests->HasStoryBeatTriggered(TEXT("CI_STATE_AUDIT_BEAT")) ? TEXT("yes") : TEXT("no"));
+            if (bRouteRestored)
+            {
+                UE_LOG(
+                    LogTemp,
+                    Display,
+                    TEXT("ShireStateAudit: route-roundtrip=PASS chapter=%s questStage=%d beat=%s"),
+                    *Quests->GetCurrentChapterId().ToString(),
+                    Quests->GetQuestStage(TEXT("RoadToWeathertop")),
+                    Quests->HasStoryBeatTriggered(TEXT("CI_STATE_AUDIT_BEAT")) ? TEXT("yes") : TEXT("no"));
+            }
+            else
+            {
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireStateAudit: route-roundtrip=FAIL chapter=%s questStage=%d beat=%s"),
+                    *Quests->GetCurrentChapterId().ToString(),
+                    Quests->GetQuestStage(TEXT("RoadToWeathertop")),
+                    Quests->HasStoryBeatTriggered(TEXT("CI_STATE_AUDIT_BEAT")) ? TEXT("yes") : TEXT("no"));
+            }
         }
     }
 
