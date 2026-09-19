@@ -255,6 +255,12 @@ private:
     UPROPERTY()
     TMap<FName, int32> ProgressionXP;
 
+    UPROPERTY()
+    TArray<FName> ChronicleEntryIds;
+
+    UPROPERTY()
+    TArray<FName> KnownMapRegionIds;
+
     TMap<FName, FShireJourneyDiscoveryDefinition> JourneyDiscoveryDefinitions;
     TArray<FShireJourneyInsightMilestoneDefinition> JourneyInsightDefinitions;
     TArray<FShireJourneyRegionBonusDefinition> JourneyRegionBonusDefinitions;
