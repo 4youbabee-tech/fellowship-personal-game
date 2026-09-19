@@ -77,6 +77,7 @@ Current proof boundary:
 - real UE4.27 compile/import: pending CI,
 - headless startup: pending CI,
 - PIE/device crowd density and FPS acceptance: pending.
+- resource flood: 15 new project-owned low-poly meshes are now source-controlled and runtime-wired across P1C01-P1C08.
 
 # CURRENT PROJECT STATE
 
