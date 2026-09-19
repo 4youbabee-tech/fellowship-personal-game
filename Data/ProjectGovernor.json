@@ -1767,6 +1767,43 @@
         "REQ-CHAR-004"
       ],
       "checkpoint": "ENSEMBLE_FILM_MISSIONS"
+    },
+    {
+      "id": "REQ-SIDE-001",
+      "title": "Canon-separated side-content catalog for the full trilogy",
+      "category": "StoryGameplay",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner supplied a programmer proposal covering film moments, expanded film spaces and book/character chronicles and asked to reconcile it with all prior requests to prevent future continuity errors.",
+      "intent": "Maintain one audited catalog that distinguishes mandatory film-playable moments, film-expanded interaction, original interstitial gap-fill and explicitly non-film Book Chronicles, each with source-verification state.",
+      "evidence": [
+        "Data/SideContentCanonCatalog.json",
+        "Data/EnsembleFilmMissionPlan.json",
+        "Data/ModernGameLayerPlan.json",
+        "Docs/STORY_CANON_BIBLE.md"
+      ],
+      "implementation_refs": [
+        "Part I and Part II proposal entries are classified and source-statused against supplied screenplays/project canon.",
+        "Part III entries are retained as FUTURE_SOURCE_CHECK rather than silently accepted as verified.",
+        "Book-only material is isolated as BOOK_CHRONICLE_NONCANON_TO_FILM."
+      ],
+      "missing_work": [
+        "Bind every accepted runtime side activity to exact opening/closing film anchors.",
+        "Complete scene-level Part III verification before promoting any Part III entry from FUTURE_SOURCE_CHECK.",
+        "Implement Chronicle presentation as a separated optional mode that cannot mutate main film save continuity."
+      ],
+      "acceptance_criteria": [
+        "No book-only event appears in main film chronology without an explicit Chronicle label.",
+        "No FUTURE_SOURCE_CHECK item can be treated as verified runtime canon.",
+        "Every FILM_CORE gameplay conversion preserves scene participants/order/outcome.",
+        "Expanded/interstitial content closes before the next mandatory film scene."
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-GAME-001",
+        "REQ-ENSEMBLE-001"
+      ],
+      "checkpoint": "SIDE_CONTENT_CANON_CATALOG"
     }
   ],
   "hard_invariants": [
@@ -2280,6 +2317,22 @@
         "Data/EnsembleFilmMissionPlan.json",
         "Docs/STORY_CANON_BIBLE.md"
       ]
+    },
+    {
+      "id": "DEC-026",
+      "title": "Use four continuity classes plus explicit source-verification status",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-SIDE-001",
+        "REQ-VISION-001",
+        "REQ-GAME-001"
+      ],
+      "resolution": "Classify side content as FILM_CORE, FILM_EXPANDED, FILM_INTERSTITIAL or BOOK_CHRONICLE. Track source verification separately. Book Chronicles never silently alter the main film timeline, and Part III stays FUTURE_SOURCE_CHECK until exact source verification is recorded.",
+      "rationale": "The programmer proposal is valuable but a three-label system alone cannot distinguish original gap-fill from book-only alternate continuity or verified from unverified material.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/SideContentCanonCatalog.json"
+      ]
     }
   ],
   "open_conflicts": [],
@@ -2782,12 +2835,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Owner clarified that the film itself contains many playable mission opportunities outside Frodo and asked to exploit the full ensemble with only slight film-compatible expansion.",
+    "reason": "Audited the programmer's trilogy side-content proposal against the supplied Fellowship/Two Towers sources and the project's canon-separated source pack.",
     "summary": [
-      "Frodo remains Ring-quest center but not default controller for every event.",
-      "Film-supported actions for Gandalf, Arwen, Aragorn, Boromir, Legolas, Gimli, Merry/Pippin and later characters are prioritized before invented filler.",
-      "Gap-fill cannot pull a character away from a required next film scene.",
-      "Part III mission details remain source-check-only until verified."
+      "Proposal retained, but normalized into FILM_CORE / FILM_EXPANDED / FILM_INTERSTITIAL / BOOK_CHRONICLE plus independent source-verification status.",
+      "Corrected the claim that Fellowship begins at Bilbo's party; prologue and Bag End/Frodo-Gandalf opening precede the party.",
+      "Part I/II entries were source-audited; risky or less-certain entries remain PROJECT_CANON_CROSSCHECK or FUTURE_SOURCE_CHECK.",
+      "Part III entries remain FUTURE_SOURCE_CHECK until scene-level source verification.",
+      "Book-only Tom Bombadil, Barrow-downs, Glorfindel and Scouring material is isolated from main film-save continuity."
     ]
   },
   "development_mode": {

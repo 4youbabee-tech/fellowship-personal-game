@@ -1,0 +1,459 @@
+{
+  "schema_version": 1,
+  "catalog_id": "SIDE_CONTENT_CANON_CATALOG_V1",
+  "status": "AUDITED_PART1_PART2_PART3_SOURCE_CHECK",
+  "authority_order": [
+    "FILM_CORE",
+    "FILM_EXPANDED",
+    "FILM_INTERSTITIAL",
+    "BOOK_CHRONICLE"
+  ],
+  "source_status_values": [
+    "VERIFIED_FOTR_SCRIPT",
+    "VERIFIED_TTT_SCRIPT",
+    "PROJECT_CANON_CROSSCHECK",
+    "FUTURE_SOURCE_CHECK"
+  ],
+  "continuity_values": [
+    "FILM_CANON",
+    "FILM_EXTENDED_COMPATIBLE",
+    "BOOK_CHRONICLE_NONCANON_TO_FILM"
+  ],
+  "rules": [
+    "FILM_CORE is mandatory and may be made playable, but its order, participants and outcome do not change.",
+    "FILM_EXPANDED adds interaction around a verified film scene without changing what the scene establishes.",
+    "FILM_INTERSTITIAL is original gap-fill only between verified anchors and must close when the next film scene begins.",
+    "BOOK_CHRONICLE is explicitly separated from the film timeline and may not silently become main-save canon.",
+    "FUTURE_SOURCE_CHECK entries are ideas only, not runtime implementation authority.",
+    "A film action should become gameplay before inventing a separate side quest for the same dramatic purpose."
+  ],
+  "audit_notes": [
+    "The first film does not begin at Bilbo's birthday party: the prologue and Bilbo writing/Frodo-Gandalf opening precede the party.",
+    "Tom Bombadil, Barrow-downs, Glorfindel-at-the-Ford and Scouring of the Shire are book-continuity material and must remain separately labeled Chronicles if used.",
+    "The film continuity gives Arwen the Ford rescue role; a Glorfindel Chronicle cannot replace that main-film mission.",
+    "The film continuity moves Shelob/Sam rescue into Return of the King; Part II must not import the book placement.",
+    "Part III mission details remain FUTURE_SOURCE_CHECK until exact film/script scene-level verification is recorded in repository authority."
+  ],
+  "part1": [
+    [
+      "Bilbo Birthday Party preparation",
+      "FILM_EXPANDED",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Gandalf fireworks operation",
+      "FILM_CORE",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Merry/Pippin dragon firework",
+      "FILM_CORE",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Party games/dance/food",
+      "FILM_EXPANDED",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Green Dragon social life",
+      "FILM_EXPANDED",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Mushrooms/field escape",
+      "FILM_CORE",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Black Rider hiding sequence",
+      "FILM_CORE",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Bucklebury Ferry escape",
+      "FILM_CORE",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Bree street exploration",
+      "FILM_EXPANDED",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Prancing Pony social/supply play",
+      "FILM_EXPANDED",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Midgewater camp and route reading",
+      "FILM_EXPANDED",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Weathertop camp/fire risk",
+      "FILM_EXPANDED",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Stone Trolls exploration",
+      "FILM_EXPANDED",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Rivendell free exploration",
+      "FILM_EXPANDED",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Fellowship preparation at Rivendell",
+      "FILM_EXPANDED",
+      "PROJECT_CANON_CROSSCHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Caradhras survival play",
+      "FILM_CORE",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Doors of Moria puzzle",
+      "FILM_CORE",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Moria route exploration",
+      "FILM_EXPANDED",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Balin Tomb inspection/lore",
+      "FILM_EXPANDED",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Lothlorien flets/craft/boats",
+      "FILM_EXPANDED",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Anduin canoe/navigation",
+      "FILM_EXPANDED",
+      "VERIFIED_FOTR_SCRIPT",
+      "FILM_CANON"
+    ]
+  ],
+  "part2": [
+    [
+      "Emyn Muil tracking/climbing",
+      "FILM_CORE",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Gollum fishing",
+      "FILM_CORE",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Dead Marshes navigation",
+      "FILM_CORE",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Three Hunters tracking",
+      "FILM_CORE",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Rohan attacked-village help",
+      "FILM_EXPANDED",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Eomer riders training",
+      "FILM_INTERSTITIAL",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Merry/Pippin Fangorn exploration",
+      "FILM_EXPANDED",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Entmoot evidence/decision play",
+      "FILM_CORE",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Edoras/Brego stable interaction",
+      "FILM_EXPANDED",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Theodred burial reflection",
+      "FILM_EXPANDED",
+      "PROJECT_CANON_CROSSCHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Evacuation to Helm's Deep support",
+      "FILM_EXPANDED",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Road camp/guard duty",
+      "FILM_INTERSTITIAL",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Helm's Deep preparation",
+      "FILM_EXPANDED",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Rohan armory preparation",
+      "FILM_EXPANDED",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Legolas/Gimli battle challenge",
+      "FILM_EXPANDED",
+      "PROJECT_CANON_CROSSCHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Faramir Ithilien ranger ambush",
+      "FILM_CORE",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Mumakil observation",
+      "FILM_CORE",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Forbidden Pool stealth/capture",
+      "FILM_CORE",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ],
+    [
+      "Ents assault/flood Isengard",
+      "FILM_CORE",
+      "VERIFIED_TTT_SCRIPT",
+      "FILM_CANON"
+    ]
+  ],
+  "part3": [
+    [
+      "Smeagol/Deagol fishing opening",
+      "FILM_CORE",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Isengard aftermath stores",
+      "FILM_EXPANDED",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_EXTENDED_COMPATIBLE"
+    ],
+    [
+      "Pippin Palantir interaction",
+      "FILM_CORE",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Ride to Minas Tirith",
+      "FILM_EXPANDED",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Minas Tirith exploration",
+      "FILM_EXPANDED",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Pippin Guard training/watch",
+      "FILM_EXPANDED",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Lighting the Beacons",
+      "FILM_CORE",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Rohan muster",
+      "FILM_EXPANDED",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Dunharrow camp",
+      "FILM_EXPANDED",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Paths of the Dead puzzles/navigation",
+      "FILM_EXPANDED",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Corsair ships battle",
+      "FILM_CORE",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Minas Tirith siege support",
+      "FILM_EXPANDED",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Pelennor horse rescue",
+      "FILM_INTERSTITIAL",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Legolas Mumakil set piece",
+      "FILM_CORE",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Cirith Ungol Sam rescue/search",
+      "FILM_CORE",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Orc disguise in Mordor",
+      "FILM_CORE",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Mordor survival",
+      "FILM_EXPANDED",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Black Gate camp preparation",
+      "FILM_INTERSTITIAL",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Coronation/post-war Minas Tirith",
+      "FILM_EXPANDED",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ],
+    [
+      "Grey Havens peaceful exploration",
+      "FILM_EXPANDED",
+      "FUTURE_SOURCE_CHECK",
+      "FILM_CANON"
+    ]
+  ],
+  "chronicles": [
+    [
+      "Tom Bombadil + Barrow-downs",
+      "BOOK_CHRONICLE",
+      "PROJECT_CANON_CROSSCHECK",
+      "BOOK_CHRONICLE_NONCANON_TO_FILM"
+    ],
+    [
+      "Glorfindel at the Ford",
+      "BOOK_CHRONICLE",
+      "PROJECT_CANON_CROSSCHECK",
+      "BOOK_CHRONICLE_NONCANON_TO_FILM"
+    ],
+    [
+      "Scouring of the Shire",
+      "BOOK_CHRONICLE",
+      "PROJECT_CANON_CROSSCHECK",
+      "BOOK_CHRONICLE_NONCANON_TO_FILM"
+    ],
+    [
+      "Aragorn Dunedain past",
+      "BOOK_CHRONICLE",
+      "PROJECT_CANON_CROSSCHECK",
+      "BOOK_CHRONICLE_NONCANON_TO_FILM"
+    ],
+    [
+      "Faramir Ithilien history",
+      "BOOK_CHRONICLE",
+      "PROJECT_CANON_CROSSCHECK",
+      "BOOK_CHRONICLE_NONCANON_TO_FILM"
+    ],
+    [
+      "Gimli/Glittering Caves history",
+      "BOOK_CHRONICLE",
+      "PROJECT_CANON_CROSSCHECK",
+      "BOOK_CHRONICLE_NONCANON_TO_FILM"
+    ],
+    [
+      "Gandalf Ring research history",
+      "BOOK_CHRONICLE",
+      "PROJECT_CANON_CROSSCHECK",
+      "BOOK_CHRONICLE_NONCANON_TO_FILM"
+    ]
+  ],
+  "prototype_priority": [
+    "Bilbo Party + Fireworks",
+    "Mushrooms/Field Escape",
+    "Prancing Pony",
+    "Rivendell Exploration",
+    "Moria Doors + Exploration",
+    "Dead Marshes Navigation",
+    "Edoras/Brego",
+    "Helm's Deep Preparation",
+    "Ithilien Ranger Ambush",
+    "Minas Tirith + Beacons (blocked on Part III source verification)"
+  ]
+}

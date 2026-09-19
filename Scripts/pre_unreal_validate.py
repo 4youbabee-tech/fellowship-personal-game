@@ -846,6 +846,39 @@ else:
         if marker not in forbidden:
             fail(f"PG-076: ensemble expansion guard missing {marker}")
 
+
+# PG-077: side-content catalog must keep film, gap-fill and book continuity separated.
+side_catalog_path = ROOT / "Data" / "SideContentCanonCatalog.json"
+if not side_catalog_path.exists():
+    fail("PG-077: SideContentCanonCatalog.json missing")
+else:
+    side_catalog = json.loads(read(side_catalog_path))
+    classes = set(side_catalog.get("authority_order", []))
+    for required_class in {"FILM_CORE","FILM_EXPANDED","FILM_INTERSTITIAL","BOOK_CHRONICLE"}:
+        if required_class not in classes:
+            fail(f"PG-077: missing side-content class {required_class}")
+
+    allowed_status = set(side_catalog.get("source_status_values", []))
+    for section in ["part1","part2","part3","chronicles"]:
+        for row in side_catalog.get(section, []):
+            if len(row) != 4:
+                fail(f"PG-077: malformed {section} row")
+                continue
+            if row[2] not in allowed_status:
+                fail(f"PG-077: invalid source status {row[2]} for {row[0]}")
+
+    for row in side_catalog.get("part3", []):
+        if row[2] != "FUTURE_SOURCE_CHECK":
+            fail(f"PG-077: Part III item promoted before source verification: {row[0]}")
+
+    for row in side_catalog.get("chronicles", []):
+        if row[1] != "BOOK_CHRONICLE" or row[3] != "BOOK_CHRONICLE_NONCANON_TO_FILM":
+            fail(f"PG-077: book Chronicle leaked into film continuity: {row[0]}")
+
+    notes = " ".join(side_catalog.get("audit_notes", [])).lower()
+    if "does not begin at bilbo's birthday party" not in notes:
+        fail("PG-077: Fellowship opening-order correction missing")
+
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
 living_world_data = {}
