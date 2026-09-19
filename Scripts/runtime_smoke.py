@@ -24,7 +24,8 @@ def required_markers(chapter, mode):
                 "ShireStateAudit: route-roundtrip=PASS",
                 "ShireStateAudit: ring-core=PASS",
                 "ShireStateAudit: discovery-core=PASS",
-                "ShireStateAudit: progression-core=PASS"]
+                "ShireStateAudit: progression-core=PASS",
+                "ShireStateAudit: knowledge-core=PASS"]
     if chapter is None:
         return ["ShirePlayableStartup: GameMode ready",
                 "ShirePlayableStartup: chapter=P1C01 route=FrodoMain"]
