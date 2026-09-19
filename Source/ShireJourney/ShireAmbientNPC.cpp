@@ -913,7 +913,9 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
 
         if (Candidate->RoutineRole == TEXT("Courier") ||
             Candidate->RoutineRole == TEXT("RoadWalker") ||
-            Candidate->RoutineRole == TEXT("Bird"))
+            Candidate->RoutineRole == TEXT("Bird") ||
+            Candidate->RoutineRole == TEXT("Rabbit") ||
+            Candidate->RoutineRole == TEXT("Butterfly"))
         {
             continue;
         }
