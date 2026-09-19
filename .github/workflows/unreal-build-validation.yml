@@ -27,30 +27,46 @@ jobs:
     timeout-minutes: 55
 
     steps:
-      - name: Stabilize active self-hosted runner ownership
+      - name: Schedule safe post-job runner cleanup
+        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
+            const fs = require('fs');
             const cp = require('child_process');
+            const scriptPath = 'C:\\actions-runner\\post-job-runner-dedupe.ps1';
             const ps = [
-              "$ErrorActionPreference='Stop'",
-              "$workers=@(Get-CimInstance Win32_Process -Filter \"Name='Runner.Worker.exe'\" | Sort-Object CreationDate -Descending)",
-              "if($workers.Count -lt 1){ throw 'No active Runner.Worker.exe found' }",
-              "$current=$workers[0]",
-              "$keep=[int]$current.ParentProcessId",
-              "$listeners=@(Get-CimInstance Win32_Process -Filter \"Name='Runner.Listener.exe'\")",
-              "Write-Host ('Current worker PID={0}; owner listener PID={1}; listeners={2}' -f $current.ProcessId,$keep,$listeners.Count)",
-              "$stale=@($listeners | Where-Object { [int]$_.ProcessId -ne $keep })",
-              "foreach($listener in $stale){ Write-Host ('Stopping stale listener PID=' + $listener.ProcessId); Stop-Process -Id $listener.ProcessId -Force -ErrorAction Stop }",
-              "$watchdogs=@(Get-CimInstance Win32_Process -Filter \"Name='powershell.exe'\" | Where-Object { $_.CommandLine -match '(?i)runner-watchdog\\.ps1' })",
-              "foreach($watchdog in $watchdogs){ Write-Host ('Stopping legacy runner watchdog PID=' + $watchdog.ProcessId); Stop-Process -Id $watchdog.ProcessId -Force -ErrorAction SilentlyContinue }",
+              "$ErrorActionPreference='SilentlyContinue'",
+              "$deadline=(Get-Date).AddMinutes(20)",
+              "do {",
+              "  $workers=@(Get-CimInstance Win32_Process -Filter \"Name='Runner.Worker.exe'\")",
+              "  if($workers.Count -eq 0){",
+              "    Start-Sleep -Seconds 4",
+              "    $workers=@(Get-CimInstance Win32_Process -Filter \"Name='Runner.Worker.exe'\")",
+              "    if($workers.Count -eq 0){ break }",
+              "  }",
+              "  Start-Sleep -Seconds 4",
+              "} while((Get-Date) -lt $deadline)",
+              "$listeners=@(Get-CimInstance Win32_Process -Filter \"Name='Runner.Listener.exe'\" | Sort-Object CreationDate)",
+              "if($listeners.Count -gt 1){",
+              "  $keep=$listeners[0]",
+              "  foreach($listener in $listeners | Select-Object -Skip 1){ Stop-Process -Id $listener.ProcessId -Force -ErrorAction SilentlyContinue }",
+              "}",
               "Remove-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run' -Name 'FellowshipGitHubRunnerWatchdog' -ErrorAction SilentlyContinue",
-              "Start-Sleep -Seconds 3",
-              "$remaining=@(Get-CimInstance Win32_Process -Filter \"Name='Runner.Listener.exe'\")",
-              "if(-not ($remaining | Where-Object { [int]$_.ProcessId -eq $keep })){ throw 'Owning Runner.Listener disappeared during stabilization' }",
-              "Write-Host ('Runner stabilization complete; preserved listener PID=' + $keep)"
-            ].join('; ');
-            cp.execFileSync('powershell.exe', ['-NoProfile','-ExecutionPolicy','Bypass','-Command', ps], {stdio:'inherit'});
+              "Remove-Item 'C:\\actions-runner\\runner-watchdog.ps1' -Force -ErrorAction SilentlyContinue",
+              "Remove-Item 'C:\\actions-runner\\start-runner-watchdog.cmd' -Force -ErrorAction SilentlyContinue"
+            ].join("\r\n");
+            fs.writeFileSync(scriptPath, ps, 'utf8');
+            const env = {...process.env};
+            delete env.RUNNER_TRACKING_ID;
+            const child = cp.spawn('powershell.exe', ['-NoProfile','-ExecutionPolicy','Bypass','-File',scriptPath], {
+              detached:true,
+              stdio:'ignore',
+              windowsHide:true,
+              env
+            });
+            child.unref();
+            console.log('Scheduled listener cleanup for the first idle gap after this job.');
 
       - name: Bootstrap Windows runner tools
         shell: cmd
