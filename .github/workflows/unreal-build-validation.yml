@@ -133,9 +133,31 @@ jobs:
             }
             if (!response) throw new Error('Exact-commit archive download failed after retries.');
 
-            const body = Buffer.isBuffer(response.data)
-              ? response.data
-              : Buffer.from(await response.data.arrayBuffer?.() || response.data);
+            async function responseBodyToBuffer(data) {
+              if (Buffer.isBuffer(data)) return data;
+              if (data instanceof ArrayBuffer) return Buffer.from(data);
+              if (ArrayBuffer.isView(data)) {
+                return Buffer.from(data.buffer, data.byteOffset, data.byteLength);
+              }
+              if (data && typeof data.getReader === 'function') {
+                const reader = data.getReader();
+                const chunks = [];
+                while (true) {
+                  const { done, value } = await reader.read();
+                  if (done) break;
+                  chunks.push(Buffer.from(value));
+                }
+                return Buffer.concat(chunks);
+              }
+              if (data && typeof data[Symbol.asyncIterator] === 'function') {
+                const chunks = [];
+                for await (const chunk of data) chunks.push(Buffer.from(chunk));
+                return Buffer.concat(chunks);
+              }
+              return Buffer.from(data);
+            }
+
+            const body = await responseBodyToBuffer(response.data);
             fs.writeFileSync(archive, body);
 
             const escapedArchive = archive.replace(/'/g, "''");
