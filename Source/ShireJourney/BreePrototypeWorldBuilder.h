@@ -33,6 +33,13 @@ private:
     UPROPERTY() UStaticMesh* ProductionHitchingPostMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionTableMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionCrateStackMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonBroadleafTreeMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonPineTreeMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonDryStoneWallMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonVillageFenceMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonWoodPileMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonFernClumpMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonBoulderClusterMesh = nullptr;
     UPROPERTY() UMaterialInterface* BasicMaterial;
 
     bool bBuilt = false;
@@ -41,6 +48,8 @@ private:
         const FLinearColor& Color, const FRotator& Rotation = FRotator::ZeroRotator, bool bCollision = true);
     void SpawnLabel(const FString& Text, const FVector& Location, const FLinearColor& Color = FLinearColor::White);
     void SpawnBreeTown();
+    void ConfigureBreeAtmosphere();
     void SpawnProductionBreeDetailLayer();
+    void SpawnFullProductionActivationLayer();
     void SpawnStoryFlow();
 };
