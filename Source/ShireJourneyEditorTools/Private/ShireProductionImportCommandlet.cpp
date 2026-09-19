@@ -26,12 +26,25 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
 {
     const FString SourceRoot = FPaths::ConvertRelativePathToFull(
         FPaths::Combine(FPaths::ProjectDir(), TEXT("SourceAssets/Production")));
+    const FString WorkingRoot = FPaths::ConvertRelativePathToFull(
+        FPaths::Combine(FPaths::ProjectSavedDir(), TEXT("ShireProductionImportWorking")));
+
+    // Never normalize/import directly from tracked SourceAssets. The older path
+    // injected smoothing-group text into real .obj source files, which made
+    // GitHub Desktop show hundreds/thousands of local changes after one-click
+    // import. Work on an ignored Saved/ copy so source assets stay byte-stable.
+    IFileManager::Get().DeleteDirectory(*WorkingRoot, false, true);
+    if (!IFileManager::Get().CopyDirectoryTree(*WorkingRoot, *SourceRoot, true))
+    {
+        UE_LOG(LogTemp, Error, TEXT("ShireProductionImport: failed to create working copy %s from %s"), *WorkingRoot, *SourceRoot);
+        return 4;
+    }
 
     TArray<FString> SourceFiles;
     TArray<FString> TextureFiles;
     TArray<FString> MeshFiles;
-    IFileManager::Get().FindFilesRecursive(TextureFiles, *SourceRoot, TEXT("*.bmp"), true, false, false);
-    IFileManager::Get().FindFilesRecursive(MeshFiles, *SourceRoot, TEXT("*.obj"), true, false, false);
+    IFileManager::Get().FindFilesRecursive(TextureFiles, *WorkingRoot, TEXT("*.bmp"), true, false, false);
+    IFileManager::Get().FindFilesRecursive(MeshFiles, *WorkingRoot, TEXT("*.obj"), true, false, false);
     TextureFiles.Sort();
     MeshFiles.Sort();
     SourceFiles.Append(TextureFiles);
@@ -50,7 +63,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     for (const FString& Filename : SourceFiles)
     {
         FString Relative = Filename;
-        FPaths::MakePathRelativeTo(Relative, *(SourceRoot / TEXT("")));
+        FPaths::MakePathRelativeTo(Relative, *(WorkingRoot / TEXT("")));
         Relative.ReplaceInline(TEXT("\\"), TEXT("/"));
 
         const FString RelativeDir = FPaths::GetPath(Relative);
@@ -76,7 +89,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             {
                 // The production bank is intentionally lightweight, but UE4.27 emits
                 // hundreds of warnings when OBJ files omit an explicit smoothing group.
-                // Normalize only the ephemeral CI/import working copy.
+                // Filename points into the ignored Saved/ working copy, so this
+                // normalization can never dirty tracked SourceAssets.
                 const bool bHasSmoothing =
                     ObjSource.StartsWith(TEXT("s ")) ||
                     ObjSource.Contains(TEXT("\ns "), ESearchCase::CaseSensitive);
@@ -222,5 +236,10 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         bSavedDirtyPackages ? TEXT("ok") : TEXT("no-dirty-or-failed"));
 
     UE_LOG(LogTemp, Display, TEXT("ShireProductionImport: %d files, %d failures"), SourceFiles.Num(), Failed);
+
+    // The copy is only needed during import. Best-effort cleanup keeps Saved/
+    // smaller; if interrupted, .gitignore still prevents it becoming source debt.
+    IFileManager::Get().DeleteDirectory(*WorkingRoot, false, true);
+
     return Failed == 0 ? 0 : 3;
 }
