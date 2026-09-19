@@ -112,6 +112,12 @@ jobs:
           git init .
           if errorlevel 1 exit /b 70
 
+          rem The self-hosted runner service and the interactive maintenance user can
+          rem own the workspace under different Windows SIDs. Mark only this exact
+          rem Actions workspace as safe before any repository command.
+          git config --global --add safe.directory "%GITHUB_WORKSPACE%"
+          if errorlevel 1 exit /b 76
+
           git remote add origin "https://x-access-token:%GH_TOKEN%@github.com/%GITHUB_REPOSITORY%.git"
           if errorlevel 1 exit /b 71
 
