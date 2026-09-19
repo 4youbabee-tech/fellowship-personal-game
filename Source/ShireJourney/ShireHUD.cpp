@@ -94,10 +94,69 @@ void AShireHUD::DrawHUD()
         }
     }
 
+    if (Player && Player->IsChronicleOpen() && Quests)
+    {
+        const float PanelW = FMath::Min(420.0f, W - 80.0f);
+        const float PanelH = FMath::Min(500.0f, H - 120.0f);
+        const float PanelX = W - PanelW - 24.0f;
+        const float PanelY = 118.0f;
+        DrawRect(FLinearColor(0.012f, 0.018f, 0.013f, 0.94f), PanelX, PanelY, PanelW, PanelH);
+        DrawRect(FLinearColor(0.76f, 0.57f, 0.22f, 0.94f), PanelX, PanelY, 4.0f, PanelH);
+        DrawText(TEXT("CHRONICLE & JOURNEY"), FLinearColor(0.95f, 0.86f, 0.62f), PanelX + 18.0f, PanelY + 14.0f, MediumFont, 0.92f, false);
+        DrawText(FString::Printf(TEXT("Entries %d  |  Known regions %d  |  Journey %d"),
+            Quests->GetChronicleCount(), Quests->GetKnownRegionCount(), Quests->GetJourneyInsight()),
+            FLinearColor(0.76f, 0.82f, 0.72f), PanelX + 18.0f, PanelY + 42.0f, SmallFont, 0.78f, false);
+
+        const FName Tracks[] = {
+            TEXT("WAYFINDING"), TEXT("PERCEPTION"), TEXT("QUIET_STEP"), TEXT("CAMPCRAFT"),
+            TEXT("FELLOWSHIP"), TEXT("LORE"), TEXT("RESOLVE")
+        };
+        float Y = PanelY + 72.0f;
+        for (const FName Track : Tracks)
+        {
+            DrawText(
+                FString::Printf(TEXT("%s  Rank %d  XP %d"),
+                    *Track.ToString(),
+                    Quests->GetProgressionRank(Track),
+                    Quests->GetProgressionXP(Track)),
+                FLinearColor(0.82f, 0.84f, 0.78f),
+                PanelX + 18.0f, Y, SmallFont, 0.74f, false);
+            Y += 19.0f;
+        }
+
+        Y += 8.0f;
+        DrawText(TEXT("Recent Chronicle"), FLinearColor(0.93f, 0.78f, 0.43f), PanelX + 18.0f, Y, SmallFont, 0.82f, false);
+        Y += 22.0f;
+        const TArray<FName>& Entries = Quests->GetChronicleEntryIds();
+        const int32 FirstEntry = FMath::Max(0, Entries.Num() - 6);
+        for (int32 EntryIndex = FirstEntry; EntryIndex < Entries.Num(); ++EntryIndex)
+        {
+            FString Label = Entries[EntryIndex].ToString();
+            Label.RemoveFromStart(TEXT("CHRONICLE_"));
+            Label.ReplaceInline(TEXT("_"), TEXT(" "));
+            DrawText(Label, FLinearColor(0.78f, 0.82f, 0.74f), PanelX + 26.0f, Y, SmallFont, 0.68f, false);
+            Y += 17.0f;
+        }
+
+        Y += 8.0f;
+        DrawText(TEXT("Known Map Regions"), FLinearColor(0.93f, 0.78f, 0.43f), PanelX + 18.0f, Y, SmallFont, 0.82f, false);
+        Y += 22.0f;
+        const TArray<FName>& Regions = Quests->GetKnownMapRegionIds();
+        const int32 FirstRegion = FMath::Max(0, Regions.Num() - 5);
+        for (int32 RegionIndex = FirstRegion; RegionIndex < Regions.Num(); ++RegionIndex)
+        {
+            FString Label = Regions[RegionIndex].ToString();
+            Label.RemoveFromStart(TEXT("MAP_REGION_"));
+            Label.ReplaceInline(TEXT("_"), TEXT(" / "));
+            DrawText(Label, FLinearColor(0.72f, 0.80f, 0.72f), PanelX + 26.0f, Y, SmallFont, 0.68f, false);
+            Y += 17.0f;
+        }
+    }
+
     DrawText(
         bCombat
-            ? TEXT("WASD Move  |  LMB Attack  |  Shift Sprint  |  Ctrl Crouch  |  E Interact  |  R Supply  |  F5 Save  |  F9 Load")
-            : TEXT("WASD Move  |  Shift Sprint  |  Ctrl Crouch  |  E Interact  |  R Supply  |  F5 Save  |  F9 Load  |  F6/F7 Chapter  |  F8 Route"),
+            ? TEXT("WASD Move  |  LMB Attack  |  Shift Sprint  |  E Interact  |  R Supply  |  C Chronicle  |  F5/F9 Save/Load")
+            : TEXT("WASD Move  |  Shift Sprint  |  E Interact  |  R Supply  |  C Chronicle  |  F5/F9 Save/Load  |  F6-F8 Debug"),
         FLinearColor(0.78f, 0.80f, 0.76f, 0.46f), 24.0f, H - 28.0f, SmallFont, 0.72f, false);
 
     const float Now = GetWorld()->GetTimeSeconds();
