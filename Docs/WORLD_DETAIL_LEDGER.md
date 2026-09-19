@@ -1,13 +1,13 @@
 # WORLD DETAIL LEDGER
 
-Purpose: hold visual, material, life, ambience and world-detail ideas discovered during the post-CP54 verification freeze **without implementing them immediately**.
+Purpose: retain visual, material, life, ambience and world-detail ideas discovered during the post-CP54 verification cycle and promote them deliberately during resumed production.
 
-## Freeze rule
-- No idea in this file is authorization to open CP55 or add content during the baseline audit.
-- First reproduce and classify the current chapter in real UE4.27 PIE.
-- Fix blocking runtime failures before moving to the next chapter.
-- Non-blocking quality ideas stay here until all current-head chapter verification is complete.
-- After the freeze, promote ideas region-by-region, beginning with Shire as the quality reference.
+## Post-freeze rule
+- The post-CP54 verification freeze is complete and CP55+ production is authorized.
+- Promote ideas in bounded batches behind Pre-Unreal and real UE4.27 regression gates.
+- Preserve story/save/route topology and the target-laptop performance budget.
+- Shire remains the visual/readability reference, but region-appropriate differences are encouraged.
+- Do not convert an idea into a validated/accepted claim until the corresponding implementation and evidence exist.
 
 ## P1C01 — Shire
 ### Ideas
@@ -15,51 +15,51 @@ Purpose: hold visual, material, life, ambience and world-detail ideas discovered
 - Stronger cloth/material identity for market/party props.
 - Lighting polish only after actual PIE/FPS baseline is known.
 ### Verification discoveries
-- Pending real PIE.
+- Post-CP54 verification pass owner-confirmed complete; numeric device measurements were not retained in chat.
 
 ## P1C02 — Bree
 ### Ideas
 - Rainy-night material/lighting differentiation.
 - Inn/street material quality pass after Shire reference is accepted.
 ### Verification discoveries
-- Pending real PIE.
+- Post-CP54 verification pass owner-confirmed complete; numeric device measurements were not retained in chat.
 
 ## P1C03 — Weathertop/Ford
 ### Ideas
 - Weathered stone/soil material upgrade.
 - Verify whether atmosphere reads as distinct without expensive VFX.
 ### Verification discoveries
-- Pending real PIE.
+- Post-CP54 verification pass owner-confirmed complete; numeric device measurements were not retained in chat.
 
 ## P1C04 — Rivendell
 ### Ideas
 - Pale stone, water and foliage material quality pass.
 ### Verification discoveries
-- Pending real PIE.
+- Post-CP54 verification pass owner-confirmed complete; numeric device measurements were not retained in chat.
 
 ## P1C05 — Road/Caradhras/West Gate
 ### Ideas
 - Snow/rock material upgrade and weather presentation after performance baseline.
 ### Verification discoveries
-- Pending real PIE.
+- Post-CP54 verification pass owner-confirmed complete; numeric device measurements were not retained in chat.
 
 ## P1C06 — Moria
 ### Ideas
 - Stone/metal/brazier material polish; preserve civilian-empty design.
 ### Verification discoveries
-- Pending real PIE.
+- Post-CP54 verification pass owner-confirmed complete; numeric device measurements were not retained in chat.
 
 ## P1C07 — Lothlorien
 ### Ideas
 - Golden foliage/wood/material differentiation.
 ### Verification discoveries
-- Pending real PIE.
+- Post-CP54 verification pass owner-confirmed complete; numeric device measurements were not retained in chat.
 
 ## P1C08 — Anduin/Amon Hen
 ### Ideas
 - River/boat/ruin material differentiation.
 ### Verification discoveries
-- Pending real PIE.
+- Post-CP54 verification pass owner-confirmed complete; numeric device measurements were not retained in chat.
 
 ## Cross-region backlog
 - True day/night cycle only if target-laptop performance allows it.
