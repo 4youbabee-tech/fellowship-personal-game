@@ -1342,6 +1342,27 @@
         "Docs/WORLD_DETAIL_LEDGER.md",
         "Data/ProjectGovernor.json"
       ]
+    },
+    {
+      "id": "DEC-008",
+      "title": "Lift the post-CP54 verification freeze and resume construction",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-QUALITY-001",
+        "REQ-QUALITY-002",
+        "REQ-PERF-001",
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-CHAR-001"
+      ],
+      "resolution": "Treat the post-CP54 verification pass as human-completed on the current validated develop baseline and resume large, guarded game-construction batches. Preserve Pre-Unreal and real UE4.27 build/import regression gates and continue to distinguish implementation from later visual/performance acceptance.",
+      "rationale": "The project owner explicitly confirmed that the planned verification/check/fix pass was completed and instructed the project to resume game construction and expansion.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md",
+        "Pre-Unreal Validation #264 on develop",
+        "Unreal Build Validation #99 on develop"
+      ]
     }
   ],
   "open_conflicts": [],
@@ -1603,18 +1624,16 @@
     }
   ],
   "active_gate": {
-    "id": "CURRENT_HEAD_PIE_DEVICE_VERIFICATION_FREEZE",
-    "status": "ACTIVE_BLOCKING",
-    "blocks_major_feature_expansion": true,
+    "id": "POST_VERIFICATION_EXPANSION_GATE",
+    "status": "ACTIVE",
+    "blocks_major_feature_expansion": false,
     "required_evidence": [
-      "Run real UE4.27.2 Editor PIE on the current develop head, not static/CI evidence alone.",
-      "Verify P1C01 Shire first: boot, traversal, interaction, story progression, NPC routines, ambient NPC-to-NPC conversations, named-NPC memory/context behavior, save/load and crash-free play.",
-      "Then verify P1C02 Bree, P1C03 Weathertop/Ford, P1C04 Rivendell, P1C05 Road/Caradhras/West Gate, P1C06 Moria, P1C07 Lothlorien and P1C08 Anduin/Amon Hen in order.",
-      "For every chapter record WORKING / INTERMITTENT / BROKEN / CRASH plus target-laptop FPS/hitch/memory observations at 720p Low-Medium.",
-      "Fix chapter-blocking crashes, progression breaks, save/load failures and severe performance regressions before advancing to the next chapter.",
-      "Do not claim day/night cycle, transient weather FX, visual acceptance or performance acceptance without direct PIE/device evidence."
+      "Every expansion batch must pass Pre-Unreal validation before merge.",
+      "Every major runtime/content batch must pass real UE4.27.2 compile/import validation on the self-hosted target laptop.",
+      "Headless startup/chapter audits remain regression guards for P1C01-P1C08.",
+      "Do not promote new visual/performance claims beyond the evidence actually observed."
     ],
-    "note": "Post-CP54 verification freeze. No CP55 or new feature/content checkpoint opens until the current develop head is chapter-by-chapter PIE-tested and the evidence is written into PRODUCTION_COMPLETENESS_MATRIX.md and CURRENT_PROJECT_STATE.md.",
+    "note": "The post-CP54 freeze was lifted on 2026-09-19 after explicit project-owner confirmation that the verification/check/fix pass was completed. Construction and expansion resume from CP55.",
     "enforcement": {
       "policy_file": "Data/VerificationGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -1622,7 +1641,7 @@
         "PG-056",
         "PG-057"
       ],
-      "behavior": "CI blocks checkpoint/runtime-source/production-asset expansion while the freeze is active, but allows repairs, verification, instrumentation and evidence work."
+      "behavior": "Freeze-specific expansion blocking is disabled; evidence-honesty and regression guards remain active."
     }
   },
   "reference_only_files": [
@@ -1677,15 +1696,15 @@
       "order": 1,
       "id": "WORK-WORLD-002",
       "title": "Part I mass resource saturation and playable integration",
-      "status": "BLOCKED_BY_WORK-GATE-001",
-      "rationale": "CP52 expands the shared production kit across Shire, Bree and P1C03-P1C08, packages runtime data needed by the living world, and explicitly guards the playable startup path. Final licensed external acquisitions and acceptance remain open. Paused by the post-CP54 PIE verification freeze."
+      "status": "ACTIVE",
+      "rationale": "Verification freeze lifted; continue mass resource saturation and playable integration behind existing CI/UE4 regression gates."
     },
     {
       "order": 1,
       "id": "WORK-GATE-001",
       "title": "Finish current functional hard gate",
-      "status": "ACTIVE_BLOCKING",
-      "rationale": "This is now the only active production priority: real current-head PIE/device verification and repair, Shire through P1C08.",
+      "status": "COMPLETED",
+      "rationale": "Post-CP54 verification/check/fix pass was explicitly confirmed complete by the project owner on 2026-09-19.",
       "items": [
         "Shire movement/camera/sprint/crouch/interact/HUD/quest/NPC awareness/dialogue smoke",
         "F9 save/load round-trip",
@@ -1699,22 +1718,22 @@
       "order": 2,
       "id": "WORK-CHAR-003",
       "title": "Distinct visual identity and motion pass for the Part I core cast",
-      "status": "BLOCKED_BY_WORK-GATE-001",
-      "rationale": "CP51 adds rig-ready skeletal handoff plus profile-specific modular idle/walk/dialogue motion; final skeletal/facial/cloth/hair animation assets and visual acceptance remain open. Paused by the post-CP54 PIE verification freeze."
+      "status": "QUEUED",
+      "rationale": "Verification freeze lifted; resume distinct visual identity and motion production after/alongside the active world/activity batch."
     },
     {
       "order": 4,
       "id": "WORK-CHAR-001",
       "title": "Playable Frodo/Gandalf character production motion pass",
-      "status": "BLOCKED_BY_WORK-GATE-001",
-      "rationale": "User explicitly wants visible playable-game progress now; scope is bounded to character presentation/motion and must preserve story/save architecture. Paused by the post-CP54 PIE verification freeze."
+      "status": "QUEUED",
+      "rationale": "Verification freeze lifted; continue playable-character presentation/motion improvements without changing story/save invariants."
     },
     {
       "order": 11,
       "id": "WORK-WORLD-001",
       "title": "Expand environmental micro-life and production polish chapter by chapter",
-      "status": "BLOCKED_BY_WORK-GATE-001",
-      "rationale": "CP53 adds continuous baseline populations plus denser micro-events across Part I using existing schedule/social/awareness behavior; final crowd art, fauna/voice production and device acceptance remain pending. Paused by the post-CP54 PIE verification freeze."
+      "status": "ACTIVE",
+      "rationale": "Verification freeze lifted; resume environmental micro-life and production polish chapter by chapter with target-device budgets preserved."
     },
     {
       "order": 13,
@@ -1727,8 +1746,8 @@
       "order": 16,
       "id": "WORK-MAINT-001",
       "title": "Perform physical Source/ShireJourney Public/Private domain migration",
-      "status": "BLOCKED_BY_WORK-GATE-001",
-      "rationale": "Architecture map is ready; do the path/include refactor only after the current gameplay baseline is proven."
+      "status": "QUEUED",
+      "rationale": "Architecture migration remains a dedicated maintenance pass and is not mixed into CP55 gameplay/world expansion."
     },
     {
       "order": 17,
@@ -1761,32 +1780,28 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Programmer review requested an immediate verification freeze after CP54: stop feature expansion, test the exact develop head in real PIE chapter-by-chapter, repair failures before continuing, and de-prioritize formal rights-holder outreach.",
+    "reason": "Project owner explicitly confirmed the full verification/check/fix pass was completed and directed the project to resume game construction and expansion.",
     "summary": [
-      "No CP55/new content checkpoint may open while the freeze is active.",
-      "Current develop baseline is CP54 at ed235ff4fb332660d2af8ce1385d9ca038a6337b; PR #44 Pre-Unreal #240 and Unreal Build #75 were green.",
-      "Real PIE/device evidence remains mandatory because CI/headless startup does not prove chapter traversal, NPC life, visual quality or target-laptop performance.",
-      "Formal rights-holder outreach is deferred; the existing asset provenance pipeline remains available for future quality-focused sourcing.",
-      "WORLD_DETAIL_LEDGER is the holding area for ideas discovered during verification; ideas are not implemented until the baseline audit is complete."
+      "Post-CP54 verification freeze is lifted.",
+      "Current develop baseline f7c2b081e7b064fcf27bb4c80124b21f351331ab has green Pre-Unreal #264 and Unreal Build Validation #99.",
+      "Human verification completion is recorded conservatively without inventing numeric FPS/memory values that were not supplied in chat.",
+      "CP55 resumes large visible world/activity/movement construction while preserving CI, UE4.27 build/import, story/save integrity and target-device budgets."
     ]
   },
   "development_mode": {
-    "id": "PIE_VERIFICATION_FREEZE",
+    "id": "VISUAL_PRODUCTION_FIRST",
     "status": "ACTIVE",
     "entered_on": "2026-09-19",
-    "supersedes": "VISUAL_PRODUCTION_FIRST",
-    "reason": "Programmer review correctly identified that CP24-CP54 contain substantial compile/static evidence but incomplete current-head PIE/device evidence. Verification and repair now outrank new content.",
+    "supersedes": "BUILD_FIRST_BATCH_MODE",
+    "reason": "Post-CP54 verification was explicitly confirmed complete by the project owner; construction now returns to visible world/character/activity expansion.",
     "rules": [
-      "Do not open a new feature/content checkpoint while this freeze is active.",
-      "Use the exact current develop head as the baseline under test.",
-      "Test one chapter at a time in real UE4.27.2 PIE on the target laptop, beginning with P1C01 Shire.",
-      "Repair blocking runtime failures before moving to the next chapter.",
-      "Record non-blocking visual/content ideas in Docs/WORLD_DETAIL_LEDGER.md without implementing them during the baseline audit.",
-      "Keep Pre-Unreal and UE4.27 compile/import CI as regression guards, but never substitute them for PIE/device evidence.",
-      "Formal rights-holder outreach is deferred; retain the external-asset manifest/provenance pipeline for future asset quality work.",
-      "After the baseline audit is complete, resume region-by-region quality upgrades with Shire as the reference standard.",
-      "PG-056 must technically block CP55+, new production source assets and new runtime source files while the freeze is active.",
-      "PG-057 must reject a current-head PIE claim unless Data/PIEVerificationEvidence.json carries exact-commit human evidence."
+      "Build substantial visible world, activity, character and presentation batches rather than tiny isolated changes.",
+      "Preserve film-story chronology, save/route integrity and the 720p Low-Medium target-device budget.",
+      "Run Pre-Unreal and real UE4.27.2 compile/import validation for every major merged batch.",
+      "Use headless startup and P1C01-P1C08 chapter audits as regression guards, not substitutes for human review.",
+      "PIE/device/visual/performance evidence must remain explicit; do not invent FPS, memory or visual acceptance details that were not actually observed.",
+      "Prefer extending proven systems over introducing parallel subsystems.",
+      "Keep final skeletal rigs, final voice/audio, weather VFX and material upgrades clearly separated from placeholder/procedural implementations until actually delivered."
     ]
   },
   "backend_completion": {
