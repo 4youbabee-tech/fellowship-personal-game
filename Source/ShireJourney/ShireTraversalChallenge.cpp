@@ -63,8 +63,8 @@ void AShireTraversalChallenge::BeginPlay()
 
 bool AShireTraversalChallenge::IsEligible() const
 {
-    const UGameInstance* GI = GetGameInstance();
-    const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
     if (!Quests)
     {
         return false;
