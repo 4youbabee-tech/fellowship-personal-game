@@ -124,7 +124,8 @@
         "Source/ShireJourney/ShireAmbientNPC.cpp",
         "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
         "Data/BiomePlan.csv",
-        "Docs/WORLD_PRODUCTION_BLUEPRINT.md"
+        "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
+        "Data/WorldActivityMovementPlan.json"
       ],
       "implementation_refs": [
         "ambient NPC routines and player awareness",
@@ -137,13 +138,14 @@
         "Lightweight Bird ambient role now provides 3D sky motion across Shire, Bree, Weathertop, Rivendell, Caradhras/Fellowship road, Lothlorien, Anduin/Amon Hen and Isengard with distance-throttled ticks",
         "Ambient residents now use role-specific activity props and low-cost work/social gestures: Shire baskets/satchels/mugs/crates, Bree goods/mugs, and Elven books/lanterns",
         "ALivingWorldDirector consumes Data/LivingWorldEventPlan.json and injects bounded disposable chapter-aware micro-events",
-        "CP49 common terrain kit adds production hills/cliffs/river-bank/boulder silhouettes across Part I"
+        "CP49 common terrain kit adds production hills/cliffs/river-bank/boulder silhouettes across Part I",
+        "CP55 adds project-owned bird/rabbit/butterfly fauna with bounded flight, hop and flutter movement through the existing LivingWorldDirector micro-event path"
       ],
       "missing_work": [
         "production-quality terrain/material/art replacement beyond current procedural detail",
         "environment motion implementation beyond static/procedural proxies",
         "batch integration PIE/device/performance/visual review",
-        "broader fauna beyond current lightweight bird motion"
+        "additional fauna variety beyond the CP55 bird/rabbit/butterfly set remains optional future polish"
       ],
       "acceptance_criteria": [
         "Ordinary traversal repeatedly reveals believable activity or environmental storytelling",
@@ -1733,7 +1735,7 @@
       "id": "WORK-WORLD-001",
       "title": "Expand environmental micro-life and production polish chapter by chapter",
       "status": "ACTIVE",
-      "rationale": "Verification freeze lifted; resume environmental micro-life and production polish chapter by chapter with target-device budgets preserved."
+      "rationale": "CP55 resumes the living-world expansion with bounded project-owned fauna and distinct low-cost movement profiles; continue regional polish behind the existing regression gates."
     },
     {
       "order": 13,
@@ -1785,7 +1787,8 @@
       "Post-CP54 verification freeze is lifted.",
       "Current develop baseline f7c2b081e7b064fcf27bb4c80124b21f351331ab has green Pre-Unreal #264 and Unreal Build Validation #99.",
       "Human verification completion is recorded conservatively without inventing numeric FPS/memory values that were not supplied in chat.",
-      "CP55 resumes large visible world/activity/movement construction while preserving CI, UE4.27 build/import, story/save integrity and target-device budgets."
+      "CP55 resumes large visible world/activity/movement construction while preserving CI, UE4.27 build/import, story/save integrity and target-device budgets.",
+      "CP55 implementation now adds project-owned bird/rabbit/butterfly fauna and chapter-aware low-cost movement without altering story/save/route topology."
     ]
   },
   "development_mode": {
