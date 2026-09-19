@@ -13,6 +13,20 @@ Current proof boundary:
 - PIE/device visual acceptance: pending.
 
 
+## Current character-motion and atmosphere status — CP51
+
+CP51 is the next visible-production layer after CP50. The runtime now has a safe skeletal-rig handoff contract for named characters plus richer procedural fallback motion, and P1C03-P1C08 have distinct bounded sun/sky/fog profiles.
+
+Machine-readable authorities:
+- `Data/CharacterMotionPlan.json`
+- `Data/ChapterAtmospherePlan.json`
+
+Current proof boundary:
+- source/runtime integration: implemented on `mega/atmosphere-character-motion-v1`,
+- Pre-Unreal validation: pending on the CP51 branch until CI completes,
+- UE4.27 compile/import: pending,
+- PIE/device visual acceptance: pending.
+
 # CURRENT PROJECT STATE
 
 > **Operational recovery note — reconciled 2026-09-19**
