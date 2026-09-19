@@ -88,6 +88,67 @@ jobs:
 
           echo Runner bootstrap succeeded.
 
+      - name: Install user-level runner autostart watchdog
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $RunnerRoot = "C:\actions-runner"
+          $Watchdog = Join-Path $RunnerRoot "runner-watchdog.ps1"
+          $Launcher = Join-Path $RunnerRoot "start-runner-watchdog.cmd"
+          $DiagDir = Join-Path $RunnerRoot "_diag"
+          $WatchdogLog = Join-Path $DiagDir "user-watchdog.log"
+
+          if (-not (Test-Path (Join-Path $RunnerRoot "run.cmd"))) {
+            throw "Expected runner launcher not found at C:\actions-runner\run.cmd"
+          }
+          if (-not (Test-Path $DiagDir)) {
+            New-Item -ItemType Directory -Path $DiagDir -Force | Out-Null
+          }
+
+          @'
+          $ErrorActionPreference = "SilentlyContinue"
+          $RunnerRoot = "C:\actions-runner"
+          $RunCmd = Join-Path $RunnerRoot "run.cmd"
+          $DiagDir = Join-Path $RunnerRoot "_diag"
+          $Log = Join-Path $DiagDir "user-watchdog.log"
+
+          function Write-WatchdogLog([string]$Message) {
+              try {
+                  Add-Content -LiteralPath $Log -Value ("{0:u} {1}" -f (Get-Date), $Message)
+              } catch {}
+          }
+
+          Write-WatchdogLog "watchdog started for interactive user $env:USERNAME"
+
+          while ($true) {
+              $listener = Get-Process -Name "Runner.Listener" -ErrorAction SilentlyContinue
+              if (-not $listener) {
+                  Write-WatchdogLog "Runner.Listener absent; starting C:\actions-runner\run.cmd"
+                  Start-Process -FilePath $RunCmd -WorkingDirectory $RunnerRoot -WindowStyle Hidden
+                  Start-Sleep -Seconds 8
+              }
+              Start-Sleep -Seconds 12
+          }
+          '@ | Set-Content -LiteralPath $Watchdog -Encoding UTF8
+
+          @'
+          @echo off
+          powershell.exe -NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "C:\actions-runner\runner-watchdog.ps1"
+          '@ | Set-Content -LiteralPath $Launcher -Encoding ASCII
+
+          $RunKey = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run"
+          if (-not (Test-Path $RunKey)) {
+            New-Item -Path $RunKey -Force | Out-Null
+          }
+          New-ItemProperty -Path $RunKey -Name "FellowshipGitHubRunnerWatchdog" -PropertyType String -Value ('"' + $Launcher + '"') -Force | Out-Null
+
+          Write-Host "Installed user-level runner watchdog:"
+          Write-Host "  watchdog: $Watchdog"
+          Write-Host "  launcher:  $Launcher"
+          Write-Host "  registry:  HKCU\Software\Microsoft\Windows\CurrentVersion\Run\FellowshipGitHubRunnerWatchdog"
+          Write-Host "This requires no Windows account password and starts after the interactive user logs in."
+
       - name: Checkout exact commit with resilient archive download
         shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
         env:
