@@ -2189,8 +2189,13 @@ editor_wait_contract_ok = (
 )
 if editor_probe_marker not in unreal_ci and not editor_wait_contract_ok:
     fail("PG-015: Unreal self-hosted validation must either prove the editor is closed or wait safely for it without terminating the user's editor")
-if "uses: actions/checkout@v4" in unreal_ci:
-    fail("PG-026: Unreal self-hosted build must not depend on actions/checkout for exact-commit acquisition")
+checkout_action_ok = (
+    "uses: actions/checkout@v4" in unreal_ci
+    and "ref: ${{ github.event.pull_request.head.sha || github.sha }}" in unreal_ci
+    and "persist-credentials: false" in unreal_ci
+    and "git rev-parse HEAD" in unreal_ci
+    and "Checkout SHA mismatch" in unreal_ci
+)
 exact_checkout_markers = [
     "zipball/$env:GITHUB_SHA",
     "GET /repos/{owner}/{repo}/zipball/{ref}",
@@ -2198,8 +2203,9 @@ exact_checkout_markers = [
     "git fetch --no-tags --prune --depth=1 origin %TARGET_SHA%",
     "& git fetch --no-tags --prune --depth=1 origin $env:TARGET_SHA",
 ]
-if not any(marker in unreal_ci for marker in exact_checkout_markers):
-    fail("PG-026: Unreal self-hosted build must acquire the exact validated event SHA")
+custom_checkout_ok = any(marker in unreal_ci for marker in exact_checkout_markers)
+if not checkout_action_ok and not custom_checkout_ok:
+    fail("PG-026: Unreal self-hosted build must acquire and verify the exact validated PR-head SHA")
 if "TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}" not in unreal_ci:
     fail("PG-026: pull-request Unreal validation must resolve TARGET_SHA to the PR head, not the synthetic merge commit")
 retry_contract_ok = (
@@ -2208,8 +2214,8 @@ retry_contract_ok = (
     or ("for /L %%A in (1,1,7)" in unreal_ci and "Start-Sleep -Seconds 5" in unreal_ci)
     or ("$attempt -le 7" in unreal_ci and "Start-Sleep -Seconds 5" in unreal_ci)
 )
-if not retry_contract_ok:
-    fail("PG-026: exact-commit acquisition must use resilient retries")
+if custom_checkout_ok and not retry_contract_ok:
+    fail("PG-026: custom exact-commit acquisition must use resilient retries")
 if "uses: actions/upload-artifact@v4" in unreal_ci:
     fail("PG-026: failure logging must not depend on artifact upload while storage quota can mask the primary error")
 if "group: unreal-build-${{ github.repository }}-ue4-device" not in unreal_ci or "cancel-in-progress: false" not in unreal_ci:

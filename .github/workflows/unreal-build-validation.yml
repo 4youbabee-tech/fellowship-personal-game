@@ -25,6 +25,8 @@ jobs:
       - X64
       - ue4-27
     timeout-minutes: 55
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
     steps:
       - name: Bootstrap Windows runner tools
@@ -82,73 +84,32 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit 22 }
           Write-Host "Runner bootstrap succeeded."
 
-      - name: Checkout exact commit with resilient git fetch
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+          clean: true
+          persist-credentials: false
+          lfs: false
+          submodules: false
+
+      - name: Verify exact checkout
+        shell: cmd
         run: |
-          $ErrorActionPreference = "Stop"
-          Set-Location $env:GITHUB_WORKSPACE
-
-          if (Test-Path ".git") {
-            Remove-Item -LiteralPath ".git" -Recurse -Force
-          }
-
-          & git init .
-          if ($LASTEXITCODE -ne 0) { exit 70 }
-
-          # The service account and interactive maintenance account can differ.
-          & git config --global --add safe.directory $env:GITHUB_WORKSPACE
-          if ($LASTEXITCODE -ne 0) { exit 76 }
-
-          $remote = "https://x-access-token:$env:GH_TOKEN@github.com/$env:GITHUB_REPOSITORY.git"
-          & git remote add origin $remote
-          if ($LASTEXITCODE -ne 0) { exit 71 }
-
-          # Ignore any machine-global Git hooks; CI checkout must be self-contained.
-          $emptyHooks = Join-Path $env:RUNNER_TEMP "shire-ci-empty-hooks"
-          New-Item -ItemType Directory -Force -Path $emptyHooks | Out-Null
-          & git config core.hooksPath $emptyHooks
-          if ($LASTEXITCODE -ne 0) { exit 77 }
-
-          $fetchOk = $false
-          for ($attempt = 1; $attempt -le 7; $attempt++) {
-            Write-Host "Exact-commit fetch attempt $attempt for $env:TARGET_SHA"
-            & git fetch --no-tags --prune --depth=1 origin $env:TARGET_SHA
-            if ($LASTEXITCODE -eq 0) {
-              $fetchOk = $true
-              break
-            }
-            if ($attempt -lt 7) {
-              Write-Host "Fetch failed; retrying in 5 seconds."
-              Start-Sleep -Seconds 5
-            }
-          }
-
-          if (-not $fetchOk) {
-            Write-Error "Exact target SHA fetch failed after 7 attempts."
-            exit 72
-          }
-
-          # Force fetched tracked files into place while preserving unrelated local
-          # Saved/SourceAssets content on the dedicated validation machine.
-          & git checkout --force --detach FETCH_HEAD
-          if ($LASTEXITCODE -ne 0) { exit 73 }
-
-          $checkedSha = (& git rev-parse HEAD).Trim()
-          if ($LASTEXITCODE -ne 0 -or $checkedSha -ne $env:TARGET_SHA) {
-            Write-Error "Checkout SHA mismatch. expected=$env:TARGET_SHA actual=$checkedSha"
-            exit 74
-          }
-
-          Set-Content -LiteralPath ".ci-source-sha" -Value $env:TARGET_SHA -Encoding ascii
-          if (-not (Test-Path "ShireJourney.uproject")) {
-            Write-Error "ShireJourney.uproject missing after exact checkout."
-            exit 75
-          }
-
-          Write-Host "Checked out exact commit $env:TARGET_SHA with resilient git fetch."
+          @echo off
+          setlocal EnableExtensions
+          for /f "delims=" %%S in ('git rev-parse HEAD') do set "CHECKED_SHA=%%S"
+          if /I not "%CHECKED_SHA%"=="%TARGET_SHA%" (
+            echo ERROR: Checkout SHA mismatch. expected=%TARGET_SHA% actual=%CHECKED_SHA%
+            exit /b 74
+          )
+          >.ci-source-sha echo %TARGET_SHA%
+          if not exist "ShireJourney.uproject" (
+            echo ERROR: ShireJourney.uproject missing after exact checkout.
+            exit /b 75
+          )
+          echo Checked out exact commit %TARGET_SHA%.
 
       - name: Verify Unreal 4.27.2 and project
         shell: cmd
@@ -179,21 +140,11 @@ jobs:
           )
 
       - name: Wait safely for Unreal Editor to close
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
+        shell: cmd
         run: |
-          $ErrorActionPreference = "Stop"
-          $deadline = (Get-Date).AddMinutes(20)
-
-          while (Get-Process -Name UE4Editor -ErrorAction SilentlyContinue) {
-            if ((Get-Date) -ge $deadline) {
-              Write-Error "UE4Editor.exe stayed open for 20 minutes. Close the editor so automated validation can rebuild safely."
-              exit 40
-            }
-            Write-Host "UE4Editor.exe is open; waiting 10 seconds instead of failing or terminating the user's editor."
-            Start-Sleep -Seconds 10
-          }
-
-          Write-Host "Unreal Editor is closed. Validation may continue."
+          @echo off
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$deadline=(Get-Date).AddMinutes(20); while (Get-Process -Name UE4Editor -ErrorAction SilentlyContinue) { if ((Get-Date) -ge $deadline) { Write-Error 'UE4Editor.exe stayed open for 20 minutes. Close the editor so automated validation can rebuild safely.'; exit 40 }; Write-Host 'UE4Editor.exe is open; waiting 10 seconds instead of terminating it.'; Start-Sleep -Seconds 10 }; Write-Host 'Unreal Editor is closed. Validation may continue.'"
+          if errorlevel 1 exit /b %ERRORLEVEL%
 
       - name: Build ShireJourneyEditor
         shell: cmd
@@ -341,66 +292,14 @@ jobs:
           )
 
       - name: Summarize and guard runtime warning debt
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
+        shell: cmd
         run: |
-          $ErrorActionPreference = "Stop"
-          $LogDir = Join-Path $env:GITHUB_WORKSPACE "Saved\Logs"
-          $Files = @(Get-ChildItem -LiteralPath $LogDir -Filter "CI-*.log" -File -ErrorAction SilentlyContinue)
-
-          if ($Files.Count -eq 0) {
-            throw "No CI Unreal logs found for warning-debt analysis."
-          }
-
-          $Text = ($Files | ForEach-Object {
-            Get-Content -LiteralPath $_.FullName -Raw -ErrorAction SilentlyContinue
-          }) -join "`n"
-
-          $Checks = @(
-            @{ Name = "Missing smoothing groups"; Pattern = "No smoothing group information"; Ceiling = 0; Unique = $false },
-            @{ Name = "Degenerate tangent bases"; Pattern = "degenerate tangent bases"; Ceiling = 150; Unique = $false },
-            @{ Name = "Nearly-zero binormals"; Pattern = "nearly zero bi-normals"; Ceiling = 150; Unique = $false },
-            # Baseline debt from the full eight-chapter UE4.27 validation is 71 unique
-            # world material package references. Guard regressions above that baseline;
-            # do not fail unchanged legacy debt and waste the self-hosted runner cycle.
-            @{ Name = "Missing world material packages"; Pattern = "Failed to load '(/Game/Production/World/[^']+)'"; Ceiling = 71; Unique = $true },
-            @{ Name = "Missing optional audio"; Pattern = "Failed to load '(/Game/Audio/[^']+)'"; Ceiling = 0; Unique = $true },
-            @{ Name = "Missing optional rigs"; Pattern = "Failed to load '(/Game/Production/Characters/Rigs/[^']+)'"; Ceiling = 0; Unique = $true },
-            @{ Name = "defaultMat references"; Pattern = "(defaultMat)"; Ceiling = 0; Unique = $true },
-            @{ Name = "DirectionalLight mobility warnings"; Pattern = "(DirectionalLight_0.*has to be 'Movable')"; Ceiling = 0; Unique = $true },
-            @{ Name = "NPC spawn collision failures"; Pattern = "SpawnActor failed because of collision at the spawn location \[([^\]]+)\] for \[ShireNPC\]"; Ceiling = 0; Unique = $true }
+          @echo off
+          "%PYTHON_EXE%" Scripts\warning_debt_guard.py --log-dir Saved\Logs --summary "%GITHUB_STEP_SUMMARY%"
+          if errorlevel 1 (
+            echo ERROR: Warning-debt regression detected.
+            exit /b 65
           )
-
-          "### UE4.27 warning-debt guard" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-          "| Category | Count | Ceiling |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-          "|---|---:|---:|" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-
-          $Failures = @()
-          foreach ($Check in $Checks) {
-            $RegexMatches = [regex]::Matches(
-              $Text,
-              $Check.Pattern,
-              [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
-            if ($Check.Unique) {
-              $Values = @($RegexMatches | ForEach-Object {
-                if ($_.Groups.Count -gt 1) { $_.Groups[1].Value } else { $_.Value }
-              } | Sort-Object -Unique)
-              $Count = $Values.Count
-            }
-            else {
-              $Count = $RegexMatches.Count
-            }
-            "| $($Check.Name) | $Count | $($Check.Ceiling) |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-            Write-Host ("Warning debt: {0} = {1} (ceiling {2})" -f $Check.Name, $Count, $Check.Ceiling)
-            if ($Count -gt $Check.Ceiling) {
-              $Failures += "$($Check.Name): $Count > $($Check.Ceiling)"
-            }
-          }
-
-          if ($Failures.Count -gt 0) {
-            throw ("Warning-debt regression detected: " + ($Failures -join "; "))
-          }
-
-          Write-Host "Warning-debt guard passed."
 
       - name: Collect Unreal build logs
         if: always()

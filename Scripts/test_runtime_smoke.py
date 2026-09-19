@@ -78,6 +78,7 @@ class RuntimeSmokeTests(unittest.TestCase):
         self.assertEqual(required_markers(None, "state"), [
             "ShirePlayableStartup: GameMode ready",
             "ShireStateAudit: route-roundtrip=PASS",
+            "ShireStateAudit: ring-core=PASS",
         ])
 
     def test_utf16_unreal_log(self):
