@@ -564,6 +564,7 @@
 - Micro-event capacity increases to five active events with a six-second floor between starts under the CP53 contract.
 - Moria remains civilian-empty by design; its movement continues to come from danger/aftermath/environment activity rather than fabricated settlement life.
 - Added PG-053 validation and packaged the CP53 life-saturation contract for runtime builds.
+- Added a 15-mesh project-owned common resource flood pack (barrels, crates, sacks, benches, hay, tents, arches, broken columns, braziers, rope posts, market canopies, boats, cairns, stumps and mushroom clusters) and wired it across P1C01-P1C08.
 - Final skeletal crowds, navmesh crowd avoidance, voice audio, fauna meshes and target-device performance acceptance remain open.
 
 ## Current hard gate
