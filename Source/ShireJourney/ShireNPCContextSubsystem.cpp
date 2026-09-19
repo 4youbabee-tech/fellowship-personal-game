@@ -141,8 +141,8 @@ void UShireNPCContextSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     const bool bConversationLoaded = LoadConversationPlan();
     const bool bBoundedLoaded = LoadBoundedDialoguePlan();
     const bool bRegionalMoodLoaded = LoadRegionalMoodPlan();
-    const bool bFilmSourceLoaded = LoadFilmDialogueSourceContext();
     BuildDialogueVariantLibrary();
+    const bool bFilmSourceLoaded = LoadFilmDialogueSourceContext();
 
     bDataReady = bSocialLoaded && bConversationLoaded && bBoundedLoaded &&
         bRegionalMoodLoaded && bFilmSourceLoaded && Profiles.Num() > 0;
@@ -467,6 +467,40 @@ bool UShireNPCContextSubsystem::LoadFilmDialogueSourceContext()
             return A.Sequence < B.Sequence;
         });
     }
+
+    const TArray<TSharedPtr<FJsonValue>>* DialogueValues = nullptr;
+    if (Root->TryGetArrayField(TEXT("original_dialogue_variants"), DialogueValues) && DialogueValues)
+    {
+        for (const TSharedPtr<FJsonValue>& Value : *DialogueValues)
+        {
+            const TSharedPtr<FJsonObject> Object = Value.IsValid() ? Value->AsObject() : nullptr;
+            if (!Object.IsValid()) continue;
+
+            FString VariantId, Speaker, Intent, Text, RequiredBeat, RequiredMood;
+            Object->TryGetStringField(TEXT("variant_id"), VariantId);
+            Object->TryGetStringField(TEXT("speaker"), Speaker);
+            Object->TryGetStringField(TEXT("intent"), Intent);
+            Object->TryGetStringField(TEXT("text"), Text);
+            Object->TryGetStringField(TEXT("required_story_beat"), RequiredBeat);
+            Object->TryGetStringField(TEXT("required_mood"), RequiredMood);
+
+            if (VariantId.IsEmpty() || Speaker.IsEmpty() || Intent.IsEmpty() || Text.IsEmpty())
+            {
+                continue;
+            }
+
+            AddDialogueVariant(
+                FName(*Speaker),
+                FName(*Intent),
+                FName(*VariantId),
+                *Text,
+                NAME_None,
+                RequiredBeat.IsEmpty() ? NAME_None : FName(*RequiredBeat),
+                NAME_None,
+                RequiredMood.IsEmpty() ? NAME_None : FName(*RequiredMood));
+        }
+    }
+
     return FilmContextsByRouteChapter.Num() > 0;
 }
 
