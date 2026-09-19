@@ -2182,6 +2182,72 @@ for chapter_id in ["P1C03", "P1C04", "P1C05", "P1C06", "P1C07", "P1C08"]:
     if chapter_world_cpp.count(f'ChapterId == TEXT("{chapter_id}")') < 1:
         fail(f"PG-051 atmosphere/world chapter branch missing: {chapter_id}")
 
+# PG-052: full playable production activation must keep source-controlled resources connected to runtime.
+production_activation_plan_path = ROOT / "Data" / "ProductionActivationPlan.json"
+if not production_activation_plan_path.exists():
+    fail("PG-052 ProductionActivationPlan.json missing")
+else:
+    try:
+        production_activation_plan = json.loads(read(production_activation_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-052 invalid ProductionActivationPlan.json: {exc}")
+        production_activation_plan = {}
+
+shire_prod_h = read(SOURCE / "ShirePrototypeWorldBuilder.h")
+shire_prod_cpp = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
+bree_prod_h = read(SOURCE / "BreePrototypeWorldBuilder.h")
+bree_prod_cpp = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
+fellowship_prod_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+
+for symbol in [
+    "SpawnFullProductionActivationLayer",
+    "ProductionCommonBroadleafTreeMesh",
+    "ProductionCommonDryStoneWallMesh",
+    "ProductionCommonVillageFenceMesh",
+    "ProductionCommonWoodPileMesh",
+    "ProductionCommonFernClumpMesh",
+    "ProductionCommonFootbridgeMesh",
+]:
+    if symbol not in (shire_prod_h + shire_prod_cpp):
+        fail(f"PG-052 Shire production activation missing: {symbol}")
+
+for symbol in [
+    "ConfigureBreeAtmosphere",
+    "SpawnFullProductionActivationLayer",
+    "CommonBroadleafTreeMesh",
+    "CommonPineTreeMesh",
+    "CommonDryStoneWallMesh",
+    "CommonVillageFenceMesh",
+    "CommonWoodPileMesh",
+    "CommonFernClumpMesh",
+    "CommonBoulderClusterMesh",
+]:
+    if symbol not in (bree_prod_h + bree_prod_cpp):
+        fail(f"PG-052 Bree production activation missing: {symbol}")
+
+for symbol in [
+    "CommonPineTreeMesh",
+    "CommonBroadleafTreeMesh",
+    "CommonGoldenTreeMesh",
+    "CommonFallenLogMesh",
+    "CommonDryStoneWallMesh",
+    "CommonPathMarkerMesh",
+    "CommonWoodPileMesh",
+    "CommonFernClumpMesh",
+    "CommonReedClusterMesh",
+    "CommonRuinSlabMesh",
+    "CommonFootbridgeMesh",
+    "CommonBoulderClusterMesh",
+]:
+    if symbol not in fellowship_prod_cpp:
+        fail(f"PG-052 regional production activation missing: {symbol}")
+
+if production_activation_plan:
+    scoped = set(production_activation_plan.get("scope", {}).get("chapters", []))
+    required = {f"P1C0{i}" for i in range(1, 9)}
+    if not required.issubset(scoped):
+        fail("PG-052 activation plan no longer covers all Part I chapters")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
