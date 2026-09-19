@@ -1309,6 +1309,21 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
             FVector(720, 140, 0));
     }
 
+    AShireTraversalChallenge* QuietFeet = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(980, -980, 75), FRotator::ZeroRotator);
+    if (QuietFeet)
+    {
+        QuietFeet->ConfigureActivityChallenge(
+            TEXT("SHIRE_QUIET_FEET"),
+            FText::FromString(TEXT("Quiet Feet Through the Hedges")),
+            TEXT("STEALTH_LITE"),
+            FVector(0, 0, 0),
+            FVector(260, 90, 0),
+            FVector(520, -30, 0),
+            true,
+            0.0f);
+    }
+
     AShireNPC* Maggot=GetWorld()->SpawnActor<AShireNPC>(FVector(6200,-1500,65),FRotator(0,155,0));
     if(Maggot)
     {

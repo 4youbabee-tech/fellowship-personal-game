@@ -3795,8 +3795,8 @@ for pg81_chapter in pg81_side.get("chapters", []):
             if str(pg81_discovery.get("chapter") or "") != pg81_chapter_id:
                 fail(f"PG-081 reward chapter mismatch: {pg81_id}")
 
-if pg81_count < 18:
-    fail(f"PG-081 contextual side-activity coverage regressed below 18: {pg81_count}")
+if pg81_count < 19:
+    fail(f"PG-081 contextual side-activity coverage regressed below 19: {pg81_count}")
 
 pg81_qh = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
 pg81_qc = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
@@ -3811,6 +3811,47 @@ for pg81_symbol in [
         fail(f"PG-081 side-activity runtime window symbol missing: {pg81_symbol}")
 if "IsSideActivityDiscoveryAvailable(DiscoveryId)" not in pg81_tc:
     fail("PG-081 traversal challenge bypasses central side-activity window guard")
+
+
+# PG-082: QUIET_STEP must have at least one authored physical STEALTH_LITE source.
+try:
+    pg82_side = json.loads(read(ROOT / "Data" / "ContextualSideActivityPlan.json"))
+    pg82_journey = json.loads(read(ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"))
+except json.JSONDecodeError as exc:
+    fail(f"PG-082 invalid side/discovery JSON: {exc}")
+    pg82_side, pg82_journey = {}, {}
+
+pg82_stealth = [
+    activity
+    for chapter in pg82_side.get("chapters", [])
+    if isinstance(chapter, dict)
+    for activity in chapter.get("activities", [])
+    if isinstance(activity, dict) and activity.get("type") == "STEALTH_LITE"
+]
+if not pg82_stealth:
+    fail("PG-082 no authored STEALTH_LITE side activity exists")
+
+pg82_rewards = {
+    str(item.get("discovery_id") or "")
+    for item in pg82_journey.get("discovery_rewards", [])
+    if isinstance(item, dict)
+}
+for pg82_activity in pg82_stealth:
+    pg82_reward = str(pg82_activity.get("discovery_reward_id") or "")
+    if not pg82_reward or pg82_reward not in pg82_rewards:
+        fail(f"PG-082 stealth reward missing from JourneyDiscoveryRewardPlan: {pg82_reward}")
+
+pg82_shire = read(ROOT / "Source" / "ShireJourney" / "ShirePrototypeWorldBuilder.cpp")
+pg82_traversal = read(ROOT / "Source" / "ShireJourney" / "ShireTraversalChallenge.cpp")
+pg82_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+for pg82_symbol in [
+    "SHIRE_QUIET_FEET",
+    'TEXT("STEALTH_LITE")',
+    "IsCrouchingForStealth",
+    "CompleteSideActivityDiscovery",
+]:
+    if pg82_symbol not in (pg82_shire + pg82_traversal + pg82_player_h):
+        fail(f"PG-082 stealth runtime symbol missing: {pg82_symbol}")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")

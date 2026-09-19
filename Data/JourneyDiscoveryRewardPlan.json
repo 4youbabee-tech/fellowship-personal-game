@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "JOURNEY_DISCOVERY_REWARD_SYSTEM_V1",
-  "status": "RUNTIME_STATE_TRIGGERS_SAVE_HUD_IMPLEMENTED_PENDING_ENGINE_PROOF",
+  "status": "RUNTIME_STATE_TRIGGERS_SAVE_HUD_AND_STEALTH_REWARD_IMPLEMENTED_PENDING_ENGINE_PROOF",
   "inspiration_note": "Uses the satisfying idea of rewarding first-time place discovery common to exploration RPGs, but the presentation and rewards are original and fitted to this project's film-spine world.",
   "purpose": "Make exploration feel like game progression, not empty wandering, while keeping mandatory film chronology intact.",
   "player_facing_name": "Journey Discoveries",
@@ -119,6 +119,22 @@
       "grants": [
         "CHRONICLE_ENTRY",
         "COMPANION_MEMORY_TOPIC"
+      ],
+      "story_effect": "NONE",
+      "may_advance_required_anchor": false,
+      "may_change_canon_outcome": false
+    },
+    {
+      "discovery_id": "SHIRE_QUIET_FEET",
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "region": "Shire",
+      "category": "ROAD_WISDOM",
+      "first_time_only": true,
+      "journey_insight": 10,
+      "grants": [
+        "CHRONICLE_ENTRY",
+        "RETURN_ROUTE_HINT"
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,

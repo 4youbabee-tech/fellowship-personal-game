@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "CONTEXTUAL_SIDE_ACTIVITY_PLAN_V1",
-  "status": "STATIC_CONTRACT_PLUS_REWARD_RUNTIME_WIRING_PENDING_FULL_ACTIVITY_MECHANICS",
+  "status": "RUNTIME_MULTI_STEP_MECHANICS_AND_STEALTH_LITE_PENDING_ENGINE_PROOF",
   "purpose": "Add optional game-like side activities that plausibly happen inside the time, place and character context of the Peter Jackson film story without creating an alternate main story.",
   "canon_rule": "The film spine is mandatory. Side activities are unseen gap-fill moments only: plausible things the player could have done between film anchors.",
   "hard_rules": [
@@ -80,6 +80,28 @@
           "may_change_canon_outcome": false,
           "future_knowledge_allowed": false,
           "urgency_policy": "Completes or silently expires when the party story anchor starts."
+        },
+        {
+          "id": "SIDE_SHIRE_QUIET_FEET",
+          "title": "Quiet Feet Through the Hedges",
+          "type": "STEALTH_LITE",
+          "available_after": "GandalfArrival",
+          "ends_before": "PartyArrival",
+          "participants": [
+            "Frodo"
+          ],
+          "film_context": "A harmless practice route through Hobbiton hedges during the still-safe Shire window. It teaches quiet movement before later danger without inventing a new story event.",
+          "mechanics": [
+            "crouch through three hedge-route checkpoints",
+            "standing up resets the sequence without story penalty",
+            "complete the route once for a bounded Quiet Step reward"
+          ],
+          "discovery_reward_id": "SHIRE_QUIET_FEET",
+          "canon_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false,
+          "future_knowledge_allowed": false,
+          "urgency_policy": "Disabled once PartyArrival begins."
         }
       ]
     },
@@ -524,11 +546,10 @@
     "repeat_policy": "Replay is allowed only for fun/banter where appropriate; Journey Insight remains first-time-only."
   },
   "runtime_next": [
-    "Implement a lightweight side-activity trigger/state layer by extending existing quest/exploration owners rather than creating a competing story manager.",
-    "Use existing chapter builders and story-beat gates for availability.",
-    "Feed completion into JourneyDiscoveryRewardPlan and named-NPC memory/dialogue context.",
-    "Persist only compact optional completion IDs and reward state.",
-    "Add automation proving each side activity cannot mutate required story anchors."
+    "Validate the central film-safe activity window guard and all physicalized activity families in UE4.27.",
+    "Tune placement, spacing and readability for the multi-step activity gates in PIE.",
+    "Expand world-event interaction into bounded optional player responses without creating quest-log noise.",
+    "Add engine-driven regression proof for open/close story windows, anti-farm and QUIET_STEP stealth completion."
   ],
   "runtime_progression_mapping": {
     "CAMP_PREPARATION": {
