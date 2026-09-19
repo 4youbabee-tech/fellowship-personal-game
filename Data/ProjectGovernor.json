@@ -1027,6 +1027,49 @@
         "REQ-WORLD-002"
       ],
       "checkpoint": "CP51"
+    },
+    {
+      "id": "REQ-PROD-005",
+      "title": "Mass resource saturation and playable runtime integration",
+      "category": "VisualProduction",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "User explicitly requested a much larger next step: pull all usable resources into the game and make the game begin to operate as a coherent playable build",
+      "intent": "Integrate every currently usable project-owned production family across Part I in one large batch, package required runtime data, preserve the launch path, and keep third-party sourcing constrained by real license evidence.",
+      "evidence": [
+        "Data/ResourceIntegrationPlan.json",
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+        "Source/ShireJourney/BreePrototypeWorldBuilder.cpp",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
+        "Source/ShireJourney/ShireJourney.Build.cs",
+        "Docs/CHECKPOINTS.md CP52"
+      ],
+      "implementation_refs": [
+        "shared common-kit saturation now covers Shire, Bree and P1C03-P1C08",
+        "living-world and production plan data are packaged as runtime dependencies",
+        "startup invariants keep P1C01 + ShireArrival + world router + LivingWorldDirector active"
+      ],
+      "missing_work": [
+        "real UE4.27.2 compile/import validation for CP52",
+        "PIE chapter-by-chapter traversal",
+        "target-device FPS/stability tuning",
+        "approved third-party asset acquisition because ExternalAssetManifest currently contains zero approved assets",
+        "final textures, audio, skeletal rigs and story-critical interiors"
+      ],
+      "acceptance_criteria": [
+        "Pre-Unreal PG-052 passes",
+        "UE4.27.2 build/import passes",
+        "Game boots into P1C01 with active ShireArrival quest and runtime directors",
+        "P1C01-P1C08 remain traversable with no story topology regression",
+        "No external third-party asset is represented as approved without manifest license evidence"
+      ],
+      "dependencies": [
+        "REQ-WORLD-004",
+        "REQ-CHAR-003",
+        "REQ-ASSET-001",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "CP52"
     }
   ],
   "hard_invariants": [
@@ -1520,9 +1563,9 @@
     {
       "order": 1,
       "id": "WORK-WORLD-002",
-      "title": "Part I world density and landmark detail pass",
+      "title": "Part I mass resource saturation and playable integration",
       "status": "ACTIVE",
-      "rationale": "CP50 density remains active; CP51 adds distinct bounded sun/sky/fog atmosphere to P1C03-P1C08 while final weather, materials, interiors and visual acceptance remain open."
+      "rationale": "CP52 expands the shared production kit across Shire, Bree and P1C03-P1C08, packages runtime data needed by the living world, and explicitly guards the playable startup path. Final licensed external acquisitions and acceptance remain open."
     },
     {
       "order": 2,
@@ -1605,14 +1648,15 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Continued from CP50 into the planned character-animation and atmosphere production layer after the previous chat reached its maximum length",
+    "reason": "User requested a substantially larger integration step rather than small incremental passes: saturate the game with all currently usable resources and move the build toward an actually running playable experience",
     "summary": [
-      "Added CharacterMotionPlan with a strict skeletal-mesh plus locomotion-AnimBP activation contract and safe modular fallback.",
-      "AShireNPC now has profile-specific idle breathing, weight shift, gait variation and dialogue gestures while retaining existing follow/save/dialogue behavior.",
-      "Added ChapterAtmospherePlan and runtime sun, skylight and exponential-height-fog profiles for P1C03-P1C08.",
-      "No story or quest topology was moved by the CP51 presentation changes.",
-      "Hardened Pre-Unreal validation so late PG-050 and PG-051 checks participate in the final exit status.",
-      "UE4.27 compile/import, PIE visual review and target-device performance acceptance remain required."
+      "Created ResourceIntegrationPlan as the CP52 source-of-truth for the mass integration batch.",
+      "Extended the reusable common production environment kit into the Shire and Bree instead of limiting it to P1C03-P1C08.",
+      "Expanded P1C03-P1C08 with additional shared fences, logs, wood piles, markers, foliage and ruin dressing while preserving quest coordinates.",
+      "Packaged LivingWorldEventPlan plus CP50/CP51/CP52 production data as Unreal runtime dependencies.",
+      "Added PG-052 guards for the P1C01/ShireArrival startup state, world router, LivingWorldDirector and shared-resource integration.",
+      "ExternalAssetManifest currently has zero approved asset entries, so CP52 does not fabricate or silently import unlicensed third-party content.",
+      "UE4.27 compile/import, PIE traversal and target-device performance acceptance remain required before calling the batch validated."
     ]
   },
   "development_mode": {
