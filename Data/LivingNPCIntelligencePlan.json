@@ -8,53 +8,124 @@
     "Named story characters receive richer identity/memory than ambient populations.",
     "Ambient populations use aggregate/archetype state rather than expensive per-instance persistence.",
     "Dialogue must respect character knowledge and admit ignorance when knowledge is unavailable.",
-    "The game must remain playable without an always-on remote language model.",
-    "A future LLM layer, if enabled, is an optional bounded renderer of already-authorized context, never the authority for story or NPC truth."
+    "All gameplay-critical NPC intelligence must run fully offline with zero network/API dependency.",
+    "If a language model is ever used at runtime, it must be a local on-device model behind strict context, memory, knowledge and performance limits; cloud/remote LLM calls are not part of the game architecture."
   ],
   "capabilities": {
     "identity_profile": {
       "status": "DATA_DEFINED",
-      "sources": ["Data/NPCSocialModel.json"],
-      "fields": ["roles","community","temperament_tags","knowledge_tags","relationships","anchors"]
+      "sources": [
+        "Data/NPCSocialModel.json"
+      ],
+      "fields": [
+        "roles",
+        "community",
+        "temperament_tags",
+        "knowledge_tags",
+        "relationships",
+        "anchors"
+      ]
     },
     "daily_routine": {
       "status": "RUNTIME_PARTIAL",
-      "sources": ["Data/NPCSocialModel.json","Source/ShireJourney/ShireAmbientNPC.cpp"],
-      "features": ["HOME","WORK","TRAVEL","SOCIAL","REST","STORY_OVERRIDE","DANGER_OVERRIDE"]
+      "sources": [
+        "Data/NPCSocialModel.json",
+        "Source/ShireJourney/ShireAmbientNPC.cpp"
+      ],
+      "features": [
+        "HOME",
+        "WORK",
+        "TRAVEL",
+        "SOCIAL",
+        "REST",
+        "STORY_OVERRIDE",
+        "DANGER_OVERRIDE"
+      ]
     },
     "persistent_memory": {
       "status": "RUNTIME_COMPLETE_PENDING_VALIDATION",
-      "sources": ["Data/NPCMemoryPlan.json","Source/ShireJourney/ShireQuestSubsystem.cpp","Source/ShireJourney/ShireSaveGame.h"],
+      "sources": [
+        "Data/NPCMemoryPlan.json",
+        "Source/ShireJourney/ShireQuestSubsystem.cpp",
+        "Source/ShireJourney/ShireSaveGame.h"
+      ],
       "policy": "Compact event IDs and relationship deltas only; no raw transcript persistence."
     },
     "goals_needs_emotions": {
       "status": "RUNTIME_PARTIAL",
-      "sources": ["Source/ShireJourney/ShireAmbientNPC.cpp"],
-      "needs": ["hunger","fatigue","social_need","fear"],
-      "emotions": ["CALM","FOCUSED","SOCIABLE","RELAXED","TIRED","HUNGRY","AFRAID","UNCOMFORTABLE"],
-      "goals": ["ROUTINE","WORK","SOCIALIZE","REST","MEAL_BREAK","SAFETY","SHELTER"],
+      "sources": [
+        "Source/ShireJourney/ShireAmbientNPC.cpp"
+      ],
+      "needs": [
+        "hunger",
+        "fatigue",
+        "social_need",
+        "fear"
+      ],
+      "emotions": [
+        "CALM",
+        "FOCUSED",
+        "SOCIABLE",
+        "RELAXED",
+        "TIRED",
+        "HUNGRY",
+        "AFRAID",
+        "UNCOMFORTABLE"
+      ],
+      "goals": [
+        "ROUTINE",
+        "WORK",
+        "SOCIALIZE",
+        "REST",
+        "MEAL_BREAK",
+        "SAFETY",
+        "SHELTER"
+      ],
       "rule": "Needs/emotions bias existing bounded routines; they never own quest progression."
     },
     "context_awareness": {
       "status": "RUNTIME_PARTIAL",
-      "inputs": ["chapter","route","quest stage","completed story beats","weather","danger","player proximity","schedule phase","relationship memory"]
+      "inputs": [
+        "chapter",
+        "route",
+        "quest stage",
+        "completed story beats",
+        "weather",
+        "danger",
+        "player proximity",
+        "schedule phase",
+        "relationship memory"
+      ]
     },
     "relationships": {
       "status": "DATA_AND_RUNTIME_PARTIAL",
-      "sources": ["Data/NPCSocialModel.json","Data/NPCMemoryPlan.json"],
+      "sources": [
+        "Data/NPCSocialModel.json",
+        "Data/NPCMemoryPlan.json"
+      ],
       "rule": "Relationship state may influence reactions/dialogue but cannot rewrite canon outcomes."
     },
     "dialogue": {
       "status": "RUNTIME_COMPLETE_PENDING_VALIDATION",
       "default_mode": "BOUNDED_LOCAL",
-      "sources": ["Data/BoundedDialoguePlan.json","Data/NPCConversationPlan.json","Source/ShireJourney/ShireNPCContextSubsystem.cpp"],
-      "future_optional_modes": ["REMOTE_LLM_BOUNDED","LOCAL_SMALL_LLM_BOUNDED"],
-      "fallback_required": true
+      "sources": [
+        "Data/BoundedDialoguePlan.json",
+        "Data/NPCConversationPlan.json",
+        "Source/ShireJourney/ShireNPCContextSubsystem.cpp"
+      ],
+      "future_optional_modes": [
+        "LOCAL_SMALL_LLM_BOUNDED"
+      ],
+      "fallback_required": true,
+      "network_policy": "FORBID_REMOTE_RUNTIME_CALLS"
     },
     "speech": {
-      "status": "DEFERRED_OPTIONAL",
-      "future_options": ["STT","TTS"],
-      "rule": "Voice transport must not become a hard dependency for gameplay."
+      "status": "DEFERRED_OPTIONAL_OFFLINE_ONLY",
+      "future_options": [
+        "LOCAL_STT",
+        "LOCAL_TTS"
+      ],
+      "rule": "If speech is shipped, STT/TTS must execute locally/offline and must not become a hard gameplay dependency."
     }
   },
   "character_knowledge_policy": {
@@ -71,25 +142,39 @@
     {
       "phase": "LW-A",
       "scope": "One Shire archetype + named Shire residents",
-      "focus": ["needs","emotion","routine","memory-aware local dialogue"],
+      "focus": [
+        "needs",
+        "emotion",
+        "routine",
+        "memory-aware local dialogue"
+      ],
       "status": "IN_PROGRESS"
     },
     {
       "phase": "LW-B",
       "scope": "Gandalf, Sam, Aragorn, Bilbo",
-      "focus": ["character biography","knowledge limits","relationship memory","story-reactive dialogue"],
+      "focus": [
+        "character biography",
+        "knowledge limits",
+        "relationship memory",
+        "story-reactive dialogue"
+      ],
       "status": "PLANNED"
     },
     {
       "phase": "LW-C",
       "scope": "Merry, Pippin, Arwen, Boromir, Legolas, Gimli, Elrond, Galadriel, Haldir, Saruman",
-      "focus": ["character-specific knowledge and relationship context"],
+      "focus": [
+        "character-specific knowledge and relationship context"
+      ],
       "status": "PLANNED"
     },
     {
       "phase": "LW-D",
       "scope": "regional ambient archetypes",
-      "focus": ["cheap aggregate needs/emotion/schedule reactions"],
+      "focus": [
+        "cheap aggregate needs/emotion/schedule reactions"
+      ],
       "status": "PLANNED"
     }
   ],
@@ -100,7 +185,9 @@
     "NPCs can express ignorance when profile knowledge is absent.",
     "Relationships and memories influence dialogue/reactions without changing required story outcomes.",
     "Ambient simulation stays distance-throttled and low-cost.",
-    "Game remains functional when no LLM/STT/TTS service is configured."
+    "Game remains fully functional with the network physically unavailable.",
+    "No gameplay-critical NPC path makes remote HTTP/API calls.",
+    "Any future local LLM/STT/TTS layer has a deterministic local fallback and stays within the target-device budget."
   ],
   "explicit_non_goals_for_current_batch": [
     "unrestricted free-form AI agents",
@@ -108,6 +195,20 @@
     "large local LLM on the 8 GB / ~2 GB VRAM target",
     "unbounded transcript storage",
     "LLM-authored quest outcomes",
-    "final facial animation, final TTS voice or final lip-sync"
-  ]
+    "final facial animation, final TTS voice or final lip-sync",
+    "remote/cloud LLM runtime integration",
+    "remote/cloud STT or TTS runtime integration",
+    "API keys or internet connectivity required by the shipped game"
+  ],
+  "offline_runtime_policy": {
+    "mode": "OFFLINE_ONLY",
+    "network_required": false,
+    "remote_llm_allowed": false,
+    "remote_stt_allowed": false,
+    "remote_tts_allowed": false,
+    "cloud_api_dependency_allowed": false,
+    "local_model_optional": true,
+    "deterministic_non_llm_fallback_required": true,
+    "rule": "Disconnecting the machine from the internet must not disable NPC routines, memory, goals, emotions, relationships, dialogue, story progression, save/load, STT/TTS if those speech layers are shipped, or any other gameplay-critical feature."
+  }
 }
