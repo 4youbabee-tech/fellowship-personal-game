@@ -4,7 +4,7 @@
   "status": "ACCEPTED_PRODUCTION_CONTRACT_RUNTIME_EXPANSION_PENDING",
   "purpose": "Make the project a complete modern narrative adventure game built around the fixed film chronology rather than a sequence of film scenes.",
   "canon_contract": {
-    "fixed_story": "Peter Jackson film chronology remains the mandatory spine.",
+    "fixed_story": "Peter Jackson film chronology remains the fixed mandatory story spine.",
     "side_content_rule": "Optional play lives between fixed film anchors and may deepen place, character, skill and relationships but may not replace, skip, reorder or change required film outcomes.",
     "opening_truth": {
       "source": "Owner-supplied Fellowship screenplay reference",
