@@ -48,6 +48,9 @@ public:
     UFUNCTION(BlueprintCallable, Category="PlayerLife")
     void GrantSupplies(int32 Amount);
 
+    UFUNCTION(BlueprintPure, Category="Chronicle")
+    bool IsChronicleOpen() const { return bChronicleOpen; }
+
     UFUNCTION(BlueprintCallable, Category="Save")
     bool SaveAutomaticCheckpoint(FName CheckpointId, bool bShowHUD = true);
 
@@ -71,6 +74,7 @@ protected:
     void Interact();
     void PrimaryAttack();
     void UseSupply();
+    void ToggleChronicle();
     void QuickSave();
     void QuickLoad();
     void DebugPreviousChapter();
@@ -206,6 +210,7 @@ private:
     int32 Supplies = 3;
     float StaminaRegenDelayRemaining = 0.0f;
     bool bStaminaExhausted = false;
+    bool bChronicleOpen = false;
     float PrototypeIdlePhase = 0.0f;
     FName PendingChapterCheckpointId = NAME_None;
 
