@@ -879,6 +879,32 @@ else:
     if "does not begin at bilbo's birthday party" not in notes:
         fail("PG-077: Fellowship opening-order correction missing")
 
+
+# PG-077: all trilogy side content must use one canon-safe taxonomy.
+side_master_path = ROOT / "Data" / "FilmSideContentMasterPlan.json"
+if not side_master_path.exists():
+    fail("PG-077: FilmSideContentMasterPlan.json missing")
+else:
+    side_master = json.loads(read(side_master_path))
+    allowed_types = {"FILM_MOMENT", "FILM_EXPANDED", "CHRONICLE"}
+    for section in ["fellowship", "two_towers", "return_of_king", "chronicles"]:
+        for item in side_master.get(section, []):
+            if item.get("type") not in allowed_types:
+                fail(f"PG-077: {item.get('id')} has invalid side-content type")
+            if not item.get("canon_lock") and section != "chronicles":
+                fail(f"PG-077: {item.get('id')} missing canon lock")
+    for item in side_master.get("chronicles", []):
+        if item.get("type") != "CHRONICLE":
+            fail(f"PG-077: book/history item {item.get('id')} must remain CHRONICLE")
+    corrections = " ".join(
+        str(x.get("correction") or "") for x in side_master.get("audits_and_corrections", [])
+    ).lower()
+    for marker in ["attack must still happen", "ring incident", "treebeard", "pippin", "book-only"]:
+        if marker not in corrections:
+            fail(f"PG-077: continuity correction missing {marker}")
+    if len(side_master.get("prototype_priority", [])) < 10:
+        fail("PG-077: prototype priority set must contain at least 10 entries")
+
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
 living_world_data = {}

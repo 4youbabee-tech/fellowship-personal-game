@@ -2831,17 +2831,24 @@
       "title": "Film-ensemble playable mission rollout",
       "status": "ACTIVE",
       "rationale": "Turn film-supported actions and safe gaps for Gandalf, Gimli, Aragorn, Arwen, Boromir, Legolas, Merry/Pippin and later characters into playable mission waves without changing chronology."
+    },
+    {
+      "order": 1,
+      "id": "WORK-SIDE-001",
+      "title": "Film-derived side-content rollout",
+      "status": "ACTIVE",
+      "rationale": "Prototype high-value film moments first, then film-expanded spaces, while keeping Chronicles separate."
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Audited the programmer's trilogy side-content proposal against the supplied Fellowship/Two Towers sources and the project's canon-separated source pack.",
+    "reason": "Owner supplied a trilogy-wide programmer proposal and requested reconciliation/audit to prevent future story and implementation errors.",
     "summary": [
-      "Proposal retained, but normalized into FILM_CORE / FILM_EXPANDED / FILM_INTERSTITIAL / BOOK_CHRONICLE plus independent source-verification status.",
-      "Corrected the claim that Fellowship begins at Bilbo's party; prologue and Bag End/Frodo-Gandalf opening precede the party.",
-      "Part I/II entries were source-audited; risky or less-certain entries remain PROJECT_CANON_CROSSCHECK or FUTURE_SOURCE_CHECK.",
-      "Part III entries remain FUTURE_SOURCE_CHECK until scene-level source verification.",
-      "Book-only Tom Bombadil, Barrow-downs, Glorfindel and Scouring material is isolated from main film-save continuity."
+      "Unified side content under FILM_MOMENT, FILM_EXPANDED and CHRONICLE.",
+      "Corrected continuity-risk ideas so optional gameplay cannot alter canonical outcomes or causality.",
+      "Fellowship and Two Towers items were cross-checked against the supplied scripts/source pack; Return of the King high-level items were cross-checked against a published 2003 screenplay source, with remaining cut-sensitive details left source-check gated.",
+      "Book-only Tom Bombadil/Barrow-downs, Glorfindel and Scouring are explicitly barred from silent Film Main Story insertion.",
+      "Prototype priorities are recorded without overriding the current exact-head UE4.27 validation gate."
     ]
   },
   "development_mode": {
