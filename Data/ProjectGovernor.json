@@ -1889,7 +1889,7 @@
   ],
   "work_queue": [
     {
-      "order": 1,
+      "order": 3,
       "id": "WORK-WORLD-002",
       "title": "Part I mass resource saturation and playable integration",
       "status": "ACTIVE",
@@ -1911,7 +1911,7 @@
       ]
     },
     {
-      "order": 2,
+      "order": 4,
       "id": "WORK-CHAR-003",
       "title": "Distinct visual identity and motion pass for the Part I core cast",
       "status": "QUEUED",
@@ -1972,17 +1972,30 @@
       "title": "Implement persistent named-NPC memory and bounded dialogue intelligence",
       "status": "IMPLEMENTED",
       "rationale": "Backend runtime implementation is complete in CP44; only integration/device acceptance remains before VALIDATED."
+    },
+    {
+      "order": 1,
+      "id": "WORK-EXP-003",
+      "title": "CP56 Fellowship film-experience mega-pass",
+      "status": "ACTIVE",
+      "rationale": "Primary production track: deepen Part I moment-to-moment play around the fixed Peter Jackson film chronology with Shire life, companionship, exploration, regional social texture and cinematic presentation, without altering canon outcomes."
+    },
+    {
+      "order": 2,
+      "id": "WORK-LW-004",
+      "title": "Offline Living NPC intelligence expansion",
+      "status": "ACTIVE",
+      "rationale": "Primary parallel production track: expand NPC identity, biography, knowledge limits, memory, goals, needs, emotions, relationships and context-aware dialogue with a strict offline-only runtime."
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Project owner clarified that the game and its intelligent-NPC foundation must be offline.",
+    "reason": "User asked to re-check recent conversations, confirm the two major requests are registered, and begin them as the active production path.",
     "summary": [
-      "Living NPC architecture is now explicitly OFFLINE_ONLY.",
-      "Remote/cloud LLM, STT and TTS runtime calls are excluded from the shipped game.",
-      "Deterministic local NPC systems remain authoritative and fully playable without network access.",
-      "A future small local/on-device language model may be evaluated only as an optional bounded wording layer after the deterministic stack passes.",
-      "Developer-side online research/tooling does not imply an online dependency in the shipped game."
+      "Primary track 1 is CP56 Fellowship film-experience mega-pass: cinematic Shire/world/character/story/life expansion while preserving the film chronology.",
+      "Primary track 2 is Offline Living NPC intelligence: memory, goals, needs, emotions, relationships, biographies, knowledge limits and context-aware dialogue with zero runtime internet dependency.",
+      "Both tracks are now explicit ACTIVE work-queue items in the Governor rather than only requirements/plans.",
+      "CI issues discovered while starting these tracks are being repaired in parallel before merge."
     ]
   },
   "development_mode": {
