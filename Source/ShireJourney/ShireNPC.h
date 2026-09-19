@@ -179,6 +179,10 @@ private:
     float DialogueActingRemaining = 0.0f;
     float ActingPhase = 0.0f;
     float BanterCooldownRemaining = -1.0f;
+    float LivingContextRefreshRemaining = 0.0f;
+    float CachedWorldPressure = 0.25f;
+    FName CachedWorldMood = NAME_None;
+    FName CachedEmotionalState = NAME_None;
 
     void ApplyPrototypeStyle();
     bool TryApplyProductionRig(const FString& RigFolder);
@@ -189,5 +193,6 @@ private:
     FVector GetFormationTarget(const APawn* PlayerPawn) const;
     void RestoreCompanionFollowState();
     void UpdateCompanionBanter(float DeltaSeconds);
+    void RefreshLivingContext(float DeltaSeconds);
     FName ResolveCanonicalProfileId() const;
 };
