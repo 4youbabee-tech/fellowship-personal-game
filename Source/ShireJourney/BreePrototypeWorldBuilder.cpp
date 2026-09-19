@@ -4,8 +4,14 @@
 #include "ShireNPC.h"
 #include "ShireQuestTrigger.h"
 
+#include "Components/DirectionalLightComponent.h"
+#include "Components/ExponentialHeightFogComponent.h"
+#include "Components/SkyLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Engine/DirectionalLight.h"
+#include "Engine/ExponentialHeightFog.h"
+#include "Engine/SkyLight.h"
 #include "Engine/StaticMeshActor.h"
 #include "Engine/TextRenderActor.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -46,6 +52,13 @@ void ABreePrototypeWorldBuilder::BeginPlay()
     ProductionHitchingPostMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Bree/SM_BreeHitchingPost.SM_BreeHitchingPost"));
     ProductionTableMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Bree/SM_BreeTable.SM_BreeTable"));
     ProductionCrateStackMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Bree/SM_BreeCrateStack.SM_BreeCrateStack"));
+    CommonBroadleafTreeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBroadleafTree.SM_CommonBroadleafTree"));
+    CommonPineTreeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonPineTree.SM_CommonPineTree"));
+    CommonDryStoneWallMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonDryStoneWall.SM_CommonDryStoneWall"));
+    CommonVillageFenceMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence"));
+    CommonWoodPileMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile"));
+    CommonFernClumpMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump"));
+    CommonBoulderClusterMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBoulderCluster.SM_CommonBoulderCluster"));
 
     BuildPrototypeWorld();
 }
@@ -120,6 +133,45 @@ void ABreePrototypeWorldBuilder::SpawnLabel(const FString& Text, const FVector& 
     TextComponent->SetHorizontalAlignment(EHorizTextAligment::EHTA_Center);
     TextComponent->SetWorldSize(40.0f);
     TextComponent->SetTextRenderColor(Color.ToFColor(true));
+}
+
+void ABreePrototypeWorldBuilder::ConfigureBreeAtmosphere()
+{
+    if (!GetWorld())
+    {
+        return;
+    }
+
+    ADirectionalLight* Sun = GetWorld()->SpawnActor<ADirectionalLight>(
+        FVector::ZeroVector, FRotator(-18.0f, -65.0f, 0.0f));
+    if (Sun && Sun->GetLightComponent())
+    {
+        Sun->Tags.AddUnique(TEXT("RuntimeAtmosphereManaged"));
+        Sun->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        Sun->GetLightComponent()->SetIntensity(1.45f);
+        Sun->GetLightComponent()->SetLightColor(FLinearColor(0.48f, 0.56f, 0.68f));
+    }
+
+    ASkyLight* Sky = GetWorld()->SpawnActor<ASkyLight>(FVector::ZeroVector, FRotator::ZeroRotator);
+    if (Sky && Sky->GetLightComponent())
+    {
+        Sky->Tags.AddUnique(TEXT("RuntimeAtmosphereManaged"));
+        Sky->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        Sky->GetLightComponent()->SetIntensity(0.48f);
+        Sky->GetLightComponent()->SetLightColor(FLinearColor(0.30f, 0.38f, 0.48f));
+        Sky->GetLightComponent()->RecaptureSky();
+    }
+
+    AExponentialHeightFog* Fog = GetWorld()->SpawnActor<AExponentialHeightFog>(
+        FVector::ZeroVector, FRotator::ZeroRotator);
+    if (Fog && Fog->GetComponent())
+    {
+        Fog->Tags.AddUnique(TEXT("RuntimeAtmosphereManaged"));
+        Fog->GetComponent()->SetMobility(EComponentMobility::Movable);
+        Fog->GetComponent()->SetFogDensity(0.025f);
+        Fog->GetComponent()->SetFogHeightFalloff(0.22f);
+        Fog->GetComponent()->SetFogInscatteringColor(FLinearColor(0.16f, 0.20f, 0.25f));
+    }
 }
 
 void ABreePrototypeWorldBuilder::SpawnBreeTown()
@@ -372,6 +424,90 @@ void ABreePrototypeWorldBuilder::SpawnProductionBreeDetailLayer()
     }
 }
 
+void ABreePrototypeWorldBuilder::SpawnFullProductionActivationLayer()
+{
+    auto SpawnProd = [this](UStaticMesh* Mesh, const FVector& Location, const FVector& Scale,
+        const FRotator& Rotation = FRotator::ZeroRotator, bool bCollision = false)
+    {
+        if (Mesh)
+        {
+            SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, bCollision);
+        }
+    };
+
+    // CP52 activates the common production kit around the town perimeter, street and inn yard.
+    const FVector PerimeterTrees[] = {
+        FVector(-2100,-1450,0), FVector(-1500,1500,0), FVector(-650,-1550,0),
+        FVector(350,1550,0), FVector(1150,-1500,0), FVector(2100,1450,0)
+    };
+    for (int32 I = 0; I < UE_ARRAY_COUNT(PerimeterTrees); ++I)
+    {
+        UStaticMesh* Mesh = I % 2 == 0 ? CommonBroadleafTreeMesh : CommonPineTreeMesh;
+        SpawnProd(Mesh, PerimeterTrees[I], FVector(0.80f + 0.06f * (I % 3)),
+            FRotator(0.0f, I * 47.0f, 0.0f), false);
+    }
+
+    const FVector Walls[] = {
+        FVector(-1420,-620,0), FVector(-920,-620,0), FVector(-420,-620,0),
+        FVector(-1420,620,0), FVector(-920,620,0), FVector(-420,620,0)
+    };
+    for (int32 I = 0; I < UE_ARRAY_COUNT(Walls); ++I)
+    {
+        SpawnProd(CommonDryStoneWallMesh, Walls[I], FVector(0.72f),
+            FRotator(0.0f, I < 3 ? 0.0f : 180.0f, 0.0f), true);
+    }
+
+    const FVector Fences[] = {
+        FVector(760,-620,0), FVector(1160,-620,0), FVector(1560,-620,0),
+        FVector(760,1210,0), FVector(1160,1210,0), FVector(1560,1210,0)
+    };
+    for (int32 I = 0; I < UE_ARRAY_COUNT(Fences); ++I)
+    {
+        SpawnProd(CommonVillageFenceMesh, Fences[I], FVector(0.74f),
+            FRotator(0.0f, I < 3 ? 0.0f : 180.0f, 0.0f), true);
+    }
+
+    const FVector WoodPiles[] = {
+        FVector(-240,410,0), FVector(650,-330,0), FVector(1040,470,0),
+        FVector(1740,540,0), FVector(1780,1010,0)
+    };
+    for (int32 I = 0; I < UE_ARRAY_COUNT(WoodPiles); ++I)
+    {
+        SpawnProd(CommonWoodPileMesh, WoodPiles[I], FVector(0.62f + 0.05f * (I % 2)),
+            FRotator(0.0f, I * 29.0f, 0.0f), true);
+    }
+
+    for (int32 I = 0; I < 20; ++I)
+    {
+        const float X = -1800.0f + I * 190.0f;
+        const float Y = I % 2 == 0 ? 820.0f : -840.0f;
+        SpawnProd(CommonFernClumpMesh, FVector(X,Y,0), FVector(0.52f + 0.03f * (I % 4)),
+            FRotator(0.0f, I * 31.0f, 0.0f), false);
+    }
+
+    SpawnProd(CommonBoulderClusterMesh, FVector(-1850,-760,0), FVector(0.82f), FRotator(0,24,0), false);
+    SpawnProd(CommonBoulderClusterMesh, FVector(2020,780,0), FVector(0.94f), FRotator(0,-18,0), false);
+
+    // Densify the common room/inn yard using the existing Bree production kit.
+    const FVector ExtraTables[] = {
+        FVector(1300,1010,0), FVector(1510,1010,0), FVector(1710,760,0)
+    };
+    for (const FVector& P : ExtraTables)
+    {
+        SpawnProd(ProductionTableMesh, P, FVector(0.68f), FRotator::ZeroRotator, true);
+    }
+
+    const FVector ExtraGoods[] = {
+        FVector(950,760,0), FVector(1110,760,0), FVector(1740,1180,0), FVector(1880,1110,0)
+    };
+    for (int32 I = 0; I < UE_ARRAY_COUNT(ExtraGoods); ++I)
+    {
+        SpawnProd(ProductionCrateStackMesh, ExtraGoods[I], FVector(0.54f + 0.04f * (I % 2)),
+            FRotator(0.0f, I * 23.0f, 0.0f), true);
+    }
+}
+
+
 void ABreePrototypeWorldBuilder::SpawnStoryFlow()
 {
     if (!GetWorld())
@@ -524,7 +660,9 @@ void ABreePrototypeWorldBuilder::BuildPrototypeWorld()
     }
 
     bBuilt = true;
+    ConfigureBreeAtmosphere();
     SpawnBreeTown();
     SpawnProductionBreeDetailLayer();
+    SpawnFullProductionActivationLayer();
     SpawnStoryFlow();
 }
