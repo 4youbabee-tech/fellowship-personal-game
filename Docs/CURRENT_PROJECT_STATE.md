@@ -1,3 +1,21 @@
+## CP56 ACTIVE — FELLOWSHIP EXPERIENCE MEGA-PASS
+
+CP55 was merged after Pre-Unreal #273 and Unreal Build Validation #108 passed on the validated branch head. CP56 now expands moment-to-moment play while preserving the same Part I film chronology.
+
+What CP56 changes now:
+- P1C01 adds visible pre-adventure Shire friendship/play: Green Dragon revelry, party-field mischief, a shared-memory race/play beat, extra party revelers and play runners.
+- P1C02 adds denser Prancing Pony/common-room life.
+- P1C03 adds optional road companionship before Weathertop tension.
+- P1C05 strengthens camp companionship around the Fellowship training stop.
+- P1C06 adds a dead-city discovery beat without adding civilians/fauna to Moria.
+- P1C07 adds a shared-grief clearing before Lothlorien story pressure.
+- P1C08 adds a river-camp tension beat before the Fellowship fractures.
+- `Data/FellowshipExperienceMegaPassCP56.json` and PG-058 preserve the film-spine/non-blocking contract.
+
+Story rule remains unchanged: required film outcomes are fixed; optional friendship, exploration and local-life content fills the spaces between them. Dialogue remains original game writing rather than screenplay reproduction.
+
+This is implementation-in-progress and still requires its own Pre-Unreal and real UE4.27 build/import/startup/chapter regression pass before merge.
+
 ## POST-VERIFICATION RESUME — CP55 OPENED
 
 ### CP55 activity/movement implementation
