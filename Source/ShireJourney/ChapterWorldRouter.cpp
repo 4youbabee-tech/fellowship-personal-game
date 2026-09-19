@@ -223,6 +223,7 @@ void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTr
         GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(FVector::ZeroVector, FRotator::ZeroRotator);
         MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
         UE_LOG(LogTemp, Display, TEXT("ShirePlayableStartup: chapter=P1C01 route=%s"), *RouteId.ToString());
+        UE_LOG(LogTemp, Display, TEXT("ShireChapterAudit: loaded=P1C01 builder=Shire route=%s"), *RouteId.ToString());
         return;
     }
 
@@ -230,6 +231,7 @@ void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTr
     {
         GetWorld()->SpawnActor<ABreePrototypeWorldBuilder>(FVector::ZeroVector, FRotator::ZeroRotator);
         MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
+        UE_LOG(LogTemp, Display, TEXT("ShireChapterAudit: loaded=P1C02 builder=Bree route=%s"), *RouteId.ToString());
         return;
     }
 
@@ -241,6 +243,16 @@ void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTr
         if (Builder)
         {
             Builder->BuildChapter(ChapterId);
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("ShireChapterAudit: loaded=%s builder=Fellowship route=%s"),
+                *ChapterId.ToString(),
+                *RouteId.ToString());
+        }
+        else
+        {
+            UE_LOG(LogTemp, Error, TEXT("ShireChapterAudit: failed-to-spawn builder for %s"), *ChapterId.ToString());
         }
         MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
         return;
