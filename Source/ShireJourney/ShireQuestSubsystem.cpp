@@ -15,6 +15,7 @@ void UShireQuestSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     Super::Initialize(Collection);
     BuildQuestDefinitions();
     LoadJourneyDiscoveryPlan();
+    LoadSideActivityPlan();
     CurrentChapterId = TEXT("P1C01");
     CurrentRouteId = TEXT("FrodoMain");
     CurrentEpisodeId = TEXT("P1C01_Main");
@@ -609,6 +610,145 @@ bool UShireQuestSubsystem::LoadJourneyDiscoveryPlan()
     return bReady;
 }
 
+
+bool UShireQuestSubsystem::LoadSideActivityPlan()
+{
+    SideActivityProgressionDefinitions.Empty();
+
+    const FString Path = FPaths::Combine(FPaths::ProjectDir(), TEXT("Data/ContextualSideActivityPlan.json"));
+    FString JsonText;
+    if (!FFileHelper::LoadFileToString(JsonText, *Path))
+    {
+        UE_LOG(LogTemp, Error, TEXT("SideActivityProgression: failed to read %s"), *Path);
+        return false;
+    }
+
+    TSharedPtr<FJsonObject> Root;
+    const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonText);
+    if (!FJsonSerializer::Deserialize(Reader, Root) || !Root.IsValid())
+    {
+        UE_LOG(LogTemp, Error, TEXT("SideActivityProgression: invalid JSON %s"), *Path);
+        return false;
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* Chapters = nullptr;
+    if (Root->TryGetArrayField(TEXT("chapters"), Chapters) && Chapters)
+    {
+        for (const TSharedPtr<FJsonValue>& ChapterValue : *Chapters)
+        {
+            const TSharedPtr<FJsonObject> Chapter = ChapterValue.IsValid() ? ChapterValue->AsObject() : nullptr;
+            if (!Chapter.IsValid()) continue;
+
+            const TArray<TSharedPtr<FJsonValue>>* Activities = nullptr;
+            if (!Chapter->TryGetArrayField(TEXT("activities"), Activities) || !Activities) continue;
+
+            for (const TSharedPtr<FJsonValue>& ActivityValue : *Activities)
+            {
+                const TSharedPtr<FJsonObject> Activity = ActivityValue.IsValid() ? ActivityValue->AsObject() : nullptr;
+                if (!Activity.IsValid()) continue;
+
+                FString DiscoveryId, ActivityId, ActivityType;
+                Activity->TryGetStringField(TEXT("discovery_reward_id"), DiscoveryId);
+                Activity->TryGetStringField(TEXT("id"), ActivityId);
+                Activity->TryGetStringField(TEXT("type"), ActivityType);
+                if (DiscoveryId.IsEmpty() || ActivityId.IsEmpty() || ActivityType.IsEmpty()) continue;
+
+                FShireSideActivityProgressionDefinition Definition;
+                Definition.DiscoveryId = FName(*DiscoveryId);
+                Definition.ActivityId = FName(*ActivityId);
+                Definition.ActivityType = FName(*ActivityType);
+                SideActivityProgressionDefinitions.Add(Definition.DiscoveryId, Definition);
+            }
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        SideActivityProgressionDefinitions.Num() > 0 ? Display : Warning,
+        TEXT("SideActivityProgression: mapped discoveries=%d"),
+        SideActivityProgressionDefinitions.Num());
+    return SideActivityProgressionDefinitions.Num() > 0;
+}
+
+FName UShireQuestSubsystem::MakeChronicleEntryId(FName DiscoveryId)
+{
+    return FName(*FString::Printf(TEXT("CHRONICLE_%s"), *DiscoveryId.ToString()));
+}
+
+FName UShireQuestSubsystem::MakeKnownMapRegionId(FName RouteId, FName ChapterId)
+{
+    return FName(*FString::Printf(TEXT("MAP_REGION_%s_%s"), *RouteId.ToString(), *ChapterId.ToString()));
+}
+
+void UShireQuestSubsystem::UnlockDiscoveryKnowledge(const FShireJourneyDiscoveryDefinition& Definition)
+{
+    ChronicleEntryIds.AddUnique(MakeChronicleEntryId(Definition.DiscoveryId));
+    KnownMapRegionIds.AddUnique(MakeKnownMapRegionId(Definition.RouteId, Definition.ChapterId));
+}
+
+void UShireQuestSubsystem::AwardSideActivityProgression(FName DiscoveryId)
+{
+    const FShireSideActivityProgressionDefinition* Activity = SideActivityProgressionDefinitions.Find(DiscoveryId);
+    if (!Activity)
+    {
+        return;
+    }
+
+    if (Activity->ActivityType == TEXT("CAMP_PREPARATION"))
+    {
+        AwardProgressionXP(TEXT("CAMPCRAFT"), 12);
+    }
+    else if (Activity->ActivityType == TEXT("STEALTH_LITE"))
+    {
+        AwardProgressionXP(TEXT("QUIET_STEP"), 12);
+    }
+    else if (Activity->ActivityType == TEXT("TRAVERSAL_CHALLENGE") ||
+             Activity->ActivityType == TEXT("ROUTE_READING"))
+    {
+        AwardProgressionXP(TEXT("WAYFINDING"), 6);
+    }
+    else if (Activity->ActivityType == TEXT("TRACKING_CHALLENGE") ||
+             Activity->ActivityType == TEXT("OBSERVATION_CHALLENGE"))
+    {
+        AwardProgressionXP(TEXT("PERCEPTION"), 6);
+    }
+    else if (Activity->ActivityType == TEXT("PATTERN_MATCH"))
+    {
+        AwardProgressionXP(TEXT("LORE"), 6);
+    }
+    else if (Activity->ActivityType == TEXT("SOCIAL_MEMORY"))
+    {
+        AwardProgressionXP(TEXT("FELLOWSHIP"), 6);
+    }
+    else if (Activity->ActivityType == TEXT("TIMING_CHALLENGE"))
+    {
+        AwardProgressionXP(TEXT("RESOLVE"), 4);
+    }
+}
+
+void UShireQuestSubsystem::RestoreKnowledgeState(
+    const TArray<FName>& InChronicleEntryIds,
+    const TArray<FName>& InKnownMapRegionIds)
+{
+    ChronicleEntryIds.Empty();
+    KnownMapRegionIds.Empty();
+
+    for (const FName EntryId : InChronicleEntryIds)
+    {
+        if (EntryId != NAME_None && EntryId.ToString().StartsWith(TEXT("CHRONICLE_")))
+        {
+            ChronicleEntryIds.AddUnique(EntryId);
+        }
+    }
+    for (const FName RegionId : InKnownMapRegionIds)
+    {
+        if (RegionId != NAME_None && RegionId.ToString().StartsWith(TEXT("MAP_REGION_")))
+        {
+            KnownMapRegionIds.AddUnique(RegionId);
+        }
+    }
+}
+
 FName UShireQuestSubsystem::MakeJourneyRegionCompletionId(FName RouteId, FName ChapterId) const
 {
     return FName(*FString::Printf(
@@ -695,6 +835,8 @@ bool UShireQuestSubsystem::RegisterJourneyDiscovery(FName DiscoveryId)
     JourneyDiscoveryIds.Add(DiscoveryId);
     RebuildJourneyInsightState();
     AwardDiscoveryProgression(*Definition);
+    AwardSideActivityProgression(DiscoveryId);
+    UnlockDiscoveryKnowledge(*Definition);
 
     UE_LOG(
         LogTemp,
