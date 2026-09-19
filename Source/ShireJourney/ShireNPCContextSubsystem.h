@@ -86,6 +86,12 @@ struct FShireBoundedDialogueResult
 
     UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
     bool bMemoryInfluenced = false;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    FName WorldMood = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    FName EmotionalState = NAME_None;
 };
 
 UCLASS()
@@ -126,6 +132,9 @@ public:
 
     UFUNCTION(BlueprintPure, Category="NPCContext")
     float GetRegionalPressure() const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    FName GetProfileEmotionalState(FName ProfileHint) const;
 
     UFUNCTION(BlueprintPure, Category="NPCContext")
     FName ResolveSchedulePhase(FName ProfileHint, float NormalizedDay, bool bDangerOverride, bool bStoryOverride) const;
