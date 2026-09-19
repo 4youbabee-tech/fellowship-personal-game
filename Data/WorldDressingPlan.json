@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_WORLD_DRESSING_V1",
+  "status": "ACTIVE_RUNTIME_IMPLEMENTATION_PENDING_BUILD",
+  "authority": "Production execution map for deterministic visual density across Part I. This complements BiomePlan.csv and WorldProductionBlueprint; it does not replace story topology.",
+  "common_asset_root": "SourceAssets/Production/World/Common",
+  "common_assets": [
+    "SM_CommonPineTree",
+    "SM_CommonBroadleafTree",
+    "SM_CommonGoldenTree",
+    "SM_CommonFallenLog",
+    "SM_CommonDryStoneWall",
+    "SM_CommonPathMarker",
+    "SM_CommonVillageFence",
+    "SM_CommonWoodPile",
+    "SM_CommonFernClump",
+    "SM_CommonReedCluster",
+    "SM_CommonRuinSlab",
+    "SM_CommonFootbridge"
+  ],
+  "chapter_profiles": [
+    {
+      "chapter": "P1C01",
+      "region": "Shire",
+      "density": "HIGH",
+      "identity": [
+        "rolling cultivated hills",
+        "hobbit lanes",
+        "hedges",
+        "gardens",
+        "mills",
+        "bridges",
+        "market clutter"
+      ],
+      "runtime_owner": "ShirePrototypeWorldBuilder",
+      "priority_next": [
+        "licensed/material enrichment",
+        "smoke/chimney life",
+        "final house variety"
+      ]
+    },
+    {
+      "chapter": "P1C02",
+      "region": "Bree",
+      "density": "HIGH",
+      "identity": [
+        "rain-dark timber town",
+        "west gate",
+        "inn",
+        "market",
+        "mud roads",
+        "dense street clutter"
+      ],
+      "runtime_owner": "BreePrototypeWorldBuilder",
+      "priority_next": [
+        "rain presentation",
+        "inn interior art",
+        "street material breakup"
+      ]
+    },
+    {
+      "chapter": "P1C03",
+      "region": "Weathertop/Ford",
+      "density": "MEDIUM",
+      "identity": [
+        "windy uplands",
+        "pine edges",
+        "ferns",
+        "fallen timber",
+        "ruin silhouette"
+      ],
+      "runtime_owner": "FellowshipChapterWorldBuilder",
+      "active_common_assets": [
+        "SM_CommonPineTree",
+        "SM_CommonFallenLog",
+        "SM_CommonFernClump",
+        "SM_CommonPathMarker"
+      ]
+    },
+    {
+      "chapter": "P1C04",
+      "region": "Rivendell",
+      "density": "HIGH",
+      "identity": [
+        "cliff valley",
+        "broadleaf canopy",
+        "ferns",
+        "river reeds",
+        "bridges",
+        "pavilions"
+      ],
+      "runtime_owner": "FellowshipChapterWorldBuilder",
+      "active_common_assets": [
+        "SM_CommonBroadleafTree",
+        "SM_CommonFernClump",
+        "SM_CommonReedCluster",
+        "SM_CommonFootbridge"
+      ]
+    },
+    {
+      "chapter": "P1C05",
+      "region": "Road/Caradhras",
+      "density": "MEDIUM",
+      "identity": [
+        "pine approaches",
+        "high ridges",
+        "camp clutter",
+        "stone boundaries",
+        "way markers"
+      ],
+      "runtime_owner": "FellowshipChapterWorldBuilder",
+      "active_common_assets": [
+        "SM_CommonPineTree",
+        "SM_CommonFallenLog",
+        "SM_CommonDryStoneWall",
+        "SM_CommonPathMarker"
+      ]
+    },
+    {
+      "chapter": "P1C06",
+      "region": "Moria",
+      "density": "MEDIUM",
+      "identity": [
+        "stone halls",
+        "collapsed slabs",
+        "boulder debris",
+        "pillars",
+        "braziers",
+        "bridge"
+      ],
+      "runtime_owner": "FellowshipChapterWorldBuilder",
+      "active_common_assets": [
+        "SM_CommonRuinSlab",
+        "SM_CommonBoulderCluster"
+      ]
+    },
+    {
+      "chapter": "P1C07",
+      "region": "Lothlorien",
+      "density": "HIGH",
+      "identity": [
+        "golden canopy",
+        "ferns",
+        "living platforms",
+        "lanterns",
+        "mirror clearing"
+      ],
+      "runtime_owner": "FellowshipChapterWorldBuilder",
+      "active_common_assets": [
+        "SM_CommonGoldenTree",
+        "SM_CommonFernClump",
+        "SM_CommonFallenLog"
+      ]
+    },
+    {
+      "chapter": "P1C08",
+      "region": "Anduin/Amon Hen",
+      "density": "HIGH",
+      "identity": [
+        "river corridor",
+        "reeds",
+        "mixed forest",
+        "ruins",
+        "boats",
+        "monumental sentinels"
+      ],
+      "runtime_owner": "FellowshipChapterWorldBuilder",
+      "active_common_assets": [
+        "SM_CommonBroadleafTree",
+        "SM_CommonPineTree",
+        "SM_CommonReedCluster",
+        "SM_CommonRuinSlab"
+      ]
+    }
+  ],
+  "performance_rules": [
+    "Use deterministic placement; no unbounded runtime procedural generation.",
+    "Distant/non-gameplay dressing is non-colliding unless required for traversal.",
+    "Prefer reusable production meshes and instancing/density bands over unique actor-heavy clutter.",
+    "Story/quest trigger coordinates remain authoritative until an explicit topology migration.",
+    "Target floor remains 720p/30fps/DX11 low-medium on the project target laptop."
+  ],
+  "next_major_content_layers": [
+    "licensed or project-owned material/texture enrichment",
+    "region-specific lighting/fog/weather presentation",
+    "skeletal/facial/cloth/animation character production",
+    "interior production for story-critical spaces",
+    "voice/SFX/music asset completion",
+    "PIE/device visual acceptance and performance tuning"
+  ]
+}
