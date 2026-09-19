@@ -20,7 +20,8 @@
         "lore reasoning",
         "urgent travel"
       ],
-      "canon_lock": "Same Ring conclusion and same return to chronology."
+      "canon_lock": "Same Ring conclusion and same return to chronology.",
+      "source_basis": "Project Story Canon Bible explicitly requires Gandalf's departure, Ring investigation/research bridge and return to Frodo before the Shire departure sequence."
     },
     {
       "id": "P1_GANDALF_ISENGARD",
@@ -32,7 +33,8 @@
         "captivity",
         "escape"
       ],
-      "canon_lock": "Betrayal, imprisonment and escape remain fixed."
+      "canon_lock": "Betrayal, imprisonment and escape remain fixed.",
+      "source_basis": "Project Story Canon Bible and existing P1G01 route cover Gandalf's Isengard arrival, Saruman betrayal, Orthanc imprisonment, industry and escape."
     },
     {
       "id": "P1_ARWEN_FORD",
@@ -43,7 +45,8 @@
         "route control",
         "protect wounded Frodo"
       ],
-      "canon_lock": "Ford outcome remains fixed."
+      "canon_lock": "Ford outcome remains fixed.",
+      "source_basis": "Project Story Canon Bible explicitly preserves the film continuity where Arwen performs the Ford rescue role."
     },
     {
       "id": "P1_BOROMIR_TRAINING",
@@ -54,7 +57,8 @@
         "timing/block practice",
         "banter"
       ],
-      "canon_lock": "Only bond/content changes."
+      "canon_lock": "Only bond/content changes.",
+      "source_basis": "Fellowship travel/camp film material contains Boromir interacting with and training the hobbits; exact runtime window remains source-checked before placement."
     },
     {
       "id": "P1_LEGOLAS_SCOUTING",
@@ -65,7 +69,8 @@
         "threat identification",
         "mobility"
       ],
-      "canon_lock": "Threat timing remains fixed."
+      "canon_lock": "Threat timing remains fixed.",
+      "source_basis": "Fellowship travel/Crebain film material supports Legolas's established long-range perception/scouting role; exact optional interaction stays inside the verified travel window."
     },
     {
       "id": "P1_GIMLI_MORIA",
@@ -76,10 +81,11 @@
         "stone lore",
         "heavy melee when canon reaches combat"
       ],
-      "canon_lock": "No early reveal of Balin's fate; Moria outcome unchanged."
+      "canon_lock": "No early reveal of Balin's fate; Moria outcome unchanged.",
+      "source_basis": "Moria/Balin material is directly tied to Gimli's people in the film; optional Dwarven interpretation must not reveal Balin's fate before the film reveal."
     },
     {
-      "id": "P1_BOROMIR_AMON_HEN",
+      "id": "P1_BOROMIR_AMON_HEN_DEFENSE",
       "character": "Boromir",
       "type": "FILM_CORE_PLAYABLE",
       "gameplay": [
@@ -87,7 +93,8 @@
         "heavy melee",
         "positioning"
       ],
-      "canon_lock": "Boromir's film outcome is immutable."
+      "canon_lock": "Boromir's film outcome is immutable.",
+      "source_basis": "Amon Hen film events place Boromir defending Merry and Pippin during the Uruk attack before his canonical death."
     },
     {
       "id": "P1_ARAGORN_SCOUT",
@@ -99,7 +106,8 @@
         "route finding",
         "leadership"
       ],
-      "canon_lock": "Cannot remove Aragorn from any required film scene."
+      "canon_lock": "Cannot remove Aragorn from any required film scene.",
+      "source_basis": "Aragorn's ranger/tracker role and Fellowship leadership support short scouting segments only when he remains available for the next required film scene."
     }
   ],
   "part2": [
@@ -117,7 +125,8 @@
         "heavy melee",
         "leadership"
       ],
-      "canon_lock": "Pursuit/Rohan/Helm's Deep outcomes stay film-locked."
+      "canon_lock": "Pursuit/Rohan/Helm's Deep outcomes stay film-locked.",
+      "source_basis": "Two Towers film/script route follows Aragorn, Legolas and Gimli pursuing the Uruk-hai into Rohan, meeting Eomer and continuing toward Fangorn/Rohan."
     },
     {
       "id": "P2_MERRY_PIPPIN",
@@ -132,7 +141,8 @@
         "Fangorn navigation",
         "social persuasion"
       ],
-      "canon_lock": "Entmoot and Isengard outcomes stay film-locked."
+      "canon_lock": "Entmoot and Isengard outcomes stay film-locked.",
+      "source_basis": "Two Towers film/script route follows Merry and Pippin from Uruk captivity into Fangorn, Treebeard, Entmoot and Isengard."
     },
     {
       "id": "P2_GANDALF_ROHAN",
@@ -144,7 +154,8 @@
         "urgent travel",
         "support"
       ],
-      "canon_lock": "No alternate Rohan outcome."
+      "canon_lock": "No alternate Rohan outcome.",
+      "source_basis": "Two Towers film/script and Story Canon Bible place Gandalf's return and major Rohan support actions in the Rohan/Helm's Deep route."
     },
     {
       "id": "P2_FARAMIR_ITHILIEN",
@@ -155,7 +166,8 @@
         "ambush planning",
         "Ithilien patrol"
       ],
-      "canon_lock": "Exact timing must be verified from Two Towers source."
+      "canon_lock": "Exact timing must be verified from Two Towers source.",
+      "source_basis": "Two Towers screenplay contains Faramir and the Ithilien Rangers, the Haradrim/Mumakil encounter, Henneth Annun and Forbidden Pool material; exact playable timing remains source-checked."
     },
     {
       "id": "P2_EOWYN_ROHAN",
@@ -166,7 +178,8 @@
         "evacuation support",
         "horse/travel preparation"
       ],
-      "canon_lock": "Exact window requires source verification."
+      "canon_lock": "Exact window requires source verification.",
+      "source_basis": "Two Towers film/script contains Eowyn in Edoras/Rohan and the evacuation/Helm's Deep route; exact optional control windows remain source-checked."
     }
   ],
   "part3": [
@@ -182,7 +195,10 @@
         "messages",
         "siege survival",
         "leadership"
-      ]
+      ],
+      "source_basis": "Story Canon Bible identifies the Minas Tirith/Denethor/siege route; exact Part III scene-level source verification is still required.",
+      "tag": "FUTURE_SOURCE_CHECK",
+      "canon_lock": "Exact film participants, order and outcome must be verified before implementation; no alternate result permitted."
     },
     {
       "id": "P3_ARAGORN_LEGOLAS_GIMLI",
@@ -197,7 +213,10 @@
         "combat identities",
         "leadership",
         "scouting"
-      ]
+      ],
+      "source_basis": "Story Canon Bible identifies Dunharrow, Paths of the Dead, southern route, Pelennor arrival and Black Gate march; exact Part III source verification is still required.",
+      "tag": "FUTURE_SOURCE_CHECK",
+      "canon_lock": "Exact film participants, order and outcome must be verified before implementation; no alternate result permitted."
     },
     {
       "id": "P3_MERRY_EOWYN_THEODEN",
@@ -211,7 +230,10 @@
         "mustering",
         "mounted travel",
         "battle survival"
-      ]
+      ],
+      "source_basis": "Story Canon Bible identifies Rohan muster, ride to Gondor and Pelennor/Witch-king route; exact Part III source verification is still required.",
+      "tag": "FUTURE_SOURCE_CHECK",
+      "canon_lock": "Exact film participants, order and outcome must be verified before implementation; no alternate result permitted."
     },
     {
       "id": "P3_SAM_RESCUE_MORDOR",
@@ -225,8 +247,47 @@
         "stealth",
         "resource problem solving",
         "Ring-pressure survival"
-      ]
+      ],
+      "source_basis": "Story Canon Bible identifies Shelob, Sam rescue, Mordor crossing and Mount Doom route; exact Part III source verification is still required.",
+      "tag": "FUTURE_SOURCE_CHECK",
+      "canon_lock": "Exact film participants, order and outcome must be verified before implementation; no alternate result permitted."
     }
   ],
-  "production_rule": "Each mission must be bound to verified opening/closing film anchors before runtime implementation. FUTURE_SOURCE_CHECK entries are not implementation authority until verified."
+  "production_rule": "Each mission must be bound to verified opening/closing film anchors before runtime implementation. FUTURE_SOURCE_CHECK entries are not implementation authority until verified.",
+  "non_negotiable_rules": [
+    "Choose the playable viewpoint from the verified film event; Frodo is not mandatory when another character carries the action.",
+    "FILM_CORE scene order, participants and outcome must follow the verified film/script source.",
+    "A character may not enter optional content if that would remove them from a required film scene.",
+    "When the film already provides meaningful action, convert the film action into gameplay before adding original gap-fill.",
+    "Original gap-fill is limited to safe scouting, preparation, travel, training, local help, craft, investigation, survival or conversation windows.",
+    "Every optional expansion yields immediately when the next mandatory film beat begins."
+  ],
+  "expansion_budget": {
+    "preferred_order": [
+      "verified film action",
+      "character-specialty gameplay in the same verified window",
+      "small original gap-fill only if still useful"
+    ],
+    "allowed": [
+      "investigation",
+      "scouting",
+      "training",
+      "craft/culture",
+      "camp preparation",
+      "local help",
+      "route finding",
+      "short stealth",
+      "environmental puzzle",
+      "companion conversation",
+      "battle preparation"
+    ],
+    "forbidden": [
+      "new Ring bearer",
+      "alternate war outcome",
+      "preventing canonical death or injury",
+      "moving a character out of a required film scene",
+      "new major villain or faction",
+      "alternate film ending"
+    ]
+  }
 }
