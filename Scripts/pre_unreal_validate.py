@@ -1764,7 +1764,7 @@ for symbol in [
         fail(f"PG-044 ambient schedule/reaction runtime missing: {symbol}")
 
 for symbol in [
-    "CurrentSchemaVersion = 5",
+    "CurrentSchemaVersion = 6",
     "SaveSchemaVersion",
     "SnapshotCreatedUnixSeconds",
 ]:
