@@ -2328,6 +2328,51 @@ if world_life_plan:
     if int(targets.get("P1C06", -1)) != 0:
         fail("PG-053 Moria must remain civilian-empty")
 
+world_resource_flood_path = ROOT / "Data" / "WorldResourceFloodPlan.json"
+if not world_resource_flood_path.exists():
+    fail("PG-053 WorldResourceFloodPlan.json missing")
+else:
+    try:
+        world_resource_flood = json.loads(read(world_resource_flood_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-053 invalid WorldResourceFloodPlan.json: {exc}")
+        world_resource_flood = {}
+
+resource_flood_assets = [
+    "SM_CommonBarrel.obj",
+    "SM_CommonCargoCrate.obj",
+    "SM_CommonSackBale.obj",
+    "SM_CommonLongBench.obj",
+    "SM_CommonHayBale.obj",
+    "SM_CommonCampTent.obj",
+    "SM_CommonStoneArch.obj",
+    "SM_CommonBrokenColumn.obj",
+    "SM_CommonBrazier.obj",
+    "SM_CommonRopePost.obj",
+    "SM_CommonMarketCanopy.obj",
+    "SM_CommonRiverBoat.obj",
+    "SM_CommonCairn.obj",
+    "SM_CommonTreeStump.obj",
+    "SM_CommonMushroomCluster.obj",
+]
+for asset_name in resource_flood_assets:
+    if not (common_dressing_root / asset_name).exists():
+        fail(f"PG-053 resource flood asset missing: {asset_name}")
+
+for runtime_symbol in [
+    "SM_CommonBarrel",
+    "SM_CommonCargoCrate",
+    "SM_CommonCampTent",
+    "SM_CommonStoneArch",
+    "SM_CommonRiverBoat",
+    "SM_CommonMushroomCluster",
+]:
+    if runtime_symbol not in (shire_cpp_cp52 + bree_cpp_cp52 + fellowship_cpp_cp52):
+        fail(f"PG-053 resource flood runtime reference missing: {runtime_symbol}")
+
+if "WorldResourceFloodPlan.json" not in build_cs_cp52:
+    fail("PG-053 world resource flood plan is not packaged")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
