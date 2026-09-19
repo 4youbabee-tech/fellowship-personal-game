@@ -749,6 +749,7 @@ void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("Sprint"), IE_Released, this, &AShirePlayerCharacter::StopSprint);
     PlayerInputComponent->BindAction(TEXT("Interact"), IE_Pressed, this, &AShirePlayerCharacter::Interact);
     PlayerInputComponent->BindAction(TEXT("UseSupply"), IE_Pressed, this, &AShirePlayerCharacter::UseSupply);
+    PlayerInputComponent->BindAction(TEXT("ToggleChronicle"), IE_Pressed, this, &AShirePlayerCharacter::ToggleChronicle);
     PlayerInputComponent->BindAction(TEXT("PrimaryAttack"), IE_Pressed, this, &AShirePlayerCharacter::PrimaryAttack);
     PlayerInputComponent->BindAction(TEXT("QuickSave"), IE_Pressed, this, &AShirePlayerCharacter::QuickSave);
     PlayerInputComponent->BindAction(TEXT("QuickLoad"), IE_Pressed, this, &AShirePlayerCharacter::QuickLoad);
@@ -1006,6 +1007,16 @@ void AShirePlayerCharacter::UseSupply()
                 FText::FromString(FString::Printf(TEXT("Travel supplies used. %d remaining."), Supplies)),
                 1.5f);
 }
+
+void AShirePlayerCharacter::ToggleChronicle()
+{
+    if (bCinematicInputLocked)
+    {
+        return;
+    }
+    bChronicleOpen = !bChronicleOpen;
+}
+
 
 void AShirePlayerCharacter::StartCrouch()
 {
