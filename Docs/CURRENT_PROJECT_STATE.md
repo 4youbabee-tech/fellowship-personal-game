@@ -1,3 +1,36 @@
+## IMMEDIATE FREEZE — current-head PIE/device verification
+
+**Active baseline:** `develop@ed235ff4fb332660d2af8ce1385d9ca038a6337b` (CP54 merged).
+
+**CI evidence already green:** PR #44 Pre-Unreal #240 and Unreal Build Validation #75. This proves static validation, real UE4.27 compile/import and headless startup for the PR head. It does **not** prove current-head PIE traversal, visual quality, NPC behavior in play, save/load round trips, or target-laptop performance.
+
+**Current rule:** no CP55 and no new feature/content batch until the existing CP24-CP54 body of work is inspected in real UE4.27 PIE on the target laptop, chapter by chapter.
+
+Order:
+1. P1C01 Shire
+2. P1C02 Bree
+3. P1C03 Weathertop/Ford
+4. P1C04 Rivendell
+5. P1C05 Road/Caradhras/West Gate
+6. P1C06 Moria
+7. P1C07 Lothlorien
+8. P1C08 Anduin/Amon Hen
+
+For each chapter record: WORKING / INTERMITTENT / BROKEN / CRASH, FPS/hitch/memory observations, NPC routines, ambient NPC-to-NPC conversations, named-NPC memory/context where applicable, and actual atmosphere/weather behavior.
+
+Important implementation truth before testing:
+- CP36 is ambient resident micro-life/props/gestures.
+- CP38 is ambient NPC-to-NPC conversation.
+- CP39 is the named-NPC memory **foundation**; memory-aware bounded dialogue was completed later in CP44.
+- CP49 is the LivingWorldDirector/micro-event runtime.
+- CP51 provides chapter-specific sun/skylight/fog profiles; final rain/snow VFX are still listed as open.
+- CP53 adds continuous regional baseline populations.
+- A true day/night cycle is not currently proven by the repository and must not be marked working unless observed/implemented.
+
+Formal rights-holder outreach is deferred. Future asset effort, after the baseline audit, should go to visible quality and performance-safe materials rather than outreach.
+
+Ideas discovered during this freeze belong in `Docs/WORLD_DETAIL_LEDGER.md`; do not implement them until the current baseline audit is complete.
+
 ## Current bulk-resource status — CP54
 
 The repository now contains a much larger project-owned production bank instead of waiting for external acquisition. CP54 adds 75 new regional/common OBJ meshes, 17 procedural BMP textures, regional MTL palettes and runtime placement across all P1C01-P1C08 world builders.

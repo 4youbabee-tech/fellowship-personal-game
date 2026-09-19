@@ -1,5 +1,26 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## Current-head verification freeze (post-CP54)
+
+Baseline under test: `develop@ed235ff4fb332660d2af8ce1385d9ca038a6337b`.
+
+PR #44 passed Pre-Unreal #240 and Unreal Build Validation #75, including compile/import/headless startup. Those checks do **not** count as current-head PIE/device acceptance.
+
+Any older PIE label below is historical and must not be treated as proof for the CP54 head. The table below is the authoritative current-head manual verification record until the freeze is lifted.
+
+| Chapter | Real PIE on CP54 head | Stability | Crash | Target laptop perf | NPC routines | NPC-to-NPC | Named memory/context | Weather/atmosphere | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| P1C01 Shire | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | First chapter to test |
+| P1C02 Bree | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | Test only after Shire blocking issues are repaired |
+| P1C03 Weathertop/Ford | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED |  |
+| P1C04 Rivendell | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED |  |
+| P1C05 Road/Caradhras/West Gate | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED |  |
+| P1C06 Moria | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | Civilian baseline is intentionally zero |
+| P1C07 Lothlorien | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED |  |
+| P1C08 Anduin/Amon Hen | NOT_RUN | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED | UNVERIFIED |  |
+
+Blocking failure means crash, progression dead-end, save/load failure, missing required runtime system, or severe target-device performance regression. Non-blocking visual ideas go to `WORLD_DETAIL_LEDGER.md` and do not expand scope during the baseline audit.
+
 This file prevents major game pillars from depending on chat memory.
 
 A chapter is not complete because its quest path works. Every chapter must be checked across all production pillars.

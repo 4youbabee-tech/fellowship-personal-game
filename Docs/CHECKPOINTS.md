@@ -576,15 +576,20 @@
 - Required proof before the next activity/movement batch: Pre-Unreal, UE4.27 compile, production import and headless startup.
 
 ## Current hard gate
-Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
+The active hard gate is now the **post-CP54 current-head PIE/device verification freeze** on `develop@ed235ff4fb332660d2af8ce1385d9ca038a6337b`.
 
-It must still pass:
-1. Shire movement / interaction / NPC-awareness smoke test,
-2. save/load round-trip,
-3. Gandalf/Isengard F8 round-trip,
-4. chapter smoke tests P1C02-P1C08,
-5. target-device performance observation.
+PR #44 passed Pre-Unreal #240 and Unreal Build Validation #75, but no new major feature/content checkpoint may open until real UE4.27 PIE/device evidence is collected chapter-by-chapter.
 
-No new major feature checkpoint should open before this functional gate is healthy.
+Required order:
+1. Shire
+2. Bree
+3. Weathertop/Ford
+4. Rivendell
+5. Road/Caradhras/West Gate
+6. Moria
+7. Lothlorien
+8. Anduin/Amon Hen
 
-See `Docs/CURRENT_PROJECT_STATE.md` for the exact current test checklist.
+Blocking failures are repaired before advancing. Non-blocking world/material ideas are logged in `Docs/WORLD_DETAIL_LEDGER.md` only.
+
+See `Docs/PRODUCTION_COMPLETENESS_MATRIX.md` and `Docs/CURRENT_PROJECT_STATE.md` for the live evidence record.

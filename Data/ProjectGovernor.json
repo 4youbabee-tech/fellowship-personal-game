@@ -842,14 +842,14 @@
         "REQ-CHAR-001"
       ],
       "checkpoint": "CP47",
-      "notes": "Pipeline is implemented; actual third-party acquisitions are intentionally item-by-item and license-gated."
+      "notes": "Keep this lightweight provenance/import-safety pipeline, but do not spend project time on formal rights-holder outreach. Future sourcing should prioritize high-quality reusable/free resources with clear provenance when practical."
     },
     {
       "id": "REQ-RIGHTS-001",
       "title": "Rights-holder and professional-partner outreach map",
       "category": "ProjectGovernance",
-      "priority": "HIGH",
-      "status": "IMPLEMENTED",
+      "priority": "LOW",
+      "status": "DEFERRED",
       "origin": "User asked to exploit worldwide resources including Weta Workshop and official rights holders for a personal non-distributed project",
       "intent": "Maximize useful external resources while clearly separating stock-asset licenses, professional services, research references and franchise rights permissions.",
       "evidence": [
@@ -866,8 +866,7 @@
         "additional CC0/animation sources added to provider manifest"
       ],
       "missing_work": [
-        "No rights-holder outreach has been sent yet",
-        "Any granted permission must be archived before protected material is imported"
+        "Deferred indefinitely unless the user later chooses to pursue formal rights or distribution."
       ],
       "acceptance_criteria": [
         "No source is mistaken for a rights holder it is not",
@@ -878,7 +877,7 @@
         "REQ-ASSET-001"
       ],
       "checkpoint": "CP48",
-      "notes": "Research and project policy are implemented; permissions themselves are not granted."
+      "notes": "Formal Weta/Middle-earth Enterprises/Tolkien Estate/Warner outreach is not an active priority for this personal offline project. Keep the existing research map only as reference; spend no production time on outreach during the verification/quality phase."
     },
     {
       "id": "REQ-ENG-002",
@@ -1322,6 +1321,27 @@
       "evidence": [
         "Data/ProjectGovernor.json"
       ]
+    },
+    {
+      "id": "DEC-007",
+      "title": "Freeze after CP54 for real current-head PIE/device verification",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-QUALITY-001",
+        "REQ-QUALITY-002",
+        "REQ-PERF-001",
+        "REQ-WORLD-006",
+        "REQ-PROD-006"
+      ],
+      "resolution": "Stop new checkpoints/content expansion after CP54. Verify the exact develop head in UE4.27 PIE chapter-by-chapter, beginning with Shire; repair blocking failures immediately; log non-blocking ideas only. Defer formal rights-holder outreach and resume material/world enrichment only after the baseline audit is complete.",
+      "rationale": "Compile, import and headless startup are green, but the repository itself still records current-head traversal, performance, pacing and visual gates as untested for most chapters. Continuing to stack content would increase regression risk.",
+      "authority": "USER_REVIEWED_PROGRAMMER_DIRECTION",
+      "evidence": [
+        "Docs/PRODUCTION_COMPLETENESS_MATRIX.md",
+        "Docs/CURRENT_PROJECT_STATE.md",
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Data/ProjectGovernor.json"
+      ]
     }
   ],
   "open_conflicts": [],
@@ -1583,18 +1603,18 @@
     }
   ],
   "active_gate": {
-    "id": "CURRENT_FUNCTIONAL_HARD_GATE",
-    "status": "DEFERRED_TO_BATCH_INTEGRATION",
-    "blocks_major_feature_expansion": false,
+    "id": "CURRENT_HEAD_PIE_DEVICE_VERIFICATION_FREEZE",
+    "status": "ACTIVE_BLOCKING",
+    "blocks_major_feature_expansion": true,
     "required_evidence": [
-      "Shire functional traversal: movement/camera/sprint/crouch/interact/HUD/quest/NPC awareness/dialogue",
-      "F9 save/load round-trip restores expected transform and story state",
-      "F8 Frodo -> Gandalf/Isengard -> Frodo round-trip preserves Frodo progress/location",
-      "P1C02-P1C08 developer chapter smoke tests",
-      "Target-laptop traversal/performance observation for crash/freeze/hitch/memory/FPS",
-      "Human pacing/clarity observations where applicable"
+      "Run real UE4.27.2 Editor PIE on the current develop head, not static/CI evidence alone.",
+      "Verify P1C01 Shire first: boot, traversal, interaction, story progression, NPC routines, ambient NPC-to-NPC conversations, named-NPC memory/context behavior, save/load and crash-free play.",
+      "Then verify P1C02 Bree, P1C03 Weathertop/Ford, P1C04 Rivendell, P1C05 Road/Caradhras/West Gate, P1C06 Moria, P1C07 Lothlorien and P1C08 Anduin/Amon Hen in order.",
+      "For every chapter record WORKING / INTERMITTENT / BROKEN / CRASH plus target-laptop FPS/hitch/memory observations at 720p Low-Medium.",
+      "Fix chapter-blocking crashes, progression breaks, save/load failures and severe performance regressions before advancing to the next chapter.",
+      "Do not claim day/night cycle, transient weather FX, visual acceptance or performance acceptance without direct PIE/device evidence."
     ],
-    "note": "User explicitly selected BUILD_FIRST_BATCH_MODE. Evidence requirements remain open and will be executed in a dedicated integration/playtest pass; compile/static gates remain mandatory now."
+    "note": "Post-CP54 verification freeze. No CP55 or new feature/content checkpoint opens until the current develop head is chapter-by-chapter PIE-tested and the evidence is written into PRODUCTION_COMPLETENESS_MATRIX.md and CURRENT_PROJECT_STATE.md."
   },
   "reference_only_files": [
     "Docs/CURRENT_PROJECT_STATE.md",
@@ -1648,36 +1668,15 @@
       "order": 1,
       "id": "WORK-WORLD-002",
       "title": "Part I mass resource saturation and playable integration",
-      "status": "ACTIVE",
-      "rationale": "CP52 expands the shared production kit across Shire, Bree and P1C03-P1C08, packages runtime data needed by the living world, and explicitly guards the playable startup path. Final licensed external acquisitions and acceptance remain open."
+      "status": "BLOCKED_BY_WORK-GATE-001",
+      "rationale": "CP52 expands the shared production kit across Shire, Bree and P1C03-P1C08, packages runtime data needed by the living world, and explicitly guards the playable startup path. Final licensed external acquisitions and acceptance remain open. Paused by the post-CP54 PIE verification freeze."
     },
     {
-      "order": 2,
-      "id": "WORK-CHAR-003",
-      "title": "Distinct visual identity and motion pass for the Part I core cast",
-      "status": "ACTIVE",
-      "rationale": "CP51 adds rig-ready skeletal handoff plus profile-specific modular idle/walk/dialogue motion; final skeletal/facial/cloth/hair animation assets and visual acceptance remain open."
-    },
-    {
-      "order": 3,
-      "id": "WORK-CHAR-002",
-      "title": "Populate Part I with the full core cast and region-appropriate inhabitants",
-      "status": "IMPLEMENTED",
-      "rationale": "Full named cast and regional inhabitants are already populated; this batch upgrades all named cast to dedicated modular identity."
-    },
-    {
-      "order": 4,
-      "id": "WORK-CHAR-001",
-      "title": "Playable Frodo/Gandalf character production motion pass",
-      "status": "ACTIVE",
-      "rationale": "User explicitly wants visible playable-game progress now; scope is bounded to character presentation/motion and must preserve story/save architecture."
-    },
-    {
-      "order": 5,
+      "order": 1,
       "id": "WORK-GATE-001",
       "title": "Finish current functional hard gate",
-      "status": "ACTIVE",
-      "rationale": "Do not stack new major features on unverified runtime behavior.",
+      "status": "ACTIVE_BLOCKING",
+      "rationale": "This is now the only active production priority: real current-head PIE/device verification and repair, Shire through P1C08.",
       "items": [
         "Shire movement/camera/sprint/crouch/interact/HUD/quest/NPC awareness/dialogue smoke",
         "F9 save/load round-trip",
@@ -1688,72 +1687,95 @@
       ]
     },
     {
-      "order": 6,
+      "order": 2,
+      "id": "WORK-CHAR-003",
+      "title": "Distinct visual identity and motion pass for the Part I core cast",
+      "status": "BLOCKED_BY_WORK-GATE-001",
+      "rationale": "CP51 adds rig-ready skeletal handoff plus profile-specific modular idle/walk/dialogue motion; final skeletal/facial/cloth/hair animation assets and visual acceptance remain open. Paused by the post-CP54 PIE verification freeze."
+    },
+    {
+      "order": 4,
+      "id": "WORK-CHAR-001",
+      "title": "Playable Frodo/Gandalf character production motion pass",
+      "status": "BLOCKED_BY_WORK-GATE-001",
+      "rationale": "User explicitly wants visible playable-game progress now; scope is bounded to character presentation/motion and must preserve story/save architecture. Paused by the post-CP54 PIE verification freeze."
+    },
+    {
+      "order": 11,
+      "id": "WORK-WORLD-001",
+      "title": "Expand environmental micro-life and production polish chapter by chapter",
+      "status": "BLOCKED_BY_WORK-GATE-001",
+      "rationale": "CP53 adds continuous baseline populations plus denser micro-events across Part I using existing schedule/social/awareness behavior; final crowd art, fauna/voice production and device acceptance remain pending. Paused by the post-CP54 PIE verification freeze."
+    },
+    {
+      "order": 13,
+      "id": "WORK-CHAR-002",
+      "title": "Populate Part I with the full core cast and region-appropriate inhabitants",
+      "status": "IMPLEMENTED",
+      "rationale": "Full named cast and regional inhabitants are already populated; this batch upgrades all named cast to dedicated modular identity."
+    },
+    {
+      "order": 16,
       "id": "WORK-MAINT-001",
       "title": "Perform physical Source/ShireJourney Public/Private domain migration",
       "status": "BLOCKED_BY_WORK-GATE-001",
       "rationale": "Architecture map is ready; do the path/include refactor only after the current gameplay baseline is proven."
     },
     {
-      "order": 7,
+      "order": 17,
       "id": "WORK-SAVE-001",
       "title": "Implement automatic safe checkpoint/respawn runtime",
       "status": "IMPLEMENTED",
       "rationale": "Backend runtime implementation is complete in CP44; only integration/device acceptance remains before VALIDATED."
     },
     {
-      "order": 8,
+      "order": 18,
       "id": "WORK-LW-001",
       "title": "Build living-world NPC identity/schedule/relationship data model",
       "status": "IMPLEMENTED",
       "rationale": "Backend runtime implementation is complete in CP44; only integration/device acceptance remains before VALIDATED."
     },
     {
-      "order": 9,
+      "order": 19,
       "id": "WORK-LW-002",
       "title": "Implement NPC-to-NPC contextual conversations",
       "status": "IMPLEMENTED",
       "rationale": "Backend runtime implementation is complete in CP44; only integration/device acceptance remains before VALIDATED."
     },
     {
-      "order": 10,
+      "order": 20,
       "id": "WORK-LW-003",
       "title": "Implement persistent named-NPC memory and bounded dialogue intelligence",
       "status": "IMPLEMENTED",
       "rationale": "Backend runtime implementation is complete in CP44; only integration/device acceptance remains before VALIDATED."
-    },
-    {
-      "order": 11,
-      "id": "WORK-WORLD-001",
-      "title": "Expand environmental micro-life and production polish chapter by chapter",
-      "status": "ACTIVE",
-      "rationale": "CP53 adds continuous baseline populations plus denser micro-events across Part I using existing schedule/social/awareness behavior; final crowd art, fauna/voice production and device acceptance remain pending."
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Immediate bulk filling of the game with every project-owned resource the current pipeline can generate and import, while retaining continuous mid-stream validation.",
+    "reason": "Programmer review requested an immediate verification freeze after CP54: stop feature expansion, test the exact develop head in real PIE chapter-by-chapter, repair failures before continuing, and de-prioritize formal rights-holder outreach.",
     "summary": [
-      "Added a 75-mesh project-owned regional/common source bank plus 17 procedural project-owned diffuse BMP textures and regional MTL palettes.",
-      "Runtime-wired the new inventory throughout Shire, Bree, Weathertop, Rivendell, Road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen.",
-      "Added PG-054 resource-count and runtime-reference validation.",
-      "Kept decorative placements non-colliding and story/quest coordinates unchanged.",
-      "The next activity/movement batch may proceed only after real UE4.27 compile/import/headless-startup validation is green."
+      "No CP55/new content checkpoint may open while the freeze is active.",
+      "Current develop baseline is CP54 at ed235ff4fb332660d2af8ce1385d9ca038a6337b; PR #44 Pre-Unreal #240 and Unreal Build #75 were green.",
+      "Real PIE/device evidence remains mandatory because CI/headless startup does not prove chapter traversal, NPC life, visual quality or target-laptop performance.",
+      "Formal rights-holder outreach is deferred; the existing asset provenance pipeline remains available for future quality-focused sourcing.",
+      "WORLD_DETAIL_LEDGER is the holding area for ideas discovered during verification; ideas are not implemented until the baseline audit is complete."
     ]
   },
   "development_mode": {
-    "id": "VISUAL_PRODUCTION_FIRST",
+    "id": "PIE_VERIFICATION_FREEZE",
     "status": "ACTIVE",
-    "entered_on": "2026-09-18",
-    "supersedes": "BUILD_FIRST_BATCH_MODE",
-    "reason": "User explicitly requested full world/character/life production and authorized broad project work; visible production quality now outranks additional backend feature expansion.",
+    "entered_on": "2026-09-19",
+    "supersedes": "VISUAL_PRODUCTION_FIRST",
+    "reason": "Programmer review correctly identified that CP24-CP54 contain substantial compile/static evidence but incomplete current-head PIE/device evidence. Verification and repair now outrank new content.",
     "rules": [
-      "Keep Pre-Unreal validation mandatory for every merge.",
-      "Keep real UE4.27.2 compile/import validation mandatory for runtime/source or production-asset changes.",
-      "Prioritize visible world, character, lighting, vegetation, architecture, props and animation production over new backend systems unless a system is required by the visible build.",
-      "Use original project-owned assets or clearly licensed reusable assets with provenance; do not rely on ripped or unauthorized film/game assets.",
-      "Do not mark PIE, device, pacing, performance or visual gates PASSED without real evidence.",
-      "Build region by region at production density, starting with the Shire vertical slice while preserving all Part I story/runtime systems."
+      "Do not open a new feature/content checkpoint while this freeze is active.",
+      "Use the exact current develop head as the baseline under test.",
+      "Test one chapter at a time in real UE4.27.2 PIE on the target laptop, beginning with P1C01 Shire.",
+      "Repair blocking runtime failures before moving to the next chapter.",
+      "Record non-blocking visual/content ideas in Docs/WORLD_DETAIL_LEDGER.md without implementing them during the baseline audit.",
+      "Keep Pre-Unreal and UE4.27 compile/import CI as regression guards, but never substitute them for PIE/device evidence.",
+      "Formal rights-holder outreach is deferred; retain the external-asset manifest/provenance pipeline for future asset quality work.",
+      "After the baseline audit is complete, resume region-by-region quality upgrades with Shire as the reference standard."
     ]
   },
   "backend_completion": {
