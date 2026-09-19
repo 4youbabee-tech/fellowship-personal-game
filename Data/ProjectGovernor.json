@@ -1262,10 +1262,12 @@
         "CP56 ambient NPCs now maintain bounded hunger/fatigue/social/fear state",
         "CP56 ambient NPCs resolve lightweight emotion/goal states and bias existing routine/social behavior",
         "Villager ambient dialogue can react to tired/hungry/afraid state",
-        "LivingNPCIntelligencePlan formalizes character knowledge limits, ignorance behavior and optional future LLM/STT/TTS layers"
+        "LivingNPCIntelligencePlan formalizes character knowledge limits, ignorance behavior and optional future LLM/STT/TTS layers",
+        "Gandalf, Sam, Aragorn and Bilbo now have explicit origin/occupation/biography/knowledge-limit/attitude context in NPCSocialModel",
+        "UShireNPCContextSubsystem loads named biography/knowledge envelopes and exposes GetProfileContextSummary for local dialogue/AI context"
       ],
       "missing_work": [
-        "Add richer biography/knowledge-envelope records for Gandalf, Sam, Aragorn, Bilbo and other named Part I characters",
+        "Extend biography/knowledge envelopes from the first four core profiles to the remaining named Part I cast",
         "Feed bounded emotion/goal context into named-NPC dialogue selection",
         "Validate memory-aware dialogue through save/load on current CP56 build",
         "Voice/STT/TTS remain optional later production layers and must be local/offline if shipped",
@@ -1985,7 +1987,7 @@
       "id": "WORK-LW-004",
       "title": "Offline Living NPC intelligence expansion",
       "status": "ACTIVE",
-      "rationale": "Primary parallel production track: expand NPC identity, biography, knowledge limits, memory, goals, needs, emotions, relationships and context-aware dialogue with a strict offline-only runtime."
+      "rationale": "Active implementation: offline needs/emotions/goals are live for ambient NPCs; Gandalf/Sam/Aragorn/Bilbo now have runtime-loaded biography and knowledge envelopes. Continue across the named cast after the current validation pass."
     }
   ],
   "last_reconciliation": {
@@ -1995,7 +1997,8 @@
       "Primary track 1 is CP56 Fellowship film-experience mega-pass: cinematic Shire/world/character/story/life expansion while preserving the film chronology.",
       "Primary track 2 is Offline Living NPC intelligence: memory, goals, needs, emotions, relationships, biographies, knowledge limits and context-aware dialogue with zero runtime internet dependency.",
       "Both tracks are now explicit ACTIVE work-queue items in the Governor rather than only requirements/plans.",
-      "CI issues discovered while starting these tracks are being repaired in parallel before merge."
+      "CI issues discovered while starting these tracks are being repaired in parallel before merge.",
+      "LW-B started: Gandalf, Sam, Aragorn and Bilbo now carry runtime-loaded biography, knowledge-limit and attitude context."
     ]
   },
   "development_mode": {
