@@ -284,6 +284,14 @@ void ALivingWorldDirector::ResetForCurrentChapter()
     }
 
     ApplyChapterWeatherContext();
+
+    const int32* AuditTarget = BaselineTargetByChapter.Find(ActiveChapterId);
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireChapterAudit: living-world chapter=%s baseline-target=%d"),
+        *ActiveChapterId.ToString(),
+        AuditTarget ? *AuditTarget : 0);
 }
 
 void ALivingWorldDirector::ApplyChapterWeatherContext()
@@ -306,6 +314,12 @@ void ALivingWorldDirector::ApplyChapterWeatherContext()
         Weather = TEXT("SNOW");
     }
     Context->SetWeatherState(Weather);
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireChapterAudit: weather chapter=%s state=%s"),
+        *ActiveChapterId.ToString(),
+        *Weather.ToString());
 }
 
 bool ALivingWorldDirector::IsStoryDangerActive() const
