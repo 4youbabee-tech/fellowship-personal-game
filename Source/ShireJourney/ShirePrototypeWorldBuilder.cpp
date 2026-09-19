@@ -159,6 +159,15 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionCommonVillageSlopeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonVillageSlope.SM_CommonVillageSlope"));
     ProductionCommonRiverBankMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonRiverBank.SM_CommonRiverBank"));
     ProductionCommonBoulderClusterMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBoulderCluster.SM_CommonBoulderCluster"));
+    ProductionCommonBroadleafTreeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBroadleafTree.SM_CommonBroadleafTree"));
+    ProductionCommonFallenLogMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonFallenLog.SM_CommonFallenLog"));
+    ProductionCommonDryStoneWallMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonDryStoneWall.SM_CommonDryStoneWall"));
+    ProductionCommonPathMarkerMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonPathMarker.SM_CommonPathMarker"));
+    ProductionCommonVillageFenceMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence"));
+    ProductionCommonWoodPileMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile"));
+    ProductionCommonFernClumpMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump"));
+    ProductionCommonReedClusterMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonReedCluster.SM_CommonReedCluster"));
+    ProductionCommonFootbridgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonFootbridge.SM_CommonFootbridge"));
 
     if (ProductionTreeTrunkMesh) DistantTreeTrunkInstances->SetStaticMesh(ProductionTreeTrunkMesh);
     if (ProductionTreeCanopyMesh) DistantTreeCanopyInstances->SetStaticMesh(ProductionTreeCanopyMesh);
@@ -1940,6 +1949,70 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
                 FLinearColor(0.38f,0.22f,0.075f), FRotator(0, Index % 2 == 0 ? 18.0f : -16.0f, 0), false);
         }
     }
+
+    // CP52: saturate the playable Shire with the reusable common kit. These are
+    // deliberately non-blocking details around existing safe traversal corridors.
+    const FVector SharedTrees[] = {
+        FVector(-2380,1180,0), FVector(-1760,1480,0), FVector(-820,1520,0),
+        FVector(1180,1380,0), FVector(5720,-1360,0), FVector(7350,-1180,0),
+        FVector(12650,1120,0), FVector(15150,-1180,0), FVector(20600,1280,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(SharedTrees); ++Index)
+    {
+        SpawnProd(ProductionCommonBroadleafTreeMesh, SharedTrees[Index],
+            FVector(0.72f + 0.05f * (Index % 3)),
+            FRotator(0.0f, static_cast<float>((Index * 41) % 360), 0.0f), false);
+    }
+
+    const FVector FieldFences[] = {
+        FVector(4300,-1250,0), FVector(4780,-1260,0), FVector(5260,-1270,0),
+        FVector(9300,1180,0), FVector(9780,1190,0), FVector(10260,1200,0),
+        FVector(17000,-1080,0), FVector(17480,-1090,0), FVector(17960,-1100,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(FieldFences); ++Index)
+    {
+        SpawnProd(ProductionCommonVillageFenceMesh, FieldFences[Index], FVector(0.78f),
+            FRotator(0.0f, Index < 6 ? 0.0f : 3.0f, 0.0f), false);
+    }
+
+    const FVector RuralClutter[] = {
+        FVector(-1460,570,0), FVector(-180,620,0), FVector(680,590,0),
+        FVector(6250,-1410,0), FVector(8450,-970,0), FVector(13650,980,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(RuralClutter); ++Index)
+    {
+        SpawnProd(Index % 2 == 0 ? ProductionCommonWoodPileMesh : ProductionCommonFallenLogMesh,
+            RuralClutter[Index], FVector(0.72f + 0.04f * (Index % 3)),
+            FRotator(0.0f, static_cast<float>((Index * 53) % 360), 0.0f), false);
+    }
+
+    const FVector Ferns[] = {
+        FVector(-2020,720,0), FVector(-1540,930,0), FVector(-980,980,0), FVector(-420,880,0),
+        FVector(5050,-720,0), FVector(5580,-860,0), FVector(11200,960,0), FVector(11800,880,0)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(Ferns); ++Index)
+    {
+        SpawnProd(ProductionCommonFernClumpMesh, Ferns[Index],
+            FVector(0.62f + 0.05f * (Index % 3)),
+            FRotator(0.0f, static_cast<float>((Index * 67) % 360), 0.0f), false);
+    }
+
+    const FVector Reeds[] = {
+        FVector(21950,-1420,-5), FVector(22300,-1380,-5), FVector(22650,-1330,-5),
+        FVector(23250,520,-5), FVector(23600,560,-5), FVector(23950,520,-5)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(Reeds); ++Index)
+    {
+        SpawnProd(ProductionCommonReedClusterMesh, Reeds[Index], FVector(0.72f),
+            FRotator(0.0f, static_cast<float>(Index * 31), 0.0f), false);
+    }
+
+    SpawnProd(ProductionCommonFootbridgeMesh, FVector(22680,-420,8), FVector(0.70f),
+        FRotator(0.0f, 5.0f, 0.0f), true);
+    SpawnProd(ProductionCommonPathMarkerMesh, FVector(10950,650,0), FVector(0.76f),
+        FRotator(0.0f, -14.0f, 0.0f), false);
+    SpawnProd(ProductionCommonDryStoneWallMesh, FVector(18400,980,0), FVector(0.86f),
+        FRotator(0.0f, 5.0f, 0.0f), false);
 }
 
 void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
