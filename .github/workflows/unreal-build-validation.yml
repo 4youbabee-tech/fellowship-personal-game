@@ -194,17 +194,22 @@ jobs:
             exit /b 33
           )
 
-      - name: Refuse build while Unreal Editor is open
-        shell: cmd
+      - name: Wait safely for Unreal Editor to close
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
-          @echo off
-          tasklist /FI "IMAGENAME eq UE4Editor.exe" | find /I "UE4Editor.exe" >nul
-          if not errorlevel 1 (
-            echo ERROR: UE4Editor.exe is open. Close Unreal Editor before automated validation.
-            exit /b 40
-          )
-          echo Unreal Editor is closed.
-          exit /b 0
+          $ErrorActionPreference = "Stop"
+          $deadline = (Get-Date).AddMinutes(20)
+
+          while (Get-Process -Name UE4Editor -ErrorAction SilentlyContinue) {
+            if ((Get-Date) -ge $deadline) {
+              Write-Error "UE4Editor.exe stayed open for 20 minutes. Close the editor so automated validation can rebuild safely."
+              exit 40
+            }
+            Write-Host "UE4Editor.exe is open; waiting 10 seconds instead of failing or terminating the user's editor."
+            Start-Sleep -Seconds 10
+          }
+
+          Write-Host "Unreal Editor is closed. Validation may continue."
 
       - name: Build ShireJourneyEditor
         shell: cmd

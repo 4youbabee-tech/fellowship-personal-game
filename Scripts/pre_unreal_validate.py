@@ -1843,8 +1843,14 @@ if "LoadObject<UObject>(nullptr, *ExpectedObjectPath)" not in production_import_
 # reports a false failure and skips the actual UE build.
 unreal_ci = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 editor_probe_marker = "echo Unreal Editor is closed.\n          exit /b 0"
-if editor_probe_marker not in unreal_ci:
-    fail("PG-015: Unreal self-hosted editor-closed probe must explicitly exit /b 0")
+editor_wait_contract_ok = (
+    "Get-Process -Name UE4Editor" in unreal_ci
+    and "AddMinutes(20)" in unreal_ci
+    and "Start-Sleep -Seconds 10" in unreal_ci
+    and "exit 40" in unreal_ci
+)
+if editor_probe_marker not in unreal_ci and not editor_wait_contract_ok:
+    fail("PG-015: Unreal self-hosted validation must either prove the editor is closed or wait safely for it without terminating the user's editor")
 if "uses: actions/checkout@v4" in unreal_ci:
     fail("PG-026: Unreal self-hosted build must not depend on actions/checkout for exact-commit acquisition")
 exact_checkout_markers = [
