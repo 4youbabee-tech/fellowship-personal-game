@@ -172,7 +172,10 @@
         "persistent Chronicle entries",
         "known map regions",
         "side-activity progression bridge",
-        "Chronicle & Journey panel"
+        "Chronicle & Journey panel",
+        "ordered traversal challenge runtime",
+        "Shire Field Race sequence",
+        "Moria Echo Path sequence"
       ]
     },
     {
@@ -332,6 +335,17 @@
         "save schema v6 persistence",
         "C-key HUD browser",
         "main-film continuity separation"
+      ]
+    },
+    {
+      "id": "SIDE_ACTIVITY_MECHANICS",
+      "status": "PARTIAL_RUNTIME_IMPLEMENTED_PENDING_ENGINE_PROOF",
+      "includes": [
+        "ordered three-gate traversal actor",
+        "story-window eligibility",
+        "first-time reward integration",
+        "Shire Field Race",
+        "Moria Echo Path"
       ]
     }
   ]

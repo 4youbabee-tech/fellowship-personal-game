@@ -1428,7 +1428,8 @@
         "Self-hosted UE4 validation now avoids fragile later temporary PowerShell scripts for checkout/warning analysis and explicitly verifies the exact PR-head SHA.",
         "Journey Discovery moved from static design into runtime triggers, persistence, HUD feedback and headless state auditing across all Part I regions.",
         "B1 now includes actual player-life/progression runtime instead of plan-only modern-game axes.",
-        "B1 now includes Chronicle/map knowledge UI, save continuity and contextual side-activity progression bridging."
+        "B1 now includes Chronicle/map knowledge UI, save continuity and contextual side-activity progression bridging.",
+        "B1 now includes reusable traversal-challenge gameplay, not only proximity discovery triggers."
       ],
       "missing_work": [
         "Get final PR #53 head through full UE4.27 validation.",
@@ -1559,19 +1560,24 @@
         "Data/ContextualSideActivityPlan.json",
         "Data/ExplorationEnvelopePlan.json",
         "Data/JourneyDiscoveryRewardPlan.json",
-        "Source/ShireJourney/ShireQuestSubsystem.cpp"
+        "Source/ShireJourney/ShireQuestSubsystem.cpp",
+        "Source/ShireJourney/ShireTraversalChallenge.h",
+        "Source/ShireJourney/ShireTraversalChallenge.cpp",
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp"
       ],
       "implementation_refs": [
         "18 contextual side activities now cover FrodoMain P1C01-P1C08 plus GandalfParallel P1C01.",
         "Every activity declares exact opening/closing story anchors, participants, film-context rationale, mechanics, reward link and urgency policy.",
         "Activities are explicitly barred from advancing required anchors, changing canon outcomes or revealing future knowledge.",
-        "Contextual side-activity types now bridge into bounded progression XP when their linked first-time discovery completes; CAMP_PREPARATION feeds CAMPCRAFT and future STEALTH_LITE feeds QUIET_STEP."
+        "Contextual side-activity types now bridge into bounded progression XP when their linked first-time discovery completes; CAMP_PREPARATION feeds CAMPCRAFT and future STEALTH_LITE feeds QUIET_STEP.",
+        "Shire Field Race and Moria Follow the Echo now require ordered three-gate traversal completion before their linked discovery/progression reward is granted."
       ],
       "missing_work": [
-        "Wire side-activity availability/completion into existing runtime quest/exploration state.",
-        "Implement HUD/interact presentation and compact save persistence.",
-        "Validate representative activities in UE4.27 for pacing, interruption and story-safety.",
-        "Add engine automation that proves side activities cannot skip mandatory film beats."
+        "Implement remaining side-activity mechanics beyond discovery/ordered traversal triggers.",
+        "Add at least one direct STEALTH_LITE activity so QUIET_STEP has an authored runtime source.",
+        "Add pattern/observation/camp interactions with actual multi-step mechanics where worthwhile.",
+        "PIE/device placement, pacing and readability review."
       ],
       "acceptance_criteria": [
         "Main story remains Peter Jackson film chronology and outcomes.",
@@ -1722,7 +1728,8 @@
         "Fellowship Bond is exposed from FELLOWSHIP progression; HUD/input expose the new player-life layer.",
         "Headless state audit now requires progression-core=PASS.",
         "Chronicle/map knowledge is now runtime: first-time discoveries persist a Chronicle entry and known route/chapter region.",
-        "C toggles an in-game Chronicle & Journey panel showing progression ranks, recent Chronicle entries and known map regions."
+        "C toggles an in-game Chronicle & Journey panel showing progression ranks, recent Chronicle entries and known map regions.",
+        "First ordered traversal challenge mechanic is now implemented as a reusable three-gate runtime actor, replacing touch-to-discover for selected activities."
       ],
       "missing_work": [
         "Add authored STEALTH_LITE activities so QUIET_STEP gains a direct runtime activity source.",
@@ -2938,13 +2945,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Continued the large B1 batch by converting Chronicle/map knowledge and contextual side-activity progression from planned presentation into persistent runtime state.",
+    "reason": "Continued the large B1 implementation wave beyond state/UI work into reusable physical gameplay challenges.",
     "summary": [
-      "First-time discoveries now unlock main-film Chronicle entries and known map-region state.",
-      "Chronicle/map knowledge persists through save schema v6.",
-      "A C-key Chronicle & Journey HUD panel exposes recent entries, known regions and all progression ranks.",
-      "Contextual side-activity types now add bounded progression XP on the same first-time discovery event, preserving anti-farm behavior.",
-      "PG-080 and knowledge-core runtime smoke extend the exact-head validation contract; UE4.27 proof is still pending."
+      "Added AShireTraversalChallenge: reusable ordered three-gate gameplay with story-open/story-close guards and first-time discovery rewards.",
+      "Shire Field Race now requires an actual ordered field route instead of a single touch trigger.",
+      "Moria Follow the Echo now requires an actual ordered route through three gates before reward.",
+      "Traversal completion still feeds the same first-time discovery, Chronicle/map and progression systems without changing FILM_CORE.",
+      "PG-081 guards the traversal runtime and placements; exact-head UE4.27 compile/PIE proof remains required."
     ]
   },
   "development_mode": {

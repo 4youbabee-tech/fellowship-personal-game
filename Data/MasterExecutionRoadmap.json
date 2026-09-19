@@ -109,7 +109,10 @@
         "persistent seven-track utility/content progression",
         "persistent main-film Chronicle entries and map knowledge",
         "in-game Chronicle & Journey progression panel",
-        "contextual side-activity type to progression bridge"
+        "contextual side-activity type to progression bridge",
+        "reusable ordered traversal challenge runtime",
+        "Shire Field Race physical challenge",
+        "Moria Echo Path physical challenge"
       ],
       "exit_evidence": [
         "STATIC_CANON_COVERAGE",
@@ -117,7 +120,7 @@
         "SAVE_ROUTE_CONTINUITY",
         "PIE_PACING_REVIEW"
       ],
-      "current_runtime_wave": "CHRONICLE_MAP_SIDE_ACTIVITY_PROGRESSION_V1"
+      "current_runtime_wave": "CHRONICLE_MAP_SIDE_ACTIVITY_TRAVERSAL_V1"
     },
     {
       "id": "B2_CHARACTERS_AND_WORLD_PRODUCTION",
@@ -378,9 +381,9 @@
     "WORK-EXEC-001"
   ],
   "immediate_next_large_actions": [
-    "Finish exact-head UE4.27 compile/import/startup/chapter/state validation for the integrated branch.",
-    "Add direct STEALTH_LITE activities and first real traversal/environmental-puzzle mechanics inside verified film windows.",
-    "Add bounded player-interactive world events on top of the already-running ambient LivingWorldDirector.",
-    "Advance production-character and cinematic-world waves in parallel after the green-head gate."
+    "Run/repair exact-head UE4.27 compile/import/startup/chapter/state validation for the new Chronicle/traversal head.",
+    "Add first STEALTH_LITE runtime activity plus observation/pattern/camp multi-step challenge actors.",
+    "Add player-interactive world-event responses while preserving LivingWorldDirector performance budgets.",
+    "Continue production-character and cinematic-world replacement waves."
   ]
 }
