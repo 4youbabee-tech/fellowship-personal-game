@@ -1247,7 +1247,7 @@
       "priority": "CRITICAL",
       "status": "PARTIAL",
       "origin": "User forwarded programmer living-NPC requirement and explicitly asked to preserve/analyze/apply it",
-      "intent": "NPCs should feel alive through bounded goals, needs, emotions, daily routines, memory, relationships, context awareness and character-specific knowledge while running fully offline with no cloud/API dependency.",
+      "intent": "Every meaningful character in Part I, named or ambient, should participate in an offline living-NPC intelligence layer appropriate to its importance: memory, routines, goals, needs, emotions, relationships, contextual knowledge and region/story mood awareness, without cloud/API dependency.",
       "evidence": [
         "Docs/PROGRAMMER_INPUT_LIVING_NPCS_PART1.md",
         "Data/LivingNPCIntelligencePlan.json",
@@ -1264,14 +1264,19 @@
         "Villager ambient dialogue can react to tired/hungry/afraid state",
         "LivingNPCIntelligencePlan formalizes character knowledge limits, ignorance behavior and optional future LLM/STT/TTS layers",
         "Gandalf, Sam, Aragorn and Bilbo now have explicit origin/occupation/biography/knowledge-limit/attitude context in NPCSocialModel",
-        "UShireNPCContextSubsystem loads named biography/knowledge envelopes and exposes GetProfileContextSummary for local dialogue/AI context"
+        "UShireNPCContextSubsystem loads named biography/knowledge envelopes and exposes GetProfileContextSummary for local dialogue/AI context",
+        "All NPCSocialModel profiles now opt into intelligence_enabled, world_mood_sensitive and offline_only",
+        "Remaining named Part I cast profiles now carry biography/knowledge-limit/attitude context",
+        "Data/NPCRegionalMoodPlan.json defines shared peace/suspicion/fear/grief/war-pressure context by chapter",
+        "UShireNPCContextSubsystem exposes regional mood/pressure and includes it in local character context and dialogue selection"
       ],
       "missing_work": [
-        "Extend biography/knowledge envelopes from the first four core profiles to the remaining named Part I cast",
         "Feed bounded emotion/goal context into named-NPC dialogue selection",
         "Validate memory-aware dialogue through save/load on current CP56 build",
         "Voice/STT/TTS remain optional later production layers and must be local/offline if shipped",
-        "Evaluate only small local/on-device language models after the deterministic offline stack passes; no cloud provider integration"
+        "Evaluate only small local/on-device language models after the deterministic offline stack passes; no cloud provider integration",
+        "Deepen authored dialogue variation so more intents visibly react to memory, relationship, emotion and regional mood",
+        "Validate all-profile offline intelligence coverage in UE4.27 and target-laptop runtime"
       ],
       "acceptance_criteria": [
         "NPC behavior visibly varies with routine, danger, weather and bounded internal state",
@@ -1282,7 +1287,10 @@
         "Target-laptop performance remains within the established budget",
         "Game remains fully functional with network access disabled",
         "No gameplay-critical NPC system requires an API key, cloud endpoint or internet connection",
-        "Any future LLM/STT/TTS implementation is local/on-device, optional and bounded by target-device performance"
+        "Any future LLM/STT/TTS implementation is local/on-device, optional and bounded by target-device performance",
+        "Every named Part I character has an intelligence profile with identity/context limits appropriate to the film chronology",
+        "Ambient regional populations participate through cheaper archetype intelligence rather than inert scripted actors",
+        "Dialogue/behavior can distinguish peaceful refuge, suspicious town, pursuit, grief, dead-city dread and active war pressure by current chapter"
       ],
       "dependencies": [
         "REQ-NPC-001",
@@ -1293,6 +1301,36 @@
       ],
       "checkpoint": "CP56",
       "notes": "Offline-only is authoritative. Deterministic local intelligence is the baseline; a future small local model may assist wording, but remote/cloud AI is excluded from shipped gameplay."
+    },
+    {
+      "id": "REQ-MEM-004",
+      "title": "Persist user production requests in the project Governor",
+      "category": "ProjectMemory",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "User explicitly asked that requested ideas/requirements be stored so neither side has to rely on remembering them later",
+      "intent": "Important user production requests must be promoted into durable project requirements, decisions, work-queue items or source-plan files before implementation proceeds.",
+      "evidence": [
+        "Data/ProjectGovernor.json"
+      ],
+      "implementation_refs": [
+        "REQ-MEM-003 persists useful external sources and requests",
+        "DEC-009 through DEC-012 preserve major story/NPC/offline decisions",
+        "WORK-EXP-003 and WORK-LW-004 keep the two major production tracks active"
+      ],
+      "missing_work": [
+        "Continue promoting future major user requests into the Governor instead of relying only on chat history"
+      ],
+      "acceptance_criteria": [
+        "A future developer can recover the active product direction from repository files without needing the chat transcript",
+        "Major user requests have a requirement/decision/work item or an explicitly linked production plan"
+      ],
+      "dependencies": [
+        "REQ-MEM-001",
+        "REQ-MEM-003"
+      ],
+      "checkpoint": "ONGOING",
+      "notes": "This is an ongoing governance rule."
     }
   ],
   "hard_invariants": [
@@ -1560,6 +1598,27 @@
         "Data/LivingNPCIntelligencePlan.json",
         "Data/BoundedDialoguePlan.json",
         "Docs/PROGRAMMER_INPUT_LIVING_NPCS_PART1.md"
+      ]
+    },
+    {
+      "id": "DEC-012",
+      "title": "All Part I characters participate in the living-NPC layer",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-NPC-001",
+        "REQ-NPC-003",
+        "REQ-NPC-004",
+        "REQ-NPC-005",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Treat living intelligence as a world-wide character rule, not a one-NPC demo. Named story characters receive rich biography, memory, relationships and knowledge envelopes; secondary named characters receive lighter persistent context; ambient populations use cheap archetype intelligence. All tiers remain offline and react to chapter mood, danger, weather and local context.",
+      "rationale": "The project owner explicitly wants conversations with any character to feel like that character understands who they are, what has happened, and whether the surrounding world is peaceful, suspicious, grieving or at war.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/LivingNPCIntelligencePlan.json",
+        "Data/NPCSocialModel.json",
+        "Data/NPCRegionalMoodPlan.json",
+        "Source/ShireJourney/ShireNPCContextSubsystem.cpp"
       ]
     }
   ],
@@ -1987,18 +2046,18 @@
       "id": "WORK-LW-004",
       "title": "Offline Living NPC intelligence expansion",
       "status": "ACTIVE",
-      "rationale": "Active implementation: offline needs/emotions/goals are live for ambient NPCs; Gandalf/Sam/Aragorn/Bilbo now have runtime-loaded biography and knowledge envelopes. Continue across the named cast after the current validation pass."
+      "rationale": "Expanded scope is explicit: every Part I character participates in offline living intelligence at a cost appropriate to its tier, with biography/knowledge limits and regional peace/war mood context."
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "User asked to re-check recent conversations, confirm the two major requests are registered, and begin them as the active production path.",
+    "reason": "User asked to keep fixing CI until green, confirmed all characters should feel intelligent and context-aware, and asked that these requests be durably recorded in the manager.",
     "summary": [
-      "Primary track 1 is CP56 Fellowship film-experience mega-pass: cinematic Shire/world/character/story/life expansion while preserving the film chronology.",
-      "Primary track 2 is Offline Living NPC intelligence: memory, goals, needs, emotions, relationships, biographies, knowledge limits and context-aware dialogue with zero runtime internet dependency.",
-      "Both tracks are now explicit ACTIVE work-queue items in the Governor rather than only requirements/plans.",
-      "CI issues discovered while starting these tracks are being repaired in parallel before merge.",
-      "LW-B started: Gandalf, Sam, Aragorn and Bilbo now carry runtime-loaded biography, knowledge-limit and attitude context."
+      "All Part I NPC profiles are now explicitly intelligence-enabled, mood-sensitive and offline-only.",
+      "Named cast biography/knowledge envelopes were expanded across the remaining Part I cast.",
+      "Regional world mood/pressure is now a data-driven local context layer for peace, suspicion, pursuit, refuge, grief, dead-city dread and war pressure.",
+      "A new Governor rule requires important user requests to be persisted in project files instead of relying on chat memory.",
+      "CI remains a hard blocker for merge; current runner duplicate-listener cleanup is being repaired before moving PR #52 to merge."
     ]
   },
   "development_mode": {
