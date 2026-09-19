@@ -172,6 +172,7 @@ private:
         FName VoiceCue = NAME_None;
         FName RequiredStoryBeat = NAME_None;
         FName RequiredMemory = NAME_None;
+        FName RequiredMood = NAME_None;
         int32 MaxWords = 24;
     };
 
@@ -208,7 +209,8 @@ private:
         const TCHAR* Text,
         FName VoiceCue = NAME_None,
         FName RequiredStoryBeat = NAME_None,
-        FName RequiredMemory = NAME_None);
+        FName RequiredMemory = NAME_None,
+        FName RequiredMood = NAME_None);
     bool ProfileAvailableInCurrentChapter(const FShireNPCProfileRuntime& Profile) const;
     bool IsFellowshipProfile(const FShireNPCProfileRuntime& Profile) const;
     int32 CountWords(const FString& Text) const;

@@ -1271,7 +1271,8 @@
         "All NPCSocialModel profiles now opt into intelligence_enabled, world_mood_sensitive and offline_only",
         "Remaining named Part I cast profiles now carry biography/knowledge-limit/attitude context",
         "Data/NPCRegionalMoodPlan.json defines shared peace/suspicion/fear/grief/war-pressure context by chapter",
-        "UShireNPCContextSubsystem exposes regional mood/pressure and includes it in local character context and dialogue selection"
+        "UShireNPCContextSubsystem exposes regional mood/pressure and includes it in local character context and dialogue selection",
+        "Follow-up: exact regional mood eligibility and priority replace seed-only mood influence; 30 original Moria/Lothlorien companion lines reuse existing intent, knowledge, chapter and repetition gates."
       ],
       "missing_work": [
         "Feed bounded emotion/goal context into named-NPC dialogue selection",
@@ -1279,7 +1280,8 @@
         "Voice/STT/TTS remain optional later production layers and must be local/offline if shipped",
         "Evaluate only small local/on-device language models after the deterministic offline stack passes; no cloud provider integration",
         "Deepen authored dialogue variation so more intents visibly react to memory, relationship, emotion and regional mood",
-        "Validate all-profile offline intelligence coverage in UE4.27 and target-laptop runtime"
+        "Validate all-profile offline intelligence coverage in UE4.27 and target-laptop runtime",
+        "Compile and run Shire.NPC.RegionalDialogue automation and observe regional dialogue in UE4.27; current follow-up is source-implemented only."
       ],
       "acceptance_criteria": [
         "NPC behavior visibly varies with routine, danger, weather and bounded internal state",

@@ -1,3 +1,7 @@
+## CP56 continuation — contextual companion dialogue, 2026-09-19
+
+Recovered prior-session stopping point: CP56 head 3705fe4, PR52 awaiting Unreal. Its latest engine attempt failed during checkout, before compilation. Follow-up PR53 now includes the tracked-source checkout fix plus a correction to regional dialogue selection and 30 original Moria/Lothlorien companion lines. Actual engine build and gameplay validation remain pending. No new checkpoint or trilogy completion is declared.
+
 ## Automation-first delivery follow-up — 2026-09-19
 
 REQ-QA-001 records the owner request to reduce manual technical testing. Runtime boot observation and subprocess regression tests are implemented on a follow-up branch based on CP56; Windows UE validation remains pending. See `Docs/AUTOMATION_FIRST_DELIVERY.md` for the trilogy/opening/side-exploration contract and ordered engine-test work. This adds no completed gameplay chapter and grants no new visual, performance or owner sign-off. Existing CP56 requirements remain active.

@@ -170,7 +170,7 @@ jobs:
               set "FETCH_OK=1"
               goto :fetch_done
             )
-            if not "%%A"=="7" timeout /t 5 /nobreak >nul
+            if not "%%A"=="7" powershell.exe -NoProfile -Command "Start-Sleep -Seconds 5"
           )
 
           :fetch_done
@@ -179,7 +179,9 @@ jobs:
             exit /b 72
           )
 
-          git checkout --detach FETCH_HEAD
+          rem This dedicated CI workspace retains source files after .git recreation.
+          rem Force only the fetched tracked source into place; do not git clean saves/assets.
+          git checkout --force --detach FETCH_HEAD
           if errorlevel 1 exit /b 73
 
           for /f %%S in ('git rev-parse HEAD') do set "CHECKED_SHA=%%S"

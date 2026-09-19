@@ -525,3 +525,9 @@ A future generative dialogue provider is allowed only as an optional bounded wor
 ## Runtime observation regression — 2026-09-19
 
 Ready markers previously ended startup checking immediately; chapter checks slept four seconds after markers without reading the resulting log again. A late fatal/assert/ensure or spontaneous exit could therefore escape those checks. `Scripts/runtime_smoke.py` now observes a live process throughout that window and scans the final log after cleanup. `Scripts/test_runtime_smoke.py` reproduces these failures with subprocess fixtures in Pre-Unreal CI. This is boot stability evidence only, not traversal, save/load, performance or visual approval. Missing markers and intermittent starts fail explicitly rather than being hidden by retries.
+
+## CP56 continuation — checkout and mood selection
+
+Unreal run 35461908616 fetched successfully on retry but checkout failed with exit 73: recreating .git left existing CI source files untracked. The dedicated runner checkout now forces only fetched tracked paths, retaining unrelated generated content and save files. No git clean is added. The retry delay uses PowerShell sleep because cmd timeout reported unsupported input redirection. This does not explain or claim to fix separate action-download cancellation during job setup.
+
+Regional mood previously altered only a random seed, permitting emotionally mismatched authored replies. Explicit mood eligibility and context priority now precede freshness/random selection. Existing story/memory/knowledge gates remain in place; five UE automation assertions guard ranking semantics. Engine validation is pending.

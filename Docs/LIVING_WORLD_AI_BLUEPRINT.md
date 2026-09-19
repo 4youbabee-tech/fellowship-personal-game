@@ -294,3 +294,7 @@ The full living-world requirement is not accepted until:
 - the target laptop sustains acceptable playability.
 
 Until those are proven, the correct status is PARTIAL or PLANNED, not complete.
+
+## Regional dialogue correction — 2026-09-19
+
+The existing regional mood hash changed a random choice but did not constrain line meaning. `RequiredMood` now excludes mismatched regions. After existing story/memory/knowledge eligibility checks, matching regional text outranks generic text; fresh-line selection stays within the best context tier. Thirty new original lines cover the eight Moria companions and seven Lothlorien companions, without adding Gandalf to Lothlorien or revealing future events. They reuse four supported intents; danger warnings retain their separate path. Voice IDs remain empty for unrecorded lines. This is authored offline response selection, not free language understanding. `Shire.NPC.RegionalDialogue` provides an engine automation test; build/runtime validation remains pending.

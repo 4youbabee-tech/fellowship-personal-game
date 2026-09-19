@@ -9,6 +9,21 @@
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 
+
+namespace
+{
+    // Story/knowledge/memory eligibility is checked before ranking. Never select
+    // another region's line merely because it is fresh in the repetition cache.
+    int32 ShireDialogueContextRank(FName RequiredMood, FName CurrentMood, bool bSpecificMemory)
+    {
+        if (RequiredMood != NAME_None && RequiredMood != CurrentMood)
+        {
+            return -1;
+        }
+        return (RequiredMood != NAME_None ? 2 : 0) + (bSpecificMemory ? 1 : 0);
+    }
+}
+
 FString UShireNPCContextSubsystem::NormalizeLookupKey(const FString& Value)
 {
     FString Key = Value;
@@ -404,7 +419,8 @@ void UShireNPCContextSubsystem::AddDialogueVariant(
     const TCHAR* Text,
     FName VoiceCue,
     FName RequiredStoryBeat,
-    FName RequiredMemory)
+    FName RequiredMemory,
+    FName RequiredMood)
 {
     FDialogueVariantRuntime Variant;
     Variant.SpeakerProfileId = SpeakerProfileId;
@@ -414,6 +430,7 @@ void UShireNPCContextSubsystem::AddDialogueVariant(
     Variant.VoiceCue = VoiceCue;
     Variant.RequiredStoryBeat = RequiredStoryBeat;
     Variant.RequiredMemory = RequiredMemory;
+    Variant.RequiredMood = RequiredMood;
     Variant.MaxWords =
         IntentId == TEXT("STORY_REACTION") || IntentId == TEXT("DANGER_WARNING")
             ? MaxWordsStoryReactive
@@ -586,6 +603,47 @@ void UShireNPCContextSubsystem::BuildDialogueVariantLibrary()
     AddDialogueVariant(TEXT("NPC_GALADRIEL"), TEXT("GREETING"), TEXT("GALADRIEL_GREETING_01"),
         TEXT("You have carried much farther than distance alone can measure."),
         TEXT("VO_Greeting_Galadriel_01"));
+    // Contextual companion lines remain offline and reuse existing knowledge,
+    // chapter, memory and repetition gates. No unrecorded voice assets are referenced.
+    struct FRegionalLinePair
+    {
+        const TCHAR* Speaker;
+        const TCHAR* Mood;
+        const TCHAR* First;
+        const TCHAR* Second;
+    };
+    const FRegionalLinePair RegionalLines[] = {
+        { TEXT("NPC_SAM"), TEXT("DEAD_CITY_DREAD"), TEXT("Stay near me. I cannot see far enough to like this place."), TEXT("I will keep watch while you catch your breath.") },
+        { TEXT("NPC_MERRY"), TEXT("DEAD_CITY_DREAD"), TEXT("Keep your steps quiet. Every sound seems to come back twice."), TEXT("Let us count heads before we take another turning.") },
+        { TEXT("NPC_PIPPIN"), TEXT("DEAD_CITY_DREAD"), TEXT("I will be quiet. I would rather not find out what heard us."), TEXT("Could we stay where we can still see each other?") },
+        { TEXT("NPC_ARAGORN"), TEXT("DEAD_CITY_DREAD"), TEXT("Watch the passage behind us. Darkness can conceal more than distance."), TEXT("Stay together and leave room for the others to move.") },
+        { TEXT("NPC_BOROMIR"), TEXT("DEAD_CITY_DREAD"), TEXT("Keep the smaller ones inside our line. I will watch the rear."), TEXT("If something moves, warn the company before you draw it closer.") },
+        { TEXT("NPC_LEGOLAS"), TEXT("DEAD_CITY_DREAD"), TEXT("Listen before you step. The stone carries sounds we cannot yet place."), TEXT("There is too little light ahead. Move carefully.") },
+        { TEXT("NPC_GIMLI"), TEXT("DEAD_CITY_DREAD"), TEXT("These halls deserved voices and lamplight. Tread with respect."), TEXT("Good stone endures, but I do not trust every shadow beneath it.") },
+        { TEXT("NPC_GANDALF"), TEXT("DEAD_CITY_DREAD"), TEXT("Patience. A wrong turning here could cost us dearly."), TEXT("Keep close, and let me study the way ahead.") },
+        { TEXT("NPC_SAM"), TEXT("GRIEF_AND_REFUGE"), TEXT("You need not find words. I can sit here with you."), TEXT("Rest a little. I will be close when you are ready.") },
+        { TEXT("NPC_MERRY"), TEXT("GRIEF_AND_REFUGE"), TEXT("It is quiet here. For once, I am grateful for that."), TEXT("We can take a little time together before we move on.") },
+        { TEXT("NPC_PIPPIN"), TEXT("GRIEF_AND_REFUGE"), TEXT("I do not feel much like talking. May I stay beside you?"), TEXT("I thought finding shelter would make everything feel easier.") },
+        { TEXT("NPC_ARAGORN"), TEXT("GRIEF_AND_REFUGE"), TEXT("Take the rest this place offers. We need not speak yet."), TEXT("Let the company gather itself before the next road.") },
+        { TEXT("NPC_BOROMIR"), TEXT("GRIEF_AND_REFUGE"), TEXT("There is no shame in needing rest. Even a guard must breathe."), TEXT("I will keep my voice down. The others need their peace.") },
+        { TEXT("NPC_LEGOLAS"), TEXT("GRIEF_AND_REFUGE"), TEXT("Let the leaves speak for a while. We have carried enough noise."), TEXT("There is room for silence beneath these trees.") },
+        { TEXT("NPC_GIMLI"), TEXT("GRIEF_AND_REFUGE"), TEXT("I have no fine words for this. You still have my company."), TEXT("Let us rest our feet. Our thoughts may take longer.") },
+    };
+    const FName RegionalIntents[] = {
+        TEXT("GREETING"), TEXT("STORY_REACTION"),
+        TEXT("COMPANION_BANTER"), TEXT("TRAVEL_COMMENT")
+    };
+    for (const FRegionalLinePair& Pair : RegionalLines)
+    {
+        for (FName Intent : RegionalIntents)
+        {
+            const FName FirstId(*FString::Printf(TEXT("%s_%s_%s_01"), Pair.Speaker, Pair.Mood, *Intent.ToString()));
+            const FName SecondId(*FString::Printf(TEXT("%s_%s_%s_02"), Pair.Speaker, Pair.Mood, *Intent.ToString()));
+            AddDialogueVariant(Pair.Speaker, Intent, FirstId, Pair.First, NAME_None, NAME_None, NAME_None, Pair.Mood);
+            AddDialogueVariant(Pair.Speaker, Intent, SecondId, Pair.Second, NAME_None, NAME_None, NAME_None, Pair.Mood);
+        }
+    }
+
 }
 
 FName UShireNPCContextSubsystem::ResolveCanonicalProfileId(FName IdAliasOrDisplayName) const
@@ -976,6 +1034,8 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
 
+    const FName CurrentMood = GetRegionalWorldMood();
+    int32 BestContextRank = -1;
     TArray<const FDialogueVariantRuntime*> Eligible;
     TArray<const FDialogueVariantRuntime*> Fresh;
     for (const FDialogueVariantRuntime& Variant : *Variants)
@@ -995,6 +1055,19 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
             continue;
         }
 
+        const int32 ContextRank = ShireDialogueContextRank(
+            Variant.RequiredMood, CurrentMood,
+            Variant.RequiredStoryBeat != NAME_None || Variant.RequiredMemory != NAME_None);
+        if (ContextRank < 0 || ContextRank < BestContextRank)
+        {
+            continue;
+        }
+        if (ContextRank > BestContextRank)
+        {
+            Eligible.Reset();
+            Fresh.Reset();
+            BestContextRank = ContextRank;
+        }
         Eligible.Add(&Variant);
         if (!Quests || !Quests->HasRecentNPCDialogueVariant(SpeakerId, Variant.VariantId))
         {
@@ -1047,3 +1120,24 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
 
     return Result;
 }
+
+#if WITH_DEV_AUTOMATION_TESTS
+#include "Misc/AutomationTest.h"
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FShireRegionalDialogueTest,
+    "Shire.NPC.RegionalDialogue", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FShireRegionalDialogueTest::RunTest(const FString& Parameters)
+{
+    const FName Dread(TEXT("DEAD_CITY_DREAD"));
+    const FName Grief(TEXT("GRIEF_AND_REFUGE"));
+    TestEqual(TEXT("Wrong-region lines stay ineligible even with memory"), ShireDialogueContextRank(Dread, Grief, true), -1);
+    TestEqual(TEXT("Unknown mood does not unlock regional text"), ShireDialogueContextRank(Dread, NAME_None, false), -1);
+    TestEqual(TEXT("Generic fallback remains available"), ShireDialogueContextRank(NAME_None, Grief, false), 0);
+    TestTrue(TEXT("Current mood outranks generic remembered text"),
+        ShireDialogueContextRank(Grief, Grief, false) > ShireDialogueContextRank(NAME_None, Grief, true));
+    TestTrue(TEXT("Remembered contextual text wins within a mood"),
+        ShireDialogueContextRank(Grief, Grief, true) > ShireDialogueContextRank(Grief, Grief, false));
+    return true;
+}
+#endif

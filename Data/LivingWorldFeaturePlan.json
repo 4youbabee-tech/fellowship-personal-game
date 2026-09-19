@@ -54,6 +54,14 @@
             "Data/BiomePlan.csv"
           ],
           "notes": "Chapter identities defined; production completion varies by chapter."
+        },
+        {
+          "id": "NPC-REGIONAL-DIALOGUE-ELIGIBILITY",
+          "status": "PARTIAL",
+          "evidence": [
+            "Source/ShireJourney/ShireNPCContextSubsystem.cpp"
+          ],
+          "notes": "Mood-specific lines are eligible only in their region and take precedence over generic lines. 30 authored companion lines for Moria/Lothlorien; engine automation added, execution pending."
         }
       ]
     },
