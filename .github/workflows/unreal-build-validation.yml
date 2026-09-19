@@ -236,7 +236,7 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          setlocal EnableExtensions
+          setlocal EnableExtensions EnableDelayedExpansion
           set "PROJECT=%GITHUB_WORKSPACE%\ShireJourney.uproject"
           set "BUILDBAT=C:\Program Files\Epic Games\UE_4.27\Engine\Build\BatchFiles\Build.bat"
           set "LOGDIR=%GITHUB_WORKSPACE%\Saved\Logs"
@@ -247,15 +247,26 @@ jobs:
           echo Building exact commit: %GITHUB_SHA%
           echo Project: %PROJECT%
           echo Build log: %BUILDLOG%
+          echo Build parallelism: 2 actions, with automatic single-action retry on MSVC PCH virtual-memory exhaustion.
 
-          call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE > "%BUILDLOG%" 2>&1
-          set "BUILD_EXIT=%ERRORLEVEL%"
+          call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=2 > "%BUILDLOG%" 2>&1
+          set "BUILD_EXIT=!ERRORLEVEL!"
+
+          if not "!BUILD_EXIT!"=="0" (
+            findstr /I /C:"error C3859" /C:"fatal error C1076" "%BUILDLOG%" >nul
+            if not errorlevel 1 (
+              echo.>>"%BUILDLOG%"
+              echo CI_BUILD_RETRY: MSVC PCH memory pressure detected; retrying with MaxParallelActions=1.>>"%BUILDLOG%"
+              call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=1 >> "%BUILDLOG%" 2>&1
+              set "BUILD_EXIT=!ERRORLEVEL!"
+            )
+          )
 
           type "%BUILDLOG%"
 
-          if not "%BUILD_EXIT%"=="0" (
-            echo ERROR: UE4.27.2 build failed with exit code %BUILD_EXIT%.
-            exit /b %BUILD_EXIT%
+          if not "!BUILD_EXIT!"=="0" (
+            echo ERROR: UE4.27.2 build failed with exit code !BUILD_EXIT!.
+            exit /b !BUILD_EXIT!
           )
 
           echo UE4.27.2 build succeeded.
