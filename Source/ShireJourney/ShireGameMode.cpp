@@ -20,6 +20,7 @@ void AShireGameMode::BeginPlay()
     // to Bree without loading both regions at the same time.
     GetWorld()->SpawnActor<AChapterWorldRouter>(FVector::ZeroVector, FRotator::ZeroRotator);
     GetWorld()->SpawnActor<ALivingWorldDirector>(FVector::ZeroVector, FRotator::ZeroRotator);
+    UE_LOG(LogTemp, Display, TEXT("ShirePlayableStartup: GameMode ready; router and living-world director spawned"));
 
     APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
     if (PC)
