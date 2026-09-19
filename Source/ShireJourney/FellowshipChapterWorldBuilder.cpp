@@ -270,6 +270,18 @@ void AFellowshipChapterWorldBuilder::EnsureProductionMeshes()
     CommonTerracedHillMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonTerracedHill.SM_CommonTerracedHill"));
     CommonRiverBankMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonRiverBank.SM_CommonRiverBank"));
     CommonBoulderClusterMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBoulderCluster.SM_CommonBoulderCluster"));
+    CommonPineTreeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonPineTree.SM_CommonPineTree"));
+    CommonBroadleafTreeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonBroadleafTree.SM_CommonBroadleafTree"));
+    CommonGoldenTreeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonGoldenTree.SM_CommonGoldenTree"));
+    CommonFallenLogMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonFallenLog.SM_CommonFallenLog"));
+    CommonDryStoneWallMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonDryStoneWall.SM_CommonDryStoneWall"));
+    CommonPathMarkerMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonPathMarker.SM_CommonPathMarker"));
+    CommonVillageFenceMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence"));
+    CommonWoodPileMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile"));
+    CommonFernClumpMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump"));
+    CommonReedClusterMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonReedCluster.SM_CommonReedCluster"));
+    CommonRuinSlabMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonRuinSlab.SM_CommonRuinSlab"));
+    CommonFootbridgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonFootbridge.SM_CommonFootbridge"));
 }
 
 void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId)
@@ -301,6 +313,39 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         }
     };
 
+    auto SpawnScatter = [&SpawnProd](
+        UStaticMesh* Mesh,
+        const FVector& Center,
+        int32 Count,
+        const FVector& Radius,
+        const FVector& BaseScale,
+        float YawStep,
+        float HeightJitter = 0.0f)
+    {
+        if (!Mesh || Count <= 0)
+        {
+            return;
+        }
+
+        for (int32 Index = 0; Index < Count; ++Index)
+        {
+            const float Angle = FMath::DegreesToRadians(
+                FMath::Fmod(Index * 137.507764f + YawStep * 0.37f, 360.0f));
+            const float Ring = 0.35f + 0.65f * (static_cast<float>((Index * 7) % Count) / FMath::Max(1, Count - 1));
+            const FVector Offset(
+                FMath::Cos(Angle) * Radius.X * Ring,
+                FMath::Sin(Angle) * Radius.Y * Ring,
+                HeightJitter * FMath::Sin(Angle * 1.7f));
+            const float ScaleJitter = 0.82f + 0.08f * (Index % 5);
+            SpawnProd(
+                Mesh,
+                Center + Offset,
+                BaseScale * ScaleJitter,
+                FRotator(0.0f, FMath::Fmod(Index * YawStep, 360.0f), 0.0f),
+                false);
+        }
+    };
+
     if (ChapterId == TEXT("P1C03"))
     {
         SpawnTerrainBand(CommonTerracedHillMesh, FVector(-2200,-1450,-150), FVector(650,0,15), 8,
@@ -317,6 +362,10 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
                 FVector(0.72f + 0.05f * (I % 2)), FRotator(0, I * 27.0f, I % 2 ? 7.0f : -4.0f), true);
         }
         SpawnProd(WeathertopCampRingMesh, FVector(1250, -260, 420), FVector(0.72f), FRotator::ZeroRotator, false);
+        SpawnScatter(CommonPineTreeMesh, FVector(-600,-100,0), 18, FVector(2200,1300,0), FVector(0.75f), 31.0f, 18.0f);
+        SpawnScatter(CommonFallenLogMesh, FVector(-300,-120,0), 6, FVector(1700,900,0), FVector(0.72f), 53.0f, 6.0f);
+        SpawnScatter(CommonFernClumpMesh, FVector(0,0,0), 26, FVector(2100,1200,0), FVector(0.62f), 29.0f, 4.0f);
+        SpawnProd(CommonPathMarkerMesh, FVector(-950,220,0), FVector(0.78f), FRotator(0,24,0), false);
     }
     else if (ChapterId == TEXT("P1C04"))
     {
@@ -337,6 +386,10 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
             SpawnProd(RivendellArchMesh, Arches[I], FVector(0.82f), FRotator(0,0,0), true);
         const FVector Lamps[] = { FVector(-1000,-200,0), FVector(-250,-250,0), FVector(500,-220,0), FVector(1200,-180,0) };
         for (const FVector& P : Lamps) SpawnProd(RivendellLanternMesh, P, FVector(0.78f), FRotator::ZeroRotator, false);
+        SpawnScatter(CommonBroadleafTreeMesh, FVector(100,0,0), 30, FVector(2500,1450,0), FVector(0.82f), 23.0f, 8.0f);
+        SpawnScatter(CommonFernClumpMesh, FVector(250,100,0), 42, FVector(2400,1300,0), FVector(0.70f), 17.0f, 4.0f);
+        SpawnScatter(CommonReedClusterMesh, FVector(200,720,-10), 20, FVector(1350,260,0), FVector(0.72f), 19.0f, 2.0f);
+        SpawnProd(CommonFootbridgeMesh, FVector(-650,690,20), FVector(0.72f), FRotator(0,4,0), true);
     }
     else if (ChapterId == TEXT("P1C05"))
     {
@@ -370,6 +423,8 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         const FVector Braziers[] = { FVector(-1200,-400,0), FVector(-450,420,0), FVector(350,-420,0), FVector(1150,420,0) };
         for (const FVector& P : Braziers) SpawnProd(MoriaBrazierMesh, P, FVector(0.82f), FRotator::ZeroRotator, false);
         SpawnProd(MoriaBridgeMesh, FVector(2450,0,40), FVector(0.92f), FRotator::ZeroRotator, true);
+        SpawnScatter(CommonRuinSlabMesh, FVector(-200,0,0), 18, FVector(2300,1050,0), FVector(0.78f), 37.0f, 2.0f);
+        SpawnScatter(CommonBoulderClusterMesh, FVector(300,0,0), 14, FVector(2500,1150,0), FVector(0.85f), 31.0f, 6.0f);
     }
     else if (ChapterId == TEXT("P1C07"))
     {
@@ -383,6 +438,9 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         const FVector Lamps[] = { FVector(-1100,-250,0), FVector(-500,280,0), FVector(100,-260,0), FVector(700,270,0), FVector(1300,-220,0) };
         for (const FVector& P : Lamps) SpawnProd(LorienLanternMesh, P, FVector(0.82f), FRotator::ZeroRotator, false);
         SpawnProd(LorienMirrorMesh, FVector(1000,420,0), FVector(0.90f), FRotator::ZeroRotator, true);
+        SpawnScatter(CommonGoldenTreeMesh, FVector(0,0,0), 34, FVector(2600,1550,0), FVector(0.92f), 19.0f, 12.0f);
+        SpawnScatter(CommonFernClumpMesh, FVector(100,0,0), 48, FVector(2500,1450,0), FVector(0.72f), 13.0f, 4.0f);
+        SpawnScatter(CommonFallenLogMesh, FVector(-100,150,0), 8, FVector(2100,1200,0), FVector(0.68f), 47.0f, 4.0f);
     }
     else if (ChapterId == TEXT("P1C08"))
     {
@@ -399,6 +457,10 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnProd(ArgonathSentinelMesh, FVector(-450,1150,0), FVector(1.65f), FRotator(0,172,0), true);
         SpawnProd(AmonHenStairMesh, FVector(1320,0,0), FVector(0.86f), FRotator(0,0,0), true);
         SpawnProd(AmonHenRuinMesh, FVector(1900,0,175), FVector(0.90f), FRotator(0,-6,0), true);
+        SpawnScatter(CommonBroadleafTreeMesh, FVector(700,0,0), 24, FVector(2600,1450,0), FVector(0.88f), 21.0f, 10.0f);
+        SpawnScatter(CommonPineTreeMesh, FVector(1000,0,0), 14, FVector(2200,1300,0), FVector(0.82f), 29.0f, 10.0f);
+        SpawnScatter(CommonReedClusterMesh, FVector(-1500,0,-10), 28, FVector(1250,520,0), FVector(0.76f), 17.0f, 2.0f);
+        SpawnScatter(CommonRuinSlabMesh, FVector(1600,0,0), 10, FVector(1100,800,0), FVector(0.74f), 43.0f, 3.0f);
     }
 }
 

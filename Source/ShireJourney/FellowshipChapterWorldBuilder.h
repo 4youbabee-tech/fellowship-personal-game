@@ -54,6 +54,18 @@ private:
     UPROPERTY() UStaticMesh* CommonTerracedHillMesh = nullptr;
     UPROPERTY() UStaticMesh* CommonRiverBankMesh = nullptr;
     UPROPERTY() UStaticMesh* CommonBoulderClusterMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonPineTreeMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonBroadleafTreeMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonGoldenTreeMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonFallenLogMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonDryStoneWallMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonPathMarkerMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonVillageFenceMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonWoodPileMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonFernClumpMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonReedClusterMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonRuinSlabMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonFootbridgeMesh = nullptr;
 
     bool bBuilt = false;
     bool bProductionMeshesLoaded = false;
