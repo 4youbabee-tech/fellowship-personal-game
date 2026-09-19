@@ -33,6 +33,13 @@ private:
     UPROPERTY() UStaticMesh* ProductionHitchingPostMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionTableMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionCrateStackMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonBroadleafTreeMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonFallenLogMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonDryStoneWallMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonPathMarkerMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonVillageFenceMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonWoodPileMesh = nullptr;
+    UPROPERTY() UStaticMesh* CommonFernClumpMesh = nullptr;
     UPROPERTY() UMaterialInterface* BasicMaterial;
 
     bool bBuilt = false;
