@@ -102,6 +102,7 @@ jobs:
         shell: cmd
         env:
           GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           @echo off
           setlocal EnableExtensions EnableDelayedExpansion
@@ -124,8 +125,8 @@ jobs:
           set "FETCH_OK=0"
           for /L %%A in (1,1,7) do (
             if "!FETCH_OK!"=="0" (
-              echo Exact-commit fetch attempt %%A for %GITHUB_SHA%
-              git fetch --no-tags --prune --depth=1 origin %GITHUB_SHA%
+              echo Exact-commit fetch attempt %%A for %TARGET_SHA%
+              git fetch --no-tags --prune --depth=1 origin %TARGET_SHA%
               if not errorlevel 1 (
                 set "FETCH_OK=1"
               ) else (
@@ -145,18 +146,18 @@ jobs:
           if errorlevel 1 exit /b 73
 
           for /f %%S in ('git rev-parse HEAD') do set "CHECKED_SHA=%%S"
-          if /I not "!CHECKED_SHA!"=="%GITHUB_SHA%" (
-            echo ERROR: checkout SHA mismatch. expected=%GITHUB_SHA% actual=!CHECKED_SHA!
+          if /I not "!CHECKED_SHA!"=="%TARGET_SHA%" (
+            echo ERROR: checkout SHA mismatch. expected=%TARGET_SHA% actual=!CHECKED_SHA!
             exit /b 74
           )
 
-          > ".ci-source-sha" echo %GITHUB_SHA%
+          > ".ci-source-sha" echo %TARGET_SHA%
           if not exist "ShireJourney.uproject" (
             echo ERROR: ShireJourney.uproject missing after exact checkout.
             exit /b 75
           )
 
-          echo Checked out exact commit %GITHUB_SHA% with resilient git fetch.
+          echo Checked out exact commit %TARGET_SHA% with resilient git fetch.
 
       - name: Verify Unreal 4.27.2 and project
         shell: cmd
@@ -210,7 +211,7 @@ jobs:
 
           if not exist "%LOGDIR%" mkdir "%LOGDIR%"
 
-          echo Building exact commit: %GITHUB_SHA%
+          echo Building exact commit: %TARGET_SHA%
           echo Project: %PROJECT%
           echo Build log: %BUILDLOG%
           echo Build parallelism: 2 actions, with automatic single-action retry on MSVC PCH virtual-memory exhaustion.
@@ -253,7 +254,7 @@ jobs:
           )
           if not exist "%LOGDIR%" mkdir "%LOGDIR%"
 
-          echo Importing production source assets for exact commit: %GITHUB_SHA%
+          echo Importing production source assets for exact commit: %TARGET_SHA%
           "%EDITORCMD%" "%PROJECT%" -run=ShireProductionImport -unattended -nop4 -nosplash -NoSound -abslog="%IMPORTLOG%"
           set "IMPORT_EXIT=%ERRORLEVEL%"
 
@@ -418,7 +419,7 @@ jobs:
           )
 
           echo UE4.27.2 build job status: ${{ job.status }}>>"%GITHUB_STEP_SUMMARY%"
-          echo Commit: %GITHUB_SHA%>>"%GITHUB_STEP_SUMMARY%"
+          echo Commit: %TARGET_SHA%>>"%GITHUB_STEP_SUMMARY%"
 
       - name: Report failure log location
         if: failure()
