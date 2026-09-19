@@ -52,6 +52,7 @@ Current proof boundary:
 - real UE4.27 compile/import: now triggered on the CP52 pull request,
 - headless playable boot smoke: now part of Unreal Build Validation and requires GameMode + P1C01/FrodoMain markers,
 - PIE/device playability and performance: pending.
+- runner autostart: post-reboot verification trigger issued on 2026-09-19.
 
 # CURRENT PROJECT STATE
 
