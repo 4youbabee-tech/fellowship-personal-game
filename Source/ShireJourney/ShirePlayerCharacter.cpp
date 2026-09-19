@@ -1190,6 +1190,8 @@ UShireSaveGame* AShirePlayerCharacter::CreateSaveSnapshot(
             Save->JourneyInsight = QuestSubsystem->GetJourneyInsight();
             Save->JourneyInsightMilestones = QuestSubsystem->GetJourneyInsightMilestones();
             Save->ProgressionXP = QuestSubsystem->GetProgressionSnapshot();
+            Save->ChronicleEntryIds = QuestSubsystem->GetChronicleEntryIds();
+            Save->KnownMapRegionIds = QuestSubsystem->GetKnownMapRegionIds();
         }
     }
 
@@ -1265,6 +1267,9 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
                 Save->JourneyInsight,
                 Save->JourneyInsightMilestones);
             QuestSubsystem->RestoreProgressionState(Save->ProgressionXP);
+            QuestSubsystem->RestoreKnowledgeState(
+                Save->ChronicleEntryIds,
+                Save->KnownMapRegionIds);
 
             bApplyExactSavedTransform =
                 QuestSubsystem->GetCurrentChapterId() == SavedChapterId;
