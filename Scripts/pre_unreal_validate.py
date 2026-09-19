@@ -304,6 +304,72 @@ if film_source_data:
     for marker in ["LoadFilmDialogueSourceContext", "GetFilmDialogueContextSummary", "SourceContextId"]:
         if marker not in npc_context_text and marker not in read(SOURCE / "ShireNPCContextSubsystem.h"):
             fail(f"Film dialogue runtime wiring missing marker: {marker}")
+    # Source-grounded authored variants must resolve to existing runtime contracts.
+    context_ids = {str(item.get("context_id") or "").strip() for item in contexts}
+    story_rows = []
+    story_path = ROOT / "Data" / "StoryBeatPlan.csv"
+    if story_path.exists():
+        with story_path.open(encoding="utf-8-sig", newline="") as handle:
+            story_rows = list(csv.DictReader(handle))
+    story_ids = {str(row.get("StoryBeatId") or "").strip() for row in story_rows}
+
+    social_path = ROOT / "Data" / "NPCSocialModel.json"
+    social_data = {}
+    try:
+        social_data = json.loads(read(social_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/NPCSocialModel.json while checking film dialogue variants: {exc}")
+    profile_ids = {str(item.get("id") or "").strip() for item in social_data.get("profiles", [])}
+
+    conversation_path = ROOT / "Data" / "NPCConversationPlan.json"
+    conversation_data = {}
+    try:
+        conversation_data = json.loads(read(conversation_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/NPCConversationPlan.json while checking film dialogue variants: {exc}")
+    intent_ids = {str(item.get("id") or "").strip() for item in conversation_data.get("intent_contracts", [])}
+
+    mood_path = ROOT / "Data" / "NPCRegionalMoodPlan.json"
+    mood_data = {}
+    try:
+        mood_data = json.loads(read(mood_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/NPCRegionalMoodPlan.json while checking film dialogue variants: {exc}")
+    mood_ids = {str(item.get("mood") or "").strip() for item in mood_data.get("chapter_moods", [])}
+
+    source_variants = film_source_data.get("original_dialogue_variants", [])
+    if len(source_variants) < 20:
+        fail("Film dialogue source context must provide a substantial original dialogue set (at least 20 variants)")
+
+    variant_ids = set()
+    for index, variant in enumerate(source_variants, start=1):
+        variant_id = str(variant.get("variant_id") or "").strip()
+        speaker = str(variant.get("speaker") or "").strip()
+        intent = str(variant.get("intent") or "").strip()
+        beat = str(variant.get("required_story_beat") or "").strip()
+        mood = str(variant.get("required_mood") or "").strip()
+        context_id = str(variant.get("context_id") or "").strip()
+        text_value = str(variant.get("text") or "").strip()
+
+        if not variant_id or not speaker or not intent or not text_value:
+            fail(f"Film dialogue authored variant {index} is incomplete")
+            continue
+        if variant_id in variant_ids:
+            fail(f"Duplicate film dialogue authored variant id: {variant_id}")
+        variant_ids.add(variant_id)
+        if speaker not in profile_ids:
+            fail(f"Film dialogue variant {variant_id} references unknown speaker {speaker}")
+        if intent not in intent_ids:
+            fail(f"Film dialogue variant {variant_id} references unknown intent {intent}")
+        if beat and beat not in story_ids:
+            fail(f"Film dialogue variant {variant_id} references unknown story beat {beat}")
+        if mood and mood not in mood_ids:
+            fail(f"Film dialogue variant {variant_id} references unknown mood {mood}")
+        if context_id and context_id not in context_ids:
+            fail(f"Film dialogue variant {variant_id} references unknown source context {context_id}")
+        if len(text_value.split()) > 38:
+            fail(f"Film dialogue variant {variant_id} exceeds the 38-word story-reactive limit")
+
 
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
