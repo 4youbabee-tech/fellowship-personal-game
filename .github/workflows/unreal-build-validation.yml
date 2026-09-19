@@ -28,75 +28,59 @@ jobs:
 
     steps:
       - name: Bootstrap Windows runner tools
-        shell: cmd
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
-          @echo off
-          setlocal EnableExtensions EnableDelayedExpansion
+          $ErrorActionPreference = "Stop"
 
-          rem Runner lifecycle, watchdog files and registry configuration are
-          rem managed outside this workflow. Validation never modifies them.
+          # Runner lifecycle/watchdog configuration is managed outside this workflow.
+          # Keep bootstrap self-contained and avoid nested CMD batch semantics.
+          $git = Get-Command git.exe -ErrorAction SilentlyContinue
+          if (-not $git) {
+            foreach ($candidate in @(
+              "C:\Program Files\Git\cmd\git.exe",
+              "C:\Program Files (x86)\Git\cmd\git.exe"
+            )) {
+              if (Test-Path $candidate) {
+                $gitDir = Split-Path -Parent $candidate
+                Add-Content -LiteralPath $env:GITHUB_PATH -Value $gitDir
+                $env:PATH = "$gitDir;$env:PATH"
+                $git = Get-Command git.exe -ErrorAction SilentlyContinue
+                if ($git) { break }
+              }
+            }
+          }
 
-          set "GIT_READY=0"
-          where git.exe >nul 2>nul
-          if not errorlevel 1 (
-            for /f "delims=" %%G in ('where git.exe') do (
-              if "!GIT_READY!"=="0" (
-                echo Found Git: %%G
-                set "GIT_READY=1"
-              )
-            )
-          )
+          if (-not $git) {
+            Write-Host "Git is not visible to the Windows service. Bootstrapping private MinGit for CI..."
+            $root = Join-Path $env:RUNNER_TEMP "mingit-2.55.0.5"
+            $zip = Join-Path $env:RUNNER_TEMP "MinGit-2.55.0.5-64-bit.zip"
+            $url = "https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.5/MinGit-2.55.0.5-64-bit.zip"
 
-          if "!GIT_READY!"=="0" (
-            for %%G in ("C:\Program Files\Git\cmd\git.exe" "C:\Program Files (x86)\Git\cmd\git.exe") do (
-              if "!GIT_READY!"=="0" if exist "%%~G" (
-                set "GITDIR=%%~dpG"
-                echo Found Git: %%~G
-                echo !GITDIR!>>"%GITHUB_PATH%"
-                set "PATH=!GITDIR!;%PATH%"
-                set "GIT_READY=1"
-              )
-            )
-          )
+            if (-not (Test-Path (Join-Path $root "cmd\git.exe"))) {
+              if (Test-Path $root) { Remove-Item -LiteralPath $root -Recurse -Force }
+              if (Test-Path $zip) { Remove-Item -LiteralPath $zip -Force }
+              & curl.exe -L --retry 3 --retry-delay 3 -o $zip $url
+              if ($LASTEXITCODE -ne 0) { exit 20 }
+              Expand-Archive -LiteralPath $zip -DestinationPath $root -Force
+            }
 
-          if "!GIT_READY!"=="0" (
-            echo Git is not visible to the Windows service. Bootstrapping a private MinGit copy for CI...
-            set "MINGIT_ROOT=%RUNNER_TEMP%\mingit-2.55.0.5"
-            set "MINGIT_ZIP=%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip"
-            set "MINGIT_URL=https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.5/MinGit-2.55.0.5-64-bit.zip"
+            $gitDir = Join-Path $root "cmd"
+            $gitBin = Join-Path $root "mingw64\bin"
+            Add-Content -LiteralPath $env:GITHUB_PATH -Value $gitDir
+            Add-Content -LiteralPath $env:GITHUB_PATH -Value $gitBin
+            $env:PATH = "$gitDir;$gitBin;$env:PATH"
+            $git = Get-Command git.exe -ErrorAction SilentlyContinue
+          }
 
-            if not exist "!MINGIT_ROOT!\cmd\git.exe" (
-              if exist "!MINGIT_ROOT!" rmdir /S /Q "!MINGIT_ROOT!"
-              if exist "!MINGIT_ZIP!" del /Q "!MINGIT_ZIP!"
+          if (-not $git) {
+            Write-Error "Git bootstrap did not produce a working git.exe."
+            exit 22
+          }
 
-              curl.exe -L --retry 3 --retry-delay 3 -o "!MINGIT_ZIP!" "!MINGIT_URL!"
-              if errorlevel 1 (
-                echo ERROR: Failed to download MinGit.
-                exit /b 20
-              )
-
-              powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath '!MINGIT_ZIP!' -DestinationPath '!MINGIT_ROOT!' -Force"
-              if errorlevel 1 (
-                echo ERROR: Failed to extract MinGit.
-                exit /b 21
-              )
-            )
-
-            set "GITDIR=!MINGIT_ROOT!\cmd"
-            set "GITBIN=!MINGIT_ROOT!\mingw64\bin"
-            echo !GITDIR!>>"%GITHUB_PATH%"
-            echo !GITBIN!>>"%GITHUB_PATH%"
-            set "PATH=!GITDIR!;!GITBIN!;%PATH%"
-            set "GIT_READY=1"
-          )
-
-          git --version
-          if errorlevel 1 (
-            echo ERROR: Git bootstrap did not produce a working git.exe.
-            exit /b 22
-          )
-
-          echo Runner bootstrap succeeded.
+          Write-Host "Found Git: $($git.Source)"
+          & git --version
+          if ($LASTEXITCODE -ne 0) { exit 22 }
+          Write-Host "Runner bootstrap succeeded."
 
       - name: Checkout exact commit with resilient git fetch
         shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
