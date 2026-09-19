@@ -48,6 +48,13 @@ struct FShireJourneyRegionBonusDefinition
     int32 BonusInsight = 0;
 };
 
+struct FShireSideActivityProgressionDefinition
+{
+    FName DiscoveryId = NAME_None;
+    FName ActivityId = NAME_None;
+    FName ActivityType = NAME_None;
+};
+
 UCLASS()
 class SHIREJOURNEY_API UShireQuestSubsystem : public UGameInstanceSubsystem
 {
@@ -148,6 +155,22 @@ public:
     TMap<FName, int32> GetProgressionSnapshot() const { return ProgressionXP; }
     void RestoreProgressionState(const TMap<FName, int32>& InProgressionXP);
 
+    UFUNCTION(BlueprintPure, Category="Chronicle")
+    int32 GetChronicleCount() const { return ChronicleEntryIds.Num(); }
+
+    UFUNCTION(BlueprintPure, Category="Chronicle")
+    bool HasChronicleEntry(FName EntryId) const { return ChronicleEntryIds.Contains(EntryId); }
+
+    UFUNCTION(BlueprintPure, Category="MapKnowledge")
+    int32 GetKnownRegionCount() const { return KnownMapRegionIds.Num(); }
+
+    UFUNCTION(BlueprintPure, Category="MapKnowledge")
+    bool HasKnownMapRegion(FName RegionId) const { return KnownMapRegionIds.Contains(RegionId); }
+
+    const TArray<FName>& GetChronicleEntryIds() const { return ChronicleEntryIds; }
+    const TArray<FName>& GetKnownMapRegionIds() const { return KnownMapRegionIds; }
+    void RestoreKnowledgeState(const TArray<FName>& InChronicleEntryIds, const TArray<FName>& InKnownMapRegionIds);
+
     UFUNCTION(BlueprintPure, Category="Quest")
     FName GetActiveQuestId() const { return ActiveQuestId; }
 
@@ -235,6 +258,7 @@ private:
     TMap<FName, FShireJourneyDiscoveryDefinition> JourneyDiscoveryDefinitions;
     TArray<FShireJourneyInsightMilestoneDefinition> JourneyInsightDefinitions;
     TArray<FShireJourneyRegionBonusDefinition> JourneyRegionBonusDefinitions;
+    TMap<FName, FShireSideActivityProgressionDefinition> SideActivityProgressionDefinitions;
 
     void BuildQuestDefinitions();
     void AddQuestDefinition(FName QuestId, const FString& Title, std::initializer_list<const TCHAR*> Objectives);
@@ -248,8 +272,13 @@ private:
     void PruneNPCMemoryForCurrentChapter();
     void RecordStoryBeatForEligibleNPCs(FName StoryBeatId);
     bool LoadJourneyDiscoveryPlan();
+    bool LoadSideActivityPlan();
     void RebuildJourneyInsightState();
     FName MakeJourneyRegionCompletionId(FName RouteId, FName ChapterId) const;
     void AwardDiscoveryProgression(const FShireJourneyDiscoveryDefinition& Definition);
     static bool IsValidProgressionTrack(FName TrackId);
+    void AwardSideActivityProgression(FName DiscoveryId);
+    void UnlockDiscoveryKnowledge(const FShireJourneyDiscoveryDefinition& Definition);
+    static FName MakeChronicleEntryId(FName DiscoveryId);
+    static FName MakeKnownMapRegionId(FName RouteId, FName ChapterId);
 };
