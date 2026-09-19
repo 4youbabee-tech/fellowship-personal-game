@@ -2075,3 +2075,63 @@ if errors:
     sys.exit(1)
 
 print("PRE-UNREAL VALIDATION PASSED")
+
+# PG-050: mass world dressing must remain deterministic, source-controlled and story-safe.
+world_dressing_plan_path = ROOT / "Data" / "WorldDressingPlan.json"
+if not world_dressing_plan_path.exists():
+    fail("PG-050 world dressing plan missing")
+else:
+    try:
+        world_dressing_plan = json.loads(read(world_dressing_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-050 invalid WorldDressingPlan.json: {exc}")
+        world_dressing_plan = {}
+
+common_dressing_assets = [
+    "SM_CommonPineTree.obj",
+    "SM_CommonBroadleafTree.obj",
+    "SM_CommonGoldenTree.obj",
+    "SM_CommonFallenLog.obj",
+    "SM_CommonDryStoneWall.obj",
+    "SM_CommonPathMarker.obj",
+    "SM_CommonVillageFence.obj",
+    "SM_CommonWoodPile.obj",
+    "SM_CommonFernClump.obj",
+    "SM_CommonReedCluster.obj",
+    "SM_CommonRuinSlab.obj",
+    "SM_CommonFootbridge.obj",
+]
+common_dressing_root = ROOT / "SourceAssets" / "Production" / "World" / "Common"
+for asset_name in common_dressing_assets:
+    if not (common_dressing_root / asset_name).exists():
+        fail(f"PG-050 common world dressing asset missing: {asset_name}")
+
+world_builder_h = read(SOURCE / "FellowshipChapterWorldBuilder.h")
+world_builder_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+for symbol in [
+    "CommonPineTreeMesh",
+    "CommonBroadleafTreeMesh",
+    "CommonGoldenTreeMesh",
+    "CommonFallenLogMesh",
+    "CommonDryStoneWallMesh",
+    "CommonPathMarkerMesh",
+    "CommonFernClumpMesh",
+    "CommonReedClusterMesh",
+    "CommonRuinSlabMesh",
+    "CommonFootbridgeMesh",
+    "SpawnScatter",
+]:
+    if symbol not in (world_builder_h + world_builder_cpp):
+        fail(f"PG-050 world dressing runtime symbol missing: {symbol}")
+
+for chapter_id in ["P1C03", "P1C04", "P1C05", "P1C06", "P1C07", "P1C08"]:
+    if f'ChapterId == TEXT("{chapter_id}")' not in world_builder_cpp:
+        fail(f"PG-050 chapter dressing branch missing: {chapter_id}")
+
+if world_dressing_plan:
+    profiles = world_dressing_plan.get("chapter_profiles", [])
+    profile_ids = {str(p.get("chapter") or "") for p in profiles if isinstance(p, dict)}
+    for chapter_id in ["P1C01","P1C02","P1C03","P1C04","P1C05","P1C06","P1C07","P1C08"]:
+        if chapter_id not in profile_ids:
+            fail(f"PG-050 world dressing plan missing chapter profile: {chapter_id}")
+

@@ -401,6 +401,17 @@ This converts failures into permanent project knowledge.
 
 **Proof rule:** implementation-complete does not mean PIE/device/visual acceptance.
 
+### PG-050 — Mass world dressing must remain deterministic and story-safe
+**Risk:** a large visual-density pass can accidentally move quest topology, add unbounded runtime actor counts, or create regionally generic scenery that erases chapter identity.
+
+**Contract:** common production dressing is source-controlled, chapter-aware and deterministic. Story/quest trigger coordinates remain authoritative. Distant dressing is non-colliding by default and must respect the target laptop budget.
+
+**Regional rule:** each P1C03-P1C08 chapter uses a deliberately different combination of common trees/foliage/river/ruin props on top of its dedicated landmark kit.
+
+**Engineering memory:** `Data/WorldDressingPlan.json` is the machine-readable owner/density/asset map for this layer and must remain synchronized with runtime placement.
+
+**Guard:** Pre-Unreal Validation checks the common source assets, runtime mesh references, chapter branches and all eight world-dressing profiles.
+
 ## What Guardian must never do automatically
 
 - change canon,

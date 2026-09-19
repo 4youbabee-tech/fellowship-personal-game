@@ -519,6 +519,20 @@
 - Reconciled stale LivingWorldFeaturePlan entries with the CP44/CP49 runtime.
 - Added PG-049. PIE/device density, placement, performance and visual acceptance remain required.
 
+## CP50 — Mass World Dressing and Regional Density Pass
+- Started the comprehensive visible-content phase rather than another backend-only cycle.
+- Added 12 original reusable common environment meshes: pine tree, broadleaf tree, golden tree, fallen log, dry-stone wall, path marker, village fence, wood pile, fern clump, reeds, ruin slab and wooden footbridge.
+- Expanded common source materials with foliage/golden foliage, bark, wood and pale stone.
+- P1C03 Weathertop/Ford now receives pine, fern, fallen-log and trail-marker dressing around the upland/ruin route.
+- P1C04 Rivendell now receives broadleaf canopy, fern density, river reeds and a secondary footbridge around the valley architecture.
+- P1C05 Road/Caradhras now receives pine approaches, fallen timber, dry-stone boundaries and wayfinding props around the mountain/camp route.
+- P1C06 Moria now receives collapsed ruin slabs and boulder debris around the existing hall/pillar/bridge architecture.
+- P1C07 Lothlorien now receives golden canopy, ferns and fallen timber around talans/lanterns/mirror.
+- P1C08 Anduin/Amon Hen now receives mixed forest, river reeds and ruin debris around boats, Argonath and Amon Hen.
+- Added `Data/WorldDressingPlan.json` as the machine-readable authority for regional density, runtime ownership, performance constraints and next visual layers.
+- Placement is deterministic and most dressing is non-colliding so story topology and target-device budgets remain stable.
+- Added PG-050. UE4.27 build/import and PIE/device visual acceptance are still required before this pass is called validated.
+
 ## Current hard gate
 Current CP30 head `bd3d0be...` is STATIC-VALIDATED, COMPILE-TESTED and ASSET-IMPORT-TESTED. It is not yet fully PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.
 

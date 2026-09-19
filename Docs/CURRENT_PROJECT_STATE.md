@@ -1,3 +1,18 @@
+## Current mass-content production status — CP50
+
+The project is now in a comprehensive visible-content phase. Backend foundations remain implemented; active work is world density, materials, character animation production, interiors, lighting and audio.
+
+CP50 adds a reusable common environment kit plus deterministic regional dressing across P1C03-P1C08. The intent is to move the game away from landmark-only prototypes and toward continuous readable environments without changing story topology.
+
+Machine-readable visual-density authority:
+- `Data/WorldDressingPlan.json`
+
+Current proof boundary:
+- source/runtime integration: implemented on the CP50 branch,
+- Pre-Unreal / UE4.27 build-import: pending for CP50,
+- PIE/device visual acceptance: pending.
+
+
 # CURRENT PROJECT STATE
 
 > **Operational recovery note — reconciled 2026-09-19**

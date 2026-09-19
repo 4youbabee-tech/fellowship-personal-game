@@ -913,6 +913,44 @@
       ],
       "checkpoint": "CP49",
       "notes": "Execution graph organizes work but cannot override Governor decisions."
+    },
+    {
+      "id": "REQ-WORLD-004",
+      "title": "Mass world dressing and regional density",
+      "category": "VisualProduction",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "User requested comprehensive visible world production instead of incremental hidden-system work",
+      "intent": "Make Part I read as distinct inhabited/landscaped regions through reusable production vegetation, terrain clutter and environmental props while preserving story topology and target-device budgets.",
+      "evidence": [
+        "Data/WorldDressingPlan.json",
+        "SourceAssets/Production/World/Common",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
+        "Docs/CHECKPOINTS.md CP50"
+      ],
+      "implementation_refs": [
+        "12 common production dressing meshes",
+        "chapter-aware deterministic scatter",
+        "P1C03-P1C08 regional density integration"
+      ],
+      "missing_work": [
+        "UE4.27 build/import validation",
+        "PIE visual inspection",
+        "target-device performance tuning",
+        "licensed/material enrichment",
+        "final lighting and interiors"
+      ],
+      "acceptance_criteria": [
+        "All common dressing source assets import",
+        "P1C03-P1C08 each use region-appropriate production dressing",
+        "No required story/quest trigger coordinates are moved",
+        "Target device remains playable after tuning"
+      ],
+      "dependencies": [
+        "REQ-ASSET-001",
+        "REQ-WORLD-002"
+      ],
+      "checkpoint": "CP50"
     }
   ],
   "hard_invariants": [
@@ -1408,7 +1446,7 @@
       "id": "WORK-WORLD-002",
       "title": "Part I world density and landmark detail pass",
       "status": "ACTIVE",
-      "rationale": "Production landmark rollout now covers Shire, Bree and P1C03-P1C08 with source-controlled original meshes; next visual layers are terrain/material/lighting density, dedicated interiors and hero-quality characters."
+      "rationale": "CP50 starts the mass-content phase: a reusable 12-mesh environment dressing kit is wired across P1C03-P1C08 with deterministic chapter-specific density while Shire/Bree retain their specialized production layers."
     },
     {
       "order": 2,
@@ -1491,15 +1529,14 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "User directed uninterrupted large-scale completion with AI life, villages/mountains/missions and a rigorously recorded engineering path",
+    "reason": "Started comprehensive mass-content production after the user requested the visible world-building phase",
     "summary": [
-      "Added a data-driven ALivingWorldDirector that consumes LivingWorldEventPlan and creates bounded disposable work, traveler, market, social, fauna, danger and aftermath events near the player.",
-      "Living-world director obeys chapter contracts, story danger suppression, active-event caps, cull distance, cooldowns and route isolation.",
-      "Added a reusable project-owned terrain kit for mountains, cliffs, terraced hills, river banks, village slopes and boulder clusters.",
-      "Overlaid the common terrain kit across Shire and P1C03-P1C08 without moving quest/story anchors.",
-      "Added ProductionExecutionGraph and EngineeringExecutionPath so backend, AI, characters, world, missions, audio and acceptance dependencies are machine-readable and recoverable without chat history.",
-      "Reconciled LivingWorldFeaturePlan with the actually implemented CP44/CP49 runtime instead of leaving old 'pending' descriptions.",
-      "Backend and AI implementation remain distinct from PIE/device/visual acceptance; large production batches may continue while compile/import gates remain green."
+      "Added 12 reusable project-owned environment meshes for forest, village, river and ruin dressing.",
+      "Expanded the common landscape material library with foliage, golden foliage, bark, wood and pale stone.",
+      "Wired deterministic production dressing across Weathertop/Ford, Rivendell, Road/Caradhras, Moria, Lothlorien and Anduin/Amon Hen.",
+      "Each chapter now has region-specific foliage/prop density rather than landmark-only production art.",
+      "Added Data/WorldDressingPlan.json so visual density, ownership, active assets, performance rules and next production layers are machine-readable.",
+      "Story/quest topology remains unchanged; this pass is visual-content expansion only."
     ]
   },
   "development_mode": {
