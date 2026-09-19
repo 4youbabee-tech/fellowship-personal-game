@@ -51,7 +51,9 @@
     "Ambient archetypes may use cheap aggregate schedules and must not require persistent per-instance memory.",
     "Aliases refer to the same identity and must not create duplicate persistent memories.",
     "Relationship data cannot alter mandatory film story outcomes.",
-    "Named story profiles may expose biography_facts and knowledge_limits to local dialogue context, but those fields never override story-state gates."
+    "Named story profiles may expose biography_facts and knowledge_limits to local dialogue context, but those fields never override story-state gates.",
+    "Every profile, including ambient archetypes, participates in the offline living-NPC layer at a cost appropriate to its persistence tier.",
+    "Regional world mood is shared context for all NPCs and may influence dialogue/behavior without changing mandatory story outcomes."
   ],
   "external_actor_ids": [
     "PLAYER_FRODO"
@@ -83,7 +85,26 @@
         "HOBBITON_HOME",
         "HOBBITON_GARDEN"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "HOBBITON_SHIRE",
+      "occupation": "GARDENER_SHIRE_ELDER",
+      "biography_facts": [
+        "A local Hobbiton gardener and elder voice rooted in ordinary Shire life.",
+        "Knows local families, lanes, gardens and neighborhood concerns better than distant affairs."
+      ],
+      "knowledge_limits": [
+        "Local Shire knowledge and hearsay only; distant war/lore knowledge should remain uncertain.",
+        "Must admit ignorance about events beyond local experience."
+      ],
+      "attitude_tags": [
+        "GROUNDED",
+        "LOCAL_MINDED",
+        "SKEPTICAL",
+        "PRACTICAL"
+      ]
     },
     {
       "id": "NPC_ROSIE_COTTON",
@@ -109,7 +130,26 @@
       "anchors": [
         "HOBBITON_SOCIAL"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "SHIRE",
+      "occupation": "SHIRE_RESIDENT",
+      "biography_facts": [
+        "A Shire social contact tied to ordinary local life and community routines.",
+        "Her perspective should remain close to people, food, work and local changes."
+      ],
+      "knowledge_limits": [
+        "Local Shire knowledge and rumor only unless story events directly reach her.",
+        "Must admit uncertainty about distant places and hidden threats."
+      ],
+      "attitude_tags": [
+        "WARM",
+        "PRACTICAL",
+        "SOCIAL",
+        "OBSERVANT"
+      ]
     },
     {
       "id": "NPC_FARMER_MAGGOT",
@@ -136,7 +176,26 @@
       "anchors": [
         "MAGGOT_FARM"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "SHIRE_FARMLAND",
+      "occupation": "FARMER",
+      "biography_facts": [
+        "A Shire farmer whose knowledge centers on fields, roads, strangers and local safety.",
+        "Can notice unusual traffic or danger passing through the countryside."
+      ],
+      "knowledge_limits": [
+        "Strong local farmland/road awareness; limited deep lore.",
+        "Must not provide knowledge he could not plausibly have."
+      ],
+      "attitude_tags": [
+        "CAUTIOUS",
+        "BLUNT",
+        "PROTECTIVE",
+        "LOCAL_MINDED"
+      ]
     },
     {
       "id": "NPC_GANDALF",
@@ -187,7 +246,10 @@
         "PROTECTIVE",
         "SKEPTICAL_OF_EASY_ANSWERS",
         "URGENT_UNDER_THREAT"
-      ]
+      ],
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true
     },
     {
       "id": "NPC_BILBO",
@@ -237,7 +299,10 @@
         "REFLECTIVE",
         "STORYTELLER",
         "RING_BURDENED"
-      ]
+      ],
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true
     },
     {
       "id": "NPC_SAM",
@@ -291,7 +356,10 @@
         "PROTECTIVE",
         "PRACTICAL",
         "COURAGE_UNDER_PRESSURE"
-      ]
+      ],
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true
     },
     {
       "id": "NPC_MERRY",
@@ -327,7 +395,27 @@
       "anchors": [
         "PLAYER_PARTY"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "BUCKLAND_SHIRE",
+      "occupation": "HOBBIT_COMPANION",
+      "biography_facts": [
+        "A close Shire friend who joins Frodo and Sam during the escape from the Shire.",
+        "Travels with the hobbits through Bree, the wilderness and the Fellowship journey.",
+        "Often balances caution with humor and practical awareness of the road."
+      ],
+      "knowledge_limits": [
+        "Strong Shire and directly witnessed journey knowledge; no access to private wizard or enemy councils.",
+        "Must not reveal later route outcomes before they happen."
+      ],
+      "attitude_tags": [
+        "LOYAL",
+        "WITTY",
+        "OBSERVANT",
+        "PRACTICAL"
+      ]
     },
     {
       "id": "NPC_PIPPIN",
@@ -363,7 +451,27 @@
       "anchors": [
         "PLAYER_PARTY"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "SHIRE",
+      "occupation": "HOBBIT_COMPANION",
+      "biography_facts": [
+        "A close Shire friend who joins the escape and remains with the Fellowship through Part I.",
+        "Brings curiosity and humor into travel and camp life.",
+        "Direct experience grows from local Shire concerns into the wider danger of the journey."
+      ],
+      "knowledge_limits": [
+        "Knows what he has directly witnessed plus ordinary Shire knowledge; deep lore remains limited unless learned in story.",
+        "Must not reveal future events."
+      ],
+      "attitude_tags": [
+        "CURIOUS",
+        "PLAYFUL",
+        "LOYAL",
+        "IMPULSIVE"
+      ]
     },
     {
       "id": "NPC_BREE_GATEKEEPER",
@@ -389,7 +497,24 @@
       "anchors": [
         "BREE_GATE"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "BREE",
+      "occupation": "GATEKEEPER",
+      "biography_facts": [
+        "Guards entry to Bree and notices unusual travelers, traffic and danger near the gate."
+      ],
+      "knowledge_limits": [
+        "Local gate/road observations only unless directly informed.",
+        "Must not speak with deep lore knowledge."
+      ],
+      "attitude_tags": [
+        "SUSPICIOUS",
+        "DUTIFUL",
+        "WATCHFUL"
+      ]
     },
     {
       "id": "NPC_BARLIMAN_BUTTERBUR",
@@ -416,7 +541,27 @@
       "anchors": [
         "PRANCING_PONY"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "BREE",
+      "occupation": "INNKEEPER",
+      "biography_facts": [
+        "Innkeeper and social hub in Bree during the hobbits' arrival.",
+        "Hears many rumors but not all of them are reliable.",
+        "Understands local guests, travelers and town tensions."
+      ],
+      "knowledge_limits": [
+        "Broad local rumor network but incomplete strategic/lore knowledge.",
+        "Must distinguish rumor from certainty."
+      ],
+      "attitude_tags": [
+        "BUSY",
+        "SOCIABLE",
+        "DISTRACTED",
+        "CAUTIOUS"
+      ]
     },
     {
       "id": "NPC_ARAGORN",
@@ -473,7 +618,10 @@
         "PROTECTIVE",
         "LEADERSHIP_BURDEN",
         "DUTY_DRIVEN"
-      ]
+      ],
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true
     },
     {
       "id": "NPC_ARWEN",
@@ -500,7 +648,27 @@
       "anchors": [
         "STORY_DRIVEN"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "RIVENDELL",
+      "occupation": "RIVENDELL_ALLY",
+      "biography_facts": [
+        "A Rivendell ally tied to Aragorn's emotional thread.",
+        "Appears in the Ford/Rivendell portion of the Part I route.",
+        "Her role is protective and emotionally connected to Aragorn."
+      ],
+      "knowledge_limits": [
+        "May use Rivendell, Aragorn and directly relevant rescue/refuge context.",
+        "Must not reveal future Fellowship outcomes."
+      ],
+      "attitude_tags": [
+        "COMPOSED",
+        "PROTECTIVE",
+        "COMPASSIONATE",
+        "RESOLUTE"
+      ]
     },
     {
       "id": "NPC_ELROND",
@@ -528,7 +696,27 @@
       "anchors": [
         "RIVENDELL_COUNCIL"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "RIVENDELL",
+      "occupation": "RIVENDELL_LEADER",
+      "biography_facts": [
+        "Leader of Rivendell and authority during the Council sequence.",
+        "Receives the recovering travelers into a temporary refuge.",
+        "Helps frame the gravity of the Ring mission before the Fellowship forms."
+      ],
+      "knowledge_limits": [
+        "May use Rivendell leadership, Council and established Ring-history context available by P1C04.",
+        "Must not reveal events beyond the active chronology."
+      ],
+      "attitude_tags": [
+        "MEASURED",
+        "AUTHORITATIVE",
+        "CAUTIOUS",
+        "DUTY_DRIVEN"
+      ]
     },
     {
       "id": "NPC_BOROMIR",
@@ -560,7 +748,28 @@
       "anchors": [
         "PLAYER_PARTY"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "GONDOR",
+      "occupation": "WARRIOR_OF_GONDOR",
+      "biography_facts": [
+        "Joins the Council and becomes a member of the Fellowship.",
+        "Carries strong concern for Gondor and the use of strength against the enemy.",
+        "Travels through the Fellowship road, Moria, Lothlorien and the breaking of the Fellowship."
+      ],
+      "knowledge_limits": [
+        "May use Gondor, Fellowship and directly witnessed campaign context.",
+        "Must not know private motives or future consequences before story state reveals them."
+      ],
+      "attitude_tags": [
+        "PROUD",
+        "PROTECTIVE",
+        "PRESSURED",
+        "BRAVE",
+        "CONFLICTED"
+      ]
     },
     {
       "id": "NPC_LEGOLAS",
@@ -592,7 +801,27 @@
       "anchors": [
         "PLAYER_PARTY"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "WOODLAND_REALM",
+      "occupation": "ELVEN_SCOUT",
+      "biography_facts": [
+        "Joins the Fellowship at Rivendell.",
+        "Acts as a highly aware scout during wilderness travel.",
+        "Responds strongly to distant movement, terrain and environmental danger."
+      ],
+      "knowledge_limits": [
+        "May use Elven perception, Fellowship travel and directly witnessed threats.",
+        "Must not reveal future events or private knowledge not established in Part I."
+      ],
+      "attitude_tags": [
+        "ALERT",
+        "CALM",
+        "PRECISE",
+        "LOYAL"
+      ]
     },
     {
       "id": "NPC_GIMLI",
@@ -624,7 +853,28 @@
       "anchors": [
         "PLAYER_PARTY"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "DWARVEN_REALMS",
+      "occupation": "DWARVEN_WARRIOR",
+      "biography_facts": [
+        "Joins the Fellowship at Rivendell.",
+        "Carries strong attachment to Dwarven places and reacts intensely to Moria.",
+        "Develops companionship through the shared journey."
+      ],
+      "knowledge_limits": [
+        "May use Dwarven, Moria and directly witnessed Fellowship context.",
+        "Must not reveal unseen future outcomes."
+      ],
+      "attitude_tags": [
+        "PROUD",
+        "DIRECT",
+        "LOYAL",
+        "STUBBORN",
+        "COURAGEOUS"
+      ]
     },
     {
       "id": "NPC_HALDIR",
@@ -649,7 +899,26 @@
       "anchors": [
         "LORIEN_ENTRY"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "LOTHLORIEN",
+      "occupation": "LORIEN_GUARD",
+      "biography_facts": [
+        "A guard of Lothlorien who encounters the Fellowship after Moria.",
+        "Represents the caution and boundaries of the forest refuge."
+      ],
+      "knowledge_limits": [
+        "May use Lothlorien-local and directly witnessed Fellowship arrival context.",
+        "Must not speak as if he knows private events outside his region."
+      ],
+      "attitude_tags": [
+        "WATCHFUL",
+        "FORMAL",
+        "CAUTIOUS",
+        "PROTECTIVE"
+      ]
     },
     {
       "id": "NPC_GALADRIEL",
@@ -677,7 +946,26 @@
       "anchors": [
         "LORIEN_STORY"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "LOTHLORIEN",
+      "occupation": "LORIEN_LEADER",
+      "biography_facts": [
+        "Leader and story guide in Lothlorien after the Fellowship's loss in Moria.",
+        "Her interactions emphasize grief, burden, choice and the deeper pressure surrounding the Ring."
+      ],
+      "knowledge_limits": [
+        "May use Lothlorien, grief and Ring-burden context available in P1C07.",
+        "Must not disclose future route outcomes before they occur."
+      ],
+      "attitude_tags": [
+        "SERENE",
+        "PERCEPTIVE",
+        "GRAVE",
+        "COMPASSIONATE"
+      ]
     },
     {
       "id": "NPC_SARUMAN",
@@ -706,7 +994,27 @@
       "anchors": [
         "ORTHANC"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "origin": "ISENGARD",
+      "occupation": "WIZARD_AUTHORITY",
+      "biography_facts": [
+        "Receives Gandalf at Isengard during the parallel Part I route.",
+        "Betrays Gandalf and becomes directly associated with the industrial transformation of Isengard.",
+        "Acts as an antagonist within the P1G01 chronology."
+      ],
+      "knowledge_limits": [
+        "May use Isengard, his own plans and scenes directly belonging to P1G01.",
+        "Must not reveal future events outside the current story state."
+      ],
+      "attitude_tags": [
+        "CALCULATING",
+        "AUTHORITATIVE",
+        "CONTROLLING",
+        "HOSTILE"
+      ]
     },
     {
       "id": "ARCH_SHIRE_RESIDENT",
@@ -731,7 +1039,18 @@
       "anchors": [
         "REGION_DRIVEN"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "knowledge_limits": [
+        "Local community knowledge only; distant threats are rumor until directly experienced."
+      ],
+      "attitude_tags": [
+        "LOCAL",
+        "ROUTINE_DRIVEN",
+        "SOCIAL"
+      ]
     },
     {
       "id": "ARCH_BREE_TOWNSPERSON",
@@ -757,7 +1076,18 @@
       "anchors": [
         "REGION_DRIVEN"
       ],
-      "status": "DATA_DEFINED"
+      "status": "DATA_DEFINED",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "knowledge_limits": [
+        "Bree-local knowledge and rumor only; deep lore is unavailable."
+      ],
+      "attitude_tags": [
+        "WATCHFUL",
+        "SOCIAL",
+        "RUMOR_AWARE"
+      ]
     }
   ],
   "schedule_templates": [
