@@ -1071,6 +1071,49 @@
         "REQ-PERF-001"
       ],
       "checkpoint": "CP52"
+    },
+    {
+      "id": "REQ-WORLD-006",
+      "title": "Continuous regional population and world-life saturation",
+      "category": "LivingWorld",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "User explicitly requested a much larger visible jump: fill the world heavily and make the game feel alive rather than continuing with small backend increments",
+      "intent": "Maintain a continuously inhabited low-cost population around the player across Part I, layer denser micro-events on top, and reuse schedules/social behavior/awareness without compromising story topology or the target performance profile.",
+      "evidence": [
+        "Data/WorldLifeSaturationPlan.json",
+        "Source/ShireJourney/LivingWorldDirector.h",
+        "Source/ShireJourney/LivingWorldDirector.cpp",
+        "Source/ShireJourney/ShireAmbientNPC.cpp",
+        "Docs/CHECKPOINTS.md CP53"
+      ],
+      "implementation_refs": [
+        "chapter-specific baseline population targets",
+        "regional role/prop mixes",
+        "gradual population replenish and cull loop",
+        "existing ambient schedules/social conversations/player awareness reused",
+        "five-event active cap with six-second cadence floor"
+      ],
+      "missing_work": [
+        "UE4.27 compile/import validation",
+        "PIE crowd-flow inspection",
+        "target-device FPS and memory acceptance",
+        "final skeletal crowd assets",
+        "final voice and fauna production"
+      ],
+      "acceptance_criteria": [
+        "Shire and Bree remain continuously populated during traversal",
+        "Rivendell and Lothlorien have region-appropriate visible inhabitants",
+        "Moria has no fabricated civilian baseline population",
+        "baseline actors cull and replenish without save/story ownership",
+        "target laptop remains above the agreed performance floor after tuning"
+      ],
+      "dependencies": [
+        "REQ-WORLD-005",
+        "REQ-PROD-005",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "CP53"
     }
   ],
   "hard_invariants": [
@@ -1643,22 +1686,21 @@
       "order": 11,
       "id": "WORK-WORLD-001",
       "title": "Expand environmental micro-life and production polish chapter by chapter",
-      "status": "PARTIAL",
-      "rationale": "Lightweight sky motion plus role-specific resident activities/social gestures now run in-world; full event director, broader fauna and later integration acceptance remain pending."
+      "status": "ACTIVE",
+      "rationale": "CP53 adds continuous baseline populations plus denser micro-events across Part I using existing schedule/social/awareness behavior; final crowd art, fauna/voice production and device acceptance remain pending."
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "User requested a substantially larger integration step rather than small incremental passes: saturate the game with all currently usable resources and move the build toward an actually running playable experience",
+    "reason": "After CP52 build/import/headless-startup validation passed, user requested a substantial visible leap: heavily populate the game and make the world feel alive instead of continuing with small increments",
     "summary": [
-      "Created ResourceIntegrationPlan as the CP52 source-of-truth for the mass integration batch.",
-      "Extended the reusable common production environment kit into the Shire and Bree instead of limiting it to P1C03-P1C08.",
-      "Expanded P1C03-P1C08 with additional shared fences, logs, wood piles, markers, foliage and ruin dressing while preserving quest coordinates.",
-      "Packaged LivingWorldEventPlan plus CP50/CP51/CP52 production data as Unreal runtime dependencies.",
-      "Added PG-052 guards for the P1C01/ShireArrival startup state, world router, LivingWorldDirector and shared-resource integration.",
-      "Unreal Build Validation now runs on develop pull requests and must observe real headless GameMode plus P1C01/FrodoMain startup markers.",
-      "ExternalAssetManifest currently has zero approved asset entries, so CP52 does not fabricate or silently import unlicensed third-party content.",
-      "UE4.27 compile/import, PIE traversal and target-device performance acceptance remain required before calling the batch validated."
+      "Created WorldLifeSaturationPlan with continuous baseline population targets for P1C01-P1C08.",
+      "LivingWorldDirector now replenishes and culls baseline regional inhabitants around the player while continuing to layer micro-events.",
+      "New baseline actors reuse AShireAmbientNPC schedules, social conversations, player awareness, role visuals and distance-based tick throttling.",
+      "Shire target is 18 nearby baseline inhabitants and Bree target is 16; Rivendell/Lothlorien receive region-appropriate elf populations while Moria remains civilian-empty.",
+      "CP53 raises active micro-event capacity to five and lowers the cadence floor to six seconds through the saturation contract.",
+      "No ambient population actor owns quest progress, story topology or save-critical state.",
+      "UE4.27 compile/import, headless startup and target-device crowd-performance acceptance remain required for CP53."
     ]
   },
   "development_mode": {
