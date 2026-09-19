@@ -4,10 +4,13 @@
 #include "AssetToolsModule.h"
 #include "FileHelpers.h"
 #include "Factories/FbxImportUI.h"
+#include "Engine/StaticMesh.h"
 #include "HAL/FileManager.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
+#include "Materials/MaterialInterface.h"
 #include "Modules/ModuleManager.h"
+#include "UObject/Package.h"
 
 UShireProductionImportCommandlet::UShireProductionImportCommandlet()
 {
@@ -62,17 +65,40 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         Task->bReplaceExisting = true;
 
         bool bBareObjMaterialImportDisabled = false;
+        bool bInjectedSmoothingGroup = false;
         if (FPaths::GetExtension(Filename).Equals(TEXT("obj"), ESearchCase::IgnoreCase))
         {
             FString ObjSource;
-            if (FFileHelper::LoadFileToString(ObjSource, *Filename) &&
-                !ObjSource.Contains(TEXT("mtllib "), ESearchCase::IgnoreCase))
+            if (FFileHelper::LoadFileToString(ObjSource, *Filename))
             {
-                UFbxImportUI* ImportOptions = NewObject<UFbxImportUI>();
-                ImportOptions->bImportMaterials = false;
-                ImportOptions->bImportTextures = false;
-                Task->Options = ImportOptions;
-                bBareObjMaterialImportDisabled = true;
+                // The production bank is intentionally lightweight, but UE4.27 emits
+                // hundreds of warnings when OBJ files omit an explicit smoothing group.
+                // Normalize the working copy before import; source-controlled files are
+                // not changed by CI because the checkout is ephemeral.
+                const bool bHasSmoothing =
+                    ObjSource.StartsWith(TEXT("s ")) ||
+                    ObjSource.Contains(TEXT("\ns "), ESearchCase::CaseSensitive);
+                if (!bHasSmoothing)
+                {
+                    int32 FaceLine = ObjSource.Find(TEXT("\nf "), ESearchCase::CaseSensitive);
+                    if (FaceLine != INDEX_NONE)
+                    {
+                        ObjSource.InsertAt(FaceLine + 1, TEXT("s 1\n"));
+                        if (FFileHelper::SaveStringToFile(ObjSource, *Filename))
+                        {
+                            bInjectedSmoothingGroup = true;
+                        }
+                    }
+                }
+
+                if (!ObjSource.Contains(TEXT("mtllib "), ESearchCase::IgnoreCase))
+                {
+                    UFbxImportUI* ImportOptions = NewObject<UFbxImportUI>();
+                    ImportOptions->bImportMaterials = false;
+                    ImportOptions->bImportTextures = false;
+                    Task->Options = ImportOptions;
+                    bBareObjMaterialImportDisabled = true;
+                }
             }
         }
 
@@ -85,6 +111,26 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             TEXT("%s/%s.%s"), *DestinationPath, *AssetName, *AssetName);
         UObject* ImportedAsset = LoadObject<UObject>(nullptr, *ExpectedObjectPath);
 
+        int32 MarkedMaterialPackages = 0;
+        if (UStaticMesh* ImportedMesh = Cast<UStaticMesh>(ImportedAsset))
+        {
+            // OBJ/MTL import can leave material packages referenced by the mesh without
+            // flagging those secondary packages for persistence. Mark every real
+            // imported material package dirty so the final SaveDirtyPackages pass writes
+            // the mesh and its material dependencies together.
+            for (const FStaticMaterial& StaticMaterial : ImportedMesh->StaticMaterials)
+            {
+                UMaterialInterface* Material = StaticMaterial.MaterialInterface;
+                UPackage* Package = Material ? Material->GetOutermost() : nullptr;
+                if (Package && Package != GetTransientPackage())
+                {
+                    Package->MarkPackageDirty();
+                    ++MarkedMaterialPackages;
+                }
+            }
+            ImportedMesh->MarkPackageDirty();
+        }
+
         // UE4.27 import factories are not perfectly consistent about which result
         // collection they populate in unattended mode. Treat the import as successful
         // when any task result is reported or the expected asset can be resolved.
@@ -96,12 +142,14 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         UE_LOG(
             LogTemp,
             Display,
-            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s bare-obj-materials=%s"),
+            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s bare-obj-materials=%s smoothing-injected=%s material-packages-marked=%d"),
             *Filename,
             Task->ImportedObjectPaths.Num(),
             Task->Result.Num(),
             ImportedAsset ? TEXT("yes") : TEXT("no"),
-            bBareObjMaterialImportDisabled ? TEXT("disabled") : TEXT("authored"));
+            bBareObjMaterialImportDisabled ? TEXT("disabled") : TEXT("authored"),
+            bInjectedSmoothingGroup ? TEXT("yes") : TEXT("no"),
+            MarkedMaterialPackages);
 
         if (!bImported)
         {
