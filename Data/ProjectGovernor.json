@@ -1314,28 +1314,31 @@
       "priority": "CRITICAL",
       "status": "IMPLEMENTED",
       "origin": "User explicitly asked that requested ideas/requirements be stored so neither side has to rely on remembering them later",
-      "intent": "Important user production requests must be promoted into durable project requirements, decisions, work-queue items or source-plan files before implementation proceeds.",
+      "intent": "Important user production requests that are explicitly accepted or clearly agreed must be promoted into durable project requirements, decisions, work-queue items or source-plan files. Ideas that are only proposed, rejected, deferred without adoption, or judged not to fit the project must not become active requirements.",
       "evidence": [
         "Data/ProjectGovernor.json"
       ],
       "implementation_refs": [
         "REQ-MEM-003 persists useful external sources and requests",
         "DEC-009 through DEC-012 preserve major story/NPC/offline decisions",
-        "WORK-EXP-003 and WORK-LW-004 keep the two major production tracks active"
+        "WORK-EXP-003 and WORK-LW-004 keep the two major production tracks active",
+        "REQ-QA-001 preserves the accepted automation-first quality direction and its remaining work"
       ],
       "missing_work": [
         "Continue promoting future major user requests into the Governor instead of relying only on chat history"
       ],
       "acceptance_criteria": [
         "A future developer can recover the active product direction from repository files without needing the chat transcript",
-        "Major user requests have a requirement/decision/work item or an explicitly linked production plan"
+        "Major user requests have a requirement/decision/work item or an explicitly linked production plan",
+        "Accepted/confirmed major requests remain recoverable from the repository even if the chat is lost or full",
+        "Rejected or non-adopted suggestions are not promoted into active requirements or work items"
       ],
       "dependencies": [
         "REQ-MEM-001",
         "REQ-MEM-003"
       ],
       "checkpoint": "ONGOING",
-      "notes": "This is an ongoing governance rule."
+      "notes": "Ongoing governance rule: record what the owner accepted/agreed as project direction; do not turn every conversation, rejected idea or unused suggestion into authoritative scope."
     },
     {
       "id": "REQ-QA-001",
@@ -1344,7 +1347,7 @@
       "priority": "CRITICAL",
       "status": "PARTIAL",
       "origin": "Owner requested on 2026-09-19 to maximize programming and automatic verification so play sessions focus on enjoyment rather than repeated bug testing.",
-      "intent": "Automate reproducible failures before delivery; preserve trilogy film chronology and optional exploration without asking the owner to repeatedly rediscover defects.",
+      "intent": "Automate reproducible failures before delivery so owner play sessions focus on enjoyment rather than repeated bug discovery. The same exact commit must accumulate machine evidence across static checks, UE4.27 build/import/runtime, story/persistence/NPC behavior, and target-device performance before merge claims are promoted.",
       "evidence": [
         "Scripts/runtime_smoke.py",
         "Scripts/test_runtime_smoke.py",
@@ -1357,13 +1360,22 @@
       "missing_work": [
         "Validate this observer on the Windows UE4.27 runner.",
         "Add engine-driven quest progression, save/load, route-return and offline NPC memory/knowledge regression scenarios.",
-        "Add rendered automated traversal captures and target-device performance reports."
+        "Add rendered automated traversal captures and target-device performance reports.",
+        "Add an exact-SHA automated quality report with machine-readable JSON plus a human-readable summary.",
+        "Extend the gate with target-device FPS/hitch and memory-pressure evidence against the existing 720p Low-Medium / 30 FPS floor target.",
+        "Add engine-driven offline NPC behavior/dialogue consistency coverage, save/load roundtrip coverage, story/canon contract checks and text/localization integrity checks.",
+        "Evaluate Unreal Automation Framework first, then add Gauntlet/Unreal Insights where they improve end-to-end or performance coverage without replacing proven existing checks."
       ],
       "acceptance_criteria": [
         "Late startup failures cannot be marked successful.",
         "Each automated claim links to its tested commit and evidence.",
         "Save/load and required story progression receive engine-driven tests before being claimed verified.",
-        "Owner is not the default reproducibility tester; pacing/visual judgement remains distinct from machine verification."
+        "Owner is not the default reproducibility tester; pacing/visual judgement remains distinct from machine verification.",
+        "A merge candidate is evaluated on the exact tested commit SHA; passing evidence from an older SHA cannot certify a newer head.",
+        "Required automated gates fail closed: a failed required check blocks merge until repaired and rerun.",
+        "Performance acceptance uses the project's 30 FPS floor target at 720p Low-Medium on the target laptop unless the owner explicitly changes that requirement.",
+        "Story/lore automation validates against the project's Governor, Story Canon Bible and FilmExperiencePlan rather than an undefined external lore score.",
+        "Automation may reduce manual defect discovery but must not claim mathematically bug-free, lag-free or leak-free software beyond measured evidence."
       ],
       "dependencies": [
         "REQ-SAVE-001",
@@ -1718,6 +1730,26 @@
       "evidence": [
         "Data/CP56MegaIntegrationPlan.json"
       ]
+    },
+    {
+      "id": "DEC-014",
+      "title": "Adopt an exact-SHA automated quality gate without overstating proof",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-QA-001",
+        "REQ-PERF-001",
+        "REQ-VISION-001",
+        "REQ-SAVE-001",
+        "REQ-NPC-005",
+        "REQ-MEM-004"
+      ],
+      "resolution": "Extend the existing automation-first path instead of replacing it. Before merge, the exact candidate SHA should accumulate required evidence for Pre-Unreal/static checks, UE4.27 compile/import, startup/headless runtime, P1C01-P1C08 chapter audits, warning debt, story/route and save/load roundtrips, offline NPC behavior, text/localization integrity, plus target-device performance and memory evidence as those tests are implemented. Keep the established 720p Low-Medium 30 FPS floor target. Validate story consistency against project authorities (Governor, Story Canon Bible and FilmExperiencePlan). Produce machine-readable exact-SHA status plus a human-readable report. Introduce Unreal Automation Framework, Gauntlet and Unreal Insights incrementally where useful; do not discard proven Python/runtime checks or let test infrastructure replace game production.",
+      "rationale": "The owner reviewed a programmer proposal for comprehensive automated quality checking and accepted the useful direction with project-specific corrections: exact evidence rather than absolute zero-bug claims, the existing 30 FPS target rather than an invented 60 FPS target, and project canon as the story authority.",
+      "authority": "USER_EXPLICIT_DIRECTION_PLUS_REVIEWED_PROGRAMMER_PROPOSAL",
+      "evidence": [
+        "Data/ProjectGovernor.json",
+        "Docs/AUTOMATION_FIRST_DELIVERY.md"
+      ]
     }
   ],
   "open_conflicts": [],
@@ -2028,6 +2060,7 @@
     "Treat Data/ProjectGovernor.json as the first-read/last-write coordination record for any meaningful project change.",
     "Read this file first before any meaningful gameplay, architecture, story or quality decision.",
     "For a new user request: add/update one requirement here, then inspect dependencies/conflicts before implementation.",
+    "Promote only user requests/decisions that are explicitly accepted, confirmed or clearly agreed. Suggestions still under discussion, rejected ideas and options that do not fit the project remain non-authoritative unless later adopted.",
     "For a contradiction: preserve both requirements and add/update one decision/open conflict here.",
     "For implementation: update evidence/missing_work/status here only after repository evidence exists.",
     "For testing: update region_quality and active_gate only from actual static/compile/PIE/device/human evidence.",
@@ -2163,11 +2196,12 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-19",
-    "reason": "Owner requested immediate start of the largest integrated pass and a red-to-green Actions repair loop.",
+    "reason": "Owner required durable recording of important agreed requests while excluding rejected/non-adopted ideas, and confirmed the reviewed automation-quality proposal belongs in project governance.",
     "summary": [
-      "PR #53 is the active continuation path.",
-      "Whole-game completeness is now machine-readable.",
-      "Actions failures remain blockers; develop stays untouched until green."
+      "Accepted/confirmed major requests are authoritative and must be recoverable from the Governor.",
+      "Rejected or merely discussed ideas do not become active scope.",
+      "Automation-first quality expansion is accepted as an extension of REQ-QA-001 with exact-SHA evidence and the existing 30 FPS target.",
+      "PR #53 remains the single active CP56 continuation path; green validation is still required before merge."
     ]
   },
   "development_mode": {
