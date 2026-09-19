@@ -551,6 +551,7 @@
 - P1C03-P1C08 gain a second shared-resource finishing layer using common walls, logs, wood piles, path markers, vegetation, bridges and ruin debris where region-appropriate.
 - `ShireJourney.Build.cs` now packages `LivingWorldEventPlan.json` plus CP50/CP51/CP52 production plans as runtime dependencies, reducing the gap between editor validation and packaged runtime behavior.
 - Added PG-052 checks for P1C01 + `ShireArrival` startup, world-router/LivingWorldDirector bootstrap, resource saturation and runtime-data packaging.
+- Unreal Build Validation now also runs on PRs to `develop` and includes a real headless UE4.27 `-game -nullrhi` boot smoke that must observe GameMode and P1C01/FrodoMain startup markers.
 - The external licensed manifest still contains zero approved asset entries; this batch therefore integrates all currently usable project-owned resources but does not pretend unlicensed third-party downloads are approved.
 - UE4.27 compile/import, PIE P1C01-P1C08 traversal and target-device performance/visual acceptance remain required.
 
