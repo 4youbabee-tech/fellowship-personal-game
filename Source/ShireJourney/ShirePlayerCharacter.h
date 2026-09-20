@@ -98,6 +98,9 @@ protected:
     void HandleCinematicStateChanged(bool bLocked);
 
     UFUNCTION()
+    void HandleStoryCameraCue(FName CameraCue);
+
+    UFUNCTION()
     void HandleExperienceChanged(FName RouteId, FName EpisodeId, FName PlayableCharacterId);
 
     UFUNCTION()
@@ -229,6 +232,11 @@ private:
     bool bWorldMapOpen = false;
     float PrototypeIdlePhase = 0.0f;
     FName PendingChapterCheckpointId = NAME_None;
+    bool bStoryCameraCueActive = false;
+    float StoryCameraCueRemaining = 0.0f;
+    float StoryCameraTargetArmLength = 260.0f;
+    float StoryCameraTargetFOV = 78.0f;
+    FVector StoryCameraTargetSocketOffset = FVector(0.0f, 28.0f, 10.0f);
 
     UShireSaveGame* CreateSaveSnapshot(FName CheckpointId, bool bCheckpointSnapshot) const;
     bool RestoreSaveSnapshot(UShireSaveGame* Save, const FText& SuccessMessage);
@@ -236,5 +244,6 @@ private:
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);
     void UpdatePlayerLife(float DeltaSeconds);
+    void UpdateStoryCameraCue(float DeltaSeconds);
     float GetResolveTarget() const;
 };

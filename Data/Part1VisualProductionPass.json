@@ -124,7 +124,8 @@
       "existing production-mesh enrichment in Moria and Anduin/Amon Hen",
       "Lurtz production-foundation runtime pressure actor",
       "adaptive mythic-threat update rate",
-      "source-asset triangle/source-byte reporting"
+      "source-asset triangle/source-byte reporting",
+      "short runtime framing treatments for selected hero and threat camera cues"
     ],
     "still_required": [
       "real UE4.27 build/import evidence",
@@ -133,5 +134,31 @@
       "final rigs/animation/materials/VFX/audio",
       "human visual/pacing acceptance"
     ]
+  },
+  "camera_execution": {
+    "status": "RUNTIME_FRAMING_IMPLEMENTED_PENDING_ENGINE_PROOF",
+    "strategy": "Short spring-arm/FOV framing treatments on selected landmark/threat cues; no full Sequencer dependency and no camera cue may own story progression.",
+    "hero_reveals": [
+      "Cam_PonyExteriorReveal",
+      "Cam_WeathertopReveal",
+      "Cam_RivendellAwakening",
+      "Cam_MoriaEntry",
+      "Cam_LorienEntry",
+      "Cam_ArgonathReveal",
+      "Cam_AmonHenArrival",
+      "Cam_IsengardArrival"
+    ],
+    "threat_reveals": [
+      "Cam_WatcherAttack",
+      "Cam_BalinsTombReveal",
+      "Cam_BalrogApproach",
+      "Cam_UrukAttack"
+    ],
+    "performance_rules": [
+      "Reuse the existing player spring arm and follow camera.",
+      "No new scene-capture target, cinematic camera actor, post-process stack or tick-heavy camera manager.",
+      "Treatments blend back automatically after a bounded duration."
+    ],
+    "acceptance_boundary": "This is runtime camera framing, not final film-grade camera/Sequencer acceptance."
   }
 }

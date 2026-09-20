@@ -3017,13 +3017,13 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "PART1_MORIA_AMON_HEN_VISUAL_COMBAT_V3",
+  "current_focus": "PART1_MORIA_AMON_HEN_VISUAL_CAMERA_V4",
   "immediate_next_large_actions": [
     "Keep newest exact head in the UE4.27 compile/import/startup/chapter/state repair loop until green.",
-    "Deepen Moria and Amon Hen visual-combat production while preserving immutable film outcomes.",
-    "Continue full-cast production rig/animation handoff using in-place locomotion and distance/URO safeguards.",
-    "Execute selected short landmark camera beats only after the current runtime wave is engine-stable.",
-    "Build chapter-specific rendered evidence and target-device FPS/frame-time/memory baselines before hard budgets or acceptance.",
-    "Keep Part1ProductionAtlas, Part1VisualProductionPass, Production100ReadinessGate and ProjectGovernor synchronized after every production wave."
+    "Validate the new bounded hero/threat camera framing on the real engine without claiming final cinematics.",
+    "Deepen Moria and Amon Hen lighting/material/encounter presentation while film outcomes remain immutable.",
+    "Continue full-cast production rig/animation handoff with in-place locomotion and distance/URO safeguards.",
+    "Add chapter-specific rendered evidence capture and target-device profiling before visual/performance promotion.",
+    "Keep production atlas, visual pass, readiness gate and governor synchronized."
   ]
 }

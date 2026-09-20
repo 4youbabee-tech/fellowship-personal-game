@@ -4314,6 +4314,28 @@ for pg94_symbol in ["obj_triangle_equivalents", "Production source buckets", "La
     if pg94_symbol not in pg94_audit:
         fail(f"PG-094 asset audit measurement missing: {pg94_symbol}")
 
+# PG-095: selected hero/threat camera moments use bounded player-camera framing only.
+pg95_player_h = read(SOURCE / "ShirePlayerCharacter.h")
+pg95_player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
+for pg95_symbol in [
+    "HandleStoryCameraCue",
+    "UpdateStoryCameraCue",
+    "OnCameraCueRequested.AddDynamic",
+    "Cam_PonyExteriorReveal",
+    "Cam_WeathertopReveal",
+    "Cam_LorienEntry",
+    "Cam_ArgonathReveal",
+    "Cam_BalrogApproach",
+    "Cam_UrukAttack",
+]:
+    if pg95_symbol not in (pg95_player_h + pg95_player_cpp):
+        fail(f"PG-095 bounded camera framing marker missing: {pg95_symbol}")
+if "SetViewTarget" in pg95_player_cpp or "SceneCapture" in pg95_player_cpp:
+    fail("PG-095 bounded camera pass must not introduce heavy alternate camera/capture systems")
+pg95_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg95_visual.get("camera_execution", {}).get("status") != "RUNTIME_FRAMING_IMPLEMENTED_PENDING_ENGINE_PROOF":
+    fail("PG-095 camera execution evidence boundary changed")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

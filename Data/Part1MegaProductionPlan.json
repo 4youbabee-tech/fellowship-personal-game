@@ -244,7 +244,7 @@
     "Run Pre-Unreal after the mega batch, then repair failures before making any green claim."
   ],
   "current_execution_wave": {
-    "id": "MORIA_AMON_HEN_VISUAL_COMBAT_V3",
+    "id": "MORIA_AMON_HEN_VISUAL_CAMERA_V4",
     "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
     "source_basis": [
       "Owner Source Pack Master",
@@ -265,15 +265,15 @@
       "Distance-adaptive Watcher/Balrog presentation tick rate for low-spec protection.",
       "Source asset triangle-equivalent and byte telemetry.",
       "Measurement-first AssetPerformanceBudget contract.",
-      "Part1VisualProductionPass covering P1C01-P1C08 plus Isengard."
+      "Part1VisualProductionPass covering P1C01-P1C08 plus Isengard.",
+      "bounded runtime landmark/threat camera framing using existing player camera"
     ],
     "next_large_actions": [
-      "Keep exact head in Pre-Unreal and UE4.27.2 compile/import/startup/chapter/state validation until green.",
-      "Execute selected short landmark camera beats after this runtime wave is engine-stable.",
-      "Deepen Moria materials/lighting/VFX/audio while retaining film-locked Watcher/Balrog outcomes.",
-      "Deepen Amon Hen woodland combat composition and final Lurtz animation/duel handoff.",
-      "Continue full-cast skeletal rig/AnimBP handoff with in-place locomotion and distance/URO safeguards.",
-      "Establish chapter-specific rendered evidence and target-device measurements before visual/performance acceptance."
+      "Keep exact head green through Pre-Unreal and real UE4.27.2 validation.",
+      "Engine-check landmark framing in Bree, Weathertop, Rivendell, Moria, Lothlorien, Argonath/Amon Hen and Isengard.",
+      "Continue Moria materials/light/VFX/audio and Amon Hen battle staging after camera framing is stable.",
+      "Continue final cast/threat rig and animation handoff.",
+      "Establish rendered screenshot/video plus target-device performance evidence before visual acceptance."
     ]
   }
 }

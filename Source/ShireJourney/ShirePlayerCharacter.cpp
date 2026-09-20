@@ -908,6 +908,7 @@ void AShirePlayerCharacter::Tick(float DeltaSeconds)
     AttackVisualRemaining = FMath::Max(0.0f, AttackVisualRemaining - DeltaSeconds);
     UpdatePlayerLife(DeltaSeconds);
     UpdatePrototypeAnimation(DeltaSeconds);
+    UpdateStoryCameraCue(DeltaSeconds);
 }
 
 void AShirePlayerCharacter::BeginPlay()
@@ -924,6 +925,7 @@ void AShirePlayerCharacter::BeginPlay()
         if (UShireStoryPresentationSubsystem* Presentation = GI->GetSubsystem<UShireStoryPresentationSubsystem>())
         {
             Presentation->OnCinematicStateChanged.AddDynamic(this, &AShirePlayerCharacter::HandleCinematicStateChanged);
+            Presentation->OnCameraCueRequested.AddDynamic(this, &AShirePlayerCharacter::HandleStoryCameraCue);
         }
         if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
         {
@@ -949,6 +951,7 @@ void AShirePlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
         if (UShireStoryPresentationSubsystem* Presentation = GI->GetSubsystem<UShireStoryPresentationSubsystem>())
         {
             Presentation->OnCinematicStateChanged.RemoveDynamic(this, &AShirePlayerCharacter::HandleCinematicStateChanged);
+            Presentation->OnCameraCueRequested.RemoveDynamic(this, &AShirePlayerCharacter::HandleStoryCameraCue);
         }
         if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
         {
@@ -1041,6 +1044,74 @@ void AShirePlayerCharacter::HandleChapterChanged(FName PreviousChapterId, FName 
     {
         PendingChapterCheckpointId = TEXT("WC_P1C07_DEPART");
     }
+}
+
+void AShirePlayerCharacter::HandleStoryCameraCue(FName CameraCue)
+{
+    // Short, low-cost framing treatments for a small set of landmark/threat beats.
+    // This is deliberately not a full cutscene system: story timing remains owned by
+    // UShireStoryPresentationSubsystem and the player view always blends back.
+    const bool bHeroReveal =
+        CameraCue == TEXT("Cam_PonyExteriorReveal") ||
+        CameraCue == TEXT("Cam_WeathertopReveal") ||
+        CameraCue == TEXT("Cam_RivendellAwakening") ||
+        CameraCue == TEXT("Cam_MoriaEntry") ||
+        CameraCue == TEXT("Cam_LorienEntry") ||
+        CameraCue == TEXT("Cam_ArgonathReveal") ||
+        CameraCue == TEXT("Cam_AmonHenArrival") ||
+        CameraCue == TEXT("Cam_IsengardArrival");
+
+    const bool bThreatReveal =
+        CameraCue == TEXT("Cam_WatcherAttack") ||
+        CameraCue == TEXT("Cam_BalinsTombReveal") ||
+        CameraCue == TEXT("Cam_BalrogApproach") ||
+        CameraCue == TEXT("Cam_UrukAttack");
+
+    if (!bHeroReveal && !bThreatReveal)
+    {
+        return;
+    }
+
+    bStoryCameraCueActive = true;
+    StoryCameraCueRemaining = bHeroReveal ? 3.2f : 2.4f;
+    StoryCameraTargetArmLength = bHeroReveal ? 345.0f : 305.0f;
+    StoryCameraTargetFOV = bHeroReveal ? 69.0f : 73.0f;
+    StoryCameraTargetSocketOffset =
+        bHeroReveal ? FVector(0.0f, 38.0f, 20.0f) : FVector(0.0f, 44.0f, 14.0f);
+
+    UE_LOG(LogTemp, Display, TEXT("StoryCamera: cue=%s style=%s duration=%.1f"),
+        *CameraCue.ToString(),
+        bHeroReveal ? TEXT("HERO_REVEAL") : TEXT("THREAT_REVEAL"),
+        StoryCameraCueRemaining);
+}
+
+void AShirePlayerCharacter::UpdateStoryCameraCue(float DeltaSeconds)
+{
+    if (!CameraBoom || !FollowCamera || DeltaSeconds <= 0.0f)
+    {
+        return;
+    }
+
+    if (bStoryCameraCueActive)
+    {
+        StoryCameraCueRemaining = FMath::Max(0.0f, StoryCameraCueRemaining - DeltaSeconds);
+        if (StoryCameraCueRemaining <= 0.0f)
+        {
+            bStoryCameraCueActive = false;
+        }
+    }
+
+    const float DesiredArm = bStoryCameraCueActive ? StoryCameraTargetArmLength : 260.0f;
+    const float DesiredFOV = bStoryCameraCueActive ? StoryCameraTargetFOV : 78.0f;
+    const FVector DesiredSocket =
+        bStoryCameraCueActive ? StoryCameraTargetSocketOffset : FVector(0.0f, 28.0f, 10.0f);
+
+    CameraBoom->TargetArmLength = FMath::FInterpTo(
+        CameraBoom->TargetArmLength, DesiredArm, DeltaSeconds, bStoryCameraCueActive ? 3.5f : 4.5f);
+    CameraBoom->SocketOffset = FMath::VInterpTo(
+        CameraBoom->SocketOffset, DesiredSocket, DeltaSeconds, bStoryCameraCueActive ? 3.5f : 4.5f);
+    FollowCamera->SetFieldOfView(FMath::FInterpTo(
+        FollowCamera->FieldOfView, DesiredFOV, DeltaSeconds, bStoryCameraCueActive ? 3.0f : 4.5f));
 }
 
 void AShirePlayerCharacter::HandleCinematicStateChanged(bool bLocked)
