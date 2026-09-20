@@ -3395,8 +3395,8 @@ if pg110_matrix.get("surface_material_wave", {}).get("status") != "ENGINE_PROVEN
 pg111_plan = json.loads(read(ROOT / "Data" / "WorldLifeSaturationPlan.json"))
 pg111_targets = pg111_plan.get("baseline_population_targets", {})
 pg111_roles = pg111_plan.get("population_roles", {})
-if pg111_plan.get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
-    fail("PG-111 V8 world-life proof boundary changed")
+if pg111_plan.get("status") != "V9_ENVIRONMENTAL_MOTION_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-111 V9 world-life proof boundary changed")
 if int(pg111_targets.get("P1C05", -1)) != 0:
     fail("PG-111 Caradhras ambient civilian baseline must remain zero")
 if int(pg111_targets.get("P1C06", -1)) != 0:
@@ -3440,6 +3440,44 @@ for pg111_symbol in [
 ]:
     if pg111_symbol not in (pg111_ambient + pg111_ambient_h):
         fail(f"PG-111 ambient presentation behavior missing: {pg111_symbol}")
+
+# PG-113: environmental-life motion keeps sparse chapters alive without inventing civilians.
+pg113_motion_h = read(ROOT / "Source" / "ShireJourney" / "WorldAmbientMotionActor.h")
+pg113_motion_cpp = read(ROOT / "Source" / "ShireJourney" / "WorldAmbientMotionActor.cpp")
+for pg113_symbol in [
+    "EWorldAmbientMotionMode",
+    "ConfigureGlow",
+    "SetCastShadows(false)",
+    "PrimaryActorTick.TickInterval = 0.05f",
+]:
+    if pg113_symbol not in (pg113_motion_h + pg113_motion_cpp):
+        fail(f"PG-113 ambient motion runtime missing: {pg113_symbol}")
+
+for pg113_symbol in [
+    "SpawnAmbientMotionActor",
+    'EventType == TEXT("PROP_MOTION")',
+    "SM_MoriaDebrisCluster",
+    "SM_MoriaChainAnchor",
+    "SM_LorienLeafLantern",
+    "SM_RivendellLantern",
+    "ConfigureGlow",
+]:
+    if pg113_symbol not in pg111_director:
+        fail(f"PG-113 environmental-life director wiring missing: {pg113_symbol}")
+
+pg113_event_plan = json.loads(read(ROOT / "Data" / "LivingWorldEventPlan.json"))
+if pg113_event_plan.get("status") != "V9_ENVIRONMENTAL_LIFE_RUNTIME_IMPLEMENTED_PENDING_ENGINE_PROOF":
+    fail("PG-113 living-world event proof boundary changed")
+pg113_moria = next(
+    (row for row in pg113_event_plan.get("chapter_contracts", [])
+     if isinstance(row, dict) and row.get("chapter") == "P1C06"),
+    {},
+)
+pg113_moria_allowed = set(pg113_moria.get("allowed", []))
+if "PROP_MOTION" not in pg113_moria_allowed or "STORY_AFTERMATH" not in pg113_moria_allowed:
+    fail("PG-113 Moria must retain environmental motion/aftermath without civilian life")
+if int(pg111_targets.get("P1C06", -1)) != 0:
+    fail("PG-113 Moria environmental-life wave may not introduce ambient civilians")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
