@@ -1,0 +1,651 @@
+{
+  "schema_version": 1,
+  "inventory_id": "PROJECT_OWNED_PRODUCTION_ASSET_INVENTORY_V1",
+  "generated_from_commit": "25625ff38bee7b09c44bd518a2e963148753e33b",
+  "status": "FOUNDATION_INVENTORY_NOT_FINAL_ACCEPTANCE",
+  "truth_rule": "File presence and importability prove only that a project-owned source foundation exists. Final production requires rig/material/animation/visual/performance acceptance.",
+  "characters": [
+    {
+      "root": "SourceAssets/Production/Characters/Aragorn",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Hair.obj",
+        "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Head.obj",
+        "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Arwen",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Arwen/SM_Arwen_Hair.obj",
+        "SourceAssets/Production/Characters/Arwen/SM_Arwen_Head.obj",
+        "SourceAssets/Production/Characters/Arwen/SM_Arwen_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Bilbo",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Bilbo/SM_Bilbo_Hair.obj",
+        "SourceAssets/Production/Characters/Bilbo/SM_Bilbo_Head.obj",
+        "SourceAssets/Production/Characters/Bilbo/SM_Bilbo_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Boromir",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Boromir/SM_Boromir_Hair.obj",
+        "SourceAssets/Production/Characters/Boromir/SM_Boromir_Head.obj",
+        "SourceAssets/Production/Characters/Boromir/SM_Boromir_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Butterbur",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Butterbur/SM_Butterbur_Hair.obj",
+        "SourceAssets/Production/Characters/Butterbur/SM_Butterbur_Head.obj",
+        "SourceAssets/Production/Characters/Butterbur/SM_Butterbur_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Common",
+      "file_count": 19,
+      "obj_count": 19,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Common/SM_Dwarf_Arm.obj",
+        "SourceAssets/Production/Characters/Common/SM_Dwarf_Beard.obj",
+        "SourceAssets/Production/Characters/Common/SM_Dwarf_Head.obj",
+        "SourceAssets/Production/Characters/Common/SM_Dwarf_Leg.obj",
+        "SourceAssets/Production/Characters/Common/SM_Dwarf_Torso.obj",
+        "SourceAssets/Production/Characters/Common/SM_Elf_Hair.obj",
+        "SourceAssets/Production/Characters/Common/SM_Elf_Head.obj",
+        "SourceAssets/Production/Characters/Common/SM_Elf_Torso.obj",
+        "SourceAssets/Production/Characters/Common/SM_Human_Arm.obj",
+        "SourceAssets/Production/Characters/Common/SM_Human_Boot.obj",
+        "SourceAssets/Production/Characters/Common/SM_Human_Hair.obj",
+        "SourceAssets/Production/Characters/Common/SM_Human_Head.obj",
+        "SourceAssets/Production/Characters/Common/SM_Human_Leg.obj",
+        "SourceAssets/Production/Characters/Common/SM_Human_Torso.obj",
+        "SourceAssets/Production/Characters/Common/SM_ProductionAxe.obj",
+        "SourceAssets/Production/Characters/Common/SM_ProductionBow.obj",
+        "SourceAssets/Production/Characters/Common/SM_ProductionCloak.obj",
+        "SourceAssets/Production/Characters/Common/SM_ProductionShield.obj",
+        "SourceAssets/Production/Characters/Common/SM_ProductionSword.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Elrond",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Elrond/SM_Elrond_Hair.obj",
+        "SourceAssets/Production/Characters/Elrond/SM_Elrond_Head.obj",
+        "SourceAssets/Production/Characters/Elrond/SM_Elrond_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/FarmerMaggot",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/FarmerMaggot/SM_FarmerMaggot_Hair.obj",
+        "SourceAssets/Production/Characters/FarmerMaggot/SM_FarmerMaggot_Head.obj",
+        "SourceAssets/Production/Characters/FarmerMaggot/SM_FarmerMaggot_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Frodo",
+      "file_count": 9,
+      "obj_count": 9,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Frodo/SM_Frodo_Cloak.obj",
+        "SourceAssets/Production/Characters/Frodo/SM_Frodo_Hair.obj",
+        "SourceAssets/Production/Characters/Frodo/SM_Frodo_Head.obj",
+        "SourceAssets/Production/Characters/Frodo/SM_Frodo_Satchel.obj",
+        "SourceAssets/Production/Characters/Frodo/SM_Frodo_Sword.obj",
+        "SourceAssets/Production/Characters/Frodo/SM_Frodo_Torso.obj",
+        "SourceAssets/Production/Characters/Frodo/SM_Hobbit_Arm.obj",
+        "SourceAssets/Production/Characters/Frodo/SM_Hobbit_Foot.obj",
+        "SourceAssets/Production/Characters/Frodo/SM_Hobbit_Leg.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Galadriel",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Galadriel/SM_Galadriel_Hair.obj",
+        "SourceAssets/Production/Characters/Galadriel/SM_Galadriel_Head.obj",
+        "SourceAssets/Production/Characters/Galadriel/SM_Galadriel_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Gandalf",
+      "file_count": 10,
+      "obj_count": 10,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Arm.obj",
+        "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Beard.obj",
+        "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Boot.obj",
+        "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Cloak.obj",
+        "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Hair.obj",
+        "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Hat.obj",
+        "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Head.obj",
+        "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Leg.obj",
+        "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Staff.obj",
+        "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/GateKeeper",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/GateKeeper/SM_GateKeeper_Hair.obj",
+        "SourceAssets/Production/Characters/GateKeeper/SM_GateKeeper_Head.obj",
+        "SourceAssets/Production/Characters/GateKeeper/SM_GateKeeper_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Gimli",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Gimli/SM_Gimli_Hair.obj",
+        "SourceAssets/Production/Characters/Gimli/SM_Gimli_Head.obj",
+        "SourceAssets/Production/Characters/Gimli/SM_Gimli_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Haldir",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Haldir/SM_Haldir_Hair.obj",
+        "SourceAssets/Production/Characters/Haldir/SM_Haldir_Head.obj",
+        "SourceAssets/Production/Characters/Haldir/SM_Haldir_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Hamfast",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Hamfast/SM_Hamfast_Hair.obj",
+        "SourceAssets/Production/Characters/Hamfast/SM_Hamfast_Head.obj",
+        "SourceAssets/Production/Characters/Hamfast/SM_Hamfast_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Hobbit",
+      "file_count": 5,
+      "obj_count": 5,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Hobbit/SM_Hobbit_Arm.obj",
+        "SourceAssets/Production/Characters/Hobbit/SM_Hobbit_Hair.obj",
+        "SourceAssets/Production/Characters/Hobbit/SM_Hobbit_Head.obj",
+        "SourceAssets/Production/Characters/Hobbit/SM_Hobbit_Leg.obj",
+        "SourceAssets/Production/Characters/Hobbit/SM_Hobbit_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Legolas",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Legolas/SM_Legolas_Hair.obj",
+        "SourceAssets/Production/Characters/Legolas/SM_Legolas_Head.obj",
+        "SourceAssets/Production/Characters/Legolas/SM_Legolas_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Merry",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Merry/SM_Merry_Hair.obj",
+        "SourceAssets/Production/Characters/Merry/SM_Merry_Head.obj",
+        "SourceAssets/Production/Characters/Merry/SM_Merry_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Pippin",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Pippin/SM_Pippin_Hair.obj",
+        "SourceAssets/Production/Characters/Pippin/SM_Pippin_Head.obj",
+        "SourceAssets/Production/Characters/Pippin/SM_Pippin_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Rosie",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Rosie/SM_Rosie_Hair.obj",
+        "SourceAssets/Production/Characters/Rosie/SM_Rosie_Head.obj",
+        "SourceAssets/Production/Characters/Rosie/SM_Rosie_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Sam",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Sam/SM_Sam_Hair.obj",
+        "SourceAssets/Production/Characters/Sam/SM_Sam_Head.obj",
+        "SourceAssets/Production/Characters/Sam/SM_Sam_Torso.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Characters/Saruman",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Characters/Saruman/SM_Saruman_Hair.obj",
+        "SourceAssets/Production/Characters/Saruman/SM_Saruman_Head.obj",
+        "SourceAssets/Production/Characters/Saruman/SM_Saruman_Torso.obj"
+      ]
+    }
+  ],
+  "enemies": [
+    {
+      "root": "SourceAssets/Production/Enemies/BlackRider",
+      "file_count": 3,
+      "obj_count": 3,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Enemies/BlackRider/SM_BlackRider_Head.obj",
+        "SourceAssets/Production/Enemies/BlackRider/SM_BlackRider_Horse.obj",
+        "SourceAssets/Production/Enemies/BlackRider/SM_BlackRider_Rider.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Enemies/CaveTroll",
+      "file_count": 5,
+      "obj_count": 5,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Enemies/CaveTroll/SM_CaveTroll_Arm.obj",
+        "SourceAssets/Production/Enemies/CaveTroll/SM_CaveTroll_Head.obj",
+        "SourceAssets/Production/Enemies/CaveTroll/SM_CaveTroll_Leg.obj",
+        "SourceAssets/Production/Enemies/CaveTroll/SM_CaveTroll_Torso.obj",
+        "SourceAssets/Production/Enemies/CaveTroll/SM_CaveTroll_Weapon.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Enemies/Orc",
+      "file_count": 5,
+      "obj_count": 5,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Enemies/Orc/SM_Orc_Arm.obj",
+        "SourceAssets/Production/Enemies/Orc/SM_Orc_Head.obj",
+        "SourceAssets/Production/Enemies/Orc/SM_Orc_Leg.obj",
+        "SourceAssets/Production/Enemies/Orc/SM_Orc_Torso.obj",
+        "SourceAssets/Production/Enemies/Orc/SM_Orc_Weapon.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Enemies/UrukHai",
+      "file_count": 5,
+      "obj_count": 5,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Enemies/UrukHai/SM_UrukHai_Arm.obj",
+        "SourceAssets/Production/Enemies/UrukHai/SM_UrukHai_Head.obj",
+        "SourceAssets/Production/Enemies/UrukHai/SM_UrukHai_Leg.obj",
+        "SourceAssets/Production/Enemies/UrukHai/SM_UrukHai_Torso.obj",
+        "SourceAssets/Production/Enemies/UrukHai/SM_UrukHai_Weapon.obj"
+      ]
+    }
+  ],
+  "world": [
+    {
+      "root": "SourceAssets/Production/World/Anduin",
+      "file_count": 12,
+      "obj_count": 10,
+      "mtl_count": 2,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/World/Anduin/RegionalMaterials.mtl",
+        "SourceAssets/Production/World/Anduin/SM_AmonHenRuin.obj",
+        "SourceAssets/Production/World/Anduin/SM_AmonHenStair.obj",
+        "SourceAssets/Production/World/Anduin/SM_AnduinBoat.obj",
+        "SourceAssets/Production/World/Anduin/SM_AnduinBoatRack.obj",
+        "SourceAssets/Production/World/Anduin/SM_AnduinCampRack.obj",
+        "SourceAssets/Production/World/Anduin/SM_AnduinCargoPile.obj",
+        "SourceAssets/Production/World/Anduin/SM_AnduinDockPier.obj",
+        "SourceAssets/Production/World/Anduin/SM_AnduinFishingFrame.obj",
+        "SourceAssets/Production/World/Anduin/SM_AnduinRiverMarker.obj",
+        "SourceAssets/Production/World/Anduin/SM_ArgonathSentinel.obj",
+        "SourceAssets/Production/World/Anduin/WorldPack.mtl"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/World/Bree",
+      "file_count": 18,
+      "obj_count": 16,
+      "mtl_count": 2,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/World/Bree/BreeMaterials.mtl",
+        "SourceAssets/Production/World/Bree/SM_BreeAleCaskRack.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeAlleyArch.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeCrateStack.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeGate.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeHitchingPost.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeHouse.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeInn.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeInnSign.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeLantern.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeMarketBoard.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeStableRail.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeStall.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeStreetAwning.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeTable.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeTavernBench.obj",
+        "SourceAssets/Production/World/Bree/SM_BreeTradeWagon.obj",
+        "SourceAssets/Production/World/Bree/WorldPack.mtl"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/World/Common",
+      "file_count": 62,
+      "obj_count": 60,
+      "mtl_count": 2,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/World/Common/CommonLandscapeMaterials.mtl",
+        "SourceAssets/Production/World/Common/SM_CommonBarrel.obj",
+        "SourceAssets/Production/World/Common/SM_CommonBedroll.obj",
+        "SourceAssets/Production/World/Common/SM_CommonBeehive.obj",
+        "SourceAssets/Production/World/Common/SM_CommonBird.obj",
+        "SourceAssets/Production/World/Common/SM_CommonBoulderCluster.obj",
+        "SourceAssets/Production/World/Common/SM_CommonBrazier.obj",
+        "SourceAssets/Production/World/Common/SM_CommonBroadleafTree.obj",
+        "SourceAssets/Production/World/Common/SM_CommonBrokenColumn.obj",
+        "SourceAssets/Production/World/Common/SM_CommonBucket.obj",
+        "SourceAssets/Production/World/Common/SM_CommonButterfly.obj",
+        "SourceAssets/Production/World/Common/SM_CommonCairn.obj",
+        "SourceAssets/Production/World/Common/SM_CommonCampTent.obj",
+        "SourceAssets/Production/World/Common/SM_CommonCampfireRing.obj",
+        "SourceAssets/Production/World/Common/SM_CommonCargoCrate.obj",
+        "SourceAssets/Production/World/Common/SM_CommonChickenCoop.obj",
+        "SourceAssets/Production/World/Common/SM_CommonCliffWall.obj",
+        "SourceAssets/Production/World/Common/SM_CommonCookingStand.obj",
+        "SourceAssets/Production/World/Common/SM_CommonDockSegment.obj",
+        "SourceAssets/Production/World/Common/SM_CommonDryStoneWall.obj",
+        "SourceAssets/Production/World/Common/SM_CommonFallenLog.obj",
+        "SourceAssets/Production/World/Common/SM_CommonFenceGate.obj",
+        "SourceAssets/Production/World/Common/SM_CommonFernClump.obj",
+        "SourceAssets/Production/World/Common/SM_CommonFishingRack.obj",
+        "SourceAssets/Production/World/Common/SM_CommonFlowerPlanter.obj",
+        "SourceAssets/Production/World/Common/SM_CommonFootbridge.obj",
+        "SourceAssets/Production/World/Common/SM_CommonGoldenTree.obj",
+        "SourceAssets/Production/World/Common/SM_CommonHandcart.obj",
+        "SourceAssets/Production/World/Common/SM_CommonHayBale.obj",
+        "SourceAssets/Production/World/Common/SM_CommonLanternPost.obj",
+        "SourceAssets/Production/World/Common/SM_CommonLongBench.obj",
+        "SourceAssets/Production/World/Common/SM_CommonMarketCanopy.obj",
+        "SourceAssets/Production/World/Common/SM_CommonMarketTable.obj",
+        "SourceAssets/Production/World/Common/SM_CommonMountainRidge.obj",
+        "SourceAssets/Production/World/Common/SM_CommonMushroomCluster.obj",
+        "SourceAssets/Production/World/Common/SM_CommonPathMarker.obj",
+        "SourceAssets/Production/World/Common/SM_CommonPineTree.obj",
+        "SourceAssets/Production/World/Common/SM_CommonRabbit.obj",
+        "SourceAssets/Production/World/Common/SM_CommonReedCluster.obj",
+        "SourceAssets/Production/World/Common/SM_CommonRiverBank.obj",
+        "SourceAssets/Production/World/Common/SM_CommonRiverBoat.obj",
+        "SourceAssets/Production/World/Common/SM_CommonRopeCoil.obj",
+        "SourceAssets/Production/World/Common/SM_CommonRopePost.obj",
+        "SourceAssets/Production/World/Common/SM_CommonRuinSlab.obj",
+        "SourceAssets/Production/World/Common/SM_CommonSackBale.obj",
+        "SourceAssets/Production/World/Common/SM_CommonScarecrow.obj",
+        "SourceAssets/Production/World/Common/SM_CommonSignBoard.obj",
+        "SourceAssets/Production/World/Common/SM_CommonStoneArch.obj",
+        "SourceAssets/Production/World/Common/SM_CommonStonePile.obj",
+        "SourceAssets/Production/World/Common/SM_CommonStool.obj",
+        "SourceAssets/Production/World/Common/SM_CommonStorageChest.obj",
+        "SourceAssets/Production/World/Common/SM_CommonTerracedHill.obj",
+        "SourceAssets/Production/World/Common/SM_CommonToolRack.obj",
+        "SourceAssets/Production/World/Common/SM_CommonTreeStump.obj",
+        "SourceAssets/Production/World/Common/SM_CommonVillageFence.obj",
+        "SourceAssets/Production/World/Common/SM_CommonVillageSlope.obj",
+        "SourceAssets/Production/World/Common/SM_CommonWagon.obj",
+        "SourceAssets/Production/World/Common/SM_CommonWashBasin.obj",
+        "SourceAssets/Production/World/Common/SM_CommonWaterTrough.obj",
+        "SourceAssets/Production/World/Common/SM_CommonWheelbarrow.obj",
+        "SourceAssets/Production/World/Common/SM_CommonWoodPile.obj",
+        "SourceAssets/Production/World/Common/WorldPack.mtl"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/World/Lothlorien",
+      "file_count": 11,
+      "obj_count": 9,
+      "mtl_count": 2,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/World/Lothlorien/RegionalMaterials.mtl",
+        "SourceAssets/Production/World/Lothlorien/SM_LorienBasketRack.obj",
+        "SourceAssets/Production/World/Lothlorien/SM_LorienGoldenBench.obj",
+        "SourceAssets/Production/World/Lothlorien/SM_LorienLantern.obj",
+        "SourceAssets/Production/World/Lothlorien/SM_LorienLeafLantern.obj",
+        "SourceAssets/Production/World/Lothlorien/SM_LorienMirror.obj",
+        "SourceAssets/Production/World/Lothlorien/SM_LorienRootBridge.obj",
+        "SourceAssets/Production/World/Lothlorien/SM_LorienTalan.obj",
+        "SourceAssets/Production/World/Lothlorien/SM_LorienTalanLadder.obj",
+        "SourceAssets/Production/World/Lothlorien/SM_LorienTreePlatform.obj",
+        "SourceAssets/Production/World/Lothlorien/WorldPack.mtl"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/World/Moria",
+      "file_count": 12,
+      "obj_count": 10,
+      "mtl_count": 2,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/World/Moria/RegionalMaterials.mtl",
+        "SourceAssets/Production/World/Moria/SM_MoriaBrazier.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaBridgeSegment.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaBrokenStair.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaChainAnchor.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaDoor.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaGateSegment.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaMineCart.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaPillar.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaRubblePillar.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaTallBrazier.obj",
+        "SourceAssets/Production/World/Moria/WorldPack.mtl"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/World/Rivendell",
+      "file_count": 12,
+      "obj_count": 10,
+      "mtl_count": 2,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/World/Rivendell/RegionalMaterials.mtl",
+        "SourceAssets/Production/World/Rivendell/SM_RivBridgeRail.obj",
+        "SourceAssets/Production/World/Rivendell/SM_RivColumn.obj",
+        "SourceAssets/Production/World/Rivendell/SM_RivGardenBench.obj",
+        "SourceAssets/Production/World/Rivendell/SM_RivLampArch.obj",
+        "SourceAssets/Production/World/Rivendell/SM_RivPlanter.obj",
+        "SourceAssets/Production/World/Rivendell/SM_RivWaterBasin.obj",
+        "SourceAssets/Production/World/Rivendell/SM_RivendellArch.obj",
+        "SourceAssets/Production/World/Rivendell/SM_RivendellBridge.obj",
+        "SourceAssets/Production/World/Rivendell/SM_RivendellLantern.obj",
+        "SourceAssets/Production/World/Rivendell/SM_RivendellPavilion.obj",
+        "SourceAssets/Production/World/Rivendell/WorldPack.mtl"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/World/Road",
+      "file_count": 11,
+      "obj_count": 9,
+      "mtl_count": 2,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/World/Road/RegionalMaterials.mtl",
+        "SourceAssets/Production/World/Road/SM_CaradhrasRock.obj",
+        "SourceAssets/Production/World/Road/SM_RoadCampTent.obj",
+        "SourceAssets/Production/World/Road/SM_RoadPackRack.obj",
+        "SourceAssets/Production/World/Road/SM_RoadShrine.obj",
+        "SourceAssets/Production/World/Road/SM_RoadSnowMarker.obj",
+        "SourceAssets/Production/World/Road/SM_RoadSupplyRack.obj",
+        "SourceAssets/Production/World/Road/SM_RoadSupplySled.obj",
+        "SourceAssets/Production/World/Road/SM_RoadTravelTent.obj",
+        "SourceAssets/Production/World/Road/SM_RoadTravelerCart.obj",
+        "SourceAssets/Production/World/Road/WorldPack.mtl"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/World/Shire",
+      "file_count": 48,
+      "obj_count": 39,
+      "mtl_count": 2,
+      "image_count": 7,
+      "files": [
+        "SourceAssets/Production/World/Shire/SM_ShBarrel.obj",
+        "SourceAssets/Production/World/Shire/SM_ShBench.obj",
+        "SourceAssets/Production/World/Shire/SM_ShCart.obj",
+        "SourceAssets/Production/World/Shire/SM_ShCartLoaded.obj",
+        "SourceAssets/Production/World/Shire/SM_ShCottageHouse.obj",
+        "SourceAssets/Production/World/Shire/SM_ShCrate.obj",
+        "SourceAssets/Production/World/Shire/SM_ShFarmGate.obj",
+        "SourceAssets/Production/World/Shire/SM_ShFarmPlough.obj",
+        "SourceAssets/Production/World/Shire/SM_ShFenceSegment.obj",
+        "SourceAssets/Production/World/Shire/SM_ShFlowerBox.obj",
+        "SourceAssets/Production/World/Shire/SM_ShGardenArch.obj",
+        "SourceAssets/Production/World/Shire/SM_ShGrassClump.obj",
+        "SourceAssets/Production/World/Shire/SM_ShGroundBlock.obj",
+        "SourceAssets/Production/World/Shire/SM_ShHaystack.obj",
+        "SourceAssets/Production/World/Shire/SM_ShHedge.obj",
+        "SourceAssets/Production/World/Shire/SM_ShHobbitFacade.obj",
+        "SourceAssets/Production/World/Shire/SM_ShLampPost.obj",
+        "SourceAssets/Production/World/Shire/SM_ShLantern.obj",
+        "SourceAssets/Production/World/Shire/SM_ShMailbox.obj",
+        "SourceAssets/Production/World/Shire/SM_ShMarketStall.obj",
+        "SourceAssets/Production/World/Shire/SM_ShMillHouse.obj",
+        "SourceAssets/Production/World/Shire/SM_ShMillWheel.obj",
+        "SourceAssets/Production/World/Shire/SM_ShOrchardLadder.obj",
+        "SourceAssets/Production/World/Shire/SM_ShPathStone.obj",
+        "SourceAssets/Production/World/Shire/SM_ShPicnicCanopy.obj",
+        "SourceAssets/Production/World/Shire/SM_ShPicnicTable.obj",
+        "SourceAssets/Production/World/Shire/SM_ShProduceStand.obj",
+        "SourceAssets/Production/World/Shire/SM_ShPumpWell.obj",
+        "SourceAssets/Production/World/Shire/SM_ShRoadBlock.obj",
+        "SourceAssets/Production/World/Shire/SM_ShRock.obj",
+        "SourceAssets/Production/World/Shire/SM_ShShrub.obj",
+        "SourceAssets/Production/World/Shire/SM_ShSignpost.obj",
+        "SourceAssets/Production/World/Shire/SM_ShStoneBridge.obj",
+        "SourceAssets/Production/World/Shire/SM_ShStoneWall.obj",
+        "SourceAssets/Production/World/Shire/SM_ShTreeCanopy.obj",
+        "SourceAssets/Production/World/Shire/SM_ShTreeTrunk.obj",
+        "SourceAssets/Production/World/Shire/SM_ShTurfMound.obj",
+        "SourceAssets/Production/World/Shire/SM_ShWashLine.obj",
+        "SourceAssets/Production/World/Shire/SM_ShWell.obj",
+        "SourceAssets/Production/World/Shire/ShireMaterials.mtl",
+        "SourceAssets/Production/World/Shire/TX_ShBark.bmp",
+        "SourceAssets/Production/World/Shire/TX_ShDirt.bmp",
+        "SourceAssets/Production/World/Shire/TX_ShDoorGreen.bmp",
+        "SourceAssets/Production/World/Shire/TX_ShGrass.bmp",
+        "SourceAssets/Production/World/Shire/TX_ShLeaves.bmp",
+        "SourceAssets/Production/World/Shire/TX_ShStone.bmp",
+        "SourceAssets/Production/World/Shire/TX_ShWood.bmp",
+        "SourceAssets/Production/World/Shire/WorldPack.mtl"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/World/Weathertop",
+      "file_count": 10,
+      "obj_count": 8,
+      "mtl_count": 2,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/World/Weathertop/RegionalMaterials.mtl",
+        "SourceAssets/Production/World/Weathertop/SM_WeathertopBrokenPillar.obj",
+        "SourceAssets/Production/World/Weathertop/SM_WeathertopCampFire.obj",
+        "SourceAssets/Production/World/Weathertop/SM_WeathertopCampRing.obj",
+        "SourceAssets/Production/World/Weathertop/SM_WeathertopRubblePile.obj",
+        "SourceAssets/Production/World/Weathertop/SM_WeathertopRuinWall.obj",
+        "SourceAssets/Production/World/Weathertop/SM_WeathertopRuinedArch.obj",
+        "SourceAssets/Production/World/Weathertop/SM_WeathertopWatchStone.obj",
+        "SourceAssets/Production/World/Weathertop/SM_WeathertopWindBanner.obj",
+        "SourceAssets/Production/World/Weathertop/WorldPack.mtl"
+      ]
+    }
+  ],
+  "totals": {
+    "production_files": 329,
+    "obj_files": 286,
+    "mtl_files": 18,
+    "image_files": 24
+  },
+  "missing_dedicated_roots": [
+    "SourceAssets/Production/World/Isengard",
+    "SourceAssets/Production/Enemies/Lurtz",
+    "SourceAssets/Production/Enemies/Watcher",
+    "SourceAssets/Production/Enemies/Balrog"
+  ]
+}
