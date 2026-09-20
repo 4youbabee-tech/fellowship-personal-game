@@ -384,6 +384,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         bool bInjectedSmoothingGroup = false;
         bool bAuthoredMaterialImportForced = false;
         bool bBuiltInTangentsForUntexturedObj = false;
+        TArray<FString> AuthoredMaterialNames;
         if (FPaths::GetExtension(Filename).Equals(TEXT("obj"), ESearchCase::IgnoreCase))
         {
             FString ObjSource;
@@ -411,6 +412,30 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
 
                 const bool bHasMaterialLibrary =
                     ObjSource.Contains(TEXT("mtllib "), ESearchCase::IgnoreCase);
+
+                // UE4.27 can collapse OBJ material slots to "defaultMat" when automated
+                // material creation is disabled, even though the source has valid usemtl
+                // statements. Preserve the authored material order from the OBJ so we
+                // can deterministically repair those slots after mesh import.
+                if (bHasMaterialLibrary)
+                {
+                    TArray<FString> ObjLines;
+                    ObjSource.ParseIntoArrayLines(ObjLines, true);
+                    for (const FString& RawObjLine : ObjLines)
+                    {
+                        const FString ObjLine = RawObjLine.TrimStartAndEnd();
+                        if (!ObjLine.StartsWith(TEXT("usemtl "), ESearchCase::IgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        const FString MaterialName = ObjLine.Mid(7).TrimStartAndEnd();
+                        if (!MaterialName.IsEmpty() && !AuthoredMaterialNames.Contains(MaterialName))
+                        {
+                            AuthoredMaterialNames.Add(MaterialName);
+                        }
+                    }
+                }
 
                 // Do not depend on factory defaults in unattended UE4.27 imports.
                 // Authored OBJ/MTL pairs must explicitly create material assets;
@@ -472,9 +497,25 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             // flagging those secondary packages for persistence. Mark every real
             // imported material package dirty so the final SaveDirtyPackages pass writes
             // the mesh and its material dependencies together.
-            for (FStaticMaterial& StaticMaterial : ImportedMesh->StaticMaterials)
+            for (int32 MaterialIndex = 0; MaterialIndex < ImportedMesh->StaticMaterials.Num(); ++MaterialIndex)
             {
+                FStaticMaterial& StaticMaterial = ImportedMesh->StaticMaterials[MaterialIndex];
                 UMaterialInterface* Material = StaticMaterial.MaterialInterface;
+
+                // When UE4.27 collapses valid authored OBJ slots to defaultMat in
+                // unattended mode, restore the slot identity from source usemtl order.
+                if (bAuthoredMaterialImportForced &&
+                    AuthoredMaterialNames.IsValidIndex(MaterialIndex))
+                {
+                    const FString CurrentSlotName = StaticMaterial.MaterialSlotName.ToString();
+                    if (StaticMaterial.MaterialSlotName.IsNone() ||
+                        CurrentSlotName.Equals(TEXT("defaultMat"), ESearchCase::IgnoreCase))
+                    {
+                        const FName AuthoredSlotName(*AuthoredMaterialNames[MaterialIndex]);
+                        StaticMaterial.MaterialSlotName = AuthoredSlotName;
+                        StaticMaterial.ImportedMaterialSlotName = AuthoredSlotName;
+                    }
+                }
 
                 // UE4.27 OBJ import can serialize the material package path into the
                 // mesh while leaving MaterialInterface unresolved in unattended mode.
