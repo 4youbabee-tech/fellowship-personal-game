@@ -4544,6 +4544,55 @@ if pg106_visual.get("current_wave", {}).get("id") != "BIBLE_DRIVEN_WORLD_COMPOSI
 if pg106_visual.get("bible_alignment", {}).get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
     fail("PG-106 Bible alignment must remain pending exact-head engine proof")
 
+# PG-107/108: screenplay-first story authority plus complete 01-09 source hierarchy.
+pg107_index = json.loads(read(ROOT / "Data" / "OwnerSourceReferenceIndex.json"))
+pg107_sources = {
+    str(row.get("id") or ""): row
+    for row in pg107_index.get("sources", [])
+    if isinstance(row, dict)
+}
+for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY"]:
+    pg107_row = pg107_sources.get(pg107_id)
+    if not pg107_row:
+        fail(f"PG-107 primary screenplay source missing: {pg107_id}")
+        continue
+    if pg107_row.get("kind") != "PRIMARY_SCREENPLAY_STORY_AUTHORITY":
+        fail(f"PG-107 screenplay not primary story authority: {pg107_id}")
+    if pg107_row.get("runtime_ship") is not False:
+        fail(f"PG-107 raw screenplay may not ship at runtime: {pg107_id}")
+    if not pg107_row.get("sha256"):
+        fail(f"PG-107 screenplay provenance hash missing: {pg107_id}")
+
+pg107_authority = pg107_index.get("story_authority", {})
+pg107_primary = {
+    str(row.get("source_id") or "")
+    for row in pg107_authority.get("primary_screenplays", [])
+    if isinstance(row, dict)
+}
+for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY"]:
+    if pg107_id not in pg107_primary:
+        fail(f"PG-107 screenplay absent from primary authority list: {pg107_id}")
+if "may not override screenplay-supported film events" not in str(pg107_authority.get("rule") or ""):
+    fail("PG-107 screenplay precedence rule missing")
+
+pg108_summary = pg107_index.get("source_set_summary", {})
+if pg108_summary.get("core_pdf_count") != 11:
+    fail("PG-108 core PDF source count must remain 11")
+if pg108_summary.get("supplied_screenplays") != 2:
+    fail("PG-108 screenplay count must remain 2")
+if pg108_summary.get("numbered_production_bibles") != 9:
+    fail("PG-108 numbered Bible count must remain 9")
+pg108_helper = pg107_sources.get("SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1")
+if not pg108_helper:
+    fail("PG-108 external helpful resources Bible 09 missing")
+else:
+    if pg108_helper.get("authority") != "HELPER_ONLY_NOT_CANON_NOT_STORY":
+        fail("PG-108 Bible 09 must remain helper-only")
+    if pg108_helper.get("runtime_ship") is not False:
+        fail("PG-108 raw Bible 09 may not ship at runtime")
+if "Bible 09 external-resource discovery" not in " ".join(pg107_authority.get("precedence", [])):
+    fail("PG-108 Bible 09 authority boundary missing")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
