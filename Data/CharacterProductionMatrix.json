@@ -645,7 +645,7 @@
     "Visual acceptance is recorded separately from compile/import success."
   ],
   "source_atlas": "Data/Part1ProductionAtlas.json",
-  "production_truth": "Nine core Part I hero/companion modular foundations now include V6 anatomical head/torso/hair geometry and production-scale face/equipment runtime placement. Final skeletal rigs, deformation, UV/material/skin/face systems, final animation and human visual acceptance remain pending.",
+  "production_truth": "V6 geometry for the nine core Part I hero/companion foundations is exact-head engine-proven on 0885d639 (#486/#321). V7 adds production surface response for cloth/skin/hair/leather/wood/metal and awaits its own exact-head proof. Final rigs/deformation, texture-level skin detail, final animation and rendered human acceptance remain pending.",
   "threats": [
     {
       "id": "BLACK_RIDER_NAZGUL",
@@ -750,7 +750,7 @@
   },
   "geometry_refinement_wave": {
     "id": "HERO_ANATOMICAL_FOUNDATION_V6",
-    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "status": "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE",
     "scope": [
       "FRODO",
       "GANDALF",
@@ -775,6 +775,34 @@
       "Named companions use existing production sword/bow/shield/axe/cloak/staff/beard/hat meshes where available.",
       "Final skeletal rig handoff remains automatic and takes priority when valid rig + AnimBP packages exist."
     ],
-    "acceptance_boundary": "Structural source-geometry improvement is implemented; rendered likeness, deformation, final animation/materials, PIE/device and human visual acceptance are not yet claimed."
+    "acceptance_boundary": "Structural source-geometry improvement is implemented; rendered likeness, deformation, final animation/materials, PIE/device and human visual acceptance are not yet claimed.",
+    "engine_proof": {
+      "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
+      "pre_unreal": "PASS #486",
+      "unreal_build": "PASS #321",
+      "scope": "compile + import + startup + P1C01-P1C08 + state/save/warning chain; rendered acceptance remains separate"
+    }
+  },
+  "surface_material_wave": {
+    "id": "HERO_SURFACE_RESPONSE_V7",
+    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "scope": [
+      "FRODO",
+      "GANDALF",
+      "SAM",
+      "MERRY",
+      "PIPPIN",
+      "ARAGORN",
+      "BOROMIR",
+      "LEGOLAS",
+      "GIMLI"
+    ],
+    "implementation": [
+      "Project-owned M_ProductionSurface master material is synthesized deterministically during production import.",
+      "Color, Roughness and Metallic parameters drive runtime character material instances.",
+      "Cloth, skin, hair, leather/wood and metal equipment now receive distinct light response instead of one flat tint.",
+      "MTL Pr/Pm values are accepted for authored source palettes without relying on import factory defaults."
+    ],
+    "acceptance_boundary": "Implemented in source/runtime; exact-head UE4.27 proof and rendered human review remain pending."
   }
 }

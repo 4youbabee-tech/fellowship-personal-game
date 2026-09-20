@@ -2768,12 +2768,12 @@
       ],
       "behavior": "Repair exact-head failures first; machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "cd58be1e1cea033295a163ef2a90985f30471c2b",
+    "last_green_head": "0885d639f61454613bd075dda1d8fd64b3d06573",
     "evidence": {
-      "pre_unreal": "PASS #484 on cd58be1",
-      "unreal_build": "PASS #319 on cd58be1"
+      "pre_unreal": "PASS #486 on 0885d639",
+      "unreal_build": "PASS #321 on 0885d639"
     },
-    "evidence_scope": "Historical passed baseline only; latest head requires its own complete engine run."
+    "evidence_scope": "Verified baseline only; V7 requires its own exact-head chain."
   },
   "reference_only_files": [
     "Docs/CURRENT_PROJECT_STATE.md",
@@ -3073,71 +3073,63 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "HERO_GEOMETRY_AND_LIVING_WORLD_V6",
+  "current_focus": "HERO_SURFACE_RESPONSE_AND_LIVING_WORLD_V7",
   "immediate_next_large_actions": [
-    "Prove the V6 head/torso/hair/equipment wave on an exact-head Pre-Unreal + UE4.27.2 chain.",
-    "After green proof, add authored character material layering and refine visible threat geometry without regressing story/save/performance safety.",
-    "Continue regional life-density, ambient animation and presentation passes while final rig/animation/PIE/device/human acceptance remains explicit."
+    "Prove HERO_SURFACE_RESPONSE_V7 on the exact new head through Pre-Unreal and UE4.27.2 compile/import/startup/chapter/state validation.",
+    "After green proof, expand regional life-density and ambient animation across the Fellowship route while preserving performance safeguards.",
+    "Continue hero clothing/detail and visible-threat refinement while keeping final rig/animation/rendered/device/human acceptance explicit."
   ],
   "session_handoff": {
-    "source_head": "cd58be1e1cea033295a163ef2a90985f30471c2b",
+    "source_head": "0885d639f61454613bd075dda1d8fd64b3d06573",
     "pull_request": 53,
     "branch": "work/automation-first-runtime-observation",
     "verified": {
-      "unreal_build": "PASS #319 (cd58be1)",
-      "ue4_compile": "PASS #319 (cd58be1)",
-      "production_import": "PASS #319 (cd58be1)",
-      "startup": "PASS #319 (cd58be1)",
-      "chapter_audit": "PASS #319 (cd58be1)",
-      "state_audit": "PASS #319 (cd58be1)",
-      "warning_guard": "PASS #319 (cd58be1)",
-      "pre_unreal": "PASS #484 (cd58be1)"
+      "pre_unreal": "PASS #486 (0885d639)",
+      "unreal_build": "PASS #321 (0885d639)",
+      "ue4_compile": "PASS #321 (0885d639)",
+      "production_import": "PASS #321 (0885d639)",
+      "startup": "PASS #321 (0885d639)",
+      "chapter_audit": "PASS #321 (0885d639)",
+      "state_audit": "PASS #321 (0885d639)",
+      "warning_guard": "PASS #321 (0885d639)"
     },
-    "failing": {
-      "current_head": "Both #320 attempts were interrupted (Ctrl-C). Attempt 2 cancelled before build at editor-wait step. Trigger not established; no new compiler defect inferred."
-    },
+    "failing": {},
     "next_actions": [
-      "Prove the V6 head/torso/hair/equipment wave on an exact-head Pre-Unreal + UE4.27.2 chain.",
-      "After green proof, add authored character material layering and refine visible threat geometry without regressing story/save/performance safety.",
-      "Continue regional life-density, ambient animation and presentation passes while final rig/animation/PIE/device/human acceptance remains explicit."
+      "Prove HERO_SURFACE_RESPONSE_V7 on the exact new head through Pre-Unreal and UE4.27.2 compile/import/startup/chapter/state validation.",
+      "After green proof, expand regional life-density and ambient animation across the Fellowship route while preserving performance safeguards.",
+      "Continue hero clothing/detail and visible-threat refinement while keeping final rig/animation/rendered/device/human acceptance explicit."
     ],
     "scope_rule": "Machine evidence does not replace rendered PIE/device/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "cd58be1e1cea033295a163ef2a90985f30471c2b",
+        "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
         "pre_unreal": {
-          "sha": "cd58be1e1cea033295a163ef2a90985f30471c2b",
-          "run_id": 35519376661,
+          "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
+          "run_id": 35525891528,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "cd58be1e1cea033295a163ef2a90985f30471c2b",
-          "run_id": 35519376668,
+          "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
+          "run_id": 35525891523,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "93092a82b95418552728c73e02d31c220a7457ac",
+        "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
         "pre_unreal": {
-          "sha": "93092a82b95418552728c73e02d31c220a7457ac",
-          "run_id": 35525072736,
+          "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
+          "run_id": 35525891528,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "93092a82b95418552728c73e02d31c220a7457ac",
-          "run_id": 35525072738,
-          "status": "CANCELLED",
-          "attempt": 2,
-          "workflow_conclusion": "FAILURE"
-        },
-        "previous_attempt": {
-          "attempt": 1,
-          "result": "Build step cancelled with Ctrl-C / -1073741510; no compiler diagnostic established before interruption."
+          "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
+          "run_id": 35525891523,
+          "status": "SUCCESS"
         }
       }
     },
     "unverified_acceptance": [
-      "V6 current-head engine proof pending rerun",
+      "V7 production surface exact-head engine proof",
       "Rendered character/world visual acceptance",
       "Target-device FPS/memory measurements",
       "Human pacing/playability acceptance",

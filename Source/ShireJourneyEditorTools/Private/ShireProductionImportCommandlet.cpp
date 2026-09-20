@@ -7,12 +7,16 @@
 #include "Factories/FbxImportUI.h"
 #include "Factories/FbxStaticMeshImportData.h"
 #include "Factories/MaterialInstanceConstantFactoryNew.h"
+#include "Factories/MaterialFactoryNew.h"
 #include "Engine/StaticMesh.h"
 #include "HAL/FileManager.h"
 #include "HAL/PlatformFilemanager.h"
 #include "Misc/FileHelper.h"
 #include "Misc/PackageName.h"
 #include "Misc/Paths.h"
+#include "Materials/Material.h"
+#include "Materials/MaterialExpressionScalarParameter.h"
+#include "Materials/MaterialExpressionVectorParameter.h"
 #include "Materials/MaterialInterface.h"
 #include "Materials/MaterialInstanceConstant.h"
 #include "Modules/ModuleManager.h"
@@ -137,10 +141,60 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     };
 
     // UE4.27 unattended OBJ import does not reliably persist simple MTL-created
-    // material packages. Create deterministic project material instances first,
-    // then bind OBJ slots to those assets after mesh import.
-    UMaterialInterface* ProductionMaterialParent = LoadObject<UMaterialInterface>(
-        nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
+    // material packages. Create a deterministic project-owned master surface first,
+    // then bind authored MTL instances to it. This gives production geometry a real
+    // roughness/metallic response while preserving the lightweight flat-color bank.
+    const TCHAR* ProductionSurfacePath =
+        TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface");
+    UMaterialInterface* ProductionMaterialParent =
+        LoadObject<UMaterialInterface>(nullptr, ProductionSurfacePath);
+
+    if (!ProductionMaterialParent)
+    {
+        UMaterialFactoryNew* SurfaceFactory = NewObject<UMaterialFactoryNew>();
+        UMaterial* SurfaceMaterial = Cast<UMaterial>(
+            AssetTools.Get().CreateAsset(
+                TEXT("M_ProductionSurface"),
+                TEXT("/Game/Production/Materials"),
+                UMaterial::StaticClass(),
+                SurfaceFactory));
+
+        if (SurfaceMaterial)
+        {
+            UMaterialExpressionVectorParameter* ColorParameter =
+                NewObject<UMaterialExpressionVectorParameter>(SurfaceMaterial);
+            ColorParameter->ParameterName = TEXT("Color");
+            ColorParameter->DefaultValue = FLinearColor(0.35f, 0.35f, 0.35f, 1.0f);
+            SurfaceMaterial->Expressions.Add(ColorParameter);
+            SurfaceMaterial->BaseColor.Expression = ColorParameter;
+
+            UMaterialExpressionScalarParameter* RoughnessParameter =
+                NewObject<UMaterialExpressionScalarParameter>(SurfaceMaterial);
+            RoughnessParameter->ParameterName = TEXT("Roughness");
+            RoughnessParameter->DefaultValue = 0.68f;
+            SurfaceMaterial->Expressions.Add(RoughnessParameter);
+            SurfaceMaterial->Roughness.Expression = RoughnessParameter;
+
+            UMaterialExpressionScalarParameter* MetallicParameter =
+                NewObject<UMaterialExpressionScalarParameter>(SurfaceMaterial);
+            MetallicParameter->ParameterName = TEXT("Metallic");
+            MetallicParameter->DefaultValue = 0.0f;
+            SurfaceMaterial->Expressions.Add(MetallicParameter);
+            SurfaceMaterial->Metallic.Expression = MetallicParameter;
+
+            SurfaceMaterial->PostEditChange();
+            SurfaceMaterial->MarkPackageDirty();
+            ImportedMaterialPackages.AddUnique(SurfaceMaterial->GetOutermost());
+            ProductionMaterialParent = SurfaceMaterial;
+            UE_LOG(LogTemp, Display, TEXT("ShireProductionImport created M_ProductionSurface master material."));
+        }
+        else
+        {
+            ++Failed;
+            UE_LOG(LogTemp, Error, TEXT("ShireProductionImport failed to create M_ProductionSurface master material."));
+        }
+    }
+
     int32 SynthesizedMaterialAssets = 0;
 
     if (ProductionMaterialParent)
@@ -166,6 +220,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             MtlText.ParseIntoArrayLines(Lines, true);
             FString CurrentMaterialName;
             FLinearColor CurrentBaseColor(0.35f, 0.35f, 0.35f, 1.0f);
+            float CurrentRoughness = 0.68f;
+            float CurrentMetallic = 0.0f;
 
             auto FlushMaterial = [&]()
             {
@@ -208,9 +264,16 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
 
                 if (Instance)
                 {
+                    Instance->SetParentEditorOnly(ProductionMaterialParent);
                     Instance->SetVectorParameterValueEditorOnly(
                         FMaterialParameterInfo(TEXT("Color")),
                         CurrentBaseColor);
+                    Instance->SetScalarParameterValueEditorOnly(
+                        FMaterialParameterInfo(TEXT("Roughness")),
+                        FMath::Clamp(CurrentRoughness, 0.0f, 1.0f));
+                    Instance->SetScalarParameterValueEditorOnly(
+                        FMaterialParameterInfo(TEXT("Metallic")),
+                        FMath::Clamp(CurrentMetallic, 0.0f, 1.0f));
                     Instance->PostEditChange();
                     Instance->MarkPackageDirty();
                     ImportedMaterialPackages.AddUnique(Instance->GetOutermost());
@@ -236,6 +299,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     FlushMaterial();
                     CurrentMaterialName = Line.Mid(7).TrimStartAndEnd();
                     CurrentBaseColor = FLinearColor(0.35f, 0.35f, 0.35f, 1.0f);
+                    CurrentRoughness = 0.68f;
+                    CurrentMetallic = 0.0f;
                 }
                 else if (Line.StartsWith(TEXT("Kd "), ESearchCase::IgnoreCase) &&
                     !CurrentMaterialName.IsEmpty())
@@ -249,6 +314,26 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                             FCString::Atof(*Parts[2]),
                             FCString::Atof(*Parts[3]),
                             1.0f);
+                    }
+                }
+                else if (Line.StartsWith(TEXT("Pr "), ESearchCase::IgnoreCase) &&
+                    !CurrentMaterialName.IsEmpty())
+                {
+                    TArray<FString> Parts;
+                    Line.ParseIntoArrayWS(Parts);
+                    if (Parts.Num() >= 2)
+                    {
+                        CurrentRoughness = FCString::Atof(*Parts[1]);
+                    }
+                }
+                else if (Line.StartsWith(TEXT("Pm "), ESearchCase::IgnoreCase) &&
+                    !CurrentMaterialName.IsEmpty())
+                {
+                    TArray<FString> Parts;
+                    Line.ParseIntoArrayWS(Parts);
+                    if (Parts.Num() >= 2)
+                    {
+                        CurrentMetallic = FCString::Atof(*Parts[1]);
                     }
                 }
             }

@@ -273,7 +273,7 @@
   },
   "hero_character_geometry_wave": {
     "id": "HERO_ANATOMICAL_FOUNDATION_V6",
-    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "status": "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE",
     "characters": [
       "Frodo",
       "Gandalf",
@@ -297,6 +297,36 @@
       "Do not call modular static foundations final characters.",
       "Do not claim actor likeness or final facial acceptance from procedural source geometry.",
       "Final rig/deformation, UV/materials, animation, PIE/device and human visual review remain required."
+    ],
+    "engine_proof": {
+      "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
+      "pre_unreal": "#486 SUCCESS",
+      "unreal": "#321 SUCCESS"
+    }
+  },
+  "hero_character_surface_wave": {
+    "id": "HERO_SURFACE_RESPONSE_V7",
+    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "characters": [
+      "Frodo",
+      "Gandalf",
+      "Sam",
+      "Merry",
+      "Pippin",
+      "Aragorn",
+      "Boromir",
+      "Legolas",
+      "Gimli"
+    ],
+    "implemented": [
+      "Project-owned Default Lit master surface material.",
+      "Runtime roughness/metallic separation for cloth, skin, hair, leather/wood and metal equipment.",
+      "MTL Pr/Pm import support for authored material libraries."
+    ],
+    "guardrails": [
+      "No final visual acceptance without rendered PIE evidence.",
+      "No claim of final skin likeness or texture fidelity; this wave is surface response, not scanned likeness.",
+      "Fallback proxy characters remain safe if the production master is unavailable."
     ]
   }
 }

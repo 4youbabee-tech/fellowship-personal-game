@@ -209,7 +209,9 @@ void AShireNPC::ApplyPrototypeStyle()
 {
     UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
         nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    if (!BasicMaterial)
+    UMaterialInterface* ProductionSurfaceMaterial = LoadObject<UMaterialInterface>(
+        nullptr, TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface"));
+    if (!BasicMaterial && !ProductionSurfaceMaterial)
     {
         bVisualStyleApplied = true;
         return;
@@ -550,31 +552,51 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeMouth->SetRelativeScale3D(FVector(0.012f, 0.050f, 0.010f));
     }
 
-    auto ApplyColor = [this, BasicMaterial](UStaticMeshComponent* Component, const FLinearColor& Color)
+    auto ApplySurface = [this, BasicMaterial, ProductionSurfaceMaterial, bProductionVisual](
+        UStaticMeshComponent* Component,
+        const FLinearColor& Color,
+        float Roughness,
+        float Metallic)
     {
         if (!Component)
         {
             return;
         }
 
-        UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, this);
+        UMaterialInterface* Parent =
+            (bProductionVisual && ProductionSurfaceMaterial)
+                ? ProductionSurfaceMaterial
+                : BasicMaterial;
+        if (!Parent)
+        {
+            return;
+        }
+
+        UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(Parent, this);
         if (MID)
         {
             MID->SetVectorParameterValue(TEXT("Color"), Color);
+            MID->SetScalarParameterValue(TEXT("Roughness"), FMath::Clamp(Roughness, 0.0f, 1.0f));
+            MID->SetScalarParameterValue(TEXT("Metallic"), FMath::Clamp(Metallic, 0.0f, 1.0f));
             Component->SetMaterial(0, MID);
         }
     };
 
-    ApplyColor(PrototypeTorso, Coat);
-    ApplyColor(PrototypeHead, Skin);
-    ApplyColor(PrototypeHair, Hair);
-    ApplyColor(PrototypeLeftArm, Coat * 0.95f);
-    ApplyColor(PrototypeRightArm, Coat * 0.95f);
-    ApplyColor(PrototypeLeftLeg, Trousers);
-    ApplyColor(PrototypeRightLeg, Trousers);
-    ApplyColor(PrototypeLeftEye, FLinearColor(0.045f, 0.035f, 0.025f));
-    ApplyColor(PrototypeRightEye, FLinearColor(0.045f, 0.035f, 0.025f));
-    ApplyColor(PrototypeMouth, FLinearColor(0.20f, 0.055f, 0.045f));
+    auto ApplyColor = [&ApplySurface](UStaticMeshComponent* Component, const FLinearColor& Color)
+    {
+        ApplySurface(Component, Color, 0.72f, 0.0f);
+    };
+
+    ApplySurface(PrototypeTorso, Coat, 0.82f, 0.0f);
+    ApplySurface(PrototypeHead, Skin, 0.54f, 0.0f);
+    ApplySurface(PrototypeHair, Hair, 0.72f, 0.0f);
+    ApplySurface(PrototypeLeftArm, Coat * 0.95f, 0.80f, 0.0f);
+    ApplySurface(PrototypeRightArm, Coat * 0.95f, 0.80f, 0.0f);
+    ApplySurface(PrototypeLeftLeg, Trousers, 0.84f, 0.0f);
+    ApplySurface(PrototypeRightLeg, Trousers, 0.84f, 0.0f);
+    ApplySurface(PrototypeLeftEye, FLinearColor(0.045f, 0.035f, 0.025f), 0.24f, 0.0f);
+    ApplySurface(PrototypeRightEye, FLinearColor(0.045f, 0.035f, 0.025f), 0.24f, 0.0f);
+    ApplySurface(PrototypeMouth, FLinearColor(0.20f, 0.055f, 0.045f), 0.56f, 0.0f);
 
     auto HideIdentityPiece = [](UStaticMeshComponent* Component)
     {
@@ -631,7 +653,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypePrimaryProp->SetRelativeLocation(PrototypePrimaryPropBase);
         PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
         PrototypePrimaryProp->SetRelativeScale3D(FVector(0.62f));
-        ApplyColor(PrototypePrimaryProp, Steel);
+        ApplySurface(PrototypePrimaryProp, Steel, 0.34f, 0.78f);
 
         const bool bPackMesh = TryMesh(
             PrototypeSecondaryProp,
@@ -641,7 +663,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeSecondaryProp->SetRelativeScale3D(
             bPackMesh ? FVector(0.88f) : FVector(0.12f, 0.18f, 0.18f));
         PrototypeSecondaryProp->SetRelativeRotation(FRotator(0.0f, 12.0f, 8.0f));
-        ApplyColor(PrototypeSecondaryProp, Leather);
+        ApplySurface(PrototypeSecondaryProp, Leather, 0.66f, 0.0f);
     }
     else if (bMerry || bPippin)
     {
@@ -663,7 +685,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypePrimaryProp->SetRelativeLocation(PrototypePrimaryPropBase);
         PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
         PrototypePrimaryProp->SetRelativeScale3D(FVector(0.58f));
-        ApplyColor(PrototypePrimaryProp, Steel);
+        ApplySurface(PrototypePrimaryProp, Steel, 0.34f, 0.78f);
     }
     else if (bRanger)
     {
@@ -672,7 +694,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeCloak->SetRelativeLocation(PrototypeCloakBase);
         PrototypeCloak->SetRelativeScale3D(
             bProductionCloakMesh ? FVector(1.0f) : FVector(0.14f, 0.45f, 0.68f));
-        ApplyColor(PrototypeCloak, DarkGreen);
+        ApplySurface(PrototypeCloak, DarkGreen, 0.86f, 0.0f);
 
         PrototypePrimaryProp->SetVisibility(true);
         PrototypePrimaryPropBase = FVector(2.0f, 31.0f, 5.0f);
@@ -681,7 +703,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
         PrototypePrimaryProp->SetRelativeScale3D(
             bProductionSwordMesh ? FVector(1.0f) : FVector(0.045f, 0.045f, 0.78f));
-        ApplyColor(PrototypePrimaryProp, Steel);
+        ApplySurface(PrototypePrimaryProp, Steel, 0.34f, 0.78f);
 
         const bool bBackBow = TryMesh(PrototypeSecondaryProp, ProductionBowPath);
         PrototypeSecondaryProp->SetVisibility(true);
@@ -689,7 +711,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeSecondaryProp->SetRelativeRotation(FRotator(0.0f, 0.0f, -18.0f));
         PrototypeSecondaryProp->SetRelativeScale3D(
             bBackBow ? FVector(0.92f) : FVector(0.04f, 0.04f, 0.72f));
-        ApplyColor(PrototypeSecondaryProp, Wood);
+        ApplySurface(PrototypeSecondaryProp, Wood, 0.78f, 0.0f);
     }
     else if (bBoromir)
     {
@@ -707,7 +729,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
         PrototypePrimaryProp->SetRelativeScale3D(
             bProductionSwordMesh ? FVector(1.0f) : FVector(0.05f, 0.05f, 0.82f));
-        ApplyColor(PrototypePrimaryProp, Steel);
+        ApplySurface(PrototypePrimaryProp, Steel, 0.34f, 0.78f);
 
         const bool bShieldMesh = TryMesh(PrototypeSecondaryProp, ProductionShieldPath);
         PrototypeSecondaryProp->SetVisibility(true);
@@ -715,7 +737,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeSecondaryProp->SetRelativeRotation(FRotator(0.0f, 14.0f, -8.0f));
         PrototypeSecondaryProp->SetRelativeScale3D(
             bShieldMesh ? FVector(0.92f) : FVector(0.08f, 0.34f, 0.34f));
-        ApplyColor(PrototypeSecondaryProp, FLinearColor(0.30f, 0.22f, 0.14f));
+        ApplySurface(PrototypeSecondaryProp, FLinearColor(0.30f, 0.22f, 0.14f), 0.62f, 0.10f);
     }
     else if (bLegolas)
     {
@@ -734,7 +756,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
         PrototypePrimaryProp->SetRelativeScale3D(
             bProductionBow ? FVector(1.0f) : FVector(0.035f, 0.035f, 0.72f));
-        ApplyColor(PrototypePrimaryProp, Wood);
+        ApplySurface(PrototypePrimaryProp, Wood, 0.78f, 0.0f);
 
         const bool bKnifeMesh = TryMesh(
             PrototypeSecondaryProp,
@@ -757,7 +779,7 @@ void AShireNPC::ApplyPrototypeStyle()
             bProductionDwarfBeard ? FVector(1.0f) : FVector(0.13f, 0.13f, 0.30f));
         PrototypeBeard->SetRelativeRotation(
             bProductionDwarfBeard ? FRotator::ZeroRotator : FRotator(90.0f, 0.0f, 0.0f));
-        ApplyColor(PrototypeBeard, FLinearColor(0.44f, 0.20f, 0.07f));
+        ApplySurface(PrototypeBeard, FLinearColor(0.44f, 0.20f, 0.07f), 0.74f, 0.0f);
 
         const bool bProductionAxe = TryMesh(PrototypePrimaryProp, ProductionAxePath);
         PrototypePrimaryProp->SetVisibility(true);
@@ -767,7 +789,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
         PrototypePrimaryProp->SetRelativeScale3D(
             bProductionAxe ? FVector(1.0f) : FVector(0.065f, 0.065f, 0.62f));
-        ApplyColor(PrototypePrimaryProp, FLinearColor(0.26f, 0.22f, 0.18f));
+        ApplySurface(PrototypePrimaryProp, FLinearColor(0.26f, 0.22f, 0.18f), 0.38f, 0.72f);
 
         const bool bSecondAxe = TryMesh(PrototypeSecondaryProp, ProductionAxePath);
         PrototypeSecondaryProp->SetVisibility(true);
@@ -789,7 +811,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
         PrototypePrimaryProp->SetRelativeScale3D(
             bGandalfStaff ? FVector(1.0f) : FVector(0.045f, 0.045f, 0.92f));
-        ApplyColor(PrototypePrimaryProp, bSaruman ? FLinearColor(0.60f, 0.58f, 0.52f) : Wood);
+        ApplySurface(PrototypePrimaryProp, bSaruman ? FLinearColor(0.60f, 0.58f, 0.52f) : Wood, bSaruman ? 0.58f : 0.78f, bSaruman ? 0.12f : 0.0f);
 
         const bool bGandalfBeard = bGandalfVisual && TryMesh(
             PrototypeBeard,
@@ -813,7 +835,7 @@ void AShireNPC::ApplyPrototypeStyle()
             PrototypeHeadpiece->SetRelativeLocation(FVector(-1.0f, 0.0f, PrototypeHairBaseZ + 10.0f));
             PrototypeHeadpiece->SetRelativeScale3D(
                 bGandalfHat ? FVector(1.0f) : FVector(0.18f, 0.42f, 0.22f));
-            ApplyColor(PrototypeHeadpiece, FLinearColor(0.28f, 0.29f, 0.27f));
+            ApplySurface(PrototypeHeadpiece, FLinearColor(0.28f, 0.29f, 0.27f), 0.84f, 0.0f);
 
             const bool bGandalfCloak = TryMesh(
                 PrototypeCloak,
@@ -823,7 +845,7 @@ void AShireNPC::ApplyPrototypeStyle()
             PrototypeCloak->SetRelativeLocation(PrototypeCloakBase);
             PrototypeCloak->SetRelativeScale3D(
                 bGandalfCloak ? FVector(1.0f) : FVector(0.14f, 0.46f, 0.72f));
-            ApplyColor(PrototypeCloak, FLinearColor(0.30f, 0.31f, 0.29f));
+            ApplySurface(PrototypeCloak, FLinearColor(0.30f, 0.31f, 0.29f), 0.86f, 0.0f);
         }
     }
     else if (bGaladriel || bElrond || bArwen)

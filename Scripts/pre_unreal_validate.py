@@ -3289,6 +3289,40 @@ for pg109_symbol in [
     if pg109_symbol not in (pg109_npc + pg109_npch):
         fail(f"PG-109 named-cast production visual integration missing: {pg109_symbol}")
 
+# PG-110: core Fellowship characters use a project production surface, not flat-only tints.
+pg110_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+for pg110_symbol in [
+    "M_ProductionSurface",
+    "UMaterialExpressionVectorParameter",
+    "UMaterialExpressionScalarParameter",
+    "RoughnessParameter",
+    "MetallicParameter",
+    "SetParentEditorOnly",
+    'TEXT("Pr ")',
+    'TEXT("Pm ")',
+]:
+    if pg110_symbol not in pg110_importer:
+        fail(f"PG-110 production surface master/import support missing: {pg110_symbol}")
+
+pg110_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
+for pg110_symbol in [
+    "ProductionSurfaceMaterial",
+    "ApplySurface",
+    'SetScalarParameterValue(TEXT("Roughness")',
+    'SetScalarParameterValue(TEXT("Metallic")',
+    "0.82f, 0.0f",
+    "0.54f, 0.0f",
+    "0.34f, 0.78f",
+]:
+    if pg110_symbol not in pg110_npc:
+        fail(f"PG-110 named-character surface response missing: {pg110_symbol}")
+
+pg110_matrix = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
+if pg110_matrix.get("geometry_refinement_wave", {}).get("status") != "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE":
+    fail("PG-110 V6 geometry should remain engine-proven but not visually accepted")
+if pg110_matrix.get("surface_material_wave", {}).get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-110 V7 surface wave proof boundary changed")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     sys.exit(1)
