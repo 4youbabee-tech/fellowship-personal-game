@@ -187,7 +187,10 @@
         "QUIET_STEP first-time progression source",
         "interactable environmental pattern puzzles",
         "Rivendell map-table pattern puzzle",
-        "Moria relief pattern puzzle"
+        "Moria relief pattern puzzle",
+        "source-grounded Chronicle display labels",
+        "previous/next persistent Chronicle entry browsing",
+        "readable region/chapter/category Chronicle context"
       ]
     },
     {
@@ -243,7 +246,9 @@
         "dialogue subtitles",
         "alerts",
         "combat controls",
-        "save/load feedback"
+        "save/load feedback",
+        "dedicated Chronicle entry browser",
+        "known-map-region presentation"
       ]
     },
     {
@@ -268,7 +273,8 @@
         "story/save roadmap",
         "warning debt",
         "PG-083 environmental puzzle contract guard",
-        "PG-084 living-world interaction anti-canon/anti-farm guard"
+        "PG-084 living-world interaction anti-canon/anti-farm guard",
+        "PG-085 Chronicle source-label and browse-control guard"
       ]
     },
     {
