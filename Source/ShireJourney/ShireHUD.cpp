@@ -36,7 +36,7 @@ void AShireHUD::DrawHUD()
     {
         const FString Context = FString::Printf(TEXT("%s  |  %s"),
             *Quests->GetPlayableCharacterId().ToString(),
-            *Quests->GetCurrentEpisodeId().ToString());
+            *Quests->GetCurrentPrimaryRegionName());
         DrawText(Context, FLinearColor(0.70f, 0.76f, 0.63f), 38.0f, 54.0f, SmallFont, 0.82f, false);
         DrawText(Quests->GetActiveQuestTitle().ToString(), FLinearColor::White, 38.0f, 73.0f, SmallFont, 0.96f, false);
         DrawText(Quests->GetActiveObjective().ToString(), FLinearColor(0.82f, 0.86f, 0.76f), 38.0f, 95.0f, SmallFont, 0.86f, false);

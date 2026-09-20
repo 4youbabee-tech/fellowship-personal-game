@@ -61,6 +61,16 @@ struct FShireSideActivityProgressionDefinition
     FName EndsBeforeStoryBeat = NAME_None;
 };
 
+struct FShireChapterProductionDefinition
+{
+    FName RouteId = NAME_None;
+    FName ChapterId = NAME_None;
+    FString DisplayName;
+    FString MacroRegion;
+    FString PrimaryRegion;
+    TArray<FString> LandmarkSequence;
+};
+
 UCLASS()
 class SHIREJOURNEY_API UShireQuestSubsystem : public UGameInstanceSubsystem
 {
@@ -219,6 +229,18 @@ public:
     UFUNCTION(BlueprintPure, Category="Route")
     FName GetPlayableCharacterId() const { return PlayableCharacterId; }
 
+    UFUNCTION(BlueprintPure, Category="World")
+    FString GetCurrentChapterDisplayName() const;
+
+    UFUNCTION(BlueprintPure, Category="World")
+    FString GetCurrentPrimaryRegionName() const;
+
+    UFUNCTION(BlueprintPure, Category="World")
+    FString GetCurrentMacroRegionName() const;
+
+    UFUNCTION(BlueprintPure, Category="World")
+    FString GetCurrentLandmarkSummary() const;
+
     const TMap<FName, int32>& GetAllQuestStages() const { return QuestStages; }
     const TArray<FName>& GetCompletedStoryBeats() const { return CompletedStoryBeats; }
     TMap<FName, FShireRouteProgress> GetRouteProgressSnapshot() const;
@@ -290,6 +312,7 @@ private:
     TArray<FShireJourneyRegionBonusDefinition> JourneyRegionBonusDefinitions;
     TMap<FName, FShireSideActivityProgressionDefinition> SideActivityProgressionDefinitions;
     TMap<FName, FShireSideActivityProgressionDefinition> SideActivityDefinitionsById;
+    TMap<FName, FShireChapterProductionDefinition> ChapterProductionDefinitions;
     bool bSideActivityRewardInProgress = false;
 
     void BuildQuestDefinitions();
@@ -305,6 +328,9 @@ private:
     void RecordStoryBeatForEligibleNPCs(FName StoryBeatId);
     bool LoadJourneyDiscoveryPlan();
     bool LoadSideActivityPlan();
+    bool LoadPart1ProductionAtlas();
+    const FShireChapterProductionDefinition* FindChapterProductionDefinition(FName RouteId, FName ChapterId) const;
+    static FName MakeChapterProductionKey(FName RouteId, FName ChapterId);
     bool IsSideActivityDefinitionAvailable(const FShireSideActivityProgressionDefinition& Definition) const;
     void RebuildJourneyInsightState();
     FName MakeJourneyRegionCompletionId(FName RouteId, FName ChapterId) const;

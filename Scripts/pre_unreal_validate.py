@@ -4014,6 +4014,28 @@ for pg87_symbol in ["SupportedPlayableIds", "PrototypeMotionProfile", "SM_Produc
 if "unsupported playable id=%s; using Frodo fallback" not in pg87_cpp:
     fail("PG-087 unsupported playable visual fallback is not explicit")
 
+
+# PG-088: source-grounded Part I geography must be packaged and visible at runtime.
+pg88_build = read(ROOT / "Source" / "ShireJourney" / "ShireJourney.Build.cs")
+pg88_qh = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
+pg88_qc = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
+pg88_hud = read(ROOT / "Source" / "ShireJourney" / "ShireHUD.cpp")
+if "Part1ProductionAtlas.json" not in pg88_build:
+    fail("PG-088 Part1ProductionAtlas is not packaged")
+for pg88_symbol in [
+    "FShireChapterProductionDefinition",
+    "LoadPart1ProductionAtlas",
+    "GetCurrentChapterDisplayName",
+    "GetCurrentPrimaryRegionName",
+    "GetCurrentMacroRegionName",
+    "GetCurrentLandmarkSummary",
+    "ProductionAtlas: ready=%s chapters=%d",
+]:
+    if pg88_symbol not in (pg88_qh + pg88_qc):
+        fail(f"PG-088 runtime geography symbol missing: {pg88_symbol}")
+if "GetCurrentPrimaryRegionName()" not in pg88_hud:
+    fail("PG-088 HUD is not using source-grounded current region naming")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

@@ -40,6 +40,7 @@ public class ShireJourney : ModuleRules
         RuntimeDependencies.Add("$(ProjectDir)/Data/ModernGameLayerPlan.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/PlayerLifeProgressionPlan.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/ChronicleMapKnowledgePlan.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/Part1ProductionAtlas.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/EnsembleFilmMissionPlan.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/FilmSideContentMasterPlan.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/SideContentCanonCatalog.json");

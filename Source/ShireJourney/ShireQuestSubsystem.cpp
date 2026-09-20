@@ -16,6 +16,7 @@ void UShireQuestSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     BuildQuestDefinitions();
     LoadJourneyDiscoveryPlan();
     LoadSideActivityPlan();
+    LoadPart1ProductionAtlas();
     CurrentChapterId = TEXT("P1C01");
     CurrentRouteId = TEXT("FrodoMain");
     CurrentEpisodeId = TEXT("P1C01_Main");
@@ -616,6 +617,150 @@ bool UShireQuestSubsystem::LoadJourneyDiscoveryPlan()
 }
 
 
+FName UShireQuestSubsystem::MakeChapterProductionKey(FName RouteId, FName ChapterId)
+{
+    return FName(*FString::Printf(TEXT("%s::%s"), *RouteId.ToString(), *ChapterId.ToString()));
+}
+
+const FShireChapterProductionDefinition* UShireQuestSubsystem::FindChapterProductionDefinition(
+    FName RouteId,
+    FName ChapterId) const
+{
+    return ChapterProductionDefinitions.Find(MakeChapterProductionKey(RouteId, ChapterId));
+}
+
+bool UShireQuestSubsystem::LoadPart1ProductionAtlas()
+{
+    ChapterProductionDefinitions.Empty();
+
+    const FString Path = FPaths::Combine(FPaths::ProjectDir(), TEXT("Data/Part1ProductionAtlas.json"));
+    FString JsonText;
+    if (!FFileHelper::LoadFileToString(JsonText, *Path))
+    {
+        UE_LOG(LogTemp, Error, TEXT("ProductionAtlas: failed to read %s"), *Path);
+        return false;
+    }
+
+    TSharedPtr<FJsonObject> Root;
+    const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonText);
+    if (!FJsonSerializer::Deserialize(Reader, Root) || !Root.IsValid())
+    {
+        UE_LOG(LogTemp, Error, TEXT("ProductionAtlas: invalid JSON %s"), *Path);
+        return false;
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* Chapters = nullptr;
+    if (!Root->TryGetArrayField(TEXT("chapters"), Chapters) || !Chapters)
+    {
+        UE_LOG(LogTemp, Error, TEXT("ProductionAtlas: chapters array missing"));
+        return false;
+    }
+
+    for (const TSharedPtr<FJsonValue>& Value : *Chapters)
+    {
+        const TSharedPtr<FJsonObject> Object = Value.IsValid() ? Value->AsObject() : nullptr;
+        if (!Object.IsValid())
+        {
+            continue;
+        }
+
+        FString Route;
+        FString Chapter;
+        FString DisplayName;
+        FString MacroRegion;
+        FString PrimaryRegion;
+        Object->TryGetStringField(TEXT("route"), Route);
+        Object->TryGetStringField(TEXT("chapter"), Chapter);
+        Object->TryGetStringField(TEXT("display_name"), DisplayName);
+        Object->TryGetStringField(TEXT("macro_region"), MacroRegion);
+        Object->TryGetStringField(TEXT("primary_region"), PrimaryRegion);
+
+        if (Route.IsEmpty() || Chapter.IsEmpty() || DisplayName.IsEmpty() ||
+            MacroRegion.IsEmpty() || PrimaryRegion.IsEmpty())
+        {
+            UE_LOG(LogTemp, Error, TEXT("ProductionAtlas: incomplete chapter identity"));
+            continue;
+        }
+
+        FShireChapterProductionDefinition Definition;
+        Definition.RouteId = FName(*Route);
+        Definition.ChapterId = FName(*Chapter);
+        Definition.DisplayName = DisplayName;
+        Definition.MacroRegion = MacroRegion;
+        Definition.PrimaryRegion = PrimaryRegion;
+
+        const TArray<TSharedPtr<FJsonValue>>* Landmarks = nullptr;
+        if (Object->TryGetArrayField(TEXT("landmark_sequence"), Landmarks) && Landmarks)
+        {
+            for (const TSharedPtr<FJsonValue>& LandmarkValue : *Landmarks)
+            {
+                const FString Landmark = LandmarkValue.IsValid() ? LandmarkValue->AsString() : FString();
+                if (!Landmark.IsEmpty())
+                {
+                    Definition.LandmarkSequence.Add(Landmark);
+                }
+            }
+        }
+
+        ChapterProductionDefinitions.Add(
+            MakeChapterProductionKey(Definition.RouteId, Definition.ChapterId),
+            Definition);
+    }
+
+    const bool bReady = ChapterProductionDefinitions.Num() == 9;
+    UE_LOG(
+        LogTemp,
+        bReady ? Display : Error,
+        TEXT("ProductionAtlas: ready=%s chapters=%d"),
+        bReady ? TEXT("yes") : TEXT("no"),
+        ChapterProductionDefinitions.Num());
+    return bReady;
+}
+
+FString UShireQuestSubsystem::GetCurrentChapterDisplayName() const
+{
+    const FShireChapterProductionDefinition* Definition =
+        FindChapterProductionDefinition(CurrentRouteId, CurrentChapterId);
+    return Definition ? Definition->DisplayName : CurrentChapterId.ToString();
+}
+
+FString UShireQuestSubsystem::GetCurrentPrimaryRegionName() const
+{
+    const FShireChapterProductionDefinition* Definition =
+        FindChapterProductionDefinition(CurrentRouteId, CurrentChapterId);
+    return Definition ? Definition->PrimaryRegion : CurrentChapterId.ToString();
+}
+
+FString UShireQuestSubsystem::GetCurrentMacroRegionName() const
+{
+    const FShireChapterProductionDefinition* Definition =
+        FindChapterProductionDefinition(CurrentRouteId, CurrentChapterId);
+    return Definition ? Definition->MacroRegion : FString();
+}
+
+FString UShireQuestSubsystem::GetCurrentLandmarkSummary() const
+{
+    const FShireChapterProductionDefinition* Definition =
+        FindChapterProductionDefinition(CurrentRouteId, CurrentChapterId);
+    if (!Definition || Definition->LandmarkSequence.Num() == 0)
+    {
+        return FString();
+    }
+
+    const int32 MaxShown = FMath::Min(3, Definition->LandmarkSequence.Num());
+    FString Result;
+    for (int32 Index = 0; Index < MaxShown; ++Index)
+    {
+        if (!Result.IsEmpty())
+        {
+            Result += TEXT("  >  ");
+        }
+        Result += Definition->LandmarkSequence[Index];
+    }
+    return Result;
+}
+
+
 bool UShireQuestSubsystem::LoadSideActivityPlan()
 {
     SideActivityProgressionDefinitions.Empty();
@@ -867,18 +1012,20 @@ FString UShireQuestSubsystem::GetChronicleEntryContextLabel(FName EntryId) const
     {
         return FString();
     }
+
     const FShireJourneyDiscoveryDefinition* Definition =
         JourneyDiscoveryDefinitions.Find(FName(*DiscoveryString));
     if (!Definition)
     {
         return FString();
     }
+
     FString Category = Definition->CategoryId.ToString();
     Category.ReplaceInline(TEXT("_"), TEXT(" "));
-    return FString::Printf(TEXT("%s  |  %s  |  %s"),
-        *Definition->RegionId.ToString(),
-        *Definition->ChapterId.ToString(),
-        *Category);
+    const FShireChapterProductionDefinition* Chapter =
+        FindChapterProductionDefinition(Definition->RouteId, Definition->ChapterId);
+    const FString Region = Chapter ? Chapter->PrimaryRegion : Definition->RegionId.ToString();
+    return FString::Printf(TEXT("%s  |  %s"), *Region, *Category);
 }
 
 FString UShireQuestSubsystem::GetKnownMapRegionDisplayLabel(FName RegionId) const
@@ -888,11 +1035,23 @@ FString UShireQuestSubsystem::GetKnownMapRegionDisplayLabel(FName RegionId) cons
         const FShireJourneyDiscoveryDefinition& Definition = Pair.Value;
         if (MakeKnownMapRegionId(Definition.RouteId, Definition.ChapterId) == RegionId)
         {
-            return FString::Printf(TEXT("%s  |  %s"),
+            const FShireChapterProductionDefinition* Chapter =
+                FindChapterProductionDefinition(Definition.RouteId, Definition.ChapterId);
+            if (Chapter)
+            {
+                return FString::Printf(
+                    TEXT("%s  |  %s"),
+                    *Chapter->PrimaryRegion,
+                    *Chapter->DisplayName);
+            }
+
+            return FString::Printf(
+                TEXT("%s  |  %s"),
                 *Definition.RegionId.ToString(),
                 *Definition.ChapterId.ToString());
         }
     }
+
     FString Label = RegionId.ToString();
     Label.RemoveFromStart(TEXT("MAP_REGION_"));
     Label.ReplaceInline(TEXT("_"), TEXT(" / "));
