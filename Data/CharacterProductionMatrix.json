@@ -612,8 +612,9 @@
         "creature mesh",
         "tentacle rig",
         "water VFX",
-        "Moria gate escape staging"
-      ]
+        "final Moria gate water/VFX/audio acceptance"
+      ],
+      "runtime_status": "FILM_LOCKED_VISUAL_PRESSURE_WIRED_P1C06"
     },
     {
       "id": "BALROG",
@@ -624,8 +625,9 @@
         "custom rig",
         "fire/shadow VFX",
         "audio",
-        "Bridge staging"
-      ]
+        "final Bridge VFX/audio/camera acceptance"
+      ],
+      "runtime_status": "FILM_LOCKED_VISUAL_PRESSURE_WIRED_P1C06"
     }
   ],
   "rig_handoff_contract": {

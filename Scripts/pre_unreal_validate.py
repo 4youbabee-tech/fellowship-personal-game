@@ -4077,6 +4077,36 @@ for pg90_id in ["LURTZ","WATCHER","BALROG"]:
     if "PENDING" not in str(pg90_row.get("status") or ""):
         fail(f"PG-090 threat foundation lost explicit pending-final status: {pg90_id}")
 
+
+# PG-091: Watcher and Balrog are film-locked pressure actors, never killable reward targets.
+pg91_h = read(ROOT / "Source" / "ShireJourney" / "FellowshipMythicThreat.h")
+pg91_cpp = read(ROOT / "Source" / "ShireJourney" / "FellowshipMythicThreat.cpp")
+pg91_builder = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
+for pg91_symbol in [
+    "EFellowshipMythicThreatType",
+    "Watcher",
+    "Balrog",
+    "ActivationStoryBeat",
+    "DeactivationStoryBeat",
+    "storyEffect=NONE",
+    "gameplayCollision=off killable=no",
+]:
+    if pg91_symbol not in (pg91_h + pg91_cpp):
+        fail(f"PG-091 mythic threat contract missing: {pg91_symbol}")
+for pg91_symbol in [
+    'TEXT("WatcherAttack")',
+    'TEXT("MoriaEntry")',
+    'TEXT("BalrogApproach")',
+    'TEXT("MoriaEscape")',
+    "EFellowshipMythicThreatType::Watcher",
+    "EFellowshipMythicThreatType::Balrog",
+]:
+    if pg91_symbol not in pg91_builder:
+        fail(f"PG-091 film-locked mythic threat wiring missing: {pg91_symbol}")
+for pg91_forbidden in ["TakeDamage(", "ApplyDamage(", "JourneyInsight", "AwardProgressionXP", "TriggerStoryBeat("]:
+    if pg91_forbidden in pg91_cpp:
+        fail(f"PG-091 mythic threat may not mutate combat/reward/story state: {pg91_forbidden}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

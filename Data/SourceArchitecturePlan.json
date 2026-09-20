@@ -453,6 +453,22 @@
       "kind": "Source",
       "role": "Story-safe reward-free interaction response implementation for living-world micro-events",
       "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/FellowshipMythicThreat.h",
+      "target_path": "Source/ShireJourney/Public/World/FellowshipMythicThreat.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Film-locked non-killable mythic threat presentation contract for Watcher and Balrog",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/FellowshipMythicThreat.cpp",
+      "target_path": "Source/ShireJourney/Private/World/FellowshipMythicThreat.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Story-beat-gated Watcher/Balrog visual pressure implementation using project-owned foundations",
+      "migration_status": "CURRENT_FLAT"
     }
   ]
 }

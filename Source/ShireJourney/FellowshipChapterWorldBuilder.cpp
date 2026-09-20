@@ -2,6 +2,7 @@
 
 #include "BlackRiderPrototype.h"
 #include "FellowshipEnemyPrototype.h"
+#include "FellowshipMythicThreat.h"
 #include "ShireNPC.h"
 #include "ShireAmbientNPC.h"
 #include "ShireQuestTrigger.h"
@@ -1459,6 +1460,16 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
         TEXT("Do not wander. The road is difficult enough when we remain together."),
         TEXT("MoriaEscape"));
 
+    AFellowshipMythicThreat* Watcher = GetWorld()->SpawnActor<AFellowshipMythicThreat>(
+        FVector(-2320, 0, 30), FRotator(0.0f, 0.0f, 0.0f));
+    if (Watcher)
+    {
+        Watcher->ConfigureThreat(
+            EFellowshipMythicThreatType::Watcher,
+            TEXT("WatcherAttack"),
+            TEXT("MoriaEntry"));
+    }
+
     SpawnQuestTrigger(FVector(-2250, 0, 90), TEXT("MoriaDark"), 0, 1,
         TEXT("Something from the lake strikes at the entrance. Get inside before the doors are lost."), TEXT("WatcherAttack"));
     SpawnQuestTrigger(FVector(-1750, 0, 90), TEXT("MoriaDark"), 1, 2,
@@ -1513,6 +1524,16 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
         TEXT("A cave troll smashes into the fight. Keep moving and protect the hobbits."), TEXT("CaveTrollAttack"), TEXT("BridgeOfKhazadDum"), 0);
 
     SpawnEnemy(EFellowshipEnemyType::CaveTroll, FVector(1450, 260, 95), FRotator(0, 190, 0), TEXT("BridgeOfKhazadDum"), 0);
+
+    AFellowshipMythicThreat* Balrog = GetWorld()->SpawnActor<AFellowshipMythicThreat>(
+        FVector(2920, 0, -80), FRotator(0.0f, 180.0f, 0.0f));
+    if (Balrog)
+    {
+        Balrog->ConfigureThreat(
+            EFellowshipMythicThreatType::Balrog,
+            TEXT("BalrogApproach"),
+            TEXT("MoriaEscape"));
+    }
 
     SpawnQuestTrigger(FVector(2000, 0, 90), TEXT("BridgeOfKhazadDum"), 0, 1,
         TEXT("Run for the bridge. Something greater than the orcs is coming."), TEXT("BalrogApproach"));
