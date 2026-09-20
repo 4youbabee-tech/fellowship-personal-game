@@ -210,6 +210,24 @@
         "do-not-infer and canon-confidence rules"
       ],
       "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1",
+      "name": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL(1).pdf",
+      "kind": "OWNER_EXTERNAL_RESOURCE_DISCOVERY_HELPER",
+      "use": [
+        "voice and TTS candidate discovery",
+        "music and sound-effects candidate discovery",
+        "character image and visual-reference discovery",
+        "3D model, prop, environment and scan discovery",
+        "animation, mocap and rigging resource discovery",
+        "LOTR-specific research-source discovery",
+        "AI-assisted original asset creation tool discovery",
+        "asset intake, provenance and release-review workflow"
+      ],
+      "authority": "HELPER_ONLY_NOT_CANON_NOT_STORY",
+      "runtime_ship": false,
+      "release_clearance_required_for_distribution": true
     }
   ],
   "derived_runtime_data": [
@@ -252,9 +270,30 @@
     "precedence": [
       "supplied screenplay evidence for film chronology/outcomes",
       "ProjectGovernor hard invariants and approved implementation decisions",
-      "numbered production bibles for derived production guidance",
-      "visual-only references for appearance/mood only"
+      "numbered production bibles 01-08 for derived production guidance",
+      "visual-only references for appearance/mood only",
+      "Bible 09 external-resource discovery for candidate assets/tools only; never canon evidence"
     ],
-    "runtime_rule": "Raw source PDFs remain reference-only and never ship as runtime dependencies."
+    "runtime_rule": "Raw source PDFs remain reference-only and never ship as runtime dependencies.",
+    "resource_helper_bibles": [
+      "SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1"
+    ]
+  },
+  "source_set_summary": {
+    "core_pdf_count": 11,
+    "supplied_screenplays": 2,
+    "numbered_production_bibles": 9,
+    "numbered_bible_ids": [
+      "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
+      "SRC_OWNER_CHARACTERS_RELATIONSHIPS_BIBLE_V1",
+      "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+      "SRC_OWNER_PEOPLES_LORE_ARTIFACTS_CULTURES_BIBLE_V1",
+      "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+      "SRC_OWNER_GAMEPLAY_SIDE_ACTIVITIES_BIBLE_V1",
+      "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+      "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
+      "SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1"
+    ],
+    "rule": "The two supplied screenplays are primary story authority. Bibles 01-08 derive production guidance. Bible 09 is a helper/resource-intake guide only and cannot establish or override canon, chronology, character identity, story outcomes or film geography."
   }
 }
