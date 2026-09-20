@@ -11,7 +11,7 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 - Merge rule: never merge a red or untested exact head into `develop`.
 - Product rule: film scenario first; game systems expand around verified film anchors.
 - Performance rule: Windows / DX11 / 720p Low-Medium / 30 FPS floor.
-- Current B1 runtime wave: **ENVIRONMENTAL_PUZZLES_AND_INTERACTIVE_WORLD_EVENTS_V4** — dedicated pattern puzzles plus optional reward-free interactions with safe living-world micro-events.
+- Current B1 runtime wave: **CHRONICLE_BROWSING_AND_KNOWLEDGE_PRESENTATION_V5** — source-grounded Chronicle labels, explicit entry browsing, readable map-region context, and PG-085 regression protection.
 
 ## Execution order
 
