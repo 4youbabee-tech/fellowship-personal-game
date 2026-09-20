@@ -1896,6 +1896,46 @@
         "REQ-MEGA-001"
       ],
       "checkpoint": "MASTER_EXECUTION_CONTROL"
+    },
+    {
+      "id": "REQ-AUDIT-001",
+      "title": "Continuous deep architecture, backend and player-experience audit",
+      "category": "QualityEngineering",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner requested a from-zero-to-thousand review of requirements, Governor, backend, game rules, developer practices and enjoyment risks before further large construction.",
+      "intent": "Continuously detect architectural contradictions, hidden validation defects, player-friction code, unsafe debug controls, save/load risks and scaling hotspots as the game grows.",
+      "evidence": [
+        "Data/DeepProjectAudit.json",
+        "Docs/DEEP_PROJECT_AUDIT.md",
+        "Scripts/deep_project_audit.py"
+      ],
+      "implementation_refs": [
+        "shipping separation for developer chapter/route controls",
+        "bounded lightweight cinematic input lock",
+        "asynchronous automatic checkpoint writes",
+        "CI deep-audit script and finding registry"
+      ],
+      "missing_work": [
+        "repair current world-material persistence blocker",
+        "profile actor-iteration/social pairing on target device",
+        "profile chapter-transition synchronous asset loads",
+        "target-device frame-time/memory capture and rendered chapter acceptance"
+      ],
+      "acceptance_criteria": [
+        "critical exact-head gates are green before unrelated expansion",
+        "shipping build exposes no developer route/chapter controls",
+        "automatic checkpoints do not perform synchronous active-play disk writes",
+        "known scaling/player-friction findings are recorded and repaired or evidence-bounded",
+        "device/rendered acceptance remains distinct from machine evidence"
+      ],
+      "dependencies": [
+        "REQ-QA-001",
+        "REQ-PERF-001",
+        "REQ-SAVE-001"
+      ],
+      "checkpoint": "DEEP_AUDIT_2026_09_20",
+      "notes": "Continuous control; never a one-time zero-bugs claim."
     }
   ],
   "hard_invariants": [
@@ -2703,24 +2743,28 @@
     }
   ],
   "active_gate": {
-    "id": "POST_VERIFICATION_EXPANSION_GATE",
-    "status": "ACTIVE",
-    "blocks_major_feature_expansion": false,
+    "id": "DEEP_EXACT_HEAD_STABILITY_GATE",
+    "status": "ACTIVE_RED_REPAIR",
+    "blocks_major_feature_expansion": true,
     "required_evidence": [
-      "Every expansion batch must pass Pre-Unreal validation before merge.",
-      "Every major runtime/content batch must pass real UE4.27.2 compile/import validation on the self-hosted target laptop.",
-      "Headless startup/chapter audits remain regression guards for P1C01-P1C08.",
-      "Do not promote new visual/performance claims beyond the evidence actually observed."
+      "Pre-Unreal including deep audit",
+      "real UE4.27.2 compile and deterministic production import",
+      "playable startup and P1C01-P1C08 audits",
+      "route/story/state isolated disk roundtrip",
+      "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "The post-CP54 freeze was lifted on 2026-09-19 after explicit project-owner confirmation that the verification/check/fix pass was completed. Construction and expansion resume from CP55.",
+    "note": "Audit/repair may continue while red; unrelated expansion waits for a green exact head.",
     "enforcement": {
-      "policy_file": "Data/VerificationGate.json",
+      "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
       "ci_guard_ids": [
         "PG-056",
-        "PG-057"
+        "PG-057",
+        "PG-100",
+        "PG-101",
+        "PG-102"
       ],
-      "behavior": "Freeze-specific expansion blocking is disabled; evidence-honesty and regression guards remain active."
+      "behavior": "Repair exact-head failures first; machine evidence never promotes visual/device acceptance."
     }
   },
   "reference_only_files": [
@@ -2975,13 +3019,14 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Exact-head warning identity rerun isolated the remaining red gate to unsaved world-material packages.",
+    "reason": "Owner requested full project-path, Governor, backend, rules and player-enjoyment audit before more large construction.",
     "summary": [
-      "Head c4fe8893e453d7eed80920e886bbfd40f4805d0d passed Pre-Unreal #451.",
-      "Unreal Build Validation #286 passed MSVC probe, UE4.27.2 compile, production import, Python resolution, startup, P1C01-P1C08 and route/story/state disk roundtrip.",
-      "Identity-based warning accounting reduced duplicated tangent debt to 50 unique meshes and nearly-zero-binormal debt to 53 unique meshes; both are real art debt but below the current regression ceiling.",
-      "The only failing exact-head gate is 78 unique missing /Game/Production/World material packages versus ceiling 71.",
-      "Importer repair now recovers unresolved material bindings and sweeps authored-material destination folders through AssetRegistry so in-memory OBJ materials are explicitly saved before runtime reload."
+      "Governor requirement IDs remain unique with no open recorded conflicts; continuous deep-audit requirement added.",
+      "Long lightweight cinematic input locks were reduced to a maximum 3.5 seconds while dialogue/audio may continue.",
+      "F6/F7/F8 developer navigation is now non-shipping only.",
+      "Automatic checkpoints now use queued AsyncSaveGameToSlot instead of synchronous active-play disk writes.",
+      "NPC actor-iteration and chapter LoadObject hotspots are tracked for target-device measurement rather than assumed free.",
+      "Material persistence remains the exact-head blocker; deterministic MTL material synthesis is under UE4 validation."
     ]
   },
   "development_mode": {
@@ -3018,14 +3063,13 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "EXACT_HEAD_WORLD_MATERIAL_PERSISTENCE_REPAIR",
+  "current_focus": "DEEP_PROJECT_AUDIT_AND_EXACT_HEAD_REPAIR",
   "immediate_next_large_actions": [
-    "Keep newest exact head in the UE4.27 compile/import/startup/chapter/state repair loop until green.",
-    "Validate the new bounded hero/threat camera framing on the real engine without claiming final cinematics.",
-    "Deepen Moria and Amon Hen lighting/material/encounter presentation while film outcomes remain immutable.",
-    "Continue full-cast production rig/animation handoff with in-place locomotion and distance/URO safeguards.",
-    "Add chapter-specific rendered evidence capture and target-device profiling before visual/performance promotion.",
-    "Keep production atlas, visual pass, readiness gate and governor synchronized."
+    "Green deterministic authored-material import on the exact head.",
+    "Run deep audit plus real UE4 compile/import/startup/eight chapters/state/warning chain on one SHA.",
+    "Profile chapter-transition loads and NPC social/banter iteration on target hardware.",
+    "Repair highest-visibility tangent/binormal asset debt without raising thresholds.",
+    "Then resume coordinated cinematic world/character/encounter production."
   ],
   "session_handoff": {
     "source_head": "c4fe8893e453d7eed80920e886bbfd40f4805d0d",
