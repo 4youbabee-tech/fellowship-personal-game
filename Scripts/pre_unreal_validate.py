@@ -3955,6 +3955,44 @@ for pg85_marker in ["ENTRY %d / %d", "KNOWN MAP REGIONS", "C Close"]:
     if pg85_marker not in pg85_hud:
         fail(f"PG-085 dedicated Chronicle HUD marker missing: {pg85_marker}")
 
+
+# PG-086: mega production remains source-grounded and truthfully gated.
+pg86_names = ["Part1ProductionAtlas.json", "Production100ReadinessGate.json", "Part1MegaProductionPlan.json"]
+pg86_docs = []
+for pg86_name in pg86_names:
+    pg86_path = ROOT / "Data" / pg86_name
+    if not pg86_path.exists():
+        fail(f"PG-086 missing mega-production contract: {pg86_name}")
+        pg86_docs.append({})
+        continue
+    try:
+        pg86_docs.append(json.loads(read(pg86_path)))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-086 invalid {pg86_name}: {exc}")
+        pg86_docs.append({})
+pg86_atlas, pg86_gate, pg86_mega = (pg86_docs + [{}, {}, {}])[:3]
+pg86_required = {("FrodoMain", f"P1C0{i}") for i in range(1, 9)} | {("GandalfParallel", "P1C01")}
+pg86_actual = {(str(row.get("route") or ""), str(row.get("chapter") or "")) for row in pg86_atlas.get("chapters", []) if isinstance(row, dict)}
+if pg86_actual != pg86_required:
+    fail("PG-086 Part1ProductionAtlas chapter/route coverage mismatch")
+if pg86_gate.get("production_100") is not False:
+    fail("PG-086 production_100 may not be promoted before final acceptance")
+if pg86_mega.get("status") != "ACTIVE":
+    fail("PG-086 Part1MegaProductionPlan must remain ACTIVE")
+pg86_sources = json.loads(read(ROOT / "Data" / "OwnerSourceReferenceIndex.json"))
+pg86_ids = {str(row.get("id") or "") for row in pg86_sources.get("sources", []) if isinstance(row, dict)}
+for pg86_id in ["SRC_FILM_FOTR_SCREENPLAY","SRC_OWNER_MASTER_PACK","SRC_OWNER_PROJECT_SOURCE_PACK","SRC_OWNER_BATTLES_WEAPONS_ARMIES_BIBLE","SRC_OWNER_SIDE_ACTIVITIES_BIBLE"]:
+    if pg86_id not in pg86_ids:
+        fail(f"PG-086 owner source index missing {pg86_id}")
+pg86_chars = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
+pg86_world = json.loads(read(ROOT / "Data" / "CinematicWorldProductionMatrix.json"))
+if pg86_chars.get("source_atlas") != "Data/Part1ProductionAtlas.json":
+    fail("PG-086 character matrix not linked to Part1ProductionAtlas")
+if pg86_world.get("source_atlas") != "Data/Part1ProductionAtlas.json":
+    fail("PG-086 world matrix not linked to Part1ProductionAtlas")
+if not (ROOT / "Scripts" / "production_readiness_audit.py").exists():
+    fail("PG-086 production readiness audit missing")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

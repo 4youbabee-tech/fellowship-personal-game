@@ -38,7 +38,8 @@
         "production vocabulary",
         "visual lookup"
       ],
-      "runtime_ship": false
+      "runtime_ship": false,
+      "sha256": "5f4a4ac2cd8762a88ed4b1762fa2b95b735a9bd4e70d4329ee98bf90ba9dd70b"
     },
     {
       "id": "SRC_OWNER_IMAGES_CHARACTER_WORLD_SET",
@@ -63,12 +64,54 @@
         "character integration"
       ],
       "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_BATTLES_WEAPONS_ARMIES_BIBLE",
+      "name": "LOTR_Battles_Weapons_Armies_Production_Bible(1).pdf",
+      "kind": "OWNER_PRODUCTION_REFERENCE",
+      "sha256": "4193dbe52acd282693f7ec3b1935fde8ac35468afb21e175e0e6932c11446600",
+      "use": [
+        "Part I encounter staging",
+        "weapons and threat silhouettes",
+        "architecture/interior production language",
+        "battle-space composition"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_SIDE_ACTIVITIES_BIBLE",
+      "name": "LOTR_Film_Inspired_Side_Activities_Bible(1).pdf",
+      "kind": "OWNER_GAMEPLAY_REFERENCE",
+      "sha256": "964f85fa56ca4dce36cf4020164fcc4d0ab58d312977dd023d3e66f4b62eda43",
+      "use": [
+        "film-safe optional activity ideas",
+        "location-appropriate mechanics",
+        "continuity constraints"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_PROJECT_SOURCE_PACK",
+      "name": "LOTR_Project_Source_Pack_v1(1).zip",
+      "kind": "OWNER_STRUCTURED_REFERENCE_PACK",
+      "sha256": "929367909d8bd112fd8142559406dc9d687c9520bf86d397266ef2a2a52114de",
+      "use": [
+        "canon layer separation",
+        "character identity",
+        "location names and macro-regions",
+        "factions and artifacts",
+        "game-writing consistency"
+      ],
+      "runtime_ship": false
     }
   ],
   "derived_runtime_data": [
     "Data/FilmDialogueSourceContext.json",
     "Data/CharacterProductionMatrix.json",
     "Data/CinematicWorldProductionMatrix.json",
-    "Data/TrilogyRingQuestPlan.json"
+    "Data/TrilogyRingQuestPlan.json",
+    "Data/Part1ProductionAtlas.json",
+    "Data/Production100ReadinessGate.json",
+    "Data/Part1MegaProductionPlan.json"
   ]
 }

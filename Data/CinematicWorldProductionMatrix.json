@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "matrix_id": "PART1_CINEMATIC_WORLD_PRODUCTION_MATRIX_V1",
-  "status": "VISUAL_PRODUCTION_TARGET_LOCKED_IMPLEMENTATION_EXPANDING",
+  "status": "PROJECT_OWNED_REGION_KITS_ACTIVE_FINAL_ART_ACCEPTANCE_PENDING",
   "visual_benchmark": "Dense cinematic naturalism like the owner's forest reference: strong light shafts, layered depth, rich ground detail, believable vegetation/stone/wood, atmospheric perspective and characters embedded in the landscape.",
   "global_rules": [
     "Film geography and story anchors remain fixed.",
@@ -42,7 +42,13 @@
         "soft morning haze",
         "late-day party lamps"
       ],
-      "production_gap": "raise current resource-rich prototype to cohesive materials/terrain/character art"
+      "production_gap": "raise current resource-rich prototype to cohesive materials/terrain/character art",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Shire",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
     },
     {
       "chapter": "P1C02",
@@ -72,7 +78,13 @@
         "warm windows/lanterns",
         "low fog"
       ],
-      "production_gap": "replace blockout architecture/materials and strengthen interior density"
+      "production_gap": "replace blockout architecture/materials and strengthen interior density",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Bree",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
     },
     {
       "chapter": "P1C03",
@@ -102,7 +114,13 @@
         "cold sunset",
         "threatening fog"
       ],
-      "production_gap": "terrain/material weather pass and stronger ruin silhouette"
+      "production_gap": "terrain/material weather pass and stronger ruin silhouette",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Weathertop",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
     },
     {
       "chapter": "P1C04",
@@ -134,7 +152,13 @@
         "fine mist",
         "warm reflected water"
       ],
-      "production_gap": "replace simple pavilion forms with richer architecture/material hierarchy"
+      "production_gap": "replace simple pavilion forms with richer architecture/material hierarchy",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Rivendell",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
     },
     {
       "chapter": "P1C05",
@@ -164,7 +188,13 @@
         "snow haze",
         "wind"
       ],
-      "production_gap": "weather VFX/materials and mountain depth"
+      "production_gap": "weather VFX/materials and mountain depth",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Road",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
     },
     {
       "chapter": "P1C06",
@@ -194,7 +224,13 @@
         "localized fire",
         "dust beams"
       ],
-      "production_gap": "material richness, controlled light shafts and unique hero architecture"
+      "production_gap": "material richness, controlled light shafts and unique hero architecture",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Moria",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
     },
     {
       "chapter": "P1C07",
@@ -225,7 +261,13 @@
         "mist",
         "subtle particles"
       ],
-      "production_gap": "stronger tree scale/materials and luminous depth without expensive full-scene translucency"
+      "production_gap": "stronger tree scale/materials and luminous depth without expensive full-scene translucency",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Lothlorien",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
     },
     {
       "chapter": "P1C08",
@@ -255,7 +297,13 @@
         "open river light",
         "growing cloud/tension"
       ],
-      "production_gap": "water material, canyon scale and final forest composition"
+      "production_gap": "water material, canyon scale and final forest composition",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Anduin",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
     },
     {
       "chapter": "P1G01",
@@ -282,7 +330,12 @@
         "cold tower light",
         "industrial smoke/glow"
       ],
-      "production_gap": "production architecture/material identity and industry depth"
+      "production_gap": "production architecture/material identity and industry depth",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "COMMON_KIT_ONLY_DEDICATED_ISENGARD_PACK_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
     }
   ],
   "optimization": [
@@ -293,5 +346,7 @@
     "few expensive translucent layers",
     "texture/material reuse through instances",
     "chapter-specific streaming/spawn scope instead of loading the whole trilogy world"
-  ]
+  ],
+  "source_atlas": "Data/Part1ProductionAtlas.json",
+  "production_truth": "Project-owned region kits exist across Part I, but kit presence is not final terrain/material/vegetation/water/interior or visual acceptance."
 }
