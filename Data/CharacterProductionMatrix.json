@@ -595,14 +595,16 @@
     },
     {
       "id": "LURTZ",
-      "status": "PROJECT_OWNED_HERO_FOUNDATION_CREATED_FINAL_RIG_ANIMATION_PENDING",
+      "status": "PROJECT_OWNED_HERO_FOUNDATION_RUNTIME_WIRED_FINAL_RIG_ANIMATION_PENDING",
       "asset_root": "SourceAssets/Production/Enemies/Lurtz",
       "final_gaps": [
-        "dedicated hero Uruk mesh",
-        "film-scene identity variation",
-        "custom combat set",
-        "Amon Hen duel integration"
-      ]
+        "dedicated skeletal hero rig and deformation",
+        "film-scene identity/material polish",
+        "custom melee/hit-reaction animation set",
+        "Aragorn duel camera/audio choreography",
+        "PIE/device encounter acceptance"
+      ],
+      "runtime_status": "FILM_LOCKED_AMON_HEN_PRESSURE_WIRED_PENDING_ENGINE_PROOF"
     },
     {
       "id": "WATCHER",

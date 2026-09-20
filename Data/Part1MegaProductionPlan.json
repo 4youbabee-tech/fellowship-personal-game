@@ -242,5 +242,38 @@
     "Build chapter/region production waves from existing world banks while keeping story coordinates fixed.",
     "Create missing threat/world asset briefs for Watcher, Balrog, Lurtz and Isengard.",
     "Run Pre-Unreal after the mega batch, then repair failures before making any green claim."
-  ]
+  ],
+  "current_execution_wave": {
+    "id": "MORIA_AMON_HEN_VISUAL_COMBAT_V3",
+    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "source_basis": [
+      "Owner Source Pack Master",
+      "Owner Battles, Weapons, Armies & Production Design Bible",
+      "existing film-first Part I canon contracts"
+    ],
+    "invariants": [
+      "Moria order remains Watcher threshold -> Mazarbul/Orc/Troll defense -> retreat -> Bridge/Balrog.",
+      "Amon Hen remains Boromir pressure/defense/fall -> Lurtz/Uruk pressure -> Frodo/Sam departure.",
+      "Lurtz is film-locked and cannot become a player-authored alternate outcome.",
+      "Visual enrichment cannot replace or reorder mandatory film outcomes.",
+      "Hard performance budgets stay measurement-derived rather than guessed."
+    ],
+    "implemented": [
+      "Moria production dressing expanded with broken circulation, chain anchors, gate pieces, rubble pillars and tall braziers.",
+      "Anduin/Amon Hen handoff expanded with boat/camp/cargo/fishing/river-marker production props.",
+      "Dedicated Lurtz runtime type, project-owned visual handoff and film-locked damage outcome.",
+      "Distance-adaptive Watcher/Balrog presentation tick rate for low-spec protection.",
+      "Source asset triangle-equivalent and byte telemetry.",
+      "Measurement-first AssetPerformanceBudget contract.",
+      "Part1VisualProductionPass covering P1C01-P1C08 plus Isengard."
+    ],
+    "next_large_actions": [
+      "Keep exact head in Pre-Unreal and UE4.27.2 compile/import/startup/chapter/state validation until green.",
+      "Execute selected short landmark camera beats after this runtime wave is engine-stable.",
+      "Deepen Moria materials/lighting/VFX/audio while retaining film-locked Watcher/Balrog outcomes.",
+      "Deepen Amon Hen woodland combat composition and final Lurtz animation/duel handoff.",
+      "Continue full-cast skeletal rig/AnimBP handoff with in-place locomotion and distance/URO safeguards.",
+      "Establish chapter-specific rendered evidence and target-device measurements before visual/performance acceptance."
+    ]
+  }
 }

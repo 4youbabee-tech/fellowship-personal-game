@@ -123,7 +123,7 @@
     },
     {
       "id": "THREATS_COMBAT",
-      "status": "FOUNDATIONS_AND_MYTHIC_PRESENTATION_PARTIAL",
+      "status": "FOUNDATIONS_AND_FILM_LOCKED_RUNTIME_PARTIAL",
       "required": [
         "Nazgul motion",
         "Orc/Uruk variants",
@@ -136,7 +136,10 @@
         "project-owned Black Rider/Orc/Uruk/Cave Troll foundations",
         "project-owned Lurtz/Watcher/Balrog foundations",
         "story-beat-gated non-killable Watcher visual pressure in P1C06",
-        "story-beat-gated non-killable Balrog visual pressure in P1C06"
+        "story-beat-gated non-killable Balrog visual pressure in P1C06",
+        "dedicated project-owned Lurtz runtime profile and Amon Hen spawn",
+        "Lurtz player damage cannot rewrite the film-locked outcome",
+        "distance-adaptive Watcher/Balrog presentation tick rate"
       ]
     },
     {
@@ -164,13 +167,18 @@
     },
     {
       "id": "PERFORMANCE",
-      "status": "NOT_ACCEPTED",
+      "status": "TELEMETRY_ACTIVE_DEVICE_ACCEPTANCE_PENDING",
       "required": [
         "Windows DX11",
         "720p Low-Medium",
         "30 FPS floor",
         "8 GB RAM target",
         "representative traversal measurements"
+      ],
+      "implemented": [
+        "source triangle-equivalent telemetry",
+        "source asset byte telemetry by production bucket",
+        "measurement-first AssetPerformanceBudget contract"
       ]
     },
     {
@@ -200,7 +208,8 @@
     "Hero skeletal rigs, final locomotion/action animation, facial/lip-sync, and cloth/hair production remain incomplete.",
     "Project-owned Watcher/Balrog/Lurtz foundations exist and Watcher/Balrog are film-locked in runtime, but final rigs, materials, VFX/audio, Lurtz duel production and human encounter acceptance remain incomplete.",
     "Most regions still need final terrain, materials, vegetation, water, architecture, interiors, and visual acceptance.",
-    "Target-device performance and human chapter-by-chapter pacing/visual acceptance remain mandatory."
+    "Target-device performance and human chapter-by-chapter pacing/visual acceptance remain mandatory.",
+    "Chapter-specific Real PIE/rendered evidence remains unaccepted; generic owner sign-off is not sufficient."
   ],
   "promotion_rule": "production_100 may become true only when every domain is PASS or ACCEPTED and exact_head_evidence.accepted_sha records the same accepted commit.",
   "no_false_claim_rule": "Static validation, compile success, or asset import alone can never set production_100 true.",

@@ -40,6 +40,7 @@ Purpose: stop overlapping JSON plans from becoming competing sources of truth. E
 ## Production coordination files
 
 - `Part1ProductionAtlas.json`: source-grounded geography, landmark chains and production targets.
+- `Part1VisualProductionPass.json`: current source-grounded chapter/encounter visual-production wave; it cannot promote visual acceptance without evidence.
 - `CharacterProductionMatrix.json`: character production coverage/readiness, not runtime behavior authority.
 - `CinematicWorldProductionMatrix.json`: region/world art-production coverage/readiness, not story authority.
 - `GameCompletenessMatrix.json`: whole-game completeness tracking across pillars.
@@ -50,7 +51,9 @@ Purpose: stop overlapping JSON plans from becoming competing sources of truth. E
 
 ## Evidence, gates and inventories
 
-The following record facts or enforce gates and must not become alternate design authorities: `PIEVerificationEvidence.json`, `VerificationGate.json`, `ProjectGuardRules.json`, `ProjectOwnedProductionAssetInventory.json`, `ExternalAssetManifest.json`, `OwnerSourceReferenceIndex.json`, `FilmDialogueSourceContext.json`, `ResourceIntegrationPlan.json`, `RightsHolderContactPlan.json`, and `WorldResourceBankCP54.json`.
+`AssetPerformanceBudget.json` owns the measurement-first performance-budget policy. It may report source/cooked/device metrics but may not invent hard limits before reproducible target-device evidence.
+
+The following record facts or enforce gates and must not become alternate design authorities: `PIEVerificationEvidence.json`, `AssetPerformanceBudget.json`, `VerificationGate.json`, `ProjectGuardRules.json`, `ProjectOwnedProductionAssetInventory.json`, `ExternalAssetManifest.json`, `OwnerSourceReferenceIndex.json`, `FilmDialogueSourceContext.json`, `ResourceIntegrationPlan.json`, `RightsHolderContactPlan.json`, and `WorldResourceBankCP54.json`.
 
 ## Anti-duplication rule
 

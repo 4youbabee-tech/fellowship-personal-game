@@ -230,7 +230,8 @@
         "SourceAssets/Production/World/Common"
       ],
       "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
-      "final_acceptance": "NOT_ACCEPTED"
+      "final_acceptance": "NOT_ACCEPTED",
+      "current_runtime_foundation": "Expanded project-owned Moria dressing plus film-locked Watcher/Balrog runtime presentation; final materials, VFX/audio, lighting shafts and human visual acceptance remain pending."
     },
     {
       "chapter": "P1C07",
@@ -303,7 +304,8 @@
         "SourceAssets/Production/World/Common"
       ],
       "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
-      "final_acceptance": "NOT_ACCEPTED"
+      "final_acceptance": "NOT_ACCEPTED",
+      "current_runtime_foundation": "Expanded Anduin shoreline/camp production dressing, Uruk pressure and dedicated film-locked Lurtz runtime foundation; final water, woodland composition, animation and hero-camera acceptance remain pending."
     },
     {
       "chapter": "P1G01",
@@ -350,7 +352,9 @@
     "bounded dynamic shadow radius",
     "few expensive translucent layers",
     "texture/material reuse through instances",
-    "chapter-specific streaming/spawn scope instead of loading the whole trilogy world"
+    "chapter-specific streaming/spawn scope instead of loading the whole trilogy world",
+    "distance-adaptive update rates for expensive hero/threat presentation",
+    "source asset telemetry informs profiling but does not substitute for cooked/device measurements"
   ],
   "source_atlas": "Data/Part1ProductionAtlas.json",
   "production_truth": "Project-owned region kits exist across Part I, but kit presence is not final terrain/material/vegetation/water/interior or visual acceptance."
