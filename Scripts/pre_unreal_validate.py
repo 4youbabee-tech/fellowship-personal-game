@@ -4369,6 +4369,31 @@ for pg97_symbol in [
 if "DistancePawn && !bFollowingPlayer && DialogueActingRemaining <= 0.0f" not in pg97_npc:
     fail("PG-097 follow/dialogue responsiveness guard missing")
 
+# PG-098: Isengard production meshes retain an authored material palette.
+pg98_isengard_root = ROOT / "SourceAssets" / "Production" / "World" / "Isengard"
+pg98_mtl = pg98_isengard_root / "RegionalMaterials.mtl"
+if not pg98_mtl.exists():
+    fail("PG-098 Isengard RegionalMaterials.mtl missing")
+else:
+    pg98_mtl_text = read(pg98_mtl)
+    for pg98_material in ["OrthancBlackStone","OrthancEdgeStone","IndustrialIron","FurnaceIron","ScorchedWood"]:
+        if f"newmtl {pg98_material}" not in pg98_mtl_text:
+            fail(f"PG-098 Isengard authored material missing: {pg98_material}")
+for pg98_obj in [
+    "SM_Isengard_OrthancCore.obj","SM_Isengard_OrthancSpire.obj",
+    "SM_Isengard_IndustrialPitRim.obj","SM_Isengard_FurnaceStack.obj",
+    "SM_Isengard_FelledTrunk.obj","SM_Isengard_ParapetSlab.obj",
+]:
+    pg98_text = read(pg98_isengard_root / pg98_obj)
+    if "mtllib RegionalMaterials.mtl" not in pg98_text or "usemtl " not in pg98_text:
+        fail(f"PG-098 Isengard OBJ lacks authored material binding: {pg98_obj}")
+pg98_builder = read(ROOT / "Source" / "ShireJourney" / "IsengardPrototypeWorldBuilder.cpp")
+if "bFallbackPrimitive" not in pg98_builder:
+    fail("PG-098 Isengard runtime no longer preserves production mesh materials")
+pg98_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg98_visual.get("parallel_route", {}).get("authored_material_palette", {}).get("status") != "SOURCE_AUTHORED_PENDING_ENGINE_IMPORT_PROOF":
+    fail("PG-098 Isengard authored-material proof boundary changed")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
