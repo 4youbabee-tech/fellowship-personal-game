@@ -4353,6 +4353,22 @@ pg96_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
 if pg96_visual.get("parallel_route", {}).get("acceptance") != "IMPLEMENTED_PENDING_UE4_BUILD_RENDER_AND_DEVICE_PROOF":
     fail("PG-096 Isengard visual acceptance boundary changed")
 
+# PG-097: named skeletal NPC handoff uses bounded animation-cost safeguards.
+pg97_motion = json.loads(read(ROOT / "Data" / "CharacterMotionPlan.json"))
+pg97_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
+if pg97_motion.get("runtime_performance_handoff", {}).get("status") != "IMPLEMENTED_PENDING_ENGINE_PROOF":
+    fail("PG-097 named NPC performance handoff status changed")
+for pg97_symbol in [
+    "bEnableUpdateRateOptimizations = true",
+    "OnlyTickPoseWhenRendered",
+    "PlayerDistance > 4200.0f",
+    "PlayerDistance > 2200.0f",
+]:
+    if pg97_symbol not in pg97_npc:
+        fail(f"PG-097 named NPC performance safeguard missing: {pg97_symbol}")
+if "DistancePawn && !bFollowingPlayer && DialogueActingRemaining <= 0.0f" not in pg97_npc:
+    fail("PG-097 follow/dialogue responsiveness guard missing")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
