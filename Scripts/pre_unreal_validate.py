@@ -3911,6 +3911,50 @@ for pg84_symbol in [
     if pg84_symbol not in (pg84_director_h + pg84_director_cpp):
         fail(f"PG-084 living-world director interaction wiring missing: {pg84_symbol}")
 
+
+# PG-085: dedicated Chronicle browsing must remain source-grounded and explicit.
+pg85_rewards = json.loads(read(ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"))
+pg85_envelope = json.loads(read(ROOT / "Data" / "ExplorationEnvelopePlan.json"))
+pg85_labels = {
+    str(item.get("id") or ""): str(item.get("label") or "")
+    for chapter in pg85_envelope.get("chapters", [])
+    if isinstance(chapter, dict)
+    for item in chapter.get("optional_discoveries", [])
+    if isinstance(item, dict)
+}
+for pg85_reward in pg85_rewards.get("discovery_rewards", []):
+    if not isinstance(pg85_reward, dict):
+        continue
+    pg85_id = str(pg85_reward.get("discovery_id") or "")
+    pg85_display = str(pg85_reward.get("display_label") or "")
+    if not pg85_display:
+        fail(f"PG-085 Journey Discovery missing display_label: {pg85_id}")
+    if pg85_labels.get(pg85_id) != pg85_display:
+        fail(f"PG-085 Chronicle display label drifted from exploration source: {pg85_id}")
+
+pg85_qh = read(SOURCE / "ShireQuestSubsystem.h")
+pg85_qc = read(SOURCE / "ShireQuestSubsystem.cpp")
+pg85_ph = read(SOURCE / "ShirePlayerCharacter.h")
+pg85_pc = read(SOURCE / "ShirePlayerCharacter.cpp")
+pg85_hud = read(SOURCE / "ShireHUD.cpp")
+pg85_input = read(ROOT / "Config" / "DefaultInput.ini")
+for pg85_symbol in [
+    "GetChronicleEntryDisplayLabel",
+    "GetChronicleEntryContextLabel",
+    "GetKnownMapRegionDisplayLabel",
+]:
+    if pg85_symbol not in (pg85_qh + pg85_qc):
+        fail(f"PG-085 Chronicle presentation API missing: {pg85_symbol}")
+for pg85_symbol in ["ChronicleBrowseIndex", "ChroniclePrevious", "ChronicleNext"]:
+    if pg85_symbol not in (pg85_ph + pg85_pc):
+        fail(f"PG-085 Chronicle browse state/input missing: {pg85_symbol}")
+for pg85_mapping in ['ActionName="ChroniclePrevious"', 'ActionName="ChronicleNext"']:
+    if pg85_mapping not in pg85_input:
+        fail(f"PG-085 Chronicle input mapping missing: {pg85_mapping}")
+for pg85_marker in ["ENTRY %d / %d", "KNOWN MAP REGIONS", "C Close"]:
+    if pg85_marker not in pg85_hud:
+        fail(f"PG-085 dedicated Chronicle HUD marker missing: {pg85_marker}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
