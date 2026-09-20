@@ -2,6 +2,7 @@
 
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "Components/PointLightComponent.h"
 
 AWorldAmbientMotionActor::AWorldAmbientMotionActor()
 {
@@ -16,6 +17,14 @@ AWorldAmbientMotionActor::AWorldAmbientMotionActor()
     Mesh->SetMobility(EComponentMobility::Movable);
     Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     Mesh->SetGenerateOverlapEvents(false);
+
+    Glow = CreateDefaultSubobject<UPointLightComponent>(TEXT("Glow"));
+    Glow->SetupAttachment(Root);
+    Glow->SetMobility(EComponentMobility::Movable);
+    Glow->SetCastShadows(false);
+    Glow->SetVisibility(false);
+    Glow->SetIntensity(0.0f);
+    Glow->SetAttenuationRadius(220.0f);
 }
 
 void AWorldAmbientMotionActor::BeginPlay()
@@ -50,6 +59,23 @@ void AWorldAmbientMotionActor::Configure(
 
     BaseLocation = GetActorLocation();
     BaseRotation = GetActorRotation();
+}
+
+void AWorldAmbientMotionActor::ConfigureGlow(
+    const FLinearColor& InColor,
+    float InIntensity,
+    float InRadius)
+{
+    if (!Glow)
+    {
+        return;
+    }
+
+    const float Intensity = FMath::Clamp(InIntensity, 0.0f, 950.0f);
+    Glow->SetLightColor(InColor);
+    Glow->SetIntensity(Intensity);
+    Glow->SetAttenuationRadius(FMath::Clamp(InRadius, 80.0f, 420.0f));
+    Glow->SetVisibility(Intensity > 1.0f);
 }
 
 void AWorldAmbientMotionActor::Tick(float DeltaSeconds)
