@@ -71,6 +71,24 @@ struct FShireChapterProductionDefinition
     TArray<FString> LandmarkSequence;
 };
 
+struct FShireWorldMapNodeDefinition
+{
+    FName NodeId = NAME_None;
+    FName RouteId = NAME_None;
+    FName ChapterId = NAME_None;
+    FString DisplayName;
+    FString MacroRegion;
+    float X = 0.0f;
+    float Y = 0.0f;
+    bool bChapterAnchor = false;
+};
+
+struct FShireWorldMapEdgeDefinition
+{
+    FName FromNodeId = NAME_None;
+    FName ToNodeId = NAME_None;
+};
+
 UCLASS()
 class SHIREJOURNEY_API UShireQuestSubsystem : public UGameInstanceSubsystem
 {
@@ -241,6 +259,15 @@ public:
     UFUNCTION(BlueprintPure, Category="World")
     FString GetCurrentLandmarkSummary() const;
 
+    UFUNCTION(BlueprintPure, Category="MapKnowledge")
+    bool IsWorldMapNodeVisible(FName NodeId) const;
+
+    UFUNCTION(BlueprintPure, Category="MapKnowledge")
+    FName GetCurrentWorldMapNodeId() const;
+
+    const TArray<FShireWorldMapNodeDefinition>& GetWorldMapNodes() const { return WorldMapNodes; }
+    const TArray<FShireWorldMapEdgeDefinition>& GetWorldMapEdges() const { return WorldMapEdges; }
+
     const TMap<FName, int32>& GetAllQuestStages() const { return QuestStages; }
     const TArray<FName>& GetCompletedStoryBeats() const { return CompletedStoryBeats; }
     TMap<FName, FShireRouteProgress> GetRouteProgressSnapshot() const;
@@ -313,6 +340,8 @@ private:
     TMap<FName, FShireSideActivityProgressionDefinition> SideActivityProgressionDefinitions;
     TMap<FName, FShireSideActivityProgressionDefinition> SideActivityDefinitionsById;
     TMap<FName, FShireChapterProductionDefinition> ChapterProductionDefinitions;
+    TArray<FShireWorldMapNodeDefinition> WorldMapNodes;
+    TArray<FShireWorldMapEdgeDefinition> WorldMapEdges;
     bool bSideActivityRewardInProgress = false;
 
     void BuildQuestDefinitions();
@@ -329,6 +358,8 @@ private:
     bool LoadJourneyDiscoveryPlan();
     bool LoadSideActivityPlan();
     bool LoadPart1ProductionAtlas();
+    bool LoadPart1WorldMap();
+    const FShireWorldMapNodeDefinition* FindWorldMapNode(FName NodeId) const;
     const FShireChapterProductionDefinition* FindChapterProductionDefinition(FName RouteId, FName ChapterId) const;
     static FName MakeChapterProductionKey(FName RouteId, FName ChapterId);
     bool IsSideActivityDefinitionAvailable(const FShireSideActivityProgressionDefinition& Definition) const;

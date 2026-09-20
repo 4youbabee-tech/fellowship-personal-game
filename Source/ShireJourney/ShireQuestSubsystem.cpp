@@ -17,6 +17,7 @@ void UShireQuestSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     LoadJourneyDiscoveryPlan();
     LoadSideActivityPlan();
     LoadPart1ProductionAtlas();
+    LoadPart1WorldMap();
     CurrentChapterId = TEXT("P1C01");
     CurrentRouteId = TEXT("FrodoMain");
     CurrentEpisodeId = TEXT("P1C01_Main");
@@ -758,6 +759,154 @@ FString UShireQuestSubsystem::GetCurrentLandmarkSummary() const
         Result += Definition->LandmarkSequence[Index];
     }
     return Result;
+}
+
+
+const FShireWorldMapNodeDefinition* UShireQuestSubsystem::FindWorldMapNode(FName NodeId) const
+{
+    for (const FShireWorldMapNodeDefinition& Node : WorldMapNodes)
+    {
+        if (Node.NodeId == NodeId)
+        {
+            return &Node;
+        }
+    }
+    return nullptr;
+}
+
+bool UShireQuestSubsystem::LoadPart1WorldMap()
+{
+    WorldMapNodes.Empty();
+    WorldMapEdges.Empty();
+
+    const FString Path = FPaths::Combine(FPaths::ProjectDir(), TEXT("Data/Part1WorldMap.json"));
+    FString JsonText;
+    if (!FFileHelper::LoadFileToString(JsonText, *Path))
+    {
+        UE_LOG(LogTemp, Error, TEXT("WorldMap: failed to read %s"), *Path);
+        return false;
+    }
+
+    TSharedPtr<FJsonObject> Root;
+    const TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(JsonText);
+    if (!FJsonSerializer::Deserialize(Reader, Root) || !Root.IsValid())
+    {
+        UE_LOG(LogTemp, Error, TEXT("WorldMap: invalid JSON %s"), *Path);
+        return false;
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* Nodes = nullptr;
+    if (Root->TryGetArrayField(TEXT("nodes"), Nodes) && Nodes)
+    {
+        for (const TSharedPtr<FJsonValue>& Value : *Nodes)
+        {
+            const TSharedPtr<FJsonObject> Object = Value.IsValid() ? Value->AsObject() : nullptr;
+            if (!Object.IsValid())
+            {
+                continue;
+            }
+
+            FString Id, Route, Chapter, DisplayName, MacroRegion;
+            double X = 0.0;
+            double Y = 0.0;
+            bool bAnchor = false;
+            Object->TryGetStringField(TEXT("id"), Id);
+            Object->TryGetStringField(TEXT("route"), Route);
+            Object->TryGetStringField(TEXT("chapter"), Chapter);
+            Object->TryGetStringField(TEXT("display_name"), DisplayName);
+            Object->TryGetStringField(TEXT("macro_region"), MacroRegion);
+            Object->TryGetNumberField(TEXT("x"), X);
+            Object->TryGetNumberField(TEXT("y"), Y);
+            Object->TryGetBoolField(TEXT("chapter_anchor"), bAnchor);
+
+            if (Id.IsEmpty() || Route.IsEmpty() || Chapter.IsEmpty() || DisplayName.IsEmpty() ||
+                MacroRegion.IsEmpty() || X < 0.0 || X > 1.0 || Y < 0.0 || Y > 1.0)
+            {
+                UE_LOG(LogTemp, Error, TEXT("WorldMap: invalid node contract id=%s"), *Id);
+                continue;
+            }
+
+            FShireWorldMapNodeDefinition Definition;
+            Definition.NodeId = FName(*Id);
+            Definition.RouteId = FName(*Route);
+            Definition.ChapterId = FName(*Chapter);
+            Definition.DisplayName = DisplayName;
+            Definition.MacroRegion = MacroRegion;
+            Definition.X = static_cast<float>(X);
+            Definition.Y = static_cast<float>(Y);
+            Definition.bChapterAnchor = bAnchor;
+            WorldMapNodes.Add(Definition);
+        }
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* Edges = nullptr;
+    if (Root->TryGetArrayField(TEXT("edges"), Edges) && Edges)
+    {
+        for (const TSharedPtr<FJsonValue>& Value : *Edges)
+        {
+            const TArray<TSharedPtr<FJsonValue>>& Pair = Value->AsArray();
+            if (Pair.Num() != 2)
+            {
+                continue;
+            }
+
+            FShireWorldMapEdgeDefinition Edge;
+            Edge.FromNodeId = FName(*Pair[0]->AsString());
+            Edge.ToNodeId = FName(*Pair[1]->AsString());
+            if (FindWorldMapNode(Edge.FromNodeId) && FindWorldMapNode(Edge.ToNodeId))
+            {
+                WorldMapEdges.Add(Edge);
+            }
+        }
+    }
+
+    const bool bReady = WorldMapNodes.Num() >= 16 && WorldMapEdges.Num() >= 14;
+    UE_LOG(
+        LogTemp,
+        bReady ? Display : Error,
+        TEXT("WorldMap: ready=%s nodes=%d edges=%d"),
+        bReady ? TEXT("yes") : TEXT("no"),
+        WorldMapNodes.Num(),
+        WorldMapEdges.Num());
+    return bReady;
+}
+
+bool UShireQuestSubsystem::IsWorldMapNodeVisible(FName NodeId) const
+{
+    const FShireWorldMapNodeDefinition* Node = FindWorldMapNode(NodeId);
+    if (!Node)
+    {
+        return false;
+    }
+
+    if (Node->RouteId == CurrentRouteId && Node->ChapterId == CurrentChapterId)
+    {
+        return true;
+    }
+
+    return HasKnownMapRegion(MakeKnownMapRegionId(Node->RouteId, Node->ChapterId));
+}
+
+FName UShireQuestSubsystem::GetCurrentWorldMapNodeId() const
+{
+    for (const FShireWorldMapNodeDefinition& Node : WorldMapNodes)
+    {
+        if (Node.RouteId == CurrentRouteId &&
+            Node.ChapterId == CurrentChapterId &&
+            Node.bChapterAnchor)
+        {
+            return Node.NodeId;
+        }
+    }
+
+    for (const FShireWorldMapNodeDefinition& Node : WorldMapNodes)
+    {
+        if (Node.RouteId == CurrentRouteId && Node.ChapterId == CurrentChapterId)
+        {
+            return Node.NodeId;
+        }
+    }
+    return NAME_None;
 }
 
 
