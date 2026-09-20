@@ -298,6 +298,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         bool bBareObjMaterialImportDisabled = false;
         bool bInjectedSmoothingGroup = false;
         bool bAuthoredMaterialImportForced = false;
+        bool bBuiltInTangentsForUntexturedObj = false;
         if (FPaths::GetExtension(Filename).Equals(TEXT("obj"), ESearchCase::IgnoreCase))
         {
             FString ObjSource;
@@ -339,6 +340,25 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 if (ImportOptions->StaticMeshImportData)
                 {
                     ImportOptions->StaticMeshImportData->bRemoveDegenerates = true;
+
+                    const bool bHasTextureCoordinates =
+                        ObjSource.StartsWith(TEXT("vt ")) ||
+                        ObjSource.Contains(TEXT("\nvt "), ESearchCase::CaseSensitive);
+
+                    // MikkTSpace derives tangent space from texture UVs. The current
+                    // lightweight production OBJ bank is mostly flat-color geometry
+                    // with no vt records, so forcing MikkTSpace only creates invalid
+                    // tangent/binormal warnings without adding useful shading data.
+                    // Compute clean normals/tangents with UE4's built-in generator for
+                    // those untextured meshes; textured meshes keep the default path.
+                    if (!bHasTextureCoordinates)
+                    {
+                        ImportOptions->StaticMeshImportData->NormalImportMethod =
+                            EFBXNormalImportMethod::FBXNIM_ComputeNormals;
+                        ImportOptions->StaticMeshImportData->NormalGenerationMethod =
+                            EFBXNormalGenerationMethod::BuiltIn;
+                        bBuiltInTangentsForUntexturedObj = true;
+                    }
                 }
                 Task->Options = ImportOptions;
 
@@ -443,7 +463,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         UE_LOG(
             LogTemp,
             Display,
-            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s bare-obj-materials=%s authored-material-import=%s smoothing-injected=%s material-packages-marked=%d"),
+            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s bare-obj-materials=%s authored-material-import=%s smoothing-injected=%s tangent-generation=%s material-packages-marked=%d"),
             *Filename,
             Task->ImportedObjectPaths.Num(),
             Task->Result.Num(),
@@ -451,6 +471,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             bBareObjMaterialImportDisabled ? TEXT("disabled") : TEXT("n/a"),
             bAuthoredMaterialImportForced ? TEXT("forced") : TEXT("n/a"),
             bInjectedSmoothingGroup ? TEXT("yes") : TEXT("no"),
+            bBuiltInTangentsForUntexturedObj ? TEXT("builtin-no-uv") : TEXT("default"),
             MarkedMaterialPackages);
 
         if (!bImported)

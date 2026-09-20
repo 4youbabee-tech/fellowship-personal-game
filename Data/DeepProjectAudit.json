@@ -76,10 +76,10 @@
     {
       "id": "AUDIT-MED-007",
       "severity": "MEDIUM",
-      "status": "ACTIVE_DEBT",
+      "status": "REPAIR_IN_PROGRESS",
       "title": "Geometry tangent/binormal quality remains incomplete",
-      "evidence": "Identity-based run reports 50 degenerate-tangent meshes and 53 nearly-zero-binormal meshes.",
-      "action": "Repair visible hero/world assets first; never hide debt by raising thresholds."
+      "evidence": "Exact-head #302 baseline: 50 degenerate-tangent identities and 53 nearly-zero-binormal identities; representative source OBJ meshes have no vt records, making MikkTSpace an invalid tangent basis for their flat-color material path.",
+      "action": "Use UE4 built-in computed normals/tangents for OBJ meshes without texture UVs; rerun exact-head import and reduce tangent/binormal warning ceilings only after measured zero-warning proof."
     },
     {
       "id": "AUDIT-MED-008",
@@ -121,6 +121,7 @@
     }
   ],
   "next_audit_waves": [
+    "close untextured OBJ tangent/binormal debt to zero",
     "material/import exact-head green",
     "save/load failure and corruption recovery",
     "central NPC social/banter registry cost",

@@ -4505,6 +4505,17 @@ for pg104_symbol in [
     if pg104_symbol not in pg104_warning:
         fail(f"PG-104 warning-debt evidence scoping missing: {pg104_symbol}")
 
+# PG-105: untextured OBJ meshes use a tangent generator that does not require UVs.
+pg105_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+for pg105_symbol in [
+    "bHasTextureCoordinates",
+    "FBXNIM_ComputeNormals",
+    "EFBXNormalGenerationMethod::BuiltIn",
+    "builtin-no-uv",
+]:
+    if pg105_symbol not in pg105_importer:
+        fail(f"PG-105 untextured OBJ tangent safeguard missing: {pg105_symbol}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
