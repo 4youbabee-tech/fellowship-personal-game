@@ -90,7 +90,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Friendship and revelry memory"
     },
     {
       "discovery_id": "SHIRE_MARKET_GARDEN_LOOP",
@@ -106,7 +107,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Market, garden and mill life"
     },
     {
       "discovery_id": "SHIRE_FIELD_RACE",
@@ -122,7 +124,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "A harmless field-path race"
     },
     {
       "discovery_id": "SHIRE_QUIET_FEET",
@@ -138,7 +141,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Quiet feet through the hedges"
     },
     {
       "discovery_id": "BREE_GATE_GOSSIP",
@@ -154,7 +158,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Bree gate gossip"
     },
     {
       "discovery_id": "BREE_STABLE_YARD",
@@ -170,7 +175,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Prancing Pony stable yard"
     },
     {
       "discovery_id": "BREE_INN_KITCHEN_LIFE",
@@ -186,7 +192,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Life behind the Prancing Pony"
     },
     {
       "discovery_id": "WILDERNESS_TRACK_SIGNS",
@@ -202,7 +209,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Strider's trail signs"
     },
     {
       "discovery_id": "WEATHERTOP_RUIN_MARKERS",
@@ -218,7 +226,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Weathertop ruin markers"
     },
     {
       "discovery_id": "CAMP_PREPARATION",
@@ -234,7 +243,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Weathertop camp preparations"
     },
     {
       "discovery_id": "RIVENDELL_LIBRARY",
@@ -250,7 +260,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Rivendell library and map lore"
     },
     {
       "discovery_id": "RIVENDELL_OVERLOOK",
@@ -266,7 +277,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Rivendell valley overlook"
     },
     {
       "discovery_id": "RIVENDELL_SMITHY_PREP",
@@ -282,7 +294,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Fellowship departure preparations"
     },
     {
       "discovery_id": "FELLOWSHIP_TRAINING",
@@ -298,7 +311,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Fellowship camp practice"
     },
     {
       "discovery_id": "CARADHRAS_SHELTER_CHECK",
@@ -314,7 +328,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Caradhras shelter check"
     },
     {
       "discovery_id": "WEST_GATE_INSCRIPTIONS",
@@ -330,7 +345,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Marks at the West Gate"
     },
     {
       "discovery_id": "MORIA_SIDE_CHAMBER",
@@ -346,7 +362,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "A forgotten Moria side chamber"
     },
     {
       "discovery_id": "MORIA_ECHO_ROUTE",
@@ -362,7 +379,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Follow the echo"
     },
     {
       "discovery_id": "MORIA_DWARVEN_RELIEF",
@@ -378,7 +396,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "A dwarven relief"
     },
     {
       "discovery_id": "LORIEN_GRIEF_CLEARING",
@@ -394,7 +413,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "A quiet grief clearing"
     },
     {
       "discovery_id": "LORIEN_CRAFT_PLATFORM",
@@ -410,7 +430,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Galadhrim craft platform"
     },
     {
       "discovery_id": "LORIEN_RIVER_PREP",
@@ -426,7 +447,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Lorien river preparations"
     },
     {
       "discovery_id": "ANDUIN_BANK_WATCH",
@@ -442,7 +464,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Watch on the Anduin bank"
     },
     {
       "discovery_id": "AMON_HEN_FALLEN_STONE",
@@ -458,7 +481,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "A fallen stone of Amon Hen"
     },
     {
       "discovery_id": "AMON_HEN_CAMP_DISTANCE",
@@ -474,7 +498,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Distance in the Fellowship camp"
     },
     {
       "discovery_id": "ORTHANC_PARAPET_VIEW",
@@ -490,7 +515,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Orthanc parapet view"
     },
     {
       "discovery_id": "ORTHANC_OLD_ALLIANCE_MEMORY",
@@ -506,7 +532,8 @@
       ],
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
-      "may_change_canon_outcome": false
+      "may_change_canon_outcome": false,
+      "display_label": "Old counsel at Orthanc"
     }
   ],
   "region_completion_bonuses": [

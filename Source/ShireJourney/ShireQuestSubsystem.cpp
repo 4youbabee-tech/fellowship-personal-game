@@ -518,14 +518,17 @@ bool UShireQuestSubsystem::LoadJourneyDiscoveryPlan()
                 continue;
             }
 
-            FString Id, Route, Chapter, Category;
+            FString Id, Route, Chapter, Region, Category, DisplayLabel;
             double InsightNumber = 0.0;
             Object->TryGetStringField(TEXT("discovery_id"), Id);
             Object->TryGetStringField(TEXT("route"), Route);
             Object->TryGetStringField(TEXT("chapter"), Chapter);
+            Object->TryGetStringField(TEXT("region"), Region);
             Object->TryGetStringField(TEXT("category"), Category);
+            Object->TryGetStringField(TEXT("display_label"), DisplayLabel);
             Object->TryGetNumberField(TEXT("journey_insight"), InsightNumber);
-            if (Id.IsEmpty() || Route.IsEmpty() || Chapter.IsEmpty() || InsightNumber <= 0.0)
+            if (Id.IsEmpty() || Route.IsEmpty() || Chapter.IsEmpty() || Region.IsEmpty() ||
+                DisplayLabel.IsEmpty() || InsightNumber <= 0.0)
             {
                 continue;
             }
@@ -534,7 +537,9 @@ bool UShireQuestSubsystem::LoadJourneyDiscoveryPlan()
             Definition.DiscoveryId = FName(*Id);
             Definition.RouteId = FName(*Route);
             Definition.ChapterId = FName(*Chapter);
+            Definition.RegionId = FName(*Region);
             Definition.CategoryId = FName(*Category);
+            Definition.DisplayLabel = DisplayLabel;
             Definition.Insight = FMath::Max(1, FMath::RoundToInt(InsightNumber));
             JourneyDiscoveryDefinitions.Add(Definition.DiscoveryId, Definition);
         }
@@ -836,6 +841,62 @@ void UShireQuestSubsystem::AwardSideActivityProgression(FName DiscoveryId)
     {
         AwardProgressionXP(TEXT("RESOLVE"), 4);
     }
+}
+
+FString UShireQuestSubsystem::GetChronicleEntryDisplayLabel(FName EntryId) const
+{
+    FString DiscoveryString = EntryId.ToString();
+    if (!DiscoveryString.RemoveFromStart(TEXT("CHRONICLE_")))
+    {
+        return EntryId.ToString();
+    }
+    const FShireJourneyDiscoveryDefinition* Definition =
+        JourneyDiscoveryDefinitions.Find(FName(*DiscoveryString));
+    if (Definition && !Definition->DisplayLabel.IsEmpty())
+    {
+        return Definition->DisplayLabel;
+    }
+    DiscoveryString.ReplaceInline(TEXT("_"), TEXT(" "));
+    return DiscoveryString;
+}
+
+FString UShireQuestSubsystem::GetChronicleEntryContextLabel(FName EntryId) const
+{
+    FString DiscoveryString = EntryId.ToString();
+    if (!DiscoveryString.RemoveFromStart(TEXT("CHRONICLE_")))
+    {
+        return FString();
+    }
+    const FShireJourneyDiscoveryDefinition* Definition =
+        JourneyDiscoveryDefinitions.Find(FName(*DiscoveryString));
+    if (!Definition)
+    {
+        return FString();
+    }
+    FString Category = Definition->CategoryId.ToString();
+    Category.ReplaceInline(TEXT("_"), TEXT(" "));
+    return FString::Printf(TEXT("%s  |  %s  |  %s"),
+        *Definition->RegionId.ToString(),
+        *Definition->ChapterId.ToString(),
+        *Category);
+}
+
+FString UShireQuestSubsystem::GetKnownMapRegionDisplayLabel(FName RegionId) const
+{
+    for (const TPair<FName, FShireJourneyDiscoveryDefinition>& Pair : JourneyDiscoveryDefinitions)
+    {
+        const FShireJourneyDiscoveryDefinition& Definition = Pair.Value;
+        if (MakeKnownMapRegionId(Definition.RouteId, Definition.ChapterId) == RegionId)
+        {
+            return FString::Printf(TEXT("%s  |  %s"),
+                *Definition.RegionId.ToString(),
+                *Definition.ChapterId.ToString());
+        }
+    }
+    FString Label = RegionId.ToString();
+    Label.RemoveFromStart(TEXT("MAP_REGION_"));
+    Label.ReplaceInline(TEXT("_"), TEXT(" / "));
+    return Label;
 }
 
 void UShireQuestSubsystem::RestoreKnowledgeState(

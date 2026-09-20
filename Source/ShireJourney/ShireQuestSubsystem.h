@@ -30,7 +30,9 @@ struct FShireJourneyDiscoveryDefinition
     FName DiscoveryId = NAME_None;
     FName RouteId = NAME_None;
     FName ChapterId = NAME_None;
+    FName RegionId = NAME_None;
     FName CategoryId = NAME_None;
+    FString DisplayLabel;
     int32 Insight = 0;
 };
 
@@ -188,6 +190,9 @@ public:
 
     const TArray<FName>& GetChronicleEntryIds() const { return ChronicleEntryIds; }
     const TArray<FName>& GetKnownMapRegionIds() const { return KnownMapRegionIds; }
+    FString GetChronicleEntryDisplayLabel(FName EntryId) const;
+    FString GetChronicleEntryContextLabel(FName EntryId) const;
+    FString GetKnownMapRegionDisplayLabel(FName RegionId) const;
     void RestoreKnowledgeState(const TArray<FName>& InChronicleEntryIds, const TArray<FName>& InKnownMapRegionIds);
 
     UFUNCTION(BlueprintPure, Category="Quest")
