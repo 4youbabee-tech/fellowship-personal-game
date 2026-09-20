@@ -1,25 +1,37 @@
 # Original Bree production materials
 newmtl Plaster
 Kd 0.34 0.31 0.26
+Pr 0.70
+Pm 0.02
 Ks 0.02 0.02 0.02
 Ns 8
 newmtl Timber
 Kd 0.19 0.11 0.06
+Pr 0.70
+Pm 0.02
 Ks 0.02 0.02 0.02
 Ns 8
 newmtl Roof
 Kd 0.13 0.08 0.06
+Pr 0.70
+Pm 0.02
 Ks 0.02 0.02 0.02
 Ns 6
 newmtl Stone
 Kd 0.29 0.30 0.28
+Pr 0.80
+Pm 0.02
 Ks 0.04 0.04 0.04
 Ns 12
 newmtl Iron
 Kd 0.12 0.13 0.13
+Pr 0.42
+Pm 0.86
 Ks 0.18 0.18 0.18
 Ns 24
 newmtl Warm
 Kd 0.68 0.42 0.12
+Pr 0.34
+Pm 0.04
 Ks 0.08 0.06 0.03
 Ns 18
