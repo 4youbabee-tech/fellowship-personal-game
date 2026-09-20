@@ -66,48 +66,12 @@ jobs:
           echo Runner bootstrap succeeded.
 
       - name: Checkout exact PR head
-        shell: cmd
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          @echo off
-          setlocal EnableExtensions EnableDelayedExpansion
-          cd /d "%GITHUB_WORKSPACE%"
-          if not exist ".git" (
-            git init
-            if errorlevel 1 exit /b 70
-          )
-          del /F /Q ".git\index.lock" 2>nul
-          del /F /Q ".git\shallow.lock" 2>nul
-          set "REPO_URL=https://x-access-token:%GH_TOKEN%@github.com/%GITHUB_REPOSITORY%.git"
-          git remote get-url origin >nul 2>&1
-          if errorlevel 1 (
-            git remote add origin "!REPO_URL!"
-          ) else (
-            git remote set-url origin "!REPO_URL!"
-          )
-          if errorlevel 1 exit /b 71
-
-          set "FETCHED=0"
-          for /L %%A in (1,1,7) do (
-            if "!FETCHED!"=="0" (
-              echo Fetching exact PR head attempt %%A of 7...
-              git fetch --no-tags --prune --depth=1 origin %TARGET_SHA%
-              if not errorlevel 1 (
-                set "FETCHED=1"
-              ) else if not "%%A"=="7" (
-                echo Fetch failed; retrying in 5 seconds.
-                powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 5"
-              )
-            )
-          )
-          if "!FETCHED!"=="0" exit /b 72
-
-          git checkout -f FETCH_HEAD
-          if errorlevel 1 exit /b 73
-          git reset --hard %TARGET_SHA%
-          if errorlevel 1 exit /b 73
-          echo Exact-head checkout complete: %TARGET_SHA%.
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 1
+          clean: true
+          persist-credentials: false
 
       - name: Verify exact checkout
         shell: cmd
