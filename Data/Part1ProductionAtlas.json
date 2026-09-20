@@ -1,0 +1,1447 @@
+{
+  "schema_version": 1,
+  "atlas_id": "PART1_SOURCE_GROUNDED_PRODUCTION_ATLAS_V1",
+  "status": "ACTIVE_PRODUCTION_SOURCE_CONTRACT",
+  "scope": "The Fellowship of the Ring / Part I runtime plus Gandalf-Isengard parallel route",
+  "engine": "Unreal Engine 4.27.2",
+  "authority": {
+    "story_spine": "Peter Jackson film screenplay chronology is immutable.",
+    "lore_support": "Owner source pack may deepen names, geography, character identity and material culture only when it does not contradict film continuity.",
+    "production_support": "Owner battles/weapons/armies bible and film-inspired side-activities bible guide original production design and optional gameplay; they do not override the film.",
+    "original_content_rule": "New gameplay is allowed only inside film-safe gaps and must not change required scene outcomes.",
+    "raw_reference_rule": "Raw owner reference PDFs/images are reference-only and are never runtime dependencies."
+  },
+  "source_basis": [
+    {
+      "id": "SRC_FILM_FOTR_SCREENPLAY",
+      "role": "scene order, speaker/location presence, film knowledge boundaries"
+    },
+    {
+      "id": "SRC_OWNER_MASTER_PACK",
+      "role": "character, location, faction, artifact and canon-layer organization"
+    },
+    {
+      "id": "SRC_OWNER_BATTLES_WEAPONS_ARMIES_BIBLE",
+      "role": "Part I battle staging, threat silhouettes, weapons, architecture and combat-space production language"
+    },
+    {
+      "id": "SRC_OWNER_SIDE_ACTIVITIES_BIBLE",
+      "role": "film-safe optional activity families and production opportunities"
+    },
+    {
+      "id": "SRC_OWNER_IMAGES_CHARACTER_WORLD_SET",
+      "role": "owner visual benchmark/reference only; no raw reference asset is shipped"
+    }
+  ],
+  "geography_policy": {
+    "note": "Use realms, settlements and macro-regions rather than modern-country assumptions.",
+    "macro_regions": [
+      {
+        "id": "ERIADOR",
+        "display_name": "Eriador",
+        "part1_places": [
+          "The Shire",
+          "Hobbiton / Bag End",
+          "Bree / The Prancing Pony",
+          "Weathertop / Amon Sul",
+          "Rivendell / Imladris"
+        ]
+      },
+      {
+        "id": "MISTY_MOUNTAINS",
+        "display_name": "Misty Mountains",
+        "part1_places": [
+          "Caradhras / Redhorn Pass",
+          "Moria / Khazad-dum"
+        ]
+      },
+      {
+        "id": "WEST_ANDUIN",
+        "display_name": "West of Anduin",
+        "part1_places": [
+          "Lothlorien"
+        ]
+      },
+      {
+        "id": "NEN_HITHOEL",
+        "display_name": "Nen Hithoel / Anduin corridor",
+        "part1_places": [
+          "River Anduin",
+          "Pillars of the Kings / Argonath",
+          "Parth Galen",
+          "Amon Hen"
+        ]
+      },
+      {
+        "id": "GAP_OF_ROHAN",
+        "display_name": "Gap of Rohan",
+        "part1_places": [
+          "Isengard / Orthanc"
+        ]
+      }
+    ]
+  },
+  "chapters": [
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "display_name": "The Shire - Leaving Home",
+      "macro_region": "ERIADOR",
+      "primary_region": "The Shire",
+      "landmark_sequence": [
+        "Hobbiton / Bag End",
+        "Party Field",
+        "Hobbiton fields and wooded Shire roads",
+        "Buckland approach",
+        "Bucklebury Ferry / Brandywine River"
+      ],
+      "required_cast": [
+        "Frodo",
+        "Sam",
+        "Merry",
+        "Pippin",
+        "Bilbo",
+        "Gandalf"
+      ],
+      "major_threats": [
+        "Black Rider / Nazgul pursuit"
+      ],
+      "key_artifacts": [
+        "The One Ring",
+        "Gandalf staff"
+      ],
+      "source_asset_roots": [
+        "SourceAssets/Production/World/Shire",
+        "SourceAssets/Production/World/Common",
+        "SourceAssets/Production/Characters"
+      ],
+      "hero_vistas": [
+        "Bag End/Hobbiton layered hill reveal",
+        "Party Field warmth",
+        "wooded road compression under Nazgul pressure",
+        "Brandywine ferry escape opening"
+      ],
+      "production_focus": [
+        "domestic warmth before danger",
+        "dense inhabited Hobbiton",
+        "readable road transition from safety to pursuit",
+        "ferry and river geography"
+      ],
+      "side_activity_refs": [
+        "FOTR-01",
+        "FOTR-02",
+        "FOTR-03",
+        "FOTR-04",
+        "FOTR-05",
+        "FOTR-06",
+        "FOTR-07",
+        "FOTR-08"
+      ]
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C02",
+      "display_name": "Bree - The Prancing Pony",
+      "macro_region": "ERIADOR",
+      "primary_region": "Bree / The Prancing Pony",
+      "landmark_sequence": [
+        "Bree Gate",
+        "Bree streets",
+        "Prancing Pony reception/common room",
+        "private Hobbit room",
+        "night-attack aftermath",
+        "Bree departure road"
+      ],
+      "required_cast": [
+        "Frodo",
+        "Sam",
+        "Merry",
+        "Pippin",
+        "Aragorn / Strider",
+        "Barliman Butterbur",
+        "Bree Gate Keeper"
+      ],
+      "major_threats": [
+        "Black Riders"
+      ],
+      "key_artifacts": [
+        "The One Ring"
+      ],
+      "source_asset_roots": [
+        "SourceAssets/Production/World/Bree",
+        "SourceAssets/Production/World/Common",
+        "SourceAssets/Production/Characters"
+      ],
+      "hero_vistas": [
+        "rain-dark Bree gate",
+        "wet lamplit streets",
+        "crowded warm inn against suspicious night"
+      ],
+      "production_focus": [
+        "mixed Men/Hobbit town scale",
+        "mud/wetness/lantern contrast",
+        "social density",
+        "stable and inn interior clutter"
+      ],
+      "side_activity_refs": [
+        "FOTR-09",
+        "FOTR-10",
+        "FOTR-11"
+      ]
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C03",
+      "display_name": "Midgewater, Weathertop and the Ford",
+      "macro_region": "ERIADOR",
+      "primary_region": "Weathertop / Amon Sul",
+      "landmark_sequence": [
+        "Midgewater Moors",
+        "Weathertop hollow",
+        "Weathertop summit ruins",
+        "flight roads and woodland",
+        "Ford of Bruinen"
+      ],
+      "required_cast": [
+        "Frodo",
+        "Sam",
+        "Merry",
+        "Pippin",
+        "Aragorn",
+        "Arwen"
+      ],
+      "major_threats": [
+        "Nazgul",
+        "Witch-king"
+      ],
+      "key_artifacts": [
+        "The One Ring",
+        "Morgul-knife",
+        "Sting"
+      ],
+      "source_asset_roots": [
+        "SourceAssets/Production/World/Weathertop",
+        "SourceAssets/Production/World/Common",
+        "SourceAssets/Production/Characters",
+        "SourceAssets/Production/Enemies/BlackRider"
+      ],
+      "hero_vistas": [
+        "lonely Weathertop crown",
+        "circular ruin fire-versus-darkness encounter",
+        "river threshold at the Ford"
+      ],
+      "production_focus": [
+        "windswept ruin silhouette",
+        "fear/darkness staging",
+        "compact supernatural ambush",
+        "fast rescue geography"
+      ],
+      "side_activity_refs": [
+        "FOTR-12"
+      ]
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C04",
+      "display_name": "Rivendell / Imladris",
+      "macro_region": "ERIADOR",
+      "primary_region": "Rivendell / Imladris",
+      "landmark_sequence": [
+        "Frodo recovery room",
+        "Rivendell valley and gardens",
+        "terraces and memorials",
+        "Council spaces",
+        "Fellowship departure gate"
+      ],
+      "required_cast": [
+        "Frodo",
+        "Sam",
+        "Merry",
+        "Pippin",
+        "Bilbo",
+        "Gandalf",
+        "Aragorn",
+        "Boromir",
+        "Legolas",
+        "Gimli",
+        "Elrond",
+        "Arwen"
+      ],
+      "major_threats": [],
+      "key_artifacts": [
+        "The One Ring",
+        "Sting",
+        "Mithril coat",
+        "Glamdring",
+        "Narsil shards"
+      ],
+      "source_asset_roots": [
+        "SourceAssets/Production/World/Rivendell",
+        "SourceAssets/Production/World/Common",
+        "SourceAssets/Production/Characters"
+      ],
+      "hero_vistas": [
+        "first valley reveal",
+        "waterfall/terrace layering",
+        "Council composition",
+        "departure gate"
+      ],
+      "production_focus": [
+        "healing/refuge identity",
+        "open arches and water views",
+        "memory/lore spaces",
+        "full Fellowship readable as a group"
+      ],
+      "side_activity_refs": [
+        "FOTR-13",
+        "FOTR-14",
+        "FOTR-15"
+      ]
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C05",
+      "display_name": "Fellowship Road, Caradhras and the West Gate",
+      "macro_region": "MISTY_MOUNTAINS",
+      "primary_region": "Caradhras / Redhorn Pass",
+      "landmark_sequence": [
+        "south road camp",
+        "mountain approach",
+        "Pass of Caradhras",
+        "retreat route",
+        "Moria lake / West Gate"
+      ],
+      "required_cast": [
+        "Frodo",
+        "Sam",
+        "Merry",
+        "Pippin",
+        "Gandalf",
+        "Aragorn",
+        "Boromir",
+        "Legolas",
+        "Gimli"
+      ],
+      "major_threats": [
+        "severe weather",
+        "Watcher in the Water"
+      ],
+      "key_artifacts": [
+        "The One Ring",
+        "Sting",
+        "Glamdring",
+        "Mithril coat",
+        "Horn of Gondor"
+      ],
+      "source_asset_roots": [
+        "SourceAssets/Production/World/Road",
+        "SourceAssets/Production/World/Common",
+        "SourceAssets/Production/Characters"
+      ],
+      "hero_vistas": [
+        "Fellowship mountain scale",
+        "snow wall of Caradhras",
+        "dark lake and West Gate cliff"
+      ],
+      "production_focus": [
+        "travel scale",
+        "snow/wind readability",
+        "company formation",
+        "Moria entrance puzzle staging"
+      ],
+      "side_activity_refs": [
+        "FOTR-16",
+        "FOTR-17"
+      ]
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C06",
+      "display_name": "Moria / Khazad-dum",
+      "macro_region": "MISTY_MOUNTAINS",
+      "primary_region": "Moria / Khazad-dum",
+      "landmark_sequence": [
+        "Moria entry",
+        "tunnel forks and mines",
+        "Dwarrowdelf / great halls",
+        "Chamber of Mazarbul / Balin's Tomb",
+        "stairs and escape",
+        "Bridge of Khazad-dum"
+      ],
+      "required_cast": [
+        "Frodo",
+        "Sam",
+        "Merry",
+        "Pippin",
+        "Gandalf",
+        "Aragorn",
+        "Boromir",
+        "Legolas",
+        "Gimli"
+      ],
+      "major_threats": [
+        "Orcs",
+        "Cave Troll",
+        "Balrog"
+      ],
+      "key_artifacts": [
+        "The One Ring",
+        "Sting",
+        "Glamdring",
+        "Mithril coat"
+      ],
+      "source_asset_roots": [
+        "SourceAssets/Production/World/Moria",
+        "SourceAssets/Production/World/Common",
+        "SourceAssets/Production/Characters",
+        "SourceAssets/Production/Enemies/Orc",
+        "SourceAssets/Production/Enemies/CaveTroll"
+      ],
+      "hero_vistas": [
+        "vast column hall",
+        "tomb-centered defense room",
+        "vertical stair/abyss scale",
+        "Bridge confrontation"
+      ],
+      "production_focus": [
+        "monumental dwarf stonework",
+        "characters small against architecture",
+        "torch/dust/deep-shadow hierarchy",
+        "staged escalation from ordinary enemies to mythic threat"
+      ],
+      "side_activity_refs": [
+        "FOTR-18",
+        "FOTR-19"
+      ]
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C07",
+      "display_name": "Lothlorien",
+      "macro_region": "WEST_ANDUIN",
+      "primary_region": "Lothlorien",
+      "landmark_sequence": [
+        "forest entry",
+        "Caras Galadhon / tree platforms",
+        "grief/rest spaces",
+        "Mirror clearing",
+        "gift/farewell spaces",
+        "river departure"
+      ],
+      "required_cast": [
+        "Frodo",
+        "Sam",
+        "Merry",
+        "Pippin",
+        "Aragorn",
+        "Boromir",
+        "Legolas",
+        "Gimli",
+        "Galadriel",
+        "Celeborn",
+        "Haldir"
+      ],
+      "major_threats": [],
+      "key_artifacts": [
+        "The One Ring",
+        "Phial of Galadriel",
+        "Lembas",
+        "Elven cloaks"
+      ],
+      "source_asset_roots": [
+        "SourceAssets/Production/World/Lothlorien",
+        "SourceAssets/Production/World/Common",
+        "SourceAssets/Production/Characters"
+      ],
+      "hero_vistas": [
+        "golden canopy arrival",
+        "vertical talan reveal",
+        "Mirror clearing",
+        "boats at departure"
+      ],
+      "production_focus": [
+        "organic vertical platforms",
+        "gold-white filtered light",
+        "quiet sacred negative space",
+        "gift continuity"
+      ],
+      "side_activity_refs": [
+        "FOTR-20"
+      ]
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "display_name": "Anduin, Nen Hithoel and Amon Hen",
+      "macro_region": "NEN_HITHOEL",
+      "primary_region": "Amon Hen / Parth Galen",
+      "landmark_sequence": [
+        "River Anduin",
+        "Pillars of the Kings / Argonath",
+        "shore of Nen Hithoel",
+        "Parth Galen camp",
+        "slopes and summit of Amon Hen",
+        "Fellowship break"
+      ],
+      "required_cast": [
+        "Frodo",
+        "Sam",
+        "Merry",
+        "Pippin",
+        "Aragorn",
+        "Boromir",
+        "Legolas",
+        "Gimli"
+      ],
+      "major_threats": [
+        "Uruk-hai hunting party",
+        "Lurtz"
+      ],
+      "key_artifacts": [
+        "The One Ring",
+        "Horn of Gondor",
+        "Sting"
+      ],
+      "source_asset_roots": [
+        "SourceAssets/Production/World/Anduin",
+        "SourceAssets/Production/World/Common",
+        "SourceAssets/Production/Characters",
+        "SourceAssets/Production/Enemies/UrukHai"
+      ],
+      "hero_vistas": [
+        "Argonath reveal",
+        "broad river canyon",
+        "ruined Amon Hen above fractured woodland"
+      ],
+      "production_focus": [
+        "boat travel scale",
+        "forest sightline breaks",
+        "simultaneous micro-battles",
+        "Boromir emotional combat readability",
+        "party split clarity"
+      ],
+      "side_activity_refs": []
+    },
+    {
+      "route": "GandalfParallel",
+      "chapter": "P1C01",
+      "display_name": "Isengard / Orthanc",
+      "macro_region": "GAP_OF_ROHAN",
+      "primary_region": "Isengard / Orthanc",
+      "landmark_sequence": [
+        "Isengard valley gate",
+        "Orthanc approach",
+        "gardens",
+        "Orthanc chambers",
+        "Orthanc summit prison",
+        "industrial caverns below Isengard",
+        "escape"
+      ],
+      "required_cast": [
+        "Gandalf",
+        "Saruman"
+      ],
+      "major_threats": [
+        "Saruman",
+        "industrial Orc/Uruk activity"
+      ],
+      "key_artifacts": [
+        "Gandalf staff",
+        "Saruman staff",
+        "Palantir context"
+      ],
+      "source_asset_roots": [
+        "SourceAssets/Production/World/Common",
+        "SourceAssets/Production/Characters",
+        "SourceAssets/Production/Enemies/Orc",
+        "SourceAssets/Production/Enemies/UrukHai"
+      ],
+      "hero_vistas": [
+        "Orthanc approach",
+        "summit prison view",
+        "ordered valley turning into industrial scar"
+      ],
+      "production_focus": [
+        "black tower material identity",
+        "controlled geometric order versus destructive industry",
+        "vertical prison staging",
+        "smoke/fire production depth"
+      ],
+      "side_activity_refs": []
+    }
+  ],
+  "character_roster": [
+    {
+      "id": "FRODO",
+      "display_name": "Frodo Baggins",
+      "role": "HERO_PLAYABLE",
+      "asset_root": "SourceAssets/Production/Characters/Frodo",
+      "rig_family": "HOBBIT_HUMANOID",
+      "part1_chapters": [
+        "P1C01",
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "production_identity": [
+        "Ring-bearer",
+        "small Hobbit scale",
+        "dark curly hair",
+        "travel layers",
+        "Sting and later mithril continuity"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "face rig",
+        "film-state acting",
+        "cloth/hair polish"
+      ]
+    },
+    {
+      "id": "GANDALF",
+      "display_name": "Gandalf",
+      "role": "HERO_PLAYABLE_COMPANION",
+      "asset_root": "SourceAssets/Production/Characters/Gandalf",
+      "rig_family": "TALL_HUMANOID",
+      "part1_chapters": [
+        "P1C01",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "GandalfParallel/P1C01"
+      ],
+      "production_identity": [
+        "grey-robed Istar",
+        "staff",
+        "hat/beard silhouette",
+        "Glamdring",
+        "measured authority"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "robe/beard secondary motion",
+        "staff/sword acting",
+        "face rig"
+      ]
+    },
+    {
+      "id": "SAM",
+      "display_name": "Samwise Gamgee",
+      "role": "HERO_COMPANION",
+      "asset_root": "SourceAssets/Production/Characters/Sam",
+      "rig_family": "HOBBIT_HUMANOID",
+      "part1_chapters": [
+        "P1C01",
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "production_identity": [
+        "sturdy Hobbit",
+        "practical travel pack",
+        "protective proximity to Frodo"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "face rig",
+        "companion interaction animation"
+      ]
+    },
+    {
+      "id": "MERRY",
+      "display_name": "Meriadoc 'Merry' Brandybuck",
+      "role": "CORE_COMPANION",
+      "asset_root": "SourceAssets/Production/Characters/Merry",
+      "rig_family": "HOBBIT_HUMANOID",
+      "part1_chapters": [
+        "P1C01",
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "production_identity": [
+        "confident Hobbit silhouette",
+        "distinct travel clothing"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "face rig",
+        "companion acting"
+      ]
+    },
+    {
+      "id": "PIPPIN",
+      "display_name": "Peregrin 'Pippin' Took",
+      "role": "CORE_COMPANION",
+      "asset_root": "SourceAssets/Production/Characters/Pippin",
+      "rig_family": "HOBBIT_HUMANOID",
+      "part1_chapters": [
+        "P1C01",
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "production_identity": [
+        "younger Hobbit energy",
+        "curious posture",
+        "distinct hair/clothes"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "face rig",
+        "companion acting"
+      ]
+    },
+    {
+      "id": "ARAGORN",
+      "display_name": "Aragorn / Strider",
+      "role": "HERO_COMPANION",
+      "asset_root": "SourceAssets/Production/Characters/Aragorn",
+      "rig_family": "STANDARD_HUMANOID",
+      "part1_chapters": [
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "production_identity": [
+        "weathered Ranger layers",
+        "sword",
+        "cloak",
+        "scout posture"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "face rig",
+        "ranger locomotion",
+        "sword combat set"
+      ]
+    },
+    {
+      "id": "BOROMIR",
+      "display_name": "Boromir",
+      "role": "HERO_COMPANION",
+      "asset_root": "SourceAssets/Production/Characters/Boromir",
+      "rig_family": "STANDARD_HUMANOID",
+      "part1_chapters": [
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "production_identity": [
+        "Gondor soldier silhouette",
+        "shield",
+        "sword",
+        "Horn of Gondor"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "face rig",
+        "shield/sword combat",
+        "Amon Hen injury/death acting"
+      ]
+    },
+    {
+      "id": "LEGOLAS",
+      "display_name": "Legolas",
+      "role": "HERO_COMPANION",
+      "asset_root": "SourceAssets/Production/Characters/Legolas",
+      "rig_family": "STANDARD_HUMANOID",
+      "part1_chapters": [
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "production_identity": [
+        "slender Elf",
+        "bow/quiver",
+        "precise fast movement"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "archery animation",
+        "face rig",
+        "light-foot locomotion"
+      ]
+    },
+    {
+      "id": "GIMLI",
+      "display_name": "Gimli",
+      "role": "HERO_COMPANION",
+      "asset_root": "SourceAssets/Production/Characters/Gimli",
+      "rig_family": "DWARF_HUMANOID",
+      "part1_chapters": [
+        "P1C04",
+        "P1C05",
+        "P1C06",
+        "P1C07",
+        "P1C08"
+      ],
+      "production_identity": [
+        "compact heavy Dwarf",
+        "beard mass",
+        "axe",
+        "grounded gait"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "beard motion",
+        "axe combat",
+        "face rig"
+      ]
+    },
+    {
+      "id": "BILBO",
+      "display_name": "Bilbo Baggins",
+      "role": "MAJOR_NAMED",
+      "asset_root": "SourceAssets/Production/Characters/Bilbo",
+      "rig_family": "HOBBIT_HUMANOID",
+      "part1_chapters": [
+        "P1C01",
+        "P1C04"
+      ],
+      "production_identity": [
+        "older Hobbit",
+        "home/scholar identity",
+        "former Ring-bearer"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "age-specific face rig",
+        "Ring-history acting"
+      ]
+    },
+    {
+      "id": "ARWEN",
+      "display_name": "Arwen Undomiel",
+      "role": "MAJOR_NAMED_FILM_EXPANDED",
+      "asset_root": "SourceAssets/Production/Characters/Arwen",
+      "rig_family": "STANDARD_HUMANOID",
+      "part1_chapters": [
+        "P1C03",
+        "P1C04"
+      ],
+      "production_identity": [
+        "Rivendell Elf",
+        "film-expanded rider/rescuer",
+        "calm decisive motion"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "riding/horse integration",
+        "face rig",
+        "wardrobe"
+      ]
+    },
+    {
+      "id": "ELROND",
+      "display_name": "Elrond",
+      "role": "MAJOR_NAMED",
+      "asset_root": "SourceAssets/Production/Characters/Elrond",
+      "rig_family": "STANDARD_HUMANOID",
+      "part1_chapters": [
+        "P1C04"
+      ],
+      "production_identity": [
+        "Rivendell lord",
+        "formal layered wardrobe",
+        "controlled posture"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "face rig",
+        "Council acting"
+      ]
+    },
+    {
+      "id": "GALADRIEL",
+      "display_name": "Galadriel",
+      "role": "MAJOR_NAMED",
+      "asset_root": "SourceAssets/Production/Characters/Galadriel",
+      "rig_family": "STANDARD_HUMANOID",
+      "part1_chapters": [
+        "P1C07"
+      ],
+      "production_identity": [
+        "Lothlorien Lady",
+        "long pale hair",
+        "light layered gown",
+        "deliberate stillness"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "hair/cloth",
+        "face rig",
+        "Mirror scene acting"
+      ]
+    },
+    {
+      "id": "SARUMAN",
+      "display_name": "Saruman",
+      "role": "MAJOR_NAMED_PARALLEL",
+      "asset_root": "SourceAssets/Production/Characters/Saruman",
+      "rig_family": "TALL_HUMANOID",
+      "part1_chapters": [
+        "GandalfParallel/P1C01"
+      ],
+      "production_identity": [
+        "white-robed Istar",
+        "staff",
+        "precise authoritarian posture"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "robe/hair",
+        "staff combat/power staging",
+        "face rig"
+      ]
+    },
+    {
+      "id": "HALDIR",
+      "display_name": "Haldir",
+      "role": "NAMED_GUARDIAN",
+      "asset_root": "SourceAssets/Production/Characters/Haldir",
+      "rig_family": "STANDARD_HUMANOID",
+      "part1_chapters": [
+        "P1C07"
+      ],
+      "production_identity": [
+        "Lothlorien border guardian",
+        "Elf martial silhouette"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "wardrobe/weapon detail",
+        "face rig"
+      ]
+    },
+    {
+      "id": "BUTTERBUR",
+      "display_name": "Barliman Butterbur",
+      "role": "REGIONAL_NAMED",
+      "asset_root": "SourceAssets/Production/Characters/Butterbur",
+      "rig_family": "STANDARD_HUMANOID",
+      "part1_chapters": [
+        "P1C02"
+      ],
+      "production_identity": [
+        "innkeeper",
+        "Bree social anchor"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "inn interaction set"
+      ]
+    },
+    {
+      "id": "FARMER_MAGGOT",
+      "display_name": "Farmer Maggot",
+      "role": "REGIONAL_NAMED",
+      "asset_root": "SourceAssets/Production/Characters/FarmerMaggot",
+      "rig_family": "HOBBIT_HUMANOID",
+      "part1_chapters": [
+        "P1C01"
+      ],
+      "production_identity": [
+        "Shire farmer",
+        "rural work identity"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "work animation"
+      ]
+    },
+    {
+      "id": "HAMFAST",
+      "display_name": "Hamfast Gamgee",
+      "role": "REGIONAL_NAMED",
+      "asset_root": "SourceAssets/Production/Characters/Hamfast",
+      "rig_family": "HOBBIT_HUMANOID",
+      "part1_chapters": [
+        "P1C01"
+      ],
+      "production_identity": [
+        "older Shire Hobbit",
+        "garden/home identity"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "work/social animation"
+      ]
+    },
+    {
+      "id": "ROSIE",
+      "display_name": "Rosie Cotton",
+      "role": "REGIONAL_NAMED",
+      "asset_root": "SourceAssets/Production/Characters/Rosie",
+      "rig_family": "HOBBIT_HUMANOID",
+      "part1_chapters": [
+        "P1C01"
+      ],
+      "production_identity": [
+        "Shire social anchor",
+        "Green Dragon context"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "social animation"
+      ]
+    },
+    {
+      "id": "GATE_KEEPER",
+      "display_name": "Bree Gate Keeper",
+      "role": "REGIONAL_NAMED",
+      "asset_root": "SourceAssets/Production/Characters/GateKeeper",
+      "rig_family": "STANDARD_HUMANOID",
+      "part1_chapters": [
+        "P1C02"
+      ],
+      "production_identity": [
+        "guarded Bree entrance",
+        "human town scale"
+      ],
+      "final_gap": [
+        "skeletal rig",
+        "gate interaction animation"
+      ]
+    }
+  ],
+  "threat_roster": [
+    {
+      "id": "BLACK_RIDER",
+      "display_name": "Black Rider / Nazgul",
+      "asset_root": "SourceAssets/Production/Enemies/BlackRider",
+      "chapters": [
+        "P1C01",
+        "P1C02",
+        "P1C03"
+      ],
+      "combat_identity": [
+        "fear pressure",
+        "mounted pursuit",
+        "dark robes",
+        "long blade"
+      ],
+      "final_gap": [
+        "final rig",
+        "cloth",
+        "horse/rider animation",
+        "Witch-king identity variant"
+      ]
+    },
+    {
+      "id": "ORC",
+      "display_name": "Moria Orc",
+      "asset_root": "SourceAssets/Production/Enemies/Orc",
+      "chapters": [
+        "P1C06"
+      ],
+      "combat_identity": [
+        "crude varied gear",
+        "group pressure",
+        "chokepoint combat"
+      ],
+      "final_gap": [
+        "rig",
+        "head/armor variants",
+        "combat animation"
+      ]
+    },
+    {
+      "id": "URUK_HAI",
+      "display_name": "Uruk-hai",
+      "asset_root": "SourceAssets/Production/Enemies/UrukHai",
+      "chapters": [
+        "P1C08",
+        "GandalfParallel/P1C01"
+      ],
+      "combat_identity": [
+        "industrial standardized war identity",
+        "heavy pursuit",
+        "melee and bows"
+      ],
+      "final_gap": [
+        "rig",
+        "armor variants",
+        "archery/melee animation",
+        "Lurtz hero variant"
+      ]
+    },
+    {
+      "id": "CAVE_TROLL",
+      "display_name": "Cave Troll",
+      "asset_root": "SourceAssets/Production/Enemies/CaveTroll",
+      "chapters": [
+        "P1C06"
+      ],
+      "combat_identity": [
+        "large brute",
+        "space-denial swings",
+        "party role switching"
+      ],
+      "final_gap": [
+        "custom rig",
+        "impact animation",
+        "hit reactions",
+        "room-scale collision tuning"
+      ]
+    },
+    {
+      "id": "BALROG",
+      "display_name": "Balrog",
+      "asset_root": null,
+      "chapters": [
+        "P1C06"
+      ],
+      "combat_identity": [
+        "mythic escalation",
+        "bridge confrontation",
+        "fire/shadow scale"
+      ],
+      "final_gap": [
+        "entire final creature asset",
+        "custom rig",
+        "VFX/audio",
+        "bridge staging"
+      ]
+    },
+    {
+      "id": "WATCHER",
+      "display_name": "Watcher in the Water",
+      "asset_root": null,
+      "chapters": [
+        "P1C05"
+      ],
+      "combat_identity": [
+        "lake-edge ambush",
+        "tentacle reach",
+        "escape pressure"
+      ],
+      "final_gap": [
+        "entire creature asset",
+        "tentacle rig",
+        "water VFX",
+        "door-collapse staging"
+      ]
+    },
+    {
+      "id": "LURTZ",
+      "display_name": "Lurtz",
+      "asset_root": null,
+      "chapters": [
+        "P1C08"
+      ],
+      "combat_identity": [
+        "film-original Uruk commander",
+        "Boromir pressure",
+        "Aragorn duel"
+      ],
+      "final_gap": [
+        "dedicated hero Uruk asset",
+        "custom face/armor",
+        "boss combat set"
+      ]
+    }
+  ],
+  "artifact_registry": [
+    {
+      "id": "ONE_RING",
+      "display_name": "The One Ring",
+      "part1_use": "central systemic/story axis",
+      "production_need": [
+        "hero prop",
+        "hand/neck presentation",
+        "Ring-pressure VFX/audio kept film-safe"
+      ]
+    },
+    {
+      "id": "STING",
+      "display_name": "Sting",
+      "part1_use": "Frodo weapon and Orc-proximity visual cue",
+      "production_need": [
+        "Hobbit-scale sword",
+        "glow state",
+        "hand/sheath attachment"
+      ]
+    },
+    {
+      "id": "GLAMDRING",
+      "display_name": "Glamdring",
+      "part1_use": "Gandalf sword in combat",
+      "production_need": [
+        "hero sword",
+        "staff/sword dual staging"
+      ]
+    },
+    {
+      "id": "MITHRIL_COAT",
+      "display_name": "Mithril coat",
+      "part1_use": "Bilbo gift and Moria protection continuity",
+      "production_need": [
+        "Frodo wearable layer",
+        "gift/impact presentation"
+      ]
+    },
+    {
+      "id": "NARSIL_SHARDS",
+      "display_name": "Shards of Narsil",
+      "part1_use": "Rivendell film heritage display",
+      "production_need": [
+        "relic display",
+        "inspection composition"
+      ]
+    },
+    {
+      "id": "MORGUL_KNIFE",
+      "display_name": "Morgul-knife",
+      "part1_use": "Weathertop wound",
+      "production_need": [
+        "Nazgul hero weapon",
+        "wound beat presentation"
+      ]
+    },
+    {
+      "id": "HORN_OF_GONDOR",
+      "display_name": "Horn of Gondor",
+      "part1_use": "Boromir identity and Amon Hen climax",
+      "production_need": [
+        "wearable prop",
+        "horn call audio",
+        "broken-state continuity if shown"
+      ]
+    },
+    {
+      "id": "PHIAL",
+      "display_name": "Phial of Galadriel",
+      "part1_use": "Lothlorien gift and future trilogy seed",
+      "production_need": [
+        "gift prop",
+        "subtle unique light"
+      ]
+    },
+    {
+      "id": "LEMBAS",
+      "display_name": "Lembas",
+      "part1_use": "Lothlorien travel provision",
+      "production_need": [
+        "gift/pack prop",
+        "supply presentation"
+      ]
+    },
+    {
+      "id": "GANDALF_STAFF",
+      "display_name": "Gandalf's staff",
+      "part1_use": "identity, light/authority/combat staging",
+      "production_need": [
+        "hero staff",
+        "hand attachment",
+        "bounded VFX"
+      ]
+    },
+    {
+      "id": "SARUMAN_STAFF",
+      "display_name": "Saruman's staff",
+      "part1_use": "Isengard identity and confrontation",
+      "production_need": [
+        "hero staff",
+        "staff-combat/power staging"
+      ]
+    }
+  ],
+  "battle_encounters": [
+    {
+      "id": "BATTLE_WEATHERTOP",
+      "chapter": "P1C03",
+      "type": "night supernatural skirmish",
+      "space": "exposed circular ruin",
+      "production_keys": [
+        "long black silhouettes",
+        "fire contrast",
+        "fear/encirclement",
+        "Aragorn protective intervention"
+      ],
+      "outcome_lock": "Frodo is wounded; the encounter becomes rescue/escape."
+    },
+    {
+      "id": "BATTLE_MORIA",
+      "chapter": "P1C06",
+      "type": "chamber defense into running retreat",
+      "space": "tomb chamber, halls, stairs, bridges and abyss",
+      "production_keys": [
+        "chokepoint defense",
+        "Orc pressure",
+        "Cave Troll rhythm break",
+        "monumental scale",
+        "Balrog escalation"
+      ],
+      "outcome_lock": "The company escapes the ordinary attackers; Gandalf falls at the bridge."
+    },
+    {
+      "id": "BATTLE_AMON_HEN",
+      "chapter": "P1C08",
+      "type": "forest ambush and Fellowship breakup",
+      "space": "wet woodland, slopes, scattered ruins and broken sightlines",
+      "production_keys": [
+        "Uruk pursuit",
+        "parallel micro-battles",
+        "Boromir defense",
+        "Lurtz commander duel"
+      ],
+      "outcome_lock": "Boromir falls, Merry/Pippin are taken, Frodo/Sam separate, Three Hunters pursue."
+    }
+  ],
+  "film_inspired_activity_catalog": [
+    {
+      "id": "FOTR-01",
+      "title": "Bilbo's Birthday Party Setup",
+      "chapter": "P1C01",
+      "production_use": "Shire work/social interaction before urgency"
+    },
+    {
+      "id": "FOTR-02",
+      "title": "Gandalf Fireworks",
+      "chapter": "P1C01",
+      "production_use": "party spectacle and timing interaction"
+    },
+    {
+      "id": "FOTR-03",
+      "title": "The Dragon Firework",
+      "chapter": "P1C01",
+      "production_use": "Merry/Pippin party moment"
+    },
+    {
+      "id": "FOTR-04",
+      "title": "Hobbit Party Games",
+      "chapter": "P1C01",
+      "production_use": "rural mini-games that preserve party chronology"
+    },
+    {
+      "id": "FOTR-05",
+      "title": "Green Dragon Social Night",
+      "chapter": "P1C01",
+      "production_use": "bounded Shire social hub"
+    },
+    {
+      "id": "FOTR-06",
+      "title": "Mushroom Dash",
+      "chapter": "P1C01",
+      "production_use": "short field traversal before Black Rider pressure"
+    },
+    {
+      "id": "FOTR-07",
+      "title": "Hide from the Black Rider",
+      "chapter": "P1C01",
+      "production_use": "fear/stealth tutorial; survival only"
+    },
+    {
+      "id": "FOTR-08",
+      "title": "Bucklebury Ferry Escape",
+      "chapter": "P1C01",
+      "production_use": "sprint/ferry coordination without changing escape outcome"
+    },
+    {
+      "id": "FOTR-09",
+      "title": "Entering Bree",
+      "chapter": "P1C02",
+      "production_use": "gate/street exploration and guarded town mood"
+    },
+    {
+      "id": "FOTR-10",
+      "title": "Prancing Pony Activities",
+      "chapter": "P1C02",
+      "production_use": "social hub and suspicion management"
+    },
+    {
+      "id": "FOTR-11",
+      "title": "Strider Travel Prep",
+      "chapter": "P1C02",
+      "production_use": "Ranger preparation/tracking tutorial"
+    },
+    {
+      "id": "FOTR-12",
+      "title": "Weathertop Camp Risk",
+      "chapter": "P1C03",
+      "production_use": "campcraft versus concealment tension"
+    },
+    {
+      "id": "FOTR-13",
+      "title": "Rivendell Memory Walk",
+      "chapter": "P1C04",
+      "production_use": "quiet lore/exploration space"
+    },
+    {
+      "id": "FOTR-14",
+      "title": "Narsil Relic Inspection",
+      "chapter": "P1C04",
+      "production_use": "heritage inspection without changing Council outcome"
+    },
+    {
+      "id": "FOTR-15",
+      "title": "Fellowship Provisioning",
+      "chapter": "P1C04",
+      "production_use": "company preparation before departure"
+    },
+    {
+      "id": "FOTR-16",
+      "title": "Caradhras Survival",
+      "chapter": "P1C05",
+      "production_use": "snow traversal and group survival"
+    },
+    {
+      "id": "FOTR-17",
+      "title": "Doors of Moria Puzzle",
+      "chapter": "P1C05",
+      "production_use": "environmental puzzle at fixed story gate"
+    },
+    {
+      "id": "FOTR-18",
+      "title": "Moria Navigation",
+      "chapter": "P1C06",
+      "production_use": "route reading inside dangerous dead city"
+    },
+    {
+      "id": "FOTR-19",
+      "title": "Balin's Tomb Lore Search",
+      "chapter": "P1C06",
+      "production_use": "bounded archive/lore interaction before fixed attack"
+    },
+    {
+      "id": "FOTR-20",
+      "title": "Lothlorien Departure Prep",
+      "chapter": "P1C07",
+      "production_use": "boat/gift/travel preparation"
+    }
+  ],
+  "production_rules": [
+    "Every named place displayed to the player must resolve through this atlas or an explicitly source-verified extension.",
+    "Every hero character must have a production matrix row, an asset provenance path, a rig family and chapter-presence contract.",
+    "Every Part I region must have at least one hero vista, one near-field detail family, one midground landmark family and one background silhouette strategy.",
+    "No raw screenplay, production-bible page or owner image becomes a runtime dependency.",
+    "No source-reference image grants an asset license; final shipped assets remain project-owned or separately licensed.",
+    "No production pass may move or delete required film anchors to improve gameplay.",
+    "Part II and Part III production stay gated by their own source verification."
+  ]
+}
