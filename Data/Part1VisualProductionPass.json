@@ -268,17 +268,21 @@
     ]
   },
   "current_wave": {
-    "id": "MEGA_MATERIAL_WORLD_WAVE_V1",
-    "status": "IMPLEMENTED_SOURCE_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "id": "MEGA_WORLD_MAGIC_LIFE_DETAIL_V1",
+    "status": "SOURCE_AND_RUNTIME_IMPLEMENTATION_ACTIVE_PENDING_EXACT_HEAD_ENGINE_PROOF",
     "focus": [
       "mass explicit roughness/metallic material response across Part I regional palettes",
       "Moria modular architecture/prop expansion",
       "route-readable landmark/light composition",
       "source-grounded visible world saturation",
       "LoadObject growth kept bounded and transition-hitch risk retained",
-      "film-locked encounter outcomes unchanged"
+      "film-locked encounter outcomes unchanged",
+      "bounded chapter-specific environmental motion and glow",
+      "HISM-based dense micro-detail in Rivendell, Moria, Lothlorien and Anduin/Amon Hen",
+      "Isengard industrial motion and furnace life",
+      "sparse-region life through environment/wildlife rather than unsupported civilians"
     ],
-    "acceptance_rule": "Exact-head machine proof is required before merge/promotion; rendered PIE/device/human acceptance remains separate."
+    "acceptance_rule": "Exact-head Pre-Unreal + UE4.27.2 import/build/startup/chapter/state proof is required; rendered visual/device/human acceptance remains separate."
   },
   "hero_character_geometry_wave": {
     "id": "HERO_ANATOMICAL_FOUNDATION_V6",
@@ -375,5 +379,25 @@
       "Anduin",
       "Shire/Bree/Road/Weathertop"
     ]
+  },
+  "world_magic_life_detail": {
+    "status": "ACTIVE_PENDING_ENGINE_PROOF",
+    "runtime_components": [
+      "AWorldAmbientMotionActor",
+      "AWorldDetailCluster",
+      "ALivingWorldDirector",
+      "AFellowshipChapterWorldBuilder",
+      "AIsengardPrototypeWorldBuilder"
+    ],
+    "source_basis": [
+      "03 World/Locations",
+      "04 Peoples/Lore/Cultures",
+      "06 Gameplay/Side Activities",
+      "07 Mission Matrix",
+      "08 Visual Reference",
+      "10 3D Visual Atlas",
+      "11 Master Production Systems"
+    ],
+    "current_result": "Environmental motion + bounded glow + performance-aware dense detail are implemented in source and await exact-head engine proof."
   }
 }
