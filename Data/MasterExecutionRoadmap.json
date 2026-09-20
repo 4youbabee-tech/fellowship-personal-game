@@ -27,7 +27,12 @@
     "baseline_head_before_roadmap": "9dd82c7b2be42a8182fd7c4eaef70e1e06cff96b",
     "baseline_pre_unreal": "SUCCESS run #361",
     "baseline_unreal": "PENDING run #196 at roadmap creation",
-    "merge_policy": "Exact current head must be green before develop integration."
+    "merge_policy": "Exact current head must be green before develop integration.",
+    "deep_audit": {
+      "status": "ACTIVE_RED_REPAIR",
+      "artifact": "Data/DeepProjectAudit.json",
+      "rule": "Critical exact-head failures block unrelated expansion; audit/repair continues until green."
+    }
   },
   "bundles": [
     {
@@ -401,9 +406,9 @@
     "WORK-EXEC-001"
   ],
   "immediate_next_large_actions": [
-    "Run/repair exact-head UE4.27 compile/import/startup/chapter/state validation for the new Chronicle/traversal head.",
-    "Add first STEALTH_LITE runtime activity plus observation/pattern/camp multi-step challenge actors.",
-    "Add player-interactive world-event responses while preserving LivingWorldDirector performance budgets.",
-    "Continue production-character and cinematic-world replacement waves."
+    "Green the exact-head material/import warning gate.",
+    "Run deep audit and real UE4.27 evidence chain on the same SHA.",
+    "Measure NPC social scans and chapter-transition synchronous loads on target device before refactoring.",
+    "Resume large visible Part I production only after stability gate is green."
   ]
 }
