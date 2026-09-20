@@ -12,6 +12,7 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 - Product rule: film scenario first; game systems expand around verified film anchors.
 - Performance rule: Windows / DX11 / 720p Low-Medium / 30 FPS floor.
 - Current B1 runtime wave: **CHRONICLE_BROWSING_AND_KNOWLEDGE_PRESENTATION_V5** — source-grounded Chronicle labels, explicit entry browsing, readable map-region context, and PG-085 regression protection.
+- Current B2 mega wave: **PART1_SOURCE_GROUNDED_PRODUCTION_MEGA_V1** — source atlas, truthful readiness gate, full-cast/threat inventory, nine-region production, and automated readiness audit.
 
 ## Execution order
 

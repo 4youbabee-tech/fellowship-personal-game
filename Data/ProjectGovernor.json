@@ -187,7 +187,8 @@
         "Anduin river canyon",
         "CP49 reusable production terrain kit overlays hills cliffs river banks slopes and boulders without moving story anchors",
         "Owner rejected the earlier plain reference-image quality as the target bar; the world visual bar is now explicitly higher and more cinematic.",
-        "Visual target emphasizes layered vistas, foreground/midground/background depth, richer materials/vegetation, landmark composition, water/fog/light atmosphere and region-specific color identity."
+        "Visual target emphasizes layered vistas, foreground/midground/background depth, richer materials/vegetation, landmark composition, water/fog/light atmosphere and region-specific color identity.",
+        "Part1ProductionAtlas records canonical region and landmark chains plus hero-vista targets for all eight Frodo chapters and Isengard."
       ],
       "missing_work": [
         "Most non-Shire regions remain prototype geometry.",
@@ -804,7 +805,8 @@
         "Rivendell and Lothlorien have moving Elf ambient residents",
         "Data/CharacterPopulationPlan.json records chapter cast coverage and visual tiers",
         "Major named proxies now carry modular identity pieces such as cloaks, weapons, shields, quivers, beards and headpieces so the cast is visually distinguishable before final rigged assets.",
-        "CP46 adds dedicated production meshes for Black Riders, Orcs, Uruk-hai and Cave Troll while preserving existing combat/quest gating"
+        "CP46 adds dedicated production meshes for Black Riders, Orcs, Uruk-hai and Cave Troll while preserving existing combat/quest gating",
+        "CharacterProductionMatrix now records existing project-owned dedicated identity foundations separately from final rigged/accepted characters."
       ],
       "missing_work": [
         "Dedicated production meshes/rigged characters for Sam, Merry, Pippin, Aragorn, Boromir, Legolas, Gimli and other non-Frodo/Gandalf major characters",
@@ -1377,7 +1379,8 @@
         "Runtime observer rejects late fatal/assert/ensure messages and spontaneous exits after ready markers; requires a live observation window and final log scan.",
         "Subprocess regression scenarios run in Pre-Unreal CI.",
         "Self-hosted UE4 validation now avoids fragile later temporary PowerShell scripts for checkout/warning analysis and explicitly verifies the exact PR-head SHA.",
-        "State-mode runtime smoke now requires Ring continuity plus Journey Discovery first-time/route-roundtrip continuity."
+        "State-mode runtime smoke now requires Ring continuity plus Journey Discovery first-time/route-roundtrip continuity.",
+        "Production100ReadinessGate plus production_readiness_audit.py prevents proxy/source-asset presence or compile success from being mislabeled as 100 percent production."
       ],
       "missing_work": [
         "Validate this observer on the Windows UE4.27 runner.",
@@ -1418,7 +1421,11 @@
       "evidence": [
         "Data/GameCompletenessMatrix.json",
         "Data/CP56MegaIntegrationPlan.json",
-        "Data/ProjectGovernor.json"
+        "Data/ProjectGovernor.json",
+        "Data/Part1ProductionAtlas.json",
+        "Data/Production100ReadinessGate.json",
+        "Data/Part1MegaProductionPlan.json",
+        "Scripts/production_readiness_audit.py"
       ],
       "implementation_refs": [
         "Whole-game completeness matrix now tracks all major gameplay and presentation systems.",
@@ -1433,7 +1440,8 @@
         "B1 now includes reusable traversal-challenge gameplay, not only proximity discovery triggers.",
         "B1 side-play physicalization now covers 19 contextual activities with centralized film-window guards and a direct stealth source.",
         "B1 now includes a dedicated environmental puzzle runtime and bounded interactive living-world micro-events, both guarded against canon mutation and persistent reward farming.",
-        "B1 now includes dedicated source-grounded Chronicle entry browsing and readable map-region presentation."
+        "B1 now includes dedicated source-grounded Chronicle entry browsing and readable map-region presentation.",
+        "Part1MegaProductionPlan launches one coordinated audit/source/character/world/gameplay/battle/presentation/acceptance operation instead of isolated micro-steps."
       ],
       "missing_work": [
         "Get final PR #53 head through full UE4.27 validation.",
@@ -1475,7 +1483,8 @@
       "implementation_refs": [
         "Fellowship screenplay mapped into Part I route/chapter/story-beat contexts.",
         "Two Towers screenplay indexed into future Part II arc seeds.",
-        "Runtime context will expose active source grounding to bounded dialogue selection."
+        "Runtime context will expose active source grounding to bounded dialogue selection.",
+        "Part1ProductionAtlas derives Part I geography/cast/threat/artifact production context from the owner screenplay/source pack/production bibles while raw references remain non-runtime."
       ],
       "missing_work": [
         "Validate source-context loading in UE4.27 on PR #53.",
@@ -1656,7 +1665,8 @@
       "implementation_refs": [
         "full Part I core-cast matrix with visual identity, rig family, priority and current proof boundary",
         "source/provenance policy for external assets",
-        "shared performance/LOD contract"
+        "shared performance/LOD contract",
+        "Full-cast production is ordered by Part1MegaProductionPlan with asset-root, rig-family, final-gap and acceptance contracts."
       ],
       "missing_work": [
         "select/import legal base assets or author replacements",
@@ -1690,7 +1700,8 @@
       ],
       "implementation_refs": [
         "all Part I regions now have hero vistas, foreground/midground/background targets, atmosphere and production-gap definitions",
-        "benchmark emphasizes light shafts, ground detail, layered depth and characters embedded in landscape"
+        "benchmark emphasizes light shafts, ground detail, layered depth and characters embedded in landscape",
+        "CinematicWorldProductionMatrix records project-owned regional kit roots separately from final-art acceptance."
       ],
       "missing_work": [
         "production terrain/material/foliage/architecture replacement",
@@ -1781,7 +1792,8 @@
       "implementation_refs": [
         "Part I identifies Gandalf investigation/Isengard, Arwen Ford, Boromir training/defense, Legolas scouting, Gimli Moria and Aragorn scouting as distinct viewpoint opportunities.",
         "Part II maps the Three Hunters, Merry/Pippin, Gandalf/Rohan and potential Faramir/Eowyn episodes.",
-        "Part III remains high-level FUTURE_SOURCE_CHECK until exact film/script scene verification."
+        "Part III remains high-level FUTURE_SOURCE_CHECK until exact film/script scene verification.",
+        "Part1ProductionAtlas maps Part I cast presence and production asset roots so ensemble viewpoints can use the correct character visual foundation."
       ],
       "missing_work": [
         "Verify exact opening/closing film anchors for each planned viewpoint mission before runtime implementation.",
@@ -2996,5 +3008,6 @@
       "logical voice-cue dispatch"
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
-  }
+  },
+  "current_focus": "PART1_SOURCE_GROUNDED_PRODUCTION_MEGA_V1"
 }

@@ -140,7 +140,9 @@
         "Moria",
         "Lothlorien",
         "Anduin/Amon Hen",
-        "Isengard"
+        "Isengard",
+        "Part1ProductionAtlas geography and landmark chains",
+        "nine-region project-owned world-kit inventory"
       ]
     },
     {
@@ -274,7 +276,9 @@
         "warning debt",
         "PG-083 environmental puzzle contract guard",
         "PG-084 living-world interaction anti-canon/anti-farm guard",
-        "PG-085 Chronicle source-label and browse-control guard"
+        "PG-085 Chronicle source-label and browse-control guard",
+        "production-readiness audit",
+        "PG-086 mega-production source/readiness guard"
       ]
     },
     {
@@ -294,7 +298,10 @@
       "includes": [
         "project-owned production bank",
         "licensed external pipeline",
-        "final rigs/materials/textures/audio pending"
+        "final rigs/materials/textures/audio pending",
+        "project-owned named-cast foundation inventory",
+        "explicit final rig/material/face/animation gaps",
+        "threat asset gap inventory for Lurtz Watcher Balrog"
       ]
     },
     {
@@ -305,7 +312,9 @@
         "decisions",
         "work queue",
         "evidence honesty",
-        "developer handoff"
+        "developer handoff",
+        "Production100ReadinessGate prevents false 100 percent promotion",
+        "Part1MegaProductionPlan coordinated workstreams"
       ]
     },
     {

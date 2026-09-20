@@ -164,7 +164,13 @@
         "proxy-to-production character replacement in priority waves",
         "hero vistas for every Part I region",
         "terrain/material/vegetation/water/architecture production pass",
-        "LOD/instancing/culling/material budget enforcement"
+        "LOD/instancing/culling/material budget enforcement",
+        "source-grounded Part I production atlas for geography/cast/threats/artifacts/battles",
+        "evidence-based production-100 readiness gate",
+        "truthful project-owned character/world foundation inventory",
+        "automated production-readiness contract audit",
+        "nine-region coordinated world production wave",
+        "full Part I hero/threat character production wave"
       ],
       "exit_evidence": [
         "ASSET_PROVENANCE_RECORDED",
@@ -172,7 +178,8 @@
         "UE4_COMPILE_PASS",
         "PIE_VISUAL_REVIEW",
         "TARGET_DEVICE_PERFORMANCE"
-      ]
+      ],
+      "current_production_wave": "PART1_SOURCE_GROUNDED_PRODUCTION_MEGA_V1"
     },
     {
       "id": "B3_LIVING_WORLD_AND_PRESENTATION",
