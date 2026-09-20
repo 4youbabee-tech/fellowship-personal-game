@@ -200,11 +200,17 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
 {
     UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
         nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    if (!BasicMaterial) return;
+    if (!BasicMaterial)
+    {
+        return;
+    }
 
     auto ApplyColor = [this, BasicMaterial](UStaticMeshComponent* Component, const FLinearColor& Color)
     {
-        if (!Component) return;
+        if (!Component)
+        {
+            return;
+        }
         if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, this))
         {
             MID->SetVectorParameterValue(TEXT("Color"), Color);
@@ -214,7 +220,10 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
 
     auto TryMesh = [](UStaticMeshComponent* Component, const TCHAR* AssetPath) -> bool
     {
-        if (!Component) return false;
+        if (!Component)
+        {
+            return false;
+        }
         if (UStaticMesh* Mesh = LoadObject<UStaticMesh>(nullptr, AssetPath))
         {
             Component->SetStaticMesh(Mesh);
@@ -232,8 +241,49 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
         }
     }
 
-    bPrototypeIsGandalf = CharacterId == TEXT("Gandalf");
-    const bool bGandalf = bPrototypeIsGandalf;
+    const TArray<FName> SupportedPlayableIds = {
+        TEXT("Frodo"), TEXT("Gandalf"), TEXT("Sam"), TEXT("Merry"), TEXT("Pippin"),
+        TEXT("Aragorn"), TEXT("Boromir"), TEXT("Legolas"), TEXT("Gimli"), TEXT("Arwen")
+    };
+    FName VisualId = CharacterId;
+    if (!SupportedPlayableIds.Contains(VisualId))
+    {
+        UE_LOG(
+            LogTemp,
+            Warning,
+            TEXT("CharacterVisual: unsupported playable id=%s; using Frodo fallback"),
+            *CharacterId.ToString());
+        VisualId = TEXT("Frodo");
+    }
+
+    const bool bFrodo = VisualId == TEXT("Frodo");
+    const bool bGandalf = VisualId == TEXT("Gandalf");
+    const bool bSam = VisualId == TEXT("Sam");
+    const bool bMerry = VisualId == TEXT("Merry");
+    const bool bPippin = VisualId == TEXT("Pippin");
+    const bool bAragorn = VisualId == TEXT("Aragorn");
+    const bool bBoromir = VisualId == TEXT("Boromir");
+    const bool bLegolas = VisualId == TEXT("Legolas");
+    const bool bGimli = VisualId == TEXT("Gimli");
+    const bool bArwen = VisualId == TEXT("Arwen");
+
+    const bool bHobbit = bFrodo || bSam || bMerry || bPippin;
+    const bool bDwarf = bGimli;
+    const bool bElf = bLegolas || bArwen;
+    const bool bWizard = bGandalf;
+    const bool bTall = bWizard || bElf || bAragorn || bBoromir;
+
+    bPrototypeIsGandalf = bGandalf;
+    PrototypeMotionProfile = bHobbit ? FName(TEXT("HOBBIT"))
+        : (bDwarf ? FName(TEXT("DWARF"))
+        : (bElf ? FName(TEXT("ELF")) : FName(TEXT("TALL"))));
+
+    PrototypeHat->SetVisibility(false, true);
+    PrototypeBeard->SetVisibility(false, true);
+    PrototypeCloak->SetVisibility(false, true);
+    PrototypeSatchel->SetVisibility(false, true);
+    PrototypeWeapon->SetVisibility(false, true);
+
     bool bProductionCharacter = true;
 
     if (bGandalf)
@@ -252,7 +302,7 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
         TryMesh(PrototypeBeard, TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Beard.SM_Gandalf_Beard"));
         TryMesh(PrototypeWeapon, TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Staff.SM_Gandalf_Staff"));
     }
-    else
+    else if (bFrodo)
     {
         bProductionCharacter = TryMesh(PrototypeTorso, TEXT("/Game/Production/Characters/Frodo/SM_Frodo_Torso.SM_Frodo_Torso")) && bProductionCharacter;
         bProductionCharacter = TryMesh(PrototypeHead, TEXT("/Game/Production/Characters/Frodo/SM_Frodo_Head.SM_Frodo_Head")) && bProductionCharacter;
@@ -267,69 +317,201 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
         TryMesh(PrototypeSatchel, TEXT("/Game/Production/Characters/Frodo/SM_Frodo_Satchel.SM_Frodo_Satchel"));
         TryMesh(PrototypeWeapon, TEXT("/Game/Production/Characters/Frodo/SM_Frodo_Sword.SM_Frodo_Sword"));
     }
+    else
+    {
+        const FString Folder = VisualId.ToString();
+        const FString TorsoPath = FString::Printf(
+            TEXT("/Game/Production/Characters/%s/SM_%s_Torso.SM_%s_Torso"),
+            *Folder, *Folder, *Folder);
+        const FString HeadPath = FString::Printf(
+            TEXT("/Game/Production/Characters/%s/SM_%s_Head.SM_%s_Head"),
+            *Folder, *Folder, *Folder);
+        const FString HairPath = FString::Printf(
+            TEXT("/Game/Production/Characters/%s/SM_%s_Hair.SM_%s_Hair"),
+            *Folder, *Folder, *Folder);
+
+        const TCHAR* ArmPath = bHobbit
+            ? TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm")
+            : (bDwarf
+                ? TEXT("/Game/Production/Characters/Common/SM_Dwarf_Arm.SM_Dwarf_Arm")
+                : TEXT("/Game/Production/Characters/Common/SM_Human_Arm.SM_Human_Arm"));
+        const TCHAR* LegPath = bHobbit
+            ? TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg")
+            : (bDwarf
+                ? TEXT("/Game/Production/Characters/Common/SM_Dwarf_Leg.SM_Dwarf_Leg")
+                : TEXT("/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg"));
+        const TCHAR* FootPath = bHobbit
+            ? TEXT("/Game/Production/Characters/Hobbit/SM_Hobbit_Foot.SM_Hobbit_Foot")
+            : TEXT("/Game/Production/Characters/Common/SM_Human_Boot.SM_Human_Boot");
+
+        bProductionCharacter = TryMesh(PrototypeTorso, *TorsoPath) && bProductionCharacter;
+        bProductionCharacter = TryMesh(PrototypeHead, *HeadPath) && bProductionCharacter;
+        bProductionCharacter = TryMesh(PrototypeHair, *HairPath) && bProductionCharacter;
+        bProductionCharacter = TryMesh(PrototypeLeftArm, ArmPath) && bProductionCharacter;
+        TryMesh(PrototypeRightArm, ArmPath);
+        bProductionCharacter = TryMesh(PrototypeLeftLeg, LegPath) && bProductionCharacter;
+        TryMesh(PrototypeRightLeg, LegPath);
+        TryMesh(PrototypeLeftFoot, FootPath);
+        TryMesh(PrototypeRightFoot, FootPath);
+    }
+
+    const bool bNeedsCloak = bFrodo || bGandalf || bAragorn || bMerry || bPippin;
+    if (bNeedsCloak && !bFrodo && !bGandalf)
+    {
+        TryMesh(PrototypeCloak, TEXT("/Game/Production/Characters/Common/SM_ProductionCloak.SM_ProductionCloak"));
+    }
+
+    if (bAragorn || bBoromir)
+    {
+        TryMesh(PrototypeWeapon, TEXT("/Game/Production/Characters/Common/SM_ProductionSword.SM_ProductionSword"));
+    }
+    else if (bLegolas)
+    {
+        TryMesh(PrototypeWeapon, TEXT("/Game/Production/Characters/Common/SM_ProductionBow.SM_ProductionBow"));
+    }
+    else if (bGimli)
+    {
+        TryMesh(PrototypeWeapon, TEXT("/Game/Production/Characters/Common/SM_ProductionAxe.SM_ProductionAxe"));
+        TryMesh(PrototypeBeard, TEXT("/Game/Production/Characters/Common/SM_Dwarf_Beard.SM_Dwarf_Beard"));
+    }
+    if (bBoromir)
+    {
+        TryMesh(PrototypeSatchel, TEXT("/Game/Production/Characters/Common/SM_ProductionShield.SM_ProductionShield"));
+    }
 
     bUsingProductionCharacter = bProductionCharacter;
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("CharacterVisual: %s production=%s"),
+        TEXT("CharacterVisual: requested=%s visual=%s profile=%s productionFoundation=%s"),
         *CharacterId.ToString(),
+        *VisualId.ToString(),
+        *PrototypeMotionProfile.ToString(),
         bUsingProductionCharacter ? TEXT("yes") : TEXT("fallback"));
 
-    GetCapsuleComponent()->SetCapsuleHalfHeight(bGandalf ? 86.0f : 60.0f);
+    const float CapsuleHalfHeight = bHobbit ? 60.0f : (bDwarf ? 70.0f : (bWizard ? 86.0f : 88.0f));
+    const float CameraLength = bHobbit ? 260.0f : (bDwarf ? 280.0f : 300.0f);
+    const float CameraZ = bHobbit ? 52.0f : (bDwarf ? 62.0f : 77.0f);
+    GetCapsuleComponent()->SetCapsuleHalfHeight(CapsuleHalfHeight);
     if (CameraBoom)
     {
-        CameraBoom->TargetArmLength = bGandalf ? 300.0f : 260.0f;
-        CameraBoom->SetRelativeLocation(FVector(0.0f, 0.0f, bGandalf ? 77.0f : 52.0f));
-        CameraBoom->SocketOffset = FVector(0.0f, bGandalf ? 32.0f : 28.0f, 10.0f);
+        CameraBoom->TargetArmLength = CameraLength;
+        CameraBoom->SetRelativeLocation(FVector(0.0f, 0.0f, CameraZ));
+        CameraBoom->SocketOffset = FVector(0.0f, bHobbit ? 28.0f : 32.0f, 10.0f);
     }
 
-    PrototypeTorsoBaseZ = bGandalf ? 9.0f : -4.0f;
-    PrototypeHeadBaseZ = bGandalf ? 69.0f : 39.0f;
-    PrototypeHairBaseZ = bGandalf ? 82.0f : 49.0f;
+    PrototypeTorsoBaseZ = bHobbit ? -4.0f : (bDwarf ? 1.0f : 9.0f);
+    PrototypeHeadBaseZ = bHobbit ? 39.0f : (bDwarf ? 51.0f : 69.0f);
+    PrototypeHairBaseZ = bHobbit ? 49.0f : (bDwarf ? 61.0f : 82.0f);
+    const float ArmSide = bHobbit ? 23.0f : (bDwarf ? 25.0f : 26.0f);
+    const float ArmZ = bHobbit ? -3.0f : (bDwarf ? 2.0f : 8.0f);
+    const float LegZ = bHobbit ? -43.0f : (bDwarf ? -48.0f : -50.0f);
+    const float FootZ = bHobbit ? -58.0f : (bDwarf ? -68.0f : -80.0f);
 
-    PrototypeTorso->SetRelativeLocation(FVector(0,0,PrototypeTorsoBaseZ));
-    PrototypeHead->SetRelativeLocation(FVector(0,0,PrototypeHeadBaseZ));
-    PrototypeHair->SetRelativeLocation(FVector(-2,0,PrototypeHairBaseZ));
-    PrototypeLeftArm->SetRelativeLocation(FVector(0,bGandalf ? -26.0f : -23.0f,bGandalf ? 8.0f : -3.0f));
-    PrototypeRightArm->SetRelativeLocation(FVector(0,bGandalf ? 26.0f : 23.0f,bGandalf ? 8.0f : -3.0f));
-    PrototypeLeftLeg->SetRelativeLocation(FVector(0,-9.5f,bGandalf ? -50.0f : -43.0f));
-    PrototypeRightLeg->SetRelativeLocation(FVector(0,9.5f,bGandalf ? -50.0f : -43.0f));
-    PrototypeLeftFoot->SetRelativeLocation(FVector(9,-10,bGandalf ? -80.0f : -58.0f));
-    PrototypeRightFoot->SetRelativeLocation(FVector(9,10,bGandalf ? -80.0f : -58.0f));
+    PrototypeTorso->SetRelativeLocation(FVector(0, 0, PrototypeTorsoBaseZ));
+    PrototypeHead->SetRelativeLocation(FVector(0, 0, PrototypeHeadBaseZ));
+    PrototypeHair->SetRelativeLocation(FVector(-2, 0, PrototypeHairBaseZ));
+    PrototypeLeftArm->SetRelativeLocation(FVector(0, -ArmSide, ArmZ));
+    PrototypeRightArm->SetRelativeLocation(FVector(0, ArmSide, ArmZ));
+    PrototypeLeftLeg->SetRelativeLocation(FVector(0, -9.5f, LegZ));
+    PrototypeRightLeg->SetRelativeLocation(FVector(0, 9.5f, LegZ));
+    PrototypeLeftFoot->SetRelativeLocation(FVector(9, -10, FootZ));
+    PrototypeRightFoot->SetRelativeLocation(FVector(9, 10, FootZ));
 
     if (bProductionCharacter)
     {
         PrototypeTorso->SetRelativeScale3D(FVector(1));
         PrototypeHead->SetRelativeScale3D(FVector(1));
         PrototypeHair->SetRelativeScale3D(FVector(1));
-        PrototypeLeftArm->SetRelativeScale3D(FVector(1)); PrototypeRightArm->SetRelativeScale3D(FVector(1));
-        PrototypeLeftLeg->SetRelativeScale3D(FVector(1)); PrototypeRightLeg->SetRelativeScale3D(FVector(1));
-        PrototypeLeftFoot->SetRelativeScale3D(FVector(1)); PrototypeRightFoot->SetRelativeScale3D(FVector(1));
+        PrototypeLeftArm->SetRelativeScale3D(FVector(1));
+        PrototypeRightArm->SetRelativeScale3D(FVector(1));
+        PrototypeLeftLeg->SetRelativeScale3D(FVector(1));
+        PrototypeRightLeg->SetRelativeScale3D(FVector(1));
+        PrototypeLeftFoot->SetRelativeScale3D(FVector(1));
+        PrototypeRightFoot->SetRelativeScale3D(FVector(1));
     }
     else
     {
-        PrototypeTorso->SetRelativeScale3D(bGandalf ? FVector(0.29f,0.22f,0.52f) : FVector(0.27f,0.20f,0.35f));
-        PrototypeHead->SetRelativeScale3D(bGandalf ? FVector(0.205f,0.19f,0.235f) : FVector(0.225f,0.215f,0.235f));
-        PrototypeHair->SetRelativeScale3D(bGandalf ? FVector(0.22f,0.21f,0.14f) : FVector(0.235f,0.235f,0.12f));
-        PrototypeLeftArm->SetRelativeScale3D(bGandalf ? FVector(0.075f,0.075f,0.46f) : FVector(0.075f,0.075f,0.33f));
-        PrototypeRightArm->SetRelativeScale3D(bGandalf ? FVector(0.075f,0.075f,0.46f) : FVector(0.075f,0.075f,0.33f));
-        PrototypeLeftLeg->SetRelativeScale3D(bGandalf ? FVector(0.085f,0.085f,0.36f) : FVector(0.095f,0.095f,0.29f));
-        PrototypeRightLeg->SetRelativeScale3D(bGandalf ? FVector(0.085f,0.085f,0.36f) : FVector(0.095f,0.095f,0.29f));
-        PrototypeLeftFoot->SetRelativeScale3D(bGandalf ? FVector(0.18f,0.105f,0.07f) : FVector(0.23f,0.135f,0.075f));
-        PrototypeRightFoot->SetRelativeScale3D(bGandalf ? FVector(0.18f,0.105f,0.07f) : FVector(0.23f,0.135f,0.075f));
+        const FVector TorsoScale = bHobbit ? FVector(0.27f, 0.20f, 0.35f)
+            : (bDwarf ? FVector(0.31f, 0.27f, 0.42f) : FVector(0.29f, 0.22f, 0.52f));
+        const FVector HeadScale = bHobbit ? FVector(0.225f, 0.215f, 0.235f)
+            : (bDwarf ? FVector(0.23f, 0.22f, 0.24f) : FVector(0.205f, 0.19f, 0.235f));
+        const FVector HairScale = bHobbit ? FVector(0.235f, 0.235f, 0.12f)
+            : (bDwarf ? FVector(0.24f, 0.23f, 0.13f) : FVector(0.22f, 0.21f, 0.14f));
+        PrototypeTorso->SetRelativeScale3D(TorsoScale);
+        PrototypeHead->SetRelativeScale3D(HeadScale);
+        PrototypeHair->SetRelativeScale3D(HairScale);
+        const FVector ArmScale = bHobbit ? FVector(0.075f, 0.075f, 0.33f)
+            : (bDwarf ? FVector(0.085f, 0.085f, 0.36f) : FVector(0.075f, 0.075f, 0.46f));
+        const FVector LegScale = bHobbit ? FVector(0.095f, 0.095f, 0.29f)
+            : (bDwarf ? FVector(0.105f, 0.105f, 0.31f) : FVector(0.085f, 0.085f, 0.36f));
+        PrototypeLeftArm->SetRelativeScale3D(ArmScale);
+        PrototypeRightArm->SetRelativeScale3D(ArmScale);
+        PrototypeLeftLeg->SetRelativeScale3D(LegScale);
+        PrototypeRightLeg->SetRelativeScale3D(LegScale);
+        PrototypeLeftFoot->SetRelativeScale3D(bHobbit ? FVector(0.23f, 0.135f, 0.075f) : FVector(0.18f, 0.105f, 0.07f));
+        PrototypeRightFoot->SetRelativeScale3D(PrototypeLeftFoot->GetRelativeScale3D());
     }
 
-    PrototypeCloak->SetRelativeLocation(FVector(-8,0,bGandalf ? -4.0f : -8.0f));
+    PrototypeCloak->SetVisibility(bNeedsCloak, true);
+    PrototypeCloak->SetRelativeLocation(FVector(-8, 0, bHobbit ? -8.0f : -4.0f));
     PrototypeCloak->SetRelativeScale3D(bProductionCharacter ? FVector(1) :
-        (bGandalf ? FVector(0.38f,0.33f,0.72f) : FVector(0.30f,0.27f,0.42f)));
-    PrototypeHat->SetVisibility(bGandalf,true);
-    PrototypeHat->SetRelativeLocation(FVector(-1,0,bProductionCharacter ? 91.0f : 101.0f));
-    PrototypeHat->SetRelativeScale3D(bProductionCharacter ? FVector(1) : FVector(0.34f,0.34f,0.48f));
-    PrototypeBeard->SetVisibility(bGandalf,true);
-    PrototypeBeard->SetRelativeLocation(FVector(bProductionCharacter ? 14.0f : 10.0f,0,bProductionCharacter ? 62.0f : 48.0f));
-    PrototypeBeard->SetRelativeRotation(bProductionCharacter ? FRotator::ZeroRotator : FRotator(180,0,0));
-    PrototypeBeard->SetRelativeScale3D(bProductionCharacter ? FVector(1) : FVector(0.14f,0.13f,0.28f));
+        (bHobbit ? FVector(0.30f, 0.27f, 0.42f) : FVector(0.38f, 0.33f, 0.72f)));
+
+    PrototypeHat->SetVisibility(bGandalf, true);
+    PrototypeHat->SetRelativeLocation(FVector(-1, 0, bProductionCharacter ? 91.0f : 101.0f));
+    PrototypeHat->SetRelativeScale3D(bProductionCharacter ? FVector(1) : FVector(0.34f, 0.34f, 0.48f));
+
+    PrototypeBeard->SetVisibility(bGandalf || bGimli, true);
+    PrototypeBeard->SetRelativeLocation(FVector(bProductionCharacter ? 14.0f : 10.0f, 0, bGimli ? 35.0f : 62.0f));
+    PrototypeBeard->SetRelativeRotation(bProductionCharacter ? FRotator::ZeroRotator : FRotator(180, 0, 0));
+    PrototypeBeard->SetRelativeScale3D(bProductionCharacter ? FVector(1) : (bGimli ? FVector(0.13f, 0.13f, 0.30f) : FVector(0.14f, 0.13f, 0.28f)));
+
+    const bool bUsesSatchel = bFrodo || bSam;
+    PrototypeSatchel->SetVisibility(bUsesSatchel || bBoromir, true);
+    PrototypeSatchel->SetRelativeLocation(bBoromir ? FVector(-9, 24, 15) : FVector(-2, bProductionCharacter ? 19.0f : 22.0f, -5));
+    PrototypeSatchel->SetRelativeRotation(bBoromir ? FRotator(0, 90, 8) : FRotator(0, 12, 8));
+    PrototypeSatchel->SetRelativeScale3D(bProductionCharacter ? FVector(1) : (bBoromir ? FVector(0.08f, 0.34f, 0.42f) : FVector(0.13f, 0.06f, 0.15f)));
+
+    FLinearColor TorsoColor(0.18f, 0.31f, 0.135f);
+    FLinearColor HairColor(0.105f, 0.045f, 0.020f);
+    FLinearColor LimbColor(0.20f, 0.35f, 0.15f);
+    FLinearColor LegColor(0.27f, 0.17f, 0.075f);
+    if (bGandalf) { TorsoColor=FLinearColor(0.28f,0.29f,0.27f); HairColor=FLinearColor(0.69f,0.68f,0.63f); LimbColor=FLinearColor(0.25f,0.26f,0.24f); LegColor=FLinearColor(0.17f,0.18f,0.17f); }
+    else if (bSam) { TorsoColor=FLinearColor(0.24f,0.31f,0.14f); HairColor=FLinearColor(0.25f,0.12f,0.045f); LimbColor=FLinearColor(0.30f,0.34f,0.17f); }
+    else if (bMerry) { TorsoColor=FLinearColor(0.30f,0.24f,0.10f); LimbColor=FLinearColor(0.28f,0.30f,0.14f); }
+    else if (bPippin) { TorsoColor=FLinearColor(0.13f,0.28f,0.16f); LimbColor=FLinearColor(0.17f,0.31f,0.18f); }
+    else if (bAragorn) { TorsoColor=FLinearColor(0.10f,0.18f,0.10f); HairColor=FLinearColor(0.08f,0.045f,0.025f); LimbColor=FLinearColor(0.13f,0.16f,0.10f); LegColor=FLinearColor(0.12f,0.10f,0.07f); }
+    else if (bBoromir) { TorsoColor=FLinearColor(0.32f,0.12f,0.09f); HairColor=FLinearColor(0.26f,0.14f,0.06f); LimbColor=FLinearColor(0.30f,0.24f,0.18f); LegColor=FLinearColor(0.18f,0.16f,0.14f); }
+    else if (bLegolas) { TorsoColor=FLinearColor(0.23f,0.31f,0.19f); HairColor=FLinearColor(0.52f,0.43f,0.23f); LimbColor=FLinearColor(0.27f,0.33f,0.23f); LegColor=FLinearColor(0.21f,0.23f,0.16f); }
+    else if (bGimli) { TorsoColor=FLinearColor(0.28f,0.18f,0.10f); HairColor=FLinearColor(0.42f,0.18f,0.055f); LimbColor=FLinearColor(0.25f,0.19f,0.13f); LegColor=FLinearColor(0.20f,0.15f,0.10f); }
+    else if (bArwen) { TorsoColor=FLinearColor(0.12f,0.16f,0.24f); HairColor=FLinearColor(0.055f,0.035f,0.025f); LimbColor=FLinearColor(0.16f,0.19f,0.27f); LegColor=FLinearColor(0.11f,0.13f,0.18f); }
+
+    const FLinearColor Skin = bGandalf ? FLinearColor(0.72f,0.54f,0.40f) : FLinearColor(0.78f,0.57f,0.39f);
+    ApplyColor(PrototypeTorso,TorsoColor);
+    ApplyColor(PrototypeHead,Skin);
+    ApplyColor(PrototypeHair,HairColor);
+    ApplyColor(PrototypeLeftArm,LimbColor);
+    ApplyColor(PrototypeRightArm,LimbColor);
+    ApplyColor(PrototypeLeftLeg,LegColor);
+    ApplyColor(PrototypeRightLeg,LegColor);
+    ApplyColor(PrototypeLeftFoot,FLinearColor(0.12f,0.08f,0.055f));
+    ApplyColor(PrototypeRightFoot,FLinearColor(0.12f,0.08f,0.055f));
+    ApplyColor(PrototypeCloak,bAragorn ? FLinearColor(0.10f,0.20f,0.10f) : TorsoColor * 0.75f);
+    ApplyColor(PrototypeHat,FLinearColor(0.245f,0.25f,0.235f));
+    ApplyColor(PrototypeBeard,bGimli ? FLinearColor(0.44f,0.20f,0.07f) : FLinearColor(0.68f,0.67f,0.62f));
+    ApplyColor(PrototypeLeftEye,FLinearColor(0.035f,0.028f,0.020f));
+    ApplyColor(PrototypeRightEye,FLinearColor(0.035f,0.028f,0.020f));
+    ApplyColor(PrototypeMouth,FLinearColor(0.23f,0.055f,0.045f));
+    ApplyColor(PrototypeSatchel,bBoromir ? FLinearColor(0.34f,0.36f,0.37f) : FLinearColor(0.26f,0.13f,0.045f));
+
+    const bool bWeaponVisible = bFrodo || bGandalf || bAragorn || bBoromir || bLegolas || bGimli;
+    PrototypeWeapon->SetVisibility(bWeaponVisible, true);
+    PrototypeWeapon->SetRelativeLocation(bGandalf ? FVector(4,34,0) : FVector(8,29,-4));
+    PrototypeWeapon->SetRelativeScale3D(bProductionCharacter ? FVector(1) :
+        (bGandalf ? FVector(0.055f,0.055f,0.92f) : (bLegolas ? FVector(0.035f,0.035f,0.72f) : FVector(0.045f,0.045f,0.52f))));
+    PrototypeWeapon->SetRelativeRotation(bGandalf ? FRotator::ZeroRotator : FRotator(-12,0,8));
+    ApplyColor(PrototypeWeapon,bGandalf ? FLinearColor(0.22f,0.13f,0.055f) : FLinearColor(0.48f,0.50f,0.52f));
 
     const float FaceX=bProductionCharacter ? 17.0f : 10.5f;
     const float FaceY=bProductionCharacter ? 6.5f : 5.2f;
@@ -340,37 +522,6 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
     PrototypeRightEye->SetRelativeScale3D(bProductionCharacter ? FVector(0.026f,0.020f,0.035f) : FVector(0.035f,0.025f,0.045f));
     PrototypeMouth->SetRelativeLocation(FVector(FaceX+0.5f,0,FaceZ-6));
     PrototypeMouth->SetRelativeScale3D(bProductionCharacter ? FVector(0.012f,0.050f,0.010f) : FVector(0.018f,0.065f,0.012f));
-
-    PrototypeSatchel->SetVisibility(!bGandalf,true);
-    PrototypeSatchel->SetRelativeLocation(FVector(-2,bProductionCharacter ? 19.0f : 22.0f,-5));
-    PrototypeSatchel->SetRelativeRotation(FRotator(0,12,8));
-    PrototypeSatchel->SetRelativeScale3D(bProductionCharacter ? FVector(1) : FVector(0.13f,0.06f,0.15f));
-
-    const FLinearColor Skin=bGandalf ? FLinearColor(0.72f,0.54f,0.40f) : FLinearColor(0.78f,0.57f,0.39f);
-    ApplyColor(PrototypeTorso,bGandalf ? FLinearColor(0.28f,0.29f,0.27f) : FLinearColor(0.18f,0.31f,0.135f));
-    ApplyColor(PrototypeHead,Skin);
-    ApplyColor(PrototypeHair,bGandalf ? FLinearColor(0.69f,0.68f,0.63f) : FLinearColor(0.105f,0.045f,0.020f));
-    ApplyColor(PrototypeLeftArm,bGandalf ? FLinearColor(0.25f,0.26f,0.24f) : FLinearColor(0.20f,0.35f,0.15f));
-    ApplyColor(PrototypeRightArm,bGandalf ? FLinearColor(0.25f,0.26f,0.24f) : FLinearColor(0.20f,0.35f,0.15f));
-    ApplyColor(PrototypeLeftLeg,bGandalf ? FLinearColor(0.17f,0.18f,0.17f) : FLinearColor(0.27f,0.17f,0.075f));
-    ApplyColor(PrototypeRightLeg,bGandalf ? FLinearColor(0.17f,0.18f,0.17f) : FLinearColor(0.27f,0.17f,0.075f));
-    ApplyColor(PrototypeLeftFoot,bGandalf ? FLinearColor(0.095f,0.09f,0.085f) : FLinearColor(0.22f,0.105f,0.04f));
-    ApplyColor(PrototypeRightFoot,bGandalf ? FLinearColor(0.095f,0.09f,0.085f) : FLinearColor(0.22f,0.105f,0.04f));
-    ApplyColor(PrototypeCloak,bGandalf ? FLinearColor(0.24f,0.25f,0.235f) : FLinearColor(0.16f,0.24f,0.105f));
-    ApplyColor(PrototypeHat,FLinearColor(0.245f,0.25f,0.235f));
-    ApplyColor(PrototypeBeard,FLinearColor(0.68f,0.67f,0.62f));
-    ApplyColor(PrototypeLeftEye,FLinearColor(0.035f,0.028f,0.020f));
-    ApplyColor(PrototypeRightEye,FLinearColor(0.035f,0.028f,0.020f));
-    ApplyColor(PrototypeMouth,FLinearColor(0.23f,0.055f,0.045f));
-    ApplyColor(PrototypeSatchel,FLinearColor(0.26f,0.13f,0.045f));
-
-    const bool bCombatAvailable=IsCombatAvailable();
-    PrototypeWeapon->SetVisibility(bGandalf||bCombatAvailable,true);
-    PrototypeWeapon->SetRelativeLocation(bGandalf ? FVector(4,34,0) : FVector(8,29,-4));
-    PrototypeWeapon->SetRelativeScale3D(bProductionCharacter ? FVector(1) :
-        (bGandalf ? FVector(0.055f,0.055f,0.92f) : FVector(0.045f,0.045f,0.48f)));
-    PrototypeWeapon->SetRelativeRotation(bGandalf ? FRotator::ZeroRotator : FRotator(-12,0,8));
-    ApplyColor(PrototypeWeapon,bGandalf ? FLinearColor(0.22f,0.13f,0.055f) : FLinearColor(0.48f,0.50f,0.52f));
 }
 
 void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
@@ -389,7 +540,9 @@ void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
     const bool bSprinting = bMoving && bSprintRequested && !bCrouching &&
         Speed > WalkSpeed * 1.05f;
 
-    PrototypeIdlePhase += DeltaSeconds * (bPrototypeIsGandalf ? 1.05f : 1.35f);
+    const bool bTallMotion = PrototypeMotionProfile == TEXT("TALL") || PrototypeMotionProfile == TEXT("ELF");
+    const bool bDwarfMotion = PrototypeMotionProfile == TEXT("DWARF");
+    PrototypeIdlePhase += DeltaSeconds * (bTallMotion ? 1.05f : (bDwarfMotion ? 1.15f : 1.35f));
 
     const FVector LocalVelocity = GetActorTransform().InverseTransformVectorNoScale(Velocity);
     const float SideRatio = FMath::Clamp(
@@ -404,9 +557,9 @@ void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
         const float SpeedRatio = FMath::Clamp(
             Speed / FMath::Max(1.0f, WalkSpeed), 0.45f, 1.85f);
         const float GaitRate = bSprinting ? 10.5f : 7.8f;
-        const float GaitAmplitude = bPrototypeIsGandalf
-            ? (bSprinting ? 30.0f : 22.0f)
-            : (bSprinting ? 38.0f : 29.0f);
+        const float GaitAmplitude = bTallMotion
+            ? (bSprinting ? 31.0f : 23.0f)
+            : (bDwarfMotion ? (bSprinting ? 34.0f : 25.0f) : (bSprinting ? 38.0f : 29.0f));
 
         PrototypeWalkPhase += DeltaSeconds * GaitRate * SpeedRatio;
         const float StepSin = FMath::Sin(PrototypeWalkPhase);
@@ -417,10 +570,10 @@ void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
     }
 
     const float IdleBreath = (!bMoving && !bFalling)
-        ? FMath::Sin(PrototypeIdlePhase) * (bPrototypeIsGandalf ? 0.55f : 0.75f)
+        ? FMath::Sin(PrototypeIdlePhase) * (bTallMotion ? 0.55f : (bDwarfMotion ? 0.62f : 0.75f))
         : 0.0f;
-    const float CrouchDrop = bCrouching ? (bPrototypeIsGandalf ? 11.0f : 8.0f) : 0.0f;
-    const float SprintLean = bSprinting ? (bPrototypeIsGandalf ? -4.0f : -7.0f) : 0.0f;
+    const float CrouchDrop = bCrouching ? (bTallMotion ? 11.0f : (bDwarfMotion ? 9.0f : 8.0f)) : 0.0f;
+    const float SprintLean = bSprinting ? (bTallMotion ? -4.0f : (bDwarfMotion ? -5.0f : -7.0f)) : 0.0f;
     const float SideLean = -SideRatio * 5.0f;
     const float BlendSpeed = bSprinting ? 14.0f : 10.0f;
 

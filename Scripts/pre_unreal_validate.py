@@ -3993,6 +3993,27 @@ if pg86_world.get("source_atlas") != "Data/Part1ProductionAtlas.json":
 if not (ROOT / "Scripts" / "production_readiness_audit.py").exists():
     fail("PG-086 production readiness audit missing")
 
+
+# PG-087: every accepted Part I ensemble playable viewpoint must have a non-Frodo visual path.
+pg87_plan = json.loads(read(ROOT / "Data" / "EnsembleFilmMissionPlan.json"))
+pg87_required_playables = {"Gandalf", "Arwen", "Boromir", "Legolas", "Gimli", "Aragorn"}
+for pg87_item in pg87_plan.get("part1", []):
+    if not isinstance(pg87_item, dict):
+        continue
+    pg87_character = str(pg87_item.get("character") or "")
+    if pg87_character and pg87_item.get("type") in {"FILM_CORE_PLAYABLE", "CHARACTER_SPECIALTY", "FILM_INTERSTITIAL"}:
+        pg87_required_playables.add(pg87_character)
+pg87_cpp = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg87_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+for pg87_character in sorted(pg87_required_playables | {"Frodo", "Sam", "Merry", "Pippin"}):
+    if f'TEXT("{pg87_character}")' not in pg87_cpp:
+        fail(f"PG-087 playable visual mapping missing: {pg87_character}")
+for pg87_symbol in ["SupportedPlayableIds", "PrototypeMotionProfile", "SM_ProductionSword", "SM_ProductionBow", "SM_ProductionAxe"]:
+    if pg87_symbol not in (pg87_cpp + pg87_h):
+        fail(f"PG-087 ensemble production visual symbol missing: {pg87_symbol}")
+if "unsupported playable id=%s; using Frodo fallback" not in pg87_cpp:
+    fail("PG-087 unsupported playable visual fallback is not explicit")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

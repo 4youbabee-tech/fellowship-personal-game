@@ -211,6 +211,7 @@ private:
     float PrototypeHeadBaseZ = 39.0f;
     float PrototypeHairBaseZ = 47.0f;
     bool bPrototypeIsGandalf = false;
+    FName PrototypeMotionProfile = TEXT("HOBBIT");
     bool bUsingProductionCharacter = false;
     bool bSprintRequested = false;
     float CurrentStamina = 100.0f;
