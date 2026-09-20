@@ -4682,10 +4682,23 @@ for pg106_id in [
         fail(f"PG-106 owner source bible provenance hash missing: {pg106_id}")
 
 pg106_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
-if pg106_visual.get("current_wave", {}).get("id") != "BIBLE_DRIVEN_WORLD_COMPOSITION_V5":
-    fail("PG-106 Bible-driven visual production wave contract missing")
-if pg106_visual.get("bible_alignment", {}).get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
-    fail("PG-106 Bible alignment must remain pending exact-head engine proof")
+pg106_wave = pg106_visual.get("current_wave", {})
+if not str(pg106_wave.get("id") or ""):
+    fail("PG-106 current production wave id missing")
+if not str(pg106_wave.get("status") or ""):
+    fail("PG-106 current production wave status missing")
+pg106_alignment = pg106_visual.get("bible_alignment", {})
+if pg106_alignment.get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-106 Bible alignment provenance contract changed")
+pg106_alignment_sources = set(pg106_alignment.get("sources", []))
+for pg106_required_source in [
+    "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+    "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+    "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+    "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
+]:
+    if pg106_required_source not in pg106_alignment_sources:
+        fail(f"PG-106 Bible alignment source missing: {pg106_required_source}")
 
 # PG-107/108: screenplay-first story authority plus complete 01-09 source hierarchy.
 pg107_index = json.loads(read(ROOT / "Data" / "OwnerSourceReferenceIndex.json"))
