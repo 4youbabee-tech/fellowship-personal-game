@@ -241,13 +241,19 @@ void AFellowshipEnemyPrototype::ApplyTypeProfile()
         }
     };
 
-    ApplyColor(Torso, Armor);
-    ApplyColor(Head, Skin);
-    ApplyColor(LeftArm, Skin);
-    ApplyColor(RightArm, Skin);
-    ApplyColor(LeftLeg, Armor);
-    ApplyColor(RightLeg, Armor);
-    ApplyColor(Weapon, WeaponColor);
+    // Bare fallback primitives need runtime tinting. Imported production hero/
+    // enemy parts now keep their authored OBJ/MTL materials instead of being flattened
+    // back to the engine BasicShape material.
+    if (!bProductionVisual)
+    {
+        ApplyColor(Torso, Armor);
+        ApplyColor(Head, Skin);
+        ApplyColor(LeftArm, Skin);
+        ApplyColor(RightArm, Skin);
+        ApplyColor(LeftLeg, Armor);
+        ApplyColor(RightLeg, Armor);
+        ApplyColor(Weapon, WeaponColor);
+    }
 
     CurrentHealth = MaxHealth;
     bProfileApplied = true;
