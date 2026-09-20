@@ -58,5 +58,26 @@
       "status": "PENDING_P1C01_REFERENCE"
     }
   ],
-  "promotion_rule": "Hard per-chapter limits may be enabled only after a reproducible target-device capture records scene identity, commit SHA, FPS/frame time and memory evidence."
+  "promotion_rule": "Hard per-chapter limits may be enabled only after a reproducible target-device capture records scene identity, commit SHA, FPS/frame time and memory evidence.",
+  "runtime_detail_policy": {
+    "instanced_micro_detail": {
+      "status": "IMPLEMENTED_PENDING_MEASUREMENT",
+      "component": "AWorldDetailCluster/UHierarchicalInstancedStaticMeshComponent",
+      "rules": [
+        "Decorative repeated detail should use HISM when it does not need independent gameplay state.",
+        "V10 detail clusters are non-colliding and shadow-disabled by default.",
+        "Cull distances are explicit per cluster.",
+        "Target-device measurements may reduce instance counts/cull ranges without changing story topology."
+      ]
+    },
+    "environmental_motion": {
+      "status": "IMPLEMENTED_PENDING_MEASUREMENT",
+      "component": "AWorldAmbientMotionActor",
+      "rules": [
+        "Ephemeral micro-event motion uses bounded event counts.",
+        "Glow accents are shadowless and should be disabled before story-critical lighting under performance pressure.",
+        "No ambient motion actor owns quest/save state."
+      ]
+    }
+  }
 }
