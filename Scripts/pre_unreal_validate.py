@@ -2540,11 +2540,22 @@ if "LoadObject<UObject>(nullptr, *ExpectedObjectPath)" not in production_import_
 # reports a false failure and skips the actual UE build.
 unreal_ci = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 editor_probe_marker = "echo Unreal Editor is closed.\n          exit /b 0"
+editor_wait_script_path = ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd"
+editor_wait_script = read(editor_wait_script_path) if editor_wait_script_path.exists() else ""
 editor_wait_contract_ok = (
-    "Get-Process -Name UE4Editor" in unreal_ci
-    and "AddMinutes(20)" in unreal_ci
-    and "Start-Sleep -Seconds 10" in unreal_ci
-    and "exit 40" in unreal_ci
+    (
+        "Get-Process -Name UE4Editor" in unreal_ci
+        and "AddMinutes(20)" in unreal_ci
+        and "Start-Sleep -Seconds 10" in unreal_ci
+        and "exit 40" in unreal_ci
+    )
+    or (
+        "ci_wait_for_unreal_editor.cmd" in unreal_ci
+        and "Get-Process -Name UE4Editor" in editor_wait_script
+        and "AddMinutes(20)" in editor_wait_script
+        and "Start-Sleep -Seconds 10" in editor_wait_script
+        and "exit 40" in editor_wait_script
+    )
 )
 if editor_probe_marker not in unreal_ci and not editor_wait_contract_ok:
     fail("PG-015: Unreal self-hosted validation must either prove the editor is closed or wait safely for it without terminating the user's editor")
@@ -2594,7 +2605,16 @@ if "group: unreal-build-${{ github.repository }}-ue4-device" not in unreal_ci or
     fail("PG-026: shared Unreal device builds must serialize without interrupting active validation")
 if "post-job-runner-dedupe.ps1" in unreal_ci or "delete env.RUNNER_TRACKING_ID" in unreal_ci:
     fail("PG-026: validation must not launch detached runner lifecycle cleanup")
-if 'shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". \'{0}\'"' not in unreal_ci:
+powershell_policy_ok = (
+    'shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". \'{0}\'"' in unreal_ci
+    or (
+        "powershell.exe -NoProfile -ExecutionPolicy Bypass -File" in unreal_ci
+        and "prepare_msvc_environment.ps1" in unreal_ci
+        and "reset_project_build_intermediates.ps1" in unreal_ci
+        and "resolve_runtime_python.ps1" in unreal_ci
+    )
+)
+if not powershell_policy_ok:
     fail("PG-027: self-hosted PowerShell steps must bypass the target machine script execution policy")
 
 quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
