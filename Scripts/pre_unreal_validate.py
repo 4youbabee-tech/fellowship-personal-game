@@ -3479,107 +3479,6 @@ if "PROP_MOTION" not in pg113_moria_allowed or "STORY_AFTERMATH" not in pg113_mo
 if int(pg111_targets.get("P1C06", -1)) != 0:
     fail("PG-113 Moria environmental-life wave may not introduce ambient civilians")
 
-# PG-116: cinematic/character/sonic V3 must remain bounded, source-controlled and runtime-wired.
-pg116_cinematic_path = ROOT / "Data" / "CinematicPerformancePlanV3.json"
-pg116_sonic_path = ROOT / "Data" / "Part1SonicWorldPlan.json"
-for pg116_path, pg116_id, pg116_status in [
-    (pg116_cinematic_path, "PART1_CINEMATIC_CHARACTER_PERFORMANCE_V3",
-     "RUNTIME_CAMERA_AND_PROCEDURAL_PERFORMANCE_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF"),
-    (pg116_sonic_path, "PART1_SONIC_WORLD_V1",
-     "RUNTIME_ROUTING_AND_TRANSITIONS_IMPLEMENTED_ASSET_AUTHORING_PENDING"),
-]:
-    if not pg116_path.exists():
-        fail(f"PG-116 production plan missing: {pg116_path.name}")
-        continue
-    try:
-        pg116_data = json.loads(read(pg116_path))
-    except json.JSONDecodeError as exc:
-        fail(f"PG-116 invalid {pg116_path.name}: {exc}")
-        continue
-    if pg116_data.get("plan_id") != pg116_id:
-        fail(f"PG-116 plan identity changed: {pg116_path.name}")
-    if pg116_data.get("status") != pg116_status:
-        fail(f"PG-116 plan evidence boundary changed: {pg116_path.name}")
-    if pg116_path.name not in pg93_build:
-        fail(f"PG-116 runtime production plan is not packaged: {pg116_path.name}")
-
-pg116_director_h = ROOT / "Source" / "ShireJourney" / "StoryPresentationDirector.h"
-pg116_director_cpp = ROOT / "Source" / "ShireJourney" / "StoryPresentationDirector.cpp"
-if not pg116_director_h.exists() or not pg116_director_cpp.exists():
-    fail("PG-116 StoryPresentationDirector runtime files missing")
-    pg116_director = ""
-else:
-    pg116_director = read(pg116_director_h) + "\n" + read(pg116_director_cpp)
-
-for pg116_symbol in [
-    "OnStoryPresentationRequested",
-    "RuntimePresentationGenerated",
-    "SetViewTargetWithBlend",
-    "LineTraceSingleByChannel",
-    "FMath::Clamp(Profile.HoldSeconds, 0.65f, 2.60f)",
-    "CurrentViewTarget != PlayerPawn && CurrentViewTarget != RuntimeCamera",
-    "HandleChapterChanged",
-]:
-    if pg116_symbol not in pg116_director:
-        fail(f"PG-116 bounded cinematic camera contract missing: {pg116_symbol}")
-
-pg116_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
-for pg116_symbol in [
-    '#include "StoryPresentationDirector.h"',
-    "SpawnActor<AStoryPresentationDirector>",
-]:
-    if pg116_symbol not in pg116_game_mode:
-        fail(f"PG-116 presentation director bootstrap missing: {pg116_symbol}")
-
-pg116_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
-pg116_npc_h = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.h")
-for pg116_symbol in [
-    "PerformanceGestureScale",
-    "PerformanceGazeScale",
-    "PerformanceWeightScale",
-    "PerformanceComposure",
-    'Name.Equals(TEXT("Boromir"), ESearchCase::IgnoreCase)',
-    'Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase)',
-    'Name.Equals(TEXT("Legolas"), ESearchCase::IgnoreCase)',
-    "WeightShift",
-]:
-    if pg116_symbol not in (pg116_npc + pg116_npc_h):
-        fail(f"PG-116 named-character fallback performance contract missing: {pg116_symbol}")
-
-pg116_audio = read(ROOT / "Source" / "ShireJourney" / "ShireAudioSubsystem.cpp")
-for pg116_symbol in [
-    "FadeOut(0.45f, 0.0f)",
-    "FadeIn(0.55f, 1.0f)",
-    "FadeOut(0.85f, 0.0f)",
-    "FadeIn(0.95f, TargetVolume)",
-    "bVoiceActive ? 0.36f : 1.0f",
-]:
-    if pg116_symbol not in pg116_audio:
-        fail(f"PG-116 sonic transition contract missing: {pg116_symbol}")
-
-pg116_arch = json.loads(read(ROOT / "Data" / "SourceArchitecturePlan.json"))
-pg116_arch_paths = [
-    str(row.get("current_path") or "")
-    for row in pg116_arch.get("files", [])
-    if isinstance(row, dict)
-]
-for pg116_path in [
-    "Source/ShireJourney/StoryPresentationDirector.h",
-    "Source/ShireJourney/StoryPresentationDirector.cpp",
-]:
-    if pg116_arch_paths.count(pg116_path) != 1:
-        fail(f"PG-116 source architecture registration must be exactly once: {pg116_path}")
-
-pg116_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
-if pg116_visual.get("current_wave", {}).get("id") != "CINEMATIC_CHARACTER_SONIC_LIFE_V3":
-    fail("PG-116 visual current wave is not CINEMATIC_CHARACTER_SONIC_LIFE_V3")
-if pg116_visual.get("cinematic_character_sonic_v3", {}).get("status") != "PENDING_EXACT_HEAD_ENGINE_PROOF":
-    fail("PG-116 V3 visual evidence boundary changed")
-
-# Existing safety gate remains authoritative while runtime camera grammar grows.
-if "FMath::Clamp(ActiveCue.SuggestedDuration, 1.0f, 3.5f)" not in pg102_presentation:
-    fail("PG-116 existing 3.5 second cinematic lock safety guard missing")
-
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     sys.exit(1)
@@ -5154,6 +5053,107 @@ for pg115_story_symbol in [
 ]:
     if pg115_story_symbol not in pg93_builder:
         fail(f"PG-115 Amon Hen locked-outcome marker missing: {pg115_story_symbol}")
+
+# PG-116: cinematic/character/sonic V3 must remain bounded, source-controlled and runtime-wired.
+pg116_cinematic_path = ROOT / "Data" / "CinematicPerformancePlanV3.json"
+pg116_sonic_path = ROOT / "Data" / "Part1SonicWorldPlan.json"
+for pg116_path, pg116_id, pg116_status in [
+    (pg116_cinematic_path, "PART1_CINEMATIC_CHARACTER_PERFORMANCE_V3",
+     "RUNTIME_CAMERA_AND_PROCEDURAL_PERFORMANCE_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF"),
+    (pg116_sonic_path, "PART1_SONIC_WORLD_V1",
+     "RUNTIME_ROUTING_AND_TRANSITIONS_IMPLEMENTED_ASSET_AUTHORING_PENDING"),
+]:
+    if not pg116_path.exists():
+        fail(f"PG-116 production plan missing: {pg116_path.name}")
+        continue
+    try:
+        pg116_data = json.loads(read(pg116_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-116 invalid {pg116_path.name}: {exc}")
+        continue
+    if pg116_data.get("plan_id") != pg116_id:
+        fail(f"PG-116 plan identity changed: {pg116_path.name}")
+    if pg116_data.get("status") != pg116_status:
+        fail(f"PG-116 plan evidence boundary changed: {pg116_path.name}")
+    if pg116_path.name not in pg93_build:
+        fail(f"PG-116 runtime production plan is not packaged: {pg116_path.name}")
+
+pg116_director_h = ROOT / "Source" / "ShireJourney" / "StoryPresentationDirector.h"
+pg116_director_cpp = ROOT / "Source" / "ShireJourney" / "StoryPresentationDirector.cpp"
+if not pg116_director_h.exists() or not pg116_director_cpp.exists():
+    fail("PG-116 StoryPresentationDirector runtime files missing")
+    pg116_director = ""
+else:
+    pg116_director = read(pg116_director_h) + "\n" + read(pg116_director_cpp)
+
+for pg116_symbol in [
+    "OnStoryPresentationRequested",
+    "RuntimePresentationGenerated",
+    "SetViewTargetWithBlend",
+    "LineTraceSingleByChannel",
+    "FMath::Clamp(Profile.HoldSeconds, 0.65f, 2.60f)",
+    "CurrentViewTarget != PlayerPawn && CurrentViewTarget != RuntimeCamera",
+    "HandleChapterChanged",
+]:
+    if pg116_symbol not in pg116_director:
+        fail(f"PG-116 bounded cinematic camera contract missing: {pg116_symbol}")
+
+pg116_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+for pg116_symbol in [
+    '#include "StoryPresentationDirector.h"',
+    "SpawnActor<AStoryPresentationDirector>",
+]:
+    if pg116_symbol not in pg116_game_mode:
+        fail(f"PG-116 presentation director bootstrap missing: {pg116_symbol}")
+
+pg116_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
+pg116_npc_h = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.h")
+for pg116_symbol in [
+    "PerformanceGestureScale",
+    "PerformanceGazeScale",
+    "PerformanceWeightScale",
+    "PerformanceComposure",
+    'Name.Equals(TEXT("Boromir"), ESearchCase::IgnoreCase)',
+    'Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase)',
+    'Name.Equals(TEXT("Legolas"), ESearchCase::IgnoreCase)',
+    "WeightShift",
+]:
+    if pg116_symbol not in (pg116_npc + pg116_npc_h):
+        fail(f"PG-116 named-character fallback performance contract missing: {pg116_symbol}")
+
+pg116_audio = read(ROOT / "Source" / "ShireJourney" / "ShireAudioSubsystem.cpp")
+for pg116_symbol in [
+    "FadeOut(0.45f, 0.0f)",
+    "FadeIn(0.55f, 1.0f)",
+    "FadeOut(0.85f, 0.0f)",
+    "FadeIn(0.95f, TargetVolume)",
+    "bVoiceActive ? 0.36f : 1.0f",
+]:
+    if pg116_symbol not in pg116_audio:
+        fail(f"PG-116 sonic transition contract missing: {pg116_symbol}")
+
+pg116_arch = json.loads(read(ROOT / "Data" / "SourceArchitecturePlan.json"))
+pg116_arch_paths = [
+    str(row.get("current_path") or "")
+    for row in pg116_arch.get("files", [])
+    if isinstance(row, dict)
+]
+for pg116_path in [
+    "Source/ShireJourney/StoryPresentationDirector.h",
+    "Source/ShireJourney/StoryPresentationDirector.cpp",
+]:
+    if pg116_arch_paths.count(pg116_path) != 1:
+        fail(f"PG-116 source architecture registration must be exactly once: {pg116_path}")
+
+pg116_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg116_visual.get("current_wave", {}).get("id") != "CINEMATIC_CHARACTER_SONIC_LIFE_V3":
+    fail("PG-116 visual current wave is not CINEMATIC_CHARACTER_SONIC_LIFE_V3")
+if pg116_visual.get("cinematic_character_sonic_v3", {}).get("status") != "PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-116 V3 visual evidence boundary changed")
+
+# Existing safety gate remains authoritative while runtime camera grammar grows.
+if "FMath::Clamp(ActiveCue.SuggestedDuration, 1.0f, 3.5f)" not in pg102_presentation:
+    fail("PG-116 existing 3.5 second cinematic lock safety guard missing")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
