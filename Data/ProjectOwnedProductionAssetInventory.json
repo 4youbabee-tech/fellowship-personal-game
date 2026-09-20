@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "inventory_id": "PROJECT_OWNED_PRODUCTION_ASSET_INVENTORY_V1",
-  "generated_from_commit": "7090db1cedf43d8eccfc38af6c2f71bba1d23031",
-  "status": "FOUNDATION_INVENTORY_NOT_FINAL_ACCEPTANCE",
+  "generated_from_commit": "MEGA_MATERIAL_WORLD_WAVE_V1 branch source inventory",
+  "status": "PROJECT_OWNED_FOUNDATION_EXPANDED_PENDING_EXACT_HEAD_ENGINE_PROOF",
   "truth_rule": "File presence and importability prove only a project-owned source foundation. Final production requires rig/material/animation/visual/performance acceptance.",
   "characters": [
     {
@@ -518,11 +518,12 @@
     },
     {
       "root": "SourceAssets/Production/World/Isengard",
-      "file_count": 6,
+      "file_count": 7,
       "obj_count": 6,
-      "mtl_count": 0,
+      "mtl_count": 1,
       "image_count": 0,
       "files": [
+        "SourceAssets/Production/World/Isengard/RegionalMaterials.mtl",
         "SourceAssets/Production/World/Isengard/SM_Isengard_FelledTrunk.obj",
         "SourceAssets/Production/World/Isengard/SM_Isengard_FurnaceStack.obj",
         "SourceAssets/Production/World/Isengard/SM_Isengard_IndustrialPitRim.obj",
@@ -553,22 +554,36 @@
     },
     {
       "root": "SourceAssets/Production/World/Moria",
-      "file_count": 12,
-      "obj_count": 10,
+      "file_count": 26,
+      "obj_count": 24,
       "mtl_count": 2,
       "image_count": 0,
       "files": [
         "SourceAssets/Production/World/Moria/RegionalMaterials.mtl",
+        "SourceAssets/Production/World/Moria/SM_MoriaArch.obj",
         "SourceAssets/Production/World/Moria/SM_MoriaBrazier.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaBridgePier.obj",
         "SourceAssets/Production/World/Moria/SM_MoriaBridgeSegment.obj",
         "SourceAssets/Production/World/Moria/SM_MoriaBrokenStair.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaCeilingRib.obj",
         "SourceAssets/Production/World/Moria/SM_MoriaChainAnchor.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaChasmButtress.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaCollapsedBeam.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaDebrisCluster.obj",
         "SourceAssets/Production/World/Moria/SM_MoriaDoor.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaFloorSlab.obj",
         "SourceAssets/Production/World/Moria/SM_MoriaGateSegment.obj",
         "SourceAssets/Production/World/Moria/SM_MoriaMineCart.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaMineRail.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaOreCrate.obj",
         "SourceAssets/Production/World/Moria/SM_MoriaPillar.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaReliefPanel.obj",
         "SourceAssets/Production/World/Moria/SM_MoriaRubblePillar.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaSideDoor.obj",
         "SourceAssets/Production/World/Moria/SM_MoriaTallBrazier.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaTombDais.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaTorchNiche.obj",
+        "SourceAssets/Production/World/Moria/SM_MoriaWallPanel.obj",
         "SourceAssets/Production/World/Moria/WorldPack.mtl"
       ]
     },
@@ -691,10 +706,10 @@
     }
   ],
   "totals": {
-    "production_files": 347,
-    "obj_files": 304,
-    "mtl_files": 18,
-    "image_files": 24
+    "production_files": 344,
+    "obj_files": 318,
+    "mtl_files": 19,
+    "image_files": 7
   },
   "newly_filled_foundation_roots": [
     "SourceAssets/Production/World/Isengard",
@@ -708,6 +723,8 @@
     "final materials/textures",
     "VFX/audio",
     "LOD/performance acceptance",
-    "human visual acceptance"
+    "human visual acceptance",
+    "mega-wave rendered composition acceptance",
+    "target-device transition-hitch measurement"
   ]
 }
