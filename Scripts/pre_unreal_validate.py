@@ -4280,7 +4280,7 @@ if "Part1VisualProductionPass.json" not in pg93_build:
 pg93_enemy_h = read(ROOT / "Source" / "ShireJourney" / "FellowshipEnemyPrototype.h")
 pg93_enemy_cpp = read(ROOT / "Source" / "ShireJourney" / "FellowshipEnemyPrototype.cpp")
 pg93_builder = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
-for pg93_symbol in ["Lurtz", "FilmLockedOutcome", "SM_Lurtz_", "player-controlled branch"]:
+for pg93_symbol in ["Lurtz", "FilmLockedOutcome", 'ProductionFolder = TEXT("Lurtz")', 'TEXT("Blade")', "player-controlled branch"]:
     if pg93_symbol not in (pg93_enemy_h + pg93_enemy_cpp):
         fail(f"PG-093 film-locked Lurtz contract missing: {pg93_symbol}")
 if "EFellowshipEnemyType::Lurtz" not in pg93_builder:
