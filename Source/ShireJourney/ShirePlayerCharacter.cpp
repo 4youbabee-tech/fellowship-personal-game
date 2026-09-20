@@ -990,9 +990,11 @@ void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("PrimaryAttack"), IE_Pressed, this, &AShirePlayerCharacter::PrimaryAttack);
     PlayerInputComponent->BindAction(TEXT("QuickSave"), IE_Pressed, this, &AShirePlayerCharacter::QuickSave);
     PlayerInputComponent->BindAction(TEXT("QuickLoad"), IE_Pressed, this, &AShirePlayerCharacter::QuickLoad);
+#if !UE_BUILD_SHIPPING
     PlayerInputComponent->BindAction(TEXT("DebugPreviousChapter"), IE_Pressed, this, &AShirePlayerCharacter::DebugPreviousChapter);
     PlayerInputComponent->BindAction(TEXT("DebugNextChapter"), IE_Pressed, this, &AShirePlayerCharacter::DebugNextChapter);
     PlayerInputComponent->BindAction(TEXT("DebugAlternateRoute"), IE_Pressed, this, &AShirePlayerCharacter::DebugToggleParallelRoute);
+#endif
 }
 
 void AShirePlayerCharacter::HandleExperienceChanged(FName RouteId, FName EpisodeId, FName InPlayableCharacterId)
@@ -1674,25 +1676,42 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
 
 bool AShirePlayerCharacter::SaveAutomaticCheckpoint(FName CheckpointId, bool bShowHUD)
 {
-    // Headless validation must never overwrite the owner's checkpoint.
     if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return false;
-    if (CheckpointId == NAME_None)
+    if (CheckpointId == NAME_None) return false;
+
+    if (bCheckpointSaveInFlight)
     {
-        return false;
+        QueuedCheckpointSaveId = CheckpointId;
+        bQueuedCheckpointShowHUD = bQueuedCheckpointShowHUD || bShowHUD;
+        return true;
     }
 
     UShireSaveGame* Save = CreateSaveSnapshot(CheckpointId, true);
-    if (!Save)
-    {
-        return false;
-    }
+    if (!Save) return false;
 
-    const bool bSaved = UGameplayStatics::SaveGameToSlot(
-        Save,
-        ShireSaveConstants::CheckpointSlotName,
-        ShireSaveConstants::UserIndex);
+    bCheckpointSaveInFlight = true;
+    bCheckpointSaveShowHUD = bShowHUD;
+    CheckpointSaveInFlightId = CheckpointId;
 
-    if (bSaved)
+    FAsyncSaveGameToSlotDelegate Delegate;
+    Delegate.BindUObject(this, &AShirePlayerCharacter::HandleCheckpointSaveComplete);
+    UGameplayStatics::AsyncSaveGameToSlot(
+        Save, ShireSaveConstants::CheckpointSlotName, ShireSaveConstants::UserIndex, Delegate);
+
+    UE_LOG(LogTemp, Display, TEXT("SafeCheckpoint: id=%s async-save=scheduled"), *CheckpointId.ToString());
+    return true;
+}
+
+void AShirePlayerCharacter::HandleCheckpointSaveComplete(
+    const FString& SlotName, const int32 UserIndex, bool bSuccess)
+{
+    const FName CompletedId = CheckpointSaveInFlightId;
+    const bool bShowHUD = bCheckpointSaveShowHUD;
+    bCheckpointSaveInFlight = false;
+    bCheckpointSaveShowHUD = false;
+    CheckpointSaveInFlightId = NAME_None;
+
+    if (bSuccess)
     {
         CurrentHealth = MaxHealth;
         CurrentStamina = MaxStamina;
@@ -1706,21 +1725,23 @@ bool AShirePlayerCharacter::SaveAutomaticCheckpoint(FName CheckpointId, bool bSh
         {
             if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
             {
-                HUD->ShowAlert(
-                    FText::FromString(bSaved ? TEXT("Checkpoint reached.") : TEXT("Checkpoint failed.")),
-                    1.4f);
+                HUD->ShowAlert(FText::FromString(
+                    bSuccess ? TEXT("Checkpoint reached.") : TEXT("Checkpoint failed.")), 1.4f);
             }
         }
     }
 
-    UE_LOG(
-        LogTemp,
-        Display,
-        TEXT("SafeCheckpoint: id=%s saved=%s"),
-        *CheckpointId.ToString(),
-        bSaved ? TEXT("yes") : TEXT("no"));
+    UE_LOG(LogTemp, Display, TEXT("SafeCheckpoint: id=%s async-save=%s slot=%s user=%d"),
+        *CompletedId.ToString(), bSuccess ? TEXT("saved") : TEXT("failed"), *SlotName, UserIndex);
 
-    return bSaved;
+    if (QueuedCheckpointSaveId != NAME_None)
+    {
+        const FName NextId = QueuedCheckpointSaveId;
+        const bool bNextHUD = bQueuedCheckpointShowHUD;
+        QueuedCheckpointSaveId = NAME_None;
+        bQueuedCheckpointShowHUD = false;
+        SaveAutomaticCheckpoint(NextId, bNextHUD);
+    }
 }
 
 bool AShirePlayerCharacter::RestoreAutomaticCheckpoint(bool bShowHUD)
