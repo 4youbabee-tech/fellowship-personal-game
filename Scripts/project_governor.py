@@ -175,7 +175,7 @@ living_npc_plan = ROOT / "Data" / "LivingNPCIntelligenceRoadmap.json"
 if not living_npc_plan.exists():
     fail("Accepted living-NPC intelligence roadmap is missing")
 else:
-    living_npc = json.loads(read(living_npc_plan))
+    living_npc = json.loads(living_npc_plan.read_text(encoding="utf-8"))
     if living_npc.get("plan_id") != "LIVING_NPC_INTELLIGENCE_ROADMAP_V2":
         fail("Living-NPC intelligence roadmap identity changed")
     if "Do not require GPT, Claude, cloud APIs, internet connectivity or runtime API keys in the shipped gameplay path." not in living_npc.get("non_goals", []):
