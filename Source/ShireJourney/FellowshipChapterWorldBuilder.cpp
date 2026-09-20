@@ -577,6 +577,25 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         const FVector Braziers[] = { FVector(-1200,-400,0), FVector(-450,420,0), FVector(350,-420,0), FVector(1150,420,0) };
         for (const FVector& P : Braziers) SpawnProd(MoriaBrazierMesh, P, FVector(0.82f), FRotator::ZeroRotator, false);
         SpawnProd(MoriaBridgeMesh, FVector(2450,0,40), FVector(0.92f), FRotator::ZeroRotator, true);
+
+        // Source-grounded Moria production dressing: monumental broken circulation,
+        // chain anchors and layered braziers reinforce scale without moving quest anchors.
+        UStaticMesh* MoriaBrokenStair = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBrokenStair.SM_MoriaBrokenStair"));
+        UStaticMesh* MoriaChainAnchor = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor"));
+        UStaticMesh* MoriaGateSegment = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaGateSegment.SM_MoriaGateSegment"));
+        UStaticMesh* MoriaRubblePillar = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaRubblePillar.SM_MoriaRubblePillar"));
+        UStaticMesh* MoriaTallBrazier = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaTallBrazier.SM_MoriaTallBrazier"));
+        SpawnProd(MoriaGateSegment, FVector(-1980,-520,0), FVector(0.86f), FRotator(0,7,0), true);
+        SpawnProd(MoriaGateSegment, FVector(-1980,520,0), FVector(0.86f), FRotator(0,-7,0), true);
+        SpawnProd(MoriaBrokenStair, FVector(520,-650,0), FVector(0.84f), FRotator(0,18,0), true);
+        SpawnProd(MoriaBrokenStair, FVector(1180,650,0), FVector(0.76f), FRotator(0,198,0), false);
+        SpawnProd(MoriaChainAnchor, FVector(1920,-760,20), FVector(0.82f), FRotator(0,15,0), false);
+        SpawnProd(MoriaChainAnchor, FVector(2050,760,20), FVector(0.82f), FRotator(0,-20,0), false);
+        SpawnProd(MoriaRubblePillar, FVector(760,740,0), FVector(0.86f), FRotator(0,27,0), false);
+        SpawnProd(MoriaRubblePillar, FVector(1480,-720,0), FVector(0.90f), FRotator(0,-22,0), false);
+        SpawnProd(MoriaTallBrazier, FVector(1860,-350,0), FVector(0.82f), FRotator::ZeroRotator, false);
+        SpawnProd(MoriaTallBrazier, FVector(1860,350,0), FVector(0.82f), FRotator::ZeroRotator, false);
+
         SpawnScatter(CommonRuinSlabMesh, FVector(-200,0,0), 18, FVector(2300,1050,0), FVector(0.78f), 37.0f, 2.0f);
         SpawnScatter(CommonBoulderClusterMesh, FVector(300,0,0), 14, FVector(2500,1150,0), FVector(0.85f), 31.0f, 6.0f);
     }
@@ -611,6 +630,19 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnProd(ArgonathSentinelMesh, FVector(-450,1150,0), FVector(1.65f), FRotator(0,172,0), true);
         SpawnProd(AmonHenStairMesh, FVector(1320,0,0), FVector(0.86f), FRotator(0,0,0), true);
         SpawnProd(AmonHenRuinMesh, FVector(1900,0,175), FVector(0.90f), FRotator(0,-6,0), true);
+
+        // River-to-battle visual handoff: travel gear and shoreline traces thin out
+        // toward Amon Hen, where broken woodland/ruin silhouettes take over.
+        UStaticMesh* AnduinBoatRack = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinBoatRack.SM_AnduinBoatRack"));
+        UStaticMesh* AnduinCampRack = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinCampRack.SM_AnduinCampRack"));
+        UStaticMesh* AnduinCargoPile = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinCargoPile.SM_AnduinCargoPile"));
+        UStaticMesh* AnduinFishingFrame = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinFishingFrame.SM_AnduinFishingFrame"));
+        UStaticMesh* AnduinRiverMarker = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinRiverMarker.SM_AnduinRiverMarker"));
+        SpawnProd(AnduinBoatRack, FVector(-1740,430,0), FVector(0.74f), FRotator(0,12,0), false);
+        SpawnProd(AnduinCampRack, FVector(-920,-500,0), FVector(0.72f), FRotator(0,-18,0), false);
+        SpawnProd(AnduinCargoPile, FVector(-760,520,0), FVector(0.68f), FRotator(0,24,0), false);
+        SpawnProd(AnduinFishingFrame, FVector(-2060,560,0), FVector(0.72f), FRotator(0,8,0), false);
+        SpawnProd(AnduinRiverMarker, FVector(-1380,-540,0), FVector(0.76f), FRotator(0,-4,0), false);
         SpawnScatter(CommonBroadleafTreeMesh, FVector(700,0,0), 24, FVector(2600,1450,0), FVector(0.88f), 21.0f, 10.0f);
         SpawnScatter(CommonPineTreeMesh, FVector(1000,0,0), 14, FVector(2200,1300,0), FVector(0.82f), 29.0f, 10.0f);
         SpawnScatter(CommonReedClusterMesh, FVector(-1500,0,-10), 28, FVector(1250,520,0), FVector(0.76f), 17.0f, 2.0f);
@@ -1867,6 +1899,9 @@ void AFellowshipChapterWorldBuilder::BuildAnduinAmonHen()
     SpawnEnemy(EFellowshipEnemyType::UrukHai, FVector(2200, 480, 75), FRotator(0, 205, 0), TEXT("BreakingFellowship"), 0);
     SpawnEnemy(EFellowshipEnemyType::UrukHai, FVector(2380, -180, 75), FRotator(0, 180, 0), TEXT("BreakingFellowship"), 0);
     SpawnEnemy(EFellowshipEnemyType::UrukHai, FVector(2500, 360, 75), FRotator(0, 195, 0), TEXT("BreakingFellowship"), 1);
+    // Film-locked Lurtz pressure enters only after the defense phase begins.
+    // He cannot be killed by player damage; final duel choreography remains asset/animation work.
+    SpawnEnemy(EFellowshipEnemyType::Lurtz, FVector(2660, -470, 78), FRotator(0, 165, 0), TEXT("BreakingFellowship"), 1);
 
     SpawnNPC(TEXT("Boromir"), FVector(2220, 260, 70), FRotator(0, 200, 0), TEXT("BreakingFellowship"), 0, 1,
         TEXT("Find the others. Do not let the enemy take the hobbits."));

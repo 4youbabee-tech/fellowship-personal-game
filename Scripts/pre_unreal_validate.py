@@ -4258,6 +4258,62 @@ for pg92_marker in ["JOURNEY MAP","Undiscovered future chapters stay hidden","Ge
 if "return HasKnownMapRegion(MakeKnownMapRegionId" not in pg92_qc:
     fail("PG-092 future world-map visibility is not bounded by Map Knowledge")
 
+
+# PG-093: Part I visual-production wave must stay source-grounded, packaged and film-safe.
+pg93_visual_path = ROOT / "Data" / "Part1VisualProductionPass.json"
+if not pg93_visual_path.exists():
+    fail("PG-093 Part1VisualProductionPass missing")
+    pg93_visual = {}
+else:
+    try:
+        pg93_visual = json.loads(read(pg93_visual_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-093 invalid Part1VisualProductionPass: {exc}")
+        pg93_visual = {}
+if pg93_visual.get("status") != "ACTIVE_IMPLEMENTATION_PENDING_ENGINE_PROOF":
+    fail("PG-093 visual production status must remain pending engine proof")
+if len(pg93_visual.get("chapters", [])) != 8:
+    fail("PG-093 visual production pass must cover P1C01-P1C08")
+pg93_build = read(ROOT / "Source" / "ShireJourney" / "ShireJourney.Build.cs")
+if "Part1VisualProductionPass.json" not in pg93_build:
+    fail("PG-093 visual production pass is not packaged")
+pg93_enemy_h = read(ROOT / "Source" / "ShireJourney" / "FellowshipEnemyPrototype.h")
+pg93_enemy_cpp = read(ROOT / "Source" / "ShireJourney" / "FellowshipEnemyPrototype.cpp")
+pg93_builder = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
+for pg93_symbol in ["Lurtz", "FilmLockedOutcome", "SM_Lurtz_", "player-controlled branch"]:
+    if pg93_symbol not in (pg93_enemy_h + pg93_enemy_cpp):
+        fail(f"PG-093 film-locked Lurtz contract missing: {pg93_symbol}")
+if "EFellowshipEnemyType::Lurtz" not in pg93_builder:
+    fail("PG-093 Lurtz is not wired into Amon Hen runtime")
+for pg93_asset in [
+    "SM_MoriaBrokenStair", "SM_MoriaChainAnchor", "SM_MoriaTallBrazier",
+    "SM_AnduinBoatRack", "SM_AnduinCargoPile", "SM_AnduinRiverMarker",
+]:
+    if pg93_asset not in pg93_builder:
+        fail(f"PG-093 visual production asset not runtime-wired: {pg93_asset}")
+
+# PG-094: performance budgets are measurement-first; no invented hard scene ceilings.
+pg94_budget_path = ROOT / "Data" / "AssetPerformanceBudget.json"
+if not pg94_budget_path.exists():
+    fail("PG-094 AssetPerformanceBudget missing")
+    pg94_budget = {}
+else:
+    try:
+        pg94_budget = json.loads(read(pg94_budget_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-094 invalid AssetPerformanceBudget: {exc}")
+        pg94_budget = {}
+if pg94_budget.get("status") != "MEASUREMENT_BASELINE_REQUIRED":
+    fail("PG-094 performance budget must remain measurement-baseline gated")
+if pg94_budget.get("policy", {}).get("hard_scene_budgets_enabled") is not False:
+    fail("PG-094 hard scene budgets may not be invented before device measurement")
+if "AssetPerformanceBudget.json" not in pg93_build:
+    fail("PG-094 asset performance budget is not packaged")
+pg94_audit = read(ROOT / "Scripts" / "asset_quality_audit.py")
+for pg94_symbol in ["obj_triangle_equivalents", "Production source buckets", "Largest OBJ by triangle equivalents"]:
+    if pg94_symbol not in pg94_audit:
+        fail(f"PG-094 asset audit measurement missing: {pg94_symbol}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

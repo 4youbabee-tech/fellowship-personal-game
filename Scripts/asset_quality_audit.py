@@ -50,6 +50,9 @@ def main() -> int:
     warnings: list[str] = []
     stats = Counter()
     dimension_counts = Counter()
+    production_bucket_bytes = Counter()
+    production_bucket_triangles = Counter()
+    largest_obj_triangles: tuple[int, str] = (0, "")
 
     obj_files = sorted(PRODUCTION.rglob("*.obj"))
     mtl_files = sorted(PRODUCTION.rglob("*.mtl"))
@@ -82,6 +85,14 @@ def main() -> int:
 
     for obj in obj_files:
         stats["obj"] += 1
+        relative_parts = obj.relative_to(PRODUCTION).parts
+        bucket = "/".join(relative_parts[:2]) if len(relative_parts) >= 2 else relative_parts[0]
+        try:
+            source_bytes = obj.stat().st_size
+        except OSError:
+            source_bytes = 0
+        stats["obj_source_bytes"] += source_bytes
+        production_bucket_bytes[bucket] += source_bytes
         vertices: list[tuple[float, float, float]] = []
         material_libraries: list[str] = []
         used_materials: set[str] = set()
@@ -145,11 +156,13 @@ def main() -> int:
                 )
 
         triangulation_risk_faces = 0
+        obj_triangle_equivalents = 0
         for tokens in face_tokens:
             if len(tokens) < 3:
                 malformed_faces += 1
                 continue
 
+            obj_triangle_equivalents += max(0, len(tokens) - 2)
             indices = [parse_face_index(token, len(vertices)) for token in tokens]
             if any(index is None or index < 0 or index >= len(vertices) for index in indices):
                 malformed_faces += 1
@@ -186,8 +199,15 @@ def main() -> int:
             )
             stats["obj_with_triangulation_risk"] += 1
 
+        stats["obj_triangle_equivalents"] += obj_triangle_equivalents
+        production_bucket_triangles[bucket] += obj_triangle_equivalents
+        if obj_triangle_equivalents > largest_obj_triangles[0]:
+            largest_obj_triangles = (obj_triangle_equivalents, obj.relative_to(ROOT).as_posix())
+
     for bmp in bmp_files:
         stats["bmp"] += 1
+        relative_parts = bmp.relative_to(PRODUCTION).parts
+        bucket = "/".join(relative_parts[:2]) if len(relative_parts) >= 2 else relative_parts[0]
         try:
             data = bmp.read_bytes()
         except Exception as exc:
@@ -196,6 +216,8 @@ def main() -> int:
         if len(data) < 26 or data[:2] != b"BM":
             errors.append(f"{bmp.relative_to(ROOT)} is not a valid BMP header")
             continue
+        stats["texture_source_bytes"] += len(data)
+        production_bucket_bytes[bucket] += len(data)
         width = abs(struct.unpack_from("<i", data, 18)[0])
         height = abs(struct.unpack_from("<i", data, 22)[0])
         dimension_counts[(width, height)] += 1
@@ -215,6 +237,10 @@ def main() -> int:
         f"- OBJ without smoothing groups: {stats['obj_without_smoothing_groups']}",
         f"- OBJ with truly near-zero-area faces: {stats['obj_with_zero_area_faces']}",
         f"- OBJ with triangulation-risk faces: {stats['obj_with_triangulation_risk']}",
+        f"- Approx source triangle equivalents: {stats['obj_triangle_equivalents']:,}",
+        f"- OBJ source bytes: {stats['obj_source_bytes']:,}",
+        f"- Texture source bytes: {stats['texture_source_bytes']:,}",
+        f"- Largest OBJ by triangle equivalents: {largest_obj_triangles[1] or 'n/a'} ({largest_obj_triangles[0]:,})",
         f"- Structural errors: {len(errors)}",
         f"- Warnings: {len(warnings)}",
     ]
@@ -226,6 +252,14 @@ def main() -> int:
                 for (w, h), count in sorted(dimension_counts.items())
             )
         )
+    if production_bucket_bytes:
+        summary.append("- Production source buckets (bytes / triangle equivalents):")
+        for bucket, byte_count in sorted(
+            production_bucket_bytes.items(), key=lambda item: (-item[1], item[0])
+        )[:24]:
+            summary.append(
+                f"  - {bucket}: {byte_count:,} bytes / {production_bucket_triangles.get(bucket, 0):,} tris"
+            )
 
     print("\n".join(summary))
     if warnings:

@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_VISUAL_PRODUCTION_PASS_V1",
+  "status": "ACTIVE_IMPLEMENTATION_PENDING_ENGINE_PROOF",
+  "source_basis": [
+    "Owner Source Pack Master",
+    "Owner Battles, Weapons, Armies & Production Design Bible",
+    "Fellowship film-continuity project contracts"
+  ],
+  "authority_rule": "Film chronology and outcomes remain immutable. Visual staging, optional traversal texture and encounter pressure may enrich presentation but cannot create alternate canon outcomes.",
+  "target_profile": {
+    "platform": "Windows",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "quality": "Low-Medium",
+    "fps_floor": 30
+  },
+  "global_rules": [
+    "Prefer chapter-specific silhouette, lighting, atmosphere and landmark composition before raw prop count.",
+    "Keep hero vistas readable in foreground/midground/background layers.",
+    "Use short story-beat camera moments only at major landmarks; do not turn every transition into a cutscene.",
+    "Use production meshes when present and retain deterministic fallbacks.",
+    "Measure target-device cost before raising asset density or texture resolution.",
+    "Watcher, Balrog and Lurtz are film-locked presentation threats; gameplay cannot rewrite their required outcomes."
+  ],
+  "chapters": [
+    {
+      "id": "P1C01",
+      "identity": "warm pastoral Shire",
+      "hero_moments": [
+        "Hobbiton/Bag End readability",
+        "party field life",
+        "leaving-home road"
+      ],
+      "priority": "re-establish chapter-specific visual/performance reference with real evidence"
+    },
+    {
+      "id": "P1C02",
+      "identity": "rainy Bree threshold",
+      "hero_moments": [
+        "town gate reveal",
+        "Prancing Pony exterior/interior contrast"
+      ],
+      "priority": "wet-night material and warm-inn contrast"
+    },
+    {
+      "id": "P1C03",
+      "identity": "exposed ancient Weathertop",
+      "hero_moments": [
+        "ruin ring reveal",
+        "fire-versus-wraith night contrast"
+      ],
+      "priority": "moonlit/cold ruin silhouette and compact encounter readability"
+    },
+    {
+      "id": "P1C04",
+      "identity": "open healing Rivendell",
+      "hero_moments": [
+        "valley/water reveal",
+        "council space"
+      ],
+      "priority": "soft daylight, reflective water, pale stone and vertical openness"
+    },
+    {
+      "id": "P1C05",
+      "identity": "cold exposed Caradhras to Moria threshold",
+      "hero_moments": [
+        "mountain approach",
+        "West Gate lake"
+      ],
+      "priority": "cold rock/snow separation and readable threshold transition"
+    },
+    {
+      "id": "P1C06",
+      "identity": "monumental abandoned Moria",
+      "hero_moments": [
+        "great-hall scale",
+        "Balin chamber",
+        "Watcher threshold",
+        "Bridge/Balrog wall"
+      ],
+      "priority": "human-scale contrast against huge dwarf geometry; sparse torch/fire against deep darkness"
+    },
+    {
+      "id": "P1C07",
+      "identity": "gold-white Lothlorien refuge",
+      "hero_moments": [
+        "forest entry",
+        "talan layers",
+        "Mirror/farewell"
+      ],
+      "priority": "filtered gold-white light, organic elevation, low clutter"
+    },
+    {
+      "id": "P1C08",
+      "identity": "Anduin awe into wet woodland breakup",
+      "hero_moments": [
+        "Argonath passage",
+        "Parth Galen camp",
+        "Amon Hen broken woodland battle"
+      ],
+      "priority": "river scale first, then dark Uruk silhouettes against green/brown woodland and scattered ruins"
+    }
+  ],
+  "parallel_route": {
+    "id": "ISENGARD",
+    "identity": "black-stone authoritarian industry",
+    "priority": "cold directional Orthanc light plus furnace glow, severe vertical geometry and visible industrial damage"
+  },
+  "encounter_staging": {
+    "moria": [
+      "Watcher partial reveal and sudden reach",
+      "Chamber defense escalates with cave troll",
+      "retreat flow ends at non-killable Balrog narrative wall"
+    ],
+    "amon_hen": [
+      "Uruk pressure enters from separated woodland lanes",
+      "Boromir defense remains story-led",
+      "Lurtz appears as film-locked pressure; final Aragorn duel choreography remains pending animation"
+    ]
+  },
+  "acceptance_boundary": {
+    "implemented_now": [
+      "existing production-mesh enrichment in Moria and Anduin/Amon Hen",
+      "Lurtz production-foundation runtime pressure actor",
+      "adaptive mythic-threat update rate",
+      "source-asset triangle/source-byte reporting"
+    ],
+    "still_required": [
+      "real UE4.27 build/import evidence",
+      "chapter-specific PIE screenshots/video or concrete observations",
+      "target-device FPS/hitch/memory measurements",
+      "final rigs/animation/materials/VFX/audio",
+      "human visual/pacing acceptance"
+    ]
+  }
+}

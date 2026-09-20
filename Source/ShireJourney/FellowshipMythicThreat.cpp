@@ -7,6 +7,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Engine/GameInstance.h"
 #include "Engine/StaticMesh.h"
+#include "GameFramework/Pawn.h"
+#include "Kismet/GameplayStatics.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
@@ -77,6 +79,7 @@ void AFellowshipMythicThreat::SetThreatActive(bool bActive)
     bThreatActive = bActive;
     SetActorHiddenInGame(!bThreatActive);
     PrimaryActorTick.SetTickFunctionEnable(true);
+    PrimaryActorTick.TickInterval = bThreatActive ? 0.06f : 0.25f;
     ThreatLight->SetVisibility(bThreatActive && ThreatType == EFellowshipMythicThreatType::Balrog);
 
     UE_LOG(
@@ -290,6 +293,14 @@ void AFellowshipMythicThreat::Tick(float DeltaSeconds)
     if (!bThreatActive)
     {
         return;
+    }
+
+    // Low-spec safeguard: retain visible motion close to the player, but reduce
+    // update frequency when the mythic silhouette is only distant scenery.
+    if (APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0))
+    {
+        const float Distance = FVector::Dist2D(GetActorLocation(), PlayerPawn->GetActorLocation());
+        PrimaryActorTick.TickInterval = Distance > 5200.0f ? 0.22f : (Distance > 2800.0f ? 0.12f : 0.06f);
     }
 
     if (ThreatType == EFellowshipMythicThreatType::Watcher)
