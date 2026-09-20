@@ -164,7 +164,8 @@
         "REQ-PROD-005",
         "REQ-PROD-006",
         "REQ-PROD-007",
-        "REQ-PROD-008"
+        "REQ-PROD-008",
+        "REQ-PROD-010"
       ],
       "work_ids": [
         "WORK-CHAR-004",
@@ -173,7 +174,8 @@
         "WORK-WORLD-002",
         "WORK-WORLD-001",
         "WORK-PROD-007",
-        "WORK-PROD-008"
+        "WORK-PROD-008",
+        "WORK-PROD-010"
       ],
       "deliverables": [
         "core-cast source/provenance selection",
@@ -197,7 +199,11 @@
         "Rivendell memory/craft/provisioning detail kit",
         "Lothlorien gift/boat-prep vertical detail kit",
         "Anduin/Amon Hen river-to-battle detail kit",
-        "Isengard industrial logistics/flood-readability kit"
+        "Isengard industrial logistics/flood-readability kit",
+        "18 dedicated Fellowship equipment/silhouette source meshes",
+        "dedicated-first runtime equipment resolution",
+        "Gimli dedicated helmet/beard/axe identity",
+        "future rig/socket handoff preserved"
       ],
       "exit_evidence": [
         "ASSET_PROVENANCE_RECORDED",
@@ -206,7 +212,7 @@
         "PIE_VISUAL_REVIEW",
         "TARGET_DEVICE_PERFORMANCE"
       ],
-      "current_production_wave": "REALM_DETAIL_SATURATION_V2"
+      "current_production_wave": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4"
     },
     {
       "id": "B3_LIVING_WORLD_AND_PRESENTATION",
@@ -420,7 +426,8 @@
     "REQ-WORLD-006",
     "REQ-PROD-007",
     "REQ-PROD-008",
-    "REQ-PROD-009"
+    "REQ-PROD-009",
+    "REQ-PROD-010"
   ],
   "tracked_active_work_ids": [
     "WORK-CHAR-001",
@@ -442,18 +449,19 @@
     "WORK-WORLD-003",
     "WORK-PROD-007",
     "WORK-PROD-008",
-    "WORK-PROD-009"
+    "WORK-PROD-009",
+    "WORK-PROD-010"
   ],
   "immediate_next_large_actions": [
-    "Prove CINEMATIC_CHARACTER_SONIC_LIFE_V3 on the exact branch head.",
-    "Repair exact-head failures without weakening film, save, import, warning or performance safeguards.",
-    "Merge only after Pre-Unreal + UE4.27.2 build/import/startup/chapter/state/warning evidence is green.",
-    "Open the next focused branch for hero rig/surface handoff and early-region finishing."
+    "Prove HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4 on the exact branch head.",
+    "Repair exact-head asset/import/runtime failures without weakening production safeguards.",
+    "Merge only after both machine gates are green.",
+    "Continue next with rig/socket/animation handoff scaffolding plus early-region final visual polish."
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
     "head": "ACTIVE_BRANCH_PENDING_EXACT_PROOF",
-    "reason": "Cinematic/character/sonic presentation wave after green PR #57.",
-    "active_wave": "CINEMATIC_CHARACTER_SONIC_LIFE_V3"
+    "reason": "Dedicated Fellowship equipment/silhouette V4 after exact-green PR #58.",
+    "active_wave": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4"
   }
 }
