@@ -1953,7 +1953,8 @@
         "REQ-SAVE-001",
         "REQ-PERF-001"
       ],
-      "acceptance_boundary": "Prototype one existing named Shire NPC first; preserve deterministic offline fallback and canon/knowledge gates."
+      "acceptance_boundary": "Prototype one existing named Shire NPC first; preserve deterministic offline fallback and canon/knowledge gates.",
+      "intent": "NPCs should feel alive through real memory, relationships, goals, needs, emotions, context and inter-NPC knowledge transfer; language generation is optional expression, never story authority."
     }
   ],
   "hard_invariants": [
