@@ -1,9 +1,9 @@
 {
-  "schema_version": 2,
-  "plan_id": "PART1_WORLD_ALIVE_SATURATION_V8",
-  "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+  "schema_version": 3,
+  "plan_id": "PART1_WORLD_ALIVE_SATURATION_V9",
+  "status": "V9_ENVIRONMENTAL_MOTION_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
   "purpose": "Make Part I feel continuously inhabited where the film-world supports habitation, while using fauna/environmental motion instead of invented civilians in exposed wilderness, Caradhras, Moria and Anduin/Amon Hen.",
-  "runtime_owner": "ALivingWorldDirector + AShireAmbientNPC",
+  "runtime_owner": "ALivingWorldDirector + AShireAmbientNPC + AWorldAmbientMotionActor",
   "baseline_population_targets": {
     "P1C01": 18,
     "P1C02": 16,
@@ -84,7 +84,10 @@
       "regional role/prop variety",
       "ambient production surface response",
       "cheap per-NPC gait and idle-look variation",
-      "existing distance tick throttling, schedules, awareness and social conversations"
+      "existing distance tick throttling, schedules, awareness and social conversations",
+      "chapter-specific environmental motion micro-events",
+      "shadowless bounded glow accents in Shire/Bree/Rivendell/Moria/Lothlorien",
+      "Moria danger and aftermath movement without civilian spawning"
     ],
     "not_claimed": [
       "final skeletal crowds",
@@ -92,7 +95,10 @@
       "final voice audio",
       "PIE visual acceptance",
       "target-device performance acceptance",
-      "human density/pacing acceptance"
+      "human density/pacing acceptance",
+      "final authored SFX/ambience assets",
+      "final weather particle systems",
+      "final target-device living-world density acceptance"
     ]
   },
   "source_basis": [
@@ -109,5 +115,20 @@
     "Bird, rabbit and butterfly baselines use role-specific motion speeds/ranges and remain non-story actors.",
     "Production humanoid ambient actors use the project production surface master when present, with BasicShape fallback.",
     "Per-actor gait rate and idle head-look variation are deterministic cheap presentation only and own no story state."
-  ]
+  ],
+  "v9_environmental_life": {
+    "runtime": [
+      "chapter-specific prop motion",
+      "bounded shadowless glow accents",
+      "Moria danger/aftermath motion",
+      "region-specific object choices"
+    ],
+    "design_goal": "World movement persists even where civilian density must fall to zero, so silence/danger reads as authored atmosphere rather than an empty prototype.",
+    "degradation": [
+      "disable glow first",
+      "reduce micro-event count",
+      "disable decorative motion",
+      "retain story actors and route readability"
+    ]
+  }
 }
