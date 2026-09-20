@@ -83,7 +83,15 @@ jobs:
           >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 73
           >>"!STABLE_CHECKOUT!" echo "!GITEXE!" reset --hard %%TARGET_SHA%%
           >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 73
-          >>"!STABLE_CHECKOUT!" echo echo Exact-head checkout complete: %%TARGET_SHA%%.
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" rev-parse HEAD ^> .ci-head-sha
+          >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 74
+          >>"!STABLE_CHECKOUT!" echo set /p CHECKED_SHA=^<.ci-head-sha
+          >>"!STABLE_CHECKOUT!" echo if /I not "%%CHECKED_SHA%%"=="%%TARGET_SHA%%" echo ERROR: Checkout SHA mismatch. expected=%%TARGET_SHA%% actual=%%CHECKED_SHA%%
+          >>"!STABLE_CHECKOUT!" echo if /I not "%%CHECKED_SHA%%"=="%%TARGET_SHA%%" exit /b 74
+          >>"!STABLE_CHECKOUT!" echo ^>.ci-source-sha echo %%TARGET_SHA%%
+          >>"!STABLE_CHECKOUT!" echo if not exist "ShireJourney.uproject" echo ERROR: ShireJourney.uproject missing after exact checkout.
+          >>"!STABLE_CHECKOUT!" echo if not exist "ShireJourney.uproject" exit /b 75
+          >>"!STABLE_CHECKOUT!" echo echo Exact-head checkout and verification complete: %%TARGET_SHA%%.
           >>"!STABLE_CHECKOUT!" echo exit /b 0
           if not exist "!STABLE_CHECKOUT!" exit /b 23
           echo Stable exact-head checkout script: !STABLE_CHECKOUT!
@@ -94,23 +102,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: '"%GITHUB_WORKSPACE%\..\fellowship_exact_checkout.cmd"'
-
-      - name: Verify exact checkout
-        shell: cmd
-        run: |
-          @echo off
-          setlocal EnableExtensions
-          for /f "delims=" %%S in ('git rev-parse HEAD') do set "CHECKED_SHA=%%S"
-          if /I not "%CHECKED_SHA%"=="%TARGET_SHA%" (
-            echo ERROR: Checkout SHA mismatch. expected=%TARGET_SHA% actual=%CHECKED_SHA%
-            exit /b 74
-          )
-          >.ci-source-sha echo %TARGET_SHA%
-          if not exist "ShireJourney.uproject" (
-            echo ERROR: ShireJourney.uproject missing after exact checkout.
-            exit /b 75
-          )
-          echo Checked out exact commit %TARGET_SHA%.
 
       - name: Verify Unreal 4.27.2 and project
         shell: cmd

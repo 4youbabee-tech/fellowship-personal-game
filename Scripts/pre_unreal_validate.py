@@ -2562,7 +2562,10 @@ stable_checkout_ok = (
     "fellowship_exact_checkout.cmd" in unreal_ci
     and "fetch --no-tags --prune --depth=1 origin %%TARGET_SHA%%" in unreal_ci
     and "reset --hard %%TARGET_SHA%%" in unreal_ci
+    and "rev-parse HEAD" in unreal_ci
     and "Checkout SHA mismatch" in unreal_ci
+    and ".ci-source-sha" in unreal_ci
+    and "ShireJourney.uproject missing after exact checkout" in unreal_ci
 )
 exact_checkout_markers = [
     "zipball/$env:GITHUB_SHA",
