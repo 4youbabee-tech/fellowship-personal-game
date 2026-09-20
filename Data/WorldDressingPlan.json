@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "PART1_WORLD_DRESSING_V1",
-  "status": "ACTIVE_RUNTIME_IMPLEMENTATION_PENDING_BUILD",
+  "status": "V10_INSTANCED_DETAIL_AND_ENVIRONMENTAL_LIFE_PENDING_ENGINE_PROOF",
   "authority": "Production execution map for deterministic visual density across Part I. This complements BiomePlan.csv and WorldProductionBlueprint; it does not replace story topology.",
   "common_asset_root": "SourceAssets/Production/World/Common",
   "common_assets": [
@@ -178,7 +178,9 @@
     "Distant/non-gameplay dressing is non-colliding unless required for traversal.",
     "Prefer reusable production meshes and instancing/density bands over unique actor-heavy clutter.",
     "Story/quest trigger coordinates remain authoritative until an explicit topology migration.",
-    "Target floor remains 720p/30fps/DX11 low-medium on the project target laptop."
+    "Target floor remains 720p/30fps/DX11 low-medium on the project target laptop.",
+    "Dense micro-detail should prefer AWorldDetailCluster HISM batches over one AStaticMeshActor per decorative repeat.",
+    "Clustered decorative instances cast no dynamic/static shadows in the V10 baseline; preserve hero shadows for authored landmarks/characters."
   ],
   "next_major_content_layers": [
     "licensed or project-owned material/texture enrichment",
@@ -187,5 +189,33 @@
     "interior production for story-critical spaces",
     "voice/SFX/music asset completion",
     "PIE/device visual acceptance and performance tuning"
-  ]
+  ],
+  "instanced_detail_wave": {
+    "runtime_owner": "AWorldDetailCluster + AFellowshipChapterWorldBuilder",
+    "purpose": "Add dense micro-detail through HISM clusters so high-priority regions gain texture and depth without one actor per decorative instance.",
+    "regions": {
+      "P1C04": [
+        "ferns",
+        "river reeds",
+        "small ruin slabs"
+      ],
+      "P1C06": [
+        "Moria debris",
+        "ruin slabs"
+      ],
+      "P1C07": [
+        "ferns",
+        "reeds",
+        "secondary golden-tree depth"
+      ],
+      "P1C08": [
+        "river reeds",
+        "ferns",
+        "ruin fragments",
+        "fallen timber"
+      ]
+    },
+    "collision": "decorative clusters non-colliding; authored traversal collision remains separate",
+    "culling": "per-cluster start/end cull distances configured at runtime"
+  }
 }
