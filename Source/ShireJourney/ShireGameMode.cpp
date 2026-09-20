@@ -74,10 +74,18 @@ void AShireGameMode::BeginPlay()
         }
         else
         {
+            // StartExperience restores existing route progress; it is not a chapter jump.
+            // Establish the fixture explicitly before testing the route roundtrip.
+            Quests->StartChapter(TEXT("P1C03"), TEXT("RoadToWeathertop"), 2);
             Quests->StartExperience(
                 TEXT("FrodoMain"), TEXT("P1C03_Main"), TEXT("Frodo"),
                 TEXT("P1C03"), TEXT("RoadToWeathertop"), 2);
             Quests->TriggerStoryBeat(TEXT("CI_STATE_AUDIT_BEAT"));
+            const bool bRejectedOutsideWindow =
+                !Quests->CompleteSideActivityDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
+            Quests->TriggerStoryBeat(TEXT("MidgewaterRoad"));
+            const bool bRejectedDirectReward =
+                !Quests->RegisterJourneyDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
 
             const int32 JourneyInsightBefore = Quests->GetJourneyInsight();
             const int32 PerceptionXPBefore = Quests->GetProgressionXP(TEXT("PERCEPTION"));
@@ -85,9 +93,9 @@ void AShireGameMode::BeginPlay()
             const int32 ChronicleCountBefore = Quests->GetChronicleCount();
             const int32 KnownRegionCountBefore = Quests->GetKnownRegionCount();
             const bool bFirstDiscovery =
-                Quests->RegisterJourneyDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
+                Quests->CompleteSideActivityDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
             const bool bRepeatDiscovery =
-                Quests->RegisterJourneyDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
+                Quests->CompleteSideActivityDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
 
             Quests->StartExperience(
                 TEXT("GandalfParallel"), TEXT("P1G01_Isengard"), TEXT("Gandalf"),
@@ -129,6 +137,7 @@ void AShireGameMode::BeginPlay()
             }
 
             const bool bDiscoveryCoreValid =
+                bRejectedOutsideWindow && bRejectedDirectReward &&
                 bFirstDiscovery &&
                 !bRepeatDiscovery &&
                 Quests->HasJourneyDiscovery(TEXT("WILDERNESS_TRACK_SIGNS")) &&

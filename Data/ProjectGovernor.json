@@ -2982,7 +2982,8 @@
       "Windows resolver and actual startup/chapter/state results remain pending rerun; do not promote visual, performance or save acceptance.",
       "Repair 15e9d2228f6e7e5ceb1e8aed2aab8b698dba4cb8 passed Pre-Unreal, Windows Python resolution, compile/import and startup in run 35500242164; chapter/state steps still running at this update.",
       "Audit found route/state checks were in-memory only. Added isolated disk save/load through production snapshot/restore, deliberate mutation of live values, field comparisons and unique-slot cleanup; pending UE execution.",
-      "All CI observer launches now isolate player manual/checkpoint save access; 13 observer regression tests pass locally."
+      "All CI observer launches now isolate player manual/checkpoint save access; 13 observer regression tests pass locally.",
+      "Run 35500242164 passed startup and all eight chapter audits. State audit failed because its fixture used StartExperience as a chapter jump and bypassed side-activity guards. Corrected fixture to StartChapter, open MidgewaterRoad window, and use CompleteSideActivityDiscovery while asserting out-of-window/direct/repeat reward rejection. Production story and reward guards remain intact."
     ]
   },
   "development_mode": {
@@ -3046,7 +3047,7 @@
       "target device performance"
     ],
     "next_actions": [
-      "Run corrected head through full UE workflow; fix each specific failing layer.",
+      "Run newest fixture+disk-audit head through compile/import/startup/eight chapters/state; investigate any specific failed layer.",
       "Verify new disk-save-roundtrip marker; the audit must save to a unique CI slot, mutate live state, load and compare, then clean only its own slot.",
       "After technical gates pass, resume visible character/world production; final rigs/materials remain incomplete."
     ],
@@ -3058,11 +3059,12 @@
         "compile",
         "production import",
         "Python discovery",
-        "startup"
+        "startup",
+        "P1C01-P1C08 chapter audits"
       ],
-      "pending": [
-        "chapters",
-        "state"
+      "pending": [],
+      "failed": [
+        "state audit fixture: wrong chapter and reward entry point"
       ]
     }
   }
