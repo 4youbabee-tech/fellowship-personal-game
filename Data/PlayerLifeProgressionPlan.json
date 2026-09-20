@@ -140,7 +140,7 @@
   "knowledge_layer": {
     "chronicle": "First-time film-continuity discoveries create persistent Chronicle entry IDs.",
     "map_knowledge": "First-time discoveries reveal the current route/chapter as known map knowledge.",
-    "presentation": "C toggles the in-game Chronicle & Journey panel.",
+    "presentation": "C toggles Chronicle & Journey; LeftBracket/RightBracket browse persistent entries with readable labels, region/chapter/category context and visible progression ranks.",
     "story_effect": "NONE"
   }
 }

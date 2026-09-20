@@ -96,22 +96,61 @@ void AShireHUD::DrawHUD()
 
     if (Player && Player->IsChronicleOpen() && Quests)
     {
-        const float PanelW = FMath::Min(420.0f, W - 80.0f);
-        const float PanelH = FMath::Min(500.0f, H - 120.0f);
+        const float PanelW = FMath::Min(500.0f, W - 80.0f);
+        const float PanelH = FMath::Min(560.0f, H - 120.0f);
         const float PanelX = W - PanelW - 24.0f;
         const float PanelY = 118.0f;
-        DrawRect(FLinearColor(0.012f, 0.018f, 0.013f, 0.94f), PanelX, PanelY, PanelW, PanelH);
+        DrawRect(FLinearColor(0.012f, 0.018f, 0.013f, 0.95f), PanelX, PanelY, PanelW, PanelH);
         DrawRect(FLinearColor(0.76f, 0.57f, 0.22f, 0.94f), PanelX, PanelY, 4.0f, PanelH);
-        DrawText(TEXT("CHRONICLE & JOURNEY"), FLinearColor(0.95f, 0.86f, 0.62f), PanelX + 18.0f, PanelY + 14.0f, MediumFont, 0.92f, false);
+
+        DrawText(TEXT("CHRONICLE & JOURNEY"),
+            FLinearColor(0.95f, 0.86f, 0.62f),
+            PanelX + 18.0f, PanelY + 14.0f, MediumFont, 0.92f, false);
         DrawText(FString::Printf(TEXT("Entries %d  |  Known regions %d  |  Journey %d"),
             Quests->GetChronicleCount(), Quests->GetKnownRegionCount(), Quests->GetJourneyInsight()),
-            FLinearColor(0.76f, 0.82f, 0.72f), PanelX + 18.0f, PanelY + 42.0f, SmallFont, 0.78f, false);
+            FLinearColor(0.76f, 0.82f, 0.72f),
+            PanelX + 18.0f, PanelY + 42.0f, SmallFont, 0.78f, false);
+
+        float Y = PanelY + 72.0f;
+        const TArray<FName>& Entries = Quests->GetChronicleEntryIds();
+        if (Entries.Num() > 0)
+        {
+            const int32 SelectedIndex =
+                FMath::Clamp(Player->GetChronicleBrowseIndex(), 0, Entries.Num() - 1);
+            const FName SelectedEntry = Entries[SelectedIndex];
+            DrawText(
+                FString::Printf(TEXT("ENTRY %d / %d    [  ] Browse"), SelectedIndex + 1, Entries.Num()),
+                FLinearColor(0.93f, 0.78f, 0.43f),
+                PanelX + 18.0f, Y, SmallFont, 0.78f, false);
+            Y += 23.0f;
+            DrawText(
+                Quests->GetChronicleEntryDisplayLabel(SelectedEntry),
+                FLinearColor(0.94f, 0.91f, 0.80f),
+                PanelX + 18.0f, Y, MediumFont, 0.88f, false);
+            Y += 25.0f;
+            DrawText(
+                Quests->GetChronicleEntryContextLabel(SelectedEntry),
+                FLinearColor(0.70f, 0.80f, 0.70f),
+                PanelX + 18.0f, Y, SmallFont, 0.72f, false);
+            Y += 30.0f;
+        }
+        else
+        {
+            DrawText(TEXT("No Chronicle entries discovered yet."),
+                FLinearColor(0.76f, 0.82f, 0.72f),
+                PanelX + 18.0f, Y, SmallFont, 0.78f, false);
+            Y += 34.0f;
+        }
+
+        DrawText(TEXT("PROGRESSION"),
+            FLinearColor(0.93f, 0.78f, 0.43f),
+            PanelX + 18.0f, Y, SmallFont, 0.82f, false);
+        Y += 22.0f;
 
         const FName Tracks[] = {
             TEXT("WAYFINDING"), TEXT("PERCEPTION"), TEXT("QUIET_STEP"), TEXT("CAMPCRAFT"),
             TEXT("FELLOWSHIP"), TEXT("LORE"), TEXT("RESOLVE")
         };
-        float Y = PanelY + 72.0f;
         for (const FName Track : Tracks)
         {
             DrawText(
@@ -120,43 +159,36 @@ void AShireHUD::DrawHUD()
                     Quests->GetProgressionRank(Track),
                     Quests->GetProgressionXP(Track)),
                 FLinearColor(0.82f, 0.84f, 0.78f),
-                PanelX + 18.0f, Y, SmallFont, 0.74f, false);
-            Y += 19.0f;
+                PanelX + 26.0f, Y, SmallFont, 0.70f, false);
+            Y += 18.0f;
         }
 
-        Y += 8.0f;
-        DrawText(TEXT("Recent Chronicle"), FLinearColor(0.93f, 0.78f, 0.43f), PanelX + 18.0f, Y, SmallFont, 0.82f, false);
+        Y += 6.0f;
+        DrawText(TEXT("KNOWN MAP REGIONS"),
+            FLinearColor(0.93f, 0.78f, 0.43f),
+            PanelX + 18.0f, Y, SmallFont, 0.82f, false);
         Y += 22.0f;
-        const TArray<FName>& Entries = Quests->GetChronicleEntryIds();
-        const int32 FirstEntry = FMath::Max(0, Entries.Num() - 6);
-        for (int32 EntryIndex = FirstEntry; EntryIndex < Entries.Num(); ++EntryIndex)
-        {
-            FString Label = Entries[EntryIndex].ToString();
-            Label.RemoveFromStart(TEXT("CHRONICLE_"));
-            Label.ReplaceInline(TEXT("_"), TEXT(" "));
-            DrawText(Label, FLinearColor(0.78f, 0.82f, 0.74f), PanelX + 26.0f, Y, SmallFont, 0.68f, false);
-            Y += 17.0f;
-        }
 
-        Y += 8.0f;
-        DrawText(TEXT("Known Map Regions"), FLinearColor(0.93f, 0.78f, 0.43f), PanelX + 18.0f, Y, SmallFont, 0.82f, false);
-        Y += 22.0f;
         const TArray<FName>& Regions = Quests->GetKnownMapRegionIds();
-        const int32 FirstRegion = FMath::Max(0, Regions.Num() - 5);
+        const int32 FirstRegion = FMath::Max(0, Regions.Num() - 6);
         for (int32 RegionIndex = FirstRegion; RegionIndex < Regions.Num(); ++RegionIndex)
         {
-            FString Label = Regions[RegionIndex].ToString();
-            Label.RemoveFromStart(TEXT("MAP_REGION_"));
-            Label.ReplaceInline(TEXT("_"), TEXT(" / "));
-            DrawText(Label, FLinearColor(0.72f, 0.80f, 0.72f), PanelX + 26.0f, Y, SmallFont, 0.68f, false);
+            DrawText(
+                Quests->GetKnownMapRegionDisplayLabel(Regions[RegionIndex]),
+                FLinearColor(0.72f, 0.80f, 0.72f),
+                PanelX + 26.0f, Y, SmallFont, 0.68f, false);
             Y += 17.0f;
         }
+
+        DrawText(TEXT("C Close   [ Previous   ] Next"),
+            FLinearColor(0.62f, 0.68f, 0.61f),
+            PanelX + 18.0f, PanelY + PanelH - 24.0f, SmallFont, 0.66f, false);
     }
 
     DrawText(
         bCombat
-            ? TEXT("WASD Move  |  LMB Attack  |  Shift Sprint  |  E Interact  |  R Supply  |  C Chronicle  |  F5/F9 Save/Load")
-            : TEXT("WASD Move  |  Shift Sprint  |  E Interact  |  R Supply  |  C Chronicle  |  F5/F9 Save/Load  |  F6-F8 Debug"),
+            ? TEXT("WASD Move  |  LMB Attack  |  Shift Sprint  |  E Interact  |  R Supply  |  C Chronicle  |  [ ] Browse  |  F5/F9 Save/Load")
+            : TEXT("WASD Move  |  Shift Sprint  |  E Interact  |  R Supply  |  C Chronicle  |  [ ] Browse  |  F5/F9 Save/Load  |  F6-F8 Debug"),
         FLinearColor(0.78f, 0.80f, 0.76f, 0.46f), 24.0f, H - 28.0f, SmallFont, 0.72f, false);
 
     const float Now = GetWorld()->GetTimeSeconds();

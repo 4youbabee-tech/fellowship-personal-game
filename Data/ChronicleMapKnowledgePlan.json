@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "CHRONICLE_MAP_KNOWLEDGE_V1",
-  "status": "RUNTIME_IMPLEMENTED_PENDING_ENGINE_PROOF",
+  "status": "DEDICATED_BROWSING_RUNTIME_IMPLEMENTED_PENDING_ENGINE_PROOF",
   "main_film_continuity_only": true,
   "story_effect": "NONE",
   "save_schema_version": 6,
@@ -18,11 +18,12 @@
     "chronicle_id_format": "CHRONICLE_<DISCOVERY_ID>",
     "map_region_id_format": "MAP_REGION_<ROUTE>_<CHAPTER>",
     "side_activity_source": "Data/ContextualSideActivityPlan.json",
-    "ui": "C toggles CHRONICLE & JOURNEY HUD panel",
+    "ui": "C toggles Chronicle & Journey; LeftBracket/RightBracket browse persistent discovered entries while known regions remain visible.",
     "save_fields": [
       "ChronicleEntryIds",
       "KnownMapRegionIds"
-    ]
+    ],
+    "display_metadata": "Journey discovery display labels are loaded from Data/JourneyDiscoveryRewardPlan.json and paired with region/chapter/category context."
   },
   "progression_bridge": {
     "behavior": "If a discovery is linked to a contextual side activity, the activity type adds bounded track XP on the same first-time registration.",
@@ -33,6 +34,7 @@
     "PG-080 static contract",
     "ShireStateAudit: knowledge-core=PASS",
     "runtime smoke requires knowledge-core marker",
-    "UE4.27 exact-head compile/startup/state proof still required"
+    "UE4.27 exact-head compile/startup/state proof still required",
+    "PG-085 dedicated Chronicle browsing contract"
   ]
 }
