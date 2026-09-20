@@ -30,7 +30,8 @@
     "A feature is never called accepted from compile/static evidence alone.",
     "If a previously passed critical gate fails, stop feature expansion, repair the smallest failing layer, and rerun the exact failed gate.",
     "Human pacing and visual review are mandatory for enjoyment/acceptance; CI cannot infer fun.",
-    "Developer-owned automation should reproduce and verify defects before asking the owner to spend play time on technical regression checks; never relabel machine checks as visual or pacing approval."
+    "Developer-owned automation should reproduce and verify defects before asking the owner to spend play time on technical regression checks; never relabel machine checks as visual or pacing approval.",
+    "Validation harness semantics are first-class: repeated log copies must not inflate defect counts, save tests must prove disk roundtrip, and every failing debt gate must print concrete asset/package identities."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -2974,17 +2975,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Owner explicitly requests exact-head import/startup/chapter/save proof before visible production.",
+    "reason": "Deep exact-head audit after the owner requested future validation to catch test-harness defects as well as game defects.",
     "summary": [
-      "Verified b0a4d2614e5744d8a0fa3b1c373c23a491274955: Pre-Unreal #446 succeeded; UE4 run 35499375838 compiled and imported successfully, then failed resolving Python (Store alias, exit 61).",
-      "Fix existing-interpreter discovery with executable/version validation and WindowsApps exclusion; permit the UE bundled Python via Python 3.7-compatible runtime observer.",
-      "Keep state-audit and startup logs separate; runtime observer regression suite: 12 passed locally.",
-      "Windows resolver and actual startup/chapter/state results remain pending rerun; do not promote visual, performance or save acceptance.",
-      "Repair 15e9d2228f6e7e5ceb1e8aed2aab8b698dba4cb8 passed Pre-Unreal, Windows Python resolution, compile/import and startup in run 35500242164; chapter/state steps still running at this update.",
-      "Audit found route/state checks were in-memory only. Added isolated disk save/load through production snapshot/restore, deliberate mutation of live values, field comparisons and unique-slot cleanup; pending UE execution.",
-      "All CI observer launches now isolate player manual/checkpoint save access; 13 observer regression tests pass locally.",
-      "Run 35500242164 passed startup and all eight chapter audits. State audit failed because its fixture used StartExperience as a chapter jump and bypassed side-activity guards. Corrected fixture to StartChapter, open MidgewaterRoad window, and use CompleteSideActivityDiscovery while asserting out-of-window/direct/repeat reward rejection. Production story and reward guards remain intact.",
-      "Newest disk-audit and fixture heads blocked at MSVC D8050 before source compilation, including single-process retry (runs 35500465321 and 35500597711). Add job-local writable TEMP/TMP and isolated one-line compiler probes (plain/Z7/Zi). No registry/service/security changes."
+      "Exact head c023a735e3e390b8d591e1f6df9d07aeaa054754 passed Pre-Unreal #450.",
+      "Unreal Build Validation #285 passed MSVC probe, UE4.27.2 C++ build, production import, Python discovery, playable startup, P1C01-P1C08 chapter audits, and the route/story/state audit including the real disk-save roundtrip.",
+      "The only failing step was warning-debt aggregation: raw repeated log occurrences inflated tangent/binormal totals, while the world-package debt also exceeded its ceiling.",
+      "Warning-debt accounting is being corrected to count unique mesh/package defect identities and print the exact identities so the next repair wave is evidence-driven rather than threshold-driven.",
+      "Production expansion remains subordinate to the exact-head green chain; rendered/PIE visual acceptance and target-device performance are still separate human/device gates."
     ]
   },
   "development_mode": {
@@ -3021,7 +3018,7 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "EXACT_HEAD_RUNTIME_PROOF_THEN_VISUAL_PRODUCTION",
+  "current_focus": "DEEP_EXACT_HEAD_AUDIT_WARNING_DEBT_THEN_VISUAL_PRODUCTION",
   "immediate_next_large_actions": [
     "Keep newest exact head in the UE4.27 compile/import/startup/chapter/state repair loop until green.",
     "Validate the new bounded hero/threat camera framing on the real engine without claiming final cinematics.",
@@ -3031,43 +3028,34 @@
     "Keep production atlas, visual pass, readiness gate and governor synchronized."
   ],
   "session_handoff": {
-    "source_head": "b0a4d2614e5744d8a0fa3b1c373c23a491274955",
+    "source_head": "c023a735e3e390b8d591e1f6df9d07aeaa054754",
     "pull_request": 53,
     "branch": "work/automation-first-runtime-observation",
-    "evidence_run": "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/35499375838",
+    "evidence_run": "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/35500732914",
     "verified": {
-      "pre_unreal": "PASS #446",
-      "compile": "PASS #281",
-      "production_import": "PASS #281"
+      "pre_unreal": "PASS #450",
+      "msvc_probe": "PASS #285",
+      "ue4_compile": "PASS #285",
+      "production_import": "PASS #285",
+      "python_resolution": "PASS #285",
+      "startup": "PASS #285",
+      "chapter_audit": "PASS #285 P1C01-P1C08",
+      "state_audit": "PASS #285 including CI disk save/load roundtrip"
+    },
+    "failing": {
+      "warning_guard": "FAIL #285: repeated import warnings were counted by occurrence; world package debt also exceeded baseline"
     },
     "not_yet_proven": [
-      "startup on corrected head",
-      "P1C01-P1C08 runtime audit",
-      "route/story/save roundtrip on corrected head",
-      "rendered visual acceptance",
-      "target device performance"
+      "warning-debt clean exact head after identity-based recount and repair",
+      "chapter-specific rendered/PIE evidence",
+      "target-device FPS/hitch/memory",
+      "human visual and pacing acceptance"
     ],
     "next_actions": [
-      "Run newest fixture+disk-audit head through compile/import/startup/eight chapters/state; investigate any specific failed layer.",
-      "Verify new disk-save-roundtrip marker; the audit must save to a unique CI slot, mutate live state, load and compare, then clean only its own slot.",
-      "After technical gates pass, resume visible character/world production; final rigs/materials remain incomplete."
+      "Rerun exact head with identity-based warning accounting and capture every failing world package path.",
+      "Repair the concrete geometry/material/import debt without raising thresholds to hide regressions.",
+      "After the full exact-head chain is green, resume the large visible world/character/encounter production wave."
     ],
-    "scope_rule": "This handoff reports evidence. It does not invent product decisions or mark planned work delivered.",
-    "additional_evidence": {
-      "head": "15e9d2228f6e7e5ceb1e8aed2aab8b698dba4cb8",
-      "run": 35500242164,
-      "passed": [
-        "compile",
-        "production import",
-        "Python discovery",
-        "startup",
-        "P1C01-P1C08 chapter audits"
-      ],
-      "pending": [],
-      "failed": [
-        "state audit fixture: wrong chapter and reward entry point"
-      ]
-    },
-    "current_blocker": "MSVC D8050 toolchain/environment failure; verify isolated compiler probe, then newest full Unreal run. Disk audit C++ not yet compiled."
+    "scope_rule": "Machine gates prove technical regression coverage only. They never promote visual, performance or Production 100 acceptance without the required evidence."
   }
 }
