@@ -1,6 +1,7 @@
 #include "LivingWorldDirector.h"
 
 #include "ShireAmbientNPC.h"
+#include "ShireWorldEventInteraction.h"
 #include "ShireNPCContextSubsystem.h"
 #include "ShireQuestSubsystem.h"
 
@@ -652,6 +653,69 @@ AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(
     return NPC;
 }
 
+AShireWorldEventInteraction* ALivingWorldDirector::SpawnPlayerInteraction(
+    FName EventId,
+    FName EventType,
+    const FVector& Origin)
+{
+    if (!GetWorld() || IsStoryDangerActive())
+    {
+        return nullptr;
+    }
+
+    FText Prompt;
+    FText Response;
+    if (EventType == TEXT("WORK_ACTIVITY"))
+    {
+        Prompt = FText::FromString(TEXT("Help with the passing work."));
+        Response = ActiveChapterId == TEXT("P1C04")
+            ? FText::FromString(TEXT("You steady the books and leave the quiet work to continue."))
+            : FText::FromString(TEXT("You lend a hand for a moment, then return to the road."));
+    }
+    else if (EventType == TEXT("MARKET_ACTIVITY"))
+    {
+        Prompt = FText::FromString(TEXT("Pause by the small exchange."));
+        Response = FText::FromString(TEXT("A few ordinary words pass between neighbors. Nothing about the main road changes."));
+    }
+    else if (EventType == TEXT("SOCIAL_MOMENT"))
+    {
+        Prompt = FText::FromString(TEXT("Return the greeting."));
+        Response = FText::FromString(TEXT("The brief greeting makes the place feel lived in, then the moment passes."));
+    }
+    else if (EventType == TEXT("TRAVELER_PASSING"))
+    {
+        Prompt = FText::FromString(TEXT("Acknowledge the passing traveler."));
+        Response = FText::FromString(TEXT("You exchange a short road courtesy and let the traveler continue."));
+    }
+    else
+    {
+        return nullptr;
+    }
+
+    FActorSpawnParameters Params;
+    Params.SpawnCollisionHandlingOverride =
+        ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+    AShireWorldEventInteraction* Interaction =
+        GetWorld()->SpawnActor<AShireWorldEventInteraction>(
+            Origin + FVector(70.0f, -70.0f, 0.0f),
+            FRotator::ZeroRotator,
+            Params);
+    if (!Interaction)
+    {
+        return nullptr;
+    }
+
+    Interaction->Tags.AddUnique(TEXT("LivingWorldEphemeral"));
+    Interaction->ConfigureInteraction(
+        EventId,
+        EventType,
+        ActiveChapterId,
+        Prompt,
+        Response,
+        true);
+    return Interaction;
+}
+
 bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEvent)
 {
     if (!GetWorld())
@@ -893,6 +957,12 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
     if (OutEvent.Actors.Num() == 0)
     {
         return false;
+    }
+
+    if (AShireWorldEventInteraction* Interaction =
+        SpawnPlayerInteraction(OutEvent.EventId, EventType, Origin))
+    {
+        OutEvent.Actors.Add(Interaction);
     }
 
     OutEvent.ExpiresAt = GetWorld()->GetTimeSeconds() + Duration;

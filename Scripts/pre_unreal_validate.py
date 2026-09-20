@@ -3876,6 +3876,41 @@ for pg83_marker in [
     if pg83_marker not in pg83_builder:
         fail(f"PG-083 environmental puzzle placement missing: {pg83_marker}")
 
+
+# PG-084: living-world player responses must remain bounded, ephemeral and story-neutral.
+pg84_plan = json.loads(read(ROOT / "Data" / "LivingWorldEventPlan.json"))
+pg84_policy = pg84_plan.get("player_interaction_policy", {})
+pg84_expected_types = {"WORK_ACTIVITY", "TRAVELER_PASSING", "MARKET_ACTIVITY", "SOCIAL_MOMENT"}
+if set(pg84_policy.get("enabled_event_types", [])) != pg84_expected_types:
+    fail("PG-084 living-world interactive event types changed without contract update")
+if pg84_policy.get("persistent_reward") != "NONE" or pg84_policy.get("story_effect") != "NONE":
+    fail("PG-084 living-world interactions may not grant persistent rewards or story effects")
+if pg84_policy.get("may_advance_required_anchor") is not False:
+    fail("PG-084 living-world interactions may not advance required anchors")
+if pg84_policy.get("may_change_canon_outcome") is not False:
+    fail("PG-084 living-world interactions may not change canon outcomes")
+
+pg84_h = read(SOURCE / "ShireWorldEventInteraction.h")
+pg84_cpp = read(SOURCE / "ShireWorldEventInteraction.cpp")
+pg84_director_h = read(SOURCE / "LivingWorldDirector.h")
+pg84_director_cpp = read(SOURCE / "LivingWorldDirector.cpp")
+for pg84_symbol in [
+    "IShireInteractable",
+    "ConfigureInteraction",
+    "Interact_Implementation",
+    "WorldEventInteraction: PASS",
+    "storyEffect=NONE",
+]:
+    if pg84_symbol not in (pg84_h + pg84_cpp):
+        fail(f"PG-084 living-world interaction runtime symbol missing: {pg84_symbol}")
+for pg84_symbol in [
+    "SpawnPlayerInteraction",
+    "IsStoryDangerActive()",
+    "OutEvent.Actors.Add(Interaction)",
+]:
+    if pg84_symbol not in (pg84_director_h + pg84_director_cpp):
+        fail(f"PG-084 living-world director interaction wiring missing: {pg84_symbol}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

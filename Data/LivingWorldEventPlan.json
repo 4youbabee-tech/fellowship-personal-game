@@ -37,7 +37,8 @@
     "Fauna and prop motion are optional under performance pressure.",
     "Danger chapters may suppress peaceful events.",
     "Event selection should avoid repeating the same event type back-to-back when alternatives exist.",
-    "CP55 fauna uses project-owned low-poly bird/rabbit/butterfly meshes and distance-throttled ambient actors; no new persistent AI state."
+    "CP55 fauna uses project-owned low-poly bird/rabbit/butterfly meshes and distance-throttled ambient actors; no new persistent AI state.",
+    "Player responses to ambient micro-events are optional, ephemeral and reward-free; they never become required quests or persistent progression."
   ],
   "chapter_contracts": [
     {
@@ -317,5 +318,22 @@
       ],
       "story_safe": true
     }
-  ]
+  ],
+  "status": "RUNTIME_AMBIENCE_PLUS_BOUNDED_PLAYER_INTERACTIONS_PENDING_ENGINE_PROOF",
+  "player_interaction_policy": {
+    "enabled_event_types": [
+      "WORK_ACTIVITY",
+      "TRAVELER_PASSING",
+      "MARKET_ACTIVITY",
+      "SOCIAL_MOMENT"
+    ],
+    "interaction_style": "single lightweight contextual response on an ephemeral event actor",
+    "persistent_reward": "NONE",
+    "story_effect": "NONE",
+    "may_advance_required_anchor": false,
+    "may_change_canon_outcome": false,
+    "danger_policy": "Casual interaction markers are not spawned while story danger is active and self-disable if danger becomes active before interaction.",
+    "persistence_policy": "No save state. Interaction objects are disposable with their parent micro-event.",
+    "anti_farm_policy": "No Journey Insight, progression XP, supplies, relationship points or combat stats are awarded."
+  }
 }

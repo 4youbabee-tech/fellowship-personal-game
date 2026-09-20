@@ -437,6 +437,22 @@
       "kind": "Source",
       "role": "Three-step interactable environmental pattern-puzzle implementation",
       "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireWorldEventInteraction.h",
+      "target_path": "Source/ShireJourney/Public/World/ShireWorldEventInteraction.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Ephemeral bounded player interaction contract for living-world micro-events",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireWorldEventInteraction.cpp",
+      "target_path": "Source/ShireJourney/Private/World/ShireWorldEventInteraction.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Story-safe reward-free interaction response implementation for living-world micro-events",
+      "migration_status": "CURRENT_FLAT"
     }
   ]
 }
