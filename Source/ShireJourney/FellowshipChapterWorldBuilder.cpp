@@ -11,11 +11,13 @@
 
 #include "Components/DirectionalLightComponent.h"
 #include "Components/ExponentialHeightFogComponent.h"
+#include "Components/PointLightComponent.h"
 #include "Components/SkyLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Engine/DirectionalLight.h"
 #include "Engine/ExponentialHeightFog.h"
+#include "Engine/PointLight.h"
 #include "Engine/SkyLight.h"
 #include "Engine/StaticMeshActor.h"
 #include "Engine/TextRenderActor.h"
@@ -92,7 +94,16 @@ void AFellowshipChapterWorldBuilder::ConfigureChapterAtmosphere(FName ChapterId)
         SkyIntensity = 0.90f; SkyColor = FLinearColor(0.72f, 0.58f, 0.30f);
         FogDensity = 0.011f; FogHeightFalloff = 0.24f; FogColor = FLinearColor(0.50f, 0.43f, 0.23f);
     }
-    else if (ChapterId != TEXT("P1C08"))
+    else if (ChapterId == TEXT("P1C08"))
+    {
+        // Bible-driven Anduin/Amon Hen identity: open river scale first, then a cooler
+        // wet-woodland breakup space. Keep this global layer restrained so landmark
+        // silhouettes and encounter readability carry the composition.
+        SunIntensity = 3.05f; SunColor = FLinearColor(0.94f, 0.88f, 0.72f); SunRotation = FRotator(-29.0f, -14.0f, 0.0f);
+        SkyIntensity = 0.82f; SkyColor = FLinearColor(0.52f, 0.62f, 0.66f);
+        FogDensity = 0.010f; FogHeightFalloff = 0.17f; FogColor = FLinearColor(0.34f, 0.42f, 0.40f);
+    }
+    else
     {
         return;
     }
@@ -585,6 +596,7 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         UStaticMesh* MoriaGateSegment = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaGateSegment.SM_MoriaGateSegment"));
         UStaticMesh* MoriaRubblePillar = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaRubblePillar.SM_MoriaRubblePillar"));
         UStaticMesh* MoriaTallBrazier = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaTallBrazier.SM_MoriaTallBrazier"));
+        UStaticMesh* MoriaMineCart = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaMineCart.SM_MoriaMineCart"));
         SpawnProd(MoriaGateSegment, FVector(-1980,-520,0), FVector(0.86f), FRotator(0,7,0), true);
         SpawnProd(MoriaGateSegment, FVector(-1980,520,0), FVector(0.86f), FRotator(0,-7,0), true);
         SpawnProd(MoriaBrokenStair, FVector(520,-650,0), FVector(0.84f), FRotator(0,18,0), true);
@@ -595,6 +607,9 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnProd(MoriaRubblePillar, FVector(1480,-720,0), FVector(0.90f), FRotator(0,-22,0), false);
         SpawnProd(MoriaTallBrazier, FVector(1860,-350,0), FVector(0.82f), FRotator::ZeroRotator, false);
         SpawnProd(MoriaTallBrazier, FVector(1860,350,0), FVector(0.82f), FRotator::ZeroRotator, false);
+        SpawnProd(MoriaMineCart, FVector(-980,-650,0), FVector(0.76f), FRotator(0,18,0), false);
+        SpawnProd(MoriaMineCart, FVector(-120,690,0), FVector(0.72f), FRotator(0,-24,0), false);
+        SpawnProd(MoriaMineCart, FVector(1320,-690,0), FVector(0.70f), FRotator(0,11,0), false);
 
         SpawnScatter(CommonRuinSlabMesh, FVector(-200,0,0), 18, FVector(2300,1050,0), FVector(0.78f), 37.0f, 2.0f);
         SpawnScatter(CommonBoulderClusterMesh, FVector(300,0,0), 14, FVector(2500,1150,0), FVector(0.85f), 31.0f, 6.0f);
@@ -638,11 +653,22 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         UStaticMesh* AnduinCargoPile = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinCargoPile.SM_AnduinCargoPile"));
         UStaticMesh* AnduinFishingFrame = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinFishingFrame.SM_AnduinFishingFrame"));
         UStaticMesh* AnduinRiverMarker = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinRiverMarker.SM_AnduinRiverMarker"));
+        UStaticMesh* AnduinDockPier = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinDockPier.SM_AnduinDockPier"));
         SpawnProd(AnduinBoatRack, FVector(-1740,430,0), FVector(0.74f), FRotator(0,12,0), false);
         SpawnProd(AnduinCampRack, FVector(-920,-500,0), FVector(0.72f), FRotator(0,-18,0), false);
         SpawnProd(AnduinCargoPile, FVector(-760,520,0), FVector(0.68f), FRotator(0,24,0), false);
         SpawnProd(AnduinFishingFrame, FVector(-2060,560,0), FVector(0.72f), FRotator(0,8,0), false);
         SpawnProd(AnduinRiverMarker, FVector(-1380,-540,0), FVector(0.76f), FRotator(0,-4,0), false);
+        SpawnProd(AnduinDockPier, FVector(-1120,-420,-6), FVector(0.80f), FRotator(0,8,0), false);
+        SpawnProd(AnduinDockPier, FVector(-760,430,-6), FVector(0.72f), FRotator(0,188,0), false);
+
+        // Deliberate non-colliding battle-lane composition: readable broken woodland
+        // and ancient-stone silhouettes without adding more full-AI enemies to the hero bubble.
+        SpawnProd(AmonHenRuinMesh, FVector(2140,-620,60), FVector(0.70f), FRotator(0,22,0), false);
+        SpawnProd(AmonHenRuinMesh, FVector(2290,640,55), FVector(0.64f), FRotator(0,-28,0), false);
+        SpawnProd(CommonFallenLogMesh, FVector(2060,-260,20), FVector(0.84f), FRotator(0,58,0), false);
+        SpawnProd(CommonFallenLogMesh, FVector(2380,250,20), FVector(0.76f), FRotator(0,-37,0), false);
+
         SpawnScatter(CommonBroadleafTreeMesh, FVector(700,0,0), 24, FVector(2600,1450,0), FVector(0.88f), 21.0f, 10.0f);
         SpawnScatter(CommonPineTreeMesh, FVector(1000,0,0), 14, FVector(2200,1300,0), FVector(0.82f), 29.0f, 10.0f);
         SpawnScatter(CommonReedClusterMesh, FVector(-1500,0,-10), 28, FVector(1250,520,0), FVector(0.76f), 17.0f, 2.0f);
@@ -1432,6 +1458,33 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
             FVector(0.18f, 0.18f, 0.14f), FLinearColor(0.28f, 0.22f, 0.15f), FRotator::ZeroRotator, false);
         SpawnShape(SphereMesh, FVector(X, (I % 2 == 0 ? -420.0f : 420.0f), 72.0f),
             FVector(0.16f), FLinearColor(0.42f, 0.17f, 0.045f), FRotator::ZeroRotator, false);
+    }
+
+    // Sparse local fire pools keep player-scale landmarks readable inside the monumental
+    // darkness. This is intentionally bounded to five non-shadow-heavy lights rather than
+    // filling the hall with expensive dynamic illumination.
+    const FVector MoriaGlowLocations[] = {
+        FVector(-1450.0f, -420.0f, 105.0f),
+        FVector(-730.0f, 420.0f, 105.0f),
+        FVector(40.0f, -420.0f, 105.0f),
+        FVector(760.0f, 420.0f, 105.0f),
+        FVector(1880.0f, 0.0f, 130.0f)
+    };
+    for (int32 LightIndex = 0; LightIndex < UE_ARRAY_COUNT(MoriaGlowLocations); ++LightIndex)
+    {
+        APointLight* Glow = GetWorld()->SpawnActor<APointLight>(MoriaGlowLocations[LightIndex], FRotator::ZeroRotator);
+        if (Glow && Glow->GetLightComponent())
+        {
+            Glow->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+            Glow->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+            Glow->GetLightComponent()->SetIntensity(LightIndex == 4 ? 1150.0f : 850.0f);
+            Glow->GetLightComponent()->SetLightColor(
+                LightIndex == 4 ? FLinearColor(1.0f, 0.15f, 0.035f) : FLinearColor(1.0f, 0.36f, 0.10f));
+            if (UPointLightComponent* PointComponent = Cast<UPointLightComponent>(Glow->GetLightComponent()))
+            {
+                PointComponent->SetAttenuationRadius(LightIndex == 4 ? 620.0f : 470.0f);
+            }
+        }
     }
 
     // Rubble and side-door silhouettes make the route feel like one path through a much larger city.
