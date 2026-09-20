@@ -2550,7 +2550,10 @@ if editor_probe_marker not in unreal_ci and not editor_wait_contract_ok:
     fail("PG-015: Unreal self-hosted validation must either prove the editor is closed or wait safely for it without terminating the user's editor")
 checkout_action_ok = (
     "uses: actions/checkout@v4" in unreal_ci
-    and "ref: ${{ github.event.pull_request.head.sha || github.sha }}" in unreal_ci
+    and (
+        "ref: ${{ env.TARGET_SHA }}" in unreal_ci
+        or "ref: ${{ github.event.pull_request.head.sha || github.sha }}" in unreal_ci
+    )
     and "persist-credentials: false" in unreal_ci
     and "git rev-parse HEAD" in unreal_ci
     and "Checkout SHA mismatch" in unreal_ci
