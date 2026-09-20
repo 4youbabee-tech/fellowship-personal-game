@@ -2095,6 +2095,52 @@
       ],
       "checkpoint": "REALM_DETAIL_SATURATION_V2",
       "notes": "Mix of FILM-EXPANDED and ORIGINAL-GAME environmental dressing only inside canon-safe windows; no main-story outcome changes."
+    },
+    {
+      "id": "REQ-PROD-009",
+      "title": "Cinematic character performance and sonic life V3",
+      "category": "PresentationProduction",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner requested uninterrupted major qualitative progression after realm-detail saturation.",
+      "intent": "Turn the already populated Part I world into a more cinematic and emotionally readable experience through safe story-camera grammar, identity-specific named-character performance, and smooth location/story audio transitions while preserving film chronology and player-state safety.",
+      "evidence": [
+        "Data/CinematicPerformancePlanV3.json",
+        "Data/Part1SonicWorldPlan.json",
+        "Source/ShireJourney/StoryPresentationDirector.cpp",
+        "Source/ShireJourney/ShireNPC.cpp",
+        "Source/ShireJourney/ShireAudioSubsystem.cpp"
+      ],
+      "implementation_refs": [
+        "Source 02: character narrative identity must remain distinct from shared animation technology; posture/gait/performance must reflect character.",
+        "Source 07: mission chapter ownership and film-locked outcomes remain unchanged.",
+        "Source 08: hero vistas, cinematic anchors and correct chapter/state reference govern presentation.",
+        "Source 11: source lock -> blocking -> camera -> performance -> gameplay seam -> QA; preserve geography before spectacle; audio sells the physical world first."
+      ],
+      "missing_work": [
+        "Author final Level Sequences and shot blocking after stable rigs exist.",
+        "Author final sound/music/voice assets under the established cue roots.",
+        "Replace modular fallback acting with skeletal/facial/cloth performance where final rigs exist.",
+        "Run exact-head Pre-Unreal and full UE4.27.2 validation.",
+        "Later run human cinematic review and target-device performance/mix acceptance."
+      ],
+      "acceptance_criteria": [
+        "Temporary camera accents never override an authored camera/Level Sequence and always return safely to gameplay.",
+        "Temporary camera hold remains below the existing 3.5 second input-lock guard.",
+        "Named modular characters differ in gesture, gaze, weight and composure instead of sharing one generic performance.",
+        "Ambience/music transitions fade instead of hard-cut where authored assets exist.",
+        "No copyrighted film soundtrack/recordings are introduced by this code/data wave.",
+        "Exact candidate head passes Pre-Unreal and Unreal build/import/runtime gates before merge."
+      ],
+      "dependencies": [
+        "REQ-PROD-008",
+        "REQ-CHAR-001",
+        "REQ-WORLD-001",
+        "REQ-PERF-001",
+        "REQ-SOURCE-001"
+      ],
+      "checkpoint": "CINEMATIC_CHARACTER_SONIC_V3",
+      "notes": "Runtime bridge/fallback wave, not final cinematic or audio asset acceptance."
     }
   ],
   "hard_invariants": [
@@ -2912,7 +2958,7 @@
       "route/story/state isolated disk roundtrip",
       "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "PR #56 exact candidate is green and merged. Realm Detail Saturation V2 starts from that develop merge and must earn new exact-head proof before merge.",
+    "note": "PR #57 is exact-head green and merged. V3 now focuses on cinematic camera grammar, named-character fallback performance and sonic transition polish; new exact-head proof is required before merge.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -2925,20 +2971,20 @@
       ],
       "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "3bc4ea804994df0113909f1bd97cc16240acbc8f",
+    "last_green_head": "f9c699f970e495a01a20224182187dc12712c919",
     "evidence": {
-      "pre_unreal": "PASS #520",
-      "unreal_build": "PASS #355"
+      "pre_unreal": "PASS #522",
+      "unreal_build": "PASS #357"
     },
-    "evidence_scope": "PR #56 exact candidate 3bc4ea804994df0113909f1bd97cc16240acbc8f passed both gates. PR #56 merged into develop as 425329a7570314ccbe1674a6cfb7598a3bec6a71. No develop-merge workflow result was observed at branch creation, so candidate proof is not silently transferred to later heads.",
+    "evidence_scope": "PR #57 exact candidate f9c699f970e495a01a20224182187dc12712c919 passed Pre-Unreal #522 and Unreal Build #357. PR #57 merged to develop as f42be73caf48de935649e7776dbfc178dcdf8746. V3 starts from that merge and must earn fresh exact-head proof.",
     "current_owner_observation": {
-      "sha": "3bc4ea804994df0113909f1bd97cc16240acbc8f",
+      "sha": "f9c699f970e495a01a20224182187dc12712c919",
       "pre_unreal": {
-        "run_number": 520,
+        "run_number": 522,
         "status": "SUCCESS"
       },
       "unreal": {
-        "run_number": 355,
+        "run_number": 357,
         "status": "SUCCESS",
         "scope": [
           "C++ build",
@@ -2950,8 +2996,8 @@
         ]
       },
       "merge": {
-        "sha": "425329a7570314ccbe1674a6cfb7598a3bec6a71",
-        "status": "MERGED_TO_DEVELOP_NO_MERGE_COMMIT_CI_OBSERVED_AT_BRANCH_CREATION"
+        "sha": "f42be73caf48de935649e7776dbfc178dcdf8746",
+        "status": "MERGED_TO_DEVELOP"
       }
     }
   },
@@ -3233,17 +3279,28 @@
       "status": "ACTIVE",
       "rationale": "Continue visible source-grounded production after the green PR #56 mega wave.",
       "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
+    },
+    {
+      "order": 31,
+      "id": "WORK-PROD-009",
+      "title": "Cinematic character and sonic life V3",
+      "status": "ACTIVE",
+      "rationale": "Raise presentation quality after green realm-detail V2 without waiting for final external animation/audio assets.",
+      "execution_bundle": "B3_LIVING_WORLD_AND_PRESENTATION"
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "reason": "PR #56 exact candidate passed both CI gates and was merged; start the next realm-specific visible production wave without carrying stale red gate state.",
-    "summary": [
-      "PR #56 candidate 3bc4ea804994df0113909f1bd97cc16240acbc8f: Pre-Unreal #520 SUCCESS; Unreal #355 SUCCESS including import/startup/chapter/state/warning gates.",
-      "PR #56 merged to develop as 425329a7570314ccbe1674a6cfb7598a3bec6a71.",
-      "Realm Detail Saturation V2 targets Rivendell, Lothlorien, Anduin/Amon Hen and Isengard using Project Sources and performance-aware detail.",
-      "Rendered visual acceptance and target-device performance remain unproven until direct evidence exists."
-    ]
+    "reason": "PR #57 passed exact-head Pre-Unreal #522 and Unreal #357 and merged; owner requested uninterrupted qualitative production.",
+    "active_wave": "CINEMATIC_CHARACTER_SONIC_LIFE_V3",
+    "base_develop": "f42be73caf48de935649e7776dbfc178dcdf8746",
+    "source_basis": [
+      "02 Characters",
+      "07 Mission Matrix",
+      "08 Visual Reference",
+      "11 Master Production Systems"
+    ],
+    "truth_boundary": "Runtime camera/performance/audio-transition work may be called implemented only after exact-head machine proof; final cinematic/audio/device quality remains evidence-gated."
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",
@@ -3279,13 +3336,13 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "REALM_DETAIL_SATURATION_V2",
+  "current_focus": "CINEMATIC_CHARACTER_SONIC_LIFE_V3",
   "immediate_next_large_actions": [
-    "Build realm-specific production kits for Rivendell, Lothlorien, Anduin/Amon Hen and Isengard from Sources 03/04/05/06/07/10/11.",
-    "Runtime-wire them around existing story-safe spaces and activity windows without moving canonical quest/cinematic anchors.",
-    "Use HISM or bounded actor counts for repeat detail; avoid new heavy AI/dynamic-light density until target-device profiling.",
-    "Validate the exact branch head through Pre-Unreal and UE4.27.2 build/import/startup/chapter/state/warning gates, repair blockers inline, then merge to develop.",
-    "After V2, continue character/animation/audio/cinematic polish and Shire/Bree/Road/Weathertop finishing in another short branch."
+    "Validate CINEMATIC_CHARACTER_SONIC_LIFE_V3 exact head through Pre-Unreal and full UE4.27.2 build/import/startup/chapter/state/warning gates.",
+    "Repair compile/runtime/validation blockers at their root without weakening safety guards.",
+    "Keep film-critical outcomes and chapter knowledge state unchanged while cinematic presentation grows.",
+    "After V3 is green, move to the next short branch for hero character rig/surface handoff plus early-region final polish.",
+    "Keep rendered human acceptance, final audio, and target-device FPS/hitch/memory evidence separate from source-level success."
   ],
   "session_handoff": {
     "source_head": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
@@ -3432,7 +3489,9 @@
       "cp56/fellowship-experience-megapass-v1",
       "work/automation-first-runtime-observation"
     ],
-    "cleanup_rule": "A historical branch may be deleted only after its meaningful content is confirmed present in develop or intentionally superseded. Diverged branches with unique commits remain preserved until audited."
+    "cleanup_rule": "A historical branch may be deleted only after its meaningful content is confirmed present in develop or intentionally superseded. Diverged branches with unique commits remain preserved until audited.",
+    "current_short_branch": "production/cinematic-audio-life-v3",
+    "integration_baseline": "develop"
   },
   "side_branch_audit": {
     "date": "2026-09-20",

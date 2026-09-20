@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "matrix_id": "PART1_CHARACTER_PRODUCTION_MATRIX_V1",
-  "status": "PROJECT_OWNED_MODULAR_FOUNDATIONS_ACTIVE_FINAL_RIGS_MATERIALS_PENDING",
+  "status": "MODULAR_FOUNDATIONS_PLUS_IDENTITY_PERFORMANCE_ACTIVE_FINAL_RIGS_PENDING",
   "target": "Replace recognizable proxy/modular stand-ins with production characters while preserving UE4.27.2 performance and each character's instantly readable silhouette.",
   "sourcing_policy": {
     "preferred_order": [
@@ -115,7 +115,8 @@
         "torso_faces": 504,
         "hair_vertices": 477,
         "hair_faces": 836
-      }
+      },
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
     },
     {
       "id": "SAM",
@@ -154,7 +155,8 @@
         "torso_faces": 504,
         "hair_vertices": 393,
         "hair_faces": 692
-      }
+      },
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
     },
     {
       "id": "MERRY",
@@ -191,7 +193,8 @@
         "torso_faces": 504,
         "hair_vertices": 379,
         "hair_faces": 668
-      }
+      },
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
     },
     {
       "id": "PIPPIN",
@@ -229,7 +232,8 @@
         "torso_faces": 504,
         "hair_vertices": 407,
         "hair_faces": 716
-      }
+      },
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
     },
     {
       "id": "ARAGORN",
@@ -268,7 +272,8 @@
         "torso_faces": 504,
         "hair_vertices": 449,
         "hair_faces": 788
-      }
+      },
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
     },
     {
       "id": "BOROMIR",
@@ -307,7 +312,8 @@
         "torso_faces": 504,
         "hair_vertices": 379,
         "hair_faces": 668
-      }
+      },
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
     },
     {
       "id": "LEGOLAS",
@@ -345,7 +351,8 @@
         "torso_faces": 504,
         "hair_vertices": 477,
         "hair_faces": 836
-      }
+      },
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
     },
     {
       "id": "GIMLI",
@@ -384,7 +391,8 @@
         "torso_faces": 504,
         "hair_vertices": 421,
         "hair_faces": 740
-      }
+      },
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
     },
     {
       "id": "BILBO",
@@ -518,7 +526,8 @@
         "animation integration",
         "PIE visual acceptance",
         "target-device performance"
-      ]
+      ],
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
     },
     {
       "id": "NAZGUL",
@@ -810,5 +819,29 @@
       "unreal_build": "PASS #323",
       "scope": "UE4.27.2 compile + production import + startup + P1C01-P1C08 runtime + route/story/save roundtrip + warning-debt gate"
     }
+  },
+  "procedural_performance_wave": {
+    "id": "NAMED_CHARACTER_PERFORMANCE_V3",
+    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "owner": "AShireNPC modular fallback path",
+    "source_plan": "Data/CinematicPerformancePlanV3.json",
+    "controls": [
+      "PerformanceGestureScale",
+      "PerformanceGazeScale",
+      "PerformanceWeightScale",
+      "PerformanceComposure"
+    ],
+    "named_profiles": [
+      "Gandalf",
+      "Saruman",
+      "Aragorn/Strider",
+      "Boromir",
+      "Legolas",
+      "Gimli",
+      "Sam",
+      "Merry",
+      "Pippin"
+    ],
+    "boundary": "Fallback acting only; final skeletal/facial/cloth/combat animation remains pending."
   }
 }

@@ -132,8 +132,11 @@ void UShireAudioSubsystem::SetAmbienceCue(FName CueId)
 
     if (ActiveAmbienceComponent)
     {
-        ActiveAmbienceComponent->Stop();
+        // Source 11 audio doctrine: ambience should transition as a physical world
+        // layer rather than hard-cut whenever a story beat changes.
+        UAudioComponent* FadingComponent = ActiveAmbienceComponent;
         ActiveAmbienceComponent = nullptr;
+        FadingComponent->FadeOut(0.45f, 0.0f);
     }
 
     const FName Previous = ActiveAmbienceCue;
@@ -145,7 +148,11 @@ void UShireAudioSubsystem::SetAmbienceCue(FName CueId)
         if (USoundBase* Sound = ResolveCategorizedAsset(CueId, ShireAudioAssetPaths::Ambience, AmbienceCache))
         {
             ActiveAmbienceComponent = UGameplayStatics::SpawnSound2D(
-                this, Sound, 1.0f, 1.0f, 0.0f, nullptr, false, false);
+                this, Sound, 0.0f, 1.0f, 0.0f, nullptr, false, true);
+            if (ActiveAmbienceComponent)
+            {
+                ActiveAmbienceComponent->FadeIn(0.55f, 1.0f);
+            }
         }
     }
 }
@@ -159,8 +166,9 @@ void UShireAudioSubsystem::SetMusicCue(FName CueId)
 
     if (ActiveMusicComponent)
     {
-        ActiveMusicComponent->Stop();
+        UAudioComponent* FadingComponent = ActiveMusicComponent;
         ActiveMusicComponent = nullptr;
+        FadingComponent->FadeOut(0.85f, 0.0f);
     }
 
     const FName Previous = ActiveMusicCue;
@@ -171,8 +179,13 @@ void UShireAudioSubsystem::SetMusicCue(FName CueId)
     {
         if (USoundBase* Sound = ResolveCategorizedAsset(CueId, ShireAudioAssetPaths::Music, MusicCache))
         {
+            const float TargetVolume = bVoiceActive ? 0.36f : 1.0f;
             ActiveMusicComponent = UGameplayStatics::SpawnSound2D(
-                this, Sound, bVoiceActive ? 0.36f : 1.0f, 1.0f, 0.0f, nullptr, false, false);
+                this, Sound, 0.0f, 1.0f, 0.0f, nullptr, false, true);
+            if (ActiveMusicComponent)
+            {
+                ActiveMusicComponent->FadeIn(0.95f, TargetVolume);
+            }
         }
     }
 }

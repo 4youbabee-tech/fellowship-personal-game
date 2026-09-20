@@ -169,6 +169,10 @@ private:
     float MotionCadenceScale = 1.0f;
     float MotionStrideScale = 1.0f;
     float MotionIdleScale = 1.0f;
+    float PerformanceGestureScale = 1.0f;
+    float PerformanceGazeScale = 1.0f;
+    float PerformanceWeightScale = 1.0f;
+    float PerformanceComposure = 0.5f;
     float PrototypeTorsoBaseZ = -4.0f;
     float PrototypeHeadBaseZ = 39.0f;
     float PrototypeHairBaseZ = 47.0f;

@@ -45,6 +45,8 @@ public class ShireJourney : ModuleRules
         RuntimeDependencies.Add("$(ProjectDir)/Data/Part1VisualProductionPass.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/MegaMaterialWorldWaveV1.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/RealmDetailSaturationV2.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/CinematicPerformancePlanV3.json");
+        RuntimeDependencies.Add("$(ProjectDir)/Data/Part1SonicWorldPlan.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/AssetPerformanceBudget.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/EnsembleFilmMissionPlan.json");
         RuntimeDependencies.Add("$(ProjectDir)/Data/FilmSideContentMasterPlan.json");

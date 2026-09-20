@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "CP54_MEGA_RESOURCE_BANK",
-  "status": "REALM_DETAIL_SATURATION_V2_EXPANDED_PENDING_ENGINE_PROOF",
+  "status": "REALM_DETAIL_SATURATION_V2_ENGINE_GREEN_PR57",
   "source_asset_count": 105,
   "texture_count": 17,
   "ownership": "PROJECT_OWNED_GENERATED_SOURCE",
@@ -142,6 +142,11 @@
       "Isengard"
     ],
     "added_obj_assets": 16,
-    "rule": "source-grounded bounded unique props plus HISM repeat detail; exact-head engine proof required"
+    "rule": "source-grounded bounded unique props plus HISM repeat detail; exact-head engine proof required",
+    "validation_evidence": {
+      "head": "f9c699f970e495a01a20224182187dc12712c919",
+      "pre_unreal": "#522 SUCCESS",
+      "unreal_build": "#357 SUCCESS"
+    }
   }
 }

@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_SONIC_WORLD_V1",
+  "status": "RUNTIME_ROUTING_AND_TRANSITIONS_IMPLEMENTED_ASSET_AUTHORING_PENDING",
+  "authority": "Data/ProjectGovernor.json",
+  "source_basis": [
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX Audio, Music, Voice & Ambience Bible",
+    "01_STORY_AND_TIMELINE_BIBLE for chapter/state chronology",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE for location identity",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX for story-state transitions"
+  ],
+  "audio_layers": [
+    "ambience bed",
+    "spot ambience",
+    "foley",
+    "footsteps",
+    "combat",
+    "creature",
+    "voice",
+    "music"
+  ],
+  "location_identities": {
+    "Shire": [
+      "birds",
+      "breeze in hedges",
+      "farm work",
+      "distant laughter",
+      "carts",
+      "warm interiors",
+      "fire/cutlery"
+    ],
+    "Bree": [
+      "rain",
+      "timber creaks",
+      "gate hardware",
+      "crowded inn murmur",
+      "horses",
+      "boots on wet stone"
+    ],
+    "Rivendell/Lothlorien": [
+      "water",
+      "leaves",
+      "airy reverb",
+      "restrained vocal/musical texture",
+      "low mechanical noise"
+    ],
+    "Moria": [
+      "large reverb",
+      "distant stone movement",
+      "drips",
+      "footfall reflections",
+      "silence used as threat"
+    ],
+    "Anduin/AmonHen": [
+      "river water",
+      "paddles",
+      "wind in forest/stone",
+      "battle-state horns/shouts only when authored"
+    ],
+    "Isengard": [
+      "industrial rhythm",
+      "chains",
+      "furnaces",
+      "marching mass",
+      "harsh wind",
+      "distant machinery/war noise"
+    ]
+  },
+  "runtime": {
+    "owner": "UShireAudioSubsystem",
+    "cue_source": "UShireStoryPresentationSubsystem + UShireDialogueSubsystem",
+    "transitions": {
+      "ambience_fade_seconds": 0.55,
+      "ambience_out_seconds": 0.45,
+      "music_fade_seconds": 0.95,
+      "music_out_seconds": 0.85,
+      "voice_music_duck_multiplier": 0.36
+    },
+    "rules": [
+      "Persistent ambience and music now fade instead of hard-cut when cue identity changes.",
+      "Voice remains spatially attached to a matching named NPC/player when an authored asset exists.",
+      "Music remains ducked under voiced dialogue.",
+      "Missing authored sound assets remain silent logical cues without warning spam.",
+      "No film soundtrack or copyrighted recording is embedded by this runtime wave."
+    ]
+  },
+  "asset_contract": {
+    "ambience_root": "/Game/Audio/Ambience/{CueId}",
+    "music_root": "/Game/Audio/Music/{CueId}",
+    "sfx_root": "/Game/Audio/SFX/{CueId}",
+    "voice_root": "/Game/Audio/Voice/{Speaker}/{CueId}",
+    "current_state": "LOGICAL_CUE_LIBRARY_AND_RUNTIME_TRANSITIONS_READY; authored final audio assets still required"
+  },
+  "acceptance_boundary": {
+    "implemented_now": [
+      "logical routing",
+      "ambience crossfade",
+      "music crossfade",
+      "voice ducking",
+      "speaker attachment contract"
+    ],
+    "not_claimed": [
+      "final SFX library",
+      "final ambience recordings",
+      "final music stems",
+      "final voices",
+      "mix/master acceptance",
+      "concurrency/device profiling"
+    ]
+  }
+}

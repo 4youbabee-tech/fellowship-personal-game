@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "matrix_id": "PART1_CINEMATIC_WORLD_PRODUCTION_MATRIX_V1",
-  "status": "PROJECT_OWNED_REGION_KITS_ACTIVE_FINAL_ART_ACCEPTANCE_PENDING",
+  "status": "REGION_KITS_PLUS_RUNTIME_CAMERA_GRAMMAR_ACTIVE_FINAL_SEQUENCE_ACCEPTANCE_PENDING",
   "visual_benchmark": "Dense cinematic naturalism like the owner's forest reference: strong light shafts, layered depth, rich ground detail, believable vegetation/stone/wood, atmospheric perspective and characters embedded in the landscape.",
   "global_rules": [
     "Film geography and story anchors remain fixed.",
@@ -158,7 +158,8 @@
         "SourceAssets/Production/World/Common"
       ],
       "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
-      "final_acceptance": "NOT_ACCEPTED"
+      "final_acceptance": "NOT_ACCEPTED",
+      "current_presentation_v3": "Story-beat camera grammar bridge active; final authored Level Sequence/camera blocking and human visual acceptance remain pending."
     },
     {
       "chapter": "P1C05",
@@ -231,7 +232,8 @@
       ],
       "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
       "final_acceptance": "NOT_ACCEPTED",
-      "current_runtime_foundation": "Expanded project-owned Moria dressing plus film-locked Watcher/Balrog runtime presentation; final materials, VFX/audio, lighting shafts and human visual acceptance remain pending."
+      "current_runtime_foundation": "Expanded project-owned Moria dressing plus film-locked Watcher/Balrog runtime presentation; final materials, VFX/audio, lighting shafts and human visual acceptance remain pending.",
+      "current_presentation_v3": "Story-beat camera grammar bridge active; final authored Level Sequence/camera blocking and human visual acceptance remain pending."
     },
     {
       "chapter": "P1C07",
@@ -268,7 +270,8 @@
         "SourceAssets/Production/World/Common"
       ],
       "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
-      "final_acceptance": "NOT_ACCEPTED"
+      "final_acceptance": "NOT_ACCEPTED",
+      "current_presentation_v3": "Story-beat camera grammar bridge active; final authored Level Sequence/camera blocking and human visual acceptance remain pending."
     },
     {
       "chapter": "P1C08",
@@ -305,7 +308,8 @@
       ],
       "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
       "final_acceptance": "NOT_ACCEPTED",
-      "current_runtime_foundation": "Expanded Anduin shoreline/camp production dressing, Uruk pressure and dedicated film-locked Lurtz runtime foundation; final water, woodland composition, animation and hero-camera acceptance remain pending."
+      "current_runtime_foundation": "Expanded Anduin shoreline/camp production dressing, Uruk pressure and dedicated film-locked Lurtz runtime foundation; final water, woodland composition, animation and hero-camera acceptance remain pending.",
+      "current_presentation_v3": "Story-beat camera grammar bridge active; final authored Level Sequence/camera blocking and human visual acceptance remain pending."
     },
     {
       "chapter": "P1G01",
@@ -342,7 +346,8 @@
       "production_assets": [
         "project-owned Orthanc core/spire source meshes",
         "project-owned industrial pit/furnace/felled-trunk source meshes"
-      ]
+      ],
+      "current_presentation_v3": "Story-beat camera grammar bridge active; final authored Level Sequence/camera blocking and human visual acceptance remain pending."
     }
   ],
   "optimization": [
@@ -357,5 +362,18 @@
     "source asset telemetry informs profiling but does not substitute for cooked/device measurements"
   ],
   "source_atlas": "Data/Part1ProductionAtlas.json",
-  "production_truth": "Project-owned region kits exist across Part I, but kit presence is not final terrain/material/vegetation/water/interior or visual acceptance."
+  "production_truth": "Project-owned region kits and a bounded runtime camera-grammar bridge exist. This is not final Level Sequence, animation, shot-direction or rendered visual acceptance.",
+  "presentation_wave": {
+    "id": "CINEMATIC_CHARACTER_SONIC_LIFE_V3",
+    "status": "RUNTIME_BRIDGE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "runtime_owner": "AStoryPresentationDirector + UShireStoryPresentationSubsystem",
+    "camera_rules": [
+      "geography before spectacle",
+      "named-subject framing for selected emotional beats",
+      "collision-safe placement",
+      "authored camera precedence",
+      "automatic gameplay return"
+    ],
+    "source_plan": "Data/CinematicPerformancePlanV3.json"
+  }
 }

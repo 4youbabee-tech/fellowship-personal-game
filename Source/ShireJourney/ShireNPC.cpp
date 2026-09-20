@@ -295,6 +295,10 @@ void AShireNPC::ApplyPrototypeStyle()
     MotionCadenceScale = 1.0f;
     MotionStrideScale = 1.0f;
     MotionIdleScale = 0.82f;
+    PerformanceGestureScale = 1.0f;
+    PerformanceGazeScale = 1.0f;
+    PerformanceWeightScale = 1.0f;
+    PerformanceComposure = 0.55f;
     if (bWizard)
     {
         MotionCadenceScale = 0.82f; MotionStrideScale = 0.86f; MotionIdleScale = 0.74f;
@@ -310,6 +314,61 @@ void AShireNPC::ApplyPrototypeStyle()
     else if (!bHuman)
     {
         MotionCadenceScale = 1.08f; MotionStrideScale = 0.92f; MotionIdleScale = 0.95f;
+    }
+
+    // Source 02 + Source 11: share animation technology, not personality.
+    // These low-cost fallback acting multipliers keep named cast silhouettes readable
+    // until the final skeletal/facial rigs replace the modular presentation path.
+    if (Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase))
+    {
+        PerformanceGestureScale = 0.68f; PerformanceGazeScale = 0.82f;
+        PerformanceWeightScale = 0.58f; PerformanceComposure = 0.90f;
+    }
+    else if (Name.Equals(TEXT("Saruman"), ESearchCase::IgnoreCase))
+    {
+        PerformanceGestureScale = 0.74f; PerformanceGazeScale = 0.72f;
+        PerformanceWeightScale = 0.52f; PerformanceComposure = 0.94f;
+    }
+    else if (Name.Equals(TEXT("Aragorn"), ESearchCase::IgnoreCase) ||
+             Name.Equals(TEXT("Strider"), ESearchCase::IgnoreCase))
+    {
+        PerformanceGestureScale = 0.78f; PerformanceGazeScale = 0.92f;
+        PerformanceWeightScale = 0.72f; PerformanceComposure = 0.86f;
+    }
+    else if (Name.Equals(TEXT("Boromir"), ESearchCase::IgnoreCase))
+    {
+        PerformanceGestureScale = 1.16f; PerformanceGazeScale = 1.05f;
+        PerformanceWeightScale = 1.08f; PerformanceComposure = 0.48f;
+    }
+    else if (Name.Equals(TEXT("Legolas"), ESearchCase::IgnoreCase))
+    {
+        PerformanceGestureScale = 0.52f; PerformanceGazeScale = 1.08f;
+        PerformanceWeightScale = 0.46f; PerformanceComposure = 0.93f;
+    }
+    else if (Name.Equals(TEXT("Gimli"), ESearchCase::IgnoreCase))
+    {
+        PerformanceGestureScale = 1.10f; PerformanceGazeScale = 0.82f;
+        PerformanceWeightScale = 1.18f; PerformanceComposure = 0.72f;
+    }
+    else if (Name.Equals(TEXT("Sam"), ESearchCase::IgnoreCase))
+    {
+        PerformanceGestureScale = 0.88f; PerformanceGazeScale = 1.02f;
+        PerformanceWeightScale = 0.92f; PerformanceComposure = 0.66f;
+    }
+    else if (Name.Equals(TEXT("Merry"), ESearchCase::IgnoreCase))
+    {
+        PerformanceGestureScale = 0.98f; PerformanceGazeScale = 1.02f;
+        PerformanceWeightScale = 0.92f; PerformanceComposure = 0.64f;
+    }
+    else if (Name.Equals(TEXT("Pippin"), ESearchCase::IgnoreCase))
+    {
+        PerformanceGestureScale = 1.08f; PerformanceGazeScale = 1.10f;
+        PerformanceWeightScale = 0.96f; PerformanceComposure = 0.52f;
+    }
+    else if (bElf)
+    {
+        PerformanceGestureScale = 0.58f; PerformanceGazeScale = 0.92f;
+        PerformanceWeightScale = 0.50f; PerformanceComposure = 0.91f;
     }
 
     if (bWizard)
@@ -888,6 +947,7 @@ void AShireNPC::UpdatePrototypeAnimation(float DeltaSeconds)
     float Bob = 0.0f;
     float IdleBreath = 0.0f;
     float IdleSway = 0.0f;
+    float WeightShift = 0.0f;
     if (bPrototypeMoving)
     {
         PrototypeWalkPhase += DeltaSeconds * 8.0f * MotionCadenceScale;
@@ -899,10 +959,12 @@ void AShireNPC::UpdatePrototypeAnimation(float DeltaSeconds)
         PrototypeIdlePhase += DeltaSeconds * (1.15f + 0.04f * static_cast<float>(GetUniqueID() % 7));
         IdleBreath = FMath::Sin(PrototypeIdlePhase) * 0.70f * MotionIdleScale;
         IdleSway = FMath::Sin(PrototypeIdlePhase * 0.55f) * 1.6f * MotionIdleScale;
+        WeightShift = FMath::Sin(PrototypeIdlePhase * 0.43f + ResolveCompanionSlot() * 0.71f) *
+            0.85f * PerformanceWeightScale;
     }
 
     const float DialogueGesture = DialogueActingRemaining > 0.0f
-        ? FMath::Sin(ActingPhase * 0.72f) * 7.0f
+        ? FMath::Sin(ActingPhase * 0.72f) * 7.0f * PerformanceGestureScale
         : 0.0f;
     const float BlendSpeed = 10.0f;
     if (PrototypeLeftArm)
@@ -930,7 +992,7 @@ void AShireNPC::UpdatePrototypeAnimation(float DeltaSeconds)
     {
         PrototypeTorso->SetRelativeLocation(FMath::VInterpTo(
             PrototypeTorso->GetRelativeLocation(),
-            FVector(0.0f, 0.0f, PrototypeTorsoBaseZ + Bob + IdleBreath), DeltaSeconds, 12.0f));
+            FVector(0.0f, WeightShift, PrototypeTorsoBaseZ + Bob + IdleBreath), DeltaSeconds, 12.0f));
     }
     if (PrototypeHead)
     {
@@ -1056,10 +1118,26 @@ void AShireNPC::UpdatePrototypeActing(float DeltaSeconds)
             {
                 const float RelativeYaw = FMath::FindDeltaAngleDegrees(
                     GetActorRotation().Yaw, ToPlayer.Rotation().Yaw);
-                const float ClampedYaw = FMath::Clamp(RelativeYaw, -38.0f, 38.0f);
+                const float MaxGaze = FMath::Lerp(22.0f, 38.0f, PerformanceGazeScale);
+                const float ClampedYaw = FMath::Clamp(
+                    RelativeYaw, -MaxGaze, MaxGaze) * PerformanceGazeScale;
+
+                float EmotionalPitch = 0.0f;
+                if (CachedEmotionalState == TEXT("GRIEF") ||
+                    CachedEmotionalState == TEXT("AFRAID") ||
+                    CachedEmotionalState == TEXT("WEARY"))
+                {
+                    EmotionalPitch = -3.8f * (1.0f - 0.35f * PerformanceComposure);
+                }
+                else if (CachedEmotionalState == TEXT("ALERT") ||
+                         CachedEmotionalState == TEXT("ANGRY"))
+                {
+                    EmotionalPitch = 2.6f * (1.0f - 0.25f * PerformanceComposure);
+                }
+
                 PrototypeHead->SetRelativeRotation(FMath::RInterpTo(
                     PrototypeHead->GetRelativeRotation(),
-                    FRotator(0.0f, ClampedYaw, 0.0f),
+                    FRotator(EmotionalPitch, ClampedYaw, 0.0f),
                     DeltaSeconds,
                     DialogueActingRemaining > 0.0f ? 7.0f : 3.0f));
                 return;
@@ -1067,8 +1145,21 @@ void AShireNPC::UpdatePrototypeActing(float DeltaSeconds)
         }
     }
 
+    const float AmbientLookYaw =
+        (!bPrototypeMoving && DialogueActingRemaining <= 0.0f)
+            ? FMath::Sin(PrototypeIdlePhase * 0.31f + static_cast<float>(GetUniqueID() % 13)) *
+                5.0f * PerformanceGazeScale
+            : 0.0f;
+    const float PressurePitch =
+        !bPrototypeMoving
+            ? FMath::Lerp(0.0f, 2.2f, FMath::Clamp(CachedWorldPressure, 0.0f, 1.0f)) *
+                (1.0f - 0.35f * PerformanceComposure)
+            : 0.0f;
     PrototypeHead->SetRelativeRotation(FMath::RInterpTo(
-        PrototypeHead->GetRelativeRotation(), FRotator::ZeroRotator, DeltaSeconds, 3.0f));
+        PrototypeHead->GetRelativeRotation(),
+        FRotator(PressurePitch, AmbientLookYaw, 0.0f),
+        DeltaSeconds,
+        2.4f));
 }
 
 int32 AShireNPC::ResolveCompanionSlot() const

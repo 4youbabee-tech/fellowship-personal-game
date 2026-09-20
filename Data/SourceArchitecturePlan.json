@@ -501,6 +501,22 @@
       "kind": "Source",
       "role": "Non-colliding culled hierarchical instanced micro-detail implementation",
       "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/StoryPresentationDirector.h",
+      "target_path": "Source/ShireJourney/Public/World/StoryPresentationDirector.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Bounded runtime cinematic camera accent director contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/StoryPresentationDirector.cpp",
+      "target_path": "Source/ShireJourney/Private/World/StoryPresentationDirector.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Story-cue camera grammar, subject framing and safe gameplay return implementation",
+      "migration_status": "CURRENT_FLAT"
     }
   ]
 }
