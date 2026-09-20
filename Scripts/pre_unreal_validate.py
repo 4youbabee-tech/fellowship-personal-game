@@ -3243,6 +3243,21 @@ if pie_evidence:
         if not signoff.get("signed_by") or not signoff.get("signed_at"):
             fail("PG-057 APPROVED human release sign-off requires signer and timestamp")
 
+# PG-112: long Windows validation must execute from repository-stable scripts.
+pg112_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+pg112_scripts = [
+    "ci_verify_unreal.cmd", "ci_wait_for_unreal_editor.cmd", "ci_build_unreal.cmd",
+    "ci_import_production_assets.cmd", "ci_runtime_startup.cmd", "ci_runtime_chapters.cmd",
+    "ci_runtime_state.cmd", "ci_warning_debt.cmd", "ci_collect_unreal_logs.cmd",
+    "ci_report_failure.cmd",
+]
+for pg112_script in pg112_scripts:
+    pg112_path = ROOT / "Scripts" / pg112_script
+    if not pg112_path.exists():
+        fail(f"PG-112 stable Windows validation script missing: {pg112_script}")
+    if pg112_script not in pg112_workflow:
+        fail(f"PG-112 workflow does not invoke stable Windows validation script: {pg112_script}")
+
 # PG-109: V6 hero geometry is a structural production step, not a final-visual claim.
 pg109_specs = {
     "Frodo": (328, 640, 254, 504, 421, 740),
@@ -3565,18 +3580,20 @@ for startup_symbol in [
 for workflow_symbol in [
     "pull_request:",
     "Headless playable startup smoke",
-    "--mode startup",
-    "--mode chapters",
-    "--mode state",
+    "ci_runtime_startup.cmd",
+    "ci_runtime_chapters.cmd",
+    "ci_runtime_state.cmd",
 ]:
     if workflow_symbol not in unreal_workflow_cp52:
         fail(f"PG-052 Unreal boot validation workflow missing: {workflow_symbol}")
 
-if (
-    "Scripts/runtime_smoke.py" not in unreal_workflow_cp52
-    and "Scripts\\runtime_smoke.py" not in unreal_workflow_cp52
-):
-    fail("PG-052 Unreal boot validation workflow missing runtime_smoke.py invocation")
+runtime_wrapper_cp52 = "\n".join(
+    read(ROOT / "Scripts" / script_name)
+    for script_name in ["ci_runtime_startup.cmd", "ci_runtime_chapters.cmd", "ci_runtime_state.cmd"]
+)
+for runtime_symbol in ["Scripts\\runtime_smoke.py", "--mode startup", "--mode chapters", "--mode state"]:
+    if runtime_symbol not in runtime_wrapper_cp52:
+        fail(f"PG-052 stable runtime observer wrapper missing: {runtime_symbol}")
 
 # The extracted observer now owns the log name and readiness contract.
 runtime_observer_path = ROOT / "Scripts" / "runtime_smoke.py"

@@ -105,198 +105,54 @@ jobs:
 
       - name: Verify Unreal 4.27.2 and project
         shell: cmd
-        run: |
-          @echo off
-          set "PROJECT=%GITHUB_WORKSPACE%\ShireJourney.uproject"
-          set "UEROOT=C:\Program Files\Epic Games\UE_4.27"
-          set "BUILDBAT=C:\Program Files\Epic Games\UE_4.27\Engine\Build\BatchFiles\Build.bat"
-          set "BUILDVERSION=C:\Program Files\Epic Games\UE_4.27\Engine\Build\Build.version"
-
-          if not exist "%PROJECT%" (
-            echo ERROR: ShireJourney.uproject was not found at "%PROJECT%"
-            exit /b 30
-          )
-          if not exist "%BUILDBAT%" (
-            echo ERROR: UE4 Build.bat was not found at "%BUILDBAT%"
-            exit /b 31
-          )
-          if not exist "%BUILDVERSION%" (
-            echo ERROR: UE4 Build.version was not found at "%BUILDVERSION%"
-            exit /b 32
-          )
-
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$v = Get-Content '%BUILDVERSION%' -Raw | ConvertFrom-Json; Write-Host ('Detected Unreal Engine {0}.{1}.{2}' -f $v.MajorVersion,$v.MinorVersion,$v.PatchVersion); if ($v.MajorVersion -ne 4 -or $v.MinorVersion -ne 27 -or $v.PatchVersion -ne 2) { exit 33 }"
-          if errorlevel 1 (
-            echo ERROR: Expected Unreal Engine 4.27.2.
-            exit /b 33
-          )
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_verify_unreal.cmd"'
 
       - name: Wait safely for Unreal Editor to close
         shell: cmd
-        run: |
-          @echo off
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$deadline=(Get-Date).AddMinutes(20); while (Get-Process -Name UE4Editor -ErrorAction SilentlyContinue) { if ((Get-Date) -ge $deadline) { Write-Error 'UE4Editor.exe stayed open for 20 minutes. Close the editor so automated validation can rebuild safely.'; exit 40 }; Write-Host 'UE4Editor.exe is open; waiting 10 seconds instead of terminating it.'; Start-Sleep -Seconds 10 }; Write-Host 'Unreal Editor is closed. Validation may continue.'"
-          if errorlevel 1 exit /b %ERRORLEVEL%
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_wait_for_unreal_editor.cmd"'
 
       - name: Prepare and probe local MSVC environment
         shell: cmd
-        run: |
-          @echo off
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\prepare_msvc_environment.ps1"
-          if errorlevel 1 exit /b %ERRORLEVEL%
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\prepare_msvc_environment.ps1"'
 
       - name: Reset project build intermediates
         shell: cmd
-        run: |
-          @echo off
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\reset_project_build_intermediates.ps1"
-          if errorlevel 1 exit /b %ERRORLEVEL%
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\reset_project_build_intermediates.ps1"'
 
       - name: Build ShireJourneyEditor
         shell: cmd
-        run: |
-          @echo off
-          setlocal EnableExtensions EnableDelayedExpansion
-          set "PROJECT=%GITHUB_WORKSPACE%\ShireJourney.uproject"
-          set "BUILDBAT=C:\Program Files\Epic Games\UE_4.27\Engine\Build\BatchFiles\Build.bat"
-          set "LOGDIR=%GITHUB_WORKSPACE%\Saved\Logs"
-          set "BUILDLOG=%GITHUB_WORKSPACE%\Saved\Logs\CI-UnrealBuild.log"
-
-          if not exist "%LOGDIR%" mkdir "%LOGDIR%"
-
-          echo Building exact commit: %TARGET_SHA%
-          echo Project: %PROJECT%
-          echo Build log: %BUILDLOG%
-          echo Build parallelism: 1 action for self-hosted VS2019 reliability.
-          echo CI debug symbols: disabled only when SHIRE_CI_NO_DEBUGINFO=1.
-
-          call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=1 > "%BUILDLOG%" 2>&1
-          set "BUILD_EXIT=!ERRORLEVEL!"
-
-          if not "!BUILD_EXIT!"=="0" (
-            findstr /I /C:"error C3859" /C:"fatal error C1076" /C:"error D8050" /C:"Command line error D8050" "%BUILDLOG%" >nul
-            if not errorlevel 1 (
-              echo.>>"%BUILDLOG%"
-              echo CI_BUILD_RETRY: MSVC compiler resource/process pressure detected; clearing project intermediates and retrying once.>>"%BUILDLOG%"
-              powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$paths=@((Join-Path $env:GITHUB_WORKSPACE 'Intermediate\Build\Win64'),(Join-Path $env:GITHUB_WORKSPACE 'Binaries\Win64')); foreach($p in $paths){ if(Test-Path -LiteralPath $p){ Remove-Item -LiteralPath $p -Recurse -Force } }; Start-Sleep -Seconds 5"
-              call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=1 >> "%BUILDLOG%" 2>&1
-              set "BUILD_EXIT=!ERRORLEVEL!"
-            )
-          )
-
-          type "%BUILDLOG%"
-
-          if not "!BUILD_EXIT!"=="0" (
-            echo ERROR: UE4.27.2 build failed with exit code !BUILD_EXIT!.
-            exit /b !BUILD_EXIT!
-          )
-
-          echo UE4.27.2 build succeeded.
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_build_unreal.cmd"'
 
       - name: Import production assets in UE4.27.2
         shell: cmd
-        run: |
-          @echo off
-          setlocal EnableExtensions
-          set "PROJECT=%GITHUB_WORKSPACE%\ShireJourney.uproject"
-          set "EDITORCMD=C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor-Cmd.exe"
-          set "LOGDIR=%GITHUB_WORKSPACE%\Saved\Logs"
-          set "IMPORTLOG=%GITHUB_WORKSPACE%\Saved\Logs\CI-ProductionAssetImport.log"
-
-          if not exist "%EDITORCMD%" (
-            echo ERROR: UE4Editor-Cmd.exe was not found at "%EDITORCMD%"
-            exit /b 50
-          )
-          if not exist "%LOGDIR%" mkdir "%LOGDIR%"
-
-          echo Importing production source assets for exact commit: %TARGET_SHA%
-          "%EDITORCMD%" "%PROJECT%" -run=ShireProductionImport -unattended -nop4 -nosplash -NoSound -abslog="%IMPORTLOG%"
-          set "IMPORT_EXIT=%ERRORLEVEL%"
-
-          if exist "%IMPORTLOG%" (
-            findstr /I /C:"ShireProductionImport:" /C:"ShireProductionImport FAILED" /C:"Error:" /C:"Warning:" "%IMPORTLOG%"
-          )
-
-          if not "%IMPORT_EXIT%"=="0" (
-            echo ERROR: UE4.27.2 production asset import failed with exit code %IMPORT_EXIT%.
-            exit /b %IMPORT_EXIT%
-          )
-
-          findstr /C:"ShireProductionImport:" "%IMPORTLOG%" | findstr /C:"0 failures" >nul
-          if errorlevel 1 (
-            echo ERROR: Production asset import did not report zero failures.
-            exit /b 51
-          )
-
-          echo UE4.27.2 production asset import succeeded.
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_import_production_assets.cmd"'
 
       - name: Resolve local Python for runtime observation
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
-        run: |
-          & "$env:GITHUB_WORKSPACE\Scripts\resolve_runtime_python.ps1"
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\resolve_runtime_python.ps1"'
 
       - name: Headless playable startup smoke
         shell: cmd
-        run: |
-          @echo off
-          "%PYTHON_EXE%" Scripts\runtime_smoke.py --editor "C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor-Cmd.exe" --project ShireJourney.uproject --mode startup
-          if errorlevel 1 (
-            echo ERROR: Playable startup observation failed.
-            exit /b 62
-          )
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_startup.cmd"'
 
       - name: Headless chapter-by-chapter runtime audit
         shell: cmd
-        run: |
-          @echo off
-          "%PYTHON_EXE%" Scripts\runtime_smoke.py --editor "C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor-Cmd.exe" --project ShireJourney.uproject --mode chapters
-          if errorlevel 1 (
-            echo ERROR: Chapter runtime observation failed.
-            exit /b 63
-          )
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_chapters.cmd"'
 
       - name: Headless route/story state roundtrip audit
         shell: cmd
-        run: |
-          @echo off
-          "%PYTHON_EXE%" Scripts\runtime_smoke.py --editor "C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor-Cmd.exe" --project ShireJourney.uproject --mode state
-          if errorlevel 1 (
-            echo ERROR: Route/story state roundtrip observation failed.
-            exit /b 64
-          )
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_state.cmd"'
 
       - name: Summarize and guard runtime warning debt
         shell: cmd
-        run: |
-          @echo off
-          "%PYTHON_EXE%" Scripts\warning_debt_guard.py --log-dir Saved\Logs --summary "%GITHUB_STEP_SUMMARY%"
-          if errorlevel 1 (
-            echo ERROR: Warning-debt regression detected.
-            exit /b 65
-          )
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_warning_debt.cmd"'
 
       - name: Collect Unreal build logs
         if: always()
         shell: cmd
-        run: |
-          @echo off
-          set "LOGDIR=%GITHUB_WORKSPACE%\Saved\Logs"
-          if not exist "%LOGDIR%" mkdir "%LOGDIR%"
-
-          if exist "%LOCALAPPDATA%\UnrealBuildTool\Log.txt" (
-            copy /Y "%LOCALAPPDATA%\UnrealBuildTool\Log.txt" "%LOGDIR%\CI-UnrealBuildTool.log" >nul
-          )
-
-          echo UE4.27.2 build job status: ${{ job.status }}>>"%GITHUB_STEP_SUMMARY%"
-          echo Commit: %TARGET_SHA%>>"%GITHUB_STEP_SUMMARY%"
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_collect_unreal_logs.cmd" "${{ job.status }}"'
 
       - name: Report failure log location
         if: failure()
         shell: cmd
-        run: |
-          @echo off
-          echo Build/import logs were already printed into the workflow log.
-          echo Self-hosted local log directory: %GITHUB_WORKSPACE%\Saved\Logs
-          echo Artifact upload is intentionally skipped to avoid storage-quota failures masking the primary error.
-
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_report_failure.cmd"'
