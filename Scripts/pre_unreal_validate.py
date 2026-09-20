@@ -4484,6 +4484,27 @@ for pg103_symbol in [
     if pg103_symbol not in pg103_importer:
         fail(f"PG-103 deterministic material persistence safeguard missing: {pg103_symbol}")
 
+# PG-104: material existence probes and warning debt must distinguish import-time probes from runtime failures.
+pg104_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+pg104_reset = read(ROOT / "Scripts" / "reset_project_build_intermediates.ps1")
+pg104_warning = read(ROOT / "Scripts" / "warning_debt_guard.py")
+for pg104_symbol in [
+    "FindObject<UMaterialInstanceConstant>",
+    "FPackageName::DoesPackageExist(PackageName)",
+    "FindObject<UMaterialInterface>",
+]:
+    if pg104_symbol not in pg104_importer:
+        fail(f"PG-104 quiet material existence probe missing: {pg104_symbol}")
+if 'Filter "CI-*.log"' not in pg104_reset:
+    fail("PG-104 exact-head validation must clear stale CI logs before generating new evidence")
+for pg104_symbol in [
+    'RUNTIME_LOG_PREFIXES',
+    'scope="runtime"',
+    'collect_text(files, "runtime")',
+]:
+    if pg104_symbol not in pg104_warning:
+        fail(f"PG-104 warning-debt evidence scoping missing: {pg104_symbol}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

@@ -3019,13 +3019,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Unreal Build Validation #299 proved bootstrap, exact checkout, UE4.27.2 build, production import, startup, all eight chapters and disk state roundtrip. The only red gate is material package persistence in warning debt.",
+    "reason": "Run #300 proved deterministic material files were physically saved but warning debt still counted intentional import-time existence probes as runtime package failures.",
     "summary": [
-      "Pre-Unreal Validation #464 is green on head 929ea3a28fe5bf9447f8c1ca8f5981e4b377cc35.",
-      "Unreal Build Validation #299 passed bootstrap, exact-head checkout, engine verification, MSVC probe, clean rebuild, UE4.27.2 compile, production import, Python resolution, startup, P1C01-P1C08 and state/save roundtrip.",
-      "Warning debt remains red only because 216 world material package identities are referenced by imported meshes but absent on disk.",
-      "The importer synthesized 227 authored material instances and tracked 225 packages, but editor save helpers did not physically persist them reliably in unattended commandlet mode.",
-      "Material packages are now saved with UPackage::SavePackage to deterministic .uasset filenames and verified with a physical file-existence check before import success."
+      "Deterministic material persistence itself worked: #300 saved 225 material packages with zero save failures and verified zero missing physical .uasset files.",
+      "The remaining 216 'missing world packages' were emitted before material creation by LoadObject existence probes inside the importer, then counted by a guard that merged import and runtime logs.",
+      "Importer existence checks now use FindObject plus DoesPackageExist before LoadObject, eliminating expected missing-package warnings.",
+      "Warning debt now scopes package/audio/rig/runtime warnings to startup/chapter/state logs while tangent/binormal import quality still uses all exact-head logs.",
+      "Stale CI logs are deleted before every exact-head build so warning evidence cannot leak across runs."
     ]
   },
   "development_mode": {
@@ -3062,11 +3062,11 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "EXACT_HEAD_DETERMINISTIC_MATERIAL_PACKAGE_PERSISTENCE",
+  "current_focus": "EXACT_HEAD_RUNTIME_WARNING_EVIDENCE_CLEAN",
   "immediate_next_large_actions": [
-    "Make the exact-head warning gate green by physically persisting all synthesized world material packages.",
-    "Rerun the full Pre-Unreal + UE4.27.2 compile/import/startup/eight-chapter/state/warning chain on the same SHA.",
-    "After exact-head green, enter the next mega production wave without weakening the new deep-audit and player-experience gates."
+    "Prove zero runtime missing-world-package debt on the next exact-head chain.",
+    "Keep tangent/binormal debt visible as art-quality debt without blocking the stability runway at the current measured baseline.",
+    "Once both Pre-Unreal and Unreal exact-head workflows are green, open the next mega production wave."
   ],
   "session_handoff": {
     "source_head": "c4fe8893e453d7eed80920e886bbfd40f4805d0d",

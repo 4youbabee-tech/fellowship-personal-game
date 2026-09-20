@@ -1,5 +1,7 @@
 import re
+import tempfile
 import unittest
+from pathlib import Path
 
 import warning_debt_guard as guard
 
@@ -27,7 +29,7 @@ class WarningDebtGuardTests(unittest.TestCase):
         self.assertEqual(count, 2)
         self.assertEqual(identities, ["SM_Frodo_Head", "SM_Gandalf_Head"])
 
-    def test_missing_package_deduplicates_across_chapter_logs(self):
+    def test_missing_package_deduplicates_across_runtime_logs(self):
         text = "\n".join([
             "Failed to load '/Game/Production/World/Moria/M_Missing.M_Missing'",
             "Failed to load '/Game/Production/World/Moria/M_Missing.M_Missing'",
@@ -36,6 +38,30 @@ class WarningDebtGuardTests(unittest.TestCase):
         count, identities = guard.measure(text, pattern, 1)
         self.assertEqual(count, 1)
         self.assertEqual(identities, ["/Game/Production/World/Moria/M_Missing.M_Missing"])
+
+    def test_import_probe_warning_is_not_runtime_debt(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            import_log = root / "CI-ProductionAssetImport.log"
+            runtime_log = root / "CI-PlayableStartup.log"
+            import_log.write_text(
+                "Failed to load '/Game/Production/World/Shire/Grass': Can't find file.\n",
+                encoding="utf-8",
+            )
+            runtime_log.write_text("PlayableStartup: PASS\n", encoding="utf-8")
+            text = guard.collect_text([import_log, runtime_log], "runtime")
+            self.assertNotIn("/Game/Production/World/Shire/Grass", text)
+
+    def test_runtime_missing_package_is_still_hard_debt(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            runtime_log = root / "CI-ChapterAudit-P1C01.log"
+            runtime_log.write_text(
+                "Failed to load '/Game/Production/World/Shire/Grass': Can't find file.\n",
+                encoding="utf-8",
+            )
+            text = guard.collect_text([runtime_log], "runtime")
+            self.assertIn("/Game/Production/World/Shire/Grass", text)
 
     def test_occurrence_gate_still_counts_each_unidentified_warning(self):
         pattern = re.compile(r"No smoothing group information", re.I)

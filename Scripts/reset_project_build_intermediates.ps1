@@ -10,5 +10,18 @@ foreach ($path in $paths) {
         Remove-Item -LiteralPath $path -Recurse -Force
     }
 }
-Write-Host "Project build intermediates reset."
+$logDir = Join-Path $env:GITHUB_WORKSPACE "Saved\Logs"
+if (Test-Path -LiteralPath $logDir) {
+    Get-ChildItem -LiteralPath $logDir -Filter "CI-*.log" -File -ErrorAction SilentlyContinue |
+        ForEach-Object {
+            Write-Host "Removing stale CI evidence log: $($_.FullName)"
+            Remove-Item -LiteralPath $_.FullName -Force
+        }
+    Get-ChildItem -LiteralPath $logDir -Filter "CI-*-result.json" -File -ErrorAction SilentlyContinue |
+        ForEach-Object {
+            Write-Host "Removing stale CI result file: $($_.FullName)"
+            Remove-Item -LiteralPath $_.FullName -Force
+        }
+}
+Write-Host "Project build intermediates and stale CI evidence reset."
 exit 0

@@ -180,8 +180,18 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     *CurrentMaterialName,
                     *CurrentMaterialName);
 
+                const FString PackageName = FString::Printf(
+                    TEXT("%s/%s"),
+                    *DestinationPath,
+                    *CurrentMaterialName);
+
                 UMaterialInstanceConstant* Instance =
-                    LoadObject<UMaterialInstanceConstant>(nullptr, *ObjectPath);
+                    FindObject<UMaterialInstanceConstant>(nullptr, *ObjectPath);
+
+                if (!Instance && FPackageName::DoesPackageExist(PackageName))
+                {
+                    Instance = LoadObject<UMaterialInstanceConstant>(nullptr, *ObjectPath);
+                }
 
                 if (!Instance)
                 {
@@ -373,12 +383,38 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                         *DestinationPath,
                         *SlotName,
                         *SlotName);
-                    if (UMaterialInterface* AuthoredMaterial =
-                        LoadObject<UMaterialInterface>(nullptr, *CandidateObjectPath))
+                    UMaterialInterface* AuthoredMaterial =
+                        FindObject<UMaterialInterface>(nullptr, *CandidateObjectPath);
+
+                    if (!AuthoredMaterial)
+                    {
+                        const FString CandidatePackageName = FString::Printf(
+                            TEXT("%s/%s"),
+                            *DestinationPath,
+                            *SlotName);
+                        if (FPackageName::DoesPackageExist(CandidatePackageName))
+                        {
+                            AuthoredMaterial =
+                                LoadObject<UMaterialInterface>(nullptr, *CandidateObjectPath);
+                        }
+                    }
+
+                    if (AuthoredMaterial)
                     {
                         Material = AuthoredMaterial;
                         StaticMaterial.MaterialInterface = AuthoredMaterial;
                         ++RecoveredMaterialBindings;
+                    }
+                    else
+                    {
+                        ++Failed;
+                        UE_LOG(
+                            LogTemp,
+                            Error,
+                            TEXT("ShireProductionImport authored material binding FAILED: mesh=%s slot=%s candidate=%s"),
+                            *AssetName,
+                            *SlotName,
+                            *CandidateObjectPath);
                     }
                 }
 
