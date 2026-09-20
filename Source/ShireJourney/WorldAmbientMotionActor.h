@@ -7,6 +7,7 @@
 class USceneComponent;
 class UStaticMesh;
 class UStaticMeshComponent;
+class UPointLightComponent;
 
 UENUM()
 enum class EWorldAmbientMotionMode : uint8
@@ -35,12 +36,20 @@ public:
         const FVector& InScale,
         bool bInCollision = false);
 
+    void ConfigureGlow(
+        const FLinearColor& InColor,
+        float InIntensity,
+        float InRadius);
+
 private:
     UPROPERTY()
     USceneComponent* Root = nullptr;
 
     UPROPERTY()
     UStaticMeshComponent* Mesh = nullptr;
+
+    UPROPERTY()
+    UPointLightComponent* Glow = nullptr;
 
     EWorldAmbientMotionMode MotionMode = EWorldAmbientMotionMode::Sway;
     FVector BaseLocation = FVector::ZeroVector;
