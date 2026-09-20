@@ -3,7 +3,7 @@
   "authority_id": "FELLOWSHIP_SINGLE_PROJECT_GOVERNOR_V2",
   "authority_rule": "This file is the sole authoritative project-management decision source. Other docs/data may describe implementation details but must not override requirements, priorities, decisions, conflicts, active gate, or quality status recorded here.",
   "repository": "4youbabee-tech/fellowship-personal-game",
-  "active_branch": "work/automation-first-runtime-observation",
+  "active_branch": "develop",
   "engine": "Unreal Engine 4.27.2",
   "target_profile": {
     "platform": "Windows",
@@ -2808,12 +2808,12 @@
       ],
       "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+    "last_green_head": "833c3679e19290a2b046ea7f53013a76ae1b29f4",
     "evidence": {
-      "pre_unreal": "PASS #488",
-      "unreal_build": "PASS #323"
+      "pre_unreal": "PASS #500",
+      "unreal_build": "PASS #335"
     },
-    "evidence_scope": "V7 verified baseline only. V8 requires its own exact-head chain."
+    "evidence_scope": "PR #53 exact candidate head before merge into develop."
   },
   "reference_only_files": [
     "Docs/CURRENT_PROJECT_STATE.md",
@@ -3077,13 +3077,12 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "V7 surface response completed exact-head engine proof; V8 regional life is ready for isolated validation.",
+    "reason": "PR #53 consolidated the long-lived production branch into develop.",
     "summary": [
-      "V7 baseline head 2e8898a53f3ab220226df24b0d4578f7232016e7 passed Pre-Unreal #488.",
-      "The same head passed Unreal Build #323 including compile, production import, startup, P1C01-P1C08 runtime audit, state/save roundtrip and warning-debt guard.",
-      "V8 removes ambient resident/fauna population from Caradhras, preserves Moria as civilian-empty and keeps Anduin/Amon Hen baseline bird-only.",
-      "V8 biases population and routine motion toward the player travel corridor while retaining distance throttling and bounded population caps.",
-      "Rendered PIE, target-device performance and human density/visual acceptance remain unproven."
+      "PR #53 exact candidate head 833c3679e19290a2b046ea7f53013a76ae1b29f4 passed Pre-Unreal #500 and Unreal Build #335.",
+      "Merge commit b9de4fd4a1aa6b4edeb25459a23b78c077dfcef7 moved the full CP56-and-later production line into develop.",
+      "CP55, CP56, repair/import-pipeline and work/automation-first-runtime-observation are now historical/contained branches, not active integration lines.",
+      "Diverged verification/repair/hygiene branches retain unique commits and remain preserved until their unique content is audited or absorbed."
     ]
   },
   "development_mode": {
@@ -3120,68 +3119,33 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "CANON_SAFE_REGIONAL_LIFE_V8",
+  "current_focus": "POST_PR53_DEVELOP_CONSOLIDATION",
   "immediate_next_large_actions": [
-    "Prove CANON_SAFE_REGIONAL_LIFE_V8 on its exact new head through Pre-Unreal and UE4.27.2 compile/import/startup/P1C01-P1C08/state/warning validation.",
-    "After green proof, continue visible world flesh: ambient prop production replacements, regional material polish and authored settlement clusters without increasing critical-path AI cost.",
-    "Continue hero/threat clothing/detail and animation handoff while keeping rendered/device/human acceptance explicit."
+    "Use develop as the only integration baseline after PR #53 consolidation.",
+    "Audit remaining diverged side branches for genuinely unique fixes before deletion; do not cherry-pick obsolete older implementations over newer equivalents.",
+    "Start the next requested production proposal from latest green develop on one short branch, then merge it back after exact-head gates."
   ],
   "session_handoff": {
-    "source_head": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+    "source_head": "b9de4fd4a1aa6b4edeb25459a23b78c077dfcef7",
     "pull_request": 53,
-    "branch": "work/automation-first-runtime-observation",
+    "branch": "develop",
     "verified": {
-      "pre_unreal": "PASS #488",
-      "unreal_build": "PASS #323",
-      "ue4_compile": "PASS #323",
-      "production_import": "PASS #323",
-      "startup": "PASS #323",
-      "chapter_audit": "PASS #323 P1C01-P1C08",
-      "state_audit": "PASS #323 route/story/save real disk roundtrip",
-      "warning_guard": "PASS #323"
+      "pre_unreal": "PASS #500 on PR head 833c3679e19290a2b046ea7f53013a76ae1b29f4",
+      "unreal_build": "PASS #335 on PR head 833c3679e19290a2b046ea7f53013a76ae1b29f4",
+      "merge": "PR #53 merged to develop as b9de4fd4a1aa6b4edeb25459a23b78c077dfcef7"
     },
     "failing": {},
     "next_actions": [
-      "Prove CANON_SAFE_REGIONAL_LIFE_V8 on its exact new head through Pre-Unreal and UE4.27.2 compile/import/startup/P1C01-P1C08/state/warning validation.",
-      "After green proof, continue visible world flesh: ambient prop production replacements, regional material polish and authored settlement clusters without increasing critical-path AI cost.",
-      "Continue hero/threat clothing/detail and animation handoff while keeping rendered/device/human acceptance explicit."
+      "Use develop as the only integration baseline after PR #53 consolidation.",
+      "Audit remaining diverged side branches for genuinely unique fixes before deletion; do not cherry-pick obsolete older implementations over newer equivalents.",
+      "Start the next requested production proposal from latest green develop on one short branch, then merge it back after exact-head gates."
     ],
     "unverified_acceptance": [
-      "V8 exact-head engine proof",
-      "Rendered character/world visual acceptance",
+      "Rendered chapter-by-chapter PIE evidence remains NOT_RUN where not directly observed.",
       "Target-device FPS/memory measurements",
-      "Human density/pacing/playability acceptance",
-      "Complete trilogy content"
+      "Human pacing and visual acceptance"
     ],
-    "validation_snapshot": {
-      "last_green": {
-        "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
-        "pre_unreal": {
-          "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
-          "run_id": 35528516895,
-          "status": "SUCCESS"
-        },
-        "unreal": {
-          "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
-          "run_id": 35528516861,
-          "status": "SUCCESS"
-        }
-      },
-      "latest_observed": {
-        "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
-        "pre_unreal": {
-          "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
-          "run_id": 35528516895,
-          "status": "SUCCESS"
-        },
-        "unreal": {
-          "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
-          "run_id": 35528516861,
-          "status": "SUCCESS"
-        }
-      }
-    },
-    "scope_rule": "Machine evidence does not replace rendered PIE/device/human acceptance."
+    "scope_rule": "Machine evidence and merge status do not replace rendered PIE/device/human acceptance."
   },
   "governor_role": {
     "mode": "OVERSEER_NOT_BOTTLENECK",
@@ -3222,5 +3186,17 @@
       ],
       "canonical_plan": "Data/LivingNPCIntelligenceRoadmap.json"
     }
-  ]
+  ],
+  "branch_workflow": {
+    "integration_branch": "develop",
+    "stable_release_branch": "main",
+    "rule": "Start each new production wave from the latest green develop, keep the branch short and single-purpose, prove its exact candidate head, then merge it back to develop before starting the next wave.",
+    "no_long_lived_feature_rule": "Do not let a temporary repair/feature branch become the de-facto project trunk.",
+    "historical_checkpoint_branches": [
+      "cp55/activity-movement-expansion-v1",
+      "cp56/fellowship-experience-megapass-v1",
+      "work/automation-first-runtime-observation"
+    ],
+    "cleanup_rule": "A historical branch may be deleted only after its meaningful content is confirmed present in develop or intentionally superseded. Diverged branches with unique commits remain preserved until audited."
+  }
 }

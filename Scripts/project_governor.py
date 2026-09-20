@@ -193,8 +193,13 @@ if governor_role.get("mode") != "OVERSEER_NOT_BOTTLENECK":
 non_blocking_policy = governor_role.get("non_blocking_policy", [])
 if not any("unrelated safe production work" in str(item) for item in non_blocking_policy):
     fail("Governor must explicitly preserve unrelated safe production work during a failing gate")
-if governor.get("active_branch") != "work/automation-first-runtime-observation":
-    fail("Governor active_branch must track PR #53 production branch")
+if governor.get("active_branch") != "develop":
+    fail("Governor active_branch must track develop as the integration baseline after PR #53 consolidation")
+branch_workflow = governor.get("branch_workflow", {})
+if branch_workflow.get("integration_branch") != "develop":
+    fail("Governor branch workflow must keep develop as the integration branch")
+if "keep the branch short" not in str(branch_workflow.get("rule") or ""):
+    fail("Governor branch workflow must require short-lived production branches")
 
 # Player-experience pacing contract is required, but human review remains the authority for PACING.
 PACING_PATH = ROOT / "Data" / "PlayerExperiencePacingPlan.json"
