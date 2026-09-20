@@ -180,5 +180,33 @@
       "Treatments blend back automatically after a bounded duration."
     ],
     "acceptance_boundary": "This is runtime camera framing, not final film-grade camera/Sequencer acceptance."
+  },
+  "threat_material_palettes": {
+    "status": "SOURCE_AUTHORED_PENDING_ENGINE_IMPORT_PROOF",
+    "runtime_rule": "Production threat/hero meshes keep authored OBJ/MTL materials; engine BasicShape tint applies only to fallback primitives.",
+    "lurtz": {
+      "library": "SourceAssets/Production/Enemies/Lurtz/RegionalMaterials.mtl",
+      "materials": [
+        "LurtzSkin",
+        "LurtzArmor",
+        "LurtzDarkIron"
+      ]
+    },
+    "watcher": {
+      "library": "SourceAssets/Production/Enemies/Watcher/RegionalMaterials.mtl",
+      "materials": [
+        "WatcherCore",
+        "WatcherTentacle"
+      ]
+    },
+    "balrog": {
+      "library": "SourceAssets/Production/Enemies/Balrog/RegionalMaterials.mtl",
+      "materials": [
+        "BalrogCharcoal",
+        "BalrogEmber",
+        "BalrogHorn",
+        "BalrogWing"
+      ]
+    }
   }
 }
