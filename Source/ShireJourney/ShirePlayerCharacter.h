@@ -51,6 +51,9 @@ public:
     UFUNCTION(BlueprintPure, Category="Chronicle")
     bool IsChronicleOpen() const { return bChronicleOpen; }
 
+    UFUNCTION(BlueprintPure, Category="Chronicle")
+    int32 GetChronicleBrowseIndex() const { return ChronicleBrowseIndex; }
+
     UFUNCTION(BlueprintPure, Category="Movement")
     bool IsCrouchingForStealth() const { return bIsCrouched; }
 
@@ -78,6 +81,8 @@ protected:
     void PrimaryAttack();
     void UseSupply();
     void ToggleChronicle();
+    void ChroniclePrevious();
+    void ChronicleNext();
     void QuickSave();
     void QuickLoad();
     void DebugPreviousChapter();
@@ -214,6 +219,7 @@ private:
     float StaminaRegenDelayRemaining = 0.0f;
     bool bStaminaExhausted = false;
     bool bChronicleOpen = false;
+    int32 ChronicleBrowseIndex = 0;
     float PrototypeIdlePhase = 0.0f;
     FName PendingChapterCheckpointId = NAME_None;
 

@@ -750,6 +750,8 @@ void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("Interact"), IE_Pressed, this, &AShirePlayerCharacter::Interact);
     PlayerInputComponent->BindAction(TEXT("UseSupply"), IE_Pressed, this, &AShirePlayerCharacter::UseSupply);
     PlayerInputComponent->BindAction(TEXT("ToggleChronicle"), IE_Pressed, this, &AShirePlayerCharacter::ToggleChronicle);
+    PlayerInputComponent->BindAction(TEXT("ChroniclePrevious"), IE_Pressed, this, &AShirePlayerCharacter::ChroniclePrevious);
+    PlayerInputComponent->BindAction(TEXT("ChronicleNext"), IE_Pressed, this, &AShirePlayerCharacter::ChronicleNext);
     PlayerInputComponent->BindAction(TEXT("PrimaryAttack"), IE_Pressed, this, &AShirePlayerCharacter::PrimaryAttack);
     PlayerInputComponent->BindAction(TEXT("QuickSave"), IE_Pressed, this, &AShirePlayerCharacter::QuickSave);
     PlayerInputComponent->BindAction(TEXT("QuickLoad"), IE_Pressed, this, &AShirePlayerCharacter::QuickLoad);
@@ -1014,7 +1016,38 @@ void AShirePlayerCharacter::ToggleChronicle()
     {
         return;
     }
+
     bChronicleOpen = !bChronicleOpen;
+    if (bChronicleOpen)
+    {
+        const UGameInstance* GI = GetGameInstance();
+        const UShireQuestSubsystem* Quests =
+            GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+        ChronicleBrowseIndex = Quests ? FMath::Max(0, Quests->GetChronicleCount() - 1) : 0;
+    }
+}
+
+void AShirePlayerCharacter::ChroniclePrevious()
+{
+    if (!bChronicleOpen || bCinematicInputLocked)
+    {
+        return;
+    }
+    ChronicleBrowseIndex = FMath::Max(0, ChronicleBrowseIndex - 1);
+}
+
+void AShirePlayerCharacter::ChronicleNext()
+{
+    if (!bChronicleOpen || bCinematicInputLocked)
+    {
+        return;
+    }
+
+    const UGameInstance* GI = GetGameInstance();
+    const UShireQuestSubsystem* Quests =
+        GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    const int32 MaxIndex = Quests ? FMath::Max(0, Quests->GetChronicleCount() - 1) : 0;
+    ChronicleBrowseIndex = FMath::Min(MaxIndex, ChronicleBrowseIndex + 1);
 }
 
 
