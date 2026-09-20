@@ -283,16 +283,15 @@
     ]
   },
   "current_wave": {
-    "id": "CINEMATIC_CHARACTER_SONIC_LIFE_V3",
-    "status": "RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "id": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4",
+    "status": "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
     "focus": [
-      "bounded story-beat camera grammar and safe gameplay return",
-      "identity-specific named-character modular performance",
-      "smooth ambience/music transition routing",
-      "preserve chapter geography before spectacle",
-      "keep film outcomes and save-state postconditions immutable"
+      "dedicated Fellowship equipment silhouettes",
+      "replace generic shared prop identity",
+      "retain V3 character performance and cinematic/audio runtime",
+      "prepare clean future rig/socket handoff"
     ],
-    "acceptance_rule": "Exact-head machine proof required; final authored Level Sequences/audio assets/human visual/device acceptance remain separate."
+    "acceptance_rule": "Exact-head machine proof required; rendered likeness/final rigs/human/device acceptance remain separate."
   },
   "hero_character_geometry_wave": {
     "id": "HERO_ANATOMICAL_FOUNDATION_V6",
@@ -431,6 +430,17 @@
     "runtime_camera_owner": "AStoryPresentationDirector",
     "runtime_audio_owner": "UShireAudioSubsystem",
     "named_character_fallback_owner": "AShireNPC",
+    "status": "EXACT_HEAD_ENGINE_PROOF_GREEN_PR58",
+    "evidence": {
+      "head": "22c6f58bc20ec8bfd97cf6efa970aff331a5dc04",
+      "pre_unreal": "#526 SUCCESS",
+      "unreal_build": "#361 SUCCESS",
+      "merged_develop": "b8a1b9cb63a37d73e8e7a12acce5bb3db0e34c06"
+    }
+  },
+  "hero_character_equipment_v4": {
+    "plan": "Data/HeroCharacterEquipmentSilhouetteV4.json",
+    "added_project_owned_obj_assets": 18,
     "status": "PENDING_EXACT_HEAD_ENGINE_PROOF"
   }
 }
