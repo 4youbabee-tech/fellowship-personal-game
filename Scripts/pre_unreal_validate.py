@@ -2835,7 +2835,10 @@ if 'StartChapter(TEXT("P1C02"), TEXT("RoadToBree"), 0)' not in story_flow_cpp:
 transition_graph["FerryEscape"].add("RoadToBree")
 
 reachable: set[str] = set()
-queue = deque([chapter_start_quests["P1C01"]])
+# Every chapter start is an authoritative runtime entry point through the world router/debug
+# chapter navigation, so traverse the static graph from all of them rather than marking later
+# starts reachable only after the BFS has already ended.
+queue = deque(chapter_start_quests.values())
 while queue:
     quest = queue.popleft()
     if quest in reachable:
@@ -2844,10 +2847,6 @@ while queue:
     for next_quest in transition_graph.get(quest, set()):
         if next_quest not in reachable:
             queue.append(next_quest)
-
-# Chapter starts are independently testable through debug navigation even when the parser cannot prove every positional call.
-for quest in chapter_start_quests.values():
-    reachable.add(quest)
 
 important_unreachable = sorted(q for q in definitions if q not in reachable)
 if important_unreachable:
