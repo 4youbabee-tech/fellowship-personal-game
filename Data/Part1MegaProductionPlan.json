@@ -296,6 +296,32 @@
       "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
       "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1"
     ],
-    "rule": "Screenplays own film chronology and required outcomes; production bibles translate that source into game/world/mission/visual constraints and may not rewrite it."
+    "rule": "Screenplays own film chronology and required outcomes; production bibles translate that source into game/world/mission/visual constraints and may not rewrite it.",
+    "resource_discovery_helper": [
+      "SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1"
+    ],
+    "resource_helper_rule": "Bible 09 may guide discovery/prototyping of voices, music, SFX, character references, 3D assets, animation/mocap and AI-assisted asset creation. It may not supply canon facts or override the supplied screenplays or production bibles 01-08."
+  },
+  "external_resource_intake": {
+    "source": "SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1",
+    "status": "ACTIVE_HELPER_REFERENCE",
+    "rules": [
+      "Record source URL, creator/uploader, filename, date and intended use for every external candidate.",
+      "Never bypass DRM, paywalls, passwords, access controls or technical protections.",
+      "Treat uncertain/franchise-specific material as personal/local reference or temporary prototype unless separately cleared.",
+      "Any future distributed build requires release-clearance review for third-party items.",
+      "Normalize scale, pivots, topology, UVs, collision, LODs, skeleton/retargeting, material count and audio properties before integration."
+    ],
+    "priority_categories": [
+      "voice/TTS/dialogue",
+      "music",
+      "SFX/field recording",
+      "character and environment visual reference",
+      "3D models/props/characters/scans",
+      "architecture/environments/materials",
+      "animation/mocap",
+      "LOTR-specific research sources",
+      "AI-assisted original asset creation"
+    ]
   }
 }
