@@ -20,6 +20,9 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "Misc/PackageName.h"
+#include "Misc/CommandLine.h"
+#include "Misc/Parse.h"
+#include "Misc/Guid.h"
 #include "UObject/ConstructorHelpers.h"
 
 namespace ShireSaveConstants
@@ -1671,6 +1674,8 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
 
 bool AShirePlayerCharacter::SaveAutomaticCheckpoint(FName CheckpointId, bool bShowHUD)
 {
+    // Headless validation must never overwrite the owner's checkpoint.
+    if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return false;
     if (CheckpointId == NAME_None)
     {
         return false;
@@ -1720,6 +1725,7 @@ bool AShirePlayerCharacter::SaveAutomaticCheckpoint(FName CheckpointId, bool bSh
 
 bool AShirePlayerCharacter::RestoreAutomaticCheckpoint(bool bShowHUD)
 {
+    if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return false;
     if (!UGameplayStatics::DoesSaveGameExist(
         ShireSaveConstants::CheckpointSlotName,
         ShireSaveConstants::UserIndex))
@@ -1753,8 +1759,77 @@ bool AShirePlayerCharacter::RestoreAutomaticCheckpoint(bool bShowHUD)
     return bRestored;
 }
 
+bool AShirePlayerCharacter::RunSaveRoundtripAudit()
+{
+    if (!FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return false;
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests) return false;
+
+    CurrentHealth = 73.0f;
+    CurrentStamina = 61.0f;
+    CurrentResolve = 47.0f;
+    Supplies = 2;
+    UShireSaveGame* Before = CreateSaveSnapshot(TEXT("CI_DISK_ROUNDTRIP"), false);
+    if (!Before) return false;
+    // A unique slot prevents collision with player saves or previous failed audits.
+    const FString Slot = FString(TEXT("ShireJourney_CI_")) + FGuid::NewGuid().ToString();
+    const bool bWritten = UGameplayStatics::SaveGameToSlot(Before, Slot, 0);
+    if (!bWritten) return false;
+
+    // Destroy the tested in-memory values so a no-op restore cannot pass.
+    CurrentHealth = 12.0f;
+    CurrentStamina = 13.0f;
+    CurrentResolve = 14.0f;
+    Supplies = 0;
+    SetActorLocation(Before->PlayerLocation + FVector(150.0f, 0.0f, 0.0f));
+    Quests->SetQuestStage(Before->ActiveQuestId, 0);
+    Quests->RestoreJourneyDiscoveryState(TArray<FName>(), 0, TArray<FName>());
+    Quests->RestoreProgressionState(TMap<FName, int32>());
+    Quests->RestoreKnowledgeState(TArray<FName>(), TArray<FName>());
+
+    UShireSaveGame* Loaded = Cast<UShireSaveGame>(UGameplayStatics::LoadGameFromSlot(Slot, 0));
+    const bool bRestored = Loaded && Loaded != Before &&
+        RestoreSaveSnapshot(Loaded, FText::GetEmpty());
+    bool bValid = bRestored &&
+        Loaded->SaveSchemaVersion == UShireSaveGame::CurrentSchemaVersion &&
+        Loaded->CheckpointId == Before->CheckpointId &&
+        GetActorLocation().Equals(Before->PlayerLocation, 0.1f) &&
+        GetActorRotation().Equals(Before->PlayerRotation, 0.1f) &&
+        FMath::IsNearlyEqual(CurrentHealth, Before->PlayerHealth) &&
+        FMath::IsNearlyEqual(CurrentStamina, Before->PlayerStamina) &&
+        FMath::IsNearlyEqual(CurrentResolve, Before->PlayerResolve) &&
+        Supplies == Before->PlayerSupplies &&
+        Quests->GetCurrentRouteId() == Before->CurrentRouteId &&
+        Quests->GetCurrentChapterId() == Before->CurrentChapterId &&
+        Quests->GetCurrentEpisodeId() == Before->CurrentEpisodeId &&
+        Quests->GetPlayableCharacterId() == Before->PlayableCharacterId &&
+        Quests->GetActiveQuestId() == Before->ActiveQuestId &&
+        Quests->GetCompletedStoryBeats() == Before->CompletedStoryBeats &&
+        Quests->GetJourneyDiscoveryIds() == Before->JourneyDiscoveryIds &&
+        Quests->GetJourneyInsight() == Before->JourneyInsight &&
+        Quests->GetJourneyInsightMilestones() == Before->JourneyInsightMilestones &&
+        Quests->GetChronicleEntryIds() == Before->ChronicleEntryIds &&
+        Quests->GetKnownMapRegionIds() == Before->KnownMapRegionIds;
+    for (const TPair<FName, int32>& Entry : Before->QuestStages)
+    {
+        bValid = bValid && Quests->GetQuestStage(Entry.Key) == Entry.Value;
+    }
+    for (const TPair<FName, int32>& Entry : Before->ProgressionXP)
+    {
+        bValid = bValid && Quests->GetProgressionXP(Entry.Key) == Entry.Value;
+    }
+    const bool bCleaned = UGameplayStatics::DeleteGameInSlot(Slot, 0);
+    if (!bValid) RestoreSaveSnapshot(Before, FText::GetEmpty());
+    UE_LOG(LogTemp, Display, TEXT("ShireStateAudit: disk-save-details written=%s restored=%s verified=%s cleaned=%s"),
+        bWritten ? TEXT("yes") : TEXT("no"), bRestored ? TEXT("yes") : TEXT("no"),
+        bValid ? TEXT("yes") : TEXT("no"), bCleaned ? TEXT("yes") : TEXT("no"));
+    return bValid && bCleaned;
+}
+
 void AShirePlayerCharacter::QuickSave()
 {
+    if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return;
     UShireSaveGame* Save = CreateSaveSnapshot(NAME_None, false);
     const bool bSaved = Save && UGameplayStatics::SaveGameToSlot(
         Save,
@@ -1774,6 +1849,7 @@ void AShirePlayerCharacter::QuickSave()
 
 void AShirePlayerCharacter::QuickLoad()
 {
+    if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return;
     if (!UGameplayStatics::DoesSaveGameExist(
         ShireSaveConstants::SlotName,
         ShireSaveConstants::UserIndex))

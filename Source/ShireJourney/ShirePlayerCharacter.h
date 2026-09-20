@@ -66,6 +66,9 @@ public:
     UFUNCTION(BlueprintCallable, Category="Save")
     bool RestoreAutomaticCheckpoint(bool bShowHUD = true);
 
+    // Explicit CI-only disk roundtrip through the production snapshot/restore path.
+    bool RunSaveRoundtripAudit();
+
 protected:
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;

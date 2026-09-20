@@ -25,7 +25,8 @@ def required_markers(chapter, mode):
                 "ShireStateAudit: ring-core=PASS",
                 "ShireStateAudit: discovery-core=PASS",
                 "ShireStateAudit: progression-core=PASS",
-                "ShireStateAudit: knowledge-core=PASS"]
+                "ShireStateAudit: knowledge-core=PASS",
+                "ShireStateAudit: disk-save-roundtrip=PASS"]
     if chapter is None:
         return ["ShirePlayableStartup: GameMode ready",
                 "ShirePlayableStartup: chapter=P1C01 route=FrodoMain"]
@@ -126,7 +127,8 @@ def main():
         log = log_dir / (name + ".log")
         command = [str(args.editor.resolve()), str(args.project.resolve()),
                    "/Engine/Maps/Templates/Template_Default", "-game", "-nullrhi",
-                   "-unattended", "-nop4", "-nosplash", "-NoSound", f"-abslog={log}"]
+                   "-unattended", "-nop4", "-nosplash", "-NoSound",
+                   "-ShireCIRuntimeAudit", f"-abslog={log}"]
         if chapter:
             command.append(f"-AuditChapter={chapter}")
         if args.mode == "state":
@@ -149,4 +151,3 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

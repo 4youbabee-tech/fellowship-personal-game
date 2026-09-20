@@ -82,7 +82,14 @@ class RuntimeSmokeTests(unittest.TestCase):
             "ShireStateAudit: discovery-core=PASS",
             "ShireStateAudit: progression-core=PASS",
             "ShireStateAudit: knowledge-core=PASS",
+            "ShireStateAudit: disk-save-roundtrip=PASS",
         ])
+
+    def test_in_memory_success_cannot_prove_disk_save(self):
+        markers = required_markers(None, "state")
+        memory_only = "\n".join(m for m in markers if "disk-save" not in m)
+        self.assertEqual(missing_markers(memory_only, markers),
+                         ["ShireStateAudit: disk-save-roundtrip=PASS"])
 
     def test_utf16_unreal_log(self):
         with tempfile.TemporaryDirectory() as directory:

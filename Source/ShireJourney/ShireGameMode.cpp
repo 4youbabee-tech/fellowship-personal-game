@@ -10,6 +10,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
+#include "TimerManager.h"
 
 AShireGameMode::AShireGameMode()
 {
@@ -231,6 +232,22 @@ void AShireGameMode::BeginPlay()
     GetWorld()->SpawnActor<AChapterWorldRouter>(FVector::ZeroVector, FRotator::ZeroRotator);
     GetWorld()->SpawnActor<ALivingWorldDirector>(FVector::ZeroVector, FRotator::ZeroRotator);
     UE_LOG(LogTemp, Display, TEXT("ShirePlayableStartup: GameMode ready; router and living-world director spawned"));
+
+    if (FParse::Param(FCommandLine::Get(), TEXT("AuditState")))
+    {
+        GetWorldTimerManager().SetTimerForNextTick(FTimerDelegate::CreateWeakLambda(this, [this]()
+        {
+            AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+            if (Player && Player->RunSaveRoundtripAudit())
+            {
+                UE_LOG(LogTemp, Display, TEXT("ShireStateAudit: disk-save-roundtrip=PASS"));
+            }
+            else
+            {
+                UE_LOG(LogTemp, Error, TEXT("ShireStateAudit: disk-save-roundtrip=FAIL"));
+            }
+        }));
+    }
 
     // Normal launches preserve the authored P1C01 placement. Audit launches let the
     // chapter router own placement so P1C02-P1C08 are not teleported back into Shire.

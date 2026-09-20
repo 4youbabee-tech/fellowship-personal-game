@@ -1,3 +1,9 @@
+## 2026-09-20 — close the disk persistence evidence gap
+
+The Python resolver repair passed on Windows and startup succeeded on `15e9d2228f6e7e5ceb1e8aed2aab8b698dba4cb8` ([run 35500242164](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/35500242164)). Chapter/state checks were still running when this update was written.
+
+Source audit confirmed the existing route/state test did not write a save file. The new `disk-save-roundtrip` audit calls the production player snapshot/restore path, writes a unique CI save slot, mutates live quest/progression/knowledge/player values, loads from disk, verifies restored fields, and deletes only its own temporary slot. It checks health/stamina/resolve/supplies, transform, route/chapter/episode/character, quest stages, story beats, discoveries, progression and Chronicle/map knowledge. It is not yet full NPC-memory or cross-process migration coverage. The observer requires the disk marker for state success. CI runs cannot overwrite or load the owner's manual/checkpoint slots. Thirteen observer tests pass locally; real UE compilation and disk execution of this change remain pending.
+
 ## 2026-09-20 — exact-head runtime validation repair
 
 Authority: `Data/ProjectGovernor.json`, including `session_handoff`.

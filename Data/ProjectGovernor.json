@@ -2979,7 +2979,10 @@
       "Verified b0a4d2614e5744d8a0fa3b1c373c23a491274955: Pre-Unreal #446 succeeded; UE4 run 35499375838 compiled and imported successfully, then failed resolving Python (Store alias, exit 61).",
       "Fix existing-interpreter discovery with executable/version validation and WindowsApps exclusion; permit the UE bundled Python via Python 3.7-compatible runtime observer.",
       "Keep state-audit and startup logs separate; runtime observer regression suite: 12 passed locally.",
-      "Windows resolver and actual startup/chapter/state results remain pending rerun; do not promote visual, performance or save acceptance."
+      "Windows resolver and actual startup/chapter/state results remain pending rerun; do not promote visual, performance or save acceptance.",
+      "Repair 15e9d2228f6e7e5ceb1e8aed2aab8b698dba4cb8 passed Pre-Unreal, Windows Python resolution, compile/import and startup in run 35500242164; chapter/state steps still running at this update.",
+      "Audit found route/state checks were in-memory only. Added isolated disk save/load through production snapshot/restore, deliberate mutation of live values, field comparisons and unique-slot cleanup; pending UE execution.",
+      "All CI observer launches now isolate player manual/checkpoint save access; 13 observer regression tests pass locally."
     ]
   },
   "development_mode": {
@@ -3044,9 +3047,23 @@
     ],
     "next_actions": [
       "Run corrected head through full UE workflow; fix each specific failing layer.",
-      "Inspect state audit implementation for actual disk save/load, not only in-memory state.",
+      "Verify new disk-save-roundtrip marker; the audit must save to a unique CI slot, mutate live state, load and compare, then clean only its own slot.",
       "After technical gates pass, resume visible character/world production; final rigs/materials remain incomplete."
     ],
-    "scope_rule": "This handoff reports evidence. It does not invent product decisions or mark planned work delivered."
+    "scope_rule": "This handoff reports evidence. It does not invent product decisions or mark planned work delivered.",
+    "additional_evidence": {
+      "head": "15e9d2228f6e7e5ceb1e8aed2aab8b698dba4cb8",
+      "run": 35500242164,
+      "passed": [
+        "compile",
+        "production import",
+        "Python discovery",
+        "startup"
+      ],
+      "pending": [
+        "chapters",
+        "state"
+      ]
+    }
   }
 }
