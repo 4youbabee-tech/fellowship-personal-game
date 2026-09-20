@@ -113,7 +113,19 @@
       "production parapet slab dressing",
       "prototype world labels hidden from the normal player view"
     ],
-    "acceptance": "IMPLEMENTED_PENDING_UE4_BUILD_RENDER_AND_DEVICE_PROOF"
+    "acceptance": "IMPLEMENTED_PENDING_UE4_BUILD_RENDER_AND_DEVICE_PROOF",
+    "authored_material_palette": {
+      "status": "SOURCE_AUTHORED_PENDING_ENGINE_IMPORT_PROOF",
+      "library": "SourceAssets/Production/World/Isengard/RegionalMaterials.mtl",
+      "materials": [
+        "OrthancBlackStone",
+        "OrthancEdgeStone",
+        "IndustrialIron",
+        "FurnaceIron",
+        "ScorchedWood"
+      ],
+      "runtime_rule": "Production Isengard meshes keep imported authored materials; engine BasicShape tint is fallback-only."
+    }
   },
   "encounter_staging": {
     "moria": [
