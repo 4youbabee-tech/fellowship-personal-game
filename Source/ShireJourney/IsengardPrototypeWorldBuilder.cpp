@@ -217,6 +217,14 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
         nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_FelledTrunk.SM_Isengard_FelledTrunk"));
     UStaticMesh* ParapetSlab = LoadObject<UStaticMesh>(
         nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_ParapetSlab.SM_Isengard_ParapetSlab"));
+    UStaticMesh* HoistFrame = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_IsengardHoistFrame.SM_IsengardHoistFrame"));
+    UStaticMesh* SlagCart = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_IsengardSlagCart.SM_IsengardSlagCart"));
+    UStaticMesh* TrenchGrate = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_IsengardTrenchGrate.SM_IsengardTrenchGrate"));
+    UStaticMesh* WaterGate = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_IsengardWaterGate.SM_IsengardWaterGate"));
     for (int32 I = 0; I < 8; ++I)
     {
         const FVector Pit(-200.0f + I * 260.0f, 720.0f + (I % 2) * 180.0f, 10.0f);
@@ -244,6 +252,33 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
             FVector(1.25f, 0.24f, 0.035f), FLinearColor(0.075f, 0.068f, 0.060f),
             FRotator(0.0f, I * 5.0f, 0.0f), false);
     }
+
+    // Realm Detail Saturation V2: harsh iron, crude mass-production logistics and
+    // future flood-control readability. These are bounded visual actors and do not
+    // pre-apply the Ent assault outcome.
+    const FVector HoistsV2[] = {
+        FVector(-520,520,15), FVector(240,610,15), FVector(1180,560,15), FVector(1580,-590,15)
+    };
+    for (int32 I=0; I<UE_ARRAY_COUNT(HoistsV2); ++I)
+        SpawnShape(HoistFrame, HoistsV2[I], FVector(0.62f),
+            FLinearColor(0.11f,0.09f,0.07f), FRotator(0,I*17.0f-12.0f,0), false);
+
+    const FVector SlagCartsV2[] = {
+        FVector(-760,930,12), FVector(-120,-940,12), FVector(720,970,12), FVector(1420,-920,12)
+    };
+    for (int32 I=0; I<UE_ARRAY_COUNT(SlagCartsV2); ++I)
+        SpawnShape(SlagCart, SlagCartsV2[I], FVector(0.66f),
+            FLinearColor(0.13f,0.09f,0.06f), FRotator(0,I*29.0f,0), false);
+
+    for (int32 I=0; I<7; ++I)
+    {
+        SpawnShape(TrenchGrate, FVector(-650.0f + I*420.0f, -360.0f, 4.0f), FVector(0.72f),
+            FLinearColor(0.10f,0.09f,0.08f), FRotator::ZeroRotator, false);
+    }
+    SpawnShape(WaterGate, FVector(-1180,-1180,20), FVector(0.82f),
+        FLinearColor(0.07f,0.075f,0.08f), FRotator(0,90,0), false);
+    SpawnShape(WaterGate, FVector(1960,1120,20), FVector(0.72f),
+        FLinearColor(0.07f,0.075f,0.08f), FRotator(0,-90,0), false);
 
     if (ParapetSlab)
     {
