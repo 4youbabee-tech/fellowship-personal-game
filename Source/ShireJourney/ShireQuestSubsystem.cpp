@@ -1041,11 +1041,20 @@ bool UShireQuestSubsystem::LoadSideActivityPlan()
 
     const bool bReady = SideActivityProgressionDefinitions.Num() > 0 &&
         SideActivityProgressionDefinitions.Num() == SideActivityDefinitionsById.Num();
-    UE_LOG(LogTemp, bReady ? Display : Error,
-        TEXT("SideActivityRuntime: ready=%s activities=%d mappedDiscoveries=%d"),
-        bReady ? TEXT("yes") : TEXT("no"),
-        SideActivityDefinitionsById.Num(),
-        SideActivityProgressionDefinitions.Num());
+    if (bReady)
+    {
+        UE_LOG(LogTemp, Display,
+            TEXT("SideActivityRuntime: ready=yes activities=%d mappedDiscoveries=%d"),
+            SideActivityDefinitionsById.Num(),
+            SideActivityProgressionDefinitions.Num());
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error,
+            TEXT("SideActivityRuntime: ready=no activities=%d mappedDiscoveries=%d"),
+            SideActivityDefinitionsById.Num(),
+            SideActivityProgressionDefinitions.Num());
+    }
     return bReady;
 }
 
