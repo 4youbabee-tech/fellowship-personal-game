@@ -1,0 +1,746 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_EXPLORATION_ENVELOPES_V1",
+  "status": "STATIC_CONTRACT_IMPLEMENTED_RUNTIME_WIRING_PENDING",
+  "purpose": "Define safe free-roam windows between fixed film-story anchors so exploration, discoveries and living-world activity can expand without skipping required chronology or outcomes.",
+  "global_rules": [
+    "Mandatory film anchors remain authoritative and ordered.",
+    "Optional discoveries may set optional completion/memory flags but may not advance required story beats, change route identity, skip chapter gates or alter canon outcomes.",
+    "Every free-roam window has a readable return-to-story policy.",
+    "Danger/combat state may temporarily suppress optional activities without deleting their completion state.",
+    "Moria remains civilian-empty; exploration there is environmental/companion discovery only.",
+    "If runtime state falls outside a declared envelope, main-story navigation takes priority over optional content."
+  ],
+  "runtime_contract": {
+    "authority_sources": [
+      "Data/StoryBeatPlan.csv",
+      "Data/FilmExperiencePlan.json",
+      "Data/FellowshipExperienceMegaPassCP56.json",
+      "Data/ProjectGovernor.json"
+    ],
+    "optional_state_namespace": "Exploration.Optional",
+    "required_story_state_mutation": "FORBIDDEN",
+    "route_mutation": "FORBIDDEN",
+    "chapter_skip": "FORBIDDEN",
+    "return_behavior": "OPTIONAL_ACTIVITY_CANCELS_OR_COMPLETES_THEN_RESTORES_MAIN_ROUTE_GUIDANCE"
+  },
+  "chapters": [
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "region": "Shire",
+      "anchor_order": [
+        "ShireOpening",
+        "GandalfArrival",
+        "PartyArrival",
+        "BilboDisappearance",
+        "RingWarning",
+        "LeavingHomeRoad",
+        "BlackRiderApproach",
+        "RootHide",
+        "FerryEscape"
+      ],
+      "free_roam_windows": [
+        {
+          "id": "P1C01_HOME_LIFE",
+          "opens_after": "ShireOpening",
+          "closes_before": "PartyArrival",
+          "pressure": "LOW",
+          "allowed": [
+            "SOCIAL",
+            "DISCOVERY",
+            "ERRAND",
+            "PLAY"
+          ]
+        },
+        {
+          "id": "P1C01_PARTY_FIELD",
+          "opens_after": "PartyArrival",
+          "closes_before": "BilboDisappearance",
+          "pressure": "LOW",
+          "allowed": [
+            "SOCIAL",
+            "PLAY",
+            "FOOD",
+            "MUSIC_AMBIENCE"
+          ]
+        },
+        {
+          "id": "P1C01_ROAD_COMPANIONS",
+          "opens_after": "LeavingHomeRoad",
+          "closes_before": "BlackRiderApproach",
+          "pressure": "RISING",
+          "allowed": [
+            "TRAVEL_TALK",
+            "LANDMARK",
+            "FORAGING"
+          ]
+        }
+      ],
+      "optional_discoveries": [
+        {
+          "id": "SHIRE_GREEN_DRAGON_MEMORY",
+          "label": "Friendship/revelry memory beat",
+          "available_between": [
+            "ShireOpening",
+            "PartyArrival"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "SHIRE_MARKET_GARDEN_LOOP",
+          "label": "Market, garden and mill micro-life loop",
+          "available_between": [
+            "ShireOpening",
+            "PartyArrival"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "SHIRE_FIELD_RACE",
+          "label": "Harmless field-path race/play beat",
+          "available_between": [
+            "GandalfArrival",
+            "PartyArrival"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "SHIRE_QUIET_FEET",
+          "label": "Quiet crouch route through Hobbiton hedges",
+          "available_between": [
+            "GandalfArrival",
+            "PartyArrival"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        }
+      ],
+      "return_policy": {
+        "primary": "main-road/party objective marker restores after optional interaction",
+        "danger_override": "Black Rider danger cancels peaceful activities and points to RootHide/FerryEscape"
+      }
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C02",
+      "region": "Bree / Prancing Pony",
+      "anchor_order": [
+        "BreeRoadNightfall",
+        "PrancingPonyExterior",
+        "RingIncident",
+        "StriderPrivateRoom",
+        "NazgulAttackPrancingPony",
+        "DepartBree"
+      ],
+      "free_roam_windows": [
+        {
+          "id": "P1C02_GATE_TO_INN",
+          "opens_after": "BreeRoadNightfall",
+          "closes_before": "PrancingPonyExterior",
+          "pressure": "MEDIUM",
+          "allowed": [
+            "OBSERVATION",
+            "SOCIAL",
+            "LANDMARK"
+          ]
+        },
+        {
+          "id": "P1C02_COMMON_ROOM",
+          "opens_after": "PrancingPonyExterior",
+          "closes_before": "RingIncident",
+          "pressure": "MEDIUM",
+          "allowed": [
+            "SOCIAL",
+            "RUMOR",
+            "INN_ACTIVITY"
+          ]
+        }
+      ],
+      "optional_discoveries": [
+        {
+          "id": "BREE_GATE_GOSSIP",
+          "label": "Gatekeeper/town gossip without future knowledge",
+          "available_between": [
+            "BreeRoadNightfall",
+            "PrancingPonyExterior"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "BREE_STABLE_YARD",
+          "label": "Stable-yard observation and horse/road chatter",
+          "available_between": [
+            "PrancingPonyExterior",
+            "RingIncident"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "BREE_INN_KITCHEN_LIFE",
+          "label": "Inn service/kitchen micro-life",
+          "available_between": [
+            "PrancingPonyExterior",
+            "RingIncident"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        }
+      ],
+      "return_policy": {
+        "primary": "Prancing Pony interior objective remains available",
+        "danger_override": "RingIncident locks casual social loops and restores Strider/private-room guidance"
+      }
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C03",
+      "region": "Weathertop / Ford",
+      "anchor_order": [
+        "MidgewaterRoad",
+        "WeathertopReveal",
+        "WeathertopCamp",
+        "NazgulCloseIn",
+        "MorgulWound",
+        "FordChase",
+        "FordEscape"
+      ],
+      "free_roam_windows": [
+        {
+          "id": "P1C03_WILDERNESS_TRACKS",
+          "opens_after": "MidgewaterRoad",
+          "closes_before": "WeathertopReveal",
+          "pressure": "RISING",
+          "allowed": [
+            "TRAVEL_TALK",
+            "TRACKING",
+            "LANDMARK"
+          ]
+        },
+        {
+          "id": "P1C03_PRE_ATTACK_CAMP",
+          "opens_after": "WeathertopReveal",
+          "closes_before": "NazgulCloseIn",
+          "pressure": "HIGH",
+          "allowed": [
+            "CAMP",
+            "COMPANION_TALK",
+            "PREPARATION"
+          ]
+        }
+      ],
+      "optional_discoveries": [
+        {
+          "id": "WILDERNESS_TRACK_SIGNS",
+          "label": "Read tracks/signs with Strider context",
+          "available_between": [
+            "MidgewaterRoad",
+            "WeathertopReveal"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "WEATHERTOP_RUIN_MARKERS",
+          "label": "Ruined-stone landmark observations",
+          "available_between": [
+            "WeathertopReveal",
+            "WeathertopCamp"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "CAMP_PREPARATION",
+          "label": "Fire/gear preparation and companion concern",
+          "available_between": [
+            "WeathertopReveal",
+            "NazgulCloseIn"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        }
+      ],
+      "return_policy": {
+        "primary": "Strider route guidance resumes from nearest trail marker",
+        "danger_override": "NazgulCloseIn disables optional detours and forces readable survival path"
+      }
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C04",
+      "region": "Rivendell",
+      "anchor_order": [
+        "RivendellAwakening",
+        "BilboReunion",
+        "CouncilBegins",
+        "FellowshipAssembled",
+        "RivendellDeparture"
+      ],
+      "free_roam_windows": [
+        {
+          "id": "P1C04_REFUGE_EXPLORATION",
+          "opens_after": "RivendellAwakening",
+          "closes_before": "CouncilBegins",
+          "pressure": "LOW",
+          "allowed": [
+            "SOCIAL",
+            "LIBRARY",
+            "OVERLOOK",
+            "GARDEN"
+          ]
+        },
+        {
+          "id": "P1C04_DEPARTURE_PREP",
+          "opens_after": "FellowshipAssembled",
+          "closes_before": "RivendellDeparture",
+          "pressure": "LOW",
+          "allowed": [
+            "COMPANION_TALK",
+            "GEAR_PREP",
+            "LANDMARK"
+          ]
+        }
+      ],
+      "optional_discoveries": [
+        {
+          "id": "RIVENDELL_LIBRARY",
+          "label": "Books/maps and bounded lore discovery",
+          "available_between": [
+            "RivendellAwakening",
+            "CouncilBegins"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "RIVENDELL_OVERLOOK",
+          "label": "Valley overlook and companion reflection",
+          "available_between": [
+            "BilboReunion",
+            "CouncilBegins"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "RIVENDELL_SMITHY_PREP",
+          "label": "Fellowship departure preparation",
+          "available_between": [
+            "FellowshipAssembled",
+            "RivendellDeparture"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        }
+      ],
+      "return_policy": {
+        "primary": "Council/departure objective remains pinned after optional exploration",
+        "danger_override": "not applicable; story locks take precedence when CouncilBegins starts"
+      }
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C05",
+      "region": "Fellowship road / Caradhras / West Gate",
+      "anchor_order": [
+        "FellowshipMarch",
+        "FellowshipCamp",
+        "CrebainWarning",
+        "CaradhrasApproach",
+        "CaradhrasStorm",
+        "MoriaLake",
+        "MoriaDoorOpens"
+      ],
+      "free_roam_windows": [
+        {
+          "id": "P1C05_TRAVEL_COMPANY",
+          "opens_after": "FellowshipMarch",
+          "closes_before": "CrebainWarning",
+          "pressure": "MEDIUM",
+          "allowed": [
+            "COMPANION_TALK",
+            "TRAINING",
+            "CAMP",
+            "LANDMARK"
+          ]
+        },
+        {
+          "id": "P1C05_CARADHRAS_APPROACH",
+          "opens_after": "CaradhrasApproach",
+          "closes_before": "CaradhrasStorm",
+          "pressure": "HIGH",
+          "allowed": [
+            "SURVIVAL_PREP",
+            "COMPANION_REACTION"
+          ]
+        },
+        {
+          "id": "P1C05_WEST_GATE_SEARCH",
+          "opens_after": "CaradhrasStorm",
+          "closes_before": "MoriaDoorOpens",
+          "pressure": "HIGH",
+          "allowed": [
+            "SEARCH",
+            "STONE_LORE",
+            "LAKE_OBSERVATION"
+          ]
+        }
+      ],
+      "optional_discoveries": [
+        {
+          "id": "FELLOWSHIP_TRAINING",
+          "label": "Travel-camp practice and banter",
+          "available_between": [
+            "FellowshipMarch",
+            "CrebainWarning"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "CARADHRAS_SHELTER_CHECK",
+          "label": "Shelter/gear survival observation",
+          "available_between": [
+            "CaradhrasApproach",
+            "CaradhrasStorm"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "WEST_GATE_INSCRIPTIONS",
+          "label": "Stone/door observations before opening",
+          "available_between": [
+            "MoriaLake",
+            "MoriaDoorOpens"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        }
+      ],
+      "return_policy": {
+        "primary": "company formation and main-route leader restore travel direction",
+        "danger_override": "Crebain/storm states suspend leisure activities but retain optional completion flags"
+      }
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C06",
+      "region": "Moria",
+      "anchor_order": [
+        "WatcherAttack",
+        "MoriaEntry",
+        "MoriaUnease",
+        "BalinsTombReveal",
+        "MoriaAttack",
+        "CaveTrollAttack",
+        "BalrogApproach",
+        "BridgeConfrontation",
+        "MoriaEscape"
+      ],
+      "free_roam_windows": [
+        {
+          "id": "P1C06_DEAD_CITY",
+          "opens_after": "MoriaEntry",
+          "closes_before": "BalinsTombReveal",
+          "pressure": "HIGH",
+          "allowed": [
+            "ENVIRONMENT_DISCOVERY",
+            "COMPANION_REACTION",
+            "ROUTE_SEARCH"
+          ]
+        }
+      ],
+      "optional_discoveries": [
+        {
+          "id": "MORIA_SIDE_CHAMBER",
+          "label": "Empty side chamber with environmental history",
+          "available_between": [
+            "MoriaEntry",
+            "BalinsTombReveal"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "MORIA_ECHO_ROUTE",
+          "label": "Sound/echo navigation observation",
+          "available_between": [
+            "MoriaEntry",
+            "MoriaUnease"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "MORIA_DWARVEN_RELIEF",
+          "label": "Dwarven relief and Gimli reaction",
+          "available_between": [
+            "MoriaUnease",
+            "BalinsTombReveal"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        }
+      ],
+      "return_policy": {
+        "primary": "route-search guidance returns to Fellowship leader/next hall",
+        "danger_override": "after BalinsTombReveal, combat/escape beats suppress all optional detours"
+      }
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C07",
+      "region": "Lothlorien",
+      "anchor_order": [
+        "LorienEntry",
+        "LorienGrief",
+        "Mirror",
+        "LorienFarewell",
+        "LorienDeparture"
+      ],
+      "free_roam_windows": [
+        {
+          "id": "P1C07_GRIEF_REFUGE",
+          "opens_after": "LorienEntry",
+          "closes_before": "Mirror",
+          "pressure": "LOW",
+          "allowed": [
+            "SOCIAL",
+            "GRIEF",
+            "ELF_ACTIVITY",
+            "LANDMARK"
+          ]
+        },
+        {
+          "id": "P1C07_FAREWELL_PREP",
+          "opens_after": "Mirror",
+          "closes_before": "LorienDeparture",
+          "pressure": "LOW",
+          "allowed": [
+            "SOCIAL",
+            "GIFT_PREP",
+            "RIVER_OBSERVATION"
+          ]
+        }
+      ],
+      "optional_discoveries": [
+        {
+          "id": "LORIEN_GRIEF_CLEARING",
+          "label": "Quiet companion grief space",
+          "available_between": [
+            "LorienEntry",
+            "Mirror"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "LORIEN_CRAFT_PLATFORM",
+          "label": "Elf craft/lantern micro-life",
+          "available_between": [
+            "LorienGrief",
+            "Mirror"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "LORIEN_RIVER_PREP",
+          "label": "Boat/gift departure preparation",
+          "available_between": [
+            "Mirror",
+            "LorienDeparture"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        }
+      ],
+      "return_policy": {
+        "primary": "Galadriel/Mirror/farewell guidance returns after optional talk",
+        "danger_override": "none; cinematic story locks override optional interactions"
+      }
+    },
+    {
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "region": "Anduin / Amon Hen",
+      "anchor_order": [
+        "AnduinDeparture",
+        "ArgonathReveal",
+        "AmonHenArrival",
+        "BoromirPressure",
+        "UrukAttack",
+        "BoromirDefense",
+        "BoromirFall",
+        "FrodoSamDeparture",
+        "Part1End"
+      ],
+      "free_roam_windows": [
+        {
+          "id": "P1C08_RIVER_COMPANY",
+          "opens_after": "AnduinDeparture",
+          "closes_before": "ArgonathReveal",
+          "pressure": "MEDIUM",
+          "allowed": [
+            "COMPANION_TALK",
+            "RIVER_OBSERVATION"
+          ]
+        },
+        {
+          "id": "P1C08_AMON_HEN_CAMP",
+          "opens_after": "AmonHenArrival",
+          "closes_before": "BoromirPressure",
+          "pressure": "HIGH",
+          "allowed": [
+            "CAMP",
+            "LANDMARK",
+            "COMPANION_TALK"
+          ]
+        }
+      ],
+      "optional_discoveries": [
+        {
+          "id": "ANDUIN_BANK_WATCH",
+          "label": "Riverbank watch and companion tension",
+          "available_between": [
+            "AnduinDeparture",
+            "ArgonathReveal"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "AMON_HEN_FALLEN_STONE",
+          "label": "Ancient fallen-stone landmark",
+          "available_between": [
+            "AmonHenArrival",
+            "BoromirPressure"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "AMON_HEN_CAMP_DISTANCE",
+          "label": "Observe growing companion separation",
+          "available_between": [
+            "AmonHenArrival",
+            "BoromirPressure"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        }
+      ],
+      "return_policy": {
+        "primary": "Frodo/main-camp objective restores after detour",
+        "danger_override": "BoromirPressure and UrukAttack end free roam and force canonical fracture sequence"
+      }
+    },
+    {
+      "route": "GandalfParallel",
+      "chapter": "P1C01",
+      "region": "Isengard / Orthanc",
+      "anchor_order": [
+        "IsengardArrival",
+        "OrthancBetrayal",
+        "OrthancPrison",
+        "IsengardIndustry",
+        "OrthancEscape"
+      ],
+      "free_roam_windows": [
+        {
+          "id": "P1G01_COUNSEL_APPROACH",
+          "opens_after": "IsengardArrival",
+          "closes_before": "OrthancBetrayal",
+          "pressure": "MEDIUM",
+          "allowed": [
+            "OBSERVATION",
+            "SOCIAL"
+          ]
+        },
+        {
+          "id": "P1G01_TOWER_OBSERVATION",
+          "opens_after": "OrthancPrison",
+          "closes_before": "OrthancEscape",
+          "pressure": "HIGH",
+          "allowed": [
+            "OBSERVATION",
+            "ENVIRONMENT_DISCOVERY"
+          ]
+        }
+      ],
+      "optional_discoveries": [
+        {
+          "id": "ORTHANC_PARAPET_VIEW",
+          "label": "Observe industrial transformation below",
+          "available_between": [
+            "OrthancPrison",
+            "IsengardIndustry"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        },
+        {
+          "id": "ORTHANC_OLD_ALLIANCE_MEMORY",
+          "label": "Bounded reflection on broken counsel/old alliance",
+          "available_between": [
+            "IsengardArrival",
+            "OrthancBetrayal"
+          ],
+          "story_effect": "NONE",
+          "may_advance_required_anchor": false,
+          "may_change_canon_outcome": false
+        }
+      ],
+      "return_policy": {
+        "primary": "Saruman/captivity objective remains authoritative",
+        "danger_override": "betrayal/escape cinematics override optional observation"
+      }
+    }
+  ],
+  "acceptance_boundary": {
+    "implemented_now": [
+      "chapter-by-chapter free-roam envelopes",
+      "explicit optional discoveries outside the Shire",
+      "machine-checkable anchor ordering and no-skip rules",
+      "return-to-main-route policies"
+    ],
+    "pending_runtime_proof": [
+      "wire discovery interactions into chapter builders/directors",
+      "prove in UE4.27 that no optional path can bypass a required beat",
+      "PIE pacing and readability review"
+    ]
+  }
+}

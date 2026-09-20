@@ -9,6 +9,21 @@
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 
+
+namespace
+{
+    // Story/knowledge/memory eligibility is checked before ranking. Never select
+    // another region's line merely because it is fresh in the repetition cache.
+    int32 ShireDialogueContextRank(FName RequiredMood, FName CurrentMood, bool bSpecificMemory)
+    {
+        if (RequiredMood != NAME_None && RequiredMood != CurrentMood)
+        {
+            return -1;
+        }
+        return (RequiredMood != NAME_None ? 2 : 0) + (bSpecificMemory ? 1 : 0);
+    }
+}
+
 FString UShireNPCContextSubsystem::NormalizeLookupKey(const FString& Value)
 {
     FString Key = Value;
@@ -20,6 +35,11 @@ FString UShireNPCContextSubsystem::NormalizeLookupKey(const FString& Value)
 FName UShireNPCContextSubsystem::MakeDialogueKey(FName SpeakerProfileId, FName IntentId)
 {
     return FName(*FString::Printf(TEXT("%s|%s"), *SpeakerProfileId.ToString(), *IntentId.ToString()));
+}
+
+FName UShireNPCContextSubsystem::MakeFilmContextKey(FName RouteId, FName ChapterId)
+{
+    return FName(*FString::Printf(TEXT("%s|%s"), *RouteId.ToString(), *ChapterId.ToString()));
 }
 
 void UShireNPCContextSubsystem::ParseNameArray(
@@ -47,6 +67,37 @@ void UShireNPCContextSubsystem::ParseNameArray(
             if (!StringValue.IsEmpty())
             {
                 OutNames.Add(FName(*StringValue));
+            }
+        }
+    }
+}
+
+void UShireNPCContextSubsystem::ParseStringArray(
+    const TSharedPtr<FJsonObject>& Object,
+    const TCHAR* Field,
+    TArray<FString>& OutStrings)
+{
+    OutStrings.Empty();
+    if (!Object.IsValid())
+    {
+        return;
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* Values = nullptr;
+    if (!Object->TryGetArrayField(Field, Values) || !Values)
+    {
+        return;
+    }
+
+    for (const TSharedPtr<FJsonValue>& Value : *Values)
+    {
+        if (Value.IsValid())
+        {
+            FString StringValue = Value->AsString();
+            StringValue.TrimStartAndEndInline();
+            if (!StringValue.IsEmpty())
+            {
+                OutStrings.Add(StringValue);
             }
         }
     }
@@ -82,35 +133,43 @@ void UShireNPCContextSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     ProfileSchedules.Empty();
     IntentRequiredKnowledge.Empty();
     DialogueVariants.Empty();
+    ChapterMoodById.Empty();
+    ChapterPressureById.Empty();
+    FilmContextsByRouteChapter.Empty();
 
     const bool bSocialLoaded = LoadSocialModel();
     const bool bConversationLoaded = LoadConversationPlan();
     const bool bBoundedLoaded = LoadBoundedDialoguePlan();
+    const bool bRegionalMoodLoaded = LoadRegionalMoodPlan();
     BuildDialogueVariantLibrary();
+    const bool bFilmSourceLoaded = LoadFilmDialogueSourceContext();
 
-    bDataReady = bSocialLoaded && bConversationLoaded && bBoundedLoaded && Profiles.Num() > 0;
+    bDataReady = bSocialLoaded && bConversationLoaded && bBoundedLoaded &&
+        bRegionalMoodLoaded && bFilmSourceLoaded && Profiles.Num() > 0;
 
     if (bDataReady)
     {
         UE_LOG(
             LogTemp,
             Display,
-            TEXT("NPCContext: ready=yes profiles=%d scheduleBindings=%d intentContracts=%d dialogueKeys=%d"),
+            TEXT("NPCContext: ready=yes profiles=%d scheduleBindings=%d intentContracts=%d dialogueKeys=%d filmContextKeys=%d"),
             Profiles.Num(),
             ProfileSchedules.Num(),
             IntentRequiredKnowledge.Num(),
-            DialogueVariants.Num());
+            DialogueVariants.Num(),
+            FilmContextsByRouteChapter.Num());
     }
     else
     {
         UE_LOG(
             LogTemp,
             Error,
-            TEXT("NPCContext: ready=no profiles=%d scheduleBindings=%d intentContracts=%d dialogueKeys=%d"),
+            TEXT("NPCContext: ready=no profiles=%d scheduleBindings=%d intentContracts=%d dialogueKeys=%d filmContextKeys=%d"),
             Profiles.Num(),
             ProfileSchedules.Num(),
             IntentRequiredKnowledge.Num(),
-            DialogueVariants.Num());
+            DialogueVariants.Num(),
+            FilmContextsByRouteChapter.Num());
     }
 }
 
@@ -121,6 +180,9 @@ void UShireNPCContextSubsystem::Deinitialize()
     ProfileSchedules.Empty();
     IntentRequiredKnowledge.Empty();
     DialogueVariants.Empty();
+    ChapterMoodById.Empty();
+    ChapterPressureById.Empty();
+    FilmContextsByRouteChapter.Empty();
     bDataReady = false;
     Super::Deinitialize();
 }
@@ -152,11 +214,15 @@ bool UShireNPCContextSubsystem::LoadSocialModel()
         FString TypeString;
         FString PersistenceTier;
         FString Community;
+        FString Origin;
+        FString Occupation;
         Object->TryGetStringField(TEXT("id"), IdString);
         Object->TryGetStringField(TEXT("display_name"), DisplayName);
         Object->TryGetStringField(TEXT("type"), TypeString);
         Object->TryGetStringField(TEXT("persistence_tier"), PersistenceTier);
         Object->TryGetStringField(TEXT("community"), Community);
+        Object->TryGetStringField(TEXT("origin"), Origin);
+        Object->TryGetStringField(TEXT("occupation"), Occupation);
 
         if (IdString.IsEmpty())
         {
@@ -169,11 +235,16 @@ bool UShireNPCContextSubsystem::LoadSocialModel()
         Profile.ProfileType = FName(*TypeString);
         Profile.PersistenceTier = FName(*PersistenceTier);
         Profile.Community = FName(*Community);
+        Profile.Origin = Origin;
+        Profile.Occupation = Occupation;
         ParseNameArray(Object, TEXT("aliases"), Profile.Aliases);
         ParseNameArray(Object, TEXT("regions"), Profile.Regions);
         ParseNameArray(Object, TEXT("roles"), Profile.Roles);
         ParseNameArray(Object, TEXT("knowledge_tags"), Profile.KnowledgeTags);
         ParseNameArray(Object, TEXT("anchors"), Profile.Anchors);
+        ParseNameArray(Object, TEXT("attitude_tags"), Profile.AttitudeTags);
+        ParseStringArray(Object, TEXT("biography_facts"), Profile.BiographyFacts);
+        ParseStringArray(Object, TEXT("knowledge_limits"), Profile.KnowledgeLimits);
 
         Profiles.Add(Profile.ProfileId, Profile);
         CanonicalLookup.Add(NormalizeLookupKey(IdString), Profile.ProfileId);
@@ -309,6 +380,130 @@ bool UShireNPCContextSubsystem::LoadBoundedDialoguePlan()
     return true;
 }
 
+bool UShireNPCContextSubsystem::LoadRegionalMoodPlan()
+{
+    TSharedPtr<FJsonObject> Root;
+    if (!LoadJsonObject(TEXT("Data/NPCRegionalMoodPlan.json"), Root))
+    {
+        return false;
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* MoodValues = nullptr;
+    if (!Root->TryGetArrayField(TEXT("chapter_moods"), MoodValues) || !MoodValues)
+    {
+        return false;
+    }
+
+    for (const TSharedPtr<FJsonValue>& Value : *MoodValues)
+    {
+        const TSharedPtr<FJsonObject> Object = Value.IsValid() ? Value->AsObject() : nullptr;
+        if (!Object.IsValid())
+        {
+            continue;
+        }
+
+        FString ChapterString;
+        FString MoodString;
+        double Pressure = 0.0;
+        Object->TryGetStringField(TEXT("chapter"), ChapterString);
+        Object->TryGetStringField(TEXT("mood"), MoodString);
+        Object->TryGetNumberField(TEXT("pressure"), Pressure);
+
+        if (ChapterString.IsEmpty() || MoodString.IsEmpty())
+        {
+            continue;
+        }
+
+        const FName ChapterId(*ChapterString);
+        ChapterMoodById.Add(ChapterId, FName(*MoodString));
+        ChapterPressureById.Add(ChapterId, FMath::Clamp(static_cast<float>(Pressure), 0.0f, 1.0f));
+    }
+
+    return ChapterMoodById.Num() > 0;
+}
+
+bool UShireNPCContextSubsystem::LoadFilmDialogueSourceContext()
+{
+    TSharedPtr<FJsonObject> Root;
+    if (!LoadJsonObject(TEXT("Data/FilmDialogueSourceContext.json"), Root)) return false;
+
+    const TArray<TSharedPtr<FJsonValue>>* Values = nullptr;
+    if (!Root->TryGetArrayField(TEXT("part1_contexts"), Values) || !Values) return false;
+
+    for (const TSharedPtr<FJsonValue>& Value : *Values)
+    {
+        const TSharedPtr<FJsonObject> Object = Value.IsValid() ? Value->AsObject() : nullptr;
+        if (!Object.IsValid()) continue;
+
+        FString ContextId, SourceId, RouteId, ChapterId, BeatId, Window;
+        double Sequence = 0.0;
+        Object->TryGetStringField(TEXT("context_id"), ContextId);
+        Object->TryGetStringField(TEXT("source_id"), SourceId);
+        Object->TryGetStringField(TEXT("route"), RouteId);
+        Object->TryGetStringField(TEXT("chapter"), ChapterId);
+        Object->TryGetStringField(TEXT("required_story_beat"), BeatId);
+        Object->TryGetStringField(TEXT("source_window"), Window);
+        Object->TryGetNumberField(TEXT("sequence"), Sequence);
+        if (ContextId.IsEmpty() || SourceId.IsEmpty() || RouteId.IsEmpty() || ChapterId.IsEmpty()) continue;
+
+        FFilmDialogueContextRuntime Context;
+        Context.ContextId = FName(*ContextId);
+        Context.SourceId = FName(*SourceId);
+        Context.RouteId = FName(*RouteId);
+        Context.ChapterId = FName(*ChapterId);
+        Context.RequiredStoryBeat = BeatId.IsEmpty() ? NAME_None : FName(*BeatId);
+        Context.Sequence = static_cast<int32>(Sequence);
+        Context.SourceWindow = Window;
+        ParseNameArray(Object, TEXT("tone_tags"), Context.ToneTags);
+        ParseStringArray(Object, TEXT("safe_topics"), Context.SafeTopics);
+        ParseStringArray(Object, TEXT("future_knowledge_blocks"), Context.FutureKnowledgeBlocks);
+        FilmContextsByRouteChapter.FindOrAdd(MakeFilmContextKey(Context.RouteId, Context.ChapterId)).Add(MoveTemp(Context));
+    }
+
+    for (TPair<FName, TArray<FFilmDialogueContextRuntime>>& Pair : FilmContextsByRouteChapter)
+    {
+        Pair.Value.Sort([](const FFilmDialogueContextRuntime& A, const FFilmDialogueContextRuntime& B)
+        {
+            return A.Sequence < B.Sequence;
+        });
+    }
+
+    const TArray<TSharedPtr<FJsonValue>>* DialogueValues = nullptr;
+    if (Root->TryGetArrayField(TEXT("original_dialogue_variants"), DialogueValues) && DialogueValues)
+    {
+        for (const TSharedPtr<FJsonValue>& Value : *DialogueValues)
+        {
+            const TSharedPtr<FJsonObject> Object = Value.IsValid() ? Value->AsObject() : nullptr;
+            if (!Object.IsValid()) continue;
+
+            FString VariantId, Speaker, Intent, Text, RequiredBeat, RequiredMood;
+            Object->TryGetStringField(TEXT("variant_id"), VariantId);
+            Object->TryGetStringField(TEXT("speaker"), Speaker);
+            Object->TryGetStringField(TEXT("intent"), Intent);
+            Object->TryGetStringField(TEXT("text"), Text);
+            Object->TryGetStringField(TEXT("required_story_beat"), RequiredBeat);
+            Object->TryGetStringField(TEXT("required_mood"), RequiredMood);
+
+            if (VariantId.IsEmpty() || Speaker.IsEmpty() || Intent.IsEmpty() || Text.IsEmpty())
+            {
+                continue;
+            }
+
+            AddDialogueVariant(
+                FName(*Speaker),
+                FName(*Intent),
+                FName(*VariantId),
+                *Text,
+                NAME_None,
+                RequiredBeat.IsEmpty() ? NAME_None : FName(*RequiredBeat),
+                NAME_None,
+                RequiredMood.IsEmpty() ? NAME_None : FName(*RequiredMood));
+        }
+    }
+
+    return FilmContextsByRouteChapter.Num() > 0;
+}
+
 void UShireNPCContextSubsystem::AddDialogueVariant(
     FName SpeakerProfileId,
     FName IntentId,
@@ -316,7 +511,8 @@ void UShireNPCContextSubsystem::AddDialogueVariant(
     const TCHAR* Text,
     FName VoiceCue,
     FName RequiredStoryBeat,
-    FName RequiredMemory)
+    FName RequiredMemory,
+    FName RequiredMood)
 {
     FDialogueVariantRuntime Variant;
     Variant.SpeakerProfileId = SpeakerProfileId;
@@ -326,6 +522,7 @@ void UShireNPCContextSubsystem::AddDialogueVariant(
     Variant.VoiceCue = VoiceCue;
     Variant.RequiredStoryBeat = RequiredStoryBeat;
     Variant.RequiredMemory = RequiredMemory;
+    Variant.RequiredMood = RequiredMood;
     Variant.MaxWords =
         IntentId == TEXT("STORY_REACTION") || IntentId == TEXT("DANGER_WARNING")
             ? MaxWordsStoryReactive
@@ -498,6 +695,80 @@ void UShireNPCContextSubsystem::BuildDialogueVariantLibrary()
     AddDialogueVariant(TEXT("NPC_GALADRIEL"), TEXT("GREETING"), TEXT("GALADRIEL_GREETING_01"),
         TEXT("You have carried much farther than distance alone can measure."),
         TEXT("VO_Greeting_Galadriel_01"));
+    // Contextual companion lines remain offline and reuse existing knowledge,
+    // chapter, memory and repetition gates. No unrecorded voice assets are referenced.
+    struct FRegionalLinePair
+    {
+        const TCHAR* Speaker;
+        const TCHAR* Mood;
+        const TCHAR* First;
+        const TCHAR* Second;
+    };
+    const FRegionalLinePair RegionalLines[] = {
+        { TEXT("NPC_SAM"), TEXT("DEAD_CITY_DREAD"), TEXT("Stay near me. I cannot see far enough to like this place."), TEXT("I will keep watch while you catch your breath.") },
+        { TEXT("NPC_MERRY"), TEXT("DEAD_CITY_DREAD"), TEXT("Keep your steps quiet. Every sound seems to come back twice."), TEXT("Let us count heads before we take another turning.") },
+        { TEXT("NPC_PIPPIN"), TEXT("DEAD_CITY_DREAD"), TEXT("I will be quiet. I would rather not find out what heard us."), TEXT("Could we stay where we can still see each other?") },
+        { TEXT("NPC_ARAGORN"), TEXT("DEAD_CITY_DREAD"), TEXT("Watch the passage behind us. Darkness can conceal more than distance."), TEXT("Stay together and leave room for the others to move.") },
+        { TEXT("NPC_BOROMIR"), TEXT("DEAD_CITY_DREAD"), TEXT("Keep the smaller ones inside our line. I will watch the rear."), TEXT("If something moves, warn the company before you draw it closer.") },
+        { TEXT("NPC_LEGOLAS"), TEXT("DEAD_CITY_DREAD"), TEXT("Listen before you step. The stone carries sounds we cannot yet place."), TEXT("There is too little light ahead. Move carefully.") },
+        { TEXT("NPC_GIMLI"), TEXT("DEAD_CITY_DREAD"), TEXT("These halls deserved voices and lamplight. Tread with respect."), TEXT("Good stone endures, but I do not trust every shadow beneath it.") },
+        { TEXT("NPC_GANDALF"), TEXT("DEAD_CITY_DREAD"), TEXT("Patience. A wrong turning here could cost us dearly."), TEXT("Keep close, and let me study the way ahead.") },
+        { TEXT("NPC_SAM"), TEXT("GRIEF_AND_REFUGE"), TEXT("You need not find words. I can sit here with you."), TEXT("Rest a little. I will be close when you are ready.") },
+        { TEXT("NPC_MERRY"), TEXT("GRIEF_AND_REFUGE"), TEXT("It is quiet here. For once, I am grateful for that."), TEXT("We can take a little time together before we move on.") },
+        { TEXT("NPC_PIPPIN"), TEXT("GRIEF_AND_REFUGE"), TEXT("I do not feel much like talking. May I stay beside you?"), TEXT("I thought finding shelter would make everything feel easier.") },
+        { TEXT("NPC_ARAGORN"), TEXT("GRIEF_AND_REFUGE"), TEXT("Take the rest this place offers. We need not speak yet."), TEXT("Let the company gather itself before the next road.") },
+        { TEXT("NPC_BOROMIR"), TEXT("GRIEF_AND_REFUGE"), TEXT("There is no shame in needing rest. Even a guard must breathe."), TEXT("I will keep my voice down. The others need their peace.") },
+        { TEXT("NPC_LEGOLAS"), TEXT("GRIEF_AND_REFUGE"), TEXT("Let the leaves speak for a while. We have carried enough noise."), TEXT("There is room for silence beneath these trees.") },
+        { TEXT("NPC_GIMLI"), TEXT("GRIEF_AND_REFUGE"), TEXT("I have no fine words for this. You still have my company."), TEXT("Let us rest our feet. Our thoughts may take longer.") },
+
+        { TEXT("NPC_SAM"), TEXT("PEACEFUL_HOME"), TEXT("The lane feels easy today. I hope it stays that way."), TEXT("There is still time for a quiet walk before supper.") },
+        { TEXT("NPC_MERRY"), TEXT("PEACEFUL_HOME"), TEXT("If nothing goes wrong, we may have to invent our own excitement."), TEXT("The Shire is best when nobody is in a hurry.") },
+        { TEXT("NPC_PIPPIN"), TEXT("PEACEFUL_HOME"), TEXT("I was promised food somewhere nearby, and I intend to find it."), TEXT("It is hard to worry when the whole place smells like supper.") },
+        { TEXT("NPC_BILBO"), TEXT("PEACEFUL_HOME"), TEXT("A peaceful road can still hide a good story if you look closely."), TEXT("Home is comfortable, but curiosity never stays quiet for long.") },
+
+        { TEXT("NPC_SAM"), TEXT("SUSPICIOUS_TOWN"), TEXT("Too many eyes in this town. I would rather keep you close."), TEXT("This place feels crowded even when the street is empty.") },
+        { TEXT("NPC_MERRY"), TEXT("SUSPICIOUS_TOWN"), TEXT("Let us hear the room before we decide who sounds friendly."), TEXT("A closed door can be sensible when strangers keep asking questions.") },
+        { TEXT("NPC_PIPPIN"), TEXT("SUSPICIOUS_TOWN"), TEXT("I liked the Shire better when every face had a name."), TEXT("I will try not to attract attention. Try is the important word.") },
+        { TEXT("NPC_ARAGORN"), TEXT("SUSPICIOUS_TOWN"), TEXT("Keep your voices low until we leave these streets."), TEXT("Bree is safer than the wild, not safer than carelessness.") },
+
+        { TEXT("NPC_SAM"), TEXT("PURSUED_WILDERNESS"), TEXT("Do not fall behind. If you stop, I stop with you."), TEXT("Every ridge looks harmless until something moves behind it.") },
+        { TEXT("NPC_MERRY"), TEXT("PURSUED_WILDERNESS"), TEXT("Cross open ground quickly and rest where the land hides us."), TEXT("I keep counting footsteps that are not ours.") },
+        { TEXT("NPC_PIPPIN"), TEXT("PURSUED_WILDERNESS"), TEXT("I am trying not to look behind us every ten steps."), TEXT("If we find cover, I vote we breathe there for a minute.") },
+        { TEXT("NPC_ARAGORN"), TEXT("PURSUED_WILDERNESS"), TEXT("Read the ground before the horizon. Tracks tell you what distance hides."), TEXT("Stay off the obvious line. We are not the only ones here.") },
+
+        { TEXT("NPC_GANDALF"), TEXT("SAFE_REFUGE"), TEXT("Rest is part of the journey. Use it before the road asks more."), TEXT("Safety gives us time to think, not permission to forget danger.") },
+        { TEXT("NPC_BILBO"), TEXT("SAFE_REFUGE"), TEXT("A quiet room after a long road can feel like its own adventure."), TEXT("Sit a while. Stories sound different when nobody is chasing you.") },
+        { TEXT("NPC_ARWEN"), TEXT("SAFE_REFUGE"), TEXT("You are safe enough to breathe here. Let that be enough for now."), TEXT("Healing is not idleness. The road can wait while strength returns.") },
+        { TEXT("NPC_ELROND"), TEXT("SAFE_REFUGE"), TEXT("Use this refuge to see the choice clearly before movement begins again."), TEXT("Peace here is temporary, but clarity need not be.") },
+
+        { TEXT("NPC_GANDALF"), TEXT("FELLOWSHIP_UNDER_PRESSURE"), TEXT("Keep your purpose in sight when the road becomes louder than thought."), TEXT("Pressure reveals weak choices quickly. We will choose carefully.") },
+        { TEXT("NPC_SAM"), TEXT("FELLOWSHIP_UNDER_PRESSURE"), TEXT("Whatever the mountain does, you are not facing it alone."), TEXT("Cold is easier to bear when we keep moving together.") },
+        { TEXT("NPC_ARAGORN"), TEXT("FELLOWSHIP_UNDER_PRESSURE"), TEXT("Close the gaps. Weather can separate us as easily as an enemy."), TEXT("Watch the footing and the company at the same time.") },
+        { TEXT("NPC_GIMLI"), TEXT("FELLOWSHIP_UNDER_PRESSURE"), TEXT("Stone I understand. Snow pretending to be stone is another matter."), TEXT("There are roads beneath mountains as well as over them.") },
+
+        { TEXT("NPC_SAM"), TEXT("FELLOWSHIP_FRACTURE"), TEXT("Something is wrong among us. I am staying where I can see you."), TEXT("The river is quiet, but the company is not.") },
+        { TEXT("NPC_ARAGORN"), TEXT("FELLOWSHIP_FRACTURE"), TEXT("Keep the company in sight. Tension can scatter us before danger arrives."), TEXT("We need clear heads now more than quick feet.") },
+        { TEXT("NPC_BOROMIR"), TEXT("FELLOWSHIP_FRACTURE"), TEXT("Every choice feels heavier here. I need a moment to think clearly."), TEXT("Do not mistake silence for peace. There is too much at stake.") },
+        { TEXT("NPC_LEGOLAS"), TEXT("FELLOWSHIP_FRACTURE"), TEXT("The woods warn of movement, and the company is already unsettled."), TEXT("We should not remain divided while danger closes around us.") },
+
+        { TEXT("NPC_GANDALF"), TEXT("WAR_CORRUPTION"), TEXT("This place no longer feels like counsel. It feels like a trap."), TEXT("Power without restraint has changed the air here.") },
+        { TEXT("NPC_SARUMAN"), TEXT("WAR_CORRUPTION"), TEXT("The old balance is finished. Only those who adapt will shape what follows."), TEXT("Warning cannot reverse what is already in motion.") },
+    };
+    const FName RegionalIntents[] = {
+        TEXT("GREETING"), TEXT("STORY_REACTION"),
+        TEXT("COMPANION_BANTER"), TEXT("TRAVEL_COMMENT")
+    };
+    for (const FRegionalLinePair& Pair : RegionalLines)
+    {
+        for (FName Intent : RegionalIntents)
+        {
+            const FName FirstId(*FString::Printf(TEXT("%s_%s_%s_01"), Pair.Speaker, Pair.Mood, *Intent.ToString()));
+            const FName SecondId(*FString::Printf(TEXT("%s_%s_%s_02"), Pair.Speaker, Pair.Mood, *Intent.ToString()));
+            AddDialogueVariant(Pair.Speaker, Intent, FirstId, Pair.First, NAME_None, NAME_None, NAME_None, Pair.Mood);
+            AddDialogueVariant(Pair.Speaker, Intent, SecondId, Pair.Second, NAME_None, NAME_None, NAME_None, Pair.Mood);
+        }
+    }
+
 }
 
 FName UShireNPCContextSubsystem::ResolveCanonicalProfileId(FName IdAliasOrDisplayName) const
@@ -612,6 +883,184 @@ bool UShireNPCContextSubsystem::ProfileAvailableInCurrentChapter(
     }
 
     return Profile.Regions.Num() == 0 || Profile.Regions.Contains(Region);
+}
+
+FString UShireNPCContextSubsystem::GetProfileContextSummary(FName ProfileHint) const
+{
+    const FName ProfileId = ResolveCanonicalProfileId(ProfileHint);
+    const FShireNPCProfileRuntime* Profile = Profiles.Find(ProfileId);
+    if (!Profile)
+    {
+        return FString();
+    }
+
+    TArray<FString> Parts;
+    Parts.Add(FString::Printf(TEXT("id=%s"), *Profile->ProfileId.ToString()));
+    if (!Profile->DisplayName.IsEmpty()) Parts.Add(FString::Printf(TEXT("name=%s"), *Profile->DisplayName));
+    if (!Profile->Origin.IsEmpty()) Parts.Add(FString::Printf(TEXT("origin=%s"), *Profile->Origin));
+    if (!Profile->Occupation.IsEmpty()) Parts.Add(FString::Printf(TEXT("occupation=%s"), *Profile->Occupation));
+
+    if (Profile->BiographyFacts.Num() > 0)
+    {
+        Parts.Add(FString::Printf(TEXT("history=%s"), *FString::Join(Profile->BiographyFacts, TEXT(" | "))));
+    }
+    if (Profile->KnowledgeLimits.Num() > 0)
+    {
+        Parts.Add(FString::Printf(TEXT("limits=%s"), *FString::Join(Profile->KnowledgeLimits, TEXT(" | "))));
+    }
+
+    TArray<FString> Attitudes;
+    for (const FName Tag : Profile->AttitudeTags)
+    {
+        Attitudes.Add(Tag.ToString());
+    }
+    if (Attitudes.Num() > 0)
+    {
+        Parts.Add(FString::Printf(TEXT("attitudes=%s"), *FString::Join(Attitudes, TEXT(","))));
+    }
+
+    Parts.Add(FString::Printf(TEXT("world_mood=%s"), *GetRegionalWorldMood().ToString()));
+    Parts.Add(FString::Printf(TEXT("world_pressure=%.2f"), GetRegionalPressure()));
+    Parts.Add(FString::Printf(TEXT("emotion=%s"), *GetProfileEmotionalState(ProfileId).ToString()));
+    const FString FilmContext = GetFilmDialogueContextSummary();
+    if (!FilmContext.IsEmpty()) Parts.Add(FString::Printf(TEXT("film_context=%s"), *FilmContext));
+    if (IsDangerStateActive())
+    {
+        Parts.Add(TEXT("danger=ACTIVE"));
+    }
+    if (IsInclementWeather())
+    {
+        Parts.Add(FString::Printf(TEXT("weather=%s"), *WeatherState.ToString()));
+    }
+
+    return FString::Join(Parts, TEXT("; "));
+}
+
+FName UShireNPCContextSubsystem::GetRegionalWorldMood() const
+{
+    const UGameInstance* GI = GetGameInstance();
+    const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests)
+    {
+        return TEXT("CALM_TRAVEL");
+    }
+
+    FName ChapterId = Quests->GetCurrentChapterId();
+    if (Quests->GetCurrentRouteId() == TEXT("GandalfParallel"))
+    {
+        ChapterId = TEXT("P1G01");
+    }
+
+    if (const FName* Mood = ChapterMoodById.Find(ChapterId))
+    {
+        return *Mood;
+    }
+    return TEXT("CALM_TRAVEL");
+}
+
+float UShireNPCContextSubsystem::GetRegionalPressure() const
+{
+    const UGameInstance* GI = GetGameInstance();
+    const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests)
+    {
+        return 0.25f;
+    }
+
+    FName ChapterId = Quests->GetCurrentChapterId();
+    if (Quests->GetCurrentRouteId() == TEXT("GandalfParallel"))
+    {
+        ChapterId = TEXT("P1G01");
+    }
+
+    float Pressure = 0.25f;
+    if (const float* Found = ChapterPressureById.Find(ChapterId))
+    {
+        Pressure = *Found;
+    }
+    if (IsDangerStateActive())
+    {
+        Pressure = FMath::Max(Pressure, 0.90f);
+    }
+    return FMath::Clamp(Pressure, 0.0f, 1.0f);
+}
+
+FName UShireNPCContextSubsystem::GetProfileEmotionalState(FName ProfileHint) const
+{
+    const FName ProfileId = ResolveCanonicalProfileId(ProfileHint);
+    const FShireNPCProfileRuntime* Profile = Profiles.Find(ProfileId);
+    if (!Profile)
+    {
+        return TEXT("CALM");
+    }
+
+    const FName Mood = GetRegionalWorldMood();
+    if (Mood == TEXT("PEACEFUL_HOME")) return TEXT("RELAXED");
+    if (Mood == TEXT("SUSPICIOUS_TOWN")) return TEXT("WATCHFUL");
+    if (Mood == TEXT("SAFE_REFUGE")) return TEXT("RELIEVED");
+    if (Mood == TEXT("GRIEF_AND_REFUGE")) return TEXT("GRIEVING");
+    if (Mood == TEXT("PURSUED_WILDERNESS")) return TEXT("TENSE");
+    if (Mood == TEXT("FELLOWSHIP_UNDER_PRESSURE")) return TEXT("DETERMINED");
+    if (Mood == TEXT("FELLOWSHIP_FRACTURE"))
+    {
+        return ProfileId == TEXT("NPC_BOROMIR") ? FName(TEXT("CONFLICTED")) : FName(TEXT("ALARMED"));
+    }
+    if (Mood == TEXT("WAR_CORRUPTION"))
+    {
+        return ProfileId == TEXT("NPC_SARUMAN") ? FName(TEXT("HOSTILE")) : FName(TEXT("RESOLUTE"));
+    }
+    if (Mood == TEXT("DEAD_CITY_DREAD"))
+    {
+        if (ProfileId == TEXT("NPC_GIMLI")) return TEXT("GRIEVING");
+        return Profile->AttitudeTags.Contains(FName(TEXT("PROTECTIVE")))
+            ? FName(TEXT("GRAVE"))
+            : FName(TEXT("AFRAID"));
+    }
+
+    return GetRegionalPressure() >= 0.75f ? FName(TEXT("ALERT")) : FName(TEXT("CALM"));
+}
+
+const UShireNPCContextSubsystem::FFilmDialogueContextRuntime*
+UShireNPCContextSubsystem::GetActiveFilmDialogueContext() const
+{
+    const UGameInstance* GI = GetGameInstance();
+    const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests) return nullptr;
+
+    const TArray<FFilmDialogueContextRuntime>* Contexts =
+        FilmContextsByRouteChapter.Find(MakeFilmContextKey(Quests->GetCurrentRouteId(), Quests->GetCurrentChapterId()));
+    if (!Contexts) return nullptr;
+
+    const FFilmDialogueContextRuntime* Best = nullptr;
+    for (const FFilmDialogueContextRuntime& Context : *Contexts)
+    {
+        if (Context.RequiredStoryBeat != NAME_None && !Quests->HasStoryBeatTriggered(Context.RequiredStoryBeat)) continue;
+        if (!Best || Context.Sequence >= Best->Sequence) Best = &Context;
+    }
+    return Best;
+}
+
+FName UShireNPCContextSubsystem::GetFilmDialogueContextId() const
+{
+    const FFilmDialogueContextRuntime* Context = GetActiveFilmDialogueContext();
+    return Context ? Context->ContextId : NAME_None;
+}
+
+FString UShireNPCContextSubsystem::GetFilmDialogueContextSummary() const
+{
+    const FFilmDialogueContextRuntime* Context = GetActiveFilmDialogueContext();
+    if (!Context) return FString();
+
+    TArray<FString> Tone;
+    for (const FName Tag : Context->ToneTags) Tone.Add(Tag.ToString());
+
+    TArray<FString> Parts;
+    Parts.Add(FString::Printf(TEXT("id=%s"), *Context->ContextId.ToString()));
+    Parts.Add(FString::Printf(TEXT("source=%s"), *Context->SourceId.ToString()));
+    if (Tone.Num() > 0) Parts.Add(FString::Printf(TEXT("tone=%s"), *FString::Join(Tone, TEXT(","))));
+    if (Context->SafeTopics.Num() > 0) Parts.Add(FString::Printf(TEXT("topics=%s"), *FString::Join(Context->SafeTopics, TEXT(" | "))));
+    if (Context->FutureKnowledgeBlocks.Num() > 0) Parts.Add(FString::Printf(TEXT("future_blocks=%s"), *FString::Join(Context->FutureKnowledgeBlocks, TEXT(" | "))));
+    return FString::Join(Parts, TEXT("; "));
 }
 
 FName UShireNPCContextSubsystem::ResolveSchedulePhase(
@@ -791,6 +1240,8 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
 
+    const FName CurrentMood = GetRegionalWorldMood();
+    int32 BestContextRank = -1;
     TArray<const FDialogueVariantRuntime*> Eligible;
     TArray<const FDialogueVariantRuntime*> Fresh;
     for (const FDialogueVariantRuntime& Variant : *Variants)
@@ -810,6 +1261,19 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
             continue;
         }
 
+        const int32 ContextRank = ShireDialogueContextRank(
+            Variant.RequiredMood, CurrentMood,
+            Variant.RequiredStoryBeat != NAME_None || Variant.RequiredMemory != NAME_None);
+        if (ContextRank < 0 || ContextRank < BestContextRank)
+        {
+            continue;
+        }
+        if (ContextRank > BestContextRank)
+        {
+            Eligible.Reset();
+            Fresh.Reset();
+            BestContextRank = ContextRank;
+        }
         Eligible.Add(&Variant);
         if (!Quests || !Quests->HasRecentNPCDialogueVariant(SpeakerId, Variant.VariantId))
         {
@@ -837,7 +1301,13 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
             SpeakerId,
             ListenerId == NAME_None ? FName(TEXT("PLAYER_FRODO")) : ListenerId);
         Seed = HashCombine(Seed, static_cast<uint32>(RelationshipContext + 100));
+        Seed = HashCombine(Seed, GetTypeHash(Quests->GetRingStateTag()));
+        Seed = HashCombine(Seed, static_cast<uint32>(Quests->GetRingPressureTier()));
     }
+    Seed = HashCombine(Seed, GetTypeHash(GetRegionalWorldMood()));
+    Seed = HashCombine(Seed, static_cast<uint32>(FMath::RoundToInt(GetRegionalPressure() * 100.0f)));
+    const FFilmDialogueContextRuntime* FilmContext = GetActiveFilmDialogueContext();
+    if (FilmContext) Seed = HashCombine(Seed, GetTypeHash(FilmContext->ContextId));
 
     const FDialogueVariantRuntime* Selected = Pool[Seed % static_cast<uint32>(Pool.Num())];
     Result.bValid = true;
@@ -852,6 +1322,13 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
         Selected->RequiredMemory != NAME_None ||
         Selected->RequiredStoryBeat != NAME_None ||
         RelationshipContext != 0;
+    Result.WorldMood = CurrentMood;
+    Result.EmotionalState = GetProfileEmotionalState(SpeakerId);
+    if (FilmContext)
+    {
+        Result.SourceContextId = FilmContext->ContextId;
+        Result.SourceContextSummary = GetFilmDialogueContextSummary();
+    }
 
     if (Quests)
     {
@@ -860,3 +1337,24 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
 
     return Result;
 }
+
+#if WITH_DEV_AUTOMATION_TESTS
+#include "Misc/AutomationTest.h"
+
+IMPLEMENT_SIMPLE_AUTOMATION_TEST(FShireRegionalDialogueTest,
+    "Shire.NPC.RegionalDialogue", EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
+
+bool FShireRegionalDialogueTest::RunTest(const FString& Parameters)
+{
+    const FName Dread(TEXT("DEAD_CITY_DREAD"));
+    const FName Grief(TEXT("GRIEF_AND_REFUGE"));
+    TestEqual(TEXT("Wrong-region lines stay ineligible even with memory"), ShireDialogueContextRank(Dread, Grief, true), -1);
+    TestEqual(TEXT("Unknown mood does not unlock regional text"), ShireDialogueContextRank(Dread, NAME_None, false), -1);
+    TestEqual(TEXT("Generic fallback remains available"), ShireDialogueContextRank(NAME_None, Grief, false), 0);
+    TestTrue(TEXT("Current mood outranks generic remembered text"),
+        ShireDialogueContextRank(Grief, Grief, false) > ShireDialogueContextRank(NAME_None, Grief, true));
+    TestTrue(TEXT("Remembered contextual text wins within a mood"),
+        ShireDialogueContextRank(Grief, Grief, true) > ShireDialogueContextRank(Grief, Grief, false));
+    return true;
+}
+#endif

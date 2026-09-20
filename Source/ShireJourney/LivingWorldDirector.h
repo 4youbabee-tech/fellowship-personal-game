@@ -5,6 +5,7 @@
 #include "LivingWorldDirector.generated.h"
 
 class AShireAmbientNPC;
+class AShireWorldEventInteraction;
 class UShireQuestSubsystem;
 
 UCLASS()
@@ -62,6 +63,10 @@ private:
     void MaintainBaselinePopulation();
     void TryStartMicroEvent();
     bool SpawnEvent(FName EventType, FActiveMicroEvent& OutEvent);
+    AShireWorldEventInteraction* SpawnPlayerInteraction(
+        FName EventId,
+        FName EventType,
+        const FVector& Origin);
     AShireAmbientNPC* SpawnAmbientActor(
         const FVector& Location,
         FName RoutineRole,

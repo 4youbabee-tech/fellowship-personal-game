@@ -1,0 +1,434 @@
+{
+  "schema_version": 1,
+  "plan_id": "MASTER_EXECUTION_ROADMAP_V1",
+  "status": "ACTIVE",
+  "authority": "Data/ProjectGovernor.json",
+  "created_from_head": "9dd82c7b2be42a8182fd7c4eaef70e1e06cff96b",
+  "purpose": "Prevent accepted work from being forgotten while converting the current large request set into dependency-ordered implementation bundles.",
+  "non_override_rule": "This roadmap is subordinate to ProjectGovernor. It may organize execution but cannot change requirement status, canon decisions, evidence status or target profile.",
+  "invariants": [
+    "Peter Jackson film continuity is the mandatory story spine; FILM_CORE changes are source-verified before implementation.",
+    "The One Ring remains the central trilogy state line while the wider ensemble may be playable where the film gives them the action.",
+    "Book Chronicles remain separated from main film continuity.",
+    "All shipped gameplay/intelligence works offline.",
+    "The performance floor remains 720p Low-Medium / 30 FPS on the target laptop profile.",
+    "Compile/static evidence never becomes visual/device acceptance.",
+    "No PR #53 merge until the exact candidate head passes the required validation chain."
+  ],
+  "execution_policy": {
+    "batch_size": "LARGE_COHERENT_BATCHES",
+    "rule": "Prefer substantial coherent batches over tiny isolated edits, but each batch must list the requirements/work items it advances and must preserve the exact-head validation gate.",
+    "request_capture": "Every accepted new user request must first/also enter ProjectGovernor, then be assigned here in the same batch. PG-078 rejects orphan work.",
+    "evidence": "Each bundle closes only from repository/engine/device/human evidence matching its exit criteria."
+  },
+  "current_control_state": {
+    "pull_request": 53,
+    "branch": "work/automation-first-runtime-observation",
+    "baseline_head_before_roadmap": "9dd82c7b2be42a8182fd7c4eaef70e1e06cff96b",
+    "baseline_pre_unreal": "SUCCESS run #361",
+    "baseline_unreal": "PENDING run #196 at roadmap creation",
+    "merge_policy": "Exact current head must be green before develop integration.",
+    "deep_audit": {
+      "status": "ACTIVE_RED_REPAIR",
+      "artifact": "Data/DeepProjectAudit.json",
+      "rule": "Critical exact-head failures block unrelated expansion; audit/repair continues until green."
+    }
+  },
+  "bundles": [
+    {
+      "id": "B0_EXACT_HEAD_STABILITY",
+      "rank": 0,
+      "status": "ACTIVE",
+      "goal": "Make the current integrated branch a trustworthy green candidate before develop integration.",
+      "requirement_ids": [
+        "REQ-CI-001",
+        "REQ-QA-001",
+        "REQ-MEGA-001",
+        "REQ-QUALITY-001",
+        "REQ-SAVE-001",
+        "REQ-PERF-001",
+        "REQ-AUDIT-001"
+      ],
+      "work_ids": [
+        "WORK-MEGA-001",
+        "WORK-QA-001"
+      ],
+      "deliverables": [
+        "Pre-Unreal exact-head validation",
+        "real UE4.27.2 compile",
+        "production import",
+        "playable startup",
+        "P1C01-P1C08 chapter audits",
+        "route/save/Ring/Discovery state audits",
+        "warning-debt guard",
+        "repair loop for any red step",
+        "continuous deep architecture/backend/player-experience audit"
+      ],
+      "exit_evidence": [
+        "PRE_UNREAL_PASS",
+        "UE4_COMPILE_PASS",
+        "ASSET_IMPORT_PASS",
+        "STARTUP_PASS",
+        "CHAPTER_AUDIT_PASS",
+        "STATE_AUDIT_PASS",
+        "WARNING_GUARD_PASS",
+        "DEEP_AUDIT_PASS"
+      ]
+    },
+    {
+      "id": "B1_PART1_STORY_GAMEPLAY_COMPLETE",
+      "rank": 1,
+      "status": "ACTIVE_AFTER_B0_OR_PARALLEL_NON_ENGINE_SAFE",
+      "goal": "Make Part I a complete game around the immutable film scenario rather than a sequence of prototypes.",
+      "requirement_ids": [
+        "REQ-VISION-001",
+        "REQ-COVERAGE-001",
+        "REQ-SOURCE-001",
+        "REQ-RING-001",
+        "REQ-SIDE-001",
+        "REQ-EXP-001",
+        "REQ-EXP-002",
+        "REQ-EXP-003",
+        "REQ-EXP-004",
+        "REQ-EXP-005",
+        "REQ-GAME-001",
+        "REQ-ENSEMBLE-001",
+        "REQ-QUALITY-002"
+      ],
+      "work_ids": [
+        "WORK-EXP-003",
+        "WORK-RING-001",
+        "WORK-SIDE-001",
+        "WORK-ENSEMBLE-001",
+        "WORK-EXP-004",
+        "WORK-EXP-005",
+        "WORK-GAME-001"
+      ],
+      "deliverables": [
+        "chapter-by-chapter verified FILM_CORE anchors",
+        "Ring burden/state continuity",
+        "film-derived playable moments",
+        "ensemble viewpoint missions",
+        "26+ discovery progression and Chronicle integration",
+        "contextual side play in safe gaps",
+        "lightweight modern player-life/progression systems",
+        "story urgency closes inappropriate optional play",
+        "runtime stamina/resolve/supplies/Fellowship Bond",
+        "persistent seven-track utility/content progression",
+        "persistent main-film Chronicle entries and map knowledge",
+        "in-game Chronicle & Journey progression panel",
+        "contextual side-activity type to progression bridge",
+        "reusable ordered traversal challenge runtime",
+        "Shire Field Race physical challenge",
+        "Moria Echo Path physical challenge",
+        "19 contextual side activities with fail-closed film-window runtime gating",
+        "multi-step observation/tracking/pattern/camp/timing/social activity families",
+        "direct crouch-gated STEALTH_LITE activity feeding QUIET_STEP",
+        "dedicated interactable environmental pattern-puzzle runtime",
+        "Rivendell map-table and Moria relief three-step puzzles",
+        "bounded reward-free living-world player responses",
+        "source-grounded readable Chronicle entry labels",
+        "explicit previous/next Chronicle browsing controls",
+        "readable known-map-region presentation",
+        "M-key source-grounded Part I Journey Map",
+        "Map Knowledge-gated route nodes and edges",
+        "film-locked non-killable Watcher runtime pressure",
+        "film-locked non-killable Balrog runtime pressure"
+      ],
+      "exit_evidence": [
+        "STATIC_CANON_COVERAGE",
+        "UE4_CHAPTER_RUNTIME",
+        "SAVE_ROUTE_CONTINUITY",
+        "PIE_PACING_REVIEW"
+      ],
+      "current_runtime_wave": "SOURCE_GROUNDED_MAP_AND_MYTHIC_ENCOUNTERS_V6"
+    },
+    {
+      "id": "B2_CHARACTERS_AND_WORLD_PRODUCTION",
+      "rank": 2,
+      "status": "ACTIVE",
+      "goal": "Replace the proxy look with recognizable production characters and cinematic regional environments.",
+      "requirement_ids": [
+        "REQ-CHAR-001",
+        "REQ-CHAR-002",
+        "REQ-CHAR-003",
+        "REQ-CHAR-004",
+        "REQ-ASSET-001",
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-WORLD-003",
+        "REQ-WORLD-004",
+        "REQ-WORLD-005",
+        "REQ-WORLD-006",
+        "REQ-PROD-005",
+        "REQ-PROD-006"
+      ],
+      "work_ids": [
+        "WORK-CHAR-004",
+        "WORK-CHAR-001",
+        "WORK-WORLD-003",
+        "WORK-WORLD-002",
+        "WORK-WORLD-001"
+      ],
+      "deliverables": [
+        "core-cast source/provenance selection",
+        "rig/skin/retarget/AnimBP pipeline",
+        "proxy-to-production character replacement in priority waves",
+        "hero vistas for every Part I region",
+        "terrain/material/vegetation/water/architecture production pass",
+        "LOD/instancing/culling/material budget enforcement",
+        "source-grounded Part I production atlas for geography/cast/threats/artifacts/battles",
+        "evidence-based production-100 readiness gate",
+        "truthful project-owned character/world foundation inventory",
+        "automated production-readiness contract audit",
+        "nine-region coordinated world production wave",
+        "full Part I hero/threat character production wave"
+      ],
+      "exit_evidence": [
+        "ASSET_PROVENANCE_RECORDED",
+        "UE4_IMPORT_PASS",
+        "UE4_COMPILE_PASS",
+        "PIE_VISUAL_REVIEW",
+        "TARGET_DEVICE_PERFORMANCE"
+      ],
+      "current_production_wave": "PART1_SOURCE_GROUNDED_PRODUCTION_MEGA_V1"
+    },
+    {
+      "id": "B3_LIVING_WORLD_AND_PRESENTATION",
+      "rank": 3,
+      "status": "ACTIVE",
+      "goal": "Make characters and regions feel inhabited, reactive and cinematic without cloud dependencies.",
+      "requirement_ids": [
+        "REQ-NPC-001",
+        "REQ-NPC-002",
+        "REQ-NPC-003",
+        "REQ-NPC-004",
+        "REQ-NPC-005",
+        "REQ-NPC-006"
+      ],
+      "work_ids": [
+        "WORK-LW-004",
+        "WORK-DLG-001",
+        "WORK-LW-005"
+      ],
+      "deliverables": [
+        "named and ambient NPC needs/goals/emotion tuning",
+        "source-grounded original dialogue expansion",
+        "companion memory/banter integration",
+        "regional routine/world-event polish",
+        "audio/voice-cue/camera/lighting presentation polish"
+      ],
+      "exit_evidence": [
+        "OFFLINE_RUNTIME_PASS",
+        "SAVE_MEMORY_PASS",
+        "PIE_DIALOGUE_REVIEW",
+        "PERFORMANCE_PASS"
+      ]
+    },
+    {
+      "id": "B4_ACCEPTANCE_AND_MERGE",
+      "rank": 4,
+      "status": "BLOCKED_UNTIL_RELEVANT_PRODUCTION_BATCHES_READY",
+      "goal": "Convert implementation evidence into trustworthy acceptance and merge only green exact heads.",
+      "requirement_ids": [
+        "REQ-CI-001",
+        "REQ-QA-001",
+        "REQ-QUALITY-001",
+        "REQ-QUALITY-002",
+        "REQ-PERF-001",
+        "REQ-SAVE-001"
+      ],
+      "work_ids": [
+        "WORK-QA-001",
+        "WORK-MEGA-001"
+      ],
+      "deliverables": [
+        "exact-SHA validation report",
+        "target-device performance observation",
+        "save/load/route verification",
+        "chapter traversal/no-blocker proof",
+        "human visual/pacing review",
+        "merge PR only after required checks pass"
+      ],
+      "exit_evidence": [
+        "EXACT_SHA_GREEN",
+        "DEVICE_TESTED",
+        "VISUALLY_ACCEPTED_WHERE_REQUIRED",
+        "DEVELOP_VERIFIED_AFTER_MERGE"
+      ]
+    },
+    {
+      "id": "B5_PART2_SOURCE_VERIFIED_PRODUCTION",
+      "rank": 5,
+      "status": "QUEUED_AFTER_PART1_PRODUCTION_BASELINE",
+      "goal": "Open The Two Towers production using supplied screenplay-derived context and the same film-first/game-around-it rules.",
+      "requirement_ids": [
+        "REQ-VISION-001",
+        "REQ-SOURCE-001",
+        "REQ-ENSEMBLE-001",
+        "REQ-SIDE-001",
+        "REQ-GAME-001"
+      ],
+      "work_ids": [
+        "WORK-ENSEMBLE-001",
+        "WORK-SIDE-001",
+        "WORK-GAME-001"
+      ],
+      "deliverables": [
+        "Frodo/Sam/Gollum route",
+        "Three Hunters/Rohan route",
+        "Merry/Pippin/Fangorn route",
+        "Gandalf/Rohan route",
+        "verified Faramir/Eowyn windows"
+      ],
+      "exit_evidence": [
+        "SOURCE_VERIFIED_PART2",
+        "PART2_RUNTIME_GATES"
+      ]
+    },
+    {
+      "id": "B6_PART3_SOURCE_VERIFIED_PRODUCTION",
+      "rank": 6,
+      "status": "SOURCE_VERIFICATION_REQUIRED",
+      "goal": "Open Return of the King production only after scene-level film/script verification is recorded.",
+      "requirement_ids": [
+        "REQ-VISION-001",
+        "REQ-ENSEMBLE-001",
+        "REQ-SIDE-001",
+        "REQ-RING-001",
+        "REQ-GAME-001"
+      ],
+      "work_ids": [
+        "WORK-ENSEMBLE-001",
+        "WORK-SIDE-001",
+        "WORK-GAME-001",
+        "WORK-RING-001"
+      ],
+      "deliverables": [
+        "Minas Tirith/Gondor",
+        "Rohan/Pelennor",
+        "Paths of the Dead",
+        "Cirith Ungol/Mordor",
+        "Black Gate/Mount Doom",
+        "coronation/Shire/Grey Havens"
+      ],
+      "exit_evidence": [
+        "SOURCE_VERIFIED_PART3",
+        "PART3_RUNTIME_GATES"
+      ]
+    }
+  ],
+  "continuous_lanes": [
+    {
+      "id": "CONTINUOUS_CONTROL",
+      "status": "ACTIVE",
+      "requirement_ids": [
+        "REQ-MEM-001",
+        "REQ-MEM-002",
+        "REQ-MEM-003",
+        "REQ-MEM-004",
+        "REQ-GOV-001",
+        "REQ-ORG-001",
+        "REQ-ENG-002",
+        "REQ-EXEC-001",
+        "REQ-AUDIT-001"
+      ],
+      "work_ids": [
+        "WORK-EXEC-001"
+      ],
+      "duties": [
+        "capture accepted requests",
+        "record conflicts/decisions",
+        "keep source provenance",
+        "keep current-state handoff accurate",
+        "ensure no active work or unfinished requirement becomes orphaned",
+        "keep deep audit findings synchronized with exact-head evidence"
+      ]
+    }
+  ],
+  "tracked_unfinished_requirement_ids": [
+    "REQ-ASSET-001",
+    "REQ-AUDIT-001",
+    "REQ-CHAR-001",
+    "REQ-CHAR-002",
+    "REQ-CHAR-003",
+    "REQ-CHAR-004",
+    "REQ-CI-001",
+    "REQ-COVERAGE-001",
+    "REQ-ENG-002",
+    "REQ-ENSEMBLE-001",
+    "REQ-EXEC-001",
+    "REQ-EXP-001",
+    "REQ-EXP-002",
+    "REQ-EXP-003",
+    "REQ-EXP-004",
+    "REQ-EXP-005",
+    "REQ-GAME-001",
+    "REQ-GOV-001",
+    "REQ-MEGA-001",
+    "REQ-MEM-001",
+    "REQ-MEM-002",
+    "REQ-MEM-003",
+    "REQ-MEM-004",
+    "REQ-NPC-001",
+    "REQ-NPC-002",
+    "REQ-NPC-003",
+    "REQ-NPC-004",
+    "REQ-NPC-005",
+    "REQ-NPC-006",
+    "REQ-ORG-001",
+    "REQ-PERF-001",
+    "REQ-PROD-005",
+    "REQ-PROD-006",
+    "REQ-QA-001",
+    "REQ-QUALITY-001",
+    "REQ-QUALITY-002",
+    "REQ-RING-001",
+    "REQ-SAVE-001",
+    "REQ-SIDE-001",
+    "REQ-SOURCE-001",
+    "REQ-VISION-001",
+    "REQ-WORLD-001",
+    "REQ-WORLD-002",
+    "REQ-WORLD-003",
+    "REQ-WORLD-004",
+    "REQ-WORLD-005",
+    "REQ-WORLD-006"
+  ],
+  "tracked_active_work_ids": [
+    "WORK-CHAR-001",
+    "WORK-CHAR-004",
+    "WORK-DLG-001",
+    "WORK-ENSEMBLE-001",
+    "WORK-EXEC-001",
+    "WORK-EXP-003",
+    "WORK-EXP-004",
+    "WORK-EXP-005",
+    "WORK-GAME-001",
+    "WORK-LW-004",
+    "WORK-MEGA-001",
+    "WORK-QA-001",
+    "WORK-RING-001",
+    "WORK-SIDE-001",
+    "WORK-WORLD-001",
+    "WORK-WORLD-002",
+    "WORK-WORLD-003"
+  ],
+  "immediate_next_large_actions": [
+    "Green the exact-head material/import warning gate.",
+    "Run deep audit and real UE4.27 evidence chain on the same SHA.",
+    "Measure NPC social scans and chapter-transition synchronous loads on target device before refactoring.",
+    "Resume large visible Part I production only after stability gate is green."
+  ],
+  "last_reconciliation": {
+    "date": "2026-09-20",
+    "reason": "Synchronize owner-approved living NPC intelligence requirement/work item with ProjectGovernor.",
+    "added_requirement_ids": [
+      "REQ-NPC-006"
+    ],
+    "added_work_ids": [
+      "WORK-LW-005"
+    ],
+    "authority": "Data/ProjectGovernor.json"
+  }
+}

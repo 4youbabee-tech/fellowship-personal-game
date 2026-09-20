@@ -1,0 +1,248 @@
+{
+  "schema_version": 1,
+  "map_id": "PART1_WORLD_MAP_V1",
+  "status": "RUNTIME_SCHEMATIC_SOURCE_GROUNDED",
+  "coordinate_system": "Normalized schematic coordinates; geographic ordering is source-grounded but distances are intentionally non-literal.",
+  "spoiler_policy": "Nodes are visible only for the current route/chapter or after that chapter has been learned through Map Knowledge. Edges require both endpoint nodes to be visible.",
+  "macro_regions": [
+    {
+      "id": "ERIADOR",
+      "display_name": "Eriador"
+    },
+    {
+      "id": "MISTY_MOUNTAINS",
+      "display_name": "Misty Mountains"
+    },
+    {
+      "id": "WEST_ANDUIN",
+      "display_name": "West of Anduin"
+    },
+    {
+      "id": "NEN_HITHOEL",
+      "display_name": "Nen Hithoel / Anduin corridor"
+    },
+    {
+      "id": "GAP_OF_ROHAN",
+      "display_name": "Gap of Rohan"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "MAP_HOBBITON",
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "display_name": "Hobbiton / Bag End",
+      "macro_region": "Eriador",
+      "x": 0.08,
+      "y": 0.18,
+      "chapter_anchor": true
+    },
+    {
+      "id": "MAP_PARTY_FIELD",
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "display_name": "Party Field",
+      "macro_region": "Eriador",
+      "x": 0.12,
+      "y": 0.22
+    },
+    {
+      "id": "MAP_BUCKLEBURY_FERRY",
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "display_name": "Bucklebury Ferry / Brandywine",
+      "macro_region": "Eriador",
+      "x": 0.22,
+      "y": 0.26
+    },
+    {
+      "id": "MAP_BREE",
+      "route": "FrodoMain",
+      "chapter": "P1C02",
+      "display_name": "Bree / The Prancing Pony",
+      "macro_region": "Eriador",
+      "x": 0.33,
+      "y": 0.26,
+      "chapter_anchor": true
+    },
+    {
+      "id": "MAP_WEATHERTOP",
+      "route": "FrodoMain",
+      "chapter": "P1C03",
+      "display_name": "Weathertop / Amon Sul",
+      "macro_region": "Eriador",
+      "x": 0.43,
+      "y": 0.29,
+      "chapter_anchor": true
+    },
+    {
+      "id": "MAP_FORD_BRUINEN",
+      "route": "FrodoMain",
+      "chapter": "P1C03",
+      "display_name": "Ford of Bruinen",
+      "macro_region": "Eriador",
+      "x": 0.52,
+      "y": 0.25
+    },
+    {
+      "id": "MAP_RIVENDELL",
+      "route": "FrodoMain",
+      "chapter": "P1C04",
+      "display_name": "Rivendell / Imladris",
+      "macro_region": "Eriador",
+      "x": 0.6,
+      "y": 0.2,
+      "chapter_anchor": true
+    },
+    {
+      "id": "MAP_CARADHRAS",
+      "route": "FrodoMain",
+      "chapter": "P1C05",
+      "display_name": "Caradhras / Redhorn Pass",
+      "macro_region": "Misty Mountains",
+      "x": 0.66,
+      "y": 0.33,
+      "chapter_anchor": true
+    },
+    {
+      "id": "MAP_WEST_GATE",
+      "route": "FrodoMain",
+      "chapter": "P1C05",
+      "display_name": "Moria Lake / West Gate",
+      "macro_region": "Misty Mountains",
+      "x": 0.62,
+      "y": 0.43
+    },
+    {
+      "id": "MAP_MORIA",
+      "route": "FrodoMain",
+      "chapter": "P1C06",
+      "display_name": "Moria / Khazad-dum",
+      "macro_region": "Misty Mountains",
+      "x": 0.67,
+      "y": 0.49,
+      "chapter_anchor": true
+    },
+    {
+      "id": "MAP_LOTHLORIEN",
+      "route": "FrodoMain",
+      "chapter": "P1C07",
+      "display_name": "Lothlorien / Caras Galadhon",
+      "macro_region": "West of Anduin",
+      "x": 0.72,
+      "y": 0.57,
+      "chapter_anchor": true
+    },
+    {
+      "id": "MAP_ANDUIN",
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "display_name": "River Anduin",
+      "macro_region": "Nen Hithoel / Anduin corridor",
+      "x": 0.78,
+      "y": 0.65,
+      "chapter_anchor": true
+    },
+    {
+      "id": "MAP_ARGONATH",
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "display_name": "Pillars of the Kings / Argonath",
+      "macro_region": "Nen Hithoel / Anduin corridor",
+      "x": 0.82,
+      "y": 0.72
+    },
+    {
+      "id": "MAP_PARTH_GALEN",
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "display_name": "Parth Galen / Nen Hithoel",
+      "macro_region": "Nen Hithoel / Anduin corridor",
+      "x": 0.85,
+      "y": 0.8
+    },
+    {
+      "id": "MAP_AMON_HEN",
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "display_name": "Amon Hen",
+      "macro_region": "Nen Hithoel / Anduin corridor",
+      "x": 0.89,
+      "y": 0.85
+    },
+    {
+      "id": "MAP_ISENGARD",
+      "route": "GandalfParallel",
+      "chapter": "P1C01",
+      "display_name": "Isengard / Orthanc",
+      "macro_region": "Gap of Rohan",
+      "x": 0.5,
+      "y": 0.82,
+      "chapter_anchor": true
+    }
+  ],
+  "edges": [
+    [
+      "MAP_HOBBITON",
+      "MAP_PARTY_FIELD"
+    ],
+    [
+      "MAP_PARTY_FIELD",
+      "MAP_BUCKLEBURY_FERRY"
+    ],
+    [
+      "MAP_BUCKLEBURY_FERRY",
+      "MAP_BREE"
+    ],
+    [
+      "MAP_BREE",
+      "MAP_WEATHERTOP"
+    ],
+    [
+      "MAP_WEATHERTOP",
+      "MAP_FORD_BRUINEN"
+    ],
+    [
+      "MAP_FORD_BRUINEN",
+      "MAP_RIVENDELL"
+    ],
+    [
+      "MAP_RIVENDELL",
+      "MAP_CARADHRAS"
+    ],
+    [
+      "MAP_CARADHRAS",
+      "MAP_WEST_GATE"
+    ],
+    [
+      "MAP_WEST_GATE",
+      "MAP_MORIA"
+    ],
+    [
+      "MAP_MORIA",
+      "MAP_LOTHLORIEN"
+    ],
+    [
+      "MAP_LOTHLORIEN",
+      "MAP_ANDUIN"
+    ],
+    [
+      "MAP_ANDUIN",
+      "MAP_ARGONATH"
+    ],
+    [
+      "MAP_ARGONATH",
+      "MAP_PARTH_GALEN"
+    ],
+    [
+      "MAP_PARTH_GALEN",
+      "MAP_AMON_HEN"
+    ]
+  ],
+  "rules": [
+    "The map is a schematic travel aid, not a literal Tolkien cartographic reconstruction.",
+    "Modern country names are never substituted for Middle-earth regions.",
+    "Map display never advances story state or grants progression.",
+    "Future chapters remain hidden until learned through the existing Map Knowledge state."
+  ]
+}

@@ -13,8 +13,9 @@ permissions:
   contents: read
 
 concurrency:
-  group: unreal-build-${{ github.event.pull_request.number || github.ref_name }}
-  cancel-in-progress: true
+  group: unreal-build-${{ github.repository }}-ue4-device
+  # Shared UE4 device runs serialize; never interrupt an active engine validation.
+  cancel-in-progress: false
 
 jobs:
   unreal-build:
@@ -25,6 +26,8 @@ jobs:
       - X64
       - ue4-27
     timeout-minutes: 55
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
     steps:
       - name: Bootstrap Windows runner tools
@@ -32,519 +35,124 @@ jobs:
         run: |
           @echo off
           setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE if exist "C:\Program Files (x86)\Git\cmd\git.exe" set "GITEXE=C:\Program Files (x86)\Git\cmd\git.exe"
 
-          rem Do not terminate Runner.Listener/Runner.Worker/watchdog processes from
-          rem inside an active Actions step. A listener exit can clean _work\_temp and
-          rem delete the batch file that is currently executing, producing the
-          rem intermittent "The batch file cannot be found" bootstrap failure.
-          rem The legacy watchdog autostart/files are retired with non-destructive cmd
-          rem operations only; runner-process lifecycle stays outside the validation job.
-          reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v FellowshipGitHubRunnerWatchdog /f >nul 2>nul
-          del /Q "C:\actions-runner\runner-watchdog.ps1" >nul 2>nul
-          del /Q "C:\actions-runner\start-runner-watchdog.cmd" >nul 2>nul
-
-          where git.exe >nul 2>nul
-          if not errorlevel 1 (
-            for /f "delims=" %%G in ('where git.exe') do (
-              echo Found Git: %%G
-              goto :git_ready
+          if not defined GITEXE (
+            set "MGROOT=%RUNNER_TEMP%\mingit-2.55.0.5"
+            set "MGZIP=%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip"
+            if not exist "%RUNNER_TEMP%\mingit-2.55.0.5\cmd\git.exe" (
+              if exist "%RUNNER_TEMP%\mingit-2.55.0.5" rmdir /S /Q "%RUNNER_TEMP%\mingit-2.55.0.5"
+              if exist "%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip" del /F /Q "%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip"
+              curl.exe -L --retry 3 --retry-delay 3 -o "%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip" "https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.5/MinGit-2.55.0.5-64-bit.zip"
+              if errorlevel 1 exit /b 20
+              powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath (Join-Path $env:RUNNER_TEMP 'MinGit-2.55.0.5-64-bit.zip') -DestinationPath (Join-Path $env:RUNNER_TEMP 'mingit-2.55.0.5') -Force"
+              if errorlevel 1 exit /b 21
             )
+            set "GITEXE=%RUNNER_TEMP%\mingit-2.55.0.5\cmd\git.exe"
           )
 
-          for %%G in ("C:\Program Files\Git\cmd\git.exe" "C:\Program Files (x86)\Git\cmd\git.exe") do (
-            if exist "%%~G" (
-              set "GITDIR=%%~dpG"
-              echo Found Git: %%~G
-              echo !GITDIR!>>"%GITHUB_PATH%"
-              set "PATH=!GITDIR!;%PATH%"
-              goto :git_ready
-            )
-          )
+          if not exist "!GITEXE!" exit /b 22
+          echo Found Git: !GITEXE!
+          "!GITEXE!" --version
+          if errorlevel 1 exit /b 22
 
-          echo Git is not visible to the Windows service. Bootstrapping a private MinGit copy for CI...
-          set "MINGIT_ROOT=%RUNNER_TEMP%\mingit-2.55.0.5"
-          set "MINGIT_ZIP=%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip"
-          set "MINGIT_URL=https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.5/MinGit-2.55.0.5-64-bit.zip"
-
-          if not exist "!MINGIT_ROOT!\cmd\git.exe" (
-            if exist "!MINGIT_ROOT!" rmdir /S /Q "!MINGIT_ROOT!"
-            if exist "!MINGIT_ZIP!" del /Q "!MINGIT_ZIP!"
-
-            curl.exe -L --retry 3 --retry-delay 3 -o "!MINGIT_ZIP!" "!MINGIT_URL!"
-            if errorlevel 1 (
-              echo ERROR: Failed to download MinGit.
-              exit /b 20
-            )
-
-            powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath '!MINGIT_ZIP!' -DestinationPath '!MINGIT_ROOT!' -Force"
-            if errorlevel 1 (
-              echo ERROR: Failed to extract MinGit.
-              exit /b 21
-            )
-          )
-
-          set "GITDIR=!MINGIT_ROOT!\cmd"
-          set "GITBIN=!MINGIT_ROOT!\mingw64\bin"
-          echo !GITDIR!>>"%GITHUB_PATH%"
-          echo !GITBIN!>>"%GITHUB_PATH%"
-          set "PATH=!GITDIR!;!GITBIN!;%PATH%"
-
-          :git_ready
-          git --version
-          if errorlevel 1 (
-            echo ERROR: Git bootstrap did not produce a working git.exe.
-            exit /b 22
-          )
-
+          set "STABLE_CHECKOUT=%GITHUB_WORKSPACE%\..\fellowship_exact_checkout.cmd"
+          >"!STABLE_CHECKOUT!" echo @echo off
+          >>"!STABLE_CHECKOUT!" echo setlocal EnableExtensions
+          >>"!STABLE_CHECKOUT!" echo cd /d "%%GITHUB_WORKSPACE%%"
+          >>"!STABLE_CHECKOUT!" echo if exist ".git" rmdir /S /Q ".git"
+          >>"!STABLE_CHECKOUT!" echo if exist ".git" exit /b 76
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" init
+          >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 70
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" remote add origin "https://x-access-token:%%GH_TOKEN%%@github.com/%%GITHUB_REPOSITORY%%.git"
+          >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 71
+          >>"!STABLE_CHECKOUT!" echo set ATTEMPT=0
+          >>"!STABLE_CHECKOUT!" echo :fetch
+          >>"!STABLE_CHECKOUT!" echo set /a ATTEMPT+=1
+          >>"!STABLE_CHECKOUT!" echo echo Fetching exact PR head attempt %%ATTEMPT%% of 7...
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" fetch --no-tags --prune --depth=1 origin %%TARGET_SHA%%
+          >>"!STABLE_CHECKOUT!" echo if not errorlevel 1 goto fetched
+          >>"!STABLE_CHECKOUT!" echo if %%ATTEMPT%% GEQ 7 exit /b 72
+          >>"!STABLE_CHECKOUT!" echo powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 5"
+          >>"!STABLE_CHECKOUT!" echo goto fetch
+          >>"!STABLE_CHECKOUT!" echo :fetched
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" checkout -f FETCH_HEAD
+          >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 73
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" reset --hard %%TARGET_SHA%%
+          >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 73
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" rev-parse HEAD ^> .ci-head-sha
+          >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 74
+          >>"!STABLE_CHECKOUT!" echo set /p CHECKED_SHA=^<.ci-head-sha
+          >>"!STABLE_CHECKOUT!" echo if /I not "%%CHECKED_SHA%%"=="%%TARGET_SHA%%" echo ERROR: Checkout SHA mismatch. expected=%%TARGET_SHA%% actual=%%CHECKED_SHA%%
+          >>"!STABLE_CHECKOUT!" echo if /I not "%%CHECKED_SHA%%"=="%%TARGET_SHA%%" exit /b 74
+          >>"!STABLE_CHECKOUT!" echo ^>.ci-source-sha echo %%TARGET_SHA%%
+          >>"!STABLE_CHECKOUT!" echo if not exist "ShireJourney.uproject" echo ERROR: ShireJourney.uproject missing after exact checkout.
+          >>"!STABLE_CHECKOUT!" echo if not exist "ShireJourney.uproject" exit /b 75
+          >>"!STABLE_CHECKOUT!" echo echo Exact-head checkout and verification complete: %%TARGET_SHA%%.
+          >>"!STABLE_CHECKOUT!" echo exit /b 0
+          if not exist "!STABLE_CHECKOUT!" exit /b 23
+          echo Stable exact-head checkout script: !STABLE_CHECKOUT!
           echo Runner bootstrap succeeded.
 
-      - name: Checkout exact commit with resilient archive download
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
+      - name: Checkout exact PR head from stable script
+        shell: cmd
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          $ErrorActionPreference = "Stop"
-
-          $Archive = Join-Path $env:RUNNER_TEMP ("fellowship-" + $env:GITHUB_SHA + ".zip")
-          $Extract = Join-Path $env:RUNNER_TEMP ("fellowship-" + $env:GITHUB_SHA)
-
-          if (Test-Path $Archive) { Remove-Item -LiteralPath $Archive -Force }
-          if (Test-Path $Extract) { Remove-Item -LiteralPath $Extract -Recurse -Force }
-          New-Item -ItemType Directory -Path $Extract | Out-Null
-
-          $Url = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/zipball/$env:GITHUB_SHA"
-          & curl.exe -L --fail --retry 6 --retry-delay 5 --retry-all-errors -H "Authorization: Bearer $env:GH_TOKEN" -H "X-GitHub-Api-Version: 2022-11-28" -o $Archive $Url
-          if ($LASTEXITCODE -ne 0) {
-            throw "Exact-commit archive download failed after retries."
-          }
-
-          Expand-Archive -LiteralPath $Archive -DestinationPath $Extract -Force
-          $Root = Get-ChildItem -LiteralPath $Extract -Directory | Select-Object -First 1
-          if (-not $Root) {
-            throw "Exact-commit archive did not contain a repository root directory."
-          }
-
-          Get-ChildItem -LiteralPath $env:GITHUB_WORKSPACE -Force | Remove-Item -Recurse -Force
-          Get-ChildItem -LiteralPath $Root.FullName -Force | Copy-Item -Destination $env:GITHUB_WORKSPACE -Recurse -Force
-
-          $Project = Join-Path $env:GITHUB_WORKSPACE "ShireJourney.uproject"
-          if (-not (Test-Path $Project)) {
-            throw "ShireJourney.uproject missing after exact-commit archive extraction."
-          }
-
-          Set-Content -LiteralPath (Join-Path $env:GITHUB_WORKSPACE ".ci-source-sha") -Value $env:GITHUB_SHA
-          Write-Host "Checked out exact commit $env:GITHUB_SHA without actions/checkout."
+        run: '"%GITHUB_WORKSPACE%\..\fellowship_exact_checkout.cmd"'
 
       - name: Verify Unreal 4.27.2 and project
         shell: cmd
-        run: |
-          @echo off
-          set "PROJECT=%GITHUB_WORKSPACE%\ShireJourney.uproject"
-          set "UEROOT=C:\Program Files\Epic Games\UE_4.27"
-          set "BUILDBAT=C:\Program Files\Epic Games\UE_4.27\Engine\Build\BatchFiles\Build.bat"
-          set "BUILDVERSION=C:\Program Files\Epic Games\UE_4.27\Engine\Build\Build.version"
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_verify_unreal.cmd"'
 
-          if not exist "%PROJECT%" (
-            echo ERROR: ShireJourney.uproject was not found at "%PROJECT%"
-            exit /b 30
-          )
-          if not exist "%BUILDBAT%" (
-            echo ERROR: UE4 Build.bat was not found at "%BUILDBAT%"
-            exit /b 31
-          )
-          if not exist "%BUILDVERSION%" (
-            echo ERROR: UE4 Build.version was not found at "%BUILDVERSION%"
-            exit /b 32
-          )
-
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$v = Get-Content '%BUILDVERSION%' -Raw | ConvertFrom-Json; Write-Host ('Detected Unreal Engine {0}.{1}.{2}' -f $v.MajorVersion,$v.MinorVersion,$v.PatchVersion); if ($v.MajorVersion -ne 4 -or $v.MinorVersion -ne 27 -or $v.PatchVersion -ne 2) { exit 33 }"
-          if errorlevel 1 (
-            echo ERROR: Expected Unreal Engine 4.27.2.
-            exit /b 33
-          )
-
-      - name: Refuse build while Unreal Editor is open
+      - name: Wait safely for Unreal Editor to close
         shell: cmd
-        run: |
-          @echo off
-          tasklist /FI "IMAGENAME eq UE4Editor.exe" | find /I "UE4Editor.exe" >nul
-          if not errorlevel 1 (
-            echo ERROR: UE4Editor.exe is open. Close Unreal Editor before automated validation.
-            exit /b 40
-          )
-          echo Unreal Editor is closed.
-          exit /b 0
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_wait_for_unreal_editor.cmd"'
+
+      - name: Prepare and probe local MSVC environment
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\prepare_msvc_environment.ps1"'
+
+      - name: Reset project build intermediates
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\reset_project_build_intermediates.ps1"'
 
       - name: Build ShireJourneyEditor
         shell: cmd
-        run: |
-          @echo off
-          setlocal EnableExtensions EnableDelayedExpansion
-          set "PROJECT=%GITHUB_WORKSPACE%\ShireJourney.uproject"
-          set "BUILDBAT=C:\Program Files\Epic Games\UE_4.27\Engine\Build\BatchFiles\Build.bat"
-          set "LOGDIR=%GITHUB_WORKSPACE%\Saved\Logs"
-          set "BUILDLOG=%GITHUB_WORKSPACE%\Saved\Logs\CI-UnrealBuild.log"
-
-          if not exist "%LOGDIR%" mkdir "%LOGDIR%"
-
-          echo Building exact commit: %GITHUB_SHA%
-          echo Project: %PROJECT%
-          echo Build log: %BUILDLOG%
-          echo Build parallelism: 2 actions, with automatic single-action retry on MSVC PCH virtual-memory exhaustion.
-
-          call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=2 > "%BUILDLOG%" 2>&1
-          set "BUILD_EXIT=!ERRORLEVEL!"
-
-          if not "!BUILD_EXIT!"=="0" (
-            findstr /I /C:"error C3859" /C:"fatal error C1076" "%BUILDLOG%" >nul
-            if not errorlevel 1 (
-              echo.>>"%BUILDLOG%"
-              echo CI_BUILD_RETRY: MSVC PCH memory pressure detected; retrying with MaxParallelActions=1.>>"%BUILDLOG%"
-              call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=1 >> "%BUILDLOG%" 2>&1
-              set "BUILD_EXIT=!ERRORLEVEL!"
-            )
-          )
-
-          type "%BUILDLOG%"
-
-          if not "!BUILD_EXIT!"=="0" (
-            echo ERROR: UE4.27.2 build failed with exit code !BUILD_EXIT!.
-            exit /b !BUILD_EXIT!
-          )
-
-          echo UE4.27.2 build succeeded.
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_build_unreal.cmd"'
 
       - name: Import production assets in UE4.27.2
         shell: cmd
-        run: |
-          @echo off
-          setlocal EnableExtensions
-          set "PROJECT=%GITHUB_WORKSPACE%\ShireJourney.uproject"
-          set "EDITORCMD=C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor-Cmd.exe"
-          set "LOGDIR=%GITHUB_WORKSPACE%\Saved\Logs"
-          set "IMPORTLOG=%GITHUB_WORKSPACE%\Saved\Logs\CI-ProductionAssetImport.log"
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_import_production_assets.cmd"'
 
-          if not exist "%EDITORCMD%" (
-            echo ERROR: UE4Editor-Cmd.exe was not found at "%EDITORCMD%"
-            exit /b 50
-          )
-          if not exist "%LOGDIR%" mkdir "%LOGDIR%"
-
-          echo Importing production source assets for exact commit: %GITHUB_SHA%
-          "%EDITORCMD%" "%PROJECT%" -run=ShireProductionImport -unattended -nop4 -nosplash -NoSound -abslog="%IMPORTLOG%"
-          set "IMPORT_EXIT=%ERRORLEVEL%"
-
-          if exist "%IMPORTLOG%" (
-            findstr /I /C:"ShireProductionImport:" /C:"ShireProductionImport FAILED" /C:"Error:" /C:"Warning:" "%IMPORTLOG%"
-          )
-
-          if not "%IMPORT_EXIT%"=="0" (
-            echo ERROR: UE4.27.2 production asset import failed with exit code %IMPORT_EXIT%.
-            exit /b %IMPORT_EXIT%
-          )
-
-          findstr /C:"ShireProductionImport:" "%IMPORTLOG%" | findstr /C:"0 failures" >nul
-          if errorlevel 1 (
-            echo ERROR: Production asset import did not report zero failures.
-            exit /b 51
-          )
-
-          echo UE4.27.2 production asset import succeeded.
+      - name: Resolve local Python for runtime observation
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\resolve_runtime_python.ps1"'
 
       - name: Headless playable startup smoke
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
-        run: |
-          $ErrorActionPreference = "Stop"
-
-          $Project = Join-Path $env:GITHUB_WORKSPACE "ShireJourney.uproject"
-          $EditorCmd = "C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor-Cmd.exe"
-          $LogDir = Join-Path $env:GITHUB_WORKSPACE "Saved\Logs"
-          $BootLog = Join-Path $LogDir "CI-PlayableStartup.log"
-
-          if (-not (Test-Path $EditorCmd)) {
-            throw "UE4Editor-Cmd.exe missing for playable startup smoke."
-          }
-          if (-not (Test-Path $LogDir)) {
-            New-Item -ItemType Directory -Path $LogDir | Out-Null
-          }
-          if (Test-Path $BootLog) {
-            Remove-Item -LiteralPath $BootLog -Force
-          }
-
-          $Args = @(
-            $Project,
-            "/Engine/Maps/Templates/Template_Default",
-            "-game",
-            "-nullrhi",
-            "-unattended",
-            "-nop4",
-            "-nosplash",
-            "-NoSound",
-            "-abslog=$BootLog"
-          )
-
-          Write-Host "Launching headless playable startup smoke for commit $env:GITHUB_SHA"
-          $Proc = Start-Process -FilePath $EditorCmd -ArgumentList $Args -PassThru
-          $Deadline = (Get-Date).AddSeconds(45)
-          $SeenGameMode = $false
-          $SeenChapter = $false
-
-          while ((Get-Date) -lt $Deadline) {
-            if (Test-Path $BootLog) {
-              $Text = Get-Content -LiteralPath $BootLog -Raw -ErrorAction SilentlyContinue
-              if ($Text -match "ShirePlayableStartup: GameMode ready") {
-                $SeenGameMode = $true
-              }
-              if ($Text -match "ShirePlayableStartup: chapter=P1C01 route=FrodoMain") {
-                $SeenChapter = $true
-              }
-              if ($SeenGameMode -and $SeenChapter) {
-                break
-              }
-            }
-
-            if ($Proc.HasExited) {
-              break
-            }
-            Start-Sleep -Seconds 1
-          }
-
-          if (-not $Proc.HasExited) {
-            Stop-Process -Id $Proc.Id -Force -ErrorAction SilentlyContinue
-            $Proc.WaitForExit()
-          }
-
-          if (Test-Path $BootLog) {
-            Write-Host "----- Playable startup log tail -----"
-            Get-Content -LiteralPath $BootLog -Tail 180
-          }
-
-          if (-not $SeenGameMode) {
-            throw "Playable startup smoke did not observe the GameMode startup marker."
-          }
-          if (-not $SeenChapter) {
-            throw "Playable startup smoke did not observe P1C01/FrodoMain world load."
-          }
-
-          Write-Host "Headless playable startup smoke succeeded."
+        shell: cmd
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_startup.cmd"'
 
       - name: Headless chapter-by-chapter runtime audit
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
-        run: |
-          $ErrorActionPreference = "Stop"
+        shell: cmd
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_chapters.cmd"'
 
-          $Project = Join-Path $env:GITHUB_WORKSPACE "ShireJourney.uproject"
-          $EditorCmd = "C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Editor-Cmd.exe"
-          $LogDir = Join-Path $env:GITHUB_WORKSPACE "Saved\Logs"
-          $Chapters = @("P1C01","P1C02","P1C03","P1C04","P1C05","P1C06","P1C07","P1C08")
-
-          foreach ($Chapter in $Chapters) {
-            $AuditLog = Join-Path $LogDir ("CI-ChapterAudit-" + $Chapter + ".log")
-            $Passed = $false
-            $SeenRequested = $false
-            $SeenLoaded = $false
-            $SeenLivingWorld = $false
-            $SeenWeather = $false
-
-            for ($Attempt = 1; $Attempt -le 2 -and -not $Passed; $Attempt++) {
-              if (Test-Path $AuditLog) {
-                Remove-Item -LiteralPath $AuditLog -Force
-              }
-
-              # A previous forced headless shutdown can leave UE helper processes alive
-              # briefly on the constrained self-hosted runner. Clear only those helpers
-              # before a retry; a chapter that reached its request marker is never retried.
-              if ($Attempt -gt 1) {
-                Get-Process -Name "CrashReportClientEditor","ShaderCompileWorker" -ErrorAction SilentlyContinue |
-                  Stop-Process -Force -ErrorAction SilentlyContinue
-                Start-Sleep -Seconds 4
-              }
-
-              $Args = @(
-                $Project,
-                "/Engine/Maps/Templates/Template_Default",
-                "-game",
-                "-nullrhi",
-                "-unattended",
-                "-nop4",
-                "-nosplash",
-                "-NoSound",
-                ("-AuditChapter=" + $Chapter),
-                ("-abslog=" + $AuditLog)
-              )
-
-              Write-Host "Auditing runtime chapter $Chapter on commit $env:GITHUB_SHA (attempt $Attempt/2)"
-              $Proc = Start-Process -FilePath $EditorCmd -ArgumentList $Args -PassThru
-              $Deadline = (Get-Date).AddSeconds(35)
-              $SeenRequested = $false
-              $SeenLoaded = $false
-              $SeenLivingWorld = $false
-              $SeenWeather = $false
-
-              while ((Get-Date) -lt $Deadline) {
-                if (Test-Path $AuditLog) {
-                  $Text = Get-Content -LiteralPath $AuditLog -Raw -ErrorAction SilentlyContinue
-                  if ($Text -match ("ShireChapterAudit: requested=" + [regex]::Escape($Chapter))) {
-                    $SeenRequested = $true
-                  }
-                  if ($Text -match ("ShireChapterAudit: loaded=" + [regex]::Escape($Chapter))) {
-                    $SeenLoaded = $true
-                  }
-                  if ($Text -match ("ShireChapterAudit: living-world chapter=" + [regex]::Escape($Chapter))) {
-                    $SeenLivingWorld = $true
-                  }
-                  if ($Text -match ("ShireChapterAudit: weather chapter=" + [regex]::Escape($Chapter))) {
-                    $SeenWeather = $true
-                  }
-
-                  if ($Text -match "Fatal error:|Assertion failed|Ensure condition failed") {
-                    throw "Runtime chapter $Chapter emitted a fatal/assert/ensure condition."
-                  }
-
-                  if ($SeenRequested -and $SeenLoaded -and $SeenLivingWorld -and $SeenWeather) {
-                    $Passed = $true
-                    Start-Sleep -Seconds 4
-                    break
-                  }
-                }
-
-                if ($Proc.HasExited) {
-                  break
-                }
-                Start-Sleep -Milliseconds 750
-              }
-
-              $ExitCode = $null
-              if ($Proc.HasExited) {
-                $ExitCode = $Proc.ExitCode
-              }
-              else {
-                Stop-Process -Id $Proc.Id -Force -ErrorAction SilentlyContinue
-                $Proc.WaitForExit()
-                $ExitCode = $Proc.ExitCode
-              }
-
-              if (Test-Path $AuditLog) {
-                Write-Host "----- $Chapter audit log tail (attempt $Attempt) -----"
-                Get-Content -LiteralPath $AuditLog -Tail 100
-              }
-
-              if ($Passed) {
-                break
-              }
-
-              if ($SeenRequested) {
-                # Once the game accepted the requested chapter, missing downstream markers
-                # are a real chapter/runtime failure rather than a transient editor startup.
-                break
-              }
-
-              if ($Attempt -lt 2) {
-                Write-Warning "Runtime chapter $Chapter exited before the request marker (exit code $ExitCode); retrying once after UE helper cleanup."
-              }
-            }
-
-            if (-not $SeenRequested) {
-              throw "Runtime chapter audit did not observe request marker for $Chapter after a single transient-startup retry."
-            }
-            if (-not $SeenLoaded) {
-              throw "Runtime chapter audit did not observe world-builder load marker for $Chapter."
-            }
-            if (-not $SeenLivingWorld) {
-              throw "Runtime chapter audit did not observe living-world initialization for $Chapter."
-            }
-            if (-not $SeenWeather) {
-              throw "Runtime chapter audit did not observe weather-context initialization for $Chapter."
-            }
-
-            Write-Host "Runtime chapter audit passed: $Chapter"
-            Start-Sleep -Seconds 2
-          }
-
-          Write-Host "All eight Part I runtime chapter audits passed."
+      - name: Headless route/story state roundtrip audit
+        shell: cmd
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_state.cmd"'
 
       - name: Summarize and guard runtime warning debt
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
-        run: |
-          $ErrorActionPreference = "Stop"
-          $LogDir = Join-Path $env:GITHUB_WORKSPACE "Saved\Logs"
-          $Files = @(Get-ChildItem -LiteralPath $LogDir -Filter "CI-*.log" -File -ErrorAction SilentlyContinue)
-
-          if ($Files.Count -eq 0) {
-            throw "No CI Unreal logs found for warning-debt analysis."
-          }
-
-          $Text = ($Files | ForEach-Object {
-            Get-Content -LiteralPath $_.FullName -Raw -ErrorAction SilentlyContinue
-          }) -join "`n"
-
-          $Checks = @(
-            @{ Name = "Missing smoothing groups"; Pattern = "No smoothing group information"; Ceiling = 0; Unique = $false },
-            @{ Name = "Degenerate tangent bases"; Pattern = "degenerate tangent bases"; Ceiling = 150; Unique = $false },
-            @{ Name = "Nearly-zero binormals"; Pattern = "nearly zero bi-normals"; Ceiling = 150; Unique = $false },
-            # Baseline debt from the full eight-chapter UE4.27 validation is 71 unique
-            # world material package references. Guard regressions above that baseline;
-            # do not fail unchanged legacy debt and waste the self-hosted runner cycle.
-            @{ Name = "Missing world material packages"; Pattern = "Failed to load '(/Game/Production/World/[^']+)'"; Ceiling = 71; Unique = $true },
-            @{ Name = "Missing optional audio"; Pattern = "Failed to load '(/Game/Audio/[^']+)'"; Ceiling = 0; Unique = $true },
-            @{ Name = "Missing optional rigs"; Pattern = "Failed to load '(/Game/Production/Characters/Rigs/[^']+)'"; Ceiling = 0; Unique = $true },
-            @{ Name = "defaultMat references"; Pattern = "(defaultMat)"; Ceiling = 0; Unique = $true },
-            @{ Name = "DirectionalLight mobility warnings"; Pattern = "(DirectionalLight_0.*has to be 'Movable')"; Ceiling = 0; Unique = $true },
-            @{ Name = "NPC spawn collision failures"; Pattern = "SpawnActor failed because of collision at the spawn location \[([^\]]+)\] for \[ShireNPC\]"; Ceiling = 0; Unique = $true }
-          )
-
-          "### UE4.27 warning-debt guard" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-          "| Category | Count | Ceiling |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-          "|---|---:|---:|" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-
-          $Failures = @()
-          foreach ($Check in $Checks) {
-            $RegexMatches = [regex]::Matches(
-              $Text,
-              $Check.Pattern,
-              [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
-            if ($Check.Unique) {
-              $Values = @($RegexMatches | ForEach-Object {
-                if ($_.Groups.Count -gt 1) { $_.Groups[1].Value } else { $_.Value }
-              } | Sort-Object -Unique)
-              $Count = $Values.Count
-            }
-            else {
-              $Count = $RegexMatches.Count
-            }
-            "| $($Check.Name) | $Count | $($Check.Ceiling) |" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
-            Write-Host ("Warning debt: {0} = {1} (ceiling {2})" -f $Check.Name, $Count, $Check.Ceiling)
-            if ($Count -gt $Check.Ceiling) {
-              $Failures += "$($Check.Name): $Count > $($Check.Ceiling)"
-            }
-          }
-
-          if ($Failures.Count -gt 0) {
-            throw ("Warning-debt regression detected: " + ($Failures -join "; "))
-          }
-
-          Write-Host "Warning-debt guard passed."
+        shell: cmd
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_warning_debt.cmd"'
 
       - name: Collect Unreal build logs
         if: always()
         shell: cmd
-        run: |
-          @echo off
-          set "LOGDIR=%GITHUB_WORKSPACE%\Saved\Logs"
-          if not exist "%LOGDIR%" mkdir "%LOGDIR%"
-
-          if exist "%LOCALAPPDATA%\UnrealBuildTool\Log.txt" (
-            copy /Y "%LOCALAPPDATA%\UnrealBuildTool\Log.txt" "%LOGDIR%\CI-UnrealBuildTool.log" >nul
-          )
-
-          echo UE4.27.2 build job status: ${{ job.status }}>>"%GITHUB_STEP_SUMMARY%"
-          echo Commit: %GITHUB_SHA%>>"%GITHUB_STEP_SUMMARY%"
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_collect_unreal_logs.cmd" "${{ job.status }}"'
 
       - name: Report failure log location
         if: failure()
         shell: cmd
-        run: |
-          @echo off
-          echo Build/import logs were already printed into the workflow log.
-          echo Self-hosted local log directory: %GITHUB_WORKSPACE%\Saved\Logs
-          echo Artifact upload is intentionally skipped to avoid storage-quota failures masking the primary error.
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_report_failure.cmd"'

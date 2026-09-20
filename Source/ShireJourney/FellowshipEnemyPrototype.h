@@ -11,6 +11,7 @@ enum class EFellowshipEnemyType : uint8
 {
     Orc,
     UrukHai,
+    Lurtz,
     CaveTroll
 };
 

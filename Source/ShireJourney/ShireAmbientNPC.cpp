@@ -99,7 +99,9 @@ void AShireAmbientNPC::ApplyVisualStyle()
 {
     UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
         nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    if (!BasicMaterial)
+    UMaterialInterface* ProductionSurfaceMaterial = LoadObject<UMaterialInterface>(
+        nullptr, TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface"));
+    if (!BasicMaterial && !ProductionSurfaceMaterial)
     {
         return;
     }
@@ -385,36 +387,63 @@ void AShireAmbientNPC::ApplyVisualStyle()
             Random.FRandRange(0.28f, 0.38f));
     }
 
-    auto ApplyColor = [this, BasicMaterial](UStaticMeshComponent* Component, const FLinearColor& Color)
+    const bool bProductionHumanoid = bProductionHobbit || bProductionRegional;
+    auto ApplySurface = [this, BasicMaterial, ProductionSurfaceMaterial, bProductionHumanoid](
+        UStaticMeshComponent* Component,
+        const FLinearColor& Color,
+        float Roughness,
+        float Metallic)
     {
         if (!Component)
         {
             return;
         }
 
-        UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, this);
+        UMaterialInterface* Parent =
+            (bProductionHumanoid && ProductionSurfaceMaterial)
+                ? ProductionSurfaceMaterial
+                : BasicMaterial;
+        if (!Parent && ProductionSurfaceMaterial)
+        {
+            Parent = ProductionSurfaceMaterial;
+        }
+        if (!Parent)
+        {
+            return;
+        }
+
+        UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(Parent, this);
         if (MID)
         {
             MID->SetVectorParameterValue(TEXT("Color"), Color);
+            MID->SetScalarParameterValue(TEXT("Roughness"), FMath::Clamp(Roughness, 0.0f, 1.0f));
+            MID->SetScalarParameterValue(TEXT("Metallic"), FMath::Clamp(Metallic, 0.0f, 1.0f));
             Component->SetMaterial(0, MID);
         }
     };
 
+    auto ApplyColor = [&ApplySurface](UStaticMeshComponent* Component, const FLinearColor& Color)
+    {
+        ApplySurface(Component, Color, 0.72f, 0.0f);
+    };
+
     if (!bProductionFauna)
     {
-        ApplyColor(Torso, Coat);
+        ApplySurface(Torso, Coat, 0.84f, 0.0f);
+        ApplySurface(Head, Skin, 0.56f, 0.0f);
+        ApplySurface(Hair, HairColor, 0.74f, 0.0f);
+        ApplySurface(LeftArm, Coat * 0.95f, 0.82f, 0.0f);
+        ApplySurface(RightArm, Coat * 0.95f, 0.82f, 0.0f);
+        ApplySurface(LeftLeg, Trousers, 0.86f, 0.0f);
+        ApplySurface(RightLeg, Trousers, 0.86f, 0.0f);
     }
-    ApplyColor(Head, Skin);
-    ApplyColor(Hair, HairColor);
-    ApplyColor(LeftArm, Coat * 0.95f);
-    ApplyColor(RightArm, Coat * 0.95f);
-    ApplyColor(LeftLeg, Trousers);
-    ApplyColor(RightLeg, Trousers);
 
     ActivityProp->SetVisibility(false);
     if (!bFauna && ActivityPropType != NAME_None)
     {
         FLinearColor PropColor(0.28f, 0.17f, 0.08f);
+        float PropRoughness = 0.78f;
+        float PropMetallic = 0.0f;
         FVector PropScale(0.18f, 0.18f, 0.18f);
         ActivityPropBase = FVector(5.0f, bElf || bBreeTownsperson ? 28.0f : 22.0f, VisualTorsoBaseZ - 3.0f);
         ActivityPropBaseRotation = FRotator::ZeroRotator;
@@ -424,6 +453,8 @@ void AShireAmbientNPC::ApplyVisualStyle()
             TryMesh(ActivityProp, TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
             PropScale = FVector(0.07f, 0.07f, 0.11f);
             PropColor = FLinearColor(0.38f, 0.24f, 0.10f);
+            PropRoughness = 0.48f;
+            PropMetallic = 0.08f;
             ActivityPropBase = FVector(12.0f, bElf || bBreeTownsperson ? 28.0f : 21.0f, VisualTorsoBaseZ + 5.0f);
         }
         else if (ActivityPropType == TEXT("Satchel"))
@@ -431,6 +462,7 @@ void AShireAmbientNPC::ApplyVisualStyle()
             TryMesh(ActivityProp, TEXT("/Engine/BasicShapes/Cube.Cube"));
             PropScale = FVector(0.13f, 0.20f, 0.18f);
             PropColor = FLinearColor(0.17f, 0.09f, 0.045f);
+            PropRoughness = 0.66f;
             ActivityPropBase = FVector(-5.0f, bElf || bBreeTownsperson ? 27.0f : 21.0f, VisualTorsoBaseZ - 8.0f);
             ActivityPropBaseRotation = FRotator(0.0f, 10.0f, 8.0f);
         }
@@ -461,6 +493,8 @@ void AShireAmbientNPC::ApplyVisualStyle()
             TryMesh(ActivityProp, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
             PropScale = FVector(0.10f);
             PropColor = FLinearColor(0.72f, 0.50f, 0.15f);
+            PropRoughness = 0.34f;
+            PropMetallic = 0.32f;
             ActivityPropBase = FVector(6.0f, bElf || bBreeTownsperson ? 29.0f : 23.0f, VisualTorsoBaseZ - 10.0f);
         }
 
@@ -468,7 +502,7 @@ void AShireAmbientNPC::ApplyVisualStyle()
         ActivityProp->SetRelativeRotation(ActivityPropBaseRotation);
         ActivityProp->SetRelativeScale3D(PropScale);
         ActivityProp->SetVisibility(true);
-        ApplyColor(ActivityProp, PropColor);
+        ApplySurface(ActivityProp, PropColor, PropRoughness, PropMetallic);
     }
 
     AppliedVisualRole = RoutineRole;
@@ -478,17 +512,24 @@ void AShireAmbientNPC::UpdateWalkAnimation(float DeltaSeconds, bool bMoving)
 {
     float Swing = 0.0f;
     float Bob = 0.0f;
-    ActivityPhase += DeltaSeconds * (bSocializing ? 4.2f : 2.8f);
+    ActivityPhase += DeltaSeconds * (bSocializing ? 4.2f : 2.8f) * AnimationRateScale;
     if (bMoving)
     {
-        WalkPhase += DeltaSeconds * 6.5f;
+        WalkPhase += DeltaSeconds * 6.5f * AnimationRateScale;
         Swing = FMath::Sin(WalkPhase) * 22.0f;
         Bob = FMath::Abs(FMath::Sin(WalkPhase * 2.0f)) * 1.0f;
     }
 
     float LeftArmTarget = Swing;
     float RightArmTarget = -Swing;
-    if (!bMoving && bSocializing)
+    if (!bMoving && RoutineRole == TEXT("PartyGuest"))
+    {
+        const float Dance = FMath::Sin(ActivityPhase * 1.35f);
+        LeftArmTarget = -34.0f + Dance * 32.0f;
+        RightArmTarget = -34.0f - Dance * 32.0f;
+        Bob = FMath::Abs(FMath::Sin(ActivityPhase * 1.35f)) * 2.4f;
+    }
+    else if (!bMoving && bSocializing)
     {
         LeftArmTarget = -12.0f + FMath::Sin(ActivityPhase) * 9.0f;
         RightArmTarget = -24.0f + FMath::Sin(ActivityPhase + 1.1f) * 12.0f;
@@ -516,6 +557,14 @@ void AShireAmbientNPC::UpdateWalkAnimation(float DeltaSeconds, bool bMoving)
     Hair->SetRelativeLocation(FMath::VInterpTo(
         Hair->GetRelativeLocation(), FVector(-1.0f, 0.0f, VisualHairBaseZ + Bob), DeltaSeconds, 10.0f));
 
+    const float IdleYaw = !bMoving
+        ? FMath::Sin(ActivityPhase * 0.55f + IdleLookPhase) * IdleLookAmplitude
+        : FMath::Sin(WalkPhase * 0.18f + IdleLookPhase) * (IdleLookAmplitude * 0.30f);
+    Head->SetRelativeRotation(FMath::RInterpTo(
+        Head->GetRelativeRotation(), FRotator(0.0f, IdleYaw, 0.0f), DeltaSeconds, 3.2f));
+    Hair->SetRelativeRotation(FMath::RInterpTo(
+        Hair->GetRelativeRotation(), FRotator(0.0f, IdleYaw * 0.72f, 0.0f), DeltaSeconds, 3.2f));
+
     if (ActivityProp && ActivityProp->IsVisible())
     {
         const float CarryBob = Bob * 0.55f;
@@ -537,6 +586,9 @@ void AShireAmbientNPC::BeginPlay()
 {
     Super::BeginPlay();
     Random.Initialize(GetUniqueID() * 9176 + 427);
+    AnimationRateScale = Random.FRandRange(0.90f, 1.10f);
+    IdleLookAmplitude = Random.FRandRange(2.5f, 6.0f);
+    IdleLookPhase = Random.FRandRange(0.0f, 2.0f * PI);
     ApplyVisualStyle();
 
     if (RoutinePointA.IsNearlyZero())
@@ -550,6 +602,13 @@ void AShireAmbientNPC::BeginPlay()
     SenseAccumulator = Random.FRandRange(0.0f, 0.35f);
     SocialCheckRemaining = Random.FRandRange(1.0f, 3.0f);
     ScheduleCheckRemaining = Random.FRandRange(0.5f, 2.0f);
+    NeedsCheckRemaining = Random.FRandRange(0.6f, 1.8f);
+    Hunger01 = Random.FRandRange(0.08f, 0.34f);
+    Fatigue01 = Random.FRandRange(0.05f, 0.28f);
+    SocialNeed01 = Random.FRandRange(0.15f, 0.60f);
+    Fear01 = 0.0f;
+    RuntimeEmotion = TEXT("CALM");
+    RuntimeGoal = TEXT("ROUTINE");
 }
 
 FName AShireAmbientNPC::ResolveRuntimeProfileHint() const
@@ -561,6 +620,7 @@ FName AShireAmbientNPC::ResolveRuntimeProfileHint() const
 
     if (RoutineRole == TEXT("Villager") ||
         RoutineRole == TEXT("PartyGuest") ||
+        RoutineRole == TEXT("PlayRunner") ||
         RoutineRole == TEXT("FieldWorker") ||
         RoutineRole == TEXT("FerryWorker"))
     {
@@ -635,6 +695,100 @@ void AShireAmbientNPC::UpdateScheduleContext(float DeltaSeconds)
     else
     {
         WalkSpeed = BaseWalkSpeed;
+    }
+}
+
+void AShireAmbientNPC::UpdateNeedsAndEmotion(float DeltaSeconds)
+{
+    NeedsCheckRemaining -= DeltaSeconds;
+    if (NeedsCheckRemaining > 0.0f || !GetWorld())
+    {
+        return;
+    }
+    NeedsCheckRemaining = Random.FRandRange(0.8f, 1.6f);
+
+    // Cheap bounded simulation: needs drift slowly and only bias existing
+    // routine/social behavior. They never own quest state or story outcomes.
+    const float NeedStep = FMath::Clamp(DeltaSeconds * 0.018f, 0.0f, 0.05f);
+    Hunger01 = FMath::Clamp(Hunger01 + NeedStep, 0.0f, 1.0f);
+    Fatigue01 = FMath::Clamp(Fatigue01 + NeedStep * 0.65f, 0.0f, 1.0f);
+    SocialNeed01 = FMath::Clamp(
+        SocialNeed01 + NeedStep * (bSocializing ? -2.8f : 0.9f),
+        0.0f, 1.0f);
+
+    UGameInstance* GI = GetGameInstance();
+    UShireNPCContextSubsystem* Context =
+        GI ? GI->GetSubsystem<UShireNPCContextSubsystem>() : nullptr;
+    const bool bDanger = Context && Context->IsDangerStateActive();
+    const bool bBadWeather = Context && Context->IsInclementWeather();
+
+    if (bDanger)
+    {
+        Fear01 = FMath::Clamp(Fear01 + 0.18f, 0.0f, 1.0f);
+    }
+    else
+    {
+        Fear01 = FMath::Clamp(Fear01 - 0.08f, 0.0f, 1.0f);
+    }
+
+    if (Fear01 > 0.55f)
+    {
+        RuntimeEmotion = TEXT("AFRAID");
+        RuntimeGoal = TEXT("SAFETY");
+    }
+    else if (Fatigue01 > 0.78f)
+    {
+        RuntimeEmotion = TEXT("TIRED");
+        RuntimeGoal = TEXT("REST");
+        WaitRemaining = FMath::Max(WaitRemaining, Random.FRandRange(2.5f, 5.0f));
+    }
+    else if (SocialNeed01 > 0.72f)
+    {
+        RuntimeEmotion = TEXT("SOCIALLY_SEEKING");
+        RuntimeGoal = TEXT("SOCIALIZE");
+        SocialCheckRemaining = FMath::Min(SocialCheckRemaining, Random.FRandRange(0.4f, 1.2f));
+    }
+    else if (Hunger01 > 0.78f)
+    {
+        RuntimeEmotion = TEXT("HUNGRY");
+        RuntimeGoal = TEXT("MEAL_BREAK");
+        WaitRemaining = FMath::Max(WaitRemaining, Random.FRandRange(1.5f, 3.2f));
+    }
+    else if (bBadWeather)
+    {
+        RuntimeEmotion = TEXT("UNCOMFORTABLE");
+        RuntimeGoal = TEXT("SHELTER");
+    }
+    else if (RuntimeSchedulePhase == TEXT("WORK"))
+    {
+        RuntimeEmotion = TEXT("FOCUSED");
+        RuntimeGoal = TEXT("WORK");
+    }
+    else if (RuntimeSchedulePhase == TEXT("SOCIAL"))
+    {
+        RuntimeEmotion = TEXT("SOCIABLE");
+        RuntimeGoal = TEXT("SOCIALIZE");
+    }
+    else if (RuntimeSchedulePhase == TEXT("REST") || RuntimeSchedulePhase == TEXT("HOME"))
+    {
+        RuntimeEmotion = TEXT("RELAXED");
+        RuntimeGoal = TEXT("REST");
+    }
+    else
+    {
+        RuntimeEmotion = TEXT("CALM");
+        RuntimeGoal = TEXT("ROUTINE");
+    }
+
+    // Completing a rest/meal phase satisfies the corresponding need gradually.
+    if (RuntimeSchedulePhase == TEXT("REST") || RuntimeSchedulePhase == TEXT("HOME"))
+    {
+        Fatigue01 = FMath::Clamp(Fatigue01 - 0.10f, 0.0f, 1.0f);
+        Hunger01 = FMath::Clamp(Hunger01 - 0.05f, 0.0f, 1.0f);
+    }
+    if (bSocializing)
+    {
+        SocialNeed01 = FMath::Clamp(SocialNeed01 - 0.14f, 0.0f, 1.0f);
     }
 }
 
@@ -717,6 +871,12 @@ FText AShireAmbientNPC::ResolveAmbientConversationLine(bool bResponse) const
             ? TEXT("Nearly ready for the dancing.")
             : TEXT("Have you seen the lanterns?"));
     }
+    if (RoutineRole == TEXT("PlayRunner"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("Only if you can catch me first.")
+            : TEXT("Race you to the hedge and back."));
+    }
     if (RoutineRole == TEXT("FieldWorker"))
     {
         return FText::FromString(bResponse
@@ -743,6 +903,24 @@ FText AShireAmbientNPC::ResolveAmbientConversationLine(bool bResponse) const
     }
     if (RoutineRole == TEXT("Villager"))
     {
+        if (RuntimeEmotion == TEXT("TIRED"))
+        {
+            return FText::FromString(bResponse
+                ? TEXT("I will finish after a short rest.")
+                : TEXT("It has been a long morning already."));
+        }
+        if (RuntimeEmotion == TEXT("AFRAID"))
+        {
+            return FText::FromString(bResponse
+                ? TEXT("Best stay near the lane until it passes.")
+                : TEXT("Something has everyone looking over their shoulder."));
+        }
+        if (RuntimeEmotion == TEXT("HUNGRY"))
+        {
+            return FText::FromString(bResponse
+                ? TEXT("After I find something warm to eat.")
+                : TEXT("I have been thinking about second breakfast for an hour."));
+        }
         return FText::FromString(bResponse
             ? TEXT("Aye. Plenty still to do.")
             : TEXT("Fine weather for the lane."));
@@ -959,6 +1137,7 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
 
     UpdateSocialCaption(DeltaSeconds);
     UpdateScheduleContext(DeltaSeconds);
+    UpdateNeedsAndEmotion(DeltaSeconds);
 
     if (AppliedVisualRole != RoutineRole)
     {

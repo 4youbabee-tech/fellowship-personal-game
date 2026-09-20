@@ -28,6 +28,18 @@
       "region": "Shire",
       "anchors": [
         {
+          "id": "P1C01_SHIRE_LIFE",
+          "label": "Frodo's ordinary Shire life and friendships before the adventure turns dangerous",
+          "canon_class": "FILM_EXTENDED",
+          "treatment": [
+            "PLAYABLE",
+            "EXPLORATION",
+            "SOCIAL_INTERACTIVE",
+            "AMBIENT_WORLD"
+          ],
+          "coverage": "PARTIAL"
+        },
+        {
           "id": "P1C01_GANDALF_ARRIVAL",
           "label": "Gandalf arrives in the Shire and reconnects with Frodo/Bilbo's world",
           "canon_class": "FILM_CORE",
@@ -45,7 +57,9 @@
           "treatment": [
             "EXPLORATION",
             "SOCIAL_INTERACTIVE",
-            "INTERACTIVE_CINEMATIC"
+            "INTERACTIVE_CINEMATIC",
+            "PLAYABLE",
+            "AMBIENT_WORLD"
           ],
           "coverage": "PARTIAL"
         },
@@ -267,6 +281,17 @@
       "route": "FrodoMain",
       "region": "Fellowship road / Caradhras / West Gate",
       "anchors": [
+        {
+          "id": "P1C05_COMPANIONSHIP",
+          "label": "Fellowship companionship, camp humor and training between major threats",
+          "canon_class": "FILM_EXTENDED",
+          "treatment": [
+            "PLAYABLE",
+            "SOCIAL_INTERACTIVE",
+            "AMBIENT_WORLD"
+          ],
+          "coverage": "PARTIAL"
+        },
         {
           "id": "P1C05_FELLOWSHIP_TRAVEL",
           "label": "Fellowship travel and camp relationships",
@@ -548,5 +573,6 @@
         }
       ]
     }
-  ]
+  ],
+  "cp56_expansion": "Data/FellowshipExperienceMegaPassCP56.json"
 }

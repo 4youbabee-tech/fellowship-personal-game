@@ -1,0 +1,1037 @@
+{
+  "schema_version": 1,
+  "plan_id": "FILM_DIALOGUE_SOURCE_CONTEXT_V1",
+  "status": "PART1_ACTIVE_EXPANDED_PART2_REFERENCE_READY",
+  "purpose": "Derived source context from the owner's Fellowship and Two Towers screenplay PDFs for in-game dialogue grounding. Store chronology, tone, topics and knowledge ceilings; never store or ship screenplay passages.",
+  "policy": {
+    "reference_only": true,
+    "source_files_are_not_shipped_game_content": true,
+    "no_verbatim_screenplay_dialogue": true,
+    "runtime_output": "ORIGINAL_PROJECT_AUTHORED_OR_BOUNDED_OFFLINE_VARIATION",
+    "authority_order": [
+      "Data/ProjectGovernor.json",
+      "Docs/STORY_CANON_BIBLE.md",
+      "Data/FilmExperiencePlan.json",
+      "this derived source context"
+    ]
+  },
+  "sources": [
+    {
+      "id": "SRC-FOTR-2001-SCREENPLAY",
+      "part": "PART_I",
+      "title": "The Fellowship of the Ring screenplay",
+      "sha256": "4760026562d943fde02133e681e5884ee85c7a5f466b7f3ff36d67122c60d656",
+      "pages": 173,
+      "use": [
+        "scene_order",
+        "speaker_presence",
+        "tone",
+        "relationship_state",
+        "knowledge_ceiling",
+        "topic_grounding"
+      ]
+    },
+    {
+      "id": "SRC-TTT-2002-SCREENPLAY",
+      "part": "PART_II",
+      "title": "The Two Towers screenplay",
+      "sha256": "8c1c780cb94b7862cc5f15e7b451ee9a4eda1d170c503390bf75cfcd210d4e7e",
+      "pages": 222,
+      "use": [
+        "future_routes",
+        "scene_order",
+        "speaker_presence",
+        "tone",
+        "relationship_state",
+        "knowledge_ceiling",
+        "topic_grounding"
+      ]
+    }
+  ],
+  "runtime_contract": {
+    "current_scope": "PART_I",
+    "part2_status": "REFERENCE_READY_NOT_IMPLEMENTED",
+    "selection": [
+      "RouteId",
+      "ChapterId",
+      "latest_completed_story_beat"
+    ],
+    "inputs": [
+      "identity",
+      "knowledge",
+      "relationships",
+      "memory",
+      "regional mood",
+      "danger",
+      "source context",
+      "recent dialogue"
+    ],
+    "rules": [
+      "use newest eligible context",
+      "context changes topic/tone/knowledge only",
+      "never override canon",
+      "fallback to existing bounded dialogue",
+      "offline only"
+    ],
+    "dialogue_variant_count": 53
+  },
+  "part1_contexts": [
+    {
+      "context_id": "P1C01_HOME",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "sequence": 10,
+      "required_story_beat": "",
+      "source_window": "pp.9-21",
+      "tone_tags": [
+        "PEACEFUL",
+        "FAMILIAR"
+      ],
+      "safe_topics": [
+        "Shire routines",
+        "Bilbo's party",
+        "Gandalf's arrival"
+      ],
+      "future_knowledge_blocks": [
+        "Ring danger before RingWarning",
+        "Black Rider facts before discovery"
+      ]
+    },
+    {
+      "context_id": "P1C01_DANGER",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C01",
+      "sequence": 20,
+      "required_story_beat": "RingWarning",
+      "source_window": "pp.38-59",
+      "tone_tags": [
+        "SECRETIVE",
+        "URGENT"
+      ],
+      "safe_topics": [
+        "leaving quietly",
+        "protecting Frodo",
+        "road danger"
+      ],
+      "future_knowledge_blocks": [
+        "Bree outcomes",
+        "Weathertop outcome"
+      ]
+    },
+    {
+      "context_id": "P1C02_BREE",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C02",
+      "sequence": 10,
+      "required_story_beat": "BreeRoadNightfall",
+      "source_window": "pp.60-69",
+      "tone_tags": [
+        "SUSPICIOUS",
+        "WATCHFUL"
+      ],
+      "safe_topics": [
+        "Bree customs",
+        "the inn",
+        "strangers",
+        "Gandalf's absence"
+      ],
+      "future_knowledge_blocks": [
+        "Strider trust before private meeting",
+        "Nazgul attack outcome"
+      ]
+    },
+    {
+      "context_id": "P1C02_AFTER_RING",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C02",
+      "sequence": 20,
+      "required_story_beat": "RingIncident",
+      "source_window": "pp.62-69",
+      "tone_tags": [
+        "EXPOSED",
+        "URGENT"
+      ],
+      "safe_topics": [
+        "witnesses",
+        "leaving the room",
+        "trust",
+        "keeping a low profile"
+      ],
+      "future_knowledge_blocks": [
+        "Weathertop outcome",
+        "Rivendell council"
+      ]
+    },
+    {
+      "context_id": "P1C03_PURSUED",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C03",
+      "sequence": 10,
+      "required_story_beat": "MidgewaterRoad",
+      "source_window": "pp.69-84",
+      "tone_tags": [
+        "PURSUED",
+        "TIRED"
+      ],
+      "safe_topics": [
+        "terrain",
+        "tracks",
+        "watch duty",
+        "rest"
+      ],
+      "future_knowledge_blocks": [
+        "Morgul wound before attack",
+        "Ford outcome"
+      ]
+    },
+    {
+      "context_id": "P1C03_WOUNDED",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C03",
+      "sequence": 20,
+      "required_story_beat": "MorgulWound",
+      "source_window": "pp.74-87",
+      "tone_tags": [
+        "WOUNDED",
+        "DESPERATE"
+      ],
+      "safe_topics": [
+        "Frodo's condition",
+        "speed",
+        "reaching aid"
+      ],
+      "future_knowledge_blocks": [
+        "Council decisions",
+        "Moria events"
+      ]
+    },
+    {
+      "context_id": "P1C04_REFUGE",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C04",
+      "sequence": 10,
+      "required_story_beat": "RivendellAwakening",
+      "source_window": "pp.87-97",
+      "tone_tags": [
+        "HEALING",
+        "RELIEF"
+      ],
+      "safe_topics": [
+        "recovery",
+        "reunions",
+        "Rivendell"
+      ],
+      "future_knowledge_blocks": [
+        "Council outcome before CouncilBegins",
+        "Moria losses"
+      ]
+    },
+    {
+      "context_id": "P1C04_COUNCIL",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C04",
+      "sequence": 20,
+      "required_story_beat": "CouncilBegins",
+      "source_window": "pp.97-109",
+      "tone_tags": [
+        "BURDEN",
+        "DECISION"
+      ],
+      "safe_topics": [
+        "different priorities",
+        "mission burden",
+        "trust among peoples"
+      ],
+      "future_knowledge_blocks": [
+        "Caradhras result",
+        "Fellowship fracture"
+      ]
+    },
+    {
+      "context_id": "P1C05_COMPANY",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C05",
+      "sequence": 10,
+      "required_story_beat": "FellowshipMarch",
+      "source_window": "pp.109-116",
+      "tone_tags": [
+        "COMPANIONSHIP",
+        "PRESSURE"
+      ],
+      "safe_topics": [
+        "camp habits",
+        "watch duty",
+        "friendly teasing",
+        "route choices"
+      ],
+      "future_knowledge_blocks": [
+        "Moria discoveries",
+        "Gandalf's fate"
+      ]
+    },
+    {
+      "context_id": "P1C05_MORIA_GATE",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C05",
+      "sequence": 20,
+      "required_story_beat": "MoriaDoorOpens",
+      "source_window": "pp.116-121",
+      "tone_tags": [
+        "THRESHOLD",
+        "DREAD"
+      ],
+      "safe_topics": [
+        "the gate",
+        "the lake",
+        "entering carefully"
+      ],
+      "future_knowledge_blocks": [
+        "Balin's fate",
+        "Balrog outcome"
+      ]
+    },
+    {
+      "context_id": "P1C06_MORIA",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C06",
+      "sequence": 10,
+      "required_story_beat": "MoriaEntry",
+      "source_window": "pp.121-131",
+      "tone_tags": [
+        "DARKNESS",
+        "UNEASE"
+      ],
+      "safe_topics": [
+        "the halls",
+        "finding the route",
+        "quiet movement"
+      ],
+      "future_knowledge_blocks": [
+        "Balin's fate before reveal",
+        "Balrog identity before approach"
+      ]
+    },
+    {
+      "context_id": "P1C06_AFTER_LOSS",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C06",
+      "sequence": 20,
+      "required_story_beat": "MoriaEscape",
+      "source_window": "pp.131-134",
+      "tone_tags": [
+        "SHOCK",
+        "GRIEF"
+      ],
+      "safe_topics": [
+        "keeping moving",
+        "loss",
+        "protecting companions"
+      ],
+      "future_knowledge_blocks": [
+        "Lothlorien visions",
+        "Amon Hen fracture"
+      ]
+    },
+    {
+      "context_id": "P1C07_REFUGE",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C07",
+      "sequence": 10,
+      "required_story_beat": "LorienEntry",
+      "source_window": "pp.134-149",
+      "tone_tags": [
+        "GRIEF",
+        "WONDER"
+      ],
+      "safe_topics": [
+        "quiet recovery",
+        "strange beauty",
+        "trust"
+      ],
+      "future_knowledge_blocks": [
+        "Mirror visions before Mirror",
+        "Amon Hen outcomes"
+      ]
+    },
+    {
+      "context_id": "P1C07_FAREWELL",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C07",
+      "sequence": 20,
+      "required_story_beat": "LorienFarewell",
+      "source_window": "pp.149-155",
+      "tone_tags": [
+        "FAREWELL",
+        "HOPE"
+      ],
+      "safe_topics": [
+        "departure",
+        "river travel",
+        "strength after grief"
+      ],
+      "future_knowledge_blocks": [
+        "Amon Hen attack",
+        "Boromir's fall"
+      ]
+    },
+    {
+      "context_id": "P1C08_ANDUIN",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "sequence": 10,
+      "required_story_beat": "AnduinDeparture",
+      "source_window": "pp.155-165",
+      "tone_tags": [
+        "UNEASE",
+        "DISTANCE"
+      ],
+      "safe_topics": [
+        "river travel",
+        "watching the banks",
+        "company tension"
+      ],
+      "future_knowledge_blocks": [
+        "Boromir confrontation before BoromirPressure",
+        "Uruk attack before UrukAttack"
+      ]
+    },
+    {
+      "context_id": "P1C08_FRACTURE",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "FrodoMain",
+      "chapter": "P1C08",
+      "sequence": 20,
+      "required_story_beat": "BoromirPressure",
+      "source_window": "pp.160-173",
+      "tone_tags": [
+        "CONFLICT",
+        "SEPARATION"
+      ],
+      "safe_topics": [
+        "fractured trust",
+        "protecting companions",
+        "urgent pursuit choices"
+      ],
+      "future_knowledge_blocks": [
+        "specific Part II outcomes before routes reach them"
+      ]
+    },
+    {
+      "context_id": "P1G01_COUNSEL",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "GandalfParallel",
+      "chapter": "P1C01",
+      "sequence": 10,
+      "required_story_beat": "IsengardArrival",
+      "source_window": "pp.49-53",
+      "tone_tags": [
+        "FORMAL",
+        "UNEASY"
+      ],
+      "safe_topics": [
+        "seeking counsel",
+        "changes around Isengard",
+        "old alliances"
+      ],
+      "future_knowledge_blocks": [
+        "Saruman's full betrayal before OrthancBetrayal"
+      ]
+    },
+    {
+      "context_id": "P1G01_BETRAYAL",
+      "source_id": "SRC-FOTR-2001-SCREENPLAY",
+      "route": "GandalfParallel",
+      "chapter": "P1C01",
+      "sequence": 20,
+      "required_story_beat": "OrthancBetrayal",
+      "source_window": "pp.51-87",
+      "tone_tags": [
+        "BETRAYAL",
+        "CAPTIVITY"
+      ],
+      "safe_topics": [
+        "broken trust",
+        "power",
+        "escape urgency",
+        "warning allies"
+      ],
+      "future_knowledge_blocks": [
+        "exact escape before OrthancEscape",
+        "later Fellowship losses"
+      ]
+    }
+  ],
+  "part2_seed_contexts": [
+    {
+      "arc_id": "P2_FRODO_SAM_GOLLUM",
+      "source_id": "SRC-TTT-2002-SCREENPLAY",
+      "windows": [
+        "Emyn Muil pp.4-20",
+        "Dead Marshes pp.48-56",
+        "Black Gate pp.68-74",
+        "Ithilien/Osgiliath pp.103-218"
+      ],
+      "tone_tags": [
+        "EXHAUSTION",
+        "MISTRUST",
+        "DEPENDENCE"
+      ],
+      "status": "REFERENCE_READY"
+    },
+    {
+      "arc_id": "P2_ROHAN_HUNTERS",
+      "source_id": "SRC-TTT-2002-SCREENPLAY",
+      "windows": [
+        "Rohan pp.17-47",
+        "Fangorn pp.57-66",
+        "Edoras pp.80-101",
+        "Helm's Deep pp.113-204"
+      ],
+      "tone_tags": [
+        "PURSUIT",
+        "LOYALTY",
+        "WAR"
+      ],
+      "status": "REFERENCE_READY"
+    },
+    {
+      "arc_id": "P2_ENTS",
+      "source_id": "SRC-TTT-2002-SCREENPLAY",
+      "windows": [
+        "Fangorn pp.32-78",
+        "Entmoot pp.172-196",
+        "Isengard pp.205-212"
+      ],
+      "tone_tags": [
+        "WONDER",
+        "HUMOR",
+        "ANGER"
+      ],
+      "status": "REFERENCE_READY"
+    },
+    {
+      "arc_id": "P2_GANDALF_ROHAN",
+      "source_id": "SRC-TTT-2002-SCREENPLAY",
+      "windows": [
+        "Durin's Tower/Fangorn pp.60-66",
+        "Edoras pp.80-101",
+        "Helm's Deep pp.160-204"
+      ],
+      "tone_tags": [
+        "RETURN",
+        "AUTHORITY",
+        "HOPE"
+      ],
+      "status": "REFERENCE_READY"
+    },
+    {
+      "arc_id": "P2_SARUMAN",
+      "source_id": "SRC-TTT-2002-SCREENPLAY",
+      "windows": [
+        "Isengard pp.22-25",
+        "Orthanc pp.98-140",
+        "aftermath pp.205-212"
+      ],
+      "tone_tags": [
+        "INDUSTRY",
+        "CONTROL",
+        "COLLAPSE"
+      ],
+      "status": "REFERENCE_READY"
+    }
+  ],
+  "original_dialogue_variants": [
+    {
+      "variant_id": "SRC_SAM_PARTY_01",
+      "speaker": "NPC_SAM",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "PartyArrival",
+      "required_mood": "PEACEFUL_HOME",
+      "context_id": "P1C01_HOME",
+      "text": "Everyone is laughing, but I keep wondering what Mr. Bilbo has planned for the speech."
+    },
+    {
+      "variant_id": "SRC_MERRY_BILBO_GONE_01",
+      "speaker": "NPC_MERRY",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BilboDisappearance",
+      "required_mood": "PEACEFUL_HOME",
+      "context_id": "P1C01_HOME",
+      "text": "That was no ordinary party trick. Frodo looks worried, and I think we should stay close."
+    },
+    {
+      "variant_id": "SRC_SAM_RING_WARNING_01",
+      "speaker": "NPC_SAM",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "RingWarning",
+      "required_mood": "PEACEFUL_HOME",
+      "context_id": "P1C01_DANGER",
+      "text": "You do not have to explain every secret. If you are leaving, I am coming."
+    },
+    {
+      "variant_id": "SRC_SAM_BREE_RING_01",
+      "speaker": "NPC_SAM",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "RingIncident",
+      "required_mood": "SUSPICIOUS_TOWN",
+      "context_id": "P1C02_AFTER_RING",
+      "text": "Too many people saw that. We should leave the common room before the questions begin."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_BREE_RING_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "RingIncident",
+      "required_mood": "SUSPICIOUS_TOWN",
+      "context_id": "P1C02_AFTER_RING",
+      "text": "The room has changed. Every curious glance is now a risk we cannot ignore."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_PRIVATE_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "StriderPrivateRoom",
+      "required_mood": "SUSPICIOUS_TOWN",
+      "context_id": "P1C02_AFTER_RING",
+      "text": "Trust can wait; survival cannot. Keep together until the road gives us a better choice."
+    },
+    {
+      "variant_id": "SRC_SAM_WOUND_01",
+      "speaker": "NPC_SAM",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "MorgulWound",
+      "required_mood": "PURSUED_WILDERNESS",
+      "context_id": "P1C03_WOUNDED",
+      "text": "Stay with us. We can slow down, but we are not leaving you behind."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_WOUND_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "MorgulWound",
+      "required_mood": "PURSUED_WILDERNESS",
+      "context_id": "P1C03_WOUNDED",
+      "text": "The wound is worsening. We need speed, shelter, and no unnecessary fights."
+    },
+    {
+      "variant_id": "SRC_GANDALF_RECOVERY_01",
+      "speaker": "NPC_GANDALF",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "RivendellAwakening",
+      "required_mood": "SAFE_REFUGE",
+      "context_id": "P1C04_REFUGE",
+      "text": "You have carried enough fear for one journey. Learn what happened before deciding what comes next."
+    },
+    {
+      "variant_id": "SRC_BILBO_REUNION_01",
+      "speaker": "NPC_BILBO",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BilboReunion",
+      "required_mood": "SAFE_REFUGE",
+      "context_id": "P1C04_REFUGE",
+      "text": "I hoped seeing you here would feel simpler. Some old choices follow us farther than expected."
+    },
+    {
+      "variant_id": "SRC_ELROND_COUNCIL_01",
+      "speaker": "NPC_ELROND",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "CouncilBegins",
+      "required_mood": "SAFE_REFUGE",
+      "context_id": "P1C04_COUNCIL",
+      "text": "Everyone here brings a different fear. We must choose despite them, not pretend they are absent."
+    },
+    {
+      "variant_id": "SRC_GIMLI_COMPANY_01",
+      "speaker": "NPC_GIMLI",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "FellowshipAssembled",
+      "required_mood": "SAFE_REFUGE",
+      "context_id": "P1C04_COUNCIL",
+      "text": "Fine company is proven on the road, not in a council chamber. We shall see soon enough."
+    },
+    {
+      "variant_id": "SRC_PIPPIN_CAMP_01",
+      "speaker": "NPC_PIPPIN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "FellowshipCamp",
+      "required_mood": "FELLOWSHIP_UNDER_PRESSURE",
+      "context_id": "P1C05_COMPANY",
+      "text": "For once nobody is chasing us. I intend to enjoy that until someone calls it irresponsible."
+    },
+    {
+      "variant_id": "SRC_GANDALF_CREBAIN_01",
+      "speaker": "NPC_GANDALF",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "CrebainWarning",
+      "required_mood": "FELLOWSHIP_UNDER_PRESSURE",
+      "context_id": "P1C05_COMPANY",
+      "text": "Whatever watched us has carried news. We should assume the road ahead is less private now."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_CARADHRAS_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "CaradhrasStorm",
+      "required_mood": "FELLOWSHIP_UNDER_PRESSURE",
+      "context_id": "P1C05_COMPANY",
+      "text": "The mountain is taking strength from the whole company. Pride is not a reason to stay exposed."
+    },
+    {
+      "variant_id": "SRC_GIMLI_BALIN_01",
+      "speaker": "NPC_GIMLI",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BalinsTombReveal",
+      "required_mood": "DEAD_CITY_DREAD",
+      "context_id": "P1C06_MORIA",
+      "text": "These names were not meant to be found in silence. Give me a moment before we move."
+    },
+    {
+      "variant_id": "SRC_GANDALF_BALIN_01",
+      "speaker": "NPC_GANDALF",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BalinsTombReveal",
+      "required_mood": "DEAD_CITY_DREAD",
+      "context_id": "P1C06_MORIA",
+      "text": "Grief must not blind us to danger. This chamber tells us more than one terrible thing."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_MORIA_ESCAPE_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "MoriaEscape",
+      "required_mood": "DEAD_CITY_DREAD",
+      "context_id": "P1C06_AFTER_LOSS",
+      "text": "Do not ask anyone to be ready. Keep them moving until we can grieve somewhere safer."
+    },
+    {
+      "variant_id": "SRC_GALADRIEL_LORIEN_01",
+      "speaker": "NPC_GALADRIEL",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "LorienEntry",
+      "required_mood": "GRIEF_AND_REFUGE",
+      "context_id": "P1C07_REFUGE",
+      "text": "This place can shelter weary travelers, but it cannot carry their burdens for them."
+    },
+    {
+      "variant_id": "SRC_GIMLI_LORIEN_01",
+      "speaker": "NPC_GIMLI",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "LorienGrief",
+      "required_mood": "GRIEF_AND_REFUGE",
+      "context_id": "P1C07_REFUGE",
+      "text": "I thought I knew what beauty looked like in stone. These woods have complicated the matter."
+    },
+    {
+      "variant_id": "SRC_GALADRIEL_MIRROR_01",
+      "speaker": "NPC_GALADRIEL",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "Mirror",
+      "required_mood": "GRIEF_AND_REFUGE",
+      "context_id": "P1C07_REFUGE",
+      "text": "Visions show possibilities and fears. What matters is what you choose when the water is still again."
+    },
+    {
+      "variant_id": "SRC_BOROMIR_ARGONATH_01",
+      "speaker": "NPC_BOROMIR",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "ArgonathReveal",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_ANDUIN",
+      "text": "Those stones speak of a kingdom I have defended all my life. I cannot look at them lightly."
+    },
+    {
+      "variant_id": "SRC_SAM_FRACTURE_01",
+      "speaker": "NPC_SAM",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BoromirPressure",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_FRACTURE",
+      "text": "Something has changed around the camp. I do not like how far apart everyone is standing."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_BOROMIR_FALL_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BoromirFall",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_FRACTURE",
+      "text": "He chose his last ground defending the others. Remember the choice, not only the mistake before it."
+    },
+    {
+      "variant_id": "SRC_GANDALF_BETRAYAL_01",
+      "speaker": "NPC_GANDALF",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "OrthancBetrayal",
+      "required_mood": "WAR_CORRUPTION",
+      "context_id": "P1G01_BETRAYAL",
+      "text": "Counsel has become coercion. I will not call surrender wisdom simply because it wears a learned face."
+    },
+    {
+      "variant_id": "SRC_SARUMAN_BETRAYAL_01",
+      "speaker": "NPC_SARUMAN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "OrthancBetrayal",
+      "required_mood": "WAR_CORRUPTION",
+      "context_id": "P1G01_BETRAYAL",
+      "text": "Old loyalties are collapsing. Refusing to adapt will not make the coming order disappear."
+    },
+    {
+      "variant_id": "SRC_PIPPIN_BILBO_GONE_01",
+      "speaker": "NPC_PIPPIN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BilboDisappearance",
+      "required_mood": "PEACEFUL_HOME",
+      "context_id": "P1C01_HOME",
+      "text": "That was meant to be a party. I do not think Frodo is enjoying the surprise nearly as much as everyone else."
+    },
+    {
+      "variant_id": "SRC_MERRY_RIDER_01",
+      "speaker": "NPC_MERRY",
+      "intent": "DANGER_WARNING",
+      "required_story_beat": "BlackRiderApproach",
+      "required_mood": "PEACEFUL_HOME",
+      "context_id": "P1C01_DANGER",
+      "text": "Keep low and keep moving. Whoever is on that road is not looking for a friendly conversation."
+    },
+    {
+      "variant_id": "SRC_SAM_FERRY_01",
+      "speaker": "NPC_SAM",
+      "intent": "TRAVEL_COMMENT",
+      "required_story_beat": "FerryEscape",
+      "required_mood": "PEACEFUL_HOME",
+      "context_id": "P1C01_DANGER",
+      "text": "The river buys us distance, not safety. I would rather keep walking than wait to see who reaches the bank."
+    },
+    {
+      "variant_id": "SRC_BREE_GATEKEEPER_01",
+      "speaker": "NPC_BREE_GATEKEEPER",
+      "intent": "LOCAL_NEWS",
+      "required_story_beat": "BreeRoadNightfall",
+      "required_mood": "SUSPICIOUS_TOWN",
+      "context_id": "P1C02_BREE",
+      "text": "Travelers are welcome enough, but folk have been watching the roads more closely than usual tonight."
+    },
+    {
+      "variant_id": "SRC_BARLIMAN_COMMON_ROOM_01",
+      "speaker": "NPC_BARLIMAN_BUTTERBUR",
+      "intent": "WORK_TALK",
+      "required_story_beat": "PrancingPonyExterior",
+      "required_mood": "SUSPICIOUS_TOWN",
+      "context_id": "P1C02_BREE",
+      "text": "Busy night, too many questions, and not enough quiet corners. Stay out of trouble and the room will treat you kindly."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_DEPART_BREE_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "TRAVEL_COMMENT",
+      "required_story_beat": "DepartBree",
+      "required_mood": "SUSPICIOUS_TOWN",
+      "context_id": "P1C02_AFTER_RING",
+      "text": "Bree is behind us. From here, every obvious road is also the easiest place for an enemy to watch."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_MIDGEWATER_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "TRAVEL_COMMENT",
+      "required_story_beat": "MidgewaterRoad",
+      "required_mood": "PURSUED_WILDERNESS",
+      "context_id": "P1C03_PURSUED",
+      "text": "The uncomfortable path is sometimes the safer one. Watch the ground before you complain about the mud."
+    },
+    {
+      "variant_id": "SRC_SAM_WEATHERTOP_CAMP_01",
+      "speaker": "NPC_SAM",
+      "intent": "COMPANION_BANTER",
+      "required_story_beat": "WeathertopCamp",
+      "required_mood": "PURSUED_WILDERNESS",
+      "context_id": "P1C03_PURSUED",
+      "text": "I can make a poor camp feel almost decent, but I cannot make those shadows stop looking suspicious."
+    },
+    {
+      "variant_id": "SRC_ARWEN_FORD_01",
+      "speaker": "NPC_ARWEN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "FordEscape",
+      "required_mood": "PURSUED_WILDERNESS",
+      "context_id": "P1C03_WOUNDED",
+      "text": "The pursuit has broken for a moment. Use that moment for healing, not for pretending the danger never happened."
+    },
+    {
+      "variant_id": "SRC_BILBO_COUNCIL_WAIT_01",
+      "speaker": "NPC_BILBO",
+      "intent": "LOCAL_NEWS",
+      "required_story_beat": "RivendellAwakening",
+      "required_mood": "SAFE_REFUGE",
+      "context_id": "P1C04_REFUGE",
+      "text": "Rivendell is good at making an hour feel peaceful, even when everyone is quietly preparing for difficult news."
+    },
+    {
+      "variant_id": "SRC_ELROND_FELLOWSHIP_01",
+      "speaker": "NPC_ELROND",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "FellowshipAssembled",
+      "required_mood": "SAFE_REFUGE",
+      "context_id": "P1C04_COUNCIL",
+      "text": "A company this varied will disagree often. The test is whether disagreement weakens the purpose that brought them together."
+    },
+    {
+      "variant_id": "SRC_BOROMIR_DEPARTURE_01",
+      "speaker": "NPC_BOROMIR",
+      "intent": "TRAVEL_COMMENT",
+      "required_story_beat": "RivendellDeparture",
+      "required_mood": "SAFE_REFUGE",
+      "context_id": "P1C04_COUNCIL",
+      "text": "Councils end neatly. Roads do not. We will learn more about one another after the gates are behind us."
+    },
+    {
+      "variant_id": "SRC_LEGOLAS_CAMP_01",
+      "speaker": "NPC_LEGOLAS",
+      "intent": "COMPANION_BANTER",
+      "required_story_beat": "FellowshipCamp",
+      "required_mood": "FELLOWSHIP_UNDER_PRESSURE",
+      "context_id": "P1C05_COMPANY",
+      "text": "The camp is loud by woodland standards, but I admit the hobbits make the noise easier to forgive."
+    },
+    {
+      "variant_id": "SRC_BOROMIR_CAMP_01",
+      "speaker": "NPC_BOROMIR",
+      "intent": "COMPANION_BANTER",
+      "required_story_beat": "FellowshipCamp",
+      "required_mood": "FELLOWSHIP_UNDER_PRESSURE",
+      "context_id": "P1C05_COMPANY",
+      "text": "A little practice is worth more than another argument about the route. Come, keep your feet under you."
+    },
+    {
+      "variant_id": "SRC_GIMLI_MORIA_GATE_01",
+      "speaker": "NPC_GIMLI",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "MoriaDoorOpens",
+      "required_mood": "FELLOWSHIP_UNDER_PRESSURE",
+      "context_id": "P1C05_MORIA_GATE",
+      "text": "Stone remembers more than travelers do. Whatever waits beyond this door, we should enter with respect and open eyes."
+    },
+    {
+      "variant_id": "SRC_LEGOLAS_MORIA_UNEASE_01",
+      "speaker": "NPC_LEGOLAS",
+      "intent": "DANGER_WARNING",
+      "required_story_beat": "MoriaUnease",
+      "required_mood": "DEAD_CITY_DREAD",
+      "context_id": "P1C06_MORIA",
+      "text": "The silence is not empty. It carries every footstep farther than it should, so choose each one carefully."
+    },
+    {
+      "variant_id": "SRC_LEGOLAS_MORIA_ATTACK_01",
+      "speaker": "NPC_LEGOLAS",
+      "intent": "DANGER_WARNING",
+      "required_story_beat": "MoriaAttack",
+      "required_mood": "DEAD_CITY_DREAD",
+      "context_id": "P1C06_MORIA",
+      "text": "Do not chase an echo. Hold the group together and strike only what you can actually see."
+    },
+    {
+      "variant_id": "SRC_SAM_MORIA_ESCAPE_01",
+      "speaker": "NPC_SAM",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "MoriaEscape",
+      "required_mood": "DEAD_CITY_DREAD",
+      "context_id": "P1C06_AFTER_LOSS",
+      "text": "Nobody has to find the right words yet. Just tell me which way we are walking and I will stay close."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_LORIEN_GRIEF_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "LorienGrief",
+      "required_mood": "GRIEF_AND_REFUGE",
+      "context_id": "P1C07_REFUGE",
+      "text": "Rest does not mean forgetting. It gives us enough strength to carry what happened without letting it stop us."
+    },
+    {
+      "variant_id": "SRC_LEGOLAS_FAREWELL_01",
+      "speaker": "NPC_LEGOLAS",
+      "intent": "TRAVEL_COMMENT",
+      "required_story_beat": "LorienFarewell",
+      "required_mood": "GRIEF_AND_REFUGE",
+      "context_id": "P1C07_FAREWELL",
+      "text": "The river will change the rhythm of the journey. Stay alert even when the current makes the road feel gentle."
+    },
+    {
+      "variant_id": "SRC_ARAGORN_ARGONATH_01",
+      "speaker": "NPC_ARAGORN",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "ArgonathReveal",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_ANDUIN",
+      "text": "The past stands very tall here. We still have to decide what kind of future can stand beside it."
+    },
+    {
+      "variant_id": "SRC_GIMLI_URUK_01",
+      "speaker": "NPC_GIMLI",
+      "intent": "DANGER_WARNING",
+      "required_story_beat": "UrukAttack",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_FRACTURE",
+      "text": "Let them come in numbers. Our first job is making sure our friends are not cut off from one another."
+    },
+    {
+      "variant_id": "SRC_LEGOLAS_BOROMIR_FALL_01",
+      "speaker": "NPC_LEGOLAS",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BoromirFall",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_FRACTURE",
+      "text": "There is no time to mourn as we should. We can still honor him by protecting those who remain."
+    },
+    {
+      "variant_id": "SRC_GIMLI_BOROMIR_FALL_01",
+      "speaker": "NPC_GIMLI",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "BoromirFall",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_FRACTURE",
+      "text": "He fought for the little ones when it mattered most. I will remember that before I remember his mistake."
+    },
+    {
+      "variant_id": "SRC_SAM_DEPARTURE_01",
+      "speaker": "NPC_SAM",
+      "intent": "FAREWELL",
+      "required_story_beat": "FrodoSamDeparture",
+      "required_mood": "FELLOWSHIP_FRACTURE",
+      "context_id": "P1C08_FRACTURE",
+      "text": "You may choose the road, but you do not get to choose whether I care enough to follow."
+    },
+    {
+      "variant_id": "SRC_GANDALF_PRISON_01",
+      "speaker": "NPC_GANDALF",
+      "intent": "STORY_REACTION",
+      "required_story_beat": "OrthancPrison",
+      "required_mood": "WAR_CORRUPTION",
+      "context_id": "P1G01_BETRAYAL",
+      "text": "From this height the damage below is clearer. Power has turned the valley into an argument made of smoke and axes."
+    },
+    {
+      "variant_id": "SRC_GANDALF_ESCAPE_01",
+      "speaker": "NPC_GANDALF",
+      "intent": "TRAVEL_COMMENT",
+      "required_story_beat": "OrthancEscape",
+      "required_mood": "WAR_CORRUPTION",
+      "context_id": "P1G01_BETRAYAL",
+      "text": "Distance from the tower is not safety yet. The warning matters only if it reaches those who still have time to act."
+    }
+  ]
+}

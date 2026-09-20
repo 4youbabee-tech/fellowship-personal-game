@@ -1,0 +1,359 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_VISUAL_PRODUCTION_PASS_V1",
+  "status": "ACTIVE_IMPLEMENTATION_PENDING_ENGINE_PROOF",
+  "source_basis": [
+    "Owner Source Pack Master",
+    "Owner Battles, Weapons, Armies & Production Design Bible",
+    "Fellowship film-continuity project contracts",
+    "03 World, Locations & Map Bible",
+    "05 Battles, Weapons, Armies & Creatures Bible",
+    "07 Mission & Chapter Implementation Matrix",
+    "08 Visual Reference Bible"
+  ],
+  "authority_rule": "Film chronology and outcomes remain immutable. Visual staging, optional traversal texture and encounter pressure may enrich presentation but cannot create alternate canon outcomes.",
+  "target_profile": {
+    "platform": "Windows",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "quality": "Low-Medium",
+    "fps_floor": 30
+  },
+  "global_rules": [
+    "Prefer chapter-specific silhouette, lighting, atmosphere and landmark composition before raw prop count.",
+    "Keep hero vistas readable in foreground/midground/background layers.",
+    "Use short story-beat camera moments only at major landmarks; do not turn every transition into a cutscene.",
+    "Use production meshes when present and retain deterministic fallbacks.",
+    "Measure target-device cost before raising asset density or texture resolution.",
+    "Watcher, Balrog and Lurtz are film-locked presentation threats; gameplay cannot rewrite their required outcomes.",
+    "Primary routes must remain readable through landmark framing, architecture, light and terrain before UI direction.",
+    "Every explorable branch must serve story, preparation/resource, relationship/lore or meaningful traversal.",
+    "Mission logic owns state; cinematic and camera systems only present already-authoritative state.",
+    "Battle scalability keeps full AI inside the hero bubble and avoids adding unnecessary full-simulation background combatants."
+  ],
+  "chapters": [
+    {
+      "id": "P1C01",
+      "identity": "warm pastoral Shire",
+      "hero_moments": [
+        "Hobbiton/Bag End readability",
+        "party field life",
+        "leaving-home road"
+      ],
+      "priority": "re-establish chapter-specific visual/performance reference with real evidence"
+    },
+    {
+      "id": "P1C02",
+      "identity": "rainy Bree threshold",
+      "hero_moments": [
+        "town gate reveal",
+        "Prancing Pony exterior/interior contrast"
+      ],
+      "priority": "wet-night material and warm-inn contrast"
+    },
+    {
+      "id": "P1C03",
+      "identity": "exposed ancient Weathertop",
+      "hero_moments": [
+        "ruin ring reveal",
+        "fire-versus-wraith night contrast"
+      ],
+      "priority": "moonlit/cold ruin silhouette and compact encounter readability"
+    },
+    {
+      "id": "P1C04",
+      "identity": "open healing Rivendell",
+      "hero_moments": [
+        "valley/water reveal",
+        "council space"
+      ],
+      "priority": "soft daylight, reflective water, pale stone and vertical openness"
+    },
+    {
+      "id": "P1C05",
+      "identity": "cold exposed Caradhras to Moria threshold",
+      "hero_moments": [
+        "mountain approach",
+        "West Gate lake"
+      ],
+      "priority": "cold rock/snow separation and readable threshold transition"
+    },
+    {
+      "id": "P1C06",
+      "identity": "monumental abandoned Moria",
+      "hero_moments": [
+        "great-hall scale",
+        "Balin chamber",
+        "Watcher threshold",
+        "Bridge/Balrog wall"
+      ],
+      "priority": "human-scale contrast against huge dwarf geometry; sparse torch/fire against deep darkness",
+      "runtime_wave_v5": [
+        "bounded local fire pools reinforce player-scale readability in monumental darkness",
+        "production mine carts reinforce the mine/city identity without changing traversal anchors",
+        "existing Watcher -> tomb -> Orc/Troll -> Balrog order remains untouched"
+      ]
+    },
+    {
+      "id": "P1C07",
+      "identity": "gold-white Lothlorien refuge",
+      "hero_moments": [
+        "forest entry",
+        "talan layers",
+        "Mirror/farewell"
+      ],
+      "priority": "filtered gold-white light, organic elevation, low clutter"
+    },
+    {
+      "id": "P1C08",
+      "identity": "Anduin awe into wet woodland breakup",
+      "hero_moments": [
+        "Argonath passage",
+        "Parth Galen camp",
+        "Amon Hen broken woodland battle"
+      ],
+      "priority": "river scale first, then dark Uruk silhouettes against green/brown woodland and scattered ruins",
+      "runtime_wave_v5": [
+        "explicit Anduin/Amon Hen daylight-sky-fog identity replaces generic atmosphere defaults",
+        "production dock-pier dressing strengthens the river-to-camp handoff",
+        "non-colliding ruin/log composition separates battle lanes without adding extra full-AI enemies"
+      ]
+    }
+  ],
+  "parallel_route": {
+    "id": "ISENGARD",
+    "identity": "black-stone authoritarian industry",
+    "priority": "cold directional Orthanc light plus furnace glow, severe vertical geometry and visible industrial damage",
+    "runtime_implemented": [
+      "cold movable directional light and restrained skylight",
+      "industrial exponential height fog",
+      "three bounded warm furnace point lights",
+      "production parapet slab dressing",
+      "prototype world labels hidden from the normal player view",
+      "secondary industrial pit/service ring using existing production assets",
+      "Orthanc base silhouette rhythm using production parapet slabs"
+    ],
+    "acceptance": "IMPLEMENTED_PENDING_UE4_BUILD_RENDER_AND_DEVICE_PROOF",
+    "authored_material_palette": {
+      "status": "SOURCE_AUTHORED_PENDING_ENGINE_IMPORT_PROOF",
+      "library": "SourceAssets/Production/World/Isengard/RegionalMaterials.mtl",
+      "materials": [
+        "OrthancBlackStone",
+        "OrthancEdgeStone",
+        "IndustrialIron",
+        "FurnaceIron",
+        "ScorchedWood"
+      ],
+      "runtime_rule": "Production Isengard meshes keep imported authored materials; engine BasicShape tint is fallback-only."
+    }
+  },
+  "encounter_staging": {
+    "moria": [
+      "Watcher partial reveal and sudden reach",
+      "Chamber defense escalates with cave troll",
+      "retreat flow ends at non-killable Balrog narrative wall"
+    ],
+    "amon_hen": [
+      "Uruk pressure enters from separated woodland lanes",
+      "Boromir defense remains story-led",
+      "Lurtz appears as film-locked pressure; final Aragorn duel choreography remains pending animation"
+    ]
+  },
+  "acceptance_boundary": {
+    "implemented_now": [
+      "existing production-mesh enrichment in Moria and Anduin/Amon Hen",
+      "Lurtz production-foundation runtime pressure actor",
+      "adaptive mythic-threat update rate",
+      "source-asset triangle/source-byte reporting",
+      "short runtime framing treatments for selected hero and threat camera cues",
+      "source-bible registry integrated into OwnerSourceReferenceIndex",
+      "Moria mine-city dressing and bounded local light pools",
+      "explicit Anduin/Amon Hen atmosphere and dock-to-battle composition",
+      "Isengard secondary industrial ring and Orthanc base composition",
+      "core Fellowship V6 anatomical head/torso/hair source geometry",
+      "production-scale named-NPC facial placement and acting",
+      "named companion production equipment mesh integration"
+    ],
+    "still_required": [
+      "real UE4.27 build/import evidence",
+      "chapter-specific PIE screenshots/video or concrete observations",
+      "target-device FPS/hitch/memory measurements",
+      "final rigs/animation/materials/VFX/audio",
+      "human visual/pacing acceptance"
+    ]
+  },
+  "camera_execution": {
+    "status": "RUNTIME_FRAMING_IMPLEMENTED_PENDING_ENGINE_PROOF",
+    "strategy": "Short spring-arm/FOV framing treatments on selected landmark/threat cues; no full Sequencer dependency and no camera cue may own story progression.",
+    "hero_reveals": [
+      "Cam_PonyExteriorReveal",
+      "Cam_WeathertopReveal",
+      "Cam_RivendellAwakening",
+      "Cam_MoriaEntry",
+      "Cam_LorienEntry",
+      "Cam_ArgonathReveal",
+      "Cam_AmonHenArrival",
+      "Cam_IsengardArrival"
+    ],
+    "threat_reveals": [
+      "Cam_WatcherAttack",
+      "Cam_BalinsTombReveal",
+      "Cam_BalrogApproach",
+      "Cam_UrukAttack"
+    ],
+    "performance_rules": [
+      "Reuse the existing player spring arm and follow camera.",
+      "No new scene-capture target, cinematic camera actor, post-process stack or tick-heavy camera manager.",
+      "Treatments blend back automatically after a bounded duration."
+    ],
+    "acceptance_boundary": "This is runtime camera framing, not final film-grade camera/Sequencer acceptance."
+  },
+  "threat_material_palettes": {
+    "status": "SOURCE_AUTHORED_PENDING_ENGINE_IMPORT_PROOF",
+    "runtime_rule": "Production threat/hero meshes keep authored OBJ/MTL materials; engine BasicShape tint applies only to fallback primitives.",
+    "lurtz": {
+      "library": "SourceAssets/Production/Enemies/Lurtz/RegionalMaterials.mtl",
+      "materials": [
+        "LurtzSkin",
+        "LurtzArmor",
+        "LurtzDarkIron"
+      ]
+    },
+    "watcher": {
+      "library": "SourceAssets/Production/Enemies/Watcher/RegionalMaterials.mtl",
+      "materials": [
+        "WatcherCore",
+        "WatcherTentacle"
+      ]
+    },
+    "balrog": {
+      "library": "SourceAssets/Production/Enemies/Balrog/RegionalMaterials.mtl",
+      "materials": [
+        "BalrogCharcoal",
+        "BalrogEmber",
+        "BalrogHorn",
+        "BalrogWing"
+      ]
+    }
+  },
+  "bible_alignment": {
+    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "sources": [
+      "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+      "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+      "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+      "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1"
+    ],
+    "world_rules": [
+      "iconic silhouette first, gameplay readability second, micro-detail third",
+      "deterministic chapter-state variants",
+      "purposeful optional branches only",
+      "companion and traversal safety remains stronger than decoration"
+    ],
+    "battle_rules": [
+      "locked canonical outcomes stay immutable",
+      "phase architecture commits explicit state",
+      "full AI remains bounded to the hero bubble"
+    ],
+    "mission_rules": [
+      "logic owns state and cinematics present state",
+      "postconditions gate chapter progression",
+      "checkpoints bracket irreversible set pieces"
+    ]
+  },
+  "current_wave": {
+    "id": "CANON_SAFE_REGIONAL_LIFE_V8",
+    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "focus": [
+      "chapter-correct ambient population",
+      "route-readable crowd flow",
+      "ambient production material response",
+      "cheap gait/idle variation",
+      "Caradhras/Moria civilian-empty safety",
+      "Anduin/Amon Hen bird-only ambient baseline"
+    ],
+    "acceptance_rule": "Exact-head machine proof is required before promotion; rendered PIE/device/human acceptance remains separate."
+  },
+  "hero_character_geometry_wave": {
+    "id": "HERO_ANATOMICAL_FOUNDATION_V6",
+    "status": "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE",
+    "characters": [
+      "Frodo",
+      "Gandalf",
+      "Sam",
+      "Merry",
+      "Pippin",
+      "Aragorn",
+      "Boromir",
+      "Legolas",
+      "Gimli"
+    ],
+    "implemented": [
+      "Higher-density original project-owned head geometry with authored brow/nose/jaw/chin/ear silhouettes.",
+      "Higher-density original project-owned torso geometry with readable shoulder/chest/waist/hip/neck transitions.",
+      "Layered hair caps, fringe and character-specific silhouette locks replace low-density hair shells.",
+      "Production-scale NPC eye/mouth placement and blink/dialogue acting.",
+      "Existing project-owned production gear replaces multiple primitive equipment proxies."
+    ],
+    "guardrails": [
+      "Preserve gameplay collision, quest anchors and spawn topology; geometry remains visual-only.",
+      "Do not call modular static foundations final characters.",
+      "Do not claim actor likeness or final facial acceptance from procedural source geometry.",
+      "Final rig/deformation, UV/materials, animation, PIE/device and human visual review remain required."
+    ],
+    "engine_proof": {
+      "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
+      "pre_unreal": "#486 SUCCESS",
+      "unreal": "#321 SUCCESS"
+    }
+  },
+  "hero_character_surface_wave": {
+    "id": "HERO_SURFACE_RESPONSE_V7",
+    "status": "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE",
+    "characters": [
+      "Frodo",
+      "Gandalf",
+      "Sam",
+      "Merry",
+      "Pippin",
+      "Aragorn",
+      "Boromir",
+      "Legolas",
+      "Gimli"
+    ],
+    "implemented": [
+      "Project-owned Default Lit master surface material.",
+      "Runtime roughness/metallic separation for cloth, skin, hair, leather/wood and metal equipment.",
+      "MTL Pr/Pm import support for authored material libraries."
+    ],
+    "guardrails": [
+      "No final visual acceptance without rendered PIE evidence.",
+      "No claim of final skin likeness or texture fidelity; this wave is surface response, not scanned likeness.",
+      "Fallback proxy characters remain safe if the production master is unavailable."
+    ],
+    "engine_proof": {
+      "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+      "pre_unreal": "#488 SUCCESS",
+      "unreal": "#323 SUCCESS"
+    }
+  },
+  "living_world_v8": {
+    "id": "CANON_SAFE_REGIONAL_LIFE_V8",
+    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "source_basis": [
+      "03 World, Locations & Map Bible",
+      "06 Gameplay & Side Activities Bible",
+      "07 Mission & Chapter Implementation Matrix"
+    ],
+    "implemented_when_committed": [
+      "forward-biased crowd flow",
+      "route-aligned ambient travel",
+      "danger-aware population throttling",
+      "Caradhras/Moria civilian-empty baselines",
+      "Anduin/Amon Hen fauna-only baseline",
+      "ambient production surface response",
+      "per-NPC gait and idle head-look variation"
+    ],
+    "acceptance_boundary": "No rendered or target-device claim until exact-head engine proof plus later PIE/device/human review."
+  }
+}

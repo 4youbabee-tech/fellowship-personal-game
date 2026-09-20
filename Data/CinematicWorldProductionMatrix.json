@@ -1,0 +1,361 @@
+{
+  "schema_version": 1,
+  "matrix_id": "PART1_CINEMATIC_WORLD_PRODUCTION_MATRIX_V1",
+  "status": "PROJECT_OWNED_REGION_KITS_ACTIVE_FINAL_ART_ACCEPTANCE_PENDING",
+  "visual_benchmark": "Dense cinematic naturalism like the owner's forest reference: strong light shafts, layered depth, rich ground detail, believable vegetation/stone/wood, atmospheric perspective and characters embedded in the landscape.",
+  "global_rules": [
+    "Film geography and story anchors remain fixed.",
+    "Every region needs foreground, midground and background composition rather than a flat playable arena.",
+    "Hero vistas receive the strongest detail; distant geometry is simplified aggressively.",
+    "Beauty comes from composition, materials, lighting, fog, vegetation grouping and landmark framing before raw polygon count.",
+    "The 720p Low-Medium / 30 FPS floor remains mandatory."
+  ],
+  "regions": [
+    {
+      "chapter": "P1C01",
+      "region": "Shire",
+      "identity": "lush warm pastoral",
+      "hero_vistas": [
+        "Bag End/Hobbiton layered hill reveal",
+        "Party Field at golden-hour warmth",
+        "wooded road/Black Rider compression",
+        "Brandywine ferry escape opening"
+      ],
+      "foreground": [
+        "flowers",
+        "hedges",
+        "mud/stone path breakup",
+        "garden props"
+      ],
+      "midground": [
+        "hobbit holes/cottages",
+        "mills/bridges",
+        "residents/carts"
+      ],
+      "background": [
+        "rolling hills",
+        "tree lines",
+        "distant farms"
+      ],
+      "atmosphere": [
+        "warm sun",
+        "soft morning haze",
+        "late-day party lamps"
+      ],
+      "production_gap": "raise current resource-rich prototype to cohesive materials/terrain/character art",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Shire",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
+    },
+    {
+      "chapter": "P1C02",
+      "region": "Bree",
+      "identity": "wet lamplit suspicious town",
+      "hero_vistas": [
+        "Bree gate in rain",
+        "Prancing Pony exterior/interior contrast"
+      ],
+      "foreground": [
+        "puddles",
+        "mud",
+        "barrels",
+        "stable clutter"
+      ],
+      "midground": [
+        "timber/stone facades",
+        "inn crowd",
+        "horses"
+      ],
+      "background": [
+        "dark rooftops",
+        "rain haze"
+      ],
+      "atmosphere": [
+        "cool rain",
+        "warm windows/lanterns",
+        "low fog"
+      ],
+      "production_gap": "replace blockout architecture/materials and strengthen interior density",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Bree",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
+    },
+    {
+      "chapter": "P1C03",
+      "region": "Weathertop/Ford",
+      "identity": "windswept hunted wilderness",
+      "hero_vistas": [
+        "Weathertop ruin crown",
+        "Nazgul camp encirclement",
+        "Ford escape opening"
+      ],
+      "foreground": [
+        "wet grasses",
+        "rocks",
+        "ruin fragments"
+      ],
+      "midground": [
+        "ruin arches",
+        "camp",
+        "pines"
+      ],
+      "background": [
+        "lonely ridges",
+        "storm haze"
+      ],
+      "atmosphere": [
+        "wind",
+        "cold sunset",
+        "threatening fog"
+      ],
+      "production_gap": "terrain/material weather pass and stronger ruin silhouette",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Weathertop",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
+    },
+    {
+      "chapter": "P1C04",
+      "region": "Rivendell",
+      "identity": "luminous layered sanctuary",
+      "hero_vistas": [
+        "first valley reveal",
+        "terraced pavilions/water",
+        "Council terrace"
+      ],
+      "foreground": [
+        "ferns",
+        "stone paths",
+        "water edges"
+      ],
+      "midground": [
+        "bridges",
+        "arches",
+        "pavilions",
+        "elves"
+      ],
+      "background": [
+        "waterfalls",
+        "cliffs",
+        "forest layers"
+      ],
+      "atmosphere": [
+        "clean light",
+        "fine mist",
+        "warm reflected water"
+      ],
+      "production_gap": "replace simple pavilion forms with richer architecture/material hierarchy",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Rivendell",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
+    },
+    {
+      "chapter": "P1C05",
+      "region": "Road/Caradhras/West Gate",
+      "identity": "travel scale to severe alpine danger",
+      "hero_vistas": [
+        "Fellowship mountain approach",
+        "Caradhras wall of snow",
+        "West Gate lake/cliff"
+      ],
+      "foreground": [
+        "camp gear",
+        "snow breakup",
+        "rock debris"
+      ],
+      "midground": [
+        "company silhouettes",
+        "tents",
+        "gate shoreline"
+      ],
+      "background": [
+        "mountain ridges",
+        "cloud mass"
+      ],
+      "atmosphere": [
+        "cold sky",
+        "snow haze",
+        "wind"
+      ],
+      "production_gap": "weather VFX/materials and mountain depth",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Road",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
+    },
+    {
+      "chapter": "P1C06",
+      "region": "Moria",
+      "identity": "monumental dead underground city",
+      "hero_vistas": [
+        "column hall vanishing scale",
+        "Balin chamber",
+        "Bridge abyss"
+      ],
+      "foreground": [
+        "dust",
+        "rubble",
+        "metal/stone debris"
+      ],
+      "midground": [
+        "pillars",
+        "gates",
+        "braziers"
+      ],
+      "background": [
+        "black void",
+        "repeating architecture"
+      ],
+      "atmosphere": [
+        "cold darkness",
+        "localized fire",
+        "dust beams"
+      ],
+      "production_gap": "material richness, controlled light shafts and unique hero architecture",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Moria",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED",
+      "current_runtime_foundation": "Expanded project-owned Moria dressing plus film-locked Watcher/Balrog runtime presentation; final materials, VFX/audio, lighting shafts and human visual acceptance remain pending."
+    },
+    {
+      "chapter": "P1C07",
+      "region": "Lothlorien",
+      "identity": "golden ethereal living forest",
+      "hero_vistas": [
+        "golden canopy arrival",
+        "talan vertical reveal",
+        "Mirror clearing",
+        "river departure"
+      ],
+      "foreground": [
+        "gold leaves",
+        "roots",
+        "flowers"
+      ],
+      "midground": [
+        "giant trunks",
+        "platforms",
+        "lanterns"
+      ],
+      "background": [
+        "gold haze",
+        "layered canopy"
+      ],
+      "atmosphere": [
+        "soft gold light",
+        "mist",
+        "subtle particles"
+      ],
+      "production_gap": "stronger tree scale/materials and luminous depth without expensive full-scene translucency",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Lothlorien",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED"
+    },
+    {
+      "chapter": "P1C08",
+      "region": "Anduin/Amon Hen",
+      "identity": "grand river journey to fractured woodland",
+      "hero_vistas": [
+        "Argonath reveal",
+        "river canyon",
+        "Amon Hen ruin above woods"
+      ],
+      "foreground": [
+        "riverbank reeds",
+        "fallen stone",
+        "camp debris"
+      ],
+      "midground": [
+        "boats",
+        "companions",
+        "ruins"
+      ],
+      "background": [
+        "river walls",
+        "forest ridges",
+        "sentinels"
+      ],
+      "atmosphere": [
+        "open river light",
+        "growing cloud/tension"
+      ],
+      "production_gap": "water material, canyon scale and final forest composition",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Anduin",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "REGION_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED",
+      "current_runtime_foundation": "Expanded Anduin shoreline/camp production dressing, Uruk pressure and dedicated film-locked Lurtz runtime foundation; final water, woodland composition, animation and hero-camera acceptance remain pending."
+    },
+    {
+      "chapter": "P1G01",
+      "region": "Isengard/Orthanc",
+      "identity": "ordered wisdom corrupted into industry",
+      "hero_vistas": [
+        "Orthanc approach",
+        "tower prison view",
+        "industrial valley below"
+      ],
+      "foreground": [
+        "cut timber",
+        "stone/metal debris"
+      ],
+      "midground": [
+        "Orthanc/tower surfaces",
+        "workers/enemies"
+      ],
+      "background": [
+        "smoke pits",
+        "scarred valley"
+      ],
+      "atmosphere": [
+        "cold tower light",
+        "industrial smoke/glow"
+      ],
+      "production_gap": "production architecture/material identity and industry depth",
+      "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Isengard",
+        "SourceAssets/Production/World/Common"
+      ],
+      "production_stage": "DEDICATED_ISENGARD_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED",
+      "production_assets": [
+        "project-owned Orthanc core/spire source meshes",
+        "project-owned industrial pit/furnace/felled-trunk source meshes"
+      ]
+    }
+  ],
+  "optimization": [
+    "HISM/ISM for repeated foliage and distant props",
+    "aggressive distance culling for micro-detail",
+    "LOD chains or simplified fallback meshes for hero assets",
+    "bounded dynamic shadow radius",
+    "few expensive translucent layers",
+    "texture/material reuse through instances",
+    "chapter-specific streaming/spawn scope instead of loading the whole trilogy world",
+    "distance-adaptive update rates for expensive hero/threat presentation",
+    "source asset telemetry informs profiling but does not substitute for cooked/device measurements"
+  ],
+  "source_atlas": "Data/Part1ProductionAtlas.json",
+  "production_truth": "Project-owned region kits exist across Part I, but kit presence is not final terrain/material/vegetation/water/interior or visual acceptance."
+}

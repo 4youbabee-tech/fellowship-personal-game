@@ -3,14 +3,28 @@
 #include "ShireNPC.h"
 #include "ShireAmbientNPC.h"
 #include "ShireQuestTrigger.h"
+#include "ShireTraversalChallenge.h"
 
+#include "Components/DirectionalLightComponent.h"
+#include "Components/ExponentialHeightFogComponent.h"
+#include "Components/PointLightComponent.h"
+#include "Components/SkyLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Engine/DirectionalLight.h"
+#include "Engine/ExponentialHeightFog.h"
+#include "Engine/PointLight.h"
+#include "Engine/SkyLight.h"
 #include "Engine/StaticMeshActor.h"
 #include "Engine/TextRenderActor.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
+
+namespace IsengardVisual
+{
+    constexpr bool ShowPrototypeWorldLabels = false;
+}
 
 AIsengardPrototypeWorldBuilder::AIsengardPrototypeWorldBuilder()
 {
@@ -59,7 +73,9 @@ AStaticMeshActor* AIsengardPrototypeWorldBuilder::SpawnShape(
     Component->SetCollisionEnabled(bCollision ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
     Actor->SetActorScale3D(Scale);
 
-    if (BasicMaterial)
+    const bool bFallbackPrimitive =
+        Mesh == CubeMesh || Mesh == SphereMesh || Mesh == CylinderMesh || Mesh == ConeMesh;
+    if (BasicMaterial && bFallbackPrimitive)
     {
         if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, Actor))
         {
@@ -73,6 +89,11 @@ AStaticMeshActor* AIsengardPrototypeWorldBuilder::SpawnShape(
 
 void AIsengardPrototypeWorldBuilder::SpawnLabel(const FString& Text, const FVector& Location, const FLinearColor& Color)
 {
+    if (!IsengardVisual::ShowPrototypeWorldLabels)
+    {
+        return;
+    }
+
     if (!GetWorld())
     {
         return;
@@ -100,6 +121,40 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
     }
     bBuilt = true;
 
+    // Isengard gets a distinct, low-cost production atmosphere: cold directional
+    // light and industrial haze, countered by a bounded set of warm furnace glows.
+    ADirectionalLight* IsengardSun = GetWorld()->SpawnActor<ADirectionalLight>(
+        FVector::ZeroVector, FRotator(-32.0f, -58.0f, 0.0f));
+    if (IsengardSun && IsengardSun->GetLightComponent())
+    {
+        IsengardSun->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        IsengardSun->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        IsengardSun->GetLightComponent()->SetIntensity(2.15f);
+        IsengardSun->GetLightComponent()->SetLightColor(FLinearColor(0.62f, 0.68f, 0.72f));
+    }
+
+    ASkyLight* IsengardSky = GetWorld()->SpawnActor<ASkyLight>(
+        FVector::ZeroVector, FRotator::ZeroRotator);
+    if (IsengardSky && IsengardSky->GetLightComponent())
+    {
+        IsengardSky->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        IsengardSky->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        IsengardSky->GetLightComponent()->SetIntensity(0.42f);
+        IsengardSky->GetLightComponent()->SetLightColor(FLinearColor(0.34f, 0.39f, 0.37f));
+        IsengardSky->GetLightComponent()->RecaptureSky();
+    }
+
+    AExponentialHeightFog* IsengardFog = GetWorld()->SpawnActor<AExponentialHeightFog>(
+        FVector::ZeroVector, FRotator::ZeroRotator);
+    if (IsengardFog && IsengardFog->GetComponent())
+    {
+        IsengardFog->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        IsengardFog->GetComponent()->SetMobility(EComponentMobility::Movable);
+        IsengardFog->GetComponent()->SetFogDensity(0.018f);
+        IsengardFog->GetComponent()->SetFogHeightFalloff(0.18f);
+        IsengardFog->GetComponent()->SetFogInscatteringColor(FLinearColor(0.16f, 0.19f, 0.17f));
+    }
+
     SpawnShape(CubeMesh, FVector(0, 0, -75), FVector(42, 32, 0.75f),
         FLinearColor(0.09f, 0.12f, 0.08f), FRotator::ZeroRotator, true);
 
@@ -119,43 +174,138 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
             FVector(2.0f, 0.82f, 0.08f), FLinearColor(0.20f, 0.18f, 0.14f), FRotator::ZeroRotator, true);
     }
 
-    // Orthanc silhouette: tall black stone core with four rising fins.
-    SpawnShape(CubeMesh, FVector(900, 0, 520), FVector(3.0f, 3.0f, 5.2f),
-        FLinearColor(0.055f, 0.06f, 0.065f), FRotator::ZeroRotator, true);
-    for (int32 I = 0; I < 4; ++I)
+    UStaticMesh* OrthancCore = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_OrthancCore.SM_Isengard_OrthancCore"));
+    UStaticMesh* OrthancSpire = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_OrthancSpire.SM_Isengard_OrthancSpire"));
+    if (OrthancCore && OrthancSpire)
     {
-        const float Angle = I * 90.0f;
-        const float R = FMath::DegreesToRadians(Angle);
-        const FVector Offset(FMath::Cos(R) * 260.0f, FMath::Sin(R) * 260.0f, 0.0f);
-        SpawnShape(CubeMesh, FVector(900, 0, 700) + Offset, FVector(0.72f, 1.15f, 7.0f),
-            FLinearColor(0.035f, 0.04f, 0.045f), FRotator(0, Angle, 0), true);
+        SpawnShape(OrthancCore, FVector(900, 0, -75), FVector(1.0f),
+            FLinearColor(0.055f, 0.06f, 0.065f), FRotator::ZeroRotator, true);
+        for (int32 I = 0; I < 4; ++I)
+        {
+            const float Angle = I * 90.0f;
+            const float R = FMath::DegreesToRadians(Angle);
+            const FVector Offset(FMath::Cos(R) * 245.0f, FMath::Sin(R) * 245.0f, 0.0f);
+            SpawnShape(OrthancSpire, FVector(900, 0, 720) + Offset, FVector(1.0f),
+                FLinearColor(0.035f, 0.04f, 0.045f), FRotator(0, Angle, 0), true);
+        }
     }
-    SpawnShape(CubeMesh, FVector(900, 0, 1125), FVector(3.0f, 3.0f, 0.18f),
-        FLinearColor(0.07f, 0.07f, 0.075f), FRotator::ZeroRotator, true);
+    else
+    {
+        SpawnShape(CubeMesh, FVector(900, 0, 520), FVector(3.0f, 3.0f, 5.2f),
+            FLinearColor(0.055f, 0.06f, 0.065f), FRotator::ZeroRotator, true);
+        for (int32 I = 0; I < 4; ++I)
+        {
+            const float Angle = I * 90.0f;
+            const float R = FMath::DegreesToRadians(Angle);
+            const FVector Offset(FMath::Cos(R) * 260.0f, FMath::Sin(R) * 260.0f, 0.0f);
+            SpawnShape(CubeMesh, FVector(900, 0, 700) + Offset, FVector(0.72f, 1.15f, 7.0f),
+                FLinearColor(0.035f, 0.04f, 0.045f), FRotator(0, Angle, 0), true);
+        }
+        SpawnShape(CubeMesh, FVector(900, 0, 1125), FVector(3.0f, 3.0f, 0.18f),
+            FLinearColor(0.07f, 0.07f, 0.075f), FRotator::ZeroRotator, true);
+    }
     SpawnLabel(TEXT("Orthanc"), FVector(900, 0, 1450), FLinearColor(0.72f, 0.74f, 0.76f));
 
-    // Industry pits and felled forest. Cheap geometric silhouettes for now.
+    UStaticMesh* PitRim = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_IndustrialPitRim.SM_Isengard_IndustrialPitRim"));
+    UStaticMesh* FurnaceStack = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_FurnaceStack.SM_Isengard_FurnaceStack"));
+    UStaticMesh* FelledTrunk = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_FelledTrunk.SM_Isengard_FelledTrunk"));
+    UStaticMesh* ParapetSlab = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_ParapetSlab.SM_Isengard_ParapetSlab"));
     for (int32 I = 0; I < 8; ++I)
     {
         const FVector Pit(-200.0f + I * 260.0f, 720.0f + (I % 2) * 180.0f, 10.0f);
-        SpawnShape(CylinderMesh, Pit, FVector(0.72f, 0.72f, 0.12f),
+        SpawnShape(PitRim ? PitRim : CylinderMesh, Pit,
+            PitRim ? FVector(1.0f) : FVector(0.72f, 0.72f, 0.12f),
             FLinearColor(0.10f, 0.085f, 0.07f), FRotator::ZeroRotator, false);
-        SpawnShape(CylinderMesh, Pit + FVector(0, 0, 85), FVector(0.10f, 0.10f, 0.85f),
+        SpawnShape(FurnaceStack ? FurnaceStack : CylinderMesh, Pit + FVector(0, 0, 45),
+            FurnaceStack ? FVector(0.55f) : FVector(0.10f, 0.10f, 0.85f),
             FLinearColor(0.16f, 0.11f, 0.07f), FRotator::ZeroRotator, false);
     }
+
+    // Bible-driven secondary industrial ring: pits, service cuts and stacks repeat on
+    // the opposite side of Orthanc so the valley reads as a war-production system,
+    // not a single decorative furnace row. All pieces are visual-only to protect traversal.
+    for (int32 I = 0; I < 6; ++I)
+    {
+        const FVector InnerPit(-350.0f + I * 310.0f, -760.0f - (I % 2) * 150.0f, 8.0f);
+        SpawnShape(PitRim ? PitRim : CylinderMesh, InnerPit,
+            PitRim ? FVector(0.82f) : FVector(0.62f, 0.62f, 0.10f),
+            FLinearColor(0.085f, 0.072f, 0.062f), FRotator(0.0f, I * 13.0f, 0.0f), false);
+        SpawnShape(FurnaceStack ? FurnaceStack : CylinderMesh, InnerPit + FVector(0, 0, 42),
+            FurnaceStack ? FVector(0.46f) : FVector(0.085f, 0.085f, 0.72f),
+            FLinearColor(0.14f, 0.09f, 0.06f), FRotator(0.0f, I * -11.0f, 0.0f), false);
+        SpawnShape(CubeMesh, InnerPit + FVector(0.0f, 210.0f, -2.0f),
+            FVector(1.25f, 0.24f, 0.035f), FLinearColor(0.075f, 0.068f, 0.060f),
+            FRotator(0.0f, I * 5.0f, 0.0f), false);
+    }
+
+    if (ParapetSlab)
+    {
+        for (int32 I = 0; I < 8; ++I)
+        {
+            const float Angle = I * 45.0f;
+            const float R = FMath::DegreesToRadians(Angle);
+            const FVector BaseRing(
+                900.0f + FMath::Cos(R) * 430.0f,
+                FMath::Sin(R) * 430.0f,
+                25.0f);
+            SpawnShape(ParapetSlab, BaseRing, FVector(0.58f),
+                FLinearColor(0.055f, 0.060f, 0.065f), FRotator(0.0f, Angle + 90.0f, 0.0f), false);
+        }
+    }
+
+    const FVector ForgeGlowLocations[] = {
+        FVector(50.0f, 810.0f, 120.0f),
+        FVector(830.0f, 900.0f, 130.0f),
+        FVector(1610.0f, 810.0f, 120.0f)
+    };
+    for (const FVector& GlowLocation : ForgeGlowLocations)
+    {
+        APointLight* ForgeGlow = GetWorld()->SpawnActor<APointLight>(
+            GlowLocation, FRotator::ZeroRotator);
+        if (ForgeGlow && ForgeGlow->GetLightComponent())
+        {
+            ForgeGlow->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+            ForgeGlow->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+            ForgeGlow->GetLightComponent()->SetIntensity(1900.0f);
+            if (UPointLightComponent* PointComponent =
+                Cast<UPointLightComponent>(ForgeGlow->GetLightComponent()))
+            {
+                PointComponent->SetAttenuationRadius(620.0f);
+            }
+            ForgeGlow->GetLightComponent()->SetLightColor(FLinearColor(1.0f, 0.19f, 0.045f));
+        }
+    }
+
     for (int32 I = 0; I < 12; ++I)
     {
         const FVector Stump(-900.0f + I * 210.0f, -820.0f - 90.0f * (I % 3), 25.0f);
-        SpawnShape(CylinderMesh, Stump, FVector(0.16f, 0.16f, 0.25f),
-            FLinearColor(0.22f, 0.12f, 0.055f), FRotator::ZeroRotator, true);
+        SpawnShape(FelledTrunk ? FelledTrunk : CylinderMesh, Stump,
+            FelledTrunk ? FVector(0.55f) : FVector(0.16f, 0.16f, 0.25f),
+            FLinearColor(0.22f, 0.12f, 0.055f),
+            FelledTrunk ? FRotator(0.0f, I * 27.0f, 88.0f) : FRotator::ZeroRotator,
+            true);
     }
 
-    // Raised path acts as the prototype rooftop/prison overlook.
+    // Raised path acts as the prison overlook. Production parapet slabs replace
+    // the visible outer edge where available while the original collision path stays.
     for (int32 I = 0; I < 8; ++I)
     {
-        SpawnShape(CubeMesh, FVector(760.0f + I * 95.0f, -520.0f, 55.0f + I * 85.0f),
+        const FVector StepLocation(760.0f + I * 95.0f, -520.0f, 55.0f + I * 85.0f);
+        SpawnShape(CubeMesh, StepLocation,
             FVector(0.90f, 0.55f, 0.12f), FLinearColor(0.11f, 0.11f, 0.12f),
             FRotator(0, 0, -7.0f), true);
+        if (ParapetSlab && (I % 2 == 0))
+        {
+            SpawnShape(ParapetSlab, StepLocation + FVector(0.0f, -72.0f, 38.0f),
+                FVector(0.62f), FLinearColor(0.07f, 0.075f, 0.08f),
+                FRotator(0.0f, 0.0f, -7.0f), false);
+        }
     }
     SpawnShape(CubeMesh, FVector(1450, -520, 720), FVector(2.3f, 1.8f, 0.12f),
         FLinearColor(0.09f, 0.09f, 0.10f), FRotator::ZeroRotator, true);
@@ -224,6 +374,28 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
         Industry->NextQuestStage = 0;
         Industry->StoryBeatId = TEXT("IsengardIndustry");
         Industry->ObjectiveMessage = FText::FromString(TEXT("The valley below is being stripped and armed for war."));
+    }
+
+    AShireTraversalChallenge* OldCounselMemory = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(220, -300, 100), FRotator::ZeroRotator);
+    if (OldCounselMemory)
+    {
+        OldCounselMemory->ConfigureActivityChallenge(
+            TEXT("ORTHANC_OLD_ALLIANCE_MEMORY"),
+            FText::FromString(TEXT("Old Counsel, Broken Trust")),
+            TEXT("SOCIAL_MEMORY"),
+            FVector(0, 0, 0), FVector(160, 110, 0), FVector(340, -30, 0));
+    }
+
+    AShireTraversalChallenge* ParapetSurvey = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(1320, -760, 790), FRotator::ZeroRotator);
+    if (ParapetSurvey)
+    {
+        ParapetSurvey->ConfigureActivityChallenge(
+            TEXT("ORTHANC_PARAPET_VIEW"),
+            FText::FromString(TEXT("What Has Changed Below")),
+            TEXT("OBSERVATION_CHALLENGE"),
+            FVector(0, 0, 0), FVector(180, 120, 0), FVector(360, -50, 0));
     }
 
     AShireQuestTrigger* Escape = GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(1680, -520, 790), FRotator::ZeroRotator);

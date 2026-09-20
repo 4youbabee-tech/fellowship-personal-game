@@ -135,6 +135,23 @@ void AFellowshipEnemyPrototype::ApplyTypeProfile()
         WidthScale = 1.08f;
         Skin = FLinearColor(0.22f, 0.16f, 0.11f);
     }
+    else if (EnemyType == EFellowshipEnemyType::Lurtz)
+    {
+        // Film-locked hero antagonist: this actor may pressure the encounter, but
+        // player damage cannot resolve Lurtz's canonical outcome.
+        MaxHealth = 320.0f;
+        DetectionRadius = 1250.0f;
+        AttackRange = 165.0f;
+        AttackDamage = 18.0f;
+        AttackInterval = 0.95f;
+        MoveSpeed = 235.0f;
+        HeightScale = 1.18f;
+        WidthScale = 1.14f;
+        Skin = FLinearColor(0.20f, 0.13f, 0.085f);
+        Armor = FLinearColor(0.075f, 0.065f, 0.055f);
+        WeaponColor = FLinearColor(0.26f, 0.25f, 0.23f);
+        Tags.AddUnique(TEXT("FilmLockedOutcome"));
+    }
     else if (EnemyType == EFellowshipEnemyType::CaveTroll)
     {
         MaxHealth = 240.0f;
@@ -153,6 +170,7 @@ void AFellowshipEnemyPrototype::ApplyTypeProfile()
     FString ProductionFolder;
     if (EnemyType == EFellowshipEnemyType::Orc) ProductionFolder = TEXT("Orc");
     else if (EnemyType == EFellowshipEnemyType::UrukHai) ProductionFolder = TEXT("UrukHai");
+    else if (EnemyType == EFellowshipEnemyType::Lurtz) ProductionFolder = TEXT("Lurtz");
     else if (EnemyType == EFellowshipEnemyType::CaveTroll) ProductionFolder = TEXT("CaveTroll");
 
     bool bProductionVisual = false;
@@ -162,12 +180,14 @@ void AFellowshipEnemyPrototype::ApplyTypeProfile()
             TEXT("/Game/Production/Enemies/%s/SM_%s_"),
             *ProductionFolder,
             *ProductionFolder);
+        const FString WeaponSuffix =
+            EnemyType == EFellowshipEnemyType::Lurtz ? TEXT("Blade") : TEXT("Weapon");
         bProductionVisual =
             TryMesh(Torso, Prefix + TEXT("Torso.SM_") + ProductionFolder + TEXT("_Torso")) &&
             TryMesh(Head, Prefix + TEXT("Head.SM_") + ProductionFolder + TEXT("_Head")) &&
             TryMesh(LeftArm, Prefix + TEXT("Arm.SM_") + ProductionFolder + TEXT("_Arm")) &&
             TryMesh(LeftLeg, Prefix + TEXT("Leg.SM_") + ProductionFolder + TEXT("_Leg")) &&
-            TryMesh(Weapon, Prefix + TEXT("Weapon.SM_") + ProductionFolder + TEXT("_Weapon"));
+            TryMesh(Weapon, Prefix + WeaponSuffix + TEXT(".SM_") + ProductionFolder + TEXT("_") + WeaponSuffix);
         TryMesh(RightArm, Prefix + TEXT("Arm.SM_") + ProductionFolder + TEXT("_Arm"));
         TryMesh(RightLeg, Prefix + TEXT("Leg.SM_") + ProductionFolder + TEXT("_Leg"));
     }
@@ -192,7 +212,9 @@ void AFellowshipEnemyPrototype::ApplyTypeProfile()
     Weapon->SetRelativeScale3D(
         EnemyType == EFellowshipEnemyType::CaveTroll
             ? FVector(0.62f, 0.10f, 0.10f)
-            : FVector(0.46f, 0.045f, 0.055f));
+            : (EnemyType == EFellowshipEnemyType::Lurtz
+                ? FVector(0.54f, 0.055f, 0.070f)
+                : FVector(0.46f, 0.045f, 0.055f)));
 
     if (bProductionVisual)
     {
@@ -219,13 +241,19 @@ void AFellowshipEnemyPrototype::ApplyTypeProfile()
         }
     };
 
-    ApplyColor(Torso, Armor);
-    ApplyColor(Head, Skin);
-    ApplyColor(LeftArm, Skin);
-    ApplyColor(RightArm, Skin);
-    ApplyColor(LeftLeg, Armor);
-    ApplyColor(RightLeg, Armor);
-    ApplyColor(Weapon, WeaponColor);
+    // Bare fallback primitives need runtime tinting. Imported production hero/
+    // enemy parts now keep their authored OBJ/MTL materials instead of being flattened
+    // back to the engine BasicShape material.
+    if (!bProductionVisual)
+    {
+        ApplyColor(Torso, Armor);
+        ApplyColor(Head, Skin);
+        ApplyColor(LeftArm, Skin);
+        ApplyColor(RightArm, Skin);
+        ApplyColor(LeftLeg, Armor);
+        ApplyColor(RightLeg, Armor);
+        ApplyColor(Weapon, WeaponColor);
+    }
 
     CurrentHealth = MaxHealth;
     bProfileApplied = true;
@@ -391,6 +419,12 @@ float AFellowshipEnemyPrototype::TakeDamage(
     AActor* DamageCauser)
 {
     const float Applied = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+    if (EnemyType == EFellowshipEnemyType::Lurtz)
+    {
+        // Lurtz's film outcome is not a player-controlled branch. Runtime damage can
+        // create pressure but cannot kill or reward-rewrite this story actor.
+        return 0.0f;
+    }
     if (bDefeated || DamageAmount <= 0.0f)
     {
         return Applied;

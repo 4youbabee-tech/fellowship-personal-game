@@ -2,17 +2,22 @@
 
 #include "BlackRiderPrototype.h"
 #include "FellowshipEnemyPrototype.h"
+#include "FellowshipMythicThreat.h"
 #include "ShireNPC.h"
 #include "ShireAmbientNPC.h"
 #include "ShireQuestTrigger.h"
+#include "ShireTraversalChallenge.h"
+#include "ShireEnvironmentalPuzzle.h"
 
 #include "Components/DirectionalLightComponent.h"
 #include "Components/ExponentialHeightFogComponent.h"
+#include "Components/PointLightComponent.h"
 #include "Components/SkyLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "Engine/DirectionalLight.h"
 #include "Engine/ExponentialHeightFog.h"
+#include "Engine/PointLight.h"
 #include "Engine/SkyLight.h"
 #include "Engine/StaticMeshActor.h"
 #include "Engine/TextRenderActor.h"
@@ -89,7 +94,16 @@ void AFellowshipChapterWorldBuilder::ConfigureChapterAtmosphere(FName ChapterId)
         SkyIntensity = 0.90f; SkyColor = FLinearColor(0.72f, 0.58f, 0.30f);
         FogDensity = 0.011f; FogHeightFalloff = 0.24f; FogColor = FLinearColor(0.50f, 0.43f, 0.23f);
     }
-    else if (ChapterId != TEXT("P1C08"))
+    else if (ChapterId == TEXT("P1C08"))
+    {
+        // Bible-driven Anduin/Amon Hen identity: open river scale first, then a cooler
+        // wet-woodland breakup space. Keep this global layer restrained so landmark
+        // silhouettes and encounter readability carry the composition.
+        SunIntensity = 3.05f; SunColor = FLinearColor(0.94f, 0.88f, 0.72f); SunRotation = FRotator(-29.0f, -14.0f, 0.0f);
+        SkyIntensity = 0.82f; SkyColor = FLinearColor(0.52f, 0.62f, 0.66f);
+        FogDensity = 0.010f; FogHeightFalloff = 0.17f; FogColor = FLinearColor(0.34f, 0.42f, 0.40f);
+    }
+    else
     {
         return;
     }
@@ -354,6 +368,32 @@ void AFellowshipChapterWorldBuilder::SpawnQuestTrigger(
     Trigger->NextChapterQuestStage = NextChapterQuestStage;
 }
 
+void AFellowshipChapterWorldBuilder::SpawnDiscoveryTrigger(
+    const FVector& Location,
+    FName DiscoveryId,
+    const FString& DisplayName,
+    FName OpensAfterStoryBeat,
+    FName ClosesBeforeStoryBeat)
+{
+    if (!GetWorld() || DiscoveryId == NAME_None)
+    {
+        return;
+    }
+
+    AShireQuestTrigger* Trigger =
+        GetWorld()->SpawnActor<AShireQuestTrigger>(Location, FRotator::ZeroRotator);
+    if (!Trigger)
+    {
+        return;
+    }
+
+    Trigger->DiscoveryId = DiscoveryId;
+    Trigger->DiscoveryDisplayName = FText::FromString(DisplayName);
+    Trigger->RequiredSideStoryBeat = OpensAfterStoryBeat;
+    Trigger->BlockedAfterStoryBeat = ClosesBeforeStoryBeat;
+    Trigger->bTriggerOnce = true;
+}
+
 
 void AFellowshipChapterWorldBuilder::EnsureProductionMeshes()
 {
@@ -548,6 +588,29 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         const FVector Braziers[] = { FVector(-1200,-400,0), FVector(-450,420,0), FVector(350,-420,0), FVector(1150,420,0) };
         for (const FVector& P : Braziers) SpawnProd(MoriaBrazierMesh, P, FVector(0.82f), FRotator::ZeroRotator, false);
         SpawnProd(MoriaBridgeMesh, FVector(2450,0,40), FVector(0.92f), FRotator::ZeroRotator, true);
+
+        // Source-grounded Moria production dressing: monumental broken circulation,
+        // chain anchors and layered braziers reinforce scale without moving quest anchors.
+        UStaticMesh* MoriaBrokenStair = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBrokenStair.SM_MoriaBrokenStair"));
+        UStaticMesh* MoriaChainAnchor = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor"));
+        UStaticMesh* MoriaGateSegment = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaGateSegment.SM_MoriaGateSegment"));
+        UStaticMesh* MoriaRubblePillar = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaRubblePillar.SM_MoriaRubblePillar"));
+        UStaticMesh* MoriaTallBrazier = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaTallBrazier.SM_MoriaTallBrazier"));
+        UStaticMesh* MoriaMineCart = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaMineCart.SM_MoriaMineCart"));
+        SpawnProd(MoriaGateSegment, FVector(-1980,-520,0), FVector(0.86f), FRotator(0,7,0), true);
+        SpawnProd(MoriaGateSegment, FVector(-1980,520,0), FVector(0.86f), FRotator(0,-7,0), true);
+        SpawnProd(MoriaBrokenStair, FVector(520,-650,0), FVector(0.84f), FRotator(0,18,0), true);
+        SpawnProd(MoriaBrokenStair, FVector(1180,650,0), FVector(0.76f), FRotator(0,198,0), false);
+        SpawnProd(MoriaChainAnchor, FVector(1920,-760,20), FVector(0.82f), FRotator(0,15,0), false);
+        SpawnProd(MoriaChainAnchor, FVector(2050,760,20), FVector(0.82f), FRotator(0,-20,0), false);
+        SpawnProd(MoriaRubblePillar, FVector(760,740,0), FVector(0.86f), FRotator(0,27,0), false);
+        SpawnProd(MoriaRubblePillar, FVector(1480,-720,0), FVector(0.90f), FRotator(0,-22,0), false);
+        SpawnProd(MoriaTallBrazier, FVector(1860,-350,0), FVector(0.82f), FRotator::ZeroRotator, false);
+        SpawnProd(MoriaTallBrazier, FVector(1860,350,0), FVector(0.82f), FRotator::ZeroRotator, false);
+        SpawnProd(MoriaMineCart, FVector(-980,-650,0), FVector(0.76f), FRotator(0,18,0), false);
+        SpawnProd(MoriaMineCart, FVector(-120,690,0), FVector(0.72f), FRotator(0,-24,0), false);
+        SpawnProd(MoriaMineCart, FVector(1320,-690,0), FVector(0.70f), FRotator(0,11,0), false);
+
         SpawnScatter(CommonRuinSlabMesh, FVector(-200,0,0), 18, FVector(2300,1050,0), FVector(0.78f), 37.0f, 2.0f);
         SpawnScatter(CommonBoulderClusterMesh, FVector(300,0,0), 14, FVector(2500,1150,0), FVector(0.85f), 31.0f, 6.0f);
     }
@@ -582,6 +645,30 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnProd(ArgonathSentinelMesh, FVector(-450,1150,0), FVector(1.65f), FRotator(0,172,0), true);
         SpawnProd(AmonHenStairMesh, FVector(1320,0,0), FVector(0.86f), FRotator(0,0,0), true);
         SpawnProd(AmonHenRuinMesh, FVector(1900,0,175), FVector(0.90f), FRotator(0,-6,0), true);
+
+        // River-to-battle visual handoff: travel gear and shoreline traces thin out
+        // toward Amon Hen, where broken woodland/ruin silhouettes take over.
+        UStaticMesh* AnduinBoatRack = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinBoatRack.SM_AnduinBoatRack"));
+        UStaticMesh* AnduinCampRack = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinCampRack.SM_AnduinCampRack"));
+        UStaticMesh* AnduinCargoPile = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinCargoPile.SM_AnduinCargoPile"));
+        UStaticMesh* AnduinFishingFrame = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinFishingFrame.SM_AnduinFishingFrame"));
+        UStaticMesh* AnduinRiverMarker = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinRiverMarker.SM_AnduinRiverMarker"));
+        UStaticMesh* AnduinDockPier = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinDockPier.SM_AnduinDockPier"));
+        SpawnProd(AnduinBoatRack, FVector(-1740,430,0), FVector(0.74f), FRotator(0,12,0), false);
+        SpawnProd(AnduinCampRack, FVector(-920,-500,0), FVector(0.72f), FRotator(0,-18,0), false);
+        SpawnProd(AnduinCargoPile, FVector(-760,520,0), FVector(0.68f), FRotator(0,24,0), false);
+        SpawnProd(AnduinFishingFrame, FVector(-2060,560,0), FVector(0.72f), FRotator(0,8,0), false);
+        SpawnProd(AnduinRiverMarker, FVector(-1380,-540,0), FVector(0.76f), FRotator(0,-4,0), false);
+        SpawnProd(AnduinDockPier, FVector(-1120,-420,-6), FVector(0.80f), FRotator(0,8,0), false);
+        SpawnProd(AnduinDockPier, FVector(-760,430,-6), FVector(0.72f), FRotator(0,188,0), false);
+
+        // Deliberate non-colliding battle-lane composition: readable broken woodland
+        // and ancient-stone silhouettes without adding more full-AI enemies to the hero bubble.
+        SpawnProd(AmonHenRuinMesh, FVector(2140,-620,60), FVector(0.70f), FRotator(0,22,0), false);
+        SpawnProd(AmonHenRuinMesh, FVector(2290,640,55), FVector(0.64f), FRotator(0,-28,0), false);
+        SpawnProd(CommonFallenLogMesh, FVector(2060,-260,20), FVector(0.84f), FRotator(0,58,0), false);
+        SpawnProd(CommonFallenLogMesh, FVector(2380,250,20), FVector(0.76f), FRotator(0,-37,0), false);
+
         SpawnScatter(CommonBroadleafTreeMesh, FVector(700,0,0), 24, FVector(2600,1450,0), FVector(0.88f), 21.0f, 10.0f);
         SpawnScatter(CommonPineTreeMesh, FVector(1000,0,0), 14, FVector(2200,1300,0), FVector(0.82f), 29.0f, 10.0f);
         SpawnScatter(CommonReedClusterMesh, FVector(-1500,0,-10), 28, FVector(1250,520,0), FVector(0.76f), 17.0f, 2.0f);
@@ -930,8 +1017,35 @@ void AFellowshipChapterWorldBuilder::BuildWeathertop()
 
     SpawnQuestTrigger(FVector(-1850, 0, 90), TEXT("RoadToWeathertop"), 0, 1,
         TEXT("The road gives way to wet country. Strider leads you off the obvious path."), TEXT("MidgewaterRoad"));
+    SpawnQuestTrigger(FVector(-1180, 360, 90), NAME_None, 0, -1,
+        TEXT("The hobbits pause long enough to share food, complain about the marsh and laugh before the hill ahead silences them."),
+        TEXT("RoadCompanionship"));
     SpawnQuestTrigger(FVector(-250, 0, 90), TEXT("RoadToWeathertop"), 1, 2,
         TEXT("The ruined hill is ahead. Keep close to the Ranger."), TEXT("WeathertopReveal"));
+
+    AShireTraversalChallenge* WildernessTrackReading = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-1050, -520, 90), FRotator::ZeroRotator);
+    if (WildernessTrackReading)
+    {
+        WildernessTrackReading->ConfigureActivityChallenge(
+            TEXT("WILDERNESS_TRACK_SIGNS"),
+            FText::FromString(TEXT("Read the Trail")),
+            TEXT("TRACKING_CHALLENGE"),
+            FVector(0, 0, 0), FVector(260, 80, 0), FVector(520, -40, 0));
+    }
+    SpawnDiscoveryTrigger(
+        FVector(980, 300, 400), TEXT("WEATHERTOP_RUIN_MARKERS"), TEXT("Weathertop Ruin Markers"),
+        TEXT("WeathertopReveal"), TEXT("WeathertopCamp"));
+    AShireTraversalChallenge* CampPreparation = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(1100, -360, 390), FRotator::ZeroRotator);
+    if (CampPreparation)
+    {
+        CampPreparation->ConfigureActivityChallenge(
+            TEXT("CAMP_PREPARATION"),
+            FText::FromString(TEXT("Prepare the Camp")),
+            TEXT("CAMP_PREPARATION"),
+            FVector(0, 0, 0), FVector(190, 140, 0), FVector(390, -80, 0));
+    }
 
     SpawnNPC(TEXT("Strider"), FVector(760, -160, 70), FRotator(0, 180, 0), TEXT("RoadToWeathertop"), 2, 2,
         TEXT("We will rest only briefly. This place can be seen from far away."), TEXT("WeathertopAttack"), 0, true);
@@ -1110,6 +1224,32 @@ void AFellowshipChapterWorldBuilder::BuildRivendell()
     SpawnNPC(TEXT("Pippin"), FVector(260, 460, 65), FRotator(0, 200, 0), NAME_None, 0, -1,
         TEXT("I only wanted to see where the stairs went. There were more stairs."));
 
+    AShireEnvironmentalPuzzle* RivendellMapTable = GetWorld()->SpawnActor<AShireEnvironmentalPuzzle>(
+        FVector(-1120, -520, 90), FRotator::ZeroRotator);
+    if (RivendellMapTable)
+    {
+        RivendellMapTable->ConfigurePuzzle(
+            TEXT("RIVENDELL_LIBRARY"),
+            FText::FromString(TEXT("Paths on the Map")),
+            FVector(0, 0, 0),
+            FVector(190, 130, 0),
+            FVector(390, -70, 0),
+            0, 2, 1);
+    }
+    AShireTraversalChallenge* RivendellOverlookMemory = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-1520, 520, 90), FRotator::ZeroRotator);
+    if (RivendellOverlookMemory)
+    {
+        RivendellOverlookMemory->ConfigureActivityChallenge(
+            TEXT("RIVENDELL_OVERLOOK"),
+            FText::FromString(TEXT("The Valley Overlook")),
+            TEXT("SOCIAL_MEMORY"),
+            FVector(0, 0, 0), FVector(180, 120, 0), FVector(380, 40, 0));
+    }
+    SpawnDiscoveryTrigger(
+        FVector(1760, 520, 90), TEXT("RIVENDELL_SMITHY_PREP"), TEXT("Fellowship Departure Preparations"),
+        TEXT("FellowshipAssembled"), TEXT("RivendellDeparture"));
+
     SpawnQuestTrigger(FVector(1050, 0, 90), TEXT("CouncilOfElrond"), 0, 1,
         TEXT("Representatives gather. The fate of the Ring will be decided here."), TEXT("CouncilBegins"));
     SpawnNPC(TEXT("Elrond"), FVector(1250, 180, 70), FRotator(0, 210, 0), TEXT("CouncilOfElrond"), 1, 2,
@@ -1231,12 +1371,41 @@ void AFellowshipChapterWorldBuilder::BuildFellowshipRoad()
 
     SpawnQuestTrigger(FVector(-1150, 260, 90), TEXT("SouthwardJourney"), 1, 1,
         TEXT("The company pauses. Boromir turns the stop into training for Merry and Pippin."), TEXT("FellowshipCamp"));
+    SpawnQuestTrigger(FVector(-1380, 720, 90), NAME_None, 0, -1,
+        TEXT("For a short while the camp feels almost ordinary: food, teasing, practice and the relief of being together."),
+        TEXT("FellowshipCompanionship"));
     SpawnNPC(TEXT("Boromir"), FVector(-980, 500, 70), FRotator(0, 200, 0), TEXT("SouthwardJourney"), 1, -1,
         TEXT("A sword is no help if your feet are in the wrong place. Again."), NAME_None, 0, true);
     SpawnNPC(TEXT("Merry"), FVector(-860, 390, 65), FRotator(0, 20, 0), TEXT("SouthwardJourney"), 1, -1,
         TEXT("I am beginning to suspect he enjoys correcting us."), NAME_None, 0, true);
     SpawnNPC(TEXT("Pippin"), FVector(-830, 500, 65), FRotator(0, 20, 0), TEXT("SouthwardJourney"), 1, -1,
         TEXT("I would learn faster if training came with second breakfast."), NAME_None, 0, true);
+
+    AShireTraversalChallenge* FellowshipTraining = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-1300, 580, 90), FRotator::ZeroRotator);
+    if (FellowshipTraining)
+    {
+        FellowshipTraining->ConfigureActivityChallenge(
+            TEXT("FELLOWSHIP_TRAINING"),
+            FText::FromString(TEXT("Camp Practice")),
+            TEXT("TIMING_CHALLENGE"),
+            FVector(0, 0, 0), FVector(220, 110, 0), FVector(440, -70, 0),
+            false,
+            20.0f);
+    }
+    SpawnDiscoveryTrigger(
+        FVector(380, 520, 180), TEXT("CARADHRAS_SHELTER_CHECK"), TEXT("Caradhras Shelter Check"),
+        TEXT("CaradhrasApproach"), TEXT("CaradhrasStorm"));
+    AShireTraversalChallenge* WestGateStudy = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(2620, 460, 90), FRotator::ZeroRotator);
+    if (WestGateStudy)
+    {
+        WestGateStudy->ConfigureActivityChallenge(
+            TEXT("WEST_GATE_INSCRIPTIONS"),
+            FText::FromString(TEXT("Marks in the Stone")),
+            TEXT("OBSERVATION_CHALLENGE"),
+            FVector(0, 0, 0), FVector(190, 140, 0), FVector(390, -50, 0));
+    }
 
     SpawnQuestTrigger(FVector(-620, 0, 110), TEXT("SouthwardJourney"), 1, 1,
         TEXT("Black birds cross the sky in an unnatural mass. Get the company under cover."), TEXT("CrebainWarning"));
@@ -1289,6 +1458,33 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
             FVector(0.18f, 0.18f, 0.14f), FLinearColor(0.28f, 0.22f, 0.15f), FRotator::ZeroRotator, false);
         SpawnShape(SphereMesh, FVector(X, (I % 2 == 0 ? -420.0f : 420.0f), 72.0f),
             FVector(0.16f), FLinearColor(0.42f, 0.17f, 0.045f), FRotator::ZeroRotator, false);
+    }
+
+    // Sparse local fire pools keep player-scale landmarks readable inside the monumental
+    // darkness. This is intentionally bounded to five non-shadow-heavy lights rather than
+    // filling the hall with expensive dynamic illumination.
+    const FVector MoriaGlowLocations[] = {
+        FVector(-1450.0f, -420.0f, 105.0f),
+        FVector(-730.0f, 420.0f, 105.0f),
+        FVector(40.0f, -420.0f, 105.0f),
+        FVector(760.0f, 420.0f, 105.0f),
+        FVector(1880.0f, 0.0f, 130.0f)
+    };
+    for (int32 LightIndex = 0; LightIndex < UE_ARRAY_COUNT(MoriaGlowLocations); ++LightIndex)
+    {
+        APointLight* Glow = GetWorld()->SpawnActor<APointLight>(MoriaGlowLocations[LightIndex], FRotator::ZeroRotator);
+        if (Glow && Glow->GetLightComponent())
+        {
+            Glow->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+            Glow->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+            Glow->GetLightComponent()->SetIntensity(LightIndex == 4 ? 1150.0f : 850.0f);
+            Glow->GetLightComponent()->SetLightColor(
+                LightIndex == 4 ? FLinearColor(1.0f, 0.15f, 0.035f) : FLinearColor(1.0f, 0.36f, 0.10f));
+            if (UPointLightComponent* PointComponent = Cast<UPointLightComponent>(Glow->GetLightComponent()))
+            {
+                PointComponent->SetAttenuationRadius(LightIndex == 4 ? 620.0f : 470.0f);
+            }
+        }
     }
 
     // Rubble and side-door silhouettes make the route feel like one path through a much larger city.
@@ -1349,10 +1545,53 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
         TEXT("Do not wander. The road is difficult enough when we remain together."),
         TEXT("MoriaEscape"));
 
+    AFellowshipMythicThreat* Watcher = GetWorld()->SpawnActor<AFellowshipMythicThreat>(
+        FVector(-2320, 0, 30), FRotator(0.0f, 0.0f, 0.0f));
+    if (Watcher)
+    {
+        Watcher->ConfigureThreat(
+            EFellowshipMythicThreatType::Watcher,
+            TEXT("WatcherAttack"),
+            TEXT("MoriaEntry"));
+    }
+
     SpawnQuestTrigger(FVector(-2250, 0, 90), TEXT("MoriaDark"), 0, 1,
         TEXT("Something from the lake strikes at the entrance. Get inside before the doors are lost."), TEXT("WatcherAttack"));
     SpawnQuestTrigger(FVector(-1750, 0, 90), TEXT("MoriaDark"), 1, 2,
         TEXT("The doors close behind you. Follow Gandalf through the dark halls."), TEXT("MoriaEntry"));
+    SpawnQuestTrigger(FVector(-1120, 620, 90), NAME_None, 0, -1,
+        TEXT("Broken rooms and abandoned tools make the silence worse: this was once a city, not merely a tunnel."),
+        TEXT("MoriaDeadCityDiscovery"));
+    SpawnDiscoveryTrigger(
+        FVector(-1200, 650, 90), TEXT("MORIA_SIDE_CHAMBER"), TEXT("A Forgotten Moria Side Chamber"),
+        TEXT("MoriaEntry"), TEXT("BalinsTombReveal"));
+    AShireTraversalChallenge* MoriaEchoPath = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-2050, -700, 90), FRotator::ZeroRotator);
+    if (MoriaEchoPath)
+    {
+        MoriaEchoPath->ConfigureChallenge(
+            TEXT("MORIA_ECHO_ROUTE"),
+            FText::FromString(TEXT("Follow the Echo")),
+            TEXT("MoriaEntry"),
+            TEXT("MoriaUnease"),
+            NAME_None,
+            FVector(0, 0, 0),
+            FVector(210, 90, 0),
+            FVector(400, 180, 0));
+    }
+    AShireEnvironmentalPuzzle* MoriaReliefStudy = GetWorld()->SpawnActor<AShireEnvironmentalPuzzle>(
+        FVector(-720, 520, 90), FRotator::ZeroRotator);
+    if (MoriaReliefStudy)
+    {
+        MoriaReliefStudy->ConfigurePuzzle(
+            TEXT("MORIA_DWARVEN_RELIEF"),
+            FText::FromString(TEXT("A Dwarven Relief")),
+            FVector(0, 0, 0),
+            FVector(170, 120, 0),
+            FVector(350, -70, 0),
+            2, 0, 1);
+    }
+
     SpawnQuestTrigger(FVector(-650, 0, 90), TEXT("MoriaDark"), 2, 3,
         TEXT("The air changes. Evidence of battle lies ahead."), TEXT("MoriaUnease"), TEXT("BalinsTomb"), 0);
 
@@ -1370,6 +1609,16 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
         TEXT("A cave troll smashes into the fight. Keep moving and protect the hobbits."), TEXT("CaveTrollAttack"), TEXT("BridgeOfKhazadDum"), 0);
 
     SpawnEnemy(EFellowshipEnemyType::CaveTroll, FVector(1450, 260, 95), FRotator(0, 190, 0), TEXT("BridgeOfKhazadDum"), 0);
+
+    AFellowshipMythicThreat* Balrog = GetWorld()->SpawnActor<AFellowshipMythicThreat>(
+        FVector(2920, 0, -80), FRotator(0.0f, 180.0f, 0.0f));
+    if (Balrog)
+    {
+        Balrog->ConfigureThreat(
+            EFellowshipMythicThreatType::Balrog,
+            TEXT("BalrogApproach"),
+            TEXT("MoriaEscape"));
+    }
 
     SpawnQuestTrigger(FVector(2000, 0, 90), TEXT("BridgeOfKhazadDum"), 0, 1,
         TEXT("Run for the bridge. Something greater than the orcs is coming."), TEXT("BalrogApproach"));
@@ -1494,8 +1743,35 @@ void AFellowshipChapterWorldBuilder::BuildLothlorien()
 
     SpawnQuestTrigger(FVector(-2200, 0, 90), TEXT("LothlorienRest"), 0, 0,
         TEXT("No one speaks much after Moria. The forest receives the Fellowship in silence."), TEXT("LorienGrief"));
+    SpawnQuestTrigger(FVector(-1500, 520, 90), NAME_None, 0, -1,
+        TEXT("A quiet clearing gives the companions space to grieve together before duty calls them onward."),
+        TEXT("LorienSharedGrief"));
     SpawnQuestTrigger(FVector(-1850, 0, 90), TEXT("LothlorienRest"), 0, 1,
         TEXT("The woods close around the grieving Fellowship. Follow the hidden path."), TEXT("LorienEntry"));
+    AShireTraversalChallenge* LorienGriefMemory = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-1420, 620, 90), FRotator::ZeroRotator);
+    if (LorienGriefMemory)
+    {
+        LorienGriefMemory->ConfigureActivityChallenge(
+            TEXT("LORIEN_GRIEF_CLEARING"),
+            FText::FromString(TEXT("A Quiet Place")),
+            TEXT("SOCIAL_MEMORY"),
+            FVector(0, 0, 0), FVector(170, 120, 0), FVector(350, 10, 0));
+    }
+    SpawnDiscoveryTrigger(
+        FVector(-420, -620, 140), TEXT("LORIEN_CRAFT_PLATFORM"), TEXT("Galadhrim Craft Platform"),
+        TEXT("LorienGrief"), TEXT("Mirror"));
+    AShireTraversalChallenge* LorienRiverPreparation = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(1500, 420, 90), FRotator::ZeroRotator);
+    if (LorienRiverPreparation)
+    {
+        LorienRiverPreparation->ConfigureActivityChallenge(
+            TEXT("LORIEN_RIVER_PREP"),
+            FText::FromString(TEXT("Ready the Boats")),
+            TEXT("CAMP_PREPARATION"),
+            FVector(0, 0, 0), FVector(220, 120, 0), FVector(430, -50, 0));
+    }
+
     SpawnNPC(TEXT("Haldir"), FVector(-900, -120, 70), FRotator(0, 170, 0), TEXT("LothlorienRest"), 1, 2,
         TEXT("You may pass, but tread carefully. These woods do not welcome careless feet."));
     SpawnNPC(TEXT("Galadriel"), FVector(250, 120, 320), FRotator(0, 200, 0), TEXT("LothlorienRest"), 2, 3,
@@ -1631,6 +1907,35 @@ void AFellowshipChapterWorldBuilder::BuildAnduinAmonHen()
 
     SpawnQuestTrigger(FVector(-1900, 0, 90), TEXT("AnduinJourney"), 0, 1,
         TEXT("Travel down the Anduin and keep the boats together."), TEXT("AnduinDeparture"));
+    SpawnQuestTrigger(FVector(-720, 760, 90), NAME_None, 0, -1,
+        TEXT("At the river camp, ordinary conversation keeps breaking against the unspoken question of where the company should go next."),
+        TEXT("AnduinCampTension"));
+    AShireTraversalChallenge* AnduinCurrentReading = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-1380, 620, 90), FRotator::ZeroRotator);
+    if (AnduinCurrentReading)
+    {
+        AnduinCurrentReading->ConfigureActivityChallenge(
+            TEXT("ANDUIN_BANK_WATCH"),
+            FText::FromString(TEXT("Read the River")),
+            TEXT("TIMING_CHALLENGE"),
+            FVector(0, 0, 0), FVector(240, 130, 0), FVector(500, -40, 0),
+            false,
+            22.0f);
+    }
+    SpawnDiscoveryTrigger(
+        FVector(1150, 520, 160), TEXT("AMON_HEN_FALLEN_STONE"), TEXT("A Fallen Stone of Amon Hen"),
+        TEXT("AmonHenArrival"), TEXT("BoromirPressure"));
+    AShireTraversalChallenge* AmonHenCampWatch = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(1350, -520, 180), FRotator::ZeroRotator);
+    if (AmonHenCampWatch)
+    {
+        AmonHenCampWatch->ConfigureActivityChallenge(
+            TEXT("AMON_HEN_CAMP_DISTANCE"),
+            FText::FromString(TEXT("Distance in the Camp")),
+            TEXT("OBSERVATION_CHALLENGE"),
+            FVector(0, 0, 0), FVector(180, 150, 0), FVector(390, -40, 0));
+    }
+
     SpawnQuestTrigger(FVector(-300, 0, 90), TEXT("AnduinJourney"), 1, 2,
         TEXT("Ancient stone guardians rise above the river."), TEXT("ArgonathReveal"));
     SpawnQuestTrigger(FVector(900, 0, 90), TEXT("AnduinJourney"), 2, 2,
@@ -1647,6 +1952,9 @@ void AFellowshipChapterWorldBuilder::BuildAnduinAmonHen()
     SpawnEnemy(EFellowshipEnemyType::UrukHai, FVector(2200, 480, 75), FRotator(0, 205, 0), TEXT("BreakingFellowship"), 0);
     SpawnEnemy(EFellowshipEnemyType::UrukHai, FVector(2380, -180, 75), FRotator(0, 180, 0), TEXT("BreakingFellowship"), 0);
     SpawnEnemy(EFellowshipEnemyType::UrukHai, FVector(2500, 360, 75), FRotator(0, 195, 0), TEXT("BreakingFellowship"), 1);
+    // Film-locked Lurtz pressure enters only after the defense phase begins.
+    // He cannot be killed by player damage; final duel choreography remains asset/animation work.
+    SpawnEnemy(EFellowshipEnemyType::Lurtz, FVector(2660, -470, 78), FRotator(0, 165, 0), TEXT("BreakingFellowship"), 1);
 
     SpawnNPC(TEXT("Boromir"), FVector(2220, 260, 70), FRotator(0, 200, 0), TEXT("BreakingFellowship"), 0, 1,
         TEXT("Find the others. Do not let the enemy take the hobbits."));

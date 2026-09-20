@@ -240,6 +240,830 @@ for required_req in [
     if required_req not in requirement_ids:
         fail(f"Single ProjectGovernor missing critical requirement: {required_req}")
 
+# PG-059: screenplay-derived dialogue source context must be complete and bounded.
+film_source_path = ROOT / "Data" / "FilmDialogueSourceContext.json"
+film_source_data = {}
+if not film_source_path.exists():
+    fail("Film dialogue source context missing: Data/FilmDialogueSourceContext.json")
+else:
+    try:
+        film_source_data = json.loads(read(film_source_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/FilmDialogueSourceContext.json: {exc}")
+
+if film_source_data:
+    source_ids = {str(item.get("id") or "").strip() for item in film_source_data.get("sources", [])}
+    for required_source in {"SRC-FOTR-2001-SCREENPLAY", "SRC-TTT-2002-SCREENPLAY"}:
+        if required_source not in source_ids:
+            fail(f"Film dialogue source context missing required source: {required_source}")
+
+    policy = film_source_data.get("policy", {})
+    if not policy.get("no_verbatim_screenplay_dialogue"):
+        fail("Film dialogue source context must explicitly forbid verbatim screenplay dialogue")
+
+    contexts = film_source_data.get("part1_contexts", [])
+    covered = set()
+    has_gandalf = False
+    seen = set()
+    for index, context in enumerate(contexts, start=1):
+        context_id = str(context.get("context_id") or "").strip()
+        source_id = str(context.get("source_id") or "").strip()
+        route = str(context.get("route") or "").strip()
+        chapter = str(context.get("chapter") or "").strip()
+        if not context_id or not source_id or not route or not chapter:
+            fail(f"Film dialogue context entry {index} is incomplete")
+            continue
+        if context_id in seen:
+            fail(f"Duplicate film dialogue context id: {context_id}")
+        seen.add(context_id)
+        if source_id not in source_ids:
+            fail(f"Film dialogue context {context_id} references unknown source {source_id}")
+        if not context.get("safe_topics"):
+            fail(f"Film dialogue context {context_id} has no safe_topics")
+        if not context.get("future_knowledge_blocks"):
+            fail(f"Film dialogue context {context_id} has no future_knowledge_blocks")
+        forbidden = {"dialogue", "dialogue_text", "screenplay_text", "verbatim_quote", "quote"}
+        if forbidden.intersection(context.keys()):
+            fail(f"Film dialogue context {context_id} contains a forbidden raw-dialogue field")
+        if route == "FrodoMain":
+            covered.add(chapter)
+        elif route == "GandalfParallel":
+            has_gandalf = True
+
+    expected = {f"P1C{i:02d}" for i in range(1, 9)}
+    missing = sorted(expected - covered)
+    if missing:
+        fail("Film dialogue source context missing Part I chapters: " + ", ".join(missing))
+    if not has_gandalf:
+        fail("Film dialogue source context missing GandalfParallel coverage")
+
+    build_text = read(SOURCE / "ShireJourney.Build.cs")
+    if "Data/FilmDialogueSourceContext.json" not in build_text:
+        fail("Film dialogue source context is not packaged as a runtime dependency")
+    npc_context_text = read(SOURCE / "ShireNPCContextSubsystem.cpp")
+    for marker in ["LoadFilmDialogueSourceContext", "GetFilmDialogueContextSummary", "SourceContextId"]:
+        if marker not in npc_context_text and marker not in read(SOURCE / "ShireNPCContextSubsystem.h"):
+            fail(f"Film dialogue runtime wiring missing marker: {marker}")
+    # Source-grounded authored variants must resolve to existing runtime contracts.
+    context_ids = {str(item.get("context_id") or "").strip() for item in contexts}
+    story_rows = []
+    story_path = ROOT / "Data" / "StoryBeatPlan.csv"
+    if story_path.exists():
+        with story_path.open(encoding="utf-8-sig", newline="") as handle:
+            story_rows = list(csv.DictReader(handle))
+    story_ids = {str(row.get("StoryBeatId") or "").strip() for row in story_rows}
+
+    social_path = ROOT / "Data" / "NPCSocialModel.json"
+    social_data = {}
+    try:
+        social_data = json.loads(read(social_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/NPCSocialModel.json while checking film dialogue variants: {exc}")
+    profile_ids = {str(item.get("id") or "").strip() for item in social_data.get("profiles", [])}
+
+    conversation_path = ROOT / "Data" / "NPCConversationPlan.json"
+    conversation_data = {}
+    try:
+        conversation_data = json.loads(read(conversation_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/NPCConversationPlan.json while checking film dialogue variants: {exc}")
+    intent_ids = {str(item.get("id") or "").strip() for item in conversation_data.get("intent_contracts", [])}
+
+    mood_path = ROOT / "Data" / "NPCRegionalMoodPlan.json"
+    mood_data = {}
+    try:
+        mood_data = json.loads(read(mood_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/NPCRegionalMoodPlan.json while checking film dialogue variants: {exc}")
+    mood_ids = {str(item.get("mood") or "").strip() for item in mood_data.get("chapter_moods", [])}
+
+    source_variants = film_source_data.get("original_dialogue_variants", [])
+    if len(source_variants) < 40:
+        fail("Film dialogue source context must provide a substantial original dialogue set (at least 40 variants)")
+
+    variant_ids = set()
+    for index, variant in enumerate(source_variants, start=1):
+        variant_id = str(variant.get("variant_id") or "").strip()
+        speaker = str(variant.get("speaker") or "").strip()
+        intent = str(variant.get("intent") or "").strip()
+        beat = str(variant.get("required_story_beat") or "").strip()
+        mood = str(variant.get("required_mood") or "").strip()
+        context_id = str(variant.get("context_id") or "").strip()
+        text_value = str(variant.get("text") or "").strip()
+
+        if not variant_id or not speaker or not intent or not text_value:
+            fail(f"Film dialogue authored variant {index} is incomplete")
+            continue
+        if variant_id in variant_ids:
+            fail(f"Duplicate film dialogue authored variant id: {variant_id}")
+        variant_ids.add(variant_id)
+        if speaker not in profile_ids:
+            fail(f"Film dialogue variant {variant_id} references unknown speaker {speaker}")
+        if intent not in intent_ids:
+            fail(f"Film dialogue variant {variant_id} references unknown intent {intent}")
+        if beat and beat not in story_ids:
+            fail(f"Film dialogue variant {variant_id} references unknown story beat {beat}")
+        if mood and mood not in mood_ids:
+            fail(f"Film dialogue variant {variant_id} references unknown mood {mood}")
+        if context_id and context_id not in context_ids:
+            fail(f"Film dialogue variant {variant_id} references unknown source context {context_id}")
+        if len(text_value.split()) > 38:
+            fail(f"Film dialogue variant {variant_id} exceeds the 38-word story-reactive limit")
+
+
+
+# PG-060: optional exploration must be explicitly bounded between mandatory story anchors.
+exploration_path = ROOT / "Data" / "ExplorationEnvelopePlan.json"
+exploration_data = {}
+if not exploration_path.exists():
+    fail("Exploration envelope plan missing: Data/ExplorationEnvelopePlan.json")
+else:
+    try:
+        exploration_data = json.loads(read(exploration_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/ExplorationEnvelopePlan.json: {exc}")
+
+if exploration_data:
+    chapter_entries = exploration_data.get("chapters", [])
+    expected_pairs = {("FrodoMain", f"P1C{i:02d}") for i in range(1, 9)}
+    expected_pairs.add(("GandalfParallel", "P1C01"))
+    found_pairs = set()
+
+    story_rows_for_exploration = []
+    story_plan_path = ROOT / "Data" / "StoryBeatPlan.csv"
+    if story_plan_path.exists():
+        with story_plan_path.open(encoding="utf-8-sig", newline="") as handle:
+            story_rows_for_exploration = list(csv.DictReader(handle))
+
+    story_order_by_pair = {}
+    for row in story_rows_for_exploration:
+        key = (str(row.get("Route") or "").strip(), str(row.get("Chapter") or "").strip())
+        story_order_by_pair.setdefault(key, []).append(str(row.get("StoryBeatId") or "").strip())
+
+    for entry in chapter_entries:
+        route = str(entry.get("route") or "").strip()
+        chapter = str(entry.get("chapter") or "").strip()
+        key = (route, chapter)
+        if not route or not chapter:
+            fail("Exploration envelope entry missing route/chapter")
+            continue
+        if key in found_pairs:
+            fail(f"Duplicate exploration envelope for {route}/{chapter}")
+        found_pairs.add(key)
+
+        declared_order = [str(x).strip() for x in entry.get("anchor_order", []) if str(x).strip()]
+        actual_order = story_order_by_pair.get(key, [])
+        if not declared_order:
+            fail(f"Exploration envelope {route}/{chapter} has no anchor_order")
+            continue
+        missing_anchors = [beat for beat in declared_order if beat not in actual_order]
+        if missing_anchors:
+            fail(f"Exploration envelope {route}/{chapter} references unknown story beats: {', '.join(missing_anchors)}")
+        positions = [actual_order.index(beat) for beat in declared_order if beat in actual_order]
+        if positions != sorted(positions):
+            fail(f"Exploration envelope {route}/{chapter} reorders mandatory story beats")
+
+        index = {beat: i for i, beat in enumerate(declared_order)}
+        for window in entry.get("free_roam_windows", []):
+            wid = str(window.get("id") or "").strip()
+            opens = str(window.get("opens_after") or "").strip()
+            closes = str(window.get("closes_before") or "").strip()
+            if not wid or opens not in index or closes not in index:
+                fail(f"Exploration window {wid or '<unnamed>'} in {route}/{chapter} has invalid anchors")
+                continue
+            if index[opens] >= index[closes]:
+                fail(f"Exploration window {wid} in {route}/{chapter} crosses/reverses mandatory anchor order")
+
+        discoveries = entry.get("optional_discoveries", [])
+        if route == "FrodoMain" and chapter != "P1C01" and len(discoveries) < 2:
+            fail(f"Exploration envelope {route}/{chapter} must define at least two non-Shire optional discoveries")
+        for discovery in discoveries:
+            did = str(discovery.get("id") or "").strip()
+            window = discovery.get("available_between", [])
+            if len(window) != 2 or window[0] not in index or window[1] not in index:
+                fail(f"Optional discovery {did or '<unnamed>'} in {route}/{chapter} has invalid availability anchors")
+                continue
+            if index[window[0]] > index[window[1]]:
+                fail(f"Optional discovery {did} in {route}/{chapter} reverses story order")
+            if discovery.get("story_effect") != "NONE":
+                fail(f"Optional discovery {did} must have story_effect NONE")
+            if discovery.get("may_advance_required_anchor") is not False:
+                fail(f"Optional discovery {did} may not advance required anchors")
+            if discovery.get("may_change_canon_outcome") is not False:
+                fail(f"Optional discovery {did} may not change canon outcomes")
+
+        if not entry.get("return_policy"):
+            fail(f"Exploration envelope {route}/{chapter} has no return_policy")
+
+    missing_pairs = sorted(expected_pairs - found_pairs)
+    if missing_pairs:
+        fail("Exploration envelope coverage missing: " + ", ".join(f"{r}/{c}" for r, c in missing_pairs))
+
+# PG-061: one-click/CI import must never normalize tracked SourceAssets in place.
+production_import_hygiene = read(
+    ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp"
+)
+for marker in [
+    "ProjectSavedDir()",
+    "ShireProductionImportWorking",
+    "CopyDirectoryTree",
+    "FindFilesRecursive(TextureFiles, *WorkingRoot",
+    "FindFilesRecursive(MeshFiles, *WorkingRoot",
+]:
+    if marker not in production_import_hygiene:
+        fail(f"PG-061: production importer missing non-destructive working-copy marker: {marker}")
+if "FindFilesRecursive(TextureFiles, *SourceRoot" in production_import_hygiene:
+    fail("PG-061: production importer must not import/normalize textures directly from tracked SourceAssets")
+if "FindFilesRecursive(MeshFiles, *SourceRoot" in production_import_hygiene:
+    fail("PG-061: production importer must not import/normalize meshes directly from tracked SourceAssets")
+
+
+# PG-062: Journey Discovery rewards must cover declared exploration without enabling canon/story farming.
+discovery_reward_path = ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"
+discovery_reward_data = {}
+if not discovery_reward_path.exists():
+    fail("Journey discovery reward plan missing: Data/JourneyDiscoveryRewardPlan.json")
+else:
+    try:
+        discovery_reward_data = json.loads(read(discovery_reward_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/JourneyDiscoveryRewardPlan.json: {exc}")
+
+if discovery_reward_data:
+    exploration_for_rewards = {}
+    try:
+        exploration_for_rewards = json.loads(read(ROOT / "Data" / "ExplorationEnvelopePlan.json"))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid ExplorationEnvelopePlan.json while validating discovery rewards: {exc}")
+
+    declared_discoveries = {
+        str(item.get("id") or "").strip()
+        for chapter in exploration_for_rewards.get("chapters", [])
+        for item in chapter.get("optional_discoveries", [])
+        if isinstance(item, dict)
+    }
+    reward_rows = discovery_reward_data.get("discovery_rewards", [])
+    reward_ids = [str(item.get("discovery_id") or "").strip() for item in reward_rows]
+    if len(reward_ids) != len(set(reward_ids)):
+        fail("Journey discovery reward plan has duplicate discovery_id entries")
+    missing_rewards = sorted(declared_discoveries - set(reward_ids))
+    unknown_rewards = sorted(set(reward_ids) - declared_discoveries)
+    if missing_rewards:
+        fail("Journey discovery rewards missing declared discoveries: " + ", ".join(missing_rewards))
+    if unknown_rewards:
+        fail("Journey discovery rewards reference unknown discoveries: " + ", ".join(unknown_rewards))
+
+    allowed_categories = {"ROAD_WISDOM", "PEOPLES_AND_PLACES", "FELLOWSHIP_BONDS", "PERIL_SENSE"}
+    for row in reward_rows:
+        did = str(row.get("discovery_id") or "").strip()
+        if row.get("first_time_only") is not True:
+            fail(f"Journey discovery reward {did} must be first_time_only")
+        if int(row.get("journey_insight") or 0) <= 0:
+            fail(f"Journey discovery reward {did} must award positive Journey Insight")
+        if str(row.get("category") or "") not in allowed_categories:
+            fail(f"Journey discovery reward {did} has invalid category")
+        if row.get("story_effect") != "NONE":
+            fail(f"Journey discovery reward {did} may not mutate story state")
+        if row.get("may_advance_required_anchor") is not False:
+            fail(f"Journey discovery reward {did} may not advance required anchors")
+        if row.get("may_change_canon_outcome") is not False:
+            fail(f"Journey discovery reward {did} may not change canon outcomes")
+
+    hard_rules = discovery_reward_data.get("hard_rules", {})
+    for rule in ["first_time_points_only", "mandatory_story_skip", "route_skip", "canon_outcome_change", "network_dependency", "raw_screenplay_reward_text"]:
+        if rule == "first_time_points_only":
+            if hard_rules.get(rule) is not True:
+                fail("Journey discovery hard rule first_time_points_only must remain true")
+        elif hard_rules.get(rule) is not False:
+            fail(f"Journey discovery hard rule {rule} must remain false")
+    if hard_rules.get("combat_stat_boosts") is not False or hard_rules.get("health_damage_armor_inflation") is not False:
+        fail("Journey discovery rewards must not become generic combat-stat inflation")
+
+    expected_region_pairs = {
+        (str(ch.get("route") or ""), str(ch.get("chapter") or ""))
+        for ch in exploration_for_rewards.get("chapters", [])
+    }
+    actual_region_pairs = {
+        (str(item.get("route") or ""), str(item.get("chapter") or ""))
+        for item in discovery_reward_data.get("region_completion_bonuses", [])
+    }
+    if expected_region_pairs - actual_region_pairs:
+        fail("Journey discovery plan missing region-completion coverage")
+
+    build_text_pg62 = read(SOURCE / "ShireJourney.Build.cs")
+    if "Data/JourneyDiscoveryRewardPlan.json" not in build_text_pg62:
+        fail("Journey discovery reward plan is not packaged as a runtime dependency")
+
+
+# PG-063: contextual side activities must remain plausible gap-fill inside film story windows.
+side_activity_path = ROOT / "Data" / "ContextualSideActivityPlan.json"
+side_activity_data = {}
+if not side_activity_path.exists():
+    fail("Contextual side activity plan missing: Data/ContextualSideActivityPlan.json")
+else:
+    try:
+        side_activity_data = json.loads(read(side_activity_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/ContextualSideActivityPlan.json: {exc}")
+
+if side_activity_data:
+    try:
+        exploration_for_side = json.loads(read(ROOT / "Data" / "ExplorationEnvelopePlan.json"))
+    except json.JSONDecodeError as exc:
+        exploration_for_side = {}
+        fail(f"Invalid ExplorationEnvelopePlan.json while checking side activities: {exc}")
+
+    try:
+        rewards_for_side = json.loads(read(ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"))
+    except json.JSONDecodeError as exc:
+        rewards_for_side = {}
+        fail(f"Invalid JourneyDiscoveryRewardPlan.json while checking side activities: {exc}")
+
+    envelope_by_pair = {
+        (str(ch.get("route") or ""), str(ch.get("chapter") or "")): ch
+        for ch in exploration_for_side.get("chapters", [])
+        if isinstance(ch, dict)
+    }
+    reward_ids = {
+        str(row.get("discovery_id") or "")
+        for row in rewards_for_side.get("discovery_rewards", [])
+        if isinstance(row, dict)
+    }
+
+    seen_side_ids = set()
+    coverage = set()
+    for chapter in side_activity_data.get("chapters", []):
+        route = str(chapter.get("route") or "")
+        chapter_id = str(chapter.get("chapter") or "")
+        pair = (route, chapter_id)
+        envelope = envelope_by_pair.get(pair)
+        if not envelope:
+            fail(f"Side activity chapter has no exploration envelope: {route}/{chapter_id}")
+            continue
+        coverage.add(pair)
+        anchor_order = [str(x) for x in envelope.get("anchor_order", [])]
+        anchor_index = {beat: i for i, beat in enumerate(anchor_order)}
+        activities = chapter.get("activities", [])
+        if route == "FrodoMain" and len(activities) < 2:
+            fail(f"Contextual side activity coverage too thin for {route}/{chapter_id}")
+
+        for activity in activities:
+            aid = str(activity.get("id") or "")
+            opens = str(activity.get("available_after") or "")
+            closes = str(activity.get("ends_before") or "")
+            reward = str(activity.get("discovery_reward_id") or "")
+            if not aid:
+                fail(f"Unnamed side activity in {route}/{chapter_id}")
+                continue
+            if aid in seen_side_ids:
+                fail(f"Duplicate contextual side activity id: {aid}")
+            seen_side_ids.add(aid)
+            if opens not in anchor_index or closes not in anchor_index or anchor_index[opens] >= anchor_index[closes]:
+                fail(f"Contextual side activity {aid} has invalid story window")
+            if activity.get("canon_effect") != "NONE":
+                fail(f"Contextual side activity {aid} may not mutate canon")
+            if activity.get("may_advance_required_anchor") is not False:
+                fail(f"Contextual side activity {aid} may not advance required story anchors")
+            if activity.get("may_change_canon_outcome") is not False:
+                fail(f"Contextual side activity {aid} may not change canon outcomes")
+            if activity.get("future_knowledge_allowed") is not False:
+                fail(f"Contextual side activity {aid} must forbid future knowledge")
+            if not activity.get("film_context"):
+                fail(f"Contextual side activity {aid} must document why it fits the film context")
+            if not activity.get("urgency_policy"):
+                fail(f"Contextual side activity {aid} must define an urgency override")
+            if reward not in reward_ids:
+                fail(f"Contextual side activity {aid} references unknown Journey Discovery reward {reward}")
+
+    expected_side_coverage = {("FrodoMain", f"P1C{i:02d}") for i in range(1, 9)}
+    expected_side_coverage.add(("GandalfParallel", "P1C01"))
+    missing_side_coverage = sorted(expected_side_coverage - coverage)
+    if missing_side_coverage:
+        fail("Contextual side activity coverage missing: " + ", ".join(f"{r}/{c}" for r, c in missing_side_coverage))
+
+    build_text_pg63 = read(SOURCE / "ShireJourney.Build.cs")
+    if "Data/ContextualSideActivityPlan.json" not in build_text_pg63:
+        fail("Contextual side activity plan is not packaged as a runtime dependency")
+
+
+# PG-070: Ring quest systemic axis must remain explicit and runtime-audited.
+ring_plan_path = ROOT / "Data" / "TrilogyRingQuestPlan.json"
+if not ring_plan_path.exists():
+    fail("PG-070: TrilogyRingQuestPlan.json missing")
+else:
+    ring_plan = json.loads(read(ring_plan_path))
+    if ring_plan.get("axis_policy") != "RING_IS_CENTRAL":
+        fail("PG-070: Ring axis policy changed")
+    windows = ring_plan.get("part1_windows", [])
+    covered = {str(x.get("chapter") or "") for x in windows if x.get("route") == "FrodoMain"}
+    if {f"P1C{i:02d}" for i in range(1, 9)} - covered:
+        fail("PG-070: Ring plan must cover P1C01-P1C08")
+    gandalf = [x for x in windows if x.get("route") == "GandalfParallel"]
+    if not gandalf or any(x.get("bearer") != "Frodo" for x in gandalf):
+        fail("PG-070: GandalfParallel must preserve Frodo as off-route Ring-bearer")
+for symbol in ["IsRingQuestActive", "GetRingBearerId", "GetRingStateTag", "GetRingPressureTier"]:
+    if symbol not in read(SOURCE / "ShireQuestSubsystem.h") or symbol not in read(SOURCE / "ShireQuestSubsystem.cpp"):
+        fail(f"PG-070: Ring runtime API missing {symbol}")
+if "ShireStateAudit: ring-core=PASS" not in read(ROOT / "Scripts" / "runtime_smoke.py"):
+    fail("PG-070: runtime state audit must require Ring continuity")
+
+# PG-071: character-production matrix must cover the Part I core cast and retain provenance rules.
+character_matrix_path = ROOT / "Data" / "CharacterProductionMatrix.json"
+if not character_matrix_path.exists():
+    fail("PG-071: CharacterProductionMatrix.json missing")
+else:
+    character_matrix = json.loads(read(character_matrix_path))
+    ids = {str(x.get("id") or "") for x in character_matrix.get("characters", [])}
+    required = {"FRODO","SAM","MERRY","PIPPIN","GANDALF","ARAGORN","BOROMIR","LEGOLAS","GIMLI","BILBO","ARWEN","ELROND","GALADRIEL","SARUMAN","NAZGUL"}
+    if required - ids:
+        fail("PG-071: character-production matrix missing core cast")
+    policy = character_matrix.get("sourcing_policy", {})
+    if "Free availability is not treated as permission by itself" not in str(policy.get("rule") or ""):
+        fail("PG-071: external-character provenance rule missing")
+
+# PG-072: cinematic world-production matrix must cover every current Part I region.
+world_matrix_path = ROOT / "Data" / "CinematicWorldProductionMatrix.json"
+if not world_matrix_path.exists():
+    fail("PG-072: CinematicWorldProductionMatrix.json missing")
+else:
+    world_matrix = json.loads(read(world_matrix_path))
+    pairs = {(str(x.get("chapter") or ""), str(x.get("region") or "")) for x in world_matrix.get("regions", [])}
+    chapters = {x[0] for x in pairs}
+    expected = {f"P1C{i:02d}" for i in range(1, 9)} | {"P1G01"}
+    if expected - chapters:
+        fail("PG-072: cinematic world matrix missing Part I chapter coverage")
+    for region in world_matrix.get("regions", []):
+        if not region.get("hero_vistas") or not region.get("foreground") or not region.get("background"):
+            fail(f"PG-072: incomplete layered composition for {region.get('chapter')}")
+
+# PG-073: owner-supplied source references must stay indexed and runtime-reference-only.
+source_index_path = ROOT / "Data" / "OwnerSourceReferenceIndex.json"
+if not source_index_path.exists():
+    fail("PG-073: OwnerSourceReferenceIndex.json missing")
+else:
+    source_index = json.loads(read(source_index_path))
+    source_ids = {str(x.get("id") or "") for x in source_index.get("sources", [])}
+    for required_id in ["SRC_FILM_FOTR_SCREENPLAY","SRC_FILM_TTT_SCREENPLAY","SRC_OWNER_MASTER_PACK","SRC_OWNER_FOREST_BEAUTY_BENCHMARK"]:
+        if required_id not in source_ids:
+            fail(f"PG-073: owner source index missing {required_id}")
+    if any(bool(x.get("runtime_ship")) for x in source_index.get("sources", [])):
+        fail("PG-073: raw owner reference sources must not be required/shipped at runtime")
+
+
+# PG-074: Journey Discovery runtime must be first-time-only, persisted and story-window bounded.
+journey_h = read(SOURCE / "ShireQuestSubsystem.h")
+journey_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
+journey_save = read(SOURCE / "ShireSaveGame.h")
+journey_player = read(SOURCE / "ShirePlayerCharacter.cpp")
+journey_trigger_h = read(SOURCE / "ShireQuestTrigger.h")
+journey_trigger_cpp = read(SOURCE / "ShireQuestTrigger.cpp")
+journey_hud_h = read(SOURCE / "ShireHUD.h")
+journey_hud_cpp = read(SOURCE / "ShireHUD.cpp")
+journey_game_mode = read(SOURCE / "ShireGameMode.cpp")
+journey_smoke = read(ROOT / "Scripts" / "runtime_smoke.py")
+
+for symbol in [
+    "RegisterJourneyDiscovery",
+    "HasJourneyDiscovery",
+    "GetJourneyInsight",
+    "RestoreJourneyDiscoveryState",
+]:
+    if symbol not in journey_h or symbol not in journey_cpp:
+        fail(f"PG-074: Journey Discovery runtime API missing {symbol}")
+
+for marker in ["JourneyDiscoveryIds", "JourneyInsight", "JourneyInsightMilestones"]:
+    if marker not in journey_save or marker not in journey_player:
+        fail(f"PG-074: Journey Discovery save/load persistence missing {marker}")
+
+for marker in ["DiscoveryId", "DiscoveryDisplayName", "BlockedAfterStoryBeat"]:
+    if marker not in journey_trigger_h or marker not in journey_trigger_cpp:
+        fail(f"PG-074: discovery trigger window/reward field missing {marker}")
+
+if "ShowDiscovery" not in journey_hud_h or "ShowDiscovery" not in journey_hud_cpp:
+    fail("PG-074: player-facing discovery toast is missing")
+
+if "ShireStateAudit: discovery-core=PASS" not in journey_game_mode:
+    fail("PG-074: engine state audit does not prove discovery first-time continuity")
+if "ShireStateAudit: discovery-core=PASS" not in journey_smoke:
+    fail("PG-074: runtime smoke does not require discovery continuity")
+
+journey_plan_runtime = json.loads(read(ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"))
+journey_reward_ids = {
+    str(item.get("discovery_id") or "").strip()
+    for item in journey_plan_runtime.get("discovery_rewards", [])
+    if isinstance(item, dict)
+}
+journey_builder_text = "\n".join([
+    read(SOURCE / "ShirePrototypeWorldBuilder.cpp"),
+    read(SOURCE / "BreePrototypeWorldBuilder.cpp"),
+    read(SOURCE / "FellowshipChapterWorldBuilder.cpp"),
+    read(SOURCE / "IsengardPrototypeWorldBuilder.cpp"),
+])
+missing_runtime_discoveries = sorted(
+    discovery_id for discovery_id in journey_reward_ids
+    if discovery_id and discovery_id not in journey_builder_text
+)
+if missing_runtime_discoveries:
+    fail("PG-074: Journey Discovery runtime trigger coverage missing: " + ", ".join(missing_runtime_discoveries))
+
+
+# PG-075: modern game layer must preserve fixed film anchors while expanding optional play.
+modern_game_path = ROOT / "Data" / "ModernGameLayerPlan.json"
+if not modern_game_path.exists():
+    fail("PG-075: ModernGameLayerPlan.json missing")
+else:
+    modern_game = json.loads(read(modern_game_path))
+    canon = modern_game.get("canon_contract", {})
+    if "fixed" not in str(canon.get("fixed_story") or "").lower():
+        fail("PG-075: film story must remain explicitly fixed")
+    side_rule = str(canon.get("side_content_rule") or "").lower()
+    for required_phrase in ["may not replace", "skip", "reorder", "change"]:
+        if required_phrase not in side_rule:
+            fail("PG-075: side-content canon guard is incomplete")
+            break
+
+    source_rule = str(canon.get("source_verification_rule") or "").lower()
+    if "verified" not in source_rule or "do not rely on memory" not in source_rule:
+        fail("PG-075: FILM_CORE source-verification rule is missing")
+    uncertainty_rule = str(canon.get("uncertainty_rule") or "").lower()
+    if "unverified" not in uncertainty_rule or "do not invent" not in uncertainty_rule:
+        fail("PG-075: unresolved film beats must remain unverified rather than invented")
+
+    axes = {str(x.get("id") or "") for x in modern_game.get("player_life_layer", {}).get("persistent_axes", [])}
+    for required_axis in {"HEALTH", "STAMINA", "RESOLVE", "FELLOWSHIP_BOND", "SUPPLIES"}:
+        if required_axis not in axes:
+            fail(f"PG-075: player-life layer missing {required_axis}")
+
+    tracks = {str(x.get("id") or "") for x in modern_game.get("progression_tracks", [])}
+    for required_track in {"WAYFINDING","PERCEPTION","QUIET_STEP","CAMPCRAFT","FELLOWSHIP","LORE","RESOLVE"}:
+        if required_track not in tracks:
+            fail(f"PG-075: progression track missing {required_track}")
+
+    chapters = {str(x.get("chapter") or "") for x in modern_game.get("chapter_gameplay_examples", [])}
+    expected = {f"P1C{i:02d}" for i in range(1, 9)} | {"P1G01"}
+    if expected - chapters:
+        fail("PG-075: modern game layer missing Part I/Gandalf chapter coverage")
+
+    forbidden_rewards = " ".join(modern_game.get("reward_rules", {}).get("forbidden", [])).lower()
+    for marker in ["canon", "ring ownership", "loot"]:
+        if marker not in forbidden_rewards:
+            fail(f"PG-075: reward safety contract missing {marker}")
+
+
+# PG-076: ensemble film missions must use verified film viewpoints and bounded gap-fill.
+ensemble_path = ROOT / "Data" / "EnsembleFilmMissionPlan.json"
+if not ensemble_path.exists():
+    fail("PG-076: EnsembleFilmMissionPlan.json missing")
+else:
+    ensemble = json.loads(read(ensemble_path))
+    rules = " ".join(ensemble.get("non_negotiable_rules", [])).lower()
+    for marker in ["viewpoint", "film", "required film scene", "original gap-fill"]:
+        if marker not in rules:
+            fail(f"PG-076: ensemble mission safety contract missing {marker}")
+
+    part1_ids = {str(x.get("id") or "") for x in ensemble.get("part1", [])}
+    for required_id in {
+        "P1_GANDALF_RING_INVESTIGATION",
+        "P1_GANDALF_ISENGARD",
+        "P1_ARWEN_FORD",
+        "P1_GIMLI_MORIA",
+        "P1_BOROMIR_AMON_HEN_DEFENSE",
+    }:
+        if required_id not in part1_ids:
+            fail(f"PG-076: missing Part I ensemble mission {required_id}")
+
+    for section in ["part1", "part2", "part3"]:
+        for mission in ensemble.get(section, []):
+            if not mission.get("source_basis") or not mission.get("canon_lock"):
+                fail(f"PG-076: {mission.get('id')} missing source basis or canon lock")
+
+    for mission in ensemble.get("part3", []):
+        if mission.get("tag") != "FUTURE_SOURCE_CHECK":
+            fail(f"PG-076: Part III mission {mission.get('id')} must remain FUTURE_SOURCE_CHECK until exact source verification")
+
+    forbidden = " ".join(ensemble.get("expansion_budget", {}).get("forbidden", [])).lower()
+    for marker in ["ring bearer", "war outcome", "canonical death", "required film scene"]:
+        if marker not in forbidden:
+            fail(f"PG-076: ensemble expansion guard missing {marker}")
+
+
+# PG-077: side-content catalog must keep film, gap-fill and book continuity separated.
+side_catalog_path = ROOT / "Data" / "SideContentCanonCatalog.json"
+if not side_catalog_path.exists():
+    fail("PG-077: SideContentCanonCatalog.json missing")
+else:
+    side_catalog = json.loads(read(side_catalog_path))
+    classes = set(side_catalog.get("authority_order", []))
+    for required_class in {"FILM_CORE","FILM_EXPANDED","FILM_INTERSTITIAL","BOOK_CHRONICLE"}:
+        if required_class not in classes:
+            fail(f"PG-077: missing side-content class {required_class}")
+
+    allowed_status = set(side_catalog.get("source_status_values", []))
+    for section in ["part1","part2","part3","chronicles"]:
+        for row in side_catalog.get(section, []):
+            if len(row) != 4:
+                fail(f"PG-077: malformed {section} row")
+                continue
+            if row[2] not in allowed_status:
+                fail(f"PG-077: invalid source status {row[2]} for {row[0]}")
+
+    for row in side_catalog.get("part3", []):
+        if row[2] != "FUTURE_SOURCE_CHECK":
+            fail(f"PG-077: Part III item promoted before source verification: {row[0]}")
+
+    for row in side_catalog.get("chronicles", []):
+        if row[1] != "BOOK_CHRONICLE" or row[3] != "BOOK_CHRONICLE_NONCANON_TO_FILM":
+            fail(f"PG-077: book Chronicle leaked into film continuity: {row[0]}")
+
+    notes = " ".join(side_catalog.get("audit_notes", [])).lower()
+    if "does not begin at bilbo's birthday party" not in notes:
+        fail("PG-077: Fellowship opening-order correction missing")
+
+
+# PG-077: all trilogy side content must use one canon-safe taxonomy.
+side_master_path = ROOT / "Data" / "FilmSideContentMasterPlan.json"
+if not side_master_path.exists():
+    fail("PG-077: FilmSideContentMasterPlan.json missing")
+else:
+    side_master = json.loads(read(side_master_path))
+    allowed_types = {"FILM_MOMENT", "FILM_EXPANDED", "CHRONICLE"}
+    for section in ["fellowship", "two_towers", "return_of_king", "chronicles"]:
+        for item in side_master.get(section, []):
+            if item.get("type") not in allowed_types:
+                fail(f"PG-077: {item.get('id')} has invalid side-content type")
+            if not item.get("canon_lock") and section != "chronicles":
+                fail(f"PG-077: {item.get('id')} missing canon lock")
+    for item in side_master.get("chronicles", []):
+        if item.get("type") != "CHRONICLE":
+            fail(f"PG-077: book/history item {item.get('id')} must remain CHRONICLE")
+    corrections = " ".join(
+        str(x.get("correction") or "") for x in side_master.get("audits_and_corrections", [])
+    ).lower()
+    for marker in ["attack must still happen", "ring incident", "treebeard", "pippin", "book-only"]:
+        if marker not in corrections:
+            fail(f"PG-077: continuity correction missing {marker}")
+    if len(side_master.get("prototype_priority", [])) < 10:
+        fail("PG-077: prototype priority set must contain at least 10 entries")
+
+
+# PG-078: master execution roadmap must cover every unfinished accepted requirement and ACTIVE work item.
+master_path = ROOT / "Data" / "MasterExecutionRoadmap.json"
+if not master_path.exists():
+    fail("PG-078: MasterExecutionRoadmap.json missing")
+else:
+    master = json.loads(read(master_path))
+    if master.get("authority") != "Data/ProjectGovernor.json":
+        fail("PG-078: master roadmap must remain subordinate to ProjectGovernor")
+
+    roadmap_req_ids = set()
+    roadmap_work_ids = set()
+    for bundle in master.get("bundles", []):
+        roadmap_req_ids.update(str(x) for x in bundle.get("requirement_ids", []))
+        roadmap_work_ids.update(str(x) for x in bundle.get("work_ids", []))
+        if not bundle.get("deliverables") or not bundle.get("exit_evidence"):
+            fail(f"PG-078: bundle {bundle.get('id')} missing deliverables or exit evidence")
+    for lane in master.get("continuous_lanes", []):
+        roadmap_req_ids.update(str(x) for x in lane.get("requirement_ids", []))
+        roadmap_work_ids.update(str(x) for x in lane.get("work_ids", []))
+
+    governor = json.loads(read(ROOT / "Data" / "ProjectGovernor.json"))
+    open_req_ids = {
+        str(req.get("id"))
+        for req in governor.get("requirements", [])
+        if req.get("status") not in {"VALIDATED","REJECTED","SUPERSEDED","DEFERRED"}
+        and req.get("missing_work")
+    }
+    active_work_ids = {
+        str(work.get("id"))
+        for work in governor.get("work_queue", [])
+        if work.get("status") == "ACTIVE"
+    }
+
+    missing_reqs = sorted(open_req_ids - roadmap_req_ids)
+    missing_work = sorted(active_work_ids - roadmap_work_ids)
+    if missing_reqs:
+        fail("PG-078: unfinished Governor requirements orphaned from master roadmap: " + ", ".join(missing_reqs))
+    if missing_work:
+        fail("PG-078: ACTIVE work items orphaned from master roadmap: " + ", ".join(missing_work))
+
+    tracked_reqs = set(str(x) for x in master.get("tracked_unfinished_requirement_ids", []))
+    tracked_work = set(str(x) for x in master.get("tracked_active_work_ids", []))
+    if tracked_reqs != open_req_ids:
+        fail("PG-078: tracked unfinished requirement snapshot is stale")
+    if tracked_work != active_work_ids:
+        fail("PG-078: tracked active work snapshot is stale")
+
+    invariant_text = " ".join(master.get("invariants", [])).lower()
+    for marker in ["film", "ring", "offline", "30 fps", "exact candidate head"]:
+        if marker not in invariant_text:
+            fail(f"PG-078: master roadmap invariant missing {marker}")
+
+
+# PG-079: player-life and progression must remain lightweight, persisted and film-safe.
+life_path = ROOT / "Data" / "PlayerLifeProgressionPlan.json"
+if not life_path.exists():
+    fail("PG-079: PlayerLifeProgressionPlan.json missing")
+else:
+    life = json.loads(read(life_path))
+    axes = {str(x.get("id") or "") for x in life.get("runtime_axes", [])}
+    for axis in {"HEALTH","STAMINA","RESOLVE","FELLOWSHIP_BOND","SUPPLIES"}:
+        if axis not in axes:
+            fail(f"PG-079: player-life axis missing {axis}")
+    tracks = {str(x.get("id") or "") for x in life.get("progression_tracks", [])}
+    for track in {"WAYFINDING","PERCEPTION","QUIET_STEP","CAMPCRAFT","FELLOWSHIP","LORE","RESOLVE"}:
+        if track not in tracks:
+            fail(f"PG-079: progression track missing {track}")
+    hard = " ".join(life.get("hard_rules", [])).lower()
+    for marker in ["no hunger", "no thirst", "no gear score", "film scenes"]:
+        if marker not in hard:
+            fail(f"PG-079: anti-grind/canon rule missing {marker}")
+player_h = read(SOURCE / "ShirePlayerCharacter.h")
+player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
+quest_h = read(SOURCE / "ShireQuestSubsystem.h")
+quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
+save_h = read(SOURCE / "ShireSaveGame.h")
+for symbol in ["GetCurrentStamina","GetCurrentResolve","GetSupplies","UseSupply","UpdatePlayerLife"]:
+    if symbol not in player_h and symbol not in player_cpp:
+        fail(f"PG-079: player-life runtime symbol missing {symbol}")
+for symbol in ["AwardProgressionXP","GetProgressionXP","GetProgressionRank","GetFellowshipBond","RestoreProgressionState"]:
+    if symbol not in quest_h or symbol not in quest_cpp:
+        fail(f"PG-079: progression runtime symbol missing {symbol}")
+for marker in ["PlayerStamina","PlayerResolve","PlayerSupplies","ProgressionXP","CurrentSchemaVersion = 6"]:
+    if marker not in save_h:
+        fail(f"PG-079: save schema missing {marker}")
+if 'ActionName="UseSupply"' not in read(ROOT / "Config" / "DefaultInput.ini"):
+    fail("PG-079: supply input mapping missing")
+if "ShireStateAudit: progression-core=PASS" not in read(SOURCE / "ShireGameMode.cpp"):
+    fail("PG-079: progression state audit missing")
+if "ShireStateAudit: progression-core=PASS" not in read(ROOT / "Scripts" / "runtime_smoke.py"):
+    fail("PG-079: runtime smoke does not require progression proof")
+if "Data/PlayerLifeProgressionPlan.json" not in read(SOURCE / "ShireJourney.Build.cs"):
+    fail("PG-079: player-life plan not packaged")
+
+
+# PG-080: Chronicle/map knowledge and side-activity progression must be persistent and story-safe.
+knowledge_path = ROOT / "Data" / "ChronicleMapKnowledgePlan.json"
+if not knowledge_path.exists():
+    fail("PG-080: ChronicleMapKnowledgePlan.json missing")
+else:
+    knowledge = json.loads(read(knowledge_path))
+    if knowledge.get("main_film_continuity_only") is not True:
+        fail("PG-080: Chronicle runtime must not silently mix Book Chronicle continuity")
+    if knowledge.get("save_schema_version") != 6:
+        fail("PG-080: Chronicle/map plan save schema must be 6")
+    if knowledge.get("story_effect") != "NONE":
+        fail("PG-080: Chronicle/map knowledge must not advance story")
+
+quest_h_pg80 = read(SOURCE / "ShireQuestSubsystem.h")
+quest_cpp_pg80 = read(SOURCE / "ShireQuestSubsystem.cpp")
+save_h_pg80 = read(SOURCE / "ShireSaveGame.h")
+player_cpp_pg80 = read(SOURCE / "ShirePlayerCharacter.cpp")
+hud_cpp_pg80 = read(SOURCE / "ShireHUD.cpp")
+input_pg80 = read(ROOT / "Config" / "DefaultInput.ini")
+side_plan_pg80 = json.loads(read(ROOT / "Data" / "ContextualSideActivityPlan.json"))
+
+for symbol in ["ChronicleEntryIds","KnownMapRegionIds","RestoreKnowledgeState","LoadSideActivityPlan","AwardSideActivityProgression"]:
+    if symbol not in (quest_h_pg80 + quest_cpp_pg80):
+        fail(f"PG-080: runtime knowledge/side-progression symbol missing {symbol}")
+for marker in ["ChronicleEntryIds","KnownMapRegionIds","CurrentSchemaVersion = 6"]:
+    if marker not in save_h_pg80:
+        fail(f"PG-080: save persistence missing {marker}")
+for marker in ["GetChronicleEntryIds","GetKnownMapRegionIds","RestoreKnowledgeState"]:
+    if marker not in player_cpp_pg80:
+        fail(f"PG-080: player save/load knowledge wiring missing {marker}")
+if 'ActionName="ToggleChronicle"' not in input_pg80:
+    fail("PG-080: Chronicle panel input missing")
+if "CHRONICLE & JOURNEY" not in hud_cpp_pg80:
+    fail("PG-080: Chronicle/map HUD panel missing")
+if "ShireStateAudit: knowledge-core=PASS" not in read(SOURCE / "ShireGameMode.cpp"):
+    fail("PG-080: knowledge state audit missing")
+if "ShireStateAudit: knowledge-core=PASS" not in read(ROOT / "Scripts" / "runtime_smoke.py"):
+    fail("PG-080: runtime smoke missing knowledge proof")
+activity_count_pg80 = sum(
+    len(chapter.get("activities", []))
+    for chapter in side_plan_pg80.get("chapters", [])
+    if isinstance(chapter, dict)
+)
+if activity_count_pg80 < 18:
+    fail(f"PG-080: contextual side-activity catalog regressed below 18 entries: {activity_count_pg80}")
+
+
+# PG-081: real traversal challenge runtime must replace pure touch-to-discover for selected activities.
+traversal_h = read(SOURCE / "ShireTraversalChallenge.h")
+traversal_cpp = read(SOURCE / "ShireTraversalChallenge.cpp")
+shire_builder_pg81 = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
+fellowship_builder_pg81 = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+for symbol in ["ConfigureChallenge","HandleGateOverlap","CurrentGateIndex","RegisterJourneyDiscovery","TraversalChallenge: PASS"]:
+    if symbol not in (traversal_h + traversal_cpp):
+        fail(f"PG-081: traversal runtime symbol missing {symbol}")
+for discovery_id in ["SHIRE_FIELD_RACE","MORIA_ECHO_ROUTE"]:
+    if discovery_id not in (shire_builder_pg81 + fellowship_builder_pg81):
+        fail(f"PG-081: traversal challenge placement missing {discovery_id}")
+if "AShireTraversalChallenge* FieldRace" not in shire_builder_pg81:
+    fail("PG-081: Shire field race must use ordered traversal gates")
+if "AShireTraversalChallenge* MoriaEchoPath" not in fellowship_builder_pg81:
+    fail("PG-081: Moria echo path must use ordered traversal gates")
+
 # PG-021: living-world plan must explicitly preserve the phased NPC/world intelligence roadmap.
 living_world_path = ROOT / "Data" / "LivingWorldFeaturePlan.json"
 living_world_data = {}
@@ -940,7 +1764,7 @@ for symbol in [
         fail(f"PG-044 ambient schedule/reaction runtime missing: {symbol}")
 
 for symbol in [
-    "CurrentSchemaVersion = 3",
+    "CurrentSchemaVersion = 6",
     "SaveSchemaVersion",
     "SnapshotCreatedUnixSeconds",
 ]:
@@ -1392,7 +2216,11 @@ for symbol in [
     "SaveAutomaticCheckpoint",
     "RestoreAutomaticCheckpoint",
     "PendingChapterCheckpointId",
-    "SafeCheckpoint: id=%s saved=%s",
+    "AsyncSaveGameToSlot",
+    "bCheckpointSaveInFlight",
+    "QueuedCheckpointSaveId",
+    "SafeCheckpoint: id=%s async-save=scheduled",
+    "SafeCheckpoint: id=%s async-save=%s slot=%s user=%d",
     "SafeCheckpoint: restored id=%s",
 ]:
     if symbol not in checkpoint_runtime_source:
@@ -1712,19 +2540,81 @@ if "LoadObject<UObject>(nullptr, *ExpectedObjectPath)" not in production_import_
 # reports a false failure and skips the actual UE build.
 unreal_ci = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 editor_probe_marker = "echo Unreal Editor is closed.\n          exit /b 0"
-if editor_probe_marker not in unreal_ci:
-    fail("PG-015: Unreal self-hosted editor-closed probe must explicitly exit /b 0")
-if "uses: actions/checkout@v4" in unreal_ci:
-    fail("PG-026: Unreal self-hosted build must not depend on actions/checkout for exact-commit acquisition")
-if "zipball/$env:GITHUB_SHA" not in unreal_ci:
-    fail("PG-026: Unreal self-hosted build must download the exact GITHUB_SHA archive")
-if "--retry 6" not in unreal_ci or "--retry-all-errors" not in unreal_ci:
-    fail("PG-026: exact-commit archive download must use resilient retries")
+editor_wait_script_path = ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd"
+editor_wait_script = read(editor_wait_script_path) if editor_wait_script_path.exists() else ""
+editor_wait_contract_ok = (
+    (
+        "Get-Process -Name UE4Editor" in unreal_ci
+        and "AddMinutes(20)" in unreal_ci
+        and "Start-Sleep -Seconds 10" in unreal_ci
+        and "exit 40" in unreal_ci
+    )
+    or (
+        "ci_wait_for_unreal_editor.cmd" in unreal_ci
+        and "Get-Process -Name UE4Editor" in editor_wait_script
+        and "AddMinutes(20)" in editor_wait_script
+        and "Start-Sleep -Seconds 10" in editor_wait_script
+        and "exit 40" in editor_wait_script
+    )
+)
+if editor_probe_marker not in unreal_ci and not editor_wait_contract_ok:
+    fail("PG-015: Unreal self-hosted validation must either prove the editor is closed or wait safely for it without terminating the user's editor")
+checkout_action_ok = (
+    "uses: actions/checkout@v4" in unreal_ci
+    and (
+        "ref: ${{ env.TARGET_SHA }}" in unreal_ci
+        or "ref: ${{ github.event.pull_request.head.sha || github.sha }}" in unreal_ci
+    )
+    and "persist-credentials: false" in unreal_ci
+    and "git rev-parse HEAD" in unreal_ci
+    and "Checkout SHA mismatch" in unreal_ci
+)
+stable_checkout_ok = (
+    "fellowship_exact_checkout.cmd" in unreal_ci
+    and "fetch --no-tags --prune --depth=1 origin %%TARGET_SHA%%" in unreal_ci
+    and "reset --hard %%TARGET_SHA%%" in unreal_ci
+    and "rev-parse HEAD" in unreal_ci
+    and "Checkout SHA mismatch" in unreal_ci
+    and ".ci-source-sha" in unreal_ci
+    and "ShireJourney.uproject missing after exact checkout" in unreal_ci
+)
+exact_checkout_markers = [
+    "zipball/$env:GITHUB_SHA",
+    "GET /repos/{owner}/{repo}/zipball/{ref}",
+    "git fetch --no-tags --prune --depth=1 origin %GITHUB_SHA%",
+    "git fetch --no-tags --prune --depth=1 origin %TARGET_SHA%",
+    "& git fetch --no-tags --prune --depth=1 origin $env:TARGET_SHA",
+]
+custom_checkout_ok = stable_checkout_ok or any(marker in unreal_ci for marker in exact_checkout_markers)
+if not checkout_action_ok and not custom_checkout_ok:
+    fail("PG-026: Unreal self-hosted build must acquire and verify the exact validated PR-head SHA")
+if "TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}" not in unreal_ci:
+    fail("PG-026: pull-request Unreal validation must resolve TARGET_SHA to the PR head, not the synthetic merge commit")
+retry_contract_ok = (
+    ("--retry 6" in unreal_ci and "--retry-all-errors" in unreal_ci)
+    or ("attempt <= 7" in unreal_ci and "retrying in 5 seconds" in unreal_ci)
+    or ("for /L %%A in (1,1,7)" in unreal_ci and "Start-Sleep -Seconds 5" in unreal_ci)
+    or ("$attempt -le 7" in unreal_ci and "Start-Sleep -Seconds 5" in unreal_ci)
+    or ("if %%ATTEMPT%% GEQ 7 exit /b 72" in unreal_ci and "goto fetch" in unreal_ci)
+)
+if custom_checkout_ok and not retry_contract_ok:
+    fail("PG-026: custom exact-commit acquisition must use resilient retries")
 if "uses: actions/upload-artifact@v4" in unreal_ci:
     fail("PG-026: failure logging must not depend on artifact upload while storage quota can mask the primary error")
-if "cancel-in-progress: true" not in unreal_ci:
-    fail("PG-026: superseded develop Unreal builds must not block the latest validation run")
-if 'shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". \'{0}\'"' not in unreal_ci:
+if "group: unreal-build-${{ github.repository }}-ue4-device" not in unreal_ci or "cancel-in-progress: false" not in unreal_ci:
+    fail("PG-026: shared Unreal device builds must serialize without interrupting active validation")
+if "post-job-runner-dedupe.ps1" in unreal_ci or "delete env.RUNNER_TRACKING_ID" in unreal_ci:
+    fail("PG-026: validation must not launch detached runner lifecycle cleanup")
+powershell_policy_ok = (
+    'shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". \'{0}\'"' in unreal_ci
+    or (
+        "powershell.exe -NoProfile -ExecutionPolicy Bypass -File" in unreal_ci
+        and "prepare_msvc_environment.ps1" in unreal_ci
+        and "reset_project_build_intermediates.ps1" in unreal_ci
+        and "resolve_runtime_python.ps1" in unreal_ci
+    )
+)
+if not powershell_policy_ok:
     fail("PG-027: self-hosted PowerShell steps must bypass the target machine script execution policy")
 
 quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
@@ -1973,6 +2863,48 @@ for path in sorted(SOURCE.glob("*.cpp")):
         if next_chapter_quest:
             transition_graph[source_quest].add(next_chapter_quest)
 
+    # Assignment-style builder wiring is the dominant form in the Shire/Bree/Isengard
+    # builders. Capture transitions by the same actor variable so static reachability
+    # does not under-report authored quest paths.
+    for assign in re.finditer(
+        r'([A-Za-z_][A-Za-z0-9_]*)->QuestId\s*=\s*TEXT\("([^"]+)"\)',
+        text,
+    ):
+        variable = assign.group(1)
+        source_quest = assign.group(2)
+        tail = text[assign.end():]
+        close = re.search(r'\n\s*}\s*(?:\n|$)', tail)
+        block = tail[: close.start()] if close else tail[:1800]
+        next_match = re.search(
+            rf'{re.escape(variable)}->NextQuestId\s*=\s*TEXT\("([^"]+)"\)',
+            block,
+        )
+        if next_match:
+            target = next_match.group(1)
+            if target in definitions and target != source_quest:
+                transition_graph[source_quest].add(target)
+        chapter_match = re.search(
+            rf'{re.escape(variable)}->NextChapterQuestId\s*=\s*TEXT\("([^"]+)"\)',
+            block,
+        )
+        if chapter_match:
+            target = chapter_match.group(1)
+            if target in definitions:
+                transition_graph[source_quest].add(target)
+
+    # Direct helper calls also carry quest handoffs (for example Strider leading into
+    # the Weathertop attack). Model those positional contracts as graph edges.
+    for direct_spawn_npc in re.finditer(
+        r'SpawnNPC\s*\(\s*TEXT\("[^"]+"\)\s*,\s*FVector\([^)]*\)\s*,\s*FRotator\([^)]*\)\s*,'
+        r'\s*TEXT\("([^"]+)"\)\s*,\s*-?\d+\s*,\s*-?\d+\s*,\s*TEXT\(".*?"\)\s*,'
+        r'\s*TEXT\("([^"]+)"\)',
+        text,
+        flags=re.S,
+    ):
+        source_quest, target_quest = direct_spawn_npc.groups()
+        if source_quest in definitions and target_quest in definitions and source_quest != target_quest:
+            transition_graph[source_quest].add(target_quest)
+
 # Critical runtime handoff guard must explicitly bridge the Shire terminal quest to Bree.
 story_flow_cpp = read(SOURCE / "ShireStoryFlowSubsystem.cpp")
 if 'QuestId == TEXT("FerryEscape")' not in story_flow_cpp:
@@ -1982,7 +2914,10 @@ if 'StartChapter(TEXT("P1C02"), TEXT("RoadToBree"), 0)' not in story_flow_cpp:
 transition_graph["FerryEscape"].add("RoadToBree")
 
 reachable: set[str] = set()
-queue = deque([chapter_start_quests["P1C01"]])
+# Every chapter start is an authoritative runtime entry point through the world router/debug
+# chapter navigation, so traverse the static graph from all of them rather than marking later
+# starts reachable only after the BFS has already ended.
+queue = deque(list(chapter_start_quests.values()) + ["IsengardCounsel"])
 while queue:
     quest = queue.popleft()
     if quest in reachable:
@@ -1991,10 +2926,6 @@ while queue:
     for next_quest in transition_graph.get(quest, set()):
         if next_quest not in reachable:
             queue.append(next_quest)
-
-# Chapter starts are independently testable through debug navigation even when the parser cannot prove every positional call.
-for quest in chapter_start_quests.values():
-    reachable.add(quest)
 
 important_unreachable = sorted(q for q in definitions if q not in reachable)
 if important_unreachable:
@@ -2175,7 +3106,7 @@ if governor_mode_id == "PIE_VERIFICATION_FREEZE" and verification_gate:
             + ", ".join(missing_runtime_paths)
         )
 
-# PG-057: current-head PIE claims require exact-commit human evidence.
+# PG-057: current-head Real PIE claims require exact-commit and chapter-specific evidence.
 pie_evidence_path = ROOT / "Data" / "PIEVerificationEvidence.json"
 pie_evidence = {}
 if not pie_evidence_path.exists():
@@ -2217,6 +3148,9 @@ if pie_evidence:
         "PIE_TESTED_WITH_ISSUES",
         "PIE_TESTED",
     }
+    used_specific_notes = {}
+    used_observation_sets = {}
+
     for chapter_id in expected_chapters:
         row = evidence_by_chapter.get(chapter_id)
         if not row:
@@ -2237,15 +3171,23 @@ if pie_evidence:
             if matrix_state != "NOT_RUN":
                 fail(
                     f"PG-057 matrix claims PIE activity for {chapter_id} "
-                    "without matching human evidence"
+                    "without matching chapter-specific evidence"
                 )
+            continue
+
+        if status == "BLOCKED":
+            blockers = row.get("blockers", [])
+            if not isinstance(blockers, list) or not blockers:
+                fail(f"PG-057 BLOCKED status for {chapter_id} requires a concrete blocker")
             continue
 
         tested_commit = str(row.get("tested_commit") or "")
         tested_at = str(row.get("tested_at") or "")
         tester = str(row.get("tester") or "")
-        artifacts = row.get("evidence_artifacts", [])
         observations = row.get("observed_details", [])
+        specific = row.get("specific_evidence", {})
+        if not isinstance(specific, dict):
+            specific = {}
 
         if not re.fullmatch(r"[0-9a-fA-F]{40}", tested_commit):
             fail(f"PG-057 {chapter_id} PIE evidence requires an exact 40-char commit SHA")
@@ -2253,13 +3195,56 @@ if pie_evidence:
             fail(f"PG-057 {chapter_id} PIE evidence requires tested_at")
         if not tester:
             fail(f"PG-057 {chapter_id} PIE evidence requires tester")
-        if not isinstance(artifacts, list) or len(artifacts) < 1:
-            fail(f"PG-057 {chapter_id} PIE evidence requires at least one artifact/log reference")
         if not isinstance(observations, list) or len(observations) < 2:
             fail(f"PG-057 {chapter_id} PIE evidence requires at least two concrete observations")
+
+        fps_value = specific.get("fps_value")
+        has_fps = (
+            isinstance(fps_value, (int, float))
+            and not isinstance(fps_value, bool)
+            and fps_value > 0
+        )
+        screenshots = specific.get("screenshot_artifacts", [])
+        videos = specific.get("video_artifacts", [])
+        has_visual = (
+            isinstance(screenshots, list) and any(str(item).strip() for item in screenshots)
+        ) or (
+            isinstance(videos, list) and any(str(item).strip() for item in videos)
+        )
+        specific_note = " ".join(str(specific.get("chapter_specific_note") or "").split())
+        has_specific_note = len(specific_note) >= 20
+
+        if not (has_fps or has_visual or has_specific_note):
+            fail(
+                f"PG-057 {chapter_id} cannot be PIE-tested from generic sign-off: "
+                "record numeric FPS, screenshot/video evidence, or a concrete chapter-specific note"
+            )
+
+        if has_specific_note:
+            note_key = specific_note.casefold()
+            previous = used_specific_notes.get(note_key)
+            if previous and previous != chapter_id:
+                fail(
+                    f"PG-057 copied chapter-specific note reused by {previous} and {chapter_id}"
+                )
+            used_specific_notes[note_key] = chapter_id
+
+        observation_key = tuple(
+            " ".join(str(item).split()).casefold()
+            for item in observations
+            if str(item).strip()
+        )
+        if observation_key:
+            previous = used_observation_sets.get(observation_key)
+            if previous and previous != chapter_id:
+                fail(
+                    f"PG-057 copied observation set reused by {previous} and {chapter_id}"
+                )
+            used_observation_sets[observation_key] = chapter_id
+
         if matrix_state == "NOT_RUN":
             fail(
-                f"PG-057 {chapter_id} has human PIE evidence but the current-head matrix "
+                f"PG-057 {chapter_id} has chapter-specific PIE evidence but the current-head matrix "
                 "was not updated"
             )
 
@@ -2277,6 +3262,154 @@ if pie_evidence:
             )
         if not signoff.get("signed_by") or not signoff.get("signed_at"):
             fail("PG-057 APPROVED human release sign-off requires signer and timestamp")
+
+# PG-112: long Windows validation must execute from repository-stable scripts.
+pg112_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+pg112_scripts = [
+    "ci_verify_unreal.cmd", "ci_wait_for_unreal_editor.cmd", "ci_build_unreal.cmd",
+    "ci_import_production_assets.cmd", "ci_runtime_startup.cmd", "ci_runtime_chapters.cmd",
+    "ci_runtime_state.cmd", "ci_warning_debt.cmd", "ci_collect_unreal_logs.cmd",
+    "ci_report_failure.cmd",
+]
+for pg112_script in pg112_scripts:
+    pg112_path = ROOT / "Scripts" / pg112_script
+    if not pg112_path.exists():
+        fail(f"PG-112 stable Windows validation script missing: {pg112_script}")
+    if pg112_script not in pg112_workflow:
+        fail(f"PG-112 workflow does not invoke stable Windows validation script: {pg112_script}")
+
+# PG-109: V6 hero geometry is a structural production step, not a final-visual claim.
+pg109_specs = {
+    "Frodo": (328, 640, 254, 504, 421, 740),
+    "Gandalf": (328, 640, 254, 504, 477, 836),
+    "Sam": (328, 640, 254, 504, 393, 692),
+    "Merry": (328, 640, 254, 504, 379, 668),
+    "Pippin": (328, 640, 254, 504, 407, 716),
+    "Aragorn": (328, 640, 254, 504, 449, 788),
+    "Boromir": (328, 640, 254, 504, 379, 668),
+    "Legolas": (328, 640, 254, 504, 477, 836),
+    "Gimli": (328, 640, 254, 504, 421, 740),
+}
+for pg109_name, pg109_limits in pg109_specs.items():
+    pg109_root = ROOT / "SourceAssets" / "Production" / "Characters" / pg109_name
+    pg109_head = read(pg109_root / f"SM_{pg109_name}_Head.obj")
+    pg109_torso = read(pg109_root / f"SM_{pg109_name}_Torso.obj")
+    pg109_hair = read(pg109_root / f"SM_{pg109_name}_Hair.obj")
+    if "Hero head wave V6" not in pg109_head:
+        fail(f"PG-109 V6 head marker missing: {pg109_name}")
+    if "Hero torso wave V6" not in pg109_torso:
+        fail(f"PG-109 V6 torso marker missing: {pg109_name}")
+    if "Hero hair wave V6" not in pg109_hair:
+        fail(f"PG-109 V6 hair marker missing: {pg109_name}")
+    pg109_counts = (
+        sum(1 for line in pg109_head.splitlines() if line.startswith("v ")),
+        sum(1 for line in pg109_head.splitlines() if line.startswith("f ")),
+        sum(1 for line in pg109_torso.splitlines() if line.startswith("v ")),
+        sum(1 for line in pg109_torso.splitlines() if line.startswith("f ")),
+        sum(1 for line in pg109_hair.splitlines() if line.startswith("v ")),
+        sum(1 for line in pg109_hair.splitlines() if line.startswith("f ")),
+    )
+    if any(actual < required for actual, required in zip(pg109_counts, pg109_limits)):
+        fail(f"PG-109 hero geometry structural regression: {pg109_name} counts={pg109_counts} limits={pg109_limits}")
+
+pg109_matrix = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
+if pg109_matrix.get("geometry_refinement_wave", {}).get("status") != "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE":
+    fail("PG-109 hero geometry must remain engine-proven while rendered acceptance is pending")
+pg109_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
+pg109_npch = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.h")
+for pg109_symbol in [
+    "bUsingProductionVisual",
+    "SM_ProductionShield",
+    "SM_ProductionBow",
+    "SM_ProductionAxe",
+    "SM_Gandalf_Staff",
+]:
+    if pg109_symbol not in (pg109_npc + pg109_npch):
+        fail(f"PG-109 named-cast production visual integration missing: {pg109_symbol}")
+
+# PG-110: core Fellowship characters use a project production surface, not flat-only tints.
+pg110_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+for pg110_symbol in [
+    "M_ProductionSurface",
+    "UMaterialExpressionVectorParameter",
+    "UMaterialExpressionScalarParameter",
+    "RoughnessParameter",
+    "MetallicParameter",
+    "SetParentEditorOnly",
+    'TEXT("Pr ")',
+    'TEXT("Pm ")',
+]:
+    if pg110_symbol not in pg110_importer:
+        fail(f"PG-110 production surface master/import support missing: {pg110_symbol}")
+
+pg110_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
+for pg110_symbol in [
+    "ProductionSurfaceMaterial",
+    "ApplySurface",
+    'SetScalarParameterValue(TEXT("Roughness")',
+    'SetScalarParameterValue(TEXT("Metallic")',
+    "0.82f, 0.0f",
+    "0.54f, 0.0f",
+    "0.34f, 0.78f",
+]:
+    if pg110_symbol not in pg110_npc:
+        fail(f"PG-110 named-character surface response missing: {pg110_symbol}")
+
+pg110_matrix = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
+if pg110_matrix.get("geometry_refinement_wave", {}).get("status") != "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE":
+    fail("PG-110 V6 geometry should remain engine-proven but not visually accepted")
+if pg110_matrix.get("surface_material_wave", {}).get("status") != "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE":
+    fail("PG-110 V7 surface wave must remain engine-proven while rendered acceptance is pending")
+
+# PG-111: V8 regional life must stay canon-safe, route-readable and performance-bounded.
+pg111_plan = json.loads(read(ROOT / "Data" / "WorldLifeSaturationPlan.json"))
+pg111_targets = pg111_plan.get("baseline_population_targets", {})
+pg111_roles = pg111_plan.get("population_roles", {})
+if pg111_plan.get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-111 V8 world-life proof boundary changed")
+if int(pg111_targets.get("P1C05", -1)) != 0:
+    fail("PG-111 Caradhras ambient civilian baseline must remain zero")
+if int(pg111_targets.get("P1C06", -1)) != 0:
+    fail("PG-111 Moria ambient civilian baseline must remain zero")
+pg111_anduin_roles = set(pg111_roles.get("P1C08", []))
+if pg111_anduin_roles != {"Bird"}:
+    fail("PG-111 Anduin/Amon Hen baseline must remain bird-only under the proven fauna contract")
+if "RoadWalker" in pg111_anduin_roles or "Villager" in pg111_anduin_roles:
+    fail("PG-111 invented civilian walkers may not populate Anduin/Amon Hen")
+
+pg111_event_plan = json.loads(read(ROOT / "Data" / "LivingWorldEventPlan.json"))
+pg111_caradhras = next(
+    (row for row in pg111_event_plan.get("chapter_contracts", [])
+     if isinstance(row, dict) and row.get("chapter") == "P1C05"),
+    {},
+)
+pg111_caradhras_allowed = set(pg111_caradhras.get("allowed", []))
+if "SOCIAL_MOMENT" in pg111_caradhras_allowed or "FAUNA" in pg111_caradhras_allowed:
+    fail("PG-111 Caradhras ambient contract may not spawn residents or fauna")
+
+pg111_director = read(ROOT / "Source" / "ShireJourney" / "LivingWorldDirector.cpp")
+for pg111_symbol in [
+    "Random.FRand() < 0.72f",
+    "GetActorForwardVector().GetSafeNormal2D()",
+    "Target = FMath::Max(1, Target / 2)",
+    'RoleName == TEXT("Bird")',
+    'RoleName == TEXT("Rabbit")',
+    'RoleName == TEXT("Butterfly")',
+]:
+    if pg111_symbol not in pg111_director:
+        fail(f"PG-111 regional-life director behavior missing: {pg111_symbol}")
+
+pg111_ambient = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.cpp")
+pg111_ambient_h = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.h")
+for pg111_symbol in [
+    "ProductionSurfaceMaterial",
+    "AnimationRateScale",
+    "IdleLookAmplitude",
+    "IdleLookPhase",
+    "IdleYaw",
+]:
+    if pg111_symbol not in (pg111_ambient + pg111_ambient_h):
+        fail(f"PG-111 ambient presentation behavior missing: {pg111_symbol}")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
@@ -2467,12 +3600,35 @@ for startup_symbol in [
 for workflow_symbol in [
     "pull_request:",
     "Headless playable startup smoke",
-    "CI-PlayableStartup.log",
-    "ShirePlayableStartup: GameMode ready",
-    "ShirePlayableStartup: chapter=P1C01 route=FrodoMain",
+    "ci_runtime_startup.cmd",
+    "ci_runtime_chapters.cmd",
+    "ci_runtime_state.cmd",
 ]:
     if workflow_symbol not in unreal_workflow_cp52:
         fail(f"PG-052 Unreal boot validation workflow missing: {workflow_symbol}")
+
+runtime_wrapper_cp52 = "\n".join(
+    read(ROOT / "Scripts" / script_name)
+    for script_name in ["ci_runtime_startup.cmd", "ci_runtime_chapters.cmd", "ci_runtime_state.cmd"]
+)
+for runtime_symbol in ["Scripts\\runtime_smoke.py", "--mode startup", "--mode chapters", "--mode state"]:
+    if runtime_symbol not in runtime_wrapper_cp52:
+        fail(f"PG-052 stable runtime observer wrapper missing: {runtime_symbol}")
+
+# The extracted observer now owns the log name and readiness contract.
+runtime_observer_path = ROOT / "Scripts" / "runtime_smoke.py"
+if not runtime_observer_path.exists():
+    fail("PG-052 runtime observer missing")
+else:
+    runtime_observer = runtime_observer_path.read_text(encoding="utf-8")
+    for observer_symbol in [
+        "CI-PlayableStartup",
+        "ShirePlayableStartup: GameMode ready",
+        "ShirePlayableStartup: chapter=P1C01 route=FrodoMain",
+        "FAILURE.search(final_text)",
+    ]:
+        if observer_symbol not in runtime_observer:
+            fail(f"PG-052 runtime observer missing: {observer_symbol}")
 
 if resource_integration:
     external_policy = resource_integration.get("external_resource_policy", {})
@@ -2662,6 +3818,976 @@ if cp55_event_plan_path.exists():
             fail(f"PG-055 fauna event template missing: {template_id}")
 else:
     fail("PG-055 LivingWorldEventPlan.json missing")
+
+# PG-058: CP56 film-spine experiential enrichment must remain canon-safe, optional and runtime-wired.
+cp56_plan_path = ROOT / "Data" / "FellowshipExperienceMegaPassCP56.json"
+cp56_plan = {}
+if not cp56_plan_path.exists():
+    fail("PG-058 FellowshipExperienceMegaPassCP56.json missing")
+else:
+    try:
+        cp56_plan = json.loads(read(cp56_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-058 invalid FellowshipExperienceMegaPassCP56.json: {exc}")
+
+if cp56_plan:
+    if cp56_plan.get("status") not in {"IMPLEMENTATION_IN_PROGRESS", "IMPLEMENTED_PENDING_VALIDATION", "VALIDATED"}:
+        fail("PG-058 CP56 plan has invalid status")
+    if len(cp56_plan.get("chapters", [])) != 8:
+        fail("PG-058 CP56 must retain exactly eight Part I chapter entries")
+    canon_policy = cp56_plan.get("canon_policy", {})
+    if canon_policy.get("primary_reference") != "Peter Jackson film continuity":
+        fail("PG-058 CP56 film-continuity spine changed")
+    if "do not reproduce screenplay dialogue" not in str(canon_policy.get("dialogue_policy", "")).lower():
+        fail("PG-058 CP56 dialogue policy must reject screenplay reproduction")
+
+cp56_film_plan_path = ROOT / "Data" / "FilmExperiencePlan.json"
+if not cp56_film_plan_path.exists():
+    fail("PG-058 FilmExperiencePlan.json missing")
+else:
+    try:
+        cp56_film_plan = json.loads(read(cp56_film_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-058 invalid FilmExperiencePlan.json: {exc}")
+        cp56_film_plan = {}
+    cp56_anchor_ids = {
+        str(anchor.get("id") or "")
+        for chapter in cp56_film_plan.get("chapters", [])
+        if isinstance(chapter, dict)
+        for anchor in chapter.get("anchors", [])
+        if isinstance(anchor, dict)
+    }
+    for anchor_id in ["P1C01_SHIRE_LIFE", "P1C01_PARTY", "P1C05_COMPANIONSHIP"]:
+        if anchor_id not in cp56_anchor_ids:
+            fail(f"PG-058 film-experience anchor missing: {anchor_id}")
+
+cp56_shire_cpp = read(ROOT / "Source" / "ShireJourney" / "ShirePrototypeWorldBuilder.cpp")
+cp56_ambient_cpp = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.cpp")
+cp56_bree_cpp = read(ROOT / "Source" / "ShireJourney" / "BreePrototypeWorldBuilder.cpp")
+cp56_fellowship_cpp = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
+for runtime_symbol in [
+    "Side_GreenDragonRevelry",
+    "Side_PartyMischief",
+    "Side_SharedShireMemory",
+    'TEXT("PlayRunner")',
+    "Side_BreeCommonRoomLife",
+    "RoadCompanionship",
+    "FellowshipCompanionship",
+    "MoriaDeadCityDiscovery",
+    "LorienSharedGrief",
+    "AnduinCampTension",
+]:
+    if runtime_symbol not in (cp56_shire_cpp + cp56_ambient_cpp + cp56_bree_cpp + cp56_fellowship_cpp):
+        fail(f"PG-058 CP56 runtime enrichment missing: {runtime_symbol}")
+
+if "FellowshipExperienceMegaPassCP56.json" not in build_cs_cp52:
+    fail("PG-058 CP56 experience plan is not packaged")
+if "WorldActivityMovementPlan.json" not in build_cs_cp52:
+    fail("PG-058 CP55 activity plan lost from runtime packaging")
+
+# PG-059: living-NPC intelligence must remain bounded, packaged and story-safe.
+living_npc_plan_path = ROOT / "Data" / "LivingNPCIntelligencePlan.json"
+living_npc_plan = {}
+if not living_npc_plan_path.exists():
+    fail("PG-059 LivingNPCIntelligencePlan.json missing")
+else:
+    try:
+        living_npc_plan = json.loads(read(living_npc_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-059 invalid LivingNPCIntelligencePlan.json: {exc}")
+
+if living_npc_plan:
+    offline_policy = living_npc_plan.get("offline_runtime_policy", {})
+    if offline_policy.get("mode") != "OFFLINE_ONLY":
+        fail("PG-059 living-NPC runtime policy must remain OFFLINE_ONLY")
+    if offline_policy.get("network_required") is not False:
+        fail("PG-059 living-NPC runtime must not require network access")
+    if offline_policy.get("remote_llm_allowed") is not False:
+        fail("PG-059 remote/cloud LLM runtime must remain disabled")
+    if offline_policy.get("cloud_api_dependency_allowed") is not False:
+        fail("PG-059 cloud API gameplay dependency must remain disabled")
+    if living_npc_plan.get("character_knowledge_policy", {}).get("default") != "DENY_UNLISTED":
+        fail("PG-059 character knowledge default must remain DENY_UNLISTED")
+
+ambient_header_pg59 = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.h")
+ambient_cpp_pg59 = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.cpp")
+for symbol in ["Hunger01", "Fatigue01", "SocialNeed01", "Fear01", "RuntimeEmotion", "RuntimeGoal", "UpdateNeedsAndEmotion"]:
+    if symbol not in (ambient_header_pg59 + ambient_cpp_pg59):
+        fail(f"PG-059 living-NPC runtime symbol missing: {symbol}")
+
+social_model_pg59 = {}
+try:
+    social_model_pg59 = json.loads(read(ROOT / "Data" / "NPCSocialModel.json"))
+except json.JSONDecodeError as exc:
+    fail(f"PG-059 invalid NPCSocialModel.json: {exc}")
+
+profiles_pg59 = {
+    str(item.get("id") or ""): item
+    for item in social_model_pg59.get("profiles", [])
+    if isinstance(item, dict)
+}
+for profile_id in ["NPC_GANDALF", "NPC_SAM", "NPC_ARAGORN", "NPC_BILBO"]:
+    profile = profiles_pg59.get(profile_id)
+    if not profile:
+        fail(f"PG-059 required core living-NPC profile missing: {profile_id}")
+        continue
+    if not profile.get("biography_facts"):
+        fail(f"PG-059 biography facts missing for core profile: {profile_id}")
+    if not profile.get("knowledge_limits"):
+        fail(f"PG-059 knowledge limits missing for core profile: {profile_id}")
+    if not profile.get("attitude_tags"):
+        fail(f"PG-059 attitude tags missing for core profile: {profile_id}")
+
+npc_context_header_pg59 = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.h")
+npc_context_cpp_pg59 = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.cpp")
+for symbol in ["BiographyFacts", "KnowledgeLimits", "AttitudeTags", "GetProfileContextSummary"]:
+    if symbol not in (npc_context_header_pg59 + npc_context_cpp_pg59):
+        fail(f"PG-059 named profile runtime context missing: {symbol}")
+
+if "LivingNPCIntelligencePlan.json" not in build_cs_cp52:
+    fail("PG-059 living-NPC intelligence plan is not packaged")
+
+# PG-060: whole-game mega integration must remain explicit and coherent.
+mega_plan_path = ROOT / "Data" / "CP56MegaIntegrationPlan.json"
+completeness_path = ROOT / "Data" / "GameCompletenessMatrix.json"
+for path, label in [
+    (mega_plan_path, "CP56MegaIntegrationPlan.json"),
+    (completeness_path, "GameCompletenessMatrix.json"),
+]:
+    if not path.exists():
+        fail(f"PG-060 {label} missing")
+    else:
+        try:
+            json.loads(read(path))
+        except json.JSONDecodeError as exc:
+            fail(f"PG-060 invalid {label}: {exc}")
+
+if completeness_path.exists():
+    try:
+        completeness_pg60 = json.loads(read(completeness_path))
+    except json.JSONDecodeError:
+        completeness_pg60 = {}
+    required_systems_pg60 = {
+        "PLAYER_MOVEMENT", "CAMERA", "INTERACTION", "COMBAT", "COMPANIONS",
+        "NAMED_CHARACTER_INTELLIGENCE", "AMBIENT_NPC_INTELLIGENCE", "DIALOGUE",
+        "OFFLINE_AI", "WORLD_LIFE", "WORLD_GEOGRAPHY", "ATMOSPHERE",
+        "EXPLORATION", "STORY", "SAVE_LOAD", "AUDIO", "CHARACTER_MOTION",
+        "UI_HUD", "PERFORMANCE", "QA_AUTOMATION", "CINEMATIC_PRESENTATION",
+        "ASSET_PRODUCTION", "HANDOFF_GOVERNANCE",
+    }
+    actual_systems_pg60 = {
+        str(item.get("id") or "")
+        for item in completeness_pg60.get("systems", [])
+        if isinstance(item, dict)
+    }
+    missing_systems_pg60 = sorted(required_systems_pg60 - actual_systems_pg60)
+    if missing_systems_pg60:
+        fail("PG-060 completeness matrix missing systems: " + ", ".join(missing_systems_pg60))
+
+npc_h_pg60 = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.h")
+npc_cpp_pg60 = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
+ctx_h_pg60 = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.h")
+ctx_cpp_pg60 = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.cpp")
+
+for symbol in ["CachedWorldPressure", "CachedWorldMood", "CachedEmotionalState", "RefreshLivingContext"]:
+    if symbol not in (npc_h_pg60 + npc_cpp_pg60):
+        fail(f"PG-060 companion living-context symbol missing: {symbol}")
+
+for symbol in ["GetProfileEmotionalState", "WorldMood", "EmotionalState"]:
+    if symbol not in (ctx_h_pg60 + ctx_cpp_pg60):
+        fail(f"PG-060 named-character context symbol missing: {symbol}")
+
+for mood in [
+    "PEACEFUL_HOME", "SUSPICIOUS_TOWN", "PURSUED_WILDERNESS", "SAFE_REFUGE",
+    "FELLOWSHIP_UNDER_PRESSURE", "DEAD_CITY_DREAD", "GRIEF_AND_REFUGE",
+    "FELLOWSHIP_FRACTURE", "WAR_CORRUPTION",
+]:
+    if mood not in ctx_cpp_pg60:
+        fail(f"PG-060 regional dialogue/context missing mood: {mood}")
+
+if '? TEXT("Mug") : NAME_None' in read(ROOT / "Source" / "ShireJourney" / "ShirePrototypeWorldBuilder.cpp"):
+    fail("PG-060 Shire crowd prop ternary regressed to UE4-incompatible mixed FName/string types")
+if '? TEXT("Mug") : NAME_None' in read(ROOT / "Source" / "ShireJourney" / "BreePrototypeWorldBuilder.cpp"):
+    fail("PG-060 Bree crowd prop ternary regressed to UE4-incompatible mixed FName/string types")
+
+
+# PG-081: contextual side activities are fail-closed runtime contracts.
+pg81_side_path = ROOT / "Data" / "ContextualSideActivityPlan.json"
+pg81_journey_path = ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"
+pg81_allowed_types = {
+    "TRAVERSAL_CHALLENGE", "OBSERVATION_CHALLENGE", "TRACKING_CHALLENGE",
+    "PATTERN_MATCH", "CAMP_PREPARATION", "SOCIAL_MEMORY", "STEALTH_LITE",
+    "TIMING_CHALLENGE", "ROUTE_READING",
+}
+try:
+    pg81_side = json.loads(read(pg81_side_path))
+    pg81_journey = json.loads(read(pg81_journey_path))
+except json.JSONDecodeError as exc:
+    fail(f"PG-081 invalid side/discovery JSON: {exc}")
+    pg81_side, pg81_journey = {}, {}
+
+pg81_discoveries = {
+    str(item.get("discovery_id") or ""): item
+    for item in pg81_journey.get("discovery_rewards", [])
+    if isinstance(item, dict)
+}
+pg81_activity_ids, pg81_reward_ids = set(), set()
+pg81_count = 0
+for pg81_chapter in pg81_side.get("chapters", []):
+    if not isinstance(pg81_chapter, dict):
+        fail("PG-081 non-object chapter entry")
+        continue
+    pg81_route = str(pg81_chapter.get("route") or "")
+    pg81_chapter_id = str(pg81_chapter.get("chapter") or "")
+    if not pg81_route or not pg81_chapter_id:
+        fail("PG-081 side-activity chapter missing route/chapter")
+        continue
+    for pg81_activity in pg81_chapter.get("activities", []):
+        if not isinstance(pg81_activity, dict):
+            fail(f"PG-081 non-object activity in {pg81_route}/{pg81_chapter_id}")
+            continue
+        pg81_count += 1
+        pg81_id = str(pg81_activity.get("id") or "")
+        pg81_type = str(pg81_activity.get("type") or "")
+        pg81_reward = str(pg81_activity.get("discovery_reward_id") or "")
+        pg81_after = str(pg81_activity.get("available_after") or "")
+        pg81_before = str(pg81_activity.get("ends_before") or "")
+        if not all([pg81_id, pg81_reward, pg81_after, pg81_before]):
+            fail(f"PG-081 incomplete side-activity contract in {pg81_route}/{pg81_chapter_id}")
+        if pg81_type not in pg81_allowed_types:
+            fail(f"PG-081 unsupported activity type {pg81_type}: {pg81_id}")
+        if pg81_id in pg81_activity_ids:
+            fail(f"PG-081 duplicate side-activity id: {pg81_id}")
+        if pg81_reward in pg81_reward_ids:
+            fail(f"PG-081 duplicate side-activity reward id: {pg81_reward}")
+        pg81_activity_ids.add(pg81_id)
+        pg81_reward_ids.add(pg81_reward)
+        if pg81_activity.get("may_advance_required_anchor") is not False:
+            fail(f"PG-081 side activity may advance required anchor: {pg81_id}")
+        if pg81_activity.get("may_change_canon_outcome") is not False:
+            fail(f"PG-081 side activity may change canon outcome: {pg81_id}")
+        if pg81_activity.get("future_knowledge_allowed") is not False:
+            fail(f"PG-081 future knowledge allowed in side activity: {pg81_id}")
+        pg81_discovery = pg81_discoveries.get(pg81_reward)
+        if not pg81_discovery:
+            fail(f"PG-081 reward missing from JourneyDiscoveryRewardPlan: {pg81_reward}")
+        else:
+            if str(pg81_discovery.get("route") or "") != pg81_route:
+                fail(f"PG-081 reward route mismatch: {pg81_id}")
+            if str(pg81_discovery.get("chapter") or "") != pg81_chapter_id:
+                fail(f"PG-081 reward chapter mismatch: {pg81_id}")
+
+if pg81_count < 19:
+    fail(f"PG-081 contextual side-activity coverage regressed below 19: {pg81_count}")
+
+pg81_qh = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
+pg81_qc = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
+pg81_tc = read(ROOT / "Source" / "ShireJourney" / "ShireTraversalChallenge.cpp")
+for pg81_symbol in [
+    "AvailableAfterStoryBeat", "EndsBeforeStoryBeat", "SideActivityDefinitionsById",
+    "HasSideActivityForDiscovery", "IsSideActivityAvailable",
+    "IsSideActivityDiscoveryAvailable", "GetSideActivityIdForDiscovery",
+    "IsSideActivityDefinitionAvailable",
+]:
+    if pg81_symbol not in (pg81_qh + pg81_qc):
+        fail(f"PG-081 side-activity runtime window symbol missing: {pg81_symbol}")
+if "IsSideActivityDiscoveryAvailable(DiscoveryId)" not in pg81_tc:
+    fail("PG-081 traversal challenge bypasses central side-activity window guard")
+
+
+# PG-082: QUIET_STEP must have at least one authored physical STEALTH_LITE source.
+try:
+    pg82_side = json.loads(read(ROOT / "Data" / "ContextualSideActivityPlan.json"))
+    pg82_journey = json.loads(read(ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"))
+except json.JSONDecodeError as exc:
+    fail(f"PG-082 invalid side/discovery JSON: {exc}")
+    pg82_side, pg82_journey = {}, {}
+
+pg82_stealth = [
+    activity
+    for chapter in pg82_side.get("chapters", [])
+    if isinstance(chapter, dict)
+    for activity in chapter.get("activities", [])
+    if isinstance(activity, dict) and activity.get("type") == "STEALTH_LITE"
+]
+if not pg82_stealth:
+    fail("PG-082 no authored STEALTH_LITE side activity exists")
+
+pg82_rewards = {
+    str(item.get("discovery_id") or "")
+    for item in pg82_journey.get("discovery_rewards", [])
+    if isinstance(item, dict)
+}
+for pg82_activity in pg82_stealth:
+    pg82_reward = str(pg82_activity.get("discovery_reward_id") or "")
+    if not pg82_reward or pg82_reward not in pg82_rewards:
+        fail(f"PG-082 stealth reward missing from JourneyDiscoveryRewardPlan: {pg82_reward}")
+
+pg82_shire = read(ROOT / "Source" / "ShireJourney" / "ShirePrototypeWorldBuilder.cpp")
+pg82_traversal = read(ROOT / "Source" / "ShireJourney" / "ShireTraversalChallenge.cpp")
+pg82_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+for pg82_symbol in [
+    "SHIRE_QUIET_FEET",
+    'TEXT("STEALTH_LITE")',
+    "IsCrouchingForStealth",
+    "CompleteSideActivityDiscovery",
+]:
+    if pg82_symbol not in (pg82_shire + pg82_traversal + pg82_player_h):
+        fail(f"PG-082 stealth runtime symbol missing: {pg82_symbol}")
+
+
+# PG-083: PATTERN_MATCH side play must have a real interactable environmental puzzle runtime.
+pg83_h = read(SOURCE / "ShireEnvironmentalPuzzle.h")
+pg83_cpp = read(SOURCE / "ShireEnvironmentalPuzzle.cpp")
+pg83_builder = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+for pg83_symbol in [
+    "IShireInteractable",
+    "ConfigurePuzzle",
+    "Interact_Implementation",
+    "CompleteSideActivityDiscovery",
+    "EnvironmentalPuzzle: PASS",
+]:
+    if pg83_symbol not in (pg83_h + pg83_cpp):
+        fail(f"PG-083 environmental puzzle runtime symbol missing: {pg83_symbol}")
+for pg83_marker in [
+    "AShireEnvironmentalPuzzle* RivendellMapTable",
+    'TEXT("RIVENDELL_LIBRARY")',
+    "AShireEnvironmentalPuzzle* MoriaReliefStudy",
+    'TEXT("MORIA_DWARVEN_RELIEF")',
+]:
+    if pg83_marker not in pg83_builder:
+        fail(f"PG-083 environmental puzzle placement missing: {pg83_marker}")
+
+
+# PG-084: living-world player responses must remain bounded, ephemeral and story-neutral.
+pg84_plan = json.loads(read(ROOT / "Data" / "LivingWorldEventPlan.json"))
+pg84_policy = pg84_plan.get("player_interaction_policy", {})
+pg84_expected_types = {"WORK_ACTIVITY", "TRAVELER_PASSING", "MARKET_ACTIVITY", "SOCIAL_MOMENT"}
+if set(pg84_policy.get("enabled_event_types", [])) != pg84_expected_types:
+    fail("PG-084 living-world interactive event types changed without contract update")
+if pg84_policy.get("persistent_reward") != "NONE" or pg84_policy.get("story_effect") != "NONE":
+    fail("PG-084 living-world interactions may not grant persistent rewards or story effects")
+if pg84_policy.get("may_advance_required_anchor") is not False:
+    fail("PG-084 living-world interactions may not advance required anchors")
+if pg84_policy.get("may_change_canon_outcome") is not False:
+    fail("PG-084 living-world interactions may not change canon outcomes")
+
+pg84_h = read(SOURCE / "ShireWorldEventInteraction.h")
+pg84_cpp = read(SOURCE / "ShireWorldEventInteraction.cpp")
+pg84_director_h = read(SOURCE / "LivingWorldDirector.h")
+pg84_director_cpp = read(SOURCE / "LivingWorldDirector.cpp")
+for pg84_symbol in [
+    "IShireInteractable",
+    "ConfigureInteraction",
+    "Interact_Implementation",
+    "WorldEventInteraction: PASS",
+    "storyEffect=NONE",
+]:
+    if pg84_symbol not in (pg84_h + pg84_cpp):
+        fail(f"PG-084 living-world interaction runtime symbol missing: {pg84_symbol}")
+for pg84_symbol in [
+    "SpawnPlayerInteraction",
+    "IsStoryDangerActive()",
+    "OutEvent.Actors.Add(Interaction)",
+]:
+    if pg84_symbol not in (pg84_director_h + pg84_director_cpp):
+        fail(f"PG-084 living-world director interaction wiring missing: {pg84_symbol}")
+
+
+# PG-085: dedicated Chronicle browsing must remain source-grounded and explicit.
+pg85_rewards = json.loads(read(ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"))
+pg85_envelope = json.loads(read(ROOT / "Data" / "ExplorationEnvelopePlan.json"))
+pg85_labels = {
+    str(item.get("id") or ""): str(item.get("label") or "")
+    for chapter in pg85_envelope.get("chapters", [])
+    if isinstance(chapter, dict)
+    for item in chapter.get("optional_discoveries", [])
+    if isinstance(item, dict)
+}
+for pg85_reward in pg85_rewards.get("discovery_rewards", []):
+    if not isinstance(pg85_reward, dict):
+        continue
+    pg85_id = str(pg85_reward.get("discovery_id") or "")
+    pg85_display = str(pg85_reward.get("display_label") or "")
+    if not pg85_display:
+        fail(f"PG-085 Journey Discovery missing display_label: {pg85_id}")
+    if pg85_labels.get(pg85_id) != pg85_display:
+        fail(f"PG-085 Chronicle display label drifted from exploration source: {pg85_id}")
+
+pg85_qh = read(SOURCE / "ShireQuestSubsystem.h")
+pg85_qc = read(SOURCE / "ShireQuestSubsystem.cpp")
+pg85_ph = read(SOURCE / "ShirePlayerCharacter.h")
+pg85_pc = read(SOURCE / "ShirePlayerCharacter.cpp")
+pg85_hud = read(SOURCE / "ShireHUD.cpp")
+pg85_input = read(ROOT / "Config" / "DefaultInput.ini")
+for pg85_symbol in [
+    "GetChronicleEntryDisplayLabel",
+    "GetChronicleEntryContextLabel",
+    "GetKnownMapRegionDisplayLabel",
+]:
+    if pg85_symbol not in (pg85_qh + pg85_qc):
+        fail(f"PG-085 Chronicle presentation API missing: {pg85_symbol}")
+for pg85_symbol in ["ChronicleBrowseIndex", "ChroniclePrevious", "ChronicleNext"]:
+    if pg85_symbol not in (pg85_ph + pg85_pc):
+        fail(f"PG-085 Chronicle browse state/input missing: {pg85_symbol}")
+for pg85_mapping in ['ActionName="ChroniclePrevious"', 'ActionName="ChronicleNext"']:
+    if pg85_mapping not in pg85_input:
+        fail(f"PG-085 Chronicle input mapping missing: {pg85_mapping}")
+for pg85_marker in ["ENTRY %d / %d", "KNOWN MAP REGIONS", "C Close"]:
+    if pg85_marker not in pg85_hud:
+        fail(f"PG-085 dedicated Chronicle HUD marker missing: {pg85_marker}")
+
+
+# PG-086: mega production remains source-grounded and truthfully gated.
+pg86_names = ["Part1ProductionAtlas.json", "Production100ReadinessGate.json", "Part1MegaProductionPlan.json"]
+pg86_docs = []
+for pg86_name in pg86_names:
+    pg86_path = ROOT / "Data" / pg86_name
+    if not pg86_path.exists():
+        fail(f"PG-086 missing mega-production contract: {pg86_name}")
+        pg86_docs.append({})
+        continue
+    try:
+        pg86_docs.append(json.loads(read(pg86_path)))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-086 invalid {pg86_name}: {exc}")
+        pg86_docs.append({})
+pg86_atlas, pg86_gate, pg86_mega = (pg86_docs + [{}, {}, {}])[:3]
+pg86_required = {("FrodoMain", f"P1C0{i}") for i in range(1, 9)} | {("GandalfParallel", "P1C01")}
+pg86_actual = {(str(row.get("route") or ""), str(row.get("chapter") or "")) for row in pg86_atlas.get("chapters", []) if isinstance(row, dict)}
+if pg86_actual != pg86_required:
+    fail("PG-086 Part1ProductionAtlas chapter/route coverage mismatch")
+if pg86_gate.get("production_100") is not False:
+    fail("PG-086 production_100 may not be promoted before final acceptance")
+if pg86_mega.get("status") != "ACTIVE":
+    fail("PG-086 Part1MegaProductionPlan must remain ACTIVE")
+pg86_sources = json.loads(read(ROOT / "Data" / "OwnerSourceReferenceIndex.json"))
+pg86_ids = {str(row.get("id") or "") for row in pg86_sources.get("sources", []) if isinstance(row, dict)}
+for pg86_id in ["SRC_FILM_FOTR_SCREENPLAY","SRC_OWNER_MASTER_PACK","SRC_OWNER_PROJECT_SOURCE_PACK","SRC_OWNER_BATTLES_WEAPONS_ARMIES_BIBLE","SRC_OWNER_SIDE_ACTIVITIES_BIBLE"]:
+    if pg86_id not in pg86_ids:
+        fail(f"PG-086 owner source index missing {pg86_id}")
+pg86_chars = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
+pg86_world = json.loads(read(ROOT / "Data" / "CinematicWorldProductionMatrix.json"))
+if pg86_chars.get("source_atlas") != "Data/Part1ProductionAtlas.json":
+    fail("PG-086 character matrix not linked to Part1ProductionAtlas")
+if pg86_world.get("source_atlas") != "Data/Part1ProductionAtlas.json":
+    fail("PG-086 world matrix not linked to Part1ProductionAtlas")
+if not (ROOT / "Scripts" / "production_readiness_audit.py").exists():
+    fail("PG-086 production readiness audit missing")
+
+
+# PG-087: every accepted Part I ensemble playable viewpoint must have a non-Frodo visual path.
+pg87_plan = json.loads(read(ROOT / "Data" / "EnsembleFilmMissionPlan.json"))
+pg87_required_playables = {"Gandalf", "Arwen", "Boromir", "Legolas", "Gimli", "Aragorn"}
+for pg87_item in pg87_plan.get("part1", []):
+    if not isinstance(pg87_item, dict):
+        continue
+    pg87_character = str(pg87_item.get("character") or "")
+    if pg87_character and pg87_item.get("type") in {"FILM_CORE_PLAYABLE", "CHARACTER_SPECIALTY", "FILM_INTERSTITIAL"}:
+        pg87_required_playables.add(pg87_character)
+pg87_cpp = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg87_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+for pg87_character in sorted(pg87_required_playables | {"Frodo", "Sam", "Merry", "Pippin"}):
+    if f'TEXT("{pg87_character}")' not in pg87_cpp:
+        fail(f"PG-087 playable visual mapping missing: {pg87_character}")
+for pg87_symbol in ["SupportedPlayableIds", "PrototypeMotionProfile", "SM_ProductionSword", "SM_ProductionBow", "SM_ProductionAxe"]:
+    if pg87_symbol not in (pg87_cpp + pg87_h):
+        fail(f"PG-087 ensemble production visual symbol missing: {pg87_symbol}")
+if "unsupported playable id=%s; using Frodo fallback" not in pg87_cpp:
+    fail("PG-087 unsupported playable visual fallback is not explicit")
+
+
+# PG-088: source-grounded Part I geography must be packaged and visible at runtime.
+pg88_build = read(ROOT / "Source" / "ShireJourney" / "ShireJourney.Build.cs")
+pg88_qh = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
+pg88_qc = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
+pg88_hud = read(ROOT / "Source" / "ShireJourney" / "ShireHUD.cpp")
+if "Part1ProductionAtlas.json" not in pg88_build:
+    fail("PG-088 Part1ProductionAtlas is not packaged")
+for pg88_symbol in [
+    "FShireChapterProductionDefinition",
+    "LoadPart1ProductionAtlas",
+    "GetCurrentChapterDisplayName",
+    "GetCurrentPrimaryRegionName",
+    "GetCurrentMacroRegionName",
+    "GetCurrentLandmarkSummary",
+    "ProductionAtlas: ready=yes chapters=%d",
+]:
+    if pg88_symbol not in (pg88_qh + pg88_qc):
+        fail(f"PG-088 runtime geography symbol missing: {pg88_symbol}")
+if "GetCurrentPrimaryRegionName()" not in pg88_hud:
+    fail("PG-088 HUD is not using source-grounded current region naming")
+
+
+# PG-089: playable production characters must support automatic final-rig handoff with modular fallback.
+pg89_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+pg89_cpp = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+for pg89_symbol in [
+    "TryApplyProductionRig",
+    "bUsingSkeletalProductionRig",
+    "FPackageName::DoesPackageExist",
+    "SK_%s",
+    "ABP_%s_Locomotion",
+    "skeletal production rig active",
+]:
+    if pg89_symbol not in (pg89_h + pg89_cpp):
+        fail(f"PG-089 playable skeletal production handoff missing: {pg89_symbol}")
+if "if (bUsingSkeletalProductionRig)" not in pg89_cpp:
+    fail("PG-089 modular animation does not yield to production skeletal rig")
+
+
+# PG-090: missing Isengard/Lurtz/Watcher/Balrog roots must remain present and non-final.
+for pg90_rel in [
+    "SourceAssets/Production/World/Isengard/SM_Isengard_OrthancCore.obj",
+    "SourceAssets/Production/World/Isengard/SM_Isengard_OrthancSpire.obj",
+    "SourceAssets/Production/Enemies/Lurtz/SM_Lurtz_Torso.obj",
+    "SourceAssets/Production/Enemies/Watcher/SM_Watcher_Core.obj",
+    "SourceAssets/Production/Enemies/Balrog/SM_Balrog_Torso.obj",
+]:
+    if not (ROOT / pg90_rel).exists():
+        fail(f"PG-090 production foundation missing: {pg90_rel}")
+pg90_isengard = read(ROOT / "Source" / "ShireJourney" / "IsengardPrototypeWorldBuilder.cpp")
+for pg90_symbol in ["SM_Isengard_OrthancCore","SM_Isengard_OrthancSpire","SM_Isengard_IndustrialPitRim","SM_Isengard_FurnaceStack","SM_Isengard_FelledTrunk"]:
+    if pg90_symbol not in pg90_isengard:
+        fail(f"PG-090 Isengard runtime production wiring missing: {pg90_symbol}")
+pg90_chars = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
+pg90_threats = {str(row.get("id") or ""): row for row in pg90_chars.get("threats", []) if isinstance(row, dict)}
+for pg90_id in ["LURTZ","WATCHER","BALROG"]:
+    pg90_row = pg90_threats.get(pg90_id)
+    if not pg90_row or not pg90_row.get("asset_root"):
+        fail(f"PG-090 threat foundation root missing: {pg90_id}")
+    if "PENDING" not in str(pg90_row.get("status") or ""):
+        fail(f"PG-090 threat foundation lost explicit pending-final status: {pg90_id}")
+
+
+# PG-091: Watcher and Balrog are film-locked pressure actors, never killable reward targets.
+pg91_h = read(ROOT / "Source" / "ShireJourney" / "FellowshipMythicThreat.h")
+pg91_cpp = read(ROOT / "Source" / "ShireJourney" / "FellowshipMythicThreat.cpp")
+pg91_builder = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
+for pg91_symbol in [
+    "EFellowshipMythicThreatType",
+    "Watcher",
+    "Balrog",
+    "ActivationStoryBeat",
+    "DeactivationStoryBeat",
+    "storyEffect=NONE",
+    "gameplayCollision=off killable=no",
+]:
+    if pg91_symbol not in (pg91_h + pg91_cpp):
+        fail(f"PG-091 mythic threat contract missing: {pg91_symbol}")
+for pg91_symbol in [
+    'TEXT("WatcherAttack")',
+    'TEXT("MoriaEntry")',
+    'TEXT("BalrogApproach")',
+    'TEXT("MoriaEscape")',
+    "EFellowshipMythicThreatType::Watcher",
+    "EFellowshipMythicThreatType::Balrog",
+]:
+    if pg91_symbol not in pg91_builder:
+        fail(f"PG-091 film-locked mythic threat wiring missing: {pg91_symbol}")
+for pg91_forbidden in ["TakeDamage(", "ApplyDamage(", "JourneyInsight", "AwardProgressionXP", "TriggerStoryBeat("]:
+    if pg91_forbidden in pg91_cpp:
+        fail(f"PG-091 mythic threat may not mutate combat/reward/story state: {pg91_forbidden}")
+
+
+# PG-092: source-grounded world map is packaged, spoiler-bounded and reachable from UI.
+pg92_path = ROOT / "Data" / "Part1WorldMap.json"
+if not pg92_path.exists():
+    fail("PG-092 Part1WorldMap missing")
+    pg92_map = {}
+else:
+    try:
+        pg92_map = json.loads(read(pg92_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-092 invalid Part1WorldMap: {exc}")
+        pg92_map = {}
+
+pg92_nodes = {
+    str(node.get("id") or ""): node
+    for node in pg92_map.get("nodes", [])
+    if isinstance(node, dict)
+}
+if len(pg92_nodes) < 16:
+    fail(f"PG-092 world map node coverage regressed: {len(pg92_nodes)}")
+for pg92_id, pg92_node in pg92_nodes.items():
+    if not pg92_node.get("route") or not pg92_node.get("chapter") or not pg92_node.get("display_name"):
+        fail(f"PG-092 incomplete world map node: {pg92_id}")
+    try:
+        pg92_x = float(pg92_node.get("x"))
+        pg92_y = float(pg92_node.get("y"))
+    except (TypeError, ValueError):
+        fail(f"PG-092 invalid map coordinates: {pg92_id}")
+        continue
+    if not (0.0 <= pg92_x <= 1.0 and 0.0 <= pg92_y <= 1.0):
+        fail(f"PG-092 map node outside normalized bounds: {pg92_id}")
+for pg92_edge in pg92_map.get("edges", []):
+    if not isinstance(pg92_edge, list) or len(pg92_edge) != 2:
+        fail("PG-092 invalid world map edge shape")
+        continue
+    if str(pg92_edge[0]) not in pg92_nodes or str(pg92_edge[1]) not in pg92_nodes:
+        fail(f"PG-092 world map edge references unknown node: {pg92_edge}")
+
+pg92_build = read(ROOT / "Source" / "ShireJourney" / "ShireJourney.Build.cs")
+pg92_qh = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
+pg92_qc = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
+pg92_ph = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+pg92_pc = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg92_hud = read(ROOT / "Source" / "ShireJourney" / "ShireHUD.cpp")
+pg92_input = read(ROOT / "Config" / "DefaultInput.ini")
+for pg92_symbol in ["Part1WorldMap.json","LoadPart1WorldMap","IsWorldMapNodeVisible","GetCurrentWorldMapNodeId"]:
+    if pg92_symbol not in (pg92_build + pg92_qh + pg92_qc):
+        fail(f"PG-092 runtime world-map symbol missing: {pg92_symbol}")
+if 'ActionName="ToggleWorldMap"' not in pg92_input or 'BindAction(TEXT("ToggleWorldMap")' not in pg92_pc:
+    fail("PG-092 M-key world-map control missing")
+for pg92_marker in ["JOURNEY MAP","Undiscovered future chapters stay hidden","GetWorldMapEdges"]:
+    if pg92_marker not in (pg92_hud + pg92_qh):
+        fail(f"PG-092 world-map UI marker missing: {pg92_marker}")
+if "return HasKnownMapRegion(MakeKnownMapRegionId" not in pg92_qc:
+    fail("PG-092 future world-map visibility is not bounded by Map Knowledge")
+
+
+# PG-093: Part I visual-production wave must stay source-grounded, packaged and film-safe.
+pg93_visual_path = ROOT / "Data" / "Part1VisualProductionPass.json"
+if not pg93_visual_path.exists():
+    fail("PG-093 Part1VisualProductionPass missing")
+    pg93_visual = {}
+else:
+    try:
+        pg93_visual = json.loads(read(pg93_visual_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-093 invalid Part1VisualProductionPass: {exc}")
+        pg93_visual = {}
+if pg93_visual.get("status") != "ACTIVE_IMPLEMENTATION_PENDING_ENGINE_PROOF":
+    fail("PG-093 visual production status must remain pending engine proof")
+if len(pg93_visual.get("chapters", [])) != 8:
+    fail("PG-093 visual production pass must cover P1C01-P1C08")
+pg93_build = read(ROOT / "Source" / "ShireJourney" / "ShireJourney.Build.cs")
+if "Part1VisualProductionPass.json" not in pg93_build:
+    fail("PG-093 visual production pass is not packaged")
+pg93_enemy_h = read(ROOT / "Source" / "ShireJourney" / "FellowshipEnemyPrototype.h")
+pg93_enemy_cpp = read(ROOT / "Source" / "ShireJourney" / "FellowshipEnemyPrototype.cpp")
+pg93_builder = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
+for pg93_symbol in ["Lurtz", "FilmLockedOutcome", 'ProductionFolder = TEXT("Lurtz")', 'TEXT("Blade")', "player-controlled branch"]:
+    if pg93_symbol not in (pg93_enemy_h + pg93_enemy_cpp):
+        fail(f"PG-093 film-locked Lurtz contract missing: {pg93_symbol}")
+if "EFellowshipEnemyType::Lurtz" not in pg93_builder:
+    fail("PG-093 Lurtz is not wired into Amon Hen runtime")
+for pg93_asset in [
+    "SM_MoriaBrokenStair", "SM_MoriaChainAnchor", "SM_MoriaTallBrazier", "SM_MoriaMineCart",
+    "SM_AnduinBoatRack", "SM_AnduinCargoPile", "SM_AnduinRiverMarker", "SM_AnduinDockPier",
+]:
+    if pg93_asset not in pg93_builder:
+        fail(f"PG-093 visual production asset not runtime-wired: {pg93_asset}")
+
+# PG-094: performance budgets are measurement-first; no invented hard scene ceilings.
+pg94_budget_path = ROOT / "Data" / "AssetPerformanceBudget.json"
+if not pg94_budget_path.exists():
+    fail("PG-094 AssetPerformanceBudget missing")
+    pg94_budget = {}
+else:
+    try:
+        pg94_budget = json.loads(read(pg94_budget_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-094 invalid AssetPerformanceBudget: {exc}")
+        pg94_budget = {}
+if pg94_budget.get("status") != "MEASUREMENT_BASELINE_REQUIRED":
+    fail("PG-094 performance budget must remain measurement-baseline gated")
+if pg94_budget.get("policy", {}).get("hard_scene_budgets_enabled") is not False:
+    fail("PG-094 hard scene budgets may not be invented before device measurement")
+if "AssetPerformanceBudget.json" not in pg93_build:
+    fail("PG-094 asset performance budget is not packaged")
+pg94_audit = read(ROOT / "Scripts" / "asset_quality_audit.py")
+for pg94_symbol in ["obj_triangle_equivalents", "Production source buckets", "Largest OBJ by triangle equivalents"]:
+    if pg94_symbol not in pg94_audit:
+        fail(f"PG-094 asset audit measurement missing: {pg94_symbol}")
+
+# PG-095: selected hero/threat camera moments use bounded player-camera framing only.
+pg95_player_h = read(SOURCE / "ShirePlayerCharacter.h")
+pg95_player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
+for pg95_symbol in [
+    "HandleStoryCameraCue",
+    "UpdateStoryCameraCue",
+    "OnCameraCueRequested.AddDynamic",
+    "Cam_PonyExteriorReveal",
+    "Cam_WeathertopReveal",
+    "Cam_LorienEntry",
+    "Cam_ArgonathReveal",
+    "Cam_BalrogApproach",
+    "Cam_UrukAttack",
+]:
+    if pg95_symbol not in (pg95_player_h + pg95_player_cpp):
+        fail(f"PG-095 bounded camera framing marker missing: {pg95_symbol}")
+if "SetViewTarget" in pg95_player_cpp or "SceneCapture" in pg95_player_cpp:
+    fail("PG-095 bounded camera pass must not introduce heavy alternate camera/capture systems")
+pg95_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg95_visual.get("camera_execution", {}).get("status") != "RUNTIME_FRAMING_IMPLEMENTED_PENDING_ENGINE_PROOF":
+    fail("PG-095 camera execution evidence boundary changed")
+
+# PG-096: Isengard atmosphere stays bounded, production-driven and non-final.
+pg96_isengard = read(ROOT / "Source" / "ShireJourney" / "IsengardPrototypeWorldBuilder.cpp")
+for pg96_symbol in [
+    "ShowPrototypeWorldLabels = false",
+    "ADirectionalLight",
+    "AExponentialHeightFog",
+    "ForgeGlowLocations",
+    "SM_Isengard_ParapetSlab",
+]:
+    if pg96_symbol not in pg96_isengard:
+        fail(f"PG-096 Isengard presentation symbol missing: {pg96_symbol}")
+if pg96_isengard.count("FVector(50.0f, 810.0f, 120.0f)") != 1:
+    fail("PG-096 Isengard furnace-light contract changed unexpectedly")
+pg96_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg96_visual.get("parallel_route", {}).get("acceptance") != "IMPLEMENTED_PENDING_UE4_BUILD_RENDER_AND_DEVICE_PROOF":
+    fail("PG-096 Isengard visual acceptance boundary changed")
+
+# PG-097: named skeletal NPC handoff uses bounded animation-cost safeguards.
+pg97_motion = json.loads(read(ROOT / "Data" / "CharacterMotionPlan.json"))
+pg97_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
+if pg97_motion.get("runtime_performance_handoff", {}).get("status") != "IMPLEMENTED_PENDING_ENGINE_PROOF":
+    fail("PG-097 named NPC performance handoff status changed")
+for pg97_symbol in [
+    "bEnableUpdateRateOptimizations = true",
+    "OnlyTickPoseWhenRendered",
+    "PlayerDistance > 4200.0f",
+    "PlayerDistance > 2200.0f",
+]:
+    if pg97_symbol not in pg97_npc:
+        fail(f"PG-097 named NPC performance safeguard missing: {pg97_symbol}")
+if "DistancePawn && !bFollowingPlayer && DialogueActingRemaining <= 0.0f" not in pg97_npc:
+    fail("PG-097 follow/dialogue responsiveness guard missing")
+
+# PG-098: Isengard production meshes retain an authored material palette.
+pg98_isengard_root = ROOT / "SourceAssets" / "Production" / "World" / "Isengard"
+pg98_mtl = pg98_isengard_root / "RegionalMaterials.mtl"
+if not pg98_mtl.exists():
+    fail("PG-098 Isengard RegionalMaterials.mtl missing")
+else:
+    pg98_mtl_text = read(pg98_mtl)
+    for pg98_material in ["OrthancBlackStone","OrthancEdgeStone","IndustrialIron","FurnaceIron","ScorchedWood"]:
+        if f"newmtl {pg98_material}" not in pg98_mtl_text:
+            fail(f"PG-098 Isengard authored material missing: {pg98_material}")
+for pg98_obj in [
+    "SM_Isengard_OrthancCore.obj","SM_Isengard_OrthancSpire.obj",
+    "SM_Isengard_IndustrialPitRim.obj","SM_Isengard_FurnaceStack.obj",
+    "SM_Isengard_FelledTrunk.obj","SM_Isengard_ParapetSlab.obj",
+]:
+    pg98_text = read(pg98_isengard_root / pg98_obj)
+    if "mtllib RegionalMaterials.mtl" not in pg98_text or "usemtl " not in pg98_text:
+        fail(f"PG-098 Isengard OBJ lacks authored material binding: {pg98_obj}")
+pg98_builder = read(ROOT / "Source" / "ShireJourney" / "IsengardPrototypeWorldBuilder.cpp")
+if "bFallbackPrimitive" not in pg98_builder:
+    fail("PG-098 Isengard runtime no longer preserves production mesh materials")
+pg98_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg98_visual.get("parallel_route", {}).get("authored_material_palette", {}).get("status") != "SOURCE_AUTHORED_PENDING_ENGINE_IMPORT_PROOF":
+    fail("PG-098 Isengard authored-material proof boundary changed")
+
+# PG-099: Lurtz/Watcher/Balrog authored materials survive production handoff.
+pg99_specs = {
+    "Lurtz": ["LurtzSkin","LurtzArmor","LurtzDarkIron"],
+    "Watcher": ["WatcherCore","WatcherTentacle"],
+    "Balrog": ["BalrogCharcoal","BalrogEmber","BalrogHorn","BalrogWing"],
+}
+for pg99_folder, pg99_materials in pg99_specs.items():
+    pg99_root = ROOT / "SourceAssets" / "Production" / "Enemies" / pg99_folder
+    pg99_mtl = pg99_root / "RegionalMaterials.mtl"
+    if not pg99_mtl.exists():
+        fail(f"PG-099 threat material library missing: {pg99_folder}")
+        continue
+    pg99_text = read(pg99_mtl)
+    for pg99_material in pg99_materials:
+        if f"newmtl {pg99_material}" not in pg99_text:
+            fail(f"PG-099 threat authored material missing: {pg99_folder}/{pg99_material}")
+    for pg99_obj in pg99_root.glob("*.obj"):
+        pg99_obj_text = read(pg99_obj)
+        if "mtllib RegionalMaterials.mtl" not in pg99_obj_text or "usemtl " not in pg99_obj_text:
+            fail(f"PG-099 threat OBJ lacks authored material binding: {pg99_obj.relative_to(ROOT)}")
+pg99_enemy = read(ROOT / "Source" / "ShireJourney" / "FellowshipEnemyPrototype.cpp")
+pg99_mythic = read(ROOT / "Source" / "ShireJourney" / "FellowshipMythicThreat.cpp")
+if "if (!bProductionVisual)" not in pg99_enemy:
+    fail("PG-099 production enemy materials are being overwritten by fallback tint")
+if "BasicMaterial && !bProductionFoundation" not in pg99_mythic:
+    fail("PG-099 production mythic materials are being overwritten by fallback tint")
+pg99_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg99_visual.get("threat_material_palettes", {}).get("status") != "SOURCE_AUTHORED_PENDING_ENGINE_IMPORT_PROOF":
+    fail("PG-099 authored threat material proof boundary changed")
+
+# PG-100: unattended production import must persist authored material packages.
+pg100_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+pg100_build = read(ROOT / "Source" / "ShireJourneyEditorTools" / "ShireJourneyEditorTools.Build.cs")
+for pg100_symbol in [
+    "AuthoredMaterialDestinationPaths",
+    "RecoveredMaterialBindings",
+    "FAssetRegistryModule",
+    "GetAssetsByPath",
+    "ImportedMaterialPackages.AddUnique",
+    "SaveMaterialPackagesDeterministically",
+    "UPackage::SavePackage",
+    "material registry recovery",
+]:
+    if pg100_symbol not in pg100_importer:
+        fail(f"PG-100 material persistence safeguard missing: {pg100_symbol}")
+if '"AssetRegistry"' not in pg100_build:
+    fail("PG-100 ShireJourneyEditorTools must depend on AssetRegistry")
+
+# PG-101: authored MTL palettes must be materialized before OBJ import.
+pg101_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+for pg101_symbol in [
+    "MaterialLibraryFiles",
+    "UMaterialInstanceConstantFactoryNew",
+    "synthesized authored materials",
+    "SetVectorParameterValueEditorOnly",
+    "ImportOptions->bImportMaterials = false",
+    "StaticMaterial.MaterialInterface = AuthoredMaterial",
+]:
+    if pg101_symbol not in pg101_importer:
+        fail(f"PG-101 deterministic material synthesis missing: {pg101_symbol}")
+
+# PG-102: player-experience safety and deep-audit contracts.
+pg102_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg102_presentation = read(ROOT / "Source" / "ShireJourney" / "ShireStoryPresentationSubsystem.cpp")
+for pg102_symbol in ["#if !UE_BUILD_SHIPPING","AsyncSaveGameToSlot","bCheckpointSaveInFlight","QueuedCheckpointSaveId"]:
+    if pg102_symbol not in pg102_player:
+        fail(f"PG-102 player-experience safeguard missing: {pg102_symbol}")
+if "FMath::Clamp(ActiveCue.SuggestedDuration, 1.0f, 3.5f)" not in pg102_presentation:
+    fail("PG-102 cinematic input lock must remain bounded to 3.5 seconds")
+for pg102_path in [ROOT/"Data"/"DeepProjectAudit.json",ROOT/"Docs"/"DEEP_PROJECT_AUDIT.md",ROOT/"Scripts"/"deep_project_audit.py"]:
+    if not pg102_path.exists():
+        fail(f"PG-102 deep audit artifact missing: {pg102_path.relative_to(ROOT)}")
+
+# PG-103: synthesized production materials must be physically persisted, not merely dirty in memory.
+pg103_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+for pg103_symbol in [
+    "SaveMaterialPackagesDeterministically",
+    "UPackage::SavePackage",
+    "FPackageName::LongPackageNameToFilename",
+    "GetAssetPackageExtension",
+    "material persistence verification",
+    "FileExists",
+]:
+    if pg103_symbol not in pg103_importer:
+        fail(f"PG-103 deterministic material persistence safeguard missing: {pg103_symbol}")
+
+# PG-104: material existence probes and warning debt must distinguish import-time probes from runtime failures.
+pg104_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+pg104_reset = read(ROOT / "Scripts" / "reset_project_build_intermediates.ps1")
+pg104_warning = read(ROOT / "Scripts" / "warning_debt_guard.py")
+for pg104_symbol in [
+    "FindObject<UMaterialInstanceConstant>",
+    "FPackageName::DoesPackageExist(PackageName)",
+    "FindObject<UMaterialInterface>",
+]:
+    if pg104_symbol not in pg104_importer:
+        fail(f"PG-104 quiet material existence probe missing: {pg104_symbol}")
+if 'Filter "CI-*.log"' not in pg104_reset:
+    fail("PG-104 exact-head validation must clear stale CI logs before generating new evidence")
+for pg104_symbol in [
+    'RUNTIME_LOG_PREFIXES',
+    'scope="runtime"',
+    'collect_text(files, "runtime")',
+]:
+    if pg104_symbol not in pg104_warning:
+        fail(f"PG-104 warning-debt evidence scoping missing: {pg104_symbol}")
+
+# PG-105: untextured OBJ meshes use a tangent generator that does not require UVs.
+pg105_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+for pg105_symbol in [
+    "bHasTextureCoordinates",
+    "FBXNIM_ComputeNormals",
+    "EFBXNormalGenerationMethod::BuiltIn",
+    "builtin-no-uv",
+]:
+    if pg105_symbol not in pg105_importer:
+        fail(f"PG-105 untextured OBJ tangent safeguard missing: {pg105_symbol}")
+
+# PG-106: the owner's eight production bibles are traceable references, never shipping dependencies.
+pg106_index = json.loads(read(ROOT / "Data" / "OwnerSourceReferenceIndex.json"))
+pg106_sources = {str(row.get("id") or ""): row for row in pg106_index.get("sources", []) if isinstance(row, dict)}
+for pg106_id in [
+    "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
+    "SRC_OWNER_CHARACTERS_RELATIONSHIPS_BIBLE_V1",
+    "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+    "SRC_OWNER_PEOPLES_LORE_ARTIFACTS_CULTURES_BIBLE_V1",
+    "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+    "SRC_OWNER_GAMEPLAY_SIDE_ACTIVITIES_BIBLE_V1",
+    "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+    "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
+]:
+    pg106_row = pg106_sources.get(pg106_id)
+    if not pg106_row:
+        fail(f"PG-106 owner source bible missing from reference index: {pg106_id}")
+        continue
+    if pg106_row.get("runtime_ship") is not False:
+        fail(f"PG-106 raw owner source bible may not become a runtime dependency: {pg106_id}")
+    if not pg106_row.get("sha256"):
+        fail(f"PG-106 owner source bible provenance hash missing: {pg106_id}")
+
+pg106_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+pg106_wave = pg106_visual.get("current_wave", {})
+if not str(pg106_wave.get("id") or ""):
+    fail("PG-106 current production wave id missing")
+if not str(pg106_wave.get("status") or ""):
+    fail("PG-106 current production wave status missing")
+pg106_alignment = pg106_visual.get("bible_alignment", {})
+if pg106_alignment.get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-106 Bible alignment provenance contract changed")
+pg106_alignment_sources = set(pg106_alignment.get("sources", []))
+for pg106_required_source in [
+    "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+    "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+    "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+    "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
+]:
+    if pg106_required_source not in pg106_alignment_sources:
+        fail(f"PG-106 Bible alignment source missing: {pg106_required_source}")
+
+# PG-107/108: screenplay-first story authority plus complete 01-09 source hierarchy.
+pg107_index = json.loads(read(ROOT / "Data" / "OwnerSourceReferenceIndex.json"))
+pg107_sources = {
+    str(row.get("id") or ""): row
+    for row in pg107_index.get("sources", [])
+    if isinstance(row, dict)
+}
+for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY"]:
+    pg107_row = pg107_sources.get(pg107_id)
+    if not pg107_row:
+        fail(f"PG-107 primary screenplay source missing: {pg107_id}")
+        continue
+    if pg107_row.get("kind") != "PRIMARY_SCREENPLAY_STORY_AUTHORITY":
+        fail(f"PG-107 screenplay not primary story authority: {pg107_id}")
+    if pg107_row.get("runtime_ship") is not False:
+        fail(f"PG-107 raw screenplay may not ship at runtime: {pg107_id}")
+    if not pg107_row.get("sha256"):
+        fail(f"PG-107 screenplay provenance hash missing: {pg107_id}")
+
+pg107_authority = pg107_index.get("story_authority", {})
+pg107_primary = {
+    str(row.get("source_id") or "")
+    for row in pg107_authority.get("primary_screenplays", [])
+    if isinstance(row, dict)
+}
+for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY"]:
+    if pg107_id not in pg107_primary:
+        fail(f"PG-107 screenplay absent from primary authority list: {pg107_id}")
+if "may not override screenplay-supported film events" not in str(pg107_authority.get("rule") or ""):
+    fail("PG-107 screenplay precedence rule missing")
+
+pg108_summary = pg107_index.get("source_set_summary", {})
+if pg108_summary.get("core_pdf_count") != 11:
+    fail("PG-108 core PDF source count must remain 11")
+if pg108_summary.get("supplied_screenplays") != 2:
+    fail("PG-108 screenplay count must remain 2")
+if pg108_summary.get("numbered_production_bibles") != 9:
+    fail("PG-108 numbered Bible count must remain 9")
+pg108_helper = pg107_sources.get("SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1")
+if not pg108_helper:
+    fail("PG-108 external helpful resources Bible 09 missing")
+else:
+    if pg108_helper.get("authority") != "HELPER_ONLY_NOT_CANON_NOT_STORY":
+        fail("PG-108 Bible 09 must remain helper-only")
+    if pg108_helper.get("runtime_ship") is not False:
+        fail("PG-108 raw Bible 09 may not ship at runtime")
+if "Bible 09 external-resource discovery" not in " ".join(pg107_authority.get("precedence", [])):
+    fail("PG-108 Bible 09 authority boundary missing")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")

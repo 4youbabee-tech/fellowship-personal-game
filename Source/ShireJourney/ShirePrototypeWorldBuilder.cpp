@@ -5,6 +5,7 @@
 #include "ShireNPC.h"
 #include "ShireQuestSubsystem.h"
 #include "ShireQuestTrigger.h"
+#include "ShireTraversalChallenge.h"
 
 #include "Components/DirectionalLightComponent.h"
 #include "Components/ExponentialHeightFogComponent.h"
@@ -1161,6 +1162,50 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
         Bird->MinWait = 0.0f;
         Bird->MaxWait = 0.0f;
     }
+
+    // CP56: make the pre-adventure Shire visibly playful. These actors reuse the
+    // existing cheap ambient simulation and never own story/save state.
+    const FVector RevelerStarts[] = {
+        FVector(-430, 470, 20), FVector(-260, 590, 20), FVector(40, 1180, 20),
+        FVector(220, 1320, 20), FVector(430, 1460, 20), FVector(620, 1260, 20)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(RevelerStarts); ++Index)
+    {
+        AShireAmbientNPC* Reveler = GetWorld()->SpawnActor<AShireAmbientNPC>(
+            RevelerStarts[Index], FRotator::ZeroRotator, AmbientSpawnParams);
+        if (!Reveler) continue;
+        Reveler->RoutineRole = TEXT("PartyGuest");
+        Reveler->ActivityPropType = Index % 3 == 0 ? FName(TEXT("Mug")) : NAME_None;
+        Reveler->RoutinePointA = RevelerStarts[Index];
+        Reveler->RoutinePointB = RevelerStarts[Index] + FVector(
+            120.0f + 35.0f * (Index % 2),
+            Index % 2 == 0 ? 95.0f : -95.0f,
+            0.0f);
+        Reveler->WalkSpeed = 34.0f + 4.0f * (Index % 3);
+        Reveler->MinWait = 2.2f;
+        Reveler->MaxWait = 5.0f;
+        Reveler->PlayerNoticeRadius = 380.0f;
+    }
+
+    const FVector PlayRunnerStarts[] = {
+        FVector(-720, 760, 20), FVector(-560, 920, 20), FVector(760, 1080, 20), FVector(980, 1280, 20)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(PlayRunnerStarts); ++Index)
+    {
+        AShireAmbientNPC* Runner = GetWorld()->SpawnActor<AShireAmbientNPC>(
+            PlayRunnerStarts[Index], FRotator::ZeroRotator, AmbientSpawnParams);
+        if (!Runner) continue;
+        Runner->RoutineRole = TEXT("PlayRunner");
+        Runner->RoutinePointA = PlayRunnerStarts[Index];
+        Runner->RoutinePointB = PlayRunnerStarts[Index] + FVector(
+            380.0f + 55.0f * Index,
+            Index % 2 == 0 ? 180.0f : -180.0f,
+            0.0f);
+        Runner->WalkSpeed = 78.0f + 6.0f * Index;
+        Runner->MinWait = 0.4f;
+        Runner->MaxWait = 1.2f;
+        Runner->PlayerNoticeRadius = 260.0f;
+    }
 }
 
 
@@ -1207,6 +1252,76 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
         PartyTableCheck->RequiredSideStoryBeat=TEXT("Side_PartyTablesStarted");
         PartyTableCheck->SideStoryBeatAfterTrigger=TEXT("Side_PartyTablesComplete");
         PartyTableCheck->ObjectiveMessage=FText::FromString(TEXT("Side story complete: the last tables are ready for the celebration."));
+    }
+
+    // CP56 optional friendship/life beats: they enrich the film-spine opening
+    // without blocking or reordering the main quest.
+    AShireQuestTrigger* GreenDragonLife = GetWorld()->SpawnActor<AShireQuestTrigger>(
+        FVector(-470, 520, 80), FRotator::ZeroRotator);
+    if (GreenDragonLife)
+    {
+        GreenDragonLife->SideStoryBeatAfterTrigger = TEXT("Side_GreenDragonRevelry");
+        GreenDragonLife->RequiredSideStoryBeat = TEXT("ShireOpening");
+        GreenDragonLife->BlockedAfterStoryBeat = TEXT("PartyArrival");
+        GreenDragonLife->DiscoveryId = TEXT("SHIRE_GREEN_DRAGON_MEMORY");
+        GreenDragonLife->DiscoveryDisplayName = FText::FromString(TEXT("The Green Dragon"));
+        GreenDragonLife->ObjectiveMessage = FText::FromString(
+            TEXT("The Green Dragon is loud with friends, dancing and local gossip. Stay awhile or continue to the party."));
+    }
+
+    AShireTraversalChallenge* PartyPreparations = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(-820, -420, 75), FRotator::ZeroRotator);
+    if (PartyPreparations)
+    {
+        PartyPreparations->ConfigureActivityChallenge(
+            TEXT("SHIRE_MARKET_GARDEN_LOOP"),
+            FText::FromString(TEXT("Party Preparations")),
+            TEXT("TIMING_CHALLENGE"),
+            FVector(0, 0, 0),
+            FVector(250, 120, 0),
+            FVector(520, -40, 0),
+            false,
+            26.0f);
+    }
+
+    AShireQuestTrigger* PartyMischief = GetWorld()->SpawnActor<AShireQuestTrigger>(
+        FVector(520, 1420, 80), FRotator::ZeroRotator);
+    if (PartyMischief)
+    {
+        PartyMischief->RequiredSideStoryBeat = TEXT("Side_GreenDragonRevelry");
+        PartyMischief->SideStoryBeatAfterTrigger = TEXT("Side_PartyMischief");
+        PartyMischief->ObjectiveMessage = FText::FromString(
+            TEXT("Laughter erupts near the fireworks wagon. Someone has clearly been where they were told not to be."));
+    }
+
+    AShireTraversalChallenge* FieldRace = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(600, 1100, 75), FRotator::ZeroRotator);
+    if (FieldRace)
+    {
+        FieldRace->ConfigureChallenge(
+            TEXT("SHIRE_FIELD_RACE"),
+            FText::FromString(TEXT("A Last Race in the Shire")),
+            TEXT("GandalfArrival"),
+            TEXT("PartyArrival"),
+            TEXT("Side_SharedShireMemory"),
+            FVector(0, 0, 0),
+            FVector(360, 120, 0),
+            FVector(720, 140, 0));
+    }
+
+    AShireTraversalChallenge* QuietFeet = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(980, -980, 75), FRotator::ZeroRotator);
+    if (QuietFeet)
+    {
+        QuietFeet->ConfigureActivityChallenge(
+            TEXT("SHIRE_QUIET_FEET"),
+            FText::FromString(TEXT("Quiet Feet Through the Hedges")),
+            TEXT("STEALTH_LITE"),
+            FVector(0, 0, 0),
+            FVector(260, 90, 0),
+            FVector(520, -30, 0),
+            true,
+            0.0f);
     }
 
     AShireNPC* Maggot=GetWorld()->SpawnActor<AShireNPC>(FVector(6200,-1500,65),FRotator(0,155,0));

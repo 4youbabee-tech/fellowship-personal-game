@@ -30,11 +30,44 @@ public:
     UFUNCTION(BlueprintPure, Category="Combat")
     bool IsCombatAvailable() const;
 
+    UFUNCTION(BlueprintPure, Category="PlayerLife")
+    float GetCurrentStamina() const { return CurrentStamina; }
+
+    UFUNCTION(BlueprintPure, Category="PlayerLife")
+    float GetMaxStamina() const { return MaxStamina; }
+
+    UFUNCTION(BlueprintPure, Category="PlayerLife")
+    float GetCurrentResolve() const { return CurrentResolve; }
+
+    UFUNCTION(BlueprintPure, Category="PlayerLife")
+    float GetMaxResolve() const { return MaxResolve; }
+
+    UFUNCTION(BlueprintPure, Category="PlayerLife")
+    int32 GetSupplies() const { return Supplies; }
+
+    UFUNCTION(BlueprintCallable, Category="PlayerLife")
+    void GrantSupplies(int32 Amount);
+
+    UFUNCTION(BlueprintPure, Category="Chronicle")
+    bool IsChronicleOpen() const { return bChronicleOpen; }
+
+    UFUNCTION(BlueprintPure, Category="Chronicle")
+    int32 GetChronicleBrowseIndex() const { return ChronicleBrowseIndex; }
+
+    UFUNCTION(BlueprintPure, Category="MapKnowledge")
+    bool IsWorldMapOpen() const { return bWorldMapOpen; }
+
+    UFUNCTION(BlueprintPure, Category="Movement")
+    bool IsCrouchingForStealth() const { return bIsCrouched; }
+
     UFUNCTION(BlueprintCallable, Category="Save")
     bool SaveAutomaticCheckpoint(FName CheckpointId, bool bShowHUD = true);
 
     UFUNCTION(BlueprintCallable, Category="Save")
     bool RestoreAutomaticCheckpoint(bool bShowHUD = true);
+
+    // Explicit CI-only disk roundtrip through the production snapshot/restore path.
+    bool RunSaveRoundtripAudit();
 
 protected:
     virtual void BeginPlay() override;
@@ -52,6 +85,11 @@ protected:
     void StopCrouch();
     void Interact();
     void PrimaryAttack();
+    void UseSupply();
+    void ToggleChronicle();
+    void ChroniclePrevious();
+    void ChronicleNext();
+    void ToggleWorldMap();
     void QuickSave();
     void QuickLoad();
     void DebugPreviousChapter();
@@ -61,6 +99,9 @@ protected:
 
     UFUNCTION()
     void HandleCinematicStateChanged(bool bLocked);
+
+    UFUNCTION()
+    void HandleStoryCameraCue(FName CameraCue);
 
     UFUNCTION()
     void HandleExperienceChanged(FName RouteId, FName EpisodeId, FName PlayableCharacterId);
@@ -143,6 +184,24 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Movement")
     float SprintSpeed = 475.0f;
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayerLife")
+    float MaxStamina = 100.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayerLife")
+    float SprintStaminaDrainPerSecond = 18.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayerLife")
+    float StaminaRegenPerSecond = 16.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayerLife")
+    float MaxResolve = 100.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayerLife")
+    float ResolveRecoveryPerSecond = 7.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="PlayerLife")
+    int32 MaxSupplies = 5;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Interaction")
     float InteractionDistance = 370.0f;
 
@@ -162,13 +221,38 @@ private:
     float PrototypeHeadBaseZ = 39.0f;
     float PrototypeHairBaseZ = 47.0f;
     bool bPrototypeIsGandalf = false;
+    FName PrototypeMotionProfile = TEXT("HOBBIT");
     bool bUsingProductionCharacter = false;
+    bool bUsingSkeletalProductionRig = false;
     bool bSprintRequested = false;
+    float CurrentStamina = 100.0f;
+    float CurrentResolve = 100.0f;
+    int32 Supplies = 3;
+    float StaminaRegenDelayRemaining = 0.0f;
+    bool bStaminaExhausted = false;
+    bool bChronicleOpen = false;
+    int32 ChronicleBrowseIndex = 0;
+    bool bWorldMapOpen = false;
     float PrototypeIdlePhase = 0.0f;
     FName PendingChapterCheckpointId = NAME_None;
+    bool bCheckpointSaveInFlight = false;
+    bool bCheckpointSaveShowHUD = false;
+    FName CheckpointSaveInFlightId = NAME_None;
+    FName QueuedCheckpointSaveId = NAME_None;
+    bool bQueuedCheckpointShowHUD = false;
+    bool bStoryCameraCueActive = false;
+    float StoryCameraCueRemaining = 0.0f;
+    float StoryCameraTargetArmLength = 260.0f;
+    float StoryCameraTargetFOV = 78.0f;
+    FVector StoryCameraTargetSocketOffset = FVector(0.0f, 28.0f, 10.0f);
 
     UShireSaveGame* CreateSaveSnapshot(FName CheckpointId, bool bCheckpointSnapshot) const;
+    void HandleCheckpointSaveComplete(const FString& SlotName, const int32 UserIndex, bool bSuccess);
     bool RestoreSaveSnapshot(UShireSaveGame* Save, const FText& SuccessMessage);
+    bool TryApplyProductionRig(const FString& RigFolder);
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);
+    void UpdatePlayerLife(float DeltaSeconds);
+    void UpdateStoryCameraCue(float DeltaSeconds);
+    float GetResolveTarget() const;
 };

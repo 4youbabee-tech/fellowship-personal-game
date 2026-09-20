@@ -1,0 +1,339 @@
+{
+  "schema_version": 1,
+  "index_id": "OWNER_SOURCE_REFERENCE_INDEX_V1",
+  "status": "ACTIVE",
+  "policy": "Raw copyrighted reference documents/images are reference-only and are not required or shipped at runtime. Derived game data must remain original, bounded and traceable.",
+  "sources": [
+    {
+      "id": "SRC_FILM_FOTR_SCREENPLAY",
+      "name": "The Lord of the Rings: The Fellowship of the Ring screenplay PDF",
+      "kind": "PRIMARY_SCREENPLAY_STORY_AUTHORITY",
+      "sha256": "4760026562d943fde02133e681e5884ee85c7a5f466b7f3ff36d67122c60d656",
+      "use": [
+        "Part I film chronology and scene order",
+        "required film outcomes",
+        "speaker and character presence",
+        "character knowledge boundaries",
+        "tone and scene context"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_FILM_TTT_SCREENPLAY",
+      "name": "The Lord of the Rings: The Two Towers screenplay PDF",
+      "kind": "PRIMARY_SCREENPLAY_STORY_AUTHORITY",
+      "sha256": "8c1c780cb94b7862cc5f15e7b451ee9a4eda1d170c503390bf75cfcd210d4e7e",
+      "use": [
+        "Part II film chronology and scene order",
+        "required film outcomes",
+        "speaker and character presence",
+        "character knowledge boundaries",
+        "tone and scene context"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_MASTER_PACK",
+      "name": "LOTR_Source_Pack_Master(1).pdf",
+      "kind": "OWNER_REFERENCE_PACK",
+      "use": [
+        "character/world reference organization",
+        "production vocabulary",
+        "visual lookup"
+      ],
+      "runtime_ship": false,
+      "sha256": "5f4a4ac2cd8762a88ed4b1762fa2b95b735a9bd4e70d4329ee98bf90ba9dd70b"
+    },
+    {
+      "id": "SRC_OWNER_IMAGES_CHARACTER_WORLD_SET",
+      "name": "Owner-uploaded character/world reference images",
+      "kind": "VISUAL_REFERENCE_SET",
+      "use": [
+        "silhouette",
+        "wardrobe cues",
+        "environment identity"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_FOREST_BEAUTY_BENCHMARK",
+      "name": "Owner-uploaded cinematic forest/character benchmark image",
+      "kind": "VISUAL_QUALITY_REFERENCE",
+      "use": [
+        "density",
+        "light shafts",
+        "layered depth",
+        "ground detail",
+        "character integration"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_BATTLES_WEAPONS_ARMIES_BIBLE",
+      "name": "LOTR_Battles_Weapons_Armies_Production_Bible(1).pdf",
+      "kind": "OWNER_PRODUCTION_REFERENCE",
+      "sha256": "4193dbe52acd282693f7ec3b1935fde8ac35468afb21e175e0e6932c11446600",
+      "use": [
+        "Part I encounter staging",
+        "weapons and threat silhouettes",
+        "architecture/interior production language",
+        "battle-space composition"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_SIDE_ACTIVITIES_BIBLE",
+      "name": "LOTR_Film_Inspired_Side_Activities_Bible(1).pdf",
+      "kind": "OWNER_GAMEPLAY_REFERENCE",
+      "sha256": "964f85fa56ca4dce36cf4020164fcc4d0ab58d312977dd023d3e66f4b62eda43",
+      "use": [
+        "film-safe optional activity ideas",
+        "location-appropriate mechanics",
+        "continuity constraints"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_PROJECT_SOURCE_PACK",
+      "name": "LOTR_Project_Source_Pack_v1(1).zip",
+      "kind": "OWNER_STRUCTURED_REFERENCE_PACK",
+      "sha256": "929367909d8bd112fd8142559406dc9d687c9520bf86d397266ef2a2a52114de",
+      "use": [
+        "canon layer separation",
+        "character identity",
+        "location names and macro-regions",
+        "factions and artifacts",
+        "game-writing consistency"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
+      "name": "01_STORY_AND_TIMELINE_BIBLE(1).pdf",
+      "kind": "OWNER_STORY_REFERENCE",
+      "sha256": "6a22f1c2eeae3aaa071374589b0705252bee4424c8870f5dab62093c744e1ae9",
+      "use": [
+        "Part I chapter chronology",
+        "causal spine and locked outcomes",
+        "safe optional-play windows",
+        "chapter state and handoff rules"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_CHARACTERS_RELATIONSHIPS_BIBLE_V1",
+      "name": "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE(1).pdf",
+      "kind": "OWNER_CHARACTER_REFERENCE",
+      "sha256": "8e6fc12f0a719666f639d19fa0e00e812c3670e87b200ed5f064bcd519b7fe82",
+      "use": [
+        "character identity and relationship continuity",
+        "cast presence and knowledge boundaries",
+        "character production priorities",
+        "relationship-safe optional interactions"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+      "name": "03_WORLD_LOCATIONS_AND_MAP_BIBLE(1).pdf",
+      "kind": "OWNER_WORLD_REFERENCE",
+      "sha256": "509f153caa86bb6cb06537eb18cd359166d9f8bf5ca81efb9d8355e6785806a5",
+      "use": [
+        "regional silhouette and landmark hierarchy",
+        "chapter-state world variants",
+        "navigation and streaming grammar",
+        "location dossiers"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_PEOPLES_LORE_ARTIFACTS_CULTURES_BIBLE_V1",
+      "name": "04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES(1).pdf",
+      "kind": "OWNER_LORE_CULTURE_REFERENCE",
+      "sha256": "b88baa4278752addb6a64df0370973c9cec3787bbc04f7da3f52c7829cfdf4a8",
+      "use": [
+        "culture-specific production language",
+        "artifact and faction consistency",
+        "lore-safe environmental storytelling",
+        "people and settlement differentiation"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+      "name": "05_BATTLES_WEAPONS_ARMIES_AND_CREATURES(1).pdf",
+      "kind": "OWNER_COMBAT_REFERENCE",
+      "sha256": "f45dbc7073b35157cd752bf0d1156de83c3247a55c907787bfa3b3f76404aae9",
+      "use": [
+        "battle phase architecture",
+        "hero-bubble AI and performance doctrine",
+        "Amon Hen and Moria encounter staging",
+        "weapons armies creatures and locked threat outcomes"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_GAMEPLAY_SIDE_ACTIVITIES_BIBLE_V1",
+      "name": "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE(1).pdf",
+      "kind": "OWNER_GAMEPLAY_REFERENCE",
+      "sha256": "2c0e6a12c94de455a0a35fc03ae8a9d9e2dfcc737217231d48e83e36d6a9da0b",
+      "use": [
+        "film-safe side activities",
+        "quest and save state rules",
+        "difficulty and accessibility boundaries",
+        "lower-tier degradation plans"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+      "name": "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX(1).pdf",
+      "kind": "OWNER_IMPLEMENTATION_REFERENCE",
+      "sha256": "da7cacce24cbb6ad95431efa62e1bb344b837c434796f2f2bb2fa59bf57fc0b5",
+      "use": [
+        "mission package contracts",
+        "chapter dependency rules",
+        "logic-versus-cinematic state ownership",
+        "production status and QA gates"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
+      "name": "08_VISUAL_REFERENCE_BIBLE(1).pdf",
+      "kind": "OWNER_VISUAL_REFERENCE",
+      "sha256": "6c1a5d20540b166858e591252a7b1796376d42a9800a290212a8bf1184f0e5b4",
+      "use": [
+        "visual-reference governance",
+        "hero-landmark and macro-layout sheets",
+        "material lighting vegetation and composition references",
+        "do-not-infer and canon-confidence rules"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1",
+      "name": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL(1).pdf",
+      "kind": "OWNER_EXTERNAL_RESOURCE_DISCOVERY_HELPER",
+      "use": [
+        "voice and TTS candidate discovery",
+        "music and sound-effects candidate discovery",
+        "character image and visual-reference discovery",
+        "3D model, prop, environment and scan discovery",
+        "animation, mocap and rigging resource discovery",
+        "LOTR-specific research-source discovery",
+        "AI-assisted original asset creation tool discovery",
+        "asset intake, provenance and release-review workflow"
+      ],
+      "authority": "HELPER_ONLY_NOT_CANON_NOT_STORY",
+      "runtime_ship": false,
+      "release_clearance_required_for_distribution": true,
+      "sha256": "3228407211220d58403f14fbee1087f4736d2ee2e5c1afd60a6f3a7c3f8e0ee6"
+    }
+  ],
+  "derived_runtime_data": [
+    "Data/FilmDialogueSourceContext.json",
+    "Data/CharacterProductionMatrix.json",
+    "Data/CinematicWorldProductionMatrix.json",
+    "Data/TrilogyRingQuestPlan.json",
+    "Data/Part1ProductionAtlas.json",
+    "Data/Production100ReadinessGate.json",
+    "Data/Part1MegaProductionPlan.json",
+    "Data/Part1VisualProductionPass.json",
+    "Data/ProjectOwnedProductionAssetInventory.json"
+  ],
+  "story_authority": {
+    "rule": "For film-story chronology, scene order, required outcomes, character presence and knowledge boundaries, the supplied screenplays are primary. The numbered production bibles organize and derive implementation guidance but may not override screenplay-supported film events.",
+    "primary_screenplays": [
+      {
+        "source_id": "SRC_FILM_FOTR_SCREENPLAY",
+        "film_part": "PART_I",
+        "scope": "The Fellowship of the Ring",
+        "role": "PRIMARY_STORY_AND_CHRONOLOGY_AUTHORITY"
+      },
+      {
+        "source_id": "SRC_FILM_TTT_SCREENPLAY",
+        "film_part": "PART_II",
+        "scope": "The Two Towers",
+        "role": "PRIMARY_STORY_AND_CHRONOLOGY_AUTHORITY"
+      }
+    ],
+    "production_bibles": [
+      "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
+      "SRC_OWNER_CHARACTERS_RELATIONSHIPS_BIBLE_V1",
+      "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+      "SRC_OWNER_PEOPLES_LORE_ARTIFACTS_CULTURES_BIBLE_V1",
+      "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+      "SRC_OWNER_GAMEPLAY_SIDE_ACTIVITIES_BIBLE_V1",
+      "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+      "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1"
+    ],
+    "precedence": [
+      "supplied screenplay evidence for film chronology/outcomes",
+      "ProjectGovernor hard invariants and approved implementation decisions",
+      "numbered production bibles 01-08 for derived production guidance",
+      "visual-only references for appearance/mood only",
+      "Bible 09 external-resource discovery for candidate assets/tools only; never canon evidence"
+    ],
+    "runtime_rule": "Raw source PDFs remain reference-only and never ship as runtime dependencies.",
+    "resource_helper_bibles": [
+      "SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1"
+    ]
+  },
+  "source_set_summary": {
+    "core_pdf_count": 11,
+    "supplied_screenplays": 2,
+    "numbered_production_bibles": 9,
+    "numbered_bible_ids": [
+      "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
+      "SRC_OWNER_CHARACTERS_RELATIONSHIPS_BIBLE_V1",
+      "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+      "SRC_OWNER_PEOPLES_LORE_ARTIFACTS_CULTURES_BIBLE_V1",
+      "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+      "SRC_OWNER_GAMEPLAY_SIDE_ACTIVITIES_BIBLE_V1",
+      "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+      "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
+      "SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1"
+    ],
+    "rule": "The two supplied screenplays are primary story authority. Bibles 01-08 derive production guidance. Bible 09 is a helper/resource-intake guide only and cannot establish or override canon, chronology, character identity, story outcomes or film geography."
+  },
+  "review_audit": {
+    "date": "2026-09-20",
+    "scope": "Uploaded primary screenplay and numbered reference file identity verified by SHA256; targeted textual review of story, mission and visual governance sections. This is not full scene-by-scene implementation or rendered acceptance.",
+    "reviewed_sections": [
+      {
+        "source_id": "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
+        "pdf_pages": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "application": "Film-safe optional windows, lane-local/global persistence, no future knowledge; Part III not screenplay-verified."
+      },
+      {
+        "source_id": "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+        "pdf_pages": [
+          2,
+          3,
+          4
+        ],
+        "application": "Mission pre/postconditions, independent logic/art readiness and explicit QA scenarios."
+      },
+      {
+        "source_id": "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
+        "pdf_pages": [
+          2,
+          3
+        ],
+        "application": "Visual references establish intended appearance only; no inference of unseen canon or final visual acceptance."
+      }
+    ],
+    "chapter_id_warning": "Bible F1-xx mission packages and runtime P1Cxx chapters are different identifiers. Never map by matching the numeric suffix. Match location, preconditions and outcomes against the screenplay and runtime atlas.",
+    "outstanding": [
+      "Scene-level provenance coverage for all implemented beats is not yet comprehensively audited.",
+      "Final visual acceptance needs rendered chapter/character evidence.",
+      "Part III screenplay is absent from the supplied core reference set."
+    ]
+  }
+}

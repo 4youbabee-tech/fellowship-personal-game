@@ -61,6 +61,17 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="SideStory")
     FName SideStoryBeatAfterTrigger = NAME_None;
 
+    // Optional Journey Discovery reward. This never advances the main story.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Exploration")
+    FName DiscoveryId = NAME_None;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Exploration")
+    FText DiscoveryDisplayName;
+
+    // If this closing beat already happened, the optional trigger is no longer valid.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Exploration")
+    FName BlockedAfterStoryBeat = NAME_None;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
     FText ObjectiveMessage;
 

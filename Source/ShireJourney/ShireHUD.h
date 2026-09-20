@@ -18,10 +18,17 @@ public:
     UFUNCTION(BlueprintCallable, Category="HUD")
     void ShowAlert(const FText& Message, float Duration = 3.0f);
 
+    UFUNCTION(BlueprintCallable, Category="HUD")
+    void ShowDiscovery(const FText& Title, int32 AwardedInsight, int32 TotalInsight, float Duration = 3.0f);
+
 private:
     FText DialogueSpeaker;
     FText DialogueLine;
     FText AlertMessage;
     float DialogueUntilTime = 0.0f;
     float AlertUntilTime = 0.0f;
+    FText DiscoveryTitle;
+    int32 DiscoveryAwardedInsight = 0;
+    int32 DiscoveryTotalInsight = 0;
+    float DiscoveryUntilTime = 0.0f;
 };

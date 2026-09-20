@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_ASSET_PERFORMANCE_BUDGET_V1",
+  "status": "MEASUREMENT_BASELINE_REQUIRED",
+  "target_profile": {
+    "resolution": "1280x720",
+    "quality": "Low-Medium",
+    "fps_floor": 30
+  },
+  "policy": {
+    "hard_scene_budgets_enabled": false,
+    "reason": "Do not invent per-chapter triangle or texture-memory ceilings before measured target-device baselines exist.",
+    "source_audit_role": "Report source triangle equivalents, source bytes, texture dimensions and structural defects on every production-asset batch.",
+    "engine_measurement_required_for": [
+      "draw calls",
+      "GPU memory",
+      "streaming pool",
+      "frame time",
+      "hitches",
+      "animation cost"
+    ]
+  },
+  "provisional_review_thresholds": {
+    "source_texture_dimension_warning": 1024,
+    "note": "Review threshold only; Unreal import compression/mips and actual residency decide runtime cost."
+  },
+  "chapter_budgets": [
+    {
+      "chapter": "P1C01",
+      "status": "BASELINE_MEASURE_FIRST"
+    },
+    {
+      "chapter": "P1C02",
+      "status": "PENDING_P1C01_REFERENCE"
+    },
+    {
+      "chapter": "P1C03",
+      "status": "PENDING_P1C01_REFERENCE"
+    },
+    {
+      "chapter": "P1C04",
+      "status": "PENDING_P1C01_REFERENCE"
+    },
+    {
+      "chapter": "P1C05",
+      "status": "PENDING_P1C01_REFERENCE"
+    },
+    {
+      "chapter": "P1C06",
+      "status": "PENDING_P1C01_REFERENCE"
+    },
+    {
+      "chapter": "P1C07",
+      "status": "PENDING_P1C01_REFERENCE"
+    },
+    {
+      "chapter": "P1C08",
+      "status": "PENDING_P1C01_REFERENCE"
+    }
+  ],
+  "promotion_rule": "Hard per-chapter limits may be enabled only after a reproducible target-device capture records scene identity, commit SHA, FPS/frame time and memory evidence."
+}

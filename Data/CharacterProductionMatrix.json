@@ -1,0 +1,814 @@
+{
+  "schema_version": 1,
+  "matrix_id": "PART1_CHARACTER_PRODUCTION_MATRIX_V1",
+  "status": "PROJECT_OWNED_MODULAR_FOUNDATIONS_ACTIVE_FINAL_RIGS_MATERIALS_PENDING",
+  "target": "Replace recognizable proxy/modular stand-ins with production characters while preserving UE4.27.2 performance and each character's instantly readable silhouette.",
+  "sourcing_policy": {
+    "preferred_order": [
+      "project-owned or self-authored character base",
+      "explicitly permitted free/personal-use asset with captured source and terms",
+      "licensed marketplace asset",
+      "procedural/custom character creation from legally usable base parts"
+    ],
+    "rule": "Free availability is not treated as permission by itself. Record source URL/provider, terms snapshot/date, allowed use and modification status before integrating an external model.",
+    "private_project_context": "The project is private/personal, but provenance is still recorded so future use does not silently exceed the asset's terms.",
+    "likeness_rule": "Use film-context silhouette, wardrobe, age and role cues; do not depend on an exact unauthorized scan or actor likeness to make the character recognizable."
+  },
+  "common_pipeline": [
+    "select/source legal base mesh",
+    "clean topology and scale",
+    "author/adjust face hair clothing and equipment",
+    "UV/material pass",
+    "UE4 humanoid-compatible skeleton where practical",
+    "skin weights and deformation audit",
+    "retarget locomotion/action animations",
+    "Animation Blueprint integration",
+    "weapon/prop sockets",
+    "collision and gameplay hooks",
+    "LOD/culling/material-instance optimization",
+    "UE4 import/compile/startup validation",
+    "PIE visual and motion acceptance"
+  ],
+  "performance_contract": {
+    "target": "720p Low-Medium / 30 FPS floor",
+    "principles": [
+      "hero characters receive selective near-camera detail",
+      "secondary characters use cheaper materials and LODs",
+      "crowds reuse skeleton/material families where visually safe",
+      "hair/cloth simulation is bounded and optional on low settings",
+      "no character is called final from a static mesh or proxy silhouette alone"
+    ]
+  },
+  "characters": [
+    {
+      "id": "FRODO",
+      "tier": "HERO_PLAYABLE",
+      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "body": "hobbit small-proportion",
+      "identity": [
+        "curly dark hair",
+        "travel clothing",
+        "cloak",
+        "Sting later",
+        "Ring-bearer acting states"
+      ],
+      "rig": "HOBBIT_HUMANOID",
+      "priority": 1,
+      "asset_root": "SourceAssets/Production/Characters/Frodo",
+      "foundation_assets": [
+        "V6 layered hair silhouette refinement",
+        "V6 anatomical head and torso refinement",
+        "expanded modular body set",
+        "dedicated identity pieces",
+        "project-owned props/accessories"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ],
+      "geometry_wave": "HERO_ANATOMICAL_FOUNDATION_V6",
+      "geometry_evidence": {
+        "head_vertices": 328,
+        "head_faces": 640,
+        "torso_vertices": 254,
+        "torso_faces": 504,
+        "hair_vertices": 421,
+        "hair_faces": 740
+      }
+    },
+    {
+      "id": "GANDALF",
+      "tier": "HERO_PLAYABLE",
+      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "body": "tall elder human",
+      "identity": [
+        "grey robes",
+        "staff",
+        "hat/beard silhouette",
+        "measured locomotion"
+      ],
+      "rig": "TALL_HUMANOID",
+      "priority": 1,
+      "asset_root": "SourceAssets/Production/Characters/Gandalf",
+      "foundation_assets": [
+        "V6 layered hair silhouette refinement",
+        "V6 anatomical head and torso refinement",
+        "expanded modular body set",
+        "dedicated identity pieces",
+        "project-owned props/accessories"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ],
+      "geometry_wave": "HERO_ANATOMICAL_FOUNDATION_V6",
+      "geometry_evidence": {
+        "head_vertices": 328,
+        "head_faces": 640,
+        "torso_vertices": 254,
+        "torso_faces": 504,
+        "hair_vertices": 477,
+        "hair_faces": 836
+      }
+    },
+    {
+      "id": "SAM",
+      "tier": "HERO_COMPANION",
+      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "body": "hobbit sturdy-proportion",
+      "identity": [
+        "travel pack",
+        "practical clothing",
+        "protective proximity",
+        "cooking/gardening props"
+      ],
+      "rig": "HOBBIT_HUMANOID",
+      "priority": 2,
+      "asset_root": "SourceAssets/Production/Characters/Sam",
+      "foundation_assets": [
+        "V6 layered hair silhouette refinement",
+        "V6 anatomical head and torso refinement",
+        "dedicated torso",
+        "dedicated head",
+        "dedicated hair",
+        "shared rig-family limbs/props where applicable"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ],
+      "geometry_wave": "HERO_ANATOMICAL_FOUNDATION_V6",
+      "geometry_evidence": {
+        "head_vertices": 328,
+        "head_faces": 640,
+        "torso_vertices": 254,
+        "torso_faces": 504,
+        "hair_vertices": 393,
+        "hair_faces": 692
+      }
+    },
+    {
+      "id": "MERRY",
+      "tier": "CORE_COMPANION",
+      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "body": "hobbit slim-medium",
+      "identity": [
+        "distinct hair/clothes",
+        "confident social posture"
+      ],
+      "rig": "HOBBIT_HUMANOID",
+      "priority": 2,
+      "asset_root": "SourceAssets/Production/Characters/Merry",
+      "foundation_assets": [
+        "V6 layered hair silhouette refinement",
+        "V6 anatomical head and torso refinement",
+        "dedicated torso",
+        "dedicated head",
+        "dedicated hair",
+        "shared rig-family limbs/props where applicable"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ],
+      "geometry_wave": "HERO_ANATOMICAL_FOUNDATION_V6",
+      "geometry_evidence": {
+        "head_vertices": 328,
+        "head_faces": 640,
+        "torso_vertices": 254,
+        "torso_faces": 504,
+        "hair_vertices": 379,
+        "hair_faces": 668
+      }
+    },
+    {
+      "id": "PIPPIN",
+      "tier": "CORE_COMPANION",
+      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "body": "hobbit youthful",
+      "identity": [
+        "lighter movement",
+        "curious posture",
+        "distinct hair/clothes"
+      ],
+      "rig": "HOBBIT_HUMANOID",
+      "priority": 2,
+      "asset_root": "SourceAssets/Production/Characters/Pippin",
+      "foundation_assets": [
+        "V6 layered hair silhouette refinement",
+        "V6 anatomical head and torso refinement",
+        "dedicated torso",
+        "dedicated head",
+        "dedicated hair",
+        "shared rig-family limbs/props where applicable"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ],
+      "geometry_wave": "HERO_ANATOMICAL_FOUNDATION_V6",
+      "geometry_evidence": {
+        "head_vertices": 328,
+        "head_faces": 640,
+        "torso_vertices": 254,
+        "torso_faces": 504,
+        "hair_vertices": 407,
+        "hair_faces": 716
+      }
+    },
+    {
+      "id": "ARAGORN",
+      "tier": "HERO_COMPANION",
+      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "body": "tall ranger",
+      "identity": [
+        "weathered ranger layers",
+        "sword",
+        "cloak",
+        "forward scout posture"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 2,
+      "asset_root": "SourceAssets/Production/Characters/Aragorn",
+      "foundation_assets": [
+        "V6 layered hair silhouette refinement",
+        "V6 anatomical head and torso refinement",
+        "dedicated torso",
+        "dedicated head",
+        "dedicated hair",
+        "shared rig-family limbs/props where applicable"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ],
+      "geometry_wave": "HERO_ANATOMICAL_FOUNDATION_V6",
+      "geometry_evidence": {
+        "head_vertices": 328,
+        "head_faces": 640,
+        "torso_vertices": 254,
+        "torso_faces": 504,
+        "hair_vertices": 449,
+        "hair_faces": 788
+      }
+    },
+    {
+      "id": "BOROMIR",
+      "tier": "HERO_COMPANION",
+      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "body": "armored human",
+      "identity": [
+        "shield",
+        "sword",
+        "layered armor",
+        "soldier stance"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 2,
+      "asset_root": "SourceAssets/Production/Characters/Boromir",
+      "foundation_assets": [
+        "V6 layered hair silhouette refinement",
+        "V6 anatomical head and torso refinement",
+        "dedicated torso",
+        "dedicated head",
+        "dedicated hair",
+        "shared rig-family limbs/props where applicable"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ],
+      "geometry_wave": "HERO_ANATOMICAL_FOUNDATION_V6",
+      "geometry_evidence": {
+        "head_vertices": 328,
+        "head_faces": 640,
+        "torso_vertices": 254,
+        "torso_faces": 504,
+        "hair_vertices": 379,
+        "hair_faces": 668
+      }
+    },
+    {
+      "id": "LEGOLAS",
+      "tier": "HERO_COMPANION",
+      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "body": "slender elf",
+      "identity": [
+        "bow/quiver",
+        "light layered clothing",
+        "fast precise movement"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 2,
+      "asset_root": "SourceAssets/Production/Characters/Legolas",
+      "foundation_assets": [
+        "V6 layered hair silhouette refinement",
+        "V6 anatomical head and torso refinement",
+        "dedicated torso",
+        "dedicated head",
+        "dedicated hair",
+        "shared rig-family limbs/props where applicable"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ],
+      "geometry_wave": "HERO_ANATOMICAL_FOUNDATION_V6",
+      "geometry_evidence": {
+        "head_vertices": 328,
+        "head_faces": 640,
+        "torso_vertices": 254,
+        "torso_faces": 504,
+        "hair_vertices": 477,
+        "hair_faces": 836
+      }
+    },
+    {
+      "id": "GIMLI",
+      "tier": "HERO_COMPANION",
+      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "body": "dwarf compact-heavy",
+      "identity": [
+        "beard mass",
+        "helmet/armor",
+        "axe",
+        "heavy grounded gait"
+      ],
+      "rig": "DWARF_HUMANOID",
+      "priority": 2,
+      "asset_root": "SourceAssets/Production/Characters/Gimli",
+      "foundation_assets": [
+        "V6 layered hair silhouette refinement",
+        "V6 anatomical head and torso refinement",
+        "dedicated torso",
+        "dedicated head",
+        "dedicated hair",
+        "shared rig-family limbs/props where applicable"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ],
+      "geometry_wave": "HERO_ANATOMICAL_FOUNDATION_V6",
+      "geometry_evidence": {
+        "head_vertices": 328,
+        "head_faces": 640,
+        "torso_vertices": 254,
+        "torso_faces": 504,
+        "hair_vertices": 421,
+        "hair_faces": 740
+      }
+    },
+    {
+      "id": "BILBO",
+      "tier": "MAJOR_NAMED",
+      "status": "PROJECT_OWNED_DEDICATED_HEAD_HAIR_TORSO_FOUNDATION_RIG_PENDING",
+      "body": "older hobbit",
+      "identity": [
+        "older face/hair",
+        "waistcoat/home clothing",
+        "walking stick/travel-history cues"
+      ],
+      "rig": "HOBBIT_HUMANOID",
+      "priority": 3,
+      "asset_root": "SourceAssets/Production/Characters/Bilbo",
+      "foundation_assets": [
+        "dedicated torso",
+        "dedicated head",
+        "dedicated hair",
+        "shared rig-family limbs/props where applicable"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ]
+    },
+    {
+      "id": "ARWEN",
+      "tier": "MAJOR_NAMED",
+      "status": "PROJECT_OWNED_DEDICATED_HEAD_HAIR_TORSO_FOUNDATION_RIG_PENDING",
+      "body": "elf",
+      "identity": [
+        "riding/travel silhouette",
+        "elf wardrobe",
+        "calm decisive movement"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 3,
+      "asset_root": "SourceAssets/Production/Characters/Arwen",
+      "foundation_assets": [
+        "dedicated torso",
+        "dedicated head",
+        "dedicated hair",
+        "shared rig-family limbs/props where applicable"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ]
+    },
+    {
+      "id": "ELROND",
+      "tier": "MAJOR_NAMED",
+      "status": "PROJECT_OWNED_DEDICATED_HEAD_HAIR_TORSO_FOUNDATION_RIG_PENDING",
+      "body": "elf elder",
+      "identity": [
+        "formal Rivendell layers",
+        "controlled posture"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 3,
+      "asset_root": "SourceAssets/Production/Characters/Elrond",
+      "foundation_assets": [
+        "dedicated torso",
+        "dedicated head",
+        "dedicated hair",
+        "shared rig-family limbs/props where applicable"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ]
+    },
+    {
+      "id": "GALADRIEL",
+      "tier": "MAJOR_NAMED",
+      "status": "PROJECT_OWNED_DEDICATED_HEAD_HAIR_TORSO_FOUNDATION_RIG_PENDING",
+      "body": "elf",
+      "identity": [
+        "light layered gown",
+        "long pale hair",
+        "slow deliberate acting"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 3,
+      "asset_root": "SourceAssets/Production/Characters/Galadriel",
+      "foundation_assets": [
+        "dedicated torso",
+        "dedicated head",
+        "dedicated hair",
+        "shared rig-family limbs/props where applicable"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ]
+    },
+    {
+      "id": "SARUMAN",
+      "tier": "MAJOR_NAMED",
+      "status": "PROJECT_OWNED_DEDICATED_HEAD_HAIR_TORSO_FOUNDATION_RIG_PENDING",
+      "body": "tall elder human",
+      "identity": [
+        "white robes",
+        "staff",
+        "precise authoritarian posture"
+      ],
+      "rig": "TALL_HUMANOID",
+      "priority": 3,
+      "asset_root": "SourceAssets/Production/Characters/Saruman",
+      "foundation_assets": [
+        "dedicated torso",
+        "dedicated head",
+        "dedicated hair",
+        "shared rig-family limbs/props where applicable"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ]
+    },
+    {
+      "id": "NAZGUL",
+      "tier": "MAJOR_THREAT",
+      "status": "DEDICATED_SILHOUETTE_EXISTS_RIG_MOTION_POLISH_PENDING",
+      "body": "wraith humanoid",
+      "identity": [
+        "hooded void",
+        "black layered cloth",
+        "long weapon",
+        "mounted variant"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 3,
+      "asset_root": "SourceAssets/Production/Enemies/BlackRider",
+      "foundation_assets": [
+        "Black Rider rider/head/horse source meshes"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ]
+    },
+    {
+      "id": "ORC_URUK_FAMILY",
+      "tier": "ENEMY_FAMILY",
+      "status": "PRODUCTION_FAMILY_VARIATION_PENDING",
+      "body": "humanoid variants",
+      "identity": [
+        "multiple heads/armor kits/weapons",
+        "shared animation family"
+      ],
+      "rig": "ENEMY_HUMANOID",
+      "priority": 4,
+      "asset_root": "SourceAssets/Production/Enemies",
+      "foundation_assets": [
+        "project-owned Orc component family",
+        "project-owned Uruk-hai component family"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ]
+    },
+    {
+      "id": "REGIONAL_RESIDENT_FAMILIES",
+      "tier": "CROWD",
+      "status": "AMBIENT_RUNTIME_EXISTS_VISUAL_FAMILIES_PENDING",
+      "body": "hobbit/human/elf families",
+      "identity": [
+        "region clothing kits",
+        "role props",
+        "face/hair variations"
+      ],
+      "rig": "SHARED_FAMILY_RIGS",
+      "priority": 4,
+      "asset_root": "SourceAssets/Production/Characters/Common",
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ]
+    },
+    {
+      "id": "GOLLUM_PART2_SEED",
+      "tier": "FUTURE_HERO_NPC",
+      "status": "REFERENCE_ONLY",
+      "body": "unique crouched humanoid",
+      "identity": [
+        "unique proportions",
+        "creature locomotion",
+        "face acting requirement"
+      ],
+      "rig": "CUSTOM_UNIQUE",
+      "priority": 5,
+      "final_gaps": [
+        "skeletal rig/skin",
+        "final UV/normal/material pass",
+        "animation integration",
+        "PIE visual acceptance",
+        "target-device performance"
+      ]
+    },
+    {
+      "id": "HALDIR",
+      "tier": "MAJOR_NAMED",
+      "status": "PROJECT_OWNED_DEDICATED_HEAD_HAIR_TORSO_FOUNDATION_RIG_PENDING",
+      "body": "elf guardian",
+      "identity": [
+        "Lothlorien border guardian",
+        "Elven martial silhouette"
+      ],
+      "rig": "STANDARD_HUMANOID",
+      "priority": 3,
+      "asset_root": "SourceAssets/Production/Characters/Haldir",
+      "foundation_assets": [
+        "dedicated torso",
+        "dedicated head",
+        "dedicated hair",
+        "shared humanoid limbs"
+      ],
+      "final_gaps": [
+        "skeletal rig/skin",
+        "wardrobe/weapon polish",
+        "face system",
+        "animation integration",
+        "PIE/device acceptance"
+      ]
+    }
+  ],
+  "acceptance": [
+    "Core cast is recognizable by silhouette and motion without relying on floating labels.",
+    "Every production character has a recorded source/provenance or is project-authored.",
+    "Rig/animation works in UE4.27.2 and does not regress gameplay collision or chapter spawning.",
+    "LOD/material budgets preserve the target laptop floor.",
+    "Visual acceptance is recorded separately from compile/import success."
+  ],
+  "source_atlas": "Data/Part1ProductionAtlas.json",
+  "production_truth": "V6 hero geometry and V7 production surface response for the nine core Part I hero/companion foundations are exact-head engine-proven through #488/#323 on 2e8898a. V8 regional life is the next implementation wave and remains pending its own exact-head proof. Final skeletal deformation, final animation, texture-level skin detail, rendered PIE/device performance and human visual acceptance remain pending.",
+  "threats": [
+    {
+      "id": "BLACK_RIDER_NAZGUL",
+      "status": "PROJECT_OWNED_COMPONENT_FOUNDATION_RIG_PENDING",
+      "asset_root": "SourceAssets/Production/Enemies/BlackRider",
+      "final_gaps": [
+        "Witch-king variant",
+        "rider/horse rig",
+        "cloth",
+        "mounted pursuit animation",
+        "fear/combat presentation"
+      ]
+    },
+    {
+      "id": "ORC",
+      "status": "PROJECT_OWNED_COMPONENT_FOUNDATION_RIG_PENDING",
+      "asset_root": "SourceAssets/Production/Enemies/Orc",
+      "final_gaps": [
+        "rig",
+        "head/armor variation",
+        "combat animation",
+        "materials"
+      ]
+    },
+    {
+      "id": "URUK_HAI",
+      "status": "PROJECT_OWNED_COMPONENT_FOUNDATION_RIG_PENDING",
+      "asset_root": "SourceAssets/Production/Enemies/UrukHai",
+      "final_gaps": [
+        "rig",
+        "armor variation",
+        "melee/ranged animation",
+        "materials"
+      ]
+    },
+    {
+      "id": "CAVE_TROLL",
+      "status": "PROJECT_OWNED_COMPONENT_FOUNDATION_CUSTOM_RIG_PENDING",
+      "asset_root": "SourceAssets/Production/Enemies/CaveTroll",
+      "final_gaps": [
+        "custom rig",
+        "impact animation",
+        "hit reactions",
+        "room-scale collision tuning"
+      ]
+    },
+    {
+      "id": "LURTZ",
+      "status": "PROJECT_OWNED_HERO_FOUNDATION_RUNTIME_WIRED_FINAL_RIG_ANIMATION_PENDING",
+      "asset_root": "SourceAssets/Production/Enemies/Lurtz",
+      "final_gaps": [
+        "dedicated skeletal hero rig and deformation",
+        "film-scene identity/material polish",
+        "custom melee/hit-reaction animation set",
+        "Aragorn duel camera/audio choreography",
+        "PIE/device encounter acceptance"
+      ],
+      "runtime_status": "FILM_LOCKED_AMON_HEN_PRESSURE_WIRED_PENDING_ENGINE_PROOF"
+    },
+    {
+      "id": "WATCHER",
+      "status": "PROJECT_OWNED_CREATURE_FOUNDATION_CREATED_FINAL_RIG_VFX_PENDING",
+      "asset_root": "SourceAssets/Production/Enemies/Watcher",
+      "final_gaps": [
+        "creature mesh",
+        "tentacle rig",
+        "water VFX",
+        "final Moria gate water/VFX/audio acceptance"
+      ],
+      "runtime_status": "FILM_LOCKED_VISUAL_PRESSURE_WIRED_P1C06"
+    },
+    {
+      "id": "BALROG",
+      "status": "PROJECT_OWNED_CREATURE_FOUNDATION_CREATED_FINAL_RIG_VFX_PENDING",
+      "asset_root": "SourceAssets/Production/Enemies/Balrog",
+      "final_gaps": [
+        "hero creature mesh",
+        "custom rig",
+        "fire/shadow VFX",
+        "audio",
+        "final Bridge VFX/audio/camera acceptance"
+      ],
+      "runtime_status": "FILM_LOCKED_VISUAL_PRESSURE_WIRED_P1C06"
+    }
+  ],
+  "rig_handoff_contract": {
+    "path_pattern": "/Game/Production/Characters/Rigs/<CharacterId>/SK_<CharacterId> plus ABP_<CharacterId>_Locomotion",
+    "behavior": "Playable and named-NPC actors automatically prefer the final skeletal rig + AnimBP when both packages exist, otherwise retain the current modular project-owned fallback.",
+    "supported_part1_playable_ids": [
+      "Frodo",
+      "Gandalf",
+      "Sam",
+      "Merry",
+      "Pippin",
+      "Aragorn",
+      "Boromir",
+      "Legolas",
+      "Gimli",
+      "Arwen"
+    ],
+    "acceptance_note": "Automatic handoff is production plumbing only; a rig is not final until deformation, animation, visual and performance acceptance pass."
+  },
+  "geometry_refinement_wave": {
+    "id": "HERO_ANATOMICAL_FOUNDATION_V6",
+    "status": "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE",
+    "scope": [
+      "FRODO",
+      "GANDALF",
+      "SAM",
+      "MERRY",
+      "PIPPIN",
+      "ARAGORN",
+      "BOROMIR",
+      "LEGOLAS",
+      "GIMLI"
+    ],
+    "structural_change": {
+      "head": "328 vertices / 640 faces per refined source mesh, with continuous cranial rings plus authored brow/nose/jaw/chin/ear silhouette.",
+      "torso": "254 vertices / 504 faces per refined source mesh, with authored shoulder/chest/waist/hip/neck transitions.",
+      "hair": "379-477 vertices / 668-836 faces depending on character, using layered cap/fringe/lock silhouettes instead of low-density hair shells.",
+      "coordinate_contract": "Centimeters, Z-up, +X face-forward; runtime collision remains capsule-owned.",
+      "material_boundary": "This wave refines geometry/silhouette only. Final UV/material/skin/face systems remain pending."
+    },
+    "runtime_integration": [
+      "Named NPC facial markers now use production-head scale and placement.",
+      "Blink/dialogue face acting preserves production-head marker scale.",
+      "Named companions use existing production sword/bow/shield/axe/cloak/staff/beard/hat meshes where available.",
+      "Final skeletal rig handoff remains automatic and takes priority when valid rig + AnimBP packages exist."
+    ],
+    "acceptance_boundary": "Structural source-geometry improvement is implemented; rendered likeness, deformation, final animation/materials, PIE/device and human visual acceptance are not yet claimed.",
+    "engine_proof": {
+      "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
+      "pre_unreal": "PASS #486",
+      "unreal_build": "PASS #321",
+      "scope": "compile + import + startup + P1C01-P1C08 + state/save/warning chain; rendered acceptance remains separate"
+    }
+  },
+  "surface_material_wave": {
+    "id": "HERO_SURFACE_RESPONSE_V7",
+    "status": "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE",
+    "scope": [
+      "FRODO",
+      "GANDALF",
+      "SAM",
+      "MERRY",
+      "PIPPIN",
+      "ARAGORN",
+      "BOROMIR",
+      "LEGOLAS",
+      "GIMLI"
+    ],
+    "implementation": [
+      "Project-owned M_ProductionSurface master material is synthesized deterministically during production import.",
+      "Color, Roughness and Metallic parameters drive runtime character material instances.",
+      "Cloth, skin, hair, leather/wood and metal equipment now receive distinct light response instead of one flat tint.",
+      "MTL Pr/Pm values are accepted for authored source palettes without relying on import factory defaults."
+    ],
+    "acceptance_boundary": "Implemented in source/runtime; exact-head UE4.27 proof and rendered human review remain pending.",
+    "engine_proof": {
+      "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+      "pre_unreal": "PASS #488",
+      "unreal_build": "PASS #323",
+      "scope": "UE4.27.2 compile + production import + startup + P1C01-P1C08 runtime + route/story/save roundtrip + warning-debt gate"
+    }
+  }
+}

@@ -38,6 +38,21 @@ struct FShireNPCProfileRuntime
 
     UPROPERTY(BlueprintReadOnly, Category="NPCContext")
     TArray<FName> Anchors;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    FString Origin;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    FString Occupation;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    TArray<FString> BiographyFacts;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    TArray<FString> KnowledgeLimits;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCContext")
+    TArray<FName> AttitudeTags;
 };
 
 USTRUCT(BlueprintType)
@@ -71,6 +86,18 @@ struct FShireBoundedDialogueResult
 
     UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
     bool bMemoryInfluenced = false;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    FName WorldMood = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    FName EmotionalState = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    FName SourceContextId = NAME_None;
+
+    UPROPERTY(BlueprintReadOnly, Category="NPCDialogue")
+    FString SourceContextSummary;
 };
 
 UCLASS()
@@ -102,6 +129,24 @@ public:
 
     UFUNCTION(BlueprintPure, Category="NPCContext")
     bool CanUseIntent(FName ProfileHint, FName IntentId) const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    FString GetProfileContextSummary(FName ProfileHint) const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    FName GetRegionalWorldMood() const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    float GetRegionalPressure() const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    FName GetProfileEmotionalState(FName ProfileHint) const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    FName GetFilmDialogueContextId() const;
+
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    FString GetFilmDialogueContextSummary() const;
 
     UFUNCTION(BlueprintPure, Category="NPCContext")
     FName ResolveSchedulePhase(FName ProfileHint, float NormalizedDay, bool bDangerOverride, bool bStoryOverride) const;
@@ -148,7 +193,22 @@ private:
         FName VoiceCue = NAME_None;
         FName RequiredStoryBeat = NAME_None;
         FName RequiredMemory = NAME_None;
+        FName RequiredMood = NAME_None;
         int32 MaxWords = 24;
+    };
+
+    struct FFilmDialogueContextRuntime
+    {
+        FName ContextId = NAME_None;
+        FName SourceId = NAME_None;
+        FName RouteId = NAME_None;
+        FName ChapterId = NAME_None;
+        FName RequiredStoryBeat = NAME_None;
+        int32 Sequence = 0;
+        FString SourceWindow;
+        TArray<FName> ToneTags;
+        TArray<FString> SafeTopics;
+        TArray<FString> FutureKnowledgeBlocks;
     };
 
     UPROPERTY()
@@ -158,6 +218,9 @@ private:
     TMap<FName, TArray<FScheduleEntry>> ProfileSchedules;
     TMap<FName, TArray<FName>> IntentRequiredKnowledge;
     TMap<FName, TArray<FDialogueVariantRuntime>> DialogueVariants;
+    TMap<FName, FName> ChapterMoodById;
+    TMap<FName, float> ChapterPressureById;
+    TMap<FName, TArray<FFilmDialogueContextRuntime>> FilmContextsByRouteChapter;
 
     bool bDataReady = false;
     int32 MaxWordsAmbient = 24;
@@ -167,11 +230,15 @@ private:
 
     static FString NormalizeLookupKey(const FString& Value);
     static FName MakeDialogueKey(FName SpeakerProfileId, FName IntentId);
+    static FName MakeFilmContextKey(FName RouteId, FName ChapterId);
     static void ParseNameArray(const TSharedPtr<class FJsonObject>& Object, const TCHAR* Field, TArray<FName>& OutNames);
+    static void ParseStringArray(const TSharedPtr<class FJsonObject>& Object, const TCHAR* Field, TArray<FString>& OutStrings);
     bool LoadJsonObject(const FString& RelativePath, TSharedPtr<class FJsonObject>& OutRoot) const;
     bool LoadSocialModel();
     bool LoadConversationPlan();
     bool LoadBoundedDialoguePlan();
+    bool LoadRegionalMoodPlan();
+    bool LoadFilmDialogueSourceContext();
     void BuildDialogueVariantLibrary();
     void AddDialogueVariant(
         FName SpeakerProfileId,
@@ -180,8 +247,10 @@ private:
         const TCHAR* Text,
         FName VoiceCue = NAME_None,
         FName RequiredStoryBeat = NAME_None,
-        FName RequiredMemory = NAME_None);
+        FName RequiredMemory = NAME_None,
+        FName RequiredMood = NAME_None);
     bool ProfileAvailableInCurrentChapter(const FShireNPCProfileRuntime& Profile) const;
     bool IsFellowshipProfile(const FShireNPCProfileRuntime& Profile) const;
+    const FFilmDialogueContextRuntime* GetActiveFilmDialogueContext() const;
     int32 CountWords(const FString& Text) const;
 };

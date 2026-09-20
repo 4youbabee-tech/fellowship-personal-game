@@ -25,6 +25,70 @@ struct FShireQuestDefinition
     TArray<FText> Objectives;
 };
 
+struct FShireJourneyDiscoveryDefinition
+{
+    FName DiscoveryId = NAME_None;
+    FName RouteId = NAME_None;
+    FName ChapterId = NAME_None;
+    FName RegionId = NAME_None;
+    FName CategoryId = NAME_None;
+    FString DisplayLabel;
+    int32 Insight = 0;
+};
+
+struct FShireJourneyInsightMilestoneDefinition
+{
+    FName MilestoneId = NAME_None;
+    int32 Threshold = 0;
+};
+
+struct FShireJourneyRegionBonusDefinition
+{
+    FName RouteId = NAME_None;
+    FName ChapterId = NAME_None;
+    int32 RequiredDiscoveries = 0;
+    int32 BonusInsight = 0;
+};
+
+struct FShireSideActivityProgressionDefinition
+{
+    FName DiscoveryId = NAME_None;
+    FName ActivityId = NAME_None;
+    FName ActivityType = NAME_None;
+    FName RouteId = NAME_None;
+    FName ChapterId = NAME_None;
+    FName AvailableAfterStoryBeat = NAME_None;
+    FName EndsBeforeStoryBeat = NAME_None;
+};
+
+struct FShireChapterProductionDefinition
+{
+    FName RouteId = NAME_None;
+    FName ChapterId = NAME_None;
+    FString DisplayName;
+    FString MacroRegion;
+    FString PrimaryRegion;
+    TArray<FString> LandmarkSequence;
+};
+
+struct FShireWorldMapNodeDefinition
+{
+    FName NodeId = NAME_None;
+    FName RouteId = NAME_None;
+    FName ChapterId = NAME_None;
+    FString DisplayName;
+    FString MacroRegion;
+    float X = 0.0f;
+    float Y = 0.0f;
+    bool bChapterAnchor = false;
+};
+
+struct FShireWorldMapEdgeDefinition
+{
+    FName FromNodeId = NAME_None;
+    FName ToNodeId = NAME_None;
+};
+
 UCLASS()
 class SHIREJOURNEY_API UShireQuestSubsystem : public UGameInstanceSubsystem
 {
@@ -79,6 +143,86 @@ public:
     UFUNCTION(BlueprintPure, Category="Story")
     bool HasStoryBeatTriggered(FName StoryBeatId) const;
 
+    UFUNCTION(BlueprintPure, Category="Ring")
+    bool IsRingQuestActive() const;
+
+    UFUNCTION(BlueprintPure, Category="Ring")
+    FName GetRingBearerId() const;
+
+    UFUNCTION(BlueprintPure, Category="Ring")
+    FName GetRingStateTag() const;
+
+    UFUNCTION(BlueprintPure, Category="Ring")
+    int32 GetRingPressureTier() const;
+
+    UFUNCTION(BlueprintCallable, Category="Exploration")
+    bool RegisterJourneyDiscovery(FName DiscoveryId);
+
+    UFUNCTION(BlueprintPure, Category="Exploration")
+    bool HasJourneyDiscovery(FName DiscoveryId) const;
+
+    UFUNCTION(BlueprintPure, Category="SideActivity")
+    bool HasSideActivityForDiscovery(FName DiscoveryId) const;
+
+    UFUNCTION(BlueprintPure, Category="SideActivity")
+    bool IsSideActivityAvailable(FName ActivityId) const;
+
+    UFUNCTION(BlueprintPure, Category="SideActivity")
+    bool IsSideActivityDiscoveryAvailable(FName DiscoveryId) const;
+
+    UFUNCTION(BlueprintPure, Category="SideActivity")
+    FName GetSideActivityIdForDiscovery(FName DiscoveryId) const;
+
+    UFUNCTION(BlueprintCallable, Category="SideActivity")
+    bool CompleteSideActivityDiscovery(FName DiscoveryId);
+
+    UFUNCTION(BlueprintPure, Category="Exploration")
+    int32 GetJourneyInsight() const;
+
+    UFUNCTION(BlueprintPure, Category="Exploration")
+    bool HasJourneyInsightMilestone(FName MilestoneId) const;
+
+    const TArray<FName>& GetJourneyDiscoveryIds() const { return JourneyDiscoveryIds; }
+    const TArray<FName>& GetJourneyInsightMilestones() const { return JourneyInsightMilestones; }
+    void RestoreJourneyDiscoveryState(
+        const TArray<FName>& InDiscoveryIds,
+        int32 SavedJourneyInsight,
+        const TArray<FName>& InMilestones);
+
+    UFUNCTION(BlueprintCallable, Category="Progression")
+    void AwardProgressionXP(FName TrackId, int32 Amount);
+
+    UFUNCTION(BlueprintPure, Category="Progression")
+    int32 GetProgressionXP(FName TrackId) const;
+
+    UFUNCTION(BlueprintPure, Category="Progression")
+    int32 GetProgressionRank(FName TrackId) const;
+
+    UFUNCTION(BlueprintPure, Category="Progression")
+    int32 GetFellowshipBond() const;
+
+    TMap<FName, int32> GetProgressionSnapshot() const { return ProgressionXP; }
+    void RestoreProgressionState(const TMap<FName, int32>& InProgressionXP);
+
+    UFUNCTION(BlueprintPure, Category="Chronicle")
+    int32 GetChronicleCount() const { return ChronicleEntryIds.Num(); }
+
+    UFUNCTION(BlueprintPure, Category="Chronicle")
+    bool HasChronicleEntry(FName EntryId) const { return ChronicleEntryIds.Contains(EntryId); }
+
+    UFUNCTION(BlueprintPure, Category="MapKnowledge")
+    int32 GetKnownRegionCount() const { return KnownMapRegionIds.Num(); }
+
+    UFUNCTION(BlueprintPure, Category="MapKnowledge")
+    bool HasKnownMapRegion(FName RegionId) const { return KnownMapRegionIds.Contains(RegionId); }
+
+    const TArray<FName>& GetChronicleEntryIds() const { return ChronicleEntryIds; }
+    const TArray<FName>& GetKnownMapRegionIds() const { return KnownMapRegionIds; }
+    FString GetChronicleEntryDisplayLabel(FName EntryId) const;
+    FString GetChronicleEntryContextLabel(FName EntryId) const;
+    FString GetKnownMapRegionDisplayLabel(FName RegionId) const;
+    void RestoreKnowledgeState(const TArray<FName>& InChronicleEntryIds, const TArray<FName>& InKnownMapRegionIds);
+
     UFUNCTION(BlueprintPure, Category="Quest")
     FName GetActiveQuestId() const { return ActiveQuestId; }
 
@@ -102,6 +246,27 @@ public:
 
     UFUNCTION(BlueprintPure, Category="Route")
     FName GetPlayableCharacterId() const { return PlayableCharacterId; }
+
+    UFUNCTION(BlueprintPure, Category="World")
+    FString GetCurrentChapterDisplayName() const;
+
+    UFUNCTION(BlueprintPure, Category="World")
+    FString GetCurrentPrimaryRegionName() const;
+
+    UFUNCTION(BlueprintPure, Category="World")
+    FString GetCurrentMacroRegionName() const;
+
+    UFUNCTION(BlueprintPure, Category="World")
+    FString GetCurrentLandmarkSummary() const;
+
+    UFUNCTION(BlueprintPure, Category="MapKnowledge")
+    bool IsWorldMapNodeVisible(FName NodeId) const;
+
+    UFUNCTION(BlueprintPure, Category="MapKnowledge")
+    FName GetCurrentWorldMapNodeId() const;
+
+    const TArray<FShireWorldMapNodeDefinition>& GetWorldMapNodes() const { return WorldMapNodes; }
+    const TArray<FShireWorldMapEdgeDefinition>& GetWorldMapEdges() const { return WorldMapEdges; }
 
     const TMap<FName, int32>& GetAllQuestStages() const { return QuestStages; }
     const TArray<FName>& GetCompletedStoryBeats() const { return CompletedStoryBeats; }
@@ -151,6 +316,34 @@ private:
     UPROPERTY()
     TMap<FName, FShireNPCMemoryBucket> NPCMemoryState;
 
+    UPROPERTY()
+    TArray<FName> JourneyDiscoveryIds;
+
+    UPROPERTY()
+    TArray<FName> JourneyInsightMilestones;
+
+    UPROPERTY()
+    int32 JourneyInsight = 0;
+
+    UPROPERTY()
+    TMap<FName, int32> ProgressionXP;
+
+    UPROPERTY()
+    TArray<FName> ChronicleEntryIds;
+
+    UPROPERTY()
+    TArray<FName> KnownMapRegionIds;
+
+    TMap<FName, FShireJourneyDiscoveryDefinition> JourneyDiscoveryDefinitions;
+    TArray<FShireJourneyInsightMilestoneDefinition> JourneyInsightDefinitions;
+    TArray<FShireJourneyRegionBonusDefinition> JourneyRegionBonusDefinitions;
+    TMap<FName, FShireSideActivityProgressionDefinition> SideActivityProgressionDefinitions;
+    TMap<FName, FShireSideActivityProgressionDefinition> SideActivityDefinitionsById;
+    TMap<FName, FShireChapterProductionDefinition> ChapterProductionDefinitions;
+    TArray<FShireWorldMapNodeDefinition> WorldMapNodes;
+    TArray<FShireWorldMapEdgeDefinition> WorldMapEdges;
+    bool bSideActivityRewardInProgress = false;
+
     void BuildQuestDefinitions();
     void AddQuestDefinition(FName QuestId, const FString& Title, std::initializer_list<const TCHAR*> Objectives);
     FShireRouteProgress CaptureCurrentRouteProgress(bool bCapturePlayerTransform) const;
@@ -162,4 +355,20 @@ private:
     static int32 ChapterOrdinal(FName ChapterId);
     void PruneNPCMemoryForCurrentChapter();
     void RecordStoryBeatForEligibleNPCs(FName StoryBeatId);
+    bool LoadJourneyDiscoveryPlan();
+    bool LoadSideActivityPlan();
+    bool LoadPart1ProductionAtlas();
+    bool LoadPart1WorldMap();
+    const FShireWorldMapNodeDefinition* FindWorldMapNode(FName NodeId) const;
+    const FShireChapterProductionDefinition* FindChapterProductionDefinition(FName RouteId, FName ChapterId) const;
+    static FName MakeChapterProductionKey(FName RouteId, FName ChapterId);
+    bool IsSideActivityDefinitionAvailable(const FShireSideActivityProgressionDefinition& Definition) const;
+    void RebuildJourneyInsightState();
+    FName MakeJourneyRegionCompletionId(FName RouteId, FName ChapterId) const;
+    void AwardDiscoveryProgression(const FShireJourneyDiscoveryDefinition& Definition);
+    static bool IsValidProgressionTrack(FName TrackId);
+    void AwardSideActivityProgression(FName DiscoveryId);
+    void UnlockDiscoveryKnowledge(const FShireJourneyDiscoveryDefinition& Definition);
+    static FName MakeChronicleEntryId(FName DiscoveryId);
+    static FName MakeKnownMapRegionId(FName RouteId, FName ChapterId);
 };

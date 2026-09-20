@@ -11,7 +11,7 @@ class SHIREJOURNEY_API UShireSaveGame : public USaveGame
     GENERATED_BODY()
 
 public:
-    static constexpr int32 CurrentSchemaVersion = 3;
+    static constexpr int32 CurrentSchemaVersion = 6;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
     int32 SaveSchemaVersion = CurrentSchemaVersion;
@@ -27,6 +27,15 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
     float PlayerHealth = 100.0f;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="PlayerLife")
+    float PlayerStamina = 100.0f;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="PlayerLife")
+    float PlayerResolve = 100.0f;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="PlayerLife")
+    int32 PlayerSupplies = 3;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
     TMap<FName, int32> QuestStages;
@@ -57,4 +66,22 @@ public:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Save")
     TMap<FName, FShireNPCMemoryBucket> NPCMemoryState;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Exploration")
+    TArray<FName> JourneyDiscoveryIds;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Exploration")
+    int32 JourneyInsight = 0;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Exploration")
+    TArray<FName> JourneyInsightMilestones;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Progression")
+    TMap<FName, int32> ProgressionXP;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Chronicle")
+    TArray<FName> ChronicleEntryIds;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="MapKnowledge")
+    TArray<FName> KnownMapRegionIds;
 };

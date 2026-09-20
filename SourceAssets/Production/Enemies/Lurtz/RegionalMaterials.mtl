@@ -1,0 +1,15 @@
+# Project-owned Lurtz production palette
+newmtl LurtzSkin
+Kd 0.205 0.120 0.073
+Ks 0.055 0.040 0.028
+Ns 16
+
+newmtl LurtzArmor
+Kd 0.070 0.060 0.052
+Ks 0.20 0.18 0.15
+Ns 34
+
+newmtl LurtzDarkIron
+Kd 0.155 0.165 0.170
+Ks 0.36 0.37 0.38
+Ns 52

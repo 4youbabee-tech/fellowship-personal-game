@@ -3,7 +3,7 @@
   "authority_id": "FELLOWSHIP_SINGLE_PROJECT_GOVERNOR_V2",
   "authority_rule": "This file is the sole authoritative project-management decision source. Other docs/data may describe implementation details but must not override requirements, priorities, decisions, conflicts, active gate, or quality status recorded here.",
   "repository": "4youbabee-tech/fellowship-personal-game",
-  "active_branch": "develop",
+  "active_branch": "work/automation-first-runtime-observation",
   "engine": "Unreal Engine 4.27.2",
   "target_profile": {
     "platform": "Windows",
@@ -26,9 +26,12 @@
     "Every meaningful user request receives a stable requirement ID here before or with implementation.",
     "New requests never silently delete older requests; contradictions become explicit conflicts/decisions here.",
     "The film story spine, build/save/story integrity, target-device performance and required traversal cannot be silently traded away.",
+    "Before changing or adding any FILM_CORE beat, verify the exact scene order, participating characters and outcome against the supplied film/script source; do not rely on memory when the source can be checked.",
     "A feature is never called accepted from compile/static evidence alone.",
-    "If a previously passed critical gate fails, stop feature expansion, repair the smallest failing layer, and rerun the exact failed gate.",
-    "Human pacing and visual review are mandatory for enjoyment/acceptance; CI cannot infer fun."
+    "If a previously passed critical gate fails, quarantine the affected acceptance/merge path, repair the smallest failing layer, and rerun the exact failed gate while unrelated safe production work continues.",
+    "Human pacing and visual review are mandatory for enjoyment/acceptance; CI cannot infer fun.",
+    "Developer-owned automation should reproduce and verify defects before asking the owner to spend play time on technical regression checks; never relabel machine checks as visual or pacing approval.",
+    "Validation harness semantics are first-class: repeated log copies must not inflate defect counts, save tests must prove disk roundtrip, and every failing debt gate must print concrete asset/package identities."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -139,11 +142,12 @@
         "Ambient residents now use role-specific activity props and low-cost work/social gestures: Shire baskets/satchels/mugs/crates, Bree goods/mugs, and Elven books/lanterns",
         "ALivingWorldDirector consumes Data/LivingWorldEventPlan.json and injects bounded disposable chapter-aware micro-events",
         "CP49 common terrain kit adds production hills/cliffs/river-bank/boulder silhouettes across Part I",
-        "CP55 adds project-owned bird/rabbit/butterfly fauna with bounded flight, hop and flutter movement through the existing LivingWorldDirector micro-event path"
+        "CP55 adds project-owned bird/rabbit/butterfly fauna with bounded flight, hop and flutter movement through the existing LivingWorldDirector micro-event path",
+        "LivingWorldDirector now spawns bounded reward-free player interaction markers for work, traveler, market and social micro-events when story danger is inactive.",
+        "Living-world interaction objects are ephemeral, chapter-bound and destroyed with their parent micro-event; they do not create persistent quest or save state."
       ],
       "missing_work": [
         "production-quality terrain/material/art replacement beyond current procedural detail",
-        "environment motion implementation beyond static/procedural proxies",
         "batch integration PIE/device/performance/visual review",
         "additional fauna variety beyond the CP55 bird/rabbit/butterfly set remains optional future polish"
       ],
@@ -167,7 +171,7 @@
       "priority": "CRITICAL",
       "status": "PARTIAL",
       "origin": "User requirement for mountains valleys water beauty and film-like travel",
-      "intent": "Worlds need strong geography: hills, valleys, rivers, forests, mountains, landmarks, occlusion, vistas and chapter-specific atmosphere.",
+      "intent": "Build a distinctly beautiful, cinematic Middle-earth world rather than merely functional or generic fantasy scenery: strong vistas, layered depth, rich terrain/materials/vegetation, water, atmosphere, architecture and chapter-specific lighting, while preserving film-story geography and the low-spec performance budget.",
       "evidence": [
         "Data/BiomePlan.csv",
         "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
@@ -182,18 +186,26 @@
         "Moria large-scale halls/abyss",
         "Lothlorien golden canopy",
         "Anduin river canyon",
-        "CP49 reusable production terrain kit overlays hills cliffs river banks slopes and boulders without moving story anchors"
+        "CP49 reusable production terrain kit overlays hills cliffs river banks slopes and boulders without moving story anchors",
+        "Owner rejected the earlier plain reference-image quality as the target bar; the world visual bar is now explicitly higher and more cinematic.",
+        "Visual target emphasizes layered vistas, foreground/midground/background depth, richer materials/vegetation, landmark composition, water/fog/light atmosphere and region-specific color identity.",
+        "Part1ProductionAtlas records canonical region and landmark chains plus hero-vista targets for all eight Frodo chapters and Isengard.",
+        "Part1WorldMap now provides a source-grounded schematic travel graph using Middle-earth region/place names rather than modern-country substitutions."
       ],
       "missing_work": [
-        "Most non-Shire regions remain prototype geometry",
-        "Final terrain/material/vegetation production assets",
-        "focused PIE/device/visual acceptance",
-        "environment motion/weather depth"
+        "Most non-Shire regions remain prototype geometry.",
+        "Raise Shire itself from reference vertical slice to the new higher cinematic beauty bar.",
+        "Final terrain/material/vegetation/water/architecture production assets and composition pass.",
+        "Chapter-specific hero vistas and landmark reveals.",
+        "Environment motion/weather depth.",
+        "Focused PIE/device/performance/visual acceptance."
       ],
       "acceptance_criteria": [
-        "Each chapter has recognizable physical identity",
-        "Traversal uses elevation, occlusion and reveal rather than flat arenas",
-        "Production visuals pass device/performance and visual acceptance"
+        "Each chapter has recognizable physical identity and at least one memorable cinematic vista/reveal.",
+        "Traversal uses elevation, occlusion, foreground/midground/background layering and landmark framing rather than flat arenas.",
+        "Terrain, materials, vegetation, architecture, water and atmosphere read as a cohesive production world rather than prototype geometry.",
+        "Beauty upgrades preserve the 720p Low-Medium / 30 FPS floor target through LODs, instancing, culling and selective hero detail.",
+        "Production visuals pass focused device/performance and human visual acceptance."
       ],
       "dependencies": [],
       "checkpoint": "CP26_PLUS_PRODUCTION",
@@ -217,7 +229,8 @@
         "player awareness/look-at",
         "running-sensitive notice behavior",
         "near-player NPC social pauses",
-        "proxy gaze/blink/mouth acting"
+        "proxy gaze/blink/mouth acting",
+        "CP56 adds lightweight needs/emotion/goal state to ambient NPC routines"
       ],
       "missing_work": [
         "target-device behavior/performance validation"
@@ -351,7 +364,9 @@
         "automatic safe checkpoints use a separate ShireJourney_Checkpoint slot so manual F5 saves are never overwritten",
         "authored story beats write mapped safe checkpoints after quest/story mutation",
         "chapter transitions queue a checkpoint until the next player Tick so the saved transform belongs to the rebuilt destination region",
-        "combat defeat restores the latest automatic safe checkpoint at full health"
+        "combat defeat restores the latest automatic safe checkpoint at full health",
+        "Save schema v5 persists stamina, resolve, supplies and progression XP.",
+        "Save schema v6 persists ChronicleEntryIds and KnownMapRegionIds in addition to player-life/progression state."
       ],
       "missing_work": [
         "F9 round-trip verification on current integrated build",
@@ -412,12 +427,14 @@
       "evidence": [
         "Docs/STORY_CANON_BIBLE.md",
         "Docs/PART1_FELLOWSHIP_MASTERPLAN.md",
-        "Data/StoryBeatPlan.csv"
+        "Data/StoryBeatPlan.csv",
+        "Docs/AUTOMATION_FIRST_DELIVERY.md"
       ],
       "implementation_refs": [
         "Film-first canon policy already exists",
         "P1C01-P1C08 Part I route follows the film continuity",
-        "Gandalf/Isengard parallel route fills a film-canon event outside Frodo's viewpoint"
+        "Gandalf/Isengard parallel route fills a film-canon event outside Frodo's viewpoint",
+        "Owner reaffirmed on 2026-09-20 that exact film scenario order/character presence/outcomes are non-negotiable; FILM_CORE changes must be source-checked rather than recalled from memory."
       ],
       "missing_work": [
         "Continue chapter-by-chapter implementation and acceptance against the existing FilmExperiencePlan",
@@ -427,7 +444,8 @@
         "Every major implemented story beat maps to film continuity or an explicitly tagged compatible gap-fill",
         "No game-authored side content changes required film outcomes",
         "Chapter handoffs preserve the known chronology",
-        "Part I coverage gaps are visible in repository data rather than hidden in chat"
+        "Part I coverage gaps are visible in repository data rather than hidden in chat",
+        "Track all three films explicitly; audit the film opening/prologue and character viewpoints as well as later chapter anchors. Part II/III remain roadmap until Part I is stable."
       ],
       "dependencies": [],
       "checkpoint": "FILM_EXPERIENCE_CONTRACT",
@@ -483,18 +501,24 @@
         "Docs/STORY_CANON_BIBLE.md",
         "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
         "Data/BiomePlan.csv",
-        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp"
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+        "Data/ExplorationEnvelopePlan.json",
+        "Scripts/pre_unreal_validate.py",
+        "Data/ContextualSideActivityPlan.json"
       ],
       "implementation_refs": [
         "Shire exploration loops and side stories",
         "optional conversations",
         "landmark discoveries",
-        "film-compatible chapter progression"
+        "film-compatible chapter progression",
+        "Data/ExplorationEnvelopePlan.json defines free-roam windows and return-to-story rules for FrodoMain P1C01-P1C08 plus GandalfParallel P1C01.",
+        "PG-060 machine-checks anchor ordering, optional discovery bounds and no-story-mutation rules.",
+        "ContextualSideActivityPlan defines original gap-fill mini-games between film anchors; side content is plausible within the same time/place/character context and cannot alter canon."
       ],
       "missing_work": [
-        "Define exploration envelopes around each chapter's fixed anchors",
-        "Add more optional discoveries and living-world activity outside Shire",
-        "Verify exploration cannot skip or invalidate mandatory story results"
+        "Wire the declared optional discoveries and return guidance into chapter runtime where still absent",
+        "Prove in UE4.27 that exploration cannot skip or invalidate mandatory story results",
+        "Run chapter-by-chapter pacing/readability acceptance for the new exploration envelopes"
       ],
       "acceptance_criteria": [
         "Player can meaningfully explore between mandatory story beats",
@@ -593,7 +617,8 @@
         "Docs/CURRENT_PROJECT_STATE.md"
       ],
       "implementation_refs": [
-        "Static chapter reachability and world routing guards exist"
+        "Static chapter reachability and world routing guards exist",
+        "PG-060 statically prevents declared exploration windows/discoveries from reordering or advancing mandatory story anchors."
       ],
       "missing_work": [
         "PIE/device traversal proof for Shire and P1C02-P1C08",
@@ -782,7 +807,8 @@
         "Rivendell and Lothlorien have moving Elf ambient residents",
         "Data/CharacterPopulationPlan.json records chapter cast coverage and visual tiers",
         "Major named proxies now carry modular identity pieces such as cloaks, weapons, shields, quivers, beards and headpieces so the cast is visually distinguishable before final rigged assets.",
-        "CP46 adds dedicated production meshes for Black Riders, Orcs, Uruk-hai and Cave Troll while preserving existing combat/quest gating"
+        "CP46 adds dedicated production meshes for Black Riders, Orcs, Uruk-hai and Cave Troll while preserving existing combat/quest gating",
+        "CharacterProductionMatrix now records existing project-owned dedicated identity foundations separately from final rigged/accepted characters."
       ],
       "missing_work": [
         "Dedicated production meshes/rigged characters for Sam, Merry, Pippin, Aragorn, Boromir, Legolas, Gimli and other non-Frodo/Gandalf major characters",
@@ -827,7 +853,8 @@
         "ignored acquisition inbox",
         "approved asset manifest contract",
         "Pre-Unreal provenance validation",
-        "Programmer-supplied future sourcing shortlist is persisted in Data/ExternalAssetManifest.json by category"
+        "Programmer-supplied future sourcing shortlist is persisted in Data/ExternalAssetManifest.json by category",
+        "Production importer now copies tracked SourceAssets into Saved/ShireProductionImportWorking with UE4.27-compatible IPlatformFile::CopyDirectoryTree before any OBJ normalization/import."
       ],
       "missing_work": [
         "Acquire specific assets only when entitlement/license evidence is available",
@@ -1192,6 +1219,765 @@
       ],
       "checkpoint": "CP55",
       "notes": "This requirement preserves discovery options, not blanket asset approval."
+    },
+    {
+      "id": "REQ-EXP-003",
+      "title": "Moment-to-moment film-spine immersion across Part I",
+      "category": "PlayerExperience",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User explicitly requested that the player live the Fellowship film from its earliest Shire life through every major moment, while allowing fun exploration and side activity that never changes canon outcomes",
+      "intent": "Make the Peter Jackson Part I chronology the playable backbone while filling travel/social gaps with bounded friendship, humor, local life, discoveries and companion activity.",
+      "evidence": [
+        "Data/FilmExperiencePlan.json",
+        "Data/FellowshipExperienceMegaPassCP56.json",
+        "Docs/STORY_CANON_BIBLE.md",
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp"
+      ],
+      "implementation_refs": [
+        "P1C01 gains pre-adventure Shire friendship/revelry/play beats around Green Dragon/party spaces",
+        "PartyGuest and PlayRunner ambient roles create bounded visible social play using the existing cheap ambient simulation",
+        "P1C03/P1C05/P1C06/P1C07/P1C08 gain optional companionship/discovery beats between mandatory story anchors",
+        "FilmExperiencePlan gains an explicit Shire-life anchor and Fellowship companionship anchor",
+        "Original game writing preserves scene intent without reproducing screenplay dialogue"
+      ],
+      "missing_work": [
+        "Deepen P1C02 Bree social escalation and common-room life",
+        "Deepen P1C04 Rivendell pre-Council social exploration",
+        "Add final cinematic cameras/animation/voice only when production assets are ready",
+        "Run UE4.27 build/import/startup/chapter regression after the CP56 batch",
+        "Run later visual/device acceptance on the completed cinematic slice"
+      ],
+      "acceptance_criteria": [
+        "Required film events remain in correct order and retain required outcomes",
+        "The player regularly experiences optional companionship or local-life activity between major anchors",
+        "Side content never blocks main progression or alters canon outcomes",
+        "No verbatim screenplay reproduction",
+        "Expanded activity respects the target-laptop budget"
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-EXP-001",
+        "REQ-WORLD-001",
+        "REQ-NPC-001",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "CP56",
+      "notes": "CP56 is a large experiential-enrichment pass, not a rewrite of the film story."
+    },
+    {
+      "id": "REQ-NPC-005",
+      "title": "Living NPC goals needs emotions and character knowledge",
+      "category": "NPCIntelligence",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "User forwarded programmer living-NPC requirement and explicitly asked to preserve/analyze/apply it",
+      "intent": "Every meaningful character in Part I, named or ambient, should participate in an offline living-NPC intelligence layer appropriate to its importance: memory, routines, goals, needs, emotions, relationships, contextual knowledge and region/story mood awareness, without cloud/API dependency.",
+      "evidence": [
+        "Docs/PROGRAMMER_INPUT_LIVING_NPCS_PART1.md",
+        "Data/LivingNPCIntelligencePlan.json",
+        "Data/NPCSocialModel.json",
+        "Data/NPCMemoryPlan.json",
+        "Data/BoundedDialoguePlan.json",
+        "Source/ShireJourney/ShireAmbientNPC.cpp"
+      ],
+      "implementation_refs": [
+        "Existing named-NPC persistent memory and relationship deltas are reused",
+        "Existing social profiles, knowledge tags, schedules and bounded dialogue guards are reused",
+        "CP56 ambient NPCs now maintain bounded hunger/fatigue/social/fear state",
+        "CP56 ambient NPCs resolve lightweight emotion/goal states and bias existing routine/social behavior",
+        "Villager ambient dialogue can react to tired/hungry/afraid state",
+        "LivingNPCIntelligencePlan formalizes character knowledge limits, ignorance behavior and optional future LLM/STT/TTS layers",
+        "Gandalf, Sam, Aragorn and Bilbo now have explicit origin/occupation/biography/knowledge-limit/attitude context in NPCSocialModel",
+        "UShireNPCContextSubsystem loads named biography/knowledge envelopes and exposes GetProfileContextSummary for local dialogue/AI context",
+        "All NPCSocialModel profiles now opt into intelligence_enabled, world_mood_sensitive and offline_only",
+        "Remaining named Part I cast profiles now carry biography/knowledge-limit/attitude context",
+        "Data/NPCRegionalMoodPlan.json defines shared peace/suspicion/fear/grief/war-pressure context by chapter",
+        "UShireNPCContextSubsystem exposes regional mood/pressure and includes it in local character context and dialogue selection",
+        "Follow-up: exact regional mood eligibility and priority replace seed-only mood influence; 30 original Moria/Lothlorien companion lines reuse existing intent, knowledge, chapter and repetition gates.",
+        "FilmDialogueSourceContext now carries 53 original story-reactive variants spanning all Part I regional moods and major companion/story contexts."
+      ],
+      "missing_work": [
+        "Feed bounded emotion/goal context into named-NPC dialogue selection",
+        "Validate memory-aware dialogue through save/load on current CP56 build",
+        "Voice/STT/TTS remain optional later production layers and must be local/offline if shipped",
+        "Evaluate only small local/on-device language models after the deterministic offline stack passes; no cloud provider integration",
+        "Deepen authored dialogue variation so more intents visibly react to memory, relationship, emotion and regional mood",
+        "Validate all-profile offline intelligence coverage in UE4.27 and target-laptop runtime",
+        "Compile and run Shire.NPC.RegionalDialogue automation and observe regional dialogue in UE4.27; current follow-up is source-implemented only."
+      ],
+      "acceptance_criteria": [
+        "NPC behavior visibly varies with routine, danger, weather and bounded internal state",
+        "Important NPCs remember selected player/story events within save budgets",
+        "Named NPC responses remain inside their authored knowledge envelope",
+        "NPC admits uncertainty/ignorance rather than fabricating unavailable lore",
+        "No NPC intelligence path can change mandatory film outcomes",
+        "Target-laptop performance remains within the established budget",
+        "Game remains fully functional with network access disabled",
+        "No gameplay-critical NPC system requires an API key, cloud endpoint or internet connection",
+        "Any future LLM/STT/TTS implementation is local/on-device, optional and bounded by target-device performance",
+        "Every named Part I character has an intelligence profile with identity/context limits appropriate to the film chronology",
+        "Ambient regional populations participate through cheaper archetype intelligence rather than inert scripted actors",
+        "Dialogue/behavior can distinguish peaceful refuge, suspicious town, pursuit, grief, dead-city dread and active war pressure by current chapter"
+      ],
+      "dependencies": [
+        "REQ-NPC-001",
+        "REQ-NPC-003",
+        "REQ-NPC-004",
+        "REQ-VISION-001",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "CP56",
+      "notes": "Offline-only is authoritative. Deterministic local intelligence is the baseline; a future small local model may assist wording, but remote/cloud AI is excluded from shipped gameplay."
+    },
+    {
+      "id": "REQ-MEM-004",
+      "title": "Persist user production requests in the project Governor",
+      "category": "ProjectMemory",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "User explicitly asked that requested ideas/requirements be stored so neither side has to rely on remembering them later",
+      "intent": "Important user production requests that are explicitly accepted or clearly agreed must be promoted into durable project requirements, decisions, work-queue items or source-plan files. Ideas that are only proposed, rejected, deferred without adoption, or judged not to fit the project must not become active requirements.",
+      "evidence": [
+        "Data/ProjectGovernor.json"
+      ],
+      "implementation_refs": [
+        "REQ-MEM-003 persists useful external sources and requests",
+        "DEC-009 through DEC-012 preserve major story/NPC/offline decisions",
+        "WORK-EXP-003 and WORK-LW-004 keep the two major production tracks active",
+        "REQ-QA-001 preserves the accepted automation-first quality direction and its remaining work"
+      ],
+      "missing_work": [
+        "Continue promoting future major user requests into the Governor instead of relying only on chat history"
+      ],
+      "acceptance_criteria": [
+        "A future developer can recover the active product direction from repository files without needing the chat transcript",
+        "Major user requests have a requirement/decision/work item or an explicitly linked production plan",
+        "Accepted/confirmed major requests remain recoverable from the repository even if the chat is lost or full",
+        "Rejected or non-adopted suggestions are not promoted into active requirements or work items"
+      ],
+      "dependencies": [
+        "REQ-MEM-001",
+        "REQ-MEM-003"
+      ],
+      "checkpoint": "ONGOING",
+      "notes": "Ongoing governance rule: record what the owner accepted/agreed as project direction; do not turn every conversation, rejected idea or unused suggestion into authoritative scope."
+    },
+    {
+      "id": "REQ-QA-001",
+      "title": "Developer-owned automated regression before owner play",
+      "category": "QualityAutomation",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner requested on 2026-09-19 to maximize programming and automatic verification so play sessions focus on enjoyment rather than repeated bug testing.",
+      "intent": "Automate reproducible failures before delivery so owner play sessions focus on enjoyment rather than repeated bug discovery. The same exact commit must accumulate machine evidence across static checks, UE4.27 build/import/runtime, story/persistence/NPC behavior, and target-device performance before merge claims are promoted.",
+      "evidence": [
+        "Scripts/runtime_smoke.py",
+        "Scripts/test_runtime_smoke.py",
+        "Docs/AUTOMATION_FIRST_DELIVERY.md"
+      ],
+      "implementation_refs": [
+        "Runtime observer rejects late fatal/assert/ensure messages and spontaneous exits after ready markers; requires a live observation window and final log scan.",
+        "Subprocess regression scenarios run in Pre-Unreal CI.",
+        "Self-hosted UE4 validation now avoids fragile later temporary PowerShell scripts for checkout/warning analysis and explicitly verifies the exact PR-head SHA.",
+        "State-mode runtime smoke now requires Ring continuity plus Journey Discovery first-time/route-roundtrip continuity.",
+        "Production100ReadinessGate plus production_readiness_audit.py prevents proxy/source-asset presence or compile success from being mislabeled as 100 percent production.",
+        "PG-092 validates world-map nodes, edges, packaging, controls and Map Knowledge spoiler bounds."
+      ],
+      "missing_work": [
+        "Validate this observer on the Windows UE4.27 runner.",
+        "Add engine-driven quest progression, save/load, route-return and offline NPC memory/knowledge regression scenarios.",
+        "Add rendered automated traversal captures and target-device performance reports.",
+        "Add an exact-SHA automated quality report with machine-readable JSON plus a human-readable summary.",
+        "Extend the gate with target-device FPS/hitch and memory-pressure evidence against the existing 720p Low-Medium / 30 FPS floor target.",
+        "Add engine-driven offline NPC behavior/dialogue consistency coverage, save/load roundtrip coverage, story/canon contract checks and text/localization integrity checks.",
+        "Evaluate Unreal Automation Framework first, then add Gauntlet/Unreal Insights where they improve end-to-end or performance coverage without replacing proven existing checks."
+      ],
+      "acceptance_criteria": [
+        "Late startup failures cannot be marked successful.",
+        "Each automated claim links to its tested commit and evidence.",
+        "Save/load and required story progression receive engine-driven tests before being claimed verified.",
+        "Owner is not the default reproducibility tester; pacing/visual judgement remains distinct from machine verification.",
+        "A merge candidate is evaluated on the exact tested commit SHA; passing evidence from an older SHA cannot certify a newer head.",
+        "Required automated gates fail closed: a failed required check blocks merge until repaired and rerun.",
+        "Performance acceptance uses the project's 30 FPS floor target at 720p Low-Medium on the target laptop unless the owner explicitly changes that requirement.",
+        "Story/lore automation validates against the project's Governor, Story Canon Bible and FilmExperiencePlan rather than an undefined external lore score.",
+        "Automation may reduce manual defect discovery but must not claim mathematically bug-free, lag-free or leak-free software beyond measured evidence."
+      ],
+      "dependencies": [
+        "REQ-SAVE-001",
+        "REQ-VISION-001",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "AUTOMATION_FIRST",
+      "notes": "Partial automation infrastructure only; no claim of full gameplay, visual or device acceptance."
+    },
+    {
+      "id": "REQ-MEGA-001",
+      "title": "Whole-game mega integration without forgotten subsystems",
+      "category": "ProductionIntegration",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly requested the largest integrated production leap so far and asked the manager to catch gameplay details they may forget.",
+      "intent": "Advance characters, gameplay, world life, story, presentation, persistence, offline intelligence and automated validation as one coordinated production path instead of isolated demos.",
+      "evidence": [
+        "Data/GameCompletenessMatrix.json",
+        "Data/CP56MegaIntegrationPlan.json",
+        "Data/ProjectGovernor.json",
+        "Data/Part1ProductionAtlas.json",
+        "Data/Production100ReadinessGate.json",
+        "Data/Part1MegaProductionPlan.json",
+        "Scripts/production_readiness_audit.py",
+        "Data/Part1WorldMap.json",
+        "Source/ShireJourney/FellowshipMythicThreat.cpp",
+        "Source/ShireJourney/FellowshipMythicThreat.h"
+      ],
+      "implementation_refs": [
+        "Whole-game completeness matrix now tracks all major gameplay and presentation systems.",
+        "PR #53 is the single active continuation path for CP56 mega integration.",
+        "Part I exploration envelopes and optional discovery contracts now cover all active routes/chapters.",
+        "Source-grounded original dialogue bank expanded to 53 validated variants.",
+        "Production asset import now operates on an ignored Saved/ working copy so one-click updates do not dirty tracked SourceAssets.",
+        "Self-hosted UE4 validation now avoids fragile later temporary PowerShell scripts for checkout/warning analysis and explicitly verifies the exact PR-head SHA.",
+        "Journey Discovery moved from static design into runtime triggers, persistence, HUD feedback and headless state auditing across all Part I regions.",
+        "B1 now includes actual player-life/progression runtime instead of plan-only modern-game axes.",
+        "B1 now includes Chronicle/map knowledge UI, save continuity and contextual side-activity progression bridging.",
+        "B1 now includes reusable traversal-challenge gameplay, not only proximity discovery triggers.",
+        "B1 side-play physicalization now covers 19 contextual activities with centralized film-window guards and a direct stealth source.",
+        "B1 now includes a dedicated environmental puzzle runtime and bounded interactive living-world micro-events, both guarded against canon mutation and persistent reward farming.",
+        "B1 now includes dedicated source-grounded Chronicle entry browsing and readable map-region presentation.",
+        "Part1MegaProductionPlan launches one coordinated audit/source/character/world/gameplay/battle/presentation/acceptance operation instead of isolated micro-steps.",
+        "The mega operation now includes film-locked Watcher/Balrog physical threat presentation plus a source-grounded runtime journey map."
+      ],
+      "missing_work": [
+        "Get final PR #53 head through full UE4.27 validation.",
+        "Deepen named-character intelligence and regional dialogue across all Part I moods.",
+        "Add engine-driven story/save regressions.",
+        "Continue world/character/presentation production passes.",
+        "Run target-device and human visual/pacing acceptance."
+      ],
+      "acceptance_criteria": [
+        "Current PR head is green before merge.",
+        "No critical subsystem silently disappears from the completeness matrix.",
+        "Film outcomes remain immutable with optional exploration between anchors.",
+        "Shipped game remains offline."
+      ],
+      "dependencies": [
+        "REQ-EXP-003",
+        "REQ-NPC-005",
+        "REQ-WORLD-001",
+        "REQ-CHAR-002",
+        "REQ-SAVE-001",
+        "REQ-PERF-001",
+        "REQ-QA-001"
+      ],
+      "checkpoint": "CP56_MEGA_INTEGRATION"
+    },
+    {
+      "id": "REQ-SOURCE-001",
+      "title": "Use owner-supplied film scripts as bounded dialogue context sources",
+      "category": "StoryDialogueSources",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly requested that the uploaded Fellowship and Two Towers screenplay PDFs become core references so conversations feel situated inside the film world without requiring exact script repetition.",
+      "intent": "Derive scene order, speaker presence, emotional pressure, relationship state, conversational topics and knowledge ceilings from the supplied film-script sources while keeping runtime dialogue original, offline, non-verbatim and subordinate to project canon/governance.",
+      "evidence": [
+        "Data/FilmDialogueSourceContext.json",
+        "Data/BoundedDialoguePlan.json",
+        "Source/ShireJourney/ShireNPCContextSubsystem.cpp"
+      ],
+      "implementation_refs": [
+        "Fellowship screenplay mapped into Part I route/chapter/story-beat contexts.",
+        "Two Towers screenplay indexed into future Part II arc seeds.",
+        "Runtime context will expose active source grounding to bounded dialogue selection.",
+        "Part1ProductionAtlas derives Part I geography/cast/threat/artifact production context from the owner screenplay/source pack/production bibles while raw references remain non-runtime."
+      ],
+      "missing_work": [
+        "Validate source-context loading in UE4.27 on PR #53.",
+        "Expand Part II route contexts when Part II runtime production begins.",
+        "Feed only bounded summaries/knowledge limits to any future local on-device language layer."
+      ],
+      "acceptance_criteria": [
+        "Part I source context is recoverable without opening PDFs at runtime.",
+        "No long or verbatim screenplay lines are stored as runtime dialogue.",
+        "NPCs cannot gain future knowledge from later screenplay events.",
+        "Two Towers remains reference-ready without falsely claiming Part II runtime implementation.",
+        "Shipped dialogue remains offline."
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-EXP-003",
+        "REQ-NPC-005",
+        "REQ-QA-001",
+        "REQ-MEM-004"
+      ],
+      "checkpoint": "CP56_SOURCE_GROUNDED_DIALOGUE"
+    },
+    {
+      "id": "REQ-EXP-004",
+      "title": "Exploration must reward discovery as game progression",
+      "category": "PlayerExperience",
+      "priority": "HIGH",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly requested a Fallout-like sense of reward when discovering areas, adapted to the tone of this game so exploration feels like a complete game system rather than only film traversal.",
+      "intent": "Reward first-time exploration with Journey Insight, Chronicle/map/knowledge unlocks, companion memory/dialogue opportunities and region-completion bonuses without adding canon-breaking power or allowing story skips.",
+      "evidence": [
+        "Data/JourneyDiscoveryRewardPlan.json",
+        "Data/ExplorationEnvelopePlan.json",
+        "Data/ContextualSideActivityPlan.json",
+        "Source/ShireJourney/ShireQuestSubsystem.cpp",
+        "Source/ShireJourney/ShireQuestTrigger.cpp",
+        "Source/ShireJourney/ShireHUD.cpp",
+        "Source/ShireJourney/ShireSaveGame.h",
+        "Source/ShireJourney/ShirePlayerCharacter.cpp"
+      ],
+      "implementation_refs": [
+        "Static reward contract now covers 27 optional discoveries, including the first direct stealth-linked discovery.",
+        "Four thematic reward categories: Road Wisdom, Peoples and Places, Fellowship Bonds, Peril Sense.",
+        "Journey Insight milestone rewards favor content/navigation quality-of-life rather than combat stat inflation.",
+        "Region completion bonuses exist for all active Part I exploration chapters/routes.",
+        "Contextual side activities feed the existing first-time Journey Discovery reward loop instead of creating a separate XP economy.",
+        "JourneyDiscoveryRewardPlan is now loaded by UShireQuestSubsystem at runtime.",
+        "All 27 declared Part I discoveries are wired to chapter/world triggers or physical activity actors with explicit film-safe route/chapter/story windows.",
+        "First-time-only Journey Insight, region completion bonuses and milestone state are deterministic and save/load persisted.",
+        "AShireHUD now has a separate subtle discovery toast instead of reusing the red alert channel.",
+        "Headless state audit requires discovery-core=PASS and proves repeat visits do not farm Insight.",
+        "First-time Journey Discovery now feeds bounded utility/content progression tracks.",
+        "Discovery registration now also unlocks persistent Chronicle/map knowledge on first registration.",
+        "SHIRE_QUIET_FEET adds a first-time Journey Discovery reward without changing the Shire region-completion threshold, preserving existing save/milestone behavior.",
+        "Dedicated Chronicle browsing now uses source-grounded discovery labels from ExplorationEnvelopePlan via JourneyDiscoveryRewardPlan display_label metadata.",
+        "Chronicle entries expose readable discovery labels plus region/chapter/category context, with explicit previous/next browsing controls.",
+        "Map Knowledge now powers a visual schematic route map instead of only a region-name list; future chapter nodes remain hidden until known."
+      ],
+      "missing_work": [
+        "Exact-head UE4.27 compile/import/startup/state proof for the new runtime discovery layer.",
+        "Discovery-specific bounded dialogue topic unlocks.",
+        "PIE/device pacing, placement and readability review."
+      ],
+      "acceptance_criteria": [
+        "Every rewarded discovery is first-time-only for Journey Insight.",
+        "Revisiting a place may create ambient/dialogue reactions but never farms points.",
+        "No discovery reward can advance or skip a mandatory story anchor.",
+        "Rewards fit the world through knowledge, memory, relationships, navigation and Chronicle content.",
+        "Discovery progress survives save/load.",
+        "The system works fully offline."
+      ],
+      "dependencies": [
+        "REQ-EXP-002",
+        "REQ-SAVE-001",
+        "REQ-NPC-005",
+        "REQ-QA-001"
+      ],
+      "checkpoint": "CP56_JOURNEY_DISCOVERY"
+    },
+    {
+      "id": "REQ-EXP-005",
+      "title": "Original side activities must feel like unseen moments from the film journey",
+      "category": "PlayerExperience",
+      "priority": "HIGH",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly confirmed that the main story must remain the film, while optional exploration may include original side games that plausibly fit the film's context.",
+      "intent": "Create enjoyable optional mini-games, social moments, observation, survival, tracking, preparation and traversal activities in the gaps between film anchors, as if they could have happened off-camera, without inventing an alternate plot.",
+      "evidence": [
+        "Data/ContextualSideActivityPlan.json",
+        "Data/ExplorationEnvelopePlan.json",
+        "Data/JourneyDiscoveryRewardPlan.json",
+        "Source/ShireJourney/ShireQuestSubsystem.cpp",
+        "Source/ShireJourney/ShireTraversalChallenge.h",
+        "Source/ShireJourney/ShireTraversalChallenge.cpp",
+        "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp"
+      ],
+      "implementation_refs": [
+        "19 contextual side activities now cover FrodoMain P1C01-P1C08 plus GandalfParallel P1C01.",
+        "Every activity declares exact opening/closing story anchors, participants, film-context rationale, mechanics, reward link and urgency policy.",
+        "Activities are explicitly barred from advancing required anchors, changing canon outcomes or revealing future knowledge.",
+        "Contextual side-activity types now bridge into bounded progression XP when their linked first-time discovery completes; CAMP_PREPARATION feeds CAMPCRAFT and future STEALTH_LITE feeds QUIET_STEP.",
+        "Shire Field Race and Moria Follow the Echo now require ordered three-gate traversal completion before their linked discovery/progression reward is granted.",
+        "All current contextual side activities now have physical multi-step runtime representation through reusable ordered challenge actors, with centralized film-window gating.",
+        "SIDE_SHIRE_QUIET_FEET is the first direct STEALTH_LITE activity and awards QUIET_STEP progression only on first completion.",
+        "PATTERN_MATCH now has a dedicated interactable three-step environmental puzzle actor used by Rivendell map study and Moria relief study.",
+        "Environmental puzzle completion still passes through the centralized side-activity discovery window and cannot advance film anchors."
+      ],
+      "missing_work": [
+        "Deepen observation/tracking/camp/social families beyond ordered-gate representation where PIE proves the extra interaction improves play.",
+        "PIE/device placement, pacing and readability review."
+      ],
+      "acceptance_criteria": [
+        "Main story remains Peter Jackson film chronology and outcomes.",
+        "Original side content feels plausible for the current place, time, companions and danger level.",
+        "Urgent film beats always override casual optional activities.",
+        "No side activity introduces future knowledge or alternate canon.",
+        "Optional play remains enjoyable even when the player ignores completion rewards."
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-EXP-002",
+        "REQ-EXP-004",
+        "REQ-NPC-005",
+        "REQ-SAVE-001"
+      ],
+      "checkpoint": "CP56_CONTEXTUAL_SIDE_PLAY"
+    },
+    {
+      "id": "REQ-RING-001",
+      "title": "The One Ring is the systemic axis of the trilogy game",
+      "category": "StoryGameplayCore",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly reaffirmed that the Ring is the axis of the series and asked to confirm the game is built around the continuing Frodo/Sam Ring journey.",
+      "intent": "Keep Ring ownership, burden, temptation and route consequences explicit. Exploration and parallel routes enrich the journey but never displace the Ring quest.",
+      "evidence": [
+        "Data/TrilogyRingQuestPlan.json",
+        "Source/ShireJourney/ShireQuestSubsystem.h",
+        "Source/ShireJourney/ShireQuestSubsystem.cpp",
+        "Source/ShireJourney/ShireGameMode.cpp"
+      ],
+      "implementation_refs": [
+        "Derived Ring bearer/state/pressure runtime API",
+        "GandalfParallel preserves Frodo as off-route bearer",
+        "headless route-state audit requires ring-core=PASS",
+        "bounded dialogue selection includes Ring context"
+      ],
+      "missing_work": [
+        "authored Ring visual/audio presentation at film-safe beats",
+        "Frodo burden animation/audio feedback",
+        "Part II/III runtime continuation",
+        "exact-head UE4.27 validation"
+      ],
+      "acceptance_criteria": [
+        "correct bearer at every story window",
+        "parallel routes cannot overwrite Ring truth",
+        "side content cannot mutate Ring outcomes",
+        "exact-head engine audit proves continuity"
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-SAVE-001",
+        "REQ-QA-001"
+      ],
+      "checkpoint": "TRILOGY_RING_CORE"
+    },
+    {
+      "id": "REQ-CHAR-004",
+      "title": "Production character replacement pipeline for the full core cast",
+      "category": "CharacterProduction",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner directed that all proxy characters be replaced with real playable/production characters and confirmed external free/personal-use sources may be used when terms allow.",
+      "intent": "Move the whole core cast through a traceable model-material-rig-skin-animation-UE4-LOD pipeline, with fallback to project-authored/custom character creation where external assets are unavailable.",
+      "evidence": [
+        "Data/CharacterProductionMatrix.json"
+      ],
+      "implementation_refs": [
+        "full Part I core-cast matrix with visual identity, rig family, priority and current proof boundary",
+        "source/provenance policy for external assets",
+        "shared performance/LOD contract",
+        "Full-cast production is ordered by Part1MegaProductionPlan with asset-root, rig-family, final-gap and acceptance contracts."
+      ],
+      "missing_work": [
+        "select/import legal base assets or author replacements",
+        "rig/skin and retarget core cast",
+        "replace runtime proxies",
+        "UE4 compile/import and PIE visual/motion acceptance"
+      ],
+      "acceptance_criteria": [
+        "core cast recognizable without labels",
+        "every asset has provenance",
+        "rigs animate correctly in UE4.27.2",
+        "target performance preserved"
+      ],
+      "dependencies": [
+        "REQ-ASSET-001",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "CHARACTER_PRODUCTION_MEGA"
+    },
+    {
+      "id": "REQ-WORLD-003",
+      "title": "Cinematic beauty benchmark production pass",
+      "category": "WorldDesign",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner supplied a dense cinematic forest/character reference and explicitly requested a more beautiful world than earlier game screenshots.",
+      "intent": "Raise all Part I regions to a layered cinematic beauty standard using hero vistas, rich near-field detail, regional materials/vegetation, fog/light/water and selective performance-safe detail.",
+      "evidence": [
+        "Data/CinematicWorldProductionMatrix.json",
+        "Docs/WORLD_PRODUCTION_BLUEPRINT.md"
+      ],
+      "implementation_refs": [
+        "all Part I regions now have hero vistas, foreground/midground/background targets, atmosphere and production-gap definitions",
+        "benchmark emphasizes light shafts, ground detail, layered depth and characters embedded in landscape",
+        "CinematicWorldProductionMatrix records project-owned regional kit roots separately from final-art acceptance."
+      ],
+      "missing_work": [
+        "production terrain/material/foliage/architecture replacement",
+        "hero-vista implementation",
+        "weather/water/material polish",
+        "target-device and human visual acceptance"
+      ],
+      "acceptance_criteria": [
+        "each region has at least one memorable hero reveal",
+        "world reads cohesive in motion not as blockout",
+        "30 FPS floor preserved through selective detail/LOD/culling"
+      ],
+      "dependencies": [
+        "REQ-WORLD-002",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "CINEMATIC_WORLD_MEGA"
+    },
+    {
+      "id": "REQ-GAME-001",
+      "title": "Modern game layer around the fixed film story",
+      "category": "GameplaySystems",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly asked for researched modern-game systems, side missions, exploration and character-life/progression mechanics across the full game without skipping the film.",
+      "intent": "Make the project a full narrative adventure game: preserve every mandatory film anchor while adding meaningful optional exploration, world events, companion activities, traversal/puzzles, character-life state and bounded progression between those anchors.",
+      "evidence": [
+        "Data/ModernGameLayerPlan.json",
+        "Data/JourneyDiscoveryRewardPlan.json",
+        "Data/ContextualSideActivityPlan.json",
+        "Data/PlayerLifeProgressionPlan.json",
+        "Source/ShireJourney/ShirePlayerCharacter.cpp",
+        "Source/ShireJourney/ShireQuestSubsystem.cpp",
+        "Source/ShireJourney/ShireSaveGame.h",
+        "Data/ChronicleMapKnowledgePlan.json",
+        "Source/ShireJourney/ShireHUD.cpp"
+      ],
+      "implementation_refs": [
+        "ModernGameLayerPlan synthesizes exploration rewards, world events, semi-open chapter hubs, companion dialogue, map discovery, environmental puzzles and living-world reactivity into an original Middle-earth implementation.",
+        "P1C01-P1C08 plus GandalfParallel now have chapter-specific side-play families while required film outcomes remain fixed.",
+        "Lightweight Stamina, Ring-pressure-sensitive Resolve and capped Supplies are implemented without hunger/thirst timers.",
+        "Seven progression tracks persist through save schema v5 and receive first-time discovery XP by category.",
+        "Fellowship Bond is exposed from FELLOWSHIP progression; HUD/input expose the new player-life layer.",
+        "Headless state audit now requires progression-core=PASS.",
+        "Chronicle/map knowledge is now runtime: first-time discoveries persist a Chronicle entry and known route/chapter region.",
+        "C toggles an in-game Chronicle & Journey panel showing progression ranks, recent Chronicle entries and known map regions.",
+        "First ordered traversal challenge mechanic is now implemented as a reusable three-gate runtime actor, replacing touch-to-discover for selected activities.",
+        "Reusable side-activity challenge runtime now covers observation, tracking, pattern, camp, timing, social-memory and stealth-lite families across Part I.",
+        "Quiet Feet Through the Hedges gives QUIET_STEP a direct crouch-gated authored runtime source.",
+        "Dedicated environmental pattern-puzzle runtime replaces generic traversal representation for Rivendell map study and Moria relief study.",
+        "Living micro-events now expose optional bounded player responses without XP, supplies, relationship, story or canon rewards.",
+        "Chronicle & Journey now supports explicit entry browsing with readable source-grounded labels instead of raw technical IDs.",
+        "M opens an in-game Journey Map using Map Knowledge to hide future chapters while exposing current/known route nodes and canonical place names."
+      ],
+      "missing_work": [
+        "Validate current exact head in UE4.27."
+      ],
+      "acceptance_criteria": [
+        "Mandatory film scenes and outcomes remain reachable and unchanged.",
+        "Every Part I chapter contains optional game-like play beyond walking between film scenes.",
+        "Optional rewards improve utility, knowledge, relationships or content without stat-bloat grind.",
+        "Character experience includes stamina/resolve/companions/supplies and not only health/death.",
+        "Urgent film moments suppress or close inappropriate side content.",
+        "Target device remains at 720p Low-Medium / 30 FPS floor."
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-EXP-004",
+        "REQ-EXP-005",
+        "REQ-WORLD-001",
+        "REQ-NPC-001",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "MODERN_GAME_LAYER"
+    },
+    {
+      "id": "REQ-ENSEMBLE-001",
+      "title": "Use the full film ensemble for playable missions and side content",
+      "category": "StoryGameplay",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "origin": "Owner explicitly said the film itself contains many mission opportunities and Frodo should not monopolize gameplay while occupied with the Ring; Gandalf, Gimli and other characters should be used and expanded slightly within film context.",
+      "intent": "Convert film actions and safe off-camera gaps into character-appropriate playable missions across the ensemble, choosing the viewpoint from the event itself while preserving every film anchor and outcome.",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Data/EnsembleFilmMissionPlan.json",
+        "Data/ModernGameLayerPlan.json"
+      ],
+      "implementation_refs": [
+        "Part I identifies Gandalf investigation/Isengard, Arwen Ford, Boromir training/defense, Legolas scouting, Gimli Moria and Aragorn scouting as distinct viewpoint opportunities.",
+        "Part II maps the Three Hunters, Merry/Pippin, Gandalf/Rohan and potential Faramir/Eowyn episodes.",
+        "Part III remains high-level FUTURE_SOURCE_CHECK until exact film/script scene verification.",
+        "Part1ProductionAtlas maps Part I cast presence and production asset roots so ensemble viewpoints can use the correct character visual foundation."
+      ],
+      "missing_work": [
+        "Verify exact opening/closing film anchors for each planned viewpoint mission before runtime implementation.",
+        "Implement short-route handoff/save logic where a mission needs temporary character control.",
+        "Add character-specific mechanics/animation/UI for non-Frodo viewpoints.",
+        "Run UE4.27 chapter/route/save/pacing validation after each mission wave."
+      ],
+      "acceptance_criteria": [
+        "Playable viewpoint follows the film event rather than defaulting to Frodo.",
+        "No optional mission removes a character from a required next film scene.",
+        "Film actions are converted to gameplay before invented filler is added.",
+        "Original expansion remains small, plausible and bounded by verified film anchors.",
+        "Every alternate viewpoint rejoins the same canonical chronology and outcome."
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-GAME-001",
+        "REQ-SAVE-001",
+        "REQ-CHAR-004"
+      ],
+      "checkpoint": "ENSEMBLE_FILM_MISSIONS"
+    },
+    {
+      "id": "REQ-SIDE-001",
+      "title": "Canon-separated side-content catalog for the full trilogy",
+      "category": "StoryGameplay",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner supplied a programmer proposal covering film moments, expanded film spaces and book/character chronicles and asked to reconcile it with all prior requests to prevent future continuity errors.",
+      "intent": "Maintain one audited catalog that distinguishes mandatory film-playable moments, film-expanded interaction, original interstitial gap-fill and explicitly non-film Book Chronicles, each with source-verification state.",
+      "evidence": [
+        "Data/SideContentCanonCatalog.json",
+        "Data/EnsembleFilmMissionPlan.json",
+        "Data/ModernGameLayerPlan.json",
+        "Docs/STORY_CANON_BIBLE.md"
+      ],
+      "implementation_refs": [
+        "Part I and Part II proposal entries are classified and source-statused against supplied screenplays/project canon.",
+        "Part III entries are retained as FUTURE_SOURCE_CHECK rather than silently accepted as verified.",
+        "Book-only material is isolated as BOOK_CHRONICLE_NONCANON_TO_FILM."
+      ],
+      "missing_work": [
+        "Bind every accepted runtime side activity to exact opening/closing film anchors.",
+        "Complete scene-level Part III verification before promoting any Part III entry from FUTURE_SOURCE_CHECK.",
+        "Implement Chronicle presentation as a separated optional mode that cannot mutate main film save continuity."
+      ],
+      "acceptance_criteria": [
+        "No book-only event appears in main film chronology without an explicit Chronicle label.",
+        "No FUTURE_SOURCE_CHECK item can be treated as verified runtime canon.",
+        "Every FILM_CORE gameplay conversion preserves scene participants/order/outcome.",
+        "Expanded/interstitial content closes before the next mandatory film scene."
+      ],
+      "dependencies": [
+        "REQ-VISION-001",
+        "REQ-GAME-001",
+        "REQ-ENSEMBLE-001"
+      ],
+      "checkpoint": "SIDE_CONTENT_CANON_CATALOG"
+    },
+    {
+      "id": "REQ-EXEC-001",
+      "title": "Single master execution roadmap with zero orphan requests",
+      "category": "ProductionIntegration",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "Owner requested that the growing set of large requests be organized together and executed immediately without leaving or forgetting work behind.",
+      "intent": "Maintain one subordinate execution roadmap that maps every unfinished Governor requirement and every ACTIVE work item into a dependency-ordered production bundle, with CI rejecting orphan work.",
+      "evidence": [
+        "Data/MasterExecutionRoadmap.json",
+        "Docs/MASTER_EXECUTION_BOARD.md",
+        "Scripts/pre_unreal_validate.py"
+      ],
+      "implementation_refs": [
+        "MasterExecutionRoadmap covers all current unfinished Governor requirements and all ACTIVE work items.",
+        "PG-078 fails Pre-Unreal when a future unfinished requirement or ACTIVE work item is not assigned to the master roadmap.",
+        "Active work queue receives unique execution ranks/bundle labels so large streams no longer compete as an unordered list."
+      ],
+      "missing_work": [
+        "Operational: keep the roadmap synchronized whenever a new accepted requirement/work item is added.",
+        "Operational: close bundle exit criteria only from actual repository/engine/device evidence."
+      ],
+      "acceptance_criteria": [
+        "No unfinished Governor requirement is absent from the master roadmap.",
+        "No ACTIVE work item is absent from the master roadmap.",
+        "Each production bundle declares dependencies, concrete deliverables and exit evidence.",
+        "Pre-Unreal rejects orphan accepted work."
+      ],
+      "dependencies": [
+        "REQ-MEM-001",
+        "REQ-GOV-001",
+        "REQ-MEGA-001"
+      ],
+      "checkpoint": "MASTER_EXECUTION_CONTROL"
+    },
+    {
+      "id": "REQ-AUDIT-001",
+      "title": "Continuous deep architecture, backend and player-experience audit",
+      "category": "QualityEngineering",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner requested a from-zero-to-thousand review of requirements, Governor, backend, game rules, developer practices and enjoyment risks before further large construction.",
+      "intent": "Continuously detect architectural contradictions, hidden validation defects, player-friction code, unsafe debug controls, save/load risks and scaling hotspots as the game grows.",
+      "evidence": [
+        "Data/DeepProjectAudit.json",
+        "Docs/DEEP_PROJECT_AUDIT.md",
+        "Scripts/deep_project_audit.py"
+      ],
+      "implementation_refs": [
+        "shipping separation for developer chapter/route controls",
+        "bounded lightweight cinematic input lock",
+        "asynchronous automatic checkpoint writes",
+        "CI deep-audit script and finding registry",
+        "World material persistence verified with zero missing runtime packages in Unreal #319.",
+        "SHA-scoped governor handoff regression guard."
+      ],
+      "missing_work": [
+        "Complete current V6 engine validation after repeated runner cancellation; investigate trigger without treating interruption as a code defect.",
+        "profile actor-iteration/social pairing on target device",
+        "profile chapter-transition synchronous asset loads",
+        "target-device frame-time/memory capture and rendered chapter acceptance"
+      ],
+      "acceptance_criteria": [
+        "critical exact-head gates are green before unrelated expansion",
+        "shipping build exposes no developer route/chapter controls",
+        "automatic checkpoints do not perform synchronous active-play disk writes",
+        "known scaling/player-friction findings are recorded and repaired or evidence-bounded",
+        "device/rendered acceptance remains distinct from machine evidence"
+      ],
+      "dependencies": [
+        "REQ-QA-001",
+        "REQ-PERF-001",
+        "REQ-SAVE-001"
+      ],
+      "checkpoint": "DEEP_AUDIT_2026_09_20",
+      "notes": "Continuous control; never a one-time zero-bugs claim."
+    },
+    {
+      "id": "REQ-NPC-006",
+      "title": "Living NPC emergent intelligence and optional bounded language expression",
+      "status": "PLANNED",
+      "priority": "CRITICAL",
+      "owner_intent": "NPCs should feel alive through real memory, relationships, goals, needs, emotions, context and inter-NPC knowledge transfer; language generation is optional expression, never story authority.",
+      "plan": "Data/LivingNPCIntelligenceRoadmap.json",
+      "acceptance_boundary": "Prototype one existing named Shire NPC first; preserve deterministic offline fallback and canon/knowledge gates.",
+      "intent": "NPCs should feel alive through real memory, relationships, goals, needs, emotions, context and inter-NPC knowledge transfer; language generation is optional expression, never story authority.",
+      "acceptance_criteria": [
+        "One existing named Shire NPC demonstrates persistent compact memory, relationship-aware revisit behavior and bounded real-event knowledge transfer.",
+        "Generated or locally expressed dialogue cannot create canon facts, quest outcomes, deaths, allegiances or future knowledge.",
+        "Disabling or losing the optional language-expression layer leaves deterministic authored/template dialogue fully functional.",
+        "NPC memory remains compact and save-safe; raw transcripts are not used as persistent memory.",
+        "No ambient crowd actor requires a per-instance persistent LLM or cloud dependency.",
+        "Prototype survives save/load and chapter-state transitions without duplicating NPC state authority.",
+        "Performance is measured before scaling the system beyond the prototype."
+      ],
+      "dependencies": [
+        "REQ-NPC-003",
+        "REQ-NPC-004",
+        "REQ-NPC-005",
+        "REQ-SAVE-001",
+        "REQ-PERF-001"
+      ],
+      "category": "LivingWorld",
+      "origin": "Owner proposal normalized from programmer suggestion",
+      "evidence": [
+        "Data/LivingNPCIntelligenceRoadmap.json",
+        "Data/BoundedDialoguePlan.json",
+        "Data/NPCMemoryPlan.json",
+        "Data/NPCSocialModel.json",
+        "Data/NPCConversationPlan.json"
+      ],
+      "missing_work": [
+        "Prototype one existing named Shire NPC over the current memory/social/context stack.",
+        "Add real-event witness/share/learn propagation with canon/knowledge gates.",
+        "Add optional local bounded expression only after deterministic behavior is proven."
+      ]
     }
   ],
   "hard_invariants": [
@@ -1401,6 +2187,342 @@
         "Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md",
         "Pre-Unreal Validation #264 on develop",
         "Unreal Build Validation #99 on develop"
+      ]
+    },
+    {
+      "id": "DEC-009",
+      "title": "Use the film chronology as the hard spine and expand playable life between anchors",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-VISION-001",
+        "REQ-EXP-001",
+        "REQ-EXP-003",
+        "REQ-WORLD-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "For Part I, preserve Peter Jackson film chronology/outcomes as the non-negotiable main route. Expand Shire friendship, party life, companion banter, regional social texture, exploration and environmental storytelling in the spaces between those anchors. Prefer Extended Edition enrichment when compatible, but write original game dialogue and keep optional activity non-blocking.",
+      "rationale": "The project owner explicitly wants to feel present inside the film moment-to-moment while also having room to play, explore and enjoy the world.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/FellowshipExperienceMegaPassCP56.json",
+        "Data/FilmExperiencePlan.json",
+        "Docs/STORY_CANON_BIBLE.md"
+      ]
+    },
+    {
+      "id": "DEC-010",
+      "title": "Living NPC architecture is offline-only, local-first and bounded",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-NPC-003",
+        "REQ-NPC-004",
+        "REQ-NPC-005",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Implement NPC identity, memory, schedules, goals, needs, emotions, relationships and knowledge limits entirely in local deterministic project systems. If a language model is later added, it must run locally/on-device and remain optional behind strict context/performance guards. Remote/cloud LLM, STT and TTS calls are not part of the shipped gameplay architecture.",
+      "rationale": "The project owner explicitly clarified that the game is offline. This also avoids API keys, internet dependency, recurring service cost, cloud outages and uncontrolled latency while protecting the 8 GB / ~2 GB VRAM target.",
+      "authority": "USER_REQUEST_PLUS_ARCHITECTURE_RECONCILIATION",
+      "evidence": [
+        "Docs/PROGRAMMER_INPUT_LIVING_NPCS_PART1.md",
+        "Data/LivingNPCIntelligencePlan.json",
+        "Data/BoundedDialoguePlan.json"
+      ]
+    },
+    {
+      "id": "DEC-011",
+      "title": "Shipped game AI must work with the internet disconnected",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-NPC-003",
+        "REQ-NPC-004",
+        "REQ-NPC-005",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Treat offline execution as a hard product constraint. NPC intelligence, memory, relationships, schedules, goals, emotions, dialogue selection and any shipped speech/AI layer must not depend on remote services. Cloud APIs may be used only as developer-side tooling outside the shipped runtime, never as a gameplay dependency.",
+      "rationale": "The project owner explicitly stated that the game is offline and that the intelligent-NPC system must be offline at its foundation.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/LivingNPCIntelligencePlan.json",
+        "Data/BoundedDialoguePlan.json",
+        "Docs/PROGRAMMER_INPUT_LIVING_NPCS_PART1.md"
+      ]
+    },
+    {
+      "id": "DEC-012",
+      "title": "All Part I characters participate in the living-NPC layer",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-NPC-001",
+        "REQ-NPC-003",
+        "REQ-NPC-004",
+        "REQ-NPC-005",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Treat living intelligence as a world-wide character rule, not a one-NPC demo. Named story characters receive rich biography, memory, relationships and knowledge envelopes; secondary named characters receive lighter persistent context; ambient populations use cheap archetype intelligence. All tiers remain offline and react to chapter mood, danger, weather and local context.",
+      "rationale": "The project owner explicitly wants conversations with any character to feel like that character understands who they are, what has happened, and whether the surrounding world is peaceful, suspicious, grieving or at war.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/LivingNPCIntelligencePlan.json",
+        "Data/NPCSocialModel.json",
+        "Data/NPCRegionalMoodPlan.json",
+        "Source/ShireJourney/ShireNPCContextSubsystem.cpp"
+      ]
+    },
+    {
+      "id": "DEC-013",
+      "title": "PR #53 is the single CP56 mega-integration continuation path",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-MEGA-001",
+        "REQ-CI-001",
+        "REQ-MEM-004"
+      ],
+      "resolution": "Continue CP56/Work changes on PR #53 only. Keep develop unchanged until the current PR #53 head passes required validation.",
+      "rationale": "One active integration branch prevents conflicting versions while we repair against one Actions result.",
+      "authority": "USER_EXPLICIT_DIRECTION_PLUS_REPOSITORY_RECONCILIATION",
+      "evidence": [
+        "Data/CP56MegaIntegrationPlan.json"
+      ]
+    },
+    {
+      "id": "DEC-014",
+      "title": "Adopt an exact-SHA automated quality gate without overstating proof",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-QA-001",
+        "REQ-PERF-001",
+        "REQ-VISION-001",
+        "REQ-SAVE-001",
+        "REQ-NPC-005",
+        "REQ-MEM-004"
+      ],
+      "resolution": "Extend the existing automation-first path instead of replacing it. Before merge, the exact candidate SHA should accumulate required evidence for Pre-Unreal/static checks, UE4.27 compile/import, startup/headless runtime, P1C01-P1C08 chapter audits, warning debt, story/route and save/load roundtrips, offline NPC behavior, text/localization integrity, plus target-device performance and memory evidence as those tests are implemented. Keep the established 720p Low-Medium 30 FPS floor target. Validate story consistency against project authorities (Governor, Story Canon Bible and FilmExperiencePlan). Produce machine-readable exact-SHA status plus a human-readable report. Introduce Unreal Automation Framework, Gauntlet and Unreal Insights incrementally where useful; do not discard proven Python/runtime checks or let test infrastructure replace game production.",
+      "rationale": "The owner reviewed a programmer proposal for comprehensive automated quality checking and accepted the useful direction with project-specific corrections: exact evidence rather than absolute zero-bug claims, the existing 30 FPS target rather than an invented 60 FPS target, and project canon as the story authority.",
+      "authority": "USER_EXPLICIT_DIRECTION_PLUS_REVIEWED_PROGRAMMER_PROPOSAL",
+      "evidence": [
+        "Data/ProjectGovernor.json",
+        "Docs/AUTOMATION_FIRST_DELIVERY.md"
+      ]
+    },
+    {
+      "id": "DEC-015",
+      "title": "Screenplays ground context, not verbatim runtime dialogue",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-SOURCE-001",
+        "REQ-VISION-001",
+        "REQ-NPC-005",
+        "REQ-QA-001"
+      ],
+      "resolution": "Treat the supplied Fellowship and Two Towers screenplay PDFs as primary scene/dialogue-context references. Store derived chronology, mood, safe topics and future-knowledge blocks. Runtime dialogue stays original and bounded; the shipped game never needs the PDFs. Part I contexts are active now and Part II contexts are reference seeds until its runtime production begins.",
+      "rationale": "The owner wants conversation to feel naturally embedded in the film world and broader than fixed scripted exchanges without requiring exact wording.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/FilmDialogueSourceContext.json",
+        "Data/BoundedDialoguePlan.json"
+      ]
+    },
+    {
+      "id": "DEC-016",
+      "title": "Use shader-compile time for non-blocking static/content expansion without bypassing the merge gate",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-MEGA-001",
+        "REQ-EXP-002",
+        "REQ-NPC-005",
+        "REQ-QA-001"
+      ],
+      "resolution": "While the target machine is busy compiling shaders or otherwise unavailable for UE rebuilds, continue work that can be statically reviewed: data contracts, dialogue coverage, exploration envelopes, source hygiene and validators. Keep the same PR #53 integration path and still require the final exact head to pass full UE4.27 validation before develop merge.",
+      "rationale": "The owner explicitly asked not to sit idle while Unreal compiles shaders, but also wants broken gates repaired before integration.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/ExplorationEnvelopePlan.json",
+        "Data/FilmDialogueSourceContext.json",
+        "Scripts/pre_unreal_validate.py"
+      ]
+    },
+    {
+      "id": "DEC-017",
+      "title": "Adopt Journey Discovery rewards instead of generic exploration XP",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-EXP-004",
+        "REQ-EXP-002",
+        "REQ-VISION-001"
+      ],
+      "resolution": "Use a first-time Journey Discovery system inspired by the satisfaction of discovery rewards in exploration RPGs, but fit it to this project's tone: brief discovery toast, Journey Insight, Chronicle/map/knowledge/companion unlocks and regional completion bonuses. Do not use raw combat-stat inflation, canon-changing rewards or story skips.",
+      "rationale": "The owner wants the project to function as a complete exploration game as well as a playable film-spine experience.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/JourneyDiscoveryRewardPlan.json"
+      ]
+    },
+    {
+      "id": "DEC-018",
+      "title": "Side content is off-camera film-context gap-fill, never an alternate story",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-VISION-001",
+        "REQ-EXP-002",
+        "REQ-EXP-004",
+        "REQ-EXP-005"
+      ],
+      "resolution": "Keep all mandatory story events and outcomes on the Peter Jackson film spine. Optional exploration may add original side games and moments only when they plausibly fit the same story window, location, available characters, knowledge state and emotional/danger context. Treat them as off-camera moments that could have happened between film scenes. They may reward exploration and deepen relationships/world knowledge, but cannot invent a competing major plot or alter canon.",
+      "rationale": "The owner wants a complete game, not a film-only corridor, while explicitly rejecting deviation from the film's main story.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/ContextualSideActivityPlan.json"
+      ]
+    },
+    {
+      "id": "DEC-019",
+      "title": "Raise the world visual bar above the earlier plain reference examples",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-PERF-001",
+        "REQ-MEGA-001"
+      ],
+      "resolution": "Do not treat the previously shown external game screenshots as the final visual target. Aim for a more beautiful, cinematic and memorable Middle-earth presentation with strong vistas, layered terrain, richer materials/vegetation, water, atmosphere, lighting and chapter-specific visual identity. Achieve the higher beauty bar selectively and efficiently so the established 720p Low-Medium / 30 FPS target is not silently abandoned.",
+      "rationale": "The owner explicitly rejected the earlier reference-image quality as not beautiful enough and wants a substantially more attractive world.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/ProjectGovernor.json",
+        "Docs/WORLD_PRODUCTION_BLUEPRINT.md"
+      ]
+    },
+    {
+      "id": "DEC-020",
+      "title": "The Ring quest is the central state line; all other routes serve or surround it",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-RING-001",
+        "REQ-VISION-001",
+        "REQ-EXP-002",
+        "REQ-EXP-005"
+      ],
+      "resolution": "Treat the One Ring as the persistent strategic/emotional axis. Frodo is the Part I bearer after Bilbo's transfer; parallel routes cannot become replacement Ring routes. The Part I split hands forward the Frodo/Sam Ring journey.",
+      "rationale": "Owner explicitly reaffirmed the Ring as the axis of the series/game.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/TrilogyRingQuestPlan.json"
+      ]
+    },
+    {
+      "id": "DEC-021",
+      "title": "Use a dual-source character pipeline with provenance instead of waiting for one perfect external model",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-CHAR-004",
+        "REQ-ASSET-001"
+      ],
+      "resolution": "For each character, prefer a usable permitted external/project-owned base when available; otherwise build the character from legally usable/custom parts. External free/personal-use assets still require source and terms to be recorded before integration.",
+      "rationale": "Owner wants immediate production and has multiple free/personal-use sources available, with custom 3D character creation as fallback.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/CharacterProductionMatrix.json"
+      ]
+    },
+    {
+      "id": "DEC-022",
+      "title": "Owner cinematic forest reference defines the higher environment beauty direction",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-002",
+        "REQ-WORLD-003",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Target the reference's dense naturalism, layered depth, strong light shafts, ground detail and embedded characters as the beauty direction, while using selective hero detail and optimization to preserve the 720p Low-Medium / 30 FPS floor.",
+      "rationale": "Owner explicitly chose the supplied image as a better visual model than prior examples.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/CinematicWorldProductionMatrix.json"
+      ]
+    },
+    {
+      "id": "DEC-023",
+      "title": "Treat the project as a modern narrative game wrapped around immutable film anchors",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-GAME-001",
+        "REQ-VISION-001",
+        "REQ-EXP-004",
+        "REQ-EXP-005"
+      ],
+      "resolution": "Mandatory Peter Jackson film anchors remain fixed. Between anchors, the game may add original plausible side missions, world events, exploration, companion activities, environmental puzzles, lightweight character-life systems and utility/content progression. These systems may deepen play but may not skip, reorder or alter film outcomes.",
+      "rationale": "Owner explicitly asked to research what modern games contain and adopt fitting game systems throughout the project while keeping the film itself intact.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/ModernGameLayerPlan.json"
+      ]
+    },
+    {
+      "id": "DEC-024",
+      "title": "Film scenario is the non-negotiable story authority from beginning to end",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-VISION-001",
+        "REQ-GAME-001",
+        "REQ-RING-001"
+      ],
+      "resolution": "For every mandatory story beat, scene order, character presence and outcome must follow the Peter Jackson film continuity. When screenplay/film source material is available, it must be checked before implementation; memory or invented connective logic may not override it. Original game content is permitted only in unused gaps around fixed anchors and must close or yield when the next canonical scene begins.",
+      "rationale": "Owner explicitly reaffirmed that adherence to the film scenario from beginning to end is the highest story requirement and corrected any tendency to drift.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Docs/STORY_CANON_BIBLE.md",
+        "Data/ModernGameLayerPlan.json",
+        "Data/FilmExperiencePlan.json"
+      ]
+    },
+    {
+      "id": "DEC-025",
+      "title": "Do not make Frodo the default viewpoint when the film gives another character the action",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-ENSEMBLE-001",
+        "REQ-VISION-001",
+        "REQ-GAME-001"
+      ],
+      "resolution": "Use Gandalf, Aragorn, Arwen, Boromir, Legolas, Gimli, Merry, Pippin, Sam and later-film characters as playable viewpoints when the film naturally centers the relevant action on them. Frodo remains the Ring-quest center, not the only playable character. Small original missions may expand verified gaps but may not displace fixed film scenes or outcomes.",
+      "rationale": "Owner explicitly wants to exploit the trilogy's many non-Frodo mission opportunities and expand them slightly as game content.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/EnsembleFilmMissionPlan.json",
+        "Docs/STORY_CANON_BIBLE.md"
+      ]
+    },
+    {
+      "id": "DEC-026",
+      "title": "Use four continuity classes plus explicit source-verification status",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-SIDE-001",
+        "REQ-VISION-001",
+        "REQ-GAME-001"
+      ],
+      "resolution": "Classify side content as FILM_CORE, FILM_EXPANDED, FILM_INTERSTITIAL or BOOK_CHRONICLE. Track source verification separately. Book Chronicles never silently alter the main film timeline, and Part III stays FUTURE_SOURCE_CHECK until exact source verification is recorded.",
+      "rationale": "The programmer proposal is valuable but a three-label system alone cannot distinguish original gap-fill from book-only alternate continuity or verified from unverified material.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/SideContentCanonCatalog.json"
+      ]
+    },
+    {
+      "id": "DEC-027",
+      "title": "Execute the project through one dependency-ordered master roadmap",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-EXEC-001",
+        "REQ-MEGA-001",
+        "REQ-GOV-001"
+      ],
+      "resolution": "All accepted unfinished work must be assigned to Data/MasterExecutionRoadmap.json. The roadmap is subordinate to ProjectGovernor and cannot override canon, evidence or requirement status. Large implementation continues in bundles: exact-head stability, Part I story/gameplay completeness, production characters/world, living-world/presentation polish, acceptance/performance, then source-verified Part II and Part III.",
+      "rationale": "The owner explicitly asked to consolidate the large request set and begin large-scale work immediately without forgotten workstreams.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/MasterExecutionRoadmap.json",
+        "Docs/MASTER_EXECUTION_BOARD.md"
       ]
     }
   ],
@@ -1663,25 +2785,35 @@
     }
   ],
   "active_gate": {
-    "id": "POST_VERIFICATION_EXPANSION_GATE",
-    "status": "ACTIVE",
+    "id": "DEEP_EXACT_HEAD_STABILITY_GATE",
+    "status": "PASSED",
     "blocks_major_feature_expansion": false,
     "required_evidence": [
-      "Every expansion batch must pass Pre-Unreal validation before merge.",
-      "Every major runtime/content batch must pass real UE4.27.2 compile/import validation on the self-hosted target laptop.",
-      "Headless startup/chapter audits remain regression guards for P1C01-P1C08.",
-      "Do not promote new visual/performance claims beyond the evidence actually observed."
+      "Pre-Unreal including deep audit",
+      "real UE4.27.2 compile and deterministic production import",
+      "playable startup and P1C01-P1C08 audits",
+      "route/story/state isolated disk roundtrip",
+      "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "The post-CP54 freeze was lifted on 2026-09-19 after explicit project-owner confirmation that the verification/check/fix pass was completed. Construction and expansion resume from CP55.",
+    "note": "Governor is an overseer, not a bottleneck. Verified V7 baseline remains green; V8 exact-head evidence is still required for V8 acceptance, but safe parallel production may continue while runner/validation issues are repaired.",
     "enforcement": {
-      "policy_file": "Data/VerificationGate.json",
+      "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
       "ci_guard_ids": [
         "PG-056",
-        "PG-057"
+        "PG-057",
+        "PG-100",
+        "PG-101",
+        "PG-102"
       ],
-      "behavior": "Freeze-specific expansion blocking is disabled; evidence-honesty and regression guards remain active."
-    }
+      "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
+    },
+    "last_green_head": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+    "evidence": {
+      "pre_unreal": "PASS #488",
+      "unreal_build": "PASS #323"
+    },
+    "evidence_scope": "V7 verified baseline only. V8 requires its own exact-head chain."
   },
   "reference_only_files": [
     "Docs/CURRENT_PROJECT_STATE.md",
@@ -1706,16 +2838,18 @@
     "Data/LivingWorldEventPlan.json",
     "Data/BoundedDialoguePlan.json",
     "Data/PlayerExperiencePacingPlan.json",
-    "Data/CharacterPopulationPlan.json"
+    "Data/CharacterPopulationPlan.json",
+    "Data/LivingNPCIntelligenceRoadmap.json"
   ],
   "update_protocol": [
     "Treat Data/ProjectGovernor.json as the first-read/last-write coordination record for any meaningful project change.",
     "Read this file first before any meaningful gameplay, architecture, story or quality decision.",
-    "For a new user request: add/update one requirement here, then inspect dependencies/conflicts before implementation.",
+    "Promote only user requests/decisions that are explicitly accepted, confirmed or clearly agreed. Suggestions still under discussion, rejected ideas and options that do not fit the project remain non-authoritative unless later adopted.",
     "For a contradiction: preserve both requirements and add/update one decision/open conflict here.",
     "For implementation: update evidence/missing_work/status here only after repository evidence exists.",
     "For testing: update region_quality and active_gate only from actual static/compile/PIE/device/human evidence.",
-    "If any reference file conflicts with this governor, reconcile that file to this governor in the same logical change."
+    "If any reference file conflicts with this governor, reconcile that file to this governor in the same logical change.",
+    "For a new owner request: record or update the requirement, preserve its intent and priority, inspect dependencies/conflicts, then proceed with implementation without unnecessary planning gates."
   ],
   "deprecated_secondary_authority_files": [
     "Data/ProjectRequirements.json",
@@ -1728,15 +2862,16 @@
     "Workers do not independently change global requirement priority, acceptance state, active gate, or conflict resolution.",
     "Any global direction change must be recorded in this Governor in the same logical change.",
     "A worker discovering a contradiction records it here rather than choosing silently.",
-    "No major feature starts while active_gate.blocks_major_feature_expansion is true."
+    "If active_gate.blocks_major_feature_expansion is true, workers must not merge or accept changes that depend on the failing layer, but may continue isolated safe parallel production that cannot worsen or conceal the failure."
   ],
   "work_queue": [
     {
-      "order": 1,
+      "order": 31,
       "id": "WORK-WORLD-002",
       "title": "Part I mass resource saturation and playable integration",
       "status": "ACTIVE",
-      "rationale": "Verification freeze lifted; continue mass resource saturation and playable integration behind existing CI/UE4 regression gates."
+      "rationale": "Verification freeze lifted; continue mass resource saturation and playable integration behind existing CI/UE4 regression gates.",
+      "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
     },
     {
       "order": 1,
@@ -1754,25 +2889,27 @@
       ]
     },
     {
-      "order": 2,
+      "order": 4,
       "id": "WORK-CHAR-003",
       "title": "Distinct visual identity and motion pass for the Part I core cast",
       "status": "QUEUED",
       "rationale": "Verification freeze lifted; resume distinct visual identity and motion production after/alongside the active world/activity batch."
     },
     {
-      "order": 4,
+      "order": 21,
       "id": "WORK-CHAR-001",
       "title": "Playable Frodo/Gandalf character production motion pass",
-      "status": "QUEUED",
-      "rationale": "Verification freeze lifted; continue playable-character presentation/motion improvements without changing story/save invariants."
+      "status": "ACTIVE",
+      "rationale": "CP56 increases character presence/acting context now; final skeletal/voice polish remains asset-dependent.",
+      "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
     },
     {
-      "order": 11,
+      "order": 32,
       "id": "WORK-WORLD-001",
       "title": "Expand environmental micro-life and production polish chapter by chapter",
       "status": "ACTIVE",
-      "rationale": "CP55 resumes the living-world expansion with bounded project-owned fauna and distinct low-cost movement profiles; continue regional polish behind the existing regression gates."
+      "rationale": "CP56 expands visible life and companionship between film-story anchors while preserving bounded simulation.",
+      "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
     },
     {
       "order": 13,
@@ -1815,18 +2952,138 @@
       "title": "Implement persistent named-NPC memory and bounded dialogue intelligence",
       "status": "IMPLEMENTED",
       "rationale": "Backend runtime implementation is complete in CP44; only integration/device acceptance remains before VALIDATED."
+    },
+    {
+      "order": 10,
+      "id": "WORK-EXP-003",
+      "title": "CP56 Fellowship film-experience mega-pass",
+      "status": "ACTIVE",
+      "rationale": "Primary production track: deepen Part I moment-to-moment play around the fixed Peter Jackson film chronology with Shire life, companionship, exploration, regional social texture and cinematic presentation, without altering canon outcomes.",
+      "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
+    },
+    {
+      "order": 40,
+      "id": "WORK-LW-004",
+      "title": "Offline Living NPC intelligence expansion",
+      "status": "ACTIVE",
+      "rationale": "Expanded scope is explicit: every Part I character participates in offline living intelligence at a cost appropriate to its tier, with biography/knowledge limits and regional peace/war mood context.",
+      "execution_bundle": "B3_LIVING_WORLD_AND_PRESENTATION"
+    },
+    {
+      "order": 1,
+      "id": "WORK-QA-001",
+      "title": "Automation-first delivery and regression coverage",
+      "status": "ACTIVE",
+      "rationale": "Reduce owner test burden: harden runtime evidence now, then test actual story, persistence and offline character behavior in the engine.",
+      "execution_bundle": "B0_EXACT_HEAD_STABILITY"
+    },
+    {
+      "order": 0,
+      "id": "WORK-MEGA-001",
+      "title": "CP56 whole-game mega integration and green-head repair loop",
+      "status": "ACTIVE",
+      "rationale": "Largest coordinated pass across gameplay, characters, living world, offline intelligence, story/persistence, presentation and automation. Current PR head must be repaired until green.",
+      "execution_bundle": "B0_EXACT_HEAD_STABILITY"
+    },
+    {
+      "order": 41,
+      "id": "WORK-DLG-001",
+      "title": "Source-grounded living dialogue expansion",
+      "status": "ACTIVE",
+      "rationale": "Use the supplied screenplay references to deepen original in-world conversation context while the PR #53 red-to-green loop continues.",
+      "execution_bundle": "B3_LIVING_WORLD_AND_PRESENTATION"
+    },
+    {
+      "order": 14,
+      "id": "WORK-EXP-004",
+      "title": "Journey Discovery rewards and exploration progression",
+      "status": "ACTIVE",
+      "rationale": "Turn optional exploration into persistent, meaningful game progression without disturbing canon anchors.",
+      "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
+    },
+    {
+      "order": 15,
+      "id": "WORK-EXP-005",
+      "title": "Contextual side-play implementation",
+      "status": "ACTIVE",
+      "rationale": "Build optional game-like activities that feel like plausible unseen moments between fixed film anchors.",
+      "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
+    },
+    {
+      "order": 11,
+      "id": "WORK-RING-001",
+      "title": "Trilogy Ring-quest systemic core",
+      "status": "ACTIVE",
+      "rationale": "Keep Ring truth explicit across routes/dialogue/audits and future trilogy expansion.",
+      "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
+    },
+    {
+      "order": 20,
+      "id": "WORK-CHAR-004",
+      "title": "Full production-character replacement mega-pass",
+      "status": "ACTIVE",
+      "rationale": "Convert core named characters from proxy/modular identity to rigged production characters in priority waves.",
+      "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
+    },
+    {
+      "order": 30,
+      "id": "WORK-WORLD-003",
+      "title": "Cinematic world beauty mega-pass",
+      "status": "ACTIVE",
+      "rationale": "Raise every Part I region toward the owner's cinematic benchmark while preserving target performance.",
+      "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
+    },
+    {
+      "order": 16,
+      "id": "WORK-GAME-001",
+      "title": "Modern game systems and side-content rollout",
+      "status": "ACTIVE",
+      "rationale": "Roll modern exploration, character-life, progression, world events and chapter-specific side play across Part I without disturbing film anchors.",
+      "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
+    },
+    {
+      "order": 13,
+      "id": "WORK-ENSEMBLE-001",
+      "title": "Film-ensemble playable mission rollout",
+      "status": "ACTIVE",
+      "rationale": "Turn film-supported actions and safe gaps for Gandalf, Gimli, Aragorn, Arwen, Boromir, Legolas, Merry/Pippin and later characters into playable mission waves without changing chronology.",
+      "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
+    },
+    {
+      "order": 12,
+      "id": "WORK-SIDE-001",
+      "title": "Film-derived side-content rollout",
+      "status": "ACTIVE",
+      "rationale": "Prototype high-value film moments first, then film-expanded spaces, while keeping Chronicles separate.",
+      "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
+    },
+    {
+      "order": 2,
+      "id": "WORK-EXEC-001",
+      "title": "Master execution control and orphan-work prevention",
+      "status": "ACTIVE",
+      "rationale": "Keep all accepted large requests dependency-ordered, visible and guarded while implementation proceeds in large batches.",
+      "execution_bundle": "CONTINUOUS_CONTROL"
+    },
+    {
+      "order": 42,
+      "id": "WORK-LW-005",
+      "title": "Living NPC vertical slice: memory, rumor transfer and optional bounded expression",
+      "status": "QUEUED",
+      "rationale": "Extend the existing living-NPC stack rather than replacing it. First prove one named Shire NPC with real-event memory/knowledge transfer, emotional context and deterministic fallback; optional local language expression and speech adapters come after the state model is proven.",
+      "execution_bundle": "B3_LIVING_WORLD_AND_PRESENTATION",
+      "plan": "Data/LivingNPCIntelligenceRoadmap.json"
     }
   ],
   "last_reconciliation": {
-    "date": "2026-09-19",
-    "reason": "Project owner explicitly confirmed the full verification/check/fix pass was completed and directed the project to resume game construction and expansion.",
+    "date": "2026-09-20",
+    "reason": "V7 surface response completed exact-head engine proof; V8 regional life is ready for isolated validation.",
     "summary": [
-      "Post-CP54 verification freeze is lifted.",
-      "Current develop baseline f7c2b081e7b064fcf27bb4c80124b21f351331ab has green Pre-Unreal #264 and Unreal Build Validation #99.",
-      "Human verification completion is recorded conservatively without inventing numeric FPS/memory values that were not supplied in chat.",
-      "CP55 resumes large visible world/activity/movement construction while preserving CI, UE4.27 build/import, story/save integrity and target-device budgets.",
-      "CP55 implementation now adds project-owned bird/rabbit/butterfly fauna and chapter-aware low-cost movement without altering story/save/route topology.",
-      "Programmer-supplied asset/source shortlist was promoted from chat into durable Governor + ExternalAssetManifest project memory for future world, character, animation, audio, music and UI production."
+      "V7 baseline head 2e8898a53f3ab220226df24b0d4578f7232016e7 passed Pre-Unreal #488.",
+      "The same head passed Unreal Build #323 including compile, production import, startup, P1C01-P1C08 runtime audit, state/save roundtrip and warning-debt guard.",
+      "V8 removes ambient resident/fauna population from Caradhras, preserves Moria as civilian-empty and keeps Anduin/Amon Hen baseline bird-only.",
+      "V8 biases population and routine motion toward the player travel corridor while retaining distance throttling and bounded population caps.",
+      "Rendered PIE, target-device performance and human density/visual acceptance remain unproven."
     ]
   },
   "development_mode": {
@@ -1862,5 +3119,108 @@
       "logical voice-cue dispatch"
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
-  }
+  },
+  "current_focus": "CANON_SAFE_REGIONAL_LIFE_V8",
+  "immediate_next_large_actions": [
+    "Prove CANON_SAFE_REGIONAL_LIFE_V8 on its exact new head through Pre-Unreal and UE4.27.2 compile/import/startup/P1C01-P1C08/state/warning validation.",
+    "After green proof, continue visible world flesh: ambient prop production replacements, regional material polish and authored settlement clusters without increasing critical-path AI cost.",
+    "Continue hero/threat clothing/detail and animation handoff while keeping rendered/device/human acceptance explicit."
+  ],
+  "session_handoff": {
+    "source_head": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+    "pull_request": 53,
+    "branch": "work/automation-first-runtime-observation",
+    "verified": {
+      "pre_unreal": "PASS #488",
+      "unreal_build": "PASS #323",
+      "ue4_compile": "PASS #323",
+      "production_import": "PASS #323",
+      "startup": "PASS #323",
+      "chapter_audit": "PASS #323 P1C01-P1C08",
+      "state_audit": "PASS #323 route/story/save real disk roundtrip",
+      "warning_guard": "PASS #323"
+    },
+    "failing": {},
+    "next_actions": [
+      "Prove CANON_SAFE_REGIONAL_LIFE_V8 on its exact new head through Pre-Unreal and UE4.27.2 compile/import/startup/P1C01-P1C08/state/warning validation.",
+      "After green proof, continue visible world flesh: ambient prop production replacements, regional material polish and authored settlement clusters without increasing critical-path AI cost.",
+      "Continue hero/threat clothing/detail and animation handoff while keeping rendered/device/human acceptance explicit."
+    ],
+    "unverified_acceptance": [
+      "V8 exact-head engine proof",
+      "Rendered character/world visual acceptance",
+      "Target-device FPS/memory measurements",
+      "Human density/pacing/playability acceptance",
+      "Complete trilogy content"
+    ],
+    "validation_snapshot": {
+      "last_green": {
+        "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+        "pre_unreal": {
+          "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+          "run_id": 35528516895,
+          "status": "SUCCESS"
+        },
+        "unreal": {
+          "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+          "run_id": 35528516861,
+          "status": "SUCCESS"
+        }
+      },
+      "latest_observed": {
+        "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+        "pre_unreal": {
+          "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+          "run_id": 35528516895,
+          "status": "SUCCESS"
+        },
+        "unreal": {
+          "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+          "run_id": 35528516861,
+          "status": "SUCCESS"
+        }
+      }
+    },
+    "scope_rule": "Machine evidence does not replace rendered PIE/device/human acceptance."
+  },
+  "governor_role": {
+    "mode": "OVERSEER_NOT_BOTTLENECK",
+    "owner_request_priority": "The owner's explicit requests define project direction and priority unless they conflict with immutable film-story outcomes, save/build integrity, legal/source provenance or target-platform safety.",
+    "responsibilities": [
+      "Record and organize the owner's requests without silently dropping older commitments.",
+      "Translate requests into ordered work, dependencies, evidence and acceptance boundaries.",
+      "Detect contradictions, stale evidence and risky changes before they contaminate the project.",
+      "Keep story chronology, save continuity, build integrity and performance safeguards intact.",
+      "Coordinate workers and validation so they do not duplicate, overwrite or contradict one another."
+    ],
+    "non_blocking_policy": [
+      "A failing gate blocks acceptance, release or merging of changes that depend on the failing layer; it does not stop unrelated safe production work.",
+      "While infrastructure or CI is being repaired, workers may continue preparing isolated art, data, world dressing, tests, source-grounded plans and other changes that cannot worsen the failing layer.",
+      "Do not idle waiting for a runner when useful non-conflicting production work can continue.",
+      "Do not create artificial gates merely because work is unfinished; track unfinished work and keep building.",
+      "Only hard integrity threats such as save corruption, story-state breakage, destructive repository changes or reproducible build/runtime failure may require pausing the directly affected path."
+    ]
+  },
+  "accepted_owner_development_ideas": [
+    {
+      "id": "OWNER-IDEA-LIVING-NPC-LLM-2026-09-20",
+      "status": "ACCEPTED_AND_NORMALIZED",
+      "title": "NPCs should feel alive, not merely conversational",
+      "captured_value": [
+        "optional local language-model expression over existing bounded context",
+        "real event/rumor propagation between NPCs",
+        "richer time/location/story/needs/emotion context",
+        "emotion reflected in face/body/voice presentation",
+        "optional STT/TTS adapters",
+        "single named Shire NPC vertical-slice before scaling"
+      ],
+      "rejected_or_modified_parts": [
+        "mandatory cloud GPT/Claude dependency",
+        "unbounded transcript memory",
+        "one LLM per ambient NPC",
+        "generated dialogue as canon/story authority"
+      ],
+      "canonical_plan": "Data/LivingNPCIntelligenceRoadmap.json"
+    }
+  ]
 }

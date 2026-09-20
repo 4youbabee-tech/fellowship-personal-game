@@ -34,3 +34,21 @@ jobs:
 
       - name: Audit production asset source quality
         run: python Scripts/asset_quality_audit.py
+
+      - name: Audit production readiness contracts
+        run: python Scripts/production_readiness_audit.py
+
+      - name: Run deep project audit
+        run: python Scripts/deep_project_audit.py
+
+      - name: Test runtime observation failure handling
+        run: python -m unittest discover -s Scripts -p 'test_runtime_smoke.py' -v
+
+      - name: Test warning-debt guard semantics
+        run: python -m unittest discover -s Scripts -p 'test_warning_debt_guard.py' -v
+
+      - name: Test deep project audit semantics
+        run: python -m unittest discover -s Scripts -p 'test_deep_project_audit.py' -v
+
+      - name: Test governor evidence scope
+        run: python -m unittest discover -s Scripts -p 'test_governor_handoff.py' -v

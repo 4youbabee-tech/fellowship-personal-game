@@ -10,6 +10,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
+#include "TimerManager.h"
 
 AShireGameMode::AShireGameMode()
 {
@@ -63,11 +64,199 @@ void AShireGameMode::BeginPlay()
         }
     }
 
+    if (FParse::Param(FCommandLine::Get(), TEXT("AuditState")))
+    {
+        UGameInstance* GI = GetGameInstance();
+        UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+        if (!Quests)
+        {
+            UE_LOG(LogTemp, Error, TEXT("ShireStateAudit: subsystem=missing"));
+        }
+        else
+        {
+            // StartExperience restores existing route progress; it is not a chapter jump.
+            // Establish the fixture explicitly before testing the route roundtrip.
+            Quests->StartChapter(TEXT("P1C03"), TEXT("RoadToWeathertop"), 2);
+            Quests->StartExperience(
+                TEXT("FrodoMain"), TEXT("P1C03_Main"), TEXT("Frodo"),
+                TEXT("P1C03"), TEXT("RoadToWeathertop"), 2);
+            Quests->TriggerStoryBeat(TEXT("CI_STATE_AUDIT_BEAT"));
+            const bool bRejectedOutsideWindow =
+                !Quests->CompleteSideActivityDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
+            Quests->TriggerStoryBeat(TEXT("MidgewaterRoad"));
+            const bool bRejectedDirectReward =
+                !Quests->RegisterJourneyDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
+
+            const int32 JourneyInsightBefore = Quests->GetJourneyInsight();
+            const int32 PerceptionXPBefore = Quests->GetProgressionXP(TEXT("PERCEPTION"));
+            const int32 ResolveXPBefore = Quests->GetProgressionXP(TEXT("RESOLVE"));
+            const int32 ChronicleCountBefore = Quests->GetChronicleCount();
+            const int32 KnownRegionCountBefore = Quests->GetKnownRegionCount();
+            const bool bFirstDiscovery =
+                Quests->CompleteSideActivityDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
+            const bool bRepeatDiscovery =
+                Quests->CompleteSideActivityDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
+
+            Quests->StartExperience(
+                TEXT("GandalfParallel"), TEXT("P1G01_Isengard"), TEXT("Gandalf"),
+                TEXT("P1G01"), TEXT("IsengardCounsel"), 1);
+
+            Quests->StartExperience(
+                TEXT("FrodoMain"), TEXT("P1C03_Main"), TEXT("Frodo"),
+                TEXT("P1C03"), TEXT("RoadToWeathertop"), 0);
+
+            const bool bRouteRestored =
+                Quests->GetCurrentRouteId() == TEXT("FrodoMain") &&
+                Quests->GetCurrentChapterId() == TEXT("P1C03") &&
+                Quests->GetQuestStage(TEXT("RoadToWeathertop")) == 2 &&
+                Quests->HasStoryBeatTriggered(TEXT("CI_STATE_AUDIT_BEAT"));
+            const bool bRingCoreValid =
+                Quests->IsRingQuestActive() &&
+                Quests->GetRingBearerId() == TEXT("Frodo") &&
+                Quests->GetRingPressureTier() >= 2;
+
+            if (bRingCoreValid)
+            {
+                UE_LOG(
+                    LogTemp,
+                    Display,
+                    TEXT("ShireStateAudit: ring-core=PASS bearer=%s state=%s pressure=%d"),
+                    *Quests->GetRingBearerId().ToString(),
+                    *Quests->GetRingStateTag().ToString(),
+                    Quests->GetRingPressureTier());
+            }
+            else
+            {
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireStateAudit: ring-core=FAIL bearer=%s state=%s pressure=%d"),
+                    *Quests->GetRingBearerId().ToString(),
+                    *Quests->GetRingStateTag().ToString(),
+                    Quests->GetRingPressureTier());
+            }
+
+            const bool bDiscoveryCoreValid =
+                bRejectedOutsideWindow && bRejectedDirectReward &&
+                bFirstDiscovery &&
+                !bRepeatDiscovery &&
+                Quests->HasJourneyDiscovery(TEXT("WILDERNESS_TRACK_SIGNS")) &&
+                Quests->GetJourneyInsight() - JourneyInsightBefore == 10;
+            if (bDiscoveryCoreValid)
+            {
+                UE_LOG(
+                    LogTemp,
+                    Display,
+                    TEXT("ShireStateAudit: discovery-core=PASS id=WILDERNESS_TRACK_SIGNS total=%d"),
+                    Quests->GetJourneyInsight());
+            }
+            else
+            {
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireStateAudit: discovery-core=FAIL first=%s repeat=%s known=%s before=%d after=%d"),
+                    bFirstDiscovery ? TEXT("yes") : TEXT("no"),
+                    bRepeatDiscovery ? TEXT("yes") : TEXT("no"),
+                    Quests->HasJourneyDiscovery(TEXT("WILDERNESS_TRACK_SIGNS")) ? TEXT("yes") : TEXT("no"),
+                    JourneyInsightBefore,
+                    Quests->GetJourneyInsight());
+            }
+
+            const bool bProgressionCoreValid =
+                Quests->GetProgressionXP(TEXT("PERCEPTION")) - PerceptionXPBefore == 14 &&
+                Quests->GetProgressionXP(TEXT("RESOLVE")) - ResolveXPBefore == 6;
+            if (bProgressionCoreValid)
+            {
+                UE_LOG(
+                    LogTemp,
+                    Display,
+                    TEXT("ShireStateAudit: progression-core=PASS perception=%d resolve=%d"),
+                    Quests->GetProgressionXP(TEXT("PERCEPTION")),
+                    Quests->GetProgressionXP(TEXT("RESOLVE")));
+            }
+            else
+            {
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireStateAudit: progression-core=FAIL perceptionBefore=%d perceptionAfter=%d resolveBefore=%d resolveAfter=%d"),
+                    PerceptionXPBefore,
+                    Quests->GetProgressionXP(TEXT("PERCEPTION")),
+                    ResolveXPBefore,
+                    Quests->GetProgressionXP(TEXT("RESOLVE")));
+            }
+
+            const bool bKnowledgeCoreValid =
+                Quests->GetChronicleCount() - ChronicleCountBefore == 1 &&
+                Quests->GetKnownRegionCount() - KnownRegionCountBefore == 1 &&
+                Quests->HasChronicleEntry(TEXT("CHRONICLE_WILDERNESS_TRACK_SIGNS")) &&
+                Quests->HasKnownMapRegion(TEXT("MAP_REGION_FrodoMain_P1C03"));
+            if (bKnowledgeCoreValid)
+            {
+                UE_LOG(
+                    LogTemp,
+                    Display,
+                    TEXT("ShireStateAudit: knowledge-core=PASS chronicle=%d regions=%d"),
+                    Quests->GetChronicleCount(),
+                    Quests->GetKnownRegionCount());
+            }
+            else
+            {
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireStateAudit: knowledge-core=FAIL chronicleBefore=%d chronicleAfter=%d regionsBefore=%d regionsAfter=%d"),
+                    ChronicleCountBefore,
+                    Quests->GetChronicleCount(),
+                    KnownRegionCountBefore,
+                    Quests->GetKnownRegionCount());
+            }
+
+            if (bRouteRestored)
+            {
+                UE_LOG(
+                    LogTemp,
+                    Display,
+                    TEXT("ShireStateAudit: route-roundtrip=PASS chapter=%s questStage=%d beat=%s"),
+                    *Quests->GetCurrentChapterId().ToString(),
+                    Quests->GetQuestStage(TEXT("RoadToWeathertop")),
+                    Quests->HasStoryBeatTriggered(TEXT("CI_STATE_AUDIT_BEAT")) ? TEXT("yes") : TEXT("no"));
+            }
+            else
+            {
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireStateAudit: route-roundtrip=FAIL chapter=%s questStage=%d beat=%s"),
+                    *Quests->GetCurrentChapterId().ToString(),
+                    Quests->GetQuestStage(TEXT("RoadToWeathertop")),
+                    Quests->HasStoryBeatTriggered(TEXT("CI_STATE_AUDIT_BEAT")) ? TEXT("yes") : TEXT("no"));
+            }
+        }
+    }
+
     // Prototype chapter worlds are spawned through a router so Chapter 1 can hand off
     // to Bree without loading both regions at the same time.
     GetWorld()->SpawnActor<AChapterWorldRouter>(FVector::ZeroVector, FRotator::ZeroRotator);
     GetWorld()->SpawnActor<ALivingWorldDirector>(FVector::ZeroVector, FRotator::ZeroRotator);
     UE_LOG(LogTemp, Display, TEXT("ShirePlayableStartup: GameMode ready; router and living-world director spawned"));
+
+    if (FParse::Param(FCommandLine::Get(), TEXT("AuditState")))
+    {
+        GetWorldTimerManager().SetTimerForNextTick(FTimerDelegate::CreateWeakLambda(this, [this]()
+        {
+            AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+            if (Player && Player->RunSaveRoundtripAudit())
+            {
+                UE_LOG(LogTemp, Display, TEXT("ShireStateAudit: disk-save-roundtrip=PASS"));
+            }
+            else
+            {
+                UE_LOG(LogTemp, Error, TEXT("ShireStateAudit: disk-save-roundtrip=FAIL"));
+            }
+        }));
+    }
 
     // Normal launches preserve the authored P1C01 placement. Audit launches let the
     // chapter router own placement so P1C02-P1C08 are not teleported back into Shire.

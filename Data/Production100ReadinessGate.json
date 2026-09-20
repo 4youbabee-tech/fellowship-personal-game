@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "gate_id": "PART1_PRODUCTION_100_READINESS_GATE_V1",
+  "status": "ACTIVE_NOT_READY",
+  "objective": "Evidence-based path to 100 percent Part I production readiness without treating implementation, asset presence, compile success, or import success as final acceptance.",
+  "production_100": false,
+  "baseline_snapshot": {
+    "audited_commit": "51fd39be8bdca957aa7a05b783989400da41aa61",
+    "pre_unreal_run": 402,
+    "pre_unreal_conclusion": "SUCCESS",
+    "validated_cpp": 25,
+    "validated_headers": 27,
+    "architecture_entries": 53,
+    "quest_definitions": 32,
+    "runtime_chapters": 8,
+    "presentation_cues": 62,
+    "dialogue_sequences": 50,
+    "governor_requirements": 46,
+    "governor_open_conflicts": 0,
+    "note": "This is the audited pre-mega baseline. Every newer exact head needs fresh evidence."
+  },
+  "asset_source_quality_snapshot": {
+    "source": "Pre-Unreal Validation 402 / Scripts/asset_quality_audit.py",
+    "obj_files": 286,
+    "mtl_files": 18,
+    "bmp_files": 24,
+    "structural_errors": 0,
+    "warnings": 11,
+    "obj_without_explicit_normals": 286,
+    "obj_without_uv_coordinates": 273,
+    "obj_without_smoothing_groups": 286,
+    "obj_with_triangulation_risk": 11,
+    "interpretation": "Current project-owned OBJ assets are structurally importable production foundations/proxies. They are not final visual acceptance."
+  },
+  "exact_head_evidence": {
+    "accepted_sha": null,
+    "candidate_sha": "929ea3a28fe5bf9447f8c1ca8f5981e4b377cc35",
+    "pre_unreal": "PASS #464",
+    "ue4_compile": "PASS #299",
+    "production_import": "PASS #299",
+    "startup": "PASS #299",
+    "chapter_audit": "PASS #299 P1C01-P1C08",
+    "state_audit": "PASS #299 real CI disk-save roundtrip",
+    "warning_guard": "FAIL #299 only: 216 unique world material packages referenced but not persisted on disk",
+    "device_profile": null,
+    "visual_acceptance": null,
+    "pacing_acceptance": null
+  },
+  "domains": [
+    {
+      "id": "CANON_SOURCE",
+      "status": "IMPLEMENTED_PENDING_ACCEPTANCE",
+      "required": [
+        "film order/outcomes immutable",
+        "source atlas traceability",
+        "Part II/III remain source gated"
+      ]
+    },
+    {
+      "id": "BUILD_ENGINE",
+      "status": "PENDING_EXACT_HEAD",
+      "required": [
+        "Pre-Unreal",
+        "UE4.27.2 compile",
+        "asset import",
+        "startup",
+        "chapter audit",
+        "state audit",
+        "warning guard"
+      ]
+    },
+    {
+      "id": "STORY_GAMEPLAY",
+      "status": "IMPLEMENTED_EXPANDING_PENDING_PIE",
+      "required": [
+        "P1C01-P1C08 traversable",
+        "mandatory anchors reachable",
+        "side content urgency closure",
+        "no canon bypass"
+      ]
+    },
+    {
+      "id": "SAVE_ROUTE_RING",
+      "status": "IMPLEMENTED_PENDING_PIE",
+      "required": [
+        "F5/F9 round trip",
+        "Frodo/Gandalf route round trip",
+        "Ring continuity",
+        "discovery/progression/knowledge persistence"
+      ]
+    },
+    {
+      "id": "CHARACTER_ART",
+      "status": "FOUNDATION_ONLY",
+      "required": [
+        "final hero meshes/skins",
+        "UV/normal/material quality",
+        "silhouette identity",
+        "LOD budget",
+        "visual acceptance"
+      ]
+    },
+    {
+      "id": "CHARACTER_ANIMATION",
+      "status": "FOUNDATION_ONLY",
+      "required": [
+        "skeletal rigs",
+        "locomotion",
+        "combat/interaction",
+        "face/lip-sync tier",
+        "cloth/hair budget"
+      ]
+    },
+    {
+      "id": "WORLD_ART",
+      "status": "FOUNDATION_EXPANDING",
+      "required": [
+        "final terrain/materials",
+        "vegetation hierarchy",
+        "water/weather",
+        "architecture/interiors",
+        "hero vistas"
+      ]
+    },
+    {
+      "id": "THREATS_COMBAT",
+      "status": "FOUNDATIONS_AND_FILM_LOCKED_RUNTIME_PARTIAL",
+      "required": [
+        "Nazgul motion",
+        "Orc/Uruk variants",
+        "Cave Troll rig",
+        "Watcher",
+        "Balrog",
+        "Lurtz hero variant"
+      ],
+      "implemented": [
+        "project-owned Black Rider/Orc/Uruk/Cave Troll foundations",
+        "project-owned Lurtz/Watcher/Balrog foundations",
+        "story-beat-gated non-killable Watcher visual pressure in P1C06",
+        "story-beat-gated non-killable Balrog visual pressure in P1C06",
+        "dedicated project-owned Lurtz runtime profile and Amon Hen spawn",
+        "Lurtz player damage cannot rewrite the film-locked outcome",
+        "distance-adaptive Watcher/Balrog presentation tick rate"
+      ]
+    },
+    {
+      "id": "WORLD_LIFE_NPC",
+      "status": "IMPLEMENTED_EXPANDING_PENDING_PIE",
+      "required": [
+        "named cast presence",
+        "ambient diversity",
+        "micro-event pacing",
+        "knowledge bounds",
+        "CPU budget"
+      ]
+    },
+    {
+      "id": "AUDIO_PRESENTATION",
+      "status": "PARTIAL",
+      "required": [
+        "owned/licensed SFX",
+        "music strategy",
+        "voice strategy",
+        "mix",
+        "lip-sync where needed",
+        "camera/lighting"
+      ]
+    },
+    {
+      "id": "PERFORMANCE",
+      "status": "TELEMETRY_ACTIVE_DEVICE_ACCEPTANCE_PENDING",
+      "required": [
+        "Windows DX11",
+        "720p Low-Medium",
+        "30 FPS floor",
+        "8 GB RAM target",
+        "representative traversal measurements"
+      ],
+      "implemented": [
+        "source triangle-equivalent telemetry",
+        "source asset byte telemetry by production bucket",
+        "measurement-first AssetPerformanceBudget contract"
+      ]
+    },
+    {
+      "id": "HUMAN_ACCEPTANCE",
+      "status": "NOT_ACCEPTED",
+      "required": [
+        "pacing",
+        "visual quality",
+        "readability",
+        "friction review",
+        "defect repair"
+      ]
+    },
+    {
+      "id": "RIGHTS_PROVENANCE",
+      "status": "ACTIVE_INTERNAL_ONLY",
+      "required": [
+        "project-owned source traceability",
+        "external license evidence",
+        "raw references not shipped"
+      ]
+    }
+  ],
+  "hard_blockers_to_100": [
+    "Newest exact head passes compile/import/startup/eight chapters/state roundtrip but still fails world-material package persistence in the warning gate.",
+    "Fifty meshes still emit degenerate-tangent warnings and 53 emit nearly-zero-binormal warnings; these remain art-quality debt even though identity-based counting avoids duplicate-log inflation.",
+    "Most OBJ assets remain production foundations: final normals, UVs, smoothing/tangent quality and triangulation cleanup are incomplete.",
+    "Hero skeletal rigs, final locomotion/action animation, facial/lip-sync, and cloth/hair production remain incomplete.",
+    "Project-owned Watcher/Balrog/Lurtz foundations and film-locked runtime contracts exist, but final rigs, materials, VFX/audio, Lurtz duel production and human encounter acceptance remain incomplete.",
+    "Most regions still need final terrain, materials, vegetation, water, architecture, interiors, hero-vista composition and visual acceptance.",
+    "Target-device performance plus human chapter-by-chapter pacing/visual acceptance remain mandatory.",
+    "Chapter-specific Real PIE/rendered evidence remains unaccepted; generic or machine-only confirmation is insufficient.",
+    "Deep audit still requires target-device profiling of NPC social/banter scans and chapter-transition synchronous asset loads.",
+    "Rendered chapter evidence must verify that short presentation locks, camera framing and side content preserve player agency and pacing."
+  ],
+  "promotion_rule": "production_100 may become true only when every domain is PASS or ACCEPTED and exact_head_evidence.accepted_sha records the same accepted commit.",
+  "no_false_claim_rule": "Static validation, compile success, or asset import alone can never set production_100 true.",
+  "latest_verified_ancestor": {
+    "sha": "c589fc7537bfb146a7528bfd23e6e4f950faac6c",
+    "pre_unreal": {
+      "run": 417,
+      "conclusion": "SUCCESS"
+    },
+    "production_readiness_audit": "PASS",
+    "asset_quality": {
+      "near_zero_faces": 0,
+      "warnings": 11
+    },
+    "static_quest_reachability_unproven": [
+      "WeathertopAttack"
+    ],
+    "note": "This SHA is the verified ancestor before governance synchronization; it is not the final accepted production SHA."
+  }
+}

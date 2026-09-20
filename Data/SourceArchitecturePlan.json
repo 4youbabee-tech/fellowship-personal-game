@@ -405,6 +405,70 @@
       "kind": "Source",
       "role": "Micro-event scheduling spawning culling weather context and chapter reaction runtime",
       "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireTraversalChallenge.h",
+      "target_path": "Source/ShireJourney/Public/World/ShireTraversalChallenge.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Ordered traversal side-activity challenge contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireTraversalChallenge.cpp",
+      "target_path": "Source/ShireJourney/Private/World/ShireTraversalChallenge.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Ordered traversal side-activity challenge implementation",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireEnvironmentalPuzzle.h",
+      "target_path": "Source/ShireJourney/Public/World/ShireEnvironmentalPuzzle.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Interactable environmental pattern-puzzle side-activity contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireEnvironmentalPuzzle.cpp",
+      "target_path": "Source/ShireJourney/Private/World/ShireEnvironmentalPuzzle.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Three-step interactable environmental pattern-puzzle implementation",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireWorldEventInteraction.h",
+      "target_path": "Source/ShireJourney/Public/World/ShireWorldEventInteraction.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Ephemeral bounded player interaction contract for living-world micro-events",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireWorldEventInteraction.cpp",
+      "target_path": "Source/ShireJourney/Private/World/ShireWorldEventInteraction.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Story-safe reward-free interaction response implementation for living-world micro-events",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/FellowshipMythicThreat.h",
+      "target_path": "Source/ShireJourney/Public/World/FellowshipMythicThreat.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Film-locked non-killable mythic threat presentation contract for Watcher and Balrog",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/FellowshipMythicThreat.cpp",
+      "target_path": "Source/ShireJourney/Private/World/FellowshipMythicThreat.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Story-beat-gated Watcher/Balrog visual pressure implementation using project-owned foundations",
+      "migration_status": "CURRENT_FLAT"
     }
   ]
 }

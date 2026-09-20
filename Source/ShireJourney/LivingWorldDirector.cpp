@@ -1,6 +1,7 @@
 #include "LivingWorldDirector.h"
 
 #include "ShireAmbientNPC.h"
+#include "ShireWorldEventInteraction.h"
 #include "ShireNPCContextSubsystem.h"
 #include "ShireQuestSubsystem.h"
 
@@ -491,12 +492,28 @@ FVector ALivingWorldDirector::ChoosePopulationOrigin()
         return FVector::ZeroVector;
     }
 
-    const float Angle = Random.FRandRange(0.0f, 2.0f * PI);
     const float Radius = Random.FRandRange(PopulationInnerRadius, PopulationOuterRadius);
-    FVector Origin = Player->GetActorLocation() + FVector(
-        FMath::Cos(Angle) * Radius,
-        FMath::Sin(Angle) * Radius,
-        0.0f);
+    FVector Direction = FVector::ZeroVector;
+
+    // Most baseline life appears in the forward/side travel corridor so crowd flow
+    // reinforces route readability. A smaller share remains fully radial to avoid
+    // turning the world into a single moving line.
+    if (Random.FRand() < 0.72f)
+    {
+        const FVector Forward = Player->GetActorForwardVector().GetSafeNormal2D();
+        const FVector Right = Player->GetActorRightVector().GetSafeNormal2D();
+        Direction = (
+            Forward * Random.FRandRange(0.35f, 1.0f) +
+            Right * Random.FRandRange(-0.90f, 0.90f)).GetSafeNormal2D();
+    }
+
+    if (Direction.IsNearlyZero())
+    {
+        const float Angle = Random.FRandRange(0.0f, 2.0f * PI);
+        Direction = FVector(FMath::Cos(Angle), FMath::Sin(Angle), 0.0f);
+    }
+
+    FVector Origin = Player->GetActorLocation() + Direction * Radius;
     Origin.Z = FMath::Max(Player->GetActorLocation().Z - 60.0f, 40.0f);
     return Origin;
 }
@@ -532,7 +549,15 @@ void ALivingWorldDirector::MaintainBaselinePopulation()
     CleanupBaselinePopulation();
 
     const int32* TargetPtr = BaselineTargetByChapter.Find(ActiveChapterId);
-    const int32 Target = TargetPtr ? *TargetPtr : 0;
+    int32 Target = TargetPtr ? *TargetPtr : 0;
+
+    // Story danger thins the baseline crowd instead of freezing the world outright.
+    // This preserves activity while keeping threat readability and AI cost bounded.
+    if (IsStoryDangerActive() && Target > 0)
+    {
+        Target = FMath::Max(1, Target / 2);
+    }
+
     if (Target <= 0 || BaselinePopulation.Num() >= Target)
     {
         return;
@@ -556,10 +581,14 @@ void ALivingWorldDirector::MaintainBaselinePopulation()
         return;
     }
 
-    FVector TravelOffset(
-        Random.FRandRange(260.0f, 620.0f),
-        Random.FRandRange(-360.0f, 360.0f),
-        0.0f);
+    APawn* Player = UGameplayStatics::GetPlayerPawn(this, 0);
+    const FVector TravelForward =
+        Player ? Player->GetActorForwardVector().GetSafeNormal2D() : FVector::ForwardVector;
+    const FVector TravelRight =
+        Player ? Player->GetActorRightVector().GetSafeNormal2D() : FVector::RightVector;
+    FVector TravelOffset =
+        TravelForward * Random.FRandRange(260.0f, 620.0f) +
+        TravelRight * Random.FRandRange(-260.0f, 260.0f);
 
     float Speed = Random.FRandRange(38.0f, 68.0f);
     float MinWait = Random.FRandRange(0.8f, 2.5f);
@@ -583,6 +612,27 @@ void ALivingWorldDirector::MaintainBaselinePopulation()
         Speed = Random.FRandRange(42.0f, 58.0f);
         MinWait = 1.8f;
         MaxWait = 5.5f;
+    }
+    else if (RoleName == TEXT("Bird"))
+    {
+        Speed = Random.FRandRange(110.0f, 150.0f);
+        MinWait = 0.0f;
+        MaxWait = 0.4f;
+        TravelOffset *= 2.1f;
+    }
+    else if (RoleName == TEXT("Rabbit"))
+    {
+        Speed = Random.FRandRange(78.0f, 108.0f);
+        MinWait = 0.8f;
+        MaxWait = 2.8f;
+        TravelOffset *= 0.72f;
+    }
+    else if (RoleName == TEXT("Butterfly"))
+    {
+        Speed = Random.FRandRange(30.0f, 48.0f);
+        MinWait = 0.2f;
+        MaxWait = 1.0f;
+        TravelOffset *= 0.48f;
     }
 
     if (AShireAmbientNPC* NPC = SpawnAmbientActor(
@@ -650,6 +700,69 @@ AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(
     NPC->MinWait = MinWait;
     NPC->MaxWait = MaxWait;
     return NPC;
+}
+
+AShireWorldEventInteraction* ALivingWorldDirector::SpawnPlayerInteraction(
+    FName EventId,
+    FName EventType,
+    const FVector& Origin)
+{
+    if (!GetWorld() || IsStoryDangerActive())
+    {
+        return nullptr;
+    }
+
+    FText Prompt;
+    FText Response;
+    if (EventType == TEXT("WORK_ACTIVITY"))
+    {
+        Prompt = FText::FromString(TEXT("Help with the passing work."));
+        Response = ActiveChapterId == TEXT("P1C04")
+            ? FText::FromString(TEXT("You steady the books and leave the quiet work to continue."))
+            : FText::FromString(TEXT("You lend a hand for a moment, then return to the road."));
+    }
+    else if (EventType == TEXT("MARKET_ACTIVITY"))
+    {
+        Prompt = FText::FromString(TEXT("Pause by the small exchange."));
+        Response = FText::FromString(TEXT("A few ordinary words pass between neighbors. Nothing about the main road changes."));
+    }
+    else if (EventType == TEXT("SOCIAL_MOMENT"))
+    {
+        Prompt = FText::FromString(TEXT("Return the greeting."));
+        Response = FText::FromString(TEXT("The brief greeting makes the place feel lived in, then the moment passes."));
+    }
+    else if (EventType == TEXT("TRAVELER_PASSING"))
+    {
+        Prompt = FText::FromString(TEXT("Acknowledge the passing traveler."));
+        Response = FText::FromString(TEXT("You exchange a short road courtesy and let the traveler continue."));
+    }
+    else
+    {
+        return nullptr;
+    }
+
+    FActorSpawnParameters Params;
+    Params.SpawnCollisionHandlingOverride =
+        ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+    AShireWorldEventInteraction* Interaction =
+        GetWorld()->SpawnActor<AShireWorldEventInteraction>(
+            Origin + FVector(70.0f, -70.0f, 0.0f),
+            FRotator::ZeroRotator,
+            Params);
+    if (!Interaction)
+    {
+        return nullptr;
+    }
+
+    Interaction->Tags.AddUnique(TEXT("LivingWorldEphemeral"));
+    Interaction->ConfigureInteraction(
+        EventId,
+        EventType,
+        ActiveChapterId,
+        Prompt,
+        Response,
+        true);
+    return Interaction;
 }
 
 bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEvent)
@@ -728,8 +841,8 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
     }
     else if (EventType == TEXT("SOCIAL_MOMENT"))
     {
-        if (ActiveChapterId == TEXT("P1C03") || ActiveChapterId == TEXT("P1C06") ||
-            ActiveChapterId == TEXT("P1C08"))
+        if (ActiveChapterId == TEXT("P1C03") || ActiveChapterId == TEXT("P1C05") ||
+            ActiveChapterId == TEXT("P1C06") || ActiveChapterId == TEXT("P1C08"))
         {
             return false;
         }
@@ -745,7 +858,7 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
     }
     else if (EventType == TEXT("FAUNA"))
     {
-        if (ActiveChapterId == TEXT("P1C06"))
+        if (ActiveChapterId == TEXT("P1C05") || ActiveChapterId == TEXT("P1C06"))
         {
             return false;
         }
@@ -831,7 +944,9 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
     }
     else if (EventType == TEXT("DANGER_REACTION"))
     {
-        if (ActiveChapterId == TEXT("P1C06"))
+        // Caradhras danger is authored through storm/group traversal, not invented
+        // resident scatter. Moria remains dead-city threat/aftermath only.
+        if (ActiveChapterId == TEXT("P1C05") || ActiveChapterId == TEXT("P1C06"))
         {
             return false;
         }
@@ -893,6 +1008,12 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
     if (OutEvent.Actors.Num() == 0)
     {
         return false;
+    }
+
+    if (AShireWorldEventInteraction* Interaction =
+        SpawnPlayerInteraction(OutEvent.EventId, EventType, Origin))
+    {
+        OutEvent.Actors.Add(Interaction);
     }
 
     OutEvent.ExpiresAt = GetWorld()->GetTimeSeconds() + Duration;

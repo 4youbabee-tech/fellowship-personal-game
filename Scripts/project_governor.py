@@ -10,7 +10,9 @@ from __future__ import annotations
 
 import json
 import sys
+import subprocess
 from pathlib import Path
+from governor_handoff import validate_handoff, evidence_summary
 
 ROOT = Path(__file__).resolve().parents[1]
 GOVERNOR_PATH = ROOT / "Data" / "ProjectGovernor.json"
@@ -169,6 +171,31 @@ for relative in governor.get("deprecated_secondary_authority_files", []):
 if not governor.get("worker_contract"):
     fail("Governor has no worker_contract")
 
+living_npc_plan = ROOT / "Data" / "LivingNPCIntelligenceRoadmap.json"
+if not living_npc_plan.exists():
+    fail("Accepted living-NPC intelligence roadmap is missing")
+else:
+    living_npc = json.loads(living_npc_plan.read_text(encoding="utf-8"))
+    if living_npc.get("plan_id") != "LIVING_NPC_INTELLIGENCE_ROADMAP_V2":
+        fail("Living-NPC intelligence roadmap identity changed")
+    if "Do not require GPT, Claude, cloud APIs, internet connectivity or runtime API keys in the shipped gameplay path." not in living_npc.get("non_goals", []):
+        fail("Living-NPC roadmap lost offline/non-cloud runtime boundary")
+
+if not any(r.get("id") == "REQ-NPC-006" for r in governor.get("requirements", [])):
+    fail("Governor lost REQ-NPC-006 living-NPC intelligence requirement")
+if not any(w.get("id") == "WORK-LW-005" for w in governor.get("work_queue", [])):
+    fail("Governor lost WORK-LW-005 living-NPC vertical-slice work item")
+
+# Owner-directed governor role: coordination must not become a project-wide bottleneck.
+governor_role = governor.get("governor_role", {})
+if governor_role.get("mode") != "OVERSEER_NOT_BOTTLENECK":
+    fail("Governor role must remain OVERSEER_NOT_BOTTLENECK")
+non_blocking_policy = governor_role.get("non_blocking_policy", [])
+if not any("unrelated safe production work" in str(item) for item in non_blocking_policy):
+    fail("Governor must explicitly preserve unrelated safe production work during a failing gate")
+if governor.get("active_branch") != "work/automation-first-runtime-observation":
+    fail("Governor active_branch must track PR #53 production branch")
+
 # Player-experience pacing contract is required, but human review remains the authority for PACING.
 PACING_PATH = ROOT / "Data" / "PlayerExperiencePacingPlan.json"
 try:
@@ -183,6 +210,8 @@ missing_pacing = sorted(required_pacing - pacing_chapters)
 if missing_pacing:
     fail("Pacing plan missing chapters/routes: " + ", ".join(missing_pacing))
 
+errors.extend(validate_handoff(governor))
+
 print(
     f"Single Project Governor checked {len(req_ids)} requirements, "
     f"{len(decision_ids)} decisions, {len(open_conflicts)} open conflicts, "
@@ -196,6 +225,13 @@ if errors:
     sys.exit(1)
 
 print("PROJECT GOVERNOR PASSED")
+try:
+    checkout = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT,
+                              capture_output=True, text=True)
+    checkout_sha = checkout.stdout.strip() if checkout.returncode == 0 else ''
+except OSError:
+    checkout_sha = ''  # Exported source archives need not have Git installed.
+print(evidence_summary(governor, checkout_sha))
 
 # Work-start reminder: surface unfinished high-priority commitments every validation run.
 open_statuses = {"REQUESTED", "PLANNED", "PARTIAL", "DEFERRED"}

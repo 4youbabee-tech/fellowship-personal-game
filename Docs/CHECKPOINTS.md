@@ -604,3 +604,15 @@ See `Docs/PRODUCTION_COMPLETENESS_MATRIX.md` and `Docs/CURRENT_PROJECT_STATE.md`
 - Fauna are excluded from NPC social pairing and never own quest/save state.
 - Added `Data/WorldActivityMovementPlan.json` and PG-055 validation.
 - Required proof: Pre-Unreal, UE4.27.2 compile/import, startup/chapter regression audit. CP55 visual/performance acceptance remains separate.
+
+## CP56 — Fellowship Film-Experience Mega-Pass
+- Opened only after CP55 passed Pre-Unreal #273 and Unreal Build Validation #108.
+- Keeps Peter Jackson film chronology/outcomes as the hard Part I spine; Extended Edition world/character texture may enrich without changing the theatrical core.
+- Added `Data/FellowshipExperienceMegaPassCP56.json` and expanded `Data/FilmExperiencePlan.json` with explicit Shire-life and Fellowship-companionship anchors.
+- P1C01 gains optional Green Dragon revelry, party mischief, a shared Shire-memory/play beat, six additional party revelers and four low-cost play runners.
+- Party guests now use a more animated bounded idle/dance gesture; play runners reuse the existing cheap ambient walking/social simulation.
+- P1C02 gains a denser six-person Prancing Pony/inn crowd and an optional common-room social observation beat.
+- P1C03/P1C05/P1C06/P1C07/P1C08 gain optional companionship, dead-city, grief and camp-tension discovery beats between mandatory story anchors.
+- CP55/CP56 plan files are packaged as runtime dependencies; no new parallel gameplay subsystem was introduced.
+- Added PG-058 to guard canon policy, eight-chapter coverage, required film-experience anchors, runtime enrichment symbols and packaging.
+- Final rigged animation, voice, cinematic cameras/cutscenes and film-grade art remain later asset-dependent work; this checkpoint does not claim those are complete.

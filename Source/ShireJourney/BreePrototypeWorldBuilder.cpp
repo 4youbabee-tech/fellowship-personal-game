@@ -3,6 +3,7 @@
 #include "ShireAmbientNPC.h"
 #include "ShireNPC.h"
 #include "ShireQuestTrigger.h"
+#include "ShireTraversalChallenge.h"
 
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
@@ -291,6 +292,27 @@ void ABreePrototypeWorldBuilder::SpawnBreeTown()
                 (Index % 3 == 1 ? TEXT("Crate") : TEXT("Mug"));
             Townsperson->WalkSpeed = 42.0f + 4.0f * (Index % 3);
         }
+    }
+
+    // CP56: denser inn/street social life around the Prancing Pony. This reuses
+    // existing bounded BreeTownsperson logic rather than introducing a new crowd system.
+    const FVector InnCrowd[] = {
+        FVector(980, 720, 20), FVector(1120, 850, 20), FVector(1260, 680, 20),
+        FVector(1420, 820, 20), FVector(1540, 610, 20), FVector(1660, 760, 20)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(InnCrowd); ++Index)
+    {
+        AShireAmbientNPC* Guest = GetWorld()->SpawnActor<AShireAmbientNPC>(InnCrowd[Index], FRotator::ZeroRotator);
+        if (!Guest) continue;
+        Guest->RoutineRole = TEXT("BreeTownsperson");
+        Guest->ActivityPropType = Index % 2 == 0 ? FName(TEXT("Mug")) : NAME_None;
+        Guest->RoutinePointA = InnCrowd[Index];
+        Guest->RoutinePointB = InnCrowd[Index] + FVector(
+            90.0f + 20.0f * (Index % 3), Index % 2 == 0 ? 80.0f : -80.0f, 0.0f);
+        Guest->WalkSpeed = 30.0f + 3.0f * (Index % 3);
+        Guest->MinWait = 2.0f;
+        Guest->MaxWait = 5.5f;
+        Guest->PlayerNoticeRadius = 420.0f;
     }
 }
 
@@ -598,6 +620,64 @@ void ABreePrototypeWorldBuilder::SpawnStoryFlow()
         Butterbur->RequiredQuestStage = 1;
         Butterbur->QuestStageAfterInteraction = 2;
     }
+
+    AShireQuestTrigger* BreeCommonRoomLife = GetWorld()->SpawnActor<AShireQuestTrigger>(
+        FVector(1180.0f, 720.0f, 90.0f), FRotator::ZeroRotator);
+    if (BreeCommonRoomLife)
+    {
+        BreeCommonRoomLife->SideStoryBeatAfterTrigger = TEXT("Side_BreeCommonRoomLife");
+        BreeCommonRoomLife->ObjectiveMessage = FText::FromString(
+            TEXT("The common room is noisy with travelers, locals and too many curious glances. You can listen, mingle, or keep moving."));
+    }
+
+    auto SpawnBreeDiscovery = [this](
+        const FVector& Location,
+        FName DiscoveryId,
+        const TCHAR* DisplayName,
+        FName OpensAfter,
+        FName ClosesBefore)
+    {
+        AShireQuestTrigger* Trigger =
+            GetWorld()->SpawnActor<AShireQuestTrigger>(Location, FRotator::ZeroRotator);
+        if (Trigger)
+        {
+            Trigger->DiscoveryId = DiscoveryId;
+            Trigger->DiscoveryDisplayName = FText::FromString(DisplayName);
+            Trigger->RequiredSideStoryBeat = OpensAfter;
+            Trigger->BlockedAfterStoryBeat = ClosesBefore;
+        }
+    };
+
+    AShireTraversalChallenge* WatchTheRoom = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(1180.0f, 650.0f, 90.0f), FRotator::ZeroRotator);
+    if (WatchTheRoom)
+    {
+        WatchTheRoom->ConfigureActivityChallenge(
+            TEXT("BREE_GATE_GOSSIP"),
+            FText::FromString(TEXT("Watch the Room")),
+            TEXT("OBSERVATION_CHALLENGE"),
+            FVector(0, 0, 0),
+            FVector(220, 80, 0),
+            FVector(420, -100, 0));
+    }
+
+    AShireTraversalChallenge* StableSigns = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+        FVector(520.0f, -520.0f, 90.0f), FRotator::ZeroRotator);
+    if (StableSigns)
+    {
+        StableSigns->ConfigureActivityChallenge(
+            TEXT("BREE_STABLE_YARD"),
+            FText::FromString(TEXT("Stable Yard Signs")),
+            TEXT("TRACKING_CHALLENGE"),
+            FVector(0, 0, 0),
+            FVector(240, 100, 0),
+            FVector(470, -60, 0));
+    }
+
+    SpawnBreeDiscovery(
+        FVector(1520.0f, 570.0f, 90.0f),
+        TEXT("BREE_INN_KITCHEN_LIFE"), TEXT("Life Behind the Prancing Pony"),
+        TEXT("PrancingPonyExterior"), TEXT("RingIncident"));
 
     AShireQuestTrigger* CommonRoomAttention = GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(1390.0f, 760.0f, 90.0f), FRotator::ZeroRotator);
     if (CommonRoomAttention)

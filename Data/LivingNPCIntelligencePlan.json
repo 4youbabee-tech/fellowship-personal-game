@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_LIVING_NPC_INTELLIGENCE_V1",
+  "status": "RUNTIME_PARTIAL",
+  "purpose": "Convert Part I NPCs from static dialogue actors into bounded, context-aware inhabitants with identity, routines, memory, goals, needs, emotions, relationships and knowledge limits while preserving film chronology and low-spec performance.",
+  "design_principles": [
+    "NPC intelligence may enrich moment-to-moment play but cannot alter mandatory film outcomes.",
+    "Named story characters receive richer identity/memory than ambient populations.",
+    "Ambient populations use aggregate/archetype state rather than expensive per-instance persistence.",
+    "Dialogue must respect character knowledge and admit ignorance when knowledge is unavailable.",
+    "All gameplay-critical NPC intelligence must run fully offline with zero network/API dependency.",
+    "If a language model is ever used at runtime, it must be a local on-device model behind strict context, memory, knowledge and performance limits; cloud/remote LLM calls are not part of the game architecture."
+  ],
+  "capabilities": {
+    "identity_profile": {
+      "status": "RUNTIME_PARTIAL",
+      "sources": [
+        "Data/NPCSocialModel.json"
+      ],
+      "fields": [
+        "roles",
+        "community",
+        "temperament_tags",
+        "knowledge_tags",
+        "relationships",
+        "anchors",
+        "origin",
+        "occupation",
+        "biography_facts",
+        "knowledge_limits",
+        "attitude_tags"
+      ]
+    },
+    "daily_routine": {
+      "status": "RUNTIME_PARTIAL",
+      "sources": [
+        "Data/NPCSocialModel.json",
+        "Source/ShireJourney/ShireAmbientNPC.cpp"
+      ],
+      "features": [
+        "HOME",
+        "WORK",
+        "TRAVEL",
+        "SOCIAL",
+        "REST",
+        "STORY_OVERRIDE",
+        "DANGER_OVERRIDE"
+      ]
+    },
+    "persistent_memory": {
+      "status": "RUNTIME_COMPLETE_PENDING_VALIDATION",
+      "sources": [
+        "Data/NPCMemoryPlan.json",
+        "Source/ShireJourney/ShireQuestSubsystem.cpp",
+        "Source/ShireJourney/ShireSaveGame.h"
+      ],
+      "policy": "Compact event IDs and relationship deltas only; no raw transcript persistence."
+    },
+    "goals_needs_emotions": {
+      "status": "RUNTIME_PARTIAL",
+      "sources": [
+        "Source/ShireJourney/ShireAmbientNPC.cpp"
+      ],
+      "needs": [
+        "hunger",
+        "fatigue",
+        "social_need",
+        "fear"
+      ],
+      "emotions": [
+        "CALM",
+        "FOCUSED",
+        "SOCIABLE",
+        "RELAXED",
+        "TIRED",
+        "HUNGRY",
+        "AFRAID",
+        "UNCOMFORTABLE"
+      ],
+      "goals": [
+        "ROUTINE",
+        "WORK",
+        "SOCIALIZE",
+        "REST",
+        "MEAL_BREAK",
+        "SAFETY",
+        "SHELTER"
+      ],
+      "rule": "Needs/emotions bias existing bounded routines; they never own quest progression."
+    },
+    "context_awareness": {
+      "status": "RUNTIME_PARTIAL",
+      "inputs": [
+        "chapter",
+        "route",
+        "quest stage",
+        "completed story beats",
+        "weather",
+        "danger",
+        "player proximity",
+        "schedule phase",
+        "relationship memory"
+      ]
+    },
+    "relationships": {
+      "status": "DATA_AND_RUNTIME_PARTIAL",
+      "sources": [
+        "Data/NPCSocialModel.json",
+        "Data/NPCMemoryPlan.json"
+      ],
+      "rule": "Relationship state may influence reactions/dialogue but cannot rewrite canon outcomes."
+    },
+    "dialogue": {
+      "status": "RUNTIME_COMPLETE_PENDING_VALIDATION",
+      "default_mode": "BOUNDED_LOCAL",
+      "sources": [
+        "Data/BoundedDialoguePlan.json",
+        "Data/NPCConversationPlan.json",
+        "Source/ShireJourney/ShireNPCContextSubsystem.cpp"
+      ],
+      "future_optional_modes": [
+        "LOCAL_SMALL_LLM_BOUNDED"
+      ],
+      "fallback_required": true,
+      "network_policy": "FORBID_REMOTE_RUNTIME_CALLS"
+    },
+    "speech": {
+      "status": "DEFERRED_OPTIONAL_OFFLINE_ONLY",
+      "future_options": [
+        "LOCAL_STT",
+        "LOCAL_TTS"
+      ],
+      "rule": "If speech is shipped, STT/TTS must execute locally/offline and must not become a hard gameplay dependency."
+    }
+  },
+  "character_knowledge_policy": {
+    "default": "DENY_UNLISTED",
+    "rules": [
+      "A character may only answer from authored profile knowledge, completed story state and remembered events.",
+      "If the requested information is outside that knowledge envelope, the response should express uncertainty or ignorance.",
+      "Future-event knowledge is forbidden.",
+      "Book/lore details may enrich a character only when compatible with the active film-continuity point.",
+      "Lore research is evidence for authored profile data, not direct runtime authority."
+    ]
+  },
+  "rollout": [
+    {
+      "phase": "LW-A",
+      "scope": "One Shire archetype + named Shire residents",
+      "focus": [
+        "needs",
+        "emotion",
+        "routine",
+        "memory-aware local dialogue"
+      ],
+      "status": "IN_PROGRESS"
+    },
+    {
+      "phase": "LW-B",
+      "scope": "Gandalf, Sam, Aragorn, Bilbo",
+      "focus": [
+        "character biography",
+        "knowledge limits",
+        "relationship memory",
+        "story-reactive dialogue"
+      ],
+      "status": "IN_PROGRESS"
+    },
+    {
+      "phase": "LW-C",
+      "scope": "Merry, Pippin, Arwen, Boromir, Legolas, Gimli, Elrond, Galadriel, Haldir, Saruman",
+      "focus": [
+        "character-specific knowledge and relationship context"
+      ],
+      "status": "PLANNED"
+    },
+    {
+      "phase": "LW-D",
+      "scope": "regional ambient archetypes",
+      "focus": [
+        "cheap aggregate needs/emotion/schedule reactions"
+      ],
+      "status": "PLANNED"
+    }
+  ],
+  "acceptance_criteria": [
+    "NPC behavior changes with schedule, danger, weather and bounded internal needs.",
+    "Important named NPC memories survive save/load within configured budgets.",
+    "NPC dialogue never reveals future story knowledge.",
+    "NPCs can express ignorance when profile knowledge is absent.",
+    "Relationships and memories influence dialogue/reactions without changing required story outcomes.",
+    "Ambient simulation stays distance-throttled and low-cost.",
+    "Game remains fully functional with the network physically unavailable.",
+    "No gameplay-critical NPC path makes remote HTTP/API calls.",
+    "Any future local LLM/STT/TTS layer has a deterministic local fallback and stays within the target-device budget."
+  ],
+  "explicit_non_goals_for_current_batch": [
+    "unrestricted free-form AI agents",
+    "always-online dependency",
+    "large local LLM on the 8 GB / ~2 GB VRAM target",
+    "unbounded transcript storage",
+    "LLM-authored quest outcomes",
+    "final facial animation, final TTS voice or final lip-sync",
+    "remote/cloud LLM runtime integration",
+    "remote/cloud STT or TTS runtime integration",
+    "API keys or internet connectivity required by the shipped game"
+  ],
+  "offline_runtime_policy": {
+    "mode": "OFFLINE_ONLY",
+    "network_required": false,
+    "remote_llm_allowed": false,
+    "remote_stt_allowed": false,
+    "remote_tts_allowed": false,
+    "cloud_api_dependency_allowed": false,
+    "local_model_optional": true,
+    "deterministic_non_llm_fallback_required": true,
+    "rule": "Disconnecting the machine from the internet must not disable NPC routines, memory, goals, emotions, relationships, dialogue, story progression, save/load, STT/TTS if those speech layers are shipped, or any other gameplay-critical feature."
+  },
+  "current_batch_progress": [
+    "Core profiles Gandalf, Sam, Aragorn and Bilbo now carry biography facts, knowledge limits and attitude tags in NPCSocialModel.",
+    "UShireNPCContextSubsystem now loads those fields and exposes a compact local profile context summary.",
+    "Ambient needs/emotion/goal simulation remains bounded and offline-only.",
+    "PG-059 now guards both offline policy and the core character knowledge envelopes."
+  ]
+}

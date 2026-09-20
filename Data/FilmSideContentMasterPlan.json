@@ -1,0 +1,947 @@
+{
+  "schema_version": 1,
+  "plan_id": "FILM_SIDE_CONTENT_MASTER_V1",
+  "status": "ACCEPTED_AUDITED_MASTER_PLAN",
+  "authority_order": [
+    "Verified Peter Jackson film/script continuity",
+    "Existing Story Canon Bible / FilmExperiencePlan",
+    "FILM_MOMENT gameplay conversion",
+    "FILM_EXPANDED story-safe life around the scene",
+    "CHRONICLE content clearly separated from film canon"
+  ],
+  "taxonomy": {
+    "FILM_MOMENT": "An event actually present in the chosen film continuity; gameplay may replace/pass through the cutscene but outcome stays fixed.",
+    "FILM_EXPANDED": "The film scene/place exists; game adds plausible local play before/after it without changing scene order, participants or outcome.",
+    "CHRONICLE": "Book-only, historical or character-past material kept visibly separate from Main Film Canon. It cannot silently become the film timeline."
+  },
+  "global_guards": [
+    "No side activity may cancel, avoid or change a mandatory film event.",
+    "A player choice may alter banter, reward, route detail, preparation or presentation, not the canonical result.",
+    "When a FILM_MOMENT already exists, prefer making that moment playable before inventing unrelated filler.",
+    "Urgent canon beats close or suspend side content.",
+    "CHRONICLE content must be labeled and separated from Film Main Story.",
+    "No book-only event may be inserted into Film Main Story merely because it is popular."
+  ],
+  "audits_and_corrections": [
+    {
+      "issue": "Fellowship opening described as starting at Bilbo's birthday party",
+      "correction": "The film/script opening includes the Ring prologue and Bilbo writing before the party sequence. Party content is early-game material, not the literal first scene."
+    },
+    {
+      "issue": "Weathertop fire treated as a player choice that could change detection",
+      "correction": "The canonical attack must still happen. Fire/visibility interaction may change tension, dialogue or stealth presentation only."
+    },
+    {
+      "issue": "Prancing Pony Attention Meter could imply the Ring incident is avoidable",
+      "correction": "Attention may alter ambient suspicion or difficulty, but the canonical Ring incident/Strider/Nazgul progression remains mandatory."
+    },
+    {
+      "issue": "Doors of Moria as an unrestricted puzzle",
+      "correction": "Use a guided canonical puzzle: the player may perform reasoning/interactions, but the required door solution/outcome cannot branch."
+    },
+    {
+      "issue": "Entmoot evidence-gathering could change the film's causal chain",
+      "correction": "Do not let the player replace the film's decision causality. Any Fangorn exploration/evidence is contextual only; Treebeard's film decision path remains fixed."
+    },
+    {
+      "issue": "Oliphaunt observation grants a future combat weakness",
+      "correction": "Keep it as Lore/Perception/Chronicle or local tactical observation, not a cross-film power-up that rewrites later combat."
+    },
+    {
+      "issue": "Lighting the Beacons framed as a generic relay time-trial",
+      "correction": "The verified Return of the King screenplay specifically supports Pippin reaching and lighting the Minas Tirith beacon while Gandalf waits below. Use that as the playable FILM_MOMENT; subsequent mountain beacons remain the film montage unless separately source-verified."
+    },
+    {
+      "issue": "Scouring of the Shire proposed as post-game continuation",
+      "correction": "It is book-only and omitted from the film continuity. If ever used, it must remain a clearly labeled CHRONICLE/alternate book campaign, not the film ending."
+    },
+    {
+      "issue": "Glorfindel at the Ford",
+      "correction": "Book-only Chronicle. Film Main Story keeps Arwen in the rescue role."
+    }
+  ],
+  "fellowship": [
+    {
+      "id": "F1_BILBO_PARTY_PREP",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Frodo",
+        "Shire residents"
+      ],
+      "gameplay": [
+        "tables",
+        "food",
+        "lanterns",
+        "small local help"
+      ],
+      "canon_lock": "Party begins on film schedule."
+    },
+    {
+      "id": "F1_GANDALF_FIREWORKS",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Gandalf"
+      ],
+      "gameplay": [
+        "select/position/fire safe fireworks",
+        "timing"
+      ],
+      "canon_lock": "Dragon-firework sequence remains separate and fixed."
+    },
+    {
+      "id": "F1_MERRY_PIPPIN_DRAGON",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Merry",
+        "Pippin"
+      ],
+      "gameplay": [
+        "steal rocket",
+        "ignite",
+        "brief escape/comedy"
+      ],
+      "canon_lock": "Same dragon firework consequence and Gandalf response."
+    },
+    {
+      "id": "F1_PARTY_GAMES",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Frodo",
+        "Hobbits"
+      ],
+      "gameplay": [
+        "dance",
+        "food/drink social play",
+        "light skill contests"
+      ],
+      "canon_lock": "Bilbo speech/disappearance remain fixed."
+    },
+    {
+      "id": "F1_GREEN_DRAGON",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Frodo",
+        "Merry",
+        "Pippin",
+        "Sam"
+      ],
+      "gameplay": [
+        "social talk",
+        "song atmosphere",
+        "table activity",
+        "local gossip"
+      ],
+      "canon_lock": "No future Ring knowledge."
+    },
+    {
+      "id": "F1_FARMER_FIELDS_MUSHROOMS",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Frodo",
+        "Sam",
+        "Merry",
+        "Pippin"
+      ],
+      "gameplay": [
+        "short chase/traversal",
+        "mushroom pickup"
+      ],
+      "canon_lock": "Black Rider road progression remains fixed."
+    },
+    {
+      "id": "F1_BLACK_RIDER_HIDE",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Frodo"
+      ],
+      "gameplay": [
+        "stealth",
+        "movement/noise discipline"
+      ],
+      "canon_lock": "Encounter outcome fixed."
+    },
+    {
+      "id": "F1_BUCKLEBURY_FERRY",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Frodo"
+      ],
+      "gameplay": [
+        "sprint to ferry",
+        "brief ferry interaction"
+      ],
+      "canon_lock": "Ferry escape outcome fixed."
+    },
+    {
+      "id": "F1_BREE_STREETS",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Frodo",
+        "Sam",
+        "Merry",
+        "Pippin"
+      ],
+      "gameplay": [
+        "streets",
+        "supplies",
+        "rumors"
+      ],
+      "canon_lock": "Prancing Pony remains required."
+    },
+    {
+      "id": "F1_PRANCING_PONY",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Frodo"
+      ],
+      "gameplay": [
+        "social observation",
+        "supplies",
+        "bounded inn activities",
+        "ambient attention"
+      ],
+      "canon_lock": "Ring incident and Strider/Nazgul sequence cannot be avoided."
+    },
+    {
+      "id": "F1_MIDGEWATER",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Frodo",
+        "Aragorn"
+      ],
+      "gameplay": [
+        "camp",
+        "route reading",
+        "marsh hazards"
+      ],
+      "canon_lock": "Travel chronology fixed."
+    },
+    {
+      "id": "F1_WEATHERTOP_CAMP",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Hobbits",
+        "Aragorn"
+      ],
+      "gameplay": [
+        "camp preparation",
+        "visibility/tension feedback"
+      ],
+      "canon_lock": "Nazgul attack must still occur."
+    },
+    {
+      "id": "F1_STONE_TROLLS",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Frodo",
+        "Bilbo-memory context"
+      ],
+      "gameplay": [
+        "small exploration",
+        "Chronicle/lore"
+      ],
+      "canon_lock": "No inserted Hobbit-book adventure in main timeline."
+    },
+    {
+      "id": "F1_RIVENDELL_FREE_EXPLORE",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Frodo"
+      ],
+      "gameplay": [
+        "Bilbo",
+        "Narsil viewing",
+        "library",
+        "gardens",
+        "waterfall paths",
+        "departure prep"
+      ],
+      "canon_lock": "Council/Fellowship formation fixed."
+    },
+    {
+      "id": "F1_FELLOWSHIP_PREP",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Frodo",
+        "Fellowship"
+      ],
+      "gameplay": [
+        "supplies",
+        "equipment familiarity",
+        "companion talk"
+      ],
+      "canon_lock": "No loot-build changes to film equipment continuity."
+    },
+    {
+      "id": "F1_CARADHRAS",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Fellowship"
+      ],
+      "gameplay": [
+        "snow traversal",
+        "carry/support hobbits",
+        "warmth/resolve pressure"
+      ],
+      "canon_lock": "Canonical retreat remains fixed."
+    },
+    {
+      "id": "F1_MORIA_DOOR",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Frodo",
+        "Gandalf"
+      ],
+      "gameplay": [
+        "guided canonical door puzzle"
+      ],
+      "canon_lock": "Door solution and Watcher progression fixed."
+    },
+    {
+      "id": "F1_MORIA_EXPLORE",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Gimli",
+        "Gandalf",
+        "Fellowship"
+      ],
+      "gameplay": [
+        "route finding",
+        "light/resource tension",
+        "Dwarven traces"
+      ],
+      "canon_lock": "No early Balin reveal."
+    },
+    {
+      "id": "F1_BALINS_TOMB",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Gimli",
+        "Gandalf"
+      ],
+      "gameplay": [
+        "inspect tomb/book",
+        "lore interaction"
+      ],
+      "canon_lock": "Attack timing and outcome fixed."
+    },
+    {
+      "id": "F1_LOTHLORIEN",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Frodo",
+        "Fellowship"
+      ],
+      "gameplay": [
+        "flets",
+        "Elven conversations",
+        "boats/supplies/gifts"
+      ],
+      "canon_lock": "Mirror/farewell/departure fixed."
+    },
+    {
+      "id": "F1_ANDUIN_BOATS",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Frodo",
+        "Fellowship"
+      ],
+      "gameplay": [
+        "canoe handling",
+        "rock avoidance",
+        "bounded shore stops"
+      ],
+      "canon_lock": "Argonath/Amon Hen route fixed."
+    }
+  ],
+  "two_towers": [
+    {
+      "id": "F2_EMYN_MUIL_TRACK_GOLLUM",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Frodo",
+        "Sam"
+      ],
+      "gameplay": [
+        "tracks",
+        "rope/climb",
+        "terrain route"
+      ],
+      "canon_lock": "Gollum encounter outcome fixed."
+    },
+    {
+      "id": "F2_GOLLUM_FISHING",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Gollum",
+        "Frodo"
+      ],
+      "gameplay": [
+        "short fishing/approach interaction where source permits"
+      ],
+      "canon_lock": "No altered capture/Forbidden Pool result."
+    },
+    {
+      "id": "F2_DEAD_MARSHES",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Frodo"
+      ],
+      "gameplay": [
+        "follow Gollum route",
+        "avoid lights/water hazards",
+        "resolve pressure"
+      ],
+      "canon_lock": "Marsh sequence outcome fixed."
+    },
+    {
+      "id": "F2_THREE_HUNTERS_TRACKING",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Aragorn",
+        "Legolas",
+        "Gimli"
+      ],
+      "gameplay": [
+        "track Uruk-hai",
+        "read signs",
+        "character specialties"
+      ],
+      "canon_lock": "Pursuit chronology fixed."
+    },
+    {
+      "id": "F2_ROHAN_VILLAGES",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Rohan civilians",
+        "Aragorn route where safe"
+      ],
+      "gameplay": [
+        "rescue",
+        "horses",
+        "evidence of attack"
+      ],
+      "canon_lock": "No invented major battle/outcome."
+    },
+    {
+      "id": "F2_EOMER_RIDERS",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Eomer"
+      ],
+      "gameplay": [
+        "horse/spear familiarity",
+        "patrol prep"
+      ],
+      "canon_lock": "Exact window source-checked; exile/meeting chronology fixed."
+    },
+    {
+      "id": "F2_MERRY_PIPPIN_FANGORN",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Merry",
+        "Pippin"
+      ],
+      "gameplay": [
+        "forest navigation",
+        "Treebeard travel",
+        "conversation"
+      ],
+      "canon_lock": "Entmoot path fixed."
+    },
+    {
+      "id": "F2_ENTMOOT",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Merry",
+        "Pippin"
+      ],
+      "gameplay": [
+        "observe/explore during waiting",
+        "dialogue/context"
+      ],
+      "canon_lock": "Player cannot replace film decision causality."
+    },
+    {
+      "id": "F2_EDORAS_BREGO",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Aragorn"
+      ],
+      "gameplay": [
+        "approach/calm Brego",
+        "horse interaction"
+      ],
+      "canon_lock": "Brego relationship outcome fixed."
+    },
+    {
+      "id": "F2_THEODRED_BURIAL",
+      "type": "FILM_MOMENT",
+      "edition_check": "VERIFY_CUT",
+      "viewpoint": [
+        "Eowyn",
+        "Rohan"
+      ],
+      "gameplay": [
+        "quiet attendance",
+        "Rohan Chronicle"
+      ],
+      "canon_lock": "No invented family outcome."
+    },
+    {
+      "id": "F2_EVACUATION_HELMS_DEEP",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Aragorn",
+        "Eowyn",
+        "Rohan"
+      ],
+      "gameplay": [
+        "wagon issue",
+        "civilian support",
+        "lost horse/child bounded event"
+      ],
+      "canon_lock": "Evacuation destination/outcome fixed."
+    },
+    {
+      "id": "F2_ROAD_CAMP",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Aragorn",
+        "Eowyn"
+      ],
+      "gameplay": [
+        "camp duties",
+        "guard",
+        "bounded conversation"
+      ],
+      "canon_lock": "Relationships remain film-consistent."
+    },
+    {
+      "id": "F2_HELMS_DEEP_PREP",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Aragorn",
+        "Legolas",
+        "Gimli",
+        "Rohan"
+      ],
+      "gameplay": [
+        "arrows",
+        "weapons",
+        "gates",
+        "civilian support"
+      ],
+      "canon_lock": "Battle start/outcome fixed."
+    },
+    {
+      "id": "F2_ARMORY",
+      "type": "FILM_EXPANDED",
+      "viewpoint": [
+        "Rohan defenders"
+      ],
+      "gameplay": [
+        "inspect/familiarize equipment"
+      ],
+      "canon_lock": "No loot-tier system."
+    },
+    {
+      "id": "F2_LEGOLAS_GIMLI_COUNT",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Legolas",
+        "Gimli"
+      ],
+      "gameplay": [
+        "friendly score challenge"
+      ],
+      "canon_lock": "Score changes banter only, not battle outcome."
+    },
+    {
+      "id": "F2_ITHILIEN_AMBUSH",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Faramir"
+      ],
+      "gameplay": [
+        "ranger stealth",
+        "ambush positioning",
+        "Haradrim/Mumakil set-piece"
+      ],
+      "canon_lock": "Frodo/Sam/Faramir sequence remains fixed."
+    },
+    {
+      "id": "F2_OLIPHAUNT_OBSERVATION",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Sam",
+        "Frodo"
+      ],
+      "gameplay": [
+        "observe",
+        "Chronicle/Perception"
+      ],
+      "canon_lock": "No future-battle permanent weakness bonus."
+    },
+    {
+      "id": "F2_FORBIDDEN_POOL",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Frodo"
+      ],
+      "gameplay": [
+        "approach/lure Gollum",
+        "stealth tension"
+      ],
+      "canon_lock": "Faramir's men capture Gollum as in film."
+    },
+    {
+      "id": "F2_ENTS_ISENGARD",
+      "type": "FILM_MOMENT",
+      "viewpoint": [
+        "Ent/Merry/Pippin"
+      ],
+      "gameplay": [
+        "bounded destruction",
+        "open route for water sequence"
+      ],
+      "canon_lock": "Film destruction/flood sequence and result fixed."
+    }
+  ],
+  "return_of_king": [
+    {
+      "id": "F3_SMEAGOL_DEAGOL_FISHING",
+      "type": "FILM_MOMENT",
+      "source_status": "WEB_SCREENPLAY_VERIFIED",
+      "viewpoint": [
+        "Smeagol",
+        "Deagol"
+      ],
+      "gameplay": [
+        "brief fishing setup"
+      ],
+      "canon_lock": "Ring discovery/murder outcome fixed."
+    },
+    {
+      "id": "F3_ISENGARD_AFTERMATH",
+      "type": "FILM_EXPANDED",
+      "source_status": "VERIFY_EDITION_DETAIL",
+      "viewpoint": [
+        "Merry",
+        "Pippin"
+      ],
+      "gameplay": [
+        "limited storeroom exploration",
+        "food/pipe-weed where chosen cut supports it"
+      ],
+      "canon_lock": "Orthanc chronology fixed."
+    },
+    {
+      "id": "F3_PALANTIR",
+      "type": "FILM_MOMENT",
+      "source_status": "WEB_SCREENPLAY_VERIFIED",
+      "viewpoint": [
+        "Pippin"
+      ],
+      "gameplay": [
+        "temptation/interaction sequence"
+      ],
+      "canon_lock": "Vision and aftermath fixed."
+    },
+    {
+      "id": "F3_RIDE_MINAS_TIRITH",
+      "type": "FILM_EXPANDED",
+      "source_status": "WEB_SCREENPLAY_HIGH_LEVEL_VERIFIED",
+      "viewpoint": [
+        "Gandalf",
+        "Pippin"
+      ],
+      "gameplay": [
+        "short travel/lore beats"
+      ],
+      "canon_lock": "Arrival chronology fixed."
+    },
+    {
+      "id": "F3_MINAS_TIRITH_EXPLORE",
+      "type": "FILM_EXPANDED",
+      "source_status": "WEB_SCREENPLAY_HIGH_LEVEL_VERIFIED",
+      "viewpoint": [
+        "Pippin"
+      ],
+      "gameplay": [
+        "city levels",
+        "guards",
+        "citizens",
+        "market/craft atmosphere"
+      ],
+      "canon_lock": "Denethor/siege chronology fixed."
+    },
+    {
+      "id": "F3_PIPPIN_GUARD",
+      "type": "FILM_MOMENT",
+      "source_status": "WEB_SCREENPLAY_VERIFY_EXACT_BEAT",
+      "viewpoint": [
+        "Pippin"
+      ],
+      "gameplay": [
+        "uniform/watch/simple guard interaction"
+      ],
+      "canon_lock": "Guard service chronology fixed."
+    },
+    {
+      "id": "F3_LIGHT_BEACON",
+      "type": "FILM_MOMENT",
+      "source_status": "WEB_SCREENPLAY_VERIFIED",
+      "viewpoint": [
+        "Pippin"
+      ],
+      "gameplay": [
+        "stealth/climb to Minas Tirith beacon",
+        "ignite beacon"
+      ],
+      "canon_lock": "Pippin lights the Minas Tirith beacon; subsequent beacon chain remains film montage."
+    },
+    {
+      "id": "F3_ROHAN_MUSTER",
+      "type": "FILM_EXPANDED",
+      "source_status": "SOURCE_CHECK_BEFORE_IMPLEMENT",
+      "viewpoint": [
+        "Rohan"
+      ],
+      "gameplay": [
+        "horses",
+        "spears",
+        "supplies"
+      ],
+      "canon_lock": "Ride chronology fixed."
+    },
+    {
+      "id": "F3_DUNHARROW",
+      "type": "FILM_EXPANDED",
+      "source_status": "SOURCE_CHECK_BEFORE_IMPLEMENT",
+      "viewpoint": [
+        "Aragorn",
+        "Rohan"
+      ],
+      "gameplay": [
+        "camp exploration",
+        "soldier talk"
+      ],
+      "canon_lock": "Paths of the Dead transition fixed."
+    },
+    {
+      "id": "F3_PATHS_DEAD",
+      "type": "FILM_MOMENT",
+      "source_status": "SOURCE_CHECK_BEFORE_IMPLEMENT",
+      "viewpoint": [
+        "Aragorn",
+        "Legolas",
+        "Gimli"
+      ],
+      "gameplay": [
+        "navigation",
+        "inscriptions",
+        "fear/resolve"
+      ],
+      "canon_lock": "Army of Dead outcome follows film continuity."
+    },
+    {
+      "id": "F3_CORSAIR_SHIPS",
+      "type": "FILM_MOMENT",
+      "source_status": "SOURCE_CHECK_BEFORE_IMPLEMENT",
+      "viewpoint": [
+        "Aragorn",
+        "Legolas",
+        "Gimli"
+      ],
+      "gameplay": [
+        "bounded boarding/combat"
+      ],
+      "canon_lock": "Ship consequence fixed."
+    },
+    {
+      "id": "F3_MINAS_TIRITH_SIEGE_SUPPORT",
+      "type": "FILM_EXPANDED",
+      "source_status": "SOURCE_CHECK_BEFORE_IMPLEMENT",
+      "viewpoint": [
+        "Pippin",
+        "Gandalf",
+        "Gondor"
+      ],
+      "gameplay": [
+        "fires",
+        "arrows",
+        "civilian routes",
+        "support"
+      ],
+      "canon_lock": "Siege result fixed."
+    },
+    {
+      "id": "F3_PELENNOR_HORSE_RESCUE",
+      "type": "FILM_EXPANDED",
+      "source_status": "SOURCE_CHECK_BEFORE_IMPLEMENT",
+      "viewpoint": [
+        "Rohirrim"
+      ],
+      "gameplay": [
+        "recover riderless horses"
+      ],
+      "canon_lock": "No battle outcome change."
+    },
+    {
+      "id": "F3_LEGOLAS_MUMAKIL",
+      "type": "FILM_MOMENT",
+      "source_status": "SOURCE_CHECK_BEFORE_IMPLEMENT",
+      "viewpoint": [
+        "Legolas"
+      ],
+      "gameplay": [
+        "skill set-piece"
+      ],
+      "canon_lock": "Film set-piece result fixed."
+    },
+    {
+      "id": "F3_CIRITH_UNGOL_SAM",
+      "type": "FILM_MOMENT",
+      "source_status": "SOURCE_CHECK_BEFORE_IMPLEMENT",
+      "viewpoint": [
+        "Sam"
+      ],
+      "gameplay": [
+        "stealth/search",
+        "recover Frodo possessions"
+      ],
+      "canon_lock": "Rescue outcome fixed."
+    },
+    {
+      "id": "F3_ORC_DISGUISE",
+      "type": "FILM_MOMENT",
+      "source_status": "SOURCE_CHECK_BEFORE_IMPLEMENT",
+      "viewpoint": [
+        "Frodo",
+        "Sam"
+      ],
+      "gameplay": [
+        "disguise discipline",
+        "column stealth"
+      ],
+      "canon_lock": "Mordor chronology fixed."
+    },
+    {
+      "id": "F3_MORDOR_SURVIVAL",
+      "type": "FILM_EXPANDED",
+      "source_status": "SOURCE_CHECK_BEFORE_IMPLEMENT",
+      "viewpoint": [
+        "Frodo",
+        "Sam"
+      ],
+      "gameplay": [
+        "bounded water/stamina",
+        "route selection",
+        "patrol avoidance"
+      ],
+      "canon_lock": "No survival sim grind; Mount Doom route fixed."
+    },
+    {
+      "id": "F3_BLACK_GATE_CAMP",
+      "type": "FILM_EXPANDED",
+      "source_status": "SOURCE_CHECK_BEFORE_IMPLEMENT",
+      "viewpoint": [
+        "Aragorn",
+        "Gandalf",
+        "remaining Fellowship"
+      ],
+      "gameplay": [
+        "talk",
+        "gear check",
+        "army atmosphere"
+      ],
+      "canon_lock": "Final battle chronology fixed."
+    },
+    {
+      "id": "F3_CORONATION_AFTERWAR",
+      "type": "FILM_EXPANDED",
+      "source_status": "SOURCE_CHECK_BEFORE_IMPLEMENT",
+      "viewpoint": [
+        "Hobbits",
+        "Aragorn"
+      ],
+      "gameplay": [
+        "peaceful social exploration"
+      ],
+      "canon_lock": "Coronation outcome fixed."
+    },
+    {
+      "id": "F3_GREY_HAVENS",
+      "type": "FILM_EXPANDED",
+      "source_status": "WEB_SCREENPLAY_HIGH_LEVEL_VERIFIED",
+      "viewpoint": [
+        "Frodo",
+        "Sam",
+        "Merry",
+        "Pippin"
+      ],
+      "gameplay": [
+        "quiet final exploration",
+        "memory/letters"
+      ],
+      "canon_lock": "Departure ending remains fixed."
+    }
+  ],
+  "chronicles": [
+    {
+      "id": "CH_TOM_BARROW",
+      "type": "CHRONICLE",
+      "status": "BOOK_ONLY",
+      "rule": "Separate optional book adventure; never inserted into Film Main Story between Shire and Bree."
+    },
+    {
+      "id": "CH_GLORFINDEL_FORD",
+      "type": "CHRONICLE",
+      "status": "BOOK_ONLY",
+      "rule": "Alternate book retelling only; Film Main Story keeps Arwen."
+    },
+    {
+      "id": "CH_SCOURING_SHIRE",
+      "type": "CHRONICLE",
+      "status": "BOOK_ONLY_POSTGAME",
+      "rule": "If built, clearly labeled book/alternate campaign after film ending; not canonical film continuation."
+    },
+    {
+      "id": "CH_ARAGORN_PAST",
+      "type": "CHRONICLE",
+      "status": "LORE_PAST",
+      "rule": "Past Ranger/Dunedain episodes only when source-verified and separated from current film chronology."
+    },
+    {
+      "id": "CH_FARAMIR_ITHILIEN_PAST",
+      "type": "CHRONICLE",
+      "status": "LORE_PAST",
+      "rule": "Past ranger material must not contradict film Faramir route."
+    },
+    {
+      "id": "CH_GIMLI_GLITTERING_CAVES",
+      "type": "CHRONICLE",
+      "status": "LORE_PAST_OR_FUTURE",
+      "rule": "Use only with explicit timeline/source tag."
+    },
+    {
+      "id": "CH_GANDALF_RING_RESEARCH",
+      "type": "CHRONICLE",
+      "status": "FILM_BRIDGE_CANDIDATE",
+      "rule": "May become Film Main gameplay only for the parts actually supported by film/script continuity; book-only details stay Chronicle."
+    }
+  ],
+  "prototype_priority": [
+    "F1_BILBO_PARTY_PREP + F1_GANDALF_FIREWORKS",
+    "F1_FARMER_FIELDS_MUSHROOMS",
+    "F1_PRANCING_PONY",
+    "F1_RIVENDELL_FREE_EXPLORE",
+    "F1_MORIA_DOOR + F1_MORIA_EXPLORE",
+    "F2_DEAD_MARSHES",
+    "F2_EDORAS_BREGO",
+    "F2_HELMS_DEEP_PREP",
+    "F2_ITHILIEN_AMBUSH",
+    "F3_MINAS_TIRITH_EXPLORE + F3_LIGHT_BEACON"
+  ]
+}

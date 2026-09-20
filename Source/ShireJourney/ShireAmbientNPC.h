@@ -101,6 +101,9 @@ private:
     float WaitRemaining = 0.0f;
     float WalkPhase = 0.0f;
     float ActivityPhase = 0.0f;
+    float AnimationRateScale = 1.0f;
+    float IdleLookAmplitude = 4.0f;
+    float IdleLookPhase = 0.0f;
     FVector ActivityPropBase = FVector::ZeroVector;
     FRotator ActivityPropBaseRotation = FRotator::ZeroRotator;
     float SenseAccumulator = 0.0f;
@@ -112,8 +115,15 @@ private:
     float SocialCaptionRemaining = 0.0f;
     float LastPartnerCooldownRemaining = 0.0f;
     float ScheduleCheckRemaining = 0.0f;
+    float NeedsCheckRemaining = 0.0f;
     float BaseWalkSpeed = 55.0f;
+    float Hunger01 = 0.0f;
+    float Fatigue01 = 0.0f;
+    float SocialNeed01 = 0.0f;
+    float Fear01 = 0.0f;
     FName RuntimeSchedulePhase = NAME_None;
+    FName RuntimeEmotion = TEXT("CALM");
+    FName RuntimeGoal = TEXT("ROUTINE");
     bool bSocializing = false;
     FText PendingSocialCaption;
     float VisualTorsoBaseZ = 58.0f;
@@ -134,4 +144,5 @@ private:
     FText ResolveAmbientConversationLine(bool bResponse) const;
     FName ResolveRuntimeProfileHint() const;
     void UpdateScheduleContext(float DeltaSeconds);
+    void UpdateNeedsAndEmotion(float DeltaSeconds);
 };

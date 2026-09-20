@@ -1,3 +1,233 @@
+## 2026-09-20 — V6 continuation and source/governor audit
+
+Authority remains `Data/ProjectGovernor.json`. Its previous handoff was stale at #303; the actual verified baseline is `cd58be1e1cea033295a163ef2a90985f30471c2b`, Pre-Unreal #484 and Unreal #319, including import/startup/eight chapters/state/save/warnings. V6 head `93092a82b95418552728c73e02d31c220a7457ac` passed Pre-Unreal #485. Unreal #320 attempt 1 was interrupted during UHT/build (Ctrl-C, -1073741510); this is not a demonstrated C++ code defect. The single rerun (attempt 2) was also interrupted, before compilation at the editor-wait step. The cancellation trigger is not established; no further blind reruns were requested.
+
+V6 refines original modular head/torso/hair geometry for nine Fellowship characters; it is not final skeletal animation or visual acceptance. Preserve that distinction.
+
+The Governor now validates exact SHA scope for baseline/current workflow evidence and prints when a checkout is not covered by the recorded snapshot. A successful ancestor cannot silently certify the current checkout. Six regression cases cover mixed SHA evidence, cancelled current runs, invalid green baselines and missing experiential boundaries.
+
+Uploaded source identities were verified against the reference index. Bible 09 now has its fingerprint. Targeted review of story, mission and visual-reference guidance confirms safe optional windows, explicit mission state/QA and the separation of visual inspiration from canon. The reference books' F1-xx identifiers do not equal runtime P1Cxx identifiers; numeric suffix matching is unsafe. Full scene-level provenance and rendered/device acceptance remain open. Green #319 still carries 132 unique near-zero-binormal identities under the existing 150 limit; passing the warning guard does not mean zero asset debt.
+
+## 2026-09-20 — final lightweight geometry-warning cleanup
+
+The green #302 baseline still carried 50 degenerate-tangent and 53 nearly-zero-binormal import identities. Inspection of representative production OBJ sources confirmed that these flat-color meshes have no `vt` texture-coordinate records. MikkTSpace therefore had no valid UV basis and was generating warning debt that did not improve the current material path.
+
+The production importer now detects untextured OBJ meshes and explicitly computes normals with UE4's built-in tangent generator while keeping MikkTSpace/default behavior available for any future OBJ that actually supplies texture UVs. The exact-head chain must prove the warnings are removed before the debt is marked fixed or warning ceilings are tightened.
+
+Two obsolete bootstrap/checkout PowerShell scripts are removed in the same cleanup because the workflow now bootstraps and checks out safely before repository scripts are available.
+
+## 2026-09-20 — warning evidence scope repair
+
+Run #300 confirmed the material persistence repair itself works: 225 authored material packages were explicitly saved with zero failures and the commandlet verified zero missing physical files. The warning gate remained red because import-time `LoadObject` existence probes intentionally asked for not-yet-created material packages, generating 216 warnings before synthesis.
+
+That is now corrected at both ends: importer probes use `FindObject` plus `FPackageName::DoesPackageExist` before any load, and missing-package debt is evaluated from runtime startup/chapter/state logs rather than the import log. Exact-head CI logs are also cleared before each run so stale evidence cannot contaminate a new SHA.
+
+The runtime missing-world-package ceiling is now zero. Any package that is genuinely absent after import will still fail the gate.
+
+## 2026-09-20 — exact-head material persistence final blocker
+
+Run #299 proved the entire machine chain through real UE4.27.2 build/import/startup, P1C01-P1C08 and isolated disk save/state roundtrip. The only failing gate is warning debt: 216 unique world material packages are referenced by imported meshes but are absent on disk.
+
+The importer already synthesizes the intended authored material instances. The repair now bypasses unreliable unattended editor save helpers for these packages and writes each package explicitly with `UPackage::SavePackage` to its deterministic `.uasset` path, then verifies physical file existence before the commandlet can report success.
+
+No threshold was raised and no debt was hidden. The next exact-head run must prove this repair.
+
+## 2026-09-20 — mega-wave runway repair
+
+The pre-production runway was repaired before the next mega build wave. REQ-AUDIT-001 is now represented in the master roadmap/tracked snapshot, PG-037 validates the new asynchronous checkpoint contract, and the Windows UE4 CI target now uses project-only clean intermediates, single-action compilation and CI-only disabled debug symbols to remove the recurring VS2019 D8050 debug-record failure mode. Local developer/editor builds retain normal debug symbols.
+
+This is preparation, not a green claim: the new exact head must still pass Pre-Unreal and the real UE4.27.2 compile/import/startup/eight-chapter/state/warning chain.
+
+## 2026-09-20 — deep exact-head validation reconciliation
+
+Exact head `c023a735e3e390b8d591e1f6df9d07aeaa054754` reached the strongest automated evidence chain so far: Pre-Unreal #450 passed, and Unreal Build Validation #285 passed the isolated MSVC probe, UE4.27.2 C++ build, production asset import, Python resolution, playable startup, every P1C01-P1C08 chapter audit, and the route/story/state audit with an actual isolated disk save/load roundtrip.
+
+The workflow failed only at warning-debt aggregation. Audit of the guard found a validation-harness defect: identical tangent/binormal warnings copied through multiple CI logs were counted repeatedly as separate debt. The guard now counts unique mesh/package identities and prints those identities. This does **not** waive real asset debt; it makes the next repair target exact instead of occurrence-inflated. The remaining world-package identities will be repaired from the next rerun.
+
+No rendered/PIE visual acceptance, FPS claim or Production 100 promotion is made from this machine evidence.
+
+## 2026-09-20 — MSVC execution blocker
+
+Runs 35500465321 and 35500597711 failed with MSVC D8050 (`failed to get command line into debug records`) across compilation actions, also on single-process retry. This has not yet tested the new disk-audit C++ code. The workflow now prepares a writable per-run TEMP/TMP and probes one-line C++ compilation with plain, /Z7 and /Zi settings before invoking UnrealBuildTool. These are job-local changes only; compiler failures remain failures and no debug verification is disabled.
+
+## 2026-09-20 — state fixture correction after eight chapter passes
+
+Run 35500242164 passed startup and all eight chapter audits. The state audit exposed an outdated test fixture: `StartExperience` correctly restores stored route progress, so calling it on the initial Frodo route did not advance to P1C03; the fixture also bypassed the activity reward entry point. The audit now explicitly starts P1C03, verifies the closed activity window rejects reward, opens `MidgewaterRoad`, verifies direct reward bypass is rejected, then completes the activity through its guarded API and verifies duplicate reward rejection. Required expected reward values remain unchanged. This fixes the test setup without weakening production story/reward guards. Full rerun remains required.
+
+## 2026-09-20 — close the disk persistence evidence gap
+
+The Python resolver repair passed on Windows and startup succeeded on `15e9d2228f6e7e5ceb1e8aed2aab8b698dba4cb8` ([run 35500242164](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/35500242164)). Chapter/state checks were still running when this update was written.
+
+Source audit confirmed the existing route/state test did not write a save file. The new `disk-save-roundtrip` audit calls the production player snapshot/restore path, writes a unique CI save slot, mutates live quest/progression/knowledge/player values, loads from disk, verifies restored fields, and deletes only its own temporary slot. It checks health/stamina/resolve/supplies, transform, route/chapter/episode/character, quest stages, story beats, discoveries, progression and Chronicle/map knowledge. It is not yet full NPC-memory or cross-process migration coverage. The observer requires the disk marker for state success. CI runs cannot overwrite or load the owner's manual/checkpoint slots. Thirteen observer tests pass locally; real UE compilation and disk execution of this change remain pending.
+
+## 2026-09-20 — exact-head runtime validation repair
+
+Authority: `Data/ProjectGovernor.json`, including `session_handoff`.
+
+On `b0a4d2614e5744d8a0fa3b1c373c23a491274955`, Pre-Unreal #446 passed. Unreal run [35499375838](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/35499375838) built UE4.27.2 C++ and imported production assets successfully. Runtime audits did **not** execute: Python discovery selected a Microsoft Store alias and exited 61.
+
+The repair validates local interpreter candidates, excludes WindowsApps aliases, checks installed/launcher/toolcache/UE-bundled interpreters, and supports Python 3.7 in the observer. It neither installs software nor modifies Windows settings. State audit now has a separate log from startup. Twelve observer regression tests pass locally; Windows execution and full runtime proof remain pending the new CI run.
+
+Next: complete exact-head startup, all eight chapters and actual save/load proof; only then resume visible production. No new visual, performance or gameplay acceptance is claimed.
+
+## PHYSICAL SIDE-ACTIVITY GAMEPLAY WAVE — 2026-09-20
+
+B1 now includes reusable physical challenge gameplay instead of relying entirely on proximity discovery triggers. `AShireTraversalChallenge` implements an ordered three-gate route, verifies opening/closing story beats, awards only the linked first-time Journey Discovery, and therefore feeds the existing Chronicle/map/progression systems without changing FILM_CORE.
+
+The Shire field race now uses the ordered route and completes `Side_SharedShireMemory` only after the route. Moria's `MORIA_ECHO_ROUTE` now uses the same mechanic for Follow the Echo before MoriaUnease closes the optional window. PG-081 guards both runtime placements.
+
+This is implementation evidence; exact-head UE4.27 compile, runtime placement and PIE pacing remain required.
+
+## CHRONICLE + MAP KNOWLEDGE + SIDE-ACTIVITY PROGRESSION MEGA-SLICE — 2026-09-20
+
+B1 expanded again from plan-only into persistent runtime. First-time Journey Discoveries now create main-film Chronicle entries and mark the current route/chapter as known map knowledge. Both collections persist through save schema v6. Book Chronicles remain explicitly separate and are not inserted into this main-film runtime registry.
+
+The C key now opens a Chronicle & Journey HUD panel showing recent Chronicle entries, known regions, Journey Insight and all seven progression tracks/ranks. Contextual side activities are also parsed at runtime: when a linked first-time discovery completes, its authored activity type adds bounded XP (for example CAMP_PREPARATION -> CAMPCRAFT, TRACKING/OBSERVATION -> PERCEPTION, SOCIAL_MEMORY -> FELLOWSHIP). Anti-farm behavior remains first-time-only.
+
+State automation now requires `ShireStateAudit: knowledge-core=PASS`, and PG-080 checks save/UI/input/continuity/side-activity wiring. Exact-head UE4.27 compile/import/startup/state evidence remains required before engine validation is claimed.
+
+## PLAYER-LIFE + PROGRESSION RUNTIME MEGA-SLICE — 2026-09-20
+
+B1 modern-game work is now runtime, not only planning. The player has lightweight Stamina, Ring-pressure-sensitive Resolve and capped travel Supplies alongside Health. Sprinting drains/rebuilds Stamina; damage and Ring pressure affect Resolve; R consumes one supply only when recovery is useful. No hunger/thirst timers, gear score or random rarity loop was introduced.
+
+Seven persistent progression tracks now exist: WAYFINDING, PERCEPTION, QUIET_STEP, CAMPCRAFT, FELLOWSHIP, LORE and RESOLVE. First-time Journey Discoveries award track XP by category, so repeated discovery cannot farm progression. Fellowship Bond is derived from the FELLOWSHIP track. Save schema v5 persists life state and ProgressionXP.
+
+PG-079 guards the full contract and state-mode automation requires `ShireStateAudit: progression-core=PASS`. Exact-head UE4.27 compile/import/startup/state proof is still required before this becomes engine-validated.
+
+## MASTER EXECUTION CONTROL — 2026-09-20
+
+The growing request set is now consolidated into `Data/MasterExecutionRoadmap.json` and the human board `Docs/MASTER_EXECUTION_BOARD.md`. The roadmap is subordinate to the Governor and maps every unfinished requirement plus every ACTIVE work item into large dependency-ordered production bundles. PG-078 makes orphan accepted work a static-validation failure.
+
+Execution order is now explicit: exact-head stability; Part I story/gameplay completeness; production characters/world; living-world/presentation; acceptance/merge; then source-verified Part II/III. Active work items have unique execution ranks/bundle labels so the project no longer behaves like a flat unordered list.
+
+## FILM SIDE-CONTENT MASTER AUDIT — 2026-09-20
+
+The owner supplied a programmer proposal covering trilogy-wide side play and asked for one reconciled, future-proof request set. `Data/FilmSideContentMasterPlan.json` is now the side-content master taxonomy: FILM_MOMENT = verified film action turned into gameplay; FILM_EXPANDED = small plausible play around an existing film scene/place; CHRONICLE = book-only/history/past-character content kept visibly separate from Film Main Canon.
+
+The audit also records continuity corrections: Fellowship does not literally begin at the birthday party; Weathertop fire cannot prevent the Nazgul attack; Prancing Pony attention cannot avoid the Ring incident; Moria's door is a guided canonical puzzle; Entmoot side play cannot replace the film decision causality; Oliphaunt observation does not grant a canon-breaking future weakness; Return of the King's beacon prototype centers on Pippin lighting the Minas Tirith beacon; Glorfindel/Scouring stay Chronicle-only.
+
+PG-077 guards taxonomy/canon separation. Runtime rollout remains behind the current exact-head UE4.27 validation gate.
+
+## SIDE-CONTENT CANON AUDIT — programmer proposal reconciled
+
+The programmer's trilogy proposal is retained but normalized into four continuity classes: FILM_CORE, FILM_EXPANDED, FILM_INTERSTITIAL and BOOK_CHRONICLE, with source-verification tracked separately. The audit corrects one important opening claim: Fellowship does not begin at Bilbo's party; the prologue and Bilbo/Frodo-Gandalf opening precede it.
+
+Part I and Part II entries are now source-audited against the supplied screenplays/project canon where available. Part III remains FUTURE_SOURCE_CHECK at scene level. Book-only Tom Bombadil/Barrow-downs, Glorfindel-at-the-Ford and Scouring content is explicitly isolated from main film continuity. PG-077 protects this separation.
+
+## ENSEMBLE FILM MISSIONS — 2026-09-20
+
+Frodo remains the Ring-quest center, but the film itself now decides who should be playable for each event. `Data/EnsembleFilmMissionPlan.json` maps Gandalf, Arwen, Aragorn, Boromir, Legolas, Gimli and later Merry/Pippin/Sam/Faramir/Eowyn opportunities. The design rule is film action first, character-specialty gameplay second, small original gap-fill last.
+
+Part III mission details remain source-check-only until exact film/script verification. PG-076 guards the ensemble contract.
+
+## ENSEMBLE FILM-MISSION RULE — 2026-09-20
+
+The owner clarified that the film itself already supplies many mission opportunities outside Frodo. Frodo remains the Ring-quest center but is no longer treated as the default controller for every event. `Data/EnsembleFilmMissionPlan.json` now prioritizes playable film actions for Gandalf, Arwen, Aragorn, Boromir, Legolas, Gimli, Merry/Pippin and later-film characters, then allows only small source-safe gap-fill around those verified scenes.
+
+Part I now explicitly identifies Gandalf Ring investigation/Isengard, Arwen at the Ford, Boromir training and Amon Hen defense, Legolas scouting, Gimli/Moria cultural gameplay and Aragorn scouting/leadership as viewpoint opportunities. Part II maps the Three Hunters, Merry/Pippin/Fangorn, Gandalf/Rohan and source-checked Faramir/Eowyn focused episodes. Part III remains FUTURE_SOURCE_CHECK at mission-detail level until exact film/script verification is available.
+
+PG-076 protects viewpoint/source/canon rules. This is a production/design contract; runtime mission handoffs and character-specific mechanics remain pending implementation and UE4.27 proof.
+
+## MODERN GAME LAYER LOCKED — 2026-09-20
+
+The owner explicitly requested a broad modern-game research pass and adoption of fitting game systems throughout the film-based experience. `Data/ModernGameLayerPlan.json` now locks the rule: mandatory Peter Jackson film anchors stay fixed, while optional play may expand only inside story-safe gaps.
+
+The plan adapts modern design patterns - meaningful exploration rewards, short world events, semi-open chapter hubs, companion dialogue during free play, earned map knowledge, environmental/traversal puzzles and reactive inhabitants - into original Middle-earth gameplay. Character life is also defined beyond a health bar through bounded Stamina, Resolve, Fellowship Bond and Supplies, with progression in Wayfinding, Perception, Quiet Step, Campcraft, Fellowship, Lore and Resolve. Survival micromanagement, gear-score grind, loot spam and canon-changing upgrades are explicitly excluded.
+
+P1C01-P1C08 plus P1G01 now each have chapter-specific optional activity families while fixed film outcomes remain mandatory. PG-075 guards this contract. Runtime rollout remains staged and exact-head UE4.27 evidence is still required before any implementation is called validated.
+
+## JOURNEY DISCOVERY RUNTIME MEGA-SLICE — 2026-09-20
+
+Journey Discovery has moved beyond a static design contract. The existing quest subsystem now owns a data-driven first-time discovery registry loaded from `Data/JourneyDiscoveryRewardPlan.json`; all 26 current Part I discoveries are wired into Shire, Bree, P1C03-P1C08 and Isengard world triggers with explicit opening/closing story-beat windows. Rewards derive Journey Insight, region-completion bonuses and milestones without changing required story state.
+
+Discovery IDs/Insight/milestones now persist through the existing save/load path with sanitation on restore. A dedicated HUD discovery card presents the first-time reward separately from combat/error alerts. State-mode automation also requires `ShireStateAudit: discovery-core=PASS`, proving a discovery cannot be farmed by repeat activation and survives the Frodo/Gandalf/Frodo route roundtrip in subsystem state.
+
+This remains implementation evidence until the exact current PR head passes real UE4.27 compile/import/startup/chapter/state validation.
+
+## MEGA-PASS RED-TO-GREEN REPAIR — current exact head
+
+Intermediate head `5699ef0` passed Pre-Unreal Validation #348. The previous Unreal engine attempt reached real compilation and exposed a UE4.27-specific incompatibility in the new non-destructive production importer: `IFileManager::CopyDirectoryTree` is not available there. The importer now keeps the same safety design but uses UE4.27-compatible `IPlatformFile::CopyDirectoryTree`.
+
+The current exact head is intentionally still pending validation. No merge, compile-success, import-success or visual acceptance is claimed until the new head completes the full gate.
+
+## MEGA PRODUCTION BATCH — RING / CHARACTERS / CINEMATIC WORLD — 2026-09-20
+
+The owner closed Unreal and ordered immediate large-scale continuation. This batch turns three previously discussed directions into durable production contracts. The One Ring is now a CRITICAL systemic axis with a runtime bearer/state/pressure API and a headless route-roundtrip audit requirement. The full Part I named cast is now tracked through a model → material → rig → skin → animation → UE4 → LOD pipeline with provenance rules and a custom-character fallback. Every active Part I region now has a cinematic hero-vista and layered foreground/midground/background target based on the owner's dense forest reference.
+
+New production authorities: `Data/TrilogyRingQuestPlan.json`, `Data/CharacterProductionMatrix.json`, `Data/CinematicWorldProductionMatrix.json`, and `Data/OwnerSourceReferenceIndex.json`. Static guards PG-070 through PG-073 protect the new contracts.
+
+Proof boundary remains strict: these are source/data/runtime implementation changes. They are not yet UE4.27-validated or visually accepted until the exact PR head passes Pre-Unreal and real engine validation.
+
+## WORLD BEAUTY BAR RAISED — 2026-09-20
+
+The owner rejected the earlier plain reference-image quality as the final target. The project now explicitly targets a more beautiful cinematic world: layered vistas, richer terrain/materials/vegetation, stronger water/fog/light atmosphere, hero landmark composition and region-specific visual identity. This does not relax the target-device budget; the visual strategy is selective hero detail plus LOD/instancing/culling so 720p Low-Medium / 30 FPS remains the floor target.
+
+## CONTEXTUAL SIDE-PLAY CONTRACT — film story stays fixed, game expands between scenes
+
+The owner reaffirmed the core rule: this remains the Peter Jackson film story. Original side content is allowed only as plausible off-camera gap-fill inside the same time, location, companions, knowledge and emotional/danger context. `Data/ContextualSideActivityPlan.json` now defines 18 optional mini-game/social/exploration activities across FrodoMain P1C01-P1C08 plus GandalfParallel P1C01.
+
+Examples include Shire party errands and a friendship race, Bree observation/tracking, Strider trail-reading, Rivendell map/memory moments, Fellowship camp practice, West Gate stone observation, Moria echo navigation, Lothlorien grief/boat preparation, Anduin river reading, Amon Hen tension observation and Orthanc prisoner observation. Every activity is bounded between exact film story anchors, forbids future knowledge, cannot advance a required anchor, and yields only the existing Journey Discovery/Chronicle/dialogue-memory rewards.
+
+PG-063 now guards those constraints statically. Runtime side-activity triggers, save/UI wiring and UE4.27 play validation remain pending; the exact-head merge gate is unchanged.
+
+## JOURNEY DISCOVERY SYSTEM — exploration now has persistent game rewards
+
+The owner requested the satisfying feeling of discovering a place and receiving a bonus, similar in spirit to exploration RPGs, but adapted to this world's tone. `Data/JourneyDiscoveryRewardPlan.json` now maps 26 declared optional discoveries to first-time Journey Insight rewards. Rewards prioritize Chronicle entries, map memory, lore/dialogue topics, companion memories and local hazard knowledge rather than generic combat-stat inflation.
+
+Four thematic tracks keep the system in-world: Road Wisdom, Peoples and Places, Fellowship Bonds and Peril Sense. Every active Part I exploration route/chapter also has a region-completion bonus. Milestones unlock subtle navigation/content benefits, never story skips or alternate canon outcomes. PG-062 enforces one-time rewards, complete discovery coverage, no canon mutation and packaging.
+
+Runtime trigger/save/HUD/Chronicle wiring is still pending; this commit is a static/game-design contract while Unreal remains busy. Full acceptance still requires UE4.27 and save/load automation on the exact final head.
+
+## PARALLEL NON-UNREAL MEGA-PASS — shader-compile time used productively
+
+While the target machine is busy compiling shaders, CP56 continues with work that does not require interrupting the editor. `Data/ExplorationEnvelopePlan.json` now defines safe free-roam windows, optional discoveries and return-to-main-story behavior for FrodoMain P1C01-P1C08 plus GandalfParallel P1C01. PG-060 checks that optional exploration cannot reorder, advance or replace mandatory film-story anchors.
+
+The source-grounded original dialogue bank has also expanded from 26 to 53 validated variants across Shire, Bree, wilderness, Rivendell, Fellowship travel, Moria, Lothlorien, Amon Hen and Isengard. PG-061 locks in the production-import hygiene fix: OBJ normalization/import must operate on an ignored `Saved/` working copy rather than dirtying tracked `SourceAssets`.
+
+This is productive parallel work, not a merge bypass. The final PR #53 exact head still must pass Pre-Unreal plus UE4.27 compile/import/startup/chapter/state/warning validation before integration into `develop`.
+
+## CP56 SOURCE-GROUNDED LIVING DIALOGUE MEGA-PASS - 2026-09-19
+
+The owner-supplied Fellowship and Two Towers screenplay PDFs are now durable story/dialogue reference sources. `Data/FilmDialogueSourceContext.json` stores only derived context: source identity/hash, scene windows, route/chapter/story-beat progression, tone, safe topics and future-knowledge blocks. Runtime dialogue remains original and offline; raw screenplay passages are not shipped.
+
+Part I contexts cover P1C01-P1C08 plus Gandalf's Isengard route. The Two Towers source is indexed into future Part II arc seeds for Frodo/Sam/Gollum, the Rohan hunters, Merry/Pippin/Ents, Gandalf/Rohan and Saruman/Isengard, without claiming Part II runtime completion.
+
+PR #53 still requires exact-head Pre-Unreal and UE4.27 validation before merge.
+
+## CP56 MEGA INTEGRATION ACTIVE — whole-game coherence pass
+
+PR #53 is the single continuation path above PR #52. The mega batch is tracked by `REQ-MEGA-001`, `WORK-MEGA-001`, `Data/CP56MegaIntegrationPlan.json` and `Data/GameCompletenessMatrix.json`.
+
+Current runtime expansion now reaches named-character behavior, not just data: companion spacing and catch-up respond to regional pressure, named profiles expose a personality-aware emotional state, free interactions choose mood-aware intents with deterministic greeting fallback, and authored regional dialogue covers Shire peace, Bree suspicion, pursued wilderness, Rivendell refuge, Fellowship pressure, Moria dread, Lothlorien grief/refuge, Anduin fracture and Isengard corruption. All shipped logic remains offline and subordinate to story, knowledge and memory gates.
+
+This does not claim final rigs, voice, materials, device performance, cinematic acceptance or trilogy completion. The merge gate is unchanged: the current PR #53 head must pass Pre-Unreal plus the complete UE4.27 compile/import/startup/chapter/warning chain before develop integration.
+
+## CP56 continuation — contextual companion dialogue, 2026-09-19
+
+Recovered prior-session stopping point: CP56 head 3705fe4, PR52 awaiting Unreal. Its latest engine attempt failed during checkout, before compilation. Follow-up PR53 now includes the tracked-source checkout fix plus a correction to regional dialogue selection and 30 original Moria/Lothlorien companion lines. Actual engine build and gameplay validation remain pending. No new checkpoint or trilogy completion is declared.
+
+## Automation-first delivery follow-up — 2026-09-19
+
+REQ-QA-001 records the owner request to reduce manual technical testing. Runtime boot observation and subprocess regression tests are implemented on a follow-up branch based on CP56; Windows UE validation remains pending. See `Docs/AUTOMATION_FIRST_DELIVERY.md` for the trilogy/opening/side-exploration contract and ordered engine-test work. This adds no completed gameplay chapter and grants no new visual, performance or owner sign-off. Existing CP56 requirements remain active.
+
+## CP56 ACTIVE — FELLOWSHIP EXPERIENCE MEGA-PASS
+
+CP55 was merged after Pre-Unreal #273 and Unreal Build Validation #108 passed on the validated branch head. CP56 now expands moment-to-moment play while preserving the same Part I film chronology.
+
+What CP56 changes now:
+- P1C01 adds visible pre-adventure Shire friendship/play: Green Dragon revelry, party-field mischief, a shared-memory race/play beat, extra party revelers and play runners.
+- P1C02 adds denser Prancing Pony/common-room life.
+- P1C03 adds optional road companionship before Weathertop tension.
+- P1C05 strengthens camp companionship around the Fellowship training stop.
+- P1C06 adds a dead-city discovery beat without adding civilians/fauna to Moria.
+- P1C07 adds a shared-grief clearing before Lothlorien story pressure.
+- P1C08 adds a river-camp tension beat before the Fellowship fractures.
+- `Data/FellowshipExperienceMegaPassCP56.json` and PG-058 preserve the film-spine/non-blocking contract.
+
+Story rule remains unchanged: required film outcomes are fixed; optional friendship, exploration and local-life content fills the spaces between them. Dialogue remains original game writing rather than screenplay reproduction.
+
+This is implementation-in-progress and still requires its own Pre-Unreal and real UE4.27 build/import/startup/chapter regression pass before merge.
+
 ## POST-VERIFICATION RESUME — CP55 OPENED
 
 ### CP55 activity/movement implementation
@@ -597,3 +827,5 @@ These files are required Project Guardian inputs.
 They explicitly cover facial acting, gaze, blink behavior, lip-sync, voice, body language, locomotion,
 interaction animation, environmental reaction, combat reaction, crowd behavior, continuity and low-spec LOD/performance.
 Current proxy characters do not satisfy final character quality; final rigs/animations/voice assets remain future production work.
+
+
