@@ -7,25 +7,28 @@
     {
       "id": "SRC_FILM_FOTR_SCREENPLAY",
       "name": "The Lord of the Rings: The Fellowship of the Ring screenplay PDF",
-      "kind": "SCREENPLAY_REFERENCE",
+      "kind": "PRIMARY_SCREENPLAY_STORY_AUTHORITY",
       "sha256": "4760026562d943fde02133e681e5884ee85c7a5f466b7f3ff36d67122c60d656",
       "use": [
-        "chronology context",
-        "speaker presence",
-        "tone",
-        "knowledge boundaries"
+        "Part I film chronology and scene order",
+        "required film outcomes",
+        "speaker and character presence",
+        "character knowledge boundaries",
+        "tone and scene context"
       ],
       "runtime_ship": false
     },
     {
       "id": "SRC_FILM_TTT_SCREENPLAY",
       "name": "The Lord of the Rings: The Two Towers screenplay PDF",
-      "kind": "SCREENPLAY_REFERENCE",
+      "kind": "PRIMARY_SCREENPLAY_STORY_AUTHORITY",
       "sha256": "8c1c780cb94b7862cc5f15e7b451ee9a4eda1d170c503390bf75cfcd210d4e7e",
       "use": [
-        "Part II route/context seeding",
-        "character pressure",
-        "knowledge boundaries"
+        "Part II film chronology and scene order",
+        "required film outcomes",
+        "speaker and character presence",
+        "character knowledge boundaries",
+        "tone and scene context"
       ],
       "runtime_ship": false
     },
@@ -219,5 +222,39 @@
     "Data/Part1MegaProductionPlan.json",
     "Data/Part1VisualProductionPass.json",
     "Data/ProjectOwnedProductionAssetInventory.json"
-  ]
+  ],
+  "story_authority": {
+    "rule": "For film-story chronology, scene order, required outcomes, character presence and knowledge boundaries, the supplied screenplays are primary. The numbered production bibles organize and derive implementation guidance but may not override screenplay-supported film events.",
+    "primary_screenplays": [
+      {
+        "source_id": "SRC_FILM_FOTR_SCREENPLAY",
+        "film_part": "PART_I",
+        "scope": "The Fellowship of the Ring",
+        "role": "PRIMARY_STORY_AND_CHRONOLOGY_AUTHORITY"
+      },
+      {
+        "source_id": "SRC_FILM_TTT_SCREENPLAY",
+        "film_part": "PART_II",
+        "scope": "The Two Towers",
+        "role": "PRIMARY_STORY_AND_CHRONOLOGY_AUTHORITY"
+      }
+    ],
+    "production_bibles": [
+      "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
+      "SRC_OWNER_CHARACTERS_RELATIONSHIPS_BIBLE_V1",
+      "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+      "SRC_OWNER_PEOPLES_LORE_ARTIFACTS_CULTURES_BIBLE_V1",
+      "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+      "SRC_OWNER_GAMEPLAY_SIDE_ACTIVITIES_BIBLE_V1",
+      "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+      "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1"
+    ],
+    "precedence": [
+      "supplied screenplay evidence for film chronology/outcomes",
+      "ProjectGovernor hard invariants and approved implementation decisions",
+      "numbered production bibles for derived production guidance",
+      "visual-only references for appearance/mood only"
+    ],
+    "runtime_rule": "Raw source PDFs remain reference-only and never ship as runtime dependencies."
+  }
 }
