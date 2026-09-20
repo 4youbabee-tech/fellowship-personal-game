@@ -584,7 +584,7 @@ void AShireNPC::ApplyPrototypeStyle()
 
     auto ApplyColor = [&ApplySurface](UStaticMeshComponent* Component, const FLinearColor& Color)
     {
-        ApplySurface(Component, Color, 0.72f, 0.0f);
+        ApplySurface(Component, Color, 0.84f, 0.0f);
     };
 
     ApplySurface(PrototypeTorso, Coat, 0.82f, 0.0f);
@@ -766,7 +766,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeSecondaryProp->SetRelativeRotation(FRotator(0.0f, 0.0f, -28.0f));
         PrototypeSecondaryProp->SetRelativeScale3D(
             bKnifeMesh ? FVector(0.55f) : FVector(0.09f, 0.20f, 0.52f));
-        ApplyColor(PrototypeSecondaryProp, Steel);
+        ApplySurface(PrototypeSecondaryProp, Steel, 0.34f, 0.78f);
     }
     else if (bGimli)
     {
@@ -797,7 +797,7 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeSecondaryProp->SetRelativeRotation(FRotator(0.0f, 0.0f, -24.0f));
         PrototypeSecondaryProp->SetRelativeScale3D(
             bSecondAxe ? FVector(0.72f) : FVector(0.28f, 0.06f, 0.16f));
-        ApplyColor(PrototypeSecondaryProp, Steel);
+        ApplySurface(PrototypeSecondaryProp, Steel, 0.34f, 0.78f);
     }
     else if (bWizard)
     {
@@ -822,9 +822,9 @@ void AShireNPC::ApplyPrototypeStyle()
             bGandalfBeard ? FVector(1.0f) : FVector(0.10f, 0.10f, 0.30f));
         PrototypeBeard->SetRelativeRotation(
             bGandalfBeard ? FRotator::ZeroRotator : FRotator(90.0f, 0.0f, 0.0f));
-        ApplyColor(PrototypeBeard, bSaruman
+        ApplySurface(PrototypeBeard, bSaruman
             ? FLinearColor(0.84f, 0.82f, 0.76f)
-            : FLinearColor(0.68f, 0.66f, 0.60f));
+            : FLinearColor(0.68f, 0.66f, 0.60f), 0.74f, 0.0f);
 
         if (bGandalfVisual)
         {
@@ -862,9 +862,9 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeHeadpiece->SetRelativeScale3D(bGaladriel
             ? FVector(0.12f, 0.34f, 0.055f)
             : FVector(0.10f, 0.28f, 0.045f));
-        ApplyColor(PrototypeHeadpiece, bGaladriel
+        ApplySurface(PrototypeHeadpiece, bGaladriel
             ? FLinearColor(0.62f, 0.66f, 0.60f)
-            : FLinearColor(0.34f, 0.42f, 0.26f));
+            : FLinearColor(0.34f, 0.42f, 0.26f), 0.36f, 0.78f);
     }
 
     FString RigFolder = DedicatedFolder;
@@ -1624,3 +1624,4 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
         bCompanionFollowStateResolved = true;
     }
 }
+

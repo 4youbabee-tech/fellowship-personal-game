@@ -3127,24 +3127,20 @@
     "Receive the next owner/programmer proposal, normalize it through the Governor, then implement it from latest green develop on one short branch."
   ],
   "session_handoff": {
-    "source_head": "833c3679e19290a2b046ea7f53013a76ae1b29f4",
-    "pull_request": 53,
-    "branch": "develop",
+    "source_head": "c929ab657dba10266536d51aa04fb21da04ada12",
+    "branch": "production/character-surface-parity-v1",
     "verified": {
-      "pre_unreal": "PASS #500 on 833c3679e19290a2b046ea7f53013a76ae1b29f4",
-      "unreal_build": "PASS #335 on 833c3679e19290a2b046ea7f53013a76ae1b29f4",
-      "merge": "PR #53 merged that exact green candidate into develop as b9de4fd4a1aa6b4edeb25459a23b78c077dfcef7"
+      "pre_unreal": "PASS #504 on c929ab657dba10266536d51aa04fb21da04ada12",
+      "unreal_build": "PASS #339 attempt 2 on c929ab657dba10266536d51aa04fb21da04ada12"
     },
-    "failing": {
-      "latest_pre_unreal": "FAIL #503 on 8f332bf3176f94b98ff250b5bf8f908e7c91e0d3 due to malformed handoff evidence shape; repaired in the next governance commit.",
-      "latest_unreal": "PENDING #338 on 8f332bf3176f94b98ff250b5bf8f908e7c91e0d3 at reconciliation time."
-    },
+    "failing": {},
     "next_actions": [
-      "Use develop as the only integration baseline after PR #53 consolidation.",
-      "Audit remaining diverged side branches for genuinely unique fixes before deletion; do not cherry-pick obsolete older implementations over newer equivalents.",
-      "Start the next requested production proposal from latest green develop on one short branch, then merge it back after exact-head gates."
+      "Exact-head Pre-Unreal and Unreal build/import/startup/chapter/state/save gates",
+      "Merge short wave into develop only after green gates",
+      "Rendered chapter production next: Moria, Amon Hen, Isengard; do not recreate already integrated minecarts/piers/atmosphere"
     ],
     "unverified_acceptance": [
+      "Character surface parity changes require their own exact-head validation; this baseline evidence does not certify the new source wave.",
       "Rendered chapter-by-chapter PIE evidence remains NOT_RUN where not directly observed.",
       "Target-device FPS/memory measurements",
       "Human pacing and visual acceptance"
@@ -3152,29 +3148,31 @@
     "scope_rule": "Machine evidence and merge status do not replace rendered PIE/device/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "833c3679e19290a2b046ea7f53013a76ae1b29f4",
+        "sha": "c929ab657dba10266536d51aa04fb21da04ada12",
         "pre_unreal": {
-          "sha": "833c3679e19290a2b046ea7f53013a76ae1b29f4",
-          "run_id": 35533254298,
+          "sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+          "run_id": 35534129087,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "833c3679e19290a2b046ea7f53013a76ae1b29f4",
-          "run_id": 35533254288,
-          "status": "SUCCESS"
+          "sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+          "run_id": 35534128972,
+          "status": "SUCCESS",
+          "attempt": 2
         }
       },
       "latest_observed": {
-        "sha": "8f332bf3176f94b98ff250b5bf8f908e7c91e0d3",
+        "sha": "c929ab657dba10266536d51aa04fb21da04ada12",
         "pre_unreal": {
-          "sha": "8f332bf3176f94b98ff250b5bf8f908e7c91e0d3",
-          "run_id": 35534018834,
-          "status": "FAILURE"
+          "sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+          "run_id": 35534129087,
+          "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "8f332bf3176f94b98ff250b5bf8f908e7c91e0d3",
-          "run_id": 35534018935,
-          "status": "PENDING"
+          "sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+          "run_id": 35534128972,
+          "status": "SUCCESS",
+          "attempt": 2
         }
       }
     }
@@ -3286,5 +3284,32 @@
       }
     ],
     "deletion_rule": "Do not delete a branch until meaningful unique content is present in develop or explicitly superseded. Branch deletion is repository housekeeping, not a substitute for merging or auditing."
+  },
+  "character_surface_followthrough": {
+    "status": "IMPLEMENTED_VALIDATION_PENDING",
+    "base_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+    "branch": "production/character-surface-parity-v1",
+    "source_basis": [
+      "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+      "08_VISUAL_REFERENCE_BIBLE",
+      "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION: source priority and costume/gear/material response guidance"
+    ],
+    "changes": [
+      "Reuse existing M_ProductionSurface for modular playable characters; preserve authored skeletal rig materials",
+      "Skin, cloth, hair, eyes, leather, wood and metal roughness assignments; Hobbit bare feet use skin palette",
+      "Legolas bow and Gandalf staff are nonmetallic wood; companion secondary blades and circlets receive metal response",
+      "Fresh-process state audit checks actual skin/cloth instances, production parent and scalar response",
+      "Explicit cook inclusion for shared production master material directory"
+    ],
+    "acceptance_boundary": [
+      "Source implementation is not rendered visual approval",
+      "Composite weapons still have one surface per component",
+      "Final rigs, authored textures, animation and target-device performance remain open"
+    ],
+    "next": [
+      "Exact-head Pre-Unreal and Unreal build/import/startup/chapter/state/save gates",
+      "Merge short wave into develop only after green gates",
+      "Rendered chapter production next: Moria, Amon Hen, Isengard; do not recreate already integrated minecarts/piers/atmosphere"
+    ]
   }
 }
