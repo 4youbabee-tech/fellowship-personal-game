@@ -4798,8 +4798,11 @@ pg107_primary = {
 for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY", "SRC_FILM_ROTK_SCREENPLAY"]:
     if pg107_id not in pg107_primary:
         fail(f"PG-107 screenplay absent from primary authority list: {pg107_id}")
-if "may not override screenplay-supported film events" not in str(pg107_authority.get("rule") or ""):
-    fail("PG-107 screenplay precedence rule missing")
+pg107_rule = str(pg107_authority.get("rule") or "")
+if "film trilogy" not in pg107_rule.lower() or "screenplays" not in pg107_rule.lower() or "primary" not in pg107_rule.lower():
+    fail("PG-107 film/screenplay primary story-authority rule missing")
+if "may not silently replace film continuity" not in pg107_rule.lower():
+    fail("PG-107 Tolkien-vs-film precedence boundary missing")
 
 pg108_summary = pg107_index.get("source_set_summary", {})
 if pg108_summary.get("core_pdf_count") != 15:
