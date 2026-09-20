@@ -4394,6 +4394,36 @@ pg98_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
 if pg98_visual.get("parallel_route", {}).get("authored_material_palette", {}).get("status") != "SOURCE_AUTHORED_PENDING_ENGINE_IMPORT_PROOF":
     fail("PG-098 Isengard authored-material proof boundary changed")
 
+# PG-099: Lurtz/Watcher/Balrog authored materials survive production handoff.
+pg99_specs = {
+    "Lurtz": ["LurtzSkin","LurtzArmor","LurtzDarkIron"],
+    "Watcher": ["WatcherCore","WatcherTentacle"],
+    "Balrog": ["BalrogCharcoal","BalrogEmber","BalrogHorn","BalrogWing"],
+}
+for pg99_folder, pg99_materials in pg99_specs.items():
+    pg99_root = ROOT / "SourceAssets" / "Production" / "Enemies" / pg99_folder
+    pg99_mtl = pg99_root / "RegionalMaterials.mtl"
+    if not pg99_mtl.exists():
+        fail(f"PG-099 threat material library missing: {pg99_folder}")
+        continue
+    pg99_text = read(pg99_mtl)
+    for pg99_material in pg99_materials:
+        if f"newmtl {pg99_material}" not in pg99_text:
+            fail(f"PG-099 threat authored material missing: {pg99_folder}/{pg99_material}")
+    for pg99_obj in pg99_root.glob("*.obj"):
+        pg99_obj_text = read(pg99_obj)
+        if "mtllib RegionalMaterials.mtl" not in pg99_obj_text or "usemtl " not in pg99_obj_text:
+            fail(f"PG-099 threat OBJ lacks authored material binding: {pg99_obj.relative_to(ROOT)}")
+pg99_enemy = read(ROOT / "Source" / "ShireJourney" / "FellowshipEnemyPrototype.cpp")
+pg99_mythic = read(ROOT / "Source" / "ShireJourney" / "FellowshipMythicThreat.cpp")
+if "if (!bProductionVisual)" not in pg99_enemy:
+    fail("PG-099 production enemy materials are being overwritten by fallback tint")
+if "BasicMaterial && !bProductionFoundation" not in pg99_mythic:
+    fail("PG-099 production mythic materials are being overwritten by fallback tint")
+pg99_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg99_visual.get("threat_material_palettes", {}).get("status") != "SOURCE_AUTHORED_PENDING_ENGINE_IMPORT_PROOF":
+    fail("PG-099 authored threat material proof boundary changed")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
