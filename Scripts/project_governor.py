@@ -100,6 +100,56 @@ for item in reqs:
         if other not in req_ids:
             fail(f"{req_id} conflicts with unknown requirement {other}")
 
+# Governor contract hardening: keep accepted requests durable and external advice evidence-bounded.
+requirement_contract = governor.get("requirement_contract", {})
+expected_required_fields = {
+    "id", "title", "category", "priority", "status", "origin",
+    "intent", "acceptance_criteria", "dependencies",
+}
+contract_required_fields = set(requirement_contract.get("required_fields", []))
+if requirement_contract.get("schema_file") != "Data/ProjectGovernor.schema.json":
+    fail("Governor requirement_contract must point to Data/ProjectGovernor.schema.json")
+if not expected_required_fields.issubset(contract_required_fields):
+    missing_contract_fields = sorted(expected_required_fields - contract_required_fields)
+    fail("Governor requirement_contract missing required fields: " + ", ".join(missing_contract_fields))
+if requirement_contract.get("authoritative_intent_field") != "intent":
+    fail("Governor authoritative intent field must remain 'intent'")
+if not (ROOT / "Data" / "ProjectGovernor.schema.json").exists():
+    fail("ProjectGovernor schema file is missing")
+
+request_capture = governor.get("request_capture_contract", {})
+for key in ("important_request_definition", "capture_rule", "external_advice_rule", "anti_loss_rule", "coordination_rule"):
+    value = request_capture.get(key)
+    if not value:
+        fail(f"Governor request_capture_contract missing {key}")
+
+work_ids = {
+    str(item.get("id") or "").strip()
+    for item in governor.get("work_queue", [])
+    if str(item.get("id") or "").strip()
+}
+finding_ids: set[str] = set()
+for finding in governor.get("external_review_findings", []):
+    finding_id = str(finding.get("id") or "").strip()
+    if not finding_id:
+        fail("External review finding is missing id")
+        continue
+    if finding_id in finding_ids:
+        fail(f"Duplicate external review finding id: {finding_id}")
+    finding_ids.add(finding_id)
+    verification_sha = str(finding.get("verification_sha") or "").strip()
+    if not re.fullmatch(r"[0-9a-f]{40}", verification_sha):
+        fail(f"{finding_id} requires an exact verification SHA")
+    for required_key in ("source", "verification_status", "claim", "verified_result", "disposition", "next_action"):
+        if finding.get(required_key) in (None, "", [], {}):
+            fail(f"{finding_id} missing {required_key}")
+    for req_ref in finding.get("linked_requirements", []):
+        if req_ref not in req_ids:
+            fail(f"{finding_id} links unknown requirement {req_ref}")
+    for work_ref in finding.get("linked_work", []):
+        if work_ref not in work_ids:
+            fail(f"{finding_id} links unknown work item {work_ref}")
+
 for required in [
     "REQ-MEM-001", "REQ-GOV-001", "REQ-VISION-001", "REQ-EXP-001",
     "REQ-WORLD-001", "REQ-WORLD-002", "REQ-NPC-001", "REQ-NPC-002",
