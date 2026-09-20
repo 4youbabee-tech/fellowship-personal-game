@@ -51,7 +51,10 @@ def observe(command, log_path, markers, timeout=45.0, observation=4.0, poll=0.25
         raise ValueError("timeout must exceed a positive observation window; poll must be positive")
     log_path = Path(log_path)
     log_path.parent.mkdir(parents=True, exist_ok=True)
-    log_path.unlink(missing_ok=True)
+    try:
+        log_path.unlink()
+    except FileNotFoundError:
+        pass
     start = time.monotonic()
     ready_at = None
     error = None
@@ -118,7 +121,8 @@ def main():
     chapters = [None] if args.mode in ("startup", "state") else [f"P1C{i:02d}" for i in range(1, 9)]
     results = []
     for chapter in chapters:
-        name = "CI-PlayableStartup" if chapter is None else f"CI-ChapterAudit-{chapter}"
+        name = ("CI-StateAudit" if args.mode == "state" else
+                "CI-PlayableStartup" if chapter is None else f"CI-ChapterAudit-{chapter}")
         log = log_dir / (name + ".log")
         command = [str(args.editor.resolve()), str(args.project.resolve()),
                    "/Engine/Maps/Templates/Template_Default", "-game", "-nullrhi",
@@ -145,3 +149,4 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(main())
+

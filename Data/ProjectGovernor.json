@@ -2974,13 +2974,12 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Continued the large B1 implementation wave beyond state/UI work into reusable physical gameplay challenges.",
+    "reason": "Owner explicitly requests exact-head import/startup/chapter/save proof before visible production.",
     "summary": [
-      "Added AShireTraversalChallenge: reusable ordered three-gate gameplay with story-open/story-close guards and first-time discovery rewards.",
-      "Shire Field Race now requires an actual ordered field route instead of a single touch trigger.",
-      "Moria Follow the Echo now requires an actual ordered route through three gates before reward.",
-      "Traversal completion still feeds the same first-time discovery, Chronicle/map and progression systems without changing FILM_CORE.",
-      "PG-081 guards the traversal runtime and placements; exact-head UE4.27 compile/PIE proof remains required."
+      "Verified b0a4d2614e5744d8a0fa3b1c373c23a491274955: Pre-Unreal #446 succeeded; UE4 run 35499375838 compiled and imported successfully, then failed resolving Python (Store alias, exit 61).",
+      "Fix existing-interpreter discovery with executable/version validation and WindowsApps exclusion; permit the UE bundled Python via Python 3.7-compatible runtime observer.",
+      "Keep state-audit and startup logs separate; runtime observer regression suite: 12 passed locally.",
+      "Windows resolver and actual startup/chapter/state results remain pending rerun; do not promote visual, performance or save acceptance."
     ]
   },
   "development_mode": {
@@ -3017,7 +3016,7 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "PART1_MORIA_AMON_HEN_VISUAL_CAMERA_V4",
+  "current_focus": "EXACT_HEAD_RUNTIME_PROOF_THEN_VISUAL_PRODUCTION",
   "immediate_next_large_actions": [
     "Keep newest exact head in the UE4.27 compile/import/startup/chapter/state repair loop until green.",
     "Validate the new bounded hero/threat camera framing on the real engine without claiming final cinematics.",
@@ -3025,5 +3024,29 @@
     "Continue full-cast production rig/animation handoff with in-place locomotion and distance/URO safeguards.",
     "Add chapter-specific rendered evidence capture and target-device profiling before visual/performance promotion.",
     "Keep production atlas, visual pass, readiness gate and governor synchronized."
-  ]
+  ],
+  "session_handoff": {
+    "source_head": "b0a4d2614e5744d8a0fa3b1c373c23a491274955",
+    "pull_request": 53,
+    "branch": "work/automation-first-runtime-observation",
+    "evidence_run": "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/35499375838",
+    "verified": {
+      "pre_unreal": "PASS #446",
+      "compile": "PASS #281",
+      "production_import": "PASS #281"
+    },
+    "not_yet_proven": [
+      "startup on corrected head",
+      "P1C01-P1C08 runtime audit",
+      "route/story/save roundtrip on corrected head",
+      "rendered visual acceptance",
+      "target device performance"
+    ],
+    "next_actions": [
+      "Run corrected head through full UE workflow; fix each specific failing layer.",
+      "Inspect state audit implementation for actual disk save/load, not only in-memory state.",
+      "After technical gates pass, resume visible character/world production; final rigs/materials remain incomplete."
+    ],
+    "scope_rule": "This handoff reports evidence. It does not invent product decisions or mark planned work delivered."
+  }
 }

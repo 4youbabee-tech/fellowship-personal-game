@@ -267,43 +267,10 @@ jobs:
           echo UE4.27.2 production asset import succeeded.
 
       - name: Resolve local Python for runtime observation
-        shell: cmd
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
         run: |
-          @echo off
-          setlocal EnableExtensions EnableDelayedExpansion
-          set "PYEXE="
-
-          for /f "delims=" %%P in ('where python.exe 2^>nul') do (
-            if not defined PYEXE set "PYEXE=%%P"
-          )
-
-          if not defined PYEXE (
-            for /f "delims=" %%P in ('py -3 -c "import sys; print(sys.executable)" 2^>nul') do (
-              if not defined PYEXE set "PYEXE=%%P"
-            )
-          )
-
-          if not defined PYEXE (
-            for %%P in (
-              "C:\Python311\python.exe"
-              "C:\Python310\python.exe"
-              "C:\Program Files\Python311\python.exe"
-              "C:\Program Files\Python310\python.exe"
-            ) do (
-              if not defined PYEXE if exist "%%~P" set "PYEXE=%%~P"
-            )
-          )
-
-          if not defined PYEXE (
-            echo ERROR: Local Python 3 was not found on the self-hosted runner.
-            exit /b 60
-          )
-
-          "!PYEXE!" --version
-          if errorlevel 1 exit /b 61
-
-          echo PYTHON_EXE=!PYEXE!>>"%GITHUB_ENV%"
-          echo Using local Python: !PYEXE!
+          & "$env:GITHUB_WORKSPACE\Scripts\resolve_runtime_python.ps1"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Headless playable startup smoke
         shell: cmd
@@ -368,3 +335,4 @@ jobs:
           echo Build/import logs were already printed into the workflow log.
           echo Self-hosted local log directory: %GITHUB_WORKSPACE%\Saved\Logs
           echo Artifact upload is intentionally skipped to avoid storage-quota failures masking the primary error.
+

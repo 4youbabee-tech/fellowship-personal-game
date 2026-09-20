@@ -1,3 +1,13 @@
+## 2026-09-20 — exact-head runtime validation repair
+
+Authority: `Data/ProjectGovernor.json`, including `session_handoff`.
+
+On `b0a4d2614e5744d8a0fa3b1c373c23a491274955`, Pre-Unreal #446 passed. Unreal run [35499375838](https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/35499375838) built UE4.27.2 C++ and imported production assets successfully. Runtime audits did **not** execute: Python discovery selected a Microsoft Store alias and exited 61.
+
+The repair validates local interpreter candidates, excludes WindowsApps aliases, checks installed/launcher/toolcache/UE-bundled interpreters, and supports Python 3.7 in the observer. It neither installs software nor modifies Windows settings. State audit now has a separate log from startup. Twelve observer regression tests pass locally; Windows execution and full runtime proof remain pending the new CI run.
+
+Next: complete exact-head startup, all eight chapters and actual save/load proof; only then resume visible production. No new visual, performance or gameplay acceptance is claimed.
+
 ## PHYSICAL SIDE-ACTIVITY GAMEPLAY WAVE — 2026-09-20
 
 B1 now includes reusable physical challenge gameplay instead of relying entirely on proximity discovery triggers. `AShireTraversalChallenge` implements an ordered three-gate route, verifies opening/closing story beats, awards only the linked first-time Journey Discovery, and therefore feeds the existing Chronicle/map/progression systems without changing FILM_CORE.
@@ -755,3 +765,4 @@ These files are required Project Guardian inputs.
 They explicitly cover facial acting, gaze, blink behavior, lip-sync, voice, body language, locomotion,
 interaction animation, environmental reaction, combat reaction, crowd behavior, continuity and low-spec LOD/performance.
 Current proxy characters do not satisfy final character quality; final rigs/animations/voice assets remain future production work.
+
