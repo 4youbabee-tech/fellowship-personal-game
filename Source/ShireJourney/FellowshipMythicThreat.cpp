@@ -233,7 +233,7 @@ void AFellowshipMythicThreat::ApplyVisualProfile()
 
     UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
         nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    if (BasicMaterial)
+    if (BasicMaterial && !bProductionFoundation)
     {
         const FLinearColor BaseColor =
             ThreatType == EFellowshipMythicThreatType::Watcher
