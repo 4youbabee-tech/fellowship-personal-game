@@ -31,112 +31,19 @@ jobs:
 
     steps:
       - name: Bootstrap Windows runner tools
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
+        shell: cmd
         run: |
-          $ErrorActionPreference = "Stop"
-
-          # Runner lifecycle/watchdog configuration is managed outside this workflow.
-          # Keep bootstrap self-contained and avoid nested CMD batch semantics.
-          $git = Get-Command git.exe -ErrorAction SilentlyContinue
-          if (-not $git) {
-            foreach ($candidate in @(
-              "C:\Program Files\Git\cmd\git.exe",
-              "C:\Program Files (x86)\Git\cmd\git.exe"
-            )) {
-              if (Test-Path $candidate) {
-                $gitDir = Split-Path -Parent $candidate
-                Add-Content -LiteralPath $env:GITHUB_PATH -Value $gitDir
-                $env:PATH = "$gitDir;$env:PATH"
-                $git = Get-Command git.exe -ErrorAction SilentlyContinue
-                if ($git) { break }
-              }
-            }
-          }
-
-          if (-not $git) {
-            Write-Host "Git is not visible to the Windows service. Bootstrapping private MinGit for CI..."
-            $root = Join-Path $env:RUNNER_TEMP "mingit-2.55.0.5"
-            $zip = Join-Path $env:RUNNER_TEMP "MinGit-2.55.0.5-64-bit.zip"
-            $url = "https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.5/MinGit-2.55.0.5-64-bit.zip"
-
-            if (-not (Test-Path (Join-Path $root "cmd\git.exe"))) {
-              if (Test-Path $root) { Remove-Item -LiteralPath $root -Recurse -Force }
-              if (Test-Path $zip) { Remove-Item -LiteralPath $zip -Force }
-              & curl.exe -L --retry 3 --retry-delay 3 -o $zip $url
-              if ($LASTEXITCODE -ne 0) { exit 20 }
-              Expand-Archive -LiteralPath $zip -DestinationPath $root -Force
-            }
-
-            $gitDir = Join-Path $root "cmd"
-            $gitBin = Join-Path $root "mingw64\bin"
-            Add-Content -LiteralPath $env:GITHUB_PATH -Value $gitDir
-            Add-Content -LiteralPath $env:GITHUB_PATH -Value $gitBin
-            $env:PATH = "$gitDir;$gitBin;$env:PATH"
-            $git = Get-Command git.exe -ErrorAction SilentlyContinue
-          }
-
-          if (-not $git) {
-            Write-Error "Git bootstrap did not produce a working git.exe."
-            exit 22
-          }
-
-          Write-Host "Found Git: $($git.Source)"
-          & git --version
-          if ($LASTEXITCODE -ne 0) { exit 22 }
-          Write-Host "Runner bootstrap succeeded."
-
+          @echo off
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\bootstrap_windows_runner.ps1"
+          if errorlevel 1 exit /b %ERRORLEVEL%
       - name: Checkout exact PR head
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
+        shell: cmd
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $ErrorActionPreference = "Stop"
-          Set-Location $env:GITHUB_WORKSPACE
-
-          # Reuse the self-hosted workspace without git clean. Generated UE files may
-          # be locked, but the tracked source tree is force-replaced by the exact SHA.
-          if (-not (Test-Path ".git")) {
-            & git init
-            if ($LASTEXITCODE -ne 0) { exit 70 }
-          }
-
-          Remove-Item -LiteralPath ".git\index.lock" -Force -ErrorAction SilentlyContinue
-          Remove-Item -LiteralPath ".git\shallow.lock" -Force -ErrorAction SilentlyContinue
-
-          $repoUrl = "https://x-access-token:$env:GH_TOKEN@github.com/${{ github.repository }}.git"
-          $origin = & git remote get-url origin 2>$null
-          if ($LASTEXITCODE -eq 0) {
-            & git remote set-url origin $repoUrl
-          } else {
-            & git remote add origin $repoUrl
-          }
-          if ($LASTEXITCODE -ne 0) { exit 71 }
-
-          $attempt = 1
-          $fetched = $false
-          while ($attempt -le 7) {
-            Write-Host "Fetching exact PR head attempt $attempt of 7..."
-            & git fetch --no-tags --prune --depth=1 origin $env:TARGET_SHA
-            if ($LASTEXITCODE -eq 0) {
-              $fetched = $true
-              break
-            }
-            if ($attempt -lt 7) {
-              Write-Host "Fetch failed; retrying in 5 seconds."
-              Start-Sleep -Seconds 5
-            }
-            $attempt++
-          }
-          if (-not $fetched) {
-            Write-Error "Failed to fetch exact PR head after 7 attempts."
-            exit 72
-          }
-
-          & git checkout -f FETCH_HEAD
-          if ($LASTEXITCODE -ne 0) { exit 73 }
-          & git reset --hard $env:TARGET_SHA
-          if ($LASTEXITCODE -ne 0) { exit 73 }
-
+          @echo off
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\checkout_exact_pr_head.ps1"
+          if errorlevel 1 exit /b %ERRORLEVEL%
       - name: Verify exact checkout
         shell: cmd
         run: |
@@ -190,26 +97,18 @@ jobs:
           if errorlevel 1 exit /b %ERRORLEVEL%
 
       - name: Prepare and probe local MSVC environment
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
+        shell: cmd
         run: |
-          & "$env:GITHUB_WORKSPACE\Scripts\prepare_msvc_environment.ps1"
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          @echo off
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\prepare_msvc_environment.ps1"
+          if errorlevel 1 exit /b %ERRORLEVEL%
 
       - name: Reset project build intermediates
-        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
+        shell: cmd
         run: |
-          $ErrorActionPreference = "Stop"
-          $paths = @(
-            (Join-Path $env:GITHUB_WORKSPACE "Intermediate\Build\Win64"),
-            (Join-Path $env:GITHUB_WORKSPACE "Binaries\Win64")
-          )
-          foreach ($path in $paths) {
-            if (Test-Path -LiteralPath $path) {
-              Write-Host "Removing stale project build product: $path"
-              Remove-Item -LiteralPath $path -Recurse -Force
-            }
-          }
-          Write-Host "Project build intermediates reset."
+          @echo off
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\reset_project_build_intermediates.ps1"
+          if errorlevel 1 exit /b %ERRORLEVEL%
 
       - name: Build ShireJourneyEditor
         shell: cmd
