@@ -207,20 +207,39 @@ else:
 if governor_data and governor_data.get("authority_id") != "FELLOWSHIP_SINGLE_PROJECT_GOVERNOR_V2":
     fail("Data/ProjectGovernor.json has unexpected authority_id")
 
+governor_schema_path = ROOT / "Data" / "ProjectGovernor.schema.json"
+if not governor_schema_path.exists():
+    fail("ProjectGovernor schema missing: Data/ProjectGovernor.schema.json")
+else:
+    try:
+        governor_schema = json.loads(read(governor_schema_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/ProjectGovernor.schema.json: {exc}")
+        governor_schema = {}
+    schema_required = governor_schema.get("properties", {}).get("requirements", {}).get("items", {}).get("required", [])
+    expected_required = ["id","title","category","priority","status","origin","intent","acceptance_criteria","dependencies"]
+    if schema_required != expected_required:
+        fail("ProjectGovernor schema requirement contract changed unexpectedly")
+
 allowed_requirement_statuses = set(governor_data.get("requirement_status_values", []))
 allowed_requirement_priorities = set(governor_data.get("priority_values", []))
 requirement_ids: set[str] = set()
 for index, item in enumerate(governor_data.get("requirements", []), start=1):
     req_id = str(item.get("id") or "").strip()
     title = str(item.get("title") or "").strip()
+    category = str(item.get("category") or "").strip()
+    origin = str(item.get("origin") or "").strip()
     intent = str(item.get("intent") or "").strip()
     status = str(item.get("status") or "").strip()
     priority = str(item.get("priority") or "").strip()
     acceptance = item.get("acceptance_criteria", [])
+    dependencies = item.get("dependencies")
 
-    if not req_id or not title or not intent:
-        fail(f"ProjectGovernor requirement entry {index} is missing id/title/intent")
+    if not req_id or not title or not category or not origin or not intent:
+        fail(f"ProjectGovernor requirement entry {index} is missing required identity/intent fields")
         continue
+    if not isinstance(dependencies, list):
+        fail(f"ProjectGovernor requirement {req_id} dependencies must be a list")
     if req_id in requirement_ids:
         fail(f"Duplicate ProjectGovernor requirement id: {req_id}")
     requirement_ids.add(req_id)
@@ -230,6 +249,17 @@ for index, item in enumerate(governor_data.get("requirements", []), start=1):
         fail(f"ProjectGovernor requirement {req_id} uses unknown priority '{priority}'")
     if not isinstance(acceptance, list) or not acceptance:
         fail(f"ProjectGovernor requirement {req_id} has no acceptance criteria")
+
+capture_contract = governor_data.get("request_capture_contract", {})
+for capture_field in ["important_request_definition","capture_rule","external_advice_rule","anti_loss_rule","coordination_rule"]:
+    if not capture_contract.get(capture_field):
+        fail(f"ProjectGovernor request capture contract missing {capture_field}")
+if not governor_data.get("external_review_findings"):
+    fail("ProjectGovernor has no durable external/programmer review findings")
+if not any(str(req.get("id") or "") == "REQ-PROD-007" for req in governor_data.get("requirements", [])):
+    fail("ProjectGovernor missing REQ-PROD-007 mega material/world wave")
+if not any(str(work.get("id") or "") == "WORK-PROD-007" for work in governor_data.get("work_queue", [])):
+    fail("ProjectGovernor missing WORK-PROD-007 mega material/world work item")
 
 for required_req in [
     "REQ-MEM-001", "REQ-GOV-001", "REQ-WORLD-001", "REQ-WORLD-002",
