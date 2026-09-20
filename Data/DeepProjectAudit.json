@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
+  "status": "ACTIVE_CONTINUOUS_AUDIT",
+  "audited_head": "fc7e2732ff2be95a54b7d091221c5fac58fe1d10",
+  "scope": [
+    "project governor",
+    "backend story/route/save",
+    "player-input and pacing",
+    "runtime tick/search/loading",
+    "world/NPC scaling",
+    "asset import/material/tangent quality",
+    "CI evidence semantics",
+    "shipping/developer separation",
+    "target-device readiness"
+  ],
+  "principles": [
+    "Film chronology/outcomes remain immutable; optional gameplay fills safe gaps only.",
+    "A red critical exact-head gate blocks unrelated feature expansion until repaired.",
+    "Player agency should not be removed longer than the presentation actually requires.",
+    "Automatic persistence during active play should avoid avoidable disk hitches.",
+    "Developer navigation must not ship as ordinary player controls.",
+    "Repeated environment detail should prefer instancing/culling over actor proliferation.",
+    "Hot-path actor enumeration and synchronous loads require measurement and explicit ownership.",
+    "Machine success never substitutes for rendered PIE/device/human acceptance."
+  ],
+  "findings": [
+    {
+      "id": "AUDIT-CRIT-001",
+      "severity": "CRITICAL",
+      "status": "REPAIR_IN_PROGRESS",
+      "title": "World material persistence is unreliable",
+      "evidence": "UE4 exact-head warning gate reports 78 missing /Game/Production/World packages.",
+      "action": "Synthesize deterministic authored materials before OBJ import, bind slots explicitly, rerun same-SHA evidence chain."
+    },
+    {
+      "id": "AUDIT-HIGH-002",
+      "severity": "HIGH",
+      "status": "FIXED",
+      "title": "Cinematic mode could lock movement for up to 27 seconds",
+      "evidence": "Presentation durations include RingWarning=27s while current camera framing is only a few seconds.",
+      "action": "Cap lightweight presentation input lock at 3.5s while dialogue/audio continue."
+    },
+    {
+      "id": "AUDIT-HIGH-003",
+      "severity": "HIGH",
+      "status": "FIXED",
+      "title": "Developer chapter/route controls were bound in all builds",
+      "evidence": "F6/F7/F8 debug navigation bindings were unconditional.",
+      "action": "Bind developer chapter/route controls only in non-shipping builds."
+    },
+    {
+      "id": "AUDIT-HIGH-004",
+      "severity": "HIGH",
+      "status": "FIXED",
+      "title": "Automatic checkpoints used synchronous disk writes during active gameplay",
+      "evidence": "Story-triggered SaveAutomaticCheckpoint used SaveGameToSlot.",
+      "action": "Use queued AsyncSaveGameToSlot for automatic checkpoints; keep CI disk roundtrip deterministic."
+    },
+    {
+      "id": "AUDIT-MED-005",
+      "severity": "MEDIUM",
+      "status": "TRACK_AND_PROFILE",
+      "title": "NPC social pairing uses distributed actor iteration",
+      "evidence": "Ambient NPCs perform two TActorIterator scans and named companion banter performs another.",
+      "action": "Profile target-device game-thread cost; move candidate lookup to a central registry/director if cost becomes material."
+    },
+    {
+      "id": "AUDIT-MED-006",
+      "severity": "MEDIUM",
+      "status": "TRACK_AND_PROFILE",
+      "title": "Chapter builders perform many direct LoadObject calls",
+      "evidence": "Production world builders synchronously load many assets during chapter construction.",
+      "action": "Keep loads out of Tick; profile transition hitch and migrate chapter banks toward soft/async preload if justified."
+    },
+    {
+      "id": "AUDIT-MED-007",
+      "severity": "MEDIUM",
+      "status": "ACTIVE_DEBT",
+      "title": "Geometry tangent/binormal quality remains incomplete",
+      "evidence": "Identity-based run reports 50 degenerate-tangent meshes and 53 nearly-zero-binormal meshes.",
+      "action": "Repair visible hero/world assets first; never hide debt by raising thresholds."
+    },
+    {
+      "id": "AUDIT-MED-008",
+      "severity": "MEDIUM",
+      "status": "BOUNDED",
+      "title": "Chapter router scans world actors during teardown",
+      "evidence": "GetAllActorsOfClass is used at chapter rebuild, not every frame.",
+      "action": "Accept at current scale; migrate to owned generated-actor registries if teardown cost grows."
+    },
+    {
+      "id": "AUDIT-LOW-009",
+      "severity": "LOW",
+      "status": "GOOD",
+      "title": "Save/route validation performs real isolated disk roundtrip",
+      "evidence": "Current CI mutates, writes, loads, verifies and deletes a unique save slot.",
+      "action": "Preserve this evidence path."
+    }
+  ],
+  "external_practice_alignment": [
+    {
+      "topic": "save hitch avoidance",
+      "project_action": "automatic checkpoint writes moved asynchronous",
+      "basis": "Epic UE4.27 recommends AsyncSaveGameToSlot for active-play saves."
+    },
+    {
+      "topic": "asset loading",
+      "project_action": "direct LoadObject hotspots recorded for staged soft/async migration",
+      "basis": "Epic recommends soft references/asynchronous loading to reduce stalls and memory pressure."
+    },
+    {
+      "topic": "repeated geometry",
+      "project_action": "retain/expand instancing for repeated non-interactive detail",
+      "basis": "Unreal instancing reduces repeated actor/object/draw-call cost."
+    },
+    {
+      "topic": "optimization method",
+      "project_action": "measurement-first budgets remain mandatory",
+      "basis": "UE4 performance guidance emphasizes profiling actual target workloads."
+    }
+  ],
+  "next_audit_waves": [
+    "material/import exact-head green",
+    "save/load failure and corruption recovery",
+    "central NPC social/banter registry cost",
+    "chapter-transition loading hitch measurement",
+    "shipping input/debug surface",
+    "quest soft-lock fuzzing",
+    "combat readability/story-lock edge cases",
+    "target-device CPU/GPU/frame-time/memory",
+    "human pacing/visual/readability per chapter"
+  ]
+}
