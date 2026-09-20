@@ -469,6 +469,38 @@
       "kind": "Source",
       "role": "Story-beat-gated Watcher/Balrog visual pressure implementation using project-owned foundations",
       "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/WorldAmbientMotionActor.h",
+      "target_path": "Source/ShireJourney/Public/World/WorldAmbientMotionActor.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Lightweight source-grounded environmental motion and bounded glow actor contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/WorldAmbientMotionActor.cpp",
+      "target_path": "Source/ShireJourney/Private/World/WorldAmbientMotionActor.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Environmental sway bob shiver and shadowless glow implementation for living-world micro-events",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/WorldDetailCluster.h",
+      "target_path": "Source/ShireJourney/Public/World/WorldDetailCluster.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Performance-aware HISM decorative detail cluster contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/WorldDetailCluster.cpp",
+      "target_path": "Source/ShireJourney/Private/World/WorldDetailCluster.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Non-colliding culled hierarchical instanced micro-detail implementation",
+      "migration_status": "CURRENT_FLAT"
     }
   ]
 }
