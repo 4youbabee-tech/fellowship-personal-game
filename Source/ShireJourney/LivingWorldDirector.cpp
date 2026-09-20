@@ -1057,6 +1057,27 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
             Amplitude,
             Speed))
         {
+            if (ActiveChapterId == TEXT("P1C01"))
+            {
+                Motion->ConfigureGlow(FLinearColor(1.0f, 0.48f, 0.16f), 180.0f, 210.0f);
+            }
+            else if (ActiveChapterId == TEXT("P1C02"))
+            {
+                Motion->ConfigureGlow(FLinearColor(1.0f, 0.34f, 0.10f), 150.0f, 190.0f);
+            }
+            else if (ActiveChapterId == TEXT("P1C04"))
+            {
+                Motion->ConfigureGlow(FLinearColor(0.72f, 0.84f, 1.0f), 170.0f, 230.0f);
+            }
+            else if (ActiveChapterId == TEXT("P1C06"))
+            {
+                Motion->ConfigureGlow(FLinearColor(1.0f, 0.20f, 0.05f), 120.0f, 175.0f);
+            }
+            else if (ActiveChapterId == TEXT("P1C07"))
+            {
+                Motion->ConfigureGlow(FLinearColor(1.0f, 0.72f, 0.22f), 210.0f, 260.0f);
+            }
+
             OutEvent.Actors.Add(Motion);
             Duration = ActiveChapterId == TEXT("P1C06") ? 10.0f : 18.0f;
         }
