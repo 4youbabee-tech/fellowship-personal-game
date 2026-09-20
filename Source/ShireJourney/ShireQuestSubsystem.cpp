@@ -606,14 +606,22 @@ bool UShireQuestSubsystem::LoadJourneyDiscoveryPlan()
         JourneyDiscoveryDefinitions.Num() > 0 &&
         JourneyInsightDefinitions.Num() > 0 &&
         JourneyRegionBonusDefinitions.Num() > 0;
-    UE_LOG(
-        LogTemp,
-        bReady ? Display : Error,
-        TEXT("JourneyDiscovery: ready=%s discoveries=%d milestones=%d regionBonuses=%d"),
-        bReady ? TEXT("yes") : TEXT("no"),
-        JourneyDiscoveryDefinitions.Num(),
-        JourneyInsightDefinitions.Num(),
-        JourneyRegionBonusDefinitions.Num());
+    if (bReady)
+    {
+        UE_LOG(LogTemp, Display,
+            TEXT("JourneyDiscovery: ready=yes discoveries=%d milestones=%d regionBonuses=%d"),
+            JourneyDiscoveryDefinitions.Num(),
+            JourneyInsightDefinitions.Num(),
+            JourneyRegionBonusDefinitions.Num());
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error,
+            TEXT("JourneyDiscovery: ready=no discoveries=%d milestones=%d regionBonuses=%d"),
+            JourneyDiscoveryDefinitions.Num(),
+            JourneyInsightDefinitions.Num(),
+            JourneyRegionBonusDefinitions.Num());
+    }
     return bReady;
 }
 
@@ -709,12 +717,16 @@ bool UShireQuestSubsystem::LoadPart1ProductionAtlas()
     }
 
     const bool bReady = ChapterProductionDefinitions.Num() == 9;
-    UE_LOG(
-        LogTemp,
-        bReady ? Display : Error,
-        TEXT("ProductionAtlas: ready=%s chapters=%d"),
-        bReady ? TEXT("yes") : TEXT("no"),
-        ChapterProductionDefinitions.Num());
+    if (bReady)
+    {
+        UE_LOG(LogTemp, Display, TEXT("ProductionAtlas: ready=yes chapters=%d"),
+            ChapterProductionDefinitions.Num());
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("ProductionAtlas: ready=no chapters=%d"),
+            ChapterProductionDefinitions.Num());
+    }
     return bReady;
 }
 
@@ -861,13 +873,16 @@ bool UShireQuestSubsystem::LoadPart1WorldMap()
     }
 
     const bool bReady = WorldMapNodes.Num() >= 16 && WorldMapEdges.Num() >= 14;
-    UE_LOG(
-        LogTemp,
-        bReady ? Display : Error,
-        TEXT("WorldMap: ready=%s nodes=%d edges=%d"),
-        bReady ? TEXT("yes") : TEXT("no"),
-        WorldMapNodes.Num(),
-        WorldMapEdges.Num());
+    if (bReady)
+    {
+        UE_LOG(LogTemp, Display, TEXT("WorldMap: ready=yes nodes=%d edges=%d"),
+            WorldMapNodes.Num(), WorldMapEdges.Num());
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("WorldMap: ready=no nodes=%d edges=%d"),
+            WorldMapNodes.Num(), WorldMapEdges.Num());
+    }
     return bReady;
 }
 
