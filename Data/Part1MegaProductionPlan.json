@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_100PCT_PRODUCTION_MEGA_OPERATION_V1",
+  "status": "ACTIVE",
+  "pull_request": 53,
+  "branch": "work/automation-first-runtime-observation",
+  "objective": "Drive Part I from system-rich prototype/foundation to evidence-backed production completion as one coordinated program using owner sources, project-owned asset banks, canonical geography, full cast production, cinematic regional art, battle production, presentation, and exact-head acceptance.",
+  "invariants": [
+    "Peter Jackson film screenplay chronology and outcomes remain immutable.",
+    "Optional play exists only inside film-safe gaps and never changes required outcomes.",
+    "Raw owner reference PDFs/images are reference-only and are not shipping dependencies.",
+    "Project-owned assets may be used immediately; external assets require item-level license evidence in ExternalAssetManifest.",
+    "No implementation or visual claim is promoted beyond actual evidence.",
+    "Part II and Part III remain source-verification gated."
+  ],
+  "workstreams": [
+    {
+      "id": "MEGA_AUDIT",
+      "rank": 0,
+      "name": "Whole-project integrity and defect audit",
+      "scope": [
+        "Pre-Unreal validation",
+        "ProjectGovernor",
+        "source architecture",
+        "asset structural quality",
+        "quest reachability warnings",
+        "save schema",
+        "runtime smoke",
+        "exact-head UE validation"
+      ],
+      "deliverables": [
+        "Production100ReadinessGate",
+        "production readiness audit",
+        "defect/gap ledger",
+        "repair loop"
+      ],
+      "exit": [
+        "contract errors zero",
+        "governor conflicts zero",
+        "current exact head passes required engine evidence"
+      ]
+    },
+    {
+      "id": "MEGA_SOURCE_ATLAS",
+      "rank": 1,
+      "name": "Source-grounded production atlas and maps",
+      "scope": [
+        "Part I macro-regions",
+        "canonical place names and aliases",
+        "chapter landmark chains",
+        "cast presence",
+        "threats",
+        "artifacts",
+        "battle spaces",
+        "activity opportunities"
+      ],
+      "deliverables": [
+        "Part1ProductionAtlas",
+        "runtime-readable geography",
+        "source traceability"
+      ],
+      "exit": [
+        "all Part I chapters and Gandalf parallel represented",
+        "all hero cast and major threats mapped",
+        "no raw-source runtime dependency"
+      ]
+    },
+    {
+      "id": "MEGA_CHARACTERS",
+      "rank": 2,
+      "name": "Full Part I character production",
+      "waves": [
+        "Frodo and Gandalf final rig/skin/locomotion/face baseline",
+        "Sam Merry Pippin Hobbit family",
+        "Aragorn Boromir Legolas Gimli Fellowship hero wave",
+        "Bilbo Arwen Elrond Galadriel Haldir Saruman and regional named cast",
+        "Black Rider Nazgul Orc Uruk-hai Cave Troll Lurtz Watcher Balrog threat wave"
+      ],
+      "pipeline": [
+        "source identity contract",
+        "asset provenance",
+        "topology/UV/normal/material pass",
+        "rig family",
+        "skin/deformation",
+        "AnimBP",
+        "face tier",
+        "equipment sockets",
+        "LOD/material budget",
+        "fallback safety"
+      ],
+      "exit": [
+        "required cast production visual tier",
+        "hero animation acceptance",
+        "chapter presence pass",
+        "target-device character budget pass"
+      ]
+    },
+    {
+      "id": "MEGA_WORLD",
+      "rank": 3,
+      "name": "Nine-region cinematic world production",
+      "waves": [
+        "Shire Hobbiton Bag End Party Field wooded road Bucklebury Ferry",
+        "Bree Gate streets Prancing Pony stable rooms",
+        "Midgewater Weathertop flight route Ford of Bruinen",
+        "Rivendell valley gardens terraces Council departure gate",
+        "Fellowship road Caradhras lake West Gate",
+        "Moria entry great halls Mazarbul stairs Bridge",
+        "Lothlorien Caras Galadhon talans Mirror river departure",
+        "Anduin Argonath Nen Hithoel Parth Galen Amon Hen",
+        "Isengard valley Orthanc summit industrial caverns"
+      ],
+      "pipeline": [
+        "terrain silhouette",
+        "foreground/midground/background composition",
+        "materials",
+        "foliage",
+        "water",
+        "weather",
+        "architecture",
+        "interiors",
+        "hero vistas",
+        "LOD/instancing/culling"
+      ],
+      "exit": [
+        "every region visually distinct",
+        "hero vista acceptance",
+        "traversal clarity",
+        "30 FPS floor retained"
+      ]
+    },
+    {
+      "id": "MEGA_GAMEPLAY",
+      "rank": 4,
+      "name": "Film-spine gameplay completion",
+      "scope": [
+        "mandatory scene playability",
+        "Ring presentation",
+        "side activities",
+        "environmental puzzles",
+        "tracking/observation/camp/social depth",
+        "world events",
+        "ensemble viewpoints",
+        "Chronicle/map knowledge",
+        "progression utility"
+      ],
+      "exit": [
+        "every chapter has meaningful play beyond walking",
+        "urgent film beats preempt optional play",
+        "no canon mutation",
+        "human pacing pass"
+      ]
+    },
+    {
+      "id": "MEGA_BATTLES",
+      "rank": 5,
+      "name": "Part I encounter production",
+      "encounters": [
+        "Weathertop Nazgul",
+        "Moria Watcher gate",
+        "Mazarbul Orc/Troll defense",
+        "Moria retreat Bridge Balrog",
+        "Amon Hen Uruk hunt and Lurtz duel"
+      ],
+      "focus": [
+        "terrain/sightlines",
+        "enemy silhouettes",
+        "weapons",
+        "sound",
+        "role switching",
+        "checkpoints",
+        "story-locked outcomes"
+      ],
+      "exit": [
+        "encounter PIE pass",
+        "acceptable retry friction",
+        "quest paths never blocked",
+        "performance pass"
+      ]
+    },
+    {
+      "id": "MEGA_PRESENTATION",
+      "rank": 6,
+      "name": "Cinematic presentation and audio",
+      "scope": [
+        "chapter lighting",
+        "weather",
+        "camera beats",
+        "Ring VFX/audio",
+        "HUD/Chronicle/map readability",
+        "SFX/music/voice policy",
+        "dialogue staging",
+        "facial/lip-sync tiering"
+      ],
+      "exit": [
+        "presentation coverage audit",
+        "audio provenance clear",
+        "human presentation acceptance"
+      ]
+    },
+    {
+      "id": "MEGA_ACCEPTANCE",
+      "rank": 7,
+      "name": "Production acceptance and 100 percent gate",
+      "scope": [
+        "exact SHA",
+        "UE build/import",
+        "P1C01-P1C08 traversal",
+        "Gandalf route",
+        "save/load",
+        "performance",
+        "visual",
+        "pacing",
+        "defect repair"
+      ],
+      "exit": [
+        "all Production100ReadinessGate domains PASS/ACCEPTED",
+        "production_100 true only on accepted exact SHA"
+      ]
+    }
+  ],
+  "parallel_policy": {
+    "allowed_now": [
+      "source/data contracts",
+      "project-owned character/world asset production",
+      "runtime integration guarded by CI",
+      "automation",
+      "presentation planning"
+    ],
+    "blocked_from_final_promotion": [
+      "visual acceptance without human review",
+      "performance acceptance without target-device measurements",
+      "final rig claims without real skeletal assets",
+      "external asset approval without license evidence"
+    ]
+  },
+  "immediate_massive_batch": [
+    "Install production/source/readiness contracts and automated audit.",
+    "Correct production matrices so modular foundations are distinguished from final rigged art.",
+    "Integrate the source atlas into player-facing geography and ensemble playable visual selection.",
+    "Start full-cast modular playable-character support using existing project-owned character assets.",
+    "Build chapter/region production waves from existing world banks while keeping story coordinates fixed.",
+    "Create missing threat/world asset briefs for Watcher, Balrog, Lurtz and Isengard.",
+    "Run Pre-Unreal after the mega batch, then repair failures before making any green claim."
+  ]
+}
