@@ -1946,15 +1946,38 @@
       "priority": "CRITICAL",
       "owner_intent": "NPCs should feel alive through real memory, relationships, goals, needs, emotions, context and inter-NPC knowledge transfer; language generation is optional expression, never story authority.",
       "plan": "Data/LivingNPCIntelligenceRoadmap.json",
-      "depends_on": [
+      "acceptance_boundary": "Prototype one existing named Shire NPC first; preserve deterministic offline fallback and canon/knowledge gates.",
+      "intent": "NPCs should feel alive through real memory, relationships, goals, needs, emotions, context and inter-NPC knowledge transfer; language generation is optional expression, never story authority.",
+      "acceptance_criteria": [
+        "One existing named Shire NPC demonstrates persistent compact memory, relationship-aware revisit behavior and bounded real-event knowledge transfer.",
+        "Generated or locally expressed dialogue cannot create canon facts, quest outcomes, deaths, allegiances or future knowledge.",
+        "Disabling or losing the optional language-expression layer leaves deterministic authored/template dialogue fully functional.",
+        "NPC memory remains compact and save-safe; raw transcripts are not used as persistent memory.",
+        "No ambient crowd actor requires a per-instance persistent LLM or cloud dependency.",
+        "Prototype survives save/load and chapter-state transitions without duplicating NPC state authority.",
+        "Performance is measured before scaling the system beyond the prototype."
+      ],
+      "dependencies": [
         "REQ-NPC-003",
         "REQ-NPC-004",
         "REQ-NPC-005",
         "REQ-SAVE-001",
         "REQ-PERF-001"
       ],
-      "acceptance_boundary": "Prototype one existing named Shire NPC first; preserve deterministic offline fallback and canon/knowledge gates.",
-      "intent": "NPCs should feel alive through real memory, relationships, goals, needs, emotions, context and inter-NPC knowledge transfer; language generation is optional expression, never story authority."
+      "category": "LivingWorld",
+      "origin": "Owner proposal normalized from programmer suggestion",
+      "evidence": [
+        "Data/LivingNPCIntelligenceRoadmap.json",
+        "Data/BoundedDialoguePlan.json",
+        "Data/NPCMemoryPlan.json",
+        "Data/NPCSocialModel.json",
+        "Data/NPCConversationPlan.json"
+      ],
+      "missing_work": [
+        "Prototype one existing named Shire NPC over the current memory/social/context stack.",
+        "Add real-event witness/share/learn propagation with canon/knowledge gates.",
+        "Add optional local bounded expression only after deterministic behavior is proven."
+      ]
     }
   ],
   "hard_invariants": [
