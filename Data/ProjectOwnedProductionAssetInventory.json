@@ -2,18 +2,21 @@
   "schema_version": 1,
   "inventory_id": "PROJECT_OWNED_PRODUCTION_ASSET_INVENTORY_V1",
   "generated_from_commit": "MEGA_MATERIAL_WORLD_WAVE_V1 branch source inventory",
-  "status": "REALM_DETAIL_V2_ENGINE_GREEN_PR57_CURRENT_V3_PRESENTATION_PENDING_PROOF",
+  "status": "HERO_CHARACTER_EQUIPMENT_V4_EXPANDED_PENDING_EXACT_HEAD_ENGINE_PROOF",
   "truth_rule": "File presence and importability prove only a project-owned source foundation. Final production requires rig/material/animation/visual/performance acceptance.",
   "characters": [
     {
       "root": "SourceAssets/Production/Characters/Aragorn",
-      "file_count": 3,
-      "obj_count": 3,
+      "file_count": 6,
+      "obj_count": 6,
       "mtl_count": 0,
       "image_count": 0,
       "files": [
+        "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Bow.obj",
+        "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Cloak.obj",
         "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Hair.obj",
         "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Head.obj",
+        "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Sword.obj",
         "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Torso.obj"
       ]
     },
@@ -43,13 +46,16 @@
     },
     {
       "root": "SourceAssets/Production/Characters/Boromir",
-      "file_count": 3,
-      "obj_count": 3,
+      "file_count": 6,
+      "obj_count": 6,
       "mtl_count": 0,
       "image_count": 0,
       "files": [
+        "SourceAssets/Production/Characters/Boromir/SM_Boromir_Cloak.obj",
         "SourceAssets/Production/Characters/Boromir/SM_Boromir_Hair.obj",
         "SourceAssets/Production/Characters/Boromir/SM_Boromir_Head.obj",
+        "SourceAssets/Production/Characters/Boromir/SM_Boromir_Shield.obj",
+        "SourceAssets/Production/Characters/Boromir/SM_Boromir_Sword.obj",
         "SourceAssets/Production/Characters/Boromir/SM_Boromir_Torso.obj"
       ]
     },
@@ -180,13 +186,16 @@
     },
     {
       "root": "SourceAssets/Production/Characters/Gimli",
-      "file_count": 3,
-      "obj_count": 3,
+      "file_count": 6,
+      "obj_count": 6,
       "mtl_count": 0,
       "image_count": 0,
       "files": [
+        "SourceAssets/Production/Characters/Gimli/SM_Gimli_Axe.obj",
+        "SourceAssets/Production/Characters/Gimli/SM_Gimli_Beard.obj",
         "SourceAssets/Production/Characters/Gimli/SM_Gimli_Hair.obj",
         "SourceAssets/Production/Characters/Gimli/SM_Gimli_Head.obj",
+        "SourceAssets/Production/Characters/Gimli/SM_Gimli_Helmet.obj",
         "SourceAssets/Production/Characters/Gimli/SM_Gimli_Torso.obj"
       ]
     },
@@ -230,37 +239,44 @@
     },
     {
       "root": "SourceAssets/Production/Characters/Legolas",
-      "file_count": 3,
-      "obj_count": 3,
+      "file_count": 6,
+      "obj_count": 6,
       "mtl_count": 0,
       "image_count": 0,
       "files": [
+        "SourceAssets/Production/Characters/Legolas/SM_Legolas_Bow.obj",
+        "SourceAssets/Production/Characters/Legolas/SM_Legolas_Cloak.obj",
         "SourceAssets/Production/Characters/Legolas/SM_Legolas_Hair.obj",
         "SourceAssets/Production/Characters/Legolas/SM_Legolas_Head.obj",
-        "SourceAssets/Production/Characters/Legolas/SM_Legolas_Torso.obj"
+        "SourceAssets/Production/Characters/Legolas/SM_Legolas_Torso.obj",
+        "SourceAssets/Production/Characters/Legolas/SM_Legolas_WhiteKnife.obj"
       ]
     },
     {
       "root": "SourceAssets/Production/Characters/Merry",
-      "file_count": 3,
-      "obj_count": 3,
+      "file_count": 5,
+      "obj_count": 5,
       "mtl_count": 0,
       "image_count": 0,
       "files": [
+        "SourceAssets/Production/Characters/Merry/SM_Merry_Cloak.obj",
         "SourceAssets/Production/Characters/Merry/SM_Merry_Hair.obj",
         "SourceAssets/Production/Characters/Merry/SM_Merry_Head.obj",
+        "SourceAssets/Production/Characters/Merry/SM_Merry_Sword.obj",
         "SourceAssets/Production/Characters/Merry/SM_Merry_Torso.obj"
       ]
     },
     {
       "root": "SourceAssets/Production/Characters/Pippin",
-      "file_count": 3,
-      "obj_count": 3,
+      "file_count": 5,
+      "obj_count": 5,
       "mtl_count": 0,
       "image_count": 0,
       "files": [
+        "SourceAssets/Production/Characters/Pippin/SM_Pippin_Cloak.obj",
         "SourceAssets/Production/Characters/Pippin/SM_Pippin_Hair.obj",
         "SourceAssets/Production/Characters/Pippin/SM_Pippin_Head.obj",
+        "SourceAssets/Production/Characters/Pippin/SM_Pippin_Sword.obj",
         "SourceAssets/Production/Characters/Pippin/SM_Pippin_Torso.obj"
       ]
     },
@@ -278,13 +294,15 @@
     },
     {
       "root": "SourceAssets/Production/Characters/Sam",
-      "file_count": 3,
-      "obj_count": 3,
+      "file_count": 5,
+      "obj_count": 5,
       "mtl_count": 0,
       "image_count": 0,
       "files": [
         "SourceAssets/Production/Characters/Sam/SM_Sam_Hair.obj",
         "SourceAssets/Production/Characters/Sam/SM_Sam_Head.obj",
+        "SourceAssets/Production/Characters/Sam/SM_Sam_Pack.obj",
+        "SourceAssets/Production/Characters/Sam/SM_Sam_Sword.obj",
         "SourceAssets/Production/Characters/Sam/SM_Sam_Torso.obj"
       ]
     },
@@ -722,8 +740,8 @@
     }
   ],
   "totals": {
-    "production_files": 378,
-    "obj_files": 334,
+    "production_files": 396,
+    "obj_files": 352,
     "mtl_files": 19,
     "image_files": 24
   },
@@ -745,7 +763,8 @@
   ],
   "notes": [
     "Totals preserve the prior 347/304/18/24 baseline and add 14 Moria OBJ files plus the previously existing Isengard RegionalMaterials.mtl entry.",
-    "Realm Detail Saturation V2 adds 16 project-owned OBJ assets: four each for Rivendell, Lothlorien, Anduin/Amon Hen and Isengard."
+    "Realm Detail Saturation V2 adds 16 project-owned OBJ assets: four each for Rivendell, Lothlorien, Anduin/Amon Hen and Isengard.",
+    "Hero Character Equipment Silhouette V4 adds 18 dedicated project-owned Fellowship equipment/silhouette OBJ assets for Sam, Merry, Pippin, Aragorn, Boromir, Legolas and Gimli."
   ],
   "validation_evidence": {
     "realm_detail_v2": {
