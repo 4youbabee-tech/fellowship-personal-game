@@ -210,10 +210,11 @@ jobs:
           set "BUILD_EXIT=!ERRORLEVEL!"
 
           if not "!BUILD_EXIT!"=="0" (
-            findstr /I /C:"error C3859" /C:"fatal error C1076" "%BUILDLOG%" >nul
+            findstr /I /C:"error C3859" /C:"fatal error C1076" /C:"error D8050" /C:"Command line error D8050" "%BUILDLOG%" >nul
             if not errorlevel 1 (
               echo.>>"%BUILDLOG%"
-              echo CI_BUILD_RETRY: MSVC PCH memory pressure detected; retrying with MaxParallelActions=1.>>"%BUILDLOG%"
+              echo CI_BUILD_RETRY: MSVC compiler resource/process pressure detected; waiting briefly and retrying with MaxParallelActions=1.>>"%BUILDLOG%"
+              powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 5"
               call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=1 >> "%BUILDLOG%" 2>&1
               set "BUILD_EXIT=!ERRORLEVEL!"
             )
