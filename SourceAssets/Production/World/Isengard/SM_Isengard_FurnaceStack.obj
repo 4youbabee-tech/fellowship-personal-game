@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Isengard_FurnaceStack
+mtllib RegionalMaterials.mtl
 o SM_Isengard_FurnaceStack
+usemtl FurnaceIron
 s 1
 v 70.000 0.000 0.000
 v 56.631 41.145 0.000

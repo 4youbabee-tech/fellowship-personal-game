@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Isengard_ParapetSlab
+mtllib RegionalMaterials.mtl
 o SM_Isengard_ParapetSlab
+usemtl OrthancBlackStone
 s 1
 v -260.000 -180.000 0.000
 v 260.000 -180.000 0.000

@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Isengard_OrthancSpire
+mtllib RegionalMaterials.mtl
 o SM_Isengard_OrthancSpire
+usemtl OrthancEdgeStone
 s 1
 v -75.000 -110.000 0.000
 v 75.000 -110.000 0.000

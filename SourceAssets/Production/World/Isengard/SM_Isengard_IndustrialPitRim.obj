@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Isengard_IndustrialPitRim
+mtllib RegionalMaterials.mtl
 o SM_Isengard_IndustrialPitRim
+usemtl IndustrialIron
 s 1
 v 210.000 0.000 0.000
 v 181.865 105.000 0.000

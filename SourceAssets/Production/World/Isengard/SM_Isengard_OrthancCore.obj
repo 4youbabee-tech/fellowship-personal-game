@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Isengard_OrthancCore
+mtllib RegionalMaterials.mtl
 o SM_Isengard_OrthancCore
+usemtl OrthancBlackStone
 s 1
 v -300.000 -300.000 0.000
 v 300.000 -300.000 0.000

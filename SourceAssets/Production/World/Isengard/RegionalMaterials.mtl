@@ -1,0 +1,25 @@
+# Project-owned Isengard production palette
+newmtl OrthancBlackStone
+Kd 0.055 0.060 0.068
+Ks 0.20 0.21 0.23
+Ns 48
+
+newmtl OrthancEdgeStone
+Kd 0.090 0.095 0.105
+Ks 0.17 0.18 0.20
+Ns 38
+
+newmtl IndustrialIron
+Kd 0.115 0.105 0.095
+Ks 0.24 0.23 0.22
+Ns 42
+
+newmtl FurnaceIron
+Kd 0.165 0.095 0.055
+Ks 0.28 0.16 0.10
+Ns 32
+
+newmtl ScorchedWood
+Kd 0.175 0.090 0.040
+Ks 0.025 0.020 0.015
+Ns 8

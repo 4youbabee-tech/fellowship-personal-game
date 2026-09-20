@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Isengard_FelledTrunk
+mtllib RegionalMaterials.mtl
 o SM_Isengard_FelledTrunk
+usemtl ScorchedWood
 s 1
 v 38.000 0.000 0.000
 v 26.870 26.870 0.000
