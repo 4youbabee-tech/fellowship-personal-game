@@ -34,21 +34,13 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          setlocal EnableExtensions
-          where git.exe >nul 2>&1
-          if errorlevel 1 (
-            if exist "C:\Program Files\Git\cmd\git.exe" (
-              set "PATH=C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;%PATH%"
-              >>"%GITHUB_PATH%" echo C:\Program Files\Git\cmd
-              >>"%GITHUB_PATH%" echo C:\Program Files\Git\mingw64\bin
-            ) else if exist "C:\Program Files (x86)\Git\cmd\git.exe" (
-              set "PATH=C:\Program Files (x86)\Git\cmd;C:\Program Files (x86)\Git\mingw64\bin;%PATH%"
-              >>"%GITHUB_PATH%" echo C:\Program Files (x86)\Git\cmd
-              >>"%GITHUB_PATH%" echo C:\Program Files (x86)\Git\mingw64\bin
-            )
-          )
-          where git.exe >nul 2>&1
-          if errorlevel 1 (
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE if exist "C:\Program Files (x86)\Git\cmd\git.exe" set "GITEXE=C:\Program Files (x86)\Git\cmd\git.exe"
+
+          if not defined GITEXE (
             set "MGROOT=%RUNNER_TEMP%\mingit-2.55.0.5"
             set "MGZIP=%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip"
             if not exist "%RUNNER_TEMP%\mingit-2.55.0.5\cmd\git.exe" (
@@ -56,16 +48,20 @@ jobs:
               if exist "%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip" del /F /Q "%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip"
               curl.exe -L --retry 3 --retry-delay 3 -o "%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip" "https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.5/MinGit-2.55.0.5-64-bit.zip"
               if errorlevel 1 exit /b 20
-              powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath $env:RUNNER_TEMP+'\MinGit-2.55.0.5-64-bit.zip' -DestinationPath $env:RUNNER_TEMP+'\mingit-2.55.0.5' -Force"
+              powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath (Join-Path $env:RUNNER_TEMP 'MinGit-2.55.0.5-64-bit.zip') -DestinationPath (Join-Path $env:RUNNER_TEMP 'mingit-2.55.0.5') -Force"
               if errorlevel 1 exit /b 21
             )
-            set "PATH=%RUNNER_TEMP%\mingit-2.55.0.5\cmd;%RUNNER_TEMP%\mingit-2.55.0.5\mingw64\bin;%PATH%"
-            >>"%GITHUB_PATH%" echo %RUNNER_TEMP%\mingit-2.55.0.5\cmd
+            set "GITEXE=%RUNNER_TEMP%\mingit-2.55.0.5\cmd\git.exe"
+          )
+
+          if not exist "!GITEXE!" exit /b 22
+          for %%D in ("!GITEXE!") do set "GITDIR=%%~dpD"
+          >>"%GITHUB_PATH%" echo !GITDIR!
+          if /I "!GITEXE!"=="%RUNNER_TEMP%\mingit-2.55.0.5\cmd\git.exe" (
             >>"%GITHUB_PATH%" echo %RUNNER_TEMP%\mingit-2.55.0.5\mingw64\bin
           )
-          where git.exe
-          if errorlevel 1 exit /b 22
-          git --version
+          echo Found Git: !GITEXE!
+          "!GITEXE!" --version
           if errorlevel 1 exit /b 22
           echo Runner bootstrap succeeded.
 
