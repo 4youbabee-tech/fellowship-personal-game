@@ -14,8 +14,8 @@ permissions:
 
 concurrency:
   group: unreal-build-${{ github.repository }}-ue4-device
-  # The single UE4 device should validate only the newest PR head.
-  cancel-in-progress: true
+  # Shared UE4 device runs serialize; never interrupt an active engine validation.
+  cancel-in-progress: false
 
 jobs:
   unreal-build:
