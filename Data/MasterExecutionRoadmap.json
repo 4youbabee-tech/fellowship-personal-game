@@ -163,7 +163,8 @@
         "REQ-WORLD-006",
         "REQ-PROD-005",
         "REQ-PROD-006",
-        "REQ-PROD-007"
+        "REQ-PROD-007",
+        "REQ-PROD-008"
       ],
       "work_ids": [
         "WORK-CHAR-004",
@@ -171,7 +172,8 @@
         "WORK-WORLD-003",
         "WORK-WORLD-002",
         "WORK-WORLD-001",
-        "WORK-PROD-007"
+        "WORK-PROD-007",
+        "WORK-PROD-008"
       ],
       "deliverables": [
         "core-cast source/provenance selection",
@@ -191,7 +193,11 @@
         "bounded chapter-specific environmental motion and glow",
         "HISM-based dense micro-detail in Rivendell, Moria, Lothlorien and Anduin/Amon Hen",
         "Isengard industrial-motion accents",
-        "sparse/dead-region life without unsupported civilian filler"
+        "sparse/dead-region life without unsupported civilian filler",
+        "Rivendell memory/craft/provisioning detail kit",
+        "Lothlorien gift/boat-prep vertical detail kit",
+        "Anduin/Amon Hen river-to-battle detail kit",
+        "Isengard industrial logistics/flood-readability kit"
       ],
       "exit_evidence": [
         "ASSET_PROVENANCE_RECORDED",
@@ -200,7 +206,7 @@
         "PIE_VISUAL_REVIEW",
         "TARGET_DEVICE_PERFORMANCE"
       ],
-      "current_production_wave": "MEGA_WORLD_MAGIC_LIFE_DETAIL_V1"
+      "current_production_wave": "REALM_DETAIL_SATURATION_V2"
     },
     {
       "id": "B3_LIVING_WORLD_AND_PRESENTATION",
@@ -405,7 +411,8 @@
     "REQ-WORLD-004",
     "REQ-WORLD-005",
     "REQ-WORLD-006",
-    "REQ-PROD-007"
+    "REQ-PROD-007",
+    "REQ-PROD-008"
   ],
   "tracked_active_work_ids": [
     "WORK-CHAR-001",
@@ -425,18 +432,19 @@
     "WORK-WORLD-001",
     "WORK-WORLD-002",
     "WORK-WORLD-003",
-    "WORK-PROD-007"
+    "WORK-PROD-007",
+    "WORK-PROD-008"
   ],
   "immediate_next_large_actions": [
-    "Earn fresh exact-head Pre-Unreal and UE4.27.2 import/build/runtime proof after repairing the PG-107 authority check and Moria Iron material binding.",
-    "Continue MEGA_WORLD_MAGIC_LIFE_DETAIL_V1 with source-grounded environmental motion, dense instanced detail, culture-specific prop life, hero vistas and chapter-state atmosphere.",
-    "Prioritize Moria/Amon Hen/Isengard/Rivendell/Lothlorien/Anduin, then final Shire/Bree/Road/Weathertop polish.",
-    "Profile representative cave/forest/battle scenes before increasing dynamic lights, skeletal crowds or texture resolution."
+    "Validate REALM_DETAIL_SATURATION_V2 exact head through Pre-Unreal and full UE4.27.2 import/runtime chain.",
+    "Repair validation/import/runtime blockers without weakening guardrails.",
+    "Merge only after exact-head green proof.",
+    "Then open the next focused branch for character animation/audio/cinematic and early-region finishing."
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "head": "ACTIVE_BRANCH_HEAD_PENDING_EXACT_PROOF",
-    "reason": "Owner requested a major qualitative jump that fills the game with magic, life and detail while fixing blockers inline.",
-    "active_wave": "MEGA_WORLD_MAGIC_LIFE_DETAIL_V1"
+    "head": "ACTIVE_BRANCH_PENDING_EXACT_PROOF",
+    "reason": "Realm Detail Saturation V2 source-grounded visible production wave.",
+    "active_wave": "REALM_DETAIL_SATURATION_V2"
   }
 }
