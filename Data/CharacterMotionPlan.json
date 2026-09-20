@@ -1,7 +1,7 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "plan_id": "PART1_CHARACTER_MOTION_V1",
-  "status": "ACTIVE_RUNTIME_IMPLEMENTATION_PENDING_BUILD",
+  "status": "V2_IDENTITY_PERFORMANCE_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
   "purpose": "Make the named Part I cast visibly alive now while establishing a safe skeletal-rig handoff path. Runtime prefers an imported skeletal mesh plus locomotion AnimBP only when both exist; otherwise the project-owned modular character remains active with deterministic low-cost procedural idle/walk/talk motion.",
   "runtime_owner": "AShireNPC",
   "rig_contract": {
@@ -98,7 +98,8 @@
       "modular fallback motion profiles",
       "idle breathing and weight shift",
       "walk/catch-up cadence variation",
-      "dialogue arm gesture layer"
+      "dialogue arm gesture layer",
+      "identity-specific gesture/gaze/weight/composure fallback profiles"
     ],
     "not_claimed": [
       "final skeletal rigs",
@@ -125,5 +126,24 @@
       "beyond_4200_units": "0.22s interval"
     },
     "acceptance_boundary": "Source/runtime safeguard only; UE4.27 compile and target-device multi-character profiling remain required."
+  },
+  "performance_v2": {
+    "source_basis": [
+      "02 Characters & Relationships",
+      "11 Cinematics/Camera/Performance"
+    ],
+    "controls": [
+      "gesture scale",
+      "gaze scale",
+      "weight shift scale",
+      "composure"
+    ],
+    "rules": [
+      "Shared fallback animation math may not erase character identity.",
+      "Dialogue gesture amplitude is character-specific.",
+      "Idle gaze and body-weight motion are character-specific and pressure-aware.",
+      "Emotional head pitch remains bounded and subordinate to story-state data.",
+      "Final rigs replace rather than double-tick the modular performance path."
+    ]
   }
 }
