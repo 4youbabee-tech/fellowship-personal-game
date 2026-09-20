@@ -118,7 +118,10 @@
         "direct crouch-gated STEALTH_LITE activity feeding QUIET_STEP",
         "dedicated interactable environmental pattern-puzzle runtime",
         "Rivendell map-table and Moria relief three-step puzzles",
-        "bounded reward-free living-world player responses"
+        "bounded reward-free living-world player responses",
+        "source-grounded readable Chronicle entry labels",
+        "explicit previous/next Chronicle browsing controls",
+        "readable known-map-region presentation"
       ],
       "exit_evidence": [
         "STATIC_CANON_COVERAGE",
@@ -126,7 +129,7 @@
         "SAVE_ROUTE_CONTINUITY",
         "PIE_PACING_REVIEW"
       ],
-      "current_runtime_wave": "ENVIRONMENTAL_PUZZLES_AND_INTERACTIVE_WORLD_EVENTS_V4"
+      "current_runtime_wave": "CHRONICLE_BROWSING_AND_KNOWLEDGE_PRESENTATION_V5"
     },
     {
       "id": "B2_CHARACTERS_AND_WORLD_PRODUCTION",
