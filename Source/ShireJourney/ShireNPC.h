@@ -162,6 +162,7 @@ private:
     bool bCompanionFollowStateResolved = false;
     bool bVisualStyleApplied = false;
     bool bPrototypeMoving = false;
+    bool bUsingProductionVisual = false;
     bool bUsingSkeletalProductionRig = false;
     float PrototypeWalkPhase = 0.0f;
     float PrototypeIdlePhase = 0.0f;
