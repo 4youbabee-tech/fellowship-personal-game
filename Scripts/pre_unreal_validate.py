@@ -3320,8 +3320,8 @@ for pg110_symbol in [
 pg110_matrix = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
 if pg110_matrix.get("geometry_refinement_wave", {}).get("status") != "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE":
     fail("PG-110 V6 geometry should remain engine-proven but not visually accepted")
-if pg110_matrix.get("surface_material_wave", {}).get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
-    fail("PG-110 V7 surface wave proof boundary changed")
+if pg110_matrix.get("surface_material_wave", {}).get("status") != "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE":
+    fail("PG-110 V7 surface wave must remain engine-proven while rendered acceptance is pending")
 
 # PG-111: V8 regional life must stay canon-safe, route-readable and performance-bounded.
 pg111_plan = json.loads(read(ROOT / "Data" / "WorldLifeSaturationPlan.json"))
