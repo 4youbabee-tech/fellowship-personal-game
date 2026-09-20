@@ -588,7 +588,8 @@
         "Scripts/project_governor.py validates requirements, decisions, conflicts, quality gates and secondary-authority prohibition",
         "CI runs the Governor validator in Pre-Unreal Validation",
         "Worker contract and active hard gate are recorded in the Governor",
-        "request_capture_contract + external_review_findings preserve accepted owner direction and verified external advice as durable repository memory."
+        "request_capture_contract + external_review_findings preserve accepted owner direction and verified external advice as durable repository memory.",
+        "Source 11 master production systems rules are registered as cross-discipline governance for audio/cinematics/UI/AI/technical/performance/QA."
       ],
       "missing_work": [
         "Operational: translate each future meaningful request into the Governor before/with implementation",
@@ -1204,7 +1205,8 @@
       "implementation_refs": [
         "ExternalAssetManifest stores providers by production category and approval/review mode",
         "ProjectGovernor records the persistence requirement as project memory",
-        "External sourcing policy defines the item-level provenance/license/import workflow"
+        "External sourcing policy defines the item-level provenance/license/import workflow",
+        "Project source library completeness and authority hierarchy are recorded in ProjectGovernor.project_source_library and Data/OwnerSourceReferenceIndex.json."
       ],
       "missing_work": [
         "Continue appending newly requested useful sources and production requests as they arise",
@@ -1495,19 +1497,23 @@
         "Fellowship screenplay mapped into Part I route/chapter/story-beat contexts.",
         "Two Towers screenplay indexed into future Part II arc seeds.",
         "Runtime context will expose active source grounding to bounded dialogue selection.",
-        "Part1ProductionAtlas derives Part I geography/cast/threat/artifact production context from the owner screenplay/source pack/production bibles while raw references remain non-runtime."
+        "Part1ProductionAtlas derives Part I geography/cast/threat/artifact production context from the owner screenplay/source pack/production bibles while raw references remain non-runtime.",
+        "Data/OwnerSourceReferenceIndex.json now registers the full trilogy screenplay set, Tolkien full volume, Source 10 3D visual atlas and Source 11 master production systems/source index."
       ],
       "missing_work": [
         "Validate source-context loading in UE4.27 on PR #53.",
         "Expand Part II route contexts when Part II runtime production begins.",
-        "Feed only bounded summaries/knowledge limits to any future local on-device language layer."
+        "Feed only bounded summaries/knowledge limits to any future local on-device language layer.",
+        "Expand bounded screenplay-derived source context for Part III only when Part III runtime production begins."
       ],
       "acceptance_criteria": [
         "Part I source context is recoverable without opening PDFs at runtime.",
         "No long or verbatim screenplay lines are stored as runtime dialogue.",
         "NPCs cannot gain future knowledge from later screenplay events.",
         "Two Towers remains reference-ready without falsely claiming Part II runtime implementation.",
-        "Shipped dialogue remains offline."
+        "Shipped dialogue remains offline.",
+        "Part III film-story work must use the supplied Return of the King screenplay before older shorthand summaries.",
+        "Book-derived lore must be labeled/used as deeper lore and may not silently override film continuity."
       ],
       "dependencies": [
         "REQ-VISION-001",
@@ -3142,13 +3148,14 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "reason": "Owner requested a very large next production step with massive material/world-content injection and durable coordination of prior requests and useful programmer findings.",
+    "reason": "Owner added rich Project Sources 10/11, Return of the King screenplay and full Tolkien LOTR volume and requested them to become durable production references.",
     "summary": [
-      "PR #54 exact candidate 3b5f9f2c0a5f30431f9020efceef1986e48d6cef passed Pre-Unreal #509 and Unreal Build #344 and was merged into develop as 2a5f96fd552cbe6343474721ca98d86d8629fc00.",
-      "The next wave is REQ-PROD-007 / WORK-PROD-007: a large source-grounded visible material/world-content saturation pass.",
-      "Verified programmer findings are retained as guardrails: schema/request capture, local preflight, LoadObject transition-hitch risk, triangulation cleanup and branch-protection semantics.",
-      "Moria is first: monumental architecture, darkness, mines/halls, route-readable light pools, entrance/tomb/Balrog state progression and film-locked outcome remain intact.",
-      "Production100, rendered visual acceptance and target-device FPS/memory remain evidence-gated."
+      "Project source library is now Sources 01-11 plus all three film screenplays and one full Tolkien LOTR volume.",
+      "Source 10 is registered as a visual modeling aid, not canon authority.",
+      "Source 11 is registered as the cross-discipline production systems and source-routing authority and supersedes old notes saying ROTK screenplay was absent.",
+      "ROTK is now screenplay-backed for Part III planning; runtime Part III still requires scene-level source verification and implementation.",
+      "Tolkien is registered as deeper-lore authority below film-story continuity.",
+      "No new Source 12+ should be created by default; extend the existing library instead."
     ]
   },
   "development_mode": {
@@ -3555,5 +3562,37 @@
       ],
       "next_action": "Treat failed exact-head CI as blocking acceptance and keep branch-protection/required checks on the governance-hardening backlog."
     }
-  ]
+  ],
+  "project_source_library": {
+    "status": "STRUCTURALLY_COMPLETE_01_TO_11_PLUS_PRIMARY_REFERENCES",
+    "registered_on": "2026-09-21",
+    "source_index": "Data/OwnerSourceReferenceIndex.json",
+    "source_set": {
+      "numbered_production_sources": 11,
+      "screenplay_count": 3,
+      "full_tolkien_volume_count": 1,
+      "total_core_pdfs": 15
+    },
+    "authority": [
+      "ProjectGovernor rules and approved game-specific decisions control this project's implementation.",
+      "Peter Jackson film trilogy and the three supplied film screenplays are primary for the game's film-driven main-story chronology, staging and required outcomes.",
+      "Tolkien's The Lord of the Rings including Appendices is primary for deeper lore/history/geography/cultures/details when the films are silent, but may not silently replace film continuity.",
+      "Sources 01-11 are production references by domain; Source 09 is helper-only and Source 10 is a visual modeling aid that must be cross-checked."
+    ],
+    "newly_registered": [
+      "SRC_OWNER_3D_VISUAL_ASSET_ATLAS_V1",
+      "SRC_OWNER_MASTER_PRODUCTION_SYSTEMS_SOURCE_INDEX_V1",
+      "SRC_FILM_ROTK_SCREENPLAY",
+      "SRC_TOLKIEN_LOTR_2010"
+    ],
+    "policy": "Do not create Source 12+ by default. Extend the relevant existing source or Source 11 unless a genuinely new domain cannot be maintained safely inside the current library."
+  },
+  "source_review_opinion": {
+    "date": "2026-09-21",
+    "overall": "HIGH_VALUE_PRODUCTION_LIBRARY",
+    "Source10": "Very useful for modeling breakdown, silhouette, costume/gear/material study and world architecture mood. It is strongest as a production visual atlas, not as canon evidence. Generated visual details must always be checked against film/source canon before modeling.",
+    "Source11": "Extremely useful and should be treated as the operational cross-discipline index. It closes important gaps in audio, cinematics, UI/UX, living-world AI, UE4.27.2 architecture, performance, QA/save safety and branch/integration rules while explicitly preventing source-library sprawl.",
+    "ROTK": "Major upgrade because Part III is now screenplay-backed instead of relying on shorthand/secondary summaries. It enables source-verified Part III planning while still requiring scene-level verification before implementation.",
+    "Tolkien": "Major upgrade for deeper lore, geography, cultures, lineages, historical detail and Appendices. It should enrich the living world and side content without replacing film continuity in film-driven scenes."
+  }
 }
