@@ -2855,6 +2855,19 @@ for path in sorted(SOURCE.glob("*.cpp")):
             if target in definitions:
                 transition_graph[source_quest].add(target)
 
+    # Direct helper calls also carry quest handoffs (for example Strider leading into
+    # the Weathertop attack). Model those positional contracts as graph edges.
+    for direct_spawn_npc in re.finditer(
+        r'SpawnNPC\s*\(\s*TEXT\("[^"]+"\)\s*,\s*FVector\([^)]*\)\s*,\s*FRotator\([^)]*\)\s*,'
+        r'\s*TEXT\("([^"]+)"\)\s*,\s*-?\d+\s*,\s*-?\d+\s*,\s*TEXT\(".*?"\)\s*,'
+        r'\s*TEXT\("([^"]+)"\)',
+        text,
+        flags=re.S,
+    ):
+        source_quest, target_quest = direct_spawn_npc.groups()
+        if source_quest in definitions and target_quest in definitions and source_quest != target_quest:
+            transition_graph[source_quest].add(target_quest)
+
 # Critical runtime handoff guard must explicitly bridge the Shire terminal quest to Bree.
 story_flow_cpp = read(SOURCE / "ShireStoryFlowSubsystem.cpp")
 if 'QuestId == TEXT("FerryEscape")' not in story_flow_cpp:

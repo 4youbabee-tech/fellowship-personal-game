@@ -123,7 +123,7 @@
     },
     {
       "id": "THREATS_COMBAT",
-      "status": "PARTIAL",
+      "status": "FOUNDATIONS_AND_MYTHIC_PRESENTATION_PARTIAL",
       "required": [
         "Nazgul motion",
         "Orc/Uruk variants",
@@ -131,6 +131,12 @@
         "Watcher",
         "Balrog",
         "Lurtz hero variant"
+      ],
+      "implemented": [
+        "project-owned Black Rider/Orc/Uruk/Cave Troll foundations",
+        "project-owned Lurtz/Watcher/Balrog foundations",
+        "story-beat-gated non-killable Watcher visual pressure in P1C06",
+        "story-beat-gated non-killable Balrog visual pressure in P1C06"
       ]
     },
     {
@@ -192,10 +198,26 @@
     "Newest exact head is not yet green through the full UE4.27.2 evidence chain.",
     "Most OBJ assets lack final normals, UVs, and smoothing quality.",
     "Hero skeletal rigs, final locomotion/action animation, facial/lip-sync, and cloth/hair production remain incomplete.",
-    "Project-owned Watcher, Balrog and Lurtz foundation meshes now exist, but final creature/hero rigs, animation, VFX, materials and encounter acceptance remain incomplete.",
+    "Project-owned Watcher/Balrog/Lurtz foundations exist and Watcher/Balrog are film-locked in runtime, but final rigs, materials, VFX/audio, Lurtz duel production and human encounter acceptance remain incomplete.",
     "Most regions still need final terrain, materials, vegetation, water, architecture, interiors, and visual acceptance.",
     "Target-device performance and human chapter-by-chapter pacing/visual acceptance remain mandatory."
   ],
   "promotion_rule": "production_100 may become true only when every domain is PASS or ACCEPTED and exact_head_evidence.accepted_sha records the same accepted commit.",
-  "no_false_claim_rule": "Static validation, compile success, or asset import alone can never set production_100 true."
+  "no_false_claim_rule": "Static validation, compile success, or asset import alone can never set production_100 true.",
+  "latest_verified_ancestor": {
+    "sha": "c589fc7537bfb146a7528bfd23e6e4f950faac6c",
+    "pre_unreal": {
+      "run": 417,
+      "conclusion": "SUCCESS"
+    },
+    "production_readiness_audit": "PASS",
+    "asset_quality": {
+      "near_zero_faces": 0,
+      "warnings": 11
+    },
+    "static_quest_reachability_unproven": [
+      "WeathertopAttack"
+    ],
+    "note": "This SHA is the verified ancestor before governance synchronization; it is not the final accepted production SHA."
+  }
 }

@@ -121,7 +121,11 @@
         "bounded reward-free living-world player responses",
         "source-grounded readable Chronicle entry labels",
         "explicit previous/next Chronicle browsing controls",
-        "readable known-map-region presentation"
+        "readable known-map-region presentation",
+        "M-key source-grounded Part I Journey Map",
+        "Map Knowledge-gated route nodes and edges",
+        "film-locked non-killable Watcher runtime pressure",
+        "film-locked non-killable Balrog runtime pressure"
       ],
       "exit_evidence": [
         "STATIC_CANON_COVERAGE",
@@ -129,7 +133,7 @@
         "SAVE_ROUTE_CONTINUITY",
         "PIE_PACING_REVIEW"
       ],
-      "current_runtime_wave": "CHRONICLE_BROWSING_AND_KNOWLEDGE_PRESENTATION_V5"
+      "current_runtime_wave": "SOURCE_GROUNDED_MAP_AND_MYTHIC_ENCOUNTERS_V6"
     },
     {
       "id": "B2_CHARACTERS_AND_WORLD_PRODUCTION",

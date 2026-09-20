@@ -188,7 +188,8 @@
         "CP49 reusable production terrain kit overlays hills cliffs river banks slopes and boulders without moving story anchors",
         "Owner rejected the earlier plain reference-image quality as the target bar; the world visual bar is now explicitly higher and more cinematic.",
         "Visual target emphasizes layered vistas, foreground/midground/background depth, richer materials/vegetation, landmark composition, water/fog/light atmosphere and region-specific color identity.",
-        "Part1ProductionAtlas records canonical region and landmark chains plus hero-vista targets for all eight Frodo chapters and Isengard."
+        "Part1ProductionAtlas records canonical region and landmark chains plus hero-vista targets for all eight Frodo chapters and Isengard.",
+        "Part1WorldMap now provides a source-grounded schematic travel graph using Middle-earth region/place names rather than modern-country substitutions."
       ],
       "missing_work": [
         "Most non-Shire regions remain prototype geometry.",
@@ -1380,7 +1381,8 @@
         "Subprocess regression scenarios run in Pre-Unreal CI.",
         "Self-hosted UE4 validation now avoids fragile later temporary PowerShell scripts for checkout/warning analysis and explicitly verifies the exact PR-head SHA.",
         "State-mode runtime smoke now requires Ring continuity plus Journey Discovery first-time/route-roundtrip continuity.",
-        "Production100ReadinessGate plus production_readiness_audit.py prevents proxy/source-asset presence or compile success from being mislabeled as 100 percent production."
+        "Production100ReadinessGate plus production_readiness_audit.py prevents proxy/source-asset presence or compile success from being mislabeled as 100 percent production.",
+        "PG-092 validates world-map nodes, edges, packaging, controls and Map Knowledge spoiler bounds."
       ],
       "missing_work": [
         "Validate this observer on the Windows UE4.27 runner.",
@@ -1425,7 +1427,10 @@
         "Data/Part1ProductionAtlas.json",
         "Data/Production100ReadinessGate.json",
         "Data/Part1MegaProductionPlan.json",
-        "Scripts/production_readiness_audit.py"
+        "Scripts/production_readiness_audit.py",
+        "Data/Part1WorldMap.json",
+        "Source/ShireJourney/FellowshipMythicThreat.cpp",
+        "Source/ShireJourney/FellowshipMythicThreat.h"
       ],
       "implementation_refs": [
         "Whole-game completeness matrix now tracks all major gameplay and presentation systems.",
@@ -1441,7 +1446,8 @@
         "B1 side-play physicalization now covers 19 contextual activities with centralized film-window guards and a direct stealth source.",
         "B1 now includes a dedicated environmental puzzle runtime and bounded interactive living-world micro-events, both guarded against canon mutation and persistent reward farming.",
         "B1 now includes dedicated source-grounded Chronicle entry browsing and readable map-region presentation.",
-        "Part1MegaProductionPlan launches one coordinated audit/source/character/world/gameplay/battle/presentation/acceptance operation instead of isolated micro-steps."
+        "Part1MegaProductionPlan launches one coordinated audit/source/character/world/gameplay/battle/presentation/acceptance operation instead of isolated micro-steps.",
+        "The mega operation now includes film-locked Watcher/Balrog physical threat presentation plus a source-grounded runtime journey map."
       ],
       "missing_work": [
         "Get final PR #53 head through full UE4.27 validation.",
@@ -1540,7 +1546,8 @@
         "Discovery registration now also unlocks persistent Chronicle/map knowledge on first registration.",
         "SHIRE_QUIET_FEET adds a first-time Journey Discovery reward without changing the Shire region-completion threshold, preserving existing save/milestone behavior.",
         "Dedicated Chronicle browsing now uses source-grounded discovery labels from ExplorationEnvelopePlan via JourneyDiscoveryRewardPlan display_label metadata.",
-        "Chronicle entries expose readable discovery labels plus region/chapter/category context, with explicit previous/next browsing controls."
+        "Chronicle entries expose readable discovery labels plus region/chapter/category context, with explicit previous/next browsing controls.",
+        "Map Knowledge now powers a visual schematic route map instead of only a region-name list; future chapter nodes remain hidden until known."
       ],
       "missing_work": [
         "Exact-head UE4.27 compile/import/startup/state proof for the new runtime discovery layer.",
@@ -1753,7 +1760,8 @@
         "Quiet Feet Through the Hedges gives QUIET_STEP a direct crouch-gated authored runtime source.",
         "Dedicated environmental pattern-puzzle runtime replaces generic traversal representation for Rivendell map study and Moria relief study.",
         "Living micro-events now expose optional bounded player responses without XP, supplies, relationship, story or canon rewards.",
-        "Chronicle & Journey now supports explicit entry browsing with readable source-grounded labels instead of raw technical IDs."
+        "Chronicle & Journey now supports explicit entry browsing with readable source-grounded labels instead of raw technical IDs.",
+        "M opens an in-game Journey Map using Map Knowledge to hide future chapters while exposing current/known route nodes and canonical place names."
       ],
       "missing_work": [
         "Validate current exact head in UE4.27."
@@ -3009,5 +3017,12 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "PART1_SOURCE_GROUNDED_PRODUCTION_MEGA_V1"
+  "current_focus": "PART1_PRODUCTION_MEGA_WORLD_MAP_MYTHIC_ENCOUNTERS_V2",
+  "immediate_next_large_actions": [
+    "Keep newest exact head in the UE4.27 compile/import/startup/chapter/state repair loop until green.",
+    "Continue full-cast production rigs/animation handoff using the existing project-owned modular foundations and automatic rig contract.",
+    "Deepen nine-region cinematic art from source-grounded hero vistas while preserving story coordinates.",
+    "Finish Part I encounter production: Nazgul, Moria Watcher/Troll/Balrog, Amon Hen Uruk/Lurtz, with immutable film outcomes.",
+    "Run target-device and human visual/pacing acceptance before any 100 percent production claim."
+  ]
 }

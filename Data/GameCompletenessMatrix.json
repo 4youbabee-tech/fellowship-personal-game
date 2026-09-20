@@ -55,7 +55,9 @@
         "damage",
         "enemy pursuit",
         "chapter gating",
-        "death/checkpoint recovery"
+        "death/checkpoint recovery",
+        "film-locked Watcher visual pressure actor",
+        "film-locked Balrog visual pressure actor"
       ]
     },
     {
@@ -142,7 +144,10 @@
         "Anduin/Amon Hen",
         "Isengard",
         "Part1ProductionAtlas geography and landmark chains",
-        "nine-region project-owned world-kit inventory"
+        "nine-region project-owned world-kit inventory",
+        "source-grounded 16-node Part I schematic world map",
+        "canonical Middle-earth macro-region/place labels",
+        "Map Knowledge-gated future route visibility"
       ]
     },
     {
@@ -192,7 +197,9 @@
         "Moria relief pattern puzzle",
         "source-grounded Chronicle display labels",
         "previous/next persistent Chronicle entry browsing",
-        "readable region/chapter/category Chronicle context"
+        "readable region/chapter/category Chronicle context",
+        "visual map use of persistent Map Knowledge",
+        "future-chapter spoiler hiding on map"
       ]
     },
     {
@@ -250,7 +257,10 @@
         "combat controls",
         "save/load feedback",
         "dedicated Chronicle entry browser",
-        "known-map-region presentation"
+        "known-map-region presentation",
+        "M-key Journey Map panel",
+        "current-location marker and visible-route edges",
+        "canonical current-region HUD context"
       ]
     },
     {
@@ -278,7 +288,9 @@
         "PG-084 living-world interaction anti-canon/anti-farm guard",
         "PG-085 Chronicle source-label and browse-control guard",
         "production-readiness audit",
-        "PG-086 mega-production source/readiness guard"
+        "PG-086 mega-production source/readiness guard",
+        "PG-091 mythic-threat anti-canon guard",
+        "PG-092 source-grounded world-map/spoiler guard"
       ]
     },
     {
