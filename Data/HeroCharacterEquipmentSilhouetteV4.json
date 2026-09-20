@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "plan_id": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4",
+  "status": "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+  "authority": "Data/ProjectGovernor.json",
+  "base_develop": "b8a1b9cb63a37d73e8e7a12acce5bb3db0e34c06",
+  "source_basis": [
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "08_VISUAL_REFERENCE_BIBLE",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX"
+  ],
+  "purpose": "Replace generic shared Fellowship equipment silhouettes with dedicated project-owned character equipment while retaining existing modular fallback, future skeletal-rig handoff and low-spec performance contracts.",
+  "continuity_rule": "Equipment dressing reinforces established film character identity; it does not create new plot actions, powers, loot tiers or alternate outcomes.",
+  "characters": {
+    "Sam": {
+      "assets": [
+        "SM_Sam_Sword",
+        "SM_Sam_Pack"
+      ],
+      "identity": "practical hobbit equipment and load-bearing travel silhouette"
+    },
+    "Merry": {
+      "assets": [
+        "SM_Merry_Cloak",
+        "SM_Merry_Sword"
+      ],
+      "identity": "distinct companion cloak and compact hobbit blade"
+    },
+    "Pippin": {
+      "assets": [
+        "SM_Pippin_Cloak",
+        "SM_Pippin_Sword"
+      ],
+      "identity": "lighter youthful cloak/blade silhouette distinct from Merry"
+    },
+    "Aragorn": {
+      "assets": [
+        "SM_Aragorn_Cloak",
+        "SM_Aragorn_Sword",
+        "SM_Aragorn_Bow"
+      ],
+      "identity": "weathered ranger layers and mixed scout/melee equipment"
+    },
+    "Boromir": {
+      "assets": [
+        "SM_Boromir_Cloak",
+        "SM_Boromir_Sword",
+        "SM_Boromir_Shield"
+      ],
+      "identity": "soldier silhouette with strong shield/sword read without villain coding"
+    },
+    "Legolas": {
+      "assets": [
+        "SM_Legolas_Cloak",
+        "SM_Legolas_Bow",
+        "SM_Legolas_WhiteKnife"
+      ],
+      "identity": "slender ranged silhouette, bow and close weapon with economical movement"
+    },
+    "Gimli": {
+      "assets": [
+        "SM_Gimli_Axe",
+        "SM_Gimli_Beard",
+        "SM_Gimli_Helmet"
+      ],
+      "identity": "compact heavy dwarf mass, beard volume and axe/helmet read"
+    }
+  },
+  "runtime": {
+    "owner": "AShireNPC modular fallback",
+    "behavior": [
+      "Dedicated assets are preferred first.",
+      "Existing common project-owned assets remain fallback if a dedicated package is absent.",
+      "M_ProductionSurface runtime instances retain separate cloth/wood/leather/metal response.",
+      "Existing cloak/prop procedural motion continues to animate dedicated meshes.",
+      "Valid skeletal mesh + AnimBP still override the entire modular fallback path."
+    ]
+  },
+  "performance": [
+    "No new skeletal simulation or dynamic cloth solver is enabled.",
+    "Equipment remains on existing bounded static-mesh components.",
+    "No new per-frame asset loads beyond the existing one-time style application path.",
+    "Future final rigs use sockets/LOD/URO and replace, not duplicate, fallback equipment."
+  ],
+  "acceptance_boundary": {
+    "implemented_now": [
+      "18 project-owned equipment/silhouette OBJ assets",
+      "runtime dedicated-first/fallback wiring",
+      "Gimli dedicated helmet visibility path"
+    ],
+    "machine_required": [
+      "Pre-Unreal exact head",
+      "UE4.27.2 compile",
+      "production import",
+      "startup",
+      "P1C01-P1C08 audits",
+      "state roundtrip",
+      "warning-debt guard"
+    ],
+    "deferred": [
+      "rendered likeness",
+      "final UV/normal maps",
+      "skeletal skinning",
+      "weapon sockets on final rigs",
+      "final cloth/hair simulation",
+      "human visual review",
+      "target-device character GPU/CPU profiling"
+    ]
+  }
+}

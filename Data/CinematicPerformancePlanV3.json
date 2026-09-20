@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "PART1_CINEMATIC_CHARACTER_PERFORMANCE_V3",
-  "status": "RUNTIME_CAMERA_AND_PROCEDURAL_PERFORMANCE_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+  "status": "EXACT_HEAD_ENGINE_PROOF_GREEN_PR58",
   "authority": "Data/ProjectGovernor.json",
   "source_basis": [
     "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE: identity-specific posture, gait, combat/personality separation, companion/cinematic handoff checks",
@@ -68,5 +68,11 @@
       "human-directed final shot acceptance",
       "target-device cinematic performance acceptance"
     ]
+  },
+  "validation_evidence": {
+    "head": "22c6f58bc20ec8bfd97cf6efa970aff331a5dc04",
+    "pre_unreal": "#526 SUCCESS",
+    "unreal_build": "#361 SUCCESS",
+    "merged_develop": "b8a1b9cb63a37d73e8e7a12acce5bb3db0e34c06"
   }
 }

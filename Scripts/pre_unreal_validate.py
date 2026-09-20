@@ -5057,11 +5057,12 @@ for pg115_story_symbol in [
 # PG-116: cinematic/character/sonic V3 must remain bounded, source-controlled and runtime-wired.
 pg116_cinematic_path = ROOT / "Data" / "CinematicPerformancePlanV3.json"
 pg116_sonic_path = ROOT / "Data" / "Part1SonicWorldPlan.json"
-for pg116_path, pg116_id, pg116_status in [
+for pg116_path, pg116_id, pg116_statuses in [
     (pg116_cinematic_path, "PART1_CINEMATIC_CHARACTER_PERFORMANCE_V3",
-     "RUNTIME_CAMERA_AND_PROCEDURAL_PERFORMANCE_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF"),
+     {"RUNTIME_CAMERA_AND_PROCEDURAL_PERFORMANCE_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "EXACT_HEAD_ENGINE_PROOF_GREEN_PR58"}),
     (pg116_sonic_path, "PART1_SONIC_WORLD_V1",
-     "RUNTIME_ROUTING_AND_TRANSITIONS_IMPLEMENTED_ASSET_AUTHORING_PENDING"),
+     {"RUNTIME_ROUTING_AND_TRANSITIONS_IMPLEMENTED_ASSET_AUTHORING_PENDING"}),
 ]:
     if not pg116_path.exists():
         fail(f"PG-116 production plan missing: {pg116_path.name}")
@@ -5073,7 +5074,7 @@ for pg116_path, pg116_id, pg116_status in [
         continue
     if pg116_data.get("plan_id") != pg116_id:
         fail(f"PG-116 plan identity changed: {pg116_path.name}")
-    if pg116_data.get("status") != pg116_status:
+    if pg116_data.get("status") not in pg116_statuses:
         fail(f"PG-116 plan evidence boundary changed: {pg116_path.name}")
     if pg116_path.name not in pg93_build:
         fail(f"PG-116 runtime production plan is not packaged: {pg116_path.name}")
@@ -5146,14 +5147,95 @@ for pg116_path in [
         fail(f"PG-116 source architecture registration must be exactly once: {pg116_path}")
 
 pg116_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
-if pg116_visual.get("current_wave", {}).get("id") != "CINEMATIC_CHARACTER_SONIC_LIFE_V3":
-    fail("PG-116 visual current wave is not CINEMATIC_CHARACTER_SONIC_LIFE_V3")
-if pg116_visual.get("cinematic_character_sonic_v3", {}).get("status") != "PENDING_EXACT_HEAD_ENGINE_PROOF":
+if pg116_visual.get("cinematic_character_sonic_v3", {}).get("status") not in {
+    "PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "EXACT_HEAD_ENGINE_PROOF_GREEN_PR58",
+}:
     fail("PG-116 V3 visual evidence boundary changed")
 
 # Existing safety gate remains authoritative while runtime camera grammar grows.
 if "FMath::Clamp(ActiveCue.SuggestedDuration, 1.0f, 3.5f)" not in pg102_presentation:
     fail("PG-116 existing 3.5 second cinematic lock safety guard missing")
+
+# PG-117: dedicated Fellowship equipment V4 must remain project-owned, imported and runtime-preferred.
+pg117_plan_path = ROOT / "Data" / "HeroCharacterEquipmentSilhouetteV4.json"
+if not pg117_plan_path.exists():
+    fail("PG-117 HeroCharacterEquipmentSilhouetteV4.json missing")
+    pg117_plan = {}
+else:
+    try:
+        pg117_plan = json.loads(read(pg117_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-117 invalid HeroCharacterEquipmentSilhouetteV4.json: {exc}")
+        pg117_plan = {}
+
+if pg117_plan.get("plan_id") != "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4":
+    fail("PG-117 hero-equipment wave identity changed")
+if pg117_plan.get("status") != "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF":
+    fail("PG-117 hero-equipment proof boundary changed")
+if "HeroCharacterEquipmentSilhouetteV4.json" not in pg93_build:
+    fail("PG-117 hero-equipment plan is not packaged")
+
+pg117_assets = {
+    "Sam": ["SM_Sam_Sword","SM_Sam_Pack"],
+    "Merry": ["SM_Merry_Cloak","SM_Merry_Sword"],
+    "Pippin": ["SM_Pippin_Cloak","SM_Pippin_Sword"],
+    "Aragorn": ["SM_Aragorn_Cloak","SM_Aragorn_Sword","SM_Aragorn_Bow"],
+    "Boromir": ["SM_Boromir_Cloak","SM_Boromir_Sword","SM_Boromir_Shield"],
+    "Legolas": ["SM_Legolas_Cloak","SM_Legolas_Bow","SM_Legolas_WhiteKnife"],
+    "Gimli": ["SM_Gimli_Axe","SM_Gimli_Beard","SM_Gimli_Helmet"],
+}
+pg117_asset_count = 0
+for pg117_character, pg117_names in pg117_assets.items():
+    pg117_root = ROOT / "SourceAssets" / "Production" / "Characters" / pg117_character
+    for pg117_name in pg117_names:
+        pg117_asset_count += 1
+        pg117_path = pg117_root / f"{pg117_name}.obj"
+        if not pg117_path.exists():
+            fail(f"PG-117 dedicated character asset missing: {pg117_character}/{pg117_name}")
+        if pg117_name not in pg116_npc:
+            fail(f"PG-117 dedicated character asset not runtime-wired: {pg117_character}/{pg117_name}")
+if pg117_asset_count != 18:
+    fail("PG-117 dedicated equipment asset contract must remain exactly 18 assets")
+
+for pg117_symbol in [
+    "TryDedicatedThenFallback",
+    "SM_Sam_Pack",
+    "SM_Merry_Cloak",
+    "SM_Pippin_Cloak",
+    "SM_Aragorn_Sword",
+    "SM_Boromir_Shield",
+    "SM_Legolas_WhiteKnife",
+    "SM_Gimli_Helmet",
+]:
+    if pg117_symbol not in pg116_npc:
+        fail(f"PG-117 dedicated-first runtime identity contract missing: {pg117_symbol}")
+
+pg117_matrix = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
+pg117_wave = pg117_matrix.get("current_character_wave", {})
+if pg117_wave.get("id") != "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4":
+    fail("PG-117 character production matrix current wave changed")
+if pg117_wave.get("added_project_owned_obj_assets") != 18:
+    fail("PG-117 character production matrix must retain 18 V4 OBJ assets")
+
+pg117_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg117_visual.get("current_wave", {}).get("id") != "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4":
+    fail("PG-117 Part I visual current wave is not hero equipment V4")
+if pg117_visual.get("hero_character_equipment_v4", {}).get("added_project_owned_obj_assets") != 18:
+    fail("PG-117 Part I visual plan must retain 18 V4 OBJ assets")
+
+pg117_inventory = json.loads(read(ROOT / "Data" / "ProjectOwnedProductionAssetInventory.json"))
+if pg117_inventory.get("totals", {}).get("obj_files", 0) < 352:
+    fail("PG-117 project-owned OBJ inventory did not register V4 assets")
+
+# Final skeletal rig handoff must continue to win over modular fallback when valid.
+pg117_npc_h = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.h")
+for pg117_symbol in [
+    "bUsingSkeletalProductionRig",
+    "TryApplyProductionRig",
+]:
+    if pg117_symbol not in (pg116_npc + pg117_npc_h):
+        fail(f"PG-117 final-rig handoff contract missing: {pg117_symbol}")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
