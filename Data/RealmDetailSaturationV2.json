@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "wave_id": "REALM_DETAIL_SATURATION_V2",
-  "status": "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+  "status": "EXACT_HEAD_ENGINE_PROOF_GREEN_PR57",
   "authority": "Data/ProjectGovernor.json",
   "base_develop": "425329a7570314ccbe1674a6cfb7598a3bec6a71",
   "source_basis": [
@@ -142,6 +142,22 @@
       "rendered human visual acceptance",
       "target-device FPS/hitch/memory",
       "final audio/animation/cinematic polish"
+    ],
+    "rendered_human_visual": "PENDING",
+    "target_device_fps_hitch_memory": "PENDING"
+  },
+  "validation_evidence": {
+    "exact_head": "f9c699f970e495a01a20224182187dc12712c919",
+    "pre_unreal": "PASS #522",
+    "unreal_build": "PASS #357",
+    "merged_develop": "f42be73caf48de935649e7776dbfc178dcdf8746",
+    "scope": [
+      "C++ build",
+      "production asset import",
+      "startup",
+      "P1C01-P1C08 chapter audit",
+      "route/story state roundtrip",
+      "warning-debt guard"
     ]
   }
 }
