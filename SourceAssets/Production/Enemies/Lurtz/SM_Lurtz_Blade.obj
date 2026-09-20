@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Lurtz_Blade
+mtllib RegionalMaterials.mtl
 o SM_Lurtz_Blade
+usemtl LurtzDarkIron
 s 1
 v 0.000 -12.000 0.000
 v 0.000 12.000 0.000

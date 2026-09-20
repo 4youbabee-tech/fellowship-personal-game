@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Lurtz_Leg
+mtllib RegionalMaterials.mtl
 o SM_Lurtz_Leg
+usemtl LurtzArmor
 s 1
 v 16.000 0.000 0.000
 v 11.314 11.314 0.000

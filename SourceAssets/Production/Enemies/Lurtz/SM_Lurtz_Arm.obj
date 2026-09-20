@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Lurtz_Arm
+mtllib RegionalMaterials.mtl
 o SM_Lurtz_Arm
+usemtl LurtzSkin
 s 1
 v 13.000 0.000 0.000
 v 9.192 9.192 0.000
