@@ -4777,7 +4777,7 @@ pg107_sources = {
     for row in pg107_index.get("sources", [])
     if isinstance(row, dict)
 }
-for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY"]:
+for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY", "SRC_FILM_ROTK_SCREENPLAY"]:
     pg107_row = pg107_sources.get(pg107_id)
     if not pg107_row:
         fail(f"PG-107 primary screenplay source missing: {pg107_id}")
@@ -4795,19 +4795,19 @@ pg107_primary = {
     for row in pg107_authority.get("primary_screenplays", [])
     if isinstance(row, dict)
 }
-for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY"]:
+for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY", "SRC_FILM_ROTK_SCREENPLAY"]:
     if pg107_id not in pg107_primary:
         fail(f"PG-107 screenplay absent from primary authority list: {pg107_id}")
 if "may not override screenplay-supported film events" not in str(pg107_authority.get("rule") or ""):
     fail("PG-107 screenplay precedence rule missing")
 
 pg108_summary = pg107_index.get("source_set_summary", {})
-if pg108_summary.get("core_pdf_count") != 11:
-    fail("PG-108 core PDF source count must remain 11")
-if pg108_summary.get("supplied_screenplays") != 2:
-    fail("PG-108 screenplay count must remain 2")
-if pg108_summary.get("numbered_production_bibles") != 9:
-    fail("PG-108 numbered Bible count must remain 9")
+if pg108_summary.get("core_pdf_count") != 15:
+    fail("PG-108 core PDF source count must remain 15")
+if pg108_summary.get("supplied_screenplays") != 3:
+    fail("PG-108 screenplay count must remain 3")
+if pg108_summary.get("numbered_production_bibles") != 11:
+    fail("PG-108 numbered production source count must remain 11")
 pg108_helper = pg107_sources.get("SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1")
 if not pg108_helper:
     fail("PG-108 external helpful resources Bible 09 missing")
@@ -4818,6 +4818,22 @@ else:
         fail("PG-108 raw Bible 09 may not ship at runtime")
 if "Bible 09 external-resource discovery" not in " ".join(pg107_authority.get("precedence", [])):
     fail("PG-108 Bible 09 authority boundary missing")
+
+for pg108_id in [
+    "SRC_OWNER_3D_VISUAL_ASSET_ATLAS_V1",
+    "SRC_OWNER_MASTER_PRODUCTION_SYSTEMS_SOURCE_INDEX_V1",
+    "SRC_TOLKIEN_LOTR_2010",
+]:
+    if pg108_id not in pg107_sources:
+        fail(f"PG-108 expanded project source missing: {pg108_id}")
+if "SRC_TOLKIEN_LOTR_2010" not in {
+    str(row.get("source_id") or "")
+    for row in pg107_authority.get("primary_deep_lore_sources", [])
+    if isinstance(row, dict)
+}:
+    fail("PG-108 Tolkien full volume missing from deep-lore authority list")
+if pg107_authority.get("master_production_systems_source") != "SRC_OWNER_MASTER_PRODUCTION_SYSTEMS_SOURCE_INDEX_V1":
+    fail("PG-108 Source 11 master production systems authority missing")
 
 # PG-112: mega material/world saturation wave must be large, source-controlled,
 # film-safe and explicit about its evidence boundary.
