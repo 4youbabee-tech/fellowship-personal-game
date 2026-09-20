@@ -420,6 +420,20 @@ void AFellowshipChapterWorldBuilder::EnsureProductionMeshes()
     MoriaDoorMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaDoor.SM_MoriaDoor"));
     MoriaBrazierMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBrazier.SM_MoriaBrazier"));
     MoriaBridgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBridgeSegment.SM_MoriaBridgeSegment"));
+    MoriaWallPanelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaWallPanel.SM_MoriaWallPanel"));
+    MoriaFloorSlabMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaFloorSlab.SM_MoriaFloorSlab"));
+    MoriaArchMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaArch.SM_MoriaArch"));
+    MoriaCeilingRibMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaCeilingRib.SM_MoriaCeilingRib"));
+    MoriaBridgePierMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBridgePier.SM_MoriaBridgePier"));
+    MoriaTombDaisMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaTombDais.SM_MoriaTombDais"));
+    MoriaReliefPanelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaReliefPanel.SM_MoriaReliefPanel"));
+    MoriaMineRailMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaMineRail.SM_MoriaMineRail"));
+    MoriaOreCrateMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaOreCrate.SM_MoriaOreCrate"));
+    MoriaCollapsedBeamMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaCollapsedBeam.SM_MoriaCollapsedBeam"));
+    MoriaTorchNicheMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaTorchNiche.SM_MoriaTorchNiche"));
+    MoriaChasmButtressMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaChasmButtress.SM_MoriaChasmButtress"));
+    MoriaSideDoorMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaSideDoor.SM_MoriaSideDoor"));
+    MoriaDebrisClusterMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster"));
 
     LorienTalanMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Lothlorien/SM_LorienTalan.SM_LorienTalan"));
     LorienLanternMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Lothlorien/SM_LorienLantern.SM_LorienLantern"));
@@ -610,6 +624,58 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnProd(MoriaMineCart, FVector(-980,-650,0), FVector(0.76f), FRotator(0,18,0), false);
         SpawnProd(MoriaMineCart, FVector(-120,690,0), FVector(0.72f), FRotator(0,-24,0), false);
         SpawnProd(MoriaMineCart, FVector(1320,-690,0), FVector(0.70f), FRotator(0,11,0), false);
+
+        // MEGA_MATERIAL_WORLD_WAVE_V1: bounded modular Dwarven city layers.
+        // These pieces sit outside the authored quest centerline or reinforce existing
+        // landmarks. They add depth and material response without moving story triggers.
+        for (int32 I = 0; I < 8; ++I)
+        {
+            const float X = -1880.0f + I * 520.0f;
+            SpawnProd(MoriaWallPanelMesh, FVector(X, -1110.0f, 0.0f), FVector(0.92f), FRotator(0, 0, 0), false);
+            SpawnProd(MoriaWallPanelMesh, FVector(X, 1110.0f, 0.0f), FVector(0.92f), FRotator(0, 180, 0), false);
+        }
+        for (int32 I = 0; I < 7; ++I)
+        {
+            const float X = -1550.0f + I * 610.0f;
+            SpawnProd(MoriaCeilingRibMesh, FVector(X, 0.0f, 690.0f), FVector(1.05f), FRotator(0, 90, 0), false);
+        }
+        const FVector ArchLocations[] = {
+            FVector(-1660, 0, 0), FVector(-720, 0, 0), FVector(260, 0, 0), FVector(1320, 0, 0)
+        };
+        for (const FVector& P : ArchLocations)
+        {
+            SpawnProd(MoriaArchMesh, P, FVector(0.92f), FRotator::ZeroRotator, false);
+        }
+        for (int32 I = 0; I < 9; ++I)
+        {
+            SpawnProd(MoriaFloorSlabMesh, FVector(-1680.0f + I * 430.0f, 0, -28.0f), FVector(0.95f), FRotator::ZeroRotator, false);
+        }
+
+        // Mine-city side lane: visually communicates industry while remaining non-critical.
+        for (int32 I = 0; I < 5; ++I)
+        {
+            SpawnProd(MoriaMineRailMesh, FVector(-1450.0f + I * 470.0f, -860.0f, 5.0f), FVector(0.82f), FRotator(0,90,0), false);
+        }
+        SpawnProd(MoriaOreCrateMesh, FVector(-1180,-930,0), FVector(0.78f), FRotator(0,8,0), false);
+        SpawnProd(MoriaOreCrateMesh, FVector(-820,-900,0), FVector(0.70f), FRotator(0,-17,0), false);
+        SpawnProd(MoriaCollapsedBeamMesh, FVector(-320,-900,12), FVector(0.82f), FRotator(0,22,0), false);
+        SpawnProd(MoriaCollapsedBeamMesh, FVector(760,880,10), FVector(0.75f), FRotator(0,165,0), false);
+
+        // Balin chamber receives a stronger authored focal hierarchy without changing its trigger graph.
+        SpawnProd(MoriaTombDaisMesh, FVector(450,0,18), FVector(1.0f), FRotator::ZeroRotator, false);
+        SpawnProd(MoriaReliefPanelMesh, FVector(430,620,80), FVector(0.82f), FRotator(0,180,0), false);
+        SpawnProd(MoriaReliefPanelMesh, FVector(430,-620,80), FVector(0.82f), FRotator::ZeroRotator, false);
+        SpawnProd(MoriaSideDoorMesh, FVector(80,840,0), FVector(0.88f), FRotator(0,180,0), false);
+        SpawnProd(MoriaSideDoorMesh, FVector(960,-840,0), FVector(0.88f), FRotator::ZeroRotator, false);
+
+        // Bridge approach: buttresses/pier silhouettes frame the canonical escape line.
+        SpawnProd(MoriaBridgePierMesh, FVector(2140,-620,0), FVector(0.90f), FRotator::ZeroRotator, false);
+        SpawnProd(MoriaBridgePierMesh, FVector(2140,620,0), FVector(0.90f), FRotator::ZeroRotator, false);
+        SpawnProd(MoriaChasmButtressMesh, FVector(2520,-760,0), FVector(1.0f), FRotator(0,8,0), false);
+        SpawnProd(MoriaChasmButtressMesh, FVector(2520,760,0), FVector(1.0f), FRotator(0,172,0), false);
+        SpawnProd(MoriaTorchNicheMesh, FVector(1840,-870,20), FVector(0.78f), FRotator(0,0,0), false);
+        SpawnProd(MoriaTorchNicheMesh, FVector(1840,870,20), FVector(0.78f), FRotator(0,180,0), false);
+        SpawnScatter(MoriaDebrisClusterMesh, FVector(1050,0,0), 14, FVector(1550,930,0), FVector(0.66f), 31.0f, 3.0f);
 
         SpawnScatter(CommonRuinSlabMesh, FVector(-200,0,0), 18, FVector(2300,1050,0), FVector(0.78f), 37.0f, 2.0f);
         SpawnScatter(CommonBoulderClusterMesh, FVector(300,0,0), 14, FVector(2500,1150,0), FVector(0.85f), 31.0f, 6.0f);
