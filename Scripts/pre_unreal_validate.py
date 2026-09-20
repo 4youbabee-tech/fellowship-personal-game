@@ -3069,7 +3069,7 @@ if governor_mode_id == "PIE_VERIFICATION_FREEZE" and verification_gate:
             + ", ".join(missing_runtime_paths)
         )
 
-# PG-057: current-head PIE claims require exact-commit human evidence.
+# PG-057: current-head Real PIE claims require exact-commit and chapter-specific evidence.
 pie_evidence_path = ROOT / "Data" / "PIEVerificationEvidence.json"
 pie_evidence = {}
 if not pie_evidence_path.exists():
@@ -3101,7 +3101,7 @@ if pie_evidence:
             continue
         cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
         if len(cells) >= 2:
-            chapter_match = re.match(r"(P1C0[1-8])\b", cells[0])
+            chapter_match = re.match(r"(P1C0[1-8])\\b", cells[0])
             if chapter_match:
                 matrix_pie_state[chapter_match.group(1)] = cells[1]
 
@@ -3111,6 +3111,9 @@ if pie_evidence:
         "PIE_TESTED_WITH_ISSUES",
         "PIE_TESTED",
     }
+    used_specific_notes = {}
+    used_observation_sets = {}
+
     for chapter_id in expected_chapters:
         row = evidence_by_chapter.get(chapter_id)
         if not row:
@@ -3131,15 +3134,23 @@ if pie_evidence:
             if matrix_state != "NOT_RUN":
                 fail(
                     f"PG-057 matrix claims PIE activity for {chapter_id} "
-                    "without matching human evidence"
+                    "without matching chapter-specific evidence"
                 )
+            continue
+
+        if status == "BLOCKED":
+            blockers = row.get("blockers", [])
+            if not isinstance(blockers, list) or not blockers:
+                fail(f"PG-057 BLOCKED status for {chapter_id} requires a concrete blocker")
             continue
 
         tested_commit = str(row.get("tested_commit") or "")
         tested_at = str(row.get("tested_at") or "")
         tester = str(row.get("tester") or "")
-        artifacts = row.get("evidence_artifacts", [])
         observations = row.get("observed_details", [])
+        specific = row.get("specific_evidence", {})
+        if not isinstance(specific, dict):
+            specific = {}
 
         if not re.fullmatch(r"[0-9a-fA-F]{40}", tested_commit):
             fail(f"PG-057 {chapter_id} PIE evidence requires an exact 40-char commit SHA")
@@ -3147,13 +3158,56 @@ if pie_evidence:
             fail(f"PG-057 {chapter_id} PIE evidence requires tested_at")
         if not tester:
             fail(f"PG-057 {chapter_id} PIE evidence requires tester")
-        if not isinstance(artifacts, list) or len(artifacts) < 1:
-            fail(f"PG-057 {chapter_id} PIE evidence requires at least one artifact/log reference")
         if not isinstance(observations, list) or len(observations) < 2:
             fail(f"PG-057 {chapter_id} PIE evidence requires at least two concrete observations")
+
+        fps_value = specific.get("fps_value")
+        has_fps = (
+            isinstance(fps_value, (int, float))
+            and not isinstance(fps_value, bool)
+            and fps_value > 0
+        )
+        screenshots = specific.get("screenshot_artifacts", [])
+        videos = specific.get("video_artifacts", [])
+        has_visual = (
+            isinstance(screenshots, list) and any(str(item).strip() for item in screenshots)
+        ) or (
+            isinstance(videos, list) and any(str(item).strip() for item in videos)
+        )
+        specific_note = " ".join(str(specific.get("chapter_specific_note") or "").split())
+        has_specific_note = len(specific_note) >= 20
+
+        if not (has_fps or has_visual or has_specific_note):
+            fail(
+                f"PG-057 {chapter_id} cannot be PIE-tested from generic sign-off: "
+                "record numeric FPS, screenshot/video evidence, or a concrete chapter-specific note"
+            )
+
+        if has_specific_note:
+            note_key = specific_note.casefold()
+            previous = used_specific_notes.get(note_key)
+            if previous and previous != chapter_id:
+                fail(
+                    f"PG-057 copied chapter-specific note reused by {previous} and {chapter_id}"
+                )
+            used_specific_notes[note_key] = chapter_id
+
+        observation_key = tuple(
+            " ".join(str(item).split()).casefold()
+            for item in observations
+            if str(item).strip()
+        )
+        if observation_key:
+            previous = used_observation_sets.get(observation_key)
+            if previous and previous != chapter_id:
+                fail(
+                    f"PG-057 copied observation set reused by {previous} and {chapter_id}"
+                )
+            used_observation_sets[observation_key] = chapter_id
+
         if matrix_state == "NOT_RUN":
             fail(
-                f"PG-057 {chapter_id} has human PIE evidence but the current-head matrix "
+                f"PG-057 {chapter_id} has chapter-specific PIE evidence but the current-head matrix "
                 "was not updated"
             )
 

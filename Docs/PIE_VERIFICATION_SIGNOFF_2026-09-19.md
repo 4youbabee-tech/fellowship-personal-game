@@ -1,34 +1,19 @@
-# PIE / DEVICE VERIFICATION SIGN-OFF — 2026-09-19
+# PIE / DEVICE VERIFICATION RECORD — 2026-09-19
 
 ## Baseline
 
 - Branch: `develop`
-- Exact merged baseline under discussion: `f7c2b081e7b064fcf27bb4c80124b21f351331ab`
+- Historical merged baseline: `f7c2b081e7b064fcf27bb4c80124b21f351331ab`
 - Engine: Unreal Engine 4.27.2
 - Target profile: Windows / DX11 / 1280x720 / Low-Medium
 
-## Project-owner confirmation
+## Correction
 
-The project owner explicitly confirmed in the project conversation that the planned verification/check/fix pass had been completed, that the game had been checked and corrected, and that construction/expansion should now resume.
+The project owner did confirm in conversation that the earlier check/fix phase was complete and that construction could resume. That statement is retained as **historical production authorization only**.
 
-This record is intentionally conservative:
-- it records the owner's human completion/sign-off;
-- it does not invent numeric FPS, hitch, memory or timing values that were not supplied;
-- it does not convert future CP55+ work into automatically accepted PIE/device/visual evidence;
-- new expansion batches still require the existing static, compile/import and runtime regression gates.
+It is **not** sufficient evidence to mark P1C01-P1C08 as `PIE_TESTED`, because the record contains no chapter-specific FPS measurement, screenshot/video reference, or concrete observation unique to each chapter. Repeating the same generic sentence across eight chapters is no longer accepted as proof.
 
-## Chapters covered by the owner confirmation
-
-- P1C01 — Shire
-- P1C02 — Bree
-- P1C03 — Weathertop/Ford
-- P1C04 — Rivendell
-- P1C05 — Road/Caradhras/West Gate
-- P1C06 — Moria
-- P1C07 — Lothlorien
-- P1C08 — Anduin/Amon Hen
-
-## Machine evidence on the merged baseline
+## Valid machine evidence on the historical baseline
 
 - Pre-Unreal Validation #264: PASS
 - Unreal Build Validation #99: PASS
@@ -38,6 +23,18 @@ This record is intentionally conservative:
 - headless P1C01-P1C08 chapter audit: PASS
 - runtime warning-debt guard: PASS
 
-## Direction after sign-off
+These checks prove machine/build/runtime conditions only. They do not prove human PIE traversal, visuals, target-device FPS, hitching, memory behavior, or chapter-specific presentation quality.
 
-The post-CP54 verification freeze is lifted. Development resumes with CP55 using the existing story/save/performance invariants and regression gates.
+## Required evidence for future chapter promotion
+
+A chapter may enter `PIE_TESTED` or `PIE_TESTED_WITH_ISSUES` only when its exact tested commit is recorded and at least one of the following exists for that chapter:
+
+- an actual numeric FPS observation;
+- a screenshot or video reference;
+- a concrete chapter-specific observation that is not copied across chapters.
+
+Two concrete observed details remain required. Generic conversation sign-off cannot satisfy this rule.
+
+## Production direction
+
+Construction continues behind static, build/import and runtime regression gates. Shire should be re-established first as the visual/performance reference with chapter-specific evidence; the same evidence pattern can then be applied to Bree through Amon Hen. Film chronology and required outcomes remain above optional gameplay additions.

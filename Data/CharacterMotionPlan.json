@@ -9,8 +9,19 @@
     "anim_blueprint_class_pattern": "/Game/Production/Characters/Rigs/{Folder}/ABP_{Folder}_Locomotion.ABP_{Folder}_Locomotion_C",
     "activation_rule": "Both skeletal mesh and AnimBP class must resolve before modular visuals are hidden.",
     "fallback_rule": "If either rig asset is missing, keep modular production meshes visible and animate their parts procedurally.",
-    "required_states": ["IDLE", "WALK", "CATCH_UP", "DIALOGUE"],
-    "future_states": ["RUN", "COMBAT_READY", "ATTACK", "HIT_REACT", "CINEMATIC"]
+    "required_states": [
+      "IDLE",
+      "WALK",
+      "CATCH_UP",
+      "DIALOGUE"
+    ],
+    "future_states": [
+      "RUN",
+      "COMBAT_READY",
+      "ATTACK",
+      "HIT_REACT",
+      "CINEMATIC"
+    ]
   },
   "procedural_profiles": [
     {
@@ -22,8 +33,8 @@
     },
     {
       "id": "HUMAN",
-      "cadence_scale": 1.0,
-      "stride_scale": 1.0,
+      "cadence_scale": 1,
+      "stride_scale": 1,
       "idle_scale": 0.82,
       "notes": "Balanced locomotion for Rangers, Men and Bree adults."
     },
@@ -75,7 +86,9 @@
     "Keep locomotion math allocation-free and bounded per character.",
     "Dialogue gestures reuse the existing dialogue acting timer instead of spawning timeline actors.",
     "Companion catch-up remains capped and teleports only beyond the existing safety distance.",
-    "Final skeletal/facial/cloth acceptance requires UE4.27 import, PIE and target-device evidence."
+    "Final skeletal/facial/cloth acceptance requires UE4.27 import, PIE and target-device evidence.",
+    "Use distance-based animation update throttling/URO for non-hero skeletal actors once final skeletal rigs are active.",
+    "Keep standard locomotion in-place; root motion is not the default traversal system."
   ],
   "acceptance_boundary": {
     "implemented_now": [
@@ -92,5 +105,11 @@
       "cloth/hair simulation",
       "final combat animation"
     ]
+  },
+  "locomotion_policy": {
+    "default_mode": "IN_PLACE",
+    "root_motion_scope": "Core traversal and companion locomotion remain in-place/code-driven. Root motion is reserved for bounded cinematic or attack montages only when explicitly justified and validated.",
+    "anim_blueprint_reuse": "Do not duplicate locomotion logic per character. Keep the current per-character asset resolution contract, but prefer a shared humanoid locomotion base/logic with thin character-specific wrappers or data overrides when skeleton compatibility allows.",
+    "skeletal_performance": "Before increasing simultaneous skeletal crowds, enable distance-based animation LOD / Update Rate Optimization for non-hero actors and verify target-device behavior."
   }
 }

@@ -1,31 +1,29 @@
 # PRODUCTION COMPLETENESS MATRIX
 
-## Post-CP54 verification completion and expansion resume
+## Verification evidence correction and production continuation
 
-Verified merged baseline: `develop@f7c2b081e7b064fcf27bb4c80124b21f351331ab`.
+Historical machine baseline: `develop@f7c2b081e7b064fcf27bb4c80124b21f351331ab`.
 
-Pre-Unreal Validation #264 and Unreal Build Validation #99 passed on the merged baseline, including compile/import, playable startup, all eight headless chapter audits and the warning-debt guard. The project owner then explicitly confirmed the planned verification/check/fix pass complete and directed construction/expansion to resume.
+Pre-Unreal Validation #264 and Unreal Build Validation #99 passed on that baseline, including compile/import, startup, headless chapter audits and warning-debt checks. Those are valid machine checks, but they are **not** Real PIE/device visual-performance proof.
 
-The owner sign-off is recorded in `Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md` and `Data/PIEVerificationEvidence.json`. Numeric FPS/hitch/memory values were not supplied in chat and are therefore not invented.
+A prior conversation-level owner confirmation was incorrectly promoted into `PIE_TESTED` for all eight chapters without chapter-specific FPS, screenshot/video, or chapter-specific notes. That promotion is withdrawn. The owner confirmation remains historical authorization to resume construction; it is not chapter-by-chapter verification evidence.
 
-### Current machine verification candidate
+Future `PIE_TESTED` / `PIE_TESTED_WITH_ISSUES` promotion requires an exact commit plus at least one chapter-specific signal: numeric FPS, screenshot/video evidence, or a concrete note unique to that chapter. Generic copied wording is rejected by PG-057.
 
-PR #45 successfully boot-audited **all eight Part I runtime chapters** in UE4.27.2 headless mode, including the expected chapter builder, living-world initialization and weather-context initialization, with no fatal/assert/ensure blocker in that audit. This is stronger than the previous P1C01-only startup smoke, but it still does **not** change any Real PIE cell below from NOT_RUN.
+### Current Real PIE/device evidence
 
-Structured human evidence for any future PIE status change must also be written to `Data/PIEVerificationEvidence.json`; PG-057 rejects unsupported claims.
-
-| Chapter | Real PIE on CP54 head | Stability | Crash | Target laptop perf | NPC routines | NPC-to-NPC | Named memory/context | Weather/atmosphere | Notes |
+| Chapter | Real PIE evidence | Stability | Crash | Target laptop perf | NPC routines | NPC-to-NPC | Named memory/context | Weather/atmosphere | Notes |
 |---|---|---|---|---|---|---|---|---|---|
-| P1C01 Shire | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Owner-completed verification pass; see sign-off record |
-| P1C02 Bree | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Owner-completed verification pass |
-| P1C03 Weathertop/Ford | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Owner-completed verification pass |
-| P1C04 Rivendell | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Owner-completed verification pass |
-| P1C05 Road/Caradhras/West Gate | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Owner-completed verification pass |
-| P1C06 Moria | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Civilian baseline remains intentionally zero |
-| P1C07 Lothlorien | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Owner-completed verification pass |
-| P1C08 Anduin/Amon Hen | PIE_TESTED | OWNER_CONFIRMED | NO_BLOCKER_REPORTED | CHECKED_NO_NUMERIC_LOG | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | OWNER_CONFIRMED | Owner-completed verification pass |
+| P1C01 Shire | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Re-establish as the chapter-specific visual/performance reference first |
+| P1C02 Bree | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Await chapter-specific evidence |
+| P1C03 Weathertop/Ford | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Await chapter-specific evidence |
+| P1C04 Rivendell | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Await chapter-specific evidence |
+| P1C05 Road/Caradhras/West Gate | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Await chapter-specific evidence |
+| P1C06 Moria | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Civilian baseline remains intentionally zero; Real PIE evidence still required |
+| P1C07 Lothlorien | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Await chapter-specific evidence |
+| P1C08 Anduin/Amon Hen | NOT_RUN | HEADLESS_ONLY | NO_HEADLESS_BLOCKER | NOT_MEASURED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | NOT_HUMAN_VERIFIED | Await chapter-specific evidence |
 
-Blocking failure means crash, progression dead-end, save/load failure, missing required runtime system, or severe target-device performance regression. The post-CP54 baseline audit is now owner-confirmed complete; CP55+ may proceed behind the existing regression gates.
+Engineering, source, asset-foundation and automated regression work may continue behind existing gates. Visual/performance acceptance and any `Production 100%` claim remain blocked until chapter-specific evidence exists.
 
 This file prevents major game pillars from depending on chat memory.
 
@@ -63,7 +61,7 @@ NOT_STARTED / FOUNDATION / PROTOTYPE / FUNCTIONAL / POLISH_PENDING / ACCEPTED
 
 | Chapter | Story | Gameplay | Exploration | Characters | Face/Anim | Voice | Audio | AI/Life | Combat | Geography | Atmosphere | Cinematic | Save | Perf | PIE |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| P1C01 Shire | FUNCTIONAL | FUNCTIONAL | FUNCTIONAL | PROTOTYPE | FOUNDATION | FOUNDATION | FOUNDATION | FUNCTIONAL | FUNCTIONAL stealth | FUNCTIONAL | FUNCTIONAL | PROTOTYPE | FUNCTIONAL | PROTOTYPE | FUNCTIONAL |
+| P1C01 Shire | FUNCTIONAL | FUNCTIONAL | FUNCTIONAL | PROTOTYPE | FOUNDATION | FOUNDATION | FOUNDATION | FUNCTIONAL | FUNCTIONAL stealth | FUNCTIONAL | FUNCTIONAL | PROTOTYPE | FUNCTIONAL | PROTOTYPE | PENDING |
 | P1C02 Bree | FUNCTIONAL | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | FOUNDATION | FOUNDATION | PROTOTYPE | PROTOTYPE | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | NOT_STARTED | PENDING |
 | P1C03 Weathertop/Ford | FUNCTIONAL | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | FOUNDATION | FOUNDATION | PROTOTYPE | PROTOTYPE | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | NOT_STARTED | PENDING |
 | P1C04 Rivendell | FUNCTIONAL | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | FOUNDATION | FOUNDATION | PROTOTYPE | N/A | PROTOTYPE | PROTOTYPE | PROTOTYPE | FOUNDATION | NOT_STARTED | PENDING |
