@@ -527,6 +527,7 @@ void AShireNPC::ApplyPrototypeStyle()
         TryMesh(PrototypeRightLeg, TEXT("/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg"));
     }
 
+    bUsingProductionVisual = bProductionVisual;
     if (bProductionVisual)
     {
         PrototypeTorso->SetRelativeScale3D(FVector(1));
@@ -536,6 +537,17 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeRightArm->SetRelativeScale3D(FVector(1));
         PrototypeLeftLeg->SetRelativeScale3D(FVector(1));
         PrototypeRightLeg->SetRelativeScale3D(FVector(1));
+
+        // Production heads are authored in centimeter scale. Keep the facial
+        // markers on the actual face rather than using BasicShape-sphere offsets.
+        const float FaceX = 16.5f;
+        const float FaceY = 6.2f;
+        PrototypeLeftEye->SetRelativeLocation(FVector(FaceX, -FaceY, 4.5f));
+        PrototypeRightEye->SetRelativeLocation(FVector(FaceX, FaceY, 4.5f));
+        PrototypeLeftEye->SetRelativeScale3D(FVector(0.026f, 0.020f, 0.035f));
+        PrototypeRightEye->SetRelativeScale3D(FVector(0.026f, 0.020f, 0.035f));
+        PrototypeMouth->SetRelativeLocation(FVector(FaceX + 0.5f, 0.0f, -4.0f));
+        PrototypeMouth->SetRelativeScale3D(FVector(0.012f, 0.050f, 0.010f));
     }
 
     auto ApplyColor = [this, BasicMaterial](UStaticMeshComponent* Component, const FLinearColor& Color)
