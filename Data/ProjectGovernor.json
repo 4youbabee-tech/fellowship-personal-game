@@ -2839,7 +2839,8 @@
     "Data/BoundedDialoguePlan.json",
     "Data/PlayerExperiencePacingPlan.json",
     "Data/CharacterPopulationPlan.json",
-    "Data/LivingNPCIntelligenceRoadmap.json"
+    "Data/LivingNPCIntelligenceRoadmap.json",
+    "Docs/REPOSITORY_HYGIENE.md"
   ],
   "update_protocol": [
     "Treat Data/ProjectGovernor.json as the first-read/last-write coordination record for any meaningful project change.",
@@ -3119,11 +3120,11 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "POST_PR53_DEVELOP_CONSOLIDATION",
+  "current_focus": "DEVELOP_CLEAN_BASELINE_READY_FOR_NEXT_SHORT_WAVE",
   "immediate_next_large_actions": [
-    "Use develop as the only integration baseline after PR #53 consolidation.",
-    "Audit remaining diverged side branches for genuinely unique fixes before deletion; do not cherry-pick obsolete older implementations over newer equivalents.",
-    "Start the next requested production proposal from latest green develop on one short branch, then merge it back after exact-head gates."
+    "Treat develop as the only integration baseline and stop extending historical CP/repair/work branches.",
+    "Delete historical branches only after confirming no external workflow/bookmark depends on their names; unique content has been audited as recorded in side_branch_audit.",
+    "Receive the next owner/programmer proposal, normalize it through the Governor, then implement it from latest green develop on one short branch."
   ],
   "session_handoff": {
     "source_head": "b9de4fd4a1aa6b4edeb25459a23b78c077dfcef7",
@@ -3198,5 +3199,61 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "A historical branch may be deleted only after its meaningful content is confirmed present in develop or intentionally superseded. Diverged branches with unique commits remain preserved until audited."
+  },
+  "side_branch_audit": {
+    "date": "2026-09-20",
+    "integration_branch": "develop",
+    "fully_contained_in_develop": [
+      {
+        "branch": "cp55/activity-movement-expansion-v1",
+        "disposition": "HISTORICAL_CHECKPOINT_SAFE_TO_DELETE_AFTER_EXTERNAL_REFERENCE_CHECK",
+        "evidence": "develop is 260 commits ahead and 0 behind from this branch"
+      },
+      {
+        "branch": "cp56/fellowship-experience-megapass-v1",
+        "disposition": "HISTORICAL_CHECKPOINT_SAFE_TO_DELETE_AFTER_EXTERNAL_REFERENCE_CHECK",
+        "evidence": "develop is 211 commits ahead and 0 behind from this branch"
+      },
+      {
+        "branch": "repair/import-pipeline-megapass-v3",
+        "disposition": "HISTORICAL_REPAIR_SAFE_TO_DELETE_AFTER_EXTERNAL_REFERENCE_CHECK",
+        "evidence": "develop is 290 commits ahead and 0 behind from this branch"
+      },
+      {
+        "branch": "work/automation-first-runtime-observation",
+        "disposition": "MERGED_PR53_SAFE_TO_DELETE_AFTER_EXTERNAL_REFERENCE_CHECK",
+        "evidence": "PR #53 merged exact green head; develop contains the branch plus merge commit"
+      }
+    ],
+    "functionally_superseded_unique_branches": [
+      {
+        "branch": "repair/verification-quality-v1",
+        "disposition": "PRESERVE_UNTIL_MANUAL_DELETE",
+        "audit": "Its three unique historical repairs are already present in develop in newer form: bare OBJ material suppression, optional rig package probing and polygon-aware asset quality audit."
+      },
+      {
+        "branch": "repair/warning-quality-v2",
+        "disposition": "PRESERVE_UNTIL_MANUAL_DELETE",
+        "audit": "Its four unique historical repairs are already present in develop in newer form: secondary material persistence, UE4.27 save helper behavior, movable-before-rotation atmosphere ordering and production-audio package probing."
+      },
+      {
+        "branch": "verification/current-head-audit-v1",
+        "disposition": "PRESERVE_UNTIL_MANUAL_DELETE",
+        "audit": "Its verification/evidence system is superseded by the current PIEVerificationEvidence, VerificationGate, chapter runtime audits, asset quality audit and expanded Pre-Unreal guards in develop."
+      }
+    ],
+    "unique_content_absorbed_in_cleanup": [
+      {
+        "branch": "verification/current-head-pie-handoff-v1",
+        "content": "SHIRE_PIE_VERIFY.bat",
+        "disposition": "ABSORBED_INTO_DEVELOP_BY_POST_PR53_HYGIENE_COMMIT"
+      },
+      {
+        "branch": "work/repository-hygiene-cleanup",
+        "content": "repository hygiene audit, ignore hardening and archive/hygiene documentation",
+        "disposition": "ABSORBED_INTO_DEVELOP_BY_POST_PR53_HYGIENE_COMMIT"
+      }
+    ],
+    "deletion_rule": "Do not delete a branch until meaningful unique content is present in develop or explicitly superseded. Branch deletion is repository housekeeping, not a substitute for merging or auditing."
   }
 }

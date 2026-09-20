@@ -17,3 +17,11 @@ Content/Production/
 
 # Candidate third-party downloads stay local until license/provenance approval.
 SourceAssets/ExternalLicensed/Inbox/
+*.user
+*.userprefs
+*.log
+*.tmp
+*.bak
+*.cache
+.DS_Store
+Thumbs.db
