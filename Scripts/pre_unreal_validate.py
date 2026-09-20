@@ -3101,7 +3101,7 @@ if pie_evidence:
             continue
         cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
         if len(cells) >= 2:
-            chapter_match = re.match(r"(P1C0[1-8])\\b", cells[0])
+            chapter_match = re.match(r"(P1C0[1-8])\b", cells[0])
             if chapter_match:
                 matrix_pie_state[chapter_match.group(1)] = cells[1]
 
