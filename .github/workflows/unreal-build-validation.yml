@@ -55,35 +55,45 @@ jobs:
           )
 
           if not exist "!GITEXE!" exit /b 22
-          for %%D in ("!GITEXE!") do set "GITDIR=%%~dpD"
-          >>"%GITHUB_PATH%" echo !GITDIR!
-          if /I "!GITEXE!"=="%RUNNER_TEMP%\mingit-2.55.0.5\cmd\git.exe" (
-            >>"%GITHUB_PATH%" echo %RUNNER_TEMP%\mingit-2.55.0.5\mingw64\bin
-          )
           echo Found Git: !GITEXE!
           "!GITEXE!" --version
           if errorlevel 1 exit /b 22
+
+          set "STABLE_CHECKOUT=%GITHUB_WORKSPACE%\..\fellowship_exact_checkout.cmd"
+          >"!STABLE_CHECKOUT!" echo @echo off
+          >>"!STABLE_CHECKOUT!" echo setlocal EnableExtensions
+          >>"!STABLE_CHECKOUT!" echo cd /d "%%GITHUB_WORKSPACE%%"
+          >>"!STABLE_CHECKOUT!" echo if exist ".git" rmdir /S /Q ".git"
+          >>"!STABLE_CHECKOUT!" echo if exist ".git" exit /b 76
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" init
+          >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 70
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" remote add origin "https://x-access-token:%%GH_TOKEN%%@github.com/%%GITHUB_REPOSITORY%%.git"
+          >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 71
+          >>"!STABLE_CHECKOUT!" echo set ATTEMPT=0
+          >>"!STABLE_CHECKOUT!" echo :fetch
+          >>"!STABLE_CHECKOUT!" echo set /a ATTEMPT+=1
+          >>"!STABLE_CHECKOUT!" echo echo Fetching exact PR head attempt %%ATTEMPT%% of 7...
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" fetch --no-tags --prune --depth=1 origin %%TARGET_SHA%%
+          >>"!STABLE_CHECKOUT!" echo if not errorlevel 1 goto fetched
+          >>"!STABLE_CHECKOUT!" echo if %%ATTEMPT%% GEQ 7 exit /b 72
+          >>"!STABLE_CHECKOUT!" echo powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 5"
+          >>"!STABLE_CHECKOUT!" echo goto fetch
+          >>"!STABLE_CHECKOUT!" echo :fetched
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" checkout -f FETCH_HEAD
+          >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 73
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" reset --hard %%TARGET_SHA%%
+          >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 73
+          >>"!STABLE_CHECKOUT!" echo echo Exact-head checkout complete: %%TARGET_SHA%%.
+          >>"!STABLE_CHECKOUT!" echo exit /b 0
+          if not exist "!STABLE_CHECKOUT!" exit /b 23
+          echo Stable exact-head checkout script: !STABLE_CHECKOUT!
           echo Runner bootstrap succeeded.
 
-      - name: Reset CI checkout metadata
+      - name: Checkout exact PR head from stable script
         shell: cmd
-        run: |
-          @echo off
-          cd /d "%GITHUB_WORKSPACE%"
-          if exist ".git" rmdir /S /Q ".git"
-          if exist ".git" (
-            echo ERROR: Could not remove stale CI Git metadata.
-            exit /b 76
-          )
-          echo CI Git metadata reset; exact checkout will initialize a clean repository.
-
-      - name: Checkout exact PR head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ env.TARGET_SHA }}
-          fetch-depth: 1
-          clean: true
-          persist-credentials: false
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: '"%GITHUB_WORKSPACE%\..\fellowship_exact_checkout.cmd"'
 
       - name: Verify exact checkout
         shell: cmd

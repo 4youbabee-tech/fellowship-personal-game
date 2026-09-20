@@ -2558,6 +2558,12 @@ checkout_action_ok = (
     and "git rev-parse HEAD" in unreal_ci
     and "Checkout SHA mismatch" in unreal_ci
 )
+stable_checkout_ok = (
+    "fellowship_exact_checkout.cmd" in unreal_ci
+    and "fetch --no-tags --prune --depth=1 origin %%TARGET_SHA%%" in unreal_ci
+    and "reset --hard %%TARGET_SHA%%" in unreal_ci
+    and "Checkout SHA mismatch" in unreal_ci
+)
 exact_checkout_markers = [
     "zipball/$env:GITHUB_SHA",
     "GET /repos/{owner}/{repo}/zipball/{ref}",
@@ -2565,7 +2571,7 @@ exact_checkout_markers = [
     "git fetch --no-tags --prune --depth=1 origin %TARGET_SHA%",
     "& git fetch --no-tags --prune --depth=1 origin $env:TARGET_SHA",
 ]
-custom_checkout_ok = any(marker in unreal_ci for marker in exact_checkout_markers)
+custom_checkout_ok = stable_checkout_ok or any(marker in unreal_ci for marker in exact_checkout_markers)
 if not checkout_action_ok and not custom_checkout_ok:
     fail("PG-026: Unreal self-hosted build must acquire and verify the exact validated PR-head SHA")
 if "TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}" not in unreal_ci:
@@ -2575,6 +2581,7 @@ retry_contract_ok = (
     or ("attempt <= 7" in unreal_ci and "retrying in 5 seconds" in unreal_ci)
     or ("for /L %%A in (1,1,7)" in unreal_ci and "Start-Sleep -Seconds 5" in unreal_ci)
     or ("$attempt -le 7" in unreal_ci and "Start-Sleep -Seconds 5" in unreal_ci)
+    or ("if %%ATTEMPT%% GEQ 7 exit /b 72" in unreal_ci and "goto fetch" in unreal_ci)
 )
 if custom_checkout_ok and not retry_contract_ok:
     fail("PG-026: custom exact-commit acquisition must use resilient retries")
