@@ -65,14 +65,17 @@ jobs:
           if errorlevel 1 exit /b 22
           echo Runner bootstrap succeeded.
 
-      - name: Clear stale Git checkout locks
+      - name: Reset CI checkout metadata
         shell: cmd
         run: |
           @echo off
           cd /d "%GITHUB_WORKSPACE%"
-          if exist ".git\index.lock" del /F /Q ".git\index.lock"
-          if exist ".git\shallow.lock" del /F /Q ".git\shallow.lock"
-          echo Stale Git checkout locks cleared.
+          if exist ".git" rmdir /S /Q ".git"
+          if exist ".git" (
+            echo ERROR: Could not remove stale CI Git metadata.
+            exit /b 76
+          )
+          echo CI Git metadata reset; exact checkout will initialize a clean repository.
 
       - name: Checkout exact PR head
         uses: actions/checkout@v4
