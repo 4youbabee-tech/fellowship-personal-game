@@ -219,26 +219,33 @@
         "REQ-NPC-003",
         "REQ-NPC-004",
         "REQ-NPC-005",
-        "REQ-NPC-006"
+        "REQ-NPC-006",
+        "REQ-PROD-009"
       ],
       "work_ids": [
         "WORK-LW-004",
         "WORK-DLG-001",
-        "WORK-LW-005"
+        "WORK-LW-005",
+        "WORK-PROD-009"
       ],
       "deliverables": [
         "named and ambient NPC needs/goals/emotion tuning",
         "source-grounded original dialogue expansion",
         "companion memory/banter integration",
         "regional routine/world-event polish",
-        "audio/voice-cue/camera/lighting presentation polish"
+        "audio/voice-cue/camera/lighting presentation polish",
+        "bounded runtime cinematic camera grammar bridge",
+        "identity-specific named-character modular performance profiles",
+        "smooth ambience/music transition runtime",
+        "cinematic/audio plans with final-asset evidence boundaries"
       ],
       "exit_evidence": [
         "OFFLINE_RUNTIME_PASS",
         "SAVE_MEMORY_PASS",
         "PIE_DIALOGUE_REVIEW",
         "PERFORMANCE_PASS"
-      ]
+      ],
+      "current_production_wave": "CINEMATIC_CHARACTER_SONIC_LIFE_V3"
     },
     {
       "id": "B4_ACCEPTANCE_AND_MERGE",
@@ -412,7 +419,8 @@
     "REQ-WORLD-005",
     "REQ-WORLD-006",
     "REQ-PROD-007",
-    "REQ-PROD-008"
+    "REQ-PROD-008",
+    "REQ-PROD-009"
   ],
   "tracked_active_work_ids": [
     "WORK-CHAR-001",
@@ -433,18 +441,19 @@
     "WORK-WORLD-002",
     "WORK-WORLD-003",
     "WORK-PROD-007",
-    "WORK-PROD-008"
+    "WORK-PROD-008",
+    "WORK-PROD-009"
   ],
   "immediate_next_large_actions": [
-    "Validate REALM_DETAIL_SATURATION_V2 exact head through Pre-Unreal and full UE4.27.2 import/runtime chain.",
-    "Repair validation/import/runtime blockers without weakening guardrails.",
-    "Merge only after exact-head green proof.",
-    "Then open the next focused branch for character animation/audio/cinematic and early-region finishing."
+    "Prove CINEMATIC_CHARACTER_SONIC_LIFE_V3 on the exact branch head.",
+    "Repair exact-head failures without weakening film, save, import, warning or performance safeguards.",
+    "Merge only after Pre-Unreal + UE4.27.2 build/import/startup/chapter/state/warning evidence is green.",
+    "Open the next focused branch for hero rig/surface handoff and early-region finishing."
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
     "head": "ACTIVE_BRANCH_PENDING_EXACT_PROOF",
-    "reason": "Realm Detail Saturation V2 source-grounded visible production wave.",
-    "active_wave": "REALM_DETAIL_SATURATION_V2"
+    "reason": "Cinematic/character/sonic presentation wave after green PR #57.",
+    "active_wave": "CINEMATIC_CHARACTER_SONIC_LIFE_V3"
   }
 }
