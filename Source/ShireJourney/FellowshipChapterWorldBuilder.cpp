@@ -6,6 +6,7 @@
 #include "ShireAmbientNPC.h"
 #include "ShireQuestTrigger.h"
 #include "ShireTraversalChallenge.h"
+#include "ShireEnvironmentalPuzzle.h"
 
 #include "Components/DirectionalLightComponent.h"
 #include "Components/ExponentialHeightFogComponent.h"
@@ -1164,15 +1165,17 @@ void AFellowshipChapterWorldBuilder::BuildRivendell()
     SpawnNPC(TEXT("Pippin"), FVector(260, 460, 65), FRotator(0, 200, 0), NAME_None, 0, -1,
         TEXT("I only wanted to see where the stairs went. There were more stairs."));
 
-    AShireTraversalChallenge* RivendellMapTable = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+    AShireEnvironmentalPuzzle* RivendellMapTable = GetWorld()->SpawnActor<AShireEnvironmentalPuzzle>(
         FVector(-1120, -520, 90), FRotator::ZeroRotator);
     if (RivendellMapTable)
     {
-        RivendellMapTable->ConfigureActivityChallenge(
+        RivendellMapTable->ConfigurePuzzle(
             TEXT("RIVENDELL_LIBRARY"),
             FText::FromString(TEXT("Paths on the Map")),
-            TEXT("PATTERN_MATCH"),
-            FVector(0, 0, 0), FVector(210, 90, 0), FVector(430, -50, 0));
+            FVector(0, 0, 0),
+            FVector(190, 130, 0),
+            FVector(390, -70, 0),
+            0, 2, 1);
     }
     AShireTraversalChallenge* RivendellOverlookMemory = GetWorld()->SpawnActor<AShireTraversalChallenge>(
         FVector(-1520, 520, 90), FRotator::ZeroRotator);
@@ -1480,15 +1483,17 @@ void AFellowshipChapterWorldBuilder::BuildMoria()
             FVector(210, 90, 0),
             FVector(400, 180, 0));
     }
-    AShireTraversalChallenge* MoriaReliefStudy = GetWorld()->SpawnActor<AShireTraversalChallenge>(
+    AShireEnvironmentalPuzzle* MoriaReliefStudy = GetWorld()->SpawnActor<AShireEnvironmentalPuzzle>(
         FVector(-720, 520, 90), FRotator::ZeroRotator);
     if (MoriaReliefStudy)
     {
-        MoriaReliefStudy->ConfigureActivityChallenge(
+        MoriaReliefStudy->ConfigurePuzzle(
             TEXT("MORIA_DWARVEN_RELIEF"),
             FText::FromString(TEXT("A Dwarven Relief")),
-            TEXT("PATTERN_MATCH"),
-            FVector(0, 0, 0), FVector(180, 120, 0), FVector(360, -60, 0));
+            FVector(0, 0, 0),
+            FVector(170, 120, 0),
+            FVector(350, -70, 0),
+            2, 0, 1);
     }
 
     SpawnQuestTrigger(FVector(-650, 0, 90), TEXT("MoriaDark"), 2, 3,

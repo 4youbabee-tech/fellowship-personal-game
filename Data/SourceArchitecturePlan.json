@@ -421,6 +421,22 @@
       "kind": "Source",
       "role": "Ordered traversal side-activity challenge implementation",
       "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireEnvironmentalPuzzle.h",
+      "target_path": "Source/ShireJourney/Public/World/ShireEnvironmentalPuzzle.h",
+      "domain": "World",
+      "kind": "Header",
+      "role": "Interactable environmental pattern-puzzle side-activity contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireEnvironmentalPuzzle.cpp",
+      "target_path": "Source/ShireJourney/Private/World/ShireEnvironmentalPuzzle.cpp",
+      "domain": "World",
+      "kind": "Source",
+      "role": "Three-step interactable environmental pattern-puzzle implementation",
+      "migration_status": "CURRENT_FLAT"
     }
   ]
 }

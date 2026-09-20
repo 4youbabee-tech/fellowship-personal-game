@@ -3853,6 +3853,29 @@ for pg82_symbol in [
     if pg82_symbol not in (pg82_shire + pg82_traversal + pg82_player_h):
         fail(f"PG-082 stealth runtime symbol missing: {pg82_symbol}")
 
+
+# PG-083: PATTERN_MATCH side play must have a real interactable environmental puzzle runtime.
+pg83_h = read(SOURCE / "ShireEnvironmentalPuzzle.h")
+pg83_cpp = read(SOURCE / "ShireEnvironmentalPuzzle.cpp")
+pg83_builder = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+for pg83_symbol in [
+    "IShireInteractable",
+    "ConfigurePuzzle",
+    "Interact_Implementation",
+    "CompleteSideActivityDiscovery",
+    "EnvironmentalPuzzle: PASS",
+]:
+    if pg83_symbol not in (pg83_h + pg83_cpp):
+        fail(f"PG-083 environmental puzzle runtime symbol missing: {pg83_symbol}")
+for pg83_marker in [
+    "AShireEnvironmentalPuzzle* RivendellMapTable",
+    'TEXT("RIVENDELL_LIBRARY")',
+    "AShireEnvironmentalPuzzle* MoriaReliefStudy",
+    'TEXT("MORIA_DWARVEN_RELIEF")',
+]:
+    if pg83_marker not in pg83_builder:
+        fail(f"PG-083 environmental puzzle placement missing: {pg83_marker}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
