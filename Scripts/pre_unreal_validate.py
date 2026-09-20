@@ -4290,8 +4290,8 @@ for pg93_symbol in ["Lurtz", "FilmLockedOutcome", 'ProductionFolder = TEXT("Lurt
 if "EFellowshipEnemyType::Lurtz" not in pg93_builder:
     fail("PG-093 Lurtz is not wired into Amon Hen runtime")
 for pg93_asset in [
-    "SM_MoriaBrokenStair", "SM_MoriaChainAnchor", "SM_MoriaTallBrazier",
-    "SM_AnduinBoatRack", "SM_AnduinCargoPile", "SM_AnduinRiverMarker",
+    "SM_MoriaBrokenStair", "SM_MoriaChainAnchor", "SM_MoriaTallBrazier", "SM_MoriaMineCart",
+    "SM_AnduinBoatRack", "SM_AnduinCargoPile", "SM_AnduinRiverMarker", "SM_AnduinDockPier",
 ]:
     if pg93_asset not in pg93_builder:
         fail(f"PG-093 visual production asset not runtime-wired: {pg93_asset}")
@@ -4515,6 +4515,34 @@ for pg105_symbol in [
 ]:
     if pg105_symbol not in pg105_importer:
         fail(f"PG-105 untextured OBJ tangent safeguard missing: {pg105_symbol}")
+
+# PG-106: the owner's eight production bibles are traceable references, never shipping dependencies.
+pg106_index = json.loads(read(ROOT / "Data" / "OwnerSourceReferenceIndex.json"))
+pg106_sources = {str(row.get("id") or ""): row for row in pg106_index.get("sources", []) if isinstance(row, dict)}
+for pg106_id in [
+    "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
+    "SRC_OWNER_CHARACTERS_RELATIONSHIPS_BIBLE_V1",
+    "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+    "SRC_OWNER_PEOPLES_LORE_ARTIFACTS_CULTURES_BIBLE_V1",
+    "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+    "SRC_OWNER_GAMEPLAY_SIDE_ACTIVITIES_BIBLE_V1",
+    "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+    "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
+]:
+    pg106_row = pg106_sources.get(pg106_id)
+    if not pg106_row:
+        fail(f"PG-106 owner source bible missing from reference index: {pg106_id}")
+        continue
+    if pg106_row.get("runtime_ship") is not False:
+        fail(f"PG-106 raw owner source bible may not become a runtime dependency: {pg106_id}")
+    if not pg106_row.get("sha256"):
+        fail(f"PG-106 owner source bible provenance hash missing: {pg106_id}")
+
+pg106_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg106_visual.get("current_wave", {}).get("id") != "BIBLE_DRIVEN_WORLD_COMPOSITION_V5":
+    fail("PG-106 Bible-driven visual production wave contract missing")
+if pg106_visual.get("bible_alignment", {}).get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-106 Bible alignment must remain pending exact-head engine proof")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
