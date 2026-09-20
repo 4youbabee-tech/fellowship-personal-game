@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "PART1_WORLD_DRESSING_V1",
-  "status": "V10_INSTANCED_DETAIL_AND_ENVIRONMENTAL_LIFE_PENDING_ENGINE_PROOF",
+  "status": "V11_REALM_SPECIFIC_DETAIL_PENDING_ENGINE_PROOF",
   "authority": "Production execution map for deterministic visual density across Part I. This complements BiomePlan.csv and WorldProductionBlueprint; it does not replace story topology.",
   "common_asset_root": "SourceAssets/Production/World/Common",
   "common_assets": [
@@ -217,5 +217,15 @@
     },
     "collision": "decorative clusters non-colliding; authored traversal collision remains separate",
     "culling": "per-cluster start/end cull distances configured at runtime"
+  },
+  "realm_specific_v2": {
+    "plan": "Data/RealmDetailSaturationV2.json",
+    "regions": {
+      "P1C04": "Rivendell memory/craft/library/provisioning",
+      "P1C07": "Lothlorien vertical craft/gifts/boat prep",
+      "P1C08": "Anduin travel staging -> Amon Hen ancient ruin/battle fracture",
+      "Isengard": "industrial logistics/future flood-control readability"
+    },
+    "generic_filler_rule": "Every new prop must communicate culture, chapter state, traversal readability, activity context or canonical pressure."
   }
 }

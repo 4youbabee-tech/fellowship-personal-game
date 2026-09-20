@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "wave_id": "REALM_DETAIL_SATURATION_V2",
+  "status": "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+  "authority": "Data/ProjectGovernor.json",
+  "base_develop": "425329a7570314ccbe1674a6cfb7598a3bec6a71",
+  "source_basis": [
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES",
+    "05_BATTLES_WEAPONS_ARMIES_AND_CREATURES",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "08_VISUAL_REFERENCE_BIBLE",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+    "Fellowship screenplay"
+  ],
+  "continuity_labels": {
+    "Rivendell": "FILM-EXPANDED + ORIGINAL-GAME environmental dressing inside established sanctuary/recovery/provisioning windows",
+    "Lothlorien": "FILM-EXPANDED + ORIGINAL-GAME environmental dressing inside grief/rest/gifts/departure-prep windows",
+    "Anduin/AmonHen": "FILM-EXPANDED travel/battle dressing with FILM-CANON outcomes locked",
+    "Isengard": "FILM-EXPANDED industrial dressing; later Ent-assault/flood outcome remains FILM-CANON and is not pre-applied"
+  },
+  "regions": {
+    "Rivendell": {
+      "source_identity": "Elven valley sanctuary; stone/wood integration, waterfalls, layered terraces; memory, craft and long perspective.",
+      "added_assets": [
+        "SM_RivLibraryArcade",
+        "SM_RivSmithyRack",
+        "SM_RivCouncilSeat",
+        "SM_RivWaterChannel"
+      ],
+      "runtime_use": [
+        "library arcade around optional recovery/lore space",
+        "smithy/provisioning rack",
+        "council seating rhythm",
+        "water channels connecting terraces"
+      ],
+      "gameplay_windows": [
+        "ACT_F1_06 Rivendell Recovery",
+        "ACT_F1_07 Fellowship Provisioning"
+      ],
+      "guardrails": [
+        "no generic loot clutter",
+        "Council and departure anchors unchanged",
+        "Elven culture expressed through craft/light/architecture rather than color alone"
+      ]
+    },
+    "Lothlorien": {
+      "source_identity": "Golden forest sanctuary; vertical flets, organic bridges, luminous forest; recovery, gifts, reflection and exploration.",
+      "added_assets": [
+        "SM_LorienGiftTable",
+        "SM_LorienBoatSupplyRack",
+        "SM_LorienCanopyRail",
+        "SM_LorienRopeLampLine"
+      ],
+      "runtime_use": [
+        "gift tables",
+        "boat supply racks",
+        "canopy rails",
+        "rope lamp lines"
+      ],
+      "gameplay_windows": [
+        "ACT_F1_10 Lorien Departure Prep"
+      ],
+      "guardrails": [
+        "gifts remain unique/contextual, not randomized loot",
+        "grief/refuge tone preserved",
+        "departure chronology unchanged"
+      ]
+    },
+    "Anduin/AmonHen": {
+      "source_identity": "River corridor into ancient forest ruins; boat traversal/scouting becomes Fellowship-break battlefield.",
+      "added_assets": [
+        "SM_AmonHenBrokenSeat",
+        "SM_AmonHenLookoutStone",
+        "SM_AnduinSupplyBundle",
+        "SM_AnduinOarRack"
+      ],
+      "runtime_use": [
+        "oar racks and supply bundles at river staging",
+        "lookout stones and broken seats at ancient ruin zone",
+        "instanced broken-stone detail near battle lanes"
+      ],
+      "gameplay_windows": [
+        "F1-07 river journey",
+        "F1-08 multi-character combat and pursuit handoff"
+      ],
+      "guardrails": [
+        "Boromir falls",
+        "Merry/Pippin captured",
+        "Frodo chooses Mordor",
+        "Sam follows",
+        "hero-bubble density remains bounded"
+      ]
+    },
+    "Isengard": {
+      "source_identity": "Ring fortress/industrialized grounds; black tower, pits, machinery, felled landscape; harsh iron and mass production.",
+      "added_assets": [
+        "SM_IsengardHoistFrame",
+        "SM_IsengardSlagCart",
+        "SM_IsengardTrenchGrate",
+        "SM_IsengardWaterGate"
+      ],
+      "runtime_use": [
+        "hoist frames",
+        "slag carts",
+        "trench grates",
+        "water gates"
+      ],
+      "gameplay_windows": [
+        "future F2-08 Ent assault",
+        "future ACT_F3_01 Isengard Stores aftermath"
+      ],
+      "guardrails": [
+        "industrial and flooded states remain separable",
+        "Orthanc remains dominant",
+        "war-machine disablement is not pre-applied by decoration"
+      ]
+    }
+  },
+  "performance": {
+    "rules": [
+      "repeatable decorative detail prefers HISM",
+      "new unique actor count is bounded",
+      "no new full-AI crowd layer",
+      "no new unbounded dynamic-light layer",
+      "later target-device profiling may reduce counts/cull distance without changing story topology"
+    ]
+  },
+  "acceptance": {
+    "machine": [
+      "Pre-Unreal exact-head",
+      "UE4.27.2 compile",
+      "production import",
+      "startup",
+      "P1C01-P1C08 chapter audit",
+      "route/story state roundtrip",
+      "warning-debt guard"
+    ],
+    "deferred": [
+      "rendered human visual acceptance",
+      "target-device FPS/hitch/memory",
+      "final audio/animation/cinematic polish"
+    ]
+  }
+}

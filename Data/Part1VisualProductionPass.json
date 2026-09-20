@@ -67,7 +67,12 @@
         "valley/water reveal",
         "council space"
       ],
-      "priority": "soft daylight, reflective water, pale stone and vertical openness"
+      "priority": "soft daylight, reflective water, pale stone and vertical openness",
+      "realm_detail_v2": [
+        "library/craft/provisioning arcade",
+        "council seating rhythm",
+        "terrace water channels"
+      ]
     },
     {
       "id": "P1C05",
@@ -108,7 +113,12 @@
         "talan layers",
         "Mirror/farewell"
       ],
-      "priority": "filtered gold-white light, organic elevation, low clutter"
+      "priority": "filtered gold-white light, organic elevation, low clutter",
+      "realm_detail_v2": [
+        "gift preparation tables",
+        "boat supply racks",
+        "canopy rails and lamp lines"
+      ]
     },
     {
       "id": "P1C08",
@@ -123,6 +133,11 @@
         "explicit Anduin/Amon Hen daylight-sky-fog identity replaces generic atmosphere defaults",
         "production dock-pier dressing strengthens the river-to-camp handoff",
         "non-colliding ruin/log composition separates battle lanes without adding extra full-AI enemies"
+      ],
+      "realm_detail_v2": [
+        "river supply/oar staging",
+        "ancient lookout stones",
+        "broken seating/ruin density near battle handoff"
       ]
     }
   ],
@@ -268,21 +283,16 @@
     ]
   },
   "current_wave": {
-    "id": "MEGA_WORLD_MAGIC_LIFE_DETAIL_V1",
-    "status": "SOURCE_AND_RUNTIME_IMPLEMENTATION_ACTIVE_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "id": "REALM_DETAIL_SATURATION_V2",
+    "status": "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
     "focus": [
-      "mass explicit roughness/metallic material response across Part I regional palettes",
-      "Moria modular architecture/prop expansion",
-      "route-readable landmark/light composition",
-      "source-grounded visible world saturation",
-      "LoadObject growth kept bounded and transition-hitch risk retained",
-      "film-locked encounter outcomes unchanged",
-      "bounded chapter-specific environmental motion and glow",
-      "HISM-based dense micro-detail in Rivendell, Moria, Lothlorien and Anduin/Amon Hen",
-      "Isengard industrial motion and furnace life",
-      "sparse-region life through environment/wildlife rather than unsupported civilians"
+      "Rivendell memory/craft/provisioning detail",
+      "Lothlorien gift/boat-prep/vertical craft detail",
+      "Anduin river staging to Amon Hen ancient-ruin/battle handoff",
+      "Isengard industrial logistics and future flood-readability",
+      "performance-aware bounded density"
     ],
-    "acceptance_rule": "Exact-head Pre-Unreal + UE4.27.2 import/build/startup/chapter/state proof is required; rendered visual/device/human acceptance remains separate."
+    "acceptance_rule": "Exact-head machine proof required; rendered human/device acceptance remains separate."
   },
   "hero_character_geometry_wave": {
     "id": "HERO_ANATOMICAL_FOUNDATION_V6",
@@ -399,5 +409,12 @@
       "11 Master Production Systems"
     ],
     "current_result": "Environmental motion + bounded glow + performance-aware dense detail are implemented in source and await exact-head engine proof."
+  },
+  "realm_detail_saturation_v2": {
+    "plan": "Data/RealmDetailSaturationV2.json",
+    "requirement": "REQ-PROD-008",
+    "work_item": "WORK-PROD-008",
+    "added_project_owned_obj_assets": 16,
+    "status": "PENDING_EXACT_HEAD_ENGINE_PROOF"
   }
 }

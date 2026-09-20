@@ -2,7 +2,7 @@
   "schema_version": 1,
   "inventory_id": "PROJECT_OWNED_PRODUCTION_ASSET_INVENTORY_V1",
   "generated_from_commit": "MEGA_MATERIAL_WORLD_WAVE_V1 branch source inventory",
-  "status": "PROJECT_OWNED_FOUNDATION_EXPANDED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+  "status": "REALM_DETAIL_V2_EXPANDED_PENDING_EXACT_HEAD_ENGINE_PROOF",
   "truth_rule": "File presence and importability prove only a project-owned source foundation. Final production requires rig/material/animation/visual/performance acceptance.",
   "characters": [
     {
@@ -399,12 +399,14 @@
   "world": [
     {
       "root": "SourceAssets/Production/World/Anduin",
-      "file_count": 12,
-      "obj_count": 10,
+      "file_count": 16,
+      "obj_count": 14,
       "mtl_count": 2,
       "image_count": 0,
       "files": [
         "SourceAssets/Production/World/Anduin/RegionalMaterials.mtl",
+        "SourceAssets/Production/World/Anduin/SM_AmonHenBrokenSeat.obj",
+        "SourceAssets/Production/World/Anduin/SM_AmonHenLookoutStone.obj",
         "SourceAssets/Production/World/Anduin/SM_AmonHenRuin.obj",
         "SourceAssets/Production/World/Anduin/SM_AmonHenStair.obj",
         "SourceAssets/Production/World/Anduin/SM_AnduinBoat.obj",
@@ -413,7 +415,9 @@
         "SourceAssets/Production/World/Anduin/SM_AnduinCargoPile.obj",
         "SourceAssets/Production/World/Anduin/SM_AnduinDockPier.obj",
         "SourceAssets/Production/World/Anduin/SM_AnduinFishingFrame.obj",
+        "SourceAssets/Production/World/Anduin/SM_AnduinOarRack.obj",
         "SourceAssets/Production/World/Anduin/SM_AnduinRiverMarker.obj",
+        "SourceAssets/Production/World/Anduin/SM_AnduinSupplyBundle.obj",
         "SourceAssets/Production/World/Anduin/SM_ArgonathSentinel.obj",
         "SourceAssets/Production/World/Anduin/WorldPack.mtl"
       ]
@@ -518,12 +522,16 @@
     },
     {
       "root": "SourceAssets/Production/World/Isengard",
-      "file_count": 7,
-      "obj_count": 6,
+      "file_count": 11,
+      "obj_count": 10,
       "mtl_count": 1,
       "image_count": 0,
       "files": [
         "SourceAssets/Production/World/Isengard/RegionalMaterials.mtl",
+        "SourceAssets/Production/World/Isengard/SM_IsengardHoistFrame.obj",
+        "SourceAssets/Production/World/Isengard/SM_IsengardSlagCart.obj",
+        "SourceAssets/Production/World/Isengard/SM_IsengardTrenchGrate.obj",
+        "SourceAssets/Production/World/Isengard/SM_IsengardWaterGate.obj",
         "SourceAssets/Production/World/Isengard/SM_Isengard_FelledTrunk.obj",
         "SourceAssets/Production/World/Isengard/SM_Isengard_FurnaceStack.obj",
         "SourceAssets/Production/World/Isengard/SM_Isengard_IndustrialPitRim.obj",
@@ -534,18 +542,22 @@
     },
     {
       "root": "SourceAssets/Production/World/Lothlorien",
-      "file_count": 11,
-      "obj_count": 9,
+      "file_count": 15,
+      "obj_count": 13,
       "mtl_count": 2,
       "image_count": 0,
       "files": [
         "SourceAssets/Production/World/Lothlorien/RegionalMaterials.mtl",
         "SourceAssets/Production/World/Lothlorien/SM_LorienBasketRack.obj",
+        "SourceAssets/Production/World/Lothlorien/SM_LorienBoatSupplyRack.obj",
+        "SourceAssets/Production/World/Lothlorien/SM_LorienCanopyRail.obj",
+        "SourceAssets/Production/World/Lothlorien/SM_LorienGiftTable.obj",
         "SourceAssets/Production/World/Lothlorien/SM_LorienGoldenBench.obj",
         "SourceAssets/Production/World/Lothlorien/SM_LorienLantern.obj",
         "SourceAssets/Production/World/Lothlorien/SM_LorienLeafLantern.obj",
         "SourceAssets/Production/World/Lothlorien/SM_LorienMirror.obj",
         "SourceAssets/Production/World/Lothlorien/SM_LorienRootBridge.obj",
+        "SourceAssets/Production/World/Lothlorien/SM_LorienRopeLampLine.obj",
         "SourceAssets/Production/World/Lothlorien/SM_LorienTalan.obj",
         "SourceAssets/Production/World/Lothlorien/SM_LorienTalanLadder.obj",
         "SourceAssets/Production/World/Lothlorien/SM_LorienTreePlatform.obj",
@@ -589,18 +601,22 @@
     },
     {
       "root": "SourceAssets/Production/World/Rivendell",
-      "file_count": 12,
-      "obj_count": 10,
+      "file_count": 16,
+      "obj_count": 14,
       "mtl_count": 2,
       "image_count": 0,
       "files": [
         "SourceAssets/Production/World/Rivendell/RegionalMaterials.mtl",
         "SourceAssets/Production/World/Rivendell/SM_RivBridgeRail.obj",
         "SourceAssets/Production/World/Rivendell/SM_RivColumn.obj",
+        "SourceAssets/Production/World/Rivendell/SM_RivCouncilSeat.obj",
         "SourceAssets/Production/World/Rivendell/SM_RivGardenBench.obj",
         "SourceAssets/Production/World/Rivendell/SM_RivLampArch.obj",
+        "SourceAssets/Production/World/Rivendell/SM_RivLibraryArcade.obj",
         "SourceAssets/Production/World/Rivendell/SM_RivPlanter.obj",
+        "SourceAssets/Production/World/Rivendell/SM_RivSmithyRack.obj",
         "SourceAssets/Production/World/Rivendell/SM_RivWaterBasin.obj",
+        "SourceAssets/Production/World/Rivendell/SM_RivWaterChannel.obj",
         "SourceAssets/Production/World/Rivendell/SM_RivendellArch.obj",
         "SourceAssets/Production/World/Rivendell/SM_RivendellBridge.obj",
         "SourceAssets/Production/World/Rivendell/SM_RivendellLantern.obj",
@@ -706,8 +722,8 @@
     }
   ],
   "totals": {
-    "production_files": 362,
-    "obj_files": 318,
+    "production_files": 378,
+    "obj_files": 334,
     "mtl_files": 19,
     "image_files": 24
   },
@@ -728,6 +744,7 @@
     "target-device transition-hitch measurement"
   ],
   "notes": [
-    "Totals preserve the prior 347/304/18/24 baseline and add 14 Moria OBJ files plus the previously existing Isengard RegionalMaterials.mtl entry."
+    "Totals preserve the prior 347/304/18/24 baseline and add 14 Moria OBJ files plus the previously existing Isengard RegionalMaterials.mtl entry.",
+    "Realm Detail Saturation V2 adds 16 project-owned OBJ assets: four each for Rivendell, Lothlorien, Anduin/Amon Hen and Isengard."
   ]
 }
