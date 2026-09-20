@@ -597,6 +597,12 @@ void AShireNPC::ApplyPrototypeStyle()
     const bool bProductionSwordMesh = TryMesh(
         PrototypePrimaryProp,
         TEXT("/Game/Production/Characters/Common/SM_ProductionSword.SM_ProductionSword"));
+    const TCHAR* ProductionShieldPath =
+        TEXT("/Game/Production/Characters/Common/SM_ProductionShield.SM_ProductionShield");
+    const TCHAR* ProductionBowPath =
+        TEXT("/Game/Production/Characters/Common/SM_ProductionBow.SM_ProductionBow");
+    const TCHAR* ProductionAxePath =
+        TEXT("/Game/Production/Characters/Common/SM_ProductionAxe.SM_ProductionAxe");
 
     const bool bSam = Name.Equals(TEXT("Sam"), ESearchCase::IgnoreCase);
     const bool bMerry = Name.Equals(TEXT("Merry"), ESearchCase::IgnoreCase);
@@ -618,9 +624,22 @@ void AShireNPC::ApplyPrototypeStyle()
 
     if (bSam)
     {
+        TryMesh(PrototypePrimaryProp, TEXT("/Game/Production/Characters/Common/SM_ProductionSword.SM_ProductionSword"));
+        PrototypePrimaryProp->SetVisibility(true);
+        PrototypePrimaryPropBase = FVector(3.0f, 27.0f, -5.0f);
+        PrototypePrimaryPropRotation = FRotator(-8.0f, 0.0f, 10.0f);
+        PrototypePrimaryProp->SetRelativeLocation(PrototypePrimaryPropBase);
+        PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
+        PrototypePrimaryProp->SetRelativeScale3D(FVector(0.62f));
+        ApplyColor(PrototypePrimaryProp, Steel);
+
+        const bool bPackMesh = TryMesh(
+            PrototypeSecondaryProp,
+            TEXT("/Game/Production/Characters/Frodo/SM_Frodo_Satchel.SM_Frodo_Satchel"));
         PrototypeSecondaryProp->SetVisibility(true);
-        PrototypeSecondaryProp->SetRelativeLocation(FVector(-4.0f, 24.0f, -5.0f));
-        PrototypeSecondaryProp->SetRelativeScale3D(FVector(0.12f, 0.18f, 0.18f));
+        PrototypeSecondaryProp->SetRelativeLocation(FVector(-7.0f, 20.0f, -4.0f));
+        PrototypeSecondaryProp->SetRelativeScale3D(
+            bPackMesh ? FVector(0.88f) : FVector(0.12f, 0.18f, 0.18f));
         PrototypeSecondaryProp->SetRelativeRotation(FRotator(0.0f, 12.0f, 8.0f));
         ApplyColor(PrototypeSecondaryProp, Leather);
     }
@@ -636,13 +655,23 @@ void AShireNPC::ApplyPrototypeStyle()
         ApplyColor(PrototypeCloak, bMerry
             ? FLinearColor(0.26f, 0.20f, 0.08f)
             : FLinearColor(0.12f, 0.26f, 0.16f));
+
+        TryMesh(PrototypePrimaryProp, TEXT("/Game/Production/Characters/Common/SM_ProductionSword.SM_ProductionSword"));
+        PrototypePrimaryProp->SetVisibility(true);
+        PrototypePrimaryPropBase = FVector(3.0f, 27.0f, -6.0f);
+        PrototypePrimaryPropRotation = FRotator(-9.0f, 0.0f, bMerry ? 7.0f : 12.0f);
+        PrototypePrimaryProp->SetRelativeLocation(PrototypePrimaryPropBase);
+        PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
+        PrototypePrimaryProp->SetRelativeScale3D(FVector(0.58f));
+        ApplyColor(PrototypePrimaryProp, Steel);
     }
     else if (bRanger)
     {
         PrototypeCloak->SetVisibility(true);
         PrototypeCloakBase = FVector(-11.0f, 0.0f, 7.0f);
         PrototypeCloak->SetRelativeLocation(PrototypeCloakBase);
-        PrototypeCloak->SetRelativeScale3D(bProductionCloakMesh ? FVector(1.0f) : FVector(0.14f, 0.45f, 0.68f));
+        PrototypeCloak->SetRelativeScale3D(
+            bProductionCloakMesh ? FVector(1.0f) : FVector(0.14f, 0.45f, 0.68f));
         ApplyColor(PrototypeCloak, DarkGreen);
 
         PrototypePrimaryProp->SetVisibility(true);
@@ -650,15 +679,25 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypePrimaryPropRotation = FRotator(0.0f, 0.0f, 7.0f);
         PrototypePrimaryProp->SetRelativeLocation(PrototypePrimaryPropBase);
         PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
-        PrototypePrimaryProp->SetRelativeScale3D(bProductionSwordMesh ? FVector(1.0f) : FVector(0.045f, 0.045f, 0.78f));
+        PrototypePrimaryProp->SetRelativeScale3D(
+            bProductionSwordMesh ? FVector(1.0f) : FVector(0.045f, 0.045f, 0.78f));
         ApplyColor(PrototypePrimaryProp, Steel);
+
+        const bool bBackBow = TryMesh(PrototypeSecondaryProp, ProductionBowPath);
+        PrototypeSecondaryProp->SetVisibility(true);
+        PrototypeSecondaryProp->SetRelativeLocation(FVector(-11.0f, -18.0f, 21.0f));
+        PrototypeSecondaryProp->SetRelativeRotation(FRotator(0.0f, 0.0f, -18.0f));
+        PrototypeSecondaryProp->SetRelativeScale3D(
+            bBackBow ? FVector(0.92f) : FVector(0.04f, 0.04f, 0.72f));
+        ApplyColor(PrototypeSecondaryProp, Wood);
     }
     else if (bBoromir)
     {
         PrototypeCloak->SetVisibility(true);
         PrototypeCloakBase = FVector(-12.0f, 0.0f, 8.0f);
         PrototypeCloak->SetRelativeLocation(PrototypeCloakBase);
-        PrototypeCloak->SetRelativeScale3D(bProductionCloakMesh ? FVector(1.0f) : FVector(0.15f, 0.47f, 0.66f));
+        PrototypeCloak->SetRelativeScale3D(
+            bProductionCloakMesh ? FVector(1.0f) : FVector(0.15f, 0.47f, 0.66f));
         ApplyColor(PrototypeCloak, FLinearColor(0.28f, 0.10f, 0.08f));
 
         PrototypePrimaryProp->SetVisibility(true);
@@ -666,12 +705,16 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypePrimaryPropRotation = FRotator(0.0f, 0.0f, 5.0f);
         PrototypePrimaryProp->SetRelativeLocation(PrototypePrimaryPropBase);
         PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
-        PrototypePrimaryProp->SetRelativeScale3D(bProductionSwordMesh ? FVector(1.0f) : FVector(0.05f, 0.05f, 0.82f));
+        PrototypePrimaryProp->SetRelativeScale3D(
+            bProductionSwordMesh ? FVector(1.0f) : FVector(0.05f, 0.05f, 0.82f));
         ApplyColor(PrototypePrimaryProp, Steel);
 
+        const bool bShieldMesh = TryMesh(PrototypeSecondaryProp, ProductionShieldPath);
         PrototypeSecondaryProp->SetVisibility(true);
-        PrototypeSecondaryProp->SetRelativeLocation(FVector(4.0f, -31.0f, 12.0f));
-        PrototypeSecondaryProp->SetRelativeScale3D(FVector(0.08f, 0.34f, 0.34f));
+        PrototypeSecondaryProp->SetRelativeLocation(FVector(-7.0f, -24.0f, 16.0f));
+        PrototypeSecondaryProp->SetRelativeRotation(FRotator(0.0f, 14.0f, -8.0f));
+        PrototypeSecondaryProp->SetRelativeScale3D(
+            bShieldMesh ? FVector(0.92f) : FVector(0.08f, 0.34f, 0.34f));
         ApplyColor(PrototypeSecondaryProp, FLinearColor(0.30f, 0.22f, 0.14f));
     }
     else if (bLegolas)
@@ -679,24 +722,29 @@ void AShireNPC::ApplyPrototypeStyle()
         PrototypeCloak->SetVisibility(true);
         PrototypeCloakBase = FVector(-10.0f, 0.0f, 8.0f);
         PrototypeCloak->SetRelativeLocation(PrototypeCloakBase);
-        PrototypeCloak->SetRelativeScale3D(FVector(0.11f, 0.40f, 0.61f));
+        PrototypeCloak->SetRelativeScale3D(
+            bProductionCloakMesh ? FVector(0.94f) : FVector(0.11f, 0.40f, 0.61f));
         ApplyColor(PrototypeCloak, ElfGreen);
 
-        const bool bProductionBow = TryMesh(
-            PrototypePrimaryProp,
-            TEXT("/Game/Production/Characters/Common/SM_ProductionBow.SM_ProductionBow"));
+        const bool bProductionBow = TryMesh(PrototypePrimaryProp, ProductionBowPath);
         PrototypePrimaryProp->SetVisibility(true);
         PrototypePrimaryPropBase = FVector(-6.0f, 26.0f, 22.0f);
         PrototypePrimaryPropRotation = FRotator(0.0f, 0.0f, 20.0f);
         PrototypePrimaryProp->SetRelativeLocation(PrototypePrimaryPropBase);
         PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
-        PrototypePrimaryProp->SetRelativeScale3D(bProductionBow ? FVector(1.0f) : FVector(0.035f, 0.035f, 0.72f));
+        PrototypePrimaryProp->SetRelativeScale3D(
+            bProductionBow ? FVector(1.0f) : FVector(0.035f, 0.035f, 0.72f));
         ApplyColor(PrototypePrimaryProp, Wood);
 
+        const bool bKnifeMesh = TryMesh(
+            PrototypeSecondaryProp,
+            TEXT("/Game/Production/Characters/Common/SM_ProductionSword.SM_ProductionSword"));
         PrototypeSecondaryProp->SetVisibility(true);
-        PrototypeSecondaryProp->SetRelativeLocation(FVector(-11.0f, -22.0f, 25.0f));
-        PrototypeSecondaryProp->SetRelativeScale3D(FVector(0.09f, 0.20f, 0.52f));
-        ApplyColor(PrototypeSecondaryProp, FLinearColor(0.20f, 0.13f, 0.07f));
+        PrototypeSecondaryProp->SetRelativeLocation(FVector(-9.0f, -21.0f, 22.0f));
+        PrototypeSecondaryProp->SetRelativeRotation(FRotator(0.0f, 0.0f, -28.0f));
+        PrototypeSecondaryProp->SetRelativeScale3D(
+            bKnifeMesh ? FVector(0.55f) : FVector(0.09f, 0.20f, 0.52f));
+        ApplyColor(PrototypeSecondaryProp, Steel);
     }
     else if (bGimli)
     {
@@ -705,48 +753,86 @@ void AShireNPC::ApplyPrototypeStyle()
             TEXT("/Game/Production/Characters/Common/SM_Dwarf_Beard.SM_Dwarf_Beard"));
         PrototypeBeard->SetVisibility(true);
         PrototypeBeard->SetRelativeLocation(FVector(13.0f, 0.0f, 33.0f));
-        PrototypeBeard->SetRelativeScale3D(bProductionDwarfBeard ? FVector(1.0f) : FVector(0.13f, 0.13f, 0.30f));
-        PrototypeBeard->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
+        PrototypeBeard->SetRelativeScale3D(
+            bProductionDwarfBeard ? FVector(1.0f) : FVector(0.13f, 0.13f, 0.30f));
+        PrototypeBeard->SetRelativeRotation(
+            bProductionDwarfBeard ? FRotator::ZeroRotator : FRotator(90.0f, 0.0f, 0.0f));
         ApplyColor(PrototypeBeard, FLinearColor(0.44f, 0.20f, 0.07f));
 
-        const bool bProductionAxe = TryMesh(
-            PrototypePrimaryProp,
-            TEXT("/Game/Production/Characters/Common/SM_ProductionAxe.SM_ProductionAxe"));
+        const bool bProductionAxe = TryMesh(PrototypePrimaryProp, ProductionAxePath);
         PrototypePrimaryProp->SetVisibility(true);
         PrototypePrimaryPropBase = FVector(4.0f, 34.0f, -1.0f);
         PrototypePrimaryPropRotation = FRotator(-10.0f, 0.0f, 12.0f);
         PrototypePrimaryProp->SetRelativeLocation(PrototypePrimaryPropBase);
         PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
-        PrototypePrimaryProp->SetRelativeScale3D(bProductionAxe ? FVector(1.0f) : FVector(0.065f, 0.065f, 0.62f));
+        PrototypePrimaryProp->SetRelativeScale3D(
+            bProductionAxe ? FVector(1.0f) : FVector(0.065f, 0.065f, 0.62f));
         ApplyColor(PrototypePrimaryProp, FLinearColor(0.26f, 0.22f, 0.18f));
 
+        const bool bSecondAxe = TryMesh(PrototypeSecondaryProp, ProductionAxePath);
         PrototypeSecondaryProp->SetVisibility(true);
-        PrototypeSecondaryProp->SetRelativeLocation(FVector(7.0f, 34.0f, 28.0f));
-        PrototypeSecondaryProp->SetRelativeScale3D(FVector(0.28f, 0.06f, 0.16f));
+        PrototypeSecondaryProp->SetRelativeLocation(FVector(-8.0f, -27.0f, 25.0f));
+        PrototypeSecondaryProp->SetRelativeRotation(FRotator(0.0f, 0.0f, -24.0f));
+        PrototypeSecondaryProp->SetRelativeScale3D(
+            bSecondAxe ? FVector(0.72f) : FVector(0.28f, 0.06f, 0.16f));
         ApplyColor(PrototypeSecondaryProp, Steel);
     }
     else if (bWizard)
     {
+        const bool bGandalfStaff = bGandalfVisual && TryMesh(
+            PrototypePrimaryProp,
+            TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Staff.SM_Gandalf_Staff"));
         PrototypePrimaryProp->SetVisibility(true);
         PrototypePrimaryPropBase = FVector(3.0f, 34.0f, 3.0f);
         PrototypePrimaryPropRotation = FRotator::ZeroRotator;
         PrototypePrimaryProp->SetRelativeLocation(PrototypePrimaryPropBase);
         PrototypePrimaryProp->SetRelativeRotation(PrototypePrimaryPropRotation);
-        PrototypePrimaryProp->SetRelativeScale3D(FVector(0.045f, 0.045f, 0.92f));
+        PrototypePrimaryProp->SetRelativeScale3D(
+            bGandalfStaff ? FVector(1.0f) : FVector(0.045f, 0.045f, 0.92f));
         ApplyColor(PrototypePrimaryProp, bSaruman ? FLinearColor(0.60f, 0.58f, 0.52f) : Wood);
 
+        const bool bGandalfBeard = bGandalfVisual && TryMesh(
+            PrototypeBeard,
+            TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Beard.SM_Gandalf_Beard"));
         PrototypeBeard->SetVisibility(true);
         PrototypeBeard->SetRelativeLocation(FVector(13.0f, 0.0f, 49.0f));
-        PrototypeBeard->SetRelativeScale3D(FVector(0.10f, 0.10f, 0.30f));
-        PrototypeBeard->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
-        ApplyColor(PrototypeBeard, bSaruman ? FLinearColor(0.84f, 0.82f, 0.76f) : FLinearColor(0.68f, 0.66f, 0.60f));
+        PrototypeBeard->SetRelativeScale3D(
+            bGandalfBeard ? FVector(1.0f) : FVector(0.10f, 0.10f, 0.30f));
+        PrototypeBeard->SetRelativeRotation(
+            bGandalfBeard ? FRotator::ZeroRotator : FRotator(90.0f, 0.0f, 0.0f));
+        ApplyColor(PrototypeBeard, bSaruman
+            ? FLinearColor(0.84f, 0.82f, 0.76f)
+            : FLinearColor(0.68f, 0.66f, 0.60f));
+
+        if (bGandalfVisual)
+        {
+            const bool bGandalfHat = TryMesh(
+                PrototypeHeadpiece,
+                TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Hat.SM_Gandalf_Hat"));
+            PrototypeHeadpiece->SetVisibility(true);
+            PrototypeHeadpiece->SetRelativeLocation(FVector(-1.0f, 0.0f, PrototypeHairBaseZ + 10.0f));
+            PrototypeHeadpiece->SetRelativeScale3D(
+                bGandalfHat ? FVector(1.0f) : FVector(0.18f, 0.42f, 0.22f));
+            ApplyColor(PrototypeHeadpiece, FLinearColor(0.28f, 0.29f, 0.27f));
+
+            const bool bGandalfCloak = TryMesh(
+                PrototypeCloak,
+                TEXT("/Game/Production/Characters/Gandalf/SM_Gandalf_Cloak.SM_Gandalf_Cloak"));
+            PrototypeCloak->SetVisibility(true);
+            PrototypeCloakBase = FVector(-12.0f, 0.0f, 8.0f);
+            PrototypeCloak->SetRelativeLocation(PrototypeCloakBase);
+            PrototypeCloak->SetRelativeScale3D(
+                bGandalfCloak ? FVector(1.0f) : FVector(0.14f, 0.46f, 0.72f));
+            ApplyColor(PrototypeCloak, FLinearColor(0.30f, 0.31f, 0.29f));
+        }
     }
     else if (bGaladriel || bElrond || bArwen)
     {
         PrototypeCloak->SetVisibility(true);
         PrototypeCloakBase = FVector(-10.0f, 0.0f, 9.0f);
         PrototypeCloak->SetRelativeLocation(PrototypeCloakBase);
-        PrototypeCloak->SetRelativeScale3D(FVector(0.10f, 0.40f, 0.70f));
+        PrototypeCloak->SetRelativeScale3D(
+            bProductionCloakMesh ? FVector(0.96f) : FVector(0.10f, 0.40f, 0.70f));
         ApplyColor(PrototypeCloak, bGaladriel ? WhiteCloth : ElfGreen);
 
         PrototypeHeadpiece->SetVisibility(true);
