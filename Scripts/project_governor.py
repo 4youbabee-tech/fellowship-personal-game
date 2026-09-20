@@ -171,6 +171,16 @@ for relative in governor.get("deprecated_secondary_authority_files", []):
 if not governor.get("worker_contract"):
     fail("Governor has no worker_contract")
 
+# Owner-directed governor role: coordination must not become a project-wide bottleneck.
+governor_role = governor.get("governor_role", {})
+if governor_role.get("mode") != "OVERSEER_NOT_BOTTLENECK":
+    fail("Governor role must remain OVERSEER_NOT_BOTTLENECK")
+non_blocking_policy = governor_role.get("non_blocking_policy", [])
+if not any("unrelated safe production work" in str(item) for item in non_blocking_policy):
+    fail("Governor must explicitly preserve unrelated safe production work during a failing gate")
+if governor.get("active_branch") != "work/automation-first-runtime-observation":
+    fail("Governor active_branch must track PR #53 production branch")
+
 # Player-experience pacing contract is required, but human review remains the authority for PACING.
 PACING_PATH = ROOT / "Data" / "PlayerExperiencePacingPlan.json"
 try:
