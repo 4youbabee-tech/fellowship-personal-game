@@ -1432,7 +1432,8 @@
         "B1 now includes Chronicle/map knowledge UI, save continuity and contextual side-activity progression bridging.",
         "B1 now includes reusable traversal-challenge gameplay, not only proximity discovery triggers.",
         "B1 side-play physicalization now covers 19 contextual activities with centralized film-window guards and a direct stealth source.",
-        "B1 now includes a dedicated environmental puzzle runtime and bounded interactive living-world micro-events, both guarded against canon mutation and persistent reward farming."
+        "B1 now includes a dedicated environmental puzzle runtime and bounded interactive living-world micro-events, both guarded against canon mutation and persistent reward farming.",
+        "B1 now includes dedicated source-grounded Chronicle entry browsing and readable map-region presentation."
       ],
       "missing_work": [
         "Get final PR #53 head through full UE4.27 validation.",
@@ -1528,11 +1529,12 @@
         "Headless state audit requires discovery-core=PASS and proves repeat visits do not farm Insight.",
         "First-time Journey Discovery now feeds bounded utility/content progression tracks.",
         "Discovery registration now also unlocks persistent Chronicle/map knowledge on first registration.",
-        "SHIRE_QUIET_FEET adds a first-time Journey Discovery reward without changing the Shire region-completion threshold, preserving existing save/milestone behavior."
+        "SHIRE_QUIET_FEET adds a first-time Journey Discovery reward without changing the Shire region-completion threshold, preserving existing save/milestone behavior.",
+        "Dedicated Chronicle browsing now uses source-grounded discovery labels from ExplorationEnvelopePlan via JourneyDiscoveryRewardPlan display_label metadata.",
+        "Chronicle entries expose readable discovery labels plus region/chapter/category context, with explicit previous/next browsing controls."
       ],
       "missing_work": [
         "Exact-head UE4.27 compile/import/startup/state proof for the new runtime discovery layer.",
-        "Dedicated Chronicle browsing UI.",
         "Discovery-specific bounded dialogue topic unlocks.",
         "PIE/device pacing, placement and readability review."
       ],
@@ -1739,10 +1741,10 @@
         "Reusable side-activity challenge runtime now covers observation, tracking, pattern, camp, timing, social-memory and stealth-lite families across Part I.",
         "Quiet Feet Through the Hedges gives QUIET_STEP a direct crouch-gated authored runtime source.",
         "Dedicated environmental pattern-puzzle runtime replaces generic traversal representation for Rivendell map study and Moria relief study.",
-        "Living micro-events now expose optional bounded player responses without XP, supplies, relationship, story or canon rewards."
+        "Living micro-events now expose optional bounded player responses without XP, supplies, relationship, story or canon rewards.",
+        "Chronicle & Journey now supports explicit entry browsing with readable source-grounded labels instead of raw technical IDs."
       ],
       "missing_work": [
-        "Tune player-life/progression/Chronicle presentation from PIE/device evidence.",
         "Validate current exact head in UE4.27."
       ],
       "acceptance_criteria": [
