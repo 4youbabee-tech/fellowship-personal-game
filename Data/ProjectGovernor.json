@@ -2744,8 +2744,8 @@
   ],
   "active_gate": {
     "id": "DEEP_EXACT_HEAD_STABILITY_GATE",
-    "status": "ACTIVE_RED_REPAIR",
-    "blocks_major_feature_expansion": true,
+    "status": "PASSED",
+    "blocks_major_feature_expansion": false,
     "required_evidence": [
       "Pre-Unreal including deep audit",
       "real UE4.27.2 compile and deterministic production import",
@@ -2753,7 +2753,7 @@
       "route/story/state isolated disk roundtrip",
       "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "Audit/repair may continue while red; unrelated expansion waits for a green exact head.",
+    "note": "Exact-head automation is green and the major production wave is unlocked. Machine evidence still does not equal rendered PIE, target-device performance or human visual acceptance.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -2765,6 +2765,11 @@
         "PG-102"
       ],
       "behavior": "Repair exact-head failures first; machine evidence never promotes visual/device acceptance."
+    },
+    "last_green_head": "096a2a9658b0da171f390505b4d0331c1a4e0f8f",
+    "evidence": {
+      "pre_unreal": "PASS #468",
+      "unreal_build": "PASS #303"
     }
   },
   "reference_only_files": [
@@ -3019,13 +3024,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Run #300 proved deterministic material files were physically saved but warning debt still counted intentional import-time existence probes as runtime package failures.",
+    "reason": "The exact-head stability runway is green and the owner explicitly approved opening the large production wave.",
     "summary": [
-      "Deterministic material persistence itself worked: #300 saved 225 material packages with zero save failures and verified zero missing physical .uasset files.",
-      "The remaining 216 'missing world packages' were emitted before material creation by LoadObject existence probes inside the importer, then counted by a guard that merged import and runtime logs.",
-      "Importer existence checks now use FindObject plus DoesPackageExist before LoadObject, eliminating expected missing-package warnings.",
-      "Warning debt now scopes package/audio/rig/runtime warnings to startup/chapter/state logs while tangent/binormal import quality still uses all exact-head logs.",
-      "Stale CI logs are deleted before every exact-head build so warning evidence cannot leak across runs."
+      "PR #53 exact head 096a2a9658b0da171f390505b4d0331c1a4e0f8f passed Pre-Unreal Validation #468.",
+      "The same exact head passed Unreal Build Validation #303.",
+      "Startup, P1C01-P1C08 runtime audits, route/story/save disk roundtrip and warning-debt gates are no longer blocking major production expansion.",
+      "Remaining tangent/binormal geometry quality debt stays visible and is not hidden by threshold inflation.",
+      "The next active program is a source-bible-driven world/character/presentation mega production wave."
     ]
   },
   "development_mode": {
@@ -3062,39 +3067,41 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "EXACT_HEAD_RUNTIME_WARNING_EVIDENCE_CLEAN",
+  "current_focus": "BIBLE_DRIVEN_MEGA_PRODUCTION_WAVE_V5",
   "immediate_next_large_actions": [
-    "Prove zero runtime missing-world-package debt on the next exact-head chain.",
-    "Keep tangent/binormal debt visible as art-quality debt without blocking the stability runway at the current measured baseline.",
-    "Once both Pre-Unreal and Unreal exact-head workflows are green, open the next mega production wave."
+    "Execute the source-bible-driven world composition wave across Moria, Anduin/Amon Hen and Isengard while preserving film-locked outcomes.",
+    "Keep Pre-Unreal and UE4.27.2 exact-head validation green after each major production batch.",
+    "Continue character rig/animation/material/VFX/audio production without promoting visual/device acceptance until real PIE/device/human evidence exists."
   ],
   "session_handoff": {
-    "source_head": "c4fe8893e453d7eed80920e886bbfd40f4805d0d",
+    "source_head": "096a2a9658b0da171f390505b4d0331c1a4e0f8f",
     "pull_request": 53,
     "branch": "work/automation-first-runtime-observation",
-    "evidence_run": "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/35502458334",
     "verified": {
-      "pre_unreal": "PASS #451",
-      "msvc_probe": "PASS #286",
-      "ue4_compile": "PASS #286",
-      "production_import": "PASS #286",
-      "python_resolution": "PASS #286",
-      "startup": "PASS #286",
-      "chapter_audit": "PASS #286 P1C01-P1C08",
-      "state_audit": "PASS #286 including CI disk save/load roundtrip"
+      "pre_unreal": "PASS #468",
+      "unreal_build": "PASS #303",
+      "ue4_compile": "PASS #303",
+      "production_import": "PASS #303",
+      "startup": "PASS #303",
+      "chapter_audit": "PASS #303 P1C01-P1C08",
+      "state_audit": "PASS #303 route/story/save real disk roundtrip"
     },
-    "failing": {
-      "warning_guard": "FAIL #286 only: 78 unique missing world material packages > ceiling 71"
-    },
+    "failing": {},
     "measured_debt": {
       "degenerate_tangent_meshes": 50,
       "nearly_zero_binormal_meshes": 53,
-      "missing_world_material_packages": 78
+      "missing_world_packages": 0,
+      "missing_audio": 0,
+      "missing_rigs": 0,
+      "default_materials": 0,
+      "directional_light_warnings": 0,
+      "npc_spawn_collision_failures": 0
     },
     "next_actions": [
-      "Run the material-persistence repair through compile/import/startup/eight chapters/state/warning guard.",
-      "If the package count reaches zero or a smaller concrete set, repair the remaining identities rather than raising the ceiling.",
-      "After the full exact-head chain is green, continue visible Moria/Amon Hen/character production while separately paying down the 50/53 geometry tangent debt."
+      "Run the Bible-driven Moria / Anduin-Amon Hen / Isengard composition wave.",
+      "Preserve film-locked Watcher, Balrog, Lurtz and Amon Hen outcomes.",
+      "Run exact-head Pre-Unreal and Unreal validation after the batch.",
+      "Do not claim final visual/device acceptance without real PIE, target-device measurements and human review."
     ],
     "scope_rule": "Machine evidence does not replace rendered PIE/device/human acceptance."
   }
