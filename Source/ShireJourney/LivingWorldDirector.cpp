@@ -1083,12 +1083,32 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
     {
         // Caradhras danger is authored through storm/group traversal, not invented
         // resident scatter. Moria remains dead-city threat/aftermath only.
-        if (ActiveChapterId == TEXT("P1C05") || ActiveChapterId == TEXT("P1C06"))
+        if (ActiveChapterId == TEXT("P1C05"))
         {
             return false;
         }
 
-        if (ActiveChapterId == TEXT("P1C03") || ActiveChapterId == TEXT("P1C08"))
+        if (ActiveChapterId == TEXT("P1C06"))
+        {
+            UStaticMesh* ThreatMotionMesh = Random.FRand() > 0.5f
+                ? LoadObject<UStaticMesh>(nullptr,
+                    TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster"))
+                : LoadObject<UStaticMesh>(nullptr,
+                    TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor"));
+            if (AWorldAmbientMotionActor* Motion = SpawnAmbientMotionActor(
+                ThreatMotionMesh,
+                Origin,
+                FRotator(0.0f, Random.FRandRange(-30.0f, 30.0f), 0.0f),
+                FVector(0.60f),
+                TEXT("SHIVER"),
+                3.2f,
+                1.55f))
+            {
+                OutEvent.Actors.Add(Motion);
+            }
+            Duration = 8.0f;
+        }
+        else if (ActiveChapterId == TEXT("P1C03") || ActiveChapterId == TEXT("P1C08"))
         {
             const FVector SkyOrigin = Origin + FVector(0.0f, 0.0f, 420.0f);
             if (AShireAmbientNPC* Bird = SpawnAmbientActor(
