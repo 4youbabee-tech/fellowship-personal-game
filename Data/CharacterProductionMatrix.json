@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "matrix_id": "PART1_CHARACTER_PRODUCTION_MATRIX_V1",
-  "status": "MODULAR_FOUNDATIONS_PLUS_IDENTITY_PERFORMANCE_ACTIVE_FINAL_RIGS_PENDING",
+  "status": "DEDICATED_EQUIPMENT_V4_ACTIVE_FINAL_RIGS_PENDING",
   "target": "Replace recognizable proxy/modular stand-ins with production characters while preserving UE4.27.2 performance and each character's instantly readable silhouette.",
   "sourcing_policy": {
     "preferred_order": [
@@ -121,7 +121,7 @@
     {
       "id": "SAM",
       "tier": "HERO_COMPANION",
-      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "status": "DEDICATED_EQUIPMENT_MODULAR_FOUNDATION_RIG_PENDING",
       "body": "hobbit sturdy-proportion",
       "identity": [
         "travel pack",
@@ -138,7 +138,9 @@
         "dedicated torso",
         "dedicated head",
         "dedicated hair",
-        "shared rig-family limbs/props where applicable"
+        "shared rig-family limbs/props where applicable",
+        "SM_Sam_Sword",
+        "SM_Sam_Pack"
       ],
       "final_gaps": [
         "skeletal rig/skin",
@@ -156,12 +158,13 @@
         "hair_vertices": 393,
         "hair_faces": 692
       },
-      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig.",
+      "equipment_wave": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4"
     },
     {
       "id": "MERRY",
       "tier": "CORE_COMPANION",
-      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "status": "DEDICATED_EQUIPMENT_MODULAR_FOUNDATION_RIG_PENDING",
       "body": "hobbit slim-medium",
       "identity": [
         "distinct hair/clothes",
@@ -176,7 +179,9 @@
         "dedicated torso",
         "dedicated head",
         "dedicated hair",
-        "shared rig-family limbs/props where applicable"
+        "shared rig-family limbs/props where applicable",
+        "SM_Merry_Cloak",
+        "SM_Merry_Sword"
       ],
       "final_gaps": [
         "skeletal rig/skin",
@@ -194,12 +199,13 @@
         "hair_vertices": 379,
         "hair_faces": 668
       },
-      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig.",
+      "equipment_wave": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4"
     },
     {
       "id": "PIPPIN",
       "tier": "CORE_COMPANION",
-      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "status": "DEDICATED_EQUIPMENT_MODULAR_FOUNDATION_RIG_PENDING",
       "body": "hobbit youthful",
       "identity": [
         "lighter movement",
@@ -215,7 +221,9 @@
         "dedicated torso",
         "dedicated head",
         "dedicated hair",
-        "shared rig-family limbs/props where applicable"
+        "shared rig-family limbs/props where applicable",
+        "SM_Pippin_Cloak",
+        "SM_Pippin_Sword"
       ],
       "final_gaps": [
         "skeletal rig/skin",
@@ -233,12 +241,13 @@
         "hair_vertices": 407,
         "hair_faces": 716
       },
-      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig.",
+      "equipment_wave": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4"
     },
     {
       "id": "ARAGORN",
       "tier": "HERO_COMPANION",
-      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "status": "DEDICATED_EQUIPMENT_MODULAR_FOUNDATION_RIG_PENDING",
       "body": "tall ranger",
       "identity": [
         "weathered ranger layers",
@@ -255,7 +264,10 @@
         "dedicated torso",
         "dedicated head",
         "dedicated hair",
-        "shared rig-family limbs/props where applicable"
+        "shared rig-family limbs/props where applicable",
+        "SM_Aragorn_Cloak",
+        "SM_Aragorn_Sword",
+        "SM_Aragorn_Bow"
       ],
       "final_gaps": [
         "skeletal rig/skin",
@@ -273,12 +285,13 @@
         "hair_vertices": 449,
         "hair_faces": 788
       },
-      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig.",
+      "equipment_wave": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4"
     },
     {
       "id": "BOROMIR",
       "tier": "HERO_COMPANION",
-      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "status": "DEDICATED_EQUIPMENT_MODULAR_FOUNDATION_RIG_PENDING",
       "body": "armored human",
       "identity": [
         "shield",
@@ -295,7 +308,10 @@
         "dedicated torso",
         "dedicated head",
         "dedicated hair",
-        "shared rig-family limbs/props where applicable"
+        "shared rig-family limbs/props where applicable",
+        "SM_Boromir_Cloak",
+        "SM_Boromir_Sword",
+        "SM_Boromir_Shield"
       ],
       "final_gaps": [
         "skeletal rig/skin",
@@ -313,12 +329,13 @@
         "hair_vertices": 379,
         "hair_faces": 668
       },
-      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig.",
+      "equipment_wave": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4"
     },
     {
       "id": "LEGOLAS",
       "tier": "HERO_COMPANION",
-      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "status": "DEDICATED_EQUIPMENT_MODULAR_FOUNDATION_RIG_PENDING",
       "body": "slender elf",
       "identity": [
         "bow/quiver",
@@ -334,7 +351,10 @@
         "dedicated torso",
         "dedicated head",
         "dedicated hair",
-        "shared rig-family limbs/props where applicable"
+        "shared rig-family limbs/props where applicable",
+        "SM_Legolas_Cloak",
+        "SM_Legolas_Bow",
+        "SM_Legolas_WhiteKnife"
       ],
       "final_gaps": [
         "skeletal rig/skin",
@@ -352,12 +372,13 @@
         "hair_vertices": 477,
         "hair_faces": 836
       },
-      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig.",
+      "equipment_wave": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4"
     },
     {
       "id": "GIMLI",
       "tier": "HERO_COMPANION",
-      "status": "REFINED_MODULAR_PRODUCTION_FOUNDATION_RIG_PENDING",
+      "status": "DEDICATED_EQUIPMENT_MODULAR_FOUNDATION_RIG_PENDING",
       "body": "dwarf compact-heavy",
       "identity": [
         "beard mass",
@@ -374,7 +395,10 @@
         "dedicated torso",
         "dedicated head",
         "dedicated hair",
-        "shared rig-family limbs/props where applicable"
+        "shared rig-family limbs/props where applicable",
+        "SM_Gimli_Axe",
+        "SM_Gimli_Beard",
+        "SM_Gimli_Helmet"
       ],
       "final_gaps": [
         "skeletal rig/skin",
@@ -392,7 +416,8 @@
         "hair_vertices": 421,
         "hair_faces": 740
       },
-      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig."
+      "performance_v3": "Identity-specific procedural fallback gesture/gaze/weight/composure active until final skeletal rig.",
+      "equipment_wave": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4"
     },
     {
       "id": "BILBO",
@@ -822,7 +847,7 @@
   },
   "procedural_performance_wave": {
     "id": "NAMED_CHARACTER_PERFORMANCE_V3",
-    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "status": "ENGINE_PROVEN_PR58_FINAL_RIGS_PENDING",
     "owner": "AShireNPC modular fallback path",
     "source_plan": "Data/CinematicPerformancePlanV3.json",
     "controls": [
@@ -842,6 +867,27 @@
       "Merry",
       "Pippin"
     ],
-    "boundary": "Fallback acting only; final skeletal/facial/cloth/combat animation remains pending."
+    "boundary": "Fallback acting only; final skeletal/facial/cloth/combat animation remains pending.",
+    "engine_proof": {
+      "head": "22c6f58bc20ec8bfd97cf6efa970aff331a5dc04",
+      "pre_unreal": "#526 SUCCESS",
+      "unreal_build": "#361 SUCCESS"
+    }
+  },
+  "current_character_wave": {
+    "id": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4",
+    "status": "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "plan": "Data/HeroCharacterEquipmentSilhouetteV4.json",
+    "added_project_owned_obj_assets": 18,
+    "scope": [
+      "Sam",
+      "Merry",
+      "Pippin",
+      "Aragorn",
+      "Boromir",
+      "Legolas",
+      "Gimli"
+    ],
+    "rule": "Dedicated equipment assets replace generic common silhouettes where available; final skeletal rig + AnimBP still has priority."
   }
 }
