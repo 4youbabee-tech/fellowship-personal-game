@@ -14,7 +14,8 @@ permissions:
 
 concurrency:
   group: unreal-build-${{ github.repository }}-ue4-device
-  cancel-in-progress: false
+  # The single UE4 device should validate only the newest PR head.
+  cancel-in-progress: true
 
 jobs:
   unreal-build:
@@ -85,11 +86,14 @@ jobs:
           Write-Host "Runner bootstrap succeeded."
 
       - name: Checkout exact PR head
+        timeout-minutes: 8
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 1
-          clean: true
+          # Avoid full clean on the self-hosted UE workspace; stale generated files can be locked.
+          # The exact SHA is verified in the next step, so a forced checkout without git clean is sufficient.
+          clean: false
           persist-credentials: false
           lfs: false
           submodules: false
