@@ -706,10 +706,10 @@
     }
   ],
   "totals": {
-    "production_files": 344,
+    "production_files": 362,
     "obj_files": 318,
     "mtl_files": 19,
-    "image_files": 7
+    "image_files": 24
   },
   "newly_filled_foundation_roots": [
     "SourceAssets/Production/World/Isengard",
@@ -726,5 +726,8 @@
     "human visual acceptance",
     "mega-wave rendered composition acceptance",
     "target-device transition-hitch measurement"
+  ],
+  "notes": [
+    "Totals preserve the prior 347/304/18/24 baseline and add 14 Moria OBJ files plus the previously existing Isengard RegionalMaterials.mtl entry."
   ]
 }
