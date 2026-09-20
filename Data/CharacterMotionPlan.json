@@ -88,7 +88,9 @@
     "Companion catch-up remains capped and teleports only beyond the existing safety distance.",
     "Final skeletal/facial/cloth acceptance requires UE4.27 import, PIE and target-device evidence.",
     "Use distance-based animation update throttling/URO for non-hero skeletal actors once final skeletal rigs are active.",
-    "Keep standard locomotion in-place; root motion is not the default traversal system."
+    "Keep standard locomotion in-place; root motion is not the default traversal system.",
+    "When a final named-NPC skeletal rig activates, enable Unreal Update Rate Optimizations and render-visibility-based animation ticking.",
+    "Stationary named NPC actor ticks may throttle at long distance, while active companions and dialogue acting remain full-rate."
   ],
   "acceptance_boundary": {
     "implemented_now": [
@@ -111,5 +113,17 @@
     "root_motion_scope": "Core traversal and companion locomotion remain in-place/code-driven. Root motion is reserved for bounded cinematic or attack montages only when explicitly justified and validated.",
     "anim_blueprint_reuse": "Do not duplicate locomotion logic per character. Keep the current per-character asset resolution contract, but prefer a shared humanoid locomotion base/logic with thin character-specific wrappers or data overrides when skeleton compatibility allows.",
     "skeletal_performance": "Before increasing simultaneous skeletal crowds, enable distance-based animation LOD / Update Rate Optimization for non-hero actors and verify target-device behavior."
+  },
+  "runtime_performance_handoff": {
+    "status": "IMPLEMENTED_PENDING_ENGINE_PROOF",
+    "skeletal_npc_uro": true,
+    "visibility_tick": "OnlyTickPoseWhenRendered",
+    "actor_tick_policy": {
+      "companion_or_acting": "full-rate",
+      "near_stationary": "full-rate",
+      "beyond_2200_units": "0.10s interval",
+      "beyond_4200_units": "0.22s interval"
+    },
+    "acceptance_boundary": "Source/runtime safeguard only; UE4.27 compile and target-device multi-character profiling remain required."
   }
 }
