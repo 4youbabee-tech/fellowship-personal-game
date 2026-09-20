@@ -91,7 +91,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Friendship and revelry memory"
+      "display_label": "Friendship/revelry memory beat"
     },
     {
       "discovery_id": "SHIRE_MARKET_GARDEN_LOOP",
@@ -108,7 +108,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Market, garden and mill life"
+      "display_label": "Market, garden and mill micro-life loop"
     },
     {
       "discovery_id": "SHIRE_FIELD_RACE",
@@ -125,7 +125,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "A harmless field-path race"
+      "display_label": "Harmless field-path race/play beat"
     },
     {
       "discovery_id": "SHIRE_QUIET_FEET",
@@ -142,7 +142,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Quiet feet through the hedges"
+      "display_label": "Quiet crouch route through Hobbiton hedges"
     },
     {
       "discovery_id": "BREE_GATE_GOSSIP",
@@ -159,7 +159,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Bree gate gossip"
+      "display_label": "Gatekeeper/town gossip without future knowledge"
     },
     {
       "discovery_id": "BREE_STABLE_YARD",
@@ -176,7 +176,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Prancing Pony stable yard"
+      "display_label": "Stable-yard observation and horse/road chatter"
     },
     {
       "discovery_id": "BREE_INN_KITCHEN_LIFE",
@@ -193,7 +193,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Life behind the Prancing Pony"
+      "display_label": "Inn service/kitchen micro-life"
     },
     {
       "discovery_id": "WILDERNESS_TRACK_SIGNS",
@@ -210,7 +210,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Strider's trail signs"
+      "display_label": "Read tracks/signs with Strider context"
     },
     {
       "discovery_id": "WEATHERTOP_RUIN_MARKERS",
@@ -227,7 +227,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Weathertop ruin markers"
+      "display_label": "Ruined-stone landmark observations"
     },
     {
       "discovery_id": "CAMP_PREPARATION",
@@ -244,7 +244,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Weathertop camp preparations"
+      "display_label": "Fire/gear preparation and companion concern"
     },
     {
       "discovery_id": "RIVENDELL_LIBRARY",
@@ -261,7 +261,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Rivendell library and map lore"
+      "display_label": "Books/maps and bounded lore discovery"
     },
     {
       "discovery_id": "RIVENDELL_OVERLOOK",
@@ -278,7 +278,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Rivendell valley overlook"
+      "display_label": "Valley overlook and companion reflection"
     },
     {
       "discovery_id": "RIVENDELL_SMITHY_PREP",
@@ -295,7 +295,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Fellowship departure preparations"
+      "display_label": "Fellowship departure preparation"
     },
     {
       "discovery_id": "FELLOWSHIP_TRAINING",
@@ -312,7 +312,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Fellowship camp practice"
+      "display_label": "Travel-camp practice and banter"
     },
     {
       "discovery_id": "CARADHRAS_SHELTER_CHECK",
@@ -329,7 +329,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Caradhras shelter check"
+      "display_label": "Shelter/gear survival observation"
     },
     {
       "discovery_id": "WEST_GATE_INSCRIPTIONS",
@@ -346,7 +346,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Marks at the West Gate"
+      "display_label": "Stone/door observations before opening"
     },
     {
       "discovery_id": "MORIA_SIDE_CHAMBER",
@@ -363,7 +363,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "A forgotten Moria side chamber"
+      "display_label": "Empty side chamber with environmental history"
     },
     {
       "discovery_id": "MORIA_ECHO_ROUTE",
@@ -380,7 +380,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Follow the echo"
+      "display_label": "Sound/echo navigation observation"
     },
     {
       "discovery_id": "MORIA_DWARVEN_RELIEF",
@@ -397,7 +397,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "A dwarven relief"
+      "display_label": "Dwarven relief and Gimli reaction"
     },
     {
       "discovery_id": "LORIEN_GRIEF_CLEARING",
@@ -414,7 +414,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "A quiet grief clearing"
+      "display_label": "Quiet companion grief space"
     },
     {
       "discovery_id": "LORIEN_CRAFT_PLATFORM",
@@ -431,7 +431,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Galadhrim craft platform"
+      "display_label": "Elf craft/lantern micro-life"
     },
     {
       "discovery_id": "LORIEN_RIVER_PREP",
@@ -448,7 +448,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Lorien river preparations"
+      "display_label": "Boat/gift departure preparation"
     },
     {
       "discovery_id": "ANDUIN_BANK_WATCH",
@@ -465,7 +465,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Watch on the Anduin bank"
+      "display_label": "Riverbank watch and companion tension"
     },
     {
       "discovery_id": "AMON_HEN_FALLEN_STONE",
@@ -482,7 +482,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "A fallen stone of Amon Hen"
+      "display_label": "Ancient fallen-stone landmark"
     },
     {
       "discovery_id": "AMON_HEN_CAMP_DISTANCE",
@@ -499,7 +499,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Distance in the Fellowship camp"
+      "display_label": "Observe growing companion separation"
     },
     {
       "discovery_id": "ORTHANC_PARAPET_VIEW",
@@ -516,7 +516,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Orthanc parapet view"
+      "display_label": "Observe industrial transformation below"
     },
     {
       "discovery_id": "ORTHANC_OLD_ALLIANCE_MEMORY",
@@ -533,7 +533,7 @@
       "story_effect": "NONE",
       "may_advance_required_anchor": false,
       "may_change_canon_outcome": false,
-      "display_label": "Old counsel at Orthanc"
+      "display_label": "Bounded reflection on broken counsel/old alliance"
     }
   ],
   "region_completion_bonuses": [
