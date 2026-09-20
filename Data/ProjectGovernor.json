@@ -3127,14 +3127,14 @@
     "Receive the next owner/programmer proposal, normalize it through the Governor, then implement it from latest green develop on one short branch."
   ],
   "session_handoff": {
-    "source_head": "c929ab657dba10266536d51aa04fb21da04ada12",
+    "source_head": "9080f2931e337ce0e6150ea72dcf8ccd5bc3f891",
     "branch": "production/character-surface-parity-v1",
     "verified": {
-      "pre_unreal": "PASS #504 on c929ab657dba10266536d51aa04fb21da04ada12",
-      "unreal_build": "PASS #339 attempt 2 on c929ab657dba10266536d51aa04fb21da04ada12"
+      "pre_unreal": "PASS run 35536813304 on 9080f2931e337ce0e6150ea72dcf8ccd5bc3f891",
+      "unreal_build": "PASS run 35536813265 on 9080f2931e337ce0e6150ea72dcf8ccd5bc3f891"
     },
     "failing": {
-      "unreal": "Initial material-wave engine run failed before C++ translation because compiler TEMP directory was absent. Follow-up source fixes directory precondition; newest-head validation pending."
+      "latest_unreal": "Documentation follow-up ba91959 engine run cancelled before a job was allocated. Its source parent 9080f29 passed full engine validation; do not transfer that result to this newer head."
     },
     "next_actions": [
       "Exact-head Pre-Unreal and Unreal build/import/startup/chapter/state/save gates",
@@ -3150,30 +3150,29 @@
     "scope_rule": "Machine evidence and merge status do not replace rendered PIE/device/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+        "sha": "9080f2931e337ce0e6150ea72dcf8ccd5bc3f891",
         "pre_unreal": {
-          "sha": "c929ab657dba10266536d51aa04fb21da04ada12",
-          "run_id": 35534129087,
+          "sha": "9080f2931e337ce0e6150ea72dcf8ccd5bc3f891",
+          "run_id": 35536813304,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "c929ab657dba10266536d51aa04fb21da04ada12",
-          "run_id": 35534128972,
-          "status": "SUCCESS",
-          "attempt": 2
+          "sha": "9080f2931e337ce0e6150ea72dcf8ccd5bc3f891",
+          "run_id": 35536813265,
+          "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "ed1b7e24e6d7c629c6db3fd671430ff3e0598835",
+        "sha": "ba91959a62b50463b3f4f700bfc9ab945c8db92f",
         "pre_unreal": {
-          "sha": "ed1b7e24e6d7c629c6db3fd671430ff3e0598835",
-          "run_id": 35536692195,
+          "sha": "ba91959a62b50463b3f4f700bfc9ab945c8db92f",
+          "run_id": 35536870361,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "ed1b7e24e6d7c629c6db3fd671430ff3e0598835",
-          "run_id": 35536692177,
-          "status": "FAILURE"
+          "sha": "ba91959a62b50463b3f4f700bfc9ab945c8db92f",
+          "run_id": 35536870355,
+          "status": "CANCELLED"
         }
       }
     },
@@ -3288,7 +3287,7 @@
     "deletion_rule": "Do not delete a branch until meaningful unique content is present in develop or explicitly superseded. Branch deletion is repository housekeeping, not a substitute for merging or auditing."
   },
   "character_surface_followthrough": {
-    "status": "IMPLEMENTED_VALIDATION_PENDING",
+    "status": "RUNTIME_VALIDATED_ON_9080f293_NEWEST_HEAD_PENDING",
     "base_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
     "branch": "production/character-surface-parity-v1",
     "source_basis": [
@@ -3318,7 +3317,8 @@
       "unreal_run_id": 35536692177,
       "cause_observed": "UnrealBuildTool C# compilation could not create temporary file: DirectoryNotFoundException for job-local TEMP. No gameplay C++ compiler diagnostic.",
       "repair": "Create/check inherited compiler TEMP immediately before invoking Build.bat; fail explicitly if unavailable.",
-      "status": "IMPLEMENTED_VALIDATION_PENDING"
+      "status": "VALIDATED_ON_9080f293",
+      "validation_run_id": 35536813265
     }
   }
 }
