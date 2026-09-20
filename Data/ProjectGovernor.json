@@ -3,7 +3,7 @@
   "authority_id": "FELLOWSHIP_SINGLE_PROJECT_GOVERNOR_V2",
   "authority_rule": "This file is the sole authoritative project-management decision source. Other docs/data may describe implementation details but must not override requirements, priorities, decisions, conflicts, active gate, or quality status recorded here.",
   "repository": "4youbabee-tech/fellowship-personal-game",
-  "active_branch": "production/cinematic-audio-life-v3",
+  "active_branch": "develop",
   "engine": "Unreal Engine 4.27.2",
   "target_profile": {
     "platform": "Windows",
@@ -3489,7 +3489,9 @@
       "cp56/fellowship-experience-megapass-v1",
       "work/automation-first-runtime-observation"
     ],
-    "cleanup_rule": "A historical branch may be deleted only after its meaningful content is confirmed present in develop or intentionally superseded. Diverged branches with unique commits remain preserved until audited."
+    "cleanup_rule": "A historical branch may be deleted only after its meaningful content is confirmed present in develop or intentionally superseded. Diverged branches with unique commits remain preserved until audited.",
+    "current_short_branch": "production/cinematic-audio-life-v3",
+    "integration_baseline": "develop"
   },
   "side_branch_audit": {
     "date": "2026-09-20",
