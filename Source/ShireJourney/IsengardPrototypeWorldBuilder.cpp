@@ -226,6 +226,39 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
             FurnaceStack ? FVector(0.55f) : FVector(0.10f, 0.10f, 0.85f),
             FLinearColor(0.16f, 0.11f, 0.07f), FRotator::ZeroRotator, false);
     }
+
+    // Bible-driven secondary industrial ring: pits, service cuts and stacks repeat on
+    // the opposite side of Orthanc so the valley reads as a war-production system,
+    // not a single decorative furnace row. All pieces are visual-only to protect traversal.
+    for (int32 I = 0; I < 6; ++I)
+    {
+        const FVector InnerPit(-350.0f + I * 310.0f, -760.0f - (I % 2) * 150.0f, 8.0f);
+        SpawnShape(PitRim ? PitRim : CylinderMesh, InnerPit,
+            PitRim ? FVector(0.82f) : FVector(0.62f, 0.62f, 0.10f),
+            FLinearColor(0.085f, 0.072f, 0.062f), FRotator(0.0f, I * 13.0f, 0.0f), false);
+        SpawnShape(FurnaceStack ? FurnaceStack : CylinderMesh, InnerPit + FVector(0, 0, 42),
+            FurnaceStack ? FVector(0.46f) : FVector(0.085f, 0.085f, 0.72f),
+            FLinearColor(0.14f, 0.09f, 0.06f), FRotator(0.0f, I * -11.0f, 0.0f), false);
+        SpawnShape(CubeMesh, InnerPit + FVector(0.0f, 210.0f, -2.0f),
+            FVector(1.25f, 0.24f, 0.035f), FLinearColor(0.075f, 0.068f, 0.060f),
+            FRotator(0.0f, I * 5.0f, 0.0f), false);
+    }
+
+    if (ParapetSlab)
+    {
+        for (int32 I = 0; I < 8; ++I)
+        {
+            const float Angle = I * 45.0f;
+            const float R = FMath::DegreesToRadians(Angle);
+            const FVector BaseRing(
+                900.0f + FMath::Cos(R) * 430.0f,
+                FMath::Sin(R) * 430.0f,
+                25.0f);
+            SpawnShape(ParapetSlab, BaseRing, FVector(0.58f),
+                FLinearColor(0.055f, 0.060f, 0.065f), FRotator(0.0f, Angle + 90.0f, 0.0f), false);
+        }
+    }
+
     const FVector ForgeGlowLocations[] = {
         FVector(50.0f, 810.0f, 120.0f),
         FVector(830.0f, 900.0f, 130.0f),
