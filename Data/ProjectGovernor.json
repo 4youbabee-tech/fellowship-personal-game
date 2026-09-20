@@ -145,7 +145,9 @@
         "CP49 common terrain kit adds production hills/cliffs/river-bank/boulder silhouettes across Part I",
         "CP55 adds project-owned bird/rabbit/butterfly fauna with bounded flight, hop and flutter movement through the existing LivingWorldDirector micro-event path",
         "LivingWorldDirector now spawns bounded reward-free player interaction markers for work, traveler, market and social micro-events when story danger is inactive.",
-        "Living-world interaction objects are ephemeral, chapter-bound and destroyed with their parent micro-event; they do not create persistent quest or save state."
+        "Living-world interaction objects are ephemeral, chapter-bound and destroyed with their parent micro-event; they do not create persistent quest or save state.",
+        "V9 environmental-life runtime adds chapter-specific prop motion and bounded shadowless glow accents through AWorldAmbientMotionActor.",
+        "Moria now receives environmental danger/aftermath motion while retaining zero civilian baseline; Isengard receives bounded industrial motion without generic crowd simulation."
       ],
       "missing_work": [
         "production-quality terrain/material/art replacement beyond current procedural detail",
@@ -156,7 +158,8 @@
         "Ordinary traversal repeatedly reveals believable activity or environmental storytelling",
         "Activity responds to region/story state",
         "Target laptop performance remains acceptable",
-        "Each chapter records living-world acceptance separately"
+        "Each chapter records living-world acceptance separately",
+        "Sparse/danger regions must still feel authored through environment/wildlife/threat motion without inventing unsupported civilian populations."
       ],
       "dependencies": [
         "REQ-WORLD-002",
@@ -402,10 +405,12 @@
         "distance-adaptive NPC ticks",
         "instanced ground cover",
         "one major generated region at a time",
-        "low/medium 720p target"
+        "low/medium 720p target",
+        "Environmental-life V9 uses ephemeral non-colliding actors, bounded event caps and shadowless point-light accents."
       ],
       "missing_work": [
-        "focused target-device traversal/performance observation for current production Shire"
+        "focused target-device traversal/performance observation for current production Shire",
+        "Measure V9 environmental-motion/light cost on target hardware; disable glow before motion under pressure."
       ],
       "acceptance_criteria": [
         "30 FPS floor target at 720p Low/Medium without severe memory pressure or unplayable hitching"
@@ -1126,7 +1131,9 @@
         "regional role/prop mixes",
         "gradual population replenish and cull loop",
         "existing ambient schedules/social conversations/player awareness reused",
-        "five-event active cap with six-second cadence floor"
+        "five-event active cap with six-second cadence floor",
+        "V9 environmental-life runtime adds chapter-specific prop motion and bounded shadowless glow accents through AWorldAmbientMotionActor.",
+        "Moria now receives environmental danger/aftermath motion while retaining zero civilian baseline; Isengard receives bounded industrial motion without generic crowd simulation."
       ],
       "missing_work": [
         "UE4.27 compile/import validation",
@@ -1140,7 +1147,8 @@
         "Rivendell and Lothlorien have region-appropriate visible inhabitants",
         "Moria has no fabricated civilian baseline population",
         "baseline actors cull and replenish without save/story ownership",
-        "target laptop remains above the agreed performance floor after tuning"
+        "target laptop remains above the agreed performance floor after tuning",
+        "Sparse/danger regions must still feel authored through environment/wildlife/threat motion without inventing unsupported civilian populations."
       ],
       "dependencies": [
         "REQ-WORLD-005",
@@ -2011,14 +2019,17 @@
         "Project Sources define silhouette-first landmarks, route-readable architecture/light, sightline/portal streaming and Moria state/mission constraints.",
         "Existing M_ProductionSurface importer supports per-material Color/Roughness/Metallic through MTL Kd/Pr/Pm.",
         "Wave prioritizes PBR-style material enrichment across existing assets before multiplying heavyweight synchronous asset loads.",
-        "Moria receives the first new modular production kit because it is the stated top world-art priority and the source matrix identifies it as the second proof slice."
+        "Moria receives the first new modular production kit because it is the stated top world-art priority and the source matrix identifies it as the second proof slice.",
+        "WorldAmbientMotionActor.cpp/h provides reusable low-cost motion/glow accents across Part I and Isengard.",
+        "LivingWorldEventPlan V9 and WorldLifeSaturationPlan V9 connect motion to chapter-state event budgets."
       ],
       "missing_work": [
         "Complete mass Pr/Pm material-response enrichment across Part I world palettes.",
         "Add and runtime-wire a bounded new Moria modular architecture/prop kit without moving canonical quest anchors.",
         "Run exact-head Pre-Unreal and Unreal build/import/runtime validation.",
         "Perform rendered PIE/device/human visual review and target-device hitch/FPS/memory measurement.",
-        "Continue the same material/content saturation pattern into Amon Hen, Isengard, Rivendell, Lothlorien, Anduin, then Shire/Bree/Weathertop."
+        "Continue the same material/content saturation pattern into Amon Hen, Isengard, Rivendell, Lothlorien, Anduin, then Shire/Bree/Weathertop.",
+        "Continue visible saturation after the environmental-life proof into Amon Hen, Rivendell, Lothlorien, Anduin, Shire/Bree/Road/Weathertop with exact-head engine checks between coherent batches."
       ],
       "acceptance_criteria": [
         "All touched production MTL materials have explicit roughness and metallic intent compatible with the importer.",
@@ -2845,8 +2856,8 @@
   ],
   "active_gate": {
     "id": "DEEP_EXACT_HEAD_STABILITY_GATE",
-    "status": "PASSED",
-    "blocks_major_feature_expansion": false,
+    "status": "FAILED",
+    "blocks_major_feature_expansion": true,
     "required_evidence": [
       "Pre-Unreal including deep audit",
       "real UE4.27.2 compile and deterministic production import",
@@ -2854,7 +2865,7 @@
       "route/story/state isolated disk roundtrip",
       "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "The latest completed production candidate 3b5f9f2c0a5f30431f9020efceef1986e48d6cef passed Pre-Unreal #509 and Unreal Build #344. Start the mega wave from current develop, but do not transfer those green results to the new candidate.",
+    "note": "Exact head b773a40cddea426520d16fc330e0ee6e4e54bb18 failed Pre-Unreal #515 on a stale validator phrase and Unreal Build #350 during production import because four new Moria Iron meshes resolved to defaultMat. Both root causes have been repaired on subsequent branch commits, but the repaired head has not yet earned exact-head proof.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -2872,7 +2883,25 @@
       "pre_unreal": "PASS #509",
       "unreal_build": "PASS #344"
     },
-    "evidence_scope": "PR #54 exact candidate head; develop merge commit 2a5f96fd552cbe6343474721ca98d86d8629fc00 contains that tree but the new mega-wave candidate must earn its own exact-head proof."
+    "evidence_scope": "PR #54 exact candidate head; develop merge commit 2a5f96fd552cbe6343474721ca98d86d8629fc00 contains that tree but the new mega-wave candidate must earn its own exact-head proof.",
+    "current_owner_observation": {
+      "sha": "b773a40cddea426520d16fc330e0ee6e4e54bb18",
+      "pre_unreal": {
+        "run_number": 515,
+        "status": "FAILURE",
+        "root_cause": "PG-107 expected obsolete screenplay precedence phrase after source authority was strengthened."
+      },
+      "unreal": {
+        "run_number": 350,
+        "status": "FAILURE",
+        "root_cause": "Import authored material binding failed for SM_MoriaMineRail, SM_MoriaOreCrate, SM_MoriaSideDoor and SM_MoriaTorchNiche because RegionalMaterials.mtl lacked Iron."
+      },
+      "repaired_after_observation": [
+        "RegionalMaterials.mtl now defines Iron with Kd/Pr/Pm/Ks/Ns.",
+        "PG-107 validation now checks the stronger trilogy-primary and Tolkien-does-not-silently-replace-film-continuity rules.",
+        "Environmental-life V9 code/data was added after the failed head and requires a fresh exact-head run."
+      ]
+    }
   },
   "reference_only_files": [
     "Docs/CURRENT_PROJECT_STATE.md",
@@ -3148,14 +3177,14 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "reason": "Owner added rich Project Sources 10/11, Return of the King screenplay and full Tolkien LOTR volume and requested them to become durable production references.",
+    "reason": "Owner requested a major qualitative transformation that fills the game with magic, life and detail, with blockers fixed in-line rather than halting production.",
     "summary": [
-      "Project source library is now Sources 01-11 plus all three film screenplays and one full Tolkien LOTR volume.",
-      "Source 10 is registered as a visual modeling aid, not canon authority.",
-      "Source 11 is registered as the cross-discipline production systems and source-routing authority and supersedes old notes saying ROTK screenplay was absent.",
-      "ROTK is now screenplay-backed for Part III planning; runtime Part III still requires scene-level source verification and implementation.",
-      "Tolkien is registered as deeper-lore authority below film-story continuity.",
-      "No new Source 12+ should be created by default; extend the existing library instead."
+      "Latest failed exact head was b773a40: Pre-Unreal #515 failed only the outdated PG-107 wording check; Unreal #350 compiled C++ but failed import on four Moria meshes missing the Iron material definition.",
+      "Both identified blockers were repaired on the active short production branch.",
+      "A reusable AWorldAmbientMotionActor was added for bounded environmental motion and optional shadowless glow accents.",
+      "LivingWorldEventPlan and WorldLifeSaturationPlan advanced to V9 environmental-life runtime: Moria gains chain/debris danger and aftermath motion with zero civilians; Lothlorien/Rivendell/Shire/Bree gain regional motion/glow; Anduin retains wildlife/river motion; Isengard gains bounded industrial furnace motion.",
+      "Project Sources remain authoritative: film outcomes unchanged, Tolkien enriches deeper lore, Source 11 living-world guidance favors believable authored routines plus state-aware systemic behavior rather than maximum simulation.",
+      "Fresh exact-head CI is required before any green/merge/visual-performance claim."
     ]
   },
   "development_mode": {
@@ -3192,12 +3221,13 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "MEGA_MATERIAL_WORLD_SATURATION_V1",
+  "current_focus": "MEGA_WORLD_MAGIC_LIFE_AND_DETAIL_TRANSFORMATION_V1",
   "immediate_next_large_actions": [
-    "Execute a mass world-material response pass across Part I using the existing M_ProductionSurface Kd/Pr/Pm importer path.",
-    "Build and runtime-wire the first bounded new modular architecture/prop kit in Moria without changing Watcher/tomb/Orc-Troll/Bridge-Balrog canonical outcomes or quest anchors.",
-    "Keep synchronous asset-loading growth evidence-bounded; reuse/instance small project-owned assets first and measure chapter-transition hitch before heavier art banks.",
-    "After exact-head green proof, continue the same visible saturation pattern to Amon Hen, Isengard, Rivendell, Lothlorien, Anduin, then Shire/Bree/Weathertop."
+    "Repair the current exact-head CI blockers first: updated screenplay-authority validator wording and missing Moria Iron material used by four new meshes.",
+    "Earn exact-head Pre-Unreal plus Unreal import/build/startup proof for the repaired mega-wave branch.",
+    "Continue the world-magic/life wave with source-grounded environmental motion, regional activity, culture-specific props, atmosphere and cinematic landmarks across Moria, Amon Hen, Isengard, Rivendell, Lothlorien and Anduin.",
+    "Keep Shire/Bree/Road/Weathertop population and micro-life rich but bounded; preserve wilderness/dead-city civilian restrictions.",
+    "After each coherent production batch, update Governor evidence and only then merge to develop."
   ],
   "session_handoff": {
     "source_head": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
@@ -3303,6 +3333,35 @@
       ],
       "canonical_requirement": "REQ-PROD-007",
       "canonical_work": "WORK-PROD-007"
+    },
+    {
+      "id": "OWNER-IDEA-WORLD-MAGIC-LIFE-2026-09-21",
+      "status": "ACTIVE_IMPLEMENTATION",
+      "title": "Transform the game through a very large source-grounded wave of magic, life and detail",
+      "captured_value": [
+        "Prepare the project, code, production data and validation system for a major qualitative jump rather than incremental cleanup.",
+        "Fill the game with authored life, environmental motion, cultural detail, atmosphere, regional identity and cinematic presentation.",
+        "Use Project Sources 01-11, trilogy screenplays and Tolkien as the production basis instead of generic fantasy filler.",
+        "Fix blockers encountered during the wave immediately, then continue production rather than stopping at diagnosis.",
+        "The result should materially change the face of the game while preserving film outcomes and the target-device performance boundary."
+      ],
+      "canonical_requirements": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-WORLD-003",
+        "REQ-WORLD-006",
+        "REQ-NPC-005",
+        "REQ-PROD-007",
+        "REQ-PERF-001"
+      ],
+      "canonical_work": [
+        "WORK-WORLD-001",
+        "WORK-WORLD-002",
+        "WORK-WORLD-003",
+        "WORK-LW-004",
+        "WORK-PROD-007",
+        "WORK-QA-001"
+      ]
     }
   ],
   "branch_workflow": {
