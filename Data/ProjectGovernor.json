@@ -3127,15 +3127,18 @@
     "Receive the next owner/programmer proposal, normalize it through the Governor, then implement it from latest green develop on one short branch."
   ],
   "session_handoff": {
-    "source_head": "b9de4fd4a1aa6b4edeb25459a23b78c077dfcef7",
+    "source_head": "833c3679e19290a2b046ea7f53013a76ae1b29f4",
     "pull_request": 53,
     "branch": "develop",
     "verified": {
-      "pre_unreal": "PASS #500 on PR head 833c3679e19290a2b046ea7f53013a76ae1b29f4",
-      "unreal_build": "PASS #335 on PR head 833c3679e19290a2b046ea7f53013a76ae1b29f4",
-      "merge": "PR #53 merged to develop as b9de4fd4a1aa6b4edeb25459a23b78c077dfcef7"
+      "pre_unreal": "PASS #500 on 833c3679e19290a2b046ea7f53013a76ae1b29f4",
+      "unreal_build": "PASS #335 on 833c3679e19290a2b046ea7f53013a76ae1b29f4",
+      "merge": "PR #53 merged that exact green candidate into develop as b9de4fd4a1aa6b4edeb25459a23b78c077dfcef7"
     },
-    "failing": {},
+    "failing": {
+      "latest_pre_unreal": "FAIL #503 on 8f332bf3176f94b98ff250b5bf8f908e7c91e0d3 due to malformed handoff evidence shape; repaired in the next governance commit.",
+      "latest_unreal": "PENDING #338 on 8f332bf3176f94b98ff250b5bf8f908e7c91e0d3 at reconciliation time."
+    },
     "next_actions": [
       "Use develop as the only integration baseline after PR #53 consolidation.",
       "Audit remaining diverged side branches for genuinely unique fixes before deletion; do not cherry-pick obsolete older implementations over newer equivalents.",
@@ -3146,7 +3149,35 @@
       "Target-device FPS/memory measurements",
       "Human pacing and visual acceptance"
     ],
-    "scope_rule": "Machine evidence and merge status do not replace rendered PIE/device/human acceptance."
+    "scope_rule": "Machine evidence and merge status do not replace rendered PIE/device/human acceptance.",
+    "validation_snapshot": {
+      "last_green": {
+        "sha": "833c3679e19290a2b046ea7f53013a76ae1b29f4",
+        "pre_unreal": {
+          "sha": "833c3679e19290a2b046ea7f53013a76ae1b29f4",
+          "run_id": 35533254298,
+          "status": "SUCCESS"
+        },
+        "unreal": {
+          "sha": "833c3679e19290a2b046ea7f53013a76ae1b29f4",
+          "run_id": 35533254288,
+          "status": "SUCCESS"
+        }
+      },
+      "latest_observed": {
+        "sha": "8f332bf3176f94b98ff250b5bf8f908e7c91e0d3",
+        "pre_unreal": {
+          "sha": "8f332bf3176f94b98ff250b5bf8f908e7c91e0d3",
+          "run_id": 35534018834,
+          "status": "FAILURE"
+        },
+        "unreal": {
+          "sha": "8f332bf3176f94b98ff250b5bf8f908e7c91e0d3",
+          "run_id": 35534018935,
+          "status": "PENDING"
+        }
+      }
+    }
   },
   "governor_role": {
     "mode": "OVERSEER_NOT_BOTTLENECK",
