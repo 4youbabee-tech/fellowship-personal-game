@@ -211,7 +211,9 @@
     "Project-owned Watcher/Balrog/Lurtz foundations and film-locked runtime contracts exist, but final rigs, materials, VFX/audio, Lurtz duel production and human encounter acceptance remain incomplete.",
     "Most regions still need final terrain, materials, vegetation, water, architecture, interiors, hero-vista composition and visual acceptance.",
     "Target-device performance plus human chapter-by-chapter pacing/visual acceptance remain mandatory.",
-    "Chapter-specific Real PIE/rendered evidence remains unaccepted; generic or machine-only confirmation is insufficient."
+    "Chapter-specific Real PIE/rendered evidence remains unaccepted; generic or machine-only confirmation is insufficient.",
+    "Deep audit still requires target-device profiling of NPC social/banter scans and chapter-transition synchronous asset loads.",
+    "Rendered chapter evidence must verify that short presentation locks, camera framing and side content preserve player agency and pacing."
   ],
   "promotion_rule": "production_100 may become true only when every domain is PASS or ACCEPTED and exact_head_evidence.accepted_sha records the same accepted commit.",
   "no_false_claim_rule": "Static validation, compile success, or asset import alone can never set production_100 true.",
