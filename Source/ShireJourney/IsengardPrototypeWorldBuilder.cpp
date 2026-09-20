@@ -73,7 +73,9 @@ AStaticMeshActor* AIsengardPrototypeWorldBuilder::SpawnShape(
     Component->SetCollisionEnabled(bCollision ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
     Actor->SetActorScale3D(Scale);
 
-    if (BasicMaterial)
+    const bool bFallbackPrimitive =
+        Mesh == CubeMesh || Mesh == SphereMesh || Mesh == CylinderMesh || Mesh == ConeMesh;
+    if (BasicMaterial && bFallbackPrimitive)
     {
         if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, Actor))
         {
