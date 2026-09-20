@@ -4124,7 +4124,7 @@ for pg88_symbol in [
     "GetCurrentPrimaryRegionName",
     "GetCurrentMacroRegionName",
     "GetCurrentLandmarkSummary",
-    "ProductionAtlas: ready=%s chapters=%d",
+    "ProductionAtlas: ready=yes chapters=%d",
 ]:
     if pg88_symbol not in (pg88_qh + pg88_qc):
         fail(f"PG-088 runtime geography symbol missing: {pg88_symbol}")
