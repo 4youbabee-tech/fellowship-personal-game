@@ -240,7 +240,11 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
             ForgeGlow->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
             ForgeGlow->GetLightComponent()->SetMobility(EComponentMobility::Movable);
             ForgeGlow->GetLightComponent()->SetIntensity(1900.0f);
-            ForgeGlow->GetLightComponent()->SetAttenuationRadius(620.0f);
+            if (UPointLightComponent* PointComponent =
+                Cast<UPointLightComponent>(ForgeGlow->GetLightComponent()))
+            {
+                PointComponent->SetAttenuationRadius(620.0f);
+            }
             ForgeGlow->GetLightComponent()->SetLightColor(FLinearColor(1.0f, 0.19f, 0.045f));
         }
     }
