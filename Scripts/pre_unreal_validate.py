@@ -4470,6 +4470,19 @@ for pg102_path in [ROOT/"Data"/"DeepProjectAudit.json",ROOT/"Docs"/"DEEP_PROJECT
     if not pg102_path.exists():
         fail(f"PG-102 deep audit artifact missing: {pg102_path.relative_to(ROOT)}")
 
+# PG-103: synthesized production materials must be physically persisted, not merely dirty in memory.
+pg103_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+for pg103_symbol in [
+    "SaveMaterialPackagesDeterministically",
+    "UPackage::SavePackage",
+    "FPackageName::LongPackageNameToFilename",
+    "GetAssetPackageExtension",
+    "material persistence verification",
+    "FileExists",
+]:
+    if pg103_symbol not in pg103_importer:
+        fail(f"PG-103 deterministic material persistence safeguard missing: {pg103_symbol}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

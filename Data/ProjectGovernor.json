@@ -3019,14 +3019,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Owner requested full project-path, Governor, backend, rules and player-enjoyment audit before more large construction.",
+    "reason": "Unreal Build Validation #299 proved bootstrap, exact checkout, UE4.27.2 build, production import, startup, all eight chapters and disk state roundtrip. The only red gate is material package persistence in warning debt.",
     "summary": [
-      "Governor requirement IDs remain unique with no open recorded conflicts; continuous deep-audit requirement added.",
-      "Long lightweight cinematic input locks were reduced to a maximum 3.5 seconds while dialogue/audio may continue.",
-      "F6/F7/F8 developer navigation is now non-shipping only.",
-      "Automatic checkpoints now use queued AsyncSaveGameToSlot instead of synchronous active-play disk writes.",
-      "NPC actor-iteration and chapter LoadObject hotspots are tracked for target-device measurement rather than assumed free.",
-      "Material persistence remains the exact-head blocker; deterministic MTL material synthesis is under UE4 validation."
+      "Pre-Unreal Validation #464 is green on head 929ea3a28fe5bf9447f8c1ca8f5981e4b377cc35.",
+      "Unreal Build Validation #299 passed bootstrap, exact-head checkout, engine verification, MSVC probe, clean rebuild, UE4.27.2 compile, production import, Python resolution, startup, P1C01-P1C08 and state/save roundtrip.",
+      "Warning debt remains red only because 216 world material package identities are referenced by imported meshes but absent on disk.",
+      "The importer synthesized 227 authored material instances and tracked 225 packages, but editor save helpers did not physically persist them reliably in unattended commandlet mode.",
+      "Material packages are now saved with UPackage::SavePackage to deterministic .uasset filenames and verified with a physical file-existence check before import success."
     ]
   },
   "development_mode": {
@@ -3063,13 +3062,11 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "DEEP_PROJECT_AUDIT_AND_EXACT_HEAD_REPAIR",
+  "current_focus": "EXACT_HEAD_DETERMINISTIC_MATERIAL_PACKAGE_PERSISTENCE",
   "immediate_next_large_actions": [
-    "Green deterministic authored-material import on the exact head.",
-    "Run deep audit plus real UE4 compile/import/startup/eight chapters/state/warning chain on one SHA.",
-    "Profile chapter-transition loads and NPC social/banter iteration on target hardware.",
-    "Repair highest-visibility tangent/binormal asset debt without raising thresholds.",
-    "Then resume coordinated cinematic world/character/encounter production."
+    "Make the exact-head warning gate green by physically persisting all synthesized world material packages.",
+    "Rerun the full Pre-Unreal + UE4.27.2 compile/import/startup/eight-chapter/state/warning chain on the same SHA.",
+    "After exact-head green, enter the next mega production wave without weakening the new deep-audit and player-experience gates."
   ],
   "session_handoff": {
     "source_head": "c4fe8893e453d7eed80920e886bbfd40f4805d0d",

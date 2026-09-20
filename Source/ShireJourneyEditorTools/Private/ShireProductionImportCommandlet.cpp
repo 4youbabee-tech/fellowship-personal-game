@@ -11,11 +11,13 @@
 #include "HAL/FileManager.h"
 #include "HAL/PlatformFilemanager.h"
 #include "Misc/FileHelper.h"
+#include "Misc/PackageName.h"
 #include "Misc/Paths.h"
 #include "Materials/MaterialInterface.h"
 #include "Materials/MaterialInstanceConstant.h"
 #include "Modules/ModuleManager.h"
 #include "UObject/Package.h"
+#include "UObject/UObjectGlobals.h"
 
 UShireProductionImportCommandlet::UShireProductionImportCommandlet()
 {
@@ -67,6 +69,72 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     FAssetToolsModule& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>(TEXT("AssetTools"));
     int32 Failed = 0;
     TArray<UPackage*> ImportedMaterialPackages;
+
+    auto SaveMaterialPackagesDeterministically = [&](const TCHAR* Phase) -> bool
+    {
+        int32 SavedPackages = 0;
+        int32 SaveFailures = 0;
+
+        for (UPackage* Package : ImportedMaterialPackages)
+        {
+            if (!Package || Package == GetTransientPackage())
+            {
+                continue;
+            }
+
+            const FString LongPackageName = Package->GetName();
+            const FString AssetName = FPackageName::GetLongPackageAssetName(LongPackageName);
+            const FString PackageFilename = FPackageName::LongPackageNameToFilename(
+                LongPackageName,
+                FPackageName::GetAssetPackageExtension());
+
+            IFileManager::Get().MakeDirectory(*FPaths::GetPath(PackageFilename), true);
+            Package->MarkPackageDirty();
+
+            UObject* AssetObject = FindObject<UObject>(Package, *AssetName);
+            const bool bSaved = UPackage::SavePackage(
+                Package,
+                AssetObject,
+                RF_Public | RF_Standalone,
+                *PackageFilename,
+                GError,
+                nullptr,
+                false,
+                true,
+                SAVE_NoError);
+
+            const bool bExistsOnDisk = IFileManager::Get().FileExists(*PackageFilename);
+            if (!bSaved || !bExistsOnDisk)
+            {
+                ++SaveFailures;
+                ++Failed;
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireProductionImport material save FAILED: phase=%s package=%s file=%s saved=%s exists=%s"),
+                    Phase,
+                    *LongPackageName,
+                    *PackageFilename,
+                    bSaved ? TEXT("yes") : TEXT("no"),
+                    bExistsOnDisk ? TEXT("yes") : TEXT("no"));
+            }
+            else
+            {
+                ++SavedPackages;
+            }
+        }
+
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireProductionImport deterministic material save: phase=%s saved=%d failures=%d packages=%d"),
+            Phase,
+            SavedPackages,
+            SaveFailures,
+            ImportedMaterialPackages.Num());
+
+        return SaveFailures == 0;
+    };
 
     // UE4.27 unattended OBJ import does not reliably persist simple MTL-created
     // material packages. Create deterministic project material instances first,
@@ -179,10 +247,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
 
         if (ImportedMaterialPackages.Num() > 0)
         {
-            (void)FEditorFileUtils::PromptForCheckoutAndSave(
-                ImportedMaterialPackages,
-                false,
-                false);
+            SaveMaterialPackagesDeterministically(TEXT("pre-mesh-import"));
         }
 
         UE_LOG(
@@ -424,11 +489,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             }
         }
 
-        (void)FEditorFileUtils::PromptForCheckoutAndSave(
-            ImportedMaterialPackages,
-            false, // bCheckDirty
-            false  // bPromptToSave
-        );
+        SaveMaterialPackagesDeterministically(TEXT("post-mesh-binding"));
 
         UE_LOG(
             LogTemp,
@@ -450,6 +511,38 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         Display,
         TEXT("ShireProductionImport secondary package save: %s"),
         bSavedDirtyPackages ? TEXT("ok") : TEXT("no-dirty-or-failed"));
+
+    int32 MissingMaterialFiles = 0;
+    for (UPackage* Package : ImportedMaterialPackages)
+    {
+        if (!Package || Package == GetTransientPackage())
+        {
+            continue;
+        }
+
+        const FString PackageFilename = FPackageName::LongPackageNameToFilename(
+            Package->GetName(),
+            FPackageName::GetAssetPackageExtension());
+
+        if (!IFileManager::Get().FileExists(*PackageFilename))
+        {
+            ++MissingMaterialFiles;
+            ++Failed;
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("ShireProductionImport material verification FAILED: package=%s file=%s"),
+                *Package->GetName(),
+                *PackageFilename);
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireProductionImport material persistence verification: missing=%d tracked=%d"),
+        MissingMaterialFiles,
+        ImportedMaterialPackages.Num());
 
     UE_LOG(LogTemp, Display, TEXT("ShireProductionImport: %d files, %d failures"), SourceFiles.Num(), Failed);
 
