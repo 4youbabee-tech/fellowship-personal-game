@@ -4454,6 +4454,18 @@ for pg101_symbol in [
     if pg101_symbol not in pg101_importer:
         fail(f"PG-101 deterministic material synthesis missing: {pg101_symbol}")
 
+# PG-102: player-experience safety and deep-audit contracts.
+pg102_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg102_presentation = read(ROOT / "Source" / "ShireJourney" / "ShireStoryPresentationSubsystem.cpp")
+for pg102_symbol in ["#if !UE_BUILD_SHIPPING","AsyncSaveGameToSlot","bCheckpointSaveInFlight","QueuedCheckpointSaveId"]:
+    if pg102_symbol not in pg102_player:
+        fail(f"PG-102 player-experience safeguard missing: {pg102_symbol}")
+if "FMath::Clamp(ActiveCue.SuggestedDuration, 1.0f, 3.5f)" not in pg102_presentation:
+    fail("PG-102 cinematic input lock must remain bounded to 3.5 seconds")
+for pg102_path in [ROOT/"Data"/"DeepProjectAudit.json",ROOT/"Docs"/"DEEP_PROJECT_AUDIT.md",ROOT/"Scripts"/"deep_project_audit.py"]:
+    if not pg102_path.exists():
+        fail(f"PG-102 deep audit artifact missing: {pg102_path.relative_to(ROOT)}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
