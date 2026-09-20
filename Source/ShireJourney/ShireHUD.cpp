@@ -185,10 +185,119 @@ void AShireHUD::DrawHUD()
             PanelX + 18.0f, PanelY + PanelH - 24.0f, SmallFont, 0.66f, false);
     }
 
+    if (Player && Player->IsWorldMapOpen() && Quests)
+    {
+        const float MapW = FMath::Min(760.0f, W - 70.0f);
+        const float MapH = FMath::Min(560.0f, H - 105.0f);
+        const float MapX = (W - MapW) * 0.5f;
+        const float MapY = 72.0f;
+
+        DrawRect(FLinearColor(0.028f, 0.026f, 0.019f, 0.97f), MapX, MapY, MapW, MapH);
+        DrawRect(FLinearColor(0.71f, 0.55f, 0.28f, 0.94f), MapX, MapY, 4.0f, MapH);
+        DrawText(TEXT("JOURNEY MAP"),
+            FLinearColor(0.95f, 0.87f, 0.67f),
+            MapX + 18.0f, MapY + 13.0f, MediumFont, 0.96f, false);
+        DrawText(
+            FString::Printf(TEXT("%s  |  %s"),
+                *Quests->GetCurrentPrimaryRegionName(),
+                *Quests->GetCurrentMacroRegionName()),
+            FLinearColor(0.78f, 0.80f, 0.67f),
+            MapX + 18.0f, MapY + 40.0f, SmallFont, 0.78f, false);
+
+        const FString Landmarks = Quests->GetCurrentLandmarkSummary();
+        if (!Landmarks.IsEmpty())
+        {
+            DrawText(
+                FString::Printf(TEXT("Route landmarks: %s"), *Landmarks),
+                FLinearColor(0.66f, 0.72f, 0.60f),
+                MapX + 18.0f, MapY + 59.0f, SmallFont, 0.66f, false);
+        }
+
+        const float PlotX = MapX + 44.0f;
+        const float PlotY = MapY + 92.0f;
+        const float PlotW = MapW - 88.0f;
+        const float PlotH = MapH - 136.0f;
+        DrawRect(FLinearColor(0.055f, 0.052f, 0.038f, 0.82f), PlotX, PlotY, PlotW, PlotH);
+
+        const TArray<FShireWorldMapNodeDefinition>& Nodes = Quests->GetWorldMapNodes();
+        const TArray<FShireWorldMapEdgeDefinition>& Edges = Quests->GetWorldMapEdges();
+
+        auto NodePosition = [PlotX, PlotY, PlotW, PlotH](const FShireWorldMapNodeDefinition& Node)
+        {
+            return FVector2D(
+                PlotX + FMath::Clamp(Node.X, 0.0f, 1.0f) * PlotW,
+                PlotY + FMath::Clamp(Node.Y, 0.0f, 1.0f) * PlotH);
+        };
+
+        auto FindNode = [&Nodes](FName NodeId) -> const FShireWorldMapNodeDefinition*
+        {
+            for (const FShireWorldMapNodeDefinition& Node : Nodes)
+            {
+                if (Node.NodeId == NodeId)
+                {
+                    return &Node;
+                }
+            }
+            return nullptr;
+        };
+
+        for (const FShireWorldMapEdgeDefinition& Edge : Edges)
+        {
+            const FShireWorldMapNodeDefinition* From = FindNode(Edge.FromNodeId);
+            const FShireWorldMapNodeDefinition* To = FindNode(Edge.ToNodeId);
+            if (!From || !To ||
+                !Quests->IsWorldMapNodeVisible(From->NodeId) ||
+                !Quests->IsWorldMapNodeVisible(To->NodeId))
+            {
+                continue;
+            }
+
+            const FVector2D A = NodePosition(*From);
+            const FVector2D B = NodePosition(*To);
+            DrawLine(A.X, A.Y, B.X, B.Y, FLinearColor(0.52f, 0.44f, 0.27f, 0.72f), 2.0f);
+        }
+
+        const FName CurrentNode = Quests->GetCurrentWorldMapNodeId();
+        for (const FShireWorldMapNodeDefinition& Node : Nodes)
+        {
+            if (!Quests->IsWorldMapNodeVisible(Node.NodeId))
+            {
+                continue;
+            }
+
+            const FVector2D P = NodePosition(Node);
+            const bool bCurrent = Node.NodeId == CurrentNode;
+            const float MarkerSize = bCurrent ? 10.0f : 7.0f;
+            DrawRect(
+                bCurrent
+                    ? FLinearColor(0.92f, 0.70f, 0.28f, 1.0f)
+                    : FLinearColor(0.70f, 0.74f, 0.58f, 0.90f),
+                P.X - MarkerSize * 0.5f,
+                P.Y - MarkerSize * 0.5f,
+                MarkerSize,
+                MarkerSize);
+
+            DrawText(
+                Node.DisplayName,
+                bCurrent
+                    ? FLinearColor(0.98f, 0.88f, 0.62f)
+                    : FLinearColor(0.76f, 0.79f, 0.68f),
+                P.X + 7.0f,
+                P.Y - 7.0f,
+                SmallFont,
+                bCurrent ? 0.64f : 0.56f,
+                false);
+        }
+
+        DrawText(TEXT("M Close  |  Undiscovered future chapters stay hidden"),
+            FLinearColor(0.61f, 0.63f, 0.55f),
+            MapX + 18.0f, MapY + MapH - 23.0f, SmallFont, 0.65f, false);
+    }
+
     DrawText(
         bCombat
-            ? TEXT("WASD Move  |  LMB Attack  |  Shift Sprint  |  E Interact  |  R Supply  |  C Chronicle  |  [ ] Browse  |  F5/F9 Save/Load")
-            : TEXT("WASD Move  |  Shift Sprint  |  E Interact  |  R Supply  |  C Chronicle  |  [ ] Browse  |  F5/F9 Save/Load  |  F6-F8 Debug"),
+            ? TEXT("WASD Move  |  LMB Attack  |  Shift Sprint  |  E Interact  |  R Supply  |  C Chronicle  |  M Map  |  [ ] Browse  |  F5/F9 Save/Load")
+            : TEXT("WASD Move  |  Shift Sprint  |  E Interact  |  R Supply  |  C Chronicle  |  M Map  |  [ ] Browse  |  F5/F9 Save/Load  |  F6-F8 Debug"),
         FLinearColor(0.78f, 0.80f, 0.76f, 0.46f), 24.0f, H - 28.0f, SmallFont, 0.72f, false);
 
     const float Now = GetWorld()->GetTimeSeconds();

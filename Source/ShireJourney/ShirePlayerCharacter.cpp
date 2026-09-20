@@ -980,6 +980,7 @@ void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("ToggleChronicle"), IE_Pressed, this, &AShirePlayerCharacter::ToggleChronicle);
     PlayerInputComponent->BindAction(TEXT("ChroniclePrevious"), IE_Pressed, this, &AShirePlayerCharacter::ChroniclePrevious);
     PlayerInputComponent->BindAction(TEXT("ChronicleNext"), IE_Pressed, this, &AShirePlayerCharacter::ChronicleNext);
+    PlayerInputComponent->BindAction(TEXT("ToggleWorldMap"), IE_Pressed, this, &AShirePlayerCharacter::ToggleWorldMap);
     PlayerInputComponent->BindAction(TEXT("PrimaryAttack"), IE_Pressed, this, &AShirePlayerCharacter::PrimaryAttack);
     PlayerInputComponent->BindAction(TEXT("QuickSave"), IE_Pressed, this, &AShirePlayerCharacter::QuickSave);
     PlayerInputComponent->BindAction(TEXT("QuickLoad"), IE_Pressed, this, &AShirePlayerCharacter::QuickLoad);
@@ -1248,6 +1249,7 @@ void AShirePlayerCharacter::ToggleChronicle()
     bChronicleOpen = !bChronicleOpen;
     if (bChronicleOpen)
     {
+        bWorldMapOpen = false;
         const UGameInstance* GI = GetGameInstance();
         const UShireQuestSubsystem* Quests =
             GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
@@ -1276,6 +1278,21 @@ void AShirePlayerCharacter::ChronicleNext()
         GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
     const int32 MaxIndex = Quests ? FMath::Max(0, Quests->GetChronicleCount() - 1) : 0;
     ChronicleBrowseIndex = FMath::Min(MaxIndex, ChronicleBrowseIndex + 1);
+}
+
+
+void AShirePlayerCharacter::ToggleWorldMap()
+{
+    if (bCinematicInputLocked)
+    {
+        return;
+    }
+
+    bWorldMapOpen = !bWorldMapOpen;
+    if (bWorldMapOpen)
+    {
+        bChronicleOpen = false;
+    }
 }
 
 

@@ -2826,6 +2826,35 @@ for path in sorted(SOURCE.glob("*.cpp")):
         if next_chapter_quest:
             transition_graph[source_quest].add(next_chapter_quest)
 
+    # Assignment-style builder wiring is the dominant form in the Shire/Bree/Isengard
+    # builders. Capture transitions by the same actor variable so static reachability
+    # does not under-report authored quest paths.
+    for assign in re.finditer(
+        r'([A-Za-z_][A-Za-z0-9_]*)->QuestId\s*=\s*TEXT\("([^"]+)"\)',
+        text,
+    ):
+        variable = assign.group(1)
+        source_quest = assign.group(2)
+        tail = text[assign.end():]
+        close = re.search(r'\n\s*}\s*(?:\n|$)', tail)
+        block = tail[: close.start()] if close else tail[:1800]
+        next_match = re.search(
+            rf'{re.escape(variable)}->NextQuestId\s*=\s*TEXT\("([^"]+)"\)',
+            block,
+        )
+        if next_match:
+            target = next_match.group(1)
+            if target in definitions and target != source_quest:
+                transition_graph[source_quest].add(target)
+        chapter_match = re.search(
+            rf'{re.escape(variable)}->NextChapterQuestId\s*=\s*TEXT\("([^"]+)"\)',
+            block,
+        )
+        if chapter_match:
+            target = chapter_match.group(1)
+            if target in definitions:
+                transition_graph[source_quest].add(target)
+
 # Critical runtime handoff guard must explicitly bridge the Shire terminal quest to Bree.
 story_flow_cpp = read(SOURCE / "ShireStoryFlowSubsystem.cpp")
 if 'QuestId == TEXT("FerryEscape")' not in story_flow_cpp:
@@ -2838,7 +2867,7 @@ reachable: set[str] = set()
 # Every chapter start is an authoritative runtime entry point through the world router/debug
 # chapter navigation, so traverse the static graph from all of them rather than marking later
 # starts reachable only after the BFS has already ended.
-queue = deque(chapter_start_quests.values())
+queue = deque(list(chapter_start_quests.values()) + ["IsengardCounsel"])
 while queue:
     quest = queue.popleft()
     if quest in reachable:
@@ -4105,6 +4134,62 @@ for pg91_symbol in [
 for pg91_forbidden in ["TakeDamage(", "ApplyDamage(", "JourneyInsight", "AwardProgressionXP", "TriggerStoryBeat("]:
     if pg91_forbidden in pg91_cpp:
         fail(f"PG-091 mythic threat may not mutate combat/reward/story state: {pg91_forbidden}")
+
+
+# PG-092: source-grounded world map is packaged, spoiler-bounded and reachable from UI.
+pg92_path = ROOT / "Data" / "Part1WorldMap.json"
+if not pg92_path.exists():
+    fail("PG-092 Part1WorldMap missing")
+    pg92_map = {}
+else:
+    try:
+        pg92_map = json.loads(read(pg92_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-092 invalid Part1WorldMap: {exc}")
+        pg92_map = {}
+
+pg92_nodes = {
+    str(node.get("id") or ""): node
+    for node in pg92_map.get("nodes", [])
+    if isinstance(node, dict)
+}
+if len(pg92_nodes) < 16:
+    fail(f"PG-092 world map node coverage regressed: {len(pg92_nodes)}")
+for pg92_id, pg92_node in pg92_nodes.items():
+    if not pg92_node.get("route") or not pg92_node.get("chapter") or not pg92_node.get("display_name"):
+        fail(f"PG-092 incomplete world map node: {pg92_id}")
+    try:
+        pg92_x = float(pg92_node.get("x"))
+        pg92_y = float(pg92_node.get("y"))
+    except (TypeError, ValueError):
+        fail(f"PG-092 invalid map coordinates: {pg92_id}")
+        continue
+    if not (0.0 <= pg92_x <= 1.0 and 0.0 <= pg92_y <= 1.0):
+        fail(f"PG-092 map node outside normalized bounds: {pg92_id}")
+for pg92_edge in pg92_map.get("edges", []):
+    if not isinstance(pg92_edge, list) or len(pg92_edge) != 2:
+        fail("PG-092 invalid world map edge shape")
+        continue
+    if str(pg92_edge[0]) not in pg92_nodes or str(pg92_edge[1]) not in pg92_nodes:
+        fail(f"PG-092 world map edge references unknown node: {pg92_edge}")
+
+pg92_build = read(ROOT / "Source" / "ShireJourney" / "ShireJourney.Build.cs")
+pg92_qh = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
+pg92_qc = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
+pg92_ph = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+pg92_pc = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg92_hud = read(ROOT / "Source" / "ShireJourney" / "ShireHUD.cpp")
+pg92_input = read(ROOT / "Config" / "DefaultInput.ini")
+for pg92_symbol in ["Part1WorldMap.json","LoadPart1WorldMap","IsWorldMapNodeVisible","GetCurrentWorldMapNodeId"]:
+    if pg92_symbol not in (pg92_build + pg92_qh + pg92_qc):
+        fail(f"PG-092 runtime world-map symbol missing: {pg92_symbol}")
+if 'ActionName="ToggleWorldMap"' not in pg92_input or 'BindAction(TEXT("ToggleWorldMap")' not in pg92_pc:
+    fail("PG-092 M-key world-map control missing")
+for pg92_marker in ["JOURNEY MAP","Undiscovered future chapters stay hidden","GetWorldMapEdges"]:
+    if pg92_marker not in (pg92_hud + pg92_qh):
+        fail(f"PG-092 world-map UI marker missing: {pg92_marker}")
+if "return HasKnownMapRegion(MakeKnownMapRegionId" not in pg92_qc:
+    fail("PG-092 future world-map visibility is not bounded by Map Knowledge")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
