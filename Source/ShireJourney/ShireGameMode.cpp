@@ -4,6 +4,7 @@
 #include "ShireHUD.h"
 #include "ShirePlayerCharacter.h"
 #include "ShireQuestSubsystem.h"
+#include "StoryPresentationDirector.h"
 
 #include "Engine/GameInstance.h"
 #include "Kismet/GameplayStatics.h"
@@ -240,7 +241,8 @@ void AShireGameMode::BeginPlay()
     // to Bree without loading both regions at the same time.
     GetWorld()->SpawnActor<AChapterWorldRouter>(FVector::ZeroVector, FRotator::ZeroRotator);
     GetWorld()->SpawnActor<ALivingWorldDirector>(FVector::ZeroVector, FRotator::ZeroRotator);
-    UE_LOG(LogTemp, Display, TEXT("ShirePlayableStartup: GameMode ready; router and living-world director spawned"));
+    GetWorld()->SpawnActor<AStoryPresentationDirector>(FVector::ZeroVector, FRotator::ZeroRotator);
+    UE_LOG(LogTemp, Display, TEXT("ShirePlayableStartup: GameMode ready; router, living-world and presentation directors spawned"));
 
     if (FParse::Param(FCommandLine::Get(), TEXT("AuditState")))
     {
