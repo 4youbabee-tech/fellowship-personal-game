@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "wave_id": "MEGA_MATERIAL_WORLD_WAVE_V1",
+  "status": "ACTIVE_IMPLEMENTATION_PENDING_EXACT_HEAD_PROOF",
+  "authority": "Data/ProjectGovernor.json",
+  "base_develop": "2a5f96fd552cbe6343474721ca98d86d8629fc00",
+  "owner_direction": "Make the next step very large, preserve useful prior requests/proposals, and inject a huge amount of visible material/content into the game.",
+  "source_basis": [
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "05_BATTLES_WEAPONS_ARMIES_AND_CREATURES",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "08_VISUAL_REFERENCE_BIBLE",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+    "Fellowship screenplay"
+  ],
+  "non_negotiables": [
+    "Peter Jackson film chronology and outcomes remain authoritative.",
+    "Moria order remains Watcher -> entry/dead-city discovery -> Balin chamber Orc/Troll escalation -> Bridge/Balrog -> Gandalf fall -> escape.",
+    "Primary route readability comes from landmark silhouette, architecture, light and terrain before UI.",
+    "Optional dressing may not block traversal, quest anchors, companion recovery or save continuity.",
+    "30 FPS floor target remains Windows DX11 1280x720 Low-Medium; no invented performance acceptance.",
+    "Production100, rendered visual acceptance and target-device acceptance remain evidence-gated."
+  ],
+  "production_strategy": {
+    "first_region": "Moria",
+    "priority_order": [
+      "Moria",
+      "Amon Hen",
+      "Isengard",
+      "Rivendell",
+      "Lothlorien",
+      "Anduin",
+      "Shire",
+      "Bree",
+      "Road/Weathertop"
+    ],
+    "material_strategy": "Mass-enrich existing project-owned MTL palettes with explicit roughness/metallic intent using the existing M_ProductionSurface importer before scaling texture resolution or synchronous asset-bank size.",
+    "geometry_strategy": "Add bounded low-cost modular architecture/prop kits around existing quest anchors and reuse them in deliberate composition rather than spawning unbounded unique actors.",
+    "loading_guardrail": "Direct synchronous LoadObject hotspots are already recorded; do not multiply heavyweight banks without transition-hitch measurement. Small project-owned modular assets are allowed in this wave, with exact-head engine proof.",
+    "source_governance": "Use source files to drive silhouette, state, route, lighting and encounter composition. Visual-only material must not override film/script-supported facts."
+  },
+  "material_targets": {
+    "categories": [
+      "stone and pale stone",
+      "dark/cold stone",
+      "iron/metal",
+      "wood and scorched wood",
+      "cloth/leather/rope",
+      "earth/grass/foliage",
+      "water",
+      "embers/warm emissive-look surfaces"
+    ],
+    "required_properties": [
+      "Kd Color",
+      "Pr Roughness",
+      "Pm Metallic"
+    ],
+    "importer": "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",
+    "master_material": "/Game/Production/Materials/M_ProductionSurface"
+  },
+  "moria_wave": {
+    "identity": "monumental abandoned dwarven kingdom; darkness, mines and halls; human-scale contrast against vast geometry",
+    "state_variants": [
+      "Entrance",
+      "Tomb Alert",
+      "Balrog Escape"
+    ],
+    "hero_vistas": [
+      "West Gate threshold",
+      "great hall scale",
+      "Balin chamber",
+      "bridge/chasm silhouette"
+    ],
+    "new_modular_assets": [
+      "SM_MoriaWallPanel",
+      "SM_MoriaFloorSlab",
+      "SM_MoriaArch",
+      "SM_MoriaCeilingRib",
+      "SM_MoriaBridgePier",
+      "SM_MoriaTombDais",
+      "SM_MoriaReliefPanel",
+      "SM_MoriaMineRail",
+      "SM_MoriaOreCrate",
+      "SM_MoriaCollapsedBeam",
+      "SM_MoriaTorchNiche",
+      "SM_MoriaChasmButtress",
+      "SM_MoriaSideDoor",
+      "SM_MoriaDebrisCluster"
+    ],
+    "composition_rules": [
+      "Keep the main route readable and centered.",
+      "Use side architecture to imply a much larger city without opening unsupported traversal.",
+      "Use warm light pools sparingly against deep cool darkness.",
+      "Keep civilian population at zero.",
+      "Do not add alternate outcomes for Watcher, Balrog or Gandalf."
+    ]
+  },
+  "followup_regions": {
+    "Amon Hen": "broken woodland lanes, ancient ruin silhouettes, river-to-battle transition, Lurtz film-locked outcome",
+    "Isengard": "Orthanc silhouette, black stone, pits/furnaces, felled landscape, later industrial/flooded state separation",
+    "Rivendell": "pale stone/wood integration, terraces, water, soft daylight and council-space readability",
+    "Lothlorien": "gold-white filtered light, vertical organic platforms, refuge/recovery mood and low clutter",
+    "Anduin": "river scale, shoreline travel gear, Argonath framing and readable camp transition",
+    "Shire/Bree/Road/Weathertop": "final material/lighting/architecture polish after the higher-priority dramatic regions"
+  },
+  "acceptance_boundary": {
+    "machine": [
+      "Pre-Unreal exact-head pass",
+      "UE4.27.2 compile",
+      "production asset import",
+      "headless startup",
+      "P1C01-P1C08 chapter audit",
+      "state/save roundtrip",
+      "warning-debt guard"
+    ],
+    "human_or_device": [
+      "rendered visual acceptance",
+      "target-device FPS/hitch/memory",
+      "pacing and composition acceptance"
+    ]
+  }
+}

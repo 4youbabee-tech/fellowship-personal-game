@@ -4,9 +4,11 @@
 #include "ShireWorldEventInteraction.h"
 #include "ShireNPCContextSubsystem.h"
 #include "ShireQuestSubsystem.h"
+#include "WorldAmbientMotionActor.h"
 
 #include "Dom/JsonObject.h"
 #include "Engine/GameInstance.h"
+#include "Engine/StaticMesh.h"
 #include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
 #include "Misc/FileHelper.h"
@@ -399,6 +401,7 @@ FName ALivingWorldDirector::ChooseEventType() const
 
         // Dead-city and danger-heavy chapters should never fabricate civilian life.
         if (ActiveChapterId == TEXT("P1C06") &&
+            EventType != TEXT("PROP_MOTION") &&
             EventType != TEXT("DANGER_REACTION") &&
             EventType != TEXT("STORY_AFTERMATH"))
         {
@@ -702,6 +705,48 @@ AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(
     return NPC;
 }
 
+AWorldAmbientMotionActor* ALivingWorldDirector::SpawnAmbientMotionActor(
+    UStaticMesh* Mesh,
+    const FVector& Location,
+    const FRotator& Rotation,
+    const FVector& Scale,
+    FName MotionMode,
+    float Amplitude,
+    float Speed)
+{
+    if (!GetWorld() || !Mesh)
+    {
+        return nullptr;
+    }
+
+    FActorSpawnParameters Params;
+    Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+    AWorldAmbientMotionActor* Actor = GetWorld()->SpawnActor<AWorldAmbientMotionActor>(
+        Location, Rotation, Params);
+    if (!Actor)
+    {
+        return nullptr;
+    }
+
+    EWorldAmbientMotionMode Mode = EWorldAmbientMotionMode::Sway;
+    if (MotionMode == TEXT("BOB"))
+    {
+        Mode = EWorldAmbientMotionMode::Bob;
+    }
+    else if (MotionMode == TEXT("ROTATE"))
+    {
+        Mode = EWorldAmbientMotionMode::Rotate;
+    }
+    else if (MotionMode == TEXT("SHIVER"))
+    {
+        Mode = EWorldAmbientMotionMode::Shiver;
+    }
+
+    Actor->Tags.AddUnique(TEXT("LivingWorldEphemeral"));
+    Actor->Configure(Mesh, Mode, Amplitude, Speed, Scale, false);
+    return Actor;
+}
+
 AShireWorldEventInteraction* ALivingWorldDirector::SpawnPlayerInteraction(
     FName EventId,
     FName EventType,
@@ -924,6 +969,119 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
 
         Duration = 14.0f;
     }
+    else if (EventType == TEXT("PROP_MOTION"))
+    {
+        UStaticMesh* MotionMesh = nullptr;
+        FName MotionMode = TEXT("SWAY");
+        float Amplitude = 4.0f;
+        float Speed = 0.8f;
+        FVector Scale(0.72f);
+
+        if (ActiveChapterId == TEXT("P1C01"))
+        {
+            MotionMesh = LoadObject<UStaticMesh>(nullptr,
+                TEXT("/Game/Production/World/Shire/SM_ShLantern.SM_ShLantern"));
+            Amplitude = 5.0f;
+            Speed = 0.70f;
+        }
+        else if (ActiveChapterId == TEXT("P1C02"))
+        {
+            MotionMesh = LoadObject<UStaticMesh>(nullptr,
+                TEXT("/Game/Production/World/Bree/SM_BreeInnSign.SM_BreeInnSign"));
+            Amplitude = 7.0f;
+            Speed = 0.95f;
+            Scale = FVector(0.64f);
+        }
+        else if (ActiveChapterId == TEXT("P1C03"))
+        {
+            MotionMesh = LoadObject<UStaticMesh>(nullptr,
+                TEXT("/Game/Production/World/Common/SM_CommonFallenLog.SM_CommonFallenLog"));
+            MotionMode = TEXT("SHIVER");
+            Amplitude = 2.4f;
+            Speed = 1.4f;
+            Scale = FVector(0.60f);
+        }
+        else if (ActiveChapterId == TEXT("P1C04"))
+        {
+            MotionMesh = LoadObject<UStaticMesh>(nullptr,
+                TEXT("/Game/Production/World/Rivendell/SM_RivendellLantern.SM_RivendellLantern"));
+            Amplitude = 4.0f;
+            Speed = 0.58f;
+        }
+        else if (ActiveChapterId == TEXT("P1C05"))
+        {
+            MotionMesh = LoadObject<UStaticMesh>(nullptr,
+                TEXT("/Game/Production/World/Road/SM_RoadSnowMarker.SM_RoadSnowMarker"));
+            MotionMode = TEXT("SHIVER");
+            Amplitude = 3.8f;
+            Speed = 1.9f;
+            Scale = FVector(0.70f);
+        }
+        else if (ActiveChapterId == TEXT("P1C06"))
+        {
+            MotionMesh = Random.FRand() > 0.45f
+                ? LoadObject<UStaticMesh>(nullptr,
+                    TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor"))
+                : LoadObject<UStaticMesh>(nullptr,
+                    TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster"));
+            MotionMode = TEXT("SHIVER");
+            Amplitude = 2.2f;
+            Speed = 1.15f;
+            Scale = FVector(0.62f);
+        }
+        else if (ActiveChapterId == TEXT("P1C07"))
+        {
+            MotionMesh = LoadObject<UStaticMesh>(nullptr,
+                TEXT("/Game/Production/World/Lothlorien/SM_LorienLeafLantern.SM_LorienLeafLantern"));
+            MotionMode = TEXT("BOB");
+            Amplitude = 8.0f;
+            Speed = 0.52f;
+            Scale = FVector(0.68f);
+        }
+        else if (ActiveChapterId == TEXT("P1C08"))
+        {
+            MotionMesh = LoadObject<UStaticMesh>(nullptr,
+                TEXT("/Game/Production/World/Anduin/SM_AnduinRiverMarker.SM_AnduinRiverMarker"));
+            MotionMode = TEXT("SWAY");
+            Amplitude = 5.5f;
+            Speed = 0.72f;
+            Scale = FVector(0.66f);
+        }
+
+        if (AWorldAmbientMotionActor* Motion = SpawnAmbientMotionActor(
+            MotionMesh,
+            Origin,
+            FRotator(0.0f, Random.FRandRange(-35.0f, 35.0f), 0.0f),
+            Scale,
+            MotionMode,
+            Amplitude,
+            Speed))
+        {
+            if (ActiveChapterId == TEXT("P1C01"))
+            {
+                Motion->ConfigureGlow(FLinearColor(1.0f, 0.48f, 0.16f), 180.0f, 210.0f);
+            }
+            else if (ActiveChapterId == TEXT("P1C02"))
+            {
+                Motion->ConfigureGlow(FLinearColor(1.0f, 0.34f, 0.10f), 150.0f, 190.0f);
+            }
+            else if (ActiveChapterId == TEXT("P1C04"))
+            {
+                Motion->ConfigureGlow(FLinearColor(0.72f, 0.84f, 1.0f), 170.0f, 230.0f);
+            }
+            else if (ActiveChapterId == TEXT("P1C06"))
+            {
+                Motion->ConfigureGlow(FLinearColor(1.0f, 0.20f, 0.05f), 120.0f, 175.0f);
+            }
+            else if (ActiveChapterId == TEXT("P1C07"))
+            {
+                Motion->ConfigureGlow(FLinearColor(1.0f, 0.72f, 0.22f), 210.0f, 260.0f);
+            }
+
+            OutEvent.Actors.Add(Motion);
+            Duration = ActiveChapterId == TEXT("P1C06") ? 10.0f : 18.0f;
+        }
+    }
     else if (EventType == TEXT("WEATHER_REACTION"))
     {
         UGameInstance* GI = GetGameInstance();
@@ -946,12 +1104,32 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
     {
         // Caradhras danger is authored through storm/group traversal, not invented
         // resident scatter. Moria remains dead-city threat/aftermath only.
-        if (ActiveChapterId == TEXT("P1C05") || ActiveChapterId == TEXT("P1C06"))
+        if (ActiveChapterId == TEXT("P1C05"))
         {
             return false;
         }
 
-        if (ActiveChapterId == TEXT("P1C03") || ActiveChapterId == TEXT("P1C08"))
+        if (ActiveChapterId == TEXT("P1C06"))
+        {
+            UStaticMesh* ThreatMotionMesh = Random.FRand() > 0.5f
+                ? LoadObject<UStaticMesh>(nullptr,
+                    TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster"))
+                : LoadObject<UStaticMesh>(nullptr,
+                    TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor"));
+            if (AWorldAmbientMotionActor* Motion = SpawnAmbientMotionActor(
+                ThreatMotionMesh,
+                Origin,
+                FRotator(0.0f, Random.FRandRange(-30.0f, 30.0f), 0.0f),
+                FVector(0.60f),
+                TEXT("SHIVER"),
+                3.2f,
+                1.55f))
+            {
+                OutEvent.Actors.Add(Motion);
+            }
+            Duration = 8.0f;
+        }
+        else if (ActiveChapterId == TEXT("P1C03") || ActiveChapterId == TEXT("P1C08"))
         {
             const FVector SkyOrigin = Origin + FVector(0.0f, 0.0f, 420.0f);
             if (AShireAmbientNPC* Bird = SpawnAmbientActor(
@@ -978,7 +1156,27 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
     }
     else if (EventType == TEXT("STORY_AFTERMATH"))
     {
-        if (ActiveChapterId == TEXT("P1C08"))
+        if (ActiveChapterId == TEXT("P1C06"))
+        {
+            UStaticMesh* Debris = LoadObject<UStaticMesh>(nullptr,
+                TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster"));
+            UStaticMesh* Chain = LoadObject<UStaticMesh>(nullptr,
+                TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor"));
+
+            if (AWorldAmbientMotionActor* Motion = SpawnAmbientMotionActor(
+                Random.FRand() > 0.5f ? Debris : Chain,
+                Origin,
+                FRotator(0.0f, Random.FRandRange(-20.0f, 20.0f), 0.0f),
+                FVector(0.58f),
+                TEXT("SHIVER"),
+                2.6f,
+                1.35f))
+            {
+                OutEvent.Actors.Add(Motion);
+            }
+            Duration = 9.0f;
+        }
+        else if (ActiveChapterId == TEXT("P1C08"))
         {
             const FVector SkyOrigin = Origin + FVector(0.0f, 0.0f, 520.0f);
             for (int32 Index = 0; Index < 2; ++Index)

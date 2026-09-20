@@ -33,6 +33,38 @@
       "runtime_ship": false
     },
     {
+      "id": "SRC_FILM_ROTK_SCREENPLAY",
+      "name": "the-lord-of-the-rings-the-3-return-of-the-king-2003.pdf",
+      "kind": "PRIMARY_SCREENPLAY_STORY_AUTHORITY",
+      "sha256": "12d5bacf22743f331a737b8461b168e652a84f053cdf14e0feaeefc6c83f9234",
+      "pages": 152,
+      "use": [
+        "Part III film chronology and scene order",
+        "required film outcomes",
+        "speaker and character presence",
+        "character knowledge boundaries",
+        "tone, performance and scene context"
+      ],
+      "authority": "FILM_STORY_PRIMARY_WITH_FILM_TRILOGY",
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_TOLKIEN_LOTR_2010",
+      "name": "Tolkien-J.-The-lord-of-the-rings-HarperCollins-ebooks-2010.pdf",
+      "kind": "PRIMARY_DEEP_LORE_BOOK_AUTHORITY",
+      "sha256": "4e2fdba27a4dbc444e182bf10d25cfb6731294fd4215b449e38a190391ebf465",
+      "pages": 1210,
+      "use": [
+        "deeper lore and history omitted or compressed by the films",
+        "geography, peoples, cultures, languages, names and relationships",
+        "material culture and world detail",
+        "appendices for chronology, lineages and historical context",
+        "book-only detail only when it does not contradict film continuity for film-driven scenes"
+      ],
+      "authority": "DEEP_LORE_PRIMARY_BELOW_FILM_STORY_AUTHORITY",
+      "runtime_ship": false
+    },
+    {
       "id": "SRC_OWNER_MASTER_PACK",
       "name": "LOTR_Source_Pack_Master(1).pdf",
       "kind": "OWNER_REFERENCE_PACK",
@@ -229,6 +261,50 @@
       "runtime_ship": false,
       "release_clearance_required_for_distribution": true,
       "sha256": "3228407211220d58403f14fbee1087f4736d2ee2e5c1afd60a6f3a7c3f8e0ee6"
+    },
+    {
+      "id": "SRC_OWNER_3D_VISUAL_ASSET_ATLAS_V1",
+      "name": "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION(1).pdf",
+      "kind": "OWNER_3D_VISUAL_MODELING_REFERENCE",
+      "sha256": "7a82efcc45a57caa8f2f06c1f72fa92c045c1e188a9f27229b674b7c91de3de1",
+      "pages": 36,
+      "use": [
+        "character modeling sheets and multi-view proportion reference",
+        "costume, hair, gear, weapon and material studies",
+        "creature and adversary silhouette reference",
+        "realm, architecture, location and journey mood boards",
+        "production modeling aid for missing angles and asset decomposition"
+      ],
+      "authority": "VISUAL_MODELING_AID_NOT_CANON",
+      "limitations": [
+        "generated visual plates may contain approximations",
+        "must be cross-checked against film scenes and Sources 01-09",
+        "absence from the atlas does not imply absence from the game world",
+        "generated labels never override canon or approved project decisions"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_MASTER_PRODUCTION_SYSTEMS_SOURCE_INDEX_V1",
+      "name": "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX(1).pdf",
+      "kind": "OWNER_MASTER_PRODUCTION_SYSTEMS_REFERENCE",
+      "sha256": "3a5b44a1294d90012cc8048dcc73d744f06f7e55b75a7b1bff2629ba319450b0",
+      "pages": 11,
+      "use": [
+        "source governance and developer source-routing index",
+        "audio, music, voice and ambience rules",
+        "cinematics, camera, dialogue and performance rules",
+        "UI/UX/HUD/map/accessibility baseline",
+        "NPC AI, crowd, companion and ambient-life rules",
+        "UE4.27.2 technical ownership and Blueprint/C++ guidance",
+        "performance, streaming, memory, QA, save safety and definition of done",
+        "build/branch/integration gate and final source-library shape"
+      ],
+      "authority": "PRODUCTION_SYSTEMS_AND_SOURCE_GOVERNANCE_NOT_STORY_CANON",
+      "supersedes": [
+        "older Sources 01-07 notes stating the Return of the King screenplay was not supplied"
+      ],
+      "runtime_ship": false
     }
   ],
   "derived_runtime_data": [
@@ -243,7 +319,7 @@
     "Data/ProjectOwnedProductionAssetInventory.json"
   ],
   "story_authority": {
-    "rule": "For film-story chronology, scene order, required outcomes, character presence and knowledge boundaries, the supplied screenplays are primary. The numbered production bibles organize and derive implementation guidance but may not override screenplay-supported film events.",
+    "rule": "For the game's main story, Peter Jackson film continuity and the supplied trilogy screenplays are primary. Tolkien's The Lord of the Rings is primary for deeper lore/history/cultures/geography/details not fully explained by the films, but book-only material may not silently replace film events or outcomes.",
     "primary_screenplays": [
       {
         "source_id": "SRC_FILM_FOTR_SCREENPLAY",
@@ -256,6 +332,19 @@
         "film_part": "PART_II",
         "scope": "The Two Towers",
         "role": "PRIMARY_STORY_AND_CHRONOLOGY_AUTHORITY"
+      },
+      {
+        "source_id": "SRC_FILM_ROTK_SCREENPLAY",
+        "film_part": "PART_III",
+        "scope": "The Return of the King",
+        "role": "PRIMARY_STORY_AND_CHRONOLOGY_AUTHORITY"
+      }
+    ],
+    "primary_deep_lore_sources": [
+      {
+        "source_id": "SRC_TOLKIEN_LOTR_2010",
+        "scope": "The Lord of the Rings including Appendices",
+        "role": "PRIMARY_DEEP_LORE_AND_HISTORY_AUTHORITY_BELOW_FILM_STORY"
       }
     ],
     "production_bibles": [
@@ -266,24 +355,34 @@
       "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
       "SRC_OWNER_GAMEPLAY_SIDE_ACTIVITIES_BIBLE_V1",
       "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
-      "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1"
+      "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
+      "SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1",
+      "SRC_OWNER_3D_VISUAL_ASSET_ATLAS_V1",
+      "SRC_OWNER_MASTER_PRODUCTION_SYSTEMS_SOURCE_INDEX_V1"
     ],
     "precedence": [
-      "supplied screenplay evidence for film chronology/outcomes",
-      "ProjectGovernor hard invariants and approved implementation decisions",
-      "numbered production bibles 01-08 for derived production guidance",
-      "visual-only references for appearance/mood only",
-      "Bible 09 external-resource discovery for candidate assets/tools only; never canon evidence"
+      "current ProjectGovernor hard invariants and approved game-specific implementation decisions",
+      "Peter Jackson film trilogy and supplied trilogy screenplays for film chronology, visible staging, dialogue context and required outcomes",
+      "Tolkien The Lord of the Rings + Appendices for deeper lore/history/geography/cultures when compatible with film continuity",
+      "Sources 01-11 for production interpretation, mission structure, assets, gameplay, world states, presentation, technical and QA rules",
+      "Source 10 generated visual plates for modeling aid only after canon/source cross-check",
+      "Bible 09 external-resource discovery for candidate assets/tools only; never canon evidence",
+      "DESIGN/ORIGINAL only after higher sources are insufficient and only inside a canon-safe narrative window"
     ],
     "runtime_rule": "Raw source PDFs remain reference-only and never ship as runtime dependencies.",
     "resource_helper_bibles": [
       "SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1"
-    ]
+    ],
+    "visual_modeling_aids": [
+      "SRC_OWNER_3D_VISUAL_ASSET_ATLAS_V1"
+    ],
+    "master_production_systems_source": "SRC_OWNER_MASTER_PRODUCTION_SYSTEMS_SOURCE_INDEX_V1"
   },
   "source_set_summary": {
-    "core_pdf_count": 11,
-    "supplied_screenplays": 2,
-    "numbered_production_bibles": 9,
+    "core_pdf_count": 15,
+    "supplied_screenplays": 3,
+    "full_tolkien_volumes": 1,
+    "numbered_production_bibles": 11,
     "numbered_bible_ids": [
       "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
       "SRC_OWNER_CHARACTERS_RELATIONSHIPS_BIBLE_V1",
@@ -293,13 +392,16 @@
       "SRC_OWNER_GAMEPLAY_SIDE_ACTIVITIES_BIBLE_V1",
       "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
       "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
-      "SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1"
+      "SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1",
+      "SRC_OWNER_3D_VISUAL_ASSET_ATLAS_V1",
+      "SRC_OWNER_MASTER_PRODUCTION_SYSTEMS_SOURCE_INDEX_V1"
     ],
-    "rule": "The two supplied screenplays are primary story authority. Bibles 01-08 derive production guidance. Bible 09 is a helper/resource-intake guide only and cannot establish or override canon, chronology, character identity, story outcomes or film geography."
+    "source_library_shape": "Sources 01-11 + three film screenplays + one full Tolkien LOTR volume; Source 00 remains project rules/governance rather than a shipped/reference PDF.",
+    "rule": "Film trilogy + supplied screenplays control film-driven chronology, visible staging and outcomes. Tolkien is the primary deeper-lore source when the films are silent and may not silently replace film continuity. Sources 01-11 are production references; Source 09 is helper-only and Source 10 is a visual modeling aid that must be cross-checked."
   },
   "review_audit": {
-    "date": "2026-09-20",
-    "scope": "Uploaded primary screenplay and numbered reference file identity verified by SHA256; targeted textual review of story, mission and visual governance sections. This is not full scene-by-scene implementation or rendered acceptance.",
+    "date": "2026-09-21",
+    "scope": "Project Source library re-audited after Source 10, Source 11, the Return of the King screenplay and the full Tolkien volume were added. Identity/page count/SHA256 were verified; Source 10 was visually reviewed as a modeling atlas, Source 11 was reviewed end-to-end, and primary references were structurally verified. This is not a full line-by-line canon audit of all 1,210 Tolkien pages or every screenplay scene.",
     "reviewed_sections": [
       {
         "source_id": "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
@@ -327,13 +429,67 @@
           3
         ],
         "application": "Visual references establish intended appearance only; no inference of unseen canon or final visual acceptance."
+      },
+      {
+        "source_id": "SRC_OWNER_3D_VISUAL_ASSET_ATLAS_V1",
+        "pdf_pages": [
+          1,
+          2,
+          12,
+          16,
+          18,
+          20,
+          30,
+          32,
+          36
+        ],
+        "application": "Visual modeling aid: character/adversary sheets, multi-view production modeling, materials/gear and homeland/shadowland location plates; generated details require film/Bible cross-check."
+      },
+      {
+        "source_id": "SRC_OWNER_MASTER_PRODUCTION_SYSTEMS_SOURCE_INDEX_V1",
+        "pdf_pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "application": "Master source hierarchy plus audio, cinematics, UI/UX, living-world AI, UE4.27.2 technical, performance, QA/save and integration rules."
+      },
+      {
+        "source_id": "SRC_FILM_ROTK_SCREENPLAY",
+        "pdf_pages": [
+          1,
+          2,
+          3
+        ],
+        "application": "Part III screenplay identity and opening sequence verified; now valid primary Part III story authority."
+      },
+      {
+        "source_id": "SRC_TOLKIEN_LOTR_2010",
+        "pdf_pages": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "application": "Full-volume identity and contents verified; includes all six books and Appendices A-E and serves deeper-lore authority below film story continuity."
       }
     ],
     "chapter_id_warning": "Bible F1-xx mission packages and runtime P1Cxx chapters are different identifiers. Never map by matching the numeric suffix. Match location, preconditions and outcomes against the screenplay and runtime atlas.",
     "outstanding": [
       "Scene-level provenance coverage for all implemented beats is not yet comprehensively audited.",
       "Final visual acceptance needs rendered chapter/character evidence.",
-      "Part III screenplay is absent from the supplied core reference set."
+      "Part III is now screenplay-backed, but Part III runtime production remains gated by chapter-by-chapter source verification and implementation work.",
+      "The Tolkien volume is a deep-lore authority, not a silent replacement for film-only chronology or outcomes."
     ]
   }
 }

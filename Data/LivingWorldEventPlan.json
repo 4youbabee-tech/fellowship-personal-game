@@ -38,7 +38,11 @@
     "Danger chapters may suppress peaceful events.",
     "Event selection should avoid repeating the same event type back-to-back when alternatives exist.",
     "CP55 fauna uses project-owned low-poly bird/rabbit/butterfly meshes and distance-throttled ambient actors; no new persistent AI state.",
-    "Player responses to ambient micro-events are optional, ephemeral and reward-free; they never become required quests or persistent progression."
+    "Player responses to ambient micro-events are optional, ephemeral and reward-free; they never become required quests or persistent progression.",
+    "Environmental motion may add physical atmosphere but never owns quest or save state.",
+    "Moria environmental life is motion, echoes/aftermath implication and threat response; civilian life remains forbidden.",
+    "Ambient glow accents are bounded, shadowless and disposable under performance pressure.",
+    "Source 11 living-world guidance: use authored routines plus state-aware systemic behavior, not maximum simulation."
   ],
   "chapter_contracts": [
     {
@@ -313,7 +317,7 @@
       "story_safe": true
     }
   ],
-  "status": "V8_CANON_SAFE_REGIONAL_CONTRACT_PENDING_ENGINE_PROOF",
+  "status": "V9_ENVIRONMENTAL_LIFE_RUNTIME_IMPLEMENTED_PENDING_ENGINE_PROOF",
   "player_interaction_policy": {
     "enabled_event_types": [
       "WORK_ACTIVITY",
@@ -329,5 +333,53 @@
     "danger_policy": "Casual interaction markers are not spawned while story danger is active and self-disable if danger becomes active before interaction.",
     "persistence_policy": "No save state. Interaction objects are disposable with their parent micro-event.",
     "anti_farm_policy": "No Journey Insight, progression XP, supplies, relationship points or combat stats are awarded."
+  },
+  "environmental_motion_runtime": {
+    "owner": "AWorldAmbientMotionActor + ALivingWorldDirector",
+    "purpose": "Make the world visibly breathe between authored missions through bounded prop/environment motion rather than generic extra NPCs.",
+    "max_cost_rule": "Motion actors are ephemeral, non-colliding, event-budgeted and use tick throttling; glow accents cast no shadows.",
+    "chapter_expression": {
+      "P1C01": [
+        "lantern sway",
+        "warm local glow",
+        "fauna/civilian life"
+      ],
+      "P1C02": [
+        "inn-sign sway",
+        "rain-state town life",
+        "guarded warm light"
+      ],
+      "P1C03": [
+        "wind-shiver wilderness debris",
+        "bird scatter",
+        "no invented settlement"
+      ],
+      "P1C04": [
+        "cool luminous lantern motion",
+        "garden/Elf social life",
+        "fauna"
+      ],
+      "P1C05": [
+        "snow-marker shiver",
+        "storm/weather reaction",
+        "zero invented residents"
+      ],
+      "P1C06": [
+        "chain/debris shiver",
+        "low warm threat glow",
+        "story-aftermath motion",
+        "zero civilians"
+      ],
+      "P1C07": [
+        "floating leaf-lantern bob",
+        "golden refuge glow",
+        "Elf/fauna life"
+      ],
+      "P1C08": [
+        "river-marker sway",
+        "bird danger/aftermath movement",
+        "no invented civilian camp population"
+      ]
+    }
   }
 }

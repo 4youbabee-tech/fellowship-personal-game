@@ -207,20 +207,39 @@ else:
 if governor_data and governor_data.get("authority_id") != "FELLOWSHIP_SINGLE_PROJECT_GOVERNOR_V2":
     fail("Data/ProjectGovernor.json has unexpected authority_id")
 
+governor_schema_path = ROOT / "Data" / "ProjectGovernor.schema.json"
+if not governor_schema_path.exists():
+    fail("ProjectGovernor schema missing: Data/ProjectGovernor.schema.json")
+else:
+    try:
+        governor_schema = json.loads(read(governor_schema_path))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Data/ProjectGovernor.schema.json: {exc}")
+        governor_schema = {}
+    schema_required = governor_schema.get("properties", {}).get("requirements", {}).get("items", {}).get("required", [])
+    expected_required = ["id","title","category","priority","status","origin","intent","acceptance_criteria","dependencies"]
+    if schema_required != expected_required:
+        fail("ProjectGovernor schema requirement contract changed unexpectedly")
+
 allowed_requirement_statuses = set(governor_data.get("requirement_status_values", []))
 allowed_requirement_priorities = set(governor_data.get("priority_values", []))
 requirement_ids: set[str] = set()
 for index, item in enumerate(governor_data.get("requirements", []), start=1):
     req_id = str(item.get("id") or "").strip()
     title = str(item.get("title") or "").strip()
+    category = str(item.get("category") or "").strip()
+    origin = str(item.get("origin") or "").strip()
     intent = str(item.get("intent") or "").strip()
     status = str(item.get("status") or "").strip()
     priority = str(item.get("priority") or "").strip()
     acceptance = item.get("acceptance_criteria", [])
+    dependencies = item.get("dependencies")
 
-    if not req_id or not title or not intent:
-        fail(f"ProjectGovernor requirement entry {index} is missing id/title/intent")
+    if not req_id or not title or not category or not origin or not intent:
+        fail(f"ProjectGovernor requirement entry {index} is missing required identity/intent fields")
         continue
+    if not isinstance(dependencies, list):
+        fail(f"ProjectGovernor requirement {req_id} dependencies must be a list")
     if req_id in requirement_ids:
         fail(f"Duplicate ProjectGovernor requirement id: {req_id}")
     requirement_ids.add(req_id)
@@ -230,6 +249,17 @@ for index, item in enumerate(governor_data.get("requirements", []), start=1):
         fail(f"ProjectGovernor requirement {req_id} uses unknown priority '{priority}'")
     if not isinstance(acceptance, list) or not acceptance:
         fail(f"ProjectGovernor requirement {req_id} has no acceptance criteria")
+
+capture_contract = governor_data.get("request_capture_contract", {})
+for capture_field in ["important_request_definition","capture_rule","external_advice_rule","anti_loss_rule","coordination_rule"]:
+    if not capture_contract.get(capture_field):
+        fail(f"ProjectGovernor request capture contract missing {capture_field}")
+if not governor_data.get("external_review_findings"):
+    fail("ProjectGovernor has no durable external/programmer review findings")
+if not any(str(req.get("id") or "") == "REQ-PROD-007" for req in governor_data.get("requirements", [])):
+    fail("ProjectGovernor missing REQ-PROD-007 mega material/world wave")
+if not any(str(work.get("id") or "") == "WORK-PROD-007" for work in governor_data.get("work_queue", [])):
+    fail("ProjectGovernor missing WORK-PROD-007 mega material/world work item")
 
 for required_req in [
     "REQ-MEM-001", "REQ-GOV-001", "REQ-WORLD-001", "REQ-WORLD-002",
@@ -3365,8 +3395,8 @@ if pg110_matrix.get("surface_material_wave", {}).get("status") != "ENGINE_PROVEN
 pg111_plan = json.loads(read(ROOT / "Data" / "WorldLifeSaturationPlan.json"))
 pg111_targets = pg111_plan.get("baseline_population_targets", {})
 pg111_roles = pg111_plan.get("population_roles", {})
-if pg111_plan.get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
-    fail("PG-111 V8 world-life proof boundary changed")
+if pg111_plan.get("status") != "V9_ENVIRONMENTAL_MOTION_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-111 V9 world-life proof boundary changed")
 if int(pg111_targets.get("P1C05", -1)) != 0:
     fail("PG-111 Caradhras ambient civilian baseline must remain zero")
 if int(pg111_targets.get("P1C06", -1)) != 0:
@@ -3410,6 +3440,44 @@ for pg111_symbol in [
 ]:
     if pg111_symbol not in (pg111_ambient + pg111_ambient_h):
         fail(f"PG-111 ambient presentation behavior missing: {pg111_symbol}")
+
+# PG-113: environmental-life motion keeps sparse chapters alive without inventing civilians.
+pg113_motion_h = read(ROOT / "Source" / "ShireJourney" / "WorldAmbientMotionActor.h")
+pg113_motion_cpp = read(ROOT / "Source" / "ShireJourney" / "WorldAmbientMotionActor.cpp")
+for pg113_symbol in [
+    "EWorldAmbientMotionMode",
+    "ConfigureGlow",
+    "SetCastShadows(false)",
+    "PrimaryActorTick.TickInterval = 0.05f",
+]:
+    if pg113_symbol not in (pg113_motion_h + pg113_motion_cpp):
+        fail(f"PG-113 ambient motion runtime missing: {pg113_symbol}")
+
+for pg113_symbol in [
+    "SpawnAmbientMotionActor",
+    'EventType == TEXT("PROP_MOTION")',
+    "SM_MoriaDebrisCluster",
+    "SM_MoriaChainAnchor",
+    "SM_LorienLeafLantern",
+    "SM_RivendellLantern",
+    "ConfigureGlow",
+]:
+    if pg113_symbol not in pg111_director:
+        fail(f"PG-113 environmental-life director wiring missing: {pg113_symbol}")
+
+pg113_event_plan = json.loads(read(ROOT / "Data" / "LivingWorldEventPlan.json"))
+if pg113_event_plan.get("status") != "V9_ENVIRONMENTAL_LIFE_RUNTIME_IMPLEMENTED_PENDING_ENGINE_PROOF":
+    fail("PG-113 living-world event proof boundary changed")
+pg113_moria = next(
+    (row for row in pg113_event_plan.get("chapter_contracts", [])
+     if isinstance(row, dict) and row.get("chapter") == "P1C06"),
+    {},
+)
+pg113_moria_allowed = set(pg113_moria.get("allowed", []))
+if "PROP_MOTION" not in pg113_moria_allowed or "STORY_AFTERMATH" not in pg113_moria_allowed:
+    fail("PG-113 Moria must retain environmental motion/aftermath without civilian life")
+if int(pg111_targets.get("P1C06", -1)) != 0:
+    fail("PG-113 Moria environmental-life wave may not introduce ambient civilians")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
@@ -4747,7 +4815,7 @@ pg107_sources = {
     for row in pg107_index.get("sources", [])
     if isinstance(row, dict)
 }
-for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY"]:
+for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY", "SRC_FILM_ROTK_SCREENPLAY"]:
     pg107_row = pg107_sources.get(pg107_id)
     if not pg107_row:
         fail(f"PG-107 primary screenplay source missing: {pg107_id}")
@@ -4765,19 +4833,23 @@ pg107_primary = {
     for row in pg107_authority.get("primary_screenplays", [])
     if isinstance(row, dict)
 }
-for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY"]:
+for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY", "SRC_FILM_ROTK_SCREENPLAY"]:
     if pg107_id not in pg107_primary:
         fail(f"PG-107 screenplay absent from primary authority list: {pg107_id}")
-if "may not override screenplay-supported film events" not in str(pg107_authority.get("rule") or ""):
-    fail("PG-107 screenplay precedence rule missing")
+pg107_rule = str(pg107_authority.get("rule") or "")
+pg107_rule_lower = pg107_rule.lower()
+if "film" not in pg107_rule_lower or "screenplay" not in pg107_rule_lower or "primary" not in pg107_rule_lower:
+    fail("PG-107 film/screenplay primary story-authority rule missing")
+if "silently replace film" not in pg107_rule_lower:
+    fail("PG-107 Tolkien-vs-film precedence boundary missing")
 
 pg108_summary = pg107_index.get("source_set_summary", {})
-if pg108_summary.get("core_pdf_count") != 11:
-    fail("PG-108 core PDF source count must remain 11")
-if pg108_summary.get("supplied_screenplays") != 2:
-    fail("PG-108 screenplay count must remain 2")
-if pg108_summary.get("numbered_production_bibles") != 9:
-    fail("PG-108 numbered Bible count must remain 9")
+if pg108_summary.get("core_pdf_count") != 15:
+    fail("PG-108 core PDF source count must remain 15")
+if pg108_summary.get("supplied_screenplays") != 3:
+    fail("PG-108 screenplay count must remain 3")
+if pg108_summary.get("numbered_production_bibles") != 11:
+    fail("PG-108 numbered production source count must remain 11")
 pg108_helper = pg107_sources.get("SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1")
 if not pg108_helper:
     fail("PG-108 external helpful resources Bible 09 missing")
@@ -4788,6 +4860,132 @@ else:
         fail("PG-108 raw Bible 09 may not ship at runtime")
 if "Bible 09 external-resource discovery" not in " ".join(pg107_authority.get("precedence", [])):
     fail("PG-108 Bible 09 authority boundary missing")
+
+for pg108_id in [
+    "SRC_OWNER_3D_VISUAL_ASSET_ATLAS_V1",
+    "SRC_OWNER_MASTER_PRODUCTION_SYSTEMS_SOURCE_INDEX_V1",
+    "SRC_TOLKIEN_LOTR_2010",
+]:
+    if pg108_id not in pg107_sources:
+        fail(f"PG-108 expanded project source missing: {pg108_id}")
+if "SRC_TOLKIEN_LOTR_2010" not in {
+    str(row.get("source_id") or "")
+    for row in pg107_authority.get("primary_deep_lore_sources", [])
+    if isinstance(row, dict)
+}:
+    fail("PG-108 Tolkien full volume missing from deep-lore authority list")
+if pg107_authority.get("master_production_systems_source") != "SRC_OWNER_MASTER_PRODUCTION_SYSTEMS_SOURCE_INDEX_V1":
+    fail("PG-108 Source 11 master production systems authority missing")
+
+# PG-112: mega material/world saturation wave must be large, source-controlled,
+# film-safe and explicit about its evidence boundary.
+pg112_plan_path = ROOT / "Data" / "MegaMaterialWorldWaveV1.json"
+if not pg112_plan_path.exists():
+    fail("PG-112 MegaMaterialWorldWaveV1.json missing")
+    pg112_plan = {}
+else:
+    try:
+        pg112_plan = json.loads(read(pg112_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-112 invalid MegaMaterialWorldWaveV1.json: {exc}")
+        pg112_plan = {}
+if pg112_plan.get("wave_id") != "MEGA_MATERIAL_WORLD_WAVE_V1":
+    fail("PG-112 mega-wave identity changed")
+if pg112_plan.get("status") != "ACTIVE_IMPLEMENTATION_PENDING_EXACT_HEAD_PROOF":
+    fail("PG-112 mega-wave status must remain pending exact-head proof")
+if "MegaMaterialWorldWaveV1.json" not in pg93_build:
+    fail("PG-112 mega-wave plan is not packaged")
+
+pg112_moria_assets = [
+    "SM_MoriaWallPanel", "SM_MoriaFloorSlab", "SM_MoriaArch", "SM_MoriaCeilingRib",
+    "SM_MoriaBridgePier", "SM_MoriaTombDais", "SM_MoriaReliefPanel", "SM_MoriaMineRail",
+    "SM_MoriaOreCrate", "SM_MoriaCollapsedBeam", "SM_MoriaTorchNiche",
+    "SM_MoriaChasmButtress", "SM_MoriaSideDoor", "SM_MoriaDebrisCluster",
+]
+pg112_moria_root = ROOT / "SourceAssets" / "Production" / "World" / "Moria"
+for pg112_asset in pg112_moria_assets:
+    pg112_path = pg112_moria_root / f"{pg112_asset}.obj"
+    if not pg112_path.exists():
+        fail(f"PG-112 Moria mega-wave asset missing: {pg112_asset}")
+    if pg112_asset not in pg93_builder:
+        fail(f"PG-112 Moria mega-wave asset not runtime-wired: {pg112_asset}")
+
+pg112_mtl_paths = [
+    ROOT / "SourceAssets" / "Production" / "World" / "Anduin" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Anduin" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Bree" / "BreeMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Bree" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Common" / "CommonLandscapeMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Common" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Lothlorien" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Lothlorien" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Moria" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Moria" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Rivendell" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Rivendell" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Road" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Road" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Shire" / "ShireMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Shire" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Weathertop" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Weathertop" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Isengard" / "RegionalMaterials.mtl",
+]
+for pg112_mtl in pg112_mtl_paths:
+    if not pg112_mtl.exists():
+        fail(f"PG-112 material palette missing: {pg112_mtl.relative_to(ROOT).as_posix()}")
+        continue
+    pg112_text = read(pg112_mtl)
+    if "newmtl " not in pg112_text or "Kd " not in pg112_text:
+        fail(f"PG-112 invalid material palette: {pg112_mtl.relative_to(ROOT).as_posix()}")
+    if "Pr " not in pg112_text or "Pm " not in pg112_text:
+        fail(f"PG-112 material response missing Pr/Pm: {pg112_mtl.relative_to(ROOT).as_posix()}")
+
+for pg112_story_symbol in [
+    'ConfigureThreat(\n            EFellowshipMythicThreatType::Watcher',
+    'EFellowshipEnemyType::CaveTroll',
+    'ConfigureThreat(\n            EFellowshipMythicThreatType::Balrog',
+    'TEXT("The Fellowship escapes the mountain, but Gandalf is gone.")',
+]:
+    if pg112_story_symbol not in pg93_builder:
+        fail(f"PG-112 Moria film-locked outcome marker missing: {pg112_story_symbol}")
+
+pg112_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg112_visual.get("current_wave", {}).get("id") != "MEGA_WORLD_MAGIC_LIFE_DETAIL_V1":
+    fail("PG-112 visual production current wave is not the active magic/life/detail wave")
+if pg112_visual.get("mega_material_world_wave", {}).get("status") != "SOURCE_IMPLEMENTATION_ACTIVE_PENDING_EXACT_HEAD_PROOF":
+    fail("PG-112 visual mega-wave evidence boundary changed")
+
+# PG-114: dense decorative richness must use performance-aware instancing rather than actor spam.
+pg114_cluster_h = read(ROOT / "Source" / "ShireJourney" / "WorldDetailCluster.h")
+pg114_cluster_cpp = read(ROOT / "Source" / "ShireJourney" / "WorldDetailCluster.cpp")
+for pg114_symbol in [
+    "UHierarchicalInstancedStaticMeshComponent",
+    "AddInstanceWorldSpace",
+    "SetCullDistances",
+    "bCastDynamicShadow = false",
+    "bCastStaticShadow = false",
+]:
+    if pg114_symbol not in (pg114_cluster_h + pg114_cluster_cpp):
+        fail(f"PG-114 detail-cluster performance contract missing: {pg114_symbol}")
+
+for pg114_symbol in [
+    "SpawnInstancedScatter",
+    "WorldDetailCluster",
+    "MoriaDebrisClusterMesh",
+    "CommonFernClumpMesh",
+    "CommonReedClusterMesh",
+    "CommonRuinSlabMesh",
+]:
+    if pg114_symbol not in pg93_builder:
+        fail(f"PG-114 instanced detail runtime wiring missing: {pg114_symbol}")
+
+pg114_dressing = json.loads(read(ROOT / "Data" / "WorldDressingPlan.json"))
+if pg114_dressing.get("status") != "V10_INSTANCED_DETAIL_AND_ENVIRONMENTAL_LIFE_PENDING_ENGINE_PROOF":
+    fail("PG-114 V10 world-dressing proof boundary changed")
+pg114_budget = json.loads(read(ROOT / "Data" / "AssetPerformanceBudget.json"))
+if pg114_budget.get("runtime_detail_policy", {}).get("instanced_micro_detail", {}).get("status") != "IMPLEMENTED_PENDING_MEASUREMENT":
+    fail("PG-114 instanced-detail performance evidence boundary missing")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")

@@ -8,6 +8,7 @@
 #include "ShireQuestTrigger.h"
 #include "ShireTraversalChallenge.h"
 #include "ShireEnvironmentalPuzzle.h"
+#include "WorldDetailCluster.h"
 
 #include "Components/DirectionalLightComponent.h"
 #include "Components/ExponentialHeightFogComponent.h"
@@ -420,6 +421,20 @@ void AFellowshipChapterWorldBuilder::EnsureProductionMeshes()
     MoriaDoorMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaDoor.SM_MoriaDoor"));
     MoriaBrazierMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBrazier.SM_MoriaBrazier"));
     MoriaBridgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBridgeSegment.SM_MoriaBridgeSegment"));
+    MoriaWallPanelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaWallPanel.SM_MoriaWallPanel"));
+    MoriaFloorSlabMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaFloorSlab.SM_MoriaFloorSlab"));
+    MoriaArchMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaArch.SM_MoriaArch"));
+    MoriaCeilingRibMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaCeilingRib.SM_MoriaCeilingRib"));
+    MoriaBridgePierMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBridgePier.SM_MoriaBridgePier"));
+    MoriaTombDaisMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaTombDais.SM_MoriaTombDais"));
+    MoriaReliefPanelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaReliefPanel.SM_MoriaReliefPanel"));
+    MoriaMineRailMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaMineRail.SM_MoriaMineRail"));
+    MoriaOreCrateMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaOreCrate.SM_MoriaOreCrate"));
+    MoriaCollapsedBeamMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaCollapsedBeam.SM_MoriaCollapsedBeam"));
+    MoriaTorchNicheMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaTorchNiche.SM_MoriaTorchNiche"));
+    MoriaChasmButtressMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaChasmButtress.SM_MoriaChasmButtress"));
+    MoriaSideDoorMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaSideDoor.SM_MoriaSideDoor"));
+    MoriaDebrisClusterMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster"));
 
     LorienTalanMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Lothlorien/SM_LorienTalan.SM_LorienTalan"));
     LorienLanternMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Lothlorien/SM_LorienLantern.SM_LorienLantern"));
@@ -511,6 +526,55 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         }
     };
 
+    // Dense decorative micro-detail uses HISM clusters so richness scales without
+    // multiplying actor/tick overhead. Story-critical collision stays on authored actors.
+    auto SpawnInstancedScatter = [this](
+        UStaticMesh* Mesh,
+        const FVector& Center,
+        int32 Count,
+        const FVector& Radius,
+        const FVector& BaseScale,
+        float YawStep,
+        float HeightJitter = 0.0f,
+        int32 StartCullDistance = 2600,
+        int32 EndCullDistance = 6500)
+    {
+        if (!GetWorld() || !Mesh || Count <= 0)
+        {
+            return;
+        }
+
+        FActorSpawnParameters Params;
+        Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+        AWorldDetailCluster* Cluster = GetWorld()->SpawnActor<AWorldDetailCluster>(
+            FVector::ZeroVector, FRotator::ZeroRotator, Params);
+        if (!Cluster)
+        {
+            return;
+        }
+
+        Cluster->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        Cluster->Tags.AddUnique(TEXT("WorldDetailCluster"));
+        Cluster->Configure(Mesh, false, StartCullDistance, EndCullDistance);
+
+        for (int32 Index = 0; Index < Count; ++Index)
+        {
+            const float Angle = FMath::DegreesToRadians(
+                FMath::Fmod(Index * 137.507764f + YawStep * 0.53f, 360.0f));
+            const float Ring = 0.28f + 0.72f *
+                (static_cast<float>((Index * 11) % FMath::Max(2, Count)) / FMath::Max(1, Count - 1));
+            const FVector Offset(
+                FMath::Cos(Angle) * Radius.X * Ring,
+                FMath::Sin(Angle) * Radius.Y * Ring,
+                HeightJitter * FMath::Sin(Angle * 1.3f));
+            const float ScaleJitter = 0.76f + 0.06f * (Index % 7);
+            Cluster->AddDetailInstance(
+                Center + Offset,
+                FRotator(0.0f, FMath::Fmod(Index * YawStep, 360.0f), 0.0f),
+                BaseScale * ScaleJitter);
+        }
+    };
+
     if (ChapterId == TEXT("P1C03"))
     {
         SpawnTerrainBand(CommonTerracedHillMesh, FVector(-2200,-1450,-150), FVector(650,0,15), 8,
@@ -555,6 +619,13 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnScatter(CommonFernClumpMesh, FVector(250,100,0), 42, FVector(2400,1300,0), FVector(0.70f), 17.0f, 4.0f);
         SpawnScatter(CommonReedClusterMesh, FVector(200,720,-10), 20, FVector(1350,260,0), FVector(0.72f), 19.0f, 2.0f);
         SpawnProd(CommonFootbridgeMesh, FVector(-650,690,20), FVector(0.72f), FRotator(0,4,0), true);
+        // V10 beauty-density layer: cheap clustered understory and river-edge detail.
+        SpawnInstancedScatter(CommonFernClumpMesh, FVector(180,40,0), 54,
+            FVector(2550,1420,0), FVector(0.46f), 29.0f, 3.0f);
+        SpawnInstancedScatter(CommonReedClusterMesh, FVector(160,735,-8), 34,
+            FVector(1500,330,0), FVector(0.52f), 23.0f, 2.0f);
+        SpawnInstancedScatter(CommonRuinSlabMesh, FVector(520,-180,0), 14,
+            FVector(2100,1050,0), FVector(0.34f), 41.0f, 2.0f);
     }
     else if (ChapterId == TEXT("P1C05"))
     {
@@ -611,8 +682,64 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnProd(MoriaMineCart, FVector(-120,690,0), FVector(0.72f), FRotator(0,-24,0), false);
         SpawnProd(MoriaMineCart, FVector(1320,-690,0), FVector(0.70f), FRotator(0,11,0), false);
 
+        // MEGA_MATERIAL_WORLD_WAVE_V1: bounded modular Dwarven city layers.
+        // These pieces sit outside the authored quest centerline or reinforce existing
+        // landmarks. They add depth and material response without moving story triggers.
+        for (int32 I = 0; I < 8; ++I)
+        {
+            const float X = -1880.0f + I * 520.0f;
+            SpawnProd(MoriaWallPanelMesh, FVector(X, -1110.0f, 0.0f), FVector(0.92f), FRotator(0, 0, 0), false);
+            SpawnProd(MoriaWallPanelMesh, FVector(X, 1110.0f, 0.0f), FVector(0.92f), FRotator(0, 180, 0), false);
+        }
+        for (int32 I = 0; I < 7; ++I)
+        {
+            const float X = -1550.0f + I * 610.0f;
+            SpawnProd(MoriaCeilingRibMesh, FVector(X, 0.0f, 690.0f), FVector(1.05f), FRotator(0, 90, 0), false);
+        }
+        const FVector ArchLocations[] = {
+            FVector(-1660, 0, 0), FVector(-720, 0, 0), FVector(260, 0, 0), FVector(1320, 0, 0)
+        };
+        for (const FVector& P : ArchLocations)
+        {
+            SpawnProd(MoriaArchMesh, P, FVector(0.92f), FRotator::ZeroRotator, false);
+        }
+        for (int32 I = 0; I < 9; ++I)
+        {
+            SpawnProd(MoriaFloorSlabMesh, FVector(-1680.0f + I * 430.0f, 0, -28.0f), FVector(0.95f), FRotator::ZeroRotator, false);
+        }
+
+        // Mine-city side lane: visually communicates industry while remaining non-critical.
+        for (int32 I = 0; I < 5; ++I)
+        {
+            SpawnProd(MoriaMineRailMesh, FVector(-1450.0f + I * 470.0f, -860.0f, 5.0f), FVector(0.82f), FRotator(0,90,0), false);
+        }
+        SpawnProd(MoriaOreCrateMesh, FVector(-1180,-930,0), FVector(0.78f), FRotator(0,8,0), false);
+        SpawnProd(MoriaOreCrateMesh, FVector(-820,-900,0), FVector(0.70f), FRotator(0,-17,0), false);
+        SpawnProd(MoriaCollapsedBeamMesh, FVector(-320,-900,12), FVector(0.82f), FRotator(0,22,0), false);
+        SpawnProd(MoriaCollapsedBeamMesh, FVector(760,880,10), FVector(0.75f), FRotator(0,165,0), false);
+
+        // Balin chamber receives a stronger authored focal hierarchy without changing its trigger graph.
+        SpawnProd(MoriaTombDaisMesh, FVector(450,0,18), FVector(1.0f), FRotator::ZeroRotator, false);
+        SpawnProd(MoriaReliefPanelMesh, FVector(430,620,80), FVector(0.82f), FRotator(0,180,0), false);
+        SpawnProd(MoriaReliefPanelMesh, FVector(430,-620,80), FVector(0.82f), FRotator::ZeroRotator, false);
+        SpawnProd(MoriaSideDoorMesh, FVector(80,840,0), FVector(0.88f), FRotator(0,180,0), false);
+        SpawnProd(MoriaSideDoorMesh, FVector(960,-840,0), FVector(0.88f), FRotator::ZeroRotator, false);
+
+        // Bridge approach: buttresses/pier silhouettes frame the canonical escape line.
+        SpawnProd(MoriaBridgePierMesh, FVector(2140,-620,0), FVector(0.90f), FRotator::ZeroRotator, false);
+        SpawnProd(MoriaBridgePierMesh, FVector(2140,620,0), FVector(0.90f), FRotator::ZeroRotator, false);
+        SpawnProd(MoriaChasmButtressMesh, FVector(2520,-760,0), FVector(1.0f), FRotator(0,8,0), false);
+        SpawnProd(MoriaChasmButtressMesh, FVector(2520,760,0), FVector(1.0f), FRotator(0,172,0), false);
+        SpawnProd(MoriaTorchNicheMesh, FVector(1840,-870,20), FVector(0.78f), FRotator(0,0,0), false);
+        SpawnProd(MoriaTorchNicheMesh, FVector(1840,870,20), FVector(0.78f), FRotator(0,180,0), false);
+        SpawnScatter(MoriaDebrisClusterMesh, FVector(1050,0,0), 14, FVector(1550,930,0), FVector(0.66f), 31.0f, 3.0f);
+
         SpawnScatter(CommonRuinSlabMesh, FVector(-200,0,0), 18, FVector(2300,1050,0), FVector(0.78f), 37.0f, 2.0f);
         SpawnScatter(CommonBoulderClusterMesh, FVector(300,0,0), 14, FVector(2500,1150,0), FVector(0.85f), 31.0f, 6.0f);
+        SpawnInstancedScatter(MoriaDebrisClusterMesh, FVector(480,0,0), 36,
+            FVector(2600,1100,0), FVector(0.44f), 33.0f, 4.0f, 2200, 5600);
+        SpawnInstancedScatter(CommonRuinSlabMesh, FVector(300,0,-4), 28,
+            FVector(2450,1000,0), FVector(0.38f), 47.0f, 2.0f, 2200, 5600);
     }
     else if (ChapterId == TEXT("P1C07"))
     {
@@ -629,6 +756,12 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnScatter(CommonGoldenTreeMesh, FVector(0,0,0), 34, FVector(2600,1550,0), FVector(0.92f), 19.0f, 12.0f);
         SpawnScatter(CommonFernClumpMesh, FVector(100,0,0), 48, FVector(2500,1450,0), FVector(0.72f), 13.0f, 4.0f);
         SpawnScatter(CommonFallenLogMesh, FVector(-100,150,0), 8, FVector(2100,1200,0), FVector(0.68f), 47.0f, 4.0f);
+        SpawnInstancedScatter(CommonFernClumpMesh, FVector(0,0,0), 70,
+            FVector(2650,1500,0), FVector(0.44f), 17.0f, 4.0f);
+        SpawnInstancedScatter(CommonReedClusterMesh, FVector(980,420,-8), 24,
+            FVector(900,520,0), FVector(0.46f), 31.0f, 2.0f);
+        SpawnInstancedScatter(CommonGoldenTreeMesh, FVector(80,0,0), 16,
+            FVector(2850,1680,0), FVector(0.58f), 37.0f, 10.0f, 3200, 7600);
     }
     else if (ChapterId == TEXT("P1C08"))
     {
@@ -673,6 +806,14 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnScatter(CommonPineTreeMesh, FVector(1000,0,0), 14, FVector(2200,1300,0), FVector(0.82f), 29.0f, 10.0f);
         SpawnScatter(CommonReedClusterMesh, FVector(-1500,0,-10), 28, FVector(1250,520,0), FVector(0.76f), 17.0f, 2.0f);
         SpawnScatter(CommonRuinSlabMesh, FVector(1600,0,0), 10, FVector(1100,800,0), FVector(0.74f), 43.0f, 3.0f);
+        SpawnInstancedScatter(CommonReedClusterMesh, FVector(-1480,0,-10), 48,
+            FVector(1450,610,0), FVector(0.48f), 19.0f, 2.0f);
+        SpawnInstancedScatter(CommonFernClumpMesh, FVector(980,0,0), 44,
+            FVector(2100,1200,0), FVector(0.42f), 27.0f, 3.0f);
+        SpawnInstancedScatter(CommonRuinSlabMesh, FVector(1760,0,0), 22,
+            FVector(1250,880,0), FVector(0.38f), 53.0f, 3.0f);
+        SpawnInstancedScatter(CommonFallenLogMesh, FVector(1550,0,5), 16,
+            FVector(1550,1050,0), FVector(0.42f), 61.0f, 3.0f);
     }
 
     // CP52 shared-resource finishing layer. These placements intentionally live away

@@ -4,6 +4,7 @@
 #include "ShireAmbientNPC.h"
 #include "ShireQuestTrigger.h"
 #include "ShireTraversalChallenge.h"
+#include "WorldAmbientMotionActor.h"
 
 #include "Components/DirectionalLightComponent.h"
 #include "Components/ExponentialHeightFogComponent.h"
@@ -256,6 +257,47 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
                 25.0f);
             SpawnShape(ParapetSlab, BaseRing, FVector(0.58f),
                 FLinearColor(0.055f, 0.060f, 0.065f), FRotator(0.0f, Angle + 90.0f, 0.0f), false);
+        }
+    }
+
+    // Source 03/11: Isengard should read as a living war-production machine.
+    // A few bounded, shadowless industrial motion accents sell machinery without
+    // introducing a heavy simulation layer or changing the authored route.
+    if (FurnaceStack)
+    {
+        const FVector FurnaceMotionLocations[] = {
+            FVector(-180.0f, 770.0f, 75.0f),
+            FVector(360.0f, 900.0f, 75.0f),
+            FVector(900.0f, 785.0f, 75.0f),
+            FVector(1420.0f, 930.0f, 75.0f),
+            FVector(220.0f, -825.0f, 70.0f),
+            FVector(1120.0f, -860.0f, 70.0f)
+        };
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(FurnaceMotionLocations); ++Index)
+        {
+            FActorSpawnParameters MotionParams;
+            MotionParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+            AWorldAmbientMotionActor* FurnaceMotion = GetWorld()->SpawnActor<AWorldAmbientMotionActor>(
+                FurnaceMotionLocations[Index],
+                FRotator(0.0f, Index * 17.0f, 0.0f),
+                MotionParams);
+            if (!FurnaceMotion)
+            {
+                continue;
+            }
+
+            FurnaceMotion->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+            FurnaceMotion->Configure(
+                FurnaceStack,
+                EWorldAmbientMotionMode::Shiver,
+                1.5f + 0.25f * (Index % 3),
+                1.15f + 0.12f * (Index % 2),
+                FVector(0.42f),
+                false);
+            FurnaceMotion->ConfigureGlow(
+                FLinearColor(1.0f, 0.16f, 0.035f),
+                260.0f,
+                230.0f);
         }
     }
 

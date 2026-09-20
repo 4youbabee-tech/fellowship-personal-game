@@ -92,6 +92,12 @@
         "bounded local fire pools reinforce player-scale readability in monumental darkness",
         "production mine carts reinforce the mine/city identity without changing traversal anchors",
         "existing Watcher -> tomb -> Orc/Troll -> Balrog order remains untouched"
+      ],
+      "runtime_wave_v6": [
+        "14 new project-owned modular Moria meshes expand wall, floor, arch, ceiling, bridge, tomb, relief, rail, crate, beam, light-niche, buttress, side-door and debris vocabulary",
+        "new kit is placed around the existing centerline and landmarks without moving quest triggers or changing encounter order",
+        "regional materials now carry explicit roughness/metallic intent through the M_ProductionSurface importer",
+        "civilian-empty baseline and Watcher -> tomb/Orc-Troll -> Bridge/Balrog -> Gandalf fall outcome remain locked"
       ]
     },
     {
@@ -262,17 +268,21 @@
     ]
   },
   "current_wave": {
-    "id": "CANON_SAFE_REGIONAL_LIFE_V8",
-    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "id": "MEGA_WORLD_MAGIC_LIFE_DETAIL_V1",
+    "status": "SOURCE_AND_RUNTIME_IMPLEMENTATION_ACTIVE_PENDING_EXACT_HEAD_ENGINE_PROOF",
     "focus": [
-      "chapter-correct ambient population",
-      "route-readable crowd flow",
-      "ambient production material response",
-      "cheap gait/idle variation",
-      "Caradhras/Moria civilian-empty safety",
-      "Anduin/Amon Hen bird-only ambient baseline"
+      "mass explicit roughness/metallic material response across Part I regional palettes",
+      "Moria modular architecture/prop expansion",
+      "route-readable landmark/light composition",
+      "source-grounded visible world saturation",
+      "LoadObject growth kept bounded and transition-hitch risk retained",
+      "film-locked encounter outcomes unchanged",
+      "bounded chapter-specific environmental motion and glow",
+      "HISM-based dense micro-detail in Rivendell, Moria, Lothlorien and Anduin/Amon Hen",
+      "Isengard industrial motion and furnace life",
+      "sparse-region life through environment/wildlife rather than unsupported civilians"
     ],
-    "acceptance_rule": "Exact-head machine proof is required before promotion; rendered PIE/device/human acceptance remains separate."
+    "acceptance_rule": "Exact-head Pre-Unreal + UE4.27.2 import/build/startup/chapter/state proof is required; rendered visual/device/human acceptance remains separate."
   },
   "hero_character_geometry_wave": {
     "id": "HERO_ANATOMICAL_FOUNDATION_V6",
@@ -355,5 +365,39 @@
       "per-NPC gait and idle head-look variation"
     ],
     "acceptance_boundary": "No rendered or target-device claim until exact-head engine proof plus later PIE/device/human review."
+  },
+  "mega_material_world_wave": {
+    "plan": "Data/MegaMaterialWorldWaveV1.json",
+    "requirement": "REQ-PROD-007",
+    "work_item": "WORK-PROD-007",
+    "status": "SOURCE_IMPLEMENTATION_ACTIVE_PENDING_EXACT_HEAD_PROOF",
+    "next_regions": [
+      "Amon Hen",
+      "Isengard",
+      "Rivendell",
+      "Lothlorien",
+      "Anduin",
+      "Shire/Bree/Road/Weathertop"
+    ]
+  },
+  "world_magic_life_detail": {
+    "status": "ACTIVE_PENDING_ENGINE_PROOF",
+    "runtime_components": [
+      "AWorldAmbientMotionActor",
+      "AWorldDetailCluster",
+      "ALivingWorldDirector",
+      "AFellowshipChapterWorldBuilder",
+      "AIsengardPrototypeWorldBuilder"
+    ],
+    "source_basis": [
+      "03 World/Locations",
+      "04 Peoples/Lore/Cultures",
+      "06 Gameplay/Side Activities",
+      "07 Mission Matrix",
+      "08 Visual Reference",
+      "10 3D Visual Atlas",
+      "11 Master Production Systems"
+    ],
+    "current_result": "Environmental motion + bounded glow + performance-aware dense detail are implemented in source and await exact-head engine proof."
   }
 }

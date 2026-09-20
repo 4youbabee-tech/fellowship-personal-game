@@ -69,7 +69,8 @@
         "Data/ProjectGovernor.json is the single project authority",
         "Scripts/project_governor.py validates the authority in CI",
         "Source/ShireJourney/README.md and CURRENT_PROJECT_STATE provide lost-chat/developer handoff entry points",
-        "Project Guardian and checkpoint history preserve regression and milestone memory"
+        "Project Guardian and checkpoint history preserve regression and milestone memory",
+        "request_capture_contract + external_review_findings preserve accepted owner direction and verified external advice as durable repository memory."
       ],
       "missing_work": [
         "Operational: every future meaningful user request must continue to be recorded in the Governor",
@@ -144,7 +145,9 @@
         "CP49 common terrain kit adds production hills/cliffs/river-bank/boulder silhouettes across Part I",
         "CP55 adds project-owned bird/rabbit/butterfly fauna with bounded flight, hop and flutter movement through the existing LivingWorldDirector micro-event path",
         "LivingWorldDirector now spawns bounded reward-free player interaction markers for work, traveler, market and social micro-events when story danger is inactive.",
-        "Living-world interaction objects are ephemeral, chapter-bound and destroyed with their parent micro-event; they do not create persistent quest or save state."
+        "Living-world interaction objects are ephemeral, chapter-bound and destroyed with their parent micro-event; they do not create persistent quest or save state.",
+        "V9 environmental-life runtime adds chapter-specific prop motion and bounded shadowless glow accents through AWorldAmbientMotionActor.",
+        "Moria now receives environmental danger/aftermath motion while retaining zero civilian baseline; Isengard receives bounded industrial motion without generic crowd simulation."
       ],
       "missing_work": [
         "production-quality terrain/material/art replacement beyond current procedural detail",
@@ -155,7 +158,8 @@
         "Ordinary traversal repeatedly reveals believable activity or environmental storytelling",
         "Activity responds to region/story state",
         "Target laptop performance remains acceptable",
-        "Each chapter records living-world acceptance separately"
+        "Each chapter records living-world acceptance separately",
+        "Sparse/danger regions must still feel authored through environment/wildlife/threat motion without inventing unsupported civilian populations."
       ],
       "dependencies": [
         "REQ-WORLD-002",
@@ -401,10 +405,12 @@
         "distance-adaptive NPC ticks",
         "instanced ground cover",
         "one major generated region at a time",
-        "low/medium 720p target"
+        "low/medium 720p target",
+        "Environmental-life V9 uses ephemeral non-colliding actors, bounded event caps and shadowless point-light accents."
       ],
       "missing_work": [
-        "focused target-device traversal/performance observation for current production Shire"
+        "focused target-device traversal/performance observation for current production Shire",
+        "Measure V9 environmental-motion/light cost on target hardware; disable glow before motion under pressure."
       ],
       "acceptance_criteria": [
         "30 FPS floor target at 720p Low/Medium without severe memory pressure or unplayable hitching"
@@ -586,7 +592,9 @@
         "Data/ProjectGovernor.json is the single authority",
         "Scripts/project_governor.py validates requirements, decisions, conflicts, quality gates and secondary-authority prohibition",
         "CI runs the Governor validator in Pre-Unreal Validation",
-        "Worker contract and active hard gate are recorded in the Governor"
+        "Worker contract and active hard gate are recorded in the Governor",
+        "request_capture_contract + external_review_findings preserve accepted owner direction and verified external advice as durable repository memory.",
+        "Source 11 master production systems rules are registered as cross-discipline governance for audio/cinematics/UI/AI/technical/performance/QA."
       ],
       "missing_work": [
         "Operational: translate each future meaningful request into the Governor before/with implementation",
@@ -1123,7 +1131,9 @@
         "regional role/prop mixes",
         "gradual population replenish and cull loop",
         "existing ambient schedules/social conversations/player awareness reused",
-        "five-event active cap with six-second cadence floor"
+        "five-event active cap with six-second cadence floor",
+        "V9 environmental-life runtime adds chapter-specific prop motion and bounded shadowless glow accents through AWorldAmbientMotionActor.",
+        "Moria now receives environmental danger/aftermath motion while retaining zero civilian baseline; Isengard receives bounded industrial motion without generic crowd simulation."
       ],
       "missing_work": [
         "UE4.27 compile/import validation",
@@ -1137,7 +1147,8 @@
         "Rivendell and Lothlorien have region-appropriate visible inhabitants",
         "Moria has no fabricated civilian baseline population",
         "baseline actors cull and replenish without save/story ownership",
-        "target laptop remains above the agreed performance floor after tuning"
+        "target laptop remains above the agreed performance floor after tuning",
+        "Sparse/danger regions must still feel authored through environment/wildlife/threat motion without inventing unsupported civilian populations."
       ],
       "dependencies": [
         "REQ-WORLD-005",
@@ -1202,7 +1213,8 @@
       "implementation_refs": [
         "ExternalAssetManifest stores providers by production category and approval/review mode",
         "ProjectGovernor records the persistence requirement as project memory",
-        "External sourcing policy defines the item-level provenance/license/import workflow"
+        "External sourcing policy defines the item-level provenance/license/import workflow",
+        "Project source library completeness and authority hierarchy are recorded in ProjectGovernor.project_source_library and Data/OwnerSourceReferenceIndex.json."
       ],
       "missing_work": [
         "Continue appending newly requested useful sources and production requests as they arise",
@@ -1346,7 +1358,8 @@
         "REQ-MEM-003 persists useful external sources and requests",
         "DEC-009 through DEC-012 preserve major story/NPC/offline decisions",
         "WORK-EXP-003 and WORK-LW-004 keep the two major production tracks active",
-        "REQ-QA-001 preserves the accepted automation-first quality direction and its remaining work"
+        "REQ-QA-001 preserves the accepted automation-first quality direction and its remaining work",
+        "request_capture_contract + external_review_findings preserve accepted owner direction and verified external advice as durable repository memory."
       ],
       "missing_work": [
         "Continue promoting future major user requests into the Governor instead of relying only on chat history"
@@ -1392,7 +1405,8 @@
         "Add an exact-SHA automated quality report with machine-readable JSON plus a human-readable summary.",
         "Extend the gate with target-device FPS/hitch and memory-pressure evidence against the existing 720p Low-Medium / 30 FPS floor target.",
         "Add engine-driven offline NPC behavior/dialogue consistency coverage, save/load roundtrip coverage, story/canon contract checks and text/localization integrity checks.",
-        "Evaluate Unreal Automation Framework first, then add Gauntlet/Unreal Insights where they improve end-to-end or performance coverage without replacing proven existing checks."
+        "Evaluate Unreal Automation Framework first, then add Gauntlet/Unreal Insights where they improve end-to-end or performance coverage without replacing proven existing checks.",
+        "Add a robust local Pre-Unreal preflight before the one-click build/share path, reusing proven Python-resolution behavior instead of assuming a Windows Store alias."
       ],
       "acceptance_criteria": [
         "Late startup failures cannot be marked successful.",
@@ -1491,19 +1505,23 @@
         "Fellowship screenplay mapped into Part I route/chapter/story-beat contexts.",
         "Two Towers screenplay indexed into future Part II arc seeds.",
         "Runtime context will expose active source grounding to bounded dialogue selection.",
-        "Part1ProductionAtlas derives Part I geography/cast/threat/artifact production context from the owner screenplay/source pack/production bibles while raw references remain non-runtime."
+        "Part1ProductionAtlas derives Part I geography/cast/threat/artifact production context from the owner screenplay/source pack/production bibles while raw references remain non-runtime.",
+        "Data/OwnerSourceReferenceIndex.json now registers the full trilogy screenplay set, Tolkien full volume, Source 10 3D visual atlas and Source 11 master production systems/source index."
       ],
       "missing_work": [
         "Validate source-context loading in UE4.27 on PR #53.",
         "Expand Part II route contexts when Part II runtime production begins.",
-        "Feed only bounded summaries/knowledge limits to any future local on-device language layer."
+        "Feed only bounded summaries/knowledge limits to any future local on-device language layer.",
+        "Expand bounded screenplay-derived source context for Part III only when Part III runtime production begins."
       ],
       "acceptance_criteria": [
         "Part I source context is recoverable without opening PDFs at runtime.",
         "No long or verbatim screenplay lines are stored as runtime dialogue.",
         "NPCs cannot gain future knowledge from later screenplay events.",
         "Two Towers remains reference-ready without falsely claiming Part II runtime implementation.",
-        "Shipped dialogue remains offline."
+        "Shipped dialogue remains offline.",
+        "Part III film-story work must use the supplied Return of the King screenplay before older shorthand summaries.",
+        "Book-derived lore must be labeled/used as deeper lore and may not silently override film continuity."
       ],
       "dependencies": [
         "REQ-VISION-001",
@@ -1680,7 +1698,8 @@
         "select/import legal base assets or author replacements",
         "rig/skin and retarget core cast",
         "replace runtime proxies",
-        "UE4 compile/import and PIE visual/motion acceptance"
+        "UE4 compile/import and PIE visual/motion acceptance",
+        "Clean verified triangulation-risk character sources before the next affected production import wave."
       ],
       "acceptance_criteria": [
         "core cast recognizable without labels",
@@ -1916,13 +1935,15 @@
         "asynchronous automatic checkpoint writes",
         "CI deep-audit script and finding registry",
         "World material persistence verified with zero missing runtime packages in Unreal #319.",
-        "SHA-scoped governor handoff regression guard."
+        "SHA-scoped governor handoff regression guard.",
+        "Mega material/world wave treats synchronous LoadObject concentration as a scaling guardrail and prioritizes material-response enrichment/re-use before adding heavyweight loads."
       ],
       "missing_work": [
         "Complete current V6 engine validation after repeated runner cancellation; investigate trigger without treating interruption as a code defect.",
         "profile actor-iteration/social pairing on target device",
         "profile chapter-transition synchronous asset loads",
-        "target-device frame-time/memory capture and rendered chapter acceptance"
+        "target-device frame-time/memory capture and rendered chapter acceptance",
+        "Measure chapter-transition hitch/memory before later high-resolution asset-bank expansion."
       ],
       "acceptance_criteria": [
         "critical exact-head gates are green before unrelated expansion",
@@ -1978,6 +1999,55 @@
         "Add real-event witness/share/learn propagation with canon/knowledge gates.",
         "Add optional local bounded expression only after deterministic behavior is proven."
       ]
+    },
+    {
+      "id": "REQ-PROD-007",
+      "title": "Massive source-grounded material and world-content saturation wave",
+      "category": "VisualProduction",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner request on 2026-09-21 to make the next step very large, remember all useful requests/proposals, and inject a huge amount of material/content into the game.",
+      "intent": "Execute a substantial, source-grounded production wave that materially increases visible world richness and material response across Part I while preserving Peter Jackson film outcomes, route readability, save/story integrity and the 720p Low-Medium 30 FPS floor target.",
+      "evidence": [
+        "Data/MegaMaterialWorldWaveV1.json",
+        "Data/ProjectGovernor.json",
+        "Data/Part1VisualProductionPass.json",
+        "SourceAssets/Production/World",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp"
+      ],
+      "implementation_refs": [
+        "Project Sources define silhouette-first landmarks, route-readable architecture/light, sightline/portal streaming and Moria state/mission constraints.",
+        "Existing M_ProductionSurface importer supports per-material Color/Roughness/Metallic through MTL Kd/Pr/Pm.",
+        "Wave prioritizes PBR-style material enrichment across existing assets before multiplying heavyweight synchronous asset loads.",
+        "Moria receives the first new modular production kit because it is the stated top world-art priority and the source matrix identifies it as the second proof slice.",
+        "WorldAmbientMotionActor.cpp/h provides reusable low-cost motion/glow accents across Part I and Isengard.",
+        "LivingWorldEventPlan V9 and WorldLifeSaturationPlan V9 connect motion to chapter-state event budgets."
+      ],
+      "missing_work": [
+        "Complete mass Pr/Pm material-response enrichment across Part I world palettes.",
+        "Add and runtime-wire a bounded new Moria modular architecture/prop kit without moving canonical quest anchors.",
+        "Run exact-head Pre-Unreal and Unreal build/import/runtime validation.",
+        "Perform rendered PIE/device/human visual review and target-device hitch/FPS/memory measurement.",
+        "Continue the same material/content saturation pattern into Amon Hen, Isengard, Rivendell, Lothlorien, Anduin, then Shire/Bree/Weathertop.",
+        "Continue visible saturation after the environmental-life proof into Amon Hen, Rivendell, Lothlorien, Anduin, Shire/Bree/Road/Weathertop with exact-head engine checks between coherent batches."
+      ],
+      "acceptance_criteria": [
+        "All touched production MTL materials have explicit roughness and metallic intent compatible with the importer.",
+        "New Moria assets are project-owned, structurally clean, triangulated or import-safe, and use authored material bindings.",
+        "Moria preserves Watcher -> tomb/Orc-Troll escalation -> Bridge/Balrog outcome order and Gandalf fall postcondition.",
+        "Primary routes remain readable through architecture, light and landmarks; optional dressing does not block traversal.",
+        "Exact candidate head passes Pre-Unreal and real UE4.27.2 build/import/startup/chapter/state/warning gates.",
+        "No Production100, rendered quality or target-device performance claim is made without direct evidence."
+      ],
+      "dependencies": [
+        "REQ-WORLD-002",
+        "REQ-WORLD-003",
+        "REQ-PERF-001",
+        "REQ-QA-001",
+        "REQ-SOURCE-001"
+      ],
+      "checkpoint": "MEGA_MATERIAL_WORLD_WAVE_V1",
+      "notes": "This is a large visible-production wave, not a completion claim. It deliberately converts useful programmer feedback into guardrails rather than letting governance stall production."
     }
   ],
   "hard_invariants": [
@@ -2786,8 +2856,8 @@
   ],
   "active_gate": {
     "id": "DEEP_EXACT_HEAD_STABILITY_GATE",
-    "status": "PASSED",
-    "blocks_major_feature_expansion": false,
+    "status": "FAILED",
+    "blocks_major_feature_expansion": true,
     "required_evidence": [
       "Pre-Unreal including deep audit",
       "real UE4.27.2 compile and deterministic production import",
@@ -2795,7 +2865,7 @@
       "route/story/state isolated disk roundtrip",
       "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "Governor is an overseer, not a bottleneck. Verified V7 baseline remains green; V8 exact-head evidence is still required for V8 acceptance, but safe parallel production may continue while runner/validation issues are repaired.",
+    "note": "Exact head e0a78d8094d70e7c75a05f0b7ab4c9df96e275b3 failed Pre-Unreal #517 because four newly added runtime files were not yet registered in Data/SourceArchitecturePlan.json. That architecture-governance blocker has now been repaired on be1554642827184cc77847a165a72c0d7ff81a8b. Unreal Build #352 was still running when the failure was reconciled; do not transfer any result to the repaired head.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -2808,12 +2878,29 @@
       ],
       "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "833c3679e19290a2b046ea7f53013a76ae1b29f4",
+    "last_green_head": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
     "evidence": {
-      "pre_unreal": "PASS #500",
-      "unreal_build": "PASS #335"
+      "pre_unreal": "PASS #509",
+      "unreal_build": "PASS #344"
     },
-    "evidence_scope": "PR #53 exact candidate head before merge into develop."
+    "evidence_scope": "PR #54 exact candidate head; develop merge commit 2a5f96fd552cbe6343474721ca98d86d8629fc00 contains that tree but the new mega-wave candidate must earn its own exact-head proof.",
+    "current_owner_observation": {
+      "sha": "e0a78d8094d70e7c75a05f0b7ab4c9df96e275b3",
+      "pre_unreal": {
+        "run_number": 517,
+        "status": "FAILURE",
+        "root_cause": "WorldAmbientMotionActor.cpp/.h and WorldDetailCluster.cpp/.h were missing from SourceArchitecturePlan.json."
+      },
+      "unreal": {
+        "run_number": 352,
+        "status": "IN_PROGRESS_AT_RECONCILIATION"
+      },
+      "repaired_after_observation": [
+        "Data/SourceArchitecturePlan.json now registers all four new runtime files exactly once under the World domain.",
+        "Previous PG-107 source-authority wording and Moria Iron material binding fixes remain present.",
+        "Fresh exact-head validation is required on be1554642827184cc77847a165a72c0d7ff81a8b or later."
+      ]
+    }
   },
   "reference_only_files": [
     "Docs/CURRENT_PROJECT_STATE.md",
@@ -2850,7 +2937,9 @@
     "For implementation: update evidence/missing_work/status here only after repository evidence exists.",
     "For testing: update region_quality and active_gate only from actual static/compile/PIE/device/human evidence.",
     "If any reference file conflicts with this governor, reconcile that file to this governor in the same logical change.",
-    "For a new owner request: record or update the requirement, preserve its intent and priority, inspect dependencies/conflicts, then proceed with implementation without unnecessary planning gates."
+    "For a new owner request: record or update the requirement, preserve its intent and priority, inspect dependencies/conflicts, then proceed with implementation without unnecessary planning gates.",
+    "For useful programmer/external reviews: verify each material claim against live develop and relevant Project Sources, record the verified finding/disposition here, and link it to the requirements/work it affects.",
+    "Before closing a major request, confirm its intent, remaining work, evidence and coordination links remain recoverable from this Governor without relying on chat history."
   ],
   "deprecated_secondary_authority_files": [
     "Data/ProjectRequirements.json",
@@ -2863,7 +2952,8 @@
     "Workers do not independently change global requirement priority, acceptance state, active gate, or conflict resolution.",
     "Any global direction change must be recorded in this Governor in the same logical change.",
     "A worker discovering a contradiction records it here rather than choosing silently.",
-    "If active_gate.blocks_major_feature_expansion is true, workers must not merge or accept changes that depend on the failing layer, but may continue isolated safe parallel production that cannot worsen or conceal the failure."
+    "If active_gate.blocks_major_feature_expansion is true, workers must not merge or accept changes that depend on the failing layer, but may continue isolated safe parallel production that cannot worsen or conceal the failure.",
+    "Workers must not apply programmer/external advice blindly: compare it with the current develop head and Project Sources, then preserve only verified/accepted value in external_review_findings and linked requirements/work."
   ],
   "work_queue": [
     {
@@ -3074,16 +3164,25 @@
       "rationale": "Extend the existing living-NPC stack rather than replacing it. First prove one named Shire NPC with real-event memory/knowledge transfer, emotional context and deterministic fallback; optional local language expression and speech adapters come after the state model is proven.",
       "execution_bundle": "B3_LIVING_WORLD_AND_PRESENTATION",
       "plan": "Data/LivingNPCIntelligenceRoadmap.json"
+    },
+    {
+      "order": 29,
+      "id": "WORK-PROD-007",
+      "title": "Mega material and world-content saturation V1",
+      "status": "ACTIVE",
+      "rationale": "Owner requested a very large next step with massive visible content/material injection while preserving useful prior requests and programmer findings.",
+      "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
     }
   ],
   "last_reconciliation": {
-    "date": "2026-09-20",
-    "reason": "PR #53 consolidated the long-lived production branch into develop.",
+    "date": "2026-09-21",
+    "reason": "Mega world-magic/life/detail wave encountered and repaired another governance blocker during exact-head validation.",
     "summary": [
-      "PR #53 exact candidate head 833c3679e19290a2b046ea7f53013a76ae1b29f4 passed Pre-Unreal #500 and Unreal Build #335.",
-      "Merge commit b9de4fd4a1aa6b4edeb25459a23b78c077dfcef7 moved the full CP56-and-later production line into develop.",
-      "CP55, CP56, repair/import-pipeline and work/automation-first-runtime-observation are now historical/contained branches, not active integration lines.",
-      "Diverged verification/repair/hygiene branches retain unique commits and remain preserved until their unique content is audited or absorbed."
+      "Pre-Unreal #517 on e0a78d8 correctly rejected four new runtime files that were absent from SourceArchitecturePlan.json.",
+      "The missing WorldAmbientMotionActor and WorldDetailCluster header/source entries were added to the architecture plan rather than weakening the validator.",
+      "This confirms the architecture guard is active and the production wave is being corrected inline rather than bypassing controls.",
+      "Unreal #352 belonged to the failed e0a78d8 head and cannot certify the repaired head.",
+      "Next acceptance step is fresh exact-head Pre-Unreal + Unreal validation."
     ]
   },
   "development_mode": {
@@ -3120,26 +3219,28 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "DEVELOP_CLEAN_BASELINE_READY_FOR_NEXT_SHORT_WAVE",
+  "current_focus": "MEGA_WORLD_MAGIC_LIFE_AND_DETAIL_TRANSFORMATION_V1",
   "immediate_next_large_actions": [
-    "Treat develop as the only integration baseline and stop extending historical CP/repair/work branches.",
-    "Delete historical branches only after confirming no external workflow/bookmark depends on their names; unique content has been audited as recorded in side_branch_audit.",
-    "Receive the next owner/programmer proposal, normalize it through the Governor, then implement it from latest green develop on one short branch."
+    "Repair the current exact-head CI blockers first: updated screenplay-authority validator wording and missing Moria Iron material used by four new meshes.",
+    "Earn exact-head Pre-Unreal plus Unreal import/build/startup proof for the repaired mega-wave branch.",
+    "Continue the world-magic/life wave with source-grounded environmental motion, regional activity, culture-specific props, atmosphere and cinematic landmarks across Moria, Amon Hen, Isengard, Rivendell, Lothlorien and Anduin.",
+    "Keep Shire/Bree/Road/Weathertop population and micro-life rich but bounded; preserve wilderness/dead-city civilian restrictions.",
+    "After each coherent production batch, update Governor evidence and only then merge to develop."
   ],
   "session_handoff": {
-    "source_head": "9080f2931e337ce0e6150ea72dcf8ccd5bc3f891",
-    "branch": "production/character-surface-parity-v1",
+    "source_head": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
+    "branch": "develop",
     "verified": {
-      "pre_unreal": "PASS run 35536813304 on 9080f2931e337ce0e6150ea72dcf8ccd5bc3f891",
-      "unreal_build": "PASS run 35536813265 on 9080f2931e337ce0e6150ea72dcf8ccd5bc3f891"
+      "pre_unreal": "PASS #509 on 3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
+      "unreal_build": "PASS #344 on 3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
+      "merge": "PR #54 merged that exact green candidate into develop as 2a5f96fd552cbe6343474721ca98d86d8629fc00"
     },
-    "failing": {
-      "latest_unreal": "Documentation follow-up ba91959 engine run cancelled before a job was allocated. Its source parent 9080f29 passed full engine validation; do not transfer that result to this newer head."
-    },
+    "failing": {},
     "next_actions": [
-      "Exact-head Pre-Unreal and Unreal build/import/startup/chapter/state/save gates",
-      "Merge short wave into develop only after green gates",
-      "Rendered chapter production next: Moria, Amon Hen, Isengard; do not recreate already integrated minecarts/piers/atmosphere"
+      "Execute a mass world-material response pass across Part I using the existing M_ProductionSurface Kd/Pr/Pm importer path.",
+      "Build and runtime-wire the first bounded new modular architecture/prop kit in Moria without changing Watcher/tomb/Orc-Troll/Bridge-Balrog canonical outcomes or quest anchors.",
+      "Keep synchronous asset-loading growth evidence-bounded; reuse/instance small project-owned assets first and measure chapter-transition hitch before heavier art banks.",
+      "After exact-head green proof, continue the same visible saturation pattern to Amon Hen, Isengard, Rivendell, Lothlorien, Anduin, then Shire/Bree/Weathertop."
     ],
     "unverified_acceptance": [
       "Character surface parity changes require their own exact-head validation; this baseline evidence does not certify the new source wave.",
@@ -3150,29 +3251,29 @@
     "scope_rule": "Machine evidence and merge status do not replace rendered PIE/device/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "9080f2931e337ce0e6150ea72dcf8ccd5bc3f891",
+        "sha": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
         "pre_unreal": {
-          "sha": "9080f2931e337ce0e6150ea72dcf8ccd5bc3f891",
-          "run_id": 35536813304,
+          "sha": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
+          "run_id": 35537404621,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "9080f2931e337ce0e6150ea72dcf8ccd5bc3f891",
-          "run_id": 35536813265,
+          "sha": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
+          "run_id": 35537404605,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "ba91959a62b50463b3f4f700bfc9ab945c8db92f",
+        "sha": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
         "pre_unreal": {
-          "sha": "ba91959a62b50463b3f4f700bfc9ab945c8db92f",
-          "run_id": 35536870361,
+          "sha": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
+          "run_id": 35537404621,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "ba91959a62b50463b3f4f700bfc9ab945c8db92f",
-          "run_id": 35536870355,
-          "status": "CANCELLED"
+          "sha": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
+          "run_id": 35537404605,
+          "status": "SUCCESS"
         }
       }
     },
@@ -3216,6 +3317,49 @@
         "generated dialogue as canon/story authority"
       ],
       "canonical_plan": "Data/LivingNPCIntelligenceRoadmap.json"
+    },
+    {
+      "id": "OWNER-IDEA-MEGA-MATERIAL-WORLD-2026-09-21",
+      "status": "ACCEPTED_AND_NORMALIZED",
+      "title": "Next step must be a very large visible production/material injection",
+      "captured_value": [
+        "Do not spend the next phase on tiny JSON/CI-only increments.",
+        "Remember and coordinate prior important owner requests and verified useful programmer suggestions.",
+        "Inject a large amount of visible material/world content into the game.",
+        "Keep the film story/results fixed and preserve the target-laptop performance boundary.",
+        "Use Project Sources as production authority."
+      ],
+      "canonical_requirement": "REQ-PROD-007",
+      "canonical_work": "WORK-PROD-007"
+    },
+    {
+      "id": "OWNER-IDEA-WORLD-MAGIC-LIFE-2026-09-21",
+      "status": "ACTIVE_IMPLEMENTATION",
+      "title": "Transform the game through a very large source-grounded wave of magic, life and detail",
+      "captured_value": [
+        "Prepare the project, code, production data and validation system for a major qualitative jump rather than incremental cleanup.",
+        "Fill the game with authored life, environmental motion, cultural detail, atmosphere, regional identity and cinematic presentation.",
+        "Use Project Sources 01-11, trilogy screenplays and Tolkien as the production basis instead of generic fantasy filler.",
+        "Fix blockers encountered during the wave immediately, then continue production rather than stopping at diagnosis.",
+        "The result should materially change the face of the game while preserving film outcomes and the target-device performance boundary."
+      ],
+      "canonical_requirements": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-WORLD-003",
+        "REQ-WORLD-006",
+        "REQ-NPC-005",
+        "REQ-PROD-007",
+        "REQ-PERF-001"
+      ],
+      "canonical_work": [
+        "WORK-WORLD-001",
+        "WORK-WORLD-002",
+        "WORK-WORLD-003",
+        "WORK-LW-004",
+        "WORK-PROD-007",
+        "WORK-QA-001"
+      ]
     }
   ],
   "branch_workflow": {
@@ -3320,5 +3464,192 @@
       "status": "VALIDATED_ON_9080f293",
       "validation_run_id": 35536813265
     }
+  },
+  "requirement_contract": {
+    "version": 1,
+    "schema_file": "Data/ProjectGovernor.schema.json",
+    "required_fields": [
+      "id",
+      "title",
+      "category",
+      "priority",
+      "status",
+      "origin",
+      "intent",
+      "acceptance_criteria",
+      "dependencies"
+    ],
+    "authoritative_intent_field": "intent",
+    "compatibility_aliases": {
+      "owner_intent": "Optional compatibility/source-note field only. It never replaces the required intent field."
+    },
+    "rule": "Every accepted or clearly agreed meaningful owner request must update an existing requirement/decision/work item or add one in the same logical change; no accepted project direction may remain chat-only."
+  },
+  "request_capture_contract": {
+    "important_request_definition": [
+      "changes product direction, story/canon constraints, priority, gameplay, AI/NPC behavior, world/character production, performance target, save/state integrity, source usage, validation, branch workflow or acceptance criteria",
+      "creates a durable future obligation, risk, blocker or production dependency",
+      "accepts a useful external/programmer proposal as project direction"
+    ],
+    "capture_rule": "Promote accepted owner direction into requirements, decisions, work_queue items or linked production plans before/with implementation. Preserve unfinished work and evidence boundaries.",
+    "external_advice_rule": "Programmer/external advice is non-authoritative until checked against live develop and relevant Project Sources. Preserve the useful verified result, not a stale claim.",
+    "anti_loss_rule": "No accepted major request may exist only in chat, a temporary ZIP or a worker's memory.",
+    "coordination_rule": "Workers read the Governor before meaningful work and write back status/evidence/findings in the same logical change; conflicts are recorded rather than silently resolved."
+  },
+  "external_review_findings": [
+    {
+      "id": "EXT-REV-2026-09-20-001",
+      "source": "Programmer review message supplied by owner",
+      "verification_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+      "verification_status": "NOT_REPRODUCED_CURRENT_HEAD",
+      "claim": "REQ-NPC-006 used owner_intent instead of required intent and caused pre_unreal_validate.py to fail.",
+      "verified_result": "Current develop lineage contains intent on REQ-NPC-006; the reported failure belongs to an older/different snapshot and must not be applied blindly.",
+      "disposition": "NO_CHANGE_REQUIRED_TO_REQ_NPC_006",
+      "linked_requirements": [
+        "REQ-GOV-001",
+        "REQ-MEM-004"
+      ],
+      "linked_work": [
+        "WORK-EXEC-001",
+        "WORK-QA-001"
+      ],
+      "next_action": "Keep intent authoritative and verify stale-snapshot claims against live develop before changing the Governor."
+    },
+    {
+      "id": "EXT-REV-2026-09-20-002",
+      "source": "Programmer review message supplied by owner",
+      "verification_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+      "verification_status": "VERIFIED_CURRENT_HEAD",
+      "claim": "The Governor needed a documented field contract/schema so new requirements are not written from memory.",
+      "verified_result": "Python validators existed, but no standalone ProjectGovernor JSON Schema was present.",
+      "disposition": "IMPLEMENTED_IN_THIS_WAVE",
+      "linked_requirements": [
+        "REQ-GOV-001",
+        "REQ-MEM-001",
+        "REQ-MEM-004"
+      ],
+      "linked_work": [
+        "WORK-EXEC-001",
+        "WORK-QA-001"
+      ],
+      "next_action": "Keep Data/ProjectGovernor.schema.json and validator behavior synchronized."
+    },
+    {
+      "id": "EXT-REV-2026-09-20-003",
+      "source": "Programmer review message supplied by owner",
+      "verification_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+      "verification_status": "VERIFIED_CURRENT_HEAD",
+      "claim": "Run Pre-Unreal validation locally before build/share instead of relying only on post-push CI.",
+      "verified_result": "The one-click update/build/launch path did not run Scripts/pre_unreal_validate.py first.",
+      "disposition": "TRACKED_ACTION",
+      "linked_requirements": [
+        "REQ-QA-001",
+        "REQ-CI-001",
+        "REQ-GOV-001"
+      ],
+      "linked_work": [
+        "WORK-QA-001"
+      ],
+      "next_action": "Add a robust local preflight using the proven Python-resolution path before one-click build/share."
+    },
+    {
+      "id": "EXT-REV-2026-09-20-004",
+      "source": "Programmer review message supplied by owner",
+      "verification_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+      "verification_status": "VERIFIED_CURRENT_HEAD",
+      "claim": "Direct LoadObject concentration can become a chapter-transition hitch risk as production art grows.",
+      "verified_result": "The existing deep audit already records synchronous construction-time asset loading as a scaling risk; the mega wave therefore prioritizes material enrichment and re-use before indiscriminately adding heavyweight mesh loads.",
+      "disposition": "ACTIVE_DESIGN_GUARDRAIL",
+      "linked_requirements": [
+        "REQ-AUDIT-001",
+        "REQ-PERF-001",
+        "REQ-PROD-007"
+      ],
+      "linked_work": [
+        "WORK-WORLD-001",
+        "WORK-WORLD-003",
+        "WORK-PROD-007",
+        "WORK-QA-001"
+      ],
+      "next_action": "Measure chapter-transition hitch/memory on target hardware and migrate justified banks toward soft/async preload before high-resolution asset growth."
+    },
+    {
+      "id": "EXT-REV-2026-09-20-005",
+      "source": "Programmer review message supplied by owner",
+      "verification_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+      "verification_status": "VERIFIED_CURRENT_HEAD",
+      "claim": "Seven OBJ assets contain triangulation-risk faces.",
+      "verified_result": {
+        "SourceAssets/Production/Characters/Frodo/SM_Frodo_Sword.obj": 24,
+        "SourceAssets/Production/Characters/Frodo/SM_Hobbit_Foot.obj": 36,
+        "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Beard.obj": 32,
+        "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Boot.obj": 36,
+        "SourceAssets/Production/Characters/Hobbit/SM_Hobbit_Hair.obj": 40,
+        "SourceAssets/Production/Characters/Hobbit/SM_Hobbit_Head.obj": 40,
+        "SourceAssets/Production/World/Shire/SM_ShTreeCanopy.obj": 96
+      },
+      "disposition": "TRACKED_RISK",
+      "linked_requirements": [
+        "REQ-CHAR-004",
+        "REQ-QA-001",
+        "REQ-PROD-006"
+      ],
+      "linked_work": [
+        "WORK-CHAR-004",
+        "WORK-WORLD-003",
+        "WORK-QA-001"
+      ],
+      "next_action": "Re-triangulate/clean before the next affected import wave and rerun asset_quality_audit.py; these are warnings, not current structural import errors."
+    },
+    {
+      "id": "EXT-REV-2026-09-20-006",
+      "source": "Programmer review plus workflow inspection",
+      "verification_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+      "verification_status": "VERIFIED_CURRENT_HEAD",
+      "claim": "Push-triggered CI does not itself stop a bad commit from already reaching develop.",
+      "verified_result": "REQ-CI-001 already records missing branch protection/required-check enforcement.",
+      "disposition": "TRACKED_ACTION",
+      "linked_requirements": [
+        "REQ-CI-001",
+        "REQ-GOV-001"
+      ],
+      "linked_work": [
+        "WORK-QA-001",
+        "WORK-EXEC-001"
+      ],
+      "next_action": "Treat failed exact-head CI as blocking acceptance and keep branch-protection/required checks on the governance-hardening backlog."
+    }
+  ],
+  "project_source_library": {
+    "status": "STRUCTURALLY_COMPLETE_01_TO_11_PLUS_PRIMARY_REFERENCES",
+    "registered_on": "2026-09-21",
+    "source_index": "Data/OwnerSourceReferenceIndex.json",
+    "source_set": {
+      "numbered_production_sources": 11,
+      "screenplay_count": 3,
+      "full_tolkien_volume_count": 1,
+      "total_core_pdfs": 15
+    },
+    "authority": [
+      "ProjectGovernor rules and approved game-specific decisions control this project's implementation.",
+      "Peter Jackson film trilogy and the three supplied film screenplays are primary for the game's film-driven main-story chronology, staging and required outcomes.",
+      "Tolkien's The Lord of the Rings including Appendices is primary for deeper lore/history/geography/cultures/details when the films are silent, but may not silently replace film continuity.",
+      "Sources 01-11 are production references by domain; Source 09 is helper-only and Source 10 is a visual modeling aid that must be cross-checked."
+    ],
+    "newly_registered": [
+      "SRC_OWNER_3D_VISUAL_ASSET_ATLAS_V1",
+      "SRC_OWNER_MASTER_PRODUCTION_SYSTEMS_SOURCE_INDEX_V1",
+      "SRC_FILM_ROTK_SCREENPLAY",
+      "SRC_TOLKIEN_LOTR_2010"
+    ],
+    "policy": "Do not create Source 12+ by default. Extend the relevant existing source or Source 11 unless a genuinely new domain cannot be maintained safely inside the current library."
+  },
+  "source_review_opinion": {
+    "date": "2026-09-21",
+    "overall": "HIGH_VALUE_PRODUCTION_LIBRARY",
+    "Source10": "Very useful for modeling breakdown, silhouette, costume/gear/material study and world architecture mood. It is strongest as a production visual atlas, not as canon evidence. Generated visual details must always be checked against film/source canon before modeling.",
+    "Source11": "Extremely useful and should be treated as the operational cross-discipline index. It closes important gaps in audio, cinematics, UI/UX, living-world AI, UE4.27.2 architecture, performance, QA/save safety and branch/integration rules while explicitly preventing source-library sprawl.",
+    "ROTK": "Major upgrade because Part III is now screenplay-backed instead of relying on shorthand/secondary summaries. It enables source-verified Part III planning while still requiring scene-level verification before implementation.",
+    "Tolkien": "Major upgrade for deeper lore, geography, cultures, lineages, historical detail and Appendices. It should enrich the living world and side content without replacing film continuity in film-driven scenes."
   }
 }

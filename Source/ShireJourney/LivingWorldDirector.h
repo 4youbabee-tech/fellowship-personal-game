@@ -6,6 +6,8 @@
 
 class AShireAmbientNPC;
 class AShireWorldEventInteraction;
+class AWorldAmbientMotionActor;
+class UStaticMesh;
 class UShireQuestSubsystem;
 
 UCLASS()
@@ -75,6 +77,14 @@ private:
         float Speed,
         float MinWait,
         float MaxWait);
+    AWorldAmbientMotionActor* SpawnAmbientMotionActor(
+        UStaticMesh* Mesh,
+        const FVector& Location,
+        const FRotator& Rotation,
+        const FVector& Scale,
+        FName MotionMode,
+        float Amplitude,
+        float Speed);
     FName ChooseEventType() const;
     FName ResolveResidentRole(FName ChapterId) const;
     FName ChooseBaselineRole() const;
