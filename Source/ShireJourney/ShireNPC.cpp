@@ -993,20 +993,33 @@ void AShireNPC::UpdatePrototypeActing(float DeltaSeconds)
         BlinkRemaining = FMath::Max(0.0f, BlinkRemaining - DeltaSeconds);
     }
 
-    const float EyeZ = BlinkRemaining > 0.0f ? 0.025f : 0.13f;
-    PrototypeLeftEye->SetRelativeScale3D(FVector(0.12f, 0.09f, EyeZ));
-    PrototypeRightEye->SetRelativeScale3D(FVector(0.12f, 0.09f, EyeZ));
+    const float EyeOpenZ = bUsingProductionVisual ? 0.035f : 0.13f;
+    const float EyeClosedZ = bUsingProductionVisual ? 0.007f : 0.025f;
+    const float EyeZ = BlinkRemaining > 0.0f ? EyeClosedZ : EyeOpenZ;
+    const FVector EyeScale = bUsingProductionVisual
+        ? FVector(0.026f, 0.020f, EyeZ)
+        : FVector(0.12f, 0.09f, EyeZ);
+    PrototypeLeftEye->SetRelativeScale3D(EyeScale);
+    PrototypeRightEye->SetRelativeScale3D(EyeScale);
 
     DialogueActingRemaining = FMath::Max(0.0f, DialogueActingRemaining - DeltaSeconds);
     if (DialogueActingRemaining > 0.0f)
     {
         ActingPhase += DeltaSeconds * 13.0f;
-        const float MouthOpen = 0.045f + FMath::Abs(FMath::Sin(ActingPhase)) * 0.085f;
-        PrototypeMouth->SetRelativeScale3D(FVector(0.11f, 0.16f, MouthOpen));
+        const float MouthOpen = bUsingProductionVisual
+            ? (0.010f + FMath::Abs(FMath::Sin(ActingPhase)) * 0.020f)
+            : (0.045f + FMath::Abs(FMath::Sin(ActingPhase)) * 0.085f);
+        PrototypeMouth->SetRelativeScale3D(
+            bUsingProductionVisual
+                ? FVector(0.012f, 0.050f, MouthOpen)
+                : FVector(0.11f, 0.16f, MouthOpen));
     }
     else
     {
-        PrototypeMouth->SetRelativeScale3D(FVector(0.11f, 0.16f, 0.045f));
+        PrototypeMouth->SetRelativeScale3D(
+            bUsingProductionVisual
+                ? FVector(0.012f, 0.050f, 0.010f)
+                : FVector(0.11f, 0.16f, 0.045f));
     }
 
     if (!bPrototypeMoving && GetWorld())
