@@ -262,14 +262,17 @@
     ]
   },
   "current_wave": {
-    "id": "BIBLE_DRIVEN_WORLD_COMPOSITION_V5",
+    "id": "CANON_SAFE_REGIONAL_LIFE_V8",
     "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
     "focus": [
-      "P1C06 Moria",
-      "P1C08 Anduin/Amon Hen",
-      "GandalfParallel Isengard"
+      "chapter-correct ambient population",
+      "route-readable crowd flow",
+      "ambient production material response",
+      "cheap gait/idle variation",
+      "Caradhras/Moria civilian-empty safety",
+      "Anduin/Amon Hen bird-only ambient baseline"
     ],
-    "acceptance_rule": "Do not promote to visual/device acceptance from headless automation alone."
+    "acceptance_rule": "Exact-head machine proof is required before promotion; rendered PIE/device/human acceptance remains separate."
   },
   "hero_character_geometry_wave": {
     "id": "HERO_ANATOMICAL_FOUNDATION_V6",
@@ -306,7 +309,7 @@
   },
   "hero_character_surface_wave": {
     "id": "HERO_SURFACE_RESPONSE_V7",
-    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "status": "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE",
     "characters": [
       "Frodo",
       "Gandalf",
@@ -327,6 +330,30 @@
       "No final visual acceptance without rendered PIE evidence.",
       "No claim of final skin likeness or texture fidelity; this wave is surface response, not scanned likeness.",
       "Fallback proxy characters remain safe if the production master is unavailable."
-    ]
+    ],
+    "engine_proof": {
+      "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+      "pre_unreal": "#488 SUCCESS",
+      "unreal": "#323 SUCCESS"
+    }
+  },
+  "living_world_v8": {
+    "id": "CANON_SAFE_REGIONAL_LIFE_V8",
+    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "source_basis": [
+      "03 World, Locations & Map Bible",
+      "06 Gameplay & Side Activities Bible",
+      "07 Mission & Chapter Implementation Matrix"
+    ],
+    "implemented_when_committed": [
+      "forward-biased crowd flow",
+      "route-aligned ambient travel",
+      "danger-aware population throttling",
+      "Caradhras/Moria civilian-empty baselines",
+      "Anduin/Amon Hen fauna-only baseline",
+      "ambient production surface response",
+      "per-NPC gait and idle head-look variation"
+    ],
+    "acceptance_boundary": "No rendered or target-device claim until exact-head engine proof plus later PIE/device/human review."
   }
 }

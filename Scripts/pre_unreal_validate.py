@@ -3323,6 +3323,56 @@ if pg110_matrix.get("geometry_refinement_wave", {}).get("status") != "ENGINE_PRO
 if pg110_matrix.get("surface_material_wave", {}).get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
     fail("PG-110 V7 surface wave proof boundary changed")
 
+# PG-111: V8 regional life must stay canon-safe, route-readable and performance-bounded.
+pg111_plan = json.loads(read(ROOT / "Data" / "WorldLifeSaturationPlan.json"))
+pg111_targets = pg111_plan.get("baseline_population_targets", {})
+pg111_roles = pg111_plan.get("population_roles", {})
+if pg111_plan.get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-111 V8 world-life proof boundary changed")
+if int(pg111_targets.get("P1C05", -1)) != 0:
+    fail("PG-111 Caradhras ambient civilian baseline must remain zero")
+if int(pg111_targets.get("P1C06", -1)) != 0:
+    fail("PG-111 Moria ambient civilian baseline must remain zero")
+pg111_anduin_roles = set(pg111_roles.get("P1C08", []))
+if pg111_anduin_roles != {"Bird"}:
+    fail("PG-111 Anduin/Amon Hen baseline must remain bird-only under the proven fauna contract")
+if "RoadWalker" in pg111_anduin_roles or "Villager" in pg111_anduin_roles:
+    fail("PG-111 invented civilian walkers may not populate Anduin/Amon Hen")
+
+pg111_event_plan = json.loads(read(ROOT / "Data" / "LivingWorldEventPlan.json"))
+pg111_caradhras = next(
+    (row for row in pg111_event_plan.get("chapter_contracts", [])
+     if isinstance(row, dict) and row.get("chapter") == "P1C05"),
+    {},
+)
+pg111_caradhras_allowed = set(pg111_caradhras.get("allowed", []))
+if "SOCIAL_MOMENT" in pg111_caradhras_allowed or "FAUNA" in pg111_caradhras_allowed:
+    fail("PG-111 Caradhras ambient contract may not spawn residents or fauna")
+
+pg111_director = read(ROOT / "Source" / "ShireJourney" / "LivingWorldDirector.cpp")
+for pg111_symbol in [
+    "Random.FRand() < 0.72f",
+    "GetActorForwardVector().GetSafeNormal2D()",
+    "Target = FMath::Max(1, Target / 2)",
+    'RoleName == TEXT("Bird")',
+    'RoleName == TEXT("Rabbit")',
+    'RoleName == TEXT("Butterfly")',
+]:
+    if pg111_symbol not in pg111_director:
+        fail(f"PG-111 regional-life director behavior missing: {pg111_symbol}")
+
+pg111_ambient = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.cpp")
+pg111_ambient_h = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.h")
+for pg111_symbol in [
+    "ProductionSurfaceMaterial",
+    "AnimationRateScale",
+    "IdleLookAmplitude",
+    "IdleLookPhase",
+    "IdleYaw",
+]:
+    if pg111_symbol not in (pg111_ambient + pg111_ambient_h):
+        fail(f"PG-111 ambient presentation behavior missing: {pg111_symbol}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     sys.exit(1)

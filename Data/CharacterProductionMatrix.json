@@ -645,7 +645,7 @@
     "Visual acceptance is recorded separately from compile/import success."
   ],
   "source_atlas": "Data/Part1ProductionAtlas.json",
-  "production_truth": "V6 geometry for the nine core Part I hero/companion foundations is exact-head engine-proven on 0885d639 (#486/#321). V7 adds production surface response for cloth/skin/hair/leather/wood/metal and awaits its own exact-head proof. Final rigs/deformation, texture-level skin detail, final animation and rendered human acceptance remain pending.",
+  "production_truth": "V6 hero geometry and V7 production surface response for the nine core Part I hero/companion foundations are exact-head engine-proven through #488/#323 on 2e8898a. V8 regional life is the next implementation wave and remains pending its own exact-head proof. Final skeletal deformation, final animation, texture-level skin detail, rendered PIE/device performance and human visual acceptance remain pending.",
   "threats": [
     {
       "id": "BLACK_RIDER_NAZGUL",
@@ -785,7 +785,7 @@
   },
   "surface_material_wave": {
     "id": "HERO_SURFACE_RESPONSE_V7",
-    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "status": "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE",
     "scope": [
       "FRODO",
       "GANDALF",
@@ -803,6 +803,12 @@
       "Cloth, skin, hair, leather/wood and metal equipment now receive distinct light response instead of one flat tint.",
       "MTL Pr/Pm values are accepted for authored source palettes without relying on import factory defaults."
     ],
-    "acceptance_boundary": "Implemented in source/runtime; exact-head UE4.27 proof and rendered human review remain pending."
+    "acceptance_boundary": "Implemented in source/runtime; exact-head UE4.27 proof and rendered human review remain pending.",
+    "engine_proof": {
+      "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+      "pre_unreal": "PASS #488",
+      "unreal_build": "PASS #323",
+      "scope": "UE4.27.2 compile + production import + startup + P1C01-P1C08 runtime + route/story/save roundtrip + warning-debt gate"
+    }
   }
 }

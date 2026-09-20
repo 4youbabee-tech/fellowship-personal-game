@@ -101,6 +101,9 @@ private:
     float WaitRemaining = 0.0f;
     float WalkPhase = 0.0f;
     float ActivityPhase = 0.0f;
+    float AnimationRateScale = 1.0f;
+    float IdleLookAmplitude = 4.0f;
+    float IdleLookPhase = 0.0f;
     FVector ActivityPropBase = FVector::ZeroVector;
     FRotator ActivityPropBaseRotation = FRotator::ZeroRotator;
     float SenseAccumulator = 0.0f;

@@ -1,30 +1,62 @@
 {
-  "schema_version": 1,
-  "plan_id": "PART1_WORLD_ALIVE_SATURATION_CP53",
-  "status": "ACTIVE_RUNTIME_IMPLEMENTATION_PENDING_BUILD",
-  "purpose": "Turn the Part I world from occasional ambient moments into a continuously inhabited low-cost runtime using baseline regional populations plus denser micro-events, while preserving the 30 FPS target and story topology.",
+  "schema_version": 2,
+  "plan_id": "PART1_WORLD_ALIVE_SATURATION_V8",
+  "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+  "purpose": "Make Part I feel continuously inhabited where the film-world supports habitation, while using fauna/environmental motion instead of invented civilians in exposed wilderness, Caradhras, Moria and Anduin/Amon Hen.",
   "runtime_owner": "ALivingWorldDirector + AShireAmbientNPC",
   "baseline_population_targets": {
     "P1C01": 18,
     "P1C02": 16,
     "P1C03": 5,
     "P1C04": 12,
-    "P1C05": 6,
+    "P1C05": 0,
     "P1C06": 0,
     "P1C07": 10,
-    "P1C08": 6
+    "P1C08": 4
   },
   "population_roles": {
-    "P1C01": ["Villager","FieldWorker","PartyGuest","FerryWorker","RoadWalker"],
-    "P1C02": ["BreeTownsperson","RoadWalker","Courier"],
-    "P1C03": ["RoadWalker"],
-    "P1C04": ["Elf","Courier"],
-    "P1C05": ["RoadWalker"],
+    "P1C01": [
+      "Villager",
+      "FieldWorker",
+      "PartyGuest",
+      "FerryWorker",
+      "RoadWalker"
+    ],
+    "P1C02": [
+      "BreeTownsperson",
+      "RoadWalker",
+      "Courier"
+    ],
+    "P1C03": [
+      "RoadWalker",
+      "RoadWalker",
+      "Bird"
+    ],
+    "P1C04": [
+      "Elf",
+      "Courier",
+      "Butterfly"
+    ],
+    "P1C05": [],
     "P1C06": [],
-    "P1C07": ["Elf","RoadWalker"],
-    "P1C08": ["RoadWalker"]
+    "P1C07": [
+      "Elf",
+      "Elf",
+      "RoadWalker",
+      "Butterfly"
+    ],
+    "P1C08": [
+      "Bird"
+    ]
   },
-  "activity_props": ["Basket","Crate","Satchel","Mug","Book","Lantern"],
+  "activity_props": [
+    "Basket",
+    "Crate",
+    "Satchel",
+    "Mug",
+    "Book",
+    "Lantern"
+  ],
   "runtime_rules": [
     "Maintain a baseline population around the player in addition to disposable micro-events.",
     "Baseline actors are culled outside a broad radius and replenished gradually rather than spawned in one frame.",
@@ -44,19 +76,38 @@
   },
   "acceptance_boundary": {
     "implemented_now": [
-      "continuous baseline regional population",
-      "regional role and prop variety",
-      "gradual replenish/cull loop",
-      "denser micro-event cadence",
-      "existing social conversations, schedules and player awareness reused by new population"
+      "continuous baseline regional population in inhabited chapters",
+      "canon-safe bird-only motion in Anduin/Amon Hen",
+      "Caradhras and Moria civilian-empty baseline",
+      "forward-biased crowd flow and route-aligned routine movement",
+      "danger-aware baseline throttling",
+      "regional role/prop variety",
+      "ambient production surface response",
+      "cheap per-NPC gait and idle-look variation",
+      "existing distance tick throttling, schedules, awareness and social conversations"
     ],
     "not_claimed": [
       "final skeletal crowds",
       "crowd navmesh avoidance",
       "final voice audio",
-      "final fauna meshes",
       "PIE visual acceptance",
-      "target-device performance acceptance"
+      "target-device performance acceptance",
+      "human density/pacing acceptance"
     ]
-  }
+  },
+  "source_basis": [
+    "03 World, Locations & Map Bible: chapter-state population, schedules and navigation/crowd-flow rules",
+    "06 Gameplay & Side Activities Bible: film-safe optional activity and low-cost degradation rules",
+    "07 Mission & Chapter Implementation Matrix: mission logic owns state; ambient content never owns canonical postconditions"
+  ],
+  "v8_runtime_rules": [
+    "Population origins are biased into the player forward/side corridor so crowd flow supports navigation instead of appearing as random radial noise.",
+    "Baseline travel direction follows the player route direction rather than a global +X axis.",
+    "Danger state halves the baseline target while preserving some world motion.",
+    "Caradhras and Moria have zero ambient civilian baseline.",
+    "Anduin/Amon Hen baseline is bird-only under the currently proven fauna contract; no invented civilian or unsupported ground-fauna population is introduced around the Fellowship break.",
+    "Bird, rabbit and butterfly baselines use role-specific motion speeds/ranges and remain non-story actors.",
+    "Production humanoid ambient actors use the project production surface master when present, with BasicShape fallback.",
+    "Per-actor gait rate and idle head-look variation are deterministic cheap presentation only and own no story state."
+  ]
 }

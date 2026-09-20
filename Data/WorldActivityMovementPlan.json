@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "CP55_WORLD_ACTIVITY_MOVEMENT_V1",
-  "status": "IMPLEMENTED_PENDING_VALIDATION",
+  "status": "V8_CANON_SAFE_REGIONAL_MOVEMENT_PENDING_ENGINE_PROOF",
   "purpose": "Resume post-verification visible game construction with low-cost movement and fauna that make traversal feel more alive without changing story, save, route or chapter topology.",
   "runtime_owners": [
     "AShireAmbientNPC",
@@ -16,24 +16,42 @@
     {
       "role": "Bird",
       "behavior": "3D point-to-point flight with bounded pitch/roll body motion",
-      "chapters": ["P1C01","P1C02","P1C03","P1C04","P1C05","P1C07","P1C08"]
+      "chapters": [
+        "P1C01",
+        "P1C02",
+        "P1C03",
+        "P1C04",
+        "P1C07",
+        "P1C08"
+      ]
     },
     {
       "role": "Rabbit",
       "behavior": "ground point-to-point travel with bounded hop/rest rhythm",
-      "chapters": ["P1C01","P1C02","P1C04","P1C07"]
+      "chapters": [
+        "P1C01",
+        "P1C02",
+        "P1C04",
+        "P1C07"
+      ]
     },
     {
       "role": "Butterfly",
       "behavior": "slow 3D flutter with small local oscillation",
-      "chapters": ["P1C01","P1C04","P1C07"]
+      "chapters": [
+        "P1C01",
+        "P1C04",
+        "P1C07"
+      ]
     }
   ],
   "story_safety": [
     "Fauna never owns quest state or persistent transforms.",
     "Fauna never blocks story-critical interactions.",
     "Moria remains civilian/fauna-empty under the dead-city rule.",
-    "Frodo/Gandalf route state is unchanged."
+    "Frodo/Gandalf route state is unchanged.",
+    "Caradhras ambient life is weather/party-authored only; no resident or fauna actors are spawned by LivingWorldDirector.",
+    "Anduin/Amon Hen baseline uses fauna only and never invents civilians around the Fellowship break."
   ],
   "performance_rules": [
     "Reuse the existing AShireAmbientNPC distance-throttled tick path.",

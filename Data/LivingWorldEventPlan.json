@@ -103,14 +103,11 @@
       "chapter": "P1C05",
       "region": "CaradhrasWestGate",
       "allowed": [
-        "SOCIAL_MOMENT",
-        "FAUNA",
         "WEATHER_REACTION",
-        "PROP_MOTION",
-        "DANGER_REACTION"
+        "PROP_MOTION"
       ],
-      "target_density": "LOW_MEDIUM",
-      "notes": "Companion activity and weather carry most life."
+      "target_density": "LOW",
+      "notes": "Caradhras life is authored Fellowship activity plus snow/wind/storm escalation; no ambient resident/fauna/danger-scatter actor is invented."
     },
     {
       "chapter": "P1C06",
@@ -198,7 +195,6 @@
         "P1C01",
         "P1C02",
         "P1C04",
-        "P1C05",
         "P1C07"
       ],
       "duration_seconds": [
@@ -215,7 +211,6 @@
         "P1C02",
         "P1C03",
         "P1C04",
-        "P1C05",
         "P1C07",
         "P1C08"
       ],
@@ -281,7 +276,6 @@
         "P1C01",
         "P1C02",
         "P1C03",
-        "P1C05",
         "P1C06",
         "P1C08"
       ],
@@ -319,7 +313,7 @@
       "story_safe": true
     }
   ],
-  "status": "RUNTIME_AMBIENCE_PLUS_BOUNDED_PLAYER_INTERACTIONS_PENDING_ENGINE_PROOF",
+  "status": "V8_CANON_SAFE_REGIONAL_CONTRACT_PENDING_ENGINE_PROOF",
   "player_interaction_policy": {
     "enabled_event_types": [
       "WORK_ACTIVITY",

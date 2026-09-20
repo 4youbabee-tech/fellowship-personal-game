@@ -2768,12 +2768,12 @@
       ],
       "behavior": "Repair exact-head failures first; machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "0885d639f61454613bd075dda1d8fd64b3d06573",
+    "last_green_head": "2e8898a53f3ab220226df24b0d4578f7232016e7",
     "evidence": {
-      "pre_unreal": "PASS #486 on 0885d639",
-      "unreal_build": "PASS #321 on 0885d639"
+      "pre_unreal": "PASS #488",
+      "unreal_build": "PASS #323"
     },
-    "evidence_scope": "Verified baseline only; V7 requires its own exact-head chain."
+    "evidence_scope": "V7 verified baseline only. V8 requires its own exact-head chain."
   },
   "reference_only_files": [
     "Docs/CURRENT_PROJECT_STATE.md",
@@ -3027,16 +3027,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Owner requested continuation, source verification and accurate professional project-manager handoff.",
+    "reason": "V7 surface response completed exact-head engine proof; V8 regional life is ready for isolated validation.",
     "summary": [
-      "Reconciled stale #303 handoff against actual green #319 / #484 on cd58be1.",
-      "V6 hero geometry head 93092a8 passed Pre-Unreal #485; Unreal #320 was cancelled while building; rerun requested once.",
-      "Added SHA-scoped evidence validation and regression tests to prevent cross-version green claims.",
-      "Verified uploaded reference hashes; added missing Bible 09 fingerprint and targeted source review scope with chapter-ID mismatch warning.",
-      "Keep implemented V6 modular geometry distinct from final rigs/materials/animation and rendered/device acceptance.",
-      "Rerun #320 attempt 2 also cancelled before compilation; cause of cancellation remains unestablished. Stop blind retries.",
-      "Green #319 retains 132 unique near-zero-binormal warning identities under the existing 150 ceiling; do not claim zero geometry debt.",
-      "Removed resolved material-persistence blocker from REQ-AUDIT-001 and scoped active gate evidence to its historical baseline."
+      "V7 baseline head 2e8898a53f3ab220226df24b0d4578f7232016e7 passed Pre-Unreal #488.",
+      "The same head passed Unreal Build #323 including compile, production import, startup, P1C01-P1C08 runtime audit, state/save roundtrip and warning-debt guard.",
+      "V8 removes ambient resident/fauna population from Caradhras, preserves Moria as civilian-empty and keeps Anduin/Amon Hen baseline bird-only.",
+      "V8 biases population and routine motion toward the player travel corridor while retaining distance throttling and bounded population caps.",
+      "Rendered PIE, target-device performance and human density/visual acceptance remain unproven."
     ]
   },
   "development_mode": {
@@ -3073,79 +3070,67 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "HERO_SURFACE_RESPONSE_AND_LIVING_WORLD_V7",
+  "current_focus": "CANON_SAFE_REGIONAL_LIFE_V8",
   "immediate_next_large_actions": [
-    "Prove HERO_SURFACE_RESPONSE_V7 on the exact new head through Pre-Unreal and UE4.27.2 compile/import/startup/chapter/state validation.",
-    "After green proof, expand regional life-density and ambient animation across the Fellowship route while preserving performance safeguards.",
-    "Continue hero clothing/detail and visible-threat refinement while keeping final rig/animation/rendered/device/human acceptance explicit."
+    "Prove CANON_SAFE_REGIONAL_LIFE_V8 on its exact new head through Pre-Unreal and UE4.27.2 compile/import/startup/P1C01-P1C08/state/warning validation.",
+    "After green proof, continue visible world flesh: ambient prop production replacements, regional material polish and authored settlement clusters without increasing critical-path AI cost.",
+    "Continue hero/threat clothing/detail and animation handoff while keeping rendered/device/human acceptance explicit."
   ],
   "session_handoff": {
-    "source_head": "0885d639f61454613bd075dda1d8fd64b3d06573",
+    "source_head": "2e8898a53f3ab220226df24b0d4578f7232016e7",
     "pull_request": 53,
     "branch": "work/automation-first-runtime-observation",
     "verified": {
-      "pre_unreal": "PASS #486 (0885d639)",
-      "unreal_build": "PASS #321 (0885d639)",
-      "ue4_compile": "PASS #321 (0885d639)",
-      "production_import": "PASS #321 (0885d639)",
-      "startup": "PASS #321 (0885d639)",
-      "chapter_audit": "PASS #321 (0885d639)",
-      "state_audit": "PASS #321 (0885d639)",
-      "warning_guard": "PASS #321 (0885d639)"
+      "pre_unreal": "PASS #488",
+      "unreal_build": "PASS #323",
+      "ue4_compile": "PASS #323",
+      "production_import": "PASS #323",
+      "startup": "PASS #323",
+      "chapter_audit": "PASS #323 P1C01-P1C08",
+      "state_audit": "PASS #323 route/story/save real disk roundtrip",
+      "warning_guard": "PASS #323"
     },
     "failing": {},
     "next_actions": [
-      "Prove HERO_SURFACE_RESPONSE_V7 on the exact new head through Pre-Unreal and UE4.27.2 compile/import/startup/chapter/state validation.",
-      "After green proof, expand regional life-density and ambient animation across the Fellowship route while preserving performance safeguards.",
-      "Continue hero clothing/detail and visible-threat refinement while keeping final rig/animation/rendered/device/human acceptance explicit."
+      "Prove CANON_SAFE_REGIONAL_LIFE_V8 on its exact new head through Pre-Unreal and UE4.27.2 compile/import/startup/P1C01-P1C08/state/warning validation.",
+      "After green proof, continue visible world flesh: ambient prop production replacements, regional material polish and authored settlement clusters without increasing critical-path AI cost.",
+      "Continue hero/threat clothing/detail and animation handoff while keeping rendered/device/human acceptance explicit."
     ],
-    "scope_rule": "Machine evidence does not replace rendered PIE/device/human acceptance.",
+    "unverified_acceptance": [
+      "V8 exact-head engine proof",
+      "Rendered character/world visual acceptance",
+      "Target-device FPS/memory measurements",
+      "Human density/pacing/playability acceptance",
+      "Complete trilogy content"
+    ],
     "validation_snapshot": {
       "last_green": {
-        "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
+        "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
         "pre_unreal": {
-          "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
-          "run_id": 35525891528,
+          "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+          "run_id": 35528516895,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
-          "run_id": 35525891523,
+          "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+          "run_id": 35528516861,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
+        "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
         "pre_unreal": {
-          "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
-          "run_id": 35525891528,
+          "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+          "run_id": 35528516895,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "0885d639f61454613bd075dda1d8fd64b3d06573",
-          "run_id": 35525891523,
+          "sha": "2e8898a53f3ab220226df24b0d4578f7232016e7",
+          "run_id": 35528516861,
           "status": "SUCCESS"
         }
       }
     },
-    "unverified_acceptance": [
-      "V7 production surface exact-head engine proof",
-      "Rendered character/world visual acceptance",
-      "Target-device FPS/memory measurements",
-      "Human pacing/playability acceptance",
-      "Complete trilogy content"
-    ],
-    "measured_debt": {
-      "source_head": "cd58be1e1cea033295a163ef2a90985f30471c2b",
-      "unreal_run_id": 35519376668,
-      "degenerate_tangent_meshes": 0,
-      "nearly_zero_binormal_meshes": 132,
-      "missing_world_packages": 0,
-      "missing_audio": 0,
-      "missing_rigs": 0,
-      "default_materials": 0,
-      "directional_light_warnings": 0,
-      "npc_spawn_collision_failures": 0
-    }
+    "scope_rule": "Machine evidence does not replace rendered PIE/device/human acceptance."
   }
 }
