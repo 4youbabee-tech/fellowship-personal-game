@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "plan_id": "CP54_MEGA_RESOURCE_BANK",
-  "status": "SOURCE_BANK_COMMITTED",
-  "source_asset_count": 75,
+  "status": "SOURCE_BANK_EXPANDED_MEGA_MATERIAL_WORLD_WAVE_V1_PENDING_ENGINE_PROOF",
+  "source_asset_count": 89,
   "texture_count": 17,
   "ownership": "PROJECT_OWNED_GENERATED_SOURCE",
   "assets_by_region": {
@@ -81,7 +81,21 @@
       "SM_MoriaRubblePillar",
       "SM_MoriaTallBrazier",
       "SM_MoriaBrokenStair",
-      "SM_MoriaGateSegment"
+      "SM_MoriaGateSegment",
+      "SM_MoriaWallPanel",
+      "SM_MoriaFloorSlab",
+      "SM_MoriaArch",
+      "SM_MoriaCeilingRib",
+      "SM_MoriaBridgePier",
+      "SM_MoriaTombDais",
+      "SM_MoriaReliefPanel",
+      "SM_MoriaMineRail",
+      "SM_MoriaOreCrate",
+      "SM_MoriaCollapsedBeam",
+      "SM_MoriaTorchNiche",
+      "SM_MoriaChasmButtress",
+      "SM_MoriaSideDoor",
+      "SM_MoriaDebrisCluster"
     ],
     "Lothlorien": [
       "SM_LorienTalanLadder",
@@ -100,5 +114,11 @@
       "SM_AnduinBoatRack"
     ]
   },
-  "validation_rule": "Every large resource batch must pass Pre-Unreal, UE4.27 compile, production import and headless startup before the next batch."
+  "validation_rule": "Source bank count is a source-control floor only. Exact-head UE4 import/build/runtime and device evidence remain required; no source count implies visual acceptance.",
+  "current_expansion": {
+    "wave": "MEGA_MATERIAL_WORLD_WAVE_V1",
+    "region": "Moria",
+    "added_obj_assets": 14,
+    "material_response": "Part I regional palettes enriched with explicit Pr/Pm for M_ProductionSurface synthesis"
+  }
 }
