@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "plan_id": "LIVING_NPC_INTELLIGENCE_ROADMAP_V2",
+  "owner_intent": "NPCs should feel like living people with memory, relationships, goals, needs, emotions and context-aware speech; language generation is only the voice of that simulation, not its source of truth.",
+  "status": "ACCEPTED_FOR_INCREMENTAL_DEVELOPMENT",
+  "derived_from": {
+    "owner_request_date": "2026-09-20",
+    "external_programmer_proposal": "NPC AI / LLM + memory + context + goals/needs + emotions + relationships + STT/TTS prototype in the Shire",
+    "integration_rule": "Extend the existing NPC memory/social/conversation/needs stack. Do not create a second parallel NPC brain."
+  },
+  "existing_foundation_to_reuse": [
+    "Data/BoundedDialoguePlan.json",
+    "Data/NPCMemoryPlan.json",
+    "Data/NPCSocialModel.json",
+    "Data/NPCConversationPlan.json",
+    "REQ-NPC-005 Living NPC goals needs emotions and character knowledge",
+    "WORK-LW-004 Offline Living NPC intelligence expansion",
+    "UShireNPCContextSubsystem",
+    "UShireQuestSubsystem named-NPC memory and relationship state"
+  ],
+  "accepted_new_development_value": [
+    {
+      "id": "NPC_EXPR_001",
+      "title": "Optional bounded local language expression layer",
+      "value": "A local small model may turn already-approved context into more natural wording while authored/template dialogue remains the deterministic fallback.",
+      "authority_boundary": "The model may express facts but may not create canon facts, quest outcomes, relationships, deaths, allegiances or future knowledge."
+    },
+    {
+      "id": "NPC_RUMOR_001",
+      "title": "Event and rumor propagation between NPCs",
+      "value": "NPC A can witness a real tagged event, share that compact event tag during a valid social interaction, and NPC B may later reference it if knowledge and relationship gates allow.",
+      "authority_boundary": "Only real registered events propagate; the model may not invent unseen gossip as factual world state."
+    },
+    {
+      "id": "NPC_CONTEXT_001",
+      "title": "Richer living context packet",
+      "value": "Dialogue/behavior context should combine time-of-day, region, chapter, quest stage, completed beats, current world pressure, recent local events, relationship state, needs, goals and emotion.",
+      "authority_boundary": "Context remains bounded and data-driven."
+    },
+    {
+      "id": "NPC_EMOTE_001",
+      "title": "Emotion-to-presentation bridge",
+      "value": "NPC emotional state should influence dialogue style, facial acting, body language, idle choice and later voice delivery without changing mandatory story outcomes."
+    },
+    {
+      "id": "NPC_SPEECH_001",
+      "title": "Optional speech input/output adapters",
+      "value": "STT can let the player speak naturally and TTS can voice validated NPC responses.",
+      "authority_boundary": "Speech services are optional adapters; gameplay and dialogue must remain functional without network access or a vendor API."
+    },
+    {
+      "id": "NPC_PROTO_001",
+      "title": "Named Shire NPC acceptance prototype",
+      "value": "Use one existing named Hobbit profile as the vertical slice for memory, relationship, schedule, needs/emotion, rumor propagation, bounded expression and optional speech.",
+      "acceptance_example": [
+        "First meeting records PLAYER_MET and relevant location/context.",
+        "A later real local event may be remembered or learned through an allowed NPC-to-NPC social exchange.",
+        "On a later visit the NPC can react to those stored facts without exposing future story knowledge.",
+        "Save/load preserves compact relevant memory and relationship state.",
+        "With AI expression disabled or unavailable, authored/template fallback still produces valid behavior."
+      ]
+    }
+  ],
+  "non_goals": [
+    "Do not make every ambient crowd actor run an LLM or hold persistent individual memory.",
+    "Do not require GPT, Claude, cloud APIs, internet connectivity or runtime API keys in the shipped gameplay path.",
+    "Do not persist raw conversation transcripts as NPC memory.",
+    "Do not allow generated text to become story authority.",
+    "Do not let AI bypass film chronology, chapter knowledge gates, quest logic or save-state ownership."
+  ],
+  "architecture": [
+    "World/Story State",
+    "NPC Identity + Schedule + Goals/Needs + Emotion",
+    "Memory + Relationships + Real Event Knowledge",
+    "Canon/Knowledge Gate",
+    "Intent Selection",
+    "Optional Bounded Local Expression",
+    "Output Validation",
+    "Dialogue Presentation",
+    "Optional TTS",
+    "Compact Memory/Relationship Update"
+  ],
+  "implementation_phases": [
+    {
+      "phase": 1,
+      "title": "Vertical-slice named Hobbit",
+      "work": [
+        "Choose an existing named Shire profile rather than adding a duplicate NPC system.",
+        "Expose a compact context packet from current subsystems.",
+        "Add real-event witness/share/learn tags.",
+        "Prove memory-aware revisit behavior with deterministic authored/template dialogue first."
+      ]
+    },
+    {
+      "phase": 2,
+      "title": "Optional local expression",
+      "work": [
+        "Define a small local-model adapter interface behind the current bounded dialogue contract.",
+        "Use strict prompt/context budgets and output validation.",
+        "Keep generation optional, cached and immediately replaceable by deterministic fallback."
+      ]
+    },
+    {
+      "phase": 3,
+      "title": "Presentation coupling",
+      "work": [
+        "Map emotion to facial/body presentation.",
+        "Add optional STT input adapter.",
+        "Add optional TTS output adapter using only validated final text."
+      ]
+    },
+    {
+      "phase": 4,
+      "title": "Scale by NPC tier",
+      "work": [
+        "NAMED_STORY receives deepest memory/context.",
+        "NAMED_LIGHT receives smaller memory and relationship budgets.",
+        "AMBIENT_ARCHETYPE remains aggregate/lightweight and never receives per-instance persistent LLM memory."
+      ]
+    }
+  ],
+  "acceptance_gates": [
+    "No canon/future-knowledge leakage in scripted test cases.",
+    "No save growth beyond the bounded memory contract.",
+    "No gameplay dependency on network/API availability.",
+    "No duplicate NPC brain/state authority.",
+    "Fallback response remains deterministic and valid when the expression layer is disabled.",
+    "Named Shire prototype survives save/load and chapter-state transitions.",
+    "Performance is measured before scaling beyond the prototype."
+  ],
+  "manager_instruction": "Preserve this roadmap as an accepted owner development direction. Schedule it alongside existing living-NPC work when dependencies permit; do not let it block unrelated world/character production and do not re-implement systems that already exist."
+}

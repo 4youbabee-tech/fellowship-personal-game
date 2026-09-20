@@ -1938,6 +1938,22 @@
       ],
       "checkpoint": "DEEP_AUDIT_2026_09_20",
       "notes": "Continuous control; never a one-time zero-bugs claim."
+    },
+    {
+      "id": "REQ-NPC-006",
+      "title": "Living NPC emergent intelligence and optional bounded language expression",
+      "status": "PLANNED",
+      "priority": "CRITICAL",
+      "owner_intent": "NPCs should feel alive through real memory, relationships, goals, needs, emotions, context and inter-NPC knowledge transfer; language generation is optional expression, never story authority.",
+      "plan": "Data/LivingNPCIntelligenceRoadmap.json",
+      "depends_on": [
+        "REQ-NPC-003",
+        "REQ-NPC-004",
+        "REQ-NPC-005",
+        "REQ-SAVE-001",
+        "REQ-PERF-001"
+      ],
+      "acceptance_boundary": "Prototype one existing named Shire NPC first; preserve deterministic offline fallback and canon/knowledge gates."
     }
   ],
   "hard_invariants": [
@@ -2798,7 +2814,8 @@
     "Data/LivingWorldEventPlan.json",
     "Data/BoundedDialoguePlan.json",
     "Data/PlayerExperiencePacingPlan.json",
-    "Data/CharacterPopulationPlan.json"
+    "Data/CharacterPopulationPlan.json",
+    "Data/LivingNPCIntelligenceRoadmap.json"
   ],
   "update_protocol": [
     "Treat Data/ProjectGovernor.json as the first-read/last-write coordination record for any meaningful project change.",
@@ -3023,6 +3040,15 @@
       "status": "ACTIVE",
       "rationale": "Keep all accepted large requests dependency-ordered, visible and guarded while implementation proceeds in large batches.",
       "execution_bundle": "CONTINUOUS_CONTROL"
+    },
+    {
+      "order": 42,
+      "id": "WORK-LW-005",
+      "title": "Living NPC vertical slice: memory, rumor transfer and optional bounded expression",
+      "status": "QUEUED",
+      "rationale": "Extend the existing living-NPC stack rather than replacing it. First prove one named Shire NPC with real-event memory/knowledge transfer, emotional context and deterministic fallback; optional local language expression and speech adapters come after the state model is proven.",
+      "execution_bundle": "B3_LIVING_WORLD_AND_PRESENTATION",
+      "plan": "Data/LivingNPCIntelligenceRoadmap.json"
     }
   ],
   "last_reconciliation": {
@@ -3150,5 +3176,27 @@
       "Do not create artificial gates merely because work is unfinished; track unfinished work and keep building.",
       "Only hard integrity threats such as save corruption, story-state breakage, destructive repository changes or reproducible build/runtime failure may require pausing the directly affected path."
     ]
-  }
+  },
+  "accepted_owner_development_ideas": [
+    {
+      "id": "OWNER-IDEA-LIVING-NPC-LLM-2026-09-20",
+      "status": "ACCEPTED_AND_NORMALIZED",
+      "title": "NPCs should feel alive, not merely conversational",
+      "captured_value": [
+        "optional local language-model expression over existing bounded context",
+        "real event/rumor propagation between NPCs",
+        "richer time/location/story/needs/emotion context",
+        "emotion reflected in face/body/voice presentation",
+        "optional STT/TTS adapters",
+        "single named Shire NPC vertical-slice before scaling"
+      ],
+      "rejected_or_modified_parts": [
+        "mandatory cloud GPT/Claude dependency",
+        "unbounded transcript memory",
+        "one LLM per ambient NPC",
+        "generated dialogue as canon/story authority"
+      ],
+      "canonical_plan": "Data/LivingNPCIntelligenceRoadmap.json"
+    }
+  ]
 }

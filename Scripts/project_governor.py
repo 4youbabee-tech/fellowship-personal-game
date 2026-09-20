@@ -171,6 +171,21 @@ for relative in governor.get("deprecated_secondary_authority_files", []):
 if not governor.get("worker_contract"):
     fail("Governor has no worker_contract")
 
+living_npc_plan = ROOT / "Data" / "LivingNPCIntelligenceRoadmap.json"
+if not living_npc_plan.exists():
+    fail("Accepted living-NPC intelligence roadmap is missing")
+else:
+    living_npc = json.loads(read(living_npc_plan))
+    if living_npc.get("plan_id") != "LIVING_NPC_INTELLIGENCE_ROADMAP_V2":
+        fail("Living-NPC intelligence roadmap identity changed")
+    if "Do not require GPT, Claude, cloud APIs, internet connectivity or runtime API keys in the shipped gameplay path." not in living_npc.get("non_goals", []):
+        fail("Living-NPC roadmap lost offline/non-cloud runtime boundary")
+
+if not any(r.get("id") == "REQ-NPC-006" for r in governor.get("requirements", [])):
+    fail("Governor lost REQ-NPC-006 living-NPC intelligence requirement")
+if not any(w.get("id") == "WORK-LW-005" for w in governor.get("work_queue", [])):
+    fail("Governor lost WORK-LW-005 living-NPC vertical-slice work item")
+
 # Owner-directed governor role: coordination must not become a project-wide bottleneck.
 governor_role = governor.get("governor_role", {})
 if governor_role.get("mode") != "OVERSEER_NOT_BOTTLENECK":
