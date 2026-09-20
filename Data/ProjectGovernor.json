@@ -3133,7 +3133,9 @@
       "pre_unreal": "PASS #504 on c929ab657dba10266536d51aa04fb21da04ada12",
       "unreal_build": "PASS #339 attempt 2 on c929ab657dba10266536d51aa04fb21da04ada12"
     },
-    "failing": {},
+    "failing": {
+      "unreal": "Initial material-wave engine run failed before C++ translation because compiler TEMP directory was absent. Follow-up source fixes directory precondition; newest-head validation pending."
+    },
     "next_actions": [
       "Exact-head Pre-Unreal and Unreal build/import/startup/chapter/state/save gates",
       "Merge short wave into develop only after green gates",
@@ -3162,20 +3164,20 @@
         }
       },
       "latest_observed": {
-        "sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+        "sha": "ed1b7e24e6d7c629c6db3fd671430ff3e0598835",
         "pre_unreal": {
-          "sha": "c929ab657dba10266536d51aa04fb21da04ada12",
-          "run_id": 35534129087,
+          "sha": "ed1b7e24e6d7c629c6db3fd671430ff3e0598835",
+          "run_id": 35536692195,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "c929ab657dba10266536d51aa04fb21da04ada12",
-          "run_id": 35534128972,
-          "status": "SUCCESS",
-          "attempt": 2
+          "sha": "ed1b7e24e6d7c629c6db3fd671430ff3e0598835",
+          "run_id": 35536692177,
+          "status": "FAILURE"
         }
       }
-    }
+    },
+    "pull_request": 54
   },
   "governor_role": {
     "mode": "OVERSEER_NOT_BOTTLENECK",
@@ -3310,6 +3312,13 @@
       "Exact-head Pre-Unreal and Unreal build/import/startup/chapter/state/save gates",
       "Merge short wave into develop only after green gates",
       "Rendered chapter production next: Moria, Amon Hen, Isengard; do not recreate already integrated minecarts/piers/atmosphere"
-    ]
+    ],
+    "build_repair": {
+      "failure_sha": "ed1b7e24e6d7c629c6db3fd671430ff3e0598835",
+      "unreal_run_id": 35536692177,
+      "cause_observed": "UnrealBuildTool C# compilation could not create temporary file: DirectoryNotFoundException for job-local TEMP. No gameplay C++ compiler diagnostic.",
+      "repair": "Create/check inherited compiler TEMP immediately before invoking Build.bat; fail explicitly if unavailable.",
+      "status": "IMPLEMENTED_VALIDATION_PENDING"
+    }
   }
 }
