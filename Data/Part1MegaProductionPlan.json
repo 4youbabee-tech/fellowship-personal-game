@@ -266,7 +266,8 @@
       "Source asset triangle-equivalent and byte telemetry.",
       "Measurement-first AssetPerformanceBudget contract.",
       "Part1VisualProductionPass covering P1C01-P1C08 plus Isengard.",
-      "bounded runtime landmark/threat camera framing using existing player camera"
+      "bounded runtime landmark/threat camera framing using existing player camera",
+      "Isengard now has a low-cost cold-light/industrial-haze/furnace-glow atmosphere and production parapet dressing; prototype world labels are hidden."
     ],
     "next_large_actions": [
       "Keep exact head green through Pre-Unreal and real UE4.27.2 validation.",

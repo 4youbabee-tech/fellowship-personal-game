@@ -105,7 +105,15 @@
   "parallel_route": {
     "id": "ISENGARD",
     "identity": "black-stone authoritarian industry",
-    "priority": "cold directional Orthanc light plus furnace glow, severe vertical geometry and visible industrial damage"
+    "priority": "cold directional Orthanc light plus furnace glow, severe vertical geometry and visible industrial damage",
+    "runtime_implemented": [
+      "cold movable directional light and restrained skylight",
+      "industrial exponential height fog",
+      "three bounded warm furnace point lights",
+      "production parapet slab dressing",
+      "prototype world labels hidden from the normal player view"
+    ],
+    "acceptance": "IMPLEMENTED_PENDING_UE4_BUILD_RENDER_AND_DEVICE_PROOF"
   },
   "encounter_staging": {
     "moria": [

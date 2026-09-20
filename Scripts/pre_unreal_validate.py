@@ -4336,6 +4336,23 @@ pg95_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
 if pg95_visual.get("camera_execution", {}).get("status") != "RUNTIME_FRAMING_IMPLEMENTED_PENDING_ENGINE_PROOF":
     fail("PG-095 camera execution evidence boundary changed")
 
+# PG-096: Isengard atmosphere stays bounded, production-driven and non-final.
+pg96_isengard = read(ROOT / "Source" / "ShireJourney" / "IsengardPrototypeWorldBuilder.cpp")
+for pg96_symbol in [
+    "ShowPrototypeWorldLabels = false",
+    "ADirectionalLight",
+    "AExponentialHeightFog",
+    "ForgeGlowLocations",
+    "SM_Isengard_ParapetSlab",
+]:
+    if pg96_symbol not in pg96_isengard:
+        fail(f"PG-096 Isengard presentation symbol missing: {pg96_symbol}")
+if pg96_isengard.count("FVector(50.0f, 810.0f, 120.0f)") != 1:
+    fail("PG-096 Isengard furnace-light contract changed unexpectedly")
+pg96_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg96_visual.get("parallel_route", {}).get("acceptance") != "IMPLEMENTED_PENDING_UE4_BUILD_RENDER_AND_DEVICE_PROOF":
+    fail("PG-096 Isengard visual acceptance boundary changed")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

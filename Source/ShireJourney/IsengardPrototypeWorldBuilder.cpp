@@ -5,13 +5,26 @@
 #include "ShireQuestTrigger.h"
 #include "ShireTraversalChallenge.h"
 
+#include "Components/DirectionalLightComponent.h"
+#include "Components/ExponentialHeightFogComponent.h"
+#include "Components/PointLightComponent.h"
+#include "Components/SkyLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Engine/DirectionalLight.h"
+#include "Engine/ExponentialHeightFog.h"
+#include "Engine/PointLight.h"
+#include "Engine/SkyLight.h"
 #include "Engine/StaticMeshActor.h"
 #include "Engine/TextRenderActor.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
+
+namespace IsengardVisual
+{
+    constexpr bool ShowPrototypeWorldLabels = false;
+}
 
 AIsengardPrototypeWorldBuilder::AIsengardPrototypeWorldBuilder()
 {
@@ -74,6 +87,11 @@ AStaticMeshActor* AIsengardPrototypeWorldBuilder::SpawnShape(
 
 void AIsengardPrototypeWorldBuilder::SpawnLabel(const FString& Text, const FVector& Location, const FLinearColor& Color)
 {
+    if (!IsengardVisual::ShowPrototypeWorldLabels)
+    {
+        return;
+    }
+
     if (!GetWorld())
     {
         return;
@@ -100,6 +118,40 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
         return;
     }
     bBuilt = true;
+
+    // Isengard gets a distinct, low-cost production atmosphere: cold directional
+    // light and industrial haze, countered by a bounded set of warm furnace glows.
+    ADirectionalLight* IsengardSun = GetWorld()->SpawnActor<ADirectionalLight>(
+        FVector::ZeroVector, FRotator(-32.0f, -58.0f, 0.0f));
+    if (IsengardSun && IsengardSun->GetLightComponent())
+    {
+        IsengardSun->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        IsengardSun->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        IsengardSun->GetLightComponent()->SetIntensity(2.15f);
+        IsengardSun->GetLightComponent()->SetLightColor(FLinearColor(0.62f, 0.68f, 0.72f));
+    }
+
+    ASkyLight* IsengardSky = GetWorld()->SpawnActor<ASkyLight>(
+        FVector::ZeroVector, FRotator::ZeroRotator);
+    if (IsengardSky && IsengardSky->GetLightComponent())
+    {
+        IsengardSky->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        IsengardSky->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+        IsengardSky->GetLightComponent()->SetIntensity(0.42f);
+        IsengardSky->GetLightComponent()->SetLightColor(FLinearColor(0.34f, 0.39f, 0.37f));
+        IsengardSky->GetLightComponent()->RecaptureSky();
+    }
+
+    AExponentialHeightFog* IsengardFog = GetWorld()->SpawnActor<AExponentialHeightFog>(
+        FVector::ZeroVector, FRotator::ZeroRotator);
+    if (IsengardFog && IsengardFog->GetComponent())
+    {
+        IsengardFog->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+        IsengardFog->GetComponent()->SetMobility(EComponentMobility::Movable);
+        IsengardFog->GetComponent()->SetFogDensity(0.018f);
+        IsengardFog->GetComponent()->SetFogHeightFalloff(0.18f);
+        IsengardFog->GetComponent()->SetFogInscatteringColor(FLinearColor(0.16f, 0.19f, 0.17f));
+    }
 
     SpawnShape(CubeMesh, FVector(0, 0, -75), FVector(42, 32, 0.75f),
         FLinearColor(0.09f, 0.12f, 0.08f), FRotator::ZeroRotator, true);
@@ -160,6 +212,8 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
         nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_FurnaceStack.SM_Isengard_FurnaceStack"));
     UStaticMesh* FelledTrunk = LoadObject<UStaticMesh>(
         nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_FelledTrunk.SM_Isengard_FelledTrunk"));
+    UStaticMesh* ParapetSlab = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_ParapetSlab.SM_Isengard_ParapetSlab"));
     for (int32 I = 0; I < 8; ++I)
     {
         const FVector Pit(-200.0f + I * 260.0f, 720.0f + (I % 2) * 180.0f, 10.0f);
@@ -170,6 +224,25 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
             FurnaceStack ? FVector(0.55f) : FVector(0.10f, 0.10f, 0.85f),
             FLinearColor(0.16f, 0.11f, 0.07f), FRotator::ZeroRotator, false);
     }
+    const FVector ForgeGlowLocations[] = {
+        FVector(50.0f, 810.0f, 120.0f),
+        FVector(830.0f, 900.0f, 130.0f),
+        FVector(1610.0f, 810.0f, 120.0f)
+    };
+    for (const FVector& GlowLocation : ForgeGlowLocations)
+    {
+        APointLight* ForgeGlow = GetWorld()->SpawnActor<APointLight>(
+            GlowLocation, FRotator::ZeroRotator);
+        if (ForgeGlow && ForgeGlow->GetLightComponent())
+        {
+            ForgeGlow->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
+            ForgeGlow->GetLightComponent()->SetMobility(EComponentMobility::Movable);
+            ForgeGlow->GetLightComponent()->SetIntensity(1900.0f);
+            ForgeGlow->GetLightComponent()->SetAttenuationRadius(620.0f);
+            ForgeGlow->GetLightComponent()->SetLightColor(FLinearColor(1.0f, 0.19f, 0.045f));
+        }
+    }
+
     for (int32 I = 0; I < 12; ++I)
     {
         const FVector Stump(-900.0f + I * 210.0f, -820.0f - 90.0f * (I % 3), 25.0f);
@@ -180,12 +253,20 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
             true);
     }
 
-    // Raised path acts as the prototype rooftop/prison overlook.
+    // Raised path acts as the prison overlook. Production parapet slabs replace
+    // the visible outer edge where available while the original collision path stays.
     for (int32 I = 0; I < 8; ++I)
     {
-        SpawnShape(CubeMesh, FVector(760.0f + I * 95.0f, -520.0f, 55.0f + I * 85.0f),
+        const FVector StepLocation(760.0f + I * 95.0f, -520.0f, 55.0f + I * 85.0f);
+        SpawnShape(CubeMesh, StepLocation,
             FVector(0.90f, 0.55f, 0.12f), FLinearColor(0.11f, 0.11f, 0.12f),
             FRotator(0, 0, -7.0f), true);
+        if (ParapetSlab && (I % 2 == 0))
+        {
+            SpawnShape(ParapetSlab, StepLocation + FVector(0.0f, -72.0f, 38.0f),
+                FVector(0.62f), FLinearColor(0.07f, 0.075f, 0.08f),
+                FRotator(0.0f, 0.0f, -7.0f), false);
+        }
     }
     SpawnShape(CubeMesh, FVector(1450, -520, 720), FVector(2.3f, 1.8f, 0.12f),
         FLinearColor(0.09f, 0.09f, 0.10f), FRotator::ZeroRotator, true);
