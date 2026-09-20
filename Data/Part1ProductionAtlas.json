@@ -551,6 +551,7 @@
         "Palantir context"
       ],
       "source_asset_roots": [
+        "SourceAssets/Production/World/Isengard",
         "SourceAssets/Production/World/Common",
         "SourceAssets/Production/Characters",
         "SourceAssets/Production/Enemies/Orc",
@@ -1112,7 +1113,7 @@
     {
       "id": "BALROG",
       "display_name": "Balrog",
-      "asset_root": null,
+      "asset_root": "SourceAssets/Production/Enemies/Balrog",
       "chapters": [
         "P1C06"
       ],
@@ -1131,7 +1132,7 @@
     {
       "id": "WATCHER",
       "display_name": "Watcher in the Water",
-      "asset_root": null,
+      "asset_root": "SourceAssets/Production/Enemies/Watcher",
       "chapters": [
         "P1C05"
       ],
@@ -1150,7 +1151,7 @@
     {
       "id": "LURTZ",
       "display_name": "Lurtz",
-      "asset_root": null,
+      "asset_root": "SourceAssets/Production/Enemies/Lurtz",
       "chapters": [
         "P1C08"
       ],

@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "inventory_id": "PROJECT_OWNED_PRODUCTION_ASSET_INVENTORY_V1",
-  "generated_from_commit": "25625ff38bee7b09c44bd518a2e963148753e33b",
+  "generated_from_commit": "7090db1cedf43d8eccfc38af6c2f71bba1d23031",
   "status": "FOUNDATION_INVENTORY_NOT_FINAL_ACCEPTANCE",
-  "truth_rule": "File presence and importability prove only that a project-owned source foundation exists. Final production requires rig/material/animation/visual/performance acceptance.",
+  "truth_rule": "File presence and importability prove only a project-owned source foundation. Final production requires rig/material/animation/visual/performance acceptance.",
   "characters": [
     {
       "root": "SourceAssets/Production/Characters/Aragorn",
@@ -303,6 +303,20 @@
   ],
   "enemies": [
     {
+      "root": "SourceAssets/Production/Enemies/Balrog",
+      "file_count": 5,
+      "obj_count": 5,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Enemies/Balrog/SM_Balrog_Head.obj",
+        "SourceAssets/Production/Enemies/Balrog/SM_Balrog_Horn.obj",
+        "SourceAssets/Production/Enemies/Balrog/SM_Balrog_Torso.obj",
+        "SourceAssets/Production/Enemies/Balrog/SM_Balrog_WhipSegment.obj",
+        "SourceAssets/Production/Enemies/Balrog/SM_Balrog_Wing.obj"
+      ]
+    },
+    {
       "root": "SourceAssets/Production/Enemies/BlackRider",
       "file_count": 3,
       "obj_count": 3,
@@ -326,6 +340,20 @@
         "SourceAssets/Production/Enemies/CaveTroll/SM_CaveTroll_Leg.obj",
         "SourceAssets/Production/Enemies/CaveTroll/SM_CaveTroll_Torso.obj",
         "SourceAssets/Production/Enemies/CaveTroll/SM_CaveTroll_Weapon.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Enemies/Lurtz",
+      "file_count": 5,
+      "obj_count": 5,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Enemies/Lurtz/SM_Lurtz_Arm.obj",
+        "SourceAssets/Production/Enemies/Lurtz/SM_Lurtz_Blade.obj",
+        "SourceAssets/Production/Enemies/Lurtz/SM_Lurtz_Head.obj",
+        "SourceAssets/Production/Enemies/Lurtz/SM_Lurtz_Leg.obj",
+        "SourceAssets/Production/Enemies/Lurtz/SM_Lurtz_Torso.obj"
       ]
     },
     {
@@ -354,6 +382,17 @@
         "SourceAssets/Production/Enemies/UrukHai/SM_UrukHai_Leg.obj",
         "SourceAssets/Production/Enemies/UrukHai/SM_UrukHai_Torso.obj",
         "SourceAssets/Production/Enemies/UrukHai/SM_UrukHai_Weapon.obj"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/Enemies/Watcher",
+      "file_count": 2,
+      "obj_count": 2,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/Enemies/Watcher/SM_Watcher_Core.obj",
+        "SourceAssets/Production/Enemies/Watcher/SM_Watcher_Tentacle.obj"
       ]
     }
   ],
@@ -475,6 +514,21 @@
         "SourceAssets/Production/World/Common/SM_CommonWheelbarrow.obj",
         "SourceAssets/Production/World/Common/SM_CommonWoodPile.obj",
         "SourceAssets/Production/World/Common/WorldPack.mtl"
+      ]
+    },
+    {
+      "root": "SourceAssets/Production/World/Isengard",
+      "file_count": 6,
+      "obj_count": 6,
+      "mtl_count": 0,
+      "image_count": 0,
+      "files": [
+        "SourceAssets/Production/World/Isengard/SM_Isengard_FelledTrunk.obj",
+        "SourceAssets/Production/World/Isengard/SM_Isengard_FurnaceStack.obj",
+        "SourceAssets/Production/World/Isengard/SM_Isengard_IndustrialPitRim.obj",
+        "SourceAssets/Production/World/Isengard/SM_Isengard_OrthancCore.obj",
+        "SourceAssets/Production/World/Isengard/SM_Isengard_OrthancSpire.obj",
+        "SourceAssets/Production/World/Isengard/SM_Isengard_ParapetSlab.obj"
       ]
     },
     {
@@ -637,15 +691,23 @@
     }
   ],
   "totals": {
-    "production_files": 329,
-    "obj_files": 286,
+    "production_files": 347,
+    "obj_files": 304,
     "mtl_files": 18,
     "image_files": 24
   },
-  "missing_dedicated_roots": [
+  "newly_filled_foundation_roots": [
     "SourceAssets/Production/World/Isengard",
     "SourceAssets/Production/Enemies/Lurtz",
     "SourceAssets/Production/Enemies/Watcher",
     "SourceAssets/Production/Enemies/Balrog"
+  ],
+  "remaining_final_art_gaps": [
+    "skeletal/custom rigs",
+    "deformation and animation",
+    "final materials/textures",
+    "VFX/audio",
+    "LOD/performance acceptance",
+    "human visual acceptance"
   ]
 }
