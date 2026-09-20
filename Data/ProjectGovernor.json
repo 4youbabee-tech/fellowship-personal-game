@@ -3,7 +3,7 @@
   "authority_id": "FELLOWSHIP_SINGLE_PROJECT_GOVERNOR_V2",
   "authority_rule": "This file is the sole authoritative project-management decision source. Other docs/data may describe implementation details but must not override requirements, priorities, decisions, conflicts, active gate, or quality status recorded here.",
   "repository": "4youbabee-tech/fellowship-personal-game",
-  "active_branch": "develop",
+  "active_branch": "work/automation-first-runtime-observation",
   "engine": "Unreal Engine 4.27.2",
   "target_profile": {
     "platform": "Windows",
@@ -28,7 +28,7 @@
     "The film story spine, build/save/story integrity, target-device performance and required traversal cannot be silently traded away.",
     "Before changing or adding any FILM_CORE beat, verify the exact scene order, participating characters and outcome against the supplied film/script source; do not rely on memory when the source can be checked.",
     "A feature is never called accepted from compile/static evidence alone.",
-    "If a previously passed critical gate fails, stop feature expansion, repair the smallest failing layer, and rerun the exact failed gate.",
+    "If a previously passed critical gate fails, quarantine the affected acceptance/merge path, repair the smallest failing layer, and rerun the exact failed gate while unrelated safe production work continues.",
     "Human pacing and visual review are mandatory for enjoyment/acceptance; CI cannot infer fun.",
     "Developer-owned automation should reproduce and verify defects before asking the owner to spend play time on technical regression checks; never relabel machine checks as visual or pacing approval.",
     "Validation harness semantics are first-class: repeated log copies must not inflate defect counts, save tests must prove disk roundtrip, and every failing debt gate must print concrete asset/package identities."
@@ -2755,7 +2755,7 @@
       "route/story/state isolated disk roundtrip",
       "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "The historical green baseline unlocked production. Current V6 head engine proof is incomplete after cancelled runs; finish that proof before unrelated expansion. Headless evidence never implies rendered/device/human acceptance.",
+    "note": "Governor is an overseer, not a bottleneck. Verified V7 baseline remains green; V8 exact-head evidence is still required for V8 acceptance, but safe parallel production may continue while runner/validation issues are repaired.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -2766,7 +2766,7 @@
         "PG-101",
         "PG-102"
       ],
-      "behavior": "Repair exact-head failures first; machine evidence never promotes visual/device acceptance."
+      "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
     },
     "last_green_head": "2e8898a53f3ab220226df24b0d4578f7232016e7",
     "evidence": {
@@ -2803,12 +2803,12 @@
   "update_protocol": [
     "Treat Data/ProjectGovernor.json as the first-read/last-write coordination record for any meaningful project change.",
     "Read this file first before any meaningful gameplay, architecture, story or quality decision.",
-    "For a new user request: add/update one requirement here, then inspect dependencies/conflicts before implementation.",
     "Promote only user requests/decisions that are explicitly accepted, confirmed or clearly agreed. Suggestions still under discussion, rejected ideas and options that do not fit the project remain non-authoritative unless later adopted.",
     "For a contradiction: preserve both requirements and add/update one decision/open conflict here.",
     "For implementation: update evidence/missing_work/status here only after repository evidence exists.",
     "For testing: update region_quality and active_gate only from actual static/compile/PIE/device/human evidence.",
-    "If any reference file conflicts with this governor, reconcile that file to this governor in the same logical change."
+    "If any reference file conflicts with this governor, reconcile that file to this governor in the same logical change.",
+    "For a new owner request: record or update the requirement, preserve its intent and priority, inspect dependencies/conflicts, then proceed with implementation without unnecessary planning gates."
   ],
   "deprecated_secondary_authority_files": [
     "Data/ProjectRequirements.json",
@@ -2821,7 +2821,7 @@
     "Workers do not independently change global requirement priority, acceptance state, active gate, or conflict resolution.",
     "Any global direction change must be recorded in this Governor in the same logical change.",
     "A worker discovering a contradiction records it here rather than choosing silently.",
-    "No major feature starts while active_gate.blocks_major_feature_expansion is true."
+    "If active_gate.blocks_major_feature_expansion is true, workers must not merge or accept changes that depend on the failing layer, but may continue isolated safe parallel production that cannot worsen or conceal the failure."
   ],
   "work_queue": [
     {
@@ -3132,5 +3132,23 @@
       }
     },
     "scope_rule": "Machine evidence does not replace rendered PIE/device/human acceptance."
+  },
+  "governor_role": {
+    "mode": "OVERSEER_NOT_BOTTLENECK",
+    "owner_request_priority": "The owner's explicit requests define project direction and priority unless they conflict with immutable film-story outcomes, save/build integrity, legal/source provenance or target-platform safety.",
+    "responsibilities": [
+      "Record and organize the owner's requests without silently dropping older commitments.",
+      "Translate requests into ordered work, dependencies, evidence and acceptance boundaries.",
+      "Detect contradictions, stale evidence and risky changes before they contaminate the project.",
+      "Keep story chronology, save continuity, build integrity and performance safeguards intact.",
+      "Coordinate workers and validation so they do not duplicate, overwrite or contradict one another."
+    ],
+    "non_blocking_policy": [
+      "A failing gate blocks acceptance, release or merging of changes that depend on the failing layer; it does not stop unrelated safe production work.",
+      "While infrastructure or CI is being repaired, workers may continue preparing isolated art, data, world dressing, tests, source-grounded plans and other changes that cannot worsen the failing layer.",
+      "Do not idle waiting for a runner when useful non-conflicting production work can continue.",
+      "Do not create artificial gates merely because work is unfinished; track unfinished work and keep building.",
+      "Only hard integrity threats such as save corruption, story-state breakage, destructive repository changes or reproducible build/runtime failure may require pausing the directly affected path."
+    ]
   }
 }
