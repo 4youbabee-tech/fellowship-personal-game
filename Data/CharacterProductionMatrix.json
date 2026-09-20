@@ -627,5 +627,22 @@
         "Bridge staging"
       ]
     }
-  ]
+  ],
+  "rig_handoff_contract": {
+    "path_pattern": "/Game/Production/Characters/Rigs/<CharacterId>/SK_<CharacterId> plus ABP_<CharacterId>_Locomotion",
+    "behavior": "Playable and named-NPC actors automatically prefer the final skeletal rig + AnimBP when both packages exist, otherwise retain the current modular project-owned fallback.",
+    "supported_part1_playable_ids": [
+      "Frodo",
+      "Gandalf",
+      "Sam",
+      "Merry",
+      "Pippin",
+      "Aragorn",
+      "Boromir",
+      "Legolas",
+      "Gimli",
+      "Arwen"
+    ],
+    "acceptance_note": "Automatic handoff is production plumbing only; a rig is not final until deformation, animation, visual and performance acceptance pass."
+  }
 }

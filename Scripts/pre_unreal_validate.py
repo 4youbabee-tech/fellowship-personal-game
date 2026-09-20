@@ -4036,6 +4036,23 @@ for pg88_symbol in [
 if "GetCurrentPrimaryRegionName()" not in pg88_hud:
     fail("PG-088 HUD is not using source-grounded current region naming")
 
+
+# PG-089: playable production characters must support automatic final-rig handoff with modular fallback.
+pg89_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+pg89_cpp = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+for pg89_symbol in [
+    "TryApplyProductionRig",
+    "bUsingSkeletalProductionRig",
+    "FPackageName::DoesPackageExist",
+    "SK_%s",
+    "ABP_%s_Locomotion",
+    "skeletal production rig active",
+]:
+    if pg89_symbol not in (pg89_h + pg89_cpp):
+        fail(f"PG-089 playable skeletal production handoff missing: {pg89_symbol}")
+if "if (bUsingSkeletalProductionRig)" not in pg89_cpp:
+    fail("PG-089 modular animation does not yield to production skeletal rig")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

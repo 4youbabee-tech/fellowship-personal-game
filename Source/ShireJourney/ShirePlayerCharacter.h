@@ -213,6 +213,7 @@ private:
     bool bPrototypeIsGandalf = false;
     FName PrototypeMotionProfile = TEXT("HOBBIT");
     bool bUsingProductionCharacter = false;
+    bool bUsingSkeletalProductionRig = false;
     bool bSprintRequested = false;
     float CurrentStamina = 100.0f;
     float CurrentResolve = 100.0f;
@@ -226,6 +227,7 @@ private:
 
     UShireSaveGame* CreateSaveSnapshot(FName CheckpointId, bool bCheckpointSnapshot) const;
     bool RestoreSaveSnapshot(UShireSaveGame* Save, const FText& SuccessMessage);
+    bool TryApplyProductionRig(const FString& RigFolder);
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);
     void UpdatePlayerLife(float DeltaSeconds);

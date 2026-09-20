@@ -5,6 +5,7 @@
 #include "ShireHUD.h"
 #include "ShireStoryPresentationSubsystem.h"
 #include "FellowshipEnemyPrototype.h"
+#include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -15,8 +16,10 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/GameInstance.h"
+#include "Engine/SkeletalMesh.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
+#include "Misc/PackageName.h"
 #include "UObject/ConstructorHelpers.h"
 
 namespace ShireSaveConstants
@@ -194,6 +197,71 @@ AShirePlayerCharacter::AShirePlayerCharacter()
         PrototypeHat->SetStaticMesh(ConeMesh.Object);
         PrototypeBeard->SetStaticMesh(ConeMesh.Object);
     }
+}
+
+bool AShirePlayerCharacter::TryApplyProductionRig(const FString& RigFolder)
+{
+    if (RigFolder.IsEmpty() || !GetMesh())
+    {
+        return false;
+    }
+
+    const FString SkeletalPackagePath = FString::Printf(
+        TEXT("/Game/Production/Characters/Rigs/%s/SK_%s"),
+        *RigFolder,
+        *RigFolder);
+    const FString AnimPackagePath = FString::Printf(
+        TEXT("/Game/Production/Characters/Rigs/%s/ABP_%s_Locomotion"),
+        *RigFolder,
+        *RigFolder);
+
+    if (!FPackageName::DoesPackageExist(SkeletalPackagePath) ||
+        !FPackageName::DoesPackageExist(AnimPackagePath))
+    {
+        GetMesh()->SetVisibility(false, true);
+        return false;
+    }
+
+    const FString SkeletalPath = FString::Printf(TEXT("%s.SK_%s"), *SkeletalPackagePath, *RigFolder);
+    const FString AnimClassPath = FString::Printf(
+        TEXT("%s.ABP_%s_Locomotion_C"),
+        *AnimPackagePath,
+        *RigFolder);
+
+    USkeletalMesh* SkeletalMesh = LoadObject<USkeletalMesh>(nullptr, *SkeletalPath);
+    UClass* AnimClass = LoadClass<UAnimInstance>(nullptr, *AnimClassPath);
+    if (!SkeletalMesh || !AnimClass)
+    {
+        GetMesh()->SetVisibility(false, true);
+        return false;
+    }
+
+    GetMesh()->SetSkeletalMesh(SkeletalMesh);
+    GetMesh()->SetAnimInstanceClass(AnimClass);
+    GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GetMesh()->SetVisibility(true, true);
+
+    UStaticMeshComponent* ModularPieces[] = {
+        PrototypeTorso, PrototypeHead, PrototypeHair,
+        PrototypeLeftArm, PrototypeRightArm, PrototypeLeftLeg, PrototypeRightLeg,
+        PrototypeLeftFoot, PrototypeRightFoot, PrototypeWeapon, PrototypeCloak,
+        PrototypeHat, PrototypeBeard, PrototypeLeftEye, PrototypeRightEye,
+        PrototypeMouth, PrototypeSatchel
+    };
+    for (UStaticMeshComponent* Piece : ModularPieces)
+    {
+        if (Piece)
+        {
+            Piece->SetVisibility(false, true);
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("CharacterVisual: skeletal production rig active id=%s"),
+        *RigFolder);
+    return true;
 }
 
 void AShirePlayerCharacter::ApplyPrototypeStyle()
@@ -522,10 +590,17 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
     PrototypeRightEye->SetRelativeScale3D(bProductionCharacter ? FVector(0.026f,0.020f,0.035f) : FVector(0.035f,0.025f,0.045f));
     PrototypeMouth->SetRelativeLocation(FVector(FaceX+0.5f,0,FaceZ-6));
     PrototypeMouth->SetRelativeScale3D(bProductionCharacter ? FVector(0.012f,0.050f,0.010f) : FVector(0.018f,0.065f,0.012f));
+
+    bUsingSkeletalProductionRig = TryApplyProductionRig(VisualId.ToString());
 }
 
 void AShirePlayerCharacter::UpdatePrototypeAnimation(float DeltaSeconds)
 {
+    if (bUsingSkeletalProductionRig)
+    {
+        return;
+    }
+
     UCharacterMovementComponent* Movement = GetCharacterMovement();
     if (!Movement)
     {
