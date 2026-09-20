@@ -2865,7 +2865,7 @@
       "route/story/state isolated disk roundtrip",
       "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "Exact head b773a40cddea426520d16fc330e0ee6e4e54bb18 failed Pre-Unreal #515 on a stale validator phrase and Unreal Build #350 during production import because four new Moria Iron meshes resolved to defaultMat. Both root causes have been repaired on subsequent branch commits, but the repaired head has not yet earned exact-head proof.",
+    "note": "Exact head e0a78d8094d70e7c75a05f0b7ab4c9df96e275b3 failed Pre-Unreal #517 because four newly added runtime files were not yet registered in Data/SourceArchitecturePlan.json. That architecture-governance blocker has now been repaired on be1554642827184cc77847a165a72c0d7ff81a8b. Unreal Build #352 was still running when the failure was reconciled; do not transfer any result to the repaired head.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -2885,21 +2885,20 @@
     },
     "evidence_scope": "PR #54 exact candidate head; develop merge commit 2a5f96fd552cbe6343474721ca98d86d8629fc00 contains that tree but the new mega-wave candidate must earn its own exact-head proof.",
     "current_owner_observation": {
-      "sha": "b773a40cddea426520d16fc330e0ee6e4e54bb18",
+      "sha": "e0a78d8094d70e7c75a05f0b7ab4c9df96e275b3",
       "pre_unreal": {
-        "run_number": 515,
+        "run_number": 517,
         "status": "FAILURE",
-        "root_cause": "PG-107 expected obsolete screenplay precedence phrase after source authority was strengthened."
+        "root_cause": "WorldAmbientMotionActor.cpp/.h and WorldDetailCluster.cpp/.h were missing from SourceArchitecturePlan.json."
       },
       "unreal": {
-        "run_number": 350,
-        "status": "FAILURE",
-        "root_cause": "Import authored material binding failed for SM_MoriaMineRail, SM_MoriaOreCrate, SM_MoriaSideDoor and SM_MoriaTorchNiche because RegionalMaterials.mtl lacked Iron."
+        "run_number": 352,
+        "status": "IN_PROGRESS_AT_RECONCILIATION"
       },
       "repaired_after_observation": [
-        "RegionalMaterials.mtl now defines Iron with Kd/Pr/Pm/Ks/Ns.",
-        "PG-107 validation now checks the stronger trilogy-primary and Tolkien-does-not-silently-replace-film-continuity rules.",
-        "Environmental-life V9 code/data was added after the failed head and requires a fresh exact-head run."
+        "Data/SourceArchitecturePlan.json now registers all four new runtime files exactly once under the World domain.",
+        "Previous PG-107 source-authority wording and Moria Iron material binding fixes remain present.",
+        "Fresh exact-head validation is required on be1554642827184cc77847a165a72c0d7ff81a8b or later."
       ]
     }
   },
@@ -3177,14 +3176,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "reason": "Owner requested a major qualitative transformation that fills the game with magic, life and detail, with blockers fixed in-line rather than halting production.",
+    "reason": "Mega world-magic/life/detail wave encountered and repaired another governance blocker during exact-head validation.",
     "summary": [
-      "Latest failed exact head was b773a40: Pre-Unreal #515 failed only the outdated PG-107 wording check; Unreal #350 compiled C++ but failed import on four Moria meshes missing the Iron material definition.",
-      "Both identified blockers were repaired on the active short production branch.",
-      "A reusable AWorldAmbientMotionActor was added for bounded environmental motion and optional shadowless glow accents.",
-      "LivingWorldEventPlan and WorldLifeSaturationPlan advanced to V9 environmental-life runtime: Moria gains chain/debris danger and aftermath motion with zero civilians; Lothlorien/Rivendell/Shire/Bree gain regional motion/glow; Anduin retains wildlife/river motion; Isengard gains bounded industrial furnace motion.",
-      "Project Sources remain authoritative: film outcomes unchanged, Tolkien enriches deeper lore, Source 11 living-world guidance favors believable authored routines plus state-aware systemic behavior rather than maximum simulation.",
-      "Fresh exact-head CI is required before any green/merge/visual-performance claim."
+      "Pre-Unreal #517 on e0a78d8 correctly rejected four new runtime files that were absent from SourceArchitecturePlan.json.",
+      "The missing WorldAmbientMotionActor and WorldDetailCluster header/source entries were added to the architecture plan rather than weakening the validator.",
+      "This confirms the architecture guard is active and the production wave is being corrected inline rather than bypassing controls.",
+      "Unreal #352 belonged to the failed e0a78d8 head and cannot certify the repaired head.",
+      "Next acceptance step is fresh exact-head Pre-Unreal + Unreal validation."
     ]
   },
   "development_mode": {
