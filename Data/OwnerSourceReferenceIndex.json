@@ -103,6 +103,110 @@
         "game-writing consistency"
       ],
       "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
+      "name": "01_STORY_AND_TIMELINE_BIBLE(1).pdf",
+      "kind": "OWNER_STORY_REFERENCE",
+      "sha256": "6a22f1c2eeae3aaa071374589b0705252bee4424c8870f5dab62093c744e1ae9",
+      "use": [
+        "Part I chapter chronology",
+        "causal spine and locked outcomes",
+        "safe optional-play windows",
+        "chapter state and handoff rules"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_CHARACTERS_RELATIONSHIPS_BIBLE_V1",
+      "name": "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE(1).pdf",
+      "kind": "OWNER_CHARACTER_REFERENCE",
+      "sha256": "8e6fc12f0a719666f639d19fa0e00e812c3670e87b200ed5f064bcd519b7fe82",
+      "use": [
+        "character identity and relationship continuity",
+        "cast presence and knowledge boundaries",
+        "character production priorities",
+        "relationship-safe optional interactions"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+      "name": "03_WORLD_LOCATIONS_AND_MAP_BIBLE(1).pdf",
+      "kind": "OWNER_WORLD_REFERENCE",
+      "sha256": "509f153caa86bb6cb06537eb18cd359166d9f8bf5ca81efb9d8355e6785806a5",
+      "use": [
+        "regional silhouette and landmark hierarchy",
+        "chapter-state world variants",
+        "navigation and streaming grammar",
+        "location dossiers"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_PEOPLES_LORE_ARTIFACTS_CULTURES_BIBLE_V1",
+      "name": "04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES(1).pdf",
+      "kind": "OWNER_LORE_CULTURE_REFERENCE",
+      "sha256": "b88baa4278752addb6a64df0370973c9cec3787bbc04f7da3f52c7829cfdf4a8",
+      "use": [
+        "culture-specific production language",
+        "artifact and faction consistency",
+        "lore-safe environmental storytelling",
+        "people and settlement differentiation"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+      "name": "05_BATTLES_WEAPONS_ARMIES_AND_CREATURES(1).pdf",
+      "kind": "OWNER_COMBAT_REFERENCE",
+      "sha256": "f45dbc7073b35157cd752bf0d1156de83c3247a55c907787bfa3b3f76404aae9",
+      "use": [
+        "battle phase architecture",
+        "hero-bubble AI and performance doctrine",
+        "Amon Hen and Moria encounter staging",
+        "weapons armies creatures and locked threat outcomes"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_GAMEPLAY_SIDE_ACTIVITIES_BIBLE_V1",
+      "name": "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE(1).pdf",
+      "kind": "OWNER_GAMEPLAY_REFERENCE",
+      "sha256": "2c0e6a12c94de455a0a35fc03ae8a9d9e2dfcc737217231d48e83e36d6a9da0b",
+      "use": [
+        "film-safe side activities",
+        "quest and save state rules",
+        "difficulty and accessibility boundaries",
+        "lower-tier degradation plans"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+      "name": "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX(1).pdf",
+      "kind": "OWNER_IMPLEMENTATION_REFERENCE",
+      "sha256": "da7cacce24cbb6ad95431efa62e1bb344b837c434796f2f2bb2fa59bf57fc0b5",
+      "use": [
+        "mission package contracts",
+        "chapter dependency rules",
+        "logic-versus-cinematic state ownership",
+        "production status and QA gates"
+      ],
+      "runtime_ship": false
+    },
+    {
+      "id": "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
+      "name": "08_VISUAL_REFERENCE_BIBLE(1).pdf",
+      "kind": "OWNER_VISUAL_REFERENCE",
+      "sha256": "6c1a5d20540b166858e591252a7b1796376d42a9800a290212a8bf1184f0e5b4",
+      "use": [
+        "visual-reference governance",
+        "hero-landmark and macro-layout sheets",
+        "material lighting vegetation and composition references",
+        "do-not-infer and canon-confidence rules"
+      ],
+      "runtime_ship": false
     }
   ],
   "derived_runtime_data": [
@@ -112,6 +216,8 @@
     "Data/TrilogyRingQuestPlan.json",
     "Data/Part1ProductionAtlas.json",
     "Data/Production100ReadinessGate.json",
-    "Data/Part1MegaProductionPlan.json"
+    "Data/Part1MegaProductionPlan.json",
+    "Data/Part1VisualProductionPass.json",
+    "Data/ProjectOwnedProductionAssetInventory.json"
   ]
 }
