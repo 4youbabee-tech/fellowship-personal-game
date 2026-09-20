@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "plan_id": "CP54_MEGA_RESOURCE_BANK",
-  "status": "SOURCE_BANK_EXPANDED_MEGA_MATERIAL_WORLD_WAVE_V1_PENDING_ENGINE_PROOF",
-  "source_asset_count": 89,
+  "status": "REALM_DETAIL_SATURATION_V2_EXPANDED_PENDING_ENGINE_PROOF",
+  "source_asset_count": 105,
   "texture_count": 17,
   "ownership": "PROJECT_OWNED_GENERATED_SOURCE",
   "assets_by_region": {
@@ -73,7 +73,11 @@
       "SM_RivBridgeRail",
       "SM_RivGardenBench",
       "SM_RivLampArch",
-      "SM_RivWaterBasin"
+      "SM_RivWaterBasin",
+      "SM_RivLibraryArcade",
+      "SM_RivSmithyRack",
+      "SM_RivCouncilSeat",
+      "SM_RivWaterChannel"
     ],
     "Moria": [
       "SM_MoriaMineCart",
@@ -103,7 +107,11 @@
       "SM_LorienLeafLantern",
       "SM_LorienBasketRack",
       "SM_LorienGoldenBench",
-      "SM_LorienRootBridge"
+      "SM_LorienRootBridge",
+      "SM_LorienGiftTable",
+      "SM_LorienBoatSupplyRack",
+      "SM_LorienCanopyRail",
+      "SM_LorienRopeLampLine"
     ],
     "Anduin": [
       "SM_AnduinDockPier",
@@ -111,14 +119,29 @@
       "SM_AnduinCampRack",
       "SM_AnduinFishingFrame",
       "SM_AnduinRiverMarker",
-      "SM_AnduinBoatRack"
+      "SM_AnduinBoatRack",
+      "SM_AmonHenBrokenSeat",
+      "SM_AmonHenLookoutStone",
+      "SM_AnduinSupplyBundle",
+      "SM_AnduinOarRack"
+    ],
+    "Isengard": [
+      "SM_IsengardHoistFrame",
+      "SM_IsengardSlagCart",
+      "SM_IsengardTrenchGrate",
+      "SM_IsengardWaterGate"
     ]
   },
   "validation_rule": "Source bank count is a source-control floor only. Exact-head UE4 import/build/runtime and device evidence remain required; no source count implies visual acceptance.",
   "current_expansion": {
-    "wave": "MEGA_MATERIAL_WORLD_WAVE_V1",
-    "region": "Moria",
-    "added_obj_assets": 14,
-    "material_response": "Part I regional palettes enriched with explicit Pr/Pm for M_ProductionSurface synthesis"
+    "wave": "REALM_DETAIL_SATURATION_V2",
+    "regions": [
+      "Rivendell",
+      "Lothlorien",
+      "Anduin",
+      "Isengard"
+    ],
+    "added_obj_assets": 16,
+    "rule": "source-grounded bounded unique props plus HISM repeat detail; exact-head engine proof required"
   }
 }
