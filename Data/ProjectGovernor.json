@@ -586,11 +586,14 @@
         "Data/ProjectGovernor.json is the single authority",
         "Scripts/project_governor.py validates requirements, decisions, conflicts, quality gates and secondary-authority prohibition",
         "CI runs the Governor validator in Pre-Unreal Validation",
-        "Worker contract and active hard gate are recorded in the Governor"
+        "Worker contract and active hard gate are recorded in the Governor",
+        "Data/ProjectGovernor.schema.json documents the required requirement-entry contract and Scripts/project_governor.py checks that contract.",
+        "external_review_findings records verified external/programmer claims, stale-snapshot rejections, dispositions and linked work."
       ],
       "missing_work": [
         "Operational: translate each future meaningful request into the Governor before/with implementation",
-        "Optional future enhancement: automated gameplay traversal probes where practical"
+        "Optional future enhancement: automated gameplay traversal probes where practical",
+        "Keep the formal requirement schema/contract synchronized whenever Governor requirement structure changes."
       ],
       "acceptance_criteria": [
         "CI fails on malformed governor data or unresolved declared conflicts",
@@ -696,7 +699,8 @@
       ],
       "missing_work": [
         "GitHub develop/main branch protection or ruleset is not currently enabled",
-        "Require relevant status checks before protected integration"
+        "Require relevant status checks before protected integration",
+        "Until branch protection/required checks are enabled, explicitly treat failing exact-head CI as blocking acceptance even though push-triggered workflows cannot prevent the commit from already reaching develop."
       ],
       "acceptance_criteria": [
         "develop/main integration policy prevents normal merge when required checks fail",
@@ -1346,7 +1350,8 @@
         "REQ-MEM-003 persists useful external sources and requests",
         "DEC-009 through DEC-012 preserve major story/NPC/offline decisions",
         "WORK-EXP-003 and WORK-LW-004 keep the two major production tracks active",
-        "REQ-QA-001 preserves the accepted automation-first quality direction and its remaining work"
+        "REQ-QA-001 preserves the accepted automation-first quality direction and its remaining work",
+        "request_capture_contract and external_review_findings preserve verified owner/programmer-derived direction with links to affected requirements/work"
       ],
       "missing_work": [
         "Continue promoting future major user requests into the Governor instead of relying only on chat history"
@@ -1355,7 +1360,8 @@
         "A future developer can recover the active product direction from repository files without needing the chat transcript",
         "Major user requests have a requirement/decision/work item or an explicitly linked production plan",
         "Accepted/confirmed major requests remain recoverable from the repository even if the chat is lost or full",
-        "Rejected or non-adopted suggestions are not promoted into active requirements or work items"
+        "Rejected or non-adopted suggestions are not promoted into active requirements or work items",
+        "Useful external/programmer findings are recoverable with verification SHA, disposition and linked work rather than remaining chat-only."
       ],
       "dependencies": [
         "REQ-MEM-001",
@@ -1392,7 +1398,8 @@
         "Add an exact-SHA automated quality report with machine-readable JSON plus a human-readable summary.",
         "Extend the gate with target-device FPS/hitch and memory-pressure evidence against the existing 720p Low-Medium / 30 FPS floor target.",
         "Add engine-driven offline NPC behavior/dialogue consistency coverage, save/load roundtrip coverage, story/canon contract checks and text/localization integrity checks.",
-        "Evaluate Unreal Automation Framework first, then add Gauntlet/Unreal Insights where they improve end-to-end or performance coverage without replacing proven existing checks."
+        "Evaluate Unreal Automation Framework first, then add Gauntlet/Unreal Insights where they improve end-to-end or performance coverage without replacing proven existing checks.",
+        "Add a robust local Pre-Unreal preflight before the one-click build/share path, reusing proven Python-resolution behavior instead of assuming a Windows Store alias."
       ],
       "acceptance_criteria": [
         "Late startup failures cannot be marked successful.",
@@ -1680,7 +1687,8 @@
         "select/import legal base assets or author replacements",
         "rig/skin and retarget core cast",
         "replace runtime proxies",
-        "UE4 compile/import and PIE visual/motion acceptance"
+        "UE4 compile/import and PIE visual/motion acceptance",
+        "Clean verified triangulation-risk character sources (Frodo sword/foot, Gandalf beard/boot, generic Hobbit hair/head) before the next affected production import wave."
       ],
       "acceptance_criteria": [
         "core cast recognizable without labels",
@@ -1916,13 +1924,16 @@
         "asynchronous automatic checkpoint writes",
         "CI deep-audit script and finding registry",
         "World material persistence verified with zero missing runtime packages in Unreal #319.",
-        "SHA-scoped governor handoff regression guard."
+        "SHA-scoped governor handoff regression guard.",
+        "Current direct UStaticMesh load concentration verified at 63 calls in FellowshipChapterWorldBuilder.cpp and 55 in ShirePrototypeWorldBuilder.cpp; construction-time risk remains evidence-bounded.",
+        "Seven current OBJ sources have verified triangulation-risk faces; exact assets/counts are recorded in external_review_findings EXT-REV-2026-09-20-005."
       ],
       "missing_work": [
         "Complete current V6 engine validation after repeated runner cancellation; investigate trigger without treating interruption as a code defect.",
         "profile actor-iteration/social pairing on target device",
         "profile chapter-transition synchronous asset loads",
-        "target-device frame-time/memory capture and rendered chapter acceptance"
+        "target-device frame-time/memory capture and rendered chapter acceptance",
+        "Clean/re-triangulate the seven flagged OBJ sources before their next affected production import wave and rerun asset quality audit."
       ],
       "acceptance_criteria": [
         "critical exact-head gates are green before unrelated expansion",
@@ -2786,8 +2797,8 @@
   ],
   "active_gate": {
     "id": "DEEP_EXACT_HEAD_STABILITY_GATE",
-    "status": "PASSED",
-    "blocks_major_feature_expansion": false,
+    "status": "FAILED",
+    "blocks_major_feature_expansion": true,
     "required_evidence": [
       "Pre-Unreal including deep audit",
       "real UE4.27.2 compile and deterministic production import",
@@ -2795,7 +2806,7 @@
       "route/story/state isolated disk roundtrip",
       "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "Governor is an overseer, not a bottleneck. Verified V7 baseline remains green; V8 exact-head evidence is still required for V8 acceptance, but safe parallel production may continue while runner/validation issues are repaired.",
+    "note": "Current owner-observed develop head c929ab657dba10266536d51aa04fb21da04ada12 passed Pre-Unreal #504 but failed Unreal Build #339. Last fully green exact candidate remains 833c3679e19290a2b046ea7f53013a76ae1b29f4. Quarantine acceptance/merge paths that depend on the failing Unreal layer while safe isolated production/governance work may continue.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -2813,7 +2824,20 @@
       "pre_unreal": "PASS #500",
       "unreal_build": "PASS #335"
     },
-    "evidence_scope": "PR #53 exact candidate head before merge into develop."
+    "evidence_scope": "PR #53 exact candidate head before merge into develop.",
+    "current_owner_observation": {
+      "sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+      "source": "Owner-supplied GitHub Actions screenshot on 2026-09-20",
+      "pre_unreal": {
+        "run_number": 504,
+        "status": "SUCCESS"
+      },
+      "unreal": {
+        "run_number": 339,
+        "status": "FAILURE"
+      },
+      "workflow_run_ids": "NOT_VERIFIED_BY_CURRENT_CONNECTOR"
+    }
   },
   "reference_only_files": [
     "Docs/CURRENT_PROJECT_STATE.md",
@@ -2850,7 +2874,9 @@
     "For implementation: update evidence/missing_work/status here only after repository evidence exists.",
     "For testing: update region_quality and active_gate only from actual static/compile/PIE/device/human evidence.",
     "If any reference file conflicts with this governor, reconcile that file to this governor in the same logical change.",
-    "For a new owner request: record or update the requirement, preserve its intent and priority, inspect dependencies/conflicts, then proceed with implementation without unnecessary planning gates."
+    "For a new owner request: record or update the requirement, preserve its intent and priority, inspect dependencies/conflicts, then proceed with implementation without unnecessary planning gates.",
+    "For useful programmer/external reviews: verify each material claim against live develop and relevant project sources, record the verified finding/disposition here, and link it to the requirements/work it affects.",
+    "Before closing a major request, confirm its intent, remaining work, evidence and coordination links remain recoverable from this Governor without relying on chat history."
   ],
   "deprecated_secondary_authority_files": [
     "Data/ProjectRequirements.json",
@@ -2863,7 +2889,9 @@
     "Workers do not independently change global requirement priority, acceptance state, active gate, or conflict resolution.",
     "Any global direction change must be recorded in this Governor in the same logical change.",
     "A worker discovering a contradiction records it here rather than choosing silently.",
-    "If active_gate.blocks_major_feature_expansion is true, workers must not merge or accept changes that depend on the failing layer, but may continue isolated safe parallel production that cannot worsen or conceal the failure."
+    "If active_gate.blocks_major_feature_expansion is true, workers must not merge or accept changes that depend on the failing layer, but may continue isolated safe parallel production that cannot worsen or conceal the failure.",
+    "Workers must not apply programmer/external advice blindly: compare it with the current develop head and Project Sources, then preserve only verified/accepted value in external_review_findings and linked requirements/work.",
+    "A worker may prepare safe parallel work during a failing exact-head gate, but must not relabel the failing head as accepted or merge dependent changes until the affected gate is repaired and rerun."
   ],
   "work_queue": [
     {
@@ -3078,12 +3106,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "PR #53 consolidated the long-lived production branch into develop.",
+    "reason": "Reconciled the single Governor against live develop, owner-observed current CI and the latest programmer review.",
     "summary": [
-      "PR #53 exact candidate head 833c3679e19290a2b046ea7f53013a76ae1b29f4 passed Pre-Unreal #500 and Unreal Build #335.",
-      "Merge commit b9de4fd4a1aa6b4edeb25459a23b78c077dfcef7 moved the full CP56-and-later production line into develop.",
-      "CP55, CP56, repair/import-pipeline and work/automation-first-runtime-observation are now historical/contained branches, not active integration lines.",
-      "Diverged verification/repair/hygiene branches retain unique commits and remain preserved until their unique content is audited or absorbed."
+      "Live develop remains c929ab657dba10266536d51aa04fb21da04ada12.",
+      "The programmer-reported missing intent on REQ-NPC-006 does not reproduce on current develop; current REQ-NPC-006 contains both intent and owner_intent and all 48 requirements contain id/title/intent.",
+      "Owner-observed current-head CI shows Pre-Unreal #504 SUCCESS and Unreal Build #339 FAILURE; old green evidence remains scoped only to 833c3679e19290a2b046ea7f53013a76ae1b29f4.",
+      "Useful programmer findings were preserved as verified external-review records: formal Governor field contract/schema, local preflight gap, direct LoadObject transition-hitch risk, seven triangulation-risk OBJ sources and branch-protection semantics.",
+      "The Governor remains the single first-read/last-write coordination authority and now explicitly requires verified external advice, durable important-request capture and non-chat-only recovery."
     ]
   },
   "development_mode": {
@@ -3120,11 +3149,12 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "DEVELOP_CLEAN_BASELINE_READY_FOR_NEXT_SHORT_WAVE",
+  "current_focus": "POST_MERGE_UNREAL_339_REPAIR_PLUS_GOVERNOR_HARDENING",
   "immediate_next_large_actions": [
-    "Treat develop as the only integration baseline and stop extending historical CP/repair/work branches.",
-    "Delete historical branches only after confirming no external workflow/bookmark depends on their names; unique content has been audited as recorded in side_branch_audit.",
-    "Receive the next owner/programmer proposal, normalize it through the Governor, then implement it from latest green develop on one short branch."
+    "Keep develop as the only integration baseline; do not reopen CP55/CP56 or other historical long-lived branches.",
+    "Reproduce and repair the current develop-head Unreal Build #339 failure without attributing older green evidence to c929ab657dba10266536d51aa04fb21da04ada12.",
+    "While that exact-head gate is quarantined, continue only safe isolated governance/source-grounded production preparation that cannot conceal or worsen the failing layer.",
+    "After exact-head Pre-Unreal and Unreal are both green again, start the first short Mega Production wave from develop, with Moria as the first production priority."
   ],
   "session_handoff": {
     "source_head": "833c3679e19290a2b046ea7f53013a76ae1b29f4",
@@ -3136,13 +3166,13 @@
       "merge": "PR #53 merged that exact green candidate into develop as b9de4fd4a1aa6b4edeb25459a23b78c077dfcef7"
     },
     "failing": {
-      "latest_pre_unreal": "FAIL #503 on 8f332bf3176f94b98ff250b5bf8f908e7c91e0d3 due to malformed handoff evidence shape; repaired in the next governance commit.",
-      "latest_unreal": "PENDING #338 on 8f332bf3176f94b98ff250b5bf8f908e7c91e0d3 at reconciliation time."
+      "latest_unreal": "OWNER-OBSERVED FAILURE #339 on c929ab657dba10266536d51aa04fb21da04ada12; exact workflow run ID/root-cause log still requires authenticated/reproduced inspection."
     },
     "next_actions": [
-      "Use develop as the only integration baseline after PR #53 consolidation.",
-      "Audit remaining diverged side branches for genuinely unique fixes before deletion; do not cherry-pick obsolete older implementations over newer equivalents.",
-      "Start the next requested production proposal from latest green develop on one short branch, then merge it back after exact-head gates."
+      "Use develop as the only integration baseline.",
+      "Repair/reproduce Unreal Build #339 on exact current develop head before claiming the baseline green.",
+      "Keep ProjectGovernor external findings/schema/request-capture contract synchronized so accepted owner direction and useful verified programmer findings remain durable.",
+      "After exact-head gates are green, open one short Moria Mega Production branch and return it to develop only after exact-head validation."
     ],
     "unverified_acceptance": [
       "Rendered chapter-by-chapter PIE evidence remains NOT_RUN where not directly observed.",
@@ -3177,6 +3207,19 @@
           "status": "PENDING"
         }
       }
+    },
+    "current_owner_observation": {
+      "sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+      "source": "Owner-supplied GitHub Actions screenshot on 2026-09-20",
+      "pre_unreal": {
+        "run_number": 504,
+        "status": "SUCCESS"
+      },
+      "unreal": {
+        "run_number": 339,
+        "status": "FAILURE"
+      },
+      "workflow_run_ids": "NOT_VERIFIED_BY_CURRENT_CONNECTOR"
     }
   },
   "governor_role": {
@@ -3286,5 +3329,158 @@
       }
     ],
     "deletion_rule": "Do not delete a branch until meaningful unique content is present in develop or explicitly superseded. Branch deletion is repository housekeeping, not a substitute for merging or auditing."
-  }
+  },
+  "requirement_contract": {
+    "version": 1,
+    "schema_file": "Data/ProjectGovernor.schema.json",
+    "required_fields": [
+      "id",
+      "title",
+      "category",
+      "priority",
+      "status",
+      "origin",
+      "intent",
+      "acceptance_criteria",
+      "dependencies"
+    ],
+    "authoritative_intent_field": "intent",
+    "compatibility_aliases": {
+      "owner_intent": "Optional compatibility/source-note field only. It never replaces the required intent field."
+    },
+    "rule": "Every accepted or clearly agreed meaningful owner request must update an existing requirement/decision/work item or add one in the same logical change; no accepted project direction may remain chat-only."
+  },
+  "request_capture_contract": {
+    "important_request_definition": [
+      "changes product direction, story/canon constraints, priority, gameplay, AI/NPC behavior, world/character production, performance target, save/state integrity, source usage, validation, branch workflow or acceptance criteria",
+      "creates a durable future obligation, risk, blocker or production dependency",
+      "accepts a useful external/programmer proposal as project direction"
+    ],
+    "capture_rule": "Promote accepted owner direction into requirements, decisions, work_queue items or linked production plans before/with implementation. Preserve unfinished work and evidence boundaries.",
+    "external_advice_rule": "Programmer/external advice is non-authoritative until checked against live develop and relevant project sources. Preserve the useful verified result, not a stale claim.",
+    "anti_loss_rule": "No accepted major request may exist only in chat, a temporary ZIP or a worker's memory.",
+    "coordination_rule": "Workers read the Governor before meaningful work and write back status/evidence/findings in the same logical change; conflicts are recorded rather than silently resolved."
+  },
+  "external_review_findings": [
+    {
+      "id": "EXT-REV-2026-09-20-001",
+      "source": "Programmer review message supplied by owner",
+      "verification_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+      "verification_status": "NOT_REPRODUCED_CURRENT_HEAD",
+      "claim": "REQ-NPC-006 used owner_intent instead of required intent and caused pre_unreal_validate.py to fail.",
+      "verified_result": "Current develop REQ-NPC-006 contains both intent and owner_intent; all 48 current requirements contain id/title/intent. The reported failure therefore belongs to an older/different snapshot, not current develop.",
+      "disposition": "NO_CHANGE_REQUIRED_TO_REQ_NPC_006",
+      "linked_requirements": [
+        "REQ-GOV-001",
+        "REQ-MEM-004"
+      ],
+      "linked_work": [
+        "WORK-EXEC-001",
+        "WORK-QA-001"
+      ],
+      "next_action": "Keep intent as the authoritative required field and reject stale-snapshot conclusions until checked against live develop."
+    },
+    {
+      "id": "EXT-REV-2026-09-20-002",
+      "source": "Programmer review message supplied by owner",
+      "verification_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+      "verification_status": "VERIFIED_CURRENT_HEAD",
+      "claim": "Governor requirement fields lacked a documented schema/contract, making new entries easier to write from memory incorrectly.",
+      "verified_result": "Existing Python validators enforce fields, but no standalone ProjectGovernor JSON Schema existed on current develop.",
+      "disposition": "IMPLEMENTED_IN_GOVERNANCE_HARDENING",
+      "linked_requirements": [
+        "REQ-GOV-001",
+        "REQ-MEM-001",
+        "REQ-MEM-004"
+      ],
+      "linked_work": [
+        "WORK-EXEC-001",
+        "WORK-QA-001"
+      ],
+      "next_action": "Keep Data/ProjectGovernor.schema.json and the in-Governor requirement_contract synchronized with validator behavior."
+    },
+    {
+      "id": "EXT-REV-2026-09-20-003",
+      "source": "Programmer review message supplied by owner",
+      "verification_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+      "verification_status": "VERIFIED_CURRENT_HEAD",
+      "claim": "Run Pre-Unreal validation locally before sharing/building instead of relying only on post-push CI.",
+      "verified_result": "SHIRE_UPDATE_BUILD_LAUNCH.bat currently pulls, builds, imports and launches but does not run Scripts/pre_unreal_validate.py first.",
+      "disposition": "TRACKED_ACTION",
+      "linked_requirements": [
+        "REQ-QA-001",
+        "REQ-CI-001",
+        "REQ-GOV-001"
+      ],
+      "linked_work": [
+        "WORK-QA-001"
+      ],
+      "next_action": "Add a robust local preflight path using the project's proven Python-resolution strategy before the one-click build/share flow."
+    },
+    {
+      "id": "EXT-REV-2026-09-20-004",
+      "source": "Programmer review message supplied by owner",
+      "verification_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+      "verification_status": "VERIFIED_CURRENT_HEAD",
+      "claim": "Direct LoadObject concentration may become a chapter-transition hitch risk as production art grows.",
+      "verified_result": "FellowshipChapterWorldBuilder.cpp contains 63 direct LoadObject<UStaticMesh> calls and ShirePrototypeWorldBuilder.cpp contains 55. The existing deep audit already records this as construction-time, not per-frame, technical risk.",
+      "disposition": "TRACKED_RISK",
+      "linked_requirements": [
+        "REQ-AUDIT-001",
+        "REQ-PERF-001"
+      ],
+      "linked_work": [
+        "WORK-WORLD-001",
+        "WORK-WORLD-003",
+        "WORK-QA-001"
+      ],
+      "next_action": "Measure real chapter-transition hitch/memory behavior on target hardware before staged migration of justified asset banks to soft/async preload."
+    },
+    {
+      "id": "EXT-REV-2026-09-20-005",
+      "source": "Programmer review message supplied by owner",
+      "verification_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+      "verification_status": "VERIFIED_CURRENT_HEAD",
+      "claim": "Seven current OBJ assets contain triangulation-risk faces that should be cleaned before the next production import wave.",
+      "verified_result": {
+        "SourceAssets/Production/Characters/Frodo/SM_Frodo_Sword.obj": 24,
+        "SourceAssets/Production/Characters/Frodo/SM_Hobbit_Foot.obj": 36,
+        "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Beard.obj": 32,
+        "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Boot.obj": 36,
+        "SourceAssets/Production/Characters/Hobbit/SM_Hobbit_Hair.obj": 40,
+        "SourceAssets/Production/Characters/Hobbit/SM_Hobbit_Head.obj": 40,
+        "SourceAssets/Production/World/Shire/SM_ShTreeCanopy.obj": 96
+      },
+      "disposition": "TRACKED_RISK",
+      "linked_requirements": [
+        "REQ-CHAR-004",
+        "REQ-QA-001",
+        "REQ-PROD-006"
+      ],
+      "linked_work": [
+        "WORK-CHAR-004",
+        "WORK-WORLD-003",
+        "WORK-QA-001"
+      ],
+      "next_action": "Re-triangulate/clean these sources before the next affected import wave, then rerun asset_quality_audit.py. These are warnings, not current structural import errors."
+    },
+    {
+      "id": "EXT-REV-2026-09-20-006",
+      "source": "Programmer review plus current workflow inspection",
+      "verification_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
+      "verification_status": "VERIFIED_CURRENT_HEAD",
+      "claim": "A push-triggered CI workflow does not by itself prevent a failing commit from reaching develop.",
+      "verified_result": "Pre-Unreal and Unreal workflows run on pushes to develop, while REQ-CI-001 already records that develop/main branch protection or required-check rules are not enabled.",
+      "disposition": "TRACKED_ACTION",
+      "linked_requirements": [
+        "REQ-CI-001",
+        "REQ-GOV-001"
+      ],
+      "linked_work": [
+        "WORK-QA-001",
+        "WORK-EXEC-001"
+      ],
+      "next_action": "Keep branch protection/required status checks as a governance-hardening item; until enabled, treat failed exact-head CI as blocking acceptance even though the commit already exists on develop."
+    }
+  ]
 }
