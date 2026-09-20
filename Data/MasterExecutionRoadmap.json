@@ -32,7 +32,8 @@
       "status": "ACTIVE_RED_REPAIR",
       "artifact": "Data/DeepProjectAudit.json",
       "rule": "Critical exact-head failures block unrelated expansion; audit/repair continues until green."
-    }
+    },
+    "source_library": "Sources 01-11 + FOTR/TTT/ROTK screenplays + Tolkien full LOTR volume registered; Part III is no longer blocked by missing screenplay, only by normal scene-level production verification."
   },
   "bundles": [
     {
@@ -293,8 +294,8 @@
     {
       "id": "B6_PART3_SOURCE_VERIFIED_PRODUCTION",
       "rank": 6,
-      "status": "SOURCE_VERIFICATION_REQUIRED",
-      "goal": "Open Return of the King production only after scene-level film/script verification is recorded.",
+      "status": "QUEUED_AFTER_PART2_WITH_TRILOGY_SCREENPLAY_AUTHORITY_AVAILABLE",
+      "goal": "Open Return of the King production only after scene-level verification against the supplied ROTK screenplay/film and Tolkien cross-checks where appropriate.",
       "requirement_ids": [
         "REQ-VISION-001",
         "REQ-ENSEMBLE-001",
@@ -314,10 +315,12 @@
         "Paths of the Dead",
         "Cirith Ungol/Mordor",
         "Black Gate/Mount Doom",
-        "coronation/Shire/Grey Havens"
+        "coronation/Shire/Grey Havens",
+        "scene-level ROTK screenplay provenance before each Part III runtime package"
       ],
       "exit_evidence": [
-        "SOURCE_VERIFIED_PART3",
+        "ROTK_SCREENPLAY_REGISTERED",
+        "SCENE_LEVEL_SOURCE_VERIFIED_PART3",
         "PART3_RUNTIME_GATES"
       ]
     }
