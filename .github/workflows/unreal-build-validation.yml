@@ -65,6 +65,15 @@ jobs:
           if errorlevel 1 exit /b 22
           echo Runner bootstrap succeeded.
 
+      - name: Clear stale Git checkout locks
+        shell: cmd
+        run: |
+          @echo off
+          cd /d "%GITHUB_WORKSPACE%"
+          if exist ".git\index.lock" del /F /Q ".git\index.lock"
+          if exist ".git\shallow.lock" del /F /Q ".git\shallow.lock"
+          echo Stale Git checkout locks cleared.
+
       - name: Checkout exact PR head
         uses: actions/checkout@v4
         with:
