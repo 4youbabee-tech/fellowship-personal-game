@@ -2975,13 +2975,13 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "Deep exact-head audit after the owner requested future validation to catch test-harness defects as well as game defects.",
+    "reason": "Exact-head warning identity rerun isolated the remaining red gate to unsaved world-material packages.",
     "summary": [
-      "Exact head c023a735e3e390b8d591e1f6df9d07aeaa054754 passed Pre-Unreal #450.",
-      "Unreal Build Validation #285 passed MSVC probe, UE4.27.2 C++ build, production import, Python discovery, playable startup, P1C01-P1C08 chapter audits, and the route/story/state audit including the real disk-save roundtrip.",
-      "The only failing step was warning-debt aggregation: raw repeated log occurrences inflated tangent/binormal totals, while the world-package debt also exceeded its ceiling.",
-      "Warning-debt accounting is being corrected to count unique mesh/package defect identities and print the exact identities so the next repair wave is evidence-driven rather than threshold-driven.",
-      "Production expansion remains subordinate to the exact-head green chain; rendered/PIE visual acceptance and target-device performance are still separate human/device gates."
+      "Head c4fe8893e453d7eed80920e886bbfd40f4805d0d passed Pre-Unreal #451.",
+      "Unreal Build Validation #286 passed MSVC probe, UE4.27.2 compile, production import, Python resolution, startup, P1C01-P1C08 and route/story/state disk roundtrip.",
+      "Identity-based warning accounting reduced duplicated tangent debt to 50 unique meshes and nearly-zero-binormal debt to 53 unique meshes; both are real art debt but below the current regression ceiling.",
+      "The only failing exact-head gate is 78 unique missing /Game/Production/World material packages versus ceiling 71.",
+      "Importer repair now recovers unresolved material bindings and sweeps authored-material destination folders through AssetRegistry so in-memory OBJ materials are explicitly saved before runtime reload."
     ]
   },
   "development_mode": {
@@ -3018,7 +3018,7 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "DEEP_EXACT_HEAD_AUDIT_WARNING_DEBT_THEN_VISUAL_PRODUCTION",
+  "current_focus": "EXACT_HEAD_WORLD_MATERIAL_PERSISTENCE_REPAIR",
   "immediate_next_large_actions": [
     "Keep newest exact head in the UE4.27 compile/import/startup/chapter/state repair loop until green.",
     "Validate the new bounded hero/threat camera framing on the real engine without claiming final cinematics.",
@@ -3028,34 +3028,33 @@
     "Keep production atlas, visual pass, readiness gate and governor synchronized."
   ],
   "session_handoff": {
-    "source_head": "c023a735e3e390b8d591e1f6df9d07aeaa054754",
+    "source_head": "c4fe8893e453d7eed80920e886bbfd40f4805d0d",
     "pull_request": 53,
     "branch": "work/automation-first-runtime-observation",
-    "evidence_run": "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/35500732914",
+    "evidence_run": "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/35502458334",
     "verified": {
-      "pre_unreal": "PASS #450",
-      "msvc_probe": "PASS #285",
-      "ue4_compile": "PASS #285",
-      "production_import": "PASS #285",
-      "python_resolution": "PASS #285",
-      "startup": "PASS #285",
-      "chapter_audit": "PASS #285 P1C01-P1C08",
-      "state_audit": "PASS #285 including CI disk save/load roundtrip"
+      "pre_unreal": "PASS #451",
+      "msvc_probe": "PASS #286",
+      "ue4_compile": "PASS #286",
+      "production_import": "PASS #286",
+      "python_resolution": "PASS #286",
+      "startup": "PASS #286",
+      "chapter_audit": "PASS #286 P1C01-P1C08",
+      "state_audit": "PASS #286 including CI disk save/load roundtrip"
     },
     "failing": {
-      "warning_guard": "FAIL #285: repeated import warnings were counted by occurrence; world package debt also exceeded baseline"
+      "warning_guard": "FAIL #286 only: 78 unique missing world material packages > ceiling 71"
     },
-    "not_yet_proven": [
-      "warning-debt clean exact head after identity-based recount and repair",
-      "chapter-specific rendered/PIE evidence",
-      "target-device FPS/hitch/memory",
-      "human visual and pacing acceptance"
-    ],
+    "measured_debt": {
+      "degenerate_tangent_meshes": 50,
+      "nearly_zero_binormal_meshes": 53,
+      "missing_world_material_packages": 78
+    },
     "next_actions": [
-      "Rerun exact head with identity-based warning accounting and capture every failing world package path.",
-      "Repair the concrete geometry/material/import debt without raising thresholds to hide regressions.",
-      "After the full exact-head chain is green, resume the large visible world/character/encounter production wave."
+      "Run the material-persistence repair through compile/import/startup/eight chapters/state/warning guard.",
+      "If the package count reaches zero or a smaller concrete set, repair the remaining identities rather than raising the ceiling.",
+      "After the full exact-head chain is green, continue visible Moria/Amon Hen/character production while separately paying down the 50/53 geometry tangent debt."
     ],
-    "scope_rule": "Machine gates prove technical regression coverage only. They never promote visual, performance or Production 100 acceptance without the required evidence."
+    "scope_rule": "Machine evidence does not replace rendered PIE/device/human acceptance."
   }
 }

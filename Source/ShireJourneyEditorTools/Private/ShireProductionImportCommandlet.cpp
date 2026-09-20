@@ -1,6 +1,7 @@
 #include "ShireProductionImportCommandlet.h"
 
 #include "AssetImportTask.h"
+#include "AssetRegistryModule.h"
 #include "AssetToolsModule.h"
 #include "FileHelpers.h"
 #include "Factories/FbxImportUI.h"
@@ -61,6 +62,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     FAssetToolsModule& AssetTools = FModuleManager::LoadModuleChecked<FAssetToolsModule>(TEXT("AssetTools"));
     int32 Failed = 0;
     TArray<UPackage*> ImportedMaterialPackages;
+    TSet<FString> AuthoredMaterialDestinationPaths;
+    int32 RecoveredMaterialBindings = 0;
 
     for (const FString& Filename : SourceFiles)
     {
@@ -127,6 +130,10 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
 
                 bBareObjMaterialImportDisabled = !bHasMaterialLibrary;
                 bAuthoredMaterialImportForced = bHasMaterialLibrary;
+                if (bHasMaterialLibrary)
+                {
+                    AuthoredMaterialDestinationPaths.Add(DestinationPath);
+                }
             }
         }
 
@@ -146,9 +153,30 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             // flagging those secondary packages for persistence. Mark every real
             // imported material package dirty so the final SaveDirtyPackages pass writes
             // the mesh and its material dependencies together.
-            for (const FStaticMaterial& StaticMaterial : ImportedMesh->StaticMaterials)
+            for (FStaticMaterial& StaticMaterial : ImportedMesh->StaticMaterials)
             {
                 UMaterialInterface* Material = StaticMaterial.MaterialInterface;
+
+                // UE4.27 OBJ import can serialize the material package path into the
+                // mesh while leaving MaterialInterface unresolved in unattended mode.
+                // Recover the material object by the imported slot name immediately,
+                // then save both sides of the reference in the same commandlet run.
+                if (!Material && bAuthoredMaterialImportForced && !StaticMaterial.MaterialSlotName.IsNone())
+                {
+                    const FString SlotName = StaticMaterial.MaterialSlotName.ToString();
+                    const FString CandidateObjectPath = FString::Printf(
+                        TEXT("%s/%s.%s"),
+                        *DestinationPath,
+                        *SlotName,
+                        *SlotName);
+                    Material = LoadObject<UMaterialInterface>(nullptr, *CandidateObjectPath);
+                    if (Material)
+                    {
+                        StaticMaterial.MaterialInterface = Material;
+                        ++RecoveredMaterialBindings;
+                    }
+                }
+
                 UPackage* Package = Material ? Material->GetOutermost() : nullptr;
                 if (Package && Package != GetTransientPackage())
                 {
@@ -193,6 +221,52 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         {
             UE_LOG(LogTemp, Display, TEXT("ShireProductionImport imported: %s"), *Filename);
         }
+    }
+
+    // Sweep authored-material destination folders through AssetRegistry as a second
+    // recovery path. Some UE4.27 OBJ factories register the material asset but do not
+    // return it through the import task or static-mesh material pointer during the same
+    // unattended import. Including in-memory assets here lets us mark and persist those
+    // packages before any startup/chapter audit reloads the mesh from disk.
+    if (AuthoredMaterialDestinationPaths.Num() > 0)
+    {
+        FAssetRegistryModule& AssetRegistryModule =
+            FModuleManager::LoadModuleChecked<FAssetRegistryModule>(TEXT("AssetRegistry"));
+        int32 RegistryMaterialAssets = 0;
+
+        for (const FString& DestinationPath : AuthoredMaterialDestinationPaths)
+        {
+            TArray<FAssetData> Assets;
+            AssetRegistryModule.Get().GetAssetsByPath(
+                FName(*DestinationPath),
+                Assets,
+                false, // bRecursive
+                false  // bIncludeOnlyOnDiskAssets
+            );
+
+            for (const FAssetData& AssetData : Assets)
+            {
+                if (UMaterialInterface* Material = Cast<UMaterialInterface>(AssetData.GetAsset()))
+                {
+                    UPackage* Package = Material->GetOutermost();
+                    if (Package && Package != GetTransientPackage())
+                    {
+                        Package->MarkPackageDirty();
+                        ImportedMaterialPackages.AddUnique(Package);
+                        ++RegistryMaterialAssets;
+                    }
+                }
+            }
+        }
+
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireProductionImport material registry recovery: folders=%d assets=%d bindings=%d packages=%d"),
+            AuthoredMaterialDestinationPaths.Num(),
+            RegistryMaterialAssets,
+            RecoveredMaterialBindings,
+            ImportedMaterialPackages.Num());
     }
 
     // OBJ import may create secondary material packages that UE4.27 does not

@@ -4424,6 +4424,23 @@ pg99_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
 if pg99_visual.get("threat_material_palettes", {}).get("status") != "SOURCE_AUTHORED_PENDING_ENGINE_IMPORT_PROOF":
     fail("PG-099 authored threat material proof boundary changed")
 
+# PG-100: unattended production import must persist authored material packages.
+pg100_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+pg100_build = read(ROOT / "Source" / "ShireJourneyEditorTools" / "ShireJourneyEditorTools.Build.cs")
+for pg100_symbol in [
+    "AuthoredMaterialDestinationPaths",
+    "RecoveredMaterialBindings",
+    "FAssetRegistryModule",
+    "GetAssetsByPath",
+    "ImportedMaterialPackages.AddUnique",
+    "PromptForCheckoutAndSave",
+    "material registry recovery",
+]:
+    if pg100_symbol not in pg100_importer:
+        fail(f"PG-100 material persistence safeguard missing: {pg100_symbol}")
+if '"AssetRegistry"' not in pg100_build:
+    fail("PG-100 ShireJourneyEditorTools must depend on AssetRegistry")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

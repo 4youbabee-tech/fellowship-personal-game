@@ -34,14 +34,14 @@
   },
   "exact_head_evidence": {
     "accepted_sha": null,
-    "candidate_sha": "c023a735e3e390b8d591e1f6df9d07aeaa054754",
-    "pre_unreal": "PASS #450",
-    "ue4_compile": "PASS #285",
-    "production_import": "PASS #285",
-    "startup": "PASS #285",
-    "chapter_audit": "PASS #285 P1C01-P1C08",
-    "state_audit": "PASS #285 real CI disk-save roundtrip",
-    "warning_guard": "FAIL #285 pending identity-based recount and concrete world-package repair",
+    "candidate_sha": "c4fe8893e453d7eed80920e886bbfd40f4805d0d",
+    "pre_unreal": "PASS #451",
+    "ue4_compile": "PASS #286",
+    "production_import": "PASS #286",
+    "startup": "PASS #286",
+    "chapter_audit": "PASS #286 P1C01-P1C08",
+    "state_audit": "PASS #286 real CI disk-save roundtrip",
+    "warning_guard": "FAIL #286: 78 unique missing world material packages; tangent/binormal unique debt 50/53",
     "device_profile": null,
     "visual_acceptance": null,
     "pacing_acceptance": null
@@ -204,7 +204,8 @@
     }
   ],
   "hard_blockers_to_100": [
-    "Newest exact head passes compile/import/startup/eight chapters/state roundtrip but is not green through the warning-debt gate.",
+    "Newest exact head passes compile/import/startup/eight chapters/state roundtrip but still fails world-material package persistence in the warning gate.",
+    "Fifty meshes still emit degenerate-tangent warnings and 53 emit nearly-zero-binormal warnings; these remain art-quality debt even though identity-based counting avoids duplicate-log inflation.",
     "Most OBJ assets remain production foundations: final normals, UVs, smoothing/tangent quality and triangulation cleanup are incomplete.",
     "Hero skeletal rigs, final locomotion/action animation, facial/lip-sync, and cloth/hair production remain incomplete.",
     "Project-owned Watcher/Balrog/Lurtz foundations and film-locked runtime contracts exist, but final rigs, materials, VFX/audio, Lurtz duel production and human encounter acceptance remain incomplete.",
