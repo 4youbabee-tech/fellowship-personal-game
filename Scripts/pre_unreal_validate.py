@@ -3275,8 +3275,8 @@ for pg109_name, pg109_limits in pg109_specs.items():
         fail(f"PG-109 hero geometry structural regression: {pg109_name} counts={pg109_counts} limits={pg109_limits}")
 
 pg109_matrix = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
-if pg109_matrix.get("geometry_refinement_wave", {}).get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
-    fail("PG-109 hero geometry proof boundary changed")
+if pg109_matrix.get("geometry_refinement_wave", {}).get("status") != "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE":
+    fail("PG-109 hero geometry must remain engine-proven while rendered acceptance is pending")
 pg109_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
 pg109_npch = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.h")
 for pg109_symbol in [
