@@ -34,16 +34,85 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\bootstrap_windows_runner.ps1"
-          if errorlevel 1 exit /b %ERRORLEVEL%
+          setlocal EnableExtensions
+          where git.exe >nul 2>&1
+          if errorlevel 1 (
+            if exist "C:\Program Files\Git\cmd\git.exe" (
+              set "PATH=C:\Program Files\Git\cmd;C:\Program Files\Git\mingw64\bin;%PATH%"
+              >>"%GITHUB_PATH%" echo C:\Program Files\Git\cmd
+              >>"%GITHUB_PATH%" echo C:\Program Files\Git\mingw64\bin
+            ) else if exist "C:\Program Files (x86)\Git\cmd\git.exe" (
+              set "PATH=C:\Program Files (x86)\Git\cmd;C:\Program Files (x86)\Git\mingw64\bin;%PATH%"
+              >>"%GITHUB_PATH%" echo C:\Program Files (x86)\Git\cmd
+              >>"%GITHUB_PATH%" echo C:\Program Files (x86)\Git\mingw64\bin
+            )
+          )
+          where git.exe >nul 2>&1
+          if errorlevel 1 (
+            set "MGROOT=%RUNNER_TEMP%\mingit-2.55.0.5"
+            set "MGZIP=%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip"
+            if not exist "%RUNNER_TEMP%\mingit-2.55.0.5\cmd\git.exe" (
+              if exist "%RUNNER_TEMP%\mingit-2.55.0.5" rmdir /S /Q "%RUNNER_TEMP%\mingit-2.55.0.5"
+              if exist "%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip" del /F /Q "%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip"
+              curl.exe -L --retry 3 --retry-delay 3 -o "%RUNNER_TEMP%\MinGit-2.55.0.5-64-bit.zip" "https://github.com/git-for-windows/git/releases/download/v2.55.0.windows.5/MinGit-2.55.0.5-64-bit.zip"
+              if errorlevel 1 exit /b 20
+              powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -LiteralPath $env:RUNNER_TEMP+'\MinGit-2.55.0.5-64-bit.zip' -DestinationPath $env:RUNNER_TEMP+'\mingit-2.55.0.5' -Force"
+              if errorlevel 1 exit /b 21
+            )
+            set "PATH=%RUNNER_TEMP%\mingit-2.55.0.5\cmd;%RUNNER_TEMP%\mingit-2.55.0.5\mingw64\bin;%PATH%"
+            >>"%GITHUB_PATH%" echo %RUNNER_TEMP%\mingit-2.55.0.5\cmd
+            >>"%GITHUB_PATH%" echo %RUNNER_TEMP%\mingit-2.55.0.5\mingw64\bin
+          )
+          where git.exe
+          if errorlevel 1 exit /b 22
+          git --version
+          if errorlevel 1 exit /b 22
+          echo Runner bootstrap succeeded.
+
       - name: Checkout exact PR head
         shell: cmd
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           @echo off
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\checkout_exact_pr_head.ps1"
-          if errorlevel 1 exit /b %ERRORLEVEL%
+          setlocal EnableExtensions EnableDelayedExpansion
+          cd /d "%GITHUB_WORKSPACE%"
+          if not exist ".git" (
+            git init
+            if errorlevel 1 exit /b 70
+          )
+          del /F /Q ".git\index.lock" 2>nul
+          del /F /Q ".git\shallow.lock" 2>nul
+          set "REPO_URL=https://x-access-token:%GH_TOKEN%@github.com/%GITHUB_REPOSITORY%.git"
+          git remote get-url origin >nul 2>&1
+          if errorlevel 1 (
+            git remote add origin "!REPO_URL!"
+          ) else (
+            git remote set-url origin "!REPO_URL!"
+          )
+          if errorlevel 1 exit /b 71
+
+          set "FETCHED=0"
+          for /L %%A in (1,1,7) do (
+            if "!FETCHED!"=="0" (
+              echo Fetching exact PR head attempt %%A of 7...
+              git fetch --no-tags --prune --depth=1 origin %TARGET_SHA%
+              if not errorlevel 1 (
+                set "FETCHED=1"
+              ) else if not "%%A"=="7" (
+                echo Fetch failed; retrying in 5 seconds.
+                powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 5"
+              )
+            )
+          )
+          if "!FETCHED!"=="0" exit /b 72
+
+          git checkout -f FETCH_HEAD
+          if errorlevel 1 exit /b 73
+          git reset --hard %TARGET_SHA%
+          if errorlevel 1 exit /b 73
+          echo Exact-head checkout complete: %TARGET_SHA%.
+
       - name: Verify exact checkout
         shell: cmd
         run: |
