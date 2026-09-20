@@ -942,6 +942,10 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         UStaticMesh* Bench = LoadCP54(TEXT("/Game/Production/World/Rivendell/SM_RivGardenBench.SM_RivGardenBench"));
         UStaticMesh* Arch = LoadCP54(TEXT("/Game/Production/World/Rivendell/SM_RivLampArch.SM_RivLampArch"));
         UStaticMesh* Basin = LoadCP54(TEXT("/Game/Production/World/Rivendell/SM_RivWaterBasin.SM_RivWaterBasin"));
+        UStaticMesh* LibraryArcade = LoadCP54(TEXT("/Game/Production/World/Rivendell/SM_RivLibraryArcade.SM_RivLibraryArcade"));
+        UStaticMesh* SmithyRack = LoadCP54(TEXT("/Game/Production/World/Rivendell/SM_RivSmithyRack.SM_RivSmithyRack"));
+        UStaticMesh* CouncilSeat = LoadCP54(TEXT("/Game/Production/World/Rivendell/SM_RivCouncilSeat.SM_RivCouncilSeat"));
+        UStaticMesh* WaterChannel = LoadCP54(TEXT("/Game/Production/World/Rivendell/SM_RivWaterChannel.SM_RivWaterChannel"));
         const FVector Columns[] = { FVector(-1200,-580,0), FVector(-1200,580,0), FVector(-300,-580,0), FVector(-300,580,0), FVector(650,-580,0), FVector(650,580,0) };
         for (const FVector& P : Columns) SpawnProd(Column, P, FVector(0.72f), FRotator::ZeroRotator, false);
         const FVector Gardens[] = { FVector(-850,-300,0), FVector(-350,300,0), FVector(250,-300,0), FVector(850,300,0) };
@@ -949,6 +953,21 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnProd(Rail, FVector(-100,0,0), FVector(0.74f), FRotator(0,0,0), false);
         SpawnProd(Arch, FVector(1150,0,0), FVector(0.74f), FRotator(0,90,0), false);
         SpawnProd(Basin, FVector(520,420,0), FVector(0.66f), FRotator::ZeroRotator, false);
+
+        // Realm Detail V2: memory/craft/provisioning spaces from Sources 03/04/06.
+        SpawnProd(LibraryArcade, FVector(-1260,-610,0), FVector(0.68f), FRotator(0,90,0), false);
+        SpawnProd(LibraryArcade, FVector(-870,-610,0), FVector(0.64f), FRotator(0,90,0), false);
+        SpawnProd(SmithyRack, FVector(1580,-520,0), FVector(0.68f), FRotator(0,-12,0), false);
+        const FVector CouncilSeatsV2[] = {
+            FVector(1060,-250,20), FVector(1240,-285,20), FVector(1420,-250,20),
+            FVector(1060,250,20), FVector(1240,285,20), FVector(1420,250,20)
+        };
+        for (int32 I=0; I<UE_ARRAY_COUNT(CouncilSeatsV2); ++I)
+            SpawnProd(CouncilSeat, CouncilSeatsV2[I], FVector(0.52f), FRotator(0, I < 3 ? 25.0f : 155.0f, 0), false);
+        SpawnProd(WaterChannel, FVector(-120,680,-12), FVector(0.76f), FRotator::ZeroRotator, false);
+        SpawnProd(WaterChannel, FVector(720,680,-12), FVector(0.70f), FRotator::ZeroRotator, false);
+        SpawnInstancedScatter(RivendellLanternMesh, FVector(140,0,0), 18,
+            FVector(2050,850,0), FVector(0.42f), 47.0f, 2.0f, 2600, 6200);
     }
     else if (ChapterId == TEXT("P1C05"))
     {
@@ -990,12 +1009,29 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         UStaticMesh* Rack = LoadCP54(TEXT("/Game/Production/World/Lothlorien/SM_LorienBasketRack.SM_LorienBasketRack"));
         UStaticMesh* Bench = LoadCP54(TEXT("/Game/Production/World/Lothlorien/SM_LorienGoldenBench.SM_LorienGoldenBench"));
         UStaticMesh* Bridge = LoadCP54(TEXT("/Game/Production/World/Lothlorien/SM_LorienRootBridge.SM_LorienRootBridge"));
+        UStaticMesh* GiftTable = LoadCP54(TEXT("/Game/Production/World/Lothlorien/SM_LorienGiftTable.SM_LorienGiftTable"));
+        UStaticMesh* BoatSupplyRack = LoadCP54(TEXT("/Game/Production/World/Lothlorien/SM_LorienBoatSupplyRack.SM_LorienBoatSupplyRack"));
+        UStaticMesh* CanopyRail = LoadCP54(TEXT("/Game/Production/World/Lothlorien/SM_LorienCanopyRail.SM_LorienCanopyRail"));
+        UStaticMesh* RopeLampLine = LoadCP54(TEXT("/Game/Production/World/Lothlorien/SM_LorienRopeLampLine.SM_LorienRopeLampLine"));
         const FVector Platforms[] = { FVector(-1300,-650,0), FVector(-500,650,0), FVector(350,-650,0), FVector(1150,650,0) };
         for (int32 I=0; I<UE_ARRAY_COUNT(Platforms); ++I) { SpawnProd(Platform, Platforms[I], FVector(0.62f), FRotator::ZeroRotator, false); SpawnProd(Ladder, Platforms[I]+FVector(100,0,0), FVector(0.62f), FRotator(0,8,0), false); }
         SpawnScatter(Lamp, FVector(0,0,0), 10, FVector(1900,900,0), FVector(0.58f), 37.0f, 2.0f);
         SpawnProd(Rack, FVector(450,320,0), FVector(0.62f), FRotator(0,-12,0), false);
         SpawnProd(Bench, FVector(980,-320,0), FVector(0.64f), FRotator(0,10,0), false);
         SpawnProd(Bridge, FVector(-120,0,15), FVector(0.68f), FRotator(0,0,0), false);
+
+        // Realm Detail V2: gifts, craft and boat-preparation context; no loot-rarity framing.
+        SpawnProd(GiftTable, FVector(760,250,0), FVector(0.62f), FRotator(0,-18,0), false);
+        SpawnProd(GiftTable, FVector(1040,110,0), FVector(0.58f), FRotator(0,15,0), false);
+        SpawnProd(BoatSupplyRack, FVector(1760,-420,0), FVector(0.68f), FRotator(0,8,0), false);
+        SpawnProd(BoatSupplyRack, FVector(1940,380,0), FVector(0.64f), FRotator(0,-10,0), false);
+        const FVector RailsV2[] = {
+            FVector(-1260,-650,235), FVector(-460,650,260), FVector(390,-650,285), FVector(1190,650,235)
+        };
+        for (int32 I=0; I<UE_ARRAY_COUNT(RailsV2); ++I)
+            SpawnProd(CanopyRail, RailsV2[I], FVector(0.56f), FRotator(0, I%2==0 ? 0.0f : 180.0f,0), false);
+        SpawnProd(RopeLampLine, FVector(-720,0,220), FVector(0.74f), FRotator::ZeroRotator, false);
+        SpawnProd(RopeLampLine, FVector(720,0,235), FVector(0.74f), FRotator::ZeroRotator, false);
     }
     else if (ChapterId == TEXT("P1C08"))
     {
@@ -1005,6 +1041,10 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         UStaticMesh* Fishing = LoadCP54(TEXT("/Game/Production/World/Anduin/SM_AnduinFishingFrame.SM_AnduinFishingFrame"));
         UStaticMesh* Marker = LoadCP54(TEXT("/Game/Production/World/Anduin/SM_AnduinRiverMarker.SM_AnduinRiverMarker"));
         UStaticMesh* BoatRack = LoadCP54(TEXT("/Game/Production/World/Anduin/SM_AnduinBoatRack.SM_AnduinBoatRack"));
+        UStaticMesh* BrokenSeat = LoadCP54(TEXT("/Game/Production/World/Anduin/SM_AmonHenBrokenSeat.SM_AmonHenBrokenSeat"));
+        UStaticMesh* LookoutStone = LoadCP54(TEXT("/Game/Production/World/Anduin/SM_AmonHenLookoutStone.SM_AmonHenLookoutStone"));
+        UStaticMesh* SupplyBundle = LoadCP54(TEXT("/Game/Production/World/Anduin/SM_AnduinSupplyBundle.SM_AnduinSupplyBundle"));
+        UStaticMesh* OarRack = LoadCP54(TEXT("/Game/Production/World/Anduin/SM_AnduinOarRack.SM_AnduinOarRack"));
         SpawnProd(Pier, FVector(-1980,420,-5), FVector(0.68f), FRotator(0,90,0), false);
         SpawnProd(Pier, FVector(-1520,-430,-5), FVector(0.68f), FRotator(0,90,0), false);
         SpawnScatter(Cargo, FVector(-1450,0,0), 8, FVector(850,520,0), FVector(0.56f), 43.0f, 2.0f);
@@ -1012,6 +1052,16 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnProd(Fishing, FVector(-1050,-520,0), FVector(0.62f), FRotator(0,-8,0), false);
         SpawnScatter(Marker, FVector(650,0,0), 7, FVector(1300,900,0), FVector(0.58f), 31.0f, 3.0f);
         SpawnProd(BoatRack, FVector(-1700,650,0), FVector(0.62f), FRotator(0,2,0), false);
+
+        // Realm Detail V2: river preparation gives way to ancient, fractured Amon Hen.
+        SpawnProd(OarRack, FVector(-1850,-610,0), FVector(0.62f), FRotator(0,8,0), false);
+        SpawnProd(OarRack, FVector(-1260,610,0), FVector(0.58f), FRotator(0,188,0), false);
+        SpawnScatter(SupplyBundle, FVector(-1360,0,0), 10, FVector(920,520,0), FVector(0.52f), 37.0f, 2.0f);
+        SpawnProd(LookoutStone, FVector(1450,610,125), FVector(0.72f), FRotator(0,-24,0), false);
+        SpawnProd(LookoutStone, FVector(2070,-650,90), FVector(0.62f), FRotator(0,35,0), false);
+        SpawnScatter(BrokenSeat, FVector(1830,0,160), 10, FVector(720,620,0), FVector(0.48f), 43.0f, 3.0f);
+        SpawnInstancedScatter(BrokenSeat, FVector(2050,0,120), 18,
+            FVector(900,720,0), FVector(0.34f), 59.0f, 3.0f, 2200, 5200);
     }
 
 }
