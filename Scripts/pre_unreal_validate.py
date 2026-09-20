@@ -4437,7 +4437,8 @@ for pg100_symbol in [
     "FAssetRegistryModule",
     "GetAssetsByPath",
     "ImportedMaterialPackages.AddUnique",
-    "PromptForCheckoutAndSave",
+    "SaveMaterialPackagesDeterministically",
+    "UPackage::SavePackage",
     "material registry recovery",
 ]:
     if pg100_symbol not in pg100_importer:
