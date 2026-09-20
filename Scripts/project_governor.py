@@ -9,6 +9,7 @@ compile, PIE, target-device testing, or human pacing/visual review.
 from __future__ import annotations
 
 import json
+import re
 import sys
 import subprocess
 from pathlib import Path
@@ -39,6 +40,30 @@ req_ids: set[str] = set()
 allowed_status = set(governor.get("requirement_status_values", []))
 allowed_priority = set(governor.get("priority_values", []))
 
+SCHEMA_PATH = ROOT / "Data" / "ProjectGovernor.schema.json"
+if not SCHEMA_PATH.exists():
+    fail("Project Governor JSON schema is missing")
+else:
+    try:
+        schema_doc = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    except Exception as exc:
+        fail(f"Cannot parse Data/ProjectGovernor.schema.json: {exc}")
+        schema_doc = {}
+    if schema_doc and schema_doc.get("title") != "Fellowship Project Governor":
+        fail("Project Governor schema identity changed unexpectedly")
+
+requirement_contract = governor.get("requirement_contract", {})
+canonical_required_fields = [
+    "id", "title", "category", "priority", "status", "origin",
+    "intent", "acceptance_criteria", "dependencies",
+]
+if requirement_contract.get("schema_file") != "Data/ProjectGovernor.schema.json":
+    fail("Governor requirement_contract must point to Data/ProjectGovernor.schema.json")
+if requirement_contract.get("required_fields") != canonical_required_fields:
+    fail("Governor requirement_contract required_fields changed")
+if requirement_contract.get("authoritative_intent_field") != "intent":
+    fail("Governor requirement intent authority must remain intent")
+
 for index, item in enumerate(reqs, start=1):
     req_id = str(item.get("id") or "").strip()
     if not req_id:
@@ -51,10 +76,18 @@ for index, item in enumerate(reqs, start=1):
         fail(f"{req_id} has invalid status '{item.get('status')}'")
     if str(item.get("priority") or "") not in allowed_priority:
         fail(f"{req_id} has invalid priority '{item.get('priority')}'")
+    if not str(item.get("title") or "").strip():
+        fail(f"{req_id} has no title")
+    if not str(item.get("category") or "").strip():
+        fail(f"{req_id} has no category")
+    if not str(item.get("origin") or "").strip():
+        fail(f"{req_id} has no origin")
     if not str(item.get("intent") or "").strip():
         fail(f"{req_id} has no intent")
-    if not item.get("acceptance_criteria"):
+    if not isinstance(item.get("acceptance_criteria"), list) or not item.get("acceptance_criteria"):
         fail(f"{req_id} has no acceptance criteria")
+    if not isinstance(item.get("dependencies"), list):
+        fail(f"{req_id} dependencies must be a list")
 
 for item in reqs:
     req_id = str(item.get("id") or "").strip()
@@ -160,6 +193,10 @@ if not str(active_gate.get("id") or "").strip():
     fail("Governor has no active_gate id")
 if not active_gate.get("required_evidence"):
     fail("Governor active_gate has no required evidence")
+if active_gate.get("status") not in set(governor.get("quality_gate_status_values", [])):
+    fail("Governor active_gate has invalid status")
+if active_gate.get("status") == "FAILED" and active_gate.get("blocks_major_feature_expansion") is not True:
+    fail("A failed active gate must quarantine major feature expansion")
 
 if not governor.get("update_protocol"):
     fail("Governor has no update protocol")
@@ -170,6 +207,35 @@ for relative in governor.get("deprecated_secondary_authority_files", []):
 
 if not governor.get("worker_contract"):
     fail("Governor has no worker_contract")
+
+request_capture = governor.get("request_capture_contract", {})
+for field in ("important_request_definition","capture_rule","external_advice_rule","anti_loss_rule","coordination_rule"):
+    if not request_capture.get(field):
+        fail(f"Governor request_capture_contract missing {field}")
+
+work_ids = {str(item.get("id") or "").strip() for item in governor.get("work_queue", []) if str(item.get("id") or "").strip()}
+review_ids = set()
+for index, finding in enumerate(governor.get("external_review_findings", []), start=1):
+    finding_id = str(finding.get("id") or "").strip()
+    if not finding_id:
+        fail(f"External review finding {index} has no id")
+        continue
+    if finding_id in review_ids:
+        fail(f"Duplicate external review finding id: {finding_id}")
+    review_ids.add(finding_id)
+    if not re.fullmatch(r"[0-9a-f]{40}", str(finding.get("verification_sha") or "")):
+        fail(f"{finding_id} requires an exact verification SHA")
+    for field in ("source","verification_status","claim","disposition","next_action"):
+        if not str(finding.get(field) or "").strip():
+            fail(f"{finding_id} missing {field}")
+    if "verified_result" not in finding:
+        fail(f"{finding_id} missing verified_result")
+    for ref in finding.get("linked_requirements", []):
+        if ref not in req_ids:
+            fail(f"{finding_id} links unknown requirement {ref}")
+    for ref in finding.get("linked_work", []):
+        if ref not in work_ids:
+            fail(f"{finding_id} links unknown work item {ref}")
 
 living_npc_plan = ROOT / "Data" / "LivingNPCIntelligenceRoadmap.json"
 if not living_npc_plan.exists():
