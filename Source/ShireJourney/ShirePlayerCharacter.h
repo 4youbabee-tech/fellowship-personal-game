@@ -235,6 +235,11 @@ private:
     bool bWorldMapOpen = false;
     float PrototypeIdlePhase = 0.0f;
     FName PendingChapterCheckpointId = NAME_None;
+    bool bCheckpointSaveInFlight = false;
+    bool bCheckpointSaveShowHUD = false;
+    FName CheckpointSaveInFlightId = NAME_None;
+    FName QueuedCheckpointSaveId = NAME_None;
+    bool bQueuedCheckpointShowHUD = false;
     bool bStoryCameraCueActive = false;
     float StoryCameraCueRemaining = 0.0f;
     float StoryCameraTargetArmLength = 260.0f;
@@ -242,6 +247,7 @@ private:
     FVector StoryCameraTargetSocketOffset = FVector(0.0f, 28.0f, 10.0f);
 
     UShireSaveGame* CreateSaveSnapshot(FName CheckpointId, bool bCheckpointSnapshot) const;
+    void HandleCheckpointSaveComplete(const FString& SlotName, const int32 UserIndex, bool bSuccess);
     bool RestoreSaveSnapshot(UShireSaveGame* Save, const FText& SuccessMessage);
     bool TryApplyProductionRig(const FString& RigFolder);
     void ApplyPrototypeStyle();
