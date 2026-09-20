@@ -4819,6 +4819,85 @@ else:
 if "Bible 09 external-resource discovery" not in " ".join(pg107_authority.get("precedence", [])):
     fail("PG-108 Bible 09 authority boundary missing")
 
+# PG-112: mega material/world saturation wave must be large, source-controlled,
+# film-safe and explicit about its evidence boundary.
+pg112_plan_path = ROOT / "Data" / "MegaMaterialWorldWaveV1.json"
+if not pg112_plan_path.exists():
+    fail("PG-112 MegaMaterialWorldWaveV1.json missing")
+    pg112_plan = {}
+else:
+    try:
+        pg112_plan = json.loads(read(pg112_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-112 invalid MegaMaterialWorldWaveV1.json: {exc}")
+        pg112_plan = {}
+if pg112_plan.get("wave_id") != "MEGA_MATERIAL_WORLD_WAVE_V1":
+    fail("PG-112 mega-wave identity changed")
+if pg112_plan.get("status") != "ACTIVE_IMPLEMENTATION_PENDING_EXACT_HEAD_PROOF":
+    fail("PG-112 mega-wave status must remain pending exact-head proof")
+if "MegaMaterialWorldWaveV1.json" not in pg93_build:
+    fail("PG-112 mega-wave plan is not packaged")
+
+pg112_moria_assets = [
+    "SM_MoriaWallPanel", "SM_MoriaFloorSlab", "SM_MoriaArch", "SM_MoriaCeilingRib",
+    "SM_MoriaBridgePier", "SM_MoriaTombDais", "SM_MoriaReliefPanel", "SM_MoriaMineRail",
+    "SM_MoriaOreCrate", "SM_MoriaCollapsedBeam", "SM_MoriaTorchNiche",
+    "SM_MoriaChasmButtress", "SM_MoriaSideDoor", "SM_MoriaDebrisCluster",
+]
+pg112_moria_root = ROOT / "SourceAssets" / "Production" / "World" / "Moria"
+for pg112_asset in pg112_moria_assets:
+    pg112_path = pg112_moria_root / f"{pg112_asset}.obj"
+    if not pg112_path.exists():
+        fail(f"PG-112 Moria mega-wave asset missing: {pg112_asset}")
+    if pg112_asset not in pg93_builder:
+        fail(f"PG-112 Moria mega-wave asset not runtime-wired: {pg112_asset}")
+
+pg112_mtl_paths = [
+    ROOT / "SourceAssets" / "Production" / "World" / "Anduin" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Anduin" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Bree" / "BreeMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Bree" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Common" / "CommonLandscapeMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Common" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Lothlorien" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Lothlorien" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Moria" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Moria" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Rivendell" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Rivendell" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Road" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Road" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Shire" / "ShireMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Shire" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Weathertop" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Weathertop" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Isengard" / "RegionalMaterials.mtl",
+]
+for pg112_mtl in pg112_mtl_paths:
+    if not pg112_mtl.exists():
+        fail(f"PG-112 material palette missing: {pg112_mtl.relative_to(ROOT).as_posix()}")
+        continue
+    pg112_text = read(pg112_mtl)
+    if "newmtl " not in pg112_text or "Kd " not in pg112_text:
+        fail(f"PG-112 invalid material palette: {pg112_mtl.relative_to(ROOT).as_posix()}")
+    if "Pr " not in pg112_text or "Pm " not in pg112_text:
+        fail(f"PG-112 material response missing Pr/Pm: {pg112_mtl.relative_to(ROOT).as_posix()}")
+
+for pg112_story_symbol in [
+    'ConfigureThreat(\n            EFellowshipMythicThreatType::Watcher',
+    'EFellowshipEnemyType::CaveTroll',
+    'ConfigureThreat(\n            EFellowshipMythicThreatType::Balrog',
+    'TEXT("The Fellowship escapes the mountain, but Gandalf is gone.")',
+]:
+    if pg112_story_symbol not in pg93_builder:
+        fail(f"PG-112 Moria film-locked outcome marker missing: {pg112_story_symbol}")
+
+pg112_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg112_visual.get("current_wave", {}).get("id") != "MEGA_MATERIAL_WORLD_WAVE_V1":
+    fail("PG-112 visual production current wave is not the mega material/world wave")
+if pg112_visual.get("mega_material_world_wave", {}).get("status") != "SOURCE_IMPLEMENTATION_ACTIVE_PENDING_EXACT_HEAD_PROOF":
+    fail("PG-112 visual mega-wave evidence boundary changed")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
