@@ -4951,10 +4951,8 @@ for pg112_story_symbol in [
         fail(f"PG-112 Moria film-locked outcome marker missing: {pg112_story_symbol}")
 
 pg112_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
-if pg112_visual.get("current_wave", {}).get("id") != "MEGA_WORLD_MAGIC_LIFE_DETAIL_V1":
-    fail("PG-112 visual production current wave is not the active magic/life/detail wave")
 if pg112_visual.get("mega_material_world_wave", {}).get("status") != "SOURCE_IMPLEMENTATION_ACTIVE_PENDING_EXACT_HEAD_PROOF":
-    fail("PG-112 visual mega-wave evidence boundary changed")
+    fail("PG-112 visual mega-wave historical evidence boundary changed")
 
 # PG-114: dense decorative richness must use performance-aware instancing rather than actor spam.
 pg114_cluster_h = read(ROOT / "Source" / "ShireJourney" / "WorldDetailCluster.h")
@@ -4981,11 +4979,74 @@ for pg114_symbol in [
         fail(f"PG-114 instanced detail runtime wiring missing: {pg114_symbol}")
 
 pg114_dressing = json.loads(read(ROOT / "Data" / "WorldDressingPlan.json"))
-if pg114_dressing.get("status") != "V10_INSTANCED_DETAIL_AND_ENVIRONMENTAL_LIFE_PENDING_ENGINE_PROOF":
-    fail("PG-114 V10 world-dressing proof boundary changed")
+if pg114_dressing.get("status") not in {
+    "V10_INSTANCED_DETAIL_AND_ENVIRONMENTAL_LIFE_PENDING_ENGINE_PROOF",
+    "V11_REALM_SPECIFIC_DETAIL_PENDING_ENGINE_PROOF",
+}:
+    fail("PG-114 world-dressing proof boundary changed")
 pg114_budget = json.loads(read(ROOT / "Data" / "AssetPerformanceBudget.json"))
 if pg114_budget.get("runtime_detail_policy", {}).get("instanced_micro_detail", {}).get("status") != "IMPLEMENTED_PENDING_MEASUREMENT":
     fail("PG-114 instanced-detail performance evidence boundary missing")
+
+# PG-115: realm-specific V2 must remain source-grounded, runtime-wired and canon-safe.
+pg115_plan_path = ROOT / "Data" / "RealmDetailSaturationV2.json"
+if not pg115_plan_path.exists():
+    fail("PG-115 RealmDetailSaturationV2.json missing")
+    pg115_plan = {}
+else:
+    try:
+        pg115_plan = json.loads(read(pg115_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-115 invalid RealmDetailSaturationV2.json: {exc}")
+        pg115_plan = {}
+
+if pg115_plan.get("wave_id") != "REALM_DETAIL_SATURATION_V2":
+    fail("PG-115 realm-detail wave identity changed")
+if pg115_plan.get("status") != "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF":
+    fail("PG-115 realm-detail proof boundary changed")
+if "RealmDetailSaturationV2.json" not in pg93_build:
+    fail("PG-115 realm-detail plan is not packaged")
+
+pg115_assets = {
+    "Rivendell": ["SM_RivLibraryArcade","SM_RivSmithyRack","SM_RivCouncilSeat","SM_RivWaterChannel"],
+    "Lothlorien": ["SM_LorienGiftTable","SM_LorienBoatSupplyRack","SM_LorienCanopyRail","SM_LorienRopeLampLine"],
+    "Anduin": ["SM_AmonHenBrokenSeat","SM_AmonHenLookoutStone","SM_AnduinSupplyBundle","SM_AnduinOarRack"],
+    "Isengard": ["SM_IsengardHoistFrame","SM_IsengardSlagCart","SM_IsengardTrenchGrate","SM_IsengardWaterGate"],
+}
+pg115_isengard = read(ROOT / "Source" / "ShireJourney" / "IsengardPrototypeWorldBuilder.cpp")
+for pg115_region, pg115_names in pg115_assets.items():
+    pg115_root = ROOT / "SourceAssets" / "Production" / "World" / pg115_region
+    for pg115_name in pg115_names:
+        pg115_asset_path = pg115_root / f"{pg115_name}.obj"
+        if not pg115_asset_path.exists():
+            fail(f"PG-115 realm-detail asset missing: {pg115_region}/{pg115_name}")
+        pg115_runtime = pg115_isengard if pg115_region == "Isengard" else pg93_builder
+        if pg115_name not in pg115_runtime:
+            fail(f"PG-115 realm-detail asset not runtime-wired: {pg115_region}/{pg115_name}")
+
+pg115_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg115_visual.get("current_wave", {}).get("id") != "REALM_DETAIL_SATURATION_V2":
+    fail("PG-115 visual current wave is not REALM_DETAIL_SATURATION_V2")
+if pg115_visual.get("realm_detail_saturation_v2", {}).get("added_project_owned_obj_assets") != 16:
+    fail("PG-115 visual plan must retain 16 new project-owned OBJ assets")
+
+pg115_bank = json.loads(read(ROOT / "Data" / "WorldResourceBankCP54.json"))
+if pg115_bank.get("source_asset_count", 0) < 105:
+    fail("PG-115 world resource bank did not register V2 source assets")
+
+pg115_inventory = json.loads(read(ROOT / "Data" / "ProjectOwnedProductionAssetInventory.json"))
+if pg115_inventory.get("totals", {}).get("obj_files", 0) < 334:
+    fail("PG-115 project-owned OBJ inventory did not register V2 assets")
+
+# Film outcomes are immutable while environmental detail grows.
+for pg115_story_symbol in [
+    'TEXT("Boromir turns back toward Merry and Pippin and fights to protect them.")',
+    'TEXT("Merry and Pippin are taken while Aragorn turns to Boromir.")',
+    'TEXT("Frodo chooses the eastern shore. Sam refuses to let him go alone.")',
+    "EFellowshipEnemyType::Lurtz",
+]:
+    if pg115_story_symbol not in pg93_builder:
+        fail(f"PG-115 Amon Hen locked-outcome marker missing: {pg115_story_symbol}")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
