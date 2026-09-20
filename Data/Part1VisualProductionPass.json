@@ -5,7 +5,11 @@
   "source_basis": [
     "Owner Source Pack Master",
     "Owner Battles, Weapons, Armies & Production Design Bible",
-    "Fellowship film-continuity project contracts"
+    "Fellowship film-continuity project contracts",
+    "03 World, Locations & Map Bible",
+    "05 Battles, Weapons, Armies & Creatures Bible",
+    "07 Mission & Chapter Implementation Matrix",
+    "08 Visual Reference Bible"
   ],
   "authority_rule": "Film chronology and outcomes remain immutable. Visual staging, optional traversal texture and encounter pressure may enrich presentation but cannot create alternate canon outcomes.",
   "target_profile": {
@@ -21,7 +25,11 @@
     "Use short story-beat camera moments only at major landmarks; do not turn every transition into a cutscene.",
     "Use production meshes when present and retain deterministic fallbacks.",
     "Measure target-device cost before raising asset density or texture resolution.",
-    "Watcher, Balrog and Lurtz are film-locked presentation threats; gameplay cannot rewrite their required outcomes."
+    "Watcher, Balrog and Lurtz are film-locked presentation threats; gameplay cannot rewrite their required outcomes.",
+    "Primary routes must remain readable through landmark framing, architecture, light and terrain before UI direction.",
+    "Every explorable branch must serve story, preparation/resource, relationship/lore or meaningful traversal.",
+    "Mission logic owns state; cinematic and camera systems only present already-authoritative state.",
+    "Battle scalability keeps full AI inside the hero bubble and avoids adding unnecessary full-simulation background combatants."
   ],
   "chapters": [
     {
@@ -79,7 +87,12 @@
         "Watcher threshold",
         "Bridge/Balrog wall"
       ],
-      "priority": "human-scale contrast against huge dwarf geometry; sparse torch/fire against deep darkness"
+      "priority": "human-scale contrast against huge dwarf geometry; sparse torch/fire against deep darkness",
+      "runtime_wave_v5": [
+        "bounded local fire pools reinforce player-scale readability in monumental darkness",
+        "production mine carts reinforce the mine/city identity without changing traversal anchors",
+        "existing Watcher -> tomb -> Orc/Troll -> Balrog order remains untouched"
+      ]
     },
     {
       "id": "P1C07",
@@ -99,7 +112,12 @@
         "Parth Galen camp",
         "Amon Hen broken woodland battle"
       ],
-      "priority": "river scale first, then dark Uruk silhouettes against green/brown woodland and scattered ruins"
+      "priority": "river scale first, then dark Uruk silhouettes against green/brown woodland and scattered ruins",
+      "runtime_wave_v5": [
+        "explicit Anduin/Amon Hen daylight-sky-fog identity replaces generic atmosphere defaults",
+        "production dock-pier dressing strengthens the river-to-camp handoff",
+        "non-colliding ruin/log composition separates battle lanes without adding extra full-AI enemies"
+      ]
     }
   ],
   "parallel_route": {
@@ -111,7 +129,9 @@
       "industrial exponential height fog",
       "three bounded warm furnace point lights",
       "production parapet slab dressing",
-      "prototype world labels hidden from the normal player view"
+      "prototype world labels hidden from the normal player view",
+      "secondary industrial pit/service ring using existing production assets",
+      "Orthanc base silhouette rhythm using production parapet slabs"
     ],
     "acceptance": "IMPLEMENTED_PENDING_UE4_BUILD_RENDER_AND_DEVICE_PROOF",
     "authored_material_palette": {
@@ -145,7 +165,11 @@
       "Lurtz production-foundation runtime pressure actor",
       "adaptive mythic-threat update rate",
       "source-asset triangle/source-byte reporting",
-      "short runtime framing treatments for selected hero and threat camera cues"
+      "short runtime framing treatments for selected hero and threat camera cues",
+      "source-bible registry integrated into OwnerSourceReferenceIndex",
+      "Moria mine-city dressing and bounded local light pools",
+      "explicit Anduin/Amon Hen atmosphere and dock-to-battle composition",
+      "Isengard secondary industrial ring and Orthanc base composition"
     ],
     "still_required": [
       "real UE4.27 build/import evidence",
@@ -208,5 +232,40 @@
         "BalrogWing"
       ]
     }
+  },
+  "bible_alignment": {
+    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "sources": [
+      "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+      "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+      "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+      "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1"
+    ],
+    "world_rules": [
+      "iconic silhouette first, gameplay readability second, micro-detail third",
+      "deterministic chapter-state variants",
+      "purposeful optional branches only",
+      "companion and traversal safety remains stronger than decoration"
+    ],
+    "battle_rules": [
+      "locked canonical outcomes stay immutable",
+      "phase architecture commits explicit state",
+      "full AI remains bounded to the hero bubble"
+    ],
+    "mission_rules": [
+      "logic owns state and cinematics present state",
+      "postconditions gate chapter progression",
+      "checkpoints bracket irreversible set pieces"
+    ]
+  },
+  "current_wave": {
+    "id": "BIBLE_DRIVEN_WORLD_COMPOSITION_V5",
+    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "focus": [
+      "P1C06 Moria",
+      "P1C08 Anduin/Amon Hen",
+      "GandalfParallel Isengard"
+    ],
+    "acceptance_rule": "Do not promote to visual/device acceptance from headless automation alone."
   }
 }
