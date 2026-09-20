@@ -4053,6 +4053,30 @@ for pg89_symbol in [
 if "if (bUsingSkeletalProductionRig)" not in pg89_cpp:
     fail("PG-089 modular animation does not yield to production skeletal rig")
 
+
+# PG-090: missing Isengard/Lurtz/Watcher/Balrog roots must remain present and non-final.
+for pg90_rel in [
+    "SourceAssets/Production/World/Isengard/SM_Isengard_OrthancCore.obj",
+    "SourceAssets/Production/World/Isengard/SM_Isengard_OrthancSpire.obj",
+    "SourceAssets/Production/Enemies/Lurtz/SM_Lurtz_Torso.obj",
+    "SourceAssets/Production/Enemies/Watcher/SM_Watcher_Core.obj",
+    "SourceAssets/Production/Enemies/Balrog/SM_Balrog_Torso.obj",
+]:
+    if not (ROOT / pg90_rel).exists():
+        fail(f"PG-090 production foundation missing: {pg90_rel}")
+pg90_isengard = read(ROOT / "Source" / "ShireJourney" / "IsengardPrototypeWorldBuilder.cpp")
+for pg90_symbol in ["SM_Isengard_OrthancCore","SM_Isengard_OrthancSpire","SM_Isengard_IndustrialPitRim","SM_Isengard_FurnaceStack","SM_Isengard_FelledTrunk"]:
+    if pg90_symbol not in pg90_isengard:
+        fail(f"PG-090 Isengard runtime production wiring missing: {pg90_symbol}")
+pg90_chars = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
+pg90_threats = {str(row.get("id") or ""): row for row in pg90_chars.get("threats", []) if isinstance(row, dict)}
+for pg90_id in ["LURTZ","WATCHER","BALROG"]:
+    pg90_row = pg90_threats.get(pg90_id)
+    if not pg90_row or not pg90_row.get("asset_root"):
+        fail(f"PG-090 threat foundation root missing: {pg90_id}")
+    if "PENDING" not in str(pg90_row.get("status") or ""):
+        fail(f"PG-090 threat foundation lost explicit pending-final status: {pg90_id}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

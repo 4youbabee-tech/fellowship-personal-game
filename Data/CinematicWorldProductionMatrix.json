@@ -332,10 +332,15 @@
       ],
       "production_gap": "production architecture/material identity and industry depth",
       "project_owned_asset_roots": [
+        "SourceAssets/Production/World/Isengard",
         "SourceAssets/Production/World/Common"
       ],
-      "production_stage": "COMMON_KIT_ONLY_DEDICATED_ISENGARD_PACK_PENDING",
-      "final_acceptance": "NOT_ACCEPTED"
+      "production_stage": "DEDICATED_ISENGARD_FOUNDATION_KIT_PRESENT_FINAL_ART_PENDING",
+      "final_acceptance": "NOT_ACCEPTED",
+      "production_assets": [
+        "project-owned Orthanc core/spire source meshes",
+        "project-owned industrial pit/furnace/felled-trunk source meshes"
+      ]
     }
   ],
   "optimization": [

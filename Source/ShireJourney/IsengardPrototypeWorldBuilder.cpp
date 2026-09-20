@@ -120,35 +120,64 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
             FVector(2.0f, 0.82f, 0.08f), FLinearColor(0.20f, 0.18f, 0.14f), FRotator::ZeroRotator, true);
     }
 
-    // Orthanc silhouette: tall black stone core with four rising fins.
-    SpawnShape(CubeMesh, FVector(900, 0, 520), FVector(3.0f, 3.0f, 5.2f),
-        FLinearColor(0.055f, 0.06f, 0.065f), FRotator::ZeroRotator, true);
-    for (int32 I = 0; I < 4; ++I)
+    UStaticMesh* OrthancCore = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_OrthancCore.SM_Isengard_OrthancCore"));
+    UStaticMesh* OrthancSpire = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_OrthancSpire.SM_Isengard_OrthancSpire"));
+    if (OrthancCore && OrthancSpire)
     {
-        const float Angle = I * 90.0f;
-        const float R = FMath::DegreesToRadians(Angle);
-        const FVector Offset(FMath::Cos(R) * 260.0f, FMath::Sin(R) * 260.0f, 0.0f);
-        SpawnShape(CubeMesh, FVector(900, 0, 700) + Offset, FVector(0.72f, 1.15f, 7.0f),
-            FLinearColor(0.035f, 0.04f, 0.045f), FRotator(0, Angle, 0), true);
+        SpawnShape(OrthancCore, FVector(900, 0, -75), FVector(1.0f),
+            FLinearColor(0.055f, 0.06f, 0.065f), FRotator::ZeroRotator, true);
+        for (int32 I = 0; I < 4; ++I)
+        {
+            const float Angle = I * 90.0f;
+            const float R = FMath::DegreesToRadians(Angle);
+            const FVector Offset(FMath::Cos(R) * 245.0f, FMath::Sin(R) * 245.0f, 0.0f);
+            SpawnShape(OrthancSpire, FVector(900, 0, 720) + Offset, FVector(1.0f),
+                FLinearColor(0.035f, 0.04f, 0.045f), FRotator(0, Angle, 0), true);
+        }
     }
-    SpawnShape(CubeMesh, FVector(900, 0, 1125), FVector(3.0f, 3.0f, 0.18f),
-        FLinearColor(0.07f, 0.07f, 0.075f), FRotator::ZeroRotator, true);
+    else
+    {
+        SpawnShape(CubeMesh, FVector(900, 0, 520), FVector(3.0f, 3.0f, 5.2f),
+            FLinearColor(0.055f, 0.06f, 0.065f), FRotator::ZeroRotator, true);
+        for (int32 I = 0; I < 4; ++I)
+        {
+            const float Angle = I * 90.0f;
+            const float R = FMath::DegreesToRadians(Angle);
+            const FVector Offset(FMath::Cos(R) * 260.0f, FMath::Sin(R) * 260.0f, 0.0f);
+            SpawnShape(CubeMesh, FVector(900, 0, 700) + Offset, FVector(0.72f, 1.15f, 7.0f),
+                FLinearColor(0.035f, 0.04f, 0.045f), FRotator(0, Angle, 0), true);
+        }
+        SpawnShape(CubeMesh, FVector(900, 0, 1125), FVector(3.0f, 3.0f, 0.18f),
+            FLinearColor(0.07f, 0.07f, 0.075f), FRotator::ZeroRotator, true);
+    }
     SpawnLabel(TEXT("Orthanc"), FVector(900, 0, 1450), FLinearColor(0.72f, 0.74f, 0.76f));
 
-    // Industry pits and felled forest. Cheap geometric silhouettes for now.
+    UStaticMesh* PitRim = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_IndustrialPitRim.SM_Isengard_IndustrialPitRim"));
+    UStaticMesh* FurnaceStack = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_FurnaceStack.SM_Isengard_FurnaceStack"));
+    UStaticMesh* FelledTrunk = LoadObject<UStaticMesh>(
+        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_FelledTrunk.SM_Isengard_FelledTrunk"));
     for (int32 I = 0; I < 8; ++I)
     {
         const FVector Pit(-200.0f + I * 260.0f, 720.0f + (I % 2) * 180.0f, 10.0f);
-        SpawnShape(CylinderMesh, Pit, FVector(0.72f, 0.72f, 0.12f),
+        SpawnShape(PitRim ? PitRim : CylinderMesh, Pit,
+            PitRim ? FVector(1.0f) : FVector(0.72f, 0.72f, 0.12f),
             FLinearColor(0.10f, 0.085f, 0.07f), FRotator::ZeroRotator, false);
-        SpawnShape(CylinderMesh, Pit + FVector(0, 0, 85), FVector(0.10f, 0.10f, 0.85f),
+        SpawnShape(FurnaceStack ? FurnaceStack : CylinderMesh, Pit + FVector(0, 0, 45),
+            FurnaceStack ? FVector(0.55f) : FVector(0.10f, 0.10f, 0.85f),
             FLinearColor(0.16f, 0.11f, 0.07f), FRotator::ZeroRotator, false);
     }
     for (int32 I = 0; I < 12; ++I)
     {
         const FVector Stump(-900.0f + I * 210.0f, -820.0f - 90.0f * (I % 3), 25.0f);
-        SpawnShape(CylinderMesh, Stump, FVector(0.16f, 0.16f, 0.25f),
-            FLinearColor(0.22f, 0.12f, 0.055f), FRotator::ZeroRotator, true);
+        SpawnShape(FelledTrunk ? FelledTrunk : CylinderMesh, Stump,
+            FelledTrunk ? FVector(0.55f) : FVector(0.16f, 0.16f, 0.25f),
+            FLinearColor(0.22f, 0.12f, 0.055f),
+            FelledTrunk ? FRotator(0.0f, I * 27.0f, 88.0f) : FRotator::ZeroRotator,
+            true);
     }
 
     // Raised path acts as the prototype rooftop/prison overlook.

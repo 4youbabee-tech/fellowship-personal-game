@@ -595,8 +595,8 @@
     },
     {
       "id": "LURTZ",
-      "status": "FINAL_HERO_ASSET_MISSING",
-      "asset_root": null,
+      "status": "PROJECT_OWNED_HERO_FOUNDATION_CREATED_FINAL_RIG_ANIMATION_PENDING",
+      "asset_root": "SourceAssets/Production/Enemies/Lurtz",
       "final_gaps": [
         "dedicated hero Uruk mesh",
         "film-scene identity variation",
@@ -606,8 +606,8 @@
     },
     {
       "id": "WATCHER",
-      "status": "FINAL_CREATURE_ASSET_MISSING",
-      "asset_root": null,
+      "status": "PROJECT_OWNED_CREATURE_FOUNDATION_CREATED_FINAL_RIG_VFX_PENDING",
+      "asset_root": "SourceAssets/Production/Enemies/Watcher",
       "final_gaps": [
         "creature mesh",
         "tentacle rig",
@@ -617,8 +617,8 @@
     },
     {
       "id": "BALROG",
-      "status": "FINAL_CREATURE_ASSET_MISSING",
-      "asset_root": null,
+      "status": "PROJECT_OWNED_CREATURE_FOUNDATION_CREATED_FINAL_RIG_VFX_PENDING",
+      "asset_root": "SourceAssets/Production/Enemies/Balrog",
       "final_gaps": [
         "hero creature mesh",
         "custom rig",

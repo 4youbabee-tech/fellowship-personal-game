@@ -192,7 +192,7 @@
     "Newest exact head is not yet green through the full UE4.27.2 evidence chain.",
     "Most OBJ assets lack final normals, UVs, and smoothing quality.",
     "Hero skeletal rigs, final locomotion/action animation, facial/lip-sync, and cloth/hair production remain incomplete.",
-    "Watcher, Balrog, and a dedicated Lurtz hero asset remain incomplete.",
+    "Project-owned Watcher, Balrog and Lurtz foundation meshes now exist, but final creature/hero rigs, animation, VFX, materials and encounter acceptance remain incomplete.",
     "Most regions still need final terrain, materials, vegetation, water, architecture, interiors, and visual acceptance.",
     "Target-device performance and human chapter-by-chapter pacing/visual acceptance remain mandatory."
   ],
