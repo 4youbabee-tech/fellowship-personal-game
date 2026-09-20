@@ -41,7 +41,10 @@
         "interact trace",
         "quest interaction",
         "side stories",
-        "context-aware named-character dialogue"
+        "context-aware named-character dialogue",
+        "ephemeral micro-event interaction markers",
+        "reward-free contextual work/traveler/market/social responses",
+        "danger-suppressed casual interactions"
       ]
     },
     {
@@ -120,7 +123,9 @@
         "fauna",
         "social activity",
         "party life",
-        "travel companionship"
+        "travel companionship",
+        "bounded player responses to ambient events",
+        "micro-event interaction objects destroyed with event lifetime"
       ]
     },
     {
@@ -179,7 +184,10 @@
         "19 contextual side activities with centralized story-window guards",
         "reusable multi-step observation/tracking/pattern/camp/timing/social challenge runtime",
         "direct crouch-gated STEALTH_LITE Quiet Feet activity",
-        "QUIET_STEP first-time progression source"
+        "QUIET_STEP first-time progression source",
+        "interactable environmental pattern puzzles",
+        "Rivendell map-table pattern puzzle",
+        "Moria relief pattern puzzle"
       ]
     },
     {
@@ -258,7 +266,9 @@
         "runtime observer",
         "chapter boots",
         "story/save roadmap",
-        "warning debt"
+        "warning debt",
+        "PG-083 environmental puzzle contract guard",
+        "PG-084 living-world interaction anti-canon/anti-farm guard"
       ]
     },
     {

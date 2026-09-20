@@ -141,11 +141,12 @@
         "Ambient residents now use role-specific activity props and low-cost work/social gestures: Shire baskets/satchels/mugs/crates, Bree goods/mugs, and Elven books/lanterns",
         "ALivingWorldDirector consumes Data/LivingWorldEventPlan.json and injects bounded disposable chapter-aware micro-events",
         "CP49 common terrain kit adds production hills/cliffs/river-bank/boulder silhouettes across Part I",
-        "CP55 adds project-owned bird/rabbit/butterfly fauna with bounded flight, hop and flutter movement through the existing LivingWorldDirector micro-event path"
+        "CP55 adds project-owned bird/rabbit/butterfly fauna with bounded flight, hop and flutter movement through the existing LivingWorldDirector micro-event path",
+        "LivingWorldDirector now spawns bounded reward-free player interaction markers for work, traveler, market and social micro-events when story danger is inactive.",
+        "Living-world interaction objects are ephemeral, chapter-bound and destroyed with their parent micro-event; they do not create persistent quest or save state."
       ],
       "missing_work": [
         "production-quality terrain/material/art replacement beyond current procedural detail",
-        "environment motion implementation beyond static/procedural proxies",
         "batch integration PIE/device/performance/visual review",
         "additional fauna variety beyond the CP55 bird/rabbit/butterfly set remains optional future polish"
       ],
@@ -1430,7 +1431,8 @@
         "B1 now includes actual player-life/progression runtime instead of plan-only modern-game axes.",
         "B1 now includes Chronicle/map knowledge UI, save continuity and contextual side-activity progression bridging.",
         "B1 now includes reusable traversal-challenge gameplay, not only proximity discovery triggers.",
-        "B1 side-play physicalization now covers 19 contextual activities with centralized film-window guards and a direct stealth source."
+        "B1 side-play physicalization now covers 19 contextual activities with centralized film-window guards and a direct stealth source.",
+        "B1 now includes a dedicated environmental puzzle runtime and bounded interactive living-world micro-events, both guarded against canon mutation and persistent reward farming."
       ],
       "missing_work": [
         "Get final PR #53 head through full UE4.27 validation.",
@@ -1575,10 +1577,12 @@
         "Contextual side-activity types now bridge into bounded progression XP when their linked first-time discovery completes; CAMP_PREPARATION feeds CAMPCRAFT and future STEALTH_LITE feeds QUIET_STEP.",
         "Shire Field Race and Moria Follow the Echo now require ordered three-gate traversal completion before their linked discovery/progression reward is granted.",
         "All current contextual side activities now have physical multi-step runtime representation through reusable ordered challenge actors, with centralized film-window gating.",
-        "SIDE_SHIRE_QUIET_FEET is the first direct STEALTH_LITE activity and awards QUIET_STEP progression only on first completion."
+        "SIDE_SHIRE_QUIET_FEET is the first direct STEALTH_LITE activity and awards QUIET_STEP progression only on first completion.",
+        "PATTERN_MATCH now has a dedicated interactable three-step environmental puzzle actor used by Rivendell map study and Moria relief study.",
+        "Environmental puzzle completion still passes through the centralized side-activity discovery window and cannot advance film anchors."
       ],
       "missing_work": [
-        "Deepen generic ordered-gate representations into richer observation/tracking/pattern/camp/social interactions where PIE proves the extra complexity improves play.",
+        "Deepen observation/tracking/camp/social families beyond ordered-gate representation where PIE proves the extra interaction improves play.",
         "PIE/device placement, pacing and readability review."
       ],
       "acceptance_criteria": [
@@ -1733,11 +1737,11 @@
         "C toggles an in-game Chronicle & Journey panel showing progression ranks, recent Chronicle entries and known map regions.",
         "First ordered traversal challenge mechanic is now implemented as a reusable three-gate runtime actor, replacing touch-to-discover for selected activities.",
         "Reusable side-activity challenge runtime now covers observation, tracking, pattern, camp, timing, social-memory and stealth-lite families across Part I.",
-        "Quiet Feet Through the Hedges gives QUIET_STEP a direct crouch-gated authored runtime source."
+        "Quiet Feet Through the Hedges gives QUIET_STEP a direct crouch-gated authored runtime source.",
+        "Dedicated environmental pattern-puzzle runtime replaces generic traversal representation for Rivendell map study and Moria relief study.",
+        "Living micro-events now expose optional bounded player responses without XP, supplies, relationship, story or canon rewards."
       ],
       "missing_work": [
-        "Implement first environmental-puzzle/traversal challenge mechanics beyond discovery triggers.",
-        "Expand world-event interaction from ambient observation into bounded optional player responses.",
         "Tune player-life/progression/Chronicle presentation from PIE/device evidence.",
         "Validate current exact head in UE4.27."
       ],
