@@ -4441,6 +4441,19 @@ for pg100_symbol in [
 if '"AssetRegistry"' not in pg100_build:
     fail("PG-100 ShireJourneyEditorTools must depend on AssetRegistry")
 
+# PG-101: authored MTL palettes must be materialized before OBJ import.
+pg101_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+for pg101_symbol in [
+    "MaterialLibraryFiles",
+    "UMaterialInstanceConstantFactoryNew",
+    "synthesized authored materials",
+    "SetVectorParameterValueEditorOnly",
+    "ImportOptions->bImportMaterials = false",
+    "StaticMaterial.MaterialInterface = AuthoredMaterial",
+]:
+    if pg101_symbol not in pg101_importer:
+        fail(f"PG-101 deterministic material synthesis missing: {pg101_symbol}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
