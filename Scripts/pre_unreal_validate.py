@@ -3240,6 +3240,55 @@ if pie_evidence:
         if not signoff.get("signed_by") or not signoff.get("signed_at"):
             fail("PG-057 APPROVED human release sign-off requires signer and timestamp")
 
+# PG-109: V6 hero geometry is a structural production step, not a final-visual claim.
+pg109_specs = {
+    "Frodo": (328, 640, 254, 504, 421, 740),
+    "Gandalf": (328, 640, 254, 504, 477, 836),
+    "Sam": (328, 640, 254, 504, 393, 692),
+    "Merry": (328, 640, 254, 504, 379, 668),
+    "Pippin": (328, 640, 254, 504, 407, 716),
+    "Aragorn": (328, 640, 254, 504, 449, 788),
+    "Boromir": (328, 640, 254, 504, 379, 668),
+    "Legolas": (328, 640, 254, 504, 477, 836),
+    "Gimli": (328, 640, 254, 504, 421, 740),
+}
+for pg109_name, pg109_limits in pg109_specs.items():
+    pg109_root = ROOT / "SourceAssets" / "Production" / "Characters" / pg109_name
+    pg109_head = read(pg109_root / f"SM_{pg109_name}_Head.obj")
+    pg109_torso = read(pg109_root / f"SM_{pg109_name}_Torso.obj")
+    pg109_hair = read(pg109_root / f"SM_{pg109_name}_Hair.obj")
+    if "Hero head wave V6" not in pg109_head:
+        fail(f"PG-109 V6 head marker missing: {pg109_name}")
+    if "Hero torso wave V6" not in pg109_torso:
+        fail(f"PG-109 V6 torso marker missing: {pg109_name}")
+    if "Hero hair wave V6" not in pg109_hair:
+        fail(f"PG-109 V6 hair marker missing: {pg109_name}")
+    pg109_counts = (
+        sum(1 for line in pg109_head.splitlines() if line.startswith("v ")),
+        sum(1 for line in pg109_head.splitlines() if line.startswith("f ")),
+        sum(1 for line in pg109_torso.splitlines() if line.startswith("v ")),
+        sum(1 for line in pg109_torso.splitlines() if line.startswith("f ")),
+        sum(1 for line in pg109_hair.splitlines() if line.startswith("v ")),
+        sum(1 for line in pg109_hair.splitlines() if line.startswith("f ")),
+    )
+    if any(actual < required for actual, required in zip(pg109_counts, pg109_limits)):
+        fail(f"PG-109 hero geometry structural regression: {pg109_name} counts={pg109_counts} limits={pg109_limits}")
+
+pg109_matrix = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
+if pg109_matrix.get("geometry_refinement_wave", {}).get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-109 hero geometry proof boundary changed")
+pg109_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
+pg109_npch = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.h")
+for pg109_symbol in [
+    "bUsingProductionVisual",
+    "SM_ProductionShield",
+    "SM_ProductionBow",
+    "SM_ProductionAxe",
+    "SM_Gandalf_Staff",
+]:
+    if pg109_symbol not in (pg109_npc + pg109_npch):
+        fail(f"PG-109 named-cast production visual integration missing: {pg109_symbol}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     sys.exit(1)

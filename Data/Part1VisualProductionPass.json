@@ -169,7 +169,10 @@
       "source-bible registry integrated into OwnerSourceReferenceIndex",
       "Moria mine-city dressing and bounded local light pools",
       "explicit Anduin/Amon Hen atmosphere and dock-to-battle composition",
-      "Isengard secondary industrial ring and Orthanc base composition"
+      "Isengard secondary industrial ring and Orthanc base composition",
+      "core Fellowship V6 anatomical head/torso/hair source geometry",
+      "production-scale named-NPC facial placement and acting",
+      "named companion production equipment mesh integration"
     ],
     "still_required": [
       "real UE4.27 build/import evidence",
@@ -267,5 +270,33 @@
       "GandalfParallel Isengard"
     ],
     "acceptance_rule": "Do not promote to visual/device acceptance from headless automation alone."
+  },
+  "hero_character_geometry_wave": {
+    "id": "HERO_ANATOMICAL_FOUNDATION_V6",
+    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "characters": [
+      "Frodo",
+      "Gandalf",
+      "Sam",
+      "Merry",
+      "Pippin",
+      "Aragorn",
+      "Boromir",
+      "Legolas",
+      "Gimli"
+    ],
+    "implemented": [
+      "Higher-density original project-owned head geometry with authored brow/nose/jaw/chin/ear silhouettes.",
+      "Higher-density original project-owned torso geometry with readable shoulder/chest/waist/hip/neck transitions.",
+      "Layered hair caps, fringe and character-specific silhouette locks replace low-density hair shells.",
+      "Production-scale NPC eye/mouth placement and blink/dialogue acting.",
+      "Existing project-owned production gear replaces multiple primitive equipment proxies."
+    ],
+    "guardrails": [
+      "Preserve gameplay collision, quest anchors and spawn topology; geometry remains visual-only.",
+      "Do not call modular static foundations final characters.",
+      "Do not claim actor likeness or final facial acceptance from procedural source geometry.",
+      "Final rig/deformation, UV/materials, animation, PIE/device and human visual review remain required."
+    ]
   }
 }

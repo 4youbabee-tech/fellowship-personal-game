@@ -3067,11 +3067,11 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "BIBLE_DRIVEN_MEGA_PRODUCTION_WAVE_V5",
+  "current_focus": "HERO_GEOMETRY_AND_LIVING_WORLD_V6",
   "immediate_next_large_actions": [
-    "Execute the source-bible-driven world composition wave across Moria, Anduin/Amon Hen and Isengard while preserving film-locked outcomes.",
-    "Keep Pre-Unreal and UE4.27.2 exact-head validation green after each major production batch.",
-    "Continue character rig/animation/material/VFX/audio production without promoting visual/device acceptance until real PIE/device/human evidence exists."
+    "Prove the V6 head/torso/hair/equipment wave on an exact-head Pre-Unreal + UE4.27.2 chain.",
+    "After green proof, add authored character material layering and refine visible threat geometry without regressing story/save/performance safety.",
+    "Continue regional life-density, ambient animation and presentation passes while final rig/animation/PIE/device/human acceptance remains explicit."
   ],
   "session_handoff": {
     "source_head": "096a2a9658b0da171f390505b4d0331c1a4e0f8f",
