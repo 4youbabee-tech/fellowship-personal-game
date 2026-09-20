@@ -5,6 +5,17 @@ set "BUILDBAT=C:\Program Files\Epic Games\UE_4.27\Engine\Build\BatchFiles\Build.
 set "LOGDIR=%GITHUB_WORKSPACE%\Saved\Logs"
 set "BUILDLOG=%LOGDIR%\CI-UnrealBuild.log"
 if not exist "%LOGDIR%" mkdir "%LOGDIR%"
+rem Re-establish the job-local compiler scratch directory at its point of use.
+rem A missing inherited TEMP prevents UnrealBuildTool's C# compiler from starting.
+if not defined TEMP (
+  echo ERROR: Compiler TEMP is not configured.
+  exit /b 77
+)
+if not exist "%TEMP%\." mkdir "%TEMP%"
+if not exist "%TEMP%\." (
+  echo ERROR: Compiler TEMP could not be created.
+  exit /b 77
+)
 echo Building exact commit: %TARGET_SHA%
 call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=1 > "%BUILDLOG%" 2>&1
 set "BUILD_EXIT=!ERRORLEVEL!"

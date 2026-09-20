@@ -270,13 +270,18 @@ bool AShirePlayerCharacter::TryApplyProductionRig(const FString& RigFolder)
 void AShirePlayerCharacter::ApplyPrototypeStyle()
 {
     UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
-        nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
+        nullptr, TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface"));
+    if (!BasicMaterial)
+    {
+        BasicMaterial = LoadObject<UMaterialInterface>(nullptr,
+            TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
+    }
     if (!BasicMaterial)
     {
         return;
     }
 
-    auto ApplyColor = [this, BasicMaterial](UStaticMeshComponent* Component, const FLinearColor& Color)
+    auto ApplyColor = [this, BasicMaterial](UStaticMeshComponent* Component, const FLinearColor& Color, float Roughness = 0.84f, float Metallic = 0.0f)
     {
         if (!Component)
         {
@@ -285,6 +290,8 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
         if (UMaterialInstanceDynamic* MID = UMaterialInstanceDynamic::Create(BasicMaterial, this))
         {
             MID->SetVectorParameterValue(TEXT("Color"), Color);
+            MID->SetScalarParameterValue(TEXT("Roughness"), FMath::Clamp(Roughness, 0.0f, 1.0f));
+            MID->SetScalarParameterValue(TEXT("Metallic"), FMath::Clamp(Metallic, 0.0f, 1.0f));
             Component->SetMaterial(0, MID);
         }
     };
@@ -560,21 +567,21 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
 
     const FLinearColor Skin = bGandalf ? FLinearColor(0.72f,0.54f,0.40f) : FLinearColor(0.78f,0.57f,0.39f);
     ApplyColor(PrototypeTorso,TorsoColor);
-    ApplyColor(PrototypeHead,Skin);
-    ApplyColor(PrototypeHair,HairColor);
+    ApplyColor(PrototypeHead,Skin, 0.54f);
+    ApplyColor(PrototypeHair,HairColor, 0.72f);
     ApplyColor(PrototypeLeftArm,LimbColor);
     ApplyColor(PrototypeRightArm,LimbColor);
     ApplyColor(PrototypeLeftLeg,LegColor);
     ApplyColor(PrototypeRightLeg,LegColor);
-    ApplyColor(PrototypeLeftFoot,FLinearColor(0.12f,0.08f,0.055f));
-    ApplyColor(PrototypeRightFoot,FLinearColor(0.12f,0.08f,0.055f));
+    ApplyColor(PrototypeLeftFoot,bHobbit ? Skin : FLinearColor(0.12f,0.08f,0.055f), bHobbit ? 0.54f : 0.66f);
+    ApplyColor(PrototypeRightFoot,bHobbit ? Skin : FLinearColor(0.12f,0.08f,0.055f), bHobbit ? 0.54f : 0.66f);
     ApplyColor(PrototypeCloak,bAragorn ? FLinearColor(0.10f,0.20f,0.10f) : TorsoColor * 0.75f);
     ApplyColor(PrototypeHat,FLinearColor(0.245f,0.25f,0.235f));
-    ApplyColor(PrototypeBeard,bGimli ? FLinearColor(0.44f,0.20f,0.07f) : FLinearColor(0.68f,0.67f,0.62f));
-    ApplyColor(PrototypeLeftEye,FLinearColor(0.035f,0.028f,0.020f));
-    ApplyColor(PrototypeRightEye,FLinearColor(0.035f,0.028f,0.020f));
-    ApplyColor(PrototypeMouth,FLinearColor(0.23f,0.055f,0.045f));
-    ApplyColor(PrototypeSatchel,bBoromir ? FLinearColor(0.34f,0.36f,0.37f) : FLinearColor(0.26f,0.13f,0.045f));
+    ApplyColor(PrototypeBeard,bGimli ? FLinearColor(0.44f,0.20f,0.07f) : FLinearColor(0.68f,0.67f,0.62f), 0.74f);
+    ApplyColor(PrototypeLeftEye,FLinearColor(0.035f,0.028f,0.020f), 0.24f);
+    ApplyColor(PrototypeRightEye,FLinearColor(0.035f,0.028f,0.020f), 0.24f);
+    ApplyColor(PrototypeMouth,FLinearColor(0.23f,0.055f,0.045f), 0.56f);
+    ApplyColor(PrototypeSatchel,bBoromir ? FLinearColor(0.34f,0.36f,0.37f) : FLinearColor(0.26f,0.13f,0.045f), bBoromir ? 0.34f : 0.66f, bBoromir ? 0.78f : 0.0f);
 
     const bool bWeaponVisible = bFrodo || bGandalf || bAragorn || bBoromir || bLegolas || bGimli;
     PrototypeWeapon->SetVisibility(bWeaponVisible, true);
@@ -582,7 +589,7 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
     PrototypeWeapon->SetRelativeScale3D(bProductionCharacter ? FVector(1) :
         (bGandalf ? FVector(0.055f,0.055f,0.92f) : (bLegolas ? FVector(0.035f,0.035f,0.72f) : FVector(0.045f,0.045f,0.52f))));
     PrototypeWeapon->SetRelativeRotation(bGandalf ? FRotator::ZeroRotator : FRotator(-12,0,8));
-    ApplyColor(PrototypeWeapon,bGandalf ? FLinearColor(0.22f,0.13f,0.055f) : FLinearColor(0.48f,0.50f,0.52f));
+    ApplyColor(PrototypeWeapon,(bGandalf || bLegolas) ? FLinearColor(0.22f,0.13f,0.055f) : FLinearColor(0.48f,0.50f,0.52f), (bGandalf || bLegolas) ? 0.78f : 0.34f, (bGandalf || bLegolas) ? 0.0f : 0.78f);
 
     const float FaceX=bProductionCharacter ? 17.0f : 10.5f;
     const float FaceY=bProductionCharacter ? 6.5f : 5.2f;
@@ -1783,6 +1790,32 @@ bool AShirePlayerCharacter::RestoreAutomaticCheckpoint(bool bShowHUD)
 bool AShirePlayerCharacter::RunSaveRoundtripAudit()
 {
     if (!FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return false;
+    // This fresh-process audit must not certify a source-only material fallback.
+    // Read the actual component instances, not just the values we asked to set.
+    UMaterialInterface* HeadSurface = PrototypeHead ? PrototypeHead->GetMaterial(0) : nullptr;
+    UMaterialInterface* ClothSurface = PrototypeTorso ? PrototypeTorso->GetMaterial(0) : nullptr;
+    float HeadRoughness = 0.0f;
+    float ClothRoughness = 0.0f;
+    float HeadMetallic = 1.0f;
+    UMaterialInstanceDynamic* HeadInstance = Cast<UMaterialInstanceDynamic>(HeadSurface);
+    UMaterialInstanceDynamic* ClothInstance = Cast<UMaterialInstanceDynamic>(ClothSurface);
+    const FString ExpectedParent = TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface");
+    const bool bSurfaceStateValid = HeadInstance && ClothInstance
+        && HeadInstance->Parent && ClothInstance->Parent
+        && HeadInstance->Parent->GetPathName() == ExpectedParent
+        && ClothInstance->Parent->GetPathName() == ExpectedParent
+        && HeadSurface->GetScalarParameterValue(FMaterialParameterInfo(TEXT("Roughness")), HeadRoughness)
+        && ClothSurface->GetScalarParameterValue(FMaterialParameterInfo(TEXT("Roughness")), ClothRoughness)
+        && HeadSurface->GetScalarParameterValue(FMaterialParameterInfo(TEXT("Metallic")), HeadMetallic)
+        && FMath::IsNearlyEqual(HeadRoughness, 0.54f)
+        && FMath::IsNearlyEqual(ClothRoughness, 0.84f)
+        && FMath::IsNearlyZero(HeadMetallic);
+    if (!bSurfaceStateValid)
+    {
+        UE_LOG(LogTemp, Error, TEXT("CharacterSurfaceAudit: FAIL persisted player skin/cloth surface state"));
+        return false;
+    }
+    UE_LOG(LogTemp, Display, TEXT("CharacterSurfaceAudit: PASS persisted player skin/cloth surface state"));
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
     if (!Quests) return false;
