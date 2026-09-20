@@ -86,17 +86,56 @@ jobs:
           Write-Host "Runner bootstrap succeeded."
 
       - name: Checkout exact PR head
-        timeout-minutes: 8
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 1
-          # Avoid full clean on the self-hosted UE workspace; stale generated files can be locked.
-          # The exact SHA is verified in the next step, so a forced checkout without git clean is sufficient.
-          clean: false
-          persist-credentials: false
-          lfs: false
-          submodules: false
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          Set-Location $env:GITHUB_WORKSPACE
+
+          # Reuse the self-hosted workspace without git clean. Generated UE files may
+          # be locked, but the tracked source tree is force-replaced by the exact SHA.
+          if (-not (Test-Path ".git")) {
+            & git init
+            if ($LASTEXITCODE -ne 0) { exit 70 }
+          }
+
+          Remove-Item -LiteralPath ".git\index.lock" -Force -ErrorAction SilentlyContinue
+          Remove-Item -LiteralPath ".git\shallow.lock" -Force -ErrorAction SilentlyContinue
+
+          $repoUrl = "https://x-access-token:$env:GH_TOKEN@github.com/${{ github.repository }}.git"
+          $origin = & git remote get-url origin 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            & git remote set-url origin $repoUrl
+          } else {
+            & git remote add origin $repoUrl
+          }
+          if ($LASTEXITCODE -ne 0) { exit 71 }
+
+          $attempt = 1
+          $fetched = $false
+          while ($attempt -le 7) {
+            Write-Host "Fetching exact PR head attempt $attempt of 7..."
+            & git fetch --no-tags --prune --depth=1 origin $env:TARGET_SHA
+            if ($LASTEXITCODE -eq 0) {
+              $fetched = $true
+              break
+            }
+            if ($attempt -lt 7) {
+              Write-Host "Fetch failed; retrying in 5 seconds."
+              Start-Sleep -Seconds 5
+            }
+            $attempt++
+          }
+          if (-not $fetched) {
+            Write-Error "Failed to fetch exact PR head after 7 attempts."
+            exit 72
+          }
+
+          & git checkout -f FETCH_HEAD
+          if ($LASTEXITCODE -ne 0) { exit 73 }
+          & git reset --hard $env:TARGET_SHA
+          if ($LASTEXITCODE -ne 0) { exit 73 }
 
       - name: Verify exact checkout
         shell: cmd
