@@ -195,6 +195,22 @@ jobs:
           & "$env:GITHUB_WORKSPACE\Scripts\prepare_msvc_environment.ps1"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
+      - name: Reset project build intermediates
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -Command ". '{0}'"
+        run: |
+          $ErrorActionPreference = "Stop"
+          $paths = @(
+            (Join-Path $env:GITHUB_WORKSPACE "Intermediate\Build\Win64"),
+            (Join-Path $env:GITHUB_WORKSPACE "Binaries\Win64")
+          )
+          foreach ($path in $paths) {
+            if (Test-Path -LiteralPath $path) {
+              Write-Host "Removing stale project build product: $path"
+              Remove-Item -LiteralPath $path -Recurse -Force
+            }
+          }
+          Write-Host "Project build intermediates reset."
+
       - name: Build ShireJourneyEditor
         shell: cmd
         run: |
@@ -210,17 +226,18 @@ jobs:
           echo Building exact commit: %TARGET_SHA%
           echo Project: %PROJECT%
           echo Build log: %BUILDLOG%
-          echo Build parallelism: 2 actions, with automatic single-action retry on MSVC PCH virtual-memory exhaustion.
+          echo Build parallelism: 1 action for self-hosted VS2019 reliability.
+          echo CI debug symbols: disabled only when SHIRE_CI_NO_DEBUGINFO=1.
 
-          call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=2 > "%BUILDLOG%" 2>&1
+          call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=1 > "%BUILDLOG%" 2>&1
           set "BUILD_EXIT=!ERRORLEVEL!"
 
           if not "!BUILD_EXIT!"=="0" (
             findstr /I /C:"error C3859" /C:"fatal error C1076" /C:"error D8050" /C:"Command line error D8050" "%BUILDLOG%" >nul
             if not errorlevel 1 (
               echo.>>"%BUILDLOG%"
-              echo CI_BUILD_RETRY: MSVC compiler resource/process pressure detected; waiting briefly and retrying with MaxParallelActions=1.>>"%BUILDLOG%"
-              powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 5"
+              echo CI_BUILD_RETRY: MSVC compiler resource/process pressure detected; clearing project intermediates and retrying once.>>"%BUILDLOG%"
+              powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$paths=@((Join-Path $env:GITHUB_WORKSPACE 'Intermediate\Build\Win64'),(Join-Path $env:GITHUB_WORKSPACE 'Binaries\Win64')); foreach($p in $paths){ if(Test-Path -LiteralPath $p){ Remove-Item -LiteralPath $p -Recurse -Force } }; Start-Sleep -Seconds 5"
               call "%BUILDBAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE -MaxParallelActions=1 >> "%BUILDLOG%" 2>&1
               set "BUILD_EXIT=!ERRORLEVEL!"
             )

@@ -46,7 +46,8 @@
         "REQ-MEGA-001",
         "REQ-QUALITY-001",
         "REQ-SAVE-001",
-        "REQ-PERF-001"
+        "REQ-PERF-001",
+        "REQ-AUDIT-001"
       ],
       "work_ids": [
         "WORK-MEGA-001",
@@ -60,7 +61,8 @@
         "P1C01-P1C08 chapter audits",
         "route/save/Ring/Discovery state audits",
         "warning-debt guard",
-        "repair loop for any red step"
+        "repair loop for any red step",
+        "continuous deep architecture/backend/player-experience audit"
       ],
       "exit_evidence": [
         "PRE_UNREAL_PASS",
@@ -69,7 +71,8 @@
         "STARTUP_PASS",
         "CHAPTER_AUDIT_PASS",
         "STATE_AUDIT_PASS",
-        "WARNING_GUARD_PASS"
+        "WARNING_GUARD_PASS",
+        "DEEP_AUDIT_PASS"
       ]
     },
     {
@@ -325,7 +328,8 @@
         "REQ-GOV-001",
         "REQ-ORG-001",
         "REQ-ENG-002",
-        "REQ-EXEC-001"
+        "REQ-EXEC-001",
+        "REQ-AUDIT-001"
       ],
       "work_ids": [
         "WORK-EXEC-001"
@@ -335,7 +339,8 @@
         "record conflicts/decisions",
         "keep source provenance",
         "keep current-state handoff accurate",
-        "ensure no active work or unfinished requirement becomes orphaned"
+        "ensure no active work or unfinished requirement becomes orphaned",
+        "keep deep audit findings synchronized with exact-head evidence"
       ]
     }
   ],
@@ -384,7 +389,8 @@
     "REQ-GAME-001",
     "REQ-ENSEMBLE-001",
     "REQ-SIDE-001",
-    "REQ-EXEC-001"
+    "REQ-EXEC-001",
+    "REQ-AUDIT-001"
   ],
   "tracked_active_work_ids": [
     "WORK-WORLD-002",

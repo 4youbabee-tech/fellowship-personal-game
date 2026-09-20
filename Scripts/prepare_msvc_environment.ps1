@@ -8,6 +8,14 @@ $env:TEMP = $root
 $env:TMP = $root
 Add-Content -LiteralPath $env:GITHUB_ENV -Value "TEMP=$root" -Encoding utf8
 Add-Content -LiteralPath $env:GITHUB_ENV -Value "TMP=$root" -Encoding utf8
+
+# The self-hosted service has repeatedly hit MSVC D8050 while c1xx records full
+# debug command lines during UE builds. Exact-head CI validates compile/runtime
+# correctness, not debugger symbol quality, so disable debug info only for this
+# CI target. Local/editor developer builds remain untouched.
+$env:SHIRE_CI_NO_DEBUGINFO = "1"
+Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_CI_NO_DEBUGINFO=1" -Encoding utf8
+Write-Host "CI editor target debug info: disabled (SHIRE_CI_NO_DEBUGINFO=1)"
 if ([string]::IsNullOrWhiteSpace($env:USERPROFILE)) {
     $profilePath = [Environment]::GetFolderPath([Environment+SpecialFolder]::UserProfile)
     if ($profilePath -and (Test-Path -LiteralPath $profilePath)) {

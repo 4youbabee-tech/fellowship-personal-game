@@ -2216,7 +2216,11 @@ for symbol in [
     "SaveAutomaticCheckpoint",
     "RestoreAutomaticCheckpoint",
     "PendingChapterCheckpointId",
-    "SafeCheckpoint: id=%s saved=%s",
+    "AsyncSaveGameToSlot",
+    "bCheckpointSaveInFlight",
+    "QueuedCheckpointSaveId",
+    "SafeCheckpoint: id=%s async-save=scheduled",
+    "SafeCheckpoint: id=%s async-save=%s slot=%s user=%d",
     "SafeCheckpoint: restored id=%s",
 ]:
     if symbol not in checkpoint_runtime_source:
