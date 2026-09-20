@@ -4950,10 +4950,41 @@ for pg112_story_symbol in [
         fail(f"PG-112 Moria film-locked outcome marker missing: {pg112_story_symbol}")
 
 pg112_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
-if pg112_visual.get("current_wave", {}).get("id") != "MEGA_MATERIAL_WORLD_WAVE_V1":
-    fail("PG-112 visual production current wave is not the mega material/world wave")
+if pg112_visual.get("current_wave", {}).get("id") != "MEGA_WORLD_MAGIC_LIFE_DETAIL_V1":
+    fail("PG-112 visual production current wave is not the active magic/life/detail wave")
 if pg112_visual.get("mega_material_world_wave", {}).get("status") != "SOURCE_IMPLEMENTATION_ACTIVE_PENDING_EXACT_HEAD_PROOF":
     fail("PG-112 visual mega-wave evidence boundary changed")
+
+# PG-114: dense decorative richness must use performance-aware instancing rather than actor spam.
+pg114_cluster_h = read(ROOT / "Source" / "ShireJourney" / "WorldDetailCluster.h")
+pg114_cluster_cpp = read(ROOT / "Source" / "ShireJourney" / "WorldDetailCluster.cpp")
+for pg114_symbol in [
+    "UHierarchicalInstancedStaticMeshComponent",
+    "AddInstanceWorldSpace",
+    "SetCullDistances",
+    "bCastDynamicShadow = false",
+    "bCastStaticShadow = false",
+]:
+    if pg114_symbol not in (pg114_cluster_h + pg114_cluster_cpp):
+        fail(f"PG-114 detail-cluster performance contract missing: {pg114_symbol}")
+
+for pg114_symbol in [
+    "SpawnInstancedScatter",
+    "WorldDetailCluster",
+    "MoriaDebrisClusterMesh",
+    "CommonFernClumpMesh",
+    "CommonReedClusterMesh",
+    "CommonRuinSlabMesh",
+]:
+    if pg114_symbol not in pg93_builder:
+        fail(f"PG-114 instanced detail runtime wiring missing: {pg114_symbol}")
+
+pg114_dressing = json.loads(read(ROOT / "Data" / "WorldDressingPlan.json"))
+if pg114_dressing.get("status") != "V10_INSTANCED_DETAIL_AND_ENVIRONMENTAL_LIFE_PENDING_ENGINE_PROOF":
+    fail("PG-114 V10 world-dressing proof boundary changed")
+pg114_budget = json.loads(read(ROOT / "Data" / "AssetPerformanceBudget.json"))
+if pg114_budget.get("runtime_detail_policy", {}).get("instanced_micro_detail", {}).get("status") != "IMPLEMENTED_PENDING_MEASUREMENT":
+    fail("PG-114 instanced-detail performance evidence boundary missing")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
