@@ -178,7 +178,14 @@ bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
     GetMesh()->SetSkeletalMesh(SkeletalMesh);
     GetMesh()->SetAnimInstanceClass(AnimClass);
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GetMesh()->bEnableUpdateRateOptimizations = true;
+    GetMesh()->VisibilityBasedAnimTickOption =
+        EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;
     GetMesh()->SetVisibility(true, true);
+
+    UE_LOG(LogTemp, Display,
+        TEXT("ProductionRig: npc=%s rig=%s URO=on visibilityTick=rendered"),
+        *DisplayName.ToString(), *RigFolder);
 
     UStaticMeshComponent* ModularPieces[] = {
         PrototypeTorso, PrototypeHead, PrototypeHair,
@@ -1199,6 +1206,26 @@ void AShireNPC::Tick(float DeltaSeconds)
 
     RefreshLivingContext(DeltaSeconds);
     bPrototypeMoving = false;
+
+    // Preserve full-rate follow/dialogue responsiveness while throttling only
+    // stationary named NPCs that are far from the player.
+    if (GetWorld())
+    {
+        APlayerController* DistancePC = GetWorld()->GetFirstPlayerController();
+        APawn* DistancePawn = DistancePC ? DistancePC->GetPawn() : nullptr;
+        if (DistancePawn && !bFollowingPlayer && DialogueActingRemaining <= 0.0f)
+        {
+            const float PlayerDistance =
+                FVector::Dist2D(GetActorLocation(), DistancePawn->GetActorLocation());
+            PrimaryActorTick.TickInterval =
+                PlayerDistance > 4200.0f ? 0.22f :
+                (PlayerDistance > 2200.0f ? 0.10f : 0.0f);
+        }
+        else
+        {
+            PrimaryActorTick.TickInterval = 0.0f;
+        }
+    }
 
     if (bFollowingPlayer && StopFollowingStoryBeat != NAME_None)
     {
