@@ -5232,7 +5232,7 @@ if pg117_inventory.get("totals", {}).get("obj_files", 0) < 352:
 pg117_npc_h = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.h")
 for pg117_symbol in [
     "bUsingSkeletalProductionRig",
-    "TryActivateSkeletalProductionRig",
+    "TryApplyProductionRig",
 ]:
     if pg117_symbol not in (pg116_npc + pg117_npc_h):
         fail(f"PG-117 final-rig handoff contract missing: {pg117_symbol}")
