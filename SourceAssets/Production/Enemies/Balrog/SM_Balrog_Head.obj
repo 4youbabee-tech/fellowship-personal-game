@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Balrog_Head
+mtllib RegionalMaterials.mtl
 o SM_Balrog_Head
+usemtl BalrogEmber
 s 1
 v -52.500 -45.000 0.000
 v 52.500 -45.000 0.000

@@ -1,0 +1,10 @@
+# Project-owned Watcher production palette
+newmtl WatcherCore
+Kd 0.052 0.095 0.090
+Ks 0.18 0.25 0.24
+Ns 38
+
+newmtl WatcherTentacle
+Kd 0.075 0.125 0.115
+Ks 0.22 0.30 0.28
+Ns 44

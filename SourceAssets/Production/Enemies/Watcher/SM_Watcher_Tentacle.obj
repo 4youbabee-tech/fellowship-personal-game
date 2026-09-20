@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Watcher_Tentacle
+mtllib RegionalMaterials.mtl
 o SM_Watcher_Tentacle
+usemtl WatcherTentacle
 s 1
 v 24.000 0.000 0.000
 v 19.416 14.107 0.000

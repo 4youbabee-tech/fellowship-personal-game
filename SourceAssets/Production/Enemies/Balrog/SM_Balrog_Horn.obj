@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Balrog_Horn
+mtllib RegionalMaterials.mtl
 o SM_Balrog_Horn
+usemtl BalrogHorn
 s 1
 v 26.000 0.000 0.000
 v 18.385 18.385 0.000

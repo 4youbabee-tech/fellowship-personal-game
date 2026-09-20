@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Balrog_Wing
+mtllib RegionalMaterials.mtl
 o SM_Balrog_Wing
+usemtl BalrogWing
 s 1
 v 0.000 -130.000 0.000
 v 0.000 130.000 0.000

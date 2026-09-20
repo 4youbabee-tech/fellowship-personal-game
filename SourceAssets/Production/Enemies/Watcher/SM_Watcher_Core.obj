@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Watcher_Core
+mtllib RegionalMaterials.mtl
 o SM_Watcher_Core
+usemtl WatcherCore
 s 1
 v 145.000 0.000 0.000
 v -145.000 0.000 0.000

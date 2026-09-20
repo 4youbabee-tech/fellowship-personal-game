@@ -1,5 +1,7 @@
 # Project-owned procedural production foundation: SM_Balrog_Torso
+mtllib RegionalMaterials.mtl
 o SM_Balrog_Torso
+usemtl BalrogCharcoal
 s 1
 v -105.000 -65.000 0.000
 v 105.000 -65.000 0.000
