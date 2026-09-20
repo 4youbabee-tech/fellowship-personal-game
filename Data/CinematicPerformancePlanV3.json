@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "plan_id": "PART1_CINEMATIC_CHARACTER_PERFORMANCE_V3",
+  "status": "RUNTIME_CAMERA_AND_PROCEDURAL_PERFORMANCE_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+  "authority": "Data/ProjectGovernor.json",
+  "source_basis": [
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE: identity-specific posture, gait, combat/personality separation, companion/cinematic handoff checks",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX: chapter ownership and fixed film outcomes",
+    "08_VISUAL_REFERENCE_BIBLE: location hero landmarks, cinematic anchors, chapter/state-specific visual references",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX: source lock -> blocking -> camera plan -> performance -> gameplay seam -> QA"
+  ],
+  "doctrine": {
+    "camera": [
+      "Preserve geography before spectacle.",
+      "Use close framing for decisions, grief, temptation and relationship turns rather than constantly.",
+      "Battle framing may be kinetic only if playable direction is re-established before control returns.",
+      "Runtime preview cameras must never steal view control from authored Level Sequences.",
+      "All temporary camera accents return to the prior player view and own no quest/save state."
+    ],
+    "performance": [
+      "Named characters share technology but retain distinct gesture, gaze, body-weight and composure profiles.",
+      "Frodo is not treated as a conventional power-fantasy warrior.",
+      "Gandalf remains measured; magic/presentation is rare and purposeful.",
+      "Aragorn remains grounded and decisive.",
+      "Legolas emphasizes precision and economy of motion.",
+      "Gimli emphasizes weight without reducing him to comedy.",
+      "Boromir remains tragic and human, not villain-coded.",
+      "Sam's supportive presence reads as active courage rather than comic-only behavior."
+    ]
+  },
+  "runtime": {
+    "camera_owner": "AStoryPresentationDirector",
+    "source_cues": "UShireStoryPresentationSubsystem",
+    "rules": [
+      "Gameplay-only cues do not trigger camera accents.",
+      "GameplayBlend and Cinematic cues use bounded establishing/emotional profiles.",
+      "Named-subject shots are attempted for Bilbo, Aragorn, Elrond, Gandalf, Galadriel, Boromir and Sam at relevant story beats.",
+      "Collision trace shortens camera placement instead of clipping through geometry.",
+      "A camera accent is skipped if another authored camera already owns the view.",
+      "Maximum runtime accent hold is 2.60 seconds, below the existing 3.5 second input-lock safety cap."
+    ],
+    "named_performance_owner": "AShireNPC modular fallback",
+    "named_profiles": {
+      "Gandalf": "restrained gesture, moderate gaze, low body sway, very high composure",
+      "Saruman": "restrained authoritative gesture, low sway, very high composure",
+      "Aragorn": "economical gesture, alert gaze, grounded stance, high composure",
+      "Boromir": "broader gesture, stronger weight shift, higher emotional volatility",
+      "Legolas": "minimal gesture, precise gaze, low sway, very high composure",
+      "Gimli": "heavier weight shift and stronger gesture with controlled gaze",
+      "Sam": "warm attentive gaze and moderate practical gesture",
+      "Merry": "confident social motion",
+      "Pippin": "quicker expressive motion with lower composure"
+    }
+  },
+  "acceptance_boundary": {
+    "implemented_now": [
+      "runtime camera grammar bridge",
+      "named-subject framing fallback",
+      "camera collision safety and authored-camera precedence",
+      "identity-specific procedural gesture/gaze/weight/composure",
+      "chapter-change camera release"
+    ],
+    "not_claimed": [
+      "final Level Sequences",
+      "final skeletal/facial rigs",
+      "motion capture",
+      "final lip sync",
+      "human-directed final shot acceptance",
+      "target-device cinematic performance acceptance"
+    ]
+  }
+}
