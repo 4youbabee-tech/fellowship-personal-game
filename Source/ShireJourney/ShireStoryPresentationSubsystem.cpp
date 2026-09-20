@@ -274,7 +274,7 @@ void UShireStoryPresentationSubsystem::HandleStoryBeat(FName StoryBeatId)
                 CinematicReleaseTimer,
                 this,
                 &UShireStoryPresentationSubsystem::ReleaseCinematicLock,
-                FMath::Max(1.0f, ActiveCue.SuggestedDuration),
+                FMath::Clamp(ActiveCue.SuggestedDuration, 1.0f, 3.5f),
                 false);
         }
     }
