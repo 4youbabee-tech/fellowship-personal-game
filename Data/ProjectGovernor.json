@@ -2048,6 +2048,53 @@
       ],
       "checkpoint": "MEGA_MATERIAL_WORLD_WAVE_V1",
       "notes": "This is a large visible-production wave, not a completion claim. It deliberately converts useful programmer feedback into guardrails rather than letting governance stall production."
+    },
+    {
+      "id": "REQ-PROD-008",
+      "title": "Realm-specific magic, life and detail saturation V2",
+      "category": "VisualProduction",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner request to continue the large qualitative transformation after PR #56 green merge.",
+      "intent": "Deepen Rivendell, Lothlorien, Anduin/Amon Hen and Isengard with source-grounded realm-specific architecture, props, cultural activity clues, cinematic silhouettes and performance-aware detail so the world feels authored and alive rather than generically populated.",
+      "evidence": [
+        "Data/RealmDetailSaturationV2.json",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
+        "Source/ShireJourney/IsengardPrototypeWorldBuilder.cpp",
+        "SourceAssets/Production/World"
+      ],
+      "implementation_refs": [
+        "Source 03: Rivendell stone/wood + waterfalls + terraces; Lothlorien vertical flets/organic bridges/luminous forest; Anduin/Amon Hen river/ancient ruins; Isengard black tower/pits/machinery/felled landscape.",
+        "Source 04: Elven realms communicate memory/craft/light through culturally coherent props/routines; Isengard communicates harsh iron and mass production.",
+        "Source 05: Amon Hen remains a forest/ruins hero-bubble skirmish with locked Boromir/Merry/Pippin/Fellowship outcomes; Isengard war-machine outcome remains fixed.",
+        "Source 06: Rivendell Recovery/Provisioning, Lorien Departure Prep, and Isengard Stores provide canon-safe activity windows.",
+        "Source 11: prefer authored routines + state-aware systems, HISM/LOD/performance awareness, and avoid maximum simulation."
+      ],
+      "missing_work": [
+        "Create and runtime-wire bounded realm-specific modular props without moving canonical mission anchors.",
+        "Use HISM for repeatable decorative details and keep collision/story state on authored actors.",
+        "Add state-readable visual clues for sanctuary/preparation/battle/industrial contexts.",
+        "Run exact-head Pre-Unreal and UE4.27.2 build/import/startup/chapter/state/warning validation.",
+        "Perform later rendered PIE/human and target-device FPS/hitch/memory acceptance."
+      ],
+      "acceptance_criteria": [
+        "Rivendell detail reinforces sanctuary, memory/craft, gardens/library/provisioning rather than generic fantasy clutter.",
+        "Lothlorien detail reinforces vertical flets, luminous organic craft, gifts/boat-departure preparation and grief/refuge tone.",
+        "Anduin/Amon Hen detail reinforces river journey -> ancient ruin -> broken woodland battle handoff without changing film outcomes.",
+        "Isengard detail reinforces industrial mass production and leaves Industrial/Flooded variants separable.",
+        "Decorative repeats use performance-aware instancing or bounded actor counts.",
+        "Exact candidate head passes Pre-Unreal and Unreal build/import/runtime gates before merge."
+      ],
+      "dependencies": [
+        "REQ-PROD-007",
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-WORLD-003",
+        "REQ-PERF-001",
+        "REQ-SOURCE-001"
+      ],
+      "checkpoint": "REALM_DETAIL_SATURATION_V2",
+      "notes": "Mix of FILM-EXPANDED and ORIGINAL-GAME environmental dressing only inside canon-safe windows; no main-story outcome changes."
     }
   ],
   "hard_invariants": [
@@ -2856,8 +2903,8 @@
   ],
   "active_gate": {
     "id": "DEEP_EXACT_HEAD_STABILITY_GATE",
-    "status": "FAILED",
-    "blocks_major_feature_expansion": true,
+    "status": "PASSED",
+    "blocks_major_feature_expansion": false,
     "required_evidence": [
       "Pre-Unreal including deep audit",
       "real UE4.27.2 compile and deterministic production import",
@@ -2865,7 +2912,7 @@
       "route/story/state isolated disk roundtrip",
       "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "Exact head e0a78d8094d70e7c75a05f0b7ab4c9df96e275b3 failed Pre-Unreal #517 because four newly added runtime files were not yet registered in Data/SourceArchitecturePlan.json. That architecture-governance blocker has now been repaired on be1554642827184cc77847a165a72c0d7ff81a8b. Unreal Build #352 was still running when the failure was reconciled; do not transfer any result to the repaired head.",
+    "note": "PR #56 exact candidate is green and merged. Realm Detail Saturation V2 starts from that develop merge and must earn new exact-head proof before merge.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -2878,28 +2925,34 @@
       ],
       "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
+    "last_green_head": "3bc4ea804994df0113909f1bd97cc16240acbc8f",
     "evidence": {
-      "pre_unreal": "PASS #509",
-      "unreal_build": "PASS #344"
+      "pre_unreal": "PASS #520",
+      "unreal_build": "PASS #355"
     },
-    "evidence_scope": "PR #54 exact candidate head; develop merge commit 2a5f96fd552cbe6343474721ca98d86d8629fc00 contains that tree but the new mega-wave candidate must earn its own exact-head proof.",
+    "evidence_scope": "PR #56 exact candidate 3bc4ea804994df0113909f1bd97cc16240acbc8f passed both gates. PR #56 merged into develop as 425329a7570314ccbe1674a6cfb7598a3bec6a71. No develop-merge workflow result was observed at branch creation, so candidate proof is not silently transferred to later heads.",
     "current_owner_observation": {
-      "sha": "e0a78d8094d70e7c75a05f0b7ab4c9df96e275b3",
+      "sha": "3bc4ea804994df0113909f1bd97cc16240acbc8f",
       "pre_unreal": {
-        "run_number": 517,
-        "status": "FAILURE",
-        "root_cause": "WorldAmbientMotionActor.cpp/.h and WorldDetailCluster.cpp/.h were missing from SourceArchitecturePlan.json."
+        "run_number": 520,
+        "status": "SUCCESS"
       },
       "unreal": {
-        "run_number": 352,
-        "status": "IN_PROGRESS_AT_RECONCILIATION"
+        "run_number": 355,
+        "status": "SUCCESS",
+        "scope": [
+          "C++ build",
+          "production asset import",
+          "playable startup smoke",
+          "P1C01-P1C08 chapter audit",
+          "route/story state roundtrip",
+          "warning-debt guard"
+        ]
       },
-      "repaired_after_observation": [
-        "Data/SourceArchitecturePlan.json now registers all four new runtime files exactly once under the World domain.",
-        "Previous PG-107 source-authority wording and Moria Iron material binding fixes remain present.",
-        "Fresh exact-head validation is required on be1554642827184cc77847a165a72c0d7ff81a8b or later."
-      ]
+      "merge": {
+        "sha": "425329a7570314ccbe1674a6cfb7598a3bec6a71",
+        "status": "MERGED_TO_DEVELOP_NO_MERGE_COMMIT_CI_OBSERVED_AT_BRANCH_CREATION"
+      }
     }
   },
   "reference_only_files": [
@@ -3172,17 +3225,24 @@
       "status": "ACTIVE",
       "rationale": "Owner requested a very large next step with massive visible content/material injection while preserving useful prior requests and programmer findings.",
       "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
+    },
+    {
+      "order": 30,
+      "id": "WORK-PROD-008",
+      "title": "Realm detail saturation V2",
+      "status": "ACTIVE",
+      "rationale": "Continue visible source-grounded production after the green PR #56 mega wave.",
+      "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "reason": "Mega world-magic/life/detail wave encountered and repaired another governance blocker during exact-head validation.",
+    "reason": "PR #56 exact candidate passed both CI gates and was merged; start the next realm-specific visible production wave without carrying stale red gate state.",
     "summary": [
-      "Pre-Unreal #517 on e0a78d8 correctly rejected four new runtime files that were absent from SourceArchitecturePlan.json.",
-      "The missing WorldAmbientMotionActor and WorldDetailCluster header/source entries were added to the architecture plan rather than weakening the validator.",
-      "This confirms the architecture guard is active and the production wave is being corrected inline rather than bypassing controls.",
-      "Unreal #352 belonged to the failed e0a78d8 head and cannot certify the repaired head.",
-      "Next acceptance step is fresh exact-head Pre-Unreal + Unreal validation."
+      "PR #56 candidate 3bc4ea804994df0113909f1bd97cc16240acbc8f: Pre-Unreal #520 SUCCESS; Unreal #355 SUCCESS including import/startup/chapter/state/warning gates.",
+      "PR #56 merged to develop as 425329a7570314ccbe1674a6cfb7598a3bec6a71.",
+      "Realm Detail Saturation V2 targets Rivendell, Lothlorien, Anduin/Amon Hen and Isengard using Project Sources and performance-aware detail.",
+      "Rendered visual acceptance and target-device performance remain unproven until direct evidence exists."
     ]
   },
   "development_mode": {
@@ -3219,13 +3279,13 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "MEGA_WORLD_MAGIC_LIFE_AND_DETAIL_TRANSFORMATION_V1",
+  "current_focus": "REALM_DETAIL_SATURATION_V2",
   "immediate_next_large_actions": [
-    "Repair the current exact-head CI blockers first: updated screenplay-authority validator wording and missing Moria Iron material used by four new meshes.",
-    "Earn exact-head Pre-Unreal plus Unreal import/build/startup proof for the repaired mega-wave branch.",
-    "Continue the world-magic/life wave with source-grounded environmental motion, regional activity, culture-specific props, atmosphere and cinematic landmarks across Moria, Amon Hen, Isengard, Rivendell, Lothlorien and Anduin.",
-    "Keep Shire/Bree/Road/Weathertop population and micro-life rich but bounded; preserve wilderness/dead-city civilian restrictions.",
-    "After each coherent production batch, update Governor evidence and only then merge to develop."
+    "Build realm-specific production kits for Rivendell, Lothlorien, Anduin/Amon Hen and Isengard from Sources 03/04/05/06/07/10/11.",
+    "Runtime-wire them around existing story-safe spaces and activity windows without moving canonical quest/cinematic anchors.",
+    "Use HISM or bounded actor counts for repeat detail; avoid new heavy AI/dynamic-light density until target-device profiling.",
+    "Validate the exact branch head through Pre-Unreal and UE4.27.2 build/import/startup/chapter/state/warning gates, repair blockers inline, then merge to develop.",
+    "After V2, continue character/animation/audio/cinematic polish and Shire/Bree/Road/Weathertop finishing in another short branch."
   ],
   "session_handoff": {
     "source_head": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
