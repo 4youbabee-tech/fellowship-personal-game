@@ -247,6 +247,8 @@
     "id": "BIBLE_DRIVEN_WORLD_COMPOSITION_V5",
     "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
     "source_basis": [
+      "The Two Towers screenplay - primary Part II story authority",
+      "The Fellowship of the Ring screenplay - primary Part I story authority",
       "01 Story & Timeline Bible",
       "03 World, Locations & Map Bible",
       "05 Battles, Weapons, Armies & Creatures Bible",
@@ -278,5 +280,22 @@
       "Continue final cast/threat rig and animation handoff in parallel with world production.",
       "Establish rendered PIE screenshots/video plus target-device performance evidence before visual acceptance."
     ]
+  },
+  "story_source_hierarchy": {
+    "primary": [
+      "SRC_FILM_FOTR_SCREENPLAY",
+      "SRC_FILM_TTT_SCREENPLAY"
+    ],
+    "production_derivation": [
+      "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
+      "SRC_OWNER_CHARACTERS_RELATIONSHIPS_BIBLE_V1",
+      "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+      "SRC_OWNER_PEOPLES_LORE_ARTIFACTS_CULTURES_BIBLE_V1",
+      "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+      "SRC_OWNER_GAMEPLAY_SIDE_ACTIVITIES_BIBLE_V1",
+      "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+      "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1"
+    ],
+    "rule": "Screenplays own film chronology and required outcomes; production bibles translate that source into game/world/mission/visual constraints and may not rewrite it."
   }
 }
