@@ -244,37 +244,39 @@
     "Run Pre-Unreal after the mega batch, then repair failures before making any green claim."
   ],
   "current_execution_wave": {
-    "id": "MORIA_AMON_HEN_VISUAL_CAMERA_V4",
+    "id": "BIBLE_DRIVEN_WORLD_COMPOSITION_V5",
     "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
     "source_basis": [
-      "Owner Source Pack Master",
-      "Owner Battles, Weapons, Armies & Production Design Bible",
+      "01 Story & Timeline Bible",
+      "03 World, Locations & Map Bible",
+      "05 Battles, Weapons, Armies & Creatures Bible",
+      "06 Gameplay & Side Activities Bible",
+      "07 Mission & Chapter Implementation Matrix",
+      "08 Visual Reference Bible",
       "existing film-first Part I canon contracts"
     ],
     "invariants": [
-      "Moria order remains Watcher threshold -> Mazarbul/Orc/Troll defense -> retreat -> Bridge/Balrog.",
-      "Amon Hen remains Boromir pressure/defense/fall -> Lurtz/Uruk pressure -> Frodo/Sam departure.",
-      "Lurtz is film-locked and cannot become a player-authored alternate outcome.",
-      "Visual enrichment cannot replace or reorder mandatory film outcomes.",
-      "Hard performance budgets stay measurement-derived rather than guessed."
+      "Moria remains Watcher threshold -> Balin/Mazarbul pressure -> Orc/Troll escalation -> retreat -> Bridge/Balrog -> Gandalf fall/escape.",
+      "Amon Hen remains Boromir pressure/defense/fall -> Merry/Pippin capture -> Frodo chooses Mordor -> Sam follows.",
+      "Watcher, Balrog and Lurtz remain film-locked and cannot become player-authored alternate outcomes.",
+      "Mission logic owns authoritative state; camera, VFX and cinematics present state only.",
+      "World decoration may not create traversal soft locks, checkpoint corruption or unnecessary full-AI cost."
     ],
     "implemented": [
-      "Moria production dressing expanded with broken circulation, chain anchors, gate pieces, rubble pillars and tall braziers.",
-      "Anduin/Amon Hen handoff expanded with boat/camp/cargo/fishing/river-marker production props.",
-      "Dedicated Lurtz runtime type, project-owned visual handoff and film-locked damage outcome.",
-      "Distance-adaptive Watcher/Balrog presentation tick rate for low-spec protection.",
-      "Source asset triangle-equivalent and byte telemetry.",
-      "Measurement-first AssetPerformanceBudget contract.",
-      "Part1VisualProductionPass covering P1C01-P1C08 plus Isengard.",
-      "bounded runtime landmark/threat camera framing using existing player camera",
-      "Isengard now has a low-cost cold-light/industrial-haze/furnace-glow atmosphere and production parapet dressing; prototype world labels are hidden."
+      "All eight owner production bibles indexed with verified SHA-256 provenance and runtime_ship=false.",
+      "ProjectGovernor exact-head stability gate reconciled to PASSED using Pre-Unreal #468 and Unreal Build #303 on the prior exact green head.",
+      "P1C06 explicit bounded local light pools added without changing quest/story anchors.",
+      "P1C06 production mine carts integrated from the existing project-owned asset bank.",
+      "P1C08 explicit river/woodland atmosphere authored instead of using generic defaults.",
+      "P1C08 production dock-pier and deliberate non-colliding Amon Hen battle-lane composition added without increasing full-AI enemy count.",
+      "Isengard receives a secondary industrial ring, service cuts and Orthanc base rhythm from the existing production bank."
     ],
     "next_large_actions": [
-      "Keep exact head green through Pre-Unreal and real UE4.27.2 validation.",
-      "Engine-check landmark framing in Bree, Weathertop, Rivendell, Moria, Lothlorien, Argonath/Amon Hen and Isengard.",
-      "Continue Moria materials/light/VFX/audio and Amon Hen battle staging after camera framing is stable.",
-      "Continue final cast/threat rig and animation handoff.",
-      "Establish rendered screenshot/video plus target-device performance evidence before visual acceptance."
+      "Run Pre-Unreal on the new exact head and repair any contract failure.",
+      "Run real UE4.27.2 compile/import/startup/chapter/state chain on the same exact head.",
+      "After green proof, continue Moria material/VFX/audio and Amon Hen encounter choreography.",
+      "Continue final cast/threat rig and animation handoff in parallel with world production.",
+      "Establish rendered PIE screenshots/video plus target-device performance evidence before visual acceptance."
     ]
   }
 }
