@@ -227,7 +227,8 @@
       ],
       "authority": "HELPER_ONLY_NOT_CANON_NOT_STORY",
       "runtime_ship": false,
-      "release_clearance_required_for_distribution": true
+      "release_clearance_required_for_distribution": true,
+      "sha256": "3228407211220d58403f14fbee1087f4736d2ee2e5c1afd60a6f3a7c3f8e0ee6"
     }
   ],
   "derived_runtime_data": [
@@ -295,5 +296,44 @@
       "SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1"
     ],
     "rule": "The two supplied screenplays are primary story authority. Bibles 01-08 derive production guidance. Bible 09 is a helper/resource-intake guide only and cannot establish or override canon, chronology, character identity, story outcomes or film geography."
+  },
+  "review_audit": {
+    "date": "2026-09-20",
+    "scope": "Uploaded primary screenplay and numbered reference file identity verified by SHA256; targeted textual review of story, mission and visual governance sections. This is not full scene-by-scene implementation or rendered acceptance.",
+    "reviewed_sections": [
+      {
+        "source_id": "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
+        "pdf_pages": [
+          2,
+          3,
+          4,
+          5
+        ],
+        "application": "Film-safe optional windows, lane-local/global persistence, no future knowledge; Part III not screenplay-verified."
+      },
+      {
+        "source_id": "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+        "pdf_pages": [
+          2,
+          3,
+          4
+        ],
+        "application": "Mission pre/postconditions, independent logic/art readiness and explicit QA scenarios."
+      },
+      {
+        "source_id": "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
+        "pdf_pages": [
+          2,
+          3
+        ],
+        "application": "Visual references establish intended appearance only; no inference of unseen canon or final visual acceptance."
+      }
+    ],
+    "chapter_id_warning": "Bible F1-xx mission packages and runtime P1Cxx chapters are different identifiers. Never map by matching the numeric suffix. Match location, preconditions and outcomes against the screenplay and runtime atlas.",
+    "outstanding": [
+      "Scene-level provenance coverage for all implemented beats is not yet comprehensively audited.",
+      "Final visual acceptance needs rendered chapter/character evidence.",
+      "Part III screenplay is absent from the supplied core reference set."
+    ]
   }
 }

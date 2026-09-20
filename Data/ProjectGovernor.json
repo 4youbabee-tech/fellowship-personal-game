@@ -1914,10 +1914,12 @@
         "shipping separation for developer chapter/route controls",
         "bounded lightweight cinematic input lock",
         "asynchronous automatic checkpoint writes",
-        "CI deep-audit script and finding registry"
+        "CI deep-audit script and finding registry",
+        "World material persistence verified with zero missing runtime packages in Unreal #319.",
+        "SHA-scoped governor handoff regression guard."
       ],
       "missing_work": [
-        "repair current world-material persistence blocker",
+        "Complete current V6 engine validation after repeated runner cancellation; investigate trigger without treating interruption as a code defect.",
         "profile actor-iteration/social pairing on target device",
         "profile chapter-transition synchronous asset loads",
         "target-device frame-time/memory capture and rendered chapter acceptance"
@@ -2753,7 +2755,7 @@
       "route/story/state isolated disk roundtrip",
       "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "Exact-head automation is green and the major production wave is unlocked. Machine evidence still does not equal rendered PIE, target-device performance or human visual acceptance.",
+    "note": "The historical green baseline unlocked production. Current V6 head engine proof is incomplete after cancelled runs; finish that proof before unrelated expansion. Headless evidence never implies rendered/device/human acceptance.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -2766,11 +2768,12 @@
       ],
       "behavior": "Repair exact-head failures first; machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "096a2a9658b0da171f390505b4d0331c1a4e0f8f",
+    "last_green_head": "cd58be1e1cea033295a163ef2a90985f30471c2b",
     "evidence": {
-      "pre_unreal": "PASS #468",
-      "unreal_build": "PASS #303"
-    }
+      "pre_unreal": "PASS #484 on cd58be1",
+      "unreal_build": "PASS #319 on cd58be1"
+    },
+    "evidence_scope": "Historical passed baseline only; latest head requires its own complete engine run."
   },
   "reference_only_files": [
     "Docs/CURRENT_PROJECT_STATE.md",
@@ -3024,13 +3027,16 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-20",
-    "reason": "The exact-head stability runway is green and the owner explicitly approved opening the large production wave.",
+    "reason": "Owner requested continuation, source verification and accurate professional project-manager handoff.",
     "summary": [
-      "PR #53 exact head 096a2a9658b0da171f390505b4d0331c1a4e0f8f passed Pre-Unreal Validation #468.",
-      "The same exact head passed Unreal Build Validation #303.",
-      "Startup, P1C01-P1C08 runtime audits, route/story/save disk roundtrip and warning-debt gates are no longer blocking major production expansion.",
-      "Remaining tangent/binormal geometry quality debt stays visible and is not hidden by threshold inflation.",
-      "The next active program is a source-bible-driven world/character/presentation mega production wave."
+      "Reconciled stale #303 handoff against actual green #319 / #484 on cd58be1.",
+      "V6 hero geometry head 93092a8 passed Pre-Unreal #485; Unreal #320 was cancelled while building; rerun requested once.",
+      "Added SHA-scoped evidence validation and regression tests to prevent cross-version green claims.",
+      "Verified uploaded reference hashes; added missing Bible 09 fingerprint and targeted source review scope with chapter-ID mismatch warning.",
+      "Keep implemented V6 modular geometry distinct from final rigs/materials/animation and rendered/device acceptance.",
+      "Rerun #320 attempt 2 also cancelled before compilation; cause of cancellation remains unestablished. Stop blind retries.",
+      "Green #319 retains 132 unique near-zero-binormal warning identities under the existing 150 ceiling; do not claim zero geometry debt.",
+      "Removed resolved material-persistence blocker from REQ-AUDIT-001 and scoped active gate evidence to its historical baseline."
     ]
   },
   "development_mode": {
@@ -3074,35 +3080,80 @@
     "Continue regional life-density, ambient animation and presentation passes while final rig/animation/PIE/device/human acceptance remains explicit."
   ],
   "session_handoff": {
-    "source_head": "096a2a9658b0da171f390505b4d0331c1a4e0f8f",
+    "source_head": "cd58be1e1cea033295a163ef2a90985f30471c2b",
     "pull_request": 53,
     "branch": "work/automation-first-runtime-observation",
     "verified": {
-      "pre_unreal": "PASS #468",
-      "unreal_build": "PASS #303",
-      "ue4_compile": "PASS #303",
-      "production_import": "PASS #303",
-      "startup": "PASS #303",
-      "chapter_audit": "PASS #303 P1C01-P1C08",
-      "state_audit": "PASS #303 route/story/save real disk roundtrip"
+      "unreal_build": "PASS #319 (cd58be1)",
+      "ue4_compile": "PASS #319 (cd58be1)",
+      "production_import": "PASS #319 (cd58be1)",
+      "startup": "PASS #319 (cd58be1)",
+      "chapter_audit": "PASS #319 (cd58be1)",
+      "state_audit": "PASS #319 (cd58be1)",
+      "warning_guard": "PASS #319 (cd58be1)",
+      "pre_unreal": "PASS #484 (cd58be1)"
     },
-    "failing": {},
+    "failing": {
+      "current_head": "Both #320 attempts were interrupted (Ctrl-C). Attempt 2 cancelled before build at editor-wait step. Trigger not established; no new compiler defect inferred."
+    },
+    "next_actions": [
+      "Prove the V6 head/torso/hair/equipment wave on an exact-head Pre-Unreal + UE4.27.2 chain.",
+      "After green proof, add authored character material layering and refine visible threat geometry without regressing story/save/performance safety.",
+      "Continue regional life-density, ambient animation and presentation passes while final rig/animation/PIE/device/human acceptance remains explicit."
+    ],
+    "scope_rule": "Machine evidence does not replace rendered PIE/device/human acceptance.",
+    "validation_snapshot": {
+      "last_green": {
+        "sha": "cd58be1e1cea033295a163ef2a90985f30471c2b",
+        "pre_unreal": {
+          "sha": "cd58be1e1cea033295a163ef2a90985f30471c2b",
+          "run_id": 35519376661,
+          "status": "SUCCESS"
+        },
+        "unreal": {
+          "sha": "cd58be1e1cea033295a163ef2a90985f30471c2b",
+          "run_id": 35519376668,
+          "status": "SUCCESS"
+        }
+      },
+      "latest_observed": {
+        "sha": "93092a82b95418552728c73e02d31c220a7457ac",
+        "pre_unreal": {
+          "sha": "93092a82b95418552728c73e02d31c220a7457ac",
+          "run_id": 35525072736,
+          "status": "SUCCESS"
+        },
+        "unreal": {
+          "sha": "93092a82b95418552728c73e02d31c220a7457ac",
+          "run_id": 35525072738,
+          "status": "CANCELLED",
+          "attempt": 2,
+          "workflow_conclusion": "FAILURE"
+        },
+        "previous_attempt": {
+          "attempt": 1,
+          "result": "Build step cancelled with Ctrl-C / -1073741510; no compiler diagnostic established before interruption."
+        }
+      }
+    },
+    "unverified_acceptance": [
+      "V6 current-head engine proof pending rerun",
+      "Rendered character/world visual acceptance",
+      "Target-device FPS/memory measurements",
+      "Human pacing/playability acceptance",
+      "Complete trilogy content"
+    ],
     "measured_debt": {
-      "degenerate_tangent_meshes": 50,
-      "nearly_zero_binormal_meshes": 53,
+      "source_head": "cd58be1e1cea033295a163ef2a90985f30471c2b",
+      "unreal_run_id": 35519376668,
+      "degenerate_tangent_meshes": 0,
+      "nearly_zero_binormal_meshes": 132,
       "missing_world_packages": 0,
       "missing_audio": 0,
       "missing_rigs": 0,
       "default_materials": 0,
       "directional_light_warnings": 0,
       "npc_spawn_collision_failures": 0
-    },
-    "next_actions": [
-      "Run the Bible-driven Moria / Anduin-Amon Hen / Isengard composition wave.",
-      "Preserve film-locked Watcher, Balrog, Lurtz and Amon Hen outcomes.",
-      "Run exact-head Pre-Unreal and Unreal validation after the batch.",
-      "Do not claim final visual/device acceptance without real PIE, target-device measurements and human review."
-    ],
-    "scope_rule": "Machine evidence does not replace rendered PIE/device/human acceptance."
+    }
   }
 }

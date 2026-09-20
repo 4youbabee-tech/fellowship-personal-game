@@ -10,7 +10,9 @@ from __future__ import annotations
 
 import json
 import sys
+import subprocess
 from pathlib import Path
+from governor_handoff import validate_handoff, evidence_summary
 
 ROOT = Path(__file__).resolve().parents[1]
 GOVERNOR_PATH = ROOT / "Data" / "ProjectGovernor.json"
@@ -183,6 +185,8 @@ missing_pacing = sorted(required_pacing - pacing_chapters)
 if missing_pacing:
     fail("Pacing plan missing chapters/routes: " + ", ".join(missing_pacing))
 
+errors.extend(validate_handoff(governor))
+
 print(
     f"Single Project Governor checked {len(req_ids)} requirements, "
     f"{len(decision_ids)} decisions, {len(open_conflicts)} open conflicts, "
@@ -196,6 +200,13 @@ if errors:
     sys.exit(1)
 
 print("PROJECT GOVERNOR PASSED")
+try:
+    checkout = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT,
+                              capture_output=True, text=True)
+    checkout_sha = checkout.stdout.strip() if checkout.returncode == 0 else ''
+except OSError:
+    checkout_sha = ''  # Exported source archives need not have Git installed.
+print(evidence_summary(governor, checkout_sha))
 
 # Work-start reminder: surface unfinished high-priority commitments every validation run.
 open_statuses = {"REQUESTED", "PLANNED", "PARTIAL", "DEFERRED"}
