@@ -679,7 +679,7 @@
     "Visual acceptance is recorded separately from compile/import success."
   ],
   "source_atlas": "Data/Part1ProductionAtlas.json",
-  "production_truth": "V6 hero geometry and V7 production surface response for the nine core Part I hero/companion foundations are exact-head engine-proven through #488/#323 on 2e8898a. V8 regional life is the next implementation wave and remains pending its own exact-head proof. Final skeletal deformation, final animation, texture-level skin detail, rendered PIE/device performance and human visual acceptance remain pending.",
+  "production_truth": "V6 hero geometry and V7 production surface response for the nine core Part I hero/companion foundations are exact-head engine-proven through #488/#323 on 2e8898a. V8 regional life is the next implementation wave and remains pending its own exact-head proof. Final skeletal deformation, final animation, texture-level skin detail, rendered PIE/device performance and human visual acceptance remain pending. Programmer review verified that OBJ cannot carry the final skeletal rig/skin data, but batch-converting existing OBJ foundations to FBX would not solve rigging. The existing rig_handoff_contract remains the authoritative migration path.",
   "threats": [
     {
       "id": "BLACK_RIDER_NAZGUL",
@@ -889,5 +889,25 @@
       "Gimli"
     ],
     "rule": "Dedicated equipment assets replace generic common silhouettes where available; final skeletal rig + AnimBP still has priority."
+  },
+  "source_format_policy_review": {
+    "date": "2026-09-21",
+    "verified_develop": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+    "current_source_snapshot": {
+      "character_obj_files": 115,
+      "enemy_obj_files": 30,
+      "fbx_files": 0
+    },
+    "verdict": "PARTIAL_CORRECT_DIRECTION_WRONG_AS_BATCH_CONVERSION",
+    "rules": [
+      "Current OBJ files are project-owned static/modular production foundations and fallback source; keeping them does not claim final character animation readiness.",
+      "Final animated heroes/enemies require an actual skeleton, skin weights, deformation audit and animation integration. Merely converting an OBJ container to FBX does not create rigging or skinning.",
+      "Use SK_<CharacterId> only for a real skeletal-mesh source/import target. Do not rename static foundation pieces from SM_ to SK_ just because their container format changes.",
+      "Rig conversion is per-character/per-creature production work: clean geometry -> build/retarget skeleton -> skin/weight -> export skeletal FBX -> import as Skeletal Mesh -> AnimBP/socket/LOD validation.",
+      "Existing modular OBJ fallback remains until the corresponding skeletal package passes exact-head engine plus visual/deformation/animation acceptance.",
+      "SourceAssets remain source/reference inputs; shipping maps use imported /Game assets, consistent with Source 11."
+    ],
+    "final_rig_target": "/Game/Production/Characters/Rigs/<CharacterId>/SK_<CharacterId> + ABP_<CharacterId>_Locomotion",
+    "immediate_action": "Do not batch-convert 145 OBJ files. Continue targeted final skeletal-rig production and retire fallback pieces only after accepted replacements exist."
   }
 }

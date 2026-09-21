@@ -128,5 +128,33 @@
     "Named Shire prototype survives save/load and chapter-state transitions.",
     "Performance is measured before scaling beyond the prototype."
   ],
-  "manager_instruction": "Preserve this roadmap as an accepted owner development direction. Schedule it alongside existing living-NPC work when dependencies permit; do not let it block unrelated world/character production and do not re-implement systems that already exist."
+  "manager_instruction": "Preserve this roadmap as an accepted owner development direction. Schedule it alongside existing living-NPC work when dependencies permit; do not let it block unrelated world/character production and do not re-implement systems that already exist.",
+  "current_runtime_truth": {
+    "verified_on": "2026-09-21",
+    "develop_sha": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+    "status": "DETERMINISTIC_OFFLINE_NO_RUNTIME_LLM",
+    "facts": [
+      "UShireNPCContextSubsystem loads social/conversation/bounded-dialogue/regional-mood/film-context JSON during subsystem Initialize, not on every conversation.",
+      "SelectBoundedDialogue operates over in-memory runtime structures plus UShireQuestSubsystem memory/relationship/story state.",
+      "No current runtime GPT/OpenAI/cloud/HTTP/FRunnable language-model path was found in live develop.",
+      "Therefore the proposed current per-conversation JSON + LLM game-thread freeze is not a reproduced current bottleneck."
+    ]
+  },
+  "future_async_expression_contract": {
+    "status": "ACCEPTED_FOR_FUTURE_OPTIONAL_LOCAL_EXPRESSION",
+    "rules": [
+      "Any future local language-model inference, STT, TTS or heavy memory retrieval must not synchronously block the Game Thread.",
+      "Use UE4.27-compatible background execution (for example Async/ThreadPool or a model runtime's asynchronous API) with a narrow validated handoff back to Game Thread.",
+      "Never wait synchronously on inference from gameplay input, Tick, interaction, quest or cinematic callbacks.",
+      "Support cancellation/timeouts, bounded context size, response cache where safe, and immediate deterministic authored/template fallback.",
+      "Only validated final text may reach dialogue presentation/TTS; generated output never owns quest, canon, memory truth or save-state authority.",
+      "Do not introduce a cloud/runtime API dependency into the shipped gameplay path."
+    ],
+    "acceptance": [
+      "Player movement/animation remains responsive while optional inference is pending.",
+      "Disabling the expression adapter changes wording quality only, not quest progression or NPC brain state.",
+      "No future-knowledge/canon leakage through generated output.",
+      "Latency and game-thread frame-time measured on target hardware before expanding beyond the named-Hobbit prototype."
+    ]
+  }
 }

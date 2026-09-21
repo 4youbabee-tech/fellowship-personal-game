@@ -518,5 +518,17 @@
       "role": "Story-cue camera grammar, subject framing and safe gameplay return implementation",
       "migration_status": "CURRENT_FLAT"
     }
-  ]
+  ],
+  "programmer_review_2026_09_21": {
+    "verified_develop": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+    "root_runtime_cpp_h_files": 60,
+    "verdict": "VALID_MAINTAINABILITY_CONCERN_ALREADY_PLANNED",
+    "finding": "The ShireJourney runtime module remains flat and is now large enough that Public/Private plus domain folders will improve maintainability.",
+    "existing_authoritative_plan": {
+      "current_layout": "FLAT_GUARDED",
+      "target_layout": "PUBLIC_PRIVATE_BY_DOMAIN"
+    },
+    "execution_rule": "Do not mix the physical source-layout migration with gameplay/production feature work. Perform it on a dedicated short branch, update includes/static-validator paths, then require Pre-Unreal and real UE4.27.2 build proof.",
+    "urgency": "STRUCTURAL_MAINTENANCE_NOT_RUNTIME_BLOCKER"
+  }
 }

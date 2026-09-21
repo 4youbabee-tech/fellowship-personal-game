@@ -67,19 +67,19 @@
     },
     {
       "id": "AUDIT-MED-006",
-      "severity": "MEDIUM",
+      "severity": "HIGH",
       "status": "TRACK_AND_PROFILE",
       "title": "Chapter builders perform many direct LoadObject calls",
-      "evidence": "Production world builders synchronously load many assets during chapter construction.",
-      "action": "Keep loads out of Tick; profile transition hitch and migrate chapter banks toward soft/async preload if justified."
+      "evidence": "Live develop count: FellowshipChapterWorldBuilder 77 LoadObject calls, ShirePrototypeWorldBuilder 55, BreePrototypeWorldBuilder 22, IsengardPrototypeWorldBuilder 10, LivingWorldDirector 13. These are synchronous explicit loads and scale with asset growth.",
+      "action": "Profile chapter-transition hitch/memory, then migrate justified chapter/region banks toward soft references + asynchronous preload behind authored seams. Do not mechanically soft-reference everything without ownership/lifetime rules."
     },
     {
       "id": "AUDIT-MED-007",
       "severity": "MEDIUM",
-      "status": "REPAIR_IN_PROGRESS",
-      "title": "Geometry tangent/binormal quality remains incomplete",
-      "evidence": "Exact-head #302 baseline: 50 degenerate-tangent identities and 53 nearly-zero-binormal identities; representative source OBJ meshes have no vt records, making MikkTSpace an invalid tangent basis for their flat-color material path.",
-      "action": "Use UE4 built-in computed normals/tangents for OBJ meshes without texture UVs; rerun exact-head import and reduce tangent/binormal warning ceilings only after measured zero-warning proof."
+      "status": "TRACK_AND_PROFILE",
+      "title": "Ambient living-world actors use spawn/cull/destroy churn",
+      "evidence": "LivingWorldDirector baseline targets reach 18 actors in P1C01 with a 0.35 s fill cadence plus up to 5 active micro-events; actors outside the cull radius and expired event actors are Destroy()ed.",
+      "action": "Measure SpawnActor/DestroyActor/GC cost. If material, introduce bounded pooling for ambient archetypes/ephemeral event actors only; do not recycle named persistent NPC identity."
     },
     {
       "id": "AUDIT-MED-008",
@@ -130,6 +130,8 @@
     "quest soft-lock fuzzing",
     "combat readability/story-lock edge cases",
     "target-device CPU/GPU/frame-time/memory",
-    "human pacing/visual/readability per chapter"
+    "human pacing/visual/readability per chapter",
+    "chapter soft/async asset-bank prototype after transition-hitch measurement",
+    "ambient spawn/destroy/GC trace before pooling decision"
   ]
 }
