@@ -8,6 +8,13 @@ on:
       - 'Data/WarehouseAcquisitionBatchV1.json'
       - 'Scripts/stage_polyhaven_warehouse.ps1'
       - '.github/workflows/warehouse-stage.yml'
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - 'Data/WarehouseAcquisitionBatchV1.json'
+      - 'Scripts/stage_polyhaven_warehouse.ps1'
+      - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
 
 permissions:
@@ -29,7 +36,7 @@ jobs:
       - name: Checkout warehouse manifest and scripts
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           clean: false
 
       - name: Stage first Poly Haven CC0 batch
