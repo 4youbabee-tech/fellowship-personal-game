@@ -11,6 +11,10 @@ on:
       - 'Scripts/stage_opengameart_audio.ps1'
       - 'Data/WarehouseQuaterniusAcquisitionBatchV1.json'
       - 'Scripts/stage_quaternius_warehouse.ps1'
+      - 'Data/WarehouseAmbientCGAcquisitionBatchV1.json'
+      - 'Scripts/stage_ambientcg_warehouse.ps1'
+      - 'Data/WarehouseKenneyAcquisitionBatchV1.json'
+      - 'Scripts/stage_kenney_warehouse.ps1'
       - '.github/workflows/warehouse-stage.yml'
   pull_request:
     branches:
@@ -22,6 +26,10 @@ on:
       - 'Scripts/stage_opengameart_audio.ps1'
       - 'Data/WarehouseQuaterniusAcquisitionBatchV1.json'
       - 'Scripts/stage_quaternius_warehouse.ps1'
+      - 'Data/WarehouseAmbientCGAcquisitionBatchV1.json'
+      - 'Scripts/stage_ambientcg_warehouse.ps1'
+      - 'Data/WarehouseKenneyAcquisitionBatchV1.json'
+      - 'Scripts/stage_kenney_warehouse.ps1'
       - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
 
@@ -61,6 +69,16 @@ jobs:
         shell: cmd
         run: |
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseQuaterniusAcquisitionBatchV1.json"
+
+      - name: Stage ambientCG CC0 material batch
+        shell: cmd
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAmbientCGAcquisitionBatchV1.json"
+
+      - name: Stage Kenney CC0 support packs
+        shell: cmd
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_kenney_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseKenneyAcquisitionBatchV1.json"
 
       - name: Show persistent warehouse footprint
         shell: cmd
