@@ -10,6 +10,7 @@ class StreamingCancellationContract(unittest.TestCase):
     def setUpClass(cls):
         cls.stream = (ROOT / 'Source/ShireJourney/ShireChapterAssetStreamingSubsystem.cpp').read_text()
         cls.router = (ROOT / 'Source/ShireJourney/ChapterWorldRouter.cpp').read_text()
+        cls.player = (ROOT / 'Source/ShireJourney/ShirePlayerCharacter.cpp').read_text()
 
     def test_cancel_invalidates_before_handle_and_preserves_resident(self):
         body = self.stream.split('::CancelPendingRequest()', 1)[1].split('::Deinitialize()', 1)[0]
@@ -28,6 +29,24 @@ class StreamingCancellationContract(unittest.TestCase):
     def test_resident_fast_path_also_cancels_pending(self):
         body = self.stream.split('if (IsChapterBankReady(ChapterId, RouteId))', 1)[1].split('return;', 1)[0]
         self.assertLess(body.index('CancelPendingRequest()'), body.index('OnChapterAssetsReady.Broadcast'))
+
+    def test_transition_checkpoint_waits_for_committed_world(self):
+        tick = self.player.split('::Tick(float DeltaSeconds)', 1)[1].split('::BeginPlay()', 1)[0]
+        self.assertIn('PendingChapterCheckpointId != NAME_None && IsCurrentWorldCommitted()', tick)
+        self.assertLess(tick.index('IsCurrentWorldCommitted()'), tick.index('SaveAutomaticCheckpoint'))
+        begin = self.player.split('::BeginPlay()', 1)[1].split('::EndPlay(', 1)[0]
+        self.assertIn('PendingChapterCheckpointId = TEXT("WC_P1C01_START")', begin)
+        self.assertNotIn('SaveAutomaticCheckpoint(TEXT("WC_P1C01_START")', begin)
+
+    def test_save_restore_defers_transform_until_committed_world(self):
+        restore = self.player.split('::RestoreSaveSnapshot(', 1)[1].split('::SaveAutomaticCheckpoint', 1)[0]
+        self.assertIn('bPendingSaveRestoreTransform = true', restore)
+        self.assertIn('TryApplyPendingSaveRestoreTransform()', restore)
+        self.assertNotIn('SetActorLocationAndRotation(', restore)
+        placement = self.router.split('::PlacePlayerAtCommittedTransform(', 1)[1].split('::MovePlayerToChapterStart', 1)[0]
+        self.assertIn('IsWorldCommitted(ChapterId, RouteId, EpisodeId)', placement)
+        self.assertIn('ResolveGroundedSpawnLocation', placement)
+        self.assertLess(placement.index('IsWorldCommitted(ChapterId, RouteId, EpisodeId)'), placement.index('SetActorLocationAndRotation'))
 
     def test_completion_checks_authoritative_quest_identity(self):
         body = self.router.split('::HandleChapterAssetsReady(FName ChapterId, FName RouteId)', 1)[1].split('CommitChapterWorld(', 1)[0]
