@@ -1,0 +1,48 @@
+name: Warehouse Stage
+
+on:
+  push:
+    branches:
+      - integration/comprehensive-foundation-v1
+    paths:
+      - 'Data/WarehouseAcquisitionBatchV1.json'
+      - 'Scripts/stage_polyhaven_warehouse.ps1'
+      - '.github/workflows/warehouse-stage.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: warehouse-stage-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  stage:
+    name: Stage CC0 warehouse batch
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+    timeout-minutes: 40
+    steps:
+      - name: Checkout warehouse manifest and scripts
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          clean: false
+
+      - name: Stage first Poly Haven CC0 batch
+        shell: powershell
+        run: |
+          Set-StrictMode -Version Latest
+          & "$env:GITHUB_WORKSPACE\Scripts\stage_polyhaven_warehouse.ps1" -ManifestPath "$env:GITHUB_WORKSPACE\Data\WarehouseAcquisitionBatchV1.json"
+
+      - name: Show persistent warehouse footprint
+        shell: powershell
+        run: |
+          $root = "C:\actions-runner\_warehouse\ShireJourney"
+          if (!(Test-Path $root)) { throw "Persistent warehouse root missing: $root" }
+          $files = Get-ChildItem -Path $root -Recurse -File
+          $bytes = ($files | Measure-Object -Property Length -Sum).Sum
+          Write-Host "WAREHOUSE_FOOTPRINT files=$($files.Count) bytes=$bytes root=$root"
