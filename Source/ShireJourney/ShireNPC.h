@@ -38,6 +38,12 @@ public:
     AShireNPC();
     virtual void Tick(float DeltaSeconds) override;
 
+protected:
+    virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+public:
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="NPC")
     FText DisplayName;
 
@@ -188,8 +194,10 @@ private:
     float CachedWorldPressure = 0.25f;
     FName CachedWorldMood = NAME_None;
     FName CachedEmotionalState = NAME_None;
+    FName RequestedProductionRigId = NAME_None;
 
     void ApplyPrototypeStyle();
+    void HandleProductionRigReady(FName CharacterId);
     bool TryApplyProductionRig(const FString& RigFolder);
     void UpdatePrototypeAnimation(float DeltaSeconds);
     void UpdatePrototypeActing(float DeltaSeconds);
