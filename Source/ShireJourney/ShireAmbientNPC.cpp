@@ -151,21 +151,21 @@ void AShireAmbientNPC::ApplyVisualStyle()
     LeftLeg->SetVisibility(true);
     RightLeg->SetVisibility(true);
 
-    if (!bHobbitResident)
+    // Pool reuse can change regional roles. Reset to lightweight resident Engine
+    // primitives before attempting any production soft-object substitutions so a
+    // missing production asset never leaves a stale mesh from the previous role.
+    if (FallbackCubeMesh) Torso->SetStaticMesh(FallbackCubeMesh);
+    if (FallbackSphereMesh)
     {
-        if (FallbackCubeMesh) Torso->SetStaticMesh(FallbackCubeMesh);
-        if (FallbackSphereMesh)
-        {
-            Head->SetStaticMesh(FallbackSphereMesh);
-            Hair->SetStaticMesh(FallbackSphereMesh);
-        }
-        if (FallbackCylinderMesh)
-        {
-            LeftArm->SetStaticMesh(FallbackCylinderMesh);
-            RightArm->SetStaticMesh(FallbackCylinderMesh);
-            LeftLeg->SetStaticMesh(FallbackCylinderMesh);
-            RightLeg->SetStaticMesh(FallbackCylinderMesh);
-        }
+        Head->SetStaticMesh(FallbackSphereMesh);
+        Hair->SetStaticMesh(FallbackSphereMesh);
+    }
+    if (FallbackCylinderMesh)
+    {
+        LeftArm->SetStaticMesh(FallbackCylinderMesh);
+        RightArm->SetStaticMesh(FallbackCylinderMesh);
+        LeftLeg->SetStaticMesh(FallbackCylinderMesh);
+        RightLeg->SetStaticMesh(FallbackCylinderMesh);
     }
 
     bool bProductionHobbit = false;
