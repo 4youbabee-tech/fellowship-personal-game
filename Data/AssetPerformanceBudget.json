@@ -128,7 +128,7 @@
       "Release streamable handles/region ownership after safe chapter unload and let Unreal GC/streaming reclaim eligible resources.",
       "Measure transition hitch, streaming pool and resident memory before and after migration."
     ],
-    "priority": "HIGH_AFTER_CURRENT_CHARACTER_WAVE"
+    "priority": "IMPLEMENTED_AS_V5_PENDING_EXACT_HEAD_AND_MEASUREMENT"
   },
   "ambient_actor_pooling_review": {
     "verified_on": "2026-09-21",
@@ -166,5 +166,18 @@
       "Current repository does not contain separate AO/roughness/metallic source texture sets that justify a bulk packing pass today.",
       "Alpha foliage still needs an alpha-capable source/import path independently of packed-mask policy."
     ]
+  },
+  "chapter_asset_streaming_v5": {
+    "status": "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF_AND_MEASUREMENT",
+    "plan": "Data/ChapterAssetStreamingPlan.json",
+    "runtime_owner": "UShireChapterAssetStreamingSubsystem + AChapterWorldRouter",
+    "changes": [
+      "chapter/route banks are soft object paths loaded with FStreamableManager RequestAsyncLoad",
+      "current visible runtime world remains until requested bank reports ready",
+      "router commits the world swap only after the bank callback",
+      "missing/unknown bank preserves compatibility builder path",
+      "Fellowship EnsureProductionMeshes is chapter-aware instead of loading every Part I region together"
+    ],
+    "evidence_boundary": "No claim of lower hitch, lower RAM or lower VRAM until representative target-device measurement exists."
   }
 }

@@ -1,3 +1,15 @@
+## 2026-09-21 - path cleanup before post-V5 production
+
+Authority remains `Data/ProjectGovernor.json`. The integration baseline is `develop` at `8d7247d229b5cd51e8aea5617e1e2030b38229bf`, green after PR #60 with Pre-Unreal #532 and Unreal Build #367. There is exactly one open production PR: #61, `production/chapter-streaming-v5`.
+
+The latest V5 code head before this cleanup is `b882b052a59c8d4e19437d7877dc30c9b1ea5daf`. Pre-Unreal #538 passed; Unreal Build #373 was pending when this reconciliation was written. Earlier V5 failures were narrowed to concrete UE4.27 issues and repaired: the `FStreamableHandle` declaration conflict (#370), invalid conditional `UE_LOG` verbosity (#371), and a stale async completion edge case after returning to an already resident world. This cleanup commit is newer than those checks and must earn fresh exact-head proof.
+
+The path is now explicit: finish V5 -> merge only after exact-head Pre-Unreal + full Unreal validation -> confirm develop returns green -> measure chapter seam hitch/streaming pool/resident memory on representative target hardware -> open the next short production branch. No V5 FPS/RAM/VRAM improvement is claimed from architecture alone.
+
+The next production branch is intentionally focused on visible world life rather than another mixed mega-branch: Shire, Bree, Rivendell and Lothlorien first for architecture density, culture-specific dressing, bounded NPC density, routines and ambient life. The character-quality lane advances through real skeleton/skin/Skeletal Mesh/AnimBP/animation work; OBJ-to-FBX container conversion alone is not treated as rigging.
+
+Repository hygiene was reconciled. PR54 and PR56-PR60 short branches are historical cleanup candidates after external-reference checks. `recovery/stached-charcter` and `repair/post-merge-unreal-339` are preserved. The scheduled "Develop 20-Min Validation" appearing under `main` is expected GitHub scheduler behavior because `main` is the default branch; that workflow explicitly checks out `develop` and does not change the rule that production work integrates through `develop`.
+
 ## 2026-09-20 — V6 continuation and source/governor audit
 
 Authority remains `Data/ProjectGovernor.json`. Its previous handoff was stale at #303; the actual verified baseline is `cd58be1e1cea033295a163ef2a90985f30471c2b`, Pre-Unreal #484 and Unreal #319, including import/startup/eight chapters/state/save/warnings. V6 head `93092a82b95418552728c73e02d31c220a7457ac` passed Pre-Unreal #485. Unreal #320 attempt 1 was interrupted during UHT/build (Ctrl-C, -1073741510); this is not a demonstrated C++ code defect. The single rerun (attempt 2) was also interrupted, before compilation at the editor-wait step. The cancellation trigger is not established; no further blind reruns were requested.

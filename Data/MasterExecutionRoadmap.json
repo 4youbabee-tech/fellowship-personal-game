@@ -22,18 +22,20 @@
     "evidence": "Each bundle closes only from repository/engine/device/human evidence matching its exit criteria."
   },
   "current_control_state": {
-    "pull_request": 53,
-    "branch": "work/automation-first-runtime-observation",
-    "baseline_head_before_roadmap": "9dd82c7b2be42a8182fd7c4eaef70e1e06cff96b",
-    "baseline_pre_unreal": "SUCCESS run #361",
-    "baseline_unreal": "PENDING run #196 at roadmap creation",
-    "merge_policy": "Exact current head must be green before develop integration.",
+    "pull_request": 61,
+    "branch": "production/chapter-streaming-v5",
+    "integration_baseline_head": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
+    "integration_baseline_pre_unreal": "SUCCESS #532",
+    "integration_baseline_unreal": "SUCCESS #367",
+    "latest_observed_candidate_head": "b882b052a59c8d4e19437d7877dc30c9b1ea5daf",
+    "latest_observed_pre_unreal": "SUCCESS #538",
+    "latest_observed_unreal": "PENDING #373 at reconciliation",
+    "merge_policy": "Newest PR head must pass exact-head Pre-Unreal and full UE4.27.2 validation before develop integration; after merge, develop must return green.",
     "deep_audit": {
-      "status": "ACTIVE_RED_REPAIR",
+      "status": "V5_EXACT_HEAD_VALIDATION_ACTIVE",
       "artifact": "Data/DeepProjectAudit.json",
-      "rule": "Critical exact-head failures block unrelated expansion; audit/repair continues until green."
-    },
-    "source_library": "Sources 01-11 + FOTR/TTT/ROTK screenplays + Tolkien full LOTR volume registered; Part III is no longer blocked by missing screenplay, only by normal scene-level production verification."
+      "rule": "Repair only demonstrated exact-head failures. Performance promotion additionally requires representative target-device hitch/memory measurement."
+    }
   },
   "bundles": [
     {
@@ -48,11 +50,12 @@
         "REQ-QUALITY-001",
         "REQ-SAVE-001",
         "REQ-PERF-001",
-        "REQ-AUDIT-001"
+        "REQ-AUDIT-001",
+        "REQ-PERF-002"
       ],
       "work_ids": [
-        "WORK-MEGA-001",
-        "WORK-QA-001"
+        "WORK-QA-001",
+        "WORK-PERF-002"
       ],
       "deliverables": [
         "Pre-Unreal exact-head validation",
@@ -63,7 +66,10 @@
         "route/save/Ring/Discovery state audits",
         "warning-debt guard",
         "repair loop for any red step",
-        "continuous deep architecture/backend/player-experience audit"
+        "continuous deep architecture/backend/player-experience audit",
+        "data-driven chapter/route asset banks",
+        "seam-safe async preload before world swap",
+        "chapter-aware Fellowship production mesh bank"
       ],
       "exit_evidence": [
         "PRE_UNREAL_PASS",
@@ -74,7 +80,8 @@
         "STATE_AUDIT_PASS",
         "WARNING_GUARD_PASS",
         "DEEP_AUDIT_PASS"
-      ]
+      ],
+      "current_performance_wave": "CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5"
     },
     {
       "id": "B1_PART1_STORY_GAMEPLAY_COMPLETE",
@@ -97,7 +104,6 @@
         "REQ-QUALITY-002"
       ],
       "work_ids": [
-        "WORK-EXP-003",
         "WORK-RING-001",
         "WORK-SIDE-001",
         "WORK-ENSEMBLE-001",
@@ -172,10 +178,7 @@
         "WORK-CHAR-001",
         "WORK-WORLD-003",
         "WORK-WORLD-002",
-        "WORK-WORLD-001",
-        "WORK-PROD-007",
-        "WORK-PROD-008",
-        "WORK-PROD-010"
+        "WORK-WORLD-001"
       ],
       "deliverables": [
         "core-cast source/provenance selection",
@@ -212,7 +215,7 @@
         "PIE_VISUAL_REVIEW",
         "TARGET_DEVICE_PERFORMANCE"
       ],
-      "current_production_wave": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4"
+      "current_production_wave": "NEXT_AFTER_V5_WORLD_LIFE_ARCHITECTURE_AND_RIG_ANIMATION"
     },
     {
       "id": "B3_LIVING_WORLD_AND_PRESENTATION",
@@ -231,8 +234,7 @@
       "work_ids": [
         "WORK-LW-004",
         "WORK-DLG-001",
-        "WORK-LW-005",
-        "WORK-PROD-009"
+        "WORK-LW-005"
       ],
       "deliverables": [
         "named and ambient NPC needs/goals/emotion tuning",
@@ -251,7 +253,7 @@
         "PIE_DIALOGUE_REVIEW",
         "PERFORMANCE_PASS"
       ],
-      "current_production_wave": "CINEMATIC_CHARACTER_SONIC_LIFE_V3"
+      "current_production_wave": "NEXT_AFTER_V5_NPC_DENSITY_AND_REGION_LIFE"
     },
     {
       "id": "B4_ACCEPTANCE_AND_MERGE",
@@ -267,8 +269,7 @@
         "REQ-SAVE-001"
       ],
       "work_ids": [
-        "WORK-QA-001",
-        "WORK-MEGA-001"
+        "WORK-QA-001"
       ],
       "deliverables": [
         "exact-SHA validation report",
@@ -427,7 +428,8 @@
     "REQ-PROD-007",
     "REQ-PROD-008",
     "REQ-PROD-009",
-    "REQ-PROD-010"
+    "REQ-PROD-010",
+    "REQ-PERF-002"
   ],
   "tracked_active_work_ids": [
     "WORK-CHAR-001",
@@ -435,33 +437,27 @@
     "WORK-DLG-001",
     "WORK-ENSEMBLE-001",
     "WORK-EXEC-001",
-    "WORK-EXP-003",
     "WORK-EXP-004",
     "WORK-EXP-005",
     "WORK-GAME-001",
     "WORK-LW-004",
-    "WORK-MEGA-001",
     "WORK-QA-001",
     "WORK-RING-001",
     "WORK-SIDE-001",
     "WORK-WORLD-001",
     "WORK-WORLD-002",
     "WORK-WORLD-003",
-    "WORK-PROD-007",
-    "WORK-PROD-008",
-    "WORK-PROD-009",
-    "WORK-PROD-010"
+    "WORK-PERF-002"
   ],
   "immediate_next_large_actions": [
-    "Prove HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4 on the exact branch head.",
-    "Repair exact-head asset/import/runtime failures without weakening production safeguards.",
-    "Merge only after both machine gates are green.",
-    "Continue next with rig/socket/animation handoff scaffolding plus early-region final visual polish."
+    "Finish PR #61 V5 exact-head validation and merge only when both machine gates pass.",
+    "Confirm the resulting develop integration head returns green.",
+    "Measure chapter seam hitch/streaming pool/resident memory before claiming a performance win.",
+    "Open the next short branch for Shire/Bree/Rivendell/Lothlorien world life, architecture and NPC density.",
+    "Advance the actual skeletal rig/skin/AnimBP/animation track as the parallel character-quality lane."
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "head": "ACTIVE_BRANCH_PENDING_EXACT_PROOF",
-    "reason": "Dedicated Fellowship equipment/silhouette V4 after exact-green PR #58.",
-    "active_wave": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4"
+    "reason": "Path cleanup before post-V5 production: stale PR53/CP56 and V1-V4 active markers retired; PR61 is the single active closeout path; post-V5 world-life plus rig sequence is explicit."
   }
 }

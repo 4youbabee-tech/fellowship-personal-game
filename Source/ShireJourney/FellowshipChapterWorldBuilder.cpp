@@ -396,7 +396,7 @@ void AFellowshipChapterWorldBuilder::SpawnDiscoveryTrigger(
 }
 
 
-void AFellowshipChapterWorldBuilder::EnsureProductionMeshes()
+void AFellowshipChapterWorldBuilder::EnsureProductionMeshes(FName ChapterId)
 {
     if (bProductionMeshesLoaded)
     {
@@ -404,47 +404,65 @@ void AFellowshipChapterWorldBuilder::EnsureProductionMeshes()
     }
     bProductionMeshesLoaded = true;
 
-    WeathertopArchMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Weathertop/SM_WeathertopRuinedArch.SM_WeathertopRuinedArch"));
-    WeathertopPillarMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Weathertop/SM_WeathertopBrokenPillar.SM_WeathertopBrokenPillar"));
-    WeathertopCampRingMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Weathertop/SM_WeathertopCampRing.SM_WeathertopCampRing"));
+    // V5 streaming rule: a Fellowship builder only retains the region it is about
+    // to build plus the shared common terrain/vegetation bank. Previously this
+    // function synchronously loaded Weathertop, Rivendell, Road, Moria, Lorien and
+    // Anduin together even when only one chapter was active.
+    if (ChapterId == TEXT("P1C03"))
+    {
+        WeathertopArchMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Weathertop/SM_WeathertopRuinedArch.SM_WeathertopRuinedArch"));
+        WeathertopPillarMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Weathertop/SM_WeathertopBrokenPillar.SM_WeathertopBrokenPillar"));
+        WeathertopCampRingMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Weathertop/SM_WeathertopCampRing.SM_WeathertopCampRing"));
+    }
+    else if (ChapterId == TEXT("P1C04"))
+    {
+        RivendellPavilionMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Rivendell/SM_RivendellPavilion.SM_RivendellPavilion"));
+        RivendellArchMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Rivendell/SM_RivendellArch.SM_RivendellArch"));
+        RivendellBridgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Rivendell/SM_RivendellBridge.SM_RivendellBridge"));
+        RivendellLanternMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Rivendell/SM_RivendellLantern.SM_RivendellLantern"));
+    }
+    else if (ChapterId == TEXT("P1C05"))
+    {
+        RoadCampTentMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Road/SM_RoadCampTent.SM_RoadCampTent"));
+        RoadSupplyRackMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Road/SM_RoadSupplyRack.SM_RoadSupplyRack"));
+        CaradhrasRockMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Road/SM_CaradhrasRock.SM_CaradhrasRock"));
+    }
+    else if (ChapterId == TEXT("P1C06"))
+    {
+        MoriaPillarMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaPillar.SM_MoriaPillar"));
+        MoriaDoorMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaDoor.SM_MoriaDoor"));
+        MoriaBrazierMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBrazier.SM_MoriaBrazier"));
+        MoriaBridgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBridgeSegment.SM_MoriaBridgeSegment"));
+        MoriaWallPanelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaWallPanel.SM_MoriaWallPanel"));
+        MoriaFloorSlabMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaFloorSlab.SM_MoriaFloorSlab"));
+        MoriaArchMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaArch.SM_MoriaArch"));
+        MoriaCeilingRibMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaCeilingRib.SM_MoriaCeilingRib"));
+        MoriaBridgePierMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBridgePier.SM_MoriaBridgePier"));
+        MoriaTombDaisMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaTombDais.SM_MoriaTombDais"));
+        MoriaReliefPanelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaReliefPanel.SM_MoriaReliefPanel"));
+        MoriaMineRailMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaMineRail.SM_MoriaMineRail"));
+        MoriaOreCrateMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaOreCrate.SM_MoriaOreCrate"));
+        MoriaCollapsedBeamMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaCollapsedBeam.SM_MoriaCollapsedBeam"));
+        MoriaTorchNicheMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaTorchNiche.SM_MoriaTorchNiche"));
+        MoriaChasmButtressMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaChasmButtress.SM_MoriaChasmButtress"));
+        MoriaSideDoorMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaSideDoor.SM_MoriaSideDoor"));
+        MoriaDebrisClusterMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster"));
+    }
+    else if (ChapterId == TEXT("P1C07"))
+    {
+        LorienTalanMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Lothlorien/SM_LorienTalan.SM_LorienTalan"));
+        LorienLanternMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Lothlorien/SM_LorienLantern.SM_LorienLantern"));
+        LorienMirrorMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Lothlorien/SM_LorienMirror.SM_LorienMirror"));
+    }
+    else if (ChapterId == TEXT("P1C08"))
+    {
+        AnduinBoatMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinBoat.SM_AnduinBoat"));
+        AmonHenStairMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AmonHenStair.SM_AmonHenStair"));
+        AmonHenRuinMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AmonHenRuin.SM_AmonHenRuin"));
+        ArgonathSentinelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_ArgonathSentinel.SM_ArgonathSentinel"));
+    }
 
-    RivendellPavilionMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Rivendell/SM_RivendellPavilion.SM_RivendellPavilion"));
-    RivendellArchMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Rivendell/SM_RivendellArch.SM_RivendellArch"));
-    RivendellBridgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Rivendell/SM_RivendellBridge.SM_RivendellBridge"));
-    RivendellLanternMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Rivendell/SM_RivendellLantern.SM_RivendellLantern"));
-
-    RoadCampTentMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Road/SM_RoadCampTent.SM_RoadCampTent"));
-    RoadSupplyRackMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Road/SM_RoadSupplyRack.SM_RoadSupplyRack"));
-    CaradhrasRockMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Road/SM_CaradhrasRock.SM_CaradhrasRock"));
-
-    MoriaPillarMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaPillar.SM_MoriaPillar"));
-    MoriaDoorMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaDoor.SM_MoriaDoor"));
-    MoriaBrazierMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBrazier.SM_MoriaBrazier"));
-    MoriaBridgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBridgeSegment.SM_MoriaBridgeSegment"));
-    MoriaWallPanelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaWallPanel.SM_MoriaWallPanel"));
-    MoriaFloorSlabMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaFloorSlab.SM_MoriaFloorSlab"));
-    MoriaArchMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaArch.SM_MoriaArch"));
-    MoriaCeilingRibMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaCeilingRib.SM_MoriaCeilingRib"));
-    MoriaBridgePierMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaBridgePier.SM_MoriaBridgePier"));
-    MoriaTombDaisMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaTombDais.SM_MoriaTombDais"));
-    MoriaReliefPanelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaReliefPanel.SM_MoriaReliefPanel"));
-    MoriaMineRailMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaMineRail.SM_MoriaMineRail"));
-    MoriaOreCrateMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaOreCrate.SM_MoriaOreCrate"));
-    MoriaCollapsedBeamMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaCollapsedBeam.SM_MoriaCollapsedBeam"));
-    MoriaTorchNicheMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaTorchNiche.SM_MoriaTorchNiche"));
-    MoriaChasmButtressMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaChasmButtress.SM_MoriaChasmButtress"));
-    MoriaSideDoorMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaSideDoor.SM_MoriaSideDoor"));
-    MoriaDebrisClusterMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster"));
-
-    LorienTalanMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Lothlorien/SM_LorienTalan.SM_LorienTalan"));
-    LorienLanternMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Lothlorien/SM_LorienLantern.SM_LorienLantern"));
-    LorienMirrorMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Lothlorien/SM_LorienMirror.SM_LorienMirror"));
-
-    AnduinBoatMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AnduinBoat.SM_AnduinBoat"));
-    AmonHenStairMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AmonHenStair.SM_AmonHenStair"));
-    AmonHenRuinMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_AmonHenRuin.SM_AmonHenRuin"));
-    ArgonathSentinelMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Anduin/SM_ArgonathSentinel.SM_ArgonathSentinel"));
-
+    // Shared production vocabulary remains available to each Fellowship chapter.
     CommonMountainRidgeMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonMountainRidge.SM_CommonMountainRidge"));
     CommonCliffWallMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonCliffWall.SM_CommonCliffWall"));
     CommonTerracedHillMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Game/Production/World/Common/SM_CommonTerracedHill.SM_CommonTerracedHill"));
@@ -1074,7 +1092,7 @@ void AFellowshipChapterWorldBuilder::BuildChapter(FName ChapterId)
     }
 
     bBuilt = true;
-    EnsureProductionMeshes();
+    EnsureProductionMeshes(ChapterId);
     ConfigureChapterAtmosphere(ChapterId);
 
     if (ChapterId == TEXT("P1C03"))

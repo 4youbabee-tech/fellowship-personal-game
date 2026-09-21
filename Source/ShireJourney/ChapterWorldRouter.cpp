@@ -6,6 +6,7 @@
 #include "FellowshipEnemyPrototype.h"
 #include "IsengardPrototypeWorldBuilder.h"
 #include "ShireAmbientNPC.h"
+#include "ShireChapterAssetStreamingSubsystem.h"
 #include "ShireNPC.h"
 #include "ShirePrototypeWorldBuilder.h"
 #include "ShireQuestSubsystem.h"
@@ -36,7 +37,27 @@ void AChapterWorldRouter::BeginPlay()
 
     Quests->OnChapterChanged.AddDynamic(this, &AChapterWorldRouter::HandleChapterChanged);
     Quests->OnExperienceChanged.AddDynamic(this, &AChapterWorldRouter::HandleExperienceChanged);
+
+    AssetStreamingSubsystem = GI->GetSubsystem<UShireChapterAssetStreamingSubsystem>();
+    if (AssetStreamingSubsystem)
+    {
+        AssetStreamingSubsystem->OnChapterAssetsReady.AddUObject(
+            this,
+            &AChapterWorldRouter::HandleChapterAssetsReady);
+    }
+
     LoadChapterWorld(Quests->GetCurrentChapterId());
+}
+
+void AChapterWorldRouter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    if (AssetStreamingSubsystem)
+    {
+        AssetStreamingSubsystem->OnChapterAssetsReady.RemoveAll(this);
+        AssetStreamingSubsystem = nullptr;
+    }
+
+    Super::EndPlay(EndPlayReason);
 }
 
 void AChapterWorldRouter::HandleChapterChanged(FName PreviousChapterId, FName NewChapterId)
@@ -198,9 +219,89 @@ void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTr
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
     const FName RouteId = Quests ? Quests->GetCurrentRouteId() : FName(TEXT("FrodoMain"));
-    const FName EpisodeId = Quests ? Quests->GetCurrentEpisodeId() : FName(*FString::Printf(TEXT("%s_Main"), *ChapterId.ToString()));
+    const FName EpisodeId = Quests
+        ? Quests->GetCurrentEpisodeId()
+        : FName(*FString::Printf(TEXT("%s_Main"), *ChapterId.ToString()));
 
-    if (LastLoadedRouteId == RouteId && LastLoadedEpisodeId == EpisodeId && LastLoadedChapterId == ChapterId)
+    if (LastLoadedRouteId == RouteId &&
+        LastLoadedEpisodeId == EpisodeId &&
+        LastLoadedChapterId == ChapterId)
+    {
+        // A -> pending B -> A: abandon B before returning to the visible world.
+        // Otherwise its delayed completion would still swap the player into B.
+        PendingRouteId = NAME_None;
+        PendingEpisodeId = NAME_None;
+        PendingChapterId = NAME_None;
+        bPendingRestoreRouteTransform = false;
+        if (AssetStreamingSubsystem)
+        {
+            AssetStreamingSubsystem->CancelPendingRequest();
+        }
+        return;
+    }
+
+    if (PendingRouteId == RouteId &&
+        PendingEpisodeId == EpisodeId &&
+        PendingChapterId == ChapterId)
+    {
+        return;
+    }
+
+    PendingRouteId = RouteId;
+    PendingEpisodeId = EpisodeId;
+    PendingChapterId = ChapterId;
+    bPendingRestoreRouteTransform = bRestoreRouteTransform;
+
+    if (AssetStreamingSubsystem)
+    {
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ChapterAssetStreaming: router-wait chapter=%s route=%s bank-assets=%d"),
+            *ChapterId.ToString(),
+            *RouteId.ToString(),
+            AssetStreamingSubsystem->GetChapterBankSize(ChapterId, RouteId));
+
+        AssetStreamingSubsystem->RequestChapterAssets(ChapterId, RouteId);
+        return;
+    }
+
+    // Compatibility path if the subsystem cannot initialize. The existing builders
+    // remain authoritative and may synchronously resolve their assets.
+    CommitChapterWorld(ChapterId, RouteId, EpisodeId, bRestoreRouteTransform);
+}
+
+void AChapterWorldRouter::HandleChapterAssetsReady(FName ChapterId, FName RouteId)
+{
+    if (PendingChapterId != ChapterId || PendingRouteId != RouteId)
+    {
+        return;
+    }
+
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests || Quests->GetCurrentChapterId() != ChapterId ||
+        Quests->GetCurrentRouteId() != RouteId ||
+        Quests->GetCurrentEpisodeId() != PendingEpisodeId)
+    {
+        // Quest/save state may have changed again while assets were loading.
+        return;
+    }
+
+    CommitChapterWorld(
+        PendingChapterId,
+        PendingRouteId,
+        PendingEpisodeId,
+        bPendingRestoreRouteTransform);
+}
+
+void AChapterWorldRouter::CommitChapterWorld(
+    FName ChapterId,
+    FName RouteId,
+    FName EpisodeId,
+    bool bRestoreRouteTransform)
+{
+    if (!GetWorld())
     {
         return;
     }
@@ -209,56 +310,96 @@ void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTr
     LastLoadedEpisodeId = EpisodeId;
     LastLoadedChapterId = ChapterId;
 
+    PendingRouteId = NAME_None;
+    PendingEpisodeId = NAME_None;
+    PendingChapterId = NAME_None;
+    bPendingRestoreRouteTransform = false;
+
+    // The previous visible chapter remains intact while the next bank streams.
+    // Only swap runtime worlds after the requested bank reports ready.
     ClearPrototypeBuilders();
 
     if (RouteId == TEXT("GandalfParallel"))
     {
-        GetWorld()->SpawnActor<AIsengardPrototypeWorldBuilder>(FVector::ZeroVector, FRotator::ZeroRotator);
+        GetWorld()->SpawnActor<AIsengardPrototypeWorldBuilder>(
+            FVector::ZeroVector,
+            FRotator::ZeroRotator);
         MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireChapterAudit: loaded=%s builder=Isengard route=%s streamed=ready"),
+            *ChapterId.ToString(),
+            *RouteId.ToString());
         return;
     }
 
     if (ChapterId == TEXT("P1C01"))
     {
-        GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(FVector::ZeroVector, FRotator::ZeroRotator);
+        GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(
+            FVector::ZeroVector,
+            FRotator::ZeroRotator);
         MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
         UE_LOG(LogTemp, Display, TEXT("ShirePlayableStartup: chapter=P1C01 route=%s"), *RouteId.ToString());
-        UE_LOG(LogTemp, Display, TEXT("ShireChapterAudit: loaded=P1C01 builder=Shire route=%s"), *RouteId.ToString());
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireChapterAudit: loaded=P1C01 builder=Shire route=%s streamed=ready"),
+            *RouteId.ToString());
         return;
     }
 
     if (ChapterId == TEXT("P1C02"))
     {
-        GetWorld()->SpawnActor<ABreePrototypeWorldBuilder>(FVector::ZeroVector, FRotator::ZeroRotator);
+        GetWorld()->SpawnActor<ABreePrototypeWorldBuilder>(
+            FVector::ZeroVector,
+            FRotator::ZeroRotator);
         MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
-        UE_LOG(LogTemp, Display, TEXT("ShireChapterAudit: loaded=P1C02 builder=Bree route=%s"), *RouteId.ToString());
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireChapterAudit: loaded=P1C02 builder=Bree route=%s streamed=ready"),
+            *RouteId.ToString());
         return;
     }
 
-    if (ChapterId == TEXT("P1C03") || ChapterId == TEXT("P1C04") || ChapterId == TEXT("P1C05") ||
-        ChapterId == TEXT("P1C06") || ChapterId == TEXT("P1C07") || ChapterId == TEXT("P1C08"))
+    if (ChapterId == TEXT("P1C03") ||
+        ChapterId == TEXT("P1C04") ||
+        ChapterId == TEXT("P1C05") ||
+        ChapterId == TEXT("P1C06") ||
+        ChapterId == TEXT("P1C07") ||
+        ChapterId == TEXT("P1C08"))
     {
-        AFellowshipChapterWorldBuilder* Builder = GetWorld()->SpawnActor<AFellowshipChapterWorldBuilder>(
-            FVector::ZeroVector, FRotator::ZeroRotator);
+        AFellowshipChapterWorldBuilder* Builder =
+            GetWorld()->SpawnActor<AFellowshipChapterWorldBuilder>(
+                FVector::ZeroVector,
+                FRotator::ZeroRotator);
         if (Builder)
         {
             Builder->BuildChapter(ChapterId);
             UE_LOG(
                 LogTemp,
                 Display,
-                TEXT("ShireChapterAudit: loaded=%s builder=Fellowship route=%s"),
+                TEXT("ShireChapterAudit: loaded=%s builder=Fellowship route=%s streamed=ready"),
                 *ChapterId.ToString(),
                 *RouteId.ToString());
         }
         else
         {
-            UE_LOG(LogTemp, Error, TEXT("ShireChapterAudit: failed-to-spawn builder for %s"), *ChapterId.ToString());
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("ShireChapterAudit: failed-to-spawn builder for %s"),
+                *ChapterId.ToString());
         }
         MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
         return;
     }
 
-    // Unknown chapter IDs fall back to the first chapter rather than leaving the player in an empty world.
-    GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(FVector::ZeroVector, FRotator::ZeroRotator);
+    // Unknown chapter IDs fall back to the first chapter rather than leaving the
+    // player in an empty world.
+    GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(
+        FVector::ZeroVector,
+        FRotator::ZeroRotator);
     MovePlayerToChapterStart(TEXT("P1C01"), false);
 }

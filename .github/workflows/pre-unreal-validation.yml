@@ -52,3 +52,6 @@ jobs:
 
       - name: Test governor evidence scope
         run: python -m unittest discover -s Scripts -p 'test_governor_handoff.py' -v
+
+      - name: Guard streaming cancellation source contracts
+        run: python -m unittest discover -s Scripts -p 'test_streaming_cancellation_contract.py' -v

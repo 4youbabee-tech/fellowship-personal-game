@@ -61,6 +61,10 @@ def observe(command, log_path, markers, timeout=45.0, observation=4.0, poll=0.25
     error = None
     deliberate_stop = False
     process = subprocess.Popen(command, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+    launch_seconds = time.monotonic() - start
+    last_poll = time.monotonic()
+    max_poll_gap = 0.0
+    stop_started = last_poll
     try:
         while True:
             text = read_log(log_path)
@@ -71,16 +75,21 @@ def observe(command, log_path, markers, timeout=45.0, observation=4.0, poll=0.25
                 error = f"runtime exited before observation completed (exit {process.returncode})"
                 break
             now = time.monotonic()
+            max_poll_gap = max(max_poll_gap, now - last_poll)
+            last_poll = now
+            # A suspended/starved runner must not turn late readiness into a pass.
+            # Check the deadline before accepting a completed observation window.
+            if now - start >= timeout:
+                error = "runtime readiness/observation timed out"
+                break
             if not missing_markers(text, markers) and ready_at is None:
                 ready_at = now
             if ready_at is not None and now - ready_at >= observation:
                 deliberate_stop = True
                 break
-            if now - start >= timeout:
-                error = "runtime readiness/observation timed out"
-                break
             time.sleep(poll)
     finally:
+        stop_started = time.monotonic()
         if process.poll() is None:
             process.terminate()
             try:
@@ -102,6 +111,10 @@ def observe(command, log_path, markers, timeout=45.0, observation=4.0, poll=0.25
             "error": error, "missing_markers": missing,
             "observation_seconds": observation,
             "elapsed_seconds": round(time.monotonic() - start, 3),
+            "timeout_seconds": timeout,
+            "launch_seconds": round(launch_seconds, 3),
+            "max_poll_gap_seconds": round(max_poll_gap, 3),
+            "cleanup_seconds": round(time.monotonic() - stop_started, 3),
             "exit_code": process.returncode,
             "harness_terminated": deliberate_stop, "log": str(log_path)}
 

@@ -106,7 +106,7 @@ private:
         FName OpensAfterStoryBeat,
         FName ClosesBeforeStoryBeat);
 
-    void EnsureProductionMeshes();
+    void EnsureProductionMeshes(FName ChapterId);
     void ConfigureChapterAtmosphere(FName ChapterId);
     void SpawnProductionChapterLayer(FName ChapterId);
     void BuildWeathertop();
