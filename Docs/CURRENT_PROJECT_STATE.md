@@ -1,3 +1,9 @@
+## 2026-09-21 - deterministic P1C01 spawn support
+
+The startup-grounding repair now also removes imported-mesh collision from the first-frame dependency. P1C01 receives a hidden Engine BasicShapes collision pad centered at the authored start `(-2410,-120)` with its top at the authored road height. The larger hidden Shire collision foundation remains underneath the region. This means initial grounding can succeed even if the imported OBJ road/ground mesh has no usable generated simple collision.
+
+This remains a **FIX_CANDIDATE**. No claim is made that the owner-observed fall-through is resolved until exact-head engine validation and defect-specific P1C01 PIE observation pass.
+
 ## 2026-09-21 - startup fall-through root cause and regression repair
 
 Owner reproduced a previously claimed startup fix as still broken: on first PIE launch the player can fall below the world. Source inspection identified the ordering defect. `AShireGameMode::BeginPlay` teleported the pawn to P1C01 coordinates immediately, while `AChapterWorldRouter` intentionally waits for asynchronous chapter asset streaming before spawning the Shire world. Raising the spawn Z did not close that race because there can still be no blocking ground under the pawn when gravity begins.

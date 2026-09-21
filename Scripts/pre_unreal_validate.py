@@ -5362,6 +5362,15 @@ for pg121_marker in [
     if pg121_marker not in pg121_runtime_smoke:
         fail(f"PG-121 runtime grounding regression marker missing: {pg121_marker}")
 
+pg121_shire_builder = read(ROOT / "Source" / "ShireJourney" / "ShirePrototypeWorldBuilder.cpp")
+for pg121_symbol in [
+    'RuntimeCollisionFoundation',
+    'RuntimeSpawnFoundation',
+    'FVector(-2410.0f, -120.0f, 2.0f)',
+]:
+    if pg121_symbol not in pg121_shire_builder:
+        fail(f"PG-121 deterministic Shire collision support missing: {pg121_symbol}")
+
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")

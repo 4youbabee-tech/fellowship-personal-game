@@ -2252,7 +2252,8 @@
         "GameMode no longer teleports the normal player to P1C01 before the asynchronous world is ready.",
         "ChapterWorldRouter holds initial character movement, resolves blocking ground after builder commit, places the capsule from measured floor height, and releases movement only on success.",
         "Headless startup/chapter audits require chapter-specific ShireStartupGrounding PASS markers.",
-        "PG-121 rejects reintroduction of the old GameMode pre-commit teleport."
+        "PG-121 rejects reintroduction of the old GameMode pre-commit teleport.",
+        "P1C01 startup receives a hidden Engine BasicShapes collision pad at the authored road height so first placement does not depend on imported OBJ collision generation."
       ],
       "missing_work": [
         "Pass Pre-Unreal on the exact fix head.",
@@ -2264,7 +2265,8 @@
         "Initial gravity remains disabled until a blocking floor is confirmed after world commit.",
         "P1C01-P1C08 automated chapter audits each emit a chapter-specific ShireStartupGrounding PASS marker.",
         "A missing floor freezes/fails closed instead of allowing the player to fall indefinitely.",
-        "The owner confirms the original P1C01 fall-through reproduction no longer occurs in PIE on the exact tested head."
+        "The owner confirms the original P1C01 fall-through reproduction no longer occurs in PIE on the exact tested head.",
+        "P1C01 initial support collision remains project-deterministic even if imported road/ground simple collision is unavailable."
       ],
       "dependencies": [
         "REQ-CI-001",
