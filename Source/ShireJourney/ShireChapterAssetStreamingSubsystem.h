@@ -6,10 +6,16 @@
 #include "UObject/SoftObjectPath.h"
 #include "ShireChapterAssetStreamingSubsystem.generated.h"
 
+class USkeletalMesh;
+
 DECLARE_MULTICAST_DELEGATE_TwoParams(
     FOnShireChapterAssetsReady,
     FName /* ChapterId */,
     FName /* RouteId */);
+
+DECLARE_MULTICAST_DELEGATE_OneParam(
+    FOnShireCharacterRigReady,
+    FName /* CharacterId */);
 
 UCLASS()
 class SHIREJOURNEY_API UShireChapterAssetStreamingSubsystem : public UGameInstanceSubsystem
@@ -26,7 +32,14 @@ public:
     bool IsChapterBankReady(FName ChapterId, FName RouteId) const;
     int32 GetChapterBankSize(FName ChapterId, FName RouteId) const;
 
+    void RequestCharacterRig(FName CharacterId);
+    bool ResolveCharacterRig(
+        FName CharacterId,
+        USkeletalMesh*& OutSkeletalMesh,
+        UClass*& OutAnimClass) const;
+
     FOnShireChapterAssetsReady OnChapterAssetsReady;
+    FOnShireCharacterRigReady OnCharacterRigReady;
 
 private:
     struct FChapterBankRuntime
@@ -35,11 +48,20 @@ private:
         TArray<FSoftObjectPath> Assets;
     };
 
+    struct FCharacterRigRuntime
+    {
+        FSoftObjectPath SkeletalMeshPath;
+        FSoftObjectPath AnimClassPath;
+        TSharedPtr<FStreamableHandle> Handle;
+    };
+
     bool LoadStreamingPlan();
     FName ResolveBankId(FName ChapterId, FName RouteId) const;
     void HandleAsyncLoadComplete(uint64 CompletedSerial);
+    void HandleCharacterRigLoadComplete(FName CharacterId);
 
     TMap<FName, FChapterBankRuntime> Banks;
+    TMap<FName, FCharacterRigRuntime> CharacterRigRequests;
     FStreamableManager StreamableManager;
     TSharedPtr<FStreamableHandle> ResidentHandle;
     TSharedPtr<FStreamableHandle> PendingHandle;
