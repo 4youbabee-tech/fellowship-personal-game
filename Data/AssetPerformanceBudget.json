@@ -79,5 +79,33 @@
         "No ambient motion actor owns quest/save state."
       ]
     }
+  },
+  "texture_source_format_review": {
+    "date": "2026-09-21",
+    "verified_develop": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+    "current_snapshot": {
+      "production_bmp_files": 24,
+      "production_bmp_source_bytes": 554256,
+      "core_texture_folder_bmp_files": 17,
+      "png_files": 0,
+      "tga_files": 0,
+      "importer_discovery": "ShireProductionImportCommandlet currently discovers *.bmp source textures."
+    },
+    "verdict": "NO_CURRENT_VRAM_CRISIS_SELECTIVE_ALPHA_MIGRATION_RECOMMENDED",
+    "rules": [
+      "Source BMP byte size is not equivalent to runtime VRAM residency. Imported Unreal texture resolution, pixel format/compression, mip chain, streaming and residency determine runtime texture cost.",
+      "The current 24 production BMP sources total about 0.53 MiB, so the claim that this source set will by itself fill a 2 GB VRAM target is not supported by current repository evidence.",
+      "BMP remains a weak choice for future masked foliage or other assets that need reliable alpha authoring. Use an alpha-capable source format such as PNG/TGA for those assets when the art actually requires alpha.",
+      "Do not batch-convert existing textures without also updating the production importer, path references, material bindings, validators and import regression proof.",
+      "Follow Source 11: profile representative scenes before setting hard texture/VRAM budgets."
+    ],
+    "migration_trigger": "Introduce PNG/TGA selectively when alpha/high-fidelity authored textures arrive; add importer support first, then migrate in a dedicated asset-pipeline change.",
+    "runtime_measurement_required": [
+      "streaming pool",
+      "resident texture memory",
+      "mip behavior",
+      "GPU memory",
+      "frame-time effect"
+    ]
   }
 }
