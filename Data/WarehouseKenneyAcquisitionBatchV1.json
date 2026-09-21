@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_KENNEY_CC0_V1",
+  "status": "AUTHORIZED_FOR_STAGING",
+  "provider": "KENNEY",
+  "license": "CC0",
+  "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\Kenney",
+  "pack_pages": [
+    {
+      "id": "FANTASY_TOWN_KIT",
+      "url": "https://kenney.nl/assets/fantasy-town-kit",
+      "category": "WORLD_KIT"
+    },
+    {
+      "id": "CASTLE_KIT",
+      "url": "https://kenney.nl/assets/castle-kit",
+      "category": "FORTIFICATION"
+    },
+    {
+      "id": "NATURE_KIT",
+      "url": "https://kenney.nl/assets/nature-kit",
+      "category": "NATURE"
+    },
+    {
+      "id": "FURNITURE_KIT",
+      "url": "https://kenney.nl/assets/furniture-kit",
+      "category": "INTERIOR_PROPS"
+    },
+    {
+      "id": "BUILDING_KIT",
+      "url": "https://kenney.nl/assets/building-kit",
+      "category": "ARCHITECTURE"
+    },
+    {
+      "id": "MODULAR_DUNGEON_KIT",
+      "url": "https://kenney.nl/assets/modular-dungeon-kit",
+      "category": "DUNGEON"
+    },
+    {
+      "id": "FOOD_KIT",
+      "url": "https://kenney.nl/assets/food-kit",
+      "category": "FOOD_PROPS"
+    },
+    {
+      "id": "UI_PACK",
+      "url": "https://kenney.nl/assets/ui-pack",
+      "category": "UI"
+    },
+    {
+      "id": "FANTASY_UI_BORDERS",
+      "url": "https://kenney.nl/assets/fantasy-ui-borders",
+      "category": "UI"
+    },
+    {
+      "id": "BLOCKY_CHARACTERS",
+      "url": "https://kenney.nl/assets/blocky-characters",
+      "category": "NPC_SUPPORT"
+    }
+  ],
+  "rules": [
+    "Resolve only public download links exposed by official Kenney asset pages.",
+    "All staged packs must retain CC0/source page provenance.",
+    "Supporting/stylized packs are background/pipeline stock and are not final hero-character art.",
+    "Extracted 3D assets must be converted/prepared to FBX before animated production use when required by project rules."
+  ]
+}
