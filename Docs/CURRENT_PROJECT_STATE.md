@@ -1,3 +1,13 @@
+## 2026-09-22 - trilogy warehouse-first production plan activated
+
+The owner explicitly changed the production emphasis: final-looking characters, world art and audio may no longer remain vague downstream gaps while backend/governance continues to grow. The project now has a machine-readable trilogy warehouse at `Data/TrilogyProductionAssetWarehouse.json` and a new Governor requirement `REQ-WAREHOUSE-001`, decision `DEC-032`, and active work item `WORK-PROD-011`.
+
+The first-pass catalogue spans all three films: major and supporting named characters, population/faction families, 28 major location slots with state variants, cultures, creatures/fauna, battles, weapons/artifacts, material families, architecture/props, animation families, audio, cinematic/VFX and UI support. The supporting-cast layer was seeded from the supplied trilogy screenplay speaker pass; the world/culture/creature layers were grounded in Sources 03/04/05 and Source 11.
+
+Important proof boundary: the catalogue is now broad enough to prevent forgotten categories, but this is not a claim that all final binary assets already exist. `CATALOGUED`, `READY`, `APPROVED`, `INTEGRATED` and `ACCEPTED` are intentionally separate states. The immediate production target is P1C01 as the first complete natural-looking vertical slice while Part II/III asset-bank preparation proceeds in parallel.
+
+No new COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made by the warehouse plan itself.
+
 ## 2026-09-22 - cinematic audio sourcing directive registered
 
 The owner-forwarded audio-engineering message is now durable repository state. The project already has `UShireAudioSubsystem` routing, ambience/music crossfades, voice ducking and speaker-attachment rules in `Part1SonicWorldPlan`; the major missing layer is authored final audio content. `Data/AudioAssetSourcingWaveV2.json` now defines the offline bank strategy for voice, music, ambience/fauna, foley and creature/combat audio, plus 3D spatialization, concurrency and low-spec profiling requirements.
