@@ -1,3 +1,11 @@
+## 2026-09-22 - exact-head runner retest preparation: duplicate EndPlay regression fixed
+
+Pre-Unreal #576 on `c9a0eaafc273aeaa2fd1a0fb0aa0f41903a0c2a8` stopped in static validation with one concrete source error: `Unbalanced braces in ShirePlayerCharacter.cpp: balance=1`. Inspection found a duplicated `AShirePlayerCharacter::EndPlay` function signature introduced while wiring async character-rig delegates. The duplicate declaration/opening brace is removed; no intended gameplay behavior is changed by this correction.
+
+The same exact head's Unreal Build #411 proved the Windows self-hosted runner is online and executing the workflow, but it still stopped before C++ compilation because the runner identity `NT AUTHORITY\\NETWORK SERVICE` received access denied reading UE4.27.2 `WorldGridMaterial.uasset`. A new exact-head workflow run is required to determine whether the laptop-side permission state has changed since #411.
+
+No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED status is claimed by this source fix.
+
 ## 2026-09-22 - persistence/world-commit repair wave started
 
 After Pre-Unreal #564 turned green on `685dc63ff94fec0a1f6b3d57d60fce3bffcde31d`, the integration train moved to the first registered runtime defect wave instead of opening new features. Transition checkpoint capture no longer clears and saves on the next player Tick unconditionally. It now waits until `ChapterWorldRouter::IsWorldCommitted` confirms the current chapter/route/episode identity, so an asynchronous preload cannot produce a destination chapter snapshot with a source-world transform.
