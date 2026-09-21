@@ -234,6 +234,58 @@ bool ALivingWorldDirector::LoadLifeSaturationContract()
         }
     }
 
+    PopulationProfilesByChapter.Empty();
+    const TSharedPtr<FJsonObject>* Profiles = nullptr;
+    if (Root->TryGetObjectField(TEXT("chapter_density_profiles"), Profiles) && Profiles && Profiles->IsValid())
+    {
+        for (const auto& Pair : (*Profiles)->Values)
+        {
+            const TSharedPtr<FJsonObject> ProfileObject =
+                Pair.Value.IsValid() ? Pair.Value->AsObject() : nullptr;
+            if (!ProfileObject.IsValid())
+            {
+                continue;
+            }
+
+            FChapterPopulationProfile Profile;
+            Profile.SpawnInterval = PopulationSpawnInterval;
+            Profile.InnerRadius = PopulationInnerRadius;
+            Profile.OuterRadius = PopulationOuterRadius;
+            Profile.CullRadius = PopulationCullRadius;
+            Profile.DangerPopulationFraction = 0.50f;
+
+            double Value = 0.0;
+            if (ProfileObject->TryGetNumberField(TEXT("spawn_interval_seconds"), Value))
+            {
+                Profile.SpawnInterval = FMath::Clamp(static_cast<float>(Value), 0.25f, 2.0f);
+            }
+            if (ProfileObject->TryGetNumberField(TEXT("baseline_inner_radius_cm"), Value))
+            {
+                Profile.InnerRadius = FMath::Clamp(static_cast<float>(Value), 500.0f, 1800.0f);
+            }
+            if (ProfileObject->TryGetNumberField(TEXT("baseline_outer_radius_cm"), Value))
+            {
+                Profile.OuterRadius = FMath::Clamp(
+                    static_cast<float>(Value),
+                    Profile.InnerRadius + 200.0f,
+                    4200.0f);
+            }
+            if (ProfileObject->TryGetNumberField(TEXT("baseline_cull_radius_cm"), Value))
+            {
+                Profile.CullRadius = FMath::Clamp(
+                    static_cast<float>(Value),
+                    Profile.OuterRadius + 800.0f,
+                    9000.0f);
+            }
+            if (ProfileObject->TryGetNumberField(TEXT("danger_population_fraction"), Value))
+            {
+                Profile.DangerPopulationFraction = FMath::Clamp(static_cast<float>(Value), 0.10f, 1.0f);
+            }
+
+            PopulationProfilesByChapter.Add(FName(*Pair.Key), Profile);
+        }
+    }
+
     return BaselineTargetByChapter.Num() > 0;
 }
 
@@ -279,11 +331,13 @@ void ALivingWorldDirector::ResetForCurrentChapter()
     BaselinePopulation.Empty();
     LastEventType = NAME_None;
 
+    ApplyPopulationProfile();
+
     if (GetWorld())
     {
         const float Now = GetWorld()->GetTimeSeconds();
         NextEventTime = Now + 3.0f + Random.FRandRange(0.0f, 2.0f);
-        NextPopulationSpawnTime = Now + 0.5f;
+        NextPopulationSpawnTime = Now + FMath::Min(0.5f, PopulationSpawnInterval);
     }
 
     ApplyChapterWeatherContext();
@@ -292,9 +346,30 @@ void ALivingWorldDirector::ResetForCurrentChapter()
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("ShireChapterAudit: living-world chapter=%s baseline-target=%d"),
+        TEXT("ShireChapterAudit: living-world chapter=%s baseline-target=%d spawn-interval=%.2f inner=%.0f outer=%.0f cull=%.0f danger-fraction=%.2f"),
         *ActiveChapterId.ToString(),
-        AuditTarget ? *AuditTarget : 0);
+        AuditTarget ? *AuditTarget : 0,
+        PopulationSpawnInterval,
+        PopulationInnerRadius,
+        PopulationOuterRadius,
+        PopulationCullRadius,
+        DangerPopulationFraction);
+}
+
+void ALivingWorldDirector::ApplyPopulationProfile()
+{
+    const FChapterPopulationProfile* Profile = PopulationProfilesByChapter.Find(ActiveChapterId);
+    if (!Profile)
+    {
+        DangerPopulationFraction = 0.50f;
+        return;
+    }
+
+    PopulationSpawnInterval = Profile->SpawnInterval;
+    PopulationInnerRadius = Profile->InnerRadius;
+    PopulationOuterRadius = Profile->OuterRadius;
+    PopulationCullRadius = Profile->CullRadius;
+    DangerPopulationFraction = Profile->DangerPopulationFraction;
 }
 
 void ALivingWorldDirector::ApplyChapterWeatherContext()
@@ -558,7 +633,7 @@ void ALivingWorldDirector::MaintainBaselinePopulation()
     // This preserves activity while keeping threat readability and AI cost bounded.
     if (IsStoryDangerActive() && Target > 0)
     {
-        Target = FMath::Max(1, Target / 2);
+        Target = FMath::Max(1, FMath::RoundToInt(Target * DangerPopulationFraction));
     }
 
     if (Target <= 0 || BaselinePopulation.Num() >= Target)
