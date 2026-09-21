@@ -7,6 +7,8 @@
 class USceneComponent;
 class UStaticMeshComponent;
 class UTextRenderComponent;
+class UMaterialInterface;
+class UStaticMesh;
 
 UCLASS()
 class SHIREJOURNEY_API AShireAmbientNPC : public AActor
@@ -106,6 +108,18 @@ private:
 
     UPROPERTY()
     UTextRenderComponent* SocialCaption;
+
+    UPROPERTY()
+    UStaticMesh* FallbackCubeMesh = nullptr;
+
+    UPROPERTY()
+    UStaticMesh* FallbackCylinderMesh = nullptr;
+
+    UPROPERTY()
+    UStaticMesh* FallbackSphereMesh = nullptr;
+
+    UPROPERTY()
+    UMaterialInterface* FallbackSurfaceMaterial = nullptr;
 
     bool bHeadingToB = true;
     bool bObservingPlayer = false;
