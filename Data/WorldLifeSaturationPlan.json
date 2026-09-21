@@ -1,8 +1,8 @@
 {
-  "schema_version": 3,
-  "plan_id": "PART1_WORLD_ALIVE_SATURATION_V9",
-  "status": "V9_ENVIRONMENTAL_MOTION_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
-  "purpose": "Make Part I feel continuously inhabited where the film-world supports habitation, while using fauna/environmental motion instead of invented civilians in exposed wilderness, Caradhras, Moria and Anduin/Amon Hen.",
+  "schema_version": 4,
+  "plan_id": "PART1_WORLD_ALIVE_SATURATION_V10",
+  "status": "V10_EARLY_REALM_CULTURAL_LIFE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+  "purpose": "Make Part I feel continuously inhabited where film continuity and culture support habitation, with stronger culture-specific early-realm routines and chapter-tuned density budgets. Preserve fauna/environmental motion instead of invented civilians in exposed wilderness, Caradhras, Moria and Anduin/Amon Hen.",
   "runtime_owner": "ALivingWorldDirector + AShireAmbientNPC + AWorldAmbientMotionActor",
   "baseline_population_targets": {
     "P1C01": 18,
@@ -17,15 +17,20 @@
   "population_roles": {
     "P1C01": [
       "Villager",
+      "Gardener",
       "FieldWorker",
+      "MarketVendor",
       "PartyGuest",
       "FerryWorker",
       "RoadWalker"
     ],
     "P1C02": [
       "BreeTownsperson",
-      "RoadWalker",
-      "Courier"
+      "InnGuest",
+      "StableHand",
+      "GateWorker",
+      "BreeCourier",
+      "RoadWalker"
     ],
     "P1C03": [
       "RoadWalker",
@@ -34,15 +39,18 @@
     ],
     "P1C04": [
       "Elf",
-      "Courier",
+      "ElfScholar",
+      "ElfArtisan",
+      "ElfAttendant",
       "Butterfly"
     ],
     "P1C05": [],
     "P1C06": [],
     "P1C07": [
       "Elf",
-      "Elf",
-      "RoadWalker",
+      "ElfWarden",
+      "ElfCraftsperson",
+      "BoatTender",
       "Butterfly"
     ],
     "P1C08": [
@@ -59,10 +67,11 @@
   ],
   "runtime_rules": [
     "Maintain a baseline population around the player in addition to disposable micro-events.",
-    "Baseline actors are culled outside a broad radius and replenished gradually rather than spawned in one frame.",
-    "Danger state suppresses peaceful social/work events but does not freeze the entire world.",
+    "Baseline actors are culled outside a chapter-tuned radius and replenished gradually rather than spawned in one frame.",
+    "Danger state suppresses peaceful social/work events and applies a chapter-specific population fraction instead of freezing the world.",
     "Moria remains civilian-empty; motion there comes from danger/aftermath and environment events.",
     "Regional role mixes are deterministic enough for repeatable tests but varied enough to avoid clone crowds.",
+    "Early-realm role labels are ORIGINAL-GAME routine labels grounded in the culture/activity bibles; they are not presented as invented canon customs.",
     "NPC tick throttling remains distance-based through AShireAmbientNPC.",
     "No ambient actor owns story progress, save-critical state or quest coordinates."
   ],
@@ -130,5 +139,79 @@
       "disable decorative motion",
       "retain story actors and route readability"
     ]
+  },
+  "chapter_density_profiles": {
+    "P1C01": {
+      "spawn_interval_seconds": 0.42,
+      "baseline_inner_radius_cm": 750,
+      "baseline_outer_radius_cm": 2400,
+      "baseline_cull_radius_cm": 5800,
+      "danger_population_fraction": 0.5
+    },
+    "P1C02": {
+      "spawn_interval_seconds": 0.48,
+      "baseline_inner_radius_cm": 650,
+      "baseline_outer_radius_cm": 2100,
+      "baseline_cull_radius_cm": 5200,
+      "danger_population_fraction": 0.42
+    },
+    "P1C03": {
+      "spawn_interval_seconds": 0.6,
+      "baseline_inner_radius_cm": 900,
+      "baseline_outer_radius_cm": 2500,
+      "baseline_cull_radius_cm": 5600,
+      "danger_population_fraction": 0.5
+    },
+    "P1C04": {
+      "spawn_interval_seconds": 0.55,
+      "baseline_inner_radius_cm": 900,
+      "baseline_outer_radius_cm": 2500,
+      "baseline_cull_radius_cm": 6000,
+      "danger_population_fraction": 0.5
+    },
+    "P1C05": {
+      "spawn_interval_seconds": 0.75,
+      "baseline_inner_radius_cm": 1000,
+      "baseline_outer_radius_cm": 2600,
+      "baseline_cull_radius_cm": 6000,
+      "danger_population_fraction": 0.5
+    },
+    "P1C06": {
+      "spawn_interval_seconds": 0.75,
+      "baseline_inner_radius_cm": 1000,
+      "baseline_outer_radius_cm": 2600,
+      "baseline_cull_radius_cm": 6000,
+      "danger_population_fraction": 0.5
+    },
+    "P1C07": {
+      "spawn_interval_seconds": 0.58,
+      "baseline_inner_radius_cm": 950,
+      "baseline_outer_radius_cm": 2550,
+      "baseline_cull_radius_cm": 6100,
+      "danger_population_fraction": 0.5
+    },
+    "P1C08": {
+      "spawn_interval_seconds": 0.65,
+      "baseline_inner_radius_cm": 1000,
+      "baseline_outer_radius_cm": 2700,
+      "baseline_cull_radius_cm": 6200,
+      "danger_population_fraction": 0.5
+    }
+  },
+  "v10_early_realm_cultural_life": {
+    "source_basis": [
+      "03 World, Locations & Map Bible: Shire social exploration, Bree crowded crossroads/inn, Rivendell sanctuary/council, Lothlorien elevated refuge; sanctuary hubs keep full schedules near player and simplified background simulation.",
+      "04 Peoples, Lore, Artifacts & Cultures: Hobbits domestic/agrarian/communal; Elves memory/craft/long perspective; routines and props must communicate culture without generic fantasy placeholders.",
+      "06 Gameplay & Side Activities Bible: Bree supplies/rumors/attention, Rivendell gardens/library/allies/provisioning, dialogue and NPC presence respect chapter knowledge.",
+      "11 Master Production Systems: progressive loading, modular reuse, crowd-density budgets, distance culling and reduced-rate distant simulation."
+    ],
+    "implemented": [
+      "culture-specific ORIGINAL-GAME ambient routine roles for Shire, Bree, Rivendell and Lothlorien",
+      "chapter-tuned spawn cadence and residency radii without raising baseline population targets",
+      "stronger danger thinning in crowded Bree while preserving route readability",
+      "existing Caradhras/Moria civilian-empty and Anduin bird-only guardrails remain unchanged"
+    ],
+    "performance_rule": "Density quality is improved primarily through role variety, spatial profile and existing instanced/detail systems; this wave does not increase the eight chapter baseline population target counts.",
+    "acceptance_boundary": "Exact-head UE4.27.2 validation is required. Target-device FPS/hitch/memory and rendered density/pacing remain separate acceptance evidence."
   }
 }
