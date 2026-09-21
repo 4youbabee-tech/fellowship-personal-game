@@ -1,4 +1,5 @@
 #include "ShirePlayerCharacter.h"
+#include "ChapterWorldRouter.h"
 #include "ShireInteractable.h"
 #include "ShireQuestSubsystem.h"
 #include "ShireSaveGame.h"
@@ -907,11 +908,17 @@ void AShirePlayerCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
-    if (PendingChapterCheckpointId != NAME_None)
+    if (bPendingSaveRestoreTransform)
+    {
+        TryApplyPendingSaveRestoreTransform();
+    }
+
+    if (PendingChapterCheckpointId != NAME_None && IsCurrentWorldCommitted())
     {
         const FName CheckpointId = PendingChapterCheckpointId;
         PendingChapterCheckpointId = NAME_None;
         SaveAutomaticCheckpoint(CheckpointId, true);
+        UE_LOG(LogTemp, Display, TEXT("SafeCheckpoint: commit-barrier=PASS id=%s"), *CheckpointId.ToString());
     }
 
     AttackCooldownRemaining = FMath::Max(0.0f, AttackCooldownRemaining - DeltaSeconds);
@@ -948,7 +955,7 @@ void AShirePlayerCharacter::BeginPlay()
                     ShireSaveConstants::CheckpointSlotName,
                     ShireSaveConstants::UserIndex))
             {
-                SaveAutomaticCheckpoint(TEXT("WC_P1C01_START"), false);
+                PendingChapterCheckpointId = TEXT("WC_P1C01_START");
             }
         }
     }
@@ -1025,9 +1032,9 @@ void AShirePlayerCharacter::HandleChapterChanged(FName PreviousChapterId, FName 
     CurrentHealth = FMath::Clamp(CurrentHealth, 1.0f, MaxHealth);
     ApplyPrototypeStyle();
 
-    // Queue transition checkpoints until the next player Tick. StartChapter broadcasts
-    // synchronously while the world router rebuilds the generated region, so waiting one
-    // Tick ensures the checkpoint transform belongs to the new authoritative chapter.
+    // Queue transition checkpoints until ChapterWorldRouter reports the matching
+    // chapter/route/episode as committed. Async preload can span many frames, so a
+    // next-Tick delay alone is not a safe persistence barrier.
     if (PreviousChapterId == TEXT("P1C01") && NewChapterId == TEXT("P1C02"))
     {
         PendingChapterCheckpointId = TEXT("WC_P1C01_FERRY");
@@ -1570,6 +1577,56 @@ UShireSaveGame* AShirePlayerCharacter::CreateSaveSnapshot(
     return Save;
 }
 
+bool AShirePlayerCharacter::IsCurrentWorldCommitted() const
+{
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    AChapterWorldRouter* Router = Cast<AChapterWorldRouter>(
+        UGameplayStatics::GetActorOfClass(this, AChapterWorldRouter::StaticClass()));
+    return Quests && Router && Router->IsWorldCommitted(
+        Quests->GetCurrentChapterId(),
+        Quests->GetCurrentRouteId(),
+        Quests->GetCurrentEpisodeId());
+}
+
+bool AShirePlayerCharacter::TryApplyPendingSaveRestoreTransform()
+{
+    if (!bPendingSaveRestoreTransform)
+    {
+        return true;
+    }
+
+    AChapterWorldRouter* Router = Cast<AChapterWorldRouter>(
+        UGameplayStatics::GetActorOfClass(this, AChapterWorldRouter::StaticClass()));
+    if (!Router || !Router->PlacePlayerAtCommittedTransform(
+            this,
+            PendingSaveRestoreChapterId,
+            PendingSaveRestoreRouteId,
+            PendingSaveRestoreEpisodeId,
+            PendingSaveRestoreLocation,
+            PendingSaveRestoreRotation))
+    {
+        return false;
+    }
+
+    bPendingSaveRestoreTransform = false;
+    GetCharacterMovement()->StopMovementImmediately();
+    ApplyPrototypeStyle();
+
+    if (!PendingSaveRestoreSuccessMessage.IsEmpty())
+    {
+        if (APlayerController* PC = Cast<APlayerController>(Controller))
+        {
+            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+            {
+                HUD->ShowAlert(PendingSaveRestoreSuccessMessage, 1.8f);
+            }
+        }
+    }
+    PendingSaveRestoreSuccessMessage = FText::GetEmpty();
+    return true;
+}
+
 bool AShirePlayerCharacter::RestoreSaveSnapshot(
     UShireSaveGame* Save,
     const FText& SuccessMessage)
@@ -1614,15 +1671,15 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
         Save->PlayableCharacterId =
             Save->CurrentRouteId == TEXT("GandalfParallel") ? FName(TEXT("Gandalf")) : FName(TEXT("Frodo"));
     }
+    if (Save->CurrentEpisodeId == NAME_None)
+    {
+        Save->CurrentEpisodeId = FName(*FString::Printf(TEXT("%s_Main"), *Save->CurrentChapterId.ToString()));
+    }
 
-    bool bApplyExactSavedTransform = true;
     if (UGameInstance* GI = GetGameInstance())
     {
         if (UShireQuestSubsystem* QuestSubsystem = GI->GetSubsystem<UShireQuestSubsystem>())
         {
-            const FName SavedChapterId =
-                Save->CurrentChapterId == NAME_None ? FName(TEXT("P1C01")) : Save->CurrentChapterId;
-
             QuestSubsystem->RestoreQuestState(
                 Save->QuestStages,
                 Save->ActiveQuestId,
@@ -1642,9 +1699,6 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
             QuestSubsystem->RestoreKnowledgeState(
                 Save->ChronicleEntryIds,
                 Save->KnownMapRegionIds);
-
-            bApplyExactSavedTransform =
-                QuestSubsystem->GetCurrentChapterId() == SavedChapterId;
         }
     }
 
@@ -1654,28 +1708,23 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
     Supplies = FMath::Clamp(Save->PlayerSupplies, 0, MaxSupplies);
     bStaminaExhausted = CurrentStamina <= 0.0f;
 
-    if (bApplyExactSavedTransform)
-    {
-        SetActorLocationAndRotation(
-            Save->PlayerLocation,
-            Save->PlayerRotation,
-            false,
-            nullptr,
-            ETeleportType::TeleportPhysics);
-    }
+    PendingSaveRestoreLocation = Save->PlayerLocation;
+    PendingSaveRestoreRotation = Save->PlayerRotation;
+    PendingSaveRestoreChapterId = Save->CurrentChapterId;
+    PendingSaveRestoreRouteId = Save->CurrentRouteId;
+    PendingSaveRestoreEpisodeId = Save->CurrentEpisodeId;
+    PendingSaveRestoreSuccessMessage = SuccessMessage;
+    bPendingSaveRestoreTransform = true;
 
-    GetCharacterMovement()->StopMovementImmediately();
-    ApplyPrototypeStyle();
-
-    if (!SuccessMessage.IsEmpty())
+    if (!TryApplyPendingSaveRestoreTransform())
     {
-        if (APlayerController* PC = Cast<APlayerController>(Controller))
-        {
-            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
-            {
-                HUD->ShowAlert(SuccessMessage, 1.8f);
-            }
-        }
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireSaveRestore: DEFERRED chapter=%s route=%s episode=%s reason=awaiting-world-commit"),
+            *PendingSaveRestoreChapterId.ToString(),
+            *PendingSaveRestoreRouteId.ToString(),
+            *PendingSaveRestoreEpisodeId.ToString());
     }
 
     return true;
