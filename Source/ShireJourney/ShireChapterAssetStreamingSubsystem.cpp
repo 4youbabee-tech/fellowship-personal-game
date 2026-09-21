@@ -208,9 +208,7 @@ void UShireChapterAssetStreamingSubsystem::RequestChapterAssets(
         FStreamableDelegate::CreateUObject(
             this,
             &UShireChapterAssetStreamingSubsystem::HandleAsyncLoadComplete,
-            ThisSerial),
-        FStreamableManager::DefaultAsyncLoadPriority,
-        false);
+            ThisSerial));
 
     if (!PendingHandle.IsValid())
     {
