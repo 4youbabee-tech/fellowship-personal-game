@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "queue_id": "TRILOGY_AUDIO_ASSET_CANDIDATE_QUEUE_V1",
+  "status": "ACTIVE_SOURCE_DISCOVERY",
+  "authority": "Data/ProjectGovernor.json",
+  "purpose": "Concrete, source-checked audio candidates for ambience, fauna, footsteps and environmental beds. Candidate status is not runtime integration or mix acceptance.",
+  "candidates": [
+    {
+      "id": "FS_SHIRE_FOREST_RIVER_YKOZY_710263",
+      "provider": "FREESOUND",
+      "source_url": "https://freesound.org/people/ykozy/sounds/710263/",
+      "license_observed": "CC0",
+      "format": "WAV",
+      "technical": "44.1kHz / 16-bit / stereo / 10:48",
+      "use": [
+        "P1C01 Shire river/forest bed",
+        "P1C07 foliage/water reference layer"
+      ],
+      "intake_status": "CANDIDATE"
+    },
+    {
+      "id": "FS_SHIRE_HORSE_MUD_FARM_OHMYPRO_400703",
+      "provider": "FREESOUND",
+      "source_url": "https://freesound.org/people/ohmypro/sounds/400703/",
+      "license_observed": "CC0",
+      "format": "WAV",
+      "technical": "48kHz / 16-bit / stereo / 5:04",
+      "use": [
+        "Shire farm life",
+        "horse/mud ambience",
+        "Rohan farm/stable reference"
+      ],
+      "intake_status": "CANDIDATE"
+    },
+    {
+      "id": "FS_SHIRE_FOREST_FOOTSTEP_TUNESEEKER_802062",
+      "provider": "FREESOUND",
+      "source_url": "https://freesound.org/people/TuneSeeker/sounds/802062/",
+      "license_observed": "CC0",
+      "format": "WAV",
+      "technical": "48kHz / 24-bit / stereo / 0:05.625",
+      "use": [
+        "forest footstep/cloth reference",
+        "Shire woodland traversal"
+      ],
+      "intake_status": "CANDIDATE"
+    },
+    {
+      "id": "FS_ANDUIN_FOREST_RIVER_ELANDRE01_594414",
+      "provider": "FREESOUND",
+      "source_url": "https://freesound.org/people/Elandre01/sounds/594414/",
+      "license_observed": "CC0",
+      "format": "WAV",
+      "technical": "48kHz / 24-bit / stereo / 2:54",
+      "use": [
+        "Anduin river ambience",
+        "Ithilien water/forest ambience"
+      ],
+      "intake_status": "CANDIDATE"
+    },
+    {
+      "id": "FS_FOREST_RIVER_DEADROBOT_609937",
+      "provider": "FREESOUND",
+      "source_url": "https://freesound.org/people/deadrobotmusic/sounds/609937/",
+      "license_observed": "CC0",
+      "format": "WAV",
+      "technical": "44.1kHz / 32-bit / stereo / 1:41.537",
+      "use": [
+        "river layer variations",
+        "crossfade alt bed"
+      ],
+      "intake_status": "CANDIDATE"
+    },
+    {
+      "id": "FS_MORIA_CAVERN_GLORB_867586",
+      "provider": "FREESOUND",
+      "source_url": "https://freesound.org/people/bassimat/sounds/867586/",
+      "license_observed": "CC0",
+      "format": "WAV",
+      "technical": "44.1kHz / 24-bit / stereo / 2:00",
+      "use": [
+        "Moria cavern/drips/stone/rumble design layer"
+      ],
+      "intake_status": "CANDIDATE",
+      "notes": "Procedurally generated sound-design source; use as layer/reference, not as sole Moria identity."
+    },
+    {
+      "id": "FS_FOREST_BIRDS_LOOP_MAGNESUS_723913",
+      "provider": "FREESOUND",
+      "source_url": "https://freesound.org/people/Magnesus/sounds/723913/",
+      "license_observed": "CC0",
+      "format": "WAV",
+      "technical": "48kHz / 16-bit / stereo / 0:27 seamless loop",
+      "use": [
+        "Shire birds",
+        "Rivendell/Lothlorien light fauna bed"
+      ],
+      "intake_status": "CANDIDATE"
+    },
+    {
+      "id": "FS_FOREST_WIND_LEAVES_REFLEKT_843073",
+      "provider": "FREESOUND",
+      "source_url": "https://freesound.org/people/ReflektWave/sounds/843073/",
+      "license_observed": "CC0",
+      "format": "WAV",
+      "technical": "44.1kHz / 24-bit / stereo / 1:06",
+      "use": [
+        "Shire/Bree outskirts forest wind",
+        "autumnal variation"
+      ],
+      "intake_status": "CANDIDATE"
+    },
+    {
+      "id": "FS_FOREST_BINAURAL_KALEID_627064",
+      "provider": "FREESOUND",
+      "source_url": "https://freesound.org/people/KaleidacousticsAudio/sounds/627064/",
+      "license_observed": "CC0",
+      "format": "WAV",
+      "technical": "48kHz / 24-bit / stereo-binaural / 3:40",
+      "use": [
+        "forest ambience reference",
+        "headphone spatial-bed comparison"
+      ],
+      "intake_status": "CANDIDATE"
+    },
+    {
+      "id": "FS_CROWS_WINTER_LWDICKENS_263492",
+      "provider": "FREESOUND",
+      "source_url": "https://freesound.org/people/lwdickens/sounds/263492/",
+      "license_observed": "CC0",
+      "format": "WAV",
+      "technical": "48kHz / 24-bit / stereo / 4:03",
+      "use": [
+        "Crebain/crow-threat reference",
+        "cold travel ambience"
+      ],
+      "intake_status": "CANDIDATE"
+    },
+    {
+      "id": "FS_LEAVES_RUSTLE_CINETONY_575380",
+      "provider": "FREESOUND",
+      "source_url": "https://freesound.org/people/Cinetony/sounds/575380/",
+      "license_observed": "CC0",
+      "format": "WAV",
+      "technical": "48kHz / 24-bit / stereo / 1:46",
+      "use": [
+        "localized foliage emitter",
+        "Lothlorien/Shire leaves"
+      ],
+      "intake_status": "CANDIDATE"
+    },
+    {
+      "id": "SONNISS_GDC_2026_BUNDLE",
+      "provider": "SONNISS",
+      "source_url": "https://gdc.sonniss.com/",
+      "license_observed": "ROYALTY_FREE_VENDOR_BUNDLE; exact bundle license to archive at acquisition",
+      "format": "mixed WAV library",
+      "technical": "7.47GB+ / 347+ files advertised",
+      "use": [
+        "broad professional SFX warehouse fill",
+        "foley",
+        "impacts",
+        "creatures",
+        "ambience candidates"
+      ],
+      "intake_status": "CANDIDATE",
+      "notes": "High-value bulk lane; preserve exact 2026 bundle license text and track-file list."
+    }
+  ],
+  "acquisition_priority": [
+    "P1C01 Shire ambience/fauna/footstep/horse layers",
+    "P1C06 Moria cavern/drip/rumble layers",
+    "P1C08 Anduin river/wind/forest layers",
+    "Sonniss bulk SFX bundle for categorized intake"
+  ],
+  "intake_rule": "Before READY_FOR_IMPORT, verify file integrity, exact license page/snapshot, sample rate/bit depth/channel count, loop suitability, noise/contamination, and whether a sound is a bed vs localized emitter.",
+  "runtime_rule": "Localized cues use 3D attenuation/concurrency; long ambience beds and music remain managed by UShireAudioSubsystem. Do not load an entire raw warehouse into memory."
+}
