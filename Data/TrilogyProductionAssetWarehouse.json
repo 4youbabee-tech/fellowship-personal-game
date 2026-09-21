@@ -1,0 +1,842 @@
+{
+  "schema_version": 1,
+  "warehouse_id": "TRILOGY_PRODUCTION_ASSET_WAREHOUSE_V1",
+  "status": "CATALOGUE_COMPLETE_FIRST_PASS_ASSET_FILL_ACTIVE",
+  "authority": "Data/ProjectGovernor.json",
+  "scope": "Full film trilogy production-readiness warehouse for Shire Journey. Catalogue all required production slots now; acquire/author/import actual files progressively without confusing catalogue coverage with asset completion.",
+  "source_basis": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES",
+    "05_BATTLES_WEAPONS_ARMIES_AND_CREATURES",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+    "The Fellowship of the Ring screenplay",
+    "The Two Towers screenplay",
+    "The Return of the King screenplay"
+  ],
+  "truth_rule": "CATALOGUED means the slot is known and tracked. READY means an actual usable source asset exists with format/provenance/compatibility metadata. APPROVED requires the project asset rules. INTEGRATED means the runtime uses it. ACCEPTED requires the relevant engine/PIE/device/visual or audio proof.",
+  "operating_model": {
+    "strategy": "WAREHOUSE_FIRST_PLUS_VERTICAL_SLICE",
+    "parallelism": [
+      "Fill trilogy warehouse catalogue and source candidates continuously.",
+      "P1C01 Shire remains the first fully assembled visual/audio benchmark.",
+      "Do not open Part II/III runtime feature implementation ahead of active foundation gates; preproduction warehouse work may proceed in parallel."
+    ],
+    "target_profile": "UE4.27.2 / DX11 / 720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+    "runtime_rules": [
+      "Animated production characters: skeletal FBX only.",
+      "Production textures: PNG/TGA, channel-packed where appropriate.",
+      "Heavy assets: soft references and FStreamableManager asynchronous ownership.",
+      "Crowd/common transient actors: pooling before density expansion.",
+      "Repeated non-identity world detail: ISM/HISM + culling/LOD."
+    ]
+  },
+  "named_characters": {
+    "core": [
+      "Frodo Baggins",
+      "Samwise Gamgee",
+      "Gandalf",
+      "Aragorn",
+      "Legolas",
+      "Gimli",
+      "Boromir",
+      "Merry",
+      "Pippin",
+      "Gollum / Smeagol",
+      "Theoden",
+      "Eowyn",
+      "Eomer",
+      "Faramir",
+      "Denethor II",
+      "Arwen",
+      "Elrond",
+      "Galadriel",
+      "Saruman",
+      "Sauron",
+      "Witch-king",
+      "Treebeard",
+      "Grima Wormtongue"
+    ],
+    "creature_characters": [
+      "Shelob",
+      "Balrog"
+    ],
+    "supporting_screenplay_roster": [
+      "Bilbo",
+      "Haldir",
+      "Celeborn",
+      "Barliman Butterbur",
+      "Old Harry",
+      "Lobelia Sackville-Baggins",
+      "Farmer Maggot",
+      "Ted Sandyman",
+      "Gaffer Gamgee",
+      "Proudfoot",
+      "Daddy Twofoot",
+      "Rosie Cotton",
+      "Isildur",
+      "Lurtz",
+      "Ugluk",
+      "Gamling",
+      "Madril",
+      "Morwen",
+      "Hama",
+      "Freda",
+      "Grishnakh",
+      "Sharku",
+      "Haleth",
+      "Mauhur",
+      "Eothain",
+      "Deagol",
+      "Gothmog",
+      "King of the Dead",
+      "Gorbag",
+      "Shagrat",
+      "Iorlas",
+      "Grimbold",
+      "Figwit"
+    ],
+    "required_asset_bundle": [
+      "skeletal FBX / rig / skin weights",
+      "character-specific body/head/hair/beard",
+      "costume/equipment variants by story state",
+      "material set: skin/cloth/leather/metal/hair",
+      "locomotion and story-action animation compatibility",
+      "LOD/material-slot/performance profile",
+      "voice/performance direction and dialogue identity"
+    ],
+    "first_fill_priority": [
+      "Frodo Baggins",
+      "Gandalf",
+      "Samwise Gamgee",
+      "Aragorn",
+      "Gimli",
+      "Legolas",
+      "Merry",
+      "Pippin",
+      "Boromir"
+    ]
+  },
+  "population_and_faction_families": [
+    "Shire Hobbits: residents/gardeners/field workers/vendors/party guests/ferry workers",
+    "Bree townspeople/inn guests/stable hands/gate workers/couriers",
+    "Rivendell residents/scholars/artisans/attendants/wardens",
+    "Lothlorien wardens/craft residents/boat tenders",
+    "Dunedain/Rangers of the North",
+    "Gondor guards/soldiers/rangers/civilians/citadel roles",
+    "Rohan riders/soldiers/civilians/stable roles",
+    "Dwarven historical/visual families",
+    "Orcs: Mordor variants",
+    "Uruk-hai: Isengard melee/pike/crossbow/officer variants",
+    "Haradrim/Easterling military variants",
+    "Nazgul family",
+    "Ent family",
+    "Dead/Paths of the Dead spectral army variants"
+  ],
+  "world_locations": [
+    {
+      "id": "SHIRE_HOBBITON",
+      "states": [
+        "Birthday",
+        "Departure",
+        "Post-war/Epilogue"
+      ],
+      "kits": [
+        "pastoral terrain",
+        "lanes",
+        "farms",
+        "hobbit-holes",
+        "gardens",
+        "party field",
+        "mills/bridges/fences"
+      ]
+    },
+    {
+      "id": "BAG_END",
+      "states": [
+        "Bilbo occupied",
+        "Frodo departure",
+        "Epilogue"
+      ],
+      "kits": [
+        "round interior architecture",
+        "pantry/kitchen",
+        "study",
+        "bedroom",
+        "hearth",
+        "lived-in props"
+      ]
+    },
+    {
+      "id": "BREE",
+      "states": [
+        "Night arrival",
+        "Departure"
+      ],
+      "kits": [
+        "timber/stone streets",
+        "gate",
+        "Prancing Pony exterior/interior",
+        "stable",
+        "rain dressing"
+      ]
+    },
+    {
+      "id": "WEATHERTOP",
+      "states": [
+        "Calm approach",
+        "Night attack"
+      ],
+      "kits": [
+        "ruined watchtower",
+        "hill terrain",
+        "camp",
+        "night threat dressing"
+      ]
+    },
+    {
+      "id": "RIVENDELL",
+      "states": [
+        "Arrival wounded",
+        "Fellowship formed"
+      ],
+      "kits": [
+        "terraces",
+        "waterfalls",
+        "stone/wood elven architecture",
+        "Council",
+        "gardens/interiors"
+      ]
+    },
+    {
+      "id": "CARADHRAS",
+      "states": [
+        "Storm escalation"
+      ],
+      "kits": [
+        "snow",
+        "rock",
+        "wind exposure",
+        "low visibility",
+        "mountain traversal"
+      ]
+    },
+    {
+      "id": "MORIA",
+      "states": [
+        "Entrance",
+        "Tomb alert",
+        "Balrog escape"
+      ],
+      "kits": [
+        "doors",
+        "mines",
+        "vast halls",
+        "Balin tomb",
+        "stairs/bridges",
+        "darkness/brazier dressing"
+      ]
+    },
+    {
+      "id": "LOTHLORIEN",
+      "states": [
+        "Night arrival",
+        "Departure"
+      ],
+      "kits": [
+        "golden forest",
+        "flets",
+        "organic bridges",
+        "river/boats",
+        "luminous foliage"
+      ]
+    },
+    {
+      "id": "ANDUIN_AMON_HEN",
+      "states": [
+        "River journey",
+        "Uruk attack"
+      ],
+      "kits": [
+        "river",
+        "boats",
+        "Argonath/monumental reveal",
+        "forest",
+        "ancient ruins",
+        "Parth Galen"
+      ]
+    },
+    {
+      "id": "FANGORN",
+      "states": [
+        "Quiet",
+        "Ent mobilization"
+      ],
+      "kits": [
+        "ancient trunks",
+        "roots",
+        "mist",
+        "living forest",
+        "Ent-scale traversal"
+      ]
+    },
+    {
+      "id": "EDORAS_MEDUSELD",
+      "states": [
+        "Grima control",
+        "Restored court"
+      ],
+      "kits": [
+        "hill capital",
+        "golden hall",
+        "stables",
+        "wind plains",
+        "Rohan village"
+      ]
+    },
+    {
+      "id": "HELMS_DEEP",
+      "states": [
+        "Pre-battle",
+        "Rain siege",
+        "Aftermath"
+      ],
+      "kits": [
+        "Deeping Wall",
+        "culvert",
+        "keep",
+        "caves",
+        "siege dressing"
+      ]
+    },
+    {
+      "id": "ISENGARD_ORTHANC",
+      "states": [
+        "Industrial",
+        "Flooded"
+      ],
+      "kits": [
+        "Orthanc",
+        "ring wall",
+        "pits",
+        "furnaces",
+        "chains",
+        "felled forest",
+        "flood state"
+      ]
+    },
+    {
+      "id": "EMYN_MUIL",
+      "states": [
+        "Pre-guide",
+        "Guided"
+      ],
+      "kits": [
+        "broken ridges",
+        "drops",
+        "grey stone",
+        "rope traversal"
+      ]
+    },
+    {
+      "id": "DEAD_MARSHES",
+      "states": [
+        "Continuous hazard"
+      ],
+      "kits": [
+        "pools",
+        "mist",
+        "dead vegetation",
+        "corpse-light treatment"
+      ]
+    },
+    {
+      "id": "ITHILIEN",
+      "states": [
+        "Ranger-controlled pockets"
+      ],
+      "kits": [
+        "green forest",
+        "ruins",
+        "waterfalls",
+        "ambush spaces"
+      ]
+    },
+    {
+      "id": "HENNETH_ANNUN",
+      "states": [
+        "Secure",
+        "Departure"
+      ],
+      "kits": [
+        "waterfall cave",
+        "concealed approach",
+        "ranger refuge"
+      ]
+    },
+    {
+      "id": "MINAS_TIRITH",
+      "states": [
+        "Peace/prep",
+        "Siege",
+        "Coronation"
+      ],
+      "kits": [
+        "concentric white city",
+        "gates",
+        "citadel",
+        "courtyards",
+        "siege variants"
+      ]
+    },
+    {
+      "id": "OSGILIATH",
+      "states": [
+        "Contested",
+        "Overrun"
+      ],
+      "kits": [
+        "ruined domes",
+        "bridges",
+        "riverfront",
+        "rubble",
+        "combat routes"
+      ]
+    },
+    {
+      "id": "MINAS_MORGUL",
+      "states": [
+        "Army departure"
+      ],
+      "kits": [
+        "corrupted valley",
+        "vertical fortress",
+        "dead road",
+        "green dread lighting"
+      ]
+    },
+    {
+      "id": "CIRITH_UNGOL",
+      "states": [
+        "Pre-Shelob",
+        "Tower aftermath"
+      ],
+      "kits": [
+        "mountain stairs",
+        "tower",
+        "harsh rock",
+        "orc interior"
+      ]
+    },
+    {
+      "id": "SHELOBS_LAIR",
+      "states": [
+        "Predator active",
+        "Aftermath"
+      ],
+      "kits": [
+        "web caves",
+        "organic tunnels",
+        "darkness",
+        "ambush spaces"
+      ]
+    },
+    {
+      "id": "PELENNOR_FIELDS",
+      "states": [
+        "Pre-siege",
+        "Battle",
+        "Aftermath"
+      ],
+      "kits": [
+        "open plain",
+        "siege debris",
+        "army staging",
+        "mumakil lanes"
+      ]
+    },
+    {
+      "id": "PATHS_OF_THE_DEAD",
+      "states": [
+        "Sealed dread",
+        "Army follows"
+      ],
+      "kits": [
+        "haunted road",
+        "stone tomb architecture",
+        "fog",
+        "spectral staging"
+      ]
+    },
+    {
+      "id": "BLACK_GATE_MORANNON",
+      "states": [
+        "Closed",
+        "Final confrontation"
+      ],
+      "kits": [
+        "black walls",
+        "barren plain",
+        "army staging"
+      ]
+    },
+    {
+      "id": "MORDOR_GORGOROTH",
+      "states": [
+        "Army movement",
+        "Final collapse"
+      ],
+      "kits": [
+        "ash",
+        "volcanic rock",
+        "industrial war landscape",
+        "slave roads"
+      ]
+    },
+    {
+      "id": "MOUNT_DOOM",
+      "states": [
+        "Stable",
+        "Destruction"
+      ],
+      "kits": [
+        "volcanic slopes",
+        "narrow paths",
+        "Sammath Naur",
+        "lava/fire"
+      ]
+    },
+    {
+      "id": "GREY_HAVENS",
+      "states": [
+        "Final"
+      ],
+      "kits": [
+        "pale harbor",
+        "ships",
+        "sea horizon",
+        "farewell staging"
+      ]
+    }
+  ],
+  "cultures_and_visual_kits": [
+    "Hobbits",
+    "Dunedain/Gondor",
+    "Rohirrim",
+    "Elves: Rivendell",
+    "Elves: Lothlorien",
+    "Dwarves",
+    "Orcs/Uruk-hai",
+    "Ents",
+    "Haradrim/Easterlings",
+    "Nazgul/Mordor"
+  ],
+  "creatures_and_fauna": {
+    "hero_threats": [
+      "Cave Troll",
+      "Balrog",
+      "Warg",
+      "Fell Beast",
+      "Mumakil/Oliphaunt",
+      "Shelob",
+      "Ent",
+      "Great Eagle"
+    ],
+    "fauna_and_world_life": [
+      "horses",
+      "ponies",
+      "cattle",
+      "pigs",
+      "dogs",
+      "fish",
+      "birds",
+      "crows/crebain",
+      "rabbits",
+      "butterflies"
+    ],
+    "rule": "Fauna density and species remain region/canon appropriate; no generic fantasy zoo."
+  },
+  "battles_and_army_sets": [
+    "Amon Hen",
+    "Helm's Deep",
+    "Isengard Ent assault",
+    "Ithilien ambush",
+    "Osgiliath",
+    "Siege of Minas Tirith",
+    "Pelennor Fields",
+    "Black Gate",
+    "Cirith Ungol Tower"
+  ],
+  "weapons_equipment_artifacts": [
+    "longsword/ranger sword",
+    "Anduril",
+    "Elven bow",
+    "Gimli axes",
+    "Rohirrim spear",
+    "sword+shield",
+    "Uruk blades/pikes/crossbows",
+    "Morgul blade",
+    "siege ladders/rams/explosives",
+    "Sting",
+    "mithril shirt",
+    "Glamdring",
+    "One Ring",
+    "Palantir",
+    "Phial of Galadriel",
+    "Elven cloaks/gifts",
+    "Narsil shards"
+  ],
+  "material_warehouse": [
+    "human/hobbit/elf/dwarf/orc skin families",
+    "hair/beard",
+    "linen",
+    "wool",
+    "heavy cloth",
+    "leather",
+    "weathered leather",
+    "iron",
+    "steel",
+    "bronze/brass",
+    "silver/elven metal",
+    "wood/timber",
+    "painted wood",
+    "plaster",
+    "thatch",
+    "slate/roofing",
+    "granite/rock",
+    "dwarven carved stone",
+    "Gondor pale stone",
+    "masonry/rubble",
+    "mud",
+    "soil",
+    "path gravel",
+    "grass",
+    "moss",
+    "snow/ice",
+    "ash/volcanic ground",
+    "wet stone",
+    "water/river",
+    "bark",
+    "leaves",
+    "golden Lothlorien foliage",
+    "web/silk",
+    "bone/corpse-safe dressing",
+    "fire/ember emissive"
+  ],
+  "architecture_props_warehouse": [
+    "hobbit-hole modular kit",
+    "Shire fences/gates/bridges/carts/barrels/crates/benches/lanterns/farm tools",
+    "Bree timber/stone modular town kit",
+    "Prancing Pony inn kit",
+    "Rivendell elven stone/wood kit",
+    "Lothlorien flet/bridge kit",
+    "Dwarven Moria column/door/stair/bridge/tomb kit",
+    "Rohan hall/house/stable kit",
+    "Helm's Deep fortress/siege kit",
+    "Gondor city/fortification kit",
+    "Mordor/Minas Morgul/Black Gate fortification kit",
+    "Isengard industrial kit",
+    "ranger camp/refuge kit",
+    "boats/canoes/paddles",
+    "camp/bedroll/cookware",
+    "banners/heraldry/shields",
+    "books/scrolls/maps",
+    "food/tableware",
+    "market/farm clutter",
+    "battle debris/corpses-safe representations"
+  ],
+  "animation_warehouse": {
+    "common_humanoid": [
+      "idle variants",
+      "walk",
+      "run",
+      "sprint",
+      "crouch",
+      "jump/fall/land",
+      "turns",
+      "start/stop",
+      "sit/stand",
+      "pickup/carry",
+      "door interaction",
+      "conversation gestures",
+      "look/gaze/listen",
+      "hit/recover/death"
+    ],
+    "hobbit": [
+      "short-stride locomotion",
+      "pack/cook/field/social actions",
+      "stealth/hide"
+    ],
+    "ranger_human": [
+      "sword",
+      "bow",
+      "tracking",
+      "command",
+      "climb/traverse"
+    ],
+    "elf": [
+      "archery",
+      "fast reposition",
+      "light-footed traversal",
+      "formal/social"
+    ],
+    "dwarf": [
+      "axe attacks",
+      "heavy stagger",
+      "climb/short-stride traversal"
+    ],
+    "wizard": [
+      "staff locomotion",
+      "sword",
+      "rare power gestures",
+      "command/conversation"
+    ],
+    "mounted": [
+      "mount/dismount",
+      "walk/trot/canter/gallop",
+      "spear/sword mounted"
+    ],
+    "creature": [
+      "warg",
+      "fell beast",
+      "troll",
+      "Shelob",
+      "Ent",
+      "eagle",
+      "mumakil",
+      "Balrog set-piece"
+    ],
+    "crowd": [
+      "work",
+      "social",
+      "fear/flee",
+      "cheer",
+      "battle background",
+      "formation marching"
+    ]
+  },
+  "audio_warehouse": {
+    "voice": "all named-character cue families + bounded ambient voice families; authorized/original production only",
+    "music": "dynamic chapter/state stems and transitions; original/authorized equivalents when commercial score cannot be used",
+    "ambience": [
+      "Shire",
+      "Bree",
+      "Rivendell",
+      "Moria",
+      "Lothlorien",
+      "Anduin",
+      "Rohan",
+      "Fangorn",
+      "Gondor",
+      "Mordor",
+      "battlefields"
+    ],
+    "foley": [
+      "footsteps by surface",
+      "cloth",
+      "leather",
+      "metal gear",
+      "doors",
+      "weapons",
+      "horses/carts",
+      "boats/paddles"
+    ],
+    "fauna": [
+      "birds",
+      "crows/crebain",
+      "horses/ponies",
+      "dogs",
+      "farm animals",
+      "wargs",
+      "eagles"
+    ],
+    "combat_creatures": [
+      "orc/uruk",
+      "weapons",
+      "shields",
+      "siege",
+      "troll",
+      "Balrog",
+      "Shelob",
+      "fell beast",
+      "mumakil"
+    ]
+  },
+  "cinematic_vfx_ui_warehouse": {
+    "cinematic": [
+      "hero reveal camera grammar",
+      "dialogue coverage",
+      "battle shot families",
+      "transition shots",
+      "chapter intros/outros"
+    ],
+    "vfx": [
+      "rain",
+      "snow",
+      "mist",
+      "embers",
+      "fire",
+      "waterfalls",
+      "river spray",
+      "dust",
+      "ash",
+      "webs",
+      "magic/fear subtle effects",
+      "siege debris"
+    ],
+    "ui": [
+      "map/region treatment",
+      "interaction/readability icons",
+      "subtitles",
+      "dialogue presentation",
+      "low-distraction objective language"
+    ]
+  },
+  "fill_lanes": [
+    {
+      "lane": "A_CHARACTERS",
+      "priority": "CRITICAL",
+      "first_goal": "Frodo/Gandalf/Sam skeletal production trio + shared rig families"
+    },
+    {
+      "lane": "B_SHIRE_WORLD",
+      "priority": "CRITICAL",
+      "first_goal": "P1C01 complete natural visual slice with Hobbit architecture, vegetation, props, materials and fauna"
+    },
+    {
+      "lane": "C_AUDIO",
+      "priority": "CRITICAL",
+      "first_goal": "P1C01 dense ambience/foley/footsteps/voice-ready bank"
+    },
+    {
+      "lane": "D_TRILOGY_WORLD_KITS",
+      "priority": "HIGH",
+      "first_goal": "catalogue/acquire reusable culture/location kits across F2/F3 without opening runtime chapters"
+    },
+    {
+      "lane": "E_ENEMIES_CREATURES",
+      "priority": "HIGH",
+      "first_goal": "Nazgul/Orc/Uruk/Cave Troll then Warg/Fell Beast/Shelob/Mumakil"
+    },
+    {
+      "lane": "F_ANIMATION",
+      "priority": "CRITICAL",
+      "first_goal": "shared locomotion/social/combat libraries per rig family"
+    },
+    {
+      "lane": "G_BATTLE_SETS",
+      "priority": "HIGH",
+      "first_goal": "army readability kits + pooled background simulation assets"
+    }
+  ],
+  "measurement": {
+    "catalogue_named_character_slots": 58,
+    "core_location_slots": 28,
+    "culture_visual_kits": 10,
+    "hero_creature_threat_slots": 8,
+    "battle_set_slots": 9,
+    "note": "Counts describe tracked catalogue slots, not finished production assets. Supporting cast count comes from the supplied trilogy screenplay speaker pass plus Source 02 core roster."
+  }
+}
