@@ -66,3 +66,12 @@ Purpose: retain visual, material, life, ambience and world-detail ideas discover
 - Real rain/snow/weather VFX only after current fixed weather-context behavior is verified.
 - Material upgrades should be measured against 720p Low-Medium and the 30 FPS floor target.
 - Prefer source quality and runtime efficiency over raw asset count.
+
+
+## Cross-system QA immune-system idea — 2026-09-21
+- Owner-approved external programmer proposal: build a layered automated QA immune system for recurring game-breaking defects.
+- Adopt Unreal Automation Framework / FAutomationTestBase as an additional engine-level layer, not a replacement for the existing headless runtime harness.
+- First wave: exact-head automation runner, save-schema/default-state contract, chapter streaming package integrity, and strengthened startup-grounding regression.
+- Later waves: deterministic authored collision/traversal probes, navigation stuck coordinates, production-rig animation readiness, transition hitch measurement, memory-growth/churn soak, material/shader integrity and exact-SHA reports.
+- Corrections: do not use random world locations, universal Z<0, fixed 4 GB/100 ms thresholds, or proxy-NPC T-pose rules as project-wide truth. Use reproducible authored probes and measured target-device budgets.
+- No automated layer may promote PIE/device/visual/pacing acceptance by itself.

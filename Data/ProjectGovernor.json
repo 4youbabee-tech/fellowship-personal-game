@@ -2274,6 +2274,55 @@
       ],
       "checkpoint": "STARTUP_GROUNDING_REGRESSION",
       "notes": "Current change is a fix candidate only until exact-head Unreal and defect-specific PIE evidence exist."
+    },
+    {
+      "id": "REQ-QA-002",
+      "title": "Automated QA immune system for common game-breaking regressions",
+      "category": "QualityAssurance",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner-approved programmer proposal reviewed against the live project on 2026-09-21",
+      "intent": "Catch reproducible world/physics, save/progression, asset integrity, AI/navigation/animation, transition performance, memory-growth and long-session regressions automatically on exact PR heads before asking the owner to perform manual technical testing.",
+      "evidence": [
+        "Data/AutomatedQAPlan.json",
+        "Source/ShireJourneyEditorTools/Private/Tests/ShireQAAutomationTests.cpp",
+        "Scripts/ci_run_project_automation.cmd",
+        "Scripts/parse_automation_report.py",
+        ".github/workflows/unreal-build-validation.yml"
+      ],
+      "implementation_refs": [
+        "Foundation wave adds UE Automation Framework tests under ShireJourney.QA.",
+        "Existing runtime_smoke.py remains the end-to-end runtime layer and already requires chapter-specific startup grounding proof.",
+        "The self-hosted workflow runs automation only after exact-head compile and production import."
+      ],
+      "missing_work": [
+        "Compile and execute the new Automation Framework suite on UE4.27.2.",
+        "Add deterministic authored world/collision probe coverage for all Part I chapter starts and critical traversal anchors.",
+        "Add deterministic navigation stuck-path scenarios with coordinate reporting.",
+        "Add production-skeletal animation/AnimBP readiness checks once rigs are declared production-ready.",
+        "Add measured transition hitch/frame-time and memory-growth reports on the target laptop.",
+        "Add repeated chapter/living-world churn soak and later long-duration target-device soak.",
+        "Add material-slot/package/shader-error coverage without relabeling headless checks as visual acceptance.",
+        "Generate exact-SHA machine-readable and human-readable QA summaries."
+      ],
+      "acceptance_criteria": [
+        "Every required automated result is tied to the exact tested commit SHA.",
+        "Automation failures block the affected merge/acceptance path and print actionable identities/coordinates.",
+        "World fall-through checks use authored probe anchors and actual collision/falling evidence rather than a universal Z threshold.",
+        "Navigation tests are deterministic and reproducible rather than random wandering.",
+        "Save tests prove serialized roundtrip state, not only in-memory equality.",
+        "Performance/memory thresholds are derived from target-device evidence and the existing 720p Low-Medium / 30 FPS floor.",
+        "Production animation checks apply only to actors declared production-skeletal-ready.",
+        "Headless/renderless checks never claim visual acceptance.",
+        "Owner manual play remains required for pacing, feel, visual acceptance and final defect-specific confirmation."
+      ],
+      "dependencies": [
+        "REQ-QA-001",
+        "REQ-CI-001",
+        "REQ-STARTUP-001"
+      ],
+      "checkpoint": "QA_IMMUNE_SYSTEM_V1",
+      "notes": "Foundation is intentionally staged behind the active startup-grounding repair; this is QA infrastructure, not a new gameplay feature."
     }
   ],
   "hard_invariants": [
@@ -2829,6 +2878,24 @@
       "evidence": [
         "Data/MasterExecutionRoadmap.json",
         "Docs/MASTER_EXECUTION_BOARD.md"
+      ]
+    },
+    {
+      "id": "DEC-029",
+      "title": "Adopt a layered Unreal automated QA immune system without replacing runtime/device/human proof",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-QA-001",
+        "REQ-QA-002",
+        "REQ-CI-001",
+        "REQ-STARTUP-001"
+      ],
+      "resolution": "Use layered validation: static/pre-Unreal guards, UE Automation Framework tests, existing end-to-end runtime smoke/state/chapter audits, then target-device performance/soak and owner PIE/visual/pacing confirmation. Prefer deterministic authored probes and evidence-based thresholds over random tests or arbitrary global limits.",
+      "rationale": "The external proposal is high-value, but several literal thresholds and test methods would create false confidence or false failures on this project's generated worlds and low-spec target.",
+      "authority": "USER_APPROVED_AFTER_EXTERNAL_REVIEW",
+      "evidence": [
+        "Data/AutomatedQAPlan.json",
+        "Docs/WORLD_DETAIL_LEDGER.md"
       ]
     }
   ],
@@ -3446,6 +3513,15 @@
       "status": "ACTIVE",
       "rationale": "Mitigate verified synchronous chapter loading risk before further world-density growth.",
       "execution_bundle": "B4_PERFORMANCE_AND_QA"
+    },
+    {
+      "order": 34,
+      "id": "WORK-QA-003",
+      "title": "Automated QA immune system V1",
+      "status": "ACTIVE",
+      "rationale": "Convert recurring runtime defects into exact-head automated regression coverage before owner play, beginning with UE Automation Framework wiring and deterministic high-value checks.",
+      "execution_bundle": "B0_EXACT_HEAD_STABILITY",
+      "plan": "Data/AutomatedQAPlan.json"
     }
   ],
   "last_reconciliation": {
@@ -3500,7 +3576,7 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "STARTUP_GROUNDING_REGRESSION_REPAIR",
+  "current_focus": "STARTUP_GROUNDING_PLUS_QA_IMMUNE_SYSTEM_FOUNDATION",
   "immediate_next_large_actions": [
     "Finish V5 on PR #61 with fresh exact-head Pre-Unreal plus full UE4.27.2 build/import/startup/P1C01-P1C08/state/warning proof, then merge to develop.",
     "Measure chapter-transition hitch, streaming pool and resident memory on representative target hardware before promoting V5 as a performance win.",
@@ -4136,6 +4212,41 @@
         "WORK-CHAR-004"
       ],
       "next_action": "When final PBR authoring begins, standardize a packed-mask convention such as ORM with sRGB disabled and measure actual compression/sampler/memory impact."
+    },
+    {
+      "id": "EXT-REV-2026-09-21-016",
+      "source": "Programmer QA proposal supplied by owner",
+      "verification_sha": "06033df4b7a2277c07c3ee07acb44b0c60b536ca",
+      "verification_status": "VERIFIED_DIRECTION_CORRECT_THRESHOLDS_REFINED",
+      "claim": "Build an Unreal Automation Framework/UAT QA immune system covering world/physics, performance/memory, AI/animation, progression/save integrity, and asset/rendering failures before owner PIE.",
+      "verified_result": {
+        "accepted": [
+          "Use FAutomationTestBase/Automation Framework as an engine-level regression layer in addition to existing runtime_smoke.py.",
+          "Run project automation on the exact PR head in the existing self-hosted UE4.27.2 workflow after compile/import.",
+          "Automate save/progression corruption checks, authored world-grounding probes, asset package/material integrity, navigation/stuck detection, production-rig animation readiness, transition hitch/memory evidence, and long-session churn checks in staged waves.",
+          "Keep developer-owned automation ahead of owner manual technical regression checks."
+        ],
+        "corrected": [
+          "Do not use Z < 0 as a universal fall-through rule; world coordinates may legitimately be negative. Use authored spawn/probe anchors, floor traces, capsule-ground distance, falling state, and bounded displacement.",
+          "Do not use random world points for collision/nav acceptance; use deterministic authored traversal/probe sets so failures are reproducible.",
+          "Do not treat x10 time dilation as equivalent to two real hours for memory leak proof. Use repeated transition/living-world churn plus measured memory slope, and reserve longer target-device soak for later acceptance.",
+          "Do not hard-code 4 GB RAM or 100 ms hitch as universal pass/fail thresholds without target-device baseline. Preserve the 8 GB machine / 30 FPS project floor and establish measured budgets.",
+          "Do not label every non-skeletal/proxy NPC as T-pose failure while production rigs are incomplete. Animation gates apply to actors declared production-skeletal-ready.",
+          "NullRHI/headless asset checks can detect missing packages/material assignments/shader compile errors but cannot replace rendered visual acceptance."
+        ]
+      },
+      "disposition": "ADOPT_PHASED_AUTOMATED_QA_IMMUNE_SYSTEM",
+      "linked_requirements": [
+        "REQ-QA-001",
+        "REQ-CI-001",
+        "REQ-STARTUP-001",
+        "REQ-PERF-001",
+        "REQ-SAVE-001"
+      ],
+      "linked_work": [
+        "WORK-QA-001"
+      ],
+      "next_action": "Start with exact-head Automation Framework wiring, save/schema and streamed-package integrity tests, and the existing grounded-startup runtime regression; add deterministic world/nav, animation, memory and hitch suites only after the foundation compiles on UE4.27.2."
     }
   ],
   "project_source_library": {

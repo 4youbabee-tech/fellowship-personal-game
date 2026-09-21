@@ -1,3 +1,11 @@
+## 2026-09-21 - automated QA immune-system direction adopted
+
+The owner supplied a programmer proposal to expand CI into a broader automated QA immune system. The direction is adopted after live-repository review, with project-specific corrections recorded in `EXT-REV-2026-09-21-016`, `REQ-QA-002`, `DEC-029` and `WORK-QA-003`.
+
+The first implementation wave is deliberately dependent on the active startup-grounding repair rather than competing with it. It will add UE Automation Framework tests and an exact-head runner after compile/import, while preserving `runtime_smoke.py` as the end-to-end chapter/state layer. Deterministic authored probes replace random-point tests; target-device measurements will set memory/hitch thresholds; headless checks do not become visual acceptance.
+
+Status before code wave: **PLANNED / STATIC-PENDING**.
+
 ## 2026-09-21 - deterministic P1C01 spawn support
 
 The startup-grounding repair now also removes imported-mesh collision from the first-frame dependency. P1C01 receives a hidden Engine BasicShapes collision pad centered at the authored start `(-2410,-120)` with its top at the authored road height. The larger hidden Shire collision foundation remains underneath the region. This means initial grounding can succeed even if the imported OBJ road/ground mesh has no usable generated simple collision.

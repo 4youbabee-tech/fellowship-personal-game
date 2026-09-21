@@ -1,5 +1,9 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-21 - automated QA immune-system foundation
+
+A layered automated QA initiative is now tracked as `REQ-QA-002`. The first wave adds Unreal Automation Framework coverage and exact-head CI execution after compile/import. Later world/nav/animation/performance/memory suites remain pending measured implementation. This does not alter any PIE/device/visual acceptance status.
+
 ## 2026-09-21 - deterministic P1C01 spawn collision support
 
 The startup repair adds a hidden Engine BasicShapes support pad at the P1C01 authored road start so initial collision no longer depends on imported OBJ simple-collision generation. This strengthens the fix candidate only; COMPILE/PIE/device/visual status remains unchanged until exact-head proof exists.
