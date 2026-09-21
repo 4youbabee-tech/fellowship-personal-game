@@ -1,3 +1,9 @@
+## 2026-09-22 - multi-lane warehouse staging expanded
+
+Warehouse fill now runs as three concrete intake lanes on the integration train: Poly Haven CC0 environment/material stock, OpenGameArt CC0 music/foley stock, and Quaternius CC0 character/animation/fauna/world-kit discovery/staging. The audio lane contains direct OpenGameArt WAV/ZIP endpoints with source-page/license records and SHA256 receipt generation. The Quaternius lane resolves only public direct archives from official pack pages and records unresolved/store-only packs without fabricating download URLs.
+
+The warehouse workflow remains independent from UE4 compile/PIE. Staged assets remain STAGED until their category-specific intake validation passes; animated production characters still require real FBX rigs and hero-character visual acceptance is not implied by background/base packs.
+
 ## 2026-09-22 - warehouse fill execution expanded beyond catalogue-only state
 
 The warehouse lane has moved into an actual staged-download implementation. `Data/WarehouseAcquisitionBatchV1.json` now contains a source-page-verified Poly Haven P1C01 material/prop batch covering wood interiors, dirt/path variants, plaster families, cobblestone, mossy stone and barrel props. `Scripts/stage_polyhaven_warehouse.ps1` now handles provider/API failures per asset instead of aborting the entire batch, records skipped reasons, and preserves successful downloads/receipts so one bad slug cannot stop warehouse growth.
