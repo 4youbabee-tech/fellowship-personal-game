@@ -21,6 +21,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
+#include "Misc/CommandLine.h"
+#include "Misc/Parse.h"
+#include "TimerManager.h"
 
 AChapterWorldRouter::AChapterWorldRouter()
 {
@@ -314,12 +317,74 @@ bool AChapterWorldRouter::MovePlayerToChapterStart(FName ChapterId, bool bRestor
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("ShireStartupGrounding: PASS chapter=%s source=%s requestedZ=%.1f groundedZ=%.1f"),
+        TEXT("ShireStartupGrounding: PLACED chapter=%s source=%s requestedZ=%.1f groundedZ=%.1f"),
         *ChapterId.ToString(),
         bUsingSavedTransform ? TEXT("saved-route") : TEXT("chapter-start"),
         RequestedLocation.Z,
         GroundedLocation.Z);
+
+    if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit")))
+    {
+        FTimerHandle StabilityTimer;
+        FTimerDelegate StabilityDelegate = FTimerDelegate::CreateUObject(
+            this,
+            &AChapterWorldRouter::VerifyPlayerGroundingStability,
+            ChapterId,
+            GroundedLocation);
+        GetWorldTimerManager().SetTimer(StabilityTimer, StabilityDelegate, 2.0f, false);
+    }
     return true;
+}
+
+void AChapterWorldRouter::VerifyPlayerGroundingStability(FName ChapterId, FVector PlacedLocation)
+{
+    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+    ACharacter* Character = Cast<ACharacter>(PlayerPawn);
+    UCharacterMovementComponent* Movement = Character ? Character->GetCharacterMovement() : nullptr;
+    if (!PlayerPawn || !Movement)
+    {
+        UE_LOG(LogTemp, Error, TEXT("ShireStartupGrounding: FAIL chapter=%s reason=stability-player-missing"), *ChapterId.ToString());
+        return;
+    }
+
+    const FVector CurrentLocation = PlayerPawn->GetActorLocation();
+    FVector ResolvedGroundLocation;
+    const bool bHasBlockingGround = ResolveGroundedSpawnLocation(
+        PlayerPawn,
+        CurrentLocation,
+        ResolvedGroundLocation);
+    const float VerticalDrop = PlacedLocation.Z - CurrentLocation.Z;
+    const float HorizontalDrift = FVector::Dist2D(PlacedLocation, CurrentLocation);
+    const bool bStable =
+        bHasBlockingGround &&
+        !Movement->IsFalling() &&
+        VerticalDrop <= 35.0f &&
+        HorizontalDrift <= 80.0f;
+
+    if (!bStable)
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireStartupGrounding: FAIL chapter=%s reason=unstable-after-2s ground=%s falling=%s drop=%.1f drift=%.1f current=(%.1f,%.1f,%.1f)"),
+            *ChapterId.ToString(),
+            bHasBlockingGround ? TEXT("yes") : TEXT("no"),
+            Movement->IsFalling() ? TEXT("yes") : TEXT("no"),
+            VerticalDrop,
+            HorizontalDrift,
+            CurrentLocation.X,
+            CurrentLocation.Y,
+            CurrentLocation.Z);
+        return;
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireStartupGrounding: PASS chapter=%s stableSeconds=2.0 ground=yes drop=%.1f drift=%.1f"),
+        *ChapterId.ToString(),
+        VerticalDrop,
+        HorizontalDrift);
 }
 
 void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTransform)
