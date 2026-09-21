@@ -283,15 +283,15 @@
     ]
   },
   "current_wave": {
-    "id": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4",
+    "id": "EARLY_REALM_WORLD_LIFE_AND_CULTURAL_DENSITY_V10",
     "status": "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
     "focus": [
-      "dedicated Fellowship equipment silhouettes",
-      "replace generic shared prop identity",
-      "retain V3 character performance and cinematic/audio runtime",
-      "prepare clean future rig/socket handoff"
+      "Shire/Bree/Rivendell/Lothlorien culture-specific ambient life",
+      "chapter-tuned residency and danger density without baseline target inflation",
+      "performance-aware Lothlorien vertical sanctuary detail through HISM",
+      "preserve V5 streaming headroom and film-story topology"
     ],
-    "acceptance_rule": "Exact-head machine proof required; rendered likeness/final rigs/human/device acceptance remain separate."
+    "acceptance_rule": "Exact-head Pre-Unreal and full UE4.27.2 proof required. Rendered density/pacing and target-device FPS/hitch/memory remain separate."
   },
   "hero_character_geometry_wave": {
     "id": "HERO_ANATOMICAL_FOUNDATION_V6",
@@ -358,7 +358,7 @@
   },
   "living_world_v8": {
     "id": "CANON_SAFE_REGIONAL_LIFE_V8",
-    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "status": "HISTORICAL_FOUNDATION_SUPERSEDED_BY_V10_WITH_GUARDRAILS_RETAINED",
     "source_basis": [
       "03 World, Locations & Map Bible",
       "06 Gameplay & Side Activities Bible",
@@ -390,7 +390,7 @@
     ]
   },
   "world_magic_life_detail": {
-    "status": "ACTIVE_PENDING_ENGINE_PROOF",
+    "status": "V10_EARLY_REALM_EXPANSION_PENDING_EXACT_HEAD_ENGINE_PROOF",
     "runtime_components": [
       "AWorldAmbientMotionActor",
       "AWorldDetailCluster",
@@ -407,7 +407,7 @@
       "10 3D Visual Atlas",
       "11 Master Production Systems"
     ],
-    "current_result": "Environmental motion + bounded glow + performance-aware dense detail are implemented in source and await exact-head engine proof."
+    "current_result": "V10 adds culture-specific early-realm ambient roles, chapter-tuned residency budgets and HISM Lothlorien sanctuary depth on top of the proven environmental-motion/detail foundation."
   },
   "realm_detail_saturation_v2": {
     "plan": "Data/RealmDetailSaturationV2.json",
@@ -442,5 +442,38 @@
     "plan": "Data/HeroCharacterEquipmentSilhouetteV4.json",
     "added_project_owned_obj_assets": 18,
     "status": "PENDING_EXACT_HEAD_ENGINE_PROOF"
+  },
+  "early_realm_world_life_v10": {
+    "source_basis": [
+      "03 World, Locations & Map Bible",
+      "04 Peoples, Lore, Artifacts & Cultures",
+      "06 Gameplay & Side Activities Bible",
+      "08 Visual Reference Bible",
+      "10 3D Visual Asset Atlas Production",
+      "11 Master Production Systems & Source Index"
+    ],
+    "continuity": "FILM-EXPANDED / ORIGINAL-GAME ambient life only; no film-critical entrance, exit, capture, alliance, death or required discovery changes.",
+    "implemented": [
+      "Shire domestic/agrarian routine roles: Gardener, FieldWorker, MarketVendor, PartyGuest, FerryWorker",
+      "Bree crossroads/inn routine roles: InnGuest, StableHand, GateWorker, BreeCourier",
+      "Rivendell sanctuary roles: ElfScholar, ElfArtisan, ElfAttendant",
+      "Lothlorien sanctuary roles: ElfWarden, ElfCraftsperson, BoatTender",
+      "chapter-specific spawn cadence and residency radii with no baseline population target increase",
+      "chapter-specific danger population fractions",
+      "Lothlorien HISM golden-tree, fern and lantern depth instead of extra ticking actors"
+    ],
+    "performance_guardrails": [
+      "baseline targets remain P1C01=18, P1C02=16, P1C03=5, P1C04=12, P1C05=0, P1C06=0, P1C07=10, P1C08=4",
+      "Caradhras and Moria remain civilian-empty",
+      "Anduin/Amon Hen remains bird-only baseline",
+      "new Lothlorien micro-detail uses AWorldDetailCluster/HISM and cull distances",
+      "distance-based ambient NPC tick throttling remains active"
+    ],
+    "not_claimed": [
+      "target-device FPS/hitch/memory improvement",
+      "final skeletal crowds or crowd nav avoidance",
+      "rendered human density/pacing acceptance",
+      "final voice/audio"
+    ]
   }
 }
