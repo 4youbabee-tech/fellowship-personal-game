@@ -39,6 +39,7 @@ private:
     bool ResolveGroundedSpawnLocation(APawn* PlayerPawn, const FVector& RequestedLocation, FVector& OutGroundedLocation) const;
     bool MovePlayerToChapterStart(FName ChapterId, bool bRestoreRouteTransform);
     void SetPlayerWorldHold(bool bHold);
+    void VerifyPlayerGroundingStability(FName ChapterId, FVector PlacedLocation);
     UShireChapterAssetStreamingSubsystem* AssetStreamingSubsystem = nullptr;
 
     FName LastLoadedRouteId = NAME_None;
