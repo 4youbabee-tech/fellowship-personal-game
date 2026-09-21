@@ -27,7 +27,8 @@
     "integration_baseline_pre_unreal": "SUCCESS #543",
     "integration_baseline_unreal": "SUCCESS #378",
     "active_wave": "EARLY_REALM_WORLD_LIFE_AND_CULTURAL_DENSITY_V10",
-    "merge_policy": "Complete one coherent V10 branch, prove its exact head with Pre-Unreal and full UE4.27.2 validation, then merge to develop and revalidate develop."
+    "merge_policy": "Complete one coherent V10 branch, prove its exact head with Pre-Unreal and full UE4.27.2 validation, then merge to develop and revalidate develop.",
+    "pull_request": 62
   },
   "bundles": [
     {
@@ -438,8 +439,7 @@
     "WORK-SIDE-001",
     "WORK-WORLD-001",
     "WORK-WORLD-002",
-    "WORK-WORLD-003",
-    "WORK-PERF-002"
+    "WORK-WORLD-003"
   ],
   "immediate_next_large_actions": [
     "Finish culture-specific Shire/Bree/Rivendell/Lothlorien ambient life and chapter-tuned residency budgets without raising baseline population targets.",
