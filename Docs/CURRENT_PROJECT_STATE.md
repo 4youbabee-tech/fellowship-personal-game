@@ -1,3 +1,11 @@
+## 2026-09-22 - PR #67 exact-head Pre-Unreal #558 failure isolated
+
+Exact-head Pre-Unreal run #558 on `809325a64547744f0cc4992d76c42fb7e0862d82` reached the project validator and reported exactly two static errors after validating 30 cpp files, 32 headers, 63 architecture entries, 32 quest definitions, 8 runtime chapters, 62 presentation cues and 50 dialogue sequences. Source inspection isolated both errors to the stale PG-111 guard: it still required the V9 world-life status and the old fixed half-density implementation marker after the integrated branch intentionally advanced to V10 chapter density profiles and `DangerPopulationFraction`.
+
+The repair updates PG-111 to protect the V10 plan identity/status, require bounded per-chapter density profiles, preserve the P1C05/P1C06 civilian-empty and P1C08 bird-only rules, and assert the chapter-driven danger-thinning runtime path rather than the removed fixed-halving string. This is a validator-contract repair; it does not change LivingWorldDirector runtime behavior.
+
+Unreal Build #393 on the same SHA failed earlier than compilation: the UE4.27.2 preflight ran as `NT AUTHORITY\\NETWORK SERVICE` and received access denied while opening `C:\\Program Files\\Epic Games\\UE_4.27\\Engine\\Content\\EngineMaterials\\WorldGridMaterial.uasset` on all six probes. The workflow remains fail-closed. This is not C++ compile evidence. Current integration status remains **STATIC-PENDING** until a new exact-head Pre-Unreal run passes, and it remains **NOT COMPILE-TESTED / NOT PIE-TESTED / NOT DEVICE-TESTED / NOT VISUALLY-ACCEPTED** until the engine-runner access blocker is repaired and the corresponding gates execute.
+
 ## 2026-09-21 - continuous transition audit integrated
 
 The comprehensive integration branch now includes a same-session transition audit across P1C01-P1C08, FrodoMain/GandalfParallel route changes, committed-world/living-world revision agreement and a disk-save roundtrip. Separate chapter boot success is no longer accepted as evidence for continuous transition integrity. PG-124 protects the audit wiring while preserving the startup-grounding markers.
