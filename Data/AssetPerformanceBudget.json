@@ -128,7 +128,7 @@
       "Release streamable handles/region ownership after safe chapter unload and let Unreal GC/streaming reclaim eligible resources.",
       "Measure transition hitch, streaming pool and resident memory before and after migration."
     ],
-    "priority": "HIGH_AFTER_CURRENT_CHARACTER_WAVE"
+    "priority": "IMPLEMENTED_AS_V5_PENDING_EXACT_HEAD_AND_MEASUREMENT"
   },
   "ambient_actor_pooling_review": {
     "verified_on": "2026-09-21",

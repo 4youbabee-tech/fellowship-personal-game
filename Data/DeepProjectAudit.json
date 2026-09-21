@@ -106,7 +106,7 @@
     },
     {
       "topic": "asset loading",
-      "project_action": "direct LoadObject hotspots recorded for staged soft/async migration",
+      "project_action": "V5 chapter/route soft-path async preload is implemented as a guarded source/runtime mitigation; exact-head engine proof and target-device measurement remain required before performance promotion.",
       "basis": "Epic recommends soft references/asynchronous loading to reduce stalls and memory pressure."
     },
     {
@@ -131,7 +131,7 @@
     "combat readability/story-lock edge cases",
     "target-device CPU/GPU/frame-time/memory",
     "human pacing/visual/readability per chapter",
-    "chapter soft/async asset-bank prototype after transition-hitch measurement",
-    "ambient spawn/destroy/GC trace before pooling decision"
+    "ambient spawn/destroy/GC trace before pooling decision",
+    "V5 exact-head engine proof plus representative target-device chapter-transition hitch/streaming-pool/resident-memory measurement before performance promotion"
   ]
 }

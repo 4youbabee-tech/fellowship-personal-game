@@ -3237,8 +3237,8 @@
       "order": 10,
       "id": "WORK-EXP-003",
       "title": "CP56 Fellowship film-experience mega-pass",
-      "status": "ACTIVE",
-      "rationale": "Primary production track: deepen Part I moment-to-moment play around the fixed Peter Jackson film chronology with Shire life, companionship, exploration, regional social texture and cinematic presentation, without altering canon outcomes.",
+      "status": "COMPLETED",
+      "rationale": "CP56 Fellowship experience mega-pass merged; further Part I enrichment continues under ongoing world, character, gameplay and living-world tracks.",
       "execution_bundle": "B1_PART1_STORY_GAMEPLAY_COMPLETE"
     },
     {
@@ -3261,8 +3261,8 @@
       "order": 0,
       "id": "WORK-MEGA-001",
       "title": "CP56 whole-game mega integration and green-head repair loop",
-      "status": "ACTIVE",
-      "rationale": "Largest coordinated pass across gameplay, characters, living world, offline intelligence, story/persistence, presentation and automation. Current PR head must be repaired until green.",
+      "status": "COMPLETED",
+      "rationale": "PR #53 integration/repair loop is complete and merged; current exact-head repair ownership is WORK-QA-001 plus the active focused wave.",
       "execution_bundle": "B0_EXACT_HEAD_STABILITY"
     },
     {
@@ -3358,32 +3358,32 @@
       "order": 29,
       "id": "WORK-PROD-007",
       "title": "Mega material and world-content saturation V1",
-      "status": "ACTIVE",
-      "rationale": "Owner requested a very large next step with massive visible content/material injection while preserving useful prior requests and programmer findings.",
+      "status": "COMPLETED",
+      "rationale": "Mega material and world saturation V1 merged through PR #56 after exact-head machine validation.",
       "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
     },
     {
       "order": 30,
       "id": "WORK-PROD-008",
       "title": "Realm detail saturation V2",
-      "status": "ACTIVE",
-      "rationale": "Continue visible source-grounded production after the green PR #56 mega wave.",
+      "status": "COMPLETED",
+      "rationale": "Realm detail saturation V2 merged through PR #57 after its focused validation cycle.",
       "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
     },
     {
       "order": 31,
       "id": "WORK-PROD-009",
       "title": "Cinematic character and sonic life V3",
-      "status": "ACTIVE",
-      "rationale": "Raise presentation quality after green realm-detail V2 without waiting for final external animation/audio assets.",
+      "status": "COMPLETED",
+      "rationale": "Cinematic character and sonic life V3 merged through PR #58 with exact-head Pre-Unreal and Unreal proof.",
       "execution_bundle": "B3_LIVING_WORLD_AND_PRESENTATION"
     },
     {
       "order": 32,
       "id": "WORK-PROD-010",
       "title": "Dedicated Fellowship equipment silhouettes V4",
-      "status": "ACTIVE",
-      "rationale": "Give the core Fellowship stronger character-specific visual identity before final rig handoff.",
+      "status": "COMPLETED",
+      "rationale": "Dedicated Fellowship equipment silhouettes V4 merged through PR #59 with exact-head Pre-Unreal and Unreal proof.",
       "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
     },
     {
@@ -3397,15 +3397,21 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "reason": "Programmer review PR #60 passed both exact-head gates and merged; chapter streaming V5 implementation continued immediately on its focused branch.",
+    "reason": "Owner requested path review/cleanup before further production.",
     "active_wave": "CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5",
-    "integrated_review": {
-      "candidate": "4879a19999951354676341f032c358ac98679c44",
-      "pre_unreal": "#531 SUCCESS",
-      "unreal": "#366 SUCCESS",
-      "merge": "8d7247d229b5cd51e8aea5617e1e2030b38229bf"
+    "integration_baseline": {
+      "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
+      "pre_unreal": "#532 SUCCESS",
+      "unreal": "#367 SUCCESS"
     },
-    "truth_boundary": "V5 source changes are pending their own exact-head machine proof and later target-device measurement."
+    "active_candidate": {
+      "pull_request": 61,
+      "branch": "production/chapter-streaming-v5",
+      "sha": "b882b052a59c8d4e19437d7877dc30c9b1ea5daf",
+      "pre_unreal": "#538 SUCCESS",
+      "unreal": "#373 PENDING_AT_RECONCILIATION"
+    },
+    "truth_boundary": "The cleanup commit is newer than the recorded candidate evidence and requires fresh exact-head checks. No FPS/RAM/VRAM improvement is claimed before representative target-device measurement."
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",
@@ -3443,31 +3449,48 @@
   },
   "current_focus": "CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5",
   "immediate_next_large_actions": [
-    "Prove CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5 on the exact short-branch head.",
-    "Repair compile/import/runtime/chapter-audit regressions without reverting to all-region synchronous loading.",
-    "Measure chapter seam hitch/memory on representative target hardware before promoting performance claims.",
-    "After green merge, continue world-life/building saturation with bounded ambient lifecycle improvements and culture-specific early-region detail.",
-    "Keep real skeletal-rig production active as the next major character-quality track; do not substitute container conversion for rigging."
+    "Finish V5 on PR #61 with fresh exact-head Pre-Unreal plus full UE4.27.2 build/import/startup/P1C01-P1C08/state/warning proof, then merge to develop.",
+    "Measure chapter-transition hitch, streaming pool and resident memory on representative target hardware before promoting V5 as a performance win.",
+    "After green V5 integration, open one short world-life branch focused first on Shire, Bree, Rivendell and Lothlorien: architecture density, culture-specific dressing, bounded NPC density and ambient routines.",
+    "Advance real skeletal rig/skin/AnimBP/motion work in a focused character-quality branch; do not treat OBJ-to-FBX container conversion as rigging.",
+    "Keep later Public/Private source-layout migration isolated as its own maintenance branch."
   ],
   "session_handoff": {
     "source_head": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-    "branch": "production/chapter-streaming-v5",
+    "branch": "develop",
     "verified": {
-      "pre_unreal": "PASS run 35547643542 on 8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-      "unreal_build": "PASS run 35547643484 on 8d7247d229b5cd51e8aea5617e1e2030b38229bf"
+      "pre_unreal": "PASS #532",
+      "unreal_build": "PASS #367",
+      "integration": "PR #60 merged and develop returned green."
     },
-    "failing": {},
+    "active_candidate": {
+      "pull_request": 61,
+      "branch": "production/chapter-streaming-v5",
+      "latest_observed_sha": "b882b052a59c8d4e19437d7877dc30c9b1ea5daf",
+      "pre_unreal": "PASS #538",
+      "unreal_build": "PENDING #373 at reconciliation"
+    },
+    "failing": {
+      "resolved": [
+        "#370 FStreamableHandle declaration mismatch",
+        "#371 conditional UE_LOG verbosity",
+        "stale async completion after returning to resident world corrected at b882b052"
+      ],
+      "current": "No new failure recorded at reconciliation time."
+    },
     "next_actions": [
-      "Finish V5 exact-head compile/import/startup/chapter/state/save and warning gates before merging PR61 into develop.",
-      "Verify rapid A -> pending B -> A chapter/route switching and cancelled callbacks in engine; source-contract checks are not behavioral proof.",
-      "After V5 green, continue world life, architecture and bounded NPC density within 8GB RAM / 2GB VRAM target; preserve film outcomes and character backup."
+      "Require fresh exact-head CI for this cleanup commit.",
+      "Repair only demonstrated V5 failures if any.",
+      "Merge PR #61 only after both gates pass, then confirm develop green.",
+      "Start post-V5 world-life/architecture/NPC-density wave, with rig/animation kept explicit."
     ],
     "unverified_acceptance": [
-      "New V5 cancellation repair requires exact-head engine validation.",
-      "Rapid chapter/route reversal runtime acceptance.",
-      "Rendered chapter/world acceptance and target-device FPS/RAM/VRAM measurements."
+      "Representative target-device chapter-transition hitch and resident-memory measurements",
+      "Rendered visual acceptance after the post-V5 density wave",
+      "Human pacing/readability acceptance",
+      "Final skeletal rig/animation acceptance"
     ],
-    "scope_rule": "Machine evidence and merge status do not replace rendered PIE/device/human acceptance.",
+    "scope_rule": "Machine evidence and merge status do not replace device profiling, rendered review or human pacing acceptance.",
     "validation_snapshot": {
       "last_green": {
         "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
@@ -3483,16 +3506,16 @@
         }
       },
       "latest_observed": {
-        "sha": "8872f2c54c14edb91bc4ed25ad6707f8665b6234",
+        "sha": "b882b052a59c8d4e19437d7877dc30c9b1ea5daf",
         "pre_unreal": {
-          "sha": "8872f2c54c14edb91bc4ed25ad6707f8665b6234",
-          "run_id": 35572531175,
+          "sha": "b882b052a59c8d4e19437d7877dc30c9b1ea5daf",
+          "run_id": 35573282625,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "8872f2c54c14edb91bc4ed25ad6707f8665b6234",
-          "run_id": 35572531053,
-          "status": "IN_PROGRESS"
+          "sha": "b882b052a59c8d4e19437d7877dc30c9b1ea5daf",
+          "run_id": 35573282474,
+          "status": "PENDING"
         }
       }
     },
@@ -3593,10 +3616,13 @@
     ],
     "cleanup_rule": "A historical branch may be deleted only after its meaningful content is confirmed present in develop or intentionally superseded. Diverged branches with unique commits remain preserved until audited.",
     "current_short_branch": "production/chapter-streaming-v5",
-    "integration_baseline": "develop"
+    "integration_baseline": "develop",
+    "current_open_pr": 61,
+    "open_pr_policy": "Do not start the post-V5 content branch until PR #61 is merged and develop is green.",
+    "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop."
   },
   "side_branch_audit": {
-    "date": "2026-09-20",
+    "date": "2026-09-21",
     "integration_branch": "develop",
     "fully_contained_in_develop": [
       {
@@ -3649,7 +3675,47 @@
         "disposition": "ABSORBED_INTO_DEVELOP_BY_POST_PR53_HYGIENE_COMMIT"
       }
     ],
-    "deletion_rule": "Do not delete a branch until meaningful unique content is present in develop or explicitly superseded. Branch deletion is repository housekeeping, not a substitute for merging or auditing."
+    "deletion_rule": "Do not delete a branch until meaningful unique content is present in develop or explicitly superseded. Branch deletion is repository housekeeping, not a substitute for merging or auditing.",
+    "preserve_now": [
+      {
+        "branch": "production/chapter-streaming-v5",
+        "reason": "Active PR #61 until V5 proof and merge complete."
+      },
+      {
+        "branch": "recovery/stached-charcter",
+        "reason": "Recovery/reference branch; do not touch during this cleanup."
+      },
+      {
+        "branch": "repair/post-merge-unreal-339",
+        "reason": "Preserve until a dedicated recovery/reference review."
+      }
+    ],
+    "recent_merged_short_branches_safe_to_delete": [
+      {
+        "branch": "production/character-surface-parity-v1",
+        "pr": 54
+      },
+      {
+        "branch": "production/mega-material-world-wave-v1",
+        "pr": 56
+      },
+      {
+        "branch": "production/realm-detail-saturation-v2",
+        "pr": 57
+      },
+      {
+        "branch": "production/cinematic-audio-life-v3",
+        "pr": 58
+      },
+      {
+        "branch": "production/hero-character-world-polish-v4",
+        "pr": 59
+      },
+      {
+        "branch": "governance/programmer-asset-pipeline-review-v2",
+        "pr": 60
+      }
+    ]
   },
   "character_surface_followthrough": {
     "status": "RUNTIME_VALIDATED_ON_9080f293_NEWEST_HEAD_PENDING",
