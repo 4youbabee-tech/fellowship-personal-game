@@ -2474,7 +2474,8 @@
         "DEC-033 / INV-WAREHOUSE-STAGING separate bulk warehouse fill from runtime acceptance: catalogue/stage continuously, run lightweight intake validation before READY_FOR_IMPORT, and defer UE runtime proof until integration.",
         "Data/ResourceBibleSourceExpansionV1.json operationalizes Source 09 into voice/TTS, music, SFX, visual/UI, 3D, architecture, material, animation/mocap, LOTR-reference and AI-tool source lanes.",
         "Data/WarehouseAmbientCGAcquisitionBatchV1.json + Scripts/stage_ambientcg_warehouse.ps1 add public-API CC0 material staging.",
-        "Data/WarehouseKenneyAcquisitionBatchV1.json + Scripts/stage_kenney_warehouse.ps1 add official-page CC0 support/world-kit staging."
+        "Data/WarehouseKenneyAcquisitionBatchV1.json + Scripts/stage_kenney_warehouse.ps1 add official-page CC0 support/world-kit staging.",
+        "Data/TrilogyWorldFoundationPlanV1.json establishes parallel world-foundation preproduction for all major trilogy regions while keeping P1C01 as the first assembled benchmark."
       ],
       "missing_work": [
         "Expand Data/TrilogyAssetCandidateQueue.json until every warehouse family has at least one concrete candidate/project-authored path, then acquire/import eligible batches under the LFS/import contract.",
@@ -3181,6 +3182,22 @@
         "Data/TrilogyAssetCandidateQueue.json",
         "Data/ExternalAssetManifest.json",
         "Docs/CURRENT_PROJECT_STATE.md"
+      ]
+    },
+    {
+      "id": "DEC-034",
+      "title": "Parallelize world foundations beyond the Shire",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WAREHOUSE-001",
+        "REQ-WORLD-003",
+        "REQ-INTEGRATION-001"
+      ],
+      "resolution": "Keep P1C01 as the first full production benchmark, but build reusable world foundations and warehouse stock in parallel for all major trilogy regions. This includes regional architecture, terrain/materials, vegetation/ecology, props, population/faction families, audio, lighting, VFX and traversal/collision contracts. Runtime Part II/III chapter implementation remains gated.",
+      "authority": "USER_DIRECTIVE",
+      "evidence": [
+        "Data/TrilogyWorldFoundationPlanV1.json",
+        "Data/TrilogyProductionAssetWarehouse.json"
       ]
     }
   ],
