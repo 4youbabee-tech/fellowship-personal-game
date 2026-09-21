@@ -1,3 +1,9 @@
+## 2026-09-21 - UE Engine Content security diagnosis
+
+Unreal #381 previously succeeded under the same `NT AUTHORITY\NETWORK SERVICE` identity and read `WorldGridMaterial.uasset` at size 130914 bytes, last-write `2026-09-21T09:29:30.1923709Z`, SHA-256 `AC67C51DF65B98E89BD659FC6307A0CD930F3F1D28915691E31DFB934213D80C`. Unreal #388, after a confirmed editor-close step, was denied access on all 18 probes; even `Get-Acl` and `icacls` on that file were denied.
+
+The next exact-head runner attempt collects parent ACLs, file attributes/EFS state, sibling package readability and runner token groups, then stops after three repeated access-denied probes instead of wasting the full retry window. CI still does not modify permissions under Program Files.
+
 ## 2026-09-21 - repeated UE Engine Content access denial
 
 PR #62 exact head `97ea82501b41a9b13f36e4794051b1709073df54` is STATIC-VALIDATED by Pre-Unreal #552. Unreal #387 failed before C++ compilation: the self-hosted runner identity `NT AUTHORITY\NETWORK SERVICE` was denied read access to `C:\Program Files\Epic Games\UE_4.27\Engine\Content\EngineMaterials\WorldGridMaterial.uasset` on every probe. This is a runner/Engine Content access block, not evidence of a source compile failure.

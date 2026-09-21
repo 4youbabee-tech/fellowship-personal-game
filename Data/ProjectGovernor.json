@@ -4385,6 +4385,13 @@
       "result": "PREBUILD_ENGINE_CONTENT_ACCESS_DENIED",
       "evidence": "All 6 engine-content probes failed before compilation because NT AUTHORITY\\NETWORK SERVICE could not read WorldGridMaterial.uasset."
     },
-    "remediation": "Wait for Unreal Editor closure before probing Engine Content; extend bounded probe window to 18 attempts; emit ACL/icacls diagnostics on persistent access denial; never auto-grant permissions or bypass package/hash/stability validation."
+    "remediation": "Wait for Unreal Editor closure before probing Engine Content; extend bounded probe window to 18 attempts; emit ACL/icacls diagnostics on persistent access denial; never auto-grant permissions or bypass package/hash/stability validation.",
+    "diagnosis": {
+      "prior_success": "#381 on d6533289 used the same NT AUTHORITY\\NETWORK SERVICE identity and read WorldGridMaterial.uasset successfully.",
+      "prior_success_fingerprint": "size=130914; lastWriteUtc=2026-09-21T09:29:30.1923709Z; sha256=AC67C51DF65B98E89BD659FC6307A0CD930F3F1D28915691E31DFB934213D80C",
+      "repeated_failure": "#388 on a7014d60 denied access after Unreal Editor close; 18/18 probes failed and even Get-Acl/icacls on the file returned access denied.",
+      "interpretation": "The runner identity is not inherently incompatible with UE4. Engine Content access changed after the last green run; treat as Windows ACL/EFS/file-security state until diagnostics prove otherwise."
+    },
+    "next_diagnostic": "Probe file and parent ACLs, attributes/EFS, sibling package readability and runner token groups. Do not auto-change Program Files permissions from CI."
   }
 }

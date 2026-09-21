@@ -1,5 +1,9 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-21 - UE Engine Content security diagnosis
+
+The self-hosted runner remains blocked before C++ compilation by Windows access denial on UE4 Engine Content. A prior green run (#381) proves the same service identity previously read the file successfully. Additional ACL/EFS/sibling-read diagnostics are being collected; no game/runtime maturity or validation status changes from this infrastructure diagnosis.
+
 ## 2026-09-21 - Unreal runner access diagnostics
 
 Exact head `97ea82501b41a9b13f36e4794051b1709073df54` has STATIC-VALIDATED evidence from Pre-Unreal #552. Unreal #387 never reached C++ compilation because the runner service could not read UE4 Engine Content. The workflow now adds editor-close ordering, bounded retries and ACL diagnostics. No COMPILE-TESTED, PIE, DEVICE or visual status is promoted from this run.

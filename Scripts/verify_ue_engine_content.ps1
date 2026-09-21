@@ -49,6 +49,24 @@ function Get-PackageFingerprint([string]$Path) {
 }
 
 
+
+function Test-ReadableFile([string]$Path) {
+    try {
+        $share = [System.IO.FileShare]::ReadWrite -bor [System.IO.FileShare]::Delete
+        $stream = [System.IO.File]::Open($Path,[System.IO.FileMode]::Open,[System.IO.FileAccess]::Read,$share)
+        try {
+            $buffer = New-Object byte[] 1
+            [void]$stream.Read($buffer, 0, 1)
+        } finally {
+            $stream.Dispose()
+        }
+        return $true
+    } catch {
+        Write-Warning "Read probe denied/failed for $Path : $($_.Exception.Message)"
+        return $false
+    }
+}
+
 function Write-EngineAccessDiagnostics([string]$Path) {
     Write-Host "Engine access diagnostics begin"
     Write-Host "Identity: $([System.Security.Principal.WindowsIdentity]::GetCurrent().Name)"
@@ -64,13 +82,43 @@ function Write-EngineAccessDiagnostics([string]$Path) {
     }
 
     $icacls = Join-Path $env:SystemRoot 'System32\icacls.exe'
-    if (Test-Path -LiteralPath $icacls -PathType Leaf) {
-        try {
-            & $icacls $Path
+    $attrib = Join-Path $env:SystemRoot 'System32\attrib.exe'
+    $cipher = Join-Path $env:SystemRoot 'System32\cipher.exe'
+    $whoami = Join-Path $env:SystemRoot 'System32\whoami.exe'
+    $materialDir = Split-Path -Parent $Path
+    $contentDir = Split-Path -Parent $materialDir
+
+    foreach ($target in @($Path, $materialDir, $contentDir, $engineRoot)) {
+        Write-Host "Diagnostic target: $target"
+        if (Test-Path -LiteralPath $icacls -PathType Leaf) {
+            try { & $icacls $target } catch { Write-Warning "icacls diagnostic failed for $target : $($_.Exception.Message)" }
         }
-        catch {
-            Write-Warning "icacls diagnostic failed: $($_.Exception.Message)"
+        if (Test-Path -LiteralPath $attrib -PathType Leaf) {
+            try { & $attrib $target } catch { Write-Warning "attrib diagnostic failed for $target : $($_.Exception.Message)" }
         }
+    }
+
+    if (Test-Path -LiteralPath $cipher -PathType Leaf) {
+        try { & $cipher /c $Path } catch { Write-Warning "cipher diagnostic failed: $($_.Exception.Message)" }
+    }
+
+    Write-Host "Readable control BaseEngine.ini: $(Test-ReadableFile $baseEngineIni)"
+    try {
+        $siblings = @(Get-ChildItem -LiteralPath $materialDir -Filter '*.uasset' -File -ErrorAction Stop | Select-Object -First 5)
+        Write-Host "Sibling package count sampled: $($siblings.Count)"
+        foreach ($sibling in $siblings) {
+            Write-Host "Sibling read probe: $($sibling.FullName) readable=$(Test-ReadableFile $sibling.FullName)"
+        }
+    }
+    catch {
+        Write-Warning "EngineMaterials directory enumeration failed: $($_.Exception.Message)"
+    }
+
+    if (Test-Path -LiteralPath $whoami -PathType Leaf) {
+        Write-Host "Runner token groups:"
+        try { & $whoami /groups } catch { Write-Warning "whoami /groups failed: $($_.Exception.Message)" }
+        Write-Host "Runner token privileges:"
+        try { & $whoami /priv } catch { Write-Warning "whoami /priv failed: $($_.Exception.Message)" }
     }
     Write-Host "Engine access diagnostics end"
 }
@@ -84,6 +132,7 @@ if (-not (Test-Path -LiteralPath $baseEngineIni -PathType Leaf)) {
 }
 
 $lastProbeError = $null
+$accessDeniedCount = 0
 
 $defaultMaterialLine = Select-String -LiteralPath $baseEngineIni -Pattern '^DefaultMaterialName=' -ErrorAction SilentlyContinue | Select-Object -First 1
 if ($defaultMaterialLine) {
@@ -123,6 +172,13 @@ for ($attempt = 1; $attempt -le $Attempts; $attempt++) {
     catch {
         $lastProbeError = $_.Exception.Message
         Write-Warning "Engine content probe failed: $lastProbeError"
+        if ($lastProbeError -match '(?i)access.*denied|unauthorized') {
+            $accessDeniedCount += 1
+            if ($accessDeniedCount -ge 3) {
+                Write-Warning "Persistent access denial observed on 3 probes; skipping redundant retries and collecting security diagnostics."
+                break
+            }
+        }
     }
 
     if ($attempt -lt $Attempts) {
