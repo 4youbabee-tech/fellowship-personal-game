@@ -1,5 +1,9 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-22 - multi-lane warehouse acquisition
+
+The persistent warehouse now has concrete staging lanes for environment/materials (Poly Haven), music/foley (OpenGameArt), and character/animation/fauna/world-kit candidates (Quaternius). Direct-download lanes preserve source/license/hash receipts; unresolved interactive-store packs remain candidates rather than being misreported as staged. This advances warehouse stock acquisition only and does not promote UE import, runtime, visual or device acceptance.
+
 ## 2026-09-22 - active warehouse fill execution
 
 Warehouse production is now executing real staged-download batches rather than only cataloguing candidates. The first Poly Haven batch has verified source pages, resilient per-asset staging and receipt/skipped-item accounting. This advances asset acquisition infrastructure and stock readiness only; UE import/runtime/visual acceptance remain later states.
