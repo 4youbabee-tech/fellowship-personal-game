@@ -22,6 +22,7 @@ public:
 
     void RequestChapterAssets(FName ChapterId, FName RouteId);
     void CancelPendingRequest();
+    bool CommitPendingRequest(FName ChapterId, FName RouteId);
     bool IsChapterBankReady(FName ChapterId, FName RouteId) const;
     int32 GetChapterBankSize(FName ChapterId, FName RouteId) const;
 
@@ -49,4 +50,5 @@ private:
     FName PendingRouteId = NAME_None;
     uint64 RequestSerial = 0;
     bool bPlanReady = false;
+    bool bPendingCompatibilityReady = false;
 };
