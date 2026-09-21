@@ -5465,6 +5465,35 @@ for pg123_symbol in [
 if "ActiveChapterId = NewChapterId;\n    ResetForCurrentChapter();" in pg123_life:
     fail("PG-123 LivingWorldDirector may not reset directly from requested quest chapter before world commit")
 
+# PG-124: continuous transition audit must remain wired with startup grounding.
+pg124_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg124_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
+pg124_runtime_tests = read(ROOT / "Scripts" / "test_runtime_smoke.py")
+pg124_state_cmd = read(ROOT / "Scripts" / "ci_runtime_state.cmd")
+
+for pg124_symbol in [
+    "ShireTransitionAudit: sequence=PASS chapters=8 routes=2 disk-save=PASS",
+    "AuditTransitions",
+    "GetAppliedWorldRevision",
+    "GetWorldRevision",
+]:
+    if pg124_symbol not in pg124_game_mode:
+        fail(f"PG-124 continuous transition GameMode audit missing: {pg124_symbol}")
+
+for pg124_symbol in [
+    'mode == "transitions"',
+    '"-AuditTransitions"',
+    "ShireTransitionAudit: sequence=PASS chapters=8 routes=2 disk-save=PASS",
+]:
+    if pg124_symbol not in pg124_runtime:
+        fail(f"PG-124 runtime transition harness missing: {pg124_symbol}")
+
+if "--mode transitions" not in pg124_state_cmd:
+    fail("PG-124 state CI does not execute continuous transition audit")
+
+if "test_separate_chapter_success_does_not_prove_continuous_transitions" not in pg124_runtime_tests:
+    fail("PG-124 unit regression for continuous transition evidence missing")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
