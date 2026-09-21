@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "plan_id": "AUTOMATED_QA_IMMUNE_SYSTEM_V1",
+  "status": "FOUNDATION_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+  "authority": "Data/ProjectGovernor.json",
+  "engine": "Unreal Engine 4.27.2",
+  "target_profile": {
+    "resolution": "720p",
+    "quality": "Low-Medium",
+    "ram_gb": 8,
+    "gpu_vram_class_gb": 2,
+    "fps_floor_target": 30
+  },
+  "layers": [
+    {
+      "id": "STATIC",
+      "runner": "Pre-Unreal",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "UE_AUTOMATION",
+      "runner": "FAutomationTestBase",
+      "status": "FOUNDATION_IMPLEMENTED"
+    },
+    {
+      "id": "RUNTIME_HEADLESS",
+      "runner": "runtime_smoke.py",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "TARGET_DEVICE",
+      "runner": "self-hosted UE4.27.2 laptop",
+      "status": "PLANNED"
+    },
+    {
+      "id": "HUMAN",
+      "runner": "owner PIE/device review",
+      "status": "MANDATORY_NOT_AUTOMATED"
+    }
+  ],
+  "rules": [
+    "World fall-through checks use deterministic authored anchors, blocking-ground evidence, falling state and bounded displacement; never a universal Z<0 rule.",
+    "Navigation tests use deterministic routes, not random wandering.",
+    "Memory/hitch thresholds come from target-device evidence; time dilation is not treated as equivalent to real-duration soak.",
+    "Animation/T-pose gates apply only to actors declared production-skeletal-ready.",
+    "Headless asset/shader checks never promote visual acceptance."
+  ],
+  "first_wave_tests": [
+    "ShireJourney.QA.Save.DefaultState",
+    "ShireJourney.QA.Assets.StreamingBankPackages",
+    "runtime ShireStartupGrounding stable-after-2s marker"
+  ],
+  "next_waves": [
+    "authored collision/traversal probes",
+    "navigation stuck coordinate reporting",
+    "production rig AnimInstance and pose-motion checks",
+    "chapter transition hitch/frame-time measurement",
+    "repeated transition/living-world memory-growth soak",
+    "material-slot and shader compile error guards",
+    "exact-SHA machine-readable and human-readable QA report"
+  ],
+  "evidence_boundary": "STATIC-VALIDATED only until exact-head UE4.27.2 compile and Automation Framework execution succeed."
+}
