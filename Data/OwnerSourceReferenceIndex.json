@@ -491,5 +491,14 @@
       "Part III is now screenplay-backed, but Part III runtime production remains gated by chapter-by-chapter source verification and implementation work.",
       "The Tolkien volume is a deep-lore authority, not a silent replacement for film-only chronology or outcomes."
     ]
+  },
+  "recovery_contract": {
+    "purpose": "Allow source identity and authority to survive deleted chats, missing Project Source attachments or developer handoff.",
+    "expected_core_source_library": "Sources 01-11 + three supplied film screenplays + one full Tolkien LOTR volume",
+    "durable_identity": "source id + recorded SHA-256 where available",
+    "precedence": "ProjectGovernor invariants/approved decisions -> film trilogy/supplied screenplays for film chronology/outcomes -> Tolkien for compatible deep lore -> Sources 01-11 for production interpretation -> original design only in source-safe gaps",
+    "owner_reported_status_2026_09_21": "Previously missing Project Source files were re-added by the owner.",
+    "verification_boundary": "Owner-reported availability is not a fresh cryptographic verification. Recheck the recorded SHA-256 whenever the actual bytes are available to the worker.",
+    "lost_chat_rule": "Never use chat attachment names or memory as the sole source identity. Reattach missing references, verify identity where possible, and continue from the repository index/governor."
   }
 }

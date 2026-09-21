@@ -13,16 +13,17 @@ Read these in order:
 2. `Docs/CURRENT_PROJECT_STATE.md` — operational snapshot, proof level and exact next hard gate.
 3. `Docs/PROJECT_GOVERNOR.md` — explains how the single authority is used.
 4. `Docs/PROJECT_MEMORY_SYSTEM.md` — persistence/recovery rules.
-5. `Docs/CHECKPOINTS.md` — chronological development history.
-6. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
-7. `Docs/LIVING_WORLD_AI_BLUEPRINT.md` — NPC/world-life intelligence design.
-8. `Data/LivingWorldFeaturePlan.json` — living-world implementation/detail plan.
-9. `Docs/PRODUCTION_COMPLETENESS_MATRIX.md` — production-pillar completeness.
-10. `Docs/DEVELOPMENT_GATES.md` — build/PIE/device discipline.
-11. `Docs/PROJECT_GUARDIAN.md` — regression memory.
-12. `Docs/STORY_CANON_BIBLE.md` — story/canon detail.
-13. `Data/SourceArchitecturePlan.json` — runtime source ownership/target paths.
-14. `Data/WorldCheckpointPlan.csv` — player/world checkpoint detail.
+5. `Data/OwnerSourceReferenceIndex.json` — durable Project Source IDs, SHA-256 fingerprints, authority and precedence.
+6. `Docs/CHECKPOINTS.md` — chronological development history.
+7. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
+8. `Docs/LIVING_WORLD_AI_BLUEPRINT.md` — NPC/world-life intelligence design.
+9. `Data/LivingWorldFeaturePlan.json` — living-world implementation/detail plan.
+10. `Docs/PRODUCTION_COMPLETENESS_MATRIX.md` — production-pillar completeness.
+11. `Docs/DEVELOPMENT_GATES.md` — build/PIE/device discipline.
+12. `Docs/PROJECT_GUARDIAN.md` — regression memory.
+13. `Docs/STORY_CANON_BIBLE.md` — story/canon detail.
+14. `Data/SourceArchitecturePlan.json` — runtime source ownership/target paths.
+15. `Data/WorldCheckpointPlan.csv` — player/world checkpoint detail.
 
 If code, data, and documentation disagree, stop and reconcile them in the same logical change.
 
@@ -108,6 +109,7 @@ Before editing:
 - confirm active development branch is `develop`,
 - inspect the latest `develop` head and GitHub Actions,
 - read `CURRENT_PROJECT_STATE.md`,
+- for story/world/character work, read `Data/OwnerSourceReferenceIndex.json` and verify the needed Project Source material/precedence instead of relying on chat memory,
 - locate the file/domain in `SourceArchitecturePlan.json`,
 - read the relevant checkpoint/data plans.
 

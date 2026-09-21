@@ -102,12 +102,19 @@ A new human or automated programmer should:
 2. read `Data/ProjectGovernor.json`,
 3. read `Docs/CHECKPOINTS.md`,
 4. read `Source/ShireJourney/README.md`,
-5. inspect the latest `develop` head and CI,
-6. read the specific design plan for the work area,
-7. resume only from recorded open requirements and the current hard gate.
+5. inspect the latest `develop` head, open PRs and exact-SHA CI,
+6. read `Data/OwnerSourceReferenceIndex.json` and confirm the Project Source materials needed for the task are available,
+7. read the specific design plan for the work area,
+8. resume only from recorded open requirements and the current hard gate.
 
 Deleted chat text is not recoverable from this system unless it already left a trace in the repository.
 The purpose of this ledger is to ensure future requests do leave that trace.
+
+### Project Source recovery rule
+
+The Project Source UI is a convenience surface; it is not the authoritative identity ledger. Durable source identity lives in `Data/OwnerSourceReferenceIndex.json` through stable source IDs, role/precedence metadata and SHA-256 fingerprints where recorded. If a chat or Project source attachment disappears, re-attach the source and compare its fingerprint when the bytes are available. Do not silently substitute a similarly named file.
+
+The expected core library shape is Sources 01-11, three supplied film screenplays and one full Tolkien LOTR volume. Raw source PDFs are reference-only and never become runtime dependencies. Source availability does not itself prove canon interpretation or visual acceptance.
 
 ## 6. Memory integrity rules
 

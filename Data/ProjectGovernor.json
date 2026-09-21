@@ -63,14 +63,16 @@
         "Docs/CHECKPOINTS.md",
         "Docs/PROJECT_GUARDIAN.md",
         "Source/ShireJourney/README.md",
-        "Data/SourceArchitecturePlan.json"
+        "Data/SourceArchitecturePlan.json",
+        "Data/OwnerSourceReferenceIndex.json"
       ],
       "implementation_refs": [
         "Data/ProjectGovernor.json is the single project authority",
         "Scripts/project_governor.py validates the authority in CI",
         "Source/ShireJourney/README.md and CURRENT_PROJECT_STATE provide lost-chat/developer handoff entry points",
         "Project Guardian and checkpoint history preserve regression and milestone memory",
-        "request_capture_contract + external_review_findings preserve accepted owner direction and verified external advice as durable repository memory."
+        "request_capture_contract + external_review_findings preserve accepted owner direction and verified external advice as durable repository memory.",
+        "Data/OwnerSourceReferenceIndex.json preserves durable source IDs, authority/precedence and SHA-256 fingerprints so the project can recover its source library after chat loss."
       ],
       "missing_work": [
         "Operational: every future meaningful user request must continue to be recorded in the Governor",
@@ -2777,6 +2779,23 @@
         "Data/MasterExecutionRoadmap.json",
         "Docs/MASTER_EXECUTION_BOARD.md"
       ]
+    },
+    {
+      "id": "DEC-028",
+      "title": "Keep develop as the canonical integration trunk; do not migrate to main during recovery",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-MEM-001",
+        "REQ-CI-001",
+        "REQ-EXEC-001"
+      ],
+      "resolution": "Treat develop as the canonical integration branch and recovery baseline. Keep main as the stable/default scheduler branch for now. Do not force-copy or rewrite branch history merely to make main look current; any future develop-to-main release/migration must be a deliberate separately validated operation.",
+      "rationale": "The owner explicitly confirmed that the project has always been developed on develop and prefers to keep develop as the basis while recovery, source reconciliation and game construction resume.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Docs/CURRENT_PROJECT_STATE.md",
+        "Docs/DEVELOPMENT_GATES.md"
+      ]
     }
   ],
   "open_conflicts": [],
@@ -3048,7 +3067,7 @@
       "route/story/state isolated disk roundtrip",
       "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "Post-V5 production is active. V10 may not merge until fresh exact-head Pre-Unreal + Unreal validation passes; target-device and rendered acceptance remain separate.",
+    "note": "Post-V5 production is active. PR #62 was exact-head machine-green at d6533289 before this recovery/documentation refresh; the refreshed candidate head must earn new exact-head Pre-Unreal + Unreal validation. PR #63 remains a separate transition repair. Target-device and rendered acceptance remain separate.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -3066,15 +3085,15 @@
       "pre_unreal": "PASS #543",
       "unreal_build": "PASS #378"
     },
-    "evidence_scope": "V5 merged develop head f4886b39feea29973543bf6cfb1be4659f10ff9d passed Pre-Unreal #543 and full Unreal Build #378. The active V10 branch is newer and must earn its own proof.",
+    "evidence_scope": "Post-V5 develop head f4886b39feea29973543bf6cfb1be4659f10ff9d passed Pre-Unreal #543 and full Unreal Build #378. PR #62 exact head d6533289dda37458b54bf5b63b82251502900eab later passed Pre-Unreal #546 and Unreal Build #381, but any new commit must earn fresh exact-head proof. PR #63 transition repair has Pre-Unreal #547 success while Unreal #382 remains queued/not started.",
     "current_owner_observation": {
-      "sha": "4879a19999951354676341f032c358ac98679c44",
+      "sha": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
       "pre_unreal": {
-        "run_number": 531,
+        "run_number": 543,
         "status": "SUCCESS"
       },
       "unreal": {
-        "run_number": 366,
+        "run_number": 378,
         "status": "SUCCESS",
         "scope": [
           "C++ build",
@@ -3086,8 +3105,8 @@
         ]
       },
       "merge": {
-        "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-        "status": "MERGED_TO_DEVELOP"
+        "sha": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
+        "status": "CURRENT_GREEN_DEVELOP_BASELINE"
       }
     }
   },
@@ -3397,22 +3416,31 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "reason": "V5 exact-head proof and post-merge develop proof are green. Production resumed immediately on the first focused post-streaming world-life branch.",
-    "active_wave": "EARLY_REALM_WORLD_LIFE_AND_CULTURAL_DENSITY_V10",
+    "reason": "Lost-chat recovery audit, source-library recovery, and live repository reconciliation before resuming game construction.",
+    "active_wave": "RECOVERY_RECONCILIATION_PLUS_EARLY_REALM_WORLD_LIFE_V10",
     "integration_baseline": {
       "sha": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
       "pre_unreal": "#543 SUCCESS",
       "unreal": "#378 SUCCESS",
       "status": "GREEN_POST_V5_DEVELOP"
     },
-    "completed_v5": {
-      "candidate": "2fd76baa6e8a8683854ab50b7c83dd668465716a",
-      "pre_unreal": "#542 SUCCESS",
-      "unreal": "#377 attempt 2 SUCCESS",
-      "merge": "f4886b39feea29973543bf6cfb1be4659f10ff9d"
+    "v10_candidate": {
+      "pull_request": 62,
+      "branch": "production/early-realms-world-life-v1",
+      "sha": "d6533289dda37458b54bf5b63b82251502900eab",
+      "pre_unreal": "#546 SUCCESS",
+      "unreal": "#381 SUCCESS",
+      "status": "EXACT_HEAD_MACHINE_GREEN_BEFORE_RECOVERY_DOC_REFRESH"
     },
-    "active_branch": "production/early-realms-world-life-v1",
-    "truth_boundary": "V10 source/runtime implementation is not yet exact-head engine proven. Baseline actor counts are unchanged; target-device FPS/hitch/memory and rendered density/pacing remain unverified."
+    "transition_repair": {
+      "pull_request": 63,
+      "branch": "repair/world-transition-coordination-v1",
+      "sha": "f4ef3a188b1a278a796e0c34d7158c2af8c72e80",
+      "pre_unreal": "#547 SUCCESS",
+      "unreal": "#382 QUEUED_NOT_STARTED",
+      "status": "SEPARATE_DRAFT_REPAIR_REQUIRES_RECONCILIATION_AFTER_V10"
+    },
+    "truth_boundary": "Machine-green V10 evidence at d653 does not certify this newer recovery/documentation head, rendered visuals, target-device FPS/hitch/memory, or human pacing. PR #63 has no Unreal-build result while #382 remains queued."
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",
@@ -3448,13 +3476,14 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "EARLY_REALM_WORLD_LIFE_AND_CULTURAL_DENSITY_V10",
+  "current_focus": "RECOVERY_RECONCILIATION_PLUS_EARLY_REALM_WORLD_LIFE_V10",
   "immediate_next_large_actions": [
-    "Finish V5 on PR #61 with fresh exact-head Pre-Unreal plus full UE4.27.2 build/import/startup/P1C01-P1C08/state/warning proof, then merge to develop.",
-    "Measure chapter-transition hitch, streaming pool and resident memory on representative target hardware before promoting V5 as a performance win.",
-    "After green V5 integration, open one short world-life branch focused first on Shire, Bree, Rivendell and Lothlorien: architecture density, culture-specific dressing, bounded NPC density and ambient routines.",
-    "Advance real skeletal rig/skin/AnimBP/motion work in a focused character-quality branch; do not treat OBJ-to-FBX container conversion as rigging.",
-    "Keep later Public/Private source-layout migration isolated as its own maintenance branch."
+    "Reconcile lost-chat/project-manager state against the live repository and preserve develop as the canonical integration trunk.",
+    "Refresh PR #62 documentation/manager/source-recovery handoff, then require fresh exact-head Pre-Unreal and Unreal validation before merge because this reconciliation changes the candidate head.",
+    "After V10 integration, port/reconcile PR #63 world-transition coordination on top of the new develop without losing V10 LivingWorldDirector density/profile logic or Governor changes.",
+    "Harden transition commit/rollback behavior so builder failure cannot erase the previously committed visible world before a destination is safely published.",
+    "Resume focused visible game construction: early-realm world life/density, then production character rig/skin/AnimBP work and target-device profiling.",
+    "Keep the later Public/Private runtime-source migration isolated as a dedicated maintenance branch; do not mix it into gameplay production."
   ],
   "session_handoff": {
     "source_head": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
@@ -3462,31 +3491,39 @@
     "verified": {
       "pre_unreal": "PASS #543",
       "unreal_build": "PASS #378",
-      "integration": "PR #61 V5 merged and the resulting develop head returned green through compile/import/startup/P1C01-P1C08/state/warning gates."
+      "integration": "PR #61 V5 merged; develop f4886b39 passed the full machine gate."
     },
     "active_candidate": {
       "branch": "production/early-realms-world-life-v1",
-      "status": "SOURCE_RUNTIME_IMPLEMENTATION_ACTIVE_PENDING_EXACT_HEAD_PROOF",
       "pull_request": 62,
-      "latest_observed_sha": "af719ce1a920fc4d01bd0e936b783d5e402ddf89"
+      "latest_observed_sha": "d6533289dda37458b54bf5b63b82251502900eab",
+      "pre_unreal": "PASS #546",
+      "unreal_build": "PASS #381",
+      "status": "MACHINE_GREEN_BEFORE_RECOVERY_DOC_REFRESH"
     },
-    "failing": {
-      "current": "#545 failed only because the V10 handoff snapshot was structurally incomplete after governance transition; gameplay/source validation had not yet run past the governor step.",
-      "repair": "Restore exact-SHA last_green/latest_observed workflow records without borrowing old success into the V10 head."
+    "parallel_repair": {
+      "branch": "repair/world-transition-coordination-v1",
+      "pull_request": 63,
+      "latest_observed_sha": "f4ef3a188b1a278a796e0c34d7158c2af8c72e80",
+      "pre_unreal": "PASS #547",
+      "unreal_build": "QUEUED #382 - JOB NOT STARTED",
+      "status": "DRAFT_REPAIR"
     },
     "next_actions": [
-      "Complete V10 early-realm cultural life and performance-bounded density implementation.",
-      "Run exact-head Pre-Unreal and UE4.27.2 validation through PR.",
-      "Repair only demonstrated failures; merge only a green exact head.",
-      "After V10 merge, continue the focused character rig/animation lane and target-device profiling."
+      "Wait for fresh exact-head gates on the recovery/documentation-refreshed PR #62 head.",
+      "Merge PR #62 only if the refreshed exact head is green.",
+      "Create/reuse a short reconciliation repair branch from the new develop and port PR #63 transition coordination without discarding V10 world-life logic.",
+      "Require fresh exact-head machine validation after reconciliation.",
+      "Then resume world/character production; keep device/visual/pacing acceptance separate."
     ],
     "unverified_acceptance": [
-      "V10 exact-head engine proof",
-      "Target-device FPS/hitch/memory measurement",
+      "Refreshed PR #62 exact-head CI after this documentation commit",
+      "PR #63 Unreal build #382 while queued",
+      "Target-device FPS/hitch/memory",
       "Rendered density/pacing acceptance",
       "Final skeletal rig/animation acceptance"
     ],
-    "scope_rule": "Machine proof does not equal device or rendered acceptance.",
+    "scope_rule": "Machine evidence is exact-SHA only. Do not promote PIE/device/visual acceptance without chapter-specific evidence.",
     "validation_snapshot": {
       "last_green": {
         "sha": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
@@ -3502,16 +3539,29 @@
         }
       },
       "latest_observed": {
-        "sha": "af719ce1a920fc4d01bd0e936b783d5e402ddf89",
+        "sha": "d6533289dda37458b54bf5b63b82251502900eab",
         "pre_unreal": {
-          "sha": "af719ce1a920fc4d01bd0e936b783d5e402ddf89",
-          "run_id": 35583245572,
-          "status": "FAILURE"
+          "sha": "d6533289dda37458b54bf5b63b82251502900eab",
+          "run_id": 35583328377,
+          "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "af719ce1a920fc4d01bd0e936b783d5e402ddf89",
-          "run_id": 35583245675,
-          "status": "PENDING"
+          "sha": "d6533289dda37458b54bf5b63b82251502900eab",
+          "run_id": 35583328379,
+          "status": "SUCCESS"
+        }
+      },
+      "parallel_repair": {
+        "sha": "f4ef3a188b1a278a796e0c34d7158c2af8c72e80",
+        "pre_unreal": {
+          "sha": "f4ef3a188b1a278a796e0c34d7158c2af8c72e80",
+          "run_id": 35617154649,
+          "status": "SUCCESS"
+        },
+        "unreal": {
+          "sha": "f4ef3a188b1a278a796e0c34d7158c2af8c72e80",
+          "run_id": 35617154650,
+          "status": "QUEUED"
         }
       }
     }
@@ -3612,8 +3662,24 @@
     "cleanup_rule": "A historical branch may be deleted only after its meaningful content is confirmed present in develop or intentionally superseded. Diverged branches with unique commits remain preserved until audited.",
     "current_short_branch": "production/early-realms-world-life-v1",
     "integration_baseline": "develop",
-    "open_pr_policy": "Open one PR for V10 after the coherent early-realm implementation is complete; require exact-head Pre-Unreal and full Unreal validation before develop merge.",
-    "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop."
+    "open_pr_policy": "PR #62 is the machine-green production candidate and is receiving recovery/documentation sync; require fresh exact-head proof after that sync, then integrate only if green. PR #63 remains a separate repair; do not blindly merge overlapping LivingWorldDirector/Governor changes. Reconcile it on top of the post-V10 develop baseline.",
+    "default_branch_scheduler_note": "main remains the default/stable scheduler branch; its scheduled workflow explicitly checks out develop. Per DEC-028, develop is the canonical integration/recovery trunk until a separately validated release migration is intentionally performed.",
+    "current_open_pr": 62,
+    "parallel_open_prs": [
+      {
+        "pull_request": 62,
+        "branch": "production/early-realms-world-life-v1",
+        "purpose": "Early-realm cultural life/density V10",
+        "head": "d6533289dda37458b54bf5b63b82251502900eab"
+      },
+      {
+        "pull_request": 63,
+        "branch": "repair/world-transition-coordination-v1",
+        "purpose": "Committed-world/LivingWorld transition coordination repair",
+        "head": "f4ef3a188b1a278a796e0c34d7158c2af8c72e80",
+        "draft": true
+      }
+    ]
   },
   "side_branch_audit": {
     "date": "2026-09-21",
@@ -4203,5 +4269,13 @@
     "validation": "14 local Python tests pass, including simulated runner suspension; not UE runtime proof.",
     "root_cause_status": "UNKNOWN: engine initialization stall and host suspension/resource starvation need next-run evidence. This harness fix is not claimed to fix the P1C05 stall.",
     "production_status": "V5 stays active. No world-density wave or merge until exact-head gates, develop verification, and target-device profiling."
+  },
+  "source_recovery": {
+    "status": "OWNER_REPORTED_PROJECT_SOURCE_LIBRARY_RESTORED",
+    "index": "Data/OwnerSourceReferenceIndex.json",
+    "expected_core_shape": "Sources 01-11 + three supplied film screenplays + one full Tolkien LOTR volume",
+    "durable_identity_rule": "Use source ID + SHA-256 from OwnerSourceReferenceIndex when bytes are available; attachment names and chat history are not authoritative identity.",
+    "precedence_rule": "ProjectGovernor decisions/invariants -> film trilogy/supplied screenplays for film chronology/outcomes -> Tolkien for compatible deep lore -> Sources 01-11 for production interpretation -> original design only inside safe gaps.",
+    "verification_boundary": "The owner reports that the previously missing Project Source files were restored. This recovery record does not claim a fresh cryptographic recheck of newly re-added files that are not exposed as bytes to the current worker."
   }
 }

@@ -1,5 +1,13 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-21 - V10 recovery/documentation synchronization
+
+PR #62 contains real runtime/source changes for early-realm cultural life and chapter-tuned density in Shire, Bree, Rivendell and Lothlorien. Exact head `d6533289dda37458b54bf5b63b82251502900eab` passed Pre-Unreal #546 and Unreal Build #381 before this recovery/documentation synchronization.
+
+Because this synchronization creates a newer PR #62 head, the d653 result is ancestor evidence only for the refreshed candidate. The new head must earn fresh exact-head Pre-Unreal and Unreal validation before integration. No new `PIE-TESTED`, `DEVICE-TESTED` or `VISUALLY-ACCEPTED` status is claimed.
+
+PR #63 transition coordination is not integrated into V10. Its Pre-Unreal #547 is green, while Unreal #382 remains queued/not started. Its `LivingWorldDirector` and Governor changes must be reconciled on top of the post-V10 develop baseline rather than overwriting the V10 density/profile work.
+
 ## Verification evidence correction and production continuation
 
 Historical machine baseline: `develop@f7c2b081e7b064fcf27bb4c80124b21f351331ab`.

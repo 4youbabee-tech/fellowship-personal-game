@@ -1,3 +1,17 @@
+## 2026-09-21 - lost-chat recovery reconciliation and production restart
+
+Authority remains `Data/ProjectGovernor.json`. Live repository reconciliation establishes `develop@f4886b39feea29973543bf6cfb1be4659f10ff9d` as the current green integration baseline. That exact develop head passed Pre-Unreal #543 and Unreal Build #378, including build/import/startup/P1C01-P1C08/state/warning machine gates. This is machine evidence only; no new PIE/device/visual acceptance is inferred.
+
+PR #62 (`production/early-realms-world-life-v1`) reached exact head `d6533289dda37458b54bf5b63b82251502900eab` and passed Pre-Unreal #546 plus Unreal Build #381. It contains the V10 culture-specific Shire/Bree/Rivendell/Lothlorien world-life/density work. This recovery/documentation synchronization advances the PR head beyond d653, so the refreshed exact head must pass fresh machine gates before merge.
+
+PR #63 (`repair/world-transition-coordination-v1`) remains a separate draft repair at `f4ef3a188b1a278a796e0c34d7158c2af8c72e80`. Pre-Unreal #547 passed. Unreal Build #382 is queued and the UE job has not started, so there is no Unreal result for that repair. It overlaps PR #62 in `LivingWorldDirector` and Governor state and must be reconciled rather than blindly merged.
+
+The Project Source library is treated as recoverable external reference state, not chat memory. `Data/OwnerSourceReferenceIndex.json` remains the durable identity/precedence map for Sources 01-11, the three supplied film screenplays and the full Tolkien volume. The owner reports the previously missing Project Source files are restored. This repository update records that report but does not claim a fresh SHA-256 recheck for newly re-added files that are not exposed as bytes to the current worker.
+
+Branch policy is now explicit in DEC-028: `develop` remains the canonical integration/recovery trunk. `main` stays the stable/default scheduler branch for now. Do not force-copy or rewrite history merely to make `main` look current.
+
+Immediate path: re-prove the refreshed PR #62 exact head -> merge V10 only if green -> reconcile/port PR #63 on top of the new develop while preserving V10 density/profile logic -> harden builder-failure rollback/transaction behavior -> re-prove that repair -> resume visible world/character production. Public/Private C++ migration remains a separate later maintenance branch.
+
 ## 2026-09-21 - path cleanup before post-V5 production
 
 Authority remains `Data/ProjectGovernor.json`. The integration baseline is `develop` at `8d7247d229b5cd51e8aea5617e1e2030b38229bf`, green after PR #60 with Pre-Unreal #532 and Unreal Build #367. There is exactly one open production PR: #61, `production/chapter-streaming-v5`.
