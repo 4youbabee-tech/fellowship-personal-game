@@ -55,3 +55,7 @@ jobs:
 
       - name: Guard streaming cancellation source contracts
         run: python -m unittest discover -s Scripts -p 'test_streaming_cancellation_contract.py' -v
+
+
+      - name: Test live governor evidence selection
+        run: python -m unittest discover -s Scripts -p 'test_live_governor_status.py' -v
