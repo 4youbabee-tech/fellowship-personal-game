@@ -3346,14 +3346,15 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "reason": "Owner supplied a programmer architecture/asset-pipeline review. Each claim was checked against live develop and Source 11 before adoption.",
+    "reason": "Consolidated two programmer proposals into one verified priority map using live develop evidence and existing production/source rules.",
     "summary": [
-      "Rigging concern is valid, but batch OBJ->FBX conversion and blanket SM_->SK_ renaming are rejected; real skeleton/skin/deformation authoring is required.",
-      "BMP alpha/source-format limitation is valid, but the claimed current VRAM crisis is unsupported: 24 production BMP sources total about 0.53 MiB and runtime VRAM depends on Unreal import/compression/mips/streaming.",
-      "Public/Private-by-domain C++ migration is valid and was already explicitly planned in Data/SourceArchitecturePlan.json; keep it isolated from gameplay waves.",
-      "Current Python automation is stdlib/local-module only; no empty requirements.txt is needed until a real third-party dependency appears.",
-      "REQ-NPC-006 already contains intent on live develop; the repeated owner_intent-only warning is stale.",
-      "No blind changes are applied from an old ZIP; live develop + Project Sources remain authoritative."
+      "Highest-value new technical action is a measured chapter asset-loading migration: soft paths/references plus async preload by chapter/region, not mechanical replacement of every hard reference.",
+      "Character OBJ concern becomes a real skeletal-rig pipeline task, not a file-extension conversion task.",
+      "C++ Public/Private-by-domain reorganization is valid but isolated maintenance, already planned.",
+      "Current NPC stack is deterministic/offline and preloads JSON at subsystem initialization; future optional language inference must be async but no current LLM Game-Thread blocker exists.",
+      "Ambient pooling is conditional on measured spawn/GC cost and must not use an arbitrary fixed 15-actor cap.",
+      "Texture alpha-format support and packed PBR masks are useful future pipeline rules, not current emergency conversions.",
+      "Stale/currently unsupported claims were recorded rather than applied blindly."
     ]
   },
   "development_mode": {
@@ -3893,6 +3894,82 @@
         "WORK-QA-001"
       ],
       "next_action": "Keep intent authoritative. Do not delete compatibility metadata merely to match an old ZIP; validate against live develop first."
+    },
+    {
+      "id": "EXT-REV-2026-09-21-012",
+      "source": "Second programmer architecture/performance proposal supplied by owner",
+      "verification_sha": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+      "verification_status": "CURRENT_BOTTLENECK_CLAIM_NOT_REPRODUCED_FUTURE_RULE_ACCEPTED",
+      "claim": "NPC interaction currently rereads JSON and waits on an LLM on the Game Thread, so dialogue can freeze the game.",
+      "verified_result": "Live develop has no runtime LLM/cloud/HTTP path. UShireNPCContextSubsystem loads its JSON datasets during subsystem Initialize and SelectBoundedDialogue uses in-memory data plus QuestSubsystem state. The stated current LLM/JSON-per-conversation freeze is therefore not reproduced.",
+      "disposition": "REJECT_CURRENT_DIAGNOSIS_ACCEPT_FUTURE_ASYNC_CONTRACT",
+      "linked_requirements": [
+        "REQ-NPC-005",
+        "REQ-NPC-006",
+        "REQ-PERF-001"
+      ],
+      "linked_work": [
+        "WORK-LW-004",
+        "WORK-QA-001"
+      ],
+      "next_action": "When the optional local language/STT/TTS layer is introduced, keep inference/heavy retrieval off the Game Thread with bounded async execution, timeout/cancellation and immediate deterministic fallback."
+    },
+    {
+      "id": "EXT-REV-2026-09-21-013",
+      "source": "Second programmer architecture/performance proposal supplied by owner",
+      "verification_sha": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+      "verification_status": "VERIFIED_PROFILE_TARGET_PROPOSAL_TOO_RIGID",
+      "claim": "Use a fixed pool of 15 ambient NPCs instead of SpawnActor/DestroyActor.",
+      "verified_result": "LivingWorldDirector currently uses bounded spawn/cull/destroy. Baseline targets reach 18 in P1C01 before up to 5 micro-events, so a fixed pool of 15 would undercut current authored density. Spawn/GC churn is a legitimate profiling target, but pooling retains actor/resource memory.",
+      "disposition": "PROFILE_THEN_POOL_AMBIENT_ARCHETYPES_ONLY_IF_MATERIAL",
+      "linked_requirements": [
+        "REQ-NPC-005",
+        "REQ-PERF-001",
+        "REQ-AUDIT-001"
+      ],
+      "linked_work": [
+        "WORK-LW-004",
+        "WORK-QA-001"
+      ],
+      "next_action": "Capture target-device SpawnActor/DestroyActor/GC cost. If material, pool ambient archetypes/ephemeral event actors with full reset/disable rules; never recycle named persistent NPC identity."
+    },
+    {
+      "id": "EXT-REV-2026-09-21-014",
+      "source": "Second programmer architecture/performance proposal supplied by owner",
+      "verification_sha": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+      "verification_status": "VERIFIED_HIGH_VALUE_SCALING_RISK",
+      "claim": "Use soft references/asynchronous loading so growing world assets are not synchronously loaded at chapter transitions.",
+      "verified_result": "Live counts show 77 LoadObject calls in FellowshipChapterWorldBuilder, 55 in ShirePrototypeWorldBuilder, 22 in BreePrototypeWorldBuilder, 10 in IsengardPrototypeWorldBuilder, 13 in LivingWorldDirector and 4 in ShireNPC. DeepProjectAudit already tracks synchronous chapter loading as a scaling risk.",
+      "disposition": "HIGH_PRIORITY_MEASURED_MIGRATION",
+      "linked_requirements": [
+        "REQ-PERF-001",
+        "REQ-AUDIT-001",
+        "REQ-WORLD-001"
+      ],
+      "linked_work": [
+        "WORK-WORLD-001",
+        "WORK-WORLD-003",
+        "WORK-QA-001"
+      ],
+      "next_action": "Profile transition hitch/memory, then introduce bounded chapter/region asset banks with soft paths plus FStreamableManager/AssetManager async preload behind authored seams. Do not mechanically outlaw every hard reference."
+    },
+    {
+      "id": "EXT-REV-2026-09-21-015",
+      "source": "Second programmer architecture/performance proposal supplied by owner",
+      "verification_sha": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+      "verification_status": "VALID_FUTURE_PBR_OPTIMIZATION_NOT_CURRENT_BLOCKER",
+      "claim": "Use texture channel packing for roughness/metallic/AO to reduce texture cost.",
+      "verified_result": "Channel packing is a useful production convention when final separate grayscale PBR maps exist, but current repository evidence does not show a bulk AO/roughness/metallic source set that warrants an immediate conversion. A universal 66 percent VRAM saving is not technically guaranteed.",
+      "disposition": "ADOPT_AS_FINAL_PBR_AUTHORING_RULE_NOT_BULK_MIGRATION",
+      "linked_requirements": [
+        "REQ-PERF-001",
+        "REQ-PROD-006"
+      ],
+      "linked_work": [
+        "WORK-WORLD-003",
+        "WORK-CHAR-004"
+      ],
+      "next_action": "When final PBR authoring begins, standardize a packed-mask convention such as ORM with sRGB disabled and measure actual compression/sampler/memory impact."
     }
   ],
   "project_source_library": {
@@ -3926,5 +4003,68 @@
     "Source11": "Extremely useful and should be treated as the operational cross-discipline index. It closes important gaps in audio, cinematics, UI/UX, living-world AI, UE4.27.2 architecture, performance, QA/save safety and branch/integration rules while explicitly preventing source-library sprawl.",
     "ROTK": "Major upgrade because Part III is now screenplay-backed instead of relying on shorthand/secondary summaries. It enables source-verified Part III planning while still requiring scene-level verification before implementation.",
     "Tolkien": "Major upgrade for deeper lore, geography, cultures, lineages, historical detail and Appendices. It should enrich the living world and side content without replacing film continuity in film-driven scenes."
+  },
+  "programmer_review_consolidation_2026_09_21": {
+    "status": "VERIFIED_AGAINST_LIVE_DEVELOP_AND_PROJECT_SOURCE_RULES",
+    "source_reviews": [
+      "first asset-pipeline/architecture proposal",
+      "second systems/performance proposal"
+    ],
+    "priority_order": [
+      {
+        "priority": 1,
+        "action": "Measured chapter/region soft-reference + async-preload migration",
+        "reason": "Largest verified scaling risk: concentrated synchronous LoadObject calls can become transition hitch/memory pressure as art grows.",
+        "decision": "DO_NEXT_AFTER_CURRENT_CHARACTER_WAVE"
+      },
+      {
+        "priority": 2,
+        "action": "Real skeletal-rig production pipeline for heroes/enemies",
+        "reason": "Animated characters need skeleton/skin/deformation/AnimBP; existing OBJ pieces are fallback foundations, not final rigs.",
+        "decision": "ACTIVE_CRITICAL_CHARACTER_WORK"
+      },
+      {
+        "priority": 3,
+        "action": "Public/Private-by-domain physical C++ layout migration",
+        "reason": "60 runtime .h/.cpp files remain flat; maintainability concern is real and an authoritative migration plan already exists.",
+        "decision": "DEDICATED_MAINTENANCE_BRANCH_NOT_MIXED_WITH_GAMEPLAY"
+      },
+      {
+        "priority": 4,
+        "action": "Future optional local AI/STT/TTS asynchronous execution contract",
+        "reason": "No current LLM freeze exists, but any future inference/heavy retrieval must never block the Game Thread.",
+        "decision": "IMPLEMENT_WITH_NAMED_HOBBIT_VERTICAL_SLICE_WHEN_LANGUAGE_LAYER_STARTS"
+      },
+      {
+        "priority": 5,
+        "action": "Ambient NPC/object pooling only after profiling",
+        "reason": "Current spawn/destroy churn may hitch, but a fixed 15-NPC pool conflicts with authored density and pooling does not eliminate memory cost.",
+        "decision": "CONDITIONAL_OPTIMIZATION"
+      },
+      {
+        "priority": 6,
+        "action": "PNG/TGA alpha-capable importer support and selective source migration",
+        "reason": "Useful for foliage/alpha and future art, but current BMP source set is tiny and not itself a demonstrated 2 GB VRAM problem.",
+        "decision": "PIPELINE_ENHANCEMENT_BEFORE_ALPHA_ART_BATCH"
+      },
+      {
+        "priority": 7,
+        "action": "Packed PBR mask convention",
+        "reason": "Useful once AO/roughness/metallic production maps exist; exact savings depend on formats/compression.",
+        "decision": "FUTURE_FINAL_MATERIAL_AUTHORING_RULE"
+      }
+    ],
+    "rejected_or_stale": [
+      "Blind batch OBJ-to-FBX conversion as a substitute for rigging.",
+      "Blanket SM_ to SK_ rename for static source pieces.",
+      "Blanket BMP-to-PNG/TGA conversion before importer/reference changes and measurement.",
+      "Universal claim that current BMP sources will fill 2 GB VRAM.",
+      "Universal 66 percent VRAM-saving claim from channel packing.",
+      "Fixed pool of exactly 15 ambient NPCs.",
+      "Claim that current runtime conversations synchronously call an LLM or reread NPC JSON per interaction.",
+      "Blanket ban on all hard references without asset-lifetime/streaming design.",
+      "Adding an empty requirements.txt while current Python automation has no third-party dependency.",
+      "Repeating the stale REQ-NPC-006 owner_intent-only bug against live develop."
+    ]
   }
 }
