@@ -1,5 +1,9 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-22 - warehouse roadmap reconciliation after Pre-Unreal #597
+
+The new trilogy warehouse requirement/work item is now explicitly assigned to the master execution roadmap and the roadmap's unfinished/active snapshots are regenerated from ProjectGovernor. This repairs governance consistency only; asset/runtime maturity is unchanged. Unreal #432 remains pre-compile blocked by local Engine Content permissions.
+
 ## 2026-09-22 - trilogy warehouse-first production lane
 
 A trilogy-wide production warehouse is now explicitly tracked. This closes the planning/coverage problem where characters, world art, creatures, materials, animation and audio could remain unspecific late-stage gaps. The catalogue includes all major trilogy production families and exact first-pass slots, but actual final assets remain at mixed readiness states and are not promoted merely because their slots are catalogued.
