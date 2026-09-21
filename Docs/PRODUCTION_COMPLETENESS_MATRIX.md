@@ -1,3 +1,7 @@
+## 2026-09-22 - Resource Bible 09 source expansion and new warehouse stagers
+
+Source 09 is now operational rather than passive documentation. Its broad resource families have been merged into the machine-readable global source registry, and concrete staging lanes now include ambientCG CC0 materials plus Kenney CC0 support/world kits in addition to the existing Poly Haven, Quaternius and OpenGameArt lanes. This advances warehouse source breadth and STAGED acquisition only; no UE import/runtime/visual/audio/device acceptance is promoted by this sourcing wave.
+
 ## 2026-09-22 - pooled visual fallback hardening
 
 The async living-world ownership wave now also resets every reused ambient actor to constructor-owned Engine primitive meshes before resolving role-specific production soft objects. This prevents a pooled NPC that changes regional role from retaining a stale Human/Elf/Hobbit mesh when a production asset is unavailable. Active density and streaming policy are unchanged. Exact-head CI/UE evidence remains required; no runtime verification claim is made.
