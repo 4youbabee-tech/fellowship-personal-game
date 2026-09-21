@@ -4755,7 +4755,8 @@
         "REQ-CHAR-004",
         "REQ-WORLD-003"
       ],
-      "next_action": "Keep converting the broad source map into provider-specific candidate/acquisition batches and exact warehouse coverage metrics."
+      "next_action": "Keep converting the broad source map into provider-specific candidate/acquisition batches and exact warehouse coverage metrics.",
+      "verification_sha": "e9ea004b6417f0276453d6d230ebfaf9d8545e5c"
     }
   ],
   "project_source_library": {
