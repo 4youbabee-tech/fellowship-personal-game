@@ -1,3 +1,9 @@
+## 2026-09-22 - warehouse runner execution-policy blocker repaired
+
+Warehouse Stage #18 reached the self-hosted runner and failed before any download because GitHub's `shell: powershell` wrapper attempted to dot-source its temporary script while the Windows service account has script execution disabled. The warehouse workflow now invokes each checked-in staging script from `cmd` using `powershell.exe -NoProfile -ExecutionPolicy Bypass -File`, matching the proven pattern already used elsewhere on the runner. This repairs the staging launcher only; actual staged-file counts remain pending the next exact-head Warehouse Stage run.
+
+Unreal Build #449 remains a separate pre-compile blocker: the same runner account is still denied read access to `WorldGridMaterial.uasset`. Pre-Unreal #614 succeeded on the same prior head. No compile/PIE/device/visual acceptance claim is made.
+
 ## 2026-09-22 - multi-lane warehouse staging expanded
 
 Warehouse fill now runs as three concrete intake lanes on the integration train: Poly Haven CC0 environment/material stock, OpenGameArt CC0 music/foley stock, and Quaternius CC0 character/animation/fauna/world-kit discovery/staging. The audio lane contains direct OpenGameArt WAV/ZIP endpoints with source-page/license records and SHA256 receipt generation. The Quaternius lane resolves only public direct archives from official pack pages and records unresolved/store-only packs without fabricating download URLs.
