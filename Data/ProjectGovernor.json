@@ -2370,6 +2370,54 @@
       ],
       "checkpoint": "VISUAL_PERFORMANCE_ARCHITECTURE_V1",
       "notes": "Guardrail/plan work may proceed during the current gate. Broad runtime lighting/world-topology changes wait for measured device evidence and the active startup/QA gates."
+    },
+    {
+      "id": "REQ-INTEGRATION-001",
+      "title": "Comprehensive foundation integration train",
+      "category": "ArchitectureIntegration",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner directed comprehensive implementation of all recent agreed fixes and proposals instead of continued isolated planning.",
+      "intent": "Consolidate startup grounding, transactional chapter streaming, committed-world/living-world coordination, V10 regional life, automated QA, and visual-performance guardrails into one ordered integration path before further large feature expansion.",
+      "evidence": [
+        "Source/ShireJourney/ChapterWorldRouter.cpp",
+        "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.cpp",
+        "Source/ShireJourney/LivingWorldDirector.cpp",
+        "Data/LivingNPCIntelligencePlan.json",
+        "Data/VisualPerformanceOptimizationPlan.json",
+        "Data/AutomatedQAPlan.json"
+      ],
+      "implementation_refs": [
+        "Chapter asset preload is now two-phase: preloaded assets are not promoted to resident until the destination world build and grounding transaction succeeds.",
+        "ChapterWorldRouter publishes a committed world revision only after supported builder creation, grounded player placement, and asset-bank commit.",
+        "Failed swaps restore the previous builder where possible and fail closed with player movement held.",
+        "LivingWorldDirector combines V10 chapter density/roles with committed-world revision synchronization and does not apply destination life/weather before visible-world commit.",
+        "V10 regional NPC roles/dialogue data and living-NPC intelligence plans are integrated into the comprehensive branch."
+      ],
+      "missing_work": [
+        "Add/merge continuous transition audit and exact-head regression guards for the integrated two-phase commit path.",
+        "Complete remaining V10 data/source reconciliation on the comprehensive branch.",
+        "Run Pre-Unreal on exact comprehensive head and repair any static integration regressions.",
+        "Repair local UE4 Engine Content access, then pass exact-head C++ build/import/Automation/startup/P1C01-P1C08/state/transition gates.",
+        "Re-run the original P1C01 fall-through symptom in PIE before closing startup defect.",
+        "Only after the integrated foundation is green, merge/rebase the integration train into develop and retire superseded overlapping PR branches."
+      ],
+      "acceptance_criteria": [
+        "No destination living-world state is applied before its geometry is committed.",
+        "No destination asset bank becomes resident before successful destination build and grounding.",
+        "Rapid/stale async transitions cannot publish the wrong visible world.",
+        "A failed swap does not publish a new world revision and fails closed rather than dropping the player.",
+        "P1C01 startup grounding regression remains required for runtime acceptance.",
+        "Exact-head machine gates and defect-specific PIE evidence remain distinct."
+      ],
+      "dependencies": [
+        "REQ-STARTUP-001",
+        "REQ-QA-002",
+        "REQ-PERF-002",
+        "REQ-PERF-003"
+      ],
+      "checkpoint": "COMPREHENSIVE_FOUNDATION_V1",
+      "notes": "This is the active integration train. It does not bypass Gate 6/7; it consolidates already-approved work so the project can resume coherent production."
     }
   ],
   "hard_invariants": [
@@ -2983,6 +3031,25 @@
         "Data/VisualPerformanceOptimizationPlan.json",
         "Data/AssetPerformanceBudget.json",
         "Scripts/deep_project_audit.py"
+      ]
+    },
+    {
+      "id": "DEC-031",
+      "title": "Consolidate recent approved work into one comprehensive integration train",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-INTEGRATION-001",
+        "REQ-STARTUP-001",
+        "REQ-QA-002",
+        "REQ-PERF-002",
+        "REQ-PERF-003"
+      ],
+      "resolution": "Use integration/comprehensive-foundation-v1 as the ordered convergence branch. Integrate startup grounding -> QA foundation -> performance guardrails -> V10 living-world content -> transactional transition coordination, validate exact head, then merge to develop. Do not independently merge overlapping #62/#63/#64/#65/#66 while the train is active.",
+      "rationale": "Multiple individually useful branches now overlap the same runtime and governance surfaces. A single ordered integration train reduces regression risk and stops the project from spending more time on parallel repair branches than on coherent construction.",
+      "authority": "USER_DIRECTIVE",
+      "evidence": [
+        "Docs/CURRENT_PROJECT_STATE.md",
+        "Data/MasterExecutionRoadmap.json"
       ]
     }
   ],
@@ -3618,6 +3685,15 @@
       "rationale": "Protect already-correct async/HISM/cull/tick patterns immediately, then profile lighting, LOD, material, draw-call and memory choices on target hardware before broad visual expansion.",
       "execution_bundle": "B4_PERFORMANCE_AND_QA",
       "plan": "Data/VisualPerformanceOptimizationPlan.json"
+    },
+    {
+      "order": 1,
+      "id": "WORK-INTEGRATION-001",
+      "title": "Comprehensive foundation integration train",
+      "status": "ACTIVE",
+      "rationale": "Unify all recent approved runtime, QA, living-world and performance architecture work before resuming broader game construction.",
+      "execution_bundle": "B0_EXACT_HEAD_STABILITY",
+      "plan": "REQ-INTEGRATION-001"
     }
   ],
   "last_reconciliation": {
@@ -3672,7 +3748,7 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "STARTUP_GROUNDING_QA_PLUS_VISUAL_PERFORMANCE_GUARDRAILS",
+  "current_focus": "COMPREHENSIVE_FOUNDATION_INTEGRATION_V1",
   "immediate_next_large_actions": [
     "Finish V5 on PR #61 with fresh exact-head Pre-Unreal plus full UE4.27.2 build/import/startup/P1C01-P1C08/state/warning proof, then merge to develop.",
     "Measure chapter-transition hitch, streaming pool and resident memory on representative target hardware before promoting V5 as a performance win.",
@@ -4527,5 +4603,12 @@
     ],
     "rule": "Do not skip from FIX_CANDIDATE to CLOSED. Static validation protects the implementation contract but cannot close a runtime defect.",
     "owner_observation_role": "Use owner play time for final symptom/pacing/visual confirmation only after reproducible technical checks have run."
+  },
+  "integration_train": {
+    "branch": "integration/comprehensive-foundation-v1",
+    "baseline": "fb7afb8e39a4186245063ddf2a46fc0df8ba6c56",
+    "current_wave": "TWO_PHASE_WORLD_COMMIT_PLUS_V10_LIVING_WORLD",
+    "merge_policy": "Do not merge overlapping PRs #62-#66 independently while the integration train is active. Reconcile into this branch, prove exact head, then integrate to develop.",
+    "proof_boundary": "STATIC-PENDING on the newest code changes; no compile/PIE/device/visual claim until exact-head evidence exists."
   }
 }
