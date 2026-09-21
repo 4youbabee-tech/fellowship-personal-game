@@ -1,3 +1,11 @@
+## 2026-09-22 - warehouse testing boundary clarified
+
+The warehouse lane is now explicitly decoupled from runtime test availability. We do **not** wait for UE4 compile/PIE/device validation to discover, catalogue, download or stage trilogy assets. That work is intentionally parallel and may continue while the self-hosted runner is blocked.
+
+The engineering boundary is staged rather than test-free: raw stock must pass a lightweight intake gate before `READY_FOR_IMPORT` (file integrity, archive/malware hygiene, correct format, units/scale, naming, texture packing/dimensions, topology/UV/skeleton/animation sanity where relevant, plus provenance/metadata). UE4 import/build evidence begins at `IMPORTED`; runtime/PIE evidence begins at `INTEGRATED`; visual/audio/device acceptance is required only for `ACCEPTED`.
+
+This rule is durable as `DEC-033` and hard invariant `INV-WAREHOUSE-STAGING`. It prevents runner outages from starving the asset warehouse without turning the warehouse into an untrusted file dump.
+
 ## 2026-09-22 - first concrete trilogy asset candidate queue seeded
 
 Warehouse-first production moved from catalogue-only planning into concrete sourcing. `Data/TrilogyAssetCandidateQueue.json` now contains the first official-source candidates: CC0 Quaternius rigged/background character, fantasy outfit, medieval village, modular ruins, nature and farm/animated-animal packs, plus Poly Haven high-fidelity barrel and wood/stone/mossy PBR material lanes. These are candidates, not automatic final hero art; low/stylized packs are explicitly limited to supporting/background/pipeline roles where appropriate.
