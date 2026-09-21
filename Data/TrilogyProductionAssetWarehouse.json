@@ -838,5 +838,43 @@
     "hero_creature_threat_slots": 8,
     "battle_set_slots": 9,
     "note": "Counts describe tracked catalogue slots, not finished production assets. Supporting cast count comes from the supplied trilogy screenplay speaker pass plus Source 02 core roster."
-  }
+  },
+  "asset_state_model": [
+    {
+      "state": "CATALOGUED",
+      "meaning": "Required slot exists in the trilogy inventory.",
+      "test_requirement": "No UE test. Source/canon/category definition only."
+    },
+    {
+      "state": "CANDIDATE",
+      "meaning": "A concrete source or project-authored option has been identified.",
+      "test_requirement": "No UE runtime test. Record source URL/provider/basic metadata."
+    },
+    {
+      "state": "STAGED",
+      "meaning": "Raw files are present in the acquisition/staging area.",
+      "test_requirement": "No PIE/device test. Run archive/malware hygiene and basic file-integrity checks."
+    },
+    {
+      "state": "READY_FOR_IMPORT",
+      "meaning": "Asset passed intake validation and is structurally suitable for the intended pipeline.",
+      "test_requirement": "Check format, file readability, scale/unit, naming, texture dimensions/packing, topology/UV/skeleton/animation sanity as applicable, plus provenance/metadata. Still no gameplay claim."
+    },
+    {
+      "state": "IMPORTED",
+      "meaning": "Asset imports into UE4.27 project/editor pipeline.",
+      "test_requirement": "UE import validation required; compile only if code/content references demand it."
+    },
+    {
+      "state": "INTEGRATED",
+      "meaning": "Asset is wired into a character/world/audio/chapter production path.",
+      "test_requirement": "Exact-head build/import plus relevant runtime smoke/PIE checks."
+    },
+    {
+      "state": "ACCEPTED",
+      "meaning": "Asset/presentation meets production quality and performance for its intended role.",
+      "test_requirement": "Relevant PIE/device/performance plus human visual/audio acceptance."
+    }
+  ],
+  "warehouse_parallelism_rule": "Fill CATALOGUED/CANDIDATE/STAGED continuously even when the self-hosted UE runner is unavailable. Do not wait for gameplay testing to build stock; do not bypass intake validation before READY_FOR_IMPORT."
 }
