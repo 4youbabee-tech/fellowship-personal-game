@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "PART1_LIVING_NPC_INTELLIGENCE_V1",
-  "status": "RUNTIME_PARTIAL",
+  "status": "RUNTIME_PARTIAL_V10_REGIONAL_ARCHETYPES_ACTIVE",
   "purpose": "Convert Part I NPCs from static dialogue actors into bounded, context-aware inhabitants with identity, routines, memory, goals, needs, emotions, relationships and knowledge limits while preserving film chronology and low-spec performance.",
   "design_principles": [
     "NPC intelligence may enrich moment-to-moment play but cannot alter mandatory film outcomes.",
@@ -9,7 +9,8 @@
     "Ambient populations use aggregate/archetype state rather than expensive per-instance persistence.",
     "Dialogue must respect character knowledge and admit ignorance when knowledge is unavailable.",
     "All gameplay-critical NPC intelligence must run fully offline with zero network/API dependency.",
-    "If a language model is ever used at runtime, it must be a local on-device model behind strict context, memory, knowledge and performance limits; cloud/remote LLM calls are not part of the game architecture."
+    "If a language model is ever used at runtime, it must be a local on-device model behind strict context, memory, knowledge and performance limits; cloud/remote LLM calls are not part of the game architecture.",
+    "NPC self-model is fully diegetic: every response and behavior is from the character's in-world identity, history, relationships, region and plausible knowledge; no character knows they are inside a game or simulation."
   ],
   "capabilities": {
     "identity_profile": {
@@ -176,11 +177,11 @@
     },
     {
       "phase": "LW-D",
-      "scope": "regional ambient archetypes",
+      "scope": "regional ambient archetypes: Shire, Bree, Rivendell and Lothlorien first",
       "focus": [
         "cheap aggregate needs/emotion/schedule reactions"
       ],
-      "status": "PLANNED"
+      "status": "IN_PROGRESS"
     }
   ],
   "acceptance_criteria": [
@@ -192,7 +193,10 @@
     "Ambient simulation stays distance-throttled and low-cost.",
     "Game remains fully functional with the network physically unavailable.",
     "No gameplay-critical NPC path makes remote HTTP/API calls.",
-    "Any future local LLM/STT/TTS layer has a deterministic local fallback and stays within the target-device budget."
+    "Any future local LLM/STT/TTS layer has a deterministic local fallback and stays within the target-device budget.",
+    "All visible NPC behavior/dialogue remains diegetic and never exposes game/system awareness.",
+    "Named profiles react from source-grounded identity/history plus current region, relationship and valid memory context.",
+    "Ambient archetypes remain culturally/local-context aware without pretending to own unsupported deep personal histories."
   ],
   "explicit_non_goals_for_current_batch": [
     "unrestricted free-form AI agents",
@@ -220,6 +224,44 @@
     "Core profiles Gandalf, Sam, Aragorn and Bilbo now carry biography facts, knowledge limits and attitude tags in NPCSocialModel.",
     "UShireNPCContextSubsystem now loads those fields and exposes a compact local profile context summary.",
     "Ambient needs/emotion/goal simulation remains bounded and offline-only.",
-    "PG-059 now guards both offline policy and the core character knowledge envelopes."
-  ]
+    "PG-059 now guards both offline policy and the core character knowledge envelopes.",
+    "V10 adds culture-specific regional ambient role labels while keeping them aggregate/ephemeral rather than save-heavy individuals.",
+    "ARCH_ELVEN_SANCTUARY now supplies a bounded offline schedule for Rivendell/Lothlorien ambient residents.",
+    "Chapter-tuned residency radii/cadence improve perceived density without increasing established baseline population target counts."
+  ],
+  "diegetic_world_contract": {
+    "status": "MANDATORY",
+    "self_model": "IN_WORLD_CHARACTER_ONLY",
+    "external_meta_awareness_allowed": false,
+    "hidden_system_context_policy": "Chapter/route/quest/save/debug identifiers may be used internally by systems for gating and selection but are never exposed as character knowledge or dialogue content.",
+    "named_character_context": [
+      "canonical identity and aliases",
+      "origin/home/community",
+      "occupation/role",
+      "source-grounded biography facts",
+      "relationships and bounded memories",
+      "directly witnessed or validly learned events",
+      "current region, local conditions and social pressure",
+      "knowledge limits appropriate to current chronology"
+    ],
+    "ambient_context": [
+      "regional/cultural archetype",
+      "local role and routine",
+      "current region/weather/danger/mood",
+      "cheap needs/emotion state",
+      "local knowledge tags and uncertainty outside them"
+    ],
+    "forbidden_awareness": [
+      "PLAYER_AS_EXTERNAL_OPERATOR",
+      "GAME_OR_SIMULATION",
+      "NPC_AS_SOFTWARE_ENTITY",
+      "QUEST_OR_CHAPTER_IDS",
+      "HUD_OR_UI",
+      "SAVE_LOAD_OR_CHECKPOINT_SYSTEM",
+      "DEBUG_OR_DEVELOPER_CONTROLS",
+      "PROMPT_OR_SCRIPT_MECHANICS",
+      "AI_LLM_MODEL_OR_INFERENCE_SYSTEM"
+    ],
+    "ignorance_rule": "If a fact is outside authored/witnessed/learned knowledge, answer as an in-world person who does not know, suspects, remembers imperfectly or has only local hearsay as appropriate."
+  }
 }
