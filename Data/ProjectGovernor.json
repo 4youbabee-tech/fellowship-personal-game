@@ -3048,7 +3048,7 @@
       "route/story/state isolated disk roundtrip",
       "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "Verified programmer proposals are now integrated on develop. V5 implementation is active and may not merge until fresh exact-head Pre-Unreal + Unreal validation passes; target-device hitch/memory proof remains separate.",
+    "note": "Post-V5 production is active. V10 may not merge until fresh exact-head Pre-Unreal + Unreal validation passes; target-device and rendered acceptance remain separate.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -3061,12 +3061,12 @@
       ],
       "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "4879a19999951354676341f032c358ac98679c44",
+    "last_green_head": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
     "evidence": {
-      "pre_unreal": "PASS #531",
-      "unreal_build": "PASS #366"
+      "pre_unreal": "PASS #543",
+      "unreal_build": "PASS #378"
     },
-    "evidence_scope": "Programmer-review PR #60 exact head 4879a19999951354676341f032c358ac98679c44 passed Pre-Unreal #531 and Unreal Build #366 and merged to develop as 8d7247d229b5cd51e8aea5617e1e2030b38229bf. V5 implementation is newer and unproven until its own exact-head gates complete.",
+    "evidence_scope": "V5 merged develop head f4886b39feea29973543bf6cfb1be4659f10ff9d passed Pre-Unreal #543 and full Unreal Build #378. The active V10 branch is newer and must earn its own proof.",
     "current_owner_observation": {
       "sha": "4879a19999951354676341f032c358ac98679c44",
       "pre_unreal": {
@@ -3188,7 +3188,7 @@
       "id": "WORK-WORLD-001",
       "title": "Expand environmental micro-life and production polish chapter by chapter",
       "status": "ACTIVE",
-      "rationale": "CP56 expands visible life and companionship between film-story anchors while preserving bounded simulation.",
+      "rationale": "Post-V5 wave is active on production/early-realms-world-life-v1: culture-specific Shire/Bree/Rivendell/Lothlorien routines, chapter-tuned residency budgets and instanced sanctuary detail without raising baseline population targets.",
       "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
     },
     {
@@ -3246,7 +3246,7 @@
       "id": "WORK-LW-004",
       "title": "Offline Living NPC intelligence expansion",
       "status": "ACTIVE",
-      "rationale": "Expanded scope is explicit: every Part I character participates in offline living intelligence at a cost appropriate to its tier, with biography/knowledge limits and regional peace/war mood context.",
+      "rationale": "V10 advances cheap offline regional ambient archetypes and schedules while retaining story ownership, knowledge limits and distance-throttled simulation.",
       "execution_bundle": "B3_LIVING_WORLD_AND_PRESENTATION"
     },
     {
@@ -3390,28 +3390,29 @@
       "order": 33,
       "id": "WORK-PERF-002",
       "title": "Chapter asset streaming V5",
-      "status": "ACTIVE",
-      "rationale": "Mitigate verified synchronous chapter loading risk before further world-density growth.",
+      "status": "COMPLETED",
+      "rationale": "Chapter asset streaming V5 passed exact-head Pre-Unreal #542 and Unreal #377 attempt 2, merged as f4886b39feea29973543bf6cfb1be4659f10ff9d, and the develop merge head passed Pre-Unreal #543 plus Unreal #378. Target-device hitch/memory measurement remains a separate performance-acceptance task.",
       "execution_bundle": "B4_PERFORMANCE_AND_QA"
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "reason": "Owner requested path review/cleanup before further production.",
-    "active_wave": "CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5",
+    "reason": "V5 exact-head proof and post-merge develop proof are green. Production resumed immediately on the first focused post-streaming world-life branch.",
+    "active_wave": "EARLY_REALM_WORLD_LIFE_AND_CULTURAL_DENSITY_V10",
     "integration_baseline": {
-      "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-      "pre_unreal": "#532 SUCCESS",
-      "unreal": "#367 SUCCESS"
+      "sha": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
+      "pre_unreal": "#543 SUCCESS",
+      "unreal": "#378 SUCCESS",
+      "status": "GREEN_POST_V5_DEVELOP"
     },
-    "active_candidate": {
-      "pull_request": 61,
-      "branch": "production/chapter-streaming-v5",
-      "sha": "b882b052a59c8d4e19437d7877dc30c9b1ea5daf",
-      "pre_unreal": "#538 SUCCESS",
-      "unreal": "#373 PENDING_AT_RECONCILIATION"
+    "completed_v5": {
+      "candidate": "2fd76baa6e8a8683854ab50b7c83dd668465716a",
+      "pre_unreal": "#542 SUCCESS",
+      "unreal": "#377 attempt 2 SUCCESS",
+      "merge": "f4886b39feea29973543bf6cfb1be4659f10ff9d"
     },
-    "truth_boundary": "The cleanup commit is newer than the recorded candidate evidence and requires fresh exact-head checks. No FPS/RAM/VRAM improvement is claimed before representative target-device measurement."
+    "active_branch": "production/early-realms-world-life-v1",
+    "truth_boundary": "V10 source/runtime implementation is not yet exact-head engine proven. Baseline actor counts are unchanged; target-device FPS/hitch/memory and rendered density/pacing remain unverified."
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",
@@ -3447,7 +3448,7 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5",
+  "current_focus": "EARLY_REALM_WORLD_LIFE_AND_CULTURAL_DENSITY_V10",
   "immediate_next_large_actions": [
     "Finish V5 on PR #61 with fresh exact-head Pre-Unreal plus full UE4.27.2 build/import/startup/P1C01-P1C08/state/warning proof, then merge to develop.",
     "Measure chapter-transition hitch, streaming pool and resident memory on representative target hardware before promoting V5 as a performance win.",
@@ -3456,70 +3457,31 @@
     "Keep later Public/Private source-layout migration isolated as its own maintenance branch."
   ],
   "session_handoff": {
-    "source_head": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
+    "source_head": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
     "branch": "develop",
     "verified": {
-      "pre_unreal": "PASS #532",
-      "unreal_build": "PASS #367",
-      "integration": "PR #60 merged and develop returned green."
+      "pre_unreal": "PASS #543",
+      "unreal_build": "PASS #378",
+      "integration": "PR #61 V5 merged and the resulting develop head returned green through compile/import/startup/P1C01-P1C08/state/warning gates."
     },
     "active_candidate": {
-      "pull_request": 61,
-      "branch": "production/chapter-streaming-v5",
-      "latest_observed_sha": "3fe79f95ffed1b6715060b3aaa090c0af929769c",
-      "pre_unreal": "PASS #539",
-      "unreal_build": "IN_PROGRESS #374 at runtime-timeout review; this new commit requires fresh exact-head validation"
+      "branch": "production/early-realms-world-life-v1",
+      "status": "SOURCE_RUNTIME_IMPLEMENTATION_ACTIVE_PENDING_EXACT_HEAD_PROOF"
     },
-    "failing": {
-      "resolved": [
-        "#370 FStreamableHandle declaration mismatch",
-        "#371 conditional UE_LOG verbosity",
-        "stale async completion after returning to resident world corrected at b882b052"
-      ],
-      "current": "#372 at 8872f2c54c14edb91bc4ed25ad6707f8665b6234 passed compile/import/startup/P1C01-P1C04, then P1C05 readiness timed out (803.594s elapsed, configured 45s). Log was still in engine initialization. Root cause not established; no chapter-content defect inferred."
-    },
+    "failing": {},
     "next_actions": [
-      "Require fresh exact-head CI for this cleanup commit.",
-      "Repair only demonstrated V5 failures if any.",
-      "Merge PR #61 only after both gates pass, then confirm develop green.",
-      "Start post-V5 world-life/architecture/NPC-density wave, with rig/animation kept explicit."
+      "Complete V10 early-realm cultural life and performance-bounded density implementation.",
+      "Run exact-head Pre-Unreal and UE4.27.2 validation through PR.",
+      "Repair only demonstrated failures; merge only a green exact head.",
+      "After V10 merge, continue the focused character rig/animation lane and target-device profiling."
     ],
     "unverified_acceptance": [
-      "Representative target-device chapter-transition hitch and resident-memory measurements",
-      "Rendered visual acceptance after the post-V5 density wave",
-      "Human pacing/readability acceptance",
+      "V10 exact-head engine proof",
+      "Target-device FPS/hitch/memory measurement",
+      "Rendered density/pacing acceptance",
       "Final skeletal rig/animation acceptance"
     ],
-    "scope_rule": "Machine evidence and merge status do not replace device profiling, rendered review or human pacing acceptance.",
-    "validation_snapshot": {
-      "last_green": {
-        "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-        "pre_unreal": {
-          "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-          "run_id": 35547643542,
-          "status": "SUCCESS"
-        },
-        "unreal": {
-          "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-          "run_id": 35547643484,
-          "status": "SUCCESS"
-        }
-      },
-      "latest_observed": {
-        "sha": "3fe79f95ffed1b6715060b3aaa090c0af929769c",
-        "pre_unreal": {
-          "sha": "3fe79f95ffed1b6715060b3aaa090c0af929769c",
-          "run_id": 35573736301,
-          "status": "SUCCESS"
-        },
-        "unreal": {
-          "sha": "3fe79f95ffed1b6715060b3aaa090c0af929769c",
-          "run_id": 35573736371,
-          "status": "IN_PROGRESS"
-        }
-      }
-    },
-    "pull_request": 61
+    "scope_rule": "Machine proof does not equal device or rendered acceptance."
   },
   "governor_role": {
     "mode": "OVERSEER_NOT_BOTTLENECK",
@@ -3615,10 +3577,9 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "A historical branch may be deleted only after its meaningful content is confirmed present in develop or intentionally superseded. Diverged branches with unique commits remain preserved until audited.",
-    "current_short_branch": "production/chapter-streaming-v5",
+    "current_short_branch": "production/early-realms-world-life-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 61,
-    "open_pr_policy": "Do not start the post-V5 content branch until PR #61 is merged and develop is green.",
+    "open_pr_policy": "Open one PR for V10 after the coherent early-realm implementation is complete; require exact-head Pre-Unreal and full Unreal validation before develop merge.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop."
   },
   "side_branch_audit": {

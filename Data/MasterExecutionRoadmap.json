@@ -22,20 +22,12 @@
     "evidence": "Each bundle closes only from repository/engine/device/human evidence matching its exit criteria."
   },
   "current_control_state": {
-    "pull_request": 61,
-    "branch": "production/chapter-streaming-v5",
-    "integration_baseline_head": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-    "integration_baseline_pre_unreal": "SUCCESS #532",
-    "integration_baseline_unreal": "SUCCESS #367",
-    "latest_observed_candidate_head": "b882b052a59c8d4e19437d7877dc30c9b1ea5daf",
-    "latest_observed_pre_unreal": "SUCCESS #538",
-    "latest_observed_unreal": "PENDING #373 at reconciliation",
-    "merge_policy": "Newest PR head must pass exact-head Pre-Unreal and full UE4.27.2 validation before develop integration; after merge, develop must return green.",
-    "deep_audit": {
-      "status": "V5_EXACT_HEAD_VALIDATION_ACTIVE",
-      "artifact": "Data/DeepProjectAudit.json",
-      "rule": "Repair only demonstrated exact-head failures. Performance promotion additionally requires representative target-device hitch/memory measurement."
-    }
+    "branch": "production/early-realms-world-life-v1",
+    "integration_baseline_head": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
+    "integration_baseline_pre_unreal": "SUCCESS #543",
+    "integration_baseline_unreal": "SUCCESS #378",
+    "active_wave": "EARLY_REALM_WORLD_LIFE_AND_CULTURAL_DENSITY_V10",
+    "merge_policy": "Complete one coherent V10 branch, prove its exact head with Pre-Unreal and full UE4.27.2 validation, then merge to develop and revalidate develop."
   },
   "bundles": [
     {
@@ -81,7 +73,7 @@
         "WARNING_GUARD_PASS",
         "DEEP_AUDIT_PASS"
       ],
-      "current_performance_wave": "CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5"
+      "current_performance_wave": "V5_MERGED_GREEN_DEVICE_MEASUREMENT_PENDING"
     },
     {
       "id": "B1_PART1_STORY_GAMEPLAY_COMPLETE",
@@ -215,7 +207,7 @@
         "PIE_VISUAL_REVIEW",
         "TARGET_DEVICE_PERFORMANCE"
       ],
-      "current_production_wave": "NEXT_AFTER_V5_WORLD_LIFE_ARCHITECTURE_AND_RIG_ANIMATION"
+      "current_production_wave": "EARLY_REALM_WORLD_LIFE_AND_CULTURAL_DENSITY_V10"
     },
     {
       "id": "B3_LIVING_WORLD_AND_PRESENTATION",
@@ -253,7 +245,7 @@
         "PIE_DIALOGUE_REVIEW",
         "PERFORMANCE_PASS"
       ],
-      "current_production_wave": "NEXT_AFTER_V5_NPC_DENSITY_AND_REGION_LIFE"
+      "current_production_wave": "EARLY_REALM_WORLD_LIFE_AND_CULTURAL_DENSITY_V10"
     },
     {
       "id": "B4_ACCEPTANCE_AND_MERGE",
@@ -450,14 +442,14 @@
     "WORK-PERF-002"
   ],
   "immediate_next_large_actions": [
-    "Finish PR #61 V5 exact-head validation and merge only when both machine gates pass.",
-    "Confirm the resulting develop integration head returns green.",
-    "Measure chapter seam hitch/streaming pool/resident memory before claiming a performance win.",
-    "Open the next short branch for Shire/Bree/Rivendell/Lothlorien world life, architecture and NPC density.",
-    "Advance the actual skeletal rig/skin/AnimBP/animation track as the parallel character-quality lane."
+    "Finish culture-specific Shire/Bree/Rivendell/Lothlorien ambient life and chapter-tuned residency budgets without raising baseline population targets.",
+    "Use instancing/culling for decorative sanctuary density instead of actor spam.",
+    "Earn exact-head V10 Pre-Unreal and full UE4.27.2 proof, then merge and revalidate develop.",
+    "Run representative target-device profiling before any later actor-density increase.",
+    "Continue the actual skeletal rig/skin/AnimBP/animation track as the next focused character-quality lane."
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "reason": "Path cleanup before post-V5 production: stale PR53/CP56 and V1-V4 active markers retired; PR61 is the single active closeout path; post-V5 world-life plus rig sequence is explicit."
+    "reason": "V5 completed and post-merge develop is green; V10 early-realm world-life is now the single focused production wave."
   }
 }
