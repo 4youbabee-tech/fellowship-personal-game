@@ -1,3 +1,7 @@
+## 2026-09-22 - pooled visual fallback hardening
+
+The async living-world ownership wave now also resets every reused ambient actor to constructor-owned Engine primitive meshes before resolving role-specific production soft objects. This prevents a pooled NPC that changes regional role from retaining a stale Human/Elf/Hobbit mesh when a production asset is unavailable. Active density and streaming policy are unchanged. Exact-head CI/UE evidence remains required; no runtime verification claim is made.
+
 ## 2026-09-22 - Resource Bible 09 operationalized into warehouse execution
 
 The project source `09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL` has now been converted into `Data/ResourceBibleSourceExpansionV1.json` and merged into `Data/GlobalWarehouseSourceRegistryV2.json`. Its source families now explicitly cover voice/TTS, music, SFX/field recording, visual/UI reference, 3D/models/scans, architecture, environments/materials, animation/mocap, LOTR-specific reference and AI creation tools. This preserves the Bible's own separation between personal-local candidate material, temporary/reference material and tools rather than flattening every website into an automatic production source.
