@@ -1,3 +1,9 @@
+## 2026-09-22 - warehouse fill execution expanded beyond catalogue-only state
+
+The warehouse lane has moved into an actual staged-download implementation. `Data/WarehouseAcquisitionBatchV1.json` now contains a source-page-verified Poly Haven P1C01 material/prop batch covering wood interiors, dirt/path variants, plaster families, cobblestone, mossy stone and barrel props. `Scripts/stage_polyhaven_warehouse.ps1` now handles provider/API failures per asset instead of aborting the entire batch, records skipped reasons, and preserves successful downloads/receipts so one bad slug cannot stop warehouse growth.
+
+The dedicated `Warehouse Stage` self-hosted workflow remains separate from the UE4 build path. The current exact-head Pre-Unreal gate is green; runtime/PIE/device proof remains separate. No staged warehouse item is promoted to imported/integrated/accepted by this download infrastructure alone.
+
 ## 2026-09-22 - persistent warehouse staging lane activated
 
 The asset warehouse is no longer catalogue-only. A dedicated `Warehouse Stage` workflow and `Scripts/stage_polyhaven_warehouse.ps1` now target a persistent self-hosted storage root at `C:\\actions-runner\\_warehouse\\ShireJourney`, independent from the blocked UE4 Engine Content build path. `Data/WarehouseAcquisitionBatchV1.json` defines the first CC0 Poly Haven material/prop batch with 2K intake and a hard byte cap; every staged file is intended to receive size/SHA256/source metadata in a local receipt before later import.
