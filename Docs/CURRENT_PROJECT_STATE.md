@@ -1,3 +1,11 @@
+## 2026-09-22 - Resource Bible 09 operationalized into warehouse execution
+
+The project source `09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL` has now been converted into `Data/ResourceBibleSourceExpansionV1.json` and merged into `Data/GlobalWarehouseSourceRegistryV2.json`. Its source families now explicitly cover voice/TTS, music, SFX/field recording, visual/UI reference, 3D/models/scans, architecture, environments/materials, animation/mocap, LOTR-specific reference and AI creation tools. This preserves the Bible's own separation between personal-local candidate material, temporary/reference material and tools rather than flattening every website into an automatic production source.
+
+Concrete staging also widened beyond the previous Poly Haven/Quaternius/OpenGameArt lanes. ambientCG now has a public-API 2K-PNG material batch for timber, plaster, terrain, stone, bark, leather/fabric and roofing/cobble families, and Kenney now has an official-pack-page CC0 resolver for world/support stock such as fantasy town, castle, nature, furniture, building, dungeon, food, UI and background-character packs. Both are wired into the persistent Warehouse Stage workflow.
+
+These changes expand warehouse sourcing and STAGED stock only. They do not promote UE import, integration, visual/audio acceptance, or any COMPILE/PIE/device status.
+
 ## 2026-09-22 - asynchronous living-world asset ownership
 
 The registered living-world synchronous production-load defect is now repaired at source level using the existing two-phase chapter streaming architecture rather than introducing another loader. `Data/ChapterAssetStreamingPlan.json` now explicitly places the ambient production surface, Hobbit/Human/Elf resident meshes, and chapter-used fauna meshes into the relevant soft chapter banks. Their lifetime is therefore owned by the resident `FStreamableHandle`, which remains alive until a replacement world successfully commits.
