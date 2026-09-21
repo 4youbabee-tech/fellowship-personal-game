@@ -20,6 +20,7 @@ void UShireChapterAssetStreamingSubsystem::Initialize(FSubsystemCollectionBase& 
     PendingChapterId = NAME_None;
     PendingRouteId = NAME_None;
     RequestSerial = 0;
+    bPendingCompatibilityReady = false;
 
     bPlanReady = LoadStreamingPlan();
     if (bPlanReady)
@@ -53,6 +54,41 @@ void UShireChapterAssetStreamingSubsystem::CancelPendingRequest()
 
     PendingChapterId = NAME_None;
     PendingRouteId = NAME_None;
+    bPendingCompatibilityReady = false;
+}
+
+bool UShireChapterAssetStreamingSubsystem::CommitPendingRequest(
+    FName ChapterId,
+    FName RouteId)
+{
+    if (PendingChapterId != ChapterId || PendingRouteId != RouteId)
+    {
+        return false;
+    }
+
+    const bool bReady =
+        bPendingCompatibilityReady ||
+        (PendingHandle.IsValid() && PendingHandle->HasLoadCompleted());
+    if (!bReady)
+    {
+        return false;
+    }
+
+    ResidentHandle = PendingHandle;
+    PendingHandle.Reset();
+    ResidentChapterId = ChapterId;
+    ResidentRouteId = RouteId;
+    PendingChapterId = NAME_None;
+    PendingRouteId = NAME_None;
+    bPendingCompatibilityReady = false;
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ChapterAssetStreaming: committed chapter=%s route=%s"),
+        *ChapterId.ToString(),
+        *RouteId.ToString());
+    return true;
 }
 
 void UShireChapterAssetStreamingSubsystem::Deinitialize()
@@ -176,11 +212,13 @@ void UShireChapterAssetStreamingSubsystem::RequestChapterAssets(
         return;
     }
 
-    if (PendingChapterId == ChapterId &&
-        PendingRouteId == RouteId &&
-        PendingHandle.IsValid() &&
-        !PendingHandle->HasLoadCompleted())
+    if (PendingChapterId == ChapterId && PendingRouteId == RouteId)
     {
+        if (bPendingCompatibilityReady ||
+            (PendingHandle.IsValid() && PendingHandle->HasLoadCompleted()))
+        {
+            OnChapterAssetsReady.Broadcast(ChapterId, RouteId);
+        }
         return;
     }
 
@@ -195,6 +233,7 @@ void UShireChapterAssetStreamingSubsystem::RequestChapterAssets(
 
     PendingChapterId = ChapterId;
     PendingRouteId = RouteId;
+    bPendingCompatibilityReady = false;
 
     const FChapterBankRuntime* Bank =
         bPlanReady ? Banks.Find(ResolveBankId(ChapterId, RouteId)) : nullptr;
@@ -207,10 +246,7 @@ void UShireChapterAssetStreamingSubsystem::RequestChapterAssets(
             TEXT("ChapterAssetStreaming: no bank for chapter=%s route=%s; compatibility path continues."),
             *ChapterId.ToString(),
             *RouteId.ToString());
-        ResidentChapterId = ChapterId;
-        ResidentRouteId = RouteId;
-        PendingChapterId = NAME_None;
-        PendingRouteId = NAME_None;
+        bPendingCompatibilityReady = true;
         OnChapterAssetsReady.Broadcast(ChapterId, RouteId);
         return;
     }
@@ -237,10 +273,7 @@ void UShireChapterAssetStreamingSubsystem::RequestChapterAssets(
             Warning,
             TEXT("ChapterAssetStreaming: async handle unavailable for chapter=%s; compatibility path continues."),
             *ChapterId.ToString());
-        ResidentChapterId = ChapterId;
-        ResidentRouteId = RouteId;
-        PendingChapterId = NAME_None;
-        PendingRouteId = NAME_None;
+        bPendingCompatibilityReady = true;
         OnChapterAssetsReady.Broadcast(ChapterId, RouteId);
     }
 }
@@ -254,22 +287,17 @@ void UShireChapterAssetStreamingSubsystem::HandleAsyncLoadComplete(uint64 Comple
 
     const FName CompletedChapter = PendingChapterId;
     const FName CompletedRoute = PendingRouteId;
+    if (CompletedChapter.IsNone() || CompletedRoute.IsNone())
+    {
+        return;
+    }
 
-    // Promote the new bank only after it is loaded. Until this point the old resident
-    // handle stays alive, matching Source 11's requirement to avoid exposing a broken
-    // narrative seam while critical content is still asynchronous.
-    ResidentHandle = PendingHandle;
-    PendingHandle.Reset();
-
-    ResidentChapterId = CompletedChapter;
-    ResidentRouteId = CompletedRoute;
-    PendingChapterId = NAME_None;
-    PendingRouteId = NAME_None;
-
+    // Two-phase transition: preload is not residency. Keep the old resident handle
+    // alive until ChapterWorldRouter proves destination construction and grounding.
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("ChapterAssetStreaming: ready chapter=%s route=%s"),
+        TEXT("ChapterAssetStreaming: preloaded chapter=%s route=%s awaiting-world-commit"),
         *CompletedChapter.ToString(),
         *CompletedRoute.ToString());
 
