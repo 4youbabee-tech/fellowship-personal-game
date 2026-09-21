@@ -19,6 +19,8 @@ def read_log(path):
 
 
 def required_markers(chapter, mode):
+    if mode == "transitions":
+        return ["ShireTransitionAudit: sequence=PASS chapters=8 routes=2 disk-save=PASS"]
     if mode == "state":
         return ["ShirePlayableStartup: GameMode ready",
                 "ShireStartupGrounding: PASS chapter=P1C03",
@@ -126,7 +128,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--editor", required=True, type=Path)
     parser.add_argument("--project", required=True, type=Path)
-    parser.add_argument("--mode", choices=("startup", "chapters", "state"), required=True)
+    parser.add_argument("--mode", choices=("startup", "chapters", "state", "transitions"), required=True)
     parser.add_argument("--timeout", type=float, default=45)
     parser.add_argument("--observation", type=float, default=4)
     args = parser.parse_args()
@@ -135,11 +137,13 @@ def main():
     if args.observation <= 0 or args.timeout <= args.observation:
         parser.error("timeout must exceed a positive observation window")
     log_dir = args.project.resolve().parent / "Saved" / "Logs"
-    chapters = [None] if args.mode in ("startup", "state") else [f"P1C{i:02d}" for i in range(1, 9)]
+    chapters = [None] if args.mode in ("startup", "state", "transitions") else [f"P1C{i:02d}" for i in range(1, 9)]
     results = []
     for chapter in chapters:
         name = ("CI-StateAudit" if args.mode == "state" else
                 "CI-PlayableStartup" if chapter is None else f"CI-ChapterAudit-{chapter}")
+        if args.mode == "transitions":
+            name = "CI-TransitionAudit"
         log = log_dir / (name + ".log")
         command = [str(args.editor.resolve()), str(args.project.resolve()),
                    "/Engine/Maps/Templates/Template_Default", "-game", "-nullrhi",
@@ -149,6 +153,8 @@ def main():
             command.append(f"-AuditChapter={chapter}")
         if args.mode == "state":
             command.append("-AuditState")
+        if args.mode == "transitions":
+            command.append("-AuditTransitions")
         try:
             result = observe(command, log, required_markers(chapter, args.mode), args.timeout, args.observation)
         except Exception as exc:
