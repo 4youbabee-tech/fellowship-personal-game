@@ -594,6 +594,101 @@ void AShireAmbientNPC::UpdateWalkAnimation(float DeltaSeconds, bool bMoving)
     }
 }
 
+void AShireAmbientNPC::ConfigureLivingWorldRoutine(
+    const FVector& Start,
+    const FVector& End,
+    FName InRoutineRole,
+    FName InActivityPropType,
+    float InWalkSpeed,
+    float InMinWait,
+    float InMaxWait)
+{
+    RoutinePointA = Start;
+    RoutinePointB = End;
+    RoutineRole = InRoutineRole;
+    ActivityPropType = InActivityPropType;
+    WalkSpeed = InWalkSpeed;
+    MinWait = InMinWait;
+    MaxWait = InMaxWait;
+    BaseWalkSpeed = FMath::Max(1.0f, WalkSpeed);
+
+    bInLivingWorldPool = false;
+    bHeadingToB = true;
+    bObservingPlayer = false;
+    bSocializing = false;
+    ObservedPlayer.Reset();
+    SocialPartner.Reset();
+    LastSocialPartner.Reset();
+    WaitRemaining = Random.FRandRange(0.0f, 1.5f);
+    SenseAccumulator = Random.FRandRange(0.0f, 0.35f);
+    ObserveRemaining = 0.0f;
+    NoticeCooldownRemaining = 0.0f;
+    SocialCheckRemaining = Random.FRandRange(1.0f, 3.0f);
+    SocialRemaining = 0.0f;
+    SocialCaptionDelay = 0.0f;
+    SocialCaptionRemaining = 0.0f;
+    LastPartnerCooldownRemaining = 0.0f;
+    ScheduleCheckRemaining = Random.FRandRange(0.5f, 2.0f);
+    NeedsCheckRemaining = Random.FRandRange(0.6f, 1.8f);
+    Hunger01 = Random.FRandRange(0.08f, 0.34f);
+    Fatigue01 = Random.FRandRange(0.05f, 0.28f);
+    SocialNeed01 = Random.FRandRange(0.15f, 0.60f);
+    Fear01 = 0.0f;
+    RuntimeSchedulePhase = NAME_None;
+    RuntimeEmotion = TEXT("CALM");
+    RuntimeGoal = TEXT("ROUTINE");
+    PendingSocialCaption = FText::GetEmpty();
+
+    SetActorLocationAndRotation(Start, FRotator::ZeroRotator, false, nullptr, ETeleportType::TeleportPhysics);
+    SetActorHiddenInGame(false);
+    SetActorEnableCollision(false);
+    SetActorTickEnabled(true);
+    Tags.Remove(TEXT("LivingWorldPooled"));
+    Tags.Remove(TEXT("LivingWorldBaseline"));
+
+    if (SocialCaption)
+    {
+        SocialCaption->SetText(FText::GetEmpty());
+        SocialCaption->SetVisibility(false);
+    }
+
+    AppliedVisualRole = NAME_None;
+    ApplyVisualStyle();
+}
+
+void AShireAmbientNPC::DeactivateForLivingWorldPool()
+{
+    if (AShireAmbientNPC* Partner = SocialPartner.Get())
+    {
+        Partner->bSocializing = false;
+        Partner->SocialPartner.Reset();
+        Partner->SocialRemaining = 0.0f;
+    }
+
+    bInLivingWorldPool = true;
+    bObservingPlayer = false;
+    bSocializing = false;
+    ObservedPlayer.Reset();
+    SocialPartner.Reset();
+    LastSocialPartner.Reset();
+    SocialRemaining = 0.0f;
+    SocialCaptionDelay = 0.0f;
+    SocialCaptionRemaining = 0.0f;
+    PendingSocialCaption = FText::GetEmpty();
+
+    if (SocialCaption)
+    {
+        SocialCaption->SetText(FText::GetEmpty());
+        SocialCaption->SetVisibility(false);
+    }
+
+    Tags.AddUnique(TEXT("LivingWorldPooled"));
+    Tags.Remove(TEXT("LivingWorldBaseline"));
+    SetActorTickEnabled(false);
+    SetActorHiddenInGame(true);
+    SetActorEnableCollision(false);
+}
+
 void AShireAmbientNPC::BeginPlay()
 {
     Super::BeginPlay();
@@ -1179,7 +1274,8 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
     for (TActorIterator<AShireAmbientNPC> It(GetWorld()); It; ++It)
     {
         AShireAmbientNPC* Candidate = *It;
-        if (!Candidate || Candidate == this || Candidate->bSocializing || Candidate->bObservingPlayer)
+        if (!Candidate || Candidate == this || Candidate->bInLivingWorldPool ||
+            Candidate->bSocializing || Candidate->bObservingPlayer)
         {
             continue;
         }
@@ -1235,6 +1331,11 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
 void AShireAmbientNPC::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+
+    if (bInLivingWorldPool)
+    {
+        return;
+    }
 
     UpdateSocialCaption(DeltaSeconds);
     UpdateScheduleContext(DeltaSeconds);
