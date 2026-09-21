@@ -2188,6 +2188,49 @@
       ],
       "checkpoint": "HERO_CHARACTER_EQUIPMENT_V4",
       "notes": "Character visual-production bridge; not final likeness, rig, facial or animation acceptance."
+    },
+    {
+      "id": "REQ-PERF-002",
+      "title": "Chapter asset streaming and seam-safe async preload",
+      "category": "PerformanceStreaming",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Verified programmer performance proposal reconciled against live LoadObject counts and Source 11 streaming doctrine.",
+      "intent": "Keep the current visible world intact while the next chapter/route production bank loads asynchronously, then swap only when ready; reduce synchronous chapter-transition pressure without weakening story topology or blindly soft-referencing every object.",
+      "evidence": [
+        "Data/ChapterAssetStreamingPlan.json",
+        "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.cpp",
+        "Source/ShireJourney/ChapterWorldRouter.cpp",
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
+        "Data/AssetPerformanceBudget.json"
+      ],
+      "implementation_refs": [
+        "Source 11 §8: profile representative scenes; memory includes textures/skeletal/audio/persistent levels; avoid crossing narrative seams while critical content is still asynchronous unless masked by an authored transition.",
+        "Live develop audit: FellowshipChapterWorldBuilder 77 direct LoadObject calls; Shire 55; Bree 22; Isengard 10; LivingWorldDirector 13; ShireNPC 4.",
+        "Fellowship builder previously loaded unrelated Weathertop/Rivendell/Road/Moria/Lorien/Anduin banks together."
+      ],
+      "missing_work": [
+        "Earn exact-head Pre-Unreal and UE4.27.2 build/import/startup/chapter/state/warning proof.",
+        "Measure transition hitch, streaming pool, resident memory and target-device frame time before claiming a performance win.",
+        "After measurement, reduce or split oversized banks and migrate remaining justified synchronous loads incrementally.",
+        "Add authored transition masking/progress presentation only if real load latency is visible."
+      ],
+      "acceptance_criteria": [
+        "Router does not clear the current runtime world before requested chapter assets report ready.",
+        "No Game Thread wait loop or synchronous wait on an async handle is introduced.",
+        "Fellowship builder no longer loads unrelated chapter region banks in EnsureProductionMeshes.",
+        "Unknown/missing bank falls back to the existing compatibility builder path instead of deadlocking progression.",
+        "Exact candidate passes both machine gates before merge.",
+        "Performance improvement is not claimed until measured on representative target hardware."
+      ],
+      "dependencies": [
+        "REQ-PERF-001",
+        "REQ-WORLD-001",
+        "REQ-AUDIT-001",
+        "REQ-QA-001"
+      ],
+      "checkpoint": "CHAPTER_ASSET_STREAMING_V5",
+      "notes": "Technical scaling wave; preserves existing film/story outcomes and builder topology."
     }
   ],
   "hard_invariants": [
@@ -3005,7 +3048,7 @@
       "route/story/state isolated disk roundtrip",
       "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "PR #58 is exact-head green and merged. V4 deepens dedicated Fellowship character equipment/silhouette identity while keeping final skeletal-rig acceptance separate.",
+    "note": "PR #59 is the latest exact-head green production baseline. V5 adds data-driven chapter asset banks, async preload and seam-safe router commit; fresh exact-head proof and later target-device hitch/memory measurement are required.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -3018,20 +3061,20 @@
       ],
       "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "22c6f58bc20ec8bfd97cf6efa970aff331a5dc04",
+    "last_green_head": "08381e5fd3896a7159c26eba6969cc7f7d7f4c89",
     "evidence": {
-      "pre_unreal": "PASS #526",
-      "unreal_build": "PASS #361"
+      "pre_unreal": "PASS #529",
+      "unreal_build": "PASS #364"
     },
-    "evidence_scope": "PR #58 exact candidate 22c6f58bc20ec8bfd97cf6efa970aff331a5dc04 passed both gates and merged to develop as b8a1b9cb63a37d73e8e7a12acce5bb3db0e34c06. V4 begins from that merge and must earn fresh exact-head proof.",
+    "evidence_scope": "PR #59 exact candidate 08381e5fd3896a7159c26eba6969cc7f7d7f4c89 passed both gates and merged to develop as 3f3c51e956fdedb7084fb5151b9c21d532683e53. Programmer review PR #60 and V5 must each earn their own exact-head proof before merge.",
     "current_owner_observation": {
-      "sha": "22c6f58bc20ec8bfd97cf6efa970aff331a5dc04",
+      "sha": "08381e5fd3896a7159c26eba6969cc7f7d7f4c89",
       "pre_unreal": {
-        "run_number": 526,
+        "run_number": 529,
         "status": "SUCCESS"
       },
       "unreal": {
-        "run_number": 361,
+        "run_number": 364,
         "status": "SUCCESS",
         "scope": [
           "C++ build",
@@ -3043,7 +3086,7 @@
         ]
       },
       "merge": {
-        "sha": "b8a1b9cb63a37d73e8e7a12acce5bb3db0e34c06",
+        "sha": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
         "status": "MERGED_TO_DEVELOP"
       }
     }
@@ -3342,20 +3385,28 @@
       "status": "ACTIVE",
       "rationale": "Give the core Fellowship stronger character-specific visual identity before final rig handoff.",
       "execution_bundle": "B2_CHARACTERS_AND_WORLD_PRODUCTION"
+    },
+    {
+      "order": 33,
+      "id": "WORK-PERF-002",
+      "title": "Chapter asset streaming V5",
+      "status": "ACTIVE",
+      "rationale": "Mitigate verified synchronous chapter loading risk before further world-density growth.",
+      "execution_bundle": "B4_PERFORMANCE_AND_QA"
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "reason": "Consolidated two programmer proposals into one verified priority map using live develop evidence and existing production/source rules.",
-    "summary": [
-      "Highest-value new technical action is a measured chapter asset-loading migration: soft paths/references plus async preload by chapter/region, not mechanical replacement of every hard reference.",
-      "Character OBJ concern becomes a real skeletal-rig pipeline task, not a file-extension conversion task.",
-      "C++ Public/Private-by-domain reorganization is valid but isolated maintenance, already planned.",
-      "Current NPC stack is deterministic/offline and preloads JSON at subsystem initialization; future optional language inference must be async but no current LLM Game-Thread blocker exists.",
-      "Ambient pooling is conditional on measured spawn/GC cost and must not use an arbitrary fixed 15-actor cap.",
-      "Texture alpha-format support and packed PBR masks are useful future pipeline rules, not current emergency conversions.",
-      "Stale/currently unsupported claims were recorded rather than applied blindly."
-    ]
+    "reason": "Owner authorized autonomous sequential implementation of verified programmer proposals plus continued world/life production.",
+    "active_wave": "CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5",
+    "base_develop": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+    "prior_green": {
+      "candidate": "08381e5fd3896a7159c26eba6969cc7f7d7f4c89",
+      "pre_unreal": "#529 SUCCESS",
+      "unreal": "#364 SUCCESS",
+      "merge": "3f3c51e956fdedb7084fb5151b9c21d532683e53"
+    },
+    "truth_boundary": "Source/runtime implementation is not a measured performance win until exact-head machine proof and target-device hitch/memory evidence exist."
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",
@@ -3391,13 +3442,13 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4",
+  "current_focus": "CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5",
   "immediate_next_large_actions": [
-    "Validate HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4 exact head through Pre-Unreal and full UE4.27.2 build/import/startup/chapter/state/warning chain.",
-    "Repair source/import/runtime failures without falling back to generic identity or weakening gates.",
-    "Merge only after exact-head green proof.",
-    "Then continue with character rig/socket/animation handoff scaffolding and early-region visual finishing on another short branch.",
-    "Keep final likeness, facial, cloth/hair simulation and target-device acceptance explicitly pending until real evidence."
+    "Prove CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5 on the exact short-branch head.",
+    "Repair compile/import/runtime/chapter-audit regressions without reverting to all-region synchronous loading.",
+    "Measure chapter seam hitch/memory on representative target hardware before promoting performance claims.",
+    "After green merge, continue world-life/building saturation with bounded ambient lifecycle improvements and culture-specific early-region detail.",
+    "Keep real skeletal-rig production active as the next major character-quality track; do not substitute container conversion for rigging."
   ],
   "session_handoff": {
     "source_head": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
@@ -3545,7 +3596,7 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "A historical branch may be deleted only after its meaningful content is confirmed present in develop or intentionally superseded. Diverged branches with unique commits remain preserved until audited.",
-    "current_short_branch": "production/hero-character-world-polish-v4",
+    "current_short_branch": "production/chapter-streaming-v5",
     "integration_baseline": "develop"
   },
   "side_branch_audit": {
