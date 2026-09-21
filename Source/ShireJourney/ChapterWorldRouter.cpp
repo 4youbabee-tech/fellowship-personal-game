@@ -8,6 +8,7 @@
 #include "ShireAmbientNPC.h"
 #include "ShireChapterAssetStreamingSubsystem.h"
 #include "ShireNPC.h"
+#include "ShirePlayerCharacter.h"
 #include "ShirePrototypeWorldBuilder.h"
 #include "ShireQuestSubsystem.h"
 #include "ShireQuestTrigger.h"
@@ -644,6 +645,13 @@ void AChapterWorldRouter::CaptureCommittedRollbackSnapshot()
     Snapshot->SnapshotCreatedUnixSeconds = FDateTime::UtcNow().ToUnixTimestamp();
     Snapshot->PlayerLocation = PlayerPawn->GetActorLocation();
     Snapshot->PlayerRotation = PlayerPawn->GetActorRotation();
+    if (const AShirePlayerCharacter* PlayerCharacter = Cast<AShirePlayerCharacter>(PlayerPawn))
+    {
+        Snapshot->PlayerHealth = PlayerCharacter->GetCurrentHealth();
+        Snapshot->PlayerStamina = PlayerCharacter->GetCurrentStamina();
+        Snapshot->PlayerResolve = PlayerCharacter->GetCurrentResolve();
+        Snapshot->PlayerSupplies = PlayerCharacter->GetSupplies();
+    }
     Snapshot->QuestStages = Quests->GetAllQuestStages();
     Snapshot->ActiveQuestId = Quests->GetActiveQuestId();
     Snapshot->CurrentChapterId = Quests->GetCurrentChapterId();
@@ -742,6 +750,18 @@ bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot(
         RestoreEpisodeId,
         Snapshot->PlayerLocation,
         Snapshot->PlayerRotation);
+
+    if (bPlaced)
+    {
+        if (AShirePlayerCharacter* PlayerCharacter = Cast<AShirePlayerCharacter>(PlayerPawn))
+        {
+            PlayerCharacter->RestoreTransactionalPlayerState(
+                Snapshot->PlayerHealth,
+                Snapshot->PlayerStamina,
+                Snapshot->PlayerResolve,
+                Snapshot->PlayerSupplies);
+        }
+    }
 
     if (!RestoredWorld || !bPlaced)
     {
