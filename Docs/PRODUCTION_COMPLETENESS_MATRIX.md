@@ -1,5 +1,9 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-22 - global source matrix expansion
+
+Warehouse sourcing now uses a ranked multi-provider matrix rather than a few favored sites. Clear public/CC0 sources are prioritized for automatic staging; account/marketplace sources remain explicit review lanes; niche/reference-only sources cannot silently enter Approved. This advances sourcing breadth and intake discipline only, not import/integration/visual acceptance.
+
 ## 2026-09-22 - warehouse staging launcher repair
 
 Warehouse Stage #18 failed before acquisition because the runner's PowerShell execution policy blocked GitHub's temporary `shell: powershell` wrapper. The workflow now launches repository-owned staging scripts from cmd with `-ExecutionPolicy Bypass -File`. No warehouse file is promoted until the next run reports actual staged receipts.
