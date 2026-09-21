@@ -372,15 +372,16 @@
         "Save schema v6 persists ChronicleEntryIds and KnownMapRegionIds in addition to player-life/progression state.",
         "Automatic checkpoint disk writes are asynchronous and serialized; commit synchronization of the captured transform remains pending.",
         "Transition automatic checkpoints now wait until ChapterWorldRouter reports the current chapter/route/episode as committed before snapshot capture.",
-        "Save restore now defers player transform placement until the matching committed world is available and asks ChapterWorldRouter to ground the saved XY transform against committed geometry."
+        "Save restore now defers player transform placement until the matching committed world is available and asks ChapterWorldRouter to ground the saved XY transform against committed geometry.",
+        "Rollback snapshot capture/restore now includes player-life state in addition to quest/world/player-transform state."
       ],
       "missing_work": [
+        "Exact-head UE4.27 compile/runtime proof for full failed-swap rollback transaction, including player-life restoration and movement release.",
         "Exact-head UE4.27 compile/runtime regression proof for commit-synchronized checkpoint capture and cross-chapter save restore.",
         "F9 round-trip verification on current integrated build",
         "F8 Gandalf-Isengard-Frodo round-trip verification",
         "PIE verification of automatic checkpoint placement/respawn across representative chapters",
         "device verification that checkpoint writes/restores do not create noticeable hitching",
-        "Failed chapter swap rollback must restore a coherent playable prior transaction (world, route/chapter state, player transform and movement) or remain explicitly failed; the current movement-held builder-only rollback is not closure.",
         "Add exact-head engine regression coverage for checkpoint capture during delayed async transition, cross-chapter save restore, and failed-swap rollback."
       ],
       "acceptance_criteria": [
@@ -2420,16 +2421,17 @@
         "LivingWorldDirector combines V10 chapter density/roles with committed-world revision synchronization and does not apply destination life/weather before visible-world commit.",
         "V10 regional NPC roles/dialogue data and living-NPC intelligence plans are integrated into the comprehensive branch.",
         "Player persistence now uses the same ChapterWorldRouter committed chapter/route/episode boundary used by living-world synchronization.",
-        "Saved transforms are grounded only after committed-world identity matches the restored save."
+        "Saved transforms are grounded only after committed-world identity matches the restored save.",
+        "Failed-swap rollback snapshots now include player health/stamina/resolve/supplies and RestoreCommittedWorldFromSnapshot reapplies player-life state before releasing world hold."
       ],
       "missing_work": [
+        "Exact-head UE4.27 compile/runtime proof for full failed-swap rollback transaction, including player-life restoration and movement release.",
         "Add/merge continuous transition audit and exact-head regression guards for the integrated two-phase commit path.",
         "Complete remaining V10 data/source reconciliation on the comprehensive branch.",
         "Run Pre-Unreal on exact comprehensive head and repair any static integration regressions.",
         "Repair local UE4 Engine Content access, then pass exact-head C++ build/import/Automation/startup/P1C01-P1C08/state/transition gates.",
         "Re-run the original P1C01 fall-through symptom in PIE before closing startup defect.",
         "Only after the integrated foundation is green, merge/rebase the integration train into develop and retire superseded overlapping PR branches.",
-        "Make failed-swap rollback restore a coherent prior playable transaction rather than only rebuilding the prior builder while movement remains held.",
         "Register and schedule ground-safe ambient placement, ambient object pooling and asynchronous living-world visual asset ownership before further density expansion."
       ],
       "acceptance_criteria": [
