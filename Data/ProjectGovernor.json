@@ -3039,7 +3039,7 @@
   ],
   "active_gate": {
     "id": "DEEP_EXACT_HEAD_STABILITY_GATE",
-    "status": "PASSED",
+    "status": "PENDING_EXACT_HEAD_PROOF",
     "blocks_major_feature_expansion": false,
     "required_evidence": [
       "Pre-Unreal including deep audit",
@@ -3048,7 +3048,7 @@
       "route/story/state isolated disk roundtrip",
       "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "PR #59 is the latest exact-head green production baseline. V5 adds data-driven chapter asset banks, async preload and seam-safe router commit; fresh exact-head proof and later target-device hitch/memory measurement are required.",
+    "note": "Verified programmer proposals are now integrated on develop. V5 implementation is active and may not merge until fresh exact-head Pre-Unreal + Unreal validation passes; target-device hitch/memory proof remains separate.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -3061,20 +3061,20 @@
       ],
       "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "08381e5fd3896a7159c26eba6969cc7f7d7f4c89",
+    "last_green_head": "4879a19999951354676341f032c358ac98679c44",
     "evidence": {
-      "pre_unreal": "PASS #529",
-      "unreal_build": "PASS #364"
+      "pre_unreal": "PASS #531",
+      "unreal_build": "PASS #366"
     },
-    "evidence_scope": "PR #59 exact candidate 08381e5fd3896a7159c26eba6969cc7f7d7f4c89 passed both gates and merged to develop as 3f3c51e956fdedb7084fb5151b9c21d532683e53. Programmer review PR #60 and V5 must each earn their own exact-head proof before merge.",
+    "evidence_scope": "Programmer-review PR #60 exact head 4879a19999951354676341f032c358ac98679c44 passed Pre-Unreal #531 and Unreal Build #366 and merged to develop as 8d7247d229b5cd51e8aea5617e1e2030b38229bf. V5 implementation is newer and unproven until its own exact-head gates complete.",
     "current_owner_observation": {
-      "sha": "08381e5fd3896a7159c26eba6969cc7f7d7f4c89",
+      "sha": "4879a19999951354676341f032c358ac98679c44",
       "pre_unreal": {
-        "run_number": 529,
+        "run_number": 531,
         "status": "SUCCESS"
       },
       "unreal": {
-        "run_number": 364,
+        "run_number": 366,
         "status": "SUCCESS",
         "scope": [
           "C++ build",
@@ -3086,7 +3086,7 @@
         ]
       },
       "merge": {
-        "sha": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+        "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
         "status": "MERGED_TO_DEVELOP"
       }
     }
@@ -3397,16 +3397,15 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "reason": "Owner authorized autonomous sequential implementation of verified programmer proposals plus continued world/life production.",
+    "reason": "Programmer review PR #60 passed both exact-head gates and merged; chapter streaming V5 implementation continued immediately on its focused branch.",
     "active_wave": "CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5",
-    "base_develop": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
-    "prior_green": {
-      "candidate": "08381e5fd3896a7159c26eba6969cc7f7d7f4c89",
-      "pre_unreal": "#529 SUCCESS",
-      "unreal": "#364 SUCCESS",
-      "merge": "3f3c51e956fdedb7084fb5151b9c21d532683e53"
+    "integrated_review": {
+      "candidate": "4879a19999951354676341f032c358ac98679c44",
+      "pre_unreal": "#531 SUCCESS",
+      "unreal": "#366 SUCCESS",
+      "merge": "8d7247d229b5cd51e8aea5617e1e2030b38229bf"
     },
-    "truth_boundary": "Source/runtime implementation is not a measured performance win until exact-head machine proof and target-device hitch/memory evidence exist."
+    "truth_boundary": "V5 source changes are pending their own exact-head machine proof and later target-device measurement."
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",
