@@ -7,6 +7,8 @@ on:
     paths:
       - 'Data/WarehouseAcquisitionBatchV1.json'
       - 'Scripts/stage_polyhaven_warehouse.ps1'
+      - 'Data/WarehouseAudioAcquisitionBatchV1.json'
+      - 'Scripts/stage_opengameart_audio.ps1'
       - '.github/workflows/warehouse-stage.yml'
   pull_request:
     branches:
@@ -14,6 +16,8 @@ on:
     paths:
       - 'Data/WarehouseAcquisitionBatchV1.json'
       - 'Scripts/stage_polyhaven_warehouse.ps1'
+      - 'Data/WarehouseAudioAcquisitionBatchV1.json'
+      - 'Scripts/stage_opengameart_audio.ps1'
       - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
 
@@ -44,6 +48,12 @@ jobs:
         run: |
           Set-StrictMode -Version Latest
           & "$env:GITHUB_WORKSPACE\Scripts\stage_polyhaven_warehouse.ps1" -ManifestPath "$env:GITHUB_WORKSPACE\Data\WarehouseAcquisitionBatchV1.json"
+
+      - name: Stage first OpenGameArt CC0 audio batch
+        shell: powershell
+        run: |
+          Set-StrictMode -Version Latest
+          & "$env:GITHUB_WORKSPACE\Scripts\stage_opengameart_audio.ps1" -ManifestPath "$env:GITHUB_WORKSPACE\Data\WarehouseAudioAcquisitionBatchV1.json"
 
       - name: Show persistent warehouse footprint
         shell: powershell
