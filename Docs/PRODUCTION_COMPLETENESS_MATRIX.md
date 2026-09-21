@@ -1,5 +1,11 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-22 - playability audit intake and PG-117 static-gate repair
+
+A source review of the owner-forwarded Work findings on `170ebd857bece56a6d7f76f4928efe0eb3426af2` confirms open persistence/transition and living-world risks: checkpoint capture is not world-commit synchronized, cross-chapter restore can apply a transform before world commit, rollback is not yet a coherent playable prior-state transaction, ambient placement lacks a ground-safe collision contract, and ambient population still has SpawnActor/Destroy plus direct LoadObject debt. These are registered repair work, not accepted runtime fixes.
+
+Pre-Unreal #560 reached and passed the core validation phase, then failed one stale PG-117 assertion because V10 world/life is now the global current visual wave. The guard is narrowed to preserve the historical hero-equipment V4 asset block without pinning the whole visual plan to V4. No chapter maturity, compile, PIE, device, performance or visual column is promoted by this static-guard correction.
+
 ## 2026-09-22 - PR #67 validation-gate repair
 
 Pre-Unreal #558 on exact head `809325a64547744f0cc4992d76c42fb7e0862d82` failed with two static-guard errors caused by PG-111 still describing the V9 fixed-halving world-life contract. The integration branch already uses the V10 chapter density profile and `DangerPopulationFraction` model. PG-111 is being aligned to that existing V10 runtime/data contract without changing gameplay behavior.
