@@ -783,7 +783,8 @@
         "PIE visual review of Frodo walk/sprint/crouch/jump/attack",
         "PIE visual review of Gandalf route and staff motion",
         "future skeletal/rigged animation pipeline for production-grade character deformation and facial/body animation",
-        "target-device performance and visual acceptance"
+        "target-device performance and visual acceptance",
+        "Replace Frodo/Gandalf modular proxy body with the first accepted V7 skeletal FBX rigs before visual acceptance."
       ],
       "acceptance_criteria": [
         "Frodo production mesh loads and remains visually coherent during idle/walk/sprint/crouch/jump/attack",
@@ -832,7 +833,8 @@
         "Dedicated character animation/rigging beyond procedural modular proxy motion",
         "Named enemy production characters beyond current prototypes",
         "PIE visual review for cast duplication, formation spacing, chapter presence and story separation",
-        "target-device population/performance validation"
+        "target-device population/performance validation",
+        "Progressively replace the full Part I named cast with V7 skeletal FBX characters; labels/proxy silhouettes are not visual completion."
       ],
       "acceptance_criteria": [
         "Every Part I chapter/route contains its required core named cast",
@@ -1704,10 +1706,13 @@
         "source/provenance policy for external assets",
         "shared performance/LOD contract",
         "Full-cast production is ordered by Part1MegaProductionPlan with asset-root, rig-family, final-gap and acceptance contracts.",
-        "Final animated character/creature delivery requires real skeletal authoring and skeletal FBX export; OBJ-to-FBX container conversion alone is not accepted as rigging evidence."
+        "Final animated character/creature delivery requires real skeletal authoring and skeletal FBX export; OBJ-to-FBX container conversion alone is not accepted as rigging evidence.",
+        "CharacterVisualProductionWaveV7 defines the rigged-FBX intake, natural-humanoid quality bar, soft/async runtime contract and first delivery order.",
+        "Docs/CHARACTER_ASSET_HANDOFF.md defines the exact FBX/PNG/TGA handoff required to replace static proxy characters."
       ],
       "missing_work": [
-        "select/import legal base assets or author replacements",
+        "Complete V7 async rig runtime/import infrastructure and earn exact-head static validation before any visual-complete claim.",
+        "Provide or source the first legal rigged FBX bundle (Frodo first) with provenance, skin/deformation and PNG/TGA texture set.",
         "rig/skin and retarget core cast",
         "replace runtime proxies",
         "UE4 compile/import and PIE visual/motion acceptance",
@@ -1724,7 +1729,8 @@
         "REQ-ASSET-001",
         "REQ-PERF-001"
       ],
-      "checkpoint": "CHARACTER_PRODUCTION_MEGA"
+      "checkpoint": "CHARACTER_PRODUCTION_MEGA",
+      "notes": "Owner has explicitly promoted natural human-readable character appearance to the immediate visible production priority. Existing OBJ modular figures remain temporary fallback; final animated characters must be real skeletal FBX assets."
     },
     {
       "id": "REQ-WORLD-003",
