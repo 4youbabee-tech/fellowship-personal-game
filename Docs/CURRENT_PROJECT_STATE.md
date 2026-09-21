@@ -1,3 +1,11 @@
+## 2026-09-22 - Pre-Unreal #597 PG-078 warehouse-roadmap reconciliation
+
+Exact-head Pre-Unreal #597 on `f7ef04c4b36d6664bdb06324a9652f1572584f28` failed with four deterministic governance errors: `REQ-WAREHOUSE-001` and `WORK-PROD-011` were registered in ProjectGovernor but not yet assigned to the master roadmap, and the tracked unfinished/active snapshots were therefore stale. The warehouse requirement/work item is now assigned to B2 Characters & World Production and both snapshots are regenerated directly from the live Governor.
+
+Unreal Build #432 on that SHA again failed before C++ compilation because the self-hosted runner identity `NT AUTHORITY\\NETWORK SERVICE` was denied access to UE4.27.2 `WorldGridMaterial.uasset`. Warehouse catalogue/candidate/staging work continues independently under DEC-033; this runner blocker still prevents compile/PIE/device evidence.
+
+No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED status is claimed.
+
 ## 2026-09-22 - warehouse testing boundary clarified
 
 The warehouse lane is now explicitly decoupled from runtime test availability. We do **not** wait for UE4 compile/PIE/device validation to discover, catalogue, download or stage trilogy assets. That work is intentionally parallel and may continue while the self-hosted runner is blocked.
