@@ -110,6 +110,7 @@ private:
     FName ChooseBaselineProp(FName RoleName) const;
     FVector ChooseEventOrigin(float MinRadius = 700.0f, float MaxRadius = 1500.0f);
     FVector ChoosePopulationOrigin();
+    bool ResolveGroundedAmbientPoint(const FVector& Candidate, FVector& OutGroundedPoint) const;
     void ApplyChapterWeatherContext();
     bool IsStoryDangerActive() const;
 };
