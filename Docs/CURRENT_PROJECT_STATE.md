@@ -1,3 +1,11 @@
+## 2026-09-22 - Pre-Unreal #578 character-guard reconciliation
+
+Exact-head Pre-Unreal #578 passed its core structural phase, then reported four character handoff guard failures because PG-051/PG-089 still required the removed synchronous package-probe symbols inside ShirePlayerCharacter/ShireNPC. The V7 runtime now owns heavy rig paths in ShireChapterAssetStreamingSubsystem and requests them with FStreamableManager::RequestAsyncLoad.
+
+The guards are updated to protect the new architecture instead of restoring the obsolete LoadObject/FPackageName path: player/NPC fallback and motion symbols remain required; the streaming subsystem must expose RequestCharacterRig/ResolveCharacterRig, SK_/ABP naming and RequestAsyncLoad; and the player path is explicitly rejected if synchronous USkeletalMesh/UAnimInstance loading returns.
+
+This is a static-validator reconciliation only. No final character art is claimed and no COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED status is promoted.
+
 ## 2026-09-22 - exact-head runner retest preparation: duplicate EndPlay regression fixed
 
 Pre-Unreal #576 on `c9a0eaafc273aeaa2fd1a0fb0aa0f41903a0c2a8` stopped in static validation with one concrete source error: `Unbalanced braces in ShirePlayerCharacter.cpp: balance=1`. Inspection found a duplicated `AShirePlayerCharacter::EndPlay` function signature introduced while wiring async character-rig delegates. The duplicate declaration/opening brace is removed; no intended gameplay behavior is changed by this correction.
