@@ -3395,8 +3395,11 @@ if pg110_matrix.get("surface_material_wave", {}).get("status") != "ENGINE_PROVEN
 pg111_plan = json.loads(read(ROOT / "Data" / "WorldLifeSaturationPlan.json"))
 pg111_targets = pg111_plan.get("baseline_population_targets", {})
 pg111_roles = pg111_plan.get("population_roles", {})
-if pg111_plan.get("status") != "V9_ENVIRONMENTAL_MOTION_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
-    fail("PG-111 V9 world-life proof boundary changed")
+if pg111_plan.get("status") not in {
+    "V9_ENVIRONMENTAL_MOTION_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "V10_EARLY_REALM_CULTURAL_LIFE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+}:
+    fail("PG-111 world-life proof boundary changed")
 if int(pg111_targets.get("P1C05", -1)) != 0:
     fail("PG-111 Caradhras ambient civilian baseline must remain zero")
 if int(pg111_targets.get("P1C06", -1)) != 0:
@@ -3421,7 +3424,7 @@ pg111_director = read(ROOT / "Source" / "ShireJourney" / "LivingWorldDirector.cp
 for pg111_symbol in [
     "Random.FRand() < 0.72f",
     "GetActorForwardVector().GetSafeNormal2D()",
-    "Target = FMath::Max(1, Target / 2)",
+    "DangerPopulationFraction",
     'RoleName == TEXT("Bird")',
     'RoleName == TEXT("Rabbit")',
     'RoleName == TEXT("Butterfly")',
@@ -5334,6 +5337,72 @@ for pg118_path in [
 pg118_budget = json.loads(read(ROOT / "Data" / "AssetPerformanceBudget.json"))
 if pg118_budget.get("chapter_asset_streaming_v5", {}).get("status") != "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF_AND_MEASUREMENT":
     fail("PG-118 streaming performance evidence boundary changed")
+
+# PG-119: post-V5 early-realm life must improve culture and density behavior without
+# inflating the established ambient population ceiling or weakening sparse-region canon rules.
+pg119_plan = pg111_plan
+if pg119_plan.get("plan_id") != "PART1_WORLD_ALIVE_SATURATION_V10":
+    fail("PG-119 V10 early-realm world-life plan identity changed")
+if int(pg119_plan.get("schema_version", 0)) < 4:
+    fail("PG-119 V10 world-life schema version missing")
+pg119_expected_targets = {
+    "P1C01": 18, "P1C02": 16, "P1C03": 5, "P1C04": 12,
+    "P1C05": 0, "P1C06": 0, "P1C07": 10, "P1C08": 4,
+}
+if pg111_targets != pg119_expected_targets:
+    fail("PG-119 baseline population targets changed; V10 must improve quality without target inflation")
+
+pg119_required_roles = {
+    "P1C01": {"Gardener", "FieldWorker", "MarketVendor", "PartyGuest", "FerryWorker"},
+    "P1C02": {"BreeTownsperson", "InnGuest", "StableHand", "GateWorker", "BreeCourier"},
+    "P1C04": {"Elf", "ElfScholar", "ElfArtisan", "ElfAttendant"},
+    "P1C07": {"Elf", "ElfWarden", "ElfCraftsperson", "BoatTender"},
+}
+for pg119_chapter, pg119_expected_roles in pg119_required_roles.items():
+    pg119_actual_roles = set(pg111_roles.get(pg119_chapter, []))
+    if not pg119_expected_roles.issubset(pg119_actual_roles):
+        fail(f"PG-119 culture-specific role mix incomplete for {pg119_chapter}")
+
+pg119_profiles = pg119_plan.get("chapter_density_profiles", {})
+for pg119_chapter in pg119_expected_targets:
+    pg119_profile = pg119_profiles.get(pg119_chapter, {})
+    if not isinstance(pg119_profile, dict):
+        fail(f"PG-119 chapter density profile missing for {pg119_chapter}")
+        continue
+    pg119_inner = float(pg119_profile.get("baseline_inner_radius_cm", 0))
+    pg119_outer = float(pg119_profile.get("baseline_outer_radius_cm", 0))
+    pg119_cull = float(pg119_profile.get("baseline_cull_radius_cm", 0))
+    pg119_spawn = float(pg119_profile.get("spawn_interval_seconds", 0))
+    pg119_danger = float(pg119_profile.get("danger_population_fraction", 0))
+    if not (500.0 <= pg119_inner < pg119_outer < pg119_cull <= 9000.0):
+        fail(f"PG-119 invalid residency radii for {pg119_chapter}")
+    if not (0.25 <= pg119_spawn <= 2.0):
+        fail(f"PG-119 invalid spawn cadence for {pg119_chapter}")
+    if not (0.10 <= pg119_danger <= 1.0):
+        fail(f"PG-119 invalid danger population fraction for {pg119_chapter}")
+
+pg119_director_h = read(ROOT / "Source" / "ShireJourney" / "LivingWorldDirector.h")
+for pg119_symbol in [
+    "FChapterPopulationProfile",
+    "PopulationProfilesByChapter",
+    "ApplyPopulationProfile",
+    "DangerPopulationFraction",
+    'TEXT("chapter_density_profiles")',
+    'RoleName == TEXT("ElfScholar")',
+    'RoleName == TEXT("BoatTender")',
+]:
+    if pg119_symbol not in (pg119_director_h + pg111_director):
+        fail(f"PG-119 chapter-tuned living-world runtime missing: {pg119_symbol}")
+
+for pg119_symbol in [
+    'RoutineRole == TEXT("InnGuest")',
+    'RoutineRole == TEXT("StableHand")',
+    'RoutineRole == TEXT("ElfScholar")',
+    'RoutineRole == TEXT("ElfWarden")',
+    'RoutineRole == TEXT("BoatTender")',
+]:
+    if pg119_symbol not in pg111_ambient:
+        fail(f"PG-119 culture-specific ambient behavior missing: {pg119_symbol}")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
