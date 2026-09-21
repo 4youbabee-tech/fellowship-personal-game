@@ -6,8 +6,6 @@
 #include "UObject/SoftObjectPath.h"
 #include "ShireChapterAssetStreamingSubsystem.generated.h"
 
-class FStreamableHandle;
-
 DECLARE_MULTICAST_DELEGATE_TwoParams(
     FOnShireChapterAssetsReady,
     FName /* ChapterId */,
