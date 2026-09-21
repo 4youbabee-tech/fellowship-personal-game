@@ -3,6 +3,7 @@ import sys
 import tempfile
 from pathlib import Path
 import unittest
+from unittest.mock import Mock, patch
 from runtime_smoke import missing_markers, observe, read_log, required_markers
 
 
@@ -28,6 +29,27 @@ time.sleep(10)
 
 
 class RuntimeSmokeTests(unittest.TestCase):
+    def test_runner_pause_past_deadline_cannot_pass_ready_observation(self):
+        clock = [0.0]
+        process = Mock()
+        process.poll.return_value = None
+        process.returncode = 1
+        def pause(_):
+            clock[0] += 80.0
+        with tempfile.TemporaryDirectory() as directory:
+            with patch("runtime_smoke.subprocess.Popen", return_value=process), \
+                 patch("runtime_smoke.read_log", return_value="READY\n"), \
+                 patch("runtime_smoke.time.monotonic", side_effect=lambda: clock[0]), \
+                 patch("runtime_smoke.time.sleep", side_effect=pause):
+                result = observe(["fake-editor"], Path(directory) / "runtime.log",
+                                 ["READY"], timeout=45, observation=4)
+        self.assertFalse(result["passed"])
+        self.assertEqual(result["error"], "runtime readiness/observation timed out")
+        self.assertEqual(result["max_poll_gap_seconds"], 80.0)
+        self.assertEqual(result["timeout_seconds"], 45)
+        process.terminate.assert_called_once()
+        process.wait.assert_called_once()
+
     def run_scenario(self, mode):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

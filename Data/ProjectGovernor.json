@@ -3466,9 +3466,9 @@
     "active_candidate": {
       "pull_request": 61,
       "branch": "production/chapter-streaming-v5",
-      "latest_observed_sha": "b882b052a59c8d4e19437d7877dc30c9b1ea5daf",
-      "pre_unreal": "PASS #538",
-      "unreal_build": "PENDING #373 at reconciliation"
+      "latest_observed_sha": "3fe79f95ffed1b6715060b3aaa090c0af929769c",
+      "pre_unreal": "PASS #539",
+      "unreal_build": "IN_PROGRESS #374 at runtime-timeout review; this new commit requires fresh exact-head validation"
     },
     "failing": {
       "resolved": [
@@ -3476,7 +3476,7 @@
         "#371 conditional UE_LOG verbosity",
         "stale async completion after returning to resident world corrected at b882b052"
       ],
-      "current": "No new failure recorded at reconciliation time."
+      "current": "#372 at 8872f2c54c14edb91bc4ed25ad6707f8665b6234 passed compile/import/startup/P1C01-P1C04, then P1C05 readiness timed out (803.594s elapsed, configured 45s). Log was still in engine initialization. Root cause not established; no chapter-content defect inferred."
     },
     "next_actions": [
       "Require fresh exact-head CI for this cleanup commit.",
@@ -3506,16 +3506,16 @@
         }
       },
       "latest_observed": {
-        "sha": "b882b052a59c8d4e19437d7877dc30c9b1ea5daf",
+        "sha": "3fe79f95ffed1b6715060b3aaa090c0af929769c",
         "pre_unreal": {
-          "sha": "b882b052a59c8d4e19437d7877dc30c9b1ea5daf",
-          "run_id": 35573282625,
+          "sha": "3fe79f95ffed1b6715060b3aaa090c0af929769c",
+          "run_id": 35573736301,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "b882b052a59c8d4e19437d7877dc30c9b1ea5daf",
-          "run_id": 35573282474,
-          "status": "PENDING"
+          "sha": "3fe79f95ffed1b6715060b3aaa090c0af929769c",
+          "run_id": 35573736371,
+          "status": "IN_PROGRESS"
         }
       }
     },
@@ -4195,5 +4195,19 @@
       "Runtime rapid reversal and load/save during pending transfer",
       "World/NPC density expansion only after V5 stabilization"
     ]
+  },
+  "v5_runtime_timeout_review": {
+    "observed_failure": {
+      "sha": "8872f2c54c14edb91bc4ed25ad6707f8665b6234",
+      "run_id": 35572531053,
+      "job_id": 106248356283,
+      "failed_gate": "P1C05 readiness",
+      "elapsed_seconds": 803.594,
+      "configured_timeout_seconds": 45
+    },
+    "repair": "Deadline is checked before readiness success, so a resumed/starved harness cannot incorrectly pass a late observation. Add launch, max polling gap and cleanup durations to distinguish delay locations on the next real run.",
+    "validation": "14 local Python tests pass, including simulated runner suspension; not UE runtime proof.",
+    "root_cause_status": "UNKNOWN: engine initialization stall and host suspension/resource starvation need next-run evidence. This harness fix is not claimed to fix the P1C05 stall.",
+    "production_status": "V5 stays active. No world-density wave or merge until exact-head gates, develop verification, and target-device profiling."
   }
 }
