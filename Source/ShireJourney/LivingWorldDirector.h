@@ -52,6 +52,7 @@ private:
     TMap<FName, TArray<FName>> AllowedEventTypesByChapter;
     TArray<FActiveMicroEvent> ActiveEvents;
     TArray<TWeakObjectPtr<AShireAmbientNPC>> BaselinePopulation;
+    TArray<TWeakObjectPtr<AShireAmbientNPC>> AmbientNPCPool;
     TMap<FName, int32> BaselineTargetByChapter;
     TMap<FName, TArray<FName>> BaselineRolesByChapter;
     TMap<FName, FChapterPopulationProfile> PopulationProfilesByChapter;
@@ -68,6 +69,7 @@ private:
     float PopulationSpawnInterval = 0.35f;
     float DangerPopulationFraction = 0.50f;
     int32 MaxActiveMicroEvents = 3;
+    int32 MaxAmbientNPCPoolSize = 24;
 
     UFUNCTION()
     void HandleChapterChanged(FName PreviousChapterId, FName NewChapterId);
@@ -81,6 +83,8 @@ private:
     void ApplyPopulationProfile();
     void CleanupExpiredEvents();
     void CleanupBaselinePopulation();
+    void ReleaseAmbientNPCToPool(AShireAmbientNPC* NPC);
+    AShireAmbientNPC* AcquireAmbientNPC(const FVector& Location);
     void MaintainBaselinePopulation();
     void TryStartMicroEvent();
     bool SpawnEvent(FName EventType, FActiveMicroEvent& OutEvent);
