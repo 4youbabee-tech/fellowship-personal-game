@@ -68,10 +68,10 @@
     {
       "id": "AUDIT-MED-006",
       "severity": "HIGH",
-      "status": "TRACK_AND_PROFILE",
+      "status": "MITIGATION_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF_AND_MEASUREMENT",
       "title": "Chapter builders perform many direct LoadObject calls",
       "evidence": "Live develop count: FellowshipChapterWorldBuilder 77 LoadObject calls, ShirePrototypeWorldBuilder 55, BreePrototypeWorldBuilder 22, IsengardPrototypeWorldBuilder 10, LivingWorldDirector 13. These are synchronous explicit loads and scale with asset growth.",
-      "action": "Profile chapter-transition hitch/memory, then migrate justified chapter/region banks toward soft references + asynchronous preload behind authored seams. Do not mechanically soft-reference everything without ownership/lifetime rules."
+      "action": "V5 adds chapter/route async preload banks and makes Fellowship EnsureProductionMeshes chapter-aware. Validate exact head, then measure transition hitch/memory and continue migrating remaining justified direct loads only where evidence supports it."
     },
     {
       "id": "AUDIT-MED-007",
