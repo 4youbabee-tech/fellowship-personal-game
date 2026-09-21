@@ -645,6 +645,17 @@ FName AShireAmbientNPC::ResolveRuntimeProfileHint() const
         return TEXT("ARCH_SHIRE_RESIDENT");
     }
 
+    if (RoutineRole == TEXT("Elf") ||
+        RoutineRole == TEXT("ElfScholar") ||
+        RoutineRole == TEXT("ElfArtisan") ||
+        RoutineRole == TEXT("ElfAttendant") ||
+        RoutineRole == TEXT("ElfWarden") ||
+        RoutineRole == TEXT("ElfCraftsperson") ||
+        RoutineRole == TEXT("BoatTender"))
+    {
+        return TEXT("ARCH_ELVEN_SANCTUARY");
+    }
+
     return NAME_None;
 }
 
