@@ -87,3 +87,10 @@ Purpose: retain visual, material, life, ambience and world-detail ideas discover
 - Corrected: Material Instances are preferred, but MIDs are only for runtime variation; LODs are role/budget based rather than blindly mandatory for every tiny asset.
 - Machine-readable plan: `Data/VisualPerformanceOptimizationPlan.json`.
 - Runtime lighting/world-topology changes wait for startup/QA gate health and target-device profiling.
+
+
+## Comprehensive foundation convergence — 2026-09-21
+- Owner authorized one integration train instead of continued isolated repair/proposal branches.
+- Ordered convergence: startup grounding -> automated QA -> visual-performance guardrails -> V10 regional living world -> transactional chapter transition synchronization.
+- New features remain gated until this foundation earns exact-head machine proof.
+- After merge: ambient pooling, residual synchronous-load burn-down, living-NPC witness/share/learn, character production, and cinematic world-art passes resume in dependency order.
