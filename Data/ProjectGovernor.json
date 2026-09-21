@@ -3450,56 +3450,53 @@
     "Keep real skeletal-rig production active as the next major character-quality track; do not substitute container conversion for rigging."
   ],
   "session_handoff": {
-    "source_head": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
-    "branch": "develop",
+    "source_head": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
+    "branch": "production/chapter-streaming-v5",
     "verified": {
-      "pre_unreal": "PASS #509 on 3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
-      "unreal_build": "PASS #344 on 3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
-      "merge": "PR #54 merged that exact green candidate into develop as 2a5f96fd552cbe6343474721ca98d86d8629fc00"
+      "pre_unreal": "PASS run 35547643542 on 8d7247d229b5cd51e8aea5617e1e2030b38229bf",
+      "unreal_build": "PASS run 35547643484 on 8d7247d229b5cd51e8aea5617e1e2030b38229bf"
     },
     "failing": {},
     "next_actions": [
-      "Execute a mass world-material response pass across Part I using the existing M_ProductionSurface Kd/Pr/Pm importer path.",
-      "Build and runtime-wire the first bounded new modular architecture/prop kit in Moria without changing Watcher/tomb/Orc-Troll/Bridge-Balrog canonical outcomes or quest anchors.",
-      "Keep synchronous asset-loading growth evidence-bounded; reuse/instance small project-owned assets first and measure chapter-transition hitch before heavier art banks.",
-      "After exact-head green proof, continue the same visible saturation pattern to Amon Hen, Isengard, Rivendell, Lothlorien, Anduin, then Shire/Bree/Weathertop."
+      "Finish V5 exact-head compile/import/startup/chapter/state/save and warning gates before merging PR61 into develop.",
+      "Verify rapid A -> pending B -> A chapter/route switching and cancelled callbacks in engine; source-contract checks are not behavioral proof.",
+      "After V5 green, continue world life, architecture and bounded NPC density within 8GB RAM / 2GB VRAM target; preserve film outcomes and character backup."
     ],
     "unverified_acceptance": [
-      "Character surface parity changes require their own exact-head validation; this baseline evidence does not certify the new source wave.",
-      "Rendered chapter-by-chapter PIE evidence remains NOT_RUN where not directly observed.",
-      "Target-device FPS/memory measurements",
-      "Human pacing and visual acceptance"
+      "New V5 cancellation repair requires exact-head engine validation.",
+      "Rapid chapter/route reversal runtime acceptance.",
+      "Rendered chapter/world acceptance and target-device FPS/RAM/VRAM measurements."
     ],
     "scope_rule": "Machine evidence and merge status do not replace rendered PIE/device/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
+        "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
         "pre_unreal": {
-          "sha": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
-          "run_id": 35537404621,
+          "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
+          "run_id": 35547643542,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
-          "run_id": 35537404605,
+          "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
+          "run_id": 35547643484,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
+        "sha": "8872f2c54c14edb91bc4ed25ad6707f8665b6234",
         "pre_unreal": {
-          "sha": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
-          "run_id": 35537404621,
+          "sha": "8872f2c54c14edb91bc4ed25ad6707f8665b6234",
+          "run_id": 35572531175,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "3b5f9f2c0a5f30431f9020efceef1986e48d6cef",
-          "run_id": 35537404605,
-          "status": "SUCCESS"
+          "sha": "8872f2c54c14edb91bc4ed25ad6707f8665b6234",
+          "run_id": 35572531053,
+          "status": "IN_PROGRESS"
         }
       }
     },
-    "pull_request": 54
+    "pull_request": 61
   },
   "governor_role": {
     "mode": "OVERSEER_NOT_BOTTLENECK",
@@ -4115,6 +4112,22 @@
       "Blanket ban on all hard references without asset-lifetime/streaming design.",
       "Adding an empty requirements.txt while current Python automation has no third-party dependency.",
       "Repeating the stale REQ-NPC-006 owner_intent-only bug against live develop."
+    ]
+  },
+  "v5_cancellation_review": {
+    "date": "2026-09-21",
+    "status": "IMPLEMENTED_ENGINE_VALIDATION_PENDING",
+    "finding": "Router returned early for the visible chapter without cancelling a pending other chapter. A -> pending B -> A could later commit obsolete B.",
+    "changes": [
+      "Clear pending router identity on return to visible chapter.",
+      "Invalidate request serial before cancelling the async handle; retain resident assets.",
+      "Cancel superseded work on the subsystem resident fast path.",
+      "Check authoritative quest chapter/route/episode before committing completion."
+    ],
+    "local_evidence": "Four source-contract regression guards passed; these do not execute the asynchronous engine schedule.",
+    "deferred": [
+      "Runtime rapid reversal and load/save during pending transfer",
+      "World/NPC density expansion only after V5 stabilization"
     ]
   }
 }

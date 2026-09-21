@@ -21,6 +21,7 @@ public:
     virtual void Deinitialize() override;
 
     void RequestChapterAssets(FName ChapterId, FName RouteId);
+    void CancelPendingRequest();
     bool IsChapterBankReady(FName ChapterId, FName RouteId) const;
     int32 GetChapterBankSize(FName ChapterId, FName RouteId) const;
 

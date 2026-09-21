@@ -40,8 +40,9 @@ void UShireChapterAssetStreamingSubsystem::Initialize(FSubsystemCollectionBase& 
     }
 }
 
-void UShireChapterAssetStreamingSubsystem::Deinitialize()
+void UShireChapterAssetStreamingSubsystem::CancelPendingRequest()
 {
+    // Invalidate callbacks before cancelling; retain the visible resident bank.
     ++RequestSerial;
 
     if (PendingHandle.IsValid())
@@ -49,6 +50,14 @@ void UShireChapterAssetStreamingSubsystem::Deinitialize()
         PendingHandle->CancelHandle();
         PendingHandle.Reset();
     }
+
+    PendingChapterId = NAME_None;
+    PendingRouteId = NAME_None;
+}
+
+void UShireChapterAssetStreamingSubsystem::Deinitialize()
+{
+    CancelPendingRequest();
 
     ResidentHandle.Reset();
     Banks.Empty();
@@ -162,6 +171,7 @@ void UShireChapterAssetStreamingSubsystem::RequestChapterAssets(
 {
     if (IsChapterBankReady(ChapterId, RouteId))
     {
+        CancelPendingRequest();
         OnChapterAssetsReady.Broadcast(ChapterId, RouteId);
         return;
     }

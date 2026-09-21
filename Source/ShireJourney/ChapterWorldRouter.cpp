@@ -227,6 +227,16 @@ void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTr
         LastLoadedEpisodeId == EpisodeId &&
         LastLoadedChapterId == ChapterId)
     {
+        // A -> pending B -> A: abandon B before returning to the visible world.
+        // Otherwise its delayed completion would still swap the player into B.
+        PendingRouteId = NAME_None;
+        PendingEpisodeId = NAME_None;
+        PendingChapterId = NAME_None;
+        bPendingRestoreRouteTransform = false;
+        if (AssetStreamingSubsystem)
+        {
+            AssetStreamingSubsystem->CancelPendingRequest();
+        }
         return;
     }
 
@@ -265,6 +275,16 @@ void AChapterWorldRouter::HandleChapterAssetsReady(FName ChapterId, FName RouteI
 {
     if (PendingChapterId != ChapterId || PendingRouteId != RouteId)
     {
+        return;
+    }
+
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests || Quests->GetCurrentChapterId() != ChapterId ||
+        Quests->GetCurrentRouteId() != RouteId ||
+        Quests->GetCurrentEpisodeId() != PendingEpisodeId)
+    {
+        // Quest/save state may have changed again while assets were loading.
         return;
     }
 
