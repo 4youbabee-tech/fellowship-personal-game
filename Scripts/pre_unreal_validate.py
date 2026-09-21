@@ -3585,6 +3585,8 @@ for guarded_path, guard_name in [
 
 npc_motion_h = read(SOURCE / "ShireNPC.h")
 npc_motion_cpp = read(SOURCE / "ShireNPC.cpp")
+character_stream_h = read(SOURCE / "ShireChapterAssetStreamingSubsystem.h")
+character_stream_cpp = read(SOURCE / "ShireChapterAssetStreamingSubsystem.cpp")
 for symbol in [
     "TryApplyProductionRig",
     "bUsingSkeletalProductionRig",
@@ -3592,10 +3594,17 @@ for symbol in [
     "MotionStrideScale",
     "MotionIdleScale",
     "DialogueGesture",
-    "ABP_%s_Locomotion",
 ]:
     if symbol not in (npc_motion_h + npc_motion_cpp):
         fail(f"PG-051 character motion invariant missing: {symbol}")
+for symbol in [
+    "RequestCharacterRig",
+    "ResolveCharacterRig",
+    "ABP_%s_Locomotion",
+    "FStreamableManager",
+]:
+    if symbol not in (character_stream_h + character_stream_cpp):
+        fail(f"PG-051 async character rig invariant missing: {symbol}")
 
 chapter_world_h = read(SOURCE / "FellowshipChapterWorldBuilder.h")
 chapter_world_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
@@ -4411,21 +4420,32 @@ if "GetCurrentPrimaryRegionName()" not in pg88_hud:
     fail("PG-088 HUD is not using source-grounded current region naming")
 
 
-# PG-089: playable production characters must support automatic final-rig handoff with modular fallback.
+# PG-089: playable production characters must support async final-rig handoff with modular fallback.
 pg89_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
 pg89_cpp = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg89_stream_h = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.h")
+pg89_stream_cpp = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
 for pg89_symbol in [
     "TryApplyProductionRig",
     "bUsingSkeletalProductionRig",
-    "FPackageName::DoesPackageExist",
+    "HandleProductionRigReady",
+    "OnCharacterRigReady",
+]:
+    if pg89_symbol not in (pg89_h + pg89_cpp + pg89_stream_h + pg89_stream_cpp):
+        fail(f"PG-089 playable skeletal production handoff missing: {pg89_symbol}")
+for pg89_symbol in [
+    "RequestCharacterRig",
+    "ResolveCharacterRig",
     "SK_%s",
     "ABP_%s_Locomotion",
-    "skeletal production rig active",
+    "RequestAsyncLoad",
 ]:
-    if pg89_symbol not in (pg89_h + pg89_cpp):
-        fail(f"PG-089 playable skeletal production handoff missing: {pg89_symbol}")
+    if pg89_symbol not in (pg89_stream_h + pg89_stream_cpp):
+        fail(f"PG-089 async rig streaming contract missing: {pg89_symbol}")
 if "if (bUsingSkeletalProductionRig)" not in pg89_cpp:
     fail("PG-089 modular animation does not yield to production skeletal rig")
+if "LoadObject<USkeletalMesh>" in pg89_cpp or "LoadClass<UAnimInstance>" in pg89_cpp:
+    fail("PG-089 playable rig handoff regressed to synchronous heavy loading")
 
 
 # PG-090: missing Isengard/Lurtz/Watcher/Balrog roots must remain present and non-final.
