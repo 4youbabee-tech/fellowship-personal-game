@@ -1,3 +1,17 @@
+## 2026-09-21 - runner-offline programmer-proposal hardening wave
+
+Owner requested immediate production restart after the deleted-chat interruption, with periodic programmer proposals reviewed against live repository evidence and only useful verified parts promoted.
+
+The self-hosted UE4.27.2 laptop runner is intentionally offline. Current PR #62 head before this hardening batch is `ba00144b833de47f80da541b940830b17d7585a5`: Pre-Unreal #548 passed; Unreal #383 is pending because the runner is unavailable. Pending/queued runner state is not a demonstrated code failure.
+
+This static-safe batch implements the previously tracked local-preflight recommendation: `SHIRE_UPDATE_BUILD_LAUNCH.bat` now runs `Scripts/run_local_preflight.ps1` before Unreal compilation/import. The resolver avoids Windows Store aliases and runs the static/governor/audit/test family before the engine build. This implementation is not yet Windows-observed; do not label it COMPILE-TESTED or DEVICE-TESTED.
+
+Verified useful programmer guidance is now durable architecture policy: no new heavy synchronous `LoadObject` debt, bounded ambient NPC pooling required after V10/transition reconciliation, animated production characters/creatures use skeletal FBX, new authored textures use PNG/TGA, and PBR masks are channel-packed where applicable. `Data/ArchitectureGuardrails.json` plus `Scripts/deep_project_audit.py` enforce legacy debt ceilings so current debt may decrease but may not silently grow.
+
+Legacy debt snapshot: 24 production BMP files, 115 character OBJ files, 30 enemy OBJ files, one direct `SpawnActor<AShireAmbientNPC>` site in LivingWorldDirector, and direct LoadObject counts of FellowshipChapterWorldBuilder=77, ShirePrototypeWorldBuilder=55, BreePrototypeWorldBuilder=22, IsengardPrototypeWorldBuilder=10, LivingWorldDirector=13, ShireNPC=4, ShireAmbientNPC=3.
+
+Runtime pooling and residual async-load migration are intentionally not edited on this overlapping V10 branch. First machine-prove/merge V10, then reconcile PR #63 world-transition coordination, then change LivingWorldDirector lifecycle/asset ownership on a focused branch.
+
 ## 2026-09-21 - lost-chat recovery reconciliation and production restart
 
 Authority remains `Data/ProjectGovernor.json`. Live repository reconciliation establishes `develop@f4886b39feea29973543bf6cfb1be4659f10ff9d` as the current green integration baseline. That exact develop head passed Pre-Unreal #543 and Unreal Build #378, including build/import/startup/P1C01-P1C08/state/warning machine gates. This is machine evidence only; no new PIE/device/visual acceptance is inferred.

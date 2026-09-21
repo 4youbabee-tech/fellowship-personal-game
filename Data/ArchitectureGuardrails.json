@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "plan_id": "AAA_RUNTIME_ARCHITECTURE_GUARDRAILS_V1",
+  "status": "ACTIVE",
+  "authority": "Data/ProjectGovernor.json",
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "resolution": "1280x720",
+    "quality": "Low-Medium",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_class_gb": 2
+  },
+  "rules": [
+    "New heavy production asset loads must use soft references and asynchronous chapter/region loading; existing synchronous LoadObject debt may decrease but not grow.",
+    "Ambient/crowd NPC lifecycle must migrate to bounded object pooling; named persistent story NPC identity/state is not recycled through generic crowd pools.",
+    "New animated character/creature production assets use skeletal FBX. Legacy OBJ files are static/fallback debt only.",
+    "New authored texture sources use PNG/TGA. Final AO/roughness/metallic PBR masks are channel-packed where applicable; do not add new BMP source debt."
+  ],
+  "legacy_ceiling": {
+    "direct_loadobject_by_cpp": {
+      "FellowshipChapterWorldBuilder.cpp": 77,
+      "ShirePrototypeWorldBuilder.cpp": 55,
+      "BreePrototypeWorldBuilder.cpp": 22,
+      "IsengardPrototypeWorldBuilder.cpp": 10,
+      "LivingWorldDirector.cpp": 13,
+      "ShireNPC.cpp": 4,
+      "ShireAmbientNPC.cpp": 3
+    },
+    "production_bmp": 24,
+    "character_obj": 115,
+    "enemy_obj": 30,
+    "living_world_direct_ambient_spawn_sites": 1
+  },
+  "evidence_boundary": "STATIC guardrails only; no compile, PIE, device, FPS/memory or visual acceptance is claimed."
+}

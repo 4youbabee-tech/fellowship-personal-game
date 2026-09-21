@@ -56,7 +56,7 @@ if not defined GIT_EXE (
 )
 
 if defined GIT_EXE (
-  echo [1/4] Updating develop from GitHub...
+  echo [1/5] Updating develop from GitHub...
   "%GIT_EXE%" fetch origin
   if errorlevel 1 goto :git_failed
   "%GIT_EXE%" checkout develop
@@ -64,24 +64,36 @@ if defined GIT_EXE (
   "%GIT_EXE%" pull --ff-only origin develop
   if errorlevel 1 goto :git_failed
 ) else (
-  echo [1/4] Git executable not found. Skipping automatic pull.
+  echo [1/5] Git executable not found. Skipping automatic pull.
   echo       Update with GitHub Desktop before the next run.
 )
 
 echo.
-echo [2/4] Building ShireJourneyEditor with UE4.27...
-call "%BUILD_BAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE
-if errorlevel 1 goto :build_failed
+echo [2/5] Running local Pre-Unreal/static preflight...
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%ROOT%\Scripts\run_local_preflight.ps1"
+if errorlevel 1 goto :preflight_failed
 
 echo.
-echo [3/4] Importing production 3D assets into Unreal...
+echo [3/5] Building ShireJourneyEditor with UE4.27...
+call "%BUILD_BAT%" ShireJourneyEditor Win64 Development "%PROJECT%" -WaitMutex -NoHotReloadFromIDE
+if errorlevel 1 goto :preflight_failed
+echo.
+echo ERROR: Local Pre-Unreal/static preflight failed. No Unreal build was attempted.
+echo Fix the reported static/governance/test failure, then run this file again.
+pause
+exit /b 25
+
+:build_failed
+
+echo.
+echo [4/5] Importing production 3D assets into Unreal...
 if not exist "%ROOT%\Saved\Logs" mkdir "%ROOT%\Saved\Logs"
 if exist "%IMPORT_LOG%" del /Q "%IMPORT_LOG%" >NUL 2>NUL
 "%EDITOR_CMD_EXE%" "%PROJECT%" -run=ShireProductionImport -unattended -nop4 -nosplash -NoSound -abslog="%IMPORT_LOG%"
 if errorlevel 1 goto :asset_import_failed
 
 echo.
-echo [4/4] Build and asset import succeeded. Launching Unreal Engine...
+echo [5/5] Build and asset import succeeded. Launching Unreal Engine...
 start "" "%EDITOR_EXE%" "%PROJECT%"
 exit /b 0
 

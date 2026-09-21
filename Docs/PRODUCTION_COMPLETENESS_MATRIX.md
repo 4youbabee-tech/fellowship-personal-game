@@ -1,5 +1,11 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-21 - runner-offline architecture hardening
+
+Static-safe production infrastructure advanced while the self-hosted UE4 runner is offline. The one-click local path now has a pre-build Pre-Unreal/static preflight, and architecture debt ceilings prevent new synchronous heavy-load, BMP/animated-OBJ and direct ambient SpawnActor regressions.
+
+This does **not** change chapter maturity to ACCEPTED and does not add any `COMPILE-TESTED`, `PIE-TESTED`, `DEVICE-TESTED` or `VISUALLY-ACCEPTED` evidence. Runtime pooling, residual async-load migration and texture-format migration remain implementation work after the current V10 + transition-repair reconciliation.
+
 ## 2026-09-21 - V10 recovery/documentation synchronization
 
 PR #62 contains real runtime/source changes for early-realm cultural life and chapter-tuned density in Shire, Bree, Rivendell and Lothlorien. Exact head `d6533289dda37458b54bf5b63b82251502900eab` passed Pre-Unreal #546 and Unreal Build #381 before this recovery/documentation synchronization.

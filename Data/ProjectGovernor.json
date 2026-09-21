@@ -413,7 +413,9 @@
       ],
       "missing_work": [
         "focused target-device traversal/performance observation for current production Shire",
-        "Measure V9 environmental-motion/light cost on target hardware; disable glow before motion under pressure."
+        "Measure V9 environmental-motion/light cost on target hardware; disable glow before motion under pressure.",
+        "Replace LivingWorldDirector ambient Spawn/Destroy churn with a bounded reusable actor pool after V10 and transition-repair reconciliation.",
+        "Burn down remaining heavy synchronous LoadObject sites behind soft references and FStreamableManager/AssetManager async preload."
       ],
       "acceptance_criteria": [
         "30 FPS floor target at 720p Low/Medium without severe memory pressure or unplayable hitching"
@@ -1391,7 +1393,10 @@
       "evidence": [
         "Scripts/runtime_smoke.py",
         "Scripts/test_runtime_smoke.py",
-        "Docs/AUTOMATION_FIRST_DELIVERY.md"
+        "Docs/AUTOMATION_FIRST_DELIVERY.md",
+        "Scripts/run_local_preflight.ps1",
+        "SHIRE_UPDATE_BUILD_LAUNCH.bat",
+        "Data/ArchitectureGuardrails.json"
       ],
       "implementation_refs": [
         "Runtime observer rejects late fatal/assert/ensure messages and spontaneous exits after ready markers; requires a live observation window and final log scan.",
@@ -1399,7 +1404,8 @@
         "Self-hosted UE4 validation now avoids fragile later temporary PowerShell scripts for checkout/warning analysis and explicitly verifies the exact PR-head SHA.",
         "State-mode runtime smoke now requires Ring continuity plus Journey Discovery first-time/route-roundtrip continuity.",
         "Production100ReadinessGate plus production_readiness_audit.py prevents proxy/source-asset presence or compile success from being mislabeled as 100 percent production.",
-        "PG-092 validates world-map nodes, edges, packaging, controls and Map Knowledge spoiler bounds."
+        "PG-092 validates world-map nodes, edges, packaging, controls and Map Knowledge spoiler bounds.",
+        "One-click Update/Build/Launch now runs the GitHub-hosted static validation family through a robust local Python resolver before any Unreal build is attempted."
       ],
       "missing_work": [
         "Validate this observer on the Windows UE4.27 runner.",
@@ -1409,7 +1415,7 @@
         "Extend the gate with target-device FPS/hitch and memory-pressure evidence against the existing 720p Low-Medium / 30 FPS floor target.",
         "Add engine-driven offline NPC behavior/dialogue consistency coverage, save/load roundtrip coverage, story/canon contract checks and text/localization integrity checks.",
         "Evaluate Unreal Automation Framework first, then add Gauntlet/Unreal Insights where they improve end-to-end or performance coverage without replacing proven existing checks.",
-        "Add a robust local Pre-Unreal preflight before the one-click build/share path, reusing proven Python-resolution behavior instead of assuming a Windows Store alias."
+        "Run the new local Pre-Unreal preflight once on the target Windows laptop after it returns; implementation is STATIC-VALIDATED only until that observation exists."
       ],
       "acceptance_criteria": [
         "Late startup failures cannot be marked successful.",
@@ -2264,6 +2270,21 @@
     {
       "id": "INV-PROOF",
       "description": "Static/compile success must never be presented as PIE, device, performance, pacing or visual acceptance.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-ASSET-PIPELINE",
+      "description": "Animated character/creature production uses skeletal FBX; new authored textures use PNG/TGA with channel-packed PBR masks where applicable. Legacy OBJ/BMP fallback debt may be reduced but not expanded.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-ASYNC-ASSETS",
+      "description": "Heavy production assets must use soft references and asynchronous chapter/region loading; existing synchronous LoadObject debt may be burned down but not expanded.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-CROWD-POOLING",
+      "description": "Ambient/crowd NPC lifecycle uses bounded object pooling rather than dense Spawn/Destroy churn; named persistent story NPC identity/state is not recycled through a generic crowd pool.",
       "auto_override": false
     }
   ],
@@ -3412,6 +3433,30 @@
       "status": "COMPLETED",
       "rationale": "Chapter asset streaming V5 passed exact-head Pre-Unreal #542 and Unreal #377 attempt 2, merged as f4886b39feea29973543bf6cfb1be4659f10ff9d, and the develop merge head passed Pre-Unreal #543 plus Unreal #378. Target-device hitch/memory measurement remains a separate performance-acceptance task.",
       "execution_bundle": "B4_PERFORMANCE_AND_QA"
+    },
+    {
+      "order": 3,
+      "id": "WORK-QA-002",
+      "title": "Local Pre-Unreal preflight before one-click build/share",
+      "status": "ACTIVE",
+      "rationale": "Fail fast on static/governance/test errors before any local Unreal build starts.",
+      "execution_bundle": "B0_EXACT_HEAD_STABILITY"
+    },
+    {
+      "order": 34,
+      "id": "WORK-PERF-003",
+      "title": "Ambient NPC object-pool migration",
+      "status": "QUEUED",
+      "rationale": "Current LivingWorldDirector still uses ambient Spawn/Destroy churn. Implement bounded pooling only after V10 and transition coordination are reconciled.",
+      "execution_bundle": "B3_LIVING_WORLD_AND_PRESENTATION"
+    },
+    {
+      "order": 35,
+      "id": "WORK-PERF-004",
+      "title": "Residual synchronous asset-load debt burn-down",
+      "status": "ACTIVE",
+      "rationale": "V5 established async chapter banks, but residual LoadObject sites remain. Static guardrails now stop the debt from growing; later focused runtime waves migrate heavy production loads to soft references and async preload.",
+      "execution_bundle": "B0_EXACT_HEAD_STABILITY"
     }
   ],
   "last_reconciliation": {
@@ -3476,14 +3521,13 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "RECOVERY_RECONCILIATION_PLUS_EARLY_REALM_WORLD_LIFE_V10",
+  "current_focus": "RUNNER_OFFLINE_STATIC_HARDENING_PLUS_EARLY_REALM_WORLD_LIFE_V10",
   "immediate_next_large_actions": [
-    "Reconcile lost-chat/project-manager state against the live repository and preserve develop as the canonical integration trunk.",
-    "Refresh PR #62 documentation/manager/source-recovery handoff, then require fresh exact-head Pre-Unreal and Unreal validation before merge because this reconciliation changes the candidate head.",
-    "After V10 integration, port/reconcile PR #63 world-transition coordination on top of the new develop without losing V10 LivingWorldDirector density/profile logic or Governor changes.",
-    "Harden transition commit/rollback behavior so builder failure cannot erase the previously committed visible world before a destination is safely published.",
-    "Resume focused visible game construction: early-realm world life/density, then production character rig/skin/AnimBP work and target-device profiling.",
-    "Keep the later Public/Private runtime-source migration isolated as a dedicated maintenance branch; do not mix it into gameplay production."
+    "While the self-hosted UE4 runner is offline, advance only static/source/data/validator work that cannot falsely claim engine proof.",
+    "Keep PR #62 V10 coherent; use static guardrails to prevent new synchronous heavy-load, BMP/animated-OBJ and ambient SpawnActor debt.",
+    "When the laptop returns, run the new local preflight then let the exact PR #62 head complete UE4.27.2 validation; merge only if green.",
+    "After V10 integration, reconcile PR #63 transition coordination and harden transactional world commit/rollback.",
+    "Then implement bounded ambient NPC object pooling and burn down residual heavy synchronous LoadObject sites behind soft async chapter/region banks."
   ],
   "session_handoff": {
     "source_head": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
@@ -3885,10 +3929,10 @@
       "id": "EXT-REV-2026-09-20-003",
       "source": "Programmer review message supplied by owner",
       "verification_sha": "c929ab657dba10266536d51aa04fb21da04ada12",
-      "verification_status": "VERIFIED_CURRENT_HEAD",
+      "verification_status": "IMPLEMENTED_STATIC_PENDING_WINDOWS_EXECUTION",
       "claim": "Run Pre-Unreal validation locally before build/share instead of relying only on post-push CI.",
       "verified_result": "The one-click update/build/launch path did not run Scripts/pre_unreal_validate.py first.",
-      "disposition": "TRACKED_ACTION",
+      "disposition": "IMPLEMENTED_PENDING_TARGET_WINDOWS_OBSERVATION",
       "linked_requirements": [
         "REQ-QA-001",
         "REQ-CI-001",
@@ -3897,7 +3941,7 @@
       "linked_work": [
         "WORK-QA-001"
       ],
-      "next_action": "Add a robust local preflight using the proven Python-resolution path before one-click build/share."
+      "next_action": "When the laptop returns, run SHIRE_UPDATE_BUILD_LAUNCH.bat once and record the local-preflight result separately from UE compile/PIE evidence."
     },
     {
       "id": "EXT-REV-2026-09-20-004",
@@ -3977,7 +4021,7 @@
         "source11_alignment": "SourceAssets are raw/reference sources; final Game/Characters production assets are expected to be skeletal meshes/materials/AnimBPs.",
         "correction": "OBJ cannot carry final bones/skin weights, but container conversion alone does not create a skeleton, skinning or animation. Existing OBJ pieces are intentional static/modular fallback foundations."
       },
-      "disposition": "ADOPT_RIGGING_GOAL_REJECT_BLIND_BATCH_CONVERSION",
+      "disposition": "ADOPT_FINAL_ANIMATED_FBX_ONLY_RETAIN_LEGACY_STATIC_OBJ_DEBT",
       "linked_requirements": [
         "REQ-CHAR-001",
         "REQ-CHAR-003",
@@ -3990,7 +4034,7 @@
         "WORK-CHAR-004",
         "WORK-PROD-010"
       ],
-      "next_action": "Produce real per-character/per-creature skeletal packages through geometry cleanup -> skeleton -> skin weights -> skeletal FBX -> UE4 Skeletal Mesh -> AnimBP/socket/LOD validation. Use SK_ only for actual skeletal assets; retain SM_/OBJ fallback sources until accepted replacements exist."
+      "next_action": "Do not add animated OBJ production assets. Build actual skeleton/skin/deformation first, export skeletal FBX, import as UE4 Skeletal Mesh, then retire legacy static/modular OBJ fallback only after acceptance."
     },
     {
       "id": "EXT-REV-2026-09-21-008",
@@ -4003,7 +4047,7 @@
         "correction": "Source-file compression is not runtime VRAM residency. Unreal runtime cost depends on imported resolution, pixel format/compression, mip chain, streaming and residency.",
         "valid_part": "BMP is weak for future authored alpha/masked foliage. PNG/TGA support is useful when alpha-capable textures are introduced."
       },
-      "disposition": "ADOPT_SELECTIVE_ALPHA_FORMAT_SUPPORT_REJECT_UNMEASURED_VRAM_CLAIM",
+      "disposition": "REJECT_UNMEASURED_VRAM_CLAIM_ADOPT_NO_NEW_BMP_PIPELINE_RULE",
       "linked_requirements": [
         "REQ-PERF-001",
         "REQ-AUDIT-001",
@@ -4013,7 +4057,7 @@
         "WORK-QA-001",
         "WORK-WORLD-003"
       ],
-      "next_action": "Do not batch-convert current BMP sources. First add/validate PNG/TGA importer support in a dedicated asset-pipeline change; migrate textures selectively when alpha or authored high-fidelity sources require it, then measure streaming pool/GPU memory on target hardware."
+      "next_action": "Treat the 24 BMP files as legacy source debt. Add PNG/TGA importer support before migration, do not add new BMP sources, and use channel-packed PNG/TGA PBR masks where applicable."
     },
     {
       "id": "EXT-REV-2026-09-21-009",
@@ -4091,10 +4135,10 @@
       "id": "EXT-REV-2026-09-21-013",
       "source": "Second programmer architecture/performance proposal supplied by owner",
       "verification_sha": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
-      "verification_status": "VERIFIED_PROFILE_TARGET_PROPOSAL_TOO_RIGID",
+      "verification_status": "VERIFIED_ARCHITECTURE_DEBT_MANDATORY_REPAIR",
       "claim": "Use a fixed pool of 15 ambient NPCs instead of SpawnActor/DestroyActor.",
       "verified_result": "LivingWorldDirector currently uses bounded spawn/cull/destroy. Baseline targets reach 18 in P1C01 before up to 5 micro-events, so a fixed pool of 15 would undercut current authored density. Spawn/GC churn is a legitimate profiling target, but pooling retains actor/resource memory.",
-      "disposition": "PROFILE_THEN_POOL_AMBIENT_ARCHETYPES_ONLY_IF_MATERIAL",
+      "disposition": "ADOPT_AMBIENT_OBJECT_POOLING_NO_FIXED_15_CAP",
       "linked_requirements": [
         "REQ-NPC-005",
         "REQ-PERF-001",
@@ -4104,7 +4148,7 @@
         "WORK-LW-004",
         "WORK-QA-001"
       ],
-      "next_action": "Capture target-device SpawnActor/DestroyActor/GC cost. If material, pool ambient archetypes/ephemeral event actors with full reset/disable rules; never recycle named persistent NPC identity."
+      "next_action": "After V10 and world-transition reconciliation, implement a bounded ambient/ephemeral actor pool sized from chapter budgets rather than a hard-coded 15. Named persistent NPC identity remains outside the pool."
     },
     {
       "id": "EXT-REV-2026-09-21-014",
@@ -4113,7 +4157,7 @@
       "verification_status": "VERIFIED_HIGH_VALUE_SCALING_RISK",
       "claim": "Use soft references/asynchronous loading so growing world assets are not synchronously loaded at chapter transitions.",
       "verified_result": "Live counts show 77 LoadObject calls in FellowshipChapterWorldBuilder, 55 in ShirePrototypeWorldBuilder, 22 in BreePrototypeWorldBuilder, 10 in IsengardPrototypeWorldBuilder, 13 in LivingWorldDirector and 4 in ShireNPC. DeepProjectAudit already tracks synchronous chapter loading as a scaling risk.",
-      "disposition": "HIGH_PRIORITY_MEASURED_MIGRATION",
+      "disposition": "ADOPT_NO_NEW_SYNC_HEAVY_LOAD_DEBT_AND_BURN_DOWN",
       "linked_requirements": [
         "REQ-PERF-001",
         "REQ-AUDIT-001",
@@ -4124,7 +4168,7 @@
         "WORK-WORLD-003",
         "WORK-QA-001"
       ],
-      "next_action": "Profile transition hitch/memory, then introduce bounded chapter/region asset banks with soft paths plus FStreamableManager/AssetManager async preload behind authored seams. Do not mechanically outlaw every hard reference."
+      "next_action": "Static guardrails prevent direct LoadObject debt from increasing. After V10/transition repair, migrate remaining heavy production sites into soft-reference chapter/region banks using FStreamableManager/AssetManager async preload."
     },
     {
       "id": "EXT-REV-2026-09-21-015",
