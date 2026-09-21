@@ -1,3 +1,13 @@
+## 2026-09-21 - comprehensive foundation integration train active
+
+The owner directed the project to stop accumulating isolated proposals/repair branches and resume coherent construction. The active convergence branch is now `integration/comprehensive-foundation-v1`, recorded by `REQ-INTEGRATION-001`, `DEC-031` and `WORK-INTEGRATION-001`.
+
+The branch currently integrates the startup-grounding/QA/performance stack with V10 regional living-world work and a stronger transactional transition model. Chapter asset streaming is now two-phase: preload completion does not replace the resident bank. `ChapterWorldRouter` freezes the player only at the swap boundary, constructs the destination, proves blocking-ground placement, commits the pending asset bank, then publishes a new `WorldRevision`. Failure does not publish a revision and attempts to restore the prior builder while keeping movement held.
+
+`LivingWorldDirector` now combines V10 chapter density/role profiles with committed-world synchronization. Quest state may move ahead while streaming, but destination residents/weather/context are not applied until the router publishes the matching committed revision.
+
+PG-123 statically protects the integrated two-phase asset/world/living-world contract. This is **IMPLEMENTED / STATIC-PENDING** on the newest integration code. It is not COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or visually accepted until exact-head gates run.
+
 ## 2026-09-21 - visual-performance proposal adopted with measured guardrails
 
 A new programmer proposal for Witcher-class visual ambition with low-spec UE4.27 optimization was reviewed against the live architecture and promoted into durable project memory as `EXT-REV-2026-09-21-017`, `REQ-PERF-003`, `DEC-030` and `WORK-PERF-006`.
