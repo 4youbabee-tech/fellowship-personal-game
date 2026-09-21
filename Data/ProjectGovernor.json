@@ -2450,6 +2450,51 @@
       ],
       "checkpoint": "COMPREHENSIVE_FOUNDATION_V1",
       "notes": "This is the active integration train. It does not bypass Gate 6/7; it consolidates already-approved work so the project can resume coherent production."
+    },
+    {
+      "id": "REQ-WAREHOUSE-001",
+      "title": "Trilogy-wide production asset warehouse must stay comprehensively stocked and measurable",
+      "category": "ProductionAssetWarehouse",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly changed production emphasis on 2026-09-22: do not leave characters/world/audio as late gaps; maintain a full trilogy warehouse and continuously fill it while runtime gates proceed.",
+      "intent": "Maintain one machine-readable F1-F3 warehouse covering named/supporting characters, population families, enemies, creatures, fauna, cultures, locations/state variants, architecture, materials, props, equipment, animations, VFX, cinematics, UI and audio. The warehouse should expose exact fill status instead of vague statements such as 'large gap'.",
+      "evidence": [
+        "Data/TrilogyProductionAssetWarehouse.json",
+        "Data/ExternalAssetManifest.json",
+        "Data/CharacterProductionMatrix.json",
+        "Data/AudioAssetSourcingWaveV2.json",
+        "Docs/WORLD_DETAIL_LEDGER.md"
+      ],
+      "implementation_refs": [
+        "Data/TrilogyProductionAssetWarehouse.json establishes the first complete trilogy-wide catalogue from Sources 02/03/04/05/11 plus the supplied film trilogy screenplays.",
+        "Warehouse-first + vertical-slice production is explicitly separated from runtime chapter gating: stock/acquisition/preproduction can proceed across F1-F3 while P1C01 remains the first fully assembled benchmark.",
+        "Existing external-source and audio-source registries feed the warehouse without changing Approved asset policy."
+      ],
+      "missing_work": [
+        "Populate each CATALOGUED slot with a real candidate or project-authored asset and exact provenance/status metadata.",
+        "Acquire/author the first accepted skeletal FBX character bundles beginning with Frodo, Gandalf and Sam.",
+        "Fill P1C01 Shire world/material/prop/vegetation/fauna/audio banks to a visible vertical-slice standard.",
+        "Build reusable location/culture kits for Part II and Part III in the warehouse without prematurely opening runtime chapter implementation.",
+        "Add automated warehouse coverage/status reporting so future reviews state exact filled/pending counts by category.",
+        "Run UE4.27 import/compile, PIE, visual/audio and target-device gates before any slot is promoted from READY/INTEGRATED to ACCEPTED."
+      ],
+      "acceptance_criteria": [
+        "All three films have explicit tracked production slots for required named/supporting characters, worlds, cultures, threats, creatures, battles, materials, animation and audio.",
+        "Every actual external asset has provider/provenance/license/entitlement metadata before Approved.",
+        "Animated final characters use real skeletal FBX rigs; static OBJ foundations are never misreported as final characters.",
+        "The warehouse status can answer exactly what is filled, ready, integrated, accepted or pending instead of relying on chat memory.",
+        "P1C01 demonstrates the warehouse as a complete natural-looking gameplay slice before mass runtime expansion."
+      ],
+      "dependencies": [
+        "REQ-ASSET-001",
+        "REQ-CHAR-004",
+        "REQ-WORLD-003",
+        "REQ-PROD-009",
+        "REQ-PERF-003"
+      ],
+      "checkpoint": "WAREHOUSE_FIRST_PRODUCTION",
+      "notes": "Catalogue coverage is now trilogy-wide first-pass complete; actual final production files are not yet complete. Do not conflate catalogue fullness with visual acceptance."
     }
   ],
   "hard_invariants": [
@@ -3082,6 +3127,26 @@
       "evidence": [
         "Docs/CURRENT_PROJECT_STATE.md",
         "Data/MasterExecutionRoadmap.json"
+      ]
+    },
+    {
+      "id": "DEC-032",
+      "title": "Adopt warehouse-first trilogy production in parallel with the P1C01 vertical slice",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WAREHOUSE-001",
+        "REQ-CHAR-004",
+        "REQ-WORLD-003",
+        "REQ-PROD-009",
+        "REQ-INTEGRATION-001"
+      ],
+      "resolution": "Maintain a comprehensive F1-F3 asset warehouse continuously instead of deferring final characters/world/audio to the end. Preproduction, sourcing and asset-bank construction may proceed across the trilogy in parallel, while runtime feature/chapter integration remains subject to the active foundation and exact-head gates. P1C01 Shire is the first fully assembled natural-looking benchmark used to prove the pipeline before mass application.",
+      "rationale": "The project accumulated strong backend/governance coverage faster than visible production content. Warehouse-first production prevents recurring surprise gaps and turns asset acquisition/authoring into a persistent production lane rather than an ad hoc late task.",
+      "authority": "USER_DIRECTIVE",
+      "evidence": [
+        "Data/TrilogyProductionAssetWarehouse.json",
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Docs/CURRENT_PROJECT_STATE.md"
       ]
     }
   ],
@@ -3726,6 +3791,14 @@
       "rationale": "Unify all recent approved runtime, QA, living-world and performance architecture work before resuming broader game construction.",
       "execution_bundle": "B0_EXACT_HEAD_STABILITY",
       "plan": "REQ-INTEGRATION-001"
+    },
+    {
+      "order": 43,
+      "id": "WORK-PROD-011",
+      "title": "Trilogy production warehouse saturation V1",
+      "status": "ACTIVE",
+      "rationale": "Owner directed immediate F1-F3 warehouse saturation so characters/world/audio/materials/creatures/props/animation are no longer late-production unknowns.",
+      "execution_bundle": "B3_LIVING_WORLD_AND_PRESENTATION"
     }
   ],
   "last_reconciliation": {
@@ -3744,7 +3817,10 @@
       "pre_unreal": "#538 SUCCESS",
       "unreal": "#373 PENDING_AT_RECONCILIATION"
     },
-    "truth_boundary": "The cleanup commit is newer than the recorded candidate evidence and requires fresh exact-head checks. No FPS/RAM/VRAM improvement is claimed before representative target-device measurement."
+    "truth_boundary": "The cleanup commit is newer than the recorded candidate evidence and requires fresh exact-head checks. No FPS/RAM/VRAM improvement is claimed before representative target-device measurement.",
+    "warehouse_first_directive": "2026-09-22",
+    "warehouse_plan": "Data/TrilogyProductionAssetWarehouse.json",
+    "note": "Trilogy catalogue first-pass is established. Actual asset fill remains measurable work; no visual/device acceptance is implied."
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",
@@ -3780,13 +3856,17 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "COMPREHENSIVE_FOUNDATION_INTEGRATION_V1",
+  "current_focus": {
+    "production_lane": "WAREHOUSE_FIRST_TRILOGY_SATURATION_V1",
+    "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
+    "rule": "Continue exact-head foundation repair, but keep trilogy asset-bank sourcing/authoring active in parallel. Do not let governance-only work starve visible production."
+  },
   "immediate_next_large_actions": [
-    "Finish V5 on PR #61 with fresh exact-head Pre-Unreal plus full UE4.27.2 build/import/startup/P1C01-P1C08/state/warning proof, then merge to develop.",
-    "Measure chapter-transition hitch, streaming pool and resident memory on representative target hardware before promoting V5 as a performance win.",
-    "After green V5 integration, open one short world-life branch focused first on Shire, Bree, Rivendell and Lothlorien: architecture density, culture-specific dressing, bounded NPC density and ambient routines.",
-    "Advance real skeletal rig/skin/AnimBP/motion work in a focused character-quality branch; do not treat OBJ-to-FBX container conversion as rigging.",
-    "Keep later Public/Private source-layout migration isolated as its own maintenance branch."
+    "Keep exact-head integration/static/engine gates honest; repair demonstrated regressions without reopening settled architecture.",
+    "Run WORK-PROD-011 continuously: fill the trilogy warehouse with real candidates/project-owned production assets by category, recording provenance/status per item.",
+    "Assemble P1C01 as the first complete natural-looking slice: skeletal Frodo/Gandalf/Sam, Shire architecture/terrain/vegetation/props/fauna, dense authored audio, animation and lighting.",
+    "Build reusable F2/F3 culture/location/character/creature kits in the warehouse without opening gated runtime chapters early.",
+    "After the P1C01 production pipeline is proven, mass-apply the same rig/material/world/audio/LOD conventions chapter-by-chapter."
   ],
   "session_handoff": {
     "source_head": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
