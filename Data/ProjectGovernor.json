@@ -353,7 +353,7 @@
       "title": "Reliable save load and route continuity",
       "category": "Persistence",
       "priority": "CRITICAL",
-      "status": "IMPLEMENTED",
+      "status": "PARTIAL",
       "origin": "Existing project requirement",
       "intent": "Player progress, location, story and parallel-route state must survive save/load and Frodo/Gandalf switching.",
       "evidence": [
@@ -367,25 +367,32 @@
         "route snapshots preserve Frodo/Gandalf route progress",
         "automatic safe checkpoints use a separate ShireJourney_Checkpoint slot so manual F5 saves are never overwritten",
         "authored story beats write mapped safe checkpoints after quest/story mutation",
-        "chapter transitions queue a checkpoint until the next player Tick so the saved transform belongs to the rebuilt destination region",
         "combat defeat restores the latest automatic safe checkpoint at full health",
         "Save schema v5 persists stamina, resolve, supplies and progression XP.",
-        "Save schema v6 persists ChronicleEntryIds and KnownMapRegionIds in addition to player-life/progression state."
+        "Save schema v6 persists ChronicleEntryIds and KnownMapRegionIds in addition to player-life/progression state.",
+        "Automatic checkpoint disk writes are asynchronous and serialized; commit synchronization of the captured transform remains pending."
       ],
       "missing_work": [
         "F9 round-trip verification on current integrated build",
         "F8 Gandalf-Isengard-Frodo round-trip verification",
         "PIE verification of automatic checkpoint placement/respawn across representative chapters",
-        "device verification that checkpoint writes/restores do not create noticeable hitching"
+        "device verification that checkpoint writes/restores do not create noticeable hitching",
+        "Transition checkpoint capture must wait for the matching ChapterWorldRouter committed chapter/route/episode identity or revision, not merely one player Tick.",
+        "Save restore must defer the exact saved player transform until the saved chapter/route/episode world is committed and grounding can be resolved against that world.",
+        "Failed chapter swap rollback must restore a coherent playable prior transaction (world, route/chapter state, player transform and movement) or remain explicitly failed; the current movement-held builder-only rollback is not closure.",
+        "Add exact-head engine regression coverage for checkpoint capture during delayed async transition, cross-chapter save restore, and failed-swap rollback."
       ],
       "acceptance_criteria": [
         "F9 restores expected transform/story state",
         "F8 preserves Frodo state through Gandalf route",
-        "automatic checkpoints cannot skip required story results"
+        "automatic checkpoints cannot skip required story results",
+        "A transition checkpoint cannot contain destination logical chapter identity with a transform sampled from the pre-commit source world.",
+        "A cross-chapter restore cannot apply its saved transform until the matching destination world is committed.",
+        "A failed world swap either returns to a coherent playable prior state or remains visibly fail-closed without claiming successful rollback."
       ],
       "dependencies": [],
       "checkpoint": "CURRENT_HARD_GATE",
-      "notes": "Automatic checkpoint/respawn runtime foundation is implemented in build-first mode; manual PIE/device verification remains deferred to the batch integration pass."
+      "notes": "Persistence serialization exists, but cross-system synchronization with asynchronous world commit is incomplete on the current integration train. Do not promote save/load continuity until the commit-barrier defects are repaired and engine-tested."
     },
     {
       "id": "REQ-PERF-001",
@@ -1949,7 +1956,11 @@
         "profile chapter-transition synchronous asset loads",
         "target-device frame-time/memory capture and rendered chapter acceptance",
         "Measure chapter-transition hitch/memory before later high-resolution asset-bank expansion.",
-        "Execute the already-defined FLAT_GUARDED -> PUBLIC_PRIVATE_BY_DOMAIN source-layout migration on a dedicated short branch after an appropriate production checkpoint."
+        "Execute the already-defined FLAT_GUARDED -> PUBLIC_PRIVATE_BY_DOMAIN source-layout migration on a dedicated short branch after an appropriate production checkpoint.",
+        "Add authored/trace-based ground-safe placement for living ambient actors and measure wall/terrain clipping in representative chapters.",
+        "Replace repeated ambient SpawnActor/Destroy churn with bounded object pooling before crowd-density expansion.",
+        "Remove or asynchronously own direct heavy production LoadObject paths in ambient visual setup; do not substitute unresolved lookups without preloading the assets.",
+        "Keep the 62-file Public/Private physical source migration as the separate DEC-003 maintenance pass after the functional integration gate."
       ],
       "acceptance_criteria": [
         "critical exact-head gates are green before unrelated expansion",
@@ -2400,7 +2411,11 @@
         "Run Pre-Unreal on exact comprehensive head and repair any static integration regressions.",
         "Repair local UE4 Engine Content access, then pass exact-head C++ build/import/Automation/startup/P1C01-P1C08/state/transition gates.",
         "Re-run the original P1C01 fall-through symptom in PIE before closing startup defect.",
-        "Only after the integrated foundation is green, merge/rebase the integration train into develop and retire superseded overlapping PR branches."
+        "Only after the integrated foundation is green, merge/rebase the integration train into develop and retire superseded overlapping PR branches.",
+        "Replace next-Tick transition checkpoint capture with a committed-world barrier.",
+        "Make cross-chapter save restore apply player transform only after matching committed-world readiness and grounded placement.",
+        "Make failed-swap rollback restore a coherent prior playable transaction rather than only rebuilding the prior builder while movement remains held.",
+        "Register and schedule ground-safe ambient placement, ambient object pooling and asynchronous living-world visual asset ownership before further density expansion."
       ],
       "acceptance_criteria": [
         "No destination living-world state is applied before its geometry is committed.",
@@ -2408,7 +2423,9 @@
         "Rapid/stale async transitions cannot publish the wrong visible world.",
         "A failed swap does not publish a new world revision and fails closed rather than dropping the player.",
         "P1C01 startup grounding regression remains required for runtime acceptance.",
-        "Exact-head machine gates and defect-specific PIE evidence remain distinct."
+        "Exact-head machine gates and defect-specific PIE evidence remain distinct.",
+        "Persistence snapshots and restored transforms agree with the same committed world revision they describe.",
+        "Rollback never leaves logical quest state pointing at a different world from the visible restored builder."
       ],
       "dependencies": [
         "REQ-STARTUP-001",
@@ -4465,6 +4482,45 @@
         "WORK-QA-003"
       ],
       "next_action": "Protect existing async/HISM/cull/tick discipline now; after startup/QA gates are healthy, profile target-device lighting, LOD, material, draw-call, streaming and transition budgets before selecting baked/distance-field/world-composition changes."
+    },
+    {
+      "id": "EXT-REV-2026-09-22-018",
+      "source": "ChatGPT Work code-review findings supplied by owner and rechecked against the live integration head",
+      "verification_sha": "170ebd857bece56a6d7f76f4928efe0eb3426af2",
+      "verification_status": "VERIFIED_CURRENT_HEAD_FINDINGS_WITH_CORRECTIONS",
+      "claim": "The current integration foundation still has cross-system playability risks around asynchronous chapter transition persistence, save restore, rollback, ambient placement and living-world churn that should be closed before the foundation is merged and expanded.",
+      "verified_result": {
+        "confirmed": [
+          "Chapter-transition automatic checkpoints are queued until the next player Tick, but chapter world construction now waits on asynchronous asset readiness; one Tick is not a committed-world barrier and can capture new logical chapter state with the old-world player transform.",
+          "RestoreSaveSnapshot restores logical quest/route/chapter state and then may immediately apply the saved transform after checking only logical chapter identity; it does not require matching ChapterWorldRouter committed-world identity/revision first.",
+          "RollbackFailedWorldSwap attempts to rebuild the prior builder and cancels the pending asset request, but it leaves player movement held and does not restore a coherent prior quest/route/player-transform transaction.",
+          "LivingWorldDirector chooses baseline ambient origins with an approximate Z derived from the player and no ground trace; AShireAmbientNPC uses a SceneComponent root and its body mesh components have collision disabled, so floating, terrain penetration or wall clipping remains structurally possible pending rendered observation.",
+          "LivingWorldDirector baseline population currently uses SpawnActor and Destroy for replenishment/culling rather than object pooling.",
+          "AShireAmbientNPC::ApplyVisualStyle contains direct synchronous LoadObject calls for production meshes/materials; the current ChapterAssetStreamingPlan does not enumerate the sampled Hobbit/Human/Elf/fauna/material paths checked during this review, so this debt cannot be replaced by ResolveObject alone without adding an async ownership/preload contract.",
+          "SourceArchitecturePlan currently records 62 runtime .h/.cpp files flat under Source/ShireJourney with zero migrated entries; DEC-003 still requires the physical Public/Private move to remain a separate maintenance pass."
+        ],
+        "corrected": [
+          "The forwarded statement that there are 24 BMP files is not supported by the indexed inventory. ProjectOwnedProductionAssetInventory reports 24 image files total and explicitly exposes seven Shire .bmp paths; the remaining image-extension breakdown was not established by this review.",
+          "Pre-Unreal #558 historically reported only a two-error summary in the captured workflow log, but the newer exact-head Pre-Unreal #560 now prints a concrete remaining failure: PG-117 Part I visual current-wave assertion is stale after the V10 visual/world-life wave became current."
+        ]
+      },
+      "disposition": "ADOPT_CRITICAL_TRANSITION_PERSISTENCE_REPAIR_AND_REGISTER_NPC_PERFORMANCE_DEBT",
+      "linked_requirements": [
+        "REQ-SAVE-001",
+        "REQ-INTEGRATION-001",
+        "REQ-AUDIT-001",
+        "REQ-PERF-003",
+        "REQ-NPC-005",
+        "REQ-ORG-001"
+      ],
+      "linked_work": [
+        "WORK-INTEGRATION-001",
+        "WORK-QA-001",
+        "WORK-QA-003",
+        "WORK-PERF-002",
+        "WORK-PERF-006"
+      ],
+      "next_action": "First restore exact-head static gate health. Then repair chapter checkpoint/save-restore/rollback around committed-world identity/revision before merge. After that, add ground-safe ambient placement, pooled ambient reuse and an asynchronous living-world asset ownership path before density expansion."
     }
   ],
   "project_source_library": {
