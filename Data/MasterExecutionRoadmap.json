@@ -38,7 +38,7 @@
     },
     "active_wave": "COMPREHENSIVE_FOUNDATION_INTEGRATION_V1",
     "source_baseline": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
-    "proof_boundary": "Exact-head Pre-Unreal remains active; persistence/rollback findings are registered as source-confirmed repair work. UE4 engine proof remains separate and blocked until the local Engine Content read-access issue is resolved.",
+    "proof_boundary": "Warehouse catalogue/preproduction may expand trilogy-wide in parallel; runtime integration and acceptance still require the active exact-head foundation/engine/PIE/device gates.",
     "integration_baseline": "fb7afb8e39a4186245063ddf2a46fc0df8ba6c56",
     "current_scope": [
       "startup grounding",
@@ -48,7 +48,9 @@
       "V10 regional density/roles/dialogue",
       "Unreal Automation QA foundation",
       "visual-performance guardrails"
-    ]
+    ],
+    "active_production_lane": "TRILOGY_PRODUCTION_ASSET_WAREHOUSE_V1",
+    "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE"
   },
   "bundles": [
     {
@@ -480,15 +482,16 @@
     "WORK-WORLD-003"
   ],
   "immediate_next_large_actions": [
-    "Restore exact-head static validation, including stale historical guard reconciliation, before additional runtime expansion.",
-    "Repair commit-synchronized transition checkpoint capture, cross-chapter save restore and coherent failed-swap rollback on the comprehensive integration train before merge.",
-    "After persistence/transition correctness is source-stable, add ground-safe ambient placement, bounded ambient object pooling and asynchronous living-world visual asset ownership before raising NPC density.",
-    "Repair local UE4 Engine Content access, then execute build/import/Automation/startup/chapter/state/transition gates on the same SHA.",
-    "Perform defect-specific P1C01 PIE startup check.",
-    "Merge the proven comprehensive foundation to develop, retire/rebase superseded PRs, then resume living-NPC witness/share/learn, character production and visual world passes."
+    "Keep exact-head foundation validation healthy and repair only demonstrated regressions.",
+    "Run the trilogy warehouse lane continuously: source/author characters, worlds, materials, props, creatures, animations, VFX and audio across F1-F3 with exact per-item status.",
+    "Make P1C01 Shire the first fully assembled production benchmark with natural skeletal characters, coherent world art, life, audio and performance-safe presentation.",
+    "In parallel, build reusable Part II/III culture/location/character/creature kits in the warehouse without opening gated runtime chapter implementation.",
+    "After the P1C01 production pipeline is proven, mass-apply the same asset/rig/material/audio conventions chapter-by-chapter."
   ],
   "last_reconciliation": {
-    "date": "2026-09-21",
-    "reason": "Path cleanup before post-V5 production: stale PR53/CP56 and V1-V4 active markers retired; PR61 is the single active closeout path; post-V5 world-life plus rig sequence is explicit."
+    "date": "2026-09-22",
+    "reason": "Path cleanup before post-V5 production: stale PR53/CP56 and V1-V4 active markers retired; PR61 is the single active closeout path; post-V5 world-life plus rig sequence is explicit.",
+    "warehouse_first": "Data/TrilogyProductionAssetWarehouse.json",
+    "note": "Roadmap now prevents visible production from being deferred behind repeated governance-only work."
   }
 }
