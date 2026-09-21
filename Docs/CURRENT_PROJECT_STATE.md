@@ -1,3 +1,11 @@
+## 2026-09-22 - Pre-Unreal #562 stale streaming-cancellation test repaired
+
+Exact-head Pre-Unreal #562 on `830b986d36d2563d11d7b3ed18c94b64e6741090` passed the core validator, Project Governor and Deep Project Audit, then failed one source-contract unittest in `Scripts/test_streaming_cancellation_contract.py`. The test still expected `ResidentHandle = PendingHandle` inside `HandleAsyncLoadComplete`, which contradicts the integrated two-phase streaming contract: async completion only reports preload readiness, while resident promotion belongs to `CommitPendingRequest` after world construction and grounding succeed.
+
+The regression test is updated to require the stale-serial guard before the preload-ready broadcast, explicitly reject resident promotion inside the async callback, and require `ResidentHandle = PendingHandle` only inside `CommitPendingRequest` after its readiness guard. Runtime streaming code is unchanged by this correction.
+
+Unreal Build #397 on the same SHA again failed before C++ compilation because `NT AUTHORITY\\NETWORK SERVICE` could not read UE4.27.2 `WorldGridMaterial.uasset` across all six probes. No compile/runtime/PIE/device/visual status is promoted. The registered transition persistence/rollback/NPC lifecycle defects remain the next runtime repair wave once static validation is green on the exact new head.
+
 ## 2026-09-22 - Pre-Unreal #561 deep-audit false regression isolated
 
 Exact-head Pre-Unreal #561 on `ed5af300852e6e2ce2264334c560af658250434b` reached `PRE-UNREAL CORE VALIDATION PASSED` and `PRE-UNREAL VALIDATION PASSED`, then failed in `Scripts/deep_project_audit.py` with one error: `async chapter streaming contract missing: FStreamableManager`. The streaming implementation is still asynchronous: `FStreamableManager` is declared in `ShireChapterAssetStreamingSubsystem.h`, while `FSoftObjectPath` and `RequestAsyncLoad` are used in the cpp. The audit had incorrectly required all three literal markers to appear in the cpp alone.
