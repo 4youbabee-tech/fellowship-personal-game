@@ -5243,8 +5243,8 @@ if pg117_wave.get("added_project_owned_obj_assets") != 18:
     fail("PG-117 character production matrix must retain 18 V4 OBJ assets")
 
 pg117_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
-if pg117_visual.get("current_wave", {}).get("id") != "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4":
-    fail("PG-117 Part I visual current wave is not hero equipment V4")
+# Hero-equipment V4 is a preserved historical production wave, not the global current wave.
+# Later world/life waves may legitimately become current without invalidating V4 evidence.
 if pg117_visual.get("hero_character_equipment_v4", {}).get("added_project_owned_obj_assets") != 18:
     fail("PG-117 Part I visual plan must retain 18 V4 OBJ assets")
 
