@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "wave_id": "CINEMATIC_AUDIO_WAREHOUSE_V2",
+  "status": "SOURCE_STRATEGY_REGISTERED_AUTHORED_ASSETS_PENDING",
+  "authority": "Data/ProjectGovernor.json",
+  "runtime_owner": "UShireAudioSubsystem",
+  "cue_sources": [
+    "UShireStoryPresentationSubsystem",
+    "UShireDialogueSubsystem"
+  ],
+  "goal": "Fill the project with a professional-quality offline audio bank for voice, music, ambience, fauna, foley, combat and creatures while preserving the existing dynamic routing and low-spec runtime budget.",
+  "source_basis": [
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX Audio, Music, Voice & Ambience Bible",
+    "Data/Part1SonicWorldPlan.json",
+    "Data/VoiceCuePlan.csv",
+    "Owner programmer/audio-manager directive 2026-09-22"
+  ],
+  "source_registry": {
+    "authorized_voice_generation": [
+      "ELEVENLABS"
+    ],
+    "professional_sfx": [
+      "BOOM_LIBRARY",
+      "PRO_SOUND_EFFECTS",
+      "SONNISS"
+    ],
+    "additional_approved_or_review_sources": [
+      "FREESOUND",
+      "PIXABAY",
+      "ZAPSPLAT",
+      "BBC_SOUND_EFFECTS"
+    ],
+    "musical_reference": [
+      "LOTR_COMPLETE_RECORDINGS"
+    ],
+    "dialogue_performance_reference": [
+      "LOTR_BLURAY_CENTER_CHANNEL"
+    ],
+    "creature_combat_reference": [
+      "EA_CLASSIC_LOTR_AUDIO"
+    ]
+  },
+  "approval_boundaries": {
+    "real_actor_voice_cloning": "REQUIRES_EXPLICIT_AUTHORIZATION; film samples alone are not approval.",
+    "commercial_film_music": "REFERENCE_ONLY_UNLESS_SEPARATELY_CLEARED",
+    "extracted_film_dialogue": "REFERENCE_ONLY_UNLESS_SEPARATELY_CLEARED",
+    "extracted_game_audio": "REFERENCE_ONLY_UNLESS_SEPARATELY_CLEARED",
+    "professional_library_assets": "ITEM_OR_PACK_ENTITLEMENT_REQUIRED"
+  },
+  "production_targets": {
+    "voice": [
+      "bounded character-specific performance direction",
+      "3D attachment to speaking actor when present",
+      "dialogue ducking and concurrency",
+      "original or authorized performance assets"
+    ],
+    "music": [
+      "chapter/state stems",
+      "exploration/tension/combat/recovery states",
+      "crossfade and intensity layers",
+      "no abrupt cue switching"
+    ],
+    "ambience": [
+      "persistent bed + local spot emitters",
+      "distance/occlusion-aware spatialization",
+      "fauna and weather variation",
+      "region-specific reverberation strategy"
+    ],
+    "foley": [
+      "surface-specific footsteps",
+      "cloth/gear movement",
+      "doors/wood/stone/metal interactions",
+      "horse/cart movement"
+    ],
+    "creatures_and_combat": [
+      "orcs/uruks/trolls/Watcher/Balrog-safe original or licensed design",
+      "weapon impact families",
+      "threat distance/readability layers"
+    ]
+  },
+  "first_bank_order": [
+    "P1C01 Shire ambience + footsteps + Hobbit interiors + Frodo/Sam/Gandalf voice placeholders from authorized/original source",
+    "P1C02 Bree rain/inn/horse/timber bank",
+    "P1C06 Moria reverb/drips/stone/threat bank",
+    "P1C07 Lothlorien foliage/water/airy bank",
+    "P1C08 Anduin river/paddle/wind/battle-state bank"
+  ],
+  "technical_contract": {
+    "source_format": "WAV preferred for authored masters; imported/compressed runtime settings chosen in UE4.27 per category.",
+    "spatial_audio": "Use 3D attenuation for localized ambience/fauna/foley/voice emitters; persistent non-local score remains 2D.",
+    "concurrency": "Bound simultaneous fauna/foley/voice emitters and prioritize story-critical cues.",
+    "dynamic_mix": "Preserve existing ambience/music crossfades and voice ducking from Part1SonicWorldPlan.",
+    "low_spec": "Profile source count, decompression mode, concurrency and resident memory on i7 Gen6/8GB/~2GB VRAM target."
+  },
+  "acceptance_boundary": {
+    "static": "plan/source registry only",
+    "compile": "requires exact-head UE4 gate when runner is healthy",
+    "pie": "not accepted until chapter-specific listening review",
+    "device": "not accepted until target-laptop mix/performance observation",
+    "final_mix": "not accepted"
+  }
+}
