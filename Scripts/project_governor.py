@@ -223,8 +223,13 @@ for index, finding in enumerate(governor.get("external_review_findings", []), st
     if finding_id in review_ids:
         fail(f"Duplicate external review finding id: {finding_id}")
     review_ids.add(finding_id)
-    if not re.fullmatch(r"[0-9a-f]{40}", str(finding.get("verification_sha") or "")):
+    verification_status = str(finding.get("verification_status") or "").strip()
+    verification_sha = str(finding.get("verification_sha") or "").strip()
+    is_owner_directive = verification_status.startswith("REGISTERED_AS_OWNER_")
+    if not is_owner_directive and not re.fullmatch(r"[0-9a-f]{40}", verification_sha):
         fail(f"{finding_id} requires an exact verification SHA")
+    if is_owner_directive and verification_sha and not re.fullmatch(r"[0-9a-f]{40}", verification_sha):
+        fail(f"{finding_id} has malformed optional verification SHA")
     for field in ("source","verification_status","claim","disposition","next_action"):
         if not str(finding.get(field) or "").strip():
             fail(f"{finding_id} missing {field}")
