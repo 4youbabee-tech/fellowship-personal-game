@@ -11,6 +11,7 @@ class StreamingCancellationContract(unittest.TestCase):
         cls.stream = (ROOT / 'Source/ShireJourney/ShireChapterAssetStreamingSubsystem.cpp').read_text()
         cls.router = (ROOT / 'Source/ShireJourney/ChapterWorldRouter.cpp').read_text()
         cls.player = (ROOT / 'Source/ShireJourney/ShirePlayerCharacter.cpp').read_text()
+        cls.player_header = (ROOT / 'Source/ShireJourney/ShirePlayerCharacter.h').read_text()
 
     def test_cancel_invalidates_before_handle_and_preserves_resident(self):
         body = self.stream.split('::CancelPendingRequest()', 1)[1].split('::Deinitialize()', 1)[0]
@@ -47,6 +48,35 @@ class StreamingCancellationContract(unittest.TestCase):
         self.assertIn('IsWorldCommitted(ChapterId, RouteId, EpisodeId)', placement)
         self.assertIn('ResolveGroundedSpawnLocation', placement)
         self.assertLess(placement.index('IsWorldCommitted(ChapterId, RouteId, EpisodeId)'), placement.index('SetActorLocationAndRotation'))
+
+    def test_failed_swap_rollback_restores_full_player_transaction(self):
+        restore = self.router.split('::RestoreCommittedWorldFromSnapshot(', 1)[1].split('::RollbackFailedWorldSwap(', 1)[0]
+        for contract in (
+            'RestoreQuestState(',
+            'RestoreNPCMemoryState(',
+            'RestoreJourneyDiscoveryState(',
+            'RestoreProgressionState(',
+            'RestoreKnowledgeState(',
+            'PlacePlayerAtCommittedTransform(',
+            'RestoreTransactionalPlayerState(',
+            'SetPlayerWorldHold(false)',
+            'OnWorldCommitted.Broadcast(WorldRevision)',
+        ):
+            self.assertIn(contract, restore)
+        self.assertLess(restore.index('PlacePlayerAtCommittedTransform('), restore.index('RestoreTransactionalPlayerState('))
+        self.assertLess(restore.index('RestoreTransactionalPlayerState('), restore.index('SetPlayerWorldHold(false)'))
+
+    def test_rollback_snapshot_captures_player_life_state(self):
+        capture = self.router.split('::CaptureCommittedRollbackSnapshot()', 1)[1].split('::RestoreCommittedWorldFromSnapshot(', 1)[0]
+        for contract in (
+            'Snapshot->PlayerHealth = PlayerCharacter->GetCurrentHealth()',
+            'Snapshot->PlayerStamina = PlayerCharacter->GetCurrentStamina()',
+            'Snapshot->PlayerResolve = PlayerCharacter->GetCurrentResolve()',
+            'Snapshot->PlayerSupplies = PlayerCharacter->GetSupplies()',
+        ):
+            self.assertIn(contract, capture)
+        self.assertIn('RestoreTransactionalPlayerState(', self.player)
+        self.assertIn('void RestoreTransactionalPlayerState(', self.player_header)
 
     def test_completion_checks_authoritative_quest_identity(self):
         body = self.router.split('::HandleChapterAssetsReady(FName ChapterId, FName RouteId)', 1)[1].split('CommitChapterWorld(', 1)[0]
