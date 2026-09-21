@@ -38,7 +38,7 @@
     },
     "active_wave": "COMPREHENSIVE_FOUNDATION_INTEGRATION_V1",
     "source_baseline": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
-    "proof_boundary": "Exact-head Pre-Unreal pending after integrated runtime changes; UE4 engine proof separately blocked until local Engine Content access is repaired.",
+    "proof_boundary": "Exact-head Pre-Unreal remains active; persistence/rollback findings are registered as source-confirmed repair work. UE4 engine proof remains separate and blocked until the local Engine Content read-access issue is resolved.",
     "integration_baseline": "fb7afb8e39a4186245063ddf2a46fc0df8ba6c56",
     "current_scope": [
       "startup grounding",
@@ -480,11 +480,12 @@
     "WORK-WORLD-003"
   ],
   "immediate_next_large_actions": [
-    "Complete static guards and continuous transition audit on the comprehensive branch.",
-    "Run exact-head Pre-Unreal and repair all integration failures before adding more runtime complexity.",
+    "Restore exact-head static validation, including stale historical guard reconciliation, before additional runtime expansion.",
+    "Repair commit-synchronized transition checkpoint capture, cross-chapter save restore and coherent failed-swap rollback on the comprehensive integration train before merge.",
+    "After persistence/transition correctness is source-stable, add ground-safe ambient placement, bounded ambient object pooling and asynchronous living-world visual asset ownership before raising NPC density.",
     "Repair local UE4 Engine Content access, then execute build/import/Automation/startup/chapter/state/transition gates on the same SHA.",
     "Perform defect-specific P1C01 PIE startup check.",
-    "Merge the proven comprehensive foundation to develop, retire/rebase superseded PRs, then resume object pooling, residual async-load debt reduction, living-NPC witness/share/learn, character production and visual world passes."
+    "Merge the proven comprehensive foundation to develop, retire/rebase superseded PRs, then resume living-NPC witness/share/learn, character production and visual world passes."
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
