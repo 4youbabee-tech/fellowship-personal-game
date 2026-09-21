@@ -262,4 +262,93 @@ void AShireGameMode::BeginPlay()
     // asynchronous, so moving the pawn here can release gravity before Shire collision
     // exists. The router holds the pawn and places it only after committed world geometry
     // provides a blocking ground surface.
+
+#if !UE_BUILD_SHIPPING
+    if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit")) &&
+        FParse::Param(FCommandLine::Get(), TEXT("AuditTransitions")))
+    {
+        struct FTransitionAuditState
+        {
+            FTimerHandle Timer;
+            int32 Step = 0;
+            int32 Polls = 0;
+            FName ExpectedChapter = TEXT("P1C01");
+            FName ExpectedRoute = TEXT("FrodoMain");
+        };
+        const TSharedRef<FTransitionAuditState> Audit = MakeShared<FTransitionAuditState>();
+        GetWorldTimerManager().SetTimer(Audit->Timer,
+            FTimerDelegate::CreateWeakLambda(this, [this, Audit]()
+        {
+            UShireQuestSubsystem* Q = GetGameInstance()->GetSubsystem<UShireQuestSubsystem>();
+            AChapterWorldRouter* Router = Cast<AChapterWorldRouter>(
+                UGameplayStatics::GetActorOfClass(this, AChapterWorldRouter::StaticClass()));
+            ALivingWorldDirector* Life = Cast<ALivingWorldDirector>(
+                UGameplayStatics::GetActorOfClass(this, ALivingWorldDirector::StaticClass()));
+            if (++Audit->Polls > 300 || !Q || !Router || !Life)
+            {
+                UE_LOG(LogTemp, Error, TEXT("ShireTransitionAudit: FAIL readiness step=%d"), Audit->Step);
+                GetWorldTimerManager().ClearTimer(Audit->Timer);
+                return;
+            }
+            if (!Router->IsWorldCommitted(Q->GetCurrentChapterId(), Q->GetCurrentRouteId(),
+                    Q->GetCurrentEpisodeId()) ||
+                Life->GetAppliedWorldRevision() != Router->GetWorldRevision()) return;
+            if (Q->GetCurrentChapterId() != Audit->ExpectedChapter ||
+                Q->GetCurrentRouteId() != Audit->ExpectedRoute)
+            {
+                UE_LOG(LogTemp, Error, TEXT("ShireTransitionAudit: FAIL unexpected identity step=%d"), Audit->Step);
+                GetWorldTimerManager().ClearTimer(Audit->Timer);
+                return;
+            }
+
+            static const TCHAR* Chapters[] = {TEXT("P1C02"), TEXT("P1C03"), TEXT("P1C04"),
+                TEXT("P1C05"), TEXT("P1C06"), TEXT("P1C07"), TEXT("P1C08")};
+            static const TCHAR* Quests[] = {TEXT("RoadToBree"), TEXT("RoadToWeathertop"),
+                TEXT("RivendellRecovery"), TEXT("SouthwardJourney"), TEXT("MoriaDark"),
+                TEXT("LothlorienRest"), TEXT("AnduinJourney")};
+            if (Audit->Step == 0)
+            {
+                Q->StartChapter(TEXT("P1C02"), TEXT("RoadToBree"), 0);
+                Q->StartChapter(TEXT("P1C01"), TEXT("ShireArrival"), 0);
+            }
+            else if (Audit->Step <= 7)
+            {
+                Audit->ExpectedChapter = FName(Chapters[Audit->Step - 1]);
+                Q->StartChapter(FName(Chapters[Audit->Step - 1]), FName(Quests[Audit->Step - 1]), 0);
+            }
+            else if (Audit->Step == 8)
+            {
+                Audit->ExpectedChapter = TEXT("P1C01");
+                Audit->ExpectedRoute = TEXT("GandalfParallel");
+                Q->StartExperience(TEXT("GandalfParallel"), TEXT("P1G01_Isengard"),
+                    TEXT("Gandalf"), TEXT("P1C01"), TEXT("IsengardCounsel"), 0);
+            }
+            else if (Audit->Step == 9)
+            {
+                Audit->ExpectedChapter = TEXT("P1C08");
+                Audit->ExpectedRoute = TEXT("FrodoMain");
+                Q->StartExperience(TEXT("FrodoMain"), NAME_None, TEXT("Frodo"), NAME_None);
+            }
+            else if (Audit->Step == 10)
+            {
+                AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(
+                    UGameplayStatics::GetPlayerPawn(this, 0));
+                if (!Player || !Player->RunSaveRoundtripAudit())
+                {
+                    UE_LOG(LogTemp, Error, TEXT("ShireTransitionAudit: FAIL disk-save"));
+                    GetWorldTimerManager().ClearTimer(Audit->Timer);
+                    return;
+                }
+            }
+            else
+            {
+                UE_LOG(LogTemp, Display, TEXT("ShireTransitionAudit: sequence=PASS chapters=8 routes=2 disk-save=PASS"));
+                GetWorldTimerManager().ClearTimer(Audit->Timer);
+                return;
+            }
+            UE_LOG(LogTemp, Display, TEXT("ShireTransitionAudit: requested-step=%d"), Audit->Step);
+            ++Audit->Step;
+        }), 0.25f, true);
+    }
+#endif
 }
