@@ -873,14 +873,16 @@
         "approved asset manifest contract",
         "Pre-Unreal provenance validation",
         "Programmer-supplied future sourcing shortlist is persisted in Data/ExternalAssetManifest.json by category",
-        "Production importer now copies tracked SourceAssets into Saved/ShireProductionImportWorking with UE4.27-compatible IPlatformFile::CopyDirectoryTree before any OBJ normalization/import."
+        "Production importer now copies tracked SourceAssets into Saved/ShireProductionImportWorking with UE4.27-compatible IPlatformFile::CopyDirectoryTree before any OBJ normalization/import.",
+        "ExternalAssetManifest now stores the owner-supplied 2026-09-22 cinematic discovery shortlist, including DeviantArt 3D ports, SFMLab, Open3DLab, Nexus Mods and a separate ArtStation Marketplace review path."
       ],
       "missing_work": [
         "Acquire specific assets only when entitlement/license evidence is available",
         "Record attributions/receipts per asset",
         "Run UE4.27.2 import/build validation for each acquired batch",
         "When a listed source becomes useful, evaluate the exact item/license/UE4.27 compatibility before acquisition",
-        "Promote useful approved sources into concrete asset batches only when they improve an active world/character/audio/UI workstream"
+        "Promote useful approved sources into concrete asset batches only when they improve an active world/character/audio/UI workstream",
+        "Create item-level candidate queues from the newly registered cinematic character/environment sources and record exact source/license/provenance before any Approved ingest."
       ],
       "acceptance_criteria": [
         "Every external production asset has a manifest record and license evidence",
@@ -4528,6 +4530,43 @@
         "WORK-PERF-006"
       ],
       "next_action": "First restore exact-head static gate health. Then repair chapter checkpoint/save-restore/rollback around committed-world identity/revision before merge. After that, add ground-safe ambient placement, pooled ambient reuse and an asynchronous living-world asset ownership path before density expansion."
+    },
+    {
+      "id": "EXT-REV-2026-09-22-019",
+      "source": "Owner-forwarded programmer/asset-manager message about high-fidelity LOTR character and world sourcing",
+      "verification_status": "REGISTERED_AS_OWNER_DISCOVERY_DIRECTIVE_WITH_POLICY_BOUNDARY",
+      "claim": "Expand the asset-source shortlist aggressively for cinematic-quality characters, creatures, weapons, architecture and environments so the visual warehouse can become production-rich rather than placeholder-heavy.",
+      "verified_result": {
+        "already_registered": [
+          "ARTSTATION",
+          "CGTRADER",
+          "TURBOSQUID",
+          "SKETCHFAB",
+          "QUixel_MEGASCANS",
+          "UNREAL_MARKETPLACE_LEGACY",
+          "FAB"
+        ],
+        "newly_registered": [
+          "DEVIANTART_3D_PORTS",
+          "SFMLAB",
+          "OPEN3DLAB",
+          "NEXUS_MODS",
+          "ARTSTATION_MARKETPLACE"
+        ],
+        "policy_boundary": [
+          "Private/non-distributed project intent is recorded but does not automatically convert ripped/ported proprietary assets into approved production assets.",
+          "Each externally acquired production asset still needs item-level provenance/license/entitlement evidence before entering Approved.",
+          "Final animated characters remain skeletal FBX with real rig/skin/deformation; static OBJ ports are not accepted as final character production.",
+          "High-fidelity original/permitted assets, commissions and project-authored reconstruction are preferred when exact film/game source reuse is not cleared."
+        ]
+      },
+      "disposition": "ADOPT_DISCOVERY_EXPANSION_WITH_ITEM_LEVEL_APPROVAL_GATE",
+      "linked_requirements": [
+        "REQ-ASSET-001",
+        "REQ-CHAR-004",
+        "REQ-WORLD-003"
+      ],
+      "next_action": "Use the expanded provider shortlist to build categorized character/environment/material/animation candidate queues, but only promote specific files after provenance, format, UE4.27 compatibility and performance review."
     }
   ],
   "project_source_library": {
