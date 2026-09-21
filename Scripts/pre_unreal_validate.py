@@ -5335,6 +5335,34 @@ pg118_budget = json.loads(read(ROOT / "Data" / "AssetPerformanceBudget.json"))
 if pg118_budget.get("chapter_asset_streaming_v5", {}).get("status") != "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF_AND_MEASUREMENT":
     fail("PG-118 streaming performance evidence boundary changed")
 
+# PG-121: startup grounding must wait for committed world geometry.
+pg121_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg121_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
+pg121_router_h = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.h")
+pg121_runtime_smoke = read(ROOT / "Scripts" / "runtime_smoke.py")
+
+if "RestartPlayerAtTransform(PC" in pg121_game_mode or    'SetActorLocationAndRotation(FVector(-2410.0f, -120.0f, 130.0f)' in pg121_game_mode:
+    fail("PG-121 GameMode may not teleport the pawn into chapter coordinates before async world commit")
+
+for pg121_symbol in [
+    "SetPlayerWorldHold(true);",
+    "ResolveGroundedSpawnLocation",
+    "LineTraceSingleByChannel",
+    "ShireStartupGrounding: PASS",
+    "ShireStartupGrounding: FAIL",
+]:
+    if pg121_symbol not in (pg121_router + pg121_router_h):
+        fail(f"PG-121 world-ready grounding contract missing: {pg121_symbol}")
+
+for pg121_marker in [
+    "ShireStartupGrounding: PASS chapter=P1C01",
+    "ShireStartupGrounding: PASS chapter=P1C03",
+    'f"ShireStartupGrounding: PASS chapter={chapter}"',
+]:
+    if pg121_marker not in pg121_runtime_smoke:
+        fail(f"PG-121 runtime grounding regression marker missing: {pg121_marker}")
+
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

@@ -16,6 +16,9 @@
 #include "Engine/StaticMeshActor.h"
 #include "Engine/TextRenderActor.h"
 #include "Engine/World.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Pawn.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -46,6 +49,7 @@ void AChapterWorldRouter::BeginPlay()
             &AChapterWorldRouter::HandleChapterAssetsReady);
     }
 
+    SetPlayerWorldHold(true);
     LoadChapterWorld(Quests->GetCurrentChapterId());
 }
 
@@ -172,16 +176,86 @@ FVector AChapterWorldRouter::GetChapterSpawnLocation(FName ChapterId) const
     return FVector(-2410.0f, -120.0f, 130.0f);
 }
 
-void AChapterWorldRouter::MovePlayerToChapterStart(FName ChapterId, bool bRestoreRouteTransform)
+void AChapterWorldRouter::SetPlayerWorldHold(bool bHold)
+{
+    ACharacter* Character = Cast<ACharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+    if (!Character || !Character->GetCharacterMovement())
+    {
+        bPlayerWorldHoldActive = bHold;
+        return;
+    }
+
+    UCharacterMovementComponent* Movement = Character->GetCharacterMovement();
+    if (bHold)
+    {
+        Movement->StopMovementImmediately();
+        Movement->DisableMovement();
+        bPlayerWorldHoldActive = true;
+        UE_LOG(LogTemp, Display, TEXT("ShireStartupGrounding: HOLD reason=awaiting-world"));
+    }
+    else if (bPlayerWorldHoldActive)
+    {
+        Movement->StopMovementImmediately();
+        Movement->SetMovementMode(MOVE_Walking);
+        bPlayerWorldHoldActive = false;
+    }
+}
+
+bool AChapterWorldRouter::ResolveGroundedSpawnLocation(
+    APawn* PlayerPawn,
+    const FVector& RequestedLocation,
+    FVector& OutGroundedLocation) const
+{
+    if (!GetWorld() || !PlayerPawn)
+    {
+        return false;
+    }
+
+    const FVector TraceStart = RequestedLocation + FVector(0.0f, 0.0f, 650.0f);
+    const FVector TraceEnd = RequestedLocation - FVector(0.0f, 0.0f, 2200.0f);
+    FCollisionQueryParams QueryParams(FName(TEXT("ShireChapterSpawnGround")), false, PlayerPawn);
+
+    FHitResult GroundHit;
+    if (!GetWorld()->LineTraceSingleByChannel(
+            GroundHit,
+            TraceStart,
+            TraceEnd,
+            ECC_Visibility,
+            QueryParams) ||
+        !GroundHit.bBlockingHit)
+    {
+        return false;
+    }
+
+    float CapsuleHalfHeight = 60.0f;
+    if (const ACharacter* Character = Cast<ACharacter>(PlayerPawn))
+    {
+        if (const UCapsuleComponent* Capsule = Character->GetCapsuleComponent())
+        {
+            CapsuleHalfHeight = Capsule->GetScaledCapsuleHalfHeight();
+        }
+    }
+
+    OutGroundedLocation = RequestedLocation;
+    OutGroundedLocation.Z = GroundHit.ImpactPoint.Z + CapsuleHalfHeight + 4.0f;
+    return true;
+}
+
+bool AChapterWorldRouter::MovePlayerToChapterStart(FName ChapterId, bool bRestoreRouteTransform)
 {
     APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
     if (!PlayerPawn)
     {
-        return;
+        UE_LOG(LogTemp, Error, TEXT("ShireStartupGrounding: FAIL chapter=%s reason=no-player-pawn"), *ChapterId.ToString());
+        return false;
     }
 
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+
+    FVector RequestedLocation = GetChapterSpawnLocation(ChapterId);
+    FRotator RequestedRotation = FRotator::ZeroRotator;
+    bool bUsingSavedTransform = false;
 
     if (bRestoreRouteTransform && Quests)
     {
@@ -189,24 +263,63 @@ void AChapterWorldRouter::MovePlayerToChapterStart(FName ChapterId, bool bRestor
         FRotator SavedRotation;
         if (Quests->GetCurrentRouteSavedTransform(SavedLocation, SavedRotation))
         {
-            PlayerPawn->SetActorLocationAndRotation(
-                SavedLocation, SavedRotation, false, nullptr, ETeleportType::TeleportPhysics);
-            return;
+            RequestedLocation = SavedLocation;
+            RequestedRotation = SavedRotation;
+            bUsingSavedTransform = true;
         }
     }
 
-    FVector Spawn = GetChapterSpawnLocation(ChapterId);
-    if (Quests && Quests->GetCurrentRouteId() == TEXT("GandalfParallel"))
+    if (!bUsingSavedTransform && Quests && Quests->GetCurrentRouteId() == TEXT("GandalfParallel"))
     {
-        Spawn = FVector(-2400.0f, 0.0f, 130.0f);
+        RequestedLocation = FVector(-2400.0f, 0.0f, 130.0f);
+    }
+
+    FVector GroundedLocation;
+    if (!ResolveGroundedSpawnLocation(PlayerPawn, RequestedLocation, GroundedLocation))
+    {
+        PlayerPawn->SetActorLocationAndRotation(
+            RequestedLocation,
+            RequestedRotation,
+            false,
+            nullptr,
+            ETeleportType::TeleportPhysics);
+        SetPlayerWorldHold(true);
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireStartupGrounding: FAIL chapter=%s reason=no-blocking-ground requested=(%.1f,%.1f,%.1f)"),
+            *ChapterId.ToString(),
+            RequestedLocation.X,
+            RequestedLocation.Y,
+            RequestedLocation.Z);
+        return false;
     }
 
     PlayerPawn->SetActorLocationAndRotation(
-        Spawn,
-        FRotator::ZeroRotator,
+        GroundedLocation,
+        RequestedRotation,
         false,
         nullptr,
         ETeleportType::TeleportPhysics);
+
+    if (ACharacter* Character = Cast<ACharacter>(PlayerPawn))
+    {
+        if (UCharacterMovementComponent* Movement = Character->GetCharacterMovement())
+        {
+            Movement->StopMovementImmediately();
+        }
+    }
+
+    SetPlayerWorldHold(false);
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireStartupGrounding: PASS chapter=%s source=%s requestedZ=%.1f groundedZ=%.1f"),
+        *ChapterId.ToString(),
+        bUsingSavedTransform ? TEXT("saved-route") : TEXT("chapter-start"),
+        RequestedLocation.Z,
+        GroundedLocation.Z);
+    return true;
 }
 
 void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTransform)
@@ -321,10 +434,14 @@ void AChapterWorldRouter::CommitChapterWorld(
 
     if (RouteId == TEXT("GandalfParallel"))
     {
-        GetWorld()->SpawnActor<AIsengardPrototypeWorldBuilder>(
+        AIsengardPrototypeWorldBuilder* Builder = GetWorld()->SpawnActor<AIsengardPrototypeWorldBuilder>(
             FVector::ZeroVector,
             FRotator::ZeroRotator);
-        MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
+        if (!Builder || !MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform))
+        {
+            UE_LOG(LogTemp, Error, TEXT("ShireChapterAudit: grounding-or-builder-failed chapter=%s route=%s"), *ChapterId.ToString(), *RouteId.ToString());
+            return;
+        }
         UE_LOG(
             LogTemp,
             Display,
@@ -336,10 +453,19 @@ void AChapterWorldRouter::CommitChapterWorld(
 
     if (ChapterId == TEXT("P1C01"))
     {
-        GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(
+        AShirePrototypeWorldBuilder* Builder = GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(
             FVector::ZeroVector,
             FRotator::ZeroRotator);
-        MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
+        if (!Builder)
+        {
+            UE_LOG(LogTemp, Error, TEXT("ShireChapterAudit: failed-to-spawn builder for P1C01"));
+            return;
+        }
+        Builder->BuildPrototypeWorld();
+        if (!MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform))
+        {
+            return;
+        }
         UE_LOG(LogTemp, Display, TEXT("ShirePlayableStartup: chapter=P1C01 route=%s"), *RouteId.ToString());
         UE_LOG(
             LogTemp,
@@ -351,10 +477,19 @@ void AChapterWorldRouter::CommitChapterWorld(
 
     if (ChapterId == TEXT("P1C02"))
     {
-        GetWorld()->SpawnActor<ABreePrototypeWorldBuilder>(
+        ABreePrototypeWorldBuilder* Builder = GetWorld()->SpawnActor<ABreePrototypeWorldBuilder>(
             FVector::ZeroVector,
             FRotator::ZeroRotator);
-        MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
+        if (!Builder)
+        {
+            UE_LOG(LogTemp, Error, TEXT("ShireChapterAudit: failed-to-spawn builder for P1C02"));
+            return;
+        }
+        Builder->BuildPrototypeWorld();
+        if (!MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform))
+        {
+            return;
+        }
         UE_LOG(
             LogTemp,
             Display,
@@ -392,14 +527,21 @@ void AChapterWorldRouter::CommitChapterWorld(
                 TEXT("ShireChapterAudit: failed-to-spawn builder for %s"),
                 *ChapterId.ToString());
         }
-        MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform);
+        if (!Builder || !MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform))
+        {
+            return;
+        }
         return;
     }
 
     // Unknown chapter IDs fall back to the first chapter rather than leaving the
     // player in an empty world.
-    GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(
+    AShirePrototypeWorldBuilder* FallbackBuilder = GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(
         FVector::ZeroVector,
         FRotator::ZeroRotator);
-    MovePlayerToChapterStart(TEXT("P1C01"), false);
+    if (FallbackBuilder)
+    {
+        FallbackBuilder->BuildPrototypeWorld();
+        MovePlayerToChapterStart(TEXT("P1C01"), false);
+    }
 }

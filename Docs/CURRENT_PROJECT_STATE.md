@@ -1,3 +1,13 @@
+## 2026-09-21 - startup fall-through root cause and regression repair
+
+Owner reproduced a previously claimed startup fix as still broken: on first PIE launch the player can fall below the world. Source inspection identified the ordering defect. `AShireGameMode::BeginPlay` teleported the pawn to P1C01 coordinates immediately, while `AChapterWorldRouter` intentionally waits for asynchronous chapter asset streaming before spawning the Shire world. Raising the spawn Z did not close that race because there can still be no blocking ground under the pawn when gravity begins.
+
+The isolated repair branch `fix/startup-grounding-regression-v1` removes the GameMode pre-commit teleport. ChapterWorldRouter now holds initial character movement while the first bank streams, moves the pawn only after the builder commits, line-traces a blocking floor, places the capsule from the measured floor height, and releases movement only on success. Missing ground fails closed with `ShireStartupGrounding: FAIL` rather than allowing indefinite falling.
+
+Automation now requires a chapter-specific `ShireStartupGrounding: PASS` marker for normal startup, state audit and P1C01-P1C08 chapter audits. PG-121 rejects reintroduction of the old pre-commit GameMode teleport.
+
+Status is **FIX_CANDIDATE / STATIC-PENDING** until the exact branch head passes Pre-Unreal. It is not COMPILE-TESTED or PIE-verified. The self-hosted Unreal runner also has a separate local UE4 Engine Content file-access blocker that must be repaired before engine proof can complete.
+
 ## 2026-09-21 - path cleanup before post-V5 production
 
 Authority remains `Data/ProjectGovernor.json`. The integration baseline is `develop` at `8d7247d229b5cd51e8aea5617e1e2030b38229bf`, green after PR #60 with Pre-Unreal #532 and Unreal Build #367. There is exactly one open production PR: #61, `production/chapter-streaming-v5`.

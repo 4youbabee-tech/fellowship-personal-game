@@ -86,19 +86,22 @@ class RuntimeSmokeTests(unittest.TestCase):
     def test_marker_prefix_is_not_exact_chapter(self):
         self.assertEqual(missing_markers("chapter=P1C010", ["chapter=P1C01"]), ["chapter=P1C01"])
 
-    def test_all_four_chapter_markers_are_required(self):
+    def test_all_five_chapter_markers_are_required(self):
         markers = required_markers("P1C08", "chapters")
-        self.assertEqual(len(markers), 4)
+        self.assertEqual(len(markers), 5)
         for omitted in markers:
             text = "\n".join(m for m in markers if m != omitted)
             self.assertEqual(missing_markers(text, markers), [omitted])
 
-    def test_startup_requires_both_markers(self):
-        self.assertEqual(len(required_markers(None, "startup")), 2)
+    def test_startup_requires_grounding_marker(self):
+        markers = required_markers(None, "startup")
+        self.assertEqual(len(markers), 3)
+        self.assertIn("ShireStartupGrounding: PASS chapter=P1C01", markers)
 
     def test_state_requires_roundtrip_marker(self):
         self.assertEqual(required_markers(None, "state"), [
             "ShirePlayableStartup: GameMode ready",
+            "ShireStartupGrounding: PASS chapter=P1C03",
             "ShireStateAudit: route-roundtrip=PASS",
             "ShireStateAudit: ring-core=PASS",
             "ShireStateAudit: discovery-core=PASS",

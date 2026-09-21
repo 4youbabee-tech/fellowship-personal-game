@@ -1,5 +1,11 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-21 - startup grounding regression repair
+
+A P1C01 PIE fall-through remains an open runtime defect despite an earlier spawn-height/placement change. The isolated fix removes pre-world GameMode teleporting, holds initial gravity until world commit, resolves a blocking floor before release, and adds startup/chapter grounding regression markers.
+
+This is a **FIX_CANDIDATE**, not an accepted fix. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED status is added until the exact fix head completes engine validation and the original owner-observed P1C01 symptom is rechecked.
+
 ## Verification evidence correction and production continuation
 
 Historical machine baseline: `develop@f7c2b081e7b064fcf27bb4c80124b21f351331ab`.

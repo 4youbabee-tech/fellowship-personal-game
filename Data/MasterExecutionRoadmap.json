@@ -23,7 +23,7 @@
   },
   "current_control_state": {
     "pull_request": 61,
-    "branch": "production/chapter-streaming-v5",
+    "branch": "fix/startup-grounding-regression-v1",
     "integration_baseline_head": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
     "integration_baseline_pre_unreal": "SUCCESS #532",
     "integration_baseline_unreal": "SUCCESS #367",
@@ -35,7 +35,10 @@
       "status": "V5_EXACT_HEAD_VALIDATION_ACTIVE",
       "artifact": "Data/DeepProjectAudit.json",
       "rule": "Repair only demonstrated exact-head failures. Performance promotion additionally requires representative target-device hitch/memory measurement."
-    }
+    },
+    "active_wave": "STARTUP_GROUNDING_REGRESSION_REPAIR",
+    "source_baseline": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
+    "proof_boundary": "Fix candidate until exact-head UE4 build/runtime plus owner P1C01 PIE observation."
   },
   "bundles": [
     {
@@ -51,7 +54,8 @@
         "REQ-SAVE-001",
         "REQ-PERF-001",
         "REQ-AUDIT-001",
-        "REQ-PERF-002"
+        "REQ-PERF-002",
+        "REQ-STARTUP-001"
       ],
       "work_ids": [
         "WORK-QA-001",
@@ -266,7 +270,8 @@
         "REQ-QUALITY-001",
         "REQ-QUALITY-002",
         "REQ-PERF-001",
-        "REQ-SAVE-001"
+        "REQ-SAVE-001",
+        "REQ-STARTUP-001"
       ],
       "work_ids": [
         "WORK-QA-001"
@@ -450,11 +455,10 @@
     "WORK-PERF-002"
   ],
   "immediate_next_large_actions": [
-    "Finish PR #61 V5 exact-head validation and merge only when both machine gates pass.",
-    "Confirm the resulting develop integration head returns green.",
-    "Measure chapter seam hitch/streaming pool/resident memory before claiming a performance win.",
-    "Open the next short branch for Shire/Bree/Rivendell/Lothlorien world life, architecture and NPC density.",
-    "Advance the actual skeletal rig/skin/AnimBP/animation track as the parallel character-quality lane."
+    "Static-validate the isolated startup-grounding repair branch.",
+    "Repair the local UE4 Engine Content access blocker, then run exact-head compile/import/startup/P1C01-P1C08 grounding audits.",
+    "Reproduce the original P1C01 startup in PIE on the exact fix head and close REQ-STARTUP-001 only if the player does not fall below the world.",
+    "Merge the isolated repair into develop before rebasing/reconciling larger V10 and transition work."
   ],
   "last_reconciliation": {
     "date": "2026-09-21",

@@ -819,10 +819,39 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
 
 void AShirePrototypeWorldBuilder::SpawnVillage()
 {
-    // The expanded terrain covers roughly 340m x 130m. One cheap slab keeps collision
-    // predictable on the low-spec target while hills and vegetation break the horizon.
-    SpawnShape(ProductionGroundBlockMesh ? ProductionGroundBlockMesh : CubeMesh, FVector(10800.0f, 0.0f, -70.0f), FVector(340.0f, 130.0f, ProductionGroundBlockMesh ? 1.0f : 0.7f),
-        FLinearColor(0.16f, 0.34f, 0.10f), FRotator::ZeroRotator, true);
+    // Foundational collision must not depend on an imported OBJ having generated
+    // simple collision. Keep one deterministic Engine/BasicShapes cube under the Shire.
+    const FLinearColor GroundColor(0.16f, 0.34f, 0.10f);
+    AStaticMeshActor* CollisionFoundation = SpawnShape(
+        CubeMesh,
+        FVector(10800.0f, 0.0f, -105.0f),
+        FVector(340.0f, 130.0f, 0.7f),
+        GroundColor,
+        FRotator::ZeroRotator,
+        true);
+    if (CollisionFoundation)
+    {
+        CollisionFoundation->Tags.AddUnique(TEXT("RuntimeCollisionFoundation"));
+        if (ProductionGroundBlockMesh)
+        {
+            if (UStaticMeshComponent* FoundationComponent = CollisionFoundation->GetStaticMeshComponent())
+            {
+                FoundationComponent->SetVisibility(false, true);
+                FoundationComponent->SetCastShadow(false);
+            }
+        }
+    }
+
+    if (ProductionGroundBlockMesh)
+    {
+        SpawnShape(
+            ProductionGroundBlockMesh,
+            FVector(10800.0f, 0.0f, -70.0f),
+            FVector(340.0f, 130.0f, 1.0f),
+            GroundColor,
+            FRotator::ZeroRotator,
+            false);
+    }
 
     // Horizon / occlusion hills. These deliberately hide later regions so the player
     // discovers them by travelling instead of seeing the ferry from Bag End.

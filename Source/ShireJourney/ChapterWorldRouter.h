@@ -5,6 +5,7 @@
 #include "ChapterWorldRouter.generated.h"
 
 class UShireChapterAssetStreamingSubsystem;
+class APawn;
 
 UCLASS()
 class SHIREJOURNEY_API AChapterWorldRouter : public AActor
@@ -35,7 +36,9 @@ private:
     void HandleChapterAssetsReady(FName ChapterId, FName RouteId);
     void ClearPrototypeBuilders();
     FVector GetChapterSpawnLocation(FName ChapterId) const;
-    void MovePlayerToChapterStart(FName ChapterId, bool bRestoreRouteTransform);
+    bool ResolveGroundedSpawnLocation(APawn* PlayerPawn, const FVector& RequestedLocation, FVector& OutGroundedLocation) const;
+    bool MovePlayerToChapterStart(FName ChapterId, bool bRestoreRouteTransform);
+    void SetPlayerWorldHold(bool bHold);
     UShireChapterAssetStreamingSubsystem* AssetStreamingSubsystem = nullptr;
 
     FName LastLoadedRouteId = NAME_None;
@@ -46,4 +49,5 @@ private:
     FName PendingEpisodeId = NAME_None;
     FName PendingChapterId = NAME_None;
     bool bPendingRestoreRouteTransform = false;
+    bool bPlayerWorldHoldActive = false;
 };

@@ -1418,7 +1418,9 @@
         "Required automated gates fail closed: a failed required check blocks merge until repaired and rerun.",
         "Performance acceptance uses the project's 30 FPS floor target at 720p Low-Medium on the target laptop unless the owner explicitly changes that requirement.",
         "Story/lore automation validates against the project's Governor, Story Canon Bible and FilmExperiencePlan rather than an undefined external lore score.",
-        "Automation may reduce manual defect discovery but must not claim mathematically bug-free, lag-free or leak-free software beyond measured evidence."
+        "Automation may reduce manual defect discovery but must not claim mathematically bug-free, lag-free or leak-free software beyond measured evidence.",
+        "A runtime defect cannot be closed by source/static evidence alone; its original symptom needs defect-specific engine/PIE evidence on the exact fix head.",
+        "Where feasible, every runtime bug fix adds a regression marker/test so later changes cannot silently reintroduce the same failure."
       ],
       "dependencies": [
         "REQ-SAVE-001",
@@ -2231,6 +2233,45 @@
       ],
       "checkpoint": "CHAPTER_ASSET_STREAMING_V5",
       "notes": "Technical scaling wave; preserves existing film/story outcomes and builder topology."
+    },
+    {
+      "id": "REQ-STARTUP-001",
+      "title": "Player startup and chapter placement must never fall through unloaded world geometry",
+      "category": "RuntimeStability",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner-observed PIE defect reaffirmed 2026-09-21 after a previous claimed fix did not resolve the fall-through",
+      "intent": "Do not move or release the player into chapter coordinates until asynchronous chapter assets are ready, the world builder has committed, and a blocking ground surface is confirmed.",
+      "evidence": [
+        "Source/ShireJourney/ShireGameMode.cpp",
+        "Source/ShireJourney/ChapterWorldRouter.cpp",
+        "Scripts/runtime_smoke.py",
+        "Scripts/pre_unreal_validate.py"
+      ],
+      "implementation_refs": [
+        "GameMode no longer teleports the normal player to P1C01 before the asynchronous world is ready.",
+        "ChapterWorldRouter holds initial character movement, resolves blocking ground after builder commit, places the capsule from measured floor height, and releases movement only on success.",
+        "Headless startup/chapter audits require chapter-specific ShireStartupGrounding PASS markers.",
+        "PG-121 rejects reintroduction of the old GameMode pre-commit teleport."
+      ],
+      "missing_work": [
+        "Pass Pre-Unreal on the exact fix head.",
+        "Pass real UE4.27.2 build/import/startup/chapter audits after the separate local Engine Content access blocker is repaired.",
+        "Owner re-run P1C01 in PIE and confirm the player no longer drops below the world on initial launch."
+      ],
+      "acceptance_criteria": [
+        "Normal P1C01 launch never teleports the pawn into an unloaded chapter world.",
+        "Initial gravity remains disabled until a blocking floor is confirmed after world commit.",
+        "P1C01-P1C08 automated chapter audits each emit a chapter-specific ShireStartupGrounding PASS marker.",
+        "A missing floor freezes/fails closed instead of allowing the player to fall indefinitely.",
+        "The owner confirms the original P1C01 fall-through reproduction no longer occurs in PIE on the exact tested head."
+      ],
+      "dependencies": [
+        "REQ-CI-001",
+        "REQ-QA-001"
+      ],
+      "checkpoint": "STARTUP_GROUNDING_REGRESSION",
+      "notes": "Current change is a fix candidate only until exact-head Unreal and defect-specific PIE evidence exist."
     }
   ],
   "hard_invariants": [
@@ -2262,6 +2303,16 @@
     {
       "id": "INV-PROOF",
       "description": "Static/compile success must never be presented as PIE, device, performance, pacing or visual acceptance.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-DEFECT-CLOSURE",
+      "description": "A runtime defect is never called fixed from source inspection or static validation alone. Identify the root cause, add a regression signal where feasible, pass exact-head machine gates, then require defect-specific PIE/device observation before closure.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-STARTUP-GROUNDING",
+      "description": "The player must not receive gravity in chapter coordinates until the destination world is committed and blocking ground is confirmed. Startup and chapter audits fail closed when grounding cannot be proven.",
       "auto_override": false
     }
   ],
@@ -3447,7 +3498,7 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5",
+  "current_focus": "STARTUP_GROUNDING_REGRESSION_REPAIR",
   "immediate_next_large_actions": [
     "Finish V5 on PR #61 with fresh exact-head Pre-Unreal plus full UE4.27.2 build/import/startup/P1C01-P1C08/state/warning proof, then merge to develop.",
     "Measure chapter-transition hitch, streaming pool and resident memory on representative target hardware before promoting V5 as a performance win.",
@@ -4209,5 +4260,17 @@
     "validation": "14 local Python tests pass, including simulated runner suspension; not UE runtime proof.",
     "root_cause_status": "UNKNOWN: engine initialization stall and host suspension/resource starvation need next-run evidence. This harness fix is not claimed to fix the P1C05 stall.",
     "production_status": "V5 stays active. No world-density wave or merge until exact-head gates, develop verification, and target-device profiling."
+  },
+  "defect_closure_contract": {
+    "states": [
+      "REPORTED",
+      "ROOT_CAUSE_IDENTIFIED",
+      "FIX_CANDIDATE",
+      "MACHINE_REGRESSION_PASS",
+      "DEFECT_SPECIFIC_PIE_OR_DEVICE_PASS",
+      "CLOSED"
+    ],
+    "rule": "Do not skip from FIX_CANDIDATE to CLOSED. Static validation protects the implementation contract but cannot close a runtime defect.",
+    "owner_observation_role": "Use owner play time for final symptom/pacing/visual confirmation only after reproducible technical checks have run."
   }
 }

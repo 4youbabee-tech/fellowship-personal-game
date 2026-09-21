@@ -26,7 +26,6 @@ void AShireGameMode::BeginPlay()
     // Verification-only command-line override. It does not change normal player startup:
     // CI can boot every Part I runtime chapter independently and prove that its world
     // builder survives a real UE4.27 game startup before manual PIE acceptance.
-    bool bAuditChapterApplied = false;
     FString AuditChapterValue;
     if (FParse::Value(FCommandLine::Get(), TEXT("AuditChapter="), AuditChapterValue))
     {
@@ -47,7 +46,6 @@ void AShireGameMode::BeginPlay()
         if (Quests && StartingQuestId != NAME_None)
         {
             Quests->StartChapter(AuditChapterId, StartingQuestId, 0);
-            bAuditChapterApplied = true;
             UE_LOG(
                 LogTemp,
                 Display,
@@ -260,21 +258,8 @@ void AShireGameMode::BeginPlay()
         }));
     }
 
-    // Normal launches preserve the authored P1C01 placement. Audit launches let the
-    // chapter router own placement so P1C02-P1C08 are not teleported back into Shire.
-    if (!bAuditChapterApplied)
-    {
-        APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
-        if (PC)
-        {
-            if (!PC->GetPawn())
-            {
-                RestartPlayerAtTransform(PC, FTransform(FRotator(0.0f, 0.0f, 0.0f), FVector(-2410.0f, -120.0f, 130.0f)));
-            }
-            else
-            {
-                PC->GetPawn()->SetActorLocationAndRotation(FVector(-2410.0f, -120.0f, 130.0f), FRotator(0.0f, 0.0f, 0.0f));
-            }
-        }
-    }
+    // Chapter placement is owned by AChapterWorldRouter. The first chapter bank is
+    // asynchronous, so moving the pawn here can release gravity before Shire collision
+    // exists. The router holds the pawn and places it only after committed world geometry
+    // provides a blocking ground surface.
 }
