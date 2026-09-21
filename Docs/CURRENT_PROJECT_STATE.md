@@ -1,3 +1,9 @@
+## 2026-09-21 - continuous transition audit integrated
+
+The comprehensive integration branch now includes a same-session transition audit across P1C01-P1C08, FrodoMain/GandalfParallel route changes, committed-world/living-world revision agreement and a disk-save roundtrip. Separate chapter boot success is no longer accepted as evidence for continuous transition integrity. PG-124 protects the audit wiring while preserving the startup-grounding markers.
+
+This remains **IMPLEMENTED / STATIC-PENDING** until the exact integration head passes Pre-Unreal. UE4 engine execution remains a separate gate.
+
 ## 2026-09-21 - comprehensive foundation integration train active
 
 The owner directed the project to stop accumulating isolated proposals/repair branches and resume coherent construction. The active convergence branch is now `integration/comprehensive-foundation-v1`, recorded by `REQ-INTEGRATION-001`, `DEC-031` and `WORK-INTEGRATION-001`.
