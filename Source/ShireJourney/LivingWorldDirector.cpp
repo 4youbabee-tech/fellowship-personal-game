@@ -89,6 +89,15 @@ void ALivingWorldDirector::EndPlay(const EEndPlayReason::Type EndPlayReason)
     }
     BaselinePopulation.Empty();
 
+    for (TWeakObjectPtr<AShireAmbientNPC>& NPCPtr : AmbientNPCPool)
+    {
+        if (AShireAmbientNPC* NPC = NPCPtr.Get())
+        {
+            NPC->Destroy();
+        }
+    }
+    AmbientNPCPool.Empty();
+
     Super::EndPlay(EndPlayReason);
 }
 
@@ -376,7 +385,14 @@ void ALivingWorldDirector::ResetForCurrentChapter()
         {
             if (AActor* Actor = ActorPtr.Get())
             {
-                Actor->Destroy();
+                if (AShireAmbientNPC* AmbientNPC = Cast<AShireAmbientNPC>(Actor))
+                {
+                    ReleaseAmbientNPCToPool(AmbientNPC);
+                }
+                else
+                {
+                    Actor->Destroy();
+                }
             }
         }
     }
@@ -386,7 +402,7 @@ void ALivingWorldDirector::ResetForCurrentChapter()
     {
         if (AShireAmbientNPC* NPC = NPCPtr.Get())
         {
-            NPC->Destroy();
+            ReleaseAmbientNPCToPool(NPC);
         }
     }
     BaselinePopulation.Empty();
@@ -512,7 +528,14 @@ void ALivingWorldDirector::CleanupExpiredEvents()
         {
             if (AActor* Actor = ActorPtr.Get())
             {
-                Actor->Destroy();
+                if (AShireAmbientNPC* AmbientNPC = Cast<AShireAmbientNPC>(Actor))
+                {
+                    ReleaseAmbientNPCToPool(AmbientNPC);
+                }
+                else
+                {
+                    Actor->Destroy();
+                }
             }
         }
         ActiveEvents.RemoveAt(Index);
@@ -674,6 +697,47 @@ FVector ALivingWorldDirector::ChoosePopulationOrigin()
     return Origin;
 }
 
+AShireAmbientNPC* ALivingWorldDirector::AcquireAmbientNPC(const FVector& Location)
+{
+    while (AmbientNPCPool.Num() > 0)
+    {
+        TWeakObjectPtr<AShireAmbientNPC> CandidatePtr = AmbientNPCPool.Pop(false);
+        if (AShireAmbientNPC* Candidate = CandidatePtr.Get())
+        {
+            Candidate->SetActorLocation(Location, false, nullptr, ETeleportType::TeleportPhysics);
+            return Candidate;
+        }
+    }
+
+    if (!GetWorld())
+    {
+        return nullptr;
+    }
+
+    FActorSpawnParameters SpawnParams;
+    SpawnParams.SpawnCollisionHandlingOverride =
+        ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+    return GetWorld()->SpawnActor<AShireAmbientNPC>(
+        Location, FRotator::ZeroRotator, SpawnParams);
+}
+
+void ALivingWorldDirector::ReleaseAmbientNPCToPool(AShireAmbientNPC* NPC)
+{
+    if (!NPC || NPC->IsPendingKillPending())
+    {
+        return;
+    }
+
+    if (AmbientNPCPool.Num() >= MaxAmbientNPCPoolSize)
+    {
+        NPC->Destroy();
+        return;
+    }
+
+    NPC->DeactivateForLivingWorldPool();
+    AmbientNPCPool.AddUnique(NPC);
+}
+
 void ALivingWorldDirector::CleanupBaselinePopulation()
 {
     APawn* Player = UGameplayStatics::GetPlayerPawn(this, 0);
@@ -689,7 +753,7 @@ void ALivingWorldDirector::CleanupBaselinePopulation()
         if (Player && FVector::DistSquared2D(NPC->GetActorLocation(), Player->GetActorLocation()) >
             FMath::Square(PopulationCullRadius))
         {
-            NPC->Destroy();
+            ReleaseAmbientNPCToPool(NPC);
             BaselinePopulation.RemoveAt(Index);
         }
     }
@@ -926,11 +990,7 @@ AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(
         }
     }
 
-    FActorSpawnParameters SpawnParams;
-    SpawnParams.SpawnCollisionHandlingOverride =
-        ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-    AShireAmbientNPC* NPC = GetWorld()->SpawnActor<AShireAmbientNPC>(
-        SpawnLocation, FRotator::ZeroRotator, SpawnParams);
+    AShireAmbientNPC* NPC = AcquireAmbientNPC(SpawnLocation);
     if (!NPC)
     {
         return nullptr;
@@ -938,13 +998,14 @@ AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(
 
     NPC->Tags.AddUnique(TEXT("LivingWorldEphemeral"));
     NPC->Tags.AddUnique(TEXT("LivingWorldManaged"));
-    NPC->RoutineRole = RoutineRole;
-    NPC->ActivityPropType = ActivityProp;
-    NPC->RoutinePointA = SpawnLocation;
-    NPC->RoutinePointB = RoutineEnd;
-    NPC->WalkSpeed = Speed;
-    NPC->MinWait = MinWait;
-    NPC->MaxWait = MaxWait;
+    NPC->ConfigureLivingWorldRoutine(
+        SpawnLocation,
+        RoutineEnd,
+        RoutineRole,
+        ActivityProp,
+        Speed,
+        MinWait,
+        MaxWait);
     return NPC;
 }
 
