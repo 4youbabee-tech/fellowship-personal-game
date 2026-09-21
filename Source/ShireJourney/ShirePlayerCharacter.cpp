@@ -2,6 +2,7 @@
 #include "ChapterWorldRouter.h"
 #include "ShireInteractable.h"
 #include "ShireQuestSubsystem.h"
+#include "ShireChapterAssetStreamingSubsystem.h"
 #include "ShireSaveGame.h"
 #include "ShireHUD.h"
 #include "ShireStoryPresentationSubsystem.h"
@@ -20,7 +21,6 @@
 #include "Engine/SkeletalMesh.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
-#include "Misc/PackageName.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
 #include "Misc/Guid.h"
@@ -210,32 +210,21 @@ bool AShirePlayerCharacter::TryApplyProductionRig(const FString& RigFolder)
         return false;
     }
 
-    const FString SkeletalPackagePath = FString::Printf(
-        TEXT("/Game/Production/Characters/Rigs/%s/SK_%s"),
-        *RigFolder,
-        *RigFolder);
-    const FString AnimPackagePath = FString::Printf(
-        TEXT("/Game/Production/Characters/Rigs/%s/ABP_%s_Locomotion"),
-        *RigFolder,
-        *RigFolder);
-
-    if (!FPackageName::DoesPackageExist(SkeletalPackagePath) ||
-        !FPackageName::DoesPackageExist(AnimPackagePath))
+    UGameInstance* GI = GetGameInstance();
+    UShireChapterAssetStreamingSubsystem* Streaming =
+        GI ? GI->GetSubsystem<UShireChapterAssetStreamingSubsystem>() : nullptr;
+    if (!Streaming)
     {
         GetMesh()->SetVisibility(false, true);
         return false;
     }
 
-    const FString SkeletalPath = FString::Printf(TEXT("%s.SK_%s"), *SkeletalPackagePath, *RigFolder);
-    const FString AnimClassPath = FString::Printf(
-        TEXT("%s.ABP_%s_Locomotion_C"),
-        *AnimPackagePath,
-        *RigFolder);
-
-    USkeletalMesh* SkeletalMesh = LoadObject<USkeletalMesh>(nullptr, *SkeletalPath);
-    UClass* AnimClass = LoadClass<UAnimInstance>(nullptr, *AnimClassPath);
-    if (!SkeletalMesh || !AnimClass)
+    const FName CharacterId(*RigFolder);
+    USkeletalMesh* SkeletalMesh = nullptr;
+    UClass* AnimClass = nullptr;
+    if (!Streaming->ResolveCharacterRig(CharacterId, SkeletalMesh, AnimClass))
     {
+        Streaming->RequestCharacterRig(CharacterId);
         GetMesh()->SetVisibility(false, true);
         return false;
     }
@@ -243,6 +232,9 @@ bool AShirePlayerCharacter::TryApplyProductionRig(const FString& RigFolder)
     GetMesh()->SetSkeletalMesh(SkeletalMesh);
     GetMesh()->SetAnimInstanceClass(AnimClass);
     GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GetMesh()->bEnableUpdateRateOptimizations = true;
+    GetMesh()->VisibilityBasedAnimTickOption =
+        EVisibilityBasedAnimTickOption::OnlyTickPoseWhenRendered;
     GetMesh()->SetVisibility(true, true);
 
     UStaticMeshComponent* ModularPieces[] = {
@@ -263,7 +255,7 @@ bool AShirePlayerCharacter::TryApplyProductionRig(const FString& RigFolder)
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("CharacterVisual: skeletal production rig active id=%s"),
+        TEXT("CharacterVisual: skeletal production rig active id=%s async=yes"),
         *RigFolder);
     return true;
 }
@@ -939,6 +931,13 @@ void AShirePlayerCharacter::BeginPlay()
 
     if (UGameInstance* GI = GetGameInstance())
     {
+        if (UShireChapterAssetStreamingSubsystem* Streaming =
+                GI->GetSubsystem<UShireChapterAssetStreamingSubsystem>())
+        {
+            Streaming->OnCharacterRigReady.AddUObject(
+                this,
+                &AShirePlayerCharacter::HandleProductionRigReady);
+        }
         if (UShireStoryPresentationSubsystem* Presentation = GI->GetSubsystem<UShireStoryPresentationSubsystem>())
         {
             Presentation->OnCinematicStateChanged.AddDynamic(this, &AShirePlayerCharacter::HandleCinematicStateChanged);
@@ -963,8 +962,15 @@ void AShirePlayerCharacter::BeginPlay()
 
 void AShirePlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+void AShirePlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
     if (UGameInstance* GI = GetGameInstance())
     {
+        if (UShireChapterAssetStreamingSubsystem* Streaming =
+                GI->GetSubsystem<UShireChapterAssetStreamingSubsystem>())
+        {
+            Streaming->OnCharacterRigReady.RemoveAll(this);
+        }
         if (UShireStoryPresentationSubsystem* Presentation = GI->GetSubsystem<UShireStoryPresentationSubsystem>())
         {
             Presentation->OnCinematicStateChanged.RemoveDynamic(this, &AShirePlayerCharacter::HandleCinematicStateChanged);
@@ -1009,6 +1015,18 @@ void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("DebugNextChapter"), IE_Pressed, this, &AShirePlayerCharacter::DebugNextChapter);
     PlayerInputComponent->BindAction(TEXT("DebugAlternateRoute"), IE_Pressed, this, &AShirePlayerCharacter::DebugToggleParallelRoute);
 #endif
+}
+
+void AShirePlayerCharacter::HandleProductionRigReady(FName CharacterId)
+{
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests || Quests->GetPlayableCharacterId() != CharacterId)
+    {
+        return;
+    }
+
+    ApplyPrototypeStyle();
 }
 
 void AShirePlayerCharacter::HandleExperienceChanged(FName RouteId, FName EpisodeId, FName InPlayableCharacterId)
