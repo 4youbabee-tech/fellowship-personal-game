@@ -1,3 +1,9 @@
+## 2026-09-22 - cinematic asset-source shortlist expanded
+
+The owner-forwarded asset-manager message has been registered rather than kept in chat memory. `Data/ExternalAssetManifest.json` now stores DeviantArt 3D/XNALara ports, SFMLab, Open3DLab, Nexus Mods and ArtStation Marketplace as additional cinematic-quality discovery/review sources, alongside the already tracked CGTrader, TurboSquid, Sketchfab, Quixel/Fab and legacy Unreal Marketplace paths.
+
+The private/non-distributed project intent and exact-film visual target are recorded, but discovery is not automatic approval: ripped/ported proprietary film or game assets still require explicit item-level reuse rights/provenance before entering `SourceAssets/ExternalLicensed/Approved`. The project should still aggressively search these sources for legal high-quality bases, original artist work, reusable marketplace items, commissions and environment/material packs so the visual warehouse can be filled without reverting to low-detail placeholders.
+
 ## 2026-09-22 - Pre-Unreal #578 character-guard reconciliation
 
 Exact-head Pre-Unreal #578 passed its core structural phase, then reported four character handoff guard failures because PG-051/PG-089 still required the removed synchronous package-probe symbols inside ShirePlayerCharacter/ShireNPC. The V7 runtime now owns heavy rig paths in ShireChapterAssetStreamingSubsystem and requests them with FStreamableManager::RequestAsyncLoad.
