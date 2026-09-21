@@ -7,6 +7,8 @@
 class UShireChapterAssetStreamingSubsystem;
 class APawn;
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnShireWorldCommitted, uint32 /* WorldRevision */);
+
 UCLASS()
 class SHIREJOURNEY_API AChapterWorldRouter : public AActor
 {
@@ -14,6 +16,10 @@ class SHIREJOURNEY_API AChapterWorldRouter : public AActor
 
 public:
     AChapterWorldRouter();
+
+    bool IsWorldCommitted(FName ChapterId, FName RouteId, FName EpisodeId) const;
+    uint32 GetWorldRevision() const { return WorldRevision; }
+    FOnShireWorldCommitted OnWorldCommitted;
 
 protected:
     virtual void BeginPlay() override;
@@ -35,6 +41,8 @@ private:
 
     void HandleChapterAssetsReady(FName ChapterId, FName RouteId);
     void ClearPrototypeBuilders();
+    AActor* SpawnWorldForRequest(FName ChapterId, FName RouteId, FName& OutBuilderName);
+    void RollbackFailedWorldSwap(FName PreviousChapterId, FName PreviousRouteId);
     FVector GetChapterSpawnLocation(FName ChapterId) const;
     bool ResolveGroundedSpawnLocation(APawn* PlayerPawn, const FVector& RequestedLocation, FVector& OutGroundedLocation) const;
     bool MovePlayerToChapterStart(FName ChapterId, bool bRestoreRouteTransform);
@@ -51,4 +59,5 @@ private:
     FName PendingChapterId = NAME_None;
     bool bPendingRestoreRouteTransform = false;
     bool bPlayerWorldHoldActive = false;
+    uint32 WorldRevision = 0;
 };
