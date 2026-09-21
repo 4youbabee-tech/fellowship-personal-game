@@ -1,5 +1,6 @@
 #include "ShireNPC.h"
 #include "ShireQuestSubsystem.h"
+#include "ShireChapterAssetStreamingSubsystem.h"
 #include "ShireNPCContextSubsystem.h"
 #include "ShireDialogueSubsystem.h"
 #include "ShireHUD.h"
@@ -13,7 +14,6 @@
 #include "GameFramework/PlayerController.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
-#include "Misc/PackageName.h"
 #include "UObject/ConstructorHelpers.h"
 
 AShireNPC::AShireNPC()
@@ -145,32 +145,21 @@ bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
         return false;
     }
 
-    const FString SkeletalPackagePath = FString::Printf(
-        TEXT("/Game/Production/Characters/Rigs/%s/SK_%s"),
-        *RigFolder, *RigFolder);
-    const FString AnimPackagePath = FString::Printf(
-        TEXT("/Game/Production/Characters/Rigs/%s/ABP_%s_Locomotion"),
-        *RigFolder, *RigFolder);
-
-    // Final skeletal rigs are optional at the current production stage. Probe
-    // package existence first so the intended modular fallback does not flood
-    // verification logs with expected missing-asset warnings.
-    if (!FPackageName::DoesPackageExist(SkeletalPackagePath) ||
-        !FPackageName::DoesPackageExist(AnimPackagePath))
+    RequestedProductionRigId = FName(*RigFolder);
+    UGameInstance* GI = GetGameInstance();
+    UShireChapterAssetStreamingSubsystem* Streaming =
+        GI ? GI->GetSubsystem<UShireChapterAssetStreamingSubsystem>() : nullptr;
+    if (!Streaming)
     {
         GetMesh()->SetVisibility(false, true);
         return false;
     }
 
-    const FString SkeletalPath = FString::Printf(
-        TEXT("%s.SK_%s"), *SkeletalPackagePath, *RigFolder);
-    const FString AnimClassPath = FString::Printf(
-        TEXT("%s.ABP_%s_Locomotion_C"), *AnimPackagePath, *RigFolder);
-
-    USkeletalMesh* SkeletalMesh = LoadObject<USkeletalMesh>(nullptr, *SkeletalPath);
-    UClass* AnimClass = LoadClass<UAnimInstance>(nullptr, *AnimClassPath);
-    if (!SkeletalMesh || !AnimClass)
+    USkeletalMesh* SkeletalMesh = nullptr;
+    UClass* AnimClass = nullptr;
+    if (!Streaming->ResolveCharacterRig(RequestedProductionRigId, SkeletalMesh, AnimClass))
     {
+        Streaming->RequestCharacterRig(RequestedProductionRigId);
         GetMesh()->SetVisibility(false, true);
         return false;
     }
@@ -184,7 +173,7 @@ bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
     GetMesh()->SetVisibility(true, true);
 
     UE_LOG(LogTemp, Display,
-        TEXT("ProductionRig: npc=%s rig=%s URO=on visibilityTick=rendered"),
+        TEXT("ProductionRig: npc=%s rig=%s async=yes URO=on visibilityTick=rendered"),
         *DisplayName.ToString(), *RigFolder);
 
     UStaticMeshComponent* ModularPieces[] = {
@@ -201,9 +190,9 @@ bool AShireNPC::TryApplyProductionRig(const FString& RigFolder)
             Piece->SetVisibility(false, true);
         }
     }
+
     return true;
 }
-
 
 void AShireNPC::ApplyPrototypeStyle()
 {
@@ -1494,6 +1483,47 @@ void AShireNPC::UpdateCompanionBanter(float DeltaSeconds)
 
     BanterCooldownRemaining =
         58.0f + ResolveCompanionSlot() * 12.0f + CachedWorldPressure * 30.0f;
+}
+
+void AShireNPC::BeginPlay()
+{
+    Super::BeginPlay();
+
+    if (UGameInstance* GI = GetGameInstance())
+    {
+        if (UShireChapterAssetStreamingSubsystem* Streaming =
+                GI->GetSubsystem<UShireChapterAssetStreamingSubsystem>())
+        {
+            Streaming->OnCharacterRigReady.AddUObject(
+                this,
+                &AShireNPC::HandleProductionRigReady);
+        }
+    }
+}
+
+void AShireNPC::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    if (UGameInstance* GI = GetGameInstance())
+    {
+        if (UShireChapterAssetStreamingSubsystem* Streaming =
+                GI->GetSubsystem<UShireChapterAssetStreamingSubsystem>())
+        {
+            Streaming->OnCharacterRigReady.RemoveAll(this);
+        }
+    }
+
+    Super::EndPlay(EndPlayReason);
+}
+
+void AShireNPC::HandleProductionRigReady(FName CharacterId)
+{
+    if (RequestedProductionRigId.IsNone() || CharacterId != RequestedProductionRigId)
+    {
+        return;
+    }
+
+    bVisualStyleApplied = false;
+    ApplyPrototypeStyle();
 }
 
 void AShireNPC::Tick(float DeltaSeconds)
