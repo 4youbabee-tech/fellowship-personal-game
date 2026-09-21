@@ -1,3 +1,13 @@
+## 2026-09-21 - QA immune-system foundation implementation
+
+The first `REQ-QA-002` implementation wave is now in source on dependent branch `qa/automated-immune-system-v1`. `ShireJourneyEditorTools` contains two initial Unreal Automation Framework tests: `ShireJourney.QA.Save.DefaultState` and `ShireJourney.QA.Assets.StreamingBankPackages`. The first checks SaveGame schema/default invariants; the second checks that every soft-path package declared by `ChapterAssetStreamingPlan.json` exists after the production import step, without synchronously loading those heavy assets.
+
+`ci_run_project_automation.cmd` runs the suite through UE4Editor-Cmd and `parse_automation_report.py` rejects missing or failed required test results. The self-hosted workflow places this new engine-level layer after compile/import and before existing runtime startup/chapter/state audits.
+
+The P1C01 fall-through regression is also strengthened: placement now logs `PLACED`; CI only receives `ShireStartupGrounding: PASS` after two seconds with blocking ground, no falling movement mode, and bounded displacement. This prevents an immediate line trace from being mistaken for sustained grounding.
+
+Evidence boundary: **IMPLEMENTED / STATIC-PENDING** until Pre-Unreal runs on the exact head. No COMPILE-TESTED or PIE-TESTED claim is made.
+
 ## 2026-09-21 - automated QA immune-system direction adopted
 
 The owner supplied a programmer proposal to expand CI into a broader automated QA immune system. The direction is adopted after live-repository review, with project-specific corrections recorded in `EXT-REV-2026-09-21-016`, `REQ-QA-002`, `DEC-029` and `WORK-QA-003`.
