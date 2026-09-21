@@ -1,5 +1,11 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-21 - diegetic NPC intelligence contract
+
+The living-NPC design now has an explicit statically guarded diegetic self-model: named characters are grounded in identity/history/relationships/valid knowledge, and ambient populations use cheaper region/culture/role archetypes. Meta-game awareness and exposure of player/game/quest/chapter/UI/save/debug/AI-model concepts are forbidden in character-facing dialogue.
+
+This strengthens the design/validation contract only. It does not promote NPC/life maturity, PIE status, device performance or human immersion acceptance. Current runtime foundation remains pending engine/device/visual review.
+
 ## 2026-09-21 - runner-offline architecture hardening
 
 Static-safe production infrastructure advanced while the self-hosted UE4 runner is offline. The one-click local path now has a pre-build Pre-Unreal/static preflight, and architecture debt ceilings prevent new synchronous heavy-load, BMP/animated-OBJ and direct ambient SpawnActor regressions.

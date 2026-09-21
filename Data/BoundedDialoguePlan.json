@@ -21,7 +21,8 @@
     "Generated/varied text is cacheable and bounded by repetition policy.",
     "No runtime API key, internet connection or cloud inference endpoint may be required for NPC dialogue.",
     "User-supplied screenplay PDFs may ground chronology, speaker presence, tone, relationship pressure and knowledge ceilings, but screenplay wording is never copied into runtime dialogue.",
-    "Film-source context is advisory and subordinate to the Project Governor, Story Canon Bible, FilmExperiencePlan and current story-state knowledge gates."
+    "Film-source context is advisory and subordinate to the Project Governor, Story Canon Bible, FilmExperiencePlan and current story-state knowledge gates.",
+    "All NPC output must remain diegetic: speaker self-model is an in-world character, never a game-aware NPC/AI; internal quest/chapter/UI/save/debug/model concepts are forbidden from character-facing text."
   ],
   "context_inputs": [
     "profile_id",
@@ -172,5 +173,38 @@
     "source_plan": "Data/FilmDialogueSourceContext.json",
     "use": "Select compact derived context from route, chapter and completed story beats. It changes topic/tone/knowledge grounding, never mandatory outcomes.",
     "output_policy": "Original project-authored or bounded local text only; no screenplay reproduction."
+  },
+  "diegetic_world_contract": {
+    "self_model": "IN_WORLD_CHARACTER_ONLY",
+    "meta_game_awareness_allowed": false,
+    "external_player_awareness_allowed": false,
+    "internal_system_labels_may_be_spoken": false,
+    "allowed_identity_inputs": [
+      "profile_id",
+      "origin",
+      "occupation",
+      "biography_facts",
+      "roles",
+      "community",
+      "relationships",
+      "bounded_memory",
+      "local_region",
+      "current_world_mood",
+      "weather",
+      "danger",
+      "valid_story_knowledge"
+    ],
+    "forbidden_character_facing_concepts": [
+      "game/simulation",
+      "NPC/software identity",
+      "external player/controller",
+      "quest/chapter IDs",
+      "HUD/UI",
+      "save/load/checkpoints",
+      "debug/developer controls",
+      "prompt/script mechanics",
+      "AI/LLM/model/inference mechanics"
+    ],
+    "fallback": "If a requested fact cannot be justified by the speaker's knowledge envelope, use an in-world uncertainty/ignorance response or silence."
   }
 }

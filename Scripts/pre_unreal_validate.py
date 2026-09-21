@@ -3482,6 +3482,36 @@ if "PROP_MOTION" not in pg113_moria_allowed or "STORY_AFTERMATH" not in pg113_mo
 if int(pg111_targets.get("P1C06", -1)) != 0:
     fail("PG-113 Moria environmental-life wave may not introduce ambient civilians")
 
+# PG-120: living NPC intelligence must remain fully diegetic and fourth-wall safe.
+pg120_dialogue = json.loads(read(ROOT / "Data" / "BoundedDialoguePlan.json"))
+pg120_living = json.loads(read(ROOT / "Data" / "LivingNPCIntelligencePlan.json"))
+pg120_roadmap = json.loads(read(ROOT / "Data" / "LivingNPCIntelligenceRoadmap.json"))
+
+pg120_contract = pg120_dialogue.get("diegetic_world_contract", {})
+if pg120_contract.get("self_model") != "IN_WORLD_CHARACTER_ONLY":
+    fail("PG-120 bounded dialogue self-model must remain IN_WORLD_CHARACTER_ONLY")
+if pg120_contract.get("meta_game_awareness_allowed") is not False:
+    fail("PG-120 meta-game awareness must remain forbidden")
+if pg120_contract.get("external_player_awareness_allowed") is not False:
+    fail("PG-120 NPCs may not treat the user as an external player")
+if pg120_contract.get("internal_system_labels_may_be_spoken") is not False:
+    fail("PG-120 internal quest/chapter/UI/save/debug/model labels may not become dialogue")
+pg120_forbidden = " ".join(str(x).lower() for x in pg120_contract.get("forbidden_character_facing_concepts", []))
+for pg120_marker in ["game/simulation","npc/software","quest/chapter","save/load","debug/developer","ai/llm"]:
+    if pg120_marker not in pg120_forbidden:
+        fail(f"PG-120 diegetic forbidden-concept coverage missing: {pg120_marker}")
+
+pg120_living_contract = pg120_living.get("diegetic_world_contract", {})
+if pg120_living_contract.get("status") != "MANDATORY":
+    fail("PG-120 LivingNPCIntelligencePlan diegetic contract must remain mandatory")
+if pg120_living_contract.get("external_meta_awareness_allowed") is not False:
+    fail("PG-120 LivingNPCIntelligencePlan may not allow external/meta awareness")
+if "NPC_DIEGETIC_001" not in {
+    str(row.get("id") or "") for row in pg120_roadmap.get("accepted_new_development_value", [])
+    if isinstance(row, dict)
+}:
+    fail("PG-120 living NPC roadmap lost diegetic intelligence direction")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     sys.exit(1)

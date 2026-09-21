@@ -1,3 +1,13 @@
+## 2026-09-21 - diegetic living-NPC requirement reaffirmed
+
+The owner explicitly reaffirmed the intended player experience: the surrounding world should feel intelligent from inside the fiction. Each named character should respond from their own identity, source-grounded history, home/region, role, relationships, valid memories and what they could plausibly know at the current chronology. Ambient inhabitants receive cheaper regional/cultural archetype intelligence so the target laptop is not asked to persist a full individual brain for every crowd actor.
+
+This is not fourth-wall AI. NPCs must never know they are in a game, identify themselves as software/NPCs, address the user as an external player, or expose quest/chapter IDs, HUD/UI, save/load/checkpoint, debug/developer controls, prompts/scripts or AI/LLM/model internals. Chapter/route/quest state remains hidden system context used only to gate/rank appropriate in-world behavior.
+
+Current source already provides a real foundation: NPCSocialModel has 22 profiles; all 22 have region, knowledge tags and knowledge limits, while 19 currently carry explicit origin, occupation and biography facts. UShireNPCContextSubsystem gates profile availability by current region/chapter, enforces intent knowledge tags, story-beat/memory requirements, regional mood and relationship-influenced deterministic selection. This is source-level evidence, not PIE/device acceptance.
+
+PG-120 now statically protects the diegetic self-model in BoundedDialoguePlan, LivingNPCIntelligencePlan and LivingNPCIntelligenceRoadmap. Future optional local language expression must consume only bounded in-world context and preserve deterministic fallback.
+
 ## 2026-09-21 - runner-offline programmer-proposal hardening wave
 
 Owner requested immediate production restart after the deleted-chat interruption, with periodic programmer proposals reviewed against live repository evidence and only useful verified parts promoted.

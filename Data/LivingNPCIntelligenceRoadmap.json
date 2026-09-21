@@ -20,6 +20,12 @@
   ],
   "accepted_new_development_value": [
     {
+      "id": "NPC_DIEGETIC_001",
+      "title": "Diegetic self-model and local-world intelligence",
+      "value": "Every NPC should behave as a person who belongs to Middle-earth: they know their own identity, plausible personal history, home/region, role, relationships, memories and locally available facts. Internal game state can shape context but never becomes their conscious vocabulary.",
+      "authority_boundary": "No NPC may know or mention that it is an NPC, that the user is an external player, or expose quest/chapter/UI/save/debug/prompt/AI-model concepts. Unknown information must stay unknown, uncertain or hearsay inside the character's knowledge envelope."
+    },
+    {
       "id": "NPC_EXPR_001",
       "title": "Optional bounded local language expression layer",
       "value": "A local small model may turn already-approved context into more natural wording while authored/template dialogue remains the deterministic fallback.",
@@ -66,7 +72,9 @@
     "Do not require GPT, Claude, cloud APIs, internet connectivity or runtime API keys in the shipped gameplay path.",
     "Do not persist raw conversation transcripts as NPC memory.",
     "Do not allow generated text to become story authority.",
-    "Do not let AI bypass film chronology, chapter knowledge gates, quest logic or save-state ownership."
+    "Do not let AI bypass film chronology, chapter knowledge gates, quest logic or save-state ownership.",
+    "Do not create fourth-wall-aware NPCs that know they are in a game, simulation or AI system.",
+    "Do not expose internal chapter/quest/save/debug/model labels in character-facing dialogue."
   ],
   "architecture": [
     "World/Story State",
@@ -126,7 +134,9 @@
     "No duplicate NPC brain/state authority.",
     "Fallback response remains deterministic and valid when the expression layer is disabled.",
     "Named Shire prototype survives save/load and chapter-state transitions.",
-    "Performance is measured before scaling beyond the prototype."
+    "Performance is measured before scaling beyond the prototype.",
+    "No meta-game/self-as-NPC awareness in authored, template or optional locally generated dialogue.",
+    "Named-character replies remain consistent with identity/history/region/relationship and current chronology; ambient replies remain consistent with their regional archetype."
   ],
   "manager_instruction": "Preserve this roadmap as an accepted owner development direction. Schedule it alongside existing living-NPC work when dependencies permit; do not let it block unrelated world/character production and do not re-implement systems that already exist.",
   "current_runtime_truth": {

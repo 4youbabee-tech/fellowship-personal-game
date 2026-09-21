@@ -1290,7 +1290,7 @@
       "priority": "CRITICAL",
       "status": "PARTIAL",
       "origin": "User forwarded programmer living-NPC requirement and explicitly asked to preserve/analyze/apply it",
-      "intent": "Every meaningful character in Part I, named or ambient, should participate in an offline living-NPC intelligence layer appropriate to its importance: memory, routines, goals, needs, emotions, relationships, contextual knowledge and region/story mood awareness, without cloud/API dependency.",
+      "intent": "Every meaningful character in Part I, named or ambient, should participate in an offline living-NPC intelligence layer appropriate to its importance: identity, history, routines, goals, needs, emotions, relationships, contextual knowledge, memory and region/story mood awareness. The intelligence must remain diegetic: each character understands the world from inside their own life and knowledge envelope, never as an actor in a game.",
       "evidence": [
         "Docs/PROGRAMMER_INPUT_LIVING_NPCS_PART1.md",
         "Data/LivingNPCIntelligencePlan.json",
@@ -1313,7 +1313,9 @@
         "Data/NPCRegionalMoodPlan.json defines shared peace/suspicion/fear/grief/war-pressure context by chapter",
         "UShireNPCContextSubsystem exposes regional mood/pressure and includes it in local character context and dialogue selection",
         "Follow-up: exact regional mood eligibility and priority replace seed-only mood influence; 30 original Moria/Lothlorien companion lines reuse existing intent, knowledge, chapter and repetition gates.",
-        "FilmDialogueSourceContext now carries 53 original story-reactive variants spanning all Part I regional moods and major companion/story contexts."
+        "FilmDialogueSourceContext now carries 53 original story-reactive variants spanning all Part I regional moods and major companion/story contexts.",
+        "Data/BoundedDialoguePlan.json diegetic_world_contract explicitly forbids meta-game/self-as-NPC awareness.",
+        "UShireNPCContextSubsystem uses chapter/quest/route state only as hidden system context for eligibility/ranking; visible dialogue remains bounded by profile identity, knowledge, memory, region and chronology."
       ],
       "missing_work": [
         "Feed bounded emotion/goal context into named-NPC dialogue selection",
@@ -1336,7 +1338,12 @@
         "Any future LLM/STT/TTS implementation is local/on-device, optional and bounded by target-device performance",
         "Every named Part I character has an intelligence profile with identity/context limits appropriate to the film chronology",
         "Ambient regional populations participate through cheaper archetype intelligence rather than inert scripted actors",
-        "Dialogue/behavior can distinguish peaceful refuge, suspicious town, pursuit, grief, dead-city dread and active war pressure by current chapter"
+        "Dialogue/behavior can distinguish peaceful refuge, suspicious town, pursuit, grief, dead-city dread and active war pressure by current chapter",
+        "Every named NPC response remains consistent with that character's authored identity, origin, occupation, biography, relationships and current chronology.",
+        "Regional ambient inhabitants use cheaper archetype intelligence but still speak/behave as locals of their culture, role and current region rather than generic game agents.",
+        "NPCs never refer to the external player, game, quest/chapter identifiers, UI/HUD, save/load, debug/developer controls, scripts, prompts, AI/LLM/model mechanics or being an NPC.",
+        "Internal engine state such as chapter/quest/route may select context but is never exposed as character knowledge.",
+        "When knowledge is outside the character's plausible envelope, the character expresses uncertainty/ignorance instead of inventing facts."
       ],
       "dependencies": [
         "REQ-NPC-001",
@@ -1977,10 +1984,10 @@
       "title": "Living NPC emergent intelligence and optional bounded language expression",
       "status": "PLANNED",
       "priority": "CRITICAL",
-      "owner_intent": "NPCs should feel alive through real memory, relationships, goals, needs, emotions, context and inter-NPC knowledge transfer; language generation is optional expression, never story authority.",
+      "owner_intent": "NPCs should feel like people who belong to Middle-earth: each one acts from their own identity, history, home/region, relationships, memories, goals, needs, emotions and what they could plausibly know. They must never become meta-aware of the game/player/system; language generation is optional expression, never world or story authority.",
       "plan": "Data/LivingNPCIntelligenceRoadmap.json",
       "acceptance_boundary": "Prototype one existing named Shire NPC first; preserve deterministic offline fallback and canon/knowledge gates.",
-      "intent": "NPCs should feel alive through real memory, relationships, goals, needs, emotions, context and inter-NPC knowledge transfer; language generation is optional expression, never story authority.",
+      "intent": "NPCs should feel like people who belong to Middle-earth: each one acts from their own identity, history, home/region, relationships, memories, goals, needs, emotions and what they could plausibly know. They must never become meta-aware of the game/player/system; language generation is optional expression, never world or story authority.",
       "acceptance_criteria": [
         "One existing named Shire NPC demonstrates persistent compact memory, relationship-aware revisit behavior and bounded real-event knowledge transfer.",
         "Generated or locally expressed dialogue cannot create canon facts, quest outcomes, deaths, allegiances or future knowledge.",
@@ -1988,7 +1995,9 @@
         "NPC memory remains compact and save-safe; raw transcripts are not used as persistent memory.",
         "No ambient crowd actor requires a per-instance persistent LLM or cloud dependency.",
         "Prototype survives save/load and chapter-state transitions without duplicating NPC state authority.",
-        "Performance is measured before scaling the system beyond the prototype."
+        "Performance is measured before scaling the system beyond the prototype.",
+        "The named-NPC vertical slice remains fully diegetic: no response exposes game/UI/quest/chapter/save/debug/AI-model concepts.",
+        "Optional local expression receives only bounded in-world context and cannot disclose hidden engine labels or developer state."
       ],
       "dependencies": [
         "REQ-NPC-003",
@@ -2285,6 +2294,11 @@
     {
       "id": "INV-CROWD-POOLING",
       "description": "Ambient/crowd NPC lifecycle uses bounded object pooling rather than dense Spawn/Destroy churn; named persistent story NPC identity/state is not recycled through a generic crowd pool.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-DIEGETIC-NPC",
+      "description": "NPC intelligence is diegetic: characters reason and speak only as inhabitants of Middle-earth from authored identity/history, relationships, witnessed/learned events, current place and chronology. They never know they are in a game or expose player/UI/quest/chapter/save/debug/AI-model concepts as world knowledge.",
       "auto_override": false
     }
   ],
@@ -2816,6 +2830,27 @@
       "evidence": [
         "Docs/CURRENT_PROJECT_STATE.md",
         "Docs/DEVELOPMENT_GATES.md"
+      ]
+    },
+    {
+      "id": "DEC-029",
+      "title": "Living NPC intelligence must remain fully diegetic",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-NPC-001",
+        "REQ-NPC-003",
+        "REQ-NPC-004",
+        "REQ-NPC-005",
+        "REQ-NPC-006"
+      ],
+      "resolution": "Treat every NPC as an in-world inhabitant, never as a game-aware agent. Named characters use source-grounded individual identity/history/relationships/knowledge; ambient populations use cheaper regional/cultural archetype intelligence. Hidden quest/chapter/route/debug/AI state may drive selection internally but may never become spoken world knowledge.",
+      "rationale": "Owner reaffirmed that immersion and enjoyment depend on characters knowing who they are, where they live, what they have plausibly experienced and what their local world means to them, without fourth-wall or system awareness.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/LivingNPCIntelligencePlan.json",
+        "Data/LivingNPCIntelligenceRoadmap.json",
+        "Data/BoundedDialoguePlan.json",
+        "Source/ShireJourney/ShireNPCContextSubsystem.cpp"
       ]
     }
   ],
