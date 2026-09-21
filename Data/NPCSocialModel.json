@@ -1088,6 +1088,47 @@
         "SOCIAL",
         "RUMOR_AWARE"
       ]
+    },
+    {
+      "id": "ARCH_ELVEN_SANCTUARY",
+      "display_name": "Elven Sanctuary Resident",
+      "aliases": [],
+      "type": "AMBIENT_ARCHETYPE",
+      "regions": [
+        "P1C04",
+        "P1C07"
+      ],
+      "roles": [
+        "RESIDENT",
+        "CRAFT",
+        "WARDEN",
+        "ATTENDANT"
+      ],
+      "community": "ELVEN_SANCTUARY",
+      "temperament_tags": [
+        "CALM",
+        "OBSERVANT",
+        "CRAFT_ORIENTED"
+      ],
+      "knowledge_tags": [
+        "LOCAL_SANCTUARY"
+      ],
+      "persistence_tier": "AMBIENT_AGGREGATE",
+      "anchors": [
+        "REGION_DRIVEN"
+      ],
+      "status": "DATA_DEFINED_ORIGINAL_GAME_ARCHETYPE",
+      "intelligence_enabled": true,
+      "world_mood_sensitive": true,
+      "offline_only": true,
+      "knowledge_limits": [
+        "Local sanctuary routine and immediately observed chapter context only; no future-event knowledge or unsupported distant lore."
+      ],
+      "attitude_tags": [
+        "OBSERVANT",
+        "ROUTINE_DRIVEN",
+        "SOCIAL"
+      ]
     }
   ],
   "schedule_templates": [
@@ -1191,6 +1232,43 @@
         }
       ],
       "overrides": [
+        "DANGER_OVERRIDE"
+      ]
+    },
+    {
+      "id": "SCHED_ELVEN_SANCTUARY",
+      "applies_to": [
+        "ARCH_ELVEN_SANCTUARY"
+      ],
+      "phases": [
+        {
+          "phase": "WORK",
+          "weight": 0.3,
+          "anchor_policy": "PROFILE_ANCHOR"
+        },
+        {
+          "phase": "TRAVEL",
+          "weight": 0.15,
+          "anchor_policy": "LOCAL_ROUTE"
+        },
+        {
+          "phase": "SOCIAL",
+          "weight": 0.2,
+          "anchor_policy": "LOCAL_SOCIAL"
+        },
+        {
+          "phase": "REST",
+          "weight": 0.2,
+          "anchor_policy": "PROFILE_ANCHOR"
+        },
+        {
+          "phase": "HOME",
+          "weight": 0.15,
+          "anchor_policy": "PROFILE_ANCHOR"
+        }
+      ],
+      "overrides": [
+        "STORY_OVERRIDE",
         "DANGER_OVERRIDE"
       ]
     }
