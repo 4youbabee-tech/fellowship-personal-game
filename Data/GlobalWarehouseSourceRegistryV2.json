@@ -3,66 +3,54 @@
   "registry_id": "GLOBAL_WAREHOUSE_SOURCE_REGISTRY_V2",
   "status": "ACTIVE",
   "authority": "Data/ProjectGovernor.json",
-  "purpose": "Global multi-source warehouse intake registry. Separates public automatable sources from auth/manual/review sources so the project can fill stock aggressively without losing provenance or confusing discovery with production approval.",
+  "purpose": "Global multi-source warehouse intake registry with staged automation, auth boundaries, provenance and production-state controls.",
   "sources": [
     {
       "id": "POLY_HAVEN",
-      "kind": [
-        "PBR_TEXTURE",
-        "HDRI",
-        "3D_MODEL"
-      ],
       "license": "CC0",
       "access": "PUBLIC_API",
       "automation": "AUTO_STAGE",
-      "formats": [
-        "PNG",
-        "TGA",
-        "FBX",
-        "ZIP"
+      "categories": [
+        "PBR_TEXTURE",
+        "HDRI",
+        "3D_MODEL"
       ],
       "priority": "CRITICAL"
     },
     {
       "id": "QUATERNIUS",
-      "kind": [
+      "license": "CC0",
+      "access": "PUBLIC_PACK_PAGES",
+      "automation": "AUTO_RESOLVE_STAGE",
+      "categories": [
         "3D_MODEL",
         "RIGGED_CHARACTER",
         "ANIMATION",
         "FAUNA",
         "WORLD_KIT"
       ],
-      "license": "CC0",
-      "access": "PUBLIC_PACK_PAGES",
-      "automation": "AUTO_RESOLVE_STAGE",
-      "formats": [
-        "FBX",
-        "glTF",
-        "Blend",
-        "OBJ"
-      ],
       "priority": "HIGH"
     },
     {
       "id": "KENNEY",
-      "kind": [
+      "license": "CC0",
+      "access": "PUBLIC_PACK_PAGES",
+      "automation": "AUTO_RESOLVE_STAGE",
+      "categories": [
         "3D_MODEL",
         "WORLD_KIT",
         "UI",
         "VFX",
         "PROPS"
       ],
-      "license": "CC0",
-      "access": "PUBLIC_PACK_PAGES",
-      "automation": "AUTO_RESOLVE_STAGE",
-      "formats": [
-        "varies by pack"
-      ],
       "priority": "HIGH"
     },
     {
       "id": "OPENGAMEART",
-      "kind": [
+      "license": "PER_ITEM_CC0_LANE_PREFERRED",
+      "access": "PUBLIC_ITEM_PAGES",
+      "automation": "AUTO_STAGE_WHEN_DIRECT_FILE_AND_LICENSE_KNOWN",
+      "categories": [
         "AUDIO",
         "MUSIC",
         "SFX",
@@ -70,356 +58,265 @@
         "UI",
         "TEXTURE"
       ],
-      "license": "PER_ITEM; CC0 lane preferred",
-      "access": "PUBLIC_ITEM_PAGES",
-      "automation": "AUTO_STAGE_WHEN_DIRECT_FILE_AND_LICENSE_KNOWN",
-      "formats": [
-        "WAV",
-        "OGG",
-        "PNG",
-        "ZIP",
-        "FBX varies"
-      ],
       "priority": "HIGH"
     },
     {
       "id": "TEXTURECAN",
-      "kind": [
-        "PBR_TEXTURE",
-        "3D_MODEL"
-      ],
       "license": "CC0",
       "access": "PUBLIC_ITEM_PAGES",
       "automation": "AUTO_RESOLVE_STAGE",
-      "formats": [
-        "PNG",
-        "FBX",
-        "ZIP"
+      "categories": [
+        "PBR_TEXTURE",
+        "3D_MODEL"
       ],
       "priority": "HIGH"
     },
     {
       "id": "CGBOOKCASE",
-      "kind": [
-        "PBR_TEXTURE"
-      ],
       "license": "CC0",
       "access": "PUBLIC_ITEM_PAGES",
       "automation": "AUTO_RESOLVE_STAGE",
-      "formats": [
-        "PNG",
-        "ZIP"
+      "categories": [
+        "PBR_TEXTURE"
       ],
       "priority": "HIGH"
     },
     {
       "id": "3DTEXTURES_ME",
-      "kind": [
-        "PBR_TEXTURE"
-      ],
       "license": "CC0",
       "access": "PUBLIC_ITEM_PAGES",
       "automation": "AUTO_RESOLVE_STAGE",
-      "formats": [
-        "PNG",
-        "ZIP"
+      "categories": [
+        "PBR_TEXTURE"
       ],
       "priority": "MEDIUM"
     },
     {
       "id": "SONNISS_GDC",
-      "kind": [
+      "license": "ROYALTY_FREE_VENDOR_BUNDLE",
+      "access": "PUBLIC_BUNDLE_PAGE",
+      "automation": "RESOLVE_OR_MANUAL_IF_CHALLENGE",
+      "categories": [
         "SFX",
         "AMBIENCE",
         "FOLEY",
         "CREATURE",
         "IMPACTS"
       ],
-      "license": "ROYALTY_FREE_VENDOR_BUNDLE",
-      "access": "PUBLIC_BUNDLE_PAGE",
-      "automation": "RESOLVE_OR_MANUAL_IF_CHALLENGE",
-      "formats": [
-        "WAV",
-        "ZIP"
-      ],
       "priority": "CRITICAL"
     },
     {
       "id": "ITCH_CC0",
-      "kind": [
+      "license": "FILTER_TO_CC0_ONLY",
+      "access": "PUBLIC_ITEM_PAGES",
+      "automation": "DISCOVER_AND_STAGE_DIRECT_PUBLIC_DOWNLOADS",
+      "categories": [
         "3D_MODEL",
         "UI",
         "TEXTURE",
         "AUDIO",
         "MUSIC"
       ],
-      "license": "FILTER_TO_CC0_ONLY",
-      "access": "PUBLIC_ITEM_PAGES",
-      "automation": "DISCOVER_AND_STAGE_DIRECT_PUBLIC_DOWNLOADS",
-      "formats": [
-        "FBX",
-        "PNG",
-        "WAV",
-        "ZIP varies"
-      ],
       "priority": "MEDIUM"
     },
     {
       "id": "SMITHSONIAN_OPEN_ACCESS",
-      "kind": [
-        "CC0_3D_PROP",
-        "REFERENCE"
-      ],
       "license": "CC0_WHERE_MARKED",
       "access": "PUBLIC_API_OR_ITEM_DOWNLOAD",
-      "automation": "METADATA_DISCOVERY; STAGE_CC0_MEDIA",
-      "formats": [
-        "glTF",
-        "GLB",
-        "OBJ",
-        "JPG",
-        "TIFF"
+      "automation": "METADATA_DISCOVERY_AND_STAGE_CC0",
+      "categories": [
+        "3D_PROP",
+        "REFERENCE"
       ],
       "priority": "LOW"
     },
     {
       "id": "MIXAMO",
-      "kind": [
-        "HUMANOID_ANIMATION",
-        "RIGGED_CHARACTER"
-      ],
       "license": "ROYALTY_FREE_PER_ADOBE_FAQ",
       "access": "ADOBE_ID_REQUIRED",
       "automation": "AUTH_REQUIRED_MANUAL_ACQUISITION",
-      "formats": [
-        "FBX"
+      "categories": [
+        "HUMANOID_ANIMATION",
+        "RIGGED_CHARACTER"
       ],
       "priority": "CRITICAL"
     },
     {
       "id": "SKETCHFAB",
-      "kind": [
-        "3D_MODEL"
-      ],
       "license": "PER_MODEL_CREATIVE_COMMONS",
       "access": "OAUTH_REQUIRED_DOWNLOAD_API",
       "automation": "AUTH_REQUIRED",
-      "formats": [
-        "glTF",
-        "GLB",
-        "USDZ"
+      "categories": [
+        "3D_MODEL"
       ],
       "priority": "MEDIUM"
     },
     {
       "id": "FREESOUND",
-      "kind": [
+      "license": "PER_SOUND",
+      "access": "API_KEY_SEARCH_OAUTH_ORIGINAL_DOWNLOAD",
+      "automation": "AUTH_REQUIRED_FOR_ORIGINALS",
+      "categories": [
         "SFX",
         "AMBIENCE",
         "FOLEY",
         "FAUNA"
       ],
-      "license": "PER_SOUND",
-      "access": "API_KEY_FOR_SEARCH_OAUTH_FOR_ORIGINAL_DOWNLOAD",
-      "automation": "AUTH_REQUIRED_FOR_ORIGINALS",
-      "formats": [
-        "WAV",
-        "AIFF",
-        "FLAC",
-        "OGG",
-        "MP3"
-      ],
       "priority": "HIGH"
     },
     {
       "id": "PIXABAY",
-      "kind": [
+      "license": "PIXABAY_CONTENT_LICENSE_OR_LEGACY_CC0",
+      "access": "PUBLIC_SITE",
+      "automation": "DISCOVERY_ONLY_UNLESS_STABLE_DIRECT_DOWNLOAD",
+      "categories": [
         "AUDIO",
         "MUSIC",
         "SFX",
         "IMAGE"
       ],
-      "license": "PIXABAY_CONTENT_LICENSE_OR_LEGACY_CC0",
-      "access": "PUBLIC_SITE",
-      "automation": "DISCOVERY_ONLY_UNLESS_STABLE_DIRECT_DOWNLOAD",
-      "formats": [
-        "varies"
-      ],
       "priority": "MEDIUM"
     },
     {
       "id": "BLENDERKIT",
-      "kind": [
+      "license": "PER_ASSET",
+      "access": "ACCOUNT_API",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
         "3D_MODEL",
         "MATERIAL",
         "HDRI",
         "SCENE"
       ],
-      "license": "PER_ASSET",
-      "access": "ACCOUNT/API",
-      "automation": "AUTH_REQUIRED",
-      "formats": [
-        "Blend and exported derivatives"
-      ],
       "priority": "MEDIUM"
     },
     {
       "id": "FAB_QUixel_MEGASCANS",
-      "kind": [
+      "license": "EPIC_FAB_ENTITLEMENT",
+      "access": "EPIC_ACCOUNT",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
         "PBR_TEXTURE",
         "3D_MODEL",
         "VEGETATION",
         "DECAL"
       ],
-      "license": "EPIC/FAB_ENTITLEMENT",
-      "access": "EPIC_ACCOUNT",
-      "automation": "AUTH_REQUIRED",
-      "formats": [
-        "provider packages"
-      ],
       "priority": "CRITICAL"
     },
     {
       "id": "CGTRADER",
-      "kind": [
+      "license": "PER_LISTING",
+      "access": "ACCOUNT_MARKETPLACE",
+      "automation": "REVIEW_REQUIRED",
+      "categories": [
         "3D_MODEL",
         "RIGGED_CHARACTER",
         "CREATURE",
         "ARCHITECTURE"
-      ],
-      "license": "PER_LISTING",
-      "access": "ACCOUNT/MARKETPLACE",
-      "automation": "REVIEW_REQUIRED",
-      "formats": [
-        "FBX varies"
       ],
       "priority": "HIGH"
     },
     {
       "id": "TURBOSQUID",
-      "kind": [
+      "license": "PER_LISTING",
+      "access": "ACCOUNT_MARKETPLACE",
+      "automation": "REVIEW_REQUIRED",
+      "categories": [
         "3D_MODEL",
         "RIGGED_CHARACTER",
         "CREATURE",
         "ARCHITECTURE"
       ],
-      "license": "PER_LISTING",
-      "access": "ACCOUNT/MARKETPLACE",
-      "automation": "REVIEW_REQUIRED",
-      "formats": [
-        "FBX varies"
-      ],
       "priority": "HIGH"
     },
     {
       "id": "ARTSTATION_MARKETPLACE",
-      "kind": [
+      "license": "PER_LISTING",
+      "access": "ACCOUNT_MARKETPLACE",
+      "automation": "REVIEW_REQUIRED",
+      "categories": [
         "3D_MODEL",
         "CHARACTER",
         "ENVIRONMENT",
         "MATERIAL"
       ],
-      "license": "PER_LISTING",
-      "access": "ACCOUNT/MARKETPLACE",
-      "automation": "REVIEW_REQUIRED",
-      "formats": [
-        "varies"
-      ],
       "priority": "HIGH"
     },
     {
       "id": "BOOM_LIBRARY",
-      "kind": [
+      "license": "PER_PRODUCT",
+      "access": "PURCHASE_ACCOUNT",
+      "automation": "REVIEW_REQUIRED",
+      "categories": [
         "SFX",
         "AMBIENCE",
         "FOLEY",
         "CREATURE"
       ],
-      "license": "PER_PRODUCT",
-      "access": "PURCHASE/ACCOUNT",
-      "automation": "REVIEW_REQUIRED",
-      "formats": [
-        "WAV"
-      ],
       "priority": "HIGH"
     },
     {
       "id": "PRO_SOUND_EFFECTS",
-      "kind": [
+      "license": "PER_PRODUCT",
+      "access": "PURCHASE_ACCOUNT",
+      "automation": "REVIEW_REQUIRED",
+      "categories": [
         "SFX",
         "AMBIENCE",
         "FOLEY"
-      ],
-      "license": "PER_PRODUCT",
-      "access": "PURCHASE/ACCOUNT",
-      "automation": "REVIEW_REQUIRED",
-      "formats": [
-        "WAV"
       ],
       "priority": "HIGH"
     },
     {
       "id": "DEVIANTART_3D_PORTS",
-      "kind": [
+      "license": "PER_ITEM",
+      "access": "PUBLIC_ACCOUNT",
+      "automation": "REFERENCE_OR_REVIEW_ONLY",
+      "categories": [
         "REFERENCE",
         "3D_DISCOVERY"
-      ],
-      "license": "PER_ITEM",
-      "access": "PUBLIC/ACCOUNT",
-      "automation": "REFERENCE_OR_REVIEW_ONLY",
-      "formats": [
-        "varies"
       ],
       "priority": "LOW"
     },
     {
       "id": "SFMLAB",
-      "kind": [
+      "license": "PER_ITEM",
+      "access": "PUBLIC_ACCOUNT",
+      "automation": "REFERENCE_OR_REVIEW_ONLY",
+      "categories": [
         "REFERENCE",
         "3D_DISCOVERY"
-      ],
-      "license": "PER_ITEM",
-      "access": "PUBLIC/ACCOUNT",
-      "automation": "REFERENCE_OR_REVIEW_ONLY",
-      "formats": [
-        "varies"
       ],
       "priority": "LOW"
     },
     {
       "id": "OPEN3DLAB",
-      "kind": [
+      "license": "PER_ITEM",
+      "access": "PUBLIC_ACCOUNT",
+      "automation": "REFERENCE_OR_REVIEW_ONLY",
+      "categories": [
         "REFERENCE",
         "3D_DISCOVERY"
-      ],
-      "license": "PER_ITEM",
-      "access": "PUBLIC/ACCOUNT",
-      "automation": "REFERENCE_OR_REVIEW_ONLY",
-      "formats": [
-        "varies"
       ],
       "priority": "LOW"
     },
     {
       "id": "NEXUS_MODS",
-      "kind": [
-        "MOD_ASSET_DISCOVERY"
-      ],
       "license": "PER_MOD_AUTHOR_AND_SOURCE_RIGHTS",
       "access": "ACCOUNT",
       "automation": "REFERENCE_OR_REVIEW_ONLY",
-      "formats": [
-        "varies"
+      "categories": [
+        "MOD_ASSET_DISCOVERY"
       ],
       "priority": "LOW"
     }
   ],
-  "global_rules": [
-    "Do not mirror whole sites indiscriminately; pull curated category batches that map to warehouse slots and target-device constraints.",
-    "Public/CC0 sources may be staged automatically with source URL, license, hash and file metadata.",
-    "Authentication-required sources remain connected as explicit acquisition lanes and are not bypassed.",
-    "Animated production characters must be FBX before READY_FOR_IMPORT; downloaded glTF/OBJ may be used only for static assets or conversion/prep where permitted.",
-    "Production textures become PNG/TGA/channel-packed before READY_FOR_IMPORT.",
-    "STAGED is not IMPORTED/INTEGRATED/ACCEPTED."
+  "rules": [
+    "Curated category batches only; never indiscriminately mirror an entire site.",
+    "Public CC0 assets may be staged automatically with source URL, license, hash and file metadata.",
+    "Authentication-required sources are explicit lanes and are never bypassed.",
+    "Animated production characters must be FBX before READY_FOR_IMPORT.",
+    "Production textures must be PNG/TGA and channel-packed where appropriate before READY_FOR_IMPORT.",
+    "STAGED is not IMPORTED, INTEGRATED or ACCEPTED."
   ]
 }
