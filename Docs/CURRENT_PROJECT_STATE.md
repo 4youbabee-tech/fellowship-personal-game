@@ -1,3 +1,11 @@
+## 2026-09-22 - Pre-Unreal #561 deep-audit false regression isolated
+
+Exact-head Pre-Unreal #561 on `ed5af300852e6e2ce2264334c560af658250434b` reached `PRE-UNREAL CORE VALIDATION PASSED` and `PRE-UNREAL VALIDATION PASSED`, then failed in `Scripts/deep_project_audit.py` with one error: `async chapter streaming contract missing: FStreamableManager`. The streaming implementation is still asynchronous: `FStreamableManager` is declared in `ShireChapterAssetStreamingSubsystem.h`, while `FSoftObjectPath` and `RequestAsyncLoad` are used in the cpp. The audit had incorrectly required all three literal markers to appear in the cpp alone.
+
+The deep audit now validates the async contract across the subsystem header+cpp while still forbidding `LoadObject<` in the streaming cpp. This is a static-audit repair only; chapter streaming runtime behavior is unchanged. The Work-session persistence/rollback/NPC findings remain open and registered under `EXT-REV-2026-09-22-018`.
+
+Status remains **STATIC-PENDING** until a fresh exact-head workflow completes successfully. Unreal Build #396 is independent engine evidence and must be read on its own result. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made by this audit change.
+
 ## 2026-09-22 - Work-session playability audit reconciled and PG-117 guard repaired
 
 The owner-forwarded Work review was rechecked against integration head `170ebd857bece56a6d7f76f4928efe0eb3426af2` rather than copied into governance verbatim. The review identified current-source risks that remain open: next-Tick chapter checkpoint capture is not synchronized to asynchronous world commit; save restore may apply a saved transform before the matching world is committed; failed-swap rollback can rebuild the prior builder while leaving movement held and logical/player state un-restored as one transaction; ambient residents use approximate-Z placement with collisionless body meshes; and living baseline population still uses SpawnActor/Destroy plus direct LoadObject in ambient visual setup. These findings are now durable under `EXT-REV-2026-09-22-018`, and REQ-SAVE-001 is downgraded from IMPLEMENTED to PARTIAL until the transition/persistence contract is repaired.
