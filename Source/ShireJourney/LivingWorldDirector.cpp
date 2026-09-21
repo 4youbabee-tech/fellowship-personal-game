@@ -16,6 +16,7 @@
 #include "Misc/Paths.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
+#include "UObject/SoftObjectPath.h"
 
 ALivingWorldDirector::ALivingWorldDirector()
 {
@@ -1283,23 +1284,20 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
 
         if (ActiveChapterId == TEXT("P1C01"))
         {
-            MotionMesh = LoadObject<UStaticMesh>(nullptr,
-                TEXT("/Game/Production/World/Shire/SM_ShLantern.SM_ShLantern"));
+            MotionMesh = Cast<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Production/World/Shire/SM_ShLantern.SM_ShLantern")).ResolveObject());
             Amplitude = 5.0f;
             Speed = 0.70f;
         }
         else if (ActiveChapterId == TEXT("P1C02"))
         {
-            MotionMesh = LoadObject<UStaticMesh>(nullptr,
-                TEXT("/Game/Production/World/Bree/SM_BreeInnSign.SM_BreeInnSign"));
+            MotionMesh = Cast<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Production/World/Bree/SM_BreeInnSign.SM_BreeInnSign")).ResolveObject());
             Amplitude = 7.0f;
             Speed = 0.95f;
             Scale = FVector(0.64f);
         }
         else if (ActiveChapterId == TEXT("P1C03"))
         {
-            MotionMesh = LoadObject<UStaticMesh>(nullptr,
-                TEXT("/Game/Production/World/Common/SM_CommonFallenLog.SM_CommonFallenLog"));
+            MotionMesh = Cast<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Production/World/Common/SM_CommonFallenLog.SM_CommonFallenLog")).ResolveObject());
             MotionMode = TEXT("SHIVER");
             Amplitude = 2.4f;
             Speed = 1.4f;
@@ -1307,15 +1305,13 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
         }
         else if (ActiveChapterId == TEXT("P1C04"))
         {
-            MotionMesh = LoadObject<UStaticMesh>(nullptr,
-                TEXT("/Game/Production/World/Rivendell/SM_RivendellLantern.SM_RivendellLantern"));
+            MotionMesh = Cast<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Production/World/Rivendell/SM_RivendellLantern.SM_RivendellLantern")).ResolveObject());
             Amplitude = 4.0f;
             Speed = 0.58f;
         }
         else if (ActiveChapterId == TEXT("P1C05"))
         {
-            MotionMesh = LoadObject<UStaticMesh>(nullptr,
-                TEXT("/Game/Production/World/Road/SM_RoadSnowMarker.SM_RoadSnowMarker"));
+            MotionMesh = Cast<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Production/World/Road/SM_RoadSnowMarker.SM_RoadSnowMarker")).ResolveObject());
             MotionMode = TEXT("SHIVER");
             Amplitude = 3.8f;
             Speed = 1.9f;
@@ -1324,10 +1320,8 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
         else if (ActiveChapterId == TEXT("P1C06"))
         {
             MotionMesh = Random.FRand() > 0.45f
-                ? LoadObject<UStaticMesh>(nullptr,
-                    TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor"))
-                : LoadObject<UStaticMesh>(nullptr,
-                    TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster"));
+                ? Cast<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor")).ResolveObject())
+                : Cast<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster")).ResolveObject());
             MotionMode = TEXT("SHIVER");
             Amplitude = 2.2f;
             Speed = 1.15f;
@@ -1335,8 +1329,7 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
         }
         else if (ActiveChapterId == TEXT("P1C07"))
         {
-            MotionMesh = LoadObject<UStaticMesh>(nullptr,
-                TEXT("/Game/Production/World/Lothlorien/SM_LorienLeafLantern.SM_LorienLeafLantern"));
+            MotionMesh = Cast<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Production/World/Lothlorien/SM_LorienLeafLantern.SM_LorienLeafLantern")).ResolveObject());
             MotionMode = TEXT("BOB");
             Amplitude = 8.0f;
             Speed = 0.52f;
@@ -1344,8 +1337,7 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
         }
         else if (ActiveChapterId == TEXT("P1C08"))
         {
-            MotionMesh = LoadObject<UStaticMesh>(nullptr,
-                TEXT("/Game/Production/World/Anduin/SM_AnduinRiverMarker.SM_AnduinRiverMarker"));
+            MotionMesh = Cast<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Production/World/Anduin/SM_AnduinRiverMarker.SM_AnduinRiverMarker")).ResolveObject());
             MotionMode = TEXT("SWAY");
             Amplitude = 5.5f;
             Speed = 0.72f;
@@ -1416,10 +1408,8 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
         if (ActiveChapterId == TEXT("P1C06"))
         {
             UStaticMesh* ThreatMotionMesh = Random.FRand() > 0.5f
-                ? LoadObject<UStaticMesh>(nullptr,
-                    TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster"))
-                : LoadObject<UStaticMesh>(nullptr,
-                    TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor"));
+                ? Cast<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster")).ResolveObject())
+                : Cast<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor")).ResolveObject());
             if (AWorldAmbientMotionActor* Motion = SpawnAmbientMotionActor(
                 ThreatMotionMesh,
                 Origin,
@@ -1462,10 +1452,8 @@ bool ALivingWorldDirector::SpawnEvent(FName EventType, FActiveMicroEvent& OutEve
     {
         if (ActiveChapterId == TEXT("P1C06"))
         {
-            UStaticMesh* Debris = LoadObject<UStaticMesh>(nullptr,
-                TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster"));
-            UStaticMesh* Chain = LoadObject<UStaticMesh>(nullptr,
-                TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor"));
+            UStaticMesh* Debris = Cast<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Production/World/Moria/SM_MoriaDebrisCluster.SM_MoriaDebrisCluster")).ResolveObject());
+            UStaticMesh* Chain = Cast<UStaticMesh>(FSoftObjectPath(TEXT("/Game/Production/World/Moria/SM_MoriaChainAnchor.SM_MoriaChainAnchor")).ResolveObject());
 
             if (AWorldAmbientMotionActor* Motion = SpawnAmbientMotionActor(
                 Random.FRand() > 0.5f ? Debris : Chain,
