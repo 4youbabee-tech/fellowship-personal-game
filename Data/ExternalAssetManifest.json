@@ -289,6 +289,36 @@
       "mode": "REVIEW_REQUIRED",
       "allowed_license_classes": [],
       "notes": "Useful for finding open-source/CC0 asset repositories and tooling. Repository visibility is not a license; verify the exact LICENSE and asset provenance."
+    },
+    {
+      "id": "DEVIANTART_3D_PORTS",
+      "mode": "REFERENCE_OR_REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Discovery source for artist-authored 3D/XNALara/Blender work. Do not ingest ripped/ported film or game assets merely because they are downloadable; production use requires explicit item-level reuse rights/provenance."
+    },
+    {
+      "id": "SFMLAB",
+      "mode": "REFERENCE_OR_REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Discovery source for rigged/high-detail 3D work. Treat ported/ripped proprietary characters as blocked unless the uploader/rightsholder provides explicit reuse rights that cover the project."
+    },
+    {
+      "id": "OPEN3DLAB",
+      "mode": "REFERENCE_OR_REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Discovery source for rigged/high-detail 3D work. Download availability is not approval; item-level license, provenance and original-rights status must be established before production ingest."
+    },
+    {
+      "id": "NEXUS_MODS",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Useful discovery source for mods, armor, weapons and environment work. Mod permissions do not automatically grant reuse of extracted source assets in another project; require author/source-rights permission per asset."
+    },
+    {
+      "id": "ARTSTATION_MARKETPLACE",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Professional marketplace source separate from ARTSTATION reference browsing. Exact listing license, entitlement, redistribution limits and UE4.27 compatibility must be reviewed before acquisition."
     }
   ],
   "assets": [],
@@ -346,5 +376,37 @@
       ]
     },
     "production_rule": "A source being listed here means 'remember and evaluate when useful', not automatic approval. Every external asset still needs item-level provenance/license/compatibility review before Approved."
+  },
+  "discovery_sources_from_programmer_message_2026_09_22": {
+    "status": "STORED_FOR_DISCOVERY_AND_ITEM_LEVEL_REVIEW",
+    "purpose": "Persistent high-fidelity character/world discovery shortlist supplied by the owner for the private interactive-film production goal.",
+    "owner_intent": [
+      "Prefer cinematic-quality characters, wardrobe, weapons, creatures, architecture and environments over low-detail placeholders.",
+      "Private/non-distributed home use is the intended project context.",
+      "Exact film likeness/design references are desired as a visual target."
+    ],
+    "source_groups": {
+      "cinematic_character_discovery": [
+        "DEVIANTART_3D_PORTS",
+        "SFMLAB",
+        "OPEN3DLAB",
+        "NEXUS_MODS",
+        "ARTSTATION_MARKETPLACE",
+        "CGTRADER",
+        "TURBOSQUID",
+        "SKETCHFAB"
+      ],
+      "cinematic_environment_discovery": [
+        "QUixel_MEGASCANS",
+        "UNREAL_MARKETPLACE_LEGACY",
+        "FAB",
+        "SKETCHFAB",
+        "ARTSTATION_MARKETPLACE",
+        "CGTRADER",
+        "TURBOSQUID"
+      ]
+    },
+    "production_rule": "Being listed means remember/search/evaluate when useful, not automatic import approval. Ripped/ported proprietary film/game assets and exact actor/film copies without explicit reuse rights remain blocked from Approved. Prefer legally reusable high-fidelity assets, original derivation, commission, or project-authored reconstruction where exact source reuse is not cleared.",
+    "pipeline_rule": "Final animated characters remain skeletal FBX-only with real rig/skin/deformation; production textures use PNG/TGA; heavy runtime assets must enter through soft/asynchronous loading."
   }
 }
