@@ -1,3 +1,9 @@
+## 2026-09-22 - world foundation work expanded beyond Shire
+
+P1C01 remains the first fully assembled visual benchmark, but production prework is no longer Shire-only. `Data/TrilogyWorldFoundationPlanV1.json` now tracks reusable world-foundation lanes for Bree, Weathertop, Rivendell, Caradhras, Moria, Lothlorien, Anduin/Amon Hen, Fangorn, Edoras/Meduseld, Helm's Deep, Isengard, Emyn Muil, Dead Marshes, Ithilien/Henneth Annun, Minas Tirith, Osgiliath, Minas Morgul, Cirith Ungol/Shelob's Lair, Pelennor, Paths of the Dead, Black Gate, Mordor/Gorgoroth, Mount Doom and Grey Havens.
+
+Each region has parallel architecture, terrain/material, vegetation/ecology, population/faction, audio, lighting/VFX and traversal/collision stock requirements. This is preproduction/warehouse foundation work only; it does not bypass runtime chapter gates for Part II/III.
+
 ## 2026-09-22 - pooled visual fallback hardening
 
 The async living-world ownership wave now also resets every reused ambient actor to constructor-owned Engine primitive meshes before resolving role-specific production soft objects. This prevents a pooled NPC that changes regional role from retaining a stale Human/Elf/Hobbit mesh when a production asset is unavailable. Active density and streaming policy are unchanged. Exact-head CI/UE evidence remains required; no runtime verification claim is made.
