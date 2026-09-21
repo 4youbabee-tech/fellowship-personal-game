@@ -1,5 +1,11 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-21 - visual-performance architecture guardrails
+
+The project now tracks a measured visual-performance architecture contract: async/soft heavy assets, instanced+cull repeated detail, bounded Tick usage, role-appropriate LOD/material policy and evidence-driven lighting/shadow selection. Static guards protect the currently proven async/HISM/non-ticking-builder patterns.
+
+This does not promote any chapter's performance, PIE, device or visual status. Draw-call, frame-time, streaming-pool, resident-memory, LOD and lighting/shadow comparisons remain target-device work.
+
 ## 2026-09-21 - engine Automation Framework QA wave
 
 The project now has an initial UE Automation Framework layer in addition to static validation and runtime smoke. The first tests cover SaveGame default/schema invariants and post-import existence of all streamed chapter packages. Startup grounding proof now waits two seconds before PASS. These are implementation changes only; engine execution and defect-specific PIE evidence remain pending.

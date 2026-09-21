@@ -2325,6 +2325,51 @@
       ],
       "checkpoint": "QA_IMMUNE_SYSTEM_V1",
       "notes": "Foundation is intentionally staged behind the active startup-grounding repair; this is QA infrastructure, not a new gameplay feature."
+    },
+    {
+      "id": "REQ-PERF-003",
+      "title": "Realistic visual quality under strict low-spec rendering and CPU budgets",
+      "category": "PerformanceArchitecture",
+      "priority": "HIGH",
+      "status": "PARTIAL",
+      "origin": "Owner-approved programmer optimization proposal reviewed against live UE4.27.2 architecture on 2026-09-21",
+      "intent": "Raise world realism and detail while keeping the 720p Low-Medium / 30 FPS target through measured streaming, instancing, culling, LOD, material, lighting and event-driven runtime budgets rather than brute-force asset density.",
+      "evidence": [
+        "Data/VisualPerformanceOptimizationPlan.json",
+        "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.cpp",
+        "Source/ShireJourney/WorldDetailCluster.cpp",
+        "Scripts/deep_project_audit.py",
+        "Data/AssetPerformanceBudget.json"
+      ],
+      "implementation_refs": [
+        "Chapter/route heavy asset banks already use FSoftObjectPath + FStreamableManager async loading.",
+        "Repeated decorative detail already has HISM + explicit cull-distance infrastructure.",
+        "DeepProjectAudit statically guards against synchronous LoadObject inside Tick.",
+        "VisualPerformanceOptimizationPlan records hybrid lighting/material/LOD/culling rules and rejects unmeasured blanket techniques."
+      ],
+      "missing_work": [
+        "Run exact-head static validation for the new visual-performance guardrails.",
+        "Add UE editor/import audit for production-mesh LOD counts and material-slot/instruction budgets when final meshes/materials are available.",
+        "Measure draw calls, frame time, streaming pool, resident memory and transition hitch on the target laptop.",
+        "Benchmark bounded CSM versus any Distance Field Shadow candidate before enabling it on the 2 GB VRAM class target.",
+        "Use baked/static or stationary Lightmass only for authored static sublevels/interiors that actually benefit and pass device comparison.",
+        "Evaluate World Composition/Level Streaming only if later authored contiguous-world topology requires it; do not replace working chapter streaming by default."
+      ],
+      "acceptance_criteria": [
+        "No new heavy runtime dependency bypasses the established soft/asynchronous chapter-bank path without explicit evidence.",
+        "Repeated non-story decorative detail uses instancing and distance culling where actor identity/collision is unnecessary.",
+        "Every-frame Tick is justified and bounded; heavy asset loading or unbounded world scans do not run in Tick.",
+        "Final production meshes receive role-appropriate LOD/cull budgets verified in Unreal, not merely source-file assumptions.",
+        "Lighting/shadow strategy is chosen from target-device evidence rather than a universal baked/distance-field rule.",
+        "Realistic visual upgrades preserve the existing 720p Low-Medium / 30 FPS floor target."
+      ],
+      "dependencies": [
+        "REQ-PERF-001",
+        "REQ-PERF-002",
+        "REQ-QA-002"
+      ],
+      "checkpoint": "VISUAL_PERFORMANCE_ARCHITECTURE_V1",
+      "notes": "Guardrail/plan work may proceed during the current gate. Broad runtime lighting/world-topology changes wait for measured device evidence and the active startup/QA gates."
     }
   ],
   "hard_invariants": [
@@ -2366,6 +2411,26 @@
     {
       "id": "INV-STARTUP-GROUNDING",
       "description": "The player must not receive gravity in chapter coordinates until the destination world is committed and blocking ground is confirmed. Startup and chapter audits fail closed when grounding cannot be proven.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-PERF-ASYNC-HEAVY-ASSETS",
+      "description": "Heavy production asset growth must follow soft/asynchronous chapter or region ownership; residual synchronous loading is debt to reduce, not a pattern to expand.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-PERF-INSTANCED-DETAIL",
+      "description": "High-count non-story decorative detail uses HISM/ISM plus bounded culling where practical; do not multiply independent actors/ticks for foliage or repeated micro-detail.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-PERF-TICK-BUDGET",
+      "description": "Per-frame Tick is reserved for bounded time-sensitive behavior. Heavy loading, JSON/file I/O, or unbounded actor/world scans may not be introduced into Tick.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-PERF-LIGHTING-MEASURED",
+      "description": "Baked, stationary, CSM and distance-field lighting/shadow choices are measured per scene/profile on the target laptop; no technique is globally declared cheaper without evidence.",
       "auto_override": false
     }
   ],
@@ -2898,6 +2963,26 @@
       "evidence": [
         "Data/AutomatedQAPlan.json",
         "Docs/WORLD_DETAIL_LEDGER.md"
+      ]
+    },
+    {
+      "id": "DEC-030",
+      "title": "Use measured hybrid visual-performance architecture instead of one-size-fits-all UE4 optimization recipes",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PERF-001",
+        "REQ-PERF-002",
+        "REQ-PERF-003",
+        "REQ-WORLD-002",
+        "REQ-WORLD-003"
+      ],
+      "resolution": "Keep current async chapter banks and HISM/culling foundations. Prefer soft references, instancing, role-appropriate LODs, shared material-instance families and event/timer-driven logic. Use baked/static lighting, Distance Field Shadows, Cull Distance Volumes or World Composition only where the authored world topology and target-device measurements justify them.",
+      "rationale": "The programmer proposal contains strong industry practices, but runtime-generated chapter geometry and the ~2 GB VRAM target make blanket lighting/world-streaming prescriptions unsafe.",
+      "authority": "USER_APPROVED_AFTER_EXTERNAL_REVIEW",
+      "evidence": [
+        "Data/VisualPerformanceOptimizationPlan.json",
+        "Data/AssetPerformanceBudget.json",
+        "Scripts/deep_project_audit.py"
       ]
     }
   ],
@@ -3524,6 +3609,15 @@
       "rationale": "Convert recurring runtime defects into exact-head automated regression coverage before owner play, beginning with UE Automation Framework wiring and deterministic high-value checks.",
       "execution_bundle": "B0_EXACT_HEAD_STABILITY",
       "plan": "Data/AutomatedQAPlan.json"
+    },
+    {
+      "order": 36,
+      "id": "WORK-PERF-006",
+      "title": "Visual-performance architecture guardrails and target-device budget pass",
+      "status": "ACTIVE",
+      "rationale": "Protect already-correct async/HISM/cull/tick patterns immediately, then profile lighting, LOD, material, draw-call and memory choices on target hardware before broad visual expansion.",
+      "execution_bundle": "B4_PERFORMANCE_AND_QA",
+      "plan": "Data/VisualPerformanceOptimizationPlan.json"
     }
   ],
   "last_reconciliation": {
@@ -3578,7 +3672,7 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "STARTUP_GROUNDING_PLUS_QA_IMMUNE_SYSTEM_FOUNDATION",
+  "current_focus": "STARTUP_GROUNDING_QA_PLUS_VISUAL_PERFORMANCE_GUARDRAILS",
   "immediate_next_large_actions": [
     "Finish V5 on PR #61 with fresh exact-head Pre-Unreal plus full UE4.27.2 build/import/startup/P1C01-P1C08/state/warning proof, then merge to develop.",
     "Measure chapter-transition hitch, streaming pool and resident memory on representative target hardware before promoting V5 as a performance win.",
@@ -4249,6 +4343,52 @@
         "WORK-QA-001"
       ],
       "next_action": "Start with exact-head Automation Framework wiring, save/schema and streamed-package integrity tests, and the existing grounded-startup runtime regression; add deterministic world/nav, animation, memory and hitch suites only after the foundation compiles on UE4.27.2."
+    },
+    {
+      "id": "EXT-REV-2026-09-21-017",
+      "source": "Programmer visual-quality/performance proposal supplied by owner",
+      "verification_sha": "7446af86b55e258d92ac1ca4ac4a7b940fd2f9ba",
+      "verification_status": "VERIFIED_HIGH_VALUE_WITH_PROJECT_SPECIFIC_CORRECTIONS",
+      "claim": "Use UE4.27 world/memory streaming, soft references, optimized lighting/materials, LOD/culling/HISM and event-driven logic to raise realism while preserving smooth performance on mid/low hardware.",
+      "verified_result": {
+        "already_present": [
+          "UShireChapterAssetStreamingSubsystem uses FSoftObjectPath + FStreamableManager::RequestAsyncLoad for chapter/route asset banks.",
+          "AWorldDetailCluster uses UHierarchicalInstancedStaticMeshComponent with explicit cull distances and no actor Tick.",
+          "Shire foliage already uses hierarchical instancing; Fellowship V10 detail paths also use HISM clusters.",
+          "DeepProjectAudit already rejects a possible synchronous LoadObject inside Tick.",
+          "Major world builders are non-ticking construction actors."
+        ],
+        "accepted": [
+          "Heavy production assets remain soft/asynchronous and residual synchronous LoadObject debt is burned down incrementally.",
+          "Repeated foliage/decorative detail uses HISM/ISM plus explicit distance culling instead of actor-per-detail density.",
+          "Shared master materials/material instances are preferred; dynamic instances are used only where runtime parameter variation is actually needed.",
+          "LOD and culling become production asset budgets, with engine-level validation added when final meshes are present.",
+          "Complex recurring logic should prefer events/delegates/timers or throttled updates over unnecessary every-frame Tick."
+        ],
+        "corrected": [
+          "Do not replace the current ChapterWorldRouter + async chapter-bank architecture with World Composition merely because it is a common UE4 technique. Evaluate Level Streaming/World Composition only if later authored contiguous sublevels materially need it.",
+          "Baked Lightmass is not a blanket solution for the current runtime-generated chapter geometry. Use baked/static or stationary lighting selectively in future authored static sublevels/interiors; runtime-generated spaces retain measured dynamic lighting.",
+          "Distance Field Shadows are not assumed cheaper on the ~2 GB VRAM target. They require target-device comparison against bounded Cascaded Shadow Maps/static lighting before adoption.",
+          "Do not require automatic LOD on every tiny mesh regardless of screen size/instance strategy; require appropriate LOD/cull budgets by asset role.",
+          "Material Instances are preferred, not an absolute rule that every material must be a dynamic instance."
+        ]
+      },
+      "disposition": "ADOPT_VISUAL_PERFORMANCE_ARCHITECTURE_WITH_MEASURED_LIGHTING_AND_STREAMING_CHOICES",
+      "linked_requirements": [
+        "REQ-PERF-001",
+        "REQ-PERF-002",
+        "REQ-PERF-003",
+        "REQ-WORLD-002",
+        "REQ-WORLD-003",
+        "REQ-QA-002"
+      ],
+      "linked_work": [
+        "WORK-PERF-002",
+        "WORK-PERF-006",
+        "WORK-WORLD-003",
+        "WORK-QA-003"
+      ],
+      "next_action": "Protect existing async/HISM/cull/tick discipline now; after startup/QA gates are healthy, profile target-device lighting, LOD, material, draw-call, streaming and transition budgets before selecting baked/distance-field/world-composition changes."
     }
   ],
   "project_source_library": {

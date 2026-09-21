@@ -23,7 +23,7 @@
   },
   "current_control_state": {
     "pull_request": 61,
-    "branch": "qa/automated-immune-system-v1",
+    "branch": "perf/visual-performance-guardrails-v1",
     "integration_baseline_head": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
     "integration_baseline_pre_unreal": "SUCCESS #532",
     "integration_baseline_unreal": "SUCCESS #367",
@@ -36,9 +36,9 @@
       "artifact": "Data/DeepProjectAudit.json",
       "rule": "Repair only demonstrated exact-head failures. Performance promotion additionally requires representative target-device hitch/memory measurement."
     },
-    "active_wave": "STARTUP_GROUNDING_PLUS_QA_IMMUNE_SYSTEM_FOUNDATION",
+    "active_wave": "STARTUP_GROUNDING_QA_PLUS_VISUAL_PERFORMANCE_GUARDRAILS",
     "source_baseline": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
-    "proof_boundary": "QA foundation may be STATIC-VALIDATED independently; no engine test is accepted until exact-head UE4.27.2 execution."
+    "proof_boundary": "Static guardrails may advance now. Runtime lighting/world-topology changes require measured target-device evidence and may not bypass startup/QA gates."
   },
   "bundles": [
     {
@@ -177,14 +177,16 @@
         "REQ-PROD-006",
         "REQ-PROD-007",
         "REQ-PROD-008",
-        "REQ-PROD-010"
+        "REQ-PROD-010",
+        "REQ-PERF-003"
       ],
       "work_ids": [
         "WORK-CHAR-004",
         "WORK-CHAR-001",
         "WORK-WORLD-003",
         "WORK-WORLD-002",
-        "WORK-WORLD-001"
+        "WORK-WORLD-001",
+        "WORK-PERF-006"
       ],
       "deliverables": [
         "core-cast source/provenance selection",
@@ -419,6 +421,7 @@
     "REQ-ORG-001",
     "REQ-PERF-001",
     "REQ-PERF-002",
+    "REQ-PERF-003",
     "REQ-PROD-005",
     "REQ-PROD-006",
     "REQ-PROD-007",
@@ -453,6 +456,7 @@
     "WORK-GAME-001",
     "WORK-LW-004",
     "WORK-PERF-002",
+    "WORK-PERF-006",
     "WORK-QA-001",
     "WORK-QA-003",
     "WORK-RING-001",
@@ -462,10 +466,11 @@
     "WORK-WORLD-003"
   ],
   "immediate_next_large_actions": [
-    "Static-validate the isolated startup-grounding repair branch.",
-    "Repair the local UE4 Engine Content access blocker, then run exact-head compile/import/startup/P1C01-P1C08 grounding audits.",
-    "Reproduce the original P1C01 startup in PIE on the exact fix head and close REQ-STARTUP-001 only if the player does not fall below the world.",
-    "Merge the isolated repair into develop before rebasing/reconciling larger V10 and transition work."
+    "Keep startup-grounding and QA Automation Framework repair ahead of visual feature expansion.",
+    "Static-validate visual-performance architecture: async chapter banks, HISM/cull infrastructure, non-ticking world builders and no heavy LoadObject in Tick.",
+    "After engine access/startup gates are healthy, capture target-device draw-call, frame-time, transition hitch, streaming-pool and resident-memory baselines.",
+    "Use those measurements to choose LOD/material/lighting/shadow budgets before a large realistic-world art pass.",
+    "Evaluate Level Streaming/World Composition only if future authored contiguous sublevels need spatial world partitioning beyond current chapter routing."
   ],
   "last_reconciliation": {
     "date": "2026-09-21",

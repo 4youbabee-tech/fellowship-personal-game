@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "plan_id": "VISUAL_PERFORMANCE_OPTIMIZATION_V1",
+  "status": "STATIC_GUARDRAILS_IMPLEMENTED_RUNTIME_PROFILE_PENDING",
+  "authority": "Data/ProjectGovernor.json",
+  "source_review_id": "EXT-REV-2026-09-21-017",
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "platform": "Windows",
+    "renderer": "DX11",
+    "resolution": "720p",
+    "quality": "Low-Medium",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_class_gb": 2
+  },
+  "architecture": {
+    "world_memory": {
+      "disposition": "KEEP_CHAPTER_ROUTER_ASYNC_BANKS",
+      "current": [
+        "ChapterWorldRouter",
+        "ShireChapterAssetStreamingSubsystem",
+        "FSoftObjectPath",
+        "FStreamableManager::RequestAsyncLoad"
+      ],
+      "later_candidate": "Level Streaming/World Composition only for future authored contiguous sublevels after measured need."
+    },
+    "lighting": {
+      "disposition": "HYBRID_MEASURED",
+      "runtime_generated": "dynamic/stationary choices remain measured",
+      "authored_static": "Lightmass/baked or stationary allowed where scene topology is stable",
+      "distance_field_shadows": "benchmark candidate, not default"
+    },
+    "materials": {
+      "disposition": "SHARED_MASTER_PLUS_INSTANCES",
+      "rule": "Preserve authored production materials; prefer instances for variants; create MID only when runtime parameter changes are needed."
+    },
+    "geometry": {
+      "disposition": "ROLE_APPROPRIATE_LOD_PLUS_CULL",
+      "repeated_detail": "HISM/ISM with explicit start/end cull distances",
+      "lod_rule": "LOD requirements depend on asset screen importance/triangle cost/instance strategy and require Unreal-side audit."
+    },
+    "logic": {
+      "disposition": "EVENT_TIMER_THROTTLED_FIRST",
+      "tick_rule": "Per-frame Tick may exist only for bounded time-sensitive work; no heavy loading, file I/O or unbounded world scans."
+    }
+  },
+  "current_proven_foundations": [
+    "UShireChapterAssetStreamingSubsystem contains asynchronous FStreamableManager chapter-bank loading.",
+    "AWorldDetailCluster owns a UHierarchicalInstancedStaticMeshComponent, disables actor Tick and applies explicit cull distances.",
+    "DeepProjectAudit already rejects possible LoadObject inside Tick.",
+    "World builders are construction-oriented and should remain non-ticking."
+  ],
+  "next_measured_wave": [
+    "stat unit / frame-time baseline per representative chapter",
+    "draw-call / primitive count",
+    "streaming pool and resident texture memory",
+    "transition hitch",
+    "representative production-mesh LOD audit",
+    "representative master/material-instance shader cost",
+    "bounded CSM versus distance-field candidate comparison where relevant"
+  ],
+  "non_goals": [
+    "Do not replace working chapter routing with World Composition by default.",
+    "Do not mark baked lighting mandatory for runtime-generated geometry.",
+    "Do not claim Distance Field Shadows are universally cheaper.",
+    "Do not require dynamic material instances for every material.",
+    "Do not claim visual or device acceptance from static guardrails."
+  ]
+}

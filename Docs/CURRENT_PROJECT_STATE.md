@@ -1,3 +1,13 @@
+## 2026-09-21 - visual-performance proposal adopted with measured guardrails
+
+A new programmer proposal for Witcher-class visual ambition with low-spec UE4.27 optimization was reviewed against the live architecture and promoted into durable project memory as `EXT-REV-2026-09-21-017`, `REQ-PERF-003`, `DEC-030` and `WORK-PERF-006`.
+
+Useful parts are active now: preserve soft/asynchronous heavy-asset ownership, HISM/ISM + explicit culling for repeated detail, non-ticking world builders, and no heavy synchronous work inside Tick. `Scripts/deep_project_audit.py` now protects those already-working architecture contracts and `Data/VisualPerformanceOptimizationPlan.json` records the staged optimization path.
+
+The proposal was not copied literally. Current generated chapter geometry makes blanket Lightmass inappropriate; Distance Field Shadows are not assumed cheaper on the ~2 GB VRAM target; World Composition will not replace the working ChapterWorldRouter/async-bank architecture without a measured topology need; LOD/material policies remain role- and profile-driven.
+
+This wave is **STATIC-PENDING** until the exact branch head passes Pre-Unreal. No FPS, VRAM, device, PIE or visual improvement is claimed yet.
+
 ## 2026-09-21 - QA immune-system foundation implementation
 
 The first `REQ-QA-002` implementation wave is now in source on dependent branch `qa/automated-immune-system-v1`. `ShireJourneyEditorTools` contains two initial Unreal Automation Framework tests: `ShireJourney.QA.Save.DefaultState` and `ShireJourney.QA.Assets.StreamingBankPackages`. The first checks SaveGame schema/default invariants; the second checks that every soft-path package declared by `ChapterAssetStreamingPlan.json` exists after the production import step, without synchronously loading those heavy assets.

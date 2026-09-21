@@ -28,6 +28,42 @@ for p in SRC.glob("*.cpp"):
  t=read(p); n=len(re.findall(r"\bLoadObject<",t))
  if n: loads[p.name]=n
  if re.search(r"void\s+\w+::Tick\s*\([^)]*\)[\s\S]{0,12000}?LoadObject<",t): errors.append(f"possible LoadObject in Tick: {p.name}")
+
+# VISUAL PERFORMANCE ARCHITECTURE GUARD
+perf_plan_path=ROOT/"Data"/"VisualPerformanceOptimizationPlan.json"
+if not perf_plan_path.exists():
+ errors.append("visual performance optimization plan missing")
+else:
+ try:
+  perf_plan=json.loads(read(perf_plan_path))
+ except Exception as exc:
+  perf_plan={}
+  errors.append(f"invalid visual performance optimization plan: {exc}")
+ if perf_plan and perf_plan.get("plan_id")!="VISUAL_PERFORMANCE_OPTIMIZATION_V1":
+  errors.append("visual performance optimization plan identity changed")
+
+streaming=read(SRC/"ShireChapterAssetStreamingSubsystem.cpp")
+for symbol in ["FStreamableManager","FSoftObjectPath","RequestAsyncLoad"]:
+ if symbol not in streaming:
+  errors.append(f"async chapter streaming contract missing: {symbol}")
+if "LoadObject<" in streaming:
+ errors.append("chapter streaming subsystem must not add synchronous LoadObject")
+
+detail=read(SRC/"WorldDetailCluster.cpp")
+for symbol in ["UHierarchicalInstancedStaticMeshComponent","SetCullDistances","PrimaryActorTick.bCanEverTick = false"]:
+ if symbol not in detail:
+  errors.append(f"instanced detail/cull contract missing: {symbol}")
+
+for builder_name in [
+ "ShirePrototypeWorldBuilder.cpp",
+ "BreePrototypeWorldBuilder.cpp",
+ "FellowshipChapterWorldBuilder.cpp",
+ "IsengardPrototypeWorldBuilder.cpp",
+]:
+ builder_text=read(SRC/builder_name)
+ if "PrimaryActorTick.bCanEverTick = false" not in builder_text:
+  errors.append(f"world builder unexpectedly became ticking: {builder_name}")
+
 audit=json.loads(read(ROOT/"Data"/"DeepProjectAudit.json"))
 if audit.get("status")!="ACTIVE_CONTINUOUS_AUDIT": errors.append("deep audit record inactive")
 print("DEEP PROJECT AUDIT")

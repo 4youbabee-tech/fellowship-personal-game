@@ -179,5 +179,45 @@
       "Fellowship EnsureProductionMeshes is chapter-aware instead of loading every Part I region together"
     ],
     "evidence_boundary": "No claim of lower hitch, lower RAM or lower VRAM until representative target-device measurement exists."
+  },
+  "visual_performance_architecture_review": {
+    "reviewed_on": "2026-09-21",
+    "status": "ACTIVE_GUARDRAILS_DEVICE_PROFILE_PENDING",
+    "target": "Windows DX11 / 720p Low-Medium / >=30 FPS / 8 GB RAM / ~2 GB VRAM",
+    "streaming": {
+      "current": "ChapterWorldRouter + UShireChapterAssetStreamingSubsystem with FSoftObjectPath/FStreamableManager async banks.",
+      "rule": "Preserve and deepen this path. Do not mandate World Composition/Level Streaming unless future authored contiguous sublevels create a measured need."
+    },
+    "lighting": {
+      "rule": "Hybrid and measured. Runtime-generated chapter geometry stays dynamic unless architecture changes; future authored static sublevels/interiors may use baked/static or stationary Lightmass when beneficial.",
+      "distance_fields": "Candidate only after memory/frame-time comparison against bounded CSM/static lighting on target hardware."
+    },
+    "materials": {
+      "rule": "Prefer shared master materials and instances. Use dynamic material instances only when runtime parameter variation is required; preserve authored production materials.",
+      "future_measurement": [
+        "shader instruction count",
+        "material slots",
+        "sampler pressure",
+        "draw calls"
+      ]
+    },
+    "geometry": {
+      "rule": "Use role-appropriate LOD/cull budgets, not automatic LOD blindly for every tiny asset.",
+      "instancing": "High-count non-story detail uses HISM/ISM with explicit cull distances.",
+      "future_engine_audit": [
+        "LOD count/screen size",
+        "triangle count by LOD",
+        "collision complexity"
+      ]
+    },
+    "cpu_logic": {
+      "rule": "Prefer events/delegates/timers or throttled updates for recurring logic. Per-frame Tick remains justified/bounded only.",
+      "forbidden_growth": [
+        "LoadObject in Tick",
+        "file/JSON I/O in Tick",
+        "new unbounded actor/world scans in Tick"
+      ]
+    },
+    "evidence_boundary": "No FPS/VRAM/draw-call improvement is claimed until measured on the target laptop."
   }
 }
