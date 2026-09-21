@@ -1,5 +1,9 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-22 - V7 async character static-guard reconciliation
+
+Pre-Unreal #578 exposed four stale character-production assertions that still described the old synchronous rig probe. PG-051/PG-089 now validate the V7 FStreamableManager character-rig path and forbid synchronous skeletal-mesh/animation-class loading in the playable character handoff. Runtime behavior and visual acceptance are unchanged by this validator repair.
+
 ## 2026-09-22 - async character wave static regression repair
 
 Pre-Unreal #576 identified one source-structure regression in the new async character-rig wave: a duplicated `AShirePlayerCharacter::EndPlay` signature left braces unbalanced. The duplicate is removed and the exact-head gates are being rerun. Unreal Build #411 had an online runner but stopped before compilation on the existing UE4 Engine Content read-permission failure, so compile/runtime maturity remains unchanged.
