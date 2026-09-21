@@ -1,3 +1,11 @@
+## 2026-09-22 - persistent warehouse staging lane activated
+
+The asset warehouse is no longer catalogue-only. A dedicated `Warehouse Stage` workflow and `Scripts/stage_polyhaven_warehouse.ps1` now target a persistent self-hosted storage root at `C:\\actions-runner\\_warehouse\\ShireJourney`, independent from the blocked UE4 Engine Content build path. `Data/WarehouseAcquisitionBatchV1.json` defines the first CC0 Poly Haven material/prop batch with 2K intake and a hard byte cap; every staged file is intended to receive size/SHA256/source metadata in a local receipt before later import.
+
+The workflow listens to the integration branch, PR exact-head changes affecting the warehouse batch/scripts, and manual dispatch. Staging does not imply UE import, runtime integration or visual acceptance. Existing exact-head evidence remains: Pre-Unreal #603 succeeded on `2e7424c9c63c2bbdb419c4bed10e01ca5cbd282a`; the UE build path remains separately blocked by the self-hosted Windows account's Engine Content read permissions.
+
+No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED status is promoted by warehouse staging.
+
 ## 2026-09-22 - Pre-Unreal #597 PG-078 warehouse-roadmap reconciliation
 
 Exact-head Pre-Unreal #597 on `f7ef04c4b36d6664bdb06324a9652f1572584f28` failed with four deterministic governance errors: `REQ-WAREHOUSE-001` and `WORK-PROD-011` were registered in ProjectGovernor but not yet assigned to the master roadmap, and the tracked unfinished/active snapshots were therefore stale. The warehouse requirement/work item is now assigned to B2 Characters & World Production and both snapshots are regenerated directly from the live Governor.
