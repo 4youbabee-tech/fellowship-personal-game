@@ -319,6 +319,42 @@
       "mode": "REVIEW_REQUIRED",
       "allowed_license_classes": [],
       "notes": "Professional marketplace source separate from ARTSTATION reference browsing. Exact listing license, entitlement, redistribution limits and UE4.27 compatibility must be reviewed before acquisition."
+    },
+    {
+      "id": "ELEVENLABS",
+      "mode": "AUTHORIZED_VOICE_USE_ONLY",
+      "allowed_license_classes": [],
+      "notes": "Candidate speech-generation/voice platform. Production use must be limited to voices/performers for which the project has the necessary authorization/rights. Do not approve cloning a real actor's voice merely from film samples."
+    },
+    {
+      "id": "BOOM_LIBRARY",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Professional SFX/ambience source candidate. Exact library entitlement and project-use terms must be recorded per acquired pack before Approved."
+    },
+    {
+      "id": "PRO_SOUND_EFFECTS",
+      "mode": "REVIEW_REQUIRED",
+      "allowed_license_classes": [],
+      "notes": "Professional SFX/ambience/spatial-audio source candidate. Exact product license/entitlement must be recorded before Approved."
+    },
+    {
+      "id": "LOTR_COMPLETE_RECORDINGS",
+      "mode": "REFERENCE_ONLY",
+      "allowed_license_classes": [],
+      "notes": "Howard Shore / film soundtrack reference target for musical identity and dynamic-scoring analysis. Do not ingest commercial soundtrack recordings into Approved without separate rights."
+    },
+    {
+      "id": "LOTR_BLURAY_CENTER_CHANNEL",
+      "mode": "REFERENCE_ONLY",
+      "allowed_license_classes": [],
+      "notes": "Film dialogue/performance reference only. Do not extract and ingest actor dialogue from Blu-ray center channels into Approved without separate rights."
+    },
+    {
+      "id": "EA_CLASSIC_LOTR_AUDIO",
+      "mode": "REFERENCE_ONLY",
+      "allowed_license_classes": [],
+      "notes": "Classic EA LOTR game audio is a reference source only. Do not extract/reuse proprietary game audio in production without separate rights."
     }
   ],
   "assets": [],
@@ -408,5 +444,32 @@
     },
     "production_rule": "Being listed means remember/search/evaluate when useful, not automatic import approval. Ripped/ported proprietary film/game assets and exact actor/film copies without explicit reuse rights remain blocked from Approved. Prefer legally reusable high-fidelity assets, original derivation, commission, or project-authored reconstruction where exact source reuse is not cleared.",
     "pipeline_rule": "Final animated characters remain skeletal FBX-only with real rig/skin/deformation; production textures use PNG/TGA; heavy runtime assets must enter through soft/asynchronous loading."
+  },
+  "discovery_sources_from_programmer_message_2026_09_22_audio": {
+    "status": "STORED_FOR_AUDIO_DISCOVERY_AND_PRODUCTION_PLANNING",
+    "purpose": "Persistent high-fidelity sonic-source shortlist supplied by the owner for the private interactive-film experience.",
+    "requested_sources": {
+      "dynamic_voice": [
+        "ELEVENLABS",
+        "LOTR_BLURAY_CENTER_CHANNEL"
+      ],
+      "music": [
+        "LOTR_COMPLETE_RECORDINGS"
+      ],
+      "ambience_and_fauna": [
+        "BOOM_LIBRARY",
+        "PRO_SOUND_EFFECTS"
+      ],
+      "creature_and_combat_reference": [
+        "EA_CLASSIC_LOTR_AUDIO"
+      ]
+    },
+    "project_intent": [
+      "Build an offline audio bank rich enough that Shire, Bree, Rivendell/Lothlorien, Moria, Anduin/Amon Hen and Isengard each have a strong cinematic sonic identity.",
+      "Use dynamic music-state routing, 3D spatial ambience/foley and bounded character dialogue integration.",
+      "Private/non-distributed home experience remains the intended context."
+    ],
+    "production_rule": "Source listing means remember/search/evaluate, not automatic approval. Commercial soundtrack/film/game recordings and real-actor voice cloning remain blocked unless separate rights/authorization are established. Prefer authorized performances, original performances, licensed professional SFX libraries and original score/stems that reproduce the intended mood without copying protected recordings.",
+    "technical_rule": "Runtime ownership remains UShireAudioSubsystem with cue routing from story/dialogue systems; authored assets are brought in as project-owned/approved WAV assets, with spatialization/concurrency/ducking and chapter-state transitions validated on UE4.27.2."
   }
 }
