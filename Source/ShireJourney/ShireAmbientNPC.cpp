@@ -117,8 +117,20 @@ void AShireAmbientNPC::ApplyVisualStyle()
         return false;
     };
 
-    const bool bBreeTownsperson = RoutineRole == TEXT("BreeTownsperson");
-    const bool bElf = RoutineRole == TEXT("Elf");
+    const bool bBreeTownsperson =
+        RoutineRole == TEXT("BreeTownsperson") ||
+        RoutineRole == TEXT("InnGuest") ||
+        RoutineRole == TEXT("StableHand") ||
+        RoutineRole == TEXT("GateWorker") ||
+        RoutineRole == TEXT("BreeCourier");
+    const bool bElf =
+        RoutineRole == TEXT("Elf") ||
+        RoutineRole == TEXT("ElfScholar") ||
+        RoutineRole == TEXT("ElfArtisan") ||
+        RoutineRole == TEXT("ElfAttendant") ||
+        RoutineRole == TEXT("ElfWarden") ||
+        RoutineRole == TEXT("ElfCraftsperson") ||
+        RoutineRole == TEXT("BoatTender");
     const bool bBird = RoutineRole == TEXT("Bird");
     const bool bRabbit = RoutineRole == TEXT("Rabbit");
     const bool bButterfly = RoutineRole == TEXT("Butterfly");
@@ -613,12 +625,18 @@ void AShireAmbientNPC::BeginPlay()
 
 FName AShireAmbientNPC::ResolveRuntimeProfileHint() const
 {
-    if (RoutineRole == TEXT("BreeTownsperson"))
+    if (RoutineRole == TEXT("BreeTownsperson") ||
+        RoutineRole == TEXT("InnGuest") ||
+        RoutineRole == TEXT("StableHand") ||
+        RoutineRole == TEXT("GateWorker") ||
+        RoutineRole == TEXT("BreeCourier"))
     {
         return TEXT("ARCH_BREE_TOWNSPERSON");
     }
 
     if (RoutineRole == TEXT("Villager") ||
+        RoutineRole == TEXT("Gardener") ||
+        RoutineRole == TEXT("MarketVendor") ||
         RoutineRole == TEXT("PartyGuest") ||
         RoutineRole == TEXT("PlayRunner") ||
         RoutineRole == TEXT("FieldWorker") ||
@@ -865,6 +883,18 @@ void AShireAmbientNPC::UpdateAwareness(float DeltaSeconds)
 
 FText AShireAmbientNPC::ResolveAmbientConversationLine(bool bResponse) const
 {
+    if (RoutineRole == TEXT("Gardener"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("They have taken well to the rain.")
+            : TEXT("Mind the young shoots by the path."));
+    }
+    if (RoutineRole == TEXT("MarketVendor"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("Set the baskets close to the table.")
+            : TEXT("Fresh apples and bread for the lane."));
+    }
     if (RoutineRole == TEXT("PartyGuest"))
     {
         return FText::FromString(bResponse
@@ -889,11 +919,71 @@ FText AShireAmbientNPC::ResolveAmbientConversationLine(bool bResponse) const
             ? TEXT("Then keep the rope tight.")
             : TEXT("The water is running fast today."));
     }
+    if (RoutineRole == TEXT("InnGuest"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("Keep your voice down in the common room.")
+            : TEXT("Strange folk on the road tonight."));
+    }
+    if (RoutineRole == TEXT("StableHand"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("I will see to the tack before dark.")
+            : TEXT("The ponies are restless in this rain."));
+    }
+    if (RoutineRole == TEXT("GateWorker"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("The road has been busy since dusk.")
+            : TEXT("The gate stays watched after sundown."));
+    }
+    if (RoutineRole == TEXT("BreeCourier"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("I will not linger in the rain.")
+            : TEXT("A message for the inn, then back to the road."));
+    }
     if (RoutineRole == TEXT("BreeTownsperson"))
     {
         return FText::FromString(bResponse
             ? TEXT("Aye. Keep your purse close after dark.")
             : TEXT("The road is busy tonight."));
+    }
+    if (RoutineRole == TEXT("ElfScholar"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("Some paths are older than the names we give them.")
+            : TEXT("The map remembers roads no traveler sees now."));
+    }
+    if (RoutineRole == TEXT("ElfArtisan"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("Nothing worth keeping is hurried.")
+            : TEXT("The work is nearly ready for the road."));
+    }
+    if (RoutineRole == TEXT("ElfAttendant"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("The guests will be shown the quiet paths.")
+            : TEXT("The council terrace is being prepared."));
+    }
+    if (RoutineRole == TEXT("ElfWarden"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("We have heard movement beyond the wood.")
+            : TEXT("The borders have grown less quiet."));
+    }
+    if (RoutineRole == TEXT("ElfCraftsperson"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("Each piece has its purpose for the road.")
+            : TEXT("The boats and gifts are nearly prepared."));
+    }
+    if (RoutineRole == TEXT("BoatTender"))
+    {
+        return FText::FromString(bResponse
+            ? TEXT("The boats will be ready before departure.")
+            : TEXT("The current is gentle today."));
     }
     if (RoutineRole == TEXT("Elf"))
     {
@@ -1002,7 +1092,7 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
     LastPartnerCooldownRemaining = FMath::Max(
         0.0f, LastPartnerCooldownRemaining - DeltaSeconds);
 
-    if (RoutineRole == TEXT("Courier") || RoutineRole == TEXT("RoadWalker") ||
+    if (RoutineRole == TEXT("BreeCourier") || RoutineRole == TEXT("RoadWalker") ||
         RoutineRole == TEXT("Bird"))
     {
         bSocializing = false;
@@ -1089,7 +1179,7 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
             continue;
         }
 
-        if (Candidate->RoutineRole == TEXT("Courier") ||
+        if (Candidate->RoutineRole == TEXT("BreeCourier") ||
             Candidate->RoutineRole == TEXT("RoadWalker") ||
             Candidate->RoutineRole == TEXT("Bird") ||
             Candidate->RoutineRole == TEXT("Rabbit") ||
