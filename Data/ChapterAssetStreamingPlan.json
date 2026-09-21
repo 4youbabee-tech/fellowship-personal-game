@@ -20,7 +20,8 @@
       "streaming pool",
       "resident memory",
       "target-device frame time"
-    ]
+    ],
+    "living_world_asset_ownership": "Ambient production character/fauna meshes and shared production surface material are soft chapter-bank members. Living-world actors may only ResolveObject from the committed resident bank; missing assets keep lightweight Engine primitive fallbacks and must not synchronously load production packages."
   },
   "banks": {
     "P1C01": {
@@ -97,7 +98,16 @@
         "/Game/Production/World/Shire/SM_ShTreeTrunk.SM_ShTreeTrunk",
         "/Game/Production/World/Shire/SM_ShTurfMound.SM_ShTurfMound",
         "/Game/Production/World/Shire/SM_ShWashLine.SM_ShWashLine",
-        "/Game/Production/World/Shire/SM_ShWell.SM_ShWell"
+        "/Game/Production/World/Shire/SM_ShWell.SM_ShWell",
+        "/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Torso.SM_Hobbit_Torso",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Head.SM_Hobbit_Head",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Hair.SM_Hobbit_Hair",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg",
+        "/Game/Production/World/Common/SM_CommonBird.SM_CommonBird",
+        "/Game/Production/World/Common/SM_CommonRabbit.SM_CommonRabbit",
+        "/Game/Production/World/Common/SM_CommonButterfly.SM_CommonButterfly"
       ]
     },
     "P1C02": {
@@ -137,7 +147,18 @@
         "/Game/Production/World/Common/SM_CommonToolRack.SM_CommonToolRack",
         "/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence",
         "/Game/Production/World/Common/SM_CommonWagon.SM_CommonWagon",
-        "/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile"
+        "/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile",
+        "/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Torso.SM_Hobbit_Torso",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Head.SM_Hobbit_Head",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Hair.SM_Hobbit_Hair",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg",
+        "/Game/Production/Characters/Common/SM_Human_Torso.SM_Human_Torso",
+        "/Game/Production/Characters/Common/SM_Human_Head.SM_Human_Head",
+        "/Game/Production/Characters/Common/SM_Human_Hair.SM_Human_Hair",
+        "/Game/Production/Characters/Common/SM_Human_Arm.SM_Human_Arm",
+        "/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg"
       ]
     },
     "P1C03": {
@@ -180,7 +201,14 @@
         "/Game/Production/World/Weathertop/SM_WeathertopRuinWall.SM_WeathertopRuinWall",
         "/Game/Production/World/Weathertop/SM_WeathertopRuinedArch.SM_WeathertopRuinedArch",
         "/Game/Production/World/Weathertop/SM_WeathertopWatchStone.SM_WeathertopWatchStone",
-        "/Game/Production/World/Weathertop/SM_WeathertopWindBanner.SM_WeathertopWindBanner"
+        "/Game/Production/World/Weathertop/SM_WeathertopWindBanner.SM_WeathertopWindBanner",
+        "/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Torso.SM_Hobbit_Torso",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Head.SM_Hobbit_Head",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Hair.SM_Hobbit_Hair",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm",
+        "/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg",
+        "/Game/Production/World/Common/SM_CommonBird.SM_CommonBird"
       ]
     },
     "P1C04": {
@@ -229,7 +257,12 @@
         "/Game/Production/World/Rivendell/SM_RivendellArch.SM_RivendellArch",
         "/Game/Production/World/Rivendell/SM_RivendellBridge.SM_RivendellBridge",
         "/Game/Production/World/Rivendell/SM_RivendellLantern.SM_RivendellLantern",
-        "/Game/Production/World/Rivendell/SM_RivendellPavilion.SM_RivendellPavilion"
+        "/Game/Production/World/Rivendell/SM_RivendellPavilion.SM_RivendellPavilion",
+        "/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface",
+        "/Game/Production/Characters/Common/SM_Elf_Torso.SM_Elf_Torso",
+        "/Game/Production/Characters/Common/SM_Elf_Head.SM_Elf_Head",
+        "/Game/Production/Characters/Common/SM_Elf_Hair.SM_Elf_Hair",
+        "/Game/Production/World/Common/SM_CommonButterfly.SM_CommonButterfly"
       ]
     },
     "P1C05": {
@@ -380,7 +413,12 @@
         "/Game/Production/World/Lothlorien/SM_LorienRopeLampLine.SM_LorienRopeLampLine",
         "/Game/Production/World/Lothlorien/SM_LorienTalan.SM_LorienTalan",
         "/Game/Production/World/Lothlorien/SM_LorienTalanLadder.SM_LorienTalanLadder",
-        "/Game/Production/World/Lothlorien/SM_LorienTreePlatform.SM_LorienTreePlatform"
+        "/Game/Production/World/Lothlorien/SM_LorienTreePlatform.SM_LorienTreePlatform",
+        "/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface",
+        "/Game/Production/Characters/Common/SM_Elf_Torso.SM_Elf_Torso",
+        "/Game/Production/Characters/Common/SM_Elf_Head.SM_Elf_Head",
+        "/Game/Production/Characters/Common/SM_Elf_Hair.SM_Elf_Hair",
+        "/Game/Production/World/Common/SM_CommonButterfly.SM_CommonButterfly"
       ]
     },
     "P1C08": {
@@ -429,7 +467,9 @@
         "/Game/Production/World/Common/SM_CommonTerracedHill.SM_CommonTerracedHill",
         "/Game/Production/World/Common/SM_CommonTreeStump.SM_CommonTreeStump",
         "/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence",
-        "/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile"
+        "/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile",
+        "/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface",
+        "/Game/Production/World/Common/SM_CommonBird.SM_CommonBird"
       ]
     },
     "GANDALF_ISENGARD": {
