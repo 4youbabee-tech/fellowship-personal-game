@@ -48,6 +48,9 @@ public:
     UFUNCTION(BlueprintCallable, Category="PlayerLife")
     void GrantSupplies(int32 Amount);
 
+    // Internal transaction restore used by ChapterWorldRouter rollback. This does not write a save slot.
+    void RestoreTransactionalPlayerState(float Health, float Stamina, float Resolve, int32 InSupplies);
+
     UFUNCTION(BlueprintPure, Category="Chronicle")
     bool IsChronicleOpen() const { return bChronicleOpen; }
 
