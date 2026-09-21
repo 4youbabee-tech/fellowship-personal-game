@@ -2471,7 +2471,10 @@
         "Warehouse-first + vertical-slice production is explicitly separated from runtime chapter gating: stock/acquisition/preproduction can proceed across F1-F3 while P1C01 remains the first fully assembled benchmark.",
         "Existing external-source and audio-source registries feed the warehouse without changing Approved asset policy.",
         "Data/TrilogyAssetCandidateQueue.json seeds concrete CC0 candidate lanes for rigged background humans, fantasy clothing, medieval architecture, ruins, nature, farm fauna and high-fidelity Poly Haven prop/material sources.",
-        "DEC-033 / INV-WAREHOUSE-STAGING separate bulk warehouse fill from runtime acceptance: catalogue/stage continuously, run lightweight intake validation before READY_FOR_IMPORT, and defer UE runtime proof until integration."
+        "DEC-033 / INV-WAREHOUSE-STAGING separate bulk warehouse fill from runtime acceptance: catalogue/stage continuously, run lightweight intake validation before READY_FOR_IMPORT, and defer UE runtime proof until integration.",
+        "Data/ResourceBibleSourceExpansionV1.json operationalizes Source 09 into voice/TTS, music, SFX, visual/UI, 3D, architecture, material, animation/mocap, LOTR-reference and AI-tool source lanes.",
+        "Data/WarehouseAmbientCGAcquisitionBatchV1.json + Scripts/stage_ambientcg_warehouse.ps1 add public-API CC0 material staging.",
+        "Data/WarehouseKenneyAcquisitionBatchV1.json + Scripts/stage_kenney_warehouse.ps1 add official-page CC0 support/world-kit staging."
       ],
       "missing_work": [
         "Expand Data/TrilogyAssetCandidateQueue.json until every warehouse family has at least one concrete candidate/project-authored path, then acquire/import eligible batches under the LFS/import contract.",
@@ -2479,7 +2482,9 @@
         "Fill P1C01 Shire world/material/prop/vegetation/fauna/audio banks to a visible vertical-slice standard.",
         "Build reusable location/culture kits for Part II and Part III in the warehouse without prematurely opening runtime chapter implementation.",
         "Add automated warehouse coverage/status reporting so future reviews state exact filled/pending counts by category.",
-        "Run UE4.27 import/compile, PIE, visual/audio and target-device gates before any slot is promoted from READY/INTEGRATED to ACCEPTED."
+        "Run UE4.27 import/compile, PIE, visual/audio and target-device gates before any slot is promoted from READY/INTEGRATED to ACCEPTED.",
+        "Continue converting Source 09 candidates into concrete provider-specific acquisition batches, prioritizing high-value legal/public lanes before auth/manual marketplaces.",
+        "Add category coverage reporting across character, animation, world, material, creature, audio, music, VFX and UI stock."
       ],
       "acceptance_criteria": [
         "All three films have explicit tracked production slots for required named/supporting characters, worlds, cultures, threats, creatures, battles, materials, animation and audio.",
@@ -4717,6 +4722,40 @@
         "REQ-NPC-003"
       ],
       "next_action": "Populate the first Shire/Bree/Moria/Lothlorien/Anduin banks with authorized/original/licensed assets, then validate spatialization, concurrency, ducking and target-device memory/performance."
+    },
+    {
+      "id": "EXT-REV-2026-09-22-021",
+      "source": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL",
+      "verification_status": "SOURCE_REVIEWED_AND_OPERATIONALIZED",
+      "claim": "Source 09 contains a broad multi-domain resource map that should feed the warehouse continuously rather than remain a passive PDF.",
+      "verified_result": {
+        "categories": [
+          "voice/TTS",
+          "music",
+          "SFX/field recording",
+          "images/art/UI reference",
+          "3D/models/scans",
+          "architecture",
+          "environments/materials",
+          "animation/mocap",
+          "LOTR-specific reference",
+          "AI creation tools"
+        ],
+        "implementation": [
+          "Data/ResourceBibleSourceExpansionV1.json",
+          "Data/GlobalWarehouseSourceRegistryV2.json",
+          "Warehouse ambientCG and Kenney staging lanes"
+        ]
+      },
+      "disposition": "ADOPT_AS_ACTIVE_WAREHOUSE_SOURCE_MAP",
+      "linked_requirements": [
+        "REQ-WAREHOUSE-001",
+        "REQ-ASSET-001",
+        "REQ-PROD-009",
+        "REQ-CHAR-004",
+        "REQ-WORLD-003"
+      ],
+      "next_action": "Keep converting the broad source map into provider-specific candidate/acquisition batches and exact warehouse coverage metrics."
     }
   ],
   "project_source_library": {
