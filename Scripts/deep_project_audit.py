@@ -42,11 +42,13 @@ else:
  if perf_plan and perf_plan.get("plan_id")!="VISUAL_PERFORMANCE_OPTIMIZATION_V1":
   errors.append("visual performance optimization plan identity changed")
 
-streaming=read(SRC/"ShireChapterAssetStreamingSubsystem.cpp")
+streaming_h=read(SRC/"ShireChapterAssetStreamingSubsystem.h")
+streaming_cpp=read(SRC/"ShireChapterAssetStreamingSubsystem.cpp")
+streaming_contract=streaming_h+"\n"+streaming_cpp
 for symbol in ["FStreamableManager","FSoftObjectPath","RequestAsyncLoad"]:
- if symbol not in streaming:
+ if symbol not in streaming_contract:
   errors.append(f"async chapter streaming contract missing: {symbol}")
-if "LoadObject<" in streaming:
+if "LoadObject<" in streaming_cpp:
  errors.append("chapter streaming subsystem must not add synchronous LoadObject")
 
 detail=read(SRC/"WorldDetailCluster.cpp")
