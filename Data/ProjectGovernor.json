@@ -2291,9 +2291,11 @@
         ".github/workflows/unreal-build-validation.yml"
       ],
       "implementation_refs": [
-        "Foundation wave adds UE Automation Framework tests under ShireJourney.QA.",
-        "Existing runtime_smoke.py remains the end-to-end runtime layer and already requires chapter-specific startup grounding proof.",
-        "The self-hosted workflow runs automation only after exact-head compile and production import."
+        "ShireJourneyEditorTools now contains FAutomationTestBase-derived simple tests under the ShireJourney.QA namespace.",
+        "First engine tests validate SaveGame default/schema invariants and post-import chapter streaming package existence without synchronously loading heavy production assets.",
+        "ci_run_project_automation.cmd launches UE4Editor-Cmd headlessly and parse_automation_report.py fails closed if required tests do not complete successfully.",
+        "Unreal Build Validation runs the automation suite after exact-head compile/import and before runtime chapter/state smoke.",
+        "Startup grounding PASS is delayed until two seconds of stable non-falling state with blocking ground."
       ],
       "missing_work": [
         "Compile and execute the new Automation Framework suite on UE4.27.2.",
