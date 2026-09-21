@@ -235,6 +235,13 @@ private:
     bool bWorldMapOpen = false;
     float PrototypeIdlePhase = 0.0f;
     FName PendingChapterCheckpointId = NAME_None;
+    bool bPendingSaveRestoreTransform = false;
+    FVector PendingSaveRestoreLocation = FVector::ZeroVector;
+    FRotator PendingSaveRestoreRotation = FRotator::ZeroRotator;
+    FName PendingSaveRestoreChapterId = NAME_None;
+    FName PendingSaveRestoreRouteId = NAME_None;
+    FName PendingSaveRestoreEpisodeId = NAME_None;
+    FText PendingSaveRestoreSuccessMessage;
     bool bCheckpointSaveInFlight = false;
     bool bCheckpointSaveShowHUD = false;
     FName CheckpointSaveInFlightId = NAME_None;
@@ -249,6 +256,8 @@ private:
     UShireSaveGame* CreateSaveSnapshot(FName CheckpointId, bool bCheckpointSnapshot) const;
     void HandleCheckpointSaveComplete(const FString& SlotName, const int32 UserIndex, bool bSuccess);
     bool RestoreSaveSnapshot(UShireSaveGame* Save, const FText& SuccessMessage);
+    bool TryApplyPendingSaveRestoreTransform();
+    bool IsCurrentWorldCommitted() const;
     bool TryApplyProductionRig(const FString& RigFolder);
     void ApplyPrototypeStyle();
     void UpdatePrototypeAnimation(float DeltaSeconds);
