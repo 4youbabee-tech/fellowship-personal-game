@@ -2470,7 +2470,8 @@
         "Data/TrilogyProductionAssetWarehouse.json establishes the first complete trilogy-wide catalogue from Sources 02/03/04/05/11 plus the supplied film trilogy screenplays.",
         "Warehouse-first + vertical-slice production is explicitly separated from runtime chapter gating: stock/acquisition/preproduction can proceed across F1-F3 while P1C01 remains the first fully assembled benchmark.",
         "Existing external-source and audio-source registries feed the warehouse without changing Approved asset policy.",
-        "Data/TrilogyAssetCandidateQueue.json seeds concrete CC0 candidate lanes for rigged background humans, fantasy clothing, medieval architecture, ruins, nature, farm fauna and high-fidelity Poly Haven prop/material sources."
+        "Data/TrilogyAssetCandidateQueue.json seeds concrete CC0 candidate lanes for rigged background humans, fantasy clothing, medieval architecture, ruins, nature, farm fauna and high-fidelity Poly Haven prop/material sources.",
+        "DEC-033 / INV-WAREHOUSE-STAGING separate bulk warehouse fill from runtime acceptance: catalogue/stage continuously, run lightweight intake validation before READY_FOR_IMPORT, and defer UE runtime proof until integration."
       ],
       "missing_work": [
         "Expand Data/TrilogyAssetCandidateQueue.json until every warehouse family has at least one concrete candidate/project-authored path, then acquire/import eligible batches under the LFS/import contract.",
@@ -2485,7 +2486,9 @@
         "Every actual external asset has provider/provenance/license/entitlement metadata before Approved.",
         "Animated final characters use real skeletal FBX rigs; static OBJ foundations are never misreported as final characters.",
         "The warehouse status can answer exactly what is filled, ready, integrated, accepted or pending instead of relying on chat memory.",
-        "P1C01 demonstrates the warehouse as a complete natural-looking gameplay slice before mass runtime expansion."
+        "P1C01 demonstrates the warehouse as a complete natural-looking gameplay slice before mass runtime expansion.",
+        "Warehouse fill is not blocked by runner/PIE availability; only promotion to runtime/acceptance states is blocked by missing engine evidence.",
+        "Bulk-staged assets are never silently treated as production-ready without intake validation."
       ],
       "dependencies": [
         "REQ-ASSET-001",
@@ -2557,6 +2560,11 @@
     {
       "id": "INV-PERF-LIGHTING-MEASURED",
       "description": "Baked, stationary, CSM and distance-field lighting/shadow choices are measured per scene/profile on the target laptop; no technique is globally declared cheaper without evidence.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-WAREHOUSE-STAGING",
+      "description": "Warehouse acquisition/cataloguing must not wait for UE runtime/PIE/device gates. Assets may be DISCOVERED/CANDIDATE/STAGED in bulk, but no file may be promoted to READY_FOR_IMPORT without intake validation (integrity, format, scale/unit, topology/UV/skeleton/texture sanity as applicable, provenance/metadata, and malware/archive hygiene). INTEGRATED and ACCEPTED states still require the relevant UE4.27 build/import/runtime/visual/audio/device evidence.",
       "auto_override": false
     }
   ],
@@ -3147,6 +3155,26 @@
       "evidence": [
         "Data/TrilogyProductionAssetWarehouse.json",
         "Docs/WORLD_DETAIL_LEDGER.md",
+        "Docs/CURRENT_PROJECT_STATE.md"
+      ]
+    },
+    {
+      "id": "DEC-033",
+      "title": "Separate warehouse intake validation from runtime acceptance",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WAREHOUSE-001",
+        "REQ-ASSET-001",
+        "REQ-PERF-003",
+        "REQ-INTEGRATION-001"
+      ],
+      "resolution": "Run asset-warehouse filling continuously and independently from runner availability. Discovery, download/staging and catalogue enrichment do not wait for compile/PIE/device tests. Use a lightweight intake gate before READY_FOR_IMPORT; reserve UE4 import/build, PIE, performance and human visual/audio acceptance for assets that are actually integrated into a production slice.",
+      "rationale": "Blocking warehouse fill on runtime gates wastes parallelizable production time; skipping all intake checks, however, converts the warehouse into an untrusted dump. The correct large-team pattern is staged asset ingestion with escalating proof requirements.",
+      "authority": "USER_DIRECTIVE",
+      "evidence": [
+        "Data/TrilogyProductionAssetWarehouse.json",
+        "Data/TrilogyAssetCandidateQueue.json",
+        "Data/ExternalAssetManifest.json",
         "Docs/CURRENT_PROJECT_STATE.md"
       ]
     }
