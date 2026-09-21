@@ -2469,10 +2469,11 @@
       "implementation_refs": [
         "Data/TrilogyProductionAssetWarehouse.json establishes the first complete trilogy-wide catalogue from Sources 02/03/04/05/11 plus the supplied film trilogy screenplays.",
         "Warehouse-first + vertical-slice production is explicitly separated from runtime chapter gating: stock/acquisition/preproduction can proceed across F1-F3 while P1C01 remains the first fully assembled benchmark.",
-        "Existing external-source and audio-source registries feed the warehouse without changing Approved asset policy."
+        "Existing external-source and audio-source registries feed the warehouse without changing Approved asset policy.",
+        "Data/TrilogyAssetCandidateQueue.json seeds concrete CC0 candidate lanes for rigged background humans, fantasy clothing, medieval architecture, ruins, nature, farm fauna and high-fidelity Poly Haven prop/material sources."
       ],
       "missing_work": [
-        "Populate each CATALOGUED slot with a real candidate or project-authored asset and exact provenance/status metadata.",
+        "Expand Data/TrilogyAssetCandidateQueue.json until every warehouse family has at least one concrete candidate/project-authored path, then acquire/import eligible batches under the LFS/import contract.",
         "Acquire/author the first accepted skeletal FBX character bundles beginning with Frodo, Gandalf and Sam.",
         "Fill P1C01 Shire world/material/prop/vegetation/fauna/audio banks to a visible vertical-slice standard.",
         "Build reusable location/culture kits for Part II and Part III in the warehouse without prematurely opening runtime chapter implementation.",
