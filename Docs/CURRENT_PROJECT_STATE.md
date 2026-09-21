@@ -1,3 +1,9 @@
+## 2026-09-22 - global warehouse source circle expanded and ranked
+
+The warehouse source registry is no longer a short-list. It now tracks a broader global source matrix with an explicit scoring/tiering policy so acquisition can widen without becoming chaotic. Newly added lanes include ambientCG, ShareTextures, KayKit, PolygonalMind CC0 releases, Poly Pizza, Gobkit, NASA 3D resources and supplemental HDRI sources. Tier A is reserved for clear, automatable, high-value sources; auth/marketplace sources are Tier B; supporting/niche sources are Tier C; ripped/unclear proprietary-port communities remain reference-only.
+
+The selection rule is intentionally not “download everything from every site.” For each warehouse slot, retain the best-fit one to three candidates based on visual fit, engine readiness, license clarity, format, performance, reuse breadth and source stability. This keeps the trilogy warehouse large but searchable and prevents duplicate low-value stock from consuming staging/storage time.
+
 ## 2026-09-22 - warehouse runner execution-policy blocker repaired
 
 Warehouse Stage #18 reached the self-hosted runner and failed before any download because GitHub's `shell: powershell` wrapper attempted to dot-source its temporary script while the Windows service account has script execution disabled. The warehouse workflow now invokes each checked-in staging script from `cmd` using `powershell.exe -NoProfile -ExecutionPolicy Bypass -File`, matching the proven pattern already used elsewhere on the runner. This repairs the staging launcher only; actual staged-file counts remain pending the next exact-head Warehouse Stage run.
