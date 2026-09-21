@@ -5427,6 +5427,44 @@ for pg122_symbol in [
         fail(f"PG-122 delayed grounding stability proof missing: {pg122_symbol}")
 
 
+# PG-123: comprehensive transactional world-commit contract.
+pg123_router_h = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.h")
+pg123_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
+pg123_stream_h = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.h")
+pg123_stream = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
+pg123_life_h = read(ROOT / "Source" / "ShireJourney" / "LivingWorldDirector.h")
+pg123_life = read(ROOT / "Source" / "ShireJourney" / "LivingWorldDirector.cpp")
+
+for pg123_symbol in [
+    "CommitPendingRequest",
+    "awaiting-world-commit",
+    "ResidentHandle = PendingHandle",
+]:
+    if pg123_symbol not in (pg123_stream_h + pg123_stream):
+        fail(f"PG-123 two-phase asset commit contract missing: {pg123_symbol}")
+
+for pg123_symbol in [
+    "IsWorldCommitted",
+    "WorldRevision",
+    "RollbackFailedWorldSwap",
+    "ShireWorldCommit: PASS",
+    "OnWorldCommitted.Broadcast",
+]:
+    if pg123_symbol not in (pg123_router_h + pg123_router):
+        fail(f"PG-123 transactional world commit contract missing: {pg123_symbol}")
+
+for pg123_symbol in [
+    "SynchronizeCommittedWorld",
+    "GetAppliedWorldRevision",
+    "LivingWorldCommitSync",
+    "LivingWorldManaged",
+]:
+    if pg123_symbol not in (pg123_life_h + pg123_life):
+        fail(f"PG-123 committed living-world synchronization missing: {pg123_symbol}")
+
+if "ActiveChapterId = NewChapterId;\n    ResetForCurrentChapter();" in pg123_life:
+    fail("PG-123 LivingWorldDirector may not reset directly from requested quest chapter before world commit")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
