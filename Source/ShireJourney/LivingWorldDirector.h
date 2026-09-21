@@ -30,6 +30,15 @@ private:
         float ExpiresAt = 0.0f;
     };
 
+    struct FChapterPopulationProfile
+    {
+        float SpawnInterval = 0.35f;
+        float InnerRadius = 850.0f;
+        float OuterRadius = 2600.0f;
+        float CullRadius = 6200.0f;
+        float DangerPopulationFraction = 0.50f;
+    };
+
     UPROPERTY()
     UShireQuestSubsystem* QuestSubsystem = nullptr;
 
@@ -38,6 +47,7 @@ private:
     TArray<TWeakObjectPtr<AShireAmbientNPC>> BaselinePopulation;
     TMap<FName, int32> BaselineTargetByChapter;
     TMap<FName, TArray<FName>> BaselineRolesByChapter;
+    TMap<FName, FChapterPopulationProfile> PopulationProfilesByChapter;
     FRandomStream Random;
     FName ActiveChapterId = NAME_None;
     FName LastEventType = NAME_None;
@@ -49,6 +59,7 @@ private:
     float PopulationOuterRadius = 2600.0f;
     float PopulationCullRadius = 6200.0f;
     float PopulationSpawnInterval = 0.35f;
+    float DangerPopulationFraction = 0.50f;
     int32 MaxActiveMicroEvents = 3;
 
     UFUNCTION()
@@ -60,6 +71,7 @@ private:
     bool LoadEventContract();
     bool LoadLifeSaturationContract();
     void ResetForCurrentChapter();
+    void ApplyPopulationProfile();
     void CleanupExpiredEvents();
     void CleanupBaselinePopulation();
     void MaintainBaselinePopulation();
