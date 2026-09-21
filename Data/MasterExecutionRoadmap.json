@@ -22,14 +22,14 @@
     "evidence": "Each bundle closes only from repository/engine/device/human evidence matching its exit criteria."
   },
   "current_control_state": {
-    "pull_request": 61,
+    "pull_request": 67,
     "branch": "integration/comprehensive-foundation-v1",
     "integration_baseline_head": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
     "integration_baseline_pre_unreal": "SUCCESS #532",
     "integration_baseline_unreal": "SUCCESS #367",
-    "latest_observed_candidate_head": "b882b052a59c8d4e19437d7877dc30c9b1ea5daf",
-    "latest_observed_pre_unreal": "SUCCESS #538",
-    "latest_observed_unreal": "PENDING #373 at reconciliation",
+    "latest_observed_candidate_head": "f7ef04c4b36d6664bdb06324a9652f1572584f28",
+    "latest_observed_pre_unreal": "FAILURE #597: PG-078 roadmap orphan/snapshot mismatch after warehouse lane registration",
+    "latest_observed_unreal": "FAILURE #432 before compilation: NETWORK SERVICE denied reading WorldGridMaterial.uasset",
     "merge_policy": "Newest PR head must pass exact-head Pre-Unreal and full UE4.27.2 validation before develop integration; after merge, develop must return green.",
     "deep_audit": {
       "status": "V5_EXACT_HEAD_VALIDATION_ACTIVE",
@@ -192,7 +192,8 @@
         "REQ-PROD-007",
         "REQ-PROD-008",
         "REQ-PROD-010",
-        "REQ-PERF-003"
+        "REQ-PERF-003",
+        "REQ-WAREHOUSE-001"
       ],
       "work_ids": [
         "WORK-CHAR-004",
@@ -200,7 +201,8 @@
         "WORK-WORLD-003",
         "WORK-WORLD-002",
         "WORK-WORLD-001",
-        "WORK-PERF-006"
+        "WORK-PERF-006",
+        "WORK-PROD-011"
       ],
       "deliverables": [
         "core-cast source/provenance selection",
@@ -228,7 +230,8 @@
         "18 dedicated Fellowship equipment/silhouette source meshes",
         "dedicated-first runtime equipment resolution",
         "Gimli dedicated helmet/beard/axe identity",
-        "future rig/socket handoff preserved"
+        "future rig/socket handoff preserved",
+        "trilogy-wide warehouse catalogue/candidate/intake pipeline with exact state reporting"
       ],
       "exit_evidence": [
         "ASSET_PROVENANCE_RECORDED",
@@ -453,6 +456,7 @@
     "REQ-SOURCE-001",
     "REQ-STARTUP-001",
     "REQ-VISION-001",
+    "REQ-WAREHOUSE-001",
     "REQ-WORLD-001",
     "REQ-WORLD-002",
     "REQ-WORLD-003",
@@ -473,6 +477,7 @@
     "WORK-LW-004",
     "WORK-PERF-002",
     "WORK-PERF-006",
+    "WORK-PROD-011",
     "WORK-QA-001",
     "WORK-QA-003",
     "WORK-RING-001",
@@ -490,8 +495,9 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-22",
-    "reason": "Path cleanup before post-V5 production: stale PR53/CP56 and V1-V4 active markers retired; PR61 is the single active closeout path; post-V5 world-life plus rig sequence is explicit.",
+    "reason": "Reconcile newly adopted warehouse requirement/work lane into B2 and regenerate Governor snapshots after Pre-Unreal #597 PG-078 failures.",
     "warehouse_first": "Data/TrilogyProductionAssetWarehouse.json",
-    "note": "Roadmap now prevents visible production from being deferred behind repeated governance-only work."
+    "note": "Roadmap now prevents visible production from being deferred behind repeated governance-only work.",
+    "exact_head_before_fix": "f7ef04c4b36d6664bdb06324a9652f1572584f28"
   }
 }
