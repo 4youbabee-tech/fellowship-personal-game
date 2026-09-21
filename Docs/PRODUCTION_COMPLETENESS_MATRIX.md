@@ -1,3 +1,7 @@
+## 2026-09-22 - trilogy-wide world foundation parallelism
+
+World production planning is no longer Shire-only. Reusable foundations are now tracked across all major trilogy regions while P1C01 remains the first fully assembled benchmark. This advances preproduction and warehouse coverage only; it does not promote later chapters to runtime-ready status.
+
 ## 2026-09-22 - Resource Bible 09 source expansion and new warehouse stagers
 
 Source 09 is now operational rather than passive documentation. Its broad resource families have been merged into the machine-readable global source registry, and concrete staging lanes now include ambientCG CC0 materials plus Kenney CC0 support/world kits in addition to the existing Poly Haven, Quaternius and OpenGameArt lanes. This advances warehouse source breadth and STAGED acquisition only; no UE import/runtime/visual/audio/device acceptance is promoted by this sourcing wave.
