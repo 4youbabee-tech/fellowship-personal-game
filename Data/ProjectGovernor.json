@@ -370,15 +370,16 @@
         "combat defeat restores the latest automatic safe checkpoint at full health",
         "Save schema v5 persists stamina, resolve, supplies and progression XP.",
         "Save schema v6 persists ChronicleEntryIds and KnownMapRegionIds in addition to player-life/progression state.",
-        "Automatic checkpoint disk writes are asynchronous and serialized; commit synchronization of the captured transform remains pending."
+        "Automatic checkpoint disk writes are asynchronous and serialized; commit synchronization of the captured transform remains pending.",
+        "Transition automatic checkpoints now wait until ChapterWorldRouter reports the current chapter/route/episode as committed before snapshot capture.",
+        "Save restore now defers player transform placement until the matching committed world is available and asks ChapterWorldRouter to ground the saved XY transform against committed geometry."
       ],
       "missing_work": [
+        "Exact-head UE4.27 compile/runtime regression proof for commit-synchronized checkpoint capture and cross-chapter save restore.",
         "F9 round-trip verification on current integrated build",
         "F8 Gandalf-Isengard-Frodo round-trip verification",
         "PIE verification of automatic checkpoint placement/respawn across representative chapters",
         "device verification that checkpoint writes/restores do not create noticeable hitching",
-        "Transition checkpoint capture must wait for the matching ChapterWorldRouter committed chapter/route/episode identity or revision, not merely one player Tick.",
-        "Save restore must defer the exact saved player transform until the saved chapter/route/episode world is committed and grounding can be resolved against that world.",
         "Failed chapter swap rollback must restore a coherent playable prior transaction (world, route/chapter state, player transform and movement) or remain explicitly failed; the current movement-held builder-only rollback is not closure.",
         "Add exact-head engine regression coverage for checkpoint capture during delayed async transition, cross-chapter save restore, and failed-swap rollback."
       ],
@@ -2403,7 +2404,9 @@
         "ChapterWorldRouter publishes a committed world revision only after supported builder creation, grounded player placement, and asset-bank commit.",
         "Failed swaps restore the previous builder where possible and fail closed with player movement held.",
         "LivingWorldDirector combines V10 chapter density/roles with committed-world revision synchronization and does not apply destination life/weather before visible-world commit.",
-        "V10 regional NPC roles/dialogue data and living-NPC intelligence plans are integrated into the comprehensive branch."
+        "V10 regional NPC roles/dialogue data and living-NPC intelligence plans are integrated into the comprehensive branch.",
+        "Player persistence now uses the same ChapterWorldRouter committed chapter/route/episode boundary used by living-world synchronization.",
+        "Saved transforms are grounded only after committed-world identity matches the restored save."
       ],
       "missing_work": [
         "Add/merge continuous transition audit and exact-head regression guards for the integrated two-phase commit path.",
@@ -2412,8 +2415,6 @@
         "Repair local UE4 Engine Content access, then pass exact-head C++ build/import/Automation/startup/P1C01-P1C08/state/transition gates.",
         "Re-run the original P1C01 fall-through symptom in PIE before closing startup defect.",
         "Only after the integrated foundation is green, merge/rebase the integration train into develop and retire superseded overlapping PR branches.",
-        "Replace next-Tick transition checkpoint capture with a committed-world barrier.",
-        "Make cross-chapter save restore apply player transform only after matching committed-world readiness and grounded placement.",
         "Make failed-swap rollback restore a coherent prior playable transaction rather than only rebuilding the prior builder while movement remains held.",
         "Register and schedule ground-safe ambient placement, ambient object pooling and asynchronous living-world visual asset ownership before further density expansion."
       ],
