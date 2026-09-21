@@ -23,7 +23,7 @@
   },
   "current_control_state": {
     "pull_request": 61,
-    "branch": "perf/visual-performance-guardrails-v1",
+    "branch": "integration/comprehensive-foundation-v1",
     "integration_baseline_head": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
     "integration_baseline_pre_unreal": "SUCCESS #532",
     "integration_baseline_unreal": "SUCCESS #367",
@@ -36,9 +36,19 @@
       "artifact": "Data/DeepProjectAudit.json",
       "rule": "Repair only demonstrated exact-head failures. Performance promotion additionally requires representative target-device hitch/memory measurement."
     },
-    "active_wave": "STARTUP_GROUNDING_QA_PLUS_VISUAL_PERFORMANCE_GUARDRAILS",
+    "active_wave": "COMPREHENSIVE_FOUNDATION_INTEGRATION_V1",
     "source_baseline": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
-    "proof_boundary": "Static guardrails may advance now. Runtime lighting/world-topology changes require measured target-device evidence and may not bypass startup/QA gates."
+    "proof_boundary": "Exact-head Pre-Unreal pending after integrated runtime changes; UE4 engine proof separately blocked until local Engine Content access is repaired.",
+    "integration_baseline": "fb7afb8e39a4186245063ddf2a46fc0df8ba6c56",
+    "current_scope": [
+      "startup grounding",
+      "two-phase chapter asset commit",
+      "transactional chapter world swap/rollback",
+      "committed-world living-world synchronization",
+      "V10 regional density/roles/dialogue",
+      "Unreal Automation QA foundation",
+      "visual-performance guardrails"
+    ]
   },
   "bundles": [
     {
@@ -56,9 +66,11 @@
         "REQ-AUDIT-001",
         "REQ-PERF-002",
         "REQ-STARTUP-001",
-        "REQ-QA-002"
+        "REQ-QA-002",
+        "REQ-INTEGRATION-001"
       ],
       "work_ids": [
+        "WORK-INTEGRATION-001",
         "WORK-QA-001",
         "WORK-PERF-002",
         "WORK-QA-003"
@@ -407,6 +419,7 @@
     "REQ-EXP-005",
     "REQ-GAME-001",
     "REQ-GOV-001",
+    "REQ-INTEGRATION-001",
     "REQ-MEGA-001",
     "REQ-MEM-001",
     "REQ-MEM-002",
@@ -454,6 +467,7 @@
     "WORK-EXP-004",
     "WORK-EXP-005",
     "WORK-GAME-001",
+    "WORK-INTEGRATION-001",
     "WORK-LW-004",
     "WORK-PERF-002",
     "WORK-PERF-006",
@@ -466,11 +480,11 @@
     "WORK-WORLD-003"
   ],
   "immediate_next_large_actions": [
-    "Keep startup-grounding and QA Automation Framework repair ahead of visual feature expansion.",
-    "Static-validate visual-performance architecture: async chapter banks, HISM/cull infrastructure, non-ticking world builders and no heavy LoadObject in Tick.",
-    "After engine access/startup gates are healthy, capture target-device draw-call, frame-time, transition hitch, streaming-pool and resident-memory baselines.",
-    "Use those measurements to choose LOD/material/lighting/shadow budgets before a large realistic-world art pass.",
-    "Evaluate Level Streaming/World Composition only if future authored contiguous sublevels need spatial world partitioning beyond current chapter routing."
+    "Complete static guards and continuous transition audit on the comprehensive branch.",
+    "Run exact-head Pre-Unreal and repair all integration failures before adding more runtime complexity.",
+    "Repair local UE4 Engine Content access, then execute build/import/Automation/startup/chapter/state/transition gates on the same SHA.",
+    "Perform defect-specific P1C01 PIE startup check.",
+    "Merge the proven comprehensive foundation to develop, retire/rebase superseded PRs, then resume object pooling, residual async-load debt reduction, living-NPC witness/share/learn, character production and visual world passes."
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
