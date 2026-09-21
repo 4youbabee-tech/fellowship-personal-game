@@ -48,11 +48,13 @@
         "REQ-QUALITY-001",
         "REQ-SAVE-001",
         "REQ-PERF-001",
-        "REQ-AUDIT-001"
+        "REQ-AUDIT-001",
+        "REQ-PERF-002"
       ],
       "work_ids": [
         "WORK-MEGA-001",
-        "WORK-QA-001"
+        "WORK-QA-001",
+        "WORK-PERF-002"
       ],
       "deliverables": [
         "Pre-Unreal exact-head validation",
@@ -63,7 +65,10 @@
         "route/save/Ring/Discovery state audits",
         "warning-debt guard",
         "repair loop for any red step",
-        "continuous deep architecture/backend/player-experience audit"
+        "continuous deep architecture/backend/player-experience audit",
+        "data-driven chapter/route asset banks",
+        "seam-safe async preload before world swap",
+        "chapter-aware Fellowship production mesh bank"
       ],
       "exit_evidence": [
         "PRE_UNREAL_PASS",
@@ -74,7 +79,8 @@
         "STATE_AUDIT_PASS",
         "WARNING_GUARD_PASS",
         "DEEP_AUDIT_PASS"
-      ]
+      ],
+      "current_performance_wave": "CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5"
     },
     {
       "id": "B1_PART1_STORY_GAMEPLAY_COMPLETE",
@@ -427,7 +433,8 @@
     "REQ-PROD-007",
     "REQ-PROD-008",
     "REQ-PROD-009",
-    "REQ-PROD-010"
+    "REQ-PROD-010",
+    "REQ-PERF-002"
   ],
   "tracked_active_work_ids": [
     "WORK-CHAR-001",
@@ -450,18 +457,19 @@
     "WORK-PROD-007",
     "WORK-PROD-008",
     "WORK-PROD-009",
-    "WORK-PROD-010"
+    "WORK-PROD-010",
+    "WORK-PERF-002"
   ],
   "immediate_next_large_actions": [
-    "Prove HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4 on the exact branch head.",
-    "Repair exact-head asset/import/runtime failures without weakening production safeguards.",
-    "Merge only after both machine gates are green.",
-    "Continue next with rig/socket/animation handoff scaffolding plus early-region final visual polish."
+    "Earn exact-head Pre-Unreal and full UE4.27.2 proof for chapter streaming V5.",
+    "Measure chapter transition hitch/streaming memory before claiming a device-performance win.",
+    "After V5 merge, continue early-region life/architecture saturation using the new loading headroom.",
+    "Keep skeletal-rig production and future async local-NPC expression as parallel planned tracks, not blind conversions."
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
     "head": "ACTIVE_BRANCH_PENDING_EXACT_PROOF",
-    "reason": "Dedicated Fellowship equipment/silhouette V4 after exact-green PR #58.",
-    "active_wave": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4"
+    "reason": "PG-078 reconciliation for active chapter streaming V5 requirement/work tracking.",
+    "active_wave": "CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5"
   }
 }
