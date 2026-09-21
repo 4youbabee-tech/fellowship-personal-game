@@ -874,7 +874,8 @@
         "Pre-Unreal provenance validation",
         "Programmer-supplied future sourcing shortlist is persisted in Data/ExternalAssetManifest.json by category",
         "Production importer now copies tracked SourceAssets into Saved/ShireProductionImportWorking with UE4.27-compatible IPlatformFile::CopyDirectoryTree before any OBJ normalization/import.",
-        "ExternalAssetManifest now stores the owner-supplied 2026-09-22 cinematic discovery shortlist, including DeviantArt 3D ports, SFMLab, Open3DLab, Nexus Mods and a separate ArtStation Marketplace review path."
+        "ExternalAssetManifest now stores the owner-supplied 2026-09-22 cinematic discovery shortlist, including DeviantArt 3D ports, SFMLab, Open3DLab, Nexus Mods and a separate ArtStation Marketplace review path.",
+        "Audio provider registry expanded with ElevenLabs, BOOM Library and Pro Sound Effects plus reference-only film soundtrack/dialogue/game-audio sources."
       ],
       "missing_work": [
         "Acquire specific assets only when entitlement/license evidence is available",
@@ -2141,14 +2142,19 @@
         "Source 02: character narrative identity must remain distinct from shared animation technology; posture/gait/performance must reflect character.",
         "Source 07: mission chapter ownership and film-locked outcomes remain unchanged.",
         "Source 08: hero vistas, cinematic anchors and correct chapter/state reference govern presentation.",
-        "Source 11: source lock -> blocking -> camera -> performance -> gameplay seam -> QA; preserve geography before spectacle; audio sells the physical world first."
+        "Source 11: source lock -> blocking -> camera -> performance -> gameplay seam -> QA; preserve geography before spectacle; audio sells the physical world first.",
+        "Data/AudioAssetSourcingWaveV2.json defines the cinematic offline audio warehouse, source registry, spatial/concurrency/mix contract and approval boundaries.",
+        "ExternalAssetManifest now stores the owner-supplied ElevenLabs/BOOM/PSE/film-score/film-dialogue/EA-audio discovery directive with item-level approval boundaries."
       ],
       "missing_work": [
         "Author final Level Sequences and shot blocking after stable rigs exist.",
         "Author final sound/music/voice assets under the established cue roots.",
         "Replace modular fallback acting with skeletal/facial/cloth performance where final rigs exist.",
         "Run exact-head Pre-Unreal and full UE4.27.2 validation.",
-        "Later run human cinematic review and target-device performance/mix acceptance."
+        "Later run human cinematic review and target-device performance/mix acceptance.",
+        "Acquire/author the first approved Shire audio bank: ambience, spot fauna, footsteps, interiors, foley and authorized/original character voice assets.",
+        "Author dynamic music stems or original/authorized equivalents under the established music cue roots.",
+        "Run chapter-specific spatialization/concurrency/mix listening passes and target-device memory/performance checks."
       ],
       "acceptance_criteria": [
         "Temporary camera accents never override an authored camera/Level Sequence and always return safely to gameplay.",
@@ -2166,7 +2172,7 @@
         "REQ-SOURCE-001"
       ],
       "checkpoint": "CINEMATIC_CHARACTER_SONIC_V3",
-      "notes": "Runtime bridge/fallback wave, not final cinematic or audio asset acceptance."
+      "notes": "Sonic direction is now production-sourcing ready, but final voice/music/SFX recordings remain pending. Existing runtime routing does not imply final audio acceptance."
     },
     {
       "id": "REQ-PROD-010",
@@ -4567,6 +4573,41 @@
         "REQ-WORLD-003"
       ],
       "next_action": "Use the expanded provider shortlist to build categorized character/environment/material/animation candidate queues, but only promote specific files after provenance, format, UE4.27 compatibility and performance review."
+    },
+    {
+      "id": "EXT-REV-2026-09-22-020",
+      "source": "Owner-forwarded programmer/audio-manager message for cinematic audio sourcing and ShireAudioSubsystem",
+      "verification_status": "REGISTERED_AS_OWNER_AUDIO_DIRECTION_WITH_RIGHTS_AND_TECHNICAL_BOUNDARIES",
+      "claim": "Build a dense professional offline audio bank for character voice, dynamic music, environmental ambience/fauna, foley and creature/combat effects, wired into the existing dynamic audio routing.",
+      "verified_result": {
+        "already_present": [
+          "UShireAudioSubsystem runtime routing contract in Part1SonicWorldPlan",
+          "ambience/music crossfades",
+          "voice music ducking",
+          "speaker attachment contract",
+          "VoiceCuePlan with character-specific performance directions"
+        ],
+        "newly_registered_sources": [
+          "ELEVENLABS",
+          "BOOM_LIBRARY",
+          "PRO_SOUND_EFFECTS",
+          "LOTR_COMPLETE_RECORDINGS",
+          "LOTR_BLURAY_CENTER_CHANNEL",
+          "EA_CLASSIC_LOTR_AUDIO"
+        ],
+        "boundaries": [
+          "Real-actor voice cloning is not approved from film samples alone; explicit authorization is required.",
+          "Commercial film score, extracted Blu-ray dialogue and extracted proprietary game audio remain reference-only unless separately cleared.",
+          "Professional SFX libraries may enter Approved when exact entitlement/license evidence is recorded."
+        ]
+      },
+      "disposition": "ADOPT_CINEMATIC_AUDIO_WAREHOUSE_AND_DYNAMIC_MIX_DIRECTION_WITH_AUTHORIZED_SOURCE_GATE",
+      "linked_requirements": [
+        "REQ-PROD-009",
+        "REQ-ASSET-001",
+        "REQ-NPC-003"
+      ],
+      "next_action": "Populate the first Shire/Bree/Moria/Lothlorien/Anduin banks with authorized/original/licensed assets, then validate spatialization, concurrency, ducking and target-device memory/performance."
     }
   ],
   "project_source_library": {
