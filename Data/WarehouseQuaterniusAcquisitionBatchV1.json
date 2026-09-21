@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_CC0_QUATERNIUS_V1",
+  "status": "AUTHORIZED_FOR_STAGING",
+  "provider": "QUATERNIUS",
+  "license": "CC0",
+  "purpose": "Bulk-stage CC0 character, animation, fauna, architecture and prop packs for supporting production use and rig/world pipeline coverage.",
+  "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\Quaternius",
+  "source_pages": [
+    {
+      "id": "QTN_UNIVERSAL_BASE_CHARACTERS",
+      "url": "https://quaternius.com/packs/universalbasecharacters.html",
+      "category": "CHARACTER_BASE",
+      "required_final_format": "FBX"
+    },
+    {
+      "id": "QTN_FANTASY_OUTFITS",
+      "url": "https://quaternius.com/packs/modularcharacteroutfitsfantasy.html",
+      "category": "CHARACTER_OUTFITS",
+      "required_final_format": "FBX"
+    },
+    {
+      "id": "QTN_RPG_CHARACTERS",
+      "url": "https://quaternius.com/packs/rpgcharacters.html",
+      "category": "NPC_CHARACTER_BASE",
+      "required_final_format": "FBX"
+    },
+    {
+      "id": "QTN_UNIVERSAL_ANIMATION_LIBRARY",
+      "url": "https://quaternius.com/packs/universalanimationlibrary.html",
+      "category": "ANIMATION",
+      "required_final_format": "FBX"
+    },
+    {
+      "id": "QTN_MEDIEVAL_VILLAGE_MEGAKIT",
+      "url": "https://quaternius.com/packs/medievalvillagemegakit.html",
+      "category": "ARCHITECTURE",
+      "required_final_format": "FBX"
+    },
+    {
+      "id": "QTN_MODULAR_RUINS",
+      "url": "https://quaternius.com/packs/ultimatemodularruins.html",
+      "category": "RUINS",
+      "required_final_format": "FBX"
+    },
+    {
+      "id": "QTN_ULTIMATE_NATURE",
+      "url": "https://quaternius.com/packs/ultimatenature.html",
+      "category": "NATURE",
+      "required_final_format": "FBX"
+    },
+    {
+      "id": "QTN_ULTIMATE_ANIMATED_ANIMALS",
+      "url": "https://quaternius.com/packs/ultimateanimatedanimals.html",
+      "category": "FAUNA",
+      "required_final_format": "FBX"
+    },
+    {
+      "id": "QTN_FARM_ANIMALS",
+      "url": "https://quaternius.com/packs/farmanimal.html",
+      "category": "SHIRE_FAUNA",
+      "required_final_format": "FBX"
+    },
+    {
+      "id": "QTN_FANTASY_PROPS_MEGAKIT",
+      "url": "https://quaternius.com/packs/fantasypropsmegakit.html",
+      "category": "PROPS",
+      "required_final_format": "FBX"
+    }
+  ],
+  "rules": [
+    "Only public downloads discovered from the official Quaternius pack pages are eligible.",
+    "Animated production-character output accepted by the project remains FBX only even if the source pack also contains OBJ/glTF/Blend.",
+    "If a pack resolves only to an interactive store page, record it as unresolved/manual-source rather than inventing a direct URL.",
+    "Downloaded archives stay STAGED until extracted/scanned and FBX/PNG/TGA intake checks pass."
+  ]
+}
