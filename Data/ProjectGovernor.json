@@ -3039,7 +3039,7 @@
   ],
   "active_gate": {
     "id": "DEEP_EXACT_HEAD_STABILITY_GATE",
-    "status": "PENDING_EXACT_HEAD_PROOF",
+    "status": "PARTIAL",
     "blocks_major_feature_expansion": false,
     "required_evidence": [
       "Pre-Unreal including deep audit",
