@@ -4209,5 +4209,23 @@
     "validation": "14 local Python tests pass, including simulated runner suspension; not UE runtime proof.",
     "root_cause_status": "UNKNOWN: engine initialization stall and host suspension/resource starvation need next-run evidence. This harness fix is not claimed to fix the P1C05 stall.",
     "production_status": "V5 stays active. No world-density wave or merge until exact-head gates, develop verification, and target-device profiling."
+  },
+  "integration_coordination_repair": {
+    "branch": "repair/world-transition-coordination-v1",
+    "base_sha": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
+    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "handoff": "Docs/TRANSITION_REPAIR_HANDOFF.md",
+    "live_status_command": "python Scripts/live_governor_status.py",
+    "scope": [
+      "Publish world revision only after builder success and player placement",
+      "Gate living-world reset/update on committed chapter/route/episode",
+      "Continuous-session chapter/route/disk-save audit"
+    ],
+    "not_yet_proven": [
+      "Saving during pending load",
+      "Forced delayed-load reversal",
+      "Target-device performance and visuals"
+    ],
+    "coordination": "PR #62 untouched. Reconcile both branches before integration."
   }
 }

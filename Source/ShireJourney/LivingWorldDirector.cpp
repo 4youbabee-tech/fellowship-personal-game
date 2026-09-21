@@ -1,4 +1,5 @@
 #include "LivingWorldDirector.h"
+#include "ChapterWorldRouter.h"
 
 #include "ShireAmbientNPC.h"
 #include "ShireWorldEventInteraction.h"
@@ -41,7 +42,7 @@ void ALivingWorldDirector::BeginPlay()
         }
     }
 
-    ResetForCurrentChapter();
+    SynchronizeCommittedWorld();
 }
 
 void ALivingWorldDirector::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -239,8 +240,7 @@ bool ALivingWorldDirector::LoadLifeSaturationContract()
 
 void ALivingWorldDirector::HandleChapterChanged(FName PreviousChapterId, FName NewChapterId)
 {
-    ActiveChapterId = NewChapterId;
-    ResetForCurrentChapter();
+    SynchronizeCommittedWorld();
 }
 
 void ALivingWorldDirector::HandleExperienceChanged(
@@ -248,11 +248,32 @@ void ALivingWorldDirector::HandleExperienceChanged(
     FName EpisodeId,
     FName PlayableCharacterId)
 {
-    if (QuestSubsystem)
+    SynchronizeCommittedWorld();
+}
+
+bool ALivingWorldDirector::SynchronizeCommittedWorld()
+{
+    if (!QuestSubsystem) return false;
+    if (!WorldRouter.IsValid())
+    {
+        WorldRouter = Cast<AChapterWorldRouter>(UGameplayStatics::GetActorOfClass(
+            this, AChapterWorldRouter::StaticClass()));
+    }
+    AChapterWorldRouter* Router = WorldRouter.Get();
+    if (!Router || !Router->IsWorldCommitted(QuestSubsystem->GetCurrentChapterId(),
+        QuestSubsystem->GetCurrentRouteId(), QuestSubsystem->GetCurrentEpisodeId()))
+    {
+        // Keep existing residents/weather while streaming. Do not spawn next-chapter
+        // life, expire its events, or apply next-chapter context to the visible world.
+        return false;
+    }
+    if (AppliedWorldRevision != Router->GetWorldRevision())
     {
         ActiveChapterId = QuestSubsystem->GetCurrentChapterId();
+        AppliedWorldRevision = Router->GetWorldRevision();
+        ResetForCurrentChapter();
     }
-    ResetForCurrentChapter();
+    return true;
 }
 
 void ALivingWorldDirector::ResetForCurrentChapter()
@@ -1249,19 +1270,13 @@ void ALivingWorldDirector::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
-    if (!GetWorld() || !QuestSubsystem)
+    if (!GetWorld() || !QuestSubsystem || !SynchronizeCommittedWorld())
     {
         return;
     }
 
     CleanupExpiredEvents();
     MaintainBaselinePopulation();
-
-    if (QuestSubsystem->GetCurrentChapterId() != ActiveChapterId)
-    {
-        ActiveChapterId = QuestSubsystem->GetCurrentChapterId();
-        ResetForCurrentChapter();
-    }
 
     const float Now = GetWorld()->GetTimeSeconds();
     if (Now < NextEventTime)

@@ -14,6 +14,10 @@ class SHIREJOURNEY_API AChapterWorldRouter : public AActor
 public:
     AChapterWorldRouter();
 
+    // A requested quest chapter is not necessarily the visible world yet.
+    bool IsWorldCommitted(FName ChapterId, FName RouteId, FName EpisodeId) const;
+    uint32 GetWorldRevision() const { return WorldRevision; }
+
 protected:
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -46,4 +50,5 @@ private:
     FName PendingEpisodeId = NAME_None;
     FName PendingChapterId = NAME_None;
     bool bPendingRestoreRouteTransform = false;
+    uint32 WorldRevision = 0;
 };

@@ -29,6 +29,11 @@ time.sleep(10)
 
 
 class RuntimeSmokeTests(unittest.TestCase):
+    def test_separate_chapter_success_does_not_prove_continuous_transitions(self):
+        markers = required_markers(None, "transitions")
+        separate = "\n".join(required_markers("P1C%02d" % i, "chapters")[0] for i in range(1, 9))
+        self.assertEqual(missing_markers(separate, markers), markers)
+        self.assertEqual(missing_markers(markers[0], markers), [])
     def test_runner_pause_past_deadline_cannot_pass_ready_observation(self):
         clock = [0.0]
         process = Mock()

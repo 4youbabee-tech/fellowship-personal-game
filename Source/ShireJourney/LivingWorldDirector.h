@@ -5,6 +5,7 @@
 #include "LivingWorldDirector.generated.h"
 
 class AShireAmbientNPC;
+class AChapterWorldRouter;
 class AShireWorldEventInteraction;
 class AWorldAmbientMotionActor;
 class UStaticMesh;
@@ -20,6 +21,7 @@ public:
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
     virtual void Tick(float DeltaSeconds) override;
+    uint32 GetAppliedWorldRevision() const { return AppliedWorldRevision; }
 
 private:
     struct FActiveMicroEvent
@@ -32,6 +34,10 @@ private:
 
     UPROPERTY()
     UShireQuestSubsystem* QuestSubsystem = nullptr;
+
+    TWeakObjectPtr<AChapterWorldRouter> WorldRouter;
+    uint32 AppliedWorldRevision = 0;
+    bool SynchronizeCommittedWorld();
 
     TMap<FName, TArray<FName>> AllowedEventTypesByChapter;
     TArray<FActiveMicroEvent> ActiveEvents;
