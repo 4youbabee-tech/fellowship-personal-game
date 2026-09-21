@@ -3391,12 +3391,14 @@ if pg110_matrix.get("geometry_refinement_wave", {}).get("status") != "ENGINE_PRO
 if pg110_matrix.get("surface_material_wave", {}).get("status") != "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE":
     fail("PG-110 V7 surface wave must remain engine-proven while rendered acceptance is pending")
 
-# PG-111: V8 regional life must stay canon-safe, route-readable and performance-bounded.
+# PG-111: V10 regional life must stay canon-safe, route-readable and performance-bounded.
 pg111_plan = json.loads(read(ROOT / "Data" / "WorldLifeSaturationPlan.json"))
 pg111_targets = pg111_plan.get("baseline_population_targets", {})
 pg111_roles = pg111_plan.get("population_roles", {})
-if pg111_plan.get("status") != "V9_ENVIRONMENTAL_MOTION_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
-    fail("PG-111 V9 world-life proof boundary changed")
+if pg111_plan.get("plan_id") != "PART1_WORLD_ALIVE_SATURATION_V10":
+    fail("PG-111 V10 world-life plan identity changed")
+if pg111_plan.get("status") != "V10_EARLY_REALM_CULTURAL_LIFE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-111 V10 world-life proof boundary changed")
 if int(pg111_targets.get("P1C05", -1)) != 0:
     fail("PG-111 Caradhras ambient civilian baseline must remain zero")
 if int(pg111_targets.get("P1C06", -1)) != 0:
@@ -3406,6 +3408,25 @@ if pg111_anduin_roles != {"Bird"}:
     fail("PG-111 Anduin/Amon Hen baseline must remain bird-only under the proven fauna contract")
 if "RoadWalker" in pg111_anduin_roles or "Villager" in pg111_anduin_roles:
     fail("PG-111 invented civilian walkers may not populate Anduin/Amon Hen")
+
+pg111_profiles = pg111_plan.get("chapter_density_profiles", {})
+for pg111_chapter in [f"P1C{i:02d}" for i in range(1, 9)]:
+    pg111_profile = pg111_profiles.get(pg111_chapter, {})
+    if not isinstance(pg111_profile, dict) or not pg111_profile:
+        fail(f"PG-111 V10 chapter density profile missing: {pg111_chapter}")
+        continue
+    for pg111_field in [
+        "spawn_interval_seconds",
+        "baseline_inner_radius_cm",
+        "baseline_outer_radius_cm",
+        "baseline_cull_radius_cm",
+        "danger_population_fraction",
+    ]:
+        if pg111_field not in pg111_profile:
+            fail(f"PG-111 V10 density profile {pg111_chapter} missing {pg111_field}")
+    pg111_fraction = float(pg111_profile.get("danger_population_fraction", 0.0))
+    if not (0.10 <= pg111_fraction <= 1.0):
+        fail(f"PG-111 V10 danger population fraction out of bounds for {pg111_chapter}: {pg111_fraction}")
 
 pg111_event_plan = json.loads(read(ROOT / "Data" / "LivingWorldEventPlan.json"))
 pg111_caradhras = next(
@@ -3421,7 +3442,10 @@ pg111_director = read(ROOT / "Source" / "ShireJourney" / "LivingWorldDirector.cp
 for pg111_symbol in [
     "Random.FRand() < 0.72f",
     "GetActorForwardVector().GetSafeNormal2D()",
-    "Target = FMath::Max(1, Target / 2)",
+    "PopulationProfilesByChapter",
+    "DangerPopulationFraction",
+    "ApplyPopulationProfile",
+    "FMath::RoundToInt(Target * DangerPopulationFraction)",
     'RoleName == TEXT("Bird")',
     'RoleName == TEXT("Rabbit")',
     'RoleName == TEXT("Butterfly")',
