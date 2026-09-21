@@ -527,25 +527,42 @@ FName ALivingWorldDirector::ChooseBaselineRole() const
 
 FName ALivingWorldDirector::ChooseBaselineProp(FName RoleName) const
 {
-    if (RoleName == TEXT("Courier") || RoleName == TEXT("RoadWalker"))
+    if (RoleName == TEXT("BreeCourier") || RoleName == TEXT("RoadWalker"))
     {
         return TEXT("Satchel");
     }
-    if (RoleName == TEXT("FieldWorker"))
+    if (RoleName == TEXT("FieldWorker") || RoleName == TEXT("Gardener"))
     {
         return Random.FRand() > 0.45f ? FName(TEXT("Basket")) : FName(TEXT("Crate"));
     }
-    if (RoleName == TEXT("PartyGuest"))
+    if (RoleName == TEXT("MarketVendor"))
     {
-        return Random.FRand() > 0.55f ? FName(TEXT("Mug")) : NAME_None;
+        return Random.FRand() > 0.50f ? FName(TEXT("Basket")) : FName(TEXT("Crate"));
     }
-    if (RoleName == TEXT("FerryWorker"))
+    if (RoleName == TEXT("PartyGuest") || RoleName == TEXT("InnGuest"))
     {
-        return Random.FRand() > 0.60f ? FName(TEXT("Lantern")) : NAME_None;
+        return Random.FRand() > 0.35f ? FName(TEXT("Mug")) : NAME_None;
     }
-    if (RoleName == TEXT("Elf"))
+    if (RoleName == TEXT("FerryWorker") || RoleName == TEXT("GateWorker") ||
+        RoleName == TEXT("ElfAttendant") || RoleName == TEXT("ElfWarden"))
     {
-        return Random.FRand() > 0.75f ? FName(TEXT("Book")) : NAME_None;
+        return Random.FRand() > 0.45f ? FName(TEXT("Lantern")) : NAME_None;
+    }
+    if (RoleName == TEXT("StableHand"))
+    {
+        return Random.FRand() > 0.50f ? FName(TEXT("Crate")) : FName(TEXT("Satchel"));
+    }
+    if (RoleName == TEXT("Elf") || RoleName == TEXT("ElfScholar"))
+    {
+        return Random.FRand() > 0.35f ? FName(TEXT("Book")) : NAME_None;
+    }
+    if (RoleName == TEXT("ElfArtisan") || RoleName == TEXT("ElfCraftsperson"))
+    {
+        return Random.FRand() > 0.55f ? FName(TEXT("Book")) : FName(TEXT("Lantern"));
+    }
+    if (RoleName == TEXT("BoatTender"))
+    {
+        return Random.FRand() > 0.55f ? FName(TEXT("Crate")) : FName(TEXT("Lantern"));
     }
     if (RoleName == TEXT("BreeTownsperson"))
     {
@@ -672,24 +689,49 @@ void ALivingWorldDirector::MaintainBaselinePopulation()
     float MinWait = Random.FRandRange(0.8f, 2.5f);
     float MaxWait = Random.FRandRange(3.0f, 6.5f);
 
-    if (RoleName == TEXT("Courier") || RoleName == TEXT("RoadWalker"))
+    if (RoleName == TEXT("BreeCourier") || RoleName == TEXT("RoadWalker"))
     {
         Speed = Random.FRandRange(68.0f, 92.0f);
         MinWait = 0.2f;
         MaxWait = 1.4f;
         TravelOffset *= 1.45f;
     }
-    else if (RoleName == TEXT("FieldWorker"))
+    else if (RoleName == TEXT("FieldWorker") || RoleName == TEXT("Gardener"))
     {
         Speed = Random.FRandRange(34.0f, 48.0f);
         TravelOffset *= 0.55f;
         MaxWait = Random.FRandRange(5.0f, 9.0f);
     }
-    else if (RoleName == TEXT("Elf"))
+    else if (RoleName == TEXT("MarketVendor") || RoleName == TEXT("InnGuest"))
     {
-        Speed = Random.FRandRange(42.0f, 58.0f);
-        MinWait = 1.8f;
-        MaxWait = 5.5f;
+        Speed = Random.FRandRange(26.0f, 38.0f);
+        TravelOffset *= 0.36f;
+        MinWait = Random.FRandRange(2.5f, 4.0f);
+        MaxWait = Random.FRandRange(6.0f, 10.0f);
+    }
+    else if (RoleName == TEXT("StableHand") || RoleName == TEXT("GateWorker"))
+    {
+        Speed = Random.FRandRange(38.0f, 54.0f);
+        TravelOffset *= 0.62f;
+        MinWait = Random.FRandRange(1.4f, 2.8f);
+        MaxWait = Random.FRandRange(4.0f, 7.0f);
+    }
+    else if (RoleName == TEXT("Elf") || RoleName == TEXT("ElfScholar") ||
+             RoleName == TEXT("ElfArtisan") || RoleName == TEXT("ElfAttendant") ||
+             RoleName == TEXT("ElfWarden") || RoleName == TEXT("ElfCraftsperson") ||
+             RoleName == TEXT("BoatTender"))
+    {
+        Speed = RoleName == TEXT("ElfWarden")
+            ? Random.FRandRange(52.0f, 66.0f)
+            : Random.FRandRange(40.0f, 56.0f);
+        MinWait = RoleName == TEXT("BoatTender") ? 1.0f : 1.8f;
+        MaxWait = (RoleName == TEXT("ElfScholar") || RoleName == TEXT("ElfCraftsperson"))
+            ? Random.FRandRange(5.0f, 8.0f)
+            : Random.FRandRange(4.0f, 6.5f);
+        if (RoleName == TEXT("ElfScholar") || RoleName == TEXT("ElfCraftsperson"))
+        {
+            TravelOffset *= 0.55f;
+        }
     }
     else if (RoleName == TEXT("Bird"))
     {
