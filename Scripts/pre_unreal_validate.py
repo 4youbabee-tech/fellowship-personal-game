@@ -5412,6 +5412,23 @@ for pg119_symbol in [
     if pg119_symbol not in pg111_ambient:
         fail(f"PG-119 culture-specific ambient behavior missing: {pg119_symbol}")
 
+pg119_social_model = json.loads(read(ROOT / "Data" / "NPCSocialModel.json"))
+pg119_profile_ids = {
+    row.get("id") for row in pg119_social_model.get("profiles", [])
+    if isinstance(row, dict)
+}
+if "ARCH_ELVEN_SANCTUARY" not in pg119_profile_ids:
+    fail("PG-119 Elven sanctuary ambient archetype missing")
+pg119_schedule = next(
+    (row for row in pg119_social_model.get("schedule_templates", [])
+     if isinstance(row, dict) and row.get("id") == "SCHED_ELVEN_SANCTUARY"),
+    {},
+)
+if set(pg119_schedule.get("applies_to", [])) != {"ARCH_ELVEN_SANCTUARY"}:
+    fail("PG-119 Elven sanctuary schedule binding changed")
+if 'return TEXT("ARCH_ELVEN_SANCTUARY");' not in pg111_ambient:
+    fail("PG-119 Elven ambient roles are not bound to the sanctuary schedule")
+
 pg119_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
 if pg119_visual.get("current_wave", {}).get("id") != "EARLY_REALM_WORLD_LIFE_AND_CULTURAL_DENSITY_V10":
     fail("PG-119 Part I visual plan current wave is not early-realm V10")
