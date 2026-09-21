@@ -1306,6 +1306,33 @@ void AShirePlayerCharacter::GrantSupplies(int32 Amount)
     }
 }
 
+void AShirePlayerCharacter::RestoreTransactionalPlayerState(
+    float Health,
+    float Stamina,
+    float Resolve,
+    int32 InSupplies)
+{
+    CurrentHealth = FMath::Clamp(Health, 1.0f, MaxHealth);
+    CurrentStamina = FMath::Clamp(Stamina, 0.0f, MaxStamina);
+    CurrentResolve = FMath::Clamp(Resolve, 0.0f, MaxResolve);
+    Supplies = FMath::Clamp(InSupplies, 0, MaxSupplies);
+    bStaminaExhausted = CurrentStamina <= 0.0f;
+
+    if (UCharacterMovementComponent* Movement = GetCharacterMovement())
+    {
+        Movement->StopMovementImmediately();
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireWorldCommit: rollback-player-state health=%.1f stamina=%.1f resolve=%.1f supplies=%d"),
+        CurrentHealth,
+        CurrentStamina,
+        CurrentResolve,
+        Supplies);
+}
+
 void AShirePlayerCharacter::UseSupply()
 {
     if (bCinematicInputLocked)
