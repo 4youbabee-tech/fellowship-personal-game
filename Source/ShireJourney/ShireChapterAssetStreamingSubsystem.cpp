@@ -2,6 +2,7 @@
 
 #include "Dom/JsonObject.h"
 #include "Engine/GameInstance.h"
+#include "Engine/SkeletalMesh.h"
 #include "HAL/FileManager.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
@@ -13,6 +14,7 @@ void UShireChapterAssetStreamingSubsystem::Initialize(FSubsystemCollectionBase& 
     Super::Initialize(Collection);
 
     Banks.Empty();
+    CharacterRigRequests.Empty();
     ResidentHandle.Reset();
     PendingHandle.Reset();
     ResidentChapterId = NAME_None;
@@ -96,9 +98,18 @@ void UShireChapterAssetStreamingSubsystem::Deinitialize()
     CancelPendingRequest();
 
     ResidentHandle.Reset();
+    for (TPair<FName, FCharacterRigRuntime>& Pair : CharacterRigRequests)
+    {
+        if (Pair.Value.Handle.IsValid())
+        {
+            Pair.Value.Handle->CancelHandle();
+        }
+    }
+    CharacterRigRequests.Empty();
     Banks.Empty();
     bPlanReady = false;
     OnChapterAssetsReady.Clear();
+    OnCharacterRigReady.Clear();
 
     Super::Deinitialize();
 }
@@ -276,6 +287,98 @@ void UShireChapterAssetStreamingSubsystem::RequestChapterAssets(
         bPendingCompatibilityReady = true;
         OnChapterAssetsReady.Broadcast(ChapterId, RouteId);
     }
+}
+
+bool UShireChapterAssetStreamingSubsystem::ResolveCharacterRig(
+    FName CharacterId,
+    USkeletalMesh*& OutSkeletalMesh,
+    UClass*& OutAnimClass) const
+{
+    OutSkeletalMesh = nullptr;
+    OutAnimClass = nullptr;
+
+    const FCharacterRigRuntime* Rig = CharacterRigRequests.Find(CharacterId);
+    if (!Rig)
+    {
+        return false;
+    }
+
+    OutSkeletalMesh = Cast<USkeletalMesh>(Rig->SkeletalMeshPath.ResolveObject());
+    OutAnimClass = Cast<UClass>(Rig->AnimClassPath.ResolveObject());
+    return OutSkeletalMesh != nullptr && OutAnimClass != nullptr;
+}
+
+void UShireChapterAssetStreamingSubsystem::RequestCharacterRig(FName CharacterId)
+{
+    if (CharacterId.IsNone())
+    {
+        return;
+    }
+
+    FCharacterRigRuntime& Rig = CharacterRigRequests.FindOrAdd(CharacterId);
+    if (!Rig.SkeletalMeshPath.IsValid())
+    {
+        const FString Character = CharacterId.ToString();
+        Rig.SkeletalMeshPath = FSoftObjectPath(FString::Printf(
+            TEXT("/Game/Production/Characters/Rigs/%s/SK_%s.SK_%s"),
+            *Character, *Character, *Character));
+        Rig.AnimClassPath = FSoftObjectPath(FString::Printf(
+            TEXT("/Game/Production/Characters/Rigs/%s/ABP_%s_Locomotion.ABP_%s_Locomotion_C"),
+            *Character, *Character, *Character));
+    }
+
+    USkeletalMesh* ExistingMesh = nullptr;
+    UClass* ExistingAnimClass = nullptr;
+    if (ResolveCharacterRig(CharacterId, ExistingMesh, ExistingAnimClass))
+    {
+        OnCharacterRigReady.Broadcast(CharacterId);
+        return;
+    }
+
+    if (Rig.Handle.IsValid() && !Rig.Handle->HasLoadCompleted())
+    {
+        return;
+    }
+
+    TArray<FSoftObjectPath> Assets;
+    Assets.Add(Rig.SkeletalMeshPath);
+    Assets.Add(Rig.AnimClassPath);
+
+    Rig.Handle = StreamableManager.RequestAsyncLoad(
+        Assets,
+        FStreamableDelegate::CreateUObject(
+            this,
+            &UShireChapterAssetStreamingSubsystem::HandleCharacterRigLoadComplete,
+            CharacterId));
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("CharacterRigStreaming: request id=%s assets=%d"),
+        *CharacterId.ToString(),
+        Assets.Num());
+}
+
+void UShireChapterAssetStreamingSubsystem::HandleCharacterRigLoadComplete(FName CharacterId)
+{
+    USkeletalMesh* SkeletalMesh = nullptr;
+    UClass* AnimClass = nullptr;
+    if (!ResolveCharacterRig(CharacterId, SkeletalMesh, AnimClass))
+    {
+        UE_LOG(
+            LogTemp,
+            Warning,
+            TEXT("CharacterRigStreaming: unavailable id=%s; modular fallback retained"),
+            *CharacterId.ToString());
+        return;
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("CharacterRigStreaming: ready id=%s"),
+        *CharacterId.ToString());
+    OnCharacterRigReady.Broadcast(CharacterId);
 }
 
 void UShireChapterAssetStreamingSubsystem::HandleAsyncLoadComplete(uint64 CompletedSerial)
