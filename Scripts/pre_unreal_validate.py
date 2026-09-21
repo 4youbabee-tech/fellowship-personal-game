@@ -5222,8 +5222,11 @@ if pg117_wave.get("added_project_owned_obj_assets") != 18:
     fail("PG-117 character production matrix must retain 18 V4 OBJ assets")
 
 pg117_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
-if pg117_visual.get("current_wave", {}).get("id") != "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4":
-    fail("PG-117 Part I visual current wave is not hero equipment V4")
+if pg117_visual.get("current_wave", {}).get("id") not in {
+    "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4",
+    "EARLY_REALM_WORLD_LIFE_AND_CULTURAL_DENSITY_V10",
+}:
+    fail("PG-117 Part I visual current wave lost the V4 equipment foundation")
 if pg117_visual.get("hero_character_equipment_v4", {}).get("added_project_owned_obj_assets") != 18:
     fail("PG-117 Part I visual plan must retain 18 V4 OBJ assets")
 
@@ -5408,6 +5411,21 @@ for pg119_symbol in [
 ]:
     if pg119_symbol not in pg111_ambient:
         fail(f"PG-119 culture-specific ambient behavior missing: {pg119_symbol}")
+
+pg119_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg119_visual.get("current_wave", {}).get("id") != "EARLY_REALM_WORLD_LIFE_AND_CULTURAL_DENSITY_V10":
+    fail("PG-119 Part I visual plan current wave is not early-realm V10")
+pg119_visual_wave = pg119_visual.get("early_realm_world_life_v10", {})
+if not pg119_visual_wave.get("performance_guardrails"):
+    fail("PG-119 V10 visual performance guardrails missing")
+if "Lothlorien HISM golden-tree, fern and lantern depth instead of extra ticking actors" not in pg119_visual_wave.get("implemented", []):
+    fail("PG-119 Lothlorien HISM density contract missing")
+for pg119_world_symbol in [
+    "SpawnInstancedScatter(CommonGoldenTreeMesh",
+    "SpawnInstancedScatter(LorienLanternMesh",
+]:
+    if pg119_world_symbol not in pg118_fellowship_cpp:
+        fail(f"PG-119 Lothlorien instanced detail missing: {pg119_world_symbol}")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
