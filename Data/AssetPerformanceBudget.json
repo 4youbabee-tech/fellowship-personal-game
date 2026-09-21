@@ -107,5 +107,64 @@
       "GPU memory",
       "frame-time effect"
     ]
+  },
+  "chapter_asset_loading_review": {
+    "verified_on": "2026-09-21",
+    "develop_sha": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+    "direct_loadobject_counts": {
+      "FellowshipChapterWorldBuilder": 77,
+      "ShirePrototypeWorldBuilder": 55,
+      "BreePrototypeWorldBuilder": 22,
+      "IsengardPrototypeWorldBuilder": 10,
+      "LivingWorldDirector": 13,
+      "ShireNPC": 4
+    },
+    "verdict": "HIGH_VALUE_PROFILE_AND_MIGRATE_BY_CHAPTER_BANK",
+    "rules": [
+      "Current direct LoadObject calls are synchronous loads and are a real chapter-transition hitch risk as production assets grow.",
+      "Do not replace every call mechanically with TSoftObjectPtr and assume memory is solved.",
+      "Build bounded chapter/region asset banks using soft paths/references plus FStreamableManager or AssetManager async preload where justified.",
+      "Prefetch before narrative seams or under authored masked transitions; keep strong references while assets are actively needed.",
+      "Release streamable handles/region ownership after safe chapter unload and let Unreal GC/streaming reclaim eligible resources.",
+      "Measure transition hitch, streaming pool and resident memory before and after migration."
+    ],
+    "priority": "HIGH_AFTER_CURRENT_CHARACTER_WAVE"
+  },
+  "ambient_actor_pooling_review": {
+    "verified_on": "2026-09-21",
+    "current_world_life": {
+      "baseline_targets": {
+        "P1C01": 18,
+        "P1C02": 16,
+        "P1C03": 5,
+        "P1C04": 12,
+        "P1C05": 0,
+        "P1C06": 0,
+        "P1C07": 10,
+        "P1C08": 4
+      },
+      "baseline_cull_radius_cm": 6200,
+      "baseline_spawn_interval_seconds": 0.35,
+      "max_active_micro_events_near_player": 5
+    },
+    "verdict": "CONDITIONAL_OPTIMIZATION_NOT_FIXED_15_ACTORS",
+    "rules": [
+      "LivingWorldDirector currently spawns/culls/destroys ambient baseline actors and ephemeral event actors, so spawn/GC churn is a legitimate profile target.",
+      "Do not impose an arbitrary fixed pool of 15 actors: current designed baseline alone reaches 18 in P1C01 before bounded micro-events.",
+      "If profiling shows spawn/Destroy/GC hitch, pool only ambient archetypes/ephemeral actors first; named persistent NPCs retain stable identity/state ownership.",
+      "A pooled inactive actor must disable tick, collision, perception/interaction and rendering before reuse; reset routine/appearance/event state explicitly.",
+      "Pooling reduces allocation/GC churn but does not make retained meshes/textures free in RAM/VRAM."
+    ],
+    "trigger": "Implement only after target-device or representative trace shows material spawn/GC cost."
+  },
+  "pbr_channel_packing_review": {
+    "verified_on": "2026-09-21",
+    "verdict": "USEFUL_LATER_NOT_CURRENT_BLOCKER",
+    "rules": [
+      "When final PBR texture sets introduce separate AO/roughness/metallic maps, define one project-wide packed-mask convention (for example ORM) with sRGB disabled.",
+      "Channel packing may reduce texture count/sampler pressure and can reduce memory, but the exact saving is compression/format dependent and must not be claimed as a universal 66 percent.",
+      "Current repository does not contain separate AO/roughness/metallic source texture sets that justify a bulk packing pass today.",
+      "Alpha foliage still needs an alpha-capable source/import path independently of packed-mask policy."
+    ]
   }
 }
