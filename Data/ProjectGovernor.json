@@ -3466,9 +3466,14 @@
     },
     "active_candidate": {
       "branch": "production/early-realms-world-life-v1",
-      "status": "SOURCE_RUNTIME_IMPLEMENTATION_ACTIVE_PENDING_EXACT_HEAD_PROOF"
+      "status": "SOURCE_RUNTIME_IMPLEMENTATION_ACTIVE_PENDING_EXACT_HEAD_PROOF",
+      "pull_request": 62,
+      "latest_observed_sha": "af719ce1a920fc4d01bd0e936b783d5e402ddf89"
     },
-    "failing": {},
+    "failing": {
+      "current": "#545 failed only because the V10 handoff snapshot was structurally incomplete after governance transition; gameplay/source validation had not yet run past the governor step.",
+      "repair": "Restore exact-SHA last_green/latest_observed workflow records without borrowing old success into the V10 head."
+    },
     "next_actions": [
       "Complete V10 early-realm cultural life and performance-bounded density implementation.",
       "Run exact-head Pre-Unreal and UE4.27.2 validation through PR.",
@@ -3481,7 +3486,35 @@
       "Rendered density/pacing acceptance",
       "Final skeletal rig/animation acceptance"
     ],
-    "scope_rule": "Machine proof does not equal device or rendered acceptance."
+    "scope_rule": "Machine proof does not equal device or rendered acceptance.",
+    "validation_snapshot": {
+      "last_green": {
+        "sha": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
+        "pre_unreal": {
+          "sha": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
+          "run_id": 35581619849,
+          "status": "SUCCESS"
+        },
+        "unreal": {
+          "sha": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
+          "run_id": 35581619913,
+          "status": "SUCCESS"
+        }
+      },
+      "latest_observed": {
+        "sha": "af719ce1a920fc4d01bd0e936b783d5e402ddf89",
+        "pre_unreal": {
+          "sha": "af719ce1a920fc4d01bd0e936b783d5e402ddf89",
+          "run_id": 35583245572,
+          "status": "FAILURE"
+        },
+        "unreal": {
+          "sha": "af719ce1a920fc4d01bd0e936b783d5e402ddf89",
+          "run_id": 35583245675,
+          "status": "PENDING"
+        }
+      }
+    }
   },
   "governor_role": {
     "mode": "OVERSEER_NOT_BOTTLENECK",
