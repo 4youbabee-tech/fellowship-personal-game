@@ -1,0 +1,560 @@
+{
+  "schema_version": 1,
+  "plan_id": "TRILOGY_WORLD_FOUNDATION_V1",
+  "status": "ACTIVE_PARALLEL_PREPRODUCTION",
+  "authority": "Data/ProjectGovernor.json",
+  "strategy": "P1C01 remains the first assembled benchmark, while reusable world foundations and asset-bank coverage advance in parallel across all major trilogy regions.",
+  "shared_systems": {
+    "terrain": [
+      "landscape material families",
+      "slope/height blends",
+      "path/road decals",
+      "snow/ash/wetness variants"
+    ],
+    "architecture": [
+      "culture-specific modular kits",
+      "interior/exterior variants",
+      "damage/state variants"
+    ],
+    "vegetation": [
+      "biome families",
+      "HISM/ISM population",
+      "LOD/cull rules",
+      "season/state variants"
+    ],
+    "population": [
+      "regional NPC families",
+      "crowd pooling",
+      "role/density tables"
+    ],
+    "audio": [
+      "regional ambience beds",
+      "localized spot emitters",
+      "fauna",
+      "weather",
+      "interior/exterior transitions"
+    ],
+    "lighting": [
+      "sun/sky/fog profiles",
+      "interior exposure targets",
+      "danger-state variants"
+    ],
+    "vfx": [
+      "rain",
+      "snow",
+      "mist",
+      "dust",
+      "embers",
+      "ash",
+      "water spray",
+      "fire",
+      "webs"
+    ],
+    "traversal": [
+      "ground-safe placement",
+      "nav/collision",
+      "streaming boundaries",
+      "landmark anchors"
+    ]
+  },
+  "regions": [
+    {
+      "id": "SHIRE",
+      "priority": "CRITICAL",
+      "kits": [
+        "hobbit architecture",
+        "pastoral terrain",
+        "hedges",
+        "farms",
+        "gardens",
+        "bridges",
+        "mills"
+      ],
+      "audio": [
+        "birds",
+        "wind",
+        "river",
+        "farm life"
+      ],
+      "population": [
+        "hobbits",
+        "farm workers",
+        "vendors",
+        "party guests"
+      ]
+    },
+    {
+      "id": "BREE",
+      "priority": "HIGH",
+      "kits": [
+        "timber-stone town",
+        "gate",
+        "inn",
+        "stable",
+        "mud/rain"
+      ],
+      "audio": [
+        "rain",
+        "crowd",
+        "horses",
+        "inn"
+      ],
+      "population": [
+        "townsfolk",
+        "guards",
+        "stable hands",
+        "travellers"
+      ]
+    },
+    {
+      "id": "WEATHERTOP",
+      "priority": "HIGH",
+      "kits": [
+        "ruins",
+        "hill terrain",
+        "camp",
+        "night threat"
+      ],
+      "audio": [
+        "wind",
+        "night insects",
+        "distant threat"
+      ],
+      "population": [
+        "travellers",
+        "Nazgul encounter set"
+      ]
+    },
+    {
+      "id": "RIVENDELL",
+      "priority": "HIGH",
+      "kits": [
+        "elven stone-wood",
+        "terraces",
+        "waterfalls",
+        "gardens"
+      ],
+      "audio": [
+        "water",
+        "birds",
+        "light wind",
+        "interior calm"
+      ],
+      "population": [
+        "elves",
+        "attendants",
+        "scholars"
+      ]
+    },
+    {
+      "id": "CARADHRAS",
+      "priority": "MEDIUM",
+      "kits": [
+        "snow",
+        "rock",
+        "storm visibility"
+      ],
+      "audio": [
+        "wind",
+        "snow",
+        "rockfall"
+      ],
+      "population": [
+        "none/minimal"
+      ]
+    },
+    {
+      "id": "MORIA",
+      "priority": "CRITICAL",
+      "kits": [
+        "dwarven halls",
+        "columns",
+        "bridges",
+        "tomb",
+        "mines"
+      ],
+      "audio": [
+        "drips",
+        "reverb",
+        "stone",
+        "threat"
+      ],
+      "population": [
+        "orc",
+        "goblin",
+        "cave troll set"
+      ]
+    },
+    {
+      "id": "LOTHLORIEN",
+      "priority": "HIGH",
+      "kits": [
+        "golden forest",
+        "flets",
+        "organic bridges",
+        "river"
+      ],
+      "audio": [
+        "foliage",
+        "water",
+        "airy ambience"
+      ],
+      "population": [
+        "elves",
+        "wardens"
+      ]
+    },
+    {
+      "id": "ANDUIN_AMON_HEN",
+      "priority": "HIGH",
+      "kits": [
+        "river",
+        "boats",
+        "forest",
+        "ruins",
+        "monumental landmarks"
+      ],
+      "audio": [
+        "river",
+        "wind",
+        "forest",
+        "battle"
+      ],
+      "population": [
+        "fellowship",
+        "Uruk attack set"
+      ]
+    },
+    {
+      "id": "FANGORN",
+      "priority": "HIGH",
+      "kits": [
+        "ancient forest",
+        "roots",
+        "mist",
+        "Ent scale"
+      ],
+      "audio": [
+        "deep wood",
+        "creaks",
+        "wind"
+      ],
+      "population": [
+        "Ents",
+        "forest fauna"
+      ]
+    },
+    {
+      "id": "EDORAS_MEDUSELD",
+      "priority": "HIGH",
+      "kits": [
+        "hill city",
+        "golden hall",
+        "stables",
+        "plains"
+      ],
+      "audio": [
+        "wind",
+        "horses",
+        "hall"
+      ],
+      "population": [
+        "Rohirrim",
+        "civilians",
+        "guards"
+      ]
+    },
+    {
+      "id": "HELMS_DEEP",
+      "priority": "CRITICAL",
+      "kits": [
+        "fortress",
+        "wall",
+        "culvert",
+        "keep",
+        "caves",
+        "siege"
+      ],
+      "audio": [
+        "rain",
+        "siege",
+        "battle"
+      ],
+      "population": [
+        "Rohan",
+        "Uruk-hai"
+      ]
+    },
+    {
+      "id": "ISENGARD",
+      "priority": "HIGH",
+      "kits": [
+        "Orthanc",
+        "ring wall",
+        "pits",
+        "industry",
+        "flood state"
+      ],
+      "audio": [
+        "machinery",
+        "fire",
+        "chains",
+        "water"
+      ],
+      "population": [
+        "Uruk-hai",
+        "workers"
+      ]
+    },
+    {
+      "id": "EMYN_MUIL",
+      "priority": "MEDIUM",
+      "kits": [
+        "broken ridges",
+        "cliffs",
+        "grey stone"
+      ],
+      "audio": [
+        "wind",
+        "rock"
+      ],
+      "population": [
+        "minimal"
+      ]
+    },
+    {
+      "id": "DEAD_MARSHES",
+      "priority": "HIGH",
+      "kits": [
+        "pools",
+        "mist",
+        "dead vegetation",
+        "corpse-light"
+      ],
+      "audio": [
+        "wetland",
+        "wind",
+        "dread"
+      ],
+      "population": [
+        "minimal/spectral"
+      ]
+    },
+    {
+      "id": "ITHILIEN_HENNETH",
+      "priority": "HIGH",
+      "kits": [
+        "green forest",
+        "ruins",
+        "waterfalls",
+        "ranger refuge"
+      ],
+      "audio": [
+        "forest",
+        "water",
+        "ranger camp"
+      ],
+      "population": [
+        "Gondor rangers",
+        "Haradrim encounter set"
+      ]
+    },
+    {
+      "id": "MINAS_TIRITH",
+      "priority": "CRITICAL",
+      "kits": [
+        "white city",
+        "walls",
+        "gates",
+        "citadel",
+        "siege variants"
+      ],
+      "audio": [
+        "city",
+        "bells",
+        "siege",
+        "crowd"
+      ],
+      "population": [
+        "Gondor civilians",
+        "guards",
+        "soldiers"
+      ]
+    },
+    {
+      "id": "OSGILIATH",
+      "priority": "HIGH",
+      "kits": [
+        "ruins",
+        "bridges",
+        "riverfront",
+        "rubble"
+      ],
+      "audio": [
+        "river",
+        "battle",
+        "ruins"
+      ],
+      "population": [
+        "Gondor",
+        "orc forces"
+      ]
+    },
+    {
+      "id": "MINAS_MORGUL",
+      "priority": "HIGH",
+      "kits": [
+        "corrupted fortress",
+        "valley",
+        "dead road"
+      ],
+      "audio": [
+        "dread wind",
+        "army movement"
+      ],
+      "population": [
+        "orc",
+        "Nazgul"
+      ]
+    },
+    {
+      "id": "CIRITH_UNGOL_SHELOB",
+      "priority": "CRITICAL",
+      "kits": [
+        "mountain stairs",
+        "tower",
+        "web caves",
+        "orc interior"
+      ],
+      "audio": [
+        "wind",
+        "cave",
+        "web movement",
+        "orc"
+      ],
+      "population": [
+        "orc",
+        "Shelob"
+      ]
+    },
+    {
+      "id": "PELENNOR",
+      "priority": "CRITICAL",
+      "kits": [
+        "open plain",
+        "siege debris",
+        "army lanes"
+      ],
+      "audio": [
+        "battle",
+        "cavalry",
+        "siege"
+      ],
+      "population": [
+        "Gondor",
+        "Rohan",
+        "Mordor",
+        "Haradrim"
+      ]
+    },
+    {
+      "id": "PATHS_OF_THE_DEAD",
+      "priority": "HIGH",
+      "kits": [
+        "haunted road",
+        "tombs",
+        "fog"
+      ],
+      "audio": [
+        "spectral",
+        "wind",
+        "stone"
+      ],
+      "population": [
+        "Army of the Dead"
+      ]
+    },
+    {
+      "id": "BLACK_GATE",
+      "priority": "HIGH",
+      "kits": [
+        "black walls",
+        "barren plain",
+        "army staging"
+      ],
+      "audio": [
+        "wind",
+        "army",
+        "battle"
+      ],
+      "population": [
+        "Mordor armies",
+        "Free Peoples"
+      ]
+    },
+    {
+      "id": "MORDOR_GORGOROTH",
+      "priority": "CRITICAL",
+      "kits": [
+        "ash",
+        "volcanic rock",
+        "war industry",
+        "roads"
+      ],
+      "audio": [
+        "wind",
+        "ash",
+        "industry",
+        "army"
+      ],
+      "population": [
+        "orc armies",
+        "slaves"
+      ]
+    },
+    {
+      "id": "MOUNT_DOOM",
+      "priority": "CRITICAL",
+      "kits": [
+        "volcanic slopes",
+        "Sammath Naur",
+        "lava/fire"
+      ],
+      "audio": [
+        "lava",
+        "rumble",
+        "wind"
+      ],
+      "population": [
+        "minimal"
+      ]
+    },
+    {
+      "id": "GREY_HAVENS",
+      "priority": "HIGH",
+      "kits": [
+        "pale harbor",
+        "ships",
+        "sea horizon"
+      ],
+      "audio": [
+        "sea",
+        "wind",
+        "gulls"
+      ],
+      "population": [
+        "elves",
+        "harbor attendants"
+      ]
+    }
+  ],
+  "implementation_boundary": "This plan authorizes warehouse/world-kit foundation work only. It does not authorize opening gated Part II/III runtime chapter implementation ahead of current foundation gates.",
+  "first_pass_outputs": [
+    "per-region material/terrain kit manifest",
+    "per-region architecture kit manifest",
+    "per-region vegetation/ecology manifest",
+    "per-region population/faction manifest",
+    "per-region audio/VFX/lighting profile",
+    "warehouse slot coverage report"
+  ]
+}
