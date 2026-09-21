@@ -5372,6 +5372,61 @@ for pg121_symbol in [
         fail(f"PG-121 deterministic Shire collision support missing: {pg121_symbol}")
 
 
+# PG-122: automated QA immune-system foundation must stay wired into exact-head UE validation.
+pg122_plan_path = ROOT / "Data" / "AutomatedQAPlan.json"
+if not pg122_plan_path.exists():
+    fail("PG-122 AutomatedQAPlan.json missing")
+else:
+    try:
+        pg122_plan = json.loads(read(pg122_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-122 invalid AutomatedQAPlan.json: {exc}")
+        pg122_plan = {}
+    if pg122_plan.get("plan_id") != "AUTOMATED_QA_IMMUNE_SYSTEM_V1":
+        fail("PG-122 automated QA plan identity changed")
+
+pg122_test_cpp = ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "Tests" / "ShireQAAutomationTests.cpp"
+if not pg122_test_cpp.exists():
+    fail("PG-122 ShireQAAutomationTests.cpp missing")
+    pg122_tests = ""
+else:
+    pg122_tests = read(pg122_test_cpp)
+
+for pg122_symbol in [
+    "IMPLEMENT_SIMPLE_AUTOMATION_TEST",
+    "ShireJourney.QA.Save.DefaultState",
+    "ShireJourney.QA.Assets.StreamingBankPackages",
+    "FPackageName::DoesPackageExist",
+]:
+    if pg122_symbol not in pg122_tests:
+        fail(f"PG-122 Automation Framework contract missing: {pg122_symbol}")
+
+pg122_runner = read(ROOT / "Scripts" / "ci_run_project_automation.cmd")
+pg122_parser = read(ROOT / "Scripts" / "parse_automation_report.py")
+pg122_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+for pg122_symbol in [
+    "Automation RunTests ShireJourney.QA",
+    "ReportOutputPath",
+    "parse_automation_report.py",
+]:
+    if pg122_symbol not in pg122_runner:
+        fail(f"PG-122 automation runner contract missing: {pg122_symbol}")
+if "Run ShireJourney Automation Framework QA" not in pg122_workflow:
+    fail("PG-122 Unreal workflow does not execute project automation QA")
+if "AUTOMATION_SUITE_PASS" not in pg122_parser:
+    fail("PG-122 automation report fail-closed parser missing")
+
+pg122_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
+for pg122_symbol in [
+    "ShireStartupGrounding: PLACED",
+    "VerifyPlayerGroundingStability",
+    "stableSeconds=2.0",
+    "Movement->IsFalling()",
+]:
+    if pg122_symbol not in pg122_router:
+        fail(f"PG-122 delayed grounding stability proof missing: {pg122_symbol}")
+
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
