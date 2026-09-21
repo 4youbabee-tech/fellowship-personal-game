@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_CC0_AUDIO_MUSIC_V1",
+  "status": "AUTHORIZED_FOR_STAGING",
+  "provider": "OPENGAMEART",
+  "license": "CC0",
+  "purpose": "Populate the persistent warehouse with an initial CC0 WAV/music/foley bank for Shire/Bree/exploration/battle-state prototyping and later audio integration.",
+  "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\OpenGameArt",
+  "max_download_bytes": 900000000,
+  "assets": [
+    {
+      "id": "OGA_MEDIEVAL_THEME",
+      "category": "MUSIC_PASTORAL",
+      "source_page": "https://opengameart.org/content/medieval-theme",
+      "download_url": "https://opengameart.org/sites/default/files/medieval_theme_music.wav",
+      "filename": "medieval_theme_music.wav",
+      "use": [
+        "Shire/Bree exploration music candidate",
+        "music-system integration test"
+      ]
+    },
+    {
+      "id": "OGA_BARDS_TALE_LOOP",
+      "category": "MUSIC_TAVERN",
+      "source_page": "https://opengameart.org/content/medieval-the-bards-tale",
+      "download_url": "https://opengameart.org/sites/default/files/Loop_The_Bards_Tale.wav",
+      "filename": "Loop_The_Bards_Tale.wav",
+      "use": [
+        "Bree/Prancing Pony loop candidate",
+        "social interior music candidate"
+      ]
+    },
+    {
+      "id": "OGA_EXPLORATION",
+      "category": "MUSIC_EXPLORATION",
+      "source_page": "https://opengameart.org/content/medieval-exploration",
+      "download_url": "https://opengameart.org/sites/default/files/Exploration.wav",
+      "filename": "Exploration.wav",
+      "use": [
+        "Shire travel",
+        "Rivendell/Bree exploration candidate"
+      ]
+    },
+    {
+      "id": "OGA_HARVEST_SEASON",
+      "category": "MUSIC_PASTORAL",
+      "source_page": "https://opengameart.org/content/medieval-harvest-season",
+      "download_url": "https://opengameart.org/sites/default/files/harvestseason.wav",
+      "filename": "harvestseason.wav",
+      "use": [
+        "Shire farming/market/daytime candidate"
+      ]
+    },
+    {
+      "id": "OGA_KINGS_FEAST_LOOP",
+      "category": "MUSIC_INTERIOR_SOCIAL",
+      "source_page": "https://opengameart.org/content/medieval-kings-feast",
+      "download_url": "https://opengameart.org/sites/default/files/Loop_Kings_Feast_0.wav",
+      "filename": "Loop_Kings_Feast_0.wav",
+      "use": [
+        "Bree inn",
+        "Rohan feast/social interior candidate"
+      ]
+    },
+    {
+      "id": "OGA_VICTORY",
+      "category": "MUSIC_STINGER",
+      "source_page": "https://opengameart.org/content/medieval-victory-theme",
+      "download_url": "https://opengameart.org/sites/default/files/victory.wav",
+      "filename": "victory.wav",
+      "use": [
+        "small activity completion stinger candidate"
+      ]
+    },
+    {
+      "id": "OGA_EPIC_MARCH_LOOP",
+      "category": "MUSIC_BATTLE_MARCH",
+      "source_page": "https://opengameart.org/content/epic-march-loop",
+      "download_url": "https://opengameart.org/sites/default/files/the_march_of_devils_dome_loop.wav",
+      "filename": "the_march_of_devils_dome_loop.wav",
+      "use": [
+        "army march/battle-state prototype candidate"
+      ]
+    },
+    {
+      "id": "OGA_CREED_OF_COURSE",
+      "category": "MUSIC_BATTLE",
+      "source_page": "https://opengameart.org/content/creed-of-course-0",
+      "download_url": "https://opengameart.org/sites/default/files/creed_of_course_0.wav",
+      "filename": "creed_of_course_0.wav",
+      "use": [
+        "battle/village transitional music candidate"
+      ]
+    },
+    {
+      "id": "OGA_DEFEAT",
+      "category": "MUSIC_STINGER",
+      "source_page": "https://opengameart.org/content/medieval-defeat-theme",
+      "download_url": "https://opengameart.org/sites/default/files/defeat.wav",
+      "filename": "defeat.wav",
+      "use": [
+        "failure/low-state prototype candidate"
+      ]
+    },
+    {
+      "id": "OGA_ONCE_UPON_A_TIME_LOOP",
+      "category": "MUSIC_CINEMATIC_LIGHT",
+      "source_page": "https://opengameart.org/content/once-upon-a-time-loop",
+      "download_url": "https://opengameart.org/sites/default/files/once_upon_a_time_loop.wav",
+      "filename": "once_upon_a_time_loop.wav",
+      "use": [
+        "light cinematic/exploration prototype candidate"
+      ]
+    },
+    {
+      "id": "OGA_EYE_OF_THE_STORM",
+      "category": "MUSIC_BATTLE",
+      "source_page": "https://opengameart.org/content/eye-of-the-storm-0",
+      "download_url": "https://opengameart.org/sites/default/files/Eye%20of%20the%20Storm.wav",
+      "filename": "Eye_of_the_Storm.wav",
+      "use": [
+        "large battle prototype candidate"
+      ]
+    },
+    {
+      "id": "OGA_OWLISH_SFX_PACK",
+      "category": "SFX_FOLEY_BULK",
+      "source_page": "https://opengameart.org/content/sound-effects-pack",
+      "download_url": "https://opengameart.org/sites/default/files/Owlish%20Media%20Sound%20Effects.zip",
+      "filename": "Owlish_Media_Sound_Effects.zip",
+      "use": [
+        "footsteps",
+        "cloth",
+        "human breaths",
+        "impacts",
+        "paper",
+        "water",
+        "general foley"
+      ]
+    }
+  ],
+  "intake_expectations": [
+    "Each source page must show CC0.",
+    "Downloads are direct OpenGameArt file endpoints discovered from the item pages.",
+    "Each staged file receives SHA256, byte size, source page and source URL in a receipt.",
+    "ZIP archives remain STAGED until extracted/scanned/classified; WAV files remain STAGED until audio intake checks pass.",
+    "These tracks are generic CC0 candidates and are not replacements for final authored cinematic score identity."
+  ]
+}
