@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_AMBIENTCG_P1C01_V1",
+  "status": "AUTHORIZED_FOR_STAGING",
+  "provider": "AMBIENTCG",
+  "license": "CC0",
+  "api_base": "https://ambientcg.com/api/v2/full_json",
+  "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\ambientCG",
+  "max_download_bytes": 1800000000,
+  "target_attribute": "2K-PNG",
+  "search_lanes": [
+    {
+      "q": "wood planks siding timber",
+      "limit": 8,
+      "category": "WOOD",
+      "use": [
+        "Shire timber",
+        "doors",
+        "bridges",
+        "carts",
+        "interiors"
+      ]
+    },
+    {
+      "q": "plaster wall",
+      "limit": 6,
+      "category": "PLASTER",
+      "use": [
+        "Hobbit/Bree walls"
+      ]
+    },
+    {
+      "q": "grass ground dirt path",
+      "limit": 8,
+      "category": "GROUND",
+      "use": [
+        "Shire terrain",
+        "Bree approaches"
+      ]
+    },
+    {
+      "q": "stone moss rock",
+      "limit": 8,
+      "category": "STONE",
+      "use": [
+        "Shire edges",
+        "Rivendell",
+        "Amon Hen",
+        "Ithilien"
+      ]
+    },
+    {
+      "q": "bark wood tree",
+      "limit": 6,
+      "category": "BARK",
+      "use": [
+        "Shire/Fangorn/Rivendell"
+      ]
+    },
+    {
+      "q": "leather fabric cloth",
+      "limit": 8,
+      "category": "CHARACTER_MATERIAL",
+      "use": [
+        "belts",
+        "boots",
+        "clothing",
+        "saddles"
+      ]
+    },
+    {
+      "q": "roof tile brick cobble",
+      "limit": 8,
+      "category": "ARCHITECTURE_SURFACE",
+      "use": [
+        "Bree",
+        "Gondor",
+        "courtyards",
+        "roofs"
+      ]
+    }
+  ],
+  "rules": [
+    "Use ambientCG public API only.",
+    "Select 2K-PNG ZIP downloads when present.",
+    "Keep at most 3 first-ranked candidates per lane.",
+    "Record API query, asset ID, source page, URL, size and SHA256.",
+    "STAGED assets still require intake validation before READY_FOR_IMPORT."
+  ]
+}
