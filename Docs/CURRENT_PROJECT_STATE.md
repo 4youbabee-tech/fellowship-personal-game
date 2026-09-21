@@ -1,3 +1,11 @@
+## 2026-09-22 - failed-swap rollback transaction expanded to player-life state
+
+The integration repair wave now closes another source-level rollback gap. `ChapterWorldRouter` rollback snapshots already preserved quest, route/chapter/episode, NPC memory, exploration, progression, knowledge and player transform. They now also capture player health, stamina, resolve and supplies from `AShirePlayerCharacter`. During `RestoreCommittedWorldFromSnapshot`, those values are reapplied through `RestoreTransactionalPlayerState` after grounded placement succeeds and before world hold is released.
+
+Source-contract regression coverage now requires this full transaction ordering. This is still source/static work only: exact-head UE4.27 compile/runtime proof is required before the rollback requirement can be considered closed.
+
+No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made.
+
 ## 2026-09-22 - world foundation work expanded beyond Shire
 
 P1C01 remains the first fully assembled visual benchmark, but production prework is no longer Shire-only. `Data/TrilogyWorldFoundationPlanV1.json` now tracks reusable world-foundation lanes for Bree, Weathertop, Rivendell, Caradhras, Moria, Lothlorien, Anduin/Amon Hen, Fangorn, Edoras/Meduseld, Helm's Deep, Isengard, Emyn Muil, Dead Marshes, Ithilien/Henneth Annun, Minas Tirith, Osgiliath, Minas Morgul, Cirith Ungol/Shelob's Lair, Pelennor, Paths of the Dead, Black Gate, Mordor/Gorgoroth, Mount Doom and Grey Havens.
