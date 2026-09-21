@@ -5335,7 +5335,10 @@ for pg118_path in [
         fail(f"PG-118 source architecture registration must be exactly once: {pg118_path}")
 
 pg118_budget = json.loads(read(ROOT / "Data" / "AssetPerformanceBudget.json"))
-if pg118_budget.get("chapter_asset_streaming_v5", {}).get("status") != "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF_AND_MEASUREMENT":
+if pg118_budget.get("chapter_asset_streaming_v5", {}).get("status") not in {
+    "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF_AND_MEASUREMENT",
+    "EXACT_HEAD_ENGINE_PROOF_GREEN_MERGED_PENDING_TARGET_DEVICE_MEASUREMENT",
+}:
     fail("PG-118 streaming performance evidence boundary changed")
 
 # PG-119: post-V5 early-realm life must improve culture and density behavior without
@@ -5343,6 +5346,8 @@ if pg118_budget.get("chapter_asset_streaming_v5", {}).get("status") != "SOURCE_R
 pg119_plan = pg111_plan
 if pg119_plan.get("plan_id") != "PART1_WORLD_ALIVE_SATURATION_V10":
     fail("PG-119 V10 early-realm world-life plan identity changed")
+if pg118_budget.get("post_v5_world_density", {}).get("status") != "EARLY_REALM_V10_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF_AND_DEVICE_MEASUREMENT":
+    fail("PG-119 post-V5 density evidence boundary changed")
 if int(pg119_plan.get("schema_version", 0)) < 4:
     fail("PG-119 V10 world-life schema version missing")
 pg119_expected_targets = {
