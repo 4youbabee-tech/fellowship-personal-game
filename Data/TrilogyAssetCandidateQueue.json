@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "queue_id": "TRILOGY_ASSET_CANDIDATE_QUEUE_V1",
+  "status": "ACTIVE_SOURCE_DISCOVERY",
+  "authority": "Data/ProjectGovernor.json",
+  "purpose": "Turn the trilogy warehouse from abstract slots into concrete sourcing lanes. Candidate status is not acquisition or visual acceptance.",
+  "candidates": [
+    {
+      "id": "QTN_UNIVERSAL_BASE_CHARACTERS",
+      "provider": "QUATERNIUS",
+      "source_page": "https://quaternius.com/packs/universalbasecharacters.html",
+      "license_observed": "CC0",
+      "formats": [
+        "FBX",
+        "glTF",
+        "Blend",
+        "OBJ"
+      ],
+      "use": [
+        "background human bases",
+        "NPC family prototyping",
+        "rig/retarget pipeline exercises"
+      ],
+      "suitability": "SUPPORTING_NPC_BASE_ONLY",
+      "notes": "Humanoid rig and animation-friendly topology; not a final likeness source for hero characters."
+    },
+    {
+      "id": "QTN_FANTASY_OUTFITS",
+      "provider": "QUATERNIUS",
+      "source_page": "https://quaternius.com/packs/modularcharacteroutfitsfantasy.html",
+      "license_observed": "CC0",
+      "formats": [
+        "FBX",
+        "glTF",
+        "Blend",
+        "OBJ"
+      ],
+      "use": [
+        "generic fantasy clothing pieces",
+        "background population variation",
+        "rig retarget testing"
+      ],
+      "suitability": "BACKGROUND_AND_PIPELINE",
+      "notes": "Useful for filler/crowd stock; hero wardrobe still needs project-specific higher-fidelity work."
+    },
+    {
+      "id": "QTN_RPG_CHARACTERS",
+      "provider": "QUATERNIUS",
+      "source_page": "https://quaternius.com/packs/rpgcharacters.html",
+      "license_observed": "CC0",
+      "formats": [
+        "FBX",
+        "Blend",
+        "OBJ"
+      ],
+      "use": [
+        "rigged fantasy NPC placeholders",
+        "animation/retarget validation"
+      ],
+      "suitability": "BACKGROUND_AND_TEST",
+      "notes": "Animated and rigged; not accepted as final core-cast art."
+    },
+    {
+      "id": "QTN_MEDIEVAL_VILLAGE_MEGAKIT",
+      "provider": "QUATERNIUS",
+      "source_page": "https://quaternius.com/packs/medievalvillagemegakit.html",
+      "license_observed": "CC0",
+      "formats": [
+        "FBX",
+        "glTF",
+        "Blend",
+        "OBJ"
+      ],
+      "use": [
+        "Bree/Rohan/Gondor supporting architecture blockout-to-mid-tier",
+        "village props",
+        "modular building pipeline"
+      ],
+      "suitability": "SUPPORTING_WORLD_KIT",
+      "notes": "300+ modular pieces; use selectively and re-materialize to avoid a generic stylized look."
+    },
+    {
+      "id": "QTN_MODULAR_RUINS",
+      "provider": "QUATERNIUS",
+      "source_page": "https://quaternius.com/packs/ultimatemodularruins.html",
+      "license_observed": "CC0",
+      "formats": [
+        "FBX",
+        "Blend",
+        "OBJ"
+      ],
+      "use": [
+        "Weathertop/Amon Hen/Osgiliath supporting ruins",
+        "dungeon/ruin filler"
+      ],
+      "suitability": "SUPPORTING_WORLD_KIT",
+      "notes": "Good stock filler after project-specific silhouette pass."
+    },
+    {
+      "id": "QTN_ULTIMATE_NATURE",
+      "provider": "QUATERNIUS",
+      "source_page": "https://quaternius.com/packs/ultimatenature.html",
+      "license_observed": "CC0",
+      "formats": [
+        "FBX",
+        "Blend",
+        "OBJ"
+      ],
+      "use": [
+        "background nature variety",
+        "low-cost foliage/rocks",
+        "prototype biome filler"
+      ],
+      "suitability": "BACKGROUND_NATURE",
+      "notes": "Use only where art direction/performance fit; hero vegetation still needs higher-quality sources."
+    },
+    {
+      "id": "QTN_ULTIMATE_ANIMATED_ANIMALS",
+      "provider": "QUATERNIUS",
+      "source_page": "https://quaternius.com/packs/ultimateanimatedanimals.html",
+      "license_observed": "CC0",
+      "formats": [
+        "FBX",
+        "glTF",
+        "Blend",
+        "OBJ"
+      ],
+      "use": [
+        "horses",
+        "cows/deer/wolves/other fauna candidates",
+        "fauna animation pipeline"
+      ],
+      "suitability": "FAUNA_BASE",
+      "notes": "Potential source for non-hero fauna after species/canon filtering."
+    },
+    {
+      "id": "QTN_FARM_ANIMALS",
+      "provider": "QUATERNIUS",
+      "source_page": "https://quaternius.com/packs/farmanimal.html",
+      "license_observed": "CC0",
+      "formats": [
+        "FBX",
+        "Blend",
+        "OBJ"
+      ],
+      "use": [
+        "Shire farm-life population: pig/cow/horse/sheep/dog candidates"
+      ],
+      "suitability": "SHIRE_FAUNA_BASE",
+      "notes": "Strong fit for filling pastoral life quickly; verify look against P1C01 quality bar."
+    },
+    {
+      "id": "PH_WOODEN_BARRELS_01",
+      "provider": "POLY_HAVEN",
+      "source_page": "https://polyhaven.com/a/wooden_barrels_01",
+      "license_observed": "CC0",
+      "formats": [
+        "provider variants"
+      ],
+      "use": [
+        "Shire/Bree/cellar/farm/market prop stock"
+      ],
+      "suitability": "HIGH_FIDELITY_PROP",
+      "notes": "Weathered barrel set with PBR maps; candidate for direct production evaluation."
+    },
+    {
+      "id": "PH_TEXTURE_LIBRARY_WOOD",
+      "provider": "POLY_HAVEN",
+      "source_page": "https://polyhaven.com/textures/wood",
+      "license_observed": "CC0",
+      "formats": [
+        "PBR texture sets"
+      ],
+      "use": [
+        "timber",
+        "doors",
+        "furniture",
+        "bridges",
+        "carts",
+        "interiors"
+      ],
+      "suitability": "HIGH_FIDELITY_MATERIAL_LIBRARY"
+    },
+    {
+      "id": "PH_TEXTURE_LIBRARY_STONE",
+      "provider": "POLY_HAVEN",
+      "source_page": "https://polyhaven.com/textures/stone",
+      "license_observed": "CC0",
+      "formats": [
+        "PBR texture sets"
+      ],
+      "use": [
+        "Moria",
+        "Rivendell",
+        "Gondor",
+        "ruins",
+        "roads"
+      ],
+      "suitability": "HIGH_FIDELITY_MATERIAL_LIBRARY"
+    },
+    {
+      "id": "PH_MOSSY_SURFACE_SEARCH",
+      "provider": "POLY_HAVEN",
+      "source_page": "https://polyhaven.com/textures?s=mossy",
+      "license_observed": "CC0",
+      "formats": [
+        "PBR texture sets"
+      ],
+      "use": [
+        "Shire",
+        "Rivendell",
+        "Amon Hen",
+        "Ithilien",
+        "ruins"
+      ],
+      "suitability": "HIGH_FIDELITY_MATERIAL_LIBRARY",
+      "notes": "Search lane currently exposes mossy sandstone/brick/rock/wood families."
+    }
+  ],
+  "next_source_lanes": [
+    "High-fidelity realistic hero humanoid bases with legal FBX export and UE4-compatible skeletons.",
+    "Realistic medieval/rural architecture for Shire/Bree/Rohan with non-stylized PBR materials.",
+    "Photoreal foliage/terrain/rock/water libraries for every biome.",
+    "Creature bases for troll/warg/spider/fell-beast/mumakil/eagle with real rigs.",
+    "Professional animation libraries compatible with the four rig families.",
+    "Professional ambience/foley libraries matching AudioAssetSourcingWaveV2."
+  ],
+  "acquisition_rule": "Do not commit raw binaries through normal Git history when LFS policy applies. Acquisition/import must preserve source provenance and the repository's LFS/import contract."
+}
