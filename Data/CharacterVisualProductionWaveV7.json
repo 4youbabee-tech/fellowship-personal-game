@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "wave_id": "CHARACTER_HUMANIZATION_AND_SKELETAL_HANDOFF_V7",
+  "status": "SOURCE_PIPELINE_ACTIVE_FINAL_RIGGED_FBX_ASSETS_PENDING",
+  "authority": "Data/ProjectGovernor.json",
+  "goal": "Replace modular/static proxy bodies with believable rigged humanoid characters while preserving film-safe identity cues, UE4.27.2 compatibility and the low-spec target.",
+  "source_basis": [
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+    "Docs/CHARACTER_PERFORMANCE_STANDARD.md",
+    "Data/CharacterProductionMatrix.json"
+  ],
+  "hard_rules": {
+    "animated_character_source_format": "FBX_ONLY",
+    "legacy_obj_policy": "Existing OBJ character pieces remain prototype/static fallback only. They are not accepted as final animated characters and are not converted to FBX as fake rigging evidence.",
+    "texture_source_formats": [
+      "PNG",
+      "TGA"
+    ],
+    "texture_policy": "Use authored compressed source textures; pack AO/Roughness/Metallic when those maps exist and keep sRGB disabled on packed masks.",
+    "heavy_runtime_loading": "FStreamableManager + soft object paths only for skeletal meshes/animation classes and other heavy final-character packages.",
+    "reference_policy": "Use silhouette, wardrobe, age, race and role cues from project sources; do not require an exact actor scan or likeness.",
+    "acceptance_boundary": "Natural-looking production character claims require real skeletal FBX, skin/deformation, animation integration, UE4 compile/import proof, PIE visual/motion review and target-device performance evidence."
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "quality": "Low-Medium",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_class_gb": 2
+  },
+  "visual_quality_bar": {
+    "face": [
+      "human-readable cranial proportions",
+      "non-spherical facial silhouette",
+      "separate eyelid/eye/mouth regions where rig permits",
+      "hair volume matching character identity without helmet-like blob shape"
+    ],
+    "body": [
+      "anatomical shoulder/torso/hip transition",
+      "hands and feet scaled to race/body type",
+      "character-specific height/weight silhouette",
+      "clothing layered over body rather than primitive-body color blocks"
+    ],
+    "motion": [
+      "character-specific idle and gait",
+      "acceleration/deceleration",
+      "reduced foot slide",
+      "listener/gaze behavior",
+      "story-state posture changes"
+    ],
+    "material": [
+      "skin/cloth/leather/metal respond differently",
+      "no flat single-material toy look",
+      "bounded material slots and scalable hair/cloth"
+    ],
+    "camera_readability": [
+      "face readable at conversation distance",
+      "silhouette readable at traversal distance",
+      "LOD transition must not collapse identity"
+    ]
+  },
+  "rig_families": {
+    "HOBBIT_HUMANOID": [
+      "Frodo",
+      "Sam",
+      "Merry",
+      "Pippin",
+      "Bilbo"
+    ],
+    "TALL_HUMANOID": [
+      "Gandalf",
+      "Saruman"
+    ],
+    "STANDARD_HUMANOID": [
+      "Aragorn",
+      "Boromir",
+      "Legolas",
+      "Arwen",
+      "Elrond",
+      "Galadriel"
+    ],
+    "DWARF_HUMANOID": [
+      "Gimli"
+    ]
+  },
+  "first_delivery_order": [
+    {
+      "id": "Frodo",
+      "priority": 1,
+      "reason": "primary playable Shire quality bar"
+    },
+    {
+      "id": "Gandalf",
+      "priority": 1,
+      "reason": "parallel playable route and radically different silhouette"
+    },
+    {
+      "id": "Sam",
+      "priority": 2,
+      "reason": "closest persistent companion and Hobbit rig-family reuse proof"
+    },
+    {
+      "id": "Aragorn",
+      "priority": 2,
+      "reason": "human/ranger rig-family proof"
+    },
+    {
+      "id": "Gimli",
+      "priority": 2,
+      "reason": "compact-heavy rig-family proof"
+    },
+    {
+      "id": "Legolas",
+      "priority": 2,
+      "reason": "slender elf material/hair/archery silhouette proof"
+    },
+    {
+      "id": "Merry",
+      "priority": 2,
+      "reason": "Hobbit family production completion"
+    },
+    {
+      "id": "Pippin",
+      "priority": 2,
+      "reason": "Hobbit family production completion"
+    },
+    {
+      "id": "Boromir",
+      "priority": 2,
+      "reason": "armored human/large equipment silhouette"
+    }
+  ],
+  "required_bundle_per_character": {
+    "skeletal_mesh": "SK_<Character>.fbx with one skinned skeleton; no OBJ delivery for animated production character",
+    "locomotion_animation_options": [
+      "Preferred: separate AN_<Character>_Idle/Walk/Run/Crouch/Jump/Interact/Attack FBX clips on the same skeleton",
+      "Acceptable first intake: one skinned SK_<Character>.fbx plus a documented skeleton compatible with an existing locomotion set"
+    ],
+    "textures": [
+      "TX_<Character>_Body_BaseColor.png or .tga",
+      "TX_<Character>_Body_Normal.png or .tga",
+      "TX_<Character>_Body_ORM.png or .tga when AO/Roughness/Metallic exist",
+      "Hair/clothing texture sets only when materially distinct"
+    ],
+    "optional": [
+      "facial blendshapes/morph targets",
+      "separate cloak/hair skeletal sections",
+      "weapon/equipment FBX if skinned or socketed"
+    ],
+    "provenance": [
+      "source/provider",
+      "license/permission terms",
+      "retrieval date",
+      "modification permission"
+    ]
+  },
+  "runtime_contract": {
+    "destination": "/Game/Production/Characters/Rigs/<Character>/",
+    "skeletal_asset": "SK_<Character>",
+    "locomotion_anim_blueprint": "ABP_<Character>_Locomotion",
+    "loading_owner": "UShireCharacterAssetSubsystem",
+    "fallback": "Existing modular proxy remains visible only until the final rig bundle reports asynchronously ready.",
+    "residency": "Subsystem retains streamable handle while the rig is active/available; later pooling/route ownership may release bounded secondary assets."
+  },
+  "proof_state": {
+    "static": "PENDING_NEW_WAVE_VALIDATION",
+    "compile": "BLOCKED_BY_CURRENT_RUNNER_ENGINE_CONTENT_PERMISSION_UNTIL_MACHINE_ACCESS_IS_FIXED",
+    "pie": "NOT_RUN_FOR_V7",
+    "device": "NOT_RUN_FOR_V7",
+    "visual": "NOT_ACCEPTED"
+  }
+}
