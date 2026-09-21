@@ -1,5 +1,9 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-22 - warehouse staging launcher repair
+
+Warehouse Stage #18 failed before acquisition because the runner's PowerShell execution policy blocked GitHub's temporary `shell: powershell` wrapper. The workflow now launches repository-owned staging scripts from cmd with `-ExecutionPolicy Bypass -File`. No warehouse file is promoted until the next run reports actual staged receipts.
+
 ## 2026-09-22 - multi-lane warehouse acquisition
 
 The persistent warehouse now has concrete staging lanes for environment/materials (Poly Haven), music/foley (OpenGameArt), and character/animation/fauna/world-kit candidates (Quaternius). Direct-download lanes preserve source/license/hash receipts; unresolved interactive-store packs remain candidates rather than being misreported as staged. This advances warehouse stock acquisition only and does not promote UE import, runtime, visual or device acceptance.
