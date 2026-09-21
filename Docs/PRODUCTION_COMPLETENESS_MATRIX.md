@@ -1,5 +1,11 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-22 - Pre-Unreal #562 streaming regression-test repair
+
+Pre-Unreal #562 passed core validation, Project Governor and Deep Project Audit, then failed a stale source-contract test that still expected async-load completion to promote `ResidentHandle`. The current two-phase architecture intentionally promotes the resident bank only in `CommitPendingRequest` after world commit prerequisites succeed. The test is aligned to that contract without changing runtime code.
+
+Unreal Build #397 remains environment-blocked before compilation by UE4 Engine Content read permissions. No compile, PIE, device, performance or visual maturity is promoted by this change.
+
 ## 2026-09-22 - Pre-Unreal #561 deep-audit contract repair
 
 On exact head `ed5af300852e6e2ce2264334c560af658250434b`, the core Pre-Unreal validator passed, but the subsequent deep audit failed because it searched only `ShireChapterAssetStreamingSubsystem.cpp` for the `FStreamableManager` type marker. The type is declared in the subsystem header while the cpp contains the async request path. The deep audit is corrected to validate the header+cpp contract together and still reject synchronous `LoadObject` in the streaming cpp.
