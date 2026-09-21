@@ -1,5 +1,9 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-22 - active warehouse fill execution
+
+Warehouse production is now executing real staged-download batches rather than only cataloguing candidates. The first Poly Haven batch has verified source pages, resilient per-asset staging and receipt/skipped-item accounting. This advances asset acquisition infrastructure and stock readiness only; UE import/runtime/visual acceptance remain later states.
+
 ## 2026-09-22 - persistent asset warehouse staging
 
 The project now has a dedicated persistent warehouse staging workflow separate from UE runtime validation. The first CC0 Poly Haven batch is machine-defined and stages to a persistent self-hosted folder with receipt/hash intent. This advances warehouse acquisition infrastructure only; staged files are not imported, integrated or visually accepted by this change.
