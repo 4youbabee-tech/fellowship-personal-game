@@ -7,7 +7,7 @@
   "license": "CC0",
   "purpose": "Populate the persistent self-hosted-runner warehouse with a first real high-fidelity material/prop batch for Shire/Bree/general medieval production without waiting for UE runtime validation.",
   "target_resolution": "2k",
-  "max_download_bytes": 1800000000,
+  "max_download_bytes": 2600000000,
   "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\PolyHaven",
   "assets": [
     {
@@ -122,6 +122,141 @@
       "use": [
         "Shire/Bree/cellar/farm/market prop"
       ]
+    },
+    {
+      "slug": "rock_surface",
+      "category": "ROCK",
+      "use": [
+        "Moria",
+        "Amon Hen",
+        "Ithilien",
+        "Mordor terrain"
+      ]
+    },
+    {
+      "slug": "rock_face",
+      "category": "CLIFF_ROCK",
+      "use": [
+        "Caradhras",
+        "Emyn Muil",
+        "Mordor cliffs"
+      ]
+    },
+    {
+      "slug": "rock_01",
+      "category": "ROCK",
+      "use": [
+        "Shire edging",
+        "Rivendell",
+        "ruins"
+      ]
+    },
+    {
+      "slug": "dark_rock",
+      "category": "DARK_ROCK",
+      "use": [
+        "Moria",
+        "Minas Morgul",
+        "Mordor"
+      ]
+    },
+    {
+      "slug": "gravel_stones",
+      "category": "GRAVEL",
+      "use": [
+        "Shire paths",
+        "Bree roads",
+        "camp areas"
+      ]
+    },
+    {
+      "slug": "gravel_ground_01",
+      "category": "GRAVEL_GROUND",
+      "use": [
+        "Bree",
+        "Rohan",
+        "battlefield transition ground"
+      ]
+    },
+    {
+      "slug": "gravel_road",
+      "category": "ROAD",
+      "use": [
+        "Bree approaches",
+        "Rohan roads",
+        "Gondor support roads"
+      ]
+    },
+    {
+      "slug": "rocky_terrain",
+      "category": "ROCKY_TERRAIN",
+      "use": [
+        "Amon Hen",
+        "Ithilien",
+        "Emyn Muil"
+      ]
+    },
+    {
+      "slug": "bark_brown_01",
+      "category": "BARK",
+      "use": [
+        "Shire trees",
+        "Fangorn supporting bark",
+        "Rivendell"
+      ]
+    },
+    {
+      "slug": "pine_bark",
+      "category": "BARK",
+      "use": [
+        "Bree woods",
+        "Caradhras tree line",
+        "Ithilien"
+      ]
+    },
+    {
+      "slug": "brown_leather",
+      "category": "LEATHER",
+      "use": [
+        "belts",
+        "boots",
+        "satchels",
+        "saddles",
+        "armor trim"
+      ]
+    },
+    {
+      "slug": "rust_coarse_01",
+      "category": "RUST_METAL",
+      "use": [
+        "Isengard",
+        "Mordor",
+        "siege gear",
+        "weathered iron"
+      ]
+    },
+    {
+      "slug": "snow_floor",
+      "category": "SNOW",
+      "use": [
+        "Caradhras"
+      ]
+    },
+    {
+      "slug": "snow_01",
+      "category": "SNOW",
+      "use": [
+        "Caradhras wind-blown variation"
+      ]
+    },
+    {
+      "slug": "stone_tiles",
+      "category": "STONE_FLOOR",
+      "use": [
+        "Rivendell",
+        "Gondor",
+        "fortress interiors"
+      ]
     }
   ],
   "intake_expectations": [
@@ -145,7 +280,22 @@
     "https://polyhaven.com/a/cobblestone_floor_001",
     "https://polyhaven.com/a/patterned_cobblestone",
     "https://polyhaven.com/a/mossy_rock",
-    "https://polyhaven.com/a/wooden_barrels_01"
+    "https://polyhaven.com/a/wooden_barrels_01",
+    "https://polyhaven.com/a/rock_surface",
+    "https://polyhaven.com/a/rock_face",
+    "https://polyhaven.com/a/rock_01",
+    "https://polyhaven.com/a/dark_rock",
+    "https://polyhaven.com/a/gravel_stones",
+    "https://polyhaven.com/a/gravel_ground_01",
+    "https://polyhaven.com/a/gravel_road",
+    "https://polyhaven.com/a/rocky_terrain",
+    "https://polyhaven.com/a/bark_brown_01",
+    "https://polyhaven.com/a/pine_bark",
+    "https://polyhaven.com/a/brown_leather",
+    "https://polyhaven.com/a/rust_coarse_01",
+    "https://polyhaven.com/a/snow_floor",
+    "https://polyhaven.com/a/snow_01",
+    "https://polyhaven.com/a/stone_tiles"
   ],
-  "notes": "V1 slugs were replaced with source-page-verified Poly Haven IDs before bulk staging. Invalid/missing provider API assets are skipped and recorded rather than aborting the batch."
+  "notes": "Expanded source-page-verified CC0 batch. Intake is capped at 2K and skips displacement/high-poly payloads to preserve target-device and warehouse efficiency."
 }
