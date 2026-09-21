@@ -1,5 +1,9 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-22 - cinematic audio warehouse V2 registered
+
+Audio production now has an explicit sourcing/warehouse plan covering voice, dynamic music, ambience/fauna, foley and creature/combat effects. Existing runtime routing remains intact; authored approved assets, spatial/concurrency listening review and target-device audio profiling are still pending, so Voice/Audio maturity is not promoted by this planning wave.
+
 ## 2026-09-22 - V7 async character static-guard reconciliation
 
 Pre-Unreal #578 exposed four stale character-production assertions that still described the old synchronous rig probe. PG-051/PG-089 now validate the V7 FStreamableManager character-rig path and forbid synchronous skeletal-mesh/animation-class loading in the playable character handoff. Runtime behavior and visual acceptance are unchanged by this validator repair.
