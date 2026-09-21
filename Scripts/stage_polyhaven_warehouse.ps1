@@ -22,6 +22,7 @@ $receipt = [ordered]@{
     staged_at_utc = [DateTime]::UtcNow.ToString("o")
     staging_root = $root
     files = @()
+    skipped_assets = @()
     total_bytes = 0
 }
 
@@ -75,7 +76,18 @@ foreach ($asset in $manifest.assets) {
     Write-Host "Warehouse stage: querying $apiUrl"
 
     $headers = @{ "User-Agent" = "ShireJourneyWarehouse/1.0" }
-    $filesTree = Invoke-RestMethod -Uri $apiUrl -Headers $headers -Method Get
+    try {
+        $filesTree = Invoke-RestMethod -Uri $apiUrl -Headers $headers -Method Get
+    }
+    catch {
+        Write-Warning "Provider API query failed for $slug : $($_.Exception.Message)"
+        $receipt.skipped_assets += [ordered]@{
+            asset_slug = $slug
+            reason = "provider_api_query_failed"
+            detail = $_.Exception.Message
+        }
+        continue
+    }
 
     $candidates = New-Object 'System.Collections.Generic.List[object]'
     Add-FileCandidate -Node $filesTree -LogicalPath "" -Out $candidates
@@ -112,6 +124,11 @@ foreach ($asset in $manifest.assets) {
 
     if ($chosen.Count -eq 0) {
         Write-Warning "No eligible $resolution PNG/TGA/FBX/ZIP files found for $slug"
+        $receipt.skipped_assets += [ordered]@{
+            asset_slug = $slug
+            reason = "no_eligible_files_at_resolution"
+            detail = $resolution
+        }
         continue
     }
 
