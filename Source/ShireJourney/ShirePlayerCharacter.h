@@ -109,6 +109,8 @@ protected:
     UFUNCTION()
     void HandleChapterChanged(FName PreviousChapterId, FName NewChapterId);
 
+    void HandleProductionRigReady(FName CharacterId);
+
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
     USpringArmComponent* CameraBoom;
 
