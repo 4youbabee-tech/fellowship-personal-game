@@ -1,3 +1,11 @@
+## 2026-09-21 - self-hosted runner online; V10 gate repair
+
+The UE4.27.2 self-hosted runner is online again. Exact head `88e3c7308599a7d11820dda7479ab03c42ed5122` reached the laptop, but the latest gate exposed two non-product-code blockers: Pre-Unreal #550 failed because WORK-QA-002 and WORK-PERF-004 had been added to ProjectGovernor without being mirrored into MasterExecutionRoadmap; Unreal #385 stopped at Engine Content preflight because `WorldGridMaterial.uasset` was temporarily unreadable by the runner service. No C++ build step ran in #385.
+
+The same `NT AUTHORITY\NETWORK SERVICE` identity successfully read the same Engine Content and completed Unreal #381 earlier, so #385 is not evidence of a source compile failure. Keep the engine-content stability guard strict and re-prove a repaired exact head.
+
+After a green V10 exact head, the authorized large integration sequence is: merge V10 -> validate develop -> reconcile PR #63 -> transactional transition rollback/stale-callback hardening -> ambient NPC object pooling -> residual synchronous heavy-load async migration -> diegetic living-NPC witness/share/learn + memory-aware revisit -> chapter/device evidence.
+
 ## 2026-09-21 - diegetic living-NPC requirement reaffirmed
 
 The owner explicitly reaffirmed the intended player experience: the surrounding world should feel intelligent from inside the fiction. Each named character should respond from their own identity, source-grounded history, home/region, role, relationships, valid memories and what they could plausibly know at the current chronology. Ambient inhabitants receive cheaper regional/cultural archetype intelligence so the target laptop is not asked to persist a full individual brain for every crowd actor.

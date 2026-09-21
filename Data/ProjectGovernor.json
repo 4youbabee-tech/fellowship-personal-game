@@ -3556,13 +3556,15 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "RUNNER_OFFLINE_STATIC_HARDENING_PLUS_EARLY_REALM_WORLD_LIFE_V10",
+  "current_focus": "V10_EXACT_HEAD_GATE_REPAIR_THEN_COMPREHENSIVE_INTEGRATION",
   "immediate_next_large_actions": [
-    "While the self-hosted UE4 runner is offline, advance only static/source/data/validator work that cannot falsely claim engine proof.",
-    "Keep PR #62 V10 coherent; use static guardrails to prevent new synchronous heavy-load, BMP/animated-OBJ and ambient SpawnActor debt.",
-    "When the laptop returns, run the new local preflight then let the exact PR #62 head complete UE4.27.2 validation; merge only if green.",
-    "After V10 integration, reconcile PR #63 transition coordination and harden transactional world commit/rollback.",
-    "Then implement bounded ambient NPC object pooling and burn down residual heavy synchronous LoadObject sites behind soft async chapter/region banks."
+    "Re-prove the repaired PR #62 exact head on GitHub-hosted Pre-Unreal and the online self-hosted UE4.27.2 runner.",
+    "If green, merge V10 to develop and immediately validate the develop merge head.",
+    "Reconcile PR #63 on top of the new develop without overwriting V10 LivingWorldDirector/Governor changes.",
+    "Fix transactional world-transition rollback/stale-callback behavior before adding more world complexity.",
+    "Then implement bounded ambient crowd pooling plus residual synchronous heavy-load migration to soft async chapter/region banks.",
+    "Then advance the diegetic Living NPC vertical slice with real-event knowledge transfer, memory-aware revisit and relationship/emotion/region-aware reactions.",
+    "Use the online laptop for chapter-specific PIE/device FPS/hitch/memory evidence; do not promote visual/device acceptance from headless CI."
   ],
   "session_handoff": {
     "source_head": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
@@ -4356,5 +4358,18 @@
     "durable_identity_rule": "Use source ID + SHA-256 from OwnerSourceReferenceIndex when bytes are available; attachment names and chat history are not authoritative identity.",
     "precedence_rule": "ProjectGovernor decisions/invariants -> film trilogy/supplied screenplays for film chronology/outcomes -> Tolkien for compatible deep lore -> Sources 01-11 for production interpretation -> original design only inside safe gaps.",
     "verification_boundary": "The owner reports that the previously missing Project Source files were restored. This recovery record does not claim a fresh cryptographic recheck of newly re-added files that are not exposed as bytes to the current worker."
+  },
+  "runner_status": {
+    "observed_at": "2026-09-21",
+    "state": "ONLINE",
+    "runner_name": "UE4-27-Windows",
+    "machine": "IDEAPAD320",
+    "service_identity": "NT AUTHORITY\\NETWORK SERVICE",
+    "latest_attempt": {
+      "unreal_run": "#385",
+      "result": "PREBUILD_ENVIRONMENT_BLOCK",
+      "detail": "WorldGridMaterial.uasset temporarily unreadable; C++ build step was never reached."
+    },
+    "comparison": "The same service identity successfully read Engine Content and completed Unreal #381 earlier on d6533289."
   }
 }

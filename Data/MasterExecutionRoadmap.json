@@ -26,9 +26,13 @@
     "integration_baseline_head": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
     "integration_baseline_pre_unreal": "SUCCESS #543",
     "integration_baseline_unreal": "SUCCESS #378",
-    "active_wave": "EARLY_REALM_WORLD_LIFE_AND_CULTURAL_DENSITY_V10",
+    "active_wave": "V10_GATE_REPAIR_THEN_COMPREHENSIVE_INTEGRATION",
     "merge_policy": "Complete one coherent V10 branch, prove its exact head with Pre-Unreal and full UE4.27.2 validation, then merge to develop and revalidate develop.",
-    "pull_request": 62
+    "pull_request": 62,
+    "candidate_before_reconciliation": "88e3c7308599a7d11820dda7479ab03c42ed5122",
+    "last_attempt_pre_unreal": "FAIL #550 - roadmap orphan WORK-QA-002/WORK-PERF-004",
+    "last_attempt_unreal": "FAIL #385 - engine content file temporarily unreadable before build; no C++ build attempted",
+    "runner_state": "ONLINE_SELF_HOSTED_UE4_27"
   },
   "bundles": [
     {
@@ -48,7 +52,9 @@
       ],
       "work_ids": [
         "WORK-QA-001",
-        "WORK-PERF-002"
+        "WORK-PERF-002",
+        "WORK-QA-002",
+        "WORK-PERF-004"
       ],
       "deliverables": [
         "Pre-Unreal exact-head validation",
@@ -62,7 +68,9 @@
         "continuous deep architecture/backend/player-experience audit",
         "data-driven chapter/route asset banks",
         "seam-safe async preload before world swap",
-        "chapter-aware Fellowship production mesh bank"
+        "chapter-aware Fellowship production mesh bank",
+        "local Pre-Unreal preflight before one-click build/share",
+        "architecture regression ceilings for residual synchronous heavy-load debt"
       ],
       "exit_evidence": [
         "PRE_UNREAL_PASS",
@@ -227,7 +235,8 @@
       "work_ids": [
         "WORK-LW-004",
         "WORK-DLG-001",
-        "WORK-LW-005"
+        "WORK-LW-005",
+        "WORK-PERF-003"
       ],
       "deliverables": [
         "named and ambient NPC needs/goals/emotion tuning",
@@ -238,7 +247,8 @@
         "bounded runtime cinematic camera grammar bridge",
         "identity-specific named-character modular performance profiles",
         "smooth ambience/music transition runtime",
-        "cinematic/audio plans with final-asset evidence boundaries"
+        "cinematic/audio plans with final-asset evidence boundaries",
+        "bounded ambient NPC object pooling after V10 + transition reconciliation"
       ],
       "exit_evidence": [
         "OFFLINE_RUNTIME_PASS",
@@ -434,7 +444,9 @@
     "WORK-EXP-005",
     "WORK-GAME-001",
     "WORK-LW-004",
+    "WORK-PERF-004",
     "WORK-QA-001",
+    "WORK-QA-002",
     "WORK-RING-001",
     "WORK-SIDE-001",
     "WORK-WORLD-001",
@@ -442,14 +454,16 @@
     "WORK-WORLD-003"
   ],
   "immediate_next_large_actions": [
-    "Finish culture-specific Shire/Bree/Rivendell/Lothlorien ambient life and chapter-tuned residency budgets without raising baseline population targets.",
-    "Use instancing/culling for decorative sanctuary density instead of actor spam.",
-    "Earn exact-head V10 Pre-Unreal and full UE4.27.2 proof, then merge and revalidate develop.",
-    "Run representative target-device profiling before any later actor-density increase.",
-    "Continue the actual skeletal rig/skin/AnimBP/animation track as the next focused character-quality lane."
+    "Repair and re-prove PR #62 exact head now that the self-hosted UE4.27 runner is online.",
+    "Merge V10 into develop only after exact-head Pre-Unreal and full Unreal validation are green.",
+    "Reconcile PR #63 committed-world transition coordination on top of post-V10 develop; preserve V10 LivingWorldDirector population/density logic.",
+    "Harden transactional world transition failure/rollback and stale async callback handling.",
+    "Implement bounded ambient NPC pooling and residual synchronous heavy-asset load burn-down behind soft references/FStreamableManager.",
+    "Advance diegetic Living NPC vertical slice: real-event witness/share/learn, memory-aware revisit, relationship/emotion/region-aware response with no meta-game awareness.",
+    "Run exact-head UE4 validation again, then collect chapter-specific PIE/device evidence instead of inferring visual/performance acceptance."
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "reason": "V5 completed and post-merge develop is green; V10 early-realm world-life is now the single focused production wave."
+    "reason": "Self-hosted UE runner returned online. Repair roadmap orphan state and use the available runner for a large gated integration wave rather than stacking unproven changes."
   }
 }

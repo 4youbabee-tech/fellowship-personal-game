@@ -4,15 +4,15 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 ## Current control point
 
-- PR: #53
-- Baseline before this consolidation: `9dd82c7b2be42a8182fd7c4eaef70e1e06cff96b`
-- Baseline Pre-Unreal: **SUCCESS #361**
-- Baseline Unreal Build Validation: **PENDING #196** when this roadmap was created
-- Merge rule: never merge a red or untested exact head into `develop`.
-- Product rule: film scenario first; game systems expand around verified film anchors.
-- Performance rule: Windows / DX11 / 720p Low-Medium / 30 FPS floor.
-- Current B1 runtime wave: **CHRONICLE_BROWSING_AND_KNOWLEDGE_PRESENTATION_V5** — source-grounded Chronicle labels, explicit entry browsing, readable map-region context, and PG-085 regression protection.
-- Current B2 mega wave: **PART1_SOURCE_GROUNDED_PRODUCTION_MEGA_V1** — source atlas, truthful readiness gate, full-cast/threat inventory, nine-region production, and automated readiness audit.
+- PR: #62 `production/early-realms-world-life-v1`
+- Green integration baseline: `develop@f4886b39feea29973543bf6cfb1be4659f10ff9d`
+- Baseline Pre-Unreal: **SUCCESS #543**
+- Baseline Unreal Build: **SUCCESS #378**
+- Previous candidate `88e3c7308599a7d11820dda7479ab03c42ed5122`: Pre-Unreal #550 failed only on stale roadmap/orphan tracking; Unreal #385 stopped before compilation because Engine Content was temporarily unreadable by the runner service.
+- The same `NETWORK SERVICE` runner read that exact Engine Content and completed Unreal Build #381 earlier, so #385 is classified as an environment/preflight block, not a demonstrated C++ build failure.
+- Runner state: **ONLINE**.
+- Gate rule: repair exact-head metadata first, then require fresh Pre-Unreal + full UE4.27.2 exact-head proof before V10 merge.
+- Comprehensive next wave after green V10: PR #63 reconciliation -> transactional transition safety -> ambient pooling -> residual async-load burn-down -> diegetic living-NPC vertical slice -> chapter/device evidence.
 
 ## Execution order
 
@@ -30,6 +30,9 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 | 0 | WORK-MEGA-001 | B0_EXACT_HEAD_STABILITY | CP56 whole-game mega integration and green-head repair loop |
 | 1 | WORK-QA-001 | B0_EXACT_HEAD_STABILITY | Automation-first delivery and regression coverage |
 | 2 | WORK-EXEC-001 | CONTINUOUS_CONTROL | Master execution control and orphan-work prevention |
+| 3 | WORK-QA-002 | B0_EXACT_HEAD_STABILITY | Local Pre-Unreal preflight before one-click build/share |
+| 34 | WORK-PERF-003 | B3_LIVING_WORLD_AND_PRESENTATION | Ambient NPC object-pool migration after V10/transition reconciliation |
+| 35 | WORK-PERF-004 | B0_EXACT_HEAD_STABILITY | Residual synchronous asset-load debt guard and burn-down |
 | 10 | WORK-EXP-003 | B1_PART1_STORY_GAMEPLAY_COMPLETE | CP56 Fellowship film-experience mega-pass |
 | 11 | WORK-RING-001 | B1_PART1_STORY_GAMEPLAY_COMPLETE | Trilogy Ring-quest systemic core |
 | 12 | WORK-SIDE-001 | B1_PART1_STORY_GAMEPLAY_COMPLETE | Film-derived side-content rollout |
