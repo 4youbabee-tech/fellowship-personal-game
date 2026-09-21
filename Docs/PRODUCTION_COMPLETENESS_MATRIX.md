@@ -1,5 +1,11 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-22 - commit-synchronized persistence implementation
+
+The first post-static-gate runtime repair now synchronizes automatic chapter checkpoint capture and saved-player transform restoration with `ChapterWorldRouter` committed chapter/route/episode identity. Saved transforms are grounded against committed destination geometry before placement. The initial P1C01 checkpoint uses the same barrier.
+
+This advances source implementation only. Save/load remains PARTIAL until exact-head UE4.27 compilation and runtime regression evidence exist, and coherent failed-swap rollback remains open. No compile, PIE, device, performance or visual column is promoted.
+
 ## 2026-09-22 - Pre-Unreal #562 streaming regression-test repair
 
 Pre-Unreal #562 passed core validation, Project Governor and Deep Project Audit, then failed a stale source-contract test that still expected async-load completion to promote `ResidentHandle`. The current two-phase architecture intentionally promotes the resident bank only in `CommitPendingRequest` after world commit prerequisites succeed. The test is aligned to that contract without changing runtime code.
