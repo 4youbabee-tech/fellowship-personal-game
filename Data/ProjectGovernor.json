@@ -706,11 +706,13 @@
         "PowerShell checkout uses explicit execution-policy bypass",
         "superseded develop Unreal runs cancel so the latest head can validate",
         "Unreal Build Validation #19 succeeded on exact commit 0936f2e779c6a6d1b4d209628d206f5d11ca3f9c with UE4.27.2 compile and production import 50 files / 0 failures",
-        "Build #27 reached UE4.27.2 C++ compilation and exposed a real ShireAmbientNPC compile regression: Bird motion referenced PrototypeWalkPhase instead of the class's WalkPhase field; repaired on develop before CP37 integration"
+        "Build #27 reached UE4.27.2 C++ compilation and exposed a real ShireAmbientNPC compile regression: Bird motion referenced PrototypeWalkPhase instead of the class's WalkPhase field; repaired on develop before CP37 integration",
+        "Self-hosted Unreal workflow now waits for Unreal Editor closure before Engine Content verification and emits ACL/icacls diagnostics on persistent access-denied failures, while retaining package-tag/hash/stability checks."
       ],
       "missing_work": [
         "GitHub develop/main branch protection or ruleset is not currently enabled",
-        "Require relevant status checks before protected integration"
+        "Require relevant status checks before protected integration",
+        "Re-run the hardened exact head; if access remains denied, repair Windows service read permission from emitted ACL evidence instead of bypassing the guard."
       ],
       "acceptance_criteria": [
         "develop/main integration policy prevents normal merge when required checks fail",
@@ -3557,7 +3559,7 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "V10_EXACT_HEAD_GATE_REPAIR_ACTIVE",
+  "current_focus": "V10_RUNNER_ENGINE_CONTENT_ACCESS_REPAIR_ACTIVE",
   "immediate_next_large_actions": [
     "Re-prove the repaired PR #62 exact head on GitHub-hosted Pre-Unreal and the online self-hosted UE4.27.2 runner.",
     "If green, merge V10 to develop and immediately validate the develop merge head.",
@@ -4362,7 +4364,7 @@
   },
   "runner_status": {
     "observed_at": "2026-09-21",
-    "state": "ONLINE",
+    "state": "ONLINE_WITH_REPEATABLE_ENGINE_CONTENT_ACCESS_BLOCK",
     "runner_name": "UE4-27-Windows",
     "machine": "IDEAPAD320",
     "service_identity": "NT AUTHORITY\\NETWORK SERVICE",
@@ -4373,14 +4375,16 @@
     },
     "comparison": "The same service identity successfully read Engine Content and completed Unreal #381 earlier on d6533289.",
     "latest_pre_unreal": {
-      "run": "#551",
-      "result": "FAIL_STATIC_GUARD_BASELINE_INCOMPLETE",
-      "detail": "Deep audit found five pre-existing LoadObject files missing from the new legacy allowlist. Guard data is being corrected to the observed exact inventory; no new synchronous loading is being authorized."
+      "run": "#552",
+      "sha": "97ea82501b41a9b13f36e4794051b1709073df54",
+      "result": "SUCCESS"
     },
     "latest_unreal": {
-      "run": "#386",
-      "result": "IN_PROGRESS_AT_REPAIR_TIME",
-      "detail": "Current exact-head Unreal validation is still running; do not infer pass/fail until completed."
-    }
+      "run": "#387",
+      "sha": "97ea82501b41a9b13f36e4794051b1709073df54",
+      "result": "PREBUILD_ENGINE_CONTENT_ACCESS_DENIED",
+      "evidence": "All 6 engine-content probes failed before compilation because NT AUTHORITY\\NETWORK SERVICE could not read WorldGridMaterial.uasset."
+    },
+    "remediation": "Wait for Unreal Editor closure before probing Engine Content; extend bounded probe window to 18 attempts; emit ACL/icacls diagnostics on persistent access denial; never auto-grant permissions or bypass package/hash/stability validation."
   }
 }

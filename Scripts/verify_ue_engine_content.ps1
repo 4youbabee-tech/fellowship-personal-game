@@ -1,6 +1,6 @@
 param(
     [int]$StableSeconds = 4,
-    [int]$Attempts = 6
+    [int]$Attempts = 18
 )
 
 $ErrorActionPreference = 'Stop'
@@ -48,6 +48,33 @@ function Get-PackageFingerprint([string]$Path) {
     }
 }
 
+
+function Write-EngineAccessDiagnostics([string]$Path) {
+    Write-Host "Engine access diagnostics begin"
+    Write-Host "Identity: $([System.Security.Principal.WindowsIdentity]::GetCurrent().Name)"
+    try {
+        $acl = Get-Acl -LiteralPath $Path -ErrorAction Stop
+        Write-Host "Owner: $($acl.Owner)"
+        foreach ($rule in $acl.Access) {
+            Write-Host (("ACL: identity={0} type={1} rights={2} inherited={3}") -f $rule.IdentityReference, $rule.AccessControlType, $rule.FileSystemRights, $rule.IsInherited)
+        }
+    }
+    catch {
+        Write-Warning "Get-Acl failed: $($_.Exception.Message)"
+    }
+
+    $icacls = Join-Path $env:SystemRoot 'System32\icacls.exe'
+    if (Test-Path -LiteralPath $icacls -PathType Leaf) {
+        try {
+            & $icacls $Path
+        }
+        catch {
+            Write-Warning "icacls diagnostic failed: $($_.Exception.Message)"
+        }
+    }
+    Write-Host "Engine access diagnostics end"
+}
+
 Write-Host "UE4 engine-content preflight identity: $([System.Security.Principal.WindowsIdentity]::GetCurrent().Name)"
 Write-Host "Engine root: $engineRoot"
 
@@ -55,6 +82,8 @@ if (-not (Test-Path -LiteralPath $baseEngineIni -PathType Leaf)) {
     Write-Error "UE4 BaseEngine.ini is missing: $baseEngineIni"
     exit 34
 }
+
+$lastProbeError = $null
 
 $defaultMaterialLine = Select-String -LiteralPath $baseEngineIni -Pattern '^DefaultMaterialName=' -ErrorAction SilentlyContinue | Select-Object -First 1
 if ($defaultMaterialLine) {
@@ -92,7 +121,8 @@ for ($attempt = 1; $attempt -le $Attempts; $attempt++) {
         }
     }
     catch {
-        Write-Warning "Engine content probe failed: $($_.Exception.Message)"
+        $lastProbeError = $_.Exception.Message
+        Write-Warning "Engine content probe failed: $lastProbeError"
     }
 
     if ($attempt -lt $Attempts) {
@@ -100,5 +130,8 @@ for ($attempt = 1; $attempt -le $Attempts; $attempt++) {
     }
 }
 
+if ($lastProbeError -and $lastProbeError -match '(?i)access.*denied|unauthorized') {
+    Write-EngineAccessDiagnostics $materialPath
+}
 Write-Error "UE4 engine content is missing, unreadable, corrupt-looking, or still changing. Do not spend a full project build until the engine installation is stable."
 exit 35

@@ -103,13 +103,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: '"%GITHUB_WORKSPACE%\..\fellowship_exact_checkout.cmd"'
 
-      - name: Verify Unreal 4.27.2 and project
-        shell: cmd
-        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_verify_unreal.cmd"'
-
       - name: Wait safely for Unreal Editor to close
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_wait_for_unreal_editor.cmd"'
+
+      - name: Verify Unreal 4.27.2 and project
+        shell: cmd
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_verify_unreal.cmd"'
 
       - name: Prepare and probe local MSVC environment
         shell: cmd

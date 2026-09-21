@@ -1,5 +1,9 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-21 - Unreal runner access diagnostics
+
+Exact head `97ea82501b41a9b13f36e4794051b1709073df54` has STATIC-VALIDATED evidence from Pre-Unreal #552. Unreal #387 never reached C++ compilation because the runner service could not read UE4 Engine Content. The workflow now adds editor-close ordering, bounded retries and ACL diagnostics. No COMPILE-TESTED, PIE, DEVICE or visual status is promoted from this run.
+
 ## 2026-09-21 - LoadObject guard baseline correction
 
 Pre-Unreal #551 exposed an incomplete static legacy-debt baseline, not a new runtime regression. The LoadObject guard now records the full observed pre-existing runtime inventory and continues to enforce a non-growth rule. This is static-validation infrastructure only and does not promote compile, PIE, device, performance or visual status.

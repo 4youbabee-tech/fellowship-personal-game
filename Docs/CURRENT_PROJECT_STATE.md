@@ -1,3 +1,9 @@
+## 2026-09-21 - repeated UE Engine Content access denial
+
+PR #62 exact head `97ea82501b41a9b13f36e4794051b1709073df54` is STATIC-VALIDATED by Pre-Unreal #552. Unreal #387 failed before C++ compilation: the self-hosted runner identity `NT AUTHORITY\NETWORK SERVICE` was denied read access to `C:\Program Files\Epic Games\UE_4.27\Engine\Content\EngineMaterials\WorldGridMaterial.uasset` on every probe. This is a runner/Engine Content access block, not evidence of a source compile failure.
+
+The runner gate is hardened without weakening validation: it now waits for Unreal Editor closure before Engine Content probing, allows a longer bounded 18-attempt stability window, and prints ACL/icacls diagnostics if access remains denied. It does not modify permissions automatically and does not skip package-tag/hash/stability checks.
+
 ## 2026-09-21 - architecture guard baseline correction
 
 Pre-Unreal #551 progressed through structure/governor/asset/readiness checks and failed in DeepProjectAudit because the newly introduced LoadObject regression guard had an incomplete legacy allowlist. The audit itself enumerated five additional pre-existing runtime files: BlackRiderPrototype.cpp=2, FellowshipEnemyPrototype.cpp=2, FellowshipMythicThreat.cpp=5, ShireAudioSubsystem.cpp=2 and ShirePlayerCharacter.cpp=4.
