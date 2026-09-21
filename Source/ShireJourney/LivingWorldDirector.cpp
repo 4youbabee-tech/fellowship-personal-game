@@ -848,6 +848,40 @@ FVector ALivingWorldDirector::ChooseEventOrigin(float MinRadius, float MaxRadius
     return Origin;
 }
 
+bool ALivingWorldDirector::ResolveGroundedAmbientPoint(
+    const FVector& Candidate,
+    FVector& OutGroundedPoint) const
+{
+    if (!GetWorld())
+    {
+        return false;
+    }
+
+    const FVector TraceStart = Candidate + FVector(0.0f, 0.0f, 900.0f);
+    const FVector TraceEnd = Candidate - FVector(0.0f, 0.0f, 2200.0f);
+    FCollisionQueryParams QueryParams(FName(TEXT("LivingWorldGroundProbe")), false, this);
+    if (APawn* Player = UGameplayStatics::GetPlayerPawn(this, 0))
+    {
+        QueryParams.AddIgnoredActor(Player);
+    }
+
+    FHitResult GroundHit;
+    if (!GetWorld()->LineTraceSingleByChannel(
+            GroundHit,
+            TraceStart,
+            TraceEnd,
+            ECC_Visibility,
+            QueryParams) ||
+        !GroundHit.bBlockingHit)
+    {
+        return false;
+    }
+
+    OutGroundedPoint = Candidate;
+    OutGroundedPoint.Z = GroundHit.ImpactPoint.Z + 2.0f;
+    return true;
+}
+
 AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(
     const FVector& Location,
     FName RoutineRole,
@@ -862,11 +896,41 @@ AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(
         return nullptr;
     }
 
+    const bool bGroundBound =
+        RoutineRole != TEXT("Bird") &&
+        RoutineRole != TEXT("Butterfly");
+
+    FVector SpawnLocation = Location;
+    FVector RoutineEnd = Location + TravelOffset;
+    if (bGroundBound)
+    {
+        if (!ResolveGroundedAmbientPoint(Location, SpawnLocation))
+        {
+            UE_LOG(
+                LogTemp,
+                Verbose,
+                TEXT("LivingWorldPlacement: rejected role=%s reason=no-ground"),
+                *RoutineRole.ToString());
+            return nullptr;
+        }
+
+        FVector GroundedRoutineEnd = FVector::ZeroVector;
+        if (ResolveGroundedAmbientPoint(RoutineEnd, GroundedRoutineEnd))
+        {
+            RoutineEnd = GroundedRoutineEnd;
+        }
+        else
+        {
+            // Do not send a ground-bound ambient actor toward an unproven endpoint.
+            RoutineEnd = SpawnLocation;
+        }
+    }
+
     FActorSpawnParameters SpawnParams;
     SpawnParams.SpawnCollisionHandlingOverride =
         ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
     AShireAmbientNPC* NPC = GetWorld()->SpawnActor<AShireAmbientNPC>(
-        Location, FRotator::ZeroRotator, SpawnParams);
+        SpawnLocation, FRotator::ZeroRotator, SpawnParams);
     if (!NPC)
     {
         return nullptr;
@@ -876,8 +940,8 @@ AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(
     NPC->Tags.AddUnique(TEXT("LivingWorldManaged"));
     NPC->RoutineRole = RoutineRole;
     NPC->ActivityPropType = ActivityProp;
-    NPC->RoutinePointA = Location;
-    NPC->RoutinePointB = Location + TravelOffset;
+    NPC->RoutinePointA = SpawnLocation;
+    NPC->RoutinePointB = RoutineEnd;
     NPC->WalkSpeed = Speed;
     NPC->MinWait = MinWait;
     NPC->MaxWait = MaxWait;
