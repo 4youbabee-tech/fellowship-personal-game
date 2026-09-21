@@ -30,6 +30,20 @@ AChapterWorldRouter::AChapterWorldRouter()
     PrimaryActorTick.bCanEverTick = false;
 }
 
+bool AChapterWorldRouter::IsWorldCommitted(
+    FName ChapterId,
+    FName RouteId,
+    FName EpisodeId) const
+{
+    return WorldRevision > 0 &&
+        PendingChapterId.IsNone() &&
+        PendingRouteId.IsNone() &&
+        PendingEpisodeId.IsNone() &&
+        LastLoadedChapterId == ChapterId &&
+        LastLoadedRouteId == RouteId &&
+        LastLoadedEpisodeId == EpisodeId;
+}
+
 void AChapterWorldRouter::BeginPlay()
 {
     Super::BeginPlay();
@@ -130,7 +144,16 @@ void AChapterWorldRouter::ClearPrototypeBuilders()
     // its own floor/lights/helpers, so only destroy geometry explicitly tagged by our builders.
     DestroyAllOfClass(AShireQuestTrigger::StaticClass());
     DestroyAllOfClass(AShireNPC::StaticClass());
-    DestroyAllOfClass(AShireAmbientNPC::StaticClass());
+
+    TArray<AActor*> AmbientActors;
+    UGameplayStatics::GetAllActorsOfClass(this, AShireAmbientNPC::StaticClass(), AmbientActors);
+    for (AActor* Actor : AmbientActors)
+    {
+        if (Actor && Actor != this && !Actor->ActorHasTag(TEXT("LivingWorldManaged")))
+        {
+            Actor->Destroy();
+        }
+    }
     DestroyAllOfClass(ABlackRiderPrototype::StaticClass());
     DestroyAllOfClass(AFellowshipEnemyPrototype::StaticClass());
     DestroyTaggedOfClass(AStaticMeshActor::StaticClass(), TEXT("RuntimePrototypeGenerated"));
@@ -473,6 +496,101 @@ void AChapterWorldRouter::HandleChapterAssetsReady(FName ChapterId, FName RouteI
         bPendingRestoreRouteTransform);
 }
 
+AActor* AChapterWorldRouter::SpawnWorldForRequest(
+    FName ChapterId,
+    FName RouteId,
+    FName& OutBuilderName)
+{
+    if (!GetWorld())
+    {
+        return nullptr;
+    }
+
+    if (RouteId == TEXT("GandalfParallel"))
+    {
+        OutBuilderName = TEXT("Isengard");
+        return GetWorld()->SpawnActor<AIsengardPrototypeWorldBuilder>(
+            FVector::ZeroVector, FRotator::ZeroRotator);
+    }
+
+    if (ChapterId == TEXT("P1C01"))
+    {
+        OutBuilderName = TEXT("Shire");
+        AShirePrototypeWorldBuilder* Builder =
+            GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(
+                FVector::ZeroVector, FRotator::ZeroRotator);
+        if (Builder)
+        {
+            Builder->BuildPrototypeWorld();
+        }
+        return Builder;
+    }
+
+    if (ChapterId == TEXT("P1C02"))
+    {
+        OutBuilderName = TEXT("Bree");
+        ABreePrototypeWorldBuilder* Builder =
+            GetWorld()->SpawnActor<ABreePrototypeWorldBuilder>(
+                FVector::ZeroVector, FRotator::ZeroRotator);
+        if (Builder)
+        {
+            Builder->BuildPrototypeWorld();
+        }
+        return Builder;
+    }
+
+    if (ChapterId == TEXT("P1C03") || ChapterId == TEXT("P1C04") ||
+        ChapterId == TEXT("P1C05") || ChapterId == TEXT("P1C06") ||
+        ChapterId == TEXT("P1C07") || ChapterId == TEXT("P1C08"))
+    {
+        OutBuilderName = TEXT("Fellowship");
+        AFellowshipChapterWorldBuilder* Builder =
+            GetWorld()->SpawnActor<AFellowshipChapterWorldBuilder>(
+                FVector::ZeroVector, FRotator::ZeroRotator);
+        if (Builder)
+        {
+            Builder->BuildChapter(ChapterId);
+        }
+        return Builder;
+    }
+
+    OutBuilderName = NAME_None;
+    return nullptr;
+}
+
+void AChapterWorldRouter::RollbackFailedWorldSwap(
+    FName PreviousChapterId,
+    FName PreviousRouteId)
+{
+    ClearPrototypeBuilders();
+
+    if (!PreviousChapterId.IsNone() && !PreviousRouteId.IsNone())
+    {
+        FName RestoredBuilderName = NAME_None;
+        AActor* RestoredWorld =
+            SpawnWorldForRequest(PreviousChapterId, PreviousRouteId, RestoredBuilderName);
+        UE_LOG(
+            LogTemp,
+            RestoredWorld ? Warning : Error,
+            TEXT("ShireWorldCommit: rollback chapter=%s route=%s builder=%s restored=%s"),
+            *PreviousChapterId.ToString(),
+            *PreviousRouteId.ToString(),
+            *RestoredBuilderName.ToString(),
+            RestoredWorld ? TEXT("yes") : TEXT("no"));
+    }
+
+    if (AssetStreamingSubsystem)
+    {
+        AssetStreamingSubsystem->CancelPendingRequest();
+    }
+    PendingRouteId = NAME_None;
+    PendingEpisodeId = NAME_None;
+    PendingChapterId = NAME_None;
+    bPendingRestoreRouteTransform = false;
+
+    SetPlayerWorldHold(true);
+}
+
 void AChapterWorldRouter::CommitChapterWorld(
     FName ChapterId,
     FName RouteId,
@@ -484,129 +602,115 @@ void AChapterWorldRouter::CommitChapterWorld(
         return;
     }
 
-    LastLoadedRouteId = RouteId;
-    LastLoadedEpisodeId = EpisodeId;
-    LastLoadedChapterId = ChapterId;
-
-    PendingRouteId = NAME_None;
-    PendingEpisodeId = NAME_None;
-    PendingChapterId = NAME_None;
-    bPendingRestoreRouteTransform = false;
-
-    // The previous visible chapter remains intact while the next bank streams.
-    // Only swap runtime worlds after the requested bank reports ready.
-    ClearPrototypeBuilders();
-
-    if (RouteId == TEXT("GandalfParallel"))
-    {
-        AIsengardPrototypeWorldBuilder* Builder = GetWorld()->SpawnActor<AIsengardPrototypeWorldBuilder>(
-            FVector::ZeroVector,
-            FRotator::ZeroRotator);
-        if (!Builder || !MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform))
-        {
-            UE_LOG(LogTemp, Error, TEXT("ShireChapterAudit: grounding-or-builder-failed chapter=%s route=%s"), *ChapterId.ToString(), *RouteId.ToString());
-            return;
-        }
-        UE_LOG(
-            LogTemp,
-            Display,
-            TEXT("ShireChapterAudit: loaded=%s builder=Isengard route=%s streamed=ready"),
-            *ChapterId.ToString(),
-            *RouteId.ToString());
-        return;
-    }
-
-    if (ChapterId == TEXT("P1C01"))
-    {
-        AShirePrototypeWorldBuilder* Builder = GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(
-            FVector::ZeroVector,
-            FRotator::ZeroRotator);
-        if (!Builder)
-        {
-            UE_LOG(LogTemp, Error, TEXT("ShireChapterAudit: failed-to-spawn builder for P1C01"));
-            return;
-        }
-        Builder->BuildPrototypeWorld();
-        if (!MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform))
-        {
-            return;
-        }
-        UE_LOG(LogTemp, Display, TEXT("ShirePlayableStartup: chapter=P1C01 route=%s"), *RouteId.ToString());
-        UE_LOG(
-            LogTemp,
-            Display,
-            TEXT("ShireChapterAudit: loaded=P1C01 builder=Shire route=%s streamed=ready"),
-            *RouteId.ToString());
-        return;
-    }
-
-    if (ChapterId == TEXT("P1C02"))
-    {
-        ABreePrototypeWorldBuilder* Builder = GetWorld()->SpawnActor<ABreePrototypeWorldBuilder>(
-            FVector::ZeroVector,
-            FRotator::ZeroRotator);
-        if (!Builder)
-        {
-            UE_LOG(LogTemp, Error, TEXT("ShireChapterAudit: failed-to-spawn builder for P1C02"));
-            return;
-        }
-        Builder->BuildPrototypeWorld();
-        if (!MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform))
-        {
-            return;
-        }
-        UE_LOG(
-            LogTemp,
-            Display,
-            TEXT("ShireChapterAudit: loaded=P1C02 builder=Bree route=%s streamed=ready"),
-            *RouteId.ToString());
-        return;
-    }
-
-    if (ChapterId == TEXT("P1C03") ||
+    const bool bSupported =
+        RouteId == TEXT("GandalfParallel") ||
+        ChapterId == TEXT("P1C01") ||
+        ChapterId == TEXT("P1C02") ||
+        ChapterId == TEXT("P1C03") ||
         ChapterId == TEXT("P1C04") ||
         ChapterId == TEXT("P1C05") ||
         ChapterId == TEXT("P1C06") ||
         ChapterId == TEXT("P1C07") ||
-        ChapterId == TEXT("P1C08"))
+        ChapterId == TEXT("P1C08");
+    if (!bSupported)
     {
-        AFellowshipChapterWorldBuilder* Builder =
-            GetWorld()->SpawnActor<AFellowshipChapterWorldBuilder>(
-                FVector::ZeroVector,
-                FRotator::ZeroRotator);
-        if (Builder)
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireWorldCommit: rejected unsupported chapter=%s route=%s"),
+            *ChapterId.ToString(),
+            *RouteId.ToString());
+        if (AssetStreamingSubsystem)
         {
-            Builder->BuildChapter(ChapterId);
-            UE_LOG(
-                LogTemp,
-                Display,
-                TEXT("ShireChapterAudit: loaded=%s builder=Fellowship route=%s streamed=ready"),
-                *ChapterId.ToString(),
-                *RouteId.ToString());
+            AssetStreamingSubsystem->CancelPendingRequest();
         }
-        else
-        {
-            UE_LOG(
-                LogTemp,
-                Error,
-                TEXT("ShireChapterAudit: failed-to-spawn builder for %s"),
-                *ChapterId.ToString());
-        }
-        if (!Builder || !MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform))
-        {
-            return;
-        }
+        PendingRouteId = NAME_None;
+        PendingEpisodeId = NAME_None;
+        PendingChapterId = NAME_None;
+        bPendingRestoreRouteTransform = false;
         return;
     }
 
-    // Unknown chapter IDs fall back to the first chapter rather than leaving the
-    // player in an empty world.
-    AShirePrototypeWorldBuilder* FallbackBuilder = GetWorld()->SpawnActor<AShirePrototypeWorldBuilder>(
-        FVector::ZeroVector,
-        FRotator::ZeroRotator);
-    if (FallbackBuilder)
+    const FName PreviousChapterId = LastLoadedChapterId;
+    const FName PreviousRouteId = LastLoadedRouteId;
+
+    SetPlayerWorldHold(true);
+    ClearPrototypeBuilders();
+
+    FName BuilderName = NAME_None;
+    AActor* BuiltWorld = SpawnWorldForRequest(ChapterId, RouteId, BuilderName);
+    if (!BuiltWorld)
     {
-        FallbackBuilder->BuildPrototypeWorld();
-        MovePlayerToChapterStart(TEXT("P1C01"), false);
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireWorldCommit: builder-failed chapter=%s route=%s"),
+            *ChapterId.ToString(),
+            *RouteId.ToString());
+        RollbackFailedWorldSwap(PreviousChapterId, PreviousRouteId);
+        return;
     }
+
+    if (!MovePlayerToChapterStart(ChapterId, bRestoreRouteTransform))
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireWorldCommit: grounding-failed chapter=%s route=%s"),
+            *ChapterId.ToString(),
+            *RouteId.ToString());
+        RollbackFailedWorldSwap(PreviousChapterId, PreviousRouteId);
+        return;
+    }
+
+    if (AssetStreamingSubsystem &&
+        !AssetStreamingSubsystem->CommitPendingRequest(ChapterId, RouteId))
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireWorldCommit: asset-commit-failed chapter=%s route=%s"),
+            *ChapterId.ToString(),
+            *RouteId.ToString());
+        RollbackFailedWorldSwap(PreviousChapterId, PreviousRouteId);
+        return;
+    }
+
+    LastLoadedRouteId = RouteId;
+    LastLoadedEpisodeId = EpisodeId;
+    LastLoadedChapterId = ChapterId;
+    PendingRouteId = NAME_None;
+    PendingEpisodeId = NAME_None;
+    PendingChapterId = NAME_None;
+    bPendingRestoreRouteTransform = false;
+    ++WorldRevision;
+
+    if (RouteId == TEXT("FrodoMain") && ChapterId == TEXT("P1C01"))
+    {
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShirePlayableStartup: chapter=P1C01 route=%s"),
+            *RouteId.ToString());
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireChapterAudit: loaded=%s builder=%s route=%s streamed=committed revision=%u"),
+        *ChapterId.ToString(),
+        *BuilderName.ToString(),
+        *RouteId.ToString(),
+        WorldRevision);
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireWorldCommit: PASS chapter=%s route=%s episode=%s revision=%u"),
+        *ChapterId.ToString(),
+        *RouteId.ToString(),
+        *EpisodeId.ToString(),
+        WorldRevision);
+
+    OnWorldCommitted.Broadcast(WorldRevision);
 }
+
