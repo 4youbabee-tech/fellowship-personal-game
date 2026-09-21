@@ -11,6 +11,7 @@
 #include "ShirePrototypeWorldBuilder.h"
 #include "ShireQuestSubsystem.h"
 #include "ShireQuestTrigger.h"
+#include "ShireSaveGame.h"
 
 #include "Engine/GameInstance.h"
 #include "Engine/StaticMeshActor.h"
@@ -78,16 +79,26 @@ void AChapterWorldRouter::EndPlay(const EEndPlayReason::Type EndPlayReason)
         AssetStreamingSubsystem = nullptr;
     }
 
+    LastCommittedRollbackSnapshot = nullptr;
     Super::EndPlay(EndPlayReason);
 }
 
 void AChapterWorldRouter::HandleChapterChanged(FName PreviousChapterId, FName NewChapterId)
 {
+    if (bRollbackInProgress)
+    {
+        return;
+    }
     LoadChapterWorld(NewChapterId);
 }
 
 void AChapterWorldRouter::HandleExperienceChanged(FName RouteId, FName EpisodeId, FName PlayableCharacterId)
 {
+    if (bRollbackInProgress)
+    {
+        return;
+    }
+
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
     if (Quests)
@@ -610,37 +621,187 @@ AActor* AChapterWorldRouter::SpawnWorldForRequest(
     return nullptr;
 }
 
+void AChapterWorldRouter::CaptureCommittedRollbackSnapshot()
+{
+    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!PlayerPawn || !Quests || !IsWorldCommitted(
+            Quests->GetCurrentChapterId(),
+            Quests->GetCurrentRouteId(),
+            Quests->GetCurrentEpisodeId()))
+    {
+        return;
+    }
+
+    UShireSaveGame* Snapshot = NewObject<UShireSaveGame>(this);
+    if (!Snapshot)
+    {
+        return;
+    }
+
+    Snapshot->SaveSchemaVersion = UShireSaveGame::CurrentSchemaVersion;
+    Snapshot->SnapshotCreatedUnixSeconds = FDateTime::UtcNow().ToUnixTimestamp();
+    Snapshot->PlayerLocation = PlayerPawn->GetActorLocation();
+    Snapshot->PlayerRotation = PlayerPawn->GetActorRotation();
+    Snapshot->QuestStages = Quests->GetAllQuestStages();
+    Snapshot->ActiveQuestId = Quests->GetActiveQuestId();
+    Snapshot->CurrentChapterId = Quests->GetCurrentChapterId();
+    Snapshot->CompletedStoryBeats = Quests->GetCompletedStoryBeats();
+    Snapshot->CurrentRouteId = Quests->GetCurrentRouteId();
+    Snapshot->CurrentEpisodeId = Quests->GetCurrentEpisodeId();
+    Snapshot->PlayableCharacterId = Quests->GetPlayableCharacterId();
+    Snapshot->RouteProgress = Quests->GetRouteProgressSnapshot();
+    Snapshot->NPCMemoryState = Quests->GetNPCMemorySnapshot();
+    Snapshot->JourneyDiscoveryIds = Quests->GetJourneyDiscoveryIds();
+    Snapshot->JourneyInsight = Quests->GetJourneyInsight();
+    Snapshot->JourneyInsightMilestones = Quests->GetJourneyInsightMilestones();
+    Snapshot->ProgressionXP = Quests->GetProgressionSnapshot();
+    Snapshot->ChronicleEntryIds = Quests->GetChronicleEntryIds();
+    Snapshot->KnownMapRegionIds = Quests->GetKnownMapRegionIds();
+
+    LastCommittedRollbackSnapshot = Snapshot;
+    LastCommittedSnapshotRevision = WorldRevision;
+
+    UE_LOG(
+        LogTemp,
+        Verbose,
+        TEXT("ShireWorldCommit: rollback-snapshot chapter=%s route=%s episode=%s revision=%u"),
+        *Snapshot->CurrentChapterId.ToString(),
+        *Snapshot->CurrentRouteId.ToString(),
+        *Snapshot->CurrentEpisodeId.ToString(),
+        LastCommittedSnapshotRevision);
+}
+
+bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot(
+    FName FallbackChapterId,
+    FName FallbackRouteId)
+{
+    if (!GetWorld() || !LastCommittedRollbackSnapshot)
+    {
+        return false;
+    }
+
+    UShireSaveGame* Snapshot = LastCommittedRollbackSnapshot;
+    const FName RestoreChapterId = Snapshot->CurrentChapterId != NAME_None
+        ? Snapshot->CurrentChapterId
+        : FallbackChapterId;
+    const FName RestoreRouteId = Snapshot->CurrentRouteId != NAME_None
+        ? Snapshot->CurrentRouteId
+        : FallbackRouteId;
+    const FName RestoreEpisodeId = Snapshot->CurrentEpisodeId != NAME_None
+        ? Snapshot->CurrentEpisodeId
+        : LastLoadedEpisodeId;
+
+    if (RestoreChapterId == NAME_None || RestoreRouteId == NAME_None || RestoreEpisodeId == NAME_None)
+    {
+        return false;
+    }
+
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests)
+    {
+        return false;
+    }
+
+    bRollbackInProgress = true;
+
+    Quests->RestoreNPCMemoryState(Snapshot->NPCMemoryState);
+    Quests->RestoreJourneyDiscoveryState(
+        Snapshot->JourneyDiscoveryIds,
+        Snapshot->JourneyInsight,
+        Snapshot->JourneyInsightMilestones);
+    Quests->RestoreProgressionState(Snapshot->ProgressionXP);
+    Quests->RestoreKnowledgeState(
+        Snapshot->ChronicleEntryIds,
+        Snapshot->KnownMapRegionIds);
+    Quests->RestoreQuestState(
+        Snapshot->QuestStages,
+        Snapshot->ActiveQuestId,
+        RestoreChapterId,
+        Snapshot->CompletedStoryBeats,
+        RestoreRouteId,
+        RestoreEpisodeId,
+        Snapshot->PlayableCharacterId,
+        Snapshot->RouteProgress);
+
+    ClearPrototypeBuilders();
+
+    FName RestoredBuilderName = NAME_None;
+    AActor* RestoredWorld = SpawnWorldForRequest(
+        RestoreChapterId,
+        RestoreRouteId,
+        RestoredBuilderName);
+
+    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+    const bool bPlaced = RestoredWorld && PlayerPawn && PlacePlayerAtCommittedTransform(
+        PlayerPawn,
+        RestoreChapterId,
+        RestoreRouteId,
+        RestoreEpisodeId,
+        Snapshot->PlayerLocation,
+        Snapshot->PlayerRotation);
+
+    if (!RestoredWorld || !bPlaced)
+    {
+        bRollbackInProgress = false;
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireWorldCommit: rollback-failed chapter=%s route=%s builder=%s world=%s placed=%s priorRevision=%u"),
+            *RestoreChapterId.ToString(),
+            *RestoreRouteId.ToString(),
+            *RestoredBuilderName.ToString(),
+            RestoredWorld ? TEXT("yes") : TEXT("no"),
+            bPlaced ? TEXT("yes") : TEXT("no"),
+            LastCommittedSnapshotRevision);
+        return false;
+    }
+
+    ++WorldRevision;
+    CaptureCommittedRollbackSnapshot();
+    SetPlayerWorldHold(false);
+    bRollbackInProgress = false;
+
+    UE_LOG(
+        LogTemp,
+        Warning,
+        TEXT("ShireWorldCommit: rollback-pass chapter=%s route=%s episode=%s builder=%s revision=%u"),
+        *RestoreChapterId.ToString(),
+        *RestoreRouteId.ToString(),
+        *RestoreEpisodeId.ToString(),
+        *RestoredBuilderName.ToString(),
+        WorldRevision);
+
+    OnWorldCommitted.Broadcast(WorldRevision);
+    return true;
+}
+
 void AChapterWorldRouter::RollbackFailedWorldSwap(
     FName PreviousChapterId,
     FName PreviousRouteId)
 {
-    ClearPrototypeBuilders();
-
-    if (!PreviousChapterId.IsNone() && !PreviousRouteId.IsNone())
-    {
-        FName RestoredBuilderName = NAME_None;
-        AActor* RestoredWorld =
-            SpawnWorldForRequest(PreviousChapterId, PreviousRouteId, RestoredBuilderName);
-        UE_LOG(
-            LogTemp,
-            RestoredWorld ? Warning : Error,
-            TEXT("ShireWorldCommit: rollback chapter=%s route=%s builder=%s restored=%s"),
-            *PreviousChapterId.ToString(),
-            *PreviousRouteId.ToString(),
-            *RestoredBuilderName.ToString(),
-            RestoredWorld ? TEXT("yes") : TEXT("no"));
-    }
-
     if (AssetStreamingSubsystem)
     {
         AssetStreamingSubsystem->CancelPendingRequest();
     }
+
     PendingRouteId = NAME_None;
     PendingEpisodeId = NAME_None;
     PendingChapterId = NAME_None;
     bPendingRestoreRouteTransform = false;
-
     SetPlayerWorldHold(true);
+
+    if (!RestoreCommittedWorldFromSnapshot(PreviousChapterId, PreviousRouteId))
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireWorldCommit: rollback unavailable or incomplete previousChapter=%s previousRoute=%s movementHeld=yes"),
+            *PreviousChapterId.ToString(),
+            *PreviousRouteId.ToString());
+    }
 }
 
 void AChapterWorldRouter::CommitChapterWorld(
@@ -736,6 +897,7 @@ void AChapterWorldRouter::CommitChapterWorld(
     PendingChapterId = NAME_None;
     bPendingRestoreRouteTransform = false;
     ++WorldRevision;
+    CaptureCommittedRollbackSnapshot();
 
     if (RouteId == TEXT("FrodoMain") && ChapterId == TEXT("P1C01"))
     {
