@@ -18,6 +18,13 @@ public:
     AChapterWorldRouter();
 
     bool IsWorldCommitted(FName ChapterId, FName RouteId, FName EpisodeId) const;
+    bool PlacePlayerAtCommittedTransform(
+        APawn* PlayerPawn,
+        FName ChapterId,
+        FName RouteId,
+        FName EpisodeId,
+        const FVector& RequestedLocation,
+        const FRotator& RequestedRotation);
     uint32 GetWorldRevision() const { return WorldRevision; }
     FOnShireWorldCommitted OnWorldCommitted;
 
