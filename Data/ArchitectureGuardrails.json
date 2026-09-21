@@ -19,18 +19,28 @@
   ],
   "legacy_ceiling": {
     "direct_loadobject_by_cpp": {
-      "FellowshipChapterWorldBuilder.cpp": 77,
-      "ShirePrototypeWorldBuilder.cpp": 55,
+      "BlackRiderPrototype.cpp": 2,
       "BreePrototypeWorldBuilder.cpp": 22,
+      "FellowshipChapterWorldBuilder.cpp": 77,
+      "FellowshipEnemyPrototype.cpp": 2,
+      "FellowshipMythicThreat.cpp": 5,
       "IsengardPrototypeWorldBuilder.cpp": 10,
       "LivingWorldDirector.cpp": 13,
+      "ShireAmbientNPC.cpp": 3,
+      "ShireAudioSubsystem.cpp": 2,
       "ShireNPC.cpp": 4,
-      "ShireAmbientNPC.cpp": 3
+      "ShirePlayerCharacter.cpp": 4,
+      "ShirePrototypeWorldBuilder.cpp": 55
     },
     "production_bmp": 24,
     "character_obj": 115,
     "enemy_obj": 30,
     "living_world_direct_ambient_spawn_sites": 1
   },
-  "evidence_boundary": "STATIC guardrails only; no compile, PIE, device, FPS/memory or visual acceptance is claimed."
+  "evidence_boundary": "STATIC guardrails only; no compile, PIE, device, FPS/memory or visual acceptance is claimed.",
+  "baseline_capture": {
+    "source_head": "0c52b481429c9139b4b70f139edd317ee9882d29",
+    "source": "Scripts/deep_project_audit.py output from Pre-Unreal #551",
+    "rule": "Exact legacy inventory only. Any new file or count increase fails; reductions are allowed."
+  }
 }

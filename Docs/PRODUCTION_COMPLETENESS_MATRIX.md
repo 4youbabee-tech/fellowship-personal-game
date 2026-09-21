@@ -1,5 +1,9 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-21 - LoadObject guard baseline correction
+
+Pre-Unreal #551 exposed an incomplete static legacy-debt baseline, not a new runtime regression. The LoadObject guard now records the full observed pre-existing runtime inventory and continues to enforce a non-growth rule. This is static-validation infrastructure only and does not promote compile, PIE, device, performance or visual status.
+
 ## 2026-09-21 - diegetic NPC intelligence contract
 
 The living-NPC design now has an explicit statically guarded diegetic self-model: named characters are grounded in identity/history/relationships/valid knowledge, and ambient populations use cheaper region/culture/role archetypes. Meta-game awareness and exposure of player/game/quest/chapter/UI/save/debug/AI-model concepts are forbidden in character-facing dialogue.

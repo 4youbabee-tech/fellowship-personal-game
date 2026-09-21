@@ -1,3 +1,11 @@
+## 2026-09-21 - architecture guard baseline correction
+
+Pre-Unreal #551 progressed through structure/governor/asset/readiness checks and failed in DeepProjectAudit because the newly introduced LoadObject regression guard had an incomplete legacy allowlist. The audit itself enumerated five additional pre-existing runtime files: BlackRiderPrototype.cpp=2, FellowshipEnemyPrototype.cpp=2, FellowshipMythicThreat.cpp=5, ShireAudioSubsystem.cpp=2 and ShirePlayerCharacter.cpp=4.
+
+This change corrects the baseline inventory only. It does not authorize new synchronous loading: every observed file/count is now recorded, any additional file or count increase remains a validation failure, and reductions are allowed. The heavy-production migration requirement to soft references + asynchronous FStreamableManager/AssetManager loading is unchanged.
+
+Unreal #386 for the previous exact head was still in progress when this correction was prepared; no compile result is claimed here.
+
 ## 2026-09-21 - self-hosted runner online; V10 gate repair
 
 The UE4.27.2 self-hosted runner is online again. Exact head `88e3c7308599a7d11820dda7479ab03c42ed5122` reached the laptop, but the latest gate exposed two non-product-code blockers: Pre-Unreal #550 failed because WORK-QA-002 and WORK-PERF-004 had been added to ProjectGovernor without being mirrored into MasterExecutionRoadmap; Unreal #385 stopped at Engine Content preflight because `WorldGridMaterial.uasset` was temporarily unreadable by the runner service. No C++ build step ran in #385.

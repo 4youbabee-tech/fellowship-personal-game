@@ -409,7 +409,8 @@
         "one major generated region at a time",
         "low/medium 720p target",
         "Environmental-life V9 uses ephemeral non-colliding actors, bounded event caps and shadowless point-light accents.",
-        "Texture-source review on develop: 24 BMP production sources total ~0.53 MiB; source container size is not runtime VRAM. Runtime streaming/GPU evidence remains the performance authority."
+        "Texture-source review on develop: 24 BMP production sources total ~0.53 MiB; source container size is not runtime VRAM. Runtime streaming/GPU evidence remains the performance authority.",
+        "Pre-Unreal #551 deep audit enumerated the full pre-existing direct LoadObject inventory; ArchitectureGuardrails now records all observed legacy sites so the guard blocks growth instead of misclassifying old debt as new."
       ],
       "missing_work": [
         "focused target-device traversal/performance observation for current production Shire",
@@ -3556,7 +3557,7 @@
     ],
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
-  "current_focus": "V10_EXACT_HEAD_GATE_REPAIR_THEN_COMPREHENSIVE_INTEGRATION",
+  "current_focus": "V10_EXACT_HEAD_GATE_REPAIR_ACTIVE",
   "immediate_next_large_actions": [
     "Re-prove the repaired PR #62 exact head on GitHub-hosted Pre-Unreal and the online self-hosted UE4.27.2 runner.",
     "If green, merge V10 to develop and immediately validate the develop merge head.",
@@ -4370,6 +4371,16 @@
       "result": "PREBUILD_ENVIRONMENT_BLOCK",
       "detail": "WorldGridMaterial.uasset temporarily unreadable; C++ build step was never reached."
     },
-    "comparison": "The same service identity successfully read Engine Content and completed Unreal #381 earlier on d6533289."
+    "comparison": "The same service identity successfully read Engine Content and completed Unreal #381 earlier on d6533289.",
+    "latest_pre_unreal": {
+      "run": "#551",
+      "result": "FAIL_STATIC_GUARD_BASELINE_INCOMPLETE",
+      "detail": "Deep audit found five pre-existing LoadObject files missing from the new legacy allowlist. Guard data is being corrected to the observed exact inventory; no new synchronous loading is being authorized."
+    },
+    "latest_unreal": {
+      "run": "#386",
+      "result": "IN_PROGRESS_AT_REPAIR_TIME",
+      "detail": "Current exact-head Unreal validation is still running; do not infer pass/fail until completed."
+    }
   }
 }
