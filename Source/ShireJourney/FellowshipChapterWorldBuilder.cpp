@@ -867,6 +867,15 @@ void AFellowshipChapterWorldBuilder::SpawnProductionChapterLayer(FName ChapterId
         SpawnProd(CommonFootbridgeMesh, FVector(-800,380,10), FVector(0.62f), FRotator(0,-6,0), true);
         SpawnProd(CommonPathMarkerMesh, FVector(-1750,120,0), FVector(0.68f), FRotator(0,10,0), false);
         SpawnProd(CommonWoodPileMesh, FVector(740,-620,0), FVector(0.60f), FRotator(0,28,0), false);
+
+        // V10 Lothlorien density: reinforce vertical gold-white sanctuary depth with
+        // instanced vegetation and lamps rather than additional ticking actors.
+        SpawnInstancedScatter(CommonGoldenTreeMesh, FVector(120,0,0), 28,
+            FVector(2600,1450,0), FVector(0.74f), 29.0f, 10.0f, 3000, 7200);
+        SpawnInstancedScatter(CommonFernClumpMesh, FVector(80,0,0), 48,
+            FVector(2350,1280,0), FVector(0.44f), 23.0f, 3.0f, 2400, 6000);
+        SpawnInstancedScatter(LorienLanternMesh, FVector(120,0,175), 22,
+            FVector(2050,820,70), FVector(0.38f), 41.0f, 10.0f, 2600, 6200);
     }
     else if (ChapterId == TEXT("P1C08"))
     {
