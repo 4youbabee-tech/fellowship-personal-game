@@ -406,7 +406,8 @@
         "instanced ground cover",
         "one major generated region at a time",
         "low/medium 720p target",
-        "Environmental-life V9 uses ephemeral non-colliding actors, bounded event caps and shadowless point-light accents."
+        "Environmental-life V9 uses ephemeral non-colliding actors, bounded event caps and shadowless point-light accents.",
+        "Texture-source review on develop: 24 BMP production sources total ~0.53 MiB; source container size is not runtime VRAM. Runtime streaming/GPU evidence remains the performance authority."
       ],
       "missing_work": [
         "focused target-device traversal/performance observation for current production Shire",
@@ -1692,14 +1693,16 @@
         "full Part I core-cast matrix with visual identity, rig family, priority and current proof boundary",
         "source/provenance policy for external assets",
         "shared performance/LOD contract",
-        "Full-cast production is ordered by Part1MegaProductionPlan with asset-root, rig-family, final-gap and acceptance contracts."
+        "Full-cast production is ordered by Part1MegaProductionPlan with asset-root, rig-family, final-gap and acceptance contracts.",
+        "Final animated character/creature delivery requires real skeletal authoring and skeletal FBX export; OBJ-to-FBX container conversion alone is not accepted as rigging evidence."
       ],
       "missing_work": [
         "select/import legal base assets or author replacements",
         "rig/skin and retarget core cast",
         "replace runtime proxies",
         "UE4 compile/import and PIE visual/motion acceptance",
-        "Clean verified triangulation-risk character sources before the next affected production import wave."
+        "Clean verified triangulation-risk character sources before the next affected production import wave.",
+        "Produce skeletal FBX packages only after skeleton/skin-weight/deformation work; retain static OBJ fallback assets until replacements pass engine + visual/motion acceptance."
       ],
       "acceptance_criteria": [
         "core cast recognizable without labels",
@@ -1943,7 +1946,8 @@
         "profile actor-iteration/social pairing on target device",
         "profile chapter-transition synchronous asset loads",
         "target-device frame-time/memory capture and rendered chapter acceptance",
-        "Measure chapter-transition hitch/memory before later high-resolution asset-bank expansion."
+        "Measure chapter-transition hitch/memory before later high-resolution asset-bank expansion.",
+        "Execute the already-defined FLAT_GUARDED -> PUBLIC_PRIVATE_BY_DOMAIN source-layout migration on a dedicated short branch after an appropriate production checkpoint."
       ],
       "acceptance_criteria": [
         "critical exact-head gates are green before unrelated expansion",
@@ -3342,10 +3346,15 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-21",
-    "reason": "PR #58 passed exact-head Pre-Unreal #526 and Unreal #361 and merged; V4 begins dedicated Fellowship equipment/silhouette production.",
-    "active_wave": "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4",
-    "base_develop": "b8a1b9cb63a37d73e8e7a12acce5bb3db0e34c06",
-    "truth_boundary": "Dedicated modular equipment may be called source/runtime implemented only after exact-head proof; final rig/likeness/animation/device quality remains separate."
+    "reason": "Owner supplied a programmer architecture/asset-pipeline review. Each claim was checked against live develop and Source 11 before adoption.",
+    "summary": [
+      "Rigging concern is valid, but batch OBJ->FBX conversion and blanket SM_->SK_ renaming are rejected; real skeleton/skin/deformation authoring is required.",
+      "BMP alpha/source-format limitation is valid, but the claimed current VRAM crisis is unsupported: 24 production BMP sources total about 0.53 MiB and runtime VRAM depends on Unreal import/compression/mips/streaming.",
+      "Public/Private-by-domain C++ migration is valid and was already explicitly planned in Data/SourceArchitecturePlan.json; keep it isolated from gameplay waves.",
+      "Current Python automation is stdlib/local-module only; no empty requirements.txt is needed until a real third-party dependency appears.",
+      "REQ-NPC-006 already contains intent on live develop; the repeated owner_intent-only warning is stale.",
+      "No blind changes are applied from an old ZIP; live develop + Project Sources remain authoritative."
+    ]
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",
@@ -3782,6 +3791,108 @@
         "WORK-EXEC-001"
       ],
       "next_action": "Treat failed exact-head CI as blocking acceptance and keep branch-protection/required checks on the governance-hardening backlog."
+    },
+    {
+      "id": "EXT-REV-2026-09-21-007",
+      "source": "Programmer architecture review supplied by owner",
+      "verification_sha": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+      "verification_status": "VERIFIED_PARTIAL_CORRECT_DIRECTION",
+      "claim": "All character/enemy OBJ assets should be converted to FBX and renamed from SM_ to SK_ immediately.",
+      "verified_result": {
+        "current_repo": "115 character OBJ files + 30 enemy OBJ files; no FBX files currently in source control.",
+        "source11_alignment": "SourceAssets are raw/reference sources; final Game/Characters production assets are expected to be skeletal meshes/materials/AnimBPs.",
+        "correction": "OBJ cannot carry final bones/skin weights, but container conversion alone does not create a skeleton, skinning or animation. Existing OBJ pieces are intentional static/modular fallback foundations."
+      },
+      "disposition": "ADOPT_RIGGING_GOAL_REJECT_BLIND_BATCH_CONVERSION",
+      "linked_requirements": [
+        "REQ-CHAR-001",
+        "REQ-CHAR-003",
+        "REQ-CHAR-004",
+        "REQ-PROD-010"
+      ],
+      "linked_work": [
+        "WORK-CHAR-001",
+        "WORK-CHAR-003",
+        "WORK-CHAR-004",
+        "WORK-PROD-010"
+      ],
+      "next_action": "Produce real per-character/per-creature skeletal packages through geometry cleanup -> skeleton -> skin weights -> skeletal FBX -> UE4 Skeletal Mesh -> AnimBP/socket/LOD validation. Use SK_ only for actual skeletal assets; retain SM_/OBJ fallback sources until accepted replacements exist."
+    },
+    {
+      "id": "EXT-REV-2026-09-21-008",
+      "source": "Programmer architecture review supplied by owner",
+      "verification_sha": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+      "verification_status": "VERIFIED_FORMAT_LIMITATION_CLAIM_OVERSTATED",
+      "claim": "BMP textures will rapidly fill the 2 GB VRAM target and should all be batch-converted to PNG/TGA immediately.",
+      "verified_result": {
+        "current_repo": "24 BMP production source images total 554256 bytes (~0.53 MiB); 17 are in SourceAssets/Production/Textures. Current importer explicitly discovers *.bmp.",
+        "correction": "Source-file compression is not runtime VRAM residency. Unreal runtime cost depends on imported resolution, pixel format/compression, mip chain, streaming and residency.",
+        "valid_part": "BMP is weak for future authored alpha/masked foliage. PNG/TGA support is useful when alpha-capable textures are introduced."
+      },
+      "disposition": "ADOPT_SELECTIVE_ALPHA_FORMAT_SUPPORT_REJECT_UNMEASURED_VRAM_CLAIM",
+      "linked_requirements": [
+        "REQ-PERF-001",
+        "REQ-AUDIT-001",
+        "REQ-PROD-006"
+      ],
+      "linked_work": [
+        "WORK-QA-001",
+        "WORK-WORLD-003"
+      ],
+      "next_action": "Do not batch-convert current BMP sources. First add/validate PNG/TGA importer support in a dedicated asset-pipeline change; migrate textures selectively when alpha or authored high-fidelity sources require it, then measure streaming pool/GPU memory on target hardware."
+    },
+    {
+      "id": "EXT-REV-2026-09-21-009",
+      "source": "Programmer architecture review supplied by owner",
+      "verification_sha": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+      "verification_status": "VERIFIED_ALREADY_PLANNED",
+      "claim": "The flat Source/ShireJourney layout should be migrated to Public/Private and domain folders.",
+      "verified_result": "Current develop has 60 .h/.cpp files directly under Source/ShireJourney. Data/SourceArchitecturePlan.json already defines current_layout=FLAT_GUARDED and target_layout=PUBLIC_PRIVATE_BY_DOMAIN with dedicated migration/validation rules.",
+      "disposition": "KEEP_EXISTING_DEDICATED_MIGRATION_PLAN",
+      "linked_requirements": [
+        "REQ-AUDIT-001",
+        "REQ-GOV-001"
+      ],
+      "linked_work": [
+        "WORK-QA-001",
+        "WORK-EXEC-001"
+      ],
+      "next_action": "Perform the physical source-layout migration only on its own short branch, update include/static-validator paths, and require Pre-Unreal plus real UE4.27.2 build proof. Do not mix it into gameplay/production waves."
+    },
+    {
+      "id": "EXT-REV-2026-09-21-010",
+      "source": "Programmer architecture review supplied by owner",
+      "verification_sha": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+      "verification_status": "NOT_A_CURRENT_DEPENDENCY_GAP",
+      "claim": "Scripts need requirements.txt because Python automation depends on an unspecified environment.",
+      "verified_result": "Thirteen current Python scripts were inspected. Their imports are Python standard library plus project-local modules; no third-party pip dependency or pip-install step is currently required.",
+      "disposition": "NO_EMPTY_REQUIREMENTS_FILE_NEEDED_NOW",
+      "linked_requirements": [
+        "REQ-QA-001",
+        "REQ-CI-001"
+      ],
+      "linked_work": [
+        "WORK-QA-001"
+      ],
+      "next_action": "Keep scripts stdlib-only where practical. Add Scripts/requirements.txt with pinned versions only when the first real third-party Python dependency is introduced."
+    },
+    {
+      "id": "EXT-REV-2026-09-21-011",
+      "source": "Programmer architecture review supplied by owner",
+      "verification_sha": "3f3c51e956fdedb7084fb5151b9c21d532683e53",
+      "verification_status": "STALE_NOT_REPRODUCED",
+      "claim": "REQ-NPC-006 still has owner_intent instead of intent and will break governor validation.",
+      "verified_result": "Current develop REQ-NPC-006 contains the required intent field (and a legacy owner_intent compatibility field). Current exact-head validation has already passed; this is the same stale finding previously recorded from an older snapshot.",
+      "disposition": "NO_CHANGE_REQUIRED",
+      "linked_requirements": [
+        "REQ-GOV-001",
+        "REQ-NPC-006"
+      ],
+      "linked_work": [
+        "WORK-EXEC-001",
+        "WORK-QA-001"
+      ],
+      "next_action": "Keep intent authoritative. Do not delete compatibility metadata merely to match an old ZIP; validate against live develop first."
     }
   ],
   "project_source_library": {
