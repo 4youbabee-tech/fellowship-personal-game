@@ -1,3 +1,9 @@
+## 2026-09-22 - first concrete trilogy asset candidate queue seeded
+
+Warehouse-first production moved from catalogue-only planning into concrete sourcing. `Data/TrilogyAssetCandidateQueue.json` now contains the first official-source candidates: CC0 Quaternius rigged/background character, fantasy outfit, medieval village, modular ruins, nature and farm/animated-animal packs, plus Poly Haven high-fidelity barrel and wood/stone/mossy PBR material lanes. These are candidates, not automatic final hero art; low/stylized packs are explicitly limited to supporting/background/pipeline roles where appropriate.
+
+The next sourcing pass is deliberately aimed at the remaining high-value gaps: realistic hero humanoid bases, non-stylized rural/medieval architecture, photoreal biome libraries, rigged hero creatures, professional animation libraries and the approved audio-bank lanes. No candidate is called INTEGRATED or ACCEPTED until an actual asset is acquired/imported and earns the required evidence.
+
 ## 2026-09-22 - trilogy warehouse-first production plan activated
 
 The owner explicitly changed the production emphasis: final-looking characters, world art and audio may no longer remain vague downstream gaps while backend/governance continues to grow. The project now has a machine-readable trilogy warehouse at `Data/TrilogyProductionAssetWarehouse.json` and a new Governor requirement `REQ-WAREHOUSE-001`, decision `DEC-032`, and active work item `WORK-PROD-011`.
