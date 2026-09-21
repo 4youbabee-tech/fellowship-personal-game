@@ -962,8 +962,6 @@ void AShirePlayerCharacter::BeginPlay()
 
 void AShirePlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-void AShirePlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
     if (UGameInstance* GI = GetGameInstance())
     {
         if (UShireChapterAssetStreamingSubsystem* Streaming =
