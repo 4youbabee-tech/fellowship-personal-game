@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "registry_id": "GLOBAL_WAREHOUSE_SOURCE_REGISTRY_V2",
-  "status": "ACTIVE",
+  "status": "ACTIVE_EXPANDED_GLOBAL_SOURCE_MATRIX",
   "authority": "Data/ProjectGovernor.json",
   "purpose": "Global multi-source warehouse intake registry with staged automation, auth boundaries, provenance and production-state controls.",
   "sources": [
@@ -309,6 +309,119 @@
         "MOD_ASSET_DISCOVERY"
       ],
       "priority": "LOW"
+    },
+    {
+      "id": "AMBIENTCG",
+      "license": "CC0",
+      "access": "PUBLIC_SITE_API",
+      "automation": "AUTO_STAGE",
+      "categories": [
+        "PBR_TEXTURE",
+        "HDRI",
+        "3D_MODEL"
+      ],
+      "priority": "CRITICAL",
+      "notes": "Photoreal CC0 anchor source; strong for terrain, stone, wood, plaster, roofing, fabric and environment material families."
+    },
+    {
+      "id": "SHARETEXTURES",
+      "license": "CC0_OR_COPYRIGHT_FREE_PER_SITE",
+      "access": "PUBLIC_SITE",
+      "automation": "AUTO_RESOLVE_STAGE",
+      "categories": [
+        "PBR_TEXTURE",
+        "3D_MODEL"
+      ],
+      "priority": "HIGH",
+      "notes": "Large free material/model library; intake must still retain exact item/source metadata."
+    },
+    {
+      "id": "KAYKIT",
+      "license": "CC0",
+      "access": "PUBLIC_ITCH_PACKS",
+      "automation": "AUTO_RESOLVE_STAGE",
+      "categories": [
+        "3D_MODEL",
+        "CHARACTER",
+        "ANIMATION",
+        "WORLD_KIT",
+        "PROPS"
+      ],
+      "priority": "HIGH",
+      "notes": "Optimized, engine-ready, stylized/low-poly; best for supporting/background stock and pipeline coverage, not hero realism."
+    },
+    {
+      "id": "POLYGONALMIND_CC0",
+      "license": "CC0_ON_OPEN_RELEASES",
+      "access": "PUBLIC_GITHUB_SKETCHFAB",
+      "automation": "REVIEW_AND_STAGE_CC0_RELEASES",
+      "categories": [
+        "RIGGED_CHARACTER",
+        "AVATAR",
+        "PROPS"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Useful for crowd/background rig coverage where CC0 release is explicit."
+    },
+    {
+      "id": "POLYPIZZA",
+      "license": "MIXED_CREATIVE_COMMONS",
+      "access": "PUBLIC_SITE",
+      "automation": "DISCOVER_REVIEW_LICENSE",
+      "categories": [
+        "3D_MODEL",
+        "PROPS",
+        "ENVIRONMENT"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Large low-poly archive; per-model license filtering required."
+    },
+    {
+      "id": "NASA_3D_RESOURCES",
+      "license": "PUBLIC_GOVERNMENT_OR_PER_ITEM",
+      "access": "PUBLIC_SITE",
+      "automation": "DISCOVER_REVIEW",
+      "categories": [
+        "REFERENCE",
+        "SCANNED_OBJECT",
+        "SKY_TECH_REFERENCE"
+      ],
+      "priority": "LOW",
+      "notes": "Occasional CC0/public-domain technical or scanned assets; niche use only."
+    },
+    {
+      "id": "GOBKIT",
+      "license": "CC0",
+      "access": "PUBLIC_SITE",
+      "automation": "AUTO_RESOLVE_STAGE",
+      "categories": [
+        "RIGGED_CHARACTER",
+        "NATURE_PROP"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Small CC0 rigged-character/nature library useful for pipeline/crowd support."
+    },
+    {
+      "id": "HDRMAPS_FREE",
+      "license": "PER_ITEM_ROYALTY_FREE",
+      "access": "PUBLIC_SITE",
+      "automation": "DISCOVER_REVIEW",
+      "categories": [
+        "HDRI"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Additional lighting/reference lane; keep exact item license."
+    },
+    {
+      "id": "OPENHDRI",
+      "license": "CC0_OR_PER_ITEM",
+      "access": "PUBLIC_SITE",
+      "automation": "DISCOVER_REVIEW",
+      "categories": [
+        "HDRI"
+      ],
+      "priority": "LOW",
+      "notes": "Supplemental HDRI lane when Poly Haven/ambientCG coverage is insufficient."
     }
   ],
   "rules": [
@@ -318,5 +431,68 @@
     "Animated production characters must be FBX before READY_FOR_IMPORT.",
     "Production textures must be PNG/TGA and channel-packed where appropriate before READY_FOR_IMPORT.",
     "STAGED is not IMPORTED, INTEGRATED or ACCEPTED."
-  ]
+  ],
+  "selection_policy": {
+    "objective": "Maximize production usefulness per GB/hour while preserving provenance and avoiding chaotic stock duplication.",
+    "scoring_dimensions": {
+      "visual_fit": 30,
+      "engine_readiness": 20,
+      "license_clarity": 15,
+      "format_fit": 10,
+      "performance_fit": 10,
+      "reuse_breadth": 10,
+      "source_stability": 5
+    },
+    "tiers": {
+      "TIER_A_AUTO": [
+        "POLY_HAVEN",
+        "AMBIENTCG",
+        "QUATERNIUS",
+        "KENNEY",
+        "KAYKIT",
+        "TEXTURECAN",
+        "CGBOOKCASE",
+        "3DTEXTURES_ME",
+        "SHARETEXTURES",
+        "OPENGAMEART",
+        "SONNISS_GDC"
+      ],
+      "TIER_B_AUTH_REVIEW": [
+        "MIXAMO",
+        "FAB_QUixel_MEGASCANS",
+        "BLENDERKIT",
+        "SKETCHFAB",
+        "FREESOUND",
+        "CGTRADER",
+        "TURBOSQUID",
+        "ARTSTATION_MARKETPLACE",
+        "BOOM_LIBRARY",
+        "PRO_SOUND_EFFECTS"
+      ],
+      "TIER_C_SUPPORTING": [
+        "POLYGONALMIND_CC0",
+        "POLYPIZZA",
+        "GOBKIT",
+        "SMITHSONIAN_OPEN_ACCESS",
+        "NASA_3D_RESOURCES",
+        "HDRMAPS_FREE",
+        "OPENHDRI"
+      ],
+      "TIER_D_REFERENCE_ONLY": [
+        "DEVIANTART_3D_PORTS",
+        "SFMLAB",
+        "OPEN3DLAB",
+        "NEXUS_MODS"
+      ]
+    },
+    "anti_chaos_rules": [
+      "Do not download the same category blindly from every provider; keep the best-fit 1-3 candidates per warehouse slot before bulk duplication.",
+      "Prefer Tier A sources for automatic intake because licenses/formats are clearer.",
+      "Hero characters and signature locations require realism/identity-fit; stylized CC0 packs are background or pipeline stock unless upgraded.",
+      "Use 2K default material intake for the target laptop; preserve higher source resolutions only when justified for hero surfaces.",
+      "Audio/music candidates must be categorized by bed/spot/stinger/foley/voice/score before READY_FOR_IMPORT.",
+      "Every staged file must retain provider, source page, license class, size, hash, intended slot and state."
+    ]
+  },
+  "source_count": 34
 }
