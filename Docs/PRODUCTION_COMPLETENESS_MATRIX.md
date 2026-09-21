@@ -1,5 +1,9 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-22 - persistent asset warehouse staging
+
+The project now has a dedicated persistent warehouse staging workflow separate from UE runtime validation. The first CC0 Poly Haven batch is machine-defined and stages to a persistent self-hosted folder with receipt/hash intent. This advances warehouse acquisition infrastructure only; staged files are not imported, integrated or visually accepted by this change.
+
 ## 2026-09-22 - warehouse roadmap reconciliation after Pre-Unreal #597
 
 The new trilogy warehouse requirement/work item is now explicitly assigned to the master execution roadmap and the roadmap's unfinished/active snapshots are regenerated from ProjectGovernor. This repairs governance consistency only; asset/runtime maturity is unchanged. Unreal #432 remains pre-compile blocked by local Engine Content permissions.
