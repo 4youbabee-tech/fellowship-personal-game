@@ -1,5 +1,11 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-22 - trilogy warehouse-first production lane
+
+A trilogy-wide production warehouse is now explicitly tracked. This closes the planning/coverage problem where characters, world art, creatures, materials, animation and audio could remain unspecific late-stage gaps. The catalogue includes all major trilogy production families and exact first-pass slots, but actual final assets remain at mixed readiness states and are not promoted merely because their slots are catalogued.
+
+P1C01 remains the first full natural-character/world/audio benchmark. Part II/III warehouse sourcing and kit preparation may run in parallel without opening runtime chapter implementation ahead of the existing gates. No visual/audio/device acceptance column is promoted by this catalogue wave.
+
 ## 2026-09-22 - cinematic audio warehouse V2 registered
 
 Audio production now has an explicit sourcing/warehouse plan covering voice, dynamic music, ambience/fauna, foley and creature/combat effects. Existing runtime routing remains intact; authored approved assets, spatial/concurrency listening review and target-device audio profiling are still pending, so Voice/Audio maturity is not promoted by this planning wave.
