@@ -5237,6 +5237,104 @@ for pg117_symbol in [
     if pg117_symbol not in (pg116_npc + pg117_npc_h):
         fail(f"PG-117 final-rig handoff contract missing: {pg117_symbol}")
 
+# PG-118: chapter streaming V5 must preload asynchronously without exposing a broken narrative seam.
+pg118_plan_path = ROOT / "Data" / "ChapterAssetStreamingPlan.json"
+if not pg118_plan_path.exists():
+    fail("PG-118 ChapterAssetStreamingPlan.json missing")
+    pg118_plan = {}
+else:
+    try:
+        pg118_plan = json.loads(read(pg118_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-118 invalid ChapterAssetStreamingPlan.json: {exc}")
+        pg118_plan = {}
+
+if pg118_plan.get("plan_id") != "CHAPTER_ASSET_STREAMING_V1":
+    fail("PG-118 chapter streaming plan identity changed")
+if "ChapterAssetStreamingPlan.json" not in pg93_build:
+    fail("PG-118 chapter streaming plan is not packaged")
+
+pg118_banks = pg118_plan.get("banks", {})
+for pg118_bank in [
+    "P1C01","P1C02","P1C03","P1C04","P1C05","P1C06","P1C07","P1C08","GANDALF_ISENGARD"
+]:
+    pg118_row = pg118_banks.get(pg118_bank, {})
+    if not isinstance(pg118_row, dict) or not pg118_row.get("assets"):
+        fail(f"PG-118 chapter streaming bank missing/empty: {pg118_bank}")
+
+pg118_stream_h = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.h")
+pg118_stream_cpp = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
+pg118_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
+pg118_router_h = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.h")
+pg118_fellowship_h = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.h")
+pg118_fellowship_cpp = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
+
+for pg118_symbol in [
+    "FStreamableManager",
+    "RequestAsyncLoad",
+    "FSoftObjectPath",
+    "ResidentHandle",
+    "PendingHandle",
+    "OnChapterAssetsReady",
+]:
+    if pg118_symbol not in (pg118_stream_h + pg118_stream_cpp):
+        fail(f"PG-118 async streaming contract missing: {pg118_symbol}")
+
+for pg118_forbidden in [
+    "WaitUntilComplete",
+    "FlushAsyncLoading",
+    "while (!PendingHandle",
+]:
+    if pg118_forbidden in pg118_stream_cpp:
+        fail(f"PG-118 Game-Thread wait pattern forbidden: {pg118_forbidden}")
+
+for pg118_symbol in [
+    "router-wait",
+    "HandleChapterAssetsReady",
+    "CommitChapterWorld",
+    "RequestChapterAssets",
+    "ClearPrototypeBuilders();",
+]:
+    if pg118_symbol not in (pg118_router + pg118_router_h):
+        fail(f"PG-118 seam-safe router contract missing: {pg118_symbol}")
+
+pg118_wait_index = pg118_router.find("RequestChapterAssets")
+pg118_clear_index = pg118_router.find("ClearPrototypeBuilders();", pg118_router.find("void AChapterWorldRouter::CommitChapterWorld"))
+if pg118_wait_index < 0 or pg118_clear_index < 0:
+    fail("PG-118 router preload/commit ordering cannot be verified")
+elif pg118_wait_index > pg118_clear_index:
+    fail("PG-118 router clears world before requesting async chapter bank")
+
+for pg118_symbol in [
+    "EnsureProductionMeshes(FName ChapterId)",
+    'if (ChapterId == TEXT("P1C03"))',
+    'else if (ChapterId == TEXT("P1C04"))',
+    'else if (ChapterId == TEXT("P1C05"))',
+    'else if (ChapterId == TEXT("P1C06"))',
+    'else if (ChapterId == TEXT("P1C07"))',
+    'else if (ChapterId == TEXT("P1C08"))',
+    "EnsureProductionMeshes(ChapterId);",
+]:
+    if pg118_symbol not in (pg118_fellowship_h + pg118_fellowship_cpp):
+        fail(f"PG-118 chapter-aware Fellowship bank contract missing: {pg118_symbol}")
+
+pg118_arch = json.loads(read(ROOT / "Data" / "SourceArchitecturePlan.json"))
+pg118_arch_paths = [
+    str(row.get("current_path") or "")
+    for row in pg118_arch.get("files", [])
+    if isinstance(row, dict)
+]
+for pg118_path in [
+    "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.h",
+    "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.cpp",
+]:
+    if pg118_arch_paths.count(pg118_path) != 1:
+        fail(f"PG-118 source architecture registration must be exactly once: {pg118_path}")
+
+pg118_budget = json.loads(read(ROOT / "Data" / "AssetPerformanceBudget.json"))
+if pg118_budget.get("chapter_asset_streaming_v5", {}).get("status") != "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF_AND_MEASUREMENT":
+    fail("PG-118 streaming performance evidence boundary changed")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
