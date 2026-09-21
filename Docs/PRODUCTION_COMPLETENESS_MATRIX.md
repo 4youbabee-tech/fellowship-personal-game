@@ -1,5 +1,11 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-21 - comprehensive foundation integration
+
+Startup grounding, QA/performance guardrails, V10 regional living-world behavior and transactional chapter commit coordination are now being consolidated on one integration branch. Asset preload and visible-world commit are separated; living-world chapter state follows committed world revision rather than requested quest state.
+
+Current status: **IMPLEMENTED / STATIC-PENDING** for the newest integration changes. No chapter validation column is promoted until exact-head Pre-Unreal, UE4 build/runtime and defect-specific PIE evidence exist.
+
 ## 2026-09-21 - visual-performance architecture guardrails
 
 The project now tracks a measured visual-performance architecture contract: async/soft heavy assets, instanced+cull repeated detail, bounded Tick usage, role-appropriate LOD/material policy and evidence-driven lighting/shadow selection. Static guards protect the currently proven async/HISM/non-ticking-builder patterns.
