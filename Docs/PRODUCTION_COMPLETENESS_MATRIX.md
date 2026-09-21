@@ -1,5 +1,11 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-22 - PR #67 validation-gate repair
+
+Pre-Unreal #558 on exact head `809325a64547744f0cc4992d76c42fb7e0862d82` failed with two static-guard errors caused by PG-111 still describing the V9 fixed-halving world-life contract. The integration branch already uses the V10 chapter density profile and `DangerPopulationFraction` model. PG-111 is being aligned to that existing V10 runtime/data contract without changing gameplay behavior.
+
+Unreal Build #393 on the same SHA did not reach C++ compilation. The self-hosted runner identity `NT AUTHORITY\\NETWORK SERVICE` was denied read access to UE4.27.2 `WorldGridMaterial.uasset` on six consecutive engine-content probes. Therefore this wave remains **STATIC-PENDING** and no COMPILE/PIE/device/visual column is promoted by this repair.
+
 ## 2026-09-21 - continuous-session transition regression
 
 A new runtime audit now requires one live session to traverse all eight Part I chapter identities, route switching, committed-world/living-world revision synchronization and disk-save roundtrip. This is implementation coverage only; no chapter is promoted to PIE/device acceptance until exact-head engine and owner evidence exist.
