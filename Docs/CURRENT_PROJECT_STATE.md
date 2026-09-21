@@ -1,3 +1,11 @@
+## 2026-09-22 - cinematic audio sourcing directive registered
+
+The owner-forwarded audio-engineering message is now durable repository state. The project already has `UShireAudioSubsystem` routing, ambience/music crossfades, voice ducking and speaker-attachment rules in `Part1SonicWorldPlan`; the major missing layer is authored final audio content. `Data/AudioAssetSourcingWaveV2.json` now defines the offline bank strategy for voice, music, ambience/fauna, foley and creature/combat audio, plus 3D spatialization, concurrency and low-spec profiling requirements.
+
+ElevenLabs, BOOM Library and Pro Sound Effects are registered as candidate production sources subject to exact authorization/license/entitlement. LOTR Complete Recordings, Blu-ray center-channel dialogue and classic EA LOTR game audio are stored as reference-only unless separately cleared. This prevents source discovery from being lost while keeping the Approved bank deterministic and auditable.
+
+No final voice/music/SFX asset, mix acceptance, PIE/device audio acceptance or new COMPILE-TESTED claim follows from this registration.
+
 ## 2026-09-22 - cinematic asset-source shortlist expanded
 
 The owner-forwarded asset-manager message has been registered rather than kept in chat memory. `Data/ExternalAssetManifest.json` now stores DeviantArt 3D/XNALara ports, SFMLab, Open3DLab, Nexus Mods and ArtStation Marketplace as additional cinematic-quality discovery/review sources, alongside the already tracked CGTrader, TurboSquid, Sketchfab, Quixel/Fab and legacy Unreal Marketplace paths.
