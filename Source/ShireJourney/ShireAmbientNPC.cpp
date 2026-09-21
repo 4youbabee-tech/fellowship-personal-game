@@ -75,32 +75,38 @@ AShireAmbientNPC::AShireAmbientNPC()
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeMesh(TEXT("/Engine/BasicShapes/Cube.Cube"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderMesh(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+    static ConstructorHelpers::FObjectFinder<UMaterialInterface> BasicMaterial(
+        TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
 
-    if (CubeMesh.Succeeded())
+    FallbackCubeMesh = CubeMesh.Succeeded() ? CubeMesh.Object : nullptr;
+    FallbackCylinderMesh = CylinderMesh.Succeeded() ? CylinderMesh.Object : nullptr;
+    FallbackSphereMesh = SphereMesh.Succeeded() ? SphereMesh.Object : nullptr;
+    FallbackSurfaceMaterial = BasicMaterial.Succeeded() ? BasicMaterial.Object : nullptr;
+
+    if (FallbackCubeMesh)
     {
-        Torso->SetStaticMesh(CubeMesh.Object);
-        ActivityProp->SetStaticMesh(CubeMesh.Object);
+        Torso->SetStaticMesh(FallbackCubeMesh);
+        ActivityProp->SetStaticMesh(FallbackCubeMesh);
     }
-    if (CylinderMesh.Succeeded())
+    if (FallbackCylinderMesh)
     {
-        LeftArm->SetStaticMesh(CylinderMesh.Object);
-        RightArm->SetStaticMesh(CylinderMesh.Object);
-        LeftLeg->SetStaticMesh(CylinderMesh.Object);
-        RightLeg->SetStaticMesh(CylinderMesh.Object);
+        LeftArm->SetStaticMesh(FallbackCylinderMesh);
+        RightArm->SetStaticMesh(FallbackCylinderMesh);
+        LeftLeg->SetStaticMesh(FallbackCylinderMesh);
+        RightLeg->SetStaticMesh(FallbackCylinderMesh);
     }
-    if (SphereMesh.Succeeded())
+    if (FallbackSphereMesh)
     {
-        Head->SetStaticMesh(SphereMesh.Object);
-        Hair->SetStaticMesh(SphereMesh.Object);
+        Head->SetStaticMesh(FallbackSphereMesh);
+        Hair->SetStaticMesh(FallbackSphereMesh);
     }
 }
 
 void AShireAmbientNPC::ApplyVisualStyle()
 {
-    UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
-        nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    UMaterialInterface* ProductionSurfaceMaterial = LoadObject<UMaterialInterface>(
-        nullptr, TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface"));
+    UMaterialInterface* BasicMaterial = FallbackSurfaceMaterial;
+    UMaterialInterface* ProductionSurfaceMaterial = Cast<UMaterialInterface>(
+        FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject());
     if (!BasicMaterial && !ProductionSurfaceMaterial)
     {
         return;
@@ -109,7 +115,7 @@ void AShireAmbientNPC::ApplyVisualStyle()
     auto TryMesh = [](UStaticMeshComponent* Component, const TCHAR* AssetPath) -> bool
     {
         if (!Component) return false;
-        if (UStaticMesh* Mesh = LoadObject<UStaticMesh>(nullptr, AssetPath))
+        if (UStaticMesh* Mesh = Cast<UStaticMesh>(FSoftObjectPath(AssetPath).ResolveObject()))
         {
             Component->SetStaticMesh(Mesh);
             return true;
@@ -147,13 +153,19 @@ void AShireAmbientNPC::ApplyVisualStyle()
 
     if (!bHobbitResident)
     {
-        TryMesh(Torso, TEXT("/Engine/BasicShapes/Cube.Cube"));
-        TryMesh(Head, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
-        TryMesh(Hair, TEXT("/Engine/BasicShapes/Sphere.Sphere"));
-        TryMesh(LeftArm, TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
-        TryMesh(RightArm, TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
-        TryMesh(LeftLeg, TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
-        TryMesh(RightLeg, TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
+        if (FallbackCubeMesh) Torso->SetStaticMesh(FallbackCubeMesh);
+        if (FallbackSphereMesh)
+        {
+            Head->SetStaticMesh(FallbackSphereMesh);
+            Hair->SetStaticMesh(FallbackSphereMesh);
+        }
+        if (FallbackCylinderMesh)
+        {
+            LeftArm->SetStaticMesh(FallbackCylinderMesh);
+            RightArm->SetStaticMesh(FallbackCylinderMesh);
+            LeftLeg->SetStaticMesh(FallbackCylinderMesh);
+            RightLeg->SetStaticMesh(FallbackCylinderMesh);
+        }
     }
 
     bool bProductionHobbit = false;
