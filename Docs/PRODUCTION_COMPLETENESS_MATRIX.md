@@ -1,5 +1,9 @@
 # PRODUCTION COMPLETENESS MATRIX
 
+## 2026-09-21 - engine Automation Framework QA wave
+
+The project now has an initial UE Automation Framework layer in addition to static validation and runtime smoke. The first tests cover SaveGame default/schema invariants and post-import existence of all streamed chapter packages. Startup grounding proof now waits two seconds before PASS. These are implementation changes only; engine execution and defect-specific PIE evidence remain pending.
+
 ## 2026-09-21 - automated QA immune-system foundation
 
 A layered automated QA initiative is now tracked as `REQ-QA-002`. The first wave adds Unreal Automation Framework coverage and exact-head CI execution after compile/import. Later world/nav/animation/performance/memory suites remain pending measured implementation. This does not alter any PIE/device/visual acceptance status.
