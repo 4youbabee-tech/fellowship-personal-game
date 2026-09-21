@@ -267,6 +267,58 @@ bool AChapterWorldRouter::ResolveGroundedSpawnLocation(
     return true;
 }
 
+bool AChapterWorldRouter::PlacePlayerAtCommittedTransform(
+    APawn* PlayerPawn,
+    FName ChapterId,
+    FName RouteId,
+    FName EpisodeId,
+    const FVector& RequestedLocation,
+    const FRotator& RequestedRotation)
+{
+    if (!PlayerPawn || !IsWorldCommitted(ChapterId, RouteId, EpisodeId))
+    {
+        return false;
+    }
+
+    FVector GroundedLocation = FVector::ZeroVector;
+    if (!ResolveGroundedSpawnLocation(PlayerPawn, RequestedLocation, GroundedLocation))
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireSaveRestore: FAIL chapter=%s route=%s episode=%s reason=no-ground"),
+            *ChapterId.ToString(),
+            *RouteId.ToString(),
+            *EpisodeId.ToString());
+        return false;
+    }
+
+    PlayerPawn->SetActorLocationAndRotation(
+        GroundedLocation,
+        RequestedRotation,
+        false,
+        nullptr,
+        ETeleportType::TeleportPhysics);
+
+    if (ACharacter* Character = Cast<ACharacter>(PlayerPawn))
+    {
+        if (UCharacterMovementComponent* Movement = Character->GetCharacterMovement())
+        {
+            Movement->StopMovementImmediately();
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireSaveRestore: PLACED chapter=%s route=%s episode=%s revision=%u"),
+        *ChapterId.ToString(),
+        *RouteId.ToString(),
+        *EpisodeId.ToString(),
+        WorldRevision);
+    return true;
+}
+
 bool AChapterWorldRouter::MovePlayerToChapterStart(FName ChapterId, bool bRestoreRouteTransform)
 {
     APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
