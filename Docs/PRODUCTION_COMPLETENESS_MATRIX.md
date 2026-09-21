@@ -1,3 +1,7 @@
+## 2026-09-22 - failed-swap rollback transaction source repair
+
+Failed-swap rollback now restores player-life state (health, stamina, resolve, supplies) in addition to the previously restored world/quest/memory/progression/knowledge/player-transform state, and source-contract tests protect the ordering before movement release. Integration/save maturity remains PARTIAL until exact-head UE4.27 compile/runtime evidence exists.
+
 ## 2026-09-22 - trilogy-wide world foundation parallelism
 
 World production planning is no longer Shire-only. Reusable foundations are now tracked across all major trilogy regions while P1C01 remains the first fully assembled benchmark. This advances preproduction and warehouse coverage only; it does not promote later chapters to runtime-ready status.
