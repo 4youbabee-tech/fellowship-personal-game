@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "registry_id": "GLOBAL_WAREHOUSE_SOURCE_REGISTRY_V2",
-  "status": "ACTIVE_EXPANDED_GLOBAL_SOURCE_MATRIX",
+  "status": "ACTIVE_GLOBAL_PLUS_RESOURCE_BIBLE_09",
   "authority": "Data/ProjectGovernor.json",
   "purpose": "Global multi-source warehouse intake registry with staged automation, auth boundaries, provenance and production-state controls.",
   "sources": [
@@ -422,6 +422,754 @@
       ],
       "priority": "LOW",
       "notes": "Supplemental HDRI lane when Poly Haven/ambientCG coverage is insufficient."
+    },
+    {
+      "id": "REPLICA_STUDIOS",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "VOICE_TTS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "ALTERED_STUDIO",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "VOICE_TTS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "RESPEECHER",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "VOICE_TTS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "MURF_AI",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "VOICE_TTS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "PLAYHT",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "VOICE_TTS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "LOVO",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "VOICE_TTS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "SPEECHIFY",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "VOICE_TTS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "NARAKEET",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "VOICE_TTS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "FAKEYOU",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "REVIEW_REQUIRED",
+      "categories": [
+        "VOICE_TTS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "TTSMAKER",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "REVIEW_REQUIRED",
+      "categories": [
+        "VOICE_TTS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "AZURE_TTS",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "VOICE_TTS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "GOOGLE_CLOUD_TTS",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "VOICE_TTS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "AMAZON_POLLY",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "VOICE_TTS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "VOICEMOD",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "VOICE_TRANSFORMATION"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "FREE_MUSIC_ARCHIVE",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "MUSIC"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "INCOMPETECH",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "MUSIC"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "BENSOUND",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "MUSIC"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "UPPBEAT",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "MUSIC_SFX"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "PURPLE_PLANET",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "MUSIC"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "MUSOPEN",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "MUSIC"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "YOUTUBE_AUDIO_LIBRARY",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "MUSIC_SFX"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "ARCHIVE_ORG",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "ARCHIVE_AUDIO_REFERENCE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "BANDCAMP_FREE_NYOP",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "MUSIC"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "ZAPSPLAT",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "SFX"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "SOUNDBIBLE",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "SFX"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "BBC_SOUND_EFFECTS",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "FIELD_RECORDING_REFERENCE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "99SOUNDS",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_PACK_REVIEW",
+      "categories": [
+        "SFX_PACKS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "SOUNDLY",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "SFX"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "KROTOS",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "REVIEW_REQUIRED",
+      "categories": [
+        "SFX_TOOLS_LIBRARY"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "A_SOUND_EFFECT",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "SFX_MARKETPLACE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "PINTEREST",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "REFERENCE_ONLY",
+      "categories": [
+        "VISUAL_REFERENCE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "PIXIV",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "REFERENCE_ONLY",
+      "categories": [
+        "VISUAL_REFERENCE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "BEHANCE",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "REFERENCE_ONLY",
+      "categories": [
+        "VISUAL_REFERENCE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "DRIBBBLE",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "REFERENCE_ONLY",
+      "categories": [
+        "UI_REFERENCE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "UNSPLASH",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "PHOTO_REFERENCE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "PEXELS",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "PHOTO_VIDEO_REFERENCE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "FREEPIK",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "VECTOR_IMAGE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "VECTEEZY",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "VECTOR_IMAGE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "FLATICON",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "ICON"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "GAME_ICONS_NET",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "ICON"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "FREE3D",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "MODEL_3D"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "3D_WAREHOUSE",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "ARCHITECTURE_MODEL"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "EVERMOTION",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "MARKETPLACE_REVIEW",
+      "categories": [
+        "ARCHITECTURE_ENVIRONMENT"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "ARCHMODELS",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "MARKETPLACE_REVIEW",
+      "categories": [
+        "ARCHITECTURE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "KITBASH3D",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "MARKETPLACE_REVIEW",
+      "categories": [
+        "ENVIRONMENT_KIT"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "UNITY_ASSET_STORE_FREE",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "GAME_ASSET"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "BLENDER_MARKET_FREE",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "BLENDER_ASSET"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "CG_PEAK",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "ARCHITECTURE_3D"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "3DEXPORT",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "MARKETPLACE_REVIEW",
+      "categories": [
+        "MODEL_3D"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "RENDERHUB",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "MARKETPLACE_REVIEW",
+      "categories": [
+        "MODEL_3D"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "HUM3D",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "MARKETPLACE_REVIEW",
+      "categories": [
+        "MODEL_3D"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "CREATIVE_MARKET",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "MARKETPLACE_REVIEW",
+      "categories": [
+        "GRAPHICS_3D_FONTS"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "THE_BASE_MESH",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "PER_ITEM_REVIEW",
+      "categories": [
+        "BASE_MESH"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "TEXTURES_COM",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_OR_PER_ITEM_REVIEW",
+      "categories": [
+        "PBR_TEXTURE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "ACTORCORE",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "MOCAP_ANIMATION"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "ROKOKO",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "MOCAP_ANIMATION"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "MOTION_CAPTURE_ONLINE",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "MARKETPLACE_REVIEW",
+      "categories": [
+        "MOCAP_ANIMATION"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "MODDB",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "REFERENCE_ONLY",
+      "categories": [
+        "LOTR_REFERENCE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "GITHUB_LOTR_SEARCH",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "REFERENCE_ONLY",
+      "categories": [
+        "CODE_TOOL_DATA_REFERENCE"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "MESHY_AI",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "AI_3D_TOOL"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "KAEDIM",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "AI_3D_TOOL"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "LUMA_AI",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "AI_3D_CAPTURE_TOOL"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "POLYCAM",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "PHOTOGRAMMETRY_TOOL"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "SCENARIO",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "AI_GAME_ART_TOOL"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "LAYER_AI",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "AI_GAME_ART_TOOL"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "PROMETHEAN_AI",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "WORLD_BUILDING_TOOL"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "INWORLD_AI",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "NPC_AGENT_TOOL"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "CONVAI",
+      "license": "PER_ITEM_OR_SERVICE_TERMS",
+      "access": "VARIES",
+      "automation": "AUTH_REQUIRED",
+      "categories": [
+        "NPC_CONVERSATION_TOOL"
+      ],
+      "priority": "MEDIUM",
+      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
     }
   ],
   "rules": [
@@ -494,5 +1242,6 @@
       "Every staged file must retain provider, source page, license class, size, hash, intended slot and state."
     ]
   },
-  "source_count": 34
+  "source_count": 102,
+  "source_bible_import": "Data/ResourceBibleSourceExpansionV1.json"
 }
