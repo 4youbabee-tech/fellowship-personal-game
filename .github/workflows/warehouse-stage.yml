@@ -48,28 +48,21 @@ jobs:
           clean: false
 
       - name: Stage first Poly Haven CC0 batch
-        shell: powershell
+        shell: cmd
         run: |
-          Set-StrictMode -Version Latest
-          & "$env:GITHUB_WORKSPACE\Scripts\stage_polyhaven_warehouse.ps1" -ManifestPath "$env:GITHUB_WORKSPACE\Data\WarehouseAcquisitionBatchV1.json"
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_polyhaven_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAcquisitionBatchV1.json"
 
       - name: Stage first OpenGameArt CC0 audio batch
-        shell: powershell
+        shell: cmd
         run: |
-          Set-StrictMode -Version Latest
-          & "$env:GITHUB_WORKSPACE\Scripts\stage_opengameart_audio.ps1" -ManifestPath "$env:GITHUB_WORKSPACE\Data\WarehouseAudioAcquisitionBatchV1.json"
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_opengameart_audio.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAudioAcquisitionBatchV1.json"
 
       - name: Stage Quaternius CC0 character/world batch
-        shell: powershell
+        shell: cmd
         run: |
-          Set-StrictMode -Version Latest
-          & "$env:GITHUB_WORKSPACE\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "$env:GITHUB_WORKSPACE\Data\WarehouseQuaterniusAcquisitionBatchV1.json"
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseQuaterniusAcquisitionBatchV1.json"
 
       - name: Show persistent warehouse footprint
-        shell: powershell
+        shell: cmd
         run: |
-          $root = "C:\actions-runner\_warehouse\ShireJourney"
-          if (!(Test-Path $root)) { throw "Persistent warehouse root missing: $root" }
-          $files = Get-ChildItem -Path $root -Recurse -File
-          $bytes = ($files | Measure-Object -Property Length -Sum).Sum
-          Write-Host "WAREHOUSE_FOOTPRINT files=$($files.Count) bytes=$bytes root=$root"
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$root='C:\actions-runner\_warehouse\ShireJourney'; if (!(Test-Path $root)) { throw ('Persistent warehouse root missing: ' + $root) }; $files=Get-ChildItem -Path $root -Recurse -File; $bytes=($files | Measure-Object -Property Length -Sum).Sum; Write-Host ('WAREHOUSE_FOOTPRINT files=' + $files.Count + ' bytes=' + $bytes + ' root=' + $root)"
