@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_CC0_POLYHAVEN_P1C01_MATERIALS_V1",
+  "status": "AUTHORIZED_FOR_STAGING",
+  "provider": "POLY_HAVEN",
+  "provider_api": "https://api.polyhaven.com",
+  "license": "CC0",
+  "purpose": "Populate the persistent self-hosted-runner warehouse with a first real high-fidelity material/prop batch for Shire/Bree/general medieval production without waiting for UE runtime validation.",
+  "target_resolution": "2k",
+  "max_download_bytes": 1800000000,
+  "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\PolyHaven",
+  "assets": [
+    {
+      "slug": "wood_planks",
+      "category": "WOOD",
+      "use": [
+        "Shire timber",
+        "bridges",
+        "doors",
+        "carts",
+        "interiors"
+      ]
+    },
+    {
+      "slug": "wooden_planks",
+      "category": "WOOD",
+      "use": [
+        "floors",
+        "farm structures",
+        "furniture"
+      ]
+    },
+    {
+      "slug": "dirt",
+      "category": "GROUND",
+      "use": [
+        "Shire paths",
+        "farm soil",
+        "Bree outskirts"
+      ]
+    },
+    {
+      "slug": "stone_wall",
+      "category": "STONE",
+      "use": [
+        "Bree",
+        "ruins",
+        "retaining walls"
+      ]
+    },
+    {
+      "slug": "plastered_stone_wall",
+      "category": "PLASTER_STONE",
+      "use": [
+        "Shire/Bree wall variation"
+      ]
+    },
+    {
+      "slug": "stone_wall_05",
+      "category": "MOSSY_STONE",
+      "use": [
+        "Rivendell/Amon Hen/Ithilien/aged Shire masonry"
+      ]
+    },
+    {
+      "slug": "granite_wall",
+      "category": "FORTRESS_STONE",
+      "use": [
+        "Moria/Gondor/fortification reference"
+      ]
+    },
+    {
+      "slug": "wooden_barrels_01",
+      "category": "PROP",
+      "use": [
+        "Shire/Bree/farm/cellar/market prop"
+      ]
+    }
+  ],
+  "intake_expectations": [
+    "Only provider API URLs are downloaded.",
+    "Only PNG/TGA/FBX/ZIP files at the selected resolution are eligible for this batch.",
+    "Every downloaded file receives SHA256/size/source metadata in a local receipt.",
+    "The staging job is independent from UE4 Engine Content access.",
+    "Staged files are not called imported/integrated/accepted until later gates."
+  ]
+}
