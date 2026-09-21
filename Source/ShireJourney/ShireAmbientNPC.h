@@ -18,6 +18,17 @@ public:
     virtual void BeginPlay() override;
     virtual void Tick(float DeltaSeconds) override;
 
+    void ConfigureLivingWorldRoutine(
+        const FVector& Start,
+        const FVector& End,
+        FName InRoutineRole,
+        FName InActivityPropType,
+        float InWalkSpeed,
+        float InMinWait,
+        float InMaxWait);
+    void DeactivateForLivingWorldPool();
+    bool IsInLivingWorldPool() const { return bInLivingWorldPool; }
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Routine")
     FVector RoutinePointA = FVector::ZeroVector;
 
@@ -125,6 +136,7 @@ private:
     FName RuntimeEmotion = TEXT("CALM");
     FName RuntimeGoal = TEXT("ROUTINE");
     bool bSocializing = false;
+    bool bInLivingWorldPool = false;
     FText PendingSocialCaption;
     float VisualTorsoBaseZ = 58.0f;
     float VisualHeadBaseZ = 101.0f;
