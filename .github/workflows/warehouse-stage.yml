@@ -9,6 +9,8 @@ on:
       - 'Scripts/stage_polyhaven_warehouse.ps1'
       - 'Data/WarehouseAudioAcquisitionBatchV1.json'
       - 'Scripts/stage_opengameart_audio.ps1'
+      - 'Data/WarehouseQuaterniusAcquisitionBatchV1.json'
+      - 'Scripts/stage_quaternius_warehouse.ps1'
       - '.github/workflows/warehouse-stage.yml'
   pull_request:
     branches:
@@ -18,6 +20,8 @@ on:
       - 'Scripts/stage_polyhaven_warehouse.ps1'
       - 'Data/WarehouseAudioAcquisitionBatchV1.json'
       - 'Scripts/stage_opengameart_audio.ps1'
+      - 'Data/WarehouseQuaterniusAcquisitionBatchV1.json'
+      - 'Scripts/stage_quaternius_warehouse.ps1'
       - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
 
@@ -54,6 +58,12 @@ jobs:
         run: |
           Set-StrictMode -Version Latest
           & "$env:GITHUB_WORKSPACE\Scripts\stage_opengameart_audio.ps1" -ManifestPath "$env:GITHUB_WORKSPACE\Data\WarehouseAudioAcquisitionBatchV1.json"
+
+      - name: Stage Quaternius CC0 character/world batch
+        shell: powershell
+        run: |
+          Set-StrictMode -Version Latest
+          & "$env:GITHUB_WORKSPACE\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "$env:GITHUB_WORKSPACE\Data\WarehouseQuaterniusAcquisitionBatchV1.json"
 
       - name: Show persistent warehouse footprint
         shell: powershell
