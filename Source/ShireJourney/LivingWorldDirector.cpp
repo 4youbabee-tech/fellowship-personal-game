@@ -1,4 +1,5 @@
 #include "LivingWorldDirector.h"
+#include "ChapterWorldRouter.h"
 
 #include "ShireAmbientNPC.h"
 #include "ShireWorldEventInteraction.h"
@@ -41,11 +42,25 @@ void ALivingWorldDirector::BeginPlay()
         }
     }
 
-    ResetForCurrentChapter();
+    WorldRouter = Cast<AChapterWorldRouter>(UGameplayStatics::GetActorOfClass(
+        this, AChapterWorldRouter::StaticClass()));
+    if (AChapterWorldRouter* Router = WorldRouter.Get())
+    {
+        Router->OnWorldCommitted.AddUObject(
+            this, &ALivingWorldDirector::HandleWorldCommitted);
+    }
+
+    SynchronizeCommittedWorld();
 }
 
 void ALivingWorldDirector::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+    if (AChapterWorldRouter* Router = WorldRouter.Get())
+    {
+        Router->OnWorldCommitted.RemoveAll(this);
+    }
+    WorldRouter.Reset();
+
     if (QuestSubsystem)
     {
         QuestSubsystem->OnChapterChanged.RemoveDynamic(this, &ALivingWorldDirector::HandleChapterChanged);
@@ -234,13 +249,64 @@ bool ALivingWorldDirector::LoadLifeSaturationContract()
         }
     }
 
+    PopulationProfilesByChapter.Empty();
+    const TSharedPtr<FJsonObject>* Profiles = nullptr;
+    if (Root->TryGetObjectField(TEXT("chapter_density_profiles"), Profiles) && Profiles && Profiles->IsValid())
+    {
+        for (const auto& Pair : (*Profiles)->Values)
+        {
+            const TSharedPtr<FJsonObject> ProfileObject =
+                Pair.Value.IsValid() ? Pair.Value->AsObject() : nullptr;
+            if (!ProfileObject.IsValid())
+            {
+                continue;
+            }
+
+            FChapterPopulationProfile Profile;
+            Profile.SpawnInterval = PopulationSpawnInterval;
+            Profile.InnerRadius = PopulationInnerRadius;
+            Profile.OuterRadius = PopulationOuterRadius;
+            Profile.CullRadius = PopulationCullRadius;
+            Profile.DangerPopulationFraction = 0.50f;
+
+            double Value = 0.0;
+            if (ProfileObject->TryGetNumberField(TEXT("spawn_interval_seconds"), Value))
+            {
+                Profile.SpawnInterval = FMath::Clamp(static_cast<float>(Value), 0.25f, 2.0f);
+            }
+            if (ProfileObject->TryGetNumberField(TEXT("baseline_inner_radius_cm"), Value))
+            {
+                Profile.InnerRadius = FMath::Clamp(static_cast<float>(Value), 500.0f, 1800.0f);
+            }
+            if (ProfileObject->TryGetNumberField(TEXT("baseline_outer_radius_cm"), Value))
+            {
+                Profile.OuterRadius = FMath::Clamp(
+                    static_cast<float>(Value),
+                    Profile.InnerRadius + 200.0f,
+                    4200.0f);
+            }
+            if (ProfileObject->TryGetNumberField(TEXT("baseline_cull_radius_cm"), Value))
+            {
+                Profile.CullRadius = FMath::Clamp(
+                    static_cast<float>(Value),
+                    Profile.OuterRadius + 800.0f,
+                    9000.0f);
+            }
+            if (ProfileObject->TryGetNumberField(TEXT("danger_population_fraction"), Value))
+            {
+                Profile.DangerPopulationFraction = FMath::Clamp(static_cast<float>(Value), 0.10f, 1.0f);
+            }
+
+            PopulationProfilesByChapter.Add(FName(*Pair.Key), Profile);
+        }
+    }
+
     return BaselineTargetByChapter.Num() > 0;
 }
 
 void ALivingWorldDirector::HandleChapterChanged(FName PreviousChapterId, FName NewChapterId)
 {
-    ActiveChapterId = NewChapterId;
-    ResetForCurrentChapter();
+    SynchronizeCommittedWorld();
 }
 
 void ALivingWorldDirector::HandleExperienceChanged(
@@ -248,11 +314,58 @@ void ALivingWorldDirector::HandleExperienceChanged(
     FName EpisodeId,
     FName PlayableCharacterId)
 {
-    if (QuestSubsystem)
+    SynchronizeCommittedWorld();
+}
+
+void ALivingWorldDirector::HandleWorldCommitted(uint32 Revision)
+{
+    SynchronizeCommittedWorld();
+}
+
+bool ALivingWorldDirector::SynchronizeCommittedWorld()
+{
+    if (!QuestSubsystem)
+    {
+        return false;
+    }
+
+    if (!WorldRouter.IsValid())
+    {
+        WorldRouter = Cast<AChapterWorldRouter>(UGameplayStatics::GetActorOfClass(
+            this, AChapterWorldRouter::StaticClass()));
+        if (AChapterWorldRouter* Router = WorldRouter.Get())
+        {
+            Router->OnWorldCommitted.RemoveAll(this);
+            Router->OnWorldCommitted.AddUObject(
+                this, &ALivingWorldDirector::HandleWorldCommitted);
+        }
+    }
+
+    AChapterWorldRouter* Router = WorldRouter.Get();
+    if (!Router ||
+        !Router->IsWorldCommitted(
+            QuestSubsystem->GetCurrentChapterId(),
+            QuestSubsystem->GetCurrentRouteId(),
+            QuestSubsystem->GetCurrentEpisodeId()))
+    {
+        // Quest state can move ahead while the old world is still visible.
+        // Never apply destination life/weather/context until geometry commits.
+        return false;
+    }
+
+    if (AppliedWorldRevision != Router->GetWorldRevision())
     {
         ActiveChapterId = QuestSubsystem->GetCurrentChapterId();
+        AppliedWorldRevision = Router->GetWorldRevision();
+        ResetForCurrentChapter();
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("LivingWorldCommitSync: chapter=%s revision=%u"),
+            *ActiveChapterId.ToString(),
+            AppliedWorldRevision);
     }
-    ResetForCurrentChapter();
+    return true;
 }
 
 void ALivingWorldDirector::ResetForCurrentChapter()
@@ -279,11 +392,13 @@ void ALivingWorldDirector::ResetForCurrentChapter()
     BaselinePopulation.Empty();
     LastEventType = NAME_None;
 
+    ApplyPopulationProfile();
+
     if (GetWorld())
     {
         const float Now = GetWorld()->GetTimeSeconds();
         NextEventTime = Now + 3.0f + Random.FRandRange(0.0f, 2.0f);
-        NextPopulationSpawnTime = Now + 0.5f;
+        NextPopulationSpawnTime = Now + FMath::Min(0.5f, PopulationSpawnInterval);
     }
 
     ApplyChapterWeatherContext();
@@ -292,9 +407,30 @@ void ALivingWorldDirector::ResetForCurrentChapter()
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("ShireChapterAudit: living-world chapter=%s baseline-target=%d"),
+        TEXT("ShireChapterAudit: living-world chapter=%s baseline-target=%d spawn-interval=%.2f inner=%.0f outer=%.0f cull=%.0f danger-fraction=%.2f"),
         *ActiveChapterId.ToString(),
-        AuditTarget ? *AuditTarget : 0);
+        AuditTarget ? *AuditTarget : 0,
+        PopulationSpawnInterval,
+        PopulationInnerRadius,
+        PopulationOuterRadius,
+        PopulationCullRadius,
+        DangerPopulationFraction);
+}
+
+void ALivingWorldDirector::ApplyPopulationProfile()
+{
+    const FChapterPopulationProfile* Profile = PopulationProfilesByChapter.Find(ActiveChapterId);
+    if (!Profile)
+    {
+        DangerPopulationFraction = 0.50f;
+        return;
+    }
+
+    PopulationSpawnInterval = Profile->SpawnInterval;
+    PopulationInnerRadius = Profile->InnerRadius;
+    PopulationOuterRadius = Profile->OuterRadius;
+    PopulationCullRadius = Profile->CullRadius;
+    DangerPopulationFraction = Profile->DangerPopulationFraction;
 }
 
 void ALivingWorldDirector::ApplyChapterWeatherContext()
@@ -452,25 +588,42 @@ FName ALivingWorldDirector::ChooseBaselineRole() const
 
 FName ALivingWorldDirector::ChooseBaselineProp(FName RoleName) const
 {
-    if (RoleName == TEXT("Courier") || RoleName == TEXT("RoadWalker"))
+    if (RoleName == TEXT("BreeCourier") || RoleName == TEXT("RoadWalker"))
     {
         return TEXT("Satchel");
     }
-    if (RoleName == TEXT("FieldWorker"))
+    if (RoleName == TEXT("FieldWorker") || RoleName == TEXT("Gardener"))
     {
         return Random.FRand() > 0.45f ? FName(TEXT("Basket")) : FName(TEXT("Crate"));
     }
-    if (RoleName == TEXT("PartyGuest"))
+    if (RoleName == TEXT("MarketVendor"))
     {
-        return Random.FRand() > 0.55f ? FName(TEXT("Mug")) : NAME_None;
+        return Random.FRand() > 0.50f ? FName(TEXT("Basket")) : FName(TEXT("Crate"));
     }
-    if (RoleName == TEXT("FerryWorker"))
+    if (RoleName == TEXT("PartyGuest") || RoleName == TEXT("InnGuest"))
     {
-        return Random.FRand() > 0.60f ? FName(TEXT("Lantern")) : NAME_None;
+        return Random.FRand() > 0.35f ? FName(TEXT("Mug")) : NAME_None;
     }
-    if (RoleName == TEXT("Elf"))
+    if (RoleName == TEXT("FerryWorker") || RoleName == TEXT("GateWorker") ||
+        RoleName == TEXT("ElfAttendant") || RoleName == TEXT("ElfWarden"))
     {
-        return Random.FRand() > 0.75f ? FName(TEXT("Book")) : NAME_None;
+        return Random.FRand() > 0.45f ? FName(TEXT("Lantern")) : NAME_None;
+    }
+    if (RoleName == TEXT("StableHand"))
+    {
+        return Random.FRand() > 0.50f ? FName(TEXT("Crate")) : FName(TEXT("Satchel"));
+    }
+    if (RoleName == TEXT("Elf") || RoleName == TEXT("ElfScholar"))
+    {
+        return Random.FRand() > 0.35f ? FName(TEXT("Book")) : NAME_None;
+    }
+    if (RoleName == TEXT("ElfArtisan") || RoleName == TEXT("ElfCraftsperson"))
+    {
+        return Random.FRand() > 0.55f ? FName(TEXT("Book")) : FName(TEXT("Lantern"));
+    }
+    if (RoleName == TEXT("BoatTender"))
+    {
+        return Random.FRand() > 0.55f ? FName(TEXT("Crate")) : FName(TEXT("Lantern"));
     }
     if (RoleName == TEXT("BreeTownsperson"))
     {
@@ -558,7 +711,7 @@ void ALivingWorldDirector::MaintainBaselinePopulation()
     // This preserves activity while keeping threat readability and AI cost bounded.
     if (IsStoryDangerActive() && Target > 0)
     {
-        Target = FMath::Max(1, Target / 2);
+        Target = FMath::Max(1, FMath::RoundToInt(Target * DangerPopulationFraction));
     }
 
     if (Target <= 0 || BaselinePopulation.Num() >= Target)
@@ -597,24 +750,49 @@ void ALivingWorldDirector::MaintainBaselinePopulation()
     float MinWait = Random.FRandRange(0.8f, 2.5f);
     float MaxWait = Random.FRandRange(3.0f, 6.5f);
 
-    if (RoleName == TEXT("Courier") || RoleName == TEXT("RoadWalker"))
+    if (RoleName == TEXT("BreeCourier") || RoleName == TEXT("RoadWalker"))
     {
         Speed = Random.FRandRange(68.0f, 92.0f);
         MinWait = 0.2f;
         MaxWait = 1.4f;
         TravelOffset *= 1.45f;
     }
-    else if (RoleName == TEXT("FieldWorker"))
+    else if (RoleName == TEXT("FieldWorker") || RoleName == TEXT("Gardener"))
     {
         Speed = Random.FRandRange(34.0f, 48.0f);
         TravelOffset *= 0.55f;
         MaxWait = Random.FRandRange(5.0f, 9.0f);
     }
-    else if (RoleName == TEXT("Elf"))
+    else if (RoleName == TEXT("MarketVendor") || RoleName == TEXT("InnGuest"))
     {
-        Speed = Random.FRandRange(42.0f, 58.0f);
-        MinWait = 1.8f;
-        MaxWait = 5.5f;
+        Speed = Random.FRandRange(26.0f, 38.0f);
+        TravelOffset *= 0.36f;
+        MinWait = Random.FRandRange(2.5f, 4.0f);
+        MaxWait = Random.FRandRange(6.0f, 10.0f);
+    }
+    else if (RoleName == TEXT("StableHand") || RoleName == TEXT("GateWorker"))
+    {
+        Speed = Random.FRandRange(38.0f, 54.0f);
+        TravelOffset *= 0.62f;
+        MinWait = Random.FRandRange(1.4f, 2.8f);
+        MaxWait = Random.FRandRange(4.0f, 7.0f);
+    }
+    else if (RoleName == TEXT("Elf") || RoleName == TEXT("ElfScholar") ||
+             RoleName == TEXT("ElfArtisan") || RoleName == TEXT("ElfAttendant") ||
+             RoleName == TEXT("ElfWarden") || RoleName == TEXT("ElfCraftsperson") ||
+             RoleName == TEXT("BoatTender"))
+    {
+        Speed = RoleName == TEXT("ElfWarden")
+            ? Random.FRandRange(52.0f, 66.0f)
+            : Random.FRandRange(40.0f, 56.0f);
+        MinWait = RoleName == TEXT("BoatTender") ? 1.0f : 1.8f;
+        MaxWait = (RoleName == TEXT("ElfScholar") || RoleName == TEXT("ElfCraftsperson"))
+            ? Random.FRandRange(5.0f, 8.0f)
+            : Random.FRandRange(4.0f, 6.5f);
+        if (RoleName == TEXT("ElfScholar") || RoleName == TEXT("ElfCraftsperson"))
+        {
+            TravelOffset *= 0.55f;
+        }
     }
     else if (RoleName == TEXT("Bird"))
     {
@@ -695,6 +873,7 @@ AShireAmbientNPC* ALivingWorldDirector::SpawnAmbientActor(
     }
 
     NPC->Tags.AddUnique(TEXT("LivingWorldEphemeral"));
+    NPC->Tags.AddUnique(TEXT("LivingWorldManaged"));
     NPC->RoutineRole = RoutineRole;
     NPC->ActivityPropType = ActivityProp;
     NPC->RoutinePointA = Location;
@@ -1249,19 +1428,13 @@ void ALivingWorldDirector::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
-    if (!GetWorld() || !QuestSubsystem)
+    if (!GetWorld() || !QuestSubsystem || !SynchronizeCommittedWorld())
     {
         return;
     }
 
     CleanupExpiredEvents();
     MaintainBaselinePopulation();
-
-    if (QuestSubsystem->GetCurrentChapterId() != ActiveChapterId)
-    {
-        ActiveChapterId = QuestSubsystem->GetCurrentChapterId();
-        ResetForCurrentChapter();
-    }
 
     const float Now = GetWorld()->GetTimeSeconds();
     if (Now < NextEventTime)
