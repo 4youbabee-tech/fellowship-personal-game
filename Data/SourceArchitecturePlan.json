@@ -517,6 +517,22 @@
       "kind": "Source",
       "role": "Story-cue camera grammar, subject framing and safe gameplay return implementation",
       "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.h",
+      "target_path": "Source/ShireJourney/Public/Subsystems/ShireChapterAssetStreamingSubsystem.h",
+      "domain": "Subsystems",
+      "kind": "Header",
+      "role": "Chapter/route asset-bank asynchronous streaming contract",
+      "migration_status": "CURRENT_FLAT"
+    },
+    {
+      "current_path": "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.cpp",
+      "target_path": "Source/ShireJourney/Private/Subsystems/ShireChapterAssetStreamingSubsystem.cpp",
+      "domain": "Subsystems",
+      "kind": "Source",
+      "role": "Data-driven soft-path bank loading and seam-safe resident-handle implementation",
+      "migration_status": "CURRENT_FLAT"
     }
   ],
   "programmer_review_2026_09_21": {
