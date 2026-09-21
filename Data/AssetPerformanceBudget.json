@@ -168,7 +168,7 @@
     ]
   },
   "chapter_asset_streaming_v5": {
-    "status": "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF_AND_MEASUREMENT",
+    "status": "EXACT_HEAD_ENGINE_PROOF_GREEN_MERGED_PENDING_TARGET_DEVICE_MEASUREMENT",
     "plan": "Data/ChapterAssetStreamingPlan.json",
     "runtime_owner": "UShireChapterAssetStreamingSubsystem + AChapterWorldRouter",
     "changes": [
@@ -178,6 +178,30 @@
       "missing/unknown bank preserves compatibility builder path",
       "Fellowship EnsureProductionMeshes is chapter-aware instead of loading every Part I region together"
     ],
-    "evidence_boundary": "No claim of lower hitch, lower RAM or lower VRAM until representative target-device measurement exists."
+    "evidence_boundary": "Exact-head and post-merge UE4.27.2 machine proof is green. Lower hitch, RAM or VRAM remains unclaimed until representative target-device measurement exists.",
+    "engine_proof": {
+      "candidate_sha": "2fd76baa6e8a8683854ab50b7c83dd668465716a",
+      "pre_unreal": "#542 SUCCESS",
+      "unreal_build": "#377 attempt 2 SUCCESS",
+      "merged_develop": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
+      "develop_pre_unreal": "#543 SUCCESS",
+      "develop_unreal": "#378 SUCCESS"
+    }
+  },
+  "post_v5_world_density": {
+    "status": "EARLY_REALM_V10_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF_AND_DEVICE_MEASUREMENT",
+    "branch": "production/early-realms-world-life-v1",
+    "rule": "Improve perceived life first through culture-specific roles, chapter-tuned residency radii/cadence and HISM detail. Do not raise baseline population targets before target-device profiling.",
+    "unchanged_baseline_targets": {
+      "P1C01": 18,
+      "P1C02": 16,
+      "P1C03": 5,
+      "P1C04": 12,
+      "P1C05": 0,
+      "P1C06": 0,
+      "P1C07": 10,
+      "P1C08": 4
+    },
+    "target_profile": "1280x720 Low-Medium DX11, 30 FPS floor"
   }
 }
