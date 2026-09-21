@@ -1,3 +1,11 @@
+## 2026-09-22 - persistence/world-commit repair wave started
+
+After Pre-Unreal #564 turned green on `685dc63ff94fec0a1f6b3d57d60fce3bffcde31d`, the integration train moved to the first registered runtime defect wave instead of opening new features. Transition checkpoint capture no longer clears and saves on the next player Tick unconditionally. It now waits until `ChapterWorldRouter::IsWorldCommitted` confirms the current chapter/route/episode identity, so an asynchronous preload cannot produce a destination chapter snapshot with a source-world transform.
+
+Cross-chapter save restore is also changed from immediate teleport to deferred committed-world placement. `AShirePlayerCharacter` stores the saved transform and identity, waits for the matching committed world, and asks `AChapterWorldRouter::PlacePlayerAtCommittedTransform` to ground the saved XY location against destination geometry before teleporting. The initial P1C01 checkpoint is routed through the same commit barrier.
+
+This is a source implementation wave only. It has not yet earned UE4.27 compile or runtime proof, and the failed-swap rollback transaction is still open. Unreal Build #399 is still expected to encounter the separate runner Engine Content permission blocker unless that machine permission changes. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made.
+
 ## 2026-09-22 - Pre-Unreal #562 stale streaming-cancellation test repaired
 
 Exact-head Pre-Unreal #562 on `830b986d36d2563d11d7b3ed18c94b64e6741090` passed the core validator, Project Governor and Deep Project Audit, then failed one source-contract unittest in `Scripts/test_streaming_cancellation_contract.py`. The test still expected `ResidentHandle = PendingHandle` inside `HandleAsyncLoadComplete`, which contradicts the integrated two-phase streaming contract: async completion only reports preload readiness, while resident promotion belongs to `CommitPendingRequest` after world construction and grounding succeed.
