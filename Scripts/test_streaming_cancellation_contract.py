@@ -35,7 +35,12 @@ class StreamingCancellationContract(unittest.TestCase):
                          'GetCurrentEpisodeId() != PendingEpisodeId'):
             self.assertIn(contract, body)
         body = self.stream.split('::HandleAsyncLoadComplete(uint64 CompletedSerial)', 1)[1]
-        self.assertLess(body.index('CompletedSerial != RequestSerial'), body.index('ResidentHandle = PendingHandle'))
+        self.assertLess(body.index('CompletedSerial != RequestSerial'), body.index('OnChapterAssetsReady.Broadcast'))
+        self.assertNotIn('ResidentHandle = PendingHandle', body)
+
+        commit = self.stream.split('::CommitPendingRequest(', 1)[1].split('::Deinitialize()', 1)[0]
+        self.assertIn('ResidentHandle = PendingHandle', commit)
+        self.assertLess(commit.index('if (!bReady)'), commit.index('ResidentHandle = PendingHandle'))
 
 
 if __name__ == '__main__':
