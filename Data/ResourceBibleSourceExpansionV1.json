@@ -1,0 +1,233 @@
+{
+  "schema_version": 1,
+  "expansion_id": "RESOURCE_BIBLE_09_SOURCE_EXPANSION_V1",
+  "status": "ACTIVE",
+  "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL",
+  "source_document_rule_summary": [
+    "Record Asset_ID, category, asset name, creator/uploader, source URL, download date, filename, intended use and known terms.",
+    "Use originals/open assets directly where practical.",
+    "Keep reference material separate from production assets.",
+    "Never bypass DRM, paywalls, restricted access or technical protections.",
+    "Validate imported assets for scale, pivot, UVs, topology, collision, LODs, materials, textures, skeleton/retargeting, audio loudness/loops/spatialization and performance."
+  ],
+  "source_groups": {
+    "voice_tts_dialogue": [
+      "ElevenLabs",
+      "Replica Studios",
+      "Altered Studio",
+      "Respeecher",
+      "Murf.ai",
+      "PlayHT",
+      "LOVO",
+      "Speechify",
+      "Narakeet",
+      "FakeYou",
+      "TTSMaker",
+      "Azure TTS",
+      "Google Cloud TTS",
+      "Amazon Polly",
+      "Voicemod"
+    ],
+    "music": [
+      "Pixabay Music",
+      "Free Music Archive",
+      "Incompetech",
+      "Bensound",
+      "Uppbeat",
+      "Purple Planet",
+      "Musopen",
+      "YouTube Audio Library",
+      "Archive.org",
+      "Bandcamp free/name-your-price",
+      "YouTube LOTR music searches"
+    ],
+    "sound_effects_field_recording": [
+      "Freesound",
+      "Pixabay SFX",
+      "ZapSplat",
+      "SoundBible",
+      "BBC Sound Effects",
+      "99Sounds",
+      "Soundly",
+      "Krotos",
+      "A Sound Effect",
+      "Sonniss GDC Audio Bundles",
+      "Kenney Audio"
+    ],
+    "image_art_character_ui_reference": [
+      "ArtStation",
+      "DeviantArt",
+      "Pinterest",
+      "Pixiv",
+      "Behance",
+      "Dribbble",
+      "Unsplash",
+      "Pexels",
+      "Freepik",
+      "Vecteezy",
+      "Flaticon",
+      "Game-icons.net",
+      "Kenney",
+      "OpenGameArt",
+      "itch.io asset packs"
+    ],
+    "models_props_characters_scans": [
+      "Sketchfab",
+      "TurboSquid",
+      "CGTrader",
+      "Free3D",
+      "Mixamo",
+      "Quixel Megascans",
+      "Poly Haven",
+      "ambientCG",
+      "BlenderKit",
+      "3D Warehouse",
+      "Evermotion",
+      "Archmodels",
+      "KitBash3D",
+      "Fab / Unreal Marketplace",
+      "Unity Asset Store - free",
+      "Blender Market - free",
+      "CG Peak",
+      "3DExport",
+      "RenderHub",
+      "Hum3D",
+      "Creative Market",
+      "Quaternius",
+      "The Base Mesh"
+    ],
+    "buildings_architecture": [
+      "Quixel Megascans",
+      "KitBash3D",
+      "Evermotion / Archmodels",
+      "3D Warehouse",
+      "Sketchfab",
+      "TurboSquid / CGTrader",
+      "Poly Haven / BlenderKit",
+      "Fab"
+    ],
+    "environments_textures_materials": [
+      "Quixel Megascans",
+      "Poly Haven",
+      "ambientCG",
+      "ShareTextures",
+      "Texture Haven / Poly Haven legacy",
+      "3DTextures.me",
+      "CC0 Textures / ambientCG legacy",
+      "Textures.com",
+      "Materialize",
+      "ArmorLab"
+    ],
+    "animation_motion_capture": [
+      "Mixamo",
+      "ActorCore",
+      "Rokoko",
+      "Motion Capture Online",
+      "Fab / Unreal Marketplace animations",
+      "Unity Asset Store animations"
+    ],
+    "lotr_specific_reference": [
+      "Sketchfab LOTR/Middle-earth searches",
+      "ArtStation LOTR fan art",
+      "Nexus Mods LOTR searches",
+      "ModDB LOTR searches",
+      "GitHub LOTR/Middle-earth asset/tool searches",
+      "Archive.org",
+      "YouTube LOTR music/ambience/scenes",
+      "Fan wikis/forums/Reddit/Tolkien communities"
+    ],
+    "ai_creation_tools": [
+      "Meshy.ai",
+      "Kaedim",
+      "Luma AI",
+      "Polycam",
+      "Scenario",
+      "Layer AI",
+      "Promethean AI",
+      "Inworld AI",
+      "Convai"
+    ]
+  },
+  "search_recipes": {
+    "Shire": [
+      "medieval english village",
+      "hobbit-style hill homes",
+      "pastoral farmland",
+      "round door architecture",
+      "cottage gardens",
+      "pub interior",
+      "rustic carts"
+    ],
+    "Bree": [
+      "medieval roadside inn",
+      "muddy medieval town",
+      "timber tavern",
+      "market street rain",
+      "horse stable"
+    ],
+    "Rivendell": [
+      "fantasy elven architecture",
+      "waterfall palace",
+      "mountain sanctuary",
+      "ornate stone arches",
+      "woodland terraces"
+    ],
+    "Moria": [
+      "dwarven hall",
+      "underground mega hall",
+      "ancient stone columns",
+      "mine ruins",
+      "cavern bridge",
+      "monumental dungeon"
+    ],
+    "Rohan": [
+      "steppe horse culture",
+      "timber mead hall",
+      "cavalry village",
+      "windswept grassland",
+      "wooden palisade"
+    ],
+    "Helms_Deep": [
+      "mountain fortress",
+      "siege wall",
+      "medieval keep",
+      "rain battle ambience",
+      "siege ladders"
+    ],
+    "Gondor_Minas_Tirith": [
+      "white stone fortress city",
+      "layered citadel",
+      "medieval military city",
+      "grand hall",
+      "siege city"
+    ],
+    "Mordor": [
+      "volcanic wasteland",
+      "ash terrain",
+      "black fortress",
+      "lava",
+      "industrial war camp",
+      "jagged rock"
+    ],
+    "Creatures": [
+      "giant spider",
+      "cave troll",
+      "warg-like beast",
+      "spectral knight",
+      "demonic fire creature",
+      "ancient eagle"
+    ],
+    "Audio": [
+      "forest ambience",
+      "tavern crowd",
+      "horse tack",
+      "sword clash",
+      "shield hit",
+      "fire crackle",
+      "cavern reverb",
+      "siege battle",
+      "wind mountain",
+      "lava rumble"
+    ]
+  }
+}
