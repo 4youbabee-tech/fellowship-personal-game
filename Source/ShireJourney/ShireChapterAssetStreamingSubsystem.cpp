@@ -22,12 +22,22 @@ void UShireChapterAssetStreamingSubsystem::Initialize(FSubsystemCollectionBase& 
     RequestSerial = 0;
 
     bPlanReady = LoadStreamingPlan();
-    UE_LOG(
-        LogTemp,
-        bPlanReady ? Display : Warning,
-        TEXT("ChapterAssetStreaming: plan-ready=%s banks=%d"),
-        bPlanReady ? TEXT("yes") : TEXT("no"),
-        Banks.Num());
+    if (bPlanReady)
+    {
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ChapterAssetStreaming: plan-ready=yes banks=%d"),
+            Banks.Num());
+    }
+    else
+    {
+        UE_LOG(
+            LogTemp,
+            Warning,
+            TEXT("ChapterAssetStreaming: plan-ready=no banks=%d"),
+            Banks.Num());
+    }
 }
 
 void UShireChapterAssetStreamingSubsystem::Deinitialize()
