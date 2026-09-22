@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_CC0_KAYKIT_GITHUB_V1",
+  "status": "AUTHORIZED_FOR_STAGING",
+  "provider": "KAYKIT",
+  "publisher": "Kay Lousberg",
+  "license": "CC0-1.0",
+  "access": "PUBLIC_OFFICIAL_GITHUB_REPOSITORIES",
+  "automation": "DIRECT_PUBLIC_ARCHIVES_ONLY_NO_INTERACTION",
+  "purpose": "Stage low-spec supporting architecture, interiors, props and rigged-character pipeline stock from KayKit official public GitHub repositories without login, purchase flows or interactive download gates.",
+  "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\KayKit",
+  "max_total_download_bytes": 650000000,
+  "packs": [
+    {
+      "id": "KAYKIT_MEDIEVAL_HEXAGON_1_0",
+      "repository": "KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0",
+      "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/archive/refs/heads/main.zip",
+      "license_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/main/LICENSE.txt",
+      "category": "ARCHITECTURE_WORLD_SUPPORT",
+      "expected_formats": ["FBX", "GLTF"],
+      "max_bytes": 160000000,
+      "regional_use": ["SHIRE", "BREE", "EDORAS_MEDUSELD", "MINAS_TIRITH", "OSGILIATH", "GREY_HAVENS"],
+      "suitability": "SUPPORTING_BACKGROUND_LAYOUT_ONLY"
+    },
+    {
+      "id": "KAYKIT_DUNGEON_REMASTERED_1_0",
+      "repository": "KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0",
+      "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0/archive/refs/heads/main.zip",
+      "license_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0/main/LICENSE.txt",
+      "category": "DUNGEON_INTERIOR_SUPPORT",
+      "expected_formats": ["FBX", "GLTF", "OBJ"],
+      "max_bytes": 180000000,
+      "regional_use": ["MORIA", "MINAS_MORGUL", "CIRITH_UNGOL_SHELOB", "PATHS_OF_THE_DEAD"],
+      "suitability": "SUPPORTING_INTERIOR_COLLISION_LAYOUT"
+    },
+    {
+      "id": "KAYKIT_ADVENTURERS_1_0",
+      "repository": "KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+      "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/archive/refs/heads/main.zip",
+      "license_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/LICENSE.txt",
+      "category": "RIGGED_CHARACTER_PIPELINE_SUPPORT",
+      "expected_formats": ["FBX", "GLTF"],
+      "max_bytes": 160000000,
+      "regional_use": ["BREE", "RIVENDELL", "LOTHLORIEN", "EDORAS_MEDUSELD", "MINAS_TIRITH"],
+      "suitability": "BACKGROUND_RETARGET_QA_ONLY"
+    },
+    {
+      "id": "KAYKIT_FURNITURE_BITS_1_0",
+      "repository": "KayKit-Game-Assets/KayKit-Furniture-Bits-1.0",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Furniture-Bits-1.0",
+      "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Furniture-Bits-1.0/archive/refs/heads/main.zip",
+      "license_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Furniture-Bits-1.0/main/LICENSE.txt",
+      "category": "INTERIOR_PROPS",
+      "expected_formats": ["FBX", "GLTF", "OBJ"],
+      "max_bytes": 90000000,
+      "regional_use": ["SHIRE", "BREE", "RIVENDELL", "EDORAS_MEDUSELD", "MINAS_TIRITH", "GREY_HAVENS"],
+      "suitability": "SUPPORTING_INTERIOR_PROPS"
+    }
+  ],
+  "rules": [
+    "Use only the exact official public GitHub repositories and direct archive/license URLs recorded here.",
+    "Never follow itch.io purchase/name-your-price flows, account login, Patreon, Discord, OAuth, cookies/tokens or other interactive routes.",
+    "Downloaded archives are STAGED only; successful download never promotes READY_FOR_IMPORT, IMPORTED, INTEGRATED or ACCEPTED.",
+    "Every archive and license snapshot receives source URL, byte size and SHA256 in the receipt.",
+    "Reject and delete any archive exceeding its per-pack byte cap or the batch total cap.",
+    "Accepted animated-character output requires skeletal FBX with a real rig and reviewed deformation; stylized support characters are not final named-character art.",
+    "Production textures remain PNG/TGA/channel-packed where applicable; source atlas textures require intake review before runtime use.",
+    "Repeated decorative props/detail require ISM/HISM and explicit cull distances when integrated at high count.",
+    "Heavy integrated assets remain soft/async-owned through FStreamableManager; staging never authorizes synchronous runtime loading."
+  ]
+}
