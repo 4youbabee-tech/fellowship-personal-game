@@ -6,6 +6,11 @@ public class ShireJourney : ModuleRules
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
+        // Transitional export for the currently flat guarded runtime layout.
+        // Cross-module editor QA needs runtime public contracts (for example ShireSaveGame.h)
+        // until the dedicated Public/Private migration moves headers under Public/<Domain>.
+        PublicIncludePaths.Add(ModuleDirectory);
+
         PublicDependencyModuleNames.AddRange(new string[]
         {
             "Core",
