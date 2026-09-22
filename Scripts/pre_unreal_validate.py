@@ -5384,6 +5384,8 @@ pg121_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
 pg121_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
 pg121_router_h = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.h")
 pg121_runtime_smoke = read(ROOT / "Scripts" / "runtime_smoke.py")
+if "RUNTIME_SWEEP_SUMMARY" not in pg121_runtime_smoke:
+    fail("PG-121 chapter runtime audit must aggregate all chapter failures in one sweep")
 
 if "RestartPlayerAtTransform(PC" in pg121_game_mode or    'SetActorLocationAndRotation(FVector(-2410.0f, -120.0f, 130.0f)' in pg121_game_mode:
     fail("PG-121 GameMode may not teleport the pawn into chapter coordinates before async world commit")
@@ -5407,13 +5409,20 @@ for pg121_marker in [
         fail(f"PG-121 runtime grounding regression marker missing: {pg121_marker}")
 
 pg121_shire_builder = read(ROOT / "Source" / "ShireJourney" / "ShirePrototypeWorldBuilder.cpp")
+pg121_fellowship_builder = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
+if "RuntimeCollisionFoundation" not in pg121_shire_builder:
+    fail("PG-121 broad Shire fallback collision foundation missing")
 for pg121_symbol in [
-    'RuntimeCollisionFoundation',
-    'RuntimeSpawnFoundation',
-    'FVector(-2410.0f, -120.0f, 2.0f)',
+    "GroundProbeOffsets",
+    "OverlapBlockingTestByChannel",
+    "FCollisionShape::MakeCapsule",
+    "GroundHit.ImpactNormal.Z < 0.55f",
+    "adjusted-to-nearby-ground",
 ]:
-    if pg121_symbol not in pg121_shire_builder:
-        fail(f"PG-121 deterministic Shire collision support missing: {pg121_symbol}")
+    if pg121_symbol not in pg121_router:
+        fail(f"PG-121 seam-tolerant grounding invariant missing: {pg121_symbol}")
+if "RuntimeSpawnFoundation" in (pg121_shire_builder + pg121_fellowship_builder):
+    fail("PG-121 chapter-specific spawn support pads are forbidden; fix grounding at router/world contract level")
 
 
 # PG-122: automated QA immune-system foundation must stay wired into exact-head UE validation.
