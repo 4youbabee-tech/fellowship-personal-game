@@ -4,7 +4,7 @@
   "status": "AUTHORIZED_FOR_STAGING",
   "provider": "QUATERNIUS",
   "license": "CC0",
-  "purpose": "Bulk-stage CC0 character, animation, fauna, architecture and prop packs for supporting production use and rig/world pipeline coverage.",
+  "purpose": "Bulk-stage CC0 character, animation, fauna, creature-pipeline, architecture and prop packs for supporting production use and rig/world pipeline coverage.",
   "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\Quaternius",
   "source_pages": [
     {
@@ -26,9 +26,21 @@
       "required_final_format": "FBX"
     },
     {
+      "id": "QTN_ULTIMATE_MODULAR_WOMEN",
+      "url": "https://quaternius.com/packs/ultimatemodularwomen.html",
+      "category": "NPC_CHARACTER_BASE",
+      "required_final_format": "FBX"
+    },
+    {
       "id": "QTN_UNIVERSAL_ANIMATION_LIBRARY",
       "url": "https://quaternius.com/packs/universalanimationlibrary.html",
       "category": "ANIMATION",
+      "required_final_format": "FBX"
+    },
+    {
+      "id": "QTN_ULTIMATE_MONSTERS",
+      "url": "https://quaternius.com/packs/ultimatemonsters.html",
+      "category": "CREATURE_PIPELINE",
       "required_final_format": "FBX"
     },
     {
@@ -38,9 +50,21 @@
       "required_final_format": "FBX"
     },
     {
+      "id": "QTN_ULTIMATE_BUILDINGS",
+      "url": "https://quaternius.com/packs/ultimatetexturedbuildings.html",
+      "category": "ARCHITECTURE",
+      "required_final_format": "FBX"
+    },
+    {
       "id": "QTN_MODULAR_RUINS",
       "url": "https://quaternius.com/packs/ultimatemodularruins.html",
       "category": "RUINS",
+      "required_final_format": "FBX"
+    },
+    {
+      "id": "QTN_MODULAR_DUNGEON",
+      "url": "https://quaternius.com/packs/medievaldungeon.html",
+      "category": "DUNGEON_ARCHITECTURE",
       "required_final_format": "FBX"
     },
     {
@@ -71,6 +95,7 @@
   "rules": [
     "Only public downloads discovered from the official Quaternius pack pages are eligible.",
     "Animated production-character output accepted by the project remains FBX only even if the source pack also contains OBJ/glTF/Blend.",
+    "Creature/monster packs are pipeline/support stock only; canonical hero creatures still require species-specific art, real rigs, deformation review and visual acceptance.",
     "If a pack resolves only to an interactive store page, record it as unresolved/manual-source rather than inventing a direct URL.",
     "Downloaded archives stay STAGED until extracted/scanned and FBX/PNG/TGA intake checks pass."
   ]
