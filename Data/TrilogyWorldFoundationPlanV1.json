@@ -2908,7 +2908,8 @@
       "Data/TrilogyAudioAssetCandidateQueue.json",
       "Data/WarehouseAmbientCGAcquisitionBatchV1.json",
       "Data/WarehouseQuaterniusAcquisitionBatchV1.json",
-      "Data/WarehouseKenneyAcquisitionBatchV1.json"
+      "Data/WarehouseKenneyAcquisitionBatchV1.json",
+      "Data/WarehouseKayKitGitHubAcquisitionBatchV1.json"
     ],
     "evidence_boundary": "CANDIDATE/AUTHORIZED/STAGED/READY_FOR_IMPORT are warehouse states only. IMPORTED/INTEGRATED/ACCEPTED require their own UE/runtime/human evidence."
   },
@@ -2963,6 +2964,55 @@
       ],
       "maturity_boundary": "LAYOUT_COLLISION_SUPPORT_NOT_HERO_ARCHITECTURE_ACCEPTANCE",
       "runtime_gate": "MORIA_EXISTING_PART_I_OR_PREPRODUCTION_ONLY_FOR_LATER_REGIONS"
+    },
+    "KAYKIT_MEDIEVAL_HEXAGON_1_0": {
+      "role": "LOW_SPEC_SETTLEMENT_AND_LANDMARK_SUPPORT",
+      "regions": [
+        "SHIRE",
+        "BREE",
+        "EDORAS_MEDUSELD",
+        "MINAS_TIRITH",
+        "OSGILIATH",
+        "GREY_HAVENS"
+      ],
+      "maturity_boundary": "STAGED_SUPPORT_STOCK_NOT_HERO_ARCHITECTURE",
+      "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY_OR_PREPRODUCTION_ONLY"
+    },
+    "KAYKIT_DUNGEON_REMASTERED_1_0": {
+      "role": "LOW_SPEC_MODULAR_INTERIOR_AND_COLLISION_SUPPORT",
+      "regions": [
+        "MORIA",
+        "MINAS_MORGUL",
+        "CIRITH_UNGOL_SHELOB",
+        "PATHS_OF_THE_DEAD"
+      ],
+      "maturity_boundary": "LAYOUT_COLLISION_SUPPORT_NOT_CANONICAL_HERO_ARCHITECTURE",
+      "runtime_gate": "MORIA_EXISTING_PART_I_OR_PREPRODUCTION_ONLY_FOR_LATER_REGIONS"
+    },
+    "KAYKIT_ADVENTURERS_1_0": {
+      "role": "BACKGROUND_RIG_RETARGET_AND_POOLING_QA",
+      "regions": [
+        "BREE",
+        "RIVENDELL",
+        "LOTHLORIEN",
+        "EDORAS_MEDUSELD",
+        "MINAS_TIRITH"
+      ],
+      "maturity_boundary": "PIPELINE_SUPPORT_REQUIRES_SKELETAL_FBX_RIG_SKIN_DEFORMATION_REVIEW",
+      "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY_OR_PREPRODUCTION_ONLY"
+    },
+    "KAYKIT_FURNITURE_BITS_1_0": {
+      "role": "LOW_SPEC_INTERIOR_PROP_SUPPORT",
+      "regions": [
+        "SHIRE",
+        "BREE",
+        "RIVENDELL",
+        "EDORAS_MEDUSELD",
+        "MINAS_TIRITH",
+        "GREY_HAVENS"
+      ],
+      "maturity_boundary": "SUPPORTING_PROP_STOCK_REQUIRES_ART_DIRECTION_AND_INSTANCING_REVIEW",
+      "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY_OR_PREPRODUCTION_ONLY"
     }
   },
   "intake_readiness_order": [
