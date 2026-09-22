@@ -11,6 +11,7 @@ $payloadFiles = @($allFiles | Where-Object { $_.Name -notlike "receipt_*.json" -
 
 $missing = @()
 $badReceipt = @()
+$licenseHashMismatch = @()
 $records = @()
 foreach($receiptFile in $receiptFiles){
   try { $receipt = Get-Content -LiteralPath $receiptFile.FullName -Raw | ConvertFrom-Json }
@@ -19,20 +20,48 @@ foreach($receiptFile in $receiptFiles){
   $batchId = [string]$receipt.batch_id
   foreach($item in @($receipt.files)){
     $path = [string]$item.file
+    $declaredHash = ([string]$item.sha256).ToLowerInvariant()
+    $recordKind = "file"
+    if([string]::IsNullOrWhiteSpace($path)){
+      $path = [string]$item.archive
+      $declaredHash = ([string]$item.archive_sha256).ToLowerInvariant()
+      $recordKind = "archive"
+    }
     if([string]::IsNullOrWhiteSpace($path)){ continue }
     if(-not (Test-Path -LiteralPath $path -PathType Leaf)){
-      $missing += [ordered]@{ provider=$provider; batch_id=$batchId; path=$path }
+      $missing += [ordered]@{ provider=$provider; batch_id=$batchId; path=$path; record_kind=$recordKind }
       continue
     }
     $actual = Get-Item -LiteralPath $path
     $actualHash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
-    $declaredHash = ([string]$item.sha256).ToLowerInvariant()
+
+    $licensePath = [string]$item.license_snapshot
+    $declaredLicenseHash = ([string]$item.license_sha256).ToLowerInvariant()
+    if(-not [string]::IsNullOrWhiteSpace($licensePath)){
+      if(-not (Test-Path -LiteralPath $licensePath -PathType Leaf)){
+        $missing += [ordered]@{ provider=$provider; batch_id=$batchId; path=$licensePath; record_kind="license_snapshot" }
+      } elseif(-not [string]::IsNullOrWhiteSpace($declaredLicenseHash)){
+        $actualLicenseHash = (Get-FileHash -LiteralPath $licensePath -Algorithm SHA256).Hash.ToLowerInvariant()
+        if($actualLicenseHash -ne $declaredLicenseHash){
+          $licenseHashMismatch += [ordered]@{
+            provider=$provider
+            batch_id=$batchId
+            asset_id=[string]$item.asset_id
+            path=$licensePath
+            declared_sha256=$declaredLicenseHash
+            actual_sha256=$actualLicenseHash
+          }
+        }
+      }
+    }
+
     $records += [pscustomobject]@{
       provider=$provider
       batch_id=$batchId
       asset_id=[string]$item.asset_id
       asset_slug=[string]$item.asset_slug
       category=[string]$item.category
+      record_kind=$recordKind
       path=$path
       extension=$actual.Extension.ToLowerInvariant()
       size=[int64]$actual.Length
@@ -72,6 +101,7 @@ $inventory = [ordered]@{
   duplicate_hash_groups=$duplicateGroups
   missing_referenced_files=$missing
   hash_mismatches=$hashMismatch
+  license_hash_mismatches=$licenseHashMismatch
   dangerous_payloads=@($dangerous.FullName)
   bad_receipts=$badReceipt
 }
@@ -79,8 +109,8 @@ $inventory = [ordered]@{
 $outPath = Join-Path $Root "warehouse_inventory_latest.json"
 $inventory | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $outPath -Encoding UTF8
 
-if($missing.Count -gt 0 -or $hashMismatch.Count -gt 0 -or $dangerous.Count -gt 0 -or $badReceipt.Count -gt 0){
-  Write-Host ("WAREHOUSE_INVENTORY_AUDIT_FAIL missing="+$missing.Count+" hashMismatch="+$hashMismatch.Count+" dangerous="+$dangerous.Count+" badReceipts="+$badReceipt.Count+" report="+$outPath)
+if($missing.Count -gt 0 -or $hashMismatch.Count -gt 0 -or $licenseHashMismatch.Count -gt 0 -or $dangerous.Count -gt 0 -or $badReceipt.Count -gt 0){
+  Write-Host ("WAREHOUSE_INVENTORY_AUDIT_FAIL missing="+$missing.Count+" hashMismatch="+$hashMismatch.Count+" licenseHashMismatch="+$licenseHashMismatch.Count+" dangerous="+$dangerous.Count+" badReceipts="+$badReceipt.Count+" report="+$outPath)
   exit 2
 }
 
