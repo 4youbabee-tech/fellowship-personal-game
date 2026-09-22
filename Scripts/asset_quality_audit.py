@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Fast source-asset quality audit for the UE4.27 production bank.
 
-This is a pre-engine diagnostic. It reports structural OBJ/MTL/BMP risks quickly and
+This is a pre-engine diagnostic. It reports structural OBJ/MTL/PNG/TGA risks quickly and
 does not pretend to replace Unreal import, PIE, or visual review.
 """
 
@@ -56,7 +56,13 @@ def main() -> int:
 
     obj_files = sorted(PRODUCTION.rglob("*.obj"))
     mtl_files = sorted(PRODUCTION.rglob("*.mtl"))
-    bmp_files = sorted(PRODUCTION.rglob("*.bmp"))
+    legacy_bmp_files = sorted(PRODUCTION.rglob("*.bmp"))
+    texture_files = sorted(PRODUCTION.rglob("*.png")) + sorted(PRODUCTION.rglob("*.tga"))
+    if legacy_bmp_files:
+        errors.extend(
+            f"{path.relative_to(ROOT)} uses forbidden uncompressed BMP; convert to PNG/TGA"
+            for path in legacy_bmp_files
+        )
 
     mtl_cache: dict[Path, set[str]] = {}
 
@@ -204,26 +210,40 @@ def main() -> int:
         if obj_triangle_equivalents > largest_obj_triangles[0]:
             largest_obj_triangles = (obj_triangle_equivalents, obj.relative_to(ROOT).as_posix())
 
-    for bmp in bmp_files:
-        stats["bmp"] += 1
-        relative_parts = bmp.relative_to(PRODUCTION).parts
+    for texture in texture_files:
+        stats["texture"] += 1
+        relative_parts = texture.relative_to(PRODUCTION).parts
         bucket = "/".join(relative_parts[:2]) if len(relative_parts) >= 2 else relative_parts[0]
         try:
-            data = bmp.read_bytes()
+            data = texture.read_bytes()
         except Exception as exc:
-            errors.append(f"{bmp.relative_to(ROOT)} unreadable: {exc}")
+            errors.append(f"{texture.relative_to(ROOT)} unreadable: {exc}")
             continue
-        if len(data) < 26 or data[:2] != b"BM":
-            errors.append(f"{bmp.relative_to(ROOT)} is not a valid BMP header")
+
+        width = height = 0
+        suffix = texture.suffix.lower()
+        if suffix == ".tga":
+            if len(data) < 18 or data[2] not in (2, 10):
+                errors.append(f"{texture.relative_to(ROOT)} is not a supported TGA")
+                continue
+            width = struct.unpack_from("<H", data, 12)[0]
+            height = struct.unpack_from("<H", data, 14)[0]
+        elif suffix == ".png":
+            if len(data) < 24 or data[:8] != b"\x89PNG\r\n\x1a\n" or data[12:16] != b"IHDR":
+                errors.append(f"{texture.relative_to(ROOT)} is not a valid PNG header")
+                continue
+            width = struct.unpack_from(">I", data, 16)[0]
+            height = struct.unpack_from(">I", data, 20)[0]
+
+        if width <= 0 or height <= 0:
+            errors.append(f"{texture.relative_to(ROOT)} has invalid dimensions")
             continue
         stats["texture_source_bytes"] += len(data)
         production_bucket_bytes[bucket] += len(data)
-        width = abs(struct.unpack_from("<i", data, 18)[0])
-        height = abs(struct.unpack_from("<i", data, 22)[0])
         dimension_counts[(width, height)] += 1
         if width > 1024 or height > 1024:
             warnings.append(
-                f"{bmp.relative_to(ROOT)} is {width}x{height}; review target-device cost"
+                f"{texture.relative_to(ROOT)} is {width}x{height}; review target-device cost"
             )
 
     summary = [
@@ -231,7 +251,7 @@ def main() -> int:
         "",
         f"- OBJ files: {len(obj_files)}",
         f"- MTL files: {len(mtl_files)}",
-        f"- BMP files: {len(bmp_files)}",
+        f"- PNG/TGA files: {len(texture_files)}",\n        f"- Forbidden BMP files: {len(legacy_bmp_files)}",
         f"- OBJ without explicit normals: {stats['obj_without_normals']}",
         f"- OBJ without UV coordinates: {stats['obj_without_uvs']}",
         f"- OBJ without smoothing groups: {stats['obj_without_smoothing_groups']}",
@@ -246,7 +266,7 @@ def main() -> int:
     ]
     if dimension_counts:
         summary.append(
-            "- BMP dimensions: "
+            "- Texture dimensions: "
             + ", ".join(
                 f"{w}x{h}={count}"
                 for (w, h), count in sorted(dimension_counts.items())

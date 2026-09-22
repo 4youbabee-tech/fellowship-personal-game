@@ -5,7 +5,7 @@ Pr 0.90
 Pm 0.00
 Ks 0.02 0.02 0.02
 Ns 6
-map_Kd TX_ShGrass.bmp
+map_Kd TX_ShGrass.tga
 
 newmtl Dirt
 Kd 0.45 0.30 0.16
@@ -13,7 +13,7 @@ Pr 0.80
 Pm 0.02
 Ks 0.01 0.01 0.01
 Ns 4
-map_Kd TX_ShDirt.bmp
+map_Kd TX_ShDirt.tga
 
 newmtl Earth
 Kd 0.40 0.29 0.18
@@ -21,7 +21,7 @@ Pr 0.80
 Pm 0.02
 Ks 0.01 0.01 0.01
 Ns 4
-map_Kd TX_ShDirt.bmp
+map_Kd TX_ShDirt.tga
 
 newmtl Bark
 Kd 0.31 0.18 0.08
@@ -29,7 +29,7 @@ Pr 0.74
 Pm 0.00
 Ks 0.01 0.01 0.01
 Ns 5
-map_Kd TX_ShBark.bmp
+map_Kd TX_ShBark.tga
 
 newmtl Leaves
 Kd 0.18 0.39 0.12
@@ -37,7 +37,7 @@ Pr 0.70
 Pm 0.02
 Ks 0.01 0.01 0.01
 Ns 5
-map_Kd TX_ShLeaves.bmp
+map_Kd TX_ShLeaves.tga
 
 newmtl Stone
 Kd 0.44 0.44 0.40
@@ -45,7 +45,7 @@ Pr 0.80
 Pm 0.02
 Ks 0.08 0.08 0.08
 Ns 18
-map_Kd TX_ShStone.bmp
+map_Kd TX_ShStone.tga
 
 newmtl Wood
 Kd 0.43 0.25 0.11
@@ -53,7 +53,7 @@ Pr 0.74
 Pm 0.00
 Ks 0.04 0.03 0.02
 Ns 12
-map_Kd TX_ShWood.bmp
+map_Kd TX_ShWood.tga
 
 newmtl DoorGreen
 Kd 0.10 0.32 0.15
@@ -61,4 +61,4 @@ Pr 0.70
 Pm 0.02
 Ks 0.04 0.04 0.03
 Ns 14
-map_Kd TX_ShDoorGreen.bmp
+map_Kd TX_ShDoorGreen.tga
