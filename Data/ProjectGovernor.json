@@ -2479,9 +2479,11 @@
         "Data/ResourceBibleSourceExpansionV1.json operationalizes Source 09 into voice/TTS, music, SFX, visual/UI, 3D, architecture, material, animation/mocap, LOTR-reference and AI-tool source lanes.",
         "Data/WarehouseAmbientCGAcquisitionBatchV1.json + Scripts/stage_ambientcg_warehouse.ps1 add public-API CC0 material staging.",
         "Data/WarehouseKenneyAcquisitionBatchV1.json + Scripts/stage_kenney_warehouse.ps1 add official-page CC0 support/world-kit staging.",
-        "Data/TrilogyWorldFoundationPlanV1.json establishes parallel world-foundation preproduction for all major trilogy regions while keeping P1C01 as the first assembled benchmark."
+        "Data/TrilogyWorldFoundationPlanV1.json establishes parallel world-foundation preproduction for all major trilogy regions while keeping P1C01 as the first assembled benchmark.",
+        "Verified official KayKit public GitHub lane now includes Skeletons 1.0 as CC0 fully-rigged/animated FBX/GLTF technical enemy-pipeline stock; this is QA/support inventory, not canonical LOTR enemy art."
       ],
       "missing_work": [
+        "Bridge staged rigged-character archives into a real UE4.27 skeletal import/runtime path once the Engine Content ACL gate is restored; prove humans/enemies visibly in P1C01 before broader runtime expansion.",
         "Expand Data/TrilogyAssetCandidateQueue.json until every warehouse family has at least one concrete candidate/project-authored path, then acquire/import eligible batches under the LFS/import contract.",
         "Acquire/author the first accepted skeletal FBX character bundles beginning with Frodo, Gandalf and Sam.",
         "Fill P1C01 Shire world/material/prop/vegetation/fauna/audio banks to a visible vertical-slice standard.",
@@ -3914,7 +3916,9 @@
   "current_focus": {
     "production_lane": "WAREHOUSE_FIRST_TRILOGY_SATURATION_V1",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "Continue exact-head foundation repair, but keep trilogy asset-bank sourcing/authoring active in parallel. Do not let governance-only work starve visible production."
+    "rule": "Continue exact-head foundation repair, but keep trilogy asset-bank sourcing/authoring active in parallel. Do not let governance-only work starve visible production.",
+    "character_visibility_bridge": "FIRST_PROVEN_RIGGED_HUMANOID_AND_ENEMY_STOCK_TO_P1C01_AFTER_ENGINE_GATE",
+    "character_visibility_rule": "Warehouse growth must feed visible character progress: validate staged FBX rigs now, then import and replace proxies in Shire as soon as UE4.27 build/import is available."
   },
   "immediate_next_large_actions": [
     "Keep exact-head integration/static/engine gates honest; repair demonstrated regressions without reopening settled architecture.",
