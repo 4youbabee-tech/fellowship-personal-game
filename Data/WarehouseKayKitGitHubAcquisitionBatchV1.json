@@ -114,6 +114,68 @@
         "TECHNICAL_QA_ONLY"
       ],
       "suitability": "ENEMY_RIG_RETARGET_QA_ONLY"
+    },
+    {
+      "id": "KAYKIT_RESTAURANT_BITS_1_0",
+      "repository": "KayKit-Game-Assets/KayKit-Restaurant-Bits-1.0",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Restaurant-Bits-1.0",
+      "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Restaurant-Bits-1.0/archive/refs/heads/main.zip",
+      "license_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Restaurant-Bits-1.0/main/LICENSE.txt",
+      "category": "FOOD_KITCHEN_INTERIOR_SUPPORT",
+      "expected_formats": [
+        "FBX",
+        "GLTF",
+        "OBJ"
+      ],
+      "max_bytes": 180000000,
+      "regional_use": [
+        "SHIRE",
+        "BREE",
+        "RIVENDELL",
+        "EDORAS_MEDUSELD",
+        "MINAS_TIRITH"
+      ],
+      "suitability": "SUPPORTING_FOOD_KITCHEN_PROPS_ONLY"
+    },
+    {
+      "id": "KAYKIT_HALLOWEEN_BITS_1_0",
+      "repository": "KayKit-Game-Assets/KayKit-Halloween-Bits-1.0",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Halloween-Bits-1.0",
+      "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Halloween-Bits-1.0/archive/refs/heads/main.zip",
+      "license_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Halloween-Bits-1.0/main/LICENSE.txt",
+      "category": "DARK_CEMETERY_PROP_SUPPORT",
+      "expected_formats": [
+        "FBX",
+        "GLTF",
+        "OBJ"
+      ],
+      "max_bytes": 130000000,
+      "regional_use": [
+        "PATHS_OF_THE_DEAD",
+        "MINAS_MORGUL",
+        "CIRITH_UNGOL_SHELOB"
+      ],
+      "suitability": "SELECTIVE_DARK_PROP_SUPPORT_ONLY"
+    },
+    {
+      "id": "KAYKIT_CITY_BUILDER_BITS_1_0",
+      "repository": "KayKit-Game-Assets/KayKit-City-Builder-Bits-1.0",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-City-Builder-Bits-1.0",
+      "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-City-Builder-Bits-1.0/archive/refs/heads/main.zip",
+      "license_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-City-Builder-Bits-1.0/main/LICENSE.txt",
+      "category": "GENERIC_CIVIC_PROP_SUPPORT",
+      "expected_formats": [
+        "FBX",
+        "GLTF",
+        "OBJ"
+      ],
+      "max_bytes": 100000000,
+      "regional_use": [
+        "BREE",
+        "MINAS_TIRITH",
+        "OSGILIATH"
+      ],
+      "suitability": "MANUAL_FILTER_GENERIC_PROPS_ONLY"
     }
   ],
   "rules": [
