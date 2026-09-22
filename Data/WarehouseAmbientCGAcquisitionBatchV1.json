@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "batch_id": "WAREHOUSE_AMBIENTCG_P1C01_V1",
+  "batch_id": "WAREHOUSE_AMBIENTCG_TRILOGY_FOUNDATION_V2",
   "status": "AUTHORIZED_FOR_STAGING",
   "provider": "AMBIENTCG",
   "license": "CC0",
   "api_base": "https://ambientcg.com/api/v2/full_json",
   "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\ambientCG",
-  "max_download_bytes": 1800000000,
+  "max_download_bytes": 3000000000,
   "target_attribute": "2K-PNG",
   "search_lanes": [
     {
@@ -78,13 +78,117 @@
         "courtyards",
         "roofs"
       ]
+    },
+    {
+      "q": "snow ice frozen rock",
+      "limit": 8,
+      "category": "SNOW_ICE",
+      "use": [
+        "Caradhras",
+        "Emyn Muil high/cold variants",
+        "mountain passes"
+      ]
+    },
+    {
+      "q": "cave rock stone cliff",
+      "limit": 8,
+      "category": "CAVE_STONE",
+      "use": [
+        "Moria",
+        "Paths of the Dead",
+        "Cirith Ungol/Shelob's Lair"
+      ]
+    },
+    {
+      "q": "mud wet soil swamp",
+      "limit": 8,
+      "category": "WETLAND_GROUND",
+      "use": [
+        "Dead Marshes",
+        "Bree rain/mud",
+        "Ithilien wet banks"
+      ]
+    },
+    {
+      "q": "white limestone marble stone",
+      "limit": 8,
+      "category": "WHITE_STONE",
+      "use": [
+        "Minas Tirith",
+        "Rivendell",
+        "Gondor architecture"
+      ]
+    },
+    {
+      "q": "dark basalt volcanic rock",
+      "limit": 8,
+      "category": "DARK_VOLCANIC",
+      "use": [
+        "Mordor/Gorgoroth",
+        "Black Gate",
+        "Minas Morgul"
+      ]
+    },
+    {
+      "q": "ash soot burned ground",
+      "limit": 8,
+      "category": "ASH_BURN",
+      "use": [
+        "Mordor/Gorgoroth",
+        "Mount Doom",
+        "Isengard industry damage"
+      ]
+    },
+    {
+      "q": "metal iron chain rust",
+      "limit": 8,
+      "category": "METAL_INDUSTRIAL",
+      "use": [
+        "Isengard",
+        "Moria",
+        "Minas Morgul",
+        "siege props"
+      ]
+    },
+    {
+      "q": "dry grass hay thatch",
+      "limit": 8,
+      "category": "ROHAN_PASTORAL",
+      "use": [
+        "Edoras/Meduseld",
+        "Rohan plains",
+        "Shire farm support"
+      ]
+    },
+    {
+      "q": "sandstone ruin weathered stone",
+      "limit": 8,
+      "category": "RUIN_STONE",
+      "use": [
+        "Weathertop",
+        "Amon Hen",
+        "Osgiliath",
+        "Ithilien ruins"
+      ]
+    },
+    {
+      "q": "water wet rock riverbank",
+      "limit": 8,
+      "category": "RIVER_WET",
+      "use": [
+        "Anduin/Amon Hen",
+        "Rivendell",
+        "Ithilien/Henneth Annun",
+        "Grey Havens"
+      ]
     }
   ],
   "rules": [
     "Use ambientCG public API only.",
-    "Select 2K-PNG ZIP downloads when present.",
+    "Select 2K-PNG ZIP downloads when present; production texture intake remains PNG/TGA/channel-packed where applicable.",
     "Keep at most 3 first-ranked candidates per lane.",
     "Record API query, asset ID, source page, URL, size and SHA256.",
-    "STAGED assets still require intake validation before READY_FOR_IMPORT."
+    "STAGED assets still require intake validation before READY_FOR_IMPORT.",
+    "This batch fills reusable trilogy world foundations; it does not authorize Part II/III runtime chapter implementation."
   ]
 }
