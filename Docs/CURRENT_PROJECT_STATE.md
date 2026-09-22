@@ -1,3 +1,11 @@
+## 2026-09-23 - systemic hardening phase, importer compile artifact repaired
+
+The project is still in W00 hardening / exact-head recovery rather than content expansion. Pre-Unreal #753 and Warehouse #167 are green on the prior head, while Unreal Build #588 reached the real 76-action UE4.27.2 C++ compile and failed only in `ShireProductionImportCommandlet.cpp` because a literal escaped `\n` sequence had been committed between the PNG and TGA discovery statements. That text produced C2017/C2065/C2143 at line 58.
+
+The importer source now contains a real newline, and PG-127 is strengthened so any literal `\n` or `\r\n` text artifact in that C++ source is rejected during Pre-Unreal instead of surviving until Unreal compilation. This is a source fix pending fresh exact-head compile proof.
+
+No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED promotion is claimed yet.
+
 ## 2026-09-22 - stabilization gate status schema correction
 
 Pre-Unreal #748 surfaced a governance-schema mistake introduced by the stabilization freeze: `active_gate.status` was set to `ACTIVE`, but the Governor quality-gate vocabulary is `NOT_TESTED / PARTIAL / PASSED / FAILED / BLOCKED`. The stabilization gate remains the active execution focus, while its evidence state is correctly `PARTIAL` until the full exact-head chain passes. No runtime behavior or maturity is changed by this correction.
