@@ -1,3 +1,11 @@
+## 2026-09-22 - runner ACL recovered; first real compile defect repaired
+
+Unreal Build #534 attempt 3 proved the Windows runner can now read UE4.27 Engine Content: the log reported `UE4_ACL_REMEDIATION_PASS action=none reason=already-readable`, UHT generated reflection code, and the exact head entered a 76-action `ShireJourneyEditor` C++ build. The runner/Engine Content ACL blocker is therefore no longer the immediate failure.
+
+The first real project compile failure was cross-module visibility: `ShireJourneyEditorTools/Private/Tests/ShireQAAutomationTests.cpp` could not include `ShireSaveGame.h` while the runtime module remains intentionally `FLAT_GUARDED`. The repair exports `Source/ShireJourney` as a temporary public include root in `ShireJourney.Build.cs`, avoiding a relative/private include hack and preserving the rule that the physical Public/Private migration remains a separate engine-tested maintenance change. The importer also replaces deprecated direct `UStaticMesh::StaticMaterials` access with `GetStaticMaterials()` to remove the two C4996 warnings observed in the same build.
+
+No COMPILE-TESTED claim is made until the new exact-head build completes successfully.
+
 ## 2026-09-22 - PIE StaticMesh mobility warning source fix
 
 A live PIE screenshot showed repeated warnings of the form `SetStaticMesh ... but Mobility is Static` on runtime-generated `AStaticMeshActor` components. The source cause was confirmed in the Shire, Bree, Fellowship and Isengard runtime world-builder spawn helpers: each helper assigned the mesh first, then changed component mobility to Movable. Runtime-spawned `AStaticMeshActor` components begin as Static, so the mesh mutation generated warning spam.
