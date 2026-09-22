@@ -1,3 +1,13 @@
+## 2026-09-22 - autonomous hourly lane: exact-head evidence + Quaternius saturation
+
+PR #67 exact head entering this iteration was `f41d5e91ac2a789387e987ff759b9e674cd86e10`. Exact-head Pre-Unreal Validation #667 succeeded, and Warehouse Stage #76 succeeded across Poly Haven, OpenGameArt, Quaternius, ambientCG base/trilogy batches, Kenney, inventory audit and footprint reporting. Unreal Build Validation #502 did not reach C++ compilation: the guarded Engine Content ACL remediation step completed, then the unchanged UE4.27.2 verification step failed; build, import, Automation Framework, startup, chapter and state audits were skipped. This remains a machine/Engine Content preflight blocker, not compile evidence, and the gate was not weakened.
+
+Warehouse saturation expanded `WarehouseQuaterniusAcquisitionBatchV1.json` and `TrilogyAssetCandidateQueue.json` with official-page CC0 lanes for additional modular background humans, creature rig/deformation pipeline stock, supporting textured buildings and dungeon/interior support. These remain CANDIDATE/AUTHORIZED_FOR_STAGING until actual staging receipts and intake checks exist. Canonical hero characters/creatures still require real skeletal FBX rigs, skin/deformation review and their own visual acceptance.
+
+`TrilogyWorldFoundationPlanV1.json` now maps the added stock into reusable regional-preproduction roles for Shire/Bree/Rivendell/Lothlorien, Moria, Rohan, Gondor/Osgiliath, Cirith Ungol, Paths of the Dead, Mordor and Grey Havens while preserving P1C01 Shire as the first assembled benchmark. Later-film mappings are warehouse/preproduction only and do not open Part II/III runtime chapters. Intake ordering reiterates SHA256/provenance retention, FBX rig requirements, PNG/TGA/channel-packed texture preference, ISM/HISM classification for repeated detail, and FStreamableManager soft/async ownership for heavy runtime content.
+
+Integration-repair inspection found no new demonstrated source regression on the green pre-Unreal head. The unresolved failure is still the local UE4 Engine Content preflight, so source/runtime gates remain fail-closed. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made for this iteration.
+
 ## 2026-09-22 - active wave: ACL repair attempt + trilogy material expansion
 
 The Unreal Build workflow now contains a guarded Engine Content ACL remediation step before the existing UE4.27.2 verification. It grants only read/execute to the runner service identity when the workflow has elevation; if the runner is not elevated, it records the exact required action and leaves the original verify gate unchanged. This does not weaken validation and does not create a compile-tested claim.
