@@ -1497,28 +1497,6 @@ void AFellowshipChapterWorldBuilder::BuildFellowshipRoad()
 {
     SpawnShape(CubeMesh, FVector(0, 0, -75), FVector(46, 28, 0.75f), FLinearColor(0.19f, 0.20f, 0.17f));
 
-    // P1C05 deterministic spawn support. The authored chapter start is X=-2400,
-    // while the broad fallback ground above ends at approximately X=-2300 and the
-    // first road slab ends near X=-2480, leaving a narrow collision gap exactly under
-    // the requested spawn. Keep a small hidden collision pad so grounding never depends
-    // on production mesh collision or edge precision.
-    AStaticMeshActor* P1C05SpawnFoundation = SpawnShape(
-        CubeMesh,
-        FVector(-2400.0f, 0.0f, 2.0f),
-        FVector(8.0f, 8.0f, 0.20f),
-        FLinearColor(0.19f, 0.20f, 0.17f),
-        FRotator::ZeroRotator,
-        true);
-    if (P1C05SpawnFoundation)
-    {
-        P1C05SpawnFoundation->Tags.AddUnique(TEXT("RuntimeSpawnFoundation"));
-        if (UStaticMeshComponent* SpawnComponent = P1C05SpawnFoundation->GetStaticMeshComponent())
-        {
-            SpawnComponent->SetVisibility(false, true);
-            SpawnComponent->SetCastShadow(false);
-        }
-    }
-
     // Mountain walls build toward Caradhras, while lower foothills remain visible behind the company.
     for (int32 I = 0; I < 10; ++I)
     {
