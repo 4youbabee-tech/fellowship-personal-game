@@ -1,3 +1,11 @@
+## 2026-09-22 - W00 engine recovery reached runtime; P1C05 grounding gap repaired
+
+Unreal Build #547 on exact head `a42679a4de808ce1f9bada7974ad87d52ee18fa9` proved the runner recovery beyond the former ACL gate. UE4.27.2 C++ build succeeded, production asset import succeeded, both `ShireJourney.QA` Automation Framework tests passed, and headless startup plus P1C01-P1C04 chapter audits passed. The run then failed at P1C05 with `ShireStartupGrounding: FAIL chapter=P1C05 reason=no-blocking-ground requested=(-2400.0,0.0,130.0)`.
+
+Source inspection found a deterministic geometry gap: the broad P1C05 fallback ground centered at X=0 with X scale 46 ends near X=-2300, while the first route slab centered at X=-2600 ends near X=-2480. The authored chapter start at X=-2400 therefore sat between both collision surfaces. `BuildFellowshipRoad` now adds a small hidden Engine BasicShapes collision foundation under the exact P1C05 start, matching the deterministic support strategy already used for P1C01.
+
+This is a source fix pending fresh exact-head engine proof. The previous run is valid COMPILE evidence for `a42679a...`, but the new repair head is not yet COMPILE-TESTED/PIE-TESTED/DEVICE-TESTED/VISUALLY-ACCEPTED.
+
 ## 2026-09-22 - runner ACL recovered; first real compile defect repaired
 
 Unreal Build #534 attempt 3 proved the Windows runner can now read UE4.27 Engine Content: the log reported `UE4_ACL_REMEDIATION_PASS action=none reason=already-readable`, UHT generated reflection code, and the exact head entered a 76-action `ShireJourneyEditor` C++ build. The runner/Engine Content ACL blocker is therefore no longer the immediate failure.
