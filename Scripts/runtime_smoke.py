@@ -170,7 +170,15 @@ def main():
     log_dir.mkdir(parents=True, exist_ok=True)
     (log_dir / f"CI-{args.mode}-result.json").write_text(
         json.dumps(results, indent=2) + "\n", encoding="utf-8")
-    return 0 if len(results) == len(chapters) and all(r["passed"] for r in results) else 1
+    failed = [r["chapter"] for r in results if not r.get("passed")]
+    print(json.dumps({
+        "marker": "RUNTIME_SWEEP_SUMMARY",
+        "mode": args.mode,
+        "attempted": len(results),
+        "expected": len(chapters),
+        "failed": failed,
+    }), flush=True)
+    return 0 if len(results) == len(chapters) and not failed else 1
 
 
 if __name__ == "__main__":
