@@ -21,6 +21,7 @@
 #include "Engine/TextRenderActor.h"
 #include "Engine/World.h"
 #include "Components/CapsuleComponent.h"
+#include "CollisionShape.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Pawn.h"
