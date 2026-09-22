@@ -1,5 +1,15 @@
 # WORLD DETAIL LEDGER
 
+## Architectural stabilization directive - 2026-09-22
+- Owner explicitly rejects symptom-by-symptom patching before further production expansion.
+- Active mode is W00 architectural stabilization: validation is allowed/required; new features and broad content expansion are frozen.
+- Grounding is a router/world invariant: bounded nearby-ground probing + walkable-slope rejection + capsule-clearance validation. Chapter-specific RuntimeSpawnFoundation pads are forbidden.
+- Chapter CI must attempt P1C01-P1C08 in one sequential sweep and aggregate failures; no first-red early exit.
+- Optional/future skeletal rig packages must be preflighted before async load; missing rigs use fallback without engine missing-package errors.
+- Source textures are PNG/TGA only; BMP is forbidden. Current 24 BMP sources were migrated to TGA and MTL references updated.
+- Duplicate-position OBJ face vertices are a source defect. The seven known affected project-owned meshes were normalized and triangulation-risk faces are now strict audit failures.
+- Feature construction resumes only after the exact stabilization head passes static + compile/import + all chapter + state/transition + warning/material gates.
+
 ## Precise integration-gap closure - 2026-09-22
 - Close discovered cross-system gaps immediately at source level; do not merely record them.
 - NPC world-facing context now follows committed visible world identity/revision. During logical/visible mismatch, no new bounded NPC dialogue/film context may start.
