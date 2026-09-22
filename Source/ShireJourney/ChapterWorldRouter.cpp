@@ -8,6 +8,7 @@
 #include "ShireAmbientNPC.h"
 #include "ShireChapterAssetStreamingSubsystem.h"
 #include "ShireNPC.h"
+#include "ShireNPCContextSubsystem.h"
 #include "ShirePlayerCharacter.h"
 #include "ShirePrototypeWorldBuilder.h"
 #include "ShireQuestSubsystem.h"
@@ -780,6 +781,20 @@ bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot(
     }
 
     ++WorldRevision;
+    if (UGameInstance* ContextGI = GetGameInstance())
+    {
+        if (UShireNPCContextSubsystem* NPCContext =
+                ContextGI->GetSubsystem<UShireNPCContextSubsystem>())
+        {
+            NPCContext->SetCommittedWorldContext(
+                RestoreChapterId,
+                RestoreRouteId,
+                RestoreEpisodeId,
+                WorldRevision,
+                Quests->GetActiveQuestId(),
+                Quests->GetActiveQuestStage());
+        }
+    }
     CaptureCommittedRollbackSnapshot();
     SetPlayerWorldHold(false);
     bRollbackInProgress = false;
@@ -917,6 +932,22 @@ void AChapterWorldRouter::CommitChapterWorld(
     PendingChapterId = NAME_None;
     bPendingRestoreRouteTransform = false;
     ++WorldRevision;
+    if (UGameInstance* ContextGI = GetGameInstance())
+    {
+        if (UShireNPCContextSubsystem* NPCContext =
+                ContextGI->GetSubsystem<UShireNPCContextSubsystem>())
+        {
+            UShireQuestSubsystem* ContextQuests =
+                ContextGI->GetSubsystem<UShireQuestSubsystem>();
+            NPCContext->SetCommittedWorldContext(
+                ChapterId,
+                RouteId,
+                EpisodeId,
+                WorldRevision,
+                ContextQuests ? ContextQuests->GetActiveQuestId() : NAME_None,
+                ContextQuests ? ContextQuests->GetActiveQuestStage() : 0);
+        }
+    }
     CaptureCommittedRollbackSnapshot();
 
     if (RouteId == TEXT("FrodoMain") && ChapterId == TEXT("P1C01"))
