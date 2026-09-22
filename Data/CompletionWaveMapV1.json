@@ -20,16 +20,19 @@
   "waves": [
     {
       "id": "W00",
-      "name": "Runner and exact-head unlock",
+      "name": "Exact-head architectural stabilization unlock",
       "from_percent": 40,
       "to_percent": 42,
       "delta": 2,
       "estimated_drops": "1-2",
-      "goal": "Restore reliable UE4.27.2 build/import/runtime validation without weakening gates.",
+      "goal": "Prove the integrated UE4.27.2 foundation is structurally clean and runtime-stable before any further feature expansion.",
       "exit": [
-        "exact-head Pre-Unreal green",
-        "UE4.27.2 compile/import reachable",
-        "runner Engine Content ACL blocker removed or proven fixed"
+        "exact-head Pre-Unreal including governor/deep/asset audits green",
+        "UE4.27.2 C++ compile and deterministic production import green",
+        "startup plus P1C01-P1C08 non-fail-fast runtime sweep green",
+        "state/save/continuous-transition regression green",
+        "warning-debt and material-persistence gate green",
+        "no unresolved CRITICAL/HIGH source defect except explicitly measurement-bound target-device work"
       ]
     },
     {
@@ -213,6 +216,7 @@
     "No COMPILE-TESTED/PIE-TESTED/DEVICE-TESTED/VISUALLY-ACCEPTED claim without matching evidence.",
     "Part II/III runtime remains gate-controlled; warehouse and preproduction may run earlier.",
     "Heavy runtime assets remain soft/asynchronous and crowd-scale NPCs remain pooled.",
-    "Final animated characters are skeletal FBX with real rig/skin/deformation; static OBJ conversion is not character completion."
+    "Final animated characters are skeletal FBX with real rig/skin/deformation; static OBJ conversion is not character completion.",
+    "Do not repair a shared-system defect with chapter-specific hidden support geometry or other symptom patches; encode the invariant in the owning subsystem and regression guard it."
   ]
 }
