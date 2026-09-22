@@ -1,3 +1,7 @@
+## 2026-09-22 - runner recovery / compile repair boundary
+
+The self-hosted runner has crossed the former Engine Content ACL gate and reached real UE4.27.2 C++ compilation on Unreal Build #534 attempt 3. That attempt is not COMPILE-TESTED because it failed on an EditorTools-to-runtime header visibility defect. A source fix now exports the flat runtime module root temporarily for editor QA and removes the observed deprecated StaticMaterials access. Production maturity is unchanged until the new exact-head build turns green.
+
 ## 2026-09-22 - runtime StaticMesh mobility warning
 
 A source-level warning fix is applied to the four runtime world builders: mobility is now changed before runtime `SetStaticMesh` assignment, matching the live PIE warning observed on the laptop. This is a warning/debt reduction only and does not promote gameplay completeness. Fresh exact-head UE4.27 compile/PIE proof is still blocked by W00 runner ACL until repaired.
