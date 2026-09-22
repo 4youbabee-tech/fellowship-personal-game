@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "plan_id": "SHIRE_JOURNEY_COMPLETION_WAVE_MAP_V1",
+  "authority": "Data/ProjectGovernor.json",
+  "status": "ACTIVE_PLANNING_ESTIMATE",
+  "baseline": {
+    "planning_completion_percent": 40,
+    "remaining_percentage_points": 60,
+    "note": "Planning estimate for whole-game production maturity, not a validation/acceptance claim."
+  },
+  "planning_unit": {
+    "name": "MAJOR_PRODUCTION_DROP",
+    "definition": "A coherent asset/code/data/documentation integration unit with a defined exit check. This is intentionally larger than an individual Git commit.",
+    "estimated_remaining_major_drops": {
+      "min": 30,
+      "max": 40
+    },
+    "commit_count_rule": "Do not use raw commit count as progress; one production drop may contain multiple commits and validation fixes."
+  },
+  "waves": [
+    {
+      "id": "W00",
+      "name": "Runner and exact-head unlock",
+      "from_percent": 40,
+      "to_percent": 42,
+      "delta": 2,
+      "estimated_drops": "1-2",
+      "goal": "Restore reliable UE4.27.2 build/import/runtime validation without weakening gates.",
+      "exit": [
+        "exact-head Pre-Unreal green",
+        "UE4.27.2 compile/import reachable",
+        "runner Engine Content ACL blocker removed or proven fixed"
+      ]
+    },
+    {
+      "id": "W01",
+      "name": "Shire skeletal character visibility bridge",
+      "from_percent": 42,
+      "to_percent": 48,
+      "delta": 6,
+      "estimated_drops": "2-3",
+      "goal": "Put real skeletal humans/enemy QA stock on screen in P1C01 and prove the FBX/rig/AnimBP path.",
+      "exit": [
+        "at least one real skeletal humanoid imported",
+        "at least one hostile skeletal rig imported for technical QA",
+        "proxy fallback preserved",
+        "PIE motion/placement check"
+      ]
+    },
+    {
+      "id": "W02",
+      "name": "Shire natural vertical slice",
+      "from_percent": 48,
+      "to_percent": 55,
+      "delta": 7,
+      "estimated_drops": "3",
+      "goal": "Turn P1C01 into the first natural-looking complete gameplay slice.",
+      "exit": [
+        "Frodo/Gandalf/Sam production character path",
+        "Shire world/material/vegetation/props/fauna bank",
+        "audio/ambience pass",
+        "living-world pass",
+        "target-device performance check",
+        "human visual/pacing review"
+      ]
+    },
+    {
+      "id": "W03",
+      "name": "Part I core-cast skeletal production",
+      "from_percent": 55,
+      "to_percent": 61,
+      "delta": 6,
+      "estimated_drops": "2-3",
+      "goal": "Replace Part I named-cast proxies with production skeletal characters in priority order.",
+      "exit": [
+        "core Fellowship rig families integrated",
+        "locomotion/interaction baseline",
+        "identity/material/LOD review",
+        "save/route character continuity"
+      ]
+    },
+    {
+      "id": "W04",
+      "name": "Part I eight-region world production",
+      "from_percent": 61,
+      "to_percent": 67,
+      "delta": 6,
+      "estimated_drops": "3-4",
+      "goal": "Raise P1C01-P1C08 environments from prototype/foundation to coherent production worlds.",
+      "exit": [
+        "terrain/material/architecture/vegetation passes",
+        "hero vistas per region",
+        "collision/traversal checks",
+        "async/soft ownership",
+        "regional target-device checks"
+      ]
+    },
+    {
+      "id": "W05",
+      "name": "Part I threats, audio and cinematic presentation",
+      "from_percent": 67,
+      "to_percent": 72,
+      "delta": 5,
+      "estimated_drops": "2-3",
+      "goal": "Finish the major encounter, sound and presentation layers for Fellowship.",
+      "exit": [
+        "Nazgul/Orc/Uruk/Cave Troll/Watcher/Balrog/Lurtz production passes as applicable",
+        "music/SFX/ambience mix",
+        "cinematic camera/lighting pass",
+        "combat/encounter QA"
+      ]
+    },
+    {
+      "id": "W06",
+      "name": "Part I acceptance lock",
+      "from_percent": 72,
+      "to_percent": 75,
+      "delta": 3,
+      "estimated_drops": "1-2",
+      "goal": "Close Fellowship as a production baseline before opening Part II runtime broadly.",
+      "exit": [
+        "chapter-specific PIE evidence",
+        "save/load/route continuity",
+        "target-device performance",
+        "human visual/pacing acceptance",
+        "green exact-head merge path"
+      ]
+    },
+    {
+      "id": "W07",
+      "name": "Part II runtime story and route construction",
+      "from_percent": 75,
+      "to_percent": 80,
+      "delta": 5,
+      "estimated_drops": "3",
+      "goal": "Open Two Towers runtime routes using source-verified screenplay/film continuity and existing systems.",
+      "exit": [
+        "Frodo/Sam/Gollum route",
+        "Three Hunters/Rohan route",
+        "Merry/Pippin/Fangorn route",
+        "Gandalf/Rohan route",
+        "chapter/save/runtime gates"
+      ]
+    },
+    {
+      "id": "W08",
+      "name": "Part II production art, characters, battles and audio",
+      "from_percent": 80,
+      "to_percent": 85,
+      "delta": 5,
+      "estimated_drops": "3-4",
+      "goal": "Raise Part II from runtime-complete to production presentation.",
+      "exit": [
+        "Rohan/Fangorn/Helm's Deep/Isengard production worlds",
+        "Part II cast/creatures",
+        "battle/audio/VFX layers",
+        "device/visual reviews"
+      ]
+    },
+    {
+      "id": "W09",
+      "name": "Part III runtime story and route construction",
+      "from_percent": 85,
+      "to_percent": 90,
+      "delta": 5,
+      "estimated_drops": "3",
+      "goal": "Open Return of the King runtime packages with scene-level source verification.",
+      "exit": [
+        "Gondor/Minas Tirith routes",
+        "Paths of the Dead",
+        "Cirith Ungol/Mordor",
+        "Black Gate/Mount Doom",
+        "ending route continuity"
+      ]
+    },
+    {
+      "id": "W10",
+      "name": "Part III production art, characters, battles and audio",
+      "from_percent": 90,
+      "to_percent": 95,
+      "delta": 5,
+      "estimated_drops": "3-4",
+      "goal": "Raise Part III to production presentation and encounter quality.",
+      "exit": [
+        "Part III hero/enemy/creature production",
+        "Gondor/Rohan/Mordor world passes",
+        "major battle/VFX/audio layers",
+        "device/visual reviews"
+      ]
+    },
+    {
+      "id": "W11",
+      "name": "Trilogy integration and final acceptance",
+      "from_percent": 95,
+      "to_percent": 100,
+      "delta": 5,
+      "estimated_drops": "3-5",
+      "goal": "Finish the full-game experience instead of only finishing content creation.",
+      "exit": [
+        "full beginning-to-end traversal",
+        "save continuity across trilogy",
+        "performance/memory stabilization",
+        "bug debt closure",
+        "accessibility/readability pass",
+        "final visual/pacing acceptance",
+        "release-ready exact head"
+      ]
+    }
+  ],
+  "guardrails": [
+    "Percentages are planning weights, not evidence labels.",
+    "No wave may be promoted by warehouse staging alone.",
+    "No COMPILE-TESTED/PIE-TESTED/DEVICE-TESTED/VISUALLY-ACCEPTED claim without matching evidence.",
+    "Part II/III runtime remains gate-controlled; warehouse and preproduction may run earlier.",
+    "Heavy runtime assets remain soft/asynchronous and crowd-scale NPCs remain pooled.",
+    "Final animated characters are skeletal FBX with real rig/skin/deformation; static OBJ conversion is not character completion."
+  ]
+}
