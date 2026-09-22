@@ -1,3 +1,7 @@
+## 2026-09-22 - runtime StaticMesh mobility warning
+
+A source-level warning fix is applied to the four runtime world builders: mobility is now changed before runtime `SetStaticMesh` assignment, matching the live PIE warning observed on the laptop. This is a warning/debt reduction only and does not promote gameplay completeness. Fresh exact-head UE4.27 compile/PIE proof is still blocked by W00 runner ACL until repaired.
+
 ## 2026-09-22 - integration gap closure status
 
 Cross-system maturity improved at source level without changing the whole-game planning percentage. Three previously open architecture risks now have source fixes: committed-world NPC context synchronization, character-rig handle lifetime release, and removal of non-engine synchronous runtime LoadObject paths from world/character/enemy/audio production resolution. DeepProjectAudit now guards these invariants against regression.
