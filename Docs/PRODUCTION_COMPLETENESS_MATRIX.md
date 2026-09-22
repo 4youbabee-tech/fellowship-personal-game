@@ -1,3 +1,7 @@
+## 2026-09-22 - P1C05 grounding regression repair
+
+Exact-head `a42679a4de808ce1f9bada7974ad87d52ee18fa9` reached a successful UE4.27.2 C++ build, successful production import, successful two-test Automation Framework suite and successful headless startup/P1C01-P1C04 chapter audits. P1C05 failed before chapter readiness because its authored spawn at X=-2400 fell into a narrow gap between fallback ground and the first route slab. A hidden deterministic spawn-support pad is now added at that exact start. The repair head still requires fresh engine/headless proof and does not promote PIE/device/visual acceptance.
+
 ## 2026-09-22 - runner recovery / compile repair boundary
 
 The self-hosted runner has crossed the former Engine Content ACL gate and reached real UE4.27.2 C++ compilation on Unreal Build #534 attempt 3. That attempt is not COMPILE-TESTED because it failed on an EditorTools-to-runtime header visibility defect. A source fix now exports the flat runtime module root temporarily for editor QA and removes the observed deprecated StaticMaterials access. Production maturity is unchanged until the new exact-head build turns green.
