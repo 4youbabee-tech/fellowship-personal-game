@@ -21,10 +21,21 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
+#include "UObject/SoftObjectPath.h"
 
 namespace IsengardVisual
 {
     constexpr bool ShowPrototypeWorldLabels = false;
+}
+
+namespace
+{
+    UStaticMesh* ResolveResidentStaticMesh(const TCHAR* AssetPath)
+    {
+        return AssetPath
+            ? Cast<UStaticMesh>(FSoftObjectPath(AssetPath).ResolveObject())
+            : nullptr;
+    }
 }
 
 AIsengardPrototypeWorldBuilder::AIsengardPrototypeWorldBuilder()
@@ -175,10 +186,8 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
             FVector(2.0f, 0.82f, 0.08f), FLinearColor(0.20f, 0.18f, 0.14f), FRotator::ZeroRotator, true);
     }
 
-    UStaticMesh* OrthancCore = LoadObject<UStaticMesh>(
-        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_OrthancCore.SM_Isengard_OrthancCore"));
-    UStaticMesh* OrthancSpire = LoadObject<UStaticMesh>(
-        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_OrthancSpire.SM_Isengard_OrthancSpire"));
+    UStaticMesh* OrthancCore = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_OrthancCore.SM_Isengard_OrthancCore"));
+    UStaticMesh* OrthancSpire = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_OrthancSpire.SM_Isengard_OrthancSpire"));
     if (OrthancCore && OrthancSpire)
     {
         SpawnShape(OrthancCore, FVector(900, 0, -75), FVector(1.0f),
@@ -209,22 +218,14 @@ void AIsengardPrototypeWorldBuilder::BuildIsengard()
     }
     SpawnLabel(TEXT("Orthanc"), FVector(900, 0, 1450), FLinearColor(0.72f, 0.74f, 0.76f));
 
-    UStaticMesh* PitRim = LoadObject<UStaticMesh>(
-        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_IndustrialPitRim.SM_Isengard_IndustrialPitRim"));
-    UStaticMesh* FurnaceStack = LoadObject<UStaticMesh>(
-        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_FurnaceStack.SM_Isengard_FurnaceStack"));
-    UStaticMesh* FelledTrunk = LoadObject<UStaticMesh>(
-        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_FelledTrunk.SM_Isengard_FelledTrunk"));
-    UStaticMesh* ParapetSlab = LoadObject<UStaticMesh>(
-        nullptr, TEXT("/Game/Production/World/Isengard/SM_Isengard_ParapetSlab.SM_Isengard_ParapetSlab"));
-    UStaticMesh* HoistFrame = LoadObject<UStaticMesh>(
-        nullptr, TEXT("/Game/Production/World/Isengard/SM_IsengardHoistFrame.SM_IsengardHoistFrame"));
-    UStaticMesh* SlagCart = LoadObject<UStaticMesh>(
-        nullptr, TEXT("/Game/Production/World/Isengard/SM_IsengardSlagCart.SM_IsengardSlagCart"));
-    UStaticMesh* TrenchGrate = LoadObject<UStaticMesh>(
-        nullptr, TEXT("/Game/Production/World/Isengard/SM_IsengardTrenchGrate.SM_IsengardTrenchGrate"));
-    UStaticMesh* WaterGate = LoadObject<UStaticMesh>(
-        nullptr, TEXT("/Game/Production/World/Isengard/SM_IsengardWaterGate.SM_IsengardWaterGate"));
+    UStaticMesh* PitRim = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_IndustrialPitRim.SM_Isengard_IndustrialPitRim"));
+    UStaticMesh* FurnaceStack = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_FurnaceStack.SM_Isengard_FurnaceStack"));
+    UStaticMesh* FelledTrunk = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_FelledTrunk.SM_Isengard_FelledTrunk"));
+    UStaticMesh* ParapetSlab = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_Isengard_ParapetSlab.SM_Isengard_ParapetSlab"));
+    UStaticMesh* HoistFrame = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_IsengardHoistFrame.SM_IsengardHoistFrame"));
+    UStaticMesh* SlagCart = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_IsengardSlagCart.SM_IsengardSlagCart"));
+    UStaticMesh* TrenchGrate = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_IsengardTrenchGrate.SM_IsengardTrenchGrate"));
+    UStaticMesh* WaterGate = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Isengard/SM_IsengardWaterGate.SM_IsengardWaterGate"));
     for (int32 I = 0; I < 8; ++I)
     {
         const FVector Pit(-200.0f + I * 260.0f, 720.0f + (I % 2) * 180.0f, 10.0f);
