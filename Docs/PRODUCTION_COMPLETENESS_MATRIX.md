@@ -1,3 +1,9 @@
+## 2026-09-22 - hourly three-lane warehouse/world/integration continuation
+
+Exact-head evidence before this batch: PR #67 `f41d5e91ac2a789387e987ff759b9e674cd86e10` had Pre-Unreal #667 SUCCESS and Warehouse Stage #76 SUCCESS. Unreal Build #502 stopped at the unchanged UE4.27.2 Engine Content verification after the guarded ACL-remediation attempt; C++ build/import/Automation/startup/chapter/state steps did not execute. Therefore no compile, PIE, device, performance or visual maturity is promoted.
+
+The warehouse lane adds official Quaternius CC0 acquisition/candidate coverage for modular background humans, monster/creature pipeline testing, supporting buildings and dungeon/interior architecture. Their state is CANDIDATE or AUTHORIZED_FOR_STAGING only; final animated characters and creatures still require skeletal FBX with real rigs plus intake/deformation/visual review. The world-foundation lane assigns that stock to appropriate regions while retaining P1C01 as the first assembled benchmark and keeping Part II/III regions PREPRODUCTION_ONLY. Runtime architecture constraints remain soft/async heavy loading, ISM/HISM for repeated detail and bounded pooled populations.
+
 ## 2026-09-22 - ACL remediation attempt and trilogy material stock expansion
 
 A safe read-only ACL remediation attempt now precedes the unchanged UE4 Engine Content preflight, and a second ambientCG batch adds non-Shire regional material stock across the trilogy. This advances integration readiness and warehouse breadth only; engine compile/runtime/visual acceptance remains pending.
