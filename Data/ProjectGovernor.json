@@ -3976,6 +3976,12 @@
       "discovered_build_defect": "ShireJourneyEditorTools/Private/Tests/ShireQAAutomationTests.cpp could not include ShireSaveGame.h because the runtime module is still FLAT_GUARDED and did not export its module root as a public include path.",
       "repair": "ShireJourney.Build.cs now exports ModuleDirectory as a temporary public include path until the dedicated Public/Private migration. The importer also uses GetStaticMaterials() to remove the observed C4996 warning debt.",
       "evidence_boundary": "This repair is source-level until the new exact-head UE4.27 build completes."
+    },
+    "p1c05_grounding_repair": {
+      "status": "SOURCE_FIX_APPLIED_ENGINE_PROOF_PENDING",
+      "evidence": "Unreal Build #547 compiled successfully, imported production assets successfully, passed both ShireJourney.QA automation tests, and passed startup/P1C01-P1C04 headless chapter audits. It then failed P1C05 with ShireStartupGrounding: FAIL reason=no-blocking-ground requested=(-2400,0,130). Source inspection shows the broad fallback ground ends around X=-2300 while the first road slab ends around X=-2480, leaving the requested X=-2400 spawn in a narrow collision gap.",
+      "repair": "BuildFellowshipRoad now adds a hidden Engine BasicShapes collision support pad at the authored P1C05 start. The pad is tagged RuntimeSpawnFoundation and does not depend on imported asset collision.",
+      "evidence_boundary": "The repair is not PIE/device/visual acceptance until fresh exact-head engine/headless and owner PIE evidence pass."
     }
   },
   "development_mode": {
