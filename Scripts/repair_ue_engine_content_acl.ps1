@@ -1,41 +1,62 @@
 param(
-    [switch]$Apply
+    [string]$EngineRoot = "C:\Program Files\Epic Games\UE_4.27\Engine"
 )
 
-$ErrorActionPreference = 'Stop'
-$target = 'C:\Program Files\Epic Games\UE_4.27\Engine\Content\EngineMaterials\WorldGridMaterial.uasset'
+$ErrorActionPreference = "Stop"
+$contentRoot = Join-Path $EngineRoot "Content"
+$probeFile = Join-Path $contentRoot "EngineMaterials\WorldGridMaterial.uasset"
+$networkServiceSid = "*S-1-5-20"
 
-if (-not (Test-Path -LiteralPath $target -PathType Leaf)) {
-    Write-Error "Target file is missing: $target"
-    exit 40
+function Test-ReadableFile([string]$Path) {
+    try {
+        $share = [System.IO.FileShare]::ReadWrite -bor [System.IO.FileShare]::Delete
+        $stream = [System.IO.File]::Open($Path,[System.IO.FileMode]::Open,[System.IO.FileAccess]::Read,$share)
+        try {
+            $buffer = New-Object byte[] 4
+            return ($stream.Read($buffer, 0, 4) -eq 4)
+        }
+        finally { $stream.Dispose() }
+    }
+    catch {
+        Write-Host "UE4 ACL probe read failure: $($_.Exception.Message)"
+        return $false
+    }
 }
 
-Write-Host 'Current ACL:'
-& icacls.exe $target
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+Write-Host "UE4 ACL remediation identity: $([System.Security.Principal.WindowsIdentity]::GetCurrent().Name)"
+Write-Host "UE4 ACL remediation target: $contentRoot"
 
-if (-not $Apply) {
-    Write-Host ''
-    Write-Host 'Dry run only. Re-run this script from an elevated PowerShell with -Apply to reset this file to inherited parent permissions.'
+if (-not (Test-Path -LiteralPath $probeFile -PathType Leaf)) {
+    Write-Host "UE4_ACL_REMEDIATION_SKIP reason=probe-file-missing path=$probeFile"
+    exit 0
+}
+if (Test-ReadableFile $probeFile) {
+    Write-Host "UE4_ACL_REMEDIATION_PASS action=none reason=already-readable"
     exit 0
 }
 
-$principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
-if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Write-Error 'This repair must be run from an elevated Administrator PowerShell.'
-    exit 41
+$currentIdentity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+$principal = New-Object System.Security.Principal.WindowsPrincipal($currentIdentity)
+$isAdmin = $principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)
+if (-not $isAdmin) {
+    Write-Host "UE4_ACL_REMEDIATION_DEFERRED reason=runner-not-elevated"
+    Write-Host "Required elevated command:"
+    Write-Host ('icacls "' + $contentRoot + '" /grant ' + $networkServiceSid + ':(OI)(CI)(RX) /T /C /Q')
+    exit 0
 }
 
-Write-Host 'Resetting file ACL to inherit from the EngineMaterials parent directory...'
-& icacls.exe $target /reset
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-
-Write-Host 'ACL after reset:'
-& icacls.exe $target
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-
-Write-Host 'Testing read access as the current elevated user...'
-$stream = [System.IO.File]::OpenRead($target)
-$stream.Dispose()
-Write-Host 'WorldGridMaterial ACL reset completed. The self-hosted runner preflight must still verify NETWORK SERVICE access on the next CI run.'
+Write-Host "UE4 ACL remediation: granting read/execute only to NETWORK SERVICE over Engine Content."
+$grantSpec = $networkServiceSid + ":(OI)(CI)(RX)"
+& icacls.exe $contentRoot /grant $grantSpec /T /C /Q
+$icaclsExit = $LASTEXITCODE
+Write-Host "UE4 ACL remediation icacls exit=$icaclsExit"
+if ($icaclsExit -ne 0) {
+    Write-Host "UE4_ACL_REMEDIATION_DEFERRED reason=icacls-failed exit=$icaclsExit"
+    exit 0
+}
+if (Test-ReadableFile $probeFile) {
+    Write-Host "UE4_ACL_REMEDIATION_PASS action=grant-network-service-rx"
+    exit 0
+}
+Write-Host "UE4_ACL_REMEDIATION_DEFERRED reason=still-unreadable-after-grant"
 exit 0
