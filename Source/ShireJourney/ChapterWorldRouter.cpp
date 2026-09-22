@@ -250,21 +250,32 @@ bool AChapterWorldRouter::ResolveGroundedSpawnLocation(
         return false;
     }
 
-    const FVector TraceStart = RequestedLocation + FVector(0.0f, 0.0f, 650.0f);
-    const FVector TraceEnd = RequestedLocation - FVector(0.0f, 0.0f, 2200.0f);
-    FCollisionQueryParams QueryParams(FName(TEXT("ShireChapterSpawnGround")), false, PlayerPawn);
-
-    FHitResult GroundHit;
-    if (!GetWorld()->LineTraceSingleByChannel(
-            GroundHit,
-            TraceStart,
-            TraceEnd,
-            ECC_Visibility,
-            QueryParams) ||
-        !GroundHit.bBlockingHit)
+    // Grounding is a world-level invariant, not a chapter-specific patch. Authored
+    // starts and restored transforms can land close to a seam between collision
+    // surfaces as production geometry changes. Probe the requested point first, then
+    // a small deterministic ring around it and choose the closest blocking surface.
+    // The 240 cm maximum correction is intentionally bounded so a bad world build
+    // still fails rather than silently teleporting the player across the scene.
+    static const FVector2D GroundProbeOffsets[] =
     {
-        return false;
-    }
+        FVector2D(0.0f, 0.0f),
+        FVector2D(90.0f, 0.0f),
+        FVector2D(-90.0f, 0.0f),
+        FVector2D(0.0f, 90.0f),
+        FVector2D(0.0f, -90.0f),
+        FVector2D(130.0f, 130.0f),
+        FVector2D(130.0f, -130.0f),
+        FVector2D(-130.0f, 130.0f),
+        FVector2D(-130.0f, -130.0f),
+        FVector2D(180.0f, 0.0f),
+        FVector2D(-180.0f, 0.0f),
+        FVector2D(0.0f, 180.0f),
+        FVector2D(0.0f, -180.0f),
+        FVector2D(240.0f, 0.0f),
+        FVector2D(-240.0f, 0.0f),
+        FVector2D(0.0f, 240.0f),
+        FVector2D(0.0f, -240.0f)
+    };
 
     float CapsuleHalfHeight = 60.0f;
     if (const ACharacter* Character = Cast<ACharacter>(PlayerPawn))
@@ -275,8 +286,67 @@ bool AChapterWorldRouter::ResolveGroundedSpawnLocation(
         }
     }
 
-    OutGroundedLocation = RequestedLocation;
-    OutGroundedLocation.Z = GroundHit.ImpactPoint.Z + CapsuleHalfHeight + 4.0f;
+    FCollisionQueryParams QueryParams(FName(TEXT("ShireChapterSpawnGround")), false, PlayerPawn);
+    bool bFoundGround = false;
+    float BestDistanceSq = TNumericLimits<float>::Max();
+    FVector BestLocation = FVector::ZeroVector;
+    FVector2D BestOffset = FVector2D::ZeroVector;
+
+    for (const FVector2D& Offset : GroundProbeOffsets)
+    {
+        const FVector ProbeLocation(
+            RequestedLocation.X + Offset.X,
+            RequestedLocation.Y + Offset.Y,
+            RequestedLocation.Z);
+        const FVector TraceStart = ProbeLocation + FVector(0.0f, 0.0f, 650.0f);
+        const FVector TraceEnd = ProbeLocation - FVector(0.0f, 0.0f, 2200.0f);
+
+        FHitResult GroundHit;
+        if (!GetWorld()->LineTraceSingleByChannel(
+                GroundHit,
+                TraceStart,
+                TraceEnd,
+                ECC_Visibility,
+                QueryParams) ||
+            !GroundHit.bBlockingHit)
+        {
+            continue;
+        }
+
+        const float DistanceSq = Offset.SizeSquared();
+        if (DistanceSq >= BestDistanceSq)
+        {
+            continue;
+        }
+
+        BestDistanceSq = DistanceSq;
+        BestOffset = Offset;
+        BestLocation = ProbeLocation;
+        BestLocation.Z = GroundHit.ImpactPoint.Z + CapsuleHalfHeight + 4.0f;
+        bFoundGround = true;
+    }
+
+    if (!bFoundGround)
+    {
+        return false;
+    }
+
+    OutGroundedLocation = BestLocation;
+    if (!BestOffset.IsNearlyZero())
+    {
+        UE_LOG(
+            LogTemp,
+            Warning,
+            TEXT("ShireStartupGrounding: adjusted-to-nearby-ground offset=(%.1f,%.1f) requested=(%.1f,%.1f,%.1f) grounded=(%.1f,%.1f,%.1f)"),
+            BestOffset.X,
+            BestOffset.Y,
+            RequestedLocation.X,
+            RequestedLocation.Y,
+            RequestedLocation.Z,
+            OutGroundedLocation.X,
+            OutGroundedLocation.Y,
+            OutGroundedLocation.Z);
+    }
     return true;
 }
 
