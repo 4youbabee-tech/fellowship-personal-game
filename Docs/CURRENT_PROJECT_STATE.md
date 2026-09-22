@@ -1,3 +1,11 @@
+## 2026-09-22 - character visibility bridge and warehouse receipt hardening
+
+Owner priority is now explicit in the Governor and WORLD_DETAIL_LEDGER: warehouse growth must convert into visible humans/enemies, with P1C01 Shire still the first assembled benchmark. The official KayKit Skeletons 1.0 public GitHub package was source-checked as CC0 and documents fully rigged/animated characters, FBX/GLTF delivery and 90+ animations. It is registered strictly as technical enemy rig/import/retarget QA stock, not canonical LOTR enemy art or a visually accepted production character.
+
+The KayKit staging batch now includes that pack, and the warehouse inventory audit now recognizes archive-style receipt records in addition to legacy file records and verifies recorded license-snapshot hashes when present. This closes a bookkeeping blind spot where KayKit archives could contribute payload bytes without participating in receipt-record hash validation.
+
+Evidence boundary remains unchanged: the last proven engine run is still blocked before C++ compilation/import by the non-elevated NETWORK SERVICE runner lacking read access to UE4.27.2 Engine Content. These changes are source/warehouse preparation only. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED claim is made.
+
 ## 2026-09-22 - hourly continuation: non-interactive KayKit public-GitHub lane
 
 Exact-head inspection started from PR #67 head `d856a716d5bc270ce0ddc2d649acbb1656ae112c`. Pre-Unreal Validation #670 completed successfully and Warehouse Stage #80 completed successfully. Unreal Build Validation #505 stopped before C++ compilation: the runner identity was `NT AUTHORITY\\NETWORK SERVICE`; the guarded ACL remediation reported `UE4_ACL_REMEDIATION_DEFERRED reason=runner-not-elevated`; the unchanged UE4.27.2 preflight then failed six reads of `Engine/Content/EngineMaterials/WorldGridMaterial.uasset` with access denied. Build/import/Automation/startup/chapter/state steps were skipped. This is machine ACL evidence, not compile evidence, and this run does not retry the same elevated fix.
