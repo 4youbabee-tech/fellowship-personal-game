@@ -388,6 +388,78 @@
         "Chronicle/map/menu UI prototyping"
       ],
       "suitability": "UI_SUPPORT"
+    },
+    {
+      "id": "QTN_ULTIMATE_MODULAR_WOMEN",
+      "provider": "QUATERNIUS",
+      "source_page": "https://quaternius.com/packs/ultimatemodularwomen.html",
+      "license_observed": "CC0",
+      "formats": [
+        "provider archive; FBX required for accepted animated use"
+      ],
+      "use": [
+        "background human population diversity",
+        "regional crowd-family prototyping",
+        "rig/retarget pipeline exercises"
+      ],
+      "suitability": "SUPPORTING_NPC_BASE_ONLY",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official Quaternius pack page; staged only through WarehouseQuaterniusAcquisitionBatchV1.",
+      "notes": "Background/crowd base only. Final named characters still require project-specific skeletal FBX rigs, skin/deformation and visual acceptance."
+    },
+    {
+      "id": "QTN_ULTIMATE_MONSTERS",
+      "provider": "QUATERNIUS",
+      "source_page": "https://quaternius.com/packs/ultimatemonsters.html",
+      "license_observed": "CC0",
+      "formats": [
+        "provider archive; FBX required for accepted animated use"
+      ],
+      "use": [
+        "creature rig/deformation pipeline exercises",
+        "non-hero threat population prototyping",
+        "animation-retarget and pooling tests"
+      ],
+      "suitability": "CREATURE_PIPELINE_SUPPORT",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official Quaternius pack page; staged only through WarehouseQuaterniusAcquisitionBatchV1.",
+      "notes": "Not a final source for canonical hero creatures. Troll/warg/spider/fell-beast/mumakil/eagle quality remains species-specific and acceptance-gated."
+    },
+    {
+      "id": "QTN_ULTIMATE_BUILDINGS",
+      "provider": "QUATERNIUS",
+      "source_page": "https://quaternius.com/packs/ultimatetexturedbuildings.html",
+      "license_observed": "CC0",
+      "formats": [
+        "provider archive; FBX required for 3D production intake"
+      ],
+      "use": [
+        "Bree/Rohan/Gondor supporting architecture",
+        "background settlement silhouettes",
+        "modular architecture and collision pipeline coverage"
+      ],
+      "suitability": "SUPPORTING_ARCHITECTURE",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official Quaternius pack page; staged only through WarehouseQuaterniusAcquisitionBatchV1.",
+      "notes": "Supporting stock only; culture-specific hero architecture still requires art-direction and PBR quality review."
+    },
+    {
+      "id": "QTN_MODULAR_DUNGEON",
+      "provider": "QUATERNIUS",
+      "source_page": "https://quaternius.com/packs/medievaldungeon.html",
+      "license_observed": "CC0",
+      "formats": [
+        "provider archive; FBX required for 3D production intake"
+      ],
+      "use": [
+        "Moria support architecture",
+        "Cirith Ungol and Paths of the Dead preproduction",
+        "interior collision/layout pipeline coverage"
+      ],
+      "suitability": "SUPPORTING_DUNGEON_ARCHITECTURE",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official Quaternius pack page; staged only through WarehouseQuaterniusAcquisitionBatchV1.",
+      "notes": "Warehouse/preproduction support only. Does not open gated Part II/III runtime implementation."
     }
   ],
   "next_source_lanes": [
