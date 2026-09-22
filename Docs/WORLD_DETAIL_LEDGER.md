@@ -1,5 +1,12 @@
 # WORLD DETAIL LEDGER
 
+## Final pre-runner warehouse saturation batch - 2026-09-22
+- Owner authorized one final source-safe warehouse fill before switching focus to the UE4.27 runner ACL repair.
+- Added only verified official KayKit public-GitHub CC0 lanes: Restaurant Bits (food/kitchen/interior support), Halloween Bits (selective cemetery/crypt/dark-region props), and City Builder Bits (manual-filter generic civic props only).
+- City Builder stock is explicitly period-filtered: modern-looking items are not eligible for Middle-earth integration merely because the archive is staged.
+- These are STAGED candidates only after workflow receipts exist. No READY_FOR_IMPORT / IMPORTED / INTEGRATED / ACCEPTED promotion is implied.
+- After this batch, active priority returns to W00 runner/exact-head unlock; broad warehouse sourcing pauses except blocker-safe bookkeeping until the runner gate is repaired.
+
 ## Embodied third-person camera direction - 2026-09-22
 - Owner explicitly rejects top-down/isometric/RTS-style normal gameplay. Shire Journey must feel like directly inhabiting Middle-earth through the active character.
 - Default gameplay perspective: **third-person action-adventure**, camera behind or slightly over the controlled character, broadly comparable to GTA V / Red Dead camera relationship rather than a strategy camera.
