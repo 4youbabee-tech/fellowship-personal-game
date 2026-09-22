@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "17689b194ddca281aa9881b9ac50594712a65df6",
+  "audited_head": "SOURCE_FIX_WAVE_AFTER_17689B_REVIEW",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -68,10 +68,10 @@
     {
       "id": "AUDIT-MED-006",
       "severity": "HIGH",
-      "status": "MITIGATION_IMPLEMENTED_BUT_SYNC_DEBT_REMAINS_PENDING_EXACT_HEAD_PROOF_AND_MEASUREMENT",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_COMPILE_AND_MEASUREMENT",
       "title": "Chapter builders perform many direct LoadObject calls",
-      "evidence": "Current PR #67 source still contains direct LoadObject calls in runtime production paths despite chapter async banks: FellowshipChapterWorldBuilder=77, ShirePrototypeWorldBuilder=55, BreePrototypeWorldBuilder=22, IsengardPrototypeWorldBuilder=10, ShireNPC=3 and ShirePlayerCharacter=3 in the inspected files. Ambient living-world production visuals have already moved toward resident soft-object resolution.",
-      "action": "Keep the two-phase chapter bank architecture. After runner recovery, replace remaining heavy runtime LoadObject resolution with resident soft-object/async ownership incrementally, beginning with player/named-character style application and chapter builders; compile and measure each batch."
+      "evidence": "All inspected non-engine runtime LoadObject paths have been removed from the current branch: chapter world builders now resolve only asynchronously resident bank assets; player/named-NPC/enemy production visuals use resident soft resolution; ShireAudioSubsystem no longer LoadObject<USoundBase>. Remaining direct LoadObject calls are limited to tiny /Engine/BasicShapes fallback assets and are guarded by deep_project_audit.py.",
+      "action": "Fresh Pre-Unreal must pass, then runner recovery must provide UE4.27 compile/import/startup/transition evidence. Measure transition hitch and resident memory before closing performance acceptance."
     },
     {
       "id": "AUDIT-MED-007",
@@ -100,18 +100,18 @@
     {
       "id": "AUDIT-HIGH-010",
       "severity": "HIGH",
-      "status": "ROOT_CAUSE_IDENTIFIED_SOURCE_REPAIR_PENDING",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_COMPILE_AND_TRANSITION_PROOF",
       "title": "NPC context can advance to destination story/world context before visible world commit",
-      "evidence": "LivingWorldDirector correctly gates ActiveChapterId/life/weather on ChapterWorldRouter::IsWorldCommitted and OnWorldCommitted. UShireNPCContextSubsystem separately reads UShireQuestSubsystem current chapter/route/active quest directly for regional mood, pressure, profile availability, film dialogue context and danger. During async chapter loading quest state may advance while old geometry is still visible, so old-world NPC dialogue/emotion can transiently use destination context.",
-      "action": "Introduce one committed-world context snapshot (chapter/route/episode/revision) for NPC world-context queries, updated only after ChapterWorldRouter world commit. Keep quest memory/story-beat authority in UShireQuestSubsystem, but bind region/mood/film-context eligibility to committed world identity. Add an exact-head transition regression before closure."
+      "evidence": "ChapterWorldRouter now publishes committed chapter/route/episode/revision plus committed quest snapshot to UShireNPCContextSubsystem on normal commit and rollback. Regional mood/profile availability use committed identity; danger uses live quest only while logical and committed world identities match; new bounded dialogue/film-context selection is suppressed during the async mismatch window.",
+      "action": "After runner recovery, execute a forced slow transition and assert that old-world NPCs never expose destination mood/dialogue before OnWorldCommitted, while same-world quest-stage reactions still update."
     },
     {
       "id": "AUDIT-HIGH-011",
       "severity": "HIGH",
-      "status": "SCALING_RISK_IDENTIFIED_MEASUREMENT_AND_EVICTION_POLICY_PENDING",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_COMPILE_AND_MEMORY_MEASUREMENT",
       "title": "Character rig async handles can accumulate for the full GameInstance lifetime",
-      "evidence": "UShireChapterAssetStreamingSubsystem::CharacterRigRequests retains one FStreamableHandle per requested character rig until subsystem Deinitialize. Player and named NPCs request rigs asynchronously, but no chapter-cast eviction/reference-count policy currently releases inactive rigs.",
-      "action": "After runner recovery, measure skeletal/animation residency on the ~2 GB VRAM target and add bounded rig residency tied to committed current/next chapter cast. Never unload the active player/current companions; release inactive rig handles only after safe world commit."
+      "evidence": "Character rig requests remain asynchronous. HandleCharacterRigLoadComplete now broadcasts while the streamable handle pins the rig, then releases the handle so active player/NPC components own the loaded UObject references and inactive rigs can become GC-eligible instead of remaining pinned for GameInstance lifetime.",
+      "action": "After runner recovery, traverse multiple character/chapter swaps and measure skeletal/animation residency and GC behavior on the target laptop before closing the memory-risk finding."
     }
   ],
   "external_practice_alignment": [
@@ -151,7 +151,10 @@
     "V5 exact-head engine proof plus representative target-device chapter-transition hitch/streaming-pool/resident-memory measurement before performance promotion",
     "committed-world NPC context synchronization regression: old visible world must never read destination regional mood/film context during async transition",
     "character-rig residency/eviction measurement across multi-chapter traversal on the ~2 GB VRAM target",
-    "remaining runtime LoadObject burn-down in player/named-character and chapter-builder production paths"
+    "remaining runtime LoadObject burn-down in player/named-character and chapter-builder production paths",
+    "forced slow async transition: assert committed NPC context remains old-world until OnWorldCommitted and new dialogue is suppressed during mismatch",
+    "multi-character rig churn: prove completed streamable handles do not pin inactive skeletal/AnimBP packages",
+    "global runtime scan: reject any non-/Engine/BasicShapes synchronous LoadObject reintroduction"
   ],
-  "audit_scope_note": "Runtime/code audit is against exact PR #67 head 17689b194ddca281aa9881b9ac50594712a65df6. Subsequent audit/governance-only reconciliation commits do not constitute engine/runtime proof."
+  "audit_scope_note": "Findings were discovered against PR #67 exact head 17689b194ddca281aa9881b9ac50594712a65df6. The source-fix wave now removes the identified committed-context, rig-handle pinning and non-engine synchronous LoadObject paths, but remains pending fresh exact-head UE4.27 compile/runtime proof."
 }
