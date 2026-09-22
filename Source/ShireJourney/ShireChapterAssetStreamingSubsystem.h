@@ -53,6 +53,8 @@ private:
         FSoftObjectPath SkeletalMeshPath;
         FSoftObjectPath AnimClassPath;
         TSharedPtr<FStreamableHandle> Handle;
+        bool bAvailabilityChecked = false;
+        bool bPackagesPresent = false;
     };
 
     bool LoadStreamingPlan();
