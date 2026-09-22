@@ -18,9 +18,19 @@
       "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/archive/refs/heads/main.zip",
       "license_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/main/LICENSE.txt",
       "category": "ARCHITECTURE_WORLD_SUPPORT",
-      "expected_formats": ["FBX", "GLTF"],
+      "expected_formats": [
+        "FBX",
+        "GLTF"
+      ],
       "max_bytes": 160000000,
-      "regional_use": ["SHIRE", "BREE", "EDORAS_MEDUSELD", "MINAS_TIRITH", "OSGILIATH", "GREY_HAVENS"],
+      "regional_use": [
+        "SHIRE",
+        "BREE",
+        "EDORAS_MEDUSELD",
+        "MINAS_TIRITH",
+        "OSGILIATH",
+        "GREY_HAVENS"
+      ],
       "suitability": "SUPPORTING_BACKGROUND_LAYOUT_ONLY"
     },
     {
@@ -30,9 +40,18 @@
       "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0/archive/refs/heads/main.zip",
       "license_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0/main/LICENSE.txt",
       "category": "DUNGEON_INTERIOR_SUPPORT",
-      "expected_formats": ["FBX", "GLTF", "OBJ"],
+      "expected_formats": [
+        "FBX",
+        "GLTF",
+        "OBJ"
+      ],
       "max_bytes": 180000000,
-      "regional_use": ["MORIA", "MINAS_MORGUL", "CIRITH_UNGOL_SHELOB", "PATHS_OF_THE_DEAD"],
+      "regional_use": [
+        "MORIA",
+        "MINAS_MORGUL",
+        "CIRITH_UNGOL_SHELOB",
+        "PATHS_OF_THE_DEAD"
+      ],
       "suitability": "SUPPORTING_INTERIOR_COLLISION_LAYOUT"
     },
     {
@@ -42,9 +61,18 @@
       "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/archive/refs/heads/main.zip",
       "license_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0/main/LICENSE.txt",
       "category": "RIGGED_CHARACTER_PIPELINE_SUPPORT",
-      "expected_formats": ["FBX", "GLTF"],
+      "expected_formats": [
+        "FBX",
+        "GLTF"
+      ],
       "max_bytes": 160000000,
-      "regional_use": ["BREE", "RIVENDELL", "LOTHLORIEN", "EDORAS_MEDUSELD", "MINAS_TIRITH"],
+      "regional_use": [
+        "BREE",
+        "RIVENDELL",
+        "LOTHLORIEN",
+        "EDORAS_MEDUSELD",
+        "MINAS_TIRITH"
+      ],
       "suitability": "BACKGROUND_RETARGET_QA_ONLY"
     },
     {
@@ -54,10 +82,38 @@
       "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Furniture-Bits-1.0/archive/refs/heads/main.zip",
       "license_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Furniture-Bits-1.0/main/LICENSE.txt",
       "category": "INTERIOR_PROPS",
-      "expected_formats": ["FBX", "GLTF", "OBJ"],
+      "expected_formats": [
+        "FBX",
+        "GLTF",
+        "OBJ"
+      ],
       "max_bytes": 90000000,
-      "regional_use": ["SHIRE", "BREE", "RIVENDELL", "EDORAS_MEDUSELD", "MINAS_TIRITH", "GREY_HAVENS"],
+      "regional_use": [
+        "SHIRE",
+        "BREE",
+        "RIVENDELL",
+        "EDORAS_MEDUSELD",
+        "MINAS_TIRITH",
+        "GREY_HAVENS"
+      ],
       "suitability": "SUPPORTING_INTERIOR_PROPS"
+    },
+    {
+      "id": "KAYKIT_SKELETONS_1_0",
+      "repository": "KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0",
+      "archive_url": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0/archive/refs/heads/main.zip",
+      "license_url": "https://raw.githubusercontent.com/KayKit-Game-Assets/KayKit-Character-Pack-Skeletons-1.0/main/LICENSE.txt",
+      "category": "RIGGED_ENEMY_PIPELINE_SUPPORT",
+      "expected_formats": [
+        "FBX",
+        "GLTF"
+      ],
+      "max_bytes": 160000000,
+      "regional_use": [
+        "TECHNICAL_QA_ONLY"
+      ],
+      "suitability": "ENEMY_RIG_RETARGET_QA_ONLY"
     }
   ],
   "rules": [
