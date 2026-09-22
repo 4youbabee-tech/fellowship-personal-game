@@ -925,24 +925,42 @@ FName UShireNPCContextSubsystem::GetContextRouteId() const
 
 FName UShireNPCContextSubsystem::GetContextActiveQuestId() const
 {
-    if (bHasCommittedWorldContext)
-    {
-        return CommittedActiveQuestId;
-    }
     const UGameInstance* GI = GetGameInstance();
     const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
-    return Quests ? Quests->GetActiveQuestId() : NAME_None;
+    if (!Quests)
+    {
+        return bHasCommittedWorldContext ? CommittedActiveQuestId : NAME_None;
+    }
+
+    const bool bLogicalWorldMatchesCommitted =
+        !bHasCommittedWorldContext ||
+        (Quests->GetCurrentChapterId() == CommittedChapterId &&
+         Quests->GetCurrentRouteId() == CommittedRouteId &&
+         Quests->GetCurrentEpisodeId() == CommittedEpisodeId);
+
+    return bLogicalWorldMatchesCommitted
+        ? Quests->GetActiveQuestId()
+        : CommittedActiveQuestId;
 }
 
 int32 UShireNPCContextSubsystem::GetContextActiveQuestStage() const
 {
-    if (bHasCommittedWorldContext)
-    {
-        return CommittedActiveQuestStage;
-    }
     const UGameInstance* GI = GetGameInstance();
     const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
-    return Quests ? Quests->GetActiveQuestStage() : 0;
+    if (!Quests)
+    {
+        return bHasCommittedWorldContext ? CommittedActiveQuestStage : 0;
+    }
+
+    const bool bLogicalWorldMatchesCommitted =
+        !bHasCommittedWorldContext ||
+        (Quests->GetCurrentChapterId() == CommittedChapterId &&
+         Quests->GetCurrentRouteId() == CommittedRouteId &&
+         Quests->GetCurrentEpisodeId() == CommittedEpisodeId);
+
+    return bLogicalWorldMatchesCommitted
+        ? Quests->GetActiveQuestStage()
+        : CommittedActiveQuestStage;
 }
 
 bool UShireNPCContextSubsystem::IsFellowshipProfile(const FShireNPCProfileRuntime& Profile) const
