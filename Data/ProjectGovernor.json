@@ -3597,7 +3597,7 @@
   ],
   "active_gate": {
     "id": "ARCHITECTURAL_STABILIZATION_GATE",
-    "status": "ACTIVE",
+    "status": "PARTIAL",
     "blocks_major_feature_expansion": true,
     "required_evidence": [
       "fresh exact-head Pre-Unreal including deep + asset + governor audits",
@@ -3607,7 +3607,7 @@
       "warning-debt/material persistence gate",
       "target-device follow-up before visual/performance acceptance"
     ],
-    "note": "Runner ACL is no longer the primary blocker. Feature expansion is frozen while root-cause stabilization is validated. Validation builds/import/runtime audits are explicitly allowed because they are evidence, not feature expansion.",
+    "note": "Architectural stabilization is the active execution focus. Quality-gate state remains PARTIAL until all exact-head evidence listed here passes. Feature expansion is frozen; validation/build/import/runtime audits are explicitly allowed because they are evidence, not feature expansion.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
