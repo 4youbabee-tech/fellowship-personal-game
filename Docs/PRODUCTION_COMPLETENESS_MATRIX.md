@@ -1,3 +1,9 @@
+## 2026-09-22 - deep organization and integration audit
+
+Current production maturity is unchanged by this audit. Warehouse #99 is real staged/audited evidence (240 payload files / 3,816,657,674 bytes), but Pre-Unreal #685 is red from roadmap/governor drift and Unreal #520 remains blocked before compilation by the runner Engine Content ACL. The camera requirement mapping is repaired at source/governance level; engine proof is still pending.
+
+Cross-system review adds two tracked HIGH risks without promoting maturity: NPC regional/film context currently follows logical quest state rather than committed-world identity during async swaps, and character-rig async handles have no bounded inactive-cast eviction policy yet. Ambient NPC pooling is corrected from “missing” to “implemented pending proof.” Remaining direct LoadObject concentration is still a scaling debt for W01+ after W00 restores engine validation.
+
 ## 2026-09-22 - final pre-runner warehouse saturation batch
 
 Warehouse breadth gains three verified official KayKit CC0 public-GitHub support lanes: food/kitchen/interior props, selective dark/cemetery props, and manually filtered generic civic props. This is sourcing/staging maturity only. No UE import, compile, PIE, device, performance or visual maturity is promoted by this batch. The next major gate is W00 runner/exact-head unlock.
