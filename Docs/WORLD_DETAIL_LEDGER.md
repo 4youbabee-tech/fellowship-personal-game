@@ -1,5 +1,12 @@
 # WORLD DETAIL LEDGER
 
+## Embodied third-person camera direction - 2026-09-22
+- Owner explicitly rejects top-down/isometric/RTS-style normal gameplay. Shire Journey must feel like directly inhabiting Middle-earth through the active character.
+- Default gameplay perspective: **third-person action-adventure**, camera behind or slightly over the controlled character, broadly comparable to GTA V / Red Dead camera relationship rather than a strategy camera.
+- Tune distance/height/FOV/camera collision contextually for Hobbit/Human/Elf/Dwarf scale, interiors, traversal, interaction and combat readability.
+- Temporary cinematic framing is allowed only as bounded presentation; control must return cleanly to the embodied gameplay camera.
+- Acceptance requires PIE review of world-scale immersion, interaction reach/readability, camera collision and interior/exterior transitions. This direction alone is not PIE/DEVICE/VISUAL acceptance.
+
 ## Completion Wave Map / Milestone Ladder - 2026-09-22
 - Owner requested a bounded finish map from the current approximately 40/100 whole-game planning position to 100/100, expressed as production waves rather than hours.
 - Planning unit is a **major production drop**, not an individual Git commit or raw file upload. One drop should be coherent enough to review, validate and roll back as a unit.
