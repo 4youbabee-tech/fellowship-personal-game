@@ -1,3 +1,7 @@
+## 2026-09-22 - final pre-runner warehouse saturation batch
+
+Warehouse breadth gains three verified official KayKit CC0 public-GitHub support lanes: food/kitchen/interior props, selective dark/cemetery props, and manually filtered generic civic props. This is sourcing/staging maturity only. No UE import, compile, PIE, device, performance or visual maturity is promoted by this batch. The next major gate is W00 runner/exact-head unlock.
+
 ## 2026-09-22 - character visibility warehouse bridge
 
 Character production remains PARTIAL, but the next visible bridge is now concrete rather than abstract. Official KayKit Skeletons 1.0 is registered as CC0 rigged/animated FBX/GLTF technical QA stock, while KayKit Adventurers remains staged background/retarget support. The warehouse audit now validates archive-style payload receipts and license-snapshot hashes, improving provenance integrity for these non-interactive public-GitHub lanes.
