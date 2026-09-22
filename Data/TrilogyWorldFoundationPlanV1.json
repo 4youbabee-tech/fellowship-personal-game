@@ -81,7 +81,107 @@
         "farm workers",
         "vendors",
         "party guests"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "hobbit architecture",
+            "pastoral terrain",
+            "hedges",
+            "farms",
+            "gardens",
+            "bridges",
+            "mills"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "hobbits",
+            "farm workers",
+            "vendors",
+            "party guests"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "birds",
+            "wind",
+            "river",
+            "farm life"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY"
+      }
     },
     {
       "id": "BREE",
@@ -104,7 +204,105 @@
         "guards",
         "stable hands",
         "travellers"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "timber-stone town",
+            "gate",
+            "inn",
+            "stable",
+            "mud/rain"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "townsfolk",
+            "guards",
+            "stable hands",
+            "travellers"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "rain",
+            "crowd",
+            "horses",
+            "inn"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY"
+      }
     },
     {
       "id": "WEATHERTOP",
@@ -123,7 +321,100 @@
       "population": [
         "travellers",
         "Nazgul encounter set"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "ruins",
+            "hill terrain",
+            "camp",
+            "night threat"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "travellers",
+            "Nazgul encounter set"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "wind",
+            "night insects",
+            "distant threat"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "QUATERNIUS"
+        ],
+        "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY"
+      }
     },
     {
       "id": "RIVENDELL",
@@ -144,7 +435,102 @@
         "elves",
         "attendants",
         "scholars"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "elven stone-wood",
+            "terraces",
+            "waterfalls",
+            "gardens"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "elves",
+            "attendants",
+            "scholars"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "water",
+            "birds",
+            "light wind",
+            "interior calm"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY"
+      }
     },
     {
       "id": "CARADHRAS",
@@ -161,7 +547,98 @@
       ],
       "population": [
         "none/minimal"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "snow",
+            "rock",
+            "storm visibility"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "none/minimal"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "wind",
+            "snow",
+            "rockfall"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY"
+      }
     },
     {
       "id": "MORIA",
@@ -183,7 +660,103 @@
         "orc",
         "goblin",
         "cave troll set"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "dwarven halls",
+            "columns",
+            "bridges",
+            "tomb",
+            "mines"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "orc",
+            "goblin",
+            "cave troll set"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "drips",
+            "reverb",
+            "stone",
+            "threat"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "QUATERNIUS"
+        ],
+        "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY"
+      }
     },
     {
       "id": "LOTHLORIEN",
@@ -202,7 +775,100 @@
       "population": [
         "elves",
         "wardens"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "golden forest",
+            "flets",
+            "organic bridges",
+            "river"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "elves",
+            "wardens"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "foliage",
+            "water",
+            "airy ambience"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY"
+      }
     },
     {
       "id": "ANDUIN_AMON_HEN",
@@ -223,7 +889,102 @@
       "population": [
         "fellowship",
         "Uruk attack set"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "river",
+            "boats",
+            "forest",
+            "ruins",
+            "monumental landmarks"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "fellowship",
+            "Uruk attack set"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "river",
+            "wind",
+            "forest",
+            "battle"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "QUATERNIUS"
+        ],
+        "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY"
+      }
     },
     {
       "id": "FANGORN",
@@ -242,7 +1003,100 @@
       "population": [
         "Ents",
         "forest fauna"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "ancient forest",
+            "roots",
+            "mist",
+            "Ent scale"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "Ents",
+            "forest fauna"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "deep wood",
+            "creaks",
+            "wind"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "EDORAS_MEDUSELD",
@@ -262,7 +1116,102 @@
         "Rohirrim",
         "civilians",
         "guards"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "hill city",
+            "golden hall",
+            "stables",
+            "plains"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "Rohirrim",
+            "civilians",
+            "guards"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "wind",
+            "horses",
+            "hall"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "HELMS_DEEP",
@@ -283,7 +1232,103 @@
       "population": [
         "Rohan",
         "Uruk-hai"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "fortress",
+            "wall",
+            "culvert",
+            "keep",
+            "caves",
+            "siege"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "Rohan",
+            "Uruk-hai"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "rain",
+            "siege",
+            "battle"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "ISENGARD",
@@ -304,7 +1349,102 @@
       "population": [
         "Uruk-hai",
         "workers"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "Orthanc",
+            "ring wall",
+            "pits",
+            "industry",
+            "flood state"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "Uruk-hai",
+            "workers"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "machinery",
+            "fire",
+            "chains",
+            "water"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "QUATERNIUS"
+        ],
+        "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY"
+      }
     },
     {
       "id": "EMYN_MUIL",
@@ -320,7 +1460,96 @@
       ],
       "population": [
         "minimal"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "broken ridges",
+            "cliffs",
+            "grey stone"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "minimal"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "wind",
+            "rock"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "DEAD_MARSHES",
@@ -338,7 +1567,99 @@
       ],
       "population": [
         "minimal/spectral"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "pools",
+            "mist",
+            "dead vegetation",
+            "corpse-light"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "minimal/spectral"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "wetland",
+            "wind",
+            "dread"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "ITHILIEN_HENNETH",
@@ -357,7 +1678,100 @@
       "population": [
         "Gondor rangers",
         "Haradrim encounter set"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "green forest",
+            "ruins",
+            "waterfalls",
+            "ranger refuge"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "Gondor rangers",
+            "Haradrim encounter set"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "forest",
+            "water",
+            "ranger camp"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "MINAS_TIRITH",
@@ -379,7 +1793,104 @@
         "Gondor civilians",
         "guards",
         "soldiers"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "white city",
+            "walls",
+            "gates",
+            "citadel",
+            "siege variants"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "Gondor civilians",
+            "guards",
+            "soldiers"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "city",
+            "bells",
+            "siege",
+            "crowd"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "OSGILIATH",
@@ -398,7 +1909,100 @@
       "population": [
         "Gondor",
         "orc forces"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "ruins",
+            "bridges",
+            "riverfront",
+            "rubble"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "Gondor",
+            "orc forces"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "river",
+            "battle",
+            "ruins"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "QUATERNIUS"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "MINAS_MORGUL",
@@ -415,7 +2019,98 @@
       "population": [
         "orc",
         "Nazgul"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "corrupted fortress",
+            "valley",
+            "dead road"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "orc",
+            "Nazgul"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "dread wind",
+            "army movement"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "QUATERNIUS"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "CIRITH_UNGOL_SHELOB",
@@ -435,7 +2130,101 @@
       "population": [
         "orc",
         "Shelob"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "mountain stairs",
+            "tower",
+            "web caves",
+            "orc interior"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "orc",
+            "Shelob"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "wind",
+            "cave",
+            "web movement",
+            "orc"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "QUATERNIUS"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "PELENNOR",
@@ -455,7 +2244,101 @@
         "Rohan",
         "Mordor",
         "Haradrim"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "open plain",
+            "siege debris",
+            "army lanes"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "Gondor",
+            "Rohan",
+            "Mordor",
+            "Haradrim"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "battle",
+            "cavalry",
+            "siege"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "KENNEY"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "PATHS_OF_THE_DEAD",
@@ -472,7 +2355,98 @@
       ],
       "population": [
         "Army of the Dead"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "haunted road",
+            "tombs",
+            "fog"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "Army of the Dead"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "spectral",
+            "wind",
+            "stone"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "QUATERNIUS"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "BLACK_GATE",
@@ -490,7 +2464,99 @@
       "population": [
         "Mordor armies",
         "Free Peoples"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "black walls",
+            "barren plain",
+            "army staging"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "Mordor armies",
+            "Free Peoples"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "wind",
+            "army",
+            "battle"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "KENNEY"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "MORDOR_GORGOROTH",
@@ -510,7 +2576,101 @@
       "population": [
         "orc armies",
         "slaves"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "ash",
+            "volcanic rock",
+            "war industry",
+            "roads"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "orc armies",
+            "slaves"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "wind",
+            "ash",
+            "industry",
+            "army"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "MOUNT_DOOM",
@@ -527,7 +2687,98 @@
       ],
       "population": [
         "minimal"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "volcanic slopes",
+            "Sammath Naur",
+            "lava/fire"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "minimal"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "lava",
+            "rumble",
+            "wind"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     },
     {
       "id": "GREY_HAVENS",
@@ -545,7 +2796,99 @@
       "population": [
         "elves",
         "harbor attendants"
-      ]
+      ],
+      "foundation_stock": {
+        "architecture": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "pale harbor",
+            "ships",
+            "sea horizon"
+          ],
+          "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
+        },
+        "terrain_materials": {
+          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "families": [
+            "terrain base",
+            "path/road",
+            "rock/stone",
+            "wetness/state variants"
+          ],
+          "texture_contract": "PNG/TGA production intake; channel-pack masks where applicable; no uncompressed BMP production textures"
+        },
+        "vegetation_ecology": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "region-appropriate canopy",
+            "ground cover",
+            "fauna/ecology accents"
+          ],
+          "runtime_rule": "HISM/ISM for high-count non-story vegetation; fauna actors remain bounded/pooled where applicable"
+        },
+        "props": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "traversal-readable props",
+            "interior/exterior support",
+            "story-safe dressing"
+          ]
+        },
+        "population_factions": {
+          "status": "PREPRODUCTION_ONLY",
+          "families": [
+            "elves",
+            "harbor attendants"
+          ],
+          "character_contract": "final animated characters require real skeletal FBX rig/skin/deformation; crowds use pooling"
+        },
+        "audio": {
+          "status": "CANDIDATE_STOCK_ACTIVE",
+          "families": [
+            "sea",
+            "wind",
+            "gulls"
+          ],
+          "runtime_rule": "stream/bound audio banks; candidate/staged audio is not accepted mix"
+        },
+        "lighting_atmosphere": {
+          "status": "PROFILE_PREPRODUCTION",
+          "families": [
+            "sun/sky/fog",
+            "interior/exterior exposure",
+            "story danger/state variants"
+          ]
+        },
+        "vfx": {
+          "status": "CANDIDATE_PREPRODUCTION",
+          "families": [
+            "rain",
+            "snow",
+            "mist",
+            "dust",
+            "embers",
+            "ash",
+            "water spray",
+            "fire",
+            "webs"
+          ]
+        },
+        "traversal_collision": {
+          "status": "FOUNDATION_REQUIRED",
+          "families": [
+            "ground-safe placement",
+            "deterministic collision probes",
+            "streaming boundary anchors",
+            "landmark approach readability"
+          ]
+        },
+        "preferred_sources": [
+          "AMBIENTCG",
+          "POLY_HAVEN",
+          "QUATERNIUS"
+        ],
+        "runtime_gate": "PREPRODUCTION_ONLY_NO_PART_II_III_RUNTIME_OPENING"
+      }
     }
   ],
   "implementation_boundary": "This plan authorizes warehouse/world-kit foundation work only. It does not authorize opening gated Part II/III runtime chapter implementation ahead of current foundation gates.",
@@ -556,5 +2899,17 @@
     "per-region population/faction manifest",
     "per-region audio/VFX/lighting profile",
     "warehouse slot coverage report"
-  ]
+  ],
+  "coverage_policy": {
+    "benchmark": "P1C01_SHIRE_FIRST_ASSEMBLED_BENCHMARK",
+    "parallelism": "All listed regions may advance reusable stock, materials, architecture, ecology, audio, lighting/VFX and traversal requirements in warehouse/preproduction without opening gated Part II/III runtime chapters.",
+    "intake_linkage": [
+      "Data/TrilogyAssetCandidateQueue.json",
+      "Data/TrilogyAudioAssetCandidateQueue.json",
+      "Data/WarehouseAmbientCGAcquisitionBatchV1.json",
+      "Data/WarehouseQuaterniusAcquisitionBatchV1.json",
+      "Data/WarehouseKenneyAcquisitionBatchV1.json"
+    ],
+    "evidence_boundary": "CANDIDATE/AUTHORIZED/STAGED/READY_FOR_IMPORT are warehouse states only. IMPORTED/INTEGRATED/ACCEPTED require their own UE/runtime/human evidence."
+  }
 }
