@@ -2911,5 +2911,67 @@
       "Data/WarehouseKenneyAcquisitionBatchV1.json"
     ],
     "evidence_boundary": "CANDIDATE/AUTHORIZED/STAGED/READY_FOR_IMPORT are warehouse states only. IMPORTED/INTEGRATED/ACCEPTED require their own UE/runtime/human evidence."
-  }
+  },
+  "provider_role_map": {
+    "QTN_ULTIMATE_MODULAR_WOMEN": {
+      "role": "BACKGROUND_POPULATION_DIVERSITY",
+      "regions": [
+        "SHIRE",
+        "BREE",
+        "RIVENDELL",
+        "LOTHLORIEN",
+        "EDORAS_MEDUSELD",
+        "MINAS_TIRITH",
+        "GREY_HAVENS"
+      ],
+      "maturity_boundary": "CANDIDATE_OR_STAGED_ONLY_UNTIL_FBXRIG_AND_INTAKE_VALIDATION",
+      "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY_OR_PREPRODUCTION_ONLY"
+    },
+    "QTN_ULTIMATE_MONSTERS": {
+      "role": "CREATURE_RIG_AND_DEFORMATION_PIPELINE_SUPPORT",
+      "regions": [
+        "MORIA",
+        "FANGORN",
+        "HELMS_DEEP",
+        "CIRITH_UNGOL_SHELOB",
+        "PELENNOR",
+        "MORDOR_GORGOROTH"
+      ],
+      "maturity_boundary": "PIPELINE_SUPPORT_NOT_CANONICAL_HERO_CREATURE_ART",
+      "runtime_gate": "WAREHOUSE_PREPRODUCTION_ONLY_FOR_GATED_PART_II_III"
+    },
+    "QTN_ULTIMATE_BUILDINGS": {
+      "role": "SUPPORTING_MODULAR_ARCHITECTURE",
+      "regions": [
+        "BREE",
+        "EDORAS_MEDUSELD",
+        "HELMS_DEEP",
+        "MINAS_TIRITH",
+        "OSGILIATH",
+        "GREY_HAVENS"
+      ],
+      "maturity_boundary": "SUPPORTING_STOCK_REQUIRES_CULTURE_SPECIFIC_ART_DIRECTION_AND_PBR_REVIEW",
+      "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY_OR_PREPRODUCTION_ONLY"
+    },
+    "QTN_MODULAR_DUNGEON": {
+      "role": "SUPPORTING_INTERIOR_AND_COLLISION_ARCHITECTURE",
+      "regions": [
+        "MORIA",
+        "MINAS_MORGUL",
+        "CIRITH_UNGOL_SHELOB",
+        "PATHS_OF_THE_DEAD"
+      ],
+      "maturity_boundary": "LAYOUT_COLLISION_SUPPORT_NOT_HERO_ARCHITECTURE_ACCEPTANCE",
+      "runtime_gate": "MORIA_EXISTING_PART_I_OR_PREPRODUCTION_ONLY_FOR_LATER_REGIONS"
+    }
+  },
+  "intake_readiness_order": [
+    "Preserve provider/source/license/provenance and SHA256 receipt at staging.",
+    "Extract and inspect archives before READY_FOR_IMPORT; reject corrupt or unexpected payloads.",
+    "For animated characters/creatures require skeletal FBX, real skeleton, skin weights, deformation sanity and animation/skeleton compatibility.",
+    "For production textures prefer PNG/TGA and channel-packed masks where applicable; staged source files are not accepted materials.",
+    "Classify repeated decorative stock for ISM/HISM and explicit cull-distance use before world integration.",
+    "Keep heavy content soft/async-owned through FStreamableManager; do not turn warehouse fill into synchronous runtime loading.",
+    "Do not promote STAGED to READY_FOR_IMPORT, IMPORTED, INTEGRATED or ACCEPTED without the evidence required by each state."
+  ]
 }
