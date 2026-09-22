@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "SOURCE_FIX_WAVE_AFTER_17689B_REVIEW",
+  "audited_head": "ARCHITECTURAL_STABILIZATION_SOURCE_HEAD_PENDING_EXACT_HEAD_ENGINE_PROOF",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -28,10 +28,10 @@
     {
       "id": "AUDIT-CRIT-001",
       "severity": "CRITICAL",
-      "status": "REPAIR_IN_PROGRESS",
+      "status": "SOURCE_REPAIR_IMPLEMENTED_PENDING_FULL_EXACT_HEAD_WARNING_GATE",
       "title": "World material persistence is unreliable",
-      "evidence": "UE4 exact-head warning gate reports 78 missing /Game/Production/World packages.",
-      "action": "Synthesize deterministic authored materials before OBJ import, bind slots explicitly, rerun same-SHA evidence chain."
+      "evidence": "Importer now synthesizes project-owned master/MTL materials, explicitly saves tracked material packages pre/post mesh import, verifies every tracked material package exists on disk, and fails import if persistence is missing. Build #547 production import succeeded, but the full warning-debt/material gate was not reached because the old chapter harness stopped at P1C05.",
+      "action": "Fresh exact-head run must complete all chapter audits, then execute the warning-debt/material-persistence gate. Do not add another material recovery path unless that evidence identifies a concrete remaining package."
     },
     {
       "id": "AUDIT-HIGH-002",
@@ -68,7 +68,7 @@
     {
       "id": "AUDIT-MED-006",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_COMPILE_AND_MEASUREMENT",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_STABILIZATION_BUILD_AND_MEASUREMENT",
       "title": "Chapter builders perform many direct LoadObject calls",
       "evidence": "All inspected non-engine runtime LoadObject paths have been removed from the current branch: chapter world builders now resolve only asynchronously resident bank assets; player/named-NPC/enemy production visuals use resident soft resolution; ShireAudioSubsystem no longer LoadObject<USoundBase>. Remaining direct LoadObject calls are limited to tiny /Engine/BasicShapes fallback assets and are guarded by deep_project_audit.py.",
       "action": "Fresh Pre-Unreal must pass, then runner recovery must provide UE4.27 compile/import/startup/transition evidence. Measure transition hitch and resident memory before closing performance acceptance."
@@ -76,7 +76,7 @@
     {
       "id": "AUDIT-MED-007",
       "severity": "MEDIUM",
-      "status": "POOLING_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF_AND_MEASUREMENT",
+      "status": "POOLING_IMPLEMENTED_PENDING_STABILIZATION_DEVICE_MEASUREMENT",
       "title": "Ambient living-world actors use spawn/cull/destroy churn",
       "evidence": "LivingWorldDirector now owns bounded ambient-NPC reuse and AShireAmbientNPC deactivation disables tick/visibility/collision and clears social state. Destroy paths remain for non-pooled/excess/event actors, so target-device Spawn/Destroy/GC measurement is still required.",
       "action": "Do not increase population because pooling exists. Validate exact head and measure churn/GC on target hardware; extend pooling only to proven hot ephemeral classes while keeping named persistent NPC identity out of the pool."
@@ -100,7 +100,7 @@
     {
       "id": "AUDIT-HIGH-010",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_COMPILE_AND_TRANSITION_PROOF",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_STABILIZATION_TRANSITION_PROOF",
       "title": "NPC context can advance to destination story/world context before visible world commit",
       "evidence": "ChapterWorldRouter now publishes committed chapter/route/episode/revision plus committed quest snapshot to UShireNPCContextSubsystem on normal commit and rollback. Regional mood/profile availability use committed identity; danger uses live quest only while logical and committed world identities match; new bounded dialogue/film-context selection is suppressed during the async mismatch window.",
       "action": "After runner recovery, execute a forced slow transition and assert that old-world NPCs never expose destination mood/dialogue before OnWorldCommitted, while same-world quest-stage reactions still update."
@@ -108,10 +108,34 @@
     {
       "id": "AUDIT-HIGH-011",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_COMPILE_AND_MEMORY_MEASUREMENT",
+      "status": "SOURCE_FIX_IMPLEMENTED_WITH_PACKAGE_PREFLIGHT_PENDING_ENGINE_MEMORY_PROOF",
       "title": "Character rig async handles can accumulate for the full GameInstance lifetime",
-      "evidence": "Character rig requests remain asynchronous. HandleCharacterRigLoadComplete now broadcasts while the streamable handle pins the rig, then releases the handle so active player/NPC components own the loaded UObject references and inactive rigs can become GC-eligible instead of remaining pinned for GameInstance lifetime.",
-      "action": "After runner recovery, traverse multiple character/chapter swaps and measure skeletal/animation residency and GC behavior on the target laptop before closing the memory-risk finding."
+      "evidence": "Character rigs use async soft paths; completed handles release after actor-owned handoff; requests now call FPackageName::DoesPackageExist for mesh+AnimBP packages once per GameInstance and do not RequestAsyncLoad absent future-production packages. This removes the missing-package engine error flood seen in Build #547 while preserving modular fallback.",
+      "action": "Fresh exact-head compile/runtime proof, then multi-chapter memory/GC measurement once real skeletal FBX rigs exist."
+    },
+    {
+      "id": "AUDIT-HIGH-012",
+      "severity": "HIGH",
+      "status": "SYSTEMIC_SOURCE_FIX_IMPLEMENTED_PENDING_ALL_CHAPTER_SWEEP",
+      "title": "Chapter spawn coordinates could drift onto collision seams",
+      "evidence": "Build #547 passed P1C01-P1C04 then P1C05 failed no-blocking-ground at (-2400,0,130). The failure came from an authored spawn falling between adjacent collision surfaces. Earlier fixes used hidden per-chapter support pads.",
+      "action": "Router now owns a bounded nearby-ground search with slope rejection and capsule-clearance validation. P1C01/P1C05 hidden RuntimeSpawnFoundation pads were removed and static validation forbids their return. Prove all P1C01-P1C08 starts in one exact-head sweep."
+    },
+    {
+      "id": "AUDIT-HIGH-013",
+      "severity": "HIGH",
+      "status": "QA_ARCHITECTURE_FIXED_PENDING_EXACT_HEAD_EXECUTION",
+      "title": "Chapter runtime CI hid later failures by stopping at the first red chapter",
+      "evidence": "Build #547 stopped at P1C05, so P1C06-P1C08 were never exercised on that head. runtime_smoke.py previously broke the chapter loop on first failure.",
+      "action": "Chapter mode now attempts all eight chapters, records every failure, emits RUNTIME_SWEEP_SUMMARY, and fails only after the full sweep. This reduces serial debug loops without running multiple UE instances in parallel on the 8 GB target."
+    },
+    {
+      "id": "AUDIT-MED-014",
+      "severity": "MEDIUM",
+      "status": "SOURCE_HYGIENE_REPAIRED_PENDING_IMPORT_WARNING_RECHECK",
+      "title": "Legacy texture format and duplicate OBJ face vertices created avoidable import debt",
+      "evidence": "The source bank contained 24 BMP textures and seven OBJ files with 304 total triangulation-risk faces caused by consecutive duplicate-position face vertices. Those defects corresponded with large UE import tangent/binormal warning volume.",
+      "action": "All 24 BMP files are migrated to TGA with MTL references updated; BMP is now rejected. Duplicate face vertices were removed from all seven known source meshes and triangulation-risk faces are now strict asset-audit errors. Re-run import and warning debt on exact head."
     }
   ],
   "external_practice_alignment": [
@@ -154,7 +178,11 @@
     "remaining runtime LoadObject burn-down in player/named-character and chapter-builder production paths",
     "forced slow async transition: assert committed NPC context remains old-world until OnWorldCommitted and new dialogue is suppressed during mismatch",
     "multi-character rig churn: prove completed streamable handles do not pin inactive skeletal/AnimBP packages",
-    "global runtime scan: reject any non-/Engine/BasicShapes synchronous LoadObject reintroduction"
+    "global runtime scan: reject any non-/Engine/BasicShapes synchronous LoadObject reintroduction",
+    "all-eight chapter sweep after seam-tolerant grounding; no fail-fast",
+    "post-import warning-debt check after BMP->TGA and duplicate-face cleanup",
+    "missing skeletal-rig fallback must produce no engine missing-package async errors",
+    "dedicated Public/Private source migration after stabilization exact-head green"
   ],
-  "audit_scope_note": "Findings were discovered against PR #67 exact head 17689b194ddca281aa9881b9ac50594712a65df6. The source-fix wave now removes the identified committed-context, rig-handle pinning and non-engine synchronous LoadObject paths, but remains pending fresh exact-head UE4.27 compile/runtime proof."
+  "audit_scope_note": "Root-cause hardening after Unreal Build #547 is source-reviewed and guarded, but exact-head UE4.27 compile/runtime evidence is still required before closure."
 }
