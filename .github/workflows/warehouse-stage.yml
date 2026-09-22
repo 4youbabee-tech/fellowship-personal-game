@@ -15,6 +15,7 @@ on:
       - 'Scripts/stage_ambientcg_warehouse.ps1'
       - 'Data/WarehouseKenneyAcquisitionBatchV1.json'
       - 'Scripts/stage_kenney_warehouse.ps1'
+      - 'Data/WarehouseAmbientCGTrilogyBatchV2.json'
       - '.github/workflows/warehouse-stage.yml'
   pull_request:
     branches:
@@ -47,7 +48,7 @@ jobs:
       - self-hosted
       - Windows
       - X64
-    timeout-minutes: 40
+    timeout-minutes: 60
     steps:
       - name: Checkout warehouse manifest and scripts
         uses: actions/checkout@v4
@@ -74,6 +75,11 @@ jobs:
         shell: cmd
         run: |
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAmbientCGAcquisitionBatchV1.json"
+
+      - name: Stage ambientCG trilogy-region material batch
+        shell: cmd
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAmbientCGTrilogyBatchV2.json"
 
       - name: Stage Kenney CC0 support packs
         shell: cmd
