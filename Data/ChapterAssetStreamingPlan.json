@@ -12,7 +12,7 @@
   "policy": {
     "keep_current_world_until_ready": true,
     "no_game_thread_wait": true,
-    "builder_compatibility": "Existing LoadObject calls may remain during migration; when an asset is already resident they resolve cheaply. Fellowship builder must also stop loading unrelated region banks.",
+    "builder_compatibility": "Production chapter/world/enemy meshes are resolved only from asynchronously resident chapter banks. Missing/nonresident production assets keep lightweight Engine primitive fallbacks; compatibility mode must not synchronously load heavy production packages.",
     "ownership": "The streaming subsystem retains the active chapter handle; the router swaps worlds only after the requested bank reports ready.",
     "release": "Previous streamable handle is released only after the replacement bank is ready and the router has committed the new chapter.",
     "measurement_required": [
@@ -21,7 +21,8 @@
       "resident memory",
       "target-device frame time"
     ],
-    "living_world_asset_ownership": "Ambient production character/fauna meshes and shared production surface material are soft chapter-bank members. Living-world actors may only ResolveObject from the committed resident bank; missing assets keep lightweight Engine primitive fallbacks and must not synchronously load production packages."
+    "living_world_asset_ownership": "Ambient production character/fauna meshes and shared production surface material are soft chapter-bank members. Living-world actors may only ResolveObject from the committed resident bank; missing assets keep lightweight Engine primitive fallbacks and must not synchronously load production packages.",
+    "character_proxy_loading": "Player/named-NPC modular production pieces use resident-only soft resolution while skeletal production rigs load asynchronously. If a modular piece is not resident, primitive fallback remains visible until the async rig path succeeds."
   },
   "banks": {
     "P1C01": {
@@ -107,7 +108,10 @@
         "/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg",
         "/Game/Production/World/Common/SM_CommonBird.SM_CommonBird",
         "/Game/Production/World/Common/SM_CommonRabbit.SM_CommonRabbit",
-        "/Game/Production/World/Common/SM_CommonButterfly.SM_CommonButterfly"
+        "/Game/Production/World/Common/SM_CommonButterfly.SM_CommonButterfly",
+        "/Game/Production/Enemies/BlackRider/SM_BlackRider_Horse.SM_BlackRider_Horse",
+        "/Game/Production/Enemies/BlackRider/SM_BlackRider_Rider.SM_BlackRider_Rider",
+        "/Game/Production/Enemies/BlackRider/SM_BlackRider_Head.SM_BlackRider_Head"
       ]
     },
     "P1C02": {
@@ -158,7 +162,10 @@
         "/Game/Production/Characters/Common/SM_Human_Head.SM_Human_Head",
         "/Game/Production/Characters/Common/SM_Human_Hair.SM_Human_Hair",
         "/Game/Production/Characters/Common/SM_Human_Arm.SM_Human_Arm",
-        "/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg"
+        "/Game/Production/Characters/Common/SM_Human_Leg.SM_Human_Leg",
+        "/Game/Production/Enemies/BlackRider/SM_BlackRider_Horse.SM_BlackRider_Horse",
+        "/Game/Production/Enemies/BlackRider/SM_BlackRider_Rider.SM_BlackRider_Rider",
+        "/Game/Production/Enemies/BlackRider/SM_BlackRider_Head.SM_BlackRider_Head"
       ]
     },
     "P1C03": {
@@ -208,7 +215,10 @@
         "/Game/Production/Characters/Hobbit/SM_Hobbit_Hair.SM_Hobbit_Hair",
         "/Game/Production/Characters/Hobbit/SM_Hobbit_Arm.SM_Hobbit_Arm",
         "/Game/Production/Characters/Hobbit/SM_Hobbit_Leg.SM_Hobbit_Leg",
-        "/Game/Production/World/Common/SM_CommonBird.SM_CommonBird"
+        "/Game/Production/World/Common/SM_CommonBird.SM_CommonBird",
+        "/Game/Production/Enemies/BlackRider/SM_BlackRider_Horse.SM_BlackRider_Horse",
+        "/Game/Production/Enemies/BlackRider/SM_BlackRider_Rider.SM_BlackRider_Rider",
+        "/Game/Production/Enemies/BlackRider/SM_BlackRider_Head.SM_BlackRider_Head"
       ]
     },
     "P1C04": {
@@ -365,7 +375,23 @@
         "/Game/Production/World/Moria/SM_MoriaTallBrazier.SM_MoriaTallBrazier",
         "/Game/Production/World/Moria/SM_MoriaTombDais.SM_MoriaTombDais",
         "/Game/Production/World/Moria/SM_MoriaTorchNiche.SM_MoriaTorchNiche",
-        "/Game/Production/World/Moria/SM_MoriaWallPanel.SM_MoriaWallPanel"
+        "/Game/Production/World/Moria/SM_MoriaWallPanel.SM_MoriaWallPanel",
+        "/Game/Production/Enemies/Orc/SM_Orc_Torso.SM_Orc_Torso",
+        "/Game/Production/Enemies/Orc/SM_Orc_Head.SM_Orc_Head",
+        "/Game/Production/Enemies/Orc/SM_Orc_Arm.SM_Orc_Arm",
+        "/Game/Production/Enemies/Orc/SM_Orc_Leg.SM_Orc_Leg",
+        "/Game/Production/Enemies/Orc/SM_Orc_Weapon.SM_Orc_Weapon",
+        "/Game/Production/Enemies/CaveTroll/SM_CaveTroll_Torso.SM_CaveTroll_Torso",
+        "/Game/Production/Enemies/CaveTroll/SM_CaveTroll_Head.SM_CaveTroll_Head",
+        "/Game/Production/Enemies/CaveTroll/SM_CaveTroll_Arm.SM_CaveTroll_Arm",
+        "/Game/Production/Enemies/CaveTroll/SM_CaveTroll_Leg.SM_CaveTroll_Leg",
+        "/Game/Production/Enemies/CaveTroll/SM_CaveTroll_Weapon.SM_CaveTroll_Weapon",
+        "/Game/Production/Enemies/Watcher/SM_Watcher_Core.SM_Watcher_Core",
+        "/Game/Production/Enemies/Watcher/SM_Watcher_Tentacle.SM_Watcher_Tentacle",
+        "/Game/Production/Enemies/Balrog/SM_Balrog_Torso.SM_Balrog_Torso",
+        "/Game/Production/Enemies/Balrog/SM_Balrog_Head.SM_Balrog_Head",
+        "/Game/Production/Enemies/Balrog/SM_Balrog_Wing.SM_Balrog_Wing",
+        "/Game/Production/Enemies/Balrog/SM_Balrog_Horn.SM_Balrog_Horn"
       ]
     },
     "P1C07": {
@@ -469,7 +495,22 @@
         "/Game/Production/World/Common/SM_CommonVillageFence.SM_CommonVillageFence",
         "/Game/Production/World/Common/SM_CommonWoodPile.SM_CommonWoodPile",
         "/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface",
-        "/Game/Production/World/Common/SM_CommonBird.SM_CommonBird"
+        "/Game/Production/World/Common/SM_CommonBird.SM_CommonBird",
+        "/Game/Production/Enemies/Orc/SM_Orc_Torso.SM_Orc_Torso",
+        "/Game/Production/Enemies/Orc/SM_Orc_Head.SM_Orc_Head",
+        "/Game/Production/Enemies/Orc/SM_Orc_Arm.SM_Orc_Arm",
+        "/Game/Production/Enemies/Orc/SM_Orc_Leg.SM_Orc_Leg",
+        "/Game/Production/Enemies/Orc/SM_Orc_Weapon.SM_Orc_Weapon",
+        "/Game/Production/Enemies/UrukHai/SM_UrukHai_Torso.SM_UrukHai_Torso",
+        "/Game/Production/Enemies/UrukHai/SM_UrukHai_Head.SM_UrukHai_Head",
+        "/Game/Production/Enemies/UrukHai/SM_UrukHai_Arm.SM_UrukHai_Arm",
+        "/Game/Production/Enemies/UrukHai/SM_UrukHai_Leg.SM_UrukHai_Leg",
+        "/Game/Production/Enemies/UrukHai/SM_UrukHai_Weapon.SM_UrukHai_Weapon",
+        "/Game/Production/Enemies/Lurtz/SM_Lurtz_Torso.SM_Lurtz_Torso",
+        "/Game/Production/Enemies/Lurtz/SM_Lurtz_Head.SM_Lurtz_Head",
+        "/Game/Production/Enemies/Lurtz/SM_Lurtz_Arm.SM_Lurtz_Arm",
+        "/Game/Production/Enemies/Lurtz/SM_Lurtz_Leg.SM_Lurtz_Leg",
+        "/Game/Production/Enemies/Lurtz/SM_Lurtz_Blade.SM_Lurtz_Blade"
       ]
     },
     "GANDALF_ISENGARD": {
