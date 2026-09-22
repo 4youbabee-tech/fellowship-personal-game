@@ -1,3 +1,7 @@
+## 2026-09-22 - stabilization gate schema correction
+
+The architectural stabilization gate is the current execution focus but its quality status is correctly `PARTIAL`, not `ACTIVE`. This repairs Governor schema consistency only and does not promote compile, PIE, device, visual or whole-game completion status.
+
 ## 2026-09-22 - stabilization guard correction
 
 Pre-Unreal #747 failed one intentional stabilization guard: the chapter harness was non-fail-fast but did not yet print the required aggregate `RUNTIME_SWEEP_SUMMARY`. The missing marker is now implemented. This does not change the 40/100 production estimate or promote compile/PIE/device/visual evidence.
