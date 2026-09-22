@@ -497,9 +497,10 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             // flagging those secondary packages for persistence. Mark every real
             // imported material package dirty so the final SaveDirtyPackages pass writes
             // the mesh and its material dependencies together.
-            for (int32 MaterialIndex = 0; MaterialIndex < ImportedMesh->StaticMaterials.Num(); ++MaterialIndex)
+            TArray<FStaticMaterial>& StaticMaterials = ImportedMesh->GetStaticMaterials();
+            for (int32 MaterialIndex = 0; MaterialIndex < StaticMaterials.Num(); ++MaterialIndex)
             {
-                FStaticMaterial& StaticMaterial = ImportedMesh->StaticMaterials[MaterialIndex];
+                FStaticMaterial& StaticMaterial = StaticMaterials[MaterialIndex];
                 UMaterialInterface* Material = StaticMaterial.MaterialInterface;
 
                 // When UE4.27 collapses valid authored OBJ slots to defaultMat in
