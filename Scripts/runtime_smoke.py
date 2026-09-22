@@ -164,7 +164,9 @@ def main():
         print(json.dumps(result), flush=True)
         if not result["passed"]:
             print(read_log(log)[-16000:], flush=True)
-            break
+            # Do not fail-fast chapter sweeps. One engine build should expose every
+            # broken chapter entry point so grounding/streaming defects are fixed as
+            # a set instead of being discovered serially across many CI reruns.
     log_dir.mkdir(parents=True, exist_ok=True)
     (log_dir / f"CI-{args.mode}-result.json").write_text(
         json.dumps(results, indent=2) + "\n", encoding="utf-8")
