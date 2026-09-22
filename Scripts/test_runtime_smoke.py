@@ -132,6 +132,12 @@ class RuntimeSmokeTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             observe(["not-an-editor"], Path("unused.log"), [], timeout=1, observation=2)
 
+    def test_chapter_mode_does_not_fail_fast(self):
+        source = Path(__file__).with_name("runtime_smoke.py").read_text(encoding="utf-8")
+        loop_tail = source[source.find("for chapter in chapters:"):]
+        self.assertNotIn('if not result["passed"]:\n            print(read_log(log)[-16000:], flush=True)\n            break', loop_tail)
+        self.assertIn("RUNTIME_SWEEP_SUMMARY", source)
+
 
 if __name__ == "__main__":
     unittest.main()
