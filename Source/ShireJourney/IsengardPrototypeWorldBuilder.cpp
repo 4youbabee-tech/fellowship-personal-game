@@ -80,8 +80,8 @@ AStaticMeshActor* AIsengardPrototypeWorldBuilder::SpawnShape(
 
     Actor->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
     UStaticMeshComponent* Component = Actor->GetStaticMeshComponent();
-    Component->SetStaticMesh(Mesh);
     Component->SetMobility(EComponentMobility::Movable);
+    Component->SetStaticMesh(Mesh);
     Component->SetCollisionEnabled(bCollision ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
     Actor->SetActorScale3D(Scale);
 
