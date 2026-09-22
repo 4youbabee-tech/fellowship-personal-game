@@ -6,6 +6,7 @@
 #include "HAL/FileManager.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
+#include "Misc/PackageName.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
 
@@ -332,6 +333,36 @@ void UShireChapterAssetStreamingSubsystem::RequestCharacterRig(FName CharacterId
     if (ResolveCharacterRig(CharacterId, ExistingMesh, ExistingAnimClass))
     {
         OnCharacterRigReady.Broadcast(CharacterId);
+        return;
+    }
+
+    // Missing production rigs are an expected maturity state, not an async-loading
+    // error. Preflight package existence once per GameInstance so RequestAsyncLoad
+    // is never asked to load paths that do not exist yet. Modular fallback remains
+    // authoritative until both packages are imported.
+    if (!Rig.bAvailabilityChecked)
+    {
+        const FString MeshPackage =
+            FPackageName::ObjectPathToPackageName(Rig.SkeletalMeshPath.ToString());
+        const FString AnimPackage =
+            FPackageName::ObjectPathToPackageName(Rig.AnimClassPath.ToString());
+        Rig.bPackagesPresent =
+            FPackageName::DoesPackageExist(MeshPackage) &&
+            FPackageName::DoesPackageExist(AnimPackage);
+        Rig.bAvailabilityChecked = true;
+
+        if (!Rig.bPackagesPresent)
+        {
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("CharacterRigStreaming: unavailable id=%s reason=packages-missing fallback=modular"),
+                *CharacterId.ToString());
+        }
+    }
+
+    if (!Rig.bPackagesPresent)
+    {
         return;
     }
 
