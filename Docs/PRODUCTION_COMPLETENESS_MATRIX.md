@@ -1,3 +1,9 @@
+## 2026-09-22 - character visibility warehouse bridge
+
+Character production remains PARTIAL, but the next visible bridge is now concrete rather than abstract. Official KayKit Skeletons 1.0 is registered as CC0 rigged/animated FBX/GLTF technical QA stock, while KayKit Adventurers remains staged background/retarget support. The warehouse audit now validates archive-style payload receipts and license-snapshot hashes, improving provenance integrity for these non-interactive public-GitHub lanes.
+
+This does not promote character maturity: no new skeletal asset has yet been imported into UE4.27.2 on the current head, no proxy has been replaced on screen by this change, and no compile/PIE/device/visual acceptance is claimed. The runner Engine Content ACL blocker still prevents the real import/runtime proof.
+
 ## 2026-09-22 - KayKit public-GitHub warehouse/world-foundation increment
 
 Evidence entering this increment: PR #67 `d856a716d5bc270ce0ddc2d649acbb1656ae112c` had Pre-Unreal #670 SUCCESS and Warehouse Stage #80 SUCCESS. Unreal Build #505 did not execute C++ build/import/runtime because the non-elevated NETWORK SERVICE runner could not read UE4.27.2 `WorldGridMaterial.uasset` after the guarded remediation deferred. Therefore no compile, PIE, device, performance or visual maturity is promoted.
