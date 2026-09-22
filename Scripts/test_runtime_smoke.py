@@ -29,6 +29,11 @@ time.sleep(10)
 
 
 class RuntimeSmokeTests(unittest.TestCase):
+    def test_transition_mode_requires_world_mutation_barrier(self):
+        markers = runtime_smoke.required_markers(None, "transitions")
+        self.assertIn("ShireTransitionBarrier: PASS held-during-swap=yes", markers)
+        self.assertIn("ShireTransitionAudit: sequence=PASS chapters=8 routes=2 disk-save=PASS", markers)
+
     def test_separate_chapter_success_does_not_prove_continuous_transitions(self):
         markers = required_markers(None, "transitions")
         separate = "\n".join(required_markers("P1C%02d" % i, "chapters")[0] for i in range(1, 9))

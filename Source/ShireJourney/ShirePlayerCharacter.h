@@ -72,6 +72,12 @@ public:
     // Explicit CI-only disk roundtrip through the production snapshot/restore path.
     bool RunSaveRoundtripAudit();
 
+    // Raised by ChapterWorldRouter before destination construction and released only
+    // after committed-world publication. Gameplay mutation must stay inert meanwhile.
+    void SetWorldTransitionHeld(bool bHeld) { bWorldTransitionHeld = bHeld; }
+    bool IsWorldTransitionHeld() const { return bWorldTransitionHeld; }
+    bool IsGameplayWorldCommitted() const;
+
 protected:
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
@@ -219,6 +225,7 @@ protected:
 
 private:
     bool bCinematicInputLocked = false;
+    bool bWorldTransitionHeld = true;
     float PrototypeWalkPhase = 0.0f;
     float CurrentHealth = 100.0f;
     float AttackCooldownRemaining = 0.0f;

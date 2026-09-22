@@ -95,7 +95,8 @@ void AShireWorldEventInteraction::ShowAlert(const FText& Message, float Duration
 
 void AShireWorldEventInteraction::Interact_Implementation(AActor* Interactor)
 {
-    if (bConsumed || !Cast<AShirePlayerCharacter>(Interactor))
+    AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(Interactor);
+    if (bConsumed || !Player || !Player->IsGameplayWorldCommitted())
     {
         return;
     }

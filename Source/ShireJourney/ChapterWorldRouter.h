@@ -27,6 +27,7 @@ public:
         const FVector& RequestedLocation,
         const FRotator& RequestedRotation);
     uint32 GetWorldRevision() const { return WorldRevision; }
+    bool IsPlayerWorldHoldActive() const { return bPlayerWorldHoldActive; }
     FOnShireWorldCommitted OnWorldCommitted;
 
 protected:

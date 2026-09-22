@@ -77,7 +77,8 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
     const FHitResult& SweepResult)
 {
     AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(OtherActor);
-    if (!Player || (bTriggerOnce && bHasTriggered))
+    if (!Player || !Player->IsGameplayWorldCommitted() ||
+        (bTriggerOnce && bHasTriggered))
     {
         return;
     }

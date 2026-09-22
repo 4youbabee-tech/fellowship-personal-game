@@ -2612,13 +2612,21 @@
         "Exact head a148d1afa919fa63725e3760684d6eed061c5e40 completed Pre-Unreal #760, Warehouse #174 and Unreal #595 successfully, including persistence and continuous transition runtime gates.",
         "Warning-debt green status is no longer allowed to hide a large tolerated tangent/binormal class; those categories are now zero-tolerance.",
         "Production importer normalizes UV-less static OBJ assets in the ignored working copy with deterministic face projection and fails closed on unsafe geometry.",
-        "M_ProductionSurface editor import recovery now checks package existence before attempting LoadObject, avoiding expected-missing warning spam."
+        "M_ProductionSurface editor import recovery now checks package existence before attempting LoadObject, avoiding expected-missing warning spam.",
+        "Unreal #596 on 02e4dfb81dc4dababb3c0085369cc628c4704bb3 failed at C++ compile with C2668 ObjectPathToPackageName ambiguity; import/runtime stages were skipped.",
+        "Importer material preflight now passes an explicit FString to FPackageName::ObjectPathToPackageName for UE4.27 overload safety.",
+        "ChapterWorldRouter world hold now mirrors into an explicit player gameplay-mutation barrier.",
+        "Player interaction/combat/supplies/save and physical trigger/puzzle/world-event mutation paths require committed world identity.",
+        "Named NPC banter requires committed logical NPC context, and transition CI asserts held-during-swap before destination commit.",
+        "PG-131 and deep_project_audit guard the transaction-boundary contract."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal and UE4.27.2 compile/import/runtime proof for the stricter UV-normalization/zero-warning import-quality head.",
-        "Require zero degenerate tangent bases, zero nearly-zero tangents, zero nearly-zero binormals and zero missing M_ProductionSurface warning debt on that same head.",
-        "After exact-head CI is green, run target-device frame-time/memory/GC/streaming profiling and the human core-loop/onboarding play gates before W00 is fully accepted.",
-        "Keep Public/Private physical migration isolated until functional/import stability remains green."
+        "Obtain fresh exact-head Pre-Unreal and UE4.27 compile proof after the explicit FString importer fix.",
+        "Require production import to complete with zero tangent/binormal/master-surface warning debt.",
+        "Require startup, P1C01-P1C08, state and continuous-transition audits on that same exact head, including ShireTransitionBarrier PASS.",
+        "Add forced-slow transition and rollback-failure injection so committed-context invariants are observed under delayed/failing async paths.",
+        "Validate staged Data JSON runtime dependencies in a packaged build before packaging readiness can be claimed.",
+        "Run target-device performance/memory/GC and human playability gates before W00 final acceptance."
       ],
       "acceptance_criteria": [
         "No known CRITICAL/HIGH source defect remains uncorrected or explicitly evidence-bounded.",
@@ -4017,49 +4025,30 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Owner explicitly requires root-cause closure rather than green builds that retain tolerated red debt. Build #595 completed the entire CI chain, then the remaining tolerated import-warning class was promoted into a hard zero-debt repair wave.",
-    "exact_reviewed_head": "a148d1afa919fa63725e3760684d6eed061c5e40",
+    "reason": "Continue large root-cause stabilization wave. Exact-head #596 exposed a compile blocker before the stricter import wave could run; source simulation also exposed gameplay mutation paths not fully coupled to the world commit barrier.",
+    "exact_reviewed_head": "02e4dfb81dc4dababb3c0085369cc628c4704bb3",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#760 SUCCESS",
-      "warehouse": "#174 SUCCESS",
-      "unreal_build": "#595 SUCCESS: UE4.27.2 C++ build, production import, Automation, startup, P1C01-P1C08 aggregate runtime, state persistence, continuous transitions and warning-debt step all completed"
+      "pre_unreal": "#761 SUCCESS",
+      "warehouse": "#175 SUCCESS",
+      "unreal_build": "#596 FAILURE at UE4.27 C++ compile: C2668 ObjectPathToPackageName ambiguous const TCHAR* argument; import/runtime skipped"
     },
     "reconciled_findings": [
-      "Persistence transaction repair is exact-head engine green on #595.",
-      "Aggregate chapter traversal and continuous transition regression paths are exact-head headless green on #595.",
-      "Warning-debt policy was too permissive: 137 unique nearly-zero binormal identities still passed under ceiling 150.",
-      "Source audit shows most static OBJ assets lack authored UVs/normals; importer-side deterministic working-copy normalization is preferable to mutating tracked SourceAssets or merely suppressing warnings.",
-      "M_ProductionSurface missing-package warnings occur before creation/recovery and should be prevented by package-existence preflight rather than tolerated."
+      "The stricter zero-warning import wave was not engine-evaluated because #596 stopped at compile.",
+      "The compile failure is type/overload ambiguity, not a design rejection of the UV normalization approach.",
+      "Movement hold alone did not prevent all gameplay mutation while quest identity could be ahead of committed geometry.",
+      "Physical interactions and player gameplay mutation now share the router's authoritative transaction barrier.",
+      "NPC banter is prevented while logical quest identity differs from committed NPC context."
     ],
-    "next_priority": "W00_IMPORT_WARNING_ROOT_CAUSE_ZERO",
-    "truth_boundary": "Build #595 evidence applies only to a148d1afa919fa63725e3760684d6eed061c5e40. The stricter import-quality changes require a new exact-head proof before any closure claim.",
+    "next_priority": "W00_COMPILE_IMPORT_TRANSACTION_BARRIER_EXACT_HEAD",
+    "truth_boundary": "All changes after 02e4dfb... are source-level until fresh exact-head Pre-Unreal and Unreal evidence. No PIE/device/visual/performance acceptance is claimed.",
     "stabilization_wave": {
-      "status": "STRICTER_SOURCE_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
-      "completed_on_595": [
-        "compile/import pipeline",
-        "Automation QA",
-        "startup",
-        "P1C01-P1C08 aggregate chapter sweep",
-        "persistence state roundtrip",
-        "continuous transitions",
-        "production surface runtime audit"
+      "status": "LARGE_SOURCE_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "current_root_causes": [
+        "UE4.27 importer overload ambiguity",
+        "gameplay mutation not fully barriered during async world transaction",
+        "tolerated tangent/binormal import debt still awaiting zero-debt engine proof"
       ],
-      "current_root_cause_target": [
-        "UV-less static OBJ tangent/binormal warning generation",
-        "warning ceilings that tolerate persistent quality debt",
-        "avoidable missing-master-material load warnings"
-      ],
-      "explicit_non_patch_rule": "A gate may not be made green by increasing a warning/error ceiling. Fix the producing pipeline or keep the gate red."
-    },
-    "user_experience_stabilization": {
-      "status": "GATED_AFTER_W00_TECHNICAL_GREEN",
-      "required_before_large_content_expansion": [
-        "15-minute P1C01 core-loop play review",
-        "first-five-minutes onboarding review without developer guidance",
-        "at least one external fresh-player playtest",
-        "target-device performance and memory profiling"
-      ],
-      "evidence_boundary": "CI cannot certify enjoyment, readability, visual quality or target-device smoothness."
+      "invariant": "Quest destination may advance before geometry commit, but no player/trigger/puzzle/NPC gameplay mutation may consume that destination state until world commit."
     }
   },
   "development_mode": {

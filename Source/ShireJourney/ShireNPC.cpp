@@ -4,6 +4,7 @@
 #include "ShireNPCContextSubsystem.h"
 #include "ShireDialogueSubsystem.h"
 #include "ShireHUD.h"
+#include "ShirePlayerCharacter.h"
 #include "Animation/AnimInstance.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -1390,6 +1391,7 @@ void AShireNPC::UpdateCompanionBanter(float DeltaSeconds)
         GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
 
     if (!Context || !Dialogue || !Quests || Dialogue->IsDialoguePlaying() ||
+        !Context->IsLogicalWorldContextCommitted() ||
         Context->IsDangerStateActive())
     {
         BanterCooldownRemaining = 8.0f;
@@ -1667,6 +1669,12 @@ const TArray<FText>* AShireNPC::ResolveDialogueLines(const UShireQuestSubsystem*
 
 void AShireNPC::Interact_Implementation(AActor* Interactor)
 {
+    AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(Interactor);
+    if (!Player || !Player->IsGameplayWorldCommitted())
+    {
+        return;
+    }
+
     DialogueActingRemaining = 2.5f;
 
     UGameInstance* GI = GetGameInstance();

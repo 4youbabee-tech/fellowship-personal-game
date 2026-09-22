@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "a148d1afa919fa63725e3760684d6eed061c5e40_ENGINE_595_GREEN_PLUS_IMPORT_WARNING_ZEROING_SOURCE_WAVE_PENDING",
+  "audited_head": "02e4dfb81dc4dababb3c0085369cc628c4704bb3_UNREAL_596_COMPILE_FAILURE_REVIEW_PLUS_TRANSACTION_BARRIER_SOURCE_WAVE",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -168,6 +168,22 @@
       "title": "Import warning ceilings allowed large tangent/binormal debt to remain green",
       "evidence": "Unreal #595 warning-debt step passed while reporting 137 unique nearly-zero binormal mesh identities because the guard ceiling was 150. That is a tolerance policy, not root-cause closure.",
       "action": "Zero the ceilings, add explicit nearly-zero tangent coverage, generate deterministic UVs in the ignored import working copy for UV-less static OBJ geometry, and fail import normalization if a face cannot be safely projected."
+    },
+    {
+      "id": "AUDIT-HIGH-019",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "title": "Gameplay mutation could occur while destination quest state was ahead of committed world geometry",
+      "evidence": "ChapterWorldRouter held CharacterMovement during async swaps, but player interaction/combat/supplies/save paths and trigger/puzzle/world-interaction actors did not share the same transaction barrier. A transition therefore had a window where logical destination state could exist while old geometry was still committed.",
+      "action": "Mirror ChapterWorldRouter world hold into AShirePlayerCharacter; require IsGameplayWorldCommitted() on physical gameplay mutation paths; require committed logical context for named NPC banter; assert the barrier in continuous transition runtime audit."
+    },
+    {
+      "id": "AUDIT-HIGH-020",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_COMPILE_PROOF",
+      "title": "UE4.27 package-name overload ambiguity blocked the stricter importer wave",
+      "evidence": "Unreal #596 failed at ShireProductionImportCommandlet.cpp with C2668 FPackageName::ObjectPathToPackageName ambiguous for const TCHAR*. Import and all runtime stages were skipped.",
+      "action": "Pass an explicit FString to ObjectPathToPackageName and preserve PG-131 static guard so automated edits cannot reintroduce the ambiguous call."
     }
   ],
   "external_practice_alignment": [
@@ -193,17 +209,15 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head persistence transaction + detailed field audit",
-    "continuous same-bank episode/save transition replay without false asset rollback",
-    "forced slow async transition: old-world NPC/LivingWorld context remains committed until OnWorldCommitted",
-    "warning-debt/material persistence gate after state chain is green",
-    "save/load failure, corrupted/legacy save and identity-repair recovery",
-    "target-device chapter-transition hitch, resident-memory, GC and frame-time measurement",
-    "audio residency/playback test without -NoSound",
-    "central NPC social/banter registry cost only if profiling proves actor iteration material",
-    "quest soft-lock fuzzing and combat/story-lock edge cases",
-    "human core-loop, first-five-minutes onboarding, pacing/readability and visual review",
-    "dedicated Public/Private source migration after stabilization exact-head green"
+    "fresh exact-head compile/import with deterministic UV normalization and zero tangent/binormal/master-surface warning debt",
+    "continuous transition audit including held-during-swap gameplay-mutation barrier",
+    "forced slow async destination request with NPCContext/LivingWorld staying on prior committed revision until commit",
+    "rollback failure injection with movement held and no interaction/save/combat mutation",
+    "packaged-build runtime dependency/read test for Data JSON contracts",
+    "target-device frame-time, resident-memory, GC, streaming and actor-tick profiling",
+    "audio playback/residency validation without -NoSound",
+    "human core-loop/onboarding/external playtest after technical W00 green",
+    "isolated Public/Private source migration last"
   ],
-  "audit_scope_note": "Unreal #595 proves the persistence/transition source wave on a148d1afa919fa63725e3760684d6eed061c5e40 through compile/import/Automation/startup/P1C01-P1C08/state/transitions/warning gate. A subsequent import-quality wave is now intentionally stricter: tangent/binormal/master-surface warning debt must be zero on a fresh exact head before closure."
+  "audit_scope_note": "Pre-Unreal #761 and Warehouse #175 passed on 02e4dfb..., but Unreal #596 failed C++ compile before import/runtime. The explicit FString compile repair and world-transaction gameplay barrier are source-level until a fresh exact-head pipeline passes."
 }

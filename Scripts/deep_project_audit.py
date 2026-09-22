@@ -67,6 +67,23 @@ if "FPackageName::DoesPackageExist" not in streaming_cpp or "bAvailabilityChecke
  errors.append("character rig request must preflight package existence before RequestAsyncLoad")
 if "LoadObject<USoundBase>" in audio:
  errors.append("audio subsystem must not synchronously LoadObject production sound")
+if "SetWorldTransitionHeld(bHold)" not in router:
+ errors.append("router does not mirror world hold into player gameplay mutation barrier")
+if "IsGameplayWorldCommitted()" not in player:
+ errors.append("player committed-world gameplay mutation barrier missing")
+for barrier_name in [
+ "ShireQuestTrigger.cpp",
+ "ShireTraversalChallenge.cpp",
+ "ShireEnvironmentalPuzzle.cpp",
+ "ShireWorldEventInteraction.cpp",
+]:
+ barrier_text=read(SRC/barrier_name)
+ if "IsGameplayWorldCommitted()" not in barrier_text:
+  errors.append(f"world-transition gameplay mutation guard missing: {barrier_name}")
+if "IsLogicalWorldContextCommitted()" not in named:
+ errors.append("named NPC banter/interaction committed-context guard missing")
+
+
 for builder_name in [
  "ShirePrototypeWorldBuilder.cpp",
  "BreePrototypeWorldBuilder.cpp",

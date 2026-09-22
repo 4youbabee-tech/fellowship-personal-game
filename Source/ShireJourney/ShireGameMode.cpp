@@ -350,6 +350,26 @@ void AShireGameMode::BeginPlay()
             if (Audit->Step == 0)
             {
                 Q->StartChapter(TEXT("P1C02"), TEXT("RoadToBree"), 0);
+
+                AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(
+                    UGameplayStatics::GetPlayerPawn(this, 0));
+                if (!Player || !Player->IsWorldTransitionHeld() ||
+                    Player->IsGameplayWorldCommitted())
+                {
+                    UE_LOG(
+                        LogTemp,
+                        Error,
+                        TEXT("ShireTransitionBarrier: FAIL held-during-swap=no"));
+                    GetWorldTimerManager().ClearTimer(Audit->Timer);
+                    return;
+                }
+                UE_LOG(
+                    LogTemp,
+                    Display,
+                    TEXT("ShireTransitionBarrier: PASS held-during-swap=yes"));
+
+                // Rapid second request intentionally exercises stale-request
+                // cancellation while gameplay mutation remains barriered.
                 Q->StartChapter(TEXT("P1C01"), TEXT("ShireArrival"), 0);
             }
             else if (Audit->Step <= 7)

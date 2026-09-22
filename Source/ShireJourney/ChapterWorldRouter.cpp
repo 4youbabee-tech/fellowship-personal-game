@@ -220,6 +220,11 @@ FVector AChapterWorldRouter::GetChapterSpawnLocation(FName ChapterId) const
 void AChapterWorldRouter::SetPlayerWorldHold(bool bHold)
 {
     ACharacter* Character = Cast<ACharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+    if (AShirePlayerCharacter* ShirePlayer = Cast<AShirePlayerCharacter>(Character))
+    {
+        ShirePlayer->SetWorldTransitionHeld(bHold);
+    }
+
     if (!Character || !Character->GetCharacterMovement())
     {
         bPlayerWorldHoldActive = bHold;

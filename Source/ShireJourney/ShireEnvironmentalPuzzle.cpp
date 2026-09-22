@@ -145,7 +145,7 @@ void AShireEnvironmentalPuzzle::DisablePuzzle()
 void AShireEnvironmentalPuzzle::Interact_Implementation(AActor* Interactor)
 {
     AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(Interactor);
-    if (!Player || bCompleted)
+    if (!Player || !Player->IsGameplayWorldCommitted() || bCompleted)
     {
         return;
     }

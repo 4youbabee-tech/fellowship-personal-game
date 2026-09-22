@@ -3622,6 +3622,55 @@ for pg130_category in [
 if "test_tangent_warning_categories_are_zero_tolerance" not in pg130_warning_tests:
     fail("PG-130 zero-tolerance warning regression test missing")
 
+# PG-131: gameplay mutation must remain behind the committed-world transaction barrier.
+pg131_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+pg131_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg131_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
+pg131_trigger = read(ROOT / "Source" / "ShireJourney" / "ShireQuestTrigger.cpp")
+pg131_traversal = read(ROOT / "Source" / "ShireJourney" / "ShireTraversalChallenge.cpp")
+pg131_puzzle = read(ROOT / "Source" / "ShireJourney" / "ShireEnvironmentalPuzzle.cpp")
+pg131_world_interaction = read(ROOT / "Source" / "ShireJourney" / "ShireWorldEventInteraction.cpp")
+pg131_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
+pg131_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg131_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
+pg131_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+
+for pg131_symbol in [
+    "SetWorldTransitionHeld",
+    "IsWorldTransitionHeld",
+    "IsGameplayWorldCommitted",
+    "bWorldTransitionHeld",
+]:
+    if pg131_symbol not in (pg131_player_h + pg131_player):
+        fail(f"PG-131 player world-transaction barrier missing: {pg131_symbol}")
+
+if "ShirePlayer->SetWorldTransitionHeld(bHold);" not in pg131_router:
+    fail("PG-131 ChapterWorldRouter does not mirror authoritative hold into player mutation barrier")
+
+for pg131_name, pg131_text in [
+    ("quest trigger", pg131_trigger),
+    ("traversal challenge", pg131_traversal),
+    ("environmental puzzle", pg131_puzzle),
+    ("world event interaction", pg131_world_interaction),
+    ("named NPC interaction", pg131_npc),
+]:
+    if "IsGameplayWorldCommitted()" not in pg131_text:
+        fail(f"PG-131 {pg131_name} can mutate gameplay before committed-world publication")
+
+if "IsLogicalWorldContextCommitted()" not in pg131_npc:
+    fail("PG-131 named NPC banter does not respect committed logical context")
+
+for pg131_marker in [
+    "ShireTransitionBarrier: PASS held-during-swap=yes",
+    "IsWorldTransitionHeld()",
+    "IsGameplayWorldCommitted()",
+]:
+    if pg131_marker not in (pg131_game_mode + pg131_runtime):
+        fail(f"PG-131 transition barrier runtime evidence contract missing: {pg131_marker}")
+
+if "ProductionSurfaceObjectPath" not in pg131_importer or    "ObjectPathToPackageName(ProductionSurfaceObjectPath)" not in pg131_importer:
+    fail("PG-131 UE4.27 package-name overload must receive an explicit FString")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     sys.exit(1)

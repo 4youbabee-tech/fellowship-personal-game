@@ -122,7 +122,7 @@ void AShireTraversalChallenge::HandleGateOverlap(
     const FHitResult& SweepResult)
 {
     AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(OtherActor);
-    if (bCompleted || !Player || !IsEligible())
+    if (bCompleted || !Player || !Player->IsGameplayWorldCommitted() || !IsEligible())
     {
         return;
     }

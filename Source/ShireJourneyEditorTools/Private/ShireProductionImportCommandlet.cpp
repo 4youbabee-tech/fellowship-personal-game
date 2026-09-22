@@ -424,8 +424,9 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         FindObject<UMaterialInterface>(nullptr, ProductionSurfacePath);
     if (!ProductionMaterialParent)
     {
+        const FString ProductionSurfaceObjectPath(ProductionSurfacePath);
         const FString ProductionSurfacePackage =
-            FPackageName::ObjectPathToPackageName(ProductionSurfacePath);
+            FPackageName::ObjectPathToPackageName(ProductionSurfaceObjectPath);
         if (FPackageName::DoesPackageExist(ProductionSurfacePackage))
         {
             ProductionMaterialParent =

@@ -1,3 +1,9 @@
+## 2026-09-23 - W00 compile/root transaction barrier follow-up
+
+Unreal #596 on `02e4dfb81dc4dababb3c0085369cc628c4704bb3` did not reach import/runtime: UE4.27 C++ compile failed on an ambiguous `ObjectPathToPackageName(const TCHAR*)` call introduced by the stricter material preflight wave. That defect is fixed with explicit `FString` typing.
+
+The same audit wave adds a systemic gameplay-mutation barrier tied to ChapterWorldRouter's authoritative world hold. Physical gameplay mutation paths now require committed world identity, and transition CI checks the barrier while a destination request is still uncommitted. These are stabilization changes only; no completion percentage or CompletionWave status is advanced.
+
 ## 2026-09-23 - W00 exact-head #595 green, followed by stricter import-quality closure
 
 On `a148d1afa919fa63725e3760684d6eed061c5e40`, Pre-Unreal #760, Warehouse #174 and Unreal #595 all passed. Unreal #595 completed compile, production import, Automation, startup, P1C01-P1C08 aggregate runtime, persistence state roundtrip, continuous route/chapter transitions and warning-debt analysis. This validates the prior persistence/transaction/streaming repair wave on that exact head.

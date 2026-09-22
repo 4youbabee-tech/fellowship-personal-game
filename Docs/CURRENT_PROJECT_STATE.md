@@ -1,3 +1,17 @@
+## 2026-09-23 - Unreal #596 compile blocker isolated; world-transaction mutation barrier added
+
+Exact head `02e4dfb81dc4dababb3c0085369cc628c4704bb3` passed Pre-Unreal #761 and Warehouse #175, then Unreal Build #596 failed in C++ compile before import/runtime. The concrete blocker was UE4.27 overload ambiguity at `FPackageName::ObjectPathToPackageName(ProductionSurfacePath)` where `ProductionSurfacePath` was a `const TCHAR*`. No import/runtime claim is made for #596 because every later engine stage was skipped.
+
+The compile root cause is fixed by constructing an explicit `FString ProductionSurfaceObjectPath` before calling `ObjectPathToPackageName`, removing compiler overload ambiguity without changing runtime behavior.
+
+The broader audit also found a transaction-boundary gap: ChapterWorldRouter disabled CharacterMovement during async world swaps, but several gameplay mutation paths could still be invoked while the quest destination had moved ahead of committed geometry. This could allow interaction, quest triggers, traversal/puzzle completion, supplies, combat, or save actions to observe/mutate half-transition state even though movement itself was held.
+
+A shared player-side world-transition barrier is now mirrored directly from `ChapterWorldRouter::SetPlayerWorldHold`. Movement/jump/sprint, combat, interaction, supplies, checkpoint save/restore, quick save/load and player-life ticking all refuse gameplay mutation while the barrier is active. Quest triggers, traversal challenges, environmental puzzles, world-event interactions and named NPC interaction also require `IsGameplayWorldCommitted()`. Companion banter now requires `ShireNPCContextSubsystem::IsLogicalWorldContextCommitted()`, so old-world dialogue cannot start from destination quest state.
+
+The transition CI now deliberately requests a new chapter and checks, before destination commit, that the player is held and `IsGameplayWorldCommitted()==false`. Required marker: `ShireTransitionBarrier: PASS held-during-swap=yes`. PG-131 and the deep-project audit enforce these contracts statically.
+
+This source wave is **STATIC-VALIDATION PENDING** until the fresh Pre-Unreal workflow completes and **COMPILE-TESTED PENDING** until a new exact-head Unreal build passes C++ compile. W01 remains closed.
+
 ## 2026-09-23 - Build #595 full chain green; warning tolerance converted into root-cause closure work
 
 Exact head `a148d1afa919fa63725e3760684d6eed061c5e40` completed Pre-Unreal #760, Warehouse #174 and Unreal Build #595 successfully. Unreal #595 passed UE4.27.2 C++ build, deterministic production import, Automation, startup, aggregate P1C01-P1C08 runtime, state persistence roundtrip, continuous transitions and the warning-debt step. This is the first exact head in this stabilization sequence to complete the entire required CI chain.
