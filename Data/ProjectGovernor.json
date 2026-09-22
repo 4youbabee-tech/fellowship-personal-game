@@ -3921,6 +3921,7 @@
     "character_visibility_rule": "Warehouse growth must feed visible character progress: validate staged FBX rigs now, then import and replace proxies in Shire as soon as UE4.27 build/import is available."
   },
   "immediate_next_large_actions": [
+    "Drive Data/CompletionWaveMapV1.json from W00 through W11; close waves only on their exit criteria and keep the planning percentage separate from evidence status.",
     "Keep exact-head integration/static/engine gates honest; repair demonstrated regressions without reopening settled architecture.",
     "Run WORK-PROD-011 continuously: fill the trilogy warehouse with real candidates/project-owned production assets by category, recording provenance/status per item.",
     "Assemble P1C01 as the first complete natural-looking slice: skeletal Frodo/Gandalf/Sam, Shire architecture/terrain/vegetation/props/fauna, dense authored audio, animation and lighting.",
@@ -4927,5 +4928,13 @@
     "current_wave": "TWO_PHASE_WORLD_COMMIT_PLUS_V10_LIVING_WORLD",
     "merge_policy": "Do not merge overlapping PRs #62-#66 independently while the integration train is active. Reconcile into this branch, prove exact head, then integrate to develop.",
     "proof_boundary": "STATIC-PENDING on the newest code changes; no compile/PIE/device/visual claim until exact-head evidence exists."
+  },
+  "completion_wave_map": {
+    "status": "ACTIVE_PLANNING_ESTIMATE",
+    "plan": "Data/CompletionWaveMapV1.json",
+    "baseline_percent": 40,
+    "remaining_waves": 12,
+    "estimated_major_production_drops": "30-40",
+    "rule": "Track progress by wave exit criteria, not raw commit/file-upload count. Percentages are planning estimates and never substitute for validation evidence."
   }
 }
