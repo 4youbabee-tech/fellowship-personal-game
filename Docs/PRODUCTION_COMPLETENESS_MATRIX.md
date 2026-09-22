@@ -1,3 +1,11 @@
+## 2026-09-22 - architectural stabilization gate
+
+Whole-game planning completion remains approximately **40/100**; this hardening wave does not manufacture production percentage from refactoring. Build #547 proved the recovered runner can compile/import and execute startup/P1C01-P1C04, but the exact hardening head has not yet passed engine validation.
+
+Source-level stabilization now includes: shared seam-tolerant spawn grounding with slope/capsule checks and no chapter-specific support pads; all-eight non-fail-fast chapter QA; skeletal-rig package preflight before async load; BMP-to-TGA migration with BMP prohibition; and cleanup of all 304 known duplicate-vertex triangulation-risk faces with strict regression failure.
+
+Status: **SOURCE HARDENED / EXACT-HEAD ENGINE PROOF PENDING**. No PIE/device/visual column is promoted. Feature expansion remains blocked by `REQ-STABILITY-001` until static, compile/import, P1C01-P1C08, state/transition and warning/material gates are green on one exact head.
+
 ## 2026-09-22 - P1C05 grounding regression repair
 
 Exact-head `a42679a4de808ce1f9bada7974ad87d52ee18fa9` reached a successful UE4.27.2 C++ build, successful production import, successful two-test Automation Framework suite and successful headless startup/P1C01-P1C04 chapter audits. P1C05 failed before chapter readiness because its authored spawn at X=-2400 fell into a narrow gap between fallback ground and the first route slab. A hidden deterministic spawn-support pad is now added at that exact start. The repair head still requires fresh engine/headless proof and does not promote PIE/device/visual acceptance.
