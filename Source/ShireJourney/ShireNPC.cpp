@@ -15,6 +15,7 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
+#include "UObject/SoftObjectPath.h"
 
 AShireNPC::AShireNPC()
 {
@@ -198,8 +199,7 @@ void AShireNPC::ApplyPrototypeStyle()
 {
     UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
         nullptr, TEXT("/Engine/BasicShapes/BasicShapeMaterial.BasicShapeMaterial"));
-    UMaterialInterface* ProductionSurfaceMaterial = LoadObject<UMaterialInterface>(
-        nullptr, TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface"));
+    UMaterialInterface* ProductionSurfaceMaterial = Cast<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject());
     if (!BasicMaterial && !ProductionSurfaceMaterial)
     {
         bVisualStyleApplied = true;
@@ -446,7 +446,7 @@ void AShireNPC::ApplyPrototypeStyle()
     auto TryMesh = [](UStaticMeshComponent* Component, const TCHAR* AssetPath) -> bool
     {
         if (!Component) return false;
-        if (UStaticMesh* Mesh = LoadObject<UStaticMesh>(nullptr, AssetPath))
+        if (UStaticMesh* Mesh = Cast<UStaticMesh>(FSoftObjectPath(AssetPath).ResolveObject()))
         {
             Component->SetStaticMesh(Mesh);
             return true;
