@@ -1,3 +1,15 @@
+## 2026-09-22 - precise integration-gap source closure
+
+The deep audit findings were acted on immediately instead of being left as notes. The source branch now contains a committed-world NPC context bridge: ChapterWorldRouter publishes committed chapter/route/episode/revision on normal commit and rollback; regional mood/profile availability follows that committed identity; danger uses live quest state only while logical and committed world identity still match; and new bounded dialogue/film-context selection is suppressed during the async mismatch window rather than leaking destination context into the old visible world.
+
+Character-rig streaming remains asynchronous, but the completed per-character streamable handle is now released after the ready broadcast, when player/NPC components have taken their own UObject references. This removes the GameInstance-lifetime handle pinning identified by the audit while retaining active-character ownership and modular fallback behavior.
+
+The synchronous production-asset debt was also burned down at source level. Shire/Bree/Fellowship/Isengard world builders no longer directly LoadObject production meshes; they resolve only objects already resident in the async chapter bank. Black Rider, standard Fellowship enemies and mythic threats use resident-only production visual resolution, and the chapter streaming plan now includes the relevant enemy banks. Player/named-NPC production proxy pieces use resident-only soft resolution while their skeletal rig path remains asynchronous. ShireAudioSubsystem no longer synchronously LoadObject<USoundBase>; production sound must be resident through an async ownership path, otherwise subtitle/story/silent fallback remains safe.
+
+A continuous guard was added to deep_project_audit.py: non-/Engine/BasicShapes synchronous LoadObject is now rejected, as are regressions in committed NPC context publication, completed rig-handle release, synchronous audio load, builder ticking and existing social-scan bounds.
+
+These are source fixes only until the runner is restored. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED promotion is claimed. The active priority remains W00 runner/exact-head unlock.
+
 ## 2026-09-22 - deep organization and integration audit before runner repair
 
 A repository-wide source/governance audit was performed against PR #67 exact head `17689b194ddca281aa9881b9ac50594712a65df6` before touching the laptop runner. Three current workflow facts are now authoritative for this checkpoint: Pre-Unreal #685 failed only because the newly accepted third-person camera requirement was not yet mapped into MasterExecutionRoadmap; Unreal Build #520 again stopped before C++ compilation because `NT AUTHORITY\\NETWORK SERVICE` could not read `Engine/Content/EngineMaterials/WorldGridMaterial.uasset`; Warehouse #99 succeeded and the persistent inventory audit reported `payloadFiles=240 bytes=3816657674 receipts=8 receiptRecords=278 duplicateGroups=22`, with total footprint `files=249 bytes=3816866382`.
