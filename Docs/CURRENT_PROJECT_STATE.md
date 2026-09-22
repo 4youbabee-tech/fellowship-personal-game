@@ -1,3 +1,11 @@
+## 2026-09-22 - PIE StaticMesh mobility warning source fix
+
+A live PIE screenshot showed repeated warnings of the form `SetStaticMesh ... but Mobility is Static` on runtime-generated `AStaticMeshActor` components. The source cause was confirmed in the Shire, Bree, Fellowship and Isengard runtime world-builder spawn helpers: each helper assigned the mesh first, then changed component mobility to Movable. Runtime-spawned `AStaticMeshActor` components begin as Static, so the mesh mutation generated warning spam.
+
+The four helpers now set mobility to Movable before `SetStaticMesh`, preserving their existing final mobility behavior while removing the invalid mutation order. A DeepProjectAudit guard now rejects reintroduction of the old ordering.
+
+This warning flood can contribute to editor log overhead/hitch perception, but it is not the GitHub runner ACL failure. The runner remains separately blocked because `NT AUTHORITY\\NETWORK SERVICE` cannot read UE4.27 Engine Content. No compile/PIE/device acceptance is claimed for this source fix until a fresh exact-head engine run is available.
+
 ## 2026-09-22 - precise integration-gap source closure
 
 The deep audit findings were acted on immediately instead of being left as notes. The source branch now contains a committed-world NPC context bridge: ChapterWorldRouter publishes committed chapter/route/episode/revision on normal commit and rollback; regional mood/profile availability follows that committed identity; danger uses live quest state only while logical and committed world identity still match; and new bounded dialogue/film-context selection is suppressed during the async mismatch window rather than leaking destination context into the old visible world.
