@@ -16,6 +16,8 @@ on:
       - 'Data/WarehouseKenneyAcquisitionBatchV1.json'
       - 'Scripts/stage_kenney_warehouse.ps1'
       - 'Data/WarehouseAmbientCGTrilogyBatchV2.json'
+      - 'Scripts/audit_warehouse_inventory.ps1'
+      - 'Data/WarehouseProviderAccessPolicyV1.json'
       - '.github/workflows/warehouse-stage.yml'
   pull_request:
     branches:
@@ -31,6 +33,9 @@ on:
       - 'Scripts/stage_ambientcg_warehouse.ps1'
       - 'Data/WarehouseKenneyAcquisitionBatchV1.json'
       - 'Scripts/stage_kenney_warehouse.ps1'
+      - 'Data/WarehouseAmbientCGTrilogyBatchV2.json'
+      - 'Scripts/audit_warehouse_inventory.ps1'
+      - 'Data/WarehouseProviderAccessPolicyV1.json'
       - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
 
@@ -85,6 +90,11 @@ jobs:
         shell: cmd
         run: |
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_kenney_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseKenneyAcquisitionBatchV1.json"
+
+      - name: Audit persistent warehouse inventory
+        shell: cmd
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\audit_warehouse_inventory.ps1"
 
       - name: Show persistent warehouse footprint
         shell: cmd
