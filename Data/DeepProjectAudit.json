@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "fc7e2732ff2be95a54b7d091221c5fac58fe1d10",
+  "audited_head": "17689b194ddca281aa9881b9ac50594712a65df6",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -68,18 +68,18 @@
     {
       "id": "AUDIT-MED-006",
       "severity": "HIGH",
-      "status": "MITIGATION_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF_AND_MEASUREMENT",
+      "status": "MITIGATION_IMPLEMENTED_BUT_SYNC_DEBT_REMAINS_PENDING_EXACT_HEAD_PROOF_AND_MEASUREMENT",
       "title": "Chapter builders perform many direct LoadObject calls",
-      "evidence": "Live develop count: FellowshipChapterWorldBuilder 77 LoadObject calls, ShirePrototypeWorldBuilder 55, BreePrototypeWorldBuilder 22, IsengardPrototypeWorldBuilder 10, LivingWorldDirector 13. These are synchronous explicit loads and scale with asset growth.",
-      "action": "V5 adds chapter/route async preload banks and makes Fellowship EnsureProductionMeshes chapter-aware. Validate exact head, then measure transition hitch/memory and continue migrating remaining justified direct loads only where evidence supports it."
+      "evidence": "Current PR #67 source still contains direct LoadObject calls in runtime production paths despite chapter async banks: FellowshipChapterWorldBuilder=77, ShirePrototypeWorldBuilder=55, BreePrototypeWorldBuilder=22, IsengardPrototypeWorldBuilder=10, ShireNPC=3 and ShirePlayerCharacter=3 in the inspected files. Ambient living-world production visuals have already moved toward resident soft-object resolution.",
+      "action": "Keep the two-phase chapter bank architecture. After runner recovery, replace remaining heavy runtime LoadObject resolution with resident soft-object/async ownership incrementally, beginning with player/named-character style application and chapter builders; compile and measure each batch."
     },
     {
       "id": "AUDIT-MED-007",
       "severity": "MEDIUM",
-      "status": "TRACK_AND_PROFILE",
+      "status": "POOLING_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF_AND_MEASUREMENT",
       "title": "Ambient living-world actors use spawn/cull/destroy churn",
-      "evidence": "LivingWorldDirector baseline targets reach 18 actors in P1C01 with a 0.35 s fill cadence plus up to 5 active micro-events; actors outside the cull radius and expired event actors are Destroy()ed.",
-      "action": "Measure SpawnActor/DestroyActor/GC cost. If material, introduce bounded pooling for ambient archetypes/ephemeral event actors only; do not recycle named persistent NPC identity."
+      "evidence": "LivingWorldDirector now owns bounded ambient-NPC reuse and AShireAmbientNPC deactivation disables tick/visibility/collision and clears social state. Destroy paths remain for non-pooled/excess/event actors, so target-device Spawn/Destroy/GC measurement is still required.",
+      "action": "Do not increase population because pooling exists. Validate exact head and measure churn/GC on target hardware; extend pooling only to proven hot ephemeral classes while keeping named persistent NPC identity out of the pool."
     },
     {
       "id": "AUDIT-MED-008",
@@ -96,6 +96,22 @@
       "title": "Save/route validation performs real isolated disk roundtrip",
       "evidence": "Current CI mutates, writes, loads, verifies and deletes a unique save slot.",
       "action": "Preserve this evidence path."
+    },
+    {
+      "id": "AUDIT-HIGH-010",
+      "severity": "HIGH",
+      "status": "ROOT_CAUSE_IDENTIFIED_SOURCE_REPAIR_PENDING",
+      "title": "NPC context can advance to destination story/world context before visible world commit",
+      "evidence": "LivingWorldDirector correctly gates ActiveChapterId/life/weather on ChapterWorldRouter::IsWorldCommitted and OnWorldCommitted. UShireNPCContextSubsystem separately reads UShireQuestSubsystem current chapter/route/active quest directly for regional mood, pressure, profile availability, film dialogue context and danger. During async chapter loading quest state may advance while old geometry is still visible, so old-world NPC dialogue/emotion can transiently use destination context.",
+      "action": "Introduce one committed-world context snapshot (chapter/route/episode/revision) for NPC world-context queries, updated only after ChapterWorldRouter world commit. Keep quest memory/story-beat authority in UShireQuestSubsystem, but bind region/mood/film-context eligibility to committed world identity. Add an exact-head transition regression before closure."
+    },
+    {
+      "id": "AUDIT-HIGH-011",
+      "severity": "HIGH",
+      "status": "SCALING_RISK_IDENTIFIED_MEASUREMENT_AND_EVICTION_POLICY_PENDING",
+      "title": "Character rig async handles can accumulate for the full GameInstance lifetime",
+      "evidence": "UShireChapterAssetStreamingSubsystem::CharacterRigRequests retains one FStreamableHandle per requested character rig until subsystem Deinitialize. Player and named NPCs request rigs asynchronously, but no chapter-cast eviction/reference-count policy currently releases inactive rigs.",
+      "action": "After runner recovery, measure skeletal/animation residency on the ~2 GB VRAM target and add bounded rig residency tied to committed current/next chapter cast. Never unload the active player/current companions; release inactive rig handles only after safe world commit."
     }
   ],
   "external_practice_alignment": [
@@ -132,6 +148,10 @@
     "target-device CPU/GPU/frame-time/memory",
     "human pacing/visual/readability per chapter",
     "ambient spawn/destroy/GC trace before pooling decision",
-    "V5 exact-head engine proof plus representative target-device chapter-transition hitch/streaming-pool/resident-memory measurement before performance promotion"
-  ]
+    "V5 exact-head engine proof plus representative target-device chapter-transition hitch/streaming-pool/resident-memory measurement before performance promotion",
+    "committed-world NPC context synchronization regression: old visible world must never read destination regional mood/film context during async transition",
+    "character-rig residency/eviction measurement across multi-chapter traversal on the ~2 GB VRAM target",
+    "remaining runtime LoadObject burn-down in player/named-character and chapter-builder production paths"
+  ],
+  "audit_scope_note": "Runtime/code audit is against exact PR #67 head 17689b194ddca281aa9881b9ac50594712a65df6. Subsequent audit/governance-only reconciliation commits do not constitute engine/runtime proof."
 }
