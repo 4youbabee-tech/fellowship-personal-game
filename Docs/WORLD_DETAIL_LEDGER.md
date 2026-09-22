@@ -1,5 +1,13 @@
 # WORLD DETAIL LEDGER
 
+## Character visibility / warehouse-to-runtime bridge - 2026-09-22
+- Owner priority: stop letting asset-bank growth remain invisible; keep broad legal/free sourcing active, but turn the first proven humanoid/enemy rig stock into a real import path as soon as engine gates permit.
+- Register this before implementation: audit staged character archives for usable FBX/texture inventory, strengthen receipt/hash/license validation, expand only from verified official/public sources, and close the documented FBX/PNG/TGA importer gap without treating static OBJ conversion as rigging.
+- Shire remains the first visible benchmark. Part II/III assets stay warehouse/preproduction only; technical enemy-rig QA stock must not be treated as canon population.
+- Acceptance boundary: archive presence or a provider README can prove source/package facts only. Skeletal import, skin/deformation, locomotion, runtime replacement, PIE/device performance and visual acceptance each require their own evidence.
+- Runtime architecture remains soft/async for heavy character packages and pooled for crowd-scale NPC reuse.
+
+
 Purpose: retain visual, material, life, ambience and world-detail ideas discovered during the post-CP54 verification cycle and promote them deliberately during resumed production.
 
 ## Post-freeze rule
