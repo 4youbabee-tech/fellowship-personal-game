@@ -1,5 +1,15 @@
 # WORLD DETAIL LEDGER
 
+## Deep organization / cross-system audit - 2026-09-22
+- Audit checkpoint exact head: `17689b194ddca281aa9881b9ac50594712a65df6`.
+- Management drift found: REQ-CAMERA-001 was accepted into ProjectGovernor but not mapped into MasterExecutionRoadmap, causing Pre-Unreal #685 PG-078 failure. Mapping/snapshot reconciliation is now applied.
+- Cross-system simulation: LivingWorldDirector is committed-world synchronized, but ShireNPCContextSubsystem derives regional mood/profile availability/film dialogue directly from QuestSubsystem logical chapter/route. Register a committed-world context bridge before scaling NPC intelligence.
+- Character rig streaming is async and fallback-safe, but rig handles currently persist for GameInstance lifetime. Measure multi-chapter skeletal residency before full-cast rollout; add bounded inactive-cast release only if safe and needed.
+- Ambient NPC pooling exists and disables pooled tick/visibility/collision; previous “pooling missing” audit text was stale.
+- Remaining runtime synchronous LoadObject debt is still high in world builders and present in player/named-NPC fallback styling. Migrate incrementally after runner recovery; do not replace one stable loader with a competing manager.
+- Public/Private physical source migration remains pending and must stay isolated from gameplay changes.
+- Next priority after this audit: W00 runner/Engine Content ACL repair and fresh exact-head validation.
+
 ## Final pre-runner warehouse saturation batch - 2026-09-22
 - Owner authorized one final source-safe warehouse fill before switching focus to the UE4.27 runner ACL repair.
 - Added only verified official KayKit public-GitHub CC0 lanes: Restaurant Bits (food/kitchen/interior support), Halloween Bits (selective cemetery/crypt/dark-region props), and City Builder Bits (manual-filter generic civic props only).
