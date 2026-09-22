@@ -546,5 +546,11 @@
     },
     "execution_rule": "Do not mix the physical source-layout migration with gameplay/production feature work. Perform it on a dedicated short branch, update includes/static-validator paths, then require Pre-Unreal and real UE4.27.2 build proof.",
     "urgency": "STRUCTURAL_MAINTENANCE_NOT_RUNTIME_BLOCKER"
+  },
+  "transitional_module_visibility": {
+    "status": "ACTIVE_UNTIL_PHYSICAL_PUBLIC_PRIVATE_MIGRATION",
+    "runtime_module_root_export": "Source/ShireJourney/ShireJourney.Build.cs -> PublicIncludePaths.Add(ModuleDirectory)",
+    "reason": "Editor-only QA module depends on runtime public contracts while the runtime module remains FLAT_GUARDED. This prevents relative/private include hacks and is removed when headers move to Public/<Domain>.",
+    "acceptance_rule": "Keep the physical migration as a dedicated maintenance change; do not mix it into build-defect repair."
   }
 }
