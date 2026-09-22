@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Misc/PackageName.h"
 #include "Sound/SoundBase.h"
+#include "UObject/SoftObjectPath.h"
 
 namespace ShireAudioAssetPaths
 {
@@ -109,8 +110,13 @@ USoundBase* UShireAudioSubsystem::ResolveCategorizedAsset(
         *PackagePath,
         *Cue);
 
-    USoundBase* Sound = LoadObject<USoundBase>(nullptr, *AssetPath);
-    Cache.Add(CueId, Sound);
+    // Heavy audio must already be resident through an asynchronous ownership path.
+    // Never synchronously load a SoundWave/SoundCue from an interaction callback.
+    USoundBase* Sound = Cast<USoundBase>(FSoftObjectPath(AssetPath).ResolveObject());
+    if (Sound)
+    {
+        Cache.Add(CueId, Sound);
+    }
     return Sound;
 }
 
@@ -242,8 +248,13 @@ USoundBase* UShireAudioSubsystem::ResolveVoiceAsset(FName CueId)
         *PackagePath,
         *Cue);
 
-    USoundBase* Sound = LoadObject<USoundBase>(nullptr, *AssetPath);
-    VoiceCache.Add(CueId, Sound);
+    // Voice follows the same resident-only rule. Subtitle/story flow remains valid
+    // when a production voice asset has not yet been asynchronously staged.
+    USoundBase* Sound = Cast<USoundBase>(FSoftObjectPath(AssetPath).ResolveObject());
+    if (Sound)
+    {
+        VoiceCache.Add(CueId, Sound);
+    }
     return Sound;
 }
 
