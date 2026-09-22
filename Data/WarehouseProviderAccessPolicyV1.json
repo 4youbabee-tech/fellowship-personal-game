@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "policy_id": "WAREHOUSE_PROVIDER_ACCESS_POLICY_V1",
+  "status": "ACTIVE",
+  "rule": "Asset license and website access policy are independent gates. Free/CC0 content does not authorize scraping, bypassing authentication, or bulk automation.",
+  "classes": {
+    "PUBLIC_API_AUTO": {
+      "meaning": "Provider documents a public API or stable public machine endpoint suitable for automated staging.",
+      "current": [
+        "POLY_HAVEN",
+        "AMBIENTCG"
+      ]
+    },
+    "PUBLIC_DIRECT_RESOLVER": {
+      "meaning": "Official public item/pack pages expose direct downloads and no contrary automation restriction has been identified. Resolver remains rate-bounded and item-scoped.",
+      "current": [
+        "KENNEY",
+        "OPENGAMEART",
+        "QUATERNIUS"
+      ]
+    },
+    "MANUAL_CLEAR_LICENSE": {
+      "meaning": "Asset license is clear enough for use, but provider access is manual/item-based or bulk automation is restricted/undocumented.",
+      "current": [
+        "TEXTURECAN",
+        "CGBOOKCASE",
+        "3DTEXTURES_ME",
+        "SHARETEXTURES"
+      ]
+    },
+    "AUTH_REQUIRED": {
+      "meaning": "Login/OAuth/account entitlement is required. Automation may use only an officially supported authenticated path after credentials are connected.",
+      "current": [
+        "MIXAMO",
+        "FAB_QUixel_MEGASCANS",
+        "SKETCHFAB",
+        "FREESOUND",
+        "BLENDERKIT"
+      ]
+    },
+    "REVIEW_MARKETPLACE": {
+      "meaning": "Per-item entitlement/license review before acquisition.",
+      "current": [
+        "CGTRADER",
+        "TURBOSQUID",
+        "ARTSTATION_MARKETPLACE",
+        "BOOM_LIBRARY",
+        "PRO_SOUND_EFFECTS"
+      ]
+    },
+    "REFERENCE_ONLY": {
+      "meaning": "Discovery/reference source only; no automatic production ingest.",
+      "current": [
+        "DEVIANTART_3D_PORTS",
+        "SFMLAB",
+        "OPEN3DLAB",
+        "NEXUS_MODS"
+      ]
+    }
+  },
+  "guardrails": [
+    "No DRM/paywall/authentication bypass.",
+    "No automated source where terms prohibit bots, scraping or bulk download.",
+    "Rate-limit public resolvers and prefer provider APIs.",
+    "Every staged file records source/provider/license/hash/state.",
+    "Quaternius unresolved packs remain candidates; do not fabricate direct download URLs."
+  ]
+}
