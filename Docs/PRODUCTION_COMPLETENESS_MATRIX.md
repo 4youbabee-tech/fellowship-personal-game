@@ -1,3 +1,7 @@
+## 2026-09-22 - stabilization guard correction
+
+Pre-Unreal #747 failed one intentional stabilization guard: the chapter harness was non-fail-fast but did not yet print the required aggregate `RUNTIME_SWEEP_SUMMARY`. The missing marker is now implemented. This does not change the 40/100 production estimate or promote compile/PIE/device/visual evidence.
+
 ## 2026-09-22 - architectural stabilization gate
 
 Whole-game planning completion remains approximately **40/100**; this hardening wave does not manufacture production percentage from refactoring. Build #547 proved the recovered runner can compile/import and execute startup/P1C01-P1C04, but the exact hardening head has not yet passed engine validation.
