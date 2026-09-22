@@ -28,6 +28,9 @@ for p in SRC.glob("*.cpp"):
  t=read(p); n=len(re.findall(r"\bLoadObject<",t))
  if n: loads[p.name]=n
  if re.search(r"void\s+\w+::Tick\s*\([^)]*\)[\s\S]{0,12000}?LoadObject<",t): errors.append(f"possible LoadObject in Tick: {p.name}")
+ for match in re.finditer(r"LoadObject<[^>]+>\s*\([^;]+;", t, re.S):
+  if "/Engine/BasicShapes/" not in match.group(0):
+   errors.append(f"non-engine synchronous LoadObject remains: {p.name}")
 
 # VISUAL PERFORMANCE ARCHITECTURE GUARD
 perf_plan_path=ROOT/"Data"/"VisualPerformanceOptimizationPlan.json"
@@ -55,7 +58,7 @@ if "LoadObject<" in streaming_cpp:
  errors.append("chapter streaming subsystem must not add synchronous LoadObject")
 if "SetCommittedWorldContext" not in npc_context or router.count("SetCommittedWorldContext(") < 2:
  errors.append("committed NPC context bridge missing from normal commit/rollback paths")
-for symbol in ["GetContextChapterId()", "GetContextRouteId()", "GetContextActiveQuestId()", "GetContextActiveQuestStage()"]:
+for symbol in ["IsLogicalWorldContextCommitted()", "GetContextChapterId()", "GetContextRouteId()", "GetContextActiveQuestId()", "GetContextActiveQuestStage()"]:
  if symbol not in npc_context:
   errors.append(f"NPC committed-context query missing: {symbol}")
 if "OnCharacterRigReady.Broadcast(CharacterId);" not in streaming_cpp or "Rig->Handle.Reset();" not in streaming_cpp:
