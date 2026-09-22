@@ -136,6 +136,13 @@ void UShireNPCContextSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     ChapterMoodById.Empty();
     ChapterPressureById.Empty();
     FilmContextsByRouteChapter.Empty();
+    bHasCommittedWorldContext = false;
+    CommittedChapterId = NAME_None;
+    CommittedRouteId = NAME_None;
+    CommittedEpisodeId = NAME_None;
+    CommittedActiveQuestId = NAME_None;
+    CommittedActiveQuestStage = 0;
+    CommittedWorldRevision = 0;
 
     const bool bSocialLoaded = LoadSocialModel();
     const bool bConversationLoaded = LoadConversationPlan();
@@ -861,6 +868,83 @@ bool UShireNPCContextSubsystem::CanUseIntent(FName ProfileHint, FName IntentId) 
     return true;
 }
 
+void UShireNPCContextSubsystem::SetCommittedWorldContext(
+    FName ChapterId,
+    FName RouteId,
+    FName EpisodeId,
+    uint32 WorldRevision,
+    FName ActiveQuestId,
+    int32 ActiveQuestStage)
+{
+    if (ChapterId.IsNone() || RouteId.IsNone() || EpisodeId.IsNone() || WorldRevision == 0)
+    {
+        return;
+    }
+
+    CommittedChapterId = ChapterId;
+    CommittedRouteId = RouteId;
+    CommittedEpisodeId = EpisodeId;
+    CommittedActiveQuestId = ActiveQuestId;
+    CommittedActiveQuestStage = FMath::Max(0, ActiveQuestStage);
+    CommittedWorldRevision = WorldRevision;
+    bHasCommittedWorldContext = true;
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("NPCContextCommit: chapter=%s route=%s episode=%s quest=%s stage=%d revision=%u"),
+        *CommittedChapterId.ToString(),
+        *CommittedRouteId.ToString(),
+        *CommittedEpisodeId.ToString(),
+        *CommittedActiveQuestId.ToString(),
+        CommittedActiveQuestStage,
+        CommittedWorldRevision);
+}
+
+FName UShireNPCContextSubsystem::GetContextChapterId() const
+{
+    if (bHasCommittedWorldContext)
+    {
+        return CommittedChapterId;
+    }
+    const UGameInstance* GI = GetGameInstance();
+    const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    return Quests ? Quests->GetCurrentChapterId() : NAME_None;
+}
+
+FName UShireNPCContextSubsystem::GetContextRouteId() const
+{
+    if (bHasCommittedWorldContext)
+    {
+        return CommittedRouteId;
+    }
+    const UGameInstance* GI = GetGameInstance();
+    const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    return Quests ? Quests->GetCurrentRouteId() : NAME_None;
+}
+
+FName UShireNPCContextSubsystem::GetContextActiveQuestId() const
+{
+    if (bHasCommittedWorldContext)
+    {
+        return CommittedActiveQuestId;
+    }
+    const UGameInstance* GI = GetGameInstance();
+    const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    return Quests ? Quests->GetActiveQuestId() : NAME_None;
+}
+
+int32 UShireNPCContextSubsystem::GetContextActiveQuestStage() const
+{
+    if (bHasCommittedWorldContext)
+    {
+        return CommittedActiveQuestStage;
+    }
+    const UGameInstance* GI = GetGameInstance();
+    const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    return Quests ? Quests->GetActiveQuestStage() : 0;
+}
+
 bool UShireNPCContextSubsystem::IsFellowshipProfile(const FShireNPCProfileRuntime& Profile) const
 {
     return Profile.Roles.Contains(TEXT("FELLOWSHIP_MEMBER"));
@@ -876,8 +960,8 @@ bool UShireNPCContextSubsystem::ProfileAvailableInCurrentChapter(
         return true;
     }
 
-    FName Region = Quests->GetCurrentChapterId();
-    if (Quests->GetCurrentRouteId() == TEXT("GandalfParallel"))
+    FName Region = GetContextChapterId();
+    if (GetContextRouteId() == TEXT("GandalfParallel"))
     {
         Region = TEXT("P1G01");
     }
@@ -945,8 +1029,8 @@ FName UShireNPCContextSubsystem::GetRegionalWorldMood() const
         return TEXT("CALM_TRAVEL");
     }
 
-    FName ChapterId = Quests->GetCurrentChapterId();
-    if (Quests->GetCurrentRouteId() == TEXT("GandalfParallel"))
+    FName ChapterId = GetContextChapterId();
+    if (GetContextRouteId() == TEXT("GandalfParallel"))
     {
         ChapterId = TEXT("P1G01");
     }
@@ -967,8 +1051,8 @@ float UShireNPCContextSubsystem::GetRegionalPressure() const
         return 0.25f;
     }
 
-    FName ChapterId = Quests->GetCurrentChapterId();
-    if (Quests->GetCurrentRouteId() == TEXT("GandalfParallel"))
+    FName ChapterId = GetContextChapterId();
+    if (GetContextRouteId() == TEXT("GandalfParallel"))
     {
         ChapterId = TEXT("P1G01");
     }
@@ -1027,8 +1111,10 @@ UShireNPCContextSubsystem::GetActiveFilmDialogueContext() const
     const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
     if (!Quests) return nullptr;
 
+    const FName ContextRouteId = GetContextRouteId();
+    const FName ContextChapterId = GetContextChapterId();
     const TArray<FFilmDialogueContextRuntime>* Contexts =
-        FilmContextsByRouteChapter.Find(MakeFilmContextKey(Quests->GetCurrentRouteId(), Quests->GetCurrentChapterId()));
+        FilmContextsByRouteChapter.Find(MakeFilmContextKey(ContextRouteId, ContextChapterId));
     if (!Contexts) return nullptr;
 
     const FFilmDialogueContextRuntime* Best = nullptr;
@@ -1174,8 +1260,8 @@ bool UShireNPCContextSubsystem::IsDangerStateActive() const
         return false;
     }
 
-    const FName Quest = Quests->GetActiveQuestId();
-    const int32 Stage = Quests->GetActiveQuestStage();
+    const FName Quest = GetContextActiveQuestId();
+    const int32 Stage = GetContextActiveQuestStage();
 
     if (Quest == TEXT("KeepOffRoad") || Quest == TEXT("NightAttack") ||
         Quest == TEXT("WeathertopAttack") || Quest == TEXT("BridgeOfKhazadDum") ||
@@ -1294,9 +1380,9 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
     int32 RelationshipContext = 0;
     if (Quests)
     {
-        Seed = HashCombine(Seed, GetTypeHash(Quests->GetCurrentChapterId()));
-        Seed = HashCombine(Seed, GetTypeHash(Quests->GetActiveQuestId()));
-        Seed = HashCombine(Seed, static_cast<uint32>(Quests->GetActiveQuestStage()));
+        Seed = HashCombine(Seed, GetTypeHash(GetContextChapterId()));
+        Seed = HashCombine(Seed, GetTypeHash(GetContextActiveQuestId()));
+        Seed = HashCombine(Seed, static_cast<uint32>(GetContextActiveQuestStage()));
         RelationshipContext = Quests->GetNamedNPCRelationship(
             SpeakerId,
             ListenerId == NAME_None ? FName(TEXT("PLAYER_FRODO")) : ListenerId);
