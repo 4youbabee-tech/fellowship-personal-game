@@ -2480,7 +2480,8 @@
         "Data/WarehouseAmbientCGAcquisitionBatchV1.json + Scripts/stage_ambientcg_warehouse.ps1 add public-API CC0 material staging.",
         "Data/WarehouseKenneyAcquisitionBatchV1.json + Scripts/stage_kenney_warehouse.ps1 add official-page CC0 support/world-kit staging.",
         "Data/TrilogyWorldFoundationPlanV1.json establishes parallel world-foundation preproduction for all major trilogy regions while keeping P1C01 as the first assembled benchmark.",
-        "Verified official KayKit public GitHub lane now includes Skeletons 1.0 as CC0 fully-rigged/animated FBX/GLTF technical enemy-pipeline stock; this is QA/support inventory, not canonical LOTR enemy art."
+        "Verified official KayKit public GitHub lane now includes Skeletons 1.0 as CC0 fully-rigged/animated FBX/GLTF technical enemy-pipeline stock; this is QA/support inventory, not canonical LOTR enemy art.",
+        "Final pre-runner source-safe saturation adds verified official KayKit CC0 Restaurant Bits, Halloween Bits and City Builder Bits lanes with strict selective/manual-fit boundaries."
       ],
       "missing_work": [
         "Bridge staged rigged-character archives into a real UE4.27 skeletal import/runtime path once the Engine Content ACL gate is restored; prove humans/enemies visibly in P1C01 before broader runtime expansion.",
@@ -3974,7 +3975,17 @@
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
     "rule": "Continue exact-head foundation repair, but keep trilogy asset-bank sourcing/authoring active in parallel. Do not let governance-only work starve visible production.",
     "character_visibility_bridge": "FIRST_PROVEN_RIGGED_HUMANOID_AND_ENEMY_STOCK_TO_P1C01_AFTER_ENGINE_GATE",
-    "character_visibility_rule": "Warehouse growth must feed visible character progress: validate staged FBX rigs now, then import and replace proxies in Shire as soon as UE4.27 build/import is available."
+    "character_visibility_rule": "Warehouse growth must feed visible character progress: validate staged FBX rigs now, then import and replace proxies in Shire as soon as UE4.27 build/import is available.",
+    "pre_runner_final_warehouse_batch": {
+      "status": "COMMITTED_WAITING_FOR_WAREHOUSE_RECEIPT",
+      "scope": [
+        "KAYKIT_RESTAURANT_BITS_1_0",
+        "KAYKIT_HALLOWEEN_BITS_1_0",
+        "KAYKIT_CITY_BUILDER_BITS_1_0"
+      ],
+      "next_priority": "W00_RUNNER_AND_EXACT_HEAD_UNLOCK",
+      "rule": "After this batch, stop broad sourcing expansion and focus on repairing the UE4.27 Engine Content ACL runner blocker. Continue only source-safe bookkeeping/audit work that does not defer the runner repair."
+    }
   },
   "immediate_next_large_actions": [
     "Drive Data/CompletionWaveMapV1.json from W00 through W11; close waves only on their exit criteria and keep the planning percentage separate from evidence status.",
