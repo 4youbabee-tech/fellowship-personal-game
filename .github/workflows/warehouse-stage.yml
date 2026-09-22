@@ -15,6 +15,8 @@ on:
       - 'Scripts/stage_ambientcg_warehouse.ps1'
       - 'Data/WarehouseKenneyAcquisitionBatchV1.json'
       - 'Scripts/stage_kenney_warehouse.ps1'
+      - 'Data/WarehouseKayKitGitHubAcquisitionBatchV1.json'
+      - 'Scripts/stage_kaykit_github_warehouse.ps1'
       - 'Data/WarehouseAmbientCGTrilogyBatchV2.json'
       - 'Scripts/audit_warehouse_inventory.ps1'
       - 'Data/WarehouseProviderAccessPolicyV1.json'
@@ -33,6 +35,8 @@ on:
       - 'Scripts/stage_ambientcg_warehouse.ps1'
       - 'Data/WarehouseKenneyAcquisitionBatchV1.json'
       - 'Scripts/stage_kenney_warehouse.ps1'
+      - 'Data/WarehouseKayKitGitHubAcquisitionBatchV1.json'
+      - 'Scripts/stage_kaykit_github_warehouse.ps1'
       - 'Data/WarehouseAmbientCGTrilogyBatchV2.json'
       - 'Scripts/audit_warehouse_inventory.ps1'
       - 'Data/WarehouseProviderAccessPolicyV1.json'
@@ -90,6 +94,11 @@ jobs:
         shell: cmd
         run: |
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_kenney_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseKenneyAcquisitionBatchV1.json"
+
+      - name: Stage KayKit public GitHub CC0 support packs
+        shell: cmd
+        run: |
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_kaykit_github_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseKayKitGitHubAcquisitionBatchV1.json"
 
       - name: Audit persistent warehouse inventory
         shell: cmd
