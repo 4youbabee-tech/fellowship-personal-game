@@ -176,6 +176,16 @@ public:
     UFUNCTION(BlueprintPure, Category="NPCContext")
     bool IsInclementWeather() const;
 
+    // World-facing NPC context must follow the visible committed world, not logical
+    // quest state that may already be pointing at an asynchronously loading destination.
+    void SetCommittedWorldContext(
+        FName ChapterId,
+        FName RouteId,
+        FName EpisodeId,
+        uint32 WorldRevision,
+        FName ActiveQuestId,
+        int32 ActiveQuestStage);
+
 private:
     struct FScheduleEntry
     {
@@ -223,6 +233,13 @@ private:
     TMap<FName, TArray<FFilmDialogueContextRuntime>> FilmContextsByRouteChapter;
 
     bool bDataReady = false;
+    bool bHasCommittedWorldContext = false;
+    FName CommittedChapterId = NAME_None;
+    FName CommittedRouteId = NAME_None;
+    FName CommittedEpisodeId = NAME_None;
+    FName CommittedActiveQuestId = NAME_None;
+    int32 CommittedActiveQuestStage = 0;
+    uint32 CommittedWorldRevision = 0;
     int32 MaxWordsAmbient = 24;
     int32 MaxWordsStoryReactive = 38;
     int32 MaxRecentLineIds = 12;
@@ -249,6 +266,10 @@ private:
         FName RequiredStoryBeat = NAME_None,
         FName RequiredMemory = NAME_None,
         FName RequiredMood = NAME_None);
+    FName GetContextChapterId() const;
+    FName GetContextRouteId() const;
+    FName GetContextActiveQuestId() const;
+    int32 GetContextActiveQuestStage() const;
     bool ProfileAvailableInCurrentChapter(const FShireNPCProfileRuntime& Profile) const;
     bool IsFellowshipProfile(const FShireNPCProfileRuntime& Profile) const;
     const FFilmDialogueContextRuntime* GetActiveFilmDialogueContext() const;
