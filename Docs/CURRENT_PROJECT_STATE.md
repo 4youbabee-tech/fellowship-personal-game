@@ -1,3 +1,9 @@
+## 2026-09-22 - whole-game completion wave map
+
+A durable finish map is now registered in `Data/CompletionWaveMapV1.json`. It treats the current whole-game planning position as approximately 40/100 and organizes the remaining 60 planning points into 12 production waves (W00-W11), from runner/exact-head unlock through Shire visible skeletal-character conversion, Part I production/acceptance, Part II/III runtime+production, and final trilogy integration.
+
+The execution unit is a major coherent production drop rather than an individual Git commit or raw file upload. The map currently estimates roughly 30-40 remaining major drops, with actual commit count allowed to be higher. These percentages/drop counts are planning estimates only; they do not alter any compile, PIE, device, performance or visual acceptance state.
+
 ## 2026-09-22 - character visibility bridge and warehouse receipt hardening
 
 Owner priority is now explicit in the Governor and WORLD_DETAIL_LEDGER: warehouse growth must convert into visible humans/enemies, with P1C01 Shire still the first assembled benchmark. The official KayKit Skeletons 1.0 public GitHub package was source-checked as CC0 and documents fully rigged/animated characters, FBX/GLTF delivery and 90+ animations. It is registered strictly as technical enemy rig/import/retarget QA stock, not canonical LOTR enemy art or a visually accepted production character.
