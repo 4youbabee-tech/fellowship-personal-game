@@ -266,6 +266,7 @@ private:
         FName RequiredStoryBeat = NAME_None,
         FName RequiredMemory = NAME_None,
         FName RequiredMood = NAME_None);
+    bool IsLogicalWorldContextCommitted() const;
     FName GetContextChapterId() const;
     FName GetContextRouteId() const;
     FName GetContextActiveQuestId() const;
