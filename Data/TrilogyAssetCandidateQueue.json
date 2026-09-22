@@ -555,6 +555,66 @@
       "intake_status": "AUTHORIZED_FOR_STAGING",
       "provenance": "Official public KayKit GitHub repository; staged only through WarehouseKayKitGitHubAcquisitionBatchV1.",
       "notes": "High-count repeated detail is ISM/HISM-classified before integration."
+    },
+    {
+      "id": "KAYKIT_RESTAURANT_BITS_1_0",
+      "provider": "KAYKIT",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Restaurant-Bits-1.0",
+      "license_observed": "CC0-1.0",
+      "formats": [
+        "FBX",
+        "GLTF",
+        "OBJ"
+      ],
+      "use": [
+        "Shire/Bree food and kitchen props",
+        "inn/household interior dressing",
+        "regional feast/provisioning support"
+      ],
+      "suitability": "SUPPORTING_FOOD_KITCHEN_PROPS_ONLY",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official KayKit public GitHub repository and CC0 LICENSE.txt; staged only through WarehouseKayKitGitHubAcquisitionBatchV1.",
+      "notes": "Official pack documents 140+ low-poly cooking/food assets. Selective supporting stock only; no visual acceptance implied."
+    },
+    {
+      "id": "KAYKIT_HALLOWEEN_BITS_1_0",
+      "provider": "KAYKIT",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Halloween-Bits-1.0",
+      "license_observed": "CC0-1.0",
+      "formats": [
+        "FBX",
+        "GLTF",
+        "OBJ"
+      ],
+      "use": [
+        "cemetery/crypt support props",
+        "dark-region set dressing",
+        "Paths of the Dead/Minas Morgul/Cirith Ungol selective prop candidates"
+      ],
+      "suitability": "SELECTIVE_DARK_PROP_SUPPORT_ONLY",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official KayKit public GitHub repository and CC0 LICENSE.txt; staged only through WarehouseKayKitGitHubAcquisitionBatchV1.",
+      "notes": "Official pack documents 60+ low-poly spooky/cemetery assets. Must be filtered against canon/art direction before integration."
+    },
+    {
+      "id": "KAYKIT_CITY_BUILDER_BITS_1_0",
+      "provider": "KAYKIT",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-City-Builder-Bits-1.0",
+      "license_observed": "CC0-1.0",
+      "formats": [
+        "FBX",
+        "GLTF",
+        "OBJ"
+      ],
+      "use": [
+        "generic civic prop mining",
+        "layout/scale support",
+        "background prop candidates after manual medieval-fit filtering"
+      ],
+      "suitability": "MANUAL_FILTER_GENERIC_PROPS_ONLY",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official KayKit public GitHub repository and CC0 LICENSE.txt; staged only through WarehouseKayKitGitHubAcquisitionBatchV1.",
+      "notes": "Official pack is city-builder oriented; only period-neutral props may survive intake. Do not import modern-looking items into Middle-earth."
     }
   ],
   "next_source_lanes": [
