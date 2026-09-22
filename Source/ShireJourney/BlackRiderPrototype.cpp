@@ -10,6 +10,7 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
+#include "UObject/SoftObjectPath.h"
 
 ABlackRiderPrototype::ABlackRiderPrototype()
 {
@@ -49,7 +50,7 @@ void ABlackRiderPrototype::ApplyPrototypeStyle()
     auto TryMesh = [](UStaticMeshComponent* Component, const TCHAR* AssetPath) -> bool
     {
         if (!Component) return false;
-        if (UStaticMesh* Mesh = LoadObject<UStaticMesh>(nullptr, AssetPath))
+        if (UStaticMesh* Mesh = Cast<UStaticMesh>(FSoftObjectPath(AssetPath).ResolveObject()))
         {
             Component->SetStaticMesh(Mesh);
             Component->SetRelativeScale3D(FVector(1.0f));
