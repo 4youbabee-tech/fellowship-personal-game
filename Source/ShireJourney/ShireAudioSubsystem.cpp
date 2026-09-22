@@ -204,6 +204,13 @@ void UShireAudioSubsystem::HandleAsyncAudioReady(
     FSoftObjectPath AssetPath,
     FName LoadKey)
 {
+    // CancelPendingAudioCategory removes the ownership record before cancelling.
+    // A late delegate from a cancelled request must never resurrect stale audio.
+    if (!PendingAudioLoads.Contains(LoadKey))
+    {
+        return;
+    }
+
     USoundBase* Sound = Cast<USoundBase>(AssetPath.ResolveObject());
     if (!Sound)
     {

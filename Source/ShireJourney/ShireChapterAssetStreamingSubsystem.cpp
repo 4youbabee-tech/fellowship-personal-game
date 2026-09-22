@@ -64,6 +64,23 @@ bool UShireChapterAssetStreamingSubsystem::CommitPendingRequest(
     FName ChapterId,
     FName RouteId)
 {
+    // Same chapter-bank, new episode/save-state: RequestChapterAssets intentionally
+    // cancels any stale pending request and reports the already resident bank ready.
+    // Treat that as a successful residency commit rather than forcing rollback.
+    if (IsChapterBankReady(ChapterId, RouteId) &&
+        PendingChapterId.IsNone() &&
+        PendingRouteId.IsNone())
+    {
+        OnChapterAssetsCommitted.Broadcast(ChapterId, RouteId);
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ChapterAssetStreaming: committed already-resident chapter=%s route=%s"),
+            *ChapterId.ToString(),
+            *RouteId.ToString());
+        return true;
+    }
+
     if (PendingChapterId != ChapterId || PendingRouteId != RouteId)
     {
         return false;

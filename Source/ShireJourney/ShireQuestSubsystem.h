@@ -280,6 +280,14 @@ public:
     void RecordNamedNPCDialogueUse(FName CanonicalProfileId, FName VariantId, FName PartnerProfileId, int32 MaxRecentVariants = 12);
     TMap<FName, FShireNPCMemoryBucket> GetNPCMemorySnapshot() const { return NPCMemoryState; }
     void RestoreNPCMemoryState(const TMap<FName, FShireNPCMemoryBucket>& InState);
+
+    // Save/rollback restore is a logical transaction. State fields are rebuilt while
+    // broadcasts are suppressed, then published once after the full snapshot exists.
+    bool BeginPersistenceRestore();
+    void CommitPersistenceRestore(bool bBroadcastQuestStateRestored = true);
+    void AbortPersistenceRestore();
+    bool IsPersistenceRestoreInProgress() const { return bPersistenceRestoreInProgress; }
+
     void RestoreQuestState(const TMap<FName, int32>& InStages, FName InActiveQuestId,
         FName InCurrentChapterId, const TArray<FName>& InCompletedStoryBeats,
         FName InCurrentRouteId, FName InCurrentEpisodeId, FName InPlayableCharacterId,
@@ -333,6 +341,13 @@ private:
 
     UPROPERTY()
     TArray<FName> KnownMapRegionIds;
+
+    bool bPersistenceRestoreInProgress = false;
+    FName PersistenceRestorePreviousChapterId = NAME_None;
+    FName PersistenceRestorePreviousRouteId = NAME_None;
+    FName PersistenceRestorePreviousEpisodeId = NAME_None;
+    FName PersistenceRestorePreviousPlayableCharacterId = NAME_None;
+    FName PersistenceRestorePreviousActiveQuestId = NAME_None;
 
     TMap<FName, FShireJourneyDiscoveryDefinition> JourneyDiscoveryDefinitions;
     TArray<FShireJourneyInsightMilestoneDefinition> JourneyInsightDefinitions;

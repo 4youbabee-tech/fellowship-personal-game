@@ -2603,14 +2603,20 @@
         "State/save audit waits for exact committed chapter/route/episode and no longer lets a surface failure mask disk-save testing.",
         "Normal commit and rollback now publish committed-world revision/context before releasing player movement.",
         "ShireAudioSubsystem now owns bounded asynchronous per-cue FStreamableManager requests with stale-request cancellation and weak caches.",
-        "PG-127 was moved before the final success/exit block; PG-128 guards the new residency, movement, state-audit and audio invariants."
+        "PG-127 was moved before the final success/exit block; PG-128 guards the new residency, movement, state-audit and audio invariants.",
+        "Unreal #594 on 38c2c958121576b68a0bfaf4e276498d4fe89dad passed UE4.27.2 compile/import/Automation/startup and the aggregate P1C01-P1C08 sweep; CharacterSurfaceAudit also passed. The only required red gate was persistence field verification.",
+        "Save/rollback restore now uses an atomic logical transaction: quest/route, NPC memory, discoveries, progression and chronicle/map knowledge rebuild before one publication boundary.",
+        "Disk persistence audit now reports exact failed fields and covers non-empty named-NPC memory/relationships/dialogue history plus route progress instead of only a generic verified flag.",
+        "Already-resident chapter banks are valid commits for same-bank episode/save replay, preventing false rollback from empty pending IDs.",
+        "Cancelled asynchronous audio callbacks require active LoadKey ownership before resolving/playing, preventing stale playback resurrection."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal and UE4.27.2 compile/import/runtime evidence for the new commit-bound residency/audio/movement repair head.",
-        "Require startup + P1C01-P1C08 + state + continuous transition audits to pass on the same exact head.",
-        "Run warning-debt/material persistence gate on the same exact head and keep AUDIT-CRIT-001 closed only with package/import evidence.",
-        "Complete the dedicated Public/Private runtime source migration in an isolated engine-tested maintenance batch after W00 runtime stability.",
-        "Measure target-device FPS, resident memory, GC, chapter-bank residency and social-scan behavior before performance acceptance."
+        "Obtain fresh exact-head Pre-Unreal and UE4.27.2 compile/import/runtime evidence for the persistence transaction / resident-bank / stale-audio repair head.",
+        "Require state disk roundtrip to print persistence-fields=PASS and disk-save-roundtrip=PASS on the same exact head.",
+        "Require continuous transition audit, including same-bank replay and forced-slow transition context invariants, on the same exact head.",
+        "Run warning-debt/material-persistence gate after persistence/transition chain is green.",
+        "Run target-device performance/memory/GC/streaming measurements before closing performance risk.",
+        "Run human core-loop, first-five-minutes onboarding and external playtest/pacing review after W00 technical stability; automation cannot close enjoyment."
       ],
       "acceptance_criteria": [
         "No known CRITICAL/HIGH source defect remains uncorrected or explicitly evidence-bounded.",
@@ -3613,7 +3619,7 @@
       "warning-debt/material persistence gate",
       "target-device follow-up before visual/performance acceptance"
     ],
-    "note": "Architectural stabilization is the active execution focus. Quality-gate state remains PARTIAL until all exact-head evidence listed here passes. Feature expansion is frozen; validation/build/import/runtime audits are explicitly allowed because they are evidence, not feature expansion.",
+    "note": "W00 remains open. Source-safe defects are being closed as a set; feature expansion stays frozen until exact-head persistence/transition/warning gates pass, followed by target-device and human experience evidence where required.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -4002,83 +4008,63 @@
       "id": "WORK-STABILITY-001",
       "title": "Architectural stabilization and root-cause hardening",
       "status": "ACTIVE",
-      "rationale": "Owner paused feature expansion until systemic grounding, streaming, source-asset and QA failure-discovery contracts are hardened and proven on one exact head.",
+      "rationale": "Owner explicitly ordered closure of all known stabilization defects before resuming feature construction. Source-safe persistence/transition/audio races are being fixed as a set; measured/device/human gates remain evidence-bound rather than guessed.",
       "execution_bundle": "B0_EXACT_HEAD_STABILITY",
       "plan": "REQ-STABILITY-001"
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Exact-head Unreal #593 reached the full runtime chain and exposed a state-audit residency-order defect; owner requires root-cause stabilization before feature expansion.",
-    "exact_reviewed_head": "5840863632d04a5fac284b472fe9e5641cd522b8",
+    "reason": "Owner directed immediate closure of all known W00 defects. Unreal #594 narrowed the active blocker to persistence verification after compile/import/Automation/startup/all-eight chapter and production-surface checks passed.",
+    "exact_reviewed_head": "38c2c958121576b68a0bfaf4e276498d4fe89dad",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#758 SUCCESS on 5840863632d04a5fac284b472fe9e5641cd522b8",
-      "unreal_build": "#593 FAILURE only at state roundtrip gate after C++ compile/import/Automation/startup/P1C01-P1C08 passed; CharacterSurfaceAudit failed before disk-save PASS marker",
-      "warehouse": "#172 SUCCESS on the same PR head"
+      "pre_unreal": "#759 SUCCESS on 38c2c958121576b68a0bfaf4e276498d4fe89dad",
+      "unreal_build": "#594: UE4.27.2 compile PASS; production import PASS; Automation PASS; startup PASS; P1C01-P1C08 aggregate PASS; CharacterSurfaceAudit PASS; persistence state verification FAIL",
+      "warehouse": "#173 was still running at the time of this source wave and does not determine W00 closure"
     },
     "reconciled_findings": [
-      "Runner identity/Engine Content ACL/exact-head checkout/editor-lock/MSVC/clean-intermediate infrastructure all passed in Unreal #593; manual ACL patching is not the active blocker.",
-      "P1C01-P1C08 aggregate chapter sweep passed in #593; the former P1C05 no-ground symptom is no longer the active failure on this SHA.",
-      "M_ProductionSurface import/persistence exists, but player prototype style was applied before async bank residency and was not re-applied at commit.",
-      "MovePlayerToChapterStart released movement before asset/context/world transaction commit, violating the commit-before-movement invariant.",
-      "ShireAudioSubsystem was resident-only without an actual async audio owner; authored nonresident audio could remain silent and strong caches could accumulate residency.",
-      "PG-127 was placed after the validator success/exit block, so the escaped-newline guard was not fail-closed."
+      "The material-residency repair is engine-proven on #594: CharacterSurfaceAudit passed.",
+      "Disk save wrote, loaded and invoked restore, but final state equality was false; the old harness did not identify which persistence domain diverged.",
+      "RestoreQuestState broadcast route/chapter/quest events before NPC memory/discovery/progression/knowledge restoration, allowing subscribers to observe half-restored logical state.",
+      "Same-bank RequestChapterAssets can report ready after cancelling pending IDs, while CommitPendingRequest previously rejected the subsequent commit and could trigger false rollback.",
+      "Cancelled audio requests could still enter HandleAsyncAudioReady without ownership validation and potentially resurrect stale playback.",
+      "P1C01-P1C08 aggregate grounding/runtime path is green on #594; P1C05 is no longer an active headless blocker."
     ],
-    "next_priority": "W00_ROOT_CAUSE_STABILIZATION_EXACT_HEAD",
-    "truth_boundary": "Unreal #593 evidence applies only to 5840863632d04a5fac284b472fe9e5641cd522b8. New source repairs require fresh exact-head proof.",
-    "source_fix_closure": {
-      "status": "SOURCE_FIXES_APPLIED_ENGINE_PROOF_PENDING",
-      "repairs": [
-        "committed-world NPC context synchronization",
-        "transitional dialogue suppression",
-        "character rig completed-handle release",
-        "chapter world-builder synchronous production mesh load removal",
-        "player/named-NPC/enemy resident-only production visual resolution",
-        "audio synchronous USoundBase load removal",
-        "enemy production assets added to async chapter banks",
-        "continuous audit guards added to prevent regression"
-      ],
-      "evidence_boundary": "Source fixes are not CLOSED defects until fresh exact-head UE4.27 compile/runtime/PIE evidence exists. W00 runner ACL remains the blocker."
-    },
-    "runner_recovery": {
-      "status": "INFRASTRUCTURE_GREEN_ON_UNREAL_593",
-      "evidence": "Unreal #593: NETWORK SERVICE runner, Engine Content ACL already-readable, exact-head checkout, editor-lock wait, MSVC environment, clean intermediates and UE4.27.2 C++ build all passed.",
-      "evidence_boundary": "This proves runner/build infrastructure for SHA 5840863632d04a5fac284b472fe9e5641cd522b8 only."
-    },
-    "p1c05_grounding_repair": {
-      "status": "SYSTEMIC_GROUNDING_PATH_ENGINE_EVIDENCE_GREEN_ON_593",
-      "evidence": "Unreal #593 aggregate chapter mode attempted 8/8 and failed=[], so P1C05 is no longer the active runtime blocker on 5840863632d04a5fac284b472fe9e5641cd522b8.",
-      "repair": "ChapterWorldRouter uses bounded nearby-ground probing, slope rejection and capsule-clearance checks; chapter-specific RuntimeSpawnFoundation pads are forbidden by validation.",
-      "evidence_boundary": "Headless chapter evidence is not PIE/device/visual acceptance."
-    },
+    "next_priority": "W00_PERSISTENCE_TRANSITION_CLOSURE",
+    "truth_boundary": "The new transaction/replay/audio fixes are source-level until fresh exact-head workflows pass. No PIE/device/visual/performance acceptance is inferred.",
     "latest_engine_evidence": {
-      "exact_head": "5840863632d04a5fac284b472fe9e5641cd522b8",
-      "cxx_compile": "PASS - Unreal #593 UE4.27.2 C++ build",
-      "production_import": "PASS - M_ProductionSurface created; deterministic material save failures=0; TGA production import completed",
-      "automation": "PASS 2/2 - StreamingBankPackages and Save.DefaultState",
-      "runtime": "startup PASS; P1C01-P1C08 aggregate PASS; state core markers PASS; state disk gate FAIL because CharacterSurfaceAudit failed before disk roundtrip marker"
+      "exact_head": "38c2c958121576b68a0bfaf4e276498d4fe89dad",
+      "cxx_compile": "PASS - Unreal #594",
+      "production_import": "PASS - Unreal #594",
+      "automation": "PASS - Unreal #594",
+      "runtime": "startup PASS; P1C01-P1C08 aggregate PASS; CharacterSurfaceAudit PASS; state persistence FAIL"
     },
     "stabilization_wave": {
-      "status": "SOURCE_REPAIR_APPLIED_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "status": "SOURCE_FIX_SET_APPLIED_PENDING_FRESH_EXACT_HEAD_PROOF",
       "root_causes_addressed": [
-        "spawn/world collision seam drift -> shared bounded seam-tolerant grounding with slope + capsule-clearance checks",
-        "chapter-by-chapter serial discovery -> all chapters aggregate failures in one CI sweep",
-        "missing future skeletal packages -> package-existence preflight before async request",
-        "legacy BMP source contract -> 24 BMP converted to TGA, MTL references migrated, BMP rejected",
-        "pre-residency player material application -> post-residency chapter-bank commit notification and surface reapply",
-        "state audit racing async world commit -> exact committed-world polling before disk/surface audit",
-        "surface audit masking persistence -> independent disk roundtrip still executes and combined result is reported",
-        "movement unlock before transaction completion -> release only after OnWorldCommitted broadcast on commit and rollback",
-        "resident-only audio without owner -> bounded asynchronous ShireAudioSubsystem ownership with weak caches",
-        "non-fail-closed PG-127 placement -> guard moved before final validator result with PG-128 regression coverage"
+        "world grounding seams -> bounded slope/capsule-aware grounding, no chapter pads",
+        "serial chapter bug discovery -> aggregate P1C01-P1C08 sweep",
+        "missing rig packages -> package-existence preflight before async load",
+        "legacy BMP/OBJ structural debt -> TGA migration and strict structural guards",
+        "pre-residency player material application -> post-residency commit reapply",
+        "movement unlock before world/context commit -> release after OnWorldCommitted",
+        "resident-only audio without owner -> bounded async audio owner",
+        "half-restored logical save state -> atomic persistence restore transaction",
+        "opaque persistence verification -> exact field-level disk/runtime diagnostics with non-empty NPC memory",
+        "same-bank ready/commit mismatch -> resident-bank idempotent commit",
+        "cancelled async audio callback race -> LoadKey ownership guard"
       ],
-      "explicit_non_patch_rule": "RuntimeSpawnFoundation chapter-specific pads are forbidden by validation. Fix world/router/streaming ownership contracts rather than chapter symptoms."
+      "explicit_non_patch_rule": "No chapter-specific symptom patch may replace a shared world/streaming/save/audio invariant."
     },
-    "current_compile_fix": {
-      "status": "PREVIOUS_IMPORTER_COMPILE_DEFECT_PROVEN_CLOSED_ON_593",
-      "root_cause": "Literal escaped newline in importer source caused Unreal #588 C++ errors.",
-      "evidence": "Unreal #593 compiled the importer and project successfully on 5840863632d04a5fac284b472fe9e5641cd522b8.",
-      "hardening": "PG-127 is now before the validator final result so future literal escaped-newline artifacts fail Pre-Unreal."
+    "user_experience_stabilization": {
+      "status": "GATED_AFTER_W00_TECHNICAL_GREEN",
+      "required_before_large_content_expansion": [
+        "15-minute P1C01 core-loop play review: movement -> interaction -> short objective -> reward/story continuation",
+        "first-five-minutes onboarding review with no developer guidance",
+        "at least one external fresh-player playtest after technical blockers are removed",
+        "chapter pacing/readability review remains human evidence, not CI"
+      ],
+      "evidence_boundary": "These gates cannot be closed by source, compile or headless automation."
     }
   },
   "development_mode": {
@@ -4118,7 +4104,7 @@
   "current_focus": {
     "production_lane": "W00_ARCHITECTURAL_STABILIZATION",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "No new gameplay feature, region runtime expansion or broad warehouse saturation until REQ-STABILITY-001 exact-head gates pass. Only root-cause repair, regression guards, source hygiene, validation and the later isolated Public/Private maintenance migration are in scope.",
+    "rule": "No new gameplay feature, region runtime expansion or broad warehouse saturation until REQ-STABILITY-001 exact-head gates pass. Continue root-cause repair, regression guards, persistence/transition closure, validation, and later isolated Public/Private migration only.",
     "character_visibility_bridge": "FIRST_PROVEN_RIGGED_HUMANOID_AND_ENEMY_STOCK_TO_P1C01_AFTER_ENGINE_GATE",
     "character_visibility_rule": "Warehouse growth must feed visible character progress: validate staged FBX rigs now, then import and replace proxies in Shire as soon as UE4.27 build/import is available.",
     "pre_runner_final_warehouse_batch": {

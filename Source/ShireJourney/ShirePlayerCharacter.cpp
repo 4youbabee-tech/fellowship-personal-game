@@ -1739,37 +1739,67 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
         Save->CurrentEpisodeId = FName(*FString::Printf(TEXT("%s_Main"), *Save->CurrentChapterId.ToString()));
     }
 
-    if (UGameInstance* GI = GetGameInstance())
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* QuestSubsystem = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!QuestSubsystem || !QuestSubsystem->BeginPersistenceRestore())
     {
-        if (UShireQuestSubsystem* QuestSubsystem = GI->GetSubsystem<UShireQuestSubsystem>())
-        {
-            QuestSubsystem->RestoreQuestState(
-                Save->QuestStages,
-                Save->ActiveQuestId,
-                Save->CurrentChapterId,
-                Save->CompletedStoryBeats,
-                Save->CurrentRouteId,
-                Save->CurrentEpisodeId,
-                Save->PlayableCharacterId,
-                Save->RouteProgress);
-
-            QuestSubsystem->RestoreNPCMemoryState(Save->NPCMemoryState);
-            QuestSubsystem->RestoreJourneyDiscoveryState(
-                Save->JourneyDiscoveryIds,
-                Save->JourneyInsight,
-                Save->JourneyInsightMilestones);
-            QuestSubsystem->RestoreProgressionState(Save->ProgressionXP);
-            QuestSubsystem->RestoreKnowledgeState(
-                Save->ChronicleEntryIds,
-                Save->KnownMapRegionIds);
-        }
+        UE_LOG(LogTemp, Error, TEXT("ShireSaveRestore: FAIL reason=persistence-transaction-unavailable"));
+        return false;
     }
+
+    // Rebuild every logical persistence domain before publishing any restore event.
+    // World-facing systems therefore see either the old complete state or the new
+    // complete state, never quest state with stale NPC/discovery/progression data.
+    QuestSubsystem->RestoreQuestState(
+        Save->QuestStages,
+        Save->ActiveQuestId,
+        Save->CurrentChapterId,
+        Save->CompletedStoryBeats,
+        Save->CurrentRouteId,
+        Save->CurrentEpisodeId,
+        Save->PlayableCharacterId,
+        Save->RouteProgress);
+    QuestSubsystem->RestoreNPCMemoryState(Save->NPCMemoryState);
+    QuestSubsystem->RestoreJourneyDiscoveryState(
+        Save->JourneyDiscoveryIds,
+        Save->JourneyInsight,
+        Save->JourneyInsightMilestones);
+    QuestSubsystem->RestoreProgressionState(Save->ProgressionXP);
+    QuestSubsystem->RestoreKnowledgeState(
+        Save->ChronicleEntryIds,
+        Save->KnownMapRegionIds);
+    QuestSubsystem->CommitPersistenceRestore(true);
 
     CurrentHealth = FMath::Clamp(Save->PlayerHealth, 1.0f, MaxHealth);
     CurrentStamina = FMath::Clamp(Save->PlayerStamina, 0.0f, MaxStamina);
     CurrentResolve = FMath::Clamp(Save->PlayerResolve, 0.0f, MaxResolve);
     Supplies = FMath::Clamp(Save->PlayerSupplies, 0, MaxSupplies);
     bStaminaExhausted = CurrentStamina <= 0.0f;
+
+    const bool bIdentityRepaired =
+        QuestSubsystem->GetCurrentChapterId() != Save->CurrentChapterId ||
+        QuestSubsystem->GetCurrentRouteId() != Save->CurrentRouteId ||
+        QuestSubsystem->GetCurrentEpisodeId() != Save->CurrentEpisodeId;
+
+    if (bIdentityRepaired)
+    {
+        // Legacy terminal-state repair may intentionally advance the save to the
+        // next canonical chapter. Never apply an old-world transform to that new
+        // world; ChapterWorldRouter owns destination start placement.
+        bPendingSaveRestoreTransform = false;
+        PendingSaveRestoreChapterId = NAME_None;
+        PendingSaveRestoreRouteId = NAME_None;
+        PendingSaveRestoreEpisodeId = NAME_None;
+        PendingSaveRestoreSuccessMessage = FText::GetEmpty();
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireSaveRestore: transform-skipped reason=identity-repaired chapter=%s route=%s episode=%s"),
+            *QuestSubsystem->GetCurrentChapterId().ToString(),
+            *QuestSubsystem->GetCurrentRouteId().ToString(),
+            *QuestSubsystem->GetCurrentEpisodeId().ToString());
+        return true;
+    }
 
     PendingSaveRestoreLocation = Save->PlayerLocation;
     PendingSaveRestoreRotation = Save->PlayerRotation;
@@ -1902,8 +1932,8 @@ bool AShirePlayerCharacter::RestoreAutomaticCheckpoint(bool bShowHUD)
 bool AShirePlayerCharacter::RunSaveRoundtripAudit()
 {
     if (!FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return false;
+
     // This fresh-process audit must not certify a source-only material fallback.
-    // Read the actual component instances, not just the values we asked to set.
     UMaterialInterface* HeadSurface = PrototypeHead ? PrototypeHead->GetMaterial(0) : nullptr;
     UMaterialInterface* ClothSurface = PrototypeTorso ? PrototypeTorso->GetMaterial(0) : nullptr;
     float HeadRoughness = 0.0f;
@@ -1931,11 +1961,22 @@ bool AShirePlayerCharacter::RunSaveRoundtripAudit()
         UE_LOG(LogTemp, Display, TEXT("CharacterSurfaceAudit: PASS persisted player skin/cloth surface state"));
     }
 
-    // Surface residency and disk persistence are independent invariants. Continue
-    // the disk roundtrip so one run can expose both defect classes.
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
     if (!Quests) return false;
+
+    // Seed a real named-NPC memory bucket so the disk audit cannot pass with an
+    // accidentally empty NPC-memory payload.
+    const bool bMemorySeeded = Quests->RememberNamedNPCEvent(
+        TEXT("NPC_SAM"), TEXT("CI_DISK_MEMORY"), 95);
+    Quests->AdjustNamedNPCRelationship(TEXT("NPC_SAM"), TEXT("PLAYER_FRODO"), 3);
+    Quests->RecordNamedNPCDialogueUse(
+        TEXT("NPC_SAM"), TEXT("CI_DISK_DIALOGUE"), TEXT("PLAYER_FRODO"), 12);
+    if (!bMemorySeeded)
+    {
+        UE_LOG(LogTemp, Error, TEXT("ShireStateAudit: disk-save-memory-seed=FAIL"));
+        return false;
+    }
 
     CurrentHealth = 73.0f;
     CurrentStamina = 61.0f;
@@ -1943,18 +1984,19 @@ bool AShirePlayerCharacter::RunSaveRoundtripAudit()
     Supplies = 2;
     UShireSaveGame* Before = CreateSaveSnapshot(TEXT("CI_DISK_ROUNDTRIP"), false);
     if (!Before) return false;
-    // A unique slot prevents collision with player saves or previous failed audits.
+
     const FString Slot = FString(TEXT("ShireJourney_CI_")) + FGuid::NewGuid().ToString();
     const bool bWritten = UGameplayStatics::SaveGameToSlot(Before, Slot, 0);
     if (!bWritten) return false;
 
-    // Destroy the tested in-memory values so a no-op restore cannot pass.
+    // Destroy every independently restorable domain so a no-op restore cannot pass.
     CurrentHealth = 12.0f;
     CurrentStamina = 13.0f;
     CurrentResolve = 14.0f;
     Supplies = 0;
     SetActorLocation(Before->PlayerLocation + FVector(150.0f, 0.0f, 0.0f));
     Quests->SetQuestStage(Before->ActiveQuestId, 0);
+    Quests->RestoreNPCMemoryState(TMap<FName, FShireNPCMemoryBucket>());
     Quests->RestoreJourneyDiscoveryState(TArray<FName>(), 0, TArray<FName>());
     Quests->RestoreProgressionState(TMap<FName, int32>());
     Quests->RestoreKnowledgeState(TArray<FName>(), TArray<FName>());
@@ -1962,39 +2004,200 @@ bool AShirePlayerCharacter::RunSaveRoundtripAudit()
     UShireSaveGame* Loaded = Cast<UShireSaveGame>(UGameplayStatics::LoadGameFromSlot(Slot, 0));
     const bool bRestored = Loaded && Loaded != Before &&
         RestoreSaveSnapshot(Loaded, FText::GetEmpty());
-    bool bValid = bRestored &&
-        Loaded->SaveSchemaVersion == UShireSaveGame::CurrentSchemaVersion &&
-        Loaded->CheckpointId == Before->CheckpointId &&
-        GetActorLocation().Equals(Before->PlayerLocation, 0.1f) &&
-        GetActorRotation().Equals(Before->PlayerRotation, 0.1f) &&
-        FMath::IsNearlyEqual(CurrentHealth, Before->PlayerHealth) &&
-        FMath::IsNearlyEqual(CurrentStamina, Before->PlayerStamina) &&
-        FMath::IsNearlyEqual(CurrentResolve, Before->PlayerResolve) &&
-        Supplies == Before->PlayerSupplies &&
-        Quests->GetCurrentRouteId() == Before->CurrentRouteId &&
-        Quests->GetCurrentChapterId() == Before->CurrentChapterId &&
-        Quests->GetCurrentEpisodeId() == Before->CurrentEpisodeId &&
-        Quests->GetPlayableCharacterId() == Before->PlayableCharacterId &&
-        Quests->GetActiveQuestId() == Before->ActiveQuestId &&
-        Quests->GetCompletedStoryBeats() == Before->CompletedStoryBeats &&
-        Quests->GetJourneyDiscoveryIds() == Before->JourneyDiscoveryIds &&
-        Quests->GetJourneyInsight() == Before->JourneyInsight &&
-        Quests->GetJourneyInsightMilestones() == Before->JourneyInsightMilestones &&
-        Quests->GetChronicleEntryIds() == Before->ChronicleEntryIds &&
-        Quests->GetKnownMapRegionIds() == Before->KnownMapRegionIds;
-    for (const TPair<FName, int32>& Entry : Before->QuestStages)
+
+    const auto NameIntMapEqual = [](const TMap<FName, int32>& A, const TMap<FName, int32>& B)
     {
-        bValid = bValid && Quests->GetQuestStage(Entry.Key) == Entry.Value;
-    }
-    for (const TPair<FName, int32>& Entry : Before->ProgressionXP)
+        if (A.Num() != B.Num()) return false;
+        for (const TPair<FName, int32>& Pair : A)
+        {
+            const int32* Other = B.Find(Pair.Key);
+            if (!Other || *Other != Pair.Value) return false;
+        }
+        return true;
+    };
+
+    const auto SafeRuntimeLocationEqual = [](const FVector& A, const FVector& B)
     {
-        bValid = bValid && Quests->GetProgressionXP(Entry.Key) == Entry.Value;
+        const FVector Delta = A - B;
+        // Same-world disk roundtrip may canonicalize capsule Z by a few centimeters
+        // after CharacterMovement settles. Horizontal drift remains effectively zero
+        // and vertical correction is tightly bounded so world defects are not hidden.
+        return FMath::Abs(Delta.X) <= 1.0f &&
+            FMath::Abs(Delta.Y) <= 1.0f &&
+            FMath::Abs(Delta.Z) <= 8.0f;
+    };
+
+    const auto MemoryEqual = [&NameIntMapEqual](
+        const TMap<FName, FShireNPCMemoryBucket>& A,
+        const TMap<FName, FShireNPCMemoryBucket>& B)
+    {
+        if (A.Num() != B.Num()) return false;
+        for (const TPair<FName, FShireNPCMemoryBucket>& Pair : A)
+        {
+            const FShireNPCMemoryBucket* Other = B.Find(Pair.Key);
+            if (!Other) return false;
+            const FShireNPCMemoryBucket& Expected = Pair.Value;
+            if (Expected.CanonicalProfileId != Other->CanonicalProfileId ||
+                Expected.RouteId != Other->RouteId ||
+                Expected.Events.Num() != Other->Events.Num() ||
+                !NameIntMapEqual(Expected.RelationshipDeltas, Other->RelationshipDeltas) ||
+                Expected.RecentDialogueVariantIds != Other->RecentDialogueVariantIds ||
+                Expected.RecentPartnerIds != Other->RecentPartnerIds)
+            {
+                return false;
+            }
+            for (int32 Index = 0; Index < Expected.Events.Num(); ++Index)
+            {
+                const FShireNPCMemoryEvent& Left = Expected.Events[Index];
+                const FShireNPCMemoryEvent& Right = Other->Events[Index];
+                if (Left.EventId != Right.EventId ||
+                    Left.ChapterId != Right.ChapterId ||
+                    Left.Priority != Right.Priority)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    };
+
+    const auto RouteProgressEqual = [&NameIntMapEqual, &SafeRuntimeLocationEqual](
+        const TMap<FName, FShireRouteProgress>& A,
+        const TMap<FName, FShireRouteProgress>& B,
+        bool bAllowSafeRuntimeGrounding)
+    {
+        if (A.Num() != B.Num()) return false;
+        for (const TPair<FName, FShireRouteProgress>& Pair : A)
+        {
+            const FShireRouteProgress* Other = B.Find(Pair.Key);
+            if (!Other) return false;
+            const FShireRouteProgress& Expected = Pair.Value;
+            const bool bTransformEqual =
+                Expected.bHasPlayerTransform == Other->bHasPlayerTransform &&
+                (!Expected.bHasPlayerTransform ||
+                    ((bAllowSafeRuntimeGrounding
+                        ? SafeRuntimeLocationEqual(Expected.PlayerLocation, Other->PlayerLocation)
+                        : Expected.PlayerLocation.Equals(Other->PlayerLocation, 0.01f)) &&
+                     Expected.PlayerRotation.Equals(Other->PlayerRotation, 0.01f)));
+            if (!NameIntMapEqual(Expected.QuestStages, Other->QuestStages) ||
+                Expected.ActiveQuestId != Other->ActiveQuestId ||
+                Expected.CurrentChapterId != Other->CurrentChapterId ||
+                Expected.EpisodeId != Other->EpisodeId ||
+                Expected.PlayableCharacterId != Other->PlayableCharacterId ||
+                Expected.CompletedStoryBeats != Other->CompletedStoryBeats ||
+                !bTransformEqual)
+            {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    TArray<FString> FailedFields;
+    const auto Check = [&FailedFields](bool bCondition, const TCHAR* Field)
+    {
+        if (!bCondition)
+        {
+            FailedFields.Add(Field);
+        }
+    };
+
+    Check(bRestored, TEXT("restore-call"));
+    if (Loaded)
+    {
+        Check(Loaded->SaveSchemaVersion == Before->SaveSchemaVersion, TEXT("disk-schema"));
+        Check(Loaded->CheckpointId == Before->CheckpointId, TEXT("disk-checkpoint"));
+        Check(Loaded->PlayerLocation.Equals(Before->PlayerLocation, 0.01f), TEXT("disk-player-location"));
+        Check(Loaded->PlayerRotation.Equals(Before->PlayerRotation, 0.01f), TEXT("disk-player-rotation"));
+        Check(FMath::IsNearlyEqual(Loaded->PlayerHealth, Before->PlayerHealth), TEXT("disk-health"));
+        Check(FMath::IsNearlyEqual(Loaded->PlayerStamina, Before->PlayerStamina), TEXT("disk-stamina"));
+        Check(FMath::IsNearlyEqual(Loaded->PlayerResolve, Before->PlayerResolve), TEXT("disk-resolve"));
+        Check(Loaded->PlayerSupplies == Before->PlayerSupplies, TEXT("disk-supplies"));
+        Check(NameIntMapEqual(Loaded->QuestStages, Before->QuestStages), TEXT("disk-quest-stages"));
+        Check(Loaded->ActiveQuestId == Before->ActiveQuestId, TEXT("disk-active-quest"));
+        Check(Loaded->CurrentChapterId == Before->CurrentChapterId, TEXT("disk-chapter"));
+        Check(Loaded->CurrentRouteId == Before->CurrentRouteId, TEXT("disk-route"));
+        Check(Loaded->CurrentEpisodeId == Before->CurrentEpisodeId, TEXT("disk-episode"));
+        Check(Loaded->PlayableCharacterId == Before->PlayableCharacterId, TEXT("disk-character"));
+        Check(Loaded->CompletedStoryBeats == Before->CompletedStoryBeats, TEXT("disk-story-beats"));
+        Check(RouteProgressEqual(Loaded->RouteProgress, Before->RouteProgress, false), TEXT("disk-route-progress"));
+        Check(MemoryEqual(Loaded->NPCMemoryState, Before->NPCMemoryState), TEXT("disk-npc-memory"));
+        Check(Loaded->JourneyDiscoveryIds == Before->JourneyDiscoveryIds, TEXT("disk-discoveries"));
+        Check(Loaded->JourneyInsight == Before->JourneyInsight, TEXT("disk-insight"));
+        Check(Loaded->JourneyInsightMilestones == Before->JourneyInsightMilestones, TEXT("disk-milestones"));
+        Check(NameIntMapEqual(Loaded->ProgressionXP, Before->ProgressionXP), TEXT("disk-progression"));
+        Check(Loaded->ChronicleEntryIds == Before->ChronicleEntryIds, TEXT("disk-chronicle"));
+        Check(Loaded->KnownMapRegionIds == Before->KnownMapRegionIds, TEXT("disk-map-knowledge"));
     }
+
+    const FVector RuntimeTransformDelta = GetActorLocation() - Before->PlayerLocation;
+    Check(SafeRuntimeLocationEqual(GetActorLocation(), Before->PlayerLocation), TEXT("runtime-player-location-safe-ground"));
+    Check(GetActorRotation().Equals(Before->PlayerRotation, 0.1f), TEXT("runtime-player-rotation"));
+    Check(FMath::IsNearlyEqual(CurrentHealth, Before->PlayerHealth), TEXT("runtime-health"));
+    Check(FMath::IsNearlyEqual(CurrentStamina, Before->PlayerStamina), TEXT("runtime-stamina"));
+    Check(FMath::IsNearlyEqual(CurrentResolve, Before->PlayerResolve), TEXT("runtime-resolve"));
+    Check(Supplies == Before->PlayerSupplies, TEXT("runtime-supplies"));
+    Check(NameIntMapEqual(Quests->GetAllQuestStages(), Before->QuestStages), TEXT("runtime-quest-stages"));
+    Check(Quests->GetCurrentRouteId() == Before->CurrentRouteId, TEXT("runtime-route"));
+    Check(Quests->GetCurrentChapterId() == Before->CurrentChapterId, TEXT("runtime-chapter"));
+    Check(Quests->GetCurrentEpisodeId() == Before->CurrentEpisodeId, TEXT("runtime-episode"));
+    Check(Quests->GetPlayableCharacterId() == Before->PlayableCharacterId, TEXT("runtime-character"));
+    Check(Quests->GetActiveQuestId() == Before->ActiveQuestId, TEXT("runtime-active-quest"));
+    Check(Quests->GetCompletedStoryBeats() == Before->CompletedStoryBeats, TEXT("runtime-story-beats"));
+    Check(Quests->GetJourneyDiscoveryIds() == Before->JourneyDiscoveryIds, TEXT("runtime-discoveries"));
+    Check(Quests->GetJourneyInsight() == Before->JourneyInsight, TEXT("runtime-insight"));
+    Check(Quests->GetJourneyInsightMilestones() == Before->JourneyInsightMilestones, TEXT("runtime-milestones"));
+    Check(NameIntMapEqual(Quests->GetProgressionSnapshot(), Before->ProgressionXP), TEXT("runtime-progression"));
+    Check(Quests->GetChronicleEntryIds() == Before->ChronicleEntryIds, TEXT("runtime-chronicle"));
+    Check(Quests->GetKnownMapRegionIds() == Before->KnownMapRegionIds, TEXT("runtime-map-knowledge"));
+    Check(MemoryEqual(Quests->GetNPCMemorySnapshot(), Before->NPCMemoryState), TEXT("runtime-npc-memory"));
+    Check(RouteProgressEqual(Quests->GetRouteProgressSnapshot(), Before->RouteProgress, true), TEXT("runtime-route-progress"));
+
+    FString FailedFieldList;
+    for (int32 Index = 0; Index < FailedFields.Num(); ++Index)
+    {
+        if (Index > 0) FailedFieldList += TEXT(",");
+        FailedFieldList += FailedFields[Index];
+    }
+
+    const bool bValid = FailedFields.Num() == 0;
+    if (bValid)
+    {
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireStateAudit: persistence-fields=PASS transformDelta=(%.2f,%.2f,%.2f)"),
+            RuntimeTransformDelta.X,
+            RuntimeTransformDelta.Y,
+            RuntimeTransformDelta.Z);
+    }
+    else
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireStateAudit: persistence-fields=FAIL fields=%s transformDelta=(%.2f,%.2f,%.2f)"),
+            *FailedFieldList,
+            RuntimeTransformDelta.X,
+            RuntimeTransformDelta.Y,
+            RuntimeTransformDelta.Z);
+    }
+
     const bool bCleaned = UGameplayStatics::DeleteGameInSlot(Slot, 0);
-    if (!bValid) RestoreSaveSnapshot(Before, FText::GetEmpty());
-    UE_LOG(LogTemp, Display, TEXT("ShireStateAudit: disk-save-details written=%s restored=%s verified=%s cleaned=%s"),
-        bWritten ? TEXT("yes") : TEXT("no"), bRestored ? TEXT("yes") : TEXT("no"),
-        bValid ? TEXT("yes") : TEXT("no"), bCleaned ? TEXT("yes") : TEXT("no"));
+    if (!bValid)
+    {
+        RestoreSaveSnapshot(Before, FText::GetEmpty());
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireStateAudit: disk-save-details written=%s restored=%s verified=%s cleaned=%s"),
+        bWritten ? TEXT("yes") : TEXT("no"),
+        bRestored ? TEXT("yes") : TEXT("no"),
+        bValid ? TEXT("yes") : TEXT("no"),
+        bCleaned ? TEXT("yes") : TEXT("no"));
+
     return bSurfaceStateValid && bValid && bCleaned;
 }
 

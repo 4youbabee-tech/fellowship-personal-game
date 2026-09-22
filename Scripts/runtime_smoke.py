@@ -29,6 +29,8 @@ def required_markers(chapter, mode):
                 "ShireStateAudit: discovery-core=PASS",
                 "ShireStateAudit: progression-core=PASS",
                 "ShireStateAudit: knowledge-core=PASS",
+                "ShirePersistenceRestore: COMMIT",
+                "ShireStateAudit: persistence-fields=PASS",
                 "ShireStateAudit: disk-save-roundtrip=PASS"]
     if chapter is None:
         return ["ShirePlayableStartup: GameMode ready",

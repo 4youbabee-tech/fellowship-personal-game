@@ -22,7 +22,92 @@ void UShireQuestSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     CurrentRouteId = TEXT("FrodoMain");
     CurrentEpisodeId = TEXT("P1C01_Main");
     PlayableCharacterId = TEXT("Frodo");
+    bPersistenceRestoreInProgress = false;
     StartQuest(TEXT("ShireArrival"), 0);
+}
+
+bool UShireQuestSubsystem::BeginPersistenceRestore()
+{
+    if (bPersistenceRestoreInProgress)
+    {
+        UE_LOG(LogTemp, Error, TEXT("ShirePersistenceRestore: BEGIN rejected reason=already-in-progress"));
+        return false;
+    }
+
+    PersistenceRestorePreviousChapterId = CurrentChapterId;
+    PersistenceRestorePreviousRouteId = CurrentRouteId;
+    PersistenceRestorePreviousEpisodeId = CurrentEpisodeId;
+    PersistenceRestorePreviousPlayableCharacterId = PlayableCharacterId;
+    PersistenceRestorePreviousActiveQuestId = ActiveQuestId;
+    bPersistenceRestoreInProgress = true;
+
+    UE_LOG(
+        LogTemp,
+        Verbose,
+        TEXT("ShirePersistenceRestore: BEGIN chapter=%s route=%s episode=%s"),
+        *CurrentChapterId.ToString(),
+        *CurrentRouteId.ToString(),
+        *CurrentEpisodeId.ToString());
+    return true;
+}
+
+void UShireQuestSubsystem::CommitPersistenceRestore(bool bBroadcastQuestStateRestored)
+{
+    if (!bPersistenceRestoreInProgress)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("ShirePersistenceRestore: COMMIT ignored reason=not-in-progress"));
+        return;
+    }
+
+    bPersistenceRestoreInProgress = false;
+
+    // Publish only after quest, route, NPC memory, discoveries, progression and
+    // knowledge have all been rebuilt. Consumers can never observe a half-restore.
+    OnExperienceChanged.Broadcast(CurrentRouteId, CurrentEpisodeId, PlayableCharacterId);
+    if (PersistenceRestorePreviousChapterId != CurrentChapterId)
+    {
+        OnChapterChanged.Broadcast(PersistenceRestorePreviousChapterId, CurrentChapterId);
+    }
+    OnActiveQuestChanged.Broadcast(ActiveQuestId);
+    for (const TPair<FName, int32>& Pair : QuestStages)
+    {
+        OnQuestStageChanged.Broadcast(Pair.Key, Pair.Value);
+    }
+    if (bBroadcastQuestStateRestored)
+    {
+        OnQuestStateRestored.Broadcast();
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShirePersistenceRestore: COMMIT chapter=%s route=%s episode=%s repairBroadcast=%s"),
+        *CurrentChapterId.ToString(),
+        *CurrentRouteId.ToString(),
+        *CurrentEpisodeId.ToString(),
+        bBroadcastQuestStateRestored ? TEXT("yes") : TEXT("no"));
+
+    PersistenceRestorePreviousChapterId = NAME_None;
+    PersistenceRestorePreviousRouteId = NAME_None;
+    PersistenceRestorePreviousEpisodeId = NAME_None;
+    PersistenceRestorePreviousPlayableCharacterId = NAME_None;
+    PersistenceRestorePreviousActiveQuestId = NAME_None;
+}
+
+void UShireQuestSubsystem::AbortPersistenceRestore()
+{
+    if (!bPersistenceRestoreInProgress)
+    {
+        return;
+    }
+
+    bPersistenceRestoreInProgress = false;
+    PersistenceRestorePreviousChapterId = NAME_None;
+    PersistenceRestorePreviousRouteId = NAME_None;
+    PersistenceRestorePreviousEpisodeId = NAME_None;
+    PersistenceRestorePreviousPlayableCharacterId = NAME_None;
+    PersistenceRestorePreviousActiveQuestId = NAME_None;
+    UE_LOG(LogTemp, Error, TEXT("ShirePersistenceRestore: ABORTED broadcasts-suppressed=yes"));
 }
 
 void UShireQuestSubsystem::AddQuestDefinition(FName QuestId, const FString& Title,
@@ -1542,15 +1627,18 @@ void UShireQuestSubsystem::RestoreQuestState(const TMap<FName, int32>& InStages,
         BuildQuestDefinitions();
     }
 
-    OnExperienceChanged.Broadcast(CurrentRouteId, CurrentEpisodeId, PlayableCharacterId);
-    OnChapterChanged.Broadcast(NAME_None, CurrentChapterId);
-    OnActiveQuestChanged.Broadcast(ActiveQuestId);
-    for (const TPair<FName, int32>& Pair : QuestStages)
+    if (!bPersistenceRestoreInProgress)
     {
-        OnQuestStageChanged.Broadcast(Pair.Key, Pair.Value);
-    }
+        OnExperienceChanged.Broadcast(CurrentRouteId, CurrentEpisodeId, PlayableCharacterId);
+        OnChapterChanged.Broadcast(NAME_None, CurrentChapterId);
+        OnActiveQuestChanged.Broadcast(ActiveQuestId);
+        for (const TPair<FName, int32>& Pair : QuestStages)
+        {
+            OnQuestStageChanged.Broadcast(Pair.Key, Pair.Value);
+        }
 
-    OnQuestStateRestored.Broadcast();
+        OnQuestStateRestored.Broadcast();
+    }
 }
 
 FName UShireQuestSubsystem::ResolveCanonicalNPCProfile(FName ProfileHint) const

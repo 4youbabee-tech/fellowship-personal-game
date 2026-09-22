@@ -3522,6 +3522,74 @@ if "PROP_MOTION" not in pg113_moria_allowed or "STORY_AFTERMATH" not in pg113_mo
 if int(pg111_targets.get("P1C06", -1)) != 0:
     fail("PG-113 Moria environmental-life wave may not introduce ambient civilians")
 
+# PG-129: persistence restore must be atomic and replay-safe across already-resident banks.
+pg129_quest_h = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
+pg129_quest = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
+pg129_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg129_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
+pg129_stream = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
+pg129_audio = read(ROOT / "Source" / "ShireJourney" / "ShireAudioSubsystem.cpp")
+pg129_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
+
+for pg129_symbol in [
+    "BeginPersistenceRestore",
+    "CommitPersistenceRestore",
+    "AbortPersistenceRestore",
+    "bPersistenceRestoreInProgress",
+]:
+    if pg129_symbol not in (pg129_quest_h + pg129_quest):
+        fail(f"PG-129 atomic persistence transaction missing: {pg129_symbol}")
+
+restore_start = pg129_player.find("bool AShirePlayerCharacter::RestoreSaveSnapshot")
+restore_end = pg129_player.find("bool AShirePlayerCharacter::SaveAutomaticCheckpoint", restore_start)
+restore_body = pg129_player[restore_start:restore_end] if restore_start >= 0 and restore_end >= 0 else ""
+begin_index = restore_body.find("BeginPersistenceRestore")
+memory_index = restore_body.find("RestoreNPCMemoryState")
+knowledge_index = restore_body.find("RestoreKnowledgeState")
+commit_index = restore_body.find("CommitPersistenceRestore")
+if min(begin_index, memory_index, knowledge_index, commit_index) < 0 or not (begin_index < memory_index < knowledge_index < commit_index):
+    fail("PG-129 save restore must publish only after all logical persistence domains are rebuilt")
+if "transform-skipped reason=identity-repaired" not in restore_body:
+    fail("PG-129 repaired save identity must not apply an old-world transform")
+
+rollback_start = pg129_router.find("bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot")
+rollback_end = pg129_router.find("void AChapterWorldRouter::RollbackFailedWorldSwap", rollback_start)
+rollback_body = pg129_router[rollback_start:rollback_end] if rollback_start >= 0 and rollback_end >= 0 else ""
+for pg129_symbol in [
+    "BeginPersistenceRestore",
+    "AbortPersistenceRestore",
+    "CommitPersistenceRestore(false)",
+]:
+    if pg129_symbol not in rollback_body:
+        fail(f"PG-129 rollback persistence transaction missing: {pg129_symbol}")
+if "LastLoadedChapterId = NAME_None;" not in rollback_body:
+    fail("PG-129 failed rollback must invalidate committed-world identity")
+
+for pg129_marker in [
+    "ShirePersistenceRestore: COMMIT",
+    "ShireStateAudit: persistence-fields=PASS",
+]:
+    if pg129_marker not in pg129_runtime:
+        fail(f"PG-129 runtime persistence regression marker missing: {pg129_marker}")
+
+for pg129_symbol in [
+    "disk-npc-memory",
+    "runtime-npc-memory",
+    "disk-route-progress",
+    "runtime-route-progress",
+    "runtime-player-location-safe-ground",
+]:
+    if pg129_symbol not in pg129_player:
+        fail(f"PG-129 disk persistence field coverage missing: {pg129_symbol}")
+
+if "committed already-resident chapter=%s route=%s" not in pg129_stream:
+    fail("PG-129 already-resident chapter bank must commit without false rollback")
+if "IsChapterBankReady(ChapterId, RouteId)" not in pg129_stream:
+    fail("PG-129 resident-bank replay guard missing")
+
+if "if (!PendingAudioLoads.Contains(LoadKey))" not in pg129_audio:
+    fail("PG-129 cancelled async audio callback can still resurrect stale playback")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     sys.exit(1)

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "ARCHITECTURAL_STABILIZATION_SOURCE_HEAD_PENDING_EXACT_HEAD_ENGINE_PROOF",
+  "audited_head": "38c2c958121576b68a0bfaf4e276498d4fe89dad_ENGINE_594_REVIEW_PLUS_NEXT_SOURCE_WAVE_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -30,8 +30,8 @@
       "severity": "CRITICAL",
       "status": "SOURCE_REPAIR_IMPLEMENTED_PENDING_FULL_EXACT_HEAD_WARNING_GATE",
       "title": "World material persistence is unreliable",
-      "evidence": "Importer now synthesizes project-owned master/MTL materials, explicitly saves tracked material packages pre/post mesh import, verifies every tracked material package exists on disk, and fails import if persistence is missing. Build #547 production import succeeded, but the full warning-debt/material gate was not reached because the old chapter harness stopped at P1C05.",
-      "action": "Fresh exact-head run must complete all chapter audits, then execute the warning-debt/material-persistence gate. Do not add another material recovery path unless that evidence identifies a concrete remaining package."
+      "evidence": "Unreal #594 on 38c2c958121576b68a0bfaf4e276498d4fe89dad passed UE4.27.2 C++ build, deterministic production import, Automation, startup and P1C01-P1C08. M_ProductionSurface was resident and CharacterSurfaceAudit passed. The workflow then failed in the persistence state gate, so the final warning-debt/material-persistence step remained skipped.",
+      "action": "Complete the persistence repair on a fresh exact head, then require the warning-debt/material-persistence gate to execute. Do not add another material recovery path unless that gate identifies a concrete package defect."
     },
     {
       "id": "AUDIT-HIGH-002",
@@ -116,18 +116,18 @@
     {
       "id": "AUDIT-HIGH-012",
       "severity": "HIGH",
-      "status": "SYSTEMIC_SOURCE_FIX_IMPLEMENTED_PENDING_ALL_CHAPTER_SWEEP",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_PENDING_PIE_DEVICE_CONFIRMATION",
       "title": "Chapter spawn coordinates could drift onto collision seams",
-      "evidence": "Build #547 passed P1C01-P1C04 then P1C05 failed no-blocking-ground at (-2400,0,130). The failure came from an authored spawn falling between adjacent collision surfaces. Earlier fixes used hidden per-chapter support pads.",
-      "action": "Router now owns a bounded nearby-ground search with slope rejection and capsule-clearance validation. P1C01/P1C05 hidden RuntimeSpawnFoundation pads were removed and static validation forbids their return. Prove all P1C01-P1C08 starts in one exact-head sweep."
+      "evidence": "Unreal #594 on 38c2c958121576b68a0bfaf4e276498d4fe89dad executed the aggregate P1C01-P1C08 chapter sweep with attempted=8 expected=8 failed=[]; the former P1C05 no-blocking-ground symptom did not recur.",
+      "action": "Keep the shared bounded grounding invariant and no-support-pad guard. Later confirm the original traversal symptom in rendered PIE/device review before final visual/traversal acceptance."
     },
     {
       "id": "AUDIT-HIGH-013",
       "severity": "HIGH",
-      "status": "QA_ARCHITECTURE_FIXED_PENDING_EXACT_HEAD_EXECUTION",
+      "status": "EXACT_HEAD_AGGREGATE_SWEEP_PROVEN",
       "title": "Chapter runtime CI hid later failures by stopping at the first red chapter",
-      "evidence": "Build #547 stopped at P1C05, so P1C06-P1C08 were never exercised on that head. runtime_smoke.py previously broke the chapter loop on first failure.",
-      "action": "Chapter mode now attempts all eight chapters, records every failure, emits RUNTIME_SWEEP_SUMMARY, and fails only after the full sweep. This reduces serial debug loops without running multiple UE instances in parallel on the 8 GB target."
+      "evidence": "Unreal #594 completed all eight chapter audits in one run and emitted RUNTIME_SWEEP_SUMMARY with failed=[].",
+      "action": "Preserve the non-fail-fast aggregate sweep as a permanent regression guard."
     },
     {
       "id": "AUDIT-MED-014",
@@ -136,6 +136,30 @@
       "title": "Legacy texture format and duplicate OBJ face vertices created avoidable import debt",
       "evidence": "The source bank contained 24 BMP textures and seven OBJ files with 304 total triangulation-risk faces caused by consecutive duplicate-position face vertices. Those defects corresponded with large UE import tangent/binormal warning volume.",
       "action": "All 24 BMP files are migrated to TGA with MTL references updated; BMP is now rejected. Duplicate face vertices were removed from all seven known source meshes and triangulation-risk faces are now strict asset-audit errors. Re-run import and warning debt on exact head."
+    },
+    {
+      "id": "AUDIT-HIGH-015",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_STATE_PROOF",
+      "title": "Save restore published quest identity before all persistent domains were rebuilt",
+      "evidence": "RestoreSaveSnapshot called RestoreQuestState first; that method immediately broadcast route/chapter/quest events before NPC memory, discoveries, progression and map/chronicle knowledge were restored. Unreal #594 also showed disk write/load/restore succeeded but final verification failed without field-level diagnostics.",
+      "action": "Use BeginPersistenceRestore/CommitPersistenceRestore so all logical domains rebuild before one publication boundary; rollback publishes only after old geometry/player placement is rebuilt. State CI now reports exact failed persistence fields and seeds real NPC memory."
+    },
+    {
+      "id": "AUDIT-HIGH-016",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_TRANSITION_PROOF",
+      "title": "Already-resident chapter bank could cause a false asset-commit failure",
+      "evidence": "RequestChapterAssets returns OnChapterAssetsReady immediately for an already-resident chapter/route after cancelling pending state, but CommitPendingRequest previously required matching PendingChapterId/PendingRouteId. Same-bank episode/save transitions could therefore roll back despite valid residency.",
+      "action": "CommitPendingRequest now accepts an already-resident matching bank and republishes the residency-commit signal. Add exact-head same-bank transition coverage."
+    },
+    {
+      "id": "AUDIT-HIGH-017",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_AUDIO_RUNTIME_PROOF",
+      "title": "Cancelled asynchronous audio callbacks could still execute stale playback",
+      "evidence": "CancelPendingAudioCategory removed/cancelled handles, but HandleAsyncAudioReady did not verify that LoadKey was still owned before resolving/playing the completed request.",
+      "action": "Late callbacks now return unless PendingAudioLoads still owns LoadKey. Keep audio runtime acceptance separate because CI currently runs with -NoSound."
     }
   ],
   "external_practice_alignment": [
@@ -161,28 +185,17 @@
     }
   ],
   "next_audit_waves": [
-    "close untextured OBJ tangent/binormal debt to zero",
-    "material/import exact-head green",
-    "save/load failure and corruption recovery",
-    "central NPC social/banter registry cost",
-    "chapter-transition loading hitch measurement",
-    "shipping input/debug surface",
-    "quest soft-lock fuzzing",
-    "combat readability/story-lock edge cases",
-    "target-device CPU/GPU/frame-time/memory",
-    "human pacing/visual/readability per chapter",
-    "ambient spawn/destroy/GC trace before pooling decision",
-    "V5 exact-head engine proof plus representative target-device chapter-transition hitch/streaming-pool/resident-memory measurement before performance promotion",
-    "committed-world NPC context synchronization regression: old visible world must never read destination regional mood/film context during async transition",
-    "character-rig residency/eviction measurement across multi-chapter traversal on the ~2 GB VRAM target",
-    "remaining runtime LoadObject burn-down in player/named-character and chapter-builder production paths",
-    "forced slow async transition: assert committed NPC context remains old-world until OnWorldCommitted and new dialogue is suppressed during mismatch",
-    "multi-character rig churn: prove completed streamable handles do not pin inactive skeletal/AnimBP packages",
-    "global runtime scan: reject any non-/Engine/BasicShapes synchronous LoadObject reintroduction",
-    "all-eight chapter sweep after seam-tolerant grounding; no fail-fast",
-    "post-import warning-debt check after BMP->TGA and duplicate-face cleanup",
-    "missing skeletal-rig fallback must produce no engine missing-package async errors",
+    "fresh exact-head persistence transaction + detailed field audit",
+    "continuous same-bank episode/save transition replay without false asset rollback",
+    "forced slow async transition: old-world NPC/LivingWorld context remains committed until OnWorldCommitted",
+    "warning-debt/material persistence gate after state chain is green",
+    "save/load failure, corrupted/legacy save and identity-repair recovery",
+    "target-device chapter-transition hitch, resident-memory, GC and frame-time measurement",
+    "audio residency/playback test without -NoSound",
+    "central NPC social/banter registry cost only if profiling proves actor iteration material",
+    "quest soft-lock fuzzing and combat/story-lock edge cases",
+    "human core-loop, first-five-minutes onboarding, pacing/readability and visual review",
     "dedicated Public/Private source migration after stabilization exact-head green"
   ],
-  "audit_scope_note": "Root-cause hardening after Unreal Build #547 is source-reviewed and guarded, but exact-head UE4.27 compile/runtime evidence is still required before closure."
+  "audit_scope_note": "Unreal #594 proves compile/import/Automation/startup/all-eight headless chapter coverage for 38c2c958121576b68a0bfaf4e276498d4fe89dad and proves the production-surface fix. Persistence still failed on that SHA. The subsequent persistence/resident-bank/audio fixes are source-level until a new exact-head run passes."
 }

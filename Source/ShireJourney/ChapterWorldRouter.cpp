@@ -802,6 +802,13 @@ bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot(
 
     bRollbackInProgress = true;
 
+    if (!Quests->BeginPersistenceRestore())
+    {
+        bRollbackInProgress = false;
+        UE_LOG(LogTemp, Error, TEXT("ShireWorldCommit: rollback-failed reason=persistence-transaction-busy"));
+        return false;
+    }
+
     Quests->RestoreNPCMemoryState(Snapshot->NPCMemoryState);
     Quests->RestoreJourneyDiscoveryState(
         Snapshot->JourneyDiscoveryIds,
@@ -852,6 +859,10 @@ bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot(
 
     if (!RestoredWorld || !bPlaced)
     {
+        Quests->AbortPersistenceRestore();
+        LastLoadedChapterId = NAME_None;
+        LastLoadedRouteId = NAME_None;
+        LastLoadedEpisodeId = NAME_None;
         bRollbackInProgress = false;
         UE_LOG(
             LogTemp,
@@ -883,6 +894,11 @@ bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot(
     }
     CaptureCommittedRollbackSnapshot();
     bRollbackInProgress = false;
+
+    // Rollback snapshots are already canonical committed state. Publish the complete
+    // logical snapshot only after its geometry/player placement has been restored;
+    // do not run legacy save-repair rules during rollback.
+    Quests->CommitPersistenceRestore(false);
 
     UE_LOG(
         LogTemp,

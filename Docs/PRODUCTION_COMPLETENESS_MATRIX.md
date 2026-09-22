@@ -1,3 +1,9 @@
+## 2026-09-23 - W00 persistence transaction and replay-safe async ownership
+
+Exact-head evidence entering this wave is Unreal #594 on `38c2c958121576b68a0bfaf4e276498d4fe89dad`: C++ build PASS, production import PASS, Automation PASS, startup PASS, P1C01-P1C08 aggregate sweep PASS, production character surface PASS, state persistence FAIL with write/load/restore successful but final field verification false.
+
+The repair does not advance production completeness. It adds atomic logical save restore, rollback publication after world reconstruction, fail-closed rollback identity invalidation, detailed disk/runtime field diagnostics including NPC memory and route progress, safe-ground transform semantics, already-resident chapter-bank commit support, and cancelled-audio callback ownership checks. W00 remains open until a fresh exact head passes persistence, continuous transitions and the warning/material chain; target-device performance and human play acceptance remain separate gates.
+
 ## 2026-09-23 - W00 exact-head #593 diagnosis and systemic source repair
 
 PR #67 head `5840863632d04a5fac284b472fe9e5641cd522b8`: Pre-Unreal #758 PASS, Warehouse #172 PASS; Unreal #593 passed UE4.27.2 C++ compile, deterministic import, Automation 2/2, startup and P1C01-P1C08 aggregate runtime, then failed the state gate at the player production-surface residency audit. This is defect-specific engine evidence for that SHA, not acceptance of the new repair head.

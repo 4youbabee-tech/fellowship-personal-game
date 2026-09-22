@@ -113,6 +113,8 @@ class RuntimeSmokeTests(unittest.TestCase):
             "ShireStateAudit: discovery-core=PASS",
             "ShireStateAudit: progression-core=PASS",
             "ShireStateAudit: knowledge-core=PASS",
+            "ShirePersistenceRestore: COMMIT",
+            "ShireStateAudit: persistence-fields=PASS",
             "ShireStateAudit: disk-save-roundtrip=PASS",
         ])
 
