@@ -1,3 +1,7 @@
+## 2026-09-22 - stabilization static-gate self-correction
+
+Pre-Unreal #747 correctly rejected the stabilization head because the new PG-121 contract required a `RUNTIME_SWEEP_SUMMARY` marker, while `runtime_smoke.py` had already removed fail-fast behavior but had not actually emitted the aggregate marker. The harness now emits attempted/expected/failed chapter summary after completing the sequential sweep. This is a QA-contract repair only; no engine/runtime maturity is promoted until the new exact head passes the full gate.
+
 ## 2026-09-22 - architectural stabilization freeze / root-cause hardening
 
 Owner direction is now explicit: **do not continue feature expansion by patching individual symptoms**. The project is in `W00_ARCHITECTURAL_STABILIZATION`; validation builds are required evidence, but new gameplay/region/warehouse expansion is frozen until the stabilization gate is green.
