@@ -1,3 +1,9 @@
+## 2026-09-22 - final pre-runner warehouse saturation batch
+
+One final source-safe warehouse expansion is committed before runner repair becomes the active priority. Three official KayKit public-GitHub packs were source-checked as CC0 and added to the non-interactive staging lane: Restaurant Bits for food/kitchen/interior support, Halloween Bits for selectively filtered cemetery/crypt/dark-region props, and City Builder Bits only as a manually filtered source of period-neutral civic props. Their FBX/GLTF/OBJ source presence does not override the project rule that animated final characters are skeletal FBX and production textures are PNG/TGA/channel-packed.
+
+This commit authorizes staging only. Until Warehouse Stage emits actual receipts, these additions are not claimed STAGED. After receipt/audit, broad warehouse expansion pauses and W00 runner/Engine Content ACL repair becomes the next active production priority.
+
 ## 2026-09-22 - whole-game completion wave map
 
 A durable finish map is now registered in `Data/CompletionWaveMapV1.json`. It treats the current whole-game planning position as approximately 40/100 and organizes the remaining 60 planning points into 12 production waves (W00-W11), from runner/exact-head unlock through Shire visible skeletal-character conversion, Part I production/acceptance, Part II/III runtime+production, and final trilogy integration.
