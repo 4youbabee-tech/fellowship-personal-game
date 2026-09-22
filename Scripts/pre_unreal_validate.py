@@ -2539,7 +2539,7 @@ if '#include "Engine/AtmosphericFog.h"' in shire_world_for_headers:
 # Raw binary blobs under an LFS-tracked extension make checkout report "should have been
 # pointers, but weren't" and make the self-hosted workspace nondeterministic.
 production_root = ROOT / "SourceAssets" / "Production"
-lfs_extensions = {".uasset", ".umap", ".fbx", ".wav", ".png", ".tga", ".exr"}
+lfs_extensions = {".uasset", ".umap", ".fbx", ".wav", ".png", ".exr"}
 if production_root.exists():
     for asset_path in production_root.rglob("*"):
         if asset_path.is_file() and asset_path.suffix.lower() in lfs_extensions:
@@ -2548,6 +2548,17 @@ if production_root.exists():
                     "PG-017: LFS-tracked production asset is committed as a raw blob: "
                     + str(asset_path.relative_to(ROOT))
                 )
+
+# Small TGA source textures are intentionally stored as regular Git blobs so the
+# source bank remains self-contained without a hidden LFS object dependency. Large
+# texture payloads must use PNG/LFS or be reduced/channel-packed before admission.
+raw_tga_limit_bytes = 512 * 1024
+for tga_path in production_root.rglob("*.tga"):
+    if tga_path.stat().st_size > raw_tga_limit_bytes:
+        fail(
+            "PG-017: raw TGA exceeds 512 KiB source cap; reduce/channel-pack or use PNG/LFS: "
+            + str(tga_path.relative_to(ROOT))
+        )
 
 # PG-013: UE4.27 UAssetImportTask does not expose bAsync. Keep the production
 # import commandlet on the UE4.27-compatible task API so the real editor build
