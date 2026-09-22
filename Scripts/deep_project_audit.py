@@ -63,6 +63,8 @@ for symbol in ["IsLogicalWorldContextCommitted()", "GetContextChapterId()", "Get
   errors.append(f"NPC committed-context query missing: {symbol}")
 if "OnCharacterRigReady.Broadcast(CharacterId);" not in streaming_cpp or "Rig->Handle.Reset();" not in streaming_cpp:
  errors.append("character rig completion must release streamable handle after actor-owned handoff")
+if "FPackageName::DoesPackageExist" not in streaming_cpp or "bAvailabilityChecked" not in streaming_h:
+ errors.append("character rig request must preflight package existence before RequestAsyncLoad")
 if "LoadObject<USoundBase>" in audio:
  errors.append("audio subsystem must not synchronously LoadObject production sound")
 for builder_name in [
