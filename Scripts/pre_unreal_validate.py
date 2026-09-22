@@ -5576,3 +5576,8 @@ if errors:
     sys.exit(1)
 
 print("PRE-UNREAL VALIDATION PASSED")
+
+# PG-127: generated/edited C++ source must not contain escaped newline artifacts.
+for escaped_newline in ("\\\\n", "\\\\r\\\\n"):
+    if escaped_newline in production_import_cpp:
+        fail("PG-127 production importer contains literal escaped newline text in C++ source")
