@@ -1,3 +1,9 @@
+## 2026-09-23 - W00 exact-head #593 diagnosis and systemic source repair
+
+PR #67 head `5840863632d04a5fac284b472fe9e5641cd522b8`: Pre-Unreal #758 PASS, Warehouse #172 PASS; Unreal #593 passed UE4.27.2 C++ compile, deterministic import, Automation 2/2, startup and P1C01-P1C08 aggregate runtime, then failed the state gate at the player production-surface residency audit. This is defect-specific engine evidence for that SHA, not acceptance of the new repair head.
+
+The repair is systemic: post-residency chapter-bank commit notification, committed-world-gated state/save audit, non-masking surface+disk audit, movement release only after committed-world broadcast, bounded async audio ownership with weak caches, and fail-closed PG-127/PG-128 guards. Whole-game planning remains approximately 40/100 and no completion wave is advanced by this cleanup.
+
 ## 2026-09-23 - W00 systemic hardening status
 
 Current whole-game planning completion remains approximately 40/100. The active work is not a new feature wave; it is W00 architecture/build hardening so later waves do not inherit recurring defects. Unreal Build #588 reached C++ compilation and exposed a single importer-source text artifact, now repaired at source and guarded by Pre-Unreal. Production maturity does not advance until fresh exact-head engine proof succeeds.

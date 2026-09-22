@@ -1,7 +1,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/StreamableManager.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+#include "UObject/SoftObjectPath.h"
 #include "ShireAudioSubsystem.generated.h"
 
 class UAudioComponent;
@@ -72,22 +74,32 @@ private:
     UPROPERTY(Transient)
     UAudioComponent* ActiveMusicComponent = nullptr;
 
-    UPROPERTY(Transient)
-    TMap<FName, USoundBase*> VoiceCache;
+    // Weak caches do not pin every sound for the GameInstance lifetime. The active
+    // audio component owns a playing sound; streamable handles own only in-flight loads.
+    TMap<FName, TWeakObjectPtr<USoundBase>> VoiceCache;
+    TMap<FName, TWeakObjectPtr<USoundBase>> AmbienceCache;
+    TMap<FName, TWeakObjectPtr<USoundBase>> MusicCache;
+    TMap<FName, TWeakObjectPtr<USoundBase>> SfxCache;
 
-    UPROPERTY(Transient)
-    TMap<FName, USoundBase*> AmbienceCache;
-
-    UPROPERTY(Transient)
-    TMap<FName, USoundBase*> MusicCache;
-
-    UPROPERTY(Transient)
-    TMap<FName, USoundBase*> SfxCache;
-
+    FStreamableManager StreamableManager;
+    TMap<FName, TSharedPtr<FStreamableHandle>> PendingAudioLoads;
+    FName PendingVoiceCue = NAME_None;
     bool bVoiceActive = false;
 
     USoundBase* ResolveVoiceAsset(FName CueId);
-    USoundBase* ResolveCategorizedAsset(FName CueId, const TCHAR* FolderPrefix, TMap<FName, USoundBase*>& Cache);
+    USoundBase* ResolveCategorizedAsset(
+        FName CueId,
+        const TCHAR* FolderPrefix,
+        TMap<FName, TWeakObjectPtr<USoundBase>>& Cache,
+        FName Category);
+    void RequestAudioAssetAsync(FName Category, FName CueId, const FSoftObjectPath& AssetPath);
+    void HandleAsyncAudioReady(
+        FName Category,
+        FName CueId,
+        FSoftObjectPath AssetPath,
+        FName LoadKey);
+    void CancelPendingAudioCategory(FName Category);
+    void StartVoicePlayback(FName CueId, USoundBase* Sound);
     void ApplyMusicDuck(bool bDuck);
     AActor* ResolveVoiceSpeakerActor(FName CueId) const;
 

@@ -113,6 +113,7 @@ protected:
     void HandleChapterChanged(FName PreviousChapterId, FName NewChapterId);
 
     void HandleProductionRigReady(FName CharacterId);
+    void HandleChapterAssetsCommitted(FName ChapterId, FName RouteId);
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
     USpringArmComponent* CameraBoom;

@@ -488,7 +488,6 @@ bool AChapterWorldRouter::MovePlayerToChapterStart(FName ChapterId, bool bRestor
         }
     }
 
-    SetPlayerWorldHold(false);
     UE_LOG(
         LogTemp,
         Display,
@@ -883,7 +882,6 @@ bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot(
         }
     }
     CaptureCommittedRollbackSnapshot();
-    SetPlayerWorldHold(false);
     bRollbackInProgress = false;
 
     UE_LOG(
@@ -897,6 +895,7 @@ bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot(
         WorldRevision);
 
     OnWorldCommitted.Broadcast(WorldRevision);
+    SetPlayerWorldHold(false);
     return true;
 }
 
@@ -1064,5 +1063,6 @@ void AChapterWorldRouter::CommitChapterWorld(
         WorldRevision);
 
     OnWorldCommitted.Broadcast(WorldRevision);
+    SetPlayerWorldHold(false);
 }
 

@@ -5569,6 +5569,76 @@ if "--mode transitions" not in pg124_state_cmd:
 if "test_separate_chapter_success_does_not_prove_continuous_transitions" not in pg124_runtime_tests:
     fail("PG-124 unit regression for continuous transition evidence missing")
 
+# PG-127: generated/edited C++ source must not contain escaped newline artifacts.
+for escaped_newline in ("\\\\n", "\\r\\n"):
+    if escaped_newline in production_import_cpp:
+        fail("PG-127 production importer contains literal escaped newline text in C++ source")
+
+# PG-128: W00 commit-bound residency, movement and audio invariants.
+pg128_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+pg128_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg128_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg128_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
+pg128_stream_h = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.h")
+pg128_stream = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
+pg128_audio_h = read(ROOT / "Source" / "ShireJourney" / "ShireAudioSubsystem.h")
+pg128_audio = read(ROOT / "Source" / "ShireJourney" / "ShireAudioSubsystem.cpp")
+
+for pg128_symbol in [
+    "OnChapterAssetsCommitted",
+    "HandleChapterAssetsCommitted",
+]:
+    if pg128_symbol not in (pg128_player_h + pg128_player + pg128_stream_h + pg128_stream):
+        fail(f"PG-128 committed-residency surface contract missing: {pg128_symbol}")
+
+if "OnChapterAssetsCommitted.Broadcast(ChapterId, RouteId);" not in pg128_stream:
+    fail("PG-128 chapter bank does not publish post-residency commit")
+
+if "reason=world-commit-timeout" not in pg128_game_mode or "IsWorldCommitted(" not in pg128_game_mode:
+    fail("PG-128 state/save audit must wait for committed world")
+
+surface_fail = pg128_player.find("CharacterSurfaceAudit: FAIL")
+surface_disk = pg128_player.find("UGameInstance* GI = GetGameInstance();", surface_fail)
+if surface_fail < 0 or surface_disk < 0:
+    fail("PG-128 character surface/disk audit structure missing")
+elif "return false;" in pg128_player[surface_fail:surface_disk]:
+    fail("PG-128 surface audit may not mask the independent disk-save roundtrip")
+
+move_start = pg128_router.find("bool AChapterWorldRouter::MovePlayerToChapterStart")
+move_end = pg128_router.find("void AChapterWorldRouter::VerifyPlayerGroundingStability", move_start)
+if move_start < 0 or move_end < 0:
+    fail("PG-128 cannot inspect chapter-start movement hold")
+elif "SetPlayerWorldHold(false);" in pg128_router[move_start:move_end]:
+    fail("PG-128 movement may not unlock before world/context commit")
+
+commit_start = pg128_router.find("void AChapterWorldRouter::CommitChapterWorld")
+commit_body = pg128_router[commit_start:] if commit_start >= 0 else ""
+commit_broadcast = commit_body.find("OnWorldCommitted.Broadcast(WorldRevision);")
+commit_release = commit_body.find("SetPlayerWorldHold(false);", commit_broadcast)
+if commit_broadcast < 0 or commit_release < 0 or commit_release < commit_broadcast:
+    fail("PG-128 normal world commit must broadcast before movement release")
+
+rollback_start = pg128_router.find("bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot")
+rollback_end = pg128_router.find("void AChapterWorldRouter::RollbackFailedWorldSwap", rollback_start)
+rollback_body = pg128_router[rollback_start:rollback_end] if rollback_start >= 0 and rollback_end >= 0 else ""
+rollback_broadcast = rollback_body.find("OnWorldCommitted.Broadcast(WorldRevision);")
+rollback_release = rollback_body.find("SetPlayerWorldHold(false);", rollback_broadcast)
+if rollback_broadcast < 0 or rollback_release < 0 or rollback_release < rollback_broadcast:
+    fail("PG-128 rollback commit must broadcast restored context before movement release")
+
+for pg128_symbol in [
+    "FStreamableManager",
+    "RequestAsyncLoad",
+    "PendingAudioLoads",
+    "TWeakObjectPtr<USoundBase>",
+    "HandleAsyncAudioReady",
+    "CancelPendingAudioCategory",
+]:
+    if pg128_symbol not in (pg128_audio_h + pg128_audio):
+        fail(f"PG-128 bounded async audio ownership missing: {pg128_symbol}")
+if "LoadObject<USoundBase>" in pg128_audio:
+    fail("PG-128 synchronous production audio loading is forbidden")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
@@ -5576,8 +5646,3 @@ if errors:
     sys.exit(1)
 
 print("PRE-UNREAL VALIDATION PASSED")
-
-# PG-127: generated/edited C++ source must not contain escaped newline artifacts.
-for escaped_newline in ("\\\\n", "\\\\r\\\\n"):
-    if escaped_newline in production_import_cpp:
-        fail("PG-127 production importer contains literal escaped newline text in C++ source")

@@ -20,6 +20,11 @@ namespace ShireAudioAssetPaths
     static const TCHAR* Ambience = TEXT("/Game/Audio/Ambience/");
     static const TCHAR* Music = TEXT("/Game/Audio/Music/");
     static const TCHAR* SFX = TEXT("/Game/Audio/SFX/");
+
+    static const FName AmbienceCategory(TEXT("Ambience"));
+    static const FName MusicCategory(TEXT("Music"));
+    static const FName SfxCategory(TEXT("SFX"));
+    static const FName VoiceCategory(TEXT("Voice"));
 }
 
 
@@ -31,6 +36,8 @@ void UShireAudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
     ActiveAmbienceCue = NAME_None;
     ActiveMusicCue = NAME_None;
+    PendingVoiceCue = NAME_None;
+    PendingAudioLoads.Empty();
 
     if (UGameInstance* GI = GetGameInstance())
     {
@@ -65,6 +72,16 @@ void UShireAudioSubsystem::Deinitialize()
         }
     }
 
+    for (TPair<FName, TSharedPtr<FStreamableHandle>>& Pair : PendingAudioLoads)
+    {
+        if (Pair.Value.IsValid())
+        {
+            Pair.Value->CancelHandle();
+        }
+    }
+    PendingAudioLoads.Empty();
+    PendingVoiceCue = NAME_None;
+
     if (ActiveVoiceComponent)
     {
         ActiveVoiceComponent->OnAudioFinished.RemoveDynamic(this, &UShireAudioSubsystem::HandleVoiceFinished);
@@ -83,41 +100,166 @@ void UShireAudioSubsystem::Deinitialize()
 USoundBase* UShireAudioSubsystem::ResolveCategorizedAsset(
     FName CueId,
     const TCHAR* FolderPrefix,
-    TMap<FName, USoundBase*>& Cache)
+    TMap<FName, TWeakObjectPtr<USoundBase>>& Cache,
+    FName Category)
 {
     if (CueId == NAME_None)
     {
         return nullptr;
     }
 
-    if (USoundBase** Cached = Cache.Find(CueId))
+    if (TWeakObjectPtr<USoundBase>* Cached = Cache.Find(CueId))
     {
-        return *Cached;
+        if (Cached->IsValid())
+        {
+            return Cached->Get();
+        }
+        Cache.Remove(CueId);
     }
 
     const FString Cue = CueId.ToString();
     const FString PackagePath = FString::Printf(TEXT("%s%s"), FolderPrefix, *Cue);
     if (!FPackageName::DoesPackageExist(PackagePath))
     {
-        // Audio cues are intentionally allowed to be un-authored during the current
-        // verification pass. Keep subtitle/story behavior without warning spam.
-        Cache.Add(CueId, nullptr);
         return nullptr;
     }
 
-    const FString AssetPath = FString::Printf(
-        TEXT("%s.%s"),
-        *PackagePath,
-        *Cue);
-
-    // Heavy audio must already be resident through an asynchronous ownership path.
-    // Never synchronously load a SoundWave/SoundCue from an interaction callback.
-    USoundBase* Sound = Cast<USoundBase>(FSoftObjectPath(AssetPath).ResolveObject());
-    if (Sound)
+    const FSoftObjectPath AssetPath(FString::Printf(TEXT("%s.%s"), *PackagePath, *Cue));
+    if (USoundBase* Sound = Cast<USoundBase>(AssetPath.ResolveObject()))
     {
         Cache.Add(CueId, Sound);
+        return Sound;
     }
-    return Sound;
+
+    RequestAudioAssetAsync(Category, CueId, AssetPath);
+    return nullptr;
+}
+
+void UShireAudioSubsystem::RequestAudioAssetAsync(
+    FName Category,
+    FName CueId,
+    const FSoftObjectPath& AssetPath)
+{
+    if (Category == NAME_None || CueId == NAME_None || !AssetPath.IsValid())
+    {
+        return;
+    }
+
+    const FName LoadKey(*FString::Printf(
+        TEXT("%s|%s"), *Category.ToString(), *CueId.ToString()));
+    if (TSharedPtr<FStreamableHandle>* Existing = PendingAudioLoads.Find(LoadKey))
+    {
+        if (Existing->IsValid() && !(*Existing)->HasLoadCompleted())
+        {
+            return;
+        }
+        PendingAudioLoads.Remove(LoadKey);
+    }
+
+    TArray<FSoftObjectPath> Assets;
+    Assets.Add(AssetPath);
+    TSharedPtr<FStreamableHandle> Handle = StreamableManager.RequestAsyncLoad(
+        Assets,
+        FStreamableDelegate::CreateUObject(
+            this,
+            &UShireAudioSubsystem::HandleAsyncAudioReady,
+            Category,
+            CueId,
+            AssetPath,
+            LoadKey));
+
+    if (Handle.IsValid())
+    {
+        PendingAudioLoads.Add(LoadKey, Handle);
+        UE_LOG(
+            LogTemp,
+            Verbose,
+            TEXT("AudioStreaming: request category=%s cue=%s"),
+            *Category.ToString(),
+            *CueId.ToString());
+    }
+}
+
+void UShireAudioSubsystem::CancelPendingAudioCategory(FName Category)
+{
+    const FString Prefix = Category.ToString() + TEXT("|");
+    for (auto It = PendingAudioLoads.CreateIterator(); It; ++It)
+    {
+        if (!It.Key().ToString().StartsWith(Prefix))
+        {
+            continue;
+        }
+
+        if (It.Value().IsValid())
+        {
+            It.Value()->CancelHandle();
+        }
+        It.RemoveCurrent();
+    }
+}
+
+void UShireAudioSubsystem::HandleAsyncAudioReady(
+    FName Category,
+    FName CueId,
+    FSoftObjectPath AssetPath,
+    FName LoadKey)
+{
+    USoundBase* Sound = Cast<USoundBase>(AssetPath.ResolveObject());
+    if (!Sound)
+    {
+        PendingAudioLoads.Remove(LoadKey);
+        UE_LOG(
+            LogTemp,
+            Warning,
+            TEXT("AudioStreaming: load-complete-unresolved category=%s cue=%s"),
+            *Category.ToString(),
+            *CueId.ToString());
+        return;
+    }
+
+    if (Category == ShireAudioAssetPaths::AmbienceCategory)
+    {
+        AmbienceCache.Add(CueId, Sound);
+        if (ActiveAmbienceCue == CueId && !ActiveAmbienceComponent)
+        {
+            ActiveAmbienceComponent = UGameplayStatics::SpawnSound2D(
+                this, Sound, 0.0f, 1.0f, 0.0f, nullptr, false, true);
+            if (ActiveAmbienceComponent)
+            {
+                ActiveAmbienceComponent->FadeIn(0.55f, 1.0f);
+            }
+        }
+    }
+    else if (Category == ShireAudioAssetPaths::MusicCategory)
+    {
+        MusicCache.Add(CueId, Sound);
+        if (ActiveMusicCue == CueId && !ActiveMusicComponent)
+        {
+            const float TargetVolume = bVoiceActive ? 0.36f : 1.0f;
+            ActiveMusicComponent = UGameplayStatics::SpawnSound2D(
+                this, Sound, 0.0f, 1.0f, 0.0f, nullptr, false, true);
+            if (ActiveMusicComponent)
+            {
+                ActiveMusicComponent->FadeIn(0.95f, TargetVolume);
+            }
+        }
+    }
+    else if (Category == ShireAudioAssetPaths::SfxCategory)
+    {
+        SfxCache.Add(CueId, Sound);
+        UGameplayStatics::SpawnSound2D(
+            this, Sound, 1.0f, 1.0f, 0.0f, nullptr, false, true);
+    }
+    else if (Category == ShireAudioAssetPaths::VoiceCategory)
+    {
+        VoiceCache.Add(CueId, Sound);
+        if (PendingVoiceCue == CueId)
+        {
+            StartVoicePlayback(CueId, Sound);
+        }
+    }
+
+    PendingAudioLoads.Remove(LoadKey);
 }
 
 void UShireAudioSubsystem::ApplyMusicDuck(bool bDuck)
@@ -136,6 +278,8 @@ void UShireAudioSubsystem::SetAmbienceCue(FName CueId)
         return;
     }
 
+    CancelPendingAudioCategory(ShireAudioAssetPaths::AmbienceCategory);
+
     if (ActiveAmbienceComponent)
     {
         // Source 11 audio doctrine: ambience should transition as a physical world
@@ -151,7 +295,11 @@ void UShireAudioSubsystem::SetAmbienceCue(FName CueId)
 
     if (CueId != NAME_None)
     {
-        if (USoundBase* Sound = ResolveCategorizedAsset(CueId, ShireAudioAssetPaths::Ambience, AmbienceCache))
+        if (USoundBase* Sound = ResolveCategorizedAsset(
+                CueId,
+                ShireAudioAssetPaths::Ambience,
+                AmbienceCache,
+                ShireAudioAssetPaths::AmbienceCategory))
         {
             ActiveAmbienceComponent = UGameplayStatics::SpawnSound2D(
                 this, Sound, 0.0f, 1.0f, 0.0f, nullptr, false, true);
@@ -170,6 +318,8 @@ void UShireAudioSubsystem::SetMusicCue(FName CueId)
         return;
     }
 
+    CancelPendingAudioCategory(ShireAudioAssetPaths::MusicCategory);
+
     if (ActiveMusicComponent)
     {
         UAudioComponent* FadingComponent = ActiveMusicComponent;
@@ -183,7 +333,11 @@ void UShireAudioSubsystem::SetMusicCue(FName CueId)
 
     if (CueId != NAME_None)
     {
-        if (USoundBase* Sound = ResolveCategorizedAsset(CueId, ShireAudioAssetPaths::Music, MusicCache))
+        if (USoundBase* Sound = ResolveCategorizedAsset(
+                CueId,
+                ShireAudioAssetPaths::Music,
+                MusicCache,
+                ShireAudioAssetPaths::MusicCategory))
         {
             const float TargetVolume = bVoiceActive ? 0.36f : 1.0f;
             ActiveMusicComponent = UGameplayStatics::SpawnSound2D(
@@ -205,7 +359,11 @@ void UShireAudioSubsystem::PlaySfxCue(FName CueId)
 
     OnSfxRequested.Broadcast(CueId);
 
-    if (USoundBase* Sound = ResolveCategorizedAsset(CueId, ShireAudioAssetPaths::SFX, SfxCache))
+    if (USoundBase* Sound = ResolveCategorizedAsset(
+            CueId,
+            ShireAudioAssetPaths::SFX,
+            SfxCache,
+            ShireAudioAssetPaths::SfxCategory))
     {
         UGameplayStatics::SpawnSound2D(this, Sound, 1.0f, 1.0f, 0.0f, nullptr, false, true);
     }
@@ -218,9 +376,13 @@ USoundBase* UShireAudioSubsystem::ResolveVoiceAsset(FName CueId)
         return nullptr;
     }
 
-    if (USoundBase** Cached = VoiceCache.Find(CueId))
+    if (TWeakObjectPtr<USoundBase>* Cached = VoiceCache.Find(CueId))
     {
-        return *Cached;
+        if (Cached->IsValid())
+        {
+            return Cached->Get();
+        }
+        VoiceCache.Remove(CueId);
     }
 
     const FString Cue = CueId.ToString();
@@ -228,34 +390,26 @@ USoundBase* UShireAudioSubsystem::ResolveVoiceAsset(FName CueId)
     Cue.ParseIntoArray(Parts, TEXT("_"), true);
     if (Parts.Num() < 2)
     {
-        VoiceCache.Add(CueId, nullptr);
         return nullptr;
     }
 
     const FString& Speaker = Parts[1];
     const FString PackagePath = FString::Printf(
-        TEXT("/Game/Audio/Voice/%s/%s"),
-        *Speaker,
-        *Cue);
+        TEXT("/Game/Audio/Voice/%s/%s"), *Speaker, *Cue);
     if (!FPackageName::DoesPackageExist(PackagePath))
     {
-        VoiceCache.Add(CueId, nullptr);
         return nullptr;
     }
 
-    const FString AssetPath = FString::Printf(
-        TEXT("%s.%s"),
-        *PackagePath,
-        *Cue);
-
-    // Voice follows the same resident-only rule. Subtitle/story flow remains valid
-    // when a production voice asset has not yet been asynchronously staged.
-    USoundBase* Sound = Cast<USoundBase>(FSoftObjectPath(AssetPath).ResolveObject());
-    if (Sound)
+    const FSoftObjectPath AssetPath(FString::Printf(TEXT("%s.%s"), *PackagePath, *Cue));
+    if (USoundBase* Sound = Cast<USoundBase>(AssetPath.ResolveObject()))
     {
         VoiceCache.Add(CueId, Sound);
+        return Sound;
     }
-    return Sound;
+
+    RequestAudioAssetAsync(ShireAudioAssetPaths::VoiceCategory, CueId, AssetPath);
+    return nullptr;
 }
 
 AActor* UShireAudioSubsystem::ResolveVoiceSpeakerActor(FName CueId) const
@@ -324,32 +478,16 @@ void UShireAudioSubsystem::HandleVoiceFinished()
         ActiveVoiceComponent = nullptr;
     }
 
+    PendingVoiceCue = NAME_None;
     ApplyMusicDuck(false);
     OnVoicePlaybackStateChanged.Broadcast(false);
 }
 
-void UShireAudioSubsystem::PlayVoiceCue(FName CueId)
+void UShireAudioSubsystem::StartVoicePlayback(FName CueId, USoundBase* Sound)
 {
-    if (CueId == NAME_None)
+    if (!Sound || !GetWorld() || PendingVoiceCue != CueId)
     {
         return;
-    }
-
-    // Keep the logical event even when the actual SoundWave/SoundCue has not been authored yet.
-    // Dialogue subtitles therefore remain functional while production voice assets are filled in.
-    OnVoiceRequested.Broadcast(CueId);
-
-    USoundBase* Sound = ResolveVoiceAsset(CueId);
-    if (!Sound || !GetWorld())
-    {
-        return;
-    }
-
-    if (ActiveVoiceComponent)
-    {
-        ActiveVoiceComponent->OnAudioFinished.RemoveDynamic(this, &UShireAudioSubsystem::HandleVoiceFinished);
-        ActiveVoiceComponent->Stop();
-        ActiveVoiceComponent = nullptr;
     }
 
     if (AActor* SpeakerActor = ResolveVoiceSpeakerActor(CueId))
@@ -371,21 +509,42 @@ void UShireAudioSubsystem::PlayVoiceCue(FName CueId)
     else
     {
         ActiveVoiceComponent = UGameplayStatics::SpawnSound2D(
-            this,
-            Sound,
-            1.0f,
-            1.0f,
-            0.0f,
-            nullptr,
-            false,
-            true);
+            this, Sound, 1.0f, 1.0f, 0.0f, nullptr, false, true);
     }
 
     if (ActiveVoiceComponent)
     {
-        ActiveVoiceComponent->OnAudioFinished.AddDynamic(this, &UShireAudioSubsystem::HandleVoiceFinished);
+        ActiveVoiceComponent->OnAudioFinished.AddDynamic(
+            this, &UShireAudioSubsystem::HandleVoiceFinished);
         ApplyMusicDuck(true);
         OnVoicePlaybackStateChanged.Broadcast(true);
+    }
+}
+
+void UShireAudioSubsystem::PlayVoiceCue(FName CueId)
+{
+    if (CueId == NAME_None)
+    {
+        return;
+    }
+
+    OnVoiceRequested.Broadcast(CueId);
+    CancelPendingAudioCategory(ShireAudioAssetPaths::VoiceCategory);
+    PendingVoiceCue = CueId;
+
+    if (ActiveVoiceComponent)
+    {
+        ActiveVoiceComponent->OnAudioFinished.RemoveDynamic(
+            this, &UShireAudioSubsystem::HandleVoiceFinished);
+        ActiveVoiceComponent->Stop();
+        ActiveVoiceComponent = nullptr;
+        ApplyMusicDuck(false);
+        OnVoicePlaybackStateChanged.Broadcast(false);
+    }
+
+    if (USoundBase* Sound = ResolveVoiceAsset(CueId))
+    {
+        StartVoicePlayback(CueId, Sound);
     }
 }
 

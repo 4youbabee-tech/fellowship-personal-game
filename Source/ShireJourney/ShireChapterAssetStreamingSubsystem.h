@@ -13,6 +13,11 @@ DECLARE_MULTICAST_DELEGATE_TwoParams(
     FName /* ChapterId */,
     FName /* RouteId */);
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(
+    FOnShireChapterAssetsCommitted,
+    FName /* ChapterId */,
+    FName /* RouteId */);
+
 DECLARE_MULTICAST_DELEGATE_OneParam(
     FOnShireCharacterRigReady,
     FName /* CharacterId */);
@@ -39,6 +44,7 @@ public:
         UClass*& OutAnimClass) const;
 
     FOnShireChapterAssetsReady OnChapterAssetsReady;
+    FOnShireChapterAssetsCommitted OnChapterAssetsCommitted;
     FOnShireCharacterRigReady OnCharacterRigReady;
 
 private:

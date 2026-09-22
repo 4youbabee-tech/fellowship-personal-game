@@ -237,25 +237,66 @@ void AShireGameMode::BeginPlay()
 
     // Prototype chapter worlds are spawned through a router so Chapter 1 can hand off
     // to Bree without loading both regions at the same time.
-    GetWorld()->SpawnActor<AChapterWorldRouter>(FVector::ZeroVector, FRotator::ZeroRotator);
+    AChapterWorldRouter* WorldRouter =
+        GetWorld()->SpawnActor<AChapterWorldRouter>(FVector::ZeroVector, FRotator::ZeroRotator);
     GetWorld()->SpawnActor<ALivingWorldDirector>(FVector::ZeroVector, FRotator::ZeroRotator);
     GetWorld()->SpawnActor<AStoryPresentationDirector>(FVector::ZeroVector, FRotator::ZeroRotator);
     UE_LOG(LogTemp, Display, TEXT("ShirePlayableStartup: GameMode ready; router, living-world and presentation directors spawned"));
 
     if (FParse::Param(FCommandLine::Get(), TEXT("AuditState")))
     {
-        GetWorldTimerManager().SetTimerForNextTick(FTimerDelegate::CreateWeakLambda(this, [this]()
+        struct FStateAuditWaitState
         {
-            AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
-            if (Player && Player->RunSaveRoundtripAudit())
+            FTimerHandle Timer;
+            int32 Polls = 0;
+        };
+
+        const TSharedRef<FStateAuditWaitState> Audit = MakeShared<FStateAuditWaitState>();
+        const TWeakObjectPtr<AChapterWorldRouter> AuditRouter(WorldRouter);
+        GetWorldTimerManager().SetTimer(
+            Audit->Timer,
+            FTimerDelegate::CreateWeakLambda(this, [this, Audit, AuditRouter]()
             {
-                UE_LOG(LogTemp, Display, TEXT("ShireStateAudit: disk-save-roundtrip=PASS"));
-            }
-            else
-            {
-                UE_LOG(LogTemp, Error, TEXT("ShireStateAudit: disk-save-roundtrip=FAIL"));
-            }
-        }));
+                ++Audit->Polls;
+                UGameInstance* GI = GetGameInstance();
+                UShireQuestSubsystem* Quests =
+                    GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+                AChapterWorldRouter* Router = AuditRouter.Get();
+                const bool bWorldCommitted =
+                    Router && Quests &&
+                    Router->IsWorldCommitted(
+                        Quests->GetCurrentChapterId(),
+                        Quests->GetCurrentRouteId(),
+                        Quests->GetCurrentEpisodeId());
+
+                if (!bWorldCommitted && Audit->Polls < 200)
+                {
+                    return;
+                }
+
+                GetWorldTimerManager().ClearTimer(Audit->Timer);
+                if (!bWorldCommitted)
+                {
+                    UE_LOG(
+                        LogTemp,
+                        Error,
+                        TEXT("ShireStateAudit: disk-save-roundtrip=FAIL reason=world-commit-timeout"));
+                    return;
+                }
+
+                AShirePlayerCharacter* Player =
+                    Cast<AShirePlayerCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+                if (Player && Player->RunSaveRoundtripAudit())
+                {
+                    UE_LOG(LogTemp, Display, TEXT("ShireStateAudit: disk-save-roundtrip=PASS"));
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Error, TEXT("ShireStateAudit: disk-save-roundtrip=FAIL"));
+                }
+            }),
+            0.05f,
+            true);
     }
 
     // Chapter placement is owned by AChapterWorldRouter. The first chapter bank is

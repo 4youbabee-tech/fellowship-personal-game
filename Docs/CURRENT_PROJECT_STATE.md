@@ -1,3 +1,15 @@
+## 2026-09-23 - Unreal #593 root cause isolated; commit-bound residency hardening applied
+
+Exact PR #67 head `5840863632d04a5fac284b472fe9e5641cd522b8` passed Pre-Unreal #758 and Warehouse #172. Unreal Build #593 passed runner/Engine Content preflight, UE4.27.2 C++ build, deterministic production import, ShireJourney.QA 2/2, startup, and the aggregate P1C01-P1C08 chapter sweep. The remaining state gate failed specifically at `CharacterSurfaceAudit: FAIL persisted player skin/cloth surface state`, followed by `ShireStateAudit: disk-save-roundtrip=FAIL`. The same log showed P1C03 world commit, NPC committed context, LivingWorld committed sync, and stable grounding.
+
+Source inspection identified a residency-order defect rather than a missing material package: `M_ProductionSurface` is an async chapter-bank member, while `AShirePlayerCharacter::BeginPlay` applied prototype MIDs before that bank became resident and had no post-residency reapply signal. The state audit also ran on the next tick before world commit and returned early on the surface check, masking the independent disk-save path.
+
+This W00 source wave adds a post-residency `OnChapterAssetsCommitted` contract, reapplies player surface state at that residency boundary, makes the state audit wait for the exact committed chapter/route/episode, and keeps disk-save testing running even when the surface invariant fails. Player movement now remains held until `OnWorldCommitted` publishes the committed revision/context on both normal commit and rollback. The previously implicit audio-residency assumption is replaced by bounded asynchronous `FStreamableManager` ownership in `ShireAudioSubsystem`; weak caches and short-lived request handles avoid pinning every sound for the GameInstance lifetime.
+
+PG-127 is now fail-closed: its escaped-newline check had been after the script success/exit block and could not fail CI. PG-128 adds regression guards for committed surface residency, state-audit ordering, movement-release ordering, and bounded asynchronous audio ownership.
+
+Evidence for this new source wave is not promoted beyond source inspection until fresh exact-head workflows run. No PIE, device, visual or target-FPS claim is made.
+
 ## 2026-09-23 - systemic hardening phase, importer compile artifact repaired
 
 The project is still in W00 hardening / exact-head recovery rather than content expansion. Pre-Unreal #753 and Warehouse #167 are green on the prior head, while Unreal Build #588 reached the real 76-action UE4.27.2 C++ compile and failed only in `ShireProductionImportCommandlet.cpp` because a literal escaped `\n` sequence had been committed between the PNG and TGA discovery statements. That text produced C2017/C2065/C2143 at line 58.

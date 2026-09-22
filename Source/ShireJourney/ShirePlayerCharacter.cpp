@@ -937,6 +937,9 @@ void AShirePlayerCharacter::BeginPlay()
             Streaming->OnCharacterRigReady.AddUObject(
                 this,
                 &AShirePlayerCharacter::HandleProductionRigReady);
+            Streaming->OnChapterAssetsCommitted.AddUObject(
+                this,
+                &AShirePlayerCharacter::HandleChapterAssetsCommitted);
         }
         if (UShireStoryPresentationSubsystem* Presentation = GI->GetSubsystem<UShireStoryPresentationSubsystem>())
         {
@@ -968,6 +971,7 @@ void AShirePlayerCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
                 GI->GetSubsystem<UShireChapterAssetStreamingSubsystem>())
         {
             Streaming->OnCharacterRigReady.RemoveAll(this);
+            Streaming->OnChapterAssetsCommitted.RemoveAll(this);
         }
         if (UShireStoryPresentationSubsystem* Presentation = GI->GetSubsystem<UShireStoryPresentationSubsystem>())
         {
@@ -1013,6 +1017,22 @@ void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("DebugNextChapter"), IE_Pressed, this, &AShirePlayerCharacter::DebugNextChapter);
     PlayerInputComponent->BindAction(TEXT("DebugAlternateRoute"), IE_Pressed, this, &AShirePlayerCharacter::DebugToggleParallelRoute);
 #endif
+}
+
+void AShirePlayerCharacter::HandleChapterAssetsCommitted(FName ChapterId, FName RouteId)
+{
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests ||
+        Quests->GetCurrentChapterId() != ChapterId ||
+        Quests->GetCurrentRouteId() != RouteId)
+    {
+        return;
+    }
+
+    // BeginPlay can precede chapter-bank residency. Re-apply the production
+    // surface only after the bank has crossed the resident commit boundary.
+    ApplyPrototypeStyle();
 }
 
 void AShirePlayerCharacter::HandleProductionRigReady(FName CharacterId)
@@ -1905,9 +1925,14 @@ bool AShirePlayerCharacter::RunSaveRoundtripAudit()
     if (!bSurfaceStateValid)
     {
         UE_LOG(LogTemp, Error, TEXT("CharacterSurfaceAudit: FAIL persisted player skin/cloth surface state"));
-        return false;
     }
-    UE_LOG(LogTemp, Display, TEXT("CharacterSurfaceAudit: PASS persisted player skin/cloth surface state"));
+    else
+    {
+        UE_LOG(LogTemp, Display, TEXT("CharacterSurfaceAudit: PASS persisted player skin/cloth surface state"));
+    }
+
+    // Surface residency and disk persistence are independent invariants. Continue
+    // the disk roundtrip so one run can expose both defect classes.
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
     if (!Quests) return false;
@@ -1970,7 +1995,7 @@ bool AShirePlayerCharacter::RunSaveRoundtripAudit()
     UE_LOG(LogTemp, Display, TEXT("ShireStateAudit: disk-save-details written=%s restored=%s verified=%s cleaned=%s"),
         bWritten ? TEXT("yes") : TEXT("no"), bRestored ? TEXT("yes") : TEXT("no"),
         bValid ? TEXT("yes") : TEXT("no"), bCleaned ? TEXT("yes") : TEXT("no"));
-    return bValid && bCleaned;
+    return bSurfaceStateValid && bValid && bCleaned;
 }
 
 void AShirePlayerCharacter::QuickSave()

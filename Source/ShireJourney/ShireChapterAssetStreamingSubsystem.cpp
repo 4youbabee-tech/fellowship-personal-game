@@ -85,6 +85,10 @@ bool UShireChapterAssetStreamingSubsystem::CommitPendingRequest(
     PendingRouteId = NAME_None;
     bPendingCompatibilityReady = false;
 
+    // Publish only after the new FStreamableHandle has become the resident owner.
+    // Consumers can now ResolveObject without racing the preload/commit boundary.
+    OnChapterAssetsCommitted.Broadcast(ChapterId, RouteId);
+
     UE_LOG(
         LogTemp,
         Display,
@@ -110,6 +114,7 @@ void UShireChapterAssetStreamingSubsystem::Deinitialize()
     Banks.Empty();
     bPlanReady = false;
     OnChapterAssetsReady.Clear();
+    OnChapterAssetsCommitted.Clear();
     OnCharacterRigReady.Clear();
 
     Super::Deinitialize();
