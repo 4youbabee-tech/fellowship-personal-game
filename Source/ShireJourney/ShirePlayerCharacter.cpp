@@ -25,6 +25,7 @@
 #include "Misc/Parse.h"
 #include "Misc/Guid.h"
 #include "UObject/ConstructorHelpers.h"
+#include "UObject/SoftObjectPath.h"
 
 namespace ShireSaveConstants
 {
@@ -262,8 +263,7 @@ bool AShirePlayerCharacter::TryApplyProductionRig(const FString& RigFolder)
 
 void AShirePlayerCharacter::ApplyPrototypeStyle()
 {
-    UMaterialInterface* BasicMaterial = LoadObject<UMaterialInterface>(
-        nullptr, TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface"));
+    UMaterialInterface* BasicMaterial = Cast<UMaterialInterface>(FSoftObjectPath(TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface")).ResolveObject());
     if (!BasicMaterial)
     {
         BasicMaterial = LoadObject<UMaterialInterface>(nullptr,
@@ -295,7 +295,7 @@ void AShirePlayerCharacter::ApplyPrototypeStyle()
         {
             return false;
         }
-        if (UStaticMesh* Mesh = LoadObject<UStaticMesh>(nullptr, AssetPath))
+        if (UStaticMesh* Mesh = Cast<UStaticMesh>(FSoftObjectPath(AssetPath).ResolveObject()))
         {
             Component->SetStaticMesh(Mesh);
             return true;
