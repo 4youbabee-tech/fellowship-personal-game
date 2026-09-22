@@ -1,3 +1,11 @@
+## 2026-09-22 - active wave: ACL repair attempt + trilogy material expansion
+
+The Unreal Build workflow now contains a guarded Engine Content ACL remediation step before the existing UE4.27.2 verification. It grants only read/execute to the runner service identity when the workflow has elevation; if the runner is not elevated, it records the exact required action and leaves the original verify gate unchanged. This does not weaken validation and does not create a compile-tested claim.
+
+Warehouse execution also expanded beyond Shire with `WarehouseAmbientCGTrilogyBatchV2.json`, targeting material families for Caradhras, Moria, Rohan, Gondor, Osgiliath/Ithilien, Mordor, Isengard, Bree/battlefields, Pelennor support and Shelob-lair support. The warehouse workflow now stages this batch in addition to the existing Shire/material/audio/Quaternius/Kenney lanes.
+
+No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED status is claimed by this wave.
+
 ## 2026-09-22 - autonomous three-lane production iteration
 
 PR #67 exact head before this production batch was `0c8130a33f8df3648d270d8bd0ee6b24aee882fb`. Pre-Unreal Validation #653 completed successfully on that exact SHA. Unreal Build Validation #488 did **not** reach C++ compilation: the self-hosted `UE4-27-Windows` runner executed as `NT AUTHORITY\\NETWORK SERVICE` and was denied read access to `Engine/Content/EngineMaterials/WorldGridMaterial.uasset` on all six preflight probes. Build, import, Automation Framework, startup, chapter and state steps were therefore skipped. This remains an Engine Content ACL/environment blocker, not compile evidence.
