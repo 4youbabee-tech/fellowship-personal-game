@@ -1,3 +1,7 @@
+## 2026-09-22 - ACL remediation attempt and trilogy material stock expansion
+
+A safe read-only ACL remediation attempt now precedes the unchanged UE4 Engine Content preflight, and a second ambientCG batch adds non-Shire regional material stock across the trilogy. This advances integration readiness and warehouse breadth only; engine compile/runtime/visual acceptance remains pending.
+
 ## 2026-09-22 - autonomous three-lane production iteration
 
 PR #67 exact head before this production batch was `0c8130a33f8df3648d270d8bd0ee6b24aee882fb`. Pre-Unreal Validation #653 completed successfully on that exact SHA. Unreal Build Validation #488 did **not** reach C++ compilation: the self-hosted `UE4-27-Windows` runner executed as `NT AUTHORITY\\NETWORK SERVICE` and was denied read access to `Engine/Content/EngineMaterials/WorldGridMaterial.uasset` on all six preflight probes. Build, import, Automation Framework, startup, chapter and state steps were therefore skipped. This remains an Engine Content ACL/environment blocker, not compile evidence.
