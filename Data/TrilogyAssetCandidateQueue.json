@@ -10,17 +10,8 @@
       "provider": "QUATERNIUS",
       "source_page": "https://quaternius.com/packs/universalbasecharacters.html",
       "license_observed": "CC0",
-      "formats": [
-        "FBX",
-        "glTF",
-        "Blend",
-        "OBJ"
-      ],
-      "use": [
-        "background human bases",
-        "NPC family prototyping",
-        "rig/retarget pipeline exercises"
-      ],
+      "formats": ["FBX", "glTF", "Blend", "OBJ"],
+      "use": ["background human bases", "NPC family prototyping", "rig/retarget pipeline exercises"],
       "suitability": "SUPPORTING_NPC_BASE_ONLY",
       "notes": "Humanoid rig and animation-friendly topology; not a final likeness source for hero characters."
     },
@@ -29,17 +20,8 @@
       "provider": "QUATERNIUS",
       "source_page": "https://quaternius.com/packs/modularcharacteroutfitsfantasy.html",
       "license_observed": "CC0",
-      "formats": [
-        "FBX",
-        "glTF",
-        "Blend",
-        "OBJ"
-      ],
-      "use": [
-        "generic fantasy clothing pieces",
-        "background population variation",
-        "rig retarget testing"
-      ],
+      "formats": ["FBX", "glTF", "Blend", "OBJ"],
+      "use": ["generic fantasy clothing pieces", "background population variation", "rig retarget testing"],
       "suitability": "BACKGROUND_AND_PIPELINE",
       "notes": "Useful for filler/crowd stock; hero wardrobe still needs project-specific higher-fidelity work."
     },
@@ -48,34 +30,30 @@
       "provider": "QUATERNIUS",
       "source_page": "https://quaternius.com/packs/rpgcharacters.html",
       "license_observed": "CC0",
-      "formats": [
-        "FBX",
-        "Blend",
-        "OBJ"
-      ],
-      "use": [
-        "rigged fantasy NPC placeholders",
-        "animation/retarget validation"
-      ],
+      "formats": ["FBX", "Blend", "OBJ"],
+      "use": ["rigged fantasy NPC placeholders", "animation/retarget validation"],
       "suitability": "BACKGROUND_AND_TEST",
       "notes": "Animated and rigged; not accepted as final core-cast art."
+    },
+    {
+      "id": "QTN_UNIVERSAL_ANIMATION_LIBRARY",
+      "provider": "QUATERNIUS",
+      "source_page": "https://quaternius.com/packs/universalanimationlibrary.html",
+      "license_observed": "CC0",
+      "formats": ["FBX"],
+      "use": ["locomotion", "idle", "interaction", "combat and traversal retarget candidates"],
+      "suitability": "ANIMATION_PIPELINE_AND_SUPPORT",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official Quaternius pack page; staged only through WarehouseQuaterniusAcquisitionBatchV1.",
+      "notes": "Production use still requires skeleton/retarget validation; animated final characters remain FBX-only with real rigs."
     },
     {
       "id": "QTN_MEDIEVAL_VILLAGE_MEGAKIT",
       "provider": "QUATERNIUS",
       "source_page": "https://quaternius.com/packs/medievalvillagemegakit.html",
       "license_observed": "CC0",
-      "formats": [
-        "FBX",
-        "glTF",
-        "Blend",
-        "OBJ"
-      ],
-      "use": [
-        "Bree/Rohan/Gondor supporting architecture blockout-to-mid-tier",
-        "village props",
-        "modular building pipeline"
-      ],
+      "formats": ["FBX", "glTF", "Blend", "OBJ"],
+      "use": ["Bree/Rohan/Gondor supporting architecture blockout-to-mid-tier", "village props", "modular building pipeline"],
       "suitability": "SUPPORTING_WORLD_KIT",
       "notes": "300+ modular pieces; use selectively and re-materialize to avoid a generic stylized look."
     },
@@ -84,15 +62,8 @@
       "provider": "QUATERNIUS",
       "source_page": "https://quaternius.com/packs/ultimatemodularruins.html",
       "license_observed": "CC0",
-      "formats": [
-        "FBX",
-        "Blend",
-        "OBJ"
-      ],
-      "use": [
-        "Weathertop/Amon Hen/Osgiliath supporting ruins",
-        "dungeon/ruin filler"
-      ],
+      "formats": ["FBX", "Blend", "OBJ"],
+      "use": ["Weathertop/Amon Hen/Osgiliath supporting ruins", "dungeon/ruin filler"],
       "suitability": "SUPPORTING_WORLD_KIT",
       "notes": "Good stock filler after project-specific silhouette pass."
     },
@@ -101,16 +72,8 @@
       "provider": "QUATERNIUS",
       "source_page": "https://quaternius.com/packs/ultimatenature.html",
       "license_observed": "CC0",
-      "formats": [
-        "FBX",
-        "Blend",
-        "OBJ"
-      ],
-      "use": [
-        "background nature variety",
-        "low-cost foliage/rocks",
-        "prototype biome filler"
-      ],
+      "formats": ["FBX", "Blend", "OBJ"],
+      "use": ["background nature variety", "low-cost foliage/rocks", "prototype biome filler"],
       "suitability": "BACKGROUND_NATURE",
       "notes": "Use only where art direction/performance fit; hero vegetation still needs higher-quality sources."
     },
@@ -119,17 +82,8 @@
       "provider": "QUATERNIUS",
       "source_page": "https://quaternius.com/packs/ultimateanimatedanimals.html",
       "license_observed": "CC0",
-      "formats": [
-        "FBX",
-        "glTF",
-        "Blend",
-        "OBJ"
-      ],
-      "use": [
-        "horses",
-        "cows/deer/wolves/other fauna candidates",
-        "fauna animation pipeline"
-      ],
+      "formats": ["FBX", "glTF", "Blend", "OBJ"],
+      "use": ["horses", "cows/deer/wolves/other fauna candidates", "fauna animation pipeline"],
       "suitability": "FAUNA_BASE",
       "notes": "Potential source for non-hero fauna after species/canon filtering."
     },
@@ -138,28 +92,109 @@
       "provider": "QUATERNIUS",
       "source_page": "https://quaternius.com/packs/farmanimal.html",
       "license_observed": "CC0",
-      "formats": [
-        "FBX",
-        "Blend",
-        "OBJ"
-      ],
-      "use": [
-        "Shire farm-life population: pig/cow/horse/sheep/dog candidates"
-      ],
+      "formats": ["FBX", "Blend", "OBJ"],
+      "use": ["Shire farm-life population: pig/cow/horse/sheep/dog candidates"],
       "suitability": "SHIRE_FAUNA_BASE",
       "notes": "Strong fit for filling pastoral life quickly; verify look against P1C01 quality bar."
+    },
+    {
+      "id": "QTN_FANTASY_PROPS_MEGAKIT",
+      "provider": "QUATERNIUS",
+      "source_page": "https://quaternius.com/packs/fantasypropsmegakit.html",
+      "license_observed": "CC0",
+      "formats": ["FBX", "Blend", "OBJ"],
+      "use": ["Shire/Bree/Rohan household stock", "Moria/ruin dressing", "Gondor/fortification support props"],
+      "suitability": "SUPPORTING_PROP_LIBRARY",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official Quaternius pack page; staged only through WarehouseQuaterniusAcquisitionBatchV1."
+    },
+    {
+      "id": "KENNEY_FANTASY_TOWN_KIT",
+      "provider": "KENNEY",
+      "source_page": "https://kenney.nl/assets/fantasy-town-kit",
+      "license_observed": "CC0",
+      "formats": ["provider archive"],
+      "use": ["Bree support buildings", "Rohan settlement support", "background town silhouettes"],
+      "suitability": "SUPPORTING_WORLD_KIT",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official Kenney asset page; staged only through WarehouseKenneyAcquisitionBatchV1.",
+      "notes": "Stylized support stock only; re-materialize or replace where the cinematic quality bar requires."
+    },
+    {
+      "id": "KENNEY_CASTLE_KIT",
+      "provider": "KENNEY",
+      "source_page": "https://kenney.nl/assets/castle-kit",
+      "license_observed": "CC0",
+      "formats": ["provider archive"],
+      "use": ["Helm's Deep/Gondor/Black Gate modular support", "fortification collision and layout prototypes"],
+      "suitability": "SUPPORTING_FORTIFICATION_KIT",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official Kenney asset page; staged only through WarehouseKenneyAcquisitionBatchV1."
+    },
+    {
+      "id": "KENNEY_NATURE_KIT",
+      "provider": "KENNEY",
+      "source_page": "https://kenney.nl/assets/nature-kit",
+      "license_observed": "CC0",
+      "formats": ["provider archive"],
+      "use": ["low-cost ecology filler", "distant/background biome dressing", "HISM/ISM performance stock"],
+      "suitability": "BACKGROUND_NATURE",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official Kenney asset page; staged only through WarehouseKenneyAcquisitionBatchV1."
+    },
+    {
+      "id": "KENNEY_FURNITURE_KIT",
+      "provider": "KENNEY",
+      "source_page": "https://kenney.nl/assets/furniture-kit",
+      "license_observed": "CC0",
+      "formats": ["provider archive"],
+      "use": ["Shire/Bree/Rivendell/Rohan/Gondor interior support props"],
+      "suitability": "SUPPORTING_INTERIOR_PROPS",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official Kenney asset page; staged only through WarehouseKenneyAcquisitionBatchV1."
+    },
+    {
+      "id": "KENNEY_MODULAR_DUNGEON_KIT",
+      "provider": "KENNEY",
+      "source_page": "https://kenney.nl/assets/modular-dungeon-kit",
+      "license_observed": "CC0",
+      "formats": ["provider archive"],
+      "use": ["Moria/Cirith Ungol/Paths of the Dead layout and collision support"],
+      "suitability": "SUPPORTING_DUNGEON_KIT",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official Kenney asset page; staged only through WarehouseKenneyAcquisitionBatchV1."
+    },
+    {
+      "id": "KENNEY_UI_PACK",
+      "provider": "KENNEY",
+      "source_page": "https://kenney.nl/assets/ui-pack",
+      "license_observed": "CC0",
+      "formats": ["PNG"],
+      "use": ["prototype inventory/map/chronicle UI atoms", "accessibility/readability support"],
+      "suitability": "UI_SUPPORT",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official Kenney asset page; staged only through WarehouseKenneyAcquisitionBatchV1.",
+      "notes": "Final UI art direction remains project-specific; this is support stock."
+    },
+    {
+      "id": "AMBIENTCG_TRILOGY_MATERIAL_LIBRARY",
+      "provider": "AMBIENTCG",
+      "source_page": "https://ambientcg.com/list?type=Material",
+      "license_observed": "CC0",
+      "formats": ["2K-PNG PBR ZIP candidates"],
+      "use": ["terrain and paths", "stone/ruins", "timber/plaster", "snow/ice", "mud/wetlands", "white stone", "volcanic/ash", "metal/rust", "cave surfaces"],
+      "suitability": "HIGH_FIDELITY_MATERIAL_LIBRARY",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "ambientCG public API and item pages; exact asset ID/source URL/hash recorded by stager.",
+      "notes": "WarehouseAmbientCGAcquisitionBatchV1 resolves concrete item IDs; catalogued library coverage is not imported or accepted content."
     },
     {
       "id": "PH_WOODEN_BARRELS_01",
       "provider": "POLY_HAVEN",
       "source_page": "https://polyhaven.com/a/wooden_barrels_01",
       "license_observed": "CC0",
-      "formats": [
-        "provider variants"
-      ],
-      "use": [
-        "Shire/Bree/cellar/farm/market prop stock"
-      ],
+      "formats": ["provider variants"],
+      "use": ["Shire/Bree/cellar/farm/market prop stock"],
       "suitability": "HIGH_FIDELITY_PROP",
       "notes": "Weathered barrel set with PBR maps; candidate for direct production evaluation."
     },
@@ -168,17 +203,8 @@
       "provider": "POLY_HAVEN",
       "source_page": "https://polyhaven.com/textures/wood",
       "license_observed": "CC0",
-      "formats": [
-        "PBR texture sets"
-      ],
-      "use": [
-        "timber",
-        "doors",
-        "furniture",
-        "bridges",
-        "carts",
-        "interiors"
-      ],
+      "formats": ["PBR texture sets"],
+      "use": ["timber", "doors", "furniture", "bridges", "carts", "interiors"],
       "suitability": "HIGH_FIDELITY_MATERIAL_LIBRARY"
     },
     {
@@ -186,16 +212,8 @@
       "provider": "POLY_HAVEN",
       "source_page": "https://polyhaven.com/textures/stone",
       "license_observed": "CC0",
-      "formats": [
-        "PBR texture sets"
-      ],
-      "use": [
-        "Moria",
-        "Rivendell",
-        "Gondor",
-        "ruins",
-        "roads"
-      ],
+      "formats": ["PBR texture sets"],
+      "use": ["Moria", "Rivendell", "Gondor", "ruins", "roads"],
       "suitability": "HIGH_FIDELITY_MATERIAL_LIBRARY"
     },
     {
@@ -203,16 +221,8 @@
       "provider": "POLY_HAVEN",
       "source_page": "https://polyhaven.com/textures?s=mossy",
       "license_observed": "CC0",
-      "formats": [
-        "PBR texture sets"
-      ],
-      "use": [
-        "Shire",
-        "Rivendell",
-        "Amon Hen",
-        "Ithilien",
-        "ruins"
-      ],
+      "formats": ["PBR texture sets"],
+      "use": ["Shire", "Rivendell", "Amon Hen", "Ithilien", "ruins"],
       "suitability": "HIGH_FIDELITY_MATERIAL_LIBRARY",
       "notes": "Search lane currently exposes mossy sandstone/brick/rock/wood families."
     }
