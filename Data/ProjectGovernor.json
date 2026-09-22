@@ -1325,7 +1325,8 @@
         "Data/NPCRegionalMoodPlan.json defines shared peace/suspicion/fear/grief/war-pressure context by chapter",
         "UShireNPCContextSubsystem exposes regional mood/pressure and includes it in local character context and dialogue selection",
         "Follow-up: exact regional mood eligibility and priority replace seed-only mood influence; 30 original Moria/Lothlorien companion lines reuse existing intent, knowledge, chapter and repetition gates.",
-        "FilmDialogueSourceContext now carries 53 original story-reactive variants spanning all Part I regional moods and major companion/story contexts."
+        "FilmDialogueSourceContext now carries 53 original story-reactive variants spanning all Part I regional moods and major companion/story contexts.",
+        "Committed-world NPC context bridge prevents old visible NPCs from using destination chapter/route mood or new dialogue/film context during asynchronous swaps; same-world quest reactions remain live."
       ],
       "missing_work": [
         "Feed bounded emotion/goal context into named-NPC dialogue selection",
@@ -1335,7 +1336,7 @@
         "Deepen authored dialogue variation so more intents visibly react to memory, relationship, emotion and regional mood",
         "Validate all-profile offline intelligence coverage in UE4.27 and target-laptop runtime",
         "Compile and run Shire.NPC.RegionalDialogue automation and observe regional dialogue in UE4.27; current follow-up is source-implemented only.",
-        "Use committed-world chapter/route context for regional mood and film-context eligibility during asynchronous world transitions so old visible NPCs cannot react to the destination early."
+        "Forced slow-transition PIE proof that old-world NPC context remains coherent until OnWorldCommitted."
       ],
       "acceptance_criteria": [
         "NPC behavior visibly varies with routine, danger, weather and bounded internal state",
@@ -2239,14 +2240,16 @@
       "implementation_refs": [
         "Source 11 §8: profile representative scenes; memory includes textures/skeletal/audio/persistent levels; avoid crossing narrative seams while critical content is still asynchronous unless masked by an authored transition.",
         "Live develop audit: FellowshipChapterWorldBuilder 77 direct LoadObject calls; Shire 55; Bree 22; Isengard 10; LivingWorldDirector 13; ShireNPC 4.",
-        "Fellowship builder previously loaded unrelated Weathertop/Rivendell/Road/Moria/Lorien/Anduin banks together."
+        "Fellowship builder previously loaded unrelated Weathertop/Rivendell/Road/Moria/Lorien/Anduin banks together.",
+        "All four chapter world builders now resolve production meshes only from asynchronously resident chapter banks; no direct UStaticMesh LoadObject remains in those builders.",
+        "ChapterAssetStreamingPlan now includes Black Rider, Moria threat and Amon Hen enemy production banks so enemy visual resolution can stay resident-only."
       ],
       "missing_work": [
         "Earn exact-head Pre-Unreal and UE4.27.2 build/import/startup/chapter/state/warning proof.",
         "Measure transition hitch, streaming pool, resident memory and target-device frame time before claiming a performance win.",
-        "After measurement, reduce or split oversized banks and migrate remaining justified synchronous loads incrementally.",
         "Add authored transition masking/progress presentation only if real load latency is visible.",
-        "Burn down remaining chapter-builder/player/named-character synchronous LoadObject paths only after exact-head engine recovery, preserving compatibility fallbacks and measuring transition behavior."
+        "Burn down remaining chapter-builder/player/named-character synchronous LoadObject paths only after exact-head engine recovery, preserving compatibility fallbacks and measuring transition behavior.",
+        "Compile and runtime-test the resident-only builder/enemy resolution path after runner recovery, then measure transition hitch/resident memory before performance acceptance."
       ],
       "acceptance_criteria": [
         "Router does not clear the current runtime world before requested chapter assets report ready.",
@@ -2326,7 +2329,8 @@
         "First engine tests validate SaveGame default/schema invariants and post-import chapter streaming package existence without synchronously loading heavy production assets.",
         "ci_run_project_automation.cmd launches UE4Editor-Cmd headlessly and parse_automation_report.py fails closed if required tests do not complete successfully.",
         "Unreal Build Validation runs the automation suite after exact-head compile/import and before runtime chapter/state smoke.",
-        "Startup grounding PASS is delayed until two seconds of stable non-falling state with blocking ground."
+        "Startup grounding PASS is delayed until two seconds of stable non-falling state with blocking ground.",
+        "Continuous deep audit now guards committed NPC context, character-rig handle release, non-engine synchronous LoadObject reintroduction, builder tick policy and bounded social scans."
       ],
       "missing_work": [
         "Compile and execute the new Automation Framework suite on UE4.27.2.",
@@ -2376,7 +2380,8 @@
         "Chapter/route heavy asset banks already use FSoftObjectPath + FStreamableManager async loading.",
         "Repeated decorative detail already has HISM + explicit cull-distance infrastructure.",
         "DeepProjectAudit statically guards against synchronous LoadObject inside Tick.",
-        "VisualPerformanceOptimizationPlan records hybrid lighting/material/LOD/culling rules and rejects unmeasured blanket techniques."
+        "VisualPerformanceOptimizationPlan records hybrid lighting/material/LOD/culling rules and rejects unmeasured blanket techniques.",
+        "DeepProjectAudit now rejects any synchronous LoadObject outside tiny /Engine/BasicShapes fallbacks and separately rejects synchronous USoundBase loading."
       ],
       "missing_work": [
         "Run exact-head static validation for the new visual-performance guardrails.",
@@ -2428,7 +2433,11 @@
         "Saved transforms are grounded only after committed-world identity matches the restored save.",
         "Failed-swap rollback snapshots now include player health/stamina/resolve/supplies and RestoreCommittedWorldFromSnapshot reapplies player-life state before releasing world hold.",
         "Unreal Build workflow now attempts a guarded read/execute-only ACL repair for NETWORK SERVICE over UE4 Engine Content before running the unchanged engine-content verification gate.",
-        "A second ambientCG warehouse batch now targets non-Shire trilogy regions (Caradhras, Moria, Rohan, Gondor, Osgiliath/Ithilien, Mordor, Isengard, Bree/battlefields, Pelennor support and Shelob-lair support materials)."
+        "A second ambientCG warehouse batch now targets non-Shire trilogy regions (Caradhras, Moria, Rohan, Gondor, Osgiliath/Ithilien, Mordor, Isengard, Bree/battlefields, Pelennor support and Shelob-lair support materials).",
+        "ChapterWorldRouter now publishes committed chapter/route/episode/revision into UShireNPCContextSubsystem on normal commit and rollback.",
+        "NPC regional mood/profile availability follows committed world identity; new bounded dialogue/film-context selection is suppressed while logical quest state and visible committed world disagree.",
+        "Character rig async handoff now releases completed FStreamableHandle ownership after player/NPC components take UObject references, preventing GameInstance-lifetime handle pinning.",
+        "All non-engine runtime LoadObject paths found in the audit were removed; chapter/world/enemy production meshes and audio now use resident-only soft resolution with async ownership/fallback contracts."
       ],
       "missing_work": [
         "Exact-head UE4.27 compile/runtime proof for full failed-swap rollback transaction, including player-life restoration and movement release.",
@@ -2439,8 +2448,9 @@
         "Re-run the original P1C01 fall-through symptom in PIE before closing startup defect.",
         "Only after the integrated foundation is green, merge/rebase the integration train into develop and retire superseded overlapping PR branches.",
         "Register and schedule ground-safe ambient placement, ambient object pooling and asynchronous living-world visual asset ownership before further density expansion.",
-        "Bind NPC regional mood/profile availability/film dialogue context to committed world identity/revision instead of logical destination quest state during async swaps.",
-        "Validate character-rig residency across chapter transitions and add bounded inactive-rig handle release if measured memory warrants it."
+        "Compile the committed-context/rig-residency/load-burn-down source fixes on UE4.27.2 exact head after runner ACL repair.",
+        "Run a forced slow chapter transition and prove no destination NPC mood/dialogue leaks before world commit.",
+        "Measure multi-chapter skeletal/animation residency and GC behavior on the target laptop."
       ],
       "acceptance_criteria": [
         "No destination living-world state is applied before its geometry is committed.",
@@ -3943,7 +3953,21 @@
       "Physical Public/Private source migration remains intentionally pending and must stay a dedicated maintenance pass after the engine gate is restored."
     ],
     "next_priority": "W00_RUNNER_AND_EXACT_HEAD_UNLOCK",
-    "truth_boundary": "This reconciliation is source/static analysis and workflow evidence. It is not compile, PIE, device or visual proof."
+    "truth_boundary": "This reconciliation is source/static analysis and workflow evidence. It is not compile, PIE, device or visual proof.",
+    "source_fix_closure": {
+      "status": "SOURCE_FIXES_APPLIED_ENGINE_PROOF_PENDING",
+      "repairs": [
+        "committed-world NPC context synchronization",
+        "transitional dialogue suppression",
+        "character rig completed-handle release",
+        "chapter world-builder synchronous production mesh load removal",
+        "player/named-NPC/enemy resident-only production visual resolution",
+        "audio synchronous USoundBase load removal",
+        "enemy production assets added to async chapter banks",
+        "continuous audit guards added to prevent regression"
+      ],
+      "evidence_boundary": "Source fixes are not CLOSED defects until fresh exact-head UE4.27 compile/runtime/PIE evidence exists. W00 runner ACL remains the blocker."
+    }
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",
@@ -5024,5 +5048,28 @@
     "report_rule": "Report whole-game planning completion percentage, 24-hour delta, wave movement, meaningful production drops, exact-head validation evidence, blockers, and warehouse/runtime visibility progress. Do not increase progress from commit count alone; only advance percentage when wave exit criteria materially move.",
     "evidence_rule": "Never convert static/compile/warehouse evidence into PIE/device/visual acceptance without matching proof.",
     "audience": "OWNER"
+  },
+  "cross_system_audit_cycle": {
+    "status": "ACTIVE_ENFORCED",
+    "cadence": "AFTER_EACH_MAJOR_PRODUCTION_DROP_AND_BEFORE_ANY_WAVE_PROMOTION",
+    "purpose": "Catch integration gaps at system boundaries instead of waiting for a later deep audit.",
+    "checks": [
+      "Governor requirement <-> MasterExecutionRoadmap mapping and tracked snapshots",
+      "logical quest/route state <-> committed visible world identity/revision",
+      "chapter/character/audio heavy asset ownership is soft/asynchronous; no non-engine synchronous LoadObject",
+      "save/checkpoint/rollback describe the same committed world and preserve player/NPC persistent state",
+      "ambient population pooling/tick/collision/social-state reset and bounded actor churn",
+      "character rig handle lifetime and inactive-cast residency on the low-VRAM target",
+      "camera/input/cinematic transitions return to embodied third-person control",
+      "exact-head evidence labels remain separated: static, compile, PIE, device, visual"
+    ],
+    "machine_guards": [
+      "PG-078 roadmap/governor orphan guard",
+      "Scripts/deep_project_audit.py committed-context bridge guard",
+      "Scripts/deep_project_audit.py character-rig handle release guard",
+      "Scripts/deep_project_audit.py non-engine LoadObject rejection",
+      "Scripts/deep_project_audit.py world-builder no-tick and social-scan bounds"
+    ],
+    "stop_rule": "A newly discovered HIGH/CRITICAL cross-system gap is repaired or explicitly quarantined before the active wave may be promoted."
   }
 }
