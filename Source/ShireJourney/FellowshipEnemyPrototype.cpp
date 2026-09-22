@@ -12,6 +12,7 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
+#include "UObject/SoftObjectPath.h"
 
 AFellowshipEnemyPrototype::AFellowshipEnemyPrototype()
 {
@@ -106,7 +107,7 @@ void AFellowshipEnemyPrototype::ApplyTypeProfile()
     auto TryMesh = [](UStaticMeshComponent* Component, const FString& AssetPath) -> bool
     {
         if (!Component) return false;
-        if (UStaticMesh* Mesh = LoadObject<UStaticMesh>(nullptr, *AssetPath))
+        if (UStaticMesh* Mesh = Cast<UStaticMesh>(FSoftObjectPath(AssetPath).ResolveObject()))
         {
             Component->SetStaticMesh(Mesh);
             return true;
