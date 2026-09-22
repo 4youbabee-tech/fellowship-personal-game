@@ -1,3 +1,21 @@
+## 2026-09-22 - architectural stabilization freeze / root-cause hardening
+
+Owner direction is now explicit: **do not continue feature expansion by patching individual symptoms**. The project is in `W00_ARCHITECTURAL_STABILIZATION`; validation builds are required evidence, but new gameplay/region/warehouse expansion is frozen until the stabilization gate is green.
+
+Last real engine evidence remains Unreal Build #547 on `a42679a4de808ce1f9bada7974ad87d52ee18fa9`: UE4.27.2 C++ build PASS, production import PASS, `ShireJourney.QA` 2/2 PASS, startup and P1C01-P1C04 headless audits PASS, then P1C05 failed with `no-blocking-ground`. The old runtime harness stopped at that first failure, so it provided no P1C06-P1C08 evidence.
+
+The P1C05 response has been converted from a chapter patch into a shared world contract. `ChapterWorldRouter::ResolveGroundedSpawnLocation` now probes a bounded deterministic ring around authored/restored positions, rejects steep surfaces, checks full pawn-capsule clearance, and chooses the nearest valid ground. The temporary P1C01 and P1C05 `RuntimeSpawnFoundation` support pads were removed; Project Guardian now rejects reintroduction of chapter-specific spawn pads.
+
+Runtime QA no longer stops at the first chapter failure. A single chapter sweep now attempts all P1C01-P1C08 sequentially on the low-RAM runner and emits `RUNTIME_SWEEP_SUMMARY`, so one engine build exposes the whole failure set instead of forcing serial red-build discovery.
+
+Character rig requests are also hardened. Missing future-production skeletal mesh / AnimBP packages are checked with `FPackageName::DoesPackageExist` before `RequestAsyncLoad`. Missing rigs remain on modular fallback without flooding Unreal with missing-package async-load errors; completed real rig handles still release after actor-owned handoff.
+
+Source-asset hygiene was repaired at the source, not hidden in importer logs. All 24 tracked BMP textures were converted to TGA, all MTL diffuse references were migrated, the importer now discovers PNG/TGA only, and Guardian rejects BMP. Seven project-owned OBJ files contained consecutive duplicate-position face vertices; 304 affected faces were normalized, and triangulation-risk faces are now strict asset-audit failures instead of warnings.
+
+Material persistence remains evidence-bounded rather than guessed. The importer already performs deterministic master/MTL synthesis, explicit pre/post material package saves, on-disk verification and import failure on missing material packages. Build #547 import passed, but the full warning-debt/material gate was not reached because the old chapter harness stopped at P1C05. Fresh exact-head proof is therefore still required.
+
+No post-#547 hardening change is called COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED yet. The next permitted activity is exact-head stabilization validation, not feature construction.
+
 ## 2026-09-22 - W00 engine recovery reached runtime; P1C05 grounding gap repaired
 
 Unreal Build #547 on exact head `a42679a4de808ce1f9bada7974ad87d52ee18fa9` proved the runner recovery beyond the former ACL gate. UE4.27.2 C++ build succeeded, production asset import succeeded, both `ShireJourney.QA` Automation Framework tests passed, and headless startup plus P1C01-P1C04 chapter audits passed. The run then failed at P1C05 with `ShireStartupGrounding: FAIL chapter=P1C05 reason=no-blocking-ground requested=(-2400.0,0.0,130.0)`.
