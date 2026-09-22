@@ -200,7 +200,7 @@ def main() -> int:
             )
             stats["obj_with_zero_area_faces"] += 1
         if triangulation_risk_faces:
-            warnings.append(
+            errors.append(
                 f"{obj.relative_to(ROOT)} has {triangulation_risk_faces} triangulation-risk faces"
             )
             stats["obj_with_triangulation_risk"] += 1
