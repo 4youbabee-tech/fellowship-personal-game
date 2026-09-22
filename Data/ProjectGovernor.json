@@ -2511,6 +2511,45 @@
       ],
       "checkpoint": "WAREHOUSE_FIRST_PRODUCTION",
       "notes": "Catalogue coverage is now trilogy-wide first-pass complete; actual final production files are not yet complete. Do not conflate catalogue fullness with visual acceptance."
+    },
+    {
+      "id": "REQ-CAMERA-001",
+      "title": "Embodied third-person action-adventure camera is the default gameplay perspective",
+      "category": "PlayerExperience",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly rejected top-down/RTS-style control and defined the goal as feeling physically present inside Middle-earth while directly controlling the character.",
+      "intent": "Use a GTA/Red-Dead-like third-person embodied camera as the default exploration/combat/interaction perspective: camera behind or slightly over the player character, close enough to read the world and character but far enough for traversal/combat awareness. Do not use top-down, isometric or commander-style gameplay as the normal control mode.",
+      "evidence": [
+        "Data/GameCompletenessMatrix.json CAMERA system",
+        "Source/ShireJourney/ShirePlayerCharacter.cpp",
+        "Source/ShireJourney/ShirePlayerCharacter.h",
+        "Docs/WORLD_DETAIL_LEDGER.md"
+      ],
+      "implementation_refs": [
+        "Current camera foundation already uses third-person follow/lag and character-scale offsets.",
+        "Temporary authored cinematic framing may override the gameplay camera only for bounded story presentation and must return safely to embodied control."
+      ],
+      "missing_work": [
+        "Tune follow distance, shoulder/height offsets, FOV, camera collision and interior behavior per character scale.",
+        "PIE review for Shire traversal, interaction distance, combat readability and world-scale immersion.",
+        "Target-device performance/comfort review before visual acceptance."
+      ],
+      "acceptance_criteria": [
+        "Normal movement directly controls the active character from a third-person behind/over-shoulder view.",
+        "The player never needs an RTS/top-down command view to explore or progress.",
+        "Camera framing keeps the character and nearby world readable without making the player feel detached from the environment.",
+        "Camera collision prevents persistent wall/geometry clipping.",
+        "Interior/exterior transitions remain comfortable and do not break interaction targeting.",
+        "Cinematic camera moments return to the same embodied gameplay state without corrupting movement/save/route state."
+      ],
+      "dependencies": [
+        "REQ-CHAR-001",
+        "REQ-QUALITY-002",
+        "REQ-PERF-001"
+      ],
+      "checkpoint": "PLAYER_CAMERA_EXPERIENCE",
+      "notes": "Primary goal is presence in the world: walk through, approach, touch/interact, fight and observe from the controlled character's physical position rather than directing units from above."
     }
   ],
   "hard_invariants": [
@@ -3204,6 +3243,23 @@
       "evidence": [
         "Data/TrilogyWorldFoundationPlanV1.json",
         "Data/TrilogyProductionAssetWarehouse.json"
+      ]
+    },
+    {
+      "id": "DEC-035",
+      "title": "Third-person embodied perspective is the permanent gameplay default",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-CAMERA-001",
+        "REQ-QUALITY-002",
+        "REQ-VISION-001"
+      ],
+      "resolution": "Keep Shire Journey as a direct-control third-person action-adventure experience, broadly comparable in camera relationship to GTA V / Red Dead style play: behind or slightly over the active character with contextual camera tuning. Do not turn normal gameplay into top-down, isometric, RTS or squad-command control. Allow bounded cinematic camera shots only when they return cleanly to the player's embodied perspective.",
+      "rationale": "The owner wants the game's central feeling to be inhabiting and touching Middle-earth, not observing it from above.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Data/GameCompletenessMatrix.json"
       ]
     }
   ],
