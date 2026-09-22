@@ -4936,5 +4936,14 @@
     "remaining_waves": 12,
     "estimated_major_production_drops": "30-40",
     "rule": "Track progress by wave exit criteria, not raw commit/file-upload count. Percentages are planning estimates and never substitute for validation evidence."
+  },
+  "daily_progress_reporting": {
+    "status": "ACTIVE",
+    "cadence": "EVERY_24_HOURS",
+    "baseline_percent": 40,
+    "source_of_truth": "Data/CompletionWaveMapV1.json",
+    "report_rule": "Report whole-game planning completion percentage, 24-hour delta, wave movement, meaningful production drops, exact-head validation evidence, blockers, and warehouse/runtime visibility progress. Do not increase progress from commit count alone; only advance percentage when wave exit criteria materially move.",
+    "evidence_rule": "Never convert static/compile/warehouse evidence into PIE/device/visual acceptance without matching proof.",
+    "audience": "OWNER"
   }
 }
