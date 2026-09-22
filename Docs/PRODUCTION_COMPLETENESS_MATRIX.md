@@ -1,3 +1,9 @@
+## 2026-09-22 - integration gap closure status
+
+Cross-system maturity improved at source level without changing the whole-game planning percentage. Three previously open architecture risks now have source fixes: committed-world NPC context synchronization, character-rig handle lifetime release, and removal of non-engine synchronous runtime LoadObject paths from world/character/enemy/audio production resolution. DeepProjectAudit now guards these invariants against regression.
+
+Status remains **SOURCE FIX / STATIC EVIDENCE PENDING FINAL HEAD**, not compile/runtime acceptance. The W00 runner ACL blocker still prevents UE4.27.2 compile, PIE, device and visual proof, so no production-completeness percentage is promoted from this repair alone.
+
 ## 2026-09-22 - deep organization and integration audit
 
 Current production maturity is unchanged by this audit. Warehouse #99 is real staged/audited evidence (240 payload files / 3,816,657,674 bytes), but Pre-Unreal #685 is red from roadmap/governor drift and Unreal #520 remains blocked before compilation by the runner Engine Content ACL. The camera requirement mapping is repaired at source/governance level; engine proof is still pending.
