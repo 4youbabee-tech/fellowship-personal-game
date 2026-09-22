@@ -8,8 +8,10 @@ import re
 # scope="runtime": startup/chapter/state logs only.
 CHECKS = [
     ("Missing smoothing groups", re.compile(r"No smoothing group information", re.I), 0, None, "all"),
-    ("Degenerate tangent bases", re.compile(r"\b(SM_[A-Za-z0-9_]+) has degenerate tangent bases", re.I), 150, 1, "all"),
-    ("Nearly-zero binormals", re.compile(r"\b(SM_[A-Za-z0-9_]+) has some nearly zero bi-normals", re.I), 150, 1, "all"),
+    ("Degenerate tangent bases", re.compile(r"\b(SM_[A-Za-z0-9_]+) has degenerate tangent bases", re.I), 0, 1, "all"),
+    ("Nearly-zero tangents", re.compile(r"\b(SM_[A-Za-z0-9_]+) has some nearly zero tangents", re.I), 0, 1, "all"),
+    ("Nearly-zero binormals", re.compile(r"\b(SM_[A-Za-z0-9_]+) has some nearly zero bi-normals", re.I), 0, 1, "all"),
+    ("Missing production master surface", re.compile(r"(M_ProductionSurface).*?(?:Can't find file|Failed to find object)", re.I), 0, 1, "all"),
     ("Missing world packages", re.compile(r"Failed to load '(/Game/Production/World/[^']+)'", re.I), 0, 1, "runtime"),
     ("Missing optional audio", re.compile(r"Failed to load '(/Game/Audio/[^']+)'", re.I), 0, 1, "runtime"),
     ("Missing optional rigs", re.compile(r"Failed to load '(/Game/Production/Characters/Rigs/[^']+)'", re.I), 0, 1, "runtime"),

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "38c2c958121576b68a0bfaf4e276498d4fe89dad_ENGINE_594_REVIEW_PLUS_NEXT_SOURCE_WAVE_PENDING",
+  "audited_head": "a148d1afa919fa63725e3760684d6eed061c5e40_ENGINE_595_GREEN_PLUS_IMPORT_WARNING_ZEROING_SOURCE_WAVE_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -131,11 +131,11 @@
     },
     {
       "id": "AUDIT-MED-014",
-      "severity": "MEDIUM",
-      "status": "SOURCE_HYGIENE_REPAIRED_PENDING_IMPORT_WARNING_RECHECK",
+      "severity": "HIGH",
+      "status": "SOURCE_NORMALIZATION_HARDENED_PENDING_EXACT_HEAD_IMPORT_PROOF",
       "title": "Legacy texture format and duplicate OBJ face vertices created avoidable import debt",
-      "evidence": "The source bank contained 24 BMP textures and seven OBJ files with 304 total triangulation-risk faces caused by consecutive duplicate-position face vertices. Those defects corresponded with large UE import tangent/binormal warning volume.",
-      "action": "All 24 BMP files are migrated to TGA with MTL references updated; BMP is now rejected. Duplicate face vertices were removed from all seven known source meshes and triangulation-risk faces are now strict asset-audit errors. Re-run import and warning debt on exact head."
+      "evidence": "Unreal #595 passed the full required runtime chain on a148d1afa919fa63725e3760684d6eed061c5e40, but import logs still contained 137 unique nearly-zero binormal identities and corresponding tangent warnings. Pre-Unreal source audit also reported 321/352 OBJ files without UVs and 334/352 without explicit normals. The old warning guard allowed up to 150, which could hide persistent quality debt.",
+      "action": "Importer working-copy normalization now generates deterministic face-projected UVs for OBJ files lacking vt records and package-existence preflights M_ProductionSurface before any synchronous load attempt. Tangent/binormal/master-surface warning ceilings are now zero. Fresh exact-head compile/import must prove the normalizer removes the warning class rather than merely tolerating it."
     },
     {
       "id": "AUDIT-HIGH-015",
@@ -160,6 +160,14 @@
       "title": "Cancelled asynchronous audio callbacks could still execute stale playback",
       "evidence": "CancelPendingAudioCategory removed/cancelled handles, but HandleAsyncAudioReady did not verify that LoadKey was still owned before resolving/playing the completed request.",
       "action": "Late callbacks now return unless PendingAudioLoads still owns LoadKey. Keep audio runtime acceptance separate because CI currently runs with -NoSound."
+    },
+    {
+      "id": "AUDIT-HIGH-018",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_IMPORT_PROOF",
+      "title": "Import warning ceilings allowed large tangent/binormal debt to remain green",
+      "evidence": "Unreal #595 warning-debt step passed while reporting 137 unique nearly-zero binormal mesh identities because the guard ceiling was 150. That is a tolerance policy, not root-cause closure.",
+      "action": "Zero the ceilings, add explicit nearly-zero tangent coverage, generate deterministic UVs in the ignored import working copy for UV-less static OBJ geometry, and fail import normalization if a face cannot be safely projected."
     }
   ],
   "external_practice_alignment": [
@@ -197,5 +205,5 @@
     "human core-loop, first-five-minutes onboarding, pacing/readability and visual review",
     "dedicated Public/Private source migration after stabilization exact-head green"
   ],
-  "audit_scope_note": "Unreal #594 proves compile/import/Automation/startup/all-eight headless chapter coverage for 38c2c958121576b68a0bfaf4e276498d4fe89dad and proves the production-surface fix. Persistence still failed on that SHA. The subsequent persistence/resident-bank/audio fixes are source-level until a new exact-head run passes."
+  "audit_scope_note": "Unreal #595 proves the persistence/transition source wave on a148d1afa919fa63725e3760684d6eed061c5e40 through compile/import/Automation/startup/P1C01-P1C08/state/transitions/warning gate. A subsequent import-quality wave is now intentionally stricter: tangent/binormal/master-surface warning debt must be zero on a fresh exact head before closure."
 }

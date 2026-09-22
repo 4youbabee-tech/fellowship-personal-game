@@ -3590,6 +3590,38 @@ if "IsChapterBankReady(ChapterId, RouteId)" not in pg129_stream:
 if "if (!PendingAudioLoads.Contains(LoadKey))" not in pg129_audio:
     fail("PG-129 cancelled async audio callback can still resurrect stale playback")
 
+# PG-130: import warning debt must converge toward zero instead of accepting a permanent ceiling.
+pg130_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+pg130_warning_guard = read(ROOT / "Scripts" / "warning_debt_guard.py")
+pg130_warning_tests = read(ROOT / "Scripts" / "test_warning_debt_guard.py")
+
+for pg130_symbol in [
+    "InjectDeterministicFaceUVs",
+    "HasObjTextureCoordinates",
+    "GeneratedUVSourceMeshes",
+    "DoesPackageExist(ProductionSurfacePackage)",
+]:
+    if pg130_symbol not in pg130_importer:
+        fail(f"PG-130 deterministic import normalization missing: {pg130_symbol}")
+
+for pg130_category in [
+    '("Degenerate tangent bases", re.compile',
+    '("Nearly-zero tangents", re.compile',
+    '("Nearly-zero binormals", re.compile',
+    '("Missing production master surface", re.compile',
+]:
+    start = pg130_warning_guard.find(pg130_category)
+    if start < 0:
+        fail(f"PG-130 zero-warning debt category missing: {pg130_category}")
+    else:
+        line_end = pg130_warning_guard.find("\n", start)
+        row = pg130_warning_guard[start:line_end if line_end >= 0 else None]
+        if ", 0," not in row:
+            fail(f"PG-130 warning-debt category is not zero-tolerance: {pg130_category}")
+
+if "test_tangent_warning_categories_are_zero_tolerance" not in pg130_warning_tests:
+    fail("PG-130 zero-tolerance warning regression test missing")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     sys.exit(1)

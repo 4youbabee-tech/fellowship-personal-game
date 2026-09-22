@@ -23,6 +23,279 @@
 #include "UObject/Package.h"
 #include "UObject/UObjectGlobals.h"
 
+namespace ShireProductionImport
+{
+    static bool HasObjTextureCoordinates(const FString& ObjSource)
+    {
+        return ObjSource.StartsWith(TEXT("vt ")) ||
+            ObjSource.Contains(TEXT("\nvt "), ESearchCase::CaseSensitive);
+    }
+
+    static bool ParseObjVertex(const FString& Line, FVector& OutVertex)
+    {
+        TArray<FString> Parts;
+        Line.ParseIntoArrayWS(Parts);
+        if (Parts.Num() < 4 || Parts[0] != TEXT("v"))
+        {
+            return false;
+        }
+
+        OutVertex.X = FCString::Atof(*Parts[1]);
+        OutVertex.Y = FCString::Atof(*Parts[2]);
+        OutVertex.Z = FCString::Atof(*Parts[3]);
+        return FMath::IsFinite(OutVertex.X) &&
+            FMath::IsFinite(OutVertex.Y) &&
+            FMath::IsFinite(OutVertex.Z);
+    }
+
+    static bool ParseObjFaceVertex(
+        const FString& Token,
+        int32 VertexCount,
+        int32& OutVertexIndex,
+        FString& OutNormalSuffix)
+    {
+        FString VertexText = Token;
+        OutNormalSuffix.Empty();
+
+        const int32 SlashIndex = Token.Find(TEXT("/"));
+        if (SlashIndex != INDEX_NONE)
+        {
+            VertexText = Token.Left(SlashIndex);
+            const FString Remainder = Token.Mid(SlashIndex + 1);
+            if (!Remainder.IsEmpty())
+            {
+                if (!Remainder.StartsWith(TEXT("/")))
+                {
+                    return false;
+                }
+                OutNormalSuffix = Remainder;
+            }
+        }
+
+        const int32 RawIndex = FCString::Atoi(*VertexText);
+        if (RawIndex == 0)
+        {
+            return false;
+        }
+
+        const int32 ResolvedIndex =
+            RawIndex > 0 ? RawIndex - 1 : VertexCount + RawIndex;
+        if (ResolvedIndex < 0 || ResolvedIndex >= VertexCount)
+        {
+            return false;
+        }
+
+        OutVertexIndex = ResolvedIndex;
+        return true;
+    }
+
+    static bool InjectDeterministicFaceUVs(
+        FString& ObjSource,
+        bool& bOutInjected)
+    {
+        bOutInjected = false;
+        if (HasObjTextureCoordinates(ObjSource))
+        {
+            return true;
+        }
+
+        TArray<FString> Lines;
+        ObjSource.ParseIntoArrayLines(Lines, false);
+
+        TArray<FVector> Vertices;
+        Vertices.Reserve(Lines.Num());
+        for (const FString& RawLine : Lines)
+        {
+            const FString Line = RawLine.TrimStartAndEnd();
+            if (!Line.StartsWith(TEXT("v ")))
+            {
+                continue;
+            }
+
+            FVector Vertex = FVector::ZeroVector;
+            if (!ParseObjVertex(Line, Vertex))
+            {
+                return false;
+            }
+            Vertices.Add(Vertex);
+        }
+
+        if (Vertices.Num() < 3)
+        {
+            return true;
+        }
+
+        FVector MinBounds = Vertices[0];
+        FVector MaxBounds = Vertices[0];
+        for (const FVector& Vertex : Vertices)
+        {
+            MinBounds.X = FMath::Min(MinBounds.X, Vertex.X);
+            MinBounds.Y = FMath::Min(MinBounds.Y, Vertex.Y);
+            MinBounds.Z = FMath::Min(MinBounds.Z, Vertex.Z);
+            MaxBounds.X = FMath::Max(MaxBounds.X, Vertex.X);
+            MaxBounds.Y = FMath::Max(MaxBounds.Y, Vertex.Y);
+            MaxBounds.Z = FMath::Max(MaxBounds.Z, Vertex.Z);
+        }
+
+        TArray<FString> GeneratedUVLines;
+        int32 NextUVIndex = 1;
+        int32 FirstFaceLine = INDEX_NONE;
+
+        for (int32 LineIndex = 0; LineIndex < Lines.Num(); ++LineIndex)
+        {
+            const FString Trimmed = Lines[LineIndex].TrimStartAndEnd();
+            if (!Trimmed.StartsWith(TEXT("f ")))
+            {
+                continue;
+            }
+
+            if (FirstFaceLine == INDEX_NONE)
+            {
+                FirstFaceLine = LineIndex;
+            }
+
+            TArray<FString> Tokens;
+            Trimmed.Mid(2).ParseIntoArrayWS(Tokens);
+            if (Tokens.Num() < 3)
+            {
+                return false;
+            }
+
+            TArray<int32> FaceVertexIndices;
+            TArray<FString> FaceNormalSuffixes;
+            FaceVertexIndices.Reserve(Tokens.Num());
+            FaceNormalSuffixes.Reserve(Tokens.Num());
+
+            for (const FString& Token : Tokens)
+            {
+                int32 VertexIndex = INDEX_NONE;
+                FString NormalSuffix;
+                if (!ParseObjFaceVertex(
+                        Token,
+                        Vertices.Num(),
+                        VertexIndex,
+                        NormalSuffix))
+                {
+                    return false;
+                }
+                FaceVertexIndices.Add(VertexIndex);
+                FaceNormalSuffixes.Add(NormalSuffix);
+            }
+
+            FVector FaceNormal = FVector::ZeroVector;
+            const FVector Base = Vertices[FaceVertexIndices[0]];
+            for (int32 Corner = 1; Corner + 1 < FaceVertexIndices.Num(); ++Corner)
+            {
+                const FVector A = Vertices[FaceVertexIndices[Corner]] - Base;
+                const FVector B = Vertices[FaceVertexIndices[Corner + 1]] - Base;
+                FaceNormal = FVector::CrossProduct(A, B);
+                if (FaceNormal.SizeSquared() > KINDA_SMALL_NUMBER)
+                {
+                    break;
+                }
+            }
+
+            if (FaceNormal.SizeSquared() <= KINDA_SMALL_NUMBER)
+            {
+                return false;
+            }
+
+            const FVector AbsNormal(
+                FMath::Abs(FaceNormal.X),
+                FMath::Abs(FaceNormal.Y),
+                FMath::Abs(FaceNormal.Z));
+
+            int32 AxisU = 0;
+            int32 AxisV = 1;
+            if (AbsNormal.X >= AbsNormal.Y && AbsNormal.X >= AbsNormal.Z)
+            {
+                AxisU = 1;
+                AxisV = 2;
+            }
+            else if (AbsNormal.Y >= AbsNormal.X && AbsNormal.Y >= AbsNormal.Z)
+            {
+                AxisU = 0;
+                AxisV = 2;
+            }
+
+            const auto AxisValue = [](const FVector& Value, int32 Axis)
+            {
+                return Axis == 0 ? Value.X : (Axis == 1 ? Value.Y : Value.Z);
+            };
+
+            const float MinU = AxisValue(MinBounds, AxisU);
+            const float MaxU = AxisValue(MaxBounds, AxisU);
+            const float MinV = AxisValue(MinBounds, AxisV);
+            const float MaxV = AxisValue(MaxBounds, AxisV);
+            const float RangeU = MaxU - MinU;
+            const float RangeV = MaxV - MinV;
+            if (FMath::Abs(RangeU) <= KINDA_SMALL_NUMBER ||
+                FMath::Abs(RangeV) <= KINDA_SMALL_NUMBER)
+            {
+                return false;
+            }
+
+            TArray<FString> RewrittenTokens;
+            RewrittenTokens.Reserve(Tokens.Num());
+            for (int32 Corner = 0; Corner < FaceVertexIndices.Num(); ++Corner)
+            {
+                const int32 VertexIndex = FaceVertexIndices[Corner];
+                const FVector& Vertex = Vertices[VertexIndex];
+                const float U = FMath::Clamp(
+                    (AxisValue(Vertex, AxisU) - MinU) / RangeU,
+                    0.0f,
+                    1.0f);
+                const float V = FMath::Clamp(
+                    (AxisValue(Vertex, AxisV) - MinV) / RangeV,
+                    0.0f,
+                    1.0f);
+
+                GeneratedUVLines.Add(FString::Printf(
+                    TEXT("vt %.6f %.6f"),
+                    U,
+                    V));
+
+                const FString& NormalSuffix = FaceNormalSuffixes[Corner];
+                const int32 SourceVertexIndex = VertexIndex + 1;
+                RewrittenTokens.Add(NormalSuffix.IsEmpty()
+                    ? FString::Printf(
+                        TEXT("%d/%d"),
+                        SourceVertexIndex,
+                        NextUVIndex)
+                    : FString::Printf(
+                        TEXT("%d/%d%s"),
+                        SourceVertexIndex,
+                        NextUVIndex,
+                        *NormalSuffix));
+                ++NextUVIndex;
+            }
+
+            Lines[LineIndex] =
+                FString(TEXT("f ")) + FString::Join(RewrittenTokens, TEXT(" "));
+        }
+
+        if (GeneratedUVLines.Num() == 0 || FirstFaceLine == INDEX_NONE)
+        {
+            return true;
+        }
+
+        TArray<FString> OutputLines;
+        OutputLines.Reserve(Lines.Num() + GeneratedUVLines.Num());
+        for (int32 LineIndex = 0; LineIndex < Lines.Num(); ++LineIndex)
+        {
+            if (LineIndex == FirstFaceLine)
+            {
+                OutputLines.Append(GeneratedUVLines);
+            }
+            OutputLines.Add(Lines[LineIndex]);
+        }
+
+        ObjSource = FString::Join(OutputLines, TEXT("\n")) + TEXT("\n");
+        bOutInjected = true;
+        return true;
+    }
+}
+
 UShireProductionImportCommandlet::UShireProductionImportCommandlet()
 {
     IsClient = false;
@@ -148,7 +421,17 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     const TCHAR* ProductionSurfacePath =
         TEXT("/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface");
     UMaterialInterface* ProductionMaterialParent =
-        LoadObject<UMaterialInterface>(nullptr, ProductionSurfacePath);
+        FindObject<UMaterialInterface>(nullptr, ProductionSurfacePath);
+    if (!ProductionMaterialParent)
+    {
+        const FString ProductionSurfacePackage =
+            FPackageName::ObjectPathToPackageName(ProductionSurfacePath);
+        if (FPackageName::DoesPackageExist(ProductionSurfacePackage))
+        {
+            ProductionMaterialParent =
+                LoadObject<UMaterialInterface>(nullptr, ProductionSurfacePath);
+        }
+    }
 
     if (!ProductionMaterialParent)
     {
@@ -361,6 +644,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     }
     TSet<FString> AuthoredMaterialDestinationPaths;
     int32 RecoveredMaterialBindings = 0;
+    int32 GeneratedUVSourceMeshes = 0;
 
     for (const FString& Filename : SourceFiles)
     {
@@ -383,6 +667,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
 
         bool bBareObjMaterialImportDisabled = false;
         bool bInjectedSmoothingGroup = false;
+        bool bInjectedGeneratedUVs = false;
         bool bAuthoredMaterialImportForced = false;
         bool bBuiltInTangentsForUntexturedObj = false;
         TArray<FString> AuthoredMaterialNames;
@@ -409,6 +694,33 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                             bInjectedSmoothingGroup = true;
                         }
                     }
+                }
+
+                if (!ShireProductionImport::InjectDeterministicFaceUVs(
+                        ObjSource,
+                        bInjectedGeneratedUVs))
+                {
+                    ++Failed;
+                    UE_LOG(
+                        LogTemp,
+                        Error,
+                        TEXT("ShireProductionImport: deterministic UV normalization failed file=%s"),
+                        *Filename);
+                    continue;
+                }
+                if (bInjectedGeneratedUVs)
+                {
+                    if (!FFileHelper::SaveStringToFile(ObjSource, *Filename))
+                    {
+                        ++Failed;
+                        UE_LOG(
+                            LogTemp,
+                            Error,
+                            TEXT("ShireProductionImport: failed to persist generated UV working copy file=%s"),
+                            *Filename);
+                        continue;
+                    }
+                    ++GeneratedUVSourceMeshes;
                 }
 
                 const bool bHasMaterialLibrary =
@@ -453,8 +765,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     ImportOptions->StaticMeshImportData->bRemoveDegenerates = true;
 
                     const bool bHasTextureCoordinates =
-                        ObjSource.StartsWith(TEXT("vt ")) ||
-                        ObjSource.Contains(TEXT("\nvt "), ESearchCase::CaseSensitive);
+                        ShireProductionImport::HasObjTextureCoordinates(ObjSource);
 
                     // MikkTSpace derives tangent space from texture UVs. The current
                     // lightweight production OBJ bank is mostly flat-color geometry
@@ -591,7 +902,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         UE_LOG(
             LogTemp,
             Display,
-            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s bare-obj-materials=%s authored-material-import=%s smoothing-injected=%s tangent-generation=%s material-packages-marked=%d"),
+            TEXT("ShireProductionImport result: %s | paths=%d result=%d resolved=%s bare-obj-materials=%s authored-material-import=%s smoothing-injected=%s generated-uvs=%s tangent-generation=%s material-packages-marked=%d"),
             *Filename,
             Task->ImportedObjectPaths.Num(),
             Task->Result.Num(),
@@ -599,6 +910,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             bBareObjMaterialImportDisabled ? TEXT("disabled") : TEXT("n/a"),
             bAuthoredMaterialImportForced ? TEXT("forced") : TEXT("n/a"),
             bInjectedSmoothingGroup ? TEXT("yes") : TEXT("no"),
+            bInjectedGeneratedUVs ? TEXT("yes") : TEXT("no"),
             bBuiltInTangentsForUntexturedObj ? TEXT("builtin-no-uv") : TEXT("default"),
             MarkedMaterialPackages);
 
@@ -721,6 +1033,12 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 *PackageFilename);
         }
     }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireProductionImport UV normalization: generated=%d"),
+        GeneratedUVSourceMeshes);
 
     UE_LOG(
         LogTemp,

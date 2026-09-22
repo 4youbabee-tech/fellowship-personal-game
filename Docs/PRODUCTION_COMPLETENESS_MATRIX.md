@@ -1,3 +1,9 @@
+## 2026-09-23 - W00 exact-head #595 green, followed by stricter import-quality closure
+
+On `a148d1afa919fa63725e3760684d6eed061c5e40`, Pre-Unreal #760, Warehouse #174 and Unreal #595 all passed. Unreal #595 completed compile, production import, Automation, startup, P1C01-P1C08 aggregate runtime, persistence state roundtrip, continuous route/chapter transitions and warning-debt analysis. This validates the prior persistence/transaction/streaming repair wave on that exact head.
+
+The build still reported 137 unique nearly-zero binormal import identities under a historical ceiling of 150. That ceiling is now removed rather than accepted as permanent debt. The next source wave generates deterministic UVs in the import working copy for UV-less static OBJ assets, preflights the project master material package, and enforces zero tangent/binormal/master-surface warning debt with PG-130. Production completeness percentage does not increase from cleanup alone; W00 remains the active gate until the stricter exact-head import run is green and device/human gates are handled separately.
+
 ## 2026-09-23 - W00 persistence transaction and replay-safe async ownership
 
 Exact-head evidence entering this wave is Unreal #594 on `38c2c958121576b68a0bfaf4e276498d4fe89dad`: C++ build PASS, production import PASS, Automation PASS, startup PASS, P1C01-P1C08 aggregate sweep PASS, production character surface PASS, state persistence FAIL with write/load/restore successful but final field verification false.

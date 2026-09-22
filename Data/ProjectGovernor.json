@@ -2608,15 +2608,17 @@
         "Save/rollback restore now uses an atomic logical transaction: quest/route, NPC memory, discoveries, progression and chronicle/map knowledge rebuild before one publication boundary.",
         "Disk persistence audit now reports exact failed fields and covers non-empty named-NPC memory/relationships/dialogue history plus route progress instead of only a generic verified flag.",
         "Already-resident chapter banks are valid commits for same-bank episode/save replay, preventing false rollback from empty pending IDs.",
-        "Cancelled asynchronous audio callbacks require active LoadKey ownership before resolving/playing, preventing stale playback resurrection."
+        "Cancelled asynchronous audio callbacks require active LoadKey ownership before resolving/playing, preventing stale playback resurrection.",
+        "Exact head a148d1afa919fa63725e3760684d6eed061c5e40 completed Pre-Unreal #760, Warehouse #174 and Unreal #595 successfully, including persistence and continuous transition runtime gates.",
+        "Warning-debt green status is no longer allowed to hide a large tolerated tangent/binormal class; those categories are now zero-tolerance.",
+        "Production importer normalizes UV-less static OBJ assets in the ignored working copy with deterministic face projection and fails closed on unsafe geometry.",
+        "M_ProductionSurface editor import recovery now checks package existence before attempting LoadObject, avoiding expected-missing warning spam."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal and UE4.27.2 compile/import/runtime evidence for the persistence transaction / resident-bank / stale-audio repair head.",
-        "Require state disk roundtrip to print persistence-fields=PASS and disk-save-roundtrip=PASS on the same exact head.",
-        "Require continuous transition audit, including same-bank replay and forced-slow transition context invariants, on the same exact head.",
-        "Run warning-debt/material-persistence gate after persistence/transition chain is green.",
-        "Run target-device performance/memory/GC/streaming measurements before closing performance risk.",
-        "Run human core-loop, first-five-minutes onboarding and external playtest/pacing review after W00 technical stability; automation cannot close enjoyment."
+        "Obtain fresh exact-head Pre-Unreal and UE4.27.2 compile/import/runtime proof for the stricter UV-normalization/zero-warning import-quality head.",
+        "Require zero degenerate tangent bases, zero nearly-zero tangents, zero nearly-zero binormals and zero missing M_ProductionSurface warning debt on that same head.",
+        "After exact-head CI is green, run target-device frame-time/memory/GC/streaming profiling and the human core-loop/onboarding play gates before W00 is fully accepted.",
+        "Keep Public/Private physical migration isolated until functional/import stability remains green."
       ],
       "acceptance_criteria": [
         "No known CRITICAL/HIGH source defect remains uncorrected or explicitly evidence-bounded.",
@@ -4015,56 +4017,49 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Owner directed immediate closure of all known W00 defects. Unreal #594 narrowed the active blocker to persistence verification after compile/import/Automation/startup/all-eight chapter and production-surface checks passed.",
-    "exact_reviewed_head": "38c2c958121576b68a0bfaf4e276498d4fe89dad",
+    "reason": "Owner explicitly requires root-cause closure rather than green builds that retain tolerated red debt. Build #595 completed the entire CI chain, then the remaining tolerated import-warning class was promoted into a hard zero-debt repair wave.",
+    "exact_reviewed_head": "a148d1afa919fa63725e3760684d6eed061c5e40",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#759 SUCCESS on 38c2c958121576b68a0bfaf4e276498d4fe89dad",
-      "unreal_build": "#594: UE4.27.2 compile PASS; production import PASS; Automation PASS; startup PASS; P1C01-P1C08 aggregate PASS; CharacterSurfaceAudit PASS; persistence state verification FAIL",
-      "warehouse": "#173 was still running at the time of this source wave and does not determine W00 closure"
+      "pre_unreal": "#760 SUCCESS",
+      "warehouse": "#174 SUCCESS",
+      "unreal_build": "#595 SUCCESS: UE4.27.2 C++ build, production import, Automation, startup, P1C01-P1C08 aggregate runtime, state persistence, continuous transitions and warning-debt step all completed"
     },
     "reconciled_findings": [
-      "The material-residency repair is engine-proven on #594: CharacterSurfaceAudit passed.",
-      "Disk save wrote, loaded and invoked restore, but final state equality was false; the old harness did not identify which persistence domain diverged.",
-      "RestoreQuestState broadcast route/chapter/quest events before NPC memory/discovery/progression/knowledge restoration, allowing subscribers to observe half-restored logical state.",
-      "Same-bank RequestChapterAssets can report ready after cancelling pending IDs, while CommitPendingRequest previously rejected the subsequent commit and could trigger false rollback.",
-      "Cancelled audio requests could still enter HandleAsyncAudioReady without ownership validation and potentially resurrect stale playback.",
-      "P1C01-P1C08 aggregate grounding/runtime path is green on #594; P1C05 is no longer an active headless blocker."
+      "Persistence transaction repair is exact-head engine green on #595.",
+      "Aggregate chapter traversal and continuous transition regression paths are exact-head headless green on #595.",
+      "Warning-debt policy was too permissive: 137 unique nearly-zero binormal identities still passed under ceiling 150.",
+      "Source audit shows most static OBJ assets lack authored UVs/normals; importer-side deterministic working-copy normalization is preferable to mutating tracked SourceAssets or merely suppressing warnings.",
+      "M_ProductionSurface missing-package warnings occur before creation/recovery and should be prevented by package-existence preflight rather than tolerated."
     ],
-    "next_priority": "W00_PERSISTENCE_TRANSITION_CLOSURE",
-    "truth_boundary": "The new transaction/replay/audio fixes are source-level until fresh exact-head workflows pass. No PIE/device/visual/performance acceptance is inferred.",
-    "latest_engine_evidence": {
-      "exact_head": "38c2c958121576b68a0bfaf4e276498d4fe89dad",
-      "cxx_compile": "PASS - Unreal #594",
-      "production_import": "PASS - Unreal #594",
-      "automation": "PASS - Unreal #594",
-      "runtime": "startup PASS; P1C01-P1C08 aggregate PASS; CharacterSurfaceAudit PASS; state persistence FAIL"
-    },
+    "next_priority": "W00_IMPORT_WARNING_ROOT_CAUSE_ZERO",
+    "truth_boundary": "Build #595 evidence applies only to a148d1afa919fa63725e3760684d6eed061c5e40. The stricter import-quality changes require a new exact-head proof before any closure claim.",
     "stabilization_wave": {
-      "status": "SOURCE_FIX_SET_APPLIED_PENDING_FRESH_EXACT_HEAD_PROOF",
-      "root_causes_addressed": [
-        "world grounding seams -> bounded slope/capsule-aware grounding, no chapter pads",
-        "serial chapter bug discovery -> aggregate P1C01-P1C08 sweep",
-        "missing rig packages -> package-existence preflight before async load",
-        "legacy BMP/OBJ structural debt -> TGA migration and strict structural guards",
-        "pre-residency player material application -> post-residency commit reapply",
-        "movement unlock before world/context commit -> release after OnWorldCommitted",
-        "resident-only audio without owner -> bounded async audio owner",
-        "half-restored logical save state -> atomic persistence restore transaction",
-        "opaque persistence verification -> exact field-level disk/runtime diagnostics with non-empty NPC memory",
-        "same-bank ready/commit mismatch -> resident-bank idempotent commit",
-        "cancelled async audio callback race -> LoadKey ownership guard"
+      "status": "STRICTER_SOURCE_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "completed_on_595": [
+        "compile/import pipeline",
+        "Automation QA",
+        "startup",
+        "P1C01-P1C08 aggregate chapter sweep",
+        "persistence state roundtrip",
+        "continuous transitions",
+        "production surface runtime audit"
       ],
-      "explicit_non_patch_rule": "No chapter-specific symptom patch may replace a shared world/streaming/save/audio invariant."
+      "current_root_cause_target": [
+        "UV-less static OBJ tangent/binormal warning generation",
+        "warning ceilings that tolerate persistent quality debt",
+        "avoidable missing-master-material load warnings"
+      ],
+      "explicit_non_patch_rule": "A gate may not be made green by increasing a warning/error ceiling. Fix the producing pipeline or keep the gate red."
     },
     "user_experience_stabilization": {
       "status": "GATED_AFTER_W00_TECHNICAL_GREEN",
       "required_before_large_content_expansion": [
-        "15-minute P1C01 core-loop play review: movement -> interaction -> short objective -> reward/story continuation",
-        "first-five-minutes onboarding review with no developer guidance",
-        "at least one external fresh-player playtest after technical blockers are removed",
-        "chapter pacing/readability review remains human evidence, not CI"
+        "15-minute P1C01 core-loop play review",
+        "first-five-minutes onboarding review without developer guidance",
+        "at least one external fresh-player playtest",
+        "target-device performance and memory profiling"
       ],
-      "evidence_boundary": "These gates cannot be closed by source, compile or headless automation."
+      "evidence_boundary": "CI cannot certify enjoyment, readability, visual quality or target-device smoothness."
     }
   },
   "development_mode": {

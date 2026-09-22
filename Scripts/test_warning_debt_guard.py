@@ -29,6 +29,13 @@ class WarningDebtGuardTests(unittest.TestCase):
         self.assertEqual(count, 2)
         self.assertEqual(identities, ["SM_Frodo_Head", "SM_Gandalf_Head"])
 
+    def test_tangent_warning_categories_are_zero_tolerance(self):
+        checks = {name: ceiling for name, _pattern, ceiling, _group, _scope in guard.CHECKS}
+        self.assertEqual(checks["Degenerate tangent bases"], 0)
+        self.assertEqual(checks["Nearly-zero tangents"], 0)
+        self.assertEqual(checks["Nearly-zero binormals"], 0)
+        self.assertEqual(checks["Missing production master surface"], 0)
+
     def test_missing_package_deduplicates_across_runtime_logs(self):
         text = "\n".join([
             "Failed to load '/Game/Production/World/Moria/M_Missing.M_Missing'",

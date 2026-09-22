@@ -1,3 +1,13 @@
+## 2026-09-23 - Build #595 full chain green; warning tolerance converted into root-cause closure work
+
+Exact head `a148d1afa919fa63725e3760684d6eed061c5e40` completed Pre-Unreal #760, Warehouse #174 and Unreal Build #595 successfully. Unreal #595 passed UE4.27.2 C++ build, deterministic production import, Automation, startup, aggregate P1C01-P1C08 runtime, state persistence roundtrip, continuous transitions and the warning-debt step. This is the first exact head in this stabilization sequence to complete the entire required CI chain.
+
+That green result is not being treated as permission to ignore remaining evidence. The warning-debt report still contained 137 unique nearly-zero binormal identities plus matching tangent warnings, and the source audit reported 321/352 OBJ files without UVs and 334/352 without explicit normals. The previous guard allowed a ceiling of 150, so this class could remain permanently green without being eliminated.
+
+A new root-cause import-quality wave therefore changes the policy and the importer together. The production importer now normalizes UV-less OBJ files only in its ignored `Saved/ShireProductionImportWorking` copy, generating deterministic dominant-plane face UVs before import. It fails closed if a face cannot be safely parsed/projected. The tracked SourceAssets remain byte-stable. `M_ProductionSurface` also receives a package-existence preflight before any attempted synchronous editor-only recovery load, removing avoidable missing-package warning spam. The warning guard now requires zero degenerate tangent bases, zero nearly-zero tangents, zero nearly-zero binormals and zero missing-production-master-surface warnings. PG-130 makes those contracts fail-closed in Pre-Unreal.
+
+This stricter wave is **source-level pending fresh exact-head proof**. Build #595 remains valid evidence for its own SHA only. No PIE/device/visual/performance acceptance is claimed, and W01 remains closed until the stricter import gate is green.
+
 ## 2026-09-23 - W00 persistence/transition root-cause repair wave after Unreal #594
 
 Unreal Build #594 on exact head `38c2c958121576b68a0bfaf4e276498d4fe89dad` materially narrowed the remaining W00 fault set. Runner/Engine Content access, clean intermediates, UE4.27.2 C++ build, deterministic production import, ShireJourney.QA, startup, and the aggregate P1C01-P1C08 sweep all passed. The previous production-surface defect is now engine-proven on that SHA: `CharacterSurfaceAudit: PASS persisted player skin/cloth surface state`. The state gate still failed with `disk-save-details written=yes restored=yes verified=no cleaned=yes`, so persistence is the active blocker.
