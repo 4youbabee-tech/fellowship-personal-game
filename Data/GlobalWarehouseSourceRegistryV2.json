@@ -64,32 +64,35 @@
       "id": "TEXTURECAN",
       "license": "CC0",
       "access": "PUBLIC_ITEM_PAGES",
-      "automation": "AUTO_RESOLVE_STAGE",
+      "automation": "DISCOVERY_AND_MANUAL_DOWNLOAD_UNLESS_DOCUMENTED_API",
       "categories": [
         "PBR_TEXTURE",
         "3D_MODEL"
       ],
-      "priority": "HIGH"
+      "priority": "HIGH",
+      "notes": "CC0 texture source. Production use is permitted, but automated retrieval is not assumed without a documented provider-supported endpoint."
     },
     {
       "id": "CGBOOKCASE",
       "license": "CC0",
       "access": "PUBLIC_ITEM_PAGES",
-      "automation": "AUTO_RESOLVE_STAGE",
+      "automation": "DISCOVERY_AND_MANUAL_DOWNLOAD_UNLESS_DOCUMENTED_API",
       "categories": [
         "PBR_TEXTURE"
       ],
-      "priority": "HIGH"
+      "priority": "HIGH",
+      "notes": "CC0 texture source. Do not assume undocumented bulk automation; use official item downloads or a documented provider API if introduced."
     },
     {
       "id": "3DTEXTURES_ME",
       "license": "CC0",
       "access": "PUBLIC_ITEM_PAGES",
-      "automation": "AUTO_RESOLVE_STAGE",
+      "automation": "MANUAL_ITEM_DOWNLOAD",
       "categories": [
         "PBR_TEXTURE"
       ],
-      "priority": "MEDIUM"
+      "priority": "MEDIUM",
+      "notes": "CC0 textures, but the provider states free textures are downloaded one by one; bulk folder access is supporter-provided. Do not automate bulk retrieval without provider-supported access."
     },
     {
       "id": "SONNISS_GDC",
@@ -327,13 +330,13 @@
       "id": "SHARETEXTURES",
       "license": "CC0_OR_COPYRIGHT_FREE_PER_SITE",
       "access": "PUBLIC_SITE",
-      "automation": "AUTO_RESOLVE_STAGE",
+      "automation": "MANUAL_ONLY_NO_AUTOMATION",
       "categories": [
         "PBR_TEXTURE",
         "3D_MODEL"
       ],
       "priority": "HIGH",
-      "notes": "Large free material/model library; intake must still retain exact item/source metadata."
+      "notes": "License permits project use, but site terms explicitly prohibit automated/bulk downloading and scraping. Keep as manual discovery/download source only."
     },
     {
       "id": "KAYKIT",
@@ -1178,7 +1181,9 @@
     "Authentication-required sources are explicit lanes and are never bypassed.",
     "Animated production characters must be FBX before READY_FOR_IMPORT.",
     "Production textures must be PNG/TGA and channel-packed where appropriate before READY_FOR_IMPORT.",
-    "STAGED is not IMPORTED, INTEGRATED or ACCEPTED."
+    "STAGED is not IMPORTED, INTEGRATED or ACCEPTED.",
+    "Provider access terms are separate from asset licenses: a CC0 asset library may still prohibit automated or bulk downloading.",
+    "Never automate a provider merely because its assets are free or CC0; automation requires a documented public API/direct-download pattern or explicit provider-compatible access."
   ],
   "selection_policy": {
     "objective": "Maximize production usefulness per GB/hour while preserving provenance and avoiding chaotic stock duplication.",
@@ -1198,10 +1203,6 @@
         "QUATERNIUS",
         "KENNEY",
         "KAYKIT",
-        "TEXTURECAN",
-        "CGBOOKCASE",
-        "3DTEXTURES_ME",
-        "SHARETEXTURES",
         "OPENGAMEART",
         "SONNISS_GDC"
       ],
@@ -1231,6 +1232,12 @@
         "SFMLAB",
         "OPEN3DLAB",
         "NEXUS_MODS"
+      ],
+      "TIER_A_MANUAL_CLEAR_LICENSE": [
+        "TEXTURECAN",
+        "CGBOOKCASE",
+        "3DTEXTURES_ME",
+        "SHARETEXTURES"
       ]
     },
     "anti_chaos_rules": [
