@@ -16,6 +16,7 @@
 #include "ShireSaveGame.h"
 
 #include "Engine/GameInstance.h"
+#include "Engine/EngineTypes.h"
 #include "Engine/StaticMeshActor.h"
 #include "Engine/TextRenderActor.h"
 #include "Engine/World.h"
@@ -278,11 +279,13 @@ bool AChapterWorldRouter::ResolveGroundedSpawnLocation(
     };
 
     float CapsuleHalfHeight = 60.0f;
+    float CapsuleRadius = 34.0f;
     if (const ACharacter* Character = Cast<ACharacter>(PlayerPawn))
     {
         if (const UCapsuleComponent* Capsule = Character->GetCapsuleComponent())
         {
             CapsuleHalfHeight = Capsule->GetScaledCapsuleHalfHeight();
+            CapsuleRadius = Capsule->GetScaledCapsuleRadius();
         }
     }
 
@@ -308,7 +311,21 @@ bool AChapterWorldRouter::ResolveGroundedSpawnLocation(
                 TraceEnd,
                 ECC_Visibility,
                 QueryParams) ||
-            !GroundHit.bBlockingHit)
+            !GroundHit.bBlockingHit ||
+            GroundHit.ImpactNormal.Z < 0.55f)
+        {
+            continue;
+        }
+
+        FVector CandidateLocation = ProbeLocation;
+        CandidateLocation.Z = GroundHit.ImpactPoint.Z + CapsuleHalfHeight + 4.0f;
+        const bool bCapsuleBlocked = GetWorld()->OverlapBlockingTestByChannel(
+            CandidateLocation,
+            FQuat::Identity,
+            ECC_Pawn,
+            FCollisionShape::MakeCapsule(CapsuleRadius, CapsuleHalfHeight),
+            QueryParams);
+        if (bCapsuleBlocked)
         {
             continue;
         }
@@ -321,8 +338,7 @@ bool AChapterWorldRouter::ResolveGroundedSpawnLocation(
 
         BestDistanceSq = DistanceSq;
         BestOffset = Offset;
-        BestLocation = ProbeLocation;
-        BestLocation.Z = GroundHit.ImpactPoint.Z + CapsuleHalfHeight + 4.0f;
+        BestLocation = CandidateLocation;
         bFoundGround = true;
     }
 
