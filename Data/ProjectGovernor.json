@@ -100,7 +100,8 @@
         "Docs/PROJECT_GUARDIAN.md PG-019"
       ],
       "implementation_refs": [
-        "Data/SourceArchitecturePlan.json currently maps 63 runtime module source/build entries: 62 CURRENT_FLAT .h/.cpp entries plus 1 STABLE_ROOT module build entry, each with a controlled Public/Private target where applicable."
+        "Data/SourceArchitecturePlan.json currently maps 63 runtime module source/build entries: 62 CURRENT_FLAT .h/.cpp entries plus 1 STABLE_ROOT module build entry, each with a controlled Public/Private target where applicable.",
+        "Temporary root public-include export keeps cross-module editor QA legal while the runtime module remains FLAT_GUARDED; it is explicitly removed by the dedicated Public/Private migration."
       ],
       "missing_work": [
         "Physical Public/Private domain migration is not yet performed"
@@ -2330,7 +2331,8 @@
         "ci_run_project_automation.cmd launches UE4Editor-Cmd headlessly and parse_automation_report.py fails closed if required tests do not complete successfully.",
         "Unreal Build Validation runs the automation suite after exact-head compile/import and before runtime chapter/state smoke.",
         "Startup grounding PASS is delayed until two seconds of stable non-falling state with blocking ground.",
-        "Continuous deep audit now guards committed NPC context, character-rig handle release, non-engine synchronous LoadObject reintroduction, builder tick policy and bounded social scans."
+        "Continuous deep audit now guards committed NPC context, character-rig handle release, non-engine synchronous LoadObject reintroduction, builder tick policy and bounded social scans.",
+        "Editor QA compile now consumes ShireSaveGame through an exported runtime-module include path instead of a relative/private path."
       ],
       "missing_work": [
         "Compile and execute the new Automation Framework suite on UE4.27.2.",
@@ -3967,6 +3969,13 @@
         "continuous audit guards added to prevent regression"
       ],
       "evidence_boundary": "Source fixes are not CLOSED defects until fresh exact-head UE4.27 compile/runtime/PIE evidence exists. W00 runner ACL remains the blocker."
+    },
+    "runner_recovery": {
+      "status": "ENGINE_CONTENT_ACL_PROVEN_READABLE_COMPILE_REACHED",
+      "evidence": "Unreal Build #534 attempt 3 reported UE4_ACL_REMEDIATION_PASS action=none reason=already-readable, completed UHT, then entered a 76-action ShireJourneyEditor compile.",
+      "discovered_build_defect": "ShireJourneyEditorTools/Private/Tests/ShireQAAutomationTests.cpp could not include ShireSaveGame.h because the runtime module is still FLAT_GUARDED and did not export its module root as a public include path.",
+      "repair": "ShireJourney.Build.cs now exports ModuleDirectory as a temporary public include path until the dedicated Public/Private migration. The importer also uses GetStaticMaterials() to remove the observed C4996 warning debt.",
+      "evidence_boundary": "This repair is source-level until the new exact-head UE4.27 build completes."
     }
   },
   "development_mode": {
