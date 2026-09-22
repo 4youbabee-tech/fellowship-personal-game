@@ -2560,6 +2560,14 @@ for tga_path in production_root.rglob("*.tga"):
             + str(tga_path.relative_to(ROOT))
         )
 
+# PG-125: source texture format is a hard pipeline rule, not a convention.
+legacy_bmp_sources = sorted(production_root.rglob("*.bmp"))
+if legacy_bmp_sources:
+    fail(
+        "PG-125 forbidden BMP production textures: "
+        + ", ".join(str(path.relative_to(ROOT)) for path in legacy_bmp_sources[:12])
+    )
+
 # PG-013: UE4.27 UAssetImportTask does not expose bAsync. Keep the production
 # import commandlet on the UE4.27-compatible task API so the real editor build
 # cannot regress to C2039 before asset import even begins.
@@ -3871,9 +3879,12 @@ if len(cp54_asset_files) < 75:
     fail(f"PG-054 mega resource bank below 75 OBJ floor: {len(cp54_asset_files)}")
 
 cp54_texture_root = ROOT / "SourceAssets" / "Production" / "Textures"
-cp54_textures = list(cp54_texture_root.glob("*.bmp")) if cp54_texture_root.exists() else []
+cp54_textures = (
+    list(cp54_texture_root.glob("*.png")) +
+    list(cp54_texture_root.glob("*.tga"))
+) if cp54_texture_root.exists() else []
 if len(cp54_textures) < 17:
-    fail(f"PG-054 production texture bank below 17 BMP floor: {len(cp54_textures)}")
+    fail(f"PG-054 production texture bank below 17 PNG/TGA floor: {len(cp54_textures)}")
 
 for runtime_symbol in ["SM_ShFarmPlough","SM_BreeStreetAwning","SM_WeathertopRuinWall","SM_RoadTravelTent","SM_RivColumn","SM_MoriaMineCart","SM_LorienTreePlatform","SM_AnduinDockPier"]:
     if runtime_symbol not in (shire_cpp_cp52 + bree_cpp_cp52 + fellowship_cpp_cp52):
