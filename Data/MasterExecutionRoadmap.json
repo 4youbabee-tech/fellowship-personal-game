@@ -27,18 +27,18 @@
     "integration_baseline_head": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
     "integration_baseline_pre_unreal": "SUCCESS #532",
     "integration_baseline_unreal": "SUCCESS #367",
-    "latest_observed_candidate_head": "c6e5c3c55835287c66b52a1adeaf00e1dceccaad",
-    "latest_observed_pre_unreal": "PENDING on current warehouse/world-foundation head; prior exact head 0c8130a33f8df3648d270d8bd0ee6b24aee882fb passed Pre-Unreal #653.",
-    "latest_observed_unreal": "Prior exact head 0c8130a33f8df3648d270d8bd0ee6b24aee882fb failed Unreal Build #488 before C++ compilation: NT AUTHORITY\\\\NETWORK SERVICE denied read access to Engine/Content/EngineMaterials/WorldGridMaterial.uasset on six probes. Treat as runner Engine Content ACL blocker, not code evidence.",
+    "latest_observed_candidate_head": "17689b194ddca281aa9881b9ac50594712a65df6",
+    "latest_observed_pre_unreal": "FAIL #685 on exact head 17689b194ddca281aa9881b9ac50594712a65df6: PG-078 only, because newly accepted REQ-CAMERA-001 was not yet mapped into this roadmap and the tracked unfinished snapshot became stale.",
+    "latest_observed_unreal": "FAIL #520 before C++ compilation on exact head 17689b194ddca281aa9881b9ac50594712a65df6: runner identity NT AUTHORITY\\\\NETWORK SERVICE cannot read UE4.27.2 Engine/Content/EngineMaterials/WorldGridMaterial.uasset; guarded ACL remediation deferred because runner is not elevated.",
     "merge_policy": "Newest PR head must pass exact-head Pre-Unreal and full UE4.27.2 validation before develop integration; after merge, develop must return green.",
     "deep_audit": {
       "status": "V5_EXACT_HEAD_VALIDATION_ACTIVE",
       "artifact": "Data/DeepProjectAudit.json",
       "rule": "Repair only demonstrated exact-head failures. Performance promotion additionally requires representative target-device hitch/memory measurement."
     },
-    "active_wave": "COMPREHENSIVE_FOUNDATION_INTEGRATION_V1",
+    "active_wave": "W00_RUNNER_AND_EXACT_HEAD_UNLOCK",
     "source_baseline": "f4886b39feea29973543bf6cfb1be4659f10ff9d",
-    "proof_boundary": "Warehouse catalogue/preproduction may expand trilogy-wide in parallel; runtime integration and acceptance still require the active exact-head foundation/engine/PIE/device gates.",
+    "proof_boundary": "Warehouse #99 is staged/audited evidence only. Current exact-head Pre-Unreal is red from roadmap/governor drift and Unreal #520 is environment-blocked before compile. No PIE/device/visual promotion.",
     "integration_baseline": "fb7afb8e39a4186245063ddf2a46fc0df8ba6c56",
     "current_scope": [
       "startup grounding",
@@ -49,15 +49,17 @@
       "Unreal Automation QA foundation",
       "visual-performance guardrails"
     ],
-    "active_production_lane": "TRILOGY_PRODUCTION_ASSET_WAREHOUSE_V1",
+    "active_production_lane": "RUNNER_EXACT_HEAD_UNLOCK_AFTER_FINAL_WAREHOUSE_BATCH",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
     "warehouse_iteration": {
-      "status": "ACTIVE_THREE_LANE_ITERATION",
-      "asset_candidate_queue": "expanded Quaternius/Kenney animation, props, world-kit, nature, fortification and UI candidates",
-      "audio_candidate_queue": "expanded OpenGameArt stage-authorized prototype music/SFX mapping across Shire/Bree/Rohan/battle states",
-      "staged_intake": "ambientCG trilogy-foundation batch expanded with snow/ice, cave stone, wetlands, white stone, volcanic/ash, metal, Rohan pastoral, ruins and river/wet lanes",
-      "world_foundation": "all declared trilogy regions now carry explicit reusable stock contracts without opening gated Part II/III runtime chapters",
-      "evidence_boundary": "candidate/authorized/staged states are not imported/integrated/accepted"
+      "status": "FINAL_PRE_RUNNER_BATCH_STAGED_AND_AUDITED",
+      "exact_head": "17689b194ddca281aa9881b9ac50594712a65df6",
+      "warehouse_run": "#99 SUCCESS",
+      "inventory": "payloadFiles=240 payloadBytes=3816657674 receipts=8 receiptRecords=278 duplicateGroups=22",
+      "total_footprint": "files=249 bytes=3816866382",
+      "kaykit": "8 files staged, 0 skipped",
+      "quaternius": "0 files staged, 14 unresolved; do not invent direct links",
+      "next_priority": "Repair W00 runner Engine Content ACL blocker; broad sourcing expansion is paused."
     }
   },
   "bundles": [
@@ -129,7 +131,8 @@
         "REQ-EXP-005",
         "REQ-GAME-001",
         "REQ-ENSEMBLE-001",
-        "REQ-QUALITY-002"
+        "REQ-QUALITY-002",
+        "REQ-CAMERA-001"
       ],
       "work_ids": [
         "WORK-RING-001",
@@ -168,7 +171,8 @@
         "M-key source-grounded Part I Journey Map",
         "Map Knowledge-gated route nodes and edges",
         "film-locked non-killable Watcher runtime pressure",
-        "film-locked non-killable Balrog runtime pressure"
+        "film-locked non-killable Balrog runtime pressure",
+        "embodied third-person gameplay camera tuned for character scale, traversal, interaction, combat readability and safe cinematic return"
       ],
       "exit_evidence": [
         "STATIC_CANON_COVERAGE",
@@ -416,6 +420,7 @@
   "tracked_unfinished_requirement_ids": [
     "REQ-ASSET-001",
     "REQ-AUDIT-001",
+    "REQ-CAMERA-001",
     "REQ-CHAR-001",
     "REQ-CHAR-002",
     "REQ-CHAR-003",
