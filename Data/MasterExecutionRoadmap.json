@@ -27,9 +27,9 @@
     "integration_baseline_head": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
     "integration_baseline_pre_unreal": "SUCCESS #532",
     "integration_baseline_unreal": "SUCCESS #367",
-    "latest_observed_candidate_head": "f7ef04c4b36d6664bdb06324a9652f1572584f28",
-    "latest_observed_pre_unreal": "FAILURE #597: PG-078 roadmap orphan/snapshot mismatch after warehouse lane registration",
-    "latest_observed_unreal": "FAILURE #432 before compilation: NETWORK SERVICE denied reading WorldGridMaterial.uasset",
+    "latest_observed_candidate_head": "c6e5c3c55835287c66b52a1adeaf00e1dceccaad",
+    "latest_observed_pre_unreal": "PENDING on current warehouse/world-foundation head; prior exact head 0c8130a33f8df3648d270d8bd0ee6b24aee882fb passed Pre-Unreal #653.",
+    "latest_observed_unreal": "Prior exact head 0c8130a33f8df3648d270d8bd0ee6b24aee882fb failed Unreal Build #488 before C++ compilation: NT AUTHORITY\\\\NETWORK SERVICE denied read access to Engine/Content/EngineMaterials/WorldGridMaterial.uasset on six probes. Treat as runner Engine Content ACL blocker, not code evidence.",
     "merge_policy": "Newest PR head must pass exact-head Pre-Unreal and full UE4.27.2 validation before develop integration; after merge, develop must return green.",
     "deep_audit": {
       "status": "V5_EXACT_HEAD_VALIDATION_ACTIVE",
@@ -50,7 +50,15 @@
       "visual-performance guardrails"
     ],
     "active_production_lane": "TRILOGY_PRODUCTION_ASSET_WAREHOUSE_V1",
-    "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE"
+    "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
+    "warehouse_iteration": {
+      "status": "ACTIVE_THREE_LANE_ITERATION",
+      "asset_candidate_queue": "expanded Quaternius/Kenney animation, props, world-kit, nature, fortification and UI candidates",
+      "audio_candidate_queue": "expanded OpenGameArt stage-authorized prototype music/SFX mapping across Shire/Bree/Rohan/battle states",
+      "staged_intake": "ambientCG trilogy-foundation batch expanded with snow/ice, cave stone, wetlands, white stone, volcanic/ash, metal, Rohan pastoral, ruins and river/wet lanes",
+      "world_foundation": "all declared trilogy regions now carry explicit reusable stock contracts without opening gated Part II/III runtime chapters",
+      "evidence_boundary": "candidate/authorized/staged states are not imported/integrated/accepted"
+    }
   },
   "bundles": [
     {
