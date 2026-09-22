@@ -864,26 +864,6 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
             false);
     }
 
-    // The first playable placement also gets a tiny deterministic hidden support pad.
-    // This prevents startup correctness from depending on auto-generated collision for
-    // the imported road/ground meshes. Its top face matches the authored road height.
-    AStaticMeshActor* StartupFoundation = SpawnShape(
-        CubeMesh,
-        FVector(-2410.0f, -120.0f, 2.0f),
-        FVector(8.0f, 8.0f, 0.20f),
-        GroundColor,
-        FRotator::ZeroRotator,
-        true);
-    if (StartupFoundation)
-    {
-        StartupFoundation->Tags.AddUnique(TEXT("RuntimeSpawnFoundation"));
-        if (UStaticMeshComponent* StartupComponent = StartupFoundation->GetStaticMeshComponent())
-        {
-            StartupComponent->SetVisibility(false, true);
-            StartupComponent->SetCastShadow(false);
-        }
-    }
-
     // Horizon / occlusion hills. These deliberately hide later regions so the player
     // discovers them by travelling instead of seeing the ferry from Bag End.
     const FVector HillCenters[] = {
