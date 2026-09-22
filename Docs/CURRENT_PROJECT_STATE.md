@@ -1,3 +1,7 @@
+## 2026-09-22 - stabilization gate status schema correction
+
+Pre-Unreal #748 surfaced a governance-schema mistake introduced by the stabilization freeze: `active_gate.status` was set to `ACTIVE`, but the Governor quality-gate vocabulary is `NOT_TESTED / PARTIAL / PASSED / FAILED / BLOCKED`. The stabilization gate remains the active execution focus, while its evidence state is correctly `PARTIAL` until the full exact-head chain passes. No runtime behavior or maturity is changed by this correction.
+
 ## 2026-09-22 - stabilization static-gate self-correction
 
 Pre-Unreal #747 correctly rejected the stabilization head because the new PG-121 contract required a `RUNTIME_SWEEP_SUMMARY` marker, while `runtime_smoke.py` had already removed fail-fast behavior but had not actually emitted the aggregate marker. The harness now emits attempted/expected/failed chapter summary after completing the sequential sweep. This is a QA-contract repair only; no engine/runtime maturity is promoted until the new exact head passes the full gate.
