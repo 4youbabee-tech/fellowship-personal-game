@@ -4064,6 +4064,12 @@
         "OBJ import tangent/triangulation debt -> duplicate consecutive face vertices removed from all seven known risky source meshes; triangulation risk becomes strict failure"
       ],
       "explicit_non_patch_rule": "RuntimeSpawnFoundation chapter-specific pads are forbidden by validation. Fix the world/router contract, not individual chapter symptoms."
+    },
+    "current_compile_fix": {
+      "status": "SOURCE_FIX_APPLIED_PENDING_EXACT_HEAD_BUILD",
+      "root_cause": "A literal \\\\n text sequence was accidentally committed between PNG and TGA FindFilesRecursive statements in ShireProductionImportCommandlet.cpp, causing C2017/C2065/C2143 on Unreal Build #588.",
+      "repair": "Replaced the escaped text with a real source newline and hardened PG-127 to reject any literal \\\\n or \\\\r\\\\n sequence in the importer source before Unreal compile.",
+      "evidence_boundary": "No COMPILE-TESTED claim until the next exact-head Unreal build passes."
     }
   },
   "development_mode": {
