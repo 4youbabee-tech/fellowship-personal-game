@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "batch_id": "WAREHOUSE_AMBIENTCG_TRILOGY_REGIONS_V2",
+  "status": "AUTHORIZED_FOR_STAGING",
+  "provider": "AMBIENTCG",
+  "license": "CC0",
+  "api_base": "https://ambientcg.com/api/v2/full_json",
+  "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\ambientCG_Trilogy",
+  "max_download_bytes": 2200000000,
+  "target_attribute": "2K-PNG",
+  "search_lanes": [
+    {
+      "q": "snow ice rock",
+      "limit": 8,
+      "category": "CARADHRAS",
+      "use": [
+        "Caradhras snow/ice/rock",
+        "mountain passes"
+      ]
+    },
+    {
+      "q": "dark stone rock cave",
+      "limit": 8,
+      "category": "MORIA",
+      "use": [
+        "Moria halls",
+        "caverns",
+        "dwarven stone"
+      ]
+    },
+    {
+      "q": "weathered wood timber",
+      "limit": 8,
+      "category": "ROHAN",
+      "use": [
+        "Edoras",
+        "Meduseld",
+        "Rohan houses/stables"
+      ]
+    },
+    {
+      "q": "white stone limestone marble",
+      "limit": 8,
+      "category": "GONDOR",
+      "use": [
+        "Minas Tirith",
+        "Gondor citadel/courtyards"
+      ]
+    },
+    {
+      "q": "ruined stone wet moss",
+      "limit": 8,
+      "category": "OSGILIATH_ITHILIEN",
+      "use": [
+        "Osgiliath",
+        "Ithilien ruins",
+        "Amon Hen"
+      ]
+    },
+    {
+      "q": "ash volcanic black rock",
+      "limit": 8,
+      "category": "MORDOR",
+      "use": [
+        "Gorgoroth",
+        "Mount Doom",
+        "Mordor terrain"
+      ]
+    },
+    {
+      "q": "rust metal iron",
+      "limit": 8,
+      "category": "ISENGARD_MORDOR_METAL",
+      "use": [
+        "Isengard industry",
+        "Mordor siege gear"
+      ]
+    },
+    {
+      "q": "mud wet ground",
+      "limit": 8,
+      "category": "BREE_BATTLEFIELD",
+      "use": [
+        "Bree rain",
+        "Helm's Deep approaches",
+        "battlefields"
+      ]
+    },
+    {
+      "q": "sand dry ground",
+      "limit": 6,
+      "category": "HARAD_PELENNOR_SUPPORT",
+      "use": [
+        "Haradrim support surfaces",
+        "dry battlefield variants"
+      ]
+    },
+    {
+      "q": "web fabric thread",
+      "limit": 6,
+      "category": "SHELOB_LAIR_SUPPORT",
+      "use": [
+        "Shelob lair support surfaces",
+        "web-adjacent material references"
+      ]
+    }
+  ],
+  "rules": [
+    "Use ambientCG public API only.",
+    "Select 2K-PNG ZIP downloads when present.",
+    "Retain at most three first-ranked candidates per lane.",
+    "Keep region/category/source/hash metadata in receipts.",
+    "These materials are warehouse stock; later region art direction and UE intake decide final use."
+  ]
+}
