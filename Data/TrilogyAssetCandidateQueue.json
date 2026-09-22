@@ -460,6 +460,82 @@
       "intake_status": "AUTHORIZED_FOR_STAGING",
       "provenance": "Official Quaternius pack page; staged only through WarehouseQuaterniusAcquisitionBatchV1.",
       "notes": "Warehouse/preproduction support only. Does not open gated Part II/III runtime implementation."
+    },
+    {
+      "id": "KAYKIT_MEDIEVAL_HEXAGON_1_0",
+      "provider": "KAYKIT",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0",
+      "license_observed": "CC0-1.0",
+      "formats": [
+        "FBX",
+        "GLTF"
+      ],
+      "use": [
+        "Shire/Bree/Rohan/Gondor/Grey Havens background layout support",
+        "mills/markets/building silhouettes",
+        "low-spec settlement blockout"
+      ],
+      "suitability": "SUPPORTING_BACKGROUND_LAYOUT_ONLY",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official public KayKit GitHub repository; staged only through WarehouseKayKitGitHubAcquisitionBatchV1.",
+      "notes": "Stylized support stock; not final hero architecture."
+    },
+    {
+      "id": "KAYKIT_DUNGEON_REMASTERED_1_0",
+      "provider": "KAYKIT",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0",
+      "license_observed": "CC0-1.0",
+      "formats": [
+        "FBX",
+        "GLTF",
+        "OBJ"
+      ],
+      "use": [
+        "Moria modular layout/collision support",
+        "Minas Morgul/Cirith Ungol/Paths of the Dead preproduction interiors"
+      ],
+      "suitability": "SUPPORTING_INTERIOR_COLLISION_LAYOUT",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official public KayKit GitHub repository; staged only through WarehouseKayKitGitHubAcquisitionBatchV1.",
+      "notes": "Later-film use is warehouse/preproduction only; OBJ is never accepted as an animated character format."
+    },
+    {
+      "id": "KAYKIT_ADVENTURERS_1_0",
+      "provider": "KAYKIT",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Character-Pack-Adventures-1.0",
+      "license_observed": "CC0-1.0",
+      "formats": [
+        "FBX",
+        "GLTF"
+      ],
+      "use": [
+        "background humanoid rig pipeline",
+        "retarget QA",
+        "crowd-pooling and animation compatibility tests"
+      ],
+      "suitability": "BACKGROUND_RETARGET_QA_ONLY",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official public KayKit GitHub repository; staged only through WarehouseKayKitGitHubAcquisitionBatchV1.",
+      "notes": "Repository describes rigged/animated characters; production acceptance still requires skeletal-FBX skeleton, skin and deformation review. Never a named-character likeness source."
+    },
+    {
+      "id": "KAYKIT_FURNITURE_BITS_1_0",
+      "provider": "KAYKIT",
+      "source_page": "https://github.com/KayKit-Game-Assets/KayKit-Furniture-Bits-1.0",
+      "license_observed": "CC0-1.0",
+      "formats": [
+        "FBX",
+        "GLTF",
+        "OBJ"
+      ],
+      "use": [
+        "Shire/Bree/Rivendell/Rohan/Gondor/Grey Havens interior support props",
+        "background furniture density"
+      ],
+      "suitability": "SUPPORTING_INTERIOR_PROPS",
+      "intake_status": "AUTHORIZED_FOR_STAGING",
+      "provenance": "Official public KayKit GitHub repository; staged only through WarehouseKayKitGitHubAcquisitionBatchV1.",
+      "notes": "High-count repeated detail is ISM/HISM-classified before integration."
     }
   ],
   "next_source_lanes": [
