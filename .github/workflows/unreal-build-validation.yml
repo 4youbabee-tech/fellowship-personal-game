@@ -103,6 +103,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: '"%GITHUB_WORKSPACE%\..\fellowship_exact_checkout.cmd"'
 
+      - name: Attempt read-only UE4 Engine Content ACL remediation
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\repair_ue_engine_content_acl.ps1"'
+
       - name: Verify Unreal 4.27.2 and project
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_verify_unreal.cmd"'
