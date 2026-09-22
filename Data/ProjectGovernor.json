@@ -1332,7 +1332,8 @@
         "Evaluate only small local/on-device language models after the deterministic offline stack passes; no cloud provider integration",
         "Deepen authored dialogue variation so more intents visibly react to memory, relationship, emotion and regional mood",
         "Validate all-profile offline intelligence coverage in UE4.27 and target-laptop runtime",
-        "Compile and run Shire.NPC.RegionalDialogue automation and observe regional dialogue in UE4.27; current follow-up is source-implemented only."
+        "Compile and run Shire.NPC.RegionalDialogue automation and observe regional dialogue in UE4.27; current follow-up is source-implemented only.",
+        "Use committed-world chapter/route context for regional mood and film-context eligibility during asynchronous world transitions so old visible NPCs cannot react to the destination early."
       ],
       "acceptance_criteria": [
         "NPC behavior visibly varies with routine, danger, weather and bounded internal state",
@@ -2242,7 +2243,8 @@
         "Earn exact-head Pre-Unreal and UE4.27.2 build/import/startup/chapter/state/warning proof.",
         "Measure transition hitch, streaming pool, resident memory and target-device frame time before claiming a performance win.",
         "After measurement, reduce or split oversized banks and migrate remaining justified synchronous loads incrementally.",
-        "Add authored transition masking/progress presentation only if real load latency is visible."
+        "Add authored transition masking/progress presentation only if real load latency is visible.",
+        "Burn down remaining chapter-builder/player/named-character synchronous LoadObject paths only after exact-head engine recovery, preserving compatibility fallbacks and measuring transition behavior."
       ],
       "acceptance_criteria": [
         "Router does not clear the current runtime world before requested chapter assets report ready.",
@@ -2434,7 +2436,9 @@
         "Repair local UE4 Engine Content access, then pass exact-head C++ build/import/Automation/startup/P1C01-P1C08/state/transition gates.",
         "Re-run the original P1C01 fall-through symptom in PIE before closing startup defect.",
         "Only after the integrated foundation is green, merge/rebase the integration train into develop and retire superseded overlapping PR branches.",
-        "Register and schedule ground-safe ambient placement, ambient object pooling and asynchronous living-world visual asset ownership before further density expansion."
+        "Register and schedule ground-safe ambient placement, ambient object pooling and asynchronous living-world visual asset ownership before further density expansion.",
+        "Bind NPC regional mood/profile availability/film dialogue context to committed world identity/revision instead of logical destination quest state during async swaps.",
+        "Validate character-rig residency across chapter transitions and add bounded inactive-rig handle release if measured memory warrants it."
       ],
       "acceptance_criteria": [
         "No destination living-world state is applied before its geometry is committed.",
@@ -3916,25 +3920,24 @@
     }
   ],
   "last_reconciliation": {
-    "date": "2026-09-21",
-    "reason": "Owner requested path review/cleanup before further production.",
-    "active_wave": "CHAPTER_ASSET_STREAMING_AND_SEAM_SAFETY_V5",
-    "integration_baseline": {
-      "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-      "pre_unreal": "#532 SUCCESS",
-      "unreal": "#367 SUCCESS"
+    "date": "2026-09-22",
+    "reason": "Owner requested deep organization/audit pass before returning to runner repair.",
+    "exact_reviewed_head": "17689b194ddca281aa9881b9ac50594712a65df6",
+    "latest_exact_head_evidence": {
+      "pre_unreal": "#685 FAILURE - governance drift only: REQ-CAMERA-001 orphaned from MasterExecutionRoadmap / tracked snapshot stale",
+      "unreal_build": "#520 FAILURE before C++ compile - NETWORK SERVICE denied read access to WorldGridMaterial.uasset; ACL remediation deferred because runner is not elevated",
+      "warehouse": "#99 SUCCESS - inventory audit PASS payloadFiles=240 bytes=3816657674 receipts=8 receiptRecords=278 duplicateGroups=22; total footprint files=249 bytes=3816866382"
     },
-    "active_candidate": {
-      "pull_request": 61,
-      "branch": "production/chapter-streaming-v5",
-      "sha": "b882b052a59c8d4e19437d7877dc30c9b1ea5daf",
-      "pre_unreal": "#538 SUCCESS",
-      "unreal": "#373 PENDING_AT_RECONCILIATION"
-    },
-    "truth_boundary": "The cleanup commit is newer than the recorded candidate evidence and requires fresh exact-head checks. No FPS/RAM/VRAM improvement is claimed before representative target-device measurement.",
-    "warehouse_first_directive": "2026-09-22",
-    "warehouse_plan": "Data/TrilogyProductionAssetWarehouse.json",
-    "note": "Trilogy catalogue first-pass is established. Actual asset fill remains measurable work; no visual/device acceptance is implied."
+    "reconciled_findings": [
+      "REQ-CAMERA-001 has now been mapped into MasterExecutionRoadmap B1 and the tracked unfinished requirement snapshot regenerated.",
+      "LivingWorldDirector correctly waits for committed world revision, but UShireNPCContextSubsystem still reads logical quest chapter/route directly; this can expose destination mood/film-context to old-world NPCs during async transitions.",
+      "Ambient NPC pooling is now source-implemented; earlier deep-audit wording that pooling was absent is stale and has been corrected.",
+      "Direct runtime LoadObject debt remains substantial in chapter builders and still exists in player/named-character visual fallback paths despite async chapter banks.",
+      "Character rig streaming is asynchronous, but per-character FStreamableHandles currently persist for the GameInstance lifetime; bounded rig residency/eviction remains a measured low-VRAM requirement.",
+      "Physical Public/Private source migration remains intentionally pending and must stay a dedicated maintenance pass after the engine gate is restored."
+    ],
+    "next_priority": "W00_RUNNER_AND_EXACT_HEAD_UNLOCK",
+    "truth_boundary": "This reconciliation is source/static analysis and workflow evidence. It is not compile, PIE, device or visual proof."
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",
@@ -3971,9 +3974,9 @@
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
   "current_focus": {
-    "production_lane": "WAREHOUSE_FIRST_TRILOGY_SATURATION_V1",
+    "production_lane": "W00_RUNNER_AND_EXACT_HEAD_UNLOCK",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "Continue exact-head foundation repair, but keep trilogy asset-bank sourcing/authoring active in parallel. Do not let governance-only work starve visible production.",
+    "rule": "Broad warehouse saturation is paused after Warehouse #99. Repair governance drift and the runner ACL gate first; only source-safe audit/bookkeeping and blocker-preparation work may proceed until exact-head engine validation is reachable again.",
     "character_visibility_bridge": "FIRST_PROVEN_RIGGED_HUMANOID_AND_ENEMY_STOCK_TO_P1C01_AFTER_ENGINE_GATE",
     "character_visibility_rule": "Warehouse growth must feed visible character progress: validate staged FBX rigs now, then import and replace proxies in Shire as soon as UE4.27 build/import is available.",
     "pre_runner_final_warehouse_batch": {
