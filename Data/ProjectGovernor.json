@@ -100,7 +100,7 @@
         "Docs/PROJECT_GUARDIAN.md PG-019"
       ],
       "implementation_refs": [
-        "43 runtime module source/build files are mapped to domains and target Public/Private paths"
+        "Data/SourceArchitecturePlan.json currently maps 63 runtime module source/build entries: 62 CURRENT_FLAT .h/.cpp entries plus 1 STABLE_ROOT module build entry, each with a controlled Public/Private target where applicable."
       ],
       "missing_work": [
         "Physical Public/Private domain migration is not yet performed"
@@ -324,7 +324,9 @@
       "origin": "Recovered from user's desire for persistent intelligent inhabitants",
       "intent": "Important NPCs should remember selected interactions/events and maintain bounded relationship context when it improves continuity.",
       "evidence": [
-        "Current route/story persistence exists, but no general named-NPC memory/relationship system is claimed"
+        "Data/NPCMemoryPlan.json",
+        "Source/ShireJourney/ShireQuestSubsystem.cpp",
+        "Source/ShireJourney/ShireSaveGame.h"
       ],
       "implementation_refs": [
         "Data/NPCMemoryPlan.json defines bounded memory tiers, expiry, per-profile budgets, alias identity sharing and route-partitioned save contract",
@@ -346,7 +348,7 @@
         "REQ-NPC-001"
       ],
       "checkpoint": "LIVING_WORLD_LW3",
-      "notes": "Not implemented yet."
+      "notes": "Memory/relationship source implementation is present and persisted; runtime save/load behavior and target-device cost remain acceptance work."
     },
     {
       "id": "REQ-SAVE-001",
@@ -3529,7 +3531,7 @@
   "active_gate": {
     "id": "DEEP_EXACT_HEAD_STABILITY_GATE",
     "status": "PARTIAL",
-    "blocks_major_feature_expansion": false,
+    "blocks_major_feature_expansion": true,
     "required_evidence": [
       "Pre-Unreal including deep audit",
       "real UE4.27.2 compile and deterministic production import",
@@ -3537,7 +3539,7 @@
       "route/story/state isolated disk roundtrip",
       "warning-debt identities clean or evidence-bounded"
     ],
-    "note": "Verified programmer proposals are now integrated on develop. V5 implementation is active and may not merge until fresh exact-head Pre-Unreal + Unreal validation passes; target-device hitch/memory proof remains separate.",
+    "note": "Current priority is W00 runner/exact-head unlock. Broad feature/warehouse expansion is paused. Source-safe audit, governance reconciliation and blocker preparation may continue, but runtime/acceptance progression waits for a green exact-head static gate and restored UE4.27.2 Engine Content access.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -3552,10 +3554,13 @@
     },
     "last_green_head": "4879a19999951354676341f032c358ac98679c44",
     "evidence": {
-      "pre_unreal": "PASS #531",
-      "unreal_build": "PASS #366"
+      "current_exact_reviewed_head": "17689b194ddca281aa9881b9ac50594712a65df6",
+      "pre_unreal": "#685 FAILURE - PG-078 roadmap/governor drift from REQ-CAMERA-001; source reconciliation applied afterward and requires fresh exact-head rerun",
+      "unreal_build": "#520 FAILURE before C++ compile - NETWORK SERVICE cannot read WorldGridMaterial.uasset; runner ACL blocker remains",
+      "warehouse": "#99 SUCCESS - payloadFiles=240 bytes=3816657674 receipts=8 receiptRecords=278 duplicateGroups=22",
+      "last_historical_full_green": "PR #60 exact head 4879a19999951354676341f032c358ac98679c44: Pre-Unreal #531 PASS / Unreal #366 PASS"
     },
-    "evidence_scope": "Programmer-review PR #60 exact head 4879a19999951354676341f032c358ac98679c44 passed Pre-Unreal #531 and Unreal Build #366 and merged to develop as 8d7247d229b5cd51e8aea5617e1e2030b38229bf. V5 implementation is newer and unproven until its own exact-head gates complete.",
+    "evidence_scope": "The last full engine-green proof is historical and does not validate current PR #67. Current PR engine proof is blocked before compilation; current warehouse evidence is staging/audit only.",
     "current_owner_observation": {
       "sha": "4879a19999951354676341f032c358ac98679c44",
       "pre_unreal": {
@@ -3577,7 +3582,8 @@
       "merge": {
         "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
         "status": "MERGED_TO_DEVELOP"
-      }
+      },
+      "historical_only": true
     }
   },
   "reference_only_files": [
@@ -3980,14 +3986,15 @@
     "character_visibility_bridge": "FIRST_PROVEN_RIGGED_HUMANOID_AND_ENEMY_STOCK_TO_P1C01_AFTER_ENGINE_GATE",
     "character_visibility_rule": "Warehouse growth must feed visible character progress: validate staged FBX rigs now, then import and replace proxies in Shire as soon as UE4.27 build/import is available.",
     "pre_runner_final_warehouse_batch": {
-      "status": "COMMITTED_WAITING_FOR_WAREHOUSE_RECEIPT",
+      "status": "STAGED_AND_AUDITED_WAREHOUSE_99",
       "scope": [
         "KAYKIT_RESTAURANT_BITS_1_0",
         "KAYKIT_HALLOWEEN_BITS_1_0",
         "KAYKIT_CITY_BUILDER_BITS_1_0"
       ],
       "next_priority": "W00_RUNNER_AND_EXACT_HEAD_UNLOCK",
-      "rule": "After this batch, stop broad sourcing expansion and focus on repairing the UE4.27 Engine Content ACL runner blocker. Continue only source-safe bookkeeping/audit work that does not defer the runner repair."
+      "rule": "After this batch, stop broad sourcing expansion and focus on repairing the UE4.27 Engine Content ACL runner blocker. Continue only source-safe bookkeeping/audit work that does not defer the runner repair.",
+      "evidence": "Warehouse Stage #99 SUCCESS; inventory payloadFiles=240 bytes=3816657674 receipts=8 receiptRecords=278 duplicateGroups=22; total footprint files=249 bytes=3816866382."
     }
   },
   "immediate_next_large_actions": [
@@ -4324,7 +4331,9 @@
     "capture_rule": "Promote accepted owner direction into requirements, decisions, work_queue items or linked production plans before/with implementation. Preserve unfinished work and evidence boundaries.",
     "external_advice_rule": "Programmer/external advice is non-authoritative until checked against live develop and relevant Project Sources. Preserve the useful verified result, not a stale claim.",
     "anti_loss_rule": "No accepted major request may exist only in chat, a temporary ZIP or a worker's memory.",
-    "coordination_rule": "Workers read the Governor before meaningful work and write back status/evidence/findings in the same logical change; conflicts are recorded rather than silently resolved."
+    "coordination_rule": "Workers read the Governor before meaningful work and write back status/evidence/findings in the same logical change; conflicts are recorded rather than silently resolved.",
+    "atomic_mapping_rule": "When a new unfinished requirement is accepted, the same logical change must map it into MasterExecutionRoadmap and refresh tracked unfinished/ACTIVE snapshots before the branch may be considered static-green. PG-078 remains the enforcement backstop.",
+    "current_focus_rule": "Do not infer execution priority from the raw count of CRITICAL requirements or ACTIVE work items. Use active_gate + current_focus + CompletionWaveMap as the execution order; accepted backlog may remain ACTIVE without being concurrently executed."
   },
   "external_review_findings": [
     {
