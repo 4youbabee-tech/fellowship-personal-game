@@ -1,5 +1,13 @@
 # WORLD DETAIL LEDGER
 
+## Completion Wave Map / Milestone Ladder - 2026-09-22
+- Owner requested a bounded finish map from the current approximately 40/100 whole-game planning position to 100/100, expressed as production waves rather than hours.
+- Planning unit is a **major production drop**, not an individual Git commit or raw file upload. One drop should be coherent enough to review, validate and roll back as a unit.
+- The completion map uses 12 remaining waves totaling 60 planning percentage points. These percentages are roadmap estimates only; they are not compile/PIE/device/visual acceptance evidence.
+- Every wave closes only on its listed exit criteria. Asset-only staging, code-only implementation or a green static gate cannot by itself close a visual/runtime wave.
+- Expected repository activity is roughly 30-40 major coherent production drops across the remaining waves; actual Git commits may be higher because fixes/documentation/validation can split a drop.
+- Shire/P1C01 remains the first visible benchmark. Part II/III runtime opens only after the relevant gates, while warehouse/preproduction may continue in parallel.
+
 ## Character visibility / warehouse-to-runtime bridge - 2026-09-22
 - Owner priority: stop letting asset-bank growth remain invisible; keep broad legal/free sourcing active, but turn the first proven humanoid/enemy rig stock into a real import path as soon as engine gates permit.
 - Register this before implementation: audit staged character archives for usable FBX/texture inventory, strengthen receipt/hash/license validation, expand only from verified official/public sources, and close the documented FBX/PNG/TGA importer gap without treating static OBJ conversion as rigging.
