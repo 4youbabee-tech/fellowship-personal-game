@@ -1,3 +1,9 @@
+## 2026-09-22 - KayKit public-GitHub warehouse/world-foundation increment
+
+Evidence entering this increment: PR #67 `d856a716d5bc270ce0ddc2d649acbb1656ae112c` had Pre-Unreal #670 SUCCESS and Warehouse Stage #80 SUCCESS. Unreal Build #505 did not execute C++ build/import/runtime because the non-elevated NETWORK SERVICE runner could not read UE4.27.2 `WorldGridMaterial.uasset` after the guarded remediation deferred. Therefore no compile, PIE, device, performance or visual maturity is promoted.
+
+The warehouse now has a non-interactive official-public-GitHub KayKit lane for supporting medieval/world layout, dungeon/interior layout, background rig/retarget QA and furniture props. Every successful download remains STAGED with source/license/hash evidence; READY_FOR_IMPORT and later states remain separate. Regional mappings are preproduction/shared-foundation support only where Part II/III runtime gates are closed. P1C01 remains the first assembled benchmark.
+
 ## 2026-09-22 - hourly three-lane warehouse/world/integration continuation
 
 Exact-head evidence before this batch: PR #67 `f41d5e91ac2a789387e987ff759b9e674cd86e10` had Pre-Unreal #667 SUCCESS and Warehouse Stage #76 SUCCESS. Unreal Build #502 stopped at the unchanged UE4.27.2 Engine Content verification after the guarded ACL-remediation attempt; C++ build/import/Automation/startup/chapter/state steps did not execute. Therefore no compile, PIE, device, performance or visual maturity is promoted.
