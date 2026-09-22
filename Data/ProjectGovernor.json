@@ -1964,7 +1964,8 @@
         "CI deep-audit script and finding registry",
         "World material persistence verified with zero missing runtime packages in Unreal #319.",
         "SHA-scoped governor handoff regression guard.",
-        "Mega material/world wave treats synchronous LoadObject concentration as a scaling guardrail and prioritizes material-response enrichment/re-use before adding heavyweight loads."
+        "Mega material/world wave treats synchronous LoadObject concentration as a scaling guardrail and prioritizes material-response enrichment/re-use before adding heavyweight loads.",
+        "Architectural stabilization gate now freezes feature expansion until root-cause hardening passes the same exact-head static/compile/import/runtime/state/warning chain."
       ],
       "missing_work": [
         "Complete current V6 engine validation after repeated runner cancellation; investigate trigger without treating interruption as a code defect.",
@@ -2332,7 +2333,9 @@
         "Unreal Build Validation runs the automation suite after exact-head compile/import and before runtime chapter/state smoke.",
         "Startup grounding PASS is delayed until two seconds of stable non-falling state with blocking ground.",
         "Continuous deep audit now guards committed NPC context, character-rig handle release, non-engine synchronous LoadObject reintroduction, builder tick policy and bounded social scans.",
-        "Editor QA compile now consumes ShireSaveGame through an exported runtime-module include path instead of a relative/private path."
+        "Editor QA compile now consumes ShireSaveGame through an exported runtime-module include path instead of a relative/private path.",
+        "Runtime chapter smoke now attempts P1C01-P1C08 in one run and reports RUNTIME_SWEEP_SUMMARY instead of stopping at the first failure.",
+        "Asset-quality strict mode now treats triangulation-risk OBJ faces and legacy BMP textures as structural failures."
       ],
       "missing_work": [
         "Compile and execute the new Automation Framework suite on UE4.27.2.",
@@ -2439,7 +2442,9 @@
         "ChapterWorldRouter now publishes committed chapter/route/episode/revision into UShireNPCContextSubsystem on normal commit and rollback.",
         "NPC regional mood/profile availability follows committed world identity; new bounded dialogue/film-context selection is suppressed while logical quest state and visible committed world disagree.",
         "Character rig async handoff now releases completed FStreamableHandle ownership after player/NPC components take UObject references, preventing GameInstance-lifetime handle pinning.",
-        "All non-engine runtime LoadObject paths found in the audit were removed; chapter/world/enemy production meshes and audio now use resident-only soft resolution with async ownership/fallback contracts."
+        "All non-engine runtime LoadObject paths found in the audit were removed; chapter/world/enemy production meshes and audio now use resident-only soft resolution with async ownership/fallback contracts.",
+        "Shared grounding now handles bounded collision seams and capsule clearance; chapter-specific spawn pads are prohibited.",
+        "Character rig requests preflight package existence before async load, preserving modular fallback without missing-package engine errors."
       ],
       "missing_work": [
         "Exact-head UE4.27 compile/runtime proof for full failed-swap rollback transaction, including player-life restoration and movement release.",
@@ -2569,6 +2574,56 @@
       ],
       "checkpoint": "PLAYER_CAMERA_EXPERIENCE",
       "notes": "Primary goal is presence in the world: walk through, approach, touch/interact, fight and observe from the controlled character's physical position rather than directing units from above."
+    },
+    {
+      "id": "REQ-STABILITY-001",
+      "title": "Architectural stabilization before further feature expansion",
+      "category": "EngineeringStability",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly requested long-term root-cause fixes and deep cleanup instead of chapter-by-chapter patches before continuing production.",
+      "intent": "Stop feature expansion while known systemic defects are converted into shared architectural invariants and regression guards. A chapter-specific patch is not acceptable when the defect belongs to a world, streaming, asset, CI or module contract.",
+      "evidence": [
+        "Source/ShireJourney/ChapterWorldRouter.cpp",
+        "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.cpp",
+        "Scripts/runtime_smoke.py",
+        "Scripts/asset_quality_audit.py",
+        "Scripts/pre_unreal_validate.py",
+        "Data/DeepProjectAudit.json"
+      ],
+      "implementation_refs": [
+        "Grounding now probes a bounded nearby-ground ring, rejects steep surfaces and verifies capsule clearance instead of relying on chapter-specific hidden spawn pads.",
+        "P1C01/P1C05 RuntimeSpawnFoundation patches were removed; validator now forbids chapter-specific spawn support pads.",
+        "Chapter runtime CI no longer stops at the first failed chapter; one build exposes all P1C01-P1C08 failures and writes an aggregate summary.",
+        "Missing skeletal rig packages are preflighted before RequestAsyncLoad so incomplete character maturity does not generate engine async-load errors.",
+        "Legacy BMP production textures were converted to TGA and BMP is now rejected by source validation.",
+        "Seven project-owned OBJ families with duplicate consecutive face vertices were normalized; triangulation-risk faces are now strict asset-quality failures."
+      ],
+      "missing_work": [
+        "Obtain fresh exact-head Pre-Unreal and UE4.27.2 compile/import/runtime evidence for the stabilization head.",
+        "Run the new non-fail-fast P1C01-P1C08 sweep and repair any remaining chapter failures at shared contract level.",
+        "Run state/transition/warning-debt chain after all chapter entries complete.",
+        "Complete the dedicated Public/Private runtime source migration in an isolated engine-tested maintenance batch.",
+        "Measure target-device memory/GC/social-scan behavior before closing remaining performance risks."
+      ],
+      "acceptance_criteria": [
+        "No known CRITICAL/HIGH source defect remains uncorrected or explicitly evidence-bounded.",
+        "Pre-Unreal exact head passes including deep/asset/governor audits.",
+        "UE4.27.2 C++ build and deterministic production import pass on the same exact head.",
+        "Startup and all P1C01-P1C08 runtime audits execute in one sweep and all pass.",
+        "State/transition/disk-save and warning-debt gates pass.",
+        "No chapter-specific hidden spawn-support patch is required for player grounding.",
+        "Missing optional production rigs use fallback without engine missing-package errors.",
+        "Production source textures contain no BMP and asset audit reports zero structural/triangulation errors."
+      ],
+      "dependencies": [
+        "REQ-AUDIT-001",
+        "REQ-QA-002",
+        "REQ-INTEGRATION-001",
+        "REQ-QUALITY-001"
+      ],
+      "checkpoint": "ARCHITECTURAL_STABILIZATION_GATE",
+      "notes": "Validation builds are allowed and required during this freeze; new gameplay/content features are not."
     }
   ],
   "hard_invariants": [
@@ -3541,17 +3596,18 @@
     }
   ],
   "active_gate": {
-    "id": "DEEP_EXACT_HEAD_STABILITY_GATE",
-    "status": "PARTIAL",
+    "id": "ARCHITECTURAL_STABILIZATION_GATE",
+    "status": "ACTIVE",
     "blocks_major_feature_expansion": true,
     "required_evidence": [
-      "Pre-Unreal including deep audit",
-      "real UE4.27.2 compile and deterministic production import",
-      "playable startup and P1C01-P1C08 audits",
-      "route/story/state isolated disk roundtrip",
-      "warning-debt identities clean or evidence-bounded"
+      "fresh exact-head Pre-Unreal including deep + asset + governor audits",
+      "real UE4.27.2 C++ compile and deterministic production import",
+      "non-fail-fast startup + P1C01-P1C08 runtime sweep",
+      "state + continuous transition + isolated disk-save roundtrip",
+      "warning-debt/material persistence gate",
+      "target-device follow-up before visual/performance acceptance"
     ],
-    "note": "Current priority is W00 runner/exact-head unlock. Broad feature/warehouse expansion is paused. Source-safe audit, governance reconciliation and blocker preparation may continue, but runtime/acceptance progression waits for a green exact-head static gate and restored UE4.27.2 Engine Content access.",
+    "note": "Runner ACL is no longer the primary blocker. Feature expansion is frozen while root-cause stabilization is validated. Validation builds/import/runtime audits are explicitly allowed because they are evidence, not feature expansion.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -3566,13 +3622,12 @@
     },
     "last_green_head": "4879a19999951354676341f032c358ac98679c44",
     "evidence": {
-      "current_exact_reviewed_head": "17689b194ddca281aa9881b9ac50594712a65df6",
-      "pre_unreal": "#685 FAILURE - PG-078 roadmap/governor drift from REQ-CAMERA-001; source reconciliation applied afterward and requires fresh exact-head rerun",
-      "unreal_build": "#520 FAILURE before C++ compile - NETWORK SERVICE cannot read WorldGridMaterial.uasset; runner ACL blocker remains",
-      "warehouse": "#99 SUCCESS - payloadFiles=240 bytes=3816657674 receipts=8 receiptRecords=278 duplicateGroups=22",
-      "last_historical_full_green": "PR #60 exact head 4879a19999951354676341f032c358ac98679c44: Pre-Unreal #531 PASS / Unreal #366 PASS"
+      "last_engine_proven_head": "a42679a4de808ce1f9bada7974ad87d52ee18fa9",
+      "unreal_build": "#547 reached UE4.27.2 C++ BUILD PASS, production import PASS, ShireJourney.QA 2/2 PASS, startup/P1C01-P1C04 PASS; P1C05 failed grounding at authored seam before the hardening wave.",
+      "runner_acl": "RESOLVED_FOR_BUILD_547 - Engine Content readable and C++ compilation/import executed.",
+      "current_hardening_head": "SOURCE_CHANGES_AFTER_BUILD_547_PENDING_FRESH_EXACT_HEAD_PROOF"
     },
-    "evidence_scope": "The last full engine-green proof is historical and does not validate current PR #67. Current PR engine proof is blocked before compilation; current warehouse evidence is staging/audit only.",
+    "evidence_scope": "Build #547 proves the runner/compile/import path on a42679a only. Grounding/rig/asset/QA hardening after that head is source-level until fresh exact-head validation.",
     "current_owner_observation": {
       "sha": "4879a19999951354676341f032c358ac98679c44",
       "pre_unreal": {
@@ -3935,11 +3990,20 @@
       "status": "ACTIVE",
       "rationale": "Owner directed immediate F1-F3 warehouse saturation so characters/world/audio/materials/creatures/props/animation are no longer late-production unknowns.",
       "execution_bundle": "B3_LIVING_WORLD_AND_PRESENTATION"
+    },
+    {
+      "order": 0,
+      "id": "WORK-STABILITY-001",
+      "title": "Architectural stabilization and root-cause hardening",
+      "status": "ACTIVE",
+      "rationale": "Owner paused feature expansion until systemic grounding, streaming, source-asset and QA failure-discovery contracts are hardened and proven on one exact head.",
+      "execution_bundle": "B0_EXACT_HEAD_STABILITY",
+      "plan": "REQ-STABILITY-001"
     }
   ],
   "last_reconciliation": {
     "date": "2026-09-22",
-    "reason": "Owner requested deep organization/audit pass before returning to runner repair.",
+    "reason": "Owner explicitly paused production expansion and requested root-cause architectural cleanup instead of symptom patches.",
     "exact_reviewed_head": "17689b194ddca281aa9881b9ac50594712a65df6",
     "latest_exact_head_evidence": {
       "pre_unreal": "#685 FAILURE - governance drift only: REQ-CAMERA-001 orphaned from MasterExecutionRoadmap / tracked snapshot stale",
@@ -3982,6 +4046,24 @@
       "evidence": "Unreal Build #547 compiled successfully, imported production assets successfully, passed both ShireJourney.QA automation tests, and passed startup/P1C01-P1C04 headless chapter audits. It then failed P1C05 with ShireStartupGrounding: FAIL reason=no-blocking-ground requested=(-2400,0,130). Source inspection shows the broad fallback ground ends around X=-2300 while the first road slab ends around X=-2480, leaving the requested X=-2400 spawn in a narrow collision gap.",
       "repair": "BuildFellowshipRoad now adds a hidden Engine BasicShapes collision support pad at the authored P1C05 start. The pad is tagged RuntimeSpawnFoundation and does not depend on imported asset collision.",
       "evidence_boundary": "The repair is not PIE/device/visual acceptance until fresh exact-head engine/headless and owner PIE evidence pass."
+    },
+    "latest_engine_evidence": {
+      "exact_head": "a42679a4de808ce1f9bada7974ad87d52ee18fa9",
+      "cxx_compile": "PASS - UE4.27.2 build succeeded",
+      "production_import": "PASS",
+      "automation": "PASS 2/2",
+      "runtime": "startup/P1C01/P1C02/P1C03/P1C04 PASS; P1C05 grounding FAIL; old harness stopped there"
+    },
+    "stabilization_wave": {
+      "status": "SOURCE_HARDENING_IMPLEMENTED_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "root_causes_addressed": [
+        "spawn/world collision seam drift -> shared bounded seam-tolerant grounding with slope + capsule-clearance checks",
+        "chapter-by-chapter serial discovery -> all chapters now continue and aggregate failures in one CI sweep",
+        "missing future skeletal packages -> package-existence preflight before async request",
+        "legacy BMP source contract -> 24 BMP converted to TGA, MTL references migrated, BMP rejected",
+        "OBJ import tangent/triangulation debt -> duplicate consecutive face vertices removed from all seven known risky source meshes; triangulation risk becomes strict failure"
+      ],
+      "explicit_non_patch_rule": "RuntimeSpawnFoundation chapter-specific pads are forbidden by validation. Fix the world/router contract, not individual chapter symptoms."
     }
   },
   "development_mode": {
@@ -4019,9 +4101,9 @@
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
   "current_focus": {
-    "production_lane": "W00_RUNNER_AND_EXACT_HEAD_UNLOCK",
+    "production_lane": "W00_ARCHITECTURAL_STABILIZATION",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "Broad warehouse saturation is paused after Warehouse #99. Repair governance drift and the runner ACL gate first; only source-safe audit/bookkeeping and blocker-preparation work may proceed until exact-head engine validation is reachable again.",
+    "rule": "No new gameplay feature, region runtime expansion or broad warehouse saturation until REQ-STABILITY-001 exact-head gates pass. Only root-cause repair, regression guards, source hygiene, validation and the later isolated Public/Private maintenance migration are in scope.",
     "character_visibility_bridge": "FIRST_PROVEN_RIGGED_HUMANOID_AND_ENEMY_STOCK_TO_P1C01_AFTER_ENGINE_GATE",
     "character_visibility_rule": "Warehouse growth must feed visible character progress: validate staged FBX rigs now, then import and replace proxies in Shire as soon as UE4.27 build/import is available.",
     "pre_runner_final_warehouse_batch": {
