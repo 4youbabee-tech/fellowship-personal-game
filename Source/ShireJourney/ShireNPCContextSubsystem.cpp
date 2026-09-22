@@ -901,6 +901,21 @@ void UShireNPCContextSubsystem::SetCommittedWorldContext(
         CommittedWorldRevision);
 }
 
+bool UShireNPCContextSubsystem::IsLogicalWorldContextCommitted() const
+{
+    if (!bHasCommittedWorldContext)
+    {
+        return true;
+    }
+
+    const UGameInstance* GI = GetGameInstance();
+    const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    return Quests &&
+        Quests->GetCurrentChapterId() == CommittedChapterId &&
+        Quests->GetCurrentRouteId() == CommittedRouteId &&
+        Quests->GetCurrentEpisodeId() == CommittedEpisodeId;
+}
+
 FName UShireNPCContextSubsystem::GetContextChapterId() const
 {
     if (bHasCommittedWorldContext)
@@ -932,13 +947,7 @@ FName UShireNPCContextSubsystem::GetContextActiveQuestId() const
         return bHasCommittedWorldContext ? CommittedActiveQuestId : NAME_None;
     }
 
-    const bool bLogicalWorldMatchesCommitted =
-        !bHasCommittedWorldContext ||
-        (Quests->GetCurrentChapterId() == CommittedChapterId &&
-         Quests->GetCurrentRouteId() == CommittedRouteId &&
-         Quests->GetCurrentEpisodeId() == CommittedEpisodeId);
-
-    return bLogicalWorldMatchesCommitted
+    return IsLogicalWorldContextCommitted()
         ? Quests->GetActiveQuestId()
         : CommittedActiveQuestId;
 }
@@ -952,13 +961,7 @@ int32 UShireNPCContextSubsystem::GetContextActiveQuestStage() const
         return bHasCommittedWorldContext ? CommittedActiveQuestStage : 0;
     }
 
-    const bool bLogicalWorldMatchesCommitted =
-        !bHasCommittedWorldContext ||
-        (Quests->GetCurrentChapterId() == CommittedChapterId &&
-         Quests->GetCurrentRouteId() == CommittedRouteId &&
-         Quests->GetCurrentEpisodeId() == CommittedEpisodeId);
-
-    return bLogicalWorldMatchesCommitted
+    return IsLogicalWorldContextCommitted()
         ? Quests->GetActiveQuestStage()
         : CommittedActiveQuestStage;
 }
@@ -1127,7 +1130,7 @@ UShireNPCContextSubsystem::GetActiveFilmDialogueContext() const
 {
     const UGameInstance* GI = GetGameInstance();
     const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
-    if (!Quests) return nullptr;
+    if (!Quests || !IsLogicalWorldContextCommitted()) return nullptr;
 
     const FName ContextRouteId = GetContextRouteId();
     const FName ContextChapterId = GetContextChapterId();
@@ -1273,7 +1276,7 @@ bool UShireNPCContextSubsystem::IsDangerStateActive() const
 {
     const UGameInstance* GI = GetGameInstance();
     const UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
-    if (!Quests)
+    if (!Quests && !bHasCommittedWorldContext)
     {
         return false;
     }
@@ -1308,6 +1311,14 @@ FShireBoundedDialogueResult UShireNPCContextSubsystem::SelectBoundedDialogue(
     FName LocationTag)
 {
     FShireBoundedDialogueResult Result;
+    // During a two-phase world swap, logical story state may already point at the
+    // destination while old geometry is still visible. Suppress new dialogue until
+    // world identity commits rather than leaking future/destination story context.
+    if (!IsLogicalWorldContextCommitted())
+    {
+        return Result;
+    }
+
     const FName SpeakerId = ResolveCanonicalProfileId(SpeakerHint);
     FName ListenerId = ResolveCanonicalProfileId(ListenerHint);
     if (ListenerId == NAME_None && ListenerHint == TEXT("PLAYER_FRODO"))
