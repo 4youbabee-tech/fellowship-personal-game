@@ -361,10 +361,17 @@ void UShireChapterAssetStreamingSubsystem::RequestCharacterRig(FName CharacterId
 
 void UShireChapterAssetStreamingSubsystem::HandleCharacterRigLoadComplete(FName CharacterId)
 {
+    FCharacterRigRuntime* Rig = CharacterRigRequests.Find(CharacterId);
+
     USkeletalMesh* SkeletalMesh = nullptr;
     UClass* AnimClass = nullptr;
     if (!ResolveCharacterRig(CharacterId, SkeletalMesh, AnimClass))
     {
+        if (Rig)
+        {
+            // A completed failed handle must not pin a useless request forever.
+            Rig->Handle.Reset();
+        }
         UE_LOG(
             LogTemp,
             Warning,
@@ -376,9 +383,17 @@ void UShireChapterAssetStreamingSubsystem::HandleCharacterRigLoadComplete(FName 
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("CharacterRigStreaming: ready id=%s"),
+        TEXT("CharacterRigStreaming: ready id=%s residency=actor-owned"),
         *CharacterId.ToString());
+
+    // Broadcast while the handle still pins the assets. Player/NPC components take
+    // their own UObject references during the callback. Releasing afterward lets
+    // inactive rigs become GC-eligible instead of accumulating for GameInstance life.
     OnCharacterRigReady.Broadcast(CharacterId);
+    if (Rig)
+    {
+        Rig->Handle.Reset();
+    }
 }
 
 void UShireChapterAssetStreamingSubsystem::HandleAsyncLoadComplete(uint64 CompletedSerial)
