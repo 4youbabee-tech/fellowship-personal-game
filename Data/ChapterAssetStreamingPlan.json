@@ -22,7 +22,8 @@
       "target-device frame time"
     ],
     "living_world_asset_ownership": "Ambient production character/fauna meshes and shared production surface material are soft chapter-bank members. Living-world actors may only ResolveObject from the committed resident bank; missing assets keep lightweight Engine primitive fallbacks and must not synchronously load production packages.",
-    "character_proxy_loading": "Player/named-NPC modular production pieces use resident-only soft resolution while skeletal production rigs load asynchronously. If a modular piece is not resident, primitive fallback remains visible until the async rig path succeeds."
+    "character_proxy_loading": "Player/named-NPC modular production pieces use resident-only soft resolution while skeletal production rigs load asynchronously. If a modular piece is not resident, primitive fallback remains visible until the async rig path succeeds.",
+    "audio_asset_ownership": "Production ambience/music/SFX/voice packages must be made resident asynchronously before playback; ShireAudioSubsystem performs resident-only soft resolution and preserves silent/subtitle fallback when an asset is absent or not resident. Do not reintroduce synchronous USoundBase LoadObject."
   },
   "banks": {
     "P1C01": {
