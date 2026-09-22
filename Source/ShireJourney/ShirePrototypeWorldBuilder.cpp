@@ -242,8 +242,8 @@ AStaticMeshActor* AShirePrototypeWorldBuilder::SpawnShape(
     Actor->Tags.AddUnique(TEXT("RuntimePrototypeGenerated"));
 
     UStaticMeshComponent* MeshComponent = Actor->GetStaticMeshComponent();
-    MeshComponent->SetStaticMesh(Mesh);
     MeshComponent->SetMobility(EComponentMobility::Movable);
+    MeshComponent->SetStaticMesh(Mesh);
     MeshComponent->SetCollisionEnabled(bCollision ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
     Actor->SetActorScale3D(Scale);
 
