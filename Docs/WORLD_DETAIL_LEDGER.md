@@ -1,5 +1,16 @@
 # WORLD DETAIL LEDGER
 
+## Precise integration-gap closure - 2026-09-22
+- Close discovered cross-system gaps immediately at source level; do not merely record them.
+- NPC world-facing context now follows committed visible world identity/revision. During logical/visible mismatch, no new bounded NPC dialogue/film context may start.
+- Same-world quest-stage/danger reactions remain live; the committed snapshot is used only across the async mismatch window.
+- Completed character-rig streamable handles are released after actor-owned handoff so inactive rigs are not pinned for the full GameInstance lifetime.
+- Chapter builders resolve production meshes only from resident async banks. Enemy bank coverage was extended for Black Rider, Moria threats and Amon Hen enemies.
+- Player/named-NPC/enemy production proxies use resident-only soft resolution; primitive fallback remains safe until skeletal production rigs become available.
+- Production audio no longer performs synchronous USoundBase loading.
+- Continuous audit now rejects non-engine synchronous LoadObject and verifies committed-context/rig-handle invariants.
+- Defect closure still requires fresh exact-head UE4.27 compile/runtime proof after W00 runner repair.
+
 ## Deep organization / cross-system audit - 2026-09-22
 - Audit checkpoint exact head: `17689b194ddca281aa9881b9ac50594712a65df6`.
 - Management drift found: REQ-CAMERA-001 was accepted into ProjectGovernor but not mapped into MasterExecutionRoadmap, causing Pre-Unreal #685 PG-078 failure. Mapping/snapshot reconciliation is now applied.
