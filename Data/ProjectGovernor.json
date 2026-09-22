@@ -2422,7 +2422,9 @@
         "V10 regional NPC roles/dialogue data and living-NPC intelligence plans are integrated into the comprehensive branch.",
         "Player persistence now uses the same ChapterWorldRouter committed chapter/route/episode boundary used by living-world synchronization.",
         "Saved transforms are grounded only after committed-world identity matches the restored save.",
-        "Failed-swap rollback snapshots now include player health/stamina/resolve/supplies and RestoreCommittedWorldFromSnapshot reapplies player-life state before releasing world hold."
+        "Failed-swap rollback snapshots now include player health/stamina/resolve/supplies and RestoreCommittedWorldFromSnapshot reapplies player-life state before releasing world hold.",
+        "Unreal Build workflow now attempts a guarded read/execute-only ACL repair for NETWORK SERVICE over UE4 Engine Content before running the unchanged engine-content verification gate.",
+        "A second ambientCG warehouse batch now targets non-Shire trilogy regions (Caradhras, Moria, Rohan, Gondor, Osgiliath/Ithilien, Mordor, Isengard, Bree/battlefields, Pelennor support and Shelob-lair support materials)."
       ],
       "missing_work": [
         "Exact-head UE4.27 compile/runtime proof for full failed-swap rollback transaction, including player-life restoration and movement release.",
