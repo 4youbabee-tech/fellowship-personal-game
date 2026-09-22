@@ -45,11 +45,32 @@ else:
 streaming_h=read(SRC/"ShireChapterAssetStreamingSubsystem.h")
 streaming_cpp=read(SRC/"ShireChapterAssetStreamingSubsystem.cpp")
 streaming_contract=streaming_h+"\n"+streaming_cpp
+router=read(SRC/"ChapterWorldRouter.cpp")
+npc_context=read(SRC/"ShireNPCContextSubsystem.cpp")
+audio=read(SRC/"ShireAudioSubsystem.cpp")
 for symbol in ["FStreamableManager","FSoftObjectPath","RequestAsyncLoad"]:
  if symbol not in streaming_contract:
   errors.append(f"async chapter streaming contract missing: {symbol}")
 if "LoadObject<" in streaming_cpp:
  errors.append("chapter streaming subsystem must not add synchronous LoadObject")
+if "SetCommittedWorldContext" not in npc_context or router.count("SetCommittedWorldContext(") < 2:
+ errors.append("committed NPC context bridge missing from normal commit/rollback paths")
+for symbol in ["GetContextChapterId()", "GetContextRouteId()", "GetContextActiveQuestId()", "GetContextActiveQuestStage()"]:
+ if symbol not in npc_context:
+  errors.append(f"NPC committed-context query missing: {symbol}")
+if "OnCharacterRigReady.Broadcast(CharacterId);" not in streaming_cpp or "Rig->Handle.Reset();" not in streaming_cpp:
+ errors.append("character rig completion must release streamable handle after actor-owned handoff")
+if "LoadObject<USoundBase>" in audio:
+ errors.append("audio subsystem must not synchronously LoadObject production sound")
+for builder_name in [
+ "ShirePrototypeWorldBuilder.cpp",
+ "BreePrototypeWorldBuilder.cpp",
+ "FellowshipChapterWorldBuilder.cpp",
+ "IsengardPrototypeWorldBuilder.cpp",
+]:
+ builder_text=read(SRC/builder_name)
+ if "LoadObject<UStaticMesh>" in builder_text:
+  errors.append(f"world builder reintroduced synchronous production mesh loading: {builder_name}")
 
 detail=read(SRC/"WorldDetailCluster.cpp")
 for symbol in ["UHierarchicalInstancedStaticMeshComponent","SetCullDistances","PrimaryActorTick.bCanEverTick = false"]:
