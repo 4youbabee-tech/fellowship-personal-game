@@ -29,6 +29,14 @@ time.sleep(10)
 
 
 class RuntimeSmokeTests(unittest.TestCase):
+    def test_edges_mode_requires_canonical_restore_and_stale_checkpoint_evidence(self):
+        markers = required_markers(None, "edges")
+        self.assertEqual(markers, [
+            "ShirePersistenceEdgeAudit: PASS legacy-terminal canonical-publications=1 worldCommits=1 chapter=P1C02",
+            "ShireCheckpointRevisionAudit: PASS stale-completion stateApplied=no",
+        ])
+        self.assertEqual(missing_markers(markers[0], markers), [markers[1]])
+
     def test_pending_mode_requires_both_window_and_commit_evidence(self):
         markers = required_markers(None, "pending")
         self.assertEqual(markers, [

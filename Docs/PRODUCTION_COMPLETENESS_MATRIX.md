@@ -1,3 +1,9 @@
+## 2026-09-23 - W00 CP-W00-140 closure wave
+
+Parent evidence boundary: `80fc54dc4e4571e57206bef28cc809e2dcb3ec62` is exact-head green on Pre-Unreal #773 / Warehouse #187 / Unreal #608, including compile/import, P1C01-P1C08, state, transitions, rollback/stream-failure faults, delayed pending authority and project warning-debt gates. No PIE/device/visual/performance/audio-playback promotion is made.
+
+New closure work is intentionally not counted as production-percentage progress. It fixes texture-pool scalability authority, broadens warning-debt runtime evidence, and adds PG-140 legacy-terminal/stale-checkpoint runtime regression coverage. Status for the new head is **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. W01 stays blocked.
+
 ## 2026-09-23 - W00 failure-path expansion after Unreal #606
 
 #606 compiled/imported and passed all established runtime paths through continuous transitions, then the new rollback audit produced a false-negative on time-varying stamina/resolve despite engine logs proving the exact rollback state was applied. The audit now captures exact restore values at the rollback application boundary and checks stable post-release values separately.

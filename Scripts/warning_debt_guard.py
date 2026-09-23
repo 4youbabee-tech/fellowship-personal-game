@@ -18,12 +18,17 @@ CHECKS = [
     ("defaultMat references", re.compile(r"(defaultMat)", re.I), 0, 1, "all"),
     ("DirectionalLight mobility warnings", re.compile(r"(DirectionalLight_0.*has to be 'Movable')", re.I), 0, 1, "runtime"),
     ("NPC spawn collision failures", re.compile(r"SpawnActor failed because of collision at the spawn location \[([^\]]+)\] for \[ShireNPC\]", re.I), 0, 1, "runtime"),
+    ("Streaming pool scalability override warnings", re.compile(r"r\.Streaming\.PoolSize.*(?:ignored|lower priority)", re.I), 0, None, "all"),
 ]
 
 RUNTIME_LOG_PREFIXES = (
     "CI-PlayableStartup",
     "CI-ChapterAudit-",
     "CI-StateAudit",
+    "CI-TransitionAudit",
+    "CI-FaultAudit",
+    "CI-PendingTransitionAudit",
+    "CI-PersistenceEdgeAudit",
 )
 
 def decode(path: Path) -> str:

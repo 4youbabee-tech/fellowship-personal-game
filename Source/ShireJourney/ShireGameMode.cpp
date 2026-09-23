@@ -758,5 +758,122 @@ void AShireGameMode::BeginPlay()
             GetWorldTimerManager().ClearTimer(Audit->Timer);
         }), 0.10f, true);
     }
+    if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit")) &&
+        FParse::Param(FCommandLine::Get(), TEXT("AuditPersistenceEdges")))
+    {
+        struct FPersistenceEdgeAuditState
+        {
+            FTimerHandle Timer;
+            int32 Step = 0;
+            int32 Polls = 0;
+            uint32 OriginRevision = 0;
+            uint32 OriginPublicationSerial = 0;
+        };
+
+        const TSharedRef<FPersistenceEdgeAuditState> Audit =
+            MakeShared<FPersistenceEdgeAuditState>();
+        GetWorldTimerManager().SetTimer(
+            Audit->Timer,
+            FTimerDelegate::CreateWeakLambda(this, [this, Audit]()
+            {
+                UGameInstance* GI = GetGameInstance();
+                UShireQuestSubsystem* Quests =
+                    GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+                AChapterWorldRouter* Router = Cast<AChapterWorldRouter>(
+                    UGameplayStatics::GetActorOfClass(this, AChapterWorldRouter::StaticClass()));
+                AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(
+                    UGameplayStatics::GetPlayerPawn(this, 0));
+
+                if (!Quests || !Router || !Player || ++Audit->Polls > 240)
+                {
+                    UE_LOG(LogTemp, Error, TEXT("ShirePersistenceEdgeAudit: FAIL reason=readiness step=%d"), Audit->Step);
+                    GetWorldTimerManager().ClearTimer(Audit->Timer);
+                    return;
+                }
+
+                if (Audit->Step == 0)
+                {
+                    if (!Router->IsWorldCommitted(
+                            Quests->GetCurrentChapterId(),
+                            Quests->GetCurrentRouteId(),
+                            Quests->GetCurrentEpisodeId()) ||
+                        Player->IsWorldTransitionHeld())
+                    {
+                        return;
+                    }
+
+                    Audit->OriginRevision = Router->GetWorldRevision();
+                    Audit->OriginPublicationSerial =
+                        Quests->GetPersistenceRestorePublicationSerial();
+
+                    if (!Player->RunLegacyTerminalRestoreAuditSetup())
+                    {
+                        UE_LOG(LogTemp, Error, TEXT("ShirePersistenceEdgeAudit: FAIL reason=legacy-restore-start"));
+                        GetWorldTimerManager().ClearTimer(Audit->Timer);
+                        return;
+                    }
+
+                    Audit->Step = 1;
+                    Audit->Polls = 0;
+                    return;
+                }
+
+                if (!Router->IsWorldCommitted(
+                        TEXT("P1C02"),
+                        TEXT("FrodoMain"),
+                        TEXT("P1C02_Main")))
+                {
+                    return;
+                }
+
+                const bool bCanonicalIdentity =
+                    Quests->GetCurrentChapterId() == TEXT("P1C02") &&
+                    Quests->GetCurrentRouteId() == TEXT("FrodoMain") &&
+                    Quests->GetCurrentEpisodeId() == TEXT("P1C02_Main") &&
+                    Quests->GetActiveQuestId() == TEXT("RoadToBree") &&
+                    Quests->GetActiveQuestStage() == 0;
+                const bool bOnePublication =
+                    Quests->GetPersistenceRestorePublicationSerial() ==
+                    Audit->OriginPublicationSerial + 1;
+                const bool bOneWorldCommit =
+                    Router->GetWorldRevision() == Audit->OriginRevision + 1;
+                const bool bReleased = !Player->IsWorldTransitionHeld();
+
+                if (!bCanonicalIdentity || !bOnePublication || !bOneWorldCommit || !bReleased)
+                {
+                    UE_LOG(
+                        LogTemp,
+                        Error,
+                        TEXT("ShirePersistenceEdgeAudit: FAIL canonical=%s publicationOnce=%s worldCommitOnce=%s released=%s revision=%u originRevision=%u publication=%u originPublication=%u"),
+                        bCanonicalIdentity ? TEXT("yes") : TEXT("no"),
+                        bOnePublication ? TEXT("yes") : TEXT("no"),
+                        bOneWorldCommit ? TEXT("yes") : TEXT("no"),
+                        bReleased ? TEXT("yes") : TEXT("no"),
+                        Router->GetWorldRevision(),
+                        Audit->OriginRevision,
+                        Quests->GetPersistenceRestorePublicationSerial(),
+                        Audit->OriginPublicationSerial);
+                    GetWorldTimerManager().ClearTimer(Audit->Timer);
+                    return;
+                }
+
+                UE_LOG(
+                    LogTemp,
+                    Display,
+                    TEXT("ShirePersistenceEdgeAudit: PASS legacy-terminal canonical-publications=1 worldCommits=1 chapter=P1C02"));
+
+                if (!Player->RunStaleCheckpointCompletionAudit())
+                {
+                    UE_LOG(LogTemp, Error, TEXT("ShirePersistenceEdgeAudit: FAIL reason=stale-checkpoint-completion"));
+                    GetWorldTimerManager().ClearTimer(Audit->Timer);
+                    return;
+                }
+
+                GetWorldTimerManager().ClearTimer(Audit->Timer);
+            }),
+            0.10f,
+            true);
+    }
+
 #endif
 }

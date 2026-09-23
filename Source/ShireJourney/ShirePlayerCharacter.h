@@ -72,6 +72,13 @@ public:
     // Explicit CI-only disk roundtrip through the production snapshot/restore path.
     bool RunSaveRoundtripAudit();
 
+#if !UE_BUILD_SHIPPING
+    // W00 regression probes: exercise the production restore path and stale
+    // checkpoint completion guard without exposing debug controls in shipping.
+    bool RunLegacyTerminalRestoreAuditSetup();
+    bool RunStaleCheckpointCompletionAudit();
+#endif
+
     // Raised by ChapterWorldRouter before destination construction and released only
     // after committed-world publication. Gameplay mutation must stay inert meanwhile.
     void SetWorldTransitionHeld(bool bHeld) { bWorldTransitionHeld = bHeld; }

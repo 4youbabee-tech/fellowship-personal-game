@@ -34,6 +34,11 @@ def required_markers(chapter, mode):
             "ShirePendingTransitionAudit: WINDOW-PASS old-world-authority=yes movementHeld=yes npcDestinationBlocked=yes",
             "ShirePendingTransitionAudit: PASS delayed-ready old-world-authority=yes destination-commit=yes",
         ]
+    if mode == "edges":
+        return [
+            "ShirePersistenceEdgeAudit: PASS legacy-terminal canonical-publications=1 worldCommits=1 chapter=P1C02",
+            "ShireCheckpointRevisionAudit: PASS stale-completion stateApplied=no",
+        ]
     if mode == "state":
         return ["ShirePlayableStartup: GameMode ready",
                 "ShireStartupGrounding: PASS chapter=P1C03",
@@ -143,7 +148,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--editor", required=True, type=Path)
     parser.add_argument("--project", required=True, type=Path)
-    parser.add_argument("--mode", choices=("startup", "chapters", "state", "transitions", "faults", "pending"), required=True)
+    parser.add_argument("--mode", choices=("startup", "chapters", "state", "transitions", "faults", "pending", "edges"), required=True)
     parser.add_argument("--timeout", type=float, default=45)
     parser.add_argument("--observation", type=float, default=4)
     args = parser.parse_args()
@@ -152,7 +157,7 @@ def main():
     if args.observation <= 0 or args.timeout <= args.observation:
         parser.error("timeout must exceed a positive observation window")
     log_dir = args.project.resolve().parent / "Saved" / "Logs"
-    chapters = [None] if args.mode in ("startup", "state", "transitions", "faults", "pending") else [f"P1C{i:02d}" for i in range(1, 9)]
+    chapters = [None] if args.mode in ("startup", "state", "transitions", "faults", "pending", "edges") else [f"P1C{i:02d}" for i in range(1, 9)]
     results = []
     for chapter in chapters:
         name = ("CI-StateAudit" if args.mode == "state" else
@@ -163,6 +168,8 @@ def main():
             name = "CI-FaultAudit"
         if args.mode == "pending":
             name = "CI-PendingTransitionAudit"
+        if args.mode == "edges":
+            name = "CI-PersistenceEdgeAudit"
         log = log_dir / (name + ".log")
         command = [str(args.editor.resolve()), str(args.project.resolve()),
                    "/Engine/Maps/Templates/Template_Default", "-game", "-nullrhi",
@@ -178,6 +185,8 @@ def main():
             command.extend(["-AuditFaults", "-ShireCIForceChapterAssetFailure=P1C02"])
         if args.mode == "pending":
             command.extend(["-AuditPendingTransition", "-ShireCIAssetReadyDelay=2.0"])
+        if args.mode == "edges":
+            command.append("-AuditPersistenceEdges")
         try:
             result = observe(command, log, required_markers(chapter, args.mode), args.timeout, args.observation)
         except Exception as exc:

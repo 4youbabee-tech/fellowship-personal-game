@@ -297,6 +297,7 @@ public:
     void CommitPersistenceRestore(bool bBroadcastQuestStateRestored = true);
     void AbortPersistenceRestore();
     bool IsPersistenceRestoreInProgress() const { return bPersistenceRestoreInProgress; }
+    uint32 GetPersistenceRestorePublicationSerial() const { return PersistenceRestorePublicationSerial; }
 
     // A save restore can change world identity without calling StartChapter first.
     // Publish the destination intent after BeginPersistenceRestore succeeds but before
@@ -365,6 +366,7 @@ private:
     TArray<FName> KnownMapRegionIds;
 
     bool bPersistenceRestoreInProgress = false;
+    uint32 PersistenceRestorePublicationSerial = 0;
     FName PersistenceRestorePreviousChapterId = NAME_None;
     FName PersistenceRestorePreviousRouteId = NAME_None;
     FName PersistenceRestorePreviousEpisodeId = NAME_None;

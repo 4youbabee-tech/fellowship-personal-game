@@ -91,6 +91,7 @@ void UShireQuestSubsystem::CommitPersistenceRestore(bool bBroadcastQuestStateRes
     }
 
     bPersistenceRestoreInProgress = false;
+    ++PersistenceRestorePublicationSerial;
 
     // Publish exactly one complete, repaired logical snapshot after every
     // persistence domain and any canonical legacy repair have settled.
@@ -104,6 +105,15 @@ void UShireQuestSubsystem::CommitPersistenceRestore(bool bBroadcastQuestStateRes
     {
         OnQuestStageChanged.Broadcast(Pair.Key, Pair.Value);
     }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShirePersistenceRestorePublication: serial=%u chapter=%s route=%s episode=%s"),
+        PersistenceRestorePublicationSerial,
+        *CurrentChapterId.ToString(),
+        *CurrentRouteId.ToString(),
+        *CurrentEpisodeId.ToString());
 
     UE_LOG(
         LogTemp,

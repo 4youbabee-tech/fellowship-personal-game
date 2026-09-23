@@ -2660,11 +2660,14 @@
         "Rollback now emits ShireRollbackSnapshotApplied at the exact application boundary; later fault checks use stable health/supplies plus context/revision/movement invariants.",
         "Save RestoreSaveSnapshot now shares the pre-mutation transition boundary through PreparePersistenceWorldTransition after BeginPersistenceRestore and before RestoreQuestState.",
         "Chapter asset streaming no longer treats missing/empty banks, invalid async handles or unresolved loaded assets as compatibility success; it publishes OnChapterAssetsFailed and preserves the old resident bank for rollback.",
-        "CI now has deterministic forced valid-bank async failure and non-blocking delayed-ready transition modes to prove failure cleanup and old-world authority."
+        "CI now has deterministic forced valid-bank async failure and non-blocking delayed-ready transition modes to prove failure cleanup and old-world authority.",
+        "Exact head 80fc54dc4e4571e57206bef28cc809e2dcb3ec62 completed Pre-Unreal #773, Warehouse #187 and Unreal #608 successfully; #608 includes rollback fault, forced stream-failure rollback and delayed pending-window authority.",
+        "PG-139 removes the fixed RendererSettings r.Streaming.PoolSize that overrode TextureQuality tiers, adds a zero-tolerance precedence-warning guard, and includes transition/fault/pending/persistence-edge logs in runtime warning-debt scope.",
+        "PG-140 adds a production-path legacy terminal restore audit requiring one canonical P1C02 publication/world commit and a stale checkpoint callback audit requiring stateApplied=no for an older world revision."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal and UE4.27 runtime proof for PG-137/PG-138, including rollback exact-apply markers, stream-failure rollback and delayed pending-window authority.",
-        "Add/execute a legacy terminal-save repair test that proves exactly one final canonical world commit.",
+        "Obtain fresh exact-head Pre-Unreal and UE4.27 runtime proof for PG-139/PG-140; parent #608 evidence applies only to 80fc54dc.",
+        "Exercise a real queued AsyncSaveGame write completion across a committed-world revision; PG-140 currently proves the stale callback guard deterministically, not the full disk race.",
         "Exercise immutable queued checkpoint completion across a real world revision.",
         "Reject or canonicalize malformed route/chapter/episode save identities before world commit.",
         "Validate packaged Data JSON staging/read behavior.",
@@ -3685,14 +3688,15 @@
       ],
       "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "4879a19999951354676341f032c358ac98679c44",
+    "last_green_head": "80fc54dc4e4571e57206bef28cc809e2dcb3ec62",
     "evidence": {
-      "last_engine_proven_head": "a42679a4de808ce1f9bada7974ad87d52ee18fa9",
-      "unreal_build": "#547 reached UE4.27.2 C++ BUILD PASS, production import PASS, ShireJourney.QA 2/2 PASS, startup/P1C01-P1C04 PASS; P1C05 failed grounding at authored seam before the hardening wave.",
-      "runner_acl": "RESOLVED_FOR_BUILD_547 - Engine Content readable and C++ compilation/import executed.",
-      "current_hardening_head": "SOURCE_CHANGES_AFTER_BUILD_547_PENDING_FRESH_EXACT_HEAD_PROOF"
+      "last_engine_proven_head": "80fc54dc4e4571e57206bef28cc809e2dcb3ec62",
+      "pre_unreal": "#773 SUCCESS on exact head 80fc54dc4e4571e57206bef28cc809e2dcb3ec62.",
+      "unreal_build": "#608 SUCCESS on exact head 80fc54dc4e4571e57206bef28cc809e2dcb3ec62: UE4.27.2 compile/import, QA, startup, P1C01-P1C08, state, transitions, rollback fault, stream-failure fault, delayed pending authority and zero-tolerance project warning debt all passed.",
+      "warehouse": "#187 SUCCESS on the same exact head; persistent inventory audit passed.",
+      "runner_acl": "RESOLVED - the self-hosted UE4.27 runner read Engine Content and completed #608."
     },
-    "evidence_scope": "Build #547 proves the runner/compile/import path on a42679a only. Grounding/rig/asset/QA hardening after that head is source-level until fresh exact-head validation.",
+    "evidence_scope": "80fc54dc is the latest exact-head COMPILE/STATIC/HEADLESS-RUNTIME evidence. New PG-139/PG-140 source/config changes require their own exact-head runs; no PIE/device/visual/performance/audio-playback acceptance is inferred.",
     "current_owner_observation": {
       "sha": "4879a19999951354676341f032c358ac98679c44",
       "pre_unreal": {
@@ -4068,24 +4072,25 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Unreal #606 exercised the first real rollback fault path. It proved exact rollback application in engine logs but exposed an invalid post-release audit comparison; continued source review also found save-driven transitions and chapter-bank failures outside the same transaction boundary.",
-    "exact_reviewed_head": "2b5651db9f2f129564a12f0fe1ad86a11dfca476",
+    "reason": "Recovered the interrupted W00 stabilization session from PR #67 and exact workflow logs, then reconciled the successful #608 fault/pending evidence before starting the next closure wave.",
+    "exact_reviewed_head": "80fc54dc4e4571e57206bef28cc809e2dcb3ec62",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#772 SUCCESS on 2b5651db9f2f129564a12f0fe1ad86a11dfca476",
-      "unreal_build": "#606 parent diagnostic: compile/import/Automation/startup/P1C01-P1C08/state/transitions PASS; fault gate FAIL on time-varying post-release snapshot comparison",
-      "parent_green": "#605 full established-chain SUCCESS on ddd0957d6201c8bf553825acd671c98a9be545ef"
+      "pre_unreal": "#773 SUCCESS",
+      "warehouse": "#187 SUCCESS",
+      "unreal_build": "#608 SUCCESS including faults and delayed pending authority"
     },
     "reconciled_findings": [
-      "The request-time rollback snapshot is applied with exact values in #606; audit sampling must distinguish exact application from legitimate post-release stamina/resolve evolution.",
-      "Save-driven restore must signal transition intent before restored logical mutation.",
-      "Missing/unresolved chapter-bank residency is a transaction failure, not a compatibility success.",
-      "Slow async authority requires a deterministic delayed-ready observation window rather than assuming fast local CI covers it."
+      "PG-137 delayed pending-window authority is headless-runtime proven on #608.",
+      "PG-138 forced valid-bank stream failure and atomic rollback are headless-runtime proven on #608.",
+      "The #608 log exposed a real r.Streaming.PoolSize priority conflict: DefaultEngine overrode TextureQuality scalability tiers.",
+      "Warning-debt runtime scope omitted transition/fault/pending logs and is expanded in PG-139.",
+      "Legacy terminal canonical publication and stale checkpoint completion receive deterministic runtime coverage in PG-140."
     ],
-    "next_priority": "W00_PG137_PG138_ASYNC_FAILURE_AND_PENDING_AUTHORITY",
-    "truth_boundary": "PG-137/PG-138 changes are source-level until a newer exact head passes. No PIE/device/visual/performance/audio acceptance is inferred.",
+    "next_priority": "W00_PG139_PG140_CLOSURE_VALIDATION",
+    "truth_boundary": "80fc54dc evidence does not prove the new PG-139/PG-140 head. No PIE/device/visual/performance/audio acceptance is inferred.",
     "stabilization_wave": {
-      "status": "LARGE_SOURCE_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
-      "invariant": "Every world-identity change, including save restore, captures an exact committed rollback origin before logical mutation; pending asset failures never become residency; old world/context/assets remain authoritative until one successful destination commit."
+      "status": "SOURCE_REPAIRED_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "invariant": "Low-spec rendering settings have one authority; every transactional runtime log participates in warning debt; restore publication is single/canonical; stale checkpoint completion cannot mutate a newer world revision."
     }
   },
   "development_mode": {
@@ -4149,70 +4154,43 @@
     "After the P1C01 production pipeline is proven, mass-apply the same rig/material/world/audio/LOD conventions chapter-by-chapter."
   ],
   "session_handoff": {
-    "source_head": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-    "branch": "develop",
+    "checkpoint_id": "CP-W00-140",
+    "source_head": "80fc54dc4e4571e57206bef28cc809e2dcb3ec62",
+    "branch": "integration/comprehensive-foundation-v1",
+    "pull_request": 67,
     "verified": {
-      "pre_unreal": "PASS #532",
-      "unreal_build": "PASS #367",
-      "integration": "PR #60 merged and develop returned green."
+      "pre_unreal": "PASS #773",
+      "warehouse": "PASS #187",
+      "unreal_build": "PASS #608"
     },
-    "active_candidate": {
-      "pull_request": 61,
-      "branch": "production/chapter-streaming-v5",
-      "latest_observed_sha": "3fe79f95ffed1b6715060b3aaa090c0af929769c",
-      "pre_unreal": "PASS #539",
-      "unreal_build": "IN_PROGRESS #374 at runtime-timeout review; this new commit requires fresh exact-head validation"
-    },
-    "failing": {
-      "resolved": [
-        "#370 FStreamableHandle declaration mismatch",
-        "#371 conditional UE_LOG verbosity",
-        "stale async completion after returning to resident world corrected at b882b052"
-      ],
-      "current": "#372 at 8872f2c54c14edb91bc4ed25ad6707f8665b6234 passed compile/import/startup/P1C01-P1C04, then P1C05 readiness timed out (803.594s elapsed, configured 45s). Log was still in engine initialization. Root cause not established; no chapter-content defect inferred."
-    },
+    "exact_head_scope": [
+      "UE4.27.2 C++ compile",
+      "production import",
+      "ShireJourney.QA 2/2",
+      "startup",
+      "P1C01-P1C08",
+      "state/disk roundtrip",
+      "continuous transitions",
+      "rollback + forced streaming failure",
+      "delayed pending authority",
+      "project warning-debt categories"
+    ],
+    "active_wave": "PG-139/PG-140 W00 closure: texture-pool authority + full runtime warning scope + persistence edge regressions",
     "next_actions": [
-      "Require fresh exact-head CI for this cleanup commit.",
-      "Repair only demonstrated V5 failures if any.",
-      "Merge PR #61 only after both gates pass, then confirm develop green.",
-      "Start post-V5 world-life/architecture/NPC-density wave, with rig/animation kept explicit."
+      "Run fresh exact-head Pre-Unreal on the new closure commit.",
+      "Run fresh exact-head UE4.27 build/import/runtime and inspect full logs, not only green status.",
+      "If red, collect the complete failure family before another repair commit.",
+      "Keep W01 blocked; after technical green continue packaged Data JSON, real queued async checkpoint race, audio without -NoSound, device profiling and human gates."
     ],
     "unverified_acceptance": [
-      "Representative target-device chapter-transition hitch and resident-memory measurements",
-      "Rendered visual acceptance after the post-V5 density wave",
-      "Human pacing/readability acceptance",
-      "Final skeletal rig/animation acceptance"
+      "PIE/rendered traversal acceptance",
+      "target-device FPS/frame-time/GC/RAM/VRAM profiling",
+      "actual audio playback without -NoSound",
+      "real queued AsyncSaveGame write completion across a world revision",
+      "packaged Data JSON staging/read",
+      "human core-loop/onboarding/external playtest"
     ],
-    "scope_rule": "Machine evidence and merge status do not replace device profiling, rendered review or human pacing acceptance.",
-    "validation_snapshot": {
-      "last_green": {
-        "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-        "pre_unreal": {
-          "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-          "run_id": 35547643542,
-          "status": "SUCCESS"
-        },
-        "unreal": {
-          "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-          "run_id": 35547643484,
-          "status": "SUCCESS"
-        }
-      },
-      "latest_observed": {
-        "sha": "3fe79f95ffed1b6715060b3aaa090c0af929769c",
-        "pre_unreal": {
-          "sha": "3fe79f95ffed1b6715060b3aaa090c0af929769c",
-          "run_id": 35573736301,
-          "status": "SUCCESS"
-        },
-        "unreal": {
-          "sha": "3fe79f95ffed1b6715060b3aaa090c0af929769c",
-          "run_id": 35573736371,
-          "status": "IN_PROGRESS"
-        }
-      }
-    },
-    "pull_request": 61
+    "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance."
   },
   "governor_role": {
     "mode": "OVERSEER_NOT_BOTTLENECK",

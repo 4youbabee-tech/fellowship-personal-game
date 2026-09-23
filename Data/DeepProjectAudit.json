@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "2b5651db9f2f129564a12f0fe1ad86a11dfca476_PRE_UNREAL_772_GREEN_UNREAL_606_FAILURE_DIAGNOSTIC_PLUS_PG137_138_SOURCE_WAVE",
+  "audited_head": "80fc54dc4e4571e57206bef28cc809e2dcb3ec62_UNREAL_608_GREEN_PLUS_PG139_140_SOURCE_WAVE_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -276,42 +276,50 @@
     {
       "id": "AUDIT-HIGH-033",
       "severity": "HIGH",
-      "status": "ENGINE_DIAGNOSTIC_PROVES_EXACT_APPLY_ON_606_PENDING_GREEN_FAULT_GATE",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_608_PENDING_PIE_DEVICE",
       "title": "Rollback snapshot freshness was tied to the last world commit instead of the transition request",
-      "evidence": "Source simulation after the fully green Unreal #605 path showed CaptureCommittedRollbackSnapshot was called at world commit/rollback completion, but no pre-mutation transition boundary refreshed it immediately before a later StartChapter/StartExperience request. Player-life, quest, discovery or NPC-memory changes made since the prior world commit could therefore be lost if the next swap failed. Unreal #606 logged ShireWorldCommit rollback-player-state health=67.0 stamina=54.0 resolve=43.0 supplies=2 twice around the rollback, restored NPC/LivingWorld context and advanced revision. The audit's later exact stamina/resolve comparison was invalid because normal life ticking had resumed.",
+      "evidence": "Source simulation after the fully green Unreal #605 path showed CaptureCommittedRollbackSnapshot was called at world commit/rollback completion, but no pre-mutation transition boundary refreshed it immediately before a later StartChapter/StartExperience request. Player-life, quest, discovery or NPC-memory changes made since the prior world commit could therefore be lost if the next swap failed. Unreal #606 logged ShireWorldCommit rollback-player-state health=67.0 stamina=54.0 resolve=43.0 supplies=2 twice around the rollback, restored NPC/LivingWorld context and advanced revision. The audit's later exact stamina/resolve comparison was invalid because normal life ticking had resumed. Exact head 80fc54dc completed Unreal #608; fault mode required ShireRollbackSnapshotApplied plus restored player/context/LivingWorld/movement invariants and passed.",
       "action": "Publish OnWorldTransitionRequested before logical chapter/route mutation, have ChapterWorldRouter capture a snapshot only from an exact committed origin, then raise the transaction hold. Exercise a failure after distinct live player-state mutation and require exact origin restoration."
     },
     {
       "id": "AUDIT-HIGH-034",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_FAULT_PROOF",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_608_PENDING_PIE_DEVICE",
       "title": "Unsupported chapter/route rejection could leave an invalid logical destination without atomic rollback",
-      "evidence": "The previous CommitChapterWorld unsupported branch cancelled pending streaming, cleared pending IDs and returned. It did not restore the prior quest/world snapshot or guarantee movement release, so an invalid destination request could leave logical and physical world state split.",
+      "evidence": "The previous CommitChapterWorld unsupported branch cancelled pending streaming, cleared pending IDs and returned. It did not restore the prior quest/world snapshot or guarantee movement release, so an invalid destination request could leave logical and physical world state split. Unreal #608 fault mode passed the unsupported-request rollback marker on exact head 80fc54dc.",
       "action": "Make supported route/chapter pairs explicit and route every unsupported destination through RollbackFailedWorldSwap. CI fault mode intentionally requests P1C99 and requires restored identity, movement, player state, NPC context and LivingWorld revision."
     },
     {
       "id": "AUDIT-HIGH-035",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "status": "SOURCE_FIX_IMPLEMENTED_PERSISTENCE_EDGE_AUDIT_ADDED_PENDING_EXACT_HEAD",
       "title": "Save-driven world restore did not capture rollback origin at the pre-mutation boundary",
       "evidence": "PG-136 covered StartChapter/StartExperience, but RestoreSaveSnapshot called BeginPersistenceRestore and mutated quest/route state without first notifying ChapterWorldRouter to snapshot the live committed origin.",
-      "action": "After BeginPersistenceRestore succeeds and before RestoreQuestState, call PreparePersistenceWorldTransition so the router captures the exact live origin and raises the world hold."
+      "action": "Keep PreparePersistenceWorldTransition before restored logical mutation. PG-140 now drives a real legacy terminal restore through the production restore path and requires one canonical publication/world commit; fresh exact-head engine proof is pending."
     },
     {
       "id": "AUDIT-HIGH-036",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_STREAM_FAILURE_PROOF",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_608_PENDING_PIE_DEVICE",
       "title": "Missing or unresolved chapter assets could be promoted through compatibility success",
-      "evidence": "RequestChapterAssets broadcast OnChapterAssetsReady for missing/empty banks or invalid handles, and HandleAsyncLoadComplete did not verify every requested bank asset resolved. A chapter could therefore commit primitive fallbacks while the streaming contract appeared green.",
+      "evidence": "RequestChapterAssets broadcast OnChapterAssetsReady for missing/empty banks or invalid handles, and HandleAsyncLoadComplete did not verify every requested bank asset resolved. A chapter could therefore commit primitive fallbacks while the streaming contract appeared green. Unreal #608 forced a valid-bank P1C02 streaming failure and passed rollback with resident-origin preserved on exact head 80fc54dc.",
       "action": "Remove compatibility-success residency, validate resolved bank assets, publish OnChapterAssetsFailed on missing bank/handle/unresolved completion, preserve the previous ResidentHandle, and route failure into RollbackFailedWorldSwap."
     },
     {
       "id": "AUDIT-HIGH-037",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_DELAYED_ASYNC_PROOF",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_608_PENDING_PIE_DEVICE",
       "title": "Old-world authority during a genuinely delayed async-ready window lacked deterministic runtime proof",
-      "evidence": "Continuous transitions proved sequencing but normal local loads completed too quickly to observe a sustained pending window. This left NPCContext/LivingWorld authority under slow storage/load conditions unproven.",
+      "evidence": "Continuous transitions proved sequencing but normal local loads completed too quickly to observe a sustained pending window. This left NPCContext/LivingWorld authority under slow storage/load conditions unproven. Unreal #608 delayed-ready mode observed the pending window with old-world authority, movement held and destination NPC context blocked, then one destination commit.",
       "action": "Use a CI-only non-blocking delayed-ready timer after actual async completion and require a pending-window marker proving movement held, destination NPC context blocked, prior LivingWorld revision retained, followed by one destination commit."
+    },
+    {
+      "id": "AUDIT-HIGH-038",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_WARNING_PROOF",
+      "title": "Project-level texture pool setting overrode low-spec scalability tiers",
+      "evidence": "Unreal #608 logged that r.Streaming.PoolSize set by Scalability was ignored because DefaultEngine RendererSettings had already set PoolSize=900 at higher priority. This meant TextureQuality@0/1/2 pool targets 600/800/1000 MB did not actually own the runtime value.",
+      "action": "Remove the fixed RendererSettings PoolSize, keep per-tier values in DefaultScalability, fail Pre-Unreal if DefaultEngine reintroduces the override, and make the UE warning zero-tolerance. Device profiling still decides the final pool budgets; no performance win is claimed from source cleanup."
     }
   ],
   "external_practice_alignment": [
@@ -337,10 +345,8 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head compile/import/runtime for PG-137 save transition boundary and delayed-ready pending window",
-    "fresh exact-head forced valid-bank async failure proving old resident handle + exact rollback",
-    "legacy terminal-save repair runtime case proving one final canonical publication",
-    "queued checkpoint completion race across world revision with immutable captured snapshot proof",
+    "fresh exact-head compile/import/runtime for PG-139 texture-pool authority and PG-140 persistence-edge evidence",
+    "real queued AsyncSaveGame completion race across world revision with immutable captured snapshot proof",
     "strict route/chapter/episode identity validation for malformed saves/direct StartExperience calls",
     "packaged-build Data JSON dependency/read validation",
     "audio production-bank presence/playback validation without -NoSound",
@@ -348,5 +354,5 @@
     "human core-loop/onboarding/external playtest",
     "isolated Public/Private migration"
   ],
-  "audit_scope_note": "Pre-Unreal #772 is green on 2b5651d. Unreal #606 on its parent compiled/imported and passed all prior runtime gates but the new fault audit remained red because it sampled naturally evolving stamina/resolve after rollback. Exact rollback application was present in the log. PG-137/PG-138 are newer source-level changes and require fresh exact-head proof."
+  "audit_scope_note": "Exact head 80fc54dc passed Pre-Unreal #773, Warehouse #187 and Unreal #608, including rollback faults, forced stream-failure rollback and delayed pending-window authority. The newly added PG-139/PG-140 config/runtime-coverage wave is source-level until its own exact-head workflows pass. No PIE/device/visual/performance/audio-playback acceptance is inferred."
 }

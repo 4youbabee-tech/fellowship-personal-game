@@ -1851,6 +1851,117 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
     return true;
 }
 
+#if !UE_BUILD_SHIPPING
+bool AShirePlayerCharacter::RunLegacyTerminalRestoreAuditSetup()
+{
+    if (!FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit")) ||
+        bWorldTransitionHeld ||
+        !IsCurrentWorldCommitted())
+    {
+        return false;
+    }
+
+    UShireSaveGame* Legacy = CreateSaveSnapshot(TEXT("CI_LEGACY_TERMINAL"), false);
+    if (!Legacy)
+    {
+        return false;
+    }
+
+    // Simulate a legacy terminal P1C01 save that must canonicalize to P1C02
+    // while restore broadcasts are still suppressed.
+    Legacy->CurrentChapterId = TEXT("P1C01");
+    Legacy->CurrentRouteId = TEXT("FrodoMain");
+    Legacy->CurrentEpisodeId = TEXT("P1C01_Main");
+    Legacy->PlayableCharacterId = TEXT("Frodo");
+    Legacy->ActiveQuestId = TEXT("FerryEscape");
+    Legacy->QuestStages.Empty();
+    Legacy->QuestStages.Add(TEXT("FerryEscape"), 2);
+
+    return RestoreSaveSnapshot(Legacy, FText::GetEmpty());
+}
+
+bool AShirePlayerCharacter::RunStaleCheckpointCompletionAudit()
+{
+    if (!FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit")) ||
+        bWorldTransitionHeld ||
+        !IsCurrentWorldCommitted() ||
+        bCheckpointSaveInFlight ||
+        QueuedCheckpointSnapshot)
+    {
+        return false;
+    }
+
+    AChapterWorldRouter* Router = Cast<AChapterWorldRouter>(
+        UGameplayStatics::GetActorOfClass(this, AChapterWorldRouter::StaticClass()));
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests =
+        GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Router || !Quests || Router->GetWorldRevision() == 0)
+    {
+        return false;
+    }
+
+    const float OriginalHealth = CurrentHealth;
+    const float OriginalStamina = CurrentStamina;
+    const float OriginalResolve = CurrentResolve;
+    const int32 OriginalSupplies = Supplies;
+
+    CurrentHealth = 41.0f;
+    CurrentStamina = 42.0f;
+    CurrentResolve = 43.0f;
+    Supplies = 1;
+    bStaminaExhausted = false;
+
+    UShireSaveGame* Snapshot = CreateSaveSnapshot(TEXT("CI_STALE_CHECKPOINT"), true);
+    if (!Snapshot)
+    {
+        CurrentHealth = OriginalHealth;
+        CurrentStamina = OriginalStamina;
+        CurrentResolve = OriginalResolve;
+        Supplies = OriginalSupplies;
+        return false;
+    }
+
+    bCheckpointSaveInFlight = true;
+    bCheckpointSaveShowHUD = false;
+    CheckpointSaveInFlightSnapshot = Snapshot;
+    CheckpointSaveInFlightId = TEXT("CI_STALE_CHECKPOINT");
+    CheckpointSaveInFlightChapterId = Quests->GetCurrentChapterId();
+    CheckpointSaveInFlightRouteId = Quests->GetCurrentRouteId();
+    CheckpointSaveInFlightEpisodeId = Quests->GetCurrentEpisodeId();
+    CheckpointSaveInFlightWorldRevision = Router->GetWorldRevision() - 1;
+
+    // Exercise the production completion path with an intentionally stale origin
+    // revision. It may finish serialization, but must not mutate the newer world.
+    HandleCheckpointSaveComplete(
+        ShireSaveConstants::CheckpointSlotName,
+        ShireSaveConstants::UserIndex,
+        true);
+
+    const bool bStateUnchanged =
+        FMath::IsNearlyEqual(CurrentHealth, 41.0f) &&
+        FMath::IsNearlyEqual(CurrentStamina, 42.0f) &&
+        FMath::IsNearlyEqual(CurrentResolve, 43.0f) &&
+        Supplies == 1 &&
+        !bCheckpointSaveInFlight;
+
+    CurrentHealth = OriginalHealth;
+    CurrentStamina = OriginalStamina;
+    CurrentResolve = OriginalResolve;
+    Supplies = OriginalSupplies;
+    bStaminaExhausted = CurrentStamina <= 0.0f;
+
+    UE_LOG(
+        LogTemp,
+        bStateUnchanged ? Display : Error,
+        TEXT("ShireCheckpointRevisionAudit: %s stale-completion stateApplied=%s"),
+        bStateUnchanged ? TEXT("PASS") : TEXT("FAIL"),
+        bStateUnchanged ? TEXT("no") : TEXT("yes"));
+
+    return bStateUnchanged;
+}
+#endif
+
 bool AShirePlayerCharacter::StartCheckpointSnapshotSave(
     UShireSaveGame* Snapshot,
     FName CheckpointId,

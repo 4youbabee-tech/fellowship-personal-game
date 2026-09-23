@@ -4043,6 +4043,74 @@ for pg138_marker in [
     if pg138_marker not in (pg138_router + pg138_game_mode + pg138_runtime):
         fail(f"PG-138 exact rollback/failure runtime evidence missing: {pg138_marker}")
 
+# PG-139: texture-pool scalability must have one authority and every runtime audit log belongs to warning debt.
+pg139_engine = read(ROOT / "Config" / "DefaultEngine.ini")
+pg139_scalability = read(ROOT / "Config" / "DefaultScalability.ini")
+pg139_warning_guard = read(ROOT / "Scripts" / "warning_debt_guard.py")
+pg139_warning_tests = read(ROOT / "Scripts" / "test_warning_debt_guard.py")
+
+if re.search(r"^\s*r\.Streaming\.PoolSize\s*=", pg139_engine, flags=re.M):
+    fail("PG-139 DefaultEngine may not hard-set r.Streaming.PoolSize; TextureQuality scalability owns the low-spec pool")
+for pg139_tier in ("0", "1", "2"):
+    pg139_section = re.search(
+        rf"\[TextureQuality@{pg139_tier}\](.*?)(?=\n\[|\Z)",
+        pg139_scalability,
+        flags=re.S)
+    if not pg139_section or "r.Streaming.PoolSize=" not in pg139_section.group(1):
+        fail(f"PG-139 TextureQuality@{pg139_tier} must define r.Streaming.PoolSize")
+for pg139_symbol in [
+    "Streaming pool scalability override warnings",
+    "CI-TransitionAudit",
+    "CI-FaultAudit",
+    "CI-PendingTransitionAudit",
+    "CI-PersistenceEdgeAudit",
+]:
+    if pg139_symbol not in pg139_warning_guard:
+        fail(f"PG-139 warning-debt scope/priority guard missing: {pg139_symbol}")
+if "test_all_transaction_runtime_logs_are_in_runtime_scope" not in pg139_warning_tests:
+    fail("PG-139 warning-debt runtime scope regression test missing")
+
+# PG-140: legacy terminal restore publishes one canonical world and stale checkpoint completion cannot mutate a later revision.
+pg140_quest_h = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
+pg140_quest = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
+pg140_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+pg140_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg140_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg140_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
+pg140_state_cmd = read(ROOT / "Scripts" / "ci_runtime_state.cmd")
+pg140_runtime_tests = read(ROOT / "Scripts" / "test_runtime_smoke.py")
+
+for pg140_symbol in [
+    "PersistenceRestorePublicationSerial",
+    "GetPersistenceRestorePublicationSerial",
+    "ShirePersistenceRestorePublication:",
+]:
+    if pg140_symbol not in (pg140_quest_h + pg140_quest):
+        fail(f"PG-140 persistence publication contract missing: {pg140_symbol}")
+
+for pg140_symbol in [
+    "RunLegacyTerminalRestoreAuditSetup",
+    "RunStaleCheckpointCompletionAudit",
+    "ShireCheckpointRevisionAudit: %s stale-completion stateApplied=%s",
+]:
+    if pg140_symbol not in (pg140_player_h + pg140_player):
+        fail(f"PG-140 player persistence-edge audit contract missing: {pg140_symbol}")
+
+for pg140_marker in [
+    "ShirePersistenceEdgeAudit: PASS legacy-terminal canonical-publications=1 worldCommits=1 chapter=P1C02",
+    "ShireCheckpointRevisionAudit: PASS stale-completion stateApplied=no",
+]:
+    if pg140_marker not in (pg140_game_mode + pg140_runtime):
+        fail(f"PG-140 persistence-edge runtime marker missing: {pg140_marker}")
+
+if '"edges"' not in pg140_runtime or "-AuditPersistenceEdges" not in pg140_runtime:
+    fail("PG-140 runtime harness does not expose persistence edge mode")
+if "--mode edges" not in pg140_state_cmd:
+    fail("PG-140 state CI does not execute persistence edge audit")
+if "test_edges_mode_requires_canonical_restore_and_stale_checkpoint_evidence" not in pg140_runtime_tests:
+    fail("PG-140 persistence edge marker regression test missing")
+
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

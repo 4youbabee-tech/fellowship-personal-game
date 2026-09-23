@@ -35,6 +35,7 @@ class WarningDebtGuardTests(unittest.TestCase):
         self.assertEqual(checks["Nearly-zero tangents"], 0)
         self.assertEqual(checks["Nearly-zero binormals"], 0)
         self.assertEqual(checks["Missing production master surface"], 0)
+        self.assertEqual(checks["Streaming pool scalability override warnings"], 0)
 
     def test_missing_package_deduplicates_across_runtime_logs(self):
         text = "\n".join([
@@ -69,6 +70,15 @@ class WarningDebtGuardTests(unittest.TestCase):
             )
             text = guard.collect_text([runtime_log], "runtime")
             self.assertIn("/Game/Production/World/Shire/Grass", text)
+
+    def test_all_transaction_runtime_logs_are_in_runtime_scope(self):
+        for name in [
+            "CI-TransitionAudit.log",
+            "CI-FaultAudit.log",
+            "CI-PendingTransitionAudit.log",
+            "CI-PersistenceEdgeAudit.log",
+        ]:
+            self.assertTrue(guard.is_runtime_log(Path(name)), name)
 
     def test_occurrence_gate_still_counts_each_unidentified_warning(self):
         pattern = re.compile(r"No smoothing group information", re.I)
