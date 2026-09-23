@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "e0b66dbccdf9e91f3cd6af0190008cf58ca31198_UNREAL618_WAREHOUSE199_GREEN_PRE783_NAMEERROR_CP150_PENDING",
+  "audited_head": "2259242a772d3dd21a90cc10a8a4a2761be3b3dd_UNREAL619_WAREHOUSE200_GREEN_PRE784_HANDOFF_LINEAGE_CP151_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -440,6 +440,14 @@
       "title": "PG-056 referenced a development-mode alias removed by the shared-contract refactor",
       "evidence": "Pre-Unreal #783 on e0b66dbc passed repository checkout/setup then crashed in pre_unreal_validate.py with NameError: governor_mode_id at the PG-056 verification-freeze guard. Unreal #618 and Warehouse #199 succeeded on the same exact head.",
       "action": "Do not restore a second mode allowlist or cached validator authority. PG-056 now reads development_mode.id directly from ProjectGovernor structured data; fresh Pre-Unreal must execute the full remaining chain."
+    },
+    {
+      "id": "AUDIT-HIGH-054",
+      "severity": "HIGH",
+      "status": "GOVERNOR_DATA_LINEAGE_CORRECTED_PENDING_EXACT_HEAD_STATIC_PROOF",
+      "title": "Session handoff source_head was overwritten with a partially proven candidate",
+      "evidence": "Pre #784 on 2259242a passed PRE-UNREAL CORE VALIDATION, then project_governor.py reported only: Legacy verified handoff must refer to the same last-green baseline. Unreal #619 and Warehouse #200 succeeded on the same head.",
+      "action": "Keep source_head equal to validation_snapshot.last_green.sha. Record newer partial candidate evidence only in validation_snapshot.latest_observed. Preserve the existing handoff regression test; do not weaken the validator."
     }
   ],
   "external_practice_alignment": [
@@ -465,12 +473,12 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head Pre-Unreal + UE4.27.2 validation for CP-W00-150",
+    "fresh exact-head full Pre-Unreal + UE4.27.2 validation for CP-W00-151",
     "after machine-green stabilization, packaged-build Data JSON staging/read validation",
     "actual audio production-bank presence/playback without -NoSound",
     "isolated Public/Private migration",
     "target-device frame-time/resident-memory/VRAM/GC/tick profiling",
     "human core-loop/onboarding/chapter-specific visual-pacing review"
   ],
-  "audit_scope_note": "e0b66dbc passed Unreal #618 and Warehouse #199. Pre #783 failed only because PG-056 referenced an alias deleted during CP149 refactoring. CP150 removes that alias without reintroducing duplicate mode authority. Fresh exact-head static/engine proof is pending."
+  "audit_scope_note": "2259242a passed Unreal #619 and Warehouse #200; Pre #784 passed core validation and failed only on Governor handoff lineage. CP151 corrects ProjectGovernor data without changing validator semantics. Fresh exact-head proof is pending."
 }

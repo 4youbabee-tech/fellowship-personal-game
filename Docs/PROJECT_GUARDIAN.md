@@ -566,3 +566,14 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Contract:** development-mode validity stays owned by `development_mode_contract`. A guard that only needs the current mode identity reads `development_mode.id` directly from Governor structured data and must not introduce a second allowlist or validator-owned alias.
 
 **Evidence boundary:** Unreal #618 and Warehouse #199 succeeded on the failing static head; fresh Pre-Unreal is still required before CP150 can be STATIC-VALIDATED.
+
+### PG-153 — Handoff source_head is verified-baseline lineage, not candidate-head storage
+**Symptom exposed by:** Pre-Unreal #784 on `2259242a772d3dd21a90cc10a8a4a2761be3b3dd`.
+
+**Evidence:** PRE-UNREAL CORE VALIDATION passed; ProjectGovernor then emitted one error: `Legacy verified handoff must refer to the same last-green baseline`. Unreal #619 and Warehouse #200 succeeded on that exact head.
+
+**Contract:** `session_handoff.source_head == validation_snapshot.last_green.sha`. Newer partial candidate evidence belongs in `validation_snapshot.latest_observed`. Never rewrite historical baseline lineage merely to point at the newest repair parent.
+
+**Guard:** existing `test_governor_handoff.py::test_historical_handoff_cannot_disagree_with_baseline` remains authoritative. The correction is data-only; the validator is not weakened.
+
+**Proof boundary:** fresh full Pre-Unreal and exact-head Unreal validation are still required for CP151.

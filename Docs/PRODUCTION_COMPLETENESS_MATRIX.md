@@ -1,3 +1,9 @@
+## 2026-09-24 - W00 CP-W00-151 handoff-lineage correction
+
+Exact CP150 head `2259242a...`: Unreal #619 SUCCESS + Warehouse #200 SUCCESS; Pre #784 passed core validation and then failed only because `session_handoff.source_head` no longer matched the recorded last-green baseline. CP151 restores the intended evidence lineage without weakening the validator.
+
+No production-completeness percentage changes. CP151 remains **SOURCE/DATA-REPAIRED / EXACT-HEAD VALIDATION PENDING**.
+
 ## 2026-09-24 - W00 CP-W00-150 refactor-regression closure
 
 Exact CP149 head `e0b66dbc...`: Unreal #618 SUCCESS + Warehouse #199 SUCCESS; Pre #783 crashed at PG-056 with `NameError: governor_mode_id` before the remaining static chain. CP150 removes that orphan alias and preserves the single data-owned development-mode contract.

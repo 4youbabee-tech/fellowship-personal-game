@@ -3699,7 +3699,7 @@
       "target-device DX11 720p Low-Medium performance/memory/GC/tick profiling",
       "chapter-specific human PIE/pacing/visual acceptance evidence"
     ],
-    "note": "W00 remains PARTIAL. Runtime/compile baseline is healthy through Unreal #618 on e0b66dbc, but fresh full static proof is still required after CP-W00-150. W01 stays blocked until remaining W00 acceptance closures are completed.",
+    "note": "W00 remains PARTIAL. Exact head 2259242a passed Unreal #619 and Warehouse #200; Pre #784 passed core validation but stopped on one Governor handoff-lineage mismatch now corrected in CP-W00-151. W01 remains blocked.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -3718,9 +3718,10 @@
       "pre_unreal": "#781 SUCCESS on exact head 96398e7cc48277324113c7879a8d28e3b659757e.",
       "unreal_build": "#616 SUCCESS on the same exact head: UE4.27.2 compile/import, Automation 2/2, startup, P1C01-P1C08, state, transitions, corrected fault semantics, delayed pending authority, persistence edges and warning-debt guard passed.",
       "warehouse": "#197 SUCCESS on the same exact head; current-delta detection concluded staging was not required, so provider stages were skipped by design.",
-      "prior_failure_family": "#615 on 6944cc0 failed the obsolete preflight-as-rollback expectation; #616 proves the corrected invalid-preflight versus entered-transaction rollback split."
+      "prior_failure_family": "#615 on 6944cc0 failed the obsolete preflight-as-rollback expectation; #616 proves the corrected invalid-preflight versus entered-transaction rollback split.",
+      "latest_runtime_parent": "2259242a772d3dd21a90cc10a8a4a2761be3b3dd: Unreal #619 SUCCESS + Warehouse #200 SUCCESS; Pre #784 partial only."
     },
-    "evidence_scope": "96398e7 is STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED for the exercised machine suite. It is not PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.",
+    "evidence_scope": "Last fully machine-green baseline remains 96398e7 because 2259242a did not finish the full Pre-Unreal chain. Runtime/compile evidence on 2259242a is valid but does not promote STATIC/PIE/DEVICE/VISUAL acceptance.",
     "current_owner_observation": {
       "sha": "4879a19999951354676341f032c358ac98679c44",
       "pre_unreal": {
@@ -4096,23 +4097,23 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-24",
-    "reason": "CP-W00-149 successfully centralized the development-mode contract, but Pre #783 exposed a narrow refactor regression: PG-056 still referenced the deleted local alias governor_mode_id. Unreal #618 and Warehouse #199 both passed on the same exact head, so this is a static-validator execution bug, not a demonstrated gameplay/runtime failure.",
-    "exact_reviewed_head": "e0b66dbccdf9e91f3cd6af0190008cf58ca31198",
+    "reason": "Pre #784 proved the CP150 core validator repair, then ProjectGovernor failed on one lineage invariant: session_handoff.source_head had been rewritten to the latest repair parent even though the handoff contract defines it as the last fully green baseline.",
+    "exact_reviewed_head": "2259242a772d3dd21a90cc10a8a4a2761be3b3dd",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#783 FAILURE: NameError governor_mode_id at PG-056 before later static steps",
-      "unreal": "#618 SUCCESS on exact head e0b66dbccdf9e91f3cd6af0190008cf58ca31198",
-      "warehouse": "#199 SUCCESS on the same exact head; no staging-required delta"
+      "pre_unreal": "#784 CORE VALIDATION PASSED; Governor step failed only on legacy verified handoff/source_head lineage",
+      "unreal": "#619 SUCCESS on exact head 2259242a772d3dd21a90cc10a8a4a2761be3b3dd",
+      "warehouse": "#200 SUCCESS on the same exact head; no staging-required delta"
     },
     "reconciled_findings": [
-      "The CP149 semantic contract itself was not rejected; the process crashed later on a stale local symbol.",
-      "PG-056 needs only the current mode identity, not a second validation owner or cached alias.",
-      "Reading development_mode.id directly from Governor data removes the orphan symbol without reintroducing a hard-coded mode allowlist."
+      "The handoff validator is correct: source_head is historical verified-baseline lineage, not the current candidate head.",
+      "The current candidate already has a dedicated place: validation_snapshot.latest_observed.",
+      "No validator-code change is needed; correcting ProjectGovernor data preserves a single stable evidence model."
     ],
-    "next_priority": "W00_CP150_FULL_STATIC_CHAIN_GREEN_THEN_STOP_VALIDATOR_SURGERY",
-    "truth_boundary": "e0b66dbc is COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED by Unreal #618 and Warehouse #199, but not STATIC-VALIDATED because Pre #783 crashed. CP-W00-150 itself is SOURCE-REPAIRED only until fresh exact-head CI passes.",
+    "next_priority": "W00_CP151_FULL_PRE_UNREAL_CHAIN_GREEN_THEN_FREEZE_VALIDATOR_SURGERY",
+    "truth_boundary": "2259242a is COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED by Unreal #619 and Warehouse #200. It is not STATIC-VALIDATED because Pre #784 stopped at the Governor lineage check. CP-W00-151 is unproven until fresh exact-head CI.",
     "stabilization_wave": {
-      "status": "NARROW_REFACTOR_REGRESSION_REPAIRED_PENDING_EXACT_HEAD_PROOF",
-      "invariant": "Phase validation remains data-owned; verification-only guards may read the current mode directly but cannot own a separate allowlist."
+      "status": "HANDOFF_LINEAGE_DATA_CORRECTED_PENDING_EXACT_HEAD_PROOF",
+      "invariant": "session_handoff.source_head equals validation_snapshot.last_green.sha; newer partial evidence belongs only in validation_snapshot.latest_observed."
     }
   },
   "development_mode": {
@@ -4177,15 +4178,15 @@
     "Run target-device DX11 720p Low-Medium profiling and chapter-specific human PIE/pacing/visual checks before W00 closure."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-150",
-    "source_head": "e0b66dbccdf9e91f3cd6af0190008cf58ca31198",
+    "checkpoint_id": "CP-W00-151",
+    "source_head": "96398e7cc48277324113c7879a8d28e3b659757e",
     "branch": "integration/comprehensive-foundation-v1",
     "pull_request": 67,
     "verified": {
       "last_full_machine_green": "96398e7: Pre #781 SUCCESS + Unreal #616 SUCCESS + Warehouse #197 SUCCESS",
-      "cp149_runtime": "e0b66dbc: Unreal #618 SUCCESS",
-      "cp149_warehouse": "e0b66dbc: Warehouse #199 SUCCESS (no staging-required delta)",
-      "cp149_static": "e0b66dbc: Pre #783 FAILURE at Validate project structure with NameError governor_mode_id in PG-056"
+      "cp150_runtime": "2259242a: Unreal #619 SUCCESS",
+      "cp150_warehouse": "2259242a: Warehouse #200 SUCCESS (no staging-required delta)",
+      "cp150_static": "2259242a: Pre #784 CORE VALIDATION PASSED, then Governor failed only because source_head did not equal validation_snapshot.last_green.sha"
     },
     "exact_head_scope": [
       "UE4.27.2 C++ compile",
@@ -4201,11 +4202,11 @@
       "real queued AsyncSaveGame cross-revision persistence edge",
       "project warning-debt categories"
     ],
-    "active_wave": "PG-152 refactor-regression closure: remove the orphan governor_mode_id alias from PG-056 and read the current Governor mode directly from structured data.",
+    "active_wave": "PG-153 handoff-lineage correction: source_head means the last fully green baseline, while validation_snapshot.latest_observed carries the newer partially proven candidate evidence.",
     "next_actions": [
-      "Run fresh Pre-Unreal and require the full static/governor/deep/unit-test chain to execute past the former PG-056 NameError.",
-      "Run fresh Unreal exact-head validation for the CP-W00-150 child head.",
-      "If both are green, stop validator/governor surgery and move only to the remaining W00 acceptance closures: packaged Data JSON, real audio, isolated Public/Private migration, target-device profiling and human PIE/pacing/visual review."
+      "Run fresh Pre-Unreal and require the entire static/governor/asset/readiness/deep/unit-test chain to finish on CP-W00-151.",
+      "Run fresh Unreal exact-head validation on the same CP-W00-151 head.",
+      "If both are green, freeze validator/governor surgery unless a new concrete failure appears and proceed only with remaining W00 acceptance closure."
     ],
     "unverified_acceptance": [
       "packaged Data JSON staging/read behavior",
@@ -4230,20 +4231,20 @@
         }
       },
       "latest_observed": {
-        "sha": "e0b66dbccdf9e91f3cd6af0190008cf58ca31198",
+        "sha": "2259242a772d3dd21a90cc10a8a4a2761be3b3dd",
         "pre_unreal": {
-          "sha": "e0b66dbccdf9e91f3cd6af0190008cf58ca31198",
-          "run_id": 35920013335,
+          "sha": "2259242a772d3dd21a90cc10a8a4a2761be3b3dd",
+          "run_id": 35922134174,
           "status": "FAILURE"
         },
         "unreal": {
-          "sha": "e0b66dbccdf9e91f3cd6af0190008cf58ca31198",
-          "run_id": 35920012795,
+          "sha": "2259242a772d3dd21a90cc10a8a4a2761be3b3dd",
+          "run_id": 35922134176,
           "status": "SUCCESS"
         },
         "warehouse": {
-          "sha": "e0b66dbccdf9e91f3cd6af0190008cf58ca31198",
-          "run_id": 35920013008,
+          "sha": "2259242a772d3dd21a90cc10a8a4a2761be3b3dd",
+          "run_id": 35922134237,
           "status": "SUCCESS"
         }
       }

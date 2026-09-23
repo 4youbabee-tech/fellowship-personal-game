@@ -1,3 +1,13 @@
+## 2026-09-24 - W00 checkpoint CP-W00-151: handoff evidence-lineage correction
+
+Exact CP150 head `2259242a772d3dd21a90cc10a8a4a2761be3b3dd` passed **Unreal #619 SUCCESS** and **Warehouse #200 SUCCESS**. Pre-Unreal #784 also passed **PRE-UNREAL CORE VALIDATION**, proving the prior PG-056 NameError is gone, then stopped in `project_governor.py` on one data-lineage invariant:
+
+`Legacy verified handoff must refer to the same last-green baseline`.
+
+The validator is correct. `session_handoff.source_head` is the verified historical baseline and must equal `validation_snapshot.last_green.sha`; the newer partially proven candidate belongs in `validation_snapshot.latest_observed`. CP151 corrects only that Governor data and does not weaken or duplicate the handoff validator.
+
+Status: **SOURCE/DATA-REPAIRED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance/audio-playback claim is added.
+
 ## 2026-09-24 - W00 checkpoint CP-W00-150: close the CP149 refactor regression
 
 Exact CP149 head `e0b66dbccdf9e91f3cd6af0190008cf58ca31198` produced **Unreal #618 SUCCESS** and **Warehouse #199 SUCCESS**. Pre-Unreal #783 failed before the later static suite because PG-056 still referenced the local symbol `governor_mode_id`, which CP149 had intentionally removed while centralizing development-mode validation.
