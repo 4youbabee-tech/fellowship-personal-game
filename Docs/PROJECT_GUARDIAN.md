@@ -598,7 +598,7 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 
 **Contract:** validator file access resolves the active migrated source tree; centralized runtime evidence anchors name the physical migrated files. Before Unreal verification/build, the persistent runner reads `SourceArchitecturePlan.json` and removes only an obsolete `current_path` whose entry is `MIGRATED` and whose `target_path` exists. No broad `git clean` is allowed.
 
-**Proof boundary:** these are migration-integration repairs only. Fresh full Pre-Unreal and UE4.27.2 evidence are required before the Public/Private migration is accepted.
+**Proof boundary:** fulfilled on CP-W00-154 exact head `ab7889d6b2dafc059220a0c0a3dc63decfe6b72e` by Pre #788 SUCCESS, Unreal #623 SUCCESS and Warehouse #204 SUCCESS. The migration is machine-accepted; this does not imply PIE/device/visual/performance acceptance.
 
 ### PG-156 — No hidden direct flat runtime Path constructors after migration
 **Symptom exposed by:** Pre #787 on `b7ad48fc927c522dcb5f4a386cde561360739278`.
@@ -609,4 +609,4 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 
 **Guard:** PG-155 now scans for any direct historical flat runtime Path construction, not only `read(...)` calls.
 
-**Proof boundary:** CP154 changes validator/source-path integration only; fresh exact-head static and engine evidence are still required.
+**Proof boundary:** fulfilled on CP-W00-154 exact head `ab7889d6b2dafc059220a0c0a3dc63decfe6b72e`: Pre #788, Unreal #623 and Warehouse #204 all succeeded. Keep PG-155/PG-156 as regression guards; do not reopen cleanup without a concrete failure.

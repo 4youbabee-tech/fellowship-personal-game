@@ -1,8 +1,8 @@
-## 2026-09-24 - W00 CP-W00-154 final migration static-path repair
+## 2026-09-24 - W00 CP-W00-154 exact-head machine-green reconciliation
 
-CP153 `b7ad48fc...`: Unreal #622 SUCCESS + Warehouse #203 SUCCESS. Pre #787 failed only PG-116's last historical StoryPresentationDirector path. CP154 removes that final observed holdout and strengthens PG-155 against all direct flat runtime Path constructors.
+Exact head `ab7889d6...` passed **Pre #788 + Unreal #623 + Warehouse #204**. The Public/Private migration is machine-accepted: static validation, UE4.27.2 compile/import and the exercised headless runtime suite are green on the same SHA.
 
-No production-completeness percentage changes. Fresh exact-head Pre-Unreal and UE4.27.2 proof remain required.
+No production-completeness percentage changes. This does **not** promote PIE, device, visual, performance, packaged-runtime or real-audio acceptance. Remaining W00 closure evidence is packaged Data JSON runtime proof, authored audio playback, target-device profiling and chapter-specific human PIE/pacing/visual review.
 
 ## 2026-09-24 - W00 CP-W00-153 migration integration repair
 
@@ -472,7 +472,7 @@ The status table above describes **production maturity**. Validation proof is re
 
 ### Source architecture / handoff
 - `Source/ShireJourney/README.md` is the code-level handoff entry point inside the runtime module.
-- `Data/SourceArchitecturePlan.json` assigns every runtime source file to a domain and a controlled target path for the planned Public/Private folder migration.
+- `Data/SourceArchitecturePlan.json` assigns every runtime source file to its accepted Public/Private domain path; CP-W00-154 exact head `ab7889d6...` passed Pre #788, Unreal #623 and Warehouse #204 after the physical migration.
 - Project Guardian must reject untracked runtime source files so a new human or automated programmer cannot silently expand the module without updating the architecture map.
 
 ## Voice rule

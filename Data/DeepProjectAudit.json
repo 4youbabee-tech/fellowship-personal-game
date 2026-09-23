@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "b7ad48fc927c522dcb5f4a386cde561360739278_PRE787_PG116_ONLY_UNREAL622_GREEN_WAREHOUSE203_GREEN_CP154_PENDING",
+  "audited_head": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e_PRE788_GREEN_UNREAL623_GREEN_WAREHOUSE204_GREEN_CP154_MACHINE_ACCEPTED",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -452,26 +452,26 @@
     {
       "id": "AUDIT-HIGH-055",
       "severity": "HIGH",
-      "status": "PHYSICAL_PUBLIC_PRIVATE_MIGRATION_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "status": "CLOSED_MACHINE_PROVEN_CP154",
       "title": "Runtime module remained physically flat after its architecture map and migration gate were already established",
-      "evidence": "CP-W00-151 exact head 92f6d3aa passed Pre #785, Unreal #620 and Warehouse #201. Data/SourceArchitecturePlan.json still marked 62 runtime .h/.cpp entries CURRENT_FLAT and Build.cs still exported the whole module root.",
-      "action": "Move all mapped headers to Public/<Domain> and sources to Private/<Domain>, remove whole-module root export, make validators recursively/layout-aware, forbid flat-root regression, then require fresh exact-head Pre-Unreal and UE4.27.2 proof."
+      "evidence": "CP-W00-151 exact head 92f6d3aa passed Pre #785, Unreal #620 and Warehouse #201. Data/SourceArchitecturePlan.json still marked 62 runtime .h/.cpp entries CURRENT_FLAT and Build.cs still exported the whole module root. CP-W00-154 exact head ab7889d6 then passed Pre #788, Unreal #623 and Warehouse #204 after the complete migration/correction chain.",
+      "action": "Preserve the accepted Public/Private domain layout and Build.cs public include boundaries. Reopen only on a concrete source-layout regression."
     },
     {
       "id": "AUDIT-HIGH-056",
       "severity": "HIGH",
-      "status": "MIGRATION_CONSUMER_AND_PERSISTENT_WORKTREE_REPAIR_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "status": "CLOSED_MACHINE_PROVEN_CP154",
       "title": "Public/Private migration exposed historical path consumers and stale self-hosted source leftovers",
-      "evidence": "On 9acc72b1, Pre #786 emitted 26 unique missing flat-source reads followed by dependent false invariant failures. Unreal #621 stopped in UHT with duplicate leaf headers because old flat headers remained as untracked files in the persistent workspace while the tracked files had moved to Public. Warehouse #202 passed.",
-      "action": "Resolve validator source basenames against the migrated tree, move centralized runtime evidence anchors to physical Private paths, make streaming tests layout-aware, and run a bounded architecture-map cleanup of obsolete current_path files on the persistent runner only when target_path exists."
+      "evidence": "On 9acc72b1, Pre #786 emitted 26 unique missing flat-source reads followed by dependent false invariant failures. Unreal #621 stopped in UHT with duplicate leaf headers because old flat headers remained as untracked files in the persistent workspace while the tracked files had moved to Public. Warehouse #202 passed. The bounded cleanup and layout-aware consumers were then exercised successfully by Pre #788 and Unreal #623 on ab7889d6; Warehouse #204 also passed.",
+      "action": "Keep the bounded architecture-map cleanup and migrated-source resolver as regression protection; do not broaden cleanup or rework the runner without a concrete failure."
     },
     {
       "id": "AUDIT-HIGH-057",
       "severity": "HIGH",
-      "status": "FINAL_MIGRATION_STATIC_PATH_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "status": "CLOSED_MACHINE_PROVEN_CP154",
       "title": "PG-116 retained the last direct flat runtime path constructor after migration",
-      "evidence": "Pre #787 on b7ad48fc passed the migrated core checks and failed only the StoryPresentationDirector existence/symbol family because its header/cpp Path objects were still constructed at Source/ShireJourney/<leaf>. Unreal #622 and Warehouse #203 succeeded on the same head.",
-      "action": "Resolve those files through the migration-aware source lookup and make PG-155 reject any future direct ROOT/Source/ShireJourney/<leaf> .h/.cpp/.cs path construction."
+      "evidence": "Pre #787 on b7ad48fc passed the migrated core checks and failed only the StoryPresentationDirector existence/symbol family because its header/cpp Path objects were still constructed at Source/ShireJourney/<leaf>. Unreal #622 and Warehouse #203 succeeded on the same head. CP154 exact head ab7889d6 passed Pre #788 after this repair, while Unreal #623 and Warehouse #204 also succeeded on the same SHA.",
+      "action": "Keep PG-155/PG-116 as regression guards. The known migration static-path family is closed unless a new concrete failure is observed."
     }
   ],
   "external_practice_alignment": [
@@ -497,11 +497,10 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head full Pre-Unreal + UE4.27.2 validation for CP-W00-154 final migration proof",
     "packaged-build Data JSON staging/read execution",
     "actual authored audio-bank presence/playback without -NoSound",
     "target-device frame-time/resident-memory/VRAM/GC/tick profiling",
     "human core-loop/onboarding/chapter-specific visual-pacing review"
   ],
-  "audit_scope_note": "CP153 b7ad48fc passed Unreal #622 and Warehouse #203; Pre #787 failed only the final PG-116 historical path construction. CP154 repairs that static holdout and strengthens its regression guard. No gameplay behavior changed."
+  "audit_scope_note": "CP-W00-154 exact head ab7889d6 passed Pre #788, Unreal #623 and Warehouse #204. The Public/Private migration and its known validator/persistent-runner correction families are machine-accepted. No gameplay behavior changed, and no PIE/device/visual/performance/audio/package acceptance is inferred."
 }

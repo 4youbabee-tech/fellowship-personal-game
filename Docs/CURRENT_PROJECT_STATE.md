@@ -1,10 +1,12 @@
-## 2026-09-24 - W00 checkpoint CP-W00-154: final observed migration static-path repair
+## 2026-09-24 - W00 checkpoint CP-W00-154: exact-head machine-green reconciliation
 
-CP153 `b7ad48fc927c522dcb5f4a386cde561360739278` proved the migrated module in the engine: **Unreal #622 SUCCESS** through C++ build, production import, Automation, startup, P1C01-P1C08, state/transitions/faults/pending/persistence-edge audits and warning-debt. **Warehouse #203 SUCCESS**. The persistent-runner stale-header duplicate family is therefore closed on that head.
+Exact head `ab7889d6b2dafc059220a0c0a3dc63decfe6b72e` is now **STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED**: **Pre-Unreal #788 SUCCESS** (run 35929433094), **Unreal Build #623 SUCCESS** (run 35929433086), and **Warehouse #204 SUCCESS** (run 35929433089).
 
-Pre #787 reduced the static failure from the prior 232-error cascade to one concrete family: PG-116 still constructed `StoryPresentationDirector.h/.cpp` at the historical flat module root. CP154 routes both through the migration-aware resolver and strengthens PG-155 so any future direct `ROOT / Source / ShireJourney / <leaf>` runtime source construction fails immediately.
+Pre #788 completed the full project-structure/Governor/asset-quality/readiness/deep/unit-test chain. Unreal #623 completed exact checkout, migrated-layout preparation, UE4.27.2 verification, MSVC setup, clean intermediates, ShireJourneyEditor build, production asset import, Automation Framework QA, startup smoke, P1C01-P1C08 headless chapter audit, route/story state roundtrip and warning-debt guard. Warehouse #204 correctly detected no staging-required delta and skipped heavy provider stages.
 
-Status: **ENGINE-PROVEN MIGRATION / FINAL STATIC FIX PENDING EXACT-HEAD PROOF**. No PIE/device/visual/audio/package acceptance is claimed.
+The Public/Private migration and its known validator/persistent-runner correction families are therefore **machine-accepted on CP-W00-154**. Do not reopen root-code/validator/Governor cleanup unless a new concrete regression appears. W00 remains open only for packaged Data JSON runtime proof, real authored audio playback, target-device profiling and chapter-specific human PIE/pacing/visual acceptance.
+
+No **PIE-TESTED**, **DEVICE-TESTED**, **VISUALLY-ACCEPTED** or **PERFORMANCE-ACCEPTED** claim is made by this machine evidence.
 
 ## 2026-09-24 - W00 checkpoint CP-W00-153: migration-consumer and persistent-runner repair
 
@@ -1422,14 +1424,14 @@ Active production order:
 
 ## Exact next hard gate
 
-1. Prove the CP-W00-152 Public/Private migration on one exact head with full Pre-Unreal and UE4.27.2 compile/import/headless runtime.
-2. If green, treat validator/governor/root-code correction work as closed unless a new concrete regression appears.
-3. Validate packaged runtime Data JSON staging/read execution.
-4. Validate actual authored audio-bank presence/playback without `-NoSound`; missing authored assets remain an explicit production blocker, not a fake pass.
-5. Run target-device DX11 / 720p / Low-Medium profiling.
-6. Collect chapter-specific human PIE/pacing/visual observations.
+The Public/Private/root-correction loop is closed machine-wise on CP-W00-154 and is not an active cleanup lane unless a concrete regression appears.
 
-W01 and B1/B2/B3 remain frozen until the Governor records the remaining W00 acceptance evidence.
+1. Validate packaged runtime Data JSON staging/read execution.
+2. Validate actual authored audio-bank presence/playback without `-NoSound`; missing authored assets remain an explicit production blocker, not a fake pass.
+3. Run target-device DX11 / 720p / Low-Medium profiling and record FPS, frame time, obvious hitching, GC spikes, RAM/VRAM pressure and tick hotspots where measurable.
+4. Collect chapter-specific human PIE traversal, onboarding/core-loop, pacing, visual readability, collision/movement and NPC-behavior observations.
+
+W01 and B1/B2/B3 remain frozen until the Governor records these remaining W00 acceptance evidence families.
 
 ## Failure procedure
 

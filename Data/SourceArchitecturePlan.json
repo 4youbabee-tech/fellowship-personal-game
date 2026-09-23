@@ -557,7 +557,7 @@
   "physical_migration": {
     "checkpoint": "CP-W00-152",
     "source_green_baseline": "92f6d3aaad79f33eaf2385de292e6886d2c1b5da",
-    "status": "ENGINE_PROVEN_CP153_STATIC_FINAL_PATH_FIX_CP154_PENDING",
+    "status": "MACHINE_ACCEPTED_CP154",
     "moved_entries": 62,
     "gameplay_changes": "NONE",
     "include_strategy": "Preserve stable basename includes by exporting only the seven Public domain directories; the module root is no longer public.",
@@ -581,7 +581,15 @@
       "checkpoint": "CP-W00-154",
       "fix": "PG-116 resolves StoryPresentationDirector header/cpp through migrated source lookup; PG-155 now rejects any direct historical ROOT/Source/ShireJourney/<leaf> path construction.",
       "gameplay_changes": "NONE",
-      "required_proof": "fresh full Pre-Unreal plus exact-head Unreal validation"
+      "required_proof": "FULFILLED on ab7889d6 by Pre #788 + Unreal #623 + Warehouse #204"
+    },
+    "machine_acceptance": {
+      "checkpoint": "CP-W00-154",
+      "head": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
+      "pre_unreal": "#788 SUCCESS / run 35929433094",
+      "unreal": "#623 SUCCESS / run 35929433086",
+      "warehouse": "#204 SUCCESS / run 35929433089",
+      "scope": "Static + UE4.27.2 compile/import + headless runtime + no-delta warehouse proof; no PIE/device/visual/performance acceptance."
     }
   }
 }
