@@ -1,3 +1,11 @@
+## 2026-09-23 - W00 checkpoint CP-W00-142: validation-contract consolidation wave
+
+Parent head `7636c7779156831660964cc5d44125efa4b480d1` produced a split result: Warehouse #189 SUCCESS, Unreal #610 SUCCESS, Pre-Unreal #775 FAILURE. #610 is concrete **COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED** evidence for that exact parent: UE4.27.2 compile/import, Automation 2/2, startup, P1C01-P1C08, state, transitions, rollback/stream-failure faults, delayed pending authority and the persistence-edge sweep all passed. Warning debt also reported `Streaming pool scalability override warnings = 0`. #775 failed on one stale static contract: PG-140 still searched for the old formatted checkpoint log template after #609 forced the C++ logger to split PASS/FAIL into static UE_LOG branches.
+
+That failure belongs to a recurring family: runtime evidence strings were copied independently into C++, `runtime_smoke.py`, `pre_unreal_validate.py` and unit tests. CP-W00-142 therefore does not patch one string. It introduces `Scripts/runtime_audit_contracts.py` as the single Python contract owner for required markers, mode arguments, log names, source anchors and warning-debt runtime log scope. Consumers import the registry; PG-124/133/136/137/138/139/140 consume registry semantics; a dedicated contract unit suite checks source anchors, state-mode execution and de-duplication.
+
+Status of the new CP-W00-142 head is **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**. W00 remains open and W01 remains blocked.
+
 ## 2026-09-23 - W00 checkpoint CP-W00-141: #774/#609 root causes repaired at source
 
 Candidate `621ad8617f7ebf1b973887fb61b4f46672d1226c` did **not** pass validation. Pre-Unreal #774 reached `PRE-UNREAL CORE VALIDATION PASSED`, then ProjectGovernor failed because CP-W00-140 had replaced `session_handoff` without its required `validation_snapshot.last_green/latest_observed` exact-SHA/run-ID/status records. Unreal #609 reached real UE4.27 compilation and failed first at `ShirePlayerCharacter.cpp:1954`: a runtime ternary was used as the `UE_LOG` verbosity token. UE4.27 requires a static verbosity token; the later parser/member diagnostics are treated as cascade from that root error.

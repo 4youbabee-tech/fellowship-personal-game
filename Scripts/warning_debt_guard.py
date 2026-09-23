@@ -3,6 +3,8 @@ import argparse
 from pathlib import Path
 import re
 
+from runtime_audit_contracts import RUNTIME_LOG_PREFIXES
+
 # name, regex, ceiling, identity_group, scope
 # scope="all": build/import/runtime evidence.
 # scope="runtime": startup/chapter/state logs only.
@@ -20,16 +22,6 @@ CHECKS = [
     ("NPC spawn collision failures", re.compile(r"SpawnActor failed because of collision at the spawn location \[([^\]]+)\] for \[ShireNPC\]", re.I), 0, 1, "runtime"),
     ("Streaming pool scalability override warnings", re.compile(r"r\.Streaming\.PoolSize.*(?:ignored|lower priority)", re.I), 0, None, "all"),
 ]
-
-RUNTIME_LOG_PREFIXES = (
-    "CI-PlayableStartup",
-    "CI-ChapterAudit-",
-    "CI-StateAudit",
-    "CI-TransitionAudit",
-    "CI-FaultAudit",
-    "CI-PendingTransitionAudit",
-    "CI-PersistenceEdgeAudit",
-)
 
 def decode(path: Path) -> str:
     raw = path.read_bytes()

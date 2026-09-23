@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "621ad8617f7ebf1b973887fb61b4f46672d1226c_FAILURE_DIAGNOSED_CP141_SOURCE_REPAIR_PENDING",
+  "audited_head": "7636c7779156831660964cc5d44125efa4b480d1_UNREAL_610_GREEN_PRE775_CONTRACT_DRIFT_CP142_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -316,9 +316,9 @@
     {
       "id": "AUDIT-HIGH-038",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_WARNING_PROOF",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_610_PENDING_DEVICE",
       "title": "Project-level texture pool setting overrode low-spec scalability tiers",
-      "evidence": "Unreal #608 logged that r.Streaming.PoolSize set by Scalability was ignored because DefaultEngine RendererSettings had already set PoolSize=900 at higher priority. This meant TextureQuality@0/1/2 pool targets 600/800/1000 MB did not actually own the runtime value.",
+      "evidence": "Unreal #608 logged that r.Streaming.PoolSize set by Scalability was ignored because DefaultEngine RendererSettings had already set PoolSize=900 at higher priority. This meant TextureQuality@0/1/2 pool targets 600/800/1000 MB did not actually own the runtime value. Unreal #610 warning debt reported Streaming pool scalability override warnings = 0 on exact parent 7636c777.",
       "action": "Remove the fixed RendererSettings PoolSize, keep per-tier values in DefaultScalability, fail Pre-Unreal if DefaultEngine reintroduces the override, and make the UE warning zero-tolerance. Device profiling still decides the final pool budgets; no performance win is claimed from source cleanup."
     },
     {
@@ -332,10 +332,18 @@
     {
       "id": "AUDIT-HIGH-040",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_COMPILE",
+      "status": "EXACT_HEAD_COMPILE_REGRESSION_PASS_ON_UNREAL_610",
       "title": "Conditional UE_LOG verbosity caused an engine compile cascade",
-      "evidence": "Unreal #609 first failed at ShirePlayerCharacter.cpp:1954 because a runtime ternary was used as the UE_LOG verbosity token. The later 100+ diagnostics are cascade from macro expansion.",
+      "evidence": "Unreal #609 first failed at ShirePlayerCharacter.cpp:1954 because a runtime ternary was used as the UE_LOG verbosity token. The later 100+ diagnostics are cascade from macro expansion. Unreal #610 compiled the corrected static-verbosity logging path successfully.",
       "action": "Use explicit static-verbosity branches and keep PG-141 scanning project C++ before UE4.27 compilation."
+    },
+    {
+      "id": "AUDIT-HIGH-041",
+      "severity": "HIGH",
+      "status": "SYSTEMIC_SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_STATIC_PROOF",
+      "title": "Runtime audit evidence strings had multiple independent Python owners",
+      "evidence": "Pre-Unreal #775 failed only because PG-140 retained the old checkpoint marker template after the C++ logger was correctly changed for UE4.27 compile safety. Parent Unreal #610 passed the actual persistence-edge runtime sweep, proving the red was validator drift rather than runtime failure.",
+      "action": "Centralize runtime marker/mode/log/source-anchor contracts in Scripts/runtime_audit_contracts.py; make runtime_smoke and warning_debt consume it; make Pre-Unreal validate anchors/wiring; forbid transaction marker copies in Python consumers with a dedicated unit test."
     }
   ],
   "external_practice_alignment": [
@@ -361,8 +369,7 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head Pre-Unreal and UE4.27 compile/runtime for CP-W00-141 / PG-139/PG-140/PG-141",
-    "if PG-140 runtime fails, collect the complete legacy-terminal/stale-checkpoint failure family before modifying source",
+    "fresh exact-head Pre-Unreal + UE4.27 validation for CP-W00-142 centralized runtime-audit contracts",
     "real queued AsyncSaveGame completion race across world revision with immutable captured snapshot proof",
     "strict route/chapter/episode identity validation for malformed saves/direct StartExperience calls",
     "packaged-build Data JSON dependency/read validation",
@@ -371,5 +378,5 @@
     "human core-loop/onboarding/external playtest",
     "isolated Public/Private migration"
   ],
-  "audit_scope_note": "621ad861 is a failed diagnostic candidate: #774 core static checks passed but governor evidence validation failed; #609 reached C++ compile and failed at conditional UE_LOG verbosity. CP-W00-141 repairs both at source and remains unproven until fresh exact-head workflows complete. 80fc54dc remains the last exact-head green baseline."
+  "audit_scope_note": "Parent 7636c777 is engine-green on Unreal #610 and Warehouse #189 but static-red on Pre-Unreal #775 because one copied PG-140 marker template drifted. CP-W00-142 is a systemic validation-architecture repair and remains source-level until fresh exact-head validation. No PIE/device/visual/performance/audio-playback acceptance is inferred."
 }

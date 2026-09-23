@@ -37,6 +37,25 @@ def read(path: Path) -> str:
         return ""
 
 
+try:
+    from runtime_audit_contracts import (
+        DEDUP_MODES,
+        MODE_EXTRA_ARGS,
+        MODE_MARKERS,
+        RUNTIME_LOG_PREFIXES,
+        SOURCE_MARKER_ANCHORS,
+        STATE_SEQUENCE_MODES,
+    )
+except Exception as exc:
+    fail(f"Cannot import runtime audit contract registry: {exc}")
+    DEDUP_MODES = ()
+    MODE_EXTRA_ARGS = {}
+    MODE_MARKERS = {}
+    RUNTIME_LOG_PREFIXES = ()
+    SOURCE_MARKER_ANCHORS = {}
+    STATE_SEQUENCE_MODES = ()
+
+
 def is_git_lfs_pointer(path: Path) -> bool:
     try:
         return path.read_bytes().startswith(b"version https://git-lfs.github.com/spec/v1\n")
@@ -54,6 +73,8 @@ def strip_comments_and_strings(text: str) -> str:
 
 required_files = [
     ROOT / "ShireJourney.uproject",
+    ROOT / "Scripts" / "runtime_audit_contracts.py",
+    ROOT / "Scripts" / "test_runtime_audit_contracts.py",
     ROOT / "Config" / "DefaultEngine.ini",
     ROOT / "Config" / "DefaultGame.ini",
     ROOT / "Config" / "DefaultInput.ini",
@@ -3781,9 +3802,8 @@ for pg133_name, pg133_text in [
     if "IsGameplayWorldCommitted()" not in pg133_text:
         fail(f"PG-133 {pg133_name} can consume destination gameplay state while world swap is pending")
 
-pg133_barrier_marker = "ShireTransitionBarrier: PASS held-during-swap=yes cancel-release=yes"
-if pg133_barrier_marker not in pg133_game_mode or pg133_barrier_marker not in pg133_runtime:
-    fail("PG-133 continuous transition audit must prove both pending hold and rapid-cancel release")
+if len(MODE_MARKERS.get("transitions", ())) != 2:
+    fail("PG-133 continuous transition evidence must remain registered centrally")
 
 if "ObjectPathToPackageName(ProductionSurfacePath)" in pg133_importer:
     fail("PG-133 ambiguous UE4.27 ObjectPathToPackageName(const TCHAR*) call reintroduced")
@@ -3913,11 +3933,10 @@ pg136_reject_tail = pg136_commit[pg136_reject:pg136_commit.find("SetPlayerWorldH
 if pg136_reject < 0 or "RollbackFailedWorldSwap" not in pg136_reject_tail:
     fail("PG-136 unsupported world request must execute rollback instead of leaving the transaction held")
 
-pg136_marker = "ShireRollbackAudit: PASS unsupported-request restored=yes movementReleased=yes freshSnapshot=yes npcContext=yes livingWorld=yes"
-if pg136_marker not in pg136_game_mode or pg136_marker not in pg136_runtime:
-    fail("PG-136 rollback fault-injection runtime marker missing")
-if '"faults"' not in pg136_runtime or '"-AuditFaults"' not in pg136_runtime:
-    fail("PG-136 runtime harness does not expose fault-injection mode")
+if len(MODE_MARKERS.get("faults", ())) != 4:
+    fail("PG-136 rollback fault evidence must remain registered centrally")
+if "-AuditFaults" not in MODE_EXTRA_ARGS.get("faults", ()):
+    fail("PG-136 runtime contract does not expose fault-injection mode")
 if "--mode faults" not in pg136_state_cmd:
     fail("PG-136 state CI does not execute rollback fault injection")
 if "test_fault_mode_requires_complete_rollback_evidence" not in pg136_runtime_tests:
@@ -3973,15 +3992,11 @@ if pg137_complete_start < 0 or pg137_publish_start < 0 or "SetTimer(" not in pg1
 if 'FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))' not in pg137_stream_tail:
     fail("PG-137 forced streaming delay must remain CI-only")
 
-for pg137_marker in [
-    "ShirePendingTransitionAudit: WINDOW-PASS old-world-authority=yes movementHeld=yes npcDestinationBlocked=yes",
-    "ShirePendingTransitionAudit: PASS delayed-ready old-world-authority=yes destination-commit=yes",
-]:
-    if pg137_marker not in pg137_game_mode or pg137_marker not in pg137_runtime:
-        fail(f"PG-137 delayed transition runtime evidence missing: {pg137_marker}")
-
-if '"pending"' not in pg137_runtime or "-ShireCIAssetReadyDelay=2.0" not in pg137_runtime:
-    fail("PG-137 runtime harness does not force a bounded delayed-ready transition")
+if len(MODE_MARKERS.get("pending", ())) != 2:
+    fail("PG-137 delayed transition evidence must remain registered centrally")
+pg137_args = MODE_EXTRA_ARGS.get("pending", ())
+if "-AuditPendingTransition" not in pg137_args or "-ShireCIAssetReadyDelay=2.0" not in pg137_args:
+    fail("PG-137 runtime contract does not force a bounded delayed-ready transition")
 if "--mode pending" not in pg137_state_cmd:
     fail("PG-137 state CI does not execute delayed transition audit")
 if "test_pending_mode_requires_both_window_and_commit_evidence" not in pg137_runtime_tests:
@@ -4032,16 +4047,10 @@ if "RollbackFailedWorldSwap" not in pg138_router_fail:
 
 if "#if !UE_BUILD_SHIPPING" not in pg138_stream or "ShireCIForceChapterAssetFailure=" not in pg138_stream:
     fail("PG-138 deterministic streaming failure injection must remain non-shipping")
-if "-ShireCIForceChapterAssetFailure=P1C02" not in pg138_runtime:
-    fail("PG-138 fault runtime does not exercise a real valid-bank async failure")
-
-for pg138_marker in [
-    "ShireRollbackSnapshotApplied: health=67.0 stamina=54.0 resolve=43.0 supplies=2",
-    "ShireRollbackSnapshotApplied: health=63.0 stamina=52.0 resolve=41.0 supplies=1",
-    "ShireStreamFailureAudit: PASS async-failure rollback=yes resident-origin=yes movementReleased=yes freshSnapshot=yes",
-]:
-    if pg138_marker not in (pg138_router + pg138_game_mode + pg138_runtime):
-        fail(f"PG-138 exact rollback/failure runtime evidence missing: {pg138_marker}")
+if "-ShireCIForceChapterAssetFailure=P1C02" not in MODE_EXTRA_ARGS.get("faults", ()):
+    fail("PG-138 fault runtime contract does not exercise a real valid-bank async failure")
+if len(MODE_MARKERS.get("faults", ())) != 4:
+    fail("PG-138 rollback/failure evidence must remain registered centrally")
 
 # PG-139: texture-pool scalability must have one authority and every runtime audit log belongs to warning debt.
 pg139_engine = read(ROOT / "Config" / "DefaultEngine.ini")
@@ -4058,15 +4067,13 @@ for pg139_tier in ("0", "1", "2"):
         flags=re.S)
     if not pg139_section or "r.Streaming.PoolSize=" not in pg139_section.group(1):
         fail(f"PG-139 TextureQuality@{pg139_tier} must define r.Streaming.PoolSize")
-for pg139_symbol in [
-    "Streaming pool scalability override warnings",
-    "CI-TransitionAudit",
-    "CI-FaultAudit",
-    "CI-PendingTransitionAudit",
-    "CI-PersistenceEdgeAudit",
-]:
-    if pg139_symbol not in pg139_warning_guard:
-        fail(f"PG-139 warning-debt scope/priority guard missing: {pg139_symbol}")
+if "Streaming pool scalability override warnings" not in pg139_warning_guard:
+    fail("PG-139 streaming-pool precedence warning guard missing")
+if "from runtime_audit_contracts import RUNTIME_LOG_PREFIXES" not in pg139_warning_guard:
+    fail("PG-139 warning-debt runtime scope must consume the central audit registry")
+for pg139_prefix in RUNTIME_LOG_PREFIXES:
+    if not pg139_prefix.startswith("CI-"):
+        fail(f"PG-139 invalid runtime log prefix in central registry: {pg139_prefix}")
 if "test_all_transaction_runtime_logs_are_in_runtime_scope" not in pg139_warning_tests:
     fail("PG-139 warning-debt runtime scope regression test missing")
 
@@ -4091,20 +4098,15 @@ for pg140_symbol in [
 for pg140_symbol in [
     "RunLegacyTerminalRestoreAuditSetup",
     "RunStaleCheckpointCompletionAudit",
-    "ShireCheckpointRevisionAudit: %s stale-completion stateApplied=%s",
+    "ShireCheckpointRevisionAudit:",
 ]:
     if pg140_symbol not in (pg140_player_h + pg140_player):
         fail(f"PG-140 player persistence-edge audit contract missing: {pg140_symbol}")
 
-for pg140_marker in [
-    "ShirePersistenceEdgeAudit: PASS legacy-terminal canonical-publications=1 worldCommits=1 chapter=P1C02",
-    "ShireCheckpointRevisionAudit: PASS stale-completion stateApplied=no",
-]:
-    if pg140_marker not in (pg140_game_mode + pg140_runtime):
-        fail(f"PG-140 persistence-edge runtime marker missing: {pg140_marker}")
-
-if '"edges"' not in pg140_runtime or "-AuditPersistenceEdges" not in pg140_runtime:
-    fail("PG-140 runtime harness does not expose persistence edge mode")
+if len(MODE_MARKERS.get("edges", ())) != 2:
+    fail("PG-140 persistence-edge evidence must remain registered centrally")
+if "-AuditPersistenceEdges" not in MODE_EXTRA_ARGS.get("edges", ()):
+    fail("PG-140 runtime contract does not expose persistence edge mode")
 if "--mode edges" not in pg140_state_cmd:
     fail("PG-140 state CI does not execute persistence edge audit")
 if "test_edges_mode_requires_canonical_restore_and_stale_checkpoint_evidence" not in pg140_runtime_tests:
@@ -4120,6 +4122,51 @@ for pg141_path in SOURCE.rglob("*.cpp"):
             "PG-141 dynamic UE_LOG verbosity is forbidden; use explicit static-verbosity branches: "
             + str(pg141_path.relative_to(ROOT)).replace("\\", "/")
         )
+
+# PG-142: all Python consumers share one runtime-audit contract registry.
+pg142_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
+pg142_runtime_tests = read(ROOT / "Scripts" / "test_runtime_smoke.py")
+pg142_contract_tests = read(ROOT / "Scripts" / "test_runtime_audit_contracts.py")
+pg142_workflow = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
+pg142_state_cmd = read(ROOT / "Scripts" / "ci_runtime_state.cmd")
+pg142_self = read(ROOT / "Scripts" / "pre_unreal_validate.py")
+
+if "from runtime_audit_contracts import" not in pg142_runtime:
+    fail("PG-142 runtime_smoke must consume the central runtime-audit contract")
+if "test_runtime_audit_contracts.py" not in pg142_workflow:
+    fail("PG-142 Pre-Unreal workflow must execute the runtime-audit contract registry tests")
+if "test_contract_consumers_do_not_copy_transaction_marker_text" not in pg142_contract_tests:
+    fail("PG-142 contract de-duplication regression test missing")
+
+pg142_source_cache = {}
+for pg142_mode, pg142_markers in MODE_MARKERS.items():
+    pg142_anchors = SOURCE_MARKER_ANCHORS.get(pg142_mode, ())
+    if {entry[0] for entry in pg142_anchors} != set(range(len(pg142_markers))):
+        fail(f"PG-142 source-anchor coverage incomplete for runtime mode {pg142_mode}")
+    for pg142_index, pg142_relative, pg142_anchor in pg142_anchors:
+        pg142_text = pg142_source_cache.get(pg142_relative)
+        if pg142_text is None:
+            pg142_text = read(ROOT / pg142_relative)
+            pg142_source_cache[pg142_relative] = pg142_text
+        if pg142_anchor not in pg142_text:
+            fail(
+                f"PG-142 runtime marker source anchor missing mode={pg142_mode} "
+                f"index={pg142_index} path={pg142_relative}"
+            )
+
+for pg142_mode in STATE_SEQUENCE_MODES:
+    if pg142_state_cmd.count(f"--mode {pg142_mode}") != 1:
+        fail(f"PG-142 state CI must execute registered mode exactly once: {pg142_mode}")
+
+for pg142_mode in DEDUP_MODES:
+    for pg142_marker in MODE_MARKERS.get(pg142_mode, ()):
+        for pg142_name, pg142_consumer in [
+            ("runtime_smoke.py", pg142_runtime),
+            ("test_runtime_smoke.py", pg142_runtime_tests),
+            ("pre_unreal_validate.py", pg142_self),
+        ]:
+            if pg142_marker in pg142_consumer:
+                fail(f"PG-142 duplicated transaction marker in {pg142_name}: mode={pg142_mode}")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
@@ -6148,7 +6195,6 @@ pg124_runtime_tests = read(ROOT / "Scripts" / "test_runtime_smoke.py")
 pg124_state_cmd = read(ROOT / "Scripts" / "ci_runtime_state.cmd")
 
 for pg124_symbol in [
-    "ShireTransitionAudit: sequence=PASS chapters=8 routes=2 disk-save=PASS",
     "AuditTransitions",
     "GetAppliedWorldRevision",
     "GetWorldRevision",
@@ -6156,13 +6202,10 @@ for pg124_symbol in [
     if pg124_symbol not in pg124_game_mode:
         fail(f"PG-124 continuous transition GameMode audit missing: {pg124_symbol}")
 
-for pg124_symbol in [
-    'mode == "transitions"',
-    '"-AuditTransitions"',
-    "ShireTransitionAudit: sequence=PASS chapters=8 routes=2 disk-save=PASS",
-]:
-    if pg124_symbol not in pg124_runtime:
-        fail(f"PG-124 runtime transition harness missing: {pg124_symbol}")
+if "-AuditTransitions" not in MODE_EXTRA_ARGS.get("transitions", ()):
+    fail("PG-124 central runtime contract lost transition execution")
+if len(MODE_MARKERS.get("transitions", ())) != 2:
+    fail("PG-124 central runtime contract lost transition evidence")
 
 if "--mode transitions" not in pg124_state_cmd:
     fail("PG-124 state CI does not execute continuous transition audit")

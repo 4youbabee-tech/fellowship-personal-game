@@ -4,7 +4,8 @@ import tempfile
 from pathlib import Path
 import unittest
 from unittest.mock import Mock, patch
-from runtime_smoke import missing_markers, observe, read_log, required_markers
+from runtime_audit_contracts import MODE_MARKERS, required_markers
+from runtime_smoke import missing_markers, observe, read_log
 
 
 FAKE_EDITOR = r'''
@@ -31,37 +32,23 @@ time.sleep(10)
 class RuntimeSmokeTests(unittest.TestCase):
     def test_edges_mode_requires_canonical_restore_and_stale_checkpoint_evidence(self):
         markers = required_markers(None, "edges")
-        self.assertEqual(markers, [
-            "ShirePersistenceEdgeAudit: PASS legacy-terminal canonical-publications=1 worldCommits=1 chapter=P1C02",
-            "ShireCheckpointRevisionAudit: PASS stale-completion stateApplied=no",
-        ])
+        self.assertEqual(markers, list(MODE_MARKERS["edges"]))
         self.assertEqual(missing_markers(markers[0], markers), [markers[1]])
 
     def test_pending_mode_requires_both_window_and_commit_evidence(self):
         markers = required_markers(None, "pending")
-        self.assertEqual(markers, [
-            "ShirePendingTransitionAudit: WINDOW-PASS old-world-authority=yes movementHeld=yes npcDestinationBlocked=yes",
-            "ShirePendingTransitionAudit: PASS delayed-ready old-world-authority=yes destination-commit=yes",
-        ])
+        self.assertEqual(markers, list(MODE_MARKERS["pending"]))
         self.assertEqual(missing_markers(markers[0], markers), [markers[1]])
 
     def test_fault_mode_requires_complete_rollback_evidence(self):
         markers = required_markers(None, "faults")
-        self.assertEqual(markers, [
-            "ShireRollbackSnapshotApplied: health=67.0 stamina=54.0 resolve=43.0 supplies=2",
-            "ShireRollbackAudit: PASS unsupported-request restored=yes movementReleased=yes freshSnapshot=yes npcContext=yes livingWorld=yes",
-            "ShireRollbackSnapshotApplied: health=63.0 stamina=52.0 resolve=41.0 supplies=1",
-            "ShireStreamFailureAudit: PASS async-failure rollback=yes resident-origin=yes movementReleased=yes freshSnapshot=yes",
-        ])
+        self.assertEqual(markers, list(MODE_MARKERS["faults"]))
         self.assertEqual(missing_markers("\n".join(markers[:2]), markers), markers[2:])
 
     def test_transition_mode_requires_world_mutation_barrier(self):
         markers = required_markers(None, "transitions")
-        self.assertIn(
-            "ShireTransitionBarrier: PASS held-during-swap=yes cancel-release=yes",
-            markers,
-        )
-        self.assertIn("ShireTransitionAudit: sequence=PASS chapters=8 routes=2 disk-save=PASS", markers)
+        self.assertIn(MODE_MARKERS["transitions"][0], markers)
+        self.assertIn(MODE_MARKERS["transitions"][1], markers)
 
     def test_separate_chapter_success_does_not_prove_continuous_transitions(self):
         markers = required_markers(None, "transitions")
@@ -136,21 +123,10 @@ class RuntimeSmokeTests(unittest.TestCase):
     def test_startup_requires_grounding_marker(self):
         markers = required_markers(None, "startup")
         self.assertEqual(len(markers), 3)
-        self.assertIn("ShireStartupGrounding: PASS chapter=P1C01", markers)
+        self.assertIn(MODE_MARKERS["startup"][1], markers)
 
     def test_state_requires_roundtrip_marker(self):
-        self.assertEqual(required_markers(None, "state"), [
-            "ShirePlayableStartup: GameMode ready",
-            "ShireStartupGrounding: PASS chapter=P1C03",
-            "ShireStateAudit: route-roundtrip=PASS",
-            "ShireStateAudit: ring-core=PASS",
-            "ShireStateAudit: discovery-core=PASS",
-            "ShireStateAudit: progression-core=PASS",
-            "ShireStateAudit: knowledge-core=PASS",
-            "ShirePersistenceRestore: COMMIT",
-            "ShireStateAudit: persistence-fields=PASS",
-            "ShireStateAudit: disk-save-roundtrip=PASS",
-        ])
+        self.assertEqual(required_markers(None, "state"), list(MODE_MARKERS["state"]))
 
     def test_in_memory_success_cannot_prove_disk_save(self):
         markers = required_markers(None, "state")

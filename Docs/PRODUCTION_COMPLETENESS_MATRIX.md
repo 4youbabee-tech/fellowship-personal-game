@@ -1,3 +1,7 @@
+## 2026-09-23 - W00 CP-W00-142 validation-contract consolidation
+
+Parent `7636c777...`: Unreal #610 SUCCESS and Warehouse #189 SUCCESS; Pre-Unreal #775 FAILURE on one stale duplicated PG-140 marker template. No production percentage is increased. The repair is systemic: one runtime-audit registry now owns markers/modes/log names/source anchors, consumers import it, and regression tests forbid duplicated transaction marker text. New-head status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. W01 remains blocked.
+
 ## 2026-09-23 - W00 CP-W00-141 validation-repair checkpoint
 
 Candidate `621ad861...` failed Pre-Unreal #774 at ProjectGovernor evidence validation and Unreal #609 at the first C++ compile error (conditional `UE_LOG` verbosity). No production-completeness percentage is increased. The repair restores exact last-green/latest-observed handoff records, replaces dynamic log verbosity with static branches, and adds PG-141 plus a handoff regression test. Status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. Last proven engine baseline remains `80fc54dc...` (#773/#608). W01 remains blocked.

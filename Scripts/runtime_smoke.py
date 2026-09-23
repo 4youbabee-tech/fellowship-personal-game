@@ -6,6 +6,14 @@ import re
 import subprocess
 import time
 
+from runtime_audit_contracts import (
+    ALL_MODES,
+    chapters_for_mode,
+    extra_args_for,
+    log_name_for,
+    required_markers,
+)
+
 
 FAILURE = re.compile(r"Fatal error:|Assertion failed|Ensure condition failed", re.I)
 
@@ -16,49 +24,6 @@ def read_log(path):
     raw = path.read_bytes()
     encoding = "utf-16" if raw.startswith((b"\xff\xfe", b"\xfe\xff")) else "utf-8-sig"
     return raw.decode(encoding, errors="replace")
-
-
-def required_markers(chapter, mode):
-    if mode == "transitions":
-        return ["ShireTransitionBarrier: PASS held-during-swap=yes cancel-release=yes",
-                "ShireTransitionAudit: sequence=PASS chapters=8 routes=2 disk-save=PASS"]
-    if mode == "faults":
-        return [
-            "ShireRollbackSnapshotApplied: health=67.0 stamina=54.0 resolve=43.0 supplies=2",
-            "ShireRollbackAudit: PASS unsupported-request restored=yes movementReleased=yes freshSnapshot=yes npcContext=yes livingWorld=yes",
-            "ShireRollbackSnapshotApplied: health=63.0 stamina=52.0 resolve=41.0 supplies=1",
-            "ShireStreamFailureAudit: PASS async-failure rollback=yes resident-origin=yes movementReleased=yes freshSnapshot=yes",
-        ]
-    if mode == "pending":
-        return [
-            "ShirePendingTransitionAudit: WINDOW-PASS old-world-authority=yes movementHeld=yes npcDestinationBlocked=yes",
-            "ShirePendingTransitionAudit: PASS delayed-ready old-world-authority=yes destination-commit=yes",
-        ]
-    if mode == "edges":
-        return [
-            "ShirePersistenceEdgeAudit: PASS legacy-terminal canonical-publications=1 worldCommits=1 chapter=P1C02",
-            "ShireCheckpointRevisionAudit: PASS stale-completion stateApplied=no",
-        ]
-    if mode == "state":
-        return ["ShirePlayableStartup: GameMode ready",
-                "ShireStartupGrounding: PASS chapter=P1C03",
-                "ShireStateAudit: route-roundtrip=PASS",
-                "ShireStateAudit: ring-core=PASS",
-                "ShireStateAudit: discovery-core=PASS",
-                "ShireStateAudit: progression-core=PASS",
-                "ShireStateAudit: knowledge-core=PASS",
-                "ShirePersistenceRestore: COMMIT",
-                "ShireStateAudit: persistence-fields=PASS",
-                "ShireStateAudit: disk-save-roundtrip=PASS"]
-    if chapter is None:
-        return ["ShirePlayableStartup: GameMode ready",
-                "ShireStartupGrounding: PASS chapter=P1C01",
-                "ShirePlayableStartup: chapter=P1C01 route=FrodoMain"]
-    return [f"ShireChapterAudit: requested={chapter}",
-            f"ShireStartupGrounding: PASS chapter={chapter}",
-            f"ShireChapterAudit: loaded={chapter}",
-            f"ShireChapterAudit: living-world chapter={chapter}",
-            f"ShireChapterAudit: weather chapter={chapter}"]
 
 
 def missing_markers(text, markers):
@@ -148,7 +113,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--editor", required=True, type=Path)
     parser.add_argument("--project", required=True, type=Path)
-    parser.add_argument("--mode", choices=("startup", "chapters", "state", "transitions", "faults", "pending", "edges"), required=True)
+    parser.add_argument("--mode", choices=ALL_MODES, required=True)
     parser.add_argument("--timeout", type=float, default=45)
     parser.add_argument("--observation", type=float, default=4)
     args = parser.parse_args()
@@ -157,19 +122,10 @@ def main():
     if args.observation <= 0 or args.timeout <= args.observation:
         parser.error("timeout must exceed a positive observation window")
     log_dir = args.project.resolve().parent / "Saved" / "Logs"
-    chapters = [None] if args.mode in ("startup", "state", "transitions", "faults", "pending", "edges") else [f"P1C{i:02d}" for i in range(1, 9)]
+    chapters = chapters_for_mode(args.mode)
     results = []
     for chapter in chapters:
-        name = ("CI-StateAudit" if args.mode == "state" else
-                "CI-PlayableStartup" if chapter is None else f"CI-ChapterAudit-{chapter}")
-        if args.mode == "transitions":
-            name = "CI-TransitionAudit"
-        if args.mode == "faults":
-            name = "CI-FaultAudit"
-        if args.mode == "pending":
-            name = "CI-PendingTransitionAudit"
-        if args.mode == "edges":
-            name = "CI-PersistenceEdgeAudit"
+        name = log_name_for(chapter, args.mode)
         log = log_dir / (name + ".log")
         command = [str(args.editor.resolve()), str(args.project.resolve()),
                    "/Engine/Maps/Templates/Template_Default", "-game", "-nullrhi",
@@ -177,16 +133,7 @@ def main():
                    "-ShireCIRuntimeAudit", f"-abslog={log}"]
         if chapter:
             command.append(f"-AuditChapter={chapter}")
-        if args.mode == "state":
-            command.append("-AuditState")
-        if args.mode == "transitions":
-            command.append("-AuditTransitions")
-        if args.mode == "faults":
-            command.extend(["-AuditFaults", "-ShireCIForceChapterAssetFailure=P1C02"])
-        if args.mode == "pending":
-            command.extend(["-AuditPendingTransition", "-ShireCIAssetReadyDelay=2.0"])
-        if args.mode == "edges":
-            command.append("-AuditPersistenceEdges")
+        command.extend(extra_args_for(args.mode))
         try:
             result = observe(command, log, required_markers(chapter, args.mode), args.timeout, args.observation)
         except Exception as exc:
