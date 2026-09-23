@@ -194,6 +194,48 @@ rollback_marker="ShireRollbackAudit: PASS unsupported-request restored=yes movem
 if rollback_marker not in game_mode or rollback_marker not in runtime_smoke or "--mode faults" not in state_cmd:
  errors.append("rollback fault-injection evidence chain missing")
 
+# SAVE-RESTORE PRE-MUTATION BOUNDARY + DELAYED ASYNC AUTHORITY
+streaming_test=streaming_cpp
+game_mode=read(SRC/"ShireGameMode.cpp")
+runtime_smoke=read(ROOT/"Scripts"/"runtime_smoke.py")
+state_cmd=read(ROOT/"Scripts"/"ci_runtime_state.cmd")
+if "PreparePersistenceWorldTransition" not in quest or "PreparePersistenceWorldTransition" not in player:
+ errors.append("save restore does not share pre-mutation world transition boundary")
+restore_start=player.find("bool AShirePlayerCharacter::RestoreSaveSnapshot")
+restore_end=player.find("bool AShirePlayerCharacter::StartCheckpointSnapshotSave",restore_start)
+restore_body=player[restore_start:restore_end]
+restore_begin=restore_body.find("BeginPersistenceRestore()")
+restore_prepare=restore_body.find("PreparePersistenceWorldTransition")
+restore_mutate=restore_body.find("RestoreQuestState(")
+if min(restore_begin,restore_prepare,restore_mutate)<0 or not (restore_begin<restore_prepare<restore_mutate):
+ errors.append("save restore transition snapshot ordering is unsafe")
+for token in ["PublishPendingReady","ShireCIAssetReadyDelay=","CompletedSerial != RequestSerial"]:
+ if token not in streaming_test:
+  errors.append(f"delayed async transition guard missing: {token}")
+pending_marker="ShirePendingTransitionAudit: PASS delayed-ready old-world-authority=yes destination-commit=yes"
+if pending_marker not in game_mode or pending_marker not in runtime_smoke or "--mode pending" not in state_cmd:
+ errors.append("delayed transition old-world-authority evidence chain missing")
+
+# FAIL-CLOSED CHAPTER BANK RESIDENCY / ROLLBACK OWNERSHIP
+if "FOnShireChapterAssetsFailed" not in streaming_h or "OnChapterAssetsFailed" not in streaming_h:
+ errors.append("chapter streaming failure delegate missing")
+if "compatibility path continues" in streaming_cpp:
+ errors.append("chapter streaming still contains compatibility-success fallback for missing residency")
+for token in ["AreBankAssetsResolved","FailPendingRequest","async-complete-with-unresolved-assets"]:
+ if token not in streaming_cpp:
+  errors.append(f"chapter streaming fail-closed contract missing: {token}")
+if "HandleChapterAssetsFailed" not in router or "OnChapterAssetsFailed.AddUObject" not in router:
+ errors.append("router is not subscribed to chapter streaming failures")
+router_fail_start=router.find("void AChapterWorldRouter::HandleChapterAssetsFailed")
+router_fail_end=router.find("AActor* AChapterWorldRouter::SpawnWorldForRequest",router_fail_start)
+router_fail=router[router_fail_start:router_fail_end]
+if "RollbackFailedWorldSwap" not in router_fail:
+ errors.append("chapter streaming failure does not rollback committed origin")
+if "ShireCIForceChapterAssetFailure=" not in streaming_cpp:
+ errors.append("deterministic non-production streaming failure injection missing")
+if "ShireStreamFailureAudit: PASS" not in game_mode or "-ShireCIForceChapterAssetFailure=P1C02" not in runtime_smoke:
+ errors.append("streaming failure runtime evidence chain missing")
+
 # UE4.27 importer overload regression and deterministic normalization stay fail-closed.
 if "ObjectPathToPackageName(ProductionSurfacePath)" in importer:
  errors.append("ambiguous UE4.27 ObjectPathToPackageName(const TCHAR*) call reintroduced")

@@ -3923,6 +3923,126 @@ if "--mode faults" not in pg136_state_cmd:
 if "test_fault_mode_requires_complete_rollback_evidence" not in pg136_runtime_tests:
     fail("PG-136 rollback evidence regression unit test missing")
 
+# PG-137: save restores share the pre-mutation rollback boundary and delayed async readiness keeps old-world authority.
+pg137_quest_h = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
+pg137_quest = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
+pg137_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg137_stream_h = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.h")
+pg137_stream = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
+pg137_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg137_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
+pg137_state_cmd = read(ROOT / "Scripts" / "ci_runtime_state.cmd")
+pg137_runtime_tests = read(ROOT / "Scripts" / "test_runtime_smoke.py")
+
+for pg137_symbol in [
+    "PreparePersistenceWorldTransition",
+    "OnWorldTransitionRequested.Broadcast",
+]:
+    if pg137_symbol not in (pg137_quest_h + pg137_quest):
+        fail(f"PG-137 persistence transition-intent contract missing: {pg137_symbol}")
+
+pg137_restore_start = pg137_player.find("bool AShirePlayerCharacter::RestoreSaveSnapshot")
+pg137_restore_end = pg137_player.find("bool AShirePlayerCharacter::StartCheckpointSnapshotSave", pg137_restore_start)
+pg137_restore = pg137_player[pg137_restore_start:pg137_restore_end]
+pg137_begin = pg137_restore.find("BeginPersistenceRestore()")
+pg137_prepare = pg137_restore.find("PreparePersistenceWorldTransition")
+pg137_mutation = pg137_restore.find("RestoreQuestState(")
+if min(pg137_begin, pg137_prepare, pg137_mutation) < 0 or not (pg137_begin < pg137_prepare < pg137_mutation):
+    fail("PG-137 save restore must snapshot/hold after transaction begin but before restored logical mutation")
+
+pg137_prepare_start = pg137_quest.find("void UShireQuestSubsystem::PreparePersistenceWorldTransition")
+pg137_prepare_end = pg137_quest.find("void UShireQuestSubsystem::CommitPersistenceRestore", pg137_prepare_start)
+pg137_prepare_body = pg137_quest[pg137_prepare_start:pg137_prepare_end]
+if "!bPersistenceRestoreInProgress" not in pg137_prepare_body or "OnWorldTransitionRequested.Broadcast" not in pg137_prepare_body:
+    fail("PG-137 persistence transition intent may publish outside an active restore transaction")
+
+for pg137_symbol in [
+    "PublishPendingReady",
+    "ShireCIAssetReadyDelay=",
+    "ci-ready-delay",
+    "CompletedSerial != RequestSerial",
+]:
+    if pg137_symbol not in (pg137_stream_h + pg137_stream):
+        fail(f"PG-137 cancellable delayed-ready streaming test hook missing: {pg137_symbol}")
+
+pg137_complete_start = pg137_stream.find("void UShireChapterAssetStreamingSubsystem::HandleAsyncLoadComplete")
+pg137_publish_start = pg137_stream.find("void UShireChapterAssetStreamingSubsystem::PublishPendingReady")
+pg137_stream_tail = pg137_stream[pg137_complete_start:]
+if pg137_complete_start < 0 or pg137_publish_start < 0 or "SetTimer(" not in pg137_stream_tail:
+    fail("PG-137 delayed-ready hook must be timer-based and non-blocking")
+if 'FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))' not in pg137_stream_tail:
+    fail("PG-137 forced streaming delay must remain CI-only")
+
+for pg137_marker in [
+    "ShirePendingTransitionAudit: WINDOW-PASS old-world-authority=yes movementHeld=yes npcDestinationBlocked=yes",
+    "ShirePendingTransitionAudit: PASS delayed-ready old-world-authority=yes destination-commit=yes",
+]:
+    if pg137_marker not in pg137_game_mode or pg137_marker not in pg137_runtime:
+        fail(f"PG-137 delayed transition runtime evidence missing: {pg137_marker}")
+
+if '"pending"' not in pg137_runtime or "-ShireCIAssetReadyDelay=2.0" not in pg137_runtime:
+    fail("PG-137 runtime harness does not force a bounded delayed-ready transition")
+if "--mode pending" not in pg137_state_cmd:
+    fail("PG-137 state CI does not execute delayed transition audit")
+if "test_pending_mode_requires_both_window_and_commit_evidence" not in pg137_runtime_tests:
+    fail("PG-137 delayed transition marker regression test missing")
+
+# PG-138: chapter streaming failures are explicit rollback events; no compatibility-success path may hide missing residency.
+pg138_stream_h = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.h")
+pg138_stream = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
+pg138_router_h = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.h")
+pg138_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
+pg138_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg138_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
+
+for pg138_symbol in [
+    "FOnShireChapterAssetsFailed",
+    "OnChapterAssetsFailed",
+    "AreBankAssetsResolved",
+    "FailPendingRequest",
+    "async-complete-with-unresolved-assets",
+]:
+    if pg138_symbol not in (pg138_stream_h + pg138_stream):
+        fail(f"PG-138 fail-closed chapter residency contract missing: {pg138_symbol}")
+
+if "compatibility path continues" in pg138_stream:
+    fail("PG-138 missing/invalid chapter bank may not be promoted through compatibility success")
+
+pg138_fail_start = pg138_stream.find("void UShireChapterAssetStreamingSubsystem::FailPendingRequest")
+pg138_fail_end = pg138_stream.find("void UShireChapterAssetStreamingSubsystem::HandleAsyncLoadComplete", pg138_fail_start)
+pg138_fail = pg138_stream[pg138_fail_start:pg138_fail_end]
+if "OnChapterAssetsFailed.Broadcast" not in pg138_fail:
+    fail("PG-138 streaming failure does not publish rollback ownership")
+if "ResidentHandle.Reset" in pg138_fail or "ResidentChapterId = NAME_None" in pg138_fail:
+    fail("PG-138 failed pending load may not release the previous resident bank")
+
+for pg138_symbol in [
+    "HandleChapterAssetsFailed",
+    "OnChapterAssetsFailed.AddUObject",
+    "OnChapterAssetsFailed.RemoveAll",
+]:
+    if pg138_symbol not in (pg138_router_h + pg138_router):
+        fail(f"PG-138 router streaming-failure bridge missing: {pg138_symbol}")
+
+pg138_router_fail_start = pg138_router.find("void AChapterWorldRouter::HandleChapterAssetsFailed")
+pg138_router_fail_end = pg138_router.find("AActor* AChapterWorldRouter::SpawnWorldForRequest", pg138_router_fail_start)
+pg138_router_fail = pg138_router[pg138_router_fail_start:pg138_router_fail_end]
+if "RollbackFailedWorldSwap" not in pg138_router_fail:
+    fail("PG-138 chapter preload failure must rollback the committed origin")
+
+if "#if !UE_BUILD_SHIPPING" not in pg138_stream or "ShireCIForceChapterAssetFailure=" not in pg138_stream:
+    fail("PG-138 deterministic streaming failure injection must remain non-shipping")
+if "-ShireCIForceChapterAssetFailure=P1C02" not in pg138_runtime:
+    fail("PG-138 fault runtime does not exercise a real valid-bank async failure")
+
+for pg138_marker in [
+    "ShireRollbackSnapshotApplied: health=67.0 stamina=54.0 resolve=43.0 supplies=2",
+    "ShireRollbackSnapshotApplied: health=63.0 stamina=52.0 resolve=41.0 supplies=1",
+    "ShireStreamFailureAudit: PASS async-failure rollback=yes resident-origin=yes movementReleased=yes freshSnapshot=yes",
+]:
+    if pg138_marker not in (pg138_router + pg138_game_mode + pg138_runtime):
+        fail(f"PG-138 exact rollback/failure runtime evidence missing: {pg138_marker}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

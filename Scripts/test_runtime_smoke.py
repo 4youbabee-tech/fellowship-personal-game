@@ -29,11 +29,23 @@ time.sleep(10)
 
 
 class RuntimeSmokeTests(unittest.TestCase):
+    def test_pending_mode_requires_both_window_and_commit_evidence(self):
+        markers = required_markers(None, "pending")
+        self.assertEqual(markers, [
+            "ShirePendingTransitionAudit: WINDOW-PASS old-world-authority=yes movementHeld=yes npcDestinationBlocked=yes",
+            "ShirePendingTransitionAudit: PASS delayed-ready old-world-authority=yes destination-commit=yes",
+        ])
+        self.assertEqual(missing_markers(markers[0], markers), [markers[1]])
+
     def test_fault_mode_requires_complete_rollback_evidence(self):
         markers = required_markers(None, "faults")
         self.assertEqual(markers, [
-            "ShireRollbackAudit: PASS unsupported-request restored=yes movementReleased=yes freshSnapshot=yes npcContext=yes livingWorld=yes"
+            "ShireRollbackSnapshotApplied: health=67.0 stamina=54.0 resolve=43.0 supplies=2",
+            "ShireRollbackAudit: PASS unsupported-request restored=yes movementReleased=yes freshSnapshot=yes npcContext=yes livingWorld=yes",
+            "ShireRollbackSnapshotApplied: health=63.0 stamina=52.0 resolve=41.0 supplies=1",
+            "ShireStreamFailureAudit: PASS async-failure rollback=yes resident-origin=yes movementReleased=yes freshSnapshot=yes",
         ])
+        self.assertEqual(missing_markers("\n".join(markers[:2]), markers), markers[2:])
 
     def test_transition_mode_requires_world_mutation_barrier(self):
         markers = required_markers(None, "transitions")

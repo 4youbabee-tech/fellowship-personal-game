@@ -298,6 +298,14 @@ public:
     void AbortPersistenceRestore();
     bool IsPersistenceRestoreInProgress() const { return bPersistenceRestoreInProgress; }
 
+    // A save restore can change world identity without calling StartChapter first.
+    // Publish the destination intent after BeginPersistenceRestore succeeds but before
+    // any restored logical fields are applied, so rollback captures the live origin.
+    void PreparePersistenceWorldTransition(
+        FName TargetChapterId,
+        FName TargetRouteId,
+        FName TargetEpisodeId);
+
     // Destructive chapter-age housekeeping belongs to the committed world boundary,
     // not the logical request boundary.
     void CommitWorldBoundState();

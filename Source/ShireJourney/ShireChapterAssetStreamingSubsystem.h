@@ -18,6 +18,11 @@ DECLARE_MULTICAST_DELEGATE_TwoParams(
     FName /* ChapterId */,
     FName /* RouteId */);
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(
+    FOnShireChapterAssetsFailed,
+    FName /* ChapterId */,
+    FName /* RouteId */);
+
 DECLARE_MULTICAST_DELEGATE_OneParam(
     FOnShireCharacterRigReady,
     FName /* CharacterId */);
@@ -45,6 +50,7 @@ public:
 
     FOnShireChapterAssetsReady OnChapterAssetsReady;
     FOnShireChapterAssetsCommitted OnChapterAssetsCommitted;
+    FOnShireChapterAssetsFailed OnChapterAssetsFailed;
     FOnShireCharacterRigReady OnCharacterRigReady;
 
 private:
@@ -66,6 +72,12 @@ private:
     bool LoadStreamingPlan();
     FName ResolveBankId(FName ChapterId, FName RouteId) const;
     void HandleAsyncLoadComplete(uint64 CompletedSerial);
+    void PublishPendingReady(
+        uint64 CompletedSerial,
+        FName CompletedChapter,
+        FName CompletedRoute);
+    bool AreBankAssetsResolved(FName ChapterId, FName RouteId, int32& OutMissingCount) const;
+    void FailPendingRequest(FName ChapterId, FName RouteId, const TCHAR* Reason);
     void HandleCharacterRigLoadComplete(FName CharacterId);
 
     TMap<FName, FChapterBankRuntime> Banks;

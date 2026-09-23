@@ -1766,6 +1766,11 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
         return false;
     }
 
+    QuestSubsystem->PreparePersistenceWorldTransition(
+        Save->CurrentChapterId,
+        Save->CurrentRouteId,
+        Save->CurrentEpisodeId);
+
     // Rebuild every logical persistence domain before publishing any restore event.
     // World-facing systems therefore see either the old complete state or the new
     // complete state, never quest state with stale NPC/discovery/progression data.

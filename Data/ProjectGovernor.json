@@ -2655,16 +2655,21 @@
         "ChapterWorldRouter captures the exact committed origin snapshot at transition request time and raises gameplay hold before logical destination mutation.",
         "Unsupported route/chapter destinations now execute atomic RollbackFailedWorldSwap instead of clearing pending state and returning.",
         "PG-136 fault audit requests unsupported P1C99 and requires exact rollback player state, identity, NPC context, LivingWorld sync and movement release.",
-        "Pre-Unreal #771 rejected literal P1C99/CI_InvalidTransition test references and an over-broad PG-136 hold-order check; the fault harness now constructs the unsupported chapter dynamically and the guard targets the normal transition hold."
+        "Pre-Unreal #771 rejected literal P1C99/CI_InvalidTransition test references and an over-broad PG-136 hold-order check; the fault harness now constructs the unsupported chapter dynamically and the guard targets the normal transition hold.",
+        "Unreal #606 compiled/imported and passed Automation/startup/P1C01-P1C08/state/transitions; its new fault audit failed only because post-release stamina/resolve naturally evolved after exact rollback application.",
+        "Rollback now emits ShireRollbackSnapshotApplied at the exact application boundary; later fault checks use stable health/supplies plus context/revision/movement invariants.",
+        "Save RestoreSaveSnapshot now shares the pre-mutation transition boundary through PreparePersistenceWorldTransition after BeginPersistenceRestore and before RestoreQuestState.",
+        "Chapter asset streaming no longer treats missing/empty banks, invalid async handles or unresolved loaded assets as compatibility success; it publishes OnChapterAssetsFailed and preserves the old resident bank for rollback.",
+        "CI now has deterministic forced valid-bank async failure and non-blocking delayed-ready transition modes to prove failure cleanup and old-world authority."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal and UE4.27 compile/import/runtime evidence for PG-136 including ShireRollbackAudit PASS.",
-        "Run a forced delayed-async transition so old committed NPCContext/LivingWorld authority is observed throughout the pending window.",
-        "Run a legacy terminal-save repair runtime case proving one final canonical world publication.",
-        "Exercise queued/stale automatic checkpoint completion across a world revision under runtime timing.",
-        "Validate staged Data JSON reads in a packaged build.",
-        "Run target-device frame-time/memory/GC/tick profiling and audio playback without -NoSound.",
-        "Run human core-loop/onboarding/external playtest evidence before W00 final acceptance."
+        "Obtain fresh exact-head Pre-Unreal and UE4.27 runtime proof for PG-137/PG-138, including rollback exact-apply markers, stream-failure rollback and delayed pending-window authority.",
+        "Add/execute a legacy terminal-save repair test that proves exactly one final canonical world commit.",
+        "Exercise immutable queued checkpoint completion across a real world revision.",
+        "Reject or canonicalize malformed route/chapter/episode save identities before world commit.",
+        "Validate packaged Data JSON staging/read behavior.",
+        "Validate actual authored audio bank presence/playback without -NoSound; current audio runtime routing exists but final production packages remain absent.",
+        "Run target-device performance/memory/GC/tick profiling and human play gates before W00 final closure."
       ],
       "acceptance_criteria": [
         "No known CRITICAL/HIGH source defect remains uncorrected or explicitly evidence-bounded.",
@@ -4063,19 +4068,25 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "PG-136 first static run exposed test-harness identifiers leaking into production reference validation plus a guard matching the fail-safe hold branch.",
-    "exact_reviewed_head": "1fdca1166cfd72099a42bbd02c9355b5f035562d",
+    "reason": "Unreal #606 exercised the first real rollback fault path. It proved exact rollback application in engine logs but exposed an invalid post-release audit comparison; continued source review also found save-driven transitions and chapter-bank failures outside the same transaction boundary.",
+    "exact_reviewed_head": "2b5651db9f2f129564a12f0fe1ad86a11dfca476",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#771 FAILURE before engine: unknown test-only P1C99/CI_InvalidTransition references plus PG-136 hold-order guard mismatch",
-      "unreal_build": "#606 queued/in-flight for the failed static head; not used as acceptance evidence",
-      "parent_green": "Unreal #605 full chain SUCCESS on ddd0957d..."
+      "pre_unreal": "#772 SUCCESS on 2b5651db9f2f129564a12f0fe1ad86a11dfca476",
+      "unreal_build": "#606 parent diagnostic: compile/import/Automation/startup/P1C01-P1C08/state/transitions PASS; fault gate FAIL on time-varying post-release snapshot comparison",
+      "parent_green": "#605 full established-chain SUCCESS on ddd0957d6201c8bf553825acd671c98a9be545ef"
     },
     "reconciled_findings": [
-      "Production chapter/quest reference validation remains strict; fault injection must not add fake production identifiers to source scans.",
-      "The no-subsystem fail-safe hold is valid and must not be confused with the normal snapshot-before-hold transaction ordering."
+      "The request-time rollback snapshot is applied with exact values in #606; audit sampling must distinguish exact application from legitimate post-release stamina/resolve evolution.",
+      "Save-driven restore must signal transition intent before restored logical mutation.",
+      "Missing/unresolved chapter-bank residency is a transaction failure, not a compatibility success.",
+      "Slow async authority requires a deterministic delayed-ready observation window rather than assuming fast local CI covers it."
     ],
-    "next_priority": "W00_PG136_FRESH_STATIC_AND_ENGINE_PROOF",
-    "truth_boundary": "PG-136 remains source-level until a fresh exact head passes Pre-Unreal and the fault-injection Unreal runtime."
+    "next_priority": "W00_PG137_PG138_ASYNC_FAILURE_AND_PENDING_AUTHORITY",
+    "truth_boundary": "PG-137/PG-138 changes are source-level until a newer exact head passes. No PIE/device/visual/performance/audio acceptance is inferred.",
+    "stabilization_wave": {
+      "status": "LARGE_SOURCE_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "invariant": "Every world-identity change, including save restore, captures an exact committed rollback origin before logical mutation; pending asset failures never become residency; old world/context/assets remain authoritative until one successful destination commit."
+    }
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",

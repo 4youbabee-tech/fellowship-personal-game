@@ -54,6 +54,7 @@ private:
         bool bRestoreRouteTransform);
 
     void HandleChapterAssetsReady(FName ChapterId, FName RouteId);
+    void HandleChapterAssetsFailed(FName ChapterId, FName RouteId);
     void ClearPrototypeBuilders();
     AActor* SpawnWorldForRequest(FName ChapterId, FName RouteId, FName& OutBuilderName);
     void RollbackFailedWorldSwap(FName PreviousChapterId, FName PreviousRouteId);

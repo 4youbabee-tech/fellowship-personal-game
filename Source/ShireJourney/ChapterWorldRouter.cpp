@@ -72,6 +72,9 @@ void AChapterWorldRouter::BeginPlay()
         AssetStreamingSubsystem->OnChapterAssetsReady.AddUObject(
             this,
             &AChapterWorldRouter::HandleChapterAssetsReady);
+        AssetStreamingSubsystem->OnChapterAssetsFailed.AddUObject(
+            this,
+            &AChapterWorldRouter::HandleChapterAssetsFailed);
     }
 
     SetPlayerWorldHold(true);
@@ -91,6 +94,7 @@ void AChapterWorldRouter::EndPlay(const EEndPlayReason::Type EndPlayReason)
     if (AssetStreamingSubsystem)
     {
         AssetStreamingSubsystem->OnChapterAssetsReady.RemoveAll(this);
+        AssetStreamingSubsystem->OnChapterAssetsFailed.RemoveAll(this);
         AssetStreamingSubsystem = nullptr;
     }
 
@@ -717,6 +721,26 @@ void AChapterWorldRouter::HandleChapterAssetsReady(FName ChapterId, FName RouteI
         bPendingRestoreRouteTransform);
 }
 
+void AChapterWorldRouter::HandleChapterAssetsFailed(
+    FName ChapterId,
+    FName RouteId)
+{
+    if (PendingChapterId != ChapterId || PendingRouteId != RouteId)
+    {
+        return;
+    }
+
+    const FName PreviousChapterId = LastLoadedChapterId;
+    const FName PreviousRouteId = LastLoadedRouteId;
+    UE_LOG(
+        LogTemp,
+        Error,
+        TEXT("ShireWorldCommit: asset-preload-failed chapter=%s route=%s rollback=yes"),
+        *ChapterId.ToString(),
+        *RouteId.ToString());
+    RollbackFailedWorldSwap(PreviousChapterId, PreviousRouteId);
+}
+
 AActor* AChapterWorldRouter::SpawnWorldForRequest(
     FName ChapterId,
     FName RouteId,
@@ -920,6 +944,14 @@ bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot(
         if (AShirePlayerCharacter* PlayerCharacter = Cast<AShirePlayerCharacter>(PlayerPawn))
         {
             PlayerCharacter->RestoreTransactionalPlayerState(
+                Snapshot->PlayerHealth,
+                Snapshot->PlayerStamina,
+                Snapshot->PlayerResolve,
+                Snapshot->PlayerSupplies);
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("ShireRollbackSnapshotApplied: health=%.1f stamina=%.1f resolve=%.1f supplies=%d"),
                 Snapshot->PlayerHealth,
                 Snapshot->PlayerStamina,
                 Snapshot->PlayerResolve,

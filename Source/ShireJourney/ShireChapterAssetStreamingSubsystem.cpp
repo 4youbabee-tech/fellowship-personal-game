@@ -3,12 +3,16 @@
 #include "Dom/JsonObject.h"
 #include "Engine/GameInstance.h"
 #include "Engine/SkeletalMesh.h"
+#include "Engine/World.h"
 #include "HAL/FileManager.h"
+#include "Misc/CommandLine.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
 #include "Misc/PackageName.h"
+#include "Misc/Parse.h"
 #include "Serialization/JsonReader.h"
 #include "Serialization/JsonSerializer.h"
+#include "TimerManager.h"
 
 void UShireChapterAssetStreamingSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -274,14 +278,7 @@ void UShireChapterAssetStreamingSubsystem::RequestChapterAssets(
 
     if (!Bank || Bank->Assets.Num() == 0)
     {
-        UE_LOG(
-            LogTemp,
-            Warning,
-            TEXT("ChapterAssetStreaming: no bank for chapter=%s route=%s; compatibility path continues."),
-            *ChapterId.ToString(),
-            *RouteId.ToString());
-        bPendingCompatibilityReady = true;
-        OnChapterAssetsReady.Broadcast(ChapterId, RouteId);
+        FailPendingRequest(ChapterId, RouteId, TEXT("missing-or-empty-bank"));
         return;
     }
 
@@ -302,13 +299,7 @@ void UShireChapterAssetStreamingSubsystem::RequestChapterAssets(
 
     if (!PendingHandle.IsValid())
     {
-        UE_LOG(
-            LogTemp,
-            Warning,
-            TEXT("ChapterAssetStreaming: async handle unavailable for chapter=%s; compatibility path continues."),
-            *ChapterId.ToString());
-        bPendingCompatibilityReady = true;
-        OnChapterAssetsReady.Broadcast(ChapterId, RouteId);
+        FailPendingRequest(ChapterId, RouteId, TEXT("async-handle-unavailable"));
     }
 }
 
@@ -449,6 +440,54 @@ void UShireChapterAssetStreamingSubsystem::HandleCharacterRigLoadComplete(FName 
     }
 }
 
+bool UShireChapterAssetStreamingSubsystem::AreBankAssetsResolved(
+    FName ChapterId,
+    FName RouteId,
+    int32& OutMissingCount) const
+{
+    OutMissingCount = 0;
+    const FChapterBankRuntime* Bank = Banks.Find(ResolveBankId(ChapterId, RouteId));
+    if (!Bank || Bank->Assets.Num() == 0)
+    {
+        OutMissingCount = 1;
+        return false;
+    }
+
+    for (const FSoftObjectPath& AssetPath : Bank->Assets)
+    {
+        if (!AssetPath.ResolveObject())
+        {
+            ++OutMissingCount;
+        }
+    }
+    return OutMissingCount == 0;
+}
+
+void UShireChapterAssetStreamingSubsystem::FailPendingRequest(
+    FName ChapterId,
+    FName RouteId,
+    const TCHAR* Reason)
+{
+    // Failed pending ownership is never promoted to residency. Drop its handle
+    // before notifying the router; the old resident handle remains untouched.
+    PendingHandle.Reset();
+    bPendingCompatibilityReady = false;
+
+    UE_LOG(
+        LogTemp,
+        Error,
+        TEXT("ChapterAssetStreaming: FAILED chapter=%s route=%s reason=%s residentChapter=%s residentRoute=%s"),
+        *ChapterId.ToString(),
+        *RouteId.ToString(),
+        Reason ? Reason : TEXT("unknown"),
+        *ResidentChapterId.ToString(),
+        *ResidentRouteId.ToString());
+
+    // Publish failure while request identity is still intact. Router owns rollback;
+    // its cancellation then invalidates the serial and releases only pending ownership.
+    OnChapterAssetsFailed.Broadcast(ChapterId, RouteId);
+}
+
 void UShireChapterAssetStreamingSubsystem::HandleAsyncLoadComplete(uint64 CompletedSerial)
 {
     if (CompletedSerial != RequestSerial)
@@ -460,6 +499,106 @@ void UShireChapterAssetStreamingSubsystem::HandleAsyncLoadComplete(uint64 Comple
     const FName CompletedRoute = PendingRouteId;
     if (CompletedChapter.IsNone() || CompletedRoute.IsNone())
     {
+        return;
+    }
+
+#if !UE_BUILD_SHIPPING
+    FString CIForcedFailureChapter;
+    const bool bForceCIFailure =
+        FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit")) &&
+        FParse::Value(
+            FCommandLine::Get(),
+            TEXT("ShireCIForceChapterAssetFailure="),
+            CIForcedFailureChapter) &&
+        CIForcedFailureChapter.Equals(
+            CompletedChapter.ToString(),
+            ESearchCase::IgnoreCase);
+    if (bForceCIFailure)
+    {
+        FailPendingRequest(
+            CompletedChapter,
+            CompletedRoute,
+            TEXT("ci-forced-async-failure"));
+        return;
+    }
+#endif
+
+    int32 MissingCount = 0;
+    if (!AreBankAssetsResolved(CompletedChapter, CompletedRoute, MissingCount))
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ChapterAssetStreaming: unresolved-bank-assets chapter=%s route=%s missing=%d"),
+            *CompletedChapter.ToString(),
+            *CompletedRoute.ToString(),
+            MissingCount);
+        FailPendingRequest(
+            CompletedChapter,
+            CompletedRoute,
+            TEXT("async-complete-with-unresolved-assets"));
+        return;
+    }
+
+    // CI may hold ready publication after the actual async load completes. This
+    // exercises the real two-phase transaction window without blocking the game thread.
+    float CIDelaySeconds = 0.0f;
+    const bool bForceCIDelay =
+        FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit")) &&
+        FParse::Value(
+            FCommandLine::Get(),
+            TEXT("ShireCIAssetReadyDelay="),
+            CIDelaySeconds) &&
+        CIDelaySeconds > 0.0f &&
+        GetWorld();
+
+    if (bForceCIDelay)
+    {
+        CIDelaySeconds = FMath::Clamp(CIDelaySeconds, 0.1f, 5.0f);
+        FTimerHandle DelayTimer;
+        FTimerDelegate DelayDelegate = FTimerDelegate::CreateUObject(
+            this,
+            &UShireChapterAssetStreamingSubsystem::PublishPendingReady,
+            CompletedSerial,
+            CompletedChapter,
+            CompletedRoute);
+        GetWorld()->GetTimerManager().SetTimer(
+            DelayTimer,
+            DelayDelegate,
+            CIDelaySeconds,
+            false);
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ChapterAssetStreaming: ci-ready-delay chapter=%s route=%s seconds=%.2f"),
+            *CompletedChapter.ToString(),
+            *CompletedRoute.ToString(),
+            CIDelaySeconds);
+        return;
+    }
+
+    PublishPendingReady(CompletedSerial, CompletedChapter, CompletedRoute);
+}
+
+void UShireChapterAssetStreamingSubsystem::PublishPendingReady(
+    uint64 CompletedSerial,
+    FName CompletedChapter,
+    FName CompletedRoute)
+{
+    if (CompletedSerial != RequestSerial ||
+        PendingChapterId != CompletedChapter ||
+        PendingRouteId != CompletedRoute)
+    {
+        return;
+    }
+
+    int32 MissingCount = 0;
+    if (!AreBankAssetsResolved(CompletedChapter, CompletedRoute, MissingCount))
+    {
+        FailPendingRequest(
+            CompletedChapter,
+            CompletedRoute,
+            TEXT("assets-lost-before-ready-publication"));
         return;
     }
 

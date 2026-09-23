@@ -1,3 +1,9 @@
+## 2026-09-23 - W00 failure-path expansion after Unreal #606
+
+#606 compiled/imported and passed all established runtime paths through continuous transitions, then the new rollback audit produced a false-negative on time-varying stamina/resolve despite engine logs proving the exact rollback state was applied. The audit now captures exact restore values at the rollback application boundary and checks stable post-release values separately.
+
+The source wave also extends the transaction contract to save-driven world restores, removes compatibility-success behavior for missing/failed chapter banks, adds explicit streaming failure rollback, and adds a deterministic delayed-ready audit for old-world authority during pending async transitions. These are stabilization changes only; no completion percentage advances until a fresh exact head passes PG-137/PG-138.
+
 ## 2026-09-23 - PG-136 static-harness correction
 
 Pre-Unreal #771 rejected test-only literal chapter/quest identifiers and an over-broad snapshot/hold ordering check. The fault injection now creates the unsupported chapter dynamically while keeping authored quest identity, and the guard distinguishes the normal transition hold from the no-subsystem fail-safe hold. No production maturity is advanced.

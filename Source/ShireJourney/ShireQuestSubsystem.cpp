@@ -51,6 +51,27 @@ bool UShireQuestSubsystem::BeginPersistenceRestore()
     return true;
 }
 
+void UShireQuestSubsystem::PreparePersistenceWorldTransition(
+    FName TargetChapterId,
+    FName TargetRouteId,
+    FName TargetEpisodeId)
+{
+    if (!bPersistenceRestoreInProgress ||
+        TargetChapterId == NAME_None ||
+        TargetRouteId == NAME_None ||
+        TargetEpisodeId == NAME_None)
+    {
+        return;
+    }
+
+    // BeginPersistenceRestore has locked restore publication, but no logical field
+    // has changed yet. This is the only safe point to snapshot the exact live origin.
+    OnWorldTransitionRequested.Broadcast(
+        TargetChapterId,
+        TargetRouteId,
+        TargetEpisodeId);
+}
+
 void UShireQuestSubsystem::CommitPersistenceRestore(bool bBroadcastQuestStateRestored)
 {
     if (!bPersistenceRestoreInProgress)

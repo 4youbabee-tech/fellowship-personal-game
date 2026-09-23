@@ -23,7 +23,17 @@ def required_markers(chapter, mode):
         return ["ShireTransitionBarrier: PASS held-during-swap=yes cancel-release=yes",
                 "ShireTransitionAudit: sequence=PASS chapters=8 routes=2 disk-save=PASS"]
     if mode == "faults":
-        return ["ShireRollbackAudit: PASS unsupported-request restored=yes movementReleased=yes freshSnapshot=yes npcContext=yes livingWorld=yes"]
+        return [
+            "ShireRollbackSnapshotApplied: health=67.0 stamina=54.0 resolve=43.0 supplies=2",
+            "ShireRollbackAudit: PASS unsupported-request restored=yes movementReleased=yes freshSnapshot=yes npcContext=yes livingWorld=yes",
+            "ShireRollbackSnapshotApplied: health=63.0 stamina=52.0 resolve=41.0 supplies=1",
+            "ShireStreamFailureAudit: PASS async-failure rollback=yes resident-origin=yes movementReleased=yes freshSnapshot=yes",
+        ]
+    if mode == "pending":
+        return [
+            "ShirePendingTransitionAudit: WINDOW-PASS old-world-authority=yes movementHeld=yes npcDestinationBlocked=yes",
+            "ShirePendingTransitionAudit: PASS delayed-ready old-world-authority=yes destination-commit=yes",
+        ]
     if mode == "state":
         return ["ShirePlayableStartup: GameMode ready",
                 "ShireStartupGrounding: PASS chapter=P1C03",
@@ -133,7 +143,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--editor", required=True, type=Path)
     parser.add_argument("--project", required=True, type=Path)
-    parser.add_argument("--mode", choices=("startup", "chapters", "state", "transitions", "faults"), required=True)
+    parser.add_argument("--mode", choices=("startup", "chapters", "state", "transitions", "faults", "pending"), required=True)
     parser.add_argument("--timeout", type=float, default=45)
     parser.add_argument("--observation", type=float, default=4)
     args = parser.parse_args()
@@ -142,7 +152,7 @@ def main():
     if args.observation <= 0 or args.timeout <= args.observation:
         parser.error("timeout must exceed a positive observation window")
     log_dir = args.project.resolve().parent / "Saved" / "Logs"
-    chapters = [None] if args.mode in ("startup", "state", "transitions", "faults") else [f"P1C{i:02d}" for i in range(1, 9)]
+    chapters = [None] if args.mode in ("startup", "state", "transitions", "faults", "pending") else [f"P1C{i:02d}" for i in range(1, 9)]
     results = []
     for chapter in chapters:
         name = ("CI-StateAudit" if args.mode == "state" else
@@ -151,6 +161,8 @@ def main():
             name = "CI-TransitionAudit"
         if args.mode == "faults":
             name = "CI-FaultAudit"
+        if args.mode == "pending":
+            name = "CI-PendingTransitionAudit"
         log = log_dir / (name + ".log")
         command = [str(args.editor.resolve()), str(args.project.resolve()),
                    "/Engine/Maps/Templates/Template_Default", "-game", "-nullrhi",
@@ -163,7 +175,9 @@ def main():
         if args.mode == "transitions":
             command.append("-AuditTransitions")
         if args.mode == "faults":
-            command.append("-AuditFaults")
+            command.extend(["-AuditFaults", "-ShireCIForceChapterAssetFailure=P1C02"])
+        if args.mode == "pending":
+            command.extend(["-AuditPendingTransition", "-ShireCIAssetReadyDelay=2.0"])
         try:
             result = observe(command, log, required_markers(chapter, args.mode), args.timeout, args.observation)
         except Exception as exc:
