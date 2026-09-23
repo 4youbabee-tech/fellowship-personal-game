@@ -1,3 +1,9 @@
+## 2026-09-24 - W00 CP-W00-154 final migration static-path repair
+
+CP153 `b7ad48fc...`: Unreal #622 SUCCESS + Warehouse #203 SUCCESS. Pre #787 failed only PG-116's last historical StoryPresentationDirector path. CP154 removes that final observed holdout and strengthens PG-155 against all direct flat runtime Path constructors.
+
+No production-completeness percentage changes. Fresh exact-head Pre-Unreal and UE4.27.2 proof remain required.
+
 ## 2026-09-24 - W00 CP-W00-153 migration integration repair
 
 CP152 `9acc72b1...` preserved the intended Public/Private Git tree, but Pre #786 failed on historical flat validator reads and Unreal #621 failed in UHT because the persistent runner retained old untracked flat headers. Warehouse #202 succeeded.

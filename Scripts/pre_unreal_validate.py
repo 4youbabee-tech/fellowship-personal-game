@@ -263,11 +263,11 @@ if source_architecture.get("current_layout") == "PUBLIC_PRIVATE_BY_DOMAIN":
 # PG-155: migration-aware validators and persistent self-hosted checkouts use the
 # architecture map rather than historical flat paths.
 pg155_self = read(ROOT / "Scripts" / "pre_unreal_validate.py")
-pg155_legacy_read = re.compile(
-    r'read\(\s*ROOT\s*/\s*["\']Source["\']\s*/\s*["\']ShireJourney["\']\s*/\s*["\'][A-Za-z0-9_.-]+\.(?:h|cpp|cs)["\']\s*\)'
+pg155_legacy_path = re.compile(
+    r'ROOT\s*/\s*["\']Source["\']\s*/\s*["\']ShireJourney["\']\s*/\s*["\'][A-Za-z0-9_.-]+\.(?:h|cpp|cs)["\']'
 )
-if pg155_legacy_read.search(pg155_self):
-    fail("PG-155 Pre-Unreal still contains a historical flat runtime file access")
+if pg155_legacy_path.search(pg155_self):
+    fail("PG-155 Pre-Unreal still constructs a historical flat runtime source path")
 pg155_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 if "prepare_runtime_source_layout.ps1" not in pg155_workflow:
     fail("PG-155 Unreal workflow must remove stale pre-migration source leftovers on the persistent runner")
@@ -5838,8 +5838,8 @@ for pg116_path, pg116_id, pg116_statuses in [
     if pg116_path.name not in pg93_build:
         fail(f"PG-116 runtime production plan is not packaged: {pg116_path.name}")
 
-pg116_director_h = ROOT / "Source" / "ShireJourney" / "StoryPresentationDirector.h"
-pg116_director_cpp = ROOT / "Source" / "ShireJourney" / "StoryPresentationDirector.cpp"
+pg116_director_h = resolve_source("StoryPresentationDirector.h")
+pg116_director_cpp = resolve_source("StoryPresentationDirector.cpp")
 if not pg116_director_h.exists() or not pg116_director_cpp.exists():
     fail("PG-116 StoryPresentationDirector runtime files missing")
     pg116_director = ""

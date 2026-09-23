@@ -105,7 +105,7 @@
         "Pre-Unreal PG-154 rejects flat root runtime files, CURRENT_FLAT entries and reintroduction of PublicIncludePaths.Add(ModuleDirectory)."
       ],
       "missing_work": [
-        "Prove CP-W00-153 with full Pre-Unreal and UE4.27.2 build/runtime after migration-aware validator and persistent-runner cleanup fixes."
+        "Fresh full Pre-Unreal and exact-head UE4.27.2 validation for CP-W00-154 final migration static-path repair."
       ],
       "acceptance_criteria": [
         "All runtime source files represented exactly once in architecture manifest",
@@ -116,7 +116,7 @@
         "REQ-MEM-001"
       ],
       "checkpoint": "CP30A",
-      "notes": "Physical migration exists in Git tree. CP152 proof failed only on migration consumers/environment; CP153 repairs those integration contracts."
+      "notes": "Physical Public/Private layout is UE4.27.2 engine-proven on CP153 (#622). CP154 removes the last observed static-validator historical path."
     },
     {
       "id": "REQ-WORLD-001",
@@ -3700,7 +3700,7 @@
       "target-device DX11 720p Low-Medium performance/memory/GC/tick profiling",
       "chapter-specific human PIE/pacing/visual acceptance evidence"
     ],
-    "note": "CP151 remains fully machine-green. CP152 physical Public/Private layout exposed validator path drift and persistent-runner stale-file contamination; CP153 repairs both without gameplay changes. W01 remains frozen pending exact-head proof and remaining acceptance evidence.",
+    "note": "Public/Private migration is engine-proven on CP153 via Unreal #622 and Warehouse #203; static proof is blocked only by the final PG-116 historical path constructor fixed in CP154. W01 remains frozen until exact-head proof and remaining W00 acceptance evidence.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -4097,24 +4097,23 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-24",
-    "reason": "CP152 physically moved all runtime files correctly, but two migration-environment consumers still assumed the flat tree: static validators read old paths and the persistent self-hosted Unreal worktree retained old now-untracked source files after git reset.",
-    "exact_reviewed_head": "9acc72b16e058a422428389fcefeb9af12fa0e98",
+    "reason": "CP153 proved the physical Public/Private layout in UE4.27.2 (#622) and solved persistent-runner stale-file contamination. Pre #787 reduced the static failure family to one remaining PG-116 direct path constructor.",
+    "exact_reviewed_head": "b7ad48fc927c522dcb5f4a386cde561360739278",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#786 FAILURE path-drift family",
-      "unreal": "#621 FAILURE UHT duplicate stale-header family",
-      "warehouse": "#202 SUCCESS"
+      "pre_unreal": "#787 FAILURE only PG-116 StoryPresentationDirector migrated-path lookup",
+      "unreal": "#622 SUCCESS",
+      "warehouse": "#203 SUCCESS"
     },
     "reconciled_findings": [
-      "Git tree itself contains zero flat runtime .h/.cpp files; 32 public headers and 30 private sources are present at mapped targets.",
-      "Pre #786 failures cascade from missing historical flat reads, not from loss of the guarded gameplay invariants.",
-      "Unreal #621 duplicate headers came from persistent untracked leftovers, not duplicate tracked blobs.",
-      "The repair keeps source-layout authority in SourceArchitecturePlan and removes only obsolete mapped paths after proving each target exists."
+      "The source-layout cleanup step passed and Unreal #622 compiled/imported/ran the migrated module successfully.",
+      "Pre #787 no longer shows the 232-error migration cascade; only the two StoryPresentationDirector path variables remained historical.",
+      "PG-155 is strengthened from a read-call pattern to any direct flat runtime Path construction, preventing another hidden holdout."
     ],
-    "next_priority": "W00_CP153_PROVE_PUBLIC_PRIVATE_MIGRATION_THEN_CLOSE_ROOT_CODE_FIXES",
-    "truth_boundary": "CP151 remains last fully machine-green baseline. CP152 physical tree is structurally migrated but failed static/UHT integration. CP153 is not certified until fresh exact-head Pre-Unreal and Unreal pass.",
+    "next_priority": "W00_CP154_FINAL_PUBLIC_PRIVATE_STATIC_PROOF_THEN_CLOSE_ROOT_CORRECTIONS",
+    "truth_boundary": "b7ad48fc is COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED and Warehouse-green, but not STATIC-VALIDATED because Pre #787 failed PG-116 path lookup. CP154 remains pending fresh exact-head proof.",
     "stabilization_wave": {
-      "status": "MIGRATION_TOOLING_ROOT_CAUSES_REPAIRED_PENDING_PROOF",
-      "invariant": "No gameplay patch; validators and persistent runner must consume the same architecture-owned physical source layout."
+      "status": "FINAL_OBSERVED_MIGRATION_STATIC_PATH_REPAIRED_PENDING_PROOF",
+      "invariant": "No direct historical flat runtime path constructors in Pre-Unreal; physical migration remains gameplay-neutral."
     }
   },
   "development_mode": {
@@ -4179,33 +4178,30 @@
     "Run target-device DX11 720p Low-Medium profiling and chapter-specific human PIE/pacing/visual checks before W00 closure."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-153",
+    "checkpoint_id": "CP-W00-154",
     "source_head": "92f6d3aaad79f33eaf2385de292e6886d2c1b5da",
     "branch": "integration/comprehensive-foundation-v1",
     "pull_request": 67,
     "verified": {
       "last_full_machine_green": "92f6d3aa: Pre #785 SUCCESS + Unreal #620 SUCCESS + Warehouse #201 SUCCESS",
-      "cp152_static": "9acc72b1: Pre #786 FAILURE from historical flat validator file accesses after physical migration",
-      "cp152_engine": "9acc72b1: Unreal #621 FAILURE in UHT from stale untracked flat headers retained by persistent self-hosted workspace",
-      "cp152_warehouse": "9acc72b1: Warehouse #202 SUCCESS (no staging-required delta)"
+      "cp153_static": "b7ad48fc: Pre #787 CORE VALIDATION PASSED then failed only PG-116 StoryPresentationDirector historical path access",
+      "cp153_engine": "b7ad48fc: Unreal #622 SUCCESS including migrated-layout preparation, C++ build/import, Automation, startup and full headless runtime suite",
+      "cp153_warehouse": "b7ad48fc: Warehouse #203 SUCCESS (no staging-required delta)"
     },
     "exact_head_scope": [
-      "CP151 full Pre-Unreal chain",
-      "UE4.27.2 compile/import",
-      "Automation QA",
-      "startup",
-      "P1C01-P1C08",
-      "state/transition/fault/pending/persistence-edge audits",
-      "warning-debt guard"
+      "CP151 full machine-green baseline",
+      "CP153 engine proof of physical Public/Private layout",
+      "CP153 Warehouse no-delta proof"
     ],
-    "active_wave": "CP-W00-153 closes the two migration-tooling failure families without changing gameplay: migration-aware validator source ownership plus bounded cleanup of stale pre-migration files on the persistent Unreal runner.",
+    "active_wave": "CP-W00-154 removes the final observed flat-path constructor from Pre-Unreal and strengthens PG-155 to reject any future direct historical runtime path construction.",
     "next_actions": [
-      "Require fresh full Pre-Unreal on CP-W00-153, including runtime audit registry and streaming cancellation tests.",
-      "Require fresh UE4.27.2 build/runtime on the same exact head; UHT must see no duplicate legacy headers.",
-      "If both are green, close the Public/Private migration and proceed only to packaged JSON, actual audio, target-device and human acceptance evidence."
+      "Require Pre-Unreal #next to complete every static/governor/asset/readiness/deep/unit-test step on CP-W00-154.",
+      "Require exact-head UE4.27.2 validation on CP-W00-154 even though gameplay C++ blobs are unchanged.",
+      "If both are green, mark the Public/Private migration machine-accepted and stop root-code/validator corrections unless a new concrete regression appears.",
+      "Then proceed to packaged Data JSON, authored audio, target-device and human PIE/pacing/visual acceptance."
     ],
     "unverified_acceptance": [
-      "CP-W00-153 exact-head migration proof",
+      "CP-W00-154 exact-head static/engine proof",
       "packaged Data JSON runtime staging/read",
       "actual authored audio playback without -NoSound",
       "target-device profiling",
@@ -4227,20 +4223,20 @@
         }
       },
       "latest_observed": {
-        "sha": "9acc72b16e058a422428389fcefeb9af12fa0e98",
+        "sha": "b7ad48fc927c522dcb5f4a386cde561360739278",
         "pre_unreal": {
-          "sha": "9acc72b16e058a422428389fcefeb9af12fa0e98",
-          "run_id": 35927240066,
+          "sha": "b7ad48fc927c522dcb5f4a386cde561360739278",
+          "run_id": 35927672223,
           "status": "FAILURE"
         },
         "unreal": {
-          "sha": "9acc72b16e058a422428389fcefeb9af12fa0e98",
-          "run_id": 35927240063,
-          "status": "FAILURE"
+          "sha": "b7ad48fc927c522dcb5f4a386cde561360739278",
+          "run_id": 35927672189,
+          "status": "SUCCESS"
         },
         "warehouse": {
-          "sha": "9acc72b16e058a422428389fcefeb9af12fa0e98",
-          "run_id": 35927240050,
+          "sha": "b7ad48fc927c522dcb5f4a386cde561360739278",
+          "run_id": 35927672181,
           "status": "SUCCESS"
         }
       }

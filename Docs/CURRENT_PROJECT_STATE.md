@@ -1,3 +1,11 @@
+## 2026-09-24 - W00 checkpoint CP-W00-154: final observed migration static-path repair
+
+CP153 `b7ad48fc927c522dcb5f4a386cde561360739278` proved the migrated module in the engine: **Unreal #622 SUCCESS** through C++ build, production import, Automation, startup, P1C01-P1C08, state/transitions/faults/pending/persistence-edge audits and warning-debt. **Warehouse #203 SUCCESS**. The persistent-runner stale-header duplicate family is therefore closed on that head.
+
+Pre #787 reduced the static failure from the prior 232-error cascade to one concrete family: PG-116 still constructed `StoryPresentationDirector.h/.cpp` at the historical flat module root. CP154 routes both through the migration-aware resolver and strengthens PG-155 so any future direct `ROOT / Source / ShireJourney / <leaf>` runtime source construction fails immediately.
+
+Status: **ENGINE-PROVEN MIGRATION / FINAL STATIC FIX PENDING EXACT-HEAD PROOF**. No PIE/device/visual/audio/package acceptance is claimed.
+
 ## 2026-09-24 - W00 checkpoint CP-W00-153: migration-consumer and persistent-runner repair
 
 CP152 head `9acc72b16e058a422428389fcefeb9af12fa0e98` has the intended physical Git tree: zero flat runtime .h/.cpp files, 32 headers under `Public/<Domain>` and 30 implementations under `Private/<Domain>`. Warehouse #202 succeeded.

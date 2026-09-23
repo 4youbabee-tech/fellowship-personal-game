@@ -557,7 +557,7 @@
   "physical_migration": {
     "checkpoint": "CP-W00-152",
     "source_green_baseline": "92f6d3aaad79f33eaf2385de292e6886d2c1b5da",
-    "status": "MIGRATED_SOURCE_PRESENT_VALIDATOR_AND_PERSISTENT_RUNNER_COMPATIBILITY_REPAIRED_PENDING_EXACT_HEAD_PROOF",
+    "status": "ENGINE_PROVEN_CP153_STATIC_FINAL_PATH_FIX_CP154_PENDING",
     "moved_entries": 62,
     "gameplay_changes": "NONE",
     "include_strategy": "Preserve stable basename includes by exporting only the seven Public domain directories; the module root is no longer public.",
@@ -566,16 +566,22 @@
       "UE4.27.2 C++ build/import/headless runtime"
     ],
     "last_observed_failures": {
-      "head": "9acc72b16e058a422428389fcefeb9af12fa0e98",
-      "pre_unreal": "#786 FAILURE: historical flat runtime file reads produced cascading false invariant failures",
-      "unreal": "#621 FAILURE in UnrealHeaderTool: persistent self-hosted workspace retained obsolete untracked flat headers, causing duplicate leaf header names",
-      "warehouse": "#202 SUCCESS: no warehouse staging-required delta"
+      "head": "b7ad48fc927c522dcb5f4a386cde561360739278",
+      "pre_unreal": "#787 FAILURE only PG-116 StoryPresentationDirector historical flat path construction; core validation otherwise reached completion point",
+      "unreal": "#622 SUCCESS: persistent-layout preparation succeeded, UE4.27.2 compile/import/Automation/startup/chapter/state/transition/fault/pending/persistence-edge/warning-debt all passed",
+      "warehouse": "#203 SUCCESS: no staging-required delta"
     },
     "repair": {
       "checkpoint": "CP-W00-153",
       "validator": "Pre-Unreal runtime source reads now resolve the migrated tree; runtime evidence anchor registry points to physical Private paths; streaming contract tests use recursive source resolution.",
       "runner": "Unreal workflow runs prepare_runtime_source_layout.ps1 after exact checkout to remove only stale architecture-mapped legacy files whose migrated targets exist.",
       "gameplay_changes": "NONE"
+    },
+    "repair_final_static": {
+      "checkpoint": "CP-W00-154",
+      "fix": "PG-116 resolves StoryPresentationDirector header/cpp through migrated source lookup; PG-155 now rejects any direct historical ROOT/Source/ShireJourney/<leaf> path construction.",
+      "gameplay_changes": "NONE",
+      "required_proof": "fresh full Pre-Unreal plus exact-head Unreal validation"
     }
   }
 }

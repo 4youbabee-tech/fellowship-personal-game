@@ -599,3 +599,14 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Contract:** validator file access resolves the active migrated source tree; centralized runtime evidence anchors name the physical migrated files. Before Unreal verification/build, the persistent runner reads `SourceArchitecturePlan.json` and removes only an obsolete `current_path` whose entry is `MIGRATED` and whose `target_path` exists. No broad `git clean` is allowed.
 
 **Proof boundary:** these are migration-integration repairs only. Fresh full Pre-Unreal and UE4.27.2 evidence are required before the Public/Private migration is accepted.
+
+### PG-156 — No hidden direct flat runtime Path constructors after migration
+**Symptom exposed by:** Pre #787 on `b7ad48fc927c522dcb5f4a386cde561360739278`.
+
+**Evidence:** migration-aware reads and the persistent-runner cleanup worked; Unreal #622 passed the full engine/headless suite. Pre #787 then reported only PG-116 because `StoryPresentationDirector.h/.cpp` were still constructed at the historical module root before `.exists()` and read checks.
+
+**Contract:** after `PUBLIC_PRIVATE_BY_DOMAIN`, Pre-Unreal may not construct any runtime .h/.cpp/.cs path as `ROOT / "Source" / "ShireJourney" / "<leaf>"`. Runtime source access must use the migration-aware resolver or an authoritative physical target path.
+
+**Guard:** PG-155 now scans for any direct historical flat runtime Path construction, not only `read(...)` calls.
+
+**Proof boundary:** CP154 changes validator/source-path integration only; fresh exact-head static and engine evidence are still required.
