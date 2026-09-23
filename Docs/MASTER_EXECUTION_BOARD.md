@@ -4,15 +4,17 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 ## Current control point
 
-- PR: #53
-- Baseline before this consolidation: `9dd82c7b2be42a8182fd7c4eaef70e1e06cff96b`
-- Baseline Pre-Unreal: **SUCCESS #361**
-- Baseline Unreal Build Validation: **PENDING #196** when this roadmap was created
-- Merge rule: never merge a red or untested exact head into `develop`.
-- Product rule: film scenario first; game systems expand around verified film anchors.
+- PR: #67
+- Branch: `integration/comprehensive-foundation-v1`
+- Active lane: **W00_ARCHITECTURAL_STABILIZATION**
+- Exact machine-green parent: `96398e7cc48277324113c7879a8d28e3b659757e`
+- Pre-Unreal: **SUCCESS #781**
+- Unreal Build Validation: **SUCCESS #616**
+- Warehouse Stage: **SUCCESS #197**; no staging-required delta, so heavy provider stages were correctly skipped.
+- Merge rule: never merge a red or untested exact candidate head into `develop`.
+- Freeze rule: B1/B2/B3 are backlog only while W00 blocks major expansion.
 - Performance rule: Windows / DX11 / 720p Low-Medium / 30 FPS floor.
-- Current B1 runtime wave: **CHRONICLE_BROWSING_AND_KNOWLEDGE_PRESENTATION_V5** — source-grounded Chronicle labels, explicit entry browsing, readable map-region context, and PG-085 regression protection.
-- Current B2 mega wave: **PART1_SOURCE_GROUNDED_PRODUCTION_MEGA_V1** — source atlas, truthful readiness gate, full-cast/threat inventory, nine-region production, and automated readiness audit.
+- Acceptance boundary: parent is static/compile/headless-runtime proven only; PIE/device/audio/visual/pacing acceptance remains open.
 
 ## Execution order
 
@@ -51,8 +53,9 @@ PG-078 compares the Governor against the master roadmap on every Pre-Unreal run.
 
 ## Immediate large actions
 
-- Finish the exact-head UE4.27 validation/repair loop.
-- Complete Part I film/gameplay gaps and the lightweight modern-game/player-life layer.
-- Start production-character waves: Frodo/Gandalf -> Sam/Merry/Pippin -> Aragorn/Boromir/Legolas/Gimli -> remaining named cast/enemies/crowds.
-- Start cinematic world waves: Shire/Bree/Rivendell first, then Weathertop/Caradhras/Moria/Lothlorien/Anduin/Isengard.
-- Continue offline NPC/dialogue/presentation work behind source-knowledge and performance guards.
+- Validate packaged runtime Data JSON staging/read behavior.
+- Validate actual authored audio-bank presence/playback without `-NoSound`.
+- Perform isolated Public/Private runtime-source migration without gameplay redesign, then re-run exact-head Pre-Unreal and UE4.27.2 validation.
+- Run target-device DX11/720p Low-Medium profiling and chapter-specific human PIE/pacing/visual checks.
+- Only after those W00 exits may the Governor unfreeze B1/B2/B3 and open W01.
+

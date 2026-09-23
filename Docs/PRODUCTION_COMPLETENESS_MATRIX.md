@@ -1,3 +1,9 @@
+## 2026-09-23 - W00 CP-W00-148 governor execution-truth hardening
+
+Exact parent `96398e7cc48277324113c7879a8d28e3b659757e` passed Pre-Unreal #781, Warehouse #197 and Unreal #616. This promotes that **parent only** to STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED for the exercised machine suite; it does not promote PIE, device, audio playback, pacing or visual acceptance.
+
+The follow-up audit found stale management surfaces contradicting the active W00 freeze. CP-W00-148 centralizes executable-vs-frozen bundles in ProjectGovernor, reconciles branch/PR metadata and makes the Governor print current execution directives before backlog memory. No production percentage is increased. The governance child is **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**.
+
 ## 2026-09-23 - W00 CP-W00-147 preflight-vs-rollback semantics
 
 Pre #780 was a qualifier false positive in PG-136: nested `TargetExisting->CurrentChapterId` sanitation was mistaken for authoritative quest identity mutation. Unreal #614 separately showed the P1C99 request is now rejected before transaction publication; the old audit incorrectly demanded a rollback revision bump for a transaction that never began. CP-W00-147 makes source-order guards qualifier-aware and splits fault evidence into preflight rejection with revision unchanged versus real async streaming rollback with revision advanced. No production-completeness percentage is increased. Status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**.

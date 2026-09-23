@@ -3,15 +3,16 @@
 These rules are mandatory project discipline, not optional advice.
 
 ## Gate 0 — Branch safety
-- work on `develop`,
-- do not develop directly on `main`,
-- inspect current `develop` head before editing,
+- `develop` is the integration baseline; `main` is the stable release branch,
+- implement on a short-lived single-purpose candidate branch/PR targeting `develop` (or the one Governor-approved integration train),
+- inspect both the current `develop` baseline and exact candidate HEAD before editing,
+- do not use direct `develop` commits as the normal production workflow,
 - do not merge/release only because static CI is green.
 
 ## Gate 1 — Static validation
 Every implementation change must:
-- push to `develop`,
-- pass Pre-Unreal Validation,
+- push the exact candidate HEAD to its branch/PR targeting `develop`,
+- pass Pre-Unreal Validation on that exact HEAD,
 - fix every error before moving forward.
 
 Static validation can check repository invariants. It cannot replace Unreal.

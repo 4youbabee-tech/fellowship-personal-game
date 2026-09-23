@@ -102,29 +102,29 @@ Each worker:
 
 The Governor is the project lead / traffic controller.
 
+## Active-gate execution control
+
+The Governor does not treat every `ACTIVE` backlog item as permission to execute it.
+
+`execution_control` defines the one active development lane, the bundles allowed now, frozen backlog bundles and the concrete next actions for the current gate. An owner-directed stabilization freeze overrides generic unrelated-production work.
+
+`Scripts/project_governor.py` cross-checks execution control, current focus, development mode, handoff branch/PR metadata and supporting management docs so those surfaces cannot silently drift apart.
+
 ## Reminder / pacing behavior
 
-Every Pre-Unreal validation run now prints a **PROJECT GOVERNOR WORK REMINDER**:
-- the active hard gate,
-- whether it blocks major feature expansion,
-- every unfinished CRITICAL/HIGH requirement,
-- the first recorded missing-work item for each.
+Every Pre-Unreal run prints **PROJECT GOVERNOR EXECUTION DIRECTIVE** first: active gate/lane, allowed bundles, frozen bundles and concrete next actions.
 
-This is the repository-level reminder the user requested after the lost chat. It works whenever project validation/work review runs; it is not an autonomous phone notification.
+It then prints **BACKLOG MEMORY (NOT EXECUTION ORDER)** for unfinished CRITICAL/HIGH requirements. This preserves commitments without making frozen backlog look executable.
 
-`Data/PlayerExperiencePacingPlan.json` defines the chapter-by-chapter human review contract for boredom, repetition, waiting, clarity, discovery and story/combat/dialogue rhythm. CI may validate that the review contract exists, but only actual human play can mark PACING accepted.
+`Data/PlayerExperiencePacingPlan.json` remains the human review contract for boredom, repetition, waiting, clarity, discovery and story/combat/dialogue rhythm. CI may validate the contract exists; only human play may accept PACING.
 
 ## Current rule
 
-The current functional hard gate remains open:
-- Shire functional traversal,
-- F9 save/load round-trip,
-- F8 Frodo/Gandalf round-trip,
-- P1C02-P1C08 chapter smoke tests,
-- target-laptop traversal/performance observation,
-- human pacing/clarity observations where applicable.
+The active lane is **W00_ARCHITECTURAL_STABILIZATION** under `ARCHITECTURAL_STABILIZATION_GATE`.
 
-Major feature expansion remains blocked until the recorded gate is healthy.
+Exact parent `96398e7cc48277324113c7879a8d28e3b659757e` passed Pre-Unreal #781, Warehouse #197 and Unreal #616. That proves static/compile/import/headless-runtime behavior for the exercised suite, including CP-W00-147 fault semantics. It does **not** prove rendered PIE, target-device performance, audio playback, pacing or visual acceptance.
+
+B1/B2/B3 stay frozen. W00 next closes packaged Data JSON execution, real audio playback, isolated Public/Private migration, target-device profiling and chapter-specific human acceptance before W01 may open.
 
 ## Important limitation
 

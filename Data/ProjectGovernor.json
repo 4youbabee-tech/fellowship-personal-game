@@ -2684,16 +2684,15 @@
         "CP-W00-146 introduces Scripts/source_contracts.py and regression tests so transition-order guards inspect protected member assignments structurally and remain valid when canonical target aliases change RHS spelling.",
         "Pre #780 proved the first structural helper still overmatched nested route-progress writes: TargetExisting->CurrentChapterId appeared before the transition signal although authoritative subsystem identity did not mutate.",
         "Unreal #614 proved the new identity preflight correctly rejects P1C99 before world-transition publication; the old unsupported-request rollback expectation was therefore stale.",
-        "CP-W00-147 separates invalid-request preflight evidence (revision unchanged) from real forced streaming-failure rollback evidence (revision advanced), and updates Pre-Unreal + DeepProjectAudit to share qualifier-aware structural mutation semantics."
+        "CP-W00-147 separates invalid-request preflight evidence (revision unchanged) from real forced streaming-failure rollback evidence (revision advanced), and updates Pre-Unreal + DeepProjectAudit to share qualifier-aware structural mutation semantics.",
+        "Exact head 96398e7cc48277324113c7879a8d28e3b659757e passed Pre-Unreal #781, Warehouse #197 and Unreal #616, including CP-W00-147 preflight-vs-rollback semantics and real queued AsyncSaveGame persistence-edge coverage."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal + Warehouse + UE4.27 proof for CP-W00-147 preflight-vs-rollback semantics repair.",
-        "Exercise a real queued AsyncSaveGame write completion across a committed-world revision; PG-140 currently proves the stale callback guard deterministically, not the full disk race.",
-        "Exercise immutable queued checkpoint completion across a real world revision.",
-        "Reject or canonicalize malformed route/chapter/episode save identities before world commit.",
+        "Prove CP-W00-148 with fresh exact-head Pre-Unreal and UE4.27.2 validation.",
         "Validate packaged Data JSON staging/read behavior.",
-        "Validate actual authored audio bank presence/playback without -NoSound; current audio runtime routing exists but final production packages remain absent.",
-        "Run target-device performance/memory/GC/tick profiling and human play gates before W00 final closure."
+        "Validate actual authored audio-bank presence/playback without -NoSound.",
+        "Perform isolated Public/Private runtime-source migration without gameplay redesign and re-prove UE4.27.2 compile/runtime.",
+        "Run target-device profiling and human PIE/pacing/visual gates before W00 closure."
       ],
       "acceptance_criteria": [
         "No known CRITICAL/HIGH source defect remains uncorrected or explicitly evidence-bounded.",
@@ -3692,11 +3691,15 @@
       "fresh exact-head Pre-Unreal including deep + asset + governor audits",
       "real UE4.27.2 C++ compile and deterministic production import",
       "non-fail-fast startup + P1C01-P1C08 runtime sweep",
-      "state + continuous transition + isolated disk-save roundtrip",
+      "state + continuous transition + isolated disk-save and persistence-edge roundtrip",
       "warning-debt/material persistence gate",
-      "target-device follow-up before visual/performance acceptance"
+      "packaged runtime Data JSON staging/read validation",
+      "actual authored audio-bank presence/playback without -NoSound",
+      "isolated Public/Private runtime-source migration followed by exact-head UE4.27.2 recompile/runtime validation",
+      "target-device DX11 720p Low-Medium performance/memory/GC/tick profiling",
+      "chapter-specific human PIE/pacing/visual acceptance evidence"
     ],
-    "note": "W00 remains open. Root-cause source repairs continue; W01 stays blocked until exact-head technical gates and later device/human evidence pass.",
+    "note": "W00 remains PARTIAL. CP-W00-147 is machine-green on exact head 96398e7, but packaged runtime, real audio, Public/Private migration, target-device and human acceptance remain open. W01 stays blocked.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -3709,17 +3712,15 @@
       ],
       "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
+    "last_green_head": "96398e7cc48277324113c7879a8d28e3b659757e",
     "evidence": {
-      "last_engine_proven_head": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
-      "pre_unreal": "#778 SUCCESS on exact head 3ea40ce1d68b6d5b961ed56a00117a75528e833e.",
-      "unreal_build": "#613 SUCCESS on the same exact head.",
-      "warehouse_parent": "#195 SUCCESS on 333cbd0dd51d82215d4b9cc94793be507299f349 after the warehouse execution-policy/network resilience changes.",
-      "latest_static": "#780 FAILURE on 6944cc0f84957842ff0a1f0ba1f53a7ea288e7fa: PG-136 StartExperience false positive caused by treating TargetExisting->CurrentChapterId as authoritative subsystem mutation.",
-      "latest_runtime": "#614 FAILURE on 333cbd0dd51d82215d4b9cc94793be507299f349: invalid P1C99 was correctly rejected before transaction, but the old fault audit still expected rollback/revision advancement.",
-      "current_runtime": "#615 was still in progress on 6944cc0 at reconciliation time."
+      "last_engine_proven_head": "96398e7cc48277324113c7879a8d28e3b659757e",
+      "pre_unreal": "#781 SUCCESS on exact head 96398e7cc48277324113c7879a8d28e3b659757e.",
+      "unreal_build": "#616 SUCCESS on the same exact head: UE4.27.2 compile/import, Automation 2/2, startup, P1C01-P1C08, state, transitions, corrected fault semantics, delayed pending authority, persistence edges and warning-debt guard passed.",
+      "warehouse": "#197 SUCCESS on the same exact head; current-delta detection concluded staging was not required, so provider stages were skipped by design.",
+      "prior_failure_family": "#615 on 6944cc0 failed the obsolete preflight-as-rollback expectation; #616 proves the corrected invalid-preflight versus entered-transaction rollback split."
     },
-    "evidence_scope": "3ea40ce1 remains the last exact head with both Pre-Unreal and Unreal SUCCESS. CP-W00-147 repairs two stale-test families exposed by #780/#614: qualified nested-field false positives in transition-order validation, and an obsolete rollback expectation for invalid requests now rejected before transaction publication.",
+    "evidence_scope": "96398e7 is STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED for the exercised machine suite. It is not PIE-TESTED, DEVICE-TESTED or VISUALLY-ACCEPTED.",
     "current_owner_observation": {
       "sha": "4879a19999951354676341f032c358ac98679c44",
       "pre_unreal": {
@@ -4095,43 +4096,39 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "The latest reds are not one unresolved gameplay bug. They are two stale validation assumptions created by the stronger identity preflight. Pre #780 treated TargetExisting->CurrentChapterId route-progress sanitation as if it were authoritative CurrentChapterId mutation before transition intent. Unreal #614 showed P1C99 is now correctly rejected inside StartChapter before OnWorldTransitionRequested; the legacy fault audit still demanded rollback and revision advancement even though no transaction began.",
-    "exact_reviewed_head": "6944cc0f84957842ff0a1f0ba1f53a7ea288e7fa",
+    "reason": "CP-W00-147 is machine-green; the next root-cause family is governance drift between the active W00 freeze and stale branch/mode/execution surfaces.",
+    "exact_reviewed_head": "96398e7cc48277324113c7879a8d28e3b659757e",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#780 FAILURE: PG-136 StartExperience must publish transition intent before logical route mutation",
-      "pre_source_fact": "StartExperience broadcasts before bare CurrentRouteId/CurrentChapterId/CurrentEpisodeId/PlayableCharacterId mutation; only TargetExisting-> fields occur earlier.",
-      "unreal_previous": "#614 FAILURE: ShireExperienceIdentity rejected P1C99, then legacy ShireRollbackAudit failed only revisionAdvanced=no; startup/chapters/state/transitions were already green.",
-      "warehouse_previous": "#195 SUCCESS",
-      "unreal_current": "#615 IN_PROGRESS when CP-W00-147 was prepared"
+      "pre_unreal": "#781 SUCCESS",
+      "unreal": "#616 SUCCESS",
+      "warehouse": "#197 SUCCESS"
     },
     "reconciled_findings": [
-      "Do not increment world revision for a request rejected before transaction publication. That would manufacture a world commit/rollback that never happened.",
-      "Invalid direct destinations now have the correct invariant: identity/state/context unchanged, movement released, and world revision unchanged.",
-      "Real rollback remains separately exercised by the forced P1C02 valid-bank async failure; that path must restore the origin and advance the world revision.",
-      "Static ordering helpers now ignore qualified writes through other objects (for example TargetExisting->CurrentChapterId) while still counting bare or this-> authoritative member assignments.",
-      "DeepProjectAudit and Pre-Unreal now share the same structural source-order semantics so the validator family cannot drift again."
+      "branch_workflow still named production/chapter-streaming-v5 and PR #61 while the live integration train is PR #67.",
+      "development_mode and immediate_next_large_actions still encouraged visual/warehouse/content expansion despite the explicit W00 freeze.",
+      "MASTER_EXECUTION_BOARD still described PR #53, and DEVELOPMENT_GATES still instructed work/push directly on develop.",
+      "CURRENT_PROJECT_STATE ranked itself ahead of ProjectGovernor despite the sole-authority rule.",
+      "The Governor reminder surfaced every HIGH/CRITICAL backlog item without distinguishing executable work from frozen backlog."
     ],
-    "next_priority": "W00_CP147_PREFLIGHT_VS_ROLLBACK_SEMANTICS_EXACT_HEAD_GREEN",
-    "truth_boundary": "CP-W00-147 is SOURCE-REPAIRED only until fresh exact-head machine runs pass. No new COMPILE-TESTED/HEADLESS-RUNTIME-VALIDATED claim is made for the candidate. No PIE/device/visual/performance/audio-playback acceptance is inferred.",
+    "next_priority": "W00_CP148_GOVERNOR_EXECUTION_TRUTH_THEN_PACKAGED_AUDIO_SOURCE_LAYOUT_DEVICE_HUMAN_CLOSURE",
+    "truth_boundary": "96398e7 is proven STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED. CP-W00-148 itself remains unproven until fresh exact-head validation.",
     "stabilization_wave": {
-      "status": "ROOT_CAUSE_TEST_SEMANTICS_REPAIRED_PENDING_EXACT_HEAD_PROOF",
-      "invariant": "Rejected-before-transaction requests do not advance revision; only entered transactions rollback. Static mutation guards track authoritative subsystem fields, not similarly named nested snapshot/progress fields."
+      "status": "GOVERNANCE_DRIFT_REPAIRED_PENDING_EXACT_HEAD_PROOF",
+      "invariant": "One Governor decides the active lane; supporting docs and reminders cannot make frozen backlog look executable."
     }
   },
   "development_mode": {
-    "id": "VISUAL_PRODUCTION_FIRST",
+    "id": "W00_ARCHITECTURAL_STABILIZATION",
     "status": "ACTIVE",
-    "entered_on": "2026-09-19",
-    "supersedes": "BUILD_FIRST_BATCH_MODE",
-    "reason": "Post-CP54 verification was explicitly confirmed complete by the project owner; construction now returns to visible world/character/activity expansion.",
+    "entered_on": "2026-09-23",
+    "supersedes": "VISUAL_PRODUCTION_FIRST_TEMPORARILY_SUSPENDED",
+    "reason": "Owner froze W01 and new production expansion until systemic architecture/evidence/governance stabilization is closed.",
     "rules": [
-      "Build substantial visible world, activity, character and presentation batches rather than tiny isolated changes.",
-      "Preserve film-story chronology, save/route integrity and the 720p Low-Medium target-device budget.",
-      "Run Pre-Unreal and real UE4.27.2 compile/import validation for every major merged batch.",
-      "Use headless startup and P1C01-P1C08 chapter audits as regression guards, not substitutes for human review.",
-      "PIE/device/visual/performance evidence must remain explicit; do not invent FPS, memory or visual acceptance details that were not actually observed.",
-      "Prefer extending proven systems over introducing parallel subsystems.",
-      "Keep final skeletal rigs, final voice/audio, weather VFX and material upgrades clearly separated from placeholder/procedural implementations until actually delivered."
+      "Fix root causes and shared contracts rather than chapter-specific patches.",
+      "Only B0 exact-head stability, B4 performance/QA and continuous-control work may execute while the freeze is active.",
+      "Do not broaden warehouse saturation, gameplay features, world regions, character production or living-world content during W00.",
+      "Machine/headless success never substitutes for PIE, target-device, pacing or visual acceptance.",
+      "Public/Private migration is an isolated architecture step and must not carry gameplay redesign."
     ]
   },
   "backend_completion": {
@@ -4155,39 +4152,31 @@
   "current_focus": {
     "production_lane": "W00_ARCHITECTURAL_STABILIZATION",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "No new gameplay feature, region runtime expansion or broad warehouse saturation until REQ-STABILITY-001 exact-head gates pass. Continue root-cause repair, regression guards, persistence/transition closure, validation, and later isolated Public/Private migration only.",
-    "character_visibility_bridge": "FIRST_PROVEN_RIGGED_HUMANOID_AND_ENEMY_STOCK_TO_P1C01_AFTER_ENGINE_GATE",
-    "character_visibility_rule": "Warehouse growth must feed visible character progress: validate staged FBX rigs now, then import and replace proxies in Shire as soon as UE4.27 build/import is available.",
-    "pre_runner_final_warehouse_batch": {
-      "status": "STAGED_AND_AUDITED_WAREHOUSE_99",
-      "scope": [
-        "KAYKIT_RESTAURANT_BITS_1_0",
-        "KAYKIT_HALLOWEEN_BITS_1_0",
-        "KAYKIT_CITY_BUILDER_BITS_1_0"
-      ],
-      "next_priority": "W00_RUNNER_AND_EXACT_HEAD_UNLOCK",
-      "rule": "After this batch, stop broad sourcing expansion and focus on repairing the UE4.27 Engine Content ACL runner blocker. Continue only source-safe bookkeeping/audit work that does not defer the runner repair.",
-      "evidence": "Warehouse Stage #99 SUCCESS; inventory payloadFiles=240 bytes=3816657674 receipts=8 receiptRecords=278 duplicateGroups=22; total footprint files=249 bytes=3816866382."
-    }
+    "rule": "W01 and broad gameplay/content/warehouse expansion are frozen until W00 exit criteria close. Execute root-cause repair, regression protection, packaged-runtime proof, real audio proof, isolated Public/Private migration, target-device profiling and human acceptance only.",
+    "machine_baseline": {
+      "sha": "96398e7cc48277324113c7879a8d28e3b659757e",
+      "pre_unreal": "#781 SUCCESS",
+      "unreal": "#616 SUCCESS",
+      "warehouse": "#197 SUCCESS",
+      "scope": "Exact parent passed static/deep/governor validation, UE4.27.2 compile/import, Automation 2/2, startup, P1C01-P1C08, state/transition/fault/pending/persistence-edge audits and warning-debt guard. Warehouse detected no staging-required delta."
+    },
+    "w01_freeze": "ACTIVE_UNTIL_W00_EXIT_CRITERIA"
   },
   "immediate_next_large_actions": [
-    "Drive Data/CompletionWaveMapV1.json from W00 through W11; close waves only on their exit criteria and keep the planning percentage separate from evidence status.",
-    "Keep exact-head integration/static/engine gates honest; repair demonstrated regressions without reopening settled architecture.",
-    "Run WORK-PROD-011 continuously: fill the trilogy warehouse with real candidates/project-owned production assets by category, recording provenance/status per item.",
-    "Assemble P1C01 as the first complete natural-looking slice: skeletal Frodo/Gandalf/Sam, Shire architecture/terrain/vegetation/props/fauna, dense authored audio, animation and lighting.",
-    "Build reusable F2/F3 culture/location/character/creature kits in the warehouse without opening gated runtime chapters early.",
-    "After the P1C01 production pipeline is proven, mass-apply the same rig/material/world/audio/LOD conventions chapter-by-chapter."
+    "Validate packaged runtime Data JSON staging/read behavior rather than relying only on RuntimeDependencies parity.",
+    "Validate actual authored audio-bank presence and playback without -NoSound.",
+    "Perform the isolated Public/Private runtime-source migration with no gameplay redesign, then rerun exact-head Pre-Unreal and UE4.27.2 build/runtime validation.",
+    "Run target-device DX11 720p Low-Medium profiling and chapter-specific human PIE/pacing/visual checks before W00 closure."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-147",
-    "source_head": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
+    "checkpoint_id": "CP-W00-148",
+    "source_head": "96398e7cc48277324113c7879a8d28e3b659757e",
     "branch": "integration/comprehensive-foundation-v1",
     "pull_request": 67,
     "verified": {
-      "last_green": "3ea40ce1: Pre #778 SUCCESS + Unreal #613 SUCCESS",
-      "current_static": "6944cc0: Pre #780 FAILURE on PG-136 qualified-field false positive",
-      "prior_runtime": "333cbd0d: Unreal #614 FAILURE in fault audit after correct preflight rejection",
-      "warehouse": "333cbd0d: Warehouse #195 SUCCESS"
+      "last_green": "96398e7: Pre #781 SUCCESS + Unreal #616 SUCCESS",
+      "warehouse": "96398e7: Warehouse #197 SUCCESS (no staging-required delta)",
+      "cp147_fault_semantics": "Unreal #616 fault mode passed invalid preflight rejection with revision unchanged and separate forced valid-bank async rollback evidence."
     },
     "exact_head_scope": [
       "UE4.27.2 C++ compile",
@@ -4197,51 +4186,52 @@
       "P1C01-P1C08",
       "state/disk roundtrip",
       "continuous transitions",
-      "rollback + forced streaming failure",
+      "invalid-request preflight rejection",
+      "forced streaming-failure rollback",
       "delayed pending authority",
+      "real queued AsyncSaveGame cross-revision persistence edge",
       "project warning-debt categories"
     ],
-    "active_wave": "PG-150/151 stale-test semantics: distinguish authoritative subsystem mutation from nested route-progress writes; distinguish preflight invalid-request rejection from real rollback",
+    "active_wave": "PG-150 governor execution-truth hardening: make the active W00 lane executable and keep frozen backlog from masquerading as current work.",
     "next_actions": [
-      "Run fresh Pre-Unreal and require the source-contract qualifier regressions plus DeepProjectAudit to pass.",
-      "Run fresh Unreal and require fault mode to prove invalid P1C99 is rejected before transaction with revision unchanged, then separately prove real valid-bank async failure rolls back with revision advancement.",
-      "Require the expanded identity/persistence-edge evidence from CP-W00-145 to run on the same exact head.",
-      "Keep W01 blocked; after machine-green stabilization continue packaged runtime, audio, target-device, human acceptance and isolated Public/Private migration."
+      "Validate packaged runtime Data JSON staging/read behavior rather than relying only on RuntimeDependencies parity.",
+      "Validate actual authored audio-bank presence and playback without -NoSound.",
+      "Perform the isolated Public/Private runtime-source migration with no gameplay redesign, then rerun exact-head Pre-Unreal and UE4.27.2 build/runtime validation.",
+      "Run target-device DX11 720p Low-Medium profiling and chapter-specific human PIE/pacing/visual checks before W00 closure."
     ],
     "unverified_acceptance": [
-      "PIE/rendered traversal acceptance",
-      "target-device FPS/frame-time/GC/RAM/VRAM profiling",
+      "packaged Data JSON staging/read behavior",
       "actual audio playback without -NoSound",
-      "real queued AsyncSaveGame write completion across a world revision",
-      "packaged Data JSON staging/read",
-      "human core-loop/onboarding/external playtest"
+      "isolated Public/Private runtime-source migration on a fresh exact head",
+      "target-device FPS/frame-time/GC/RAM/VRAM profiling",
+      "PIE/rendered traversal, chapter-specific pacing/visual review and human core-loop/onboarding playtest"
     ],
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
+        "sha": "96398e7cc48277324113c7879a8d28e3b659757e",
         "pre_unreal": {
-          "sha": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
-          "run_id": 35903307038,
+          "sha": "96398e7cc48277324113c7879a8d28e3b659757e",
+          "run_id": 35913774272,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
-          "run_id": 35903307018,
+          "sha": "96398e7cc48277324113c7879a8d28e3b659757e",
+          "run_id": 35913774304,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "6944cc0f84957842ff0a1f0ba1f53a7ea288e7fa",
+        "sha": "96398e7cc48277324113c7879a8d28e3b659757e",
         "pre_unreal": {
-          "sha": "6944cc0f84957842ff0a1f0ba1f53a7ea288e7fa",
-          "run_id": 35912791434,
-          "status": "FAILURE"
+          "sha": "96398e7cc48277324113c7879a8d28e3b659757e",
+          "run_id": 35913774272,
+          "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "6944cc0f84957842ff0a1f0ba1f53a7ea288e7fa",
-          "run_id": 35912791433,
-          "status": "IN_PROGRESS"
+          "sha": "96398e7cc48277324113c7879a8d28e3b659757e",
+          "run_id": 35913774304,
+          "status": "SUCCESS"
         }
       }
     }
@@ -4257,11 +4247,11 @@
       "Coordinate workers and validation so they do not duplicate, overwrite or contradict one another."
     ],
     "non_blocking_policy": [
-      "A failing gate blocks acceptance, release or merging of changes that depend on the failing layer; it does not stop unrelated safe production work.",
-      "While infrastructure or CI is being repaired, workers may continue preparing isolated art, data, world dressing, tests, source-grounded plans and other changes that cannot worsen the failing layer.",
-      "Do not idle waiting for a runner when useful non-conflicting production work can continue.",
-      "Do not create artificial gates merely because work is unfinished; track unfinished work and keep building.",
-      "Only hard integrity threats such as save corruption, story-state breakage, destructive repository changes or reproducible build/runtime failure may require pausing the directly affected path."
+      "A failing gate normally quarantines acceptance, release and dependent changes rather than the whole repository.",
+      "The active stabilization freeze overrides the generic unrelated-production allowance: when active_gate blocks major expansion and execution_control freezes a bundle, that bundle must not execute.",
+      "Infrastructure waiting may be used for tests, evidence collection, documentation reconciliation and repairs only when they belong to an allowed execution bundle.",
+      "Do not broaden warehouse, world, character, gameplay or living-world production merely because a runner is idle while W00 is active.",
+      "Only the Governor may change the active lane or unfreeze B1/B2/B3 after the recorded exit criteria are satisfied."
     ]
   },
   "accepted_owner_development_ideas": [
@@ -4332,7 +4322,7 @@
   "branch_workflow": {
     "integration_branch": "develop",
     "stable_release_branch": "main",
-    "rule": "Start each new production wave from the latest green develop, keep the branch short and single-purpose, prove its exact candidate head, then merge it back to develop before starting the next wave.",
+    "rule": "Use a short-lived single-purpose candidate branch/PR targeting develop. Prove the exact candidate head, then merge to develop; direct develop commits are not the normal production workflow.",
     "no_long_lived_feature_rule": "Do not let a temporary repair/feature branch become the de-facto project trunk.",
     "historical_checkpoint_branches": [
       "cp55/activity-movement-expansion-v1",
@@ -4340,10 +4330,10 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "A historical branch may be deleted only after its meaningful content is confirmed present in develop or intentionally superseded. Diverged branches with unique commits remain preserved until audited.",
-    "current_short_branch": "production/chapter-streaming-v5",
+    "current_short_branch": "integration/comprehensive-foundation-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 61,
-    "open_pr_policy": "Do not start the post-V5 content branch until PR #61 is merged and develop is green.",
+    "current_open_pr": 67,
+    "open_pr_policy": "PR #67 is the active W00 integration train. Do not open or execute post-W00 feature/content branches until this gate is explicitly closed by the Governor.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop."
   },
   "side_branch_audit": {
@@ -5179,9 +5169,9 @@
   "integration_train": {
     "branch": "integration/comprehensive-foundation-v1",
     "baseline": "fb7afb8e39a4186245063ddf2a46fc0df8ba6c56",
-    "current_wave": "TWO_PHASE_WORLD_COMMIT_PLUS_V10_LIVING_WORLD",
-    "merge_policy": "Do not merge overlapping PRs #62-#66 independently while the integration train is active. Reconcile into this branch, prove exact head, then integrate to develop.",
-    "proof_boundary": "STATIC-PENDING on the newest code changes; no compile/PIE/device/visual claim until exact-head evidence exists."
+    "current_wave": "W00_GOVERNOR_EXECUTION_TRUTH_AND_ACCEPTANCE_CLOSURE",
+    "merge_policy": "Keep PR #67 as the active W00 integration train; do not independently merge historical branches or open post-W00 feature/content work while the stabilization gate is active.",
+    "proof_boundary": "Exact parent 96398e7 passed Pre #781, Warehouse #197 and Unreal #616. The CP-W00-148 child head requires fresh exact-head proof."
   },
   "completion_wave_map": {
     "status": "ACTIVE_PLANNING_ESTIMATE",
@@ -5222,5 +5212,33 @@
       "Scripts/deep_project_audit.py world-builder no-tick and social-scan bounds"
     ],
     "stop_rule": "A newly discovered HIGH/CRITICAL cross-system gap is repaired or explicitly quarantined before the active wave may be promoted."
+  },
+  "execution_control": {
+    "mode": "ACTIVE_GATE_FIRST",
+    "active_lane": "W00_ARCHITECTURAL_STABILIZATION",
+    "allowed_bundles": [
+      "B0_EXACT_HEAD_STABILITY",
+      "B4_PERFORMANCE_AND_QA",
+      "CONTINUOUS_CONTROL"
+    ],
+    "frozen_bundles": [
+      "B1_PART1_STORY_GAMEPLAY_COMPLETE",
+      "B2_CHARACTERS_AND_WORLD_PRODUCTION",
+      "B3_LIVING_WORLD_AND_PRESENTATION"
+    ],
+    "freeze_reason": "Owner explicitly ordered architectural stabilization and root-cause closure before W01 or broader feature/content production.",
+    "backlog_semantics": "ACTIVE backlog outside allowed_bundles remains recorded memory, not permission to execute it while the active gate blocks expansion.",
+    "completed_parent_proof": {
+      "sha": "96398e7cc48277324113c7879a8d28e3b659757e",
+      "pre_unreal_run": 781,
+      "unreal_run": 616,
+      "warehouse_run": 197
+    },
+    "next_actions": [
+      "Validate packaged runtime Data JSON staging/read behavior rather than relying only on RuntimeDependencies parity.",
+      "Validate actual authored audio-bank presence and playback without -NoSound.",
+      "Perform the isolated Public/Private runtime-source migration with no gameplay redesign, then rerun exact-head Pre-Unreal and UE4.27.2 build/runtime validation.",
+      "Run target-device DX11 720p Low-Medium profiling and chapter-specific human PIE/pacing/visual checks before W00 closure."
+    ]
   }
 }

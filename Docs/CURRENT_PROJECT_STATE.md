@@ -1,3 +1,15 @@
+## 2026-09-23 - W00 checkpoint CP-W00-148: Governor execution-truth hardening
+
+Exact parent `96398e7cc48277324113c7879a8d28e3b659757e` is **STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED**: Pre-Unreal #781 SUCCESS, Unreal #616 SUCCESS and Warehouse #197 SUCCESS. #616 passed UE4.27.2 compile/import, Automation 2/2, startup, P1C01-P1C08, state/continuous-transition/fault/pending/persistence-edge modes and warning-debt guard. #197 detected no staging-required delta and skipped heavy provider staging by design.
+
+The screenshot/log with `ShireRollbackAudit ... revisionAdvanced=no` belongs to older #615 on `6944cc0...`. #616 on the current parent passed the corrected split semantics.
+
+The next audit found governance drift, not a gameplay regression: stale PR #61/#53 metadata, `VISUAL_PRODUCTION_FIRST`, broad production actions, direct-develop workflow text and a source hierarchy that could make supporting docs/backlog look authoritative despite the W00 freeze.
+
+CP-W00-148 centralizes active-gate-first execution, explicitly freezes B1/B2/B3, reconciles PR #67/branch metadata and adds PG-150 so supporting management surfaces cannot drift silently. This child checkpoint is **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING** until fresh CI proves it.
+
+No PIE/device/visual/pacing/audio-playback acceptance is claimed and no production-completeness percentage is increased.
+
 ## 2026-09-23 - W00 checkpoint CP-W00-147: separate invalid-request preflight from real rollback
 
 Two reds were collected before this repair.
@@ -1314,25 +1326,22 @@ Runtime voice playback now resolves `/Game/Audio/Voice/<Speaker>/<VO_ID>`, plays
 
 ## Story/data source hierarchy
 
-Use all of these, with this priority for their purpose:
+Use these for their proper role. **Management authority exists only in the Governor:**
 
-1. `Docs/CURRENT_PROJECT_STATE.md` — implementation/handoff truth and current hard gate.
-2. `Data/ProjectGovernor.json` — single authority for user requirements, decisions, conflicts, active gate and region quality.
-3. `Docs/PROJECT_MEMORY_SYSTEM.md` — rules for preserving requests and decisions across lost chats/developer changes.
+1. `Data/ProjectGovernor.json` — **sole project-management authority** for requirements, priority, conflicts, active gate, execution lane and acceptance status.
+2. `Docs/CURRENT_PROJECT_STATE.md` — operational handoff/implementation summary; it follows the Governor.
+3. `Docs/PROJECT_MEMORY_SYSTEM.md` — request/decision preservation rules.
 4. `Docs/WORLD_PRODUCTION_BLUEPRINT.md` — world/chapter/checkpoint engineering map.
-5. `Docs/LIVING_WORLD_AI_BLUEPRINT.md` — living-world/NPC intelligence design authority.
-6. `Data/LivingWorldFeaturePlan.json` — machine-readable living-world implementation phases.
-7. `Docs/DEVELOPMENT_GATES.md` — process and acceptance rules.
-8. `Docs/PROJECT_GUARDIAN.md` — regression-memory model.
-9. `Docs/STORY_CANON_BIBLE.md` — film-first canon and route vision.
+5. `Docs/LIVING_WORLD_AI_BLUEPRINT.md` — living-world/NPC intelligence design reference.
+6. `Data/LivingWorldFeaturePlan.json` — machine-readable living-world implementation detail.
+7. `Docs/DEVELOPMENT_GATES.md` — process/acceptance rules subordinate to the Governor.
+8. `Docs/PROJECT_GUARDIAN.md` — regression memory.
+9. `Docs/STORY_CANON_BIBLE.md` — film-first canon/route vision.
 10. `Docs/PART1_FELLOWSHIP_MASTERPLAN.md` — Part I production plan.
-11. `Data/StoryBeatPlan.csv` — presentation beat plan.
-12. `Data/DialogueIntent.csv` — dialogue intent.
-13. `Data/MusicCuePlan.csv` — original music direction.
-14. `Data/BiomePlan.csv` — chapter terrain/vegetation/water/weather/traversal/hazard/audio/performance contract.
-15. Runtime C++ — actual implementation.
+11. Story/dialogue/music/biome/checkpoint data — authored detail contracts.
+12. Runtime C++ — actual implementation behavior.
 
-If runtime and documentation disagree, stop and reconcile them in the same change.
+If a supporting document disagrees with the Governor on management state, reconcile it in the same change. Do not invent acceptance evidence.
 
 ## Canon/content rules
 
@@ -1359,46 +1368,17 @@ Active production order:
 
 ## Exact next hard gate
 
-The current build/editor/PIE boot gate has passed. Continue with functional smoke testing in the already working build.
+The CP-W00-147 parent has passed the current static/compile/headless-runtime machine suite. **W00 is still not closed.**
 
-### Shire smoke test
-- PIE starts in Shire.
-- movement/camera/sprint/crouch/interact work.
-- HUD shows Frodo and current episode.
-- Shire quest advances.
-- ambient Hobbits walk/wait and briefly notice/face the player.
-- dialogue/alerts render.
-- F5 saves.
-- after moving, F9 restores expected player/story state.
+Execute in this order:
+1. prove CP-W00-148 with fresh Pre-Unreal and UE4.27.2 validation,
+2. validate packaged Data JSON staging/read behavior,
+3. validate actual authored audio-bank presence/playback without `-NoSound`,
+4. perform isolated `Public/` + `Private/` runtime-source migration with no gameplay redesign and re-prove compile/runtime,
+5. profile the target laptop at DX11 / 720p / Low-Medium for FPS, frame time, GC, RAM/VRAM pressure and obvious hitches,
+6. collect chapter-specific human PIE/pacing/visual observations.
 
-### Parallel-route smoke test
-- F8 switches to Gandalf / `P1G01_Isengard`.
-- Isengard/Orthanc prototype exists.
-- Gandalf can approach/interact with Saruman.
-- parallel quest can advance through prison / industry / escape.
-- F8 returns to Frodo.
-- Frodo location and story progress are preserved.
-
-### Chapter smoke test
-Use F6/F7 only as developer navigation and confirm each world builds:
-- P1C02 Bree
-- P1C03 Weathertop/Ford
-- P1C04 Rivendell
-- P1C05 road/Caradhras/West Gate
-- P1C06 Moria
-- P1C07 Lothlorien
-- P1C08 Anduin/Amon Hen
-
-This does not mean those worlds are visually finished.
-
-### Device observations
-Record:
-- crash/freeze,
-- obvious hitching,
-- severe memory pressure,
-- unplayable frame-rate drops.
-
-Target floor remains 720p / 30 FPS / Low-Medium / DX11.
+B1/B2/B3 remain frozen until the Governor records these W00 exits as satisfied. Headless CI success is not PIE/device/visual acceptance.
 
 ## Failure procedure
 

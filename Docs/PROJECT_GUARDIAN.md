@@ -535,3 +535,14 @@ Regional mood previously altered only a random seed, permitting emotionally mism
 ## Interrupted build investigation — 2026-09-19
 
 Run 35463567281 proves the source checkout repair worked. Build then received Ctrl-C and exit -1073741510; no C++ compiler error was observed. The cancellation source is not proven. Review found detached lifecycle cleanup can kill listeners after its 20-minute deadline even with workers still running. Removed scheduling of this unsafe cleanup. Repository-wide Unreal concurrency now serializes PR/develop jobs on the shared device and does not cancel active builds on new pushes. These are preventive repairs, not proof of the cancellation's cause. A fresh engine run must establish success.
+
+### PG-150 — Governor execution truth must not drift from the active gate
+**Symptom exposed by:** exact machine-green W00 parent `96398e7cc48277324113c7879a8d28e3b659757e` after Pre #781 / Unreal #616 / Warehouse #197.
+
+**Risk:** the Governor can block W01 while stale supporting fields still name an old PR/branch, old development mode, direct-develop workflow or broad production actions. A worker may then restart frozen work from the wrong surface.
+
+**Contract:** `active_gate -> execution_control -> current_focus/development_mode` is the execution order. While W00 blocks major expansion, B1/B2/B3 remain frozen backlog. `branch_workflow` must match `session_handoff`; supporting docs must identify ProjectGovernor as the sole management authority and short-lived candidate PRs targeting `develop`.
+
+**Guard:** `Scripts/project_governor.py` cross-checks the lane, freeze, branch/PR handoff and supporting management docs.
+
+**Proof boundary:** governance hardening does not promote PIE, device, audio, pacing or visual acceptance.

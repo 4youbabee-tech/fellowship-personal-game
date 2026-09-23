@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "6944cc0f84957842ff0a1f0ba1f53a7ea288e7fa_PRE780_QUALIFIER_FALSE_POSITIVE_UNREAL614_STALE_ROLLBACK_EXPECTATION_CP147_PENDING",
+  "audited_head": "96398e7cc48277324113c7879a8d28e3b659757e_PRE781_UNREAL616_WAREHOUSE197_GREEN_GOVERNOR_DRIFT_CP148_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -380,7 +380,7 @@
     {
       "id": "AUDIT-HIGH-046",
       "severity": "HIGH",
-      "status": "REAL_ASYNC_RACE_AUDIT_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+      "status": "EXACT_HEAD_ENGINE_PROOF_PASS_UNREAL616",
       "title": "Queued checkpoint stale-callback guard lacked a real two-write disk race",
       "evidence": "PG-140 directly invoked the production completion handler with a stale revision, proving guard semantics but not actual AsyncSaveGameToSlot queue/completion behavior across a committed world transition.",
       "action": "Schedule two real async checkpoint writes from one committed revision, transition world before deterministic delayed completion processing, require both disk callbacks to report success, and require zero stale checkpoint effects."
@@ -388,7 +388,7 @@
     {
       "id": "AUDIT-HIGH-047",
       "severity": "HIGH",
-      "status": "STATIC_GUARD_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "status": "STATIC_GUARD_PROVEN_PRE781_PACKAGED_RUNTIME_EXECUTION_STILL_OPEN",
       "title": "Runtime Data JSON packaging declarations could drift from C++ loads",
       "evidence": "Runtime systems load multiple Data/*.json files through FPaths::ProjectDir and FileHelper, while Build.cs maintains an explicit RuntimeDependencies list. Without a cross-check a future runtime JSON load could compile/headless-pass from source checkout but be omitted from staged packaged output.",
       "action": "PG-147 scans runtime C++ Data/*.json literals and requires matching RuntimeDependencies entries; later packaged-build execution remains the acceptance boundary."
@@ -404,7 +404,7 @@
     {
       "id": "AUDIT-HIGH-049",
       "severity": "HIGH",
-      "status": "SYSTEMIC_VALIDATOR_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_STATIC_PROOF",
+      "status": "EXACT_HEAD_STATIC_PROOF_PASS_PRE781",
       "title": "Transition-order helper overmatched similarly named fields on nested objects",
       "evidence": "Pre-Unreal #780 failed StartExperience because the helper saw TargetExisting->CurrentChapterId before OnWorldTransitionRequested. That write sanitizes stored FShireRouteProgress and is not mutation of UShireQuestSubsystem::CurrentChapterId.",
       "action": "Ignore qualified writes through other objects, retain bare and this-> authoritative member detection, regression-test both cases, and use the same helper in DeepProjectAudit."
@@ -412,10 +412,18 @@
     {
       "id": "AUDIT-HIGH-050",
       "severity": "HIGH",
-      "status": "RUNTIME_AUDIT_SEMANTICS_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+      "status": "EXACT_HEAD_ENGINE_PROOF_PASS_UNREAL616",
       "title": "Fault audit demanded rollback revision advancement for a request rejected before transaction",
       "evidence": "Unreal #614 logged ShireExperienceIdentity rejection for P1C99, then ShireRollbackAudit failed only revisionAdvanced=no while movement, player snapshot stability, NPC context and LivingWorld were healthy. Identity preflight intentionally prevents OnWorldTransitionRequested for unsupported P1C99, so no world transaction existed to rollback.",
       "action": "Require invalid direct requests to remain inert with revision unchanged; separately require forced valid-bank async streaming failure to rollback with revision advancement. Never manufacture a revision bump for preflight rejection."
+    },
+    {
+      "id": "AUDIT-HIGH-051",
+      "severity": "HIGH",
+      "status": "GOVERNANCE_HARDENING_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "title": "Project Governor execution surfaces drifted behind the live W00 integration train",
+      "evidence": "On exact machine-green head 96398e7, current_focus blocked W01 while branch_workflow still named PR #61, development_mode still declared VISUAL_PRODUCTION_FIRST, immediate actions encouraged broad production, MASTER_EXECUTION_BOARD named PR #53, DEVELOPMENT_GATES instructed direct develop work, and CURRENT_PROJECT_STATE ranked itself ahead of the sole Governor authority.",
+      "action": "Use active-gate-first execution_control, reconcile branch/PR metadata, freeze B1/B2/B3 during W00, and guard supporting management docs against stale execution instructions."
     }
   ],
   "external_practice_alignment": [
@@ -441,13 +449,12 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head Pre-Unreal + Warehouse + UE4.27 validation for CP-W00-147",
-    "verify CP-W00-145 malformed identity restore and real queued AsyncSaveGame race on the same exact head",
-    "actual packaged-build Data JSON read validation beyond static RuntimeDependencies parity",
+    "fresh exact-head Pre-Unreal + UE4.27.2 validation for CP-W00-148 governor execution-truth hardening",
+    "actual packaged-build Data JSON staging/read validation beyond static RuntimeDependencies parity",
     "audio production-bank presence/playback validation without -NoSound",
+    "isolated Public/Private migration after the governance head is machine-green",
     "target-device frame-time/resident-memory/VRAM/GC/tick profiling",
-    "human core-loop/onboarding/external playtest",
-    "isolated Public/Private migration after machine stability"
+    "human core-loop/onboarding/external playtest"
   ],
-  "audit_scope_note": "Pre #780 is a source-parser qualifier false positive; Unreal #614 is a stale fault-audit expectation after identity preflight became stricter. CP-W00-147 repairs both families without weakening production transaction semantics. Fresh exact-head proof is pending; no PIE/device/visual/performance/audio-playback acceptance is inferred."
+  "audit_scope_note": "Exact parent 96398e7 passed Pre #781, Warehouse #197 and Unreal #616, closing CP-W00-147 at the machine/headless level. CP-W00-148 addresses governance drift only and remains pending fresh exact-head proof; no PIE/device/visual/performance/audio-playback acceptance is inferred."
 }
