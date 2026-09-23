@@ -7,14 +7,19 @@ from source_contracts import signal_precedes_member_mutation
 ROOT=Path(__file__).resolve().parents[1]
 SRC=ROOT/"Source"/"ShireJourney"
 errors=[]
+def resolve_src(name):
+ candidates=[p for p in SRC.rglob(name) if p.is_file()]
+ if len(candidates)==1: return candidates[0]
+ if not candidates: raise FileNotFoundError(name)
+ raise RuntimeError("ambiguous runtime source filename: "+name)
 def read(p): return p.read_text(encoding="utf-8",errors="replace")
 gov=json.loads(read(ROOT/"Data"/"ProjectGovernor.json"))
 ids=[str(r.get("id") or "") for r in gov.get("requirements",[]) if isinstance(r,dict)]
 if len(ids)!=len(set(ids)): errors.append("duplicate Governor requirement IDs")
-player=read(SRC/"ShirePlayerCharacter.cpp")
-presentation=read(SRC/"ShireStoryPresentationSubsystem.cpp")
-ambient=read(SRC/"ShireAmbientNPC.cpp")
-named=read(SRC/"ShireNPC.cpp")
+player=read(resolve_src("ShirePlayerCharacter.cpp"))
+presentation=read(resolve_src("ShireStoryPresentationSubsystem.cpp"))
+ambient=read(resolve_src("ShireAmbientNPC.cpp"))
+named=read(resolve_src("ShireNPC.cpp"))
 d=player.find('BindAction(TEXT("DebugPreviousChapter")')
 a=player.rfind("#if !UE_BUILD_SHIPPING",0,d)
 b=player.find("#endif",d)
@@ -26,7 +31,7 @@ named_it=len(re.findall(r"TActorIterator<AShireNPC>",named))
 if ambient_it>1: errors.append(f"ambient actor scans grew: {ambient_it}")
 if named_it>1: errors.append(f"named actor scans grew: {named_it}")
 loads={}
-for p in SRC.glob("*.cpp"):
+for p in SRC.rglob("*.cpp"):
  t=read(p); n=len(re.findall(r"\bLoadObject<",t))
  if n: loads[p.name]=n
  if re.search(r"void\s+\w+::Tick\s*\([^)]*\)[\s\S]{0,12000}?LoadObject<",t): errors.append(f"possible LoadObject in Tick: {p.name}")
@@ -47,15 +52,15 @@ else:
  if perf_plan and perf_plan.get("plan_id")!="VISUAL_PERFORMANCE_OPTIMIZATION_V1":
   errors.append("visual performance optimization plan identity changed")
 
-streaming_h=read(SRC/"ShireChapterAssetStreamingSubsystem.h")
-streaming_cpp=read(SRC/"ShireChapterAssetStreamingSubsystem.cpp")
+streaming_h=read(resolve_src("ShireChapterAssetStreamingSubsystem.h"))
+streaming_cpp=read(resolve_src("ShireChapterAssetStreamingSubsystem.cpp"))
 streaming_contract=streaming_h+"\n"+streaming_cpp
-router=read(SRC/"ChapterWorldRouter.cpp")
-npc_context=read(SRC/"ShireNPCContextSubsystem.cpp")
-npc_context_h=read(SRC/"ShireNPCContextSubsystem.h")
-audio=read(SRC/"ShireAudioSubsystem.cpp")
-quest=read(SRC/"ShireQuestSubsystem.cpp")
-player_h=read(SRC/"ShirePlayerCharacter.h")
+router=read(resolve_src("ChapterWorldRouter.cpp"))
+npc_context=read(resolve_src("ShireNPCContextSubsystem.cpp"))
+npc_context_h=read(resolve_src("ShireNPCContextSubsystem.h"))
+audio=read(resolve_src("ShireAudioSubsystem.cpp"))
+quest=read(resolve_src("ShireQuestSubsystem.cpp"))
+player_h=read(resolve_src("ShirePlayerCharacter.h"))
 importer=read(ROOT/"Source"/"ShireJourneyEditorTools"/"Private"/"ShireProductionImportCommandlet.cpp")
 for symbol in ["FStreamableManager","FSoftObjectPath","RequestAsyncLoad"]:
  if symbol not in streaming_contract:
@@ -83,7 +88,7 @@ for barrier_name in [
  "ShireEnvironmentalPuzzle.cpp",
  "ShireWorldEventInteraction.cpp",
 ]:
- barrier_text=read(SRC/barrier_name)
+ barrier_text=read(resolve_src(barrier_name))
  if "IsGameplayWorldCommitted()" not in barrier_text:
   errors.append(f"world-transition gameplay mutation guard missing: {barrier_name}")
 if "IsLogicalWorldContextCommitted()" not in named:
@@ -162,8 +167,8 @@ if "SaveAutomaticCheckpoint(NextId" in checkpoint_callback:
  errors.append("queued checkpoint is reconstructed from later live state after async completion")
 
 # PRE-MUTATION TRANSITION SNAPSHOT / ROLLBACK FAILURE CONTRACT
-quest_h=read(SRC/"ShireQuestSubsystem.h")
-game_mode=read(SRC/"ShireGameMode.cpp")
+quest_h=read(resolve_src("ShireQuestSubsystem.h"))
+game_mode=read(resolve_src("ShireGameMode.cpp"))
 runtime_smoke=read(ROOT/"Scripts"/"runtime_smoke.py")
 state_cmd=read(ROOT/"Scripts"/"ci_runtime_state.cmd")
 if "FOnWorldTransitionRequested" not in quest_h or "OnWorldTransitionRequested" not in quest_h:
@@ -203,7 +208,7 @@ if not mode_has_evidence("faults", "fault.invalid_request_rejected") or "-AuditF
 
 # SAVE-RESTORE PRE-MUTATION BOUNDARY + DELAYED ASYNC AUTHORITY
 streaming_test=streaming_cpp
-game_mode=read(SRC/"ShireGameMode.cpp")
+game_mode=read(resolve_src("ShireGameMode.cpp"))
 runtime_smoke=read(ROOT/"Scripts"/"runtime_smoke.py")
 state_cmd=read(ROOT/"Scripts"/"ci_runtime_state.cmd")
 if "PreparePersistenceWorldTransition" not in quest or "PreparePersistenceWorldTransition" not in player:
@@ -270,11 +275,11 @@ for builder_name in [
  "FellowshipChapterWorldBuilder.cpp",
  "IsengardPrototypeWorldBuilder.cpp",
 ]:
- builder_text=read(SRC/builder_name)
+ builder_text=read(resolve_src(builder_name))
  if "LoadObject<UStaticMesh>" in builder_text:
   errors.append(f"world builder reintroduced synchronous production mesh loading: {builder_name}")
 
-detail=read(SRC/"WorldDetailCluster.cpp")
+detail=read(resolve_src("WorldDetailCluster.cpp"))
 for symbol in ["UHierarchicalInstancedStaticMeshComponent","SetCullDistances","PrimaryActorTick.bCanEverTick = false"]:
  if symbol not in detail:
   errors.append(f"instanced detail/cull contract missing: {symbol}")
@@ -285,7 +290,7 @@ for builder_name in [
  "FellowshipChapterWorldBuilder.cpp",
  "IsengardPrototypeWorldBuilder.cpp",
 ]:
- builder_text=read(SRC/builder_name)
+ builder_text=read(resolve_src(builder_name))
  if "PrimaryActorTick.bCanEverTick = false" not in builder_text:
   errors.append(f"world builder unexpectedly became ticking: {builder_name}")
 

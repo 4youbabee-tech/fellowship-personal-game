@@ -36,13 +36,11 @@ Never mark a request complete merely because the conversation moved on.
 
 ## Current runtime module state
 
-The module is currently a guarded flat UE4.27 layout. This is historical structure, not the final organization target.
+CP-W00-152 physically migrated the runtime module to **PUBLIC_PRIVATE_BY_DOMAIN**. The old flat layout is no longer active.
 
-Project Guardian now requires every runtime C++/header/build file in this module to be represented in
-`Data/SourceArchitecturePlan.json`. Adding a new source file without assigning a domain is a CI failure.
+Project Guardian requires every runtime C++/header/build file in this module to be represented in `Data/SourceArchitecturePlan.json`. Adding a new source file without assigning a domain is a CI failure.
 
 Current domains:
-
 - **Core** — module entry point, game mode, interaction interface.
 - **Characters** — player, story NPC, ambient NPC.
 - **World** — chapter router, world builders, quest/world triggers.
@@ -51,9 +49,9 @@ Current domains:
 - **SaveGame** — save object and per-route state.
 - **Prototypes** — Black Rider and Fellowship enemy prototypes.
 
-## Target folder layout
+Runtime headers live under `Public/<Domain>/`; implementations live under `Private/<Domain>/`. `ShireJourney.Build.cs` remains at the module root. The module root itself is no longer exported as a public include path.
 
-The planned organization is:
+## Active folder layout
 
 ```text
 Source/ShireJourney/
@@ -77,28 +75,20 @@ Source/ShireJourney/
     Prototypes/
 ```
 
-Headers intended for module-wide use move to `Public/<Domain>/`.
-Implementation files move to `Private/<Domain>/`.
+The exact mapping and migration status are defined in `Data/SourceArchitecturePlan.json`. Existing basename includes remain legal because Build.cs exports only the explicit `Public/<Domain>` directories, never the whole module root.
 
-The exact current-to-target mapping is defined in `Data/SourceArchitecturePlan.json`.
-Do not invent a different folder structure during a handoff.
+## Source-layout rule
 
-## Refactor rule
+The physical migration is complete. Future maintenance must preserve these invariants:
 
-Physical source-file migration is an organizational maintenance change, not a gameplay feature.
-
-When performing the migration:
-
-1. change paths only; do not redesign gameplay at the same time,
-2. update module-local `#include` paths in the same change,
-3. update `Scripts/pre_unreal_validate.py` path lookups and recursive scans,
-4. update `Data/SourceArchitecturePlan.json` from `CURRENT_FLAT` to `MIGRATED`,
-5. require green Pre-Unreal Validation,
-6. require a real UE4.27.2 self-hosted C++ build,
-7. require production asset import success,
-8. then rerun the exact functional PIE smoke tests listed in `CURRENT_PROJECT_STATE.md`.
-
-Never mix a large source-layout migration with a new gameplay feature.
+1. headers belong under `Public/<Domain>/`,
+2. implementation files belong under `Private/<Domain>/`,
+3. `ShireJourney.Build.cs` remains at module root,
+4. do not reintroduce flat root .h/.cpp files,
+5. do not reintroduce `PublicIncludePaths.Add(ModuleDirectory)`,
+6. register every new runtime file in `Data/SourceArchitecturePlan.json`,
+7. source-layout changes require green Pre-Unreal and a real UE4.27.2 build,
+8. never mix a large source-layout change with gameplay redesign.
 
 ## Handoff protocol
 

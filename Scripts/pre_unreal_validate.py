@@ -32,6 +32,17 @@ def warn(message: str) -> None:
     warnings.append(message)
 
 
+def resolve_source(filename: str) -> Path:
+    """Resolve one runtime source filename after the Public/Private migration."""
+    candidates = [p for p in SOURCE.rglob(filename) if p.is_file()]
+    if len(candidates) == 1:
+        return candidates[0]
+    if not candidates:
+        return SOURCE / filename
+    fail(f"Runtime source filename is ambiguous after migration: {filename}")
+    return candidates[0]
+
+
 def read(path: Path) -> str:
     try:
         return path.read_text(encoding="utf-8")
@@ -95,24 +106,24 @@ required_files = [
     ROOT / "Config" / "DefaultEngine.ini",
     ROOT / "Config" / "DefaultGame.ini",
     ROOT / "Config" / "DefaultInput.ini",
-    SOURCE / "ShireGameMode.cpp",
-    SOURCE / "ShirePlayerCharacter.cpp",
-    SOURCE / "ShireQuestSubsystem.cpp",
-    SOURCE / "ShireQuestTrigger.cpp",
-    SOURCE / "ChapterWorldRouter.cpp",
-    SOURCE / "ShirePrototypeWorldBuilder.cpp",
-    SOURCE / "BreePrototypeWorldBuilder.cpp",
-    SOURCE / "FellowshipChapterWorldBuilder.cpp",
-    SOURCE / "ShireStoryPresentationSubsystem.h",
-    SOURCE / "ShireStoryPresentationSubsystem.cpp",
-    SOURCE / "ShireDialogueSubsystem.h",
-    SOURCE / "ShireDialogueSubsystem.cpp",
-    SOURCE / "ShireAudioSubsystem.h",
-    SOURCE / "ShireAudioSubsystem.cpp",
-    SOURCE / "ShireStoryFlowSubsystem.h",
-    SOURCE / "ShireStoryFlowSubsystem.cpp",
-    SOURCE / "FellowshipEnemyPrototype.h",
-    SOURCE / "FellowshipEnemyPrototype.cpp",
+    resolve_source("ShireGameMode.cpp"),
+    resolve_source("ShirePlayerCharacter.cpp"),
+    resolve_source("ShireQuestSubsystem.cpp"),
+    resolve_source("ShireQuestTrigger.cpp"),
+    resolve_source("ChapterWorldRouter.cpp"),
+    resolve_source("ShirePrototypeWorldBuilder.cpp"),
+    resolve_source("BreePrototypeWorldBuilder.cpp"),
+    resolve_source("FellowshipChapterWorldBuilder.cpp"),
+    resolve_source("ShireStoryPresentationSubsystem.h"),
+    resolve_source("ShireStoryPresentationSubsystem.cpp"),
+    resolve_source("ShireDialogueSubsystem.h"),
+    resolve_source("ShireDialogueSubsystem.cpp"),
+    resolve_source("ShireAudioSubsystem.h"),
+    resolve_source("ShireAudioSubsystem.cpp"),
+    resolve_source("ShireStoryFlowSubsystem.h"),
+    resolve_source("ShireStoryFlowSubsystem.cpp"),
+    resolve_source("FellowshipEnemyPrototype.h"),
+    resolve_source("FellowshipEnemyPrototype.cpp"),
     ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp",
 ]
 
@@ -230,6 +241,24 @@ if missing_architecture_entries:
     fail("Runtime source files missing from SourceArchitecturePlan: " + ", ".join(missing_architecture_entries))
 if stale_architecture_entries:
     fail("SourceArchitecturePlan references inactive/missing runtime files: " + ", ".join(stale_architecture_entries))
+
+# PG-154: the isolated runtime-module migration is now a physical invariant.
+if source_architecture.get("current_layout") == "PUBLIC_PRIVATE_BY_DOMAIN":
+    remaining_flat = [
+        str(p.relative_to(ROOT)).replace("\\", "/")
+        for p in list(SOURCE.glob("*.h")) + list(SOURCE.glob("*.cpp"))
+    ]
+    if remaining_flat:
+        fail("PG-154 flat runtime source files reintroduced at module root: " + ", ".join(sorted(remaining_flat)))
+    if any(entry.get("migration_status") == "CURRENT_FLAT" for entry in architecture_entries):
+        fail("PG-154 SourceArchitecturePlan still contains CURRENT_FLAT entries after migration")
+    migrated_build = read(resolve_source("ShireJourney.Build.cs"))
+    if "PublicIncludePaths.Add(ModuleDirectory)" in migrated_build:
+        fail("PG-154 module-root public include export was reintroduced after migration")
+    for domain in ["Core","Characters","World","Subsystems","UI","SaveGame","Prototypes"]:
+        expected = f'Path.Combine(ModuleDirectory, "Public", "{domain}")'
+        if expected not in migrated_build:
+            fail(f"PG-154 public domain include path missing: {domain}")
 
 # PG-020: the single Project Governor is the authoritative project-management memory.
 governor_path = ROOT / "Data" / "ProjectGovernor.json"
@@ -365,12 +394,12 @@ if film_source_data:
     if not has_gandalf:
         fail("Film dialogue source context missing GandalfParallel coverage")
 
-    build_text = read(SOURCE / "ShireJourney.Build.cs")
+    build_text = read(resolve_source("ShireJourney.Build.cs"))
     if "Data/FilmDialogueSourceContext.json" not in build_text:
         fail("Film dialogue source context is not packaged as a runtime dependency")
-    npc_context_text = read(SOURCE / "ShireNPCContextSubsystem.cpp")
+    npc_context_text = read(resolve_source("ShireNPCContextSubsystem.cpp"))
     for marker in ["LoadFilmDialogueSourceContext", "GetFilmDialogueContextSummary", "SourceContextId"]:
-        if marker not in npc_context_text and marker not in read(SOURCE / "ShireNPCContextSubsystem.h"):
+        if marker not in npc_context_text and marker not in read(resolve_source("ShireNPCContextSubsystem.h")):
             fail(f"Film dialogue runtime wiring missing marker: {marker}")
     # Source-grounded authored variants must resolve to existing runtime contracts.
     context_ids = {str(item.get("context_id") or "").strip() for item in contexts}
@@ -618,7 +647,7 @@ if discovery_reward_data:
     if expected_region_pairs - actual_region_pairs:
         fail("Journey discovery plan missing region-completion coverage")
 
-    build_text_pg62 = read(SOURCE / "ShireJourney.Build.cs")
+    build_text_pg62 = read(resolve_source("ShireJourney.Build.cs"))
     if "Data/JourneyDiscoveryRewardPlan.json" not in build_text_pg62:
         fail("Journey discovery reward plan is not packaged as a runtime dependency")
 
@@ -709,7 +738,7 @@ if side_activity_data:
     if missing_side_coverage:
         fail("Contextual side activity coverage missing: " + ", ".join(f"{r}/{c}" for r, c in missing_side_coverage))
 
-    build_text_pg63 = read(SOURCE / "ShireJourney.Build.cs")
+    build_text_pg63 = read(resolve_source("ShireJourney.Build.cs"))
     if "Data/ContextualSideActivityPlan.json" not in build_text_pg63:
         fail("Contextual side activity plan is not packaged as a runtime dependency")
 
@@ -730,7 +759,7 @@ else:
     if not gandalf or any(x.get("bearer") != "Frodo" for x in gandalf):
         fail("PG-070: GandalfParallel must preserve Frodo as off-route Ring-bearer")
 for symbol in ["IsRingQuestActive", "GetRingBearerId", "GetRingStateTag", "GetRingPressureTier"]:
-    if symbol not in read(SOURCE / "ShireQuestSubsystem.h") or symbol not in read(SOURCE / "ShireQuestSubsystem.cpp"):
+    if symbol not in read(resolve_source("ShireQuestSubsystem.h")) or symbol not in read(resolve_source("ShireQuestSubsystem.cpp")):
         fail(f"PG-070: Ring runtime API missing {symbol}")
 if not mode_has_evidence("state", "state.ring_core"):
     fail("PG-070: runtime state audit must require Ring continuity")
@@ -779,15 +808,15 @@ else:
 
 
 # PG-074: Journey Discovery runtime must be first-time-only, persisted and story-window bounded.
-journey_h = read(SOURCE / "ShireQuestSubsystem.h")
-journey_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
-journey_save = read(SOURCE / "ShireSaveGame.h")
-journey_player = read(SOURCE / "ShirePlayerCharacter.cpp")
-journey_trigger_h = read(SOURCE / "ShireQuestTrigger.h")
-journey_trigger_cpp = read(SOURCE / "ShireQuestTrigger.cpp")
-journey_hud_h = read(SOURCE / "ShireHUD.h")
-journey_hud_cpp = read(SOURCE / "ShireHUD.cpp")
-journey_game_mode = read(SOURCE / "ShireGameMode.cpp")
+journey_h = read(resolve_source("ShireQuestSubsystem.h"))
+journey_cpp = read(resolve_source("ShireQuestSubsystem.cpp"))
+journey_save = read(resolve_source("ShireSaveGame.h"))
+journey_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+journey_trigger_h = read(resolve_source("ShireQuestTrigger.h"))
+journey_trigger_cpp = read(resolve_source("ShireQuestTrigger.cpp"))
+journey_hud_h = read(resolve_source("ShireHUD.h"))
+journey_hud_cpp = read(resolve_source("ShireHUD.cpp"))
+journey_game_mode = read(resolve_source("ShireGameMode.cpp"))
 
 for symbol in [
     "RegisterJourneyDiscovery",
@@ -821,10 +850,10 @@ journey_reward_ids = {
     if isinstance(item, dict)
 }
 journey_builder_text = "\n".join([
-    read(SOURCE / "ShirePrototypeWorldBuilder.cpp"),
-    read(SOURCE / "BreePrototypeWorldBuilder.cpp"),
-    read(SOURCE / "FellowshipChapterWorldBuilder.cpp"),
-    read(SOURCE / "IsengardPrototypeWorldBuilder.cpp"),
+    read(resolve_source("ShirePrototypeWorldBuilder.cpp")),
+    read(resolve_source("BreePrototypeWorldBuilder.cpp")),
+    read(resolve_source("FellowshipChapterWorldBuilder.cpp")),
+    read(resolve_source("IsengardPrototypeWorldBuilder.cpp")),
 ])
 missing_runtime_discoveries = sorted(
     discovery_id for discovery_id in journey_reward_ids
@@ -1044,11 +1073,11 @@ else:
     for marker in ["no hunger", "no thirst", "no gear score", "film scenes"]:
         if marker not in hard:
             fail(f"PG-079: anti-grind/canon rule missing {marker}")
-player_h = read(SOURCE / "ShirePlayerCharacter.h")
-player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
-quest_h = read(SOURCE / "ShireQuestSubsystem.h")
-quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
-save_h = read(SOURCE / "ShireSaveGame.h")
+player_h = read(resolve_source("ShirePlayerCharacter.h"))
+player_cpp = read(resolve_source("ShirePlayerCharacter.cpp"))
+quest_h = read(resolve_source("ShireQuestSubsystem.h"))
+quest_cpp = read(resolve_source("ShireQuestSubsystem.cpp"))
+save_h = read(resolve_source("ShireSaveGame.h"))
 for symbol in ["GetCurrentStamina","GetCurrentResolve","GetSupplies","UseSupply","UpdatePlayerLife"]:
     if symbol not in player_h and symbol not in player_cpp:
         fail(f"PG-079: player-life runtime symbol missing {symbol}")
@@ -1060,11 +1089,11 @@ for marker in ["PlayerStamina","PlayerResolve","PlayerSupplies","ProgressionXP",
         fail(f"PG-079: save schema missing {marker}")
 if 'ActionName="UseSupply"' not in read(ROOT / "Config" / "DefaultInput.ini"):
     fail("PG-079: supply input mapping missing")
-if EVIDENCE_SOURCE_ANCHORS.get("state.progression_core", ("", ""))[1] not in read(SOURCE / "ShireGameMode.cpp"):
+if EVIDENCE_SOURCE_ANCHORS.get("state.progression_core", ("", ""))[1] not in read(resolve_source("ShireGameMode.cpp")):
     fail("PG-079: progression state audit missing")
 if not mode_has_evidence("state", "state.progression_core"):
     fail("PG-079: runtime smoke does not require progression proof")
-if "Data/PlayerLifeProgressionPlan.json" not in read(SOURCE / "ShireJourney.Build.cs"):
+if "Data/PlayerLifeProgressionPlan.json" not in read(resolve_source("ShireJourney.Build.cs")):
     fail("PG-079: player-life plan not packaged")
 
 
@@ -1081,11 +1110,11 @@ else:
     if knowledge.get("story_effect") != "NONE":
         fail("PG-080: Chronicle/map knowledge must not advance story")
 
-quest_h_pg80 = read(SOURCE / "ShireQuestSubsystem.h")
-quest_cpp_pg80 = read(SOURCE / "ShireQuestSubsystem.cpp")
-save_h_pg80 = read(SOURCE / "ShireSaveGame.h")
-player_cpp_pg80 = read(SOURCE / "ShirePlayerCharacter.cpp")
-hud_cpp_pg80 = read(SOURCE / "ShireHUD.cpp")
+quest_h_pg80 = read(resolve_source("ShireQuestSubsystem.h"))
+quest_cpp_pg80 = read(resolve_source("ShireQuestSubsystem.cpp"))
+save_h_pg80 = read(resolve_source("ShireSaveGame.h"))
+player_cpp_pg80 = read(resolve_source("ShirePlayerCharacter.cpp"))
+hud_cpp_pg80 = read(resolve_source("ShireHUD.cpp"))
 input_pg80 = read(ROOT / "Config" / "DefaultInput.ini")
 side_plan_pg80 = json.loads(read(ROOT / "Data" / "ContextualSideActivityPlan.json"))
 
@@ -1102,7 +1131,7 @@ if 'ActionName="ToggleChronicle"' not in input_pg80:
     fail("PG-080: Chronicle panel input missing")
 if "CHRONICLE & JOURNEY" not in hud_cpp_pg80:
     fail("PG-080: Chronicle/map HUD panel missing")
-if EVIDENCE_SOURCE_ANCHORS.get("state.knowledge_core", ("", ""))[1] not in read(SOURCE / "ShireGameMode.cpp"):
+if EVIDENCE_SOURCE_ANCHORS.get("state.knowledge_core", ("", ""))[1] not in read(resolve_source("ShireGameMode.cpp")):
     fail("PG-080: knowledge state audit missing")
 if not mode_has_evidence("state", "state.knowledge_core"):
     fail("PG-080: runtime smoke missing knowledge proof")
@@ -1116,10 +1145,10 @@ if activity_count_pg80 < 18:
 
 
 # PG-081: real traversal challenge runtime must replace pure touch-to-discover for selected activities.
-traversal_h = read(SOURCE / "ShireTraversalChallenge.h")
-traversal_cpp = read(SOURCE / "ShireTraversalChallenge.cpp")
-shire_builder_pg81 = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
-fellowship_builder_pg81 = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+traversal_h = read(resolve_source("ShireTraversalChallenge.h"))
+traversal_cpp = read(resolve_source("ShireTraversalChallenge.cpp"))
+shire_builder_pg81 = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+fellowship_builder_pg81 = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
 for symbol in ["ConfigureChallenge","HandleGateOverlap","CurrentGateIndex","RegisterJourneyDiscovery","TraversalChallenge: PASS"]:
     if symbol not in (traversal_h + traversal_cpp):
         fail(f"PG-081: traversal runtime symbol missing {symbol}")
@@ -1271,11 +1300,11 @@ for entry in chapter_contracts:
             fail(f"CharacterPopulationPlan chapter {chapter} references unknown cast id {cast_id}")
 
 population_runtime_source = "\n".join([
-    read(SOURCE / "ShirePlayerCharacter.cpp"),
-    read(SOURCE / "ShirePrototypeWorldBuilder.cpp"),
-    read(SOURCE / "BreePrototypeWorldBuilder.cpp"),
-    read(SOURCE / "FellowshipChapterWorldBuilder.cpp"),
-    read(SOURCE / "IsengardPrototypeWorldBuilder.cpp"),
+    read(resolve_source("ShirePlayerCharacter.cpp")),
+    read(resolve_source("ShirePrototypeWorldBuilder.cpp")),
+    read(resolve_source("BreePrototypeWorldBuilder.cpp")),
+    read(resolve_source("FellowshipChapterWorldBuilder.cpp")),
+    read(resolve_source("IsengardPrototypeWorldBuilder.cpp")),
 ])
 for item in population_plan.get("core_cast", []):
     display_name = str(item.get("display_name") or "").strip()
@@ -1284,11 +1313,11 @@ for item in population_plan.get("core_cast", []):
     if not any(f'TEXT("{name}")' in population_runtime_source for name in names):
         fail(f"CharacterPopulationPlan cast has no runtime source representation: {display_name}")
 
-npc_cpp_for_population = read(SOURCE / "ShireNPC.cpp")
-npc_h_for_population = read(SOURCE / "ShireNPC.h")
-ambient_cpp_for_population = read(SOURCE / "ShireAmbientNPC.cpp")
-bree_cpp_for_population = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
-fellowship_cpp_for_population = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+npc_cpp_for_population = read(resolve_source("ShireNPC.cpp"))
+npc_h_for_population = read(resolve_source("ShireNPC.h"))
+ambient_cpp_for_population = read(resolve_source("ShireAmbientNPC.cpp"))
+bree_cpp_for_population = read(resolve_source("BreePrototypeWorldBuilder.cpp"))
+fellowship_cpp_for_population = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
 for symbol in ["StopFollowingStoryBeat", "HasStoryBeatTriggered(StopFollowingStoryBeat)"]:
     if symbol not in npc_cpp_for_population and symbol not in npc_h_for_population:
         fail(f"PG-032 story-aware companion release missing: {symbol}")
@@ -1301,11 +1330,11 @@ for symbol in ["VisualTorsoBaseZ", "VisualHeadBaseZ", "VisualHairBaseZ"]:
         fail(f"PG-032 ambient role-specific visual base missing: {symbol}")
 
 # PG-036: ambient micro-life must remain role-driven and reuse the cheap ambient actor.
-ambient_life_cpp = read(SOURCE / "ShireAmbientNPC.cpp")
-ambient_life_h = read(SOURCE / "ShireAmbientNPC.h")
-shire_life_cpp = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
-bree_life_cpp = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
-fellowship_life_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+ambient_life_cpp = read(resolve_source("ShireAmbientNPC.cpp"))
+ambient_life_h = read(resolve_source("ShireAmbientNPC.h"))
+shire_life_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+bree_life_cpp = read(resolve_source("BreePrototypeWorldBuilder.cpp"))
+fellowship_life_cpp = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
 
 for symbol in [
     "ActivityPropType",
@@ -1336,11 +1365,11 @@ if "Resident->ActivityPropType" not in fellowship_life_cpp:
     fail("PG-036 Elven residents lost visible activity assignments")
 
 # PG-035: lightweight world motion must remain cheap, 3D and region-aware.
-ambient_motion_cpp = read(SOURCE / "ShireAmbientNPC.cpp")
-shire_world_motion_cpp = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
-bree_world_motion_cpp = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
-fellowship_world_motion_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
-isengard_world_motion_cpp = read(SOURCE / "IsengardPrototypeWorldBuilder.cpp")
+ambient_motion_cpp = read(resolve_source("ShireAmbientNPC.cpp"))
+shire_world_motion_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+bree_world_motion_cpp = read(resolve_source("BreePrototypeWorldBuilder.cpp"))
+fellowship_world_motion_cpp = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
+isengard_world_motion_cpp = read(resolve_source("IsengardPrototypeWorldBuilder.cpp"))
 
 for symbol in [
     'RoutineRole == TEXT("Bird")',
@@ -1363,8 +1392,8 @@ if "Distance > DormantTickDistance ? 0.75f" not in ambient_motion_cpp:
     fail("PG-035 Bird role must continue using the distance-throttled ambient actor tick budget")
 
 # PG-034: Part I batch-build world detail must keep chapter-specific visual-density markers.
-bree_world_cpp = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
-fellowship_world_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+bree_world_cpp = read(resolve_source("BreePrototypeWorldBuilder.cpp"))
+fellowship_world_cpp = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
 for symbol in [
     "Street-life pass: stalls, rain puddles, lantern posts, crates and hitching details.",
     "Reeds, low rocks and abandoned camp remains keep the marsh approach from feeling empty.",
@@ -1379,8 +1408,8 @@ for symbol in [
         fail(f"PG-034 Part I world-detail marker missing: {symbol}")
 
 # PG-033: core-cast visual identity must remain distinct without pretending proxies are final art.
-npc_visual_cpp = read(SOURCE / "ShireNPC.cpp")
-npc_visual_h = read(SOURCE / "ShireNPC.h")
+npc_visual_cpp = read(resolve_source("ShireNPC.cpp"))
+npc_visual_h = read(resolve_source("ShireNPC.h"))
 for symbol in [
     "PrototypeCloak",
     "PrototypePrimaryProp",
@@ -1678,12 +1707,12 @@ for folder_name, asset_names in enemy_assets.items():
         if not (enemy_root / asset_name).exists():
             fail(f"PG-046 enemy production asset missing: {folder_name}/{asset_name}")
 
-black_rider_cpp = read(SOURCE / "BlackRiderPrototype.cpp")
+black_rider_cpp = read(resolve_source("BlackRiderPrototype.cpp"))
 for symbol in ["SM_BlackRider_Horse", "SM_BlackRider_Rider", "SM_BlackRider_Head"]:
     if symbol not in black_rider_cpp:
         fail(f"PG-046 Black Rider production runtime missing: {symbol}")
 
-enemy_cpp = read(SOURCE / "FellowshipEnemyPrototype.cpp")
+enemy_cpp = read(resolve_source("FellowshipEnemyPrototype.cpp"))
 for symbol in [
     'ProductionFolder = TEXT("Orc")',
     'ProductionFolder = TEXT("UrukHai")',
@@ -1721,7 +1750,7 @@ for folder_name, asset_names in dedicated_named_assets.items():
         if not (character_root / asset_name).exists():
             fail(f"PG-045 dedicated named character asset missing: {folder_name}/{asset_name}")
 
-named_visual_cpp = read(SOURCE / "ShireNPC.cpp")
+named_visual_cpp = read(resolve_source("ShireNPC.cpp"))
 for folder_name in dedicated_named_assets:
     if f'DedicatedFolder = TEXT("{folder_name}")' not in named_visual_cpp:
         fail(f"PG-045 runtime dedicated-folder mapping missing: {folder_name}")
@@ -1731,7 +1760,7 @@ for character in character_plan_core:
     if character.get("visual_tier") != "PRODUCTION_DEDICATED":
         fail(f"PG-045 named cast not promoted to PRODUCTION_DEDICATED: {character.get('id')}")
 
-dialogue_context_cpp = read(SOURCE / "ShireNPCContextSubsystem.cpp")
+dialogue_context_cpp = read(resolve_source("ShireNPCContextSubsystem.cpp"))
 for profile_id in [
     "NPC_BILBO","NPC_ARWEN","NPC_ELROND","NPC_SARUMAN",
     "NPC_HAMFAST_GAMGEE","NPC_ROSIE_COTTON","NPC_FARMER_MAGGOT",
@@ -1741,17 +1770,17 @@ for profile_id in [
         fail(f"PG-045 expanded named dialogue coverage missing: {profile_id}")
 
 # PG-044: backend hardening must keep NPC context, memory, dialogue and save contracts connected.
-backend_context_h = read(SOURCE / "ShireNPCContextSubsystem.h")
-backend_context_cpp = read(SOURCE / "ShireNPCContextSubsystem.cpp")
-backend_quest_h = read(SOURCE / "ShireQuestSubsystem.h")
-backend_quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
-backend_npc_cpp = read(SOURCE / "ShireNPC.cpp")
-backend_ambient_cpp = read(SOURCE / "ShireAmbientNPC.cpp")
-backend_dialogue_h = read(SOURCE / "ShireDialogueSubsystem.h")
-backend_dialogue_cpp = read(SOURCE / "ShireDialogueSubsystem.cpp")
-backend_save_h = read(SOURCE / "ShireSaveGame.h")
-backend_player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
-backend_build_cs = read(SOURCE / "ShireJourney.Build.cs")
+backend_context_h = read(resolve_source("ShireNPCContextSubsystem.h"))
+backend_context_cpp = read(resolve_source("ShireNPCContextSubsystem.cpp"))
+backend_quest_h = read(resolve_source("ShireQuestSubsystem.h"))
+backend_quest_cpp = read(resolve_source("ShireQuestSubsystem.cpp"))
+backend_npc_cpp = read(resolve_source("ShireNPC.cpp"))
+backend_ambient_cpp = read(resolve_source("ShireAmbientNPC.cpp"))
+backend_dialogue_h = read(resolve_source("ShireDialogueSubsystem.h"))
+backend_dialogue_cpp = read(resolve_source("ShireDialogueSubsystem.cpp"))
+backend_save_h = read(resolve_source("ShireSaveGame.h"))
+backend_player_cpp = read(resolve_source("ShirePlayerCharacter.cpp"))
+backend_build_cs = read(resolve_source("ShireJourney.Build.cs"))
 
 for symbol in [
     "ResolveCanonicalProfileId",
@@ -1881,7 +1910,7 @@ for character_name, asset_names in dedicated_characters.items():
         if not (character_root / asset_name).exists():
             fail(f"PG-043 dedicated character asset missing: {character_name}/{asset_name}")
 
-hero_visual_cpp = read(SOURCE / "ShireNPC.cpp")
+hero_visual_cpp = read(resolve_source("ShireNPC.cpp"))
 for symbol in [
     "DedicatedFolder",
     'DedicatedFolder = TEXT("Sam")',
@@ -1917,7 +1946,7 @@ for region_name, asset_names in regional_assets.items():
         if not (region_root / asset_name).exists():
             fail(f"PG-042 regional production asset missing: {region_name}/{asset_name}")
 
-regional_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+regional_cpp = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
 for symbol in [
     "EnsureProductionMeshes",
     "SpawnProductionChapterLayer",
@@ -1951,7 +1980,7 @@ for asset_name in [
     if not (bree_asset_root / asset_name).exists():
         fail(f"PG-041 Bree production asset missing: {asset_name}")
 
-bree_visual_cpp = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
+bree_visual_cpp = read(resolve_source("BreePrototypeWorldBuilder.cpp"))
 for symbol in [
     "SpawnProductionBreeDetailLayer",
     "ProductionHouseMesh",
@@ -2015,9 +2044,9 @@ for asset_name in [
     if not (common_character_root / asset_name).exists():
         fail(f"PG-040 common production character asset missing: {asset_name}")
 
-shire_visual_cpp = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
-named_visual_cpp = read(SOURCE / "ShireNPC.cpp")
-ambient_visual_cpp = read(SOURCE / "ShireAmbientNPC.cpp")
+shire_visual_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+named_visual_cpp = read(resolve_source("ShireNPC.cpp"))
+ambient_visual_cpp = read(resolve_source("ShireAmbientNPC.cpp"))
 for symbol in [
     "SpawnProductionVillageDetailLayer",
     "ProductionCottageHouseMesh",
@@ -2043,12 +2072,12 @@ for symbol in ["SM_Human_Torso", "SM_Elf_Torso"]:
         fail(f"PG-040 ambient production archetype reference missing: {symbol}")
 
 # PG-039: named-NPC memory must remain compact, bounded, route-partitioned and save-backed.
-memory_route_h = read(SOURCE / "ShireRouteState.h")
-memory_quest_h = read(SOURCE / "ShireQuestSubsystem.h")
-memory_quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
-memory_context_cpp = read(SOURCE / "ShireNPCContextSubsystem.cpp")
-memory_save_h = read(SOURCE / "ShireSaveGame.h")
-memory_player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
+memory_route_h = read(resolve_source("ShireRouteState.h"))
+memory_quest_h = read(resolve_source("ShireQuestSubsystem.h"))
+memory_quest_cpp = read(resolve_source("ShireQuestSubsystem.cpp"))
+memory_context_cpp = read(resolve_source("ShireNPCContextSubsystem.cpp"))
+memory_save_h = read(resolve_source("ShireSaveGame.h"))
+memory_player_cpp = read(resolve_source("ShirePlayerCharacter.cpp"))
 
 for symbol in [
     "FShireNPCMemoryEvent",
@@ -2100,8 +2129,8 @@ if memory_runtime.get("proof_limit") is None:
     fail("PG-039 NPCMemoryPlan must keep its proof limit explicit")
 
 # PG-038: ambient NPC-to-NPC conversation runtime must stay bounded and near-player.
-ambient_conversation_cpp = read(SOURCE / "ShireAmbientNPC.cpp")
-ambient_conversation_h = read(SOURCE / "ShireAmbientNPC.h")
+ambient_conversation_cpp = read(resolve_source("ShireAmbientNPC.cpp"))
+ambient_conversation_h = read(resolve_source("ShireAmbientNPC.h"))
 for symbol in [
     "SocialCaption",
     "BeginSocialCaption",
@@ -2132,10 +2161,10 @@ if conversation_status == "RUNTIME_PARTIAL":
     if "named Fellowship companion banter runtime" not in conversation_runtime.get("not_yet_implemented", []):
         fail("PG-038 partial NPC conversation runtime must keep named Fellowship conversation gap explicit")
 else:
-    named_npc_cpp = read(SOURCE / "ShireNPC.cpp")
-    dialogue_h = read(SOURCE / "ShireDialogueSubsystem.h")
-    dialogue_cpp = read(SOURCE / "ShireDialogueSubsystem.cpp")
-    context_cpp = read(SOURCE / "ShireNPCContextSubsystem.cpp")
+    named_npc_cpp = read(resolve_source("ShireNPC.cpp"))
+    dialogue_h = read(resolve_source("ShireDialogueSubsystem.h"))
+    dialogue_cpp = read(resolve_source("ShireDialogueSubsystem.cpp"))
+    context_cpp = read(resolve_source("ShireNPCContextSubsystem.cpp"))
     for symbol in [
         "UpdateCompanionBanter",
         "COMPANION_BANTER",
@@ -2252,10 +2281,10 @@ if missing_checkpoint_chapters:
 
 # PG-037: any checkpoint promoted beyond PLANNED must have a concrete runtime binding.
 checkpoint_runtime_source = "\n".join([
-    read(SOURCE / "ShirePlayerCharacter.cpp"),
-    read(SOURCE / "ShirePlayerCharacter.h"),
-    read(SOURCE / "ShireQuestTrigger.cpp"),
-    read(SOURCE / "ShireSaveGame.h"),
+    read(resolve_source("ShirePlayerCharacter.cpp")),
+    read(resolve_source("ShirePlayerCharacter.h")),
+    read(resolve_source("ShireQuestTrigger.cpp")),
+    read(resolve_source("ShireSaveGame.h")),
 ])
 for index, row in enumerate(checkpoint_rows, start=2):
     checkpoint_id = (row.get("CheckpointId") or "").strip()
@@ -2359,7 +2388,7 @@ if uproject.exists():
     except json.JSONDecodeError as exc:
         fail(f"Invalid ShireJourney.uproject JSON: {exc}")
 
-for path in sorted(SOURCE.glob("*.[ch]pp")) + sorted(SOURCE.glob("*.h")):
+for path in sorted(SOURCE.rglob("*.[ch]pp")) + sorted(SOURCE.rglob("*.h")):
     text = read(path)
     cleaned = strip_comments_and_strings(text)
     balance = 0
@@ -2374,7 +2403,7 @@ for path in sorted(SOURCE.glob("*.[ch]pp")) + sorted(SOURCE.glob("*.h")):
     if balance != 0:
         fail(f"Unbalanced braces in {path.name}: balance={balance}")
 
-for path in sorted(SOURCE.glob("*.h")):
+for path in sorted(SOURCE.rglob("*.h")):
     lines = read(path).splitlines()
     generated_indexes = [i for i, line in enumerate(lines) if ".generated.h\"" in line]
     if not generated_indexes:
@@ -2409,8 +2438,8 @@ for workstream_id in [
     if workstream_id not in {str(x.get("id") or "") for x in execution_graph.get("workstreams", []) if isinstance(x, dict)}:
         fail(f"PG-049 execution workstream missing: {workstream_id}")
 
-living_h = read(SOURCE / "LivingWorldDirector.h")
-living_cpp = read(SOURCE / "LivingWorldDirector.cpp")
+living_h = read(resolve_source("LivingWorldDirector.h"))
+living_cpp = read(resolve_source("LivingWorldDirector.cpp"))
 for symbol in [
     "LoadEventContract",
     "MaxActiveMicroEvents",
@@ -2424,7 +2453,7 @@ for symbol in [
     if symbol not in (living_h + living_cpp):
         fail(f"PG-049 living-world director invariant missing: {symbol}")
 
-game_mode_cpp = read(SOURCE / "ShireGameMode.cpp")
+game_mode_cpp = read(resolve_source("ShireGameMode.cpp"))
 if "SpawnActor<ALivingWorldDirector>" not in game_mode_cpp:
     fail("PG-049 ShireGameMode no longer bootstraps LivingWorldDirector")
 
@@ -2440,8 +2469,8 @@ for asset_name in [
     if not (common_world_root / asset_name).exists():
         fail(f"PG-049 common terrain production asset missing: {asset_name}")
 
-shire_world_cpp = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
-fellowship_world_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+shire_world_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+fellowship_world_cpp = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
 for symbol in ["SM_CommonTerracedHill", "SM_CommonVillageSlope", "SM_CommonRiverBank", "SM_CommonBoulderCluster"]:
     if symbol not in shire_world_cpp:
         fail(f"PG-049 Shire terrain runtime reference missing: {symbol}")
@@ -2553,7 +2582,7 @@ if approved_external_root.exists():
 # PG-016: the installed UE4.27.2 build does not expose Engine/AtmosphericFog.h
 # as a public include. Cleanup of a legacy AtmosphericFog actor must avoid a direct
 # dependency on that header/class so real Windows compilation cannot regress to C1083.
-shire_world_for_headers = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
+shire_world_for_headers = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
 if '#include "Engine/AtmosphericFog.h"' in shire_world_for_headers:
     fail("PG-016: do not include Engine/AtmosphericFog.h on the locked UE4.27.2 toolchain")
 
@@ -2688,13 +2717,13 @@ powershell_policy_ok = (
 if not powershell_policy_ok:
     fail("PG-027: self-hosted PowerShell steps must bypass the target machine script execution policy")
 
-quest_cpp = read(SOURCE / "ShireQuestSubsystem.cpp")
+quest_cpp = read(resolve_source("ShireQuestSubsystem.cpp"))
 definitions = set(re.findall(r'AddQuestDefinition\s*\(\s*TEXT\("([^"]+)"\)', quest_cpp))
 if not definitions:
     fail("No quest definitions found in ShireQuestSubsystem.cpp")
 
 references: set[str] = set()
-for path in sorted(SOURCE.glob("*.cpp")):
+for path in sorted(SOURCE.rglob("*.cpp")):
     text = read(path)
     for pattern in [
         r'\bQuestId\s*=\s*TEXT\("([^"]+)"\)',
@@ -2711,7 +2740,7 @@ undefined = sorted(ref for ref in references if ref not in definitions)
 if undefined:
     fail("Quest references without definitions: " + ", ".join(undefined))
 
-router_cpp = read(SOURCE / "ChapterWorldRouter.cpp")
+router_cpp = read(resolve_source("ChapterWorldRouter.cpp"))
 
 # Guardian regression PG-010: route helper takes (ChapterId, bRestoreRouteTransform).
 # Catch the exact stale one-argument forms that escaped earlier static validation.
@@ -2728,7 +2757,7 @@ if missing_chapters:
 
 # Guardian regression PG-011: UE4.27 GetLightComponent returns a base pointer.
 # Direct assignment to a derived light component pointer fails real C++ compilation.
-shire_world_cpp = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
+shire_world_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
 if re.search(r'UDirectionalLightComponent\s*\*\s*\w+\s*=\s*\w+->GetLightComponent\s*\(\s*\)\s*;', shire_world_cpp):
     fail("PG-011: direct GetLightComponent assignment to UDirectionalLightComponent*; use Cast<>")
 if re.search(r'USkyLightComponent\s*\*\s*\w+\s*=\s*\w+->GetLightComponent\s*\(\s*\)\s*;', shire_world_cpp):
@@ -2750,7 +2779,7 @@ else:
         fail("PG-012: Directional Light rotation occurs before mobility is set to Movable")
 
 chapter_refs: set[str] = set()
-for path in sorted(SOURCE.glob("*.cpp")):
+for path in sorted(SOURCE.rglob("*.cpp")):
     text = read(path)
     chapter_refs.update(re.findall(r'NextChapterId\s*=\s*TEXT\("(P1C\d+)"\)', text))
     chapter_refs.update(re.findall(r'StartChapter\s*\(\s*TEXT\("(P1C\d+)"\)', text))
@@ -2760,7 +2789,7 @@ if unknown_chapters:
     fail("Unknown runtime chapter references: " + ", ".join(unknown_chapters))
 
 story_beat_refs: set[str] = set()
-for path in sorted(SOURCE.glob("*.cpp")):
+for path in sorted(SOURCE.rglob("*.cpp")):
     if path.name == "ShireStoryPresentationSubsystem.cpp":
         continue
     text = read(path)
@@ -2771,7 +2800,7 @@ for path in sorted(SOURCE.glob("*.cpp")):
         flags=re.S,
     ))
 
-presentation_cpp = read(SOURCE / "ShireStoryPresentationSubsystem.cpp")
+presentation_cpp = read(resolve_source("ShireStoryPresentationSubsystem.cpp"))
 presentation_beats = set(re.findall(r'AddCue\s*\(\s*TEXT\("([^"]+)"\)', presentation_cpp))
 missing_presentation = sorted(story_beat_refs - presentation_beats)
 if missing_presentation:
@@ -2809,7 +2838,7 @@ if dead_music_plan:
     fail("MusicCuePlan cues missing from runtime presentation: " + ", ".join(dead_music_plan))
 
 # Every non-empty dialogue cue referenced by a presentation cue must exist in the runtime dialogue library.
-dialogue_cpp = read(SOURCE / "ShireDialogueSubsystem.cpp")
+dialogue_cpp = read(resolve_source("ShireDialogueSubsystem.cpp"))
 dialogue_sequences = set(re.findall(r'AddSequence\s*\(\s*TEXT\("([^"]+)"\)', dialogue_cpp))
 presentation_dialogue_refs = set(
     re.findall(
@@ -2837,14 +2866,14 @@ if missing_voice_plan:
 if dead_voice_plan:
     fail("VoiceCuePlan cues missing from runtime dialogue: " + ", ".join(dead_voice_plan))
 
-audio_cpp = read(SOURCE / "ShireAudioSubsystem.cpp")
+audio_cpp = read(resolve_source("ShireAudioSubsystem.cpp"))
 if "ResolveVoiceAsset" not in audio_cpp or "/Game/Audio/Voice/" not in audio_cpp:
     fail("Runtime voice asset resolver missing from ShireAudioSubsystem")
 if "SpawnSoundAttached" not in audio_cpp or "SpawnSound2D" not in audio_cpp:
     fail("Runtime voice playback must support attached spatial world voice and controlled 2D fallback")
 
-player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
-player_h = read(SOURCE / "ShirePlayerCharacter.h")
+player_cpp = read(resolve_source("ShirePlayerCharacter.cpp"))
+player_h = read(resolve_source("ShirePlayerCharacter.h"))
 
 # PG-031: production character motion must preserve production-aware transforms.
 for symbol in [
@@ -2865,8 +2894,8 @@ if "/Game/Production/Characters/Frodo/" not in player_cpp:
 if "/Game/Production/Characters/Gandalf/" not in player_cpp:
     fail("PG-031 player character lost Gandalf production asset path")
 
-enemy_cpp = read(SOURCE / "FellowshipEnemyPrototype.cpp")
-save_h = read(SOURCE / "ShireSaveGame.h")
+enemy_cpp = read(resolve_source("FellowshipEnemyPrototype.cpp"))
+save_h = read(resolve_source("ShireSaveGame.h"))
 for symbol in ["PrimaryAttack", "TakeDamage", "GetCurrentHealth", "IsCombatAvailable"]:
     if symbol not in player_cpp and symbol not in player_h:
         fail(f"Combat foundation missing player symbol: {symbol}")
@@ -2883,7 +2912,7 @@ for category in ["/Game/Audio/Ambience/", "/Game/Audio/Music/", "/Game/Audio/SFX
         fail(f"Runtime audio category resolver missing: {category}")
 if "ApplyMusicDuck" not in audio_cpp:
     fail("Runtime audio mix missing dialogue music ducking")
-npc_cpp = read(SOURCE / "ShireNPC.cpp")
+npc_cpp = read(resolve_source("ShireNPC.cpp"))
 for acting_symbol in ["PrototypeLeftEye", "PrototypeRightEye", "PrototypeMouth", "UpdatePrototypeActing"]:
     if acting_symbol not in npc_cpp:
         fail(f"Proxy acting foundation missing: {acting_symbol}")
@@ -2904,7 +2933,7 @@ for chapter, quest in chapter_start_quests.items():
         fail(f"Chapter {chapter} starts with undefined quest: {quest}")
 
 transition_graph: dict[str, set[str]] = defaultdict(set)
-for path in sorted(SOURCE.glob("*.cpp")):
+for path in sorted(SOURCE.rglob("*.cpp")):
     text = read(path)
 
     for match in re.finditer(
@@ -2977,7 +3006,7 @@ for path in sorted(SOURCE.glob("*.cpp")):
             transition_graph[source_quest].add(target_quest)
 
 # Critical runtime handoff guard must explicitly bridge the Shire terminal quest to Bree.
-story_flow_cpp = read(SOURCE / "ShireStoryFlowSubsystem.cpp")
+story_flow_cpp = read(resolve_source("ShireStoryFlowSubsystem.cpp"))
 if 'QuestId == TEXT("FerryEscape")' not in story_flow_cpp:
     fail("Story-flow guard does not monitor FerryEscape terminal state")
 if 'StartChapter(TEXT("P1C02"), TEXT("RoadToBree"), 0)' not in story_flow_cpp:
@@ -3013,7 +3042,7 @@ if "r.DefaultFeature.MotionBlur=False" not in engine_ini:
     warn("Motion blur low-spec default is not explicitly disabled")
 
 input_ini = read(ROOT / "Config" / "DefaultInput.ini")
-player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
+player_cpp = read(resolve_source("ShirePlayerCharacter.cpp"))
 required_actions = guard_rules.get(
     "required_debug_actions",
     ["QuickSave", "QuickLoad", "DebugNextChapter", "DebugPreviousChapter"]
@@ -3034,8 +3063,8 @@ if "CinematicReleaseTimer" not in presentation_cpp:
     fail("Story presentation subsystem lacks automatic cinematic lock release")
 
 # Audio runtime wiring: story ambience/music/SFX and queued voice cues must converge on one subsystem.
-audio_h = read(SOURCE / "ShireAudioSubsystem.h")
-audio_cpp = read(SOURCE / "ShireAudioSubsystem.cpp")
+audio_h = read(resolve_source("ShireAudioSubsystem.h"))
+audio_cpp = read(resolve_source("ShireAudioSubsystem.cpp"))
 for required_symbol in ["OnAmbienceChanged", "OnMusicChanged", "OnSfxRequested", "OnVoiceRequested"]:
     if required_symbol not in audio_h:
         fail(f"Audio subsystem missing event: {required_symbol}")
@@ -3057,8 +3086,8 @@ for unbinding in [
         fail(f"Audio subsystem missing cleanup binding: {unbinding}")
 
 # Guardian: key multi-route persistence symbols must remain present after refactors.
-save_h = read(SOURCE / "ShireSaveGame.h")
-route_h = read(SOURCE / "ShireRouteState.h")
+save_h = read(resolve_source("ShireSaveGame.h"))
+route_h = read(resolve_source("ShireRouteState.h"))
 for symbol in ["CurrentRouteId", "CurrentEpisodeId", "PlayableCharacterId", "RouteProgress", "StartExperience"]:
     if symbol not in quest_cpp and symbol != "RouteProgress":
         fail(f"Quest subsystem missing route-state symbol: {symbol}")
@@ -4209,8 +4238,8 @@ for asset_name in common_dressing_assets:
     if not (common_dressing_root / asset_name).exists():
         fail(f"PG-050 common world dressing asset missing: {asset_name}")
 
-world_builder_h = read(SOURCE / "FellowshipChapterWorldBuilder.h")
-world_builder_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+world_builder_h = read(resolve_source("FellowshipChapterWorldBuilder.h"))
+world_builder_cpp = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
 for symbol in [
     "CommonPineTreeMesh",
     "CommonBroadleafTreeMesh",
@@ -4253,10 +4282,10 @@ for guarded_path, guard_name in [
         except json.JSONDecodeError as exc:
             fail(f"PG-051 invalid {guard_name}: {exc}")
 
-npc_motion_h = read(SOURCE / "ShireNPC.h")
-npc_motion_cpp = read(SOURCE / "ShireNPC.cpp")
-character_stream_h = read(SOURCE / "ShireChapterAssetStreamingSubsystem.h")
-character_stream_cpp = read(SOURCE / "ShireChapterAssetStreamingSubsystem.cpp")
+npc_motion_h = read(resolve_source("ShireNPC.h"))
+npc_motion_cpp = read(resolve_source("ShireNPC.cpp"))
+character_stream_h = read(resolve_source("ShireChapterAssetStreamingSubsystem.h"))
+character_stream_cpp = read(resolve_source("ShireChapterAssetStreamingSubsystem.cpp"))
 for symbol in [
     "TryApplyProductionRig",
     "bUsingSkeletalProductionRig",
@@ -4276,8 +4305,8 @@ for symbol in [
     if symbol not in (character_stream_h + character_stream_cpp):
         fail(f"PG-051 async character rig invariant missing: {symbol}")
 
-chapter_world_h = read(SOURCE / "FellowshipChapterWorldBuilder.h")
-chapter_world_cpp = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+chapter_world_h = read(resolve_source("FellowshipChapterWorldBuilder.h"))
+chapter_world_cpp = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
 for symbol in [
     "ConfigureChapterAtmosphere",
     "ADirectionalLight",
@@ -4305,15 +4334,15 @@ else:
     except json.JSONDecodeError as exc:
         fail(f"PG-052 invalid ResourceIntegrationPlan.json: {exc}")
 
-shire_h_cp52 = read(SOURCE / "ShirePrototypeWorldBuilder.h")
-shire_cpp_cp52 = read(SOURCE / "ShirePrototypeWorldBuilder.cpp")
-bree_h_cp52 = read(SOURCE / "BreePrototypeWorldBuilder.h")
-bree_cpp_cp52 = read(SOURCE / "BreePrototypeWorldBuilder.cpp")
-fellowship_cpp_cp52 = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
-build_cs_cp52 = read(SOURCE / "ShireJourney.Build.cs")
-game_mode_cpp_cp52 = read(SOURCE / "ShireGameMode.cpp")
-router_cpp_cp52 = read(SOURCE / "ChapterWorldRouter.cpp")
-quest_cpp_cp52 = read(SOURCE / "ShireQuestSubsystem.cpp")
+shire_h_cp52 = read(resolve_source("ShirePrototypeWorldBuilder.h"))
+shire_cpp_cp52 = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+bree_h_cp52 = read(resolve_source("BreePrototypeWorldBuilder.h"))
+bree_cpp_cp52 = read(resolve_source("BreePrototypeWorldBuilder.cpp"))
+fellowship_cpp_cp52 = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
+build_cs_cp52 = read(resolve_source("ShireJourney.Build.cs"))
+game_mode_cpp_cp52 = read(resolve_source("ShireGameMode.cpp"))
+router_cpp_cp52 = read(resolve_source("ChapterWorldRouter.cpp"))
+quest_cpp_cp52 = read(resolve_source("ShireQuestSubsystem.cpp"))
 unreal_workflow_cp52 = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 
 for symbol in [
@@ -4416,9 +4445,9 @@ else:
     except json.JSONDecodeError as exc:
         fail(f"PG-053 invalid WorldLifeSaturationPlan.json: {exc}")
 
-living_world_h = read(SOURCE / "LivingWorldDirector.h")
-living_world_cpp = read(SOURCE / "LivingWorldDirector.cpp")
-ambient_cpp = read(SOURCE / "ShireAmbientNPC.cpp")
+living_world_h = read(resolve_source("LivingWorldDirector.h"))
+living_world_cpp = read(resolve_source("LivingWorldDirector.cpp"))
+ambient_cpp = read(resolve_source("ShireAmbientNPC.cpp"))
 
 for symbol in [
     "BaselinePopulation",
@@ -4910,9 +4939,9 @@ for pg82_symbol in [
 
 
 # PG-083: PATTERN_MATCH side play must have a real interactable environmental puzzle runtime.
-pg83_h = read(SOURCE / "ShireEnvironmentalPuzzle.h")
-pg83_cpp = read(SOURCE / "ShireEnvironmentalPuzzle.cpp")
-pg83_builder = read(SOURCE / "FellowshipChapterWorldBuilder.cpp")
+pg83_h = read(resolve_source("ShireEnvironmentalPuzzle.h"))
+pg83_cpp = read(resolve_source("ShireEnvironmentalPuzzle.cpp"))
+pg83_builder = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
 for pg83_symbol in [
     "IShireInteractable",
     "ConfigurePuzzle",
@@ -4945,10 +4974,10 @@ if pg84_policy.get("may_advance_required_anchor") is not False:
 if pg84_policy.get("may_change_canon_outcome") is not False:
     fail("PG-084 living-world interactions may not change canon outcomes")
 
-pg84_h = read(SOURCE / "ShireWorldEventInteraction.h")
-pg84_cpp = read(SOURCE / "ShireWorldEventInteraction.cpp")
-pg84_director_h = read(SOURCE / "LivingWorldDirector.h")
-pg84_director_cpp = read(SOURCE / "LivingWorldDirector.cpp")
+pg84_h = read(resolve_source("ShireWorldEventInteraction.h"))
+pg84_cpp = read(resolve_source("ShireWorldEventInteraction.cpp"))
+pg84_director_h = read(resolve_source("LivingWorldDirector.h"))
+pg84_director_cpp = read(resolve_source("LivingWorldDirector.cpp"))
 for pg84_symbol in [
     "IShireInteractable",
     "ConfigureInteraction",
@@ -4987,11 +5016,11 @@ for pg85_reward in pg85_rewards.get("discovery_rewards", []):
     if pg85_labels.get(pg85_id) != pg85_display:
         fail(f"PG-085 Chronicle display label drifted from exploration source: {pg85_id}")
 
-pg85_qh = read(SOURCE / "ShireQuestSubsystem.h")
-pg85_qc = read(SOURCE / "ShireQuestSubsystem.cpp")
-pg85_ph = read(SOURCE / "ShirePlayerCharacter.h")
-pg85_pc = read(SOURCE / "ShirePlayerCharacter.cpp")
-pg85_hud = read(SOURCE / "ShireHUD.cpp")
+pg85_qh = read(resolve_source("ShireQuestSubsystem.h"))
+pg85_qc = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg85_ph = read(resolve_source("ShirePlayerCharacter.h"))
+pg85_pc = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg85_hud = read(resolve_source("ShireHUD.cpp"))
 pg85_input = read(ROOT / "Config" / "DefaultInput.ini")
 for pg85_symbol in [
     "GetChronicleEntryDisplayLabel",
@@ -5286,8 +5315,8 @@ for pg94_symbol in ["obj_triangle_equivalents", "Production source buckets", "La
         fail(f"PG-094 asset audit measurement missing: {pg94_symbol}")
 
 # PG-095: selected hero/threat camera moments use bounded player-camera framing only.
-pg95_player_h = read(SOURCE / "ShirePlayerCharacter.h")
-pg95_player_cpp = read(SOURCE / "ShirePlayerCharacter.cpp")
+pg95_player_h = read(resolve_source("ShirePlayerCharacter.h"))
+pg95_player_cpp = read(resolve_source("ShirePlayerCharacter.cpp"))
 for pg95_symbol in [
     "HandleStoryCameraCue",
     "UpdateStoryCameraCue",

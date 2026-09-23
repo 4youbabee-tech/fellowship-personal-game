@@ -1,3 +1,11 @@
+## 2026-09-24 - W00 checkpoint CP-W00-152: isolated Public/Private runtime-source migration
+
+Exact CP151 head `92f6d3aaad79f33eaf2385de292e6886d2c1b5da` is the new fully machine-green baseline: **Pre-Unreal #785 SUCCESS + Unreal #620 SUCCESS + Warehouse #201 SUCCESS**. The full static/governor/asset/readiness/deep/unit-test chain passed, and Unreal #620 passed compile/import/Automation/startup/chapter/state/transition/fault/pending/persistence-edge/warning-debt coverage.
+
+With the correction loop green, CP152 performs the already-approved architecture-only migration: all 62 runtime .h/.cpp entries move from the module root to their mapped `Public/<Domain>` and `Private/<Domain>` paths. Gameplay source blobs are unchanged. Build.cs no longer exports the entire module root; it exposes only explicit public domain include roots. Pre-Unreal and DeepProjectAudit now resolve runtime filenames recursively, and PG-154 rejects flat-root regression.
+
+CP152 is **SOURCE-LAYOUT-MIGRATED / EXACT-HEAD VALIDATION PENDING** until fresh Pre-Unreal and UE4.27.2 proof. No PIE/device/visual/audio/package acceptance is claimed.
+
 ## 2026-09-24 - W00 checkpoint CP-W00-151: handoff evidence-lineage correction
 
 Exact CP150 head `2259242a772d3dd21a90cc10a8a4a2761be3b3dd` passed **Unreal #619 SUCCESS** and **Warehouse #200 SUCCESS**. Pre-Unreal #784 also passed **PRE-UNREAL CORE VALIDATION**, proving the prior PG-056 NameError is gone, then stopped in `project_governor.py` on one data-lineage invariant:
@@ -1396,14 +1404,14 @@ Active production order:
 
 ## Exact next hard gate
 
-Finish the stabilization loop instead of opening another architecture wave:
+1. Prove the CP-W00-152 Public/Private migration on one exact head with full Pre-Unreal and UE4.27.2 compile/import/headless runtime.
+2. If green, treat validator/governor/root-code correction work as closed unless a new concrete regression appears.
+3. Validate packaged runtime Data JSON staging/read execution.
+4. Validate actual authored audio-bank presence/playback without `-NoSound`; missing authored assets remain an explicit production blocker, not a fake pass.
+5. Run target-device DX11 / 720p / Low-Medium profiling.
+6. Collect chapter-specific human PIE/pacing/visual observations.
 
-1. prove CP-W00-150 with a **full** Pre-Unreal run that reaches Governor, strict asset audit, readiness audit, DeepProjectAudit and all regression tests,
-2. prove the same exact head with UE4.27.2 compile/import/headless runtime,
-3. once both are green, stop validator/governor refactoring unless a new concrete failure appears,
-4. close only the remaining W00 acceptance gaps: packaged Data JSON execution, real audio playback, isolated Public/Private migration, target-device profiling and chapter-specific human PIE/pacing/visual review.
-
-W01 and B1/B2/B3 remain frozen until the Governor records W00 exit criteria as satisfied.
+W01 and B1/B2/B3 remain frozen until the Governor records the remaining W00 acceptance evidence.
 
 ## Failure procedure
 

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "2259242a772d3dd21a90cc10a8a4a2761be3b3dd_UNREAL619_WAREHOUSE200_GREEN_PRE784_HANDOFF_LINEAGE_CP151_PENDING",
+  "audited_head": "92f6d3aaad79f33eaf2385de292e6886d2c1b5da_PRE785_UNREAL620_WAREHOUSE201_GREEN_CP152_PUBLIC_PRIVATE_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -448,6 +448,14 @@
       "title": "Session handoff source_head was overwritten with a partially proven candidate",
       "evidence": "Pre #784 on 2259242a passed PRE-UNREAL CORE VALIDATION, then project_governor.py reported only: Legacy verified handoff must refer to the same last-green baseline. Unreal #619 and Warehouse #200 succeeded on the same head.",
       "action": "Keep source_head equal to validation_snapshot.last_green.sha. Record newer partial candidate evidence only in validation_snapshot.latest_observed. Preserve the existing handoff regression test; do not weaken the validator."
+    },
+    {
+      "id": "AUDIT-HIGH-055",
+      "severity": "HIGH",
+      "status": "PHYSICAL_PUBLIC_PRIVATE_MIGRATION_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "title": "Runtime module remained physically flat after its architecture map and migration gate were already established",
+      "evidence": "CP-W00-151 exact head 92f6d3aa passed Pre #785, Unreal #620 and Warehouse #201. Data/SourceArchitecturePlan.json still marked 62 runtime .h/.cpp entries CURRENT_FLAT and Build.cs still exported the whole module root.",
+      "action": "Move all mapped headers to Public/<Domain> and sources to Private/<Domain>, remove whole-module root export, make validators recursively/layout-aware, forbid flat-root regression, then require fresh exact-head Pre-Unreal and UE4.27.2 proof."
     }
   ],
   "external_practice_alignment": [
@@ -473,12 +481,11 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head full Pre-Unreal + UE4.27.2 validation for CP-W00-151",
-    "after machine-green stabilization, packaged-build Data JSON staging/read validation",
-    "actual audio production-bank presence/playback without -NoSound",
-    "isolated Public/Private migration",
+    "fresh exact-head Pre-Unreal + UE4.27.2 validation for CP-W00-152 Public/Private migration",
+    "packaged-build Data JSON staging/read execution",
+    "actual audio-bank presence/playback without -NoSound",
     "target-device frame-time/resident-memory/VRAM/GC/tick profiling",
     "human core-loop/onboarding/chapter-specific visual-pacing review"
   ],
-  "audit_scope_note": "2259242a passed Unreal #619 and Warehouse #200; Pre #784 passed core validation and failed only on Governor handoff lineage. CP151 corrects ProjectGovernor data without changing validator semantics. Fresh exact-head proof is pending."
+  "audit_scope_note": "CP-W00-151 exact head 92f6d3aa passed Pre #785, Unreal #620 and Warehouse #201. CP152 changes physical runtime source layout only; gameplay source blobs are unchanged. Fresh exact-head compile/runtime proof remains mandatory."
 }

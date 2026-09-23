@@ -1,3 +1,9 @@
+## 2026-09-24 - W00 CP-W00-152 Public/Private source migration
+
+Exact CP151 head `92f6d3aa...` passed Pre #785, Unreal #620 and Warehouse #201. CP152 performs only the pre-recorded physical runtime-module migration: 62 .h/.cpp files move to `Public/<Domain>` and `Private/<Domain>`; Build.cs stops exporting the module root; validators become layout-aware and PG-154 forbids flat regression.
+
+No gameplay behavior or production-completeness percentage changes. CP152 is **SOURCE-LAYOUT-MIGRATED / EXACT-HEAD VALIDATION PENDING**.
+
 ## 2026-09-24 - W00 CP-W00-151 handoff-lineage correction
 
 Exact CP150 head `2259242a...`: Unreal #619 SUCCESS + Warehouse #200 SUCCESS; Pre #784 passed core validation and then failed only because `session_handoff.source_head` no longer matched the recorded last-green baseline. CP151 restores the intended evidence lineage without weakening the validator.

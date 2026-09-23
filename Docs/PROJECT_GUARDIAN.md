@@ -577,3 +577,14 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Guard:** existing `test_governor_handoff.py::test_historical_handoff_cannot_disagree_with_baseline` remains authoritative. The correction is data-only; the validator is not weakened.
 
 **Proof boundary:** fresh full Pre-Unreal and exact-head Unreal validation are still required for CP151.
+
+### PG-154 — Runtime module may not regress to flat-root source layout
+**Baseline:** CP-W00-151 `92f6d3aaad79f33eaf2385de292e6886d2c1b5da` passed Pre #785, Unreal #620 and Warehouse #201 before the isolated migration.
+
+**Contract:** runtime headers live under `Source/ShireJourney/Public/<Domain>/`; implementation files live under `Private/<Domain>/`; `ShireJourney.Build.cs` remains at module root. All mapped .h/.cpp entries are `MIGRATED`.
+
+**Visibility rule:** never reintroduce `PublicIncludePaths.Add(ModuleDirectory)`. Only explicit `Public/<Domain>` include roots may be exported, keeping private implementation and module-root files out of dependent-module visibility.
+
+**Guard:** Pre-Unreal recursively resolves runtime files, rejects root-level .h/.cpp files, rejects `CURRENT_FLAT` entries after migration and checks all public domain include roots. DeepProjectAudit also scans recursively.
+
+**Proof boundary:** CP152 is organizational only. Fresh exact-head Pre-Unreal and UE4.27.2 compile/runtime validation are required; no PIE/device/visual claim follows from moving files.

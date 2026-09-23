@@ -1,4 +1,5 @@
 using UnrealBuildTool;
+using System.IO;
 
 public class ShireJourney : ModuleRules
 {
@@ -6,10 +7,19 @@ public class ShireJourney : ModuleRules
     {
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-        // Transitional export for the currently flat guarded runtime layout.
-        // Cross-module editor QA needs runtime public contracts (for example ShireSaveGame.h)
-        // until the dedicated Public/Private migration moves headers under Public/<Domain>.
-        PublicIncludePaths.Add(ModuleDirectory);
+        // Physical Public/Private migration completed in CP-W00-152.
+        // Keep existing basename includes stable without exporting the module root:
+        // only intentional public domain headers are visible to this and dependent modules.
+        PublicIncludePaths.AddRange(new string[]
+        {
+            Path.Combine(ModuleDirectory, "Public", "Core"),
+            Path.Combine(ModuleDirectory, "Public", "Characters"),
+            Path.Combine(ModuleDirectory, "Public", "World"),
+            Path.Combine(ModuleDirectory, "Public", "Subsystems"),
+            Path.Combine(ModuleDirectory, "Public", "UI"),
+            Path.Combine(ModuleDirectory, "Public", "SaveGame"),
+            Path.Combine(ModuleDirectory, "Public", "Prototypes")
+        });
 
         PublicDependencyModuleNames.AddRange(new string[]
         {

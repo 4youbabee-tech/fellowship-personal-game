@@ -4,7 +4,7 @@
   "module": "ShireJourney",
   "engine": "Unreal Engine 4.27.2",
   "purpose": "Machine-readable runtime source ownership and controlled migration plan so developer handoffs do not depend on chat memory.",
-  "current_layout": "FLAT_GUARDED",
+  "current_layout": "PUBLIC_PRIVATE_BY_DOMAIN",
   "target_layout": "PUBLIC_PRIVATE_BY_DOMAIN",
   "allowed_domains": [
     "ModuleRoot",
@@ -44,7 +44,7 @@
       "domain": "Core",
       "kind": "Header",
       "role": "Runtime module public header",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireJourney.cpp",
@@ -52,7 +52,7 @@
       "domain": "Core",
       "kind": "Source",
       "role": "Runtime module implementation/registration",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireGameMode.h",
@@ -60,7 +60,7 @@
       "domain": "Core",
       "kind": "Header",
       "role": "Game mode declaration",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireGameMode.cpp",
@@ -68,7 +68,7 @@
       "domain": "Core",
       "kind": "Source",
       "role": "Game mode startup and chapter-router bootstrap",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireInteractable.h",
@@ -76,7 +76,7 @@
       "domain": "Core",
       "kind": "Header",
       "role": "Interaction interface contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShirePlayerCharacter.h",
@@ -84,7 +84,7 @@
       "domain": "Characters",
       "kind": "Header",
       "role": "Playable character contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShirePlayerCharacter.cpp",
@@ -92,7 +92,7 @@
       "domain": "Characters",
       "kind": "Source",
       "role": "Movement interaction save-load route toggle and combat input",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireNPC.h",
@@ -100,7 +100,7 @@
       "domain": "Characters",
       "kind": "Header",
       "role": "Story NPC contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireNPC.cpp",
@@ -108,7 +108,7 @@
       "domain": "Characters",
       "kind": "Source",
       "role": "Story NPC interaction follow and proxy acting",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireAmbientNPC.h",
@@ -116,7 +116,7 @@
       "domain": "Characters",
       "kind": "Header",
       "role": "Ambient resident contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireAmbientNPC.cpp",
@@ -124,7 +124,7 @@
       "domain": "Characters",
       "kind": "Source",
       "role": "Ambient routine awareness and low-cost social life",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ChapterWorldRouter.h",
@@ -132,7 +132,7 @@
       "domain": "World",
       "kind": "Header",
       "role": "Runtime chapter/route world router contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ChapterWorldRouter.cpp",
@@ -140,7 +140,7 @@
       "domain": "World",
       "kind": "Source",
       "role": "Runtime chapter/route world switching and cleanup",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShirePrototypeWorldBuilder.h",
@@ -148,7 +148,7 @@
       "domain": "World",
       "kind": "Header",
       "role": "Shire runtime world builder contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
@@ -156,7 +156,7 @@
       "domain": "World",
       "kind": "Source",
       "role": "Shire vertical-slice runtime world generation",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/BreePrototypeWorldBuilder.h",
@@ -164,7 +164,7 @@
       "domain": "World",
       "kind": "Header",
       "role": "Bree runtime world builder contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/BreePrototypeWorldBuilder.cpp",
@@ -172,7 +172,7 @@
       "domain": "World",
       "kind": "Source",
       "role": "Bree prototype world generation",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/FellowshipChapterWorldBuilder.h",
@@ -180,7 +180,7 @@
       "domain": "World",
       "kind": "Header",
       "role": "Shared P1C03-P1C08 world builder contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
@@ -188,7 +188,7 @@
       "domain": "World",
       "kind": "Source",
       "role": "Shared Part I chapter prototype generation",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/IsengardPrototypeWorldBuilder.h",
@@ -196,7 +196,7 @@
       "domain": "World",
       "kind": "Header",
       "role": "Gandalf/Isengard world builder contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/IsengardPrototypeWorldBuilder.cpp",
@@ -204,7 +204,7 @@
       "domain": "World",
       "kind": "Source",
       "role": "Gandalf/Isengard parallel-route world generation",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireQuestTrigger.h",
@@ -212,7 +212,7 @@
       "domain": "World",
       "kind": "Header",
       "role": "Spatial quest/chapter trigger contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireQuestTrigger.cpp",
@@ -220,7 +220,7 @@
       "domain": "World",
       "kind": "Source",
       "role": "Quest/chapter trigger progression implementation",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireQuestSubsystem.h",
@@ -228,7 +228,7 @@
       "domain": "Subsystems",
       "kind": "Header",
       "role": "Quest chapter route episode and per-route state contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireQuestSubsystem.cpp",
@@ -236,7 +236,7 @@
       "domain": "Subsystems",
       "kind": "Source",
       "role": "Quest definitions story state and route snapshots",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireDialogueSubsystem.h",
@@ -244,7 +244,7 @@
       "domain": "Subsystems",
       "kind": "Header",
       "role": "Dialogue runtime contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireDialogueSubsystem.cpp",
@@ -252,7 +252,7 @@
       "domain": "Subsystems",
       "kind": "Source",
       "role": "Dialogue sequence and voice-cue runtime library",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireAudioSubsystem.h",
@@ -260,7 +260,7 @@
       "domain": "Subsystems",
       "kind": "Header",
       "role": "Audio runtime contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireAudioSubsystem.cpp",
@@ -268,7 +268,7 @@
       "domain": "Subsystems",
       "kind": "Source",
       "role": "Ambience music SFX voice routing and ducking",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireStoryFlowSubsystem.h",
@@ -276,7 +276,7 @@
       "domain": "Subsystems",
       "kind": "Header",
       "role": "Story handoff safety contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireStoryFlowSubsystem.cpp",
@@ -284,7 +284,7 @@
       "domain": "Subsystems",
       "kind": "Source",
       "role": "Terminal quest/chapter flow guard",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireStoryPresentationSubsystem.h",
@@ -292,7 +292,7 @@
       "domain": "Subsystems",
       "kind": "Header",
       "role": "Story presentation/cinematic cue contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireStoryPresentationSubsystem.cpp",
@@ -300,7 +300,7 @@
       "domain": "Subsystems",
       "kind": "Source",
       "role": "Story presentation dialogue audio and cinematic cue orchestration",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireHUD.h",
@@ -308,7 +308,7 @@
       "domain": "UI",
       "kind": "Header",
       "role": "Runtime HUD contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireHUD.cpp",
@@ -316,7 +316,7 @@
       "domain": "UI",
       "kind": "Source",
       "role": "Quest dialogue alert combat and developer HUD",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireSaveGame.h",
@@ -324,7 +324,7 @@
       "domain": "SaveGame",
       "kind": "Header",
       "role": "Quick-save serialized state contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireSaveGame.cpp",
@@ -332,7 +332,7 @@
       "domain": "SaveGame",
       "kind": "Source",
       "role": "SaveGame implementation unit",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireRouteState.h",
@@ -340,7 +340,7 @@
       "domain": "SaveGame",
       "kind": "Header",
       "role": "Per-route progress snapshot structure",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/BlackRiderPrototype.h",
@@ -348,7 +348,7 @@
       "domain": "Prototypes",
       "kind": "Header",
       "role": "Black Rider stealth prototype contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/BlackRiderPrototype.cpp",
@@ -356,7 +356,7 @@
       "domain": "Prototypes",
       "kind": "Source",
       "role": "Black Rider patrol detection and investigation prototype",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/FellowshipEnemyPrototype.h",
@@ -364,7 +364,7 @@
       "domain": "Prototypes",
       "kind": "Header",
       "role": "Part I enemy prototype contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/FellowshipEnemyPrototype.cpp",
@@ -372,7 +372,7 @@
       "domain": "Prototypes",
       "kind": "Source",
       "role": "Orc Uruk-hai Cave Troll lightweight combat prototype",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireNPCContextSubsystem.h",
@@ -380,7 +380,7 @@
       "domain": "Subsystems",
       "kind": "Header",
       "role": "Runtime NPC identity alias knowledge schedule and bounded-dialogue context contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireNPCContextSubsystem.cpp",
@@ -388,7 +388,7 @@
       "domain": "Subsystems",
       "kind": "Source",
       "role": "Runtime social-model loading canonical identity schedules knowledge guards and bounded dialogue selection",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/LivingWorldDirector.h",
@@ -396,7 +396,7 @@
       "domain": "World",
       "kind": "Header",
       "role": "Data-driven chapter-aware living-world micro-event director contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/LivingWorldDirector.cpp",
@@ -404,7 +404,7 @@
       "domain": "World",
       "kind": "Source",
       "role": "Micro-event scheduling spawning culling weather context and chapter reaction runtime",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireTraversalChallenge.h",
@@ -412,7 +412,7 @@
       "domain": "World",
       "kind": "Header",
       "role": "Ordered traversal side-activity challenge contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireTraversalChallenge.cpp",
@@ -420,7 +420,7 @@
       "domain": "World",
       "kind": "Source",
       "role": "Ordered traversal side-activity challenge implementation",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireEnvironmentalPuzzle.h",
@@ -428,7 +428,7 @@
       "domain": "World",
       "kind": "Header",
       "role": "Interactable environmental pattern-puzzle side-activity contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireEnvironmentalPuzzle.cpp",
@@ -436,7 +436,7 @@
       "domain": "World",
       "kind": "Source",
       "role": "Three-step interactable environmental pattern-puzzle implementation",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireWorldEventInteraction.h",
@@ -444,7 +444,7 @@
       "domain": "World",
       "kind": "Header",
       "role": "Ephemeral bounded player interaction contract for living-world micro-events",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireWorldEventInteraction.cpp",
@@ -452,7 +452,7 @@
       "domain": "World",
       "kind": "Source",
       "role": "Story-safe reward-free interaction response implementation for living-world micro-events",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/FellowshipMythicThreat.h",
@@ -460,7 +460,7 @@
       "domain": "World",
       "kind": "Header",
       "role": "Film-locked non-killable mythic threat presentation contract for Watcher and Balrog",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/FellowshipMythicThreat.cpp",
@@ -468,7 +468,7 @@
       "domain": "World",
       "kind": "Source",
       "role": "Story-beat-gated Watcher/Balrog visual pressure implementation using project-owned foundations",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/WorldAmbientMotionActor.h",
@@ -476,7 +476,7 @@
       "domain": "World",
       "kind": "Header",
       "role": "Lightweight source-grounded environmental motion and bounded glow actor contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/WorldAmbientMotionActor.cpp",
@@ -484,7 +484,7 @@
       "domain": "World",
       "kind": "Source",
       "role": "Environmental sway bob shiver and shadowless glow implementation for living-world micro-events",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/WorldDetailCluster.h",
@@ -492,7 +492,7 @@
       "domain": "World",
       "kind": "Header",
       "role": "Performance-aware HISM decorative detail cluster contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/WorldDetailCluster.cpp",
@@ -500,7 +500,7 @@
       "domain": "World",
       "kind": "Source",
       "role": "Non-colliding culled hierarchical instanced micro-detail implementation",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/StoryPresentationDirector.h",
@@ -508,7 +508,7 @@
       "domain": "World",
       "kind": "Header",
       "role": "Bounded runtime cinematic camera accent director contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/StoryPresentationDirector.cpp",
@@ -516,7 +516,7 @@
       "domain": "World",
       "kind": "Source",
       "role": "Story-cue camera grammar, subject framing and safe gameplay return implementation",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.h",
@@ -524,7 +524,7 @@
       "domain": "Subsystems",
       "kind": "Header",
       "role": "Chapter/route asset-bank asynchronous streaming contract",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     },
     {
       "current_path": "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.cpp",
@@ -532,7 +532,7 @@
       "domain": "Subsystems",
       "kind": "Source",
       "role": "Data-driven soft-path bank loading and seam-safe resident-handle implementation",
-      "migration_status": "CURRENT_FLAT"
+      "migration_status": "MIGRATED"
     }
   ],
   "programmer_review_2026_09_21": {
@@ -544,13 +544,26 @@
       "current_layout": "FLAT_GUARDED",
       "target_layout": "PUBLIC_PRIVATE_BY_DOMAIN"
     },
-    "execution_rule": "Do not mix the physical source-layout migration with gameplay/production feature work. Perform it on a dedicated short branch, update includes/static-validator paths, then require Pre-Unreal and real UE4.27.2 build proof.",
-    "urgency": "STRUCTURAL_MAINTENANCE_NOT_RUNTIME_BLOCKER"
+    "execution_rule": "Physical migration executed in CP-W00-152 as a dedicated maintenance change with no gameplay redesign; exact-head Pre-Unreal and UE4.27.2 proof are required before acceptance.",
+    "urgency": "MIGRATION_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF"
   },
   "transitional_module_visibility": {
-    "status": "ACTIVE_UNTIL_PHYSICAL_PUBLIC_PRIVATE_MIGRATION",
-    "runtime_module_root_export": "Source/ShireJourney/ShireJourney.Build.cs -> PublicIncludePaths.Add(ModuleDirectory)",
-    "reason": "Editor-only QA module depends on runtime public contracts while the runtime module remains FLAT_GUARDED. This prevents relative/private include hacks and is removed when headers move to Public/<Domain>.",
-    "acceptance_rule": "Keep the physical migration as a dedicated maintenance change; do not mix it into build-defect repair."
+    "status": "CLOSED_AFTER_PHYSICAL_PUBLIC_PRIVATE_MIGRATION",
+    "runtime_module_root_export": "REMOVED",
+    "replacement": "ShireJourney.Build.cs exports only Public/<Domain> include roots; runtime headers live under Public and implementation files under Private.",
+    "reason": "CP-W00-152 completed the isolated physical source-layout migration without gameplay redesign.",
+    "acceptance_rule": "Do not reintroduce flat runtime .h/.cpp files or PublicIncludePaths.Add(ModuleDirectory). New runtime files must be registered in the architecture plan under Public/<Domain> or Private/<Domain>."
+  },
+  "physical_migration": {
+    "checkpoint": "CP-W00-152",
+    "source_green_baseline": "92f6d3aaad79f33eaf2385de292e6886d2c1b5da",
+    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+    "moved_entries": 62,
+    "gameplay_changes": "NONE",
+    "include_strategy": "Preserve stable basename includes by exporting only the seven Public domain directories; the module root is no longer public.",
+    "validation_required": [
+      "Pre-Unreal exact-head",
+      "UE4.27.2 C++ build/import/headless runtime"
+    ]
   }
 }
