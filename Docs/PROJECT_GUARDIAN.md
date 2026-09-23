@@ -588,3 +588,14 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Guard:** Pre-Unreal recursively resolves runtime files, rejects root-level .h/.cpp files, rejects `CURRENT_FLAT` entries after migration and checks all public domain include roots. DeepProjectAudit also scans recursively.
 
 **Proof boundary:** CP152 is organizational only. Fresh exact-head Pre-Unreal and UE4.27.2 compile/runtime validation are required; no PIE/device/visual claim follows from moving files.
+
+### PG-155 — Public/Private migration consumers and persistent runners must follow the architecture map
+**Symptom exposed by:** Pre #786 and Unreal #621 on `9acc72b16e058a422428389fcefeb9af12fa0e98`.
+
+**Static failure:** validators still opened historical flat paths after the physical files moved, creating missing-read cascades that looked like dozens of lost gameplay invariants.
+
+**Engine failure:** the self-hosted runner intentionally does not `git clean`; after the migration, old tracked root headers became untracked leftovers. UHT therefore saw both the stale flat header and the new Public header and rejected duplicate leaf names.
+
+**Contract:** validator file access resolves the active migrated source tree; centralized runtime evidence anchors name the physical migrated files. Before Unreal verification/build, the persistent runner reads `SourceArchitecturePlan.json` and removes only an obsolete `current_path` whose entry is `MIGRATED` and whose `target_path` exists. No broad `git clean` is allowed.
+
+**Proof boundary:** these are migration-integration repairs only. Fresh full Pre-Unreal and UE4.27.2 evidence are required before the Public/Private migration is accepted.

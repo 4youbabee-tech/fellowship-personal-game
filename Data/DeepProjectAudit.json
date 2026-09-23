@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "92f6d3aaad79f33eaf2385de292e6886d2c1b5da_PRE785_UNREAL620_WAREHOUSE201_GREEN_CP152_PUBLIC_PRIVATE_PENDING",
+  "audited_head": "9acc72b16e058a422428389fcefeb9af12fa0e98_PRE786_PATH_DRIFT_UNREAL621_STALE_WORKTREE_WAREHOUSE202_GREEN_CP153_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -456,6 +456,14 @@
       "title": "Runtime module remained physically flat after its architecture map and migration gate were already established",
       "evidence": "CP-W00-151 exact head 92f6d3aa passed Pre #785, Unreal #620 and Warehouse #201. Data/SourceArchitecturePlan.json still marked 62 runtime .h/.cpp entries CURRENT_FLAT and Build.cs still exported the whole module root.",
       "action": "Move all mapped headers to Public/<Domain> and sources to Private/<Domain>, remove whole-module root export, make validators recursively/layout-aware, forbid flat-root regression, then require fresh exact-head Pre-Unreal and UE4.27.2 proof."
+    },
+    {
+      "id": "AUDIT-HIGH-056",
+      "severity": "HIGH",
+      "status": "MIGRATION_CONSUMER_AND_PERSISTENT_WORKTREE_REPAIR_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "title": "Public/Private migration exposed historical path consumers and stale self-hosted source leftovers",
+      "evidence": "On 9acc72b1, Pre #786 emitted 26 unique missing flat-source reads followed by dependent false invariant failures. Unreal #621 stopped in UHT with duplicate leaf headers because old flat headers remained as untracked files in the persistent workspace while the tracked files had moved to Public. Warehouse #202 passed.",
+      "action": "Resolve validator source basenames against the migrated tree, move centralized runtime evidence anchors to physical Private paths, make streaming tests layout-aware, and run a bounded architecture-map cleanup of obsolete current_path files on the persistent runner only when target_path exists."
     }
   ],
   "external_practice_alignment": [
@@ -481,11 +489,11 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head Pre-Unreal + UE4.27.2 validation for CP-W00-152 Public/Private migration",
+    "fresh exact-head full Pre-Unreal + UE4.27.2 validation for CP-W00-153",
     "packaged-build Data JSON staging/read execution",
-    "actual audio-bank presence/playback without -NoSound",
+    "actual authored audio-bank presence/playback without -NoSound",
     "target-device frame-time/resident-memory/VRAM/GC/tick profiling",
     "human core-loop/onboarding/chapter-specific visual-pacing review"
   ],
-  "audit_scope_note": "CP-W00-151 exact head 92f6d3aa passed Pre #785, Unreal #620 and Warehouse #201. CP152 changes physical runtime source layout only; gameplay source blobs are unchanged. Fresh exact-head compile/runtime proof remains mandatory."
+  "audit_scope_note": "CP152 Git tree is physically migrated with no gameplay blob changes. Pre #786 and Unreal #621 exposed migration consumers/workspace residue rather than gameplay regressions. CP153 repairs those two families; fresh exact-head proof is required."
 }

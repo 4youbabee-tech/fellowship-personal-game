@@ -1,3 +1,13 @@
+## 2026-09-24 - W00 checkpoint CP-W00-153: migration-consumer and persistent-runner repair
+
+CP152 head `9acc72b16e058a422428389fcefeb9af12fa0e98` has the intended physical Git tree: zero flat runtime .h/.cpp files, 32 headers under `Public/<Domain>` and 30 implementations under `Private/<Domain>`. Warehouse #202 succeeded.
+
+Its proof failed in two concrete migration-tooling families. Pre #786 still had historical direct reads such as `Source/ShireJourney/ShireGameMode.cpp`, so missing-file reads cascaded into false PG-109/129/131/133/136/137/138/140/142 failures. Unreal #621 reached UHT and failed on duplicate leaf headers because the persistent self-hosted worktree retained the old flat headers as **untracked leftovers** after the tracked files moved.
+
+CP153 fixes both systemically without changing gameplay: all real Pre-Unreal source reads resolve migrated basenames, the central runtime-evidence registry points at actual `Private/<Domain>` paths, the streaming source-contract test is layout-aware, and the Unreal workflow removes only obsolete architecture-mapped legacy files after confirming their migrated targets exist.
+
+Status: **SOURCE-LAYOUT INTACT / MIGRATION INTEGRATION REPAIRED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/audio/package acceptance is claimed.
+
 ## 2026-09-24 - W00 checkpoint CP-W00-152: isolated Public/Private runtime-source migration
 
 Exact CP151 head `92f6d3aaad79f33eaf2385de292e6886d2c1b5da` is the new fully machine-green baseline: **Pre-Unreal #785 SUCCESS + Unreal #620 SUCCESS + Warehouse #201 SUCCESS**. The full static/governor/asset/readiness/deep/unit-test chain passed, and Unreal #620 passed compile/import/Automation/startup/chapter/state/transition/fault/pending/persistence-edge/warning-debt coverage.

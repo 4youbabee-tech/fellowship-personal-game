@@ -557,13 +557,25 @@
   "physical_migration": {
     "checkpoint": "CP-W00-152",
     "source_green_baseline": "92f6d3aaad79f33eaf2385de292e6886d2c1b5da",
-    "status": "IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+    "status": "MIGRATED_SOURCE_PRESENT_VALIDATOR_AND_PERSISTENT_RUNNER_COMPATIBILITY_REPAIRED_PENDING_EXACT_HEAD_PROOF",
     "moved_entries": 62,
     "gameplay_changes": "NONE",
     "include_strategy": "Preserve stable basename includes by exporting only the seven Public domain directories; the module root is no longer public.",
     "validation_required": [
       "Pre-Unreal exact-head",
       "UE4.27.2 C++ build/import/headless runtime"
-    ]
+    ],
+    "last_observed_failures": {
+      "head": "9acc72b16e058a422428389fcefeb9af12fa0e98",
+      "pre_unreal": "#786 FAILURE: historical flat runtime file reads produced cascading false invariant failures",
+      "unreal": "#621 FAILURE in UnrealHeaderTool: persistent self-hosted workspace retained obsolete untracked flat headers, causing duplicate leaf header names",
+      "warehouse": "#202 SUCCESS: no warehouse staging-required delta"
+    },
+    "repair": {
+      "checkpoint": "CP-W00-153",
+      "validator": "Pre-Unreal runtime source reads now resolve the migrated tree; runtime evidence anchor registry points to physical Private paths; streaming contract tests use recursive source resolution.",
+      "runner": "Unreal workflow runs prepare_runtime_source_layout.ps1 after exact checkout to remove only stale architecture-mapped legacy files whose migrated targets exist.",
+      "gameplay_changes": "NONE"
+    }
   }
 }

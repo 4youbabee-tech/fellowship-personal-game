@@ -1,3 +1,9 @@
+## 2026-09-24 - W00 CP-W00-153 migration integration repair
+
+CP152 `9acc72b1...` preserved the intended Public/Private Git tree, but Pre #786 failed on historical flat validator reads and Unreal #621 failed in UHT because the persistent runner retained old untracked flat headers. Warehouse #202 succeeded.
+
+CP153 makes validators/tests layout-aware and adds bounded cleanup of only architecture-mapped obsolete source paths on the self-hosted runner. No gameplay source behavior and no production-completeness percentage change. Exact-head proof is pending.
+
 ## 2026-09-24 - W00 CP-W00-152 Public/Private source migration
 
 Exact CP151 head `92f6d3aa...` passed Pre #785, Unreal #620 and Warehouse #201. CP152 performs only the pre-recorded physical runtime-module migration: 62 .h/.cpp files move to `Public/<Domain>` and `Private/<Domain>`; Build.cs stops exporting the module root; validators become layout-aware and PG-154 forbids flat regression.

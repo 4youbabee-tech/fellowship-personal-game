@@ -260,6 +260,20 @@ if source_architecture.get("current_layout") == "PUBLIC_PRIVATE_BY_DOMAIN":
         if expected not in migrated_build:
             fail(f"PG-154 public domain include path missing: {domain}")
 
+# PG-155: migration-aware validators and persistent self-hosted checkouts use the
+# architecture map rather than historical flat paths.
+pg155_self = read(ROOT / "Scripts" / "pre_unreal_validate.py")
+pg155_legacy_read = re.compile(
+    r'read\(\s*ROOT\s*/\s*["\']Source["\']\s*/\s*["\']ShireJourney["\']\s*/\s*["\'][A-Za-z0-9_.-]+\.(?:h|cpp|cs)["\']\s*\)'
+)
+if pg155_legacy_read.search(pg155_self):
+    fail("PG-155 Pre-Unreal still contains a historical flat runtime file access")
+pg155_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+if "prepare_runtime_source_layout.ps1" not in pg155_workflow:
+    fail("PG-155 Unreal workflow must remove stale pre-migration source leftovers on the persistent runner")
+if not (ROOT / "Scripts" / "prepare_runtime_source_layout.ps1").exists():
+    fail("PG-155 persistent-runner source-layout preparation script is missing")
+
 # PG-020: the single Project Governor is the authoritative project-management memory.
 governor_path = ROOT / "Data" / "ProjectGovernor.json"
 governor_data = {}
@@ -3415,8 +3429,8 @@ for pg109_name, pg109_limits in pg109_specs.items():
 pg109_matrix = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
 if pg109_matrix.get("geometry_refinement_wave", {}).get("status") != "ENGINE_PROVEN_PENDING_RENDERED_ACCEPTANCE":
     fail("PG-109 hero geometry must remain engine-proven while rendered acceptance is pending")
-pg109_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
-pg109_npch = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.h")
+pg109_npc = read(resolve_source("ShireNPC.cpp"))
+pg109_npch = read(resolve_source("ShireNPC.h"))
 for pg109_symbol in [
     "bUsingProductionVisual",
     "SM_ProductionShield",
@@ -3442,7 +3456,7 @@ for pg110_symbol in [
     if pg110_symbol not in pg110_importer:
         fail(f"PG-110 production surface master/import support missing: {pg110_symbol}")
 
-pg110_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
+pg110_npc = read(resolve_source("ShireNPC.cpp"))
 for pg110_symbol in [
     "ProductionSurfaceMaterial",
     "ApplySurface",
@@ -3508,7 +3522,7 @@ pg111_caradhras_allowed = set(pg111_caradhras.get("allowed", []))
 if "SOCIAL_MOMENT" in pg111_caradhras_allowed or "FAUNA" in pg111_caradhras_allowed:
     fail("PG-111 Caradhras ambient contract may not spawn residents or fauna")
 
-pg111_director = read(ROOT / "Source" / "ShireJourney" / "LivingWorldDirector.cpp")
+pg111_director = read(resolve_source("LivingWorldDirector.cpp"))
 for pg111_symbol in [
     "Random.FRand() < 0.72f",
     "GetActorForwardVector().GetSafeNormal2D()",
@@ -3523,8 +3537,8 @@ for pg111_symbol in [
     if pg111_symbol not in pg111_director:
         fail(f"PG-111 regional-life director behavior missing: {pg111_symbol}")
 
-pg111_ambient = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.cpp")
-pg111_ambient_h = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.h")
+pg111_ambient = read(resolve_source("ShireAmbientNPC.cpp"))
+pg111_ambient_h = read(resolve_source("ShireAmbientNPC.h"))
 for pg111_symbol in [
     "ProductionSurfaceMaterial",
     "AnimationRateScale",
@@ -3536,8 +3550,8 @@ for pg111_symbol in [
         fail(f"PG-111 ambient presentation behavior missing: {pg111_symbol}")
 
 # PG-113: environmental-life motion keeps sparse chapters alive without inventing civilians.
-pg113_motion_h = read(ROOT / "Source" / "ShireJourney" / "WorldAmbientMotionActor.h")
-pg113_motion_cpp = read(ROOT / "Source" / "ShireJourney" / "WorldAmbientMotionActor.cpp")
+pg113_motion_h = read(resolve_source("WorldAmbientMotionActor.h"))
+pg113_motion_cpp = read(resolve_source("WorldAmbientMotionActor.cpp"))
 for pg113_symbol in [
     "EWorldAmbientMotionMode",
     "ConfigureGlow",
@@ -3574,12 +3588,12 @@ if int(pg111_targets.get("P1C06", -1)) != 0:
     fail("PG-113 Moria environmental-life wave may not introduce ambient civilians")
 
 # PG-129: persistence restore must be atomic and replay-safe across already-resident banks.
-pg129_quest_h = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
-pg129_quest = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
-pg129_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
-pg129_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
-pg129_stream = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
-pg129_audio = read(ROOT / "Source" / "ShireJourney" / "ShireAudioSubsystem.cpp")
+pg129_quest_h = read(resolve_source("ShireQuestSubsystem.h"))
+pg129_quest = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg129_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg129_router = read(resolve_source("ChapterWorldRouter.cpp"))
+pg129_stream = read(resolve_source("ShireChapterAssetStreamingSubsystem.cpp"))
+pg129_audio = read(resolve_source("ShireAudioSubsystem.cpp"))
 
 for pg129_symbol in [
     "BeginPersistenceRestore",
@@ -3670,8 +3684,8 @@ if "test_tangent_warning_categories_are_zero_tolerance" not in pg130_warning_tes
     fail("PG-130 zero-tolerance warning regression test missing")
 
 # PG-132: legacy save repair must settle silently before final world publication.
-pg132_quest = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
-pg132_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg132_quest = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg132_player = read(resolve_source("ShirePlayerCharacter.cpp"))
 
 pg132_commit_start = pg132_quest.find("void UShireQuestSubsystem::CommitPersistenceRestore")
 pg132_commit_end = pg132_quest.find("void UShireQuestSubsystem::AbortPersistenceRestore", pg132_commit_start)
@@ -3701,15 +3715,15 @@ if pg132_health < 0 or pg132_commit_call < 0 or pg132_health > pg132_commit_call
     fail("PG-132 player-life state must be restored before final world identity publication")
 
 # PG-131: gameplay mutation must remain behind the committed-world transaction barrier.
-pg131_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
-pg131_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
-pg131_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
-pg131_trigger = read(ROOT / "Source" / "ShireJourney" / "ShireQuestTrigger.cpp")
-pg131_traversal = read(ROOT / "Source" / "ShireJourney" / "ShireTraversalChallenge.cpp")
-pg131_puzzle = read(ROOT / "Source" / "ShireJourney" / "ShireEnvironmentalPuzzle.cpp")
-pg131_world_interaction = read(ROOT / "Source" / "ShireJourney" / "ShireWorldEventInteraction.cpp")
-pg131_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
-pg131_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg131_player_h = read(resolve_source("ShirePlayerCharacter.h"))
+pg131_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg131_router = read(resolve_source("ChapterWorldRouter.cpp"))
+pg131_trigger = read(resolve_source("ShireQuestTrigger.cpp"))
+pg131_traversal = read(resolve_source("ShireTraversalChallenge.cpp"))
+pg131_puzzle = read(resolve_source("ShireEnvironmentalPuzzle.cpp"))
+pg131_world_interaction = read(resolve_source("ShireWorldEventInteraction.cpp"))
+pg131_npc = read(resolve_source("ShireNPC.cpp"))
+pg131_game_mode = read(resolve_source("ShireGameMode.cpp"))
 pg131_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
 
 for pg131_symbol in [
@@ -3747,19 +3761,19 @@ if "ProductionSurfaceObjectPath" not in pg131_importer or    "ObjectPathToPackag
     fail("PG-131 UE4.27 package-name overload must receive an explicit FString")
 
 # PG-133: transition starts at logical request time and all delayed side effects stay origin-bound.
-pg133_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
-pg133_quest = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
-pg133_quest_h = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
-pg133_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
-pg133_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
-pg133_context = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.cpp")
-pg133_context_h = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.h")
-pg133_ambient = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.cpp")
-pg133_named = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
-pg133_enemy = read(ROOT / "Source" / "ShireJourney" / "FellowshipEnemyPrototype.cpp")
-pg133_mythic = read(ROOT / "Source" / "ShireJourney" / "FellowshipMythicThreat.cpp")
-pg133_rider = read(ROOT / "Source" / "ShireJourney" / "BlackRiderPrototype.cpp")
-pg133_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg133_router = read(resolve_source("ChapterWorldRouter.cpp"))
+pg133_quest = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg133_quest_h = read(resolve_source("ShireQuestSubsystem.h"))
+pg133_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg133_player_h = read(resolve_source("ShirePlayerCharacter.h"))
+pg133_context = read(resolve_source("ShireNPCContextSubsystem.cpp"))
+pg133_context_h = read(resolve_source("ShireNPCContextSubsystem.h"))
+pg133_ambient = read(resolve_source("ShireAmbientNPC.cpp"))
+pg133_named = read(resolve_source("ShireNPC.cpp"))
+pg133_enemy = read(resolve_source("FellowshipEnemyPrototype.cpp"))
+pg133_mythic = read(resolve_source("FellowshipMythicThreat.cpp"))
+pg133_rider = read(resolve_source("BlackRiderPrototype.cpp"))
+pg133_game_mode = read(resolve_source("ShireGameMode.cpp"))
 pg133_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
 pg133_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
 
@@ -3861,8 +3875,8 @@ for pg134_asset in [
         fail(f"PG-134 repaired tangent-basis asset is not face-local: {pg134_asset.name}")
 
 # PG-135: queued async checkpoints preserve their captured snapshot/origin across world revisions.
-pg135_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
-pg135_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg135_player_h = read(resolve_source("ShirePlayerCharacter.h"))
+pg135_player = read(resolve_source("ShirePlayerCharacter.cpp"))
 for pg135_symbol in [
     "CheckpointSaveInFlightSnapshot",
     "QueuedCheckpointSnapshot",
@@ -3898,11 +3912,11 @@ for pg135_symbol in [
         fail(f"PG-135 queued checkpoint dispatch lost captured origin: {pg135_symbol}")
 
 # PG-136: rollback state is captured at the pre-mutation transition boundary and every rejected destination fails back atomically.
-pg136_quest_h = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
-pg136_quest = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
-pg136_router_h = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.h")
-pg136_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
-pg136_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg136_quest_h = read(resolve_source("ShireQuestSubsystem.h"))
+pg136_quest = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg136_router_h = read(resolve_source("ChapterWorldRouter.h"))
+pg136_router = read(resolve_source("ChapterWorldRouter.cpp"))
+pg136_game_mode = read(resolve_source("ShireGameMode.cpp"))
 pg136_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
 pg136_state_cmd = read(ROOT / "Scripts" / "ci_runtime_state.cmd")
 pg136_runtime_tests = read(ROOT / "Scripts" / "test_runtime_smoke.py")
@@ -3969,12 +3983,12 @@ if "test_fault_mode_requires_complete_rollback_evidence" not in pg136_runtime_te
     fail("PG-136 rollback evidence regression unit test missing")
 
 # PG-137: save restores share the pre-mutation rollback boundary and delayed async readiness keeps old-world authority.
-pg137_quest_h = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
-pg137_quest = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
-pg137_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
-pg137_stream_h = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.h")
-pg137_stream = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
-pg137_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg137_quest_h = read(resolve_source("ShireQuestSubsystem.h"))
+pg137_quest = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg137_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg137_stream_h = read(resolve_source("ShireChapterAssetStreamingSubsystem.h"))
+pg137_stream = read(resolve_source("ShireChapterAssetStreamingSubsystem.cpp"))
+pg137_game_mode = read(resolve_source("ShireGameMode.cpp"))
 pg137_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
 pg137_state_cmd = read(ROOT / "Scripts" / "ci_runtime_state.cmd")
 pg137_runtime_tests = read(ROOT / "Scripts" / "test_runtime_smoke.py")
@@ -4030,11 +4044,11 @@ if "test_pending_mode_requires_both_window_and_commit_evidence" not in pg137_run
     fail("PG-137 delayed transition marker regression test missing")
 
 # PG-138: chapter streaming failures are explicit rollback events; no compatibility-success path may hide missing residency.
-pg138_stream_h = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.h")
-pg138_stream = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
-pg138_router_h = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.h")
-pg138_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
-pg138_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg138_stream_h = read(resolve_source("ShireChapterAssetStreamingSubsystem.h"))
+pg138_stream = read(resolve_source("ShireChapterAssetStreamingSubsystem.cpp"))
+pg138_router_h = read(resolve_source("ChapterWorldRouter.h"))
+pg138_router = read(resolve_source("ChapterWorldRouter.cpp"))
+pg138_game_mode = read(resolve_source("ShireGameMode.cpp"))
 pg138_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
 
 for pg138_symbol in [
@@ -4106,11 +4120,11 @@ if "test_all_transaction_runtime_logs_are_in_runtime_scope" not in pg139_warning
     fail("PG-139 warning-debt runtime scope regression test missing")
 
 # PG-140: legacy terminal restore publishes one canonical world and stale checkpoint completion cannot mutate a later revision.
-pg140_quest_h = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
-pg140_quest = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
-pg140_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
-pg140_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
-pg140_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg140_quest_h = read(resolve_source("ShireQuestSubsystem.h"))
+pg140_quest = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg140_player_h = read(resolve_source("ShirePlayerCharacter.h"))
+pg140_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg140_game_mode = read(resolve_source("ShireGameMode.cpp"))
 pg140_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
 pg140_state_cmd = read(ROOT / "Scripts" / "ci_runtime_state.cmd")
 pg140_runtime_tests = read(ROOT / "Scripts" / "test_runtime_smoke.py")
@@ -4591,8 +4605,8 @@ for asset_path in cp55_required_assets:
     if not asset_path.exists():
         fail(f"PG-055 required fauna asset missing: {asset_path.relative_to(ROOT).as_posix()}")
 
-cp55_ambient_cpp = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.cpp")
-cp55_director_cpp = read(ROOT / "Source" / "ShireJourney" / "LivingWorldDirector.cpp")
+cp55_ambient_cpp = read(resolve_source("ShireAmbientNPC.cpp"))
+cp55_director_cpp = read(resolve_source("LivingWorldDirector.cpp"))
 for role in ['TEXT("Bird")', 'TEXT("Rabbit")', 'TEXT("Butterfly")']:
     if role not in cp55_ambient_cpp:
         fail(f"PG-055 ambient movement role missing: {role}")
@@ -4663,10 +4677,10 @@ else:
         if anchor_id not in cp56_anchor_ids:
             fail(f"PG-058 film-experience anchor missing: {anchor_id}")
 
-cp56_shire_cpp = read(ROOT / "Source" / "ShireJourney" / "ShirePrototypeWorldBuilder.cpp")
-cp56_ambient_cpp = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.cpp")
-cp56_bree_cpp = read(ROOT / "Source" / "ShireJourney" / "BreePrototypeWorldBuilder.cpp")
-cp56_fellowship_cpp = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
+cp56_shire_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+cp56_ambient_cpp = read(resolve_source("ShireAmbientNPC.cpp"))
+cp56_bree_cpp = read(resolve_source("BreePrototypeWorldBuilder.cpp"))
+cp56_fellowship_cpp = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
 for runtime_symbol in [
     "Side_GreenDragonRevelry",
     "Side_PartyMischief",
@@ -4711,8 +4725,8 @@ if living_npc_plan:
     if living_npc_plan.get("character_knowledge_policy", {}).get("default") != "DENY_UNLISTED":
         fail("PG-059 character knowledge default must remain DENY_UNLISTED")
 
-ambient_header_pg59 = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.h")
-ambient_cpp_pg59 = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.cpp")
+ambient_header_pg59 = read(resolve_source("ShireAmbientNPC.h"))
+ambient_cpp_pg59 = read(resolve_source("ShireAmbientNPC.cpp"))
 for symbol in ["Hunger01", "Fatigue01", "SocialNeed01", "Fear01", "RuntimeEmotion", "RuntimeGoal", "UpdateNeedsAndEmotion"]:
     if symbol not in (ambient_header_pg59 + ambient_cpp_pg59):
         fail(f"PG-059 living-NPC runtime symbol missing: {symbol}")
@@ -4740,8 +4754,8 @@ for profile_id in ["NPC_GANDALF", "NPC_SAM", "NPC_ARAGORN", "NPC_BILBO"]:
     if not profile.get("attitude_tags"):
         fail(f"PG-059 attitude tags missing for core profile: {profile_id}")
 
-npc_context_header_pg59 = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.h")
-npc_context_cpp_pg59 = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.cpp")
+npc_context_header_pg59 = read(resolve_source("ShireNPCContextSubsystem.h"))
+npc_context_cpp_pg59 = read(resolve_source("ShireNPCContextSubsystem.cpp"))
 for symbol in ["BiographyFacts", "KnowledgeLimits", "AttitudeTags", "GetProfileContextSummary"]:
     if symbol not in (npc_context_header_pg59 + npc_context_cpp_pg59):
         fail(f"PG-059 named profile runtime context missing: {symbol}")
@@ -4786,10 +4800,10 @@ if completeness_path.exists():
     if missing_systems_pg60:
         fail("PG-060 completeness matrix missing systems: " + ", ".join(missing_systems_pg60))
 
-npc_h_pg60 = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.h")
-npc_cpp_pg60 = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
-ctx_h_pg60 = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.h")
-ctx_cpp_pg60 = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.cpp")
+npc_h_pg60 = read(resolve_source("ShireNPC.h"))
+npc_cpp_pg60 = read(resolve_source("ShireNPC.cpp"))
+ctx_h_pg60 = read(resolve_source("ShireNPCContextSubsystem.h"))
+ctx_cpp_pg60 = read(resolve_source("ShireNPCContextSubsystem.cpp"))
 
 for symbol in ["CachedWorldPressure", "CachedWorldMood", "CachedEmotionalState", "RefreshLivingContext"]:
     if symbol not in (npc_h_pg60 + npc_cpp_pg60):
@@ -4807,9 +4821,9 @@ for mood in [
     if mood not in ctx_cpp_pg60:
         fail(f"PG-060 regional dialogue/context missing mood: {mood}")
 
-if '? TEXT("Mug") : NAME_None' in read(ROOT / "Source" / "ShireJourney" / "ShirePrototypeWorldBuilder.cpp"):
+if '? TEXT("Mug") : NAME_None' in read(resolve_source("ShirePrototypeWorldBuilder.cpp")):
     fail("PG-060 Shire crowd prop ternary regressed to UE4-incompatible mixed FName/string types")
-if '? TEXT("Mug") : NAME_None' in read(ROOT / "Source" / "ShireJourney" / "BreePrototypeWorldBuilder.cpp"):
+if '? TEXT("Mug") : NAME_None' in read(resolve_source("BreePrototypeWorldBuilder.cpp")):
     fail("PG-060 Bree crowd prop ternary regressed to UE4-incompatible mixed FName/string types")
 
 
@@ -4882,9 +4896,9 @@ for pg81_chapter in pg81_side.get("chapters", []):
 if pg81_count < 19:
     fail(f"PG-081 contextual side-activity coverage regressed below 19: {pg81_count}")
 
-pg81_qh = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
-pg81_qc = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
-pg81_tc = read(ROOT / "Source" / "ShireJourney" / "ShireTraversalChallenge.cpp")
+pg81_qh = read(resolve_source("ShireQuestSubsystem.h"))
+pg81_qc = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg81_tc = read(resolve_source("ShireTraversalChallenge.cpp"))
 for pg81_symbol in [
     "AvailableAfterStoryBeat", "EndsBeforeStoryBeat", "SideActivityDefinitionsById",
     "HasSideActivityForDiscovery", "IsSideActivityAvailable",
@@ -4925,9 +4939,9 @@ for pg82_activity in pg82_stealth:
     if not pg82_reward or pg82_reward not in pg82_rewards:
         fail(f"PG-082 stealth reward missing from JourneyDiscoveryRewardPlan: {pg82_reward}")
 
-pg82_shire = read(ROOT / "Source" / "ShireJourney" / "ShirePrototypeWorldBuilder.cpp")
-pg82_traversal = read(ROOT / "Source" / "ShireJourney" / "ShireTraversalChallenge.cpp")
-pg82_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+pg82_shire = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+pg82_traversal = read(resolve_source("ShireTraversalChallenge.cpp"))
+pg82_player_h = read(resolve_source("ShirePlayerCharacter.h"))
 for pg82_symbol in [
     "SHIRE_QUIET_FEET",
     'TEXT("STEALTH_LITE")',
@@ -5087,8 +5101,8 @@ for pg87_item in pg87_plan.get("part1", []):
     pg87_character = str(pg87_item.get("character") or "")
     if pg87_character and pg87_item.get("type") in {"FILM_CORE_PLAYABLE", "CHARACTER_SPECIALTY", "FILM_INTERSTITIAL"}:
         pg87_required_playables.add(pg87_character)
-pg87_cpp = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
-pg87_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+pg87_cpp = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg87_h = read(resolve_source("ShirePlayerCharacter.h"))
 for pg87_character in sorted(pg87_required_playables | {"Frodo", "Sam", "Merry", "Pippin"}):
     if f'TEXT("{pg87_character}")' not in pg87_cpp:
         fail(f"PG-087 playable visual mapping missing: {pg87_character}")
@@ -5100,10 +5114,10 @@ if "unsupported playable id=%s; using Frodo fallback" not in pg87_cpp:
 
 
 # PG-088: source-grounded Part I geography must be packaged and visible at runtime.
-pg88_build = read(ROOT / "Source" / "ShireJourney" / "ShireJourney.Build.cs")
-pg88_qh = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
-pg88_qc = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
-pg88_hud = read(ROOT / "Source" / "ShireJourney" / "ShireHUD.cpp")
+pg88_build = read(resolve_source("ShireJourney.Build.cs"))
+pg88_qh = read(resolve_source("ShireQuestSubsystem.h"))
+pg88_qc = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg88_hud = read(resolve_source("ShireHUD.cpp"))
 if "Part1ProductionAtlas.json" not in pg88_build:
     fail("PG-088 Part1ProductionAtlas is not packaged")
 for pg88_symbol in [
@@ -5122,10 +5136,10 @@ if "GetCurrentPrimaryRegionName()" not in pg88_hud:
 
 
 # PG-089: playable production characters must support async final-rig handoff with modular fallback.
-pg89_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
-pg89_cpp = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
-pg89_stream_h = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.h")
-pg89_stream_cpp = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
+pg89_h = read(resolve_source("ShirePlayerCharacter.h"))
+pg89_cpp = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg89_stream_h = read(resolve_source("ShireChapterAssetStreamingSubsystem.h"))
+pg89_stream_cpp = read(resolve_source("ShireChapterAssetStreamingSubsystem.cpp"))
 for pg89_symbol in [
     "TryApplyProductionRig",
     "bUsingSkeletalProductionRig",
@@ -5159,7 +5173,7 @@ for pg90_rel in [
 ]:
     if not (ROOT / pg90_rel).exists():
         fail(f"PG-090 production foundation missing: {pg90_rel}")
-pg90_isengard = read(ROOT / "Source" / "ShireJourney" / "IsengardPrototypeWorldBuilder.cpp")
+pg90_isengard = read(resolve_source("IsengardPrototypeWorldBuilder.cpp"))
 for pg90_symbol in ["SM_Isengard_OrthancCore","SM_Isengard_OrthancSpire","SM_Isengard_IndustrialPitRim","SM_Isengard_FurnaceStack","SM_Isengard_FelledTrunk"]:
     if pg90_symbol not in pg90_isengard:
         fail(f"PG-090 Isengard runtime production wiring missing: {pg90_symbol}")
@@ -5174,9 +5188,9 @@ for pg90_id in ["LURTZ","WATCHER","BALROG"]:
 
 
 # PG-091: Watcher and Balrog are film-locked pressure actors, never killable reward targets.
-pg91_h = read(ROOT / "Source" / "ShireJourney" / "FellowshipMythicThreat.h")
-pg91_cpp = read(ROOT / "Source" / "ShireJourney" / "FellowshipMythicThreat.cpp")
-pg91_builder = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
+pg91_h = read(resolve_source("FellowshipMythicThreat.h"))
+pg91_cpp = read(resolve_source("FellowshipMythicThreat.cpp"))
+pg91_builder = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
 for pg91_symbol in [
     "EFellowshipMythicThreatType",
     "Watcher",
@@ -5240,12 +5254,12 @@ for pg92_edge in pg92_map.get("edges", []):
     if str(pg92_edge[0]) not in pg92_nodes or str(pg92_edge[1]) not in pg92_nodes:
         fail(f"PG-092 world map edge references unknown node: {pg92_edge}")
 
-pg92_build = read(ROOT / "Source" / "ShireJourney" / "ShireJourney.Build.cs")
-pg92_qh = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
-pg92_qc = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
-pg92_ph = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
-pg92_pc = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
-pg92_hud = read(ROOT / "Source" / "ShireJourney" / "ShireHUD.cpp")
+pg92_build = read(resolve_source("ShireJourney.Build.cs"))
+pg92_qh = read(resolve_source("ShireQuestSubsystem.h"))
+pg92_qc = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg92_ph = read(resolve_source("ShirePlayerCharacter.h"))
+pg92_pc = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg92_hud = read(resolve_source("ShireHUD.cpp"))
 pg92_input = read(ROOT / "Config" / "DefaultInput.ini")
 for pg92_symbol in ["Part1WorldMap.json","LoadPart1WorldMap","IsWorldMapNodeVisible","GetCurrentWorldMapNodeId"]:
     if pg92_symbol not in (pg92_build + pg92_qh + pg92_qc):
@@ -5274,12 +5288,12 @@ if pg93_visual.get("status") != "ACTIVE_IMPLEMENTATION_PENDING_ENGINE_PROOF":
     fail("PG-093 visual production status must remain pending engine proof")
 if len(pg93_visual.get("chapters", [])) != 8:
     fail("PG-093 visual production pass must cover P1C01-P1C08")
-pg93_build = read(ROOT / "Source" / "ShireJourney" / "ShireJourney.Build.cs")
+pg93_build = read(resolve_source("ShireJourney.Build.cs"))
 if "Part1VisualProductionPass.json" not in pg93_build:
     fail("PG-093 visual production pass is not packaged")
-pg93_enemy_h = read(ROOT / "Source" / "ShireJourney" / "FellowshipEnemyPrototype.h")
-pg93_enemy_cpp = read(ROOT / "Source" / "ShireJourney" / "FellowshipEnemyPrototype.cpp")
-pg93_builder = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
+pg93_enemy_h = read(resolve_source("FellowshipEnemyPrototype.h"))
+pg93_enemy_cpp = read(resolve_source("FellowshipEnemyPrototype.cpp"))
+pg93_builder = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
 for pg93_symbol in ["Lurtz", "FilmLockedOutcome", 'ProductionFolder = TEXT("Lurtz")', 'TEXT("Blade")', "player-controlled branch"]:
     if pg93_symbol not in (pg93_enemy_h + pg93_enemy_cpp):
         fail(f"PG-093 film-locked Lurtz contract missing: {pg93_symbol}")
@@ -5337,7 +5351,7 @@ if pg95_visual.get("camera_execution", {}).get("status") != "RUNTIME_FRAMING_IMP
     fail("PG-095 camera execution evidence boundary changed")
 
 # PG-096: Isengard atmosphere stays bounded, production-driven and non-final.
-pg96_isengard = read(ROOT / "Source" / "ShireJourney" / "IsengardPrototypeWorldBuilder.cpp")
+pg96_isengard = read(resolve_source("IsengardPrototypeWorldBuilder.cpp"))
 for pg96_symbol in [
     "ShowPrototypeWorldLabels = false",
     "ADirectionalLight",
@@ -5355,7 +5369,7 @@ if pg96_visual.get("parallel_route", {}).get("acceptance") != "IMPLEMENTED_PENDI
 
 # PG-097: named skeletal NPC handoff uses bounded animation-cost safeguards.
 pg97_motion = json.loads(read(ROOT / "Data" / "CharacterMotionPlan.json"))
-pg97_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
+pg97_npc = read(resolve_source("ShireNPC.cpp"))
 if pg97_motion.get("runtime_performance_handoff", {}).get("status") != "IMPLEMENTED_PENDING_ENGINE_PROOF":
     fail("PG-097 named NPC performance handoff status changed")
 for pg97_symbol in [
@@ -5387,7 +5401,7 @@ for pg98_obj in [
     pg98_text = read(pg98_isengard_root / pg98_obj)
     if "mtllib RegionalMaterials.mtl" not in pg98_text or "usemtl " not in pg98_text:
         fail(f"PG-098 Isengard OBJ lacks authored material binding: {pg98_obj}")
-pg98_builder = read(ROOT / "Source" / "ShireJourney" / "IsengardPrototypeWorldBuilder.cpp")
+pg98_builder = read(resolve_source("IsengardPrototypeWorldBuilder.cpp"))
 if "bFallbackPrimitive" not in pg98_builder:
     fail("PG-098 Isengard runtime no longer preserves production mesh materials")
 pg98_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
@@ -5414,8 +5428,8 @@ for pg99_folder, pg99_materials in pg99_specs.items():
         pg99_obj_text = read(pg99_obj)
         if "mtllib RegionalMaterials.mtl" not in pg99_obj_text or "usemtl " not in pg99_obj_text:
             fail(f"PG-099 threat OBJ lacks authored material binding: {pg99_obj.relative_to(ROOT)}")
-pg99_enemy = read(ROOT / "Source" / "ShireJourney" / "FellowshipEnemyPrototype.cpp")
-pg99_mythic = read(ROOT / "Source" / "ShireJourney" / "FellowshipMythicThreat.cpp")
+pg99_enemy = read(resolve_source("FellowshipEnemyPrototype.cpp"))
+pg99_mythic = read(resolve_source("FellowshipMythicThreat.cpp"))
 if "if (!bProductionVisual)" not in pg99_enemy:
     fail("PG-099 production enemy materials are being overwritten by fallback tint")
 if "BasicMaterial && !bProductionFoundation" not in pg99_mythic:
@@ -5456,8 +5470,8 @@ for pg101_symbol in [
         fail(f"PG-101 deterministic material synthesis missing: {pg101_symbol}")
 
 # PG-102: player-experience safety and deep-audit contracts.
-pg102_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
-pg102_presentation = read(ROOT / "Source" / "ShireJourney" / "ShireStoryPresentationSubsystem.cpp")
+pg102_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg102_presentation = read(resolve_source("ShireStoryPresentationSubsystem.cpp"))
 for pg102_symbol in ["#if !UE_BUILD_SHIPPING","AsyncSaveGameToSlot","bCheckpointSaveInFlight","QueuedCheckpointSaveId"]:
     if pg102_symbol not in pg102_player:
         fail(f"PG-102 player-experience safeguard missing: {pg102_symbol}")
@@ -5700,8 +5714,8 @@ if pg112_visual.get("mega_material_world_wave", {}).get("status") != "SOURCE_IMP
     fail("PG-112 visual mega-wave historical evidence boundary changed")
 
 # PG-114: dense decorative richness must use performance-aware instancing rather than actor spam.
-pg114_cluster_h = read(ROOT / "Source" / "ShireJourney" / "WorldDetailCluster.h")
-pg114_cluster_cpp = read(ROOT / "Source" / "ShireJourney" / "WorldDetailCluster.cpp")
+pg114_cluster_h = read(resolve_source("WorldDetailCluster.h"))
+pg114_cluster_cpp = read(resolve_source("WorldDetailCluster.cpp"))
 for pg114_symbol in [
     "UHierarchicalInstancedStaticMeshComponent",
     "AddInstanceWorldSpace",
@@ -5761,7 +5775,7 @@ pg115_assets = {
     "Anduin": ["SM_AmonHenBrokenSeat","SM_AmonHenLookoutStone","SM_AnduinSupplyBundle","SM_AnduinOarRack"],
     "Isengard": ["SM_IsengardHoistFrame","SM_IsengardSlagCart","SM_IsengardTrenchGrate","SM_IsengardWaterGate"],
 }
-pg115_isengard = read(ROOT / "Source" / "ShireJourney" / "IsengardPrototypeWorldBuilder.cpp")
+pg115_isengard = read(resolve_source("IsengardPrototypeWorldBuilder.cpp"))
 for pg115_region, pg115_names in pg115_assets.items():
     pg115_root = ROOT / "SourceAssets" / "Production" / "World" / pg115_region
     for pg115_name in pg115_names:
@@ -5844,7 +5858,7 @@ for pg116_symbol in [
     if pg116_symbol not in pg116_director:
         fail(f"PG-116 bounded cinematic camera contract missing: {pg116_symbol}")
 
-pg116_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg116_game_mode = read(resolve_source("ShireGameMode.cpp"))
 for pg116_symbol in [
     '#include "StoryPresentationDirector.h"',
     "SpawnActor<AStoryPresentationDirector>",
@@ -5852,8 +5866,8 @@ for pg116_symbol in [
     if pg116_symbol not in pg116_game_mode:
         fail(f"PG-116 presentation director bootstrap missing: {pg116_symbol}")
 
-pg116_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
-pg116_npc_h = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.h")
+pg116_npc = read(resolve_source("ShireNPC.cpp"))
+pg116_npc_h = read(resolve_source("ShireNPC.h"))
 for pg116_symbol in [
     "PerformanceGestureScale",
     "PerformanceGazeScale",
@@ -5867,7 +5881,7 @@ for pg116_symbol in [
     if pg116_symbol not in (pg116_npc + pg116_npc_h):
         fail(f"PG-116 named-character fallback performance contract missing: {pg116_symbol}")
 
-pg116_audio = read(ROOT / "Source" / "ShireJourney" / "ShireAudioSubsystem.cpp")
+pg116_audio = read(resolve_source("ShireAudioSubsystem.cpp"))
 for pg116_symbol in [
     "FadeOut(0.45f, 0.0f)",
     "FadeIn(0.55f, 1.0f)",
@@ -5974,7 +5988,7 @@ if pg117_inventory.get("totals", {}).get("obj_files", 0) < 352:
     fail("PG-117 project-owned OBJ inventory did not register V4 assets")
 
 # Final skeletal rig handoff must continue to win over modular fallback when valid.
-pg117_npc_h = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.h")
+pg117_npc_h = read(resolve_source("ShireNPC.h"))
 for pg117_symbol in [
     "bUsingSkeletalProductionRig",
     "TryApplyProductionRig",
@@ -6007,12 +6021,12 @@ for pg118_bank in [
     if not isinstance(pg118_row, dict) or not pg118_row.get("assets"):
         fail(f"PG-118 chapter streaming bank missing/empty: {pg118_bank}")
 
-pg118_stream_h = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.h")
-pg118_stream_cpp = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
-pg118_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
-pg118_router_h = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.h")
-pg118_fellowship_h = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.h")
-pg118_fellowship_cpp = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
+pg118_stream_h = read(resolve_source("ShireChapterAssetStreamingSubsystem.h"))
+pg118_stream_cpp = read(resolve_source("ShireChapterAssetStreamingSubsystem.cpp"))
+pg118_router = read(resolve_source("ChapterWorldRouter.cpp"))
+pg118_router_h = read(resolve_source("ChapterWorldRouter.h"))
+pg118_fellowship_h = read(resolve_source("FellowshipChapterWorldBuilder.h"))
+pg118_fellowship_cpp = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
 
 for pg118_symbol in [
     "FStreamableManager",
@@ -6081,9 +6095,9 @@ if pg118_budget.get("chapter_asset_streaming_v5", {}).get("status") != "SOURCE_R
     fail("PG-118 streaming performance evidence boundary changed")
 
 # PG-121: startup grounding must wait for committed world geometry.
-pg121_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
-pg121_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
-pg121_router_h = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.h")
+pg121_game_mode = read(resolve_source("ShireGameMode.cpp"))
+pg121_router = read(resolve_source("ChapterWorldRouter.cpp"))
+pg121_router_h = read(resolve_source("ChapterWorldRouter.h"))
 pg121_runtime_smoke = read(ROOT / "Scripts" / "runtime_smoke.py")
 if "RUNTIME_SWEEP_SUMMARY" not in pg121_runtime_smoke:
     fail("PG-121 chapter runtime audit must aggregate all chapter failures in one sweep")
@@ -6108,8 +6122,8 @@ if not mode_has_evidence("state", "state.ground_p1c03"):
 if not chapter_has_evidence("grounding"):
     fail("PG-121 chapter sweep grounding evidence missing")
 
-pg121_shire_builder = read(ROOT / "Source" / "ShireJourney" / "ShirePrototypeWorldBuilder.cpp")
-pg121_fellowship_builder = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
+pg121_shire_builder = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+pg121_fellowship_builder = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
 if "RuntimeCollisionFoundation" not in pg121_shire_builder:
     fail("PG-121 broad Shire fallback collision foundation missing")
 for pg121_symbol in [
@@ -6169,7 +6183,7 @@ if "Run ShireJourney Automation Framework QA" not in pg122_workflow:
 if "AUTOMATION_SUITE_PASS" not in pg122_parser:
     fail("PG-122 automation report fail-closed parser missing")
 
-pg122_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
+pg122_router = read(resolve_source("ChapterWorldRouter.cpp"))
 for pg122_symbol in [
     "ShireStartupGrounding: PLACED",
     "VerifyPlayerGroundingStability",
@@ -6181,12 +6195,12 @@ for pg122_symbol in [
 
 
 # PG-123: comprehensive transactional world-commit contract.
-pg123_router_h = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.h")
-pg123_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
-pg123_stream_h = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.h")
-pg123_stream = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
-pg123_life_h = read(ROOT / "Source" / "ShireJourney" / "LivingWorldDirector.h")
-pg123_life = read(ROOT / "Source" / "ShireJourney" / "LivingWorldDirector.cpp")
+pg123_router_h = read(resolve_source("ChapterWorldRouter.h"))
+pg123_router = read(resolve_source("ChapterWorldRouter.cpp"))
+pg123_stream_h = read(resolve_source("ShireChapterAssetStreamingSubsystem.h"))
+pg123_stream = read(resolve_source("ShireChapterAssetStreamingSubsystem.cpp"))
+pg123_life_h = read(resolve_source("LivingWorldDirector.h"))
+pg123_life = read(resolve_source("LivingWorldDirector.cpp"))
 
 for pg123_symbol in [
     "CommitPendingRequest",
@@ -6219,7 +6233,7 @@ if "ActiveChapterId = NewChapterId;\n    ResetForCurrentChapter();" in pg123_lif
     fail("PG-123 LivingWorldDirector may not reset directly from requested quest chapter before world commit")
 
 # PG-124: continuous transition audit must remain wired with startup grounding.
-pg124_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg124_game_mode = read(resolve_source("ShireGameMode.cpp"))
 pg124_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
 pg124_runtime_tests = read(ROOT / "Scripts" / "test_runtime_smoke.py")
 pg124_state_cmd = read(ROOT / "Scripts" / "ci_runtime_state.cmd")
@@ -6250,14 +6264,14 @@ for escaped_newline in ("\\\\n", "\\r\\n"):
         fail("PG-127 production importer contains literal escaped newline text in C++ source")
 
 # PG-128: W00 commit-bound residency, movement and audio invariants.
-pg128_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
-pg128_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
-pg128_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
-pg128_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
-pg128_stream_h = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.h")
-pg128_stream = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
-pg128_audio_h = read(ROOT / "Source" / "ShireJourney" / "ShireAudioSubsystem.h")
-pg128_audio = read(ROOT / "Source" / "ShireJourney" / "ShireAudioSubsystem.cpp")
+pg128_player_h = read(resolve_source("ShirePlayerCharacter.h"))
+pg128_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg128_game_mode = read(resolve_source("ShireGameMode.cpp"))
+pg128_router = read(resolve_source("ChapterWorldRouter.cpp"))
+pg128_stream_h = read(resolve_source("ShireChapterAssetStreamingSubsystem.h"))
+pg128_stream = read(resolve_source("ShireChapterAssetStreamingSubsystem.cpp"))
+pg128_audio_h = read(resolve_source("ShireAudioSubsystem.h"))
+pg128_audio = read(resolve_source("ShireAudioSubsystem.cpp"))
 
 for pg128_symbol in [
     "OnChapterAssetsCommitted",
@@ -6378,11 +6392,11 @@ if "uses: actions/checkout@" in pg145_workflow:
     fail("PG-145 warehouse must not depend on marketplace checkout download on the flaky self-hosted network path")
 
 # PG-146: route/chapter/episode/character identity is one fail-closed contract.
-pg146_quest_h = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
-pg146_quest = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
-pg146_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
-pg146_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
-pg146_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg146_quest_h = read(resolve_source("ShireQuestSubsystem.h"))
+pg146_quest = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg146_player_h = read(resolve_source("ShirePlayerCharacter.h"))
+pg146_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg146_game_mode = read(resolve_source("ShireGameMode.cpp"))
 for pg146_symbol in [
     "NormalizeExperienceIdentity",
     "CanonicalizeRestoredExperienceIdentity",
@@ -6401,7 +6415,7 @@ if "TEXT(\"P1G01\"), TEXT(\"IsengardCounsel\"), 1" in pg146_game_mode and    "di
     fail("PG-146 P1G01 chapter shorthand may appear only inside the explicit rejection audit")
 
 # PG-147: every runtime JSON literal must be declared as a staged RuntimeDependency.
-pg147_build = read(ROOT / "Source" / "ShireJourney" / "ShireJourney.Build.cs")
+pg147_build = read(resolve_source("ShireJourney.Build.cs"))
 pg147_runtime_json = set()
 for pg147_path in SOURCE.rglob("*.cpp"):
     for pg147_name in re.findall(r'Data/([A-Za-z0-9_.-]+\.json)', read(pg147_path)):

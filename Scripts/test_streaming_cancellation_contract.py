@@ -3,15 +3,23 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+RUNTIME_SOURCE = ROOT / "Source" / "ShireJourney"
+
+
+def runtime_source(name: str) -> Path:
+    matches = [path for path in RUNTIME_SOURCE.rglob(name) if path.is_file()]
+    if len(matches) != 1:
+        raise RuntimeError(f"Expected exactly one runtime source named {name}, found {len(matches)}")
+    return matches[0]
 
 
 class StreamingCancellationContract(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.stream = (ROOT / 'Source/ShireJourney/ShireChapterAssetStreamingSubsystem.cpp').read_text()
-        cls.router = (ROOT / 'Source/ShireJourney/ChapterWorldRouter.cpp').read_text()
-        cls.player = (ROOT / 'Source/ShireJourney/ShirePlayerCharacter.cpp').read_text()
-        cls.player_header = (ROOT / 'Source/ShireJourney/ShirePlayerCharacter.h').read_text()
+        cls.stream = runtime_source("ShireChapterAssetStreamingSubsystem.cpp").read_text()
+        cls.router = runtime_source("ChapterWorldRouter.cpp").read_text()
+        cls.player = runtime_source("ShirePlayerCharacter.cpp").read_text()
+        cls.player_header = runtime_source("ShirePlayerCharacter.h").read_text()
 
     def test_cancel_invalidates_before_handle_and_preserves_resident(self):
         body = self.stream.split('::CancelPendingRequest()', 1)[1].split('::Deinitialize()', 1)[0]

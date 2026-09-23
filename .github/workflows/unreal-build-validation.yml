@@ -103,6 +103,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: '"%GITHUB_WORKSPACE%\..\fellowship_exact_checkout.cmd"'
 
+      - name: Prepare migrated runtime source layout
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\prepare_runtime_source_layout.ps1"'
+
       - name: Attempt read-only UE4 Engine Content ACL remediation
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\repair_ue_engine_content_acl.ps1"'
