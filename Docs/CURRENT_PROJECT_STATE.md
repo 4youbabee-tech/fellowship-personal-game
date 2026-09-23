@@ -1,3 +1,11 @@
+## 2026-09-23 - W00 checkpoint CP-W00-141: #774/#609 root causes repaired at source
+
+Candidate `621ad8617f7ebf1b973887fb61b4f46672d1226c` did **not** pass validation. Pre-Unreal #774 reached `PRE-UNREAL CORE VALIDATION PASSED`, then ProjectGovernor failed because CP-W00-140 had replaced `session_handoff` without its required `validation_snapshot.last_green/latest_observed` exact-SHA/run-ID/status records. Unreal #609 reached real UE4.27 compilation and failed first at `ShirePlayerCharacter.cpp:1954`: a runtime ternary was used as the `UE_LOG` verbosity token. UE4.27 requires a static verbosity token; the later parser/member diagnostics are treated as cascade from that root error.
+
+CP-W00-141 restores evidence lineage: last green remains `80fc54dc...` with Pre-Unreal #773 / Unreal #608, while latest observed records `621ad861...` with #774/#609 FAILURE. The checkpoint audit now logs through explicit Display/Error branches. PG-141 rejects future conditional `UE_LOG` verbosity before engine compilation, and the handoff regression tests explicitly reject checkpoint rewrites that drop `validation_snapshot`.
+
+Status: **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**. W00 remains open and W01 remains blocked. No COMPILE-TESTED / STATIC-VALIDATED claim is made for CP-W00-141 yet.
+
 ## 2026-09-23 - W00 checkpoint CP-W00-140: exact-head #608 green; closure/validation-authority wave started
 
 Exact PR #67 head `80fc54dc4e4571e57206bef28cc809e2dcb3ec62` completed Pre-Unreal #773, Warehouse #187 and Unreal Build #608 successfully. #608 compiled UE4.27.2 C++, imported production assets, passed ShireJourney.QA 2/2, startup, P1C01-P1C08, state persistence, continuous transitions, rollback fault injection, forced valid-bank stream failure, delayed pending-window authority and the zero-tolerance project warning-debt categories. This evidence is **COMPILE-TESTED + STATIC-VALIDATED + HEADLESS-RUNTIME-VALIDATED** for that exact SHA only. It is not PIE/device/visual/performance/audio-playback acceptance.

@@ -1,3 +1,7 @@
+## 2026-09-23 - W00 CP-W00-141 validation-repair checkpoint
+
+Candidate `621ad861...` failed Pre-Unreal #774 at ProjectGovernor evidence validation and Unreal #609 at the first C++ compile error (conditional `UE_LOG` verbosity). No production-completeness percentage is increased. The repair restores exact last-green/latest-observed handoff records, replaces dynamic log verbosity with static branches, and adds PG-141 plus a handoff regression test. Status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. Last proven engine baseline remains `80fc54dc...` (#773/#608). W01 remains blocked.
+
 ## 2026-09-23 - W00 CP-W00-140 closure wave
 
 Parent evidence boundary: `80fc54dc4e4571e57206bef28cc809e2dcb3ec62` is exact-head green on Pre-Unreal #773 / Warehouse #187 / Unreal #608, including compile/import, P1C01-P1C08, state, transitions, rollback/stream-failure faults, delayed pending authority and project warning-debt gates. No PIE/device/visual/performance/audio-playback promotion is made.

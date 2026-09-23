@@ -2663,10 +2663,13 @@
         "CI now has deterministic forced valid-bank async failure and non-blocking delayed-ready transition modes to prove failure cleanup and old-world authority.",
         "Exact head 80fc54dc4e4571e57206bef28cc809e2dcb3ec62 completed Pre-Unreal #773, Warehouse #187 and Unreal #608 successfully; #608 includes rollback fault, forced stream-failure rollback and delayed pending-window authority.",
         "PG-139 removes the fixed RendererSettings r.Streaming.PoolSize that overrode TextureQuality tiers, adds a zero-tolerance precedence-warning guard, and includes transition/fault/pending/persistence-edge logs in runtime warning-debt scope.",
-        "PG-140 adds a production-path legacy terminal restore audit requiring one canonical P1C02 publication/world commit and a stale checkpoint callback audit requiring stateApplied=no for an older world revision."
+        "PG-140 adds a production-path legacy terminal restore audit requiring one canonical P1C02 publication/world commit and a stale checkpoint callback audit requiring stateApplied=no for an older world revision.",
+        "Pre-Unreal #774 on 621ad861 reached PRE-UNREAL CORE VALIDATION PASSED then failed ProjectGovernor because session_handoff.validation_snapshot had been dropped.",
+        "Unreal #609 on 621ad861 failed first at conditional UE_LOG verbosity in ShirePlayerCharacter.cpp; later 100+ diagnostics are compiler cascade, not independent defects.",
+        "CP-W00-141 restores evidence lineage and adds PG-141 to reject dynamic UE_LOG verbosity before UE4.27 compilation."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal and UE4.27 runtime proof for PG-139/PG-140; parent #608 evidence applies only to 80fc54dc.",
+        "Obtain fresh exact-head Pre-Unreal and UE4.27 compile/runtime proof for CP-W00-141 (PG-139/PG-140/PG-141).",
         "Exercise a real queued AsyncSaveGame write completion across a committed-world revision; PG-140 currently proves the stale callback guard deterministically, not the full disk race.",
         "Exercise immutable queued checkpoint completion across a real world revision.",
         "Reject or canonicalize malformed route/chapter/episode save identities before world commit.",
@@ -4072,25 +4075,24 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Recovered the interrupted W00 stabilization session from PR #67 and exact workflow logs, then reconciled the successful #608 fault/pending evidence before starting the next closure wave.",
-    "exact_reviewed_head": "80fc54dc4e4571e57206bef28cc809e2dcb3ec62",
+    "reason": "Candidate 621ad861 exposed two independent blockers: the checkpoint rewrite removed the required governor validation_snapshot evidence lineage, and the stale-checkpoint audit used a conditional UE_LOG verbosity token that UE4.27 cannot compile.",
+    "exact_reviewed_head": "621ad8617f7ebf1b973887fb61b4f46672d1226c",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#773 SUCCESS",
-      "warehouse": "#187 SUCCESS",
-      "unreal_build": "#608 SUCCESS including faults and delayed pending authority"
+      "last_green": "80fc54dc: Pre-Unreal #773 SUCCESS, Warehouse #187 SUCCESS, Unreal #608 SUCCESS",
+      "pre_unreal": "#774 FAILURE after PRE-UNREAL CORE VALIDATION PASSED; ProjectGovernor rejected malformed session_handoff evidence lineage.",
+      "unreal_build": "#609 FAILURE at C++ compile; first root error was conditional UE_LOG verbosity in ShirePlayerCharacter.cpp. Later diagnostics are treated as cascade."
     },
     "reconciled_findings": [
-      "PG-137 delayed pending-window authority is headless-runtime proven on #608.",
-      "PG-138 forced valid-bank stream failure and atomic rollback are headless-runtime proven on #608.",
-      "The #608 log exposed a real r.Streaming.PoolSize priority conflict: DefaultEngine overrode TextureQuality scalability tiers.",
-      "Warning-debt runtime scope omitted transition/fault/pending logs and is expanded in PG-139.",
-      "Legacy terminal canonical publication and stale checkpoint completion receive deterministic runtime coverage in PG-140."
+      "PG-139/PG-140 core static validation reached PASS before the governor step failed.",
+      "Checkpoint persistence must preserve separate last_green and latest_observed exact SHA/run-id/status evidence.",
+      "UE_LOG verbosity must be a static macro token; conditional verbosity is replaced by explicit static branches.",
+      "PG-141 now rejects this UE_LOG macro misuse before an expensive Unreal compile."
     ],
-    "next_priority": "W00_PG139_PG140_CLOSURE_VALIDATION",
-    "truth_boundary": "80fc54dc evidence does not prove the new PG-139/PG-140 head. No PIE/device/visual/performance/audio acceptance is inferred.",
+    "next_priority": "W00_CP141_EXACT_HEAD_REVALIDATION",
+    "truth_boundary": "621ad861 is not fully STATIC-VALIDATED or COMPILE-TESTED because #774/#609 failed. 80fc54dc remains the last exact-head green baseline. CP-W00-141 needs fresh exact-head proof.",
     "stabilization_wave": {
       "status": "SOURCE_REPAIRED_PENDING_FRESH_EXACT_HEAD_PROOF",
-      "invariant": "Low-spec rendering settings have one authority; every transactional runtime log participates in warning debt; restore publication is single/canonical; stale checkpoint completion cannot mutate a newer world revision."
+      "invariant": "Durable checkpoints preserve evidence lineage and compile-time Unreal macro contracts are guarded pre-engine."
     }
   },
   "development_mode": {
@@ -4154,7 +4156,7 @@
     "After the P1C01 production pipeline is proven, mass-apply the same rig/material/world/audio/LOD conventions chapter-by-chapter."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-140",
+    "checkpoint_id": "CP-W00-141",
     "source_head": "80fc54dc4e4571e57206bef28cc809e2dcb3ec62",
     "branch": "integration/comprehensive-foundation-v1",
     "pull_request": 67,
@@ -4175,12 +4177,12 @@
       "delayed pending authority",
       "project warning-debt categories"
     ],
-    "active_wave": "PG-139/PG-140 W00 closure: texture-pool authority + full runtime warning scope + persistence edge regressions",
+    "active_wave": "PG-139/PG-140 closure repair after #774/#609: evidence lineage + compile-safe logging",
     "next_actions": [
-      "Run fresh exact-head Pre-Unreal on the new closure commit.",
-      "Run fresh exact-head UE4.27 build/import/runtime and inspect full logs, not only green status.",
-      "If red, collect the complete failure family before another repair commit.",
-      "Keep W01 blocked; after technical green continue packaged Data JSON, real queued async checkpoint race, audio without -NoSound, device profiling and human gates."
+      "Run fresh exact-head Pre-Unreal after CP-W00-141; ProjectGovernor and PG-141 must pass.",
+      "Run fresh exact-head UE4.27 compile/import/runtime after CP-W00-141.",
+      "Inspect full logs; if PG-140 runtime fails, collect the complete persistence-edge failure family before another repair.",
+      "Keep W01 blocked; do not infer PIE/device/visual/performance/audio acceptance."
     ],
     "unverified_acceptance": [
       "PIE/rendered traversal acceptance",
@@ -4190,7 +4192,35 @@
       "packaged Data JSON staging/read",
       "human core-loop/onboarding/external playtest"
     ],
-    "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance."
+    "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
+    "validation_snapshot": {
+      "last_green": {
+        "sha": "80fc54dc4e4571e57206bef28cc809e2dcb3ec62",
+        "pre_unreal": {
+          "sha": "80fc54dc4e4571e57206bef28cc809e2dcb3ec62",
+          "run_id": 35826865705,
+          "status": "SUCCESS"
+        },
+        "unreal": {
+          "sha": "80fc54dc4e4571e57206bef28cc809e2dcb3ec62",
+          "run_id": 35826865486,
+          "status": "SUCCESS"
+        }
+      },
+      "latest_observed": {
+        "sha": "621ad8617f7ebf1b973887fb61b4f46672d1226c",
+        "pre_unreal": {
+          "sha": "621ad8617f7ebf1b973887fb61b4f46672d1226c",
+          "run_id": 35880446975,
+          "status": "FAILURE"
+        },
+        "unreal": {
+          "sha": "621ad8617f7ebf1b973887fb61b4f46672d1226c",
+          "run_id": 35880447089,
+          "status": "FAILURE"
+        }
+      }
+    }
   },
   "governor_role": {
     "mode": "OVERSEER_NOT_BOTTLENECK",

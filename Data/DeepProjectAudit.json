@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "80fc54dc4e4571e57206bef28cc809e2dcb3ec62_UNREAL_608_GREEN_PLUS_PG139_140_SOURCE_WAVE_PENDING",
+  "audited_head": "621ad8617f7ebf1b973887fb61b4f46672d1226c_FAILURE_DIAGNOSED_CP141_SOURCE_REPAIR_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -320,6 +320,22 @@
       "title": "Project-level texture pool setting overrode low-spec scalability tiers",
       "evidence": "Unreal #608 logged that r.Streaming.PoolSize set by Scalability was ignored because DefaultEngine RendererSettings had already set PoolSize=900 at higher priority. This meant TextureQuality@0/1/2 pool targets 600/800/1000 MB did not actually own the runtime value.",
       "action": "Remove the fixed RendererSettings PoolSize, keep per-tier values in DefaultScalability, fail Pre-Unreal if DefaultEngine reintroduces the override, and make the UE warning zero-tolerance. Device profiling still decides the final pool budgets; no performance win is claimed from source cleanup."
+    },
+    {
+      "id": "AUDIT-HIGH-039",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "title": "Checkpoint rewrite dropped the governor evidence-lineage schema",
+      "evidence": "Pre-Unreal #774 completed PRE-UNREAL CORE VALIDATION, then ProjectGovernor reported 12 handoff errors because session_handoff.validation_snapshot was absent.",
+      "action": "Preserve validation_snapshot in every checkpoint rewrite and keep a regression test that rejects its removal."
+    },
+    {
+      "id": "AUDIT-HIGH-040",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_COMPILE",
+      "title": "Conditional UE_LOG verbosity caused an engine compile cascade",
+      "evidence": "Unreal #609 first failed at ShirePlayerCharacter.cpp:1954 because a runtime ternary was used as the UE_LOG verbosity token. The later 100+ diagnostics are cascade from macro expansion.",
+      "action": "Use explicit static-verbosity branches and keep PG-141 scanning project C++ before UE4.27 compilation."
     }
   ],
   "external_practice_alignment": [
@@ -345,7 +361,8 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head compile/import/runtime for PG-139 texture-pool authority and PG-140 persistence-edge evidence",
+    "fresh exact-head Pre-Unreal and UE4.27 compile/runtime for CP-W00-141 / PG-139/PG-140/PG-141",
+    "if PG-140 runtime fails, collect the complete legacy-terminal/stale-checkpoint failure family before modifying source",
     "real queued AsyncSaveGame completion race across world revision with immutable captured snapshot proof",
     "strict route/chapter/episode identity validation for malformed saves/direct StartExperience calls",
     "packaged-build Data JSON dependency/read validation",
@@ -354,5 +371,5 @@
     "human core-loop/onboarding/external playtest",
     "isolated Public/Private migration"
   ],
-  "audit_scope_note": "Exact head 80fc54dc passed Pre-Unreal #773, Warehouse #187 and Unreal #608, including rollback faults, forced stream-failure rollback and delayed pending-window authority. The newly added PG-139/PG-140 config/runtime-coverage wave is source-level until its own exact-head workflows pass. No PIE/device/visual/performance/audio-playback acceptance is inferred."
+  "audit_scope_note": "621ad861 is a failed diagnostic candidate: #774 core static checks passed but governor evidence validation failed; #609 reached C++ compile and failed at conditional UE_LOG verbosity. CP-W00-141 repairs both at source and remains unproven until fresh exact-head workflows complete. 80fc54dc remains the last exact-head green baseline."
 }

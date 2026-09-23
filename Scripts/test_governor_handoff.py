@@ -31,6 +31,11 @@ class HandoffTests(unittest.TestCase):
         g['session_handoff']['source_head'] = 'c' * 40
         self.assertTrue(validate_handoff(g))
 
+    def test_checkpoint_rewrite_must_preserve_validation_snapshot(self):
+        g = fixture()
+        del g['session_handoff']['validation_snapshot']
+        self.assertTrue(validate_handoff(g))
+
     def test_new_checkout_is_explicitly_unproven(self):
         self.assertIn('does not certify', evidence_summary(fixture(), 'c' * 40))
 

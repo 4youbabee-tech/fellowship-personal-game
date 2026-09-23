@@ -1951,12 +1951,20 @@ bool AShirePlayerCharacter::RunStaleCheckpointCompletionAudit()
     Supplies = OriginalSupplies;
     bStaminaExhausted = CurrentStamina <= 0.0f;
 
-    UE_LOG(
-        LogTemp,
-        bStateUnchanged ? Display : Error,
-        TEXT("ShireCheckpointRevisionAudit: %s stale-completion stateApplied=%s"),
-        bStateUnchanged ? TEXT("PASS") : TEXT("FAIL"),
-        bStateUnchanged ? TEXT("no") : TEXT("yes"));
+    if (bStateUnchanged)
+    {
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireCheckpointRevisionAudit: PASS stale-completion stateApplied=no"));
+    }
+    else
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireCheckpointRevisionAudit: FAIL stale-completion stateApplied=yes"));
+    }
 
     return bStateUnchanged;
 }

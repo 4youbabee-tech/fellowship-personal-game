@@ -4111,6 +4111,16 @@ if "test_edges_mode_requires_canonical_restore_and_stale_checkpoint_evidence" no
     fail("PG-140 persistence edge marker regression test missing")
 
 
+# PG-141: UE_LOG verbosity is a compile-time macro token in UE4.27. Runtime
+# conditionals in that macro slot create a misleading cascade of compile errors.
+for pg141_path in SOURCE.rglob("*.cpp"):
+    pg141_text = read(pg141_path)
+    if re.search(r"UE_LOG\s*\(\s*[^,]+,\s*[^,]*\?", pg141_text, flags=re.S):
+        fail(
+            "PG-141 dynamic UE_LOG verbosity is forbidden; use explicit static-verbosity branches: "
+            + str(pg141_path.relative_to(ROOT)).replace("\\", "/")
+        )
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
