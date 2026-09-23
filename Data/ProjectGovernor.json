@@ -2679,10 +2679,12 @@
         "CP-W00-145 replaces marketplace warehouse checkout with bounded exact-head native Git retries, forces Bypass on inline PowerShell, and keeps receipt reuse/atomic provider downloads.",
         "PG-146 canonicalizes Route/Chapter/Episode/PlayableCharacter identity for direct requests, route progress and restored saves; P1G01 is treated only as a repairable legacy Gandalf shorthand, never as an authoritative chapter.",
         "PG-148 extends persistence-edge runtime coverage to two real AsyncSaveGameToSlot writes queued on an old world revision and requires successful writes with zero stale completion effects after a committed revision change.",
-        "PG-147 guards packaged runtime JSON declarations by matching C++ Data/*.json loads to ShireJourney.Build.cs RuntimeDependencies."
+        "PG-147 guards packaged runtime JSON declarations by matching C++ Data/*.json loads to ShireJourney.Build.cs RuntimeDependencies.",
+        "Pre-Unreal #779 exposed a PG-136 validator false positive: production StartChapter already broadcasts transition intent before authoritative identity mutation, but the guard still required the obsolete literal CurrentChapterId = ChapterId;.",
+        "CP-W00-146 introduces Scripts/source_contracts.py and regression tests so transition-order guards inspect protected member assignments structurally and remain valid when canonical target aliases change RHS spelling."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal + Warehouse + UE4.27 proof for CP-W00-145 large closure wave.",
+        "Obtain fresh exact-head Pre-Unreal + Warehouse + UE4.27 proof for CP-W00-146 after structural PG-136 validator repair.",
         "Exercise a real queued AsyncSaveGame write completion across a committed-world revision; PG-140 currently proves the stale callback guard deterministically, not the full disk race.",
         "Exercise immutable queued checkpoint completion across a real world revision.",
         "Reject or canonicalize malformed route/chapter/episode save identities before world commit.",
@@ -4089,27 +4091,25 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Exact head 3ea40ce1 passed Pre-Unreal #778 and Unreal #613. Warehouse #193 then failed deterministically before provider staging because GitHub's inline powershell shell invoked a temporary .ps1 that the local runner execution policy rejected. Push Warehouse #192 separately proves a flaky network/DNS family around actions/checkout. The next source audit also found a real identity defect: one state fixture treated P1G01 as a chapter although the project data defines GandalfParallel as chapter P1C01 / episode P1G01_Isengard. W00 is therefore continuing as one large root-cause closure wave rather than isolated line patches.",
-    "exact_reviewed_head": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
+    "reason": "Pre-Unreal #779 reported PG-136 StartChapter transition intent ordering on exact head 333cbd0d. Source inspection shows the invariant itself is already correct: OnWorldTransitionRequested.Broadcast occurs before CurrentChapterId/CurrentEpisodeId/PlayableCharacterId mutation. The validator was coupled to the obsolete exact assignment string 'CurrentChapterId = ChapterId;' and therefore treated the canonicalized 'CurrentChapterId = TargetChapterId;' as if no mutation existed.",
+    "exact_reviewed_head": "333cbd0dd51d82215d4b9cc94793be507299f349",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#778 SUCCESS",
-      "unreal_build": "#613 SUCCESS including startup, P1C01-P1C08, state/transitions/faults/pending/edges and zero project warning debt",
-      "warehouse_pr": "#193 FAILURE at Detect current warehouse delta: PSSecurityException, scripts disabled",
-      "warehouse_push": "#192 FAILURE before code: checkout/download network timeout, packfile error and DNS resolution failure"
+      "pre_unreal": "#779 FAILURE on one PG-136 false positive caused by exact assignment spelling",
+      "source_order": "ShireQuestSubsystem::StartChapter publishes OnWorldTransitionRequested before authoritative CurrentChapterId/CurrentEpisodeId/PlayableCharacterId assignments",
+      "unreal_build": "#614 IN_PROGRESS at reconciliation time; compile/import/Automation/startup/chapter sweep had already completed successfully, state/edge audit still running",
+      "warehouse": "#195 QUEUED at reconciliation time"
     },
     "reconciled_findings": [
-      "Warehouse execution policy and checkout network failure are infrastructure families, not gameplay regressions.",
-      "Warehouse inline PowerShell now explicitly uses -ExecutionPolicy Bypass, and the workflow no longer depends on downloading actions/checkout on the flaky self-hosted network path; exact-head native Git checkout has bounded retries.",
-      "Route/chapter/episode/playable-character identity now has one canonical contract sourced from the existing production atlas: FrodoMain P1C01-P1C08 with matching P1Cxx_Main episodes, and GandalfParallel P1C01/P1G01_Isengard/Gandalf.",
-      "Direct malformed StartExperience/StartChapter calls fail closed before transition publication; restored saves and route-progress maps are canonicalized before becoming authoritative.",
-      "Persistence-edge CI now drives a real two-write AsyncSaveGameToSlot sequence, crosses a committed world revision, delays completion handling deterministically, and requires both disk writes to succeed while stale completion effects remain inert.",
-      "PG-147 statically checks every Data/*.json literal loaded by runtime C++ against ShireJourney.Build.cs RuntimeDependencies so packaged-data declarations cannot silently drift."
+      "Do not reorder StartChapter C++: doing so would change already-correct production transaction semantics in response to a validator defect.",
+      "PG-136 now checks the semantic invariant: transition signal must precede the first protected member assignment, independent of the RHS variable name.",
+      "The same structural helper protects StartExperience and ignores comments/string literals so source text cannot fake an ordering pass.",
+      "A reusable source_contracts.py helper plus regression unit tests turns this from a one-line validator patch into a guard against the whole exact-spelling drift family."
     ],
-    "next_priority": "W00_CP145_LARGE_CLOSURE_EXACT_HEAD_PROOF",
-    "truth_boundary": "CP-W00-145 is SOURCE-REPAIRED only until fresh exact-head Pre-Unreal, Warehouse and Unreal runs complete. Parent 3ea40ce1 remains the last exact machine-proven source for static/compile/headless runtime. No PIE/device/visual/performance/audio-playback acceptance is inferred.",
+    "next_priority": "W00_CP146_STRUCTURAL_VALIDATOR_EXACT_HEAD_GREEN",
+    "truth_boundary": "333cbd0d is not a fully green baseline because Pre-Unreal #779 failed and Unreal #614 was still in progress. The PG-136 failure is diagnosed as validator drift from direct source evidence, not as a proven gameplay/runtime defect. CP-W00-146 is SOURCE-REPAIRED pending fresh exact-head validation.",
     "stabilization_wave": {
-      "status": "LARGE_ROOT_CAUSE_REPAIR_PENDING_EXACT_HEAD_PROOF",
-      "invariant": "External infrastructure failures are isolated from gameplay; world identity is canonical before publication; queued async checkpoint completions cannot mutate a later committed world; runtime JSON packaging declarations cannot drift silently."
+      "status": "VALIDATOR_ROOT_CAUSE_REPAIRED_PENDING_EXACT_HEAD_PROOF",
+      "invariant": "Static architecture guards validate semantic source ordering, not the incidental spelling of assignment right-hand sides."
     }
   },
   "development_mode": {
@@ -4173,7 +4173,7 @@
     "After the P1C01 production pipeline is proven, mass-apply the same rig/material/world/audio/LOD conventions chapter-by-chapter."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-145",
+    "checkpoint_id": "CP-W00-146",
     "source_head": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
     "branch": "integration/comprehensive-foundation-v1",
     "pull_request": 67,
@@ -4194,12 +4194,12 @@
       "delayed pending authority",
       "project warning-debt categories"
     ],
-    "active_wave": "PG-145..148 W00 closure wave: resilient self-hosted warehouse execution, canonical route/chapter/episode identity, malformed-save repair, and real queued AsyncSaveGame revision-race proof",
+    "active_wave": "PG-149 structural validator semantics: transition intent ordering must survive canonical target aliases without false reds",
     "next_actions": [
-      "Run fresh Pre-Unreal on CP-W00-145 and require PG-145..148 static guards to pass.",
-      "Run fresh Warehouse: exact checkout must use bounded native Git retries, inline PowerShell must force ExecutionPolicy Bypass, and valid persistent receipts may short-circuit provider acquisition.",
-      "Run fresh Unreal exact-head validation and require the expanded state/edges evidence, including malformed identity restore and a real two-write AsyncSaveGame race across a committed world revision.",
-      "If all machine gates are green, continue the same W00 repair campaign into remaining packaged-runtime/audio/device/human acceptance debt; do not open W01."
+      "Run fresh Pre-Unreal and require PG-136 to pass through structural member-mutation ordering rather than exact assignment spelling.",
+      "Run the dedicated source-contract regression tests proving alias RHS changes still preserve the transition-order invariant.",
+      "Let exact-head Unreal and Warehouse complete on the new candidate; collect their whole failure family before any further source change.",
+      "Continue W00 only; W01 stays blocked until remaining packaged/audio/device/human gates have evidence."
     ],
     "unverified_acceptance": [
       "PIE/rendered traversal acceptance",
@@ -4225,16 +4225,16 @@
         }
       },
       "latest_observed": {
-        "sha": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
+        "sha": "333cbd0dd51d82215d4b9cc94793be507299f349",
         "pre_unreal": {
-          "sha": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
-          "run_id": 35903307038,
-          "status": "SUCCESS"
+          "sha": "333cbd0dd51d82215d4b9cc94793be507299f349",
+          "run_id": 35910899703,
+          "status": "FAILURE"
         },
         "unreal": {
-          "sha": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
-          "run_id": 35903307018,
-          "status": "SUCCESS"
+          "sha": "333cbd0dd51d82215d4b9cc94793be507299f349",
+          "run_id": 35910899579,
+          "status": "IN_PROGRESS"
         }
       }
     }

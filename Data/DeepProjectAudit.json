@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "3ea40ce1d68b6d5b961ed56a00117a75528e833e_PRE778_UNREAL613_GREEN_WAREHOUSE193_EXEC_POLICY_CP145_PENDING",
+  "audited_head": "333cbd0dd51d82215d4b9cc94793be507299f349_PRE779_PG136_FALSE_POSITIVE_CP146_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -392,6 +392,14 @@
       "title": "Runtime Data JSON packaging declarations could drift from C++ loads",
       "evidence": "Runtime systems load multiple Data/*.json files through FPaths::ProjectDir and FileHelper, while Build.cs maintains an explicit RuntimeDependencies list. Without a cross-check a future runtime JSON load could compile/headless-pass from source checkout but be omitted from staged packaged output.",
       "action": "PG-147 scans runtime C++ Data/*.json literals and requires matching RuntimeDependencies entries; later packaged-build execution remains the acceptance boundary."
+    },
+    {
+      "id": "AUDIT-HIGH-048",
+      "severity": "HIGH",
+      "status": "SYSTEMIC_VALIDATOR_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_STATIC_PROOF",
+      "title": "PG-136 transition-order guard depended on exact assignment RHS spelling",
+      "evidence": "Pre-Unreal #779 failed because PG-136 searched for CurrentChapterId = ChapterId;. Current production StartChapter broadcasts OnWorldTransitionRequested first and later assigns CurrentChapterId = TargetChapterId, CurrentEpisodeId = TargetEpisodeId and PlayableCharacterId = TargetPlayableCharacterId. The architectural invariant is satisfied; the validator could not recognize the canonicalized RHS.",
+      "action": "Use reusable structural source-contract helpers that locate protected member assignments independent of RHS names, ignore comments/strings, and unit-test both alias-RHS success and mutation-first failure."
     }
   ],
   "external_practice_alignment": [
@@ -417,12 +425,13 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head Pre-Unreal + Warehouse + UE4.27 validation for CP-W00-145 large closure wave",
+    "fresh exact-head Pre-Unreal + Warehouse + UE4.27 validation for CP-W00-146",
+    "collect any CP-W00-145 identity/real-async-race runtime failures as one family if Unreal reports red",
     "actual packaged-build Data JSON read validation beyond static RuntimeDependencies parity",
     "audio production-bank presence/playback validation without -NoSound",
     "target-device frame-time/resident-memory/VRAM/GC/tick profiling",
     "human core-loop/onboarding/external playtest",
     "isolated Public/Private migration after machine stability"
   ],
-  "audit_scope_note": "Parent 3ea40ce1 is exact-head Pre-Unreal #778 + Unreal #613 green. Warehouse #192/#193 are pre-code infrastructure failures (network/DNS and execution policy respectively). CP-W00-145 combines their systemic repair with canonical experience identity, real queued AsyncSaveGame cross-revision runtime audit and runtime-JSON packaging parity guards; fresh exact-head proof is pending. No PIE/device/visual/performance/audio-playback acceptance is inferred."
+  "audit_scope_note": "Pre-Unreal #779 is a validator false positive proven by source order: transition intent precedes StartChapter identity mutation, while PG-136 searched an obsolete exact RHS string. CP-W00-146 repairs this validation family structurally. Unreal #614 and Warehouse #195 were not yet final at reconciliation, so no result is inferred for them."
 }

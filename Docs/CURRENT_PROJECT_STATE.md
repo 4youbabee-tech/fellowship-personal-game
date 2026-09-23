@@ -1,3 +1,11 @@
+## 2026-09-23 - W00 checkpoint CP-W00-146: PG-136 false red fixed at the validator architecture layer
+
+Pre-Unreal #779 on `333cbd0dd51d82215d4b9cc94793be507299f349` failed with `PG-136 StartChapter must publish transition intent before logical chapter mutation`. Direct source inspection shows the production transaction order is already correct: `OnWorldTransitionRequested.Broadcast(...)` executes before the authoritative `CurrentChapterId`, `CurrentEpisodeId`, and `PlayableCharacterId` assignments. The red was caused by validator drift: PG-136 searched specifically for the obsolete text `CurrentChapterId = ChapterId;`, while CP-W00-145 correctly canonicalized the destination through `TargetChapterId` and now assigns `CurrentChapterId = TargetChapterId;`.
+
+No C++ transaction reorder is made. CP-W00-146 fixes the root validation family instead. `Scripts/source_contracts.py` provides a reusable structural check that finds protected member assignments regardless of RHS spelling, ignores comments/string literals, and proves the transition signal occurs first. PG-136 uses the same helper for StartChapter and StartExperience, and a dedicated unit suite proves alias-RHS changes pass while mutation-first ordering fails.
+
+At reconciliation time Unreal #614 was still running: build/import/Automation/startup/chapter sweep had already passed, with the state/edge phase still active; Warehouse #195 remained queued. Therefore CP-W00-146 is **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**. W01 remains blocked and no production-completeness percentage is increased.
+
 ## 2026-09-23 - W00 checkpoint CP-W00-145: large root-cause closure wave
 
 Exact parent `3ea40ce1d68b6d5b961ed56a00117a75528e833e` is **STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED** by Pre-Unreal #778 and Unreal #613. #613 passed UE4.27.2 compile/import, Automation 2/2, startup, P1C01-P1C08, state, continuous transitions, rollback/stream-failure faults, delayed pending authority, persistence edges and all tracked project warning-debt ceilings at zero.

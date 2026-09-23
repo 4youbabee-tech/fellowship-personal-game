@@ -14,6 +14,8 @@ import sys
 from collections import defaultdict, deque
 from pathlib import Path
 
+from source_contracts import signal_precedes_member_mutation
+
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "Source" / "ShireJourney"
 
@@ -85,6 +87,8 @@ required_files = [
     ROOT / "ShireJourney.uproject",
     ROOT / "Scripts" / "runtime_audit_contracts.py",
     ROOT / "Scripts" / "test_runtime_audit_contracts.py",
+    ROOT / "Scripts" / "source_contracts.py",
+    ROOT / "Scripts" / "test_source_contracts.py",
     ROOT / "Config" / "DefaultEngine.ini",
     ROOT / "Config" / "DefaultGame.ini",
     ROOT / "Config" / "DefaultInput.ini",
@@ -3896,17 +3900,19 @@ for pg136_symbol in [
 pg136_start_chapter_start = pg136_quest.find("void UShireQuestSubsystem::StartChapter")
 pg136_start_chapter_end = pg136_quest.find("FShireRouteProgress UShireQuestSubsystem::CaptureCurrentRouteProgress", pg136_start_chapter_start)
 pg136_start_chapter = pg136_quest[pg136_start_chapter_start:pg136_start_chapter_end]
-pg136_chapter_signal = pg136_start_chapter.find("OnWorldTransitionRequested.Broadcast")
-pg136_chapter_mutation = pg136_start_chapter.find("CurrentChapterId = ChapterId;")
-if pg136_chapter_signal < 0 or pg136_chapter_mutation < 0 or pg136_chapter_signal > pg136_chapter_mutation:
+if not signal_precedes_member_mutation(
+        pg136_start_chapter,
+        "OnWorldTransitionRequested.Broadcast",
+        ("CurrentChapterId", "CurrentEpisodeId", "PlayableCharacterId")):
     fail("PG-136 StartChapter must publish transition intent before logical chapter mutation")
 
 pg136_start_experience_start = pg136_quest.find("void UShireQuestSubsystem::StartExperience")
 pg136_start_experience_end = pg136_quest.find("TMap<FName, FShireRouteProgress>", pg136_start_experience_start)
 pg136_start_experience = pg136_quest[pg136_start_experience_start:pg136_start_experience_end]
-pg136_experience_signal = pg136_start_experience.find("OnWorldTransitionRequested.Broadcast")
-pg136_route_mutation = pg136_start_experience.find("CurrentRouteId = RouteId;")
-if pg136_experience_signal < 0 or pg136_route_mutation < 0 or pg136_experience_signal > pg136_route_mutation:
+if not signal_precedes_member_mutation(
+        pg136_start_experience,
+        "OnWorldTransitionRequested.Broadcast",
+        ("CurrentRouteId", "CurrentChapterId", "CurrentEpisodeId", "PlayableCharacterId")):
     fail("PG-136 StartExperience must publish transition intent before logical route mutation")
 
 for pg136_symbol in [
@@ -6402,6 +6408,25 @@ if not mode_has_evidence("edges", "edge.queued_checkpoint_race"):
     fail("PG-148 queued checkpoint race runtime evidence missing")
 if "RunMalformedExperienceRestoreAuditSetup" not in pg146_player:
     fail("PG-148 persistence-edge sequence must exercise malformed restore before async race")
+
+
+# PG-149: transition-order validation checks protected member mutations, not exact RHS spelling.
+pg149_self = read(ROOT / "Scripts" / "pre_unreal_validate.py")
+pg149_tests = read(ROOT / "Scripts" / "test_source_contracts.py")
+pg149_workflow = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
+if "from source_contracts import signal_precedes_member_mutation" not in pg149_self:
+    fail("PG-149 Pre-Unreal must consume the structural transition-order helper")
+if re.search(r'\.find\(["\']Current(?:Chapter|Route|Episode)Id\s*=', pg149_self):
+    fail("PG-149 transition-order guards may not hard-code an assignment RHS")
+for pg149_symbol in [
+    "test_transition_signal_accepts_alias_rhs",
+    "test_transition_signal_rejects_mutation_first",
+    "test_comments_and_strings_do_not_fake_mutation",
+]:
+    if pg149_symbol not in pg149_tests:
+        fail(f"PG-149 source-contract regression test missing: {pg149_symbol}")
+if "test_source_contracts.py" not in pg149_workflow:
+    fail("PG-149 Pre-Unreal workflow must execute source-contract regression tests")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")

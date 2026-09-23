@@ -1,3 +1,7 @@
+## 2026-09-23 - W00 CP-W00-146 structural validator repair
+
+Head `333cbd0d...` produced Pre-Unreal #779 FAILURE on PG-136, but the production StartChapter source already publishes transition intent before authoritative identity mutation. Root cause: the guard hard-coded the old RHS spelling `CurrentChapterId = ChapterId;` and failed after canonicalization changed the assignment to `TargetChapterId`. CP-W00-146 replaces exact-spelling checks with reusable structural member-mutation ordering plus regression tests. No production percentage is increased. Status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**.
+
 ## 2026-09-23 - W00 CP-W00-145 large closure wave
 
 Parent `3ea40ce1...`: Pre-Unreal #778 SUCCESS and Unreal #613 SUCCESS; Warehouse #193 FAILURE before staging due Windows PowerShell execution policy, with separate #192 network/DNS checkout failure. CP-W00-145 repairs both warehouse infrastructure families and simultaneously closes source-level identity/persistence gaps: canonical Route/Chapter/Episode/PlayableCharacter validation, malformed-save/route-progress repair, real queued AsyncSaveGame cross-revision race evidence, and packaged-runtime JSON declaration guards. No production percentage is increased. New-head status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. W01 remains blocked.
