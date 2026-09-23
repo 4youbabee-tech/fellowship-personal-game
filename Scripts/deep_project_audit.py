@@ -150,12 +150,16 @@ if "ObjectPathToPackageName(ProductionSurfacePath)" in importer:
 if "ObjectPathToPackageName(ProductionSurfaceObjectPath)" not in importer:
  errors.append("explicit FString package-name preflight missing from production importer")
 
+pre_unreal_workflow=read(ROOT/".github"/"workflows"/"pre-unreal-validation.yml")
+if "python Scripts/asset_quality_audit.py --strict" not in pre_unreal_workflow:
+ errors.append("Pre-Unreal workflow does not fail closed on structural asset-quality defects")
+
 asset_quality=read(ROOT/"Scripts"/"asset_quality_audit.py")
 for token in [
  "obj_with_degenerate_uv_triangles",
  "degenerate UV triangle",
  "obj_with_opposed_normals",
- "opposes the geometric face normal",
+ "oppose the geometric face normal",
 ]:
  if token not in asset_quality:
   errors.append(f"source tangent-basis quality guard missing: {token}")

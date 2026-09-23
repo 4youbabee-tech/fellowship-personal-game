@@ -2639,13 +2639,18 @@
         "PG-037 now requires the origin-bound async checkpoint completion marker with stateApplied and sameCommittedContext instead of its obsolete pre-PG-133 log signature.",
         "PG-134 guards the source tangent-basis contract while warning ceilings remain zero.",
         "Pre-Unreal #767 on 274b5d0dfd12d57e9250001409ea28e43e56d41c failed in PG-134 self-validation because the expected diagnostic phrase did not exactly match asset_quality_audit.py; the guarded source behavior itself was present.",
-        "The PG-134 literal contract now matches 'oppose the geometric face normal', and the early Pre-Unreal failure gate prints each accumulated ERROR before exit to avoid opaque one-count failures."
+        "The PG-134 literal contract now matches 'oppose the geometric face normal', and the early Pre-Unreal failure gate prints each accumulated ERROR before exit to avoid opaque one-count failures.",
+        "Pre-Unreal #768 exposed 23 additional project-owned static OBJ assets with degenerate UV triangles and 7 with opposed authored normals.",
+        "The full exposed tangent-basis set is normalized in one wave to explicit triangulated face-local UVs and face-aligned normals; final animated assets remain skeletal FBX only.",
+        "The Pre-Unreal asset-quality workflow now runs asset_quality_audit.py --strict because #768 proved the previous advisory invocation could print structural ERROR lines while the step stayed green.",
+        "PG-134 and deep_project_audit now guard the strict workflow wiring as well as tangent-basis source semantics."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal and UE4.27 compile/import/runtime proof after PG-134 mesh source repair.",
-        "Require zero nearly-zero tangent and zero nearly-zero binormal identities on that same exact head.",
-        "Require startup, P1C01-P1C08, persistence state and continuous-transition audits to remain green after the asset-source repair.",
-        "Execute forced-slow transition and rollback-failure injection, legacy terminal-save repair, packaged Data JSON staging, target-device performance/memory, real audio playback and human play gates before W00 final closure."
+        "Obtain fresh exact-head Pre-Unreal proof with strict asset_quality_audit and zero structural tangent-basis errors.",
+        "Obtain fresh exact-head UE4.27 compile/import/runtime proof with zero tangent/binormal/master-surface warning debt.",
+        "Keep startup, P1C01-P1C08, state/persistence and continuous transitions green on that same head.",
+        "Execute forced-slow transition, rollback-failure, legacy save repair and stale checkpoint callback race cases.",
+        "Validate packaged Data JSON dependencies, target-device performance/memory/GC, audio playback and human core-loop/onboarding before W00 final acceptance."
       ],
       "acceptance_criteria": [
         "No known CRITICAL/HIGH source defect remains uncorrected or explicitly evidence-bounded.",
@@ -4044,20 +4049,25 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Pre-Unreal #767 exposed validator contract drift after PG-134. The source guard existed, but its self-check searched an obsolete literal and the early exit hid error details.",
-    "exact_reviewed_head": "274b5d0dfd12d57e9250001409ea28e43e56d41c",
+    "reason": "Pre-Unreal #768 exposed the complete currently visible source tangent-basis family and a CI policy defect: structural asset ERROR lines were advisory because --strict was not wired.",
+    "exact_reviewed_head": "be5914d9b94d8e8bb5e25de88edab8a0dc089baf",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#767 FAILURE in validator self-check before asset audit; one opaque core-validation error",
-      "unreal_build": "#602 still in progress at reconciliation time",
-      "warehouse": "#181 queued at reconciliation time"
+      "pre_unreal": "#768 FAILURE at deep-project audit after core/governor/asset-quality/readiness stages; asset-quality log exposed 23 degenerate-UV assets and 7 opposed-normal assets",
+      "unreal_build": "#603 pending at reconciliation time",
+      "warehouse": "#182 pending at reconciliation time"
     },
     "reconciled_findings": [
-      "PG-134 source tangent-basis repair remains pending engine proof.",
-      "The #767 failure is validator self-check drift, not evidence that the three repaired OBJ assets still fail Unreal.",
-      "Early validator exits now print concrete error messages so future red runs can be acted on without an extra diagnostic commit."
+      "The three meshes isolated by Unreal #601 were not the only source assets with invalid tangent-basis data.",
+      "Source asset audit can find the class faster than serial Unreal warning discovery, so the entire reported set should be repaired at once.",
+      "The standalone asset-quality workflow must be strict; otherwise structural ERROR output can remain green.",
+      "Static OBJ proxy/prop repair does not alter the rule that final animated characters and creatures use skeletal FBX only."
     ],
-    "next_priority": "W00_PG134_FRESH_VALIDATION",
-    "truth_boundary": "The diagnostic correction is source-level until a fresh Pre-Unreal run succeeds; Unreal #602 applies only to 274b5d0d..."
+    "next_priority": "W00_STRICT_ASSET_BASIS_ZERO_DEBT_EXACT_HEAD",
+    "truth_boundary": "The broad asset normalization and strict workflow wiring are source-level until a fresh exact-head Pre-Unreal and Unreal validation pass.",
+    "stabilization_wave": {
+      "status": "LARGE_SOURCE_ASSET_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "invariant": "No production static OBJ may carry a structurally singular UV tangent basis or authored normals that oppose its geometry; structural source errors must fail CI before Unreal import."
+    }
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",

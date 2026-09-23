@@ -33,7 +33,7 @@ jobs:
         run: python Scripts/project_governor.py
 
       - name: Audit production asset source quality
-        run: python Scripts/asset_quality_audit.py
+        run: python Scripts/asset_quality_audit.py --strict
 
       - name: Audit production readiness contracts
         run: python Scripts/production_readiness_audit.py

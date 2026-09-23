@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab_UNREAL_601_RUNTIME_GREEN_WARNING_GATE_3_ASSET_ROOT_CAUSE",
+  "audited_head": "be5914d9b94d8e8bb5e25de88edab8a0dc089baf_PRE_UNREAL_768_EXPOSED_BROADER_TANGENT_SOURCE_DEBT",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -164,10 +164,10 @@
     {
       "id": "AUDIT-HIGH-018",
       "severity": "HIGH",
-      "status": "THREE_SOURCE_ASSETS_ISOLATED_SOURCE_REPAIR_PENDING_EXACT_HEAD_ZERO_WARNING_PROOF",
+      "status": "BROAD_SOURCE_TANGENT_BASIS_REPAIR_APPLIED_PENDING_STRICT_EXACT_HEAD_PROOF",
       "title": "Import warning ceilings allowed large tangent/binormal debt to remain green",
-      "evidence": "Unreal #601 on 34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab passed UE4.27.2 C++ build, production import, Automation, startup, aggregate P1C01-P1C08, state and transitions, then the zero-warning gate failed only on 3 mesh identities: SM_Balrog_Wing, SM_Lurtz_Blade, SM_Isengard_IndustrialPitRim. Source inspection found degenerate UV triangles on the first two and authored normals opposing geometric face normals on the Isengard rim.",
-      "action": "Repair those three project-owned procedural OBJ sources with face-local non-degenerate UVs and face-aligned normals, then keep a pre-engine structural guard that rejects degenerate UV triangles/opposed normals before Unreal import. Do not raise warning ceilings."
+      "evidence": "Unreal #601 reduced runtime warning debt to three meshes, but Pre-Unreal #768's newly strengthened source audit exposed the same structural class across 23 additional project-owned static OBJ assets: degenerate UV triangles in 23 assets and opposed authored normals in 7 of them. The standalone asset-quality CI step was still non-strict, so it printed ERROR lines yet returned success.",
+      "action": "Normalize all 23 exposed static OBJ sources to explicit triangulated face-local UV/normal bases, keep zero warning ceilings, and make the Pre-Unreal asset-quality workflow run with --strict so source structural errors cannot be advisory."
     },
     {
       "id": "AUDIT-HIGH-019",
@@ -248,6 +248,22 @@
       "title": "Three procedural OBJ assets carried invalid tangent-space source data",
       "evidence": "Unreal #601 zero-warning gate isolated nearly-zero tangent/binormal debt to SM_Balrog_Wing, SM_Lurtz_Blade and SM_Isengard_IndustrialPitRim. Source geometry analysis found 4 zero-area UV triangles in each of the first two meshes and widespread authored normal/face opposition in the industrial rim.",
       "action": "Use face-local non-degenerate UV triangles and face-aligned normals for these flat-color procedural meshes. asset_quality_audit.py now rejects future degenerate UV triangles and strongly opposed authored normals before engine import."
+    },
+    {
+      "id": "AUDIT-HIGH-030",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "title": "Asset-quality CI printed structural ERROR lines without failing",
+      "evidence": "Pre-Unreal #768 showed the asset-quality step as SUCCESS even while its log printed structural ERROR lines for 23 degenerate-UV assets and 7 opposed-normal assets because the workflow invoked asset_quality_audit.py without --strict.",
+      "action": "Run asset_quality_audit.py --strict in Pre-Unreal and add both pre_unreal_validate and deep_project_audit guards that fail if the workflow loses strict mode."
+    },
+    {
+      "id": "AUDIT-HIGH-031",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "title": "Tangent-basis debt existed beyond the three meshes visible in Unreal #601",
+      "evidence": "The generic source audit exposed 23 additional static OBJ assets with degenerate UV triangles and 7 with opposed normals, including Balrog/Lurtz proxy pieces, Watcher tentacle, Isengard industrial props and Shire props.",
+      "action": "Normalize the full exposed set in one wave rather than waiting for Unreal to surface one warning identity at a time. Preserve the skeletal-FBX-only rule for final animated assets."
     }
   ],
   "external_practice_alignment": [
@@ -273,15 +289,17 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head Pre-Unreal + UE4.27 compile/import/runtime after PG-134 source tangent-basis repair",
-    "require zero nearly-zero tangent/binormal identities on the same exact head",
-    "forced slow async transition and failed transition rollback injection",
-    "legacy terminal-save repair runtime case proving one final committed identity",
-    "packaged-build Data JSON staging/read validation",
+    "fresh exact-head strict Pre-Unreal asset-quality audit after all 23 exposed tangent-basis sources are normalized",
+    "fresh exact-head UE4.27 compile/import/runtime with zero tangent/binormal/master-surface warning debt",
+    "forced slow async transition with committed NPC/LivingWorld context assertions",
+    "rollback failure injection with exact player/persistence restoration",
+    "legacy terminal-save one-publication repair runtime case",
+    "stale async checkpoint callback race across world revision",
+    "packaged-build Data JSON dependency/read validation",
     "target-device frame-time/resident-memory/GC/tick profiling",
     "audio playback validation without -NoSound",
     "human core-loop/onboarding/external playtest",
-    "isolated Public/Private migration"
+    "isolated Public/Private migration after W00 functional stability"
   ],
-  "audit_scope_note": "Unreal #601 proves compile/import/Automation/startup/P1C01-P1C08/state/transitions on 34a9a2a8..., with the only final gate failure being exactly three tangent/binormal mesh identities. PG-134 source repairs and the refreshed PG-037 validator are source-level until a newer exact-head pipeline passes."
+  "audit_scope_note": "Pre-Unreal #768 proved the new tangent-basis audit can discover broader source debt, but also exposed that the workflow was not fail-closed because asset_quality_audit.py lacked --strict. The current source wave normalizes every asset named by #768 and makes strict asset-quality CI mandatory. Fresh exact-head proof is required."
 }

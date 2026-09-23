@@ -1,3 +1,9 @@
+## 2026-09-23 - W00 broad tangent-basis source normalization and strict asset CI
+
+Pre-Unreal #768 exposed 23 additional static OBJ assets with degenerate UV triangles and 7 with opposed normals. The whole exposed set is normalized in one source wave to triangulated face-local UV/normal bases. The Pre-Unreal asset-quality step is also changed from advisory execution to `--strict`, and PG-134/deep audit guard that fail-closed behavior.
+
+This is stabilization only. No CompletionWave or percentage credit is added until a fresh exact head passes strict source validation and the full UE4.27 zero-warning runtime chain.
+
 ## 2026-09-23 - PG-134 validator diagnostics synchronization
 
 Pre-Unreal #767 failed because its PG-134 literal self-check did not match the wording already present in `asset_quality_audit.py`. The check now targets the real structural-error phrase and the early validator gate prints exact accumulated errors before exiting. No gameplay/content completion credit is added.

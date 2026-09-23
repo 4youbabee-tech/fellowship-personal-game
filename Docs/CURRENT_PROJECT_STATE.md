@@ -1,3 +1,13 @@
+## 2026-09-23 - Pre-Unreal #768 exposed the broader tangent-basis family; full source wave + strict CI
+
+Exact head `be5914d9b94d8e8bb5e25de88edab8a0dc089baf` passed the core validator, governor, source asset-quality script and production-readiness stages, then deep-project audit failed on one stale diagnostic token. More importantly, the asset-quality log exposed that the earlier three Unreal warning identities were only the visible edge of a broader authored-source class: 23 additional project-owned static OBJ assets contained degenerate UV triangles, and 7 of those also contained normals opposed to geometric face direction.
+
+This is being handled as one root-cause wave, not as 23 future warning patches. Every asset named by #768 is normalized to explicit triangulated face-local UVs and face-aligned normals. The set includes Balrog/Lurtz static proxy pieces, the Watcher tentacle proxy, Isengard industrial/static structures and Shire props. These remain static/non-animated OBJ assets; no exception is made to the final animated skeletal-FBX contract.
+
+The CI contract is also corrected. `asset_quality_audit.py` previously printed structural `ERROR:` lines but the Pre-Unreal workflow invoked it without `--strict`, so that step still appeared green. The workflow now runs `python Scripts/asset_quality_audit.py --strict`. PG-134 and deep-project audit both check that strict mode remains wired, so structural asset errors cannot silently become advisory again.
+
+The deep-audit diagnostic token is synchronized with the real opposed-normal error wording. No warning ceiling is raised and no W01 work is opened. This wave remains **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**.
+
 ## 2026-09-23 - Pre-Unreal #767 exposed a validator self-check mismatch, not a project defect
 
 Exact head `274b5d0dfd12d57e9250001409ea28e43e56d41c` entered the PG-134 tangent-space repair wave. Pre-Unreal #767 stopped in the core validator with one error before the asset-quality stage. The cause was internal validator drift: PG-134 searched for the phrase `opposes geometric face normal` while the source audit deliberately emits `oppose the geometric face normal`. The guarded behavior was present; the literal self-check was stale.

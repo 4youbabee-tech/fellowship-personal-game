@@ -3792,6 +3792,9 @@ if "ObjectPathToPackageName(ProductionSurfaceObjectPath)" not in pg133_importer:
 
 # PG-134: source geometry that can generate zero tangent/binormal basis is rejected before Unreal import.
 pg134_asset_audit = read(ROOT / "Scripts" / "asset_quality_audit.py")
+pg134_workflow = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
+if "python Scripts/asset_quality_audit.py --strict" not in pg134_workflow:
+    fail("PG-134 Pre-Unreal workflow must run asset_quality_audit.py in strict mode")
 for pg134_symbol in [
     "obj_with_degenerate_uv_triangles",
     "degenerate UV triangle",
