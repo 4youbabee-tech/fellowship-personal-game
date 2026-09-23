@@ -1,3 +1,11 @@
+## 2026-09-23 - Pre-Unreal #767 exposed a validator self-check mismatch, not a project defect
+
+Exact head `274b5d0dfd12d57e9250001409ea28e43e56d41c` entered the PG-134 tangent-space repair wave. Pre-Unreal #767 stopped in the core validator with one error before the asset-quality stage. The cause was internal validator drift: PG-134 searched for the phrase `opposes geometric face normal` while the source audit deliberately emits `oppose the geometric face normal`. The guarded behavior was present; the literal self-check was stale.
+
+The PG-134 token is synchronized with the actual source-audit contract. The early Pre-Unreal failure block is also changed to print every accumulated error before exit, matching the later failure block, so future validator failures are diagnostic rather than opaque.
+
+This is a validator-source correction only. It does not upgrade the PG-134 mesh repair to engine-proven status; Unreal #602 on the parent head remains separate evidence.
+
 ## 2026-09-23 - Unreal #601 narrowed W00 to three source-mesh tangent defects; PG-134 repairs source data
 
 Exact head `34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab` reached substantially farther than the preceding failed heads. Unreal Build #601 completed UE4.27.2 C++ build, production import, Automation, startup, aggregate P1C01-P1C08 runtime, state roundtrip and continuous-transition runtime. The final warning-debt gate failed with exactly three unique nearly-zero tangent identities and the same three nearly-zero binormal identities: `SM_Balrog_Wing`, `SM_Lurtz_Blade`, and `SM_Isengard_IndustrialPitRim`. Missing smoothing groups, degenerate tangent bases, missing production master surface, missing runtime world packages, optional audio/rig debt, defaultMat references, light mobility warnings and NPC spawn collision failures were all zero in that gate.

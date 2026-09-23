@@ -1,3 +1,7 @@
+## 2026-09-23 - PG-134 validator diagnostics synchronization
+
+Pre-Unreal #767 failed because its PG-134 literal self-check did not match the wording already present in `asset_quality_audit.py`. The check now targets the real structural-error phrase and the early validator gate prints exact accumulated errors before exiting. No gameplay/content completion credit is added.
+
 ## 2026-09-23 - W00 PG-134 tangent-space source repair after Unreal #601
 
 Unreal #601 on `34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab` passed C++ build, production import, Automation, startup, P1C01-P1C08 aggregate runtime, state and continuous transitions. The final zero-warning gate isolated the remaining import debt to exactly three meshes: `SM_Balrog_Wing`, `SM_Lurtz_Blade`, and `SM_Isengard_IndustrialPitRim`.

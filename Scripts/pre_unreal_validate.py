@@ -3796,7 +3796,7 @@ for pg134_symbol in [
     "obj_with_degenerate_uv_triangles",
     "degenerate UV triangle",
     "obj_with_opposed_normals",
-    "opposes geometric face normal",
+    "oppose the geometric face normal",
 ]:
     if pg134_symbol not in pg134_asset_audit:
         fail(f"PG-134 source tangent-basis guard missing: {pg134_symbol}")
@@ -3815,6 +3815,8 @@ for pg134_asset in [
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
+    for message in errors:
+        print(f"ERROR: {message}")
     sys.exit(1)
 
 print("PRE-UNREAL CORE VALIDATION PASSED")

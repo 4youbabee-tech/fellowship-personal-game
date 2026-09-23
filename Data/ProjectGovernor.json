@@ -2637,7 +2637,9 @@
         "Those three project-owned procedural static OBJ sources now use face-local non-degenerate UVs and face-aligned normals; final animated assets remain skeletal FBX-only.",
         "asset_quality_audit.py now treats degenerate UV triangles and opposed/zero authored normals as structural source errors before Unreal import.",
         "PG-037 now requires the origin-bound async checkpoint completion marker with stateApplied and sameCommittedContext instead of its obsolete pre-PG-133 log signature.",
-        "PG-134 guards the source tangent-basis contract while warning ceilings remain zero."
+        "PG-134 guards the source tangent-basis contract while warning ceilings remain zero.",
+        "Pre-Unreal #767 on 274b5d0dfd12d57e9250001409ea28e43e56d41c failed in PG-134 self-validation because the expected diagnostic phrase did not exactly match asset_quality_audit.py; the guarded source behavior itself was present.",
+        "The PG-134 literal contract now matches 'oppose the geometric face normal', and the early Pre-Unreal failure gate prints each accumulated ERROR before exit to avoid opaque one-count failures."
       ],
       "missing_work": [
         "Obtain fresh exact-head Pre-Unreal and UE4.27 compile/import/runtime proof after PG-134 mesh source repair.",
@@ -4042,25 +4044,20 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Continue root-cause stabilization from exact-head evidence. Unreal #601 reduced the remaining hard failure to three mesh tangent/binormal identities; source analysis found concrete UV/normal defects and PG-134 now rejects that class before engine import.",
-    "exact_reviewed_head": "34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab",
+    "reason": "Pre-Unreal #767 exposed validator contract drift after PG-134. The source guard existed, but its self-check searched an obsolete literal and the early exit hid error details.",
+    "exact_reviewed_head": "274b5d0dfd12d57e9250001409ea28e43e56d41c",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#766 FAILURE only because PG-037 expected the obsolete checkpoint completion log signature",
-      "warehouse": "#180 SUCCESS",
-      "unreal_build": "#601: C++ build PASS; production import PASS; Automation PASS; startup PASS; P1C01-P1C08 aggregate PASS; state PASS; transitions PASS; warning gate FAIL on exactly SM_Balrog_Wing, SM_Lurtz_Blade, SM_Isengard_IndustrialPitRim"
+      "pre_unreal": "#767 FAILURE in validator self-check before asset audit; one opaque core-validation error",
+      "unreal_build": "#602 still in progress at reconciliation time",
+      "warehouse": "#181 queued at reconciliation time"
     },
     "reconciled_findings": [
-      "The zero-warning policy worked: it stopped the pipeline on three concrete source assets instead of tolerating them.",
-      "Wing and blade UV charts contained singular triangles; the industrial rim authored normals conflict with face geometry.",
-      "Source repair plus pre-engine source validation is preferred over warning suppression, ceiling increases or per-build log exceptions.",
-      "PG-037 failure is validator drift after a stronger runtime log contract, not a runtime checkpoint regression."
+      "PG-134 source tangent-basis repair remains pending engine proof.",
+      "The #767 failure is validator self-check drift, not evidence that the three repaired OBJ assets still fail Unreal.",
+      "Early validator exits now print concrete error messages so future red runs can be acted on without an extra diagnostic commit."
     ],
-    "next_priority": "W00_PG134_ZERO_TANGENT_WARNING_EXACT_HEAD",
-    "truth_boundary": "The mesh and validator repairs are source-level until a newer exact-head run passes. Build #601 evidence applies only to 34a9a2a8...",
-    "stabilization_wave": {
-      "status": "SOURCE_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
-      "invariant": "No production mesh may enter Unreal with a structurally singular UV triangle or strongly opposed authored normal that creates zero tangent/binormal basis; the warning ceiling remains zero."
-    }
+    "next_priority": "W00_PG134_FRESH_VALIDATION",
+    "truth_boundary": "The diagnostic correction is source-level until a fresh Pre-Unreal run succeeds; Unreal #602 applies only to 274b5d0d..."
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",
