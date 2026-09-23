@@ -21,13 +21,32 @@ def strip_comments_and_strings_preserve_length(text: str) -> str:
 
 
 def first_member_assignment_position(source: str, member_names: Iterable[str]) -> int:
-    """Return the first assignment to one of the named members, ignoring comments/strings."""
+    """Return the first authoritative member assignment, ignoring nested-object fields.
+
+    Bare members and explicit this->members count. Writes through another object
+    (TargetExisting->CurrentChapterId or Snapshot.CurrentChapterId) do not mutate
+    the subsystem's authoritative identity and must not trip transition-order guards.
+    """
     cleaned = strip_comments_and_strings_preserve_length(source)
     names = [re.escape(name) for name in member_names]
     if not names:
         return -1
-    match = re.search(r"\b(?:" + "|".join(names) + r")\s*=", cleaned)
-    return -1 if match is None else match.start()
+
+    pattern = re.compile(r"\b(?:" + "|".join(names) + r")\s*=")
+    for match in pattern.finditer(cleaned):
+        prefix = cleaned[:match.start()]
+        trimmed = prefix.rstrip()
+
+        if trimmed.endswith("."):
+            continue
+
+        if trimmed.endswith(">"):
+            if re.search(r"\bthis\s*->\s*$", prefix) is None:
+                continue
+
+        return match.start()
+
+    return -1
 
 
 def signal_precedes_member_mutation(

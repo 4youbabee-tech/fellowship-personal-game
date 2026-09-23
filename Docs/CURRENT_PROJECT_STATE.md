@@ -1,3 +1,15 @@
+## 2026-09-23 - W00 checkpoint CP-W00-147: separate invalid-request preflight from real rollback
+
+Two reds were collected before this repair.
+
+Pre-Unreal #780 on `6944cc0f...` failed PG-136 for `StartExperience`, but source inspection shows the authoritative subsystem identity still follows the correct order: transition intent is broadcast before bare `CurrentRouteId / CurrentChapterId / CurrentEpisodeId / PlayableCharacterId` mutation. The helper was falsely treating `TargetExisting->CurrentChapterId` and related route-progress sanitation fields as authoritative subsystem mutation. The structural helper is now qualifier-aware: writes through another object are ignored, while bare and `this->` member writes still count. DeepProjectAudit consumes the same helper.
+
+Unreal #614 on parent `333cbd0d...` exposed a second stale assumption. The new identity preflight correctly logged `ShireExperienceIdentity: rejected ... chapter=P1C99` before any transition request. The legacy fault audit then failed only because it expected `revisionAdvanced=yes`. That expectation is now wrong by design: a request rejected before transaction publication must leave identity, player state, NPC/LivingWorld authority and world revision unchanged. Real rollback remains tested separately by the forced valid-bank P1C02 async streaming failure, which must restore the origin and advance revision.
+
+Accordingly the fault evidence contract now distinguishes `ShireInvalidTransitionAudit` (rejected-before-transaction, revision unchanged) from `ShireStreamFailureAudit` (entered transaction, rollback, revision advanced). No production revision is artificially bumped merely to satisfy an obsolete test.
+
+Status of CP-W00-147: **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**. The last exact head with both static and Unreal success remains `3ea40ce1...` (#778/#613). W01 remains blocked.
+
 ## 2026-09-23 - W00 checkpoint CP-W00-146: PG-136 false red fixed at the validator architecture layer
 
 Pre-Unreal #779 on `333cbd0dd51d82215d4b9cc94793be507299f349` failed with `PG-136 StartChapter must publish transition intent before logical chapter mutation`. Direct source inspection shows the production transaction order is already correct: `OnWorldTransitionRequested.Broadcast(...)` executes before the authoritative `CurrentChapterId`, `CurrentEpisodeId`, and `PlayableCharacterId` assignments. The red was caused by validator drift: PG-136 searched specifically for the obsolete text `CurrentChapterId = ChapterId;`, while CP-W00-145 correctly canonicalized the destination through `TargetChapterId` and now assigns `CurrentChapterId = TargetChapterId;`.

@@ -532,7 +532,9 @@ void AShireGameMode::BeginPlay()
 
                 Player->RestoreTransactionalPlayerState(67.0f, 54.0f, 43.0f, 2);
 
-                // Missing/unsupported destination: must fail closed and rollback.
+                // Unsupported identity is rejected by the quest preflight before any
+                // world transaction is published. No rollback or revision bump should
+                // occur because no destination ever became authoritative/pending.
                 const FName UnsupportedChapterId(*FString::Printf(TEXT("P1C%02d"), 99));
                 Q->StartChapter(
                     UnsupportedChapterId,
@@ -545,38 +547,32 @@ void AShireGameMode::BeginPlay()
 
             if (Audit->Step == 1)
             {
-                if (!bOriginCommitted)
-                {
-                    return;
-                }
-
+                const bool bIdentityStable = bOriginCommitted;
                 const bool bMovementReleased =
                     !Player->IsWorldTransitionHeld() &&
                     Player->IsGameplayWorldCommitted();
-                // Health/supplies remain stable after rollback. Stamina/resolve are
-                // intentionally time-varying once movement/life ticking resumes; their
-                // exact restored values are proven by ShireRollbackSnapshotApplied.
-                const bool bFreshSnapshot =
+                const bool bStateStable =
                     FMath::IsNearlyEqual(Player->GetCurrentHealth(), 67.0f, 0.1f) &&
                     Player->GetSupplies() == 2;
-                const bool bContextRestored = Context->IsLogicalWorldContextCommitted();
-                const bool bLivingWorldRestored =
+                const bool bContextStable = Context->IsLogicalWorldContextCommitted();
+                const bool bLivingWorldStable =
                     Life->GetAppliedWorldRevision() == Router->GetWorldRevision();
-                const bool bRevisionAdvanced =
-                    Router->GetWorldRevision() > Audit->OriginRevision;
+                const bool bRevisionUnchanged =
+                    Router->GetWorldRevision() == Audit->OriginRevision;
 
-                if (!bMovementReleased || !bFreshSnapshot || !bContextRestored ||
-                    !bLivingWorldRestored || !bRevisionAdvanced)
+                if (!bIdentityStable || !bMovementReleased || !bStateStable ||
+                    !bContextStable || !bLivingWorldStable || !bRevisionUnchanged)
                 {
                     UE_LOG(
                         LogTemp,
                         Error,
-                        TEXT("ShireRollbackAudit: FAIL movement=%s freshSnapshot=%s npcContext=%s livingWorld=%s revisionAdvanced=%s"),
+                        TEXT("ShireInvalidTransitionAudit: FAIL identityStable=%s movement=%s stateStable=%s npcContext=%s livingWorld=%s revisionUnchanged=%s"),
+                        bIdentityStable ? TEXT("yes") : TEXT("no"),
                         bMovementReleased ? TEXT("yes") : TEXT("no"),
-                        bFreshSnapshot ? TEXT("yes") : TEXT("no"),
-                        bContextRestored ? TEXT("yes") : TEXT("no"),
-                        bLivingWorldRestored ? TEXT("yes") : TEXT("no"),
-                        bRevisionAdvanced ? TEXT("yes") : TEXT("no"));
+                        bStateStable ? TEXT("yes") : TEXT("no"),
+                        bContextStable ? TEXT("yes") : TEXT("no"),
+                        bLivingWorldStable ? TEXT("yes") : TEXT("no"),
+                        bRevisionUnchanged ? TEXT("yes") : TEXT("no"));
                     GetWorldTimerManager().ClearTimer(Audit->Timer);
                     return;
                 }
@@ -584,10 +580,11 @@ void AShireGameMode::BeginPlay()
                 UE_LOG(
                     LogTemp,
                     Display,
-                    TEXT("ShireRollbackAudit: PASS unsupported-request restored=yes movementReleased=yes freshSnapshot=yes npcContext=yes livingWorld=yes"));
+                    TEXT("ShireInvalidTransitionAudit: PASS rejected-before-transaction=yes identityStable=yes revisionUnchanged=yes movementReleased=yes stateStable=yes npcContext=yes livingWorld=yes"));
 
-                // Now exercise a real bank request whose async completion is forced
-                // to fail by the CI-only streaming hook. Old residency must survive.
+                // Now exercise a real valid-bank request whose async completion is
+                // forced to fail. This path genuinely enters the transaction and must
+                // rollback the exact committed origin with a newer world revision.
                 Audit->OriginRevision = Router->GetWorldRevision();
                 Player->RestoreTransactionalPlayerState(63.0f, 52.0f, 41.0f, 1);
                 Q->StartChapter(TEXT("P1C02"), TEXT("RoadToBree"), 0);

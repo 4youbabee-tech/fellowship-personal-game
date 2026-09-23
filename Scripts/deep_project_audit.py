@@ -3,6 +3,7 @@ from __future__ import annotations
 import json,re,sys
 from pathlib import Path
 from runtime_audit_contracts import MODE_EXTRA_ARGS, mode_has_evidence
+from source_contracts import signal_precedes_member_mutation
 ROOT=Path(__file__).resolve().parents[1]
 SRC=ROOT/"Source"/"ShireJourney"
 errors=[]
@@ -170,12 +171,18 @@ if "FOnWorldTransitionRequested" not in quest_h or "OnWorldTransitionRequested" 
 start_chapter_start=quest.find("void UShireQuestSubsystem::StartChapter")
 start_chapter_end=quest.find("FShireRouteProgress UShireQuestSubsystem::CaptureCurrentRouteProgress",start_chapter_start)
 start_chapter=quest[start_chapter_start:start_chapter_end]
-if start_chapter.find("OnWorldTransitionRequested.Broadcast")<0 or start_chapter.find("OnWorldTransitionRequested.Broadcast")>start_chapter.find("CurrentChapterId = ChapterId;"):
+if not signal_precedes_member_mutation(
+    start_chapter,
+    "OnWorldTransitionRequested.Broadcast",
+    ("CurrentChapterId","CurrentEpisodeId","PlayableCharacterId")):
  errors.append("StartChapter transition signal is not pre-mutation")
 start_experience_start=quest.find("void UShireQuestSubsystem::StartExperience")
 start_experience_end=quest.find("TMap<FName, FShireRouteProgress>",start_experience_start)
 start_experience=quest[start_experience_start:start_experience_end]
-if start_experience.find("OnWorldTransitionRequested.Broadcast")<0 or start_experience.find("OnWorldTransitionRequested.Broadcast")>start_experience.find("CurrentRouteId = RouteId;"):
+if not signal_precedes_member_mutation(
+    start_experience,
+    "OnWorldTransitionRequested.Broadcast",
+    ("CurrentRouteId","CurrentChapterId","CurrentEpisodeId","PlayableCharacterId")):
  errors.append("StartExperience transition signal is not pre-mutation")
 request_start=router.find("void AChapterWorldRouter::HandleWorldTransitionRequested")
 request_end=router.find("void AChapterWorldRouter::HandleChapterChanged",request_start)
@@ -191,8 +198,8 @@ reject_end=commit_body.find("SetPlayerWorldHold(true);",reject_start)
 reject_body=commit_body[reject_start:reject_end]
 if reject_start<0 or "RollbackFailedWorldSwap" not in reject_body:
  errors.append("unsupported chapter/route request does not rollback atomically")
-if not mode_has_evidence("faults", "fault.rollback_unsupported") or "-AuditFaults" not in MODE_EXTRA_ARGS.get("faults", ()) or "--mode faults" not in state_cmd:
- errors.append("rollback fault-injection evidence chain missing")
+if not mode_has_evidence("faults", "fault.invalid_request_rejected") or "-AuditFaults" not in MODE_EXTRA_ARGS.get("faults", ()) or "--mode faults" not in state_cmd:
+ errors.append("invalid-request preflight evidence chain missing")
 
 # SAVE-RESTORE PRE-MUTATION BOUNDARY + DELAYED ASYNC AUTHORITY
 streaming_test=streaming_cpp

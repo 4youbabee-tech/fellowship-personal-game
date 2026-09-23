@@ -3942,9 +3942,8 @@ pg136_reject_tail = pg136_commit[pg136_reject:pg136_commit.find("SetPlayerWorldH
 if pg136_reject < 0 or "RollbackFailedWorldSwap" not in pg136_reject_tail:
     fail("PG-136 unsupported world request must execute rollback instead of leaving the transaction held")
 
-for pg136_evidence in ["fault.snapshot_unsupported", "fault.rollback_unsupported"]:
-    if not mode_has_evidence("faults", pg136_evidence):
-        fail(f"PG-136 rollback fault evidence missing: {pg136_evidence}")
+if not mode_has_evidence("faults", "fault.invalid_request_rejected"):
+    fail("PG-136 invalid direct destination must be proven rejected before a world transaction")
 if "-AuditFaults" not in MODE_EXTRA_ARGS.get("faults", ()):
     fail("PG-136 runtime contract does not expose fault-injection mode")
 if "--mode faults" not in pg136_state_cmd:
@@ -6422,6 +6421,8 @@ for pg149_symbol in [
     "test_transition_signal_accepts_alias_rhs",
     "test_transition_signal_rejects_mutation_first",
     "test_comments_and_strings_do_not_fake_mutation",
+    "test_nested_route_progress_write_is_not_authoritative_mutation",
+    "test_explicit_this_member_still_counts_as_authoritative_mutation",
 ]:
     if pg149_symbol not in pg149_tests:
         fail(f"PG-149 source-contract regression test missing: {pg149_symbol}")

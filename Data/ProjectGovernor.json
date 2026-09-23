@@ -2681,10 +2681,13 @@
         "PG-148 extends persistence-edge runtime coverage to two real AsyncSaveGameToSlot writes queued on an old world revision and requires successful writes with zero stale completion effects after a committed revision change.",
         "PG-147 guards packaged runtime JSON declarations by matching C++ Data/*.json loads to ShireJourney.Build.cs RuntimeDependencies.",
         "Pre-Unreal #779 exposed a PG-136 validator false positive: production StartChapter already broadcasts transition intent before authoritative identity mutation, but the guard still required the obsolete literal CurrentChapterId = ChapterId;.",
-        "CP-W00-146 introduces Scripts/source_contracts.py and regression tests so transition-order guards inspect protected member assignments structurally and remain valid when canonical target aliases change RHS spelling."
+        "CP-W00-146 introduces Scripts/source_contracts.py and regression tests so transition-order guards inspect protected member assignments structurally and remain valid when canonical target aliases change RHS spelling.",
+        "Pre #780 proved the first structural helper still overmatched nested route-progress writes: TargetExisting->CurrentChapterId appeared before the transition signal although authoritative subsystem identity did not mutate.",
+        "Unreal #614 proved the new identity preflight correctly rejects P1C99 before world-transition publication; the old unsupported-request rollback expectation was therefore stale.",
+        "CP-W00-147 separates invalid-request preflight evidence (revision unchanged) from real forced streaming-failure rollback evidence (revision advanced), and updates Pre-Unreal + DeepProjectAudit to share qualifier-aware structural mutation semantics."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal + Warehouse + UE4.27 proof for CP-W00-146 after structural PG-136 validator repair.",
+        "Obtain fresh exact-head Pre-Unreal + Warehouse + UE4.27 proof for CP-W00-147 preflight-vs-rollback semantics repair.",
         "Exercise a real queued AsyncSaveGame write completion across a committed-world revision; PG-140 currently proves the stale callback guard deterministically, not the full disk race.",
         "Exercise immutable queued checkpoint completion across a real world revision.",
         "Reject or canonicalize malformed route/chapter/episode save identities before world commit.",
@@ -3710,12 +3713,13 @@
     "evidence": {
       "last_engine_proven_head": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
       "pre_unreal": "#778 SUCCESS on exact head 3ea40ce1d68b6d5b961ed56a00117a75528e833e.",
-      "unreal_build": "#613 SUCCESS on the same exact head after an infrastructure-only checkout rerun. UE4.27.2 compile/import, Automation 2/2, startup, P1C01-P1C08, state, transitions, faults, pending, persistence edges and zero project warning debt all passed.",
-      "warehouse": "#193 FAILURE after checkout succeeded; Detect current warehouse delta was blocked by local Windows PowerShell execution policy (PSSecurityException / scripts disabled), so provider staging never started.",
-      "warehouse_push": "#192 FAILURE before project code due self-hosted network/DNS instability while acquiring actions/checkout and repository data (HttpClient timeout, packfile error, Could not resolve host: github.com).",
-      "warehouse_previous": "#190 SUCCESS on aa8f80c8 across all providers and inventory audit."
+      "unreal_build": "#613 SUCCESS on the same exact head.",
+      "warehouse_parent": "#195 SUCCESS on 333cbd0dd51d82215d4b9cc94793be507299f349 after the warehouse execution-policy/network resilience changes.",
+      "latest_static": "#780 FAILURE on 6944cc0f84957842ff0a1f0ba1f53a7ea288e7fa: PG-136 StartExperience false positive caused by treating TargetExisting->CurrentChapterId as authoritative subsystem mutation.",
+      "latest_runtime": "#614 FAILURE on 333cbd0dd51d82215d4b9cc94793be507299f349: invalid P1C99 was correctly rejected before transaction, but the old fault audit still expected rollback/revision advancement.",
+      "current_runtime": "#615 was still in progress on 6944cc0 at reconciliation time."
     },
-    "evidence_scope": "3ea40ce1 is STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED by #778/#613. Warehouse remains an independent infrastructure lane: #192 failed on network/DNS before code, #193 failed on runner execution policy before provider staging. CP-W00-145 changes warehouse shell/checkout resilience plus experience identity and persistence-race guards; fresh exact-head proof is required.",
+    "evidence_scope": "3ea40ce1 remains the last exact head with both Pre-Unreal and Unreal SUCCESS. CP-W00-147 repairs two stale-test families exposed by #780/#614: qualified nested-field false positives in transition-order validation, and an obsolete rollback expectation for invalid requests now rejected before transaction publication.",
     "current_owner_observation": {
       "sha": "4879a19999951354676341f032c358ac98679c44",
       "pre_unreal": {
@@ -4091,25 +4095,27 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Pre-Unreal #779 reported PG-136 StartChapter transition intent ordering on exact head 333cbd0d. Source inspection shows the invariant itself is already correct: OnWorldTransitionRequested.Broadcast occurs before CurrentChapterId/CurrentEpisodeId/PlayableCharacterId mutation. The validator was coupled to the obsolete exact assignment string 'CurrentChapterId = ChapterId;' and therefore treated the canonicalized 'CurrentChapterId = TargetChapterId;' as if no mutation existed.",
-    "exact_reviewed_head": "333cbd0dd51d82215d4b9cc94793be507299f349",
+    "reason": "The latest reds are not one unresolved gameplay bug. They are two stale validation assumptions created by the stronger identity preflight. Pre #780 treated TargetExisting->CurrentChapterId route-progress sanitation as if it were authoritative CurrentChapterId mutation before transition intent. Unreal #614 showed P1C99 is now correctly rejected inside StartChapter before OnWorldTransitionRequested; the legacy fault audit still demanded rollback and revision advancement even though no transaction began.",
+    "exact_reviewed_head": "6944cc0f84957842ff0a1f0ba1f53a7ea288e7fa",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#779 FAILURE on one PG-136 false positive caused by exact assignment spelling",
-      "source_order": "ShireQuestSubsystem::StartChapter publishes OnWorldTransitionRequested before authoritative CurrentChapterId/CurrentEpisodeId/PlayableCharacterId assignments",
-      "unreal_build": "#614 IN_PROGRESS at reconciliation time; compile/import/Automation/startup/chapter sweep had already completed successfully, state/edge audit still running",
-      "warehouse": "#195 QUEUED at reconciliation time"
+      "pre_unreal": "#780 FAILURE: PG-136 StartExperience must publish transition intent before logical route mutation",
+      "pre_source_fact": "StartExperience broadcasts before bare CurrentRouteId/CurrentChapterId/CurrentEpisodeId/PlayableCharacterId mutation; only TargetExisting-> fields occur earlier.",
+      "unreal_previous": "#614 FAILURE: ShireExperienceIdentity rejected P1C99, then legacy ShireRollbackAudit failed only revisionAdvanced=no; startup/chapters/state/transitions were already green.",
+      "warehouse_previous": "#195 SUCCESS",
+      "unreal_current": "#615 IN_PROGRESS when CP-W00-147 was prepared"
     },
     "reconciled_findings": [
-      "Do not reorder StartChapter C++: doing so would change already-correct production transaction semantics in response to a validator defect.",
-      "PG-136 now checks the semantic invariant: transition signal must precede the first protected member assignment, independent of the RHS variable name.",
-      "The same structural helper protects StartExperience and ignores comments/string literals so source text cannot fake an ordering pass.",
-      "A reusable source_contracts.py helper plus regression unit tests turns this from a one-line validator patch into a guard against the whole exact-spelling drift family."
+      "Do not increment world revision for a request rejected before transaction publication. That would manufacture a world commit/rollback that never happened.",
+      "Invalid direct destinations now have the correct invariant: identity/state/context unchanged, movement released, and world revision unchanged.",
+      "Real rollback remains separately exercised by the forced P1C02 valid-bank async failure; that path must restore the origin and advance the world revision.",
+      "Static ordering helpers now ignore qualified writes through other objects (for example TargetExisting->CurrentChapterId) while still counting bare or this-> authoritative member assignments.",
+      "DeepProjectAudit and Pre-Unreal now share the same structural source-order semantics so the validator family cannot drift again."
     ],
-    "next_priority": "W00_CP146_STRUCTURAL_VALIDATOR_EXACT_HEAD_GREEN",
-    "truth_boundary": "333cbd0d is not a fully green baseline because Pre-Unreal #779 failed and Unreal #614 was still in progress. The PG-136 failure is diagnosed as validator drift from direct source evidence, not as a proven gameplay/runtime defect. CP-W00-146 is SOURCE-REPAIRED pending fresh exact-head validation.",
+    "next_priority": "W00_CP147_PREFLIGHT_VS_ROLLBACK_SEMANTICS_EXACT_HEAD_GREEN",
+    "truth_boundary": "CP-W00-147 is SOURCE-REPAIRED only until fresh exact-head machine runs pass. No new COMPILE-TESTED/HEADLESS-RUNTIME-VALIDATED claim is made for the candidate. No PIE/device/visual/performance/audio-playback acceptance is inferred.",
     "stabilization_wave": {
-      "status": "VALIDATOR_ROOT_CAUSE_REPAIRED_PENDING_EXACT_HEAD_PROOF",
-      "invariant": "Static architecture guards validate semantic source ordering, not the incidental spelling of assignment right-hand sides."
+      "status": "ROOT_CAUSE_TEST_SEMANTICS_REPAIRED_PENDING_EXACT_HEAD_PROOF",
+      "invariant": "Rejected-before-transaction requests do not advance revision; only entered transactions rollback. Static mutation guards track authoritative subsystem fields, not similarly named nested snapshot/progress fields."
     }
   },
   "development_mode": {
@@ -4173,14 +4179,15 @@
     "After the P1C01 production pipeline is proven, mass-apply the same rig/material/world/audio/LOD conventions chapter-by-chapter."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-146",
+    "checkpoint_id": "CP-W00-147",
     "source_head": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
     "branch": "integration/comprehensive-foundation-v1",
     "pull_request": 67,
     "verified": {
-      "pre_unreal": "PASS #778",
-      "unreal_build": "PASS #613",
-      "warehouse": "FAIL #193 - PSSecurityException in Detect current warehouse delta before staging"
+      "last_green": "3ea40ce1: Pre #778 SUCCESS + Unreal #613 SUCCESS",
+      "current_static": "6944cc0: Pre #780 FAILURE on PG-136 qualified-field false positive",
+      "prior_runtime": "333cbd0d: Unreal #614 FAILURE in fault audit after correct preflight rejection",
+      "warehouse": "333cbd0d: Warehouse #195 SUCCESS"
     },
     "exact_head_scope": [
       "UE4.27.2 C++ compile",
@@ -4194,12 +4201,12 @@
       "delayed pending authority",
       "project warning-debt categories"
     ],
-    "active_wave": "PG-149 structural validator semantics: transition intent ordering must survive canonical target aliases without false reds",
+    "active_wave": "PG-150/151 stale-test semantics: distinguish authoritative subsystem mutation from nested route-progress writes; distinguish preflight invalid-request rejection from real rollback",
     "next_actions": [
-      "Run fresh Pre-Unreal and require PG-136 to pass through structural member-mutation ordering rather than exact assignment spelling.",
-      "Run the dedicated source-contract regression tests proving alias RHS changes still preserve the transition-order invariant.",
-      "Let exact-head Unreal and Warehouse complete on the new candidate; collect their whole failure family before any further source change.",
-      "Continue W00 only; W01 stays blocked until remaining packaged/audio/device/human gates have evidence."
+      "Run fresh Pre-Unreal and require the source-contract qualifier regressions plus DeepProjectAudit to pass.",
+      "Run fresh Unreal and require fault mode to prove invalid P1C99 is rejected before transaction with revision unchanged, then separately prove real valid-bank async failure rolls back with revision advancement.",
+      "Require the expanded identity/persistence-edge evidence from CP-W00-145 to run on the same exact head.",
+      "Keep W01 blocked; after machine-green stabilization continue packaged runtime, audio, target-device, human acceptance and isolated Public/Private migration."
     ],
     "unverified_acceptance": [
       "PIE/rendered traversal acceptance",
@@ -4225,15 +4232,15 @@
         }
       },
       "latest_observed": {
-        "sha": "333cbd0dd51d82215d4b9cc94793be507299f349",
+        "sha": "6944cc0f84957842ff0a1f0ba1f53a7ea288e7fa",
         "pre_unreal": {
-          "sha": "333cbd0dd51d82215d4b9cc94793be507299f349",
-          "run_id": 35910899703,
+          "sha": "6944cc0f84957842ff0a1f0ba1f53a7ea288e7fa",
+          "run_id": 35912791434,
           "status": "FAILURE"
         },
         "unreal": {
-          "sha": "333cbd0dd51d82215d4b9cc94793be507299f349",
-          "run_id": 35910899579,
+          "sha": "6944cc0f84957842ff0a1f0ba1f53a7ea288e7fa",
+          "run_id": 35912791433,
           "status": "IN_PROGRESS"
         }
       }

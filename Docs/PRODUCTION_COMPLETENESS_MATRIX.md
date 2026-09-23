@@ -1,3 +1,7 @@
+## 2026-09-23 - W00 CP-W00-147 preflight-vs-rollback semantics
+
+Pre #780 was a qualifier false positive in PG-136: nested `TargetExisting->CurrentChapterId` sanitation was mistaken for authoritative quest identity mutation. Unreal #614 separately showed the P1C99 request is now rejected before transaction publication; the old audit incorrectly demanded a rollback revision bump for a transaction that never began. CP-W00-147 makes source-order guards qualifier-aware and splits fault evidence into preflight rejection with revision unchanged versus real async streaming rollback with revision advanced. No production-completeness percentage is increased. Status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**.
+
 ## 2026-09-23 - W00 CP-W00-146 structural validator repair
 
 Head `333cbd0d...` produced Pre-Unreal #779 FAILURE on PG-136, but the production StartChapter source already publishes transition intent before authoritative identity mutation. Root cause: the guard hard-coded the old RHS spelling `CurrentChapterId = ChapterId;` and failed after canonicalization changed the assignment to `TargetChapterId`. CP-W00-146 replaces exact-spelling checks with reusable structural member-mutation ordering plus regression tests. No production percentage is increased. Status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**.

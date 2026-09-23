@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "333cbd0dd51d82215d4b9cc94793be507299f349_PRE779_PG136_FALSE_POSITIVE_CP146_PENDING",
+  "audited_head": "6944cc0f84957842ff0a1f0ba1f53a7ea288e7fa_PRE780_QUALIFIER_FALSE_POSITIVE_UNREAL614_STALE_ROLLBACK_EXPECTATION_CP147_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -284,10 +284,10 @@
     {
       "id": "AUDIT-HIGH-034",
       "severity": "HIGH",
-      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_608_PENDING_PIE_DEVICE",
+      "status": "SUPERSEDED_BY_PREFLIGHT_REJECTION_PLUS_REAL_STREAM_ROLLBACK_CP147_PENDING_PROOF",
       "title": "Unsupported chapter/route rejection could leave an invalid logical destination without atomic rollback",
-      "evidence": "The previous CommitChapterWorld unsupported branch cancelled pending streaming, cleared pending IDs and returned. It did not restore the prior quest/world snapshot or guarantee movement release, so an invalid destination request could leave logical and physical world state split. Unreal #608 fault mode passed the unsupported-request rollback marker on exact head 80fc54dc.",
-      "action": "Make supported route/chapter pairs explicit and route every unsupported destination through RollbackFailedWorldSwap. CI fault mode intentionally requests P1C99 and requires restored identity, movement, player state, NPC context and LivingWorld revision."
+      "evidence": "The previous CommitChapterWorld unsupported branch cancelled pending streaming, cleared pending IDs and returned. It did not restore the prior quest/world snapshot or guarantee movement release, so an invalid destination request could leave logical and physical world state split. Unreal #608 fault mode passed the unsupported-request rollback marker on exact head 80fc54dc. After experience-identity canonicalization, Unreal #614 showed P1C99 is rejected in StartChapter before a world transaction is published. The former runtime expectation that this direct invalid request itself must rollback and advance revision is obsolete.",
+      "action": "Keep Router unsupported-destination rollback as defense-in-depth, but runtime semantics now require direct invalid requests to fail closed before transaction with revision unchanged. Use the forced valid-bank P1C02 streaming failure to prove actual rollback and revision advancement."
     },
     {
       "id": "AUDIT-HIGH-035",
@@ -396,10 +396,26 @@
     {
       "id": "AUDIT-HIGH-048",
       "severity": "HIGH",
-      "status": "SYSTEMIC_VALIDATOR_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_STATIC_PROOF",
+      "status": "EXTENDED_BY_CP147_QUALIFIER_AWARE_STRUCTURAL_GUARD_PENDING_PROOF",
       "title": "PG-136 transition-order guard depended on exact assignment RHS spelling",
-      "evidence": "Pre-Unreal #779 failed because PG-136 searched for CurrentChapterId = ChapterId;. Current production StartChapter broadcasts OnWorldTransitionRequested first and later assigns CurrentChapterId = TargetChapterId, CurrentEpisodeId = TargetEpisodeId and PlayableCharacterId = TargetPlayableCharacterId. The architectural invariant is satisfied; the validator could not recognize the canonicalized RHS.",
-      "action": "Use reusable structural source-contract helpers that locate protected member assignments independent of RHS names, ignore comments/strings, and unit-test both alias-RHS success and mutation-first failure."
+      "evidence": "Pre-Unreal #779 failed because PG-136 searched for CurrentChapterId = ChapterId;. Current production StartChapter broadcasts OnWorldTransitionRequested first and later assigns CurrentChapterId = TargetChapterId, CurrentEpisodeId = TargetEpisodeId and PlayableCharacterId = TargetPlayableCharacterId. The architectural invariant is satisfied; the validator could not recognize the canonicalized RHS. Pre #780 exposed a second parser weakness: TargetExisting->CurrentChapterId route-progress sanitation was mistaken for authoritative quest identity mutation.",
+      "action": "Structural helpers must ignore qualified fields on other objects, count bare/this-> authoritative members, and be shared by Pre-Unreal and DeepProjectAudit."
+    },
+    {
+      "id": "AUDIT-HIGH-049",
+      "severity": "HIGH",
+      "status": "SYSTEMIC_VALIDATOR_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_STATIC_PROOF",
+      "title": "Transition-order helper overmatched similarly named fields on nested objects",
+      "evidence": "Pre-Unreal #780 failed StartExperience because the helper saw TargetExisting->CurrentChapterId before OnWorldTransitionRequested. That write sanitizes stored FShireRouteProgress and is not mutation of UShireQuestSubsystem::CurrentChapterId.",
+      "action": "Ignore qualified writes through other objects, retain bare and this-> authoritative member detection, regression-test both cases, and use the same helper in DeepProjectAudit."
+    },
+    {
+      "id": "AUDIT-HIGH-050",
+      "severity": "HIGH",
+      "status": "RUNTIME_AUDIT_SEMANTICS_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+      "title": "Fault audit demanded rollback revision advancement for a request rejected before transaction",
+      "evidence": "Unreal #614 logged ShireExperienceIdentity rejection for P1C99, then ShireRollbackAudit failed only revisionAdvanced=no while movement, player snapshot stability, NPC context and LivingWorld were healthy. Identity preflight intentionally prevents OnWorldTransitionRequested for unsupported P1C99, so no world transaction existed to rollback.",
+      "action": "Require invalid direct requests to remain inert with revision unchanged; separately require forced valid-bank async streaming failure to rollback with revision advancement. Never manufacture a revision bump for preflight rejection."
     }
   ],
   "external_practice_alignment": [
@@ -425,13 +441,13 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head Pre-Unreal + Warehouse + UE4.27 validation for CP-W00-146",
-    "collect any CP-W00-145 identity/real-async-race runtime failures as one family if Unreal reports red",
+    "fresh exact-head Pre-Unreal + Warehouse + UE4.27 validation for CP-W00-147",
+    "verify CP-W00-145 malformed identity restore and real queued AsyncSaveGame race on the same exact head",
     "actual packaged-build Data JSON read validation beyond static RuntimeDependencies parity",
     "audio production-bank presence/playback validation without -NoSound",
     "target-device frame-time/resident-memory/VRAM/GC/tick profiling",
     "human core-loop/onboarding/external playtest",
     "isolated Public/Private migration after machine stability"
   ],
-  "audit_scope_note": "Pre-Unreal #779 is a validator false positive proven by source order: transition intent precedes StartChapter identity mutation, while PG-136 searched an obsolete exact RHS string. CP-W00-146 repairs this validation family structurally. Unreal #614 and Warehouse #195 were not yet final at reconciliation, so no result is inferred for them."
+  "audit_scope_note": "Pre #780 is a source-parser qualifier false positive; Unreal #614 is a stale fault-audit expectation after identity preflight became stricter. CP-W00-147 repairs both families without weakening production transaction semantics. Fresh exact-head proof is pending; no PIE/device/visual/performance/audio-playback acceptance is inferred."
 }
