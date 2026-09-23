@@ -59,10 +59,20 @@ void UShireQuestSubsystem::CommitPersistenceRestore(bool bBroadcastQuestStateRes
         return;
     }
 
+    // The restore-repair hook runs while mutation broadcasts are still suppressed.
+    // StoryFlow may canonicalize legacy terminal states here, but StartChapter /
+    // StartExperience / StartQuest remain silent until the final repaired identity
+    // is known. This prevents the router and world consumers from committing an
+    // intermediate legacy state and then committing again.
+    if (bBroadcastQuestStateRestored)
+    {
+        OnQuestStateRestored.Broadcast();
+    }
+
     bPersistenceRestoreInProgress = false;
 
-    // Publish only after quest, route, NPC memory, discoveries, progression and
-    // knowledge have all been rebuilt. Consumers can never observe a half-restore.
+    // Publish exactly one complete, repaired logical snapshot after every
+    // persistence domain and any canonical legacy repair have settled.
     OnExperienceChanged.Broadcast(CurrentRouteId, CurrentEpisodeId, PlayableCharacterId);
     if (PersistenceRestorePreviousChapterId != CurrentChapterId)
     {
@@ -72,10 +82,6 @@ void UShireQuestSubsystem::CommitPersistenceRestore(bool bBroadcastQuestStateRes
     for (const TPair<FName, int32>& Pair : QuestStages)
     {
         OnQuestStageChanged.Broadcast(Pair.Key, Pair.Value);
-    }
-    if (bBroadcastQuestStateRestored)
-    {
-        OnQuestStateRestored.Broadcast();
     }
 
     UE_LOG(
@@ -344,8 +350,11 @@ void UShireQuestSubsystem::StartQuest(FName QuestId, int32 InitialStage)
 
     ActiveQuestId = QuestId;
     QuestStages.Add(QuestId, FMath::Max(0, InitialStage));
-    OnActiveQuestChanged.Broadcast(QuestId);
-    OnQuestStageChanged.Broadcast(QuestId, GetQuestStage(QuestId));
+    if (!bPersistenceRestoreInProgress)
+    {
+        OnActiveQuestChanged.Broadcast(QuestId);
+        OnQuestStageChanged.Broadcast(QuestId, GetQuestStage(QuestId));
+    }
 }
 
 void UShireQuestSubsystem::StartChapter(FName ChapterId, FName StartingQuestId, int32 StartingQuestStage)
@@ -367,7 +376,10 @@ void UShireQuestSubsystem::StartChapter(FName ChapterId, FName StartingQuestId, 
     if (PreviousChapterId != CurrentChapterId)
     {
         PruneNPCMemoryForCurrentChapter();
-        OnChapterChanged.Broadcast(PreviousChapterId, CurrentChapterId);
+        if (!bPersistenceRestoreInProgress)
+        {
+            OnChapterChanged.Broadcast(PreviousChapterId, CurrentChapterId);
+        }
     }
 
     if (StartingQuestId != NAME_None)
@@ -417,7 +429,7 @@ void UShireQuestSubsystem::StartExperience(FName RouteId, FName EpisodeId, FName
         return;
     }
 
-    if (CurrentRouteId != NAME_None)
+    if (CurrentRouteId != NAME_None && !bPersistenceRestoreInProgress)
     {
         RouteProgress.Add(CurrentRouteId, CaptureCurrentRouteProgress(true));
     }
@@ -453,11 +465,14 @@ void UShireQuestSubsystem::StartExperience(FName RouteId, FName EpisodeId, FName
         PlayableCharacterId = InPlayableCharacterId;
     }
 
-    OnExperienceChanged.Broadcast(CurrentRouteId, CurrentEpisodeId, PlayableCharacterId);
-    OnActiveQuestChanged.Broadcast(ActiveQuestId);
-    for (const TPair<FName, int32>& Pair : QuestStages)
+    if (!bPersistenceRestoreInProgress)
     {
-        OnQuestStageChanged.Broadcast(Pair.Key, Pair.Value);
+        OnExperienceChanged.Broadcast(CurrentRouteId, CurrentEpisodeId, PlayableCharacterId);
+        OnActiveQuestChanged.Broadcast(ActiveQuestId);
+        for (const TPair<FName, int32>& Pair : QuestStages)
+        {
+            OnQuestStageChanged.Broadcast(Pair.Key, Pair.Value);
+        }
     }
 }
 

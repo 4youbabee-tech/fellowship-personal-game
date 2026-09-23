@@ -1,3 +1,9 @@
+## 2026-09-23 - W00 restore-repair publication ordering
+
+Source audit identified a save migration/repair ordering risk: the legacy repair callback ran after restore broadcasts had already exposed the un-repaired identity. The persistence transaction now keeps broadcasts suppressed through legacy canonicalization and publishes only the final repaired state. Player-life restoration also precedes final publication so synchronous same-bank world commit cannot capture stale life values in rollback state.
+
+PG-132 guards the ordering. No CompletionWave or percentage advancement is granted until fresh exact-head engine evidence passes.
+
 ## 2026-09-23 - CI harness correction after PG-131 expansion
 
 Pre-Unreal #762 failed because transition-unit tests had not been updated consistently after adding a second required transition marker. The correction changes only the regression harness semantics: imported `required_markers` is used directly and success requires the full transition marker list rather than the first marker alone. No production completion credit is added.

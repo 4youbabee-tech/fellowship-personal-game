@@ -82,6 +82,18 @@ for barrier_name in [
   errors.append(f"world-transition gameplay mutation guard missing: {barrier_name}")
 if "IsLogicalWorldContextCommitted()" not in named:
  errors.append("named NPC banter/interaction committed-context guard missing")
+quest=read(SRC/"ShireQuestSubsystem.cpp")
+restore_commit_start=quest.find("void UShireQuestSubsystem::CommitPersistenceRestore")
+restore_commit_end=quest.find("void UShireQuestSubsystem::AbortPersistenceRestore",restore_commit_start)
+restore_commit=quest[restore_commit_start:restore_commit_end]
+repair_index=restore_commit.find("OnQuestStateRestored.Broadcast();")
+release_index=restore_commit.find("bPersistenceRestoreInProgress = false;")
+publish_index=restore_commit.find("OnExperienceChanged.Broadcast")
+if min(repair_index,release_index,publish_index)<0 or not (repair_index<release_index<publish_index):
+ errors.append("legacy restore repair may publish intermediate world identity")
+if "CurrentRouteId != NAME_None && !bPersistenceRestoreInProgress" not in quest:
+ errors.append("restore repair may overwrite restored route progress")
+
 
 
 for builder_name in [

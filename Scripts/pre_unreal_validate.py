@@ -3622,6 +3622,37 @@ for pg130_category in [
 if "test_tangent_warning_categories_are_zero_tolerance" not in pg130_warning_tests:
     fail("PG-130 zero-tolerance warning regression test missing")
 
+# PG-132: legacy save repair must settle silently before final world publication.
+pg132_quest = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
+pg132_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+
+pg132_commit_start = pg132_quest.find("void UShireQuestSubsystem::CommitPersistenceRestore")
+pg132_commit_end = pg132_quest.find("void UShireQuestSubsystem::AbortPersistenceRestore", pg132_commit_start)
+pg132_commit = pg132_quest[pg132_commit_start:pg132_commit_end]
+pg132_repair = pg132_commit.find("OnQuestStateRestored.Broadcast();")
+pg132_release = pg132_commit.find("bPersistenceRestoreInProgress = false;")
+pg132_experience = pg132_commit.find("OnExperienceChanged.Broadcast")
+if min(pg132_repair, pg132_release, pg132_experience) < 0 or not (pg132_repair < pg132_release < pg132_experience):
+    fail("PG-132 restore repair hook must run while broadcasts are suppressed and before final experience publication")
+
+for pg132_function in ["StartQuest", "StartChapter", "StartExperience"]:
+    pg132_start = pg132_quest.find(f"void UShireQuestSubsystem::{pg132_function}")
+    pg132_next = pg132_quest.find("\nvoid UShireQuestSubsystem::", pg132_start + 1)
+    pg132_body = pg132_quest[pg132_start:pg132_next if pg132_next >= 0 else None]
+    if "!bPersistenceRestoreInProgress" not in pg132_body:
+        fail(f"PG-132 {pg132_function} can publish intermediate restore state")
+
+if "CurrentRouteId != NAME_None && !bPersistenceRestoreInProgress" not in pg132_quest:
+    fail("PG-132 StartExperience may overwrite restored route progress with pre-commit player transform")
+
+pg132_restore_start = pg132_player.find("bool AShirePlayerCharacter::RestoreSaveSnapshot")
+pg132_restore_end = pg132_player.find("bool AShirePlayerCharacter::SaveAutomaticCheckpoint", pg132_restore_start)
+pg132_restore = pg132_player[pg132_restore_start:pg132_restore_end]
+pg132_health = pg132_restore.find("CurrentHealth = FMath::Clamp")
+pg132_commit_call = pg132_restore.find("CommitPersistenceRestore(true)")
+if pg132_health < 0 or pg132_commit_call < 0 or pg132_health > pg132_commit_call:
+    fail("PG-132 player-life state must be restored before final world identity publication")
+
 # PG-131: gameplay mutation must remain behind the committed-world transaction barrier.
 pg131_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
 pg131_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")

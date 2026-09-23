@@ -2619,15 +2619,19 @@
         "Player interaction/combat/supplies/save and physical trigger/puzzle/world-event mutation paths require committed world identity.",
         "Named NPC banter requires committed logical NPC context, and transition CI asserts held-during-swap before destination commit.",
         "PG-131 and deep_project_audit guard the transaction-boundary contract.",
-        "Pre-Unreal #762 exposed a regression-harness defect after PG-131 added a second transition marker; the harness now validates the complete marker set and uses the imported required_markers symbol correctly."
+        "Pre-Unreal #762 exposed a regression-harness defect after PG-131 added a second transition marker; the harness now validates the complete marker set and uses the imported required_markers symbol correctly.",
+        "Pre-Unreal #763 passed on 30c8b04ddba164048362bce7f40b1a6fe25f6ebd after the transition-marker harness correction.",
+        "Persistence legacy-repair hook now runs while bPersistenceRestoreInProgress remains true; final experience/chapter/quest broadcasts occur only after repair settles.",
+        "StartQuest, StartChapter and StartExperience suppress intermediate broadcasts during persistence repair; StartExperience also skips route-progress capture during restore.",
+        "RestoreSaveSnapshot restores player health/stamina/resolve/supplies before CommitPersistenceRestore(true), protecting synchronous same-bank rollback snapshots.",
+        "PG-132 and deep_project_audit guard repair-before-publish ordering."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal and UE4.27 compile proof after the explicit FString importer fix.",
-        "Require production import to complete with zero tangent/binormal/master-surface warning debt.",
-        "Require startup, P1C01-P1C08, state and continuous-transition audits on that same exact head, including ShireTransitionBarrier PASS.",
-        "Add forced-slow transition and rollback-failure injection so committed-context invariants are observed under delayed/failing async paths.",
-        "Validate staged Data JSON runtime dependencies in a packaged build before packaging readiness can be claimed.",
-        "Run target-device performance/memory/GC and human playability gates before W00 final acceptance."
+        "Obtain fresh exact-head Pre-Unreal + UE4.27 compile/import/runtime evidence for PG-131 and PG-132 together.",
+        "Add/execute a legacy terminal-save runtime repair case proving only the final repaired world identity commits.",
+        "Execute forced slow async transition and rollback-failure injection with no gameplay mutation while uncommitted.",
+        "Require zero tangent/binormal/master-surface warning debt on the same exact head.",
+        "Validate packaged Data JSON dependencies, target-device performance/memory, audio playback, and human play gates before W00 final closure."
       ],
       "acceptance_criteria": [
         "No known CRITICAL/HIGH source defect remains uncorrected or explicitly evidence-bounded.",
@@ -4026,20 +4030,24 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "PG-131 transition-barrier evidence expanded the transition marker set. Pre-Unreal #762 correctly exposed stale unit-test assumptions rather than a runtime defect.",
-    "exact_reviewed_head": "7cb6ccf8e3e5d29c13048cb5eb9862b2268bd18a",
+    "reason": "Silent mental simulation of save restore against same-bank synchronous commit exposed a deeper repair-order race: legacy canonicalization occurred after world-facing broadcasts, and player-life state was assigned after possible synchronous commit.",
+    "exact_reviewed_head": "30c8b04ddba164048362bce7f40b1a6fe25f6ebd",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#762 FAILURE in test_runtime_smoke.py: NameError for runtime_smoke plus stale one-marker transition assertion",
-      "unreal_build": "#597 still in progress at reconciliation time",
-      "warehouse": "#176 queued at reconciliation time"
+      "pre_unreal": "#763 SUCCESS on 30c8b04ddba164048362bce7f40b1a6fe25f6ebd",
+      "unreal_build": "#598 pending at time of this source wave",
+      "warehouse": "#177 pending at time of this source wave"
     },
     "reconciled_findings": [
-      "Project structural/deep audit stages passed before the runtime-smoke unit-test failure.",
-      "Transition mode now intentionally requires two markers: barrier-held evidence plus full sequence PASS.",
-      "The regression test must validate the entire required marker set rather than treating marker[0] as sufficient."
+      "Legacy restore repair must occur inside the persistence transaction before any world-facing identity broadcast.",
+      "StartExperience route-progress capture is unsafe during restore because it can overwrite loaded transform/progress with current pre-commit runtime state.",
+      "Player-life values must be restored before final publication because resident-bank commits may execute synchronously."
     ],
-    "next_priority": "W00_TRANSACTION_BARRIER_FRESH_EXACT_HEAD",
-    "truth_boundary": "The unit-test correction is source-level until fresh Pre-Unreal succeeds. Unreal #597 evidence, when available, applies only to 7cb6ccf8..."
+    "next_priority": "W00_RESTORE_REPAIR_SINGLE_PUBLICATION_EXACT_HEAD",
+    "truth_boundary": "PG-132 changes are source-level until fresh exact-head CI and UE4.27 evidence. Pre-Unreal #763 proves only its parent head.",
+    "stabilization_wave": {
+      "status": "SOURCE_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "invariant": "A save restore publishes one final canonical logical identity only after all persistence domains, legacy repair, and player-life state are ready."
+    }
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",

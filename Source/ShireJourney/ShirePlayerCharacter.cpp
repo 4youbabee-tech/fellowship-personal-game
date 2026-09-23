@@ -1782,13 +1782,17 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
     QuestSubsystem->RestoreKnowledgeState(
         Save->ChronicleEntryIds,
         Save->KnownMapRegionIds);
-    QuestSubsystem->CommitPersistenceRestore(true);
 
+    // Player-life state belongs to the same restore transaction. Set it before
+    // publishing quest/world identity because an already-resident bank may commit
+    // synchronously inside the final broadcast and capture a rollback snapshot.
     CurrentHealth = FMath::Clamp(Save->PlayerHealth, 1.0f, MaxHealth);
     CurrentStamina = FMath::Clamp(Save->PlayerStamina, 0.0f, MaxStamina);
     CurrentResolve = FMath::Clamp(Save->PlayerResolve, 0.0f, MaxResolve);
     Supplies = FMath::Clamp(Save->PlayerSupplies, 0, MaxSupplies);
     bStaminaExhausted = CurrentStamina <= 0.0f;
+
+    QuestSubsystem->CommitPersistenceRestore(true);
 
     const bool bIdentityRepaired =
         QuestSubsystem->GetCurrentChapterId() != Save->CurrentChapterId ||

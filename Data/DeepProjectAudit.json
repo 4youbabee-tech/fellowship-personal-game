@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "02e4dfb81dc4dababb3c0085369cc628c4704bb3_UNREAL_596_COMPILE_FAILURE_REVIEW_PLUS_TRANSACTION_BARRIER_SOURCE_WAVE",
+  "audited_head": "30c8b04ddba164048362bce7f40b1a6fe25f6ebd_PRE_UNREAL_763_GREEN_PLUS_RESTORE_REPAIR_ORDER_SOURCE_WAVE",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -184,6 +184,22 @@
       "title": "UE4.27 package-name overload ambiguity blocked the stricter importer wave",
       "evidence": "Unreal #596 failed at ShireProductionImportCommandlet.cpp with C2668 FPackageName::ObjectPathToPackageName ambiguous for const TCHAR*. Import and all runtime stages were skipped.",
       "action": "Pass an explicit FString to ObjectPathToPackageName and preserve PG-131 static guard so automated edits cannot reintroduce the ambiguous call."
+    },
+    {
+      "id": "AUDIT-HIGH-021",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "title": "Legacy save repair could publish and commit an intermediate world identity",
+      "evidence": "CommitPersistenceRestore cleared bPersistenceRestoreInProgress and broadcast experience/chapter/quest state before OnQuestStateRestored. ShireStoryFlowSubsystem repairs terminal legacy saves from OnQuestStateRestored using StartChapter/StartExperience, so an already-resident bank could commit the pre-repair identity before the repair fired.",
+      "action": "Run the repair hook while persistence broadcast suppression is still active; suppress StartQuest/StartChapter/StartExperience broadcasts during restore; skip route-progress recapture while restoring; publish only the final repaired identity."
+    },
+    {
+      "id": "AUDIT-HIGH-022",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "title": "Synchronous same-bank restore commit could capture stale player-life state",
+      "evidence": "RestoreSaveSnapshot published the restored logical identity before assigning player health/stamina/resolve/supplies. An already-resident chapter bank can commit synchronously from the final identity broadcast and CaptureCommittedRollbackSnapshot immediately.",
+      "action": "Restore player-life fields before CommitPersistenceRestore(true), so any synchronous world commit/rollback snapshot observes a complete restored player + quest state."
     }
   ],
   "external_practice_alignment": [
@@ -209,15 +225,15 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head compile/import with deterministic UV normalization and zero tangent/binormal/master-surface warning debt",
-    "continuous transition audit including held-during-swap gameplay-mutation barrier",
-    "forced slow async destination request with NPCContext/LivingWorld staying on prior committed revision until commit",
-    "rollback failure injection with movement held and no interaction/save/combat mutation",
-    "packaged-build runtime dependency/read test for Data JSON contracts",
-    "target-device frame-time, resident-memory, GC, streaming and actor-tick profiling",
-    "audio playback/residency validation without -NoSound",
-    "human core-loop/onboarding/external playtest after technical W00 green",
-    "isolated Public/Private source migration last"
+    "fresh exact-head compile/import/runtime proof for PG-131 gameplay barrier and PG-132 repair-order transaction",
+    "zero tangent/binormal/master-surface warning debt under deterministic UV normalization",
+    "forced slow async transition and failed transition rollback injection",
+    "legacy terminal-save repair runtime case proving one final committed identity",
+    "packaged-build Data JSON staging/read validation",
+    "target-device frame-time/resident-memory/GC/tick profiling",
+    "audio playback validation without -NoSound",
+    "human core-loop/onboarding/external playtest",
+    "isolated Public/Private migration"
   ],
-  "audit_scope_note": "Pre-Unreal #761 and Warehouse #175 passed on 02e4dfb..., but Unreal #596 failed C++ compile before import/runtime. The explicit FString compile repair and world-transaction gameplay barrier are source-level until a fresh exact-head pipeline passes."
+  "audit_scope_note": "Pre-Unreal #763 passed on 30c8b04d..., while Unreal #598 had not yet completed when the deeper restore-order race was identified. PG-132 changes are source-level pending a newer exact head."
 }

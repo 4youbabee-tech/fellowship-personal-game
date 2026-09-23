@@ -1,3 +1,13 @@
+## 2026-09-23 - Restore repair ordering hardened before final world publication
+
+A further source simulation found a deeper save/restore race that was not covered by the earlier atomic restore patch. `CommitPersistenceRestore(true)` previously cleared the restore-in-progress flag and published `OnExperienceChanged` / `OnChapterChanged` before broadcasting `OnQuestStateRestored`. The StoryFlow legacy-repair handler therefore could run only after the router had already seen and potentially committed an intermediate legacy chapter/route identity. On already-resident banks this could become a synchronous double-commit window.
+
+The transaction is now ordered as: rebuild all persistence domains -> invoke the legacy-repair hook while persistence broadcasts remain suppressed -> let `StartChapter`, `StartExperience`, and `StartQuest` canonicalize silently -> release the restore barrier -> publish exactly one final repaired experience/chapter/quest snapshot. `StartExperience` also no longer captures the current pre-commit player transform into RouteProgress while restore is in progress.
+
+Player health/stamina/resolve/supplies are now restored before the final persistence publication because a matching resident bank can commit synchronously from the final broadcast and capture a rollback snapshot immediately. This prevents a rollback snapshot from containing restored quest state paired with stale player-life state.
+
+PG-132 and the deep-project audit enforce the repair-before-publish ordering and player-life-before-commit invariant. This wave is source-level pending fresh exact-head validation; no new compile/runtime acceptance is claimed yet.
+
 ## 2026-09-23 - Pre-Unreal #762 test-harness regression isolated during transaction-barrier wave
 
 On exact head `7cb6ccf8e3e5d29c13048cb5eb9862b2268bd18a`, Pre-Unreal #762 failed in `test_runtime_smoke.py`, not in project structure/deep audit. Two harness defects were introduced while extending transition evidence: the new test referenced `runtime_smoke.required_markers` although only `required_markers` was imported, and the older transition test still assumed the mode had exactly one required marker. Both are corrected so transition mode requires the complete marker set, including `ShireTransitionBarrier: PASS held-during-swap=yes`.
