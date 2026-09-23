@@ -1,3 +1,7 @@
+## 2026-09-23 - PG-136 static-harness correction
+
+Pre-Unreal #771 rejected test-only literal chapter/quest identifiers and an over-broad snapshot/hold ordering check. The fault injection now creates the unsupported chapter dynamically while keeping authored quest identity, and the guard distinguishes the normal transition hold from the no-subsystem fail-safe hold. No production maturity is advanced.
+
 ## 2026-09-23 - W00 #605 green baseline followed by rollback-freshness hardening
 
 Exact head `ddd0957d6201c8bf553825acd671c98a9be545ef` passed Pre-Unreal #770, Warehouse #184 and the full Unreal #605 chain: UE4.27.2 compile, production import, Automation, startup, P1C01-P1C08 aggregate runtime, persistence/state, continuous transitions and zero project warning debt. This is the current green technical baseline, not PIE/device/visual/performance acceptance.

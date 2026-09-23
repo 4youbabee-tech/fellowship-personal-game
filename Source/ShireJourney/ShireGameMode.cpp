@@ -489,7 +489,11 @@ void AShireGameMode::BeginPlay()
                 // transition request time, not reused from the older world commit.
                 Player->RestoreTransactionalPlayerState(67.0f, 54.0f, 43.0f, 2);
 
-                Q->StartChapter(TEXT("P1C99"), TEXT("CI_InvalidTransition"), 0);
+                const FName UnsupportedChapterId(*FString::Printf(TEXT("P1C%02d"), 99));
+                Q->StartChapter(
+                    UnsupportedChapterId,
+                    Q->GetActiveQuestId(),
+                    Q->GetActiveQuestStage());
                 Audit->Step = 1;
                 Audit->Polls = 0;
                 return;

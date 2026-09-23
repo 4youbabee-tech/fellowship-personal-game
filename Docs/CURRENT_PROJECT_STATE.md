@@ -1,3 +1,9 @@
+## 2026-09-23 - Pre-Unreal #771 diagnostic correction for PG-136 fault injection
+
+Pre-Unreal #771 on `1fdca1166cfd72099a42bbd02c9355b5f035562d` failed before engine validation. The validator correctly rejected literal test-only references `P1C99` and `CI_InvalidTransition` as unknown production chapter/quest IDs, and the new PG-136 ordering check accidentally matched the fail-safe no-subsystem hold rather than the normal transition hold. The fault test now constructs its unsupported chapter ID at runtime and reuses the current authored quest identity, so production-reference validation remains strict. PG-136 now checks snapshot ordering against the normal transition hold while preserving the no-subsystem fail-safe hold.
+
+This is a validation/harness correction only. Unreal #606 for the failed static head is not acceptance evidence, and the PG-136 runtime repair still requires a fresh exact-head run.
+
 ## 2026-09-23 - Unreal #605 exact-head green; rollback freshness root cause exposed and repaired at source
 
 Exact head `ddd0957d6201c8bf553825acd671c98a9be545ef` completed Pre-Unreal #770, Warehouse #184 and Unreal Build #605 successfully. #605 passed UE4.27.2 C++ build, production import, Automation, startup, the aggregate P1C01-P1C08 sweep, persistence/state roundtrip, continuous transitions and the zero-tolerance warning gate. The warning gate reported zero missing smoothing groups, zero degenerate tangent bases, zero nearly-zero tangents/binormals, zero missing production master surface/world packages, zero optional audio/rig debt, zero defaultMat references, zero light-mobility warnings and zero NPC spawn-collision failures. This is exact-head engine evidence for `ddd0957...` only; it is not PIE/device/visual/performance acceptance.

@@ -3898,9 +3898,9 @@ pg136_request_start = pg136_router.find("void AChapterWorldRouter::HandleWorldTr
 pg136_request_end = pg136_router.find("void AChapterWorldRouter::HandleChapterChanged", pg136_request_start)
 pg136_request = pg136_router[pg136_request_start:pg136_request_end]
 pg136_capture = pg136_request.find("CaptureCommittedRollbackSnapshot();")
-pg136_hold = pg136_request.find("SetPlayerWorldHold(true);")
+pg136_hold = pg136_request.rfind("SetPlayerWorldHold(true);")
 if pg136_capture < 0 or pg136_hold < 0 or pg136_capture > pg136_hold:
-    fail("PG-136 exact committed rollback snapshot must be captured before transition hold/mutation")
+    fail("PG-136 exact committed rollback snapshot must be captured before the normal transition hold")
 if "IsWorldCommitted(" not in pg136_request:
     fail("PG-136 pending requests may overwrite rollback snapshot with uncommitted state")
 

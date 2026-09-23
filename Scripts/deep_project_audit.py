@@ -179,8 +179,10 @@ if start_experience.find("OnWorldTransitionRequested.Broadcast")<0 or start_expe
 request_start=router.find("void AChapterWorldRouter::HandleWorldTransitionRequested")
 request_end=router.find("void AChapterWorldRouter::HandleChapterChanged",request_start)
 request_body=router[request_start:request_end]
-if "CaptureCommittedRollbackSnapshot();" not in request_body or "SetPlayerWorldHold(true);" not in request_body:
- errors.append("router does not snapshot/hold at transition request boundary")
+request_capture=request_body.find("CaptureCommittedRollbackSnapshot();")
+request_hold=request_body.rfind("SetPlayerWorldHold(true);")
+if request_capture<0 or request_hold<0 or request_capture>request_hold:
+ errors.append("router does not snapshot exact committed origin before the normal transition hold")
 commit_start=router.find("void AChapterWorldRouter::CommitChapterWorld")
 commit_body=router[commit_start:]
 reject_start=commit_body.find("if (!bSupported)")

@@ -2654,7 +2654,8 @@
         "Quest subsystem now publishes a native pre-mutation OnWorldTransitionRequested boundary before StartChapter/StartExperience change logical identity.",
         "ChapterWorldRouter captures the exact committed origin snapshot at transition request time and raises gameplay hold before logical destination mutation.",
         "Unsupported route/chapter destinations now execute atomic RollbackFailedWorldSwap instead of clearing pending state and returning.",
-        "PG-136 fault audit requests unsupported P1C99 and requires exact rollback player state, identity, NPC context, LivingWorld sync and movement release."
+        "PG-136 fault audit requests unsupported P1C99 and requires exact rollback player state, identity, NPC context, LivingWorld sync and movement release.",
+        "Pre-Unreal #771 rejected literal P1C99/CI_InvalidTransition test references and an over-broad PG-136 hold-order check; the fault harness now constructs the unsupported chapter dynamically and the guard targets the normal transition hold."
       ],
       "missing_work": [
         "Obtain fresh exact-head Pre-Unreal and UE4.27 compile/import/runtime evidence for PG-136 including ShireRollbackAudit PASS.",
@@ -4062,25 +4063,19 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Unreal #605 closed the known compile/import/runtime/warning chain on ddd0957d, then failure-path simulation exposed stale rollback snapshots and unsupported-request non-rollback as untested root causes.",
-    "exact_reviewed_head": "ddd0957d6201c8bf553825acd671c98a9be545ef",
+    "reason": "PG-136 first static run exposed test-harness identifiers leaking into production reference validation plus a guard matching the fail-safe hold branch.",
+    "exact_reviewed_head": "1fdca1166cfd72099a42bbd02c9355b5f035562d",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#770 SUCCESS",
-      "warehouse": "#184 SUCCESS",
-      "unreal_build": "#605 SUCCESS: UE4.27.2 C++ build, production import, Automation, startup, P1C01-P1C08 aggregate runtime, state persistence, continuous transitions and zero warning debt"
+      "pre_unreal": "#771 FAILURE before engine: unknown test-only P1C99/CI_InvalidTransition references plus PG-136 hold-order guard mismatch",
+      "unreal_build": "#606 queued/in-flight for the failed static head; not used as acceptance evidence",
+      "parent_green": "Unreal #605 full chain SUCCESS on ddd0957d..."
     },
     "reconciled_findings": [
-      "The PG-135 queued checkpoint snapshot/origin repair is exact-head engine green on #605.",
-      "The broad tangent-basis source normalization is exact-head zero-warning green on #605.",
-      "Green success-path transitions do not prove rollback freshness after live state has changed since the last world commit.",
-      "Rollback origin now has a pre-mutation transaction boundary, and unsupported destinations use the same rollback path."
+      "Production chapter/quest reference validation remains strict; fault injection must not add fake production identifiers to source scans.",
+      "The no-subsystem fail-safe hold is valid and must not be confused with the normal snapshot-before-hold transaction ordering."
     ],
-    "next_priority": "W00_PG136_FAILURE_PATH_EXACT_HEAD",
-    "truth_boundary": "Unreal #605 evidence applies to ddd0957d only. PG-136 transition-request snapshot and fault-injection changes are source-level until a newer exact head passes.",
-    "stabilization_wave": {
-      "status": "SOURCE_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
-      "invariant": "A failed world transition restores the exact committed state that existed immediately before the logical request, never a stale chapter-commit snapshot; unsupported destinations cannot leave movement held or logical/physical world identity split."
-    }
+    "next_priority": "W00_PG136_FRESH_STATIC_AND_ENGINE_PROOF",
+    "truth_boundary": "PG-136 remains source-level until a fresh exact head passes Pre-Unreal and the fault-injection Unreal runtime."
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",
