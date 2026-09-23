@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "aa8f80c89de1193728c1ff82b5876fdac0fdc7d3_UNREAL_611_GREEN_PRE776_LEGACY_CONSUMER_DRIFT_CP143_PENDING",
+  "audited_head": "67ebc4ee4142c4df9c479c6b326631b767bc903a_PRE777_UNREAL612_GREEN_WAREHOUSE191_INTERRUPTED_CP144_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -352,6 +352,14 @@
       "title": "Legacy validators depended on runtime evidence location instead of semantic contracts",
       "evidence": "Pre-Unreal #776 failed PG-070/074/079/080 and PG-129 because those guards searched runtime_smoke.py for exact evidence text. The same parent head passed Unreal #611 across all current runtime modes, showing the red was stale validator location-coupling rather than a gameplay regression.",
       "action": "Use semantic evidence IDs as the only validator-facing API. Keep exact marker text and C++ source anchors owned by runtime_audit_contracts.py, migrate DeepProjectAudit/tests, and reject duplicate evidence text in Python consumers."
+    },
+    {
+      "id": "AUDIT-HIGH-043",
+      "severity": "HIGH",
+      "status": "SYSTEMIC_SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_WAREHOUSE_PROOF",
+      "title": "Warehouse acquisition reran on unrelated PR synchronizations and used unbounded provider I/O",
+      "evidence": "On exact head 67ebc4ee, Pre-Unreal #777 and Unreal #612 succeeded while Warehouse #191 failed after 32m57s. GitHub structured state left Poly Haven step 3 in_progress, later provider/audit steps pending and logs_url null. Previous #190 completed all providers. The workflow's pull_request paths match the cumulative PR diff, and provider scripts directly used Invoke-WebRequest/Invoke-RestMethod without one timeout/retry/atomic-download policy or persistent-receipt fast path.",
+      "action": "Gate heavy warehouse work on files changed in the current update, reuse valid persistent receipts, route provider traffic through a shared timeout/retry helper, download to .partial then atomically rename, and statically reject raw network primitives in provider stage scripts."
     }
   ],
   "external_practice_alignment": [
@@ -377,14 +385,14 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head Pre-Unreal + UE4.27 validation for CP-W00-143 semantic evidence contracts",
-    "real queued AsyncSaveGame completion race across world revision with immutable captured snapshot proof",
+    "fresh exact-head Pre-Unreal + Warehouse validation for CP-W00-144 resilience",
     "strict route/chapter/episode identity validation for malformed saves/direct StartExperience calls",
+    "real queued AsyncSaveGame completion race across world revision with immutable captured snapshot proof",
     "packaged-build Data JSON dependency/read validation",
     "audio production-bank presence/playback validation without -NoSound",
     "target-device frame-time/resident-memory/GC/tick profiling",
     "human core-loop/onboarding/external playtest",
     "isolated Public/Private migration"
   ],
-  "audit_scope_note": "Parent aa8f80c8 is engine-green on Unreal #611 and Warehouse #190 but static-red on Pre-Unreal #776 because legacy validators still depended on exact runtime marker location. CP-W00-143 repairs that class semantically and remains source-level until fresh exact-head validation. No PIE/device/visual/performance/audio-playback acceptance is inferred."
+  "audit_scope_note": "67ebc4ee passed Pre-Unreal #777 and Unreal #612. Warehouse #191 separately failed with Poly Haven still marked in_progress and no finalized job logs; exact provider/runner terminal cause is unknown. CP-W00-144 repairs the reproducible architecture weaknesses around unnecessary reruns, unbounded provider calls and partial-download promotion, pending fresh exact-head evidence."
 }

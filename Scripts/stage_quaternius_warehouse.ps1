@@ -1,14 +1,18 @@
 param(
-    [string]$ManifestPath = "Data/WarehouseQuaterniusAcquisitionBatchV1.json"
+    [string]$ManifestPath = "Data/WarehouseQuaterniusAcquisitionBatchV1.json",
+    [switch]$Refresh
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "warehouse_network.ps1")
 if (-not (Test-Path $ManifestPath)) { throw "Quaternius manifest not found: $ManifestPath" }
 
 $manifest = Get-Content $ManifestPath -Raw | ConvertFrom-Json
 $root = [string]$manifest.staging_root
 New-Item -ItemType Directory -Path $root -Force | Out-Null
 $headers = @{ "User-Agent" = "ShireJourneyWarehouse/1.0" }
+$receiptPath = Join-Path $root ("receipt_" + $manifest.batch_id + ".json")
+if (-not $Refresh -and (Test-WarehouseReceiptReusable -ReceiptPath $receiptPath -BatchId ([string]$manifest.batch_id))) { exit 0 }
 
 $receipt = [ordered]@{
     batch_id = $manifest.batch_id
@@ -25,7 +29,7 @@ foreach ($pack in $manifest.source_pages) {
     Write-Host "Resolving Quaternius pack $id"
 
     try {
-        $response = Invoke-WebRequest -Uri $page -Headers $headers -UseBasicParsing
+        $response = Invoke-WarehousePage -Uri $page -Headers $headers
     }
     catch {
         $receipt.unresolved += [ordered]@{ asset_id=$id; source_page=$page; reason="page_fetch_failed"; detail=$_.Exception.Message }
@@ -79,7 +83,7 @@ foreach ($pack in $manifest.source_pages) {
             if ([string]::IsNullOrWhiteSpace($name)) { continue }
             $dest = Join-Path $destDir $name
             if (-not (Test-Path $dest)) {
-                Invoke-WebRequest -Uri $url -Headers $headers -OutFile $dest -UseBasicParsing
+                Invoke-WarehouseDownload -Uri $url -Headers $headers -OutFile $dest | Out-Null
             }
             $file = Get-Item $dest
             $hash = (Get-FileHash $dest -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -100,6 +104,5 @@ foreach ($pack in $manifest.source_pages) {
     }
 }
 
-$receiptPath = Join-Path $root ("receipt_" + $manifest.batch_id + ".json")
 $receipt | ConvertTo-Json -Depth 8 | Set-Content -Path $receiptPath -Encoding UTF8
 Write-Host "QUATERNIUS_WAREHOUSE_STAGE_PASS files=$($receipt.files.Count) unresolved=$($receipt.unresolved.Count) receipt=$receiptPath"

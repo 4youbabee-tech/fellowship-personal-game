@@ -1,15 +1,21 @@
-param([string]$ManifestPath = "Data/WarehouseAmbientCGAcquisitionBatchV1.json")
+param(
+  [string]$ManifestPath = "Data/WarehouseAmbientCGAcquisitionBatchV1.json",
+  [switch]$Refresh
+)
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "warehouse_network.ps1")
 $manifest = Get-Content $ManifestPath -Raw | ConvertFrom-Json
 $root = [string]$manifest.staging_root
 New-Item -ItemType Directory -Path $root -Force | Out-Null
+$receiptPath=Join-Path $root ("receipt_"+$manifest.batch_id+".json")
+if (-not $Refresh -and (Test-WarehouseReceiptReusable -ReceiptPath $receiptPath -BatchId ([string]$manifest.batch_id))) { exit 0 }
 $headers = @{ "User-Agent" = "ShireJourneyWarehouse/1.0"; "Accept" = "application/json" }
 $receipt = [ordered]@{ batch_id=$manifest.batch_id; provider=$manifest.provider; license=$manifest.license; staged_at_utc=[DateTime]::UtcNow.ToString("o"); files=@(); skipped=@(); total_bytes=0 }
 foreach($lane in $manifest.search_lanes){
   $q=[uri]::EscapeDataString([string]$lane.q)
   $limit=[int]$lane.limit
   $url="$($manifest.api_base)?type=Material&sort=Popular&limit=$limit&include=downloadData&offset=0&q=$q"
-  try { $data=Invoke-RestMethod -Uri $url -Headers $headers -Method Get } catch { $receipt.skipped += [ordered]@{ query=$lane.q; reason="api_query_failed"; detail=$_.Exception.Message }; continue }
+  try { $data=Invoke-WarehouseRestJson -Uri $url -Headers $headers } catch { $receipt.skipped += [ordered]@{ query=$lane.q; reason="api_query_failed"; detail=$_.Exception.Message }; continue }
   $assets=@()
   if($data.foundAssets){ $assets=@($data.foundAssets) } elseif($data.assets){ $assets=@($data.assets) } elseif($data -is [System.Collections.IEnumerable]){ $assets=@($data) }
   $taken=0
@@ -28,7 +34,7 @@ foreach($lane in $manifest.search_lanes){
     $name=($id + "_" + [string]$manifest.target_attribute + ".zip")
     $dest=Join-Path $destDir $name
     try {
-      if(-not (Test-Path $dest)){ Invoke-WebRequest -Uri ([string]$match.downloadLink) -Headers $headers -OutFile $dest -UseBasicParsing }
+      if(-not (Test-Path $dest)){ Invoke-WarehouseDownload -Uri ([string]$match.downloadLink) -Headers $headers -OutFile $dest | Out-Null }
       $file=Get-Item $dest
       if(($receipt.total_bytes + [int64]$file.Length) -gt [int64]$manifest.max_download_bytes){ Remove-Item $dest -Force; $receipt.skipped += [ordered]@{ asset_id=$id; reason="batch_byte_cap" }; continue }
       $hash=(Get-FileHash $dest -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -38,6 +44,5 @@ foreach($lane in $manifest.search_lanes){
     } catch { $receipt.skipped += [ordered]@{ asset_id=$id; reason="download_failed"; detail=$_.Exception.Message } }
   }
 }
-$receiptPath=Join-Path $root ("receipt_"+$manifest.batch_id+".json")
 $receipt | ConvertTo-Json -Depth 10 | Set-Content -Path $receiptPath -Encoding UTF8
 Write-Host ("AMBIENTCG_WAREHOUSE_STAGE_PASS files="+$receipt.files.Count+" skipped="+$receipt.skipped.Count+" bytes="+$receipt.total_bytes+" receipt="+$receiptPath)

@@ -1,3 +1,7 @@
+## 2026-09-23 - W00 CP-W00-144 warehouse resilience
+
+Parent `67ebc4ee...`: Pre-Unreal #777 SUCCESS, Unreal #612 SUCCESS, Warehouse #191 FAILURE at the still-in-progress Poly Haven step after 32m57s; no finalized job log blob exists. This is classified as warehouse acquisition/infrastructure debt, not a gameplay regression. CP-W00-144 adds current-update gating, persistent receipt reuse, bounded/retried provider I/O and atomic partial downloads. No production-completeness percentage is increased. New-head status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**.
+
 ## 2026-09-23 - W00 CP-W00-143 semantic validation-contract wave
 
 Parent `aa8f80c8...`: Unreal #611 SUCCESS, Warehouse #190 SUCCESS, Pre-Unreal #776 FAILURE on six legacy marker-location checks. No production-completeness percentage is increased. CP-W00-143 makes semantic evidence IDs the validation API and removes exact marker ownership from legacy Python consumers. New-head status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. W01 remains blocked.

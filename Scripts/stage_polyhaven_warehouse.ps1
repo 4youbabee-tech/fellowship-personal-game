@@ -1,8 +1,10 @@
 param(
-    [string]$ManifestPath = "Data/WarehouseAcquisitionBatchV1.json"
+    [string]$ManifestPath = "Data/WarehouseAcquisitionBatchV1.json",
+    [switch]$Refresh
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "warehouse_network.ps1")
 
 if (-not (Test-Path $ManifestPath)) {
     throw "Warehouse manifest not found: $ManifestPath"
@@ -14,6 +16,8 @@ $resolution = [string]$manifest.target_resolution
 $maxBytes = [int64]$manifest.max_download_bytes
 
 New-Item -ItemType Directory -Path $root -Force | Out-Null
+$receiptPath = Join-Path $root ("receipt_" + $manifest.batch_id + ".json")
+if (-not $Refresh -and (Test-WarehouseReceiptReusable -ReceiptPath $receiptPath -BatchId ([string]$manifest.batch_id))) { exit 0 }
 
 $receipt = [ordered]@{
     batch_id = $manifest.batch_id
@@ -77,7 +81,7 @@ foreach ($asset in $manifest.assets) {
 
     $headers = @{ "User-Agent" = "ShireJourneyWarehouse/1.0" }
     try {
-        $filesTree = Invoke-RestMethod -Uri $apiUrl -Headers $headers -Method Get
+        $filesTree = Invoke-WarehouseRestJson -Uri $apiUrl -Headers $headers
     }
     catch {
         Write-Warning "Provider API query failed for $slug : $($_.Exception.Message)"
@@ -149,11 +153,18 @@ foreach ($asset in $manifest.assets) {
         }
 
         $dest = Join-Path $assetDir $name
-        if (-not (Test-Path $dest)) {
-            Write-Host "Downloading $slug/$name"
-            Invoke-WebRequest -Uri $candidate.url -Headers $headers -OutFile $dest -UseBasicParsing
-        } else {
-            Write-Host "Already staged: $slug/$name"
+        try {
+            if (-not (Test-Path $dest)) {
+                Write-Host "Downloading $slug/$name"
+                Invoke-WarehouseDownload -Uri ([string]$candidate.url) -Headers $headers -OutFile $dest | Out-Null
+            } else {
+                Write-Host "Already staged: $slug/$name"
+            }
+        }
+        catch {
+            Write-Warning "Warehouse download failed for $slug/$name : $($_.Exception.Message)"
+            $receipt.skipped_assets += [ordered]@{ asset_slug=$slug; reason="download_failed"; detail=$_.Exception.Message }
+            continue
         }
 
         $file = Get-Item $dest
@@ -170,7 +181,6 @@ foreach ($asset in $manifest.assets) {
     }
 }
 
-$receiptPath = Join-Path $root ("receipt_" + $manifest.batch_id + ".json")
 $receipt | ConvertTo-Json -Depth 8 | Set-Content -Path $receiptPath -Encoding UTF8
 
 Write-Host "WAREHOUSE_STAGE_PASS batch=$($manifest.batch_id) files=$($receipt.files.Count) bytes=$($receipt.total_bytes) receipt=$receiptPath"

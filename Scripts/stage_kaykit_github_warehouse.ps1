@@ -1,8 +1,10 @@
 param(
-    [string]$ManifestPath = "Data/WarehouseKayKitGitHubAcquisitionBatchV1.json"
+    [string]$ManifestPath = "Data/WarehouseKayKitGitHubAcquisitionBatchV1.json",
+    [switch]$Refresh
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "warehouse_network.ps1")
 if (-not (Test-Path -LiteralPath $ManifestPath -PathType Leaf)) {
     throw "KayKit manifest not found: $ManifestPath"
 }
@@ -10,6 +12,8 @@ if (-not (Test-Path -LiteralPath $ManifestPath -PathType Leaf)) {
 $manifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
 $root = [string]$manifest.staging_root
 New-Item -ItemType Directory -Path $root -Force | Out-Null
+$receiptPath = Join-Path $root ("receipt_" + [string]$manifest.batch_id + ".json")
+if (-not $Refresh -and (Test-WarehouseReceiptReusable -ReceiptPath $receiptPath -BatchId ([string]$manifest.batch_id))) { exit 0 }
 $headers = @{ "User-Agent" = "ShireJourneyWarehouse/1.0" }
 $totalBytes = [int64]0
 
@@ -33,7 +37,7 @@ foreach ($pack in $manifest.packs) {
 
     try {
         if (-not (Test-Path -LiteralPath $archivePath -PathType Leaf)) {
-            Invoke-WebRequest -Uri ([string]$pack.archive_url) -Headers $headers -OutFile $archivePath -UseBasicParsing
+            Invoke-WarehouseDownload -Uri ([string]$pack.archive_url) -Headers $headers -OutFile $archivePath | Out-Null
         }
 
         $archiveFile = Get-Item -LiteralPath $archivePath
@@ -59,7 +63,7 @@ foreach ($pack in $manifest.packs) {
             continue
         }
 
-        Invoke-WebRequest -Uri ([string]$pack.license_url) -Headers $headers -OutFile $licensePath -UseBasicParsing
+        Invoke-WarehouseDownload -Uri ([string]$pack.license_url) -Headers $headers -OutFile $licensePath | Out-Null
         $licenseText = Get-Content -LiteralPath $licensePath -Raw
         if ($licenseText -notmatch "Creative Commons Zero|CC0") {
             Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
@@ -102,6 +106,5 @@ foreach ($pack in $manifest.packs) {
     }
 }
 
-$receiptPath = Join-Path $root ("receipt_" + [string]$manifest.batch_id + ".json")
 $receipt | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $receiptPath -Encoding UTF8
 Write-Host "KAYKIT_WAREHOUSE_STAGE_PASS files=$($receipt.files.Count) skipped=$($receipt.skipped.Count) bytes=$totalBytes receipt=$receiptPath"

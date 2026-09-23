@@ -1,3 +1,11 @@
+## 2026-09-23 - W00 checkpoint CP-W00-144: warehouse red isolated from gameplay and repaired as an execution-family defect
+
+Exact parent `67ebc4ee4142c4df9c479c6b326631b767bc903a` is **STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED** by Pre-Unreal #777 and Unreal #612. Warehouse #191 alone failed after 32m57s. GitHub's structured job record ended with `Stage first Poly Haven CC0 batch` still marked `in_progress`; OpenGameArt/Quaternius/ambientCG/Kenney/KayKit and the final inventory audit never started, and the job exposes no finalized log blob. Therefore no unsupported claim is made about a specific provider exception. Previous Warehouse #190 completed the full provider chain successfully.
+
+The systemic issue is clear even without the missing terminal log: pull-request path matching is cumulative, so the heavy warehouse workflow can run again on stabilization commits that did not change warehouse inputs; provider scripts also used raw web calls and re-queried providers despite persistent receipts. CP-W00-144 adds a current-update delta gate, reusable receipt validation, a shared bounded retry/timeout layer, and atomic `.partial` downloads before rename. A provider/network interruption can no longer leave a partial file looking complete, and unrelated code commits should skip acquisition instead of spending many minutes touching external providers.
+
+PG-144 statically prevents warehouse provider scripts from bypassing the shared network helper and requires every heavy workflow step to be delta-gated. Status of the new head is **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**. W01 remains blocked.
+
 ## 2026-09-23 - W00 checkpoint CP-W00-143: semantic evidence-contract consolidation
 
 Parent head `aa8f80c89de1193728c1ff82b5876fdac0fdc7d3` split again: Warehouse #190 SUCCESS, Unreal #611 SUCCESS, Pre-Unreal #776 FAILURE. #611 gives exact-parent **COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED** evidence for compile/import, Automation 2/2, startup, P1C01-P1C08, state, transitions, rollback/stream-failure faults, delayed pending authority and persistence edges. The warning-debt gate remained zero for all tracked project categories, including the streaming-pool precedence warning.

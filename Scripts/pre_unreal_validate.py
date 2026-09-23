@@ -6292,6 +6292,49 @@ for pg128_symbol in [
 if "LoadObject<USoundBase>" in pg128_audio:
     fail("PG-128 synchronous production audio loading is forbidden")
 
+
+# PG-144: warehouse staging is bounded, resumable and current-delta gated.
+pg144_helper = read(ROOT / "Scripts" / "warehouse_network.ps1")
+pg144_workflow = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
+pg144_scripts = [
+    ROOT / "Scripts" / "stage_polyhaven_warehouse.ps1",
+    ROOT / "Scripts" / "stage_opengameart_audio.ps1",
+    ROOT / "Scripts" / "stage_quaternius_warehouse.ps1",
+    ROOT / "Scripts" / "stage_ambientcg_warehouse.ps1",
+    ROOT / "Scripts" / "stage_kenney_warehouse.ps1",
+    ROOT / "Scripts" / "stage_kaykit_github_warehouse.ps1",
+]
+for pg144_symbol in [
+    "Invoke-WarehouseRestJson",
+    "Invoke-WarehousePage",
+    "Invoke-WarehouseDownload",
+    "Test-WarehouseReceiptReusable",
+    "-TimeoutSec",
+    ".partial",
+    "WAREHOUSE_NET",
+]:
+    if pg144_symbol not in pg144_helper:
+        fail(f"PG-144 warehouse network helper missing: {pg144_symbol}")
+for pg144_path in pg144_scripts:
+    pg144_text = read(pg144_path)
+    if "warehouse_network.ps1" not in pg144_text:
+        fail(f"PG-144 provider script does not import bounded network helper: {pg144_path.name}")
+    if "Test-WarehouseReceiptReusable" not in pg144_text:
+        fail(f"PG-144 provider script lacks persistent receipt reuse: {pg144_path.name}")
+    if re.search(r"\bInvoke-(?:WebRequest|RestMethod)\b", pg144_text):
+        fail(f"PG-144 provider script bypasses bounded network helper: {pg144_path.name}")
+for pg144_symbol in [
+    "Detect current warehouse delta",
+    "WAREHOUSE_DELTA_SKIP",
+    "warehouse_network.ps1",
+    "fetch-depth: 20",
+    "steps.warehouse_delta.outputs.run_stage == 'true'",
+]:
+    if pg144_symbol not in pg144_workflow:
+        fail(f"PG-144 warehouse workflow resilience guard missing: {pg144_symbol}")
+if pg144_workflow.count("steps.warehouse_delta.outputs.run_stage == 'true'") < 8:
+    fail("PG-144 every heavy warehouse stage must be current-delta gated")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

@@ -19,6 +19,7 @@ on:
       - 'Scripts/stage_kaykit_github_warehouse.ps1'
       - 'Data/WarehouseAmbientCGTrilogyBatchV2.json'
       - 'Scripts/audit_warehouse_inventory.ps1'
+      - 'Scripts/warehouse_network.ps1'
       - 'Data/WarehouseProviderAccessPolicyV1.json'
       - '.github/workflows/warehouse-stage.yml'
   pull_request:
@@ -39,6 +40,7 @@ on:
       - 'Scripts/stage_kaykit_github_warehouse.ps1'
       - 'Data/WarehouseAmbientCGTrilogyBatchV2.json'
       - 'Scripts/audit_warehouse_inventory.ps1'
+      - 'Scripts/warehouse_network.ps1'
       - 'Data/WarehouseProviderAccessPolicyV1.json'
       - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
@@ -64,48 +66,89 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           clean: false
+          fetch-depth: 20
+
+      - name: Detect current warehouse delta
+        id: warehouse_delta
+        shell: powershell
+        run: |
+          $event = Get-Content -LiteralPath $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json
+          $runStage = $true
+          if ($env:GITHUB_EVENT_NAME -ne 'workflow_dispatch') {
+            $after = (git rev-parse HEAD).Trim()
+            $before = [string]$event.before
+            if ([string]::IsNullOrWhiteSpace($before) -or $before -match '^0+$') {
+              $before = (git rev-parse HEAD^).Trim()
+            }
+            git cat-file -e ($before + '^{commit}') 2>$null
+            if ($LASTEXITCODE -ne 0) {
+              Write-Warning "WAREHOUSE_DELTA before=$before unavailable; fail-safe staging enabled."
+            } else {
+              $changed = @(git diff --name-only $before $after)
+              $warehousePattern = '^(Data/Warehouse.*\.json|Scripts/(stage_.*_warehouse|stage_opengameart_audio|audit_warehouse_inventory|warehouse_network)\.ps1|\.github/workflows/warehouse-stage\.yml)$'
+              $relevant = @($changed | Where-Object { $_ -match $warehousePattern })
+              Write-Host ("WAREHOUSE_DELTA before=" + $before + " after=" + $after + " changed=" + $changed.Count + " relevant=" + $relevant.Count)
+              $relevant | ForEach-Object { Write-Host ("WAREHOUSE_DELTA_FILE " + $_) }
+              $runStage = $relevant.Count -gt 0
+            }
+          }
+          "run_stage=$($runStage.ToString().ToLowerInvariant())" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+
+      - name: Warehouse staging not required for this update
+        if: steps.warehouse_delta.outputs.run_stage != 'true'
+        shell: powershell
+        run: Write-Host "WAREHOUSE_DELTA_SKIP no warehouse inputs changed in the current update."
 
       - name: Stage first Poly Haven CC0 batch
+        if: steps.warehouse_delta.outputs.run_stage == 'true'
         shell: cmd
         run: |
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_polyhaven_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAcquisitionBatchV1.json"
 
       - name: Stage first OpenGameArt CC0 audio batch
+        if: steps.warehouse_delta.outputs.run_stage == 'true'
         shell: cmd
         run: |
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_opengameart_audio.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAudioAcquisitionBatchV1.json"
 
       - name: Stage Quaternius CC0 character/world batch
+        if: steps.warehouse_delta.outputs.run_stage == 'true'
         shell: cmd
         run: |
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseQuaterniusAcquisitionBatchV1.json"
 
       - name: Stage ambientCG CC0 material batch
+        if: steps.warehouse_delta.outputs.run_stage == 'true'
         shell: cmd
         run: |
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAmbientCGAcquisitionBatchV1.json"
 
       - name: Stage ambientCG trilogy-region material batch
+        if: steps.warehouse_delta.outputs.run_stage == 'true'
         shell: cmd
         run: |
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAmbientCGTrilogyBatchV2.json"
 
       - name: Stage Kenney CC0 support packs
+        if: steps.warehouse_delta.outputs.run_stage == 'true'
         shell: cmd
         run: |
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_kenney_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseKenneyAcquisitionBatchV1.json"
 
       - name: Stage KayKit public GitHub CC0 support packs
+        if: steps.warehouse_delta.outputs.run_stage == 'true'
         shell: cmd
         run: |
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_kaykit_github_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseKayKitGitHubAcquisitionBatchV1.json"
 
       - name: Audit persistent warehouse inventory
+        if: steps.warehouse_delta.outputs.run_stage == 'true'
         shell: cmd
         run: |
           powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\audit_warehouse_inventory.ps1"
 
       - name: Show persistent warehouse footprint
+        if: steps.warehouse_delta.outputs.run_stage == 'true'
         shell: cmd
         run: |
           powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "$root='C:\actions-runner\_warehouse\ShireJourney'; if (!(Test-Path $root)) { throw ('Persistent warehouse root missing: ' + $root) }; $files=Get-ChildItem -Path $root -Recurse -File; $bytes=($files | Measure-Object -Property Length -Sum).Sum; Write-Host ('WAREHOUSE_FOOTPRINT files=' + $files.Count + ' bytes=' + $bytes + ' root=' + $root)"

@@ -1,8 +1,10 @@
 param(
-    [string]$ManifestPath = "Data/WarehouseAudioAcquisitionBatchV1.json"
+    [string]$ManifestPath = "Data/WarehouseAudioAcquisitionBatchV1.json",
+    [switch]$Refresh
 )
 
 $ErrorActionPreference = "Stop"
+. (Join-Path $PSScriptRoot "warehouse_network.ps1")
 
 if (-not (Test-Path $ManifestPath)) {
     throw "Audio warehouse manifest not found: $ManifestPath"
@@ -12,6 +14,8 @@ $manifest = Get-Content $ManifestPath -Raw | ConvertFrom-Json
 $root = [string]$manifest.staging_root
 $maxBytes = [int64]$manifest.max_download_bytes
 New-Item -ItemType Directory -Path $root -Force | Out-Null
+$receiptPath = Join-Path $root ("receipt_" + $manifest.batch_id + ".json")
+if (-not $Refresh -and (Test-WarehouseReceiptReusable -ReceiptPath $receiptPath -BatchId ([string]$manifest.batch_id))) { exit 0 }
 
 $receipt = [ordered]@{
     batch_id = $manifest.batch_id
@@ -46,7 +50,7 @@ foreach ($asset in $manifest.assets) {
     try {
         if (-not (Test-Path $dest)) {
             Write-Host "Downloading audio warehouse asset $id -> $name"
-            Invoke-WebRequest -Uri $url -Headers $headers -OutFile $dest -UseBasicParsing
+            Invoke-WarehouseDownload -Uri $url -Headers $headers -OutFile $dest | Out-Null
         } else {
             Write-Host "Already staged: $id -> $name"
         }
@@ -87,7 +91,6 @@ foreach ($asset in $manifest.assets) {
     }
 }
 
-$receiptPath = Join-Path $root ("receipt_" + $manifest.batch_id + ".json")
 $receipt | ConvertTo-Json -Depth 8 | Set-Content -Path $receiptPath -Encoding UTF8
 
 Write-Host "AUDIO_WAREHOUSE_STAGE_PASS batch=$($manifest.batch_id) files=$($receipt.files.Count) bytes=$($receipt.total_bytes) skipped=$($receipt.skipped_assets.Count) receipt=$receiptPath"
