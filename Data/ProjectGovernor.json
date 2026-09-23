@@ -2648,14 +2648,22 @@
         "Queued automatic checkpoints now capture and retain the actual UShireSaveGame snapshot plus chapter/route/episode/world revision instead of only a checkpoint ID.",
         "Queued checkpoint dispatch serializes the captured snapshot directly after the in-flight write; it never calls SaveAutomaticCheckpoint to reconstruct state from a later world.",
         "Both in-flight and queued checkpoint snapshots are UPROPERTY-owned during async serialization, while completion effects remain origin/revision-bound.",
-        "PG-135 and deep_project_audit guard queued checkpoint snapshot/origin ownership."
+        "PG-135 and deep_project_audit guard queued checkpoint snapshot/origin ownership.",
+        "Exact head ddd0957d6201c8bf553825acd671c98a9be545ef completed Pre-Unreal #770, Warehouse #184 and Unreal #605 successfully through UE4.27.2 compile/import/Automation/startup/P1C01-P1C08/state/transitions and zero-warning debt.",
+        "Unreal #605 warning debt was zero for smoothing, degenerate tangent bases, nearly-zero tangents/binormals, production master surface/world packages, optional audio/rigs, defaultMat, directional-light mobility and NPC spawn collisions.",
+        "Quest subsystem now publishes a native pre-mutation OnWorldTransitionRequested boundary before StartChapter/StartExperience change logical identity.",
+        "ChapterWorldRouter captures the exact committed origin snapshot at transition request time and raises gameplay hold before logical destination mutation.",
+        "Unsupported route/chapter destinations now execute atomic RollbackFailedWorldSwap instead of clearing pending state and returning.",
+        "PG-136 fault audit requests unsupported P1C99 and requires exact rollback player state, identity, NPC context, LivingWorld sync and movement release."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal proof for PG-135 and strict asset-quality guards.",
-        "Obtain fresh exact-head UE4.27 compile/import/runtime proof with zero tangent/binormal/master-surface warning debt.",
-        "Execute a queued checkpoint race across a world revision and prove disk snapshot origin plus no stale side effects.",
-        "Execute forced-slow transition, failed-transition rollback and legacy-save repair runtime cases.",
-        "Validate packaged Data JSON dependencies, target-device performance/memory/GC, audio playback and human core-loop/onboarding before W00 final acceptance."
+        "Obtain fresh exact-head Pre-Unreal and UE4.27 compile/import/runtime evidence for PG-136 including ShireRollbackAudit PASS.",
+        "Run a forced delayed-async transition so old committed NPCContext/LivingWorld authority is observed throughout the pending window.",
+        "Run a legacy terminal-save repair runtime case proving one final canonical world publication.",
+        "Exercise queued/stale automatic checkpoint completion across a world revision under runtime timing.",
+        "Validate staged Data JSON reads in a packaged build.",
+        "Run target-device frame-time/memory/GC/tick profiling and audio playback without -NoSound.",
+        "Run human core-loop/onboarding/external playtest evidence before W00 final acceptance."
       ],
       "acceptance_criteria": [
         "No known CRITICAL/HIGH source defect remains uncorrected or explicitly evidence-bounded.",
@@ -4054,23 +4062,24 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "After strict source assets turned green on Pre-Unreal #769, continued save-path simulation found that PG-133 guarded async callback effects but the queued checkpoint itself was still ID-only and could be rebuilt from a later committed world.",
-    "exact_reviewed_head": "e8b69e5b61f94ada054cbe5c7b1ed6408796c43e",
+    "reason": "Unreal #605 closed the known compile/import/runtime/warning chain on ddd0957d, then failure-path simulation exposed stale rollback snapshots and unsupported-request non-rollback as untested root causes.",
+    "exact_reviewed_head": "ddd0957d6201c8bf553825acd671c98a9be545ef",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#769 SUCCESS; strict asset source audit zero degenerate UV/opposed-normal/structural errors",
-      "unreal_build": "#604 queued at time PG-135 source wave began",
-      "warehouse": "#183 pending at that time"
+      "pre_unreal": "#770 SUCCESS",
+      "warehouse": "#184 SUCCESS",
+      "unreal_build": "#605 SUCCESS: UE4.27.2 C++ build, production import, Automation, startup, P1C01-P1C08 aggregate runtime, state persistence, continuous transitions and zero warning debt"
     },
     "reconciled_findings": [
-      "Async checkpoint origin safety has two boundaries: captured disk data and callback side effects.",
-      "PG-133 protected side effects but ID-only queueing allowed delayed data capture from the wrong world.",
-      "Queue ownership now includes the immutable-at-request snapshot and exact committed-world origin."
+      "The PG-135 queued checkpoint snapshot/origin repair is exact-head engine green on #605.",
+      "The broad tangent-basis source normalization is exact-head zero-warning green on #605.",
+      "Green success-path transitions do not prove rollback freshness after live state has changed since the last world commit.",
+      "Rollback origin now has a pre-mutation transaction boundary, and unsupported destinations use the same rollback path."
     ],
-    "next_priority": "W00_PG135_AND_ZERO_WARNING_EXACT_HEAD",
-    "truth_boundary": "PG-135 is source-level until a fresh exact-head validator/engine run passes. Pre-Unreal #769 applies only to e8b69e5b...",
+    "next_priority": "W00_PG136_FAILURE_PATH_EXACT_HEAD",
+    "truth_boundary": "Unreal #605 evidence applies to ddd0957d only. PG-136 transition-request snapshot and fault-injection changes are source-level until a newer exact head passes.",
     "stabilization_wave": {
       "status": "SOURCE_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
-      "invariant": "An automatic checkpoint's serialized state is bound to the committed world revision where it was reached, even when disk writes are queued; delayed completion may not reconstruct or mutate a later world."
+      "invariant": "A failed world transition restores the exact committed state that existed immediately before the logical request, never a stale chapter-commit snapshot; unsupported destinations cannot leave movement held or logical/physical world identity split."
     }
   },
   "development_mode": {

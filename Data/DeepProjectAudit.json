@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "e8b69e5b61f94ada054cbe5c7b1ed6408796c43e_PRE_UNREAL_769_GREEN_PLUS_PG135_QUEUED_CHECKPOINT_SOURCE_WAVE",
+  "audited_head": "ddd0957d6201c8bf553825acd671c98a9be545ef_UNREAL_605_FULL_CHAIN_GREEN_PLUS_PG136_ROLLBACK_FRESHNESS_SOURCE_WAVE",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -180,7 +180,7 @@
     {
       "id": "AUDIT-HIGH-020",
       "severity": "HIGH",
-      "status": "COMPILE_TESTED_FIXED_ON_UNREAL_601",
+      "status": "COMPILE_TESTED_FIXED_ON_UNREAL_605",
       "title": "UE4.27 package-name overload ambiguity blocked the stricter importer wave",
       "evidence": "Unreal #601 on 34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab completed UE4.27.2 C++ build successfully, proving the explicit FString ObjectPathToPackageName fix compiles on the target engine.",
       "action": "Pass an explicit FString to ObjectPathToPackageName and preserve PG-131 static guard so automated edits cannot reintroduce the ambiguous call."
@@ -188,23 +188,23 @@
     {
       "id": "AUDIT-HIGH-021",
       "severity": "HIGH",
-      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_601_PENDING_PIE_DEVICE",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_605_PENDING_PIE_DEVICE",
       "title": "Legacy save repair could publish and commit an intermediate world identity",
-      "evidence": "CommitPersistenceRestore cleared bPersistenceRestoreInProgress and broadcast experience/chapter/quest state before OnQuestStateRestored. ShireStoryFlowSubsystem repairs terminal legacy saves from OnQuestStateRestored using StartChapter/StartExperience, so an already-resident bank could commit the pre-repair identity before the repair fired.",
+      "evidence": "CommitPersistenceRestore cleared bPersistenceRestoreInProgress and broadcast experience/chapter/quest state before OnQuestStateRestored. ShireStoryFlowSubsystem repairs terminal legacy saves from OnQuestStateRestored using StartChapter/StartExperience, so an already-resident bank could commit the pre-repair identity before the repair fired. Exact head ddd0957d6201c8bf553825acd671c98a9be545ef completed Unreal #605 compile/import/Automation/startup/P1C01-P1C08/state/transitions and zero-warning debt successfully.",
       "action": "Run the repair hook while persistence broadcast suppression is still active; suppress StartQuest/StartChapter/StartExperience broadcasts during restore; skip route-progress recapture while restoring; publish only the final repaired identity."
     },
     {
       "id": "AUDIT-HIGH-022",
       "severity": "HIGH",
-      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_601_PENDING_PIE_DEVICE",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_605_PENDING_PIE_DEVICE",
       "title": "Synchronous same-bank restore commit could capture stale player-life state",
-      "evidence": "RestoreSaveSnapshot published the restored logical identity before assigning player health/stamina/resolve/supplies. An already-resident chapter bank can commit synchronously from the final identity broadcast and CaptureCommittedRollbackSnapshot immediately.",
+      "evidence": "RestoreSaveSnapshot published the restored logical identity before assigning player health/stamina/resolve/supplies. An already-resident chapter bank can commit synchronously from the final identity broadcast and CaptureCommittedRollbackSnapshot immediately. Exact head ddd0957d6201c8bf553825acd671c98a9be545ef completed Unreal #605 compile/import/Automation/startup/P1C01-P1C08/state/transitions and zero-warning debt successfully.",
       "action": "Restore player-life fields before CommitPersistenceRestore(true), so any synchronous world commit/rollback snapshot observes a complete restored player + quest state."
     },
     {
       "id": "AUDIT-HIGH-023",
       "severity": "HIGH",
-      "status": "COMPILE_TESTED_FIXED_ON_UNREAL_601",
+      "status": "COMPILE_TESTED_FIXED_ON_UNREAL_605",
       "title": "Committed NPC context query was private while named NPC runtime called it",
       "evidence": "Unreal #601 completed UE4.27.2 C++ build successfully on 34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab, so the public read-only NPC committed-context API compiles with named NPC consumers.",
       "action": "Promote the read-only committed-context query to the public NPCContext API, keep mutation ownership private, and add PG-133/deep-audit visibility guards."
@@ -212,25 +212,25 @@
     {
       "id": "AUDIT-HIGH-024",
       "severity": "HIGH",
-      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_601_PENDING_PIE_DEVICE",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_605_PENDING_PIE_DEVICE",
       "title": "World mutation hold started after preload instead of at logical destination request",
-      "evidence": "Source simulation of ChapterWorldRouter showed LoadChapterWorld assigned pending destination and requested async assets without SetPlayerWorldHold(true). PG-131 runtime expected held-during-swap, but the authoritative hold was only guaranteed later in CommitChapterWorld.",
+      "evidence": "Source simulation of ChapterWorldRouter showed LoadChapterWorld assigned pending destination and requested async assets without SetPlayerWorldHold(true). PG-131 runtime expected held-during-swap, but the authoritative hold was only guaranteed later in CommitChapterWorld. Exact head ddd0957d6201c8bf553825acd671c98a9be545ef completed Unreal #605 compile/import/Automation/startup/P1C01-P1C08/state/transitions and zero-warning debt successfully.",
       "action": "Raise the hold before pending destination/preload, release only when rapid A->pending B->A cancellation proves the exact old world is committed, and require one runtime marker to prove both pending hold and cancel release."
     },
     {
       "id": "AUDIT-HIGH-025",
       "severity": "HIGH",
-      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_601_PENDING_PIE_DEVICE",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_605_PENDING_PIE_DEVICE",
       "title": "Async checkpoint completion could heal a different committed world",
-      "evidence": "HandleCheckpointSaveComplete applied full health/stamina/resolve on any successful callback. Async disk I/O can finish after a chapter/world revision changes, allowing an old checkpoint callback to mutate destination player state.",
+      "evidence": "HandleCheckpointSaveComplete applied full health/stamina/resolve on any successful callback. Async disk I/O can finish after a chapter/world revision changes, allowing an old checkpoint callback to mutate destination player state. Exact head ddd0957d6201c8bf553825acd671c98a9be545ef completed Unreal #605 compile/import/Automation/startup/P1C01-P1C08/state/transitions and zero-warning debt successfully.",
       "action": "Capture chapter/route/episode/world revision when the async save is scheduled. Keep the disk result valid, but apply checkpoint heal/HUD effects only if callback origin still matches the exact committed world."
     },
     {
       "id": "AUDIT-HIGH-026",
       "severity": "HIGH",
-      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_601_PENDING_PIE_DEVICE",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_605_PENDING_PIE_DEVICE",
       "title": "NPC memory pruning occurred at logical chapter request before world commit",
-      "evidence": "StartChapter called PruneNPCMemoryForCurrentChapter before destination geometry/residency commit. Rollback snapshots could repair this later, but live persistent state was destructively aged during the uncommitted window and restore canonicalization could prune against an intermediate chapter.",
+      "evidence": "StartChapter called PruneNPCMemoryForCurrentChapter before destination geometry/residency commit. Rollback snapshots could repair this later, but live persistent state was destructively aged during the uncommitted window and restore canonicalization could prune against an intermediate chapter. Exact head ddd0957d6201c8bf553825acd671c98a9be545ef completed Unreal #605 compile/import/Automation/startup/P1C01-P1C08/state/transitions and zero-warning debt successfully.",
       "action": "Move destructive memory aging to CommitWorldBoundState called by ChapterWorldRouter only after destination world/context commit; suppress restore pruning until the final canonical commit."
     },
     {
@@ -244,34 +244,50 @@
     {
       "id": "AUDIT-HIGH-028",
       "severity": "HIGH",
-      "status": "SOURCE_REPAIR_IMPLEMENTED_PENDING_EXACT_HEAD_ZERO_WARNING_PROOF",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_605_PENDING_PIE_DEVICE",
       "title": "Three procedural OBJ assets carried invalid tangent-space source data",
-      "evidence": "Unreal #601 zero-warning gate isolated nearly-zero tangent/binormal debt to SM_Balrog_Wing, SM_Lurtz_Blade and SM_Isengard_IndustrialPitRim. Source geometry analysis found 4 zero-area UV triangles in each of the first two meshes and widespread authored normal/face opposition in the industrial rim.",
+      "evidence": "Unreal #601 zero-warning gate isolated nearly-zero tangent/binormal debt to SM_Balrog_Wing, SM_Lurtz_Blade and SM_Isengard_IndustrialPitRim. Source geometry analysis found 4 zero-area UV triangles in each of the first two meshes and widespread authored normal/face opposition in the industrial rim. Exact head ddd0957d6201c8bf553825acd671c98a9be545ef completed Unreal #605 compile/import/Automation/startup/P1C01-P1C08/state/transitions and zero-warning debt successfully.",
       "action": "Use face-local non-degenerate UV triangles and face-aligned normals for these flat-color procedural meshes. asset_quality_audit.py now rejects future degenerate UV triangles and strongly opposed authored normals before engine import."
     },
     {
       "id": "AUDIT-HIGH-030",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_605_PENDING_PIE_DEVICE",
       "title": "Asset-quality CI printed structural ERROR lines without failing",
-      "evidence": "Pre-Unreal #768 showed the asset-quality step as SUCCESS even while its log printed structural ERROR lines for 23 degenerate-UV assets and 7 opposed-normal assets because the workflow invoked asset_quality_audit.py without --strict.",
+      "evidence": "Pre-Unreal #768 showed the asset-quality step as SUCCESS even while its log printed structural ERROR lines for 23 degenerate-UV assets and 7 opposed-normal assets because the workflow invoked asset_quality_audit.py without --strict. Exact head ddd0957d6201c8bf553825acd671c98a9be545ef completed Unreal #605 compile/import/Automation/startup/P1C01-P1C08/state/transitions and zero-warning debt successfully.",
       "action": "Run asset_quality_audit.py --strict in Pre-Unreal and add both pre_unreal_validate and deep_project_audit guards that fail if the workflow loses strict mode."
     },
     {
       "id": "AUDIT-HIGH-031",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_605_PENDING_PIE_DEVICE",
       "title": "Tangent-basis debt existed beyond the three meshes visible in Unreal #601",
-      "evidence": "The generic source audit exposed 23 additional static OBJ assets with degenerate UV triangles and 7 with opposed normals, including Balrog/Lurtz proxy pieces, Watcher tentacle, Isengard industrial props and Shire props.",
+      "evidence": "The generic source audit exposed 23 additional static OBJ assets with degenerate UV triangles and 7 with opposed normals, including Balrog/Lurtz proxy pieces, Watcher tentacle, Isengard industrial props and Shire props. Exact head ddd0957d6201c8bf553825acd671c98a9be545ef completed Unreal #605 compile/import/Automation/startup/P1C01-P1C08/state/transitions and zero-warning debt successfully.",
       "action": "Normalize the full exposed set in one wave rather than waiting for Unreal to surface one warning identity at a time. Preserve the skeletal-FBX-only rule for final animated assets."
     },
     {
       "id": "AUDIT-HIGH-032",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_605_PENDING_PIE_DEVICE",
       "title": "Queued automatic checkpoint was reconstructed from later live world state",
-      "evidence": "SaveAutomaticCheckpoint queued only QueuedCheckpointSaveId while another save was in flight. HandleCheckpointSaveComplete later called SaveAutomaticCheckpoint(NextId), causing CreateSaveSnapshot to run against the then-current world. A transition between the two writes could serialize destination state under an old checkpoint ID or drop the queued checkpoint while the world hold was active.",
+      "evidence": "SaveAutomaticCheckpoint queued only QueuedCheckpointSaveId while another save was in flight. HandleCheckpointSaveComplete later called SaveAutomaticCheckpoint(NextId), causing CreateSaveSnapshot to run against the then-current world. A transition between the two writes could serialize destination state under an old checkpoint ID or drop the queued checkpoint while the world hold was active. Exact head ddd0957d6201c8bf553825acd671c98a9be545ef completed Unreal #605 compile/import/Automation/startup/P1C01-P1C08/state/transitions and zero-warning debt successfully.",
       "action": "Capture and UPROPERTY-own the queued UShireSaveGame snapshot plus chapter/route/episode/world revision at request time. Dispatch that captured snapshot directly after the active write completes; never reconstruct it from later live state. Keep completion side effects origin-bound."
+    },
+    {
+      "id": "AUDIT-HIGH-033",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_FAULT_PROOF",
+      "title": "Rollback snapshot freshness was tied to the last world commit instead of the transition request",
+      "evidence": "Source simulation after the fully green Unreal #605 path showed CaptureCommittedRollbackSnapshot was called at world commit/rollback completion, but no pre-mutation transition boundary refreshed it immediately before a later StartChapter/StartExperience request. Player-life, quest, discovery or NPC-memory changes made since the prior world commit could therefore be lost if the next swap failed.",
+      "action": "Publish OnWorldTransitionRequested before logical chapter/route mutation, have ChapterWorldRouter capture a snapshot only from an exact committed origin, then raise the transaction hold. Exercise a failure after distinct live player-state mutation and require exact origin restoration."
+    },
+    {
+      "id": "AUDIT-HIGH-034",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_FAULT_PROOF",
+      "title": "Unsupported chapter/route rejection could leave an invalid logical destination without atomic rollback",
+      "evidence": "The previous CommitChapterWorld unsupported branch cancelled pending streaming, cleared pending IDs and returned. It did not restore the prior quest/world snapshot or guarantee movement release, so an invalid destination request could leave logical and physical world state split.",
+      "action": "Make supported route/chapter pairs explicit and route every unsupported destination through RollbackFailedWorldSwap. CI fault mode intentionally requests P1C99 and requires restored identity, movement, player state, NPC context and LivingWorld revision."
     }
   ],
   "external_practice_alignment": [
@@ -297,17 +313,15 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head Pre-Unreal for PG-135 queued checkpoint snapshot/origin guards",
-    "fresh exact-head UE4.27 compile/import/runtime requiring zero warning debt after broad tangent-basis normalization",
-    "forced slow async transition proving old NPC/LivingWorld context remains authoritative until destination commit",
-    "failed-transition rollback injection proving exact persistence/player restoration and held gameplay",
+    "fresh exact-head Pre-Unreal and UE4.27 compile/import/runtime for PG-136 rollback freshness/fault injection",
+    "forced delayed async transition proving old NPC/LivingWorld context remains authoritative until destination commit",
     "legacy terminal-save single-publication repair runtime case",
-    "queued/stale async checkpoint race across a world revision",
+    "queued/stale async checkpoint race across a world revision with captured snapshot proof",
     "packaged-build Data JSON dependency/read validation",
     "target-device frame-time/resident-memory/GC/tick profiling",
     "audio playback validation without -NoSound",
     "human core-loop/onboarding/external playtest",
     "isolated Public/Private migration after W00 functional stability"
   ],
-  "audit_scope_note": "Pre-Unreal #769 passed on e8b69e5b... with strict asset source validation: zero degenerate UV assets, zero opposed-normal assets and zero structural errors. PG-135 is a subsequent source-level checkpoint-queue repair and needs fresh exact-head proof."
+  "audit_scope_note": "Unreal #605 is a full exact-head green technical baseline for ddd0957d... including zero project warning debt. PG-136 is a subsequent source-level failure-path repair and must not inherit #605 engine acceptance until a fresh exact head executes the new fault audit."
 }

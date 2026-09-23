@@ -29,6 +29,12 @@ time.sleep(10)
 
 
 class RuntimeSmokeTests(unittest.TestCase):
+    def test_fault_mode_requires_complete_rollback_evidence(self):
+        markers = required_markers(None, "faults")
+        self.assertEqual(markers, [
+            "ShireRollbackAudit: PASS unsupported-request restored=yes movementReleased=yes freshSnapshot=yes npcContext=yes livingWorld=yes"
+        ])
+
     def test_transition_mode_requires_world_mutation_barrier(self):
         markers = required_markers(None, "transitions")
         self.assertIn(

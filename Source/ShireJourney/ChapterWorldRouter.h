@@ -41,6 +41,11 @@ private:
     UFUNCTION()
     void HandleExperienceChanged(FName RouteId, FName EpisodeId, FName PlayableCharacterId);
 
+    void HandleWorldTransitionRequested(
+        FName TargetChapterId,
+        FName TargetRouteId,
+        FName TargetEpisodeId);
+
     void LoadChapterWorld(FName ChapterId, bool bRestoreRouteTransform = false);
     void CommitChapterWorld(
         FName ChapterId,

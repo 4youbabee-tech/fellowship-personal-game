@@ -3853,6 +3853,76 @@ for pg135_symbol in [
     if pg135_symbol not in pg135_callback:
         fail(f"PG-135 queued checkpoint dispatch lost captured origin: {pg135_symbol}")
 
+# PG-136: rollback state is captured at the pre-mutation transition boundary and every rejected destination fails back atomically.
+pg136_quest_h = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
+pg136_quest = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
+pg136_router_h = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.h")
+pg136_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
+pg136_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg136_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
+pg136_state_cmd = read(ROOT / "Scripts" / "ci_runtime_state.cmd")
+pg136_runtime_tests = read(ROOT / "Scripts" / "test_runtime_smoke.py")
+
+for pg136_symbol in [
+    "FOnWorldTransitionRequested",
+    "OnWorldTransitionRequested",
+]:
+    if pg136_symbol not in pg136_quest_h:
+        fail(f"PG-136 pre-mutation transition contract missing: {pg136_symbol}")
+
+pg136_start_chapter_start = pg136_quest.find("void UShireQuestSubsystem::StartChapter")
+pg136_start_chapter_end = pg136_quest.find("FShireRouteProgress UShireQuestSubsystem::CaptureCurrentRouteProgress", pg136_start_chapter_start)
+pg136_start_chapter = pg136_quest[pg136_start_chapter_start:pg136_start_chapter_end]
+pg136_chapter_signal = pg136_start_chapter.find("OnWorldTransitionRequested.Broadcast")
+pg136_chapter_mutation = pg136_start_chapter.find("CurrentChapterId = ChapterId;")
+if pg136_chapter_signal < 0 or pg136_chapter_mutation < 0 or pg136_chapter_signal > pg136_chapter_mutation:
+    fail("PG-136 StartChapter must publish transition intent before logical chapter mutation")
+
+pg136_start_experience_start = pg136_quest.find("void UShireQuestSubsystem::StartExperience")
+pg136_start_experience_end = pg136_quest.find("TMap<FName, FShireRouteProgress>", pg136_start_experience_start)
+pg136_start_experience = pg136_quest[pg136_start_experience_start:pg136_start_experience_end]
+pg136_experience_signal = pg136_start_experience.find("OnWorldTransitionRequested.Broadcast")
+pg136_route_mutation = pg136_start_experience.find("CurrentRouteId = RouteId;")
+if pg136_experience_signal < 0 or pg136_route_mutation < 0 or pg136_experience_signal > pg136_route_mutation:
+    fail("PG-136 StartExperience must publish transition intent before logical route mutation")
+
+for pg136_symbol in [
+    "HandleWorldTransitionRequested",
+    "OnWorldTransitionRequested.AddUObject",
+    "OnWorldTransitionRequested.RemoveAll",
+]:
+    if pg136_symbol not in (pg136_router_h + pg136_router):
+        fail(f"PG-136 router transition-intent ownership missing: {pg136_symbol}")
+
+pg136_request_start = pg136_router.find("void AChapterWorldRouter::HandleWorldTransitionRequested")
+pg136_request_end = pg136_router.find("void AChapterWorldRouter::HandleChapterChanged", pg136_request_start)
+pg136_request = pg136_router[pg136_request_start:pg136_request_end]
+pg136_capture = pg136_request.find("CaptureCommittedRollbackSnapshot();")
+pg136_hold = pg136_request.find("SetPlayerWorldHold(true);")
+if pg136_capture < 0 or pg136_hold < 0 or pg136_capture > pg136_hold:
+    fail("PG-136 exact committed rollback snapshot must be captured before transition hold/mutation")
+if "IsWorldCommitted(" not in pg136_request:
+    fail("PG-136 pending requests may overwrite rollback snapshot with uncommitted state")
+
+pg136_commit_start = pg136_router.find("void AChapterWorldRouter::CommitChapterWorld")
+pg136_commit = pg136_router[pg136_commit_start:]
+if 'RouteId == TEXT("FrodoMain")' not in pg136_commit or    'RouteId == TEXT("GandalfParallel")' not in pg136_commit or    'ChapterId == TEXT("P1C01")' not in pg136_commit:
+    fail("PG-136 route/chapter compatibility contract is not explicit")
+pg136_reject = pg136_commit.find("if (!bSupported)")
+pg136_reject_tail = pg136_commit[pg136_reject:pg136_commit.find("SetPlayerWorldHold(true);", pg136_reject)]
+if pg136_reject < 0 or "RollbackFailedWorldSwap" not in pg136_reject_tail:
+    fail("PG-136 unsupported world request must execute rollback instead of leaving the transaction held")
+
+pg136_marker = "ShireRollbackAudit: PASS unsupported-request restored=yes movementReleased=yes freshSnapshot=yes npcContext=yes livingWorld=yes"
+if pg136_marker not in pg136_game_mode or pg136_marker not in pg136_runtime:
+    fail("PG-136 rollback fault-injection runtime marker missing")
+if '"faults"' not in pg136_runtime or '"-AuditFaults"' not in pg136_runtime:
+    fail("PG-136 runtime harness does not expose fault-injection mode")
+if "--mode faults" not in pg136_state_cmd:
+    fail("PG-136 state CI does not execute rollback fault injection")
+if "test_fault_mode_requires_complete_rollback_evidence" not in pg136_runtime_tests:
+    fail("PG-136 rollback evidence regression unit test missing")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

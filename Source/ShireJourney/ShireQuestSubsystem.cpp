@@ -364,12 +364,23 @@ void UShireQuestSubsystem::StartChapter(FName ChapterId, FName StartingQuestId, 
         return;
     }
 
+    const FName TargetEpisodeId = CurrentRouteId == TEXT("FrodoMain")
+        ? FName(*FString::Printf(TEXT("%s_Main"), *ChapterId.ToString()))
+        : CurrentEpisodeId;
+    if (!bPersistenceRestoreInProgress)
+    {
+        OnWorldTransitionRequested.Broadcast(
+            ChapterId,
+            CurrentRouteId,
+            TargetEpisodeId);
+    }
+
     const FName PreviousChapterId = CurrentChapterId;
     CurrentChapterId = ChapterId;
 
     if (CurrentRouteId == TEXT("FrodoMain"))
     {
-        CurrentEpisodeId = FName(*FString::Printf(TEXT("%s_Main"), *ChapterId.ToString()));
+        CurrentEpisodeId = TargetEpisodeId;
         PlayableCharacterId = TEXT("Frodo");
     }
 
@@ -428,6 +439,27 @@ void UShireQuestSubsystem::StartExperience(FName RouteId, FName EpisodeId, FName
     if (RouteId == NAME_None)
     {
         return;
+    }
+
+    FName TargetChapterId = ChapterId == NAME_None ? FName(TEXT("P1C01")) : ChapterId;
+    FName TargetEpisodeId = EpisodeId;
+    if (const FShireRouteProgress* TargetExisting = RouteProgress.Find(RouteId))
+    {
+        if (TargetExisting->CurrentChapterId != NAME_None)
+        {
+            TargetChapterId = TargetExisting->CurrentChapterId;
+        }
+        if (TargetEpisodeId == NAME_None)
+        {
+            TargetEpisodeId = TargetExisting->EpisodeId;
+        }
+    }
+    if (!bPersistenceRestoreInProgress)
+    {
+        OnWorldTransitionRequested.Broadcast(
+            TargetChapterId,
+            RouteId,
+            TargetEpisodeId);
     }
 
     if (CurrentRouteId != NAME_None && !bPersistenceRestoreInProgress)

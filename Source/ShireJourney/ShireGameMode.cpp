@@ -3,6 +3,7 @@
 #include "LivingWorldDirector.h"
 #include "ShireHUD.h"
 #include "ShirePlayerCharacter.h"
+#include "ShireNPCContextSubsystem.h"
 #include "ShireQuestSubsystem.h"
 #include "StoryPresentationDirector.h"
 
@@ -426,6 +427,123 @@ void AShireGameMode::BeginPlay()
             }
             UE_LOG(LogTemp, Display, TEXT("ShireTransitionAudit: requested-step=%d"), Audit->Step);
             ++Audit->Step;
+        }), 0.25f, true);
+    }
+
+    if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit")) &&
+        FParse::Param(FCommandLine::Get(), TEXT("AuditFaults")))
+    {
+        struct FFaultAuditState
+        {
+            FTimerHandle Timer;
+            int32 Step = 0;
+            int32 Polls = 0;
+            FName OriginChapter = NAME_None;
+            FName OriginRoute = NAME_None;
+            FName OriginEpisode = NAME_None;
+            uint32 OriginRevision = 0;
+        };
+
+        const TSharedRef<FFaultAuditState> Audit = MakeShared<FFaultAuditState>();
+        GetWorldTimerManager().SetTimer(
+            Audit->Timer,
+            FTimerDelegate::CreateWeakLambda(this, [this, Audit]()
+        {
+            UGameInstance* GI = GetGameInstance();
+            UShireQuestSubsystem* Q =
+                GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+            UShireNPCContextSubsystem* Context =
+                GI ? GI->GetSubsystem<UShireNPCContextSubsystem>() : nullptr;
+            AChapterWorldRouter* Router = Cast<AChapterWorldRouter>(
+                UGameplayStatics::GetActorOfClass(this, AChapterWorldRouter::StaticClass()));
+            ALivingWorldDirector* Life = Cast<ALivingWorldDirector>(
+                UGameplayStatics::GetActorOfClass(this, ALivingWorldDirector::StaticClass()));
+            AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(
+                UGameplayStatics::GetPlayerPawn(this, 0));
+
+            if (++Audit->Polls > 240 || !Q || !Context || !Router || !Life || !Player)
+            {
+                UE_LOG(LogTemp, Error, TEXT("ShireRollbackAudit: FAIL reason=readiness"));
+                GetWorldTimerManager().ClearTimer(Audit->Timer);
+                return;
+            }
+
+            if (Audit->Step == 0)
+            {
+                if (!Router->IsWorldCommitted(
+                        Q->GetCurrentChapterId(),
+                        Q->GetCurrentRouteId(),
+                        Q->GetCurrentEpisodeId()) ||
+                    Life->GetAppliedWorldRevision() != Router->GetWorldRevision() ||
+                    !Context->IsLogicalWorldContextCommitted())
+                {
+                    return;
+                }
+
+                Audit->OriginChapter = Q->GetCurrentChapterId();
+                Audit->OriginRoute = Q->GetCurrentRouteId();
+                Audit->OriginEpisode = Q->GetCurrentEpisodeId();
+                Audit->OriginRevision = Router->GetWorldRevision();
+
+                // Distinct live values prove the rollback snapshot is captured at
+                // transition request time, not reused from the older world commit.
+                Player->RestoreTransactionalPlayerState(67.0f, 54.0f, 43.0f, 2);
+
+                Q->StartChapter(TEXT("P1C99"), TEXT("CI_InvalidTransition"), 0);
+                Audit->Step = 1;
+                Audit->Polls = 0;
+                return;
+            }
+
+            const bool bIdentityRestored =
+                Q->GetCurrentChapterId() == Audit->OriginChapter &&
+                Q->GetCurrentRouteId() == Audit->OriginRoute &&
+                Q->GetCurrentEpisodeId() == Audit->OriginEpisode &&
+                Router->IsWorldCommitted(
+                    Audit->OriginChapter,
+                    Audit->OriginRoute,
+                    Audit->OriginEpisode);
+
+            if (!bIdentityRestored)
+            {
+                return;
+            }
+
+            const bool bMovementReleased =
+                !Player->IsWorldTransitionHeld() &&
+                Player->IsGameplayWorldCommitted();
+            const bool bFreshSnapshot =
+                FMath::IsNearlyEqual(Player->GetCurrentHealth(), 67.0f, 0.1f) &&
+                FMath::IsNearlyEqual(Player->GetCurrentStamina(), 54.0f, 0.1f) &&
+                FMath::IsNearlyEqual(Player->GetCurrentResolve(), 43.0f, 0.1f) &&
+                Player->GetSupplies() == 2;
+            const bool bContextRestored = Context->IsLogicalWorldContextCommitted();
+            const bool bLivingWorldRestored =
+                Life->GetAppliedWorldRevision() == Router->GetWorldRevision();
+            const bool bRevisionAdvanced =
+                Router->GetWorldRevision() > Audit->OriginRevision;
+
+            if (!bMovementReleased || !bFreshSnapshot || !bContextRestored ||
+                !bLivingWorldRestored || !bRevisionAdvanced)
+            {
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireRollbackAudit: FAIL movement=%s freshSnapshot=%s npcContext=%s livingWorld=%s revisionAdvanced=%s"),
+                    bMovementReleased ? TEXT("yes") : TEXT("no"),
+                    bFreshSnapshot ? TEXT("yes") : TEXT("no"),
+                    bContextRestored ? TEXT("yes") : TEXT("no"),
+                    bLivingWorldRestored ? TEXT("yes") : TEXT("no"),
+                    bRevisionAdvanced ? TEXT("yes") : TEXT("no"));
+                GetWorldTimerManager().ClearTimer(Audit->Timer);
+                return;
+            }
+
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("ShireRollbackAudit: PASS unsupported-request restored=yes movementReleased=yes freshSnapshot=yes npcContext=yes livingWorld=yes"));
+            GetWorldTimerManager().ClearTimer(Audit->Timer);
         }), 0.25f, true);
     }
 #endif

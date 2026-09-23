@@ -1,3 +1,9 @@
+## 2026-09-23 - W00 #605 green baseline followed by rollback-freshness hardening
+
+Exact head `ddd0957d6201c8bf553825acd671c98a9be545ef` passed Pre-Unreal #770, Warehouse #184 and the full Unreal #605 chain: UE4.27.2 compile, production import, Automation, startup, P1C01-P1C08 aggregate runtime, persistence/state, continuous transitions and zero project warning debt. This is the current green technical baseline, not PIE/device/visual/performance acceptance.
+
+A subsequent source audit found that rollback snapshots were commit-time snapshots rather than guaranteed request-time snapshots, and unsupported destinations could return without atomic rollback. PG-136 adds a pre-mutation transition-request boundary, fresh origin snapshot capture, strict route/chapter pairing, rollback for unsupported requests and a real headless failure-injection audit. These changes are stabilization only; no CompletionWave or percentage advancement is granted until a newer exact head passes.
+
 ## 2026-09-23 - W00 PG-135 queued checkpoint origin preservation
 
 Source simulation found that the existing async checkpoint callback guard protected completion side effects but an ID-only queued checkpoint could still be reconstructed from a later world after the first save completed. The queue now retains the actual save snapshot plus chapter/route/episode/world revision and serializes that captured snapshot directly. UPROPERTY ownership protects both in-flight and queued snapshot objects from GC. PG-135 prevents ID-only reconstruction from returning.

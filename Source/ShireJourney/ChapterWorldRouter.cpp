@@ -60,6 +60,9 @@ void AChapterWorldRouter::BeginPlay()
         return;
     }
 
+    Quests->OnWorldTransitionRequested.AddUObject(
+        this,
+        &AChapterWorldRouter::HandleWorldTransitionRequested);
     Quests->OnChapterChanged.AddDynamic(this, &AChapterWorldRouter::HandleChapterChanged);
     Quests->OnExperienceChanged.AddDynamic(this, &AChapterWorldRouter::HandleExperienceChanged);
 
@@ -77,6 +80,14 @@ void AChapterWorldRouter::BeginPlay()
 
 void AChapterWorldRouter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+    if (UGameInstance* GI = GetGameInstance())
+    {
+        if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
+        {
+            Quests->OnWorldTransitionRequested.RemoveAll(this);
+        }
+    }
+
     if (AssetStreamingSubsystem)
     {
         AssetStreamingSubsystem->OnChapterAssetsReady.RemoveAll(this);
@@ -85,6 +96,49 @@ void AChapterWorldRouter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 
     LastCommittedRollbackSnapshot = nullptr;
     Super::EndPlay(EndPlayReason);
+}
+
+void AChapterWorldRouter::HandleWorldTransitionRequested(
+    FName TargetChapterId,
+    FName TargetRouteId,
+    FName TargetEpisodeId)
+{
+    if (bRollbackInProgress)
+    {
+        return;
+    }
+
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    if (!Quests)
+    {
+        SetPlayerWorldHold(true);
+        return;
+    }
+
+    // Capture the exact live origin only while it is still fully committed.
+    // Rapid A -> pending B -> A requests must not overwrite the A snapshot with
+    // B's uncommitted logical state.
+    if (IsWorldCommitted(
+            Quests->GetCurrentChapterId(),
+            Quests->GetCurrentRouteId(),
+            Quests->GetCurrentEpisodeId()))
+    {
+        CaptureCommittedRollbackSnapshot();
+    }
+
+    SetPlayerWorldHold(true);
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireWorldTransaction: BEGIN origin=%s/%s/%s target=%s/%s/%s revision=%u"),
+        *Quests->GetCurrentChapterId().ToString(),
+        *Quests->GetCurrentRouteId().ToString(),
+        *Quests->GetCurrentEpisodeId().ToString(),
+        *TargetChapterId.ToString(),
+        *TargetRouteId.ToString(),
+        *TargetEpisodeId.ToString(),
+        WorldRevision);
 }
 
 void AChapterWorldRouter::HandleChapterChanged(FName PreviousChapterId, FName NewChapterId)
@@ -968,37 +1022,34 @@ void AChapterWorldRouter::CommitChapterWorld(
         return;
     }
 
-    const bool bSupported =
-        RouteId == TEXT("GandalfParallel") ||
-        ChapterId == TEXT("P1C01") ||
-        ChapterId == TEXT("P1C02") ||
-        ChapterId == TEXT("P1C03") ||
-        ChapterId == TEXT("P1C04") ||
-        ChapterId == TEXT("P1C05") ||
-        ChapterId == TEXT("P1C06") ||
-        ChapterId == TEXT("P1C07") ||
-        ChapterId == TEXT("P1C08");
+    const FName PreviousChapterId = LastLoadedChapterId;
+    const FName PreviousRouteId = LastLoadedRouteId;
+
+    const bool bFrodoMainChapter =
+        RouteId == TEXT("FrodoMain") &&
+        (ChapterId == TEXT("P1C01") ||
+         ChapterId == TEXT("P1C02") ||
+         ChapterId == TEXT("P1C03") ||
+         ChapterId == TEXT("P1C04") ||
+         ChapterId == TEXT("P1C05") ||
+         ChapterId == TEXT("P1C06") ||
+         ChapterId == TEXT("P1C07") ||
+         ChapterId == TEXT("P1C08"));
+    const bool bGandalfParallel =
+        RouteId == TEXT("GandalfParallel") &&
+        ChapterId == TEXT("P1C01");
+    const bool bSupported = bFrodoMainChapter || bGandalfParallel;
     if (!bSupported)
     {
         UE_LOG(
             LogTemp,
             Error,
-            TEXT("ShireWorldCommit: rejected unsupported chapter=%s route=%s"),
+            TEXT("ShireWorldCommit: rejected unsupported chapter=%s route=%s rollback=yes"),
             *ChapterId.ToString(),
             *RouteId.ToString());
-        if (AssetStreamingSubsystem)
-        {
-            AssetStreamingSubsystem->CancelPendingRequest();
-        }
-        PendingRouteId = NAME_None;
-        PendingEpisodeId = NAME_None;
-        PendingChapterId = NAME_None;
-        bPendingRestoreRouteTransform = false;
+        RollbackFailedWorldSwap(PreviousChapterId, PreviousRouteId);
         return;
     }
-
-    const FName PreviousChapterId = LastLoadedChapterId;
-    const FName PreviousRouteId = LastLoadedRouteId;
 
     SetPlayerWorldHold(true);
     ClearPrototypeBuilders();

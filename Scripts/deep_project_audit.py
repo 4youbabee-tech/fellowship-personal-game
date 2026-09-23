@@ -159,6 +159,39 @@ checkpoint_callback=player[checkpoint_callback_start:checkpoint_callback_end]
 if "SaveAutomaticCheckpoint(NextId" in checkpoint_callback:
  errors.append("queued checkpoint is reconstructed from later live state after async completion")
 
+# PRE-MUTATION TRANSITION SNAPSHOT / ROLLBACK FAILURE CONTRACT
+quest_h=read(SRC/"ShireQuestSubsystem.h")
+game_mode=read(SRC/"ShireGameMode.cpp")
+runtime_smoke=read(ROOT/"Scripts"/"runtime_smoke.py")
+state_cmd=read(ROOT/"Scripts"/"ci_runtime_state.cmd")
+if "FOnWorldTransitionRequested" not in quest_h or "OnWorldTransitionRequested" not in quest_h:
+ errors.append("pre-mutation world transition request contract missing")
+start_chapter_start=quest.find("void UShireQuestSubsystem::StartChapter")
+start_chapter_end=quest.find("FShireRouteProgress UShireQuestSubsystem::CaptureCurrentRouteProgress",start_chapter_start)
+start_chapter=quest[start_chapter_start:start_chapter_end]
+if start_chapter.find("OnWorldTransitionRequested.Broadcast")<0 or start_chapter.find("OnWorldTransitionRequested.Broadcast")>start_chapter.find("CurrentChapterId = ChapterId;"):
+ errors.append("StartChapter transition signal is not pre-mutation")
+start_experience_start=quest.find("void UShireQuestSubsystem::StartExperience")
+start_experience_end=quest.find("TMap<FName, FShireRouteProgress>",start_experience_start)
+start_experience=quest[start_experience_start:start_experience_end]
+if start_experience.find("OnWorldTransitionRequested.Broadcast")<0 or start_experience.find("OnWorldTransitionRequested.Broadcast")>start_experience.find("CurrentRouteId = RouteId;"):
+ errors.append("StartExperience transition signal is not pre-mutation")
+request_start=router.find("void AChapterWorldRouter::HandleWorldTransitionRequested")
+request_end=router.find("void AChapterWorldRouter::HandleChapterChanged",request_start)
+request_body=router[request_start:request_end]
+if "CaptureCommittedRollbackSnapshot();" not in request_body or "SetPlayerWorldHold(true);" not in request_body:
+ errors.append("router does not snapshot/hold at transition request boundary")
+commit_start=router.find("void AChapterWorldRouter::CommitChapterWorld")
+commit_body=router[commit_start:]
+reject_start=commit_body.find("if (!bSupported)")
+reject_end=commit_body.find("SetPlayerWorldHold(true);",reject_start)
+reject_body=commit_body[reject_start:reject_end]
+if reject_start<0 or "RollbackFailedWorldSwap" not in reject_body:
+ errors.append("unsupported chapter/route request does not rollback atomically")
+rollback_marker="ShireRollbackAudit: PASS unsupported-request restored=yes movementReleased=yes freshSnapshot=yes npcContext=yes livingWorld=yes"
+if rollback_marker not in game_mode or rollback_marker not in runtime_smoke or "--mode faults" not in state_cmd:
+ errors.append("rollback fault-injection evidence chain missing")
+
 # UE4.27 importer overload regression and deterministic normalization stay fail-closed.
 if "ObjectPathToPackageName(ProductionSurfacePath)" in importer:
  errors.append("ambiguous UE4.27 ObjectPathToPackageName(const TCHAR*) call reintroduced")

@@ -12,6 +12,11 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnChapterChanged, FName, PreviousC
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStoryBeatTriggered, FName, StoryBeatId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnExperienceChanged, FName, RouteId, FName, EpisodeId, FName, PlayableCharacterId);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQuestStateRestored);
+DECLARE_MULTICAST_DELEGATE_ThreeParams(
+    FOnWorldTransitionRequested,
+    FName /* TargetChapterId */,
+    FName /* TargetRouteId */,
+    FName /* TargetEpisodeId */);
 
 USTRUCT(BlueprintType)
 struct FShireQuestDefinition
@@ -111,6 +116,11 @@ public:
 
     UPROPERTY(BlueprintAssignable, Category="Route")
     FOnExperienceChanged OnExperienceChanged;
+
+    // Native pre-mutation transaction boundary. ChapterWorldRouter subscribes here
+    // so it can snapshot the exact committed origin before logical route/chapter
+    // state advances toward an asynchronous destination.
+    FOnWorldTransitionRequested OnWorldTransitionRequested;
 
     // Emitted only after a save-state restore has rebuilt quest/chapter state. Runtime
     // story guards use this event so they can repair legacy/incomplete terminal states
