@@ -1846,17 +1846,53 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
     return true;
 }
 
+bool AShirePlayerCharacter::StartCheckpointSnapshotSave(
+    UShireSaveGame* Snapshot,
+    FName CheckpointId,
+    bool bShowHUD,
+    FName ChapterId,
+    FName RouteId,
+    FName EpisodeId,
+    uint32 WorldRevision)
+{
+    if (!Snapshot || CheckpointId == NAME_None || bCheckpointSaveInFlight)
+    {
+        return false;
+    }
+
+    bCheckpointSaveInFlight = true;
+    bCheckpointSaveShowHUD = bShowHUD;
+    CheckpointSaveInFlightSnapshot = Snapshot;
+    CheckpointSaveInFlightId = CheckpointId;
+    CheckpointSaveInFlightChapterId = ChapterId;
+    CheckpointSaveInFlightRouteId = RouteId;
+    CheckpointSaveInFlightEpisodeId = EpisodeId;
+    CheckpointSaveInFlightWorldRevision = WorldRevision;
+
+    FAsyncSaveGameToSlotDelegate Delegate;
+    Delegate.BindUObject(this, &AShirePlayerCharacter::HandleCheckpointSaveComplete);
+    UGameplayStatics::AsyncSaveGameToSlot(
+        Snapshot,
+        ShireSaveConstants::CheckpointSlotName,
+        ShireSaveConstants::UserIndex,
+        Delegate);
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("SafeCheckpoint: id=%s async-save=scheduled chapter=%s route=%s episode=%s revision=%u"),
+        *CheckpointId.ToString(),
+        *ChapterId.ToString(),
+        *RouteId.ToString(),
+        *EpisodeId.ToString(),
+        WorldRevision);
+    return true;
+}
+
 bool AShirePlayerCharacter::SaveAutomaticCheckpoint(FName CheckpointId, bool bShowHUD)
 {
     if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))) return false;
     if (CheckpointId == NAME_None || bWorldTransitionHeld || !IsCurrentWorldCommitted()) return false;
-
-    if (bCheckpointSaveInFlight)
-    {
-        QueuedCheckpointSaveId = CheckpointId;
-        bQueuedCheckpointShowHUD = bQueuedCheckpointShowHUD || bShowHUD;
-        return true;
-    }
 
     UShireSaveGame* Save = CreateSaveSnapshot(CheckpointId, true);
     if (!Save) return false;
@@ -1868,21 +1904,39 @@ bool AShirePlayerCharacter::SaveAutomaticCheckpoint(FName CheckpointId, bool bSh
         return false;
     }
 
-    bCheckpointSaveInFlight = true;
-    bCheckpointSaveShowHUD = bShowHUD;
-    CheckpointSaveInFlightId = CheckpointId;
-    CheckpointSaveInFlightChapterId = Save->CurrentChapterId;
-    CheckpointSaveInFlightRouteId = Save->CurrentRouteId;
-    CheckpointSaveInFlightEpisodeId = Save->CurrentEpisodeId;
-    CheckpointSaveInFlightWorldRevision = Router->GetWorldRevision();
+    const uint32 WorldRevision = Router->GetWorldRevision();
+    if (bCheckpointSaveInFlight)
+    {
+        // Coalesce only the queued request, never its data. Reconstructing a queued
+        // checkpoint later from live state can silently write the destination world
+        // under an old checkpoint ID after a transition.
+        QueuedCheckpointSnapshot = Save;
+        QueuedCheckpointSaveId = CheckpointId;
+        QueuedCheckpointChapterId = Save->CurrentChapterId;
+        QueuedCheckpointRouteId = Save->CurrentRouteId;
+        QueuedCheckpointEpisodeId = Save->CurrentEpisodeId;
+        QueuedCheckpointWorldRevision = WorldRevision;
+        bQueuedCheckpointShowHUD = bShowHUD;
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("SafeCheckpoint: id=%s async-save=queued-snapshot chapter=%s route=%s episode=%s revision=%u"),
+            *CheckpointId.ToString(),
+            *QueuedCheckpointChapterId.ToString(),
+            *QueuedCheckpointRouteId.ToString(),
+            *QueuedCheckpointEpisodeId.ToString(),
+            QueuedCheckpointWorldRevision);
+        return true;
+    }
 
-    FAsyncSaveGameToSlotDelegate Delegate;
-    Delegate.BindUObject(this, &AShirePlayerCharacter::HandleCheckpointSaveComplete);
-    UGameplayStatics::AsyncSaveGameToSlot(
-        Save, ShireSaveConstants::CheckpointSlotName, ShireSaveConstants::UserIndex, Delegate);
-
-    UE_LOG(LogTemp, Display, TEXT("SafeCheckpoint: id=%s async-save=scheduled"), *CheckpointId.ToString());
-    return true;
+    return StartCheckpointSnapshotSave(
+        Save,
+        CheckpointId,
+        bShowHUD,
+        Save->CurrentChapterId,
+        Save->CurrentRouteId,
+        Save->CurrentEpisodeId,
+        WorldRevision);
 }
 
 void AShirePlayerCharacter::HandleCheckpointSaveComplete(
@@ -1915,6 +1969,7 @@ void AShirePlayerCharacter::HandleCheckpointSaveComplete(
 
     bCheckpointSaveInFlight = false;
     bCheckpointSaveShowHUD = false;
+    CheckpointSaveInFlightSnapshot = nullptr;
     CheckpointSaveInFlightId = NAME_None;
     CheckpointSaveInFlightChapterId = NAME_None;
     CheckpointSaveInFlightRouteId = NAME_None;
@@ -1953,13 +2008,42 @@ void AShirePlayerCharacter::HandleCheckpointSaveComplete(
         *SlotName,
         UserIndex);
 
-    if (QueuedCheckpointSaveId != NAME_None)
+    if (QueuedCheckpointSnapshot && QueuedCheckpointSaveId != NAME_None)
     {
+        UShireSaveGame* NextSnapshot = QueuedCheckpointSnapshot;
         const FName NextId = QueuedCheckpointSaveId;
+        const FName NextChapterId = QueuedCheckpointChapterId;
+        const FName NextRouteId = QueuedCheckpointRouteId;
+        const FName NextEpisodeId = QueuedCheckpointEpisodeId;
+        const uint32 NextWorldRevision = QueuedCheckpointWorldRevision;
         const bool bNextHUD = bQueuedCheckpointShowHUD;
+
+        QueuedCheckpointSnapshot = nullptr;
         QueuedCheckpointSaveId = NAME_None;
+        QueuedCheckpointChapterId = NAME_None;
+        QueuedCheckpointRouteId = NAME_None;
+        QueuedCheckpointEpisodeId = NAME_None;
+        QueuedCheckpointWorldRevision = 0;
         bQueuedCheckpointShowHUD = false;
-        SaveAutomaticCheckpoint(NextId, bNextHUD);
+
+        // Disk serialization remains valid even if the player has transitioned since
+        // this checkpoint was reached. The callback's origin guard prevents old-world
+        // completion effects from mutating the later world.
+        if (!StartCheckpointSnapshotSave(
+                NextSnapshot,
+                NextId,
+                bNextHUD,
+                NextChapterId,
+                NextRouteId,
+                NextEpisodeId,
+                NextWorldRevision))
+        {
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("SafeCheckpoint: id=%s queued-snapshot-dispatch=failed"),
+                *NextId.ToString());
+        }
     }
 }
 

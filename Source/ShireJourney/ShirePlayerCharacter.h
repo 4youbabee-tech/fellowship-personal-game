@@ -257,12 +257,23 @@ private:
     FText PendingSaveRestoreSuccessMessage;
     bool bCheckpointSaveInFlight = false;
     bool bCheckpointSaveShowHUD = false;
+    UPROPERTY()
+    UShireSaveGame* CheckpointSaveInFlightSnapshot = nullptr;
     FName CheckpointSaveInFlightId = NAME_None;
     FName CheckpointSaveInFlightChapterId = NAME_None;
     FName CheckpointSaveInFlightRouteId = NAME_None;
     FName CheckpointSaveInFlightEpisodeId = NAME_None;
     uint32 CheckpointSaveInFlightWorldRevision = 0;
+
+    // Coalesce to the latest queued checkpoint, but preserve the snapshot and
+    // originating committed-world identity captured when that checkpoint was reached.
+    UPROPERTY()
+    UShireSaveGame* QueuedCheckpointSnapshot = nullptr;
     FName QueuedCheckpointSaveId = NAME_None;
+    FName QueuedCheckpointChapterId = NAME_None;
+    FName QueuedCheckpointRouteId = NAME_None;
+    FName QueuedCheckpointEpisodeId = NAME_None;
+    uint32 QueuedCheckpointWorldRevision = 0;
     bool bQueuedCheckpointShowHUD = false;
     bool bStoryCameraCueActive = false;
     float StoryCameraCueRemaining = 0.0f;
@@ -271,6 +282,14 @@ private:
     FVector StoryCameraTargetSocketOffset = FVector(0.0f, 28.0f, 10.0f);
 
     UShireSaveGame* CreateSaveSnapshot(FName CheckpointId, bool bCheckpointSnapshot) const;
+    bool StartCheckpointSnapshotSave(
+        UShireSaveGame* Snapshot,
+        FName CheckpointId,
+        bool bShowHUD,
+        FName ChapterId,
+        FName RouteId,
+        FName EpisodeId,
+        uint32 WorldRevision);
     void HandleCheckpointSaveComplete(const FString& SlotName, const int32 UserIndex, bool bSuccess);
     bool RestoreSaveSnapshot(UShireSaveGame* Save, const FText& SuccessMessage);
     bool TryApplyPendingSaveRestoreTransform();

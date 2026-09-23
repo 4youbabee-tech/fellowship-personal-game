@@ -144,6 +144,21 @@ for token in [
 if "bSameCommittedContext" not in player or "bApplyCheckpointEffects" not in player:
  errors.append("async checkpoint completion is not bound to originating committed world")
 
+# QUEUED ASYNC CHECKPOINTS MUST PRESERVE THE ORIGINAL SNAPSHOT.
+for token in [
+ "CheckpointSaveInFlightSnapshot",
+ "QueuedCheckpointSnapshot",
+ "QueuedCheckpointWorldRevision",
+ "StartCheckpointSnapshotSave",
+]:
+ if token not in (player_h + player):
+  errors.append(f"queued checkpoint snapshot/origin guard missing: {token}")
+checkpoint_callback_start=player.find("void AShirePlayerCharacter::HandleCheckpointSaveComplete")
+checkpoint_callback_end=player.find("bool AShirePlayerCharacter::RestoreAutomaticCheckpoint",checkpoint_callback_start)
+checkpoint_callback=player[checkpoint_callback_start:checkpoint_callback_end]
+if "SaveAutomaticCheckpoint(NextId" in checkpoint_callback:
+ errors.append("queued checkpoint is reconstructed from later live state after async completion")
+
 # UE4.27 importer overload regression and deterministic normalization stay fail-closed.
 if "ObjectPathToPackageName(ProductionSurfacePath)" in importer:
  errors.append("ambiguous UE4.27 ObjectPathToPackageName(const TCHAR*) call reintroduced")

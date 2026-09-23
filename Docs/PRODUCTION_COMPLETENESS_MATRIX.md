@@ -1,3 +1,9 @@
+## 2026-09-23 - W00 PG-135 queued checkpoint origin preservation
+
+Source simulation found that the existing async checkpoint callback guard protected completion side effects but an ID-only queued checkpoint could still be reconstructed from a later world after the first save completed. The queue now retains the actual save snapshot plus chapter/route/episode/world revision and serializes that captured snapshot directly. UPROPERTY ownership protects both in-flight and queued snapshot objects from GC. PG-135 prevents ID-only reconstruction from returning.
+
+Pre-Unreal #769 is static evidence for its parent head only; the PG-135 wave requires a newer exact-head validation. No completion percentage changes.
+
 ## 2026-09-23 - W00 broad tangent-basis source normalization and strict asset CI
 
 Pre-Unreal #768 exposed 23 additional static OBJ assets with degenerate UV triangles and 7 with opposed normals. The whole exposed set is normalized in one source wave to triangulated face-local UV/normal bases. The Pre-Unreal asset-quality step is also changed from advisory execution to `--strict`, and PG-134/deep audit guard that fail-closed behavior.

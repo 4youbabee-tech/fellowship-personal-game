@@ -2643,13 +2643,18 @@
         "Pre-Unreal #768 exposed 23 additional project-owned static OBJ assets with degenerate UV triangles and 7 with opposed authored normals.",
         "The full exposed tangent-basis set is normalized in one wave to explicit triangulated face-local UVs and face-aligned normals; final animated assets remain skeletal FBX only.",
         "The Pre-Unreal asset-quality workflow now runs asset_quality_audit.py --strict because #768 proved the previous advisory invocation could print structural ERROR lines while the step stayed green.",
-        "PG-134 and deep_project_audit now guard the strict workflow wiring as well as tangent-basis source semantics."
+        "PG-134 and deep_project_audit now guard the strict workflow wiring as well as tangent-basis source semantics.",
+        "Pre-Unreal #769 passed every static gate on e8b69e5b61f94ada054cbe5c7b1ed6408796c43e; strict asset audit reported zero degenerate UV assets, zero opposed-normal assets and zero structural errors.",
+        "Queued automatic checkpoints now capture and retain the actual UShireSaveGame snapshot plus chapter/route/episode/world revision instead of only a checkpoint ID.",
+        "Queued checkpoint dispatch serializes the captured snapshot directly after the in-flight write; it never calls SaveAutomaticCheckpoint to reconstruct state from a later world.",
+        "Both in-flight and queued checkpoint snapshots are UPROPERTY-owned during async serialization, while completion effects remain origin/revision-bound.",
+        "PG-135 and deep_project_audit guard queued checkpoint snapshot/origin ownership."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal proof with strict asset_quality_audit and zero structural tangent-basis errors.",
+        "Obtain fresh exact-head Pre-Unreal proof for PG-135 and strict asset-quality guards.",
         "Obtain fresh exact-head UE4.27 compile/import/runtime proof with zero tangent/binormal/master-surface warning debt.",
-        "Keep startup, P1C01-P1C08, state/persistence and continuous transitions green on that same head.",
-        "Execute forced-slow transition, rollback-failure, legacy save repair and stale checkpoint callback race cases.",
+        "Execute a queued checkpoint race across a world revision and prove disk snapshot origin plus no stale side effects.",
+        "Execute forced-slow transition, failed-transition rollback and legacy-save repair runtime cases.",
         "Validate packaged Data JSON dependencies, target-device performance/memory/GC, audio playback and human core-loop/onboarding before W00 final acceptance."
       ],
       "acceptance_criteria": [
@@ -4049,24 +4054,23 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Pre-Unreal #768 exposed the complete currently visible source tangent-basis family and a CI policy defect: structural asset ERROR lines were advisory because --strict was not wired.",
-    "exact_reviewed_head": "be5914d9b94d8e8bb5e25de88edab8a0dc089baf",
+    "reason": "After strict source assets turned green on Pre-Unreal #769, continued save-path simulation found that PG-133 guarded async callback effects but the queued checkpoint itself was still ID-only and could be rebuilt from a later committed world.",
+    "exact_reviewed_head": "e8b69e5b61f94ada054cbe5c7b1ed6408796c43e",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#768 FAILURE at deep-project audit after core/governor/asset-quality/readiness stages; asset-quality log exposed 23 degenerate-UV assets and 7 opposed-normal assets",
-      "unreal_build": "#603 pending at reconciliation time",
-      "warehouse": "#182 pending at reconciliation time"
+      "pre_unreal": "#769 SUCCESS; strict asset source audit zero degenerate UV/opposed-normal/structural errors",
+      "unreal_build": "#604 queued at time PG-135 source wave began",
+      "warehouse": "#183 pending at that time"
     },
     "reconciled_findings": [
-      "The three meshes isolated by Unreal #601 were not the only source assets with invalid tangent-basis data.",
-      "Source asset audit can find the class faster than serial Unreal warning discovery, so the entire reported set should be repaired at once.",
-      "The standalone asset-quality workflow must be strict; otherwise structural ERROR output can remain green.",
-      "Static OBJ proxy/prop repair does not alter the rule that final animated characters and creatures use skeletal FBX only."
+      "Async checkpoint origin safety has two boundaries: captured disk data and callback side effects.",
+      "PG-133 protected side effects but ID-only queueing allowed delayed data capture from the wrong world.",
+      "Queue ownership now includes the immutable-at-request snapshot and exact committed-world origin."
     ],
-    "next_priority": "W00_STRICT_ASSET_BASIS_ZERO_DEBT_EXACT_HEAD",
-    "truth_boundary": "The broad asset normalization and strict workflow wiring are source-level until a fresh exact-head Pre-Unreal and Unreal validation pass.",
+    "next_priority": "W00_PG135_AND_ZERO_WARNING_EXACT_HEAD",
+    "truth_boundary": "PG-135 is source-level until a fresh exact-head validator/engine run passes. Pre-Unreal #769 applies only to e8b69e5b...",
     "stabilization_wave": {
-      "status": "LARGE_SOURCE_ASSET_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
-      "invariant": "No production static OBJ may carry a structurally singular UV tangent basis or authored normals that oppose its geometry; structural source errors must fail CI before Unreal import."
+      "status": "SOURCE_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "invariant": "An automatic checkpoint's serialized state is bound to the committed world revision where it was reached, even when disk writes are queued; delayed completion may not reconstruct or mutate a later world."
     }
   },
   "development_mode": {

@@ -3816,6 +3816,43 @@ for pg134_asset in [
     if not pg134_faces or len(pg134_uvs) < len(pg134_faces) * 3 or len(pg134_normals) < len(pg134_faces):
         fail(f"PG-134 repaired tangent-basis asset is not face-local: {pg134_asset.name}")
 
+# PG-135: queued async checkpoints preserve their captured snapshot/origin across world revisions.
+pg135_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+pg135_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+for pg135_symbol in [
+    "CheckpointSaveInFlightSnapshot",
+    "QueuedCheckpointSnapshot",
+    "QueuedCheckpointChapterId",
+    "QueuedCheckpointRouteId",
+    "QueuedCheckpointEpisodeId",
+    "QueuedCheckpointWorldRevision",
+    "StartCheckpointSnapshotSave",
+    "async-save=queued-snapshot",
+]:
+    if pg135_symbol not in (pg135_player_h + pg135_player):
+        fail(f"PG-135 queued checkpoint snapshot/origin contract missing: {pg135_symbol}")
+
+pg135_save_start = pg135_player.find("bool AShirePlayerCharacter::SaveAutomaticCheckpoint")
+pg135_save_end = pg135_player.find("void AShirePlayerCharacter::HandleCheckpointSaveComplete", pg135_save_start)
+pg135_save = pg135_player[pg135_save_start:pg135_save_end]
+pg135_snapshot = pg135_save.find("CreateSaveSnapshot")
+pg135_queue = pg135_save.find("if (bCheckpointSaveInFlight)")
+if pg135_snapshot < 0 or pg135_queue < 0 or pg135_snapshot > pg135_queue:
+    fail("PG-135 queued checkpoint must capture its snapshot before entering the async queue")
+
+pg135_callback_start = pg135_player.find("void AShirePlayerCharacter::HandleCheckpointSaveComplete")
+pg135_callback_end = pg135_player.find("bool AShirePlayerCharacter::RestoreAutomaticCheckpoint", pg135_callback_start)
+pg135_callback = pg135_player[pg135_callback_start:pg135_callback_end]
+if "SaveAutomaticCheckpoint(NextId" in pg135_callback:
+    fail("PG-135 queued checkpoint callback must not rebuild a queued snapshot from later live state")
+for pg135_symbol in [
+    "NextSnapshot",
+    "NextWorldRevision",
+    "StartCheckpointSnapshotSave(",
+]:
+    if pg135_symbol not in pg135_callback:
+        fail(f"PG-135 queued checkpoint dispatch lost captured origin: {pg135_symbol}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

@@ -1,3 +1,13 @@
+## 2026-09-23 - PG-135 queued checkpoint snapshot ownership hardening
+
+Pre-Unreal #769 on exact head `e8b69e5b61f94ada054cbe5c7b1ed6408796c43e` passed every static gate, including the now-strict source asset audit with zero degenerate-UV assets, zero opposed-normal assets and zero structural errors. Unreal #604 had not completed when this follow-up source audit began.
+
+A further save-path simulation found a distinct async race that the PG-133 callback-origin guard did not fully close. When one automatic checkpoint save was already in flight, a second checkpoint stored only its `CheckpointId`. After the first callback completed, the second request called `SaveAutomaticCheckpoint` again and rebuilt its snapshot from whatever live world happened to exist at that later time. If a chapter transition occurred meanwhile, an old checkpoint ID could therefore serialize destination-world state, or the queued checkpoint could be discarded because the transition hold was active.
+
+PG-135 changes queued checkpoint ownership from ID-only to snapshot+origin. The second checkpoint now captures its full `UShireSaveGame` snapshot plus chapter, route, episode and committed world revision at the instant the checkpoint is reached. The queued request is dispatched directly from that captured snapshot after the current async write completes; it is never reconstructed from later live state. Its completion can still write the disk snapshot after a transition, while the existing origin/revision guard prevents old-world health/resolve/HUD effects from mutating the newer committed world. Both in-flight and queued snapshots are held by UPROPERTY references so GC cannot invalidate them during async serialization.
+
+PG-135 and deep-project audit now reject any return to ID-only queued checkpoint reconstruction. This is **source-level pending fresh exact-head validation** and does not advance W00 or production completion.
+
 ## 2026-09-23 - Pre-Unreal #768 exposed the broader tangent-basis family; full source wave + strict CI
 
 Exact head `be5914d9b94d8e8bb5e25de88edab8a0dc089baf` passed the core validator, governor, source asset-quality script and production-readiness stages, then deep-project audit failed on one stale diagnostic token. More importantly, the asset-quality log exposed that the earlier three Unreal warning identities were only the visible edge of a broader authored-source class: 23 additional project-owned static OBJ assets contained degenerate UV triangles, and 7 of those also contained normals opposed to geometric face direction.
