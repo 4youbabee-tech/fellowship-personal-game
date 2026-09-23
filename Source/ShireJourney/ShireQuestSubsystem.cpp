@@ -395,25 +395,40 @@ void UShireQuestSubsystem::StartChapter(FName ChapterId, FName StartingQuestId, 
         return;
     }
 
-    const FName TargetEpisodeId = CurrentRouteId == TEXT("FrodoMain")
+    FName TargetChapterId = ChapterId;
+    FName TargetEpisodeId = CurrentRouteId == TEXT("FrodoMain")
         ? FName(*FString::Printf(TEXT("%s_Main"), *ChapterId.ToString()))
         : CurrentEpisodeId;
+    FName TargetPlayableCharacterId = PlayableCharacterId;
+    if (!NormalizeExperienceIdentity(
+            CurrentRouteId,
+            TargetChapterId,
+            TargetEpisodeId,
+            TargetPlayableCharacterId,
+            false))
+    {
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireExperienceIdentity: rejected source=StartChapter route=%s chapter=%s episode=%s character=%s"),
+            *CurrentRouteId.ToString(),
+            *ChapterId.ToString(),
+            *TargetEpisodeId.ToString(),
+            *PlayableCharacterId.ToString());
+        return;
+    }
     if (!bPersistenceRestoreInProgress)
     {
         OnWorldTransitionRequested.Broadcast(
-            ChapterId,
+            TargetChapterId,
             CurrentRouteId,
             TargetEpisodeId);
     }
 
     const FName PreviousChapterId = CurrentChapterId;
-    CurrentChapterId = ChapterId;
-
-    if (CurrentRouteId == TEXT("FrodoMain"))
-    {
-        CurrentEpisodeId = TargetEpisodeId;
-        PlayableCharacterId = TEXT("Frodo");
-    }
+    CurrentChapterId = TargetChapterId;
+    CurrentEpisodeId = TargetEpisodeId;
+    PlayableCharacterId = TargetPlayableCharacterId;
 
     if (PreviousChapterId != CurrentChapterId)
     {
@@ -454,6 +469,144 @@ FShireRouteProgress UShireQuestSubsystem::CaptureCurrentRouteProgress(bool bCapt
     return Progress;
 }
 
+
+bool UShireQuestSubsystem::NormalizeExperienceIdentity(
+    FName RouteId,
+    FName& InOutChapterId,
+    FName& InOutEpisodeId,
+    FName& InOutPlayableCharacterId,
+    bool bRepairMalformed) const
+{
+    if (RouteId == NAME_None)
+    {
+        return false;
+    }
+
+    if (InOutChapterId == NAME_None)
+    {
+        InOutChapterId = TEXT("P1C01");
+    }
+
+    // P1G01 is an old shorthand for the Gandalf episode, never a chapter id.
+    if (bRepairMalformed &&
+        RouteId == TEXT("GandalfParallel") &&
+        InOutChapterId == TEXT("P1G01"))
+    {
+        InOutChapterId = TEXT("P1C01");
+    }
+
+    if (!FindChapterProductionDefinition(RouteId, InOutChapterId))
+    {
+        return false;
+    }
+
+    FName CanonicalEpisodeId = NAME_None;
+    FName CanonicalPlayableCharacterId = NAME_None;
+    if (RouteId == TEXT("FrodoMain"))
+    {
+        CanonicalEpisodeId =
+            FName(*FString::Printf(TEXT("%s_Main"), *InOutChapterId.ToString()));
+        CanonicalPlayableCharacterId = TEXT("Frodo");
+    }
+    else if (RouteId == TEXT("GandalfParallel") &&
+        InOutChapterId == TEXT("P1C01"))
+    {
+        CanonicalEpisodeId = TEXT("P1G01_Isengard");
+        CanonicalPlayableCharacterId = TEXT("Gandalf");
+    }
+    else
+    {
+        return false;
+    }
+
+    if (InOutEpisodeId == NAME_None)
+    {
+        InOutEpisodeId = CanonicalEpisodeId;
+    }
+    else if (InOutEpisodeId != CanonicalEpisodeId)
+    {
+        if (!bRepairMalformed)
+        {
+            return false;
+        }
+        InOutEpisodeId = CanonicalEpisodeId;
+    }
+
+    if (InOutPlayableCharacterId == NAME_None)
+    {
+        InOutPlayableCharacterId = CanonicalPlayableCharacterId;
+    }
+    else if (InOutPlayableCharacterId != CanonicalPlayableCharacterId)
+    {
+        if (!bRepairMalformed)
+        {
+            return false;
+        }
+        InOutPlayableCharacterId = CanonicalPlayableCharacterId;
+    }
+
+    return true;
+}
+
+void UShireQuestSubsystem::SanitizeRouteProgressMap(
+    TMap<FName, FShireRouteProgress>& InOutRouteProgress) const
+{
+    TArray<FName> RouteIds;
+    InOutRouteProgress.GetKeys(RouteIds);
+    for (const FName RouteId : RouteIds)
+    {
+        FShireRouteProgress* Progress = InOutRouteProgress.Find(RouteId);
+        if (!Progress)
+        {
+            continue;
+        }
+
+        FName ChapterId = Progress->CurrentChapterId;
+        FName EpisodeId = Progress->EpisodeId;
+        FName CharacterId = Progress->PlayableCharacterId;
+        if (!NormalizeExperienceIdentity(
+                RouteId,
+                ChapterId,
+                EpisodeId,
+                CharacterId,
+                true))
+        {
+            InOutRouteProgress.Remove(RouteId);
+            continue;
+        }
+
+        Progress->CurrentChapterId = ChapterId;
+        Progress->EpisodeId = EpisodeId;
+        Progress->PlayableCharacterId = CharacterId;
+    }
+}
+
+bool UShireQuestSubsystem::CanonicalizeRestoredExperienceIdentity(
+    FName& InOutRouteId,
+    FName& InOutChapterId,
+    FName& InOutEpisodeId,
+    FName& InOutPlayableCharacterId,
+    TMap<FName, FShireRouteProgress>& InOutRouteProgress) const
+{
+    if (InOutRouteId == NAME_None)
+    {
+        InOutRouteId = TEXT("FrodoMain");
+    }
+
+    if (!NormalizeExperienceIdentity(
+            InOutRouteId,
+            InOutChapterId,
+            InOutEpisodeId,
+            InOutPlayableCharacterId,
+            true))
+    {
+        return false;
+    }
+
+    SanitizeRouteProgressMap(InOutRouteProgress);
+    return true;
+}
+
 void UShireQuestSubsystem::ApplyRouteProgress(const FShireRouteProgress& Progress)
 {
     QuestStages = Progress.QuestStages;
@@ -472,19 +625,85 @@ void UShireQuestSubsystem::StartExperience(FName RouteId, FName EpisodeId, FName
         return;
     }
 
-    FName TargetChapterId = ChapterId == NAME_None ? FName(TEXT("P1C01")) : ChapterId;
-    FName TargetEpisodeId = EpisodeId;
+    // Validate caller-supplied identity before route-progress resume can hide a bad
+    // explicit chapter/episode pair behind an older valid route snapshot.
+    FName ExplicitChapterId = ChapterId;
+    FName ExplicitEpisodeId = EpisodeId;
+    FName ExplicitPlayableCharacterId = InPlayableCharacterId;
+    if (!NormalizeExperienceIdentity(
+            RouteId,
+            ExplicitChapterId,
+            ExplicitEpisodeId,
+            ExplicitPlayableCharacterId,
+            false))
+    {
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireExperienceIdentity: rejected source=StartExperience route=%s chapter=%s episode=%s character=%s"),
+            *RouteId.ToString(),
+            *ChapterId.ToString(),
+            *EpisodeId.ToString(),
+            *InPlayableCharacterId.ToString());
+        return;
+    }
+
+    if (FShireRouteProgress* TargetExisting = RouteProgress.Find(RouteId))
+    {
+        FName ExistingChapterId = TargetExisting->CurrentChapterId;
+        FName ExistingEpisodeId = TargetExisting->EpisodeId;
+        FName ExistingPlayableCharacterId = TargetExisting->PlayableCharacterId;
+        if (!NormalizeExperienceIdentity(
+                RouteId,
+                ExistingChapterId,
+                ExistingEpisodeId,
+                ExistingPlayableCharacterId,
+                true))
+        {
+            RouteProgress.Remove(RouteId);
+        }
+        else
+        {
+            TargetExisting->CurrentChapterId = ExistingChapterId;
+            TargetExisting->EpisodeId = ExistingEpisodeId;
+            TargetExisting->PlayableCharacterId = ExistingPlayableCharacterId;
+        }
+    }
+
+    FName TargetChapterId = ExplicitChapterId;
+    FName TargetEpisodeId = ExplicitEpisodeId;
+    FName TargetPlayableCharacterId = ExplicitPlayableCharacterId;
     if (const FShireRouteProgress* TargetExisting = RouteProgress.Find(RouteId))
     {
-        if (TargetExisting->CurrentChapterId != NAME_None)
-        {
-            TargetChapterId = TargetExisting->CurrentChapterId;
-        }
-        if (TargetEpisodeId == NAME_None)
+        TargetChapterId = TargetExisting->CurrentChapterId;
+        if (EpisodeId == NAME_None)
         {
             TargetEpisodeId = TargetExisting->EpisodeId;
         }
+        if (InPlayableCharacterId == NAME_None)
+        {
+            TargetPlayableCharacterId = TargetExisting->PlayableCharacterId;
+        }
     }
+
+    if (!NormalizeExperienceIdentity(
+            RouteId,
+            TargetChapterId,
+            TargetEpisodeId,
+            TargetPlayableCharacterId,
+            false))
+    {
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireExperienceIdentity: rejected source=RouteProgress route=%s chapter=%s episode=%s character=%s"),
+            *RouteId.ToString(),
+            *TargetChapterId.ToString(),
+            *TargetEpisodeId.ToString(),
+            *TargetPlayableCharacterId.ToString());
+        return;
+    }
+
     if (!bPersistenceRestoreInProgress)
     {
         OnWorldTransitionRequested.Broadcast(
@@ -509,9 +728,6 @@ void UShireQuestSubsystem::StartExperience(FName RouteId, FName EpisodeId, FName
         QuestStages.Empty();
         CompletedStoryBeats.Empty();
         ActiveQuestId = NAME_None;
-        CurrentChapterId = ChapterId == NAME_None ? FName(TEXT("P1C01")) : ChapterId;
-        CurrentEpisodeId = EpisodeId;
-        PlayableCharacterId = InPlayableCharacterId == NAME_None ? FName(TEXT("Frodo")) : InPlayableCharacterId;
 
         if (StartingQuestId != NAME_None)
         {
@@ -520,14 +736,9 @@ void UShireQuestSubsystem::StartExperience(FName RouteId, FName EpisodeId, FName
         }
     }
 
-    if (EpisodeId != NAME_None)
-    {
-        CurrentEpisodeId = EpisodeId;
-    }
-    if (InPlayableCharacterId != NAME_None)
-    {
-        PlayableCharacterId = InPlayableCharacterId;
-    }
+    CurrentChapterId = TargetChapterId;
+    CurrentEpisodeId = TargetEpisodeId;
+    PlayableCharacterId = TargetPlayableCharacterId;
 
     if (!bPersistenceRestoreInProgress)
     {
@@ -1690,16 +1901,37 @@ void UShireQuestSubsystem::RestoreQuestState(const TMap<FName, int32>& InStages,
     FName InCurrentRouteId, FName InCurrentEpisodeId, FName InPlayableCharacterId,
     const TMap<FName, FShireRouteProgress>& InRouteProgress)
 {
+    FName CanonicalRouteId = InCurrentRouteId;
+    FName CanonicalChapterId = InCurrentChapterId;
+    FName CanonicalEpisodeId = InCurrentEpisodeId;
+    FName CanonicalPlayableCharacterId = InPlayableCharacterId;
+    TMap<FName, FShireRouteProgress> CanonicalRouteProgress = InRouteProgress;
+    if (!CanonicalizeRestoredExperienceIdentity(
+            CanonicalRouteId,
+            CanonicalChapterId,
+            CanonicalEpisodeId,
+            CanonicalPlayableCharacterId,
+            CanonicalRouteProgress))
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireExperienceIdentity: restore-rejected route=%s chapter=%s episode=%s character=%s"),
+            *InCurrentRouteId.ToString(),
+            *InCurrentChapterId.ToString(),
+            *InCurrentEpisodeId.ToString(),
+            *InPlayableCharacterId.ToString());
+        return;
+    }
+
     QuestStages = InStages;
     ActiveQuestId = InActiveQuestId;
-    CurrentChapterId = InCurrentChapterId == NAME_None ? FName(TEXT("P1C01")) : InCurrentChapterId;
+    CurrentChapterId = CanonicalChapterId;
     CompletedStoryBeats = InCompletedStoryBeats;
-    CurrentRouteId = InCurrentRouteId == NAME_None ? FName(TEXT("FrodoMain")) : InCurrentRouteId;
-    CurrentEpisodeId = InCurrentEpisodeId == NAME_None
-        ? FName(*FString::Printf(TEXT("%s_Main"), *CurrentChapterId.ToString()))
-        : InCurrentEpisodeId;
-    PlayableCharacterId = InPlayableCharacterId == NAME_None ? FName(TEXT("Frodo")) : InPlayableCharacterId;
-    RouteProgress = InRouteProgress;
+    CurrentRouteId = CanonicalRouteId;
+    CurrentEpisodeId = CanonicalEpisodeId;
+    PlayableCharacterId = CanonicalPlayableCharacterId;
+    RouteProgress = MoveTemp(CanonicalRouteProgress);
 
     if (QuestDefinitions.Num() == 0)
     {

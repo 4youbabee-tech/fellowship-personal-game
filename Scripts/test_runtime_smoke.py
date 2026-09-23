@@ -4,7 +4,7 @@ import tempfile
 from pathlib import Path
 import unittest
 from unittest.mock import Mock, patch
-from runtime_audit_contracts import MODE_MARKERS, required_markers
+from runtime_audit_contracts import MODE_MARKERS, evidence_marker, required_markers
 from runtime_smoke import missing_markers, observe, read_log
 
 
@@ -33,7 +33,7 @@ class RuntimeSmokeTests(unittest.TestCase):
     def test_edges_mode_requires_canonical_restore_and_stale_checkpoint_evidence(self):
         markers = required_markers(None, "edges")
         self.assertEqual(markers, list(MODE_MARKERS["edges"]))
-        self.assertEqual(missing_markers(markers[0], markers), [markers[1]])
+        self.assertEqual(missing_markers(markers[0], markers), markers[1:])
 
     def test_pending_mode_requires_both_window_and_commit_evidence(self):
         markers = required_markers(None, "pending")
@@ -130,9 +130,9 @@ class RuntimeSmokeTests(unittest.TestCase):
 
     def test_in_memory_success_cannot_prove_disk_save(self):
         markers = required_markers(None, "state")
-        memory_only = "\n".join(m for m in markers if "disk-save" not in m)
-        self.assertEqual(missing_markers(memory_only, markers),
-                         [MODE_MARKERS["state"][-1]])
+        disk_marker = evidence_marker("state.disk_save")
+        memory_only = "\n".join(m for m in markers if m != disk_marker)
+        self.assertEqual(missing_markers(memory_only, markers), [disk_marker])
 
     def test_utf16_unreal_log(self):
         with tempfile.TemporaryDirectory() as directory:

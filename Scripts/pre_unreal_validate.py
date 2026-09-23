@@ -6327,13 +6327,81 @@ for pg144_symbol in [
     "Detect current warehouse delta",
     "WAREHOUSE_DELTA_SKIP",
     "warehouse_network.ps1",
-    "fetch-depth: 20",
+    "WAREHOUSE_CHECKOUT_PASS",
     "steps.warehouse_delta.outputs.run_stage == 'true'",
 ]:
     if pg144_symbol not in pg144_workflow:
         fail(f"PG-144 warehouse workflow resilience guard missing: {pg144_symbol}")
 if pg144_workflow.count("steps.warehouse_delta.outputs.run_stage == 'true'") < 8:
     fail("PG-144 every heavy warehouse stage must be current-delta gated")
+
+
+# PG-145: self-hosted Windows warehouse steps must bypass machine execution policy.
+pg145_workflow = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
+if "shell: powershell\n" in pg145_workflow:
+    fail("PG-145 raw powershell shell can be blocked by the runner execution policy")
+if pg145_workflow.count("powershell -NoProfile -ExecutionPolicy Bypass -File {0}") < 2:
+    fail("PG-145 inline warehouse PowerShell steps must explicitly bypass execution policy")
+if pg145_workflow.count("powershell.exe -NoProfile -ExecutionPolicy Bypass") < 8:
+    fail("PG-145 heavy warehouse scripts must execute through explicit Bypass wrappers")
+for pg145_checkout_symbol in [
+    "Checkout exact warehouse head with bounded retries",
+    "Fetching exact warehouse head attempt",
+    "fetch --no-tags --prune --depth=20",
+    "WAREHOUSE_CHECKOUT_PASS",
+]:
+    if pg145_checkout_symbol not in pg145_workflow:
+        fail(f"PG-145 resilient warehouse checkout missing: {pg145_checkout_symbol}")
+if "uses: actions/checkout@" in pg145_workflow:
+    fail("PG-145 warehouse must not depend on marketplace checkout download on the flaky self-hosted network path")
+
+# PG-146: route/chapter/episode/character identity is one fail-closed contract.
+pg146_quest_h = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
+pg146_quest = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
+pg146_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+pg146_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg146_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+for pg146_symbol in [
+    "NormalizeExperienceIdentity",
+    "CanonicalizeRestoredExperienceIdentity",
+    "SanitizeRouteProgressMap",
+    "ShireExperienceIdentity: rejected source=StartExperience",
+    "ShireExperienceIdentity: rejected source=StartChapter",
+]:
+    if pg146_symbol not in (pg146_quest_h + pg146_quest):
+        fail(f"PG-146 experience identity contract missing: {pg146_symbol}")
+if "CanonicalizeRestoredExperienceIdentity(" not in pg146_player:
+    fail("PG-146 save restore does not canonicalize identity before transaction publication")
+for pg146_evidence in ["state.identity_guard", "edge.identity_restore"]:
+    if not mode_has_evidence("state" if pg146_evidence.startswith("state.") else "edges", pg146_evidence):
+        fail(f"PG-146 runtime identity evidence missing: {pg146_evidence}")
+if "TEXT(\"P1G01\"), TEXT(\"IsengardCounsel\"), 1" in pg146_game_mode and    "direct-invalid-rejected=yes" not in pg146_game_mode:
+    fail("PG-146 P1G01 chapter shorthand may appear only inside the explicit rejection audit")
+
+# PG-147: every runtime JSON literal must be declared as a staged RuntimeDependency.
+pg147_build = read(ROOT / "Source" / "ShireJourney" / "ShireJourney.Build.cs")
+pg147_runtime_json = set()
+for pg147_path in SOURCE.rglob("*.cpp"):
+    for pg147_name in re.findall(r'Data/([A-Za-z0-9_.-]+\.json)', read(pg147_path)):
+        pg147_runtime_json.add(pg147_name)
+for pg147_name in sorted(pg147_runtime_json):
+    if f'RuntimeDependencies.Add("$(ProjectDir)/Data/{pg147_name}")' not in pg147_build:
+        fail(f"PG-147 runtime JSON is not staged for packaged builds: {pg147_name}")
+
+# PG-148: a real queued AsyncSaveGame race must cross a committed world revision inertly.
+for pg148_symbol in [
+    "RunQueuedCheckpointRevisionRaceAuditSetup",
+    "FinalizeCheckpointSaveComplete",
+    "CIAuditQueuedCheckpointOriginRevision",
+    "AsyncSaveGameToSlot",
+    "callback-deferred",
+]:
+    if pg148_symbol not in (pg146_player_h + pg146_player):
+        fail(f"PG-148 queued checkpoint race contract missing: {pg148_symbol}")
+if not mode_has_evidence("edges", "edge.queued_checkpoint_race"):
+    fail("PG-148 queued checkpoint race runtime evidence missing")
+if "RunMalformedExperienceRestoreAuditSetup" not in pg146_player:
+    fail("PG-148 persistence-edge sequence must exercise malformed restore before async race")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")

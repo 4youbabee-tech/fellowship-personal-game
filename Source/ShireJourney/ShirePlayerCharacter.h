@@ -77,6 +77,10 @@ public:
     // checkpoint completion guard without exposing debug controls in shipping.
     bool RunLegacyTerminalRestoreAuditSetup();
     bool RunStaleCheckpointCompletionAudit();
+    bool RunMalformedExperienceRestoreAuditSetup();
+    bool RunQueuedCheckpointRevisionRaceAuditSetup();
+    bool IsQueuedCheckpointRevisionRaceAuditComplete() const { return bCIAuditQueuedCheckpointRaceComplete; }
+    bool DidQueuedCheckpointRevisionRaceAuditPass() const { return bCIAuditQueuedCheckpointRacePassed; }
 #endif
 
     // Raised by ChapterWorldRouter before destination construction and released only
@@ -282,6 +286,21 @@ private:
     FName QueuedCheckpointEpisodeId = NAME_None;
     uint32 QueuedCheckpointWorldRevision = 0;
     bool bQueuedCheckpointShowHUD = false;
+#if !UE_BUILD_SHIPPING
+    int32 CIAuditCheckpointCallbacksToDefer = 0;
+    bool bCIAuditQueuedCheckpointRaceActive = false;
+    bool bCIAuditQueuedCheckpointRaceComplete = false;
+    bool bCIAuditQueuedCheckpointRacePassed = false;
+    bool bCIAuditQueuedCheckpointAnyEffects = false;
+    bool bCIAuditQueuedCheckpointAllWritesSucceeded = true;
+    int32 CIAuditQueuedCheckpointCompletions = 0;
+    uint32 CIAuditQueuedCheckpointOriginRevision = 0;
+    uint32 CIAuditQueuedCheckpointLastCompletionRevision = 0;
+    float CIAuditQueuedCheckpointOriginalHealth = 100.0f;
+    float CIAuditQueuedCheckpointOriginalStamina = 100.0f;
+    float CIAuditQueuedCheckpointOriginalResolve = 100.0f;
+    int32 CIAuditQueuedCheckpointOriginalSupplies = 0;
+#endif
     bool bStoryCameraCueActive = false;
     float StoryCameraCueRemaining = 0.0f;
     float StoryCameraTargetArmLength = 260.0f;
@@ -298,6 +317,7 @@ private:
         FName EpisodeId,
         uint32 WorldRevision);
     void HandleCheckpointSaveComplete(const FString& SlotName, const int32 UserIndex, bool bSuccess);
+    void FinalizeCheckpointSaveComplete(const FString& SlotName, const int32 UserIndex, bool bSuccess);
     bool RestoreSaveSnapshot(UShireSaveGame* Save, const FText& SuccessMessage);
     bool TryApplyPendingSaveRestoreTransform();
     bool IsCurrentWorldCommitted() const;

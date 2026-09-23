@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "67ebc4ee4142c4df9c479c6b326631b767bc903a_PRE777_UNREAL612_GREEN_WAREHOUSE191_INTERRUPTED_CP144_PENDING",
+  "audited_head": "3ea40ce1d68b6d5b961ed56a00117a75528e833e_PRE778_UNREAL613_GREEN_WAREHOUSE193_EXEC_POLICY_CP145_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -360,6 +360,38 @@
       "title": "Warehouse acquisition reran on unrelated PR synchronizations and used unbounded provider I/O",
       "evidence": "On exact head 67ebc4ee, Pre-Unreal #777 and Unreal #612 succeeded while Warehouse #191 failed after 32m57s. GitHub structured state left Poly Haven step 3 in_progress, later provider/audit steps pending and logs_url null. Previous #190 completed all providers. The workflow's pull_request paths match the cumulative PR diff, and provider scripts directly used Invoke-WebRequest/Invoke-RestMethod without one timeout/retry/atomic-download policy or persistent-receipt fast path.",
       "action": "Gate heavy warehouse work on files changed in the current update, reuse valid persistent receipts, route provider traffic through a shared timeout/retry helper, download to .partial then atomically rename, and statically reject raw network primitives in provider stage scripts."
+    },
+    {
+      "id": "AUDIT-HIGH-044",
+      "severity": "HIGH",
+      "status": "SYSTEMIC_SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_WAREHOUSE_PROOF",
+      "title": "Self-hosted warehouse had two independent pre-code failure families",
+      "evidence": "Warehouse push #192 failed while acquiring checkout/repository data with HttpClient timeout, packfile error and Could not resolve host: github.com. PR #193 later completed checkout but the generated inline PowerShell script was rejected by local execution policy before any provider stage ran.",
+      "action": "Use bounded exact-head native Git retries instead of marketplace checkout, force ExecutionPolicy Bypass for inline PowerShell, retain bounded provider network helper/receipt reuse/atomic partial downloads, and keep static guards against regression."
+    },
+    {
+      "id": "AUDIT-HIGH-045",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+      "title": "Route/chapter/episode identity could accept impossible combinations",
+      "evidence": "The production data defines GandalfParallel as chapter P1C01 with episode P1G01_Isengard, but the state audit still issued StartExperience with chapter P1G01. StartExperience and RestoreQuestState previously trusted route/chapter/episode combinations independently, allowing malformed direct calls or saves to become logical state before Router rejection.",
+      "action": "Normalize identity against the existing production atlas before transition publication; reject malformed direct requests, repair known legacy restore aliases, sanitize stored route progress, and require runtime rejection/canonical-restore evidence."
+    },
+    {
+      "id": "AUDIT-HIGH-046",
+      "severity": "HIGH",
+      "status": "REAL_ASYNC_RACE_AUDIT_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+      "title": "Queued checkpoint stale-callback guard lacked a real two-write disk race",
+      "evidence": "PG-140 directly invoked the production completion handler with a stale revision, proving guard semantics but not actual AsyncSaveGameToSlot queue/completion behavior across a committed world transition.",
+      "action": "Schedule two real async checkpoint writes from one committed revision, transition world before deterministic delayed completion processing, require both disk callbacks to report success, and require zero stale checkpoint effects."
+    },
+    {
+      "id": "AUDIT-HIGH-047",
+      "severity": "HIGH",
+      "status": "STATIC_GUARD_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "title": "Runtime Data JSON packaging declarations could drift from C++ loads",
+      "evidence": "Runtime systems load multiple Data/*.json files through FPaths::ProjectDir and FileHelper, while Build.cs maintains an explicit RuntimeDependencies list. Without a cross-check a future runtime JSON load could compile/headless-pass from source checkout but be omitted from staged packaged output.",
+      "action": "PG-147 scans runtime C++ Data/*.json literals and requires matching RuntimeDependencies entries; later packaged-build execution remains the acceptance boundary."
     }
   ],
   "external_practice_alignment": [
@@ -385,14 +417,12 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head Pre-Unreal + Warehouse validation for CP-W00-144 resilience",
-    "strict route/chapter/episode identity validation for malformed saves/direct StartExperience calls",
-    "real queued AsyncSaveGame completion race across world revision with immutable captured snapshot proof",
-    "packaged-build Data JSON dependency/read validation",
+    "fresh exact-head Pre-Unreal + Warehouse + UE4.27 validation for CP-W00-145 large closure wave",
+    "actual packaged-build Data JSON read validation beyond static RuntimeDependencies parity",
     "audio production-bank presence/playback validation without -NoSound",
-    "target-device frame-time/resident-memory/GC/tick profiling",
+    "target-device frame-time/resident-memory/VRAM/GC/tick profiling",
     "human core-loop/onboarding/external playtest",
-    "isolated Public/Private migration"
+    "isolated Public/Private migration after machine stability"
   ],
-  "audit_scope_note": "67ebc4ee passed Pre-Unreal #777 and Unreal #612. Warehouse #191 separately failed with Poly Haven still marked in_progress and no finalized job logs; exact provider/runner terminal cause is unknown. CP-W00-144 repairs the reproducible architecture weaknesses around unnecessary reruns, unbounded provider calls and partial-download promotion, pending fresh exact-head evidence."
+  "audit_scope_note": "Parent 3ea40ce1 is exact-head Pre-Unreal #778 + Unreal #613 green. Warehouse #192/#193 are pre-code infrastructure failures (network/DNS and execution policy respectively). CP-W00-145 combines their systemic repair with canonical experience identity, real queued AsyncSaveGame cross-revision runtime audit and runtime-JSON packaging parity guards; fresh exact-head proof is pending. No PIE/device/visual/performance/audio-playback acceptance is inferred."
 }

@@ -1,3 +1,15 @@
+## 2026-09-23 - W00 checkpoint CP-W00-145: large root-cause closure wave
+
+Exact parent `3ea40ce1d68b6d5b961ed56a00117a75528e833e` is **STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED** by Pre-Unreal #778 and Unreal #613. #613 passed UE4.27.2 compile/import, Automation 2/2, startup, P1C01-P1C08, state, continuous transitions, rollback/stream-failure faults, delayed pending authority, persistence edges and all tracked project warning-debt ceilings at zero.
+
+Warehouse is still an infrastructure lane, not a gameplay regression. Push run #192 failed before project code on self-hosted network/DNS instability while acquiring checkout/repository data. PR run #193 then checked out successfully but failed immediately in `Detect current warehouse delta`: Windows PowerShell refused GitHub's generated temporary script under the machine execution policy (`PSSecurityException`, scripts disabled). Provider staging never began.
+
+CP-W00-145 folds several remaining W00 families into one guarded repair wave rather than waiting for them to surface one by one. Warehouse inline PowerShell now runs with explicit `-ExecutionPolicy Bypass`; marketplace `actions/checkout` is removed from that lane and replaced by bounded exact-head native Git retries. The experience-state contract is also centralized: authoritative Gandalf identity is `GandalfParallel / P1C01 / P1G01_Isengard / Gandalf`, matching the existing production data. Direct malformed requests fail closed before transition publication, while save/route-progress restore repairs known legacy aliases and rejects unsupported identities before publication.
+
+Persistence coverage is deepened from a synthetic stale callback to a real queued async-disk race. The CI-only edge audit now schedules two actual `AsyncSaveGameToSlot` writes from one committed world revision, crosses to another committed world, defers completion processing deterministically, and requires both writes to succeed while neither stale callback applies checkpoint effects. A separate static guard also compares every runtime C++ `Data/*.json` load with `ShireJourney.Build.cs` `RuntimeDependencies` so packaged-data declarations cannot drift unnoticed.
+
+Status of the new CP-W00-145 head is **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**. W01 remains blocked; no production-completeness percentage is increased.
+
 ## 2026-09-23 - W00 checkpoint CP-W00-144: warehouse red isolated from gameplay and repaired as an execution-family defect
 
 Exact parent `67ebc4ee4142c4df9c479c6b326631b767bc903a` is **STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED** by Pre-Unreal #777 and Unreal #612. Warehouse #191 alone failed after 32m57s. GitHub's structured job record ended with `Stage first Poly Haven CC0 batch` still marked `in_progress`; OpenGameArt/Quaternius/ambientCG/Kenney/KayKit and the final inventory audit never started, and the job exposes no finalized log blob. Therefore no unsupported claim is made about a specific provider exception. Previous Warehouse #190 completed the full provider chain successfully.

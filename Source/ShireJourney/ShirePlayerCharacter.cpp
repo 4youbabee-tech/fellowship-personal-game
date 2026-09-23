@@ -26,6 +26,7 @@
 #include "Misc/Guid.h"
 #include "UObject/ConstructorHelpers.h"
 #include "UObject/SoftObjectPath.h"
+#include "TimerManager.h"
 
 namespace ShireSaveConstants
 {
@@ -1740,27 +1741,32 @@ bool AShirePlayerCharacter::RestoreSaveSnapshot(
         return false;
     }
 
-    if (Save->CurrentRouteId == NAME_None)
-    {
-        Save->CurrentRouteId = TEXT("FrodoMain");
-    }
-    if (Save->CurrentChapterId == NAME_None)
-    {
-        Save->CurrentChapterId = TEXT("P1C01");
-    }
-    if (Save->PlayableCharacterId == NAME_None)
-    {
-        Save->PlayableCharacterId =
-            Save->CurrentRouteId == TEXT("GandalfParallel") ? FName(TEXT("Gandalf")) : FName(TEXT("Frodo"));
-    }
-    if (Save->CurrentEpisodeId == NAME_None)
-    {
-        Save->CurrentEpisodeId = FName(*FString::Printf(TEXT("%s_Main"), *Save->CurrentChapterId.ToString()));
-    }
-
     UGameInstance* GI = GetGameInstance();
     UShireQuestSubsystem* QuestSubsystem = GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
-    if (!QuestSubsystem || !QuestSubsystem->BeginPersistenceRestore())
+    if (!QuestSubsystem)
+    {
+        return false;
+    }
+
+    if (!QuestSubsystem->CanonicalizeRestoredExperienceIdentity(
+            Save->CurrentRouteId,
+            Save->CurrentChapterId,
+            Save->CurrentEpisodeId,
+            Save->PlayableCharacterId,
+            Save->RouteProgress))
+    {
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireSaveRestore: FAIL reason=invalid-experience-identity route=%s chapter=%s episode=%s character=%s"),
+            *Save->CurrentRouteId.ToString(),
+            *Save->CurrentChapterId.ToString(),
+            *Save->CurrentEpisodeId.ToString(),
+            *Save->PlayableCharacterId.ToString());
+        return false;
+    }
+
+    if (!QuestSubsystem->BeginPersistenceRestore())
     {
         UE_LOG(LogTemp, Error, TEXT("ShireSaveRestore: FAIL reason=persistence-transaction-unavailable"));
         return false;
@@ -1970,6 +1976,136 @@ bool AShirePlayerCharacter::RunStaleCheckpointCompletionAudit()
 }
 #endif
 
+
+bool AShirePlayerCharacter::RunMalformedExperienceRestoreAuditSetup()
+{
+    if (!FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit")) ||
+        bWorldTransitionHeld ||
+        !IsCurrentWorldCommitted() ||
+        bCheckpointSaveInFlight)
+    {
+        return false;
+    }
+
+    UShireSaveGame* Malformed = CreateSaveSnapshot(TEXT("CI_MALFORMED_EXPERIENCE"), false);
+    if (!Malformed)
+    {
+        return false;
+    }
+
+    Malformed->CurrentRouteId = TEXT("GandalfParallel");
+    Malformed->CurrentChapterId = TEXT("P1G01");
+    Malformed->CurrentEpisodeId = TEXT("P1G01_Legacy");
+    Malformed->PlayableCharacterId = TEXT("Frodo");
+
+    FShireRouteProgress GandalfProgress;
+    GandalfProgress.CurrentChapterId = TEXT("P1G01");
+    GandalfProgress.EpisodeId = NAME_None;
+    GandalfProgress.PlayableCharacterId = TEXT("Frodo");
+    Malformed->RouteProgress.Add(TEXT("GandalfParallel"), GandalfProgress);
+
+    return RestoreSaveSnapshot(Malformed, FText::GetEmpty());
+}
+
+bool AShirePlayerCharacter::RunQueuedCheckpointRevisionRaceAuditSetup()
+{
+    if (!FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit")) ||
+        bWorldTransitionHeld ||
+        !IsCurrentWorldCommitted() ||
+        bCheckpointSaveInFlight ||
+        QueuedCheckpointSnapshot)
+    {
+        return false;
+    }
+
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests =
+        GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    AChapterWorldRouter* Router = Cast<AChapterWorldRouter>(
+        UGameplayStatics::GetActorOfClass(this, AChapterWorldRouter::StaticClass()));
+    if (!Quests || !Router || Router->GetWorldRevision() == 0)
+    {
+        return false;
+    }
+
+    CIAuditQueuedCheckpointOriginalHealth = CurrentHealth;
+    CIAuditQueuedCheckpointOriginalStamina = CurrentStamina;
+    CIAuditQueuedCheckpointOriginalResolve = CurrentResolve;
+    CIAuditQueuedCheckpointOriginalSupplies = Supplies;
+
+    CurrentHealth = 31.0f;
+    CurrentStamina = 32.0f;
+    CurrentResolve = 33.0f;
+    Supplies = 1;
+    bStaminaExhausted = false;
+
+    UShireSaveGame* FirstSnapshot =
+        CreateSaveSnapshot(TEXT("CI_ASYNC_ORIGIN"), true);
+    UShireSaveGame* QueuedSnapshot =
+        CreateSaveSnapshot(TEXT("CI_ASYNC_QUEUED"), true);
+    if (!FirstSnapshot || !QueuedSnapshot)
+    {
+        CurrentHealth = CIAuditQueuedCheckpointOriginalHealth;
+        CurrentStamina = CIAuditQueuedCheckpointOriginalStamina;
+        CurrentResolve = CIAuditQueuedCheckpointOriginalResolve;
+        Supplies = CIAuditQueuedCheckpointOriginalSupplies;
+        return false;
+    }
+
+    const uint32 OriginRevision = Router->GetWorldRevision();
+    CIAuditCheckpointCallbacksToDefer = 2;
+    bCIAuditQueuedCheckpointRaceActive = true;
+    bCIAuditQueuedCheckpointRaceComplete = false;
+    bCIAuditQueuedCheckpointRacePassed = false;
+    bCIAuditQueuedCheckpointAnyEffects = false;
+    bCIAuditQueuedCheckpointAllWritesSucceeded = true;
+    CIAuditQueuedCheckpointCompletions = 0;
+    CIAuditQueuedCheckpointOriginRevision = OriginRevision;
+    CIAuditQueuedCheckpointLastCompletionRevision = OriginRevision;
+
+    if (!StartCheckpointSnapshotSave(
+            FirstSnapshot,
+            TEXT("CI_ASYNC_ORIGIN"),
+            false,
+            FirstSnapshot->CurrentChapterId,
+            FirstSnapshot->CurrentRouteId,
+            FirstSnapshot->CurrentEpisodeId,
+            OriginRevision))
+    {
+        bCIAuditQueuedCheckpointRaceActive = false;
+        CIAuditCheckpointCallbacksToDefer = 0;
+        CurrentHealth = CIAuditQueuedCheckpointOriginalHealth;
+        CurrentStamina = CIAuditQueuedCheckpointOriginalStamina;
+        CurrentResolve = CIAuditQueuedCheckpointOriginalResolve;
+        Supplies = CIAuditQueuedCheckpointOriginalSupplies;
+        return false;
+    }
+
+    QueuedCheckpointSnapshot = QueuedSnapshot;
+    QueuedCheckpointSaveId = TEXT("CI_ASYNC_QUEUED");
+    QueuedCheckpointChapterId = QueuedSnapshot->CurrentChapterId;
+    QueuedCheckpointRouteId = QueuedSnapshot->CurrentRouteId;
+    QueuedCheckpointEpisodeId = QueuedSnapshot->CurrentEpisodeId;
+    QueuedCheckpointWorldRevision = OriginRevision;
+    bQueuedCheckpointShowHUD = false;
+
+    // Switch away from Gandalf while two real AsyncSaveGameToSlot writes still carry
+    // the old committed-world revision. The delayed CI callback processing makes the
+    // second completion deterministically observe the later committed revision.
+    Quests->StartExperience(
+        TEXT("FrodoMain"),
+        NAME_None,
+        TEXT("Frodo"),
+        NAME_None);
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireQueuedCheckpointRaceAudit: scheduled writes=2 originRevision=%u"),
+        OriginRevision);
+    return true;
+}
+
 bool AShirePlayerCharacter::StartCheckpointSnapshotSave(
     UShireSaveGame* Snapshot,
     FName CheckpointId,
@@ -2066,6 +2202,37 @@ bool AShirePlayerCharacter::SaveAutomaticCheckpoint(FName CheckpointId, bool bSh
 void AShirePlayerCharacter::HandleCheckpointSaveComplete(
     const FString& SlotName, const int32 UserIndex, bool bSuccess)
 {
+#if !UE_BUILD_SHIPPING
+    if (bCIAuditQueuedCheckpointRaceActive && CIAuditCheckpointCallbacksToDefer > 0)
+    {
+        --CIAuditCheckpointCallbacksToDefer;
+        FTimerHandle DeferredHandle;
+        FTimerDelegate DeferredDelegate = FTimerDelegate::CreateWeakLambda(
+            this,
+            [this, SlotName, UserIndex, bSuccess]()
+            {
+                FinalizeCheckpointSaveComplete(SlotName, UserIndex, bSuccess);
+            });
+        GetWorldTimerManager().SetTimer(
+            DeferredHandle,
+            DeferredDelegate,
+            3.0f,
+            false);
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShireQueuedCheckpointRaceAudit: callback-deferred remaining=%d"),
+            CIAuditCheckpointCallbacksToDefer);
+        return;
+    }
+#endif
+
+    FinalizeCheckpointSaveComplete(SlotName, UserIndex, bSuccess);
+}
+
+void AShirePlayerCharacter::FinalizeCheckpointSaveComplete(
+    const FString& SlotName, const int32 UserIndex, bool bSuccess)
+{
     const FName CompletedId = CheckpointSaveInFlightId;
     const bool bShowHUD = bCheckpointSaveShowHUD;
     const FName CompletedChapterId = CheckpointSaveInFlightChapterId;
@@ -2101,6 +2268,18 @@ void AShirePlayerCharacter::HandleCheckpointSaveComplete(
     CheckpointSaveInFlightWorldRevision = 0;
 
     const bool bApplyCheckpointEffects = bSuccess && bSameCommittedContext;
+#if !UE_BUILD_SHIPPING
+    if (bCIAuditQueuedCheckpointRaceActive)
+    {
+        ++CIAuditQueuedCheckpointCompletions;
+        bCIAuditQueuedCheckpointAnyEffects =
+            bCIAuditQueuedCheckpointAnyEffects || bApplyCheckpointEffects;
+        bCIAuditQueuedCheckpointAllWritesSucceeded =
+            bCIAuditQueuedCheckpointAllWritesSucceeded && bSuccess;
+        CIAuditQueuedCheckpointLastCompletionRevision =
+            Router ? Router->GetWorldRevision() : 0;
+    }
+#endif
     if (bApplyCheckpointEffects)
     {
         CurrentHealth = MaxHealth;
@@ -2169,6 +2348,51 @@ void AShirePlayerCharacter::HandleCheckpointSaveComplete(
                 *NextId.ToString());
         }
     }
+
+#if !UE_BUILD_SHIPPING
+    if (bCIAuditQueuedCheckpointRaceActive &&
+        CIAuditQueuedCheckpointCompletions >= 2 &&
+        !bCheckpointSaveInFlight &&
+        !QueuedCheckpointSnapshot)
+    {
+        const bool bRevisionAdvanced =
+            CIAuditQueuedCheckpointLastCompletionRevision >
+            CIAuditQueuedCheckpointOriginRevision;
+        bCIAuditQueuedCheckpointRacePassed =
+            bCIAuditQueuedCheckpointAllWritesSucceeded &&
+            !bCIAuditQueuedCheckpointAnyEffects &&
+            bRevisionAdvanced;
+        bCIAuditQueuedCheckpointRaceComplete = true;
+        bCIAuditQueuedCheckpointRaceActive = false;
+        CIAuditCheckpointCallbacksToDefer = 0;
+
+        CurrentHealth = CIAuditQueuedCheckpointOriginalHealth;
+        CurrentStamina = CIAuditQueuedCheckpointOriginalStamina;
+        CurrentResolve = CIAuditQueuedCheckpointOriginalResolve;
+        Supplies = CIAuditQueuedCheckpointOriginalSupplies;
+        bStaminaExhausted = CurrentStamina <= 0.0f;
+
+        if (bCIAuditQueuedCheckpointRacePassed)
+        {
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("ShireQueuedCheckpointRaceAudit: PASS writes=2 staleEffects=0 revisionAdvanced=yes"));
+        }
+        else
+        {
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("ShireQueuedCheckpointRaceAudit: FAIL writes=%d writesSucceeded=%s staleEffects=%s originRevision=%u completionRevision=%u"),
+                CIAuditQueuedCheckpointCompletions,
+                bCIAuditQueuedCheckpointAllWritesSucceeded ? TEXT("yes") : TEXT("no"),
+                bCIAuditQueuedCheckpointAnyEffects ? TEXT("yes") : TEXT("no"),
+                CIAuditQueuedCheckpointOriginRevision,
+                CIAuditQueuedCheckpointLastCompletionRevision);
+        }
+    }
+#endif
 }
 
 bool AShirePlayerCharacter::RestoreAutomaticCheckpoint(bool bShowHUD)

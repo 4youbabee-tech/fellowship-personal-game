@@ -2674,10 +2674,15 @@
         "CP-W00-143 replaces text/location coupling with semantic evidence IDs in runtime_audit_contracts.py and migrates legacy Pre-Unreal, DeepProjectAudit and runtime tests to those IDs.",
         "The contract regression suite now requires every evidence ID to have one marker owner and one C++ source anchor, and rejects exact marker copies in runtime_smoke.py, test_runtime_smoke.py, pre_unreal_validate.py, deep_project_audit.py and warning_debt_guard.py.",
         "Exact head 67ebc4ee passed Pre-Unreal #777 and Unreal #612; Warehouse #191 alone failed after 32m57s with Poly Haven still marked in_progress and no finalized log blob.",
-        "PG-144 introduces a shared bounded warehouse network helper, atomic .partial downloads, receipt reuse and current-update delta gating so cumulative PR path matching cannot re-run bulk acquisition on every stabilization commit."
+        "PG-144 introduces a shared bounded warehouse network helper, atomic .partial downloads, receipt reuse and current-update delta gating so cumulative PR path matching cannot re-run bulk acquisition on every stabilization commit.",
+        "Exact head 3ea40ce1 passed Pre-Unreal #778 and Unreal #613; Warehouse #193 failed before provider staging because the self-hosted Windows execution policy blocked the generated inline PowerShell script.",
+        "CP-W00-145 replaces marketplace warehouse checkout with bounded exact-head native Git retries, forces Bypass on inline PowerShell, and keeps receipt reuse/atomic provider downloads.",
+        "PG-146 canonicalizes Route/Chapter/Episode/PlayableCharacter identity for direct requests, route progress and restored saves; P1G01 is treated only as a repairable legacy Gandalf shorthand, never as an authoritative chapter.",
+        "PG-148 extends persistence-edge runtime coverage to two real AsyncSaveGameToSlot writes queued on an old world revision and requires successful writes with zero stale completion effects after a committed revision change.",
+        "PG-147 guards packaged runtime JSON declarations by matching C++ Data/*.json loads to ShireJourney.Build.cs RuntimeDependencies."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal + Warehouse proof for CP-W00-144 resilience; parent 67ebc4ee is already #777/#612 green but #191 warehouse-red.",
+        "Obtain fresh exact-head Pre-Unreal + Warehouse + UE4.27 proof for CP-W00-145 large closure wave.",
         "Exercise a real queued AsyncSaveGame write completion across a committed-world revision; PG-140 currently proves the stale callback guard deterministically, not the full disk race.",
         "Exercise immutable queued checkpoint completion across a real world revision.",
         "Reject or canonicalize malformed route/chapter/episode save identities before world commit.",
@@ -3699,15 +3704,16 @@
       ],
       "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "67ebc4ee4142c4df9c479c6b326631b767bc903a",
+    "last_green_head": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
     "evidence": {
-      "last_engine_proven_head": "67ebc4ee4142c4df9c479c6b326631b767bc903a",
-      "pre_unreal": "#777 SUCCESS on exact head 67ebc4ee4142c4df9c479c6b326631b767bc903a.",
-      "unreal_build": "#612 SUCCESS on the same exact head: UE4.27.2 compile/import, Automation, startup, P1C01-P1C08, state, transitions, rollback/stream-failure faults, delayed pending authority, persistence edges and warning-debt gates passed.",
-      "warehouse": "#191 FAILURE on the same head after 32m57s; structured job state ended while Poly Haven step 3 remained in_progress and later provider/audit steps never started. Job logs_url was null, so no terminal provider exception is claimed.",
-      "warehouse_previous": "#190 SUCCESS on parent aa8f80c8, proving the persistent warehouse and all provider stages can complete when the runner/network path remains healthy."
+      "last_engine_proven_head": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
+      "pre_unreal": "#778 SUCCESS on exact head 3ea40ce1d68b6d5b961ed56a00117a75528e833e.",
+      "unreal_build": "#613 SUCCESS on the same exact head after an infrastructure-only checkout rerun. UE4.27.2 compile/import, Automation 2/2, startup, P1C01-P1C08, state, transitions, faults, pending, persistence edges and zero project warning debt all passed.",
+      "warehouse": "#193 FAILURE after checkout succeeded; Detect current warehouse delta was blocked by local Windows PowerShell execution policy (PSSecurityException / scripts disabled), so provider staging never started.",
+      "warehouse_push": "#192 FAILURE before project code due self-hosted network/DNS instability while acquiring actions/checkout and repository data (HttpClient timeout, packfile error, Could not resolve host: github.com).",
+      "warehouse_previous": "#190 SUCCESS on aa8f80c8 across all providers and inventory audit."
     },
-    "evidence_scope": "67ebc4ee is exact-head STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED by #777/#612. Warehouse #191 is a separate acquisition/infrastructure failure, not gameplay proof. CP-W00-144 changes warehouse resilience and requires fresh exact-head proof.",
+    "evidence_scope": "3ea40ce1 is STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED by #778/#613. Warehouse remains an independent infrastructure lane: #192 failed on network/DNS before code, #193 failed on runner execution policy before provider staging. CP-W00-145 changes warehouse shell/checkout resilience plus experience identity and persistence-race guards; fresh exact-head proof is required.",
     "current_owner_observation": {
       "sha": "4879a19999951354676341f032c358ac98679c44",
       "pre_unreal": {
@@ -4083,25 +4089,27 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Exact head 67ebc4ee passed Pre-Unreal #777 and Unreal #612, while Warehouse #191 failed after 32m57s. GitHub structured job metadata shows step 3 (Poly Haven) still in_progress at job failure, steps 4-11 never started, logs_url is null, and the previous Warehouse #190 completed all providers successfully. The precise terminal exception is therefore unavailable; the actionable defect is that every PR synchronize re-ran heavy external acquisition and provider scripts had unbounded raw web calls with no atomic partial-file protection or receipt fast path.",
-    "exact_reviewed_head": "67ebc4ee4142c4df9c479c6b326631b767bc903a",
+    "reason": "Exact head 3ea40ce1 passed Pre-Unreal #778 and Unreal #613. Warehouse #193 then failed deterministically before provider staging because GitHub's inline powershell shell invoked a temporary .ps1 that the local runner execution policy rejected. Push Warehouse #192 separately proves a flaky network/DNS family around actions/checkout. The next source audit also found a real identity defect: one state fixture treated P1G01 as a chapter although the project data defines GandalfParallel as chapter P1C01 / episode P1G01_Isengard. W00 is therefore continuing as one large root-cause closure wave rather than isolated line patches.",
+    "exact_reviewed_head": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#777 SUCCESS",
-      "unreal_build": "#612 SUCCESS",
-      "warehouse": "#191 FAILURE during Poly Haven step; no finalized log blob",
-      "previous_warehouse": "#190 SUCCESS across Poly Haven/OpenGameArt/Quaternius/ambientCG/Kenney/KayKit + inventory audit"
+      "pre_unreal": "#778 SUCCESS",
+      "unreal_build": "#613 SUCCESS including startup, P1C01-P1C08, state/transitions/faults/pending/edges and zero project warning debt",
+      "warehouse_pr": "#193 FAILURE at Detect current warehouse delta: PSSecurityException, scripts disabled",
+      "warehouse_push": "#192 FAILURE before code: checkout/download network timeout, packfile error and DNS resolution failure"
     },
     "reconciled_findings": [
-      "Gameplay/runtime is not implicated by #191 because #777/#612 are green on the same SHA.",
-      "Warehouse workflow can be retriggered by cumulative pull-request path matching even when the newest stabilization update is unrelated to warehouse inputs.",
-      "Provider scripts used raw Invoke-WebRequest/Invoke-RestMethod calls without one timeout/retry policy; a long provider/network operation could monopolize the self-hosted runner.",
-      "CP-W00-144 adds current-update delta gating, persistent receipt reuse, bounded retries/timeouts, atomic .partial downloads and a PG-144 guard preventing providers from bypassing the shared network helper."
+      "Warehouse execution policy and checkout network failure are infrastructure families, not gameplay regressions.",
+      "Warehouse inline PowerShell now explicitly uses -ExecutionPolicy Bypass, and the workflow no longer depends on downloading actions/checkout on the flaky self-hosted network path; exact-head native Git checkout has bounded retries.",
+      "Route/chapter/episode/playable-character identity now has one canonical contract sourced from the existing production atlas: FrodoMain P1C01-P1C08 with matching P1Cxx_Main episodes, and GandalfParallel P1C01/P1G01_Isengard/Gandalf.",
+      "Direct malformed StartExperience/StartChapter calls fail closed before transition publication; restored saves and route-progress maps are canonicalized before becoming authoritative.",
+      "Persistence-edge CI now drives a real two-write AsyncSaveGameToSlot sequence, crosses a committed world revision, delays completion handling deterministically, and requires both disk writes to succeed while stale completion effects remain inert.",
+      "PG-147 statically checks every Data/*.json literal loaded by runtime C++ against ShireJourney.Build.cs RuntimeDependencies so packaged-data declarations cannot silently drift."
     ],
-    "next_priority": "W00_CP144_WAREHOUSE_RESILIENCE_EXACT_HEAD_PROOF",
-    "truth_boundary": "The exact terminal cause of Warehouse #191 cannot be asserted because GitHub did not finalize a job log blob. Structured evidence proves where execution stopped, not whether the external event was provider stall, runner/network interruption or process loss.",
+    "next_priority": "W00_CP145_LARGE_CLOSURE_EXACT_HEAD_PROOF",
+    "truth_boundary": "CP-W00-145 is SOURCE-REPAIRED only until fresh exact-head Pre-Unreal, Warehouse and Unreal runs complete. Parent 3ea40ce1 remains the last exact machine-proven source for static/compile/headless runtime. No PIE/device/visual/performance/audio-playback acceptance is inferred.",
     "stabilization_wave": {
-      "status": "SOURCE_REPAIRED_PENDING_FRESH_EXACT_HEAD_PROOF",
-      "invariant": "Unrelated code commits do not repeat bulk warehouse acquisition; staged batches are reusable; external requests are time-bounded/retried; partial downloads are never promoted as complete files."
+      "status": "LARGE_ROOT_CAUSE_REPAIR_PENDING_EXACT_HEAD_PROOF",
+      "invariant": "External infrastructure failures are isolated from gameplay; world identity is canonical before publication; queued async checkpoint completions cannot mutate a later committed world; runtime JSON packaging declarations cannot drift silently."
     }
   },
   "development_mode": {
@@ -4165,14 +4173,14 @@
     "After the P1C01 production pipeline is proven, mass-apply the same rig/material/world/audio/LOD conventions chapter-by-chapter."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-144",
-    "source_head": "67ebc4ee4142c4df9c479c6b326631b767bc903a",
+    "checkpoint_id": "CP-W00-145",
+    "source_head": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
     "branch": "integration/comprehensive-foundation-v1",
     "pull_request": 67,
     "verified": {
-      "pre_unreal": "PASS #777",
-      "unreal_build": "PASS #612",
-      "warehouse": "FAIL #191 - Poly Haven step remained in_progress; no finalized job log blob"
+      "pre_unreal": "PASS #778",
+      "unreal_build": "PASS #613",
+      "warehouse": "FAIL #193 - PSSecurityException in Detect current warehouse delta before staging"
     },
     "exact_head_scope": [
       "UE4.27.2 C++ compile",
@@ -4186,12 +4194,12 @@
       "delayed pending authority",
       "project warning-debt categories"
     ],
-    "active_wave": "PG-144 warehouse execution resilience: current-delta gating + receipt reuse + bounded/retried atomic network I/O",
+    "active_wave": "PG-145..148 W00 closure wave: resilient self-hosted warehouse execution, canonical route/chapter/episode identity, malformed-save repair, and real queued AsyncSaveGame revision-race proof",
     "next_actions": [
-      "Run fresh Pre-Unreal to prove PG-144 static warehouse guards.",
-      "Run fresh Warehouse because CP-W00-144 changes warehouse inputs; reusable receipts should bypass already-staged provider downloads and the final inventory audit remains the integrity gate.",
-      "Keep Unreal exact-head validation green; warehouse acquisition failure must not be misclassified as a gameplay/runtime regression.",
-      "After CP-W00-144 evidence, continue W00 with route/chapter/episode identity canonicalization and the real queued AsyncSaveGame revision race."
+      "Run fresh Pre-Unreal on CP-W00-145 and require PG-145..148 static guards to pass.",
+      "Run fresh Warehouse: exact checkout must use bounded native Git retries, inline PowerShell must force ExecutionPolicy Bypass, and valid persistent receipts may short-circuit provider acquisition.",
+      "Run fresh Unreal exact-head validation and require the expanded state/edges evidence, including malformed identity restore and a real two-write AsyncSaveGame race across a committed world revision.",
+      "If all machine gates are green, continue the same W00 repair campaign into remaining packaged-runtime/audio/device/human acceptance debt; do not open W01."
     ],
     "unverified_acceptance": [
       "PIE/rendered traversal acceptance",
@@ -4204,28 +4212,28 @@
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "67ebc4ee4142c4df9c479c6b326631b767bc903a",
+        "sha": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
         "pre_unreal": {
-          "sha": "67ebc4ee4142c4df9c479c6b326631b767bc903a",
-          "run_id": 35897973440,
+          "sha": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
+          "run_id": 35903307038,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "67ebc4ee4142c4df9c479c6b326631b767bc903a",
-          "run_id": 35897973445,
+          "sha": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
+          "run_id": 35903307018,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "67ebc4ee4142c4df9c479c6b326631b767bc903a",
+        "sha": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
         "pre_unreal": {
-          "sha": "67ebc4ee4142c4df9c479c6b326631b767bc903a",
-          "run_id": 35897973440,
+          "sha": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
+          "run_id": 35903307038,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "67ebc4ee4142c4df9c479c6b326631b767bc903a",
-          "run_id": 35897973445,
+          "sha": "3ea40ce1d68b6d5b961ed56a00117a75528e833e",
+          "run_id": 35903307018,
           "status": "SUCCESS"
         }
       }

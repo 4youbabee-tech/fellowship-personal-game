@@ -61,16 +61,54 @@ jobs:
       - X64
     timeout-minutes: 60
     steps:
-      - name: Checkout warehouse manifest and scripts
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          clean: false
-          fetch-depth: 20
+      - name: Checkout exact warehouse head with bounded retries
+        shell: cmd
+        env:
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE if exist "C:\Program Files (x86)\Git\cmd\git.exe" set "GITEXE=C:\Program Files (x86)\Git\cmd\git.exe"
+          if not defined GITEXE exit /b 22
+
+          echo Warehouse exact-head checkout target=!TARGET_SHA!
+          if exist ".git" rmdir /S /Q ".git"
+          if exist ".git" exit /b 76
+          "!GITEXE!" init
+          if errorlevel 1 exit /b 70
+          "!GITEXE!" remote add origin "https://x-access-token:!GH_TOKEN!@github.com/%GITHUB_REPOSITORY%.git"
+          if errorlevel 1 exit /b 71
+
+          set ATTEMPT=0
+          :fetch
+          set /a ATTEMPT+=1
+          echo Fetching exact warehouse head attempt !ATTEMPT! of 7...
+          "!GITEXE!" fetch --no-tags --prune --depth=20 origin !TARGET_SHA!
+          if not errorlevel 1 goto fetched
+          if !ATTEMPT! GEQ 7 exit /b 72
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 5"
+          goto fetch
+
+          :fetched
+          "!GITEXE!" checkout -f FETCH_HEAD
+          if errorlevel 1 exit /b 73
+          "!GITEXE!" reset --hard !TARGET_SHA!
+          if errorlevel 1 exit /b 73
+          for /f "delims=" %%H in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%H"
+          if /I not "!CHECKED_SHA!"=="!TARGET_SHA!" (
+            echo ERROR: Warehouse checkout SHA mismatch expected=!TARGET_SHA! actual=!CHECKED_SHA!
+            exit /b 74
+          )
+          if not exist "ShireJourney.uproject" exit /b 75
+          echo WAREHOUSE_CHECKOUT_PASS sha=!CHECKED_SHA!
 
       - name: Detect current warehouse delta
         id: warehouse_delta
-        shell: powershell
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: |
           $event = Get-Content -LiteralPath $env:GITHUB_EVENT_PATH -Raw | ConvertFrom-Json
           $runStage = $true
@@ -96,7 +134,7 @@ jobs:
 
       - name: Warehouse staging not required for this update
         if: steps.warehouse_delta.outputs.run_stage != 'true'
-        shell: powershell
+        shell: powershell -NoProfile -ExecutionPolicy Bypass -File {0}
         run: Write-Host "WAREHOUSE_DELTA_SKIP no warehouse inputs changed in the current update."
 
       - name: Stage first Poly Haven CC0 batch

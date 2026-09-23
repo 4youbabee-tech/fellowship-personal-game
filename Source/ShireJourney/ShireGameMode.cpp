@@ -98,9 +98,41 @@ void AShireGameMode::BeginPlay()
             const bool bRepeatDiscovery =
                 Quests->CompleteSideActivityDiscovery(TEXT("WILDERNESS_TRACK_SIGNS"));
 
+            const FName IdentityRouteBefore = Quests->GetCurrentRouteId();
+            const FName IdentityChapterBefore = Quests->GetCurrentChapterId();
+            const FName IdentityEpisodeBefore = Quests->GetCurrentEpisodeId();
+            const FName IdentityCharacterBefore = Quests->GetPlayableCharacterId();
+
+            // P1G01 is an episode shorthand, not a world chapter. Direct requests
+            // must fail closed instead of leaking an unsupported logical destination.
             Quests->StartExperience(
                 TEXT("GandalfParallel"), TEXT("P1G01_Isengard"), TEXT("Gandalf"),
                 TEXT("P1G01"), TEXT("IsengardCounsel"), 1);
+
+            const bool bInvalidExperienceRejected =
+                Quests->GetCurrentRouteId() == IdentityRouteBefore &&
+                Quests->GetCurrentChapterId() == IdentityChapterBefore &&
+                Quests->GetCurrentEpisodeId() == IdentityEpisodeBefore &&
+                Quests->GetPlayableCharacterId() == IdentityCharacterBefore;
+
+            if (bInvalidExperienceRejected)
+            {
+                UE_LOG(
+                    LogTemp,
+                    Display,
+                    TEXT("ShireStateAudit: experience-identity=PASS direct-invalid-rejected=yes"));
+            }
+            else
+            {
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireStateAudit: experience-identity=FAIL direct-invalid-rejected=no"));
+            }
+
+            Quests->StartExperience(
+                TEXT("GandalfParallel"), TEXT("P1G01_Isengard"), TEXT("Gandalf"),
+                TEXT("P1C01"), TEXT("IsengardCounsel"), 1);
 
             Quests->StartExperience(
                 TEXT("FrodoMain"), TEXT("P1C03_Main"), TEXT("Frodo"),
@@ -818,7 +850,8 @@ void AShireGameMode::BeginPlay()
                     return;
                 }
 
-                if (!Router->IsWorldCommitted(
+                if (Audit->Step == 1 &&
+                    !Router->IsWorldCommitted(
                         TEXT("P1C02"),
                         TEXT("FrodoMain"),
                         TEXT("P1C02_Main")))
@@ -826,6 +859,8 @@ void AShireGameMode::BeginPlay()
                     return;
                 }
 
+                if (Audit->Step == 1)
+                {
                 const bool bCanonicalIdentity =
                     Quests->GetCurrentChapterId() == TEXT("P1C02") &&
                     Quests->GetCurrentRouteId() == TEXT("FrodoMain") &&
@@ -869,7 +904,93 @@ void AShireGameMode::BeginPlay()
                     return;
                 }
 
-                GetWorldTimerManager().ClearTimer(Audit->Timer);
+                if (!Player->RunMalformedExperienceRestoreAuditSetup())
+                {
+                    UE_LOG(LogTemp, Error, TEXT("ShirePersistenceEdgeAudit: FAIL reason=malformed-experience-restore-start"));
+                    GetWorldTimerManager().ClearTimer(Audit->Timer);
+                    return;
+                }
+
+                Audit->Step = 2;
+                Audit->Polls = 0;
+                return;
+                }
+
+                if (Audit->Step == 2)
+                {
+                    if (!Router->IsWorldCommitted(
+                            TEXT("P1C01"),
+                            TEXT("GandalfParallel"),
+                            TEXT("P1G01_Isengard")) ||
+                        Player->IsWorldTransitionHeld())
+                    {
+                        return;
+                    }
+
+                    const TMap<FName, FShireRouteProgress> RouteProgress =
+                        Quests->GetRouteProgressSnapshot();
+                    const FShireRouteProgress* GandalfProgress =
+                        RouteProgress.Find(TEXT("GandalfParallel"));
+                    const bool bCanonicalRestore =
+                        Quests->GetCurrentRouteId() == TEXT("GandalfParallel") &&
+                        Quests->GetCurrentChapterId() == TEXT("P1C01") &&
+                        Quests->GetCurrentEpisodeId() == TEXT("P1G01_Isengard") &&
+                        Quests->GetPlayableCharacterId() == TEXT("Gandalf") &&
+                        GandalfProgress &&
+                        GandalfProgress->CurrentChapterId == TEXT("P1C01") &&
+                        GandalfProgress->EpisodeId == TEXT("P1G01_Isengard") &&
+                        GandalfProgress->PlayableCharacterId == TEXT("Gandalf");
+
+                    if (!bCanonicalRestore)
+                    {
+                        UE_LOG(
+                            LogTemp,
+                            Error,
+                            TEXT("ShireExperienceRestoreAudit: FAIL canonical=no"));
+                        GetWorldTimerManager().ClearTimer(Audit->Timer);
+                        return;
+                    }
+
+                    UE_LOG(
+                        LogTemp,
+                        Display,
+                        TEXT("ShireExperienceRestoreAudit: PASS current=yes route-progress=yes"));
+
+                    if (!Player->RunQueuedCheckpointRevisionRaceAuditSetup())
+                    {
+                        UE_LOG(LogTemp, Error, TEXT("ShirePersistenceEdgeAudit: FAIL reason=queued-checkpoint-race-start"));
+                        GetWorldTimerManager().ClearTimer(Audit->Timer);
+                        return;
+                    }
+
+                    Audit->Step = 3;
+                    Audit->Polls = 0;
+                    return;
+                }
+
+                if (Audit->Step == 3)
+                {
+                    const bool bWorldCommitted =
+                        Router->IsWorldCommitted(
+                            Quests->GetCurrentChapterId(),
+                            Quests->GetCurrentRouteId(),
+                            Quests->GetCurrentEpisodeId()) &&
+                        !Player->IsWorldTransitionHeld();
+                    if (!bWorldCommitted ||
+                        !Player->IsQueuedCheckpointRevisionRaceAuditComplete())
+                    {
+                        return;
+                    }
+
+                    if (!Player->DidQueuedCheckpointRevisionRaceAuditPass())
+                    {
+                        UE_LOG(LogTemp, Error, TEXT("ShirePersistenceEdgeAudit: FAIL reason=queued-checkpoint-race"));
+                        GetWorldTimerManager().ClearTimer(Audit->Timer);
+                        return;
+                    }
+
+                    GetWorldTimerManager().ClearTimer(Audit->Timer);
+                }
             }),
             0.10f,
             true);

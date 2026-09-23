@@ -316,6 +316,15 @@ public:
         FName InCurrentRouteId, FName InCurrentEpisodeId, FName InPlayableCharacterId,
         const TMap<FName, FShireRouteProgress>& InRouteProgress);
 
+    // Save/rollback input is normalized before publication. Unknown routes or
+    // unsupported chapters fail closed; known legacy aliases are repaired.
+    bool CanonicalizeRestoredExperienceIdentity(
+        FName& InOutRouteId,
+        FName& InOutChapterId,
+        FName& InOutEpisodeId,
+        FName& InOutPlayableCharacterId,
+        TMap<FName, FShireRouteProgress>& InOutRouteProgress) const;
+
 private:
     UPROPERTY()
     TMap<FName, int32> QuestStages;
@@ -387,6 +396,13 @@ private:
     void AddQuestDefinition(FName QuestId, const FString& Title, std::initializer_list<const TCHAR*> Objectives);
     FShireRouteProgress CaptureCurrentRouteProgress(bool bCapturePlayerTransform) const;
     void ApplyRouteProgress(const FShireRouteProgress& Progress);
+    bool NormalizeExperienceIdentity(
+        FName RouteId,
+        FName& InOutChapterId,
+        FName& InOutEpisodeId,
+        FName& InOutPlayableCharacterId,
+        bool bRepairMalformed) const;
+    void SanitizeRouteProgressMap(TMap<FName, FShireRouteProgress>& InOutRouteProgress) const;
     FName MakeNPCMemoryKey(FName CanonicalProfileId) const;
     FName ResolveCanonicalNPCProfile(FName ProfileHint) const;
     int32 ResolvePersistentMemoryBudget(FName ProfileHint) const;

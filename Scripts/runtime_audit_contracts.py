@@ -21,6 +21,7 @@ EVIDENCE_MARKERS = {
     "state.persistence_commit": "ShirePersistenceRestore: COMMIT",
     "state.persistence_fields": "ShireStateAudit: persistence-fields=PASS",
     "state.disk_save": "ShireStateAudit: disk-save-roundtrip=PASS",
+    "state.identity_guard": "ShireStateAudit: experience-identity=PASS direct-invalid-rejected=yes",
     "transition.barrier": "ShireTransitionBarrier: PASS held-during-swap=yes cancel-release=yes",
     "transition.sequence": "ShireTransitionAudit: sequence=PASS chapters=8 routes=2 disk-save=PASS",
     "fault.snapshot_unsupported": "ShireRollbackSnapshotApplied: health=67.0 stamina=54.0 resolve=43.0 supplies=2",
@@ -31,6 +32,8 @@ EVIDENCE_MARKERS = {
     "pending.commit": "ShirePendingTransitionAudit: PASS delayed-ready old-world-authority=yes destination-commit=yes",
     "edge.legacy_terminal": "ShirePersistenceEdgeAudit: PASS legacy-terminal canonical-publications=1 worldCommits=1 chapter=P1C02",
     "edge.stale_checkpoint": "ShireCheckpointRevisionAudit: PASS stale-completion stateApplied=no",
+    "edge.identity_restore": "ShireExperienceRestoreAudit: PASS current=yes route-progress=yes",
+    "edge.queued_checkpoint_race": "ShireQueuedCheckpointRaceAudit: PASS writes=2 staleEffects=0 revisionAdvanced=yes",
 }
 
 MODE_EVIDENCE_IDS = {
@@ -50,6 +53,7 @@ MODE_EVIDENCE_IDS = {
         "state.persistence_commit",
         "state.persistence_fields",
         "state.disk_save",
+        "state.identity_guard",
     ),
     "transitions": ("transition.barrier", "transition.sequence"),
     "faults": (
@@ -59,7 +63,12 @@ MODE_EVIDENCE_IDS = {
         "fault.stream_failure",
     ),
     "pending": ("pending.window", "pending.commit"),
-    "edges": ("edge.legacy_terminal", "edge.stale_checkpoint"),
+    "edges": (
+        "edge.legacy_terminal",
+        "edge.stale_checkpoint",
+        "edge.identity_restore",
+        "edge.queued_checkpoint_race",
+    ),
 }
 
 MODE_MARKERS = {
@@ -109,6 +118,7 @@ EVIDENCE_SOURCE_ANCHORS = {
     "state.persistence_commit": ("Source/ShireJourney/ShireQuestSubsystem.cpp", "ShirePersistenceRestore: COMMIT chapter=%s"),
     "state.persistence_fields": ("Source/ShireJourney/ShirePlayerCharacter.cpp", "ShireStateAudit: persistence-fields=PASS transformDelta=("),
     "state.disk_save": ("Source/ShireJourney/ShireGameMode.cpp", "ShireStateAudit: disk-save-roundtrip=PASS"),
+    "state.identity_guard": ("Source/ShireJourney/ShireGameMode.cpp", "ShireStateAudit: experience-identity=PASS direct-invalid-rejected=yes"),
     "transition.barrier": ("Source/ShireJourney/ShireGameMode.cpp", "ShireTransitionBarrier: PASS held-during-swap=yes cancel-release=yes"),
     "transition.sequence": ("Source/ShireJourney/ShireGameMode.cpp", "ShireTransitionAudit: sequence=PASS chapters=8 routes=2 disk-save=PASS"),
     "fault.snapshot_unsupported": ("Source/ShireJourney/ChapterWorldRouter.cpp", "ShireRollbackSnapshotApplied: health=%.1f stamina=%.1f resolve=%.1f supplies=%d"),
@@ -119,6 +129,8 @@ EVIDENCE_SOURCE_ANCHORS = {
     "pending.commit": ("Source/ShireJourney/ShireGameMode.cpp", "ShirePendingTransitionAudit: PASS delayed-ready old-world-authority=yes destination-commit=yes"),
     "edge.legacy_terminal": ("Source/ShireJourney/ShireGameMode.cpp", "ShirePersistenceEdgeAudit: PASS legacy-terminal canonical-publications=1 worldCommits=1 chapter=P1C02"),
     "edge.stale_checkpoint": ("Source/ShireJourney/ShirePlayerCharacter.cpp", "ShireCheckpointRevisionAudit: PASS stale-completion stateApplied=no"),
+    "edge.identity_restore": ("Source/ShireJourney/ShireGameMode.cpp", "ShireExperienceRestoreAudit: PASS current=yes route-progress=yes"),
+    "edge.queued_checkpoint_race": ("Source/ShireJourney/ShirePlayerCharacter.cpp", "ShireQueuedCheckpointRaceAudit: PASS writes=2 staleEffects=0 revisionAdvanced=yes"),
 }
 
 SOURCE_MARKER_ANCHORS = {
