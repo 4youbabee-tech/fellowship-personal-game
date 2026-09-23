@@ -2669,10 +2669,13 @@
         "CP-W00-141 restores evidence lineage and adds PG-141 to reject dynamic UE_LOG verbosity before UE4.27 compilation.",
         "Exact head 7636c777 completed Unreal #610 successfully, including persistence-edge mode and zero streaming-pool precedence warning debt; Pre-Unreal #775 failed only on a stale copied PG-140 marker template.",
         "PG-142 introduces Scripts/runtime_audit_contracts.py as the single Python owner for runtime markers, mode args, log names, source anchors and warning-debt runtime prefixes.",
-        "runtime_smoke.py and warning_debt_guard.py now consume the central registry; PG-124/133/136/137/138/139/140 no longer duplicate transaction marker text, and a dedicated unit suite forbids reintroduction."
+        "runtime_smoke.py and warning_debt_guard.py now consume the central registry; PG-124/133/136/137/138/139/140 no longer duplicate transaction marker text, and a dedicated unit suite forbids reintroduction.",
+        "Exact parent aa8f80c8 completed Unreal #611 successfully through all current headless runtime modes; Pre-Unreal #776 failed only because six legacy static guards still depended on exact evidence strings inside runtime_smoke.py.",
+        "CP-W00-143 replaces text/location coupling with semantic evidence IDs in runtime_audit_contracts.py and migrates legacy Pre-Unreal, DeepProjectAudit and runtime tests to those IDs.",
+        "The contract regression suite now requires every evidence ID to have one marker owner and one C++ source anchor, and rejects exact marker copies in runtime_smoke.py, test_runtime_smoke.py, pre_unreal_validate.py, deep_project_audit.py and warning_debt_guard.py."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal + UE4.27 runtime proof for CP-W00-142 validation-contract consolidation; parent #610 is engine-green but parent #775 static-red.",
+        "Obtain fresh exact-head Pre-Unreal + UE4.27 runtime proof for CP-W00-143 semantic evidence-contract consolidation.",
         "Exercise a real queued AsyncSaveGame write completion across a committed-world revision; PG-140 currently proves the stale callback guard deterministically, not the full disk race.",
         "Exercise immutable queued checkpoint completion across a real world revision.",
         "Reject or canonicalize malformed route/chapter/episode save identities before world commit.",
@@ -4078,24 +4081,24 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Parent 7636c777 completed Unreal #610 successfully through compile/import/Automation/startup/P1C01-P1C08/state/transitions/faults/pending/persistence-edges and zero project warning debt, while Pre-Unreal #775 failed only because PG-140 still copied the pre-#609 checkpoint log template. This is validation-contract drift, not a new runtime defect.",
-    "exact_reviewed_head": "7636c7779156831660964cc5d44125efa4b480d1",
+    "reason": "Parent aa8f80c8 passed Unreal #611 and Warehouse #190 but Pre-Unreal #776 exposed six more legacy validators still reading exact runtime marker text from runtime_smoke.py after the new central registry removed those strings. The failure family is duplicated evidence ownership across generations of guards, not a gameplay regression.",
+    "exact_reviewed_head": "aa8f80c89de1193728c1ff82b5876fdac0fdc7d3",
     "latest_exact_head_evidence": {
-      "parent_engine": "Unreal #610 SUCCESS on 7636c7779156831660964cc5d44125efa4b480d1",
-      "parent_static": "Pre-Unreal #775 FAILURE: one stale PG-140 marker-template contract",
-      "parent_warehouse": "Warehouse #189 SUCCESS"
+      "engine": "Unreal #611 SUCCESS on aa8f80c89de1193728c1ff82b5876fdac0fdc7d3: compile/import, Automation 2/2, startup, P1C01-P1C08, state, transitions, faults, pending and persistence edges all passed.",
+      "pre_unreal": "#776 FAILURE: PG-070/074/079/080 and PG-129 still expected runtime evidence text to live inside runtime_smoke.py.",
+      "warehouse": "Warehouse #190 SUCCESS."
     },
     "reconciled_findings": [
-      "PG-139 texture-pool authority is engine-proven on #610: warning-debt reported Streaming pool scalability override warnings = 0.",
-      "PG-140 persistence edges are headless-runtime proven on #610: edges sweep attempted=1 expected=1 failed=[].",
-      "The recurring red family is duplicated validation text across runtime_smoke, pre_unreal_validate and unit tests.",
-      "PG-142 centralizes mode markers, command args, log names, source anchors and warning-debt runtime prefixes in one Python registry; consumers are forbidden from copying transaction marker text."
+      "The gameplay/runtime path remains headless-green on #611; #776 is validation architecture drift.",
+      "The first PG-142 registry centralized text, but older validators still encoded where the text had to live. That location-coupling was the remaining root cause.",
+      "CP-W00-143 promotes semantic evidence IDs as the contract: validators ask whether a mode requires an evidence ID, while only runtime_audit_contracts.py owns the exact marker text.",
+      "DeepProjectAudit and runtime unit tests are migrated to the same semantic registry, and de-duplication tests now forbid exact evidence text in all Python consumers."
     ],
-    "next_priority": "W00_CP142_EXACT_HEAD_VALIDATION_CONTRACT_GREEN",
-    "truth_boundary": "7636c777 is COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED by #610 but not fully STATIC-VALIDATED because #775 failed. CP-W00-142 is source-level until fresh exact-head workflows pass. No PIE/device/visual/performance/audio-playback acceptance is inferred.",
+    "next_priority": "W00_CP143_SEMANTIC_EVIDENCE_EXACT_HEAD_VALIDATION",
+    "truth_boundary": "aa8f80c8 is COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED by #611 but not fully STATIC-VALIDATED because #776 failed. CP-W00-143 is SOURCE-REPAIRED pending fresh exact-head proof. No PIE/device/visual/performance/audio-playback acceptance is inferred.",
     "stabilization_wave": {
-      "status": "LARGE_VALIDATION_ARCHITECTURE_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
-      "invariant": "Runtime audit evidence has one Python contract owner; static guards validate source anchors and execution wiring rather than copying exact marker strings."
+      "status": "SYSTEMIC_VALIDATION_CONTRACT_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "invariant": "Exact runtime evidence text has one owner; every Python validator consumes semantic evidence IDs instead of depending on marker location or copying marker text."
     }
   },
   "development_mode": {
@@ -4159,7 +4162,7 @@
     "After the P1C01 production pipeline is proven, mass-apply the same rig/material/world/audio/LOD conventions chapter-by-chapter."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-142",
+    "checkpoint_id": "CP-W00-143",
     "source_head": "80fc54dc4e4571e57206bef28cc809e2dcb3ec62",
     "branch": "integration/comprehensive-foundation-v1",
     "pull_request": 67,
@@ -4180,11 +4183,11 @@
       "delayed pending authority",
       "project warning-debt categories"
     ],
-    "active_wave": "PG-142 validation-contract consolidation after #610 green / #775 stale-marker failure",
+    "active_wave": "PG-143 semantic validation-contract consolidation after #611 green / #776 legacy consumer failures",
     "next_actions": [
-      "Require fresh exact-head Pre-Unreal to pass the centralized runtime-audit contract registry.",
-      "Require fresh exact-head Unreal validation and inspect all runtime/warning logs, even though parent #610 is green.",
-      "If any red appears, repair the defect family and add a shared invariant instead of changing one duplicated string.",
+      "Run fresh exact-head Pre-Unreal and require all legacy PG-052/070/074/079/080/121/129/131/133/136/137/138/140/142 consumers to pass through semantic evidence IDs.",
+      "Run fresh exact-head UE4.27 compile/import/runtime and inspect complete logs even though parent Unreal #611 is green.",
+      "If any red remains, classify it as runtime defect, compiler contract, infrastructure noise or validation drift before changing source.",
       "Keep W01 blocked until W00 technical, packaged-data, audio, device and human gates are evidence-complete."
     ],
     "unverified_acceptance": [
@@ -4211,15 +4214,15 @@
         }
       },
       "latest_observed": {
-        "sha": "7636c7779156831660964cc5d44125efa4b480d1",
+        "sha": "aa8f80c89de1193728c1ff82b5876fdac0fdc7d3",
         "pre_unreal": {
-          "sha": "7636c7779156831660964cc5d44125efa4b480d1",
-          "run_id": 35884064721,
+          "sha": "aa8f80c89de1193728c1ff82b5876fdac0fdc7d3",
+          "run_id": 35894943683,
           "status": "FAILURE"
         },
         "unreal": {
-          "sha": "7636c7779156831660964cc5d44125efa4b480d1",
-          "run_id": 35884064605,
+          "sha": "aa8f80c89de1193728c1ff82b5876fdac0fdc7d3",
+          "run_id": 35894943758,
           "status": "SUCCESS"
         }
       }

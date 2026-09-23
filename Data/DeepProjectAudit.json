@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "7636c7779156831660964cc5d44125efa4b480d1_UNREAL_610_GREEN_PRE775_CONTRACT_DRIFT_CP142_PENDING",
+  "audited_head": "aa8f80c89de1193728c1ff82b5876fdac0fdc7d3_UNREAL_611_GREEN_PRE776_LEGACY_CONSUMER_DRIFT_CP143_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -340,10 +340,18 @@
     {
       "id": "AUDIT-HIGH-041",
       "severity": "HIGH",
-      "status": "SYSTEMIC_SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_STATIC_PROOF",
+      "status": "SUPERSEDED_BY_SEMANTIC_CONTRACT_WAVE_CP143_PENDING_EXACT_HEAD",
       "title": "Runtime audit evidence strings had multiple independent Python owners",
       "evidence": "Pre-Unreal #775 failed only because PG-140 retained the old checkpoint marker template after the C++ logger was correctly changed for UE4.27 compile safety. Parent Unreal #610 passed the actual persistence-edge runtime sweep, proving the red was validator drift rather than runtime failure.",
-      "action": "Centralize runtime marker/mode/log/source-anchor contracts in Scripts/runtime_audit_contracts.py; make runtime_smoke and warning_debt consume it; make Pre-Unreal validate anchors/wiring; forbid transaction marker copies in Python consumers with a dedicated unit test."
+      "action": "PG-142 text centralization was necessary but insufficient because legacy consumers still depended on marker location. CP-W00-143 replaces location coupling with semantic evidence IDs and full consumer de-duplication."
+    },
+    {
+      "id": "AUDIT-HIGH-042",
+      "severity": "HIGH",
+      "status": "SYSTEMIC_SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_STATIC_PROOF",
+      "title": "Legacy validators depended on runtime evidence location instead of semantic contracts",
+      "evidence": "Pre-Unreal #776 failed PG-070/074/079/080 and PG-129 because those guards searched runtime_smoke.py for exact evidence text. The same parent head passed Unreal #611 across all current runtime modes, showing the red was stale validator location-coupling rather than a gameplay regression.",
+      "action": "Use semantic evidence IDs as the only validator-facing API. Keep exact marker text and C++ source anchors owned by runtime_audit_contracts.py, migrate DeepProjectAudit/tests, and reject duplicate evidence text in Python consumers."
     }
   ],
   "external_practice_alignment": [
@@ -369,7 +377,7 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head Pre-Unreal + UE4.27 validation for CP-W00-142 centralized runtime-audit contracts",
+    "fresh exact-head Pre-Unreal + UE4.27 validation for CP-W00-143 semantic evidence contracts",
     "real queued AsyncSaveGame completion race across world revision with immutable captured snapshot proof",
     "strict route/chapter/episode identity validation for malformed saves/direct StartExperience calls",
     "packaged-build Data JSON dependency/read validation",
@@ -378,5 +386,5 @@
     "human core-loop/onboarding/external playtest",
     "isolated Public/Private migration"
   ],
-  "audit_scope_note": "Parent 7636c777 is engine-green on Unreal #610 and Warehouse #189 but static-red on Pre-Unreal #775 because one copied PG-140 marker template drifted. CP-W00-142 is a systemic validation-architecture repair and remains source-level until fresh exact-head validation. No PIE/device/visual/performance/audio-playback acceptance is inferred."
+  "audit_scope_note": "Parent aa8f80c8 is engine-green on Unreal #611 and Warehouse #190 but static-red on Pre-Unreal #776 because legacy validators still depended on exact runtime marker location. CP-W00-143 repairs that class semantically and remains source-level until fresh exact-head validation. No PIE/device/visual/performance/audio-playback acceptance is inferred."
 }

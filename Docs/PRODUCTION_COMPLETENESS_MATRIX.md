@@ -1,3 +1,7 @@
+## 2026-09-23 - W00 CP-W00-143 semantic validation-contract wave
+
+Parent `aa8f80c8...`: Unreal #611 SUCCESS, Warehouse #190 SUCCESS, Pre-Unreal #776 FAILURE on six legacy marker-location checks. No production-completeness percentage is increased. CP-W00-143 makes semantic evidence IDs the validation API and removes exact marker ownership from legacy Python consumers. New-head status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. W01 remains blocked.
+
 ## 2026-09-23 - W00 CP-W00-142 validation-contract consolidation
 
 Parent `7636c777...`: Unreal #610 SUCCESS and Warehouse #189 SUCCESS; Pre-Unreal #775 FAILURE on one stale duplicated PG-140 marker template. No production percentage is increased. The repair is systemic: one runtime-audit registry now owns markers/modes/log names/source anchors, consumers import it, and regression tests forbid duplicated transaction marker text. New-head status: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. W01 remains blocked.

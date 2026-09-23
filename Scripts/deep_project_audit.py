@@ -2,6 +2,7 @@
 from __future__ import annotations
 import json,re,sys
 from pathlib import Path
+from runtime_audit_contracts import MODE_EXTRA_ARGS, mode_has_evidence
 ROOT=Path(__file__).resolve().parents[1]
 SRC=ROOT/"Source"/"ShireJourney"
 errors=[]
@@ -190,8 +191,7 @@ reject_end=commit_body.find("SetPlayerWorldHold(true);",reject_start)
 reject_body=commit_body[reject_start:reject_end]
 if reject_start<0 or "RollbackFailedWorldSwap" not in reject_body:
  errors.append("unsupported chapter/route request does not rollback atomically")
-rollback_marker="ShireRollbackAudit: PASS unsupported-request restored=yes movementReleased=yes freshSnapshot=yes npcContext=yes livingWorld=yes"
-if rollback_marker not in game_mode or rollback_marker not in runtime_smoke or "--mode faults" not in state_cmd:
+if not mode_has_evidence("faults", "fault.rollback_unsupported") or "-AuditFaults" not in MODE_EXTRA_ARGS.get("faults", ()) or "--mode faults" not in state_cmd:
  errors.append("rollback fault-injection evidence chain missing")
 
 # SAVE-RESTORE PRE-MUTATION BOUNDARY + DELAYED ASYNC AUTHORITY
@@ -212,8 +212,7 @@ if min(restore_begin,restore_prepare,restore_mutate)<0 or not (restore_begin<res
 for token in ["PublishPendingReady","ShireCIAssetReadyDelay=","CompletedSerial != RequestSerial"]:
  if token not in streaming_test:
   errors.append(f"delayed async transition guard missing: {token}")
-pending_marker="ShirePendingTransitionAudit: PASS delayed-ready old-world-authority=yes destination-commit=yes"
-if pending_marker not in game_mode or pending_marker not in runtime_smoke or "--mode pending" not in state_cmd:
+if not mode_has_evidence("pending", "pending.commit") or "-AuditPendingTransition" not in MODE_EXTRA_ARGS.get("pending", ()) or "--mode pending" not in state_cmd:
  errors.append("delayed transition old-world-authority evidence chain missing")
 
 # FAIL-CLOSED CHAPTER BANK RESIDENCY / ROLLBACK OWNERSHIP
@@ -233,7 +232,7 @@ if "RollbackFailedWorldSwap" not in router_fail:
  errors.append("chapter streaming failure does not rollback committed origin")
 if "ShireCIForceChapterAssetFailure=" not in streaming_cpp:
  errors.append("deterministic non-production streaming failure injection missing")
-if "ShireStreamFailureAudit: PASS" not in game_mode or "-ShireCIForceChapterAssetFailure=P1C02" not in runtime_smoke:
+if not mode_has_evidence("faults", "fault.stream_failure") or "-ShireCIForceChapterAssetFailure=P1C02" not in MODE_EXTRA_ARGS.get("faults", ()):
  errors.append("streaming failure runtime evidence chain missing")
 
 # UE4.27 importer overload regression and deterministic normalization stay fail-closed.

@@ -132,7 +132,7 @@ class RuntimeSmokeTests(unittest.TestCase):
         markers = required_markers(None, "state")
         memory_only = "\n".join(m for m in markers if "disk-save" not in m)
         self.assertEqual(missing_markers(memory_only, markers),
-                         ["ShireStateAudit: disk-save-roundtrip=PASS"])
+                         [MODE_MARKERS["state"][-1]])
 
     def test_utf16_unreal_log(self):
         with tempfile.TemporaryDirectory() as directory:

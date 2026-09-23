@@ -39,21 +39,31 @@ def read(path: Path) -> str:
 
 try:
     from runtime_audit_contracts import (
-        DEDUP_MODES,
+        CHAPTER_EVIDENCE_KINDS,
+        EVIDENCE_MARKERS,
+        EVIDENCE_SOURCE_ANCHORS,
+        MODE_EVIDENCE_IDS,
         MODE_EXTRA_ARGS,
         MODE_MARKERS,
         RUNTIME_LOG_PREFIXES,
         SOURCE_MARKER_ANCHORS,
         STATE_SEQUENCE_MODES,
+        chapter_has_evidence,
+        mode_has_evidence,
     )
 except Exception as exc:
     fail(f"Cannot import runtime audit contract registry: {exc}")
-    DEDUP_MODES = ()
+    CHAPTER_EVIDENCE_KINDS = ()
+    EVIDENCE_MARKERS = {}
+    EVIDENCE_SOURCE_ANCHORS = {}
+    MODE_EVIDENCE_IDS = {}
     MODE_EXTRA_ARGS = {}
     MODE_MARKERS = {}
     RUNTIME_LOG_PREFIXES = ()
     SOURCE_MARKER_ANCHORS = {}
     STATE_SEQUENCE_MODES = ()
+    chapter_has_evidence = lambda _kind: False
+    mode_has_evidence = lambda _mode, _evidence: False
 
 
 def is_git_lfs_pointer(path: Path) -> bool:
@@ -715,7 +725,7 @@ else:
 for symbol in ["IsRingQuestActive", "GetRingBearerId", "GetRingStateTag", "GetRingPressureTier"]:
     if symbol not in read(SOURCE / "ShireQuestSubsystem.h") or symbol not in read(SOURCE / "ShireQuestSubsystem.cpp"):
         fail(f"PG-070: Ring runtime API missing {symbol}")
-if "ShireStateAudit: ring-core=PASS" not in read(ROOT / "Scripts" / "runtime_smoke.py"):
+if not mode_has_evidence("state", "state.ring_core"):
     fail("PG-070: runtime state audit must require Ring continuity")
 
 # PG-071: character-production matrix must cover the Part I core cast and retain provenance rules.
@@ -771,7 +781,6 @@ journey_trigger_cpp = read(SOURCE / "ShireQuestTrigger.cpp")
 journey_hud_h = read(SOURCE / "ShireHUD.h")
 journey_hud_cpp = read(SOURCE / "ShireHUD.cpp")
 journey_game_mode = read(SOURCE / "ShireGameMode.cpp")
-journey_smoke = read(ROOT / "Scripts" / "runtime_smoke.py")
 
 for symbol in [
     "RegisterJourneyDiscovery",
@@ -793,9 +802,9 @@ for marker in ["DiscoveryId", "DiscoveryDisplayName", "BlockedAfterStoryBeat"]:
 if "ShowDiscovery" not in journey_hud_h or "ShowDiscovery" not in journey_hud_cpp:
     fail("PG-074: player-facing discovery toast is missing")
 
-if "ShireStateAudit: discovery-core=PASS" not in journey_game_mode:
+if EVIDENCE_SOURCE_ANCHORS.get("state.discovery_core", ("", ""))[1] not in journey_game_mode:
     fail("PG-074: engine state audit does not prove discovery first-time continuity")
-if "ShireStateAudit: discovery-core=PASS" not in journey_smoke:
+if not mode_has_evidence("state", "state.discovery_core"):
     fail("PG-074: runtime smoke does not require discovery continuity")
 
 journey_plan_runtime = json.loads(read(ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"))
@@ -1044,9 +1053,9 @@ for marker in ["PlayerStamina","PlayerResolve","PlayerSupplies","ProgressionXP",
         fail(f"PG-079: save schema missing {marker}")
 if 'ActionName="UseSupply"' not in read(ROOT / "Config" / "DefaultInput.ini"):
     fail("PG-079: supply input mapping missing")
-if "ShireStateAudit: progression-core=PASS" not in read(SOURCE / "ShireGameMode.cpp"):
+if EVIDENCE_SOURCE_ANCHORS.get("state.progression_core", ("", ""))[1] not in read(SOURCE / "ShireGameMode.cpp"):
     fail("PG-079: progression state audit missing")
-if "ShireStateAudit: progression-core=PASS" not in read(ROOT / "Scripts" / "runtime_smoke.py"):
+if not mode_has_evidence("state", "state.progression_core"):
     fail("PG-079: runtime smoke does not require progression proof")
 if "Data/PlayerLifeProgressionPlan.json" not in read(SOURCE / "ShireJourney.Build.cs"):
     fail("PG-079: player-life plan not packaged")
@@ -1086,9 +1095,9 @@ if 'ActionName="ToggleChronicle"' not in input_pg80:
     fail("PG-080: Chronicle panel input missing")
 if "CHRONICLE & JOURNEY" not in hud_cpp_pg80:
     fail("PG-080: Chronicle/map HUD panel missing")
-if "ShireStateAudit: knowledge-core=PASS" not in read(SOURCE / "ShireGameMode.cpp"):
+if EVIDENCE_SOURCE_ANCHORS.get("state.knowledge_core", ("", ""))[1] not in read(SOURCE / "ShireGameMode.cpp"):
     fail("PG-080: knowledge state audit missing")
-if "ShireStateAudit: knowledge-core=PASS" not in read(ROOT / "Scripts" / "runtime_smoke.py"):
+if not mode_has_evidence("state", "state.knowledge_core"):
     fail("PG-080: runtime smoke missing knowledge proof")
 activity_count_pg80 = sum(
     len(chapter.get("activities", []))
@@ -3550,7 +3559,6 @@ pg129_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp
 pg129_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
 pg129_stream = read(ROOT / "Source" / "ShireJourney" / "ShireChapterAssetStreamingSubsystem.cpp")
 pg129_audio = read(ROOT / "Source" / "ShireJourney" / "ShireAudioSubsystem.cpp")
-pg129_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
 
 for pg129_symbol in [
     "BeginPersistenceRestore",
@@ -3586,12 +3594,9 @@ for pg129_symbol in [
 if "LastLoadedChapterId = NAME_None;" not in rollback_body:
     fail("PG-129 failed rollback must invalidate committed-world identity")
 
-for pg129_marker in [
-    "ShirePersistenceRestore: COMMIT",
-    "ShireStateAudit: persistence-fields=PASS",
-]:
-    if pg129_marker not in pg129_runtime:
-        fail(f"PG-129 runtime persistence regression marker missing: {pg129_marker}")
+for pg129_evidence in ["state.persistence_commit", "state.persistence_fields"]:
+    if not mode_has_evidence("state", pg129_evidence):
+        fail(f"PG-129 runtime persistence evidence missing: {pg129_evidence}")
 
 for pg129_symbol in [
     "disk-npc-memory",
@@ -3684,7 +3689,6 @@ pg131_puzzle = read(ROOT / "Source" / "ShireJourney" / "ShireEnvironmentalPuzzle
 pg131_world_interaction = read(ROOT / "Source" / "ShireJourney" / "ShireWorldEventInteraction.cpp")
 pg131_npc = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
 pg131_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
-pg131_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
 pg131_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
 
 for pg131_symbol in [
@@ -3712,13 +3716,11 @@ for pg131_name, pg131_text in [
 if "IsLogicalWorldContextCommitted()" not in pg131_npc:
     fail("PG-131 named NPC banter does not respect committed logical context")
 
-for pg131_marker in [
-    "ShireTransitionBarrier: PASS held-during-swap=yes",
-    "IsWorldTransitionHeld()",
-    "IsGameplayWorldCommitted()",
-]:
-    if pg131_marker not in (pg131_game_mode + pg131_runtime):
-        fail(f"PG-131 transition barrier runtime evidence contract missing: {pg131_marker}")
+if not mode_has_evidence("transitions", "transition.barrier"):
+    fail("PG-131 transition barrier runtime evidence contract missing")
+for pg131_symbol in ["IsWorldTransitionHeld()", "IsGameplayWorldCommitted()"]:
+    if pg131_symbol not in (pg131_game_mode + pg131_player):
+        fail(f"PG-131 committed-world mutation guard missing: {pg131_symbol}")
 
 if "ProductionSurfaceObjectPath" not in pg131_importer or    "ObjectPathToPackageName(ProductionSurfaceObjectPath)" not in pg131_importer:
     fail("PG-131 UE4.27 package-name overload must receive an explicit FString")
@@ -3802,8 +3804,9 @@ for pg133_name, pg133_text in [
     if "IsGameplayWorldCommitted()" not in pg133_text:
         fail(f"PG-133 {pg133_name} can consume destination gameplay state while world swap is pending")
 
-if len(MODE_MARKERS.get("transitions", ())) != 2:
-    fail("PG-133 continuous transition evidence must remain registered centrally")
+for pg133_evidence in ["transition.barrier", "transition.sequence"]:
+    if not mode_has_evidence("transitions", pg133_evidence):
+        fail(f"PG-133 continuous transition evidence missing: {pg133_evidence}")
 
 if "ObjectPathToPackageName(ProductionSurfacePath)" in pg133_importer:
     fail("PG-133 ambiguous UE4.27 ObjectPathToPackageName(const TCHAR*) call reintroduced")
@@ -3933,8 +3936,9 @@ pg136_reject_tail = pg136_commit[pg136_reject:pg136_commit.find("SetPlayerWorldH
 if pg136_reject < 0 or "RollbackFailedWorldSwap" not in pg136_reject_tail:
     fail("PG-136 unsupported world request must execute rollback instead of leaving the transaction held")
 
-if len(MODE_MARKERS.get("faults", ())) != 4:
-    fail("PG-136 rollback fault evidence must remain registered centrally")
+for pg136_evidence in ["fault.snapshot_unsupported", "fault.rollback_unsupported"]:
+    if not mode_has_evidence("faults", pg136_evidence):
+        fail(f"PG-136 rollback fault evidence missing: {pg136_evidence}")
 if "-AuditFaults" not in MODE_EXTRA_ARGS.get("faults", ()):
     fail("PG-136 runtime contract does not expose fault-injection mode")
 if "--mode faults" not in pg136_state_cmd:
@@ -3992,8 +3996,9 @@ if pg137_complete_start < 0 or pg137_publish_start < 0 or "SetTimer(" not in pg1
 if 'FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit"))' not in pg137_stream_tail:
     fail("PG-137 forced streaming delay must remain CI-only")
 
-if len(MODE_MARKERS.get("pending", ())) != 2:
-    fail("PG-137 delayed transition evidence must remain registered centrally")
+for pg137_evidence in ["pending.window", "pending.commit"]:
+    if not mode_has_evidence("pending", pg137_evidence):
+        fail(f"PG-137 delayed transition evidence missing: {pg137_evidence}")
 pg137_args = MODE_EXTRA_ARGS.get("pending", ())
 if "-AuditPendingTransition" not in pg137_args or "-ShireCIAssetReadyDelay=2.0" not in pg137_args:
     fail("PG-137 runtime contract does not force a bounded delayed-ready transition")
@@ -4049,8 +4054,9 @@ if "#if !UE_BUILD_SHIPPING" not in pg138_stream or "ShireCIForceChapterAssetFail
     fail("PG-138 deterministic streaming failure injection must remain non-shipping")
 if "-ShireCIForceChapterAssetFailure=P1C02" not in MODE_EXTRA_ARGS.get("faults", ()):
     fail("PG-138 fault runtime contract does not exercise a real valid-bank async failure")
-if len(MODE_MARKERS.get("faults", ())) != 4:
-    fail("PG-138 rollback/failure evidence must remain registered centrally")
+for pg138_evidence in ["fault.snapshot_stream", "fault.stream_failure"]:
+    if not mode_has_evidence("faults", pg138_evidence):
+        fail(f"PG-138 streaming failure evidence missing: {pg138_evidence}")
 
 # PG-139: texture-pool scalability must have one authority and every runtime audit log belongs to warning debt.
 pg139_engine = read(ROOT / "Config" / "DefaultEngine.ini")
@@ -4103,8 +4109,9 @@ for pg140_symbol in [
     if pg140_symbol not in (pg140_player_h + pg140_player):
         fail(f"PG-140 player persistence-edge audit contract missing: {pg140_symbol}")
 
-if len(MODE_MARKERS.get("edges", ())) != 2:
-    fail("PG-140 persistence-edge evidence must remain registered centrally")
+for pg140_evidence in ["edge.legacy_terminal", "edge.stale_checkpoint"]:
+    if not mode_has_evidence("edges", pg140_evidence):
+        fail(f"PG-140 persistence-edge evidence missing: {pg140_evidence}")
 if "-AuditPersistenceEdges" not in MODE_EXTRA_ARGS.get("edges", ()):
     fail("PG-140 runtime contract does not expose persistence edge mode")
 if "--mode edges" not in pg140_state_cmd:
@@ -4123,50 +4130,53 @@ for pg141_path in SOURCE.rglob("*.cpp"):
             + str(pg141_path.relative_to(ROOT)).replace("\\", "/")
         )
 
-# PG-142: all Python consumers share one runtime-audit contract registry.
+# PG-142: all Python consumers share semantic runtime-audit contracts.
 pg142_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
 pg142_runtime_tests = read(ROOT / "Scripts" / "test_runtime_smoke.py")
+pg142_deep = read(ROOT / "Scripts" / "deep_project_audit.py")
+pg142_warning = read(ROOT / "Scripts" / "warning_debt_guard.py")
 pg142_contract_tests = read(ROOT / "Scripts" / "test_runtime_audit_contracts.py")
 pg142_workflow = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
 pg142_state_cmd = read(ROOT / "Scripts" / "ci_runtime_state.cmd")
 pg142_self = read(ROOT / "Scripts" / "pre_unreal_validate.py")
 
-if "from runtime_audit_contracts import" not in pg142_runtime:
-    fail("PG-142 runtime_smoke must consume the central runtime-audit contract")
+for pg142_consumer_name, pg142_consumer in [
+    ("runtime_smoke.py", pg142_runtime),
+    ("deep_project_audit.py", pg142_deep),
+]:
+    if "runtime_audit_contracts import" not in pg142_consumer:
+        fail(f"PG-142 {pg142_consumer_name} must consume the central runtime-audit registry")
+if "from runtime_audit_contracts import RUNTIME_LOG_PREFIXES" not in pg142_warning:
+    fail("PG-142 warning-debt runtime scope must consume the central registry")
 if "test_runtime_audit_contracts.py" not in pg142_workflow:
     fail("PG-142 Pre-Unreal workflow must execute the runtime-audit contract registry tests")
-if "test_contract_consumers_do_not_copy_transaction_marker_text" not in pg142_contract_tests:
+if "test_contract_consumers_do_not_copy_evidence_text" not in pg142_contract_tests:
     fail("PG-142 contract de-duplication regression test missing")
 
 pg142_source_cache = {}
-for pg142_mode, pg142_markers in MODE_MARKERS.items():
-    pg142_anchors = SOURCE_MARKER_ANCHORS.get(pg142_mode, ())
-    if {entry[0] for entry in pg142_anchors} != set(range(len(pg142_markers))):
-        fail(f"PG-142 source-anchor coverage incomplete for runtime mode {pg142_mode}")
-    for pg142_index, pg142_relative, pg142_anchor in pg142_anchors:
-        pg142_text = pg142_source_cache.get(pg142_relative)
-        if pg142_text is None:
-            pg142_text = read(ROOT / pg142_relative)
-            pg142_source_cache[pg142_relative] = pg142_text
-        if pg142_anchor not in pg142_text:
-            fail(
-                f"PG-142 runtime marker source anchor missing mode={pg142_mode} "
-                f"index={pg142_index} path={pg142_relative}"
-            )
+for pg142_evidence_id, pg142_anchor_info in EVIDENCE_SOURCE_ANCHORS.items():
+    pg142_relative, pg142_anchor = pg142_anchor_info
+    pg142_text = pg142_source_cache.get(pg142_relative)
+    if pg142_text is None:
+        pg142_text = read(ROOT / pg142_relative)
+        pg142_source_cache[pg142_relative] = pg142_text
+    if pg142_anchor not in pg142_text:
+        fail(f"PG-142 runtime evidence source anchor missing: {pg142_evidence_id} -> {pg142_relative}")
 
 for pg142_mode in STATE_SEQUENCE_MODES:
     if pg142_state_cmd.count(f"--mode {pg142_mode}") != 1:
         fail(f"PG-142 state CI must execute registered mode exactly once: {pg142_mode}")
 
-for pg142_mode in DEDUP_MODES:
-    for pg142_marker in MODE_MARKERS.get(pg142_mode, ()):
-        for pg142_name, pg142_consumer in [
-            ("runtime_smoke.py", pg142_runtime),
-            ("test_runtime_smoke.py", pg142_runtime_tests),
-            ("pre_unreal_validate.py", pg142_self),
-        ]:
-            if pg142_marker in pg142_consumer:
-                fail(f"PG-142 duplicated transaction marker in {pg142_name}: mode={pg142_mode}")
+for pg142_evidence_id, pg142_marker in EVIDENCE_MARKERS.items():
+    for pg142_name, pg142_consumer in [
+        ("runtime_smoke.py", pg142_runtime),
+        ("test_runtime_smoke.py", pg142_runtime_tests),
+        ("pre_unreal_validate.py", pg142_self),
+        ("deep_project_audit.py", pg142_deep),
+        ("warning_debt_guard.py", pg142_warning),
+    ]:
+        if pg142_marker in pg142_consumer:
+            fail(f"PG-142 duplicated runtime evidence text in {pg142_name}: {pg142_evidence_id}")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
@@ -4359,8 +4369,8 @@ for startup_symbol in [
     "SpawnActor<ALivingWorldDirector>",
     'CurrentChapterId = TEXT("P1C01")',
     'StartQuest(TEXT("ShireArrival"), 0)',
-    "ShirePlayableStartup: GameMode ready",
-    "ShirePlayableStartup: chapter=P1C01 route=%s",
+    EVIDENCE_SOURCE_ANCHORS.get("startup.ready", ("", ""))[1],
+    EVIDENCE_SOURCE_ANCHORS.get("startup.route_p1c01", ("", ""))[1],
 ]:
     if startup_symbol not in (game_mode_cpp_cp52 + router_cpp_cp52 + quest_cpp_cp52):
         fail(f"PG-052 playable startup invariant missing: {startup_symbol}")
@@ -4389,14 +4399,13 @@ if not runtime_observer_path.exists():
     fail("PG-052 runtime observer missing")
 else:
     runtime_observer = runtime_observer_path.read_text(encoding="utf-8")
-    for observer_symbol in [
-        "CI-PlayableStartup",
-        "ShirePlayableStartup: GameMode ready",
-        "ShirePlayableStartup: chapter=P1C01 route=FrodoMain",
-        "FAILURE.search(final_text)",
-    ]:
-        if observer_symbol not in runtime_observer:
-            fail(f"PG-052 runtime observer missing: {observer_symbol}")
+    if "from runtime_audit_contracts import" not in runtime_observer:
+        fail("PG-052 runtime observer must consume the central audit registry")
+    if "FAILURE.search(final_text)" not in runtime_observer:
+        fail("PG-052 runtime observer lost final fatal/assert/ensure scan")
+    for startup_evidence in ["startup.ready", "startup.route_p1c01"]:
+        if not mode_has_evidence("startup", startup_evidence):
+            fail(f"PG-052 central startup evidence missing: {startup_evidence}")
 
 if resource_integration:
     external_policy = resource_integration.get("external_resource_policy", {})
@@ -6070,13 +6079,12 @@ for pg121_symbol in [
     if pg121_symbol not in (pg121_router + pg121_router_h):
         fail(f"PG-121 world-ready grounding contract missing: {pg121_symbol}")
 
-for pg121_marker in [
-    "ShireStartupGrounding: PASS chapter=P1C01",
-    "ShireStartupGrounding: PASS chapter=P1C03",
-    'f"ShireStartupGrounding: PASS chapter={chapter}"',
-]:
-    if pg121_marker not in pg121_runtime_smoke:
-        fail(f"PG-121 runtime grounding regression marker missing: {pg121_marker}")
+if not mode_has_evidence("startup", "startup.ground_p1c01"):
+    fail("PG-121 startup grounding evidence missing")
+if not mode_has_evidence("state", "state.ground_p1c03"):
+    fail("PG-121 state grounding evidence missing")
+if not chapter_has_evidence("grounding"):
+    fail("PG-121 chapter sweep grounding evidence missing")
 
 pg121_shire_builder = read(ROOT / "Source" / "ShireJourney" / "ShirePrototypeWorldBuilder.cpp")
 pg121_fellowship_builder = read(ROOT / "Source" / "ShireJourney" / "FellowshipChapterWorldBuilder.cpp")
@@ -6204,8 +6212,9 @@ for pg124_symbol in [
 
 if "-AuditTransitions" not in MODE_EXTRA_ARGS.get("transitions", ()):
     fail("PG-124 central runtime contract lost transition execution")
-if len(MODE_MARKERS.get("transitions", ())) != 2:
-    fail("PG-124 central runtime contract lost transition evidence")
+for pg124_evidence in ["transition.barrier", "transition.sequence"]:
+    if not mode_has_evidence("transitions", pg124_evidence):
+        fail(f"PG-124 central runtime contract lost transition evidence: {pg124_evidence}")
 
 if "--mode transitions" not in pg124_state_cmd:
     fail("PG-124 state CI does not execute continuous transition audit")

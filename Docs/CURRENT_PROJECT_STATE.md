@@ -1,3 +1,13 @@
+## 2026-09-23 - W00 checkpoint CP-W00-143: semantic evidence-contract consolidation
+
+Parent head `aa8f80c89de1193728c1ff82b5876fdac0fdc7d3` split again: Warehouse #190 SUCCESS, Unreal #611 SUCCESS, Pre-Unreal #776 FAILURE. #611 gives exact-parent **COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED** evidence for compile/import, Automation 2/2, startup, P1C01-P1C08, state, transitions, rollback/stream-failure faults, delayed pending authority and persistence edges. The warning-debt gate remained zero for all tracked project categories, including the streaming-pool precedence warning.
+
+#776 exposed the remaining root of the repeated static reds. PG-070/074/079/080 and PG-129 still assumed that exact evidence strings physically lived in `runtime_smoke.py`. After PG-142 correctly moved those strings to a central registry, those older guards became stale even though the real runtime was green. CP-W00-143 therefore deepens the repair: `runtime_audit_contracts.py` now owns semantic evidence IDs, exact marker text, mode membership and C++ source anchors. Static validators ask for semantic IDs such as ring continuity, persistence commit, rollback or stale-checkpoint proof rather than searching another Python file for copied text.
+
+The same wave migrates DeepProjectAudit and runtime unit tests to the semantic registry and strengthens the de-duplication test so exact runtime evidence text is forbidden in all Python consumers. This is intended to eliminate the recurring class where a correct C++/runtime change turns Pre-Unreal red because a second or third copy of the old marker survives elsewhere.
+
+Status of CP-W00-143: **SOURCE-REPAIRED / FRESH EXACT-HEAD PROOF PENDING**. W00 remains open; W01 remains blocked.
+
 ## 2026-09-23 - W00 checkpoint CP-W00-142: validation-contract consolidation wave
 
 Parent head `7636c7779156831660964cc5d44125efa4b480d1` produced a split result: Warehouse #189 SUCCESS, Unreal #610 SUCCESS, Pre-Unreal #775 FAILURE. #610 is concrete **COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED** evidence for that exact parent: UE4.27.2 compile/import, Automation 2/2, startup, P1C01-P1C08, state, transitions, rollback/stream-failure faults, delayed pending authority and the persistence-edge sweep all passed. Warning debt also reported `Streaming pool scalability override warnings = 0`. #775 failed on one stale static contract: PG-140 still searched for the old formatted checkpoint log template after #609 forced the C++ logger to split PASS/FAIL into static UE_LOG branches.
