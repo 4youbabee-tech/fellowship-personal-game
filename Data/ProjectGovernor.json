@@ -2631,15 +2631,19 @@
         "Destructive NPC-memory chapter aging now runs from CommitWorldBoundState at destination commit rather than StartChapter logical request.",
         "Async checkpoint completion captures chapter/route/episode/world revision and cannot heal/message a different committed world.",
         "Ambient social evaluation now uses one actor traversal; no performance improvement is claimed until target-device measurement.",
-        "PG-133 and deep_project_audit guard request-time hold, public committed context, commit-bound memory housekeeping, checkpoint origin binding and transition cancel-release evidence."
+        "PG-133 and deep_project_audit guard request-time hold, public committed context, commit-bound memory housekeeping, checkpoint origin binding and transition cancel-release evidence.",
+        "Unreal #601 on 34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab completed UE4.27.2 build/import/Automation/startup/P1C01-P1C08/state/transitions; final warning gate failed only on three tangent/binormal mesh identities.",
+        "SM_Balrog_Wing and SM_Lurtz_Blade source OBJ data contained four degenerate UV triangles each; SM_Isengard_IndustrialPitRim contained authored normals opposing geometric face normals.",
+        "Those three project-owned procedural static OBJ sources now use face-local non-degenerate UVs and face-aligned normals; final animated assets remain skeletal FBX-only.",
+        "asset_quality_audit.py now treats degenerate UV triangles and opposed/zero authored normals as structural source errors before Unreal import.",
+        "PG-037 now requires the origin-bound async checkpoint completion marker with stateApplied and sameCommittedContext instead of its obsolete pre-PG-133 log signature.",
+        "PG-134 guards the source tangent-basis contract while warning ceilings remain zero."
       ],
       "missing_work": [
-        "Obtain fresh exact-head Pre-Unreal and UE4.27.2 compile/import/runtime evidence for PG-131, PG-132 and PG-133 together.",
-        "Require production import to finish with zero degenerate tangent, nearly-zero tangent/binormal and missing M_ProductionSurface warning debt.",
-        "Require startup, P1C01-P1C08 aggregate, state/persistence and continuous-transition audits on the same exact head, including held-during-swap + cancel-release evidence.",
-        "Add and execute forced-slow async transition and failed-transition rollback injection, including exact NPC/LivingWorld committed-context checks.",
-        "Add runtime coverage for legacy terminal-save single-publication repair and stale async checkpoint callback across a world revision.",
-        "Validate packaged Data JSON runtime dependencies, target-device performance/memory/GC, audio playback and human core-loop/onboarding gates before W00 final acceptance."
+        "Obtain fresh exact-head Pre-Unreal and UE4.27 compile/import/runtime proof after PG-134 mesh source repair.",
+        "Require zero nearly-zero tangent and zero nearly-zero binormal identities on that same exact head.",
+        "Require startup, P1C01-P1C08, persistence state and continuous-transition audits to remain green after the asset-source repair.",
+        "Execute forced-slow transition and rollback-failure injection, legacy terminal-save repair, packaged Data JSON staging, target-device performance/memory, real audio playback and human play gates before W00 final closure."
       ],
       "acceptance_criteria": [
         "No known CRITICAL/HIGH source defect remains uncorrected or explicitly evidence-bounded.",
@@ -4038,44 +4042,24 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Continued root-cause stabilization after exact-head Unreal #599 exposed a C++ API ownership defect. Source simulation also showed PG-131 did not begin the gameplay hold early enough and asynchronous checkpoint completion could mutate a later world.",
-    "exact_reviewed_head": "cb8c789aff25d2d1f53c0bc7e37f47fe92607eeb",
+    "reason": "Continue root-cause stabilization from exact-head evidence. Unreal #601 reduced the remaining hard failure to three mesh tangent/binormal identities; source analysis found concrete UV/normal defects and PG-134 now rejects that class before engine import.",
+    "exact_reviewed_head": "34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#764 SUCCESS on cb8c789aff25d2d1f53c0bc7e37f47fe92607eeb",
-      "unreal_build": "#599 FAILURE at UE4.27.2 C++ compile: ShireNPC.cpp C2248 calling private UShireNPCContextSubsystem::IsLogicalWorldContextCommitted; import/runtime skipped",
-      "warehouse": "#178 queued/pending at reconciliation time"
+      "pre_unreal": "#766 FAILURE only because PG-037 expected the obsolete checkpoint completion log signature",
+      "warehouse": "#180 SUCCESS",
+      "unreal_build": "#601: C++ build PASS; production import PASS; Automation PASS; startup PASS; P1C01-P1C08 aggregate PASS; state PASS; transitions PASS; warning gate FAIL on exactly SM_Balrog_Wing, SM_Lurtz_Blade, SM_Isengard_IndustrialPitRim"
     },
     "reconciled_findings": [
-      "A read-only committed-context readiness query used by named NPC runtime must be public; private API placement caused #597 and #599 compile failure.",
-      "World transition hold must start when logical destination is requested, before asynchronous asset preload, not only during final destination construction.",
-      "Rapid cancellation back to the current world needs an explicit release path once stale pending work is cancelled and exact current identity is committed.",
-      "NPC memory pruning is destructive persistence housekeeping and belongs to committed-world publication, not StartChapter logical request.",
-      "Async checkpoint callbacks need origin chapter/route/episode/revision binding so old-world completion cannot heal destination player state.",
-      "Ambient social actor iteration can be reduced from two full scans to one without increasing density or changing gameplay."
+      "The zero-warning policy worked: it stopped the pipeline on three concrete source assets instead of tolerating them.",
+      "Wing and blade UV charts contained singular triangles; the industrial rim authored normals conflict with face geometry.",
+      "Source repair plus pre-engine source validation is preferred over warning suppression, ceiling increases or per-build log exceptions.",
+      "PG-037 failure is validator drift after a stronger runtime log contract, not a runtime checkpoint regression."
     ],
-    "next_priority": "W00_PG133_EXACT_HEAD_COMPILE_IMPORT_RUNTIME",
-    "truth_boundary": "The PG-133 source wave is not compile/runtime accepted until a fresh exact-head pipeline passes. #599 proves only the private-API compile defect on cb8c789a; it does not validate import or runtime.",
+    "next_priority": "W00_PG134_ZERO_TANGENT_WARNING_EXACT_HEAD",
+    "truth_boundary": "The mesh and validator repairs are source-level until a newer exact-head run passes. Build #601 evidence applies only to 34a9a2a8...",
     "stabilization_wave": {
-      "status": "LARGE_SOURCE_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
-      "invariant": "Logical destination state may advance before geometry commit, but no player/NPC/enemy/trigger persistent mutation or delayed checkpoint side effect may consume or mutate that state until the exact world revision is committed.",
-      "current_root_causes": [
-        "private committed-context API used cross-class",
-        "late world hold relative to async preload",
-        "destructive NPC-memory pruning before commit",
-        "stale async checkpoint completion side effects",
-        "duplicate ambient social full-scan"
-      ]
-    },
-    "user_experience_stabilization": {
-      "status": "GATED_AFTER_W00_TECHNICAL_GREEN",
-      "required_before_large_content_expansion": [
-        "15-minute P1C01 core-loop play review",
-        "first-five-minutes onboarding review without developer guidance",
-        "at least one fresh external playtest",
-        "target-device frame-time, memory and transition-hitch profiling",
-        "audio playback/residency validation without -NoSound"
-      ],
-      "evidence_boundary": "Automation cannot certify enjoyment, readability, visual consistency, target-device smoothness or audible mix quality."
+      "status": "SOURCE_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "invariant": "No production mesh may enter Unreal with a structurally singular UV triangle or strongly opposed authored normal that creates zero tangent/binormal basis; the warning ceiling remains zero."
     }
   },
   "development_mode": {

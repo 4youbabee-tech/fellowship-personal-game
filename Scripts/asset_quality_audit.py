@@ -41,6 +41,31 @@ def triangle_area(a, b, c) -> float:
     return 0.5 * math.sqrt(sum(value * value for value in cross))
 
 
+def parse_obj_component_index(token: str, component: int, count: int) -> int | None:
+    parts = token.split("/")
+    if component >= len(parts) or not parts[component]:
+        return None
+    try:
+        raw = int(parts[component])
+    except ValueError:
+        return None
+    return count + raw if raw < 0 else raw - 1
+
+
+def normalized_cross(a, b, c):
+    ab = (b[0]-a[0], b[1]-a[1], b[2]-a[2])
+    ac = (c[0]-a[0], c[1]-a[1], c[2]-a[2])
+    cross = (
+        ab[1]*ac[2] - ab[2]*ac[1],
+        ab[2]*ac[0] - ab[0]*ac[2],
+        ab[0]*ac[1] - ab[1]*ac[0],
+    )
+    length = math.sqrt(sum(value * value for value in cross))
+    if length <= 1e-12:
+        return None
+    return tuple(value / length for value in cross)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--strict", action="store_true", help="Fail on structural asset defects.")
@@ -102,11 +127,15 @@ def main() -> int:
         vertices: list[tuple[float, float, float]] = []
         material_libraries: list[str] = []
         used_materials: set[str] = set()
+        normals: list[tuple[float, float, float]] = []
+        uvs: list[tuple[float, float]] = []
         normal_count = 0
         uv_count = 0
         smoothing_seen = False
         zero_area_faces = 0
         malformed_faces = 0
+        degenerate_uv_triangles = 0
+        opposed_normal_corners = 0
 
         try:
             lines = obj.read_text(encoding="utf-8", errors="replace").splitlines()
@@ -126,8 +155,20 @@ def main() -> int:
                         errors.append(f"{obj.relative_to(ROOT)} contains malformed vertex data")
             elif stripped.startswith("vn "):
                 normal_count += 1
+                parts = stripped.split()
+                if len(parts) >= 4:
+                    try:
+                        normals.append((float(parts[1]), float(parts[2]), float(parts[3])))
+                    except ValueError:
+                        errors.append(f"{obj.relative_to(ROOT)} contains malformed normal data")
             elif stripped.startswith("vt "):
                 uv_count += 1
+                parts = stripped.split()
+                if len(parts) >= 3:
+                    try:
+                        uvs.append((float(parts[1]), float(parts[2])))
+                    except ValueError:
+                        errors.append(f"{obj.relative_to(ROOT)} contains malformed UV data")
             elif stripped.startswith("s ") and stripped.lower() not in {"s off", "s 0"}:
                 smoothing_seen = True
             elif stripped.startswith("mtllib "):
@@ -189,6 +230,49 @@ def main() -> int:
                 zero_area_faces += 1
             elif any(area <= 1e-7 for area in fan_areas):
                 triangulation_risk_faces += 1
+            # A zero-area UV triangle is a direct tangent-space singularity. UE4
+            # reports this later as nearly-zero tangents/binormals; reject it here.
+            for offset in range(1, len(tokens) - 1):
+                tri_tokens = (tokens[0], tokens[offset], tokens[offset + 1])
+                uv_indices = [
+                    parse_obj_component_index(token, 1, len(uvs))
+                    for token in tri_tokens
+                ]
+                if all(index is not None and 0 <= index < len(uvs) for index in uv_indices):
+                    ua, ub, uc = (uvs[index] for index in uv_indices)
+                    uv_twice_area = abs(
+                        (ub[0] - ua[0]) * (uc[1] - ua[1]) -
+                        (ub[1] - ua[1]) * (uc[0] - ua[0])
+                    )
+                    if uv_twice_area <= 1e-8:
+                        degenerate_uv_triangles += 1
+
+                normal_indices = [
+                    parse_obj_component_index(token, 2, len(normals))
+                    for token in tri_tokens
+                ]
+                geometric_normal = normalized_cross(
+                    vertices[indices[0]],
+                    vertices[indices[offset]],
+                    vertices[indices[offset + 1]],
+                )
+                if geometric_normal and all(
+                    index is not None and 0 <= index < len(normals)
+                    for index in normal_indices
+                ):
+                    for normal_index in normal_indices:
+                        source_normal = normals[normal_index]
+                        source_length = math.sqrt(sum(value * value for value in source_normal))
+                        if source_length <= 1e-12:
+                            opposed_normal_corners += 1
+                            continue
+                        source_unit = tuple(value / source_length for value in source_normal)
+                        alignment = sum(
+                            geometric_normal[axis] * source_unit[axis]
+                            for axis in range(3)
+                        )
+                        if alignment < -0.20:
+                            opposed_normal_corners += 1
 
         if malformed_faces:
             errors.append(
@@ -204,6 +288,16 @@ def main() -> int:
                 f"{obj.relative_to(ROOT)} has {triangulation_risk_faces} triangulation-risk faces"
             )
             stats["obj_with_triangulation_risk"] += 1
+        if degenerate_uv_triangles:
+            errors.append(
+                f"{obj.relative_to(ROOT)} has {degenerate_uv_triangles} degenerate UV triangle(s)"
+            )
+            stats["obj_with_degenerate_uv_triangles"] += 1
+        if opposed_normal_corners:
+            errors.append(
+                f"{obj.relative_to(ROOT)} has {opposed_normal_corners} corner normal(s) that oppose the geometric face normal"
+            )
+            stats["obj_with_opposed_normals"] += 1
 
         stats["obj_triangle_equivalents"] += obj_triangle_equivalents
         production_bucket_triangles[bucket] += obj_triangle_equivalents
@@ -258,6 +352,8 @@ def main() -> int:
         f"- OBJ without smoothing groups: {stats['obj_without_smoothing_groups']}",
         f"- OBJ with truly near-zero-area faces: {stats['obj_with_zero_area_faces']}",
         f"- OBJ with triangulation-risk faces: {stats['obj_with_triangulation_risk']}",
+        f"- OBJ with degenerate UV triangles: {stats['obj_with_degenerate_uv_triangles']}",
+        f"- OBJ with opposed face normals: {stats['obj_with_opposed_normals']}",
         f"- Approx source triangle equivalents: {stats['obj_triangle_equivalents']:,}",
         f"- OBJ source bytes: {stats['obj_source_bytes']:,}",
         f"- Texture source bytes: {stats['texture_source_bytes']:,}",

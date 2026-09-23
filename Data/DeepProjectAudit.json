@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "cb8c789aff25d2d1f53c0bc7e37f47fe92607eeb_UNREAL_599_COMPILE_FAILURE_PLUS_PG133_ROOT_CAUSE_SOURCE_WAVE",
+  "audited_head": "34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab_UNREAL_601_RUNTIME_GREEN_WARNING_GATE_3_ASSET_ROOT_CAUSE",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -164,15 +164,15 @@
     {
       "id": "AUDIT-HIGH-018",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_IMPORT_PROOF",
+      "status": "THREE_SOURCE_ASSETS_ISOLATED_SOURCE_REPAIR_PENDING_EXACT_HEAD_ZERO_WARNING_PROOF",
       "title": "Import warning ceilings allowed large tangent/binormal debt to remain green",
-      "evidence": "Unreal #595 warning-debt step passed while reporting 137 unique nearly-zero binormal mesh identities because the guard ceiling was 150. That is a tolerance policy, not root-cause closure.",
-      "action": "Zero the ceilings, add explicit nearly-zero tangent coverage, generate deterministic UVs in the ignored import working copy for UV-less static OBJ geometry, and fail import normalization if a face cannot be safely projected."
+      "evidence": "Unreal #601 on 34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab passed UE4.27.2 C++ build, production import, Automation, startup, aggregate P1C01-P1C08, state and transitions, then the zero-warning gate failed only on 3 mesh identities: SM_Balrog_Wing, SM_Lurtz_Blade, SM_Isengard_IndustrialPitRim. Source inspection found degenerate UV triangles on the first two and authored normals opposing geometric face normals on the Isengard rim.",
+      "action": "Repair those three project-owned procedural OBJ sources with face-local non-degenerate UVs and face-aligned normals, then keep a pre-engine structural guard that rejects degenerate UV triangles/opposed normals before Unreal import. Do not raise warning ceilings."
     },
     {
       "id": "AUDIT-HIGH-019",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_601_PENDING_PIE_DEVICE",
       "title": "Gameplay mutation could occur while destination quest state was ahead of committed world geometry",
       "evidence": "ChapterWorldRouter held CharacterMovement during async swaps, but player interaction/combat/supplies/save paths and trigger/puzzle/world-interaction actors did not share the same transaction barrier. A transition therefore had a window where logical destination state could exist while old geometry was still committed.",
       "action": "Mirror ChapterWorldRouter world hold into AShirePlayerCharacter; require IsGameplayWorldCommitted() on physical gameplay mutation paths; require committed logical context for named NPC banter; assert the barrier in continuous transition runtime audit."
@@ -180,15 +180,15 @@
     {
       "id": "AUDIT-HIGH-020",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_COMPILE_PROOF",
+      "status": "COMPILE_TESTED_FIXED_ON_UNREAL_601",
       "title": "UE4.27 package-name overload ambiguity blocked the stricter importer wave",
-      "evidence": "Unreal #596 failed at ShireProductionImportCommandlet.cpp with C2668 FPackageName::ObjectPathToPackageName ambiguous for const TCHAR*. Import and all runtime stages were skipped.",
+      "evidence": "Unreal #601 on 34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab completed UE4.27.2 C++ build successfully, proving the explicit FString ObjectPathToPackageName fix compiles on the target engine.",
       "action": "Pass an explicit FString to ObjectPathToPackageName and preserve PG-131 static guard so automated edits cannot reintroduce the ambiguous call."
     },
     {
       "id": "AUDIT-HIGH-021",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_601_PENDING_PIE_DEVICE",
       "title": "Legacy save repair could publish and commit an intermediate world identity",
       "evidence": "CommitPersistenceRestore cleared bPersistenceRestoreInProgress and broadcast experience/chapter/quest state before OnQuestStateRestored. ShireStoryFlowSubsystem repairs terminal legacy saves from OnQuestStateRestored using StartChapter/StartExperience, so an already-resident bank could commit the pre-repair identity before the repair fired.",
       "action": "Run the repair hook while persistence broadcast suppression is still active; suppress StartQuest/StartChapter/StartExperience broadcasts during restore; skip route-progress recapture while restoring; publish only the final repaired identity."
@@ -196,7 +196,7 @@
     {
       "id": "AUDIT-HIGH-022",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_601_PENDING_PIE_DEVICE",
       "title": "Synchronous same-bank restore commit could capture stale player-life state",
       "evidence": "RestoreSaveSnapshot published the restored logical identity before assigning player health/stamina/resolve/supplies. An already-resident chapter bank can commit synchronously from the final identity broadcast and CaptureCommittedRollbackSnapshot immediately.",
       "action": "Restore player-life fields before CommitPersistenceRestore(true), so any synchronous world commit/rollback snapshot observes a complete restored player + quest state."
@@ -204,15 +204,15 @@
     {
       "id": "AUDIT-HIGH-023",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_FRESH_COMPILE_PROOF",
+      "status": "COMPILE_TESTED_FIXED_ON_UNREAL_601",
       "title": "Committed NPC context query was private while named NPC runtime called it",
-      "evidence": "Unreal #599 on cb8c789aff25d2d1f53c0bc7e37f47fe92607eeb failed C++ compile at ShireNPC.cpp(1394) with C2248: UShireNPCContextSubsystem::IsLogicalWorldContextCommitted cannot access private member. The same defect also caused Unreal #597.",
+      "evidence": "Unreal #601 completed UE4.27.2 C++ build successfully on 34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab, so the public read-only NPC committed-context API compiles with named NPC consumers.",
       "action": "Promote the read-only committed-context query to the public NPCContext API, keep mutation ownership private, and add PG-133/deep-audit visibility guards."
     },
     {
       "id": "AUDIT-HIGH-024",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_TRANSITION_PROOF",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_601_PENDING_PIE_DEVICE",
       "title": "World mutation hold started after preload instead of at logical destination request",
       "evidence": "Source simulation of ChapterWorldRouter showed LoadChapterWorld assigned pending destination and requested async assets without SetPlayerWorldHold(true). PG-131 runtime expected held-during-swap, but the authoritative hold was only guaranteed later in CommitChapterWorld.",
       "action": "Raise the hold before pending destination/preload, release only when rapid A->pending B->A cancellation proves the exact old world is committed, and require one runtime marker to prove both pending hold and cancel release."
@@ -220,7 +220,7 @@
     {
       "id": "AUDIT-HIGH-025",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_ASYNC_PROOF",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_601_PENDING_PIE_DEVICE",
       "title": "Async checkpoint completion could heal a different committed world",
       "evidence": "HandleCheckpointSaveComplete applied full health/stamina/resolve on any successful callback. Async disk I/O can finish after a chapter/world revision changes, allowing an old checkpoint callback to mutate destination player state.",
       "action": "Capture chapter/route/episode/world revision when the async save is scheduled. Keep the disk result valid, but apply checkpoint heal/HUD effects only if callback origin still matches the exact committed world."
@@ -228,7 +228,7 @@
     {
       "id": "AUDIT-HIGH-026",
       "severity": "HIGH",
-      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_ROLLBACK_PROOF",
+      "status": "EXACT_HEAD_HEADLESS_REGRESSION_PASS_ON_UNREAL_601_PENDING_PIE_DEVICE",
       "title": "NPC memory pruning occurred at logical chapter request before world commit",
       "evidence": "StartChapter called PruneNPCMemoryForCurrentChapter before destination geometry/residency commit. Rollback snapshots could repair this later, but live persistent state was destructively aged during the uncommitted window and restore canonicalization could prune against an intermediate chapter.",
       "action": "Move destructive memory aging to CommitWorldBoundState called by ChapterWorldRouter only after destination world/context commit; suppress restore pruning until the final canonical commit."
@@ -240,6 +240,14 @@
       "title": "Ambient social check scanned the full ambient actor set twice",
       "evidence": "AShireAmbientNPC::UpdateSocialLife used two TActorIterator<AShireAmbientNPC> traversals per social check: one for active-social count and one for nearest partner selection.",
       "action": "Use one bounded traversal for both results. Keep target-device profiling as the acceptance boundary; no FPS claim is made from source inspection."
+    },
+    {
+      "id": "AUDIT-HIGH-028",
+      "severity": "HIGH",
+      "status": "SOURCE_REPAIR_IMPLEMENTED_PENDING_EXACT_HEAD_ZERO_WARNING_PROOF",
+      "title": "Three procedural OBJ assets carried invalid tangent-space source data",
+      "evidence": "Unreal #601 zero-warning gate isolated nearly-zero tangent/binormal debt to SM_Balrog_Wing, SM_Lurtz_Blade and SM_Isengard_IndustrialPitRim. Source geometry analysis found 4 zero-area UV triangles in each of the first two meshes and widespread authored normal/face opposition in the industrial rim.",
+      "action": "Use face-local non-degenerate UV triangles and face-aligned normals for these flat-color procedural meshes. asset_quality_audit.py now rejects future degenerate UV triangles and strongly opposed authored normals before engine import."
     }
   ],
   "external_practice_alignment": [
@@ -265,17 +273,15 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head compile/import/runtime proof for PG-131/PG-132/PG-133 together",
-    "zero tangent/binormal/master-surface warning debt under deterministic UV normalization",
-    "forced slow async transition proving old NPC/LivingWorld context remains authoritative until destination commit",
-    "rollback-failure injection proving movement/gameplay remains held and prior persistence state is restored exactly",
-    "legacy terminal-save repair runtime case proving one final canonical world commit",
-    "async checkpoint callback race case across a world revision",
-    "packaged-build Data JSON dependency/read validation",
+    "fresh exact-head Pre-Unreal + UE4.27 compile/import/runtime after PG-134 source tangent-basis repair",
+    "require zero nearly-zero tangent/binormal identities on the same exact head",
+    "forced slow async transition and failed transition rollback injection",
+    "legacy terminal-save repair runtime case proving one final committed identity",
+    "packaged-build Data JSON staging/read validation",
     "target-device frame-time/resident-memory/GC/tick profiling",
     "audio playback validation without -NoSound",
     "human core-loop/onboarding/external playtest",
-    "isolated Public/Private migration after W00 functional stability"
+    "isolated Public/Private migration"
   ],
-  "audit_scope_note": "Pre-Unreal #764 passed on cb8c789a..., but Unreal #599 failed C++ compile at the private IsLogicalWorldContextCommitted API call; import/runtime were skipped. PG-133 source wave fixes that compile ownership defect and additional request-time transaction/async callback/persistence-boundary defects. No new engine acceptance applies until a fresh exact head passes."
+  "audit_scope_note": "Unreal #601 proves compile/import/Automation/startup/P1C01-P1C08/state/transitions on 34a9a2a8..., with the only final gate failure being exactly three tangent/binormal mesh identities. PG-134 source repairs and the refreshed PG-037 validator are source-level until a newer exact-head pipeline passes."
 }

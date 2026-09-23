@@ -150,6 +150,16 @@ if "ObjectPathToPackageName(ProductionSurfacePath)" in importer:
 if "ObjectPathToPackageName(ProductionSurfaceObjectPath)" not in importer:
  errors.append("explicit FString package-name preflight missing from production importer")
 
+asset_quality=read(ROOT/"Scripts"/"asset_quality_audit.py")
+for token in [
+ "obj_with_degenerate_uv_triangles",
+ "degenerate UV triangle",
+ "obj_with_opposed_normals",
+ "opposes the geometric face normal",
+]:
+ if token not in asset_quality:
+  errors.append(f"source tangent-basis quality guard missing: {token}")
+
 
 
 for builder_name in [

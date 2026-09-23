@@ -1,3 +1,15 @@
+## 2026-09-23 - Unreal #601 narrowed W00 to three source-mesh tangent defects; PG-134 repairs source data
+
+Exact head `34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab` reached substantially farther than the preceding failed heads. Unreal Build #601 completed UE4.27.2 C++ build, production import, Automation, startup, aggregate P1C01-P1C08 runtime, state roundtrip and continuous-transition runtime. The final warning-debt gate failed with exactly three unique nearly-zero tangent identities and the same three nearly-zero binormal identities: `SM_Balrog_Wing`, `SM_Lurtz_Blade`, and `SM_Isengard_IndustrialPitRim`. Missing smoothing groups, degenerate tangent bases, missing production master surface, missing runtime world packages, optional audio/rig debt, defaultMat references, light mobility warnings and NPC spawn collision failures were all zero in that gate.
+
+Source analysis isolated actual asset-data causes instead of relaxing the zero-warning policy. `SM_Balrog_Wing` and `SM_Lurtz_Blade` each contained four UV-degenerate triangles, which makes tangent derivation singular. `SM_Isengard_IndustrialPitRim` contained authored normals that oppose the geometric face direction on many triangles. These three project-owned procedural static OBJ sources are repaired with face-local non-degenerate UVs and face-aligned normals. This is an asset-source correction, not an animated-OBJ exception; final animated characters/creatures remain skeletal FBX only.
+
+The source-quality audit is also hardened so this class cannot silently return: degenerate UV triangles are structural errors, and strongly opposed/zero authored normals are structural errors before Unreal import. PG-134 requires both the guard and the repaired face-local basis. Warning ceilings remain zero.
+
+Pre-Unreal #766 separately failed because PG-037 still searched for the old async-checkpoint completion log format after PG-133 added `stateApplied` and `sameCommittedContext` evidence fields. The validator is updated to require the new stronger completion marker rather than reverting the runtime guard.
+
+Current status for this new wave is **source repair pending fresh exact-head proof**. #601 evidence remains valid only for `34a9a2a8...`; it does not prove the new mesh repairs. No PIE, device, visual or performance acceptance is claimed.
+
 ## 2026-09-23 - Unreal #599 compile failure exposed API ownership defect; PG-133 transaction wave
 
 Exact head `cb8c789aff25d2d1f53c0bc7e37f47fe92607eeb` passed Pre-Unreal #764, then Unreal Build #599 failed during UE4.27.2 C++ compile at `ShireNPC.cpp(1394)`: `UShireNPCContextSubsystem::IsLogicalWorldContextCommitted` was called by the named-NPC runtime while still declared private. Import, Automation and runtime stages were skipped, so #599 provides no evidence for those stages.

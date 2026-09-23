@@ -1,3 +1,9 @@
+## 2026-09-23 - W00 PG-134 tangent-space source repair after Unreal #601
+
+Unreal #601 on `34a9a2a8b2cf8f944ce4eae7e90fc7492809b9ab` passed C++ build, production import, Automation, startup, P1C01-P1C08 aggregate runtime, state and continuous transitions. The final zero-warning gate isolated the remaining import debt to exactly three meshes: `SM_Balrog_Wing`, `SM_Lurtz_Blade`, and `SM_Isengard_IndustrialPitRim`.
+
+The first two contained degenerate UV triangles; the rim contained authored normals opposing its geometric faces. Their project-owned procedural OBJ source data is repaired with face-local UV/normal bases, and `asset_quality_audit.py` now rejects these tangent-space source defects before engine import. PG-037 is also synchronized with the stronger async-checkpoint completion marker introduced by PG-133. No production-completeness percentage is advanced until a newer exact head reaches zero warning debt.
+
 ## 2026-09-23 - W00 PG-133 request-time transaction closure
 
 Unreal #599 on `cb8c789aff25d2d1f53c0bc7e37f47fe92607eeb` failed at UE4.27.2 C++ compile because the named-NPC runtime called a private NPCContext committed-state query. The following source wave promotes that read-only query to the public API and hardens the transaction boundary further: request-time world hold, exact cancel-release, commit-bound NPC-memory pruning, origin-bound async checkpoint side effects, context-dependent NPC/enemy freeze during pending swaps, and a single ambient social actor scan.

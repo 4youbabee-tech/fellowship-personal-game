@@ -2250,7 +2250,7 @@ for symbol in [
     "bCheckpointSaveInFlight",
     "QueuedCheckpointSaveId",
     "SafeCheckpoint: id=%s async-save=scheduled",
-    "SafeCheckpoint: id=%s async-save=%s slot=%s user=%d",
+    "SafeCheckpoint: id=%s async-save=%s stateApplied=%s sameCommittedContext=%s slot=%s user=%d",
     "SafeCheckpoint: restored id=%s",
 ]:
     if symbol not in checkpoint_runtime_source:
@@ -3789,6 +3789,29 @@ if "ObjectPathToPackageName(ProductionSurfacePath)" in pg133_importer:
     fail("PG-133 ambiguous UE4.27 ObjectPathToPackageName(const TCHAR*) call reintroduced")
 if "ObjectPathToPackageName(ProductionSurfaceObjectPath)" not in pg133_importer:
     fail("PG-133 explicit FString importer package-name call missing")
+
+# PG-134: source geometry that can generate zero tangent/binormal basis is rejected before Unreal import.
+pg134_asset_audit = read(ROOT / "Scripts" / "asset_quality_audit.py")
+for pg134_symbol in [
+    "obj_with_degenerate_uv_triangles",
+    "degenerate UV triangle",
+    "obj_with_opposed_normals",
+    "opposes geometric face normal",
+]:
+    if pg134_symbol not in pg134_asset_audit:
+        fail(f"PG-134 source tangent-basis guard missing: {pg134_symbol}")
+
+for pg134_asset in [
+    ROOT / "SourceAssets" / "Production" / "Enemies" / "Balrog" / "SM_Balrog_Wing.obj",
+    ROOT / "SourceAssets" / "Production" / "Enemies" / "Lurtz" / "SM_Lurtz_Blade.obj",
+    ROOT / "SourceAssets" / "Production" / "World" / "Isengard" / "SM_Isengard_IndustrialPitRim.obj",
+]:
+    pg134_text = read(pg134_asset)
+    pg134_faces = [line for line in pg134_text.splitlines() if line.startswith("f ")]
+    pg134_uvs = [line for line in pg134_text.splitlines() if line.startswith("vt ")]
+    pg134_normals = [line for line in pg134_text.splitlines() if line.startswith("vn ")]
+    if not pg134_faces or len(pg134_uvs) < len(pg134_faces) * 3 or len(pg134_normals) < len(pg134_faces):
+        fail(f"PG-134 repaired tangent-basis asset is not face-local: {pg134_asset.name}")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
