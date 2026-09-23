@@ -118,6 +118,10 @@ It then prints **BACKLOG MEMORY (NOT EXECUTION ORDER)** for unfinished CRITICAL/
 
 `Data/PlayerExperiencePacingPlan.json` remains the human review contract for boredom, repetition, waiting, clarity, discovery and story/combat/dialogue rhythm. CI may validate the contract exists; only human play may accept PACING.
 
+## Development-mode contract
+
+Development phases are registered in `development_mode_contract` inside the Governor. That contract owns mode identity, supersedes relationships and the labels that require manual/device evidence. Validators consume the shared semantic helper; they must not keep independent mode allowlists or decide proof honesty from prose wording.
+
 ## Current rule
 
 The active lane is **W00_ARCHITECTURAL_STABILIZATION** under `ARCHITECTURAL_STABILIZATION_GATE`.

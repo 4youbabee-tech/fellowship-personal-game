@@ -2688,7 +2688,7 @@
         "Exact head 96398e7cc48277324113c7879a8d28e3b659757e passed Pre-Unreal #781, Warehouse #197 and Unreal #616, including CP-W00-147 preflight-vs-rollback semantics and real queued AsyncSaveGame persistence-edge coverage."
       ],
       "missing_work": [
-        "Prove CP-W00-148 with fresh exact-head Pre-Unreal and UE4.27.2 validation.",
+        "Prove CP-W00-149 with fresh exact-head Pre-Unreal and UE4.27.2 validation.",
         "Validate packaged Data JSON staging/read behavior.",
         "Validate actual authored audio-bank presence/playback without -NoSound.",
         "Perform isolated Public/Private runtime-source migration without gameplay redesign and re-prove UE4.27.2 compile/runtime.",
@@ -4096,32 +4096,30 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "CP-W00-147 is machine-green; the next root-cause family is governance drift between the active W00 freeze and stale branch/mode/execution surfaces.",
-    "exact_reviewed_head": "96398e7cc48277324113c7879a8d28e3b659757e",
+    "reason": "Pre #782 exposed one remaining validator-drift family after CP-W00-148: PG-033 hard-coded three historical development-mode IDs and searched mode-rule prose for proof keywords, so the legitimate Governor-owned W00 mode was rejected before the rest of Pre-Unreal could run.",
+    "exact_reviewed_head": "32af3140d1d297283de640144a58c3b32133d3d1",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#781 SUCCESS",
-      "unreal": "#616 SUCCESS",
-      "warehouse": "#197 SUCCESS"
+      "pre_unreal": "#782 FAILURE only at PG-033 stale mode/proof semantics",
+      "unreal": "#617 SUCCESS on exact head 32af3140d1d297283de640144a58c3b32133d3d1",
+      "warehouse": "#198 SUCCESS on the same exact head; no staging-required delta"
     },
     "reconciled_findings": [
-      "branch_workflow still named production/chapter-streaming-v5 and PR #61 while the live integration train is PR #67.",
-      "development_mode and immediate_next_large_actions still encouraged visual/warehouse/content expansion despite the explicit W00 freeze.",
-      "MASTER_EXECUTION_BOARD still described PR #53, and DEVELOPMENT_GATES still instructed work/push directly on develop.",
-      "CURRENT_PROJECT_STATE ranked itself ahead of ProjectGovernor despite the sole-authority rule.",
-      "The Governor reminder surfaced every HIGH/CRITICAL backlog item without distinguishing executable work from frozen backlog."
+      "Development-mode authority belongs in ProjectGovernor data, not duplicated Python allowlists.",
+      "Manual-proof honesty must be structured data, not inferred from whether a sentence happens to contain PIE plus evidence/performance/device/visual words.",
+      "Pre-Unreal and ProjectGovernor validation now consume one shared governance_contracts helper, with regression tests for unknown modes, supersedes drift and missing manual-proof labels."
     ],
-    "next_priority": "W00_CP148_GOVERNOR_EXECUTION_TRUTH_THEN_PACKAGED_AUDIO_SOURCE_LAYOUT_DEVICE_HUMAN_CLOSURE",
-    "truth_boundary": "96398e7 is proven STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED. CP-W00-148 itself remains unproven until fresh exact-head validation.",
+    "next_priority": "W00_CP149_DATA_OWNED_MODE_CONTRACT_EXACT_HEAD_GREEN",
+    "truth_boundary": "32af3140 is COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED by Unreal #617 and Warehouse #198, but not STATIC-VALIDATED because Pre #782 failed before the later static suite. The CP-W00-149 child head is unproven until fresh exact-head runs.",
     "stabilization_wave": {
-      "status": "GOVERNANCE_DRIFT_REPAIRED_PENDING_EXACT_HEAD_PROOF",
-      "invariant": "One Governor decides the active lane; supporting docs and reminders cannot make frozen backlog look executable."
+      "status": "VALIDATOR_DRIFT_ROOT_CAUSE_REPAIRED_PENDING_EXACT_HEAD_PROOF",
+      "invariant": "Governor phase changes are validated from the Governor-owned mode contract; validators cannot invent a second allowlist or textual proof heuristic."
     }
   },
   "development_mode": {
     "id": "W00_ARCHITECTURAL_STABILIZATION",
     "status": "ACTIVE",
     "entered_on": "2026-09-23",
-    "supersedes": "VISUAL_PRODUCTION_FIRST_TEMPORARILY_SUSPENDED",
+    "supersedes": "VISUAL_PRODUCTION_FIRST",
     "reason": "Owner froze W01 and new production expansion until systemic architecture/evidence/governance stabilization is closed.",
     "rules": [
       "Fix root causes and shared contracts rather than chapter-specific patches.",
@@ -4129,7 +4127,17 @@
       "Do not broaden warehouse saturation, gameplay features, world regions, character production or living-world content during W00.",
       "Machine/headless success never substitutes for PIE, target-device, pacing or visual acceptance.",
       "Public/Private migration is an isolated architecture step and must not carry gameplay redesign."
-    ]
+    ],
+    "proof_boundary": {
+      "machine_evidence_cannot_promote_manual_acceptance": true,
+      "manual_only_labels": [
+        "PIE-TESTED",
+        "DEVICE-TESTED",
+        "VISUALLY-ACCEPTED",
+        "PERFORMANCE-ACCEPTED"
+      ],
+      "note": "Static, compile, import and headless runtime evidence remain machine evidence only. Human/device evidence is required for these labels."
+    }
   },
   "backend_completion": {
     "checkpoint": "CP44",
@@ -4169,14 +4177,15 @@
     "Run target-device DX11 720p Low-Medium profiling and chapter-specific human PIE/pacing/visual checks before W00 closure."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-148",
+    "checkpoint_id": "CP-W00-149",
     "source_head": "96398e7cc48277324113c7879a8d28e3b659757e",
     "branch": "integration/comprehensive-foundation-v1",
     "pull_request": 67,
     "verified": {
       "last_green": "96398e7: Pre #781 SUCCESS + Unreal #616 SUCCESS",
-      "warehouse": "96398e7: Warehouse #197 SUCCESS (no staging-required delta)",
-      "cp147_fault_semantics": "Unreal #616 fault mode passed invalid preflight rejection with revision unchanged and separate forced valid-bank async rollback evidence."
+      "governance_parent_runtime": "32af3140: Unreal #617 SUCCESS",
+      "governance_parent_warehouse": "32af3140: Warehouse #198 SUCCESS (no staging-required delta)",
+      "governance_parent_static": "32af3140: Pre #782 FAILURE only at PG-033 stale development-mode validator before later Pre-Unreal steps ran"
     },
     "exact_head_scope": [
       "UE4.27.2 C++ compile",
@@ -4192,12 +4201,11 @@
       "real queued AsyncSaveGame cross-revision persistence edge",
       "project warning-debt categories"
     ],
-    "active_wave": "PG-150 governor execution-truth hardening: make the active W00 lane executable and keep frozen backlog from masquerading as current work.",
+    "active_wave": "PG-151 data-owned development-mode contract: remove PG-033 hard-coded mode allowlist and proof-wording heuristics so Governor phase changes cannot create validator drift.",
     "next_actions": [
-      "Validate packaged runtime Data JSON staging/read behavior rather than relying only on RuntimeDependencies parity.",
-      "Validate actual authored audio-bank presence and playback without -NoSound.",
-      "Perform the isolated Public/Private runtime-source migration with no gameplay redesign, then rerun exact-head Pre-Unreal and UE4.27.2 build/runtime validation.",
-      "Run target-device DX11 720p Low-Medium profiling and chapter-specific human PIE/pacing/visual checks before W00 closure."
+      "Run fresh Pre-Unreal and require PG-033/PG-151 to accept the Governor-owned W00 mode contract and execute the remaining static/deep/governor tests.",
+      "Run fresh Unreal exact-head validation after static proof; do not infer success from #617 because the source head will change.",
+      "If exact-head machine gates are green, continue W00 closure with packaged Data JSON execution, real audio playback, isolated Public/Private migration, target-device profiling and human acceptance."
     ],
     "unverified_acceptance": [
       "packaged Data JSON staging/read behavior",
@@ -4222,15 +4230,15 @@
         }
       },
       "latest_observed": {
-        "sha": "96398e7cc48277324113c7879a8d28e3b659757e",
+        "sha": "32af3140d1d297283de640144a58c3b32133d3d1",
         "pre_unreal": {
-          "sha": "96398e7cc48277324113c7879a8d28e3b659757e",
-          "run_id": 35913774272,
-          "status": "SUCCESS"
+          "sha": "32af3140d1d297283de640144a58c3b32133d3d1",
+          "run_id": 35917560820,
+          "status": "FAILURE"
         },
         "unreal": {
-          "sha": "96398e7cc48277324113c7879a8d28e3b659757e",
-          "run_id": 35913774304,
+          "sha": "32af3140d1d297283de640144a58c3b32133d3d1",
+          "run_id": 35917560853,
           "status": "SUCCESS"
         }
       }
@@ -5239,6 +5247,35 @@
       "Validate actual authored audio-bank presence and playback without -NoSound.",
       "Perform the isolated Public/Private runtime-source migration with no gameplay redesign, then rerun exact-head Pre-Unreal and UE4.27.2 build/runtime validation.",
       "Run target-device DX11 720p Low-Medium profiling and chapter-specific human PIE/pacing/visual checks before W00 closure."
+    ]
+  },
+  "development_mode_contract": {
+    "schema_version": 1,
+    "authority": "Data/ProjectGovernor.json",
+    "rule": "Development-mode validity and manual-proof boundaries are data-owned here. Validators consume this contract and must not maintain independent hard-coded allowlists or proof-wording heuristics.",
+    "modes": {
+      "BUILD_FIRST_BATCH_MODE": {
+        "supersedes": null,
+        "class": "BUILD"
+      },
+      "VISUAL_PRODUCTION_FIRST": {
+        "supersedes": "BUILD_FIRST_BATCH_MODE",
+        "class": "PRODUCTION"
+      },
+      "PIE_VERIFICATION_FREEZE": {
+        "supersedes": "VISUAL_PRODUCTION_FIRST",
+        "class": "VERIFICATION"
+      },
+      "W00_ARCHITECTURAL_STABILIZATION": {
+        "supersedes": "VISUAL_PRODUCTION_FIRST",
+        "class": "STABILIZATION"
+      }
+    },
+    "required_manual_only_labels": [
+      "PIE-TESTED",
+      "DEVICE-TESTED",
+      "VISUALLY-ACCEPTED",
+      "PERFORMANCE-ACCEPTED"
     ]
   }
 }

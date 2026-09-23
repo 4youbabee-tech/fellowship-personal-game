@@ -14,6 +14,7 @@ import sys
 import subprocess
 from pathlib import Path
 from governor_handoff import validate_handoff, evidence_summary
+from governance_contracts import validate_development_mode
 
 ROOT = Path(__file__).resolve().parents[1]
 GOVERNOR_PATH = ROOT / "Data" / "ProjectGovernor.json"
@@ -34,6 +35,9 @@ if governor.get("authority_id") != "FELLOWSHIP_SINGLE_PROJECT_GOVERNOR_V2":
 
 if "sole authoritative project-management decision source" not in str(governor.get("authority_rule", "")):
     fail("Governor must explicitly declare sole decision authority")
+
+for mode_error in validate_development_mode(governor):
+    fail("PG-151 " + mode_error)
 
 reqs = governor.get("requirements", [])
 req_ids: set[str] = set()

@@ -1,3 +1,9 @@
+## 2026-09-23 - W00 CP-W00-149 data-owned development-mode contract
+
+Parent `32af3140...`: Unreal #617 SUCCESS + Warehouse #198 SUCCESS; Pre #782 FAILURE only at the stale PG-033 development-mode/prose validator before the remaining static suite executed. CP-W00-149 replaces the hard-coded validator allowlist and wording heuristic with one structured Governor-owned contract shared by Pre-Unreal and project_governor.py, plus regression tests.
+
+No production-completeness percentage is increased. Child head remains **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**.
+
 ## 2026-09-23 - W00 CP-W00-148 governor execution-truth hardening
 
 Exact parent `96398e7cc48277324113c7879a8d28e3b659757e` passed Pre-Unreal #781, Warehouse #197 and Unreal #616. This promotes that **parent only** to STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED for the exercised machine suite; it does not promote PIE, device, audio playback, pacing or visual acceptance.

@@ -546,3 +546,14 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Guard:** `Scripts/project_governor.py` cross-checks the lane, freeze, branch/PR handoff and supporting management docs.
 
 **Proof boundary:** governance hardening does not promote PIE, device, audio, pacing or visual acceptance.
+
+### PG-151 — Development-mode validation must have one data owner
+**Symptom exposed by:** Pre-Unreal #782 on `32af3140d1d297283de640144a58c3b32133d3d1`.
+
+**Risk:** a validator-owned mode allowlist becomes a second project manager. A legitimate Governor phase change can turn red until Python is edited, and proof honesty can accidentally depend on exact sentence wording.
+
+**Contract:** `Data/ProjectGovernor.json/development_mode_contract` owns registered mode IDs, supersedes relations and mandatory manual-only acceptance labels. `development_mode.proof_boundary` is structured data. Validators consume the shared semantic helper and do not infer acceptance boundaries from prose.
+
+**Guard:** `Scripts/governance_contracts.py` is consumed by both Pre-Unreal and ProjectGovernor validation; `test_governance_contracts.py` covers unknown mode, supersedes drift, missing labels and prose-only fake proof.
+
+**Proof boundary:** this guard repairs governance validation semantics only. Fresh exact-head Pre-Unreal/UE4 evidence is required before the child checkpoint is promoted.

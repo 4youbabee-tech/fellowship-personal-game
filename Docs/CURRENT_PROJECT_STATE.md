@@ -1,3 +1,13 @@
+## 2026-09-23 - W00 checkpoint CP-W00-149: data-owned development-mode validation
+
+CP-W00-148 parent `32af3140d1d297283de640144a58c3b32133d3d1` produced a clean split result: Unreal #617 SUCCESS and Warehouse #198 SUCCESS, while Pre-Unreal #782 stopped immediately on two PG-033 validator errors. No C++/runtime failure was reported by #617.
+
+Root cause: PG-033 carried a second hard-coded list of acceptable development modes and inferred manual-proof honesty by searching rule prose for words such as PIE/evidence/device/visual/performance. The Governor's legitimate `W00_ARCHITECTURAL_STABILIZATION` mode therefore looked invalid to the validator.
+
+CP-W00-149 moves mode IDs, supersedes relations and manual-only acceptance labels into structured `development_mode_contract` data owned by ProjectGovernor. Both Pre-Unreal and `project_governor.py` consume one shared `governance_contracts.py` helper, and unit tests guard unknown modes, supersedes drift, missing manual labels and prose-only fake proof.
+
+Status of this child checkpoint: **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance/audio-playback acceptance is claimed and no completeness percentage changes.
+
 ## 2026-09-23 - W00 checkpoint CP-W00-148: Governor execution-truth hardening
 
 Exact parent `96398e7cc48277324113c7879a8d28e3b659757e` is **STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED**: Pre-Unreal #781 SUCCESS, Unreal #616 SUCCESS and Warehouse #197 SUCCESS. #616 passed UE4.27.2 compile/import, Automation 2/2, startup, P1C01-P1C08, state/continuous-transition/fault/pending/persistence-edge modes and warning-debt guard. #197 detected no staging-required delta and skipped heavy provider staging by design.

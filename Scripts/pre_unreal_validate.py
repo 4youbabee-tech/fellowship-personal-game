@@ -15,6 +15,7 @@ from collections import defaultdict, deque
 from pathlib import Path
 
 from source_contracts import signal_precedes_member_mutation
+from governance_contracts import validate_development_mode
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "Source" / "ShireJourney"
@@ -89,6 +90,8 @@ required_files = [
     ROOT / "Scripts" / "test_runtime_audit_contracts.py",
     ROOT / "Scripts" / "source_contracts.py",
     ROOT / "Scripts" / "test_source_contracts.py",
+    ROOT / "Scripts" / "governance_contracts.py",
+    ROOT / "Scripts" / "test_governance_contracts.py",
     ROOT / "Config" / "DefaultEngine.ini",
     ROOT / "Config" / "DefaultGame.ini",
     ROOT / "Config" / "DefaultInput.ini",
@@ -1400,23 +1403,8 @@ population_proof = str(population_identity.get("proof_limit") or "")
 if not population_proof or ("final" not in population_proof.lower()) or ("modular" not in population_proof.lower() and "not final" not in population_proof.lower()):
     fail("PG-033 CharacterPopulationPlan must preserve proxy/production-archetype versus final-art proof boundary")
 
-governor_mode = governor_data.get("development_mode", {}) if governor_data else {}
-governor_mode_id = governor_mode.get("id")
-governor_mode_rules = [str(rule) for rule in governor_mode.get("rules", [])]
-if governor_mode_id not in {"BUILD_FIRST_BATCH_MODE", "VISUAL_PRODUCTION_FIRST", "PIE_VERIFICATION_FREEZE"}:
-    fail("PG-033 Governor development mode must record an approved build/visual/verification mode")
-if governor_mode_id == "VISUAL_PRODUCTION_FIRST" and governor_mode.get("supersedes") != "BUILD_FIRST_BATCH_MODE":
-    fail("PG-033 VISUAL_PRODUCTION_FIRST must explicitly supersede BUILD_FIRST_BATCH_MODE")
-if governor_mode_id == "PIE_VERIFICATION_FREEZE" and governor_mode.get("supersedes") != "VISUAL_PRODUCTION_FIRST":
-    fail("PG-033 PIE_VERIFICATION_FREEZE must explicitly supersede VISUAL_PRODUCTION_FIRST")
-proof_honesty_rule = any(
-    "PIE" in rule
-    and "evidence" in rule.lower()
-    and any(marker in rule.lower() for marker in ("performance", "fps", "device", "visual"))
-    for rule in governor_mode_rules
-)
-if not proof_honesty_rule:
-    fail("PG-033 production/verification mode must preserve manual-proof honesty")
+for pg033_error in validate_development_mode(governor_data):
+    fail("PG-033 " + pg033_error)
 
 # PG-024: NPC identity/schedule/relationship data must stay coherent before runtime intelligence consumes it.
 npc_social_path = ROOT / "Data" / "NPCSocialModel.json"
