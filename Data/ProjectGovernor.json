@@ -2686,10 +2686,11 @@
         "Unreal #614 proved the new identity preflight correctly rejects P1C99 before world-transition publication; the old unsupported-request rollback expectation was therefore stale.",
         "CP-W00-147 separates invalid-request preflight evidence (revision unchanged) from real forced streaming-failure rollback evidence (revision advanced), and updates Pre-Unreal + DeepProjectAudit to share qualifier-aware structural mutation semantics.",
         "Exact head 96398e7cc48277324113c7879a8d28e3b659757e passed Pre-Unreal #781, Warehouse #197 and Unreal #616, including CP-W00-147 preflight-vs-rollback semantics and real queued AsyncSaveGame persistence-edge coverage.",
-        "Exact CP-W00-151 head 92f6d3aaad79f33eaf2385de292e6886d2c1b5da passed Pre-Unreal #785, Warehouse #201 and Unreal #620, closing the validator/governor correction loop before source-layout migration."
+        "Exact CP-W00-151 head 92f6d3aaad79f33eaf2385de292e6886d2c1b5da passed Pre-Unreal #785, Warehouse #201 and Unreal #620, closing the validator/governor correction loop before source-layout migration.",
+        "Unreal #624 on f524a83 passed UE4.27.2 build/import/Automation/startup/P1C01-P1C08/state/transitions/faults/pending/persistence-edge and zero warning debt; material persistence reported missing=0 tracked=225.",
+        "CP-W00-155 is the final consolidated machine-repair wave: reconcile PG-078, add explicit already-resident bank evidence, and stop governance/docs-only commits from repeating the full Unreal chain when their direct parent is already Unreal-green."
       ],
       "missing_work": [
-        "Prove CP-W00-153 Public/Private migration integration with fresh exact-head Pre-Unreal and UE4.27.2 validation.",
         "Validate packaged Data JSON staging/read behavior.",
         "Validate actual authored audio-bank presence/playback without -NoSound.",
         "Run target-device profiling and human PIE/pacing/visual gates before W00 final closure."
@@ -3699,7 +3700,7 @@
       "target-device DX11 720p Low-Medium performance/memory/GC/tick profiling",
       "chapter-specific human PIE/pacing/visual acceptance evidence"
     ],
-    "note": "CP-W00-154 exact head ab7889d6 is machine-green: Pre #788 SUCCESS, Unreal #623 SUCCESS and Warehouse #204 SUCCESS. Public/Private migration and its validator/runner correction loop are closed machine-wise. W01 remains frozen only on the remaining W00 acceptance evidence: packaged Data JSON, real authored audio, target-device profiling and human PIE/pacing/visual review.",
+    "note": "f524a83 passed Unreal #624 and Warehouse #205. Pre #789 failed only PG-078 because REQ-ORG-001 was promoted to VALIDATED while MasterExecutionRoadmap still tracked it as unfinished. CP-W00-155 is one final bounded repair wave for that snapshot, dedicated resident-bank evidence, and CI cadence.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -4096,24 +4097,23 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-24",
-    "reason": "CP-W00-154 exact head completed the final migration proof: Pre #788, Unreal #623 and Warehouse #204 all succeeded on ab7889d6 after PG-116 was moved to the migration-aware resolver and PG-155 was hardened.",
-    "exact_reviewed_head": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
+    "reason": "Owner requested one final consolidated repair wave. Unreal #624 is green; Pre #789 has one governance-only PG-078 mismatch caused by REQ-ORG-001 validation.",
+    "exact_reviewed_head": "f524a83cd39510b956e4977571448d43100b628d",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#788 SUCCESS (run 35929433094)",
-      "unreal": "#623 SUCCESS (run 35929433086)",
-      "warehouse": "#204 SUCCESS (run 35929433089)"
+      "pre_unreal": "#789 FAILURE only PG-078 stale unfinished snapshot",
+      "unreal": "#624 SUCCESS",
+      "warehouse": "#205 SUCCESS"
     },
     "reconciled_findings": [
-      "All Pre-Unreal validation families completed successfully, including project structure, Governor, asset quality, readiness, deep audit, runtime contracts, source contracts, warning debt, evidence scope, streaming cancellation and live evidence selection.",
-      "Unreal #623 successfully prepared the migrated layout, built ShireJourneyEditor on UE4.27.2, imported production assets, ran Automation, startup, P1C01-P1C08, route/story roundtrip and warning-debt checks.",
-      "Warehouse #204 correctly detected no staging-required delta; heavy provider stages were intentionally skipped.",
-      "The Public/Private migration is machine-accepted. Further validator/Governor/root-code cleanup is out of scope unless a concrete regression appears."
+      "Remove VALIDATED REQ-ORG-001 from MasterExecutionRoadmap tracked unfinished IDs; do not weaken PG-078.",
+      "Require explicit ShireResidentBankAudit evidence for the already-resident bank recommit path.",
+      "Use a fail-safe Unreal fast path only for governance/docs-only deltas whose direct parent already has a successful Unreal run; all engine-impact or unknown deltas still run full UE4.27.2 validation."
     ],
-    "next_priority": "W00_ACCEPTANCE_CLOSURE_PACKAGED_DATA_THEN_REAL_AUDIO_THEN_DEVICE_THEN_HUMAN",
-    "truth_boundary": "ab7889d6 is STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED. No PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED claim is made.",
+    "next_priority": "CP_W00_155_FINAL_MACHINE_REPAIR_WAVE_THEN_ACCEPTANCE_ONLY",
+    "truth_boundary": "After CP155 is green, root-code/validator/Governor cleanup stays closed unless a concrete new regression appears. Packaged Data, real audio, target-device and human acceptance remain separate.",
     "stabilization_wave": {
-      "status": "PUBLIC_PRIVATE_MIGRATION_MACHINE_ACCEPTED_CP154",
-      "invariant": "Keep the accepted Public/Private layout and regression guards stable; do not reopen cleanup without a concrete failure."
+      "status": "FINAL_CONSOLIDATED_REPAIR_CLOSURE_PENDING_PROOF",
+      "invariant": "No new gameplay/content feature in CP155."
     }
   },
   "development_mode": {
@@ -4161,7 +4161,7 @@
   "current_focus": {
     "production_lane": "W00_ARCHITECTURAL_STABILIZATION",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "W01 and broad gameplay/content/warehouse expansion are frozen until W00 exit criteria close. The root-code/validator/Public-Private correction loop is machine-green on CP-W00-154; execute only packaged-runtime proof, real audio proof, target-device profiling and human acceptance work now.",
+    "rule": "Execute CP-W00-155 as the final consolidated machine-repair wave. Once green, stop cleanup loops and move directly to packaged Data JSON, real audio, target-device profiling and human PIE/pacing/visual acceptance.",
     "machine_baseline": {
       "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
       "pre_unreal": "#788 SUCCESS",
@@ -4172,13 +4172,14 @@
     "w01_freeze": "ACTIVE_UNTIL_W00_EXIT_CRITERIA"
   },
   "immediate_next_large_actions": [
-    "Validate packaged runtime Data JSON staging/read behavior rather than relying only on RuntimeDependencies parity.",
-    "Validate actual authored audio-bank presence and playback without -NoSound; if authored assets are absent, record the production blocker rather than inventing a pass.",
-    "Run target-device DX11 720p Low-Medium profiling for FPS/frame time, hitching, GC, RAM/VRAM pressure and material tick hotspots where measurable.",
-    "Collect chapter-specific human PIE traversal, onboarding/core-loop, pacing, visual readability, collision/movement and NPC-behavior observations before W00 closure."
+    "Prove CP-W00-155 exact head once because it changes CI/runtime audit contracts.",
+    "Validate packaged runtime Data JSON staging/read execution.",
+    "Validate actual authored audio-bank presence/playback without -NoSound.",
+    "Run target-device DX11 720p Low-Medium profiling.",
+    "Collect chapter-specific human PIE/pacing/visual observations and decide W00 exit."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-154",
+    "checkpoint_id": "CP-W00-155",
     "source_head": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
     "branch": "integration/comprehensive-foundation-v1",
     "pull_request": 67,
@@ -4198,14 +4199,14 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "CP-W00-154 machine acceptance is recorded. W00 now moves directly to acceptance closure: packaged Data JSON, authored audio, target-device profiling, then human PIE/pacing/visual review.",
+    "active_wave": "Final consolidated machine-repair closure: PG-078 snapshot + resident-bank proof + governance/docs-only Unreal fast path.",
     "next_actions": [
-      "Prove packaged runtime Data JSON staging/read execution.",
-      "Prove actual authored audio-bank presence/playback without -NoSound; record missing authored assets as a production blocker if applicable.",
-      "Run target-device DX11 720p Low-Medium performance/memory/GC/tick profiling.",
-      "Collect chapter-specific human PIE/pacing/visual acceptance evidence; only then consider W00 exit and W01."
+      "Require fresh Pre-Unreal and one full Unreal run for CP155.",
+      "After CP155 green, governance/docs-only reconciliation uses the fast path and does not repeat full Unreal.",
+      "Proceed directly to packaged Data, real audio, target-device and human acceptance."
     ],
     "unverified_acceptance": [
+      "CP-W00-155 exact-head final repair proof",
       "packaged Data JSON runtime staging/read",
       "actual authored audio playback without -NoSound",
       "target-device profiling",
@@ -4232,20 +4233,20 @@
         }
       },
       "latest_observed": {
-        "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
+        "sha": "f524a83cd39510b956e4977571448d43100b628d",
         "pre_unreal": {
-          "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
-          "run_id": 35929433094,
-          "status": "SUCCESS"
+          "sha": "f524a83cd39510b956e4977571448d43100b628d",
+          "run_id": 35932131857,
+          "status": "FAILURE"
         },
         "unreal": {
-          "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
-          "run_id": 35929433086,
+          "sha": "f524a83cd39510b956e4977571448d43100b628d",
+          "run_id": 35932131862,
           "status": "SUCCESS"
         },
         "warehouse": {
-          "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
-          "run_id": 35929433089,
+          "sha": "f524a83cd39510b956e4977571448d43100b628d",
+          "run_id": 35932131888,
           "status": "SUCCESS"
         }
       }

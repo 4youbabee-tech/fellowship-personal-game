@@ -443,6 +443,20 @@ void AShireGameMode::BeginPlay()
             }
             else if (Audit->Step == 10)
             {
+                UShireChapterAssetStreamingSubsystem* Streaming =
+                    GetGameInstance()->GetSubsystem<UShireChapterAssetStreamingSubsystem>();
+                const bool bResidentRecommit =
+                    Streaming &&
+                    Streaming->IsChapterBankReady(Audit->ExpectedChapter, Audit->ExpectedRoute) &&
+                    Streaming->CommitPendingRequest(Audit->ExpectedChapter, Audit->ExpectedRoute);
+                if (!bResidentRecommit)
+                {
+                    UE_LOG(LogTemp, Error, TEXT("ShireResidentBankAudit: FAIL already-resident-recommit=no"));
+                    GetWorldTimerManager().ClearTimer(Audit->Timer);
+                    return;
+                }
+                UE_LOG(LogTemp, Display, TEXT("ShireResidentBankAudit: PASS already-resident-recommit=yes"));
+
                 AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(
                     UGameplayStatics::GetPlayerPawn(this, 0));
                 if (!Player || !Player->RunSaveRoundtripAudit())

@@ -1,3 +1,15 @@
+## 2026-09-24 - W00 checkpoint CP-W00-155: final consolidated repair-closure wave
+
+Head `f524a83cd39510b956e4977571448d43100b628d` passed **Unreal #624 SUCCESS** and **Warehouse #205 SUCCESS**. Unreal #624 completed UE4.27.2 build/import, Automation, startup, P1C01-P1C08, state, transitions, faults, pending, persistence-edge and zero-warning-debt checks; material persistence reported `missing=0 tracked=225`.
+
+Pre #789 failed at one governance invariant only: `PG-078: tracked unfinished requirement snapshot is stale`. The exact mismatch is `REQ-ORG-001`, correctly VALIDATED in ProjectGovernor but still present in MasterExecutionRoadmap's unfinished snapshot. CP155 reconciles that snapshot without weakening the validator.
+
+The same final wave adds explicit already-resident bank recommit runtime evidence and a fail-safe Unreal fast path for governance/docs-only deltas whose direct parent already has successful Unreal evidence. Any source/runtime/CI/config/asset or unknown delta still runs the full UE4.27.2 chain.
+
+This is the last planned root-repair wave. CP155 gets one full run because it changes CI/runtime audit contracts. After it is green, root-code/validator/Governor cleanup stays closed unless a concrete new regression appears; W00 proceeds only to packaged Data, real audio, target-device profiling and human PIE/pacing/visual acceptance.
+
+No PIE/device/visual/performance acceptance is claimed here.
+
 ## 2026-09-24 - W00 checkpoint CP-W00-154: exact-head machine-green reconciliation
 
 Exact head `ab7889d6b2dafc059220a0c0a3dc63decfe6b72e` is now **STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED**: **Pre-Unreal #788 SUCCESS** (run 35929433094), **Unreal Build #623 SUCCESS** (run 35929433086), and **Warehouse #204 SUCCESS** (run 35929433089).
