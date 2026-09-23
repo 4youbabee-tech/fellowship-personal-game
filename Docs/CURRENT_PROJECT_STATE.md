@@ -1,3 +1,11 @@
+## 2026-09-24 - W00 checkpoint CP-W00-150: close the CP149 refactor regression
+
+Exact CP149 head `e0b66dbccdf9e91f3cd6af0190008cf58ca31198` produced **Unreal #618 SUCCESS** and **Warehouse #199 SUCCESS**. Pre-Unreal #783 failed before the later static suite because PG-056 still referenced the local symbol `governor_mode_id`, which CP149 had intentionally removed while centralizing development-mode validation.
+
+This is a validator execution regression, not evidence of a new gameplay/runtime defect. CP150 removes the orphan alias completely: PG-056 reads `development_mode.id` directly from the Governor data only to decide whether the historical PIE verification-freeze guard is active. The data-owned mode contract remains the sole validation authority.
+
+CP150 status is **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**. No PIE/device/visual/performance/audio-playback claim is added.
+
 ## 2026-09-23 - W00 checkpoint CP-W00-149: data-owned development-mode validation
 
 CP-W00-148 parent `32af3140d1d297283de640144a58c3b32133d3d1` produced a clean split result: Unreal #617 SUCCESS and Warehouse #198 SUCCESS, while Pre-Unreal #782 stopped immediately on two PG-033 validator errors. No C++/runtime failure was reported by #617.
@@ -1378,17 +1386,14 @@ Active production order:
 
 ## Exact next hard gate
 
-The CP-W00-147 parent has passed the current static/compile/headless-runtime machine suite. **W00 is still not closed.**
+Finish the stabilization loop instead of opening another architecture wave:
 
-Execute in this order:
-1. prove CP-W00-148 with fresh Pre-Unreal and UE4.27.2 validation,
-2. validate packaged Data JSON staging/read behavior,
-3. validate actual authored audio-bank presence/playback without `-NoSound`,
-4. perform isolated `Public/` + `Private/` runtime-source migration with no gameplay redesign and re-prove compile/runtime,
-5. profile the target laptop at DX11 / 720p / Low-Medium for FPS, frame time, GC, RAM/VRAM pressure and obvious hitches,
-6. collect chapter-specific human PIE/pacing/visual observations.
+1. prove CP-W00-150 with a **full** Pre-Unreal run that reaches Governor, strict asset audit, readiness audit, DeepProjectAudit and all regression tests,
+2. prove the same exact head with UE4.27.2 compile/import/headless runtime,
+3. once both are green, stop validator/governor refactoring unless a new concrete failure appears,
+4. close only the remaining W00 acceptance gaps: packaged Data JSON execution, real audio playback, isolated Public/Private migration, target-device profiling and chapter-specific human PIE/pacing/visual review.
 
-B1/B2/B3 remain frozen until the Governor records these W00 exits as satisfied. Headless CI success is not PIE/device/visual acceptance.
+W01 and B1/B2/B3 remain frozen until the Governor records W00 exit criteria as satisfied.
 
 ## Failure procedure
 

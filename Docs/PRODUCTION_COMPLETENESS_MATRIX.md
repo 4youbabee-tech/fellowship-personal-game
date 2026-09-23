@@ -1,3 +1,9 @@
+## 2026-09-24 - W00 CP-W00-150 refactor-regression closure
+
+Exact CP149 head `e0b66dbc...`: Unreal #618 SUCCESS + Warehouse #199 SUCCESS; Pre #783 crashed at PG-056 with `NameError: governor_mode_id` before the remaining static chain. CP150 removes that orphan alias and preserves the single data-owned development-mode contract.
+
+No production-completeness percentage changes. CP150 is **SOURCE-REPAIRED / EXACT-HEAD VALIDATION PENDING**.
+
 ## 2026-09-23 - W00 CP-W00-149 data-owned development-mode contract
 
 Parent `32af3140...`: Unreal #617 SUCCESS + Warehouse #198 SUCCESS; Pre #782 FAILURE only at the stale PG-033 development-mode/prose validator before the remaining static suite executed. CP-W00-149 replaces the hard-coded validator allowlist and wording heuristic with one structured Governor-owned contract shared by Pre-Unreal and project_governor.py, plus regression tests.

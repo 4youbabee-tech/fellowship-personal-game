@@ -557,3 +557,12 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Guard:** `Scripts/governance_contracts.py` is consumed by both Pre-Unreal and ProjectGovernor validation; `test_governance_contracts.py` covers unknown mode, supersedes drift, missing labels and prose-only fake proof.
 
 **Proof boundary:** this guard repairs governance validation semantics only. Fresh exact-head Pre-Unreal/UE4 evidence is required before the child checkpoint is promoted.
+
+### PG-152 — Validator refactors must not leave orphan phase aliases
+**Symptom exposed by:** Pre-Unreal #783 on `e0b66dbccdf9e91f3cd6af0190008cf58ca31198`.
+
+**Failure:** CP149 removed the old `governor_mode_id` validation block, but the later PG-056 freeze guard still referenced that local name and crashed with `NameError`.
+
+**Contract:** development-mode validity stays owned by `development_mode_contract`. A guard that only needs the current mode identity reads `development_mode.id` directly from Governor structured data and must not introduce a second allowlist or validator-owned alias.
+
+**Evidence boundary:** Unreal #618 and Warehouse #199 succeeded on the failing static head; fresh Pre-Unreal is still required before CP150 can be STATIC-VALIDATED.

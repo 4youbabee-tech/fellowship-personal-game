@@ -3093,7 +3093,7 @@ else:
     except json.JSONDecodeError as exc:
         fail(f"PG-056 invalid VerificationGate.json: {exc}")
 
-if governor_mode_id == "PIE_VERIFICATION_FREEZE" and verification_gate:
+if str(governor_data.get("development_mode", {}).get("id") or "") == "PIE_VERIFICATION_FREEZE" and verification_gate:
     if verification_gate.get("mode") != "PIE_VERIFICATION_FREEZE":
         fail("PG-056 verification gate mode must match PIE_VERIFICATION_FREEZE")
 
