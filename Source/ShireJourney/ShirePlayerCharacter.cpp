@@ -1454,7 +1454,7 @@ void AShirePlayerCharacter::ToggleWorldMap()
 
 void AShirePlayerCharacter::StartCrouch()
 {
-    if (!bCinematicInputLocked)
+    if (!bCinematicInputLocked && IsGameplayWorldCommitted())
     {
         Crouch();
     }
@@ -1496,6 +1496,11 @@ float AShirePlayerCharacter::TakeDamage(
     AController* EventInstigator,
     AActor* DamageCauser)
 {
+    if (!IsGameplayWorldCommitted())
+    {
+        return 0.0f;
+    }
+
     const float Applied = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
     if (DamageAmount <= 0.0f || !IsCombatAvailable())
     {
@@ -1856,9 +1861,20 @@ bool AShirePlayerCharacter::SaveAutomaticCheckpoint(FName CheckpointId, bool bSh
     UShireSaveGame* Save = CreateSaveSnapshot(CheckpointId, true);
     if (!Save) return false;
 
+    AChapterWorldRouter* Router = Cast<AChapterWorldRouter>(
+        UGameplayStatics::GetActorOfClass(this, AChapterWorldRouter::StaticClass()));
+    if (!Router)
+    {
+        return false;
+    }
+
     bCheckpointSaveInFlight = true;
     bCheckpointSaveShowHUD = bShowHUD;
     CheckpointSaveInFlightId = CheckpointId;
+    CheckpointSaveInFlightChapterId = Save->CurrentChapterId;
+    CheckpointSaveInFlightRouteId = Save->CurrentRouteId;
+    CheckpointSaveInFlightEpisodeId = Save->CurrentEpisodeId;
+    CheckpointSaveInFlightWorldRevision = Router->GetWorldRevision();
 
     FAsyncSaveGameToSlotDelegate Delegate;
     Delegate.BindUObject(this, &AShirePlayerCharacter::HandleCheckpointSaveComplete);
@@ -1874,11 +1890,39 @@ void AShirePlayerCharacter::HandleCheckpointSaveComplete(
 {
     const FName CompletedId = CheckpointSaveInFlightId;
     const bool bShowHUD = bCheckpointSaveShowHUD;
+    const FName CompletedChapterId = CheckpointSaveInFlightChapterId;
+    const FName CompletedRouteId = CheckpointSaveInFlightRouteId;
+    const FName CompletedEpisodeId = CheckpointSaveInFlightEpisodeId;
+    const uint32 CompletedWorldRevision = CheckpointSaveInFlightWorldRevision;
+
+    UGameInstance* GI = GetGameInstance();
+    UShireQuestSubsystem* Quests =
+        GI ? GI->GetSubsystem<UShireQuestSubsystem>() : nullptr;
+    AChapterWorldRouter* Router = Cast<AChapterWorldRouter>(
+        UGameplayStatics::GetActorOfClass(this, AChapterWorldRouter::StaticClass()));
+    const bool bSameCommittedContext =
+        !bWorldTransitionHeld &&
+        Quests &&
+        Router &&
+        Router->GetWorldRevision() == CompletedWorldRevision &&
+        Router->IsWorldCommitted(
+            CompletedChapterId,
+            CompletedRouteId,
+            CompletedEpisodeId) &&
+        Quests->GetCurrentChapterId() == CompletedChapterId &&
+        Quests->GetCurrentRouteId() == CompletedRouteId &&
+        Quests->GetCurrentEpisodeId() == CompletedEpisodeId;
+
     bCheckpointSaveInFlight = false;
     bCheckpointSaveShowHUD = false;
     CheckpointSaveInFlightId = NAME_None;
+    CheckpointSaveInFlightChapterId = NAME_None;
+    CheckpointSaveInFlightRouteId = NAME_None;
+    CheckpointSaveInFlightEpisodeId = NAME_None;
+    CheckpointSaveInFlightWorldRevision = 0;
 
-    if (bSuccess)
+    const bool bApplyCheckpointEffects = bSuccess && bSameCommittedContext;
+    if (bApplyCheckpointEffects)
     {
         CurrentHealth = MaxHealth;
         CurrentStamina = MaxStamina;
@@ -1886,7 +1930,7 @@ void AShirePlayerCharacter::HandleCheckpointSaveComplete(
         bStaminaExhausted = false;
     }
 
-    if (bShowHUD)
+    if (bShowHUD && bSameCommittedContext)
     {
         if (APlayerController* PC = Cast<APlayerController>(Controller))
         {
@@ -1898,8 +1942,16 @@ void AShirePlayerCharacter::HandleCheckpointSaveComplete(
         }
     }
 
-    UE_LOG(LogTemp, Display, TEXT("SafeCheckpoint: id=%s async-save=%s slot=%s user=%d"),
-        *CompletedId.ToString(), bSuccess ? TEXT("saved") : TEXT("failed"), *SlotName, UserIndex);
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("SafeCheckpoint: id=%s async-save=%s stateApplied=%s sameCommittedContext=%s slot=%s user=%d"),
+        *CompletedId.ToString(),
+        bSuccess ? TEXT("saved") : TEXT("failed"),
+        bApplyCheckpointEffects ? TEXT("yes") : TEXT("no"),
+        bSameCommittedContext ? TEXT("yes") : TEXT("no"),
+        *SlotName,
+        UserIndex);
 
     if (QueuedCheckpointSaveId != NAME_None)
     {

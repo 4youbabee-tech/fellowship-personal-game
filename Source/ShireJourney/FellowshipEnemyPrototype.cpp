@@ -396,6 +396,15 @@ void AFellowshipEnemyPrototype::Tick(float DeltaSeconds)
         ApplyTypeProfile();
     }
 
+    if (AShirePlayerCharacter* Player =
+            Cast<AShirePlayerCharacter>(UGameplayStatics::GetPlayerPawn(this, 0)))
+    {
+        if (!Player->IsGameplayWorldCommitted())
+        {
+            return;
+        }
+    }
+
     AttackCooldownRemaining = FMath::Max(0.0f, AttackCooldownRemaining - DeltaSeconds);
 
     if (bDefeated)
@@ -419,6 +428,15 @@ float AFellowshipEnemyPrototype::TakeDamage(
     AController* EventInstigator,
     AActor* DamageCauser)
 {
+    if (AShirePlayerCharacter* Player =
+            Cast<AShirePlayerCharacter>(UGameplayStatics::GetPlayerPawn(this, 0)))
+    {
+        if (!Player->IsGameplayWorldCommitted())
+        {
+            return 0.0f;
+        }
+    }
+
     const float Applied = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
     if (EnemyType == EFellowshipEnemyType::Lurtz)
     {

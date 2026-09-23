@@ -1,3 +1,17 @@
+## 2026-09-23 - Unreal #599 compile failure exposed API ownership defect; PG-133 transaction wave
+
+Exact head `cb8c789aff25d2d1f53c0bc7e37f47fe92607eeb` passed Pre-Unreal #764, then Unreal Build #599 failed during UE4.27.2 C++ compile at `ShireNPC.cpp(1394)`: `UShireNPCContextSubsystem::IsLogicalWorldContextCommitted` was called by the named-NPC runtime while still declared private. Import, Automation and runtime stages were skipped, so #599 provides no evidence for those stages.
+
+The compile root cause is corrected by making the read-only committed-context query part of the public NPCContext API while keeping committed-state mutation owned by the subsystem/router contract. A broader source simulation then found that the PG-131 world barrier still began too late: logical quest identity could advance and asynchronous preload could start before `SetPlayerWorldHold(true)`. The router now raises the authoritative hold at destination request time, not at destination construction time. Rapid A -> pending B -> A cancellation releases the hold only after stale async work is cancelled and the exact old world identity is again committed. Transition CI now requires one marker proving both held-during-swap and cancel-release.
+
+Persistent NPC memory aging is moved out of `StartChapter` into `CommitWorldBoundState`, called only after destination world/context commit. Restore-time NPC memory pruning is likewise deferred until the final canonical world commit. This prevents destructive persistent-state housekeeping from running against an uncommitted or intermediate repaired chapter.
+
+Async checkpoint completion is now origin-bound. The save captures chapter, route, episode and world revision when scheduled; a late callback may still complete its disk write, but health/stamina/resolve healing and HUD success effects are applied only if the callback still belongs to the exact same committed world revision. This closes cross-transition completion mutation without turning asynchronous disk I/O back into synchronous loading.
+
+Ambient social partner evaluation now uses one actor traversal instead of two, and ambient/named/enemy/mythic/Black Rider context-dependent logic is held behind the committed gameplay barrier during world swaps. This is architecture/performance hardening only; no FPS or device-performance claim is made.
+
+PG-133 plus deep-project audit guards these contracts. This new wave is **source-level pending fresh exact-head validation**. W01 remains closed; no completion percentage is increased.
+
 ## 2026-09-23 - Restore repair ordering hardened before final world publication
 
 A further source simulation found a deeper save/restore race that was not covered by the earlier atomic restore patch. `CommitPersistenceRestore(true)` previously cleared the restore-in-progress flag and published `OnExperienceChanged` / `OnChapterChanged` before broadcasting `OnQuestStateRestored`. The StoryFlow legacy-repair handler therefore could run only after the router had already seen and potentially committed an intermediate legacy chapter/route identity. On already-resident banks this could become a synchronous double-commit window.

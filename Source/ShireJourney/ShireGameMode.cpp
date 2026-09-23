@@ -363,14 +363,31 @@ void AShireGameMode::BeginPlay()
                     GetWorldTimerManager().ClearTimer(Audit->Timer);
                     return;
                 }
-                UE_LOG(
-                    LogTemp,
-                    Display,
-                    TEXT("ShireTransitionBarrier: PASS held-during-swap=yes"));
-
                 // Rapid second request intentionally exercises stale-request
                 // cancellation while gameplay mutation remains barriered.
                 Q->StartChapter(TEXT("P1C01"), TEXT("ShireArrival"), 0);
+
+                const bool bReleasedAfterCancel =
+                    !Player->IsWorldTransitionHeld() &&
+                    Player->IsGameplayWorldCommitted() &&
+                    Router->IsWorldCommitted(
+                        Q->GetCurrentChapterId(),
+                        Q->GetCurrentRouteId(),
+                        Q->GetCurrentEpisodeId());
+                if (!bReleasedAfterCancel)
+                {
+                    UE_LOG(
+                        LogTemp,
+                        Error,
+                        TEXT("ShireTransitionBarrier: FAIL cancel-release=no"));
+                    GetWorldTimerManager().ClearTimer(Audit->Timer);
+                    return;
+                }
+
+                UE_LOG(
+                    LogTemp,
+                    Display,
+                    TEXT("ShireTransitionBarrier: PASS held-during-swap=yes cancel-release=yes"));
             }
             else if (Audit->Step <= 7)
             {

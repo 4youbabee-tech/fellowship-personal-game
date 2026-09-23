@@ -186,6 +186,10 @@ public:
         FName ActiveQuestId,
         int32 ActiveQuestStage);
 
+    // Public read-only transaction query used by world-facing NPC consumers.
+    UFUNCTION(BlueprintPure, Category="NPCContext")
+    bool IsLogicalWorldContextCommitted() const;
+
 private:
     struct FScheduleEntry
     {
@@ -266,7 +270,6 @@ private:
         FName RequiredStoryBeat = NAME_None,
         FName RequiredMemory = NAME_None,
         FName RequiredMood = NAME_None);
-    bool IsLogicalWorldContextCommitted() const;
     FName GetContextChapterId() const;
     FName GetContextRouteId() const;
     FName GetContextActiveQuestId() const;

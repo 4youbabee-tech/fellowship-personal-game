@@ -1,6 +1,7 @@
 #include "FellowshipMythicThreat.h"
 
 #include "ShireQuestSubsystem.h"
+#include "ShirePlayerCharacter.h"
 
 #include "Components/PointLightComponent.h"
 #include "Components/SceneComponent.h"
@@ -289,6 +290,16 @@ void AFellowshipMythicThreat::UpdateBalrogMotion(float DeltaSeconds)
 void AFellowshipMythicThreat::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+
+    if (AShirePlayerCharacter* Player =
+            Cast<AShirePlayerCharacter>(UGameplayStatics::GetPlayerPawn(this, 0)))
+    {
+        if (!Player->IsGameplayWorldCommitted())
+        {
+            return;
+        }
+    }
+
     UpdateActivation();
 
     if (!bThreatActive)

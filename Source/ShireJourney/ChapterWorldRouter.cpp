@@ -594,6 +594,13 @@ void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTr
         {
             AssetStreamingSubsystem->CancelPendingRequest();
         }
+
+        // A -> pending B -> A is complete only after stale pending work is gone.
+        // During rollback this function is suppressed by bRollbackInProgress.
+        if (IsWorldCommitted(ChapterId, RouteId, EpisodeId))
+        {
+            SetPlayerWorldHold(false);
+        }
         return;
     }
 
@@ -603,6 +610,10 @@ void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTr
     {
         return;
     }
+
+    // Quest identity is destination-facing before asynchronous preload completes.
+    // Hold all gameplay mutation from request time until destination publication.
+    SetPlayerWorldHold(true);
 
     PendingRouteId = RouteId;
     PendingEpisodeId = EpisodeId;
@@ -898,11 +909,10 @@ bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot(
         }
     }
     CaptureCommittedRollbackSnapshot();
-    bRollbackInProgress = false;
 
-    // Rollback snapshots are already canonical committed state. Publish the complete
-    // logical snapshot only after its geometry/player placement has been restored;
-    // do not run legacy save-repair rules during rollback.
+    // Keep rollback re-entrancy suppression active while restored logical state is
+    // published. Router chapter/experience handlers must not start a second load
+    // before the restored world revision itself is broadcast.
     Quests->CommitPersistenceRestore(false);
 
     UE_LOG(
@@ -917,6 +927,7 @@ bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot(
 
     OnWorldCommitted.Broadcast(WorldRevision);
     SetPlayerWorldHold(false);
+    bRollbackInProgress = false;
     return true;
 }
 
@@ -1053,6 +1064,14 @@ void AChapterWorldRouter::CommitChapterWorld(
                 WorldRevision,
                 ContextQuests ? ContextQuests->GetActiveQuestId() : NAME_None,
                 ContextQuests ? ContextQuests->GetActiveQuestStage() : 0);
+        }
+    }
+    if (UGameInstance* QuestGI = GetGameInstance())
+    {
+        if (UShireQuestSubsystem* CommitQuests =
+                QuestGI->GetSubsystem<UShireQuestSubsystem>())
+        {
+            CommitQuests->CommitWorldBoundState();
         }
     }
     CaptureCommittedRollbackSnapshot();

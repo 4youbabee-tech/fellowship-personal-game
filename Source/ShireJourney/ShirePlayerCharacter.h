@@ -258,6 +258,10 @@ private:
     bool bCheckpointSaveInFlight = false;
     bool bCheckpointSaveShowHUD = false;
     FName CheckpointSaveInFlightId = NAME_None;
+    FName CheckpointSaveInFlightChapterId = NAME_None;
+    FName CheckpointSaveInFlightRouteId = NAME_None;
+    FName CheckpointSaveInFlightEpisodeId = NAME_None;
+    uint32 CheckpointSaveInFlightWorldRevision = 0;
     FName QueuedCheckpointSaveId = NAME_None;
     bool bQueuedCheckpointShowHUD = false;
     bool bStoryCameraCueActive = false;

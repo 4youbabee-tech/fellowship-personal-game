@@ -1,3 +1,9 @@
+## 2026-09-23 - W00 PG-133 request-time transaction closure
+
+Unreal #599 on `cb8c789aff25d2d1f53c0bc7e37f47fe92607eeb` failed at UE4.27.2 C++ compile because the named-NPC runtime called a private NPCContext committed-state query. The following source wave promotes that read-only query to the public API and hardens the transaction boundary further: request-time world hold, exact cancel-release, commit-bound NPC-memory pruning, origin-bound async checkpoint side effects, context-dependent NPC/enemy freeze during pending swaps, and a single ambient social actor scan.
+
+These changes do not advance CompletionWave progress. Fresh exact-head compile/import/startup/P1C01-P1C08/state/transitions/zero-warning evidence is required before technical W00 closure, followed by the separately evidence-bound packaged/device/audio/human gates.
+
 ## 2026-09-23 - W00 restore-repair publication ordering
 
 Source audit identified a save migration/repair ordering risk: the legacy repair callback ran after restore broadcasts had already exposed the un-repaired identity. The persistence transaction now keeps broadcasts suppressed through legacy canonicalization and publishes only the final repaired state. Player-life restoration also precedes final publication so synchronous same-bank world commit cannot capture stale life values in rollback state.

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "30c8b04ddba164048362bce7f40b1a6fe25f6ebd_PRE_UNREAL_763_GREEN_PLUS_RESTORE_REPAIR_ORDER_SOURCE_WAVE",
+  "audited_head": "cb8c789aff25d2d1f53c0bc7e37f47fe92607eeb_UNREAL_599_COMPILE_FAILURE_PLUS_PG133_ROOT_CAUSE_SOURCE_WAVE",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -200,6 +200,46 @@
       "title": "Synchronous same-bank restore commit could capture stale player-life state",
       "evidence": "RestoreSaveSnapshot published the restored logical identity before assigning player health/stamina/resolve/supplies. An already-resident chapter bank can commit synchronously from the final identity broadcast and CaptureCommittedRollbackSnapshot immediately.",
       "action": "Restore player-life fields before CommitPersistenceRestore(true), so any synchronous world commit/rollback snapshot observes a complete restored player + quest state."
+    },
+    {
+      "id": "AUDIT-HIGH-023",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_FRESH_COMPILE_PROOF",
+      "title": "Committed NPC context query was private while named NPC runtime called it",
+      "evidence": "Unreal #599 on cb8c789aff25d2d1f53c0bc7e37f47fe92607eeb failed C++ compile at ShireNPC.cpp(1394) with C2248: UShireNPCContextSubsystem::IsLogicalWorldContextCommitted cannot access private member. The same defect also caused Unreal #597.",
+      "action": "Promote the read-only committed-context query to the public NPCContext API, keep mutation ownership private, and add PG-133/deep-audit visibility guards."
+    },
+    {
+      "id": "AUDIT-HIGH-024",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_TRANSITION_PROOF",
+      "title": "World mutation hold started after preload instead of at logical destination request",
+      "evidence": "Source simulation of ChapterWorldRouter showed LoadChapterWorld assigned pending destination and requested async assets without SetPlayerWorldHold(true). PG-131 runtime expected held-during-swap, but the authoritative hold was only guaranteed later in CommitChapterWorld.",
+      "action": "Raise the hold before pending destination/preload, release only when rapid A->pending B->A cancellation proves the exact old world is committed, and require one runtime marker to prove both pending hold and cancel release."
+    },
+    {
+      "id": "AUDIT-HIGH-025",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_ASYNC_PROOF",
+      "title": "Async checkpoint completion could heal a different committed world",
+      "evidence": "HandleCheckpointSaveComplete applied full health/stamina/resolve on any successful callback. Async disk I/O can finish after a chapter/world revision changes, allowing an old checkpoint callback to mutate destination player state.",
+      "action": "Capture chapter/route/episode/world revision when the async save is scheduled. Keep the disk result valid, but apply checkpoint heal/HUD effects only if callback origin still matches the exact committed world."
+    },
+    {
+      "id": "AUDIT-HIGH-026",
+      "severity": "HIGH",
+      "status": "SOURCE_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_ROLLBACK_PROOF",
+      "title": "NPC memory pruning occurred at logical chapter request before world commit",
+      "evidence": "StartChapter called PruneNPCMemoryForCurrentChapter before destination geometry/residency commit. Rollback snapshots could repair this later, but live persistent state was destructively aged during the uncommitted window and restore canonicalization could prune against an intermediate chapter.",
+      "action": "Move destructive memory aging to CommitWorldBoundState called by ChapterWorldRouter only after destination world/context commit; suppress restore pruning until the final canonical commit."
+    },
+    {
+      "id": "AUDIT-MED-027",
+      "severity": "MEDIUM",
+      "status": "SOURCE_OPTIMIZED_PENDING_MEASUREMENT",
+      "title": "Ambient social check scanned the full ambient actor set twice",
+      "evidence": "AShireAmbientNPC::UpdateSocialLife used two TActorIterator<AShireAmbientNPC> traversals per social check: one for active-social count and one for nearest partner selection.",
+      "action": "Use one bounded traversal for both results. Keep target-device profiling as the acceptance boundary; no FPS claim is made from source inspection."
     }
   ],
   "external_practice_alignment": [
@@ -225,15 +265,17 @@
     }
   ],
   "next_audit_waves": [
-    "fresh exact-head compile/import/runtime proof for PG-131 gameplay barrier and PG-132 repair-order transaction",
+    "fresh exact-head compile/import/runtime proof for PG-131/PG-132/PG-133 together",
     "zero tangent/binormal/master-surface warning debt under deterministic UV normalization",
-    "forced slow async transition and failed transition rollback injection",
-    "legacy terminal-save repair runtime case proving one final committed identity",
-    "packaged-build Data JSON staging/read validation",
+    "forced slow async transition proving old NPC/LivingWorld context remains authoritative until destination commit",
+    "rollback-failure injection proving movement/gameplay remains held and prior persistence state is restored exactly",
+    "legacy terminal-save repair runtime case proving one final canonical world commit",
+    "async checkpoint callback race case across a world revision",
+    "packaged-build Data JSON dependency/read validation",
     "target-device frame-time/resident-memory/GC/tick profiling",
     "audio playback validation without -NoSound",
     "human core-loop/onboarding/external playtest",
-    "isolated Public/Private migration"
+    "isolated Public/Private migration after W00 functional stability"
   ],
-  "audit_scope_note": "Pre-Unreal #763 passed on 30c8b04d..., while Unreal #598 had not yet completed when the deeper restore-order race was identified. PG-132 changes are source-level pending a newer exact head."
+  "audit_scope_note": "Pre-Unreal #764 passed on cb8c789a..., but Unreal #599 failed C++ compile at the private IsLogicalWorldContextCommitted API call; import/runtime were skipped. PG-133 source wave fixes that compile ownership defect and additional request-time transaction/async callback/persistence-boundary defects. No new engine acceptance applies until a fresh exact head passes."
 }

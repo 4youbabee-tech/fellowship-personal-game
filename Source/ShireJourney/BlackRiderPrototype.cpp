@@ -1,12 +1,14 @@
 #include "BlackRiderPrototype.h"
 #include "ShireHUD.h"
 #include "ShireQuestSubsystem.h"
+#include "ShirePlayerCharacter.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/GameInstance.h"
 #include "Engine/World.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/PlayerController.h"
+#include "Kismet/GameplayStatics.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "Materials/MaterialInterface.h"
 #include "UObject/ConstructorHelpers.h"
@@ -167,6 +169,15 @@ void ABlackRiderPrototype::Tick(float DeltaSeconds)
 
 void ABlackRiderPrototype::HandleActiveQuestChanged(FName QuestId)
 {
+    if (AShirePlayerCharacter* Player =
+            Cast<AShirePlayerCharacter>(UGameplayStatics::GetPlayerPawn(this, 0)))
+    {
+        if (!Player->IsGameplayWorldCommitted())
+        {
+            return;
+        }
+    }
+
     bDetectionQuestActive = QuestId == TEXT("KeepOffRoad");
     bInvestigating = false;
     InvestigationRemaining = 0.0f;

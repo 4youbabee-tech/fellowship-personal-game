@@ -375,7 +375,8 @@ void UShireQuestSubsystem::StartChapter(FName ChapterId, FName StartingQuestId, 
 
     if (PreviousChapterId != CurrentChapterId)
     {
-        PruneNPCMemoryForCurrentChapter();
+        // Memory pruning is destructive. The destination may still fail to build,
+        // so defer aging until ChapterWorldRouter commits destination geometry.
         if (!bPersistenceRestoreInProgress)
         {
             OnChapterChanged.Broadcast(PreviousChapterId, CurrentChapterId);
@@ -1891,6 +1892,17 @@ void UShireQuestSubsystem::RecordNamedNPCDialogueUse(
     }
 }
 
+void UShireQuestSubsystem::CommitWorldBoundState()
+{
+    PruneNPCMemoryForCurrentChapter();
+    UE_LOG(
+        LogTemp,
+        Verbose,
+        TEXT("ShireQuestCommit: world-bound-state chapter=%s route=%s"),
+        *CurrentChapterId.ToString(),
+        *CurrentRouteId.ToString());
+}
+
 void UShireQuestSubsystem::PruneNPCMemoryForCurrentChapter()
 {
     const int32 CurrentOrdinal = ChapterOrdinal(CurrentChapterId);
@@ -2003,5 +2015,10 @@ void UShireQuestSubsystem::RestoreNPCMemoryState(
         NPCMemoryState.Add(SanitizedKey, MoveTemp(Bucket));
     }
 
-    PruneNPCMemoryForCurrentChapter();
+    // During a restore transaction the final chapter may still be canonicalized by
+    // StoryFlow. Prune once, at the final committed world boundary.
+    if (!bPersistenceRestoreInProgress)
+    {
+        PruneNPCMemoryForCurrentChapter();
+    }
 }

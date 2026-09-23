@@ -1,5 +1,6 @@
 #include "ShireAmbientNPC.h"
 #include "ShireNPCContextSubsystem.h"
+#include "ShirePlayerCharacter.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/TextRenderComponent.h"
@@ -1265,28 +1266,27 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
     }
 
     int32 NearbySocialActors = 0;
+    AShireAmbientNPC* BestPartner = nullptr;
+    float BestDistanceSq = FMath::Square(240.0f);
+
+    // One bounded scan answers both density and partner selection. The old path
+    // traversed the ambient actor list twice for every social check.
     for (TActorIterator<AShireAmbientNPC> It(GetWorld()); It; ++It)
     {
-        const AShireAmbientNPC* Candidate = *It;
-        if (Candidate && Candidate->bSocializing &&
+        AShireAmbientNPC* Candidate = *It;
+        if (!Candidate)
+        {
+            continue;
+        }
+
+        if (Candidate->bSocializing &&
             FVector::DistSquared2D(PlayerPawn->GetActorLocation(), Candidate->GetActorLocation()) <=
                 FMath::Square(1800.0f))
         {
             ++NearbySocialActors;
         }
-    }
-    if (NearbySocialActors >= 4)
-    {
-        return;
-    }
 
-    AShireAmbientNPC* BestPartner = nullptr;
-    float BestDistanceSq = FMath::Square(240.0f);
-
-    for (TActorIterator<AShireAmbientNPC> It(GetWorld()); It; ++It)
-    {
-        AShireAmbientNPC* Candidate = *It;
-        if (!Candidate || Candidate == this || Candidate->bInLivingWorldPool ||
+        if (Candidate == this || Candidate->bInLivingWorldPool ||
             Candidate->bSocializing || Candidate->bObservingPlayer)
         {
             continue;
@@ -1314,6 +1314,11 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
             BestDistanceSq = DistanceSq;
             BestPartner = Candidate;
         }
+    }
+
+    if (NearbySocialActors >= 4)
+    {
+        return;
     }
 
     if (BestPartner)
@@ -1350,8 +1355,16 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
     }
 
     UpdateSocialCaption(DeltaSeconds);
-    UpdateScheduleContext(DeltaSeconds);
-    UpdateNeedsAndEmotion(DeltaSeconds);
+
+    const AShirePlayerCharacter* ShirePlayer =
+        Cast<AShirePlayerCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+    const bool bCommittedGameplay =
+        !ShirePlayer || ShirePlayer->IsGameplayWorldCommitted();
+    if (bCommittedGameplay)
+    {
+        UpdateScheduleContext(DeltaSeconds);
+        UpdateNeedsAndEmotion(DeltaSeconds);
+    }
 
     if (AppliedVisualRole != RoutineRole)
     {
@@ -1464,7 +1477,10 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
         return;
     }
 
-    UpdateAwareness(DeltaSeconds);
+    if (bCommittedGameplay)
+    {
+        UpdateAwareness(DeltaSeconds);
+    }
 
     if (bObservingPlayer)
     {
@@ -1472,7 +1488,10 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
         return;
     }
 
-    UpdateSocialLife(DeltaSeconds);
+    if (bCommittedGameplay)
+    {
+        UpdateSocialLife(DeltaSeconds);
+    }
     if (bSocializing)
     {
         UpdateWalkAnimation(DeltaSeconds, false);

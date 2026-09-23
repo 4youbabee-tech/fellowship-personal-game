@@ -20,7 +20,7 @@ def read_log(path):
 
 def required_markers(chapter, mode):
     if mode == "transitions":
-        return ["ShireTransitionBarrier: PASS held-during-swap=yes",
+        return ["ShireTransitionBarrier: PASS held-during-swap=yes cancel-release=yes",
                 "ShireTransitionAudit: sequence=PASS chapters=8 routes=2 disk-save=PASS"]
     if mode == "state":
         return ["ShirePlayableStartup: GameMode ready",

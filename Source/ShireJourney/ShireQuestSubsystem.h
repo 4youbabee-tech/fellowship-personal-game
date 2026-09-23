@@ -288,6 +288,10 @@ public:
     void AbortPersistenceRestore();
     bool IsPersistenceRestoreInProgress() const { return bPersistenceRestoreInProgress; }
 
+    // Destructive chapter-age housekeeping belongs to the committed world boundary,
+    // not the logical request boundary.
+    void CommitWorldBoundState();
+
     void RestoreQuestState(const TMap<FName, int32>& InStages, FName InActiveQuestId,
         FName InCurrentChapterId, const TArray<FName>& InCompletedStoryBeats,
         FName InCurrentRouteId, FName InCurrentEpisodeId, FName InPlayableCharacterId,

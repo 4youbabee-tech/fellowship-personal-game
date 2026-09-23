@@ -1537,6 +1537,15 @@ void AShireNPC::Tick(float DeltaSeconds)
         ApplyPrototypeStyle();
     }
 
+    if (const AShirePlayerCharacter* Player =
+            Cast<AShirePlayerCharacter>(UGameplayStatics::GetPlayerPawn(this, 0)))
+    {
+        if (!Player->IsGameplayWorldCommitted())
+        {
+            return;
+        }
+    }
+
     if (!bCompanionFollowStateResolved)
     {
         RestoreCompanionFollowState();

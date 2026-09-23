@@ -3702,6 +3702,94 @@ for pg131_marker in [
 if "ProductionSurfaceObjectPath" not in pg131_importer or    "ObjectPathToPackageName(ProductionSurfaceObjectPath)" not in pg131_importer:
     fail("PG-131 UE4.27 package-name overload must receive an explicit FString")
 
+# PG-133: transition starts at logical request time and all delayed side effects stay origin-bound.
+pg133_router = read(ROOT / "Source" / "ShireJourney" / "ChapterWorldRouter.cpp")
+pg133_quest = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.cpp")
+pg133_quest_h = read(ROOT / "Source" / "ShireJourney" / "ShireQuestSubsystem.h")
+pg133_player = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.cpp")
+pg133_player_h = read(ROOT / "Source" / "ShireJourney" / "ShirePlayerCharacter.h")
+pg133_context = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.cpp")
+pg133_context_h = read(ROOT / "Source" / "ShireJourney" / "ShireNPCContextSubsystem.h")
+pg133_ambient = read(ROOT / "Source" / "ShireJourney" / "ShireAmbientNPC.cpp")
+pg133_named = read(ROOT / "Source" / "ShireJourney" / "ShireNPC.cpp")
+pg133_enemy = read(ROOT / "Source" / "ShireJourney" / "FellowshipEnemyPrototype.cpp")
+pg133_mythic = read(ROOT / "Source" / "ShireJourney" / "FellowshipMythicThreat.cpp")
+pg133_rider = read(ROOT / "Source" / "ShireJourney" / "BlackRiderPrototype.cpp")
+pg133_game_mode = read(ROOT / "Source" / "ShireJourney" / "ShireGameMode.cpp")
+pg133_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
+pg133_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+
+pg133_load_start = pg133_router.find("void AChapterWorldRouter::LoadChapterWorld")
+pg133_load_end = pg133_router.find("void AChapterWorldRouter::HandleChapterAssetsReady", pg133_load_start)
+pg133_load = pg133_router[pg133_load_start:pg133_load_end]
+pg133_hold = pg133_load.find("SetPlayerWorldHold(true);")
+pg133_pending = pg133_load.find("PendingRouteId = RouteId;")
+if pg133_hold < 0 or pg133_pending < 0 or pg133_hold > pg133_pending:
+    fail("PG-133 player/world transaction hold must begin before pending destination preload")
+if "SetPlayerWorldHold(false);" not in pg133_load:
+    fail("PG-133 rapid transition cancellation cannot release hold after returning to exact committed world")
+
+pg133_start_chapter = pg133_quest.find("void UShireQuestSubsystem::StartChapter")
+pg133_start_chapter_end = pg133_quest.find("FShireRouteProgress UShireQuestSubsystem::CaptureCurrentRouteProgress", pg133_start_chapter)
+pg133_start_chapter_body = pg133_quest[pg133_start_chapter:pg133_start_chapter_end]
+if "PruneNPCMemoryForCurrentChapter();" in pg133_start_chapter_body:
+    fail("PG-133 StartChapter must not destructively prune persistent NPC memory before world commit")
+if "void UShireQuestSubsystem::CommitWorldBoundState()" not in pg133_quest:
+    fail("PG-133 quest committed-world housekeeping owner missing")
+if "CommitQuests->CommitWorldBoundState();" not in pg133_router:
+    fail("PG-133 router does not execute world-bound quest housekeeping at destination commit")
+
+pg133_restore_memory = pg133_quest[pg133_quest.find("void UShireQuestSubsystem::RestoreNPCMemoryState"):]
+if "if (!bPersistenceRestoreInProgress)" not in pg133_restore_memory:
+    fail("PG-133 restore may prune NPC memory before final canonical commit")
+
+pg133_public_context = pg133_context_h[:pg133_context_h.find("private:")]
+if "IsLogicalWorldContextCommitted() const;" not in pg133_public_context:
+    fail("PG-133 NPC committed-context query must be public to named/world consumers")
+pg133_context_start = pg133_context.find("bool UShireNPCContextSubsystem::IsLogicalWorldContextCommitted() const")
+pg133_context_end = pg133_context.find("FName UShireNPCContextSubsystem::GetContextChapterId", pg133_context_start)
+pg133_context_body = pg133_context[pg133_context_start:pg133_context_end]
+if "if (!bHasCommittedWorldContext)" not in pg133_context_body or "return false;" not in pg133_context_body:
+    fail("PG-133 NPC context must fail closed before the first committed world")
+
+for pg133_token in [
+    "CheckpointSaveInFlightChapterId",
+    "CheckpointSaveInFlightRouteId",
+    "CheckpointSaveInFlightEpisodeId",
+    "CheckpointSaveInFlightWorldRevision",
+]:
+    if pg133_token not in pg133_player_h:
+        fail(f"PG-133 async checkpoint origin context missing: {pg133_token}")
+for pg133_token in [
+    "bSameCommittedContext",
+    "bApplyCheckpointEffects",
+    "Router->GetWorldRevision() == CompletedWorldRevision",
+]:
+    if pg133_token not in pg133_player:
+        fail(f"PG-133 stale async checkpoint callback guard missing: {pg133_token}")
+
+if pg133_ambient.count("TActorIterator<AShireAmbientNPC>") > 1:
+    fail("PG-133 ambient social check regressed to multiple full actor scans")
+
+for pg133_name, pg133_text in [
+    ("ambient NPC", pg133_ambient),
+    ("named NPC", pg133_named),
+    ("enemy", pg133_enemy),
+    ("mythic threat", pg133_mythic),
+    ("Black Rider", pg133_rider),
+]:
+    if "IsGameplayWorldCommitted()" not in pg133_text:
+        fail(f"PG-133 {pg133_name} can consume destination gameplay state while world swap is pending")
+
+pg133_barrier_marker = "ShireTransitionBarrier: PASS held-during-swap=yes cancel-release=yes"
+if pg133_barrier_marker not in pg133_game_mode or pg133_barrier_marker not in pg133_runtime:
+    fail("PG-133 continuous transition audit must prove both pending hold and rapid-cancel release")
+
+if "ObjectPathToPackageName(ProductionSurfacePath)" in pg133_importer:
+    fail("PG-133 ambiguous UE4.27 ObjectPathToPackageName(const TCHAR*) call reintroduced")
+if "ObjectPathToPackageName(ProductionSurfaceObjectPath)" not in pg133_importer:
+    fail("PG-133 explicit FString importer package-name call missing")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     sys.exit(1)

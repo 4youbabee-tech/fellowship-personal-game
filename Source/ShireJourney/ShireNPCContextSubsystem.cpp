@@ -903,9 +903,11 @@ void UShireNPCContextSubsystem::SetCommittedWorldContext(
 
 bool UShireNPCContextSubsystem::IsLogicalWorldContextCommitted() const
 {
+    // Startup and two-phase transitions are not permissive. Until a real world
+    // revision is committed, destination quest identity must not leak into NPC logic.
     if (!bHasCommittedWorldContext)
     {
-        return true;
+        return false;
     }
 
     const UGameInstance* GI = GetGameInstance();
