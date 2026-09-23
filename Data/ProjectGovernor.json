@@ -2618,7 +2618,8 @@
         "ChapterWorldRouter world hold now mirrors into an explicit player gameplay-mutation barrier.",
         "Player interaction/combat/supplies/save and physical trigger/puzzle/world-event mutation paths require committed world identity.",
         "Named NPC banter requires committed logical NPC context, and transition CI asserts held-during-swap before destination commit.",
-        "PG-131 and deep_project_audit guard the transaction-boundary contract."
+        "PG-131 and deep_project_audit guard the transaction-boundary contract.",
+        "Pre-Unreal #762 exposed a regression-harness defect after PG-131 added a second transition marker; the harness now validates the complete marker set and uses the imported required_markers symbol correctly."
       ],
       "missing_work": [
         "Obtain fresh exact-head Pre-Unreal and UE4.27 compile proof after the explicit FString importer fix.",
@@ -4025,31 +4026,20 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-23",
-    "reason": "Continue large root-cause stabilization wave. Exact-head #596 exposed a compile blocker before the stricter import wave could run; source simulation also exposed gameplay mutation paths not fully coupled to the world commit barrier.",
-    "exact_reviewed_head": "02e4dfb81dc4dababb3c0085369cc628c4704bb3",
+    "reason": "PG-131 transition-barrier evidence expanded the transition marker set. Pre-Unreal #762 correctly exposed stale unit-test assumptions rather than a runtime defect.",
+    "exact_reviewed_head": "7cb6ccf8e3e5d29c13048cb5eb9862b2268bd18a",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#761 SUCCESS",
-      "warehouse": "#175 SUCCESS",
-      "unreal_build": "#596 FAILURE at UE4.27 C++ compile: C2668 ObjectPathToPackageName ambiguous const TCHAR* argument; import/runtime skipped"
+      "pre_unreal": "#762 FAILURE in test_runtime_smoke.py: NameError for runtime_smoke plus stale one-marker transition assertion",
+      "unreal_build": "#597 still in progress at reconciliation time",
+      "warehouse": "#176 queued at reconciliation time"
     },
     "reconciled_findings": [
-      "The stricter zero-warning import wave was not engine-evaluated because #596 stopped at compile.",
-      "The compile failure is type/overload ambiguity, not a design rejection of the UV normalization approach.",
-      "Movement hold alone did not prevent all gameplay mutation while quest identity could be ahead of committed geometry.",
-      "Physical interactions and player gameplay mutation now share the router's authoritative transaction barrier.",
-      "NPC banter is prevented while logical quest identity differs from committed NPC context."
+      "Project structural/deep audit stages passed before the runtime-smoke unit-test failure.",
+      "Transition mode now intentionally requires two markers: barrier-held evidence plus full sequence PASS.",
+      "The regression test must validate the entire required marker set rather than treating marker[0] as sufficient."
     ],
-    "next_priority": "W00_COMPILE_IMPORT_TRANSACTION_BARRIER_EXACT_HEAD",
-    "truth_boundary": "All changes after 02e4dfb... are source-level until fresh exact-head Pre-Unreal and Unreal evidence. No PIE/device/visual/performance acceptance is claimed.",
-    "stabilization_wave": {
-      "status": "LARGE_SOURCE_REPAIR_PENDING_FRESH_EXACT_HEAD_PROOF",
-      "current_root_causes": [
-        "UE4.27 importer overload ambiguity",
-        "gameplay mutation not fully barriered during async world transaction",
-        "tolerated tangent/binormal import debt still awaiting zero-debt engine proof"
-      ],
-      "invariant": "Quest destination may advance before geometry commit, but no player/trigger/puzzle/NPC gameplay mutation may consume that destination state until world commit."
-    }
+    "next_priority": "W00_TRANSACTION_BARRIER_FRESH_EXACT_HEAD",
+    "truth_boundary": "The unit-test correction is source-level until fresh Pre-Unreal succeeds. Unreal #597 evidence, when available, applies only to 7cb6ccf8..."
   },
   "development_mode": {
     "id": "VISUAL_PRODUCTION_FIRST",

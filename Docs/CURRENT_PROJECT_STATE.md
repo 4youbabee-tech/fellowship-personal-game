@@ -1,3 +1,9 @@
+## 2026-09-23 - Pre-Unreal #762 test-harness regression isolated during transaction-barrier wave
+
+On exact head `7cb6ccf8e3e5d29c13048cb5eb9862b2268bd18a`, Pre-Unreal #762 failed in `test_runtime_smoke.py`, not in project structure/deep audit. Two harness defects were introduced while extending transition evidence: the new test referenced `runtime_smoke.required_markers` although only `required_markers` was imported, and the older transition test still assumed the mode had exactly one required marker. Both are corrected so transition mode requires the complete marker set, including `ShireTransitionBarrier: PASS held-during-swap=yes`.
+
+Unreal #597 was still compiling this SHA when the harness correction was prepared. Therefore #762 is not treated as a gameplay/runtime failure, and no engine acceptance is inferred for the follow-up head until fresh workflows run.
+
 ## 2026-09-23 - Unreal #596 compile blocker isolated; world-transaction mutation barrier added
 
 Exact head `02e4dfb81dc4dababb3c0085369cc628c4704bb3` passed Pre-Unreal #761 and Warehouse #175, then Unreal Build #596 failed in C++ compile before import/runtime. The concrete blocker was UE4.27 overload ambiguity at `FPackageName::ObjectPathToPackageName(ProductionSurfacePath)` where `ProductionSurfacePath` was a `const TCHAR*`. No import/runtime claim is made for #596 because every later engine stage was skipped.

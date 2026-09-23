@@ -30,7 +30,7 @@ time.sleep(10)
 
 class RuntimeSmokeTests(unittest.TestCase):
     def test_transition_mode_requires_world_mutation_barrier(self):
-        markers = runtime_smoke.required_markers(None, "transitions")
+        markers = required_markers(None, "transitions")
         self.assertIn("ShireTransitionBarrier: PASS held-during-swap=yes", markers)
         self.assertIn("ShireTransitionAudit: sequence=PASS chapters=8 routes=2 disk-save=PASS", markers)
 
@@ -38,7 +38,7 @@ class RuntimeSmokeTests(unittest.TestCase):
         markers = required_markers(None, "transitions")
         separate = "\n".join(required_markers("P1C%02d" % i, "chapters")[0] for i in range(1, 9))
         self.assertEqual(missing_markers(separate, markers), markers)
-        self.assertEqual(missing_markers(markers[0], markers), [])
+        self.assertEqual(missing_markers("\n".join(markers), markers), [])
 
     def test_runner_pause_past_deadline_cannot_pass_ready_observation(self):
         clock = [0.0]

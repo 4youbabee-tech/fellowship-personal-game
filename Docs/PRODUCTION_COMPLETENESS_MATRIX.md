@@ -1,3 +1,7 @@
+## 2026-09-23 - CI harness correction after PG-131 expansion
+
+Pre-Unreal #762 failed because transition-unit tests had not been updated consistently after adding a second required transition marker. The correction changes only the regression harness semantics: imported `required_markers` is used directly and success requires the full transition marker list rather than the first marker alone. No production completion credit is added.
+
 ## 2026-09-23 - W00 compile/root transaction barrier follow-up
 
 Unreal #596 on `02e4dfb81dc4dababb3c0085369cc628c4704bb3` did not reach import/runtime: UE4.27 C++ compile failed on an ambiguous `ObjectPathToPackageName(const TCHAR*)` call introduced by the stricter material preflight wave. That defect is fixed with explicit `FString` typing.
