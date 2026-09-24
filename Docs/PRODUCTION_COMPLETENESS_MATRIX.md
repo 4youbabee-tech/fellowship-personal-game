@@ -1,3 +1,13 @@
+## 2026-09-24 - W00 final closure wave started on isolated acceptance branch
+
+Architectural/root repair remains closed on exact green head `31b6e1c9958b6121ec7a00c07e038fec4ab36408` (Pre #791 SUCCESS, Unreal #626 attempt 2 SUCCESS, Warehouse #207 SUCCESS).
+
+A dedicated branch `acceptance/w00-final-closure-v1` now carries the final automatable W00 acceptance wave. Added `Data/W00FinalClosurePlanV1.json` plus runner scripts for: real Windows BuildCookRun packaging, verification of every `RuntimeDependencies` JSON staged into the package, packaged executable startup/grounding observation, and CPU/RAM/GPU/OS runner snapshot. The Unreal validation workflow now executes these gates after the existing compile/import/Automation/startup/chapter/state/warning suite.
+
+This wave does not claim PIE/device/visual/audio acceptance. Human-only traversal/collision, visual composition, pacing/fun, NPC believability and final listening/mix remain separate evidence. Scripted/ambient voice source generation also remains distinct from UE audio acceptance.
+
+W01 opening rule: if the new automated closure gates are green, the Governor may open the deferred W01-W06 large Part I production program. Broad architectural repair may reopen only for a concrete regression.
+
 ## 2026-09-24 - W00 CP-W00-156 bounded exact-checkout validator repair
 
 CP155 `3534e632...` passed Unreal #625 and Warehouse #206. Pre #790 failed only PG-026 because its static contract recognized `--depth=1` but not the new bounded `--depth=2` checkout used for direct-parent classification. CP156 accepts depth 1 or 2 while preserving hard reset + exact SHA verification.
