@@ -3,7 +3,7 @@
   "authority_id": "FELLOWSHIP_SINGLE_PROJECT_GOVERNOR_V2",
   "authority_rule": "This file is the sole authoritative project-management decision source. Other docs/data may describe implementation details but must not override requirements, priorities, decisions, conflicts, active gate, or quality status recorded here.",
   "repository": "4youbabee-tech/fellowship-personal-game",
-  "active_branch": "develop",
+  "active_branch": "acceptance/w00-final-closure-v1",
   "engine": "Unreal Engine 4.27.2",
   "target_profile": {
     "platform": "Windows",
@@ -31,7 +31,9 @@
     "If a previously passed critical gate fails, quarantine the affected acceptance/merge path, repair the smallest failing layer, and rerun the exact failed gate while unrelated safe production work continues.",
     "Human pacing and visual review are mandatory for enjoyment/acceptance; CI cannot infer fun.",
     "Developer-owned automation should reproduce and verify defects before asking the owner to spend play time on technical regression checks; never relabel machine checks as visual or pacing approval.",
-    "Validation harness semantics are first-class: repeated log copies must not inflate defect counts, save tests must prove disk roundtrip, and every failing debt gate must print concrete asset/package identities."
+    "Validation harness semantics are first-class: repeated log copies must not inflate defect counts, save tests must prove disk roundtrip, and every failing debt gate must print concrete asset/package identities.",
+    "After W00 machine repair closure, do not delay W01 for invented repair work. Only concrete regression evidence may reopen architectural/root repair.",
+    "Final W00 automation must prove packaged runtime data and packaged executable startup before W01 opens."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -5282,5 +5284,26 @@
       "VISUALLY-ACCEPTED",
       "PERFORMANCE-ACCEPTED"
     ]
+  },
+  "w00_final_closure": {
+    "status": "ACTIVE",
+    "branch": "acceptance/w00-final-closure-v1",
+    "base_green_head": "31b6e1c9958b6121ec7a00c07e038fec4ab36408",
+    "plan": "Data/W00FinalClosurePlanV1.json",
+    "automated_gates": [
+      "real Windows BuildCookRun package",
+      "packaged RuntimeDependencies JSON existence + parse",
+      "packaged executable startup observation",
+      "runner CPU/RAM/GPU/OS snapshot",
+      "fresh compile/import/Automation/chapter/state/warning regression"
+    ],
+    "human_only_tail": [
+      "PIE traversal/collision",
+      "visual composition/beauty",
+      "pacing/fun/friction",
+      "NPC believability",
+      "real audio listening/mix after complete bank integration"
+    ],
+    "open_rule": "If automated closure gates are green, W01 may open; remaining human-only acceptance is tracked separately and may not be misrepresented as architectural repair."
   }
 }
