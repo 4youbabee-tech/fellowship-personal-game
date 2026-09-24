@@ -5307,5 +5307,19 @@
     "open_rule": "If automated closure gates are green, W01 may open; remaining human-only acceptance is tracked separately and may not be misrepresented as architectural repair.",
     "governor_integration_baseline": "develop"
   },
-  "active_acceptance_branch": "acceptance/w00-final-closure-v1"
+  "active_acceptance_branch": "acceptance/w00-final-closure-v1",
+  "known_failures": [
+    {
+      "id": "KF-W00-DBGHELP-001",
+      "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
+      "symptom": "UE4 BuildCookRun packaging fails copying Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll with Access denied under self-hosted Windows runner.",
+      "evidence": [
+        "Unreal #627: cook/pak succeeded, dbghelp copy failed after staging retries",
+        "Unreal #630: explicit dbghelp copy preflight reproduced UnauthorizedAccessException within seconds"
+      ],
+      "rejected_workaround": "Changing staging directory alone does not remove the permission boundary.",
+      "permanent_policy": "Acceptance packaging uses BuildCookRun -nodebuginfo so debug-file staging is omitted. Preflight tests staging writability only.",
+      "reopen_rule": "Reopen only if a later exact-head package log fails for a different proven reason or still requests dbghelp.dll despite -nodebuginfo."
+    }
+  ]
 }
