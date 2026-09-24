@@ -3,7 +3,7 @@
   "authority_id": "FELLOWSHIP_SINGLE_PROJECT_GOVERNOR_V2",
   "authority_rule": "This file is the sole authoritative project-management decision source. Other docs/data may describe implementation details but must not override requirements, priorities, decisions, conflicts, active gate, or quality status recorded here.",
   "repository": "4youbabee-tech/fellowship-personal-game",
-  "active_branch": "acceptance/w00-final-closure-v1",
+  "active_branch": "develop",
   "engine": "Unreal Engine 4.27.2",
   "target_profile": {
     "platform": "Windows",
@@ -5304,6 +5304,8 @@
       "NPC believability",
       "real audio listening/mix after complete bank integration"
     ],
-    "open_rule": "If automated closure gates are green, W01 may open; remaining human-only acceptance is tracked separately and may not be misrepresented as architectural repair."
-  }
+    "open_rule": "If automated closure gates are green, W01 may open; remaining human-only acceptance is tracked separately and may not be misrepresented as architectural repair.",
+    "governor_integration_baseline": "develop"
+  },
+  "active_acceptance_branch": "acceptance/w00-final-closure-v1"
 }
