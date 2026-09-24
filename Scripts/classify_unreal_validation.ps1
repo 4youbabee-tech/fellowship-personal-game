@@ -1,16 +1,17 @@
 $ErrorActionPreference = "Stop"
 
-function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha) {
+function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = "none") {
     $full = if ($Mode -eq "full") { "true" } else { "false" }
     $acceptance = if ($Mode -eq "acceptance") { "true" } else { "false" }
 
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_MODE=$Mode"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_FULL_UNREAL_REQUIRED=$full"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_ONLY=$acceptance"
+    Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_RESUME_STAGE=$ResumeStage"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_DECISION_REASON=$Reason"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_PARENT_SHA=$ParentSha"
 
-    Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode full=$full acceptance=$acceptance parent=$ParentSha reason=$Reason"
+    Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode full=$full acceptance=$acceptance resume=$ResumeStage parent=$ParentSha reason=$Reason"
 }
 
 function Get-GitExe {
@@ -137,6 +138,53 @@ function Test-ParentCoreUnrealGreen([string]$ParentSha) {
     return $false
 }
 
+function Test-ParentAcceptanceDataGreen([string]$ParentSha) {
+    if (-not $env:GH_TOKEN) { return $false }
+
+    $requiredSteps = @(
+        "Build cook stage and archive real Windows package",
+        "Verify packaged Runtime Data JSON payload"
+    )
+
+    try {
+        $headers = Get-GitHubHeaders
+        $runsUri="https://api.github.com/repos/$($env:GITHUB_REPOSITORY)/actions/runs?head_sha=$ParentSha&per_page=100"
+        $runs=Invoke-RestMethod -Uri $runsUri -Headers $headers -Method Get -TimeoutSec 20
+        $candidates=@($runs.workflow_runs | Where-Object {
+            $_.name -eq "Unreal Build Validation" -and $_.status -eq "completed"
+        })
+
+        foreach($run in $candidates) {
+            $jobsUri="https://api.github.com/repos/$($env:GITHUB_REPOSITORY)/actions/runs/$($run.id)/jobs?per_page=100"
+            $jobs=Invoke-RestMethod -Uri $jobsUri -Headers $headers -Method Get -TimeoutSec 20
+            foreach($job in @($jobs.jobs)) {
+                $stepMap=@{}
+                foreach($step in @($job.steps)) {
+                    $stepMap[$step.name] = $step.conclusion
+                }
+
+                $allGreen=$true
+                foreach($required in $requiredSteps) {
+                    if(-not $stepMap.ContainsKey($required) -or $stepMap[$required] -ne "success") {
+                        $allGreen=$false
+                        break
+                    }
+                }
+
+                if($allGreen) {
+                    Write-Host "PARENT_ACCEPTANCE_DATA_PROOF_PASS parent=$ParentSha run=$($run.id) job=$($job.id)"
+                    return $true
+                }
+            }
+        }
+    } catch {
+        Write-Host "Parent package/data proof lookup failed: $($_.Exception.Message)"
+        return $false
+    }
+
+    return $false
+}
+
 Set-Location $env:GITHUB_WORKSPACE
 $git = Get-GitExe
 if (-not $git) { Set-Mode "full" "git-unavailable-fail-safe" ""; exit 0 }
@@ -202,6 +250,23 @@ if($fullImpact.Count -gt 0){
 if($acceptanceTouched.Count -gt 0){
     if(Test-ParentCoreUnrealGreen $parentSha){
         $acceptanceTouched | ForEach-Object { Write-Host "ACCEPTANCE_ONLY_FILE $_" }
+
+        $startupResumeExact = @(
+            ".github/workflows/unreal-build-validation.yml",
+            "Scripts/classify_unreal_validation.ps1",
+            "Scripts/pre_unreal_validate.py",
+            "Scripts/verify_packaged_startup.ps1"
+        )
+        $startupResumeCandidate = (
+            ($acceptanceTouched -contains "Scripts/verify_packaged_startup.ps1") -and
+            (@($acceptanceTouched | Where-Object { $startupResumeExact -notcontains $_ }).Count -eq 0)
+        )
+
+        if($startupResumeCandidate -and (Test-ParentAcceptanceDataGreen $parentSha)){
+            Set-Mode "acceptance" "startup-verifier-only-inherits-parent-package-data-proof" $parentSha "startup"
+            exit 0
+        }
+
         Set-Mode "acceptance" "acceptance-only-delta-inherits-parent-core-unreal-proof" $parentSha
         exit 0
     }

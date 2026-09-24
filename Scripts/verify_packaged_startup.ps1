@@ -47,7 +47,13 @@ try {
             break
         }
 
-        $text = if (Test-Path -LiteralPath $log) { Get-Content -LiteralPath $log -Raw } else { "" }
+        $text = ""
+        if (Test-Path -LiteralPath $log -PathType Leaf) {
+            $rawText = Get-Content -LiteralPath $log -Raw -ErrorAction SilentlyContinue
+            if ($null -ne $rawText) {
+                $text = [string]$rawText
+            }
+        }
         if ($text -match "Fatal error:|Assertion failed|Ensure condition failed") {
             $failure = "fatal/assert/ensure in packaged runtime log"
             break

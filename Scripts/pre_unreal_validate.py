@@ -2756,6 +2756,22 @@ if (
 if "$proc.ExitCode" in package_script:
     fail("PG-026: W00 package wrapper must not trust Start-Process .ExitCode for RunUAT.bat")
 
+startup_verifier = read(ROOT / "Scripts" / "verify_packaged_startup.ps1")
+if (
+    '$text = ""' not in startup_verifier
+    or "$rawText = Get-Content" not in startup_verifier
+    or "if ($null -ne $rawText)" not in startup_verifier
+):
+    fail("PG-026: packaged startup verifier must tolerate an existing but still-empty log file")
+
+if (
+    "SHIRE_ACCEPTANCE_RESUME_STAGE" not in unreal_ci
+    or "Validate inherited packaged artifact" not in unreal_ci
+    or "W00_INHERITED_PACKAGE_DATA_PASS" not in unreal_ci
+    or "PARENT_ACCEPTANCE_DATA_PROOF_PASS" not in read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
+):
+    fail("PG-026: startup-verifier-only acceptance must resume after proven parent package/data gates")
+
 game_target = read(ROOT / "Source" / "ShireJourney.Target.cs")
 if (
     'Environment.GetEnvironmentVariable("SHIRE_CI_NO_DEBUGINFO") == "1"' not in game_target

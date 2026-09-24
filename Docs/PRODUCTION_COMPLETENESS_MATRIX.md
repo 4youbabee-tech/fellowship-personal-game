@@ -1,3 +1,27 @@
+## 2026-09-24 - Unreal #648: Package + 37 Runtime Data proven; resume at packaged startup
+
+Unreal #648 on exact head `9689a65ade82af5e1a87b63e344ed491c27c4079` produced the first valid packaged-acceptance proof:
+
+- `W00_PACKAGE_EXITCODE source=cmd-sidecar exit=0`
+- `W00_PACKAGE_PASS elapsedSeconds=300`
+- `W00_PACKAGED_DATA_PASS expected=37 verified=37`
+
+These gates are now green evidence and must **not** be repeated for a packaged-startup-verifier-only fix.
+
+The next step failed before producing a game/runtime verdict. `verify_packaged_startup.ps1` read an existing but still-empty log with `Get-Content -Raw`; PowerShell returned `$null`, and line 58 called `$text.Contains($marker)`, raising `InvokeMethodOnNull`.
+
+Repair:
+- startup log polling initializes `$text` to `""` and only replaces it when the raw read is non-null;
+- Pre-Unreal now rejects regressions of this empty-log case;
+- the acceptance classifier can inherit parent Package + Runtime Data proof for startup-verifier-only deltas;
+- that resume path skips UE verification, editor wait, package and Data gates;
+- before launching the packaged executable, CI proves the persisted `ShireJourney.exe` and the successful 37-file packaged-data report are still present locally.
+
+Next intended execution:
+`Inherited package/data artifact check -> Packaged Startup -> Hardware Snapshot`.
+
+Status: **PACKAGE PASS / 37 JSON PASS / PACKAGED STARTUP PROOF PENDING**. No PIE, visual, device, or player-falling closure is claimed.
+
 ## 2026-09-24 - Fast-path rule and package exit truth after Unreal #647
 
 Unreal #647 on exact head `6fb1c5edd81989de853fface5e406d8cddab0099` provides fresh successful Core Unreal proof through the warning-debt guard. Those successful gates are **not to be repeated** for a package-wrapper-only fix.

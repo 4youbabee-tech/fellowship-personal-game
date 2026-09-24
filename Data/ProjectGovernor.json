@@ -5379,13 +5379,27 @@
       "root_cause": "PG-122 still required the established 2.0 second stability proof while runtime used 0.35 seconds; PG-128 inspected the legacy CommitChapterWorld publication location even though publication moved into VerifyPlayerGroundingStability.",
       "permanent_policy": "Grounding finalization waits a real 2.0 seconds before commit publication; PG-128 structurally inspects the grounding finalizer and requires OnWorldCommitted.Broadcast before SetPlayerWorldHold(false).",
       "evidence_boundary": "Static contract fixed only. Requires fresh Pre-Unreal, UE4.27 compile/runtime proof and human PIE observation before closing falling issue."
+    },
+    {
+      "id": "KF-W00-PACKAGED-STARTUP-001",
+      "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
+      "symptom": "Unreal #648 passed package and all 37 Runtime Data JSON files, then the packaged-startup verifier crashed immediately because Get-Content -Raw returned null for an existing but still-empty startup log and the script called .Contains() on that null value.",
+      "evidence": [
+        "Unreal #648: W00_PACKAGE_EXITCODE source=cmd-sidecar exit=0.",
+        "Unreal #648: W00_PACKAGE_PASS elapsedSeconds=300 with Saved/W00Package/WindowsNoEditor/ShireJourney.exe present.",
+        "Unreal #648: W00_PACKAGED_DATA_PASS expected=37 verified=37.",
+        "Unreal #648: verify_packaged_startup.ps1 line 58 raised InvokeMethodOnNull at $text.Contains($marker) before a packaged-runtime verdict was produced."
+      ],
+      "root_cause": "PowerShell 5.1 Get-Content -Raw can yield $null for an empty file. The startup verifier treated Test-Path as sufficient proof that the returned value was a string.",
+      "permanent_policy": "Initialize startup log text to an empty string and only replace it when Get-Content returns non-null. Startup-verifier-only child commits inherit a parent run's successful package+37-data proof and skip those expensive gates, while validating the persisted package/data artifact before launching the executable.",
+      "reopen_rule": "Reopen if the verifier throws on an empty/missing startup log, if startup-only fixes recook a parent-proven package, or if inherited package/data artifacts are accepted without local provenance checks."
     }
   ],
   "w00_acceptance_fast_path": {
-    "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
+    "status": "PARTIAL_RUNNER_PROOF_STARTUP_PENDING",
     "mode_contract": {
       "full": "C++/Build.cs/Config/runtime-contract deltas run the full UE4 chain.",
-      "acceptance": "Packaging/verifier/acceptance-script deltas inherit parent core Unreal proof and run only package/data/startup/hardware gates.",
+      "acceptance": "Acceptance deltas inherit the deepest safe parent proof: package-only fixes resume at package; startup-verifier-only fixes may resume at packaged startup after parent package+37-data success and local artifact validation.",
       "inherit": "Docs/governance-only deltas inherit a green parent workflow."
     },
     "parent_core_proof_steps": [
@@ -5398,6 +5412,6 @@
       "Summarize and guard runtime warning debt"
     ],
     "superseded_run_policy": "On acceptance/* branches, newer commits cancel older in-progress runs sharing the UE4 device concurrency group. Non-acceptance branches remain serialized.",
-    "current_boundary": "Unreal #647 supplies fresh green core Unreal proof through warning debt on 6fb1c5edd81989de853fface5e406d8cddab0099. The next package-wrapper-only child must inherit that proof and run package/data/startup/hardware only."
+    "current_boundary": "Unreal #648 on 9689a65ade82af5e1a87b63e344ed491c27c4079 proved Package PASS and 37/37 Runtime Data PASS. Its startup step produced no runtime verdict because the verifier itself crashed on a null empty-log read. The next verifier-only child must resume at packaged startup, not recook."
   }
 }

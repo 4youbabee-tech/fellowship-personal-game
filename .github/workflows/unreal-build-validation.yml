@@ -131,12 +131,12 @@ jobs:
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\repair_ue_engine_content_acl.ps1"'
 
       - name: Verify Unreal 4.27.2 and project
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_verify_unreal.cmd"'
 
       - name: Wait safely for Unreal Editor to close
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_wait_for_unreal_editor.cmd"'
 
@@ -191,14 +191,28 @@ jobs:
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_warning_debt.cmd"'
 
       - name: Build cook stage and archive real Windows package
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_package_w00.cmd"'
 
       - name: Verify packaged Runtime Data JSON payload
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_packaged_runtime_data.ps1"'
+
+      - name: Validate inherited packaged artifact
+        if: env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE == 'startup'
+        shell: cmd
+        run: >-
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command
+          "$root=Join-Path $env:GITHUB_WORKSPACE 'Saved\W00Package\WindowsNoEditor';
+          $exe=Join-Path $root 'ShireJourney.exe';
+          $report=Join-Path $env:GITHUB_WORKSPACE 'Saved\Logs\CI-W00-PackagedData.json';
+          if(-not (Test-Path -LiteralPath $exe -PathType Leaf)){Write-Host 'W00_INHERITED_PACKAGE_MISSING'; exit 81};
+          if(-not (Test-Path -LiteralPath $report -PathType Leaf)){Write-Host 'W00_INHERITED_DATA_REPORT_MISSING'; exit 82};
+          $j=Get-Content -LiteralPath $report -Raw | ConvertFrom-Json;
+          if($j.expected_count -ne 37 -or $j.verified_count -ne 37 -or @($j.missing).Count -ne 0 -or @($j.invalid_json).Count -ne 0){Write-Host 'W00_INHERITED_DATA_PROOF_INVALID'; exit 83};
+          Write-Host ('W00_INHERITED_PACKAGE_DATA_PASS exe=' + $exe + ' verified=' + $j.verified_count)"
 
       - name: Launch and observe packaged executable
         if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
