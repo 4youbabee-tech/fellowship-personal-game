@@ -1,3 +1,24 @@
+## 2026-09-25 - Unreal #651 Attempt 2 closes automated W00 package/startup chain; runner background path proven
+
+Exact head `efdb2e291505472247fae921945b083b3cc1ce2c` completed the repaired machine path successfully after the foreground legacy `run.cmd` session was removed and the user-context watchdog-owned runner remained active.
+
+Fresh evidence:
+- Pre-Unreal #816: SUCCESS.
+- Warehouse #232: SUCCESS; hosted delta gate selected the no-delta fast path and the self-hosted Warehouse stage was skipped.
+- Unreal #651 Attempt 2: SUCCESS.
+- `Build ShireJourneyEditor`: SUCCESS.
+- production import, Automation QA, playable startup, P1C01-P1C08 runtime audit, route/story roundtrip and warning-debt guard: SUCCESS.
+- `W00_PACKAGE_PASS elapsedSeconds=182`.
+- `W00_PACKAGED_DATA_PASS expected=37 verified=37`.
+- `W00_PACKAGED_STARTUP_PASS observed=6s`.
+- `W00_RUNNER_HARDWARE_SNAPSHOT_PASS cpu=Intel(R) Core(TM) i7-6498DU CPU @ 2.50GHz ramBytes=8457560064`.
+
+The packaged-startup verifier requires the runtime marker `ShireStartupGrounding: PASS chapter=P1C01`, so automated packaged grounding reached that marker on #651. This is not human PIE evidence and does not close the player-fall issue by itself.
+
+Runner conclusion: the previous zero-step ten-minute failures are no longer treated as project-code failures. Their timing and shape match the still-open upstream GitHub Actions runner acquire-job hang family, while the local mitigation is to keep the runner under the proven Windows user context, keep the legacy NetworkService service disabled/manual, isolate Warehouse from the UE4 device unless a real Warehouse delta exists, and supervise the listener externally. #651 proves normal background execution after this architecture change; the watchdog's forced recovery branch itself has not yet been observed firing in production.
+
+Status: **AUTOMATED W00 CHAIN GREEN / HUMAN PIE GROUNDING PROOF PENDING**. Do not rerun green automated gates unless a dependency that can invalidate them changes.
+
 ## 2026-09-25 - Self-hosted runner pre-step failure isolated; warehouse contention removed; watchdog root mitigation added
 
 Live GitHub evidence on exact head `a69147e4e34869bc43abfbce517ba8023b6027c8` isolates the new failure boundary outside repository steps. Unreal #650 was assigned to runner `UE4-27-Windows` (runner id 21) at 21:22:36Z, recorded **zero steps**, and failed at 21:32:37Z. Warehouse #231 was then assigned to the same runner at 21:32:39Z, also recorded **zero steps**, and failed at 21:42:39Z. Pre-Unreal #815, which runs on GitHub-hosted Ubuntu, succeeded on the same head. The a69147 commit did not modify the Unreal workflow.

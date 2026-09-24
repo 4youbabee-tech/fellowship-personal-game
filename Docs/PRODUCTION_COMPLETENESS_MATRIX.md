@@ -1,3 +1,18 @@
+## 2026-09-25 - Automated W00 acceptance chain green on Unreal #651 Attempt 2
+
+Exact head `efdb2e291505472247fae921945b083b3cc1ce2c` is now machine-proven through the complete automated W00 chain: Pre-Unreal #816 SUCCESS, Warehouse #232 SUCCESS with no-delta self-hosted skip, and Unreal #651 Attempt 2 SUCCESS.
+
+Accepted automated evidence on this head:
+- UE4.27.2 Editor build and production import.
+- Automation QA, headless startup, P1C01-P1C08 runtime audit, route/story roundtrip and warning-debt guard.
+- Windows package: `W00_PACKAGE_PASS elapsedSeconds=182`.
+- Runtime JSON: `W00_PACKAGED_DATA_PASS expected=37 verified=37`.
+- Packaged startup: `W00_PACKAGED_STARTUP_PASS observed=6s`.
+- Runner hardware snapshot: PASS on i7-6498DU with 8.45 GB reported RAM.
+- Packaged startup also required `ShireStartupGrounding: PASS chapter=P1C01`.
+
+This closes the runner/package/data/startup proof debt for the current contract. It does **not** promote PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED. Human PIE grounding/traversal remains the next acceptance boundary.
+
 ## 2026-09-25 - Self-hosted runner pre-step failure isolated; warehouse contention removed; watchdog root mitigation added
 
 Live GitHub evidence on exact head `a69147e4e34869bc43abfbce517ba8023b6027c8` isolates the new failure boundary outside repository steps. Unreal #650 was assigned to runner `UE4-27-Windows` (runner id 21) at 21:22:36Z, recorded **zero steps**, and failed at 21:32:37Z. Warehouse #231 was then assigned to the same runner at 21:32:39Z, also recorded **zero steps**, and failed at 21:42:39Z. Pre-Unreal #815, which runs on GitHub-hosted Ubuntu, succeeded on the same head. The a69147 commit did not modify the Unreal workflow.

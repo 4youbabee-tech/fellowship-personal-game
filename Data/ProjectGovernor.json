@@ -3702,7 +3702,7 @@
       "target-device DX11 720p Low-Medium performance/memory/GC/tick profiling",
       "chapter-specific human PIE/pacing/visual acceptance evidence"
     ],
-    "note": "CP-W00-155 head 3534e632 passed Unreal #625 and Warehouse #206. Pre #790 failed only PG-026 because the exact-head checkout was intentionally changed from shallow depth=1 to bounded depth=2 so the validation classifier can inspect the direct parent. Exact-head reset + rev-parse verification remained intact. CP-W00-156 repairs only this concrete validator-drift literal by accepting bounded depth 1 or 2; no gameplay/runtime behavior changes.",
+    "note": "Automated W00 machine closure is green on Pre-Unreal #816, Warehouse #232 and Unreal #651 Attempt 2. Packaged startup required the P1C01 grounding PASS marker. Human PIE grounding/traversal evidence remains pending; no device/visual/performance acceptance is claimed.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -3715,15 +3715,15 @@
       ],
       "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
+    "last_green_head": "efdb2e291505472247fae921945b083b3cc1ce2c",
     "evidence": {
-      "last_engine_proven_head": "3534e632e2085351149648aa7ec2d9b88d0badf1",
-      "pre_unreal": "#790 FAILURE only at PG-026 exact-checkout literal: validator accepted only --depth=1 while CP155 uses bounded --depth=2 for direct-parent classification. Exact SHA reset/rev-parse verification remained present.",
-      "unreal_build": "#625 SUCCESS on exact head 3534e632 through the full UE4.27.2 chain.",
-      "warehouse": "#206 SUCCESS on exact head 3534e632.",
+      "last_engine_proven_head": "efdb2e291505472247fae921945b083b3cc1ce2c",
+      "pre_unreal": "#816 SUCCESS.",
+      "unreal_build": "#651 Attempt 2 SUCCESS through build/import/Automation/runtime/package/data/startup/hardware.",
+      "warehouse": "#232 SUCCESS; no-delta path stayed GitHub-hosted and self-hosted staging was skipped.",
       "root_correction_boundary": "Public/Private migration and its known validator/persistent-runner correction families are machine-accepted on CP-W00-154. Do not reopen validator/Governor/root-code cleanup unless a new concrete regression appears."
     },
-    "evidence_scope": "3534e632 is COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED and Warehouse-green. CP-W00-156 changes only the static validator contract for the demonstrated bounded-depth exact checkout; no PIE/device/visual/performance claim.",
+    "evidence_scope": "efdb2e... is COMPILE-TESTED + HEADLESS/PACKAGED-RUNTIME-VALIDATED for the automated W00 suite. Human PIE/device/visual/performance labels remain unproven.",
     "current_owner_observation": {
       "sha": "4879a19999951354676341f032c358ac98679c44",
       "pre_unreal": {
@@ -4163,13 +4163,13 @@
   "current_focus": {
     "production_lane": "W00_ARCHITECTURAL_STABILIZATION",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "Prove CP-W00-156 static closure for the single PG-026 bounded-depth validator drift. After that, do not reopen machine cleanup without a concrete new regression; move directly to W00 acceptance closure.",
+    "rule": "Automated W00 acceptance is green on efdb2e291505472247fae921945b083b3cc1ce2c. Do not reopen runner/package/core repair without a concrete regression; move to the remaining human PIE grounding boundary, then branch audit.",
     "machine_baseline": {
-      "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
-      "pre_unreal": "#788 SUCCESS",
-      "unreal": "#623 SUCCESS",
-      "warehouse": "#204 SUCCESS",
-      "scope": "Exact CP-W00-154 head passed the full Pre-Unreal chain, UE4.27.2 compile/import, Automation, startup, P1C01-P1C08, route/story state roundtrip, warning-debt guard and Warehouse no-delta gate."
+      "sha": "efdb2e291505472247fae921945b083b3cc1ce2c",
+      "pre_unreal": "#816 SUCCESS",
+      "unreal": "#651 Attempt 2 SUCCESS",
+      "warehouse": "#232 SUCCESS",
+      "scope": "UE4.27.2 build/import, Automation, startup, P1C01-P1C08, route/story roundtrip, warning debt, package, 37 Runtime JSON, packaged startup and hardware snapshot."
     },
     "w01_freeze": "ACTIVE_UNTIL_W00_EXIT_CRITERIA"
   },
@@ -5244,16 +5244,15 @@
     "freeze_reason": "Owner explicitly ordered architectural stabilization and root-cause closure before W01 or broader feature/content production.",
     "backlog_semantics": "ACTIVE backlog outside allowed_bundles remains recorded memory, not permission to execute it while the active gate blocks expansion.",
     "completed_parent_proof": {
-      "sha": "92f6d3aaad79f33eaf2385de292e6886d2c1b5da",
-      "pre_unreal_run": 785,
-      "unreal_run": 620,
-      "warehouse_run": 201
+      "sha": "efdb2e291505472247fae921945b083b3cc1ce2c",
+      "pre_unreal_run": 816,
+      "unreal_run": 651,
+      "warehouse_run": 232
     },
     "next_actions": [
-      "Prove the isolated CP-W00-152 Public/Private runtime-source migration with exact-head Pre-Unreal and UE4.27.2 build/runtime validation.",
-      "Validate packaged runtime Data JSON staging/read behavior rather than relying only on RuntimeDependencies parity.",
-      "Validate actual authored audio-bank presence and playback without -NoSound; if authored assets are absent, keep this as a production-evidence blocker rather than fabricating acceptance.",
-      "Run target-device DX11 720p Low-Medium profiling and chapter-specific human PIE/pacing/visual checks before W00 closure."
+      "Run one real PIE grounding/traversal acceptance on the exact machine-proven head; require the player to remain on blocking ground, stop falling, and regain movement only after the grounding barrier.",
+      "Record the exact ShireStartupGrounding PASS evidence and human observation without promoting DEVICE-TESTED or VISUALLY-ACCEPTED.",
+      "After the required W00 human tail is satisfied, perform branch ancestry audit/cleanup before closing W00 and opening W01."
     ]
   },
   "development_mode_contract": {
@@ -5286,7 +5285,7 @@
     ]
   },
   "w00_final_closure": {
-    "status": "ACTIVE",
+    "status": "AUTOMATED_GATES_GREEN_HUMAN_TAIL_PENDING",
     "branch": "acceptance/w00-final-closure-v1",
     "base_green_head": "31b6e1c9958b6121ec7a00c07e038fec4ab36408",
     "plan": "Data/W00FinalClosurePlanV1.json",
@@ -5311,13 +5310,14 @@
   "known_failures": [
     {
       "id": "KF-W00-DBGHELP-001",
-      "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
+      "status": "PROVEN_FIXED_UNREAL_651",
       "symptom": "UE4 BuildCookRun reaches NonUFS staging then fails copying Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll to the packaged staging destination with Access denied on the self-hosted Windows runner.",
       "evidence": [
         "Unreal #627: cook/pak succeeded, dbghelp copy failed after staging retries.",
         "Unreal #630: explicit dbghelp copy preflight reproduced UnauthorizedAccessException.",
         "Unreal #643 on d94b7fe7797e9ef417b7dad2abde26dfc279e700: stage-root preflight passed, UnrealPak exited 0, then SafeCopyFile repeatedly denied the destination Saved/W00Stage-36038731060-1/WindowsNoEditor/Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll under the NetworkService runner context.",
-        "Unreal #643: -nodebuginfo did not suppress bundled DbgHelp staging; UAT ended ExitCode=1 / BUILD FAILED."
+        "Unreal #643: -nodebuginfo did not suppress bundled DbgHelp staging; UAT ended ExitCode=1 / BUILD FAILED.",
+        "Unreal #651 Attempt 2 on exact head efdb2e291505472247fae921945b083b3cc1ce2c completed the full automated chain successfully."
       ],
       "rejected_workaround": "Do not silently copy/replace dbghelp.dll, change the Data contract, or treat -nodebuginfo as sufficient.",
       "permanent_policy": "When SHIRE_CI_NO_DEBUGINFO=1, ShireJourney.Target.cs sets WindowsPlatform.bUseBundledDbgHelp=false. ci_package_w00.ps1 separately proves source readability and exact destination writability before UAT, then waits for and propagates a concrete UAT exit code.",
@@ -5326,13 +5326,14 @@
     },
     {
       "id": "KF-W00-RUNTIME-DATA-001",
-      "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
+      "status": "PROVEN_FIXED_UNREAL_651",
       "symptom": "Verify packaged Runtime Data JSON reports MISSING_RUNTIME_DATA for all 37 JSON RuntimeDependencies after package step succeeds.",
       "evidence": [
         "Earlier runner evidence reported 37/37 MISSING_RUNTIME_DATA after an incomplete package attempt.",
         "ShireJourney.Build.cs declares 37 project-root Data JSON RuntimeDependencies as StagedFileType.NonUFS.",
         "Runtime C++ loaders use FPaths::ProjectDir()/Data/... paths.",
-        "Unreal #643 again reported 37 missing files, but its UAT log had already failed during NonUFS staging on dbghelp.dll; therefore that 37/37 result is downstream evidence only and does not reopen the NonUFS contract yet."
+        "Unreal #643 again reported 37 missing files, but its UAT log had already failed during NonUFS staging on dbghelp.dll; therefore that 37/37 result is downstream evidence only and does not reopen the NonUFS contract yet.",
+        "Unreal #651 Attempt 2 on exact head efdb2e291505472247fae921945b083b3cc1ce2c completed the full automated chain successfully."
       ],
       "root_cause": "RuntimeDependencies were declared without an explicit loose staging type, while runtime code requires project-relative external files.",
       "permanent_policy": "All project-root runtime Data JSON dependencies are staged as StagedFileType.NonUFS and verified in packaged output before W01 opens.",
@@ -5340,21 +5341,25 @@
     },
     {
       "id": "KF-W00-PG147-001",
-      "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
+      "status": "PROVEN_FIXED_UNREAL_651",
       "symptom": "Pre-Unreal PG-147 rejected runtime JSON staging after RuntimeDependencies were upgraded to explicit StagedFileType.NonUFS.",
       "root_cause": "Validator matched only the legacy one-argument RuntimeDependencies.Add spelling and was stale relative to the packaging contract.",
       "permanent_policy": "PG-147 uses structural NonUFS dependency detection and regression tests reject legacy/untyped and UFS forms.",
-      "reopen_rule": "Reopen only if PG-147 misclassifies a syntactically valid explicit NonUFS dependency or misses a real unstaged runtime JSON."
+      "reopen_rule": "Reopen only if PG-147 misclassifies a syntactically valid explicit NonUFS dependency or misses a real unstaged runtime JSON.",
+      "evidence": [
+        "Unreal #651 Attempt 2 on exact head efdb2e291505472247fae921945b083b3cc1ce2c completed the full automated chain successfully."
+      ]
     },
     {
       "id": "KF-W00-PACKAGE-EXIT-001",
-      "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
+      "status": "PROVEN_FIXED_UNREAL_651",
       "symptom": "Unreal #647 spent about 25 minutes actively cooking but the package wrapper terminated on W00_PACKAGE_EXITCODE_FAIL exitCode=<null> before any terminal UAT result.",
       "evidence": [
         "Unreal #647 exact head 6fb1c5edd81989de853fface5e406d8cddab0099: Verify UE, Editor build, production import, Automation QA, startup, P1C01-P1C08 audit, route/story roundtrip and warning-debt guard all succeeded.",
         "Package output advanced to Cooked packages 251 Packages Remain 12 Total 263 with active shader compilation.",
         "No terminal UAT success/failure line preceded the wrapper error.",
-        "The wrapper then emitted W00_PACKAGE_EXITCODE_FAIL exitCode=<null> and exited 97."
+        "The wrapper then emitted W00_PACKAGE_EXITCODE_FAIL exitCode=<null> and exited 97.",
+        "Unreal #651 Attempt 2 on exact head efdb2e291505472247fae921945b083b3cc1ce2c completed the full automated chain successfully."
       ],
       "root_cause": "Direct Start-Process monitoring of RunUAT.bat used the PowerShell Process.ExitCode property as package truth. On this Windows batch indirection that property was null even though the cook had been progressing, so CI terminated independently of UAT's actual batch result.",
       "permanent_policy": "A dedicated cmd.exe wrapper CALLs RunUAT.bat synchronously, captures %ERRORLEVEL% after CALL into CI-W00-Package-exitcode.txt, and that sidecar is the sole UAT result authority. PowerShell only monitors heartbeat/timeout.",
@@ -5362,11 +5367,12 @@
     },
     {
       "id": "KF-W00-PG026-001",
-      "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
+      "status": "PROVEN_FIXED_UNREAL_651",
       "symptom": "Pre-Unreal #808 rejected the acceptance-branch superseded-run cancellation policy because PG-026 required the literal cancel-in-progress: false.",
       "evidence": [
         "Pre-Unreal #808: ERROR: PG-026: shared Unreal device builds must serialize without interrupting active validation.",
-        "The workflow uses cancel-in-progress: ${{ startsWith(github.head_ref, 'acceptance/') }}, which is intentionally scoped to acceptance/* PR heads."
+        "The workflow uses cancel-in-progress: ${{ startsWith(github.head_ref, 'acceptance/') }}, which is intentionally scoped to acceptance/* PR heads.",
+        "Unreal #651 Attempt 2 on exact head efdb2e291505472247fae921945b083b3cc1ce2c completed the full automated chain successfully."
       ],
       "root_cause": "The validator encoded the old literal workflow spelling instead of the current policy semantics.",
       "permanent_policy": "PG-026 accepts either fully serial cancellation=false or the exact acceptance/* head_ref expression; unconditional true or any broader expression is rejected.",
@@ -5374,21 +5380,22 @@
     },
     {
       "id": "KF-W00-GROUNDING-GUARD-001",
-      "status": "FIX_APPLIED_RUNNER_AND_PIE_PROOF_PENDING",
+      "status": "COMPILE_AND_PACKAGED_GROUNDING_PROVEN_PIE_PENDING",
       "symptom": "Pre-Unreal rejected the new grounding commit barrier under PG-122/PG-128 after the player-fall root fix.",
       "root_cause": "PG-122 still required the established 2.0 second stability proof while runtime used 0.35 seconds; PG-128 inspected the legacy CommitChapterWorld publication location even though publication moved into VerifyPlayerGroundingStability.",
       "permanent_policy": "Grounding finalization waits a real 2.0 seconds before commit publication; PG-128 structurally inspects the grounding finalizer and requires OnWorldCommitted.Broadcast before SetPlayerWorldHold(false).",
-      "evidence_boundary": "Static contract fixed only. Requires fresh Pre-Unreal, UE4.27 compile/runtime proof and human PIE observation before closing falling issue."
+      "evidence_boundary": "Pre-Unreal #816 and Unreal #651 Attempt 2 are green. verify_packaged_startup.ps1 requires ShireStartupGrounding: PASS chapter=P1C01 and #651 packaged startup passed. Human PIE observation is still required before closing the player-falling issue."
     },
     {
       "id": "KF-W00-PACKAGED-STARTUP-001",
-      "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
+      "status": "PROVEN_FIXED_UNREAL_651",
       "symptom": "Unreal #648 passed package and all 37 Runtime Data JSON files, then the packaged-startup verifier crashed immediately because Get-Content -Raw returned null for an existing but still-empty startup log and the script called .Contains() on that null value.",
       "evidence": [
         "Unreal #648: W00_PACKAGE_EXITCODE source=cmd-sidecar exit=0.",
         "Unreal #648: W00_PACKAGE_PASS elapsedSeconds=300 with Saved/W00Package/WindowsNoEditor/ShireJourney.exe present.",
         "Unreal #648: W00_PACKAGED_DATA_PASS expected=37 verified=37.",
-        "Unreal #648: verify_packaged_startup.ps1 line 58 raised InvokeMethodOnNull at $text.Contains($marker) before a packaged-runtime verdict was produced."
+        "Unreal #648: verify_packaged_startup.ps1 line 58 raised InvokeMethodOnNull at $text.Contains($marker) before a packaged-runtime verdict was produced.",
+        "Unreal #651 Attempt 2 on exact head efdb2e291505472247fae921945b083b3cc1ce2c completed the full automated chain successfully."
       ],
       "root_cause": "PowerShell 5.1 Get-Content -Raw can yield $null for an empty file. The startup verifier treated Test-Path as sufficient proof that the returned value was a string.",
       "permanent_policy": "Initialize startup log text to an empty string and only replace it when Get-Content returns non-null. Startup-verifier-only child commits inherit a parent run's successful package+37-data proof and skip those expensive gates, while validating the persisted package/data artifact before launching the executable.",
@@ -5396,14 +5403,15 @@
     },
     {
       "id": "KF-W00-PRODUCTION-COOK-001",
-      "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
+      "status": "PROVEN_FIXED_UNREAL_651",
       "symptom": "Unreal #649 packaged startup launched successfully but P1C01 async streaming reported 82 unresolved production-bank assets, then the world swap failed closed and movement remained held.",
       "evidence": [
         "Unreal #649: W00_PACKAGE_PASS succeeded and W00_PACKAGED_DATA_PASS expected=37 verified=37 succeeded.",
         "Packaged runtime: ChapterAssetStreaming: unresolved-bank-assets chapter=P1C01 route=FrodoMain missing=82.",
         "P1C01 currently contains 83 streaming assets; exactly one is under the previously always-cooked /Game/Production/Materials directory, so 83 - 1 = 82, matching runtime exactly.",
         "ChapterAssetStreamingPlan contains 238 unique production package paths; all 238 map to project-owned import sources with zero source-plan mismatches.",
-        "Unreal #649 production import: 376 files, 0 failures; material persistence verification missing=0."
+        "Unreal #649 production import: 376 files, 0 failures; material persistence verification missing=0.",
+        "Unreal #651 Attempt 2 on exact head efdb2e291505472247fae921945b083b3cc1ce2c completed the full automated chain successfully."
       ],
       "root_cause": "Soft object paths loaded from the external ChapterAssetStreamingPlan JSON are not discoverable by normal hard-reference cook traversal. Packaging forced only the production Materials directory, leaving World, required Common/Hobbit character parts, and Enemies outside the pak.",
       "permanent_policy": "Always cook Materials, World, Characters/Common, Characters/Hobbit, and Enemies for the current streaming-bank contract. Before UAT, parse the streaming plan and require all 238 generated production .uasset packages to exist locally.",
@@ -5411,22 +5419,25 @@
     },
     {
       "id": "KF-W00-RUNNER-BROKER-001",
-      "status": "REPO_FIX_APPLIED_LOCAL_WATCHDOG_INSTALL_PENDING",
+      "status": "UPSTREAM_BUG_MITIGATED_BACKGROUND_RUNNER_PROVEN_RECOVERY_TRIGGER_UNEXERCISED",
       "symptom": "Unreal #650 and Warehouse #231 were both assigned to UE4-27-Windows but failed after about ten minutes with zero workflow steps and no downloadable job log.",
       "evidence": [
         "Exact head a69147e4e34869bc43abfbce517ba8023b6027c8: Pre-Unreal #815 SUCCESS on GitHub-hosted Ubuntu.",
         "Unreal #650 job 107839854062: runner_id=21, runner_name=UE4-27-Windows, started_at=2026-09-24T21:22:36Z, completed_at=2026-09-24T21:32:37Z, steps=[].",
         "Warehouse #231 job 107839854730: same runner_id=21/name, started_at=2026-09-24T21:32:39Z, completed_at=2026-09-24T21:42:39Z, steps=[].",
         "The a69147 commit changed packaging config/scripts/docs/governor only; it did not change .github/workflows/unreal-build-validation.yml.",
-        "The runner immediately before this incident was already Actions Runner 2.337.0 and successfully executed full step lists in Unreal #649 and Warehouse #230."
+        "The runner immediately before this incident was already Actions Runner 2.337.0 and successfully executed full step lists in Unreal #649 and Warehouse #230.",
+        "Warehouse #232 succeeded through the GitHub-hosted no-delta gate and did not consume the self-hosted UE4 stage.",
+        "Unreal #651 Attempt 2 succeeded end-to-end after the legacy foreground run.cmd session was removed and the supervised user-context listener owned the runner.",
+        "GitHub actions/runner issue #4668 documents the same v2.337.0 failure shape: acknowledged job, no Runner.Worker/steps, then GitHub failure at about ten minutes; the upstream issue remains open."
       ],
-      "root_cause": "Proven boundary is the self-hosted runner listener/job-acquisition path before any repository step executes. The exact machine-side subcause (broker acquire hang versus equivalent local listener/worker launch failure) is not claimed without the runner _diag tail.",
-      "permanent_policy": "Keep the UE4 self-hosted runner, but supervise it externally under the interactive Windows user. If a job is acknowledged and no Runner.Worker appears within 150 seconds, restart Runner.Listener. Warehouse delta detection runs on GitHub-hosted Ubuntu and self-hosted staging is requested only for a real current Warehouse input; real Warehouse staging shares the UE4 device concurrency group.",
+      "root_cause": "The local failure boundary is proven to be the self-hosted runner listener/job-acquisition path before repository steps. Its exact local packet-level subcause was not captured, but the v2.337.0 zero-step ten-minute signature matches the open upstream actions/runner #4668 acquirejob hang family. Treat recurrence as runner infrastructure unless repository steps actually begin and fail.",
+      "permanent_policy": "Run the UE4 listener under the proven Windows user context, not NETWORK SERVICE; keep the legacy runner service disabled/manual; keep Warehouse delta detection on GitHub-hosted Ubuntu and request the self-hosted stage only for a real Warehouse input; serialize real Warehouse work with the UE4 device group; keep the external watchdog active so an acknowledged job with no Runner.Worker is recycled instead of consuming the full GitHub ten-minute failure window.",
       "reopen_rule": "Reopen if a supervised runner still produces a zero-step ten-minute failure, if the watchdog restarts during an active Runner.Worker, or if Warehouse consumes the self-hosted runner on a no-delta synchronize update."
     }
   ],
   "w00_acceptance_fast_path": {
-    "status": "PACKAGING_CONTENT_FIX_APPLIED_RUNNER_PROOF_PENDING",
+    "status": "AUTOMATED_ACCEPTANCE_GREEN_HUMAN_PIE_PENDING",
     "mode_contract": {
       "full": "C++/Build.cs/Config/runtime-contract deltas run the full UE4 chain.",
       "acceptance": "Acceptance deltas inherit the deepest safe parent proof: package-only fixes resume at package; startup-verifier-only fixes may resume at packaged startup after parent package+37-data success and local artifact validation.",
@@ -5442,7 +5453,7 @@
       "Summarize and guard runtime warning debt"
     ],
     "superseded_run_policy": "On acceptance/* branches, newer commits cancel older in-progress runs sharing the UE4 device concurrency group. Non-acceptance branches remain serialized.",
-    "current_boundary": "Unreal #650 and Warehouse #231 failed before any workflow step on the same self-hosted runner; Pre-Unreal #815 stayed green. Repository isolation/watchdog support is applied, but local watchdog installation and one fresh acceptance run are still required before packaged-startup proof resumes.",
-    "runner_policy": "No broad rerun. Install the supervised interactive-user runner watchdog first; Warehouse no-delta work stays on GitHub-hosted capacity. Then run one W00 acceptance attempt on the exact head."
+    "current_boundary": "Exact head efdb2e291505472247fae921945b083b3cc1ce2c: Pre-Unreal #816 SUCCESS, Warehouse #232 SUCCESS with hosted no-delta skip, Unreal #651 Attempt 2 SUCCESS including package, 37/37 Runtime JSON, packaged startup and hardware snapshot. Do not repeat green automated gates unless an invalidating dependency changes.",
+    "runner_policy": "Keep the supervised user-context self-hosted runner; keep NETWORK SERVICE/manual legacy service out of execution; Warehouse no-delta work remains GitHub-hosted; real Warehouse work shares UE4 device serialization. If the upstream zero-step acquire hang recurs, watchdog recovery handles the listener rather than reopening game-code repair."
   }
 }
