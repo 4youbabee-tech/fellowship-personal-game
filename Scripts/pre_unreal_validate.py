@@ -14,7 +14,7 @@ import sys
 from collections import defaultdict, deque
 from pathlib import Path
 
-from source_contracts import signal_precedes_member_mutation
+from source_contracts import has_nonufs_runtime_dependency, signal_precedes_member_mutation
 from governance_contracts import validate_development_mode
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -6424,8 +6424,11 @@ for pg147_path in SOURCE.rglob("*.cpp"):
     for pg147_name in re.findall(r'Data/([A-Za-z0-9_.-]+\.json)', read(pg147_path)):
         pg147_runtime_json.add(pg147_name)
 for pg147_name in sorted(pg147_runtime_json):
-    if f'RuntimeDependencies.Add("$(ProjectDir)/Data/{pg147_name}")' not in pg147_build:
-        fail(f"PG-147 runtime JSON is not staged for packaged builds: {pg147_name}")
+    pg147_relative = f"Data/{pg147_name}"
+    if not has_nonufs_runtime_dependency(pg147_build, pg147_relative):
+        fail(
+            f"PG-147 runtime JSON is not staged as project-relative NonUFS data: {pg147_name}"
+        )
 
 # PG-148: a real queued AsyncSaveGame race must cross a committed world revision inertly.
 for pg148_symbol in [
