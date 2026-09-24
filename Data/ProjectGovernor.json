@@ -5393,10 +5393,25 @@
       "root_cause": "PowerShell 5.1 Get-Content -Raw can yield $null for an empty file. The startup verifier treated Test-Path as sufficient proof that the returned value was a string.",
       "permanent_policy": "Initialize startup log text to an empty string and only replace it when Get-Content returns non-null. Startup-verifier-only child commits inherit a parent run's successful package+37-data proof and skip those expensive gates, while validating the persisted package/data artifact before launching the executable.",
       "reopen_rule": "Reopen if the verifier throws on an empty/missing startup log, if startup-only fixes recook a parent-proven package, or if inherited package/data artifacts are accepted without local provenance checks."
+    },
+    {
+      "id": "KF-W00-PRODUCTION-COOK-001",
+      "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
+      "symptom": "Unreal #649 packaged startup launched successfully but P1C01 async streaming reported 82 unresolved production-bank assets, then the world swap failed closed and movement remained held.",
+      "evidence": [
+        "Unreal #649: W00_PACKAGE_PASS succeeded and W00_PACKAGED_DATA_PASS expected=37 verified=37 succeeded.",
+        "Packaged runtime: ChapterAssetStreaming: unresolved-bank-assets chapter=P1C01 route=FrodoMain missing=82.",
+        "P1C01 currently contains 83 streaming assets; exactly one is under the previously always-cooked /Game/Production/Materials directory, so 83 - 1 = 82, matching runtime exactly.",
+        "ChapterAssetStreamingPlan contains 238 unique production package paths; all 238 map to project-owned import sources with zero source-plan mismatches.",
+        "Unreal #649 production import: 376 files, 0 failures; material persistence verification missing=0."
+      ],
+      "root_cause": "Soft object paths loaded from the external ChapterAssetStreamingPlan JSON are not discoverable by normal hard-reference cook traversal. Packaging forced only the production Materials directory, leaving World, required Common/Hobbit character parts, and Enemies outside the pak.",
+      "permanent_policy": "Always cook Materials, World, Characters/Common, Characters/Hobbit, and Enemies for the current streaming-bank contract. Before UAT, parse the streaming plan and require all 238 generated production .uasset packages to exist locally.",
+      "reopen_rule": "Reopen if the streaming plan expands beyond the covered directories, the expected package count changes without synchronized contract update, preflight finds a missing generated asset, or packaged startup still reports unresolved production-bank assets."
     }
   ],
   "w00_acceptance_fast_path": {
-    "status": "PARTIAL_RUNNER_PROOF_STARTUP_PENDING",
+    "status": "PACKAGING_CONTENT_FIX_APPLIED_RUNNER_PROOF_PENDING",
     "mode_contract": {
       "full": "C++/Build.cs/Config/runtime-contract deltas run the full UE4 chain.",
       "acceptance": "Acceptance deltas inherit the deepest safe parent proof: package-only fixes resume at package; startup-verifier-only fixes may resume at packaged startup after parent package+37-data success and local artifact validation.",
@@ -5412,6 +5427,6 @@
       "Summarize and guard runtime warning debt"
     ],
     "superseded_run_policy": "On acceptance/* branches, newer commits cancel older in-progress runs sharing the UE4 device concurrency group. Non-acceptance branches remain serialized.",
-    "current_boundary": "Unreal #648 on 9689a65ade82af5e1a87b63e344ed491c27c4079 proved Package PASS and 37/37 Runtime Data PASS. Its startup step produced no runtime verdict because the verifier itself crashed on a null empty-log read. The next verifier-only child must resume at packaged startup, not recook."
+    "current_boundary": "Unreal #649 proved package creation and 37 runtime JSON, then packaged startup failed because 82/83 P1C01 bank assets were uncooked. The exact missing count equals the bank minus its single previously always-cooked material. The next child is packaging-only and must inherit #649 core proof."
   }
 }

@@ -2739,6 +2739,17 @@ if (
 if "cancel-in-progress: true" in unreal_ci:
     fail("PG-026: unconditional shared Unreal cancellation is forbidden")
 
+packaging_config = read(ROOT / "Config" / "DefaultGame.ini")
+for required_cook_dir in (
+    '+DirectoriesToAlwaysCook=(Path="/Game/Production/Materials")',
+    '+DirectoriesToAlwaysCook=(Path="/Game/Production/World")',
+    '+DirectoriesToAlwaysCook=(Path="/Game/Production/Characters/Common")',
+    '+DirectoriesToAlwaysCook=(Path="/Game/Production/Characters/Hobbit")',
+    '+DirectoriesToAlwaysCook=(Path="/Game/Production/Enemies")',
+):
+    if required_cook_dir not in packaging_config:
+        fail("PG-026: dynamic production streaming banks must be included in packaged cook directories")
+
 package_script = read(ROOT / "Scripts" / "ci_package_w00.ps1")
 if (
     "CI-W00-Package-wrapper.cmd" not in package_script
@@ -2755,6 +2766,12 @@ if (
     )
 if "$proc.ExitCode" in package_script:
     fail("PG-026: W00 package wrapper must not trust Start-Process .ExitCode for RunUAT.bat")
+if (
+    "W00_STREAMING_ASSET_PREFLIGHT_PASS" not in package_script
+    or "W00_STREAMING_PLAN_COUNT_MISMATCH" not in package_script
+    or "W00_STREAMING_ASSET_PREFLIGHT_FAIL" not in package_script
+):
+    fail("PG-026: package must fail fast if generated production streaming assets are absent before cook")
 
 startup_verifier = read(ROOT / "Scripts" / "verify_packaged_startup.ps1")
 if (

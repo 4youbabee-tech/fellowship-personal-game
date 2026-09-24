@@ -78,6 +78,41 @@ if (Test-Path -LiteralPath $windowsProbeRoot) {
     Remove-Item -LiteralPath $windowsProbeRoot -Recurse -Force
 }
 Write-Host ("W00_PACKAGE_PREFLIGHT_PASS stageWritable=true dbghelpSourceReadable=true dbghelpDestinationWritable=true identity=" + $runnerIdentity + " destinationOwner=" + $dbghelpDestinationOwner + " stage=" + $stage)
+$streamingPlanPath = Join-Path $ProjectRoot "Data\ChapterAssetStreamingPlan.json"
+if (-not (Test-Path -LiteralPath $streamingPlanPath -PathType Leaf)) {
+    throw "W00_STREAMING_PLAN_MISSING path=$streamingPlanPath"
+}
+$streamingPlan = Get-Content -LiteralPath $streamingPlanPath -Raw | ConvertFrom-Json
+$expectedStreamingPackages = @()
+foreach ($bankProperty in $streamingPlan.banks.PSObject.Properties) {
+    foreach ($assetPath in @($bankProperty.Value.assets)) {
+        $assetPathText = [string]$assetPath
+        if ([string]::IsNullOrWhiteSpace($assetPathText)) { continue }
+        $packagePath = $assetPathText.Split('.')[0]
+        if (-not $packagePath.StartsWith("/Game/Production/", [System.StringComparison]::OrdinalIgnoreCase)) {
+            throw "W00_STREAMING_ASSET_OUTSIDE_PRODUCTION path=$assetPathText"
+        }
+        $expectedStreamingPackages += $packagePath
+    }
+}
+$expectedStreamingPackages = @($expectedStreamingPackages | Sort-Object -Unique)
+if ($expectedStreamingPackages.Count -ne 238) {
+    throw ("W00_STREAMING_PLAN_COUNT_MISMATCH expected=238 actual=" + $expectedStreamingPackages.Count)
+}
+$missingGeneratedAssets = @()
+foreach ($packagePath in $expectedStreamingPackages) {
+    $relativePackage = $packagePath.Substring("/Game/".Length).Replace('/', '\')
+    $assetFile = Join-Path $ProjectRoot ("Content\" + $relativePackage + ".uasset")
+    if (-not (Test-Path -LiteralPath $assetFile -PathType Leaf)) {
+        $missingGeneratedAssets += $packagePath
+    }
+}
+if ($missingGeneratedAssets.Count -gt 0) {
+    $missingGeneratedAssets | Select-Object -First 40 | ForEach-Object { Write-Host ("W00_STREAMING_ASSET_MISSING " + $_) }
+    throw ("W00_STREAMING_ASSET_PREFLIGHT_FAIL missing=" + $missingGeneratedAssets.Count + " expected=" + $expectedStreamingPackages.Count)
+}
+Write-Host ("W00_STREAMING_ASSET_PREFLIGHT_PASS expected=" + $expectedStreamingPackages.Count + " missing=0")
+
 
 $argList = @(
     "BuildCookRun",

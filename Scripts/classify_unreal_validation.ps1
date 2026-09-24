@@ -55,6 +55,32 @@ function Test-ParentWholeWorkflowGreen([string]$ParentSha) {
     }
 }
 
+function Test-PackagingCookConfigOnlyDelta([string]$GitExe, [string]$ParentSha, [string]$HeadSha) {
+    $path = "Config/DefaultGame.ini"
+    $diff = @(& $GitExe diff --unified=0 $ParentSha $HeadSha -- $path)
+    if ($LASTEXITCODE -ne 0) { return $false }
+
+    $requiredAdds = @(
+        '+DirectoriesToAlwaysCook=(Path="/Game/Production/World")',
+        '+DirectoriesToAlwaysCook=(Path="/Game/Production/Characters/Common")',
+        '+DirectoriesToAlwaysCook=(Path="/Game/Production/Characters/Hobbit")',
+        '+DirectoriesToAlwaysCook=(Path="/Game/Production/Enemies")'
+    )
+    $changedLines = @($diff | Where-Object {
+        $_ -match '^[+-]' -and $_ -notmatch '^(---|\+\+\+)'
+    })
+    $trimmedChangedLines = @($changedLines | ForEach-Object { $_.Trim() })
+
+    if ($trimmedChangedLines.Count -ne $requiredAdds.Count) { return $false }
+    foreach ($line in $trimmedChangedLines) {
+        if ($requiredAdds -notcontains $line) { return $false }
+    }
+    foreach ($required in $requiredAdds) {
+        if ($trimmedChangedLines -notcontains $required) { return $false }
+    }
+    return $true
+}
+
 function Test-CiPackagingTargetOnlyDelta([string]$GitExe, [string]$ParentSha, [string]$HeadSha) {
     $path = "Source/ShireJourney.Target.cs"
     $diff = @(& $GitExe diff --unified=0 $ParentSha $HeadSha -- $path)
@@ -126,6 +152,14 @@ function Test-ParentCoreUnrealGreen([string]$ParentSha) {
 
                 if($allGreen) {
                     Write-Host "PARENT_CORE_UNREAL_PROOF_PASS parent=$ParentSha run=$($run.id) job=$($job.id)"
+                    return $true
+                }
+
+                if(
+                    $stepMap.ContainsKey("Acceptance-only Unreal fast path") -and
+                    $stepMap["Acceptance-only Unreal fast path"] -eq "success"
+                ) {
+                    Write-Host "PARENT_CORE_UNREAL_PROOF_PASS parent=$ParentSha run=$($run.id) job=$($job.id) source=transitive-acceptance"
                     return $true
                 }
             }
@@ -234,6 +268,13 @@ foreach($p in $changed){
     if(
         $n -eq "Source/ShireJourney.Target.cs" -and
         (Test-CiPackagingTargetOnlyDelta $git $parentSha $env:TARGET_SHA)
+    ){
+        $acceptanceTouched += $n
+        continue
+    }
+    if(
+        $n -eq "Config/DefaultGame.ini" -and
+        (Test-PackagingCookConfigOnlyDelta $git $parentSha $env:TARGET_SHA)
     ){
         $acceptanceTouched += $n
         continue
