@@ -1,3 +1,21 @@
+## 2026-09-24 - Player falling / grounding commit barrier root fix
+
+Real PIE evidence showed the player can still fall despite the earlier grounding logic. Root review found that `ChapterWorldRouter` resolved a grounded placement, but published the world as committed and released movement before proving CharacterMovement had actually settled on blocking ground. The previous stability check was CI-only and log-only.
+
+Root fix applied:
+- world commit is now two-phase,
+- player remains transition-held while CharacterMovement settles,
+- grounding stability is checked before `WorldRevision` / `OnWorldCommitted` publication,
+- one bounded re-ground attempt is allowed,
+- persistent instability keeps the player held and triggers rollback instead of releasing the pawn into a fall,
+- successful stability is now the condition that publishes the world and releases movement.
+
+Changed files:
+- `Source/ShireJourney/Private/World/ChapterWorldRouter.cpp`
+- `Source/ShireJourney/Public/World/ChapterWorldRouter.h`
+
+Status: STATIC-VALIDATED / COMPILE-AND-PIE-PROOF-PENDING. Do not claim the falling issue is closed until a fresh UE4.27 compile and real PIE observation show stable grounding without falling.
+
 ## 2026-09-24 - W00 package truth, DbgHelp policy, and PG-026 repair
 
 Live PR #69 head `d94b7fe7797e9ef417b7dad2abde26dfc279e700` produced three decisive signals:
