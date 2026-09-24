@@ -162,6 +162,14 @@ function Test-ParentCoreUnrealGreen([string]$ParentSha) {
                     Write-Host "PARENT_CORE_UNREAL_PROOF_PASS parent=$ParentSha run=$($run.id) job=$($job.id) source=transitive-acceptance"
                     return $true
                 }
+
+                if(
+                    $stepMap.ContainsKey("Governance/docs-only Unreal fast path") -and
+                    $stepMap["Governance/docs-only Unreal fast path"] -eq "success"
+                ) {
+                    Write-Host "PARENT_CORE_UNREAL_PROOF_PASS parent=$ParentSha run=$($run.id) job=$($job.id) source=transitive-governance"
+                    return $true
+                }
             }
         }
     } catch {
@@ -238,7 +246,8 @@ $safeExact = @(
     "Data/MasterExecutionRoadmap.json",
     "Data/PIEVerificationEvidence.json",
     "Data/ProjectGovernor.schema.json",
-    "Data/Production100ReadinessGate.json"
+    "Data/Production100ReadinessGate.json",
+    "Data/W00FinalClosurePlanV1.json"
 )
 
 $acceptanceExact = @(
@@ -250,7 +259,7 @@ $acceptanceExact = @(
     "Scripts/verify_packaged_runtime_data.ps1",
     "Scripts/verify_packaged_startup.ps1",
     "Scripts/capture_runner_hardware.ps1",
-    "Data/W00FinalClosurePlanV1.json"
+    "Scripts/verify_runtime_source_workspace.ps1"
 )
 
 $fullImpact = @()

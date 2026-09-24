@@ -2789,6 +2789,47 @@ if (
 ):
     fail("PG-026: startup-verifier-only acceptance must resume after proven parent package/data gates")
 
+# PG-157: one canonical interactive branch and no silent local branch switching.
+local_update = read(ROOT / "SHIRE_UPDATE_BUILD_LAUNCH.bat")
+local_pie = read(ROOT / "SHIRE_PIE_VERIFY.bat")
+for forbidden in ["git checkout develop", "checkout develop", "Synchronizing exact develop head"]:
+    if forbidden.lower() in local_update.lower() or forbidden.lower() in local_pie.lower():
+        fail(f"PG-157: local helper silently switches branch: {forbidden}")
+for required in [
+    "RUNNER_WORKSPACE_BLOCKED",
+    "CANONICAL_BRANCH_REQUIRED",
+    'if /I not "!ACTIVE_BRANCH!"=="develop"',
+    'pull --ff-only origin develop',
+]:
+    if required not in local_update:
+        fail(f"PG-157: canonical develop update/build helper contract missing: {required}")
+for required in [
+    "DEVELOP PIE VERIFICATION",
+    "RUNNER_WORKSPACE_BLOCKED",
+    "CANONICAL_BRANCH_REQUIRED",
+    'if /I not "!TESTED_BRANCH!"=="develop"',
+]:
+    if required not in local_pie:
+        fail(f"PG-157: canonical develop PIE helper contract missing: {required}")
+
+# PG-158: exact-head runner source tree must be present immediately before UBT.
+source_integrity = read(ROOT / "Scripts" / "verify_runtime_source_workspace.ps1")
+for required in [
+    "RUNTIME_SOURCE_WORKSPACE_REPAIR_BEGIN",
+    "RUNTIME_SOURCE_WORKSPACE_RESTORE",
+    "RUNTIME_SOURCE_WORKSPACE_INTEGRITY_PASS",
+    "RUNTIME_SOURCE_ARCHITECTURE_TARGET_MISSING",
+    "git checkout HEAD",
+]:
+    if required not in source_integrity:
+        fail(f"PG-158: runtime source workspace integrity contract missing: {required}")
+if "Verify runtime source workspace integrity" not in unreal_ci:
+    fail("PG-158: Unreal workflow must validate/repair the exact tracked source tree immediately before build")
+
+classifier_guard = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
+if "source=transitive-governance" not in classifier_guard:
+    fail("PG-158: governance-only green parents must preserve transitive core Unreal proof")
+
 game_target = read(ROOT / "Source" / "ShireJourney.Target.cs")
 if (
     'Environment.GetEnvironmentVariable("SHIRE_CI_NO_DEBUGINFO") == "1"' not in game_target
