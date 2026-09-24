@@ -6422,7 +6422,8 @@ if "LoadObject<USoundBase>" in pg128_audio:
     fail("PG-128 synchronous production audio loading is forbidden")
 
 
-# PG-144: warehouse staging is bounded, resumable and current-delta gated.
+# PG-144: warehouse staging is bounded, resumable and filtered on a GitHub-hosted delta gate
+# before any self-hosted runner capacity is consumed.
 pg144_helper = read(ROOT / "Scripts" / "warehouse_network.ps1")
 pg144_workflow = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
 pg144_scripts = [
@@ -6453,24 +6454,28 @@ for pg144_path in pg144_scripts:
     if re.search(r"\bInvoke-(?:WebRequest|RestMethod)\b", pg144_text):
         fail(f"PG-144 provider script bypasses bounded network helper: {pg144_path.name}")
 for pg144_symbol in [
-    "Detect current warehouse delta",
-    "WAREHOUSE_DELTA_SKIP",
+    "Detect warehouse delta on GitHub-hosted runner",
+    "Detect warehouse delta before touching the self-hosted runner",
+    "EVENT_BEFORE: ${{ github.event.before }}",
+    "if: needs.delta.outputs.run_stage == 'true'",
+    "WAREHOUSE_HOSTED_DELTA_SKIP",
+    "group: unreal-build-${{ github.repository }}-ue4-device",
     "warehouse_network.ps1",
     "WAREHOUSE_CHECKOUT_PASS",
-    "steps.warehouse_delta.outputs.run_stage == 'true'",
 ]:
     if pg144_symbol not in pg144_workflow:
-        fail(f"PG-144 warehouse workflow resilience guard missing: {pg144_symbol}")
-if pg144_workflow.count("steps.warehouse_delta.outputs.run_stage == 'true'") < 8:
-    fail("PG-144 every heavy warehouse stage must be current-delta gated")
+        fail(f"PG-144 warehouse runner-isolation guard missing: {pg144_symbol}")
+if pg144_workflow.count("runs-on: ubuntu-latest") < 2:
+    fail("PG-144 warehouse delta/skip path must stay on GitHub-hosted capacity")
+if pg144_workflow.count("- self-hosted") != 1:
+    fail("PG-144 exactly one warehouse job may request the self-hosted runner")
+if "id: warehouse_delta" in pg144_workflow:
+    fail("PG-144 self-hosted warehouse delta detector was reintroduced")
 
-
-# PG-145: self-hosted Windows warehouse steps must bypass machine execution policy.
-pg145_workflow = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
+# PG-145: self-hosted Windows warehouse execution and runner supervision are explicit.
+pg145_workflow = pg144_workflow
 if "shell: powershell\n" in pg145_workflow:
     fail("PG-145 raw powershell shell can be blocked by the runner execution policy")
-if pg145_workflow.count("powershell -NoProfile -ExecutionPolicy Bypass -File {0}") < 2:
-    fail("PG-145 inline warehouse PowerShell steps must explicitly bypass execution policy")
 if pg145_workflow.count("powershell.exe -NoProfile -ExecutionPolicy Bypass") < 8:
     fail("PG-145 heavy warehouse scripts must execute through explicit Bypass wrappers")
 for pg145_checkout_symbol in [
@@ -6481,8 +6486,42 @@ for pg145_checkout_symbol in [
 ]:
     if pg145_checkout_symbol not in pg145_workflow:
         fail(f"PG-145 resilient warehouse checkout missing: {pg145_checkout_symbol}")
-if "uses: actions/checkout@" in pg145_workflow:
-    fail("PG-145 warehouse must not depend on marketplace checkout download on the flaky self-hosted network path")
+pg145_delta_start = pg145_workflow.find("  delta:")
+pg145_stage_start = pg145_workflow.find("  stage:")
+if pg145_delta_start < 0 or pg145_stage_start < 0 or pg145_stage_start <= pg145_delta_start:
+    fail("PG-145 warehouse hosted-delta/stage job layout is invalid")
+else:
+    pg145_hosted = pg145_workflow[pg145_delta_start:pg145_stage_start]
+    pg145_stage = pg145_workflow[pg145_stage_start:]
+    if pg145_hosted.count("uses: actions/checkout@v4") != 1:
+        fail("PG-145 hosted warehouse delta gate must use exactly one actions/checkout@v4")
+    if "uses: actions/checkout@" in pg145_stage:
+        fail("PG-145 self-hosted warehouse stage must not depend on marketplace checkout download")
+
+pg145_watchdog = read(ROOT / "Scripts" / "runner_watchdog.ps1")
+pg145_watchdog_installer = read(ROOT / "Scripts" / "install_runner_watchdog.ps1")
+for pg145_symbol in [
+    "Acknowledging runner request",
+    "Runner.Listener",
+    "Runner.Worker",
+    "AcquireHangSeconds",
+    "SHIRE_RUNNER_WATCHDOG_RECOVERY",
+]:
+    if pg145_symbol not in pg145_watchdog:
+        fail(f"PG-145 runner watchdog contract missing: {pg145_symbol}")
+pg145_timeout = re.search(r"\[int\]\$AcquireHangSeconds\s*=\s*(\d+)", pg145_watchdog)
+if not pg145_timeout or not (110 <= int(pg145_timeout.group(1)) <= 180):
+    fail("PG-145 runner acquire watchdog must recover within 110-180 seconds")
+for pg145_install_symbol in [
+    "ShireJourney-GitHubRunner-Watchdog",
+    "New-ScheduledTaskTrigger -AtLogOn",
+    "-LogonType Interactive",
+    "actions.runner.*",
+    "NETWORK SERVICE",
+]:
+    if pg145_install_symbol not in pg145_watchdog_installer:
+        fail(f"PG-145 runner watchdog installer contract missing: {pg145_install_symbol}")
+
 
 # PG-146: route/chapter/episode/character identity is one fail-closed contract.
 pg146_quest_h = read(resolve_source("ShireQuestSubsystem.h"))

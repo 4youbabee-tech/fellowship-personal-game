@@ -5408,6 +5408,21 @@
       "root_cause": "Soft object paths loaded from the external ChapterAssetStreamingPlan JSON are not discoverable by normal hard-reference cook traversal. Packaging forced only the production Materials directory, leaving World, required Common/Hobbit character parts, and Enemies outside the pak.",
       "permanent_policy": "Always cook Materials, World, Characters/Common, Characters/Hobbit, and Enemies for the current streaming-bank contract. Before UAT, parse the streaming plan and require all 238 generated production .uasset packages to exist locally.",
       "reopen_rule": "Reopen if the streaming plan expands beyond the covered directories, the expected package count changes without synchronized contract update, preflight finds a missing generated asset, or packaged startup still reports unresolved production-bank assets."
+    },
+    {
+      "id": "KF-W00-RUNNER-BROKER-001",
+      "status": "REPO_FIX_APPLIED_LOCAL_WATCHDOG_INSTALL_PENDING",
+      "symptom": "Unreal #650 and Warehouse #231 were both assigned to UE4-27-Windows but failed after about ten minutes with zero workflow steps and no downloadable job log.",
+      "evidence": [
+        "Exact head a69147e4e34869bc43abfbce517ba8023b6027c8: Pre-Unreal #815 SUCCESS on GitHub-hosted Ubuntu.",
+        "Unreal #650 job 107839854062: runner_id=21, runner_name=UE4-27-Windows, started_at=2026-09-24T21:22:36Z, completed_at=2026-09-24T21:32:37Z, steps=[].",
+        "Warehouse #231 job 107839854730: same runner_id=21/name, started_at=2026-09-24T21:32:39Z, completed_at=2026-09-24T21:42:39Z, steps=[].",
+        "The a69147 commit changed packaging config/scripts/docs/governor only; it did not change .github/workflows/unreal-build-validation.yml.",
+        "The runner immediately before this incident was already Actions Runner 2.337.0 and successfully executed full step lists in Unreal #649 and Warehouse #230."
+      ],
+      "root_cause": "Proven boundary is the self-hosted runner listener/job-acquisition path before any repository step executes. The exact machine-side subcause (broker acquire hang versus equivalent local listener/worker launch failure) is not claimed without the runner _diag tail.",
+      "permanent_policy": "Keep the UE4 self-hosted runner, but supervise it externally under the interactive Windows user. If a job is acknowledged and no Runner.Worker appears within 150 seconds, restart Runner.Listener. Warehouse delta detection runs on GitHub-hosted Ubuntu and self-hosted staging is requested only for a real current Warehouse input; real Warehouse staging shares the UE4 device concurrency group.",
+      "reopen_rule": "Reopen if a supervised runner still produces a zero-step ten-minute failure, if the watchdog restarts during an active Runner.Worker, or if Warehouse consumes the self-hosted runner on a no-delta synchronize update."
     }
   ],
   "w00_acceptance_fast_path": {
@@ -5427,6 +5442,7 @@
       "Summarize and guard runtime warning debt"
     ],
     "superseded_run_policy": "On acceptance/* branches, newer commits cancel older in-progress runs sharing the UE4 device concurrency group. Non-acceptance branches remain serialized.",
-    "current_boundary": "Unreal #649 proved package creation and 37 runtime JSON, then packaged startup failed because 82/83 P1C01 bank assets were uncooked. The exact missing count equals the bank minus its single previously always-cooked material. The next child is packaging-only and must inherit #649 core proof."
+    "current_boundary": "Unreal #650 and Warehouse #231 failed before any workflow step on the same self-hosted runner; Pre-Unreal #815 stayed green. Repository isolation/watchdog support is applied, but local watchdog installation and one fresh acceptance run are still required before packaged-startup proof resumes.",
+    "runner_policy": "No broad rerun. Install the supervised interactive-user runner watchdog first; Warehouse no-delta work stays on GitHub-hosted capacity. Then run one W00 acceptance attempt on the exact head."
   }
 }
