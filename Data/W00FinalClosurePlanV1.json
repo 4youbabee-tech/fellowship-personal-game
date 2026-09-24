@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "W00_FINAL_CLOSURE_WAVE_V1",
-  "status": "ACTIVE_RUNNER_EXECUTION_PENDING",
+  "status": "AUTOMATED_GATES_GREEN_GROUNDING_PIE_PROVEN",
   "authority": "Data/ProjectGovernor.json",
   "base_green_head": "31b6e1c9958b6121ec7a00c07e038fec4ab36408",
   "purpose": "Close every remaining automatable W00 acceptance blocker in one large evidence wave so the deferred W01-W11 production program can start on an unobstructed foundation.",
@@ -66,5 +66,13 @@
     "Data/CompletionWaveMapV1.json"
   ],
   "next_large_program": "W01-W06 Part I large production build, followed by W07-W11 Part II/III and trilogy final integration.",
-  "last_refresh": "2026-09-24"
+  "last_refresh": "2026-09-25",
+  "grounding_pie_evidence": {
+    "tested_commit": "2427e6594f5adb3ea81f143dc19d4ecede8eecc9",
+    "chapter": "P1C01",
+    "owner_observation": "Player remained on the ground and did not fall in real PIE.",
+    "log_marker": "ShireStartupGrounding: PASS chapter=P1C01 commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.0 drift=0.0",
+    "placed_marker": "ShireStartupGrounding: PLACED chapter=P1C01 source=chapter-start requestedZ=130.0 groundedZ=76.0",
+    "scope": "Grounding regression only; full chapter traversal/pacing/visual/device acceptance remains separate."
+  }
 }

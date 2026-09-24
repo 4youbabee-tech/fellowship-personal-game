@@ -1,3 +1,17 @@
+## 2026-09-25 - Real PIE closes P1C01 startup-grounding regression
+
+Exact tested head: `2427e6594f5adb3ea81f143dc19d4ecede8eecc9`.
+
+Owner real-PIE observation: the P1C01 player remained on the ground and did not fall.
+
+Chapter-specific Output Log evidence from the owner-provided screenshot:
+- `ShireStartupGrounding: PLACED chapter=P1C01 source=chapter-start requestedZ=130.0 groundedZ=76.0`
+- `ShireStartupGrounding: PASS chapter=P1C01 commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.0 drift=0.0`
+
+This closes the specific player-fall/startup-grounding repair. It does **not** promote the whole P1C01 chapter to PIE-TESTED and does not claim DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED. Chapter-wide traversal/quest/save-load/pacing/visual review remains a separate human acceptance tail.
+
+Next action: final W00 branch ancestry/cleanup audit, then close the repair lane and open W01 under Gate 6/7.
+
 ## 2026-09-25 - Automated W00 acceptance chain green on Unreal #651 Attempt 2
 
 Exact head `efdb2e291505472247fae921945b083b3cc1ce2c` is now machine-proven through the complete automated W00 chain: Pre-Unreal #816 SUCCESS, Warehouse #232 SUCCESS with no-delta self-hosted skip, and Unreal #651 Attempt 2 SUCCESS.

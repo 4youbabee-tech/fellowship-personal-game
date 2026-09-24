@@ -4163,7 +4163,7 @@
   "current_focus": {
     "production_lane": "W00_ARCHITECTURAL_STABILIZATION",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "Automated W00 acceptance is green on efdb2e291505472247fae921945b083b3cc1ce2c. Do not reopen runner/package/core repair without a concrete regression; move to the remaining human PIE grounding boundary, then branch audit.",
+    "rule": "P1C01 startup grounding is real-PIE-proven on 2427e6594f5adb3ea81f143dc19d4ecede8eecc9. Do not reopen grounding/runner/package repair without a concrete regression. Proceed to final branch ancestry/cleanup audit, then close W00 repair and open W01 under Gate 6/7.",
     "machine_baseline": {
       "sha": "efdb2e291505472247fae921945b083b3cc1ce2c",
       "pre_unreal": "#816 SUCCESS",
@@ -5250,9 +5250,9 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Run one real PIE grounding/traversal acceptance on the exact machine-proven head; require the player to remain on blocking ground, stop falling, and regain movement only after the grounding barrier.",
-      "Record the exact ShireStartupGrounding PASS evidence and human observation without promoting DEVICE-TESTED or VISUALLY-ACCEPTED.",
-      "After the required W00 human tail is satisfied, perform branch ancestry audit/cleanup before closing W00 and opening W01."
+      "Run final branch ancestry/cleanup audit for the W00 acceptance train; classify KEEP ACTIVE / MERGE-ARCHIVE FIRST / SAFE TO DELETE.",
+      "Close W00 architectural repair after the branch audit while preserving chapter-wide human PIE/device/visual/performance work as separate acceptance backlog.",
+      "Open W01 only under Gate 6/7 scope control; do not reinterpret remaining human-tail acceptance as permission for Part II/III expansion."
     ]
   },
   "development_mode_contract": {
@@ -5285,7 +5285,7 @@
     ]
   },
   "w00_final_closure": {
-    "status": "AUTOMATED_GATES_GREEN_HUMAN_TAIL_PENDING",
+    "status": "AUTOMATED_GREEN_GROUNDING_PIE_PROVEN_HUMAN_TAIL_SEPARATE",
     "branch": "acceptance/w00-final-closure-v1",
     "base_green_head": "31b6e1c9958b6121ec7a00c07e038fec4ab36408",
     "plan": "Data/W00FinalClosurePlanV1.json",
@@ -5380,11 +5380,18 @@
     },
     {
       "id": "KF-W00-GROUNDING-GUARD-001",
-      "status": "COMPILE_AND_PACKAGED_GROUNDING_PROVEN_PIE_PENDING",
+      "status": "PROVEN_FIXED_REAL_PIE_GROUNDING",
       "symptom": "Pre-Unreal rejected the new grounding commit barrier under PG-122/PG-128 after the player-fall root fix.",
       "root_cause": "PG-122 still required the established 2.0 second stability proof while runtime used 0.35 seconds; PG-128 inspected the legacy CommitChapterWorld publication location even though publication moved into VerifyPlayerGroundingStability.",
       "permanent_policy": "Grounding finalization waits a real 2.0 seconds before commit publication; PG-128 structurally inspects the grounding finalizer and requires OnWorldCommitted.Broadcast before SetPlayerWorldHold(false).",
-      "evidence_boundary": "Pre-Unreal #816 and Unreal #651 Attempt 2 are green. verify_packaged_startup.ps1 requires ShireStartupGrounding: PASS chapter=P1C01 and #651 packaged startup passed. Human PIE observation is still required before closing the player-falling issue."
+      "evidence_boundary": "Grounding repair is now REAL-PIE-PROVEN for P1C01 startup. This does not promote full-chapter PIE, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED.",
+      "evidence": [
+        "Pre-Unreal #817 SUCCESS on exact head 2427e6594f5adb3ea81f143dc19d4ecede8eecc9.",
+        "Unreal #652 SUCCESS via governance/docs fast path inheriting exact machine-green parent #651.",
+        "Owner real PIE observation on the exact runner workspace: P1C01 player remained on blocking ground and did not fall.",
+        "Owner-provided PIE Output Log screenshot: ShireStartupGrounding: PLACED chapter=P1C01 source=chapter-start requestedZ=130.0 groundedZ=76.0.",
+        "Owner-provided PIE Output Log screenshot: ShireStartupGrounding: PASS chapter=P1C01 commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.0 drift=0.0."
+      ]
     },
     {
       "id": "KF-W00-PACKAGED-STARTUP-001",
@@ -5453,7 +5460,7 @@
       "Summarize and guard runtime warning debt"
     ],
     "superseded_run_policy": "On acceptance/* branches, newer commits cancel older in-progress runs sharing the UE4 device concurrency group. Non-acceptance branches remain serialized.",
-    "current_boundary": "Exact head efdb2e291505472247fae921945b083b3cc1ce2c: Pre-Unreal #816 SUCCESS, Warehouse #232 SUCCESS with hosted no-delta skip, Unreal #651 Attempt 2 SUCCESS including package, 37/37 Runtime JSON, packaged startup and hardware snapshot. Do not repeat green automated gates unless an invalidating dependency changes.",
+    "current_boundary": "Automated W00 acceptance is green and the P1C01 startup-grounding regression is now real-PIE-proven on exact head 2427e6594f5adb3ea81f143dc19d4ecede8eecc9. Remaining chapter-wide traversal/pacing/visual/device work is human-tail acceptance, not architectural repair.",
     "runner_policy": "Keep the supervised user-context self-hosted runner; keep NETWORK SERVICE/manual legacy service out of execution; Warehouse no-delta work remains GitHub-hosted; real Warehouse work shares UE4 device serialization. If the upstream zero-step acquire hang recurs, watchdog recovery handles the listener rather than reopening game-code repair."
   }
 }

@@ -34,16 +34,24 @@
       "chapter_id": "P1C01",
       "region": "Shire",
       "status": "NOT_RUN",
-      "tested_commit": null,
-      "tested_at": null,
-      "tester": null,
-      "evidence_artifacts": [],
-      "observed_details": [],
+      "tested_commit": "2427e6594f5adb3ea81f143dc19d4ecede8eecc9",
+      "tested_at": "2026-09-25",
+      "tester": "owner",
+      "evidence_artifacts": [
+        "Owner-provided PIE Output Log screenshot: ShireStartupGrounding PASS for P1C01"
+      ],
+      "observed_details": [
+        "Owner observed the P1C01 player remained on the ground and did not fall during PIE.",
+        "PIE Output Log: ShireStartupGrounding: PASS chapter=P1C01 commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.0 drift=0.0.",
+        "PIE Output Log: ShireStartupGrounding: PLACED chapter=P1C01 source=chapter-start requestedZ=130.0 groundedZ=76.0."
+      ],
       "specific_evidence": {
         "fps_value": null,
-        "screenshot_artifacts": [],
+        "screenshot_artifacts": [
+          "Owner-provided chat screenshot showing P1C01 ShireStartupGrounding PASS"
+        ],
         "video_artifacts": [],
-        "chapter_specific_note": ""
+        "chapter_specific_note": "Grounding subgate proven in real PIE on the current machine-proven head: player did not fall; output log showed PASS with commitBarrier=yes, stableSeconds=2.0, ground=yes, drop=1.0, drift=0.0. This is grounding-specific evidence only and does not promote full P1C01 traversal/quest/pacing/visual acceptance."
       },
       "target_device": {
         "resolution": "1280x720",
@@ -52,7 +60,9 @@
         "hitch_observation": null,
         "memory_observation": null
       },
-      "blockers": []
+      "blockers": [
+        "Full P1C01 chapter-wide PIE traversal/quest/save-load/pacing/visual review remains separate; grounding repair itself is proven."
+      ]
     },
     {
       "chapter_id": "P1C02",
