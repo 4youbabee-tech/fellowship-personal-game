@@ -2,6 +2,7 @@ import unittest
 
 from source_contracts import (
     first_member_assignment_position,
+    has_nonufs_runtime_dependency,
     signal_precedes_member_mutation,
 )
 
@@ -76,6 +77,27 @@ class SourceContractTests(unittest.TestCase):
             source,
             "OnWorldTransitionRequested.Broadcast",
             ("CurrentChapterId",),
+        ))
+
+    def test_runtime_dependency_requires_nonufs(self):
+        build_cs = 'RuntimeDependencies.Add("$(ProjectDir)/Data/NPCSocialModel.json", StagedFileType.NonUFS);'
+        self.assertTrue(has_nonufs_runtime_dependency(
+            build_cs,
+            "Data/NPCSocialModel.json",
+        ))
+
+    def test_runtime_dependency_rejects_legacy_untyped_form(self):
+        build_cs = 'RuntimeDependencies.Add("$(ProjectDir)/Data/NPCSocialModel.json");'
+        self.assertFalse(has_nonufs_runtime_dependency(
+            build_cs,
+            "Data/NPCSocialModel.json",
+        ))
+
+    def test_runtime_dependency_rejects_wrong_staging_type(self):
+        build_cs = 'RuntimeDependencies.Add("$(ProjectDir)/Data/NPCSocialModel.json", StagedFileType.UFS);'
+        self.assertFalse(has_nonufs_runtime_dependency(
+            build_cs,
+            "Data/NPCSocialModel.json",
         ))
 
 
