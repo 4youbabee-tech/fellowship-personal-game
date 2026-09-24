@@ -5369,6 +5369,14 @@
       "root_cause": "The validator encoded the old literal workflow spelling instead of the current policy semantics.",
       "permanent_policy": "PG-026 accepts either fully serial cancellation=false or the exact acceptance/* head_ref expression; unconditional true or any broader expression is rejected.",
       "reopen_rule": "Reopen if a non-acceptance branch can cancel an active shared-device run or the exact acceptance-only expression is rejected."
+    },
+    {
+      "id": "KF-W00-GROUNDING-GUARD-001",
+      "status": "FIX_APPLIED_RUNNER_AND_PIE_PROOF_PENDING",
+      "symptom": "Pre-Unreal rejected the new grounding commit barrier under PG-122/PG-128 after the player-fall root fix.",
+      "root_cause": "PG-122 still required the established 2.0 second stability proof while runtime used 0.35 seconds; PG-128 inspected the legacy CommitChapterWorld publication location even though publication moved into VerifyPlayerGroundingStability.",
+      "permanent_policy": "Grounding finalization waits a real 2.0 seconds before commit publication; PG-128 structurally inspects the grounding finalizer and requires OnWorldCommitted.Broadcast before SetPlayerWorldHold(false).",
+      "evidence_boundary": "Static contract fixed only. Requires fresh Pre-Unreal, UE4.27 compile/runtime proof and human PIE observation before closing falling issue."
     }
   ],
   "w00_acceptance_fast_path": {

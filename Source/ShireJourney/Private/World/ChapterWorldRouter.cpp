@@ -30,6 +30,11 @@
 #include "Misc/Parse.h"
 #include "TimerManager.h"
 
+namespace ShireGrounding
+{
+    static constexpr float GroundingStabilitySeconds = 2.0f;
+}
+
 AChapterWorldRouter::AChapterWorldRouter()
 {
     PrimaryActorTick.bCanEverTick = false;
@@ -628,7 +633,7 @@ void AChapterWorldRouter::VerifyPlayerGroundingStability(FName ChapterId, FVecto
                 GetWorldTimerManager().SetTimer(
                     GroundingStabilityTimer,
                     RetryDelegate,
-                    0.35f,
+                    ShireGrounding::GroundingStabilitySeconds,
                     false);
 
                 UE_LOG(
@@ -727,7 +732,7 @@ void AChapterWorldRouter::VerifyPlayerGroundingStability(FName ChapterId, FVecto
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("ShireStartupGrounding: PASS chapter=%s commitBarrier=yes ground=yes drop=%.1f drift=%.1f"),
+        TEXT("ShireStartupGrounding: PASS chapter=%s commitBarrier=yes stableSeconds=2.0 ground=yes drop=%.1f drift=%.1f"),
         *CommittedChapterId.ToString(),
         VerticalDrop,
         HorizontalDrift);
@@ -1300,13 +1305,13 @@ void AChapterWorldRouter::CommitChapterWorld(
     GetWorldTimerManager().SetTimer(
         GroundingStabilityTimer,
         StabilityDelegate,
-        0.35f,
+        ShireGrounding::GroundingStabilitySeconds,
         false);
 
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("ShireWorldCommit: grounding-barrier-pending chapter=%s route=%s episode=%s builder=%s"),
+        TEXT("ShireWorldCommit: grounding-barrier-pending chapter=%s route=%s episode=%s builder=%s stableSeconds=2.0"),
         *ChapterId.ToString(),
         *RouteId.ToString(),
         *EpisodeId.ToString(),

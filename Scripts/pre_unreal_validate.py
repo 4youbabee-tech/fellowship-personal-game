@@ -6338,11 +6338,26 @@ elif "SetPlayerWorldHold(false);" in pg128_router[move_start:move_end]:
     fail("PG-128 movement may not unlock before world/context commit")
 
 commit_start = pg128_router.find("void AChapterWorldRouter::CommitChapterWorld")
-commit_body = pg128_router[commit_start:] if commit_start >= 0 else ""
-commit_broadcast = commit_body.find("OnWorldCommitted.Broadcast(WorldRevision);")
-commit_release = commit_body.find("SetPlayerWorldHold(false);", commit_broadcast)
-if commit_broadcast < 0 or commit_release < 0 or commit_release < commit_broadcast:
-    fail("PG-128 normal world commit must broadcast before movement release")
+if commit_start < 0:
+    fail("PG-128 normal world commit function missing")
+else:
+    commit_body = pg128_router[commit_start:]
+    if "grounding-barrier-pending" not in commit_body:
+        fail("PG-128 normal world commit must enter the grounding barrier before publication")
+    if "SetPlayerWorldHold(false);" in commit_body:
+        fail("PG-128 normal world commit setup may not release movement before grounding finalization")
+
+finalize_start = pg128_router.find("void AChapterWorldRouter::VerifyPlayerGroundingStability")
+finalize_end = pg128_router.find("void AChapterWorldRouter::LoadChapterWorld", finalize_start)
+finalize_body = (
+    pg128_router[finalize_start:finalize_end]
+    if finalize_start >= 0 and finalize_end >= 0
+    else ""
+)
+finalize_broadcast = finalize_body.find("OnWorldCommitted.Broadcast(WorldRevision);")
+finalize_release = finalize_body.find("SetPlayerWorldHold(false);", finalize_broadcast)
+if finalize_broadcast < 0 or finalize_release < 0 or finalize_release < finalize_broadcast:
+    fail("PG-128 grounding finalization must broadcast world commit before movement release")
 
 rollback_start = pg128_router.find("bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot")
 rollback_end = pg128_router.find("void AChapterWorldRouter::RollbackFailedWorldSwap", rollback_start)
