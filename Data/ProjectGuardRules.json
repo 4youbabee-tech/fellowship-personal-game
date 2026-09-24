@@ -182,5 +182,11 @@
     "P1C07",
     "P1C08",
     "P1G01"
-  ]
+  ],
+  "canonical_development": {
+    "branch": "develop",
+    "interactive_workspace_policy": "Developer clone only; GitHub Actions _work is runner-exclusive.",
+    "local_helper_branch_switch_forbidden": true,
+    "pre_ubt_source_integrity_required": true
+  }
 }

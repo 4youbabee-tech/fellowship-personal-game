@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "W00_FINAL_CLOSURE_WAVE_V1",
-  "status": "AUTOMATED_GATES_GREEN_GROUNDING_PIE_PROVEN",
+  "status": "FINAL_WORKFLOW_REPAIR_COMMITTED_PROOF_PENDING",
   "authority": "Data/ProjectGovernor.json",
   "base_green_head": "31b6e1c9958b6121ec7a00c07e038fec4ab36408",
   "purpose": "Close every remaining automatable W00 acceptance blocker in one large evidence wave so the deferred W01-W11 production program can start on an unobstructed foundation.",
@@ -74,5 +74,21 @@
     "log_marker": "ShireStartupGrounding: PASS chapter=P1C01 commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.0 drift=0.0",
     "placed_marker": "ShireStartupGrounding: PLACED chapter=P1C01 source=chapter-start requestedZ=130.0 groundedZ=76.0",
     "scope": "Grounding regression only; full chapter traversal/pacing/visual/device acceptance remains separate."
+  },
+  "canonical_branch": "develop",
+  "final_workflow_repair": {
+    "commit": "09f89ab472832b8f03b56cf09eddb4ec7e268af9",
+    "changes": [
+      "local launch helper no longer switches branches",
+      "PIE helper verifies canonical develop only",
+      "interactive use of actions-runner _work is blocked",
+      "tracked runtime source integrity is repaired/validated before UBT",
+      "governance-only successful parents carry transitive core Unreal proof"
+    ],
+    "required_proof": [
+      "fresh Pre-Unreal exact-head success",
+      "fresh real UE4.27.2 build success",
+      "fresh P1C01 no-fall PIE confirmation on canonical develop"
+    ]
   }
 }

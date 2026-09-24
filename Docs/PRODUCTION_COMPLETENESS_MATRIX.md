@@ -1,3 +1,19 @@
+## 2026-09-25 - Final workflow repair batch committed to canonical develop
+
+A single canonical interactive lane is now enforced: `develop`.
+
+Root repairs in commit `09f89ab472832b8f03b56cf09eddb4ec7e268af9`:
+- `SHIRE_UPDATE_BUILD_LAUNCH.bat` updates/builds/imports only the already-selected `develop` branch and never performs a silent branch switch.
+- `SHIRE_PIE_VERIFY.bat` verifies only `develop` and refuses the GitHub Actions runner workspace.
+- interactive Unreal use under `C:\actions-runner\_work` is blocked; the Documents developer clone and runner workspace remain physically isolated.
+- `Scripts/verify_runtime_source_workspace.ps1` validates every tracked Source .h/.cpp/.cs immediately before UBT and restores a tracked file from exact HEAD if a persistent runner workspace is missing it.
+- Unreal workflow now executes that source-integrity gate immediately before `Build ShireJourneyEditor`.
+- the Unreal classifier recognizes governance-only green parents as transitive core proof, preventing evidence-only commits from needlessly returning to a full engine pass.
+
+This batch responds to two observed regressions: the local launch helper previously returned the owner from the grounding-proven acceptance branch to stale `develop`, and Unreal #653 later reported a missing `ShireAmbientNPC.cpp` from the persistent runner workspace even though that file exists in Git.
+
+Evidence status: **STATIC-VALIDATED / FRESH PRE-UNREAL + UE4 BUILD/PIE PROOF PENDING**. Existing #651 automated acceptance and the earlier real P1C01 grounding observation remain historical evidence; this new workflow batch itself is not yet COMPILE-TESTED or PIE-TESTED.
+
 ## 2026-09-25 - Real PIE closes P1C01 startup-grounding regression
 
 Exact tested head: `2427e6594f5adb3ea81f143dc19d4ecede8eecc9`.

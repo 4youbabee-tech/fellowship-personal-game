@@ -610,3 +610,14 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Guard:** PG-155 now scans for any direct historical flat runtime Path construction, not only `read(...)` calls.
 
 **Proof boundary:** fulfilled on CP-W00-154 exact head `ab7889d6b2dafc059220a0c0a3dc63decfe6b72e`: Pre #788, Unreal #623 and Warehouse #204 all succeeded. Keep PG-155/PG-156 as regression guards; do not reopen cleanup without a concrete failure.
+
+### PG-157 — Canonical develop helper / branch drift guard
+**Observed failure:** the local Update/Build/Launch helper silently executed `checkout develop` while the owner was testing another branch. That changed the runtime under test without an explicit decision.
+
+**Guard:** local Update/Build/Launch and PIE helpers require the developer clone to already be on `develop`, refuse the self-hosted runner `_work` tree, refuse tracked dirty state before pulling, and never issue a branch-switch command.
+
+### PG-158 — Persistent self-hosted source-tree integrity
+**Observed failure:** Unreal #653 reached UBT on exact head `8397922a...` then raised `DirectoryNotFoundException` for `Source/ShireJourney/Private/Characters/ShireAmbientNPC.cpp`, even though that file exists on the exact Git commit.
+
+**Guard:** immediately before UBT, the workflow enumerates Git-tracked Source .h/.cpp/.cs files, restores any missing tracked path from exact HEAD, then validates every current target in `Data/SourceArchitecturePlan.json`. The build may not start if any tracked or architecture target source is absent.
+

@@ -4163,7 +4163,7 @@
   "current_focus": {
     "production_lane": "W00_ARCHITECTURAL_STABILIZATION",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "P1C01 startup grounding is real-PIE-proven on 2427e6594f5adb3ea81f143dc19d4ecede8eecc9. Do not reopen grounding/runner/package repair without a concrete regression. Proceed to final branch ancestry/cleanup audit, then close W00 repair and open W01 under Gate 6/7.",
+    "rule": "Finish W00 on canonical develop only. Await fresh Pre-Unreal + UE4 build proof for the final workflow/source-integrity batch, then one real P1C01 PIE grounding confirmation. No new feature scope before those proofs.",
     "machine_baseline": {
       "sha": "efdb2e291505472247fae921945b083b3cc1ce2c",
       "pre_unreal": "#816 SUCCESS",
@@ -5250,9 +5250,10 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Run final branch ancestry/cleanup audit for the W00 acceptance train; classify KEEP ACTIVE / MERGE-ARCHIVE FIRST / SAFE TO DELETE.",
-      "Close W00 architectural repair after the branch audit while preserving chapter-wide human PIE/device/visual/performance work as separate acceptance backlog.",
-      "Open W01 only under Gate 6/7 scope control; do not reinterpret remaining human-tail acceptance as permission for Part II/III expansion."
+      "Wait for fresh develop Pre-Unreal and Unreal validation triggered by the final workflow/source-integrity repair batch.",
+      "If compile/import/runtime gates are green, pull canonical develop in the Documents clone and run one P1C01 PIE grounding confirmation.",
+      "Record the exact grounding PASS marker and no-fall observation.",
+      "Then perform final branch cleanup and close W00."
     ]
   },
   "development_mode_contract": {
@@ -5285,8 +5286,8 @@
     ]
   },
   "w00_final_closure": {
-    "status": "AUTOMATED_GREEN_GROUNDING_PIE_PROVEN_HUMAN_TAIL_SEPARATE",
-    "branch": "acceptance/w00-final-closure-v1",
+    "status": "FINAL_WORKFLOW_REPAIR_COMMITTED_PROOF_PENDING",
+    "branch": "develop",
     "base_green_head": "31b6e1c9958b6121ec7a00c07e038fec4ab36408",
     "plan": "Data/W00FinalClosurePlanV1.json",
     "automated_gates": [
@@ -5441,10 +5442,26 @@
       "root_cause": "The local failure boundary is proven to be the self-hosted runner listener/job-acquisition path before repository steps. Its exact local packet-level subcause was not captured, but the v2.337.0 zero-step ten-minute signature matches the open upstream actions/runner #4668 acquirejob hang family. Treat recurrence as runner infrastructure unless repository steps actually begin and fail.",
       "permanent_policy": "Run the UE4 listener under the proven Windows user context, not NETWORK SERVICE; keep the legacy runner service disabled/manual; keep Warehouse delta detection on GitHub-hosted Ubuntu and request the self-hosted stage only for a real Warehouse input; serialize real Warehouse work with the UE4 device group; keep the external watchdog active so an acknowledged job with no Runner.Worker is recycled instead of consuming the full GitHub ten-minute failure window.",
       "reopen_rule": "Reopen if a supervised runner still produces a zero-step ten-minute failure, if the watchdog restarts during an active Runner.Worker, or if Warehouse consumes the self-hosted runner on a no-delta synchronize update."
+    },
+    {
+      "id": "KF-W00-LOCAL-BRANCH-001",
+      "status": "FIX_COMMITTED_PROOF_PENDING",
+      "symptom": "After real P1C01 grounding success, SHIRE_UPDATE_BUILD_LAUNCH.bat silently switched the developer clone to develop and the player-fall symptom returned.",
+      "root_cause": "The helper owned branch selection instead of respecting the explicit development lane.",
+      "permanent_policy": "develop is the only interactive development branch. Local helpers verify develop but never switch branches. The runner workspace is never used for interactive Unreal.",
+      "reopen_rule": "Reopen only if branch-safe develop still changes branches or P1C01 falls again on an exact develop commit containing the grounding barrier."
+    },
+    {
+      "id": "KF-W00-SOURCE-WORKSPACE-001",
+      "status": "FIX_COMMITTED_PROOF_PENDING",
+      "symptom": "Unreal #653 failed in UBT with DirectoryNotFoundException for Private/Characters/ShireAmbientNPC.cpp although the file exists on the exact Git commit.",
+      "root_cause": "Persistent self-hosted workspace source presence was not revalidated immediately before UBT.",
+      "permanent_policy": "Immediately before UBT, verify every Git-tracked Source h/cpp/cs and every SourceArchitecturePlan target; restore missing tracked files from exact HEAD and fail closed if anything remains absent.",
+      "reopen_rule": "Reopen if a fresh exact-head build still reaches UBT with a missing tracked source after RUNTIME_SOURCE_WORKSPACE_INTEGRITY_PASS."
     }
   ],
   "w00_acceptance_fast_path": {
-    "status": "AUTOMATED_ACCEPTANCE_GREEN_HUMAN_PIE_PENDING",
+    "status": "FINAL_WORKFLOW_REPAIR_COMMITTED_PROOF_PENDING",
     "mode_contract": {
       "full": "C++/Build.cs/Config/runtime-contract deltas run the full UE4 chain.",
       "acceptance": "Acceptance deltas inherit the deepest safe parent proof: package-only fixes resume at package; startup-verifier-only fixes may resume at packaged startup after parent package+37-data success and local artifact validation.",
@@ -5460,7 +5477,7 @@
       "Summarize and guard runtime warning debt"
     ],
     "superseded_run_policy": "On acceptance/* branches, newer commits cancel older in-progress runs sharing the UE4 device concurrency group. Non-acceptance branches remain serialized.",
-    "current_boundary": "Automated W00 acceptance is green and the P1C01 startup-grounding regression is now real-PIE-proven on exact head 2427e6594f5adb3ea81f143dc19d4ecede8eecc9. Remaining chapter-wide traversal/pacing/visual/device work is human-tail acceptance, not architectural repair.",
+    "current_boundary": "Canonical develop now contains all W00 fixes plus branch-safe local helpers and pre-UBT source-integrity repair. Fresh exact-head Pre-Unreal/UE4 proof is pending before W00 closure.",
     "runner_policy": "Keep the supervised user-context self-hosted runner; keep NETWORK SERVICE/manual legacy service out of execution; Warehouse no-delta work remains GitHub-hosted; real Warehouse work shares UE4 device serialization. If the upstream zero-step acquire hang recurs, watchdog recovery handles the listener rather than reopening game-code repair."
   }
 }
