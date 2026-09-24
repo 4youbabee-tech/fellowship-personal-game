@@ -560,27 +560,29 @@ bool AChapterWorldRouter::MovePlayerToChapterStart(FName ChapterId, bool bRestor
         RequestedLocation.Z,
         GroundedLocation.Z);
 
-    if (FParse::Param(FCommandLine::Get(), TEXT("ShireCIRuntimeAudit")))
-    {
-        FTimerHandle StabilityTimer;
-        FTimerDelegate StabilityDelegate = FTimerDelegate::CreateUObject(
-            this,
-            &AChapterWorldRouter::VerifyPlayerGroundingStability,
-            ChapterId,
-            GroundedLocation);
-        GetWorldTimerManager().SetTimer(StabilityTimer, StabilityDelegate, 2.0f, false);
-    }
     return true;
 }
 
 void AChapterWorldRouter::VerifyPlayerGroundingStability(FName ChapterId, FVector PlacedLocation)
 {
+    if (PendingGroundingCommitChapterId != ChapterId ||
+        PendingGroundingCommitRouteId == NAME_None ||
+        PendingGroundingCommitEpisodeId == NAME_None)
+    {
+        return;
+    }
+
     APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
     ACharacter* Character = Cast<ACharacter>(PlayerPawn);
     UCharacterMovementComponent* Movement = Character ? Character->GetCharacterMovement() : nullptr;
     if (!PlayerPawn || !Movement)
     {
-        UE_LOG(LogTemp, Error, TEXT("ShireStartupGrounding: FAIL chapter=%s reason=stability-player-missing"), *ChapterId.ToString());
+        UE_LOG(
+            LogTemp,
+            Error,
+            TEXT("ShireStartupGrounding: FAIL chapter=%s reason=stability-player-missing"),
+            *ChapterId.ToString());
+        RollbackFailedWorldSwap(LastLoadedChapterId, LastLoadedRouteId);
         return;
     }
 
@@ -600,10 +602,53 @@ void AChapterWorldRouter::VerifyPlayerGroundingStability(FName ChapterId, FVecto
 
     if (!bStable)
     {
+        if (GroundingRecoveryAttempts < 1)
+        {
+            FVector RecoveryLocation;
+            if (ResolveGroundedSpawnLocation(
+                    PlayerPawn,
+                    PendingGroundingPlacedLocation,
+                    RecoveryLocation))
+            {
+                ++GroundingRecoveryAttempts;
+                PlayerPawn->SetActorLocation(
+                    RecoveryLocation,
+                    false,
+                    nullptr,
+                    ETeleportType::TeleportPhysics);
+                Movement->StopMovementImmediately();
+                Movement->SetMovementMode(MOVE_Walking);
+                PendingGroundingPlacedLocation = RecoveryLocation;
+
+                FTimerDelegate RetryDelegate = FTimerDelegate::CreateUObject(
+                    this,
+                    &AChapterWorldRouter::VerifyPlayerGroundingStability,
+                    ChapterId,
+                    RecoveryLocation);
+                GetWorldTimerManager().SetTimer(
+                    GroundingStabilityTimer,
+                    RetryDelegate,
+                    0.35f,
+                    false);
+
+                UE_LOG(
+                    LogTemp,
+                    Warning,
+                    TEXT("ShireStartupGrounding: RECOVERY chapter=%s attempt=%d ground=%s falling=%s drop=%.1f drift=%.1f"),
+                    *ChapterId.ToString(),
+                    GroundingRecoveryAttempts,
+                    bHasBlockingGround ? TEXT("yes") : TEXT("no"),
+                    Movement->IsFalling() ? TEXT("yes") : TEXT("no"),
+                    VerticalDrop,
+                    HorizontalDrift);
+                return;
+            }
+        }
+
         UE_LOG(
             LogTemp,
             Error,
-            TEXT("ShireStartupGrounding: FAIL chapter=%s reason=unstable-after-2s ground=%s falling=%s drop=%.1f drift=%.1f current=(%.1f,%.1f,%.1f)"),
+            TEXT("ShireStartupGrounding: FAIL chapter=%s reason=unstable-commit-barrier ground=%s falling=%s drop=%.1f drift=%.1f current=(%.1f,%.1f,%.1f)"),
             *ChapterId.ToString(),
             bHasBlockingGround ? TEXT("yes") : TEXT("no"),
             Movement->IsFalling() ? TEXT("yes") : TEXT("no"),
@@ -612,16 +657,99 @@ void AChapterWorldRouter::VerifyPlayerGroundingStability(FName ChapterId, FVecto
             CurrentLocation.X,
             CurrentLocation.Y,
             CurrentLocation.Z);
+
+        PendingGroundingCommitChapterId = NAME_None;
+        PendingGroundingCommitRouteId = NAME_None;
+        PendingGroundingCommitEpisodeId = NAME_None;
+        PendingGroundingBuilderName = NAME_None;
+        GroundingRecoveryAttempts = 0;
+        RollbackFailedWorldSwap(LastLoadedChapterId, LastLoadedRouteId);
         return;
+    }
+
+    const FName CommittedChapterId = PendingGroundingCommitChapterId;
+    const FName CommittedRouteId = PendingGroundingCommitRouteId;
+    const FName CommittedEpisodeId = PendingGroundingCommitEpisodeId;
+    const FName CommittedBuilderName = PendingGroundingBuilderName;
+
+    LastLoadedRouteId = CommittedRouteId;
+    LastLoadedEpisodeId = CommittedEpisodeId;
+    LastLoadedChapterId = CommittedChapterId;
+    PendingRouteId = NAME_None;
+    PendingEpisodeId = NAME_None;
+    PendingChapterId = NAME_None;
+    bPendingRestoreRouteTransform = false;
+    ++WorldRevision;
+
+    if (UGameInstance* ContextGI = GetGameInstance())
+    {
+        if (UShireNPCContextSubsystem* NPCContext =
+                ContextGI->GetSubsystem<UShireNPCContextSubsystem>())
+        {
+            UShireQuestSubsystem* ContextQuests =
+                ContextGI->GetSubsystem<UShireQuestSubsystem>();
+            NPCContext->SetCommittedWorldContext(
+                CommittedChapterId,
+                CommittedRouteId,
+                CommittedEpisodeId,
+                WorldRevision,
+                ContextQuests ? ContextQuests->GetActiveQuestId() : NAME_None,
+                ContextQuests ? ContextQuests->GetActiveQuestStage() : 0);
+        }
+    }
+
+    if (UGameInstance* QuestGI = GetGameInstance())
+    {
+        if (UShireQuestSubsystem* CommitQuests =
+                QuestGI->GetSubsystem<UShireQuestSubsystem>())
+        {
+            CommitQuests->CommitWorldBoundState();
+        }
+    }
+
+    PendingGroundingCommitChapterId = NAME_None;
+    PendingGroundingCommitRouteId = NAME_None;
+    PendingGroundingCommitEpisodeId = NAME_None;
+    PendingGroundingBuilderName = NAME_None;
+    GroundingRecoveryAttempts = 0;
+
+    CaptureCommittedRollbackSnapshot();
+
+    if (CommittedRouteId == TEXT("FrodoMain") && CommittedChapterId == TEXT("P1C01"))
+    {
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("ShirePlayableStartup: chapter=P1C01 route=%s"),
+            *CommittedRouteId.ToString());
     }
 
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("ShireStartupGrounding: PASS chapter=%s stableSeconds=2.0 ground=yes drop=%.1f drift=%.1f"),
-        *ChapterId.ToString(),
+        TEXT("ShireStartupGrounding: PASS chapter=%s commitBarrier=yes ground=yes drop=%.1f drift=%.1f"),
+        *CommittedChapterId.ToString(),
         VerticalDrop,
         HorizontalDrift);
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireChapterAudit: loaded=%s builder=%s route=%s streamed=committed revision=%u"),
+        *CommittedChapterId.ToString(),
+        *CommittedBuilderName.ToString(),
+        *CommittedRouteId.ToString(),
+        WorldRevision);
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireWorldCommit: PASS chapter=%s route=%s episode=%s revision=%u"),
+        *CommittedChapterId.ToString(),
+        *CommittedRouteId.ToString(),
+        *CommittedEpisodeId.ToString(),
+        WorldRevision);
+
+    OnWorldCommitted.Broadcast(WorldRevision);
+    SetPlayerWorldHold(false);
 }
 
 void AChapterWorldRouter::LoadChapterWorld(FName ChapterId, bool bRestoreRouteTransform)
@@ -1083,6 +1211,14 @@ void AChapterWorldRouter::CommitChapterWorld(
         return;
     }
 
+    GetWorldTimerManager().ClearTimer(GroundingStabilityTimer);
+    PendingGroundingCommitChapterId = NAME_None;
+    PendingGroundingCommitRouteId = NAME_None;
+    PendingGroundingCommitEpisodeId = NAME_None;
+    PendingGroundingBuilderName = NAME_None;
+    PendingGroundingPlacedLocation = FVector::ZeroVector;
+    GroundingRecoveryAttempts = 0;
+
     SetPlayerWorldHold(true);
     ClearPrototypeBuilders();
 
@@ -1125,67 +1261,55 @@ void AChapterWorldRouter::CommitChapterWorld(
         return;
     }
 
-    LastLoadedRouteId = RouteId;
-    LastLoadedEpisodeId = EpisodeId;
-    LastLoadedChapterId = ChapterId;
-    PendingRouteId = NAME_None;
-    PendingEpisodeId = NAME_None;
-    PendingChapterId = NAME_None;
-    bPendingRestoreRouteTransform = false;
-    ++WorldRevision;
-    if (UGameInstance* ContextGI = GetGameInstance())
-    {
-        if (UShireNPCContextSubsystem* NPCContext =
-                ContextGI->GetSubsystem<UShireNPCContextSubsystem>())
-        {
-            UShireQuestSubsystem* ContextQuests =
-                ContextGI->GetSubsystem<UShireQuestSubsystem>();
-            NPCContext->SetCommittedWorldContext(
-                ChapterId,
-                RouteId,
-                EpisodeId,
-                WorldRevision,
-                ContextQuests ? ContextQuests->GetActiveQuestId() : NAME_None,
-                ContextQuests ? ContextQuests->GetActiveQuestStage() : 0);
-        }
-    }
-    if (UGameInstance* QuestGI = GetGameInstance())
-    {
-        if (UShireQuestSubsystem* CommitQuests =
-                QuestGI->GetSubsystem<UShireQuestSubsystem>())
-        {
-            CommitQuests->CommitWorldBoundState();
-        }
-    }
-    CaptureCommittedRollbackSnapshot();
-
-    if (RouteId == TEXT("FrodoMain") && ChapterId == TEXT("P1C01"))
+    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+    if (!PlayerPawn)
     {
         UE_LOG(
             LogTemp,
-            Display,
-            TEXT("ShirePlayableStartup: chapter=P1C01 route=%s"),
+            Error,
+            TEXT("ShireWorldCommit: grounding-barrier-failed chapter=%s route=%s reason=no-player"),
+            *ChapterId.ToString(),
             *RouteId.ToString());
+        RollbackFailedWorldSwap(PreviousChapterId, PreviousRouteId);
+        return;
     }
+
+    PendingGroundingCommitChapterId = ChapterId;
+    PendingGroundingCommitRouteId = RouteId;
+    PendingGroundingCommitEpisodeId = EpisodeId;
+    PendingGroundingBuilderName = BuilderName;
+    PendingGroundingPlacedLocation = PlayerPawn->GetActorLocation();
+    GroundingRecoveryAttempts = 0;
+
+    // Keep gameplay input held, but allow CharacterMovement physics to settle on the
+    // blocking surface before the world is published as committed.
+    if (ACharacter* Character = Cast<ACharacter>(PlayerPawn))
+    {
+        if (UCharacterMovementComponent* Movement = Character->GetCharacterMovement())
+        {
+            Movement->StopMovementImmediately();
+            Movement->SetMovementMode(MOVE_Walking);
+        }
+    }
+
+    FTimerDelegate StabilityDelegate = FTimerDelegate::CreateUObject(
+        this,
+        &AChapterWorldRouter::VerifyPlayerGroundingStability,
+        ChapterId,
+        PendingGroundingPlacedLocation);
+    GetWorldTimerManager().SetTimer(
+        GroundingStabilityTimer,
+        StabilityDelegate,
+        0.35f,
+        false);
 
     UE_LOG(
         LogTemp,
         Display,
-        TEXT("ShireChapterAudit: loaded=%s builder=%s route=%s streamed=committed revision=%u"),
-        *ChapterId.ToString(),
-        *BuilderName.ToString(),
-        *RouteId.ToString(),
-        WorldRevision);
-    UE_LOG(
-        LogTemp,
-        Display,
-        TEXT("ShireWorldCommit: PASS chapter=%s route=%s episode=%s revision=%u"),
+        TEXT("ShireWorldCommit: grounding-barrier-pending chapter=%s route=%s episode=%s builder=%s"),
         *ChapterId.ToString(),
         *RouteId.ToString(),
         *EpisodeId.ToString(),
-        WorldRevision);
-
-    OnWorldCommitted.Broadcast(WorldRevision);
-    SetPlayerWorldHold(false);
+        *BuilderName.ToString());
 }
 
