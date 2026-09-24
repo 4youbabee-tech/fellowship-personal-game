@@ -1,3 +1,17 @@
+## 2026-09-24 - Acceptance Fast-Path and superseded-run cancellation
+
+Implemented a three-mode Unreal validation classifier:
+
+- `full`: C++ / Build.cs / Config / runtime-contract changes run the complete UE4 validation chain.
+- `acceptance`: packaging/verifier/acceptance-only changes inherit proven parent **core Unreal** steps and run only package -> packaged Data JSON -> packaged startup -> hardware gates.
+- `inherit`: docs/governance-only changes inherit a green parent workflow.
+
+Parent core proof is accepted only when the prior run has successful Editor build, production import, Automation QA, startup, P1C01-P1C08 audit, route/story roundtrip and warning-debt guard. A run that later fails only at an acceptance gate may therefore still provide valid core-engine evidence for the next acceptance-only fix.
+
+On `acceptance/*` branches, newer commits now cancel superseded runs in the shared UE4-device concurrency group. Normal/full validation branches remain serialized. This prevents obsolete acceptance heads from consuming another 20-25 minute engine pass.
+
+Status: **IMPLEMENTED / RUNNER_PROOF_PENDING**. No acceptance result is claimed until a fresh run demonstrates the fast path and final package/data/startup/hardware gates.
+
 ## 2026-09-24 - PG-147 validator reconciled with explicit NonUFS runtime staging
 
 After the runtime Data staging fix, Pre-Unreal #800 failed because PG-147 still matched only the legacy one-argument `RuntimeDependencies.Add("$(ProjectDir)/Data/...json")` spelling. That validator behavior was stale and incorrectly rejected the new explicit `StagedFileType.NonUFS` contract.

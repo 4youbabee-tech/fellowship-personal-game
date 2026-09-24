@@ -5342,5 +5342,24 @@
       "permanent_policy": "PG-147 uses structural NonUFS dependency detection and regression tests reject legacy/untyped and UFS forms.",
       "reopen_rule": "Reopen only if PG-147 misclassifies a syntactically valid explicit NonUFS dependency or misses a real unstaged runtime JSON."
     }
-  ]
+  ],
+  "w00_acceptance_fast_path": {
+    "status": "IMPLEMENTED_RUNNER_PROOF_PENDING",
+    "mode_contract": {
+      "full": "C++/Build.cs/Config/runtime-contract deltas run the full UE4 chain.",
+      "acceptance": "Packaging/verifier/acceptance-script deltas inherit parent core Unreal proof and run only package/data/startup/hardware gates.",
+      "inherit": "Docs/governance-only deltas inherit a green parent workflow."
+    },
+    "parent_core_proof_steps": [
+      "Build ShireJourneyEditor",
+      "Import production assets in UE4.27.2",
+      "Run ShireJourney Automation Framework QA",
+      "Headless playable startup smoke",
+      "Headless chapter-by-chapter runtime audit",
+      "Headless route/story state roundtrip audit",
+      "Summarize and guard runtime warning debt"
+    ],
+    "superseded_run_policy": "On acceptance/* branches, newer commits cancel older in-progress runs sharing the UE4 device concurrency group. Non-acceptance branches remain serialized.",
+    "current_boundary": "Fast-path code is committed; runner proof is still required before calling it operationally accepted."
+  }
 }
