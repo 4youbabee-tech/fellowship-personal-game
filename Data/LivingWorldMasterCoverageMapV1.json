@@ -1,0 +1,472 @@
+{
+  "schema_version": 1,
+  "map_id": "LIVING_WORLD_MASTER_COVERAGE_V1",
+  "status": "ACTIVE_OFFLINE_PRODUCTION",
+  "authority": "Data/ProjectGovernor.json",
+  "owner_intent": "Treat 'a fully alive game' as an end-to-end production requirement owned by the project. The owner must not have to remember or request each micro-detail.",
+  "truth_boundary": "This is a coverage/control map. READY/ACCEPTED is never inferred from planning, source discovery or generated external media. Each layer advances only from evidence matching its state.",
+  "control_state": {
+    "integration_branch": "integration/comprehensive-foundation-v1",
+    "integration_head": "31b6e1c9958b6121ec7a00c07e038fec4ab36408",
+    "pre_unreal": "#791 SUCCESS",
+    "unreal_build": "#626 QUEUED",
+    "warehouse_stage": "#207 QUEUED",
+    "rule": "Do not move the integration head while the self-hosted runner is offline/queued. Continue only isolated offline-safe generation, sourcing, provenance, manifests and production preparation."
+  },
+  "evidence_states": {
+    "PLANNED": "Requirement/slot exists but no production asset evidence.",
+    "CANDIDATE": "A source candidate exists; not staged/import-ready.",
+    "AUTHORIZED_FOR_STAGING": "Source page/license/direct acquisition path recorded; content still requires intake QA.",
+    "GENERATED_EXTERNAL": "Generated source media exists outside UE and is registered.",
+    "WAV_MASTER_PENDING": "Source exists but clean production WAV master is not durably staged.",
+    "READY_FOR_IMPORT": "Durable production master + provenance + integrity/technical QC exist.",
+    "UE_IMPORTED": "UE asset exists at the contracted path; playback not implied.",
+    "RUNTIME_WIRED": "Runtime route/binding exists; real playback still needs evidence.",
+    "TEST_PENDING": "Implementation/assets exist but PIE/device/human acceptance is missing.",
+    "ACCEPTED": "Only after chapter-specific playback/traversal/visual/performance evidence.",
+    "N_A": "Layer is explicitly not applicable to the chapter/state."
+  },
+  "completion_rule": "A chapter is not experientially complete while any applicable life layer is silently absent. Every required slot must be ACCEPTED or explicitly N_A; partial technical import never counts as bank completion.",
+  "global_domains": [
+    {
+      "id": "LIFE_AUDIO_VOICE",
+      "requirement": "Scripted dialogue, contextual barks, ambient NPC speech, greetings/acknowledgements, efforts/breath/pain/fear/recovery, crowd speech and state-aware variants.",
+      "current": [
+        "103/103 registered scripted VO cues are GENERATED_EXTERNAL as MP3 sources in Data/GeneratedAudioWarehouseV1.json on warehouse/generated-audio-v1.",
+        "P1C01 scripted bank is 25/25 GENERATED_EXTERNAL.",
+        "Logical dialogue/voice-cue routing exists in UShireDialogueSubsystem/UShireAudioSubsystem."
+      ],
+      "gaps": [
+        "Clean WAV masters and durable warehouse intake.",
+        "Contextual bark/ambient NPC speech banks.",
+        "Character effort families.",
+        "UE import/playback/lip-sync/listening acceptance."
+      ],
+      "runner_dependency": "Only UE import/runtime playback/PIE/device proof requires the UE runner. Writing, generation, source acquisition, QC planning and provenance do not."
+    },
+    {
+      "id": "LIFE_AUDIO_PHYSICAL",
+      "requirement": "Surface footsteps, cloth/leather/gear, doors/latches/keys, carts/harness/rope, cutlery/crockery/bottles/books/paper/tools, fire, water/paddle/splash and other physical-world foley.",
+      "current": [
+        "Authorized/candidate coverage exists for wood/leaves/gravel/mud/stone footsteps, fireplace, wood/metal, accessory foley, water splashes and broad foley packs.",
+        "Live 2026-09-24 gap-fill added grass/stone footsteps, cloth/leather, workshop/tool candidates."
+      ],
+      "gaps": [
+        "Select best 1-3 production candidates per slot; resolve/download/classify archives.",
+        "Dedicated shallow-water step family, cart/wheel/harness, rope/paddle and some farm/household variants.",
+        "UE physical-material mapping and animation-notify bindings later."
+      ],
+      "runner_dependency": "Candidate/source intake and master preparation are offline-safe; UE import/binding/testing waits."
+    },
+    {
+      "id": "LIFE_AUDIO_AMBIENCE_NATURE",
+      "requirement": "Region/state/time/weather ambience beds plus spatial randomized birds, insects, fauna, wind/foliage, water and localized world emitters.",
+      "current": [
+        "Shire birds/river/wind/foliage/horse candidates exist.",
+        "Live gap-fill added cricket/insect and horse-trot candidates."
+      ],
+      "gaps": [
+        "Day/evening/night variation, farm-animal breadth, anti-repetition spot sets, occlusion/reverb implementation proof.",
+        "Production listening/loop/noise QC and final selection."
+      ],
+      "runner_dependency": "Sourcing/generation/QC manifests now; UE spatialization/concurrency/reverb/playback later."
+    },
+    {
+      "id": "LIFE_AUDIO_MUSIC",
+      "requirement": "Original/authorized adaptive exploration, tension, battle, aftermath and location/character motif layers; intentional silence allowed.",
+      "current": [
+        "MusicCuePlan defines state-specific cue identities and originality rules.",
+        "Generic CC0 tracks exist only as prototype/reference candidates."
+      ],
+      "gaps": [
+        "Original final score assets/stems for the defined cues.",
+        "Dynamic mix/listening acceptance and target-device memory/concurrency proof."
+      ],
+      "runner_dependency": "Composition/generation/mastering can proceed offline; UE import/state transitions/listening proof later."
+    },
+    {
+      "id": "LIFE_NPC_SOCIETY",
+      "requirement": "Work, meals, travel, sleep/offstage routines, social groups, farm/market/craft/inn/festival activity, danger responses, aftermath behavior, density/state variation and non-clone presentation.",
+      "current": [
+        "NPC routines, awareness, social pauses, needs/emotion/goal foundations and state-aware LivingWorldDirector systems exist in project plans/runtime.",
+        "P1C01 remains the benchmark for production-quality social density."
+      ],
+      "gaps": [
+        "Production character/prop/animation variety, chapter-specific social staging, human traversal review and device profiling."
+      ],
+      "runner_dependency": "Planning/asset sourcing can proceed; integrated runtime acceptance waits."
+    },
+    {
+      "id": "LIFE_NPC_MEMORY_RELATIONSHIPS",
+      "requirement": "Named NPC knowledge, relationship, memory, companion banter and committed-world context must remain coherent across chapter swaps/save-load.",
+      "current": [
+        "Governor records named-NPC memory/relationship/context foundations and committed-world synchronization work."
+      ],
+      "gaps": [
+        "Production dialogue breadth and chapter-specific human validation; no premature context during async transitions."
+      ],
+      "runner_dependency": "Content authoring can continue; end-to-end runtime/save proof waits."
+    },
+    {
+      "id": "LIFE_CHARACTER_PERFORMANCE",
+      "requirement": "Gaze, blink, facial/mouth/lip-sync, gesture, posture, body weight, breathing, interaction and reaction timing.",
+      "current": [
+        "Proxy gaze/blink/mouth acting foundations are recorded; production voice sources now exist for scripted cues."
+      ],
+      "gaps": [
+        "Final production skeletal/facial rigs, lip-sync timing, authored gestures/animation events and final visual acceptance."
+      ],
+      "runner_dependency": "Rig/animation asset discovery and timing data can be prepared; final binding/visual review waits."
+    },
+    {
+      "id": "LIFE_WILDLIFE_CREATURES",
+      "requirement": "Biome-appropriate small fauna, horses/ponies/farm animals, canon-supported larger creatures, movement/vocals/breathing/threat cues and panic response.",
+      "current": [
+        "Bird/rabbit/butterfly lightweight runtime foundation exists; fauna sourcing candidates exist but final import evidence is incomplete."
+      ],
+      "gaps": [
+        "Production fauna mesh/animation/audio selection, farm-animal breadth, creature-specific banks and chapter state behavior."
+      ],
+      "runner_dependency": "Source/generation/manifests now; import/runtime/performance later."
+    },
+    {
+      "id": "LIFE_ENVIRONMENT_MOTION",
+      "requirement": "Wind-reactive trees/leaves/hedges/grass, rain/snow/storm, water movement/splashes, fire/smoke, banners/ropes/signs/clutter and state-aware stillness.",
+      "current": [
+        "World ambient motion/weather/state planning exists and low-cost runtime foundations are recorded."
+      ],
+      "gaps": [
+        "Production assets/material/VFX replacement, chapter-specific motion density, final weather FX and target-device profiling."
+      ],
+      "runner_dependency": "Asset/material/VFX sourcing and design now; UE integration/profile later."
+    },
+    {
+      "id": "LIFE_INTERACTION_FEEDBACK",
+      "requirement": "Every meaningful physical interaction has readable visible + audible response and does not feel like a static prop.",
+      "current": [
+        "Bounded living-world interaction markers and gameplay interaction foundations exist."
+      ],
+      "gaps": [
+        "Production prop animation/SFX pairs, contact feedback, chapter-specific interaction polish."
+      ],
+      "runner_dependency": "Content map and assets now; runtime binding/testing later."
+    },
+    {
+      "id": "LIFE_COMBAT_THREAT",
+      "requirement": "Swings/impacts/parries/shields/arrows, armor/gear, enemy warnings/efforts, creature threat audio, battle crowds/horns and readable mix.",
+      "current": [
+        "Sword attack/clash candidates and broad SFX sources exist; threat/music cue plans exist."
+      ],
+      "gaps": [
+        "Final weapon/armor/creature families, encounter-specific threat layers, mix readability and production acceptance."
+      ],
+      "runner_dependency": "Source/generation now; combat binding/mix/PIE later."
+    },
+    {
+      "id": "LIFE_ACCESSIBILITY_PRESENTATION",
+      "requirement": "Subtitles, speaker labels, meaningful non-speech captions where useful, separate voice/music/SFX controls, readable dynamic range and cinematic dialogue priority.",
+      "current": [
+        "Tracked as mandatory in LivingWorldSensoryCompletenessPlan; audio routing already supports voice/music priority behavior."
+      ],
+      "gaps": [
+        "Evidence-backed subtitle/control/dynamic-range completeness matrix and human accessibility review."
+      ],
+      "runner_dependency": "Specification/data work now; UI/runtime acceptance later."
+    },
+    {
+      "id": "LIFE_PERFORMANCE",
+      "requirement": "Believability via authored relevance-aware systems rather than maximum simulation; pooling, HISM/ISM, culling, bounded concurrency, soft refs and async loading.",
+      "current": [
+        "Project architecture already records pooling, HISM/ISM, relevance/distance throttling, async audio loading and soft-reference policies."
+      ],
+      "gaps": [
+        "Representative target-device frame-time, hitch, RAM/VRAM and audio-concurrency measurement before scaling density."
+      ],
+      "runner_dependency": "Budgets/guards can be prepared; device proof waits for target machine."
+    }
+  ],
+  "p1c01_shire_benchmark": {
+    "rule": "P1C01 is the first full-life benchmark. It cannot be called complete because scripted VO is complete externally; all applicable rows below must eventually be ACCEPTED or N_A.",
+    "audio_slots": [
+      {
+        "id": "P1C01_VO_SCRIPTED",
+        "requirement": "25 scripted Shire lines",
+        "state": "GENERATED_EXTERNAL",
+        "evidence": "25/25 external MP3 registered; part of 103/103 registered scripted VO bank",
+        "gap": "WAV master -> UE import -> playback -> subtitle/lip-sync/listening evidence"
+      },
+      {
+        "id": "P1C01_VO_CONTEXT_BARKS",
+        "requirement": "Companion/context barks with cooldown/suppression",
+        "state": "PLANNED",
+        "gap": "Write/generate original context/state variants; no bark spam"
+      },
+      {
+        "id": "P1C01_VO_AMBIENT_NPC",
+        "requirement": "Ambient Hobbit conversations/greetings/acknowledgements",
+        "state": "PLANNED",
+        "gap": "Production voice bank and social-context matrix"
+      },
+      {
+        "id": "P1C01_VO_EFFORTS",
+        "requirement": "Breath/walk/run/exertion/pain/fear/recovery/stealth efforts",
+        "state": "CANDIDATE",
+        "evidence": "Broad CC0 foley/human-breath pack candidate exists; exact production set not classified",
+        "gap": "Character-specific effort family + QC"
+      },
+      {
+        "id": "P1C01_FOOT_GRASS",
+        "requirement": "Grass footsteps with variation",
+        "state": "CANDIDATE",
+        "evidence": "OGA Fantozzi grass/sand/stone candidate discovered",
+        "gap": "Resolve/stage/audition/select variants"
+      },
+      {
+        "id": "P1C01_FOOT_DIRT",
+        "requirement": "Dirt/packed-earth footsteps",
+        "state": "CANDIDATE",
+        "evidence": "Existing broad footstep packs; no selected final family",
+        "gap": "Select clean production family"
+      },
+      {
+        "id": "P1C01_FOOT_GRAVEL",
+        "requirement": "Gravel footsteps",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "evidence": "OGA different-steps wood/stone/leaves/gravel/mud pack",
+        "gap": "Extract/classify/QC"
+      },
+      {
+        "id": "P1C01_FOOT_MUD",
+        "requirement": "Mud footsteps",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "evidence": "OGA different-steps pack",
+        "gap": "Extract/classify/QC"
+      },
+      {
+        "id": "P1C01_FOOT_WOOD",
+        "requirement": "Wood floor/stair footsteps",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "evidence": "OGA wood-floor + different-steps candidates",
+        "gap": "Select best variants"
+      },
+      {
+        "id": "P1C01_FOOT_WATER",
+        "requirement": "Shallow-water steps/splash contacts",
+        "state": "CANDIDATE",
+        "evidence": "Water splash candidates exist; dedicated step family not selected",
+        "gap": "Acquire/select dedicated shallow-water step set"
+      },
+      {
+        "id": "P1C01_FOOT_FOLIAGE",
+        "requirement": "Leaf/hedge brush traversal",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "evidence": "Different-steps leaves + localized leaf-rustle candidates",
+        "gap": "Separate foot contact vs foliage brush roles"
+      },
+      {
+        "id": "P1C01_CHAR_FOLEY",
+        "requirement": "Cloth/leather/bag/belt/gear movement",
+        "state": "CANDIDATE",
+        "evidence": "OGA cloth/leather/armor + broad foley pack candidates",
+        "gap": "Character-weight/gear-specific final families"
+      },
+      {
+        "id": "P1C01_FIREPLACE",
+        "requirement": "Bag End/hearth fire",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "evidence": "OGA fireplace loop",
+        "gap": "Loop/noise/QC and local-emitter role"
+      },
+      {
+        "id": "P1C01_DOORS_KEYS",
+        "requirement": "Doors/hinges/latches/keys",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "evidence": "100 CC0 wood/metal + accessory SFX candidates",
+        "gap": "Classify/open-close/latch/lock variants"
+      },
+      {
+        "id": "P1C01_HOUSEHOLD",
+        "requirement": "Cutlery/crockery/bottles/corks/books/paper",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "evidence": "Fantasy accessory SFX + broad foley candidates",
+        "gap": "Classify/select Shire-appropriate subsets"
+      },
+      {
+        "id": "P1C01_WORK_FARM",
+        "requirement": "Farm/craft/tool activity",
+        "state": "CANDIDATE",
+        "evidence": "68 Workshop Sounds + wood/metal candidates",
+        "gap": "Audition and exclude modern/industrial-sounding samples"
+      },
+      {
+        "id": "P1C01_CART_HARNESS",
+        "requirement": "Cart wheels, harness, rope/wood strain",
+        "state": "PLANNED",
+        "gap": "No selected complete production family yet"
+      },
+      {
+        "id": "P1C01_FERRY_PADDLE_ROPE",
+        "requirement": "Rope, ferry wood, paddle, water contact",
+        "state": "CANDIDATE",
+        "evidence": "Water splash candidates cover only part of family",
+        "gap": "Acquire rope/paddle/wood-creak variants"
+      },
+      {
+        "id": "P1C01_BIRDS",
+        "requirement": "Daytime Shire birds as bed + spot calls",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "evidence": "OpenGameArt birds + Freesound CC0 bird-loop candidates",
+        "gap": "Audition/anti-repetition/spatial-role selection"
+      },
+      {
+        "id": "P1C01_INSECTS",
+        "requirement": "Rural insects/crickets by time/state",
+        "state": "CANDIDATE",
+        "evidence": "OGA CC0 cricket candidate discovered",
+        "gap": "Resolve/stage and define time-of-day use"
+      },
+      {
+        "id": "P1C01_WIND_FOLIAGE",
+        "requirement": "Hedge/field wind and localized leaf rustle",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "evidence": "OGA wind + Freesound CC0 wind/leaves/leaf-rustle candidates",
+        "gap": "Layer/loop/spatial design"
+      },
+      {
+        "id": "P1C01_WATER_BED",
+        "requirement": "Stream/river bed with local water detail",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "evidence": "OGA river + Freesound CC0 river candidates",
+        "gap": "Select main bed + alternates; loop/phase/noise QC"
+      },
+      {
+        "id": "P1C01_FARM_ANIMALS",
+        "requirement": "Ponies/horses and appropriate farm-animal texture",
+        "state": "CANDIDATE",
+        "evidence": "Freesound horse/mud + OGA horse-trot candidates",
+        "gap": "Pony/horse vocals/tack plus sheep/chicken/etc only where world placement supports them"
+      },
+      {
+        "id": "P1C01_SOCIAL_CROWD",
+        "requirement": "Party/farm/market/social murmur, laughter, applause/reaction without modern leakage",
+        "state": "CANDIDATE",
+        "evidence": "OGA crowd-speaking + fireworks/applause candidates discovered",
+        "gap": "Audition for neutral language/acoustic fit; generate original texture if libraries leak modern speech"
+      },
+      {
+        "id": "P1C01_THREAT_RIDER",
+        "requirement": "Black Rider horse/hoof/cloth/breath/threat-distance/stealth cues",
+        "state": "PLANNED",
+        "gap": "Build original/licensed layered threat family; avoid copying film signature sounds"
+      },
+      {
+        "id": "P1C01_MUSIC",
+        "requirement": "13 defined P1C01 state/region music cues including Gandalf parallel lane",
+        "state": "PLANNED",
+        "evidence": "MusicCuePlan has cue identities/palettes/originality rules; generic CC0 tracks are prototype candidates only",
+        "gap": "Produce original final cues/stems; no film soundtrack imitation/recording"
+      }
+    ],
+    "non_audio_slots": [
+      {
+        "id": "P1C01_SOCIAL_ROUTINES",
+        "requirement": "Farm/work/party/travel/home/social groups + danger response",
+        "state": "TEST_PENDING",
+        "evidence": "Runtime foundations exist; production chapter review pending"
+      },
+      {
+        "id": "P1C01_GAZE_FACE_BODY",
+        "requirement": "Gaze/blink/facial/lip-sync/gesture/posture/breathing/reactions",
+        "state": "PLANNED",
+        "gap": "Production rigs/animation binding"
+      },
+      {
+        "id": "P1C01_WILDLIFE_MOTION",
+        "requirement": "Bird/small-fauna/farm-animal motion and reaction",
+        "state": "TEST_PENDING",
+        "evidence": "Lightweight bird/rabbit/butterfly foundation; production asset proof incomplete"
+      },
+      {
+        "id": "P1C01_FOLIAGE_WATER_FIRE",
+        "requirement": "Wind-reactive foliage, water interaction, fireplace/smoke and local prop motion",
+        "state": "TEST_PENDING",
+        "evidence": "Low-cost world-motion foundations exist; final production art/VFX pending"
+      },
+      {
+        "id": "P1C01_MEMORY_STATE",
+        "requirement": "NPC knowledge/relationship/mood/population/soundscape follow committed story/world state",
+        "state": "TEST_PENDING",
+        "evidence": "Context/memory/committed-world architecture exists; integrated benchmark pending"
+      },
+      {
+        "id": "P1C01_ACCESSIBILITY",
+        "requirement": "Subtitles/speaker labels/audio controls/non-speech caption policy",
+        "state": "PLANNED",
+        "gap": "Complete implementation/evidence matrix"
+      },
+      {
+        "id": "P1C01_PERFORMANCE",
+        "requirement": "30 FPS floor target with bounded CPU/RAM/VRAM/audio concurrency",
+        "state": "TEST_PENDING",
+        "gap": "Target-laptop profiling after integrated benchmark"
+      }
+    ]
+  },
+  "source_policy": {
+    "priority_order": [
+      "Already-staged/authorized project warehouse sources with clear provenance and appropriate quality",
+      "CC0/public-domain or clearly licensed professional libraries",
+      "Per-item licensed sources with exact license/provenance capture",
+      "Original generation/recording for uncovered or identity-specific needs",
+      "Reference-only film/game material never becomes production media without separate rights"
+    ],
+    "live_license_research_2026_09_24": [
+      "Sonniss GDC bundle current v2.0 allows royalty-free synchronized game/media use and modification, but raw/re-designed SFX redistribution is restricted; preserve acquisition-date licence version.",
+      "Freesound is per-sound CC0/CC-BY/CC-BY-NC; production lane prefers CC0 and records exact item license.",
+      "Pixabay current Content License allows free use/modification without required attribution, subject to prohibited uses including standalone redistribution.",
+      "BBC Sound Effects archive is personal/educational/research by default; production requires separate commercial licensing.",
+      "Quaternius current site uses QAL v1.0, not blanket CC0; commercial project use is allowed but raw-asset redistribution is prohibited.",
+      "Poly Haven and ambientCG remain CC0 sources for environment materials; Kenney asset pages are CC0."
+    ]
+  },
+  "import_policy": {
+    "no_false_partial_completion": true,
+    "rule": "Technical imports may be executed in controlled sub-batches, but P1C01 audio is not called integrated/complete until every applicable bank slot has a durable master, UE asset at the contracted path, runtime binding and required playback evidence.",
+    "ue_paths": {
+      "voice": "/Game/Audio/Voice/{Speaker}/{CueId}",
+      "ambience": "/Game/Audio/Ambience/{CueId}",
+      "music": "/Game/Audio/Music/{CueId}",
+      "sfx": "/Game/Audio/SFX/{CueId}"
+    },
+    "source_asset_rules": [
+      "Preserve cue/asset IDs and provenance across conversion/import.",
+      "WAV master is preferred before UE import; generated MP3 is an intake source, not the production master.",
+      "Use soft references and async FStreamableManager for heavy/nonresident audio.",
+      "Localized emitters use 3D attenuation and bounded concurrency; long ambience/music remain managed persistent layers.",
+      "Do not bulk-load the raw warehouse into memory."
+    ]
+  },
+  "performance_guardrails": [
+    "Target: i7 6th gen, 8GB RAM, about 2GB VRAM, DX11, 720p Low-Medium, 30 FPS floor.",
+    "NPC crowds use pooling; no high-frequency Spawn/Destroy churn.",
+    "Repeated visual detail uses ISM/HISM and culling.",
+    "Simulation/animation/audio fidelity scales by distance, relevance and visibility.",
+    "Bound simultaneous voices, fauna, foley and spot ambience; story-critical cues have priority.",
+    "Do not invent final numeric budgets before target-device measurement."
+  ],
+  "next_offline_actions": [
+    "Finish P1C01 source/candidate coverage for every PLANNED audio slot before spending generation credits.",
+    "Resolve/stage the best 1-3 candidates per required family; capture exact license/source/hash/size and technical metadata.",
+    "Prepare durable WAV masters for the 103 registered scripted VO cues if a persistent warehouse destination is available; otherwise retain external source registry and an intake script without claiming WAV_MASTER_READY.",
+    "Write/generate original contextual barks, ambient Hobbit speech and character effort families using project-authored text and stable original voices.",
+    "Produce original P1C01 music only after SFX/voice/source coverage is mapped; never use film soundtrack recordings.",
+    "Continue visual/living-world asset gap filling and production manifests on isolated branches while the runner is offline."
+  ],
+  "runner_handoff": [
+    "Do not touch integration/comprehensive-foundation-v1 until queued #626/#207 resolve or the self-hosted runner is deliberately restored.",
+    "On runner return: first prove exact integration head; then intake/import complete prepared banks instead of ad-hoc partial content.",
+    "After UE import: validate path resolution, async loads, surface/animation binding, concurrency/ducking, playback without -NoSound, subtitles, chapter traversal, human listening, target-device performance.",
+    "Only evidence-specific stages may be promoted; external generation/source discovery never equals UE or experiential acceptance."
+  ],
+  "last_refresh": "2026-09-24"
+}
