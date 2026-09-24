@@ -14,9 +14,10 @@ if (-not (Test-Path -LiteralPath $buildCs -PathType Leaf)) { throw "Build.cs mis
 if (-not (Test-Path -LiteralPath $ArchiveRoot -PathType Container)) { throw "Archive root missing: $ArchiveRoot" }
 
 $text = Get-Content -LiteralPath $buildCs -Raw
-$matches = [regex]::Matches($text, 'RuntimeDependencies\.Add\("\$\(ProjectDir\)/([^"]+)"\)')
+$matches = [regex]::Matches($text, 'RuntimeDependencies\.Add\(\s*"\$\(ProjectDir\)/(Data/[^"]+\.json)"\s*,\s*StagedFileType\.NonUFS\s*\)')
 $expected = @($matches | ForEach-Object { $_.Groups[1].Value })
-if ($expected.Count -eq 0) { throw "No RuntimeDependencies discovered in Build.cs" }
+if ($expected.Count -eq 0) { throw "No explicit NonUFS runtime Data dependencies discovered in Build.cs" }
+$expected = @($expected | Sort-Object -Unique)
 
 $missing = @()
 $invalidJson = @()
