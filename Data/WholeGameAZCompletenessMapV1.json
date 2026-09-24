@@ -1,0 +1,458 @@
+{
+  "schema_version": 1,
+  "map_id": "WHOLE_GAME_AZ_COMPLETENESS_MAP_V1",
+  "status": "ACTIVE_MASTER_NO_FORGET_CONTRACT",
+  "authority": "Data/ProjectGovernor.json",
+  "purpose": "Translate the owner's 'from A to Z' requirement into a durable whole-game completeness contract. The project team owns discovery of missing details; the owner is not expected to enumerate every bird, bark, door, animation, sound, interaction or failure case.",
+  "definition_of_complete": "A game area/system is complete only when all applicable domains below are explicitly satisfied or marked N_A with rationale, and the required evidence gates are met. Silence in the plan is never interpreted as 'not needed'.",
+  "global_rules": [
+    "No hidden omission: every applicable domain must have an explicit status.",
+    "No partial-import completion: a partially populated bank or partially implemented system cannot be labeled complete.",
+    "No evidence inflation: planning, source discovery, generated media, compile success, PIE, device and human acceptance are separate states.",
+    "Prepare future-needed assets/data/contracts early when that preparation is offline-safe, even if runtime integration is gate-blocked.",
+    "Do not build runtime features that violate active Governor gate ordering; preparation and sourcing may proceed on isolated branches.",
+    "All heavy assets use soft references/async loading; no heavy synchronous LoadObject expansion.",
+    "Crowd-scale NPCs use pooling/relevance throttling; repeated world detail uses ISM/HISM/culling.",
+    "Animated production characters are skeletal FBX. OBJ character pieces remain prototype/foundation only.",
+    "Production textures are PNG/TGA/channel-packed where appropriate; no BMP production texture path.",
+    "All story/lore details remain source-grounded and original dialogue never copies Tolkien/movie lines verbatim.",
+    "Every real code change updates CURRENT_PROJECT_STATE and PRODUCTION_COMPLETENESS_MATRIX in the same work unit."
+  ],
+  "evidence_states": [
+    "UNMAPPED",
+    "PLANNED",
+    "SOURCE_CANDIDATE",
+    "SOURCE_LOCKED",
+    "GENERATED_EXTERNAL",
+    "MASTER_READY",
+    "IMPLEMENTED",
+    "STATIC_VALIDATED",
+    "COMPILE_TESTED",
+    "ASSET_IMPORT_TESTED",
+    "RUNTIME_WIRED",
+    "PIE_TESTED",
+    "DEVICE_TESTED",
+    "VISUALLY_ACCEPTED",
+    "PACING_ACCEPTED",
+    "AUDIO_ACCEPTED",
+    "ACCESSIBILITY_ACCEPTED",
+    "COMPLETE",
+    "N_A"
+  ],
+  "domains": [
+    {
+      "id": "A_FOUNDATION_ARCHITECTURE",
+      "covers": [
+        "module/source organization",
+        "subsystem ownership",
+        "decoupling",
+        "soft references",
+        "async loading",
+        "pooling",
+        "failure boundaries",
+        "anti-stuck/recovery"
+      ],
+      "current": "IMPLEMENTED_STRONG_W00_ACCEPTANCE_ACTIVE"
+    },
+    {
+      "id": "B_BOOT_BUILD_PACKAGING",
+      "covers": [
+        "UE4.27 build",
+        "startup",
+        "packaged Data JSON",
+        "asset cooking/import",
+        "exact-head reproducibility",
+        "shipping config"
+      ],
+      "current": "PARTIAL_W00"
+    },
+    {
+      "id": "C_PLAYER_CONTROLS_MOVEMENT_CAMERA",
+      "covers": [
+        "walk",
+        "sprint",
+        "crouch",
+        "jump",
+        "collision",
+        "camera",
+        "input locks",
+        "comfort/readability",
+        "controller/keyboard mapping"
+      ],
+      "current": "IMPLEMENTED_PENDING_HUMAN_DEVICE"
+    },
+    {
+      "id": "D_TRAVERSAL_NAVIGATION",
+      "covers": [
+        "walkable routes",
+        "doors/bridges/ferries",
+        "stairs/slopes",
+        "collision",
+        "wayfinding",
+        "return paths",
+        "soft-lock prevention",
+        "checkpoint placement"
+      ],
+      "current": "IMPLEMENTED_PENDING_PIE_DEVICE"
+    },
+    {
+      "id": "E_STORY_CANON_MISSIONS",
+      "covers": [
+        "film spine",
+        "chapter anchors",
+        "parallel routes",
+        "mission sequencing",
+        "failure/rollback",
+        "side-content gating",
+        "source traceability"
+      ],
+      "current": "PART1_IMPLEMENTED_EXPANDING"
+    },
+    {
+      "id": "F_SAVE_PERSISTENCE_CONTINUITY",
+      "covers": [
+        "quick save/load",
+        "checkpoint",
+        "route state",
+        "world state",
+        "NPC memory",
+        "progression",
+        "cross-chapter restore",
+        "rollback"
+      ],
+      "current": "IMPLEMENTED_PENDING_EXACT_HEAD_AND_PIE"
+    },
+    {
+      "id": "G_PLAYER_LIFE_PROGRESSION",
+      "covers": [
+        "health",
+        "stamina",
+        "resolve",
+        "supplies",
+        "Fellowship Bond",
+        "Journey Insight",
+        "progression utilities",
+        "death/retry"
+      ],
+      "current": "IMPLEMENTED_PENDING_ENGINE_HUMAN_TUNING"
+    },
+    {
+      "id": "H_INTERACTION_PHYSICAL_FEEDBACK",
+      "covers": [
+        "interactables",
+        "prop response",
+        "doors",
+        "containers",
+        "tools",
+        "water/contact",
+        "visible+audible feedback",
+        "contextual prompts"
+      ],
+      "current": "PARTIAL"
+    },
+    {
+      "id": "I_COMBAT_THREATS_ENEMIES",
+      "covers": [
+        "melee",
+        "damage",
+        "telegraphs",
+        "AI",
+        "weapons",
+        "enemy families",
+        "boss/threat presentation",
+        "retry friction",
+        "story-locked outcomes"
+      ],
+      "current": "PROTOTYPE_TO_PARTIAL_PRODUCTION"
+    },
+    {
+      "id": "J_CHARACTERS_VISUAL_RIG_ANIMATION",
+      "covers": [
+        "hero silhouettes",
+        "skeletal rigs",
+        "skin/deformation",
+        "locomotion",
+        "combat/interaction animation",
+        "face",
+        "gaze",
+        "blink",
+        "gesture",
+        "cloth/hair",
+        "LODs"
+      ],
+      "current": "FOUNDATION_ONLY_MAJOR_PRODUCTION_PENDING"
+    },
+    {
+      "id": "K_NPC_INTELLIGENCE_SOCIAL_LIFE",
+      "covers": [
+        "identity",
+        "knowledge limits",
+        "routines",
+        "needs",
+        "goals",
+        "emotion",
+        "memory",
+        "relationships",
+        "social grouping",
+        "conversation",
+        "danger/weather reaction"
+      ],
+      "current": "IMPLEMENTED_EXPANDING_PENDING_ACCEPTANCE"
+    },
+    {
+      "id": "L_WORLD_GEOGRAPHY_ENVIRONMENT",
+      "covers": [
+        "terrain",
+        "roads",
+        "villages",
+        "architecture",
+        "interiors",
+        "landmarks",
+        "vistas",
+        "water",
+        "biomes",
+        "regional identity",
+        "collision"
+      ],
+      "current": "PARTIAL_PRODUCTION"
+    },
+    {
+      "id": "M_WORLD_LIFE_MICRODETAIL",
+      "covers": [
+        "work",
+        "travelers",
+        "markets",
+        "meals",
+        "rest",
+        "farm activity",
+        "festival life",
+        "prop motion",
+        "environmental storytelling",
+        "state-reactive density"
+      ],
+      "current": "IMPLEMENTED_FOUNDATION_EXPANDING"
+    },
+    {
+      "id": "N_WILDLIFE_CREATURES",
+      "covers": [
+        "birds",
+        "insects",
+        "small fauna",
+        "farm animals",
+        "horses/ponies",
+        "creatures",
+        "movement",
+        "vocalizations",
+        "reactions",
+        "panic/threat"
+      ],
+      "current": "PARTIAL"
+    },
+    {
+      "id": "O_WEATHER_VFX_ATMOSPHERE",
+      "covers": [
+        "wind",
+        "rain",
+        "snow",
+        "fog",
+        "fire",
+        "smoke",
+        "water response",
+        "foliage motion",
+        "lighting",
+        "time/state mood",
+        "regional grading"
+      ],
+      "current": "PARTIAL"
+    },
+    {
+      "id": "P_AUDIO_VOICE",
+      "covers": [
+        "scripted VO",
+        "ambient NPC speech",
+        "barks",
+        "efforts",
+        "pain/fear/breath",
+        "speaker identity",
+        "subtitles",
+        "ducking",
+        "lip-sync timing"
+      ],
+      "current": "EXTERNAL_SOURCE_PRODUCTION_ACTIVE"
+    },
+    {
+      "id": "Q_AUDIO_SFX_FOLEY_AMBIENCE",
+      "covers": [
+        "footsteps by surface",
+        "cloth/gear",
+        "doors/keys",
+        "carts/harness",
+        "household",
+        "tools",
+        "water",
+        "animals",
+        "nature",
+        "crowds",
+        "combat",
+        "threats",
+        "interiors"
+      ],
+      "current": "SOURCE_COVERAGE_EXPANDING"
+    },
+    {
+      "id": "R_MUSIC",
+      "covers": [
+        "exploration",
+        "home",
+        "danger",
+        "combat",
+        "aftermath",
+        "location themes",
+        "character motifs",
+        "adaptive transitions",
+        "intentional silence"
+      ],
+      "current": "PLAN_DEFINED_FINAL_ORIGINAL_SCORE_PENDING"
+    },
+    {
+      "id": "S_CINEMATIC_PRESENTATION",
+      "covers": [
+        "camera beats",
+        "blocking",
+        "lighting",
+        "dialogue staging",
+        "transitions",
+        "character acting",
+        "UI suppression",
+        "player agency",
+        "skip/lock limits"
+      ],
+      "current": "PARTIAL"
+    },
+    {
+      "id": "T_UI_HUD_MAP_CHRONICLE",
+      "covers": [
+        "objectives",
+        "prompts",
+        "subtitles",
+        "alerts",
+        "save feedback",
+        "map",
+        "Chronicle",
+        "discovery feedback",
+        "settings",
+        "readability"
+      ],
+      "current": "IMPLEMENTED_NEEDS_POLISH_ACCEPTANCE"
+    },
+    {
+      "id": "U_ACCESSIBILITY",
+      "covers": [
+        "subtitles",
+        "speaker labels",
+        "non-speech captions",
+        "volume categories",
+        "text readability",
+        "input clarity",
+        "dynamic range",
+        "color/readability considerations"
+      ],
+      "current": "PLANNED_PARTIAL"
+    },
+    {
+      "id": "V_PERFORMANCE_MEMORY_STREAMING",
+      "covers": [
+        "30 FPS floor",
+        "CPU",
+        "RAM",
+        "VRAM",
+        "audio concurrency",
+        "streaming hitches",
+        "pooling",
+        "LOD",
+        "HISM/ISM",
+        "GC",
+        "load times"
+      ],
+      "current": "BUDGETED_DEVICE_PROOF_PENDING"
+    },
+    {
+      "id": "W_ASSET_PIPELINE_RIGHTS",
+      "covers": [
+        "provenance",
+        "license",
+        "hash/size",
+        "FBX/PNG/TGA rules",
+        "source quality",
+        "warehouse",
+        "import receipts",
+        "release-clearance boundaries"
+      ],
+      "current": "ACTIVE_STRONG"
+    },
+    {
+      "id": "X_QA_REGRESSION_RECOVERY",
+      "covers": [
+        "Pre-Unreal",
+        "compile",
+        "automation",
+        "runtime audit",
+        "warning debt",
+        "anti-stuck",
+        "timeouts",
+        "resume",
+        "exact-SHA evidence",
+        "defect ledger"
+      ],
+      "current": "ACTIVE_W00"
+    },
+    {
+      "id": "Y_HUMAN_EXPERIENCE_ACCEPTANCE",
+      "covers": [
+        "fun",
+        "pacing",
+        "boredom",
+        "frustration",
+        "clarity",
+        "beauty",
+        "sound balance",
+        "encounter readability",
+        "world believability"
+      ],
+      "current": "NOT_ACCEPTED_REQUIRES_REAL_PLAY"
+    },
+    {
+      "id": "Z_RELEASE_COMPLETENESS",
+      "covers": [
+        "full trilogy traversal",
+        "save continuity",
+        "packaging",
+        "settings",
+        "performance",
+        "bug closure",
+        "rights review",
+        "final acceptance",
+        "release-ready exact head"
+      ],
+      "current": "FUTURE_W11"
+    }
+  ],
+  "living_world_subauthority": "Data/LivingWorldMasterCoverageMapV1.json",
+  "file_organization_subauthority": "Data/ProjectFileOrganizationMapV1.json",
+  "wave_framework": "Data/CompletionWaveMapV1.json",
+  "current_wave_summary": {
+    "current": "W00",
+    "next": "W01 after W00 exit",
+    "deferred_major_build": "W01-W06 Part I production, then W07-W11 Part II/III and final trilogy acceptance",
+    "rule": "The large build is not forgotten; it is explicitly queued and may receive offline-safe preparation while W00 finishes."
+  },
+  "proactive_discovery_protocol": [
+    "At every major wave, scan all A-Z domains and create/update explicit gaps before implementation begins.",
+    "Before declaring a chapter ready, run the chapter against every applicable A-Z domain plus the detailed living-world map.",
+    "If a small missing detail is discovered (for example one animal, sound, prop reaction, subtitle state or interior behavior), record it under its owning domain rather than relying on chat memory.",
+    "If a domain is intentionally absent, mark N_A with reason; do not leave it implicit.",
+    "Prepare assets/data/scripts ahead of runtime integration when legal, performant and gate-safe.",
+    "Never require the owner to remember the checklist; the Governor/coverage maps own that responsibility."
+  ],
+  "last_refresh": "2026-09-24"
+}
