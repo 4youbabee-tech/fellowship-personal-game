@@ -67,6 +67,14 @@ private:
     void VerifyPlayerGroundingStability(FName ChapterId, FVector PlacedLocation);
     UShireChapterAssetStreamingSubsystem* AssetStreamingSubsystem = nullptr;
 
+    FTimerHandle GroundingStabilityTimer;
+    FName PendingGroundingCommitChapterId = NAME_None;
+    FName PendingGroundingCommitRouteId = NAME_None;
+    FName PendingGroundingCommitEpisodeId = NAME_None;
+    FName PendingGroundingBuilderName = NAME_None;
+    FVector PendingGroundingPlacedLocation = FVector::ZeroVector;
+    int32 GroundingRecoveryAttempts = 0;
+
     FName LastLoadedRouteId = NAME_None;
     FName LastLoadedEpisodeId = NAME_None;
     FName LastLoadedChapterId = NAME_None;
