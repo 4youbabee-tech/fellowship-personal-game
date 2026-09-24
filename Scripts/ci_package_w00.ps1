@@ -101,9 +101,28 @@ $argList = @(
 Write-Host ("W00_PACKAGE_BEGIN sha=" + $env:TARGET_SHA + " timeoutMinutes=" + $TimeoutMinutes)
 $stdout = Join-Path $logDir "CI-W00-Package-stdout.log"
 $stderr = Join-Path $logDir "CI-W00-Package-stderr.log"
-if (Test-Path $stdout) { Remove-Item $stdout -Force }
-if (Test-Path $stderr) { Remove-Item $stderr -Force }
-$proc = Start-Process -FilePath $uat -ArgumentList $argList -RedirectStandardOutput $stdout -RedirectStandardError $stderr -PassThru
+$exitCodeFile = Join-Path $logDir "CI-W00-Package-exitcode.txt"
+$wrapper = Join-Path $logDir "CI-W00-Package-wrapper.cmd"
+foreach ($generated in @($stdout, $stderr, $exitCodeFile, $wrapper)) {
+    if (Test-Path -LiteralPath $generated) { Remove-Item -LiteralPath $generated -Force }
+}
+
+# RunUAT.bat is a batch entrypoint. Do not use the PowerShell Process.ExitCode
+# property as package truth. The cmd wrapper calls UAT synchronously and records
+# the actual batch ERRORLEVEL into a sidecar file after UAT returns.
+$wrapperLines = @(
+    "@echo off",
+    "setlocal EnableExtensions",
+    ('call "' + $uat + '" ' + ($argList -join " ") + ' 1>"' + $stdout + '" 2>"' + $stderr + '"'),
+    'set "SHIRE_UAT_EXIT=%ERRORLEVEL%"',
+    ('> "' + $exitCodeFile + '" echo %SHIRE_UAT_EXIT%'),
+    'exit /b %SHIRE_UAT_EXIT%'
+)
+Set-Content -LiteralPath $wrapper -Value $wrapperLines -Encoding ASCII
+
+$cmdExe = if ($env:ComSpec) { $env:ComSpec } else { "C:\Windows\System32\cmd.exe" }
+$cmdArguments = @("/D", "/S", "/C", ('""' + $wrapper + '""'))
+$proc = Start-Process -FilePath $cmdExe -ArgumentList $cmdArguments -PassThru -WindowStyle Hidden
 $start = Get-Date
 while (-not $proc.HasExited) {
     $elapsed = [int]((Get-Date) - $start).TotalSeconds
@@ -117,15 +136,26 @@ while (-not $proc.HasExited) {
     Start-Sleep -Seconds $HeartbeatSeconds
     $proc.Refresh()
 }
-
 $proc.WaitForExit()
-$proc.Refresh()
-$exitCode = $proc.ExitCode
-if ($null -eq $exitCode) {
-    Write-Host "W00_PACKAGE_EXITCODE_FAIL exitCode=<null>"
-    exit 97
+
+$resultDeadline = (Get-Date).AddSeconds(15)
+while (-not (Test-Path -LiteralPath $exitCodeFile -PathType Leaf) -and (Get-Date) -lt $resultDeadline) {
+    Start-Sleep -Seconds 1
 }
-$exitCode = [int]$exitCode
+if (-not (Test-Path -LiteralPath $exitCodeFile -PathType Leaf)) {
+    Write-Host ("W00_PACKAGE_RESULT_MISSING wrapperPid=" + $proc.Id + " hasExited=" + $proc.HasExited)
+    if (Test-Path $stdout) { Get-Content -LiteralPath $stdout -Tail 120 }
+    if (Test-Path $stderr) { Get-Content -LiteralPath $stderr -Tail 120 }
+    exit 98
+}
+
+$rawExitCode = (Get-Content -LiteralPath $exitCodeFile -Raw).Trim()
+$exitCode = 0
+if (-not [int]::TryParse($rawExitCode, [ref]$exitCode)) {
+    Write-Host ("W00_PACKAGE_RESULT_INVALID raw=" + $rawExitCode)
+    exit 99
+}
+Write-Host ("W00_PACKAGE_EXITCODE source=cmd-sidecar exit=" + $exitCode)
 
 if (Test-Path $stdout) { Get-Content -LiteralPath $stdout | Set-Content -LiteralPath $log -Encoding UTF8 }
 if (Test-Path $stderr) { Get-Content -LiteralPath $stderr | Add-Content -LiteralPath $log -Encoding UTF8 }

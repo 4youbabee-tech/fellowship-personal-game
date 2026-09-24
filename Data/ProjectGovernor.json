@@ -5349,14 +5349,16 @@
     {
       "id": "KF-W00-PACKAGE-EXIT-001",
       "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
-      "symptom": "Unreal #643 logged UAT ExitCode=1 / BUILD FAILED, but the GitHub package step was marked success and allowed the Runtime Data verifier to run.",
+      "symptom": "Unreal #647 spent about 25 minutes actively cooking but the package wrapper terminated on W00_PACKAGE_EXITCODE_FAIL exitCode=<null> before any terminal UAT result.",
       "evidence": [
-        "ci_package_w00.ps1 printed W00_PACKAGE_FAIL exit= with a blank value on Unreal #643.",
-        "The following packaged-data step ran and failed 37/37 missing instead of the package step stopping the job."
+        "Unreal #647 exact head 6fb1c5edd81989de853fface5e406d8cddab0099: Verify UE, Editor build, production import, Automation QA, startup, P1C01-P1C08 audit, route/story roundtrip and warning-debt guard all succeeded.",
+        "Package output advanced to Cooked packages 251 Packages Remain 12 Total 263 with active shader compilation.",
+        "No terminal UAT success/failure line preceded the wrapper error.",
+        "The wrapper then emitted W00_PACKAGE_EXITCODE_FAIL exitCode=<null> and exited 97."
       ],
-      "root_cause": "The Start-Process wrapper read and re-exited a blank process ExitCode without a final WaitForExit/Refresh/null guard, so the wrapper did not reliably transmit the UAT failure.",
-      "permanent_policy": "After the heartbeat loop, ci_package_w00.ps1 calls WaitForExit, Refresh, rejects a null ExitCode with an explicit nonzero code, and exits with the concrete UAT code before any downstream acceptance verifier can run.",
-      "reopen_rule": "Reopen if any UAT nonzero result is followed by a successful package step or by execution of downstream packaged acceptance gates."
+      "root_cause": "Direct Start-Process monitoring of RunUAT.bat used the PowerShell Process.ExitCode property as package truth. On this Windows batch indirection that property was null even though the cook had been progressing, so CI terminated independently of UAT's actual batch result.",
+      "permanent_policy": "A dedicated cmd.exe wrapper CALLs RunUAT.bat synchronously, captures %ERRORLEVEL% after CALL into CI-W00-Package-exitcode.txt, and that sidecar is the sole UAT result authority. PowerShell only monitors heartbeat/timeout.",
+      "reopen_rule": "Reopen if the sidecar is missing/invalid, if downstream acceptance executes after a nonzero sidecar, or if sidecar zero contradicts missing packaged executable evidence."
     },
     {
       "id": "KF-W00-PG026-001",
@@ -5396,6 +5398,6 @@
       "Summarize and guard runtime warning debt"
     ],
     "superseded_run_policy": "On acceptance/* branches, newer commits cancel older in-progress runs sharing the UE4 device concurrency group. Non-acceptance branches remain serialized.",
-    "current_boundary": "Head d94b7fe7797e9ef417b7dad2abde26dfc279e700 / Unreal #643 supplies successful core Unreal steps through warning debt but failed later in UAT staging. The next acceptance-only head may inherit that core proof only if Pre-Unreal passes and the classifier recognizes the delta as acceptance-safe."
+    "current_boundary": "Unreal #647 supplies fresh green core Unreal proof through warning debt on 6fb1c5edd81989de853fface5e406d8cddab0099. The next package-wrapper-only child must inherit that proof and run package/data/startup/hardware only."
   }
 }

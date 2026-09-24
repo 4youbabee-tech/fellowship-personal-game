@@ -2741,12 +2741,20 @@ if "cancel-in-progress: true" in unreal_ci:
 
 package_script = read(ROOT / "Scripts" / "ci_package_w00.ps1")
 if (
-    "$proc.WaitForExit()" not in package_script
-    or "$exitCode = $proc.ExitCode" not in package_script
-    or "W00_PACKAGE_EXITCODE_FAIL" not in package_script
+    "CI-W00-Package-wrapper.cmd" not in package_script
+    or "CI-W00-Package-exitcode.txt" not in package_script
+    or "SHIRE_UAT_EXIT=%ERRORLEVEL%" not in package_script
+    or "W00_PACKAGE_RESULT_MISSING" not in package_script
+    or "[int]::TryParse" not in package_script
+    or "W00_PACKAGE_EXITCODE source=cmd-sidecar" not in package_script
     or "exit $exitCode" not in package_script
 ):
-    fail("PG-026: W00 package wrapper must propagate a concrete UAT process exit code")
+    fail(
+        "PG-026: W00 package wrapper must capture synchronous RunUAT ERRORLEVEL "
+        "through the cmd sidecar contract"
+    )
+if "$proc.ExitCode" in package_script:
+    fail("PG-026: W00 package wrapper must not trust Start-Process .ExitCode for RunUAT.bat")
 
 game_target = read(ROOT / "Source" / "ShireJourney.Target.cs")
 if (

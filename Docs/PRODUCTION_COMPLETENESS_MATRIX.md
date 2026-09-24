@@ -1,3 +1,22 @@
+## 2026-09-24 - Fast-path rule and package exit truth after Unreal #647
+
+Unreal #647 on exact head `6fb1c5edd81989de853fface5e406d8cddab0099` provides fresh successful Core Unreal proof through the warning-debt guard. Those successful gates are **not to be repeated** for a package-wrapper-only fix.
+
+The package step itself was still making forward progress after about 25 minutes: the last evidence was `Cooked packages 251 Packages Remain 12 Total 263` with shader compilation still active. No terminal UAT result was logged before `ci_package_w00.ps1` emitted `W00_PACKAGE_EXITCODE_FAIL exitCode=<null>` and exited 97. This is a wrapper-result failure, not proof of a UAT/package failure.
+
+Repair:
+- RunUAT is called synchronously by a dedicated `cmd.exe` wrapper.
+- The wrapper writes the actual post-CALL `%ERRORLEVEL%` to `CI-W00-Package-exitcode.txt`.
+- PowerShell keeps heartbeat and bounded timeout only; it no longer trusts `$proc.ExitCode` for UAT truth.
+- Missing/invalid sidecar results fail immediately with explicit diagnostic codes.
+- PG-026 rejects reintroduction of `$proc.ExitCode` as RunUAT result authority.
+
+Execution rule: the child commit is acceptance-only and must inherit #647's green Core Unreal proof. The intended next sequence is only:
+`Verify UE -> Package -> 37 Runtime JSON -> Packaged Startup -> Hardware`.
+If classification unexpectedly becomes `full`, stop rather than spend another full Core Unreal cycle.
+
+Status: **STATIC-VALIDATED / RUNNER_PROOF_PENDING**. No Package PASS or downstream packaged acceptance is claimed yet.
+
 ## 2026-09-24 - Grounding guard reconciliation after real PIE fall regression
 
 The new two-phase grounding commit barrier exposed two stale/strict validation assumptions. PG-122 correctly required the established delayed stability proof, while the runtime barrier had been shortened to 0.35 seconds. The runtime now waits a real **2.0 seconds** before grounding finalization and logs `stableSeconds=2.0`.
