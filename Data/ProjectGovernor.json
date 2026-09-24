@@ -3700,7 +3700,7 @@
       "target-device DX11 720p Low-Medium performance/memory/GC/tick profiling",
       "chapter-specific human PIE/pacing/visual acceptance evidence"
     ],
-    "note": "f524a83 passed Unreal #624 and Warehouse #205. Pre #789 failed only PG-078 because REQ-ORG-001 was promoted to VALIDATED while MasterExecutionRoadmap still tracked it as unfinished. CP-W00-155 is one final bounded repair wave for that snapshot, dedicated resident-bank evidence, and CI cadence.",
+    "note": "CP-W00-155 head 3534e632 passed Unreal #625 and Warehouse #206. Pre #790 failed only PG-026 because the exact-head checkout was intentionally changed from shallow depth=1 to bounded depth=2 so the validation classifier can inspect the direct parent. Exact-head reset + rev-parse verification remained intact. CP-W00-156 repairs only this concrete validator-drift literal by accepting bounded depth 1 or 2; no gameplay/runtime behavior changes.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -3715,13 +3715,13 @@
     },
     "last_green_head": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
     "evidence": {
-      "last_engine_proven_head": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
-      "pre_unreal": "#788 SUCCESS on exact head ab7889d6b2dafc059220a0c0a3dc63decfe6b72e; every Pre-Unreal static/governor/asset/readiness/deep/unit-test step completed successfully.",
-      "unreal_build": "#623 SUCCESS on the same exact head through exact checkout, migrated-layout preparation, UE4.27.2 compile/import, Automation, startup, P1C01-P1C08, route/story roundtrip and warning-debt coverage.",
-      "warehouse": "#204 SUCCESS on the same exact head; warehouse staging was correctly not required for this delta and provider stages were skipped.",
+      "last_engine_proven_head": "3534e632e2085351149648aa7ec2d9b88d0badf1",
+      "pre_unreal": "#790 FAILURE only at PG-026 exact-checkout literal: validator accepted only --depth=1 while CP155 uses bounded --depth=2 for direct-parent classification. Exact SHA reset/rev-parse verification remained present.",
+      "unreal_build": "#625 SUCCESS on exact head 3534e632 through the full UE4.27.2 chain.",
+      "warehouse": "#206 SUCCESS on exact head 3534e632.",
       "root_correction_boundary": "Public/Private migration and its known validator/persistent-runner correction families are machine-accepted on CP-W00-154. Do not reopen validator/Governor/root-code cleanup unless a new concrete regression appears."
     },
-    "evidence_scope": "ab7889d6 is STATIC-VALIDATED + COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED for the exercised exact-head suite. PIE, target-device, visual, performance, packaged-runtime and real-audio acceptance remain separate.",
+    "evidence_scope": "3534e632 is COMPILE-TESTED + HEADLESS-RUNTIME-VALIDATED and Warehouse-green. CP-W00-156 changes only the static validator contract for the demonstrated bounded-depth exact checkout; no PIE/device/visual/performance claim.",
     "current_owner_observation": {
       "sha": "4879a19999951354676341f032c358ac98679c44",
       "pre_unreal": {
@@ -4097,23 +4097,23 @@
   ],
   "last_reconciliation": {
     "date": "2026-09-24",
-    "reason": "Owner requested one final consolidated repair wave. Unreal #624 is green; Pre #789 has one governance-only PG-078 mismatch caused by REQ-ORG-001 validation.",
-    "exact_reviewed_head": "f524a83cd39510b956e4977571448d43100b628d",
+    "reason": "Pre #790 exposed one concrete validator-drift mismatch after CP155: PG-026 hard-coded depth=1 even though the new fail-safe classifier needs depth=2 to inspect HEAD^ while exact SHA verification remains unchanged.",
+    "exact_reviewed_head": "3534e632e2085351149648aa7ec2d9b88d0badf1",
     "latest_exact_head_evidence": {
-      "pre_unreal": "#789 FAILURE only PG-078 stale unfinished snapshot",
-      "unreal": "#624 SUCCESS",
-      "warehouse": "#205 SUCCESS"
+      "pre_unreal": "#790 FAILURE PG-026 only",
+      "unreal": "#625 SUCCESS",
+      "warehouse": "#206 SUCCESS"
     },
     "reconciled_findings": [
-      "Remove VALIDATED REQ-ORG-001 from MasterExecutionRoadmap tracked unfinished IDs; do not weaken PG-078.",
-      "Require explicit ShireResidentBankAudit evidence for the already-resident bank recommit path.",
-      "Use a fail-safe Unreal fast path only for governance/docs-only deltas whose direct parent already has a successful Unreal run; all engine-impact or unknown deltas still run full UE4.27.2 validation."
+      "The runner still resets hard to TARGET_SHA, rev-parses HEAD, compares exact SHA, writes .ci-source-sha and fails on mismatch.",
+      "Allowing only bounded shallow depth 1 or 2 preserves exact-head safety while supporting direct-parent classification.",
+      "No new validator/Governor cleanup lane is opened; this is the concrete CP155 regression and its narrow correction."
     ],
-    "next_priority": "CP_W00_155_FINAL_MACHINE_REPAIR_WAVE_THEN_ACCEPTANCE_ONLY",
-    "truth_boundary": "After CP155 is green, root-code/validator/Governor cleanup stays closed unless a concrete new regression appears. Packaged Data, real audio, target-device and human acceptance remain separate.",
+    "next_priority": "CP_W00_156_STATIC_CLOSURE_THEN_ACCEPTANCE_ONLY",
+    "truth_boundary": "Once CP156 static validation is green, machine repair is closed unless a new concrete regression appears. Remaining W00 work is packaged Data, real audio, target-device profiling and human PIE/pacing/visual acceptance.",
     "stabilization_wave": {
-      "status": "FINAL_CONSOLIDATED_REPAIR_CLOSURE_PENDING_PROOF",
-      "invariant": "No new gameplay/content feature in CP155."
+      "status": "FINAL_STATIC_REPAIR_PENDING_PROOF",
+      "invariant": "No gameplay/content changes."
     }
   },
   "development_mode": {
@@ -4161,7 +4161,7 @@
   "current_focus": {
     "production_lane": "W00_ARCHITECTURAL_STABILIZATION",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "Execute CP-W00-155 as the final consolidated machine-repair wave. Once green, stop cleanup loops and move directly to packaged Data JSON, real audio, target-device profiling and human PIE/pacing/visual acceptance.",
+    "rule": "Prove CP-W00-156 static closure for the single PG-026 bounded-depth validator drift. After that, do not reopen machine cleanup without a concrete new regression; move directly to W00 acceptance closure.",
     "machine_baseline": {
       "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
       "pre_unreal": "#788 SUCCESS",
@@ -4172,14 +4172,12 @@
     "w01_freeze": "ACTIVE_UNTIL_W00_EXIT_CRITERIA"
   },
   "immediate_next_large_actions": [
-    "Prove CP-W00-155 exact head once because it changes CI/runtime audit contracts.",
-    "Validate packaged runtime Data JSON staging/read execution.",
-    "Validate actual authored audio-bank presence/playback without -NoSound.",
-    "Run target-device DX11 720p Low-Medium profiling.",
-    "Collect chapter-specific human PIE/pacing/visual observations and decide W00 exit."
+    "Require fresh Pre-Unreal to prove PG-026 accepts the bounded exact-head checkout and the remaining static chain is green.",
+    "Use the admin-only Unreal fast path for this validator/governance reconciliation if its classifier permits; do not manufacture another heavy engine run unless the workflow classifies the delta as engine-impacting.",
+    "Then validate packaged Data JSON runtime execution, real audio, target-device profiling and human PIE/pacing/visual acceptance."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-155",
+    "checkpoint_id": "CP-W00-156",
     "source_head": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
     "branch": "integration/comprehensive-foundation-v1",
     "pull_request": 67,
@@ -4199,11 +4197,10 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "Final consolidated machine-repair closure: PG-078 snapshot + resident-bank proof + governance/docs-only Unreal fast path.",
+    "active_wave": "Single concrete PG-026 validator-drift repair after CP155.",
     "next_actions": [
-      "Require fresh Pre-Unreal and one full Unreal run for CP155.",
-      "After CP155 green, governance/docs-only reconciliation uses the fast path and does not repeat full Unreal.",
-      "Proceed directly to packaged Data, real audio, target-device and human acceptance."
+      "Prove Pre-Unreal green on CP156.",
+      "If CP156 is green, close machine repair and proceed to acceptance-only W00 work."
     ],
     "unverified_acceptance": [
       "CP-W00-155 exact-head final repair proof",

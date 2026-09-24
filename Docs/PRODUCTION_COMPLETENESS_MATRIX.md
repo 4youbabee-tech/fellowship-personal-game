@@ -1,3 +1,9 @@
+## 2026-09-24 - W00 CP-W00-156 bounded exact-checkout validator repair
+
+CP155 `3534e632...` passed Unreal #625 and Warehouse #206. Pre #790 failed only PG-026 because its static contract recognized `--depth=1` but not the new bounded `--depth=2` checkout used for direct-parent classification. CP156 accepts depth 1 or 2 while preserving hard reset + exact SHA verification.
+
+No production-completeness percentage changes. No gameplay/runtime change and no new acceptance claim.
+
 ## 2026-09-24 - W00 CP-W00-155 final consolidated repair closure
 
 `f524a83c...` passed **Unreal #624** and **Warehouse #205**; Pre #789 failed only PG-078 stale roadmap tracking after REQ-ORG-001 became VALIDATED. CP155 reconciles that snapshot, adds dedicated resident-bank runtime evidence, and adds a fail-safe governance/docs-only Unreal fast path.

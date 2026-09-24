@@ -2685,7 +2685,10 @@ checkout_action_ok = (
 )
 stable_checkout_ok = (
     "fellowship_exact_checkout.cmd" in unreal_ci
-    and "fetch --no-tags --prune --depth=1 origin %%TARGET_SHA%%" in unreal_ci
+    and re.search(
+        r"fetch --no-tags --prune --depth=(?:1|2) origin %%TARGET_SHA%%",
+        unreal_ci,
+    ) is not None
     and "reset --hard %%TARGET_SHA%%" in unreal_ci
     and "rev-parse HEAD" in unreal_ci
     and "Checkout SHA mismatch" in unreal_ci

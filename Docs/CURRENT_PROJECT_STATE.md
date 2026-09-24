@@ -1,3 +1,11 @@
+## 2026-09-24 - W00 checkpoint CP-W00-156: one concrete PG-026 validator-drift repair
+
+CP155 exact head `3534e632e2085351149648aa7ec2d9b88d0badf1` completed **Unreal #625 SUCCESS** and **Warehouse #206 SUCCESS**. **Pre #790 failed only PG-026** before the rest of the static chain because the validator hard-coded the exact checkout as `--depth=1`.
+
+CP155 intentionally changed the bounded shallow checkout to `--depth=2` so the new fail-safe validation classifier can inspect the direct parent. Exact-head safety did not change: the workflow still resets hard to `TARGET_SHA`, rev-parses HEAD, compares the exact SHA, records `.ci-source-sha`, and fails on mismatch.
+
+CP156 changes only PG-026's structural contract to accept bounded shallow depth **1 or 2** while retaining all exact-SHA requirements. No gameplay/runtime logic changes. If fresh Pre-Unreal is green, the machine-repair lane closes and W00 proceeds only to packaged Data JSON, real authored audio, target-device profiling and human PIE/pacing/visual acceptance.
+
 ## 2026-09-24 - W00 checkpoint CP-W00-155: final consolidated repair-closure wave
 
 Head `f524a83cd39510b956e4977571448d43100b628d` passed **Unreal #624 SUCCESS** and **Warehouse #205 SUCCESS**. Unreal #624 completed UE4.27.2 build/import, Automation, startup, P1C01-P1C08, state, transitions, faults, pending, persistence-edge and zero-warning-debt checks; material persistence reported `missing=0 tracked=225`.

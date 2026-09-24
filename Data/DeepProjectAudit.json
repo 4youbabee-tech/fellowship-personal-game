@@ -2,7 +2,7 @@
   "schema_version": 1,
   "audit_id": "FELLOWSHIP_DEEP_PROJECT_AUDIT_V1",
   "status": "ACTIVE_CONTINUOUS_AUDIT",
-  "audited_head": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e_PRE788_GREEN_UNREAL623_GREEN_WAREHOUSE204_GREEN_CP154_MACHINE_ACCEPTED",
+  "audited_head": "3534e632_UNREAL625_GREEN_WAREHOUSE206_GREEN_PRE790_PG026_ONLY_CP156_PENDING",
   "scope": [
     "project governor",
     "backend story/route/save",
@@ -497,10 +497,11 @@
     }
   ],
   "next_audit_waves": [
+    "CP-W00-156 static proof for the demonstrated PG-026 bounded-depth validator repair",
     "packaged-build Data JSON staging/read execution",
     "actual authored audio-bank presence/playback without -NoSound",
-    "target-device frame-time/resident-memory/VRAM/GC/tick profiling",
-    "human core-loop/onboarding/chapter-specific visual-pacing review"
+    "target-device profiling",
+    "human PIE/pacing/visual acceptance"
   ],
-  "audit_scope_note": "CP-W00-154 exact head ab7889d6 passed Pre #788, Unreal #623 and Warehouse #204. The Public/Private migration and its known validator/persistent-runner correction families are machine-accepted. No gameplay behavior changed, and no PIE/device/visual/performance/audio/package acceptance is inferred."
+  "audit_scope_note": "CP155 exact head 3534e632 passed Unreal #625 and Warehouse #206. Pre #790 failed only because PG-026 encoded the exact checkout as a literal depth=1 string, while the new parent-aware classifier uses bounded depth=2. CP156 accepts depth 1 or 2 while retaining hard reset, rev-parse and exact SHA mismatch failure."
 }
