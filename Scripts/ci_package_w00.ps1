@@ -9,7 +9,6 @@ if ([string]::IsNullOrWhiteSpace($ProjectRoot)) { throw "ProjectRoot is required
 
 $project = Join-Path $ProjectRoot "ShireJourney.uproject"
 $uat = "C:\Program Files\Epic Games\UE_4.27\Engine\Build\BatchFiles\RunUAT.bat"
-$dbgHelp = "C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\ThirdParty\DbgHelp\dbghelp.dll"
 $archive = Join-Path $ProjectRoot "Saved\W00Package"
 $runId = if ($env:GITHUB_RUN_ID) { $env:GITHUB_RUN_ID } else { "local" }
 $attempt = if ($env:GITHUB_RUN_ATTEMPT) { $env:GITHUB_RUN_ATTEMPT } else { "1" }
@@ -19,7 +18,6 @@ $log = Join-Path $logDir "CI-W00-Package.log"
 
 if (-not (Test-Path -LiteralPath $project -PathType Leaf)) { throw "Project missing: $project" }
 if (-not (Test-Path -LiteralPath $uat -PathType Leaf)) { throw "RunUAT missing: $uat" }
-if (-not (Test-Path -LiteralPath $dbgHelp -PathType Leaf)) { throw "DbgHelp source missing: $dbgHelp" }
 New-Item -ItemType Directory -Path $logDir -Force | Out-Null
 
 foreach ($path in @($archive, $stage)) {
@@ -30,13 +28,14 @@ foreach ($path in @($archive, $stage)) {
     New-Item -ItemType Directory -Path $path -Force | Out-Null
 }
 
-$probeDir = Join-Path $stage "Engine\Binaries\ThirdParty\DbgHelp"
+$probeDir = Join-Path $stage "_write_probe"
 New-Item -ItemType Directory -Path $probeDir -Force | Out-Null
-$probe = Join-Path $probeDir "dbghelp.dll"
-Copy-Item -LiteralPath $dbgHelp -Destination $probe -Force
-if (-not (Test-Path -LiteralPath $probe -PathType Leaf)) { throw "W00_PACKAGE_PREFLIGHT_FAIL dbghelp copy probe missing" }
+$probe = Join-Path $probeDir "probe.txt"
+Set-Content -LiteralPath $probe -Value "w00-package-stage-write-probe" -Encoding ASCII
+if (-not (Test-Path -LiteralPath $probe -PathType Leaf)) { throw "W00_PACKAGE_PREFLIGHT_FAIL stage write probe missing" }
 Remove-Item -LiteralPath $probe -Force
-Write-Host ("W00_PACKAGE_PREFLIGHT_PASS stage=" + $stage)
+Remove-Item -LiteralPath $probeDir -Force
+Write-Host ("W00_PACKAGE_PREFLIGHT_PASS stageWritable=true stage=" + $stage)
 
 $argList = @(
     "BuildCookRun",
@@ -53,7 +52,8 @@ $argList = @(
     "-archive",
     ("-archivedirectory=`"" + $archive + "`""),
     "-utf8output",
-    "-unattended"
+    "-unattended",
+    "-nodebuginfo"
 )
 
 Write-Host ("W00_PACKAGE_BEGIN sha=" + $env:TARGET_SHA + " timeoutMinutes=" + $TimeoutMinutes)
