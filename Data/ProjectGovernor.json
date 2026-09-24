@@ -5333,6 +5333,14 @@
       "root_cause": "RuntimeDependencies were declared without an explicit loose staging type, while runtime code requires project-relative external files.",
       "permanent_policy": "All project-root runtime Data JSON dependencies are staged as StagedFileType.NonUFS and verified in packaged output before W01 opens.",
       "reopen_rule": "Reopen only if fresh exact-head packaging still omits files or packaged startup proves a path mismatch."
+    },
+    {
+      "id": "KF-W00-PG147-001",
+      "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
+      "symptom": "Pre-Unreal PG-147 rejected runtime JSON staging after RuntimeDependencies were upgraded to explicit StagedFileType.NonUFS.",
+      "root_cause": "Validator matched only the legacy one-argument RuntimeDependencies.Add spelling and was stale relative to the packaging contract.",
+      "permanent_policy": "PG-147 uses structural NonUFS dependency detection and regression tests reject legacy/untyped and UFS forms.",
+      "reopen_rule": "Reopen only if PG-147 misclassifies a syntactically valid explicit NonUFS dependency or misses a real unstaged runtime JSON."
     }
   ]
 }
