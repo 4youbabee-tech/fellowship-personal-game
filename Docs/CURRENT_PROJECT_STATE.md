@@ -1,3 +1,21 @@
+## 2026-09-24 - W00 packaging delay root cause and bounded retry fix
+
+Unreal #627 proved that compile/import/Automation/startup/chapter/state/warning gates remained green. The final package step ran for about 37 minutes and failed **after cook/pak succeeded**: UnrealPak added 1665 files and exited 0, then AutomationTool repeatedly failed to copy `Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll` into the staged build with Windows `Access denied`.
+
+This is a staging/ACL file-copy blocker, not a demonstrated gameplay/source compile regression.
+
+Added `Scripts/ci_package_w00.ps1` and routed `ci_package_w00.cmd` through it. New behavior:
+- unique staging directory per workflow run/attempt,
+- explicit DbgHelp copy preflight before any expensive cook,
+- 30-second progress heartbeat,
+- bounded internal package timeout,
+- reuse of Unreal/DDC/cook cache where available,
+- no broad repair-wave reopen.
+
+Governor integration baseline was restored to `develop`; the acceptance branch is tracked separately.
+
+Status remains **ACCEPTANCE_FIX_IN_PROGRESS** until the next runner execution proves the package/data/startup gates. No PACKAGE-TESTED/DEVICE-TESTED/PIE-TESTED claim is made yet.
+
 ## 2026-09-24 - W00 final closure wave started on isolated acceptance branch
 
 Architectural/root repair remains closed on exact green head `31b6e1c9958b6121ec7a00c07e038fec4ab36408` (Pre #791 SUCCESS, Unreal #626 attempt 2 SUCCESS, Warehouse #207 SUCCESS).
