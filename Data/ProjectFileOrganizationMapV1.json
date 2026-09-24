@@ -1,0 +1,2733 @@
+{
+  "schema_version": 1,
+  "map_id": "PROJECT_FILE_ORGANIZATION_MAP_V1",
+  "status": "ACTIVE_INDEX_NO_PHYSICAL_MASS_MOVE_DURING_W00",
+  "authority": "Data/ProjectGovernor.json",
+  "indexed_branch": "planning/living-world-completeness-v1",
+  "indexed_head": "c3668ec48d439985fc8f075df3f23b1269671072",
+  "indexed_file_count": 651,
+  "purpose": "Make the large project navigable without relying on chat memory. Every important file has one declared role; authority, live execution, domain planning, historical snapshots, runtime data, source, automation and assets are not allowed to masquerade as each other.",
+  "authority_chain": [
+    "Data/ProjectGovernor.json = sole project-management decision authority.",
+    "Data/MasterExecutionRoadmap.json = current dependency/order map subordinate to Governor.",
+    "Data/CompletionWaveMapV1.json = W00-W11 / 30-40-drop completion framework.",
+    "Data/WholeGameAZCompletenessMapV1.json = whole-game no-forget coverage contract.",
+    "Data/LivingWorldMasterCoverageMapV1.json = detailed living-world/sensory sub-map.",
+    "Docs/CURRENT_PROJECT_STATE.md = human-readable operational handoff, never authority over Governor."
+  ],
+  "organization_rules": [
+    "Do not physically mass-move Data/Docs/SourceAssets during W00 just for neatness; moves require a dedicated maintenance batch and validator/import impact review.",
+    "Historical audits preserve evidence and are not rewritten into current authority.",
+    "A plan with stale embedded PR/branch metadata may still contain useful domain design, but current control state comes only from Governor/MasterExecutionRoadmap.",
+    "Any new accepted requirement must enter Governor and be mapped into the execution roadmap in the same logical change.",
+    "Any new broad completeness category must enter WholeGameAZCompletenessMapV1; living-world micro-details additionally enter LivingWorldMasterCoverageMapV1.",
+    "Source code remains Public headers / Private implementations; do not regress the CP154 migration.",
+    "Animated production characters use skeletal FBX; project-owned OBJ character pieces are foundation/proxy sources only and never count as final animated-character completion."
+  ],
+  "known_stale_or_historical_metadata": [
+    {
+      "path": "Data/Part1MegaProductionPlan.json",
+      "issue": "Contains historical PR #53 / branch work/automation-first-runtime-observation control metadata.",
+      "treatment": "Keep domain design as reference; do not use its embedded PR/branch as current execution truth. Current PR/branch come from Governor/MasterExecutionRoadmap."
+    },
+    {
+      "path": "Data/Production100ReadinessGate.json",
+      "issue": "Contains older baseline/candidate evidence snapshots.",
+      "treatment": "Historical evidence is retained. Promotion decisions require current exact-head evidence and Governor reconciliation."
+    },
+    {
+      "path": "Docs/DEEP_ORGANIZATION_AUDIT_2026-09-22.md",
+      "issue": "States source tree was flat at that date.",
+      "treatment": "Historical snapshot only. CP154 later closed the Public/Private runtime-source migration."
+    }
+  ],
+  "role_counts": {
+    "ROOT_PROJECT_FILE": 6,
+    "CI_WORKFLOW": 3,
+    "ENGINE_CONFIG": 4,
+    "RUNTIME_OR_SUPPORT_DATA": 26,
+    "DOMAIN_PLAN_OR_REGISTRY": 53,
+    "LIVE_CONTROL_OR_EXECUTION": 13,
+    "HISTORICAL_AUDIT_SNAPSHOT": 3,
+    "DOMAIN_PROGRAM_PLAN_WITH_STALE_EMBEDDED_CONTROL_METADATA": 1,
+    "AUTHORITY": 2,
+    "SUPPORTING_DOCUMENTATION": 18,
+    "AUTOMATION_OR_VALIDATION_SCRIPT": 51,
+    "RUNTIME_OR_EDITOR_SOURCE": 71,
+    "SOURCE_ASSET": 400
+  },
+  "core_control_files": [
+    {
+      "path": "Data/ProjectGovernor.json",
+      "role": "AUTHORITY"
+    },
+    {
+      "path": "Data/ProjectGovernor.schema.json",
+      "role": "AUTHORITY"
+    },
+    {
+      "path": "Data/MasterExecutionRoadmap.json",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Data/CompletionWaveMapV1.json",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Data/ProductionExecutionGraph.json",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Data/GameCompletenessMatrix.json",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Data/Production100ReadinessGate.json",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Data/LivingWorldMasterCoverageMapV1.json",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Docs/CURRENT_PROJECT_STATE.md",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Docs/PRODUCTION_COMPLETENESS_MATRIX.md",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Docs/MASTER_EXECUTION_BOARD.md",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Docs/DEVELOPMENT_GATES.md",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Docs/PROJECT_GOVERNOR.md",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Docs/PROJECT_GUARDIAN.md",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Docs/CHECKPOINTS.md",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    }
+  ],
+  "file_index": [
+    {
+      "path": ".gitattributes",
+      "role": "ROOT_PROJECT_FILE"
+    },
+    {
+      "path": ".github/workflows/pre-unreal-validation.yml",
+      "role": "CI_WORKFLOW"
+    },
+    {
+      "path": ".github/workflows/unreal-build-validation.yml",
+      "role": "CI_WORKFLOW"
+    },
+    {
+      "path": ".github/workflows/warehouse-stage.yml",
+      "role": "CI_WORKFLOW"
+    },
+    {
+      "path": ".gitignore",
+      "role": "ROOT_PROJECT_FILE"
+    },
+    {
+      "path": "Config/DefaultEngine.ini",
+      "role": "ENGINE_CONFIG"
+    },
+    {
+      "path": "Config/DefaultGame.ini",
+      "role": "ENGINE_CONFIG"
+    },
+    {
+      "path": "Config/DefaultInput.ini",
+      "role": "ENGINE_CONFIG"
+    },
+    {
+      "path": "Config/DefaultScalability.ini",
+      "role": "ENGINE_CONFIG"
+    },
+    {
+      "path": "Data/AssetPerformanceBudget.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/AudioAssetSourcingWaveV2.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/AutomatedQAPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/BiomePlan.csv",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/BoundedDialoguePlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/CP56MegaIntegrationPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/ChapterAssetStreamingPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/ChapterAtmospherePlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/CharacterMotionPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/CharacterPopulationPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/CharacterProductionMatrix.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/CharacterVisualProductionWaveV7.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/ChronicleMapKnowledgePlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/CinematicPerformancePlanV3.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/CinematicWorldProductionMatrix.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/CompletionWaveMapV1.json",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Data/ContextualSideActivityPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/DeepProjectAudit.json",
+      "role": "HISTORICAL_AUDIT_SNAPSHOT"
+    },
+    {
+      "path": "Data/DialogueIntent.csv",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/EnsembleFilmMissionPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/ExplorationEnvelopePlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/ExternalAssetManifest.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/FellowshipExperienceMegaPassCP56.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/FilmDialogueSourceContext.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/FilmExperiencePlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/FilmSideContentMasterPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/GameCompletenessMatrix.json",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Data/GlobalWarehouseSourceRegistryV2.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/HeroCharacterEquipmentSilhouetteV4.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/JourneyDiscoveryRewardPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/LivingNPCIntelligencePlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/LivingNPCIntelligenceRoadmap.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/LivingWorldEventPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/LivingWorldFeaturePlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/LivingWorldMasterCoverageMapV1.json",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Data/LivingWorldSensoryCompletenessPlanV1.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/MasterExecutionRoadmap.json",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Data/MegaMaterialWorldWaveV1.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/ModernGameLayerPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/MusicCuePlan.csv",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/NPCConversationPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/NPCMemoryPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/NPCRegionalMoodPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/NPCSocialModel.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/OwnerSourceReferenceIndex.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/PIEVerificationEvidence.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/Part1MegaProductionPlan.json",
+      "role": "DOMAIN_PROGRAM_PLAN_WITH_STALE_EMBEDDED_CONTROL_METADATA"
+    },
+    {
+      "path": "Data/Part1ProductionAtlas.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/Part1SonicWorldPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/Part1VisualProductionPass.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/Part1WorldMap.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/PlayerExperiencePacingPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/PlayerLifeProgressionPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/Production100ReadinessGate.json",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Data/ProductionExecutionGraph.json",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Data/ProjectGovernor.json",
+      "role": "AUTHORITY"
+    },
+    {
+      "path": "Data/ProjectGovernor.schema.json",
+      "role": "AUTHORITY"
+    },
+    {
+      "path": "Data/ProjectGuardRules.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/ProjectOwnedProductionAssetInventory.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/RealmDetailSaturationV2.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/ResourceBibleSourceExpansionV1.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/ResourceIntegrationPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/RightsHolderContactPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/SideContentCanonCatalog.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/SourceArchitecturePlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/StoryBeatPlan.csv",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/TrilogyAssetCandidateQueue.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/TrilogyAudioAssetCandidateQueue.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/TrilogyProductionAssetWarehouse.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/TrilogyRingQuestPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/TrilogyWorldFoundationPlanV1.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/VerificationGate.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/VisualPerformanceOptimizationPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/VoiceCuePlan.csv",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/VoiceProductionMasterPlanV1.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/WarehouseAcquisitionBatchV1.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/WarehouseAmbientCGAcquisitionBatchV1.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/WarehouseAmbientCGTrilogyBatchV2.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/WarehouseAudioAcquisitionBatchV1.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/WarehouseKayKitGitHubAcquisitionBatchV1.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/WarehouseKenneyAcquisitionBatchV1.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/WarehouseProviderAccessPolicyV1.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/WarehouseQuaterniusAcquisitionBatchV1.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/WorldActivityMovementPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/WorldCheckpointPlan.csv",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/WorldDressingPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/WorldLifeSaturationPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Data/WorldResourceBankCP54.json",
+      "role": "RUNTIME_OR_SUPPORT_DATA"
+    },
+    {
+      "path": "Data/WorldResourceFloodPlan.json",
+      "role": "DOMAIN_PLAN_OR_REGISTRY"
+    },
+    {
+      "path": "Docs/AUTOMATION_FIRST_DELIVERY.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/Archive/README.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/CHARACTER_ASSET_HANDOFF.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/CHARACTER_PERFORMANCE_STANDARD.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/CHARACTER_SURFACE_PARITY_V1.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/CHECKPOINTS.md",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Docs/CURRENT_PROJECT_STATE.md",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Docs/DATA_PLAN_INDEX.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/DEEP_ORGANIZATION_AUDIT_2026-09-22.md",
+      "role": "HISTORICAL_AUDIT_SNAPSHOT"
+    },
+    {
+      "path": "Docs/DEEP_PROJECT_AUDIT.md",
+      "role": "HISTORICAL_AUDIT_SNAPSHOT"
+    },
+    {
+      "path": "Docs/DEVELOPMENT_GATES.md",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Docs/ENGINEERING_EXECUTION_PATH.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/EXTERNAL_ASSET_SOURCING.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/LIVING_WORLD_AI_BLUEPRINT.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/MASTER_EXECUTION_BOARD.md",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Docs/PART1_FELLOWSHIP_MASTERPLAN.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/PIE_VERIFICATION_SIGNOFF_2026-09-19.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/PRODUCTION_COMPLETENESS_MATRIX.md",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Docs/PROGRAMMER_INPUT_LIVING_NPCS_PART1.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/PROJECT_GOVERNOR.md",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Docs/PROJECT_GUARDIAN.md",
+      "role": "LIVE_CONTROL_OR_EXECUTION"
+    },
+    {
+      "path": "Docs/PROJECT_MEMORY_SYSTEM.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/REPOSITORY_HYGIENE.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/RIGHTS_AND_REFERENCE_OUTREACH.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/STORY_CANON_BIBLE.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/WORLD_DETAIL_LEDGER.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "Docs/WORLD_PRODUCTION_BLUEPRINT.md",
+      "role": "SUPPORTING_DOCUMENTATION"
+    },
+    {
+      "path": "README.md",
+      "role": "ROOT_PROJECT_FILE"
+    },
+    {
+      "path": "SHIRE_PIE_VERIFY.bat",
+      "role": "ROOT_PROJECT_FILE"
+    },
+    {
+      "path": "SHIRE_UPDATE_BUILD_LAUNCH.bat",
+      "role": "ROOT_PROJECT_FILE"
+    },
+    {
+      "path": "Scripts/asset_quality_audit.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/audit_warehouse_inventory.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/ci_build_unreal.cmd",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/ci_collect_unreal_logs.cmd",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/ci_import_production_assets.cmd",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/ci_report_failure.cmd",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/ci_run_project_automation.cmd",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/ci_runtime_chapters.cmd",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/ci_runtime_startup.cmd",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/ci_runtime_state.cmd",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/ci_verify_unreal.cmd",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/ci_wait_for_unreal_editor.cmd",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/ci_warning_debt.cmd",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/classify_unreal_validation.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/deep_project_audit.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/governance_contracts.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/governor_handoff.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/live_governor_status.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/operation_recovery.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/parse_automation_report.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/pre_unreal_validate.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/prepare_msvc_environment.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/prepare_runtime_source_layout.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/production_readiness_audit.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/project_governor.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/repair_ue_engine_content_acl.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/repository_hygiene_audit.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/reset_project_build_intermediates.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/resolve_runtime_python.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/runtime_audit_contracts.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/runtime_smoke.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/source_contracts.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/stage_ambientcg_warehouse.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/stage_kaykit_github_warehouse.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/stage_kenney_warehouse.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/stage_opengameart_audio.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/stage_polyhaven_warehouse.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/stage_quaternius_warehouse.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/test_deep_project_audit.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/test_governance_contracts.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/test_governor_handoff.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/test_live_governor_status.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/test_operation_recovery.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/test_runtime_audit_contracts.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/test_runtime_smoke.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/test_source_contracts.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/test_streaming_cancellation_contract.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/test_warning_debt_guard.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/verify_ue_engine_content.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/warehouse_network.ps1",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "Scripts/warning_debt_guard.py",
+      "role": "AUTOMATION_OR_VALIDATION_SCRIPT"
+    },
+    {
+      "path": "ShireJourney.uproject",
+      "role": "ROOT_PROJECT_FILE"
+    },
+    {
+      "path": "Source/ShireJourney.Target.cs",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/Characters/ShireAmbientNPC.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/Characters/ShireNPC.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/Core/ShireGameMode.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/Core/ShireJourney.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/Prototypes/BlackRiderPrototype.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/Prototypes/FellowshipEnemyPrototype.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/SaveGame/ShireSaveGame.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/Subsystems/ShireAudioSubsystem.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/Subsystems/ShireChapterAssetStreamingSubsystem.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/Subsystems/ShireDialogueSubsystem.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/Subsystems/ShireNPCContextSubsystem.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/Subsystems/ShireQuestSubsystem.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/Subsystems/ShireStoryFlowSubsystem.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/Subsystems/ShireStoryPresentationSubsystem.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/UI/ShireHUD.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/World/BreePrototypeWorldBuilder.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/World/ChapterWorldRouter.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/World/FellowshipChapterWorldBuilder.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/World/FellowshipMythicThreat.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/World/IsengardPrototypeWorldBuilder.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/World/LivingWorldDirector.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/World/ShireEnvironmentalPuzzle.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/World/ShireQuestTrigger.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/World/ShireTraversalChallenge.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/World/ShireWorldEventInteraction.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/World/StoryPresentationDirector.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/World/WorldAmbientMotionActor.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Private/World/WorldDetailCluster.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Characters/ShireAmbientNPC.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Characters/ShireNPC.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Characters/ShirePlayerCharacter.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Core/ShireGameMode.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Core/ShireInteractable.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Core/ShireJourney.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Prototypes/BlackRiderPrototype.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Prototypes/FellowshipEnemyPrototype.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/SaveGame/ShireRouteState.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/SaveGame/ShireSaveGame.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Subsystems/ShireAudioSubsystem.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Subsystems/ShireChapterAssetStreamingSubsystem.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Subsystems/ShireDialogueSubsystem.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Subsystems/ShireNPCContextSubsystem.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Subsystems/ShireQuestSubsystem.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Subsystems/ShireStoryFlowSubsystem.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/Subsystems/ShireStoryPresentationSubsystem.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/UI/ShireHUD.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/World/BreePrototypeWorldBuilder.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/World/ChapterWorldRouter.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/World/FellowshipChapterWorldBuilder.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/World/FellowshipMythicThreat.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/World/IsengardPrototypeWorldBuilder.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/World/LivingWorldDirector.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/World/ShireEnvironmentalPuzzle.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/World/ShireQuestTrigger.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/World/ShireTraversalChallenge.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/World/ShireWorldEventInteraction.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/World/StoryPresentationDirector.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/World/WorldAmbientMotionActor.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/Public/World/WorldDetailCluster.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/README.md",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourney/ShireJourney.Build.cs",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourneyEditor.Target.cs",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourneyEditorTools/Private/ShireJourneyEditorToolsModule.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourneyEditorTools/Private/Tests/ShireQAAutomationTests.cpp",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourneyEditorTools/Public/ShireProductionImportCommandlet.h",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "Source/ShireJourneyEditorTools/ShireJourneyEditorTools.Build.cs",
+      "role": "RUNTIME_OR_EDITOR_SOURCE"
+    },
+    {
+      "path": "SourceAssets/ExternalLicensed/README.md",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Bow.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Cloak.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Sword.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Aragorn/SM_Aragorn_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Arwen/SM_Arwen_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Arwen/SM_Arwen_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Arwen/SM_Arwen_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Bilbo/SM_Bilbo_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Bilbo/SM_Bilbo_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Bilbo/SM_Bilbo_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Boromir/SM_Boromir_Cloak.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Boromir/SM_Boromir_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Boromir/SM_Boromir_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Boromir/SM_Boromir_Shield.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Boromir/SM_Boromir_Sword.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Boromir/SM_Boromir_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Butterbur/SM_Butterbur_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Butterbur/SM_Butterbur_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Butterbur/SM_Butterbur_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_Dwarf_Arm.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_Dwarf_Beard.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_Dwarf_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_Dwarf_Leg.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_Dwarf_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_Elf_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_Elf_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_Elf_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_Human_Arm.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_Human_Boot.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_Human_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_Human_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_Human_Leg.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_Human_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_ProductionAxe.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_ProductionBow.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_ProductionCloak.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_ProductionShield.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Common/SM_ProductionSword.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Elrond/SM_Elrond_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Elrond/SM_Elrond_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Elrond/SM_Elrond_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/FarmerMaggot/SM_FarmerMaggot_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/FarmerMaggot/SM_FarmerMaggot_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/FarmerMaggot/SM_FarmerMaggot_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Frodo/SM_Frodo_Cloak.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Frodo/SM_Frodo_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Frodo/SM_Frodo_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Frodo/SM_Frodo_Satchel.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Frodo/SM_Frodo_Sword.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Frodo/SM_Frodo_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Frodo/SM_Hobbit_Arm.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Frodo/SM_Hobbit_Foot.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Frodo/SM_Hobbit_Leg.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Galadriel/SM_Galadriel_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Galadriel/SM_Galadriel_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Galadriel/SM_Galadriel_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Arm.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Beard.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Boot.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Cloak.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Hat.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Leg.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Staff.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gandalf/SM_Gandalf_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/GateKeeper/SM_GateKeeper_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/GateKeeper/SM_GateKeeper_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/GateKeeper/SM_GateKeeper_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gimli/SM_Gimli_Axe.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gimli/SM_Gimli_Beard.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gimli/SM_Gimli_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gimli/SM_Gimli_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gimli/SM_Gimli_Helmet.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Gimli/SM_Gimli_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Haldir/SM_Haldir_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Haldir/SM_Haldir_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Haldir/SM_Haldir_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Hamfast/SM_Hamfast_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Hamfast/SM_Hamfast_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Hamfast/SM_Hamfast_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Hobbit/SM_Hobbit_Arm.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Hobbit/SM_Hobbit_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Hobbit/SM_Hobbit_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Hobbit/SM_Hobbit_Leg.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Hobbit/SM_Hobbit_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Legolas/SM_Legolas_Bow.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Legolas/SM_Legolas_Cloak.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Legolas/SM_Legolas_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Legolas/SM_Legolas_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Legolas/SM_Legolas_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Legolas/SM_Legolas_WhiteKnife.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Merry/SM_Merry_Cloak.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Merry/SM_Merry_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Merry/SM_Merry_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Merry/SM_Merry_Sword.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Merry/SM_Merry_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Pippin/SM_Pippin_Cloak.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Pippin/SM_Pippin_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Pippin/SM_Pippin_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Pippin/SM_Pippin_Sword.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Pippin/SM_Pippin_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Rosie/SM_Rosie_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Rosie/SM_Rosie_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Rosie/SM_Rosie_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Sam/SM_Sam_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Sam/SM_Sam_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Sam/SM_Sam_Pack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Sam/SM_Sam_Sword.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Sam/SM_Sam_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Saruman/SM_Saruman_Hair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Saruman/SM_Saruman_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Characters/Saruman/SM_Saruman_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Balrog/RegionalMaterials.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Balrog/SM_Balrog_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Balrog/SM_Balrog_Horn.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Balrog/SM_Balrog_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Balrog/SM_Balrog_WhipSegment.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Balrog/SM_Balrog_Wing.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/BlackRider/SM_BlackRider_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/BlackRider/SM_BlackRider_Horse.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/BlackRider/SM_BlackRider_Rider.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/CaveTroll/SM_CaveTroll_Arm.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/CaveTroll/SM_CaveTroll_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/CaveTroll/SM_CaveTroll_Leg.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/CaveTroll/SM_CaveTroll_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/CaveTroll/SM_CaveTroll_Weapon.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Lurtz/RegionalMaterials.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Lurtz/SM_Lurtz_Arm.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Lurtz/SM_Lurtz_Blade.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Lurtz/SM_Lurtz_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Lurtz/SM_Lurtz_Leg.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Lurtz/SM_Lurtz_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Orc/SM_Orc_Arm.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Orc/SM_Orc_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Orc/SM_Orc_Leg.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Orc/SM_Orc_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Orc/SM_Orc_Weapon.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/UrukHai/SM_UrukHai_Arm.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/UrukHai/SM_UrukHai_Head.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/UrukHai/SM_UrukHai_Leg.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/UrukHai/SM_UrukHai_Torso.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/UrukHai/SM_UrukHai_Weapon.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Watcher/RegionalMaterials.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Watcher/SM_Watcher_Core.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Enemies/Watcher/SM_Watcher_Tentacle.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/README.md",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Cloth_Green.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Cloth_Red.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Cloth_Tan.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Earth.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Ember.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Hay.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Iron.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Leaf_Gold.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Leaf_Green.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Leather.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Rope.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_SnowStone.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Stone_Grey.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Stone_Moss.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_WaterBlue.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Wood_Dark.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/Textures/T_Wood_Oak.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/RegionalMaterials.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/SM_AmonHenBrokenSeat.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/SM_AmonHenLookoutStone.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/SM_AmonHenRuin.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/SM_AmonHenStair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/SM_AnduinBoat.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/SM_AnduinBoatRack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/SM_AnduinCampRack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/SM_AnduinCargoPile.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/SM_AnduinDockPier.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/SM_AnduinFishingFrame.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/SM_AnduinOarRack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/SM_AnduinRiverMarker.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/SM_AnduinSupplyBundle.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/SM_ArgonathSentinel.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Anduin/WorldPack.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/BreeMaterials.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeAleCaskRack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeAlleyArch.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeCrateStack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeGate.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeHitchingPost.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeHouse.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeInn.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeInnSign.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeLantern.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeMarketBoard.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeStableRail.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeStall.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeStreetAwning.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeTable.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeTavernBench.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/SM_BreeTradeWagon.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Bree/WorldPack.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/CommonLandscapeMaterials.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonBarrel.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonBedroll.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonBeehive.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonBird.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonBoulderCluster.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonBrazier.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonBroadleafTree.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonBrokenColumn.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonBucket.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonButterfly.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonCairn.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonCampTent.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonCampfireRing.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonCargoCrate.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonChickenCoop.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonCliffWall.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonCookingStand.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonDockSegment.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonDryStoneWall.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonFallenLog.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonFenceGate.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonFernClump.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonFishingRack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonFlowerPlanter.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonFootbridge.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonGoldenTree.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonHandcart.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonHayBale.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonLanternPost.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonLongBench.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonMarketCanopy.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonMarketTable.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonMountainRidge.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonMushroomCluster.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonPathMarker.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonPineTree.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonRabbit.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonReedCluster.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonRiverBank.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonRiverBoat.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonRopeCoil.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonRopePost.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonRuinSlab.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonSackBale.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonScarecrow.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonSignBoard.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonStoneArch.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonStonePile.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonStool.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonStorageChest.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonTerracedHill.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonToolRack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonTreeStump.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonVillageFence.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonVillageSlope.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonWagon.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonWashBasin.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonWaterTrough.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonWheelbarrow.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/SM_CommonWoodPile.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Common/WorldPack.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Isengard/RegionalMaterials.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Isengard/SM_IsengardHoistFrame.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Isengard/SM_IsengardSlagCart.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Isengard/SM_IsengardTrenchGrate.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Isengard/SM_IsengardWaterGate.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Isengard/SM_Isengard_FelledTrunk.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Isengard/SM_Isengard_FurnaceStack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Isengard/SM_Isengard_IndustrialPitRim.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Isengard/SM_Isengard_OrthancCore.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Isengard/SM_Isengard_OrthancSpire.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Isengard/SM_Isengard_ParapetSlab.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/RegionalMaterials.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/SM_LorienBasketRack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/SM_LorienBoatSupplyRack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/SM_LorienCanopyRail.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/SM_LorienGiftTable.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/SM_LorienGoldenBench.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/SM_LorienLantern.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/SM_LorienLeafLantern.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/SM_LorienMirror.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/SM_LorienRootBridge.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/SM_LorienRopeLampLine.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/SM_LorienTalan.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/SM_LorienTalanLadder.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/SM_LorienTreePlatform.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Lothlorien/WorldPack.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/RegionalMaterials.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaArch.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaBrazier.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaBridgePier.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaBridgeSegment.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaBrokenStair.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaCeilingRib.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaChainAnchor.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaChasmButtress.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaCollapsedBeam.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaDebrisCluster.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaDoor.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaFloorSlab.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaGateSegment.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaMineCart.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaMineRail.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaOreCrate.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaPillar.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaReliefPanel.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaRubblePillar.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaSideDoor.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaTallBrazier.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaTombDais.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaTorchNiche.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/SM_MoriaWallPanel.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Moria/WorldPack.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/RegionalMaterials.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/SM_RivBridgeRail.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/SM_RivColumn.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/SM_RivCouncilSeat.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/SM_RivGardenBench.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/SM_RivLampArch.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/SM_RivLibraryArcade.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/SM_RivPlanter.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/SM_RivSmithyRack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/SM_RivWaterBasin.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/SM_RivWaterChannel.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/SM_RivendellArch.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/SM_RivendellBridge.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/SM_RivendellLantern.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/SM_RivendellPavilion.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Rivendell/WorldPack.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Road/RegionalMaterials.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Road/SM_CaradhrasRock.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Road/SM_RoadCampTent.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Road/SM_RoadPackRack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Road/SM_RoadShrine.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Road/SM_RoadSnowMarker.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Road/SM_RoadSupplyRack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Road/SM_RoadSupplySled.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Road/SM_RoadTravelTent.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Road/SM_RoadTravelerCart.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Road/WorldPack.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShBarrel.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShBench.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShCart.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShCartLoaded.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShCottageHouse.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShCrate.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShFarmGate.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShFarmPlough.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShFenceSegment.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShFlowerBox.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShGardenArch.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShGrassClump.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShGroundBlock.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShHaystack.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShHedge.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShHobbitFacade.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShLampPost.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShLantern.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShMailbox.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShMarketStall.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShMillHouse.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShMillWheel.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShOrchardLadder.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShPathStone.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShPicnicCanopy.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShPicnicTable.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShProduceStand.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShPumpWell.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShRoadBlock.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShRock.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShShrub.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShSignpost.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShStoneBridge.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShStoneWall.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShTreeCanopy.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShTreeTrunk.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShTurfMound.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShWashLine.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/SM_ShWell.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/ShireMaterials.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/TX_ShBark.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/TX_ShDirt.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/TX_ShDoorGreen.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/TX_ShGrass.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/TX_ShLeaves.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/TX_ShStone.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/TX_ShWood.tga",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Shire/WorldPack.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Weathertop/RegionalMaterials.mtl",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Weathertop/SM_WeathertopBrokenPillar.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Weathertop/SM_WeathertopCampFire.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Weathertop/SM_WeathertopCampRing.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Weathertop/SM_WeathertopRubblePile.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Weathertop/SM_WeathertopRuinWall.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Weathertop/SM_WeathertopRuinedArch.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Weathertop/SM_WeathertopWatchStone.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Weathertop/SM_WeathertopWindBanner.obj",
+      "role": "SOURCE_ASSET"
+    },
+    {
+      "path": "SourceAssets/Production/World/Weathertop/WorldPack.mtl",
+      "role": "SOURCE_ASSET"
+    }
+  ],
+  "physical_cleanup_gate": {
+    "current_decision": "INDEX_FIRST",
+    "reason": "Logical organization can be made authoritative now without risking broad path churn while W00 exact-head validation is active.",
+    "future_trigger": "Only perform physical Data/Docs restructuring when a concrete maintenance benefit outweighs path/validator/runtime-data churn, and prove it on an exact engine-tested head."
+  },
+  "last_refresh": "2026-09-24"
+}
