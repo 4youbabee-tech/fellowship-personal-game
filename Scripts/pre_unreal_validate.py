@@ -2718,8 +2718,42 @@ if custom_checkout_ok and not retry_contract_ok:
     fail("PG-026: custom exact-commit acquisition must use resilient retries")
 if "uses: actions/upload-artifact@v4" in unreal_ci:
     fail("PG-026: failure logging must not depend on artifact upload while storage quota can mask the primary error")
-if "group: unreal-build-${{ github.repository }}-ue4-device" not in unreal_ci or "cancel-in-progress: false" not in unreal_ci:
-    fail("PG-026: shared Unreal device builds must serialize without interrupting active validation")
+concurrency_group_ok = "group: unreal-build-${{ github.repository }}-ue4-device" in unreal_ci
+cancel_values = [
+    value.strip()
+    for value in re.findall(r"(?m)^\s*cancel-in-progress:\s*(.+?)\s*$", unreal_ci)
+]
+allowed_cancel_values = {
+    "false",
+    "${{ startsWith(github.head_ref, 'acceptance/') }}",
+}
+if (
+    not concurrency_group_ok
+    or len(cancel_values) != 1
+    or cancel_values[0] not in allowed_cancel_values
+):
+    fail(
+        "PG-026: shared Unreal device validation must remain serial; "
+        "only acceptance/* PR heads may cancel superseded runs"
+    )
+if "cancel-in-progress: true" in unreal_ci:
+    fail("PG-026: unconditional shared Unreal cancellation is forbidden")
+
+package_script = read(ROOT / "Scripts" / "ci_package_w00.ps1")
+if (
+    "$proc.WaitForExit()" not in package_script
+    or "$exitCode = $proc.ExitCode" not in package_script
+    or "W00_PACKAGE_EXITCODE_FAIL" not in package_script
+    or "exit $exitCode" not in package_script
+):
+    fail("PG-026: W00 package wrapper must propagate a concrete UAT process exit code")
+
+game_target = read(ROOT / "Source" / "ShireJourney.Target.cs")
+if (
+    'Environment.GetEnvironmentVariable("SHIRE_CI_NO_DEBUGINFO") == "1"' not in game_target
+    or "WindowsPlatform.bUseBundledDbgHelp = false;" not in game_target
+):
+    fail("PG-026: CI Game target must disable bundled DbgHelp rather than silently copying it")
 if "post-job-runner-dedupe.ps1" in unreal_ci or "delete env.RUNNER_TRACKING_ID" in unreal_ci:
     fail("PG-026: validation must not launch detached runner lifecycle cleanup")
 powershell_policy_ok = (

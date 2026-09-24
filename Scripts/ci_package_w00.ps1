@@ -35,7 +35,49 @@ Set-Content -LiteralPath $probe -Value "w00-package-stage-write-probe" -Encoding
 if (-not (Test-Path -LiteralPath $probe -PathType Leaf)) { throw "W00_PACKAGE_PREFLIGHT_FAIL stage write probe missing" }
 Remove-Item -LiteralPath $probe -Force
 Remove-Item -LiteralPath $probeDir -Force
-Write-Host ("W00_PACKAGE_PREFLIGHT_PASS stageWritable=true stage=" + $stage)
+$runnerIdentity = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$dbghelpSource = "C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\ThirdParty\DbgHelp\dbghelp.dll"
+if (-not (Test-Path -LiteralPath $dbghelpSource -PathType Leaf)) {
+    throw "W00_DBGHELP_SOURCE_MISSING path=$dbghelpSource"
+}
+
+$dbghelpStream = $null
+try {
+    $dbghelpStream = [System.IO.File]::Open(
+        $dbghelpSource,
+        [System.IO.FileMode]::Open,
+        [System.IO.FileAccess]::Read,
+        [System.IO.FileShare]::ReadWrite
+    )
+    $null = $dbghelpStream.ReadByte()
+}
+catch {
+    throw ("W00_DBGHELP_SOURCE_READ_FAIL identity=" + $runnerIdentity + " path=" + $dbghelpSource + " error=" + $_.Exception.Message)
+}
+finally {
+    if ($null -ne $dbghelpStream) { $dbghelpStream.Dispose() }
+}
+
+$dbghelpProbeDir = Join-Path $stage "WindowsNoEditor\Engine\Binaries\ThirdParty\DbgHelp"
+New-Item -ItemType Directory -Path $dbghelpProbeDir -Force | Out-Null
+$dbghelpProbePath = Join-Path $dbghelpProbeDir "dbghelp.dll"
+try {
+    [System.IO.File]::WriteAllText($dbghelpProbePath, "shire-w00-dbghelp-destination-probe")
+    if (-not (Test-Path -LiteralPath $dbghelpProbePath -PathType Leaf)) {
+        throw "exact destination probe was not created"
+    }
+    $dbghelpDestinationOwner = (Get-Acl -LiteralPath $dbghelpProbeDir).Owner
+    Remove-Item -LiteralPath $dbghelpProbePath -Force
+}
+catch {
+    throw ("W00_DBGHELP_DESTINATION_WRITE_FAIL identity=" + $runnerIdentity + " path=" + $dbghelpProbePath + " error=" + $_.Exception.Message)
+}
+
+$windowsProbeRoot = Join-Path $stage "WindowsNoEditor"
+if (Test-Path -LiteralPath $windowsProbeRoot) {
+    Remove-Item -LiteralPath $windowsProbeRoot -Recurse -Force
+}
+Write-Host ("W00_PACKAGE_PREFLIGHT_PASS stageWritable=true dbghelpSourceReadable=true dbghelpDestinationWritable=true identity=" + $runnerIdentity + " destinationOwner=" + $dbghelpDestinationOwner + " stage=" + $stage)
 
 $argList = @(
     "BuildCookRun",
@@ -76,13 +118,28 @@ while (-not $proc.HasExited) {
     $proc.Refresh()
 }
 
+$proc.WaitForExit()
+$proc.Refresh()
+$exitCode = $proc.ExitCode
+if ($null -eq $exitCode) {
+    Write-Host "W00_PACKAGE_EXITCODE_FAIL exitCode=<null>"
+    exit 97
+}
+$exitCode = [int]$exitCode
+
 if (Test-Path $stdout) { Get-Content -LiteralPath $stdout | Set-Content -LiteralPath $log -Encoding UTF8 }
 if (Test-Path $stderr) { Get-Content -LiteralPath $stderr | Add-Content -LiteralPath $log -Encoding UTF8 }
 
-if ($proc.ExitCode -ne 0) {
-    Write-Host ("W00_PACKAGE_FAIL exit=" + $proc.ExitCode)
-    if (Test-Path $log) { Get-Content -LiteralPath $log -Tail 250 }
-    exit $proc.ExitCode
+if ($exitCode -ne 0) {
+    Write-Host ("W00_PACKAGE_FAIL exit=" + $exitCode)
+    if (Test-Path $log) {
+        $dbghelpFailure = @(Select-String -LiteralPath $log -Pattern 'DbgHelp\\dbghelp\.dll' -ErrorAction SilentlyContinue)
+        if ($dbghelpFailure.Count -gt 0) {
+            Write-Host ("W00_DBGHELP_STAGE_FAILURE_OBSERVED matches=" + $dbghelpFailure.Count + " identity=" + $runnerIdentity)
+        }
+        Get-Content -LiteralPath $log -Tail 250
+    }
+    exit $exitCode
 }
 
 $exe = Join-Path $archive "WindowsNoEditor\ShireJourney.exe"

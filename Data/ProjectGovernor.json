@@ -5312,27 +5312,31 @@
     {
       "id": "KF-W00-DBGHELP-001",
       "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
-      "symptom": "UE4 BuildCookRun packaging fails copying Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll with Access denied under self-hosted Windows runner.",
+      "symptom": "UE4 BuildCookRun reaches NonUFS staging then fails copying Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll to the packaged staging destination with Access denied on the self-hosted Windows runner.",
       "evidence": [
-        "Unreal #627: cook/pak succeeded, dbghelp copy failed after staging retries",
-        "Unreal #630: explicit dbghelp copy preflight reproduced UnauthorizedAccessException within seconds"
+        "Unreal #627: cook/pak succeeded, dbghelp copy failed after staging retries.",
+        "Unreal #630: explicit dbghelp copy preflight reproduced UnauthorizedAccessException.",
+        "Unreal #643 on d94b7fe7797e9ef417b7dad2abde26dfc279e700: stage-root preflight passed, UnrealPak exited 0, then SafeCopyFile repeatedly denied the destination Saved/W00Stage-36038731060-1/WindowsNoEditor/Engine/Binaries/ThirdParty/DbgHelp/dbghelp.dll under the NetworkService runner context.",
+        "Unreal #643: -nodebuginfo did not suppress bundled DbgHelp staging; UAT ended ExitCode=1 / BUILD FAILED."
       ],
-      "rejected_workaround": "Changing staging directory alone does not remove the permission boundary.",
-      "permanent_policy": "Acceptance packaging uses BuildCookRun -nodebuginfo so debug-file staging is omitted. Preflight tests staging writability only.",
-      "reopen_rule": "Reopen only if a later exact-head package log fails for a different proven reason or still requests dbghelp.dll despite -nodebuginfo."
+      "rejected_workaround": "Do not silently copy/replace dbghelp.dll, change the Data contract, or treat -nodebuginfo as sufficient.",
+      "permanent_policy": "When SHIRE_CI_NO_DEBUGINFO=1, ShireJourney.Target.cs sets WindowsPlatform.bUseBundledDbgHelp=false. ci_package_w00.ps1 separately proves source readability and exact destination writability before UAT, then waits for and propagates a concrete UAT exit code.",
+      "reopen_rule": "Reopen if a fresh exact-head package still requests bundled dbghelp.dll, the exact destination preflight fails, or UAT fails for another demonstrated staging cause.",
+      "root_cause": "The CI package policy relied on -nodebuginfo, but UE4.27 Windows Game packaging still stages its bundled DbgHelp copy unless the Game TargetRules disable it. The runner can write the stage root, yet the exact bundled-DLL destination copy is denied. The wrapper also failed to propagate that UAT failure because its observed process ExitCode was blank."
     },
     {
       "id": "KF-W00-RUNTIME-DATA-001",
       "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
       "symptom": "Verify packaged Runtime Data JSON reports MISSING_RUNTIME_DATA for all 37 JSON RuntimeDependencies after package step succeeds.",
       "evidence": [
-        "Runner evidence: Verify packaged Runtime Data JSON exits code 2 with repeated MISSING_RUNTIME_DATA entries.",
-        "ShireJourney.Build.cs declares 37 project-root Data JSON RuntimeDependencies.",
-        "Runtime C++ loaders use FPaths::ProjectDir()/Data/... paths."
+        "Earlier runner evidence reported 37/37 MISSING_RUNTIME_DATA after an incomplete package attempt.",
+        "ShireJourney.Build.cs declares 37 project-root Data JSON RuntimeDependencies as StagedFileType.NonUFS.",
+        "Runtime C++ loaders use FPaths::ProjectDir()/Data/... paths.",
+        "Unreal #643 again reported 37 missing files, but its UAT log had already failed during NonUFS staging on dbghelp.dll; therefore that 37/37 result is downstream evidence only and does not reopen the NonUFS contract yet."
       ],
       "root_cause": "RuntimeDependencies were declared without an explicit loose staging type, while runtime code requires project-relative external files.",
       "permanent_policy": "All project-root runtime Data JSON dependencies are staged as StagedFileType.NonUFS and verified in packaged output before W01 opens.",
-      "reopen_rule": "Reopen only if fresh exact-head packaging still omits files or packaged startup proves a path mismatch."
+      "reopen_rule": "Reopen only if a fresh package reaches UAT ExitCode=0 and the packaged-data verifier still omits files, reports invalid JSON, or packaged startup proves a path mismatch."
     },
     {
       "id": "KF-W00-PG147-001",
@@ -5341,10 +5345,34 @@
       "root_cause": "Validator matched only the legacy one-argument RuntimeDependencies.Add spelling and was stale relative to the packaging contract.",
       "permanent_policy": "PG-147 uses structural NonUFS dependency detection and regression tests reject legacy/untyped and UFS forms.",
       "reopen_rule": "Reopen only if PG-147 misclassifies a syntactically valid explicit NonUFS dependency or misses a real unstaged runtime JSON."
+    },
+    {
+      "id": "KF-W00-PACKAGE-EXIT-001",
+      "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
+      "symptom": "Unreal #643 logged UAT ExitCode=1 / BUILD FAILED, but the GitHub package step was marked success and allowed the Runtime Data verifier to run.",
+      "evidence": [
+        "ci_package_w00.ps1 printed W00_PACKAGE_FAIL exit= with a blank value on Unreal #643.",
+        "The following packaged-data step ran and failed 37/37 missing instead of the package step stopping the job."
+      ],
+      "root_cause": "The Start-Process wrapper read and re-exited a blank process ExitCode without a final WaitForExit/Refresh/null guard, so the wrapper did not reliably transmit the UAT failure.",
+      "permanent_policy": "After the heartbeat loop, ci_package_w00.ps1 calls WaitForExit, Refresh, rejects a null ExitCode with an explicit nonzero code, and exits with the concrete UAT code before any downstream acceptance verifier can run.",
+      "reopen_rule": "Reopen if any UAT nonzero result is followed by a successful package step or by execution of downstream packaged acceptance gates."
+    },
+    {
+      "id": "KF-W00-PG026-001",
+      "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
+      "symptom": "Pre-Unreal #808 rejected the acceptance-branch superseded-run cancellation policy because PG-026 required the literal cancel-in-progress: false.",
+      "evidence": [
+        "Pre-Unreal #808: ERROR: PG-026: shared Unreal device builds must serialize without interrupting active validation.",
+        "The workflow uses cancel-in-progress: ${{ startsWith(github.head_ref, 'acceptance/') }}, which is intentionally scoped to acceptance/* PR heads."
+      ],
+      "root_cause": "The validator encoded the old literal workflow spelling instead of the current policy semantics.",
+      "permanent_policy": "PG-026 accepts either fully serial cancellation=false or the exact acceptance/* head_ref expression; unconditional true or any broader expression is rejected.",
+      "reopen_rule": "Reopen if a non-acceptance branch can cancel an active shared-device run or the exact acceptance-only expression is rejected."
     }
   ],
   "w00_acceptance_fast_path": {
-    "status": "IMPLEMENTED_RUNNER_PROOF_PENDING",
+    "status": "FIX_APPLIED_RUNNER_PROOF_PENDING",
     "mode_contract": {
       "full": "C++/Build.cs/Config/runtime-contract deltas run the full UE4 chain.",
       "acceptance": "Packaging/verifier/acceptance-script deltas inherit parent core Unreal proof and run only package/data/startup/hardware gates.",
@@ -5360,6 +5388,6 @@
       "Summarize and guard runtime warning debt"
     ],
     "superseded_run_policy": "On acceptance/* branches, newer commits cancel older in-progress runs sharing the UE4 device concurrency group. Non-acceptance branches remain serialized.",
-    "current_boundary": "Fast-path code is committed; runner proof is still required before calling it operationally accepted."
+    "current_boundary": "Head d94b7fe7797e9ef417b7dad2abde26dfc279e700 / Unreal #643 supplies successful core Unreal steps through warning debt but failed later in UAT staging. The next acceptance-only head may inherit that core proof only if Pre-Unreal passes and the classifier recognizes the delta as acceptance-safe."
   }
 }

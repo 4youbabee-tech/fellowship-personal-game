@@ -54,6 +54,37 @@ function Test-ParentWholeWorkflowGreen([string]$ParentSha) {
     }
 }
 
+function Test-CiPackagingTargetOnlyDelta([string]$GitExe, [string]$ParentSha, [string]$HeadSha) {
+    $path = "Source/ShireJourney.Target.cs"
+    $diff = @(& $GitExe diff --unified=0 $ParentSha $HeadSha -- $path)
+    if ($LASTEXITCODE -ne 0) { return $false }
+
+    $changedLines = @($diff | Where-Object {
+        $_ -match '^[+-]' -and $_ -notmatch '^(---|\+\+\+)'
+    })
+    if ($changedLines.Count -eq 0) { return $false }
+
+    $hasCiGuard = $false
+    $hasDbgHelpPolicy = $false
+    foreach ($line in $changedLines) {
+        $body = $line.Substring(1).Trim()
+        if ($body -eq 'if (Environment.GetEnvironmentVariable("SHIRE_CI_NO_DEBUGINFO") == "1")') {
+            $hasCiGuard = $true
+            continue
+        }
+        if ($body -eq "WindowsPlatform.bUseBundledDbgHelp = false;") {
+            $hasDbgHelpPolicy = $true
+            continue
+        }
+        if ($body -in @("", "using System;", "{", "}")) {
+            continue
+        }
+        return $false
+    }
+
+    return $hasCiGuard -and $hasDbgHelpPolicy
+}
+
 function Test-ParentCoreUnrealGreen([string]$ParentSha) {
     if (-not $env:GH_TOKEN) { return $false }
 
@@ -131,6 +162,7 @@ $safeExact = @(
 $acceptanceExact = @(
     ".github/workflows/unreal-build-validation.yml",
     "Scripts/classify_unreal_validation.ps1",
+    "Scripts/pre_unreal_validate.py",
     "Scripts/ci_package_w00.ps1",
     "Scripts/ci_package_w00.cmd",
     "Scripts/verify_packaged_runtime_data.ps1",
@@ -148,6 +180,13 @@ foreach($p in $changed){
         continue
     }
     if($acceptanceExact -contains $n){
+        $acceptanceTouched += $n
+        continue
+    }
+    if(
+        $n -eq "Source/ShireJourney.Target.cs" -and
+        (Test-CiPackagingTargetOnlyDelta $git $parentSha $env:TARGET_SHA)
+    ){
         $acceptanceTouched += $n
         continue
     }
