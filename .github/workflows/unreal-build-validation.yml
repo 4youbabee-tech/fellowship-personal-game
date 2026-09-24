@@ -111,9 +111,14 @@ jobs:
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\classify_unreal_validation.ps1"'
 
       - name: Governance/docs-only Unreal fast path
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'false'
+        if: env.SHIRE_UNREAL_MODE == 'inherit'
         shell: cmd
         run: 'echo UNREAL_FAST_PATH_PASS head=%TARGET_SHA% parent=%SHIRE_UNREAL_PARENT_SHA% reason=%SHIRE_UNREAL_DECISION_REASON%'
+
+      - name: Acceptance-only Unreal fast path
+        if: env.SHIRE_UNREAL_MODE == 'acceptance'
+        shell: cmd
+        run: 'echo UNREAL_ACCEPTANCE_FAST_PATH head=%TARGET_SHA% parent=%SHIRE_UNREAL_PARENT_SHA% reason=%SHIRE_UNREAL_DECISION_REASON%'
 
       - name: Prepare migrated runtime source layout
         if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
@@ -126,12 +131,12 @@ jobs:
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\repair_ue_engine_content_acl.ps1"'
 
       - name: Verify Unreal 4.27.2 and project
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_verify_unreal.cmd"'
 
       - name: Wait safely for Unreal Editor to close
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_wait_for_unreal_editor.cmd"'
 
@@ -186,31 +191,31 @@ jobs:
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_warning_debt.cmd"'
 
       - name: Build cook stage and archive real Windows package
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_package_w00.cmd"'
 
       - name: Verify packaged Runtime Data JSON payload
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_packaged_runtime_data.ps1"'
 
       - name: Launch and observe packaged executable
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_packaged_startup.ps1"'
 
       - name: Capture runner hardware acceptance boundary
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true'
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\capture_runner_hardware.ps1"'
 
       - name: Collect Unreal build logs
-        if: always() && env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
+        if: always() && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true')
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_collect_unreal_logs.cmd" "${{ job.status }}"'
 
       - name: Report failure log location
-        if: failure() && env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
+        if: failure() && (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true')
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_report_failure.cmd"'
