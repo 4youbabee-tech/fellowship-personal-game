@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "plan_id": "W00_FINAL_CLOSURE_WAVE_V1",
+  "status": "ACTIVE_RUNNER_EXECUTION_PENDING",
+  "authority": "Data/ProjectGovernor.json",
+  "base_green_head": "31b6e1c9958b6121ec7a00c07e038fec4ab36408",
+  "purpose": "Close every remaining automatable W00 acceptance blocker in one large evidence wave so the deferred W01-W11 production program can start on an unobstructed foundation.",
+  "machine_green_baseline": {
+    "pre_unreal": "#791 SUCCESS",
+    "unreal": "#626 attempt 2 SUCCESS",
+    "warehouse": "#207 SUCCESS",
+    "interpretation": "Architectural/root-repair loop is closed. This wave is acceptance expansion, not another broad repair wave."
+  },
+  "automated_gates": [
+    {
+      "id": "W00-PKG-001",
+      "name": "Real Windows BuildCookRun package",
+      "evidence": "ci_package_w00.cmd / RunUAT BuildCookRun",
+      "pass": "WindowsNoEditor/ShireJourney.exe exists and UAT exits 0"
+    },
+    {
+      "id": "W00-DATA-001",
+      "name": "Packaged runtime Data JSON staging and syntax",
+      "evidence": "verify_packaged_runtime_data.ps1",
+      "pass": "All RuntimeDependencies declared by ShireJourney.Build.cs exist in staged package and parse as JSON"
+    },
+    {
+      "id": "W00-BOOT-001",
+      "name": "Packaged executable startup",
+      "evidence": "verify_packaged_startup.ps1",
+      "pass": "Packaged game emits startup/grounding/route markers and survives observation window without fatal/assert/ensure"
+    },
+    {
+      "id": "W00-HW-001",
+      "name": "Runner hardware snapshot",
+      "evidence": "capture_runner_hardware.ps1",
+      "pass": "CPU/RAM/GPU/OS snapshot captured; this is not DEVICE_TESTED unless runner is explicitly confirmed as target laptop"
+    },
+    {
+      "id": "W00-REG-001",
+      "name": "Existing exact-head regression suite",
+      "evidence": "Pre #791 + Unreal #626 attempt2 + Warehouse #207 baseline, plus fresh PR validation after acceptance changes",
+      "pass": "Compile/import/Automation/startup/chapters/state/warning gates remain green after acceptance additions"
+    }
+  ],
+  "audio_boundary": {
+    "status": "CONTENT_PREPARATION_ACTIVE_NOT_YET_ACCEPTED",
+    "scripted_voice": "103/103 registered story VO generated externally",
+    "p1c01_scripted": "25/25 generated externally",
+    "p1c01_ambient_barks": "58/58 generated externally",
+    "rule": "Do not block packaged-data closure on absent final audio masters, but do not call W00 audio accepted until a prepared complete P1C01 bank is imported and real playback occurs without -NoSound.",
+    "next": "Continue complete-bank source/master preparation in parallel; import only complete prepared families, not random partial audio."
+  },
+  "human_only_gates": [
+    "chapter-specific PIE traversal/collision review",
+    "visual composition/beauty review",
+    "pacing/fun/friction review",
+    "NPC believability/social-life review",
+    "real listening/mix review once audio bank is integrated"
+  ],
+  "w01_open_rule": "W01 may open after automated final-closure gates are green and the Governor explicitly separates any remaining human-only acceptance from architectural repair. No broad repair wave may be invented without concrete regression evidence.",
+  "organization_inputs": [
+    "Data/WholeGameAZCompletenessMapV1.json",
+    "Data/ProjectFileOrganizationMapV1.json",
+    "Data/LivingWorldMasterCoverageMapV1.json",
+    "Data/CompletionWaveMapV1.json"
+  ],
+  "next_large_program": "W01-W06 Part I large production build, followed by W07-W11 Part II/III and trilogy final integration.",
+  "last_refresh": "2026-09-24"
+}
