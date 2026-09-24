@@ -26,7 +26,7 @@ jobs:
       - Windows
       - X64
       - ue4-27
-    timeout-minutes: 55
+    timeout-minutes: 90
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
@@ -184,6 +184,26 @@ jobs:
         if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_warning_debt.cmd"'
+
+      - name: Build cook stage and archive real Windows package
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
+        shell: cmd
+        run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_package_w00.cmd"'
+
+      - name: Verify packaged Runtime Data JSON payload
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_packaged_runtime_data.ps1"'
+
+      - name: Launch and observe packaged executable
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_packaged_startup.ps1"'
+
+      - name: Capture runner hardware acceptance boundary
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\capture_runner_hardware.ps1"'
 
       - name: Collect Unreal build logs
         if: always() && env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
