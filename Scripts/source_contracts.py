@@ -59,3 +59,14 @@ def signal_precedes_member_mutation(
     signal_position = cleaned.find(signal_expression)
     mutation_position = first_member_assignment_position(source, member_names)
     return signal_position >= 0 and mutation_position >= 0 and signal_position < mutation_position
+
+
+def has_nonufs_runtime_dependency(build_cs: str, relative_path: str) -> bool:
+    """Return True only when a project-relative runtime file is staged loose as NonUFS."""
+    normalized = relative_path.replace("\\", "/").lstrip("/")
+    pattern = re.compile(
+        r'RuntimeDependencies\.Add\(\s*"\$\(ProjectDir\)/'
+        + re.escape(normalized)
+        + r'"\s*,\s*StagedFileType\.NonUFS\s*\)\s*;'
+    )
+    return pattern.search(build_cs) is not None
