@@ -1,3 +1,12 @@
+## 2026-09-25 - W01 P1C01 drop 1: living-world ownership/budget convergence
+
+- **Ambient population ownership:** IMPLEMENTED in source — P1C01 builder duplicate `AShireAmbientNPC` spawning removed; `LivingWorldDirector` is the ambient crowd owner and uses the existing pool.
+- **Story ownership boundary:** PRESERVED — named/story NPCs, quest triggers and canonical postconditions remain outside ambient crowd ownership.
+- **Micro-event budget authority:** IMPLEMENTED — `LivingWorldEventPlan#region_budgets` is sole cap/cadence source; `WorldLifeSaturationPlan` no longer overrides those values.
+- **P1C01 playful life role:** PRESERVED through director-owned `PlayRunner` role.
+- **Validation state:** STATIC-VALIDATED only; Pre-Unreal/UE4.27 compile/runtime pending. Do not promote to COMPILE-TESTED/PIE-TESTED yet.
+- **Next W01 production stage after engine-green:** terrain/geography foundation, then Hobbiton/Bag End architecture, while sensory/reactive notes remain queued inside their ordered stages.
+
 ## 2026-09-25 - W00 closure / W01 kickoff
 
 - **W00 repair lane:** CLOSED on `develop@809e56a9e1dc4b453e02a0b04b6875a71df21933`.
