@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "queue_id": "PRIVATE_OFFLINE_ASSET_INTAKE_QUEUE_V1",
+  "status": "READY_FOR_OWNER_BATCH_INTAKE",
+  "authority": "Data/ProjectGovernor.json / DEC-037 / Data/PrivateOfflineAssetPolicyV1.json",
+  "target_project": "Shire Journey UE4.27.2 private offline experience",
+  "default_classification": "PRIVATE_OFFLINE_ONLY",
+  "distributable_by_default": false,
+  "categories": [
+    "MATERIAL",
+    "STATIC_MESH",
+    "SKELETAL_MESH",
+    "ANIMATION",
+    "CHARACTER",
+    "CREATURE",
+    "FAUNA",
+    "ARCHITECTURE",
+    "PROP",
+    "AUDIO_SFX",
+    "AMBIENCE",
+    "VOICE",
+    "MUSIC",
+    "VFX",
+    "UI",
+    "REFERENCE"
+  ],
+  "required_fields": [
+    "intake_id",
+    "source_url_or_origin",
+    "category",
+    "private_use_state"
+  ],
+  "optional_fields": [
+    "provider",
+    "item_name",
+    "known_license",
+    "format",
+    "expected_use",
+    "notes",
+    "local_filename",
+    "hash",
+    "size_bytes"
+  ],
+  "state_machine": [
+    "SUBMITTED",
+    "REVIEWED",
+    "PRIVATE_OFFLINE_STAGING",
+    "PRIVATE_OFFLINE_STAGED",
+    "INTAKE_QC",
+    "PRIVATE_OFFLINE_READY_FOR_IMPORT",
+    "PRIVATE_OFFLINE_IMPORTED",
+    "PRIVATE_OFFLINE_INTEGRATED",
+    "REJECTED_TECHNICAL",
+    "BLOCKED_ACCESS"
+  ],
+  "rules": [
+    "Commercial-license uncertainty does not by itself block PRIVATE_OFFLINE_ONLY local experimentation.",
+    "Do not promote any private-only asset into the DISTRIBUTABLE_FRAMEWORK lane without separate rights clearance.",
+    "No authentication/paywall/DRM/anti-bot bypass.",
+    "Animated production assets accepted by the project end as FBX; production textures use PNG/TGA.",
+    "Heavy runtime assets remain soft-referenced and asynchronously loaded when integrated.",
+    "Do not claim READY/INTEGRATED/ACCEPTED states without the evidence required by the project Governor."
+  ],
+  "items": []
+}
