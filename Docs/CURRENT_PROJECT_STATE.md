@@ -1,3 +1,13 @@
+## 2026-09-25 - Big world build campaign: C2 clean runtime lane active
+
+- Warehouse/Master Resource Bible expansion merged to `develop` as `4980c3c8b1f4660863940a58e052dcf8095772cf`.
+- Superseded conflicted C2 v1 branch is being replaced by clean runtime branch `production/w01-p1c01-foliage-wind-v2` based exactly on that merged baseline.
+- C2 v2 carries only the intended runtime material implementation/validator/plan plus synchronized governance/docs; it does not regress the global Warehouse/DEC-037/038/039 baseline.
+- Near/mid foliage uses the UE4.27 Engine `SimpleGrassWind` material function with parameterized intensity/speed/weight. Far foliage uses `M_ProductionFoliageFar` with no WPO.
+- The previously observed UE4.27 failures are preserved as known-failure contracts: nonexistent `UMaterialExpressionSimpleGrassWind` and non-linkable `UMaterialExpressionDistanceCullFade` must not return.
+- Runtime scope remains P1C01 until Gate 6/7. Whole-game preparation/build inventory proceeds in parallel under `BigProductionBuildLaunchV1.json`.
+- Evidence boundary: C2 v2 is STATIC-VALIDATED pending exact-head Pre-Unreal + UE4.27.2 core/production-import proof.
+
 ## 2026-09-25 - Master External Resource Bible audited and adopted
 
 - Audited the uploaded 68-page `SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25`, containing 225 classified external sources/tools.
