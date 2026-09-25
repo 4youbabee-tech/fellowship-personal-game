@@ -233,7 +233,13 @@ Set-Location $env:GITHUB_WORKSPACE
 $git = Get-GitExe
 if (-not $git) { Set-Mode "full" "git-unavailable-fail-safe" ""; exit 0 }
 
-$parentSha = (& $git rev-parse "HEAD^").Trim()
+$parentSha = ""
+if ($env:BASE_SHA) {
+    $parentSha = $env:BASE_SHA.Trim()
+}
+if (-not $parentSha) {
+    $parentSha = (& $git rev-parse "HEAD^").Trim()
+}
 if (-not $parentSha) { Set-Mode "full" "parent-unavailable-fail-safe" ""; exit 0 }
 
 $changed = @(& $git diff --name-only $parentSha $env:TARGET_SHA)
