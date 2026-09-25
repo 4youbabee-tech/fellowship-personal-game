@@ -2520,6 +2520,45 @@ for symbol in ["SM_CommonMountainRidge", "SM_CommonCliffWall", "SM_CommonRiverBa
     if symbol not in fellowship_world_cpp:
         fail(f"PG-049 Fellowship terrain runtime reference missing: {symbol}")
 
+# PG-163: P1C01 production geography must stay instanced, bounded and story-safe.
+pg163_shire_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
+pg163_shire_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+for pg163_symbol in [
+    "GeographyHillInstances",
+    "GeographySlopeInstances",
+    "GeographyRiverBankInstances",
+    "SpawnGeographyFoundationPass",
+    "GeographyHillInstances->AddInstance",
+    "GeographySlopeInstances->AddInstance",
+    "GeographyRiverBankInstances->AddInstance",
+    "GeographyHillInstances->SetCullDistances",
+    "GeographySlopeInstances->SetCullDistances",
+    "GeographyRiverBankInstances->SetCullDistances",
+    'TEXT("ShireWorldFoundation: geography-pass',
+]:
+    if pg163_symbol not in (pg163_shire_h + pg163_shire_cpp):
+        fail(f"PG-163 P1C01 geography foundation invariant missing: {pg163_symbol}")
+
+for pg163_actor_spawn in [
+    "SpawnShape(ProductionCommonTerracedHillMesh",
+    "SpawnShape(ProductionCommonVillageSlopeMesh",
+    "SpawnShape(ProductionCommonRiverBankMesh",
+]:
+    if pg163_actor_spawn in pg163_shire_cpp:
+        fail(f"PG-163 repeated geography regressed to actor spawning: {pg163_actor_spawn}")
+
+pg163_perf = json.loads(read(ROOT / "Data" / "AssetPerformanceBudget.json"))
+if pg163_perf.get("p1c01_world_foundation", {}).get("status") != "IMPLEMENTED_PENDING_TARGET_DEVICE_MEASUREMENT":
+    fail("PG-163 P1C01 geography performance evidence boundary changed")
+
+pg163_foundation = json.loads(read(ROOT / "Data" / "TrilogyWorldFoundationPlanV1.json"))
+pg163_slice = pg163_foundation.get("p1c01_vertical_slice", {})
+if pg163_slice.get("status") != "DROP_A_TERRAIN_GEOGRAPHY_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-163 P1C01 world-foundation drop status changed")
+if pg163_slice.get("ordered_drops", [None])[0] != "A_TERRAIN_GEOGRAPHY_FOUNDATION":
+    fail("PG-163 P1C01 ordered production sequence changed")
+
+
 # PG-048: resource sources, service partners and rights holders must not be conflated.
 rights_plan_path = ROOT / "Data" / "RightsHolderContactPlan.json"
 rights_plan = {}
