@@ -670,7 +670,9 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 
 **Permanent rule:** source guards must inspect the smallest structural region that represents the forbidden behavior. A guard may not ban the exact explicit path it is supposed to require.
 
-**Fix:** PG-161 now isolates only the ordinary safe-governance block and checks that the classifier script is absent there, while separately requiring the explicit validation-policy-only marker.
+**Follow-up evidence:** Pre-Unreal #875 showed the first correction still anchored at the first `Docs/` test in the helper function, so its text slice crossed later declarations and again produced the same false positive.
 
-**Evidence boundary:** fix committed; exact-head Pre-Unreal rerun required before calling PG-164 proven.
+**Fix:** PG-161 now anchors its search inside the main `foreach($p in $changed)` classification loop, isolates only the ordinary safe-governance branch there, and separately requires the explicit validation-policy-only marker.
+
+**Evidence boundary:** second correction committed; exact-head Pre-Unreal rerun required before calling PG-164 proven.
 
