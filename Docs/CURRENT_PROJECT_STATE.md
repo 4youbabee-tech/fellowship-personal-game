@@ -1,3 +1,13 @@
+## 2026-09-26 - P1C01 downstream production stages prepared
+
+- **D prepared:** low-cost lighting/sky/fog/water plan with chapter-state ownership and no density escalation.
+- **E prepared:** character presentation plan with FBX-only animated intake, soft references, async loading, retarget/LOD/shadow evidence and pooling boundaries.
+- **F prepared:** Living Shire plan extends `LivingWorldDirector`, `ShireNPCContextSubsystem`, `ShireQuestSubsystem`, bounded dialogue/memory/social plans and pooled fauna without a parallel AI brain or per-NPC global polling.
+- **G prepared:** quest/cinematic/audio polish plan preserves DEC-038 locked beats, bounded control loss, original dialogue, save/route continuity and audio subsystem ownership.
+- **H prepared:** target-device profiling plan locks the i7 Gen6 / 8GB / ~2GB VRAM / DX11 / 720p Low-Medium / 30 FPS floor evidence route.
+- **Gate 6/7 prepared:** `Data/P1C01Gate67AcceptanceChecklistV1.json` separates static/compile/PIE/device/visual/performance proof so no preparation state can be mislabeled as acceptance.
+- **Runtime remains serialized:** these are preparation artifacts only; PR #80 C2 is still the sole runtime-changing lane.
+
 ## 2026-09-26 - Massive production preparation resumed without opening another runtime lane
 
 - **Preparation branch:** `planning/whole-game-production-prep-v2` continues from PR #81 preparation head and is intentionally not opened as another runtime-changing PR.
