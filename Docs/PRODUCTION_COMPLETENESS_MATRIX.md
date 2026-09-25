@@ -1,3 +1,12 @@
+## 2026-09-26 - CI capacity / red-error root repair
+
+- **REQ-STABILITY-002 / DEC-040:** IMPLEMENTED, exact-head proof pending.
+- **Hosted polling:** removed; Pre-Unreal no longer consumes a 20-minute ubuntu-latest schedule.
+- **UE4 device queue:** preparation/warehouse/private-offline/docs-only paths are filtered from Unreal Build Validation.
+- **Stale queue recovery:** the sole active `production/*` runtime lane may preempt superseded work in the shared UE4 device concurrency group.
+- **Runner continuity:** watchdog installer now supports `-KeepRunnerAwakeOnAC` and restart/battery/wake-safe task settings.
+- **Acceptance state:** STATIC-VALIDATED. Fresh exact-head repository-step Pre-Unreal + UE4.27.2 green evidence is still mandatory before C2 merge.
+
 ## 2026-09-25 - CI evidence boundary
 
 - **Pre-Unreal #959/#960:** ZERO-STEP / LOG-BLOB-MISSING infrastructure incidents; repository cause unproven.

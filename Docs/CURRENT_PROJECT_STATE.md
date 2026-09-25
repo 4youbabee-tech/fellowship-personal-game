@@ -1,3 +1,11 @@
+## 2026-09-26 - CI root repair for large-production continuity
+
+- **Owner directive:** red CI is now treated as a production blocker regardless of whether the cause is repository code, hosted infrastructure, runner availability or stale queue state.
+- **Concrete evidence:** PR #80 Pre-Unreal #963 failed twice with zero steps + BlobNotFound logs; PR #81 #966 reproduced the same shape twice. Unreal #776 from merged PR #79 remained queued while #801 was pending behind the shared device lane.
+- **Root repair implemented:** remove the 20-minute Pre-Unreal schedule, move Pre-Unreal to the supervised Windows UE4 runner, isolate preparation-only paths from Unreal Build Validation, and let the sole active production/* lane preempt stale shared-device work.
+- **Runner availability hardening:** `install_runner_watchdog.ps1 -KeepRunnerAwakeOnAC` can disable AC standby/hibernate during build windows and installs restart/battery/wake-safe task settings.
+- **Evidence boundary:** STATIC-VALIDATED only until fresh exact-head Pre-Unreal + UE4.27.2 runs execute real repository steps and pass. No C2 runtime/C++ change was made by this CI repair.
+
 ## 2026-09-25 - GitHub Pre-Unreal zero-step infrastructure incident
 
 - Pre-Unreal #959 (PR #80) and #960 (PR #81) both report failed validate jobs with `steps=null` and unavailable logs; GitHub log retrieval returns `BlobNotFound 404`.

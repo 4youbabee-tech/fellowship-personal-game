@@ -2888,6 +2888,7 @@ cancel_values = [
 allowed_cancel_values = {
     "false",
     "${{ startsWith(github.head_ref, 'acceptance/') }}",
+    "${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}",
 }
 if (
     not concurrency_group_ok
@@ -4583,6 +4584,32 @@ for pg142_evidence_id, pg142_marker in EVIDENCE_MARKERS.items():
     ]:
         if pg142_marker in pg142_consumer:
             fail(f"PG-142 duplicated runtime evidence text in {pg142_name}: {pg142_evidence_id}")
+
+# PG-167: CI capacity must not be consumed by polling or preparation-only Unreal jobs.
+pg167_pre = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
+for pg167_symbol in [
+    "- self-hosted",
+    "- Windows",
+    "- X64",
+    "- ue4-27",
+    "cancel-in-progress: true",
+]:
+    if pg167_symbol not in pg167_pre:
+        fail(f"PG-167 supervised self-hosted Pre-Unreal contract missing: {pg167_symbol}")
+if "schedule:" in pg167_pre or "runs-on: ubuntu-latest" in pg167_pre:
+    fail("PG-167 Pre-Unreal must not consume scheduled GitHub-hosted capacity")
+
+pg167_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+for pg167_symbol in [
+    "paths-ignore:",
+    "Data/WholeGame*.json",
+    "Data/*Warehouse*.json",
+    "Data/P1C01WorldBuildIntakePacketV1.json",
+    "${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}",
+]:
+    if pg167_symbol not in pg167_unreal:
+        fail(f"PG-167 Unreal queue-isolation contract missing: {pg167_symbol}")
+
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")

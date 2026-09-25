@@ -8,12 +8,18 @@ on:
     branches:
       - main
       - develop
-  schedule:
-    - cron: '*/20 * * * *'
+
+concurrency:
+  group: pre-unreal-${{ github.repository }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
     timeout-minutes: 5
     steps:
       - name: Checkout

@@ -2725,6 +2725,26 @@
       ],
       "checkpoint": "ARCHITECTURAL_STABILIZATION_GATE",
       "notes": "Validation builds are allowed and required during this freeze; new gameplay/content features are not."
+    },
+    {
+      "id": "REQ-STABILITY-002",
+      "title": "Self-healing CI capacity with no avoidable red infrastructure lane",
+      "category": "EngineeringStability",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "Owner explicitly required that red CI failures be root-fixed regardless of whether the cause is game code, workflow infrastructure, runner availability or queue pollution because large-scale production must continue.",
+      "intent": "Treat CI reliability as production infrastructure: remove periodic hosted-runner polling, keep static validation on the supervised Windows runner, prevent planning/warehouse-only deltas from occupying the UE4 device lane, allow the sole active production lane to preempt stale device work, and provide an opt-in AC keep-awake runner mode.",
+      "acceptance_criteria": [
+        "Pre-Unreal no longer runs on a 20-minute schedule and no longer depends on ubuntu-latest.",
+        "Preparation-only WholeGame/Warehouse/PrivateOffline/docs deltas do not enqueue Unreal Build Validation.",
+        "The sole active production/* runtime PR may cancel superseded work in the shared UE4 device concurrency group while develop pushes remain serialized.",
+        "The watchdog installer can keep the runner machine awake on AC and keeps the runner task restartable under the proven interactive Windows user context.",
+        "Fresh exact-head Pre-Unreal and UE4.27.2 runs execute repository steps and complete without zero-step/BlobNotFound infrastructure failure before C2 merges."
+      ],
+      "dependencies": [
+        "REQ-STABILITY-001",
+        "REQ-QA-002"
+      ]
     }
   ],
   "hard_invariants": [
@@ -3545,6 +3565,24 @@
         "Data/MasterExternalResourceBibleAdoptionV1.json",
         "Data/GlobalWarehouseSourceRegistryV2.json"
       ]
+    },
+    {
+      "id": "DEC-040",
+      "title": "CI red-error elimination and UE device-lane isolation",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-002"
+      ],
+      "resolution": "Production CI is treated as a first-class build system, not a passive reporting layer. The 20-minute Pre-Unreal poll is removed; Pre-Unreal runs on the supervised self-hosted Windows UE4 runner; preparation/warehouse-only changes are filtered out of Unreal Build Validation; and the sole active production/* runtime lane may preempt stale work in the shared UE4 device concurrency group. This avoids recurring hosted-runner zero-step reds and prevents non-runtime preparation from blocking the only UE4.27.2 device lane.",
+      "implementation_contract": [
+        ".github/workflows/pre-unreal-validation.yml has no schedule and uses self-hosted/Windows/X64/ue4-27.",
+        ".github/workflows/unreal-build-validation.yml ignores known preparation-only paths for push/PR engine validation.",
+        "Unreal concurrency remains one shared device lane; only acceptance/* and the sole active production/* PR head may cancel superseded work.",
+        "Scripts/install_runner_watchdog.ps1 exposes -KeepRunnerAwakeOnAC and configures restart/battery/wake-safe task settings.",
+        "PG-167 prevents regression to scheduled hosted Pre-Unreal capacity or preparation-only UE queue pollution."
+      ],
+      "evidence_boundary": "STATIC-VALIDATED design/contract only until fresh exact-head repository-step CI proves the new lane. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED claim is made by this decision.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
@@ -5701,19 +5739,23 @@
     },
     {
       "id": "KNOWN-CI-UBUNTU-NULL-STEPS-BLOB404",
-      "status": "INFRASTRUCTURE_FAILURE_OBSERVED_CODE_CAUSE_UNPROVEN",
+      "status": "ROOT_FIX_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
       "observed_runs": [
         "Pre-Unreal #959 on PR #80 head eaf5699596db8f9ea661bf64b5ea9395b97db45b",
-        "Pre-Unreal #960 on PR #81 head b7f05dc76c4c0c36019c912aab0886f8bba2b9be"
+        "Pre-Unreal #960 on PR #81 head b7f05dc76c4c0c36019c912aab0886f8bba2b9be",
+        "Pre-Unreal #963 Attempt 1 and Attempt 2 on PR #80 head 3ea1bc51e457f32a410e7a88fef87f2652d674c6",
+        "Pre-Unreal #966 Attempt 1 and Attempt 2 on PR #81 head f10e9f180168e0c7f46a694aff0ed93a74605c4a"
       ],
       "evidence": [
         "Both failed validate jobs report steps=null.",
         "Fetching both job logs returns GitHub BlobNotFound 404.",
         "Immediately previous Pre-Unreal #957 completed SUCCESS with the full 35-step job list on the same ubuntu-latest workflow.",
-        "PR #80 prior head dc70a48c5bda0904b64c2009a9088fd0d0bd7ec5 passed Pre-Unreal #954 before only status-documentation changes advanced the head."
+        "PR #80 prior head dc70a48c5bda0904b64c2009a9088fd0d0bd7ec5 passed Pre-Unreal #954 before only status-documentation changes advanced the head.",
+        "Both #963 attempts and both #966 attempts again produced zero repository steps and BlobNotFound 404 job logs.",
+        "Unreal #776 from already-merged warehouse PR #79 remained queued on the shared UE4 device lane while planning Unreal #801 remained pending, proving queue pollution independently of game C++."
       ],
-      "conclusion": "Do not attribute these runs to C++/validator/project failure unless a rerun produces repository step evidence. Treat as CI infrastructure/log-acquisition incident.",
-      "prevention": "Never patch runtime code from a zero-step/no-log failure. Retry the same exact head or wait for a fresh workflow; only root-fix repository content when a concrete step/log identifies the failing contract."
+      "conclusion": "The repository now removes the two avoidable CI exposure paths: scheduled GitHub-hosted Pre-Unreal capacity and non-runtime preparation occupying the UE4 device lane. Current runtime code remains unchanged by this repair; exact-head repository-step proof is still required.",
+      "prevention": "PG-167 forbids restoring scheduled hosted Pre-Unreal polling and requires preparation-path isolation. The active production/* lane may preempt stale shared-device work; the supervised Windows runner remains mandatory and can be kept awake on AC during build windows."
     }
   ],
   "w00_acceptance_fast_path": {
@@ -5734,6 +5776,6 @@
     ],
     "superseded_run_policy": "On acceptance/* branches, newer commits cancel older in-progress runs sharing the UE4 device concurrency group. Non-acceptance branches remain serialized.",
     "current_boundary": "Canonical develop has final branch/workspace hardening plus PG-159/PG-160 warning-debt guards. Fresh exact-head compile and P1C01 PIE warning log are the remaining proof.",
-    "runner_policy": "Keep the supervised user-context self-hosted runner; keep NETWORK SERVICE/manual legacy service out of execution; Warehouse no-delta work remains GitHub-hosted; real Warehouse work shares UE4 device serialization. If the upstream zero-step acquire hang recurs, watchdog recovery handles the listener rather than reopening game-code repair."
+    "runner_policy": "Use the supervised interactive-user self-hosted Windows runner as the exact-head static/UE4 execution authority; do not consume scheduled GitHub-hosted Pre-Unreal capacity. Known preparation-only deltas stay off the Unreal device lane. The sole active production/* runtime PR and acceptance/* repair heads may preempt stale shared-device work. During production build windows, reinstall the watchdog with -KeepRunnerAwakeOnAC if the machine would otherwise sleep."
   }
 }
