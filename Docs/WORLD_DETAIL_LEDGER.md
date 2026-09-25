@@ -1,3 +1,12 @@
+## 2026-09-25 - Global world rule: playable-film safe windows
+
+- Every major chapter/world state must be designed as: **Locked Canon Beat -> Playable Safe Window -> Locked/Bounded Set-Piece -> Persistent World-State Change -> Player Control** where chronology permits.
+- Safe windows are where world detail becomes gameplay: interiors, props, NPC routines, fauna, ambient conversations, interaction objects, optional tasks, discovery, weather/audio/foley and local traversal.
+- These additions exist to make the player feel physically present inside the film continuity; they must never create a contradictory route, outcome, character presence or chronology.
+- Post-beat world state must visibly/sonically communicate what changed before normal exploration resumes.
+- P1C01 Bag End/Shire is the benchmark pattern and later chapters must apply the same doctrine with chapter-specific canon constraints.
+- New safe-window content must still be recorded in this ledger before runtime implementation.
+
 ## 2026-09-25 - P1C01 Warehouse visual/sensory stock expansion
 
 - New Shire-support stock is registered for later art-directed use: pastoral grass/soil/leaf-litter/path breakup, farm outbuilding silhouettes, cave/architecture support kits, multi-surface footsteps, hearth fire, wood/metal interactions and daytime bird ambience.
