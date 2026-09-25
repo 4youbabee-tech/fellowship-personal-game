@@ -1,3 +1,11 @@
+## 2026-09-25 - W01 validator follow-up after Pre-Unreal #881
+
+- Pre-Unreal #881 failed on the first W01 head because PG-035/PG-036/PG-111 still encoded the pre-W01 builder-owned Shire ambient implementation: they required direct Shire builder bird/activity assignments and the old WorldLifeSaturationPlan status.
+- This was validator drift against the intentional single-owner architecture, not evidence that the new runtime ownership change failed in UE4.
+- `Scripts/pre_unreal_validate.py` now validates Shire activity props through `LivingWorldDirector::ChooseBaselineProp`, Shire bird life through the P1C01 `FAUNA` + `EVT_FAUNA_BIRDS` data contract, the new single-owner world-life status/authority, and explicitly rejects any return of `SpawnActor<AShireAmbientNPC>` to `ShirePrototypeWorldBuilder`.
+- Fresh exact-head validation is running on `03e886a6ecc0673680975b11fdda3fbc711041d2`: Pre-Unreal #882 in progress; Unreal #717 pending at the time of this record.
+- Evidence boundary remains **STATIC-VALIDATED / FRESH ENGINE PROOF PENDING**.
+
 ## 2026-09-25 - W01 drop 1 implemented: ambient single ownership and budget authority
 
 - Branch: `production/w01-p1c01-kickoff-v1`.
