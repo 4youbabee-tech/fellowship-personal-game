@@ -1,3 +1,12 @@
+## 2026-09-25 - PR #78 PG-166 validator false-red corrected
+
+- Exact head `428895672a8c4e1138221aa6f2d220ae212712f5` reached Pre-Unreal #911 and failed in `Validate project structure` only.
+- Exact log evidence: `ERROR: PG-166 foliage wind invariant missing: WorldPositionOffset.Expression = GrassWind`.
+- Root cause: PG-166 expected the stale local variable name `GrassWind`, while the actual implementation uses `SimpleWind` and wires `FoliageMaterial->WorldPositionOffset.Expression = SimpleWind`.
+- Correction: PG-166 now checks the actual WPO contract string instead of the stale symbol. No foliage/material runtime implementation changed in this correction.
+- Unreal #746 on the superseded head was still pending when this validator fix was committed; it is not accepted as evidence for the new head.
+- Evidence boundary remains STATIC-VALIDATED until a fresh exact-head Pre-Unreal + UE4.27.2 production-import/core result exists.
+
 ## 2026-09-25 - W01/P1C01 Drop C2 lightweight foliage wind implemented
 
 - C1 is merged to `develop` as merge commit `82fc4deaf2e2a99cfebd0d8d1b99a42b5d922ffe`; its exact PR head `36bb37a102ae3d34e35b667ae3991bad814e1d7a` passed Pre-Unreal #897 and Unreal Build Validation #732.
