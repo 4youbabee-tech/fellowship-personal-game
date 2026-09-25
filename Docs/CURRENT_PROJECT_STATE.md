@@ -1,3 +1,12 @@
+## 2026-09-25 - Final consolidation pass on PR #70
+- PR #70 is now the **single** maintenance consolidation train. The parallel PR #71 payload was selectively folded into #70; #71 is to be closed as superseded.
+- Branch cleanup is finalized for post-merge execution: preserve only `develop`, `main`, and temporary archive `archive/generated-audio-intake-v1`; approved stale refs are deleted by `.github/workflows/branch-cleanup.yml` after the cleanup plan lands on `develop`.
+- Historical diverged runtime branches were audited rather than bulk-merged. Old pre-Public/Private runtime paths are superseded; only still-valid unique planning/audio/ops records were salvaged.
+- Generated-audio registries for the 103 scripted cues, P1C01 ambient speech, P1C01 complete-bank contract and named-character efforts are now consolidated in sanitized form without expiring signed delivery URLs. This is registry/intake evidence only, **not** UE playback/audio acceptance.
+- Both local launch controllers (`SHIRE_UPDATE_BUILD_LAUNCH.bat` and `SHIRE_PIE_VERIFY.bat`) execute from immutable temp copies so `git pull` cannot rewrite the batch currently being parsed. Local rerun proof remains pending.
+- Unreal validation cost contract is corrected: ordinary C++/runtime/Data/SourceAssets deltas use the **core** lane (build/import/Automation/runtime/warning checks) with **no package/cook**; Config/Build.cs/Target.cs/chapter-streaming/Package/Cook/Release deltas use the full package lane. Governance/docs/offline-maintenance deltas inherit green parent proof.
+- W00 remains **AUTOMATED CLOSURE GREEN / HUMAN PIE WARNING TAIL PENDING**. No new PIE/device/visual/performance acceptance is claimed by this maintenance pass.
+
 ## 2026-09-25 - Develop consolidation / branch cleanup
 - Superseded Unreal runs on `maintenance/*` now cancel in progress, preventing an obsolete maintenance head from monopolizing the single UE4 runner after newer commits exist.
 - Canonical development lane remains `develop`; stable release lane remains `main`.
