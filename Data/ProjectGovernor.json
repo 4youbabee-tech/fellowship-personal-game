@@ -3739,7 +3739,8 @@
         "PG-159",
         "PG-160",
         "PG-163",
-        "PG-164"
+        "PG-164",
+        "PG-165"
       ],
       "behavior": "Validate the exact W01 candidate head; machine evidence never promotes visual/device/performance acceptance."
     },
@@ -4165,7 +4166,7 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "W01/P1C01 mega production active. Drop B Hobbiton/Bag End architecture is implemented on the candidate branch and requires exact-head engine proof. W00 remains closed unless a concrete regression is reproduced.",
+    "rule": "W01/P1C01 mega production active. Drop C1 authored material texture binding is implemented on the candidate branch. Prove exact head before C2 foliage wind/WPO.",
     "machine_baseline": {
       "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
       "pre_unreal": "#885 SUCCESS",
@@ -4182,10 +4183,10 @@
     "5. Keep Arabic localization runtime implementation isolated from the active world-production PR."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W01-P1C01-DROP-B",
-    "source_head": "b9a312ce2321f55a58bc5f24dd478b4839871006",
-    "branch": "production/w01-p1c01-hobbiton-bagend-v1",
-    "pull_request": 76,
+    "checkpoint_id": "CP-W01-P1C01-DROP-C1",
+    "source_head": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
+    "branch": "production/w01-p1c01-materials-vegetation-v1",
+    "pull_request": 77,
     "verified": {
       "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
       "latest_automated_closure": "809e56a9e1dc4b453e02a0b04b6875a71df21933: Pre-Unreal #880 SUCCESS + Unreal #715 SUCCESS validation-policy inherit + Branch Cleanup #3 SUCCESS",
@@ -4202,12 +4203,12 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "W01/P1C01 Drop B architecture implemented. PR #76 Pre-Unreal reds were governance handoff-baseline drift only; runtime architecture code has not yet reached engine validation. Handoff now points to the actual last-green exact head b9a312ce with #888/#723 SUCCESS.",
+    "active_wave": "W01/P1C01 Drop C1 material texture binding: Unreal #731 SUCCESS on corrected head 3b2281c17...; Pre-Unreal #896 failed only because the handoff snapshot used a non-contract status token. Snapshot normalized to FAILURE with an explanatory note; no runtime change in this correction.",
     "next_actions": [
-      "1. Re-run PR #76 exact-head Pre-Unreal with corrected handoff baseline.",
-      "2. If Pre-Unreal is green, allow UE4.27.2 core validation to run on the same head.",
-      "3. If both are green, merge Drop B and begin Drop C materials/vegetation.",
-      "4. Treat future Governor branch/PR/baseline drift as a control-plane defect and update all handoff surfaces atomically."
+      "1. Require fresh exact-head Pre-Unreal after normalizing the handoff status contract.",
+      "2. Preserve Unreal #731 SUCCESS as engine/core evidence for the same corrected runtime head ancestry unless policy requires rerun.",
+      "3. Merge Drop C1 when required exact-head gates are green.",
+      "4. Promote C2 foliage/wind as the next and only runtime-changing lane; parallel preparation lanes continue independently."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -4218,29 +4219,30 @@
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "b9a312ce2321f55a58bc5f24dd478b4839871006",
+        "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
         "pre_unreal": {
-          "sha": "b9a312ce2321f55a58bc5f24dd478b4839871006",
-          "run_id": 36140117592,
+          "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
+          "run_id": 36145910660,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "b9a312ce2321f55a58bc5f24dd478b4839871006",
-          "run_id": 36140117645,
+          "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
+          "run_id": 36145910505,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "c7c136b8ac0b849296de682049bd9b1a99512aa7",
+        "sha": "725ca99151b5438fab7ce48209c04a4ce05c681d",
         "pre_unreal": {
-          "sha": "c7c136b8ac0b849296de682049bd9b1a99512aa7",
-          "run_id": 36143992150,
-          "status": "FAILURE"
+          "sha": "725ca99151b5438fab7ce48209c04a4ce05c681d",
+          "run_id": 36149288137,
+          "status": "FAILURE",
+          "note": "Validator-only failure: PG-165 initially routed EditorTools source through runtime resolver; root fix committed in 3b2281c17b6111fd30f7614ca5d0df22a6dc572d."
         },
         "unreal": {
-          "sha": "c7c136b8ac0b849296de682049bd9b1a99512aa7",
-          "run_id": 36143992212,
-          "status": "PENDING"
+          "sha": "725ca99151b5438fab7ce48209c04a4ce05c681d",
+          "run_id": 36149288111,
+          "status": "SUCCESS"
         }
       }
     }
@@ -4339,10 +4341,10 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
-    "current_short_branch": "production/w01-p1c01-hobbiton-bagend-v1",
+    "current_short_branch": "production/w01-p1c01-materials-vegetation-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 76,
-    "open_pr_policy": "PR #76 is the sole short-lived W01/P1C01 Drop B architecture candidate targeting develop.",
+    "current_open_pr": 77,
+    "open_pr_policy": "PR #77 is the sole short-lived W01/P1C01 Drop C1 material-texture candidate targeting develop.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
       "date": "2026-09-25",
@@ -5224,11 +5226,11 @@
     "owner_observation_role": "Use owner play time for final symptom/pacing/visual confirmation only after reproducible technical checks have run."
   },
   "integration_train": {
-    "branch": "production/w01-p1c01-hobbiton-bagend-v1",
-    "baseline": "430d0a26f3b441f072740fc58285c0c0eb842d8c",
-    "current_wave": "W01_P1C01_DROP_B_HOBBITON_BAGEND_ARCHITECTURE",
-    "merge_policy": "Merge only after exact-head Pre-Unreal + UE4.27.2 core green. W00 remains closed.",
-    "proof_boundary": "Source/static only until engine proof; human visual/device/performance acceptance remains separate."
+    "branch": "production/w01-p1c01-materials-vegetation-v1",
+    "baseline": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
+    "current_wave": "W01_P1C01_DROP_C1_MATERIAL_TEXTURE_BINDING",
+    "merge_policy": "Merge only after exact-head Pre-Unreal + UE4.27.2 core/production-import green.",
+    "proof_boundary": "No PIE/device/visual/material acceptance until matching evidence exists."
   },
   "completion_wave_map": {
     "status": "ACTIVE_PLANNING_ESTIMATE",
@@ -5571,6 +5573,15 @@
       "root_cause": "Stable exact-head checkout fetched head with depth=2 but not the PR base SHA. Classifier git diff failed and escalated to full package via delta-unavailable-fail-safe.",
       "correction": "Scripts/classify_unreal_validation.ps1 now fetches BASE_SHA explicitly and retries diff before fail-safe.",
       "policy": "Ordinary C++/runtime/Data/SourceAssets use core validation only; full package is reserved for Config/Build.cs/Target.cs/streaming/package/cook/release deltas."
+    },
+    {
+      "id": "KNOWN-PG165-EDITOR-RESOLVER",
+      "status": "ROOT_FIXED_PENDING_FRESH_PRE_UNREAL",
+      "observed_head": "725ca99151b5438fab7ce48209c04a4ce05c681d",
+      "symptom": "Pre-Unreal #895 could not read ShireProductionImportCommandlet.cpp and emitted seven PG-165 misses while Unreal #730 succeeded.",
+      "root_cause": "PG-165 called the runtime-module resolve_source() helper for a file owned by Source/ShireJourneyEditorTools.",
+      "correction": "Add resolve_editor_source() rooted at Source/ShireJourneyEditorTools and route PG-165 through it.",
+      "prevention": "Future editor-tools validator guards must use the editor resolver or an explicit EditorTools path; runtime resolve_source() is reserved for Source/ShireJourney."
     }
   ],
   "w00_acceptance_fast_path": {

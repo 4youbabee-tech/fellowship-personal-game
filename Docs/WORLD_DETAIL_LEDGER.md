@@ -1,5 +1,14 @@
 # WORLD DETAIL LEDGER
 
+## 2026-09-25 - W01 P1C01 Drop C1: authored material texture binding
+
+- Source 03 keeps the Shire pastoral/domestic visual grammar; Source 11 makes foliage overdraw/material complexity/texture memory explicit review gates.
+- Existing project source already contains Shire TGA textures and MTL `map_Kd` references, but the importer previously synthesized only Color/Roughness/Metallic and did not bind the authored textures.
+- C1 now binds `map_Kd` to an `AlbedoTexture` parameter after texture import and changes the generated `M_ProductionSurface` BaseColor to `AlbedoTexture * Color`.
+- This is an editor production-import change only. Quest/state/AI/LivingWorld/audio/streaming/runtime asset ownership is untouched.
+- C2 wind/WPO remains gated behind C1 exact-head engine proof.
+- Evidence boundary: STATIC-VALIDATED only.
+
 ## 2026-09-25 - W01 P1C01 Mega Production Drop B: Hobbiton + Bag End architecture
 
 - **Source basis:** Source 03 requires Shire/Hobbiton pastoral domestic scale, circular doors and gardens; Bag End must read as a dense lived-in Hobbit narrative hub with round geometry and deterministic state variants. Source 07 anchors F1-01 to Shire onboarding/social/birthday setup. Source 11 requires modular reuse, simple collision/visibility cost and measured target-hardware budgets.

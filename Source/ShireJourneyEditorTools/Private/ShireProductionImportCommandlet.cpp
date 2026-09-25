@@ -9,6 +9,7 @@
 #include "Factories/MaterialInstanceConstantFactoryNew.h"
 #include "Factories/MaterialFactoryNew.h"
 #include "Engine/StaticMesh.h"
+#include "Engine/Texture2D.h"
 #include "HAL/FileManager.h"
 #include "HAL/PlatformFilemanager.h"
 #include "Misc/FileHelper.h"
@@ -16,6 +17,8 @@
 #include "Misc/Paths.h"
 #include "Materials/Material.h"
 #include "Materials/MaterialExpressionScalarParameter.h"
+#include "Materials/MaterialExpressionTextureSampleParameter2D.h"
+#include "Materials/MaterialExpressionMultiply.h"
 #include "Materials/MaterialExpressionVectorParameter.h"
 #include "Materials/MaterialInterface.h"
 #include "Materials/MaterialInstanceConstant.h"
@@ -348,6 +351,13 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     int32 Failed = 0;
     TArray<UPackage*> ImportedMaterialPackages;
 
+    struct FPendingAlbedoBinding
+    {
+        FString MaterialObjectPath;
+        FString TextureObjectPath;
+    };
+    TArray<FPendingAlbedoBinding> PendingAlbedoBindings;
+
     auto SaveMaterialPackagesDeterministically = [&](const TCHAR* Phase) -> bool
     {
         int32 SavedPackages = 0;
@@ -449,9 +459,23 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             UMaterialExpressionVectorParameter* ColorParameter =
                 NewObject<UMaterialExpressionVectorParameter>(SurfaceMaterial);
             ColorParameter->ParameterName = TEXT("Color");
-            ColorParameter->DefaultValue = FLinearColor(0.35f, 0.35f, 0.35f, 1.0f);
+            ColorParameter->DefaultValue = FLinearColor::White;
             SurfaceMaterial->Expressions.Add(ColorParameter);
-            SurfaceMaterial->BaseColor.Expression = ColorParameter;
+
+            UMaterialExpressionTextureSampleParameter2D* AlbedoParameter =
+                NewObject<UMaterialExpressionTextureSampleParameter2D>(SurfaceMaterial);
+            AlbedoParameter->ParameterName = TEXT("AlbedoTexture");
+            AlbedoParameter->Texture = LoadObject<UTexture2D>(
+                nullptr,
+                TEXT("/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture"));
+            SurfaceMaterial->Expressions.Add(AlbedoParameter);
+
+            UMaterialExpressionMultiply* BaseColorMultiply =
+                NewObject<UMaterialExpressionMultiply>(SurfaceMaterial);
+            BaseColorMultiply->A.Expression = AlbedoParameter;
+            BaseColorMultiply->B.Expression = ColorParameter;
+            SurfaceMaterial->Expressions.Add(BaseColorMultiply);
+            SurfaceMaterial->BaseColor.Expression = BaseColorMultiply;
 
             UMaterialExpressionScalarParameter* RoughnessParameter =
                 NewObject<UMaterialExpressionScalarParameter>(SurfaceMaterial);
@@ -504,6 +528,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             TArray<FString> Lines;
             MtlText.ParseIntoArrayLines(Lines, true);
             FString CurrentMaterialName;
+            FString CurrentAlbedoMap;
             FLinearColor CurrentBaseColor(0.35f, 0.35f, 0.35f, 1.0f);
             float CurrentRoughness = 0.68f;
             float CurrentMetallic = 0.0f;
@@ -559,6 +584,34 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     Instance->SetScalarParameterValueEditorOnly(
                         FMaterialParameterInfo(TEXT("Metallic")),
                         FMath::Clamp(CurrentMetallic, 0.0f, 1.0f));
+
+                    if (!CurrentAlbedoMap.IsEmpty())
+                    {
+                        FString AlbedoSourcePath = FPaths::ConvertRelativePathToFull(
+                            FPaths::Combine(FPaths::GetPath(MtlFilename), CurrentAlbedoMap));
+                        FPaths::NormalizeFilename(AlbedoSourcePath);
+
+                        FString RelativeTexturePath = AlbedoSourcePath;
+                        FPaths::MakePathRelativeTo(RelativeTexturePath, *(WorkingRoot / TEXT("")));
+                        RelativeTexturePath.ReplaceInline(TEXT("\\"), TEXT("/"));
+
+                        const FString RelativeTextureDir = FPaths::GetPath(RelativeTexturePath);
+                        const FString TextureAssetName = FPaths::GetBaseFilename(RelativeTexturePath);
+                        const FString TextureDestinationPath = RelativeTextureDir.IsEmpty()
+                            ? TEXT("/Game/Production")
+                            : FString::Printf(TEXT("/Game/Production/%s"), *RelativeTextureDir);
+                        const FString TextureObjectPath = FString::Printf(
+                            TEXT("%s/%s.%s"),
+                            *TextureDestinationPath,
+                            *TextureAssetName,
+                            *TextureAssetName);
+
+                        PendingAlbedoBindings.Add({
+                            ObjectPath,
+                            TextureObjectPath
+                        });
+                    }
+
                     Instance->PostEditChange();
                     Instance->MarkPackageDirty();
                     ImportedMaterialPackages.AddUnique(Instance->GetOutermost());
@@ -583,6 +636,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 {
                     FlushMaterial();
                     CurrentMaterialName = Line.Mid(7).TrimStartAndEnd();
+                    CurrentAlbedoMap.Empty();
                     CurrentBaseColor = FLinearColor(0.35f, 0.35f, 0.35f, 1.0f);
                     CurrentRoughness = 0.68f;
                     CurrentMetallic = 0.0f;
@@ -620,6 +674,11 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     {
                         CurrentMetallic = FCString::Atof(*Parts[1]);
                     }
+                }
+                else if (Line.StartsWith(TEXT("map_Kd "), ESearchCase::IgnoreCase) &&
+                    !CurrentMaterialName.IsEmpty())
+                {
+                    CurrentAlbedoMap = Line.Mid(7).TrimStartAndEnd();
                 }
             }
             FlushMaterial();
@@ -925,6 +984,61 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             UE_LOG(LogTemp, Display, TEXT("ShireProductionImport imported: %s"), *Filename);
         }
     }
+
+    int32 BoundAlbedoTextures = 0;
+    int32 MissingAlbedoTextures = 0;
+    for (const FPendingAlbedoBinding& Binding : PendingAlbedoBindings)
+    {
+        UMaterialInstanceConstant* Instance =
+            FindObject<UMaterialInstanceConstant>(nullptr, *Binding.MaterialObjectPath);
+        if (!Instance)
+        {
+            Instance = LoadObject<UMaterialInstanceConstant>(
+                nullptr,
+                *Binding.MaterialObjectPath);
+        }
+
+        UTexture2D* Texture =
+            FindObject<UTexture2D>(nullptr, *Binding.TextureObjectPath);
+        if (!Texture)
+        {
+            Texture = LoadObject<UTexture2D>(
+                nullptr,
+                *Binding.TextureObjectPath);
+        }
+
+        if (Instance && Texture)
+        {
+            Instance->SetTextureParameterValueEditorOnly(
+                FMaterialParameterInfo(TEXT("AlbedoTexture")),
+                Texture);
+            Instance->PostEditChange();
+            Instance->MarkPackageDirty();
+            ImportedMaterialPackages.AddUnique(Instance->GetOutermost());
+            ++BoundAlbedoTextures;
+        }
+        else
+        {
+            ++MissingAlbedoTextures;
+            ++Failed;
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("ShireProductionImport albedo binding FAILED: material=%s texture=%s material-found=%s texture-found=%s"),
+                *Binding.MaterialObjectPath,
+                *Binding.TextureObjectPath,
+                Instance ? TEXT("yes") : TEXT("no"),
+                Texture ? TEXT("yes") : TEXT("no"));
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireProductionImport albedo texture bindings: requested=%d bound=%d missing=%d"),
+        PendingAlbedoBindings.Num(),
+        BoundAlbedoTextures,
+        MissingAlbedoTextures);
 
     // Sweep authored-material destination folders through AssetRegistry as a second
     // recovery path. Some UE4.27 OBJ factories register the material asset but do not

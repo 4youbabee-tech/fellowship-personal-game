@@ -1,3 +1,25 @@
+## 2026-09-25 - PR #77 handoff status normalization
+
+- **Unreal #731:** SUCCESS on `3b2281c17...`.
+- **Pre-Unreal #896:** Governor metadata failure only; a descriptive non-schema status was used in the handoff snapshot.
+- **Root fix:** use canonical `FAILURE` status plus a separate explanatory note.
+- **Runtime conclusion:** Drop C1 engine/core implementation remains green on the corrected runtime head ancestry; fresh Pre-Unreal is still required. No PIE/device/visual promotion.
+
+## 2026-09-25 - PR #77 PG-165 resolver correction
+
+- **Pre-Unreal #895:** FAILED in validator path resolution only; PG-165 searched the runtime module for an EditorTools commandlet.
+- **Unreal #730:** SUCCESS on exact head `725ca991...`; Drop C1 compiled and completed the production-import/core validation path.
+- **Root fix:** add dedicated EditorTools source resolver and route PG-165 through it, so editor-module guards cannot regress to runtime-module lookup.
+- **Current proof boundary:** prior runtime head is COMPILE/ENGINE-CORE PROVEN; corrected validator head still requires fresh Pre-Unreal. No PIE/device/visual acceptance.
+
+## 2026-09-25 - W01 P1C01 Drop C1: material texture binding
+
+- **Shire authored albedo pipeline:** IMPLEMENTED IN SOURCE — MTL `map_Kd` is parsed and bound into deterministic `AlbedoTexture` material-instance parameters.
+- **Master material:** IMPLEMENTED IN SOURCE — BaseColor uses `AlbedoTexture * Color`; Roughness/Metallic contract remains intact.
+- **Gameplay/runtime ownership:** UNCHANGED — editor import pipeline only.
+- **Foliage wind/WPO:** NOT YET IMPLEMENTED; scheduled as C2 after C1 exact-head green.
+- **Validation:** STATIC-VALIDATED only until fresh Pre-Unreal + UE4.27.2 production import/core validation succeeds.
+
 ## 2026-09-25 - PR #76 handoff-baseline coherence correction
 
 - **Pre-Unreal #890/#891/#892:** FAILED in Governor handoff coherence, not in architecture runtime.

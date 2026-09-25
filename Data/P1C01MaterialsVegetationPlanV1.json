@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_MATERIALS_VEGETATION_V1",
+  "status": "C1_ALBEDO_BINDING_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+  "canonical_parent": "develop@712a81cac150b7fdb338a4cf7554d4f27d4b5191",
+  "source_contract": {
+    "world_bible": [
+      "Shire/Hobbiton visual grammar remains pastoral hills, lanes, farms, Hobbit-holes, warm domestic scale, circular doors and gardens.",
+      "Canonical landmarks remain visually dominant; decorative branches must serve story, resource/preparation, relationship/lore or meaningful traversal."
+    ],
+    "systems_bible": [
+      "Foliage review focuses on instance density, cull distance, LOD, wind complexity and masked-material overdraw.",
+      "GPU review includes foliage overdraw and expensive materials; memory review includes textures and duplicated materials.",
+      "Profile representative Shire scenes before promoting density or universal budgets."
+    ]
+  },
+  "existing_project_assets": {
+    "textures": [
+      "TX_ShGrass.tga",
+      "TX_ShDirt.tga",
+      "TX_ShBark.tga",
+      "TX_ShLeaves.tga",
+      "TX_ShStone.tga",
+      "TX_ShWood.tga",
+      "TX_ShDoorGreen.tga"
+    ],
+    "foliage_meshes": [
+      "SM_ShGrassClump.obj",
+      "SM_ShHedge.obj",
+      "SM_ShShrub.obj",
+      "SM_ShTreeCanopy.obj",
+      "SM_ShTreeTrunk.obj"
+    ],
+    "material_libraries": [
+      "SourceAssets/Production/World/Shire/ShireMaterials.mtl",
+      "SourceAssets/Production/World/Shire/WorldPack.mtl"
+    ]
+  },
+  "verified_pipeline_gap": [
+    "The production importer synthesizes Color/Roughness/Metallic material instances but currently ignores authored map_Kd texture bindings.",
+    "No repository implementation currently contains SimpleGrassWind, WorldPositionOffset or a global wind material parameter path.",
+    "Existing Shire TGA textures are imported but are not yet guaranteed to drive the synthesized master-material base color."
+  ],
+  "drop_c_order": [
+    "C1 bind authored albedo texture paths from MTL into deterministic production material instances",
+    "C2 add a dedicated lightweight foliage master with parameterized wind WPO for grass/leaves only",
+    "C3 assign foliage parents by stable material identity without changing gameplay IDs or world ownership",
+    "C4 retain HISM/LOD/cull bands and profile masked-overdraw/material cost before density increase",
+    "C5 prepare a later weather/audio shared wind parameter bridge after the visual material path is engine-green"
+  ],
+  "material_contract": {
+    "source_formats": [
+      "png",
+      "tga"
+    ],
+    "forbidden_formats": [
+      "bmp"
+    ],
+    "channel_packing": "New PBR acquisitions should use channel-packed masks where useful; existing project-owned albedo TGAs remain valid source assets.",
+    "master_surface": "/Game/Production/Materials/M_ProductionSurface",
+    "foliage_master": "/Game/Production/Materials/M_ProductionFoliage",
+    "foliage_material_names": [
+      "Grass",
+      "Leaves",
+      "LeafGreen",
+      "LeafGold"
+    ],
+    "runtime_loading": "No new synchronous heavy asset loading."
+  },
+  "performance_contract": {
+    "target": "i7 6th gen / 8 GB RAM / approx 2 GB VRAM / DX11 / 720p Low-Medium / 30 FPS floor",
+    "rules": [
+      "Repeated vegetation remains HISM/ISM.",
+      "Do not increase foliage instance density until target-device profiling.",
+      "Wind complexity must be cheaper at distance; distant vegetation may use reduced/no wind.",
+      "Masked-material overdraw and shadow cost are profiling gates, not assumptions."
+    ]
+  },
+  "external_sourcing": {
+    "policy": "Provider listing is not item approval; every asset requires provenance/license/scale/UV/material/LOD review.",
+    "preferred_material_sources": [
+      "ambientCG",
+      "Poly Haven",
+      "entitled Fab/Quixel Megascans"
+    ],
+    "preferred_generic_modular_sources": [
+      "Quaternius",
+      "Kenney"
+    ]
+  },
+  "acceptance": [
+    "Exact-head Pre-Unreal success.",
+    "UE4.27.2 production import and core validation success.",
+    "Imported Shire material instances resolve authored texture parameters without broken references.",
+    "No project-owned material usage warning regression.",
+    "Owner PIE visual review confirms natural material response and non-distracting wind.",
+    "Target-device profiling confirms foliage/material cost before density expansion."
+  ],
+  "evidence_boundary": "Planning/preparation only until runtime implementation starts after the current develop post-merge validation is green.",
+  "runtime_implementation": {
+    "importer_change": "MTL map_Kd is now captured and bound to deterministic AlbedoTexture material-instance parameters after texture import.",
+    "master_material_change": "M_ProductionSurface now multiplies AlbedoTexture by Color while retaining Roughness/Metallic parameters.",
+    "gameplay_impact": "none; editor production-import pipeline only",
+    "next": "C2 dedicated lightweight foliage master + parameterized wind WPO after C1 exact-head engine proof"
+  }
+}

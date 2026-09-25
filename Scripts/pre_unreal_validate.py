@@ -19,6 +19,7 @@ from governance_contracts import validate_development_mode
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "Source" / "ShireJourney"
+EDITOR_SOURCE = ROOT / "Source" / "ShireJourneyEditorTools"
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -40,6 +41,17 @@ def resolve_source(filename: str) -> Path:
     if not candidates:
         return SOURCE / filename
     fail(f"Runtime source filename is ambiguous after migration: {filename}")
+    return candidates[0]
+
+
+def resolve_editor_source(filename: str) -> Path:
+    """Resolve one editor-tools source filename without misrouting it into the runtime module."""
+    candidates = [p for p in EDITOR_SOURCE.rglob(filename) if p.is_file()]
+    if len(candidates) == 1:
+        return candidates[0]
+    if not candidates:
+        return EDITOR_SOURCE / filename
+    fail(f"Editor source filename is ambiguous: {filename}")
     return candidates[0]
 
 
@@ -2519,6 +2531,26 @@ for symbol in ["SM_CommonTerracedHill", "SM_CommonVillageSlope", "SM_CommonRiver
 for symbol in ["SM_CommonMountainRidge", "SM_CommonCliffWall", "SM_CommonRiverBank", "SpawnTerrainBand"]:
     if symbol not in fellowship_world_cpp:
         fail(f"PG-049 Fellowship terrain runtime reference missing: {symbol}")
+
+# PG-165: Drop C1 authored material texture binding must remain deterministic and editor-only.
+pg165_importer = read(resolve_editor_source("ShireProductionImportCommandlet.cpp"))
+for pg165_symbol in [
+    "MaterialExpressionTextureSampleParameter2D",
+    'ParameterName = TEXT("AlbedoTexture")',
+    'Line.StartsWith(TEXT("map_Kd ")',
+    "PendingAlbedoBindings",
+    "SetTextureParameterValueEditorOnly",
+    'TEXT("ShireProductionImport albedo texture bindings:',
+]:
+    if pg165_symbol not in pg165_importer:
+        fail(f"PG-165 authored albedo binding invariant missing: {pg165_symbol}")
+
+pg165_plan = json.loads(read(ROOT / "Data" / "P1C01MaterialsVegetationPlanV1.json"))
+if pg165_plan.get("status") != "C1_ALBEDO_BINDING_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-165 Drop C1 material plan status changed")
+if "AlbedoTexture" not in json.dumps(pg165_plan):
+    fail("PG-165 Drop C1 lost AlbedoTexture contract")
+
 
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))

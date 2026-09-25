@@ -1,3 +1,27 @@
+## 2026-09-25 - PR #77 handoff-status contract corrected
+
+- Unreal #731 completed **SUCCESS** on corrected Drop C1 head `3b2281c17b6111fd30f7614ca5d0df22a6dc572d`.
+- Pre-Unreal #896 reached the Governor and failed because `validation_snapshot.latest_observed.pre_unreal.status` used the descriptive token `FAILURE_VALIDATOR_PATH_ONLY`, while the handoff schema allows only `SUCCESS | FAILURE | CANCELLED | PENDING | IN_PROGRESS`.
+- Root correction: status is now the contract-valid `FAILURE`; the validator-only explanation is stored separately in a `note` field. This prevents recurrence without weakening the schema.
+- No C++/runtime/material implementation changed in this correction. Fresh exact-head Pre-Unreal is required before merge.
+
+## 2026-09-25 - PR #77 validator false-red root-fixed
+
+- Pre-Unreal #895 failed only because PG-165 incorrectly used the runtime `resolve_source()` helper for `ShireProductionImportCommandlet.cpp`, which lives in the separate `ShireJourneyEditorTools` module.
+- Unreal #730 on the same exact head `725ca99151b5438fab7ce48209c04a4ce05c681d` completed **SUCCESS**, so the Drop C1 editor build/production-import/core engine path itself is proven on that head.
+- Root correction: Pre-Unreal now has a dedicated `resolve_editor_source()` helper rooted at `Source/ShireJourneyEditorTools`; PG-165 uses that helper, preventing future editor-tool guards from being silently routed into the runtime module.
+- This correction is validator/docs/governance-only. Fresh exact-head Pre-Unreal is required; engine proof may inherit only under the established safe validation-policy ancestry rules.
+- Evidence boundary: Drop C1 is engine/core proven on the prior exact runtime head, but no PIE/device/visual material acceptance is inferred.
+
+## 2026-09-25 - W01/P1C01 Drop C1 material texture binding implemented
+
+- Parent `develop@712a81cac150b7fdb338a4cf7554d4f27d4b5191` is post-merge green: Pre-Unreal #894 SUCCESS + Unreal #729 SUCCESS.
+- Active branch: `production/w01-p1c01-materials-vegetation-v1`.
+- Verified source gap addressed: authored Shire MTL `map_Kd` entries are now carried into deterministic production material instances through an `AlbedoTexture` parameter.
+- `M_ProductionSurface` creation now uses `AlbedoTexture * Color` for BaseColor while preserving Roughness/Metallic.
+- Texture binding happens in the editor import commandlet after texture import; no gameplay runtime loading path is changed and no new synchronous heavy gameplay load is introduced.
+- This is **STATIC-VALIDATED / EXACT-HEAD PRE-UNREAL + UE4.27.2 CORE PROOF PENDING**. Wind/WPO is not yet claimed; that is Drop C2 after C1 is engine-green.
+
 ## 2026-09-25 - PR #76 governance false-red corrected atomically
 
 - Pre-Unreal #890/#891/#892 did not reach an Unreal runtime failure. The remaining red was the Governor handoff invariant: `session_handoff.source_head` must equal `validation_snapshot.last_green.sha`.
