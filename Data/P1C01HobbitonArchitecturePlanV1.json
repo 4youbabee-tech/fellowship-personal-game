@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_HOBBITON_BAGEND_ARCHITECTURE_V1",
+  "status": "DROP_B_ACTIVE",
+  "canonical_parent": "develop@430d0a26f3b441f072740fc58285c0c0eb842d8c",
+  "source_contract": {
+    "world_bible": [
+      "The Shire/Hobbiton: pastoral hills, lanes, farms, Hobbit-holes; warm domestic scale; circular doors; gardens.",
+      "Bag End: Hobbit interior; dense lived-in props; round geometry; narrative hub; Bilbo occupied / Frodo departure / epilogue state variants."
+    ],
+    "mission_matrix": [
+      "F1-01 owner location: Middle-earth / Shire.",
+      "Critical path: Ring history establishes stakes; Bilbo prepares birthday; Gandalf arrives.",
+      "Optional window: party setup, social onboarding, fireworks."
+    ],
+    "systems": [
+      "Architecture review focus: modular reuse, HLOD, light/shadow cost, collision simplicity, visibility/occlusion.",
+      "Do not hard-code universal budgets without target-hardware measurement."
+    ],
+    "canon_correction": [
+      "The Green Dragon belongs at Bywater, not Hobbiton. The compact prototype label must not be promoted as canonical Hobbiton architecture."
+    ]
+  },
+  "runtime_scope": {
+    "implemented_now": [
+      "Bag End exterior hierarchy and garden approach using existing resident Shire production meshes.",
+      "Hobbiton lane/property clusters with circular-door Hobbit-hole identity preserved.",
+      "Party Field architectural dressing supporting F1-01 social/birthday setup.",
+      "Mill/bridge/market/common-space composition without moving quest anchors."
+    ],
+    "deferred_until_assets_exist": [
+      "Production Bag End interior shell/circulation.",
+      "Interior room/portal streaming implementation.",
+      "Final hero-grade round-door/window modular kit.",
+      "Final collision/navmesh acceptance and HLOD profiling."
+    ]
+  },
+  "invariants": [
+    "No quest/chapter/location IDs are changed.",
+    "No named-character or story-postcondition coordinates are moved by this drop.",
+    "No synchronous heavy LoadObject path is added.",
+    "Animated production assets remain FBX only.",
+    "Repeated details remain instanced where appropriate; unique architecture stays bounded.",
+    "Bag End remains visually dominant at Hobbiton entry/return."
+  ],
+  "acceptance": [
+    "Pre-Unreal exact-head success.",
+    "UE4.27.2 core validation success.",
+    "Owner PIE confirms no grounding/collision regression.",
+    "Human review confirms Bag End reads as dominant landmark and Hobbiton reads as warm domestic/circular/garden architecture.",
+    "No canonical Green Dragon-at-Hobbiton label remains."
+  ]
+}
