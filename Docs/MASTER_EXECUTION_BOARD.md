@@ -1,12 +1,12 @@
-## W01 P1C01 Mega Production control point - Drop B
-- Canonical parent: `develop@430d0a26f3b441f072740fc58285c0c0eb842d8c`.
-- Active candidate: PR #76 on `production/w01-p1c01-hobbiton-bagend-v1` targeting `develop`.
+## W01 P1C01 Mega Production control point - Drop C1
+- Canonical parent: `develop@712a81cac150b7fdb338a4cf7554d4f27d4b5191`.
+- Parent proof: Pre-Unreal #894 SUCCESS; Unreal #729 SUCCESS.
+- Active candidate: PR #77 on `production/w01-p1c01-materials-vegetation-v1` targeting `develop`.
 - Active lane: **W01_P1C01_PRODUCTION_VERTICAL_SLICE**.
-- Current drop: **B - Hobbiton / Bag End Architecture**.
-- Next dependency after exact-head green: **C - Materials / Vegetation**.
-- Bag End interior remains explicitly incomplete until approved production interior FBX assets exist.
+- Current drop: **C1 - Authored Material Texture Binding**.
+- Next dependency after exact-head green: **C2 - Lightweight Foliage Master + Wind WPO**.
 - W00 remains CLOSED; reopen only for a concrete regression.
-- Evidence boundary: STATIC-VALIDATED until PR #76 exact-head machine proof.
+- Evidence boundary: STATIC-VALIDATED until PR #77 exact-head machine proof.
 
 # Master Execution Board
 
@@ -14,10 +14,10 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 ## Current control point
 
-- PR: #76 (W01/P1C01 Hobbiton/Bag End architecture candidate)
-- Branch: `production/w01-p1c01-hobbiton-bagend-v1`
+- PR: #77 (W01/P1C01 material texture binding candidate)
+- Branch: `production/w01-p1c01-materials-vegetation-v1`
 - Active lane: **W01_P1C01_PRODUCTION_VERTICAL_SLICE**
-- Active production drop: **B_HOBBITON_BAGEND_ARCHITECTURE**
+- Active production drop: **C1_MATERIAL_TEXTURE_BINDING**
 - Previous lane: **W00_ARCHITECTURAL_STABILIZATION — CLOSED**
 - Canonical integration/programmer-handoff branch: `develop`
 - Stable release branch: `main`
