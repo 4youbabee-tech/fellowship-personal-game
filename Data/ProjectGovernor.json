@@ -4216,7 +4216,7 @@
     "checkpoint_id": "CP-W00-159",
     "source_head": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
     "branch": "maintenance/w00-lessons-lock-v1",
-    "pull_request": 0,
+    "pull_request": 73,
     "verified": {
       "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
       "latest_automated_closure": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: current canonical develop machine-green",
@@ -4376,8 +4376,8 @@
     "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
     "current_short_branch": "maintenance/w00-lessons-lock-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 0,
-    "open_pr_policy": "One bounded W00 lessons-lock maintenance PR may target develop. It may change only governance/regression-memory/validation-policy surfaces needed to preserve learned invariants. No W01 gameplay implementation is mixed into it.",
+    "current_open_pr": 73,
+    "open_pr_policy": "PR #73 is the sole bounded W00 lessons-lock maintenance train targeting develop. It may change only governance/regression-memory/validation-policy surfaces needed to preserve learned invariants. No W01 gameplay implementation is mixed into it.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
       "date": "2026-09-25",
