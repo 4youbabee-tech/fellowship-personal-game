@@ -1,3 +1,11 @@
+## 2026-09-25 - W01 P1C01 Drop C1: material texture binding
+
+- **Shire authored albedo pipeline:** IMPLEMENTED IN SOURCE — MTL `map_Kd` is parsed and bound into deterministic `AlbedoTexture` material-instance parameters.
+- **Master material:** IMPLEMENTED IN SOURCE — BaseColor uses `AlbedoTexture * Color`; Roughness/Metallic contract remains intact.
+- **Gameplay/runtime ownership:** UNCHANGED — editor import pipeline only.
+- **Foliage wind/WPO:** NOT YET IMPLEMENTED; scheduled as C2 after C1 exact-head green.
+- **Validation:** STATIC-VALIDATED only until fresh Pre-Unreal + UE4.27.2 production import/core validation succeeds.
+
 ## 2026-09-25 - PR #76 handoff-baseline coherence correction
 
 - **Pre-Unreal #890/#891/#892:** FAILED in Governor handoff coherence, not in architecture runtime.
