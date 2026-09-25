@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "policy_id": "PRIVATE_OFFLINE_ASSET_POLICY_V1",
+  "status": "ACTIVE_OWNER_POLICY",
+  "authority": "Data/ProjectGovernor.json / DEC-037",
+  "owner_intent": "Maximize personal offline Shire Journey production speed without allowing private-use art/audio to contaminate the separately distributable/commercial framework.",
+  "lanes": {
+    "PRIVATE_OFFLINE_ONLY": {
+      "purpose": "Personal local/offline interactive-film experience only.",
+      "license_gate": "NON_BLOCKING_FOR_LOCAL_EXPERIMENTAL_INTAKE",
+      "required_metadata": [
+        "source/provider or user-supplied origin when known",
+        "original filename/asset ID when known",
+        "acquisition date when known",
+        "known/unknown license status",
+        "PRIVATE_OFFLINE_ONLY tag"
+      ],
+      "allowed_states": [
+        "DISCOVERED",
+        "PRIVATE_OFFLINE_STAGED",
+        "PRIVATE_OFFLINE_IMPORTED",
+        "PRIVATE_OFFLINE_INTEGRATED"
+      ],
+      "restrictions": [
+        "Never classify as distributable/commercial Approved merely because local import works.",
+        "Never include in the sellable Framework package, release asset bundle, public repository, marketplace package or reusable commercial sample content.",
+        "Unknown/franchise/ripped/editorial assets remain replaceable temporary/private media, not project-owned final art.",
+        "Do not remove source/provenance notes merely to silence CI.",
+        "Provider-access rules remain binding: no authentication, paywall, DRM or anti-bot bypass."
+      ]
+    },
+    "DISTRIBUTABLE_FRAMEWORK": {
+      "purpose": "Reusable framework and any future product/release intended for third parties.",
+      "license_gate": "STRICT",
+      "requirements": [
+        "clear redistributable/commercial entitlement",
+        "provenance/receipt/attribution metadata as applicable",
+        "no unknown-license, ripped, editorial-only or private-offline-only art/audio",
+        "commercial package must build without depending on Private Offline assets"
+      ]
+    }
+  },
+  "isolation_contract": {
+    "recommended_local_root": "SourceAssets/PrivateOffline",
+    "git_policy": "Keep PRIVATE_OFFLINE_ONLY payloads out of distributable/public package history unless their redistribution rights are separately cleared.",
+    "framework_dependency_rule": "Framework code and data contracts must not hard-reference Private Offline payloads; private integration should remain swappable/soft-referenced where runtime integration is needed.",
+    "export_gate": "Any framework/release export must run a zero-PRIVATE_OFFLINE dependency check before distribution."
+  },
+  "workflow_rule": "License uncertainty must not stop personal offline experimentation, but it changes classification and export eligibility. Access restrictions and technical safety/intake checks still apply.",
+  "truth_boundary": "PRIVATE_OFFLINE_IMPORTED means only that the user's private local project can consume the asset. It does not prove ownership, redistribution rights, commercial clearance, UE acceptance, visual acceptance or device performance."
+}
