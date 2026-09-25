@@ -1,3 +1,13 @@
+## 2026-09-25 - W01 drop 1 implemented: ambient single ownership and budget authority
+
+- Branch: `production/w01-p1c01-kickoff-v1`.
+- `ShirePrototypeWorldBuilder` no longer creates its own `AShireAmbientNPC` population. Ambient crowds are now owned by `ALivingWorldDirector` and therefore use its existing object pool, culling, target density and danger-thinning path.
+- Named/story NPCs and quest actors remain builder-owned; this change does not transfer canonical story ownership to the ambient system.
+- `LivingWorldEventPlan.json#region_budgets` is now the sole runtime authority for micro-event caps and event-start cadence. `WorldLifeSaturationPlan.json` is baseline-population density/role authority only.
+- P1C01 `PlayRunner` remains in the director-owned role set so the pre-adventure playful Shire beat is not silently lost when duplicate builder crowds are removed.
+- Static source checks: direct builder ambient spawn count = 0; old life-saturation micro-event override reads = 0.
+- Status: **STATIC-VALIDATED / FRESH PRE-UNREAL + UE4.27.2 COMPILE/RUNTIME PROOF PENDING**. No new PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-25 - W00 closed; W01/P1C01 production vertical slice opened
 
 - Canonical W00 close head: `develop@809e56a9e1dc4b453e02a0b04b6875a71df21933`.
