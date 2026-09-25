@@ -1,3 +1,13 @@
+## 2026-09-25 - PR #78 Unreal #751 C2 compile correction
+
+- **Pre-Unreal #916:** SUCCESS on `96e6fc2da...`.
+- **Unreal #751:** FAILURE at C++ compile only; exact C1083 missing `MaterialExpressionSimpleGrassWind.h`.
+- **Root cause:** UE4.27 SimpleGrassWind is a material function asset, not a material-expression C++ class/header.
+- **Correction in source:** use `UMaterialExpressionMaterialFunctionCall`, load the Engine `SimpleGrassWind` function, bind WindIntensity / distance-scaled WindWeight / WindSpeed, and route its output to World Position Offset.
+- **Far path:** `M_ProductionFoliageFar` remains no-WPO.
+- **Runtime loading:** unchanged; editor-only production-import asset lookup, not gameplay asset streaming.
+- **Validation:** STATIC-VALIDATED pending fresh exact-head machine proof. No compile success is claimed yet for the correction.
+
 ## 2026-09-25 - PR #78 PG-166 validator correction
 
 - **Pre-Unreal #911:** FAILURE in structure validation only on `428895672...`.
