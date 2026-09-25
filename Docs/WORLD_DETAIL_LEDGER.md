@@ -1,3 +1,9 @@
+## 2026-09-25 - Multi-threaded campaign world-state rule registered
+
+- Post-Amon-Hen world building must track route-specific chapter states and synchronization barriers rather than assuming one global linear timeline.
+- Rohan, Ring-bearer, Gondor and late-Rohan world states may prepare in parallel, but shared cinematics and global world-state transitions require source-defined synchronization.
+- Explicit chapter-state assets are required for major transformations such as Isengard aftermath/flooding, Helm's Deep damage and Minas Tirith siege states; do not derive these from generic dynamic simulation.
+
 ## 2026-09-25 - Whole-game region build coverage registered
 
 - Every canonical playable region is now represented in `Data/WholeGameWorldBuildCoverageV1.json` with a complete cross-discipline build checklist.
