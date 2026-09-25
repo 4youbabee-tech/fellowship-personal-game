@@ -2496,7 +2496,8 @@
         "Data/ExternalAssetManifest.json",
         "Data/CharacterProductionMatrix.json",
         "Data/AudioAssetSourcingWaveV2.json",
-        "Docs/WORLD_DETAIL_LEDGER.md"
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Data/PrivateOfflineAssetPolicyV1.json"
       ],
       "implementation_refs": [
         "Data/TrilogyProductionAssetWarehouse.json establishes the first complete trilogy-wide catalogue from Sources 02/03/04/05/11 plus the supplied film trilogy screenplays.",
@@ -2510,7 +2511,8 @@
         "Warehouse bulk-intake V2 adds source-page-verified P1C01 Poly Haven ground/woodland stock, additional Kenney CC0 support kits, page-licensed Quaternius Farm Buildings FBX support, verified OpenGameArt CC0 footsteps/fire/wood-metal/birds, and a fail-closed per-pack Quaternius license gate.",
         "Data/TrilogyWorldFoundationPlanV1.json establishes parallel world-foundation preproduction for all major trilogy regions while keeping P1C01 as the first assembled benchmark.",
         "Verified official KayKit public GitHub lane now includes Skeletons 1.0 as CC0 fully-rigged/animated FBX/GLTF technical enemy-pipeline stock; this is QA/support inventory, not canonical LOTR enemy art.",
-        "Final pre-runner source-safe saturation adds verified official KayKit CC0 Restaurant Bits, Halloween Bits and City Builder Bits lanes with strict selective/manual-fit boundaries."
+        "Final pre-runner source-safe saturation adds verified official KayKit CC0 Restaurant Bits, Halloween Bits and City Builder Bits lanes with strict selective/manual-fit boundaries.",
+        "DEC-037 / Data/PrivateOfflineAssetPolicyV1.json separates fast private-offline intake from strict distributable-framework clearance; private-only assets stay tagged and excluded from commercial exports."
       ],
       "missing_work": [
         "Bridge staged rigged-character archives into a real UE4.27 skeletal import/runtime path once the Engine Content ACL gate is restored; prove humans/enemies visibly in P1C01 before broader runtime expansion.",
@@ -3458,6 +3460,24 @@
         "Unreal #704 SUCCESS on develop ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
         "Docs/PROJECT_GUARDIAN.md PG-161",
         "Scripts/classify_unreal_validation.ps1"
+      ]
+    },
+    {
+      "id": "DEC-037",
+      "title": "Separate private-offline asset intake from distributable framework clearance",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WAREHOUSE-001",
+        "REQ-ASSET-001",
+        "REQ-GOV-001"
+      ],
+      "resolution": "For the owner's private offline Shire Journey experience, uncertain or non-commercially-cleared art/audio may be classified and used only in an explicitly isolated PRIVATE_OFFLINE_ONLY lane without blocking local experimentation solely on commercial-license uncertainty. Such assets must remain tagged, replaceable and excluded from every distributable/commercial Framework package. The distributable Framework lane remains strict: only assets with clear redistribution/commercial entitlement may ship. Provider-access restrictions remain independent and binding: do not bypass authentication, paywalls, DRM, anti-bot controls or prohibited scraping.",
+      "rationale": "The owner wants maximum private-production speed while preserving a clean framework that may later be sold. Classification/isolation is safer than deleting provenance or globally disabling license/access guards.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/PrivateOfflineAssetPolicyV1.json",
+        "Data/WarehouseProviderAccessPolicyV1.json",
+        "Docs/EXTERNAL_ASSET_SOURCING.md"
       ]
     }
   ],
