@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "policy_id": "FAST_PRODUCTION_SMART_FENCE_V1",
+  "status": "ACTIVE_PREPARATION_POLICY",
+  "purpose": "Relax administrative blockers in preparation/private lanes while leaving runtime correctness, performance, memory and packaging guards fail-closed.",
+  "lanes": {
+    "RUNTIME_INTEGRATION": {
+      "blocking": [
+        "compile/runtime defects",
+        "world-commit/save/rollback defects",
+        "grounding/collision/nav blockers",
+        "runtime dependency gaps",
+        "synchronous heavy loading",
+        "pooling/memory/performance regressions",
+        "technical asset corruption",
+        "required exact-head engine gate"
+      ],
+      "warnings": []
+    },
+    "WAREHOUSE_PREPARATION": {
+      "blocking": [
+        "dangerous payload",
+        "corrupt archive",
+        "hash mismatch",
+        "provider access bypass",
+        "forbidden production format at READY_FOR_IMPORT"
+      ],
+      "warnings": [
+        "candidate not downloaded yet",
+        "non-final naming",
+        "optional descriptive metadata gaps"
+      ]
+    },
+    "PRIVATE_OFFLINE_ONLY": {
+      "blocking": [
+        "provider access bypass",
+        "dangerous/corrupt payload",
+        "BMP production texture",
+        "animated final production asset not FBX",
+        "hard dependency from distributable framework",
+        "technical import defect"
+      ],
+      "warnings": [
+        "unknown commercial redistribution rights",
+        "non-final naming",
+        "optional descriptive metadata"
+      ]
+    },
+    "SOURCE_PDF_INTAKE": {
+      "blocking": [
+        "source role contradicts Source Rules",
+        "visual-only source used as canon fact"
+      ],
+      "warnings": [
+        "large binary kept outside Git",
+        "CI machine lacks the original PDF binary"
+      ]
+    }
+  },
+  "parallelism": {
+    "allowed": [
+      "source PDF indexing",
+      "warehouse acquisition",
+      "material intake/QC",
+      "audio/foley prep",
+      "character/animation prep",
+      "later-region packets",
+      "CI/hygiene repair"
+    ],
+    "serialized": "Exactly one runtime-changing integration PR until P1C01 Gate 6/7."
+  },
+  "evidence_boundary": "Policy only; relaxed administration is not technical acceptance."
+}
