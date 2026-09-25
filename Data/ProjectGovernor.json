@@ -4197,18 +4197,24 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "Canonical develop consolidation and stale-branch cleanup after automated W00 closure.",
+    "active_wave": "Develop consolidation, branch cleanup, local launcher self-update hardening, and Unreal validation-cost correction. No W01 feature expansion.",
     "next_actions": [
-      "Merge PR #70 after Pre-Unreal/static validation is green.",
-      "Pull canonical develop in the Documents clone.",
-      "Run one P1C01 PIE confirmation for ShireStartupGrounding PASS, no player fall, and no project-owned SetStaticMesh mobility warning.",
-      "Then close the remaining W00 human PIE tail and begin the P1C01 production-quality vertical slice."
+      "Require exact-head Pre-Unreal green on PR #70.",
+      "Require exact-head Unreal workflow decision to pass without unnecessary packaging for this maintenance delta.",
+      "Merge PR #70 into develop only after green exact-head validation.",
+      "Let Branch Cleanup delete approved stale refs and verify develop/main remain.",
+      "Run the remaining P1C01 human PIE grounding/traversal plus project-owned SetStaticMesh mobility-warning check from the Documents clone.",
+      "Close W00 only if that human evidence is clean, then open P1C01 production work."
     ],
     "unverified_acceptance": [
-      "P1C01 human PIE grounding/traversal confirmation on canonical post-cleanup develop",
-      "target-device 720p Low-Medium performance profiling",
-      "P1C01 visual acceptance",
-      "real audio listening/mix acceptance"
+      "PR #70 exact-head final validation",
+      "post-merge branch cleanup execution",
+      "local Documents-clone launcher rerun after temp-copy hardening",
+      "P1C01 human PIE grounding/traversal on canonical develop",
+      "absence of project-owned SetStaticMesh mobility warnings in that PIE session",
+      "target-device performance profiling",
+      "visual/pacing/NPC-believability acceptance",
+      "real audio listening/mix after complete bank integration"
     ],
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
@@ -4333,12 +4339,35 @@
       "cp56/fellowship-experience-megapass-v1",
       "work/automation-first-runtime-observation"
     ],
-    "cleanup_rule": "Delete historical branches only after confirming their meaningful content is already in develop or intentionally superseded. Never bulk-merge diverged stale branches. Unique planning/warehouse records must be salvaged or explicitly archived before deletion.",
+    "cleanup_rule": "After PR #70 lands, Data/BranchCleanupPlan.json is authoritative for remote branch-ref cleanup. Preserve develop, main and archive/generated-audio-intake-v1 only; delete listed historical refs after selective salvage/supersession audit.",
     "current_short_branch": "maintenance/develop-consolidation-v1",
     "integration_baseline": "develop",
     "current_open_pr": 70,
-    "open_pr_policy": "PR #70 is the active maintenance/consolidation lane targeting develop. It may only consolidate proven/superseded branch state and harden local workflow; do not revive stale feature branches or treat this maintenance PR as gameplay/visual acceptance.",
-    "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop."
+    "open_pr_policy": "PR #70 is the single bounded maintenance consolidation train targeting develop. PR #71 is superseded after its unique safe payload was folded into #70. Historical diverged branches must not be bulk-merged.",
+    "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
+    "cleanup_snapshot": {
+      "date": "2026-09-25",
+      "active_pr": 70,
+      "active_branch": "maintenance/develop-consolidation-v1",
+      "canonical_branch": "develop",
+      "stable_release_branch": "main",
+      "archive_branch": "archive/generated-audio-intake-v1",
+      "plan": "Data/BranchCleanupPlan.json",
+      "audit": "Docs/BRANCH_CONSOLIDATION_AUDIT.md",
+      "stale_prs_closed": [
+        62,
+        63,
+        66
+      ],
+      "superseded_parallel_pr": 71,
+      "physical_cleanup": "Post-merge Branch Cleanup workflow deletes approved stale refs and verifies develop/main survive."
+    },
+    "validation_cost_contract": {
+      "governance_docs_maintenance": "inherit parent green proof; no engine build/package",
+      "ordinary_cpp_runtime_data_sourceassets": "core UE lane: source integrity + editor build/import + Automation/startup/chapter/state/warning checks; no package/cook",
+      "packaging_critical": "full lane for Config, Build.cs, Target.cs, chapter streaming, Package/Cook/Release deltas",
+      "acceptance_verifier": "acceptance lane may package/resume only when contract requires it"
+    }
   },
   "side_branch_audit": {
     "date": "2026-09-21",
@@ -5276,7 +5305,7 @@
     ]
   },
   "w00_final_closure": {
-    "status": "AUTOMATED_CLOSURE_GREEN_HUMAN_PIE_TAIL_PENDING",
+    "status": "AUTOMATED_CLOSURE_GREEN_HUMAN_PIE_WARNING_TAIL_PENDING",
     "branch": "develop",
     "base_green_head": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
     "plan": "Data/W00FinalClosurePlanV1.json",
