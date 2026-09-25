@@ -635,3 +635,31 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 **Current state:** the Shire, Bree, Fellowship and Isengard procedural `SpawnShape` paths set `Movable` before `SetStaticMesh`.
 
 **Guard:** Pre-Unreal structurally checks that ordering in all four builders so the warning family cannot silently return.
+
+### PG-161 — Do not repeat expensive Unreal/package proof across safe metadata ancestry
+**Observed waste:** after branch consolidation, the direct parent Unreal run had been cancelled even though a recent ancestor had full green engine/package proof. A governance/docs-only develop update therefore fell through the classifier fail-safe and Unreal #704 repeated build/import/runtime/cook/package work that the content delta itself did not require.
+
+**Root cause:** validation inheritance looked only at the immediate parent workflow result. A cancelled metadata parent erased visibility of still-valid nearby green proof.
+
+**Permanent rule:** governance/docs-only changes may inherit the nearest first-parent green Unreal proof only when every changed path from that green ancestor to the candidate head is still inside the explicit safe-governance set. Any runtime, SourceAssets, Config, Build.cs/Target.cs, streaming, packaging/release or unclassified path breaks inheritance and fails back to the required core/full lane. Changes to the classifier/Pre-Unreal policy itself may inherit a green parent without rerunning the engine, but only through the explicit validation-policy-only path.
+
+**Guard:** Pre-Unreal requires `Test-NearestSafeGovernanceAncestorGreen`, `Test-SafeGovernanceDelta`, the transitive-proof marker and the validation-policy-only marker. This turns evidence reuse into an explicit fail-closed contract instead of a shortcut.
+
+### PG-162 — Local update/PIE launchers must be immutable while Git pulls
+**Observed failure:** the Documents-clone launcher ran `git pull` while CMD was still parsing the same batch file. Git rewrote the running file and execution continued at the wrong offsets, producing `'defined' is not recognized`, an empty branch value and `CANONICAL_BRANCH_REQUIRED`.
+
+**Root cause:** a self-updating batch controller was executing directly from the tracked repository path.
+
+**Permanent rule:** `SHIRE_UPDATE_BUILD_LAUNCH.bat` and `SHIRE_PIE_VERIFY.bat` first copy themselves to a unique temporary file, run from that immutable copy, pass the real repository root explicitly, and delete the temporary copy afterward. Interactive Unreal remains forbidden from the Actions runner workspace.
+
+**Guard:** Pre-Unreal requires the immutable-bootstrap markers in both launchers.
+
+### PG-163 — Historical branch sprawl must never become programmer handoff state
+**Observed risk:** many repair/production/verification/warehouse branches accumulated overlapping snapshots, making it unclear which branch contained the complete project and creating a temptation to bulk-merge stale code.
+
+**Resolution:** unique still-valid data/ops content was selectively salvaged, stale pre-Public/Private runtime branches were classified as superseded, old PRs were closed, and Branch Cleanup reduced the remote repository to `develop` + `main`.
+
+**Permanent rule:** `develop` is the sole canonical development/programmer-handoff lane; `main` is stable/release only. Future implementation uses short-lived single-purpose PRs targeting develop. After merge, the temporary branch must self-clean once meaningful content is integrated. Never bulk-merge an old diverged branch merely because it is ahead by commit count.
+
+**Guard:** `Data/BranchCleanupPlan.json`, the branch-cleanup workflow, the Governor branch workflow contract, and Gate 0 together preserve this rule.
+
