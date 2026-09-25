@@ -1,6 +1,7 @@
 ## 2026-09-25 - Active runtime lane: C2 v2 clean transplant
 
 - Baseline: `develop@4980c3c8b1f4660863940a58e052dcf8095772cf`.
+- PR: #80 (W01/P1C01 C2 v2 lightweight foliage wind candidate)
 - Branch: `production/w01-p1c01-foliage-wind-v2`.
 - Runtime scope: P1C01 Drop C2 lightweight foliage wind only.
 - Global preparation: BigProductionBuildLaunchV1 waves continue in parallel across the whole game.
