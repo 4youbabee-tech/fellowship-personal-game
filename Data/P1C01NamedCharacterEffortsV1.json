@@ -1,0 +1,265 @@
+{
+  "schema_version": 1,
+  "bank_id": "P1C01_NAMED_CHARACTER_EFFORTS_V1",
+  "status": "GENERATION_IN_PROGRESS",
+  "truth_boundary": "Nonverbal named-character effort candidates generated from the already fixed original preset voice identities. No playback/animation binding/PIE/device/listening acceptance is implied. Expiring signed delivery URLs were intentionally removed during develop consolidation; task/cue identity is preserved without treating temporary URLs as durable project state.",
+  "source_basis": [
+    "Data/VoiceProductionMasterPlanV1.json",
+    "Data/LivingWorldMasterCoverageMapV1.json",
+    "Data/P1C01CompleteAudioBankV1.json"
+  ],
+  "rules": [
+    "No spoken lore/story content in effort cues.",
+    "Use effort cues sparingly and state/context gated; no repetitive vocal spam.",
+    "Animation/gameplay event binding waits for W00/runtime lane.",
+    "Named-character efforts preserve the established voice identity; ambient residents use licensed generic human-foley pools where possible.",
+    "Human listening review is mandatory because expressive tag rendering can vary."
+  ],
+  "cues": [
+    {
+      "cue_id": "EFF_Frodo_Breath_01",
+      "speaker": "Frodo",
+      "voice": "Noah",
+      "category": "BREATH",
+      "generation_text": "[breathes heavily]",
+      "generation_status": "SUBMITTED",
+      "expected_ue_path": "/Game/Audio/Voice/Frodo/EFF_Frodo_Breath_01.EFF_Frodo_Breath_01",
+      "spatial_mode": "3D_FROM_SPEAKER",
+      "task_id": "3329234a-1735-449a-b2b5-0247b603155f"
+    },
+    {
+      "cue_id": "EFF_Frodo_Exert_01",
+      "speaker": "Frodo",
+      "voice": "Noah",
+      "category": "EXERTION",
+      "generation_text": "[strains softly]",
+      "generation_status": "SUBMITTED",
+      "expected_ue_path": "/Game/Audio/Voice/Frodo/EFF_Frodo_Exert_01.EFF_Frodo_Exert_01",
+      "spatial_mode": "3D_FROM_SPEAKER",
+      "task_id": "7a2196c0-8f66-4ec2-b017-17b0ebb7bc37"
+    },
+    {
+      "cue_id": "EFF_Frodo_Fear_01",
+      "speaker": "Frodo",
+      "voice": "Noah",
+      "category": "FEAR",
+      "generation_text": "[gasps quietly]",
+      "generation_status": "SUBMITTED",
+      "expected_ue_path": "/Game/Audio/Voice/Frodo/EFF_Frodo_Fear_01.EFF_Frodo_Fear_01",
+      "spatial_mode": "3D_FROM_SPEAKER",
+      "task_id": "c3678fba-f52d-4f88-b38e-f18d631f1a8e"
+    },
+    {
+      "cue_id": "EFF_Frodo_Pain_01",
+      "speaker": "Frodo",
+      "voice": "Noah",
+      "category": "PAIN",
+      "generation_text": "[grunts in pain]",
+      "generation_status": "SUBMITTED",
+      "expected_ue_path": "/Game/Audio/Voice/Frodo/EFF_Frodo_Pain_01.EFF_Frodo_Pain_01",
+      "spatial_mode": "3D_FROM_SPEAKER",
+      "task_id": "1b3f0c87-e5f0-4e98-aa49-5708e29a06ea"
+    },
+    {
+      "cue_id": "EFF_Frodo_Recovery_01",
+      "speaker": "Frodo",
+      "voice": "Noah",
+      "category": "RECOVERY",
+      "generation_text": "[exhales slowly]",
+      "generation_status": "SUBMITTED",
+      "expected_ue_path": "/Game/Audio/Voice/Frodo/EFF_Frodo_Recovery_01.EFF_Frodo_Recovery_01",
+      "spatial_mode": "3D_FROM_SPEAKER",
+      "task_id": "a46af1fb-e078-402d-9c63-784f517a7190"
+    },
+    {
+      "cue_id": "EFF_Sam_Breath_01",
+      "speaker": "Sam",
+      "voice": "Brodie",
+      "category": "BREATH",
+      "generation_text": "[breathes heavily]",
+      "generation_status": "SUBMITTED",
+      "expected_ue_path": "/Game/Audio/Voice/Sam/EFF_Sam_Breath_01.EFF_Sam_Breath_01",
+      "spatial_mode": "3D_FROM_SPEAKER",
+      "task_id": "ca0af4c7-c9ba-4396-8f81-b9d8b2ae9efa"
+    },
+    {
+      "cue_id": "EFF_Sam_Exert_01",
+      "speaker": "Sam",
+      "voice": "Brodie",
+      "category": "EXERTION",
+      "generation_text": "[grunts with effort]",
+      "generation_status": "SUBMITTED",
+      "expected_ue_path": "/Game/Audio/Voice/Sam/EFF_Sam_Exert_01.EFF_Sam_Exert_01",
+      "spatial_mode": "3D_FROM_SPEAKER",
+      "task_id": "e397060b-662d-4883-b1d0-d35404be07b1"
+    },
+    {
+      "cue_id": "EFF_Sam_Fear_01",
+      "speaker": "Sam",
+      "voice": "Brodie",
+      "category": "FEAR",
+      "generation_text": "[breathes shakily]",
+      "generation_status": "SUBMITTED",
+      "expected_ue_path": "/Game/Audio/Voice/Sam/EFF_Sam_Fear_01.EFF_Sam_Fear_01",
+      "spatial_mode": "3D_FROM_SPEAKER",
+      "task_id": "a4f27be3-4848-4ee2-85ad-a03908c430e7"
+    },
+    {
+      "cue_id": "EFF_Sam_Pain_01",
+      "speaker": "Sam",
+      "voice": "Brodie",
+      "category": "PAIN",
+      "generation_text": "[grunts in pain]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Sam/EFF_Sam_Pain_01.EFF_Sam_Pain_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    },
+    {
+      "cue_id": "EFF_Sam_Recovery_01",
+      "speaker": "Sam",
+      "voice": "Brodie",
+      "category": "RECOVERY",
+      "generation_text": "[exhales with relief]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Sam/EFF_Sam_Recovery_01.EFF_Sam_Recovery_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    },
+    {
+      "cue_id": "EFF_Merry_Breath_01",
+      "speaker": "Merry",
+      "voice": "James",
+      "category": "BREATH",
+      "generation_text": "[breathes heavily]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Merry/EFF_Merry_Breath_01.EFF_Merry_Breath_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    },
+    {
+      "cue_id": "EFF_Merry_Exert_01",
+      "speaker": "Merry",
+      "voice": "James",
+      "category": "EXERTION",
+      "generation_text": "[grunts with effort]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Merry/EFF_Merry_Exert_01.EFF_Merry_Exert_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    },
+    {
+      "cue_id": "EFF_Merry_Fear_01",
+      "speaker": "Merry",
+      "voice": "James",
+      "category": "FEAR",
+      "generation_text": "[gasps]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Merry/EFF_Merry_Fear_01.EFF_Merry_Fear_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    },
+    {
+      "cue_id": "EFF_Merry_Recovery_01",
+      "speaker": "Merry",
+      "voice": "James",
+      "category": "RECOVERY",
+      "generation_text": "[exhales with relief]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Merry/EFF_Merry_Recovery_01.EFF_Merry_Recovery_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    },
+    {
+      "cue_id": "EFF_Pippin_Breath_01",
+      "speaker": "Pippin",
+      "voice": "Chad",
+      "category": "BREATH",
+      "generation_text": "[breathes heavily]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Pippin/EFF_Pippin_Breath_01.EFF_Pippin_Breath_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    },
+    {
+      "cue_id": "EFF_Pippin_Exert_01",
+      "speaker": "Pippin",
+      "voice": "Chad",
+      "category": "EXERTION",
+      "generation_text": "[grunts with effort]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Pippin/EFF_Pippin_Exert_01.EFF_Pippin_Exert_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    },
+    {
+      "cue_id": "EFF_Pippin_Fear_01",
+      "speaker": "Pippin",
+      "voice": "Chad",
+      "category": "FEAR",
+      "generation_text": "[gasps nervously]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Pippin/EFF_Pippin_Fear_01.EFF_Pippin_Fear_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    },
+    {
+      "cue_id": "EFF_Pippin_Recovery_01",
+      "speaker": "Pippin",
+      "voice": "Chad",
+      "category": "RECOVERY",
+      "generation_text": "[exhales with relief]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Pippin/EFF_Pippin_Recovery_01.EFF_Pippin_Recovery_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    },
+    {
+      "cue_id": "EFF_Gandalf_Breath_01",
+      "speaker": "Gandalf",
+      "voice": "Elias",
+      "category": "BREATH",
+      "generation_text": "[breathes heavily]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Gandalf/EFF_Gandalf_Breath_01.EFF_Gandalf_Breath_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    },
+    {
+      "cue_id": "EFF_Gandalf_Exert_01",
+      "speaker": "Gandalf",
+      "voice": "Elias",
+      "category": "EXERTION",
+      "generation_text": "[strains with effort]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Gandalf/EFF_Gandalf_Exert_01.EFF_Gandalf_Exert_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    },
+    {
+      "cue_id": "EFF_Gandalf_Pain_01",
+      "speaker": "Gandalf",
+      "voice": "Elias",
+      "category": "PAIN",
+      "generation_text": "[grunts in pain]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Gandalf/EFF_Gandalf_Pain_01.EFF_Gandalf_Pain_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    },
+    {
+      "cue_id": "EFF_Bilbo_Sigh_01",
+      "speaker": "Bilbo",
+      "voice": "Vincent",
+      "category": "RECOVERY",
+      "generation_text": "[sighs softly]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Bilbo/EFF_Bilbo_Sigh_01.EFF_Bilbo_Sigh_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    },
+    {
+      "cue_id": "EFF_Bilbo_Laugh_01",
+      "speaker": "Bilbo",
+      "voice": "Vincent",
+      "category": "SOCIAL",
+      "generation_text": "[chuckles warmly]",
+      "generation_status": "PENDING",
+      "expected_ue_path": "/Game/Audio/Voice/Bilbo/EFF_Bilbo_Laugh_01.EFF_Bilbo_Laugh_01",
+      "spatial_mode": "3D_FROM_SPEAKER"
+    }
+  ],
+  "counts": {
+    "total": 23,
+    "generated_external": 0,
+    "pending": 15,
+    "submitted": 8
+  },
+  "last_refresh": "2026-09-24"
+}
