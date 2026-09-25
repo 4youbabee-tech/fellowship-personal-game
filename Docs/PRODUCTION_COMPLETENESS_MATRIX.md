@@ -1,3 +1,11 @@
+## 2026-09-26 - Source architecture hygiene repair
+
+- **SourceArchitecturePlan:** synchronized after the already-completed Public/Private migration.
+- **Rows corrected:** 62 migrated runtime source entries.
+- **Repository comparison:** 63 actual runtime source files / 63 manifest rows / 0 stale / 0 missing.
+- **Runtime impact:** none; no C++ implementation changed.
+- **Evidence state:** STATIC-VALIDATED only.
+
 ## 2026-09-25 - Global external-resource production expansion
 
 - **Resource Bible review:** COMPLETE FIRST PASS — 68 pages / 225 classified sources audited as a production sourcing map.
