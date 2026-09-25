@@ -268,5 +268,22 @@
       "Heavy production assets remain soft/asynchronous; this drop reuses already-resident imported world meshes and adds no synchronous LoadObject path.",
       "Visual terrain meshes do not replace deterministic grounding/collision proof."
     ]
+  },
+  "p1c01_architecture": {
+    "status": "IMPLEMENTED_PENDING_TARGET_DEVICE_MEASUREMENT",
+    "scope": "Bag End exterior + Hobbiton domestic/common/party architecture",
+    "rules": [
+      "Reuse already-resident Shire/Common production meshes; no new synchronous LoadObject path.",
+      "Unique hero architecture may use bounded actors; repeated micro-detail remains HISM/ISM where practical.",
+      "Do not add interior streaming or heavy hero assets until approved FBX/provenance assets exist.",
+      "Measure shadow/collision/HLOD cost on target device before Gate 6/7."
+    ],
+    "deferred_measurements": [
+      "architecture actor count after import",
+      "shadowed draw calls",
+      "collision primitives",
+      "HLOD opportunity",
+      "Bag End interior memory once authored"
+    ]
   }
 }
