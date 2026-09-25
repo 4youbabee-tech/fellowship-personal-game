@@ -36,7 +36,8 @@
     "Final W00 automation must prove packaged runtime data and packaged executable startup before W01 opens.",
     "Do not repeat an expensive UE4 build/cook/package gate merely because an immediate metadata parent was cancelled; reuse the nearest still-valid green proof only across an explicitly safe governance/docs-only ancestry, and fail closed if any runtime/asset/config/packaging path intervenes.",
     "Local tracked launch controllers must never update themselves in place. Any helper that performs git pull while running must execute from an immutable temporary copy and preserve the explicit develop lane.",
-    "The programmer handoff must remain branch-simple: develop is canonical development/integration, main is stable/release, and temporary implementation branches self-clean after merge once meaningful content is integrated."
+    "The programmer handoff must remain branch-simple: develop is canonical development/integration, main is stable/release, and temporary implementation branches self-clean after merge once meaningful content is integrated.",
+    "Temporary branches must merge meaningful completed work into develop immediately, then delete the branch ref; only active work or unresolved unique-content salvage may remain outside develop."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -2725,6 +2726,26 @@
       ],
       "checkpoint": "ARCHITECTURAL_STABILIZATION_GATE",
       "notes": "Validation builds are allowed and required during this freeze; new gameplay/content features are not."
+    },
+    {
+      "id": "REQ-EXEC-002",
+      "title": "Immediate completed-branch integration and stale-branch removal",
+      "category": "ProjectGovernance",
+      "priority": "HIGH",
+      "status": "IMPLEMENTED",
+      "origin": "Owner explicitly requested that dead branches be deleted and every completed working branch be merged into develop immediately.",
+      "intent": "Keep develop as the continuously current integration truth. Temporary branches exist only while active work is unfinished or while unique content is awaiting selective salvage.",
+      "acceptance_criteria": [
+        "A branch with completed meaningful work is merged into develop immediately rather than left as a long-lived side branch.",
+        "After successful merge, the temporary branch ref is deleted.",
+        "Branches with zero commits ahead of develop and no active PR are removed as stale refs.",
+        "Divergent branches with unique commits are not deleted until their useful content is selectively reviewed/salvaged.",
+        "main remains stable/release only."
+      ],
+      "dependencies": [
+        "REQ-MEM-001",
+        "REQ-ORG-001"
+      ]
     }
   ],
   "hard_invariants": [
@@ -3545,6 +3566,22 @@
         "Data/MasterExternalResourceBibleAdoptionV1.json",
         "Data/GlobalWarehouseSourceRegistryV2.json"
       ]
+    },
+    {
+      "id": "DEC-042",
+      "title": "Immediate develop integration and dead-branch self-cleanup",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-EXEC-002"
+      ],
+      "resolution": "develop is the canonical live integration branch. Once a temporary branch is finished, its meaningful content must be merged into develop immediately and the branch ref removed. Zero-ahead stale refs may be deleted after confirming they are not active PR heads. Divergent branches with unique commits are preserved only until selective salvage is complete.",
+      "implementation_contract": [
+        "Data/BranchCleanupPlan.json lists safe stale refs for deletion and separately lists active work and pending-salvage branches.",
+        "Branch Cleanup runs when the cleanup plan lands on develop.",
+        "No completed branch is kept merely for historical convenience; Git history already preserves merged commits."
+      ],
+      "evidence_boundary": "Branch/process governance only; no gameplay acceptance claim.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
