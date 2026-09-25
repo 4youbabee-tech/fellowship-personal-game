@@ -2507,6 +2507,7 @@
         "Data/ResourceBibleSourceExpansionV1.json operationalizes Source 09 into voice/TTS, music, SFX, visual/UI, 3D, architecture, material, animation/mocap, LOTR-reference and AI-tool source lanes.",
         "Data/WarehouseAmbientCGAcquisitionBatchV1.json + Scripts/stage_ambientcg_warehouse.ps1 add public-API CC0 material staging.",
         "Data/WarehouseKenneyAcquisitionBatchV1.json + Scripts/stage_kenney_warehouse.ps1 add official-page CC0 support/world-kit staging.",
+        "Warehouse bulk-intake V2 adds source-page-verified P1C01 Poly Haven ground/woodland stock, additional Kenney CC0 support kits, page-licensed Quaternius Farm Buildings FBX support, verified OpenGameArt CC0 footsteps/fire/wood-metal/birds, and a fail-closed per-pack Quaternius license gate.",
         "Data/TrilogyWorldFoundationPlanV1.json establishes parallel world-foundation preproduction for all major trilogy regions while keeping P1C01 as the first assembled benchmark.",
         "Verified official KayKit public GitHub lane now includes Skeletons 1.0 as CC0 fully-rigged/animated FBX/GLTF technical enemy-pipeline stock; this is QA/support inventory, not canonical LOTR enemy art.",
         "Final pre-runner source-safe saturation adds verified official KayKit CC0 Restaurant Bits, Halloween Bits and City Builder Bits lanes with strict selective/manual-fit boundaries."
@@ -2516,6 +2517,7 @@
         "Expand Data/TrilogyAssetCandidateQueue.json until every warehouse family has at least one concrete candidate/project-authored path, then acquire/import eligible batches under the LFS/import contract.",
         "Acquire/author the first accepted skeletal FBX character bundles beginning with Frodo, Gandalf and Sam.",
         "Fill P1C01 Shire world/material/prop/vegetation/fauna/audio banks to a visible vertical-slice standard.",
+        "Convert the V2 warehouse staging receipts into intake-QC selections: extract/scan archives, verify FBX/PNG/TGA/WAV eligibility, dedupe, and promote only evidence-backed files to READY_FOR_IMPORT.",
         "Build reusable location/culture kits for Part II and Part III in the warehouse without prematurely opening runtime chapter implementation.",
         "Add automated warehouse coverage/status reporting so future reviews state exact filled/pending counts by category.",
         "Run UE4.27 import/compile, PIE, visual/audio and target-device gates before any slot is promoted from READY/INTEGRATED to ACCEPTED.",
