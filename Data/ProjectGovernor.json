@@ -3739,7 +3739,8 @@
         "PG-159",
         "PG-160",
         "PG-163",
-        "PG-164"
+        "PG-164",
+        "PG-165"
       ],
       "behavior": "Validate the exact W01 candidate head; machine evidence never promotes visual/device/performance acceptance."
     },
@@ -4185,7 +4186,7 @@
     "checkpoint_id": "CP-W01-P1C01-DROP-C1",
     "source_head": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
     "branch": "production/w01-p1c01-materials-vegetation-v1",
-    "pull_request": null,
+    "pull_request": 77,
     "verified": {
       "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
       "latest_automated_closure": "809e56a9e1dc4b453e02a0b04b6875a71df21933: Pre-Unreal #880 SUCCESS + Unreal #715 SUCCESS validation-policy inherit + Branch Cleanup #3 SUCCESS",
@@ -4204,10 +4205,10 @@
     ],
     "active_wave": "W01/P1C01 Drop C1 materials: bind authored Shire MTL albedo textures into deterministic production material instances; exact-head engine proof pending.",
     "next_actions": [
-      "1. Open bounded Drop C1 PR targeting develop.",
-      "2. Require Pre-Unreal + UE4.27.2 production import/core validation on exact head.",
-      "3. If green, implement C2 lightweight foliage master + parameterized wind WPO.",
-      "4. Do not increase foliage density before target-device profiling."
+      "1. Validate PR #77 exact head through Pre-Unreal and UE4.27.2 production-import/core lane.",
+      "2. If green, merge C1 and begin C2 lightweight foliage master + wind WPO.",
+      "3. Keep vegetation density unchanged until target-device profiling.",
+      "4. Preserve gameplay/quest/audio/world ownership while material presentation evolves."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -4339,10 +4340,10 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
-    "current_short_branch": "production/w01-p1c01-hobbiton-bagend-v1",
+    "current_short_branch": "production/w01-p1c01-materials-vegetation-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 76,
-    "open_pr_policy": "PR #76 is the sole short-lived W01/P1C01 Drop B architecture candidate targeting develop.",
+    "current_open_pr": 77,
+    "open_pr_policy": "PR #77 is the sole short-lived W01/P1C01 Drop C1 material-texture candidate targeting develop.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
       "date": "2026-09-25",
