@@ -6,6 +6,7 @@
 - Drop A implements the first production-world dependency: Shire terrain/geography foundation using deterministic HISM hills/slopes/riverbanks, explicit cull ranges and preserved quest/story anchors.
 - The old repeated actor-owned CP49 terrain silhouette layer is removed in favor of instancing. Existing broad collision foundation and startup grounding contracts are untouched.
 - Source-backed order remains: terrain/geography -> Hobbiton/Bag End -> materials/vegetation -> lighting/sky/fog/water -> character presentation -> living Shire -> quest/audio polish -> target-device profiling -> Gate 6/7.
+- Regression guard: PG-163 now enforces instanced geography ownership/cull bands and rejects a return to repeated terrain actor spawning.
 - Status: **STATIC-VALIDATED / EXACT-HEAD PRE-UNREAL + UE4.27.2 CORE PROOF PENDING**. No new PIE/device/visual/performance acceptance is claimed.
 
 ## 2026-09-25 - PR #74 repeated red isolated to incomplete W00->W01 governance transition
