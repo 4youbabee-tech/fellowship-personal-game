@@ -1,3 +1,11 @@
+## 2026-09-25 - Big build campaign execution boundary
+
+- Whole-game source/asset/world preparation is now active under `BigProductionBuildLaunchV1.json`.
+- Runtime implementation remains serialized through the P1C01 benchmark until Gate 6/7, while later-region materials, biome kits, architecture, character/animation, VFX, audio, terrain/scanning and localization stock can be prepared in parallel.
+- Current runtime world-detail step is C2 v2 foliage wind only; it does not increase density or add per-instance Tick.
+- C3 will bind foliage material identity; C4 will own LOD/cull/overdraw profiling before any density increase.
+- DEC-038 remains global: every later region must ultimately receive canon-locked beats plus playable safe windows and persistent world-state consequences.
+
 ## 2026-09-25 - Whole-game source diversity expansion from Master External Resource Bible
 
 - The new 225-source external-resource Bible is adopted as a world-production sourcing map, not a canon source.
