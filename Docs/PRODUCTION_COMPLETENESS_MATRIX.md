@@ -1,3 +1,13 @@
+## 2026-09-26 - P1C01 D-H + Gate 6/7 preparation
+
+- **D Environment Presentation:** PREPARED_NOT_RUNTIME_STARTED.
+- **E Character Presentation:** PREPARED_NOT_RUNTIME_STARTED.
+- **F Living Shire:** PREPARED_NOT_RUNTIME_STARTED; existing system ownership retained and bottleneck guards defined.
+- **G Quest/Cinematic/Audio Polish:** PREPARED_NOT_RUNTIME_STARTED.
+- **H Target Device Profiling:** PREPARED_NOT_RUNTIME_STARTED.
+- **Gate 6/7 checklist:** PREPARED_NOT_ACCEPTED.
+- **Evidence boundary:** preparation only; no new COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED claim.
+
 ## 2026-09-26 - Massive whole-game preparation batch
 
 - **28 region packets:** active preparation tracks created without runtime promotion beyond P1C01.
