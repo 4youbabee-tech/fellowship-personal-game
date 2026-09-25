@@ -5559,10 +5559,11 @@
       "status": "FIX_COMMITTED_EXACT_HEAD_PROOF_PENDING",
       "symptom": "Pre-Unreal #871 failed PG-161 immediately after the lessons-lock change even though the classifier had the intended explicit validation-policy-only path.",
       "evidence": [
-        "Pre-Unreal #871: ERROR: PG-161 classifier script must not be silently treated as ordinary governance/docs-only input."
+        "Pre-Unreal #871: ERROR: PG-161 classifier script must not be silently treated as ordinary governance/docs-only input.",
+        "Pre-Unreal #875 reproduced the same false positive because the first correction anchored at a helper-function Docs/ test instead of the main changed-file loop."
       ],
-      "root_cause": "The new PG-161 validator searched a textual region broad enough to include the allowed policy-only hook, so it confused required behavior with forbidden ordinary-safe classification.",
-      "permanent_policy": "Regression guards inspect the smallest structural region that represents the forbidden behavior and separately assert required explicit paths. Never use a broad text-presence test that can reject the intended contract.",
+      "root_cause": "The PG-161 validator initially searched too broad a textual region; the first correction still anchored at an earlier helper-function Docs/ test, so the inspected slice crossed later declarations and included the allowed explicit policy-only hook.",
+      "permanent_policy": "Regression guards inspect the smallest structural region that represents the forbidden behavior. PG-161 anchors inside the main changed-file classification loop, isolates the ordinary safe-governance branch, and separately requires the explicit validation-policy-only path.",
       "reopen_rule": "Reopen if PG-161 rejects the explicit policy-only hook again or permits classifier/pre-unreal policy changes to be treated as ordinary safe metadata."
     }
   ],
