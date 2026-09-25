@@ -4274,7 +4274,7 @@
     "checkpoint_id": "CP-W01-P1C01-DROP-C2-V2",
     "source_head": "4980c3c8b1f4660863940a58e052dcf8095772cf",
     "branch": "production/w01-p1c01-foliage-wind-v2",
-    "pull_request": null,
+    "pull_request": 80,
     "verified": {
       "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
       "latest_automated_closure": "809e56a9e1dc4b453e02a0b04b6875a71df21933: Pre-Unreal #880 SUCCESS + Unreal #715 SUCCESS validation-policy inherit + Branch Cleanup #3 SUCCESS",
@@ -4432,8 +4432,8 @@
     "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
     "current_short_branch": "production/w01-p1c01-foliage-wind-v2",
     "integration_baseline": "develop",
-    "current_open_pr": null,
-    "open_pr_policy": "C2 v2 is the sole runtime-changing W01/P1C01 candidate. It is a clean transplant onto develop@4980c3c8b1f4660863940a58e052dcf8095772cf after the Warehouse/Master Resource Bible baseline merged.",
+    "current_open_pr": 80,
+    "open_pr_policy": "PR #80 is the sole runtime-changing W01/P1C01 Drop C2 v2 candidate targeting develop.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
       "date": "2026-09-25",
