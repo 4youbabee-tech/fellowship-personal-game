@@ -280,6 +280,13 @@ if (-not $parentSha) {
 if (-not $parentSha) { Set-Mode "full" "parent-unavailable-fail-safe" ""; exit 0 }
 
 $changed = @(& $git diff --name-only $parentSha $env:TARGET_SHA)
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "DELTA_BASE_FETCH_REQUIRED parent=$parentSha head=$($env:TARGET_SHA)"
+    & $git fetch --no-tags --depth=1 origin $parentSha
+    if ($LASTEXITCODE -eq 0) {
+        $changed = @(& $git diff --name-only $parentSha $env:TARGET_SHA)
+    }
+}
 if ($LASTEXITCODE -ne 0 -or $changed.Count -eq 0) {
     Set-Mode "full" "delta-unavailable-fail-safe" $parentSha
     exit 0
