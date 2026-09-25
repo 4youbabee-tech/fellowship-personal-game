@@ -1,4 +1,5 @@
 ## 2026-09-25 - W00 lessons-lock / current develop proof
+- **PG-161 self-test:** #871 found a validator false positive; PG-164 correction committed. Exact-head Pre-Unreal rerun pending; no gameplay acceptance state changed.
 - **Current develop machine baseline:** `ed3587aa...` — Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS.
 - **Compile/import/runtime/package:** PROVEN on current canonical develop. #704 passed build/import/Automation/startup/P1C01-P1C08/route-state/warning/package/data/startup/hardware.
 - **Human PIE tail:** PENDING on the final canonical develop after lessons-lock merge; do not call full P1C01 PIE-TESTED yet.
