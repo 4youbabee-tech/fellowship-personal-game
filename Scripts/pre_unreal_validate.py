@@ -2855,6 +2855,7 @@ cancel_values = [
 allowed_cancel_values = {
     "false",
     "${{ startsWith(github.head_ref, 'acceptance/') }}",
+    "${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}",
 }
 if (
     not concurrency_group_ok
@@ -2863,7 +2864,7 @@ if (
 ):
     fail(
         "PG-026: shared Unreal device validation must remain serial; "
-        "only acceptance/* PR heads may cancel superseded runs"
+        "only acceptance/* or the sole active production/* PR head may cancel superseded runs"
     )
 if "cancel-in-progress: true" in unreal_ci:
     fail("PG-026: unconditional shared Unreal cancellation is forbidden")
@@ -4550,6 +4551,40 @@ for pg142_evidence_id, pg142_marker in EVIDENCE_MARKERS.items():
     ]:
         if pg142_marker in pg142_consumer:
             fail(f"PG-142 duplicated runtime evidence text in {pg142_name}: {pg142_evidence_id}")
+
+# PG-167: CI capacity must stay event-driven and off the recurrent hosted zero-step path.
+pg167_pre = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
+for pg167_symbol in [
+    "- self-hosted",
+    "- Windows",
+    "- X64",
+    "- ue4-27",
+    "cancel-in-progress: true",
+]:
+    if pg167_symbol not in pg167_pre:
+        fail(f"PG-167 supervised static-lane contract missing: {pg167_symbol}")
+if "schedule:" in pg167_pre or "runs-on: ubuntu-latest" in pg167_pre or "runs-on: windows-latest" in pg167_pre:
+    fail("PG-167 Pre-Unreal must be event-driven on the supervised Windows UE4 runner")
+
+pg167_cleanup = read(ROOT / ".github" / "workflows" / "branch-cleanup.yml")
+for pg167_symbol in ["- self-hosted", "- Windows", "- X64", "- ue4-27"]:
+    if pg167_symbol not in pg167_cleanup:
+        fail(f"PG-167 branch-cleanup runner contract missing: {pg167_symbol}")
+if "runs-on: ubuntu-latest" in pg167_cleanup or "runs-on: windows-latest" in pg167_cleanup:
+    fail("PG-167 Branch Cleanup must not depend on GitHub-hosted runners")
+
+pg167_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+for pg167_symbol in [
+    "paths-ignore:",
+    ".github/workflows/**",
+    "Data/WholeGame*.json",
+    "Data/*Warehouse*.json",
+    "Data/P1C01WorldBuildIntakePacketV1.json",
+    "${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}",
+]:
+    if pg167_symbol not in pg167_unreal:
+        fail(f"PG-167 Unreal queue-isolation contract missing: {pg167_symbol}")
+
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
