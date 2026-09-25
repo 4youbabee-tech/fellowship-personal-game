@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "batch_id": "WAREHOUSE_QUATERNIUS_SUPPORT_V2",
+  "batch_id": "WAREHOUSE_QUATERNIUS_SUPPORT_V3",
   "status": "AUTHORIZED_FOR_STAGING",
   "provider": "QUATERNIUS",
   "license": "PER_PACK_PAGE_LICENSE_CAPTURE_REQUIRED",
@@ -100,6 +100,30 @@
       "use": [
         "Shire farm support silhouettes",
         "background barns/outbuildings after art-direction review"
+      ]
+    },
+    {
+      "id": "QTN_FURNITURE_PACK",
+      "url": "https://quaternius.com/packs/furniture.html",
+      "category": "SHIRE_INTERIOR_SUPPORT",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "use": [
+        "Bag End support furniture intake",
+        "Hobbit home background furniture",
+        "Bree interior support"
+      ]
+    },
+    {
+      "id": "QTN_MEDIEVAL_VILLAGE_CC0",
+      "url": "https://quaternius.com/packs/medievalvillage.html",
+      "category": "SHIRE_BREE_SUPPORT_ARCHITECTURE",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "use": [
+        "Shire support outbuildings/props",
+        "Bree background support",
+        "non-hero village dressing"
       ]
     }
   ],
