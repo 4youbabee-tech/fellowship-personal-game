@@ -1,3 +1,10 @@
+## 2026-09-26 - CI validator synchronized with the new supervised runner policy
+
+- PG-026 now allows only acceptance/* or the sole active production/* PR to cancel superseded shared-device work.
+- PG-167 now enforces event-driven self-hosted Pre-Unreal/Branch Cleanup and the preparation-only Unreal queue isolation contract.
+- This removes a validator contradiction that would otherwise reject the newly adopted CI policy before repository tests could run.
+- Evidence boundary: STATIC source correction; fresh supervised-runner execution still pending.
+
 ## 2026-09-26 - CI zero-step root bypass installed
 
 - Recurrent hosted `steps=null` / BlobNotFound failures are removed from the critical path: Pre-Unreal and Branch Cleanup now run only on the supervised self-hosted Windows UE4 runner.
