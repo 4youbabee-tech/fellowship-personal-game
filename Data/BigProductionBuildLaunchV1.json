@@ -1,0 +1,372 @@
+{
+  "schema_version": 1,
+  "plan_id": "BIG_PRODUCTION_BUILD_LAUNCH_V1",
+  "status": "READY_TO_EXECUTE_SOURCE_AND_WAREHOUSE_WAVES",
+  "authority": [
+    "Data/ProjectGovernor.json / DEC-038 / DEC-039",
+    "Data/MasterExternalResourceBibleAdoptionV1.json"
+  ],
+  "scope": "Whole game from opening through final ending. P1C01 remains the first assembled benchmark, while warehouse/source preparation proceeds across all regions and production categories in parallel.",
+  "truth_states": [
+    "SOURCE_REGISTERED",
+    "CANDIDATE",
+    "AUTHORIZED_FOR_STAGING",
+    "STAGED",
+    "INTAKE_QC",
+    "READY_FOR_IMPORT",
+    "IMPORTED",
+    "INTEGRATED",
+    "ACCEPTED"
+  ],
+  "never_conflate": [
+    "SOURCE_REGISTERED is not downloaded.",
+    "STAGED is not READY_FOR_IMPORT.",
+    "IMPORTED is not INTEGRATED.",
+    "INTEGRATED is not PIE/DEVICE/VISUAL/AUDIO accepted."
+  ],
+  "active_build_waves": [
+    {
+      "id": "BPB-W1",
+      "name": "Whole-World Surface Library",
+      "target_categories": [
+        "terrain",
+        "ground",
+        "stone",
+        "wood",
+        "plaster",
+        "brick",
+        "roofing",
+        "metal",
+        "cloth",
+        "leather",
+        "snow",
+        "ash",
+        "volcanic"
+      ],
+      "priority_sources": [
+        "POLY_HAVEN",
+        "AMBIENTCG",
+        "TEXTURES_COM",
+        "3DTEXTURES_ME",
+        "CGBOOKCASE",
+        "MATERIAL_MAKER",
+        "MATERIALIZE"
+      ],
+      "target_regions": [
+        "SHIRE_HOBBITON",
+        "BAG_END",
+        "BREE",
+        "WEATHERTOP",
+        "RIVENDELL",
+        "CARADHRAS",
+        "MORIA",
+        "LOTHLORIEN",
+        "ANDUIN_AMON_HEN",
+        "FANGORN",
+        "EDORAS_MEDUSELD",
+        "HELMS_DEEP",
+        "ISENGARD_ORTHANC",
+        "EMYN_MUIL",
+        "DEAD_MARSHES",
+        "ITHILIEN",
+        "MINAS_TIRITH",
+        "OSGILIATH",
+        "MINAS_MORGUL",
+        "CIRITH_UNGOL",
+        "SHELOBS_LAIR",
+        "PELENNOR_FIELDS",
+        "PATHS_OF_THE_DEAD",
+        "BLACK_GATE_MORANNON",
+        "MORDOR_GORGOROTH",
+        "MOUNT_DOOM",
+        "GREY_HAVENS"
+      ],
+      "integration_rules": [
+        "1K/2K default runtime textures",
+        "PNG/TGA only",
+        "channel-pack masks where appropriate",
+        "hero 4K only after VRAM measurement"
+      ]
+    },
+    {
+      "id": "BPB-W2",
+      "name": "Biome and Vegetation Library",
+      "target_categories": [
+        "trees",
+        "shrubs",
+        "grass",
+        "reeds",
+        "roots",
+        "stumps",
+        "rocks",
+        "dead vegetation",
+        "forest floor"
+      ],
+      "priority_sources": [
+        "SPEEDTREE",
+        "POLY_HAVEN",
+        "FAB_QUixel_MEGASCANS",
+        "XFROG",
+        "GLOBE_PLANTS",
+        "QUATERNIUS",
+        "KENNEY"
+      ],
+      "target_regions": [
+        "SHIRE_HOBBITON",
+        "RIVENDELL",
+        "LOTHLORIEN",
+        "FANGORN",
+        "ITHILIEN",
+        "DEAD_MARSHES",
+        "ANDUIN_AMON_HEN",
+        "CARADHRAS",
+        "MORDOR_GORGOROTH"
+      ],
+      "integration_rules": [
+        "HISM/ISM for repeated detail",
+        "authored LOD/cull bands",
+        "masked overdraw profiling",
+        "no density escalation before target-device measurement"
+      ]
+    },
+    {
+      "id": "BPB-W3",
+      "name": "Characters NPCs Fauna and Animation",
+      "target_categories": [
+        "NPC bases",
+        "hero-support bases",
+        "rigging",
+        "locomotion",
+        "idles",
+        "social gestures",
+        "household actions",
+        "combat",
+        "traversal",
+        "fauna"
+      ],
+      "priority_sources": [
+        "MIXAMO",
+        "ACTORCORE",
+        "ACCURIG",
+        "ROKOKO",
+        "MOTION_CAPTURE_ONLINE",
+        "CASCADEUR",
+        "DEEPMOTION",
+        "PLASK",
+        "QUATERNIUS",
+        "MAKEHUMAN"
+      ],
+      "target_regions": [
+        "GLOBAL"
+      ],
+      "integration_rules": [
+        "final animated production assets FBX only",
+        "real skeleton/skin weights",
+        "retarget test required",
+        "pool crowd/common transient actors",
+        "soft refs for heavy skeletal assets"
+      ]
+    },
+    {
+      "id": "BPB-W4",
+      "name": "Architecture Props and Interiors",
+      "target_categories": [
+        "farm buildings",
+        "furniture",
+        "household props",
+        "village support",
+        "ruins",
+        "fortifications",
+        "caves",
+        "industrial structures"
+      ],
+      "priority_sources": [
+        "QUATERNIUS",
+        "KENNEY",
+        "FAB_QUixel_MEGASCANS",
+        "CGTRADER",
+        "TURBOSQUID",
+        "THE_BASE_MESH",
+        "EVERMOTION",
+        "KITBASH3D"
+      ],
+      "target_regions": [
+        "GLOBAL"
+      ],
+      "integration_rules": [
+        "generic support only unless project-authored hero silhouette",
+        "FBX for final production mesh exchange",
+        "scale/pivot/UV/collision/triangles/LOD/material slots reviewed",
+        "high-poly content decimated/retopo'd"
+      ]
+    },
+    {
+      "id": "BPB-W5",
+      "name": "Atmosphere VFX Weather",
+      "target_categories": [
+        "fire",
+        "smoke",
+        "embers",
+        "rain",
+        "splash",
+        "dust",
+        "mist support",
+        "impact VFX",
+        "sky/HDRI reference"
+      ],
+      "priority_sources": [
+        "ACTIONVFX",
+        "EMBERGEN",
+        "JANGAFX_FREE_VFX",
+        "FAB_QUixel_MEGASCANS",
+        "POLY_HAVEN"
+      ],
+      "target_regions": [
+        "GLOBAL"
+      ],
+      "integration_rules": [
+        "prefer baked/flipbook/Cascade-compatible content",
+        "avoid heavy runtime volumetrics on ~2GB VRAM",
+        "weather/visual state must respect chapter world-state"
+      ]
+    },
+    {
+      "id": "BPB-W6",
+      "name": "Sensory Audio and Foley",
+      "target_categories": [
+        "ambience beds",
+        "localized emitters",
+        "footsteps",
+        "household foley",
+        "weather",
+        "fauna",
+        "creatures",
+        "combat",
+        "UI",
+        "water",
+        "fire"
+      ],
+      "priority_sources": [
+        "SONNISS_GDC",
+        "FREESOUND",
+        "ZAPSPLAT",
+        "99SOUNDS",
+        "KENNEY",
+        "SOUNDLY",
+        "KROTOS",
+        "A_SOUND_EFFECT"
+      ],
+      "target_regions": [
+        "GLOBAL"
+      ],
+      "integration_rules": [
+        "WAV production masters",
+        "3D attenuation/concurrency for emitters",
+        "long beds owned by audio subsystem",
+        "never preload raw warehouse"
+      ]
+    },
+    {
+      "id": "BPB-W7",
+      "name": "Music Candidate Pool",
+      "target_categories": [
+        "home",
+        "wonder",
+        "travel",
+        "danger",
+        "battle",
+        "loss",
+        "hope",
+        "farewell",
+        "credits"
+      ],
+      "priority_sources": [
+        "SCOTT_BUCKLEY",
+        "INCOMPETECH",
+        "PIXABAY",
+        "FREEPD"
+      ],
+      "target_regions": [
+        "GLOBAL"
+      ],
+      "integration_rules": [
+        "original-feeling candidates only",
+        "no copied film score",
+        "exact license/attribution retained",
+        "adaptive use deferred to audio design integration"
+      ]
+    },
+    {
+      "id": "BPB-W8",
+      "name": "Terrain Scanning and Original Asset Toolchain",
+      "target_categories": [
+        "heightmaps",
+        "terrain masks",
+        "own scans",
+        "retopo",
+        "decimation",
+        "collision-ready FBX"
+      ],
+      "priority_sources": [
+        "GAEA",
+        "USGS_EARTHEXPLORER",
+        "OPENTOPOGRAPHY",
+        "QGIS",
+        "REALITYSCAN",
+        "MESHROOM",
+        "MESHLAB",
+        "CLOUDCOMPARE",
+        "BLENDER"
+      ],
+      "target_regions": [
+        "GLOBAL"
+      ],
+      "integration_rules": [
+        "generic real-world terrain informs authored fantasy geography only",
+        "canon geography remains controlled by project sources",
+        "scans cleaned/decimated before UE"
+      ]
+    },
+    {
+      "id": "BPB-W9",
+      "name": "Arabic Presentation and UI",
+      "target_categories": [
+        "FText",
+        "string tables",
+        "RTL",
+        "full shaping",
+        "composite fonts",
+        "subtitles",
+        "menus",
+        "notifications"
+      ],
+      "priority_sources": [
+        "UE427_LOCALIZATION_DOCS",
+        "GOOGLE_FONTS",
+        "POEDIT",
+        "AZURE_TTS"
+      ],
+      "target_regions": [
+        "GLOBAL_PRESENTATION_LAYER"
+      ],
+      "integration_rules": [
+        "English audio + professional Arabic localization",
+        "no gameplay/ID/save/AI/cinematic timing changes",
+        "Arabic font fallback validated in UE4.27"
+      ]
+    }
+  ],
+  "execution_order": {
+    "runtime_lane": "Keep exactly one runtime-changing PR at a time.",
+    "parallel_preparation": "All BPB source/warehouse/tooling waves may advance in parallel.",
+    "benchmark_order": "P1C01 Shire remains first fully assembled/validated benchmark before broad runtime expansion.",
+    "gate": "No large runtime chapter expansion beyond the active gate without required evidence."
+  },
+  "next_immediate_actions": [
+    "Expand category-specific concrete candidate queues from newly registered high-value sources.",
+    "Stage public/direct/open batches where provider access permits.",
+    "Create manual/auth-required acquisition checklist for Fab/Mixamo/Freesound/marketplaces.",
+    "Run intake QC and promote only technically usable assets to READY_FOR_IMPORT.",
+    "Feed P1C01 first with surface/vegetation/interior/audio/animation candidates while keeping all later regions stocked in warehouse preparation."
+  ]
+}
