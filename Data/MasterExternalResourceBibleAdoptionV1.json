@@ -347,5 +347,12 @@
       "runtime_rule": "Presentation layer only; IDs/save/gameplay/audio timing/lip-sync remain unchanged unless separately approved."
     }
   ],
-  "next_action": "Expand source registry with missing high-value providers, correct disabled/legacy sources, then generate category-specific candidate batches instead of browsing randomly."
+  "next_action": "Run P1C01 material intake and whole-game warehouse preparation in parallel while runtime promotion remains serialized through C2/C3/C4 and Gate 6/7.",
+  "source_fingerprint": {
+    "file_name": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25(1).pdf",
+    "pages": 68,
+    "bytes": 1199482,
+    "sha256": "dec78252ee2e0d4650a5cb1eca0dfd6099f55b956713fb70471300b5270708d5",
+    "role": "External production-source and tooling authority; does not override canon/story bibles."
+  }
 }

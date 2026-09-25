@@ -1,0 +1,157 @@
+{
+  "schema_version": 1,
+  "matrix_id": "WHOLE_GAME_ASSET_FAMILY_COVERAGE_V1",
+  "status": "ACTIVE_PREPARATION",
+  "authority": [
+    "Data/WholeGameRegionProductionPacketsV1.json",
+    "Data/BigProductionBuildLaunchV1.json",
+    "Data/ProductionAssetPromotionPolicyV1.json"
+  ],
+  "purpose": "Aggregate region production families so the large build reuses validated shared kits instead of duplicating textures, props, materials and memory across the trilogy.",
+  "target_profile": "i7 Gen6 / 8GB RAM / ~2GB VRAM / DX11 / 720p Low-Medium / 30 FPS floor",
+  "reuse_principles": [
+    "Prefer one shared technical kit per repeated family, then region-specific dressing/material identity on top.",
+    "Keep hero silhouettes and canon-critical landmarks region-specific.",
+    "Do not create a global hard-reference hub; heavy kits stay soft referenced and asynchronously streamed.",
+    "Repeated world detail uses ISM/HISM and authored LOD/culling.",
+    "Shared support kits do not override canon identity or region-specific art direction."
+  ],
+  "families": [
+    {
+      "family": "GLOBAL_SURFACE_LIBRARY",
+      "region_count": 28,
+      "regions": [
+        "SHIRE_HOBBITON",
+        "BAG_END",
+        "BREE",
+        "WEATHERTOP",
+        "RIVENDELL",
+        "CARADHRAS",
+        "MORIA",
+        "LOTHLORIEN",
+        "ANDUIN_AMON_HEN",
+        "FANGORN",
+        "EDORAS_MEDUSELD",
+        "HELMS_DEEP",
+        "ISENGARD_ORTHANC",
+        "EMYN_MUIL",
+        "DEAD_MARSHES",
+        "ITHILIEN",
+        "HENNETH_ANNUN",
+        "MINAS_TIRITH",
+        "OSGILIATH",
+        "MINAS_MORGUL",
+        "CIRITH_UNGOL",
+        "SHELOBS_LAIR",
+        "PELENNOR_FIELDS",
+        "PATHS_OF_THE_DEAD",
+        "BLACK_GATE_MORANNON",
+        "MORDOR_GORGOROTH",
+        "MOUNT_DOOM",
+        "GREY_HAVENS"
+      ],
+      "reuse_strategy": "GLOBAL_SHARED_KIT_FIRST",
+      "runtime_rule": "Use soft references; repeated instances use ISM/HISM where applicable; do not hard-reference every region kit from a global manager."
+    },
+    {
+      "family": "DARK_CAVE_RUIN",
+      "region_count": 8,
+      "regions": [
+        "MORIA",
+        "HELMS_DEEP",
+        "DEAD_MARSHES",
+        "HENNETH_ANNUN",
+        "MINAS_MORGUL",
+        "CIRITH_UNGOL",
+        "SHELOBS_LAIR",
+        "PATHS_OF_THE_DEAD"
+      ],
+      "reuse_strategy": "GLOBAL_SHARED_KIT_FIRST",
+      "runtime_rule": "Use soft references; repeated instances use ISM/HISM where applicable; do not hard-reference every region kit from a global manager."
+    },
+    {
+      "family": "WATER_RIVER_COAST",
+      "region_count": 7,
+      "regions": [
+        "RIVENDELL",
+        "LOTHLORIEN",
+        "ANDUIN_AMON_HEN",
+        "ITHILIEN",
+        "HENNETH_ANNUN",
+        "OSGILIATH",
+        "GREY_HAVENS"
+      ],
+      "reuse_strategy": "GLOBAL_SHARED_KIT_FIRST",
+      "runtime_rule": "Use soft references; repeated instances use ISM/HISM where applicable; do not hard-reference every region kit from a global manager."
+    },
+    {
+      "family": "FOREST_BIOME",
+      "region_count": 6,
+      "regions": [
+        "RIVENDELL",
+        "LOTHLORIEN",
+        "ANDUIN_AMON_HEN",
+        "FANGORN",
+        "ISENGARD_ORTHANC",
+        "ITHILIEN"
+      ],
+      "reuse_strategy": "GLOBAL_SHARED_KIT_FIRST",
+      "runtime_rule": "Use soft references; repeated instances use ISM/HISM where applicable; do not hard-reference every region kit from a global manager."
+    },
+    {
+      "family": "FORTIFICATION",
+      "region_count": 5,
+      "regions": [
+        "HELMS_DEEP",
+        "MINAS_TIRITH",
+        "OSGILIATH",
+        "MINAS_MORGUL",
+        "BLACK_GATE_MORANNON"
+      ],
+      "reuse_strategy": "GLOBAL_SHARED_KIT_FIRST",
+      "runtime_rule": "Use soft references; repeated instances use ISM/HISM where applicable; do not hard-reference every region kit from a global manager."
+    },
+    {
+      "family": "PASTORAL_SETTLEMENT",
+      "region_count": 4,
+      "regions": [
+        "SHIRE_HOBBITON",
+        "BAG_END",
+        "BREE",
+        "EDORAS_MEDUSELD"
+      ],
+      "reuse_strategy": "GLOBAL_SHARED_KIT_FIRST",
+      "runtime_rule": "Use soft references; repeated instances use ISM/HISM where applicable; do not hard-reference every region kit from a global manager."
+    },
+    {
+      "family": "ASH_INDUSTRIAL_VOLCANIC",
+      "region_count": 3,
+      "regions": [
+        "ISENGARD_ORTHANC",
+        "MORDOR_GORGOROTH",
+        "MOUNT_DOOM"
+      ],
+      "reuse_strategy": "CROSS_REGION_SHARED_KIT",
+      "runtime_rule": "Use soft references; repeated instances use ISM/HISM where applicable; do not hard-reference every region kit from a global manager."
+    },
+    {
+      "family": "MARSH_WETLAND",
+      "region_count": 1,
+      "regions": [
+        "DEAD_MARSHES"
+      ],
+      "reuse_strategy": "REGION_SPECIFIC_KIT",
+      "runtime_rule": "Use soft references; repeated instances use ISM/HISM where applicable; do not hard-reference every region kit from a global manager."
+    },
+    {
+      "family": "SNOW_ALPINE",
+      "region_count": 1,
+      "regions": [
+        "CARADHRAS"
+      ],
+      "reuse_strategy": "REGION_SPECIFIC_KIT",
+      "runtime_rule": "Use soft references; repeated instances use ISM/HISM where applicable; do not hard-reference every region kit from a global manager."
+    }
+  ],
+  "evidence_boundary": "Preparation matrix only. Family reuse is not runtime-integrated or performance-accepted by this file."
+}

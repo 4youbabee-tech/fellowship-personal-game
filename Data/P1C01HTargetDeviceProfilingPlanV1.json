@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_H_TARGET_DEVICE_PROFILING_V1",
+  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+    "DEC-038",
+    "DEC-039"
+  ],
+  "prerequisite": "G quest/cinematic/audio polish must be engine-green before H target-device profiling begins.",
+  "purpose": "Define the final P1C01 performance evidence pass on the real low-spec target before Gate 6/7 acceptance.",
+  "target_profile": {
+    "cpu": "Intel i7 6th generation class",
+    "ram_gb": 8,
+    "vram_gb_class": 2,
+    "renderer": "DX11",
+    "resolution": "720p",
+    "quality": "Low-Medium",
+    "fps_floor": 30
+  },
+  "representative_routes": [
+    "Bag End interior traversal",
+    "Bag End exterior transition",
+    "Hobbiton lane traversal",
+    "dense vegetation view",
+    "active NPC/fauna area",
+    "canon-beat return-to-control state",
+    "save/load resumed traversal"
+  ],
+  "measurements": [
+    "frame time and sustained FPS",
+    "game-thread time",
+    "render-thread time",
+    "GPU time where available",
+    "draw calls",
+    "visible mesh/instance counts",
+    "texture/VRAM footprint",
+    "masked foliage overdraw observations",
+    "dynamic shadowed light count",
+    "active pooled NPC/fauna counts",
+    "audio concurrency",
+    "streaming stalls/hitches",
+    "save/load and chapter transition hitch observations"
+  ],
+  "fail_closed_rules": [
+    "Do not increase foliage/detail density to hide visual gaps before profiling.",
+    "Do not call PERFORMANCE-ACCEPTED from desktop/high-end or synthetic evidence alone.",
+    "Any repeated hitch tied to synchronous heavy loading blocks acceptance.",
+    "Any sustained route segment below the 30 FPS floor is a profiling defect until measured and addressed.",
+    "Any VRAM pressure/texture thrash must be solved by asset/material/streaming budgets before hero-resolution expansion.",
+    "Profiling changes must not compromise locked story outcomes, traversal, save continuity or player readability."
+  ],
+  "optimization_order": [
+    "remove accidental expensive features and warning debt",
+    "fix overdraw/material complexity",
+    "fix draw-call/instance batching",
+    "fix shadow/light cost",
+    "fix texture memory/streaming",
+    "fix NPC/fauna activation and pooling budgets",
+    "reduce geometry/LOD/cull cost",
+    "only then revisit content density"
+  ],
+  "gate_6_7_inputs": [
+    "exact build/commit identity",
+    "target-device hardware identity",
+    "route-by-route performance observations",
+    "chapter-specific PIE evidence",
+    "human visual/pacing notes",
+    "known defects and disposition"
+  ],
+  "acceptance": [
+    "P1C01 route remains playable at/above the required 30 FPS floor on the target device under the tested profile.",
+    "No blocking streaming hitch, collision trap, save-continuity failure or world-state regression is present.",
+    "Human visual/pacing review is completed for the same chapter/build.",
+    "Only the evidence actually observed is promoted to DEVICE/PERFORMANCE/VISUAL acceptance."
+  ],
+  "evidence_boundary": "Preparation only. No performance acceptance exists until real target-device measurements are captured."
+}

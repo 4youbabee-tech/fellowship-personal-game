@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "packet_id": "P1C01_SOURCE_EXTRACTION_V1",
+  "status": "ACTIVE_SOURCE_GROUNDED_PREPARATION",
+  "purpose": "Turn the owner-supplied PDFs into a compact implementation packet for Shire/Hobbiton/Bag End so programmers do not need to reread the entire corpus for routine production decisions.",
+  "authority": [
+    "Data/ProjectSourcePdfRegistryV1.json",
+    "00_PROJECT_SOURCE_RULES",
+    "03_WORLD_LOCATIONS_AND_MAP_BIBLE",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+    "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+  ],
+  "source_rules": {
+    "precedence": [
+      "SCRIPT_VERIFIED / supplied screenplay for scene order and participant facts where recognized by the Source Rules.",
+      "FILM_CANON and project master summaries below screenplay authority.",
+      "Production-design bibles guide visual/implementation language but cannot override higher canon.",
+      "VISUAL_ONLY references never define canon facts.",
+      "External resource providers never define canon."
+    ],
+    "implementation_rule": "If two sources conflict, prefer the higher source priority and mark unresolved conflicts instead of blending them."
+  },
+  "p1c01_world_requirements": {
+    "SHIRE_HOBBITON": {
+      "source": "SRC03_WORLD physical page 6",
+      "location_type": "Pastoral hills, lanes, farms, Hobbit-holes",
+      "visual_grammar": "Warm domestic scale; circular doors; gardens",
+      "gameplay_role": "Onboarding, social play, low-threat exploration",
+      "state_variants": [
+        "Birthday",
+        "Departure",
+        "Post-war"
+      ],
+      "production_rules": [
+        "Keep canonical landmarks visually dominant.",
+        "Partition streaming by sightline/portal/terrain logic and preload the next critical area.",
+        "NPC population, schedules, dialogue knowledge and faction presence are chapter-state data.",
+        "Test backtracking, reload, collision, navmesh and chapter-state swaps."
+      ]
+    },
+    "BAG_END": {
+      "source": "SRC03_WORLD physical page 7",
+      "location_type": "Hobbit interior",
+      "visual_grammar": "Dense lived-in props; round geometry",
+      "gameplay_role": "Narrative hub, inventory tutorial, Ring revelation",
+      "state_variants": [
+        "Bilbo occupied",
+        "Frodo departure",
+        "Epilogue"
+      ],
+      "production_rules": [
+        "Use deterministic chapter-state variants.",
+        "Preload next critical area before transition.",
+        "Preserve the interior as a lived-in narrative hub rather than an empty shell."
+      ]
+    }
+  },
+  "technical_requirements": {
+    "source": "SRC11_SYSTEMS physical pages 8-10",
+    "ownership": [
+      "SourceAssets are raw/reference sources and shipping maps do not directly reference them.",
+      "Production world assets belong in the game/world content structure.",
+      "Stable IDs and data-driven state are preferred over fragile object references."
+    ],
+    "profiling": [
+      "CPU review includes AI counts, animation ticking, collision, spawning, pathfinding and crowd logic.",
+      "GPU review includes shadows, foliage overdraw, translucency, expensive materials and skeletal cost.",
+      "Memory review includes textures, duplicate materials, skeletal meshes, animation sets, audio and persistent sublevels.",
+      "Streaming should avoid large synchronous world transitions."
+    ]
+  },
+  "material_resource_requirements": {
+    "source": "SRC_EXT_MASTER physical pages 13-14",
+    "primary_open_sources": [
+      "POLY_HAVEN",
+      "AMBIENTCG"
+    ],
+    "runtime_texture_default": "1K/2K",
+    "hero_texture_rule": "4K only when measured and justified",
+    "provenance_rule": "Retain source/provider/license metadata even for open/CC0 assets."
+  },
+  "visual_reference_boundary": {
+    "source": "SRC10_VISUAL_ATLAS physical page 6",
+    "role": "VISUAL_ONLY",
+    "observed_families": [
+      "stone/rock",
+      "grass/ground",
+      "water",
+      "wood",
+      "leather/fabric",
+      "earth/dirt"
+    ],
+    "rule": "Use for modeling/material study only; do not infer story/canon from the atlas."
+  },
+  "immediate_asset_targets": [
+    "pastoral grass and soil",
+    "Shire lane/path breakup",
+    "warm wood and plaster",
+    "mossy stone and garden edging",
+    "bark/woodland floor",
+    "Bag End domestic wood surfaces",
+    "support props for lived-in interior density",
+    "bounded foliage/vegetation with authored LOD/cull"
+  ],
+  "evidence_boundary": "Source extraction for implementation planning only; no runtime/visual acceptance claim."
+}

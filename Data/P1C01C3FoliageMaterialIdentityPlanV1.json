@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_C3_FOLIAGE_MATERIAL_IDENTITY_V1",
+  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01MaterialsVegetationPlanV1.json",
+    "DEC-038",
+    "DEC-039"
+  ],
+  "prerequisite": "C2 exact-head Pre-Unreal + UE4.27.2 core/production-import green and merged to develop.",
+  "purpose": "Assign only stable foliage material identities to M_ProductionFoliage while preserving all gameplay/world ownership, asset IDs, albedo bindings and density.",
+  "target_material_names": [
+    "Grass",
+    "Leaves",
+    "LeafGreen",
+    "LeafGold"
+  ],
+  "parent_assignment_contract": {
+    "near_mid_parent": "/Game/Production/Materials/M_ProductionFoliage",
+    "non_foliage_parent": "/Game/Production/Materials/M_ProductionSurface",
+    "far_parent": "/Game/Production/Materials/M_ProductionFoliageFar",
+    "c3_scope": "C3 assigns the near/mid foliage parent only. Far/no-WPO LOD material-slot binding belongs to C4 after actual mesh LOD/cull review.",
+    "identity_rule": "Use exact normalized material identity from authored MTL/material instance names. Do not infer foliage from arbitrary texture color or mesh filename substrings.",
+    "preservation": [
+      "Keep deterministic material instance object paths unchanged.",
+      "Keep AlbedoTexture binding unchanged.",
+      "Keep Color/Roughness/Metallic parameter values unchanged.",
+      "Do not rename gameplay discovery IDs, quest IDs, save keys or world ownership.",
+      "Do not increase foliage instance density.",
+      "Do not add Actor/component Tick."
+    ]
+  },
+  "implementation_shape": [
+    "Centralize foliage-name classification in an editor-import helper/predicate.",
+    "When creating or refreshing a deterministic material instance, choose ProductionFoliageParent only for the approved foliage identities.",
+    "All other material identities remain on ProductionSurfaceParent.",
+    "Do not synchronously load heavy gameplay assets; editor commandlet material lookups remain editor-only.",
+    "Keep importer idempotent: rerunning must not duplicate material instances or change object paths."
+  ],
+  "guards": [
+    "Validator requires the exact approved foliage identity set.",
+    "Validator rejects broad contains('Leaf') or contains('Grass') heuristics that could capture unrelated materials.",
+    "Validator requires no density/ownership/gameplay-ID changes in C3.",
+    "Validator requires M_ProductionFoliageFar to remain unused until C4 mesh/LOD binding."
+  ],
+  "acceptance": [
+    "Exact-head Pre-Unreal success.",
+    "UE4.27.2 editor compile success.",
+    "Production import succeeds and material instances retain deterministic object paths.",
+    "Grass/Leaves/LeafGreen/LeafGold resolve to M_ProductionFoliage.",
+    "Non-foliage materials remain on M_ProductionSurface.",
+    "No broken AlbedoTexture bindings.",
+    "No foliage density increase.",
+    "PIE visual wind acceptance remains later manual evidence, not implied by import success."
+  ],
+  "evidence_boundary": "Preparation only. No runtime/integration/visual acceptance claim."
+}

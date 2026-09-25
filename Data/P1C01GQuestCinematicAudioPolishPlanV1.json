@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_G_QUEST_CINEMATIC_AUDIO_POLISH_V1",
+  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "DEC-038"
+  ],
+  "prerequisite": "F living Shire runtime pass must be engine-green before G runtime implementation starts.",
+  "purpose": "Prepare the final P1C01 gameplay/presentation polish layer around locked canon beats while preserving player control windows and persistent world-state consequences.",
+  "playable_film_contract": [
+    "Locked Canon Beat",
+    "Playable Safe Window",
+    "Bounded Set Piece",
+    "Persistent World-State Change",
+    "Return to Player Control"
+  ],
+  "quest_contract": [
+    "Side/help activities may enrich the safe window but cannot alter immutable film outcomes.",
+    "Quest state remains owned by ShireQuestSubsystem.",
+    "Quest completion/failure cannot invent contradictory chronology.",
+    "Any world-detail interaction promoted to runtime must already exist in WORLD_DETAIL_LEDGER."
+  ],
+  "cinematic_contract": [
+    "Cinematic control loss is bounded.",
+    "Entry/exit restores the same embodied third-person player state.",
+    "No cinematic may silently rewrite route/save/quest state outside the transaction boundary.",
+    "Original project-authored dialogue only; no verbatim Tolkien or film dialogue reproduction."
+  ],
+  "audio_contract": [
+    "Long ambience beds remain owned by the audio subsystem.",
+    "Localized emitters use attenuation/concurrency budgets.",
+    "Heavy audio assets use soft references and asynchronous loading.",
+    "Music candidates do not copy or reconstruct the film score.",
+    "World-state changes may alter ambience/foley/music availability after canon beats."
+  ],
+  "polish_evidence": [
+    "quest gate matrix",
+    "cinematic entry/exit state",
+    "player-control return point",
+    "audio concurrency snapshot",
+    "world-state before/after canon beat",
+    "save/load continuity observation",
+    "human pacing notes"
+  ],
+  "acceptance": [
+    "Exact-head static validation.",
+    "UE4.27.2 compile/automation succeeds.",
+    "Required quest/route/save continuity survives bounded cinematic transitions.",
+    "No copied dialogue/score material is introduced.",
+    "Human pacing/visual/audio review remains mandatory.",
+    "Target-device profiling remains a later separate gate."
+  ],
+  "evidence_boundary": "Preparation only. No runtime, pacing, audio, PIE/device or performance acceptance claim."
+}

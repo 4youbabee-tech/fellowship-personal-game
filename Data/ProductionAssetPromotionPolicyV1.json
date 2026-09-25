@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "policy_id": "PRODUCTION_ASSET_PROMOTION_POLICY_V1",
+  "status": "ACTIVE_PREPARATION_POLICY",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/BigProductionBuildLaunchV1.json",
+    "DEC-039"
+  ],
+  "purpose": "Fail closed before production assets are promoted from warehouse preparation into Unreal import/runtime integration.",
+  "states": [
+    "SOURCE_REGISTERED",
+    "CANDIDATE",
+    "AUTHORIZED_FOR_STAGING",
+    "STAGED",
+    "INTAKE_QC",
+    "READY_FOR_IMPORT",
+    "IMPORTED",
+    "INTEGRATED",
+    "ACCEPTED"
+  ],
+  "required_provenance": [
+    "provider_id",
+    "source_page_or_supported_api",
+    "license_or_entitlement",
+    "local_staging_receipt",
+    "sha256_for_staged_payload"
+  ],
+  "format_contract": {
+    "animated_final_assets": [
+      "FBX"
+    ],
+    "forbidden_for_animated_final_assets": [
+      "OBJ"
+    ],
+    "production_textures": [
+      "PNG",
+      "TGA"
+    ],
+    "forbidden_production_textures": [
+      "BMP"
+    ],
+    "audio_production_master": [
+      "WAV"
+    ],
+    "archives_allowed_only_before_ready_for_import": [
+      "ZIP",
+      "7Z",
+      "RAR"
+    ]
+  },
+  "texture_contract": {
+    "runtime_default": "1K/2K",
+    "hero_4k": "Only after measured VRAM approval",
+    "channel_packing": "Use packed masks where appropriate",
+    "foliage_alpha": "Masked-overdraw review required before density increase"
+  },
+  "static_mesh_qc": [
+    "scale",
+    "pivot",
+    "UVs",
+    "normals/tangents",
+    "material slots",
+    "collision",
+    "triangle count",
+    "LOD/cull plan"
+  ],
+  "animated_asset_qc": [
+    "real skeleton",
+    "skin weights",
+    "retarget result",
+    "deformation review",
+    "FBX final exchange"
+  ],
+  "runtime_contract": {
+    "heavy_asset_reference": "TSoftObjectPtr/TSoftClassPtr",
+    "heavy_asset_loading": "FStreamableManager asynchronous loading",
+    "synchronous_heavy_loading": "FORBIDDEN",
+    "repeated_detail": "ISM/HISM + authored LOD/culling",
+    "crowds": "Object Pooling",
+    "density_rule": "No foliage/crowd/detail density escalation before target-device profiling"
+  },
+  "promotion_rules": {
+    "ready_for_import": "All provenance, format and technical QC checks relevant to the asset class must pass.",
+    "imported": "UE4 import succeeded; this still does not imply runtime integration.",
+    "integrated": "Asset is bound into the intended world/system with stable IDs and ownership.",
+    "accepted": "Requires the chapter/system machine evidence plus the human visual/pacing/performance gates defined by ProjectGovernor."
+  },
+  "evidence_boundary": "Policy definition only. It does not assert that any individual asset passed QC."
+}

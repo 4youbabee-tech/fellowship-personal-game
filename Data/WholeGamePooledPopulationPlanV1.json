@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "plan_id": "WHOLE_GAME_POOLED_POPULATION_PLAN_V1",
+  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/LivingNPCIntelligenceRoadmap.json",
+    "Data/WholeGameRegionProductionPacketsV1.json",
+    "DEC-038"
+  ],
+  "purpose": "Prepare one bounded NPC/fauna population architecture for all regions without per-region Spawn/Destroy churn or a second world-ownership system.",
+  "ownership": {
+    "LivingWorldDirector": "Owns region population admission, active/inactive budgets, pool checkout/return and coarse activation windows.",
+    "ShireNPCContextSubsystem": "Projects structured NPC context, memory, relationships and knowledge only for active/queried NPCs.",
+    "ShireQuestSubsystem": "Owns quest/progression facts and exposes bounded read-only gates.",
+    "rule": "No subsystem may independently spawn a crowd because it observed story state. Population changes are requested through LivingWorldDirector."
+  },
+  "pool_classes": [
+    {
+      "class": "NAMED_NPC",
+      "policy": "Persistent identity/state; actor may be pooled only where identity-preserving restoration is proven. Never discard structured memory/relationship state with actor return."
+    },
+    {
+      "class": "COMMON_CIVILIAN",
+      "policy": "Object pooled. Appearance/behavior seed and local state reset on checkout; no raw transcript memory."
+    },
+    {
+      "class": "AMBIENT_WORKER",
+      "policy": "Object pooled. Schedule/action set selected from region/world state; no full-rate global Tick."
+    },
+    {
+      "class": "FAUNA_COMMON",
+      "policy": "Object pooled where practical. Activation driven by region/distance/visibility/activity budgets."
+    },
+    {
+      "class": "COMBAT_TRANSIENT",
+      "policy": "Object pooled where system design permits. Combat ownership remains with the relevant encounter system, not ambient NPC context."
+    }
+  ],
+  "activation_bands": [
+    "PLAYER_NEAR_INTERACTIVE",
+    "LOCAL_AMBIENT",
+    "DISTANT_PRESENTATION",
+    "POOLED_INACTIVE"
+  ],
+  "update_contract": [
+    "Interactive NPCs may receive high-frequency movement/animation updates required by gameplay, but context/social reasoning stays event-driven or budgeted.",
+    "Local ambient NPCs use scheduled context refresh and native UE4.27 navigation/perception only when needed.",
+    "Distant presentation uses cheaper animation/behavior and no expensive social/perception scans.",
+    "Pooled inactive actors perform no gameplay Tick and retain only structured persistent state outside the actor when required."
+  ],
+  "anti_bottleneck_rules": [
+    "No per-frame loop across the entire world NPC registry from LivingWorldDirector.",
+    "No per-frame full memory/relationship reconstruction from ShireNPCContextSubsystem.",
+    "No NPC-to-NPC direct polling mesh; rumor/knowledge transfer is event-mediated and bounded to active participants.",
+    "No cloud/LLM dependency in the actor activation path.",
+    "No Spawn/Destroy bursts on chapter/world-state change; use pool warmup and bounded checkout/return."
+  ],
+  "route_transition_rule": "During region transitions, destination population checkout occurs only after destination world context is committed; source-region pooled returns are staggered/bounded so streaming and population churn do not spike together.",
+  "profiling_fields": [
+    "pool size by class",
+    "active count by band",
+    "checkout/return count",
+    "spawn fallback count",
+    "context refresh count",
+    "perception query count",
+    "game-thread cost",
+    "state leakage/reset failures"
+  ],
+  "evidence_boundary": "Preparation only. No runtime NPC/fauna behavior or performance acceptance claim."
+}

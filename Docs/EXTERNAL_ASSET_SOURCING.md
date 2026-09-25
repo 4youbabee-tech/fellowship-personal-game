@@ -1,3 +1,13 @@
+## Fast production smart fence - DEC-041
+
+The production pipeline now separates administrative friction from technical safety.
+
+- Warehouse/preparation candidates that are not downloaded yet stay `PENDING_SOURCE`; they do not fail unrelated work.
+- PRIVATE_OFFLINE_ONLY may continue with unknown commercial-clearance status for the owner's local experiment, but access controls and technical safety remain strict and private payloads cannot leak into distributable output.
+- Always blocking: provider-access bypass, dangerous/corrupt payloads, BMP production textures, animated final production assets that are not FBX, broken runtime dependencies, synchronous heavy loading, pooling/memory/performance violations, and world/save/grounding/collision defects.
+- Supplied project PDFs are bound by hash/role in `Data/ProjectSourcePdfRegistryV1.json`; VISUAL-ONLY sources do not become canon evidence.
+- Runtime integration remains exactly one changing lane while material/audio/character/world preparation can run in parallel.
+
 # External Asset Sourcing Policy
 
 This project may use high-quality third-party assets, but only through a license-tracked production pipeline.

@@ -1,0 +1,179 @@
+{
+  "schema_version": 1,
+  "registry_id": "PROJECT_SOURCE_PDF_REGISTRY_V1",
+  "status": "ACTIVE_HASHED_LOCAL_SOURCE_INDEX",
+  "purpose": "Bind the owner-supplied project PDF corpus to stable fingerprints and authority roles without committing the large PDF binaries into Git history.",
+  "binary_policy": "Keep source PDFs outside Git history; replacing a PDF requires a new hash/page-count record before its facts are treated as updated.",
+  "sources": [
+    {
+      "id": "SRC00_RULES",
+      "file": "00_PROJECT_SOURCE_RULES(1).pdf",
+      "pages": 9,
+      "bytes": 102329,
+      "sha256": "527c1c1350b6d19d67245f27925593ae0d1da080579be01cb4632ec16b8d6225",
+      "role": "PROJECT_SOURCE_GOVERNANCE"
+    },
+    {
+      "id": "SRC01_STORY",
+      "file": "01_STORY_AND_TIMELINE_BIBLE.pdf",
+      "pages": 29,
+      "bytes": 147158,
+      "sha256": "6a22f1c2eeae3aaa071374589b0705252bee4424c8870f5dab62093c744e1ae9",
+      "role": "STORY_TIMELINE_MASTER"
+    },
+    {
+      "id": "SRC02_CHARACTERS",
+      "file": "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE.pdf",
+      "pages": 31,
+      "bytes": 150417,
+      "sha256": "8e6fc12f0a719666f639d19fa0e00e812c3670e87b200ed5f064bcd519b7fe82",
+      "role": "CHARACTER_RELATIONSHIP_MASTER"
+    },
+    {
+      "id": "SRC03_WORLD",
+      "file": "03_WORLD_LOCATIONS_AND_MAP_BIBLE(1).pdf",
+      "pages": 33,
+      "bytes": 154768,
+      "sha256": "509f153caa86bb6cb06537eb18cd359166d9f8bf5ca81efb9d8355e6785806a5",
+      "role": "WORLD_LOCATION_PRODUCTION"
+    },
+    {
+      "id": "SRC04_CULTURES",
+      "file": "04_PEOPLES_LORE_ARTIFACTS_AND_CULTURES(1).pdf",
+      "pages": 23,
+      "bytes": 126383,
+      "sha256": "b88baa4278752addb6a64df0370973c9cec3787bbc04f7da3f52c7829cfdf4a8",
+      "role": "CULTURE_LORE_ARTIFACT_PRODUCTION"
+    },
+    {
+      "id": "SRC05_BATTLES",
+      "file": "05_BATTLES_WEAPONS_ARMIES_AND_CREATURES(1).pdf",
+      "pages": 31,
+      "bytes": 141407,
+      "sha256": "f45dbc7073b35157cd752bf0d1156de83c3247a55c907787bfa3b3f76404aae9",
+      "role": "BATTLE_WEAPON_CREATURE_PRODUCTION"
+    },
+    {
+      "id": "SRC06_GAMEPLAY",
+      "file": "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE(1).pdf",
+      "pages": 42,
+      "bytes": 165101,
+      "sha256": "2c0e6a12c94de455a0a35fc03ae8a9d9e2dfcc737217231d48e83e36d6a9da0b",
+      "role": "GAMEPLAY_SIDE_ACTIVITY_PRODUCTION"
+    },
+    {
+      "id": "SRC07_MISSION",
+      "file": "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX(1).pdf",
+      "pages": 29,
+      "bytes": 152532,
+      "sha256": "da7cacce24cbb6ad95431efa62e1bb344b837c434796f2f2bb2fa59bf57fc0b5",
+      "role": "MISSION_CHAPTER_IMPLEMENTATION"
+    },
+    {
+      "id": "SRC10_VISUAL_ATLAS",
+      "file": "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION.pdf",
+      "pages": 36,
+      "bytes": 74486821,
+      "sha256": "7a82efcc45a57caa8f2f06c1f72fa92c045c1e188a9f27229b674b7c91de3de1",
+      "role": "MODELING_MATERIAL_VISUAL_REFERENCE"
+    },
+    {
+      "id": "SRC11_SYSTEMS",
+      "file": "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX.pdf",
+      "pages": 11,
+      "bytes": 31073,
+      "sha256": "3a5b44a1294d90012cc8048dcc73d744f06f7e55b75a7b1bff2629ba319450b0",
+      "role": "TECHNICAL_PRODUCTION_AND_SOURCE_INDEX"
+    },
+    {
+      "id": "SRC_EXT_MASTER",
+      "file": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25(1).pdf",
+      "pages": 68,
+      "bytes": 1199482,
+      "sha256": "dec78252ee2e0d4650a5cb1eca0dfd6099f55b956713fb70471300b5270708d5",
+      "role": "EXTERNAL_RESOURCE_AND_TOOLING_MAP"
+    },
+    {
+      "id": "SRC_TOLKIEN",
+      "file": "Tolkien-J.-The-lord-of-the-rings-HarperCollins-ebooks-2010.pdf",
+      "pages": 1210,
+      "bytes": 6549111,
+      "sha256": "4e2fdba27a4dbc444e182bf10d25cfb6731294fd4215b449e38a190391ebf465",
+      "role": "BOOK_REFERENCE"
+    },
+    {
+      "id": "SRC_FILM_FOTR",
+      "file": "the-lord-of-the-rings-the-fellowship-of-the-ring-2001.pdf",
+      "pages": 173,
+      "bytes": 259122,
+      "sha256": "4760026562d943fde02133e681e5884ee85c7a5f466b7f3ff36d67122c60d656",
+      "role": "FELLOWSHIP_FILM_SCRIPT_SOURCE"
+    },
+    {
+      "id": "SRC_FILM_TTT",
+      "file": "the-lord-of-the-rings-the-two-towers-2002.pdf",
+      "pages": 222,
+      "bytes": 306594,
+      "sha256": "8c1c780cb94b7862cc5f15e7b451ee9a4eda1d170c503390bf75cfcd210d4e7e",
+      "role": "TWO_TOWERS_FILM_SCRIPT_SOURCE"
+    },
+    {
+      "id": "SRC_FILM_ROTK_REF",
+      "file": "the-lord-of-the-rings-the-3-return-of-the-king-2003.pdf",
+      "pages": 152,
+      "bytes": 207575,
+      "sha256": "12d5bacf22743f331a737b8461b168e652a84f053cdf14e0feaeefc6c83f9234",
+      "role": "RETURN_OF_THE_KING_REFERENCE_PRESENT"
+    }
+  ],
+  "authority_rules": [
+    "00_PROJECT_SOURCE_RULES controls provenance classes and source priority.",
+    "Visual atlas material is VISUAL_ONLY and cannot define canon facts.",
+    "Master External Resource Bible is a production sourcing map and cannot redefine canon/story.",
+    "Book material is BOOK_CANON only when labeled and non-conflicting with the film-continuity hierarchy.",
+    "ROTK reference PDF is not promoted to SCRIPT_VERIFIED authority under current source rules."
+  ],
+  "p1c01_fast_reference": [
+    {
+      "source_id": "SRC03_WORLD",
+      "physical_pages": [
+        6,
+        7
+      ],
+      "use": "Shire/Hobbiton and Bag End visual grammar, state variants, streaming, NPC and QA rules."
+    },
+    {
+      "source_id": "SRC11_SYSTEMS",
+      "physical_pages": [
+        8,
+        9,
+        10
+      ],
+      "use": "UE4.27 folder ownership, performance, streaming, memory, QA and integration gates."
+    },
+    {
+      "source_id": "SRC10_VISUAL_ATLAS",
+      "physical_pages": [
+        6
+      ],
+      "use": "VISUAL_ONLY modeling/material families; never canon evidence."
+    },
+    {
+      "source_id": "SRC_EXT_MASTER",
+      "physical_pages": [
+        13,
+        14
+      ],
+      "use": "Open material sources including Poly Haven and ambientCG; 1K/2K target defaults."
+    },
+    {
+      "source_id": "SRC00_RULES",
+      "physical_pages": [
+        2,
+        3
+      ],
+      "use": "Source priority/provenance and production gates."
+    }
+  ],
+  "evidence_boundary": "Hashed source index only; no acceptance claim."
+}

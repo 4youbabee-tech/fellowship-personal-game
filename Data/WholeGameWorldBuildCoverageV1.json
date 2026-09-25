@@ -1,0 +1,1535 @@
+{
+  "schema_version": 1,
+  "campaign_id": "WHOLE_GAME_WORLD_BUILD_V1",
+  "status": "GLOBAL_PREPRODUCTION_ACTIVE_RUNTIME_SERIALIZED",
+  "authority": [
+    "Data/ProjectGovernor.json / DEC-038 / DEC-039",
+    "Data/BigProductionBuildLaunchV1.json",
+    "Data/TrilogyProductionAssetWarehouse.json"
+  ],
+  "purpose": "Turn the complete story world into a region-by-region build campaign while keeping runtime implementation serialized through the P1C01 benchmark.",
+  "global_rules": [
+    "DEC-038 applies to every region: locked canon beats + playable safe windows + bounded set pieces + persistent world-state consequences + return to player control.",
+    "Resources serve canon and chapter identity; they never redefine story chronology.",
+    "Exactly one runtime-changing PR at a time.",
+    "All later-region work before P1C01 Gate 6/7 is asset/authoring/design/warehouse preparation only.",
+    "No region is called accepted from source registration, staging, compile, or headless checks alone."
+  ],
+  "layers": [
+    "CANON_BEATS",
+    "PLAYABLE_SAFE_WINDOWS",
+    "TERRAIN",
+    "MATERIALS",
+    "VEGETATION",
+    "ARCHITECTURE",
+    "INTERIORS",
+    "WATER",
+    "LIGHTING_SKY_FOG",
+    "CHARACTERS",
+    "NPC_LIFE",
+    "FAUNA",
+    "AUDIO_FOLEY",
+    "QUESTS_INTERACTIONS",
+    "CINEMATICS",
+    "UI_LOCALIZATION",
+    "COLLISION_NAVMESH",
+    "STREAMING_MEMORY",
+    "PERFORMANCE_PROFILING",
+    "HUMAN_VISUAL_PACING"
+  ],
+  "regions": [
+    {
+      "order": 1,
+      "region_id": "SHIRE_HOBBITON",
+      "story_states": [
+        "Birthday",
+        "Departure",
+        "Post-war/Epilogue"
+      ],
+      "required_kits": [
+        "pastoral terrain",
+        "lanes",
+        "farms",
+        "hobbit-holes",
+        "gardens",
+        "party field",
+        "mills/bridges/fences"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "ACTIVE_FIRST_BENCHMARK",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 2,
+      "region_id": "BAG_END",
+      "story_states": [
+        "Bilbo occupied",
+        "Frodo departure",
+        "Epilogue"
+      ],
+      "required_kits": [
+        "round interior architecture",
+        "pantry/kitchen",
+        "study",
+        "bedroom",
+        "hearth",
+        "lived-in props"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "ACTIVE_FIRST_BENCHMARK",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 3,
+      "region_id": "BREE",
+      "story_states": [
+        "Night arrival",
+        "Departure"
+      ],
+      "required_kits": [
+        "timber/stone streets",
+        "gate",
+        "Prancing Pony exterior/interior",
+        "stable",
+        "rain dressing"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 4,
+      "region_id": "WEATHERTOP",
+      "story_states": [
+        "Calm approach",
+        "Night attack"
+      ],
+      "required_kits": [
+        "ruined watchtower",
+        "hill terrain",
+        "camp",
+        "night threat dressing"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 5,
+      "region_id": "RIVENDELL",
+      "story_states": [
+        "Arrival wounded",
+        "Fellowship formed"
+      ],
+      "required_kits": [
+        "terraces",
+        "waterfalls",
+        "stone/wood elven architecture",
+        "Council",
+        "gardens/interiors"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 6,
+      "region_id": "CARADHRAS",
+      "story_states": [
+        "Storm escalation"
+      ],
+      "required_kits": [
+        "snow",
+        "rock",
+        "wind exposure",
+        "low visibility",
+        "mountain traversal"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 7,
+      "region_id": "MORIA",
+      "story_states": [
+        "Entrance",
+        "Tomb alert",
+        "Balrog escape"
+      ],
+      "required_kits": [
+        "doors",
+        "mines",
+        "vast halls",
+        "Balin tomb",
+        "stairs/bridges",
+        "darkness/brazier dressing"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 8,
+      "region_id": "LOTHLORIEN",
+      "story_states": [
+        "Night arrival",
+        "Departure"
+      ],
+      "required_kits": [
+        "golden forest",
+        "flets",
+        "organic bridges",
+        "river/boats",
+        "luminous foliage"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 9,
+      "region_id": "ANDUIN_AMON_HEN",
+      "story_states": [
+        "River journey",
+        "Uruk attack"
+      ],
+      "required_kits": [
+        "river",
+        "boats",
+        "Argonath/monumental reveal",
+        "forest",
+        "ancient ruins",
+        "Parth Galen"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 10,
+      "region_id": "FANGORN",
+      "story_states": [
+        "Quiet",
+        "Ent mobilization"
+      ],
+      "required_kits": [
+        "ancient trunks",
+        "roots",
+        "mist",
+        "living forest",
+        "Ent-scale traversal"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 11,
+      "region_id": "EDORAS_MEDUSELD",
+      "story_states": [
+        "Grima control",
+        "Restored court"
+      ],
+      "required_kits": [
+        "hill capital",
+        "golden hall",
+        "stables",
+        "wind plains",
+        "Rohan village"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 12,
+      "region_id": "HELMS_DEEP",
+      "story_states": [
+        "Pre-battle",
+        "Rain siege",
+        "Aftermath"
+      ],
+      "required_kits": [
+        "Deeping Wall",
+        "culvert",
+        "keep",
+        "caves",
+        "siege dressing"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 13,
+      "region_id": "ISENGARD_ORTHANC",
+      "story_states": [
+        "Industrial",
+        "Flooded"
+      ],
+      "required_kits": [
+        "Orthanc",
+        "ring wall",
+        "pits",
+        "furnaces",
+        "chains",
+        "felled forest",
+        "flood state"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 14,
+      "region_id": "EMYN_MUIL",
+      "story_states": [
+        "Pre-guide",
+        "Guided"
+      ],
+      "required_kits": [
+        "broken ridges",
+        "drops",
+        "grey stone",
+        "rope traversal"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 15,
+      "region_id": "DEAD_MARSHES",
+      "story_states": [
+        "Continuous hazard"
+      ],
+      "required_kits": [
+        "pools",
+        "mist",
+        "dead vegetation",
+        "corpse-light treatment"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 16,
+      "region_id": "ITHILIEN",
+      "story_states": [
+        "Ranger-controlled pockets"
+      ],
+      "required_kits": [
+        "green forest",
+        "ruins",
+        "waterfalls",
+        "ambush spaces"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 17,
+      "region_id": "HENNETH_ANNUN",
+      "story_states": [
+        "Secure",
+        "Departure"
+      ],
+      "required_kits": [
+        "waterfall cave",
+        "concealed approach",
+        "ranger refuge"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 18,
+      "region_id": "MINAS_TIRITH",
+      "story_states": [
+        "Peace/prep",
+        "Siege",
+        "Coronation"
+      ],
+      "required_kits": [
+        "concentric white city",
+        "gates",
+        "citadel",
+        "courtyards",
+        "siege variants"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 19,
+      "region_id": "OSGILIATH",
+      "story_states": [
+        "Contested",
+        "Overrun"
+      ],
+      "required_kits": [
+        "ruined domes",
+        "bridges",
+        "riverfront",
+        "rubble",
+        "combat routes"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 20,
+      "region_id": "MINAS_MORGUL",
+      "story_states": [
+        "Army departure"
+      ],
+      "required_kits": [
+        "corrupted valley",
+        "vertical fortress",
+        "dead road",
+        "green dread lighting"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 21,
+      "region_id": "CIRITH_UNGOL",
+      "story_states": [
+        "Pre-Shelob",
+        "Tower aftermath"
+      ],
+      "required_kits": [
+        "mountain stairs",
+        "tower",
+        "harsh rock",
+        "orc interior"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 22,
+      "region_id": "SHELOBS_LAIR",
+      "story_states": [
+        "Predator active",
+        "Aftermath"
+      ],
+      "required_kits": [
+        "web caves",
+        "organic tunnels",
+        "darkness",
+        "ambush spaces"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 23,
+      "region_id": "PELENNOR_FIELDS",
+      "story_states": [
+        "Pre-siege",
+        "Battle",
+        "Aftermath"
+      ],
+      "required_kits": [
+        "open plain",
+        "siege debris",
+        "army staging",
+        "mumakil lanes"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 24,
+      "region_id": "PATHS_OF_THE_DEAD",
+      "story_states": [
+        "Sealed dread",
+        "Army follows"
+      ],
+      "required_kits": [
+        "haunted road",
+        "stone tomb architecture",
+        "fog",
+        "spectral staging"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 25,
+      "region_id": "BLACK_GATE_MORANNON",
+      "story_states": [
+        "Closed",
+        "Final confrontation"
+      ],
+      "required_kits": [
+        "black walls",
+        "barren plain",
+        "army staging"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 26,
+      "region_id": "MORDOR_GORGOROTH",
+      "story_states": [
+        "Army movement",
+        "Final collapse"
+      ],
+      "required_kits": [
+        "ash",
+        "volcanic rock",
+        "industrial war landscape",
+        "slave roads"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 27,
+      "region_id": "MOUNT_DOOM",
+      "story_states": [
+        "Stable",
+        "Destruction"
+      ],
+      "required_kits": [
+        "volcanic slopes",
+        "narrow paths",
+        "Sammath Naur",
+        "lava/fire"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    },
+    {
+      "order": 28,
+      "region_id": "GREY_HAVENS",
+      "story_states": [
+        "Final"
+      ],
+      "required_kits": [
+        "pale harbor",
+        "ships",
+        "sea horizon",
+        "farewell staging"
+      ],
+      "doctrine": "DEC-038_GLOBAL_PLAYABLE_FILM",
+      "runtime_status": "PREPRODUCTION_ONLY_UNTIL_P1C01_GATE_6_7",
+      "layer_status": {
+        "CANON_BEATS": "SOURCE_DEFINED_REVIEW_REQUIRED_PER_CHAPTER",
+        "PLAYABLE_SAFE_WINDOWS": "REQUIRED_DESIGN_PASS",
+        "TERRAIN": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "MATERIALS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "VEGETATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "ARCHITECTURE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "INTERIORS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "WATER": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "LIGHTING_SKY_FOG": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CHARACTERS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "NPC_LIFE": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "FAUNA": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "AUDIO_FOLEY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "QUESTS_INTERACTIONS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "CINEMATICS": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "UI_LOCALIZATION": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "COLLISION_NAVMESH": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "STREAMING_MEMORY": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "PERFORMANCE_PROFILING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE",
+        "HUMAN_VISUAL_PACING": "WAREHOUSE_PREP_AND_AUTHORING_QUEUE"
+      },
+      "performance_contract": {
+        "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+        "repeated_detail": "ISM/HISM + LOD + culling",
+        "heavy_assets": "TSoftObjectPtr/TSoftClassPtr + FStreamableManager async",
+        "crowds": "Object Pooling",
+        "animated_assets": "FBX only",
+        "textures": "PNG/TGA, 1K/2K default runtime, 4K hero only after measurement"
+      },
+      "acceptance_gate": {
+        "machine": "compile/import/headless evidence where applicable",
+        "manual": "PIE + target-device + visual/pacing/performance chapter-specific evidence",
+        "current_claim": "NOT_ACCEPTED"
+      }
+    }
+  ],
+  "cross_game_systems": {
+    "world_streaming": {
+      "status": "PREP_REQUIRED",
+      "notes": "Define chunk/level ownership and memory budgets before broad runtime integration."
+    },
+    "save_load": {
+      "status": "EXISTING_PARTIAL_ACCEPTANCE",
+      "notes": "Must preserve route/chapter/world-state continuity as new regions integrate."
+    },
+    "living_world": {
+      "status": "GLOBAL_DESIGN_REQUIRED",
+      "notes": "LivingWorldDirector + context subsystems remain decoupled; use pooling and bounded simulation."
+    },
+    "weather_wind": {
+      "status": "PREP_REQUIRED",
+      "notes": "Shared visual/audio weather state only after visual wind path is engine-green."
+    },
+    "accessibility": {
+      "status": "PREP_REQUIRED",
+      "notes": "Subtitle/readability/input/accessibility review remains whole-game acceptance work."
+    },
+    "localization": {
+      "status": "PLANNED_PRESENTATION_LAYER",
+      "notes": "English audio + professional Arabic localization through FText/String Tables/RTL."
+    }
+  },
+  "execution_order": [
+    "P1C01 C2 foliage/wind",
+    "P1C01 C3 foliage material identity",
+    "P1C01 C4 LOD/cull/overdraw profiling",
+    "P1C01 D lighting/sky/fog/water",
+    "P1C01 E character presentation",
+    "P1C01 F living Shire NPC/fauna/environmental motion",
+    "P1C01 G quest/cinematic/audio polish",
+    "P1C01 H target-device profiling",
+    "P1C01 Gate 6/7 human visual/pacing/performance",
+    "Then promote next region/chapter runtime build from its prepared world packet"
+  ],
+  "next_preproduction_actions": [
+    "Create per-region asset candidate packets from the 142-source registry.",
+    "Create per-region atmosphere/audio/lighting identity sheets.",
+    "Create canon-beat and playable-safe-window maps per chapter.",
+    "Create streaming/collision/navmesh/performance budgets per region.",
+    "Keep warehouse staging and authored asset preparation running while runtime PR #80 validates."
+  ]
+}

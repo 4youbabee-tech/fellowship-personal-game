@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "packet_id": "P1C01_WORLD_BUILD_INTAKE_V1",
+  "status": "PREPARED_FOR_STAGING_AND_QC",
+  "region_scope": [
+    "SHIRE_HOBBITON",
+    "BAG_END"
+  ],
+  "story_rule": "Resources serve the established Shire/Bag End canon and DEC-038 playable-film safe windows; resources never redefine story chronology.",
+  "categories": [
+    {
+      "id": "SURFACES",
+      "priority": "CRITICAL",
+      "needs": [
+        "pastoral grass",
+        "dirt lanes",
+        "garden soil",
+        "bark",
+        "leaf litter",
+        "stone",
+        "timber",
+        "painted wood",
+        "plaster",
+        "roofing/thatch/slate",
+        "cloth/leather"
+      ],
+      "source_order": [
+        "POLY_HAVEN",
+        "AMBIENTCG",
+        "TEXTURES_COM",
+        "CGBOOKCASE",
+        "3DTEXTURES_ME"
+      ],
+      "runtime_target": "1K/2K default, PNG/TGA, packed masks where useful"
+    },
+    {
+      "id": "VEGETATION",
+      "priority": "CRITICAL",
+      "needs": [
+        "grass clumps",
+        "hedges",
+        "shrubs",
+        "deciduous trees",
+        "orchard support",
+        "garden plants",
+        "reeds/wet-edge support"
+      ],
+      "source_order": [
+        "SPEEDTREE",
+        "POLY_HAVEN",
+        "FAB_QUixel_MEGASCANS",
+        "QUATERNIUS",
+        "KENNEY"
+      ],
+      "runtime_target": "HISM/ISM, authored LOD/cull, masked-overdraw profiling before density"
+    },
+    {
+      "id": "BAG_END_INTERIOR",
+      "priority": "CRITICAL",
+      "needs": [
+        "round-door compatible support furniture",
+        "tables",
+        "chairs",
+        "shelves",
+        "books",
+        "kitchenware",
+        "pantry props",
+        "hearth props",
+        "bottles",
+        "crockery",
+        "rugs",
+        "lamps"
+      ],
+      "source_order": [
+        "QUATERNIUS",
+        "KENNEY",
+        "THE_BASE_MESH",
+        "FAB_QUixel_MEGASCANS"
+      ],
+      "runtime_target": "support stock only; hero Bag End shell/silhouette remains project-authored or separately sourced"
+    },
+    {
+      "id": "SHIRE_ARCHITECTURE_PROPS",
+      "priority": "HIGH",
+      "needs": [
+        "fences",
+        "gates",
+        "bridges",
+        "carts",
+        "barrels",
+        "crates",
+        "benches",
+        "lanterns",
+        "farm tools",
+        "barn/outbuilding support"
+      ],
+      "source_order": [
+        "QUATERNIUS",
+        "KENNEY",
+        "FAB_QUixel_MEGASCANS"
+      ],
+      "runtime_target": "FBX final mesh exchange where imported; collision/LOD/material-slot review required"
+    },
+    {
+      "id": "FAUNA",
+      "priority": "HIGH",
+      "needs": [
+        "birds",
+        "rabbits",
+        "butterflies",
+        "dogs",
+        "pigs",
+        "cattle",
+        "sheep",
+        "ponies/horses"
+      ],
+      "source_order": [
+        "QUATERNIUS",
+        "KENNEY",
+        "FAB_QUixel_MEGASCANS"
+      ],
+      "runtime_target": "region-appropriate bounded fauna; pooled/transient where applicable"
+    },
+    {
+      "id": "NPC_ANIMATION",
+      "priority": "HIGH",
+      "needs": [
+        "walk",
+        "idle",
+        "sit",
+        "carry",
+        "talk gestures",
+        "garden/work actions",
+        "eat/drink",
+        "door/household interactions"
+      ],
+      "source_order": [
+        "MIXAMO",
+        "ROKOKO",
+        "ACTORCORE",
+        "CASCADEUR",
+        "QUATERNIUS"
+      ],
+      "runtime_target": "FBX only for final animated intake; retarget/skeleton validation required"
+    },
+    {
+      "id": "AUDIO_FOLEY",
+      "priority": "CRITICAL",
+      "needs": [
+        "day birds",
+        "wind through vegetation",
+        "footsteps wood/stone/leaves/gravel/mud",
+        "hearth fire",
+        "doors/keys/latches",
+        "wood creaks",
+        "kitchen/household",
+        "farm ambience",
+        "water/stream"
+      ],
+      "source_order": [
+        "SONNISS_GDC",
+        "OPENGAMEART",
+        "FREESOUND",
+        "ZAPSPLAT",
+        "99SOUNDS",
+        "KENNEY"
+      ],
+      "runtime_target": "WAV masters, localized attenuation/concurrency, ambience beds managed by audio subsystem"
+    },
+    {
+      "id": "VFX_ATMOSPHERE",
+      "priority": "MEDIUM",
+      "needs": [
+        "subtle chimney smoke",
+        "hearth embers",
+        "dust motes",
+        "light rain/splash support",
+        "mist support"
+      ],
+      "source_order": [
+        "ACTIONVFX",
+        "EMBERGEN",
+        "JANGAFX_FREE_VFX"
+      ],
+      "runtime_target": "baked/flipbook/Cascade-friendly; avoid heavy volumetrics"
+    }
+  ],
+  "promotion_ladder": [
+    "SOURCE_REGISTERED",
+    "CANDIDATE",
+    "AUTHORIZED_FOR_STAGING",
+    "STAGED",
+    "INTAKE_QC",
+    "READY_FOR_IMPORT",
+    "IMPORTED",
+    "INTEGRATED",
+    "ACCEPTED"
+  ],
+  "immediate_queue": [
+    "Complete C2 exact-head Pre-Unreal + UE4.27.2 proof and merge.",
+    "Implement prepared C3 stable foliage material identity binding only after C2 is engine-green.",
+    "Execute Data/P1C01C4FoliageLodCullOverdrawPlanV1.json only after C3 is exact-head engine-green and merged.",
+    "Execute Data/P1C01DLightingSkyFogWaterPlanV1.json only after C4 is exact-head engine-green and merged.",
+    "Promote highest-fit Shire/Bag End warehouse assets through item-level candidate review and intake QC without skipping maturity states.",
+    "After D, continue runtime order: character presentation -> living world -> quest/cinematic/audio -> target-device profiling -> Gate 6/7."
+  ],
+  "evidence_boundary": "This packet is preparation and sourcing only. It does not claim download/import/runtime/visual/audio acceptance."
+}
