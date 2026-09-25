@@ -1,3 +1,14 @@
+## 2026-09-25 - Playable-film interaction doctrine
+
+- **Governor decision:** DEC-038 ACCEPTED.
+- **Canon beats/outcomes:** LOCKED by Story/Timeline/Mission sources.
+- **Interactive safe windows:** REQUIRED around major beats when source chronology permits.
+- **Cutscene-only chapter design:** NOT ACCEPTABLE when meaningful interaction can exist without changing canon.
+- **Open-world divergence:** NOT ACCEPTABLE when it contradicts chronology or locked outcomes.
+- **Persistent consequence presentation:** REQUIRED before control returns after major canon transitions.
+- **Dialogue:** original project-authored text only; no verbatim Tolkien/film reproduction.
+- **Implementation proof:** chapter-specific; no chapter is called visually/pacing accepted until Gate 6/7 evidence exists.
+
 ## 2026-09-25 - Private-offline asset isolation lane
 
 - **Owner decision:** RECORDED — DEC-037.
