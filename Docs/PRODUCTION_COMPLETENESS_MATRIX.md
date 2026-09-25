@@ -1,3 +1,12 @@
+## 2026-09-25 - W01 P1C01 Drop C2: lightweight foliage wind
+
+- **C1 baseline:** MERGED / COMPILE-ENGINE-CORE PROVEN — PR #77 exact head passed Pre-Unreal #897 + Unreal #732 and merged as `82fc4deaf2e2a99cfebd0d8d1b99a42b5d922ffe`.
+- **Near/mid foliage master:** IMPLEMENTED IN SOURCE — `M_ProductionFoliage` uses parameterized `SimpleGrassWind` through WPO; no actor Tick is added.
+- **Far foliage master:** IMPLEMENTED IN SOURCE — `M_ProductionFoliageFar` has no WPO, providing a shader-cheaper destination for far LOD assignment rather than merely zeroing wind amplitude.
+- **Density:** UNCHANGED — increase remains blocked until target-device profiling.
+- **HISM/ISM + LOD/culling:** EXISTING WORLD CONTRACT PRESERVED; C2 does not replace instancing or expand counts. Stable material identity/LOD assignment remains C3/C4.
+- **Validation:** STATIC-VALIDATED pending exact-head Pre-Unreal + UE4.27.2 production-import/core proof. No PIE/device/visual acceptance.
+
 ## 2026-09-25 - W01 P1C01 Drop C2: lightweight foliage wind master
 
 - **Drop C1 integration:** MERGED — PR #77 -> `develop@82fc4deaf2e2a99cfebd0d8d1b99a42b5d922ffe`; Pre-Unreal #897 SUCCESS + Unreal #732 SUCCESS on the exact C1 head.
