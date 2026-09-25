@@ -2558,13 +2558,15 @@ if "AlbedoTexture" not in json.dumps(pg165_plan):
 # PG-166: Drop C2 lightweight foliage wind must stay material-only and keep a stripped far path.
 pg166_importer = pg165_importer
 for pg166_symbol in [
-    "MaterialExpressionSimpleGrassWind",
+    "MaterialExpressionMaterialFunctionCall",
     'TEXT("M_ProductionFoliage")',
     'TEXT("M_ProductionFoliageFar")',
     'ParameterName = TEXT("WindIntensity")',
     'ParameterName = TEXT("WindSpeed")',
     'ParameterName = TEXT("WindWeight")',
+    "/Engine/Functions/Engine_MaterialFunctions01/WorldPositionOffset/SimpleGrassWind.SimpleGrassWind",
     "WorldPositionOffset.Expression = SimpleWind",
+    'TEXT("ShireProductionImport failed to bind UE4.27 SimpleGrassWind material function.")',
     'TEXT("ShireProductionImport created M_ProductionFoliageFar no-WPO master.")',
 ]:
     if pg166_symbol not in pg166_importer:
