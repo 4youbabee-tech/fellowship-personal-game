@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_C4_FOLIAGE_LOD_CULL_OVERDRAW_V1",
+  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01MaterialsVegetationPlanV1.json",
+    "Data/P1C01C3FoliageMaterialIdentityPlanV1.json",
+    "DEC-038",
+    "DEC-039"
+  ],
+  "prerequisite": "C3 exact-head Pre-Unreal + UE4.27.2 core/production-import green and merged to develop.",
+  "purpose": "Prepare the evidence-driven far-foliage LOD/cull/overdraw pass after C3 without changing density, gameplay ownership, object paths, or story state.",
+  "review_inputs": [
+    "Imported P1C01 foliage mesh inventory and stable material identities.",
+    "Per-mesh LOD count, section/material-slot layout, screen-size transitions and existing cull bands.",
+    "Near/mid M_ProductionFoliage assignments produced by C3.",
+    "M_ProductionFoliageFar no-WPO master created by C2.",
+    "Masked foliage overdraw observations on the target 720p Low-Medium profile before any density expansion."
+  ],
+  "implementation_contract": {
+    "near_mid_parent": "/Game/Production/Materials/M_ProductionFoliage",
+    "far_parent": "/Game/Production/Materials/M_ProductionFoliageFar",
+    "selection_rule": "Bind the far no-WPO parent only where an actual far LOD/material section is verified. Do not blanket-reparent all foliage instances or infer far-LOD eligibility from filenames alone.",
+    "preservation": [
+      "Keep deterministic material instance object paths unchanged.",
+      "Keep AlbedoTexture, Color, Roughness and Metallic values unchanged.",
+      "Do not add Actor/component Tick.",
+      "Do not increase instance density, spawn counts or gameplay loading.",
+      "Do not move quest IDs, save keys, story anchors, collision ownership or LivingWorld ownership.",
+      "Keep C2 known-failure guards: do not introduce UMaterialExpressionSimpleGrassWind or UMaterialExpressionDistanceCullFade."
+    ]
+  },
+  "evidence_record_schema": [
+    "mesh_object_path",
+    "material_identity",
+    "lod_count",
+    "lod_section",
+    "current_parent",
+    "proposed_parent",
+    "cull_start",
+    "cull_end",
+    "screen_size_transition",
+    "masked_overdraw_observation",
+    "decision",
+    "reason"
+  ],
+  "guards": [
+    "No far-parent promotion without a concrete mesh/LOD evidence row.",
+    "No density increase in C4.",
+    "No per-actor wind or fade Tick.",
+    "No unsupported UE4.27 editor-expression class shortcuts.",
+    "Far material remains no-WPO.",
+    "C4 does not claim performance acceptance; target-device profiling remains a later gate."
+  ],
+  "acceptance": [
+    "Exact-head Pre-Unreal success.",
+    "UE4.27.2 editor compile success.",
+    "Production import succeeds with deterministic material paths intact.",
+    "Every C4 far-parent change is backed by a mesh/LOD evidence row.",
+    "Near/mid foliage remains on M_ProductionFoliage and verified far slots use M_ProductionFoliageFar.",
+    "No broken AlbedoTexture bindings.",
+    "No foliage density increase.",
+    "No PIE/device/visual/performance acceptance is inferred from compile/import proof."
+  ],
+  "evidence_boundary": "Preparation only. Runtime implementation must not start until C3 is exact-head engine-green and merged."
+}
