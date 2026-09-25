@@ -4271,10 +4271,10 @@
     "5. Keep Arabic localization runtime implementation isolated from the active world-production PR."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W01-P1C01-DROP-C1",
-    "source_head": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
-    "branch": "production/w01-p1c01-materials-vegetation-v1",
-    "pull_request": 77,
+    "checkpoint_id": "CP-W01-P1C01-DROP-C2-V2",
+    "source_head": "4980c3c8b1f4660863940a58e052dcf8095772cf",
+    "branch": "production/w01-p1c01-foliage-wind-v2",
+    "pull_request": null,
     "verified": {
       "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
       "latest_automated_closure": "809e56a9e1dc4b453e02a0b04b6875a71df21933: Pre-Unreal #880 SUCCESS + Unreal #715 SUCCESS validation-policy inherit + Branch Cleanup #3 SUCCESS",
@@ -4291,12 +4291,13 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "W01/P1C01 Drop C1 material texture binding: Unreal #731 SUCCESS on corrected head 3b2281c17...; Pre-Unreal #896 failed only because the handoff snapshot used a non-contract status token. Snapshot normalized to FAILURE with an explanatory note; no runtime change in this correction.",
+    "active_wave": "W01/P1C01 Drop C2 v2: clean transplant of the lightweight foliage wind implementation onto the merged Warehouse/Master Resource Bible baseline. Near/mid uses UE4.27 SimpleGrassWind material function; far uses no-WPO master. Exact-head proof pending.",
     "next_actions": [
-      "1. Require fresh exact-head Pre-Unreal after normalizing the handoff status contract.",
-      "2. Preserve Unreal #731 SUCCESS as engine/core evidence for the same corrected runtime head ancestry unless policy requires rerun.",
-      "3. Merge Drop C1 when required exact-head gates are green.",
-      "4. Promote C2 foliage/wind as the next and only runtime-changing lane; parallel preparation lanes continue independently."
+      "1. Open the clean C2 v2 PR against develop.",
+      "2. Require exact-head Pre-Unreal + UE4.27.2 core/production-import green.",
+      "3. Merge C2 v2 only when both exact-head gates are green.",
+      "4. After merge, advance within P1C01 to C3 stable foliage material identity binding, then C4 LOD/cull/overdraw profiling, then D lighting/sky/fog/water.",
+      "5. Continue all non-runtime warehouse/world-production preparation waves in parallel; do not open a second runtime-changing lane."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -4304,7 +4305,7 @@
       "P1C01 visual/pacing/NPC-believability acceptance",
       "real audio listening/mix acceptance after production bank/spatial layer integration"
     ],
-    "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
+    "scope_rule": "DEC-038 is global across the whole game, but runtime expansion remains gated: P1C01 is the first assembled benchmark until Gate 6/7. Global preparation may advance in parallel.",
     "validation_snapshot": {
       "last_green": {
         "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
@@ -4429,10 +4430,10 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
-    "current_short_branch": "production/w01-p1c01-materials-vegetation-v1",
+    "current_short_branch": "production/w01-p1c01-foliage-wind-v2",
     "integration_baseline": "develop",
-    "current_open_pr": 77,
-    "open_pr_policy": "PR #77 is the sole short-lived W01/P1C01 Drop C1 material-texture candidate targeting develop.",
+    "current_open_pr": null,
+    "open_pr_policy": "C2 v2 is the sole runtime-changing W01/P1C01 candidate. It is a clean transplant onto develop@4980c3c8b1f4660863940a58e052dcf8095772cf after the Warehouse/Master Resource Bible baseline merged.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
       "date": "2026-09-25",
@@ -5314,11 +5315,11 @@
     "owner_observation_role": "Use owner play time for final symptom/pacing/visual confirmation only after reproducible technical checks have run."
   },
   "integration_train": {
-    "branch": "production/w01-p1c01-materials-vegetation-v1",
-    "baseline": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
-    "current_wave": "W01_P1C01_DROP_C1_MATERIAL_TEXTURE_BINDING",
+    "branch": "production/w01-p1c01-foliage-wind-v2",
+    "baseline": "4980c3c8b1f4660863940a58e052dcf8095772cf",
+    "current_wave": "W01_P1C01_DROP_C2_LIGHTWEIGHT_FOLIAGE_WIND_V2",
     "merge_policy": "Merge only after exact-head Pre-Unreal + UE4.27.2 core/production-import green.",
-    "proof_boundary": "No PIE/device/visual/material acceptance until matching evidence exists."
+    "proof_boundary": "No PIE/device/visual/material/wind acceptance until matching evidence exists."
   },
   "completion_wave_map": {
     "status": "ACTIVE_PLANNING_ESTIMATE",
@@ -5670,6 +5671,24 @@
       "root_cause": "PG-165 called the runtime-module resolve_source() helper for a file owned by Source/ShireJourneyEditorTools.",
       "correction": "Add resolve_editor_source() rooted at Source/ShireJourneyEditorTools and route PG-165 through it.",
       "prevention": "Future editor-tools validator guards must use the editor resolver or an explicit EditorTools path; runtime resolve_source() is reserved for Source/ShireJourney."
+    },
+    {
+      "id": "KNOWN-C2-SIMPLEGRASSWIND-MATERIAL-FUNCTION",
+      "status": "ROOT_FIXED_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "observed_head": "96e6fc2da794776e7abc76e7df4981f252d97d97",
+      "symptom": "Unreal #751 failed compile because Materials/MaterialExpressionSimpleGrassWind.h does not exist.",
+      "root_cause": "UE4.27 exposes SimpleGrassWind as an Engine material function asset, not UMaterialExpressionSimpleGrassWind.",
+      "correction": "Use UMaterialExpressionMaterialFunctionCall with /Engine/Functions/Engine_MaterialFunctions01/WorldPositionOffset/SimpleGrassWind.SimpleGrassWind and bind WindIntensity/WindWeight/WindSpeed.",
+      "prevention": "Validate target-engine material API shape before generating C++ node code; PG-166 protects the material-function contract."
+    },
+    {
+      "id": "KNOWN-C2-DISTANCECULLFADE-LINK",
+      "status": "ROOT_FIXED_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "observed_head": "93c23a5b7c71ddfd25a21cef983b1a9fb6eef7eb",
+      "symptom": "Unreal #758 compiled but link failed on UMaterialExpressionDistanceCullFade::GetPrivateStaticClass.",
+      "root_cause": "The UE4.27 DistanceCullFade expression class is not link-usable from ShireJourneyEditorTools despite visible headers.",
+      "correction": "Remove DistanceCullFade dependency; near/mid uses direct SimpleGrassWind and far distance cost is removed through M_ProductionFoliageFar with no WPO.",
+      "prevention": "PG-166 rejects MaterialExpressionDistanceCullFade/DistanceScaledWindWeight in C2."
     }
   ],
   "w00_acceptance_fast_path": {
