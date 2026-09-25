@@ -1,3 +1,11 @@
+## 2026-09-25 - Whole-game world build campaign prepared in parallel
+
+- New preparation branch: `planning/whole-game-world-build-v1`, based on canonical `develop@4980c3c8...`.
+- Added `Data/WholeGameWorldBuildCoverageV1.json`, covering every world location in `TrilogyProductionAssetWarehouse.json`.
+- Every region now has the same required build layers: canon beats, playable safe windows, terrain, materials, vegetation, architecture, interiors, water, lighting/sky/fog, characters, NPC life, fauna, audio/foley, quests/interactions, cinematics, UI/localization, collision/navmesh, streaming/memory, performance profiling and human visual/pacing acceptance.
+- P1C01 remains the only active runtime benchmark until Gate 6/7. All later regions are preparation/authoring/warehouse lanes only for now.
+- This campaign operationalizes DEC-038 globally and consumes the DEC-039 resource registry without allowing assets to redefine canon.
+
 ## 2026-09-25 - Master External Resource Bible audited and adopted
 
 - Audited the uploaded 68-page `SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25`, containing 225 classified external sources/tools.
