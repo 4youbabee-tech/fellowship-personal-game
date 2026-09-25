@@ -1,3 +1,11 @@
+## 2026-09-25 - PR #75 core engine proof passed; package red isolated to classifier/base-fetch path
+
+- Unreal #721 attempt 2 reached and passed the required **core** chain on exact head `5a58c8d3d33f07a2b3440f0ab85e42ca20c00695`: ShireJourneyEditor build, production import, Automation QA, startup smoke, P1C01-P1C08 runtime audit, route/state audit and warning-debt guard all succeeded.
+- The overall workflow red was **not** a C++/runtime failure. The classifier could not resolve the PR base because the stable checkout fetched only the PR head at depth 2; it fell back to `full` with `reason=delta-unavailable-fail-safe`.
+- That unnecessary full lane then failed inside the legacy W00 package helper before cook at `W00_DBGHELP_DESTINATION_WRITE_FAIL`: access denied while probing the staged `dbghelp.dll` destination.
+- This delta is ordinary C++/Data/world-production work, so project policy requires the **core** lane and no package/cook. The classifier now fetches the explicit PR base SHA on demand and retries the diff before any full-lane fail-safe.
+- Drop A remains source-complete and core-engine-proven on the previous exact head; the new classifier head still requires fresh Pre-Unreal + Unreal core workflow success before merge.
+
 ## 2026-09-25 - W01/P1C01 Mega Production Drop A started
 
 - Canonical parent: `develop@ec3208919910b58bd6a87ce59c17e31312bd7bab` with Pre-Unreal #885 SUCCESS + Unreal #720 SUCCESS.
