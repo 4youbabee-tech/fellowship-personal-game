@@ -1,6 +1,7 @@
 ## 2026-09-25 - Final consolidation / CI-cost / launcher hardening
+- **Final branch survivor set:** `develop` + `main` only. The generated-audio archive ref is also safe-delete after registry consolidation; no branch-only WAV/UE master asset was found in its changed-file set.
 - **Canonical handoff target:** `develop`; stable release lane: `main`.
-- **Branch consolidation:** FINAL DELETE SET RECORDED on PR #70. Post-merge cleanup preserves only develop/main plus temporary generated-audio archive; stale refs are removed automatically by the branch-cleanup workflow.
+- **Branch consolidation:** FINAL DELETE SET RECORDED on PR #70. Post-merge cleanup preserves only develop/main; stale refs are removed automatically by the branch-cleanup workflow.
 - **Parallel consolidation PR #71:** SUPERSEDED after unique safe payload transfer into #70.
 - **Generated-audio registries:** CONSOLIDATED/SANITIZED; expiring signed delivery URLs removed; no UE playback/listening acceptance promoted.
 - **Local launcher self-update hazard:** FIX_COMMITTED for both update/build and PIE verification controllers; local rerun proof pending.
@@ -13,7 +14,7 @@
 - Local launcher self-update hazard: **FIX_COMMITTED / PROOF PENDING**. The running batch now uses a temp copy before pulling, preventing mid-execution mutation. No local rerun evidence is claimed yet.
 - Unreal classifier cost correction: **FIX_COMMITTED / CI PROOF PENDING**. PR classification uses the canonical base SHA, so ordinary C++/runtime/data/SourceAssets deltas use a core lane (build/import/Automation/runtime/warning) with no package/cook even when intermediate branch runs were cancelled. Packaging remains mandatory for Build.cs/Target.cs/Config/streaming/packaging-critical deltas.
 - W00 status remains **AUTOMATED_CLOSURE_GREEN_HUMAN_PIE_TAIL_PENDING**. Pre-Unreal #821 + Unreal #656 are machine evidence only; no new PIE/device/visual acceptance is claimed.
-- Branch consolidation salvages planning/recovery/source09 records into develop and keeps generated-audio evidence behind an explicit archive pointer until materialized audio intake is durable.
+- Branch consolidation salvages planning/recovery/source09 records into develop and consolidates the generated-audio registry evidence directly into the canonical lane; no separate archive branch is required.
 
 ## 2026-09-25 - C4996 / SetStaticMesh warning-debt guards added
 
