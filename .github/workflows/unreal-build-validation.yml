@@ -132,7 +132,7 @@ jobs:
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\repair_ue_engine_content_acl.ps1"'
 
       - name: Verify Unreal 4.27.2 and project
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_verify_unreal.cmd"'
 
@@ -197,12 +197,12 @@ jobs:
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_warning_debt.cmd"'
 
       - name: Build cook stage and archive real Windows package
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_package_w00.cmd"'
 
       - name: Verify packaged Runtime Data JSON payload
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\verify_packaged_runtime_data.ps1"'
 
