@@ -15,13 +15,14 @@ The repository already has Shire TGA textures and authored MTL entries such as G
 
 This means Drop C begins with the material pipeline itself, not with blind density growth.
 
-## Runtime sequence after post-merge green
+## Runtime sequence
 
-1. Add a texture parameter to the deterministic production surface master and bind authored MTL albedo paths.
-2. Create a lightweight foliage master for grass/leaves only.
-3. Add parameterized foliage WPO/wind while keeping repeated vegetation under HISM/ISM.
-4. Keep existing cull bands/LOD policy and measure masked overdraw/shadow cost before raising density.
-5. After the visual wind path is stable, bridge weather/wind state to both material response and adaptive ambience in a later bounded step.
+1. **C1 complete / merged:** authored MTL albedo paths bind into the deterministic production surface master.
+2. **C2 implemented in source:** create `M_ProductionFoliage` with parameterized `SimpleGrassWind` WPO for near/mid grass/leaves only.
+3. **C2 implemented in source:** create `M_ProductionFoliageFar` with no WPO so far LODs have a genuinely cheaper shader target instead of running wind math at zero amplitude.
+4. **C3 next:** bind foliage parents by stable material identity without changing gameplay IDs, world ownership, or density.
+5. **C4 after C3:** keep HISM/ISM, existing cull bands and LOD policy, then measure masked overdraw/shadow/material cost on target hardware before any density increase.
+6. Only after the visual wind path is engine-green and visually accepted, prepare a shared weather/wind parameter bridge for materials and adaptive ambience.
 
 ## Asset rules
 
@@ -43,3 +44,14 @@ The Shire should read as:
 ## Evidence boundary
 
 This document prepares Drop C only. Runtime material/foliage changes do not start until the current post-merge world/architecture validation is green.
+
+## C2 architecture boundary
+
+- Wind lives in the material vertex path; there is no per-tree or per-grass Tick.
+- `WindIntensity`, `WindSpeed`, and `WindWeight` are scalar parameters so presentation can be tuned without code changes.
+- The far material intentionally omits World Position Offset. Actual distance/LOD material assignment is deferred to C3/C4; C2 does not claim that the far path is visually active yet.
+- Density stays unchanged until target-device profiling. No synchronous heavy gameplay loading is introduced.
+
+## C2 evidence
+
+C1 exact head passed Pre-Unreal #897 and Unreal Build Validation #732 before merge. C2 is **STATIC-VALIDATED** until its own exact head passes Pre-Unreal and UE4.27.2 production-import/core validation. No PIE/device/visual acceptance is claimed.
