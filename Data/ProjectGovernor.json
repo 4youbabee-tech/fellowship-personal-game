@@ -3479,6 +3479,34 @@
         "Data/WarehouseProviderAccessPolicyV1.json",
         "Docs/EXTERNAL_ASSET_SOURCING.md"
       ]
+    },
+    {
+      "id": "DEC-038",
+      "title": "Make the film playable from inside through canon-locked beats and interactive safe windows",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-003",
+        "REQ-CAMERA-001",
+        "REQ-GOV-001"
+      ],
+      "resolution": "Shire Journey must feel like inhabiting and interacting with the film rather than watching a chain of cutscenes or playing an unrelated open world. Canon-defining story beats and locked outcomes remain immutable. Between those beats, use interactive safe windows for embodied third-person exploration, optional conversations, household/world interactions, side activities, NPC life, fauna, environmental storytelling and local choice. Control may enter bounded cinematic/set-piece moments when required, then return cleanly to the player. Optional actions may change flavor, local relationships, discovery, pacing or minor world state, but must not invalidate the film's causal spine or locked chapter outcome. World/NPC/prop/audio state must transition coherently before and after each canon beat so the player feels the consequences in the playable space.",
+      "example_contract": "F1-01/Bag End may allow Frodo to explore Bag End, interact with Bilbo and the household, help with party preparation and experience Shire life before the locked story transition. The Ring handoff/leave sequence must follow the project film-continuity source rather than inventing a contradictory direct transfer. After the canonical beat, control returns into a changed persistent world state.",
+      "acceptance_criteria": [
+        "Every major chapter identifies its locked canon beats and the playable safe windows around them.",
+        "No required chapter is implemented as cutscene-only when an interactive safe window can preserve canon.",
+        "No free-roam/side activity can alter an immutable film outcome or create a contradictory chronology.",
+        "After a canon beat, NPC/world/prop/audio state reflects the new story state when the player regains control.",
+        "Dialogue added inside safe windows is original project-authored text and does not copy Tolkien or film dialogue verbatim.",
+        "Cinematic control transitions are bounded and return to the embodied third-person player cleanly."
+      ],
+      "rationale": "The owner explicitly wants the experience to feel like being inside the film: free to live in and explore the world between decisive moments, while the recognized story still unfolds correctly. This keeps cinematic identity and player agency at the same time.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "01_STORY_AND_TIMELINE_BIBLE",
+        "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+        "Docs/WORLD_DETAIL_LEDGER.md"
+      ]
     }
   ],
   "open_conflicts": [],
