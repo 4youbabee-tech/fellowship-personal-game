@@ -1,3 +1,11 @@
+## 2026-09-26 - Whole-game reuse, streaming and pooled-population architecture prepared
+
+- **Asset-family reuse:** `Data/WholeGameAssetFamilyCoverageV1.json` aggregates the 28 region packets into shared production families so repeated technical kits can be reused without erasing region-specific hero identity.
+- **Streaming residency:** `Data/WholeGameStreamingResidencyPlanV1.json` defines GLOBAL_TINY / REGION_ACTIVE / TRANSITION_OVERLAP / WAREHOUSE_ONLY tiers, soft-reference ownership, async FStreamableManager loading and post-commit handle release.
+- **Population architecture:** `Data/WholeGamePooledPopulationPlanV1.json` centralizes NPC/fauna pool admission under `LivingWorldDirector`, bounded context under `ShireNPCContextSubsystem`, quest facts under `ShireQuestSubsystem`, and forbids Spawn/Destroy bursts and global per-frame NPC scans.
+- **Low-spec objective:** these plans explicitly prevent the massive production campaign from turning into a global hard-reference or always-resident world that would exceed the 8GB RAM / ~2GB VRAM target.
+- **Evidence boundary:** PREPARATION only. No runtime memory, AI or performance acceptance is claimed.
+
 ## 2026-09-26 - P1C01 downstream production stages prepared
 
 - **D prepared:** low-cost lighting/sky/fog/water plan with chapter-state ownership and no density escalation.
