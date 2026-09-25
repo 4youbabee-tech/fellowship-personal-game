@@ -4202,12 +4202,12 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "W01/P1C01 Mega Production Drop A: terrain/geography foundation implemented; exact-head validation pending.",
+    "active_wave": "W01/P1C01 Drop A terrain/geography: previous exact head passed the complete core engine chain; overall #721 red was an unnecessary full-package escalation caused by shallow base history. Classifier base-fetch fix committed; fresh exact-head proof pending.",
     "next_actions": [
-      "1. Prove PR #75 exact head through Pre-Unreal and UE4.27.2 core validation.",
-      "2. If green, begin Drop B Hobbiton/Bag End architecture without reopening W00.",
-      "3. Preserve stable quest/story anchors and the existing grounding contract during visual world expansion.",
-      "4. Keep target-device profiling before density increases and Gate 6/7 before broad Part II/III production."
+      "1. Require fresh Pre-Unreal + Unreal core green on the classifier-corrected PR #75 head.",
+      "2. Do not rerun package/cook for this ordinary C++/Data world-production delta.",
+      "3. After green, merge Drop A and begin Drop B Hobbiton/Bag End architecture.",
+      "4. Keep localization runtime work isolated from world-production changes."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -5562,6 +5562,15 @@
       "root_cause": "The PG-161 validator initially searched too broad a textual region; the first correction still anchored at an earlier helper-function Docs/ test, so the inspected slice crossed later declarations and included the allowed explicit policy-only hook.",
       "permanent_policy": "Regression guards inspect the smallest structural region that represents the forbidden behavior. PG-161 anchors inside the main changed-file classification loop, isolates the ordinary safe-governance branch, and separately requires the explicit validation-policy-only path.",
       "reopen_rule": "Reopen if PG-161 rejects the explicit policy-only hook again or permits classifier/pre-unreal policy changes to be treated as ordinary safe metadata."
+    },
+    {
+      "id": "KNOWN-PR75-SHALLOW-DELTA-PACKAGE-FALSE-RED",
+      "status": "CORRECTED_PENDING_FRESH_PROOF",
+      "observed_head": "5a58c8d3d33f07a2b3440f0ab85e42ca20c00695",
+      "symptom": "Unreal #721 core steps all passed, then package lane failed with W00_DBGHELP_DESTINATION_WRITE_FAIL.",
+      "root_cause": "Stable exact-head checkout fetched head with depth=2 but not the PR base SHA. Classifier git diff failed and escalated to full package via delta-unavailable-fail-safe.",
+      "correction": "Scripts/classify_unreal_validation.ps1 now fetches BASE_SHA explicitly and retries diff before fail-safe.",
+      "policy": "Ordinary C++/runtime/Data/SourceAssets use core validation only; full package is reserved for Config/Build.cs/Target.cs/streaming/package/cook/release deltas."
     }
   ],
   "w00_acceptance_fast_path": {
