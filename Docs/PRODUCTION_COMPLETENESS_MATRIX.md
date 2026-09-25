@@ -1,3 +1,12 @@
+## 2026-09-25 - Private-offline asset isolation lane
+
+- **Owner decision:** RECORDED — DEC-037.
+- **Private offline intake:** READY — `PrivateOfflineAssetIntakeQueueV1.json` can accept bulk owner links/files without commercial-clearance uncertainty blocking local experimental classification.
+- **Isolation:** ACTIVE — `SourceAssets/PrivateOffline/` payloads are Git-ignored and excluded by policy from distributable Framework output.
+- **Framework clearance:** STRICT — private-only/unknown-license/editorial/ripped payloads cannot be promoted into distributable/commercial output without separate clearance.
+- **Provider access:** STRICT — no auth/paywall/DRM/anti-bot bypass.
+- **Technical acceptance:** UNCHANGED — private/offline classification does not imply import/runtime/PIE/device/visual/audio acceptance.
+
 ## 2026-09-25 - Warehouse bulk-intake V2
 
 - **P1C01 environment materials:** EXPANDED FOR STAGING — additional verified CC0 Poly Haven ground/woodland families added at 2K intake scale.
