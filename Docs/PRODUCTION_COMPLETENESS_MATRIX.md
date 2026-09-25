@@ -1,3 +1,15 @@
+## 2026-09-26 - High-throughput production / material intake
+
+- **REQ-PROD-011:** PARTIAL.
+- **DEC-041:** ACCEPTED.
+- **15 source PDFs:** HASHED/INDEXED with authority roles.
+- **P1C01 material wave:** 8 concrete Poly Haven CC0 candidates + ambientCG fallback at 2K intake scale.
+- **Material tooling:** IMPLEMENTED IN PREPARATION SCRIPTS; missing downloads are PENDING, technical defects remain blocking.
+- **Administrative relaxation:** naming/optional metadata/not-yet-downloaded candidates do not stop unrelated prep work.
+- **Technical hard stops:** dangerous/corrupt payloads, BMP, invalid final animated format, provider-access bypass, runtime dependency/streaming/memory/pooling/world-state defects remain blocking.
+- **Runtime lane:** unchanged; no second runtime-changing PR opened.
+- **Acceptance:** STATIC/PREPARATION only; no fresh COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE claim.
+
 ## 2026-09-26 - Global runtime-cost architecture preparation
 
 - **WholeGameAssetFamilyCoverageV1:** PREPARED; 9 shared family groups derived from 28 region packets.
