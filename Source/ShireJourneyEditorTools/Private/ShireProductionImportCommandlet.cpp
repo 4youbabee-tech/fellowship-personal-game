@@ -19,6 +19,8 @@
 #include "Materials/MaterialExpressionScalarParameter.h"
 #include "Materials/MaterialExpressionTextureSampleParameter2D.h"
 #include "Materials/MaterialExpressionMultiply.h"
+#include "Materials/MaterialExpressionDistanceCullFade.h"
+#include "Materials/MaterialExpressionSimpleGrassWind.h"
 #include "Materials/MaterialExpressionVectorParameter.h"
 #include "Materials/MaterialInterface.h"
 #include "Materials/MaterialInstanceConstant.h"
@@ -501,6 +503,131 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         {
             ++Failed;
             UE_LOG(LogTemp, Error, TEXT("ShireProductionImport failed to create M_ProductionSurface master material."));
+        }
+    }
+
+    // Drop C2: create a dedicated foliage master without assigning it yet.
+    // Grass/leaves will be re-parented in C3 by stable authored material identity.
+    // SimpleGrassWind executes in the material vertex path, so there is no per-tree
+    // Actor Tick. DistanceCullFade attenuates the wind contribution as instances
+    // approach their existing cull distance, keeping the low-spec path bounded.
+    const TCHAR* ProductionFoliagePath =
+        TEXT("/Game/Production/Materials/M_ProductionFoliage.M_ProductionFoliage");
+    UMaterialInterface* ProductionFoliageParent =
+        FindObject<UMaterialInterface>(nullptr, ProductionFoliagePath);
+    if (!ProductionFoliageParent)
+    {
+        const FString ProductionFoliageObjectPath(ProductionFoliagePath);
+        const FString ProductionFoliagePackage =
+            FPackageName::ObjectPathToPackageName(ProductionFoliageObjectPath);
+        if (FPackageName::DoesPackageExist(ProductionFoliagePackage))
+        {
+            ProductionFoliageParent =
+                LoadObject<UMaterialInterface>(nullptr, ProductionFoliagePath);
+        }
+    }
+
+    if (!ProductionFoliageParent)
+    {
+        UMaterialFactoryNew* FoliageFactory = NewObject<UMaterialFactoryNew>();
+        UMaterial* FoliageMaterial = Cast<UMaterial>(
+            AssetTools.Get().CreateAsset(
+                TEXT("M_ProductionFoliage"),
+                TEXT("/Game/Production/Materials"),
+                UMaterial::StaticClass(),
+                FoliageFactory));
+
+        if (FoliageMaterial)
+        {
+            FoliageMaterial->TwoSided = true;
+
+            UMaterialExpressionVectorParameter* FoliageColorParameter =
+                NewObject<UMaterialExpressionVectorParameter>(FoliageMaterial);
+            FoliageColorParameter->ParameterName = TEXT("Color");
+            FoliageColorParameter->DefaultValue = FLinearColor::White;
+            FoliageMaterial->Expressions.Add(FoliageColorParameter);
+
+            UMaterialExpressionTextureSampleParameter2D* FoliageAlbedoParameter =
+                NewObject<UMaterialExpressionTextureSampleParameter2D>(FoliageMaterial);
+            FoliageAlbedoParameter->ParameterName = TEXT("AlbedoTexture");
+            FoliageAlbedoParameter->Texture = LoadObject<UTexture2D>(
+                nullptr,
+                TEXT("/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture"));
+            FoliageMaterial->Expressions.Add(FoliageAlbedoParameter);
+
+            UMaterialExpressionMultiply* FoliageBaseColorMultiply =
+                NewObject<UMaterialExpressionMultiply>(FoliageMaterial);
+            FoliageBaseColorMultiply->A.Expression = FoliageAlbedoParameter;
+            FoliageBaseColorMultiply->B.Expression = FoliageColorParameter;
+            FoliageMaterial->Expressions.Add(FoliageBaseColorMultiply);
+            FoliageMaterial->BaseColor.Expression = FoliageBaseColorMultiply;
+
+            UMaterialExpressionScalarParameter* FoliageRoughnessParameter =
+                NewObject<UMaterialExpressionScalarParameter>(FoliageMaterial);
+            FoliageRoughnessParameter->ParameterName = TEXT("Roughness");
+            FoliageRoughnessParameter->DefaultValue = 0.78f;
+            FoliageMaterial->Expressions.Add(FoliageRoughnessParameter);
+            FoliageMaterial->Roughness.Expression = FoliageRoughnessParameter;
+
+            UMaterialExpressionScalarParameter* FoliageMetallicParameter =
+                NewObject<UMaterialExpressionScalarParameter>(FoliageMaterial);
+            FoliageMetallicParameter->ParameterName = TEXT("Metallic");
+            FoliageMetallicParameter->DefaultValue = 0.0f;
+            FoliageMaterial->Expressions.Add(FoliageMetallicParameter);
+            FoliageMaterial->Metallic.Expression = FoliageMetallicParameter;
+
+            UMaterialExpressionScalarParameter* WindIntensityParameter =
+                NewObject<UMaterialExpressionScalarParameter>(FoliageMaterial);
+            WindIntensityParameter->ParameterName = TEXT("WindIntensity");
+            WindIntensityParameter->DefaultValue = 0.18f;
+            FoliageMaterial->Expressions.Add(WindIntensityParameter);
+
+            UMaterialExpressionScalarParameter* WindSpeedParameter =
+                NewObject<UMaterialExpressionScalarParameter>(FoliageMaterial);
+            WindSpeedParameter->ParameterName = TEXT("WindSpeed");
+            WindSpeedParameter->DefaultValue = 0.28f;
+            FoliageMaterial->Expressions.Add(WindSpeedParameter);
+
+            UMaterialExpressionScalarParameter* WindWeightParameter =
+                NewObject<UMaterialExpressionScalarParameter>(FoliageMaterial);
+            WindWeightParameter->ParameterName = TEXT("WindWeight");
+            WindWeightParameter->DefaultValue = 1.0f;
+            FoliageMaterial->Expressions.Add(WindWeightParameter);
+
+            UMaterialExpressionDistanceCullFade* WindDistanceFade =
+                NewObject<UMaterialExpressionDistanceCullFade>(FoliageMaterial);
+            FoliageMaterial->Expressions.Add(WindDistanceFade);
+
+            UMaterialExpressionMultiply* DistanceScaledWindWeight =
+                NewObject<UMaterialExpressionMultiply>(FoliageMaterial);
+            DistanceScaledWindWeight->A.Expression = WindWeightParameter;
+            DistanceScaledWindWeight->B.Expression = WindDistanceFade;
+            FoliageMaterial->Expressions.Add(DistanceScaledWindWeight);
+
+            UMaterialExpressionSimpleGrassWind* SimpleWind =
+                NewObject<UMaterialExpressionSimpleGrassWind>(FoliageMaterial);
+            SimpleWind->WindIntensity.Expression = WindIntensityParameter;
+            SimpleWind->WindSpeed.Expression = WindSpeedParameter;
+            SimpleWind->WindWeight.Expression = DistanceScaledWindWeight;
+            FoliageMaterial->Expressions.Add(SimpleWind);
+            FoliageMaterial->WorldPositionOffset.Expression = SimpleWind;
+
+            FoliageMaterial->PostEditChange();
+            FoliageMaterial->MarkPackageDirty();
+            ImportedMaterialPackages.AddUnique(FoliageMaterial->GetOutermost());
+            ProductionFoliageParent = FoliageMaterial;
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("ShireProductionImport created M_ProductionFoliage master material with distance-scaled SimpleGrassWind."));
+        }
+        else
+        {
+            ++Failed;
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("ShireProductionImport failed to create M_ProductionFoliage master material."));
         }
     }
 
