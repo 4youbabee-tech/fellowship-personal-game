@@ -1,3 +1,13 @@
+## 2026-09-25 - W00 closed; W01/P1C01 production vertical slice opened
+
+- Canonical W00 close head: `develop@809e56a9e1dc4b453e02a0b04b6875a71df21933`.
+- GitHub evidence on that head: Pre-Unreal #880 SUCCESS; Unreal #715 SUCCESS via the explicit validation-policy-only inherit path; Branch Cleanup #3 SUCCESS with only `develop` and `main` remaining.
+- Owner-side P1C01 PIE evidence on the Documents clone: `ShireStartupGrounding: PASS chapter=P1C01 commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.8 drift=0.0`; player remained grounded; owner reported no same-session Output Log matches for `Mobility is Static` or `SetStaticMesh`.
+- W00 architectural/root-repair lane is therefore **CLOSED**. Reopen it only for a concrete regression. This does not promote whole-chapter PIE, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED status.
+- W01/P1C01 is now the sole active production vertical slice. First code work remains: centralize ambient population ownership under `LivingWorldDirector` + pooling, then reconcile `LivingWorldEventPlan` vs `WorldLifeSaturationPlan` authority before any density increase.
+- The owner-forwarded sensory/reactive review was checked against live source. Accepted additions are spatial environmental audio + surface foley, performance-scaled vegetation material motion, and later skeletal Look-At/Foot IK. Corrected stale claims: ambient NPC player awareness/weather reactions already exist; audio already has async routing/fades/ducking; ambient pooling already exists in `LivingWorldDirector`.
+- Detailed accepted/corrected notes are registered in `Docs/WORLD_DETAIL_LEDGER.md` before implementation, satisfying the W01 scope gate.
+
 ## 2026-09-25 - W00 lessons lock after current develop machine-green
 - Pre-Unreal #875 confirmed the PG-161 correction still used the wrong textual anchor (helper-function `Docs/` test instead of the main changed-file loop). The guard is now anchored inside `foreach($p in $changed)` so it inspects only the forbidden ordinary-safe branch. Exact-head rerun pending; this remains validator self-test work, not a game regression.
 - Pre-Unreal #871 exposed one self-test false positive in the new PG-161 guard: it confused the required explicit validation-policy-only path with forbidden ordinary metadata classification. The guard is narrowed structurally (PG-164); exact-head rerun is pending. This is validator logic, not an Unreal/game regression.
