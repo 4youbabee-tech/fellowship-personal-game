@@ -1,3 +1,14 @@
+## 2026-09-25 - Parallel Warehouse bulk-intake V2 active
+
+- Preparation branch: `warehouse/p1c01-bulk-intake-v2`, based on the current merged C1 baseline. This is **not** a second runtime-changing lane.
+- Poly Haven batch advanced to V2 with additional source-page-verified CC0 Shire ground families: leafy grass, forest floor, damp soil, leaf litter, rustic pathway and organic ground detail. Intake remains 2K and skips displacement/high-poly payloads.
+- Kenney batch advanced to V2 with additional CC0 cave/architecture support stock. These packs remain support/background stock, not hero LOTR art.
+- Quaternius intake now requires an explicit per-pack observed license before automatic download. Packs without per-page license evidence are skipped instead of inheriting a blanket provider assumption.
+- Verified Quaternius Farm Buildings is added as Shire support architecture with FBX as the required final format.
+- OpenGameArt audio batch advanced to V2 with CC0 multi-surface footsteps, fireplace loop, 100 wood/metal SFX and bird ambience. Non-WAV intake sources must be converted/auditioned to WAV masters before UE import.
+- Warehouse states remain honest: CANDIDATE/AUTHORIZED_FOR_STAGING/STAGED only. No READY_FOR_IMPORT, UE integration, PIE/device/visual/audio acceptance is claimed without matching receipts and later gates.
+- Runtime PR #78 remains isolated; warehouse preparation continues in parallel so production does not idle during Unreal validation.
+
 ## 2026-09-25 - PR #77 handoff-status contract corrected
 
 - Unreal #731 completed **SUCCESS** on corrected Drop C1 head `3b2281c17b6111fd30f7614ca5d0df22a6dc572d`.
