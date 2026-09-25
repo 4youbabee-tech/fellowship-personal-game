@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "plan_id": "DEVELOP_BRANCH_CONSOLIDATION_2026_09_25",
+  "authority": "Data/ProjectGovernor.json",
+  "canonical_branch": "develop",
+  "stable_release_branch": "main",
+  "status": "READY_FOR_POST_MERGE_REMOTE_CLEANUP",
+  "truth_boundary": "This plan records branch hygiene only. It does not claim PIE/device/visual acceptance.",
+  "preserve": [
+    {
+      "branch": "develop",
+      "reason": "canonical interactive/integration lane"
+    },
+    {
+      "branch": "main",
+      "reason": "stable release and scheduled-workflow owner"
+    },
+    {
+      "branch": "archive/generated-audio-intake-v1",
+      "reason": "temporary archival pointer for generated-audio intake evidence not yet safely materialized into canonical runtime assets"
+    },
+    {
+      "branch": "audit/pre-mega-integration-v1",
+      "reason": "legacy divergent audit history retained pending a separate archival/content audit"
+    },
+    {
+      "branch": "ci/w00-acceptance-fast-path-v1",
+      "reason": "legacy divergent CI history retained pending a separate archival/content audit"
+    }
+  ],
+  "salvaged_into_develop": [
+    "Data/LivingWorldSensoryCompletenessPlanV1.json",
+    "Data/VoiceProductionMasterPlanV1.json",
+    "Scripts/operation_recovery.py",
+    "Scripts/test_operation_recovery.py",
+    "Data/WarehouseGapAuditSource09V1.json"
+  ],
+  "delete_after_merge": [
+    "acceptance/w00-final-closure-v1",
+    "cp55/activity-movement-expansion-v1",
+    "cp56/fellowship-experience-megapass-v1",
+    "fix/startup-grounding-regression-v1",
+    "governance/programmer-asset-pipeline-review-v2",
+    "governance/programmer-findings-v1",
+    "integration/comprehensive-foundation-v1",
+    "perf/visual-performance-guardrails-v1",
+    "planning/living-world-completeness-v1",
+    "production/chapter-streaming-v5",
+    "production/character-surface-parity-v1",
+    "production/cinematic-audio-life-v3",
+    "production/early-realms-world-life-v1",
+    "production/hero-character-world-polish-v4",
+    "production/mega-material-world-wave-v1",
+    "production/realm-detail-saturation-v2",
+    "qa/automated-immune-system-v1",
+    "recovery/stached-charcter",
+    "repair/import-pipeline-megapass-v3",
+    "repair/post-merge-unreal-339",
+    "repair/pr67-work-review-intake",
+    "repair/verification-quality-v1",
+    "repair/warning-quality-v2",
+    "repair/world-transition-coordination-v1",
+    "verification/current-head-audit-v1",
+    "verification/current-head-pie-handoff-v1",
+    "warehouse/generated-audio-v1",
+    "warehouse/source09-gapfill-v1",
+    "work/automation-first-runtime-observation",
+    "work/repository-hygiene-cleanup",
+    "maintenance/develop-consolidation-v1"
+  ],
+  "safety_rules": [
+    "Never delete develop or main.",
+    "Never bulk-merge a divergent historical branch into develop.",
+    "Branches with unresolved unique evidence remain preserved explicitly.",
+    "Cleanup runs only after this plan lands on develop."
+  ]
+}
