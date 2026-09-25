@@ -4364,7 +4364,47 @@
       ],
       "active_cleanup_pr": 71,
       "audit_doc": "Docs/BRANCH_CONSOLIDATION_AUDIT.md",
-      "rule": "Delete historical branch refs only after meaningful unique content is present on develop or intentionally superseded. Diverged stale runtime branches must never be wholesale-merged."
+      "rule": "Delete historical branch refs only after meaningful unique content is present on develop or intentionally superseded. Diverged stale runtime branches must never be wholesale-merged.",
+      "safe_delete_after_pr71": [
+        "acceptance/w00-final-closure-v1",
+        "audit/pre-mega-integration-v1",
+        "ci/w00-acceptance-fast-path-v1",
+        "cp55/activity-movement-expansion-v1",
+        "cp56/fellowship-experience-megapass-v1",
+        "fix/startup-grounding-regression-v1",
+        "governance/programmer-asset-pipeline-review-v2",
+        "governance/programmer-findings-v1",
+        "integration/comprehensive-foundation-v1",
+        "perf/visual-performance-guardrails-v1",
+        "planning/living-world-completeness-v1",
+        "production/chapter-streaming-v5",
+        "production/character-surface-parity-v1",
+        "production/cinematic-audio-life-v3",
+        "production/early-realms-world-life-v1",
+        "production/hero-character-world-polish-v4",
+        "production/mega-material-world-wave-v1",
+        "production/realm-detail-saturation-v2",
+        "qa/automated-immune-system-v1",
+        "recovery/stached-charcter",
+        "repair/import-pipeline-megapass-v3",
+        "repair/post-merge-unreal-339",
+        "repair/pr67-work-review-intake",
+        "repair/verification-quality-v1",
+        "repair/warning-quality-v2",
+        "repair/world-transition-coordination-v1",
+        "verification/current-head-audit-v1",
+        "verification/current-head-pie-handoff-v1",
+        "warehouse/generated-audio-v1",
+        "warehouse/source09-gapfill-v1",
+        "work/automation-first-runtime-observation",
+        "work/repository-hygiene-cleanup"
+      ],
+      "preserve_after_cleanup": [
+        "develop",
+        "main"
+      ],
+      "temporary_active_branch": "maintenance/repository-consolidation-v1",
+      "physical_delete_boundary": "Branch refs may be removed only after PR #71 merges and canonical develop contains the consolidated files. No bulk merge from historical branches is permitted."
     }
   },
   "side_branch_audit": {
