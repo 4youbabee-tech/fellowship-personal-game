@@ -1,3 +1,20 @@
+## 2026-09-25 - PR #76 handoff-baseline coherence correction
+
+- **Pre-Unreal #890/#891/#892:** FAILED in Governor handoff coherence, not in architecture runtime.
+- **Root cause:** `session_handoff.source_head` pointed at the merged Drop A commit while `validation_snapshot.last_green` still pointed at an older baseline.
+- **Correction:** handoff source/baseline now consistently use `b9a312ce...` with #888/#723 SUCCESS; latest observed PR #76 evidence is tracked separately.
+- **Evidence boundary:** Drop B remains STATIC-VALIDATED until the corrected exact head passes Pre-Unreal and UE4.27.2 core validation.
+
+## 2026-09-25 - W01 P1C01 Drop B: Hobbiton + Bag End architecture
+
+- **Bag End exterior hierarchy:** IMPLEMENTED IN SOURCE — garden/property approach and landmark-supporting dressing added without moving story anchors.
+- **Hobbiton domestic architecture:** IMPLEMENTED IN SOURCE — garden/property clusters and village-common composition reinforce warm domestic scale.
+- **F1-01 Party Field architecture:** IMPLEMENTED IN SOURCE — canopy/produce dressing added to existing social destination.
+- **Canon presentation:** CORRECTED — The Green Dragon is no longer presented as a Hobbiton landmark; legacy internal discovery ID retained for save compatibility.
+- **Bag End production interior:** NOT YET IMPLEMENTED — dedicated interior shell/portal kit absent from current asset bank.
+- **Performance:** existing resident meshes only; no synchronous heavy-load path; target-device shadow/collision/HLOD measurement pending.
+- **Validation:** STATIC-VALIDATED only until exact-head Pre-Unreal + UE4.27.2 core green. No PIE/device/visual acceptance yet.
+
 ## 2026-09-25 - PR #75 validation classification correction
 
 - **Exact-head core evidence on 5a58c8d3...:** COMPILE/ENGINE CORE PASSED — editor build, import, Automation, startup, chapter sweep, route/state and warning guard succeeded.

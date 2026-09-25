@@ -1,3 +1,20 @@
+## 2026-09-25 - PR #76 governance false-red corrected atomically
+
+- Pre-Unreal #890/#891/#892 did not reach an Unreal runtime failure. The remaining red was the Governor handoff invariant: `session_handoff.source_head` must equal `validation_snapshot.last_green.sha`.
+- Last-green proof is now recorded consistently as `b9a312ce2321f55a58bc5f24dd478b4839871006` with Pre-Unreal #888 SUCCESS + Unreal #723 SUCCESS.
+- Branch/PR surfaces already agree on `production/w01-p1c01-hobbiton-bagend-v1` / PR #76. This correction updates the baseline/evidence tuple in one atomic commit to avoid another chain of self-triggered governance runs.
+- Drop B architecture remains STATIC-VALIDATED until fresh exact-head Pre-Unreal + UE4.27.2 core green.
+
+## 2026-09-25 - W01/P1C01 Mega Production Drop B implemented
+
+- Parent: `develop@430d0a26f3b441f072740fc58285c0c0eb842d8c` after PR #75 merge.
+- Active branch: `production/w01-p1c01-hobbiton-bagend-v1`.
+- Drop B adds a bounded Hobbiton/Bag End architecture pass using already-resident production meshes: Bag End hero approach/property framing, domestic garden clusters, village common, Party Field dressing and working-Shire props.
+- Canon correction: visible Green Dragon-at-Hobbiton presentation was removed because the inn belongs at Bywater. The legacy `Discover_GreenDragon` ID remains unchanged for save compatibility.
+- Bag End interior remains explicitly incomplete because no dedicated production interior shell exists yet; no false completion is recorded.
+- Added PG-164 regression protection and synchronized architecture/performance plans.
+- Status: **STATIC-VALIDATED / EXACT-HEAD PRE-UNREAL + UE4.27.2 CORE PROOF PENDING**.
+
 ## 2026-09-25 - PR #75 core engine proof passed; package red isolated to classifier/base-fetch path
 
 - Unreal #721 attempt 2 reached and passed the required **core** chain on exact head `5a58c8d3d33f07a2b3440f0ab85e42ca20c00695`: ShireJourneyEditor build, production import, Automation QA, startup smoke, P1C01-P1C08 runtime audit, route/state audit and warning-debt guard all succeeded.

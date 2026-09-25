@@ -108,6 +108,7 @@ private:
     void SpawnFoliagePass();
     void SpawnScenicDetailPass();
     void SpawnGeographyFoundationPass();
+    void SpawnHobbitonArchitecturePass();
     void SpawnVillage();
     void SpawnProductionVillageDetailLayer();
     void SpawnSideStories();

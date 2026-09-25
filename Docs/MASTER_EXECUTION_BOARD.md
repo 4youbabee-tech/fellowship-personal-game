@@ -1,12 +1,12 @@
-## W01 P1C01 Mega Production control point - 2026-09-25
-- Canonical machine-green parent: `develop@ec3208919910b58bd6a87ce59c17e31312bd7bab`.
-- Parent proof: Pre-Unreal #885 SUCCESS; Unreal #720 SUCCESS.
-- Active candidate: PR #75 on `production/w01-p1c01-world-foundation-v1` targeting `develop`.
+## W01 P1C01 Mega Production control point - Drop B
+- Canonical parent: `develop@430d0a26f3b441f072740fc58285c0c0eb842d8c`.
+- Active candidate: PR #76 on `production/w01-p1c01-hobbiton-bagend-v1` targeting `develop`.
 - Active lane: **W01_P1C01_PRODUCTION_VERTICAL_SLICE**.
-- Current drop: **A - Terrain / Geography Foundation**.
-- Next dependency after exact-head green: **B - Hobbiton / Bag End Architecture**.
-- W00_ARCHITECTURAL_STABILIZATION remains CLOSED; reopen only for a concrete regression.
-- Evidence boundary: STATIC-VALIDATED until PR #75 exact-head machine proof; human PIE/device/visual/performance labels remain separate.
+- Current drop: **B - Hobbiton / Bag End Architecture**.
+- Next dependency after exact-head green: **C - Materials / Vegetation**.
+- Bag End interior remains explicitly incomplete until approved production interior FBX assets exist.
+- W00 remains CLOSED; reopen only for a concrete regression.
+- Evidence boundary: STATIC-VALIDATED until PR #76 exact-head machine proof.
 
 # Master Execution Board
 
@@ -14,10 +14,10 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 ## Current control point
 
-- PR: #75 (W01/P1C01 terrain/geography production candidate)
-- Branch: `production/w01-p1c01-world-foundation-v1`
+- PR: #76 (W01/P1C01 Hobbiton/Bag End architecture candidate)
+- Branch: `production/w01-p1c01-hobbiton-bagend-v1`
 - Active lane: **W01_P1C01_PRODUCTION_VERTICAL_SLICE**
-- Active production drop: **A_TERRAIN_GEOGRAPHY_FOUNDATION**
+- Active production drop: **B_HOBBITON_BAGEND_ARCHITECTURE**
 - Previous lane: **W00_ARCHITECTURAL_STABILIZATION — CLOSED**
 - Canonical integration/programmer-handoff branch: `develop`
 - Stable release branch: `main`
