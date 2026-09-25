@@ -1,3 +1,15 @@
+## 2026-09-25 - DEC-038 playable-film doctrine adopted
+
+- The owner has formally defined Shire Journey as a **playable film-from-inside experience**, not a cutscene chain and not an unrelated open world.
+- Locked film-continuity beats/outcomes remain immutable.
+- Between locked beats, every chapter should expose bounded **interactive safe windows** for embodied third-person exploration, optional conversations, household/world interactions, NPC life, fauna, environmental storytelling and side activities where canon allows.
+- Player freedom may change local flavor, discovery, pacing, minor relationship/state and optional content, but may not contradict chronology or invalidate a locked film outcome.
+- Cinematic/set-piece control is bounded and must return cleanly to the player.
+- When control returns after a canon beat, NPC/world/prop/audio state must reflect the new story state.
+- F1-01/Bag End is the reference pattern: playable pre-party/Bag End/Shire life may surround the locked Bilbo/Ring transition, but the transition itself follows project film continuity rather than an invented contradictory handoff.
+- Added dialogue in safe windows remains original project-authored text; no verbatim Tolkien/film dialogue.
+- Authority: `Data/ProjectGovernor.json` decision `DEC-038`.
+
 ## 2026-09-25 - Owner private-offline asset policy adopted
 
 - Owner policy is now recorded as `DEC-037` in `Data/ProjectGovernor.json`.
