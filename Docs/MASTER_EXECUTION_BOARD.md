@@ -1,7 +1,7 @@
 ## W01 P1C01 Mega Production control point - Drop C2
 - Canonical parent: `develop@82fc4deaf2e2a99cfebd0d8d1b99a42b5d922ffe` (Drop C1 merge).
 - Active candidate: PR #78 on `production/w01-p1c01-foliage-wind-v1` targeting `develop`.
-- Scope: dedicated lightweight foliage master + parameterized SimpleGrassWind WPO + DistanceCullFade attenuation only.
+- Scope: dedicated near/mid foliage master + parameterized SimpleGrassWind WPO + DistanceCullFade attenuation, plus a stripped `M_ProductionFoliageFar` with no WPO for later far-LOD binding.
 - Explicit non-scope: no density increase, no C3 material reassignment, no gameplay runtime loading changes, no NPC/LivingWorld ownership changes.
 - Required machine gate: exact-head Pre-Unreal + UE4.27.2 production-import/core validation.
 - Human/device boundary: no visual, pacing, FPS, VRAM, overdraw or target-device acceptance until separately observed.
@@ -22,10 +22,10 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 ## Current control point
 
-- PR: #77 (W01/P1C01 material texture binding candidate)
-- Branch: `production/w01-p1c01-materials-vegetation-v1`
+- PR: #78 (W01/P1C01 lightweight foliage wind candidate)
+- Branch: `production/w01-p1c01-foliage-wind-v1`
 - Active lane: **W01_P1C01_PRODUCTION_VERTICAL_SLICE**
-- Active production drop: **C1_MATERIAL_TEXTURE_BINDING**
+- Active production drop: **C2_LIGHTWEIGHT_FOLIAGE_WIND**
 - Previous lane: **W00_ARCHITECTURAL_STABILIZATION — CLOSED**
 - Canonical integration/programmer-handoff branch: `develop`
 - Stable release branch: `main`
