@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_D_LIGHTING_SKY_FOG_WATER_V1",
+  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "DEC-038",
+    "DEC-039",
+    "Data/P1C01WorldBuildIntakePacketV1.json",
+    "Data/P1C01C4FoliageLodCullOverdrawPlanV1.json"
+  ],
+  "prerequisite": "C4 exact-head Pre-Unreal + UE4.27.2 core/production-import green and merged to develop.",
+  "purpose": "Prepare the fixed-state Shire lighting, sky, fog and water presentation pass that follows C4 while preserving the low-spec target and avoiding premature dynamic-weather or day/night scope.",
+  "chapter_state_contract": [
+    {
+      "state": "P1C01_SHIRE_DAY",
+      "intent": "Warm pastoral readability, soft sky fill, readable lanes and gardens, stable landmark silhouettes.",
+      "dynamic_cycle": false
+    },
+    {
+      "state": "P1C01_STORY_TENSION_VARIANT",
+      "intent": "Only if required by the established P1C01 story state; use bounded authored parameter changes rather than a free-running world cycle.",
+      "dynamic_cycle": false
+    }
+  ],
+  "lighting_contract": {
+    "key_light": "One primary directional-light strategy per authored state; avoid overlapping expensive shadowed keys.",
+    "sky_fill": "Use UE4.27-compatible skylight/ambient support with explicit capture/update ownership; no per-frame recapture.",
+    "reflection": "Prefer bounded reflection captures and material response over expensive real-time scene-capture systems.",
+    "shadow_rule": "Shadow distance, cascade count and movable-light count must remain compatible with DX11 720p Low-Medium / 2GB-class VRAM.",
+    "no_claim": "Static or headless success does not establish visual quality or target-device performance."
+  },
+  "fog_sky_contract": {
+    "fog": "Use a bounded UE4.27 ExponentialHeightFog-style authored state where needed; do not add volumetric cost by default without measurement.",
+    "sky": "Keep sky presentation compatible with UE4.27 and fixed chapter states; no true dynamic day/night system in this pass.",
+    "weather": "Weather presentation is chapter-authored and bounded. Do not infer a dynamic weather cycle."
+  },
+  "water_contract": {
+    "scope": "Only Shire water bodies required by the established world map and traversal composition.",
+    "default_strategy": "Low-cost authored surface/material presentation with simple collision/traversal boundaries where required.",
+    "restrictions": [
+      "No always-on planar reflection or scene-capture dependency by default.",
+      "No per-frame CPU water simulation.",
+      "No gameplay route, quest, save or world-ownership change.",
+      "No water density/detail escalation before target-device measurement."
+    ]
+  },
+  "evidence_record_schema": [
+    "world_state",
+    "actor_or_component",
+    "mobility",
+    "shadow_mode",
+    "capture_or_update_mode",
+    "fog_setting_summary",
+    "water_material_or_mesh",
+    "estimated_runtime_cost_risk",
+    "verification_result",
+    "evidence_reference"
+  ],
+  "guards": [
+    "No free-running dynamic day/night cycle in D.",
+    "No unbounded movable-light growth.",
+    "No per-frame skylight/reflection recapture.",
+    "No expensive water reflection path without measured justification.",
+    "No change to C2/C3/C4 material identity, density, quest/save/story or LivingWorld ownership.",
+    "No PIE/device/visual/performance acceptance claim without direct evidence."
+  ],
+  "acceptance": [
+    "Exact-head Pre-Unreal success after implementation.",
+    "UE4.27.2 compile/import/runtime smoke appropriate to the actual D delta.",
+    "No broken P1C01 traversal/collision/story anchors.",
+    "Rendered PIE review records the intended chapter-state lighting/sky/fog/water presentation.",
+    "Target-device DX11 720p Low-Medium profiling is recorded before performance acceptance.",
+    "Manual visual and performance evidence remain distinct from machine validation."
+  ],
+  "evidence_boundary": "Preparation only. D runtime implementation must not begin until C4 is exact-head engine-green and merged."
+}
