@@ -1,3 +1,9 @@
+## 2026-09-25 - Whole-game region production packets created
+
+- Added `Data/WholeGameRegionProductionPacketsV1.json` on the global preparation lane.
+- Every registered world region now has a concrete production packet covering sourcing families and deliverables for terrain, materials, vegetation, architecture/interiors, water, lighting, characters, LivingWorld, audio, interactions, cinematics, collision/navmesh, streaming/memory, profiling and acceptance.
+- Packets are PREPRODUCTION only outside P1C01 until Gate 6/7; they are not runtime-integration claims.
+
 ## 2026-09-25 - Whole-game world build campaign prepared in parallel
 
 - New preparation branch: `planning/whole-game-world-build-v1`, based on canonical `develop@4980c3c8...`.
