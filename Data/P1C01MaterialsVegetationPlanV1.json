@@ -77,8 +77,8 @@
       "Masked-material overdraw and shadow cost are profiling gates, not assumptions."
     ],
     "c2_wind_strategy": {
-      "near_mid": "M_ProductionFoliage uses SimpleGrassWind in WorldPositionOffset with WindIntensity/WindSpeed/WindWeight scalar parameters.",
-      "far": "M_ProductionFoliageFar intentionally has no WorldPositionOffset path so far LODs can avoid wind shader work once C3/C4 assignment is wired.",
+      "near_mid": "M_ProductionFoliage uses the UE4.27 SimpleGrassWind material function in WorldPositionOffset with WindIntensity/WindSpeed/WindWeight scalar parameters; no DistanceCullFade dependency.",
+      "far": "M_ProductionFoliageFar intentionally has no WorldPositionOffset path; C3/C4 bind this to distant LODs so distance complexity reduction removes wind vertex instructions rather than attenuating them.",
       "density": "unchanged until target-device profiling",
       "ownership": "material vertex shader only; no per-instance or per-tree Tick"
     }
@@ -106,7 +106,7 @@
   "evidence_boundary": "Drop C2 source implementation is STATIC-VALIDATED only until PR #78 exact-head Pre-Unreal + UE4.27.2 production-import/core validation succeeds; PIE/device/visual/performance acceptance remains separate.",
   "runtime_implementation": {
     "importer_change": "C1 map_Kd -> AlbedoTexture binding remains intact. C2 deterministically creates M_ProductionFoliage and M_ProductionFoliageFar during production import.",
-    "master_material_change": "Near/mid foliage master keeps AlbedoTexture * Color, Roughness and Metallic, and adds parameterized SimpleGrassWind WPO. Far foliage master mirrors surface parameters but has no WPO.",
+    "master_material_change": "Near/mid foliage master keeps AlbedoTexture * Color, Roughness and Metallic, and calls the UE4.27 SimpleGrassWind Engine material function from WPO. Far foliage master mirrors surface parameters but has no WPO.",
     "gameplay_impact": "none; editor production-import material generation only",
     "c2_assignment_boundary": "C2 creates the masters only. Stable foliage-material identity binding is C3; LOD/cull/overdraw profiling remains C4.",
     "next": "C3 assign foliage parents by stable material identity without changing gameplay IDs or world ownership"
