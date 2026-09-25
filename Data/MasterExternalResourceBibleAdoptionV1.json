@@ -1,0 +1,351 @@
+{
+  "schema_version": 1,
+  "adoption_id": "MASTER_EXTERNAL_RESOURCE_BIBLE_ADOPTION_V1",
+  "status": "ACTIVE_PRODUCTION_SOURCE_EXPANSION",
+  "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25",
+  "source_summary": {
+    "pages": 68,
+    "classified_sources": 225,
+    "review_date": "2026-09-25",
+    "role": "External production-source and tooling authority; does not override canon/story bibles."
+  },
+  "governing_rules": [
+    "Start with A-priority providers for the needed category, then B, then C.",
+    "DIRECT/API automation only where provider access permits it; no DRM/paywall/account-control bypass or prohibited scraping.",
+    "Record source URL, creator/uploader when applicable, exact license/terms, filename, acquisition date, intended use, category and modifications.",
+    "Animated production assets end as FBX. Production textures use PNG/TGA, preferably channel-packed.",
+    "Target defaults: 1K/2K runtime textures, 4K only for measured hero assets; downscale 8K/16K sources before runtime use.",
+    "Heavy runtime assets use soft references + FStreamableManager async loading; crowds remain pooled; repeated world detail uses ISM/HISM/LOD/culling.",
+    "REFERENCE_ONLY / QUARANTINE / DISABLED sources never auto-promote into distributable production.",
+    "DEC-037 remains authoritative for PRIVATE_OFFLINE_ONLY isolation versus DISTRIBUTABLE_FRAMEWORK clearance."
+  ],
+  "adopt_now": {
+    "environment_materials": [
+      "POLY_HAVEN",
+      "AMBIENTCG",
+      "TEXTURES_COM",
+      "SHARETEXTURES",
+      "3DTEXTURES_ME",
+      "CGBOOKCASE",
+      "MATERIAL_MAKER",
+      "MATERIALIZE"
+    ],
+    "vegetation_nature": [
+      "SPEEDTREE",
+      "POLY_HAVEN",
+      "FAB_QUixel_MEGASCANS",
+      "XFROG",
+      "GLOBE_PLANTS"
+    ],
+    "characters_rigging": [
+      "MIXAMO",
+      "ACTORCORE",
+      "ACCURIG",
+      "MAKEHUMAN"
+    ],
+    "animation_mocap": [
+      "MIXAMO",
+      "ROKOKO",
+      "MOTION_CAPTURE_ONLINE",
+      "CASCADEUR",
+      "DEEPMOTION",
+      "PLASK",
+      "QUATERNIUS"
+    ],
+    "vfx_weather": [
+      "ACTIONVFX",
+      "FAB_QUixel_MEGASCANS",
+      "EMBERGEN"
+    ],
+    "audio_sfx": [
+      "SONNISS_GDC",
+      "FREESOUND",
+      "ZAPSPLAT",
+      "99SOUNDS",
+      "KENNEY",
+      "SOUNDLY"
+    ],
+    "music": [
+      "SCOTT_BUCKLEY",
+      "INCOMPETECH",
+      "PIXABAY",
+      "FREEPD"
+    ],
+    "ui_fonts_localization": [
+      "KENNEY",
+      "GAME_ICONS_NET",
+      "TABLER_ICONS",
+      "GOOGLE_FONTS",
+      "UE427_LOCALIZATION_DOCS",
+      "POEDIT"
+    ],
+    "terrain_world_authoring": [
+      "GAEA",
+      "USGS_EARTHEXPLORER",
+      "OPENTOPOGRAPHY",
+      "QGIS",
+      "WORLD_MACHINE"
+    ],
+    "scanning_cleanup": [
+      "REALITYSCAN",
+      "POLYCAM",
+      "MESHROOM",
+      "MESHLAB",
+      "CLOUDCOMPARE"
+    ],
+    "production_tools": [
+      "BLENDER",
+      "GIMP",
+      "KRITA",
+      "AUDACITY",
+      "REAPER"
+    ],
+    "technical_reference": [
+      "UE427_AI_DOCS",
+      "UE427_LOCALIZATION_DOCS",
+      "LEVEL80_REFERENCE"
+    ]
+  },
+  "conditional_or_selective": [
+    "CGTRADER",
+    "TURBOSQUID",
+    "SKETCHFAB",
+    "EVERMOTION",
+    "KITBASH3D",
+    "POLIIGON",
+    "ADOBE_SUBSTANCE_ASSETS",
+    "MAXTREE",
+    "GLOBE_PLANTS",
+    "XFROG",
+    "BOTANIQ",
+    "BOOM_LIBRARY",
+    "PRO_SOUND_EFFECTS",
+    "KROTOS",
+    "A_SOUND_EFFECT",
+    "ACTIONVFX",
+    "PRODUCTIONCRATE",
+    "JANGAFX_FREE_VFX",
+    "SPEEDTREE",
+    "FMOD",
+    "WWISE"
+  ],
+  "reference_only_or_quarantine": [
+    "ARTSTATION_LOTR_SEARCH",
+    "NEXUS_MODS",
+    "MODDB",
+    "MODDING_UNION",
+    "REVORA_THIRD_AGE",
+    "TOLKIEN_GATEWAY",
+    "YOUTUBE_LOTR_SEARCH",
+    "FAKEYOU",
+    "CG_PEAK"
+  ],
+  "disabled_or_redirect": [
+    {
+      "id": "REPLICA_STUDIOS",
+      "replacement": "AZURE_TTS / GOOGLE_CLOUD_TTS / AMAZON_POLLY / authorized voice services"
+    },
+    {
+      "id": "UNREAL_MARKETPLACE_LEGACY",
+      "replacement": "FAB"
+    },
+    {
+      "id": "TEXTURE_HAVEN_LEGACY",
+      "replacement": "POLY_HAVEN"
+    },
+    {
+      "id": "CC0_TEXTURES_LEGACY",
+      "replacement": "AMBIENTCG"
+    },
+    {
+      "id": "ARMORLAB_OLD_DOMAIN",
+      "replacement": "ARMORPAINT / MATERIAL_MAKER"
+    },
+    {
+      "id": "TERRAIN_PARTY",
+      "replacement": "USGS_EARTHEXPLORER / OPENTOPOGRAPHY / GAEA"
+    }
+  ],
+  "production_waves": [
+    {
+      "wave": "R1_WORLD_SURFACE_EXPANSION",
+      "target": "Whole-game terrain/material/architecture surface diversity",
+      "providers": [
+        "POLY_HAVEN",
+        "AMBIENTCG",
+        "TEXTURES_COM",
+        "3DTEXTURES_ME",
+        "CGBOOKCASE",
+        "MATERIAL_MAKER",
+        "MATERIALIZE"
+      ],
+      "deliverables": [
+        "wood",
+        "stone",
+        "plaster",
+        "brick",
+        "roofing",
+        "mud",
+        "grass",
+        "leaf litter",
+        "snow",
+        "ash",
+        "volcanic",
+        "metal",
+        "cloth",
+        "leather"
+      ],
+      "runtime_rule": "1K/2K default; channel-pack where appropriate; no density increase before profiling."
+    },
+    {
+      "wave": "R2_VEGETATION_BIOME_EXPANSION",
+      "target": "Shire/Rivendell/Lothlorien/Fangorn/Ithilien and regional ecology diversity",
+      "providers": [
+        "SPEEDTREE",
+        "POLY_HAVEN",
+        "FAB_QUixel_MEGASCANS",
+        "XFROG",
+        "GLOBE_PLANTS"
+      ],
+      "deliverables": [
+        "trees",
+        "shrubs",
+        "grasses",
+        "reeds",
+        "dead vegetation",
+        "roots",
+        "stumps",
+        "rocks"
+      ],
+      "runtime_rule": "HISM/ISM + authored LOD/cull bands; masked overdraw budgeted before density."
+    },
+    {
+      "wave": "R3_CHARACTER_ANIMATION_BASE",
+      "target": "NPC/hero-support motion and rig pipeline coverage",
+      "providers": [
+        "MIXAMO",
+        "ACTORCORE",
+        "ACCURIG",
+        "ROKOKO",
+        "MOTION_CAPTURE_ONLINE",
+        "CASCADEUR",
+        "QUATERNIUS",
+        "MAKEHUMAN"
+      ],
+      "deliverables": [
+        "locomotion",
+        "idles",
+        "social gestures",
+        "household interactions",
+        "combat/traversal candidates",
+        "NPC base rigs"
+      ],
+      "runtime_rule": "Final animated pipeline FBX only; retarget and skeleton/material-count tests required."
+    },
+    {
+      "wave": "R4_VFX_ATMOSPHERE",
+      "target": "Weather/fire/smoke/dust/magic/environmental motion support",
+      "providers": [
+        "ACTIONVFX",
+        "EMBERGEN",
+        "FAB_QUixel_MEGASCANS"
+      ],
+      "deliverables": [
+        "fire",
+        "smoke",
+        "embers",
+        "rain/splash",
+        "dust",
+        "fog-support flipbooks",
+        "impact elements"
+      ],
+      "runtime_rule": "Prefer baked/flipbook/Cascade-compatible assets; avoid heavy runtime volumetrics on ~2GB VRAM."
+    },
+    {
+      "wave": "R5_AUDIO_SENSORY_SATURATION",
+      "target": "Whole-game ambience/foley/creature/combat/UI bank",
+      "providers": [
+        "SONNISS_GDC",
+        "FREESOUND",
+        "ZAPSPLAT",
+        "99SOUNDS",
+        "KENNEY",
+        "SOUNDLY"
+      ],
+      "deliverables": [
+        "ambience beds",
+        "localized emitters",
+        "footsteps",
+        "household foley",
+        "weather",
+        "animals",
+        "creatures",
+        "combat",
+        "UI"
+      ],
+      "runtime_rule": "WAV masters; concurrency/attenuation; never load warehouse wholesale."
+    },
+    {
+      "wave": "R6_MUSIC_SCORE_CANDIDATES",
+      "target": "Original-feeling fantasy/cinematic temp/final candidate pool without copying film score",
+      "providers": [
+        "SCOTT_BUCKLEY",
+        "INCOMPETECH",
+        "PIXABAY",
+        "FREEPD"
+      ],
+      "deliverables": [
+        "exploration",
+        "wonder",
+        "danger",
+        "battle",
+        "loss",
+        "homecoming",
+        "credits candidates"
+      ],
+      "runtime_rule": "Track exact license/attribution; film soundtrack remains reference-only."
+    },
+    {
+      "wave": "R7_TERRAIN_SCANNING_TOOLCHAIN",
+      "target": "Original terrain/prop creation and cleanup",
+      "providers": [
+        "GAEA",
+        "USGS_EARTHEXPLORER",
+        "OPENTOPOGRAPHY",
+        "QGIS",
+        "REALITYSCAN",
+        "MESHROOM",
+        "MESHLAB",
+        "CLOUDCOMPARE",
+        "BLENDER"
+      ],
+      "deliverables": [
+        "heightmap studies",
+        "original terrain masks",
+        "own scans",
+        "retopo/decimation",
+        "collision-ready FBX"
+      ],
+      "runtime_rule": "Generic terrain sources inform authored Middle-earth terrain; they do not define canon geography."
+    },
+    {
+      "wave": "R8_ARABIC_LOCALIZATION_UI",
+      "target": "Professional Arabic presentation layer",
+      "providers": [
+        "UE427_LOCALIZATION_DOCS",
+        "GOOGLE_FONTS",
+        "POEDIT",
+        "AZURE_TTS"
+      ],
+      "deliverables": [
+        "FText/string-table workflow",
+        "RTL/full shaping",
+        "composite font fallback",
+        "subtitle QA",
+        "prototype voice support"
+      ],
+      "runtime_rule": "Presentation layer only; IDs/save/gameplay/audio timing/lip-sync remain unchanged unless separately approved."
+    }
+  ],
+  "next_action": "Expand source registry with missing high-value providers, correct disabled/legacy sources, then generate category-specific candidate batches instead of browsing randomly."
+}
