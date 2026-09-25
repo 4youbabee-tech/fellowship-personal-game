@@ -1,3 +1,11 @@
+## 2026-09-25 - Post-cleanup canonical handoff
+- Remote branch cleanup is **complete**: Branch Cleanup run #1 succeeded and a live repository query returned exactly two branches: `develop` and `main`.
+- `develop` is now the sole canonical development/programmer-handoff lane; `main` remains stable release/scheduler ownership only.
+- No historical feature/repair PR remains open. The final metadata-only PR #72 exists only to remove stale PR #70 references from governance/docs and self-registers for deletion after merge.
+- Consolidated develop after PR #70 is `3108b2dd6354b196d36406935057c25feab2fec2`; post-merge Pre-Unreal #865 succeeded. Exact post-consolidation Unreal #700 has not been claimed green here.
+- W00 remains **AUTOMATED_CLOSURE_GREEN_HUMAN_PIE_WARNING_TAIL_PENDING**. The remaining owner-side proof is one P1C01 PIE observation with `ShireStartupGrounding: PASS`, no player fall, and no project-owned `SetStaticMesh ... Mobility is Static` warning.
+- No DEVICE-TESTED or VISUALLY-ACCEPTED status is promoted by repository cleanup.
+
 ## 2026-09-25 - Final consolidation pass on PR #70
 - Final branch target for programmer handoff is now exactly **`develop`**; `main` remains release-only. The temporary generated-audio archive ref is also approved for deletion because its branch-only diff contained Data/Docs metadata, not WAV/UE binary masters, and the valid registries are already consolidated.
 - PR #70 is now the **single** maintenance consolidation train. The parallel PR #71 payload was selectively folded into #70; #71 is to be closed as superseded.
