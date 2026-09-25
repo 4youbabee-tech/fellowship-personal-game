@@ -1,3 +1,10 @@
+## 2026-09-25 - Consolidation and validation-cost correction
+- Repository/branch hygiene: **IMPLEMENTED ON PR #70 / MERGE-PENDING**. Canonical runtime handoff target remains `develop`; stale feature/repair branches are not authoritative.
+- Local launcher self-update hazard: **FIX_COMMITTED / PROOF PENDING**. The running batch now uses a temp copy before pulling, preventing mid-execution mutation. No local rerun evidence is claimed yet.
+- Unreal classifier cost correction: **FIX_COMMITTED / CI PROOF PENDING**. Ordinary C++/runtime/data/SourceAssets deltas use a core lane (build/import/Automation/runtime/warning) with no package/cook. Packaging remains mandatory for Build.cs/Target.cs/Config/streaming/packaging-critical deltas.
+- W00 status remains **AUTOMATED_CLOSURE_GREEN_HUMAN_PIE_TAIL_PENDING**. Pre-Unreal #821 + Unreal #656 are machine evidence only; no new PIE/device/visual acceptance is claimed.
+- Branch consolidation salvages planning/recovery/source09 records into develop and keeps generated-audio evidence behind an explicit archive pointer until materialized audio intake is durable.
+
 ## 2026-09-25 - C4996 / SetStaticMesh warning-debt guards added
 
 The remaining visible warning families are now encoded as hard regression guards. Canonical `develop` already uses `GetStaticMaterials()` in the production importer, so the old C4996 source pattern is absent. PG-159 now rejects any return to direct `UStaticMesh::StaticMaterials` access.
