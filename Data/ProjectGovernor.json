@@ -4163,7 +4163,7 @@
   "current_focus": {
     "production_lane": "W00_ARCHITECTURAL_STABILIZATION",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "Finish W00 on canonical develop only. Await fresh Pre-Unreal + UE4 build proof for the final workflow/source-integrity batch, then one real P1C01 PIE grounding confirmation. No new feature scope before those proofs.",
+    "rule": "Finish W00 only after the final develop build/PIE proof also confirms no C4996 StaticMaterials warning and no project-owned SetStaticMesh mobility warning.",
     "machine_baseline": {
       "sha": "efdb2e291505472247fae921945b083b3cc1ce2c",
       "pre_unreal": "#816 SUCCESS",
@@ -5250,10 +5250,11 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Wait for fresh develop Pre-Unreal and Unreal validation triggered by the final workflow/source-integrity repair batch.",
-      "If compile/import/runtime gates are green, pull canonical develop in the Documents clone and run one P1C01 PIE grounding confirmation.",
-      "Record the exact grounding PASS marker and no-fall observation.",
-      "Then perform final branch cleanup and close W00."
+      "Run fresh exact-head Pre-Unreal and UE4.27.2 build on canonical develop.",
+      "Confirm the build log has no StaticMaterials C4996 warning.",
+      "Pull canonical develop in the Documents clone and run one P1C01 PIE confirmation.",
+      "Confirm ShireStartupGrounding PASS, no player fall, and no project-owned SetStaticMesh mobility warnings.",
+      "Then close W00 and perform final branch cleanup."
     ]
   },
   "development_mode_contract": {
@@ -5286,7 +5287,7 @@
     ]
   },
   "w00_final_closure": {
-    "status": "FINAL_WORKFLOW_REPAIR_COMMITTED_PROOF_PENDING",
+    "status": "FINAL_WARNING_GUARDS_COMMITTED_PROOF_PENDING",
     "branch": "develop",
     "base_green_head": "31b6e1c9958b6121ec7a00c07e038fec4ab36408",
     "plan": "Data/W00FinalClosurePlanV1.json",
@@ -5458,10 +5459,18 @@
       "root_cause": "Persistent self-hosted workspace source presence was not revalidated immediately before UBT.",
       "permanent_policy": "Immediately before UBT, verify every Git-tracked Source h/cpp/cs and every SourceArchitecturePlan target; restore missing tracked files from exact HEAD and fail closed if anything remains absent.",
       "reopen_rule": "Reopen if a fresh exact-head build still reaches UBT with a missing tracked source after RUNTIME_SOURCE_WORKSPACE_INTEGRITY_PASS."
+    },
+    {
+      "id": "KF-W00-WARNING-DEBT-001",
+      "status": "GUARDS_COMMITTED_PROOF_PENDING",
+      "symptom": "Earlier local build showed C4996 StaticMaterials deprecation and PIE showed SetStaticMesh-on-Static mobility warnings.",
+      "root_cause": "The importer previously used a deprecated direct StaticMaterials API in an older source state; procedural mesh assignment requires mobility to be set before SetStaticMesh.",
+      "permanent_policy": "Use GetStaticMaterials/SetStaticMaterials only. All procedural StaticMeshActor SpawnShape paths must set Movable before SetStaticMesh. PG-159/PG-160 enforce both invariants.",
+      "reopen_rule": "Reopen if a fresh exact-head build still emits the StaticMaterials C4996 warning or fresh PIE still emits project-owned SetStaticMesh mobility warnings."
     }
   ],
   "w00_acceptance_fast_path": {
-    "status": "FINAL_WORKFLOW_REPAIR_COMMITTED_PROOF_PENDING",
+    "status": "FINAL_WARNING_GUARDS_COMMITTED_PROOF_PENDING",
     "mode_contract": {
       "full": "C++/Build.cs/Config/runtime-contract deltas run the full UE4 chain.",
       "acceptance": "Acceptance deltas inherit the deepest safe parent proof: package-only fixes resume at package; startup-verifier-only fixes may resume at packaged startup after parent package+37-data success and local artifact validation.",
@@ -5477,7 +5486,7 @@
       "Summarize and guard runtime warning debt"
     ],
     "superseded_run_policy": "On acceptance/* branches, newer commits cancel older in-progress runs sharing the UE4 device concurrency group. Non-acceptance branches remain serialized.",
-    "current_boundary": "Canonical develop now contains all W00 fixes plus branch-safe local helpers and pre-UBT source-integrity repair. Fresh exact-head Pre-Unreal/UE4 proof is pending before W00 closure.",
+    "current_boundary": "Canonical develop has final branch/workspace hardening plus PG-159/PG-160 warning-debt guards. Fresh exact-head compile and P1C01 PIE warning log are the remaining proof.",
     "runner_policy": "Keep the supervised user-context self-hosted runner; keep NETWORK SERVICE/manual legacy service out of execution; Warehouse no-delta work remains GitHub-hosted; real Warehouse work shares UE4 device serialization. If the upstream zero-step acquire hang recurs, watchdog recovery handles the listener rather than reopening game-code repair."
   }
 }

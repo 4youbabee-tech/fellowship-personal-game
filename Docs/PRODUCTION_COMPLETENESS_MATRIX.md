@@ -1,3 +1,11 @@
+## 2026-09-25 - C4996 / SetStaticMesh warning-debt guards added
+
+The remaining visible warning families are now encoded as hard regression guards. Canonical `develop` already uses `GetStaticMaterials()` in the production importer, so the old C4996 source pattern is absent. PG-159 now rejects any return to direct `UStaticMesh::StaticMaterials` access.
+
+For the PIE `SetStaticMesh ... Mobility is Static` warning family, the current Shire/Bree/Fellowship/Isengard `SpawnShape` implementations already set `EComponentMobility::Movable` before assigning the mesh. PG-160 now locks that ordering.
+
+Status: **STATIC-VALIDATED / FRESH COMPILE + PIE WARNING LOG PROOF PENDING**. Do not claim zero warnings until the fresh exact-head UE4.27 build and PIE log confirm it.
+
 ## 2026-09-25 - Final workflow repair batch committed to canonical develop
 
 A single canonical interactive lane is now enforced: `develop`.

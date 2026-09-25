@@ -2830,6 +2830,34 @@ classifier_guard = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
 if "source=transitive-governance" not in classifier_guard:
     fail("PG-158: governance-only green parents must preserve transitive core Unreal proof")
 
+# PG-159: deprecated StaticMaterials access must not return.
+pg159_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+if re.search(r'(?:->|\.)StaticMaterials\b', pg159_importer):
+    fail("PG-159: direct UStaticMesh::StaticMaterials access is deprecated; use GetStaticMaterials/SetStaticMaterials")
+if "GetStaticMaterials()" not in pg159_importer:
+    fail("PG-159: production importer must use GetStaticMaterials()")
+
+# PG-160: procedural StaticMeshActor spawn paths must set Movable before SetStaticMesh.
+for pg160_builder in [
+    "ShirePrototypeWorldBuilder.cpp",
+    "BreePrototypeWorldBuilder.cpp",
+    "FellowshipChapterWorldBuilder.cpp",
+    "IsengardPrototypeWorldBuilder.cpp",
+]:
+    pg160_text = read(ROOT / "Source" / "ShireJourney" / "Private" / "World" / pg160_builder)
+    pg160_start = pg160_text.find("::SpawnShape(")
+    if pg160_start < 0:
+        fail(f"PG-160: SpawnShape missing in {pg160_builder}")
+        continue
+    pg160_end = pg160_text.find("\nvoid ", pg160_start + 1)
+    if pg160_end < 0:
+        pg160_end = len(pg160_text)
+    pg160_block = pg160_text[pg160_start:pg160_end]
+    pg160_mobility = pg160_block.find("SetMobility(EComponentMobility::Movable)")
+    pg160_mesh = pg160_block.find("SetStaticMesh(")
+    if pg160_mobility < 0 or pg160_mesh < 0 or pg160_mobility > pg160_mesh:
+        fail(f"PG-160: {pg160_builder} must set Movable before SetStaticMesh")
+
 game_target = read(ROOT / "Source" / "ShireJourney.Target.cs")
 if (
     'Environment.GetEnvironmentVariable("SHIRE_CI_NO_DEBUGINFO") == "1"' not in game_target

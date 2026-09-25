@@ -621,3 +621,17 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 
 **Guard:** immediately before UBT, the workflow enumerates Git-tracked Source .h/.cpp/.cs files, restores any missing tracked path from exact HEAD, then validates every current target in `Data/SourceArchitecturePlan.json`. The build may not start if any tracked or architecture target source is absent.
 
+
+### PG-159 — UE4.27 StaticMaterials deprecation warning
+**Observed warning:** an earlier local build showed C4996 for direct `UStaticMesh::StaticMaterials` access in the production importer.
+
+**Current state:** canonical `develop` already uses `GetStaticMaterials()` and contains no direct `.StaticMaterials` / `->StaticMaterials` access in `ShireProductionImportCommandlet.cpp`.
+
+**Guard:** Pre-Unreal rejects any direct deprecated member access and requires the accessor-based API.
+
+### PG-160 — SetStaticMesh mobility ordering
+**Observed warning:** PIE showed repeated `Calling SetStaticMesh ... but Mobility is Static` warnings on generated `StaticMeshActor` components.
+
+**Current state:** the Shire, Bree, Fellowship and Isengard procedural `SpawnShape` paths set `Movable` before `SetStaticMesh`.
+
+**Guard:** Pre-Unreal structurally checks that ordering in all four builders so the warning family cannot silently return.
