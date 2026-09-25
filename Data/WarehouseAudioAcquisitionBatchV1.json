@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "batch_id": "WAREHOUSE_CC0_AUDIO_MUSIC_V2",
+  "batch_id": "WAREHOUSE_CC0_AUDIO_MUSIC_V3",
   "status": "AUTHORIZED_FOR_STAGING",
   "provider": "OPENGAMEART",
   "license": "CC0",
@@ -188,6 +188,20 @@
       "use": [
         "P1C01 daytime Shire bird bed",
         "spot-call source extraction candidate"
+      ]
+    },
+    {
+      "id": "OGA_TINYSIZED_FANTASY_SFX",
+      "category": "SFX_HOUSEHOLD_INTERACTION",
+      "source_page": "https://opengameart.org/content/fantasy-sound-effects-tinysized-sfx",
+      "download_url": "https://opengameart.org/sites/default/files/tinysized.zip",
+      "filename": "tinysized.zip",
+      "observed_page_license": "CC0",
+      "use": [
+        "Bag End books/paper/bottles/corks/pouches/keys/creaks",
+        "leather sheath and metal interaction support",
+        "water pour/drop support",
+        "general Shire household interaction bank"
       ]
     }
   ],
