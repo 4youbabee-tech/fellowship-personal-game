@@ -6,13 +6,74 @@
 - **Unique-content quarantine:** old foliage-wind-v1, localization prototype and mega-prep branches are not deleted yet because they still contain commits unique versus develop; useful content must be selectively salvaged first.
 - **Evidence boundary:** repository/process hygiene only; no runtime acceptance change.
 
-## 2026-09-26 - Source architecture manifest synchronization
 
-- **Confirmed defect:** `Data/SourceArchitecturePlan.json` still recorded 62 pre-migration flat `Source/ShireJourney/*` paths even though the files already live under the canonical `Public/<Domain>` / `Private/<Domain>` layout.
-- **Root correction:** all 62 rows marked `MIGRATED` now use their existing `target_path` as canonical `current_path`; `ShireJourney.Build.cs` remains the sole stable module-root entry.
-- **Static cross-check:** repository tree contains 63 runtime .h/.cpp/.cs files and the manifest now contains the same 63 paths with **0 stale** and **0 missing** rows.
-- **Scope:** metadata/hygiene synchronization only; no gameplay/runtime C++ was changed.
-- **Evidence boundary:** STATIC-VALIDATED by repository-tree/manifest comparison only. No compile/PIE/device/visual/performance claim.
+## 2026-09-26 - P1C01 source-to-production bridge and local material pipeline
+
+- **Source packet:** `Data/P1C01SourceExtractionV1.json` converts the supplied PDFs into a compact Shire/Hobbiton/Bag End implementation packet while preserving source priority and VISUAL-ONLY boundaries.
+- **Production bridge:** `Data/P1C01SourceToProductionBridgeV1.json` maps source-grounded needs directly to the active material/warehouse candidate lanes.
+- **One-command local path:** `Scripts/run_p1c01_material_pipeline.ps1` stages Poly Haven + ambientCG, audits warehouse receipts/hashes, prepares the P1C01 material intake, and can optionally call the real UE4 production importer with `-RunUnrealImport`.
+- **CI independence:** this local preparation/import entry point exists specifically so public-source/material work can continue when GitHub-hosted checks or the Actions queue are unavailable; it does not bypass technical validation.
+- **Evidence boundary:** tooling is authored but not claimed as UE4-import-tested in this session because no self-hosted UE4 commandlet log has run on this branch.
+
+## 2026-09-26 - Massive build accelerated with source-PDF indexing and material-intake tooling
+
+- **Parallel preparation authorized:** source/PDF, warehouse, materials, audio, character/animation and later-region preparation may proceed together; runtime-changing integration remains serialized.
+- **Source PDFs indexed:** `Data/ProjectSourcePdfRegistryV1.json` records 15 owner-supplied PDFs by page count, byte size, SHA256 and authority role. Large source PDFs are not added to Git history.
+- **Smart fence active:** `Data/FastProductionSmartFenceV1.json` downgrades administrative-only friction to warning/pending states while keeping technical/runtime/performance safety blocking.
+- **P1C01 material intake:** `Data/P1C01MaterialImportWaveV1.json` selects eight Poly Haven CC0 Shire/Bag End surface families at the existing 2K intake target, with ambientCG fallback.
+- **Import tooling added:** `Scripts/prepare_p1c01_material_intake.ps1` prepares deterministic BaseColor + MTL input from staged warehouse receipts; `Scripts/promote_p1c01_material_intake.ps1` can feed those materials through the existing production importer using a temporary source overlay that is always removed afterward.
+- **Material master boundary preserved:** extra PBR maps are staged only; the current master remains AlbedoTexture + Color + scalar Roughness/Metallic until a separately gated material-cost pass.
+- **Source architecture bug carried forward:** migrated source paths are synchronized to the actual Public/Private layout on this lane.
+- **Evidence boundary:** STATIC/PREPARATION. No UE4 material import success is claimed until a real self-hosted intake receipt and commandlet log exist.
+
+## 2026-09-26 - Whole-game reuse, streaming and pooled-population architecture prepared
+
+- **Asset-family reuse:** `Data/WholeGameAssetFamilyCoverageV1.json` aggregates the 28 region packets into shared production families so repeated technical kits can be reused without erasing region-specific hero identity.
+- **Streaming residency:** `Data/WholeGameStreamingResidencyPlanV1.json` defines GLOBAL_TINY / REGION_ACTIVE / TRANSITION_OVERLAP / WAREHOUSE_ONLY tiers, soft-reference ownership, async FStreamableManager loading and post-commit handle release.
+- **Population architecture:** `Data/WholeGamePooledPopulationPlanV1.json` centralizes NPC/fauna pool admission under `LivingWorldDirector`, bounded context under `ShireNPCContextSubsystem`, quest facts under `ShireQuestSubsystem`, and forbids Spawn/Destroy bursts and global per-frame NPC scans.
+- **Low-spec objective:** these plans explicitly prevent the massive production campaign from turning into a global hard-reference or always-resident world that would exceed the 8GB RAM / ~2GB VRAM target.
+- **Evidence boundary:** PREPARATION only. No runtime memory, AI or performance acceptance is claimed.
+
+## 2026-09-26 - P1C01 downstream production stages prepared
+
+- **D prepared:** low-cost lighting/sky/fog/water plan with chapter-state ownership and no density escalation.
+- **E prepared:** character presentation plan with FBX-only animated intake, soft references, async loading, retarget/LOD/shadow evidence and pooling boundaries.
+- **F prepared:** Living Shire plan extends `LivingWorldDirector`, `ShireNPCContextSubsystem`, `ShireQuestSubsystem`, bounded dialogue/memory/social plans and pooled fauna without a parallel AI brain or per-NPC global polling.
+- **G prepared:** quest/cinematic/audio polish plan preserves DEC-038 locked beats, bounded control loss, original dialogue, save/route continuity and audio subsystem ownership.
+- **H prepared:** target-device profiling plan locks the i7 Gen6 / 8GB / ~2GB VRAM / DX11 / 720p Low-Medium / 30 FPS floor evidence route.
+- **Gate 6/7 prepared:** `Data/P1C01Gate67AcceptanceChecklistV1.json` separates static/compile/PIE/device/visual/performance proof so no preparation state can be mislabeled as acceptance.
+- **Runtime remains serialized:** these are preparation artifacts only; PR #80 C2 is still the sole runtime-changing lane.
+
+## 2026-09-26 - Massive production preparation resumed without opening another runtime lane
+
+- **Preparation branch:** `planning/whole-game-production-prep-v2` continues from PR #81 preparation head and is intentionally not opened as another runtime-changing PR.
+- **Whole-game execution:** `Data/WholeGameProductionExecutionQueueV1.json` now drives all 28 existing region packets across BPB-W1..W9 while preserving the P1C01 Gate 6/7 runtime barrier.
+- **P1C01 benchmark intake:** `Data/P1C01WarehousePromotionQueueV1.json` defines 28 concrete already-registered candidates across Shire/Bag End surfaces, support architecture/interiors, fauna review, support stock and audio/foley.
+- **Asset promotion guard:** `Data/ProductionAssetPromotionPolicyV1.json` locks provenance, FBX-only animated production intake, PNG/TGA textures, WAV masters, 1K/2K defaults, soft-reference/async loading, pooling and ISM/HISM requirements before promotion.
+- **Fail-closed sourcing:** Quaternius farm animals remain blocked at license capture because the current manifest does not record an observed per-pack license; no license was inferred.
+- **Evidence boundary:** PREPARATION / STATIC DATA AUTHORING only. No new COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE acceptance is claimed.
+
+## 2026-09-25 - Source-grounded post-Amon-Hen promotion graph added
+
+- Added `Data/WholeGameRoutePromotionGraphV1.json` from the supplied `01_STORY_AND_TIMELINE_BIBLE` and `07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX`.
+- After Amon Hen, production/runtime planning is explicitly multi-threaded rather than falsely linear: Rohan, Ring-bearer, Gondor and late-Rohan lanes advance through synchronization barriers.
+- F2-01 through F3-07 chapter titles, locations and locked outcomes are recorded in the graph from project sources.
+- Shared cinematics/world-state changes wait for required peer-route barriers; local playable safe windows remain allowed under DEC-038.
+- This is planning only. P1C01 remains the sole active runtime benchmark until Gate 6/7.
+
+## 2026-09-25 - Whole-game region production packets created
+
+- Added `Data/WholeGameRegionProductionPacketsV1.json` on the global preparation lane.
+- Every registered world region now has a concrete production packet covering sourcing families and deliverables for terrain, materials, vegetation, architecture/interiors, water, lighting, characters, LivingWorld, audio, interactions, cinematics, collision/navmesh, streaming/memory, profiling and acceptance.
+- Packets are PREPRODUCTION only outside P1C01 until Gate 6/7; they are not runtime-integration claims.
+
+## 2026-09-25 - Whole-game world build campaign prepared in parallel
+
+- New preparation branch: `planning/whole-game-world-build-v1`, based on canonical `develop@4980c3c8...`.
+- Added `Data/WholeGameWorldBuildCoverageV1.json`, covering every world location in `TrilogyProductionAssetWarehouse.json`.
+- Every region now has the same required build layers: canon beats, playable safe windows, terrain, materials, vegetation, architecture, interiors, water, lighting/sky/fog, characters, NPC life, fauna, audio/foley, quests/interactions, cinematics, UI/localization, collision/navmesh, streaming/memory, performance profiling and human visual/pacing acceptance.
+- P1C01 remains the only active runtime benchmark until Gate 6/7. All later regions are preparation/authoring/warehouse lanes only for now.
+- This campaign operationalizes DEC-038 globally and consumes the DEC-039 resource registry without allowing assets to redefine canon.
 
 ## 2026-09-25 - Master External Resource Bible audited and adopted
 
