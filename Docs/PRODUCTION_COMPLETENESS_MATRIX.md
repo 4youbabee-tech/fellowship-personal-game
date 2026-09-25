@@ -1,3 +1,11 @@
+## 2026-09-25 - PR #78 PG-166 validator correction
+
+- **Pre-Unreal #911:** FAILURE in structure validation only on `428895672...`.
+- **Failure line:** `PG-166 foliage wind invariant missing: WorldPositionOffset.Expression = GrassWind`.
+- **Root cause:** validator symbol drift; runtime source uses `SimpleWind` for the WPO expression.
+- **Correction:** PG-166 now validates the actual `WorldPositionOffset.Expression = SimpleWind` contract.
+- **Runtime conclusion:** no C++ foliage behavior changed in this correction; fresh exact-head proof is required. No PIE/device/visual/performance promotion.
+
 ## 2026-09-25 - W01 P1C01 Drop C2: lightweight foliage wind
 
 - **C1 baseline:** MERGED / COMPILE-ENGINE-CORE PROVEN — PR #77 exact head passed Pre-Unreal #897 + Unreal #732 and merged as `82fc4deaf2e2a99cfebd0d8d1b99a42b5d922ffe`.
