@@ -4179,10 +4179,10 @@
     "Then validate packaged Data JSON runtime execution, real audio, target-device profiling and human PIE/pacing/visual acceptance."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-156",
+    "checkpoint_id": "CP-W00-157",
     "source_head": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
-    "branch": "integration/comprehensive-foundation-v1",
-    "pull_request": 67,
+    "branch": "maintenance/repository-consolidation-v1",
+    "pull_request": 71,
     "verified": {
       "last_full_machine_green": "ab7889d6: Pre #788 SUCCESS + Unreal #623 SUCCESS + Warehouse #204 SUCCESS",
       "cp154_static": "ab7889d6: Pre #788 SUCCESS including the full static/governor/asset/readiness/deep/unit-test chain",
@@ -4199,19 +4199,22 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "Single concrete PG-026 validator-drift repair after CP155.",
+    "active_wave": "Repository consolidation and local-launcher self-update hardening; no W01 feature expansion.",
     "next_actions": [
-      "Prove Pre-Unreal green on CP156.",
-      "If CP156 is green, close machine repair and proceed to acceptance-only W00 work."
+      "Prove PR #71 static/CI gates.",
+      "Merge PR #71 into develop if green.",
+      "Run the remaining P1C01 human PIE grounding/traversal and mobility-warning check from the Documents clone.",
+      "Then close W00 if that exact human evidence is clean and proceed to P1C01 production work."
     ],
     "unverified_acceptance": [
-      "CP-W00-155 exact-head final repair proof",
-      "packaged Data JSON runtime staging/read",
-      "actual authored audio playback without -NoSound",
+      "PR #71 exact-head validation",
+      "P1C01 human PIE grounding/traversal on canonical develop",
+      "absence of project-owned SetStaticMesh mobility warnings in that PIE session",
       "target-device profiling",
-      "PIE/pacing/visual/human acceptance"
+      "visual/pacing/NPC-believability acceptance",
+      "real audio listening/mix after complete bank integration"
     ],
-    "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
+    "scope_rule": "Maintenance consolidation does not promote PIE/device/visual/audio acceptance. Machine/headless evidence remains separate from human proof.",
     "validation_snapshot": {
       "last_green": {
         "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
@@ -4345,11 +4348,24 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "A historical branch may be deleted only after its meaningful content is confirmed present in develop or intentionally superseded. Diverged branches with unique commits remain preserved until audited.",
-    "current_short_branch": "integration/comprehensive-foundation-v1",
+    "current_short_branch": "maintenance/repository-consolidation-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 67,
-    "open_pr_policy": "PR #67 is the active W00 integration train. Do not open or execute post-W00 feature/content branches until this gate is explicitly closed by the Governor.",
-    "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop."
+    "current_open_pr": 71,
+    "open_pr_policy": "PR #71 is the bounded repository-consolidation/launcher-hardening maintenance train targeting develop. Do not revive stale historical PRs or bulk-merge diverged branches; salvage valid unique content only.",
+    "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
+    "cleanup_snapshot": {
+      "date": "2026-09-25",
+      "canonical_development_branch": "develop",
+      "stable_release_branch": "main",
+      "stale_open_prs_closed": [
+        62,
+        63,
+        66
+      ],
+      "active_cleanup_pr": 71,
+      "audit_doc": "Docs/BRANCH_CONSOLIDATION_AUDIT.md",
+      "rule": "Delete historical branch refs only after meaningful unique content is present on develop or intentionally superseded. Diverged stale runtime branches must never be wholesale-merged."
+    }
   },
   "side_branch_audit": {
     "date": "2026-09-21",
