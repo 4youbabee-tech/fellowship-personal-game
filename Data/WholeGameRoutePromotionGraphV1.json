@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "graph_id": "WHOLE_GAME_ROUTE_PROMOTION_GRAPH_V1",
+  "status": "SOURCE_GROUNDED_PREPRODUCTION_GRAPH",
+  "authority": [
+    "01_STORY_AND_TIMELINE_BIBLE",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "Data/ProjectGovernor.json / DEC-038"
+  ],
+  "source_note": "Post-Amon-Hen route structure and chapter order are taken from the supplied Story/Timeline and Mission/Chapter sources, not inferred from memory.",
+  "part1": {
+    "route": "FrodoMain",
+    "chapters": [
+      "P1C01",
+      "P1C02",
+      "P1C03",
+      "P1C04",
+      "P1C05",
+      "P1C06",
+      "P1C07",
+      "P1C08"
+    ],
+    "terminal_anchor": "Amon Hen / Fellowship split",
+    "source_map": "Data/Part1WorldMap.json"
+  },
+  "post_amon_hen_lanes": [
+    {
+      "lane": "ROHAN",
+      "playable_focus": [
+        "Aragorn",
+        "Legolas",
+        "Gimli",
+        "Merry",
+        "Pippin"
+      ],
+      "synchronization_anchors": [
+        "Fangorn",
+        "Edoras",
+        "Helm's Deep",
+        "Isengard aftermath"
+      ],
+      "chapters": [
+        "F2-01",
+        "F2-02",
+        "F2-03",
+        "F2-04",
+        "F2-05",
+        "F2-08",
+        "F3-01"
+      ]
+    },
+    {
+      "lane": "RING_BEARER",
+      "playable_focus": [
+        "Frodo",
+        "Sam",
+        "Gollum"
+      ],
+      "synchronization_anchors": [
+        "Emyn Muil",
+        "Dead Marshes",
+        "Ithilien",
+        "Cirith Ungol",
+        "Mordor"
+      ],
+      "chapters": [
+        "F2-06",
+        "F2-07",
+        "F3-05",
+        "F3-06"
+      ]
+    },
+    {
+      "lane": "GONDOR",
+      "playable_focus": [
+        "Gandalf",
+        "Pippin",
+        "Aragorn group"
+      ],
+      "synchronization_anchors": [
+        "Minas Tirith",
+        "Pelennor",
+        "Black Gate"
+      ],
+      "chapters": [
+        "F3-02",
+        "F3-03",
+        "F3-04",
+        "F3-06"
+      ]
+    },
+    {
+      "lane": "ROHAN_LATE",
+      "playable_focus": [
+        "Theoden",
+        "Eowyn",
+        "Merry context"
+      ],
+      "synchronization_anchors": [
+        "Muster",
+        "Pelennor"
+      ],
+      "chapters": [
+        "F3-02",
+        "F3-04"
+      ]
+    }
+  ],
+  "chapter_catalog": [
+    {
+      "id": "F2-01",
+      "title": "Three Hunters / Captives",
+      "location": "Rohan / Fangorn edge",
+      "locked_outcome": "Paths converge around Fangorn/Rohan."
+    },
+    {
+      "id": "F2-02",
+      "title": "Fangorn & Gandalf Returned",
+      "location": "Fangorn",
+      "locked_outcome": "Gandalf leads hunters to Edoras."
+    },
+    {
+      "id": "F2-03",
+      "title": "Edoras",
+      "location": "Rohan",
+      "locked_outcome": "Rohan evacuates toward Helm's Deep."
+    },
+    {
+      "id": "F2-04",
+      "title": "Road & Helm's Deep Prep",
+      "location": "Rohan / Helm's Deep",
+      "locked_outcome": "Uruk army arrives."
+    },
+    {
+      "id": "F2-05",
+      "title": "Battle of Helm's Deep",
+      "location": "Helm's Deep",
+      "locked_outcome": "Rohan survives."
+    },
+    {
+      "id": "F2-06",
+      "title": "Frodo, Sam & Gollum",
+      "location": "Emyn Muil / Dead Marshes",
+      "locked_outcome": "Approach to Black Gate."
+    },
+    {
+      "id": "F2-07",
+      "title": "Ithilien & Faramir",
+      "location": "Ithilien / Henneth Annun",
+      "locked_outcome": "Frodo continues toward Mordor."
+    },
+    {
+      "id": "F2-08",
+      "title": "Ents & Isengard",
+      "location": "Fangorn / Isengard",
+      "locked_outcome": "Saruman's war machine broken."
+    },
+    {
+      "id": "F3-01",
+      "title": "Isengard Aftermath / Palantir",
+      "location": "Isengard / Rohan road",
+      "locked_outcome": "Gandalf rides with Pippin to Gondor."
+    },
+    {
+      "id": "F3-02",
+      "title": "Minas Tirith & Muster",
+      "location": "Minas Tirith / Rohan",
+      "locked_outcome": "Armies move to war."
+    },
+    {
+      "id": "F3-03",
+      "title": "Paths of the Dead",
+      "location": "Dunharrow / Paths",
+      "locked_outcome": "Aragorn gains decisive force."
+    },
+    {
+      "id": "F3-04",
+      "title": "Siege & Pelennor",
+      "location": "Minas Tirith / Pelennor",
+      "locked_outcome": "Mordor army defeated locally at great cost."
+    },
+    {
+      "id": "F3-05",
+      "title": "Cirith Ungol / Mordor",
+      "location": "Cirith Ungol / Mordor",
+      "locked_outcome": "Ring-bearers reach Mount Doom."
+    },
+    {
+      "id": "F3-06",
+      "title": "Black Gate & Mount Doom",
+      "location": "Mordor",
+      "locked_outcome": "Sauron falls."
+    },
+    {
+      "id": "F3-07",
+      "title": "Return & Farewell",
+      "location": "Minas Tirith / Shire / Grey Havens",
+      "locked_outcome": "Main campaign complete."
+    }
+  ],
+  "synchronization_policy": [
+    "After Amon Hen, no lane is allowed to trigger a shared cinematic/world-state transition until required peer lanes reach the matching barrier.",
+    "A synchronization barrier coordinates chronology; it does not erase local playable safe windows.",
+    "World-state assets such as flooded Isengard, damaged Helm's Deep, or siege-state Minas Tirith are explicit chapter-state assets, not dynamic guesses.",
+    "Save/load must persist route progress per lane and resume without advancing peer routes incorrectly."
+  ],
+  "runtime_promotion_policy": [
+    "Current runtime promotion remains P1C01 only until Gate 6/7.",
+    "After P1C01 acceptance, later runtime chapters are promoted from their prepared packets in dependency order, while source/asset preparation for all lanes may continue in parallel.",
+    "The graph does not authorize skipping chapter-specific canon verification before implementation."
+  ],
+  "evidence_boundary": "Source-grounded planning graph only; no later chapter runtime integration or acceptance is claimed."
+}
