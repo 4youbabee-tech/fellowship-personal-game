@@ -1,3 +1,10 @@
+## W00 lessons-lock control point — 2026-09-25
+- Canonical machine-green develop before this bounded maintenance change: `ed3587aa9d1f0025a5f10778a6be8048e2c778d1`.
+- Pre-Unreal #869: **SUCCESS**.
+- Unreal Build Validation #704: **SUCCESS** through build/import/Automation/runtime/warning/package/data/startup/hardware.
+- Active maintenance branch: `maintenance/w00-lessons-lock-v1`; purpose is regression-memory/validation-policy only, no W01 gameplay expansion.
+- Exit order: exact-head maintenance validation -> merge/self-clean -> Documents-clone PIE grounding/mobility-warning confirmation -> close W00 if clean -> open P1C01 production vertical slice.
+
 # Master Execution Board
 
 This file is a human-readable execution board. **Data/ProjectGovernor.json remains the sole project-management authority.** Data/MasterExecutionRoadmap.json is the machine-readable execution map.
