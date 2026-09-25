@@ -19,6 +19,8 @@
 #include "Materials/MaterialExpressionScalarParameter.h"
 #include "Materials/MaterialExpressionTextureSampleParameter2D.h"
 #include "Materials/MaterialExpressionMultiply.h"
+#include "Materials/MaterialExpressionMaterialFunctionCall.h"
+#include "Materials/MaterialFunction.h"
 #include "Materials/MaterialExpressionVectorParameter.h"
 #include "Materials/MaterialInterface.h"
 #include "Materials/MaterialInstanceConstant.h"
@@ -501,6 +503,241 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         {
             ++Failed;
             UE_LOG(LogTemp, Error, TEXT("ShireProductionImport failed to create M_ProductionSurface master material."));
+        }
+    }
+
+    // Drop C2: create a dedicated foliage master without assigning it yet.
+    // Grass/leaves will be re-parented in C3 by stable authored material identity.
+    // SimpleGrassWind executes in the material vertex path, so there is no per-tree
+    // Actor Tick. Distance complexity is reduced by assigning the separate no-WPO
+    // far master in C3/C4, rather than adding another unsupported expression here.
+    const TCHAR* ProductionFoliagePath =
+        TEXT("/Game/Production/Materials/M_ProductionFoliage.M_ProductionFoliage");
+    UMaterialInterface* ProductionFoliageParent =
+        FindObject<UMaterialInterface>(nullptr, ProductionFoliagePath);
+    if (!ProductionFoliageParent)
+    {
+        const FString ProductionFoliageObjectPath(ProductionFoliagePath);
+        const FString ProductionFoliagePackage =
+            FPackageName::ObjectPathToPackageName(ProductionFoliageObjectPath);
+        if (FPackageName::DoesPackageExist(ProductionFoliagePackage))
+        {
+            ProductionFoliageParent =
+                LoadObject<UMaterialInterface>(nullptr, ProductionFoliagePath);
+        }
+    }
+
+    if (!ProductionFoliageParent)
+    {
+        UMaterialFactoryNew* FoliageFactory = NewObject<UMaterialFactoryNew>();
+        UMaterial* FoliageMaterial = Cast<UMaterial>(
+            AssetTools.Get().CreateAsset(
+                TEXT("M_ProductionFoliage"),
+                TEXT("/Game/Production/Materials"),
+                UMaterial::StaticClass(),
+                FoliageFactory));
+
+        if (FoliageMaterial)
+        {
+            FoliageMaterial->TwoSided = true;
+
+            UMaterialExpressionVectorParameter* FoliageColorParameter =
+                NewObject<UMaterialExpressionVectorParameter>(FoliageMaterial);
+            FoliageColorParameter->ParameterName = TEXT("Color");
+            FoliageColorParameter->DefaultValue = FLinearColor::White;
+            FoliageMaterial->Expressions.Add(FoliageColorParameter);
+
+            UMaterialExpressionTextureSampleParameter2D* FoliageAlbedoParameter =
+                NewObject<UMaterialExpressionTextureSampleParameter2D>(FoliageMaterial);
+            FoliageAlbedoParameter->ParameterName = TEXT("AlbedoTexture");
+            FoliageAlbedoParameter->Texture = LoadObject<UTexture2D>(
+                nullptr,
+                TEXT("/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture"));
+            FoliageMaterial->Expressions.Add(FoliageAlbedoParameter);
+
+            UMaterialExpressionMultiply* FoliageBaseColorMultiply =
+                NewObject<UMaterialExpressionMultiply>(FoliageMaterial);
+            FoliageBaseColorMultiply->A.Expression = FoliageAlbedoParameter;
+            FoliageBaseColorMultiply->B.Expression = FoliageColorParameter;
+            FoliageMaterial->Expressions.Add(FoliageBaseColorMultiply);
+            FoliageMaterial->BaseColor.Expression = FoliageBaseColorMultiply;
+
+            UMaterialExpressionScalarParameter* FoliageRoughnessParameter =
+                NewObject<UMaterialExpressionScalarParameter>(FoliageMaterial);
+            FoliageRoughnessParameter->ParameterName = TEXT("Roughness");
+            FoliageRoughnessParameter->DefaultValue = 0.78f;
+            FoliageMaterial->Expressions.Add(FoliageRoughnessParameter);
+            FoliageMaterial->Roughness.Expression = FoliageRoughnessParameter;
+
+            UMaterialExpressionScalarParameter* FoliageMetallicParameter =
+                NewObject<UMaterialExpressionScalarParameter>(FoliageMaterial);
+            FoliageMetallicParameter->ParameterName = TEXT("Metallic");
+            FoliageMetallicParameter->DefaultValue = 0.0f;
+            FoliageMaterial->Expressions.Add(FoliageMetallicParameter);
+            FoliageMaterial->Metallic.Expression = FoliageMetallicParameter;
+
+            UMaterialExpressionScalarParameter* WindIntensityParameter =
+                NewObject<UMaterialExpressionScalarParameter>(FoliageMaterial);
+            WindIntensityParameter->ParameterName = TEXT("WindIntensity");
+            WindIntensityParameter->DefaultValue = 0.18f;
+            FoliageMaterial->Expressions.Add(WindIntensityParameter);
+
+            UMaterialExpressionScalarParameter* WindSpeedParameter =
+                NewObject<UMaterialExpressionScalarParameter>(FoliageMaterial);
+            WindSpeedParameter->ParameterName = TEXT("WindSpeed");
+            WindSpeedParameter->DefaultValue = 0.28f;
+            FoliageMaterial->Expressions.Add(WindSpeedParameter);
+
+            UMaterialExpressionScalarParameter* WindWeightParameter =
+                NewObject<UMaterialExpressionScalarParameter>(FoliageMaterial);
+            WindWeightParameter->ParameterName = TEXT("WindWeight");
+            WindWeightParameter->DefaultValue = 1.0f;
+            FoliageMaterial->Expressions.Add(WindWeightParameter);
+
+            UMaterialFunction* SimpleGrassWindFunction =
+                LoadObject<UMaterialFunction>(
+                    nullptr,
+                    TEXT("/Engine/Functions/Engine_MaterialFunctions01/WorldPositionOffset/SimpleGrassWind.SimpleGrassWind"));
+
+            UMaterialExpressionMaterialFunctionCall* SimpleWind =
+                NewObject<UMaterialExpressionMaterialFunctionCall>(FoliageMaterial);
+
+            bool bSimpleWindBound = false;
+            if (SimpleGrassWindFunction && SimpleWind)
+            {
+                SimpleWind->MaterialFunction = SimpleGrassWindFunction;
+                SimpleWind->UpdateFromFunctionResource();
+
+                // UE4.27 SimpleGrassWind exposes inputs in documented order:
+                // WindIntensity, WindWeight, WindSpeed, AdditionalWPO.
+                FExpressionInput* WindIntensityInput = SimpleWind->GetInput(0);
+                FExpressionInput* WindWeightInput = SimpleWind->GetInput(1);
+                FExpressionInput* WindSpeedInput = SimpleWind->GetInput(2);
+
+                if (WindIntensityInput && WindWeightInput && WindSpeedInput)
+                {
+                    WindIntensityInput->Expression = WindIntensityParameter;
+                    WindWeightInput->Expression = WindWeightParameter;
+                    WindSpeedInput->Expression = WindSpeedParameter;
+
+                    FoliageMaterial->Expressions.Add(SimpleWind);
+                    FoliageMaterial->WorldPositionOffset.Expression = SimpleWind;
+                    bSimpleWindBound = true;
+                }
+            }
+
+            if (!bSimpleWindBound)
+            {
+                ++Failed;
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireProductionImport failed to bind UE4.27 SimpleGrassWind material function."));
+            }
+
+            FoliageMaterial->PostEditChange();
+            FoliageMaterial->MarkPackageDirty();
+            ImportedMaterialPackages.AddUnique(FoliageMaterial->GetOutermost());
+            ProductionFoliageParent = FoliageMaterial;
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("ShireProductionImport created M_ProductionFoliage master material with parameterized SimpleGrassWind."));
+        }
+        else
+        {
+            ++Failed;
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("ShireProductionImport failed to create M_ProductionFoliage master material."));
+        }
+    }
+
+
+    // Far foliage uses a separate no-WPO master. C3/C4 will bind this to distant
+    // LOD material slots so far vegetation removes wind vertex instructions entirely.
+    const TCHAR* ProductionFoliageFarPath =
+        TEXT("/Game/Production/Materials/M_ProductionFoliageFar.M_ProductionFoliageFar");
+    UMaterialInterface* ProductionFoliageFarParent =
+        FindObject<UMaterialInterface>(nullptr, ProductionFoliageFarPath);
+    if (!ProductionFoliageFarParent)
+    {
+        const FString ProductionFoliageFarObjectPath(ProductionFoliageFarPath);
+        const FString ProductionFoliageFarPackage =
+            FPackageName::ObjectPathToPackageName(ProductionFoliageFarObjectPath);
+        if (FPackageName::DoesPackageExist(ProductionFoliageFarPackage))
+        {
+            ProductionFoliageFarParent =
+                LoadObject<UMaterialInterface>(nullptr, ProductionFoliageFarPath);
+        }
+    }
+
+    if (!ProductionFoliageFarParent)
+    {
+        UMaterialFactoryNew* FoliageFarFactory = NewObject<UMaterialFactoryNew>();
+        UMaterial* FoliageFarMaterial = Cast<UMaterial>(
+            AssetTools.Get().CreateAsset(
+                TEXT("M_ProductionFoliageFar"),
+                TEXT("/Game/Production/Materials"),
+                UMaterial::StaticClass(),
+                FoliageFarFactory));
+
+        if (FoliageFarMaterial)
+        {
+            FoliageFarMaterial->TwoSided = true;
+
+            UMaterialExpressionVectorParameter* FoliageFarColorParameter =
+                NewObject<UMaterialExpressionVectorParameter>(FoliageFarMaterial);
+            FoliageFarColorParameter->ParameterName = TEXT("Color");
+            FoliageFarColorParameter->DefaultValue = FLinearColor::White;
+            FoliageFarMaterial->Expressions.Add(FoliageFarColorParameter);
+
+            UMaterialExpressionTextureSampleParameter2D* FoliageFarAlbedoParameter =
+                NewObject<UMaterialExpressionTextureSampleParameter2D>(FoliageFarMaterial);
+            FoliageFarAlbedoParameter->ParameterName = TEXT("AlbedoTexture");
+            FoliageFarAlbedoParameter->Texture = LoadObject<UTexture2D>(
+                nullptr,
+                TEXT("/Engine/EngineResources/WhiteSquareTexture.WhiteSquareTexture"));
+            FoliageFarMaterial->Expressions.Add(FoliageFarAlbedoParameter);
+
+            UMaterialExpressionMultiply* FoliageFarBaseColorMultiply =
+                NewObject<UMaterialExpressionMultiply>(FoliageFarMaterial);
+            FoliageFarBaseColorMultiply->A.Expression = FoliageFarAlbedoParameter;
+            FoliageFarBaseColorMultiply->B.Expression = FoliageFarColorParameter;
+            FoliageFarMaterial->Expressions.Add(FoliageFarBaseColorMultiply);
+            FoliageFarMaterial->BaseColor.Expression = FoliageFarBaseColorMultiply;
+
+            UMaterialExpressionScalarParameter* FoliageFarRoughnessParameter =
+                NewObject<UMaterialExpressionScalarParameter>(FoliageFarMaterial);
+            FoliageFarRoughnessParameter->ParameterName = TEXT("Roughness");
+            FoliageFarRoughnessParameter->DefaultValue = 0.78f;
+            FoliageFarMaterial->Expressions.Add(FoliageFarRoughnessParameter);
+            FoliageFarMaterial->Roughness.Expression = FoliageFarRoughnessParameter;
+
+            UMaterialExpressionScalarParameter* FoliageFarMetallicParameter =
+                NewObject<UMaterialExpressionScalarParameter>(FoliageFarMaterial);
+            FoliageFarMetallicParameter->ParameterName = TEXT("Metallic");
+            FoliageFarMetallicParameter->DefaultValue = 0.0f;
+            FoliageFarMaterial->Expressions.Add(FoliageFarMetallicParameter);
+            FoliageFarMaterial->Metallic.Expression = FoliageFarMetallicParameter;
+
+            FoliageFarMaterial->PostEditChange();
+            FoliageFarMaterial->MarkPackageDirty();
+            ImportedMaterialPackages.AddUnique(FoliageFarMaterial->GetOutermost());
+            ProductionFoliageFarParent = FoliageFarMaterial;
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("ShireProductionImport created M_ProductionFoliageFar no-WPO master."));
+        }
+        else
+        {
+            ++Failed;
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("ShireProductionImport failed to create M_ProductionFoliageFar master material."));
         }
     }
 
