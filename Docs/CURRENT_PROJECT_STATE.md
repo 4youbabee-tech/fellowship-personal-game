@@ -1,3 +1,10 @@
+## 2026-09-25 - PR #77 handoff-status contract corrected
+
+- Unreal #731 completed **SUCCESS** on corrected Drop C1 head `3b2281c17b6111fd30f7614ca5d0df22a6dc572d`.
+- Pre-Unreal #896 reached the Governor and failed because `validation_snapshot.latest_observed.pre_unreal.status` used the descriptive token `FAILURE_VALIDATOR_PATH_ONLY`, while the handoff schema allows only `SUCCESS | FAILURE | CANCELLED | PENDING | IN_PROGRESS`.
+- Root correction: status is now the contract-valid `FAILURE`; the validator-only explanation is stored separately in a `note` field. This prevents recurrence without weakening the schema.
+- No C++/runtime/material implementation changed in this correction. Fresh exact-head Pre-Unreal is required before merge.
+
 ## 2026-09-25 - PR #77 validator false-red root-fixed
 
 - Pre-Unreal #895 failed only because PG-165 incorrectly used the runtime `resolve_source()` helper for `ShireProductionImportCommandlet.cpp`, which lives in the separate `ShireJourneyEditorTools` module.

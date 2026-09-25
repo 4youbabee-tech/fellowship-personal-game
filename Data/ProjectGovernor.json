@@ -4203,12 +4203,12 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "W01/P1C01 Drop C1 material texture binding: Unreal #730 SUCCESS on exact runtime head; Pre-Unreal #895 was a validator-only EditorTools path-resolution defect. Dedicated editor-source resolver root fix committed; fresh exact-head Pre-Unreal pending.",
+    "active_wave": "W01/P1C01 Drop C1 material texture binding: Unreal #731 SUCCESS on corrected head 3b2281c17...; Pre-Unreal #896 failed only because the handoff snapshot used a non-contract status token. Snapshot normalized to FAILURE with an explanatory note; no runtime change in this correction.",
     "next_actions": [
-      "1. Require fresh exact-head Pre-Unreal after the PG-165 editor-source resolver root fix.",
-      "2. Reuse #730 engine proof only through the established safe validator/docs/governance ancestry policy; do not rerun expensive engine work merely for metadata unless policy requires it.",
-      "3. Merge Drop C1 once required exact-head gates are green.",
-      "4. Then execute C2 lightweight foliage master + performance-scaled wind WPO while keeping foliage density fixed until target-device profiling."
+      "1. Require fresh exact-head Pre-Unreal after normalizing the handoff status contract.",
+      "2. Preserve Unreal #731 SUCCESS as engine/core evidence for the same corrected runtime head ancestry unless policy requires rerun.",
+      "3. Merge Drop C1 when required exact-head gates are green.",
+      "4. Promote C2 foliage/wind as the next and only runtime-changing lane; parallel preparation lanes continue independently."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -4236,7 +4236,8 @@
         "pre_unreal": {
           "sha": "725ca99151b5438fab7ce48209c04a4ce05c681d",
           "run_id": 36149288137,
-          "status": "FAILURE_VALIDATOR_PATH_ONLY"
+          "status": "FAILURE",
+          "note": "Validator-only failure: PG-165 initially routed EditorTools source through runtime resolver; root fix committed in 3b2281c17b6111fd30f7614ca5d0df22a6dc572d."
         },
         "unreal": {
           "sha": "725ca99151b5438fab7ce48209c04a4ce05c681d",

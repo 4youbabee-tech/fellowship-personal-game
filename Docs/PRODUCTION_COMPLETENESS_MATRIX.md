@@ -1,3 +1,10 @@
+## 2026-09-25 - PR #77 handoff status normalization
+
+- **Unreal #731:** SUCCESS on `3b2281c17...`.
+- **Pre-Unreal #896:** Governor metadata failure only; a descriptive non-schema status was used in the handoff snapshot.
+- **Root fix:** use canonical `FAILURE` status plus a separate explanatory note.
+- **Runtime conclusion:** Drop C1 engine/core implementation remains green on the corrected runtime head ancestry; fresh Pre-Unreal is still required. No PIE/device/visual promotion.
+
 ## 2026-09-25 - PR #77 PG-165 resolver correction
 
 - **Pre-Unreal #895:** FAILED in validator path resolution only; PG-165 searched the runtime module for an EditorTools commandlet.
