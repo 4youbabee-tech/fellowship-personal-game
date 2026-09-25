@@ -2497,7 +2497,9 @@
         "Data/CharacterProductionMatrix.json",
         "Data/AudioAssetSourcingWaveV2.json",
         "Docs/WORLD_DETAIL_LEDGER.md",
-        "Data/PrivateOfflineAssetPolicyV1.json"
+        "Data/PrivateOfflineAssetPolicyV1.json",
+        "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25",
+        "Data/MasterExternalResourceBibleAdoptionV1.json"
       ],
       "implementation_refs": [
         "Data/TrilogyProductionAssetWarehouse.json establishes the first complete trilogy-wide catalogue from Sources 02/03/04/05/11 plus the supplied film trilogy screenplays.",
@@ -2512,7 +2514,8 @@
         "Data/TrilogyWorldFoundationPlanV1.json establishes parallel world-foundation preproduction for all major trilogy regions while keeping P1C01 as the first assembled benchmark.",
         "Verified official KayKit public GitHub lane now includes Skeletons 1.0 as CC0 fully-rigged/animated FBX/GLTF technical enemy-pipeline stock; this is QA/support inventory, not canonical LOTR enemy art.",
         "Final pre-runner source-safe saturation adds verified official KayKit CC0 Restaurant Bits, Halloween Bits and City Builder Bits lanes with strict selective/manual-fit boundaries.",
-        "DEC-037 / Data/PrivateOfflineAssetPolicyV1.json separates fast private-offline intake from strict distributable-framework clearance; private-only assets stay tagged and excluded from commercial exports."
+        "DEC-037 / Data/PrivateOfflineAssetPolicyV1.json separates fast private-offline intake from strict distributable-framework clearance; private-only assets stay tagged and excluded from commercial exports.",
+        "DEC-039 adopts the 225-source Master External Resource Bible as the whole-game production sourcing map and converts it into structured acquisition waves instead of random browsing."
       ],
       "missing_work": [
         "Bridge staged rigged-character archives into a real UE4.27 skeletal import/runtime path once the Engine Content ACL gate is restored; prove humans/enemies visibly in P1C01 before broader runtime expansion.",
@@ -3508,6 +3511,39 @@
         "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
         "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
         "Docs/WORLD_DETAIL_LEDGER.md"
+      ]
+    },
+    {
+      "id": "DEC-039",
+      "title": "Adopt the 225-source Master External Resource Bible as the global production sourcing map",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WAREHOUSE-001",
+        "REQ-ASSET-001",
+        "REQ-GOV-001"
+      ],
+      "resolution": "The 68-page SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25, containing 225 classified sources, is adopted as a global production-sourcing authority for the entire game. It does not override story/canon bibles. Its role is to diversify and prioritize sources for environment materials, vegetation, characters, rigging, animation, VFX, audio, music, UI/fonts, Arabic localization, terrain/GIS, scanning, AI-assisted creation and production tooling. Sourcing proceeds category-first using A then B then C priority, with provider-access restrictions preserved. The project converts the Bible into structured registry entries and category-specific acquisition waves rather than browsing randomly or copying all sources wholesale.",
+      "implementation_contract": [
+        "Data/MasterExternalResourceBibleAdoptionV1.json is the machine-readable adoption/triage layer.",
+        "Data/GlobalWarehouseSourceRegistryV2.json is expanded from the Bible with high-value sources and corrected disabled/legacy routes.",
+        "Production waves cover world surfaces, vegetation/biomes, character/animation, VFX, audio, music, terrain/scanning and Arabic/UI across the whole game.",
+        "REFERENCE_ONLY/QUARANTINE/DISABLED sources do not auto-promote into distributable production.",
+        "DEC-037 still governs PRIVATE_OFFLINE_ONLY vs DISTRIBUTABLE_FRAMEWORK asset isolation.",
+        "DEC-038 still governs whole-game playable-film canon-safe design; resources serve the story rather than altering it."
+      ],
+      "performance_contract": [
+        "1K/2K default runtime textures; 4K only for measured hero assets.",
+        "Animated production assets use FBX.",
+        "Production textures use PNG/TGA, preferably channel-packed.",
+        "Heavy runtime assets use soft references + FStreamableManager async loading.",
+        "Crowds use pooling; repeated world detail uses ISM/HISM + LOD/culling.",
+        "High-poly scans/vegetation require decimation/retopo/LOD/material-slot and overdraw review before integration."
+      ],
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25",
+        "Data/MasterExternalResourceBibleAdoptionV1.json",
+        "Data/GlobalWarehouseSourceRegistryV2.json"
       ]
     }
   ],
