@@ -1,0 +1,559 @@
+{
+  "schema_version": 1,
+  "queue_id": "WHOLE_GAME_PRODUCTION_EXECUTION_QUEUE_V1",
+  "status": "ACTIVE_PREPARATION_RUNTIME_SERIALIZED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/BigProductionBuildLaunchV1.json",
+    "Data/WholeGameRegionProductionPacketsV1.json",
+    "DEC-038",
+    "DEC-039"
+  ],
+  "purpose": "Drive the large whole-game production campaign now without opening a second runtime-changing lane.",
+  "target_profile": "Windows / DX11 / 720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+  "active_waves": [
+    "BPB-W1 Whole-World Surface Library",
+    "BPB-W2 Biome and Vegetation Library",
+    "BPB-W3 Characters NPCs Fauna and Animation",
+    "BPB-W4 Architecture Props and Interiors",
+    "BPB-W5 Atmosphere VFX Weather",
+    "BPB-W6 Sensory Audio and Foley",
+    "BPB-W7 Music Candidate Pool",
+    "BPB-W8 Terrain Scanning and Original Asset Toolchain",
+    "BPB-W9 Arabic Presentation and UI"
+  ],
+  "hard_rules": [
+    "Exactly one runtime-changing PR at a time.",
+    "P1C01 remains the active runtime benchmark until Gate 6/7.",
+    "Later regions may advance source, asset, authoring, design and warehouse preparation now but not runtime promotion.",
+    "Animated production assets use FBX only.",
+    "Production textures use PNG/TGA; 1K/2K is default and 4K is hero-only after measurement.",
+    "Heavy runtime assets use TSoftObjectPtr/TSoftClassPtr and FStreamableManager asynchronous loading.",
+    "Crowds use object pooling and repeated world detail uses ISM/HISM plus LOD/culling.",
+    "No preparation, staging or import state is treated as PIE/device/visual/performance acceptance."
+  ],
+  "runtime_lane": {
+    "current": "PR #80 C2 lightweight foliage wind",
+    "next": "C3 stable foliage material identity after C2 evidence gate",
+    "then": [
+      "C4 LOD/cull/overdraw",
+      "D lighting/sky/fog/water",
+      "E character presentation",
+      "F living Shire NPC/fauna/environmental motion",
+      "G quest/cinematic/audio polish",
+      "H target-device profiling",
+      "Gate 6/7"
+    ]
+  },
+  "preparation_lane": {
+    "source_branch": "planning/whole-game-production-prep-v2",
+    "merge_policy": "Accumulate preparation artifacts here without opening another runtime-changing lane; integrate when CI is healthy."
+  },
+  "regions": [
+    {
+      "order": 1,
+      "region_id": "SHIRE_HOBBITON",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "P1C01_ACTIVE_BENCHMARK",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 2,
+      "region_id": "BAG_END",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "P1C01_ACTIVE_BENCHMARK",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 3,
+      "region_id": "BREE",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 4,
+      "region_id": "WEATHERTOP",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 5,
+      "region_id": "RIVENDELL",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 6,
+      "region_id": "CARADHRAS",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 7,
+      "region_id": "MORIA",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 8,
+      "region_id": "LOTHLORIEN",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 9,
+      "region_id": "ANDUIN_AMON_HEN",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 10,
+      "region_id": "FANGORN",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 11,
+      "region_id": "EDORAS_MEDUSELD",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 12,
+      "region_id": "HELMS_DEEP",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 13,
+      "region_id": "ISENGARD_ORTHANC",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 14,
+      "region_id": "EMYN_MUIL",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 15,
+      "region_id": "DEAD_MARSHES",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 16,
+      "region_id": "ITHILIEN",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 17,
+      "region_id": "HENNETH_ANNUN",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 18,
+      "region_id": "MINAS_TIRITH",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 19,
+      "region_id": "OSGILIATH",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 20,
+      "region_id": "MINAS_MORGUL",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 21,
+      "region_id": "CIRITH_UNGOL",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 22,
+      "region_id": "SHELOBS_LAIR",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 23,
+      "region_id": "PELENNOR_FIELDS",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 24,
+      "region_id": "PATHS_OF_THE_DEAD",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 25,
+      "region_id": "BLACK_GATE_MORANNON",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 26,
+      "region_id": "MORDOR_GORGOROTH",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 27,
+      "region_id": "MOUNT_DOOM",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    },
+    {
+      "order": 28,
+      "region_id": "GREY_HAVENS",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "preparation_tracks": {
+        "surfaces_materials": "ACTIVE_SOURCE_QC",
+        "vegetation_biome": "ACTIVE_SOURCE_QC",
+        "architecture_interiors": "ACTIVE_SOURCE_QC",
+        "characters_animation_fauna": "ACTIVE_SOURCE_QC",
+        "audio_foley": "ACTIVE_SOURCE_QC",
+        "vfx_atmosphere": "ACTIVE_SOURCE_QC",
+        "collision_navmesh": "DESIGN_PREP",
+        "streaming_memory": "BUDGET_PREP",
+        "profiling": "BLOCKED_UNTIL_RUNTIME_INTEGRATION",
+        "human_acceptance": "BLOCKED_UNTIL_PLAYABLE_BUILD"
+      }
+    }
+  ],
+  "evidence_boundary": "Preparation execution only. No new runtime acceptance claim."
+}
