@@ -2733,13 +2733,14 @@
       "priority": "CRITICAL",
       "status": "IMPLEMENTED",
       "origin": "Owner explicitly required that red CI failures be root-fixed regardless of whether the cause is game code, workflow infrastructure, runner availability or queue pollution because large-scale production must continue.",
-      "intent": "Treat CI reliability as production infrastructure: remove periodic hosted-runner polling, keep static validation on the supervised Windows runner, prevent planning/warehouse-only deltas from occupying the UE4 device lane, allow the sole active production lane to preempt stale device work, and provide an opt-in AC keep-awake runner mode.",
+      "intent": "Treat CI reliability as production infrastructure: keep Pre-Unreal event-driven on an independent GitHub-hosted Windows static lane, prevent planning/warehouse-only and pure static-workflow deltas from occupying or restarting the UE4 device lane, allow the sole active production lane to preempt stale device work, and keep the local UE4 runner supervised/awake for engine validation.",
       "acceptance_criteria": [
-        "Pre-Unreal no longer runs on a 20-minute schedule and no longer depends on ubuntu-latest.",
+        "Pre-Unreal has no periodic schedule and runs on windows-latest independently of the local UE4 runner.",
         "Preparation-only WholeGame/Warehouse/PrivateOffline/docs deltas do not enqueue Unreal Build Validation.",
+        "A change confined to .github/workflows/pre-unreal-validation.yml does not enqueue/restart Unreal Build Validation.",
         "The sole active production/* runtime PR may cancel superseded work in the shared UE4 device concurrency group while develop pushes remain serialized.",
         "The watchdog installer can keep the runner machine awake on AC and keeps the runner task restartable under the proven interactive Windows user context.",
-        "Fresh exact-head Pre-Unreal and UE4.27.2 runs execute repository steps and complete without zero-step/BlobNotFound infrastructure failure before C2 merges."
+        "Fresh exact-head Pre-Unreal executes real repository steps; UE4.27.2 remains separately required on the self-hosted Windows runner before C2 merges."
       ],
       "dependencies": [
         "REQ-STABILITY-001",
@@ -3573,13 +3574,13 @@
       "requirements": [
         "REQ-STABILITY-002"
       ],
-      "resolution": "Production CI is treated as a first-class build system, not a passive reporting layer. The 20-minute Pre-Unreal poll is removed; Pre-Unreal runs on the supervised self-hosted Windows UE4 runner; preparation/warehouse-only changes are filtered out of Unreal Build Validation; and the sole active production/* runtime lane may preempt stale work in the shared UE4 device concurrency group. This avoids recurring hosted-runner zero-step reds and prevents non-runtime preparation from blocking the only UE4.27.2 device lane.",
+      "resolution": "Production CI is treated as a first-class build system. The 20-minute poll remains removed. Pre-Unreal is an event-driven windows-latest static lane independent of local UE4 availability; preparation/warehouse-only and pure Pre-Unreal-workflow changes are filtered out of Unreal Build Validation; and the sole active production/* runtime lane may preempt stale work in the shared UE4 device concurrency group. This prevents static validation from stalling behind an offline UE4 machine while also protecting the only UE4.27.2 device lane from queue pollution.",
       "implementation_contract": [
-        ".github/workflows/pre-unreal-validation.yml has no schedule and uses self-hosted/Windows/X64/ue4-27.",
-        ".github/workflows/unreal-build-validation.yml ignores known preparation-only paths for push/PR engine validation.",
+        ".github/workflows/pre-unreal-validation.yml has no schedule and uses windows-latest.",
+        ".github/workflows/unreal-build-validation.yml ignores known preparation-only paths and .github/workflows/pre-unreal-validation.yml for engine validation.",
         "Unreal concurrency remains one shared device lane; only acceptance/* and the sole active production/* PR head may cancel superseded work.",
         "Scripts/install_runner_watchdog.ps1 exposes -KeepRunnerAwakeOnAC and configures restart/battery/wake-safe task settings.",
-        "PG-167 prevents regression to scheduled hosted Pre-Unreal capacity or preparation-only UE queue pollution."
+        "PG-167 prevents regression to scheduled ubuntu polling, local-runner coupling for static validation, or preparation/static-workflow UE queue pollution."
       ],
       "evidence_boundary": "STATIC-VALIDATED design/contract only until fresh exact-head repository-step CI proves the new lane. No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED claim is made by this decision.",
       "authority": "USER_EXPLICIT_DIRECTION"
@@ -5752,9 +5753,10 @@
         "Immediately previous Pre-Unreal #957 completed SUCCESS with the full 35-step job list on the same ubuntu-latest workflow.",
         "PR #80 prior head dc70a48c5bda0904b64c2009a9088fd0d0bd7ec5 passed Pre-Unreal #954 before only status-documentation changes advanced the head.",
         "Both #963 attempts and both #966 attempts again produced zero repository steps and BlobNotFound 404 job logs.",
-        "Unreal #776 from already-merged warehouse PR #79 remained queued on the shared UE4 device lane while planning Unreal #801 remained pending, proving queue pollution independently of game C++."
+        "Unreal #776 from already-merged warehouse PR #79 remained queued on the shared UE4 device lane while planning Unreal #801 remained pending, proving queue pollution independently of game C++.",
+        "After the first root-repair head b9fdce7352f30364c895d08391d30105fb8b14e2, both Pre-Unreal #967 and Unreal #802 remained queued with zero steps on the self-hosted device lane for more than ten minutes, demonstrating that coupling static validation to the local UE runner can stall all evidence when that machine is unavailable."
       ],
-      "conclusion": "The repository now removes the two avoidable CI exposure paths: scheduled GitHub-hosted Pre-Unreal capacity and non-runtime preparation occupying the UE4 device lane. Current runtime code remains unchanged by this repair; exact-head repository-step proof is still required.",
+      "conclusion": "Static validation is now decoupled from both the failing ubuntu-latest path and local UE4 runner availability by using event-driven windows-latest. Engine proof remains on the supervised self-hosted UE4 runner. Preparation and pure static-workflow changes are isolated from the engine queue.",
       "prevention": "PG-167 forbids restoring scheduled hosted Pre-Unreal polling and requires preparation-path isolation. The active production/* lane may preempt stale shared-device work; the supervised Windows runner remains mandatory and can be kept awake on AC during build windows."
     }
   ],
@@ -5776,6 +5778,6 @@
     ],
     "superseded_run_policy": "On acceptance/* branches, newer commits cancel older in-progress runs sharing the UE4 device concurrency group. Non-acceptance branches remain serialized.",
     "current_boundary": "Canonical develop has final branch/workspace hardening plus PG-159/PG-160 warning-debt guards. Fresh exact-head compile and P1C01 PIE warning log are the remaining proof.",
-    "runner_policy": "Use the supervised interactive-user self-hosted Windows runner as the exact-head static/UE4 execution authority; do not consume scheduled GitHub-hosted Pre-Unreal capacity. Known preparation-only deltas stay off the Unreal device lane. The sole active production/* runtime PR and acceptance/* repair heads may preempt stale shared-device work. During production build windows, reinstall the watchdog with -KeepRunnerAwakeOnAC if the machine would otherwise sleep."
+    "runner_policy": "Use event-driven windows-latest for Pre-Unreal static validation and the supervised interactive-user self-hosted Windows runner only for UE4.27.2 engine validation. Do not schedule polling. Known preparation-only and pure Pre-Unreal-workflow changes stay off the Unreal device lane. The sole active production/* runtime PR and acceptance/* repair heads may preempt stale shared-device work. During production build windows, reinstall the watchdog with -KeepRunnerAwakeOnAC if the machine would otherwise sleep."
   }
 }

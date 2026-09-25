@@ -5,6 +5,7 @@ on:
     branches:
       - develop
     paths-ignore:
+      - '.github/workflows/pre-unreal-validation.yml'
       - 'Docs/**'
       - '.gitignore'
       - 'Data/ProjectGovernor.json'
@@ -22,6 +23,7 @@ on:
     branches:
       - develop
     paths-ignore:
+      - '.github/workflows/pre-unreal-validation.yml'
       - 'Docs/**'
       - '.gitignore'
       - 'Data/ProjectGovernor.json'

@@ -4588,20 +4588,18 @@ for pg142_evidence_id, pg142_marker in EVIDENCE_MARKERS.items():
 # PG-167: CI capacity must not be consumed by polling or preparation-only Unreal jobs.
 pg167_pre = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
 for pg167_symbol in [
-    "- self-hosted",
-    "- Windows",
-    "- X64",
-    "- ue4-27",
+    "runs-on: windows-latest",
     "cancel-in-progress: true",
 ]:
     if pg167_symbol not in pg167_pre:
-        fail(f"PG-167 supervised self-hosted Pre-Unreal contract missing: {pg167_symbol}")
-if "schedule:" in pg167_pre or "runs-on: ubuntu-latest" in pg167_pre:
-    fail("PG-167 Pre-Unreal must not consume scheduled GitHub-hosted capacity")
+        fail(f"PG-167 hosted Windows Pre-Unreal contract missing: {pg167_symbol}")
+if "schedule:" in pg167_pre or "runs-on: ubuntu-latest" in pg167_pre or "- self-hosted" in pg167_pre:
+    fail("PG-167 Pre-Unreal must be an event-driven hosted Windows static lane independent of the UE4 device runner")
 
 pg167_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 for pg167_symbol in [
     "paths-ignore:",
+    ".github/workflows/pre-unreal-validation.yml",
     "Data/WholeGame*.json",
     "Data/*Warehouse*.json",
     "Data/P1C01WorldBuildIntakePacketV1.json",

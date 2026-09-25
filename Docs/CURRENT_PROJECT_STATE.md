@@ -1,3 +1,10 @@
+## 2026-09-26 - CI static/engine lane decoupling
+
+- **Observed after first repair:** exact-head Pre-Unreal #967 and Unreal #802 both remained queued with zero steps on the self-hosted UE4 lane for >10 minutes; this is runner availability, not repository-step failure.
+- **Root refinement:** Pre-Unreal now runs event-driven on `windows-latest`, independent of the local UE4 machine. The 20-minute schedule stays removed.
+- **Engine queue protection:** pure `.github/workflows/pre-unreal-validation.yml` changes are ignored by Unreal Build Validation, so static-CI maintenance cannot restart/cancel an expensive queued engine build.
+- **Evidence boundary:** STATIC-VALIDATED design only until the new hosted Windows Pre-Unreal executes and passes; UE4.27.2 proof still requires the self-hosted runner before C2 merge.
+
 ## 2026-09-26 - CI root repair for large-production continuity
 
 - **Owner directive:** red CI is now treated as a production blocker regardless of whether the cause is repository code, hosted infrastructure, runner availability or stale queue state.
