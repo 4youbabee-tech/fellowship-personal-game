@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "batch_id": "WAREHOUSE_CC0_QUATERNIUS_V1",
+  "batch_id": "WAREHOUSE_QUATERNIUS_SUPPORT_V2",
   "status": "AUTHORIZED_FOR_STAGING",
   "provider": "QUATERNIUS",
-  "license": "CC0",
+  "license": "PER_PACK_PAGE_LICENSE_CAPTURE_REQUIRED",
   "purpose": "Bulk-stage CC0 character, animation, fauna, creature-pipeline, architecture and prop packs for supporting production use and rig/world pipeline coverage.",
   "staging_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\Quaternius",
   "source_pages": [
@@ -90,9 +90,21 @@
       "url": "https://quaternius.com/packs/fantasypropsmegakit.html",
       "category": "PROPS",
       "required_final_format": "FBX"
+    },
+    {
+      "id": "QTN_FARM_BUILDINGS",
+      "url": "https://quaternius.com/packs/farmbuildings.html",
+      "category": "SHIRE_SUPPORT_ARCHITECTURE",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "use": [
+        "Shire farm support silhouettes",
+        "background barns/outbuildings after art-direction review"
+      ]
     }
   ],
   "rules": [
+    "Capture the license shown on each official pack page; do not infer a blanket provider license for older/newer packs.",
     "Only public downloads discovered from the official Quaternius pack pages are eligible.",
     "Animated production-character output accepted by the project remains FBX only even if the source pack also contains OBJ/glTF/Blend.",
     "Creature/monster packs are pipeline/support stock only; canonical hero creatures still require species-specific art, real rigs, deformation review and visual acceptance.",
