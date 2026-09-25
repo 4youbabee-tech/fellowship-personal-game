@@ -1,4 +1,5 @@
 ## 2026-09-25 - Consolidation and validation-cost correction
+- Sanitized audio registry salvage: **DATA-CONSOLIDATED / RUNTIME-UNPROVEN**. Canonical develop receives the generated-audio/P1C01 bank metadata without signed external download URLs; WAV mastering, UE import, playback, lip-sync, listening and device acceptance remain pending.
 - Repository/branch hygiene: **IMPLEMENTED ON PR #70 / MERGE-PENDING**. Canonical runtime handoff target remains `develop`; stale feature/repair branches are not authoritative.
 - Local launcher self-update hazard: **FIX_COMMITTED / PROOF PENDING**. The running batch now uses a temp copy before pulling, preventing mid-execution mutation. No local rerun evidence is claimed yet.
 - Unreal classifier cost correction: **FIX_COMMITTED / CI PROOF PENDING**. PR classification uses the canonical base SHA, so ordinary C++/runtime/data/SourceAssets deltas use a core lane (build/import/Automation/runtime/warning) with no package/cook even when intermediate branch runs were cancelled. Packaging remains mandatory for Build.cs/Target.cs/Config/streaming/packaging-critical deltas.
