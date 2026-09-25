@@ -1,3 +1,11 @@
+## W01 P1C01 Mega Production control point - Drop C2
+- Canonical parent: `develop@82fc4deaf2e2a99cfebd0d8d1b99a42b5d922ffe` (Drop C1 merge).
+- Active candidate: PR #78 on `production/w01-p1c01-foliage-wind-v1` targeting `develop`.
+- Scope: dedicated lightweight foliage master + parameterized SimpleGrassWind WPO + DistanceCullFade attenuation only.
+- Explicit non-scope: no density increase, no C3 material reassignment, no gameplay runtime loading changes, no NPC/LivingWorld ownership changes.
+- Required machine gate: exact-head Pre-Unreal + UE4.27.2 production-import/core validation.
+- Human/device boundary: no visual, pacing, FPS, VRAM, overdraw or target-device acceptance until separately observed.
+
 ## W01 P1C01 Mega Production control point - Drop C1
 - Canonical parent: `develop@712a81cac150b7fdb338a4cf7554d4f27d4b5191`.
 - Parent proof: Pre-Unreal #894 SUCCESS; Unreal #729 SUCCESS.
