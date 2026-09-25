@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "batch_id": "WAREHOUSE_CC0_POLYHAVEN_P1C01_MATERIALS_V3",
+  "batch_id": "WAREHOUSE_CC0_POLYHAVEN_P1C01_MATERIALS_V4",
   "status": "AUTHORIZED_FOR_STAGING",
   "provider": "POLY_HAVEN",
   "provider_api": "https://api.polyhaven.com",
@@ -367,7 +367,15 @@
     "https://polyhaven.com/a/rust_coarse_01",
     "https://polyhaven.com/a/snow_floor",
     "https://polyhaven.com/a/snow_01",
-    "https://polyhaven.com/a/stone_tiles"
+    "https://polyhaven.com/a/stone_tiles",
+    "https://polyhaven.com/a/leafy_grass",
+    "https://polyhaven.com/a/forest_floor",
+    "https://polyhaven.com/a/park_dirt",
+    "https://polyhaven.com/a/leaves_forest_ground",
+    "https://polyhaven.com/a/wood_stone_pathway",
+    "https://polyhaven.com/a/wood_chips",
+    "https://polyhaven.com/a/forrest_ground_01",
+    "https://polyhaven.com/a/forest_leaves_02"
   ],
-  "notes": "V2 extends the source-page-verified CC0 2K intake with Shire grass, woodland floor, damp soil, leaf litter, rustic path and organic ground detail. Existing script still skips displacement/high-poly payloads; STAGED is not READY/INTEGRATED."
+  "notes": "V4 synchronizes the verified source-page registry with every currently authorized Poly Haven material slug, including the Shire grass/woodland/soil/path additions. Existing staging still targets 2K and skips displacement/high-poly payloads; STAGED is not READY/INTEGRATED."
 }
