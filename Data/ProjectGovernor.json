@@ -4272,7 +4272,7 @@
   ],
   "session_handoff": {
     "checkpoint_id": "CP-W01-P1C01-DROP-C2-V2",
-    "source_head": "4980c3c8b1f4660863940a58e052dcf8095772cf",
+    "source_head": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
     "branch": "production/w01-p1c01-foliage-wind-v2",
     "pull_request": 80,
     "verified": {
@@ -4291,7 +4291,7 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "W01/P1C01 Drop C2 v2: clean transplant of the lightweight foliage wind implementation onto the merged Warehouse/Master Resource Bible baseline. Near/mid uses UE4.27 SimpleGrassWind material function; far uses no-WPO master. Exact-head proof pending.",
+    "active_wave": "W01/P1C01 Drop C2 v2: clean transplant onto develop@4980c3c8...; legacy source_head remains the last-green validation baseline per governor_handoff contract, while integration_train.baseline records the actual candidate parent. Exact-head proof pending.",
     "next_actions": [
       "1. Open the clean C2 v2 PR against develop.",
       "2. Require exact-head Pre-Unreal + UE4.27.2 core/production-import green.",
@@ -5689,6 +5689,15 @@
       "root_cause": "The UE4.27 DistanceCullFade expression class is not link-usable from ShireJourneyEditorTools despite visible headers.",
       "correction": "Remove DistanceCullFade dependency; near/mid uses direct SimpleGrassWind and far distance cost is removed through M_ProductionFoliageFar with no WPO.",
       "prevention": "PG-166 rejects MaterialExpressionDistanceCullFade/DistanceScaledWindWeight in C2."
+    },
+    {
+      "id": "KNOWN-C2V2-GOVERNOR-HANDOFF-SYNC",
+      "status": "ROOT_FIXED_PENDING_FRESH_PRE_UNREAL",
+      "observed_head": "40df9dbe8a83cbf03689403e3e27b5bbcddb8fb3",
+      "symptom": "Pre-Unreal #951 structure validation passed, then Project Governor failed PG-150 execution-board PR alignment and the legacy source_head/last-green baseline contract.",
+      "root_cause": "The clean-transplant metadata update treated session_handoff.source_head as the new branch parent, but governor_handoff defines it as the last fully green evidence baseline; the execution-board header also omitted the literal '- PR: #80' contract.",
+      "correction": "Keep integration_train.baseline as the actual C2 v2 parent, restore session_handoff.source_head to validation_snapshot.last_green.sha, and expose PR #80 literally in MASTER_EXECUTION_BOARD.",
+      "prevention": "When moving runtime lanes, update branch_workflow/session_handoff/execution board atomically and preserve the legacy source_head evidence semantics until the validator schema is intentionally migrated."
     }
   ],
   "w00_acceptance_fast_path": {
