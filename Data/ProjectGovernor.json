@@ -5698,6 +5698,22 @@
       "root_cause": "The clean-transplant metadata update treated session_handoff.source_head as the new branch parent, but governor_handoff defines it as the last fully green evidence baseline; the execution-board header also omitted the literal '- PR: #80' contract.",
       "correction": "Keep integration_train.baseline as the actual C2 v2 parent, restore session_handoff.source_head to validation_snapshot.last_green.sha, and expose PR #80 literally in MASTER_EXECUTION_BOARD.",
       "prevention": "When moving runtime lanes, update branch_workflow/session_handoff/execution board atomically and preserve the legacy source_head evidence semantics until the validator schema is intentionally migrated."
+    },
+    {
+      "id": "KNOWN-CI-UBUNTU-NULL-STEPS-BLOB404",
+      "status": "INFRASTRUCTURE_FAILURE_OBSERVED_CODE_CAUSE_UNPROVEN",
+      "observed_runs": [
+        "Pre-Unreal #959 on PR #80 head eaf5699596db8f9ea661bf64b5ea9395b97db45b",
+        "Pre-Unreal #960 on PR #81 head b7f05dc76c4c0c36019c912aab0886f8bba2b9be"
+      ],
+      "evidence": [
+        "Both failed validate jobs report steps=null.",
+        "Fetching both job logs returns GitHub BlobNotFound 404.",
+        "Immediately previous Pre-Unreal #957 completed SUCCESS with the full 35-step job list on the same ubuntu-latest workflow.",
+        "PR #80 prior head dc70a48c5bda0904b64c2009a9088fd0d0bd7ec5 passed Pre-Unreal #954 before only status-documentation changes advanced the head."
+      ],
+      "conclusion": "Do not attribute these runs to C++/validator/project failure unless a rerun produces repository step evidence. Treat as CI infrastructure/log-acquisition incident.",
+      "prevention": "Never patch runtime code from a zero-step/no-log failure. Retry the same exact head or wait for a fresh workflow; only root-fix repository content when a concrete step/log identifies the failing contract."
     }
   ],
   "w00_acceptance_fast_path": {
