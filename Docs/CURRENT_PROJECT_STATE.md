@@ -1,3 +1,13 @@
+## 2026-09-25 - W00 lessons lock after current develop machine-green
+- Pre-Unreal #875 confirmed the PG-161 correction still used the wrong textual anchor (helper-function `Docs/` test instead of the main changed-file loop). The guard is now anchored inside `foreach($p in $changed)` so it inspects only the forbidden ordinary-safe branch. Exact-head rerun pending; this remains validator self-test work, not a game regression.
+- Pre-Unreal #871 exposed one self-test false positive in the new PG-161 guard: it confused the required explicit validation-policy-only path with forbidden ordinary metadata classification. The guard is narrowed structurally (PG-164); exact-head rerun is pending. This is validator logic, not an Unreal/game regression.
+- Current canonical `develop@ed3587aa9d1f0025a5f10778a6be8048e2c778d1` is now **COMPILE-TESTED + HEADLESS/PACKAGED-RUNTIME-VALIDATED** by Pre-Unreal #869 SUCCESS and Unreal #704 SUCCESS.
+- #704 passed UE4.27.2 editor build, production import, Automation, startup, P1C01-P1C08 runtime sweep, route/story roundtrip, warning-debt guard, Windows cook/package, 37 packaged Runtime Data JSON verification, packaged startup and hardware snapshot. This does **not** promote DEVICE-TESTED, VISUALLY-ACCEPTED, PERFORMANCE-ACCEPTED, or final human PIE acceptance.
+- Two-day regression memory is being locked before W01: PG-161 prevents redundant full UE/package work across cancelled metadata parents by allowing only path-bounded safe-ancestry proof reuse; PG-162 locks immutable temp-copy local launchers; PG-163 locks develop/main-only programmer handoff discipline.
+- Root cause of the redundant #704 cook was classifier ancestry semantics, not a gameplay/package defect: a cancelled immediate metadata parent hid still-valid nearby green proof and triggered the fail-safe FULL lane. The classifier now has explicit safe transitive governance proof and validation-policy-only inheritance while remaining fail-closed for runtime/assets/config/streaming/packaging changes.
+- W00 remains open only for the final owner-side canonical-develop P1C01 PIE tail: `ShireStartupGrounding: PASS`, no fall, and no project-owned `SetStaticMesh ... Mobility is Static` warning. The local immutable-launcher rerun is captured in the same session.
+- No new gameplay feature wave starts before that evidence. If clean, close W00 and immediately open the P1C01 Shire production vertical slice under Gate 6/7.
+
 ## 2026-09-25 - Post-cleanup canonical handoff
 - Remote branch cleanup is **complete**: Branch Cleanup run #1 succeeded and a live repository query returned exactly two branches: `develop` and `main`.
 - `develop` is now the sole canonical development/programmer-handoff lane; `main` remains stable release/scheduler ownership only.

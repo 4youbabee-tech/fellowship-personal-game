@@ -57,6 +57,43 @@ function Test-ParentWholeWorkflowGreen([string]$ParentSha) {
     }
 }
 
+function Test-SafeGovernanceDelta([string]$GitExe, [string]$BaseSha, [string]$HeadSha, [string[]]$SafeExact) {
+    $delta = @(& $GitExe diff --name-only $BaseSha $HeadSha)
+    if ($LASTEXITCODE -ne 0 -or $delta.Count -eq 0) { return $false }
+
+    foreach ($path in $delta) {
+        $n = $path -replace "\\","/"
+        $safe = (
+            $n.StartsWith("Docs/") -or
+            ($SafeExact -contains $n) -or
+            $n -eq "Scripts/project_governor.py" -or
+            $n -eq "Scripts/asset_quality_audit.py" -or
+            $n -eq ".github/workflows/pre-unreal-validation.yml" -or
+            $n -eq "SHIRE_UPDATE_BUILD_LAUNCH.bat" -or
+            $n -eq "SHIRE_PIE_VERIFY.bat"
+        )
+        if (-not $safe) { return $false }
+    }
+    return $true
+}
+
+function Test-NearestSafeGovernanceAncestorGreen([string]$GitExe, [string]$ParentSha, [string]$HeadSha, [string[]]$SafeExact) {
+    if (-not $env:GH_TOKEN) { return $false }
+
+    $ancestors = @(& $GitExe rev-list --first-parent --max-count=20 $ParentSha)
+    if ($LASTEXITCODE -ne 0 -or $ancestors.Count -eq 0) { return $false }
+
+    foreach ($candidate in $ancestors) {
+        if (-not (Test-ParentWholeWorkflowGreen $candidate)) { continue }
+        if (-not (Test-SafeGovernanceDelta $GitExe $candidate $HeadSha $SafeExact)) { continue }
+
+        Write-Host "TRANSITIVE_GOVERNANCE_PROOF_PASS ancestor=$candidate parent=$ParentSha head=$HeadSha"
+        return $true
+    }
+
+    return $false
+}
+
 function Test-PackagingCookConfigOnlyDelta([string]$GitExe, [string]$ParentSha, [string]$HeadSha) {
     $path = "Config/DefaultGame.ini"
     $diff = @(& $GitExe diff --unified=0 $ParentSha $HeadSha -- $path)
@@ -283,6 +320,7 @@ $acceptanceExact = @(
 
 $fullImpact = @()
 $coreImpact = @()
+$policyOnlyTouched = @()
 $acceptanceTouched = @()
 foreach($p in $changed){
     $n=$p -replace "\\","/"
@@ -290,15 +328,16 @@ foreach($p in $changed){
     if(
         $n.StartsWith("Docs/") -or
         ($safeExact -contains $n) -or
-        $n -eq "Scripts/pre_unreal_validate.py" -or
         $n -eq "Scripts/project_governor.py" -or
         $n -eq "Scripts/asset_quality_audit.py" -or
-        $n -eq "Scripts/classify_unreal_validation.ps1" -or
         $n -eq ".github/workflows/pre-unreal-validation.yml" -or
-        $n -eq ".github/workflows/unreal-build-validation.yml" -or
         $n -eq "SHIRE_UPDATE_BUILD_LAUNCH.bat" -or
         $n -eq "SHIRE_PIE_VERIFY.bat"
     ){
+        continue
+    }
+    if($n -eq "Scripts/classify_unreal_validation.ps1" -or $n -eq "Scripts/pre_unreal_validate.py"){
+        $policyOnlyTouched += $n
         continue
     }
     if($acceptanceExact -contains $n){
@@ -336,6 +375,16 @@ foreach($p in $changed){
 if($fullImpact.Count -gt 0){
     $fullImpact | ForEach-Object { Write-Host "FULL_UNREAL_FILE $_" }
     Set-Mode "full" "engine-runtime-config-or-unclassified-delta" $parentSha
+    exit 0
+}
+
+if($policyOnlyTouched.Count -gt 0 -and $acceptanceTouched.Count -eq 0 -and $coreImpact.Count -eq 0 -and $fullImpact.Count -eq 0){
+    if(Test-ParentWholeWorkflowGreen $parentSha){
+        $policyOnlyTouched | ForEach-Object { Write-Host "VALIDATION_POLICY_ONLY_FILE $_" }
+        Set-Mode "inherit" "validation-policy-only-inherits-green-parent-no-engine-repeat" $parentSha
+        exit 0
+    }
+    Set-Mode "full" "validation-policy-only-parent-not-green-fail-safe" $parentSha
     exit 0
 }
 
@@ -381,4 +430,9 @@ if(Test-ParentWholeWorkflowGreen $parentSha){
     exit 0
 }
 
-Set-Mode "full" "governance-only-but-parent-unreal-not-green" $parentSha
+if(Test-NearestSafeGovernanceAncestorGreen $git $parentSha $env:TARGET_SHA $safeExact){
+    Set-Mode "inherit" "governance-docs-only-inherits-nearest-safe-green-ancestor" $parentSha
+    exit 0
+}
+
+Set-Mode "full" "governance-only-no-safe-green-ancestor-fail-safe" $parentSha

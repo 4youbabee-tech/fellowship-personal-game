@@ -33,7 +33,10 @@
     "Developer-owned automation should reproduce and verify defects before asking the owner to spend play time on technical regression checks; never relabel machine checks as visual or pacing approval.",
     "Validation harness semantics are first-class: repeated log copies must not inflate defect counts, save tests must prove disk roundtrip, and every failing debt gate must print concrete asset/package identities.",
     "After W00 machine repair closure, do not delay W01 for invented repair work. Only concrete regression evidence may reopen architectural/root repair.",
-    "Final W00 automation must prove packaged runtime data and packaged executable startup before W01 opens."
+    "Final W00 automation must prove packaged runtime data and packaged executable startup before W01 opens.",
+    "Do not repeat an expensive UE4 build/cook/package gate merely because an immediate metadata parent was cancelled; reuse the nearest still-valid green proof only across an explicitly safe governance/docs-only ancestry, and fail closed if any runtime/asset/config/packaging path intervenes.",
+    "Local tracked launch controllers must never update themselves in place. Any helper that performs git pull while running must execute from an immutable temporary copy and preserve the explicit develop lane.",
+    "The programmer handoff must remain branch-simple: develop is canonical development/integration, main is stable/release, and temporary implementation branches self-clean after merge once meaningful content is integrated."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -2782,6 +2785,16 @@
       "id": "INV-WAREHOUSE-STAGING",
       "description": "Warehouse acquisition/cataloguing must not wait for UE runtime/PIE/device gates. Assets may be DISCOVERED/CANDIDATE/STAGED in bulk, but no file may be promoted to READY_FOR_IMPORT without intake validation (integrity, format, scale/unit, topology/UV/skeleton/texture sanity as applicable, provenance/metadata, and malware/archive hygiene). INTEGRATED and ACCEPTED states still require the relevant UE4.27 build/import/runtime/visual/audio/device evidence.",
       "auto_override": false
+    },
+    {
+      "id": "INV-CI-EVIDENCE-REUSE",
+      "description": "Expensive Unreal/package evidence is reused only across an explicit safe ancestry. Cancelled metadata parents do not force a recook when a nearby green ancestor remains valid, but any runtime/asset/config/streaming/packaging/unclassified delta breaks inheritance and requires the appropriate fresh lane.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-BRANCH-HANDOFF",
+      "description": "develop is the sole canonical development/programmer-handoff branch and main is stable/release. Temporary branches are short-lived and removed after merge; stale diverged branches are never bulk-merged as a substitute for selective salvage.",
+      "auto_override": false
     }
   ],
   "conflict_status_values": [
@@ -3426,6 +3439,24 @@
         "Docs/WORLD_DETAIL_LEDGER.md",
         "Data/GameCompletenessMatrix.json"
       ]
+    },
+    {
+      "id": "DEC-036",
+      "title": "Reuse proven CI evidence without repeating expensive work",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-CI-001",
+        "REQ-GOV-001",
+        "REQ-MEM-001"
+      ],
+      "resolution": "Use three validation cost classes: safe governance/docs/offline metadata inherits valid nearby green proof without UE execution; ordinary runtime/C++/Data/SourceAssets uses core build/import/Automation/runtime/warning validation without cook/package; Config/Build.cs/Target.cs/streaming/package/cook/release changes use the full package lane. If the immediate parent was cancelled, governance-only ancestry may search backward for the nearest green first-parent proof only when every intervening path is explicitly safe. Validation-policy-only classifier/Pre-Unreal edits may inherit a green parent without engine repetition.",
+      "rationale": "Two days of W00 stabilization showed that repeating already-proven build/cook/package work wastes time and increases runner exposure without increasing confidence when only metadata changed. Evidence reuse must remain fail-closed and path-bounded so speed never weakens correctness.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Unreal #704 SUCCESS on develop ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
+        "Docs/PROJECT_GUARDIAN.md PG-161",
+        "Scripts/classify_unreal_validation.ps1"
+      ]
     }
   ],
   "open_conflicts": [],
@@ -3702,7 +3733,7 @@
       "target-device DX11 720p Low-Medium performance/memory/GC/tick profiling",
       "chapter-specific human PIE/pacing/visual acceptance evidence"
     ],
-    "note": "Automated W00 machine closure is green on Pre-Unreal #816, Warehouse #232 and Unreal #651 Attempt 2. Packaged startup required the P1C01 grounding PASS marker. Human PIE grounding/traversal evidence remains pending; no device/visual/performance acceptance is claimed.",
+    "note": "Current canonical develop ed3587aa... is machine-green via Pre-Unreal #869 and Unreal #704, including UE4.27.2 build/import/Automation/startup/P1C01-P1C08/route-state/warning/package/data/startup/hardware. Historical real P1C01 grounding proof exists, but one final owner-side PIE confirmation on canonical post-cleanup develop remains before the W00 repair lane is closed. No DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED status is inferred.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
@@ -3715,15 +3746,15 @@
       ],
       "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
     },
-    "last_green_head": "efdb2e291505472247fae921945b083b3cc1ce2c",
+    "last_green_head": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
     "evidence": {
-      "last_engine_proven_head": "efdb2e291505472247fae921945b083b3cc1ce2c",
-      "pre_unreal": "#816 SUCCESS.",
-      "unreal_build": "#651 Attempt 2 SUCCESS through build/import/Automation/runtime/package/data/startup/hardware.",
+      "last_engine_proven_head": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
+      "pre_unreal": "#869 SUCCESS.",
+      "unreal_build": "#704 SUCCESS through build/import/Automation/runtime/warning/package/data/startup/hardware.",
       "warehouse": "#232 SUCCESS; no-delta path stayed GitHub-hosted and self-hosted staging was skipped.",
       "root_correction_boundary": "Public/Private migration and its known validator/persistent-runner correction families are machine-accepted on CP-W00-154. Do not reopen validator/Governor/root-code cleanup unless a new concrete regression appears."
     },
-    "evidence_scope": "efdb2e... is COMPILE-TESTED + HEADLESS/PACKAGED-RUNTIME-VALIDATED for the automated W00 suite. Human PIE/device/visual/performance labels remain unproven.",
+    "evidence_scope": "ed3587aa... is COMPILE-TESTED + HEADLESS/PACKAGED-RUNTIME-VALIDATED for the current automated W00 suite. Human PIE/device/visual/performance labels remain separate.",
     "current_owner_observation": {
       "sha": "4879a19999951354676341f032c358ac98679c44",
       "pre_unreal": {
@@ -4165,26 +4196,30 @@
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
     "rule": "Finish W00 only after the final develop build/PIE proof also confirms no C4996 StaticMaterials warning and no project-owned SetStaticMesh mobility warning.",
     "machine_baseline": {
-      "sha": "9066d6494248def59680820bbd6ca8e10038ea6e",
-      "pre_unreal": "#821 SUCCESS",
-      "unreal": "#656 SUCCESS acceptance-only; parent #655 provides full core UE proof",
-      "scope": "Automated W00 chain is green. Human P1C01 PIE grounding/warning-tail evidence remains separate and unclaimed."
+      "sha": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
+      "pre_unreal": "#869 SUCCESS",
+      "unreal": "#704 SUCCESS full machine chain",
+      "scope": "Current canonical develop is COMPILE-TESTED and headless/package-runtime validated. Human P1C01 PIE grounding/mobility-warning confirmation remains separate; no device/visual/performance acceptance is inferred."
     },
     "w01_freeze": "ACTIVE_UNTIL_W00_EXIT_CRITERIA"
   },
   "immediate_next_large_actions": [
-    "Require fresh Pre-Unreal to prove PG-026 accepts the bounded exact-head checkout and the remaining static chain is green.",
-    "Use the admin-only Unreal fast path for this validator/governance reconciliation if its classifier permits; do not manufacture another heavy engine run unless the workflow classifies the delta as engine-impacting.",
-    "Then validate packaged Data JSON runtime execution, real audio, target-device profiling and human PIE/pacing/visual acceptance."
+    "1. Merge the bounded W00 lessons-lock maintenance PR only after exact-head Pre-Unreal/validation-policy checks are green; do not open gameplay scope in parallel.",
+    "2. Pull canonical develop in the Documents clone and run SHIRE_PIE_VERIFY.bat from the developer clone, not the Actions runner workspace.",
+    "3. In P1C01 capture ShireStartupGrounding: PASS on the exact develop SHA, confirm the player does not fall, and confirm no project-owned SetStaticMesh Mobility is Static warning appears.",
+    "4. If that human PIE tail is clean, close W00. Do not create another repair wave without a concrete regression.",
+    "5. Before W01 code changes, register the P1C01 crowd-ownership and living-world-budget corrections in WORLD_DETAIL_LEDGER.md.",
+    "6. Open W01/P1C01 as the sole production vertical-slice campaign: unify ambient population ownership under LivingWorldDirector/object pooling, resolve event-budget authority drift, then terrain/geography, Hobbiton architecture, materials/vegetation, lighting/water, character presentation, living Shire activity, quest/audio polish and measured target-device profiling.",
+    "7. Keep Part II/III implementation gated; other regions remain roadmap/foundation work until the Shire satisfies Gate 6/7 evidence."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-158",
+    "checkpoint_id": "CP-W00-159",
     "source_head": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
-    "branch": "develop",
-    "pull_request": 0,
+    "branch": "maintenance/w00-lessons-lock-v1",
+    "pull_request": 73,
     "verified": {
-      "last_full_machine_green": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be: Pre-Unreal #820 SUCCESS + Unreal #655 SUCCESS",
-      "latest_automated_closure": "9066d6494248def59680820bbd6ca8e10038ea6e: Pre-Unreal #821 SUCCESS + Unreal #656 SUCCESS acceptance-only",
+      "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
+      "latest_automated_closure": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: current canonical develop machine-green",
       "proof_boundary": "Machine/headless/package evidence only; human PIE/device/visual/performance acceptance remains separate."
     },
     "exact_head_scope": [
@@ -4197,16 +4232,22 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "Post-cleanup canonical develop handoff; no active repair branch.",
+    "active_wave": "W00 lessons-lock maintenance only: preserve two-day regression memory and prevent redundant validation/cook repetition. No W01 gameplay implementation yet.",
     "next_actions": [
-      "Pull canonical develop in the Documents clone.",
-      "Run one P1C01 PIE confirmation and capture ShireStartupGrounding PASS, no player fall, and absence of project-owned SetStaticMesh mobility warnings.",
-      "If that human PIE tail is clean, close W00 and start the P1C01 production-quality Shire vertical slice."
+      "1. Merge the bounded W00 lessons-lock maintenance PR only after exact-head Pre-Unreal/validation-policy checks are green; do not open gameplay scope in parallel.",
+      "2. Pull canonical develop in the Documents clone and run SHIRE_PIE_VERIFY.bat from the developer clone, not the Actions runner workspace.",
+      "3. In P1C01 capture ShireStartupGrounding: PASS on the exact develop SHA, confirm the player does not fall, and confirm no project-owned SetStaticMesh Mobility is Static warning appears.",
+      "4. If that human PIE tail is clean, close W00. Do not create another repair wave without a concrete regression.",
+      "5. Before W01 code changes, register the P1C01 crowd-ownership and living-world-budget corrections in WORLD_DETAIL_LEDGER.md.",
+      "6. Open W01/P1C01 as the sole production vertical-slice campaign: unify ambient population ownership under LivingWorldDirector/object pooling, resolve event-budget authority drift, then terrain/geography, Hobbiton architecture, materials/vegetation, lighting/water, character presentation, living Shire activity, quest/audio polish and measured target-device profiling."
     ],
     "unverified_acceptance": [
-      "P1C01 human PIE grounding/traversal confirmation on canonical post-cleanup develop",
+      "W00 lessons-lock PR exact-head Pre-Unreal proof after PG-164 correction",
+      "P1C01 human PIE grounding/traversal confirmation on final canonical develop after maintenance merge",
+      "absence of project-owned SetStaticMesh mobility warnings in that exact PIE session",
+      "local immutable-launcher rerun proof in the Documents clone",
       "target-device 720p Low-Medium performance profiling",
-      "P1C01 visual acceptance",
+      "P1C01 visual/pacing/NPC-believability acceptance",
       "real audio listening/mix acceptance"
     ],
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
@@ -4225,15 +4266,15 @@
         }
       },
       "latest_observed": {
-        "sha": "9066d6494248def59680820bbd6ca8e10038ea6e",
+        "sha": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
         "pre_unreal": {
-          "sha": "9066d6494248def59680820bbd6ca8e10038ea6e",
-          "run_id": 36075815776,
+          "sha": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
+          "run_id": 36114260452,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "9066d6494248def59680820bbd6ca8e10038ea6e",
-          "run_id": 36075815713,
+          "sha": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
+          "run_id": 36114260514,
           "status": "SUCCESS"
         }
       }
@@ -4333,10 +4374,10 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
-    "current_short_branch": "develop",
+    "current_short_branch": "maintenance/w00-lessons-lock-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 0,
-    "open_pr_policy": "No active feature/repair PR is authoritative after cleanup. `develop` is the canonical programmer-handoff and integration baseline; future work must use a new short-lived single-purpose PR targeting develop.",
+    "current_open_pr": 73,
+    "open_pr_policy": "PR #73 is the sole bounded W00 lessons-lock maintenance train targeting develop. It may change only governance/regression-memory/validation-policy surfaces needed to preserve learned invariants. No W01 gameplay implementation is mixed into it.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
       "date": "2026-09-25",
@@ -5301,7 +5342,7 @@
     ]
   },
   "w00_final_closure": {
-    "status": "AUTOMATED_CLOSURE_GREEN_HUMAN_PIE_WARNING_TAIL_PENDING",
+    "status": "CURRENT_DEVELOP_MACHINE_GREEN_HUMAN_PIE_WARNING_TAIL_PENDING",
     "branch": "develop",
     "base_green_head": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
     "plan": "Data/W00FinalClosurePlanV1.json",
@@ -5322,10 +5363,10 @@
     "open_rule": "If automated closure gates are green, W01 may open; remaining human-only acceptance is tracked separately and may not be misrepresented as architectural repair.",
     "governor_integration_baseline": "develop",
     "automated_evidence": {
-      "develop_head": "9066d6494248def59680820bbd6ca8e10038ea6e",
-      "pre_unreal": "#821 SUCCESS",
-      "unreal": "#656 SUCCESS acceptance-only",
-      "inherited_core_parent": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be / Unreal #655 SUCCESS"
+      "develop_head": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
+      "pre_unreal": "#869 SUCCESS",
+      "unreal": "#704 SUCCESS full chain",
+      "inherited_history": "Earlier #655/#656/#651 evidence remains historical support, but #704 is the current canonical develop machine baseline."
     }
   },
   "active_acceptance_branch": "acceptance/w00-final-closure-v1",
@@ -5487,6 +5528,43 @@
       "root_cause": "The importer previously used a deprecated direct StaticMaterials API in an older source state; procedural mesh assignment requires mobility to be set before SetStaticMesh.",
       "permanent_policy": "Use GetStaticMaterials/SetStaticMaterials only. All procedural StaticMeshActor SpawnShape paths must set Movable before SetStaticMesh. PG-159/PG-160 enforce both invariants.",
       "reopen_rule": "Reopen if a fresh exact-head build still emits the StaticMaterials C4996 warning or fresh PIE still emits project-owned SetStaticMesh mobility warnings."
+    },
+    {
+      "id": "KF-W00-VALIDATION-COST-001",
+      "status": "ROOT_FIX_COMMITTED_EXACT_HEAD_PROOF_PENDING",
+      "symptom": "A governance/docs-only post-cleanup develop update ran the full UE4 core suite and BuildCookRun/package in Unreal #704 even though the content delta itself did not require a recook.",
+      "evidence": [
+        "Unreal #704 on ed3587aa9d1f0025a5f10778a6be8048e2c778d1 completed SUCCESS through build/import/Automation/startup/P1C01-P1C08/route-state/warning/package/data/startup/hardware.",
+        "The classifier reached FULL because its immediate parent #700 was cancelled, despite nearby prior green engine/package proof.",
+        "The redundant run still produced a clean current-develop machine baseline; this incident is about validation cost/ancestry semantics, not a gameplay failure."
+      ],
+      "root_cause": "Governance-only inheritance checked only the immediate parent for a completed green Unreal workflow. Branch-cleanup/metadata merges created a cancelled direct parent, so the fail-safe escalated to FULL instead of recognizing a still-valid green ancestor across safe metadata-only changes.",
+      "permanent_policy": "Governance/docs-only validation may inherit the nearest green first-parent Unreal proof only when the complete ancestor-to-head changed-file set is explicitly safe. Runtime/asset/config/streaming/package/cook/release or unclassified changes break inheritance. Classifier/Pre-Unreal policy-only changes have an explicit green-parent inherit path and do not recook.",
+      "reopen_rule": "Reopen if a safe governance/docs-only change still triggers full cook/package solely due to a cancelled metadata parent, or if transitive inheritance crosses any runtime/asset/config/packaging-impacting file."
+    },
+    {
+      "id": "KF-W00-LOCAL-LAUNCHER-SELFUPDATE-001",
+      "status": "FIX_COMMITTED_LOCAL_RERUN_PENDING",
+      "symptom": "The Documents-clone launcher updated its own tracked .bat file during git pull, then CMD continued parsing shifted content and emitted 'defined is not recognized', blank branch output and CANONICAL_BRANCH_REQUIRED.",
+      "evidence": [
+        "Owner screenshot from the Documents clone showed the self-update corruption immediately after pull converted texture files and updated the launcher.",
+        "SHIRE_UPDATE_BUILD_LAUNCH.bat and SHIRE_PIE_VERIFY.bat now bootstrap through unique %TEMP% copies before any repository update."
+      ],
+      "root_cause": "The running control script lived inside the Git working tree that it was mutating.",
+      "permanent_policy": "Any tracked Windows launcher that pulls the repository must execute from an immutable temporary copy, pass the real project root explicitly, and clean up the temporary copy afterward. It must never silently change branches.",
+      "reopen_rule": "Reopen if a local develop update can still corrupt the running launcher, lose branch identity, or execute interactive Unreal from the Actions runner workspace."
+    },
+    {
+      "id": "KF-W00-PG161-001",
+      "status": "FIX_COMMITTED_EXACT_HEAD_PROOF_PENDING",
+      "symptom": "Pre-Unreal #871 failed PG-161 immediately after the lessons-lock change even though the classifier had the intended explicit validation-policy-only path.",
+      "evidence": [
+        "Pre-Unreal #871: ERROR: PG-161 classifier script must not be silently treated as ordinary governance/docs-only input.",
+        "Pre-Unreal #875 reproduced the same false positive because the first correction anchored at a helper-function Docs/ test instead of the main changed-file loop."
+      ],
+      "root_cause": "The PG-161 validator initially searched too broad a textual region; the first correction still anchored at an earlier helper-function Docs/ test, so the inspected slice crossed later declarations and included the allowed explicit policy-only hook.",
+      "permanent_policy": "Regression guards inspect the smallest structural region that represents the forbidden behavior. PG-161 anchors inside the main changed-file classification loop, isolates the ordinary safe-governance branch, and separately requires the explicit validation-policy-only path.",
+      "reopen_rule": "Reopen if PG-161 rejects the explicit policy-only hook again or permits classifier/pre-unreal policy changes to be treated as ordinary safe metadata."
     }
   ],
   "w00_acceptance_fast_path": {

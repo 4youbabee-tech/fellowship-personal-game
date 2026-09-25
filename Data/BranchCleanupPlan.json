@@ -4,7 +4,7 @@
   "authority": "Data/ProjectGovernor.json",
   "canonical_branch": "develop",
   "stable_release_branch": "main",
-  "status": "POST_CLEANUP_METADATA_FINALIZATION",
+  "status": "READY_FOR_W00_LESSONS_LOCK_SELF_CLEANUP",
   "truth_boundary": "This plan records branch hygiene only. It does not claim PIE/device/visual acceptance.",
   "preserve": [
     {
@@ -65,7 +65,8 @@
     "ci/w00-acceptance-fast-path-v1",
     "maintenance/repository-consolidation-v1",
     "archive/generated-audio-intake-v1",
-    "maintenance/post-cleanup-handoff-v1"
+    "maintenance/post-cleanup-handoff-v1",
+    "maintenance/w00-lessons-lock-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -77,6 +78,7 @@
     "status": "COMPLETE_FOR_POST_MERGE_REF_CLEANUP",
     "rule": "No historical diverged branch is authorized for wholesale merge. Unique still-valid planning/audio/ops content was selectively salvaged; stale pre-Public/Private runtime history is superseded by develop.",
     "physical_cleanup": "Branch Cleanup workflow deletes delete_after_merge refs only after this plan lands on develop and verifies develop/main remain.",
-    "archive_resolution": "archive/generated-audio-intake-v1 contains Data/Docs metadata only in the branch comparison; its still-valid registries were consolidated into PR #70 in sanitized form. No branch-only WAV/UE binary/master asset was found in the changed-file set, so the archive ref is no longer required."
+    "archive_resolution": "archive/generated-audio-intake-v1 contains Data/Docs metadata only in the branch comparison; its still-valid registries were consolidated into PR #70 in sanitized form. No branch-only WAV/UE binary/master asset was found in the changed-file set, so the archive ref is no longer required.",
+    "lessons_lock": "maintenance/w00-lessons-lock-v1 is temporary and must be deleted after merge. Final survivor set remains develop + main."
   }
 }
