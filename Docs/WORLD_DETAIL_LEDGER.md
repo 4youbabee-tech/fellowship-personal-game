@@ -1,3 +1,12 @@
+## 2026-09-25 - Whole-game source diversity expansion from Master External Resource Bible
+
+- The new 225-source external-resource Bible is adopted as a world-production sourcing map, not a canon source.
+- Whole-game world detail may now draw from broader generic/open/licensed material, vegetation, architecture, prop, character-base, animation, VFX, audio, terrain/scanning and authoring-tool lanes while story/location identity remains governed by project canon sources.
+- P1C01 remains the first fully assembled benchmark, but warehouse preparation now explicitly covers every region and biome through the nine `BigProductionBuildLaunchV1` waves.
+- LOTR/fan/franchise-specific search lanes remain reference/quarantine unless separately cleared; generic sources are preferred for production building blocks.
+- Real-world terrain/GIS/scanning sources inform authored fantasy terrain and material creation only; they do not redefine Middle-earth geography.
+- New external world-detail assets remain subject to scale/pivot/UV/collision/LOD/material/overdraw/memory review before READY_FOR_IMPORT or integration.
+
 ## 2026-09-25 - Global world rule: playable-film safe windows
 
 - Every major chapter/world state must be designed as: **Locked Canon Beat -> Playable Safe Window -> Locked/Bounded Set-Piece -> Persistent World-State Change -> Player Control** where chronology permits.
