@@ -1,3 +1,11 @@
+## 2026-09-25 - Source-grounded post-Amon-Hen promotion graph added
+
+- Added `Data/WholeGameRoutePromotionGraphV1.json` from the supplied `01_STORY_AND_TIMELINE_BIBLE` and `07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX`.
+- After Amon Hen, production/runtime planning is explicitly multi-threaded rather than falsely linear: Rohan, Ring-bearer, Gondor and late-Rohan lanes advance through synchronization barriers.
+- F2-01 through F3-07 chapter titles, locations and locked outcomes are recorded in the graph from project sources.
+- Shared cinematics/world-state changes wait for required peer-route barriers; local playable safe windows remain allowed under DEC-038.
+- This is planning only. P1C01 remains the sole active runtime benchmark until Gate 6/7.
+
 ## 2026-09-25 - Whole-game region production packets created
 
 - Added `Data/WholeGameRegionProductionPacketsV1.json` on the global preparation lane.
