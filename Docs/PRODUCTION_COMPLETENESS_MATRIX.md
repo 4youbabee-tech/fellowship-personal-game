@@ -2,6 +2,7 @@
 
 - **Governor decision:** DEC-038 ACCEPTED.
 - **Canon beats/outcomes:** LOCKED by Story/Timeline/Mission sources.
+- **Scope:** WHOLE GAME — every chapter and major playable region from beginning to final ending; P1C01 is only the first benchmark.
 - **Interactive safe windows:** REQUIRED around major beats when source chronology permits.
 - **Cutscene-only chapter design:** NOT ACCEPTABLE when meaningful interaction can exist without changing canon.
 - **Open-world divergence:** NOT ACCEPTABLE when it contradicts chronology or locked outcomes.
