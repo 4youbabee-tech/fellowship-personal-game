@@ -1,3 +1,11 @@
+## 2026-09-25 - PR #78 Unreal #758 C2 link correction
+
+- **Pre-Unreal #923:** SUCCESS on `93c23a5b7...`.
+- **Unreal #758:** FAILURE at link only; unresolved `UMaterialExpressionDistanceCullFade::GetPrivateStaticClass`.
+- **Root correction:** remove DistanceCullFade dependency. Near/mid uses direct parameterized SimpleGrassWind; far LOD cost reduction is provided by the dedicated no-WPO foliage master.
+- **Architecture:** no Actor Tick, no density increase, no runtime asset-loading change, no LivingWorld ownership change.
+- **Validation:** STATIC-VALIDATED pending fresh exact-head engine proof; no compile/import/PIE/device/visual/performance acceptance claimed.
+
 ## 2026-09-25 - PR #78 Unreal #751 C2 compile correction
 
 - **Pre-Unreal #916:** SUCCESS on `96e6fc2da...`.
