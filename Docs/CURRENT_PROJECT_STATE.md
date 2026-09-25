@@ -1,3 +1,22 @@
+## 2026-09-25 - PR #75 core engine proof passed; package red isolated to classifier/base-fetch path
+
+- Unreal #721 attempt 2 reached and passed the required **core** chain on exact head `5a58c8d3d33f07a2b3440f0ab85e42ca20c00695`: ShireJourneyEditor build, production import, Automation QA, startup smoke, P1C01-P1C08 runtime audit, route/state audit and warning-debt guard all succeeded.
+- The overall workflow red was **not** a C++/runtime failure. The classifier could not resolve the PR base because the stable checkout fetched only the PR head at depth 2; it fell back to `full` with `reason=delta-unavailable-fail-safe`.
+- That unnecessary full lane then failed inside the legacy W00 package helper before cook at `W00_DBGHELP_DESTINATION_WRITE_FAIL`: access denied while probing the staged `dbghelp.dll` destination.
+- This delta is ordinary C++/Data/world-production work, so project policy requires the **core** lane and no package/cook. The classifier now fetches the explicit PR base SHA on demand and retries the diff before any full-lane fail-safe.
+- Drop A remains source-complete and core-engine-proven on the previous exact head; the new classifier head still requires fresh Pre-Unreal + Unreal core workflow success before merge.
+
+## 2026-09-25 - W01/P1C01 Mega Production Drop A started
+
+- Canonical parent: `develop@ec3208919910b58bd6a87ce59c17e31312bd7bab` with Pre-Unreal #885 SUCCESS + Unreal #720 SUCCESS.
+- Active branch: `production/w01-p1c01-world-foundation-v1`; intended PR: #75 targeting `develop`.
+- W00 remains closed. PR #74 ambient ownership + budget authority is merged and machine-green.
+- Drop A implements the first production-world dependency: Shire terrain/geography foundation using deterministic HISM hills/slopes/riverbanks, explicit cull ranges and preserved quest/story anchors.
+- The old repeated actor-owned CP49 terrain silhouette layer is removed in favor of instancing. Existing broad collision foundation and startup grounding contracts are untouched.
+- Source-backed order remains: terrain/geography -> Hobbiton/Bag End -> materials/vegetation -> lighting/sky/fog/water -> character presentation -> living Shire -> quest/audio polish -> target-device profiling -> Gate 6/7.
+- Regression guard: PG-163 now enforces instanced geography ownership/cull bands and rejects a return to repeated terrain actor spawning.
+- Status: **STATIC-VALIDATED / EXACT-HEAD PRE-UNREAL + UE4.27.2 CORE PROOF PENDING**. No new PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-25 - PR #74 repeated red isolated to incomplete W00->W01 governance transition
 
 - Pre-Unreal #882 and #883 did **not** report an Unreal/runtime regression. They failed in Project Governor coherence because some fields still described the old W00 control point while current_focus/execution_control had already moved to W01.

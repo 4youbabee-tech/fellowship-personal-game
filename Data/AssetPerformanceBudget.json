@@ -219,5 +219,54 @@
       ]
     },
     "evidence_boundary": "No FPS/VRAM/draw-call improvement is claimed until measured on the target laptop."
+  },
+  "p1c01_world_foundation": {
+    "status": "IMPLEMENTED_PENDING_TARGET_DEVICE_MEASUREMENT",
+    "owner": "AShirePrototypeWorldBuilder",
+    "target": "i7 6th gen / 8 GB RAM / approx 2 GB VRAM / DX11 / 720p Low-Medium / 30 FPS floor",
+    "instanced_cull_cm": {
+      "grass": [
+        1200,
+        5200
+      ],
+      "flowers": [
+        800,
+        3200
+      ],
+      "shrubs": [
+        1500,
+        6500
+      ],
+      "distant_trees": [
+        5000,
+        19000
+      ],
+      "rocks": [
+        2200,
+        9000
+      ],
+      "path_stones": [
+        900,
+        5000
+      ],
+      "geography_hills": [
+        16000,
+        32000
+      ],
+      "geography_slopes": [
+        12000,
+        28000
+      ],
+      "river_banks": [
+        9000,
+        26000
+      ]
+    },
+    "rules": [
+      "Repeated non-story geography and micro-detail use HISM/ISM rather than per-instance actors where practical.",
+      "Do not raise density from planning estimates; measure target-device CPU/GPU/VRAM first.",
+      "Heavy production assets remain soft/asynchronous; this drop reuses already-resident imported world meshes and adds no synchronous LoadObject path.",
+      "Visual terrain meshes do not replace deterministic grounding/collision proof."
+    ]
   }
 }

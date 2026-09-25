@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "plan_id": "TRILOGY_WORLD_FOUNDATION_V1",
-  "status": "ACTIVE_PARALLEL_PREPRODUCTION",
+  "status": "W01_P1C01_RUNTIME_FOUNDATION_ACTIVE",
   "authority": "Data/ProjectGovernor.json",
-  "strategy": "P1C01 remains the first assembled benchmark, while reusable world foundations and asset-bank coverage advance in parallel across all major trilogy regions.",
+  "strategy": "P1C01 Shire is the active production benchmark. Reusable world foundations may be prepared in parallel, but no other region may outrun P1C01 Gate 6/7 evidence.",
   "shared_systems": {
     "terrain": [
       "landscape material families",
@@ -84,7 +84,7 @@
       ],
       "foundation_stock": {
         "architecture": {
-          "status": "CANDIDATE_STOCK_ACTIVE",
+          "status": "NEXT_DROP_HOBBITON_BAG_END",
           "families": [
             "hobbit architecture",
             "pastoral terrain",
@@ -97,7 +97,7 @@
           "high_count_rule": "repeated decorative modules use ISM/HISM with explicit cull distances"
         },
         "terrain_materials": {
-          "status": "AUTHORIZED_INTAKE_ACTIVE",
+          "status": "RUNTIME_GEOGRAPHY_ACTIVE_MATERIAL_REFINEMENT_NEXT",
           "families": [
             "terrain base",
             "path/road",
@@ -166,7 +166,7 @@
           ]
         },
         "traversal_collision": {
-          "status": "FOUNDATION_REQUIRED",
+          "status": "RUNTIME_FOUNDATION_ACTIVE_PENDING_ENGINE_PROOF",
           "families": [
             "ground-safe placement",
             "deterministic collision probes",
@@ -178,7 +178,8 @@
           "AMBIENTCG",
           "POLY_HAVEN",
           "QUATERNIUS",
-          "KENNEY"
+          "KENNEY",
+          "FAB_QUixel_MEGASCANS"
         ],
         "runtime_gate": "PART_I_EXISTING_RUNTIME_ONLY"
       }
@@ -3023,5 +3024,46 @@
     "Classify repeated decorative stock for ISM/HISM and explicit cull-distance use before world integration.",
     "Keep heavy content soft/async-owned through FStreamableManager; do not turn warehouse fill into synchronous runtime loading.",
     "Do not promote STAGED to READY_FOR_IMPORT, IMPORTED, INTEGRATED or ACCEPTED without the evidence required by each state."
-  ]
+  ],
+  "p1c01_vertical_slice": {
+    "status": "DROP_A_TERRAIN_GEOGRAPHY_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "branch": "production/w01-p1c01-world-foundation-v1",
+    "source_basis": [
+      "03_WORLD_LOCATIONS_AND_MAP_BIBLE: Shire/Hobbiton pastoral hills, lanes, farms, Hobbit-holes; landmark, traversal, streaming, NPC and QA contracts.",
+      "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX: F1-01 Shire onboarding/social/birthday mission package and deterministic mission-state/checkpoint rules.",
+      "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE: modular-kit, provenance and per-asset validation discipline.",
+      "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION: visual/modeling aid only; never overrides canon/source files.",
+      "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX: performance, audio, living-world and production-system contracts."
+    ],
+    "ordered_drops": [
+      "A_TERRAIN_GEOGRAPHY_FOUNDATION",
+      "B_HOBBITON_BAG_END_ARCHITECTURE",
+      "C_MATERIALS_VEGETATION",
+      "D_LIGHTING_SKY_FOG_WATER",
+      "E_CHARACTER_PRESENTATION",
+      "F_LIVING_SHIRE_NPC_FAUNA_ENVIRONMENT",
+      "G_QUEST_AUDIO_POLISH",
+      "H_TARGET_DEVICE_PROFILING_GATE_6_7"
+    ],
+    "geography_zones": [
+      "Bag End / Hill",
+      "Hobbiton village / The Water",
+      "East fields / farm belt",
+      "Wooded road transition",
+      "Brandywine / Bucklebury ferry approach"
+    ],
+    "runtime_rules": [
+      "Do not move stable quest/story anchors merely to create visual terrain.",
+      "Repeated non-story terrain silhouettes use HISM with explicit cull distances.",
+      "Grounding remains protected by the broad collision foundation and router grounding contract.",
+      "Sightline breaks reveal later geography through travel rather than exposing the entire route from Bag End.",
+      "No new synchronous heavy asset loading is introduced by the geography pass."
+    ],
+    "acceptance": [
+      "Exact-head Pre-Unreal and UE4.27.2 core lane green.",
+      "P1C01 owner PIE confirms grounding/traversal/collision remains stable after terrain pass.",
+      "Human visual review confirms at least one dominant Hobbiton/Bag End vista and readable route progression.",
+      "Target-device profiling precedes any density increase."
+    ]
+  }
 }

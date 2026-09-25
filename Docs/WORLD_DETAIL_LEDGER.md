@@ -1,5 +1,15 @@
 # WORLD DETAIL LEDGER
 
+## 2026-09-25 - W01 P1C01 Mega Production Drop A: terrain/geography foundation
+
+- **Source basis checked before implementation:** Source 03 defines the Shire/Hobbiton as pastoral hills, lanes, farms and Hobbit-holes with warm domestic scale, readable landmark/vista navigation, sightline/terrain-aware streaming and collision/navmesh/backtracking QA. Source 07 keeps F1-01 in the Shire as an onboarding/social/birthday mission package with deterministic mission-state ownership. Source 09 requires modular reuse, provenance and per-asset validation. Source 10 is visual/modeling aid only. Source 11 remains the systems/performance/audio authority.
+- **Runtime scope:** geography only. Quest IDs, story postconditions, named-character canon state and established quest coordinates are not moved by this drop.
+- **Implemented:** dedicated HISM geography groups for terraced hills, village slopes and river banks; route-framing placements across Bag End/Hobbiton -> East Fields -> Wooded Road -> Brandywine/Ferry; old repeated CP49 terrain AStaticMeshActor layer removed.
+- **Performance:** explicit cull bands now cover grass, flowers, shrubs, distant trees, rocks, path stones and the new geography groups. The broad collision foundation and router grounding contract remain the gameplay safety net.
+- **Asset sourcing lane:** existing project-owned Shire/Common meshes are used first. External terrain/material candidates remain item-level reviewed through the existing manifest; ambientCG/Poly Haven are preferred low-friction material/environment sources, with entitled Fab/Megascans, Quaternius and Kenney evaluated where useful. Provider listing never equals item approval.
+- **Next dependency:** after this exact head is machine-green, proceed directly to Hobbiton + Bag End architecture. Do not detour into unrelated regions or reopen W00 without a concrete regression.
+- **Evidence boundary:** STATIC-VALIDATED at implementation time. Fresh exact-head engine validation and owner PIE/visual review remain required.
+
 ## 2026-09-25 - W01 implementation drop 1: single-owner ambient life + budget authority
 
 - **Runtime ownership change implemented:** `ShirePrototypeWorldBuilder` no longer directly spawns `AShireAmbientNPC` crowds. P1C01 ambient population now converges on `ALivingWorldDirector`, which already owns pooling, culling, chapter targets, danger thinning and micro-event/fauna lifecycle. Named/story `AShireNPC` actors remain builder-owned.

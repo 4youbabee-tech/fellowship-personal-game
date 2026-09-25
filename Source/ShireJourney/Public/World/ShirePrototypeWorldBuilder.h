@@ -86,6 +86,9 @@ private:
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* DistantTreeCanopyInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* RockInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* PathStoneInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographyHillInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographySlopeInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographyRiverBankInstances;
     UPROPERTY() ADirectionalLight* RuntimeSun = nullptr;
     UPROPERTY() ASkyLight* RuntimeSky = nullptr;
     UPROPERTY() APostProcessVolume* RuntimePostProcess = nullptr;
@@ -104,6 +107,7 @@ private:
     void ConfigureFoliageInstances();
     void SpawnFoliagePass();
     void SpawnScenicDetailPass();
+    void SpawnGeographyFoundationPass();
     void SpawnVillage();
     void SpawnProductionVillageDetailLayer();
     void SpawnSideStories();

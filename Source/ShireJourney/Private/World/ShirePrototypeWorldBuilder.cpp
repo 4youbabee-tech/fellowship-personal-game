@@ -98,6 +98,37 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     PathStoneInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     PathStoneInstances->SetCastShadow(false);
 
+    GeographyHillInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("GeographyHillInstances"));
+    GeographyHillInstances->SetupAttachment(RuntimeRoot);
+    GeographyHillInstances->SetMobility(EComponentMobility::Movable);
+    GeographyHillInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GeographyHillInstances->SetCastShadow(false);
+
+    GeographySlopeInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("GeographySlopeInstances"));
+    GeographySlopeInstances->SetupAttachment(RuntimeRoot);
+    GeographySlopeInstances->SetMobility(EComponentMobility::Movable);
+    GeographySlopeInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GeographySlopeInstances->SetCastShadow(false);
+
+    GeographyRiverBankInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("GeographyRiverBankInstances"));
+    GeographyRiverBankInstances->SetupAttachment(RuntimeRoot);
+    GeographyRiverBankInstances->SetMobility(EComponentMobility::Movable);
+    GeographyRiverBankInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GeographyRiverBankInstances->SetCastShadow(false);
+
+    // Explicit cull bands keep the first production world pass bounded on the
+    // i7/8 GB/~2 GB VRAM target. These are starting budgets, not acceptance proof.
+    GrassInstances->SetCullDistances(1200, 5200);
+    FlowerInstances->SetCullDistances(800, 3200);
+    ShrubInstances->SetCullDistances(1500, 6500);
+    DistantTreeTrunkInstances->SetCullDistances(5000, 19000);
+    DistantTreeCanopyInstances->SetCullDistances(5000, 19000);
+    RockInstances->SetCullDistances(2200, 9000);
+    PathStoneInstances->SetCullDistances(900, 5000);
+    GeographyHillInstances->SetCullDistances(16000, 32000);
+    GeographySlopeInstances->SetCullDistances(12000, 28000);
+    GeographyRiverBankInstances->SetCullDistances(9000, 26000);
+
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereAsset(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderAsset(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
@@ -179,6 +210,19 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionCommonFernClumpMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump"));
     ProductionCommonReedClusterMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonReedCluster.SM_CommonReedCluster"));
     ProductionCommonFootbridgeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFootbridge.SM_CommonFootbridge"));
+
+    if (GeographyHillInstances && ProductionCommonTerracedHillMesh)
+    {
+        GeographyHillInstances->SetStaticMesh(ProductionCommonTerracedHillMesh);
+    }
+    if (GeographySlopeInstances && ProductionCommonVillageSlopeMesh)
+    {
+        GeographySlopeInstances->SetStaticMesh(ProductionCommonVillageSlopeMesh);
+    }
+    if (GeographyRiverBankInstances && ProductionCommonRiverBankMesh)
+    {
+        GeographyRiverBankInstances->SetStaticMesh(ProductionCommonRiverBankMesh);
+    }
 
     if (ProductionTreeTrunkMesh) DistantTreeTrunkInstances->SetStaticMesh(ProductionTreeTrunkMesh);
     if (ProductionTreeCanopyMesh) DistantTreeCanopyInstances->SetStaticMesh(ProductionTreeCanopyMesh);
@@ -863,22 +907,29 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
             false);
     }
 
-    // Horizon / occlusion hills. These deliberately hide later regions so the player
-    // discovers them by travelling instead of seeing the ferry from Bag End.
-    const FVector HillCenters[] = {
-        FVector(-2300,-1500,-145), FVector(-1200,1650,-150), FVector(700,1850,-160),
-        FVector(3200,-1500,-150), FVector(4300,1650,-150),
-        FVector(9800,-1750,-150), FVector(10800,1850,-155),
-        FVector(13900,-1850,-145), FVector(15100,1900,-150),
-        FVector(19000,-1750,-150), FVector(20500,1750,-155),
-        FVector(24700,-1600,-150)
-    };
-    for (int32 Index = 0; Index < UE_ARRAY_COUNT(HillCenters); ++Index)
+    // Fallback-only horizon silhouettes. When the authored common terrain mesh is
+    // resident, SpawnGeographyFoundationPass owns this repeated geography through HISM.
+    if (!ProductionCommonTerracedHillMesh)
     {
-        const float XY = 12.0f + 2.0f * static_cast<float>(Index % 3);
-        SpawnShape(ProductionTurfMoundMesh ? ProductionTurfMoundMesh : SphereMesh, HillCenters[Index], FVector(XY, XY * 0.72f, 6.8f + 0.6f * (Index % 2)),
-            Index % 2 == 0 ? FLinearColor(0.13f,0.33f,0.09f) : FLinearColor(0.15f,0.37f,0.10f),
-            FRotator::ZeroRotator, false);
+        const FVector HillCenters[] = {
+            FVector(-2300,-1500,-145), FVector(-1200,1650,-150), FVector(700,1850,-160),
+            FVector(3200,-1500,-150), FVector(4300,1650,-150),
+            FVector(9800,-1750,-150), FVector(10800,1850,-155),
+            FVector(13900,-1850,-145), FVector(15100,1900,-150),
+            FVector(19000,-1750,-150), FVector(20500,1750,-155),
+            FVector(24700,-1600,-150)
+        };
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(HillCenters); ++Index)
+        {
+            const float XY = 12.0f + 2.0f * static_cast<float>(Index % 3);
+            SpawnShape(
+                ProductionTurfMoundMesh ? ProductionTurfMoundMesh : SphereMesh,
+                HillCenters[Index],
+                FVector(XY, XY * 0.72f, 6.8f + 0.6f * (Index % 2)),
+                Index % 2 == 0 ? FLinearColor(0.13f,0.33f,0.09f) : FLinearColor(0.15f,0.37f,0.10f),
+                FRotator::ZeroRotator,
+                false);
+        }
     }
 
     // Continuous curved main road from Bag End to the Brandywine.
@@ -1603,6 +1654,126 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
 
 
 
+void AShirePrototypeWorldBuilder::SpawnGeographyFoundationPass()
+{
+    if (!GeographyHillInstances || !GeographySlopeInstances || !GeographyRiverBankInstances)
+    {
+        return;
+    }
+
+    GeographyHillInstances->ClearInstances();
+    GeographySlopeInstances->ClearInstances();
+    GeographyRiverBankInstances->ClearInstances();
+
+    int32 HillCount = 0;
+    int32 SlopeCount = 0;
+    int32 BankCount = 0;
+
+    if (ProductionCommonTerracedHillMesh)
+    {
+        struct FGeoPlacement
+        {
+            FVector Location;
+            FVector Scale;
+            float Yaw;
+        };
+
+        // Pastoral sightline breaks frame the playable route without moving any
+        // story/quest anchor. Later areas should reveal through travel, not from Bag End.
+        const FGeoPlacement Hills[] = {
+            { FVector(-2850,2050,-175), FVector(3.15f,2.40f,1.55f), -18.0f },
+            { FVector(-2250,1650,-145), FVector(3.05f,2.25f,1.45f), 12.0f },
+            { FVector(-1200,1900,-165), FVector(2.85f,2.30f,1.45f), 31.0f },
+            { FVector(150,1880,-160), FVector(3.20f,2.35f,1.48f), 62.0f },
+            { FVector(1350,1650,-150), FVector(2.95f,2.20f,1.42f), 95.0f },
+            { FVector(3600,2020,-170), FVector(3.10f,2.30f,1.48f), 18.0f },
+            { FVector(6100,2050,-175), FVector(3.30f,2.35f,1.52f), 42.0f },
+            { FVector(7900,2150,-180), FVector(3.10f,2.45f,1.50f), 78.0f },
+            { FVector(10200,2250,-185), FVector(3.45f,2.50f,1.55f), 104.0f },
+            { FVector(13200,2300,-190), FVector(3.35f,2.45f,1.58f), 132.0f },
+            { FVector(15100,2180,-185), FVector(3.15f,2.35f,1.52f), 166.0f },
+            { FVector(17600,2280,-190), FVector(3.45f,2.55f,1.58f), 205.0f },
+            { FVector(20500,2350,-195), FVector(3.55f,2.60f,1.62f), 244.0f },
+            { FVector(22800,2100,-180), FVector(3.20f,2.40f,1.50f), 282.0f },
+            { FVector(24900,1880,-170), FVector(3.10f,2.35f,1.48f), 318.0f }
+        };
+
+        for (const FGeoPlacement& P : Hills)
+        {
+            GeographyHillInstances->AddInstance(
+                FTransform(FRotator(0.0f, P.Yaw, 0.0f), P.Location, P.Scale));
+            ++HillCount;
+        }
+    }
+
+    if (ProductionCommonVillageSlopeMesh)
+    {
+        struct FSlopePlacement
+        {
+            FVector Location;
+            FVector Scale;
+            float Yaw;
+        };
+
+        const FSlopePlacement Slopes[] = {
+            { FVector(-2550,-1700,-90), FVector(2.45f,1.90f,1.28f), 8.0f },
+            { FVector(-650,-1750,-95), FVector(2.35f,1.85f,1.25f), -10.0f },
+            { FVector(2450,-1850,-92), FVector(2.55f,1.95f,1.26f), 7.0f },
+            { FVector(4550,-2050,-98), FVector(2.65f,2.00f,1.30f), -12.0f },
+            { FVector(6200,-2350,-100), FVector(2.50f,1.90f,1.28f), 8.0f },
+            { FVector(8850,-2200,-95), FVector(2.55f,1.95f,1.28f), -10.0f },
+            { FVector(11200,-2150,-100), FVector(2.70f,2.00f,1.32f), 6.0f },
+            { FVector(13700,-2250,-105), FVector(2.60f,1.95f,1.30f), -9.0f },
+            { FVector(16000,-2100,-95), FVector(2.55f,1.90f,1.28f), 8.0f },
+            { FVector(18600,-2150,-100), FVector(2.75f,2.00f,1.32f), -7.0f },
+            { FVector(21100,-2050,-95), FVector(2.60f,1.95f,1.30f), 10.0f },
+            { FVector(24600,-1850,-90), FVector(2.45f,1.85f,1.25f), -8.0f }
+        };
+
+        for (const FSlopePlacement& P : Slopes)
+        {
+            GeographySlopeInstances->AddInstance(
+                FTransform(FRotator(0.0f, P.Yaw, 0.0f), P.Location, P.Scale));
+            ++SlopeCount;
+        }
+    }
+
+    if (ProductionCommonRiverBankMesh)
+    {
+        struct FBankPlacement
+        {
+            FVector Location;
+            FVector Scale;
+            float Yaw;
+        };
+
+        const FBankPlacement Banks[] = {
+            { FVector(-1380,260,-32), FVector(1.35f,0.92f,0.72f), 86.0f },
+            { FVector(-760,350,-32), FVector(1.35f,0.92f,0.72f), 266.0f },
+            { FVector(22650,-1220,-35), FVector(2.80f,1.50f,1.00f), 2.0f },
+            { FVector(22950,420,-35), FVector(2.80f,1.50f,1.00f), 178.0f },
+            { FVector(23950,-1220,-35), FVector(2.80f,1.50f,1.00f), 2.0f },
+            { FVector(24250,420,-35), FVector(2.80f,1.50f,1.00f), 178.0f }
+        };
+
+        for (const FBankPlacement& P : Banks)
+        {
+            GeographyRiverBankInstances->AddInstance(
+                FTransform(FRotator(0.0f, P.Yaw, 0.0f), P.Location, P.Scale));
+            ++BankCount;
+        }
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireWorldFoundation: geography-pass hills=%d slopes=%d banks=%d route=BagEnd-Hobbiton-Fields-WoodedRoad-Ferry"),
+        HillCount,
+        SlopeCount,
+        BankCount);
+}
+
+
 void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
 {
     // CP40 visual-production layer. This pass deliberately prefers imported original
@@ -1618,44 +1789,8 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
         }
     };
 
-    // CP49 terrain silhouette layer: authored low-poly terrain breaks the long flat
-    // blockout horizon while preserving the established quest/traversal coordinates.
-    const FVector VillageHills[] = {
-        FVector(-2250, 1650, -145), FVector(-1200, 1900, -165),
-        FVector(150, 1880, -160), FVector(1350, 1650, -150),
-        FVector(6100, 2050, -175), FVector(7900, 2150, -180),
-        FVector(13200, 2300, -190), FVector(15100, 2180, -185),
-        FVector(20500, 2350, -195), FVector(22800, 2100, -180)
-    };
-    for (int32 Index = 0; Index < UE_ARRAY_COUNT(VillageHills); ++Index)
-    {
-        SpawnProd(
-            ProductionCommonTerracedHillMesh,
-            VillageHills[Index],
-            FVector(2.8f + 0.25f * (Index % 3), 2.2f + 0.2f * (Index % 2), 1.45f),
-            FRotator(0.0f, static_cast<float>((Index * 31) % 360), 0.0f),
-            false);
-    }
-
-    const FVector VillageSlopes[] = {
-        FVector(-2450,-1550,-80), FVector(-650,-1750,-95),
-        FVector(6200,-2350,-100), FVector(8850,-2200,-95),
-        FVector(13700,-2250,-105), FVector(16000,-2100,-95)
-    };
-    for (int32 Index = 0; Index < UE_ARRAY_COUNT(VillageSlopes); ++Index)
-    {
-        SpawnProd(
-            ProductionCommonVillageSlopeMesh,
-            VillageSlopes[Index],
-            FVector(2.35f, 1.85f, 1.25f),
-            FRotator(0.0f, Index % 2 == 0 ? 8.0f : -10.0f, 0.0f),
-            false);
-    }
-
-    SpawnProd(ProductionCommonRiverBankMesh, FVector(22950,-1220,-35), FVector(2.8f,1.5f,1.0f),
-        FRotator(0.0f, 2.0f, 0.0f), false);
-    SpawnProd(ProductionCommonRiverBankMesh, FVector(23600,420,-35), FVector(2.8f,1.5f,1.0f),
-        FRotator(0.0f, 178.0f, 0.0f), false);
+    // W01 geography foundation owns repeated hills/slopes/river banks through HISM.
+    // Keep this detail layer focused on authored architecture and local props.
 
     const FVector BoulderGroups[] = {
         FVector(10800,-1280,0), FVector(12850,1480,0), FVector(15300,-1380,0),
@@ -2181,6 +2316,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     ConfigureMorningAtmosphere();
     ConfigureFoliageInstances();
     SpawnVillage();
+    SpawnGeographyFoundationPass();
     SpawnProductionVillageDetailLayer();
     SpawnFoliagePass();
     SpawnScenicDetailPass();
