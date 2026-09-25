@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_D_ENVIRONMENT_PRESENTATION_V1",
+  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01WorldBuildIntakePacketV1.json",
+    "Data/P1C01C4FoliageLodCullOverdrawPlanV1.json",
+    "DEC-038",
+    "DEC-039"
+  ],
+  "prerequisite": "C4 exact-head engine evidence and required foliage profiling observations completed before runtime implementation begins.",
+  "scope": [
+    "LIGHTING",
+    "SKY",
+    "FOG",
+    "WATER"
+  ],
+  "purpose": "Prepare a low-cost Shire/Bag End environment presentation pass after foliage cost is bounded.",
+  "performance_contract": {
+    "target": "720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+    "lighting": "Prefer baked/static or stationary lighting where practical; keep dynamic shadowed lights bounded.",
+    "fog": "Use restrained UE4.27-compatible fog; no expensive cinematic volumetric dependence on the target profile.",
+    "water": "Use bounded simple water materials/reflection strategy; avoid universal high-cost translucency/reflection features.",
+    "textures": "1K/2K default; hero 4K only after measured VRAM approval."
+  },
+  "implementation_boundaries": [
+    "No story outcome or canon beat changes.",
+    "Lighting/sky/fog state is driven by chapter/world-state, not autonomous presentation logic.",
+    "No per-actor Tick for ambient presentation where a shared subsystem/material parameter can own the state.",
+    "Heavy environment assets remain soft referenced and asynchronously loaded.",
+    "Do not increase foliage density while tuning atmosphere."
+  ],
+  "evidence_to_capture": [
+    "chapter-state lighting identity",
+    "dynamic shadowed light count",
+    "water material instruction/feature choice",
+    "fog feature choice",
+    "representative GPU/game-thread observations",
+    "visual notes for exterior-to-interior readability"
+  ],
+  "acceptance": [
+    "Exact-head Pre-Unreal success.",
+    "UE4.27.2 compile/import succeeds.",
+    "No warning-debt regression.",
+    "Human PIE review is still required for mood/readability.",
+    "Target-device performance evidence is still required before PERFORMANCE-ACCEPTED."
+  ],
+  "evidence_boundary": "Preparation only. No runtime, visual or performance acceptance claim."
+}
