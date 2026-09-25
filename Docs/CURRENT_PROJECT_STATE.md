@@ -1,4 +1,5 @@
 ## 2026-09-25 Repository consolidation / launcher repair
+- Consolidated `Scripts/operation_recovery.py` + unit tests from the planning branch so long operations can persist exact-SHA checkpoints and detect stale/stuck steps without reviving that historical branch.
 - Canonical development lane remains `develop`; `main` remains release-only.
 - PR #71 (`maintenance/repository-consolidation-v1`) consolidates branch-only safe planning/audio/warehouse metadata and hardens local launchers against self-update during `git pull`.
 - Stale PRs #62, #63 and #66 were closed as superseded; they must not be wholesale-merged.
