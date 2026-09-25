@@ -4178,10 +4178,10 @@
     "Then validate packaged Data JSON runtime execution, real audio, target-device profiling and human PIE/pacing/visual acceptance."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-157",
+    "checkpoint_id": "CP-W00-158",
     "source_head": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
-    "branch": "maintenance/develop-consolidation-v1",
-    "pull_request": 70,
+    "branch": "develop",
+    "pull_request": 0,
     "verified": {
       "last_full_machine_green": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be: Pre-Unreal #820 SUCCESS + Unreal #655 SUCCESS",
       "latest_automated_closure": "9066d6494248def59680820bbd6ca8e10038ea6e: Pre-Unreal #821 SUCCESS + Unreal #656 SUCCESS acceptance-only",
@@ -4197,24 +4197,17 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "Develop consolidation, branch cleanup, local launcher self-update hardening, and Unreal validation-cost correction. No W01 feature expansion.",
+    "active_wave": "Post-cleanup canonical develop handoff; no active repair branch.",
     "next_actions": [
-      "Require exact-head Pre-Unreal green on PR #70.",
-      "Require exact-head Unreal workflow decision to pass without unnecessary packaging for this maintenance delta.",
-      "Merge PR #70 into develop only after green exact-head validation.",
-      "Let Branch Cleanup delete approved stale refs and verify develop/main remain.",
-      "Run the remaining P1C01 human PIE grounding/traversal plus project-owned SetStaticMesh mobility-warning check from the Documents clone.",
-      "Close W00 only if that human evidence is clean, then open P1C01 production work."
+      "Pull canonical develop in the Documents clone.",
+      "Run one P1C01 PIE confirmation and capture ShireStartupGrounding PASS, no player fall, and absence of project-owned SetStaticMesh mobility warnings.",
+      "If that human PIE tail is clean, close W00 and start the P1C01 production-quality Shire vertical slice."
     ],
     "unverified_acceptance": [
-      "PR #70 exact-head final validation",
-      "post-merge branch cleanup execution",
-      "local Documents-clone launcher rerun after temp-copy hardening",
-      "P1C01 human PIE grounding/traversal on canonical develop",
-      "absence of project-owned SetStaticMesh mobility warnings in that PIE session",
-      "target-device performance profiling",
-      "visual/pacing/NPC-believability acceptance",
-      "real audio listening/mix after complete bank integration"
+      "P1C01 human PIE grounding/traversal confirmation on canonical post-cleanup develop",
+      "target-device 720p Low-Medium performance profiling",
+      "P1C01 visual acceptance",
+      "real audio listening/mix acceptance"
     ],
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
@@ -4339,16 +4332,16 @@
       "cp56/fellowship-experience-megapass-v1",
       "work/automation-first-runtime-observation"
     ],
-    "cleanup_rule": "After PR #70 lands, Data/BranchCleanupPlan.json deletes every approved historical/maintenance/archive ref. Preserve only develop as canonical development/programmer-handoff lane and main as stable release lane.",
-    "current_short_branch": "maintenance/develop-consolidation-v1",
+    "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
+    "current_short_branch": "develop",
     "integration_baseline": "develop",
-    "current_open_pr": 70,
-    "open_pr_policy": "PR #70 is the single bounded maintenance consolidation train targeting develop. PR #71 is superseded after its unique safe payload was folded into #70. Historical diverged branches must not be bulk-merged.",
+    "current_open_pr": 0,
+    "open_pr_policy": "No active feature/repair PR is authoritative after cleanup. `develop` is the canonical programmer-handoff and integration baseline; future work must use a new short-lived single-purpose PR targeting develop.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
       "date": "2026-09-25",
-      "active_pr": 70,
-      "active_branch": "maintenance/develop-consolidation-v1",
+      "active_pr": 0,
+      "active_branch": "develop",
       "canonical_branch": "develop",
       "stable_release_branch": "main",
       "plan": "Data/BranchCleanupPlan.json",
@@ -4359,7 +4352,7 @@
         66
       ],
       "superseded_parallel_pr": 71,
-      "physical_cleanup": "Post-merge Branch Cleanup workflow deletes approved stale refs and verifies develop/main survive.",
+      "physical_cleanup": "Branch Cleanup run #1 succeeded after PR #70 and a live branch query confirmed only develop/main remained. PR #72 is metadata-only and self-registers for post-merge deletion.",
       "final_survivors": [
         "develop",
         "main"
