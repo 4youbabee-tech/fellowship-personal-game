@@ -4179,14 +4179,13 @@
   ],
   "session_handoff": {
     "checkpoint_id": "CP-W00-157",
-    "source_head": "9066d6494248def59680820bbd6ca8e10038ea6e",
+    "source_head": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
     "branch": "maintenance/develop-consolidation-v1",
     "pull_request": 70,
     "verified": {
-      "last_full_machine_green": "ab7889d6: Pre #788 SUCCESS + Unreal #623 SUCCESS + Warehouse #204 SUCCESS",
-      "cp154_static": "ab7889d6: Pre #788 SUCCESS including the full static/governor/asset/readiness/deep/unit-test chain",
-      "cp154_engine": "ab7889d6: Unreal #623 SUCCESS including migrated-layout preparation, UE4.27.2 C++ build/import, Automation, startup, P1C01-P1C08, route/story roundtrip and warning debt",
-      "cp154_warehouse": "ab7889d6: Warehouse #204 SUCCESS; no staging-required delta, provider stages intentionally skipped"
+      "last_full_machine_green": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be: Pre-Unreal #820 SUCCESS + Unreal #655 SUCCESS",
+      "latest_automated_closure": "9066d6494248def59680820bbd6ca8e10038ea6e: Pre-Unreal #821 SUCCESS + Unreal #656 SUCCESS acceptance-only",
+      "proof_boundary": "Machine/headless/package evidence only; human PIE/device/visual/performance acceptance remains separate."
     },
     "exact_head_scope": [
       "CP154 full Pre-Unreal chain",
@@ -4216,24 +4215,27 @@
       "last_green": {
         "sha": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
         "pre_unreal": {
+          "sha": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
+          "run_id": 36074075688,
           "status": "SUCCESS"
         },
         "unreal": {
-          "run_number": 655,
-          "status": "SUCCESS",
-          "scope": "full build/import/Automation/startup/P1C01-P1C08/state/warning/package/runtime-data/startup chain"
+          "sha": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
+          "run_id": 36074075678,
+          "status": "SUCCESS"
         }
       },
       "latest_observed": {
         "sha": "9066d6494248def59680820bbd6ca8e10038ea6e",
         "pre_unreal": {
-          "run_number": 821,
+          "sha": "9066d6494248def59680820bbd6ca8e10038ea6e",
+          "run_id": 36075815776,
           "status": "SUCCESS"
         },
         "unreal": {
-          "run_number": 656,
-          "status": "SUCCESS",
-          "scope": "acceptance-only package/runtime-data/packaged-startup/hardware; inherited parent core proof"
+          "sha": "9066d6494248def59680820bbd6ca8e10038ea6e",
+          "run_id": 36075815713,
+          "status": "SUCCESS"
         }
       }
     }
