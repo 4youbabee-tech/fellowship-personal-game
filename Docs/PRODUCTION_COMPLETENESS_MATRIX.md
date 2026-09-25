@@ -1,3 +1,10 @@
+## 2026-09-25 - Region production packets
+
+- **Whole-game packets:** CREATED for every registered region.
+- **Sourcing families:** MAPPED to the global resource registry by discipline.
+- **Runtime state:** P1C01 active; later regions preparation-only until Gate 6/7.
+- **Acceptance:** NONE claimed from packet creation.
+
 ## 2026-09-25 - Whole-game world build coverage
 
 - **Coverage map:** CREATED — all registered world locations now carry the full production-layer checklist.
