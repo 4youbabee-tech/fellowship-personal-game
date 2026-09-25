@@ -1,9 +1,24 @@
 @echo off
+if not defined SHIRE_LAUNCH_ROOT (
+  set "SHIRE_LAUNCH_ROOT=%~dp0"
+  set "SHIRE_TEMP_LAUNCHER=%TEMP%\ShireUpdateBuildLaunch_%RANDOM%_%RANDOM%.bat"
+  copy /Y "%~f0" "%SHIRE_TEMP_LAUNCHER%" >NUL
+  if errorlevel 1 (
+    echo ERROR: Could not create stable launcher copy.
+    pause
+    exit /b 9
+  )
+  call "%SHIRE_TEMP_LAUNCHER%"
+  set "SHIRE_LAUNCH_RC=%ERRORLEVEL%"
+  del /F /Q "%SHIRE_TEMP_LAUNCHER%" >NUL 2>NUL
+  exit /b %SHIRE_LAUNCH_RC%
+)
+
 setlocal EnableExtensions EnableDelayedExpansion
 title Shire Journey - Update Build Launch
 
-cd /d "%~dp0"
-set "ROOT=%~dp0"
+cd /d "%SHIRE_LAUNCH_ROOT%"
+set "ROOT=%SHIRE_LAUNCH_ROOT%"
 if "%ROOT:~-1%"=="\" set "ROOT=%ROOT:~0,-1%"
 
 set "PROJECT=%ROOT%\ShireJourney.uproject"
