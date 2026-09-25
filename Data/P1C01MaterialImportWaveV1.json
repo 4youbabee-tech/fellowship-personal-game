@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "wave_id": "P1C01_MATERIAL_IMPORT_WAVE_V1",
+  "status": "READY_FOR_LOCAL_WAREHOUSE_INTAKE",
+  "purpose": "Prepare an open-source Shire/Bag End material wave against the existing UE4 production importer without expanding the runtime material master before C3/C4 gates.",
+  "target_profile": "i7 Gen6 / 8GB RAM / approx 2GB VRAM / DX11 / 720p Low-Medium / 30 FPS floor",
+  "source_grounding": [
+    "SRC03_WORLD pages 6-7: Shire/Hobbiton pastoral hills, lanes, farms, Hobbit-holes, warm domestic scale, circular doors and gardens; Bag End dense lived-in props and round geometry.",
+    "SRC11_SYSTEMS pages 8-10: SourceAssets are raw/reference only; profile foliage/material/texture/memory cost.",
+    "SRC_EXT_MASTER pages 13-14: Poly Haven and ambientCG are preferred open material sources; use 1K/2K by default.",
+    "SRC10_VISUAL_ATLAS page 6 is VISUAL_ONLY and supports material-family reference only."
+  ],
+  "current_project_fallbacks": [
+    {
+      "identity": "Grass",
+      "texture": "SourceAssets/Production/World/Shire/TX_ShGrass.tga"
+    },
+    {
+      "identity": "Dirt",
+      "texture": "SourceAssets/Production/World/Shire/TX_ShDirt.tga"
+    },
+    {
+      "identity": "Bark",
+      "texture": "SourceAssets/Production/World/Shire/TX_ShBark.tga"
+    },
+    {
+      "identity": "Leaves",
+      "texture": "SourceAssets/Production/World/Shire/TX_ShLeaves.tga"
+    },
+    {
+      "identity": "Stone",
+      "texture": "SourceAssets/Production/World/Shire/TX_ShStone.tga"
+    },
+    {
+      "identity": "Wood",
+      "texture": "SourceAssets/Production/World/Shire/TX_ShWood.tga"
+    },
+    {
+      "identity": "DoorGreen",
+      "texture": "SourceAssets/Production/World/Shire/TX_ShDoorGreen.tga"
+    }
+  ],
+  "immediate_open_source_items": [
+    {
+      "id": "SH_GRASS_GROUND",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "leafy_grass",
+      "material_name": "MI_Sh_GrassGround_PH",
+      "roughness": 0.9,
+      "metallic": 0,
+      "use": [
+        "Hobbiton lawns",
+        "Party Field support",
+        "pastoral path edges"
+      ]
+    },
+    {
+      "id": "SH_DIRT_SOIL",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "dirt",
+      "material_name": "MI_Sh_DirtSoil_PH",
+      "roughness": 0.82,
+      "metallic": 0,
+      "use": [
+        "farm soil",
+        "bare Shire ground"
+      ]
+    },
+    {
+      "id": "SH_STONY_PATH",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "stony_dirt_path",
+      "material_name": "MI_Sh_StonyPath_PH",
+      "roughness": 0.84,
+      "metallic": 0,
+      "use": [
+        "Shire lanes",
+        "property approaches"
+      ]
+    },
+    {
+      "id": "SH_WARM_PLASTER",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "plastered_wall",
+      "material_name": "MI_Sh_WarmPlaster_PH",
+      "roughness": 0.78,
+      "metallic": 0,
+      "use": [
+        "Hobbit-hole support walls",
+        "Bag End support surfaces"
+      ]
+    },
+    {
+      "id": "SH_MOSS_STONE",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "mossy_rock",
+      "material_name": "MI_Sh_MossStone_PH",
+      "roughness": 0.82,
+      "metallic": 0,
+      "use": [
+        "garden edging",
+        "bridges",
+        "Shire stone accents"
+      ]
+    },
+    {
+      "id": "SH_WOOD_INTERIOR",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "wood_floor",
+      "material_name": "MI_Sh_WoodInterior_PH",
+      "roughness": 0.72,
+      "metallic": 0,
+      "use": [
+        "Bag End floors",
+        "furniture support",
+        "warm domestic interiors"
+      ]
+    },
+    {
+      "id": "SH_TREE_BARK",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "bark_brown_01",
+      "material_name": "MI_Sh_TreeBark_PH",
+      "roughness": 0.76,
+      "metallic": 0,
+      "use": [
+        "tree trunks",
+        "woodland support"
+      ]
+    },
+    {
+      "id": "SH_FOREST_FLOOR",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "forest_floor",
+      "material_name": "MI_Sh_ForestFloor_PH",
+      "roughness": 0.88,
+      "metallic": 0,
+      "use": [
+        "wooded road",
+        "hedgerow undergrowth",
+        "forest transition"
+      ]
+    }
+  ],
+  "fallback_search_lane": {
+    "provider": "AMBIENTCG",
+    "target_attribute": "2K-PNG",
+    "categories": [
+      "WOOD",
+      "PLASTER",
+      "GROUND",
+      "STONE",
+      "BARK"
+    ]
+  },
+  "current_master_limit": {
+    "bind_now": [
+      "AlbedoTexture",
+      "Color",
+      "Roughness scalar",
+      "Metallic scalar"
+    ],
+    "stage_for_later": [
+      "Normal",
+      "AO",
+      "Roughness texture",
+      "Metallic texture",
+      "Height/Displacement"
+    ],
+    "rule": "Do not expand the material master in this preparation wave."
+  },
+  "foliage_boundary": "Do not auto-reparent imported enhancement materials into foliage masters; C3 stable identities remain Grass/Leaves/LeafGreen/LeafGold and C4 owns far/no-WPO binding.",
+  "density_rule": "No foliage/detail density increase.",
+  "evidence_boundary": "Preparation only until a real local intake/import receipt exists."
+}
