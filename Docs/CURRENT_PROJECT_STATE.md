@@ -1,3 +1,12 @@
+## 2026-09-26 - Massive production preparation resumed without opening another runtime lane
+
+- **Preparation branch:** `planning/whole-game-production-prep-v2` continues from PR #81 preparation head and is intentionally not opened as another runtime-changing PR.
+- **Whole-game execution:** `Data/WholeGameProductionExecutionQueueV1.json` now drives all 28 existing region packets across BPB-W1..W9 while preserving the P1C01 Gate 6/7 runtime barrier.
+- **P1C01 benchmark intake:** `Data/P1C01WarehousePromotionQueueV1.json` defines 28 concrete already-registered candidates across Shire/Bag End surfaces, support architecture/interiors, fauna review, support stock and audio/foley.
+- **Asset promotion guard:** `Data/ProductionAssetPromotionPolicyV1.json` locks provenance, FBX-only animated production intake, PNG/TGA textures, WAV masters, 1K/2K defaults, soft-reference/async loading, pooling and ISM/HISM requirements before promotion.
+- **Fail-closed sourcing:** Quaternius farm animals remain blocked at license capture because the current manifest does not record an observed per-pack license; no license was inferred.
+- **Evidence boundary:** PREPARATION / STATIC DATA AUTHORING only. No new COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE acceptance is claimed.
+
 ## 2026-09-25 - Source-grounded post-Amon-Hen promotion graph added
 
 - Added `Data/WholeGameRoutePromotionGraphV1.json` from the supplied `01_STORY_AND_TIMELINE_BIBLE` and `07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX`.
