@@ -1019,7 +1019,8 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     SpawnFenceLine(FVector(-1540,-820,0),FVector(-930,-820,0),6);
     SpawnFenceLine(FVector(260,520,0),FVector(900,520,0),6);
 
-    // Green Dragon and market.
+    // Village common and market. The Green Dragon belongs at Bywater and is not
+    // promoted as a canonical Hobbiton landmark in this compact P1C01 production slice.
     // The production layer provides the dominant building and stall silhouettes.
     // Retain these primitives only as a fallback when imports are unavailable.
     if (!ProductionCottageHouseMesh)
@@ -1027,7 +1028,7 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
         SpawnShape(CubeMesh,FVector(-520,360,115),FVector(2.1f,1.5f,1.15f),FLinearColor(0.45f,0.30f,0.17f));
         SpawnShape(ConeMesh,FVector(-520,360,270),FVector(2.4f,1.8f,0.7f),FLinearColor(0.28f,0.12f,0.05f),FRotator::ZeroRotator,false);
     }
-    SpawnLabel(TEXT("The Green Dragon"),FVector(-520,360,370),FLinearColor(0.85f,0.80f,0.55f));
+    SpawnLabel(TEXT("Village Common"),FVector(-520,360,370),FLinearColor(0.85f,0.80f,0.55f));
     if (!ProductionMarketStallMesh)
     {
         const FVector MarketStalls[] = {
@@ -1774,6 +1775,135 @@ void AShirePrototypeWorldBuilder::SpawnGeographyFoundationPass()
 }
 
 
+void AShirePrototypeWorldBuilder::SpawnHobbitonArchitecturePass()
+{
+    // Drop B uses already-resident production meshes only. Missing optional meshes
+    // simply remove dressing; they never trigger synchronous runtime loads.
+    auto ResolveShire = [](const TCHAR* Path) -> UStaticMesh*
+    {
+        return ResolveResidentStaticMesh(Path);
+    };
+
+    auto SpawnProd = [this](UStaticMesh* Mesh, const FVector& Location, const FVector& Scale,
+        const FRotator& Rotation = FRotator::ZeroRotator, bool bCollision = true)
+    {
+        if (Mesh)
+        {
+            SpawnShape(Mesh, Location, Scale, FLinearColor::White, Rotation, bCollision);
+        }
+    };
+
+    UStaticMesh* GardenArch = ResolveShire(TEXT("/Game/Production/World/Shire/SM_ShGardenArch.SM_ShGardenArch"));
+    UStaticMesh* Mailbox = ResolveShire(TEXT("/Game/Production/World/Shire/SM_ShMailbox.SM_ShMailbox"));
+    UStaticMesh* PicnicCanopy = ResolveShire(TEXT("/Game/Production/World/Shire/SM_ShPicnicCanopy.SM_ShPicnicCanopy"));
+    UStaticMesh* ProduceStand = ResolveShire(TEXT("/Game/Production/World/Shire/SM_ShProduceStand.SM_ShProduceStand"));
+    UStaticMesh* PumpWell = ResolveShire(TEXT("/Game/Production/World/Shire/SM_ShPumpWell.SM_ShPumpWell"));
+    UStaticMesh* WashLine = ResolveShire(TEXT("/Game/Production/World/Shire/SM_ShWashLine.SM_ShWashLine"));
+    UStaticMesh* FarmPlough = ResolveShire(TEXT("/Game/Production/World/Shire/SM_ShFarmPlough.SM_ShFarmPlough"));
+    UStaticMesh* OrchardLadder = ResolveShire(TEXT("/Game/Production/World/Shire/SM_ShOrchardLadder.SM_ShOrchardLadder"));
+    UStaticMesh* FlowerPlanter = ResolveShire(TEXT("/Game/Production/World/Common/SM_CommonFlowerPlanter.SM_CommonFlowerPlanter"));
+    UStaticMesh* LongBench = ResolveShire(TEXT("/Game/Production/World/Common/SM_CommonLongBench.SM_CommonLongBench"));
+
+    // Bag End is the dominant Hobbiton landmark and narrative return point.
+    // Keep the existing story/quest anchor fixed; enrich only its architectural read.
+    const FVector BagEnd(-2210.0f, -520.0f, 0.0f);
+    SpawnProd(GardenArch, BagEnd + FVector(260.0f, -10.0f, 0.0f), FVector(0.90f),
+        FRotator(0.0f, 90.0f, 0.0f), true);
+    SpawnProd(Mailbox, BagEnd + FVector(245.0f, -150.0f, 0.0f), FVector(0.72f),
+        FRotator(0.0f, 82.0f, 0.0f), false);
+    SpawnProd(ProductionBenchMesh, BagEnd + FVector(170.0f, 185.0f, 0.0f), FVector(0.72f),
+        FRotator(0.0f, -8.0f, 0.0f), true);
+    SpawnProd(FlowerPlanter, BagEnd + FVector(45.0f, -155.0f, 0.0f), FVector(0.78f),
+        FRotator(0.0f, 6.0f, 0.0f), false);
+    SpawnProd(FlowerPlanter, BagEnd + FVector(45.0f, 155.0f, 0.0f), FVector(0.78f),
+        FRotator(0.0f, -6.0f, 0.0f), false);
+    SpawnProd(ProductionLampPostMesh, BagEnd + FVector(320.0f, 120.0f, 0.0f), FVector(0.72f),
+        FRotator::ZeroRotator, false);
+
+    const FVector BagEndWalls[] = {
+        BagEnd + FVector(40.0f,-330.0f,0.0f),
+        BagEnd + FVector(420.0f,-330.0f,0.0f),
+        BagEnd + FVector(40.0f,330.0f,0.0f),
+        BagEnd + FVector(420.0f,330.0f,0.0f)
+    };
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(BagEndWalls); ++Index)
+    {
+        SpawnProd(ProductionStoneWallMesh, BagEndWalls[Index], FVector(0.72f),
+            FRotator(0.0f, 90.0f, 0.0f), true);
+    }
+    SpawnProd(ProductionFarmGateMesh, BagEnd + FVector(470.0f,-40.0f,0.0f), FVector(0.72f),
+        FRotator(0.0f,90.0f,0.0f), true);
+
+    // Domestic clusters reinforce warm scale and garden/property rhythm without
+    // challenging Bag End's silhouette dominance.
+    struct FDomesticCluster
+    {
+        FVector Center;
+        float Yaw;
+    };
+    const FDomesticCluster Clusters[] = {
+        { FVector(-1660.0f, 610.0f, 0.0f), 20.0f },
+        { FVector(-760.0f, -610.0f, 0.0f), -15.0f },
+        { FVector(320.0f, 760.0f, 0.0f), 16.0f },
+        { FVector(1120.0f, -620.0f, 0.0f), -18.0f }
+    };
+
+    for (int32 Index = 0; Index < UE_ARRAY_COUNT(Clusters); ++Index)
+    {
+        const FDomesticCluster& C = Clusters[Index];
+        SpawnProd(GardenArch, C.Center + FVector(165.0f, 0.0f, 0.0f), FVector(0.62f),
+            FRotator(0.0f, C.Yaw + 90.0f, 0.0f), true);
+        SpawnProd(ProductionFlowerBoxMesh, C.Center + FVector(55.0f,-135.0f,0.0f), FVector(0.58f),
+            FRotator(0.0f, C.Yaw, 0.0f), false);
+        SpawnProd(ProductionFlowerBoxMesh, C.Center + FVector(55.0f,135.0f,0.0f), FVector(0.58f),
+            FRotator(0.0f, C.Yaw, 0.0f), false);
+        if ((Index % 2) == 0)
+        {
+            SpawnProd(Mailbox, C.Center + FVector(220.0f,-115.0f,0.0f), FVector(0.54f),
+                FRotator(0.0f, C.Yaw + 75.0f, 0.0f), false);
+        }
+        else
+        {
+            SpawnProd(LongBench, C.Center + FVector(205.0f,120.0f,0.0f), FVector(0.60f),
+                FRotator(0.0f, C.Yaw, 0.0f), true);
+        }
+    }
+
+    // Village common: social/readable space, deliberately not identified as the
+    // Green Dragon because that canonical inn belongs at Bywater.
+    const FVector CommonCenter(-520.0f, 360.0f, 0.0f);
+    SpawnProd(PumpWell, CommonCenter + FVector(360.0f,-40.0f,0.0f), FVector(0.70f),
+        FRotator::ZeroRotator, true);
+    SpawnProd(ProduceStand, CommonCenter + FVector(-360.0f,-150.0f,0.0f), FVector(0.70f),
+        FRotator(0.0f, 8.0f, 0.0f), true);
+    SpawnProd(ProduceStand, CommonCenter + FVector(-160.0f,-210.0f,0.0f), FVector(0.66f),
+        FRotator(0.0f,-6.0f,0.0f), true);
+
+    // F1-01 birthday/social space. Keep this readable as a destination separate
+    // from Bag End while reusing the existing party field story location.
+    const FVector PartyCenter(280.0f,1320.0f,0.0f);
+    SpawnProd(PicnicCanopy, PartyCenter + FVector(0.0f,30.0f,0.0f), FVector(0.92f),
+        FRotator(0.0f,-4.0f,0.0f), true);
+    SpawnProd(ProduceStand, PartyCenter + FVector(-540.0f,80.0f,0.0f), FVector(0.66f),
+        FRotator(0.0f,12.0f,0.0f), true);
+    SpawnProd(ProduceStand, PartyCenter + FVector(520.0f,70.0f,0.0f), FVector(0.66f),
+        FRotator(0.0f,-12.0f,0.0f), true);
+
+    // Working Shire details around the eastward domestic edge.
+    SpawnProd(WashLine, FVector(1700.0f,640.0f,0.0f), FVector(0.68f),
+        FRotator(0.0f,8.0f,0.0f), false);
+    SpawnProd(FarmPlough, FVector(5650.0f,-1570.0f,0.0f), FVector(0.70f),
+        FRotator(0.0f,-12.0f,0.0f), true);
+    SpawnProd(OrchardLadder, FVector(9950.0f,-1350.0f,0.0f), FVector(0.66f),
+        FRotator(0.0f,16.0f,0.0f), true);
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("ShireArchitecture: DropB BagEnd=hero Hobbiton=domestic PartyField=prepared canonGreenDragon=Bywater interior=deferred"));
+}
+
+
 void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
 {
     // CP40 visual-production layer. This pass deliberately prefers imported original
@@ -1826,7 +1956,7 @@ void AShirePrototypeWorldBuilder::SpawnProductionVillageDetailLayer()
             FVector(P.Scale * 0.65f), FRotator(0.0f, P.Yaw, 0.0f), false);
     }
 
-    // Green Dragon visual shell and village social yard.
+    // Hobbiton village-common visual shell and social yard.
     SpawnProd(ProductionCottageHouseMesh, FVector(-520, 360, 0), FVector(1.28f, 1.15f, 1.18f),
         FRotator(0.0f, -8.0f, 0.0f), true);
     SpawnProd(ProductionWellMesh, FVector(-120, 300, 0), FVector(0.82f), FRotator::ZeroRotator, true);
@@ -2317,6 +2447,7 @@ void AShirePrototypeWorldBuilder::BuildPrototypeWorld()
     ConfigureFoliageInstances();
     SpawnVillage();
     SpawnGeographyFoundationPass();
+    SpawnHobbitonArchitecturePass();
     SpawnProductionVillageDetailLayer();
     SpawnFoliagePass();
     SpawnScenicDetailPass();
