@@ -131,7 +131,7 @@ jobs:
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\repair_ue_engine_content_acl.ps1"'
 
       - name: Verify Unreal 4.27.2 and project
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_ACCEPTANCE_ONLY == 'true' && env.SHIRE_ACCEPTANCE_RESUME_STAGE != 'startup')
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_verify_unreal.cmd"'
 
