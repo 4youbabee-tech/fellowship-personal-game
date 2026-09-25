@@ -2520,6 +2520,36 @@ for symbol in ["SM_CommonMountainRidge", "SM_CommonCliffWall", "SM_CommonRiverBa
     if symbol not in fellowship_world_cpp:
         fail(f"PG-049 Fellowship terrain runtime reference missing: {symbol}")
 
+# PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
+pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
+pg164_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+for pg164_symbol in [
+    "SpawnHobbitonArchitecturePass",
+    'TEXT("ShireArchitecture: DropB',
+    'TEXT("Hobbiton Village Common")',
+    'TEXT("Discovered: Hobbiton village common.")',
+]:
+    if pg164_symbol not in (pg164_h + pg164_cpp):
+        fail(f"PG-164 P1C01 Hobbiton architecture invariant missing: {pg164_symbol}")
+
+for pg164_bad_visible in [
+    'FText::FromString(TEXT("The Green Dragon"))',
+    'TEXT("Discovered: The Green Dragon',
+]:
+    if pg164_bad_visible in pg164_cpp:
+        fail(f"PG-164 canonical Bywater inn is still presented as Hobbiton content: {pg164_bad_visible}")
+
+pg164_plan = json.loads(read(ROOT / "Data" / "P1C01HobbitonArchitecturePlanV1.json"))
+if pg164_plan.get("status") not in {
+    "DROP_B_ACTIVE",
+    "DROP_B_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+}:
+    fail("PG-164 Hobbiton/Bag End architecture plan status changed")
+
+if "Discover_GreenDragon" not in pg164_cpp:
+    fail("PG-164 legacy discovery ID disappeared; preserve save compatibility while correcting visible copy")
+
+
 # PG-163: P1C01 production geography must stay instanced, bounded and story-safe.
 pg163_shire_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
 pg163_shire_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
