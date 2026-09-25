@@ -1,3 +1,12 @@
+## 2026-09-26 - P1C01 C4 and D world-presentation preparation
+
+- C4 preparation now records the evidence required for far foliage treatment: actual mesh object path, material identity, LOD section, cull band, screen-size transition and masked-overdraw observation before a far no-WPO parent can be chosen.
+- D preparation now defines the next world-presentation layer after C4: fixed-state Shire lighting, sky fill, bounded fog and low-cost water presentation compatible with UE4.27 / DX11 / 720p Low-Medium.
+- D explicitly rejects a free-running day/night cycle, per-frame skylight/reflection recapture and expensive water reflection paths without measured justification.
+- Neither preparation changes quest/save/story state, traversal ownership, LivingWorld ownership, material object paths or foliage density.
+- Whole-game region packets and Master Resource Bible sourcing continue under DEC-037/038/039. SOURCE_REGISTERED, CANDIDATE, STAGED, READY_FOR_IMPORT, IMPORTED, INTEGRATED and ACCEPTED remain distinct evidence states.
+- No rendered, audio, device or performance acceptance is implied by preparation.
+
 ## 2026-09-25 - Multi-threaded campaign world-state rule registered
 
 - Post-Amon-Hen world building must track route-specific chapter states and synchronization barriers rather than assuming one global linear timeline.

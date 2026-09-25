@@ -1,3 +1,13 @@
+## 2026-09-26 - C4 and D preparation advanced while C2 CI remains evidence-blocked
+
+- Added `Data/P1C01C4FoliageLodCullOverdrawPlanV1.json` and `Data/P1C01DLightingSkyFogWaterPlanV1.json` as preparation-only artifacts on PR #81; neither opens a second runtime lane.
+- C4 is blocked until C3 exact-head Pre-Unreal + UE4.27.2 core/production-import proof and merge. D is blocked until C4 reaches the same evidence boundary and merges.
+- C4 requires concrete mesh/LOD/material-section/cull/overdraw evidence before far no-WPO material binding and prohibits density increases.
+- D prepares fixed-state UE4.27 Shire lighting/sky/fog/water with low-spec constraints: no free-running day/night cycle, no per-frame capture loop and no expensive water reflection path without measured justification.
+- PR #80 remains the sole runtime-changing PR. Pre-Unreal #968 and its rerun both produced `steps=null` with BlobNotFound logs; no runtime/project code is changed from those reds. UE4.27.2 exact-head proof is still required before C2 merge.
+- PR #81 Pre-Unreal #969 likewise produced `steps=null` with BlobNotFound logs; its rerun was requested. This is CI infrastructure evidence failure unless concrete repository-step evidence appears.
+- Evidence boundary: preparation only. No compile, PIE, device, visual, audio or performance acceptance is claimed.
+
 ## 2026-09-25 - Source-grounded post-Amon-Hen promotion graph added
 
 - Added `Data/WholeGameRoutePromotionGraphV1.json` from the supplied `01_STORY_AND_TIMELINE_BIBLE` and `07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX`.

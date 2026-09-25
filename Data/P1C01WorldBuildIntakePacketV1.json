@@ -197,11 +197,12 @@
     "ACCEPTED"
   ],
   "immediate_queue": [
-    "Complete C2 proof and merge.",
-    "Implement C3 stable foliage material identity binding.",
-    "Run C4 mesh LOD/cull/overdraw review before any density change.",
-    "Promote highest-fit Shire/Bag End warehouse assets through intake QC.",
-    "Begin D lighting/sky/fog/water only after C4 evidence."
+    "Complete C2 exact-head Pre-Unreal + UE4.27.2 proof and merge.",
+    "Implement prepared C3 stable foliage material identity binding only after C2 is engine-green.",
+    "Execute Data/P1C01C4FoliageLodCullOverdrawPlanV1.json only after C3 is exact-head engine-green and merged.",
+    "Execute Data/P1C01DLightingSkyFogWaterPlanV1.json only after C4 is exact-head engine-green and merged.",
+    "Promote highest-fit Shire/Bag End warehouse assets through item-level candidate review and intake QC without skipping maturity states.",
+    "After D, continue runtime order: character presentation -> living world -> quest/cinematic/audio -> target-device profiling -> Gate 6/7."
   ],
   "evidence_boundary": "This packet is preparation and sourcing only. It does not claim download/import/runtime/visual/audio acceptance."
 }

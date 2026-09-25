@@ -1,3 +1,12 @@
+## 2026-09-26 - P1C01 ordered preparation through D
+
+- **C2:** sole active runtime candidate; exact-head Pre-Unreal evidence is currently blocked by zero-step/BlobNotFound CI infrastructure failure, and UE4.27.2 proof remains required.
+- **C3:** PREPARED / NOT RUNTIME-STARTED; stable foliage material identity binding stays blocked until C2 is engine-green and merged.
+- **C4:** PREPARED / NOT RUNTIME-STARTED; real mesh/LOD/material-section/cull/overdraw evidence is required before any far no-WPO material binding. No density increase is allowed.
+- **D lighting/sky/fog/water:** PREPARED / NOT RUNTIME-STARTED; fixed authored chapter states only, low-spec UE4.27 presentation, no dynamic day/night or expensive reflection/capture path without measurement.
+- **Later runtime order remains unchanged:** character presentation -> living world -> quest/cinematic/audio -> target-device profiling -> Gate 6/7.
+- No completeness percentage or acceptance state increases from these preparation artifacts alone.
+
 ## 2026-09-25 - Region production packets
 
 - **Whole-game packets:** CREATED for every registered region.
