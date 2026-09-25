@@ -2788,6 +2788,26 @@
         "REQ-STABILITY-001",
         "REQ-STABILITY-002"
       ]
+    },
+    {
+      "id": "REQ-STABILITY-004",
+      "title": "Warehouse staging must remain on the current develop train without hosted-worker dependency",
+      "category": "EngineeringStability",
+      "priority": "HIGH",
+      "status": "IMPLEMENTED",
+      "origin": "Owner requires uninterrupted world/material production and elimination of recurring hosted Action failures.",
+      "intent": "Make warehouse staging event-driven from develop/active PR changes, run it only on the supervised Windows build machine, and avoid consuming the Unreal validation concurrency group.",
+      "acceptance_criteria": [
+        "Warehouse push trigger targets develop.",
+        "No ubuntu-latest/windows-latest warehouse jobs remain.",
+        "Warehouse staging has a dedicated concurrency group.",
+        "Exact-head checkout remains bounded/retried.",
+        "Provider staging and inventory audit remain unchanged."
+      ],
+      "dependencies": [
+        "REQ-STABILITY-003",
+        "REQ-WAREHOUSE-001"
+      ]
     }
   ],
   "hard_invariants": [
@@ -3654,6 +3674,17 @@
       ],
       "resolution": "Pre-Unreal and Branch Cleanup are event-driven on the supervised self-hosted Windows UE4 runner; periodic polling is removed. Unreal Build Validation ignores preparation/docs/CI-only deltas so the single device lane is reserved for runtime-relevant work. Scripts/run_local_static_validation.ps1 mirrors the static validation chain for direct local execution.",
       "evidence_boundary": "Workflow/source configuration only until the supervised runner executes the new jobs. No compile/PIE/device/visual/performance claim.",
+      "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-044",
+      "title": "Warehouse staging follows develop on the supervised runner",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-004"
+      ],
+      "resolution": "Remove the GitHub-hosted delta/no-stage jobs and obsolete push branch from warehouse-stage.yml. Relevant develop/PR warehouse changes directly queue one supervised Windows staging job with its own concurrency group.",
+      "evidence_boundary": "Workflow/source configuration only until the supervised runner executes a staging job.",
       "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
