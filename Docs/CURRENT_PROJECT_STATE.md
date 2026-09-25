@@ -1,3 +1,13 @@
+## 2026-09-25 - W01/P1C01 Mega Production Drop B implemented
+
+- Parent: `develop@430d0a26f3b441f072740fc58285c0c0eb842d8c` after PR #75 merge.
+- Active branch: `production/w01-p1c01-hobbiton-bagend-v1`.
+- Drop B adds a bounded Hobbiton/Bag End architecture pass using already-resident production meshes: Bag End hero approach/property framing, domestic garden clusters, village common, Party Field dressing and working-Shire props.
+- Canon correction: visible Green Dragon-at-Hobbiton presentation was removed because the inn belongs at Bywater. The legacy `Discover_GreenDragon` ID remains unchanged for save compatibility.
+- Bag End interior remains explicitly incomplete because no dedicated production interior shell exists yet; no false completion is recorded.
+- Added PG-164 regression protection and synchronized architecture/performance plans.
+- Status: **STATIC-VALIDATED / EXACT-HEAD PRE-UNREAL + UE4.27.2 CORE PROOF PENDING**.
+
 ## 2026-09-25 - PR #75 core engine proof passed; package red isolated to classifier/base-fetch path
 
 - Unreal #721 attempt 2 reached and passed the required **core** chain on exact head `5a58c8d3d33f07a2b3440f0ab85e42ca20c00695`: ShireJourneyEditor build, production import, Automation QA, startup smoke, P1C01-P1C08 runtime audit, route/state audit and warning-debt guard all succeeded.
