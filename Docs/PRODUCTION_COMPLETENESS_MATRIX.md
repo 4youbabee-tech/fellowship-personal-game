@@ -1,3 +1,10 @@
+## 2026-09-26 - CI validator/policy synchronization
+
+- **PG-026:** synchronized with serialized production-lane preemption.
+- **PG-167:** added for self-hosted static/cleanup lanes and Unreal preparation isolation.
+- **Runtime impact:** none.
+- **Evidence state:** STATIC-VALIDATED SOURCE CHANGE; runner execution pending.
+
 ## 2026-09-26 - CI zero-step bypass
 
 - **REQ-STABILITY-003 / DEC-043:** IMPLEMENTED in workflow/source configuration.
