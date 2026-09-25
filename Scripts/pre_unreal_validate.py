@@ -1364,14 +1364,24 @@ for prop in ["Basket", "Crate", "Satchel", "Mug", "Book", "Lantern"]:
     if f'TEXT("{prop}")' not in ambient_life_cpp:
         fail(f"PG-036 ambient activity prop style missing: {prop}")
 
+living_world_life_cpp = read(resolve_source("LivingWorldDirector.cpp"))
 for role_marker in [
-    'ActivityPropType=TEXT("Mug")',
-    'ActivityPropType=TEXT("Satchel")',
-    'ActivityPropType=TEXT("Basket")',
-    'ActivityPropType=TEXT("Crate")',
+    'RoleName == TEXT("PartyGuest") || RoleName == TEXT("InnGuest")',
+    'RoleName == TEXT("BreeCourier") || RoleName == TEXT("RoadWalker")',
+    'RoleName == TEXT("FieldWorker") || RoleName == TEXT("Gardener")',
+    'RoleName == TEXT("FerryWorker") || RoleName == TEXT("GateWorker")',
 ]:
-    if role_marker not in shire_life_cpp:
-        fail(f"PG-036 Shire role activity assignment missing: {role_marker}")
+    if role_marker not in living_world_life_cpp:
+        fail(f"PG-036 director-owned Shire role activity mapping missing: {role_marker}")
+for prop_marker in [
+    'FName(TEXT("Mug"))',
+    'TEXT("Satchel")',
+    'FName(TEXT("Basket"))',
+    'FName(TEXT("Crate"))',
+    'FName(TEXT("Lantern"))',
+]:
+    if prop_marker not in living_world_life_cpp:
+        fail(f"PG-036 director-owned ambient prop mapping missing: {prop_marker}")
 
 if "Townsperson->ActivityPropType" not in bree_life_cpp:
     fail("PG-036 Bree townspeople lost visible activity assignments")
@@ -1393,8 +1403,26 @@ for symbol in [
     if symbol not in ambient_motion_cpp:
         fail(f"PG-035 lightweight bird-motion invariant missing: {symbol}")
 
+# P1C01 Shire ambient life is director-owned after W01 crowd ownership convergence.
+# Prove sky-life through the data-owned fauna contract instead of requiring a
+# second builder-owned permanent bird population.
+pg035_event_plan = json.loads(read(ROOT / "Data" / "LivingWorldEventPlan.json"))
+pg035_shire_contract = next(
+    (row for row in pg035_event_plan.get("chapter_contracts", [])
+     if isinstance(row, dict) and row.get("chapter") == "P1C01"),
+    {},
+)
+if "FAUNA" not in set(pg035_shire_contract.get("allowed", [])):
+    fail("PG-035 Shire lost director-owned fauna eligibility")
+pg035_bird_template = next(
+    (row for row in pg035_event_plan.get("event_templates", [])
+     if isinstance(row, dict) and row.get("id") == "EVT_FAUNA_BIRDS"),
+    {},
+)
+if "P1C01" not in set(pg035_bird_template.get("regions", [])):
+    fail("PG-035 Shire lost lightweight bird event coverage")
+
 for source_name, source_text in [
-    ("Shire", shire_world_motion_cpp),
     ("Bree", bree_world_motion_cpp),
     ("Fellowship outdoor regions", fellowship_world_motion_cpp),
     ("Isengard", isengard_world_motion_cpp),
@@ -3675,8 +3703,17 @@ pg111_targets = pg111_plan.get("baseline_population_targets", {})
 pg111_roles = pg111_plan.get("population_roles", {})
 if pg111_plan.get("plan_id") != "PART1_WORLD_ALIVE_SATURATION_V10":
     fail("PG-111 V10 world-life plan identity changed")
-if pg111_plan.get("status") != "V10_EARLY_REALM_CULTURAL_LIFE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
-    fail("PG-111 V10 world-life proof boundary changed")
+if pg111_plan.get("status") != "W01_P1C01_SINGLE_OWNER_BUDGET_AUTHORITY_IMPLEMENTED_PENDING_ENGINE_PROOF":
+    fail("PG-111 W01 world-life proof boundary changed")
+if pg111_plan.get("micro_event_budget_authority") != "Data/LivingWorldEventPlan.json#region_budgets":
+    fail("PG-111 micro-event budget authority must remain LivingWorldEventPlan#region_budgets")
+pg111_density = pg111_plan.get("density_profile", {})
+for pg111_stale_field in [
+    "max_active_micro_events_near_player",
+    "min_seconds_between_event_starts",
+]:
+    if pg111_stale_field in pg111_density:
+        fail(f"PG-111 WorldLifeSaturationPlan must not override micro-event authority: {pg111_stale_field}")
 if int(pg111_targets.get("P1C05", -1)) != 0:
     fail("PG-111 Caradhras ambient civilian baseline must remain zero")
 if int(pg111_targets.get("P1C06", -1)) != 0:
@@ -3717,6 +3754,11 @@ if "SOCIAL_MOMENT" in pg111_caradhras_allowed or "FAUNA" in pg111_caradhras_allo
     fail("PG-111 Caradhras ambient contract may not spawn residents or fauna")
 
 pg111_director = read(resolve_source("LivingWorldDirector.cpp"))
+pg111_shire_builder = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+if "SpawnActor<AShireAmbientNPC>" in pg111_shire_builder:
+    fail("PG-111 ShirePrototypeWorldBuilder must not own ambient crowd spawning after W01 convergence")
+if "AcquireAmbientNPC" not in pg111_director or "ReleaseAmbientNPCToPool" not in pg111_director:
+    fail("PG-111 LivingWorldDirector ambient pooling ownership missing")
 for pg111_symbol in [
     "Random.FRand() < 0.72f",
     "GetActorForwardVector().GetSafeNormal2D()",

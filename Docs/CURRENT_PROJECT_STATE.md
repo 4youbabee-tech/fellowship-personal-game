@@ -1,3 +1,39 @@
+## 2026-09-25 - PR #74 repeated red isolated to incomplete W00->W01 governance transition
+
+- Pre-Unreal #882 and #883 did **not** report an Unreal/runtime regression. They failed in Project Governor coherence because some fields still described the old W00 control point while current_focus/execution_control had already moved to W01.
+- #883 errors were branch/PR handoff mismatch, development-mode mismatch, stale blocking W00 gate/freeze assumptions, MASTER_EXECUTION_BOARD still on PR #73, and a stale legacy handoff baseline.
+- Root cause: the W00 -> W01 control-plane transition was only partially updated across governance surfaces. This is metadata/governance drift, not evidence that the ambient-ownership C++ change failed.
+- Correction is being applied as one atomic multi-file commit so the branch produces one new validation head rather than another sequence of self-triggered runs.
+- Status remains **STATIC-VALIDATED / FRESH PRE-UNREAL + UE4.27.2 CORE PROOF PENDING**.
+
+## 2026-09-25 - W01 validator follow-up after Pre-Unreal #881
+
+- Pre-Unreal #881 failed on the first W01 head because PG-035/PG-036/PG-111 still encoded the pre-W01 builder-owned Shire ambient implementation: they required direct Shire builder bird/activity assignments and the old WorldLifeSaturationPlan status.
+- This was validator drift against the intentional single-owner architecture, not evidence that the new runtime ownership change failed in UE4.
+- `Scripts/pre_unreal_validate.py` now validates Shire activity props through `LivingWorldDirector::ChooseBaselineProp`, Shire bird life through the P1C01 `FAUNA` + `EVT_FAUNA_BIRDS` data contract, the new single-owner world-life status/authority, and explicitly rejects any return of `SpawnActor<AShireAmbientNPC>` to `ShirePrototypeWorldBuilder`.
+- Fresh exact-head validation is running on `03e886a6ecc0673680975b11fdda3fbc711041d2`: Pre-Unreal #882 in progress; Unreal #717 pending at the time of this record.
+- Evidence boundary remains **STATIC-VALIDATED / FRESH ENGINE PROOF PENDING**.
+
+## 2026-09-25 - W01 drop 1 implemented: ambient single ownership and budget authority
+
+- Branch: `production/w01-p1c01-kickoff-v1`.
+- `ShirePrototypeWorldBuilder` no longer creates its own `AShireAmbientNPC` population. Ambient crowds are now owned by `ALivingWorldDirector` and therefore use its existing object pool, culling, target density and danger-thinning path.
+- Named/story NPCs and quest actors remain builder-owned; this change does not transfer canonical story ownership to the ambient system.
+- `LivingWorldEventPlan.json#region_budgets` is now the sole runtime authority for micro-event caps and event-start cadence. `WorldLifeSaturationPlan.json` is baseline-population density/role authority only.
+- P1C01 `PlayRunner` remains in the director-owned role set so the pre-adventure playful Shire beat is not silently lost when duplicate builder crowds are removed.
+- Static source checks: direct builder ambient spawn count = 0; old life-saturation micro-event override reads = 0.
+- Status: **STATIC-VALIDATED / FRESH PRE-UNREAL + UE4.27.2 COMPILE/RUNTIME PROOF PENDING**. No new PIE/device/visual/performance acceptance is claimed.
+
+## 2026-09-25 - W00 closed; W01/P1C01 production vertical slice opened
+
+- Canonical W00 close head: `develop@809e56a9e1dc4b453e02a0b04b6875a71df21933`.
+- GitHub evidence on that head: Pre-Unreal #880 SUCCESS; Unreal #715 SUCCESS via the explicit validation-policy-only inherit path; Branch Cleanup #3 SUCCESS with only `develop` and `main` remaining.
+- Owner-side P1C01 PIE evidence on the Documents clone: `ShireStartupGrounding: PASS chapter=P1C01 commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.8 drift=0.0`; player remained grounded; owner reported no same-session Output Log matches for `Mobility is Static` or `SetStaticMesh`.
+- W00 architectural/root-repair lane is therefore **CLOSED**. Reopen it only for a concrete regression. This does not promote whole-chapter PIE, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED status.
+- W01/P1C01 is now the sole active production vertical slice. First code work remains: centralize ambient population ownership under `LivingWorldDirector` + pooling, then reconcile `LivingWorldEventPlan` vs `WorldLifeSaturationPlan` authority before any density increase.
+- The owner-forwarded sensory/reactive review was checked against live source. Accepted additions are spatial environmental audio + surface foley, performance-scaled vegetation material motion, and later skeletal Look-At/Foot IK. Corrected stale claims: ambient NPC player awareness/weather reactions already exist; audio already has async routing/fades/ducking; ambient pooling already exists in `LivingWorldDirector`.
+- Detailed accepted/corrected notes are registered in `Docs/WORLD_DETAIL_LEDGER.md` before implementation, satisfying the W01 scope gate.
+
 ## 2026-09-25 - W00 lessons lock after current develop machine-green
 - Pre-Unreal #875 confirmed the PG-161 correction still used the wrong textual anchor (helper-function `Docs/` test instead of the main changed-file loop). The guard is now anchored inside `foreach($p in $changed)` so it inspects only the forbidden ordinary-safe branch. Exact-head rerun pending; this remains validator self-test work, not a game regression.
 - Pre-Unreal #871 exposed one self-test false positive in the new PG-161 guard: it confused the required explicit validation-policy-only path with forbidden ordinary metadata classification. The guard is narrowed structurally (PG-164); exact-head rerun is pending. This is validator logic, not an Unreal/game regression.

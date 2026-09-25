@@ -3718,67 +3718,37 @@
     }
   ],
   "active_gate": {
-    "id": "ARCHITECTURAL_STABILIZATION_GATE",
+    "id": "W01_P1C01_VERTICAL_SLICE_GATE",
     "status": "PARTIAL",
-    "blocks_major_feature_expansion": true,
+    "blocks_major_feature_expansion": false,
     "required_evidence": [
-      "fresh exact-head Pre-Unreal including deep + asset + governor audits",
-      "real UE4.27.2 C++ compile and deterministic production import",
-      "non-fail-fast startup + P1C01-P1C08 runtime sweep",
-      "state + continuous transition + isolated disk-save and persistence-edge roundtrip",
-      "warning-debt/material persistence gate",
-      "packaged runtime Data JSON staging/read validation",
-      "actual authored audio-bank presence/playback without -NoSound",
-      "isolated Public/Private runtime-source migration followed by exact-head UE4.27.2 recompile/runtime validation",
-      "target-device DX11 720p Low-Medium performance/memory/GC/tick profiling",
-      "chapter-specific human PIE/pacing/visual acceptance evidence"
+      "fresh exact-head Pre-Unreal for the active W01 candidate",
+      "UE4.27.2 core validation for C++/Data deltas",
+      "P1C01 human rendered review as ordered production stages land",
+      "target-device DX11 720p Low-Medium profiling before density or expensive presentation expansion",
+      "Gate 6/7 human visual, pacing and performance evidence before broad Part II/III runtime production"
     ],
-    "note": "Current canonical develop ed3587aa... is machine-green via Pre-Unreal #869 and Unreal #704, including UE4.27.2 build/import/Automation/startup/P1C01-P1C08/route-state/warning/package/data/startup/hardware. Historical real P1C01 grounding proof exists, but one final owner-side PIE confirmation on canonical post-cleanup develop remains before the W00 repair lane is closed. No DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED status is inferred.",
+    "note": "W00 architectural stabilization closed on develop@809e56a9 after owner-side P1C01 grounding/warning-tail proof. W01/P1C01 is now the sole production vertical slice.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
       "ci_guard_ids": [
-        "PG-056",
-        "PG-057",
-        "PG-100",
-        "PG-101",
-        "PG-102"
+        "PG-078",
+        "PG-111",
+        "PG-150",
+        "PG-159",
+        "PG-160"
       ],
-      "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
+      "behavior": "Validate the exact W01 candidate head; machine evidence never promotes visual/device/performance acceptance."
     },
-    "last_green_head": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
+    "last_green_head": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
     "evidence": {
-      "last_engine_proven_head": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
-      "pre_unreal": "#869 SUCCESS.",
-      "unreal_build": "#704 SUCCESS through build/import/Automation/runtime/warning/package/data/startup/hardware.",
-      "warehouse": "#232 SUCCESS; no-delta path stayed GitHub-hosted and self-hosted staging was skipped.",
-      "root_correction_boundary": "Public/Private migration and its known validator/persistent-runner correction families are machine-accepted on CP-W00-154. Do not reopen validator/Governor/root-code cleanup unless a new concrete regression appears."
+      "last_engine_proven_head": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
+      "pre_unreal": "#880 SUCCESS.",
+      "unreal_build": "#715 SUCCESS via safe validation-policy inheritance; nearest full machine proof #704.",
+      "root_correction_boundary": "W00 is closed; reopen only for a concrete new regression."
     },
-    "evidence_scope": "ed3587aa... is COMPILE-TESTED + HEADLESS/PACKAGED-RUNTIME-VALIDATED for the current automated W00 suite. Human PIE/device/visual/performance labels remain separate.",
-    "current_owner_observation": {
-      "sha": "4879a19999951354676341f032c358ac98679c44",
-      "pre_unreal": {
-        "run_number": 531,
-        "status": "SUCCESS"
-      },
-      "unreal": {
-        "run_number": 366,
-        "status": "SUCCESS",
-        "scope": [
-          "C++ build",
-          "production asset import",
-          "startup",
-          "P1C01-P1C08 chapter audit",
-          "route/story state roundtrip",
-          "warning-debt guard"
-        ]
-      },
-      "merge": {
-        "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-        "status": "MERGED_TO_DEVELOP"
-      },
-      "historical_only": true
-    }
+    "evidence_scope": "W00 close head has machine proof plus P1C01 startup-grounding/warning-tail PIE evidence; whole-chapter device/visual/performance acceptance remains separate."
   },
   "reference_only_files": [
     "Docs/CURRENT_PROJECT_STATE.md",
@@ -4142,7 +4112,7 @@
       "Allowing only bounded shallow depth 1 or 2 preserves exact-head safety while supporting direct-parent classification.",
       "No new validator/Governor cleanup lane is opened; this is the concrete CP155 regression and its narrow correction."
     ],
-    "next_priority": "CP_W00_156_STATIC_CLOSURE_THEN_ACCEPTANCE_ONLY",
+    "next_priority": "W01_P1C01_AMBIENT_OWNERSHIP_AND_BUDGET_AUTHORITY",
     "truth_boundary": "Once CP156 static validation is green, machine repair is closed unless a new concrete regression appears. Remaining W00 work is packaged Data, real audio, target-device profiling and human PIE/pacing/visual acceptance.",
     "stabilization_wave": {
       "status": "FINAL_STATIC_REPAIR_PENDING_PROOF",
@@ -4150,17 +4120,16 @@
     }
   },
   "development_mode": {
-    "id": "W00_ARCHITECTURAL_STABILIZATION",
+    "id": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "status": "ACTIVE",
-    "entered_on": "2026-09-23",
-    "supersedes": "VISUAL_PRODUCTION_FIRST",
-    "reason": "Owner froze W01 and new production expansion until systemic architecture/evidence/governance stabilization is closed.",
+    "entered_on": "2026-09-25",
+    "supersedes": "W00_ARCHITECTURAL_STABILIZATION",
+    "reason": "W00 exit criteria were satisfied on canonical develop; production resumes only through the P1C01 Shire vertical slice.",
     "rules": [
-      "Fix root causes and shared contracts rather than chapter-specific patches.",
-      "Only B0 exact-head stability, B4 performance/QA and continuous-control work may execute while the freeze is active.",
-      "Do not broaden warehouse saturation, gameplay features, world regions, character production or living-world content during W00.",
-      "Machine/headless success never substitutes for PIE, target-device, pacing or visual acceptance.",
-      "Public/Private migration is an isolated architecture step and must not carry gameplay redesign."
+      "Keep P1C01 as the sole runtime production benchmark until Gate 6/7 evidence is earned.",
+      "Follow the ordered dependency chain; do not reopen historical W00 repair loops without a concrete regression.",
+      "Heavy assets remain soft/asynchronous; crowd-scale ambient actors use pooling; repeated world detail uses instancing/LOD/culling.",
+      "Machine/headless success never substitutes for PIE, target-device, pacing or visual acceptance."
     ],
     "proof_boundary": {
       "machine_evidence_cannot_promote_manual_acceptance": true,
@@ -4170,7 +4139,7 @@
         "VISUALLY-ACCEPTED",
         "PERFORMANCE-ACCEPTED"
       ],
-      "note": "Static, compile, import and headless runtime evidence remain machine evidence only. Human/device evidence is required for these labels."
+      "note": "Static/compile/headless evidence validates implementation only."
     }
   },
   "backend_completion": {
@@ -4192,35 +4161,35 @@
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
   "current_focus": {
-    "production_lane": "W00_ARCHITECTURAL_STABILIZATION",
+    "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "Finish W00 only after the final develop build/PIE proof also confirms no C4996 StaticMaterials warning and no project-owned SetStaticMesh mobility warning.",
+    "rule": "W01/P1C01 active. Ambient single ownership and micro-event budget authority are implemented on the W01 branch but remain STATIC-VALIDATED until fresh engine proof. Continue only after required validation; do not reopen W00 without a concrete regression.",
     "machine_baseline": {
-      "sha": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
-      "pre_unreal": "#869 SUCCESS",
-      "unreal": "#704 SUCCESS full machine chain",
-      "scope": "Current canonical develop is COMPILE-TESTED and headless/package-runtime validated. Human P1C01 PIE grounding/mobility-warning confirmation remains separate; no device/visual/performance acceptance is inferred."
+      "sha": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
+      "pre_unreal": "#880 SUCCESS",
+      "unreal": "#715 SUCCESS validation-policy inherit; nearest full machine proof #704",
+      "scope": "Canonical W00 close head has post-merge static/CI success plus owner-side P1C01 grounding/warning-tail PIE evidence. No device/visual/performance acceptance is inferred."
     },
-    "w01_freeze": "ACTIVE_UNTIL_W00_EXIT_CRITERIA"
+    "w01_freeze": "RELEASED_BY_W00_EXIT"
   },
   "immediate_next_large_actions": [
-    "1. Merge the bounded W00 lessons-lock maintenance PR only after exact-head Pre-Unreal/validation-policy checks are green; do not open gameplay scope in parallel.",
-    "2. Pull canonical develop in the Documents clone and run SHIRE_PIE_VERIFY.bat from the developer clone, not the Actions runner workspace.",
-    "3. In P1C01 capture ShireStartupGrounding: PASS on the exact develop SHA, confirm the player does not fall, and confirm no project-owned SetStaticMesh Mobility is Static warning appears.",
-    "4. If that human PIE tail is clean, close W00. Do not create another repair wave without a concrete regression.",
-    "5. Before W01 code changes, register the P1C01 crowd-ownership and living-world-budget corrections in WORLD_DETAIL_LEDGER.md.",
-    "6. Open W01/P1C01 as the sole production vertical-slice campaign: unify ambient population ownership under LivingWorldDirector/object pooling, resolve event-budget authority drift, then terrain/geography, Hobbiton architecture, materials/vegetation, lighting/water, character presentation, living Shire activity, quest/audio polish and measured target-device profiling.",
-    "7. Keep Part II/III implementation gated; other regions remain roadmap/foundation work until the Shire satisfies Gate 6/7 evidence."
+    "1. Keep W00 closed unless a concrete regression appears; do not revive historical repair waves.",
+    "2. W01/P1C01 first code step: remove duplicate ambient AShireAmbientNPC ownership from ShirePrototypeWorldBuilder and route ambient population through LivingWorldDirector pooling while preserving named/story actor ownership.",
+    "3. Reconcile LivingWorldEventPlan vs WorldLifeSaturationPlan micro-event caps/cadence into one runtime authority before increasing density.",
+    "4. Continue P1C01 production in order: terrain/geography, Hobbiton/Bag End architecture, materials/vegetation, lighting/sky/fog/water, character presentation, living Shire NPC/fauna/environment motion, quest/audio polish, target-device profiling.",
+    "5. Fold verified sensory/reactive work into those stages: spatial environmental audio + surface foley, performance-scaled vegetation material motion, and later skeletal Look-At/Foot IK behind rig readiness and significance LOD.",
+    "6. Keep Part II/III implementation gated until P1C01 reaches Gate 6/7 human visual/pacing/performance evidence."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-159",
-    "source_head": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
-    "branch": "maintenance/w00-lessons-lock-v1",
-    "pull_request": 73,
+    "checkpoint_id": "CP-W01-001",
+    "source_head": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
+    "branch": "production/w01-p1c01-kickoff-v1",
+    "pull_request": 74,
     "verified": {
       "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
-      "latest_automated_closure": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: current canonical develop machine-green",
-      "proof_boundary": "Machine/headless/package evidence only; human PIE/device/visual/performance acceptance remains separate."
+      "latest_automated_closure": "809e56a9e1dc4b453e02a0b04b6875a71df21933: Pre-Unreal #880 SUCCESS + Unreal #715 SUCCESS validation-policy inherit + Branch Cleanup #3 SUCCESS",
+      "owner_pie": "develop@809e56a9: P1C01 ShireStartupGrounding PASS stableSeconds=2.0 ground=yes drop=1.8 drift=0.0; player remained grounded; owner reported zero same-session Mobility is Static / SetStaticMesh search matches",
+      "proof_boundary": "P1C01 startup-grounding/warning-tail PIE evidence only; no device/visual/performance acceptance."
     },
     "exact_head_scope": [
       "CP154 full Pre-Unreal chain",
@@ -4232,50 +4201,45 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "W00 lessons-lock maintenance only: preserve two-day regression memory and prevent redundant validation/cook repetition. No W01 gameplay implementation yet.",
+    "active_wave": "W01/P1C01 drop 1 implemented: builder duplicate ambient spawning removed; LivingWorldDirector is ambient owner; LivingWorldEventPlan is sole micro-event budget authority. Fresh Pre-Unreal + UE4.27 proof pending.",
     "next_actions": [
-      "1. Merge the bounded W00 lessons-lock maintenance PR only after exact-head Pre-Unreal/validation-policy checks are green; do not open gameplay scope in parallel.",
-      "2. Pull canonical develop in the Documents clone and run SHIRE_PIE_VERIFY.bat from the developer clone, not the Actions runner workspace.",
-      "3. In P1C01 capture ShireStartupGrounding: PASS on the exact develop SHA, confirm the player does not fall, and confirm no project-owned SetStaticMesh Mobility is Static warning appears.",
-      "4. If that human PIE tail is clean, close W00. Do not create another repair wave without a concrete regression.",
-      "5. Before W01 code changes, register the P1C01 crowd-ownership and living-world-budget corrections in WORLD_DETAIL_LEDGER.md.",
-      "6. Open W01/P1C01 as the sole production vertical-slice campaign: unify ambient population ownership under LivingWorldDirector/object pooling, resolve event-budget authority drift, then terrain/geography, Hobbiton architecture, materials/vegetation, lighting/water, character presentation, living Shire activity, quest/audio polish and measured target-device profiling."
+      "1. Run exact-head Pre-Unreal on the W01 branch.",
+      "2. Run UE4.27.2 core validation for the C++/Data delta; do not cook/package because no package/config/streaming contract changed.",
+      "3. If engine-green, continue P1C01 terrain/geography foundation, then Hobbiton/Bag End architecture.",
+      "4. Preserve Gate 6/7 human visual/pacing/performance boundaries."
     ],
     "unverified_acceptance": [
-      "W00 lessons-lock PR exact-head Pre-Unreal proof after PG-164 correction",
-      "P1C01 human PIE grounding/traversal confirmation on final canonical develop after maintenance merge",
-      "absence of project-owned SetStaticMesh mobility warnings in that exact PIE session",
-      "local immutable-launcher rerun proof in the Documents clone",
+      "P1C01 full traversal/quest/save-load human PIE acceptance",
       "target-device 720p Low-Medium performance profiling",
       "P1C01 visual/pacing/NPC-believability acceptance",
-      "real audio listening/mix acceptance"
+      "real audio listening/mix acceptance after production bank/spatial layer integration"
     ],
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
+        "sha": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
         "pre_unreal": {
-          "sha": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
-          "run_id": 36074075688,
+          "sha": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
+          "run_id": 36122047603,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
-          "run_id": 36074075678,
+          "sha": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
+          "run_id": 36122047612,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
+        "sha": "ae79cf2db7e87481a03728e0ad3ca61f4d7c5c52",
         "pre_unreal": {
-          "sha": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
-          "run_id": 36114260452,
-          "status": "SUCCESS"
+          "sha": "ae79cf2db7e87481a03728e0ad3ca61f4d7c5c52",
+          "run_id": 36128503229,
+          "status": "FAILURE"
         },
         "unreal": {
-          "sha": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
-          "run_id": 36114260514,
-          "status": "SUCCESS"
+          "sha": "ae79cf2db7e87481a03728e0ad3ca61f4d7c5c52",
+          "run_id": 36128503140,
+          "status": "PENDING"
         }
       }
     }
@@ -4374,10 +4338,10 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
-    "current_short_branch": "maintenance/w00-lessons-lock-v1",
+    "current_short_branch": "production/w01-p1c01-kickoff-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 73,
-    "open_pr_policy": "PR #73 is the sole bounded W00 lessons-lock maintenance train targeting develop. It may change only governance/regression-memory/validation-policy surfaces needed to preserve learned invariants. No W01 gameplay implementation is mixed into it.",
+    "current_open_pr": 74,
+    "open_pr_policy": "PR #74 is the sole short-lived W01/P1C01 candidate targeting develop.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
       "date": "2026-09-25",
@@ -5097,6 +5061,28 @@
       ],
       "next_action": "Keep converting the broad source map into provider-specific candidate/acquisition batches and exact warehouse coverage metrics.",
       "verification_sha": "e9ea004b6417f0276453d6d230ebfaf9d8545e5c"
+    },
+    {
+      "id": "EXT-REV-2026-09-25-001",
+      "source": "Owner-forwarded Sensory & Reactive Layer review",
+      "verification_sha": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
+      "verification_status": "PARTIALLY_VERIFIED_CURRENT_HEAD",
+      "claim": "Living-world logic exists but needs a sensory/reactive presentation layer: vegetation wind response, adaptive environmental audio/surface footsteps, and NPC head/eye/foot micro-reactions.",
+      "verified_result": "Live source confirms real gaps in spatial environmental audio/physical-surface footsteps, vegetation WPO/wind material logic, and skeletal Look-At/Foot IK. The review is stale where it implies NPC awareness/weather reactions, audio fades/ducking or pooling are absent: AShireAmbientNPC already observes/turns toward the player, varies idle head look, reacts to inclement weather and distance-throttles Tick; UShireAudioSubsystem already uses async loading with ambience fades/music ducking; ALivingWorldDirector already has an ambient NPC pool. The current ownership defect is duplicate direct ambient spawning in ShirePrototypeWorldBuilder, and LivingWorldEventPlan vs WorldLifeSaturationPlan still disagree on micro-event caps/cadence.",
+      "disposition": "PARTIALLY_ACCEPTED_W01_DROP1_OWNERSHIP_AND_BUDGET_ITEMS_IMPLEMENTED",
+      "linked_requirements": [
+        "REQ-WORLD-001",
+        "REQ-NPC-001",
+        "REQ-NPC-005",
+        "REQ-PROD-009",
+        "REQ-PERF-003"
+      ],
+      "linked_work": [
+        "WORK-WORLD-001",
+        "WORK-LW-004",
+        "WORK-PERF-006"
+      ],
+      "next_action": "Validate drop 1. Then continue ordered P1C01 production; spatial audio/foley, vegetation material motion and skeletal IK remain scheduled inside later W01 stages rather than as parallel scope."
     }
   ],
   "project_source_library": {
@@ -5237,11 +5223,11 @@
     "owner_observation_role": "Use owner play time for final symptom/pacing/visual confirmation only after reproducible technical checks have run."
   },
   "integration_train": {
-    "branch": "integration/comprehensive-foundation-v1",
-    "baseline": "fb7afb8e39a4186245063ddf2a46fc0df8ba6c56",
-    "current_wave": "W00_GOVERNOR_EXECUTION_TRUTH_AND_ACCEPTANCE_CLOSURE",
-    "merge_policy": "Keep PR #67 as the active W00 integration train; do not independently merge historical branches or open post-W00 feature/content work while the stabilization gate is active.",
-    "proof_boundary": "Exact parent 96398e7 passed Pre #781, Warehouse #197 and Unreal #616. The CP-W00-148 child head requires fresh exact-head proof."
+    "branch": "production/w01-p1c01-kickoff-v1",
+    "baseline": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
+    "current_wave": "W01_P1C01_DROP1_AMBIENT_OWNERSHIP_BUDGET_AUTHORITY",
+    "merge_policy": "PR #74 is the active W01 candidate targeting develop; historical W00 trains stay closed.",
+    "proof_boundary": "Fresh exact-head Pre-Unreal + UE4.27.2 core proof required before promotion."
   },
   "completion_wave_map": {
     "status": "ACTIVE_PLANNING_ESTIMATE",
@@ -5285,18 +5271,17 @@
   },
   "execution_control": {
     "mode": "ACTIVE_GATE_FIRST",
-    "active_lane": "W00_ARCHITECTURAL_STABILIZATION",
+    "active_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "allowed_bundles": [
-      "B0_EXACT_HEAD_STABILITY",
+      "B2_CHARACTERS_AND_WORLD_PRODUCTION",
+      "B3_LIVING_WORLD_AND_PRESENTATION",
       "B4_PERFORMANCE_AND_QA",
       "CONTINUOUS_CONTROL"
     ],
     "frozen_bundles": [
-      "B1_PART1_STORY_GAMEPLAY_COMPLETE",
-      "B2_CHARACTERS_AND_WORLD_PRODUCTION",
-      "B3_LIVING_WORLD_AND_PRESENTATION"
+      "B1_PART1_STORY_GAMEPLAY_COMPLETE"
     ],
-    "freeze_reason": "Owner explicitly ordered architectural stabilization and root-cause closure before W01 or broader feature/content production.",
+    "freeze_reason": "W00 architectural stabilization is closed. W01 is limited to the existing P1C01 production vertical slice; broad Part I story/gameplay expansion remains frozen until the Shire clears Gate 6/7.",
     "backlog_semantics": "ACTIVE backlog outside allowed_bundles remains recorded memory, not permission to execute it while the active gate blocks expansion.",
     "completed_parent_proof": {
       "sha": "efdb2e291505472247fae921945b083b3cc1ce2c",
@@ -5305,11 +5290,9 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Run fresh exact-head Pre-Unreal and UE4.27.2 build on canonical develop.",
-      "Confirm the build log has no StaticMaterials C4996 warning.",
-      "Pull canonical develop in the Documents clone and run one P1C01 PIE confirmation.",
-      "Confirm ShireStartupGrounding PASS, no player fall, and no project-owned SetStaticMesh mobility warnings.",
-      "Then close W00 and perform final branch cleanup."
+      "Validate W01 drop 1 exact head through Pre-Unreal and UE4.27.2 core lane.",
+      "If green, begin terrain/geography foundation for P1C01.",
+      "Do not increase crowd density before target-device profiling."
     ]
   },
   "development_mode_contract": {
@@ -5332,6 +5315,10 @@
       "W00_ARCHITECTURAL_STABILIZATION": {
         "supersedes": "VISUAL_PRODUCTION_FIRST",
         "class": "STABILIZATION"
+      },
+      "W01_P1C01_PRODUCTION_VERTICAL_SLICE": {
+        "supersedes": "W00_ARCHITECTURAL_STABILIZATION",
+        "class": "PRODUCTION"
       }
     },
     "required_manual_only_labels": [
@@ -5342,7 +5329,7 @@
     ]
   },
   "w00_final_closure": {
-    "status": "CURRENT_DEVELOP_MACHINE_GREEN_HUMAN_PIE_WARNING_TAIL_PENDING",
+    "status": "CLOSED_OWNER_PIE_WARNING_TAIL_PROVEN",
     "branch": "develop",
     "base_green_head": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
     "plan": "Data/W00FinalClosurePlanV1.json",
@@ -5360,16 +5347,24 @@
       "NPC believability",
       "real audio listening/mix after complete bank integration"
     ],
-    "open_rule": "If automated closure gates are green, W01 may open; remaining human-only acceptance is tracked separately and may not be misrepresented as architectural repair.",
+    "open_rule": "W00 is closed. Reopen architectural/root repair only for a concrete regression with chapter/log/build evidence.",
     "governor_integration_baseline": "develop",
     "automated_evidence": {
-      "develop_head": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
-      "pre_unreal": "#869 SUCCESS",
-      "unreal": "#704 SUCCESS full chain",
-      "inherited_history": "Earlier #655/#656/#651 evidence remains historical support, but #704 is the current canonical develop machine baseline."
+      "develop_head": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
+      "pre_unreal": "#880 SUCCESS",
+      "unreal": "#715 SUCCESS via explicit validation-policy-only safe inheritance",
+      "inherited_full_machine_history": "#704 on ed3587aa completed build/import/Automation/startup/P1C01-P1C08/route-state/warning/package/data/startup/hardware."
+    },
+    "owner_pie_evidence": {
+      "exact_head": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
+      "branch": "develop",
+      "grounding_log": "ShireStartupGrounding: PASS chapter=P1C01 commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.8 drift=0.0",
+      "visual_observation": "Player remained on blocking ground in P1C01.",
+      "warning_search": "Owner reported zero same-session Output Log matches for Mobility is Static and SetStaticMesh.",
+      "proof_boundary": "P1C01 startup-grounding/warning-tail only; not whole-chapter, device, visual or performance acceptance."
     }
   },
-  "active_acceptance_branch": "acceptance/w00-final-closure-v1",
+  "active_acceptance_branch": "CLOSED_W00_NO_ACTIVE_ACCEPTANCE_BRANCH",
   "known_failures": [
     {
       "id": "KF-W00-DBGHELP-001",

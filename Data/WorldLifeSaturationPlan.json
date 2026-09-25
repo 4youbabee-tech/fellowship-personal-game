@@ -1,7 +1,7 @@
 {
-  "schema_version": 4,
+  "schema_version": 5,
   "plan_id": "PART1_WORLD_ALIVE_SATURATION_V10",
-  "status": "V10_EARLY_REALM_CULTURAL_LIFE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+  "status": "W01_P1C01_SINGLE_OWNER_BUDGET_AUTHORITY_IMPLEMENTED_PENDING_ENGINE_PROOF",
   "purpose": "Make Part I feel continuously inhabited where film continuity and culture support habitation, with stronger culture-specific early-realm routines and chapter-tuned density budgets. Preserve fauna/environmental motion instead of invented civilians in exposed wilderness, Caradhras, Moria and Anduin/Amon Hen.",
   "runtime_owner": "ALivingWorldDirector + AShireAmbientNPC + AWorldAmbientMotionActor",
   "baseline_population_targets": {
@@ -22,7 +22,8 @@
       "MarketVendor",
       "PartyGuest",
       "FerryWorker",
-      "RoadWalker"
+      "RoadWalker",
+      "PlayRunner"
     ],
     "P1C02": [
       "BreeTownsperson",
@@ -66,6 +67,8 @@
     "Lantern"
   ],
   "runtime_rules": [
+    "P1C01 ambient residents are owned/spawned only by ALivingWorldDirector; ShirePrototypeWorldBuilder owns named/story actors and world geometry, not ambient crowds.",
+    "LivingWorldEventPlan is the sole authority for micro-event caps/cadence; this plan owns baseline population density only.",
     "Maintain a baseline population around the player in addition to disposable micro-events.",
     "Baseline actors are culled outside a chapter-tuned radius and replenished gradually rather than spawned in one frame.",
     "Danger state suppresses peaceful social/work events and applies a chapter-specific population fraction instead of freezing the world.",
@@ -76,8 +79,6 @@
     "No ambient actor owns story progress, save-critical state or quest coordinates."
   ],
   "density_profile": {
-    "max_active_micro_events_near_player": 5,
-    "min_seconds_between_event_starts": 6,
     "baseline_spawn_interval_seconds": 0.35,
     "baseline_inner_radius_cm": 850,
     "baseline_outer_radius_cm": 2600,
@@ -213,5 +214,6 @@
     ],
     "performance_rule": "Density quality is improved primarily through role variety, spatial profile and existing instanced/detail systems; this wave does not increase the eight chapter baseline population target counts.",
     "acceptance_boundary": "Exact-head UE4.27.2 validation is required. Target-device FPS/hitch/memory and rendered density/pacing remain separate acceptance evidence."
-  }
+  },
+  "micro_event_budget_authority": "Data/LivingWorldEventPlan.json#region_budgets"
 }

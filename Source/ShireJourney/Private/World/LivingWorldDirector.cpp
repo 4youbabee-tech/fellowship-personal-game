@@ -233,14 +233,8 @@ bool ALivingWorldDirector::LoadLifeSaturationContract()
     if (Root->TryGetObjectField(TEXT("density_profile"), Density) && Density && Density->IsValid())
     {
         double Value = 0.0;
-        if ((*Density)->TryGetNumberField(TEXT("max_active_micro_events_near_player"), Value))
-        {
-            MaxActiveMicroEvents = FMath::Clamp(static_cast<int32>(Value), 1, 6);
-        }
-        if ((*Density)->TryGetNumberField(TEXT("min_seconds_between_event_starts"), Value))
-        {
-            MinSecondsBetweenEventStarts = FMath::Clamp(static_cast<float>(Value), 4.0f, 30.0f);
-        }
+        // Micro-event caps/cadence are owned exclusively by LivingWorldEventPlan.
+        // WorldLifeSaturationPlan controls only baseline population density.
         if ((*Density)->TryGetNumberField(TEXT("baseline_spawn_interval_seconds"), Value))
         {
             PopulationSpawnInterval = FMath::Clamp(static_cast<float>(Value), 0.25f, 2.0f);

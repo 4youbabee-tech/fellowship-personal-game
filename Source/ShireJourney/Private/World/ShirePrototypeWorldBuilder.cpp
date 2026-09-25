@@ -1,7 +1,6 @@
 #include "ShirePrototypeWorldBuilder.h"
 
 #include "BlackRiderPrototype.h"
-#include "ShireAmbientNPC.h"
 #include "ShireNPC.h"
 #include "ShireQuestSubsystem.h"
 #include "ShireQuestTrigger.h"
@@ -1115,137 +1114,10 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     };
     for(const FVector& P:TreeLocations) SpawnTree(P,0.80f);
 
-    // Population is clustered where people logically live/work, leaving wilderness quieter.
-    const FVector HobbitStarts[] = {
-        FVector(-2050,-330,20),FVector(-1840,80,20),FVector(-1660,-420,20),FVector(-1510,160,20),
-        FVector(-1320,430,20),FVector(-1180,20,20),FVector(-900,330,20),FVector(-760,-360,20),
-        FVector(-610,-120,20),FVector(-310,190,20),FVector(-80,420,20),FVector(220,180,20),
-        FVector(-120,1120,20),FVector(180,1460,20),FVector(520,1160,20),FVector(680,1480,20),
-        FVector(1150,-320,20),FVector(2500,400,20),
-        FVector(6100,-1460,20),FVector(6700,-1180,20),FVector(7350,-900,20),FVector(8200,-450,20),
-        FVector(9000,150,20),FVector(10200,-1250,20),
-        FVector(11800,1050,20),FVector(12800,780,20),FVector(17200,-650,20),
-        FVector(ShireLayout::FerryX-1300,-720,20),FVector(ShireLayout::FerryX-900,-250,20)
-    };
-    FActorSpawnParameters AmbientSpawnParams;
-    AmbientSpawnParams.SpawnCollisionHandlingOverride =
-        ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-    for(int32 Index=0; Index<UE_ARRAY_COUNT(HobbitStarts); ++Index)
-    {
-        AShireAmbientNPC* Hobbit=GetWorld()->SpawnActor<AShireAmbientNPC>(
-            HobbitStarts[Index],FRotator::ZeroRotator,AmbientSpawnParams);
-        if(!Hobbit) continue;
+    // Ambient population ownership belongs exclusively to ALivingWorldDirector.
+    // The director applies the chapter population target, pooling, culling, danger
+    // thinning and micro-event/fauna budgets. Story/named actors remain builder-owned.
 
-        Hobbit->RoutinePointA=HobbitStarts[Index];
-        const float Side=(Index%2==0)?1.0f:-1.0f;
-        Hobbit->RoutinePointB=HobbitStarts[Index]+FVector(300.0f+35.0f*(Index%3),Side*150.0f,0);
-        Hobbit->WalkSpeed=44.0f+6.0f*(Index%4);
-
-        if(Index<12)
-        {
-            Hobbit->RoutineRole=TEXT("Villager");
-            Hobbit->MinWait=2.0f;
-            Hobbit->MaxWait=5.0f;
-        }
-        else if(Index<16)
-        {
-            Hobbit->RoutineRole=TEXT("PartyGuest");
-            Hobbit->ActivityPropType=TEXT("Mug");
-            Hobbit->PlayerNoticeRadius=340.0f;
-            Hobbit->MinWait=1.0f;
-            Hobbit->MaxWait=3.0f;
-        }
-        else if(Index<18)
-        {
-            Hobbit->RoutineRole=TEXT("Courier");
-            Hobbit->ActivityPropType=TEXT("Satchel");
-            Hobbit->WalkSpeed=70.0f;
-        }
-        else if(Index<24)
-        {
-            Hobbit->RoutineRole=TEXT("FieldWorker");
-            Hobbit->ActivityPropType=TEXT("Basket");
-            Hobbit->WalkSpeed=42.0f;
-            Hobbit->MinWait=2.5f;
-            Hobbit->MaxWait=6.0f;
-        }
-        else if(Index<27)
-        {
-            Hobbit->RoutineRole=TEXT("RoadWalker");
-            Hobbit->PlayerNoticeRadius=260.0f;
-        }
-        else
-        {
-            Hobbit->RoutineRole=TEXT("FerryWorker");
-            Hobbit->ActivityPropType=TEXT("Crate");
-            Hobbit->WalkSpeed=38.0f;
-        }
-    }
-
-    // Lightweight sky life: a few cheap ambient birds keep Hobbiton/fields moving without heavy AI.
-    const FVector BirdStarts[] = {
-        FVector(-1500, -600, 420), FVector(-200, 850, 520), FVector(1900, -720, 460),
-        FVector(6900, -900, 560), FVector(12600, 820, 500), FVector(20500, -640, 540)
-    };
-    for (int32 Index = 0; Index < UE_ARRAY_COUNT(BirdStarts); ++Index)
-    {
-        AShireAmbientNPC* Bird = GetWorld()->SpawnActor<AShireAmbientNPC>(
-            BirdStarts[Index], FRotator::ZeroRotator, AmbientSpawnParams);
-        if (!Bird) continue;
-        Bird->RoutineRole = TEXT("Bird");
-        Bird->RoutinePointA = BirdStarts[Index];
-        Bird->RoutinePointB = BirdStarts[Index] + FVector(
-            650.0f + 90.0f * (Index % 3),
-            Index % 2 == 0 ? 420.0f : -420.0f,
-            80.0f + 35.0f * (Index % 2));
-        Bird->WalkSpeed = 135.0f + 12.0f * (Index % 3);
-        Bird->MinWait = 0.0f;
-        Bird->MaxWait = 0.0f;
-    }
-
-    // CP56: make the pre-adventure Shire visibly playful. These actors reuse the
-    // existing cheap ambient simulation and never own story/save state.
-    const FVector RevelerStarts[] = {
-        FVector(-430, 470, 20), FVector(-260, 590, 20), FVector(40, 1180, 20),
-        FVector(220, 1320, 20), FVector(430, 1460, 20), FVector(620, 1260, 20)
-    };
-    for (int32 Index = 0; Index < UE_ARRAY_COUNT(RevelerStarts); ++Index)
-    {
-        AShireAmbientNPC* Reveler = GetWorld()->SpawnActor<AShireAmbientNPC>(
-            RevelerStarts[Index], FRotator::ZeroRotator, AmbientSpawnParams);
-        if (!Reveler) continue;
-        Reveler->RoutineRole = TEXT("PartyGuest");
-        Reveler->ActivityPropType = Index % 3 == 0 ? FName(TEXT("Mug")) : NAME_None;
-        Reveler->RoutinePointA = RevelerStarts[Index];
-        Reveler->RoutinePointB = RevelerStarts[Index] + FVector(
-            120.0f + 35.0f * (Index % 2),
-            Index % 2 == 0 ? 95.0f : -95.0f,
-            0.0f);
-        Reveler->WalkSpeed = 34.0f + 4.0f * (Index % 3);
-        Reveler->MinWait = 2.2f;
-        Reveler->MaxWait = 5.0f;
-        Reveler->PlayerNoticeRadius = 380.0f;
-    }
-
-    const FVector PlayRunnerStarts[] = {
-        FVector(-720, 760, 20), FVector(-560, 920, 20), FVector(760, 1080, 20), FVector(980, 1280, 20)
-    };
-    for (int32 Index = 0; Index < UE_ARRAY_COUNT(PlayRunnerStarts); ++Index)
-    {
-        AShireAmbientNPC* Runner = GetWorld()->SpawnActor<AShireAmbientNPC>(
-            PlayRunnerStarts[Index], FRotator::ZeroRotator, AmbientSpawnParams);
-        if (!Runner) continue;
-        Runner->RoutineRole = TEXT("PlayRunner");
-        Runner->RoutinePointA = PlayRunnerStarts[Index];
-        Runner->RoutinePointB = PlayRunnerStarts[Index] + FVector(
-            380.0f + 55.0f * Index,
-            Index % 2 == 0 ? 180.0f : -180.0f,
-            0.0f);
-        Runner->WalkSpeed = 78.0f + 6.0f * Index;
-        Runner->MinWait = 0.4f;
-        Runner->MaxWait = 1.2f;
-        Runner->PlayerNoticeRadius = 260.0f;
-    }
 }
 
 

@@ -1,3 +1,37 @@
+## 2026-09-25 - PR #74 governance-transition red diagnosis
+
+- **Pre-Unreal #882/#883:** FAILED in Project Governor coherence, not UE4 runtime.
+- **Failure family:** partial W00 -> W01 control-plane transition; old PR #73/branch/W00 mode/blocking-gate state remained beside new W01 focus.
+- **Runtime impact:** no runtime conclusion can be drawn because validation stopped before engine proof.
+- **Correction:** reconcile Governor active gate, development mode, branch workflow, session handoff, integration train and MASTER_EXECUTION_BOARD together in one atomic commit.
+- **Evidence state:** W01 Drop 1 remains STATIC-VALIDATED; fresh exact-head Pre-Unreal + UE4.27.2 core validation required.
+
+## 2026-09-25 - W01 validator reconciliation after #881
+
+- **Pre-Unreal #881:** FAILED on stale PG-035/PG-036/PG-111 assumptions tied to builder-owned Shire ambient life and the old saturation-plan status.
+- **Runtime conclusion:** no UE4 runtime failure is inferred from #881; the failure occurred in project-structure validation before Governor/deep/engine stages.
+- **Validator correction:** guards now validate director-owned role/prop mappings, data-owned P1C01 fauna coverage, explicit single-owner budget authority, and absence of direct Shire builder ambient spawning.
+- **Fresh proof:** `03e886a6...` has Pre-Unreal #882 running and Unreal #717 pending. Status remains STATIC-VALIDATED until those finish.
+
+## 2026-09-25 - W01 P1C01 drop 1: living-world ownership/budget convergence
+
+- **Ambient population ownership:** IMPLEMENTED in source — P1C01 builder duplicate `AShireAmbientNPC` spawning removed; `LivingWorldDirector` is the ambient crowd owner and uses the existing pool.
+- **Story ownership boundary:** PRESERVED — named/story NPCs, quest triggers and canonical postconditions remain outside ambient crowd ownership.
+- **Micro-event budget authority:** IMPLEMENTED — `LivingWorldEventPlan#region_budgets` is sole cap/cadence source; `WorldLifeSaturationPlan` no longer overrides those values.
+- **P1C01 playful life role:** PRESERVED through director-owned `PlayRunner` role.
+- **Validation state:** STATIC-VALIDATED only; Pre-Unreal/UE4.27 compile/runtime pending. Do not promote to COMPILE-TESTED/PIE-TESTED yet.
+- **Next W01 production stage after engine-green:** terrain/geography foundation, then Hobbiton/Bag End architecture, while sensory/reactive notes remain queued inside their ordered stages.
+
+## 2026-09-25 - W00 closure / W01 kickoff
+
+- **W00 repair lane:** CLOSED on `develop@809e56a9e1dc4b453e02a0b04b6875a71df21933`.
+- **Machine evidence:** Pre-Unreal #880 SUCCESS; Unreal #715 SUCCESS by safe validation-policy inheritance; prior full machine chain remains Unreal #704 on the safe ancestor.
+- **Owner PIE evidence:** P1C01 startup grounding PASS with `commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.8 drift=0.0`; player remained on ground; same-session owner searches returned no `Mobility is Static` or `SetStaticMesh` matches.
+- **Evidence boundary:** startup-grounding/warning-tail is PIE-TESTED. Whole P1C01 remains not DEVICE-TESTED, not VISUALLY-ACCEPTED and not PERFORMANCE-ACCEPTED.
+- **W01 status:** STARTED AS PRODUCTION GOVERNANCE/LEDGER KICKOFF; runtime code is unchanged in this kickoff change.
+- **First implementation gates:** ambient ownership/pooling consolidation -> living-world event-budget authority reconciliation -> terrain/geography and the ordered P1C01 vertical-slice production stack.
+- **Sensory/reactive intake:** VERIFIED/PARTIALLY ACCEPTED. Spatial environmental audio/surface foley, performance-scaled vegetation motion and skeletal IK presentation are tracked; duplicate implementations of already-present NPC awareness/weather and audio fade/duck systems are explicitly rejected.
+
 ## 2026-09-25 - W00 lessons-lock / current develop proof
 - **PG-161 follow-up:** #875 exposed a wrong textual anchor in the self-guard. Loop-anchored correction committed; exact-head rerun pending. No gameplay/acceptance status changed.
 - **PG-161 self-test:** #871 found a validator false positive; PG-164 correction committed. Exact-head Pre-Unreal rerun pending; no gameplay acceptance state changed.
