@@ -1,3 +1,11 @@
+## 2026-09-26 - P1C01 warehouse material staging V4
+
+- **Poly Haven manifest:** V4 / all authorized slugs have source-page records.
+- **Resolution:** 2K staging target.
+- **High-poly/displacement:** excluded.
+- **Execution:** warehouse staging workflow queued by this manifest delta.
+- **Evidence:** AUTHORIZED_FOR_STAGING / QUEUED only; receipt required for STAGED.
+
 ## 2026-09-26 - Warehouse staging execution repair
 
 - **REQ-STABILITY-004 / DEC-044:** IMPLEMENTED in workflow/source.
