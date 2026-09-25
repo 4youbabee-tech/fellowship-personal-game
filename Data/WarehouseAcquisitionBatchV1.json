@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "batch_id": "WAREHOUSE_CC0_POLYHAVEN_P1C01_MATERIALS_V1",
+  "batch_id": "WAREHOUSE_CC0_POLYHAVEN_P1C01_MATERIALS_V2",
   "status": "AUTHORIZED_FOR_STAGING",
   "provider": "POLY_HAVEN",
   "provider_api": "https://api.polyhaven.com",
@@ -257,6 +257,60 @@
         "Gondor",
         "fortress interiors"
       ]
+    },
+    {
+      "slug": "leafy_grass",
+      "category": "SHIRE_GRASS_GROUND",
+      "use": [
+        "Hobbiton lawns and field transitions",
+        "Party Field support",
+        "pastoral path edges"
+      ]
+    },
+    {
+      "slug": "forest_floor",
+      "category": "SHIRE_WOODLAND_GROUND",
+      "use": [
+        "Shire wooded-road floor",
+        "hedgerow undergrowth",
+        "forest transition dressing"
+      ]
+    },
+    {
+      "slug": "park_dirt",
+      "category": "SHIRE_DAMP_SOIL",
+      "use": [
+        "garden/farm soil",
+        "damp lane variation",
+        "riverbank support"
+      ]
+    },
+    {
+      "slug": "leaves_forest_ground",
+      "category": "LEAF_LITTER",
+      "use": [
+        "wooded-road leaf litter",
+        "hedge-edge breakup",
+        "autumnal support"
+      ]
+    },
+    {
+      "slug": "wood_stone_pathway",
+      "category": "RUSTIC_PATH",
+      "use": [
+        "Shire rustic path accents",
+        "farm/property approach support",
+        "Bree support stock"
+      ]
+    },
+    {
+      "slug": "wood_chips",
+      "category": "ORGANIC_GROUND_DETAIL",
+      "use": [
+        "garden/mulch support",
+        "orchard/tree-base breakup",
+        "farmyard detail"
+      ]
     }
   ],
   "intake_expectations": [
@@ -297,5 +351,5 @@
     "https://polyhaven.com/a/snow_01",
     "https://polyhaven.com/a/stone_tiles"
   ],
-  "notes": "Expanded source-page-verified CC0 batch. Intake is capped at 2K and skips displacement/high-poly payloads to preserve target-device and warehouse efficiency."
+  "notes": "V2 extends the source-page-verified CC0 2K intake with Shire grass, woodland floor, damp soil, leaf litter, rustic path and organic ground detail. Existing script still skips displacement/high-poly payloads; STAGED is not READY/INTEGRATED."
 }
