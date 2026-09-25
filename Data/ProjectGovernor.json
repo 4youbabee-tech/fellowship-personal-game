@@ -3740,7 +3740,8 @@
         "PG-160",
         "PG-163",
         "PG-164",
-        "PG-165"
+        "PG-165",
+        "PG-166"
       ],
       "behavior": "Validate the exact W01 candidate head; machine evidence never promotes visual/device/performance acceptance."
     },
@@ -4203,7 +4204,7 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "W01/P1C01 Drop C2 foliage master source is implemented on PR #78. It adds parameterized SimpleGrassWind with DistanceCullFade attenuation, no Actor Tick and no density increase. Exact-head Pre-Unreal + UE4.27.2 production-import/core proof is pending.",
+    "active_wave": "W01/P1C01 Drop C2 foliage source is implemented on PR #78. Near/mid foliage uses parameterized SimpleGrassWind with DistanceCullFade attenuation; a separate M_ProductionFoliageFar omits WPO so later far-LOD binding can remove wind vertex work entirely. No Actor Tick or density increase. Exact-head Pre-Unreal + UE4.27.2 production-import/core proof is pending.",
     "next_actions": [
       "1. Run PR #78 exact-head Pre-Unreal.",
       "2. If Pre-Unreal is green, run/confirm UE4.27.2 production-import/core validation on the same exact head.",
@@ -5231,7 +5232,7 @@
     "baseline": "82fc4deaf2e2a99cfebd0d8d1b99a42b5d922ffe",
     "current_wave": "W01_P1C01_DROP_C2_LIGHTWEIGHT_FOLIAGE_WIND",
     "merge_policy": "Merge only after exact-head Pre-Unreal + UE4.27.2 core/production-import green.",
-    "proof_boundary": "Source/static only until exact-head engine proof; human visual/device/performance acceptance remains separate."
+    "proof_boundary": "Source/static only until exact-head engine proof. C2 creates the no-WPO far material but C3/C4 still own actual authored-material and LOD assignment; human visual/device/performance acceptance remains separate."
   },
   "completion_wave_map": {
     "status": "ACTIVE_PLANNING_ESTIMATE",
