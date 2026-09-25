@@ -2580,6 +2580,8 @@ if "no WorldPositionOffset" not in pg166_perf.get("far", ""):
     fail("PG-166 far foliage path lost the no-WPO complexity contract")
 if pg166_perf.get("density") != "unchanged until target-device profiling":
     fail("PG-166 foliage density profiling gate changed")
+if "MaterialExpressionDistanceCullFade" in pg166_importer or "DistanceScaledWindWeight" in pg166_importer:
+    fail("PG-166 C2 must not regress to the non-exported DistanceCullFade dependency")
 
 
 
