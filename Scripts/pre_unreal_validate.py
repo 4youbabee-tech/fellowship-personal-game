@@ -2837,6 +2837,42 @@ if re.search(r'(?:->|\.)StaticMaterials\b', pg159_importer):
 if "GetStaticMaterials()" not in pg159_importer:
     fail("PG-159: production importer must use GetStaticMaterials()")
 
+# PG-161: validation evidence may be reused only across safe governance/metadata ancestry.
+# This prevents cancelled metadata parents from forcing an unnecessary full UE4 cook/package,
+# while still failing closed when runtime/packaging/workflow-affecting files are present.
+pg161_classifier = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
+for pg161_symbol in [
+    "Test-NearestSafeGovernanceAncestorGreen",
+    "Test-SafeGovernanceDelta",
+    "TRANSITIVE_GOVERNANCE_PROOF_PASS",
+    "governance-docs-only-inherits-nearest-safe-green-ancestor",
+    "VALIDATION_POLICY_ONLY_FILE",
+    "validation-policy-only-inherits-green-parent-no-engine-repeat",
+]:
+    if pg161_symbol not in pg161_classifier:
+        fail(f"PG-161 validation-cost/evidence-reuse guard missing: {pg161_symbol}")
+if '"Scripts/classify_unreal_validation.ps1" -or' in pg161_classifier.split("if($acceptanceExact -contains $n)")[0]:
+    fail("PG-161 classifier script must not be silently treated as ordinary governance/docs-only input")
+
+# PG-162: local launch controllers must execute from immutable temporary copies before git pull.
+# This prevents CMD from continuing to parse a .bat file that git is rewriting in-place.
+pg162_update = read(ROOT / "SHIRE_UPDATE_BUILD_LAUNCH.bat")
+pg162_pie = read(ROOT / "SHIRE_PIE_VERIFY.bat")
+for pg162_symbol in [
+    "SHIRE_UPDATE_BOOTSTRAPPED",
+    "ShireJourney_UpdateBuildLaunch_",
+    "LOCAL_BOOTSTRAP_COPY_FAILED",
+]:
+    if pg162_symbol not in pg162_update:
+        fail(f"PG-162 update/build launcher immutable-bootstrap guard missing: {pg162_symbol}")
+for pg162_symbol in [
+    "SHIRE_PIE_BOOTSTRAPPED",
+    "ShireJourney_PIEVerify_",
+    "PIE_BOOTSTRAP_COPY_FAILED",
+]:
+    if pg162_symbol not in pg162_pie:
+        fail(f"PG-162 PIE launcher immutable-bootstrap guard missing: {pg162_symbol}")
+
 # PG-160: procedural StaticMeshActor spawn paths must set Movable before SetStaticMesh.
 for pg160_builder in [
     "ShirePrototypeWorldBuilder.cpp",
