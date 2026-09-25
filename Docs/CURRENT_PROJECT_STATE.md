@@ -1,3 +1,14 @@
+## 2026-09-25 - Master External Resource Bible audited and adopted
+
+- Audited the uploaded 68-page `SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25`, containing 225 classified external sources/tools.
+- Adopted it globally as sourcing authority through Governor decision `DEC-039`; it does not override story/canon sources or `DEC-038`.
+- Created `Data/MasterExternalResourceBibleAdoptionV1.json` with high-value adoption groups, conditional sources, reference/quarantine sources, disabled/redirected legacy sources and eight structured source waves.
+- Expanded `Data/GlobalWarehouseSourceRegistryV2.json` from 102 to 142 registered sources/tools on the first adoption pass.
+- Corrected `REPLICA_STUDIOS` to DISABLED and added redirects for legacy Unreal Marketplace, Texture Haven, CC0 Textures, old ArmorLab and Terrain.party routes.
+- Added high-value missing lanes including SpeedTree, Xfrog, Globe Plants, Material Maker, Materialize, ActionVFX, EmberGen, AccuRIG, MakeHuman, DeepMotion, Plask, Cascadeur, Scott Buckley, FreePD, Tabler Icons, Google Fonts, Poedit, USGS EarthExplorer, OpenTopography, QGIS, Gaea, World Machine, RealityScan, Meshroom, MeshLab, CloudCompare, Blender, GIMP, Krita, Audacity, REAPER and native UE4.27 AI/localization references.
+- Created `Data/BigProductionBuildLaunchV1.json` with nine whole-game production waves: surfaces; biomes; characters/animation; architecture/interiors; VFX/weather; audio/foley; music; terrain/scanning; Arabic/UI.
+- Truth boundary: registered/adopted sources are not automatically downloaded, READY_FOR_IMPORT, integrated or accepted. Existing evidence-state ladder remains binding.
+
 ## 2026-09-25 - DEC-038 playable-film doctrine adopted
 
 - The owner has formally defined Shire Journey as a **playable film-from-inside experience**, not a cutscene chain and not an unrelated open world.
