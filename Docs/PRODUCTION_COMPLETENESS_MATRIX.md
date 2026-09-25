@@ -8,13 +8,68 @@
 - **Pending selective salvage:** foliage-wind-v1, localization-prototype-v1, p1c01-mega-prep-v1.
 - **Acceptance impact:** none; branch cleanup does not promote gameplay/visual/performance state.
 
-## 2026-09-26 - Source architecture hygiene repair
 
-- **SourceArchitecturePlan:** synchronized after the already-completed Public/Private migration.
-- **Rows corrected:** 62 migrated runtime source entries.
-- **Repository comparison:** 63 actual runtime source files / 63 manifest rows / 0 stale / 0 missing.
-- **Runtime impact:** none; no C++ implementation changed.
-- **Evidence state:** STATIC-VALIDATED only.
+## 2026-09-26 - Source-to-production and local material execution path
+
+- **P1C01SourceExtractionV1:** PREPARED from supplied PDFs.
+- **P1C01SourceToProductionBridgeV1:** PREPARED.
+- **run_p1c01_material_pipeline.ps1:** IMPLEMENTED as local orchestration for Poly Haven/ambientCG staging -> warehouse audit -> intake -> optional UE4 import.
+- **Safety:** local execution does not disable hash/audit/format/import checks.
+- **Acceptance:** STATIC/PREPARATION only until a real material intake receipt + UE4 commandlet log is captured.
+
+## 2026-09-26 - High-throughput production / material intake
+
+- **REQ-PROD-011:** PARTIAL.
+- **DEC-041:** ACCEPTED.
+- **15 source PDFs:** HASHED/INDEXED with authority roles.
+- **P1C01 material wave:** 8 concrete Poly Haven CC0 candidates + ambientCG fallback at 2K intake scale.
+- **Material tooling:** IMPLEMENTED IN PREPARATION SCRIPTS; missing downloads are PENDING, technical defects remain blocking.
+- **Administrative relaxation:** naming/optional metadata/not-yet-downloaded candidates do not stop unrelated prep work.
+- **Technical hard stops:** dangerous/corrupt payloads, BMP, invalid final animated format, provider-access bypass, runtime dependency/streaming/memory/pooling/world-state defects remain blocking.
+- **Runtime lane:** unchanged; no second runtime-changing PR opened.
+- **Acceptance:** STATIC/PREPARATION only; no fresh COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE claim.
+
+## 2026-09-26 - Global runtime-cost architecture preparation
+
+- **WholeGameAssetFamilyCoverageV1:** PREPARED; 9 shared family groups derived from 28 region packets.
+- **WholeGameStreamingResidencyPlanV1:** PREPARED_NOT_RUNTIME_STARTED.
+- **WholeGamePooledPopulationPlanV1:** PREPARED_NOT_RUNTIME_STARTED.
+- **System ownership:** LivingWorldDirector / ShireNPCContextSubsystem / ShireQuestSubsystem boundaries preserved; no parallel brain/world owner introduced.
+- **Evidence state:** preparation only; no new COMPILE/PIE/DEVICE/PERFORMANCE acceptance.
+
+## 2026-09-26 - P1C01 D-H + Gate 6/7 preparation
+
+- **D Environment Presentation:** PREPARED_NOT_RUNTIME_STARTED.
+- **E Character Presentation:** PREPARED_NOT_RUNTIME_STARTED.
+- **F Living Shire:** PREPARED_NOT_RUNTIME_STARTED; existing system ownership retained and bottleneck guards defined.
+- **G Quest/Cinematic/Audio Polish:** PREPARED_NOT_RUNTIME_STARTED.
+- **H Target Device Profiling:** PREPARED_NOT_RUNTIME_STARTED.
+- **Gate 6/7 checklist:** PREPARED_NOT_ACCEPTED.
+- **Evidence boundary:** preparation only; no new COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED claim.
+
+## 2026-09-26 - Massive whole-game preparation batch
+
+- **28 region packets:** active preparation tracks created without runtime promotion beyond P1C01.
+- **9 production waves:** BPB-W1 through BPB-W9 remain active for surfaces, vegetation, characters/animation, architecture/interiors, VFX, audio, music, terrain/scanning and Arabic/UI.
+- **P1C01 concrete intake queue:** 28 registered candidates organized for staging/QC; blocked license items remain blocked.
+- **Production asset policy:** format/provenance/technical/performance contracts locked before READY_FOR_IMPORT.
+- **Runtime status:** unchanged; PR #80 C2 remains the sole runtime-changing lane.
+- **Acceptance status:** PREPARATION ONLY. No exact-head engine/PIE/device/visual/performance acceptance added by this batch.
+
+## 2026-09-25 - Region production packets
+
+- **Whole-game packets:** CREATED for every registered region.
+- **Sourcing families:** MAPPED to the global resource registry by discipline.
+- **Runtime state:** P1C01 active; later regions preparation-only until Gate 6/7.
+- **Acceptance:** NONE claimed from packet creation.
+
+## 2026-09-25 - Whole-game world build coverage
+
+- **Coverage map:** CREATED — all registered world locations now carry the full production-layer checklist.
+- **Global preparation:** ACTIVE — all regions may receive source/asset/design preparation in parallel.
+- **Runtime expansion:** SERIALIZED — P1C01 only until Gate 6/7.
+- **Cross-game layers:** REQUIRED — world streaming, save/load continuity, LivingWorld integration, weather/wind, accessibility and Arabic localization remain explicit build tracks.
+- **Acceptance:** REGION-SPECIFIC — no later region is accepted from preparation alone.
 
 ## 2026-09-25 - Global external-resource production expansion
 
