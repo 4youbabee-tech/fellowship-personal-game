@@ -1,3 +1,12 @@
+## 2026-09-25 - W01/P1C01 Drop C2 foliage wind master opened
+
+- Drop C1 PR #77 merged to `develop` as `82fc4deaf2e2a99cfebd0d8d1b99a42b5d922ffe` after exact-head Pre-Unreal #897 SUCCESS + Unreal Build Validation #732 SUCCESS.
+- Active runtime lane: PR #78 on `production/w01-p1c01-foliage-wind-v1`, based exactly on the Drop C1 merge commit.
+- C2 creates a dedicated `/Game/Production/Materials/M_ProductionFoliage` material master. It preserves AlbedoTexture * Color plus Roughness/Metallic and adds parameterized `SimpleGrassWind` WPO.
+- Wind uses `DistanceCullFade` as a multiplier on `WindWeight`, so motion fades as existing HISM/ISM instances approach their cull boundary. There is no per-tree Actor Tick and no foliage density increase.
+- Material reassignment for authored Grass/Leaves identities remains Drop C3; C2 does not alter gameplay IDs, LivingWorld ownership, NPC systems, or runtime asset loading.
+- Evidence boundary: **STATIC-VALIDATED / exact-head engine proof pending**. No PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-25 - PR #77 handoff-status contract corrected
 
 - Unreal #731 completed **SUCCESS** on corrected Drop C1 head `3b2281c17b6111fd30f7614ca5d0df22a6dc572d`.
