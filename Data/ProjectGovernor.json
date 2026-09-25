@@ -5593,6 +5593,15 @@
       "root_cause": "The regression guard encoded an incidental local variable name from an earlier draft instead of the actual current WPO assignment contract.",
       "correction": "PG-166 now validates WorldPositionOffset.Expression = SimpleWind on the current editor-import implementation.",
       "prevention": "Future source-text guards must prefer stable API/parameter/material path contracts over arbitrary local variable names unless the name itself is a required interface."
+    },
+    {
+      "id": "KNOWN-C2-SIMPLEGRASSWIND-MATERIAL-FUNCTION",
+      "status": "ROOT_FIXED_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "observed_head": "96e6fc2da794776e7abc76e7df4981f252d97d97",
+      "symptom": "Unreal Build Validation #751 failed ShireJourneyEditor compile with C1083: Materials/MaterialExpressionSimpleGrassWind.h does not exist.",
+      "root_cause": "UE4.27 exposes SimpleGrassWind as an Engine material function asset, not UMaterialExpressionSimpleGrassWind.",
+      "correction": "Use UMaterialExpressionMaterialFunctionCall with /Engine/Functions/Engine_MaterialFunctions01/WorldPositionOffset/SimpleGrassWind.SimpleGrassWind and bind the documented WindIntensity, WindWeight and WindSpeed inputs.",
+      "prevention": "Before generating material nodes from C++, distinguish UE material functions from UMaterialExpression classes against the target UE4.27 API; guards must encode the target-engine contract rather than assumed class names."
     }
   ],
   "w00_acceptance_fast_path": {
