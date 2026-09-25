@@ -4242,7 +4242,7 @@
       "6. Open W01/P1C01 as the sole production vertical-slice campaign: unify ambient population ownership under LivingWorldDirector/object pooling, resolve event-budget authority drift, then terrain/geography, Hobbiton architecture, materials/vegetation, lighting/water, character presentation, living Shire activity, quest/audio polish and measured target-device profiling."
     ],
     "unverified_acceptance": [
-      "W00 lessons-lock PR exact-head static/CI proof",
+      "W00 lessons-lock PR exact-head Pre-Unreal proof after PG-164 correction",
       "P1C01 human PIE grounding/traversal confirmation on final canonical develop after maintenance merge",
       "absence of project-owned SetStaticMesh mobility warnings in that exact PIE session",
       "local immutable-launcher rerun proof in the Documents clone",
@@ -5553,6 +5553,17 @@
       "root_cause": "The running control script lived inside the Git working tree that it was mutating.",
       "permanent_policy": "Any tracked Windows launcher that pulls the repository must execute from an immutable temporary copy, pass the real project root explicitly, and clean up the temporary copy afterward. It must never silently change branches.",
       "reopen_rule": "Reopen if a local develop update can still corrupt the running launcher, lose branch identity, or execute interactive Unreal from the Actions runner workspace."
+    },
+    {
+      "id": "KF-W00-PG161-001",
+      "status": "FIX_COMMITTED_EXACT_HEAD_PROOF_PENDING",
+      "symptom": "Pre-Unreal #871 failed PG-161 immediately after the lessons-lock change even though the classifier had the intended explicit validation-policy-only path.",
+      "evidence": [
+        "Pre-Unreal #871: ERROR: PG-161 classifier script must not be silently treated as ordinary governance/docs-only input."
+      ],
+      "root_cause": "The new PG-161 validator searched a textual region broad enough to include the allowed policy-only hook, so it confused required behavior with forbidden ordinary-safe classification.",
+      "permanent_policy": "Regression guards inspect the smallest structural region that represents the forbidden behavior and separately assert required explicit paths. Never use a broad text-presence test that can reject the intended contract.",
+      "reopen_rule": "Reopen if PG-161 rejects the explicit policy-only hook again or permits classifier/pre-unreal policy changes to be treated as ordinary safe metadata."
     }
   ],
   "w00_acceptance_fast_path": {
