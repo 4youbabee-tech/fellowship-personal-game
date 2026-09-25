@@ -1,3 +1,13 @@
+## 2026-09-25 - PR #78 Unreal #751 compile root cause corrected
+
+- Exact C2 head `96e6fc2da794776e7abc76e7df4981f252d97d97` passed Pre-Unreal #916 but Unreal Build Validation #751 failed at **Build ShireJourneyEditor**.
+- Exact compiler evidence: `ShireProductionImportCommandlet.cpp(23): fatal error C1083: Cannot open include file: 'Materials/MaterialExpressionSimpleGrassWind.h': No such file or directory`.
+- Root cause: in UE4.27, `SimpleGrassWind` is an Engine material function, not a `UMaterialExpressionSimpleGrassWind` C++ expression/header.
+- Root correction: C2 now uses `UMaterialExpressionMaterialFunctionCall` + the Engine function asset `/Engine/Functions/Engine_MaterialFunctions01/WorldPositionOffset/SimpleGrassWind.SimpleGrassWind`, then binds documented intensity/weight/speed inputs and sends the function result to WPO.
+- The synchronous `LoadObject` here is confined to the editor-only production import commandlet and loads an Engine material-function asset; no gameplay runtime heavy-load path was added.
+- PG-166 now guards the material-function-call contract and exact Engine function path rather than the nonexistent expression class.
+- Evidence boundary: correction is **STATIC-VALIDATED** until fresh exact-head Pre-Unreal + UE4.27.2 compile/import/core validation succeeds. No PIE/device/visual/performance acceptance.
+
 ## 2026-09-25 - PR #78 PG-166 validator false-red corrected
 
 - Exact head `428895672a8c4e1138221aa6f2d220ae212712f5` reached Pre-Unreal #911 and failed in `Validate project structure` only.
