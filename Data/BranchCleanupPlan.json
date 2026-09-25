@@ -73,7 +73,10 @@
     "production/w01-p1c01-materials-vegetation-v1",
     "production/w01-p1c01-world-foundation-v1",
     "warehouse/p1c01-bulk-intake-v2",
-    "stability/source-architecture-manifest-sync-v1"
+    "stability/source-architecture-manifest-sync-v1",
+    "planning/whole-game-world-build-v1",
+    "planning/whole-game-production-prep-v2",
+    "integration/whole-game-prep-consolidation-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -85,19 +88,18 @@
     "Cleanup runs only after this plan lands on develop."
   ],
   "final_audit": {
-    "status": "ACTIVE_BRANCH_HYGIENE_ENFORCED",
-    "rule": "develop is canonical integration. Completed branches merge to develop immediately and self-delete. Only active work or unresolved unique-content branches may remain temporarily.",
-    "current_safe_delete_count": 7,
+    "status": "READY_FOR_POST_CONSOLIDATION_CLEANUP",
+    "rule": "After this consolidation lands, only the active runtime PR and unresolved unique-content salvage branches may remain outside develop.",
     "current_active_runtime_pr": "production/w01-p1c01-foliage-wind-v2 / PR #80",
-    "current_active_preparation_pr": "planning/whole-game-world-build-v1 / PR #81",
-    "current_active_preparation_branch": "planning/whole-game-production-prep-v2",
-    "physical_cleanup": "Branch Cleanup workflow deletes delete_after_merge refs after this plan lands on develop.",
-    "truth_boundary": "Branch hygiene only; no runtime/PIE/device/visual/performance acceptance implied."
+    "completed_preparation_prs": [
+      "PR #81 superseded by consolidation",
+      "PR #83 superseded by consolidation"
+    ],
+    "physical_cleanup": "Branch Cleanup workflow deletes delete_after_merge refs when GitHub Actions executes; zero-step infrastructure failures may delay physical deletion but do not change the approved deletion set.",
+    "truth_boundary": "Branch/process hygiene only; no runtime acceptance implied."
   },
   "active_work_branches": [
-    "production/w01-p1c01-foliage-wind-v2",
-    "planning/whole-game-world-build-v1",
-    "planning/whole-game-production-prep-v2"
+    "production/w01-p1c01-foliage-wind-v2"
   ],
   "preserve_pending_salvage": [
     {
@@ -112,5 +114,11 @@
       "branch": "planning/w01-p1c01-mega-prep-v1",
       "reason": "2 commits unique versus develop; preserve until useful content is selectively integrated."
     }
+  ],
+  "completed_integration_branches": [
+    "stability/source-architecture-manifest-sync-v1",
+    "planning/whole-game-world-build-v1",
+    "planning/whole-game-production-prep-v2",
+    "integration/whole-game-prep-consolidation-v1"
   ]
 }
