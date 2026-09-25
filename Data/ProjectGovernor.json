@@ -3482,24 +3482,26 @@
     },
     {
       "id": "DEC-038",
-      "title": "Make the film playable from inside through canon-locked beats and interactive safe windows",
+      "title": "Global playable-film doctrine for the entire game world and full story",
       "status": "ACCEPTED",
       "requirements": [
         "REQ-WORLD-003",
         "REQ-CAMERA-001",
         "REQ-GOV-001"
       ],
-      "resolution": "Shire Journey must feel like inhabiting and interacting with the film rather than watching a chain of cutscenes or playing an unrelated open world. Canon-defining story beats and locked outcomes remain immutable. Between those beats, use interactive safe windows for embodied third-person exploration, optional conversations, household/world interactions, side activities, NPC life, fauna, environmental storytelling and local choice. Control may enter bounded cinematic/set-piece moments when required, then return cleanly to the player. Optional actions may change flavor, local relationships, discovery, pacing or minor world state, but must not invalidate the film's causal spine or locked chapter outcome. World/NPC/prop/audio state must transition coherently before and after each canon beat so the player feels the consequences in the playable space.",
-      "example_contract": "F1-01/Bag End may allow Frodo to explore Bag End, interact with Bilbo and the household, help with party preparation and experience Shire life before the locked story transition. The Ring handoff/leave sequence must follow the project film-continuity source rather than inventing a contradictory direct transfer. After the canonical beat, control returns into a changed persistent world state.",
+      "resolution": "This doctrine is GLOBAL across the entire Shire Journey game, from the opening of the story through the final ending, across every chapter, region, character arc, settlement, dungeon, battlefield, travel segment and world-state transition. Shire/P1C01 is only the first implementation benchmark, not the scope of the rule. The player must feel physically present inside the film-continuity world rather than watching a chain of cutscenes or playing an unrelated open world. Canon-defining story beats and locked outcomes remain immutable. Between those beats, every chapter and region must expose interactive safe windows for embodied third-person exploration, optional conversations, world/household interaction, side activities, NPC life, fauna, environmental storytelling and local choice whenever chronology permits. Control may enter bounded cinematic/set-piece moments when required, then return cleanly to the player. Optional actions may change flavor, local relationships, discovery, pacing or minor world state, but must not invalidate the film's causal spine or locked chapter outcome. World/NPC/prop/audio state must transition coherently before and after each canon beat so the player feels the consequences in the playable world.",
+      "example_contract": "F1-01/Bag End remains only the first benchmark example of the global rule. The same pattern must be applied chapter-by-chapter across the full game world: identify locked canon beats, surround them with playable safe windows, preserve chronology/outcomes, and return control into a world state that reflects what just happened.",
       "acceptance_criteria": [
+        "The doctrine applies to every chapter and every major playable region from the beginning of the story through the final ending; Shire/P1C01 is not an exception or the sole target.",
         "Every major chapter identifies its locked canon beats and the playable safe windows around them.",
+        "Every major region identifies the world-life, exploration, interaction and environmental systems needed to make the player feel present inside that part of the story.",
         "No required chapter is implemented as cutscene-only when an interactive safe window can preserve canon.",
         "No free-roam/side activity can alter an immutable film outcome or create a contradictory chronology.",
         "After a canon beat, NPC/world/prop/audio state reflects the new story state when the player regains control.",
         "Dialogue added inside safe windows is original project-authored text and does not copy Tolkien or film dialogue verbatim.",
         "Cinematic control transitions are bounded and return to the embodied third-person player cleanly."
       ],
-      "rationale": "The owner explicitly wants the experience to feel like being inside the film: free to live in and explore the world between decisive moments, while the recognized story still unfolds correctly. This keeps cinematic identity and player agency at the same time.",
+      "rationale": "The owner explicitly clarified that this is not a Shire/P1C01-specific design idea. It is a whole-game doctrine covering the complete world and full narrative: the player should inhabit and interact with the film continuity everywhere, while recognized story outcomes still unfold correctly.",
       "authority": "USER_EXPLICIT_DIRECTION",
       "evidence": [
         "01_STORY_AND_TIMELINE_BIBLE",
