@@ -1,3 +1,11 @@
+## 2026-09-25 - PR #77 validator false-red root-fixed
+
+- Pre-Unreal #895 failed only because PG-165 incorrectly used the runtime `resolve_source()` helper for `ShireProductionImportCommandlet.cpp`, which lives in the separate `ShireJourneyEditorTools` module.
+- Unreal #730 on the same exact head `725ca99151b5438fab7ce48209c04a4ce05c681d` completed **SUCCESS**, so the Drop C1 editor build/production-import/core engine path itself is proven on that head.
+- Root correction: Pre-Unreal now has a dedicated `resolve_editor_source()` helper rooted at `Source/ShireJourneyEditorTools`; PG-165 uses that helper, preventing future editor-tool guards from being silently routed into the runtime module.
+- This correction is validator/docs/governance-only. Fresh exact-head Pre-Unreal is required; engine proof may inherit only under the established safe validation-policy ancestry rules.
+- Evidence boundary: Drop C1 is engine/core proven on the prior exact runtime head, but no PIE/device/visual material acceptance is inferred.
+
 ## 2026-09-25 - W01/P1C01 Drop C1 material texture binding implemented
 
 - Parent `develop@712a81cac150b7fdb338a4cf7554d4f27d4b5191` is post-merge green: Pre-Unreal #894 SUCCESS + Unreal #729 SUCCESS.

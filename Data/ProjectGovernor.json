@@ -4203,12 +4203,12 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "W01/P1C01 Drop C1 materials: bind authored Shire MTL albedo textures into deterministic production material instances; exact-head engine proof pending.",
+    "active_wave": "W01/P1C01 Drop C1 material texture binding: Unreal #730 SUCCESS on exact runtime head; Pre-Unreal #895 was a validator-only EditorTools path-resolution defect. Dedicated editor-source resolver root fix committed; fresh exact-head Pre-Unreal pending.",
     "next_actions": [
-      "1. Validate PR #77 exact head through Pre-Unreal and UE4.27.2 production-import/core lane.",
-      "2. If green, merge C1 and begin C2 lightweight foliage master + wind WPO.",
-      "3. Keep vegetation density unchanged until target-device profiling.",
-      "4. Preserve gameplay/quest/audio/world ownership while material presentation evolves."
+      "1. Require fresh exact-head Pre-Unreal after the PG-165 editor-source resolver root fix.",
+      "2. Reuse #730 engine proof only through the established safe validator/docs/governance ancestry policy; do not rerun expensive engine work merely for metadata unless policy requires it.",
+      "3. Merge Drop C1 once required exact-head gates are green.",
+      "4. Then execute C2 lightweight foliage master + performance-scaled wind WPO while keeping foliage density fixed until target-device profiling."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -4232,15 +4232,15 @@
         }
       },
       "latest_observed": {
-        "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
+        "sha": "725ca99151b5438fab7ce48209c04a4ce05c681d",
         "pre_unreal": {
-          "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
-          "run_id": 36145910660,
-          "status": "SUCCESS"
+          "sha": "725ca99151b5438fab7ce48209c04a4ce05c681d",
+          "run_id": 36149288137,
+          "status": "FAILURE_VALIDATOR_PATH_ONLY"
         },
         "unreal": {
-          "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
-          "run_id": 36145910505,
+          "sha": "725ca99151b5438fab7ce48209c04a4ce05c681d",
+          "run_id": 36149288111,
           "status": "SUCCESS"
         }
       }
@@ -5572,6 +5572,15 @@
       "root_cause": "Stable exact-head checkout fetched head with depth=2 but not the PR base SHA. Classifier git diff failed and escalated to full package via delta-unavailable-fail-safe.",
       "correction": "Scripts/classify_unreal_validation.ps1 now fetches BASE_SHA explicitly and retries diff before fail-safe.",
       "policy": "Ordinary C++/runtime/Data/SourceAssets use core validation only; full package is reserved for Config/Build.cs/Target.cs/streaming/package/cook/release deltas."
+    },
+    {
+      "id": "KNOWN-PG165-EDITOR-RESOLVER",
+      "status": "ROOT_FIXED_PENDING_FRESH_PRE_UNREAL",
+      "observed_head": "725ca99151b5438fab7ce48209c04a4ce05c681d",
+      "symptom": "Pre-Unreal #895 could not read ShireProductionImportCommandlet.cpp and emitted seven PG-165 misses while Unreal #730 succeeded.",
+      "root_cause": "PG-165 called the runtime-module resolve_source() helper for a file owned by Source/ShireJourneyEditorTools.",
+      "correction": "Add resolve_editor_source() rooted at Source/ShireJourneyEditorTools and route PG-165 through it.",
+      "prevention": "Future editor-tools validator guards must use the editor resolver or an explicit EditorTools path; runtime resolve_source() is reserved for Source/ShireJourney."
     }
   ],
   "w00_acceptance_fast_path": {

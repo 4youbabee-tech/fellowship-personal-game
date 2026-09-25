@@ -19,6 +19,7 @@ from governance_contracts import validate_development_mode
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "Source" / "ShireJourney"
+EDITOR_SOURCE = ROOT / "Source" / "ShireJourneyEditorTools"
 
 errors: list[str] = []
 warnings: list[str] = []
@@ -40,6 +41,17 @@ def resolve_source(filename: str) -> Path:
     if not candidates:
         return SOURCE / filename
     fail(f"Runtime source filename is ambiguous after migration: {filename}")
+    return candidates[0]
+
+
+def resolve_editor_source(filename: str) -> Path:
+    """Resolve one editor-tools source filename without misrouting it into the runtime module."""
+    candidates = [p for p in EDITOR_SOURCE.rglob(filename) if p.is_file()]
+    if len(candidates) == 1:
+        return candidates[0]
+    if not candidates:
+        return EDITOR_SOURCE / filename
+    fail(f"Editor source filename is ambiguous: {filename}")
     return candidates[0]
 
 
@@ -2521,7 +2533,7 @@ for symbol in ["SM_CommonMountainRidge", "SM_CommonCliffWall", "SM_CommonRiverBa
         fail(f"PG-049 Fellowship terrain runtime reference missing: {symbol}")
 
 # PG-165: Drop C1 authored material texture binding must remain deterministic and editor-only.
-pg165_importer = read(resolve_source("ShireProductionImportCommandlet.cpp"))
+pg165_importer = read(resolve_editor_source("ShireProductionImportCommandlet.cpp"))
 for pg165_symbol in [
     "MaterialExpressionTextureSampleParameter2D",
     'ParameterName = TEXT("AlbedoTexture")',

@@ -1,3 +1,10 @@
+## 2026-09-25 - PR #77 PG-165 resolver correction
+
+- **Pre-Unreal #895:** FAILED in validator path resolution only; PG-165 searched the runtime module for an EditorTools commandlet.
+- **Unreal #730:** SUCCESS on exact head `725ca991...`; Drop C1 compiled and completed the production-import/core validation path.
+- **Root fix:** add dedicated EditorTools source resolver and route PG-165 through it, so editor-module guards cannot regress to runtime-module lookup.
+- **Current proof boundary:** prior runtime head is COMPILE/ENGINE-CORE PROVEN; corrected validator head still requires fresh Pre-Unreal. No PIE/device/visual acceptance.
+
 ## 2026-09-25 - W01 P1C01 Drop C1: material texture binding
 
 - **Shire authored albedo pipeline:** IMPLEMENTED IN SOURCE — MTL `map_Kd` is parsed and bound into deterministic `AlbedoTexture` material-instance parameters.
