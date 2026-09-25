@@ -1,3 +1,12 @@
+## 2026-09-25 - W01/P1C01 Drop C1 material texture binding implemented
+
+- Parent `develop@712a81cac150b7fdb338a4cf7554d4f27d4b5191` is post-merge green: Pre-Unreal #894 SUCCESS + Unreal #729 SUCCESS.
+- Active branch: `production/w01-p1c01-materials-vegetation-v1`.
+- Verified source gap addressed: authored Shire MTL `map_Kd` entries are now carried into deterministic production material instances through an `AlbedoTexture` parameter.
+- `M_ProductionSurface` creation now uses `AlbedoTexture * Color` for BaseColor while preserving Roughness/Metallic.
+- Texture binding happens in the editor import commandlet after texture import; no gameplay runtime loading path is changed and no new synchronous heavy gameplay load is introduced.
+- This is **STATIC-VALIDATED / EXACT-HEAD PRE-UNREAL + UE4.27.2 CORE PROOF PENDING**. Wind/WPO is not yet claimed; that is Drop C2 after C1 is engine-green.
+
 ## 2026-09-25 - PR #76 governance false-red corrected atomically
 
 - Pre-Unreal #890/#891/#892 did not reach an Unreal runtime failure. The remaining red was the Governor handoff invariant: `session_handoff.source_head` must equal `validation_snapshot.last_green.sha`.
