@@ -4,17 +4,21 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 ## Current control point
 
-- PR: #67
-- Branch: `integration/comprehensive-foundation-v1`
+- PR: #70
+- Branch: `maintenance/develop-consolidation-v1`
 - Active lane: **W00_ARCHITECTURAL_STABILIZATION**
-- Exact machine-green parent: `96398e7cc48277324113c7879a8d28e3b659757e`
-- Pre-Unreal: **SUCCESS #781**
-- Unreal Build Validation: **SUCCESS #616**
-- Warehouse Stage: **SUCCESS #197**; no staging-required delta, so heavy provider stages were correctly skipped.
+- Canonical integration branch: `develop`
+- Full machine-green baseline: `fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be`
+- Pre-Unreal baseline: **SUCCESS #820**
+- Unreal baseline: **SUCCESS #655**
+- Latest automated closure head: `9066d6494248def59680820bbd6ca8e10038ea6e`
+- Pre-Unreal latest: **SUCCESS #821**
+- Unreal latest: **SUCCESS #656 acceptance-only**, inheriting parent core proof.
+- Current purpose: consolidate branch state, harden the local launcher and validation classifier, then return to canonical `develop`.
 - Merge rule: never merge a red or untested exact candidate head into `develop`.
-- Freeze rule: B1/B2/B3 are backlog only while W00 blocks major expansion.
+- Freeze rule: no new feature wave is opened by this maintenance PR.
 - Performance rule: Windows / DX11 / 720p Low-Medium / 30 FPS floor.
-- Acceptance boundary: parent is static/compile/headless-runtime proven only; PIE/device/audio/visual/pacing acceptance remains open.
+- Acceptance boundary: human P1C01 grounding/warning-tail, device/performance and visual acceptance remain open.
 
 ## Execution order
 
