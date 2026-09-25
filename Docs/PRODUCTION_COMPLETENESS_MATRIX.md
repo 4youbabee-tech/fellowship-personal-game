@@ -1,3 +1,13 @@
+## 2026-09-26 - Branch hygiene / immediate develop integration
+
+- **REQ-EXEC-002:** IMPLEMENTED.
+- **DEC-042:** ACCEPTED.
+- **Safe stale refs queued for deletion:** 7 including the finished stability branch after merge.
+- **Active runtime lane:** PR #80 only.
+- **Active preparation:** PR #81 + whole-game-production-prep-v2.
+- **Pending selective salvage:** foliage-wind-v1, localization-prototype-v1, p1c01-mega-prep-v1.
+- **Acceptance impact:** none; branch cleanup does not promote gameplay/visual/performance state.
+
 ## 2026-09-26 - Source architecture hygiene repair
 
 - **SourceArchitecturePlan:** synchronized after the already-completed Public/Private migration.
