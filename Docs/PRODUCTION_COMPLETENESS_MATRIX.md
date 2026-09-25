@@ -1,3 +1,11 @@
+## 2026-09-25 - Whole-game world build coverage
+
+- **Coverage map:** CREATED — all registered world locations now carry the full production-layer checklist.
+- **Global preparation:** ACTIVE — all regions may receive source/asset/design preparation in parallel.
+- **Runtime expansion:** SERIALIZED — P1C01 only until Gate 6/7.
+- **Cross-game layers:** REQUIRED — world streaming, save/load continuity, LivingWorld integration, weather/wind, accessibility and Arabic localization remain explicit build tracks.
+- **Acceptance:** REGION-SPECIFIC — no later region is accepted from preparation alone.
+
 ## 2026-09-25 - Global external-resource production expansion
 
 - **Resource Bible review:** COMPLETE FIRST PASS — 68 pages / 225 classified sources audited as a production sourcing map.
