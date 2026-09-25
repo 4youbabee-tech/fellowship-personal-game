@@ -5,7 +5,7 @@
 - The local one-click launcher now executes from a temporary stable copy so a `git pull` cannot mutate the running batch file and corrupt branch detection.
 - Unreal validation now separates ordinary runtime/source/data changes from package/cook changes and classifies PRs against the canonical base SHA rather than only the previous branch commit; this prevents cancelled intermediate branch runs from forcing unnecessary full/package validation. Core runtime changes run build/import/Automation/runtime/warning gates without packaging; Build.cs/Target.cs/Config/streaming/packaging-critical changes still force the full package path.
 - Planning/warehouse records missing from canonical develop were salvaged: `LivingWorldSensoryCompletenessPlanV1.json`, `VoiceProductionMasterPlanV1.json`, `operation_recovery.py` + tests, and `WarehouseGapAuditSource09V1.json`.
-- Generated-audio intake history is preserved under `archive/generated-audio-intake-v1` until durable WAV/UE intake exists. This archival pointer is not runtime/audio acceptance.
+- Generated-audio intake history is preserved under `archive/generated-audio-intake-v1` until durable WAV/UE intake exists. This archival pointer is not runtime/audio acceptance. Sanitized canonical registries for scripted voice, P1C01 ambient speech/barks, complete audio-bank coverage and named-character efforts are now also present on the consolidation lane; signed external download URLs are intentionally excluded.
 - `Data/BranchCleanupPlan.json` + `.github/workflows/branch-cleanup.yml` will remove approved stale remote branches after PR #70 lands on develop while preserving develop/main and explicitly retained audit/archive refs.
 
 ## 2026-09-25 - C4996 / SetStaticMesh warning-debt guards added
