@@ -1,4 +1,5 @@
 ## 2026-09-25 - Consolidation and validation-cost correction
+- Maintenance-run supersession: **FIX_COMMITTED / CI PROOF PENDING**. Newer `maintenance/*` heads cancel older Unreal validations so the single self-hosted UE4 runner does not spend a full package cycle on obsolete maintenance commits.
 - Sanitized audio registry salvage: **DATA-CONSOLIDATED / RUNTIME-UNPROVEN**. Canonical develop receives the generated-audio/P1C01 bank metadata without signed external download URLs; WAV mastering, UE import, playback, lip-sync, listening and device acceptance remain pending.
 - Repository/branch hygiene: **IMPLEMENTED ON PR #70 / MERGE-PENDING**. Canonical runtime handoff target remains `develop`; stale feature/repair branches are not authoritative.
 - Local launcher self-update hazard: **FIX_COMMITTED / PROOF PENDING**. The running batch now uses a temp copy before pulling, preventing mid-execution mutation. No local rerun evidence is claimed yet.
