@@ -1,0 +1,353 @@
+{
+  "schema_version": 1,
+  "queue_id": "P1C01_WAREHOUSE_PROMOTION_QUEUE_V1",
+  "status": "READY_FOR_STAGING_AND_INTAKE_QC",
+  "authority": [
+    "Data/P1C01WorldBuildIntakePacketV1.json",
+    "Data/WarehouseAcquisitionBatchV1.json",
+    "Data/WarehouseQuaterniusAcquisitionBatchV1.json",
+    "Data/WarehouseKenneyAcquisitionBatchV1.json",
+    "Data/WarehouseAudioAcquisitionBatchV1.json"
+  ],
+  "scope": [
+    "SHIRE_HOBBITON",
+    "BAG_END"
+  ],
+  "purpose": "Turn already-registered provider candidates into a benchmark-first staging/QC queue without implying import or runtime acceptance.",
+  "groups": {
+    "surfaces_and_ground": [
+      {
+        "provider": "POLY_HAVEN",
+        "id": "wood_floor",
+        "category": "WOOD_INTERIOR",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Bag End floors",
+          "Shire interiors",
+          "Bree interiors"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "wooden_floor_02",
+        "category": "WOOD_INTERIOR",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Bag End/Bree alternate floors",
+          "furniture material"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "dirt",
+        "category": "GROUND",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Shire bare soil",
+          "farm plots",
+          "Bree outskirts"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "stony_dirt_path",
+        "category": "GROUND_PATH",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Shire lanes",
+          "Bree approaches",
+          "Ithilien paths"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "grass_path_2",
+        "category": "GROUND_PATH",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Shire footpaths",
+          "pastoral transitions"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "plastered_wall",
+        "category": "PLASTER",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Shire/Bree wall base"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "mossy_rock",
+        "category": "MOSSY_STONE",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Shire edges",
+          "Rivendell",
+          "Amon Hen",
+          "Ithilien"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "bark_brown_01",
+        "category": "BARK",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Shire trees",
+          "Fangorn supporting bark",
+          "Rivendell"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "leafy_grass",
+        "category": "SHIRE_GRASS_GROUND",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Hobbiton lawns and field transitions",
+          "Party Field support",
+          "pastoral path edges"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "forest_floor",
+        "category": "SHIRE_WOODLAND_GROUND",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Shire wooded-road floor",
+          "hedgerow undergrowth",
+          "forest transition dressing"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "park_dirt",
+        "category": "SHIRE_DAMP_SOIL",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "garden/farm soil",
+          "damp lane variation",
+          "riverbank support"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "leaves_forest_ground",
+        "category": "LEAF_LITTER",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "wooded-road leaf litter",
+          "hedge-edge breakup",
+          "autumnal support"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "wood_stone_pathway",
+        "category": "RUSTIC_PATH",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Shire rustic path accents",
+          "farm/property approach support",
+          "Bree support stock"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "wood_chips",
+        "category": "ORGANIC_GROUND_DETAIL",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "garden/mulch support",
+          "orchard/tree-base breakup",
+          "farmyard detail"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "forrest_ground_01",
+        "category": "SHIRE_FOREST_GROUND",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Shire woodland floor",
+          "hedge/forest transitions",
+          "Amon Hen support"
+        ]
+      },
+      {
+        "provider": "POLY_HAVEN",
+        "id": "forest_leaves_02",
+        "category": "MOSSY_FOREST_FLOOR",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Shire shaded woodland",
+          "Rivendell/Ithilien support",
+          "mossy leaf-litter breakup"
+        ]
+      }
+    ],
+    "architecture_and_interiors": [
+      {
+        "provider": "QUATERNIUS",
+        "id": "QTN_FARM_BUILDINGS",
+        "category": "SHIRE_SUPPORT_ARCHITECTURE",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "observed_page_license": "CC0",
+        "use": [
+          "Shire farm support silhouettes",
+          "background barns/outbuildings after art-direction review"
+        ]
+      },
+      {
+        "provider": "QUATERNIUS",
+        "id": "QTN_FURNITURE_PACK",
+        "category": "SHIRE_INTERIOR_SUPPORT",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "observed_page_license": "CC0",
+        "use": [
+          "Bag End support furniture intake",
+          "Hobbit home background furniture",
+          "Bree interior support"
+        ]
+      },
+      {
+        "provider": "QUATERNIUS",
+        "id": "QTN_MEDIEVAL_VILLAGE_CC0",
+        "category": "SHIRE_BREE_SUPPORT_ARCHITECTURE",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "observed_page_license": "CC0",
+        "use": [
+          "Shire support outbuildings/props",
+          "Bree background support",
+          "non-hero village dressing"
+        ]
+      }
+    ],
+    "fauna_review": [
+      {
+        "provider": "QUATERNIUS",
+        "id": "QTN_FARM_ANIMALS",
+        "category": "SHIRE_FAUNA",
+        "state": "BLOCKED_LICENSE_CAPTURE",
+        "reason": "Current manifest does not record observed_page_license for this pack; do not infer it.",
+        "final_format": "FBX"
+      }
+    ],
+    "support_stock": [
+      {
+        "provider": "KENNEY",
+        "id": "NATURE_KIT",
+        "category": "NATURE",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "P1C01 support/background stock after art-direction review"
+        ]
+      },
+      {
+        "provider": "KENNEY",
+        "id": "FURNITURE_KIT",
+        "category": "INTERIOR_PROPS",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "P1C01 support/background stock after art-direction review"
+        ]
+      },
+      {
+        "provider": "KENNEY",
+        "id": "FOOD_KIT",
+        "category": "FOOD_PROPS",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "P1C01 support/background stock after art-direction review"
+        ]
+      }
+    ],
+    "audio_foley": [
+      {
+        "provider": "OPENGAMEART",
+        "id": "OGA_DIFFERENT_STEPS_SURFACES",
+        "category": "SFX_FOOTSTEPS_MULTI_SURFACE",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "P1C01 wood/stone/leaves/gravel/mud footsteps",
+          "surface-driven footstep bank intake"
+        ],
+        "production_master_requirement": "WAV production master before UE import."
+      },
+      {
+        "provider": "OPENGAMEART",
+        "id": "OGA_FIREPLACE_LOOP",
+        "category": "SFX_FIREPLACE",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Bag End hearth",
+          "warm interior fireplace emitter"
+        ],
+        "production_master_requirement": "WAV production master before UE import."
+      },
+      {
+        "provider": "OPENGAMEART",
+        "id": "OGA_100_CC0_WOOD_METAL_SFX",
+        "category": "SFX_WOOD_METAL",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "doors/keys/latches",
+          "wood creaks",
+          "tools/farm support",
+          "metal/wood interaction bank"
+        ],
+        "production_master_requirement": "WAV production master before UE import."
+      },
+      {
+        "provider": "OPENGAMEART",
+        "id": "OGA_AMBIENT_BIRD_SOUNDS",
+        "category": "AMBIENCE_BIRDS",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "P1C01 daytime Shire bird bed",
+          "spot-call source extraction candidate"
+        ],
+        "production_master_requirement": "Convert/audition to WAV master before UE import."
+      },
+      {
+        "provider": "OPENGAMEART",
+        "id": "OGA_TINYSIZED_FANTASY_SFX",
+        "category": "SFX_HOUSEHOLD_INTERACTION",
+        "state": "AUTHORIZED_FOR_STAGING",
+        "use": [
+          "Bag End books/paper/bottles/corks/pouches/keys/creaks",
+          "leather sheath and metal interaction support",
+          "water pour/drop support",
+          "general Shire household interaction bank"
+        ],
+        "production_master_requirement": "WAV production master before UE import."
+      }
+    ]
+  },
+  "intake_gate": [
+    "Retain provider, source page, license/entitlement and SHA256 receipt for staged payloads.",
+    "Archives remain STAGED until extracted and scanned.",
+    "Animated final production assets must be FBX; OBJ is not accepted for animated production.",
+    "Production textures must be PNG/TGA; BMP is forbidden.",
+    "Audio production masters must be WAV.",
+    "Static meshes require scale, pivot, UV, normals/tangents, material-slot, collision, triangle-count and LOD/cull review before READY_FOR_IMPORT.",
+    "Animated meshes require real skeleton, skin-weight, retarget and deformation review before READY_FOR_IMPORT.",
+    "No foliage density increase is authorized by this queue."
+  ],
+  "promotion_states": [
+    "SOURCE_REGISTERED",
+    "CANDIDATE",
+    "AUTHORIZED_FOR_STAGING",
+    "STAGED",
+    "INTAKE_QC",
+    "READY_FOR_IMPORT",
+    "IMPORTED",
+    "INTEGRATED",
+    "ACCEPTED"
+  ],
+  "evidence_boundary": "Warehouse/source preparation only. STAGED or INTAKE_QC is not imported, integrated, PIE-tested, device-tested, visually accepted or performance accepted."
+}
