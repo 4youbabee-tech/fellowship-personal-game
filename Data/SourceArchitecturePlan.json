@@ -39,7 +39,7 @@
       "migration_status": "STABLE_ROOT"
     },
     {
-      "current_path": "Source/ShireJourney/ShireJourney.h",
+      "current_path": "Source/ShireJourney/Public/Core/ShireJourney.h",
       "target_path": "Source/ShireJourney/Public/Core/ShireJourney.h",
       "domain": "Core",
       "kind": "Header",
@@ -47,7 +47,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireJourney.cpp",
+      "current_path": "Source/ShireJourney/Private/Core/ShireJourney.cpp",
       "target_path": "Source/ShireJourney/Private/Core/ShireJourney.cpp",
       "domain": "Core",
       "kind": "Source",
@@ -55,7 +55,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireGameMode.h",
+      "current_path": "Source/ShireJourney/Public/Core/ShireGameMode.h",
       "target_path": "Source/ShireJourney/Public/Core/ShireGameMode.h",
       "domain": "Core",
       "kind": "Header",
@@ -63,7 +63,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireGameMode.cpp",
+      "current_path": "Source/ShireJourney/Private/Core/ShireGameMode.cpp",
       "target_path": "Source/ShireJourney/Private/Core/ShireGameMode.cpp",
       "domain": "Core",
       "kind": "Source",
@@ -71,7 +71,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireInteractable.h",
+      "current_path": "Source/ShireJourney/Public/Core/ShireInteractable.h",
       "target_path": "Source/ShireJourney/Public/Core/ShireInteractable.h",
       "domain": "Core",
       "kind": "Header",
@@ -79,7 +79,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShirePlayerCharacter.h",
+      "current_path": "Source/ShireJourney/Public/Characters/ShirePlayerCharacter.h",
       "target_path": "Source/ShireJourney/Public/Characters/ShirePlayerCharacter.h",
       "domain": "Characters",
       "kind": "Header",
@@ -87,7 +87,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShirePlayerCharacter.cpp",
+      "current_path": "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp",
       "target_path": "Source/ShireJourney/Private/Characters/ShirePlayerCharacter.cpp",
       "domain": "Characters",
       "kind": "Source",
@@ -95,7 +95,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireNPC.h",
+      "current_path": "Source/ShireJourney/Public/Characters/ShireNPC.h",
       "target_path": "Source/ShireJourney/Public/Characters/ShireNPC.h",
       "domain": "Characters",
       "kind": "Header",
@@ -103,7 +103,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireNPC.cpp",
+      "current_path": "Source/ShireJourney/Private/Characters/ShireNPC.cpp",
       "target_path": "Source/ShireJourney/Private/Characters/ShireNPC.cpp",
       "domain": "Characters",
       "kind": "Source",
@@ -111,7 +111,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireAmbientNPC.h",
+      "current_path": "Source/ShireJourney/Public/Characters/ShireAmbientNPC.h",
       "target_path": "Source/ShireJourney/Public/Characters/ShireAmbientNPC.h",
       "domain": "Characters",
       "kind": "Header",
@@ -119,7 +119,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireAmbientNPC.cpp",
+      "current_path": "Source/ShireJourney/Private/Characters/ShireAmbientNPC.cpp",
       "target_path": "Source/ShireJourney/Private/Characters/ShireAmbientNPC.cpp",
       "domain": "Characters",
       "kind": "Source",
@@ -127,7 +127,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ChapterWorldRouter.h",
+      "current_path": "Source/ShireJourney/Public/World/ChapterWorldRouter.h",
       "target_path": "Source/ShireJourney/Public/World/ChapterWorldRouter.h",
       "domain": "World",
       "kind": "Header",
@@ -135,7 +135,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ChapterWorldRouter.cpp",
+      "current_path": "Source/ShireJourney/Private/World/ChapterWorldRouter.cpp",
       "target_path": "Source/ShireJourney/Private/World/ChapterWorldRouter.cpp",
       "domain": "World",
       "kind": "Source",
@@ -143,7 +143,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShirePrototypeWorldBuilder.h",
+      "current_path": "Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h",
       "target_path": "Source/ShireJourney/Public/World/ShirePrototypeWorldBuilder.h",
       "domain": "World",
       "kind": "Header",
@@ -151,7 +151,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
+      "current_path": "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp",
       "target_path": "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp",
       "domain": "World",
       "kind": "Source",
@@ -159,7 +159,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/BreePrototypeWorldBuilder.h",
+      "current_path": "Source/ShireJourney/Public/World/BreePrototypeWorldBuilder.h",
       "target_path": "Source/ShireJourney/Public/World/BreePrototypeWorldBuilder.h",
       "domain": "World",
       "kind": "Header",
@@ -167,7 +167,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/BreePrototypeWorldBuilder.cpp",
+      "current_path": "Source/ShireJourney/Private/World/BreePrototypeWorldBuilder.cpp",
       "target_path": "Source/ShireJourney/Private/World/BreePrototypeWorldBuilder.cpp",
       "domain": "World",
       "kind": "Source",
@@ -175,7 +175,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/FellowshipChapterWorldBuilder.h",
+      "current_path": "Source/ShireJourney/Public/World/FellowshipChapterWorldBuilder.h",
       "target_path": "Source/ShireJourney/Public/World/FellowshipChapterWorldBuilder.h",
       "domain": "World",
       "kind": "Header",
@@ -183,7 +183,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
+      "current_path": "Source/ShireJourney/Private/World/FellowshipChapterWorldBuilder.cpp",
       "target_path": "Source/ShireJourney/Private/World/FellowshipChapterWorldBuilder.cpp",
       "domain": "World",
       "kind": "Source",
@@ -191,7 +191,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/IsengardPrototypeWorldBuilder.h",
+      "current_path": "Source/ShireJourney/Public/World/IsengardPrototypeWorldBuilder.h",
       "target_path": "Source/ShireJourney/Public/World/IsengardPrototypeWorldBuilder.h",
       "domain": "World",
       "kind": "Header",
@@ -199,7 +199,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/IsengardPrototypeWorldBuilder.cpp",
+      "current_path": "Source/ShireJourney/Private/World/IsengardPrototypeWorldBuilder.cpp",
       "target_path": "Source/ShireJourney/Private/World/IsengardPrototypeWorldBuilder.cpp",
       "domain": "World",
       "kind": "Source",
@@ -207,7 +207,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireQuestTrigger.h",
+      "current_path": "Source/ShireJourney/Public/World/ShireQuestTrigger.h",
       "target_path": "Source/ShireJourney/Public/World/ShireQuestTrigger.h",
       "domain": "World",
       "kind": "Header",
@@ -215,7 +215,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireQuestTrigger.cpp",
+      "current_path": "Source/ShireJourney/Private/World/ShireQuestTrigger.cpp",
       "target_path": "Source/ShireJourney/Private/World/ShireQuestTrigger.cpp",
       "domain": "World",
       "kind": "Source",
@@ -223,7 +223,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireQuestSubsystem.h",
+      "current_path": "Source/ShireJourney/Public/Subsystems/ShireQuestSubsystem.h",
       "target_path": "Source/ShireJourney/Public/Subsystems/ShireQuestSubsystem.h",
       "domain": "Subsystems",
       "kind": "Header",
@@ -231,7 +231,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireQuestSubsystem.cpp",
+      "current_path": "Source/ShireJourney/Private/Subsystems/ShireQuestSubsystem.cpp",
       "target_path": "Source/ShireJourney/Private/Subsystems/ShireQuestSubsystem.cpp",
       "domain": "Subsystems",
       "kind": "Source",
@@ -239,7 +239,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireDialogueSubsystem.h",
+      "current_path": "Source/ShireJourney/Public/Subsystems/ShireDialogueSubsystem.h",
       "target_path": "Source/ShireJourney/Public/Subsystems/ShireDialogueSubsystem.h",
       "domain": "Subsystems",
       "kind": "Header",
@@ -247,7 +247,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireDialogueSubsystem.cpp",
+      "current_path": "Source/ShireJourney/Private/Subsystems/ShireDialogueSubsystem.cpp",
       "target_path": "Source/ShireJourney/Private/Subsystems/ShireDialogueSubsystem.cpp",
       "domain": "Subsystems",
       "kind": "Source",
@@ -255,7 +255,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireAudioSubsystem.h",
+      "current_path": "Source/ShireJourney/Public/Subsystems/ShireAudioSubsystem.h",
       "target_path": "Source/ShireJourney/Public/Subsystems/ShireAudioSubsystem.h",
       "domain": "Subsystems",
       "kind": "Header",
@@ -263,7 +263,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireAudioSubsystem.cpp",
+      "current_path": "Source/ShireJourney/Private/Subsystems/ShireAudioSubsystem.cpp",
       "target_path": "Source/ShireJourney/Private/Subsystems/ShireAudioSubsystem.cpp",
       "domain": "Subsystems",
       "kind": "Source",
@@ -271,7 +271,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireStoryFlowSubsystem.h",
+      "current_path": "Source/ShireJourney/Public/Subsystems/ShireStoryFlowSubsystem.h",
       "target_path": "Source/ShireJourney/Public/Subsystems/ShireStoryFlowSubsystem.h",
       "domain": "Subsystems",
       "kind": "Header",
@@ -279,7 +279,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireStoryFlowSubsystem.cpp",
+      "current_path": "Source/ShireJourney/Private/Subsystems/ShireStoryFlowSubsystem.cpp",
       "target_path": "Source/ShireJourney/Private/Subsystems/ShireStoryFlowSubsystem.cpp",
       "domain": "Subsystems",
       "kind": "Source",
@@ -287,7 +287,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireStoryPresentationSubsystem.h",
+      "current_path": "Source/ShireJourney/Public/Subsystems/ShireStoryPresentationSubsystem.h",
       "target_path": "Source/ShireJourney/Public/Subsystems/ShireStoryPresentationSubsystem.h",
       "domain": "Subsystems",
       "kind": "Header",
@@ -295,7 +295,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireStoryPresentationSubsystem.cpp",
+      "current_path": "Source/ShireJourney/Private/Subsystems/ShireStoryPresentationSubsystem.cpp",
       "target_path": "Source/ShireJourney/Private/Subsystems/ShireStoryPresentationSubsystem.cpp",
       "domain": "Subsystems",
       "kind": "Source",
@@ -303,7 +303,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireHUD.h",
+      "current_path": "Source/ShireJourney/Public/UI/ShireHUD.h",
       "target_path": "Source/ShireJourney/Public/UI/ShireHUD.h",
       "domain": "UI",
       "kind": "Header",
@@ -311,7 +311,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireHUD.cpp",
+      "current_path": "Source/ShireJourney/Private/UI/ShireHUD.cpp",
       "target_path": "Source/ShireJourney/Private/UI/ShireHUD.cpp",
       "domain": "UI",
       "kind": "Source",
@@ -319,7 +319,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireSaveGame.h",
+      "current_path": "Source/ShireJourney/Public/SaveGame/ShireSaveGame.h",
       "target_path": "Source/ShireJourney/Public/SaveGame/ShireSaveGame.h",
       "domain": "SaveGame",
       "kind": "Header",
@@ -327,7 +327,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireSaveGame.cpp",
+      "current_path": "Source/ShireJourney/Private/SaveGame/ShireSaveGame.cpp",
       "target_path": "Source/ShireJourney/Private/SaveGame/ShireSaveGame.cpp",
       "domain": "SaveGame",
       "kind": "Source",
@@ -335,7 +335,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireRouteState.h",
+      "current_path": "Source/ShireJourney/Public/SaveGame/ShireRouteState.h",
       "target_path": "Source/ShireJourney/Public/SaveGame/ShireRouteState.h",
       "domain": "SaveGame",
       "kind": "Header",
@@ -343,7 +343,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/BlackRiderPrototype.h",
+      "current_path": "Source/ShireJourney/Public/Prototypes/BlackRiderPrototype.h",
       "target_path": "Source/ShireJourney/Public/Prototypes/BlackRiderPrototype.h",
       "domain": "Prototypes",
       "kind": "Header",
@@ -351,7 +351,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/BlackRiderPrototype.cpp",
+      "current_path": "Source/ShireJourney/Private/Prototypes/BlackRiderPrototype.cpp",
       "target_path": "Source/ShireJourney/Private/Prototypes/BlackRiderPrototype.cpp",
       "domain": "Prototypes",
       "kind": "Source",
@@ -359,7 +359,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/FellowshipEnemyPrototype.h",
+      "current_path": "Source/ShireJourney/Public/Prototypes/FellowshipEnemyPrototype.h",
       "target_path": "Source/ShireJourney/Public/Prototypes/FellowshipEnemyPrototype.h",
       "domain": "Prototypes",
       "kind": "Header",
@@ -367,7 +367,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/FellowshipEnemyPrototype.cpp",
+      "current_path": "Source/ShireJourney/Private/Prototypes/FellowshipEnemyPrototype.cpp",
       "target_path": "Source/ShireJourney/Private/Prototypes/FellowshipEnemyPrototype.cpp",
       "domain": "Prototypes",
       "kind": "Source",
@@ -375,7 +375,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireNPCContextSubsystem.h",
+      "current_path": "Source/ShireJourney/Public/Subsystems/ShireNPCContextSubsystem.h",
       "target_path": "Source/ShireJourney/Public/Subsystems/ShireNPCContextSubsystem.h",
       "domain": "Subsystems",
       "kind": "Header",
@@ -383,7 +383,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireNPCContextSubsystem.cpp",
+      "current_path": "Source/ShireJourney/Private/Subsystems/ShireNPCContextSubsystem.cpp",
       "target_path": "Source/ShireJourney/Private/Subsystems/ShireNPCContextSubsystem.cpp",
       "domain": "Subsystems",
       "kind": "Source",
@@ -391,7 +391,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/LivingWorldDirector.h",
+      "current_path": "Source/ShireJourney/Public/World/LivingWorldDirector.h",
       "target_path": "Source/ShireJourney/Public/World/LivingWorldDirector.h",
       "domain": "World",
       "kind": "Header",
@@ -399,7 +399,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/LivingWorldDirector.cpp",
+      "current_path": "Source/ShireJourney/Private/World/LivingWorldDirector.cpp",
       "target_path": "Source/ShireJourney/Private/World/LivingWorldDirector.cpp",
       "domain": "World",
       "kind": "Source",
@@ -407,7 +407,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireTraversalChallenge.h",
+      "current_path": "Source/ShireJourney/Public/World/ShireTraversalChallenge.h",
       "target_path": "Source/ShireJourney/Public/World/ShireTraversalChallenge.h",
       "domain": "World",
       "kind": "Header",
@@ -415,7 +415,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireTraversalChallenge.cpp",
+      "current_path": "Source/ShireJourney/Private/World/ShireTraversalChallenge.cpp",
       "target_path": "Source/ShireJourney/Private/World/ShireTraversalChallenge.cpp",
       "domain": "World",
       "kind": "Source",
@@ -423,7 +423,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireEnvironmentalPuzzle.h",
+      "current_path": "Source/ShireJourney/Public/World/ShireEnvironmentalPuzzle.h",
       "target_path": "Source/ShireJourney/Public/World/ShireEnvironmentalPuzzle.h",
       "domain": "World",
       "kind": "Header",
@@ -431,7 +431,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireEnvironmentalPuzzle.cpp",
+      "current_path": "Source/ShireJourney/Private/World/ShireEnvironmentalPuzzle.cpp",
       "target_path": "Source/ShireJourney/Private/World/ShireEnvironmentalPuzzle.cpp",
       "domain": "World",
       "kind": "Source",
@@ -439,7 +439,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireWorldEventInteraction.h",
+      "current_path": "Source/ShireJourney/Public/World/ShireWorldEventInteraction.h",
       "target_path": "Source/ShireJourney/Public/World/ShireWorldEventInteraction.h",
       "domain": "World",
       "kind": "Header",
@@ -447,7 +447,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireWorldEventInteraction.cpp",
+      "current_path": "Source/ShireJourney/Private/World/ShireWorldEventInteraction.cpp",
       "target_path": "Source/ShireJourney/Private/World/ShireWorldEventInteraction.cpp",
       "domain": "World",
       "kind": "Source",
@@ -455,7 +455,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/FellowshipMythicThreat.h",
+      "current_path": "Source/ShireJourney/Public/World/FellowshipMythicThreat.h",
       "target_path": "Source/ShireJourney/Public/World/FellowshipMythicThreat.h",
       "domain": "World",
       "kind": "Header",
@@ -463,7 +463,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/FellowshipMythicThreat.cpp",
+      "current_path": "Source/ShireJourney/Private/World/FellowshipMythicThreat.cpp",
       "target_path": "Source/ShireJourney/Private/World/FellowshipMythicThreat.cpp",
       "domain": "World",
       "kind": "Source",
@@ -471,7 +471,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/WorldAmbientMotionActor.h",
+      "current_path": "Source/ShireJourney/Public/World/WorldAmbientMotionActor.h",
       "target_path": "Source/ShireJourney/Public/World/WorldAmbientMotionActor.h",
       "domain": "World",
       "kind": "Header",
@@ -479,7 +479,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/WorldAmbientMotionActor.cpp",
+      "current_path": "Source/ShireJourney/Private/World/WorldAmbientMotionActor.cpp",
       "target_path": "Source/ShireJourney/Private/World/WorldAmbientMotionActor.cpp",
       "domain": "World",
       "kind": "Source",
@@ -487,7 +487,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/WorldDetailCluster.h",
+      "current_path": "Source/ShireJourney/Public/World/WorldDetailCluster.h",
       "target_path": "Source/ShireJourney/Public/World/WorldDetailCluster.h",
       "domain": "World",
       "kind": "Header",
@@ -495,7 +495,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/WorldDetailCluster.cpp",
+      "current_path": "Source/ShireJourney/Private/World/WorldDetailCluster.cpp",
       "target_path": "Source/ShireJourney/Private/World/WorldDetailCluster.cpp",
       "domain": "World",
       "kind": "Source",
@@ -503,7 +503,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/StoryPresentationDirector.h",
+      "current_path": "Source/ShireJourney/Public/World/StoryPresentationDirector.h",
       "target_path": "Source/ShireJourney/Public/World/StoryPresentationDirector.h",
       "domain": "World",
       "kind": "Header",
@@ -511,7 +511,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/StoryPresentationDirector.cpp",
+      "current_path": "Source/ShireJourney/Private/World/StoryPresentationDirector.cpp",
       "target_path": "Source/ShireJourney/Private/World/StoryPresentationDirector.cpp",
       "domain": "World",
       "kind": "Source",
@@ -519,7 +519,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.h",
+      "current_path": "Source/ShireJourney/Public/Subsystems/ShireChapterAssetStreamingSubsystem.h",
       "target_path": "Source/ShireJourney/Public/Subsystems/ShireChapterAssetStreamingSubsystem.h",
       "domain": "Subsystems",
       "kind": "Header",
@@ -527,7 +527,7 @@
       "migration_status": "MIGRATED"
     },
     {
-      "current_path": "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.cpp",
+      "current_path": "Source/ShireJourney/Private/Subsystems/ShireChapterAssetStreamingSubsystem.cpp",
       "target_path": "Source/ShireJourney/Private/Subsystems/ShireChapterAssetStreamingSubsystem.cpp",
       "domain": "Subsystems",
       "kind": "Source",
@@ -591,5 +591,6 @@
       "warehouse": "#204 SUCCESS / run 35929433089",
       "scope": "Static + UE4.27.2 compile/import + headless runtime + no-delta warehouse proof; no PIE/device/visual/performance acceptance."
     }
-  }
+  },
+  "last_sync_note": "2026-09-26: 62 migrated rows synchronized to the completed Public/Private layout on the high-throughput preparation lane."
 }
