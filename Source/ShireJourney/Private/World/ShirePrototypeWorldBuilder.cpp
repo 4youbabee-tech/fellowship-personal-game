@@ -1204,7 +1204,7 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
     {
         Rosie->DisplayName=FText::FromString(TEXT("Rosie Cotton"));
         Rosie->DialogueLines={
-            FText::FromString(TEXT("They have carried half the Green Dragon into that field. If you pass the party tables, make sure the far row has not been forgotten.")),
+            FText::FromString(TEXT("Half of Hobbiton seems to be carrying supper into that field. If you pass the party tables, make sure the far row has not been forgotten.")),
             FText::FromString(TEXT("Everyone says Bilbo planned too much. I think they will change their minds once the food arrives."))
         };
         Rosie->SideStoryBeatAfterInteraction=TEXT("Side_PartyTablesStarted");
@@ -1228,9 +1228,10 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
         GreenDragonLife->RequiredSideStoryBeat = TEXT("ShireOpening");
         GreenDragonLife->BlockedAfterStoryBeat = TEXT("PartyArrival");
         GreenDragonLife->DiscoveryId = TEXT("SHIRE_GREEN_DRAGON_MEMORY");
-        GreenDragonLife->DiscoveryDisplayName = FText::FromString(TEXT("The Green Dragon"));
+        // Keep the legacy discovery ID for save compatibility; only player-visible text is corrected.
+        GreenDragonLife->DiscoveryDisplayName = FText::FromString(TEXT("Hobbiton Village Common"));
         GreenDragonLife->ObjectiveMessage = FText::FromString(
-            TEXT("The Green Dragon is loud with friends, dancing and local gossip. Stay awhile or continue to the party."));
+            TEXT("The village common is loud with friends, dancing and local gossip. Stay awhile or continue to the party."));
     }
 
     AShireTraversalChallenge* PartyPreparations = GetWorld()->SpawnActor<AShireTraversalChallenge>(
@@ -1410,7 +1411,8 @@ void AShirePrototypeWorldBuilder::SpawnSideStories()
 
     const FDiscovery Discoveries[] = {
         { FVector(-1250,330,75), TEXT("Discover_ShireMill"), TEXT("Discovered: The Mill beside the Water.") },
-        { FVector(-520,360,75), TEXT("Discover_GreenDragon"), TEXT("Discovered: The Green Dragon and Bywater market.") },
+        // Legacy discovery ID retained for existing saves; visible copy no longer misplaces Bywater's inn in Hobbiton.
+        { FVector(-520,360,75), TEXT("Discover_GreenDragon"), TEXT("Discovered: Hobbiton village common.") },
         { FVector(280,1320,75), TEXT("Discover_PartyField"), TEXT("Discovered: Bilbo's Party Field.") },
         { FVector(10150,-1500,75), TEXT("Discover_OldBoundary"), TEXT("Discovered: the old eastern boundary and orchard.") },
         { FVector(14500,1180,75), TEXT("Discover_RootHide"), TEXT("Discovered: a hollow root beneath the wooded road.") },
