@@ -19,7 +19,6 @@
 #include "Materials/MaterialExpressionScalarParameter.h"
 #include "Materials/MaterialExpressionTextureSampleParameter2D.h"
 #include "Materials/MaterialExpressionMultiply.h"
-#include "Materials/MaterialExpressionDistanceCullFade.h"
 #include "Materials/MaterialExpressionMaterialFunctionCall.h"
 #include "Materials/MaterialFunction.h"
 #include "Materials/MaterialExpressionVectorParameter.h"
@@ -510,8 +509,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     // Drop C2: create a dedicated foliage master without assigning it yet.
     // Grass/leaves will be re-parented in C3 by stable authored material identity.
     // SimpleGrassWind executes in the material vertex path, so there is no per-tree
-    // Actor Tick. DistanceCullFade attenuates the wind contribution as instances
-    // approach their existing cull distance, keeping the low-spec path bounded.
+    // Actor Tick. Distance complexity is reduced by assigning the separate no-WPO
+    // far master in C3/C4, rather than adding another unsupported expression here.
     const TCHAR* ProductionFoliagePath =
         TEXT("/Game/Production/Materials/M_ProductionFoliage.M_ProductionFoliage");
     UMaterialInterface* ProductionFoliageParent =
@@ -595,16 +594,6 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             WindWeightParameter->DefaultValue = 1.0f;
             FoliageMaterial->Expressions.Add(WindWeightParameter);
 
-            UMaterialExpressionDistanceCullFade* WindDistanceFade =
-                NewObject<UMaterialExpressionDistanceCullFade>(FoliageMaterial);
-            FoliageMaterial->Expressions.Add(WindDistanceFade);
-
-            UMaterialExpressionMultiply* DistanceScaledWindWeight =
-                NewObject<UMaterialExpressionMultiply>(FoliageMaterial);
-            DistanceScaledWindWeight->A.Expression = WindWeightParameter;
-            DistanceScaledWindWeight->B.Expression = WindDistanceFade;
-            FoliageMaterial->Expressions.Add(DistanceScaledWindWeight);
-
             UMaterialFunction* SimpleGrassWindFunction =
                 LoadObject<UMaterialFunction>(
                     nullptr,
@@ -628,7 +617,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 if (WindIntensityInput && WindWeightInput && WindSpeedInput)
                 {
                     WindIntensityInput->Expression = WindIntensityParameter;
-                    WindWeightInput->Expression = DistanceScaledWindWeight;
+                    WindWeightInput->Expression = WindWeightParameter;
                     WindSpeedInput->Expression = WindSpeedParameter;
 
                     FoliageMaterial->Expressions.Add(SimpleWind);
@@ -653,7 +642,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             UE_LOG(
                 LogTemp,
                 Display,
-                TEXT("ShireProductionImport created M_ProductionFoliage master material with distance-scaled SimpleGrassWind."));
+                TEXT("ShireProductionImport created M_ProductionFoliage master material with parameterized SimpleGrassWind."));
         }
         else
         {
@@ -666,9 +655,8 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
     }
 
 
-    // Far foliage uses a separate no-WPO master. DistanceCullFade makes near/mid
-    // motion less distracting at the cull edge, while the far master lets C3/C4
-    // remove wind vertex instructions entirely when LOD material assignment is wired.
+    // Far foliage uses a separate no-WPO master. C3/C4 will bind this to distant
+    // LOD material slots so far vegetation removes wind vertex instructions entirely.
     const TCHAR* ProductionFoliageFarPath =
         TEXT("/Game/Production/Materials/M_ProductionFoliageFar.M_ProductionFoliageFar");
     UMaterialInterface* ProductionFoliageFarParent =
