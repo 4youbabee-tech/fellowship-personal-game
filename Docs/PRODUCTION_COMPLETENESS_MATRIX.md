@@ -1,3 +1,13 @@
+## 2026-09-25 - W00 closure / W01 kickoff
+
+- **W00 repair lane:** CLOSED on `develop@809e56a9e1dc4b453e02a0b04b6875a71df21933`.
+- **Machine evidence:** Pre-Unreal #880 SUCCESS; Unreal #715 SUCCESS by safe validation-policy inheritance; prior full machine chain remains Unreal #704 on the safe ancestor.
+- **Owner PIE evidence:** P1C01 startup grounding PASS with `commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.8 drift=0.0`; player remained on ground; same-session owner searches returned no `Mobility is Static` or `SetStaticMesh` matches.
+- **Evidence boundary:** startup-grounding/warning-tail is PIE-TESTED. Whole P1C01 remains not DEVICE-TESTED, not VISUALLY-ACCEPTED and not PERFORMANCE-ACCEPTED.
+- **W01 status:** STARTED AS PRODUCTION GOVERNANCE/LEDGER KICKOFF; runtime code is unchanged in this kickoff change.
+- **First implementation gates:** ambient ownership/pooling consolidation -> living-world event-budget authority reconciliation -> terrain/geography and the ordered P1C01 vertical-slice production stack.
+- **Sensory/reactive intake:** VERIFIED/PARTIALLY ACCEPTED. Spatial environmental audio/surface foley, performance-scaled vegetation motion and skeletal IK presentation are tracked; duplicate implementations of already-present NPC awareness/weather and audio fade/duck systems are explicitly rejected.
+
 ## 2026-09-25 - W00 lessons-lock / current develop proof
 - **PG-161 follow-up:** #875 exposed a wrong textual anchor in the self-guard. Loop-anchored correction committed; exact-head rerun pending. No gameplay/acceptance status changed.
 - **PG-161 self-test:** #871 found a validator false positive; PG-164 correction committed. Exact-head Pre-Unreal rerun pending; no gameplay acceptance state changed.
