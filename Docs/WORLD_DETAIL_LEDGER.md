@@ -1,3 +1,12 @@
+## 2026-09-25 - W01 P1C01 Drop C2: foliage wind material layer
+
+- Source 03 keeps Hobbiton/Shire as pastoral hills, lanes, farms and gardens with warm domestic scale; canonical landmarks remain visually dominant.
+- Source 11 requires foliage review around instance density, cull distance, LOD, wind complexity and masked-material overdraw, and explicitly requires representative profiling before universal budgets.
+- C2 therefore adds material-only vegetation motion: `M_ProductionFoliage` for parameterized near/mid WPO and a separate `M_ProductionFoliageFar` with no WPO for the future far-LOD binding path.
+- The world population remains HISM/ISM owned; no tree/grass Tick, Spawn/Destroy loop, density escalation, quest ID, save key, NPC system, audio cue or weather runtime bridge is added here.
+- C3 remains the stable material-identity parent assignment step; C4 remains LOD/cull/overdraw profiling. Shared weather/audio wind state stays deferred until the visual path is engine-green.
+- Evidence boundary: STATIC-VALIDATED only until exact-head automation succeeds.
+
 ## 2026-09-25 - W01/P1C01 Drop C2 foliage motion
 
 - Detail: subtle wind response for Shire grass/leaves through a dedicated foliage master.
