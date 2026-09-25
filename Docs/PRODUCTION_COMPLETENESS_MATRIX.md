@@ -1,3 +1,12 @@
+## 2026-09-25 - Final consolidation / CI-cost / launcher hardening
+- **Canonical handoff target:** `develop`; stable release lane: `main`.
+- **Branch consolidation:** FINAL DELETE SET RECORDED on PR #70. Post-merge cleanup preserves only develop/main plus temporary generated-audio archive; stale refs are removed automatically by the branch-cleanup workflow.
+- **Parallel consolidation PR #71:** SUPERSEDED after unique safe payload transfer into #70.
+- **Generated-audio registries:** CONSOLIDATED/SANITIZED; expiring signed delivery URLs removed; no UE playback/listening acceptance promoted.
+- **Local launcher self-update hazard:** FIX_COMMITTED for both update/build and PIE verification controllers; local rerun proof pending.
+- **Unreal validation classifier/workflow:** FIX_COMMITTED. Core runtime changes compile/test without package/cook; packaging-critical deltas retain full package validation; maintenance/docs can inherit green parent proof.
+- **W00:** AUTOMATED CLOSURE GREEN; remaining human P1C01 grounding/traversal + project-owned mobility-warning tail is still unproven on the final canonical post-maintenance head.
+
 ## 2026-09-25 - Consolidation and validation-cost correction
 - Maintenance-run supersession: **FIX_COMMITTED / CI PROOF PENDING**. Newer `maintenance/*` heads cancel older Unreal validations so the single self-hosted UE4 runner does not spend a full package cycle on obsolete maintenance commits.
 - Sanitized audio registry salvage: **DATA-CONSOLIDATED / RUNTIME-UNPROVEN**. Canonical develop receives the generated-audio/P1C01 bank metadata without signed external download URLs; WAV mastering, UE import, playback, lip-sync, listening and device acceptance remain pending.
