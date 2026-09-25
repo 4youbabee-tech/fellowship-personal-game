@@ -355,6 +355,18 @@
       "mode": "REFERENCE_ONLY",
       "allowed_license_classes": [],
       "notes": "Classic EA LOTR game audio is a reference source only. Do not extract/reuse proprietary game audio in production without separate rights."
+    },
+    {
+      "id": "QUATERNIUS",
+      "mode": "PER_ITEM_REVIEW_REQUIRED",
+      "allowed_license_classes": [
+        "CC0",
+        "QAL_1_0_GAME_USE"
+      ],
+      "denied_license_classes": [
+        "UNKNOWN"
+      ],
+      "notes": "Do not assume a blanket provider license. Capture the exact license shown for each pack at acquisition time. Automated warehouse staging must skip packs without per-pack license evidence."
     }
   ],
   "assets": [],
