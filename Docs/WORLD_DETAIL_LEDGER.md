@@ -1,5 +1,13 @@
 # WORLD DETAIL LEDGER
 
+## 2026-09-25 - W01 implementation drop 1: single-owner ambient life + budget authority
+
+- **Runtime ownership change implemented:** `ShirePrototypeWorldBuilder` no longer directly spawns `AShireAmbientNPC` crowds. P1C01 ambient population now converges on `ALivingWorldDirector`, which already owns pooling, culling, chapter targets, danger thinning and micro-event/fauna lifecycle. Named/story `AShireNPC` actors remain builder-owned.
+- **Budget drift resolved at source:** `LivingWorldEventPlan.json#region_budgets` is now the sole micro-event cap/cadence authority. `WorldLifeSaturationPlan.json` controls baseline population density only, and `ALivingWorldDirector::LoadLifeSaturationContract` no longer overwrites micro-event caps/cadence.
+- **P1C01 life preservation:** `PlayRunner` is retained in the director-owned P1C01 role mix. Fauna remains available through the existing living-world event path instead of a second permanent builder-owned bird crowd.
+- **Static verification on branch:** zero `SpawnActor<AShireAmbientNPC>` occurrences remain in `ShirePrototypeWorldBuilder.cpp`; the old `ShireAmbientNPC.h` include is removed; the life-saturation loader no longer reads the two micro-event budget fields.
+- **Evidence boundary:** STATIC-VALIDATED only. Fresh Pre-Unreal + UE4.27.2 compile/runtime/PIE evidence is still required before calling this W01 code COMPILE-TESTED or PIE-TESTED.
+
 ## 2026-09-25 - W01 kickoff: verified sensory/reactive review intake
 
 - W00 repair lane is closed on canonical `develop@809e56a9e1dc4b453e02a0b04b6875a71df21933`. Owner-side P1C01 PIE showed `ShireStartupGrounding: PASS chapter=P1C01 commitBarrier=yes stableSeconds=2.0 ground=yes drop=1.8 drift=0.0`, the player remained on blocking ground, and the owner reported zero same-session Output Log search matches for `Mobility is Static` and `SetStaticMesh`. This is P1C01 startup-grounding/warning-tail PIE evidence only; it is not DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED.
