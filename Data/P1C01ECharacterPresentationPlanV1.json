@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_E_CHARACTER_PRESENTATION_V1",
+  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01WorldBuildIntakePacketV1.json",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE",
+    "DEC-038",
+    "DEC-039"
+  ],
+  "prerequisite": "D environment presentation runtime pass must be engine-green before E runtime implementation starts.",
+  "purpose": "Prepare named/support Shire character presentation without replacing existing gameplay ownership or creating cloud-dependent character logic.",
+  "asset_contract": {
+    "final_animated_format": "FBX only",
+    "references": "TSoftObjectPtr/TSoftClassPtr for heavy skeletal assets",
+    "loading": "FStreamableManager asynchronous loading",
+    "crowd_lifecycle": "Object Pooling for common/transient crowd actors",
+    "textures": "1K/2K runtime default; 4K only for measured hero need"
+  },
+  "presentation_tracks": [
+    "skeleton/retarget validation",
+    "material and silhouette identity",
+    "locomotion/idles",
+    "talk/household/work gestures",
+    "distance LOD/cull policy",
+    "shadow policy",
+    "named-vs-background quality tiers"
+  ],
+  "integration_boundaries": [
+    "Do not duplicate character-state authority already owned by current subsystems.",
+    "Do not add per-character expensive Tick for presentation-only behavior.",
+    "Named character identity and relationships remain data/system driven.",
+    "No generated dialogue may alter canon facts, deaths, allegiances, quest outcomes or future knowledge."
+  ],
+  "evidence_to_capture": [
+    "skeletal asset object path",
+    "skeleton identity",
+    "retarget result",
+    "LOD count",
+    "material slots",
+    "texture memory estimate",
+    "shadow mode",
+    "animation set coverage",
+    "deformation issues"
+  ],
+  "acceptance": [
+    "Exact-head static validation.",
+    "UE4.27.2 editor compile/import success.",
+    "Retarget/deformation checks for promoted animated assets.",
+    "No synchronous heavy load introduced.",
+    "Human PIE visual review remains mandatory.",
+    "Target-device profiling remains mandatory before performance acceptance."
+  ],
+  "evidence_boundary": "Preparation only. No compile/PIE/device/visual/performance acceptance claim."
+}
