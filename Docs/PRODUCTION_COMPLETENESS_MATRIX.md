@@ -1,3 +1,13 @@
+## 2026-09-25 - W01 P1C01 Drop A: terrain/geography foundation
+
+- **Parent baseline:** `develop@ec320891...` = Pre-Unreal #885 SUCCESS + Unreal #720 SUCCESS.
+- **Terrain/geography runtime:** IMPLEMENTED IN SOURCE - repeated terraced hills, village slopes and river banks moved to dedicated HISM groups; route-framing geography expanded across the P1C01 Shire traversal.
+- **Performance contract:** IMPLEMENTED IN SOURCE - explicit HISM cull distances for foliage/scenic/geography groups; no new synchronous heavy-load path.
+- **Story/quest boundary:** PRESERVED - no quest IDs, chapter postconditions or stable story anchors moved.
+- **Grounding boundary:** PRESERVED - broad collision foundation and router grounding contract remain authoritative.
+- **Validation:** STATIC-VALIDATED only until PR #75 exact-head Pre-Unreal + UE4.27.2 core validation succeeds.
+- **Next production dependency:** Hobbiton / Bag End architecture.
+
 ## 2026-09-25 - PR #74 governance-transition red diagnosis
 
 - **Pre-Unreal #882/#883:** FAILED in Project Governor coherence, not UE4 runtime.
