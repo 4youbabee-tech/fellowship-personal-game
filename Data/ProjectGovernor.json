@@ -36,7 +36,8 @@
     "Final W00 automation must prove packaged runtime data and packaged executable startup before W01 opens.",
     "Do not repeat an expensive UE4 build/cook/package gate merely because an immediate metadata parent was cancelled; reuse the nearest still-valid green proof only across an explicitly safe governance/docs-only ancestry, and fail closed if any runtime/asset/config/packaging path intervenes.",
     "Local tracked launch controllers must never update themselves in place. Any helper that performs git pull while running must execute from an immutable temporary copy and preserve the explicit develop lane.",
-    "The programmer handoff must remain branch-simple: develop is canonical development/integration, main is stable/release, and temporary implementation branches self-clean after merge once meaningful content is integrated."
+    "The programmer handoff must remain branch-simple: develop is canonical development/integration, main is stable/release, and temporary implementation branches self-clean after merge once meaningful content is integrated.",
+    "Parallel source/PDF/warehouse/asset-preparation lanes may advance without repeating engine gates for administrative-only changes; promotion into runtime remains serialized and technical safety/performance/runtime-data gates stay fail-closed."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -2725,6 +2726,27 @@
       ],
       "checkpoint": "ARCHITECTURAL_STABILIZATION_GATE",
       "notes": "Validation builds are allowed and required during this freeze; new gameplay/content features are not."
+    },
+    {
+      "id": "REQ-PROD-011",
+      "title": "High-throughput multi-lane production with strict runtime smart fence",
+      "category": "ProductionPipeline",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner explicitly requested the massive build continue on multiple parallel lanes, use the supplied source PDFs, import game materials faster, and relax administrative constraints without creating future runtime errors.",
+      "intent": "Allow source/PDF indexing, warehouse acquisition, material/audio/character preparation and later-region authoring to advance in parallel while exactly one runtime-changing integration lane remains serialized and all crash/save/streaming/memory/performance/runtime-dependency guards stay fail-closed.",
+      "acceptance_criteria": [
+        "Supplied source PDFs are indexed by stable hash, page count and authority role without adding large binaries to Git.",
+        "P1C01 material intake can prepare 1K/2K PNG/TGA sources and deterministic MTL files for the existing production importer.",
+        "Missing candidate downloads and non-final naming do not fail unrelated preparation work.",
+        "Dangerous/corrupt payloads, BMP, invalid final animation format, provider-access bypass, runtime dependency gaps, synchronous heavy loading, pooling violations and critical gameplay-state defects remain blocking.",
+        "Only one runtime-changing PR is active while source/warehouse/tooling lanes advance in parallel."
+      ],
+      "dependencies": [
+        "REQ-WAREHOUSE-001",
+        "REQ-STABILITY-001",
+        "REQ-PERF-003"
+      ]
     }
   ],
   "hard_invariants": [
@@ -3545,6 +3567,26 @@
         "Data/MasterExternalResourceBibleAdoptionV1.json",
         "Data/GlobalWarehouseSourceRegistryV2.json"
       ]
+    },
+    {
+      "id": "DEC-041",
+      "title": "Smart-fence acceleration for the massive production build",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WAREHOUSE-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Parallel preparation lanes are authorized. Administrative friction is downgraded only where runtime correctness cannot be affected: missing not-yet-acquired candidates, non-final naming and private-offline commercial-clearance uncertainty may remain warnings or pending states. Technical safety stays strict. Runtime integration remains one PR at a time.",
+      "implementation_contract": [
+        "Data/FastProductionSmartFenceV1.json defines blocking versus warning rules per lane.",
+        "Data/ProjectSourcePdfRegistryV1.json fingerprints the supplied source corpus and preserves authority roles.",
+        "Data/P1C01MaterialImportWaveV1.json selects a benchmark-first open-material wave.",
+        "Scripts/prepare_p1c01_material_intake.ps1 treats missing warehouse sources as pending but fails on technical payload defects.",
+        "Scripts/promote_p1c01_material_intake.ps1 uses a temporary SourceAssets/Production overlay and invokes the existing UE4 importer only on explicit request."
+      ],
+      "evidence_boundary": "Preparation/tooling implementation only until a real local intake/import run emits its receipt/log. No COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE acceptance is implied.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
