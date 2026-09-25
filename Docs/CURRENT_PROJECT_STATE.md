@@ -1,3 +1,11 @@
+## 2026-09-25 - GitHub Pre-Unreal zero-step infrastructure incident
+
+- Pre-Unreal #959 (PR #80) and #960 (PR #81) both report failed validate jobs with `steps=null` and unavailable logs; GitHub log retrieval returns `BlobNotFound 404`.
+- By contrast, immediately previous Pre-Unreal #957 completed SUCCESS with the normal full 35-step job list.
+- PR #80 also had Pre-Unreal #954 SUCCESS on `dc70a48c5...`; the later head advanced through status-documentation only before #959.
+- Therefore these two runs are classified as **CI infrastructure/log-acquisition failures with repository cause unproven**, not C++/validator failure evidence.
+- Policy: do not modify runtime code from a zero-step/no-log failure. Require a rerun with concrete repository-step evidence before any code root-fix.
+
 ## 2026-09-25 - C2 v2 exact-head validation retry requested by real status update
 
 - PR #80 head `dc70a48c5bda0904b64c2009a9088fd0d0bd7ec5` passed Pre-Unreal #954.
