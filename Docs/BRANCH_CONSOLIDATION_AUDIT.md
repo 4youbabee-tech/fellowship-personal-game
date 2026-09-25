@@ -56,12 +56,14 @@ These branches have no reason to remain active after PR #71 is merged and the fi
 - `work/automation-first-runtime-observation`
 - `work/repository-hygiene-cleanup`
 
-### PRESERVE UNTIL FINAL SALVAGE CHECK
-Do not bulk-delete these until their remaining unique data is explicitly classified:
-- `audit/pre-mega-integration-v1` — 67 commits ahead of its old base but hundreds behind develop; contains stale pre-Public/Private runtime paths and must not be wholesale-merged.
-- `planning/living-world-completeness-v1` — key unique sensory/voice plans have now been salvaged; remaining differences are mainly stale governance/docs/roadmap snapshots and recovery tooling, pending final supersession check.
-- `warehouse/generated-audio-v1` — core manifests have been salvaged in sanitized form; preserve until confirming no binary/master asset intake depends on branch-only state.
-- `warehouse/source09-gapfill-v1` — gap audit has been salvaged; preserve until final candidate-registry equivalence check.
+### FINAL SALVAGE CHECK COMPLETED
+The remaining diverged branches were inspected after safe-content salvage:
+- `audit/pre-mega-integration-v1`: historical offline/CI/runtime work from 2026-09-21. Its runtime source paths predate the Public/Private migration and its key fixes/contracts have newer develop equivalents. Do not merge it; classify as superseded history.
+- `planning/living-world-completeness-v1`: unique sensory/voice plans and the exact-SHA anti-stuck recovery helper/tests were salvaged. Remaining differences are stale governance/docs/roadmap snapshots already superseded by develop.
+- `warehouse/generated-audio-v1`: generated-audio/ambient/effort/P1C01 bank manifests were salvaged in sanitized form. Branch-only changes are metadata snapshots; no audio binary/master file appears in the branch-vs-consolidation changed-file set.
+- `warehouse/source09-gapfill-v1`: the missing Source09 gap audit was salvaged; the remaining candidate/registry files already exist on develop in newer/current form.
+
+Therefore all four are SAFE DELETE CANDIDATES after PR #71 lands. No historical diverged branch is authorized for wholesale merge.
 
 ## Merge policy
 - Never bulk-merge an old diverged branch merely because it is ahead by commit count.
