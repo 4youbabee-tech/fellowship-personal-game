@@ -663,3 +663,14 @@ Run 35463567281 proves the source checkout repair worked. Build then received Ct
 
 **Guard:** `Data/BranchCleanupPlan.json`, the branch-cleanup workflow, the Governor branch workflow contract, and Gate 0 together preserve this rule.
 
+### PG-164 — Regression guards must validate semantics, not reject the intended explicit path
+**Observed failure:** Pre-Unreal #871 rejected the new PG-161 classifier policy because its guard searched too broadly for the classifier filename and mistook the intended explicit validation-policy-only branch for ordinary governance/docs classification.
+
+**Root cause:** the new guard used a textual range that included both the forbidden ordinary-safe block and the allowed explicit policy-only hook.
+
+**Permanent rule:** source guards must inspect the smallest structural region that represents the forbidden behavior. A guard may not ban the exact explicit path it is supposed to require.
+
+**Fix:** PG-161 now isolates only the ordinary safe-governance block and checks that the classifier script is absent there, while separately requiring the explicit validation-policy-only marker.
+
+**Evidence boundary:** fix committed; exact-head Pre-Unreal rerun required before calling PG-164 proven.
+
