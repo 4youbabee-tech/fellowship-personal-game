@@ -1,3 +1,11 @@
+## 2026-09-26 - CI zero-step root bypass installed
+
+- Recurrent hosted `steps=null` / BlobNotFound failures are removed from the critical path: Pre-Unreal and Branch Cleanup now run only on the supervised self-hosted Windows UE4 runner.
+- The 20-minute Pre-Unreal schedule is removed.
+- Unreal Build Validation now ignores CI/docs/known preparation-only deltas so the single UE device lane is reserved for runtime-relevant work.
+- `Scripts/run_local_static_validation.ps1` mirrors the full static/governor/audit/unit-test chain for direct local execution independent of GitHub-hosted workers.
+- Evidence boundary: STATIC SOURCE CHANGE ONLY until the supervised runner executes these workflows.
+
 ## 2026-09-26 - Immediate branch integration policy and dead-ref cleanup
 
 - **Owner rule:** completed temporary branches must merge meaningful work into `develop` immediately, then delete the branch ref.
