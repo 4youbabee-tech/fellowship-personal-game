@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "audit_id": "WAREHOUSE_SOURCE09_P1C01_GAP_AUDIT_V1",
+  "status": "PREPARED_OFFLINE_SAFE",
+  "authority": "Data/ProjectGovernor.json / REQ-WAREHOUSE-001 / INV-WAREHOUSE-STAGING",
+  "source_basis": [
+    "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+    "Data/TrilogyProductionAssetWarehouse.json",
+    "Data/TrilogyAssetCandidateQueue.json",
+    "Data/TrilogyAudioAssetCandidateQueue.json"
+  ],
+  "truth_boundary": "This report describes repository catalog/candidate/manifests only. It does not claim STAGED, READY_FOR_IMPORT, IMPORTED, INTEGRATED, PIE-tested, device-tested, visually accepted, performance accepted, or final audio acceptance without matching receipts/engine/human evidence.",
+  "branch_isolation": {
+    "branch": "warehouse/source09-gapfill-v1",
+    "integration_pr_head_untouched": true,
+    "purpose": "Continue safe warehouse preparation while the self-hosted runner is unavailable/queued."
+  },
+  "repository_prepared_counts": {
+    "asset_candidates": 35,
+    "audio_candidates": 26,
+    "p1c01_relevant_audio_candidates": 20,
+    "note": "Counts are candidate records, not downloaded or accepted assets."
+  },
+  "p1c01_gap_matrix": [
+    {
+      "lane": "SHIRE_MATERIALS_TERRAIN",
+      "state": "CANDIDATE_COVERAGE_STRONG",
+      "evidence": [
+        "Poly Haven 2K batch",
+        "ambientCG 2K PNG foundation lanes"
+      ],
+      "remaining": "Intake/dedupe/normalization and actual UE material integration."
+    },
+    {
+      "lane": "SHIRE_SUPPORT_ARCHITECTURE_PROPS",
+      "state": "CANDIDATE_COVERAGE_STRONG_SUPPORT_ONLY",
+      "evidence": [
+        "Quaternius medieval village/props",
+        "Kenney furniture/nature/world kits",
+        "KayKit medieval/furniture/restaurant/prototype packs"
+      ],
+      "remaining": "Hobbit-hole/Bag End hero architecture and film-specific silhouettes still require project-specific art direction/acceptance."
+    },
+    {
+      "lane": "SHIRE_FAUNA",
+      "state": "CANDIDATE_PRESENT_NOT_STAGED_PROVEN",
+      "evidence": [
+        "Quaternius farm animals",
+        "Quaternius animated animals"
+      ],
+      "remaining": "Resolve/publicly acquire eligible FBX packs, then skeleton/deformation/performance review."
+    },
+    {
+      "lane": "P1C01_GENERIC_HUMANOID_RIG_ANIMATION",
+      "state": "CANDIDATE_PRESENT_SUPPORT_ONLY",
+      "evidence": [
+        "Quaternius universal bases/outfits/animation library",
+        "KayKit adventurers technical QA"
+      ],
+      "remaining": "Named Frodo/Sam/Gandalf/Bilbo production-quality skeletal FBX assets remain a final-art gap."
+    },
+    {
+      "lane": "P1C01_AUDIO_AMBIENCE_FOLEY",
+      "state": "CANDIDATE_COVERAGE_EXPANDED",
+      "evidence": [
+        "FS_SHIRE_FOREST_RIVER_YKOZY_710263",
+        "FS_SHIRE_HORSE_MUD_FARM_OHMYPRO_400703",
+        "FS_SHIRE_FOREST_FOOTSTEP_TUNESEEKER_802062",
+        "FS_ANDUIN_FOREST_RIVER_ELANDRE01_594414",
+        "FS_FOREST_RIVER_DEADROBOT_609937",
+        "FS_FOREST_BIRDS_LOOP_MAGNESUS_723913",
+        "FS_FOREST_WIND_LEAVES_REFLEKT_843073",
+        "FS_LEAVES_RUSTLE_CINETONY_575380",
+        "SONNISS_GDC_2026_BUNDLE",
+        "OGA_PARK_AMBIENCE_BIRDS",
+        "OGA_PARK_AMBIENCE_RIVER",
+        "OGA_PARK_AMBIENCE_WIND",
+        "OGA_100_CC0_WOOD_METAL_SFX",
+        "OGA_FIREPLACE_LOOP",
+        "OGA_STEPS_WOOD_FLOOR",
+        "OGA_TINYSIZED_FANTASY_SFX",
+        "OGA_WATER_SPLASH_1",
+        "OGA_WATER_SPLASH_2",
+        "OGA_DIFFERENT_STEPS_SURFACES",
+        "OGA_FANTASY_ACCESSORY_SFX"
+      ],
+      "remaining": "Runner staging receipts, archive extraction, listening/loop/noise/channel review, then UE import/playback without -NoSound."
+    },
+    {
+      "lane": "P1C01_AUTHORED_VOICE_MUSIC_IDENTITY",
+      "state": "PRODUCTION_GAP",
+      "evidence": [
+        "Generic CC0 music/SFX candidates only"
+      ],
+      "remaining": "Final authored/authorized voice and score identity; do not treat temp CC0 tracks as final LOTR score replacement."
+    },
+    {
+      "lane": "P1C01_VFX_LIGHTING_PRESENTATION",
+      "state": "NOT_EXPANDED_DURING_W00",
+      "evidence": [],
+      "remaining": "Keep frozen until active W00 acceptance closure permits production expansion."
+    }
+  ],
+  "safe_next_actions_without_runner": [
+    "Verify source pages, license labels, direct public file endpoints and expected formats.",
+    "Prepare bounded acquisition manifests for P1C01/common reusable stock only.",
+    "Dedupe candidate IDs/providers and label support-only vs potential production use.",
+    "Do not download via protected/interactive/paywalled flows and do not invent direct URLs.",
+    "Do not promote any candidate beyond catalog/prepared state without the required intake evidence."
+  ],
+  "blocked_until_runner_or_engine": [
+    "Actual persistent warehouse download/staging receipts",
+    "Archive extraction/malware hygiene on runner storage",
+    "READY_FOR_IMPORT promotion",
+    "UE4 import/integration",
+    "real audio playback without -NoSound",
+    "PIE/device/visual/performance acceptance"
+  ]
+}
