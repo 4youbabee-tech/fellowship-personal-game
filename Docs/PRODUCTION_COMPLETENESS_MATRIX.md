@@ -1,3 +1,14 @@
+## 2026-09-25 - Global external-resource production expansion
+
+- **Resource Bible review:** COMPLETE FIRST PASS — 68 pages / 225 classified sources audited as a production sourcing map.
+- **Governor:** DEC-039 ACCEPTED — whole-game sourcing authority, subordinate to canon/story rules.
+- **Global source registry:** EXPANDED — 102 -> 142 structured providers/tools in first pass.
+- **Legacy cleanup:** ACTIVE — Replica Studios disabled; old Marketplace/Texture Haven/CC0 Textures/ArmorLab/Terrain.party paths redirected or disabled.
+- **Big production launch:** READY — nine structured source/warehouse waves registered in `BigProductionBuildLaunchV1.json`.
+- **Performance contract:** PRESERVED — FBX animated production assets; PNG/TGA textures; 1K/2K default runtime texture target; async/soft heavy assets; pooling; HISM/LOD/culling.
+- **Runtime expansion:** NOT CLAIMED — warehouse/source preparation can scale globally, while runtime chapter expansion remains gated and P1C01 remains first assembled benchmark.
+- **Acceptance:** NOT CLAIMED — source registration is not download/import/integration/PIE/device/visual/audio acceptance.
+
 ## 2026-09-25 - Playable-film interaction doctrine
 
 - **Governor decision:** DEC-038 ACCEPTED.
