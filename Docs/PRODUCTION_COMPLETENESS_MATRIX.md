@@ -1,4 +1,5 @@
 ## 2026-09-25 — Repository consolidation maintenance
+- **Operational anti-stuck helper:** CONSOLIDATED into the canonical cleanup train with its unit test; this is tooling only and does not promote gameplay/PIE acceptance.
 - **Repository/branch hygiene:** IN PROGRESS via PR #71; canonical lane = `develop`, release lane = `main`.
 - **Local launcher self-update hazard:** FIX COMMITTED on PR #71 by immutable temporary-copy execution; runtime/PIE proof still separate.
 - **Branch-only planning/audio metadata:** CONSOLIDATED/SANITIZED where safe; no gameplay/audio acceptance promotion.
