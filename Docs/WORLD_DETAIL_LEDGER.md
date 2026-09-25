@@ -4,7 +4,7 @@
 - Safe windows are where world detail becomes gameplay: interiors, props, NPC routines, fauna, ambient conversations, interaction objects, optional tasks, discovery, weather/audio/foley and local traversal.
 - These additions exist to make the player feel physically present inside the film continuity; they must never create a contradictory route, outcome, character presence or chronology.
 - Post-beat world state must visibly/sonically communicate what changed before normal exploration resumes.
-- P1C01 Bag End/Shire is the benchmark pattern and later chapters must apply the same doctrine with chapter-specific canon constraints.
+- This is a whole-game world rule covering every chapter and region from the opening through the final ending. P1C01 Bag End/Shire is only the first benchmark pattern; later chapters/regions must apply the same doctrine with chapter-specific canon constraints.
 - New safe-window content must still be recorded in this ledger before runtime implementation.
 
 ## 2026-09-25 - P1C01 Warehouse visual/sensory stock expansion
