@@ -16,7 +16,7 @@ permissions:
 concurrency:
   group: unreal-build-${{ github.repository }}-ue4-device
   # Full engine validation remains serialized; superseded acceptance-only PR runs are cancelled.
-  cancel-in-progress: ${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'maintenance/') }}
+  cancel-in-progress: ${{ startsWith(github.head_ref, 'acceptance/') }}
 
 jobs:
   unreal-build:
