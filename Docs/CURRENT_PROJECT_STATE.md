@@ -1,3 +1,10 @@
+## 2026-09-26 - P1C01 Poly Haven material staging wave V4 queued
+
+- Warehouse manifest now lists a verified source-page record for every currently authorized Poly Haven material slug, including the Shire grass, woodland, soil, leaf-litter and rustic-path additions.
+- Target remains 2K source intake; displacement/high-poly payloads remain excluded from this staging wave.
+- The repaired Warehouse Stage workflow will run the real provider staging + SHA256 inventory audit on the supervised Windows runner.
+- Evidence boundary: QUEUED FOR STAGING only; no STAGED/IMPORTED/INTEGRATED claim until receipts exist.
+
 ## 2026-09-26 - Warehouse staging removed from hosted-error path
 
 - Warehouse staging now triggers from `develop` / relevant PR deltas instead of the obsolete comprehensive-foundation branch.
