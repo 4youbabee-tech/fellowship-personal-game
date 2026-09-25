@@ -1,3 +1,11 @@
+## 2026-09-25 - W01/P1C01 Drop C2 foliage motion
+
+- Detail: subtle wind response for Shire grass/leaves through a dedicated foliage master.
+- Scope: material vertex WPO only; no Actor Tick, no new NPC/world ownership path, no density increase.
+- Performance rule: wind weight fades with existing instance cull fade; HISM/ISM + LOD/culling remain the population mechanism.
+- Follow-on: C3 may assign only stable authored grass/leaves material identities after C2 exact-head engine proof. Shared weather/audio wind control remains a later bounded bridge, not part of this PR.
+- Acceptance boundary: visual naturalness, pacing, target-device FPS/VRAM and overdraw remain human/device profiling gates.
+
 # WORLD DETAIL LEDGER
 
 ## 2026-09-25 - W01 P1C01 Drop C1: authored material texture binding
