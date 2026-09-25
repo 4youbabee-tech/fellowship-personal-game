@@ -5,6 +5,7 @@
 - **Performance contract:** IMPLEMENTED IN SOURCE - explicit HISM cull distances for foliage/scenic/geography groups; no new synchronous heavy-load path.
 - **Story/quest boundary:** PRESERVED - no quest IDs, chapter postconditions or stable story anchors moved.
 - **Grounding boundary:** PRESERVED - broad collision foundation and router grounding contract remain authoritative.
+- **Regression guard:** PG-163 checks the HISM geography/cull contract and rejects repeated geography actor spawning.
 - **Validation:** STATIC-VALIDATED only until PR #75 exact-head Pre-Unreal + UE4.27.2 core validation succeeds.
 - **Next production dependency:** Hobbiton / Bag End architecture.
 
