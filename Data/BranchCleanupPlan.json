@@ -4,7 +4,7 @@
   "authority": "Data/ProjectGovernor.json",
   "canonical_branch": "develop",
   "stable_release_branch": "main",
-  "status": "READY_FOR_W00_LESSONS_LOCK_SELF_CLEANUP",
+  "status": "READY_FOR_ACTIVE_BRANCH_HYGIENE_CLEANUP",
   "truth_boundary": "This plan records branch hygiene only. It does not claim PIE/device/visual acceptance.",
   "preserve": [
     {
@@ -66,19 +66,51 @@
     "maintenance/repository-consolidation-v1",
     "archive/generated-audio-intake-v1",
     "maintenance/post-cleanup-handoff-v1",
-    "maintenance/w00-lessons-lock-v1"
+    "maintenance/w00-lessons-lock-v1",
+    "ci/pr80-hosted-zero-step-fallback-20260926",
+    "production/w01-p1c01-hobbiton-bagend-v1",
+    "production/w01-p1c01-kickoff-v1",
+    "production/w01-p1c01-materials-vegetation-v1",
+    "production/w01-p1c01-world-foundation-v1",
+    "warehouse/p1c01-bulk-intake-v2",
+    "stability/source-architecture-manifest-sync-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
-    "Never bulk-merge a divergent historical branch into develop.",
-    "Branches with unresolved unique evidence remain preserved explicitly.",
+    "Never delete an active PR head.",
+    "Delete a branch immediately after its meaningful content is merged into develop.",
+    "Branches with zero commits ahead of develop may be removed as stale refs after confirming they are not active PR heads.",
+    "Never bulk-merge a divergent historical branch into develop; selectively salvage useful unique content first.",
+    "Branches with unresolved unique commits remain preserved_pending_salvage until reviewed.",
     "Cleanup runs only after this plan lands on develop."
   ],
   "final_audit": {
-    "status": "COMPLETE_FOR_POST_MERGE_REF_CLEANUP",
-    "rule": "No historical diverged branch is authorized for wholesale merge. Unique still-valid planning/audio/ops content was selectively salvaged; stale pre-Public/Private runtime history is superseded by develop.",
-    "physical_cleanup": "Branch Cleanup workflow deletes delete_after_merge refs only after this plan lands on develop and verifies develop/main remain.",
-    "archive_resolution": "archive/generated-audio-intake-v1 contains Data/Docs metadata only in the branch comparison; its still-valid registries were consolidated into PR #70 in sanitized form. No branch-only WAV/UE binary/master asset was found in the changed-file set, so the archive ref is no longer required.",
-    "lessons_lock": "maintenance/w00-lessons-lock-v1 is temporary and must be deleted after merge. Final survivor set remains develop + main."
-  }
+    "status": "ACTIVE_BRANCH_HYGIENE_ENFORCED",
+    "rule": "develop is canonical integration. Completed branches merge to develop immediately and self-delete. Only active work or unresolved unique-content branches may remain temporarily.",
+    "current_safe_delete_count": 7,
+    "current_active_runtime_pr": "production/w01-p1c01-foliage-wind-v2 / PR #80",
+    "current_active_preparation_pr": "planning/whole-game-world-build-v1 / PR #81",
+    "current_active_preparation_branch": "planning/whole-game-production-prep-v2",
+    "physical_cleanup": "Branch Cleanup workflow deletes delete_after_merge refs after this plan lands on develop.",
+    "truth_boundary": "Branch hygiene only; no runtime/PIE/device/visual/performance acceptance implied."
+  },
+  "active_work_branches": [
+    "production/w01-p1c01-foliage-wind-v2",
+    "planning/whole-game-world-build-v1",
+    "planning/whole-game-production-prep-v2"
+  ],
+  "preserve_pending_salvage": [
+    {
+      "branch": "production/w01-p1c01-foliage-wind-v1",
+      "reason": "35 commits unique versus develop; do not delete until compared/salvaged against v2."
+    },
+    {
+      "branch": "planning/w01-localization-prototype-v1",
+      "reason": "6 commits unique versus develop; preserve until useful content is selectively integrated."
+    },
+    {
+      "branch": "planning/w01-p1c01-mega-prep-v1",
+      "reason": "2 commits unique versus develop; preserve until useful content is selectively integrated."
+    }
+  ]
 }

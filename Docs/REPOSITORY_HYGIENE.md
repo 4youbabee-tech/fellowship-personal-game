@@ -1,3 +1,10 @@
+## 2026-09-26 manifest synchronization
+
+- The physical Public/Private migration is already complete.
+- `Data/SourceArchitecturePlan.json` was corrected so every `MIGRATED` row uses the real migrated path as `current_path`.
+- Static repository comparison at commit `d1f45328df4eaf0e51c2a181515665a8011ca6b3` found 63 actual runtime .h/.cpp/.cs files, 63 manifest paths, 0 stale rows and 0 missing rows.
+- This is a hygiene/metadata repair only; it does not claim UE4 compile or runtime acceptance.
+
 # Repository Hygiene / Consolidated Baseline
 
 This document records the non-destructive cleanup policy after PR #53 was merged into `develop`.

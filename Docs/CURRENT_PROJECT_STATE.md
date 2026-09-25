@@ -1,3 +1,19 @@
+## 2026-09-26 - Immediate branch integration policy and dead-ref cleanup
+
+- **Owner rule:** completed temporary branches must merge meaningful work into `develop` immediately, then delete the branch ref.
+- **Safe dead refs queued now:** `ci/pr80-hosted-zero-step-fallback-20260926`, `production/w01-p1c01-hobbiton-bagend-v1`, `production/w01-p1c01-kickoff-v1`, `production/w01-p1c01-materials-vegetation-v1`, `production/w01-p1c01-world-foundation-v1`, `warehouse/p1c01-bulk-intake-v2`, plus this finished stability branch after merge.
+- **Active work preserved:** PR #80 `production/w01-p1c01-foliage-wind-v2`, PR #81 `planning/whole-game-world-build-v1`, and `planning/whole-game-production-prep-v2`.
+- **Unique-content quarantine:** old foliage-wind-v1, localization prototype and mega-prep branches are not deleted yet because they still contain commits unique versus develop; useful content must be selectively salvaged first.
+- **Evidence boundary:** repository/process hygiene only; no runtime acceptance change.
+
+## 2026-09-26 - Source architecture manifest synchronization
+
+- **Confirmed defect:** `Data/SourceArchitecturePlan.json` still recorded 62 pre-migration flat `Source/ShireJourney/*` paths even though the files already live under the canonical `Public/<Domain>` / `Private/<Domain>` layout.
+- **Root correction:** all 62 rows marked `MIGRATED` now use their existing `target_path` as canonical `current_path`; `ShireJourney.Build.cs` remains the sole stable module-root entry.
+- **Static cross-check:** repository tree contains 63 runtime .h/.cpp/.cs files and the manifest now contains the same 63 paths with **0 stale** and **0 missing** rows.
+- **Scope:** metadata/hygiene synchronization only; no gameplay/runtime C++ was changed.
+- **Evidence boundary:** STATIC-VALIDATED by repository-tree/manifest comparison only. No compile/PIE/device/visual/performance claim.
+
 ## 2026-09-25 - Master External Resource Bible audited and adopted
 
 - Audited the uploaded 68-page `SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25`, containing 225 classified external sources/tools.
