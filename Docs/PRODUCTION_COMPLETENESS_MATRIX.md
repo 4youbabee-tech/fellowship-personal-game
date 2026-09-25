@@ -1,3 +1,11 @@
+## 2026-09-26 - Global runtime-cost architecture preparation
+
+- **WholeGameAssetFamilyCoverageV1:** PREPARED; 9 shared family groups derived from 28 region packets.
+- **WholeGameStreamingResidencyPlanV1:** PREPARED_NOT_RUNTIME_STARTED.
+- **WholeGamePooledPopulationPlanV1:** PREPARED_NOT_RUNTIME_STARTED.
+- **System ownership:** LivingWorldDirector / ShireNPCContextSubsystem / ShireQuestSubsystem boundaries preserved; no parallel brain/world owner introduced.
+- **Evidence state:** preparation only; no new COMPILE/PIE/DEVICE/PERFORMANCE acceptance.
+
 ## 2026-09-26 - P1C01 D-H + Gate 6/7 preparation
 
 - **D Environment Presentation:** PREPARED_NOT_RUNTIME_STARTED.
