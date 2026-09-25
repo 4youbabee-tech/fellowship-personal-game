@@ -4,13 +4,13 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 ## Current control point
 
-- PR: #67
-- Branch: `integration/comprehensive-foundation-v1`
+- PR: #71
+- Branch: `maintenance/repository-consolidation-v1`
 - Active lane: **W00_ARCHITECTURAL_STABILIZATION**
-- Exact machine-green parent: `96398e7cc48277324113c7879a8d28e3b659757e`
-- Pre-Unreal: **SUCCESS #781**
-- Unreal Build Validation: **SUCCESS #616**
-- Warehouse Stage: **SUCCESS #197**; no staging-required delta, so heavy provider stages were correctly skipped.
+- Canonical develop parent: `9066d6494248def59680820bbd6ca8e10038ea6e`
+- Parent Pre-Unreal: **SUCCESS #821**
+- Parent Unreal Build Validation: **SUCCESS #656** (acceptance-only package/data/startup path; full core proof inherited from #655)
+- Current maintenance purpose: consolidate branch-only safe metadata and harden local launchers; PR #71 exact-head validation is required before merge.
 - Merge rule: never merge a red or untested exact candidate head into `develop`.
 - Freeze rule: B1/B2/B3 are backlog only while W00 blocks major expansion.
 - Performance rule: Windows / DX11 / 720p Low-Medium / 30 FPS floor.
