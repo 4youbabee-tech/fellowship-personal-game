@@ -2,9 +2,28 @@
 setlocal EnableExtensions EnableDelayedExpansion
 title Shire Journey - Develop PIE Verification
 
-cd /d "%~dp0"
-set "ROOT=%~dp0"
+rem Keep the verification controller immutable while its child updates the repo.
+rem Otherwise git pull can rewrite this running batch file before it records the session.
+if not defined SHIRE_PIE_BOOTSTRAPPED (
+  set "SHIRE_PIE_BOOTSTRAPPED=1"
+  set "SHIRE_BOOTSTRAP_ROOT=%~dp0"
+  set "SHIRE_BOOTSTRAP_FILE=%TEMP%\ShireJourney_PIEVerify_!RANDOM!_!RANDOM!.bat"
+  copy /Y "%~f0" "!SHIRE_BOOTSTRAP_FILE!" >NUL
+  if errorlevel 1 (
+    echo ERROR: PIE_BOOTSTRAP_COPY_FAILED
+    pause
+    exit /b 9
+  )
+  call "!SHIRE_BOOTSTRAP_FILE!" "!SHIRE_BOOTSTRAP_ROOT!"
+  set "SHIRE_BOOTSTRAP_RC=!ERRORLEVEL!"
+  del /Q "!SHIRE_BOOTSTRAP_FILE!" >NUL 2>NUL
+  exit /b !SHIRE_BOOTSTRAP_RC!
+)
+
+set "ROOT=%~1"
+if not defined ROOT set "ROOT=%~dp0"
 if "%ROOT:~-1%"=="\" set "ROOT=%ROOT:~0,-1%"
+cd /d "%ROOT%"
 
 set "PROJECT=%ROOT%\ShireJourney.uproject"
 set "UE_ROOT=C:\Program Files\Epic Games\UE_4.27"
