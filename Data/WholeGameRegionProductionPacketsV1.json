@@ -1,0 +1,2421 @@
+{
+  "schema_version": 1,
+  "packet_set_id": "WHOLE_GAME_REGION_PRODUCTION_PACKETS_V1",
+  "status": "PREPRODUCTION_PACKETS_CREATED",
+  "authority": [
+    "DEC-038",
+    "DEC-039",
+    "Data/WholeGameWorldBuildCoverageV1.json",
+    "Data/TrilogyProductionAssetWarehouse.json"
+  ],
+  "truth_rule": "Packet creation is preparation only. It does not mean assets are downloaded, imported, integrated or accepted.",
+  "packets": [
+    {
+      "order": 1,
+      "region_id": "SHIRE_HOBBITON",
+      "story_states": [
+        "Birthday",
+        "Departure",
+        "Post-war/Epilogue"
+      ],
+      "canonical_kit_requirements": [
+        "pastoral terrain",
+        "lanes",
+        "farms",
+        "hobbit-holes",
+        "gardens",
+        "party field",
+        "mills/bridges/fences"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "PASTORAL_SETTLEMENT"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "P1C01_ACTIVE_BENCHMARK",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 2,
+      "region_id": "BAG_END",
+      "story_states": [
+        "Bilbo occupied",
+        "Frodo departure",
+        "Epilogue"
+      ],
+      "canonical_kit_requirements": [
+        "round interior architecture",
+        "pantry/kitchen",
+        "study",
+        "bedroom",
+        "hearth",
+        "lived-in props"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "PASTORAL_SETTLEMENT"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "P1C01_ACTIVE_BENCHMARK",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 3,
+      "region_id": "BREE",
+      "story_states": [
+        "Night arrival",
+        "Departure"
+      ],
+      "canonical_kit_requirements": [
+        "timber/stone streets",
+        "gate",
+        "Prancing Pony exterior/interior",
+        "stable",
+        "rain dressing"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "PASTORAL_SETTLEMENT"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 4,
+      "region_id": "WEATHERTOP",
+      "story_states": [
+        "Calm approach",
+        "Night attack"
+      ],
+      "canonical_kit_requirements": [
+        "ruined watchtower",
+        "hill terrain",
+        "camp",
+        "night threat dressing"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 5,
+      "region_id": "RIVENDELL",
+      "story_states": [
+        "Arrival wounded",
+        "Fellowship formed"
+      ],
+      "canonical_kit_requirements": [
+        "terraces",
+        "waterfalls",
+        "stone/wood elven architecture",
+        "Council",
+        "gardens/interiors"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "FOREST_BIOME",
+        "WATER_RIVER_COAST"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 6,
+      "region_id": "CARADHRAS",
+      "story_states": [
+        "Storm escalation"
+      ],
+      "canonical_kit_requirements": [
+        "snow",
+        "rock",
+        "wind exposure",
+        "low visibility",
+        "mountain traversal"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "SNOW_ALPINE"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 7,
+      "region_id": "MORIA",
+      "story_states": [
+        "Entrance",
+        "Tomb alert",
+        "Balrog escape"
+      ],
+      "canonical_kit_requirements": [
+        "doors",
+        "mines",
+        "vast halls",
+        "Balin tomb",
+        "stairs/bridges",
+        "darkness/brazier dressing"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "DARK_CAVE_RUIN"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 8,
+      "region_id": "LOTHLORIEN",
+      "story_states": [
+        "Night arrival",
+        "Departure"
+      ],
+      "canonical_kit_requirements": [
+        "golden forest",
+        "flets",
+        "organic bridges",
+        "river/boats",
+        "luminous foliage"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "FOREST_BIOME",
+        "WATER_RIVER_COAST"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 9,
+      "region_id": "ANDUIN_AMON_HEN",
+      "story_states": [
+        "River journey",
+        "Uruk attack"
+      ],
+      "canonical_kit_requirements": [
+        "river",
+        "boats",
+        "Argonath/monumental reveal",
+        "forest",
+        "ancient ruins",
+        "Parth Galen"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "FOREST_BIOME",
+        "WATER_RIVER_COAST"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 10,
+      "region_id": "FANGORN",
+      "story_states": [
+        "Quiet",
+        "Ent mobilization"
+      ],
+      "canonical_kit_requirements": [
+        "ancient trunks",
+        "roots",
+        "mist",
+        "living forest",
+        "Ent-scale traversal"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "FOREST_BIOME"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 11,
+      "region_id": "EDORAS_MEDUSELD",
+      "story_states": [
+        "Grima control",
+        "Restored court"
+      ],
+      "canonical_kit_requirements": [
+        "hill capital",
+        "golden hall",
+        "stables",
+        "wind plains",
+        "Rohan village"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "PASTORAL_SETTLEMENT"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 12,
+      "region_id": "HELMS_DEEP",
+      "story_states": [
+        "Pre-battle",
+        "Rain siege",
+        "Aftermath"
+      ],
+      "canonical_kit_requirements": [
+        "Deeping Wall",
+        "culvert",
+        "keep",
+        "caves",
+        "siege dressing"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "DARK_CAVE_RUIN",
+        "FORTIFICATION"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 13,
+      "region_id": "ISENGARD_ORTHANC",
+      "story_states": [
+        "Industrial",
+        "Flooded"
+      ],
+      "canonical_kit_requirements": [
+        "Orthanc",
+        "ring wall",
+        "pits",
+        "furnaces",
+        "chains",
+        "felled forest",
+        "flood state"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "FOREST_BIOME",
+        "ASH_INDUSTRIAL_VOLCANIC"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 14,
+      "region_id": "EMYN_MUIL",
+      "story_states": [
+        "Pre-guide",
+        "Guided"
+      ],
+      "canonical_kit_requirements": [
+        "broken ridges",
+        "drops",
+        "grey stone",
+        "rope traversal"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 15,
+      "region_id": "DEAD_MARSHES",
+      "story_states": [
+        "Continuous hazard"
+      ],
+      "canonical_kit_requirements": [
+        "pools",
+        "mist",
+        "dead vegetation",
+        "corpse-light treatment"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "DARK_CAVE_RUIN",
+        "MARSH_WETLAND"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 16,
+      "region_id": "ITHILIEN",
+      "story_states": [
+        "Ranger-controlled pockets"
+      ],
+      "canonical_kit_requirements": [
+        "green forest",
+        "ruins",
+        "waterfalls",
+        "ambush spaces"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "FOREST_BIOME",
+        "WATER_RIVER_COAST"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 17,
+      "region_id": "HENNETH_ANNUN",
+      "story_states": [
+        "Secure",
+        "Departure"
+      ],
+      "canonical_kit_requirements": [
+        "waterfall cave",
+        "concealed approach",
+        "ranger refuge"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "DARK_CAVE_RUIN",
+        "WATER_RIVER_COAST"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 18,
+      "region_id": "MINAS_TIRITH",
+      "story_states": [
+        "Peace/prep",
+        "Siege",
+        "Coronation"
+      ],
+      "canonical_kit_requirements": [
+        "concentric white city",
+        "gates",
+        "citadel",
+        "courtyards",
+        "siege variants"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "FORTIFICATION"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 19,
+      "region_id": "OSGILIATH",
+      "story_states": [
+        "Contested",
+        "Overrun"
+      ],
+      "canonical_kit_requirements": [
+        "ruined domes",
+        "bridges",
+        "riverfront",
+        "rubble",
+        "combat routes"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "FORTIFICATION",
+        "WATER_RIVER_COAST"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 20,
+      "region_id": "MINAS_MORGUL",
+      "story_states": [
+        "Army departure"
+      ],
+      "canonical_kit_requirements": [
+        "corrupted valley",
+        "vertical fortress",
+        "dead road",
+        "green dread lighting"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "DARK_CAVE_RUIN",
+        "FORTIFICATION"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 21,
+      "region_id": "CIRITH_UNGOL",
+      "story_states": [
+        "Pre-Shelob",
+        "Tower aftermath"
+      ],
+      "canonical_kit_requirements": [
+        "mountain stairs",
+        "tower",
+        "harsh rock",
+        "orc interior"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "DARK_CAVE_RUIN"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 22,
+      "region_id": "SHELOBS_LAIR",
+      "story_states": [
+        "Predator active",
+        "Aftermath"
+      ],
+      "canonical_kit_requirements": [
+        "web caves",
+        "organic tunnels",
+        "darkness",
+        "ambush spaces"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "DARK_CAVE_RUIN"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 23,
+      "region_id": "PELENNOR_FIELDS",
+      "story_states": [
+        "Pre-siege",
+        "Battle",
+        "Aftermath"
+      ],
+      "canonical_kit_requirements": [
+        "open plain",
+        "siege debris",
+        "army staging",
+        "mumakil lanes"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 24,
+      "region_id": "PATHS_OF_THE_DEAD",
+      "story_states": [
+        "Sealed dread",
+        "Army follows"
+      ],
+      "canonical_kit_requirements": [
+        "haunted road",
+        "stone tomb architecture",
+        "fog",
+        "spectral staging"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "DARK_CAVE_RUIN"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 25,
+      "region_id": "BLACK_GATE_MORANNON",
+      "story_states": [
+        "Closed",
+        "Final confrontation"
+      ],
+      "canonical_kit_requirements": [
+        "black walls",
+        "barren plain",
+        "army staging"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "FORTIFICATION"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 26,
+      "region_id": "MORDOR_GORGOROTH",
+      "story_states": [
+        "Army movement",
+        "Final collapse"
+      ],
+      "canonical_kit_requirements": [
+        "ash",
+        "volcanic rock",
+        "industrial war landscape",
+        "slave roads"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "ASH_INDUSTRIAL_VOLCANIC"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 27,
+      "region_id": "MOUNT_DOOM",
+      "story_states": [
+        "Stable",
+        "Destruction"
+      ],
+      "canonical_kit_requirements": [
+        "volcanic slopes",
+        "narrow paths",
+        "Sammath Naur",
+        "lava/fire"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "ASH_INDUSTRIAL_VOLCANIC"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    },
+    {
+      "order": 28,
+      "region_id": "GREY_HAVENS",
+      "story_states": [
+        "Final"
+      ],
+      "canonical_kit_requirements": [
+        "pale harbor",
+        "ships",
+        "sea horizon",
+        "farewell staging"
+      ],
+      "production_families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "WATER_RIVER_COAST"
+      ],
+      "sourcing": {
+        "materials": [
+          "POLY_HAVEN",
+          "AMBIENTCG",
+          "TEXTURES_COM",
+          "CGBOOKCASE",
+          "3DTEXTURES_ME"
+        ],
+        "vegetation": [
+          "POLY_HAVEN",
+          "SPEEDTREE",
+          "QUATERNIUS",
+          "KENNEY"
+        ],
+        "architecture_props": [
+          "QUATERNIUS",
+          "KENNEY",
+          "THE_BASE_MESH",
+          "FAB_QUixel_MEGASCANS"
+        ],
+        "animation": [
+          "MIXAMO",
+          "ROKOKO",
+          "ACTORCORE",
+          "CASCADEUR",
+          "QUATERNIUS"
+        ],
+        "audio": [
+          "SONNISS_GDC",
+          "FREESOUND",
+          "ZAPSPLAT",
+          "99SOUNDS",
+          "KENNEY"
+        ],
+        "vfx": [
+          "ACTIONVFX",
+          "EMBERGEN",
+          "JANGAFX_FREE_VFX"
+        ],
+        "terrain_tools": [
+          "GAEA",
+          "USGS_EARTHEXPLORER",
+          "OPENTOPOGRAPHY",
+          "QGIS",
+          "BLENDER"
+        ]
+      },
+      "deliverables": {
+        "terrain": "height/shape pass + traversal-safe collision + vista framing",
+        "materials": "region surface set with 1K/2K runtime defaults and packed masks",
+        "vegetation": "species/shape palette + HISM/ISM + LOD/cull plan where biome needs it",
+        "architecture": "hero silhouette list + support kit list + collision/material-slot budget",
+        "interiors": "only where story/playable-safe-window requires entry; no empty shell acceptance",
+        "water": "only where region kit/story requires it; reflection/translucency budgeted",
+        "lighting": "chapter-state lighting/sky/fog identity sheet",
+        "characters": "named/support/crowd presentation needs by story state",
+        "living_world": "NPC/fauna/environmental motion density appropriate to region danger/story state",
+        "audio": "ambience bed + localized emitter + foley + weather/water/fire/creature layers",
+        "interaction": "DEC-038 playable-safe-window interactions around locked beats",
+        "cinematics": "bounded set-piece entry/exit and return-to-player state",
+        "collision_navmesh": "walkable routes + blocker audit + AI nav coverage",
+        "streaming_memory": "soft-reference ownership + level/chunk/memory budget",
+        "profiling": "draw calls/triangles/texture memory/overdraw/shadow/audio concurrency",
+        "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
+      },
+      "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+    }
+  ]
+}
