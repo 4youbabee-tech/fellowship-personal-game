@@ -1,3 +1,11 @@
+## 2026-09-26 - Source-to-production and local material execution path
+
+- **P1C01SourceExtractionV1:** PREPARED from supplied PDFs.
+- **P1C01SourceToProductionBridgeV1:** PREPARED.
+- **run_p1c01_material_pipeline.ps1:** IMPLEMENTED as local orchestration for Poly Haven/ambientCG staging -> warehouse audit -> intake -> optional UE4 import.
+- **Safety:** local execution does not disable hash/audit/format/import checks.
+- **Acceptance:** STATIC/PREPARATION only until a real material intake receipt + UE4 commandlet log is captured.
+
 ## 2026-09-26 - High-throughput production / material intake
 
 - **REQ-PROD-011:** PARTIAL.
