@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "packet_set_id": "WHOLE_GAME_REGION_PRODUCTION_PACKETS_V1",
-  "status": "PREPRODUCTION_PACKETS_CREATED",
+  "status": "PREPRODUCTION_PACKETS_WITH_PROVISIONAL_BUDGETS",
   "authority": [
     "DEC-038",
     "DEC-039",
@@ -97,7 +97,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "P1C01_ACTIVE_BENCHMARK",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 260,
+        "visible_static_mesh_instances_soft_cap": 2400,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 32,
+        "ambient_npc_active_soft_cap": 16,
+        "fauna_active_soft_cap": 12,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 2,
@@ -185,7 +199,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "P1C01_ACTIVE_BENCHMARK",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 260,
+        "visible_static_mesh_instances_soft_cap": 2400,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 32,
+        "ambient_npc_active_soft_cap": 16,
+        "fauna_active_soft_cap": 12,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 3,
@@ -271,7 +299,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 260,
+        "visible_static_mesh_instances_soft_cap": 2400,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 32,
+        "ambient_npc_active_soft_cap": 16,
+        "fauna_active_soft_cap": 12,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 4,
@@ -355,7 +397,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 1800,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 24,
+        "ambient_npc_active_soft_cap": 10,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 5,
@@ -442,7 +498,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 260,
+        "visible_static_mesh_instances_soft_cap": 2400,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 32,
+        "ambient_npc_active_soft_cap": 16,
+        "fauna_active_soft_cap": 12,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 6,
@@ -527,7 +597,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 1800,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 24,
+        "ambient_npc_active_soft_cap": 10,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 7,
@@ -615,7 +699,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 1500,
+        "dynamic_shadowed_lights_soft_cap": 5,
+        "localized_audio_emitters_soft_cap": 20,
+        "ambient_npc_active_soft_cap": 4,
+        "fauna_active_soft_cap": 2,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 8,
@@ -702,7 +800,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 260,
+        "visible_static_mesh_instances_soft_cap": 2400,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 32,
+        "ambient_npc_active_soft_cap": 16,
+        "fauna_active_soft_cap": 12,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 9,
@@ -790,7 +902,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 1800,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 24,
+        "ambient_npc_active_soft_cap": 10,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 10,
@@ -876,7 +1002,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 1800,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 24,
+        "ambient_npc_active_soft_cap": 10,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 11,
@@ -962,7 +1102,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 260,
+        "visible_static_mesh_instances_soft_cap": 2400,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 32,
+        "ambient_npc_active_soft_cap": 16,
+        "fauna_active_soft_cap": 12,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 12,
@@ -1050,7 +1204,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 2200,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 24,
+        "ambient_npc_active_soft_cap": 12,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 40,
+        "target_draw_calls_soft_cap": 1050,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 13,
@@ -1139,7 +1307,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 230,
+        "visible_static_mesh_instances_soft_cap": 1700,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 28,
+        "ambient_npc_active_soft_cap": 10,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 14,
@@ -1223,7 +1405,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 1800,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 24,
+        "ambient_npc_active_soft_cap": 10,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 15,
@@ -1308,7 +1504,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 1800,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 24,
+        "ambient_npc_active_soft_cap": 10,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 16,
@@ -1393,7 +1603,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 1800,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 24,
+        "ambient_npc_active_soft_cap": 10,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 17,
@@ -1478,7 +1702,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 1800,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 24,
+        "ambient_npc_active_soft_cap": 10,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 18,
@@ -1565,7 +1803,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 2200,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 24,
+        "ambient_npc_active_soft_cap": 12,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 40,
+        "target_draw_calls_soft_cap": 1050,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 19,
@@ -1652,7 +1904,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 2200,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 24,
+        "ambient_npc_active_soft_cap": 12,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 40,
+        "target_draw_calls_soft_cap": 1050,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 20,
@@ -1737,7 +2003,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 1500,
+        "dynamic_shadowed_lights_soft_cap": 5,
+        "localized_audio_emitters_soft_cap": 20,
+        "ambient_npc_active_soft_cap": 4,
+        "fauna_active_soft_cap": 2,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 21,
@@ -1822,7 +2102,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 1500,
+        "dynamic_shadowed_lights_soft_cap": 5,
+        "localized_audio_emitters_soft_cap": 20,
+        "ambient_npc_active_soft_cap": 4,
+        "fauna_active_soft_cap": 2,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 22,
@@ -1907,7 +2201,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 1500,
+        "dynamic_shadowed_lights_soft_cap": 5,
+        "localized_audio_emitters_soft_cap": 20,
+        "ambient_npc_active_soft_cap": 4,
+        "fauna_active_soft_cap": 2,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 23,
@@ -1992,7 +2300,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 2200,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 24,
+        "ambient_npc_active_soft_cap": 12,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 40,
+        "target_draw_calls_soft_cap": 1050,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 24,
@@ -2077,7 +2399,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 1500,
+        "dynamic_shadowed_lights_soft_cap": 5,
+        "localized_audio_emitters_soft_cap": 20,
+        "ambient_npc_active_soft_cap": 4,
+        "fauna_active_soft_cap": 2,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 25,
@@ -2161,7 +2497,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 2200,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 24,
+        "ambient_npc_active_soft_cap": 12,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 40,
+        "target_draw_calls_soft_cap": 1050,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 26,
@@ -2246,7 +2596,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 230,
+        "visible_static_mesh_instances_soft_cap": 1700,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 28,
+        "ambient_npc_active_soft_cap": 10,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 27,
@@ -2331,7 +2695,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 230,
+        "visible_static_mesh_instances_soft_cap": 1700,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 28,
+        "ambient_npc_active_soft_cap": 10,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     },
     {
       "order": 28,
@@ -2415,7 +2793,21 @@
         "acceptance": "chapter-specific PIE + target-device + human visual/pacing evidence"
       },
       "runtime_gate": "PREP_ONLY_UNTIL_P1C01_GATE_6_7",
-      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED"
+      "current_state": "PACKET_CREATED_NOT_RUNTIME_INTEGRATED",
+      "provisional_runtime_budget": {
+        "texture_vram_mb_soft_cap": 220,
+        "visible_static_mesh_instances_soft_cap": 1800,
+        "dynamic_shadowed_lights_soft_cap": 3,
+        "localized_audio_emitters_soft_cap": 24,
+        "ambient_npc_active_soft_cap": 10,
+        "fauna_active_soft_cap": 8,
+        "pooled_transient_actor_soft_cap": 24,
+        "target_draw_calls_soft_cap": 900,
+        "target_gpu_ms_at_30fps_budget": 28,
+        "target_game_thread_ms_budget": 25
+      },
+      "budget_status": "PROVISIONAL_PRE_PROFILE",
+      "budget_rule": "These are starting soft caps for planning only. Target-device profiling may lower them before any region is accepted."
     }
   ]
 }
