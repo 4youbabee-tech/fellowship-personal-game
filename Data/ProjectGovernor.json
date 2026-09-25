@@ -4343,10 +4343,10 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
-    "current_short_branch": "production/w01-p1c01-materials-vegetation-v1",
+    "current_short_branch": "production/w01-p1c01-foliage-wind-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 77,
-    "open_pr_policy": "PR #77 is the sole short-lived W01/P1C01 Drop C1 material-texture candidate targeting develop.",
+    "current_open_pr": 78,
+    "open_pr_policy": "PR #78 is the sole short-lived W01/P1C01 Drop C2 lightweight foliage-wind candidate targeting develop.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
       "date": "2026-09-25",
