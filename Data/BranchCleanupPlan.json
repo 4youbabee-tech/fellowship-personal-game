@@ -9,15 +9,11 @@
   "preserve": [
     {
       "branch": "develop",
-      "reason": "canonical interactive/integration lane"
+      "reason": "canonical interactive/integration lane and programmer handoff source"
     },
     {
       "branch": "main",
       "reason": "stable release and scheduled-workflow owner"
-    },
-    {
-      "branch": "archive/generated-audio-intake-v1",
-      "reason": "temporary archival pointer for generated-audio intake evidence until durable WAV/UE intake exists; not runtime/audio acceptance"
     }
   ],
   "salvaged_into_develop": [
@@ -67,7 +63,8 @@
     "maintenance/develop-consolidation-v1",
     "audit/pre-mega-integration-v1",
     "ci/w00-acceptance-fast-path-v1",
-    "maintenance/repository-consolidation-v1"
+    "maintenance/repository-consolidation-v1",
+    "archive/generated-audio-intake-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -78,6 +75,7 @@
   "final_audit": {
     "status": "COMPLETE_FOR_POST_MERGE_REF_CLEANUP",
     "rule": "No historical diverged branch is authorized for wholesale merge. Unique still-valid planning/audio/ops content was selectively salvaged; stale pre-Public/Private runtime history is superseded by develop.",
-    "physical_cleanup": "Branch Cleanup workflow deletes delete_after_merge refs only after this plan lands on develop and verifies develop/main remain."
+    "physical_cleanup": "Branch Cleanup workflow deletes delete_after_merge refs only after this plan lands on develop and verifies develop/main remain.",
+    "archive_resolution": "archive/generated-audio-intake-v1 contains Data/Docs metadata only in the branch comparison; its still-valid registries were consolidated into PR #70 in sanitized form. No branch-only WAV/UE binary/master asset was found in the changed-file set, so the archive ref is no longer required."
   }
 }
