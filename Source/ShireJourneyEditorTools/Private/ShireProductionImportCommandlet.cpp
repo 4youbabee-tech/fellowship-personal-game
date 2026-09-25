@@ -20,7 +20,8 @@
 #include "Materials/MaterialExpressionTextureSampleParameter2D.h"
 #include "Materials/MaterialExpressionMultiply.h"
 #include "Materials/MaterialExpressionDistanceCullFade.h"
-#include "Materials/MaterialExpressionSimpleGrassWind.h"
+#include "Materials/MaterialExpressionMaterialFunctionCall.h"
+#include "Materials/MaterialFunction.h"
 #include "Materials/MaterialExpressionVectorParameter.h"
 #include "Materials/MaterialInterface.h"
 #include "Materials/MaterialInstanceConstant.h"
@@ -604,13 +605,46 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             DistanceScaledWindWeight->B.Expression = WindDistanceFade;
             FoliageMaterial->Expressions.Add(DistanceScaledWindWeight);
 
-            UMaterialExpressionSimpleGrassWind* SimpleWind =
-                NewObject<UMaterialExpressionSimpleGrassWind>(FoliageMaterial);
-            SimpleWind->WindIntensity.Expression = WindIntensityParameter;
-            SimpleWind->WindSpeed.Expression = WindSpeedParameter;
-            SimpleWind->WindWeight.Expression = DistanceScaledWindWeight;
-            FoliageMaterial->Expressions.Add(SimpleWind);
-            FoliageMaterial->WorldPositionOffset.Expression = SimpleWind;
+            UMaterialFunction* SimpleGrassWindFunction =
+                LoadObject<UMaterialFunction>(
+                    nullptr,
+                    TEXT("/Engine/Functions/Engine_MaterialFunctions01/WorldPositionOffset/SimpleGrassWind.SimpleGrassWind"));
+
+            UMaterialExpressionMaterialFunctionCall* SimpleWind =
+                NewObject<UMaterialExpressionMaterialFunctionCall>(FoliageMaterial);
+
+            bool bSimpleWindBound = false;
+            if (SimpleGrassWindFunction && SimpleWind)
+            {
+                SimpleWind->MaterialFunction = SimpleGrassWindFunction;
+                SimpleWind->UpdateFromFunctionResource();
+
+                // UE4.27 SimpleGrassWind exposes inputs in documented order:
+                // WindIntensity, WindWeight, WindSpeed, AdditionalWPO.
+                FExpressionInput* WindIntensityInput = SimpleWind->GetInput(0);
+                FExpressionInput* WindWeightInput = SimpleWind->GetInput(1);
+                FExpressionInput* WindSpeedInput = SimpleWind->GetInput(2);
+
+                if (WindIntensityInput && WindWeightInput && WindSpeedInput)
+                {
+                    WindIntensityInput->Expression = WindIntensityParameter;
+                    WindWeightInput->Expression = DistanceScaledWindWeight;
+                    WindSpeedInput->Expression = WindSpeedParameter;
+
+                    FoliageMaterial->Expressions.Add(SimpleWind);
+                    FoliageMaterial->WorldPositionOffset.Expression = SimpleWind;
+                    bSimpleWindBound = true;
+                }
+            }
+
+            if (!bSimpleWindBound)
+            {
+                ++Failed;
+                UE_LOG(
+                    LogTemp,
+                    Error,
+                    TEXT("ShireProductionImport failed to bind UE4.27 SimpleGrassWind material function."));
+            }
 
             FoliageMaterial->PostEditChange();
             FoliageMaterial->MarkPackageDirty();
