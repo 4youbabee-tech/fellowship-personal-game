@@ -1,3 +1,12 @@
+## 2026-09-25 - Active runtime lane: C2 v2 clean transplant
+
+- Baseline: `develop@4980c3c8b1f4660863940a58e052dcf8095772cf`.
+- Branch: `production/w01-p1c01-foliage-wind-v2`.
+- Runtime scope: P1C01 Drop C2 lightweight foliage wind only.
+- Global preparation: BigProductionBuildLaunchV1 waves continue in parallel across the whole game.
+- Merge gate: exact-head Pre-Unreal + UE4.27.2 core/production-import green.
+- After C2: C3 foliage material identity -> C4 LOD/cull/overdraw -> D lighting/sky/fog/water.
+
 ## W01 P1C01 Mega Production control point - Drop C1
 - Canonical parent: `develop@712a81cac150b7fdb338a4cf7554d4f27d4b5191`.
 - Parent proof: Pre-Unreal #894 SUCCESS; Unreal #729 SUCCESS.
