@@ -1,0 +1,810 @@
+{
+  "schema_version": 1,
+  "registry_id": "GENERATED_AUDIO_WAREHOUSE_V1",
+  "status": "SCRIPTED_VOICE_BANK_GENERATED_EXTERNAL_COMPLETE",
+  "branch": "develop-consolidated-registry",
+  "truth_boundary": "All 103 registered scripted VO cues have generated external MP3 sources recorded here. This proves generation/registry coverage only; no WAV mastering, UE import, playback, lip-sync, PIE, device or mix acceptance is implied. Expiring signed delivery URLs were intentionally removed during develop consolidation; task/cue identity is preserved without treating temporary URLs as durable project state.",
+  "source": "Runway connected workspace",
+  "production_rules": [
+    "Original preset voices only; no specific film-actor cloning or imitation.",
+    "One generated voice asset per existing VO_* cue ID.",
+    "Generated MP3 is intake source; convert to WAV master before UE import.",
+    "Runtime integration stays blocked by W00.",
+    "Do not mark scripted VO PLAYABLE/IMPORTED/ACCEPTED until WAV mastering, Unreal import, runtime playback and evidence gates are complete.",
+    "Do not treat the 103 scripted VO bank as total game-audio completeness; living-world speech/SFX/ambience/efforts/creatures/combat/music remain separately tracked."
+  ],
+  "credits_snapshot": {
+    "unlimited": false,
+    "plan": 310,
+    "purchased": 0,
+    "total": 310
+  },
+  "voice_identity_map": {
+    "Frodo": "Noah",
+    "Gandalf": "Elias",
+    "Sam": "Brodie",
+    "Bilbo": "Vincent",
+    "Merry": "James",
+    "Pippin": "Chad",
+    "Aragorn": "Benjamin",
+    "Strider": "Benjamin",
+    "Arwen": "Katie",
+    "Boromir": "Tom",
+    "Elrond": "Malachi",
+    "Galadriel": "Marlene",
+    "Gimli": "Kirk",
+    "Haldir": "Martin",
+    "Legolas": "Frank",
+    "Saruman": "Rusty"
+  },
+  "voice_assets": [
+    {
+      "cue_id": "VO_Aragorn_Argonath_01",
+      "task_id": "abf3ec13-f2fb-4135-b8e3-918e155543be",
+      "generated_at": "2026-09-24T10:43:24.033Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Aragorn_Caradhras_01",
+      "task_id": "7e2e3279-3ca7-46dd-871a-d6ff4e7bc3c7",
+      "generated_at": "2026-09-24T10:43:24.036Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Aragorn_Crebain_01",
+      "task_id": "d793b237-0241-4d0c-b933-131bb1e1b1da",
+      "generated_at": "2026-09-24T10:57:40.818Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Aragorn_FinalBoromir_01",
+      "task_id": "2f738064-ba54-4384-bfc2-b0d6f00ae6cd",
+      "generated_at": "2026-09-24T10:57:40.846Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Aragorn_LorienGrief_01",
+      "task_id": "1d44e006-91ef-482a-860a-c07d0bb57e51",
+      "generated_at": "2026-09-24T10:57:43.526Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Aragorn_MoriaAfter_01",
+      "task_id": "c85a3b02-5bd3-4625-8e57-779bcd3d8363",
+      "generated_at": "2026-09-24T10:57:45.833Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Aragorn_MoriaAttack_01",
+      "task_id": "135304bb-9278-4860-aca8-1c1608b67415",
+      "generated_at": "2026-09-24T10:57:48.746Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Aragorn_Watcher_01",
+      "task_id": "f2032e56-25b8-4837-9e1d-2e73bf05127c",
+      "generated_at": "2026-09-24T10:57:51.112Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Aragorn_Weathertop_01",
+      "task_id": "66ceb9bb-85fe-4d96-ad4b-906deeee0d22",
+      "generated_at": "2026-09-24T10:57:54.070Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Aragorn_Wound_01",
+      "task_id": "53ee4be0-39c9-47e8-95f0-f629652b6b25",
+      "generated_at": "2026-09-24T10:57:55.577Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Arwen_Ford_01",
+      "task_id": "cc5192f4-fd35-4c6c-b78f-9b57037f096b",
+      "generated_at": "2026-09-24T10:57:58.124Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Bilbo_Party_01",
+      "task_id": "60d8646a-ee92-451e-8fa5-e592e8c22f99",
+      "generated_at": "2026-09-24T09:16:00.930Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Bilbo_Rivendell_01",
+      "task_id": "3683069f-4da3-49ab-a6d5-120a97847813",
+      "generated_at": "2026-09-24T10:58:03.052Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Bilbo_Rivendell_02",
+      "task_id": "14db80e1-e92d-4179-85ae-e9398b72c205",
+      "generated_at": "2026-09-24T10:58:22.401Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Boromir_Council_01",
+      "task_id": "6d6f06f4-d872-456e-a65c-af7162120803",
+      "generated_at": "2026-09-24T10:58:27.454Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Boromir_Defense_01",
+      "task_id": "e9455204-9f4b-4337-b803-16ddae67a22a",
+      "generated_at": "2026-09-24T10:58:27.892Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Boromir_Final_01",
+      "task_id": "a7871d17-cf2d-48ec-aaaf-9bb2b55440ea",
+      "generated_at": "2026-09-24T10:58:30.504Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Boromir_ParthGalen_01",
+      "task_id": "8b1d9715-b2b4-4b6a-90ea-ac9f04b72015",
+      "generated_at": "2026-09-24T10:58:31.871Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Boromir_Pressure_01",
+      "task_id": "c40a7e6f-6e1e-4778-b86d-45616d11c0a2",
+      "generated_at": "2026-09-24T10:58:35.596Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Boromir_Training_01",
+      "task_id": "003dcc0b-c1d2-48ba-9da2-643fcee58827",
+      "generated_at": "2026-09-24T10:58:36.375Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Boromir_Travel_01",
+      "task_id": "8e980222-26f1-438f-9e72-57c9f31a6a4f",
+      "generated_at": "2026-09-24T10:58:39.134Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Boromir_Troll_01",
+      "task_id": "f8975d39-c30a-443a-8d19-a1b82548c591",
+      "generated_at": "2026-09-24T10:58:42.484Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Elrond_Council_01",
+      "task_id": "9d94666b-947e-43b1-8789-5dfbafcd9256",
+      "generated_at": "2026-09-24T10:58:45.272Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Elrond_Departure_01",
+      "task_id": "f49d0551-5e8e-4dce-83dd-14f6033cd24b",
+      "generated_at": "2026-09-24T10:58:46.873Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_AfterParty_01",
+      "task_id": "0f83dd58-b6ab-4ff2-896d-452e7da77ed4",
+      "generated_at": "2026-09-24T09:16:02.891Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_AfterParty_02",
+      "task_id": "8a425515-d53d-4db7-b614-0d422dc9fb9c",
+      "generated_at": "2026-09-24T09:16:05.275Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_Departure_01",
+      "task_id": "b5bd2b5e-ea6b-4184-9db2-bdf8ae9872d9",
+      "generated_at": "2026-09-24T10:58:49.511Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_Fellowship_01",
+      "task_id": "fe13b0b9-3c49-4984-8e44-a4986b63dc27",
+      "generated_at": "2026-09-24T10:59:02.919Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_Ford_01",
+      "task_id": "42ca2216-6136-490e-a98d-f0b43ead306e",
+      "generated_at": "2026-09-24T10:59:03.563Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_Leaving_01",
+      "task_id": "f2eeecc1-d9aa-4d93-8cbe-2d38e7ff0886",
+      "generated_at": "2026-09-24T09:16:21.207Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_Mirror_01",
+      "task_id": "605464ea-700d-43e8-9b59-f0cacdd9dd62",
+      "generated_at": "2026-09-24T10:59:06.526Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_Moria_01",
+      "task_id": "90c01724-96a1-46fd-be76-c50dd0c0d45b",
+      "generated_at": "2026-09-24T10:59:08.891Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_Party_01",
+      "task_id": "eaaa31e5-0bde-4e6f-ac7d-d31fab4f81f6",
+      "generated_at": "2026-09-24T09:15:57.829Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_Pressure_01",
+      "task_id": "ae6a06df-60b6-417a-be8d-a1afd3ea42ee",
+      "generated_at": "2026-09-24T10:59:14.015Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_RingWarn_01",
+      "task_id": "3dd5d2db-d05f-4f0e-b46a-263276aa420e",
+      "generated_at": "2026-09-24T09:16:10.303Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_RingWarn_02",
+      "task_id": "5ae38f95-2477-4480-8fd2-6a2b91af7eb2",
+      "generated_at": "2026-09-24T09:16:13.656Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_Rivendell_01",
+      "task_id": "9fc1dfd1-2d4c-47f7-839c-92ac966e1379",
+      "generated_at": "2026-09-24T10:59:17.836Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_RivendellBilbo_01",
+      "task_id": "d3f0d305-459b-46d6-a7c7-02a9a62cb546",
+      "generated_at": "2026-09-24T10:59:14.128Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_RootHide_01",
+      "task_id": "1d8862e8-e910-4e40-bf9f-52c2a1a434d1",
+      "generated_at": "2026-09-24T10:59:18.034Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_ShireRoad_01",
+      "task_id": "038ea966-5571-4d15-ad34-e717814f3fb6",
+      "generated_at": "2026-09-24T09:15:50.321Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_ShireRoad_02",
+      "task_id": "7e0c3d1a-85fb-4862-8820-a816f1f4cc22",
+      "generated_at": "2026-09-24T09:15:55.216Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Frodo_Warn_01",
+      "task_id": "c07b2ada-8fee-490f-914c-5663428ad6ea",
+      "generated_at": "2026-09-24T10:59:24.324Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Galadriel_Gifts_01",
+      "task_id": "2728d72d-1691-4239-9185-12f0b3261850",
+      "generated_at": "2026-09-24T10:59:23.902Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Galadriel_Mirror_01",
+      "task_id": "53aacc4d-abb3-47b5-92af-ca617d250cb5",
+      "generated_at": "2026-09-24T10:59:26.523Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_AfterParty_01",
+      "task_id": "d6331cd3-3496-41cd-901c-fedf4527e48a",
+      "generated_at": "2026-09-24T09:16:05.060Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Balin_01",
+      "task_id": "048dc9d3-f94f-426e-bd15-f4787a2342de",
+      "generated_at": "2026-09-24T10:59:27.795Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Balrog_01",
+      "task_id": "0fa1ef4a-f1a9-4f7a-9704-aedf32a188d0",
+      "generated_at": "2026-09-24T11:00:22.774Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Betrayal_01",
+      "task_id": "21e816e2-01e9-496d-be15-00e6d43790a2",
+      "generated_at": "2026-09-24T11:00:25.305Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Bridge_01",
+      "task_id": "4e21b9f7-b069-48a3-ad5d-ac0b18347e45",
+      "generated_at": "2026-09-24T11:00:27.542Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Council_01",
+      "task_id": "121ddd3e-ca49-4ae0-a7da-05ea747dfbb6",
+      "generated_at": "2026-09-24T11:00:30.355Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Crebain_01",
+      "task_id": "1944d55f-8cef-4c1b-8d32-50945c6ca2d4",
+      "generated_at": "2026-09-24T11:00:43.605Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Escape_01",
+      "task_id": "fc9f8312-2bef-45f7-943d-e5d192996d38",
+      "generated_at": "2026-09-24T11:00:34.434Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Escape_02",
+      "task_id": "41e26cad-6cad-4182-84f4-7e2992aa4467",
+      "generated_at": "2026-09-24T11:00:38.618Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Industry_01",
+      "task_id": "71780543-d32a-419f-826f-0a6c17bafcad",
+      "generated_at": "2026-09-24T11:00:39.729Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Industry_02",
+      "task_id": "06ced000-c65c-4ca8-ab63-bd53afe317e6",
+      "generated_at": "2026-09-24T11:00:54.137Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Isengard_01",
+      "task_id": "6b6dbf79-b8a4-470c-9a9e-00bb69740960",
+      "generated_at": "2026-09-24T11:00:45.570Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Isengard_02",
+      "task_id": "88dec352-a24b-4a19-a816-e2399005a580",
+      "generated_at": "2026-09-24T11:01:51.168Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Moria_01",
+      "task_id": "12b4ed61-a873-4184-be71-cef0cc322352",
+      "generated_at": "2026-09-24T11:01:59.242Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_MoriaDoor_01",
+      "task_id": "6afd24f1-cf52-476a-9ed6-26ee92e76148",
+      "generated_at": "2026-09-24T11:01:55.424Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_MoriaGate_01",
+      "task_id": "1444d6ed-b4ea-4da7-9f59-d1fc49b5c0d5",
+      "generated_at": "2026-09-24T11:01:55.840Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Prison_01",
+      "task_id": "6e226323-08b1-4b87-9350-8021dcea62b2",
+      "generated_at": "2026-09-24T11:02:03.616Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_RingWarn_01",
+      "task_id": "9e293e98-865e-45a5-915e-04b5cf8bd457",
+      "generated_at": "2026-09-24T09:16:09.458Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_RingWarn_02",
+      "task_id": "1a5bc3bd-9cf0-41b8-a894-537ebdc795a2",
+      "generated_at": "2026-09-24T09:16:12.962Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_RingWarn_03",
+      "task_id": "3700df1b-035f-4d6e-b3c9-28084b651b77",
+      "generated_at": "2026-09-24T09:16:18.006Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_ShireRoad_01",
+      "task_id": "155d2fe6-f0f2-484a-bf15-36f0b26d99f7",
+      "generated_at": "2026-09-24T09:15:52.221Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Merry_Rider_01",
+      "task_id": "4319411b-0d06-4077-ae9b-0b6b02038c1d",
+      "generated_at": "2026-09-24T09:16:25.785Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Pippin_Rider_01",
+      "task_id": "450a327d-a322-45f4-a6f6-2cfa110c9ff4",
+      "generated_at": "2026-09-24T09:16:24.496Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Sam_Leaving_01",
+      "task_id": "0f92f832-56a1-4649-a1c1-4080f6dd32f9",
+      "generated_at": "2026-09-24T09:16:18.293Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Sam_Leaving_02",
+      "task_id": "fba2172c-c987-4d4c-a3f7-80e09067332a",
+      "generated_at": "2026-09-24T09:16:21.297Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Sam_Party_01",
+      "task_id": "e7945752-481a-4c09-81cb-7f22701b3af2",
+      "generated_at": "2026-09-24T09:15:56.942Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Prison_02",
+      "task_id": "1a868686-7bc5-4a73-9fb0-5f9086e41446",
+      "generated_at": "2026-09-24T12:12:43.616Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Rivendell_01",
+      "task_id": "4a0ff2bd-9103-41e7-843b-685e4343c5c0",
+      "generated_at": "2026-09-24T12:18:11.071Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gandalf_Watcher_01",
+      "task_id": "29742af6-14a7-4a1c-9d34-a5068c1268b0",
+      "generated_at": "2026-09-24T12:18:13.569Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gimli_Balin_01",
+      "task_id": "639353da-ff2b-44da-ab25-73992fa59978",
+      "generated_at": "2026-09-24T12:18:15.467Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gimli_Caradhras_01",
+      "task_id": "13ef56e5-e932-475a-8dd0-112370224f59",
+      "generated_at": "2026-09-24T12:18:16.040Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gimli_Travel_01",
+      "task_id": "29f0a28e-0369-4cce-9a13-c16d37a1e2bb",
+      "generated_at": "2026-09-24T12:18:18.154Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Gimli_Troll_01",
+      "task_id": "c05dbada-5e85-45db-b82c-ad39b3b80299",
+      "generated_at": "2026-09-24T12:18:20.865Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Haldir_Lorien_01",
+      "task_id": "bc8f7160-eda3-4398-8615-4e120dde146c",
+      "generated_at": "2026-09-24T12:13:07.910Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Legolas_Travel_01",
+      "task_id": "0a66b73a-9803-4986-96a9-4ab35feb414e",
+      "generated_at": "2026-09-24T12:13:09.639Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Legolas_Uruk_01",
+      "task_id": "5f48d79f-f45d-484b-acda-2a80db1b9193",
+      "generated_at": "2026-09-24T12:13:17.084Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Merry_Defense_01",
+      "task_id": "2e1309fd-4782-4c30-9785-a48f51787a77",
+      "generated_at": "2026-09-24T12:17:32.349Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Merry_Ferry_01",
+      "task_id": "65629d23-d338-4a6d-9fe2-a9ff75d32e06",
+      "generated_at": "2026-09-24T12:17:35.506Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Merry_Training_01",
+      "task_id": "3b78c348-81a8-4e80-9ddb-69e5d37d26c2",
+      "generated_at": "2026-09-24T12:17:37.227Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Merry_Weathertop_01",
+      "task_id": "7085f299-4468-4478-9252-8ab64c7a757a",
+      "generated_at": "2026-09-24T12:17:38.111Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Pippin_Ferry_01",
+      "task_id": "c602f1ba-eba0-4aab-a40d-58c0dbd27334",
+      "generated_at": "2026-09-24T12:17:40.574Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Pippin_MoriaGate_01",
+      "task_id": "4537b00d-b4b3-4bdf-9672-e1044e9f8eec",
+      "generated_at": "2026-09-24T12:17:42.055Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Pippin_Training_01",
+      "task_id": "5c77f3b7-0747-42fa-893d-51cd6c1e3738",
+      "generated_at": "2026-09-24T12:17:44.171Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Sam_Anduin_01",
+      "task_id": "de50cca6-7ee5-4ef9-a6ad-2bdd58bae40c",
+      "generated_at": "2026-09-24T12:17:47.619Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Sam_BreeRing_01",
+      "task_id": "955ad7a9-4db2-4e21-9578-df5125b1c95b",
+      "generated_at": "2026-09-24T12:17:50.325Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Sam_Depart_01",
+      "task_id": "c698392b-c3ea-4c52-a50f-3fe9cd1da49d",
+      "generated_at": "2026-09-24T12:17:51.312Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Sam_Departure_01",
+      "task_id": "813121b5-6918-4d70-bd75-921e2646ff6f",
+      "generated_at": "2026-09-24T12:17:53.138Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Sam_Fellowship_01",
+      "task_id": "41c78d16-3fbc-49a3-a818-987aa0dfb1d3",
+      "generated_at": "2026-09-24T12:19:05.516Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Sam_Ferry_01",
+      "task_id": "10b3683b-8d83-4ff3-96c9-d9eef2a636da",
+      "generated_at": "2026-09-24T12:19:06.055Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Sam_LorienGrief_01",
+      "task_id": "e6689b46-6d5d-41f7-8798-18d9a146c894",
+      "generated_at": "2026-09-24T12:19:08.453Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Sam_Rider_01",
+      "task_id": "927396be-305e-4d70-aca2-ac1f9db96446",
+      "generated_at": "2026-09-24T12:19:09.610Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Sam_RootHide_01",
+      "task_id": "eb0da8fa-852e-4e95-b913-18841cdc0f45",
+      "generated_at": "2026-09-24T12:19:10.946Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Sam_Wound_01",
+      "task_id": "ca18c5d4-4a3c-4af3-b2e1-68976f3061fc",
+      "generated_at": "2026-09-24T12:19:17.583Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Saruman_Betrayal_01",
+      "task_id": "d0407431-6e22-4095-9060-c9a79d788248",
+      "generated_at": "2026-09-24T12:19:23.142Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Saruman_Betrayal_02",
+      "task_id": "d353b8fb-7c3b-4337-839b-e0a85249c634",
+      "generated_at": "2026-09-24T12:19:24.489Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Strider_BreeRing_01",
+      "task_id": "8d3a0998-3f3e-4079-89b9-273b2b3cf84e",
+      "generated_at": "2026-09-24T12:19:28.946Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Strider_Depart_01",
+      "task_id": "99f1471c-2dcc-478d-8a1d-feddb1eb94c1",
+      "generated_at": "2026-09-24T12:19:32.538Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Strider_Warn_01",
+      "task_id": "2e3aa5dc-b4b8-446d-9bf2-fbdc84b7be60",
+      "generated_at": "2026-09-24T12:19:35.197Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    },
+    {
+      "cue_id": "VO_Strider_Warn_02",
+      "task_id": "940a4f4e-87f7-4e28-bcfd-38ddcda8fa93",
+      "generated_at": "2026-09-24T12:19:35.360Z",
+      "source_format": "MP3",
+      "intake_status": "GENERATED_EXTERNAL_READY_FOR_WAREHOUSE_INTAKE"
+    }
+  ],
+  "sfx_assets": [],
+  "music_assets": [],
+  "blockers": [
+    "WAV master conversion/intake and UE import/playback require the later engine/runner integration lane.",
+    "Living-world SFX, ambience, efforts, creature, combat and music coverage remain separate production work and are not implied complete by the 103 scripted VO cues."
+  ],
+  "last_refresh": "2026-09-24",
+  "generated_voice_count": 103,
+  "scripted_voice_inventory_count": 103,
+  "scripted_voice_generation_coverage": {
+    "generated_external": 103,
+    "registered_scripted_cues": 103,
+    "missing_scripted_cues": 0,
+    "p1c01_scripted_bank": {
+      "planned": 25,
+      "generated_external": 25,
+      "missing": 0
+    }
+  },
+  "p1c01_complete_bank_manifest": "Data/P1C01CompleteAudioBankV1.json",
+  "production_scope_note": "The 103/103 external scripted VO milestone is one bank only. Complete living-world audio follows the P1C01CompleteAudioBankV1 families before UE integration can be called complete.",
+  "next_actions": [
+    "Do not regenerate existing 103 scripted VO cues.",
+    "Resolve/source/generate remaining P1C01 bank families in Data/P1C01CompleteAudioBankV1.json.",
+    "Prepare WAV masters and receipts offline where a durable warehouse path exists.",
+    "When runner returns, import and wire the complete prepared bank, then prove real playback without -NoSound."
+  ],
+  "additional_voice_banks": [
+    {
+      "id": "P1C01_AMBIENT_SPEECH_AND_BARKS_V1",
+      "path": "Data/P1C01AmbientSpeechAndBarksV1.json",
+      "commit": "02677a9480050e2956b01074ff762da113f0d825",
+      "generated_external_mp3": 58,
+      "ue_imported": 0,
+      "playback_evidence": 0,
+      "status": "GENERATED_EXTERNAL_COMPLETE"
+    }
+  ],
+  "external_voice_source_totals": {
+    "scripted_registered": 103,
+    "scripted_generated_external": 103,
+    "p1c01_ambient_barks": 58,
+    "p1c01_ambient_barks_generated_external": 58,
+    "total_registered_external_voice_sources": 161
+  },
+  "asset_url_policy": "Runway asset_url values are temporary signed retrieval URLs and may expire. task_id is the durable retrieval handle in the connected workspace; refresh the URL via task lookup at intake time. Never treat an expired URL as a lost asset while task_id remains resolvable.",
+  "canonical_repo_note": "Signed external download URLs are intentionally excluded from canonical develop. Cue/task/generation metadata is retained; historical source URLs remain only on archive/generated-audio-intake-v1 until durable WAV intake."
+}

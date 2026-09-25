@@ -1,3 +1,23 @@
+## 2026-09-25 - Final consolidation pass on PR #70
+- Final branch target for programmer handoff is now exactly **`develop`**; `main` remains release-only. The temporary generated-audio archive ref is also approved for deletion because its branch-only diff contained Data/Docs metadata, not WAV/UE binary masters, and the valid registries are already consolidated.
+- PR #70 is now the **single** maintenance consolidation train. The parallel PR #71 payload was selectively folded into #70; #71 is to be closed as superseded.
+- Branch cleanup is finalized for post-merge execution: preserve only `develop` and `main`; approved stale refs are deleted by `.github/workflows/branch-cleanup.yml` after the cleanup plan lands on `develop`.
+- Historical diverged runtime branches were audited rather than bulk-merged. Old pre-Public/Private runtime paths are superseded; only still-valid unique planning/audio/ops records were salvaged.
+- Generated-audio registries for the 103 scripted cues, P1C01 ambient speech, P1C01 complete-bank contract and named-character efforts are now consolidated in sanitized form without expiring signed delivery URLs. This is registry/intake evidence only, **not** UE playback/audio acceptance.
+- Both local launch controllers (`SHIRE_UPDATE_BUILD_LAUNCH.bat` and `SHIRE_PIE_VERIFY.bat`) execute from immutable temp copies so `git pull` cannot rewrite the batch currently being parsed. Local rerun proof remains pending.
+- Unreal validation cost contract is corrected: ordinary C++/runtime/Data/SourceAssets deltas use the **core** lane (build/import/Automation/runtime/warning checks) with **no package/cook**; Config/Build.cs/Target.cs/chapter-streaming/Package/Cook/Release deltas use the full package lane. Governance/docs/offline-maintenance deltas inherit green parent proof.
+- W00 remains **AUTOMATED CLOSURE GREEN / HUMAN PIE WARNING TAIL PENDING**. No new PIE/device/visual/performance acceptance is claimed by this maintenance pass.
+
+## 2026-09-25 - Develop consolidation / branch cleanup
+- Canonical development lane remains `develop`; stable release lane remains `main`.
+- W00 automated machine closure is green on `develop@9066d649...` via Pre-Unreal #821 and Unreal #656, inheriting full core UE4.27.2 proof from parent `fdbb6492...` / Unreal #655. Human P1C01 PIE grounding/warning-tail evidence is still pending and is not promoted here.
+- PR #70 is the active maintenance-only consolidation lane. Stale PR #62, #63 and #66 were closed as superseded; they must not be bulk-merged.
+- The local one-click launcher now executes from a temporary stable copy so a `git pull` cannot mutate the running batch file and corrupt branch detection.
+- Unreal validation now separates ordinary runtime/source/data changes from package/cook changes and classifies PRs against the canonical base SHA rather than only the previous branch commit; this prevents cancelled intermediate branch runs from forcing unnecessary full/package validation. Core runtime changes run build/import/Automation/runtime/warning gates without packaging; Build.cs/Target.cs/Config/streaming/packaging-critical changes still force the full package path.
+- Planning/warehouse records missing from canonical develop were salvaged: `LivingWorldSensoryCompletenessPlanV1.json`, `VoiceProductionMasterPlanV1.json`, `operation_recovery.py` + tests, and `WarehouseGapAuditSource09V1.json`.
+- Generated-audio intake metadata is consolidated directly into the canonical lane; no separate archive branch is required. Sanitized canonical registries for scripted voice, P1C01 ambient speech/barks, complete audio-bank coverage and named-character efforts are now also present on the consolidation lane; signed external download URLs are intentionally excluded.
+- `Data/BranchCleanupPlan.json` + `.github/workflows/branch-cleanup.yml` will remove approved stale remote branches after PR #70 lands on develop while preserving develop/main and explicitly retained audit/archive refs.
+
 ## 2026-09-25 - C4996 / SetStaticMesh warning-debt guards added
 
 The remaining visible warning families are now encoded as hard regression guards. Canonical `develop` already uses `GetStaticMaterials()` in the production importer, so the old C4996 source pattern is absent. PG-159 now rejects any return to direct `UStaticMesh::StaticMaterials` access.

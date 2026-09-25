@@ -4165,11 +4165,10 @@
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
     "rule": "Finish W00 only after the final develop build/PIE proof also confirms no C4996 StaticMaterials warning and no project-owned SetStaticMesh mobility warning.",
     "machine_baseline": {
-      "sha": "efdb2e291505472247fae921945b083b3cc1ce2c",
-      "pre_unreal": "#816 SUCCESS",
-      "unreal": "#651 Attempt 2 SUCCESS",
-      "warehouse": "#232 SUCCESS",
-      "scope": "UE4.27.2 build/import, Automation, startup, P1C01-P1C08, route/story roundtrip, warning debt, package, 37 Runtime JSON, packaged startup and hardware snapshot."
+      "sha": "9066d6494248def59680820bbd6ca8e10038ea6e",
+      "pre_unreal": "#821 SUCCESS",
+      "unreal": "#656 SUCCESS acceptance-only; parent #655 provides full core UE proof",
+      "scope": "Automated W00 chain is green. Human P1C01 PIE grounding/warning-tail evidence remains separate and unclaimed."
     },
     "w01_freeze": "ACTIVE_UNTIL_W00_EXIT_CRITERIA"
   },
@@ -4179,15 +4178,14 @@
     "Then validate packaged Data JSON runtime execution, real audio, target-device profiling and human PIE/pacing/visual acceptance."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-156",
-    "source_head": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
-    "branch": "integration/comprehensive-foundation-v1",
-    "pull_request": 67,
+    "checkpoint_id": "CP-W00-157",
+    "source_head": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
+    "branch": "maintenance/develop-consolidation-v1",
+    "pull_request": 70,
     "verified": {
-      "last_full_machine_green": "ab7889d6: Pre #788 SUCCESS + Unreal #623 SUCCESS + Warehouse #204 SUCCESS",
-      "cp154_static": "ab7889d6: Pre #788 SUCCESS including the full static/governor/asset/readiness/deep/unit-test chain",
-      "cp154_engine": "ab7889d6: Unreal #623 SUCCESS including migrated-layout preparation, UE4.27.2 C++ build/import, Automation, startup, P1C01-P1C08, route/story roundtrip and warning debt",
-      "cp154_warehouse": "ab7889d6: Warehouse #204 SUCCESS; no staging-required delta, provider stages intentionally skipped"
+      "last_full_machine_green": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be: Pre-Unreal #820 SUCCESS + Unreal #655 SUCCESS",
+      "latest_automated_closure": "9066d6494248def59680820bbd6ca8e10038ea6e: Pre-Unreal #821 SUCCESS + Unreal #656 SUCCESS acceptance-only",
+      "proof_boundary": "Machine/headless/package evidence only; human PIE/device/visual/performance acceptance remains separate."
     },
     "exact_head_scope": [
       "CP154 full Pre-Unreal chain",
@@ -4199,53 +4197,50 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "Single concrete PG-026 validator-drift repair after CP155.",
+    "active_wave": "Develop consolidation, branch cleanup, local launcher self-update hardening, and Unreal validation-cost correction. No W01 feature expansion.",
     "next_actions": [
-      "Prove Pre-Unreal green on CP156.",
-      "If CP156 is green, close machine repair and proceed to acceptance-only W00 work."
+      "Require exact-head Pre-Unreal green on PR #70.",
+      "Require exact-head Unreal workflow decision to pass without unnecessary packaging for this maintenance delta.",
+      "Merge PR #70 into develop only after green exact-head validation.",
+      "Let Branch Cleanup delete approved stale refs and verify develop/main remain.",
+      "Run the remaining P1C01 human PIE grounding/traversal plus project-owned SetStaticMesh mobility-warning check from the Documents clone.",
+      "Close W00 only if that human evidence is clean, then open P1C01 production work."
     ],
     "unverified_acceptance": [
-      "CP-W00-155 exact-head final repair proof",
-      "packaged Data JSON runtime staging/read",
-      "actual authored audio playback without -NoSound",
-      "target-device profiling",
-      "PIE/pacing/visual/human acceptance"
+      "PR #70 exact-head final validation",
+      "post-merge branch cleanup execution",
+      "local Documents-clone launcher rerun after temp-copy hardening",
+      "P1C01 human PIE grounding/traversal on canonical develop",
+      "absence of project-owned SetStaticMesh mobility warnings in that PIE session",
+      "target-device performance profiling",
+      "visual/pacing/NPC-believability acceptance",
+      "real audio listening/mix after complete bank integration"
     ],
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
+        "sha": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
         "pre_unreal": {
-          "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
-          "run_id": 35929433094,
+          "sha": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
+          "run_id": 36074075688,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
-          "run_id": 35929433086,
-          "status": "SUCCESS"
-        },
-        "warehouse": {
-          "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
-          "run_id": 35929433089,
+          "sha": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
+          "run_id": 36074075678,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "f524a83cd39510b956e4977571448d43100b628d",
+        "sha": "9066d6494248def59680820bbd6ca8e10038ea6e",
         "pre_unreal": {
-          "sha": "f524a83cd39510b956e4977571448d43100b628d",
-          "run_id": 35932131857,
-          "status": "FAILURE"
-        },
-        "unreal": {
-          "sha": "f524a83cd39510b956e4977571448d43100b628d",
-          "run_id": 35932131862,
+          "sha": "9066d6494248def59680820bbd6ca8e10038ea6e",
+          "run_id": 36075815776,
           "status": "SUCCESS"
         },
-        "warehouse": {
-          "sha": "f524a83cd39510b956e4977571448d43100b628d",
-          "run_id": 35932131888,
+        "unreal": {
+          "sha": "9066d6494248def59680820bbd6ca8e10038ea6e",
+          "run_id": 36075815713,
           "status": "SUCCESS"
         }
       }
@@ -4344,12 +4339,38 @@
       "cp56/fellowship-experience-megapass-v1",
       "work/automation-first-runtime-observation"
     ],
-    "cleanup_rule": "A historical branch may be deleted only after its meaningful content is confirmed present in develop or intentionally superseded. Diverged branches with unique commits remain preserved until audited.",
-    "current_short_branch": "integration/comprehensive-foundation-v1",
+    "cleanup_rule": "After PR #70 lands, Data/BranchCleanupPlan.json deletes every approved historical/maintenance/archive ref. Preserve only develop as canonical development/programmer-handoff lane and main as stable release lane.",
+    "current_short_branch": "maintenance/develop-consolidation-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 67,
-    "open_pr_policy": "PR #67 is the active W00 integration train. Do not open or execute post-W00 feature/content branches until this gate is explicitly closed by the Governor.",
-    "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop."
+    "current_open_pr": 70,
+    "open_pr_policy": "PR #70 is the single bounded maintenance consolidation train targeting develop. PR #71 is superseded after its unique safe payload was folded into #70. Historical diverged branches must not be bulk-merged.",
+    "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
+    "cleanup_snapshot": {
+      "date": "2026-09-25",
+      "active_pr": 70,
+      "active_branch": "maintenance/develop-consolidation-v1",
+      "canonical_branch": "develop",
+      "stable_release_branch": "main",
+      "plan": "Data/BranchCleanupPlan.json",
+      "audit": "Docs/BRANCH_CONSOLIDATION_AUDIT.md",
+      "stale_prs_closed": [
+        62,
+        63,
+        66
+      ],
+      "superseded_parallel_pr": 71,
+      "physical_cleanup": "Post-merge Branch Cleanup workflow deletes approved stale refs and verifies develop/main survive.",
+      "final_survivors": [
+        "develop",
+        "main"
+      ]
+    },
+    "validation_cost_contract": {
+      "governance_docs_maintenance": "inherit parent green proof; no engine build/package",
+      "ordinary_cpp_runtime_data_sourceassets": "core UE lane: source integrity + editor build/import + Automation/startup/chapter/state/warning checks; no package/cook",
+      "packaging_critical": "full lane for Config, Build.cs, Target.cs, chapter streaming, Package/Cook/Release deltas",
+      "acceptance_verifier": "acceptance lane may package/resume only when contract requires it"
+    }
   },
   "side_branch_audit": {
     "date": "2026-09-21",
@@ -5287,9 +5308,9 @@
     ]
   },
   "w00_final_closure": {
-    "status": "FINAL_WARNING_GUARDS_COMMITTED_PROOF_PENDING",
+    "status": "AUTOMATED_CLOSURE_GREEN_HUMAN_PIE_WARNING_TAIL_PENDING",
     "branch": "develop",
-    "base_green_head": "31b6e1c9958b6121ec7a00c07e038fec4ab36408",
+    "base_green_head": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
     "plan": "Data/W00FinalClosurePlanV1.json",
     "automated_gates": [
       "real Windows BuildCookRun package",
@@ -5306,7 +5327,13 @@
       "real audio listening/mix after complete bank integration"
     ],
     "open_rule": "If automated closure gates are green, W01 may open; remaining human-only acceptance is tracked separately and may not be misrepresented as architectural repair.",
-    "governor_integration_baseline": "develop"
+    "governor_integration_baseline": "develop",
+    "automated_evidence": {
+      "develop_head": "9066d6494248def59680820bbd6ca8e10038ea6e",
+      "pre_unreal": "#821 SUCCESS",
+      "unreal": "#656 SUCCESS acceptance-only",
+      "inherited_core_parent": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be / Unreal #655 SUCCESS"
+    }
   },
   "active_acceptance_branch": "acceptance/w00-final-closure-v1",
   "known_failures": [

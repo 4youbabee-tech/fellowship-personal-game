@@ -1,0 +1,385 @@
+{
+  "schema_version": 1,
+  "manifest_id": "P1C01_COMPLETE_AUDIO_BANK_V1",
+  "status": "OFFLINE_PRODUCTION_ACTIVE_UE_INTAKE_BLOCKED_BY_RUNNER",
+  "authority": "Data/ProjectGovernor.json",
+  "coverage_map": "Data/LivingWorldMasterCoverageMapV1.json on planning/living-world-completeness-v1",
+  "scripted_voice_registry": "Data/GeneratedAudioWarehouseV1.json",
+  "source_candidate_registry": "Data/TrilogyAudioAssetCandidateQueue.json on warehouse/source09-gapfill-v1",
+  "truth_boundary": "P1C01 bank completeness contract. Scripted VO 25/25 and ambient/local/context speech 58/58 now have generated external MP3 sources. SFX/ambience/music/non-verbal families remain source/master/intake work; no UE import/playback/PIE/device acceptance is implied.",
+  "completeness_rule": "The P1C01 audio bank is not considered integrated until every applicable family below is READY_FOR_IMPORT, imported to the contracted UE path, runtime-bound and playback-tested. Technical sub-batch import is allowed, but partial import never earns COMPLETE/ACCEPTED status.",
+  "banks": [
+    {
+      "id": "BANK_VOICE_SCRIPTED",
+      "required": true,
+      "state": "GENERATED_EXTERNAL_COMPLETE",
+      "inventory": {
+        "p1c01_cues": 25,
+        "generated_external": 25,
+        "global_registered_cues": 103,
+        "global_generated_external": 103
+      },
+      "source": "Runway preset/original voices; stable voice identity per character",
+      "pending": [
+        "production WAV master intake",
+        "UE import",
+        "speaker attachment playback evidence",
+        "subtitle timing",
+        "lip-sync/facial timing",
+        "human listening review"
+      ]
+    },
+    {
+      "id": "BANK_VOICE_CONTEXTUAL",
+      "required": true,
+      "state": "GENERATED_EXTERNAL_COMPLETE",
+      "families": [
+        "companion contextual barks",
+        "ambient Hobbit conversations",
+        "greetings/farewells/acknowledgements",
+        "social/festival reactions",
+        "danger/stealth/state variants"
+      ],
+      "rules": [
+        "original project-authored wording only",
+        "state/relationship/knowledge aware",
+        "cooldown and scripted-dialogue suppression",
+        "no film dialogue reproduction",
+        "no actor cloning"
+      ],
+      "generated_bank": "Data/P1C01AmbientSpeechAndBarksV1.json",
+      "generated_commit": "02677a9480050e2956b01074ff762da113f0d825",
+      "inventory": {
+        "total_cues": 58,
+        "named_local": 18,
+        "ambient_archetype": 20,
+        "sam_barks": 8,
+        "merry_barks": 6,
+        "pippin_barks": 6
+      },
+      "pending": [
+        "WAV master intake",
+        "UE runtime intent/state wiring",
+        "subtitle metadata",
+        "lip-sync for named speakers",
+        "PIE/device/listening acceptance"
+      ]
+    },
+    {
+      "id": "BANK_CHARACTER_EFFORTS",
+      "required": true,
+      "state": "CANDIDATE_GAP_FILL",
+      "families": [
+        "idle breathing",
+        "walk/run exertion",
+        "pain",
+        "fear",
+        "recovery",
+        "stealth/held-breath moments",
+        "combat/impact efforts where applicable"
+      ],
+      "rules": [
+        "character/weight/state appropriate",
+        "avoid repetitive trigger spam",
+        "voice priority rules apply"
+      ]
+    },
+    {
+      "id": "BANK_FOOTSTEPS",
+      "required": true,
+      "state": "CANDIDATE_COVERAGE_PARTIAL",
+      "surfaces": [
+        "grass",
+        "dirt/packed earth",
+        "gravel",
+        "mud",
+        "wood",
+        "stone where applicable",
+        "shallow water",
+        "foliage/leaf contact"
+      ],
+      "current_sources": [
+        "OGA different steps wood/stone/leaves/gravel/mud",
+        "OGA Fantozzi grass/sand/stone candidate",
+        "OGA wood-floor steps",
+        "water-splash candidates"
+      ],
+      "pending": [
+        "select final families",
+        "separate contact vs foliage brush",
+        "dedicated shallow-water step set",
+        "variation/weight/footwear metadata",
+        "physical-material mapping later"
+      ]
+    },
+    {
+      "id": "BANK_CHARACTER_FOLEY",
+      "required": true,
+      "state": "CANDIDATE_COVERAGE_PARTIAL",
+      "families": [
+        "cloth",
+        "leather",
+        "bags/belts",
+        "small gear",
+        "weapon/quiver only for equipped characters"
+      ],
+      "current_sources": [
+        "OGA Footsteps Leather Cloth Armor",
+        "Owlish/general foley candidate packs"
+      ],
+      "pending": [
+        "audition",
+        "normalize role naming",
+        "character equipment mapping"
+      ]
+    },
+    {
+      "id": "BANK_HOBBIT_INTERIORS",
+      "required": true,
+      "state": "AUTHORIZED_AND_CANDIDATE_MIX",
+      "families": [
+        "fireplace",
+        "wood/timber creak",
+        "door open/close",
+        "hinge/latch",
+        "keys/locks",
+        "cutlery/crockery",
+        "bottles/corks",
+        "books/paper",
+        "room tone"
+      ],
+      "current_sources": [
+        "OGA fireplace loop",
+        "100 CC0 wood/metal SFX",
+        "Fantasy Accessory SFX",
+        "broad foley pack"
+      ],
+      "pending": [
+        "room-tone selection",
+        "extract/classify packs",
+        "listen for modern/industrial contamination",
+        "select coherent Bag End palette"
+      ]
+    },
+    {
+      "id": "BANK_WORK_FARM_CART",
+      "required": true,
+      "state": "CANDIDATE_COVERAGE_STRONG",
+      "families": [
+        "farm tools",
+        "craft/work impacts",
+        "cart wheels",
+        "wood axle/creak",
+        "harness/tack",
+        "rope",
+        "pony/horse movement"
+      ],
+      "current_sources": [
+        "OGA 68 Workshop Sounds candidate",
+        "wood/metal pack",
+        "Freesound horse/mud candidate",
+        "OGA horse-trot candidate",
+        "Freesound CC0 horse+old-cart recording FS_SHIRE_HORSE_OLD_CART_BRUNO_AUZET_538438",
+        "Freesound CC0 rope-creak FS_SHIRE_ROPE_CREAK_VESTIBULE_DOOR_664929"
+      ],
+      "pending": [
+        "audition/select cart/wheel/harness/rope production family",
+        "classify pre-industrial workshop sounds",
+        "pony/horse vocal/tack layers"
+      ]
+    },
+    {
+      "id": "BANK_NATURE_AMBIENCE",
+      "required": true,
+      "state": "AUTHORIZED_AND_CANDIDATE_MIX",
+      "families": [
+        "birds",
+        "insects/crickets",
+        "hedge/field wind",
+        "localized leaf rustle",
+        "stream/river bed",
+        "small fauna spots",
+        "time/state alternates"
+      ],
+      "current_sources": [
+        "OGA birds/river/wind",
+        "Freesound CC0 forest river/birds/wind/leaves",
+        "OGA cricket candidate"
+      ],
+      "pending": [
+        "day/evening/night assignment",
+        "loop/noise QC",
+        "bed vs spot classification",
+        "anti-repetition sets"
+      ]
+    },
+    {
+      "id": "BANK_FARM_ANIMALS",
+      "required": true,
+      "state": "CANDIDATE_COVERAGE_PARTIAL",
+      "families": [
+        "pony/horse",
+        "sheep/chicken/other farm texture only where placed and source-grounded"
+      ],
+      "current_sources": [
+        "Freesound horse/mud",
+        "OGA horse-trot",
+        "Source09 animal-library lanes"
+      ],
+      "pending": [
+        "exact per-species source selection",
+        "movement/vocal/panic variants",
+        "world-placement validation"
+      ]
+    },
+    {
+      "id": "BANK_SOCIAL_PARTY",
+      "required": true,
+      "state": "CANDIDATE_COVERAGE_PARTIAL",
+      "families": [
+        "party murmur",
+        "distant laughter",
+        "applause/reaction",
+        "fireworks",
+        "farm/market/social texture"
+      ],
+      "current_sources": [
+        "OGA crowd-speaking ambience candidate",
+        "OGA fireworks/applause candidate"
+      ],
+      "pending": [
+        "audition for modern language/acoustics",
+        "generate original neutral texture if library speech leaks modern identity",
+        "separate bed/reaction/firework layers"
+      ]
+    },
+    {
+      "id": "BANK_FERRY_WATER_INTERACTION",
+      "required": true,
+      "state": "CANDIDATE_COVERAGE_STRONG",
+      "families": [
+        "river bed",
+        "ferry timber",
+        "rope strain",
+        "paddle",
+        "boarding movement",
+        "water splash/contact"
+      ],
+      "current_sources": [
+        "OGA/Freesound river candidates",
+        "OGA water splash candidates",
+        "Freesound CC0 paddle stroke FS_SHIRE_PADDLE_STROKE_EPICWIZARD_316576",
+        "Freesound CC0 rowing boat/rowlock FS_SHIRE_ROWING_BOAT_FENODYRIE_588307",
+        "Freesound CC0 rope creak FS_SHIRE_ROPE_CREAK_VESTIBULE_DOOR_664929"
+      ],
+      "pending": [
+        "audition/select matched rope/paddle/ferry timber family",
+        "capture final production masters/receipts"
+      ]
+    },
+    {
+      "id": "BANK_BLACK_RIDER_THREAT",
+      "required": true,
+      "state": "PLANNED",
+      "families": [
+        "hoof approach/distance",
+        "horse breath/snort",
+        "cloth/gear movement",
+        "subtle presence/stealth pressure",
+        "chase transition",
+        "non-iconic original threat vocal/design only if needed"
+      ],
+      "rules": [
+        "do not recreate film signature Nazgul audio",
+        "threat readability before loudness",
+        "distance/state layered"
+      ],
+      "pending": [
+        "licensed/original source family",
+        "mix behavior"
+      ]
+    },
+    {
+      "id": "BANK_COMBAT_GENERIC_SUPPORT",
+      "required": "only where P1C01 encounter state uses it",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "families": [
+        "swings",
+        "clashes/parries",
+        "impacts",
+        "gear/armor",
+        "arrows if applicable"
+      ],
+      "current_sources": [
+        "OGA sword attack pack",
+        "OGA sword clash pack",
+        "Tinysized fantasy SFX"
+      ],
+      "pending": [
+        "chapter applicability mapping",
+        "final selection/QC"
+      ]
+    },
+    {
+      "id": "BANK_MUSIC_P1C01",
+      "required": true,
+      "state": "PLAN_DEFINED_FINAL_ASSETS_PENDING",
+      "cue_count": 13,
+      "cue_source": "Data/MusicCuePlan.csv",
+      "rules": [
+        "original melody/motif only",
+        "no film soundtrack recording",
+        "no recognizable film-theme reconstruction",
+        "leave space for dialogue and gameplay cues",
+        "silence is permitted where narratively stronger"
+      ],
+      "pending": [
+        "compose/generate/record final assets or stems",
+        "master",
+        "UE state mapping/playback review"
+      ]
+    },
+    {
+      "id": "BANK_ACCESSIBILITY_METADATA",
+      "required": true,
+      "state": "PLANNED",
+      "families": [
+        "subtitle text/timing",
+        "speaker labels",
+        "important non-speech caption tags",
+        "voice/music/SFX category metadata",
+        "dynamic-range intent"
+      ],
+      "pending": [
+        "complete metadata coverage",
+        "UI/runtime evidence later"
+      ]
+    }
+  ],
+  "offline_intake_pipeline": [
+    "Resolve exact source file from approved candidate page; capture creator/provider/source URL/license snapshot/acquisition date.",
+    "Download only the selected 1-3 best candidates per slot; no mass random accumulation.",
+    "Verify file integrity and compute SHA256/byte size.",
+    "Inspect sample rate/bit depth/channels, clipping/noise, loop suitability and modern/copyright contamination.",
+    "Convert accepted intake sources to clean WAV masters where legally/technically appropriate while preserving source provenance.",
+    "Rename to deterministic bank/cue IDs without losing original filename in receipt.",
+    "Record whether asset is ambience bed, localized 3D spot, one-shot foley, voice, music/stem or reference-only.",
+    "Do not mark READY_FOR_IMPORT until the durable master and receipt both exist."
+  ],
+  "ue_runner_handoff": [
+    "First restore/prove exact integration head; do not change current queued integration head merely to ingest audio.",
+    "Import the prepared complete P1C01 bank to /Game/Audio/Voice, /Ambience, /SFX and /Music path contracts.",
+    "Bind footsteps to physical surfaces and foley to animation/gameplay events.",
+    "Apply attenuation, concurrency, priority/ducking and streaming policies; do not load the raw warehouse wholesale.",
+    "Run actual playback without -NoSound, then PIE listening/traversal and target-device profiling.",
+    "Record exact cue/log/device evidence before any IMPORTED/RUNTIME_WIRED/ACCEPTED promotion."
+  ],
+  "performance_contract": [
+    "soft refs + async FStreamableManager for nonresident/heavy audio",
+    "bounded voice/fauna/foley/spot-ambience concurrency",
+    "distance/relevance/visibility throttling",
+    "story-critical voice and threat telegraphs outrank decorative ambience",
+    "target i7 6th gen / 8GB RAM / ~2GB VRAM / DX11 / 720p Low-Medium / 30 FPS floor"
+  ],
+  "last_refresh": "2026-09-24"
+}

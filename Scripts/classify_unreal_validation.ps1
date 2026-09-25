@@ -2,16 +2,18 @@ $ErrorActionPreference = "Stop"
 
 function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = "none") {
     $full = if ($Mode -eq "full") { "true" } else { "false" }
+    $core = if ($Mode -eq "core") { "true" } else { "false" }
     $acceptance = if ($Mode -eq "acceptance") { "true" } else { "false" }
 
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_MODE=$Mode"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_FULL_UNREAL_REQUIRED=$full"
+    Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_CORE_UNREAL_REQUIRED=$core"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_ONLY=$acceptance"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_RESUME_STAGE=$ResumeStage"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_DECISION_REASON=$Reason"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_PARENT_SHA=$ParentSha"
 
-    Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode full=$full acceptance=$acceptance resume=$ResumeStage parent=$ParentSha reason=$Reason"
+    Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode full=$full core=$core acceptance=$acceptance resume=$ResumeStage parent=$ParentSha reason=$Reason"
 }
 
 function Get-GitExe {
@@ -231,7 +233,13 @@ Set-Location $env:GITHUB_WORKSPACE
 $git = Get-GitExe
 if (-not $git) { Set-Mode "full" "git-unavailable-fail-safe" ""; exit 0 }
 
-$parentSha = (& $git rev-parse "HEAD^").Trim()
+$parentSha = ""
+if ($env:BASE_SHA) {
+    $parentSha = $env:BASE_SHA.Trim()
+}
+if (-not $parentSha) {
+    $parentSha = (& $git rev-parse "HEAD^").Trim()
+}
 if (-not $parentSha) { Set-Mode "full" "parent-unavailable-fail-safe" ""; exit 0 }
 
 $changed = @(& $git diff --name-only $parentSha $env:TARGET_SHA)
@@ -247,7 +255,18 @@ $safeExact = @(
     "Data/PIEVerificationEvidence.json",
     "Data/ProjectGovernor.schema.json",
     "Data/Production100ReadinessGate.json",
-    "Data/W00FinalClosurePlanV1.json"
+    "Data/W00FinalClosurePlanV1.json",
+    "Data/BranchCleanupPlan.json",
+    "Data/LivingWorldSensoryCompletenessPlanV1.json",
+    "Data/VoiceProductionMasterPlanV1.json",
+    "Data/GeneratedAudioWarehouseV1.json",
+    "Data/P1C01AmbientSpeechAndBarksV1.json",
+    "Data/P1C01CompleteAudioBankV1.json",
+    "Data/P1C01NamedCharacterEffortsV1.json",
+    "Data/WarehouseGapAuditSource09V1.json",
+    "Scripts/operation_recovery.py",
+    "Scripts/test_operation_recovery.py",
+    ".github/workflows/branch-cleanup.yml"
 )
 
 $acceptanceExact = @(
@@ -263,37 +282,70 @@ $acceptanceExact = @(
 )
 
 $fullImpact = @()
+$coreImpact = @()
 $acceptanceTouched = @()
 foreach($p in $changed){
     $n=$p -replace "\\","/"
 
-    if($n.StartsWith("Docs/") -or ($safeExact -contains $n)){
+    if(
+        $n.StartsWith("Docs/") -or
+        ($safeExact -contains $n) -or
+        $n -eq "Scripts/pre_unreal_validate.py" -or
+        $n -eq "Scripts/project_governor.py" -or
+        $n -eq "Scripts/asset_quality_audit.py" -or
+        $n -eq "Scripts/classify_unreal_validation.ps1" -or
+        $n -eq ".github/workflows/pre-unreal-validation.yml" -or
+        $n -eq ".github/workflows/unreal-build-validation.yml" -or
+        $n -eq "SHIRE_UPDATE_BUILD_LAUNCH.bat" -or
+        $n -eq "SHIRE_PIE_VERIFY.bat"
+    ){
         continue
     }
     if($acceptanceExact -contains $n){
         $acceptanceTouched += $n
         continue
     }
-    if(
-        $n -eq "Source/ShireJourney.Target.cs" -and
-        (Test-CiPackagingTargetOnlyDelta $git $parentSha $env:TARGET_SHA)
-    ){
-        $acceptanceTouched += $n
+
+    $isPackagingCritical = (
+        $n.StartsWith("Config/") -or
+        $n.EndsWith(".Build.cs") -or
+        $n.EndsWith(".Target.cs") -or
+        $n -match "ChapterAssetStreaming" -or
+        $n -eq "Data/ChapterAssetStreamingPlan.json" -or
+        $n -match "Package|Packaging|Cook|Release"
+    )
+    if($isPackagingCritical){
+        $fullImpact += $n
         continue
     }
-    if(
-        $n -eq "Config/DefaultGame.ini" -and
-        (Test-PackagingCookConfigOnlyDelta $git $parentSha $env:TARGET_SHA)
-    ){
-        $acceptanceTouched += $n
+
+    $isCoreRuntime = (
+        $n.StartsWith("Source/ShireJourney/") -or
+        $n.StartsWith("Source/ShireJourneyEditorTools/") -or
+        $n.StartsWith("SourceAssets/") -or
+        $n.StartsWith("Data/")
+    )
+    if($isCoreRuntime){
+        $coreImpact += $n
         continue
     }
+
     $fullImpact += $n
 }
 
 if($fullImpact.Count -gt 0){
     $fullImpact | ForEach-Object { Write-Host "FULL_UNREAL_FILE $_" }
     Set-Mode "full" "engine-runtime-config-or-unclassified-delta" $parentSha
+    exit 0
+}
+
+if($coreImpact.Count -gt 0){
+    if(Test-ParentCoreUnrealGreen $parentSha){
+        $coreImpact | ForEach-Object { Write-Host "CORE_UNREAL_FILE $_" }
+        Set-Mode "core" "runtime-or-asset-delta-inherits-parent-core-proof-no-package" $parentSha
+        exit 0
+    }
+    Set-Mode "full" "core-delta-parent-proof-missing-fail-safe" $parentSha
     exit 0
 }
 

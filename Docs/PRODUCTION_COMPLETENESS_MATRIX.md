@@ -1,3 +1,21 @@
+## 2026-09-25 - Final consolidation / CI-cost / launcher hardening
+- **Final branch survivor set:** `develop` + `main` only. The generated-audio archive ref is also safe-delete after registry consolidation; no branch-only WAV/UE master asset was found in its changed-file set.
+- **Canonical handoff target:** `develop`; stable release lane: `main`.
+- **Branch consolidation:** FINAL DELETE SET RECORDED on PR #70. Post-merge cleanup preserves only develop/main; stale refs are removed automatically by the branch-cleanup workflow.
+- **Parallel consolidation PR #71:** SUPERSEDED after unique safe payload transfer into #70.
+- **Generated-audio registries:** CONSOLIDATED/SANITIZED; expiring signed delivery URLs removed; no UE playback/listening acceptance promoted.
+- **Local launcher self-update hazard:** FIX_COMMITTED for both update/build and PIE verification controllers; local rerun proof pending.
+- **Unreal validation classifier/workflow:** FIX_COMMITTED. Core runtime changes compile/test without package/cook; packaging-critical deltas retain full package validation; maintenance/docs can inherit green parent proof.
+- **W00:** AUTOMATED CLOSURE GREEN; remaining human P1C01 grounding/traversal + project-owned mobility-warning tail is still unproven on the final canonical post-maintenance head.
+
+## 2026-09-25 - Consolidation and validation-cost correction
+- Sanitized audio registry salvage: **DATA-CONSOLIDATED / RUNTIME-UNPROVEN**. Canonical develop receives the generated-audio/P1C01 bank metadata without signed external download URLs; WAV mastering, UE import, playback, lip-sync, listening and device acceptance remain pending.
+- Repository/branch hygiene: **IMPLEMENTED ON PR #70 / MERGE-PENDING**. Canonical runtime handoff target remains `develop`; stale feature/repair branches are not authoritative.
+- Local launcher self-update hazard: **FIX_COMMITTED / PROOF PENDING**. The running batch now uses a temp copy before pulling, preventing mid-execution mutation. No local rerun evidence is claimed yet.
+- Unreal classifier cost correction: **FIX_COMMITTED / CI PROOF PENDING**. PR classification uses the canonical base SHA, so ordinary C++/runtime/data/SourceAssets deltas use a core lane (build/import/Automation/runtime/warning) with no package/cook even when intermediate branch runs were cancelled. Packaging remains mandatory for Build.cs/Target.cs/Config/streaming/packaging-critical deltas.
+- W00 status remains **AUTOMATED_CLOSURE_GREEN_HUMAN_PIE_TAIL_PENDING**. Pre-Unreal #821 + Unreal #656 are machine evidence only; no new PIE/device/visual acceptance is claimed.
+- Branch consolidation salvages planning/recovery/source09 records into develop and consolidates the generated-audio registry evidence directly into the canonical lane; no separate archive branch is required.
+
 ## 2026-09-25 - C4996 / SetStaticMesh warning-debt guards added
 
 The remaining visible warning families are now encoded as hard regression guards. Canonical `develop` already uses `GetStaticMaterials()` in the production importer, so the old C4996 source pattern is absent. PG-159 now rejects any return to direct `UStaticMesh::StaticMaterials` access.
