@@ -1,9 +1,12 @@
-## W01 P1C01 control point — 2026-09-25
-- Previous lane `W00_ARCHITECTURAL_STABILIZATION`: **CLOSED** on `develop@809e56a9e1dc4b453e02a0b04b6875a71df21933`.
-- Active candidate: PR #74 on `production/w01-p1c01-kickoff-v1` targeting `develop`.
+## W01 P1C01 Mega Production control point - 2026-09-25
+- Canonical machine-green parent: `develop@ec3208919910b58bd6a87ce59c17e31312bd7bab`.
+- Parent proof: Pre-Unreal #885 SUCCESS; Unreal #720 SUCCESS.
+- Active candidate: PR #75 on `production/w01-p1c01-world-foundation-v1` targeting `develop`.
 - Active lane: **W01_P1C01_PRODUCTION_VERTICAL_SLICE**.
-- Current drop: ambient population ownership under `LivingWorldDirector` pooling + single micro-event budget authority.
-- Evidence boundary: STATIC-VALIDATED; fresh exact-head Pre-Unreal + UE4.27.2 core proof pending.
+- Current drop: **A - Terrain / Geography Foundation**.
+- Next dependency after exact-head green: **B - Hobbiton / Bag End Architecture**.
+- W00_ARCHITECTURAL_STABILIZATION remains CLOSED; reopen only for a concrete regression.
+- Evidence boundary: STATIC-VALIDATED until PR #75 exact-head machine proof; human PIE/device/visual/performance labels remain separate.
 
 # Master Execution Board
 
@@ -11,9 +14,10 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 ## Current control point
 
-- PR: #74 (bounded W01/P1C01 production candidate)
-- Branch: `production/w01-p1c01-kickoff-v1`
+- PR: #75 (W01/P1C01 terrain/geography production candidate)
+- Branch: `production/w01-p1c01-world-foundation-v1`
 - Active lane: **W01_P1C01_PRODUCTION_VERTICAL_SLICE**
+- Active production drop: **A_TERRAIN_GEOGRAPHY_FOUNDATION**
 - Previous lane: **W00_ARCHITECTURAL_STABILIZATION — CLOSED**
 - Canonical integration/programmer-handoff branch: `develop`
 - Stable release branch: `main`
