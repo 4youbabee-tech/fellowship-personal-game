@@ -1,3 +1,11 @@
+## 2026-09-26 - Source architecture manifest synchronization
+
+- **Confirmed defect:** `Data/SourceArchitecturePlan.json` still recorded 62 pre-migration flat `Source/ShireJourney/*` paths even though the files already live under the canonical `Public/<Domain>` / `Private/<Domain>` layout.
+- **Root correction:** all 62 rows marked `MIGRATED` now use their existing `target_path` as canonical `current_path`; `ShireJourney.Build.cs` remains the sole stable module-root entry.
+- **Static cross-check:** repository tree contains 63 runtime .h/.cpp/.cs files and the manifest now contains the same 63 paths with **0 stale** and **0 missing** rows.
+- **Scope:** metadata/hygiene synchronization only; no gameplay/runtime C++ was changed.
+- **Evidence boundary:** STATIC-VALIDATED by repository-tree/manifest comparison only. No compile/PIE/device/visual/performance claim.
+
 ## 2026-09-25 - Master External Resource Bible audited and adopted
 
 - Audited the uploaded 68-page `SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25`, containing 225 classified external sources/tools.
