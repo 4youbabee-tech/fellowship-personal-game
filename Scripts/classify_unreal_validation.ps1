@@ -255,7 +255,18 @@ $safeExact = @(
     "Data/PIEVerificationEvidence.json",
     "Data/ProjectGovernor.schema.json",
     "Data/Production100ReadinessGate.json",
-    "Data/W00FinalClosurePlanV1.json"
+    "Data/W00FinalClosurePlanV1.json",
+    "Data/BranchCleanupPlan.json",
+    "Data/LivingWorldSensoryCompletenessPlanV1.json",
+    "Data/VoiceProductionMasterPlanV1.json",
+    "Data/GeneratedAudioWarehouseV1.json",
+    "Data/P1C01AmbientSpeechAndBarksV1.json",
+    "Data/P1C01CompleteAudioBankV1.json",
+    "Data/P1C01NamedCharacterEffortsV1.json",
+    "Data/WarehouseGapAuditSource09V1.json",
+    "Scripts/operation_recovery.py",
+    "Scripts/test_operation_recovery.py",
+    ".github/workflows/branch-cleanup.yml"
 )
 
 $acceptanceExact = @(
