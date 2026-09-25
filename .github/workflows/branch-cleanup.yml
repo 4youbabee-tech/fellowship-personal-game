@@ -11,54 +11,52 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: branch-cleanup-${{ github.repository }}
+  cancel-in-progress: true
+
 jobs:
   cleanup:
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 10
     steps:
       - name: Checkout develop
         uses: actions/checkout@v4
+        with:
+          ref: develop
+          fetch-depth: 1
 
       - name: Delete approved stale branches
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
+        shell: powershell
         run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import json
-          from pathlib import Path
-          plan=json.loads(Path("Data/BranchCleanupPlan.json").read_text(encoding="utf-8"))
-          for protected in ("develop","main"):
-              assert protected not in plan["delete_after_merge"], f"refusing to delete {protected}"
-          print("\n".join(plan["delete_after_merge"]))
-          PY
-
-          while IFS= read -r branch; do
-            [ -n "$branch" ] || continue
-            if [ "$branch" = "develop" ] || [ "$branch" = "main" ]; then
-              echo "REFUSE protected branch: $branch"
-              exit 91
-            fi
-            echo "Deleting stale branch: $branch"
-            gh api --method DELETE "repos/$GITHUB_REPOSITORY/git/refs/heads/$branch" >/dev/null 2>&1 || {
-              rc=$?
-              echo "Branch delete returned $rc for $branch; treating missing/already-deleted refs as non-blocking."
+          $ErrorActionPreference = "Stop"
+          $plan = Get-Content -LiteralPath "Data/BranchCleanupPlan.json" -Raw | ConvertFrom-Json
+          foreach ($protected in @("develop","main")) {
+            if (@($plan.delete_after_merge) -contains $protected) {
+              throw "Refusing to delete protected branch: $protected"
             }
-          done < <(python3 - <<'PY'
-          import json
-          from pathlib import Path
-          plan=json.loads(Path("Data/BranchCleanupPlan.json").read_text(encoding="utf-8"))
-          for branch in plan["delete_after_merge"]:
-              print(branch)
-          PY
-          )
+          }
+
+          foreach ($branch in @($plan.delete_after_merge)) {
+            if ([string]::IsNullOrWhiteSpace([string]$branch)) { continue }
+            if ($branch -in @("develop","main")) { throw "Refusing protected branch: $branch" }
+            Write-Host "Deleting stale branch: $branch"
+            & git push origin --delete ([string]$branch)
+            if ($LASTEXITCODE -ne 0) {
+              Write-Host "Delete returned $LASTEXITCODE for $branch; treating missing/already-deleted refs as non-blocking."
+            }
+          }
 
       - name: Verify canonical branches remain
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
+        shell: powershell
         run: |
-          set -euo pipefail
-          gh api "repos/$GITHUB_REPOSITORY/branches/develop" >/dev/null
-          gh api "repos/$GITHUB_REPOSITORY/branches/main" >/dev/null
-          echo "BRANCH_CLEANUP_PASS canonical=develop stable=main"
+          $ErrorActionPreference = "Stop"
+          $refs = & git ls-remote --heads origin refs/heads/develop refs/heads/main
+          if ($LASTEXITCODE -ne 0) { throw "Unable to query canonical refs." }
+          if (($refs | Select-String "refs/heads/develop").Count -lt 1) { throw "develop missing after cleanup" }
+          if (($refs | Select-String "refs/heads/main").Count -lt 1) { throw "main missing after cleanup" }
+          Write-Host "BRANCH_CLEANUP_PASS canonical=develop stable=main"
