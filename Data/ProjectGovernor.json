@@ -3741,12 +3741,12 @@
       ],
       "behavior": "Validate the exact W01 candidate head; machine evidence never promotes visual/device/performance acceptance."
     },
-    "last_green_head": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
+    "last_green_head": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
     "evidence": {
-      "last_engine_proven_head": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
-      "pre_unreal": "#880 SUCCESS.",
-      "unreal_build": "#715 SUCCESS via safe validation-policy inheritance; nearest full machine proof #704.",
-      "root_correction_boundary": "W00 is closed; reopen only for a concrete new regression."
+      "last_engine_proven_head": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
+      "pre_unreal": "#885 SUCCESS.",
+      "unreal_build": "#720 SUCCESS through the W01 post-merge core validation lane.",
+      "root_correction_boundary": "W00 is closed; current work is P1C01 production. Reopen architectural repair only for a concrete new regression."
     },
     "evidence_scope": "W00 close head has machine proof plus P1C01 startup-grounding/warning-tail PIE evidence; whole-chapter device/visual/performance acceptance remains separate."
   },
@@ -4163,28 +4163,28 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "W01/P1C01 active. Ambient single ownership and micro-event budget authority are implemented on the W01 branch but remain STATIC-VALIDATED until fresh engine proof. Continue only after required validation; do not reopen W00 without a concrete regression.",
+    "rule": "W01/P1C01 mega production is active. Drop A terrain/geography is implemented on the candidate branch; validate exact head, then proceed directly to Hobbiton/Bag End architecture. W00 remains closed unless a concrete regression is reproduced.",
     "machine_baseline": {
-      "sha": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
-      "pre_unreal": "#880 SUCCESS",
-      "unreal": "#715 SUCCESS validation-policy inherit; nearest full machine proof #704",
-      "scope": "Canonical W00 close head has post-merge static/CI success plus owner-side P1C01 grounding/warning-tail PIE evidence. No device/visual/performance acceptance is inferred."
+      "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
+      "pre_unreal": "#885 SUCCESS",
+      "unreal": "#720 SUCCESS",
+      "scope": "Canonical merged W01 Drop 1 baseline is machine-green. Human/device/visual/performance acceptance remains separate."
     },
     "w01_freeze": "RELEASED_BY_W00_EXIT"
   },
   "immediate_next_large_actions": [
-    "1. Keep W00 closed unless a concrete regression appears; do not revive historical repair waves.",
-    "2. W01/P1C01 first code step: remove duplicate ambient AShireAmbientNPC ownership from ShirePrototypeWorldBuilder and route ambient population through LivingWorldDirector pooling while preserving named/story actor ownership.",
-    "3. Reconcile LivingWorldEventPlan vs WorldLifeSaturationPlan micro-event caps/cadence into one runtime authority before increasing density.",
-    "4. Continue P1C01 production in order: terrain/geography, Hobbiton/Bag End architecture, materials/vegetation, lighting/sky/fog/water, character presentation, living Shire NPC/fauna/environment motion, quest/audio polish, target-device profiling.",
-    "5. Fold verified sensory/reactive work into those stages: spatial environmental audio + surface foley, performance-scaled vegetation material motion, and later skeletal Look-At/Foot IK behind rig readiness and significance LOD.",
-    "6. Keep Part II/III implementation gated until P1C01 reaches Gate 6/7 human visual/pacing/performance evidence."
+    "1. Prove P1C01 Drop A terrain/geography exact head.",
+    "2. Build Drop B Hobbiton/Bag End architecture with modular reuse and canonical landmark dominance.",
+    "3. Build Drop C materials/vegetation with PNG/TGA channel-packed textures, HISM/LOD/culling and performance-scaled wind.",
+    "4. Build Drop D lighting/sky/fog/water, then character presentation, living Shire, quest/audio polish and target-device profiling.",
+    "5. Keep accepted sensory/reactive work inside its ordered production stage instead of parallel scope.",
+    "6. Require Gate 6/7 human visual/pacing/performance evidence before broad Part II/III runtime expansion."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W01-001",
-    "source_head": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
-    "branch": "production/w01-p1c01-kickoff-v1",
-    "pull_request": 74,
+    "checkpoint_id": "CP-W01-P1C01-DROP-A",
+    "source_head": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
+    "branch": "production/w01-p1c01-world-foundation-v1",
+    "pull_request": 75,
     "verified": {
       "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
       "latest_automated_closure": "809e56a9e1dc4b453e02a0b04b6875a71df21933: Pre-Unreal #880 SUCCESS + Unreal #715 SUCCESS validation-policy inherit + Branch Cleanup #3 SUCCESS",
@@ -4201,12 +4201,12 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "W01/P1C01 drop 1 implemented: builder duplicate ambient spawning removed; LivingWorldDirector is ambient owner; LivingWorldEventPlan is sole micro-event budget authority. Fresh Pre-Unreal + UE4.27 proof pending.",
+    "active_wave": "W01/P1C01 Mega Production Drop A: terrain/geography foundation implemented; exact-head validation pending.",
     "next_actions": [
-      "1. Run exact-head Pre-Unreal on the W01 branch.",
-      "2. Run UE4.27.2 core validation for the C++/Data delta; do not cook/package because no package/config/streaming contract changed.",
-      "3. If engine-green, continue P1C01 terrain/geography foundation, then Hobbiton/Bag End architecture.",
-      "4. Preserve Gate 6/7 human visual/pacing/performance boundaries."
+      "1. Prove PR #75 exact head through Pre-Unreal and UE4.27.2 core validation.",
+      "2. If green, begin Drop B Hobbiton/Bag End architecture without reopening W00.",
+      "3. Preserve stable quest/story anchors and the existing grounding contract during visual world expansion.",
+      "4. Keep target-device profiling before density increases and Gate 6/7 before broad Part II/III production."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -4217,29 +4217,29 @@
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
+        "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
         "pre_unreal": {
-          "sha": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
-          "run_id": 36122047603,
+          "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
+          "run_id": 36131768688,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
-          "run_id": 36122047612,
+          "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
+          "run_id": 36131768694,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "ae79cf2db7e87481a03728e0ad3ca61f4d7c5c52",
+        "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
         "pre_unreal": {
-          "sha": "ae79cf2db7e87481a03728e0ad3ca61f4d7c5c52",
-          "run_id": 36128503229,
-          "status": "FAILURE"
+          "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
+          "run_id": 36131768688,
+          "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "ae79cf2db7e87481a03728e0ad3ca61f4d7c5c52",
-          "run_id": 36128503140,
-          "status": "PENDING"
+          "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
+          "run_id": 36131768694,
+          "status": "SUCCESS"
         }
       }
     }
@@ -4338,10 +4338,10 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
-    "current_short_branch": "production/w01-p1c01-kickoff-v1",
+    "current_short_branch": "production/w01-p1c01-world-foundation-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 74,
-    "open_pr_policy": "PR #74 is the sole short-lived W01/P1C01 candidate targeting develop.",
+    "current_open_pr": 75,
+    "open_pr_policy": "PR #75 is the sole short-lived W01/P1C01 Drop A terrain/geography candidate targeting develop. It may contain source/data/docs/validator changes required by this production drop only.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
       "date": "2026-09-25",
@@ -5223,11 +5223,11 @@
     "owner_observation_role": "Use owner play time for final symptom/pacing/visual confirmation only after reproducible technical checks have run."
   },
   "integration_train": {
-    "branch": "production/w01-p1c01-kickoff-v1",
-    "baseline": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
-    "current_wave": "W01_P1C01_DROP1_AMBIENT_OWNERSHIP_BUDGET_AUTHORITY",
-    "merge_policy": "PR #74 is the active W01 candidate targeting develop; historical W00 trains stay closed.",
-    "proof_boundary": "Fresh exact-head Pre-Unreal + UE4.27.2 core proof required before promotion."
+    "branch": "production/w01-p1c01-world-foundation-v1",
+    "baseline": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
+    "current_wave": "W01_P1C01_DROP_A_TERRAIN_GEOGRAPHY",
+    "merge_policy": "PR #75 is the active W01 production candidate. Merge only after exact-head Pre-Unreal + UE4.27.2 core validation. Historical W00 branches remain closed.",
+    "proof_boundary": "Terrain/geography source is not engine/PIE/device/visual accepted until matching evidence exists."
   },
   "completion_wave_map": {
     "status": "ACTIVE_PLANNING_ESTIMATE",
@@ -5290,9 +5290,10 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Validate W01 drop 1 exact head through Pre-Unreal and UE4.27.2 core lane.",
-      "If green, begin terrain/geography foundation for P1C01.",
-      "Do not increase crowd density before target-device profiling."
+      "Validate PR #75 exact head through Pre-Unreal and UE4.27.2 core lane.",
+      "If green, execute Drop B Hobbiton/Bag End architecture.",
+      "Then proceed to materials/vegetation and atmosphere in the documented P1C01 order.",
+      "Do not increase crowd/detail density before target-device profiling."
     ]
   },
   "development_mode_contract": {
