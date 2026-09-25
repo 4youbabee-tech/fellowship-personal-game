@@ -2564,7 +2564,7 @@ for pg166_symbol in [
     'ParameterName = TEXT("WindIntensity")',
     'ParameterName = TEXT("WindSpeed")',
     'ParameterName = TEXT("WindWeight")',
-    "WorldPositionOffset.Expression = GrassWind",
+    "WorldPositionOffset.Expression = SimpleWind",
     'TEXT("ShireProductionImport created M_ProductionFoliageFar no-WPO master.")',
 ]:
     if pg166_symbol not in pg166_importer:
