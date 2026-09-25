@@ -2851,7 +2851,14 @@ for pg161_symbol in [
 ]:
     if pg161_symbol not in pg161_classifier:
         fail(f"PG-161 validation-cost/evidence-reuse guard missing: {pg161_symbol}")
-if '"Scripts/classify_unreal_validation.ps1" -or' in pg161_classifier.split("if($acceptanceExact -contains $n)")[0]:
+pg161_safe_start = pg161_classifier.find('$n.StartsWith("Docs/")')
+pg161_policy_start = pg161_classifier.find('if($n -eq "Scripts/classify_unreal_validation.ps1"')
+pg161_safe_block = (
+    pg161_classifier[pg161_safe_start:pg161_policy_start]
+    if pg161_safe_start >= 0 and pg161_policy_start > pg161_safe_start
+    else ""
+)
+if "Scripts/classify_unreal_validation.ps1" in pg161_safe_block:
     fail("PG-161 classifier script must not be silently treated as ordinary governance/docs-only input")
 
 # PG-162: local launch controllers must execute from immutable temporary copies before git pull.
