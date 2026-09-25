@@ -4586,6 +4586,26 @@ for pg167_symbol in [
         fail(f"PG-167 Unreal queue-isolation contract missing: {pg167_symbol}")
 
 
+# PG-168: Warehouse staging must not depend on GitHub-hosted workers or obsolete branches.
+pg168 = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
+for pg168_symbol in [
+    "branches:",
+    "- develop",
+    "- self-hosted",
+    "- Windows",
+    "- X64",
+    "- ue4-27",
+    "group: warehouse-stage-${{ github.repository }}",
+    "cancel-in-progress: true",
+]:
+    if pg168_symbol not in pg168:
+        fail(f"PG-168 warehouse execution contract missing: {pg168_symbol}")
+if "runs-on: ubuntu-latest" in pg168 or "runs-on: windows-latest" in pg168:
+    fail("PG-168 warehouse staging must not depend on GitHub-hosted runners")
+if "integration/comprehensive-foundation-v1" in pg168:
+    fail("PG-168 warehouse push trigger still points at an obsolete integration branch")
+
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

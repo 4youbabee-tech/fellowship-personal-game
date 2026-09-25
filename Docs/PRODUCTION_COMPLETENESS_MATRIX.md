@@ -1,3 +1,12 @@
+## 2026-09-26 - Warehouse staging execution repair
+
+- **REQ-STABILITY-004 / DEC-044:** IMPLEMENTED in workflow/source.
+- **Push lane:** develop.
+- **Hosted warehouse workers:** removed.
+- **Concurrency:** dedicated warehouse-stage group.
+- **Provider staging/audit:** preserved.
+- **Evidence:** STATIC configuration; real staging run pending.
+
 ## 2026-09-26 - CI validator/policy synchronization
 
 - **PG-026:** synchronized with serialized production-lane preemption.

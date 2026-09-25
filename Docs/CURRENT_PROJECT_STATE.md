@@ -1,3 +1,11 @@
+## 2026-09-26 - Warehouse staging removed from hosted-error path
+
+- Warehouse staging now triggers from `develop` / relevant PR deltas instead of the obsolete comprehensive-foundation branch.
+- GitHub-hosted delta/no-stage jobs were removed; one supervised Windows job stages Poly Haven, OpenGameArt, Quaternius, ambientCG, Kenney and KayKit and audits the persistent warehouse.
+- Warehouse has its own concurrency group, so it no longer shares/cancels the UE4 validation group.
+- PG-168 prevents regression to hosted runners or the obsolete branch trigger.
+- Evidence boundary: workflow/source configuration only; a real warehouse staging receipt is still required before STAGED claims.
+
 ## 2026-09-26 - CI validator synchronized with the new supervised runner policy
 
 - PG-026 now allows only acceptance/* or the sole active production/* PR to cancel superseded shared-device work.
