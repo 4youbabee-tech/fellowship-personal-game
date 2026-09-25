@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_MATERIALS_VEGETATION_V1",
-  "status": "C2_FOLIAGE_WIND_MASTER_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+  "status": "C2_FOLIAGE_WIND_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
   "canonical_parent": "develop@82fc4deaf2e2a99cfebd0d8d1b99a42b5d922ffe",
   "source_contract": {
     "world_bible": [
@@ -37,9 +37,9 @@
     ]
   },
   "verified_pipeline_gap": [
-    "The production importer synthesizes Color/Roughness/Metallic material instances but currently ignores authored map_Kd texture bindings.",
-    "No repository implementation currently contains SimpleGrassWind, WorldPositionOffset or a global wind material parameter path.",
-    "Existing Shire TGA textures are imported but are not yet guaranteed to drive the synthesized master-material base color."
+    "C1 authored map_Kd albedo binding is merged and exact-head proven by Pre-Unreal #897 SUCCESS + Unreal Build Validation #732 SUCCESS.",
+    "C2 now creates a dedicated lightweight foliage wind master plus a stripped no-WPO far master; material-parent/LOD assignment remains C3/C4.",
+    "No runtime actor Tick, foliage density increase, gameplay loading change or LivingWorld ownership change is introduced by C2."
   ],
   "drop_c_order": [
     "C1 bind authored albedo texture paths from MTL into deterministic production material instances",
@@ -65,7 +65,8 @@
       "LeafGreen",
       "LeafGold"
     ],
-    "runtime_loading": "No new synchronous heavy asset loading."
+    "runtime_loading": "No new synchronous heavy asset loading.",
+    "foliage_far_master": "/Game/Production/Materials/M_ProductionFoliageFar"
   },
   "performance_contract": {
     "target": "i7 6th gen / 8 GB RAM / approx 2 GB VRAM / DX11 / 720p Low-Medium / 30 FPS floor",
@@ -74,7 +75,13 @@
       "Do not increase foliage instance density until target-device profiling.",
       "Wind complexity must be cheaper at distance; distant vegetation may use reduced/no wind.",
       "Masked-material overdraw and shadow cost are profiling gates, not assumptions."
-    ]
+    ],
+    "c2_wind_strategy": {
+      "near_mid": "M_ProductionFoliage uses SimpleGrassWind in WorldPositionOffset with WindIntensity/WindSpeed/WindWeight scalar parameters.",
+      "far": "M_ProductionFoliageFar intentionally has no WorldPositionOffset path so far LODs can avoid wind shader work once C3/C4 assignment is wired.",
+      "density": "unchanged until target-device profiling",
+      "ownership": "material vertex shader only; no per-instance or per-tree Tick"
+    }
   },
   "external_sourcing": {
     "policy": "Provider listing is not item approval; every asset requires provenance/license/scale/UV/material/LOD review.",
@@ -98,13 +105,10 @@
   ],
   "evidence_boundary": "Drop C2 source implementation is STATIC-VALIDATED only until PR #78 exact-head Pre-Unreal + UE4.27.2 production-import/core validation succeeds; PIE/device/visual/performance acceptance remains separate.",
   "runtime_implementation": {
-    "importer_change": "MTL map_Kd is now captured and bound to deterministic AlbedoTexture material-instance parameters after texture import.",
-    "master_material_change": "M_ProductionSurface now multiplies AlbedoTexture by Color while retaining Roughness/Metallic parameters.",
-    "gameplay_impact": "none; editor production-import pipeline only",
-    "next": "C3 assign only stable authored grass/leaves material identities after C2 exact-head engine proof.",
-    "c1_merge": "PR #77 merged to develop as 82fc4deaf2e2a99cfebd0d8d1b99a42b5d922ffe after exact-head Pre-Unreal #897 SUCCESS + Unreal #732 SUCCESS.",
-    "foliage_master": "C2 creates /Game/Production/Materials/M_ProductionFoliage as a dedicated two-sided foliage material master.",
-    "foliage_wind": "Parameterized WindIntensity/WindSpeed/WindWeight drive SimpleGrassWind WPO; DistanceCullFade scales wind weight near existing instance cull distance.",
-    "performance_boundary": "No Actor Tick, no density increase, no gameplay runtime loading change. HISM/ISM, LOD and culling remain mandatory."
+    "importer_change": "C1 map_Kd -> AlbedoTexture binding remains intact. C2 deterministically creates M_ProductionFoliage and M_ProductionFoliageFar during production import.",
+    "master_material_change": "Near/mid foliage master keeps AlbedoTexture * Color, Roughness and Metallic, and adds parameterized SimpleGrassWind WPO. Far foliage master mirrors surface parameters but has no WPO.",
+    "gameplay_impact": "none; editor production-import material generation only",
+    "c2_assignment_boundary": "C2 creates the masters only. Stable foliage-material identity binding is C3; LOD/cull/overdraw profiling remains C4.",
+    "next": "C3 assign foliage parents by stable material identity without changing gameplay IDs or world ownership"
   }
 }
