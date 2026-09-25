@@ -1,3 +1,9 @@
+## 2026-09-25 - C2 v2 validation retry state
+
+- **Pre-Unreal #954:** SUCCESS on prior exact candidate head `dc70a48c5...`.
+- **Unreal #789:** CANCELLED with no job/step evidence; not a code failure and not accepted as compile proof.
+- **Current action:** fresh exact-head validation is required before merge; no runtime behavior changed in this status update.
+
 ## 2026-09-25 - C2 v2 clean-transplant status
 
 - **Baseline:** `develop@4980c3c8...` containing the merged Warehouse/Master Resource Bible production expansion.
