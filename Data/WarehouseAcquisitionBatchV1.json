@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "batch_id": "WAREHOUSE_CC0_POLYHAVEN_P1C01_MATERIALS_V2",
+  "batch_id": "WAREHOUSE_CC0_POLYHAVEN_P1C01_MATERIALS_V3",
   "status": "AUTHORIZED_FOR_STAGING",
   "provider": "POLY_HAVEN",
   "provider_api": "https://api.polyhaven.com",
@@ -310,6 +310,24 @@
         "garden/mulch support",
         "orchard/tree-base breakup",
         "farmyard detail"
+      ]
+    },
+    {
+      "slug": "forrest_ground_01",
+      "category": "SHIRE_FOREST_GROUND",
+      "use": [
+        "Shire woodland floor",
+        "hedge/forest transitions",
+        "Amon Hen support"
+      ]
+    },
+    {
+      "slug": "forest_leaves_02",
+      "category": "MOSSY_FOREST_FLOOR",
+      "use": [
+        "Shire shaded woodland",
+        "Rivendell/Ithilien support",
+        "mossy leaf-litter breakup"
       ]
     }
   ],
