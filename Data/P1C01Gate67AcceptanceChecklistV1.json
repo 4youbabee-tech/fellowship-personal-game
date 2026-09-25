@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "checklist_id": "P1C01_GATE_6_7_ACCEPTANCE_CHECKLIST_V1",
+  "status": "PREPARED_NOT_ACCEPTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01C3FoliageMaterialIdentityPlanV1.json",
+    "Data/P1C01C4FoliageLodCullOverdrawPlanV1.json",
+    "Data/P1C01DEnvironmentPresentationPlanV1.json",
+    "Data/P1C01ECharacterPresentationPlanV1.json",
+    "Data/P1C01FLivingShirePlanV1.json",
+    "Data/P1C01GQuestCinematicAudioPolishPlanV1.json",
+    "Data/P1C01HTargetDeviceProfilingPlanV1.json"
+  ],
+  "purpose": "Make the P1C01 Gate 6/7 promotion evidence explicit so the project can move quickly without relabeling preparation or compile evidence as human/device acceptance.",
+  "required_evidence": {
+    "machine": [
+      "exact commit/head identity",
+      "Pre-Unreal/static validation result",
+      "UE4.27.2 editor compile result",
+      "production import result",
+      "automation/runtime audit result",
+      "warning-debt result",
+      "save/route/world-state continuity result"
+    ],
+    "chapter_playability": [
+      "PIE chapter entry succeeds",
+      "required route is traversable",
+      "collision/nav blockers are absent on required path",
+      "canon-beat control handoff returns to player",
+      "save/load resumes the intended chapter/world state"
+    ],
+    "target_device": [
+      "hardware identity matching target class",
+      "720p Low-Medium profile",
+      "route-by-route FPS/frame-time evidence",
+      "streaming hitch observations",
+      "VRAM/texture pressure observations",
+      "NPC/fauna activation budget observations"
+    ],
+    "human_review": [
+      "Shire/Bag End visual readability",
+      "lighting/sky/fog/water mood",
+      "character readability and animation presentation",
+      "foliage wind naturalness and distraction check",
+      "NPC/fauna world-life believability",
+      "quest/cinematic/audio pacing",
+      "return-to-control feel after locked canon beats"
+    ]
+  },
+  "status_rules": [
+    "STATIC-VALIDATED requires repository/static evidence only.",
+    "COMPILE-TESTED requires a real UE4.27.2 compile result from the relevant source state.",
+    "PIE-TESTED requires chapter-specific PIE evidence from the relevant build.",
+    "DEVICE-TESTED requires observations from the target-class device/profile.",
+    "VISUALLY-ACCEPTED requires explicit human visual review for this chapter/build.",
+    "PERFORMANCE-ACCEPTED requires target-device measurements that meet the declared performance gate."
+  ],
+  "promotion_rule": "No wider runtime-region promotion until the ProjectGovernor Gate 6/7 requirements are satisfied with real evidence. Preparation for later regions may continue in parallel.",
+  "evidence_boundary": "Checklist only; P1C01 is not Gate 6/7 accepted by creation of this file."
+}
