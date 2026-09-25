@@ -4,7 +4,7 @@
   "authority": "Data/ProjectGovernor.json",
   "canonical_branch": "develop",
   "stable_release_branch": "main",
-  "status": "READY_FOR_POST_MERGE_REMOTE_CLEANUP",
+  "status": "POST_CLEANUP_METADATA_FINALIZATION",
   "truth_boundary": "This plan records branch hygiene only. It does not claim PIE/device/visual acceptance.",
   "preserve": [
     {
@@ -64,7 +64,8 @@
     "audit/pre-mega-integration-v1",
     "ci/w00-acceptance-fast-path-v1",
     "maintenance/repository-consolidation-v1",
-    "archive/generated-audio-intake-v1"
+    "archive/generated-audio-intake-v1",
+    "maintenance/post-cleanup-handoff-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",

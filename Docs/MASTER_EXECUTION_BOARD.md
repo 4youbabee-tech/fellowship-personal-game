@@ -4,21 +4,21 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 ## Current control point
 
-- PR: #70
-- Branch: `maintenance/develop-consolidation-v1`
+- PR: #0 (no active production/repair PR; canonical handoff is `develop`)
+- Branch: `develop`
 - Active lane: **W00_ARCHITECTURAL_STABILIZATION**
-- Canonical integration branch: `develop`
+- Canonical integration/programmer-handoff branch: `develop`
+- Stable release branch: `main`
+- Repository branch cleanup: **COMPLETE**; remote branch query after cleanup returned only `develop` and `main`.
 - Full machine-green baseline: `fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be`
 - Pre-Unreal baseline: **SUCCESS #820**
 - Unreal baseline: **SUCCESS #655**
-- Latest automated closure head: `9066d6494248def59680820bbd6ca8e10038ea6e`
-- Pre-Unreal latest: **SUCCESS #821**
-- Unreal latest: **SUCCESS #656 acceptance-only**, inheriting parent core proof.
-- Current purpose: consolidate branch state, harden the local launcher and validation classifier, then return to canonical `develop`.
-- Merge rule: never merge a red or untested exact candidate head into `develop`.
-- Freeze rule: no new feature wave is opened by this maintenance PR.
+- Automated closure head before consolidation: `9066d6494248def59680820bbd6ca8e10038ea6e`
+- Pre-Unreal: **SUCCESS #821**
+- Unreal: **SUCCESS #656 acceptance-only**, inheriting parent core proof.
+- Consolidated develop head after PR #70: `3108b2dd6354b196d36406935057c25feab2fec2`; Pre-Unreal #865 **SUCCESS**.
 - Performance rule: Windows / DX11 / 720p Low-Medium / 30 FPS floor.
-- Acceptance boundary: human P1C01 grounding/warning-tail, device/performance and visual acceptance remain open.
+- Acceptance boundary: human P1C01 grounding/warning-tail, target-device performance and visual/audio acceptance remain open.
 
 ## Execution order
 
