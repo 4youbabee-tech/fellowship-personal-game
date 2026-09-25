@@ -320,6 +320,7 @@ $acceptanceExact = @(
 
 $fullImpact = @()
 $coreImpact = @()
+$policyOnlyTouched = @()
 $acceptanceTouched = @()
 foreach($p in $changed){
     $n=$p -replace "\\","/"
@@ -327,15 +328,16 @@ foreach($p in $changed){
     if(
         $n.StartsWith("Docs/") -or
         ($safeExact -contains $n) -or
-        $n -eq "Scripts/pre_unreal_validate.py" -or
         $n -eq "Scripts/project_governor.py" -or
         $n -eq "Scripts/asset_quality_audit.py" -or
-        $n -eq "Scripts/classify_unreal_validation.ps1" -or
         $n -eq ".github/workflows/pre-unreal-validation.yml" -or
-        $n -eq ".github/workflows/unreal-build-validation.yml" -or
         $n -eq "SHIRE_UPDATE_BUILD_LAUNCH.bat" -or
         $n -eq "SHIRE_PIE_VERIFY.bat"
     ){
+        continue
+    }
+    if($n -eq "Scripts/classify_unreal_validation.ps1" -or $n -eq "Scripts/pre_unreal_validate.py"){
+        $policyOnlyTouched += $n
         continue
     }
     if($acceptanceExact -contains $n){
@@ -373,6 +375,16 @@ foreach($p in $changed){
 if($fullImpact.Count -gt 0){
     $fullImpact | ForEach-Object { Write-Host "FULL_UNREAL_FILE $_" }
     Set-Mode "full" "engine-runtime-config-or-unclassified-delta" $parentSha
+    exit 0
+}
+
+if($policyOnlyTouched.Count -gt 0 -and $acceptanceTouched.Count -eq 0 -and $coreImpact.Count -eq 0 -and $fullImpact.Count -eq 0){
+    if(Test-ParentWholeWorkflowGreen $parentSha){
+        $policyOnlyTouched | ForEach-Object { Write-Host "VALIDATION_POLICY_ONLY_FILE $_" }
+        Set-Mode "inherit" "validation-policy-only-inherits-green-parent-no-engine-repeat" $parentSha
+        exit 0
+    }
+    Set-Mode "full" "validation-policy-only-parent-not-green-fail-safe" $parentSha
     exit 0
 }
 
