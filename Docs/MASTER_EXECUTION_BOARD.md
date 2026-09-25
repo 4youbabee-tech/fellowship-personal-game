@@ -11,8 +11,8 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 ## Current control point
 
-- PR: #0 (no active production/repair PR; canonical handoff is `develop`)
-- Branch: `develop`
+- PR: #73 (bounded W00 lessons-lock maintenance; no W01 gameplay implementation)
+- Branch: `maintenance/w00-lessons-lock-v1`
 - Active lane: **W00_ARCHITECTURAL_STABILIZATION**
 - Canonical integration/programmer-handoff branch: `develop`
 - Stable release branch: `main`
