@@ -1,3 +1,10 @@
+## 2026-09-25 — Repository consolidation maintenance
+- **Repository/branch hygiene:** IN PROGRESS via PR #71; canonical lane = `develop`, release lane = `main`.
+- **Local launcher self-update hazard:** FIX COMMITTED on PR #71 by immutable temporary-copy execution; runtime/PIE proof still separate.
+- **Branch-only planning/audio metadata:** CONSOLIDATED/SANITIZED where safe; no gameplay/audio acceptance promotion.
+- **W00 architectural closure:** remains PROOF PENDING only for the human PIE/warning tail; no visual/device/performance acceptance is claimed.
+- See `Docs/BRANCH_CONSOLIDATION_AUDIT.md` for delete/preserve classification.
+
 ## 2026-09-25 - C4996 / SetStaticMesh warning-debt guards added
 
 The remaining visible warning families are now encoded as hard regression guards. Canonical `develop` already uses `GetStaticMaterials()` in the production importer, so the old C4996 source pattern is absent. PG-159 now rejects any return to direct `UStaticMesh::StaticMaterials` access.
