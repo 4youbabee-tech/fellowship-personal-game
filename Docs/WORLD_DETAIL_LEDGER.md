@@ -1,3 +1,11 @@
+## 2026-09-25 - P1C01 Warehouse visual/sensory stock expansion
+
+- New Shire-support stock is registered for later art-directed use: pastoral grass/soil/leaf-litter/path breakup, farm outbuilding silhouettes, cave/architecture support kits, multi-surface footsteps, hearth fire, wood/metal interactions and daytime bird ambience.
+- These are production-support resources, not new canon claims. Hero Hobbit-hole/Bag End silhouettes and named-character identity still require project-specific art direction and approval.
+- Source 11 performance rules remain binding: foliage/material overdraw, texture memory, HISM/LOD/cull cost and audio concurrency are measured before density expansion.
+- All external stock must retain provenance/license records and pass format/intake review before READY_FOR_IMPORT. Animated production assets remain FBX-only; production textures remain PNG/TGA.
+- Runtime world ownership, quest IDs, save keys, LivingWorld/NPC systems and active C2 foliage integration are untouched by this preparation lane.
+
 # WORLD DETAIL LEDGER
 
 ## 2026-09-25 - W01 P1C01 Drop C1: authored material texture binding
