@@ -1,3 +1,13 @@
+## 2026-09-25 - W01/P1C01 Drop C2 lightweight foliage wind implemented
+
+- C1 is merged to `develop` as merge commit `82fc4deaf2e2a99cfebd0d8d1b99a42b5d922ffe`; its exact PR head `36bb37a102ae3d34e35b667ae3991bad814e1d7a` passed Pre-Unreal #897 and Unreal Build Validation #732.
+- Active C2 branch: `production/w01-p1c01-foliage-wind-v1`, created from the C1 merge commit with no drift.
+- Production import now creates `M_ProductionFoliage` with `SimpleGrassWind` wired to World Position Offset and scalar parameters `WindIntensity`, `WindSpeed`, and `WindWeight`.
+- Production import also creates `M_ProductionFoliageFar` with the same lightweight surface parameters but deliberately no WPO. This is the stripped far-LOD shader target for real distance complexity reduction in the later material/LOD binding step.
+- No per-tree/per-instance Tick, no foliage density increase, no gameplay runtime loading change, and no LivingWorld/NPC ownership change are introduced by C2.
+- Added PG-166 to protect the near/mid wind master, no-WPO far master, and density profiling gate.
+- Evidence boundary: **STATIC-VALIDATED** until this exact C2 head passes Pre-Unreal + UE4.27.2 production-import/core validation. No PIE/device/visual wind acceptance is claimed.
+
 ## 2026-09-25 - W01/P1C01 Drop C2 foliage wind master opened
 
 - Drop C1 PR #77 merged to `develop` as `82fc4deaf2e2a99cfebd0d8d1b99a42b5d922ffe` after exact-head Pre-Unreal #897 SUCCESS + Unreal Build Validation #732 SUCCESS.
