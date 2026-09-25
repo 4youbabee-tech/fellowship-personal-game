@@ -1,3 +1,13 @@
+## 2026-09-25 - Warehouse bulk-intake V2
+
+- **P1C01 environment materials:** EXPANDED FOR STAGING — additional verified CC0 Poly Haven ground/woodland families added at 2K intake scale.
+- **Shire support architecture:** EXPANDED FOR STAGING — page-licensed Quaternius Farm Buildings added with FBX requirement; unverified Quaternius pack licenses now fail closed.
+- **Reusable support kits:** EXPANDED FOR STAGING — Kenney cave/building support stock added under CC0.
+- **P1C01 ambience/foley:** EXPANDED FOR STAGING — CC0 multi-surface footsteps, fireplace, wood/metal interaction bank and bird ambience added to the OpenGameArt batch.
+- **Provenance safety:** HARDENED — Quaternius automatic staging requires per-pack license evidence; no blanket-provider assumption.
+- **Runtime integration:** UNCHANGED — this lane prepares/stages source assets only. No second runtime-changing PR is opened.
+- **Acceptance:** NOT CLAIMED — STAGED does not equal READY_FOR_IMPORT, INTEGRATED, PIE-tested, device-tested, visually accepted or audio accepted.
+
 ## 2026-09-25 - PR #77 handoff status normalization
 
 - **Unreal #731:** SUCCESS on `3b2281c17...`.
