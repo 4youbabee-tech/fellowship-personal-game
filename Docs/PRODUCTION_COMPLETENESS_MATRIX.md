@@ -1,3 +1,12 @@
+## 2026-09-25 - W00 lessons-lock / current develop proof
+- **Current develop machine baseline:** `ed3587aa...` — Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS.
+- **Compile/import/runtime/package:** PROVEN on current canonical develop. #704 passed build/import/Automation/startup/P1C01-P1C08/route-state/warning/package/data/startup/hardware.
+- **Human PIE tail:** PENDING on the final canonical develop after lessons-lock merge; do not call full P1C01 PIE-TESTED yet.
+- **Validation-cost regression:** ROOT FIX COMMITTED. Safe governance/docs ancestry may inherit nearby green proof; runtime/assets/config/streaming/package changes still force core/full validation. Validation-policy-only changes no longer recook a green parent.
+- **Local launcher self-update regression:** FIX COMMITTED; immutable temp-copy execution is guarded by Pre-Unreal, local rerun pending.
+- **Branch hygiene:** develop + main only after cleanup; lessons-lock branch is temporary and registered for deletion after merge.
+- **W01 status:** NOT STARTED. First production work begins only after final P1C01 PIE warning/grounding tail is clean.
+
 ## 2026-09-25 - Post-cleanup handoff state
 - **Branch hygiene:** PROVEN CLEAN. Branch Cleanup run #1 succeeded; live GitHub branch enumeration returned only `develop` and `main`.
 - **Programmer handoff:** canonical branch = `develop`; stable release = `main`. Historical feature/repair branches are no longer required for handoff.
