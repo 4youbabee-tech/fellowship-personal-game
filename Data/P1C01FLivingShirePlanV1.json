@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_F_LIVING_SHIRE_V1",
+  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/LivingNPCIntelligenceRoadmap.json",
+    "Data/P1C01WorldBuildIntakePacketV1.json",
+    "DEC-038"
+  ],
+  "prerequisite": "E character presentation must be engine-green before F runtime implementation starts.",
+  "purpose": "Prepare low-cost living Shire NPC/fauna/environmental motion on top of existing ownership instead of creating a parallel AI brain.",
+  "ownership_model": {
+    "LivingWorldDirector": "Owns region population budgets, activation windows, pooled actor admission/retirement and coarse world-state events.",
+    "ShireNPCContextSubsystem": "Owns per-NPC context projection, bounded memory/knowledge lookup, relationship/context queries and conversation context assembly.",
+    "ShireQuestSubsystem": "Owns quest/progression facts and exposes read-only gates to NPC context/dialogue.",
+    "dialogue_memory_social": [
+      "BoundedDialoguePlan",
+      "NPCMemoryPlan",
+      "NPCSocialModel",
+      "NPCConversationPlan"
+    ],
+    "rule": "Systems communicate through bounded event/context contracts. NPCs do not poll one another or directly own global population/world budgets."
+  },
+  "runtime_cost_model": {
+    "crowd_spawn_destroy": "FORBIDDEN_AS_PRIMARY_PATTERN",
+    "crowd_lifecycle": "Object Pooling",
+    "per_npc_tick": "Avoid for context/social reasoning; use scheduled/budgeted updates and event-driven refresh.",
+    "perception": "UE4.27 native AI Perception/navigation where required; bounded by activation radius and budget.",
+    "heavy_assets": "Soft references plus asynchronous FStreamableManager loading.",
+    "dialogue_fallback": "Deterministic authored/template dialogue must function with no AI service."
+  },
+  "knowledge_and_rumor_contract": [
+    "An NPC may only learn a fact from authored initial knowledge, a witnessed tagged event, or a permitted transfer from another NPC.",
+    "Transferred rumors preserve source/event identity and knowledge gates.",
+    "No NPC receives future knowledge solely because the player or another system knows it.",
+    "Optional AI/local model may phrase an already-authorized utterance but cannot create canon facts or outcomes.",
+    "Raw conversation transcripts are not the long-term memory store; structured memory records are."
+  ],
+  "fauna_contract": {
+    "scope": "Region-appropriate bounded fauna only.",
+    "lifecycle": "Pool common/transient fauna where practical.",
+    "updates": "Distance/visibility/activity-budget driven rather than full-rate global Tick.",
+    "story_rule": "Fauna cannot block locked canon beats or required traversal."
+  },
+  "bottleneck_guards": [
+    "LivingWorldDirector never performs per-frame full-NPC context reconstruction.",
+    "ShireNPCContextSubsystem exposes cached/bounded context snapshots instead of forcing global scans.",
+    "Conversation eligibility queries are local to nearby/active NPCs.",
+    "World-state fan-out is event-driven and coalesced where multiple systems consume the same change.",
+    "No cloud request is allowed to stall game-thread dialogue availability."
+  ],
+  "prototype_first": "One named Shire NPC above the existing systems before expanding to broader named NPC coverage.",
+  "acceptance": [
+    "Exact-head static validation.",
+    "UE4.27.2 compile/runtime automation succeeds.",
+    "Pool reuse and activation/deactivation behavior is observed without state leakage.",
+    "Structured memory/knowledge transfer preserves gates.",
+    "Player traversal and quest state are not blocked by inactive/pooled NPCs.",
+    "PIE/device/performance acceptance remains separately evidenced."
+  ],
+  "evidence_boundary": "Preparation only. No runtime, AI-behavior, PIE/device or performance acceptance claim."
+}
