@@ -1,3 +1,11 @@
+## 2026-09-26 - Immediate branch integration policy and dead-ref cleanup
+
+- **Owner rule:** completed temporary branches must merge meaningful work into `develop` immediately, then delete the branch ref.
+- **Safe dead refs queued now:** `ci/pr80-hosted-zero-step-fallback-20260926`, `production/w01-p1c01-hobbiton-bagend-v1`, `production/w01-p1c01-kickoff-v1`, `production/w01-p1c01-materials-vegetation-v1`, `production/w01-p1c01-world-foundation-v1`, `warehouse/p1c01-bulk-intake-v2`, plus this finished stability branch after merge.
+- **Active work preserved:** PR #80 `production/w01-p1c01-foliage-wind-v2`, PR #81 `planning/whole-game-world-build-v1`, and `planning/whole-game-production-prep-v2`.
+- **Unique-content quarantine:** old foliage-wind-v1, localization prototype and mega-prep branches are not deleted yet because they still contain commits unique versus develop; useful content must be selectively salvaged first.
+- **Evidence boundary:** repository/process hygiene only; no runtime acceptance change.
+
 ## 2026-09-26 - Source architecture manifest synchronization
 
 - **Confirmed defect:** `Data/SourceArchitecturePlan.json` still recorded 62 pre-migration flat `Source/ShireJourney/*` paths even though the files already live under the canonical `Public/<Domain>` / `Private/<Domain>` layout.
