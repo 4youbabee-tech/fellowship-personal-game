@@ -4194,7 +4194,7 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "W00 is closed on develop@809e56a9 after owner P1C01 grounding/warning-tail proof. Execute only the ordered P1C01 production vertical slice; reopen architectural repair only for a concrete regression.",
+    "rule": "W01/P1C01 active. Ambient single ownership and micro-event budget authority are implemented on the W01 branch but remain STATIC-VALIDATED until fresh engine proof. Continue only after required validation; do not reopen W00 without a concrete regression.",
     "machine_baseline": {
       "sha": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
       "pre_unreal": "#880 SUCCESS",
@@ -4232,12 +4232,12 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "W01/P1C01 production vertical-slice kickoff: ambient ownership/pooling and living-world budget authority first; sensory/reactive review items are recorded but not allowed to bypass the ordered production sequence.",
+    "active_wave": "W01/P1C01 drop 1 implemented: builder duplicate ambient spawning removed; LivingWorldDirector is ambient owner; LivingWorldEventPlan is sole micro-event budget authority. Fresh Pre-Unreal + UE4.27 proof pending.",
     "next_actions": [
-      "1. Validate/merge the W01 kickoff governance+ledger change.",
-      "2. Consolidate ambient AShireAmbientNPC ownership under LivingWorldDirector pooling; remove duplicate direct ambient population spawns from ShirePrototypeWorldBuilder.",
-      "3. Resolve LivingWorldEventPlan vs WorldLifeSaturationPlan budget authority before density expansion.",
-      "4. Continue the ordered P1C01 production vertical slice and measure target-device cost before Gate 6/7 promotion."
+      "1. Run exact-head Pre-Unreal on the W01 branch.",
+      "2. Run UE4.27.2 core validation for the C++/Data delta; do not cook/package because no package/config/streaming contract changed.",
+      "3. If engine-green, continue P1C01 terrain/geography foundation, then Hobbiton/Bag End architecture.",
+      "4. Preserve Gate 6/7 human visual/pacing/performance boundaries."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -5100,7 +5100,7 @@
       "verification_status": "PARTIALLY_VERIFIED_CURRENT_HEAD",
       "claim": "Living-world logic exists but needs a sensory/reactive presentation layer: vegetation wind response, adaptive environmental audio/surface footsteps, and NPC head/eye/foot micro-reactions.",
       "verified_result": "Live source confirms real gaps in spatial environmental audio/physical-surface footsteps, vegetation WPO/wind material logic, and skeletal Look-At/Foot IK. The review is stale where it implies NPC awareness/weather reactions, audio fades/ducking or pooling are absent: AShireAmbientNPC already observes/turns toward the player, varies idle head look, reacts to inclement weather and distance-throttles Tick; UShireAudioSubsystem already uses async loading with ambience fades/music ducking; ALivingWorldDirector already has an ambient NPC pool. The current ownership defect is duplicate direct ambient spawning in ShirePrototypeWorldBuilder, and LivingWorldEventPlan vs WorldLifeSaturationPlan still disagree on micro-event caps/cadence.",
-      "disposition": "PARTIALLY_ACCEPTED_AND_SCOPED_TO_W01",
+      "disposition": "PARTIALLY_ACCEPTED_W01_DROP1_OWNERSHIP_AND_BUDGET_ITEMS_IMPLEMENTED",
       "linked_requirements": [
         "REQ-WORLD-001",
         "REQ-NPC-001",
@@ -5113,7 +5113,7 @@
         "WORK-LW-004",
         "WORK-PERF-006"
       ],
-      "next_action": "First consolidate P1C01 ambient ownership/pooling and budget authority. Then fold spatial audio/foley, performance-scaled vegetation motion and skeletal IK into the ordered W01 vertical-slice stages with soft/async assets, significance LOD and target-device measurement."
+      "next_action": "Validate drop 1. Then continue ordered P1C01 production; spatial audio/foley, vegetation material motion and skeletal IK remain scheduled inside later W01 stages rather than as parallel scope."
     }
   ],
   "project_source_library": {
@@ -5256,7 +5256,7 @@
   "integration_train": {
     "branch": "integration/comprehensive-foundation-v1",
     "baseline": "fb7afb8e39a4186245063ddf2a46fc0df8ba6c56",
-    "current_wave": "W01_P1C01_PRODUCTION_VERTICAL_SLICE_KICKOFF",
+    "current_wave": "W01_P1C01_DROP1_AMBIENT_OWNERSHIP_BUDGET_AUTHORITY",
     "merge_policy": "Keep PR #67 as the active W00 integration train; do not independently merge historical branches or open post-W00 feature/content work while the stabilization gate is active.",
     "proof_boundary": "Exact parent 96398e7 passed Pre #781, Warehouse #197 and Unreal #616. The CP-W00-148 child head requires fresh exact-head proof."
   },
@@ -5321,10 +5321,9 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Merge/validate W01 kickoff memory and scope reconciliation.",
-      "Centralize ambient population ownership under LivingWorldDirector pooling.",
-      "Reconcile living-world event budget authority before increasing density.",
-      "Proceed through the ordered P1C01 production stack with target-device profiling."
+      "Validate W01 drop 1 exact head through Pre-Unreal and UE4.27.2 core lane.",
+      "If green, begin terrain/geography foundation for P1C01.",
+      "Do not increase crowd density before target-device profiling."
     ]
   },
   "development_mode_contract": {
