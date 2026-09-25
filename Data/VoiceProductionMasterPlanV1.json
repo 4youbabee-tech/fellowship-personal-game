@@ -1,0 +1,421 @@
+{
+  "schema_version": 1,
+  "plan_id": "VOICE_PRODUCTION_MASTER_V1",
+  "status": "SCRIPTED_VOICE_GENERATED_EXTERNAL_COMPLETE_WAV_UE_PENDING",
+  "authority": "Data/ProjectGovernor.json",
+  "owner_goal": "No meaningful character conversation should remain silent. Spoken performance is a mandatory life layer, not optional polish.",
+  "source_basis": [
+    "Data/VoiceCuePlan.csv",
+    "Source/ShireJourney/Private/Subsystems/ShireDialogueSubsystem.cpp",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX §3 Audio/Music/Voice/Ambience",
+    "02_CHARACTERS_AND_RELATIONSHIPS_BIBLE"
+  ],
+  "truth_boundary": "All 103 currently registered scripted VO cues now have generated external MP3 sources recorded on warehouse/generated-audio-v1. This does not prove WAV mastering, UE import, playback, lip-sync, PIE/device or mix acceptance, and it does not cover all contextual/ambient/effort speech required by the living-world mandate.",
+  "inventory": {
+    "registered_voice_cues": 103,
+    "speaker_count": 16,
+    "cue_count_by_speaker": {
+      "Aragorn": 10,
+      "Arwen": 1,
+      "Bilbo": 3,
+      "Boromir": 8,
+      "Elrond": 2,
+      "Frodo": 18,
+      "Galadriel": 2,
+      "Gandalf": 24,
+      "Gimli": 4,
+      "Haldir": 1,
+      "Legolas": 2,
+      "Merry": 5,
+      "Pippin": 4,
+      "Sam": 13,
+      "Saruman": 2,
+      "Strider": 4
+    },
+    "current_registered_asset_state": "103_OF_103_GENERATED_EXTERNAL_MP3_WAV_MASTER_PENDING"
+  },
+  "policy": {
+    "master_format": "WAV",
+    "naming": "One master WAV per existing VO_* cue ID.",
+    "runtime_root": "/Game/Audio/Voice/{Speaker}/{CueId}",
+    "performance_rule": "Performance follows character state and relationship; never use generic fantasy presets as the sole identity.",
+    "rights_rule": "Use original or explicitly authorized voices. Do not clone or imitate a specific real film actor voice without explicit authorization.",
+    "spatial_rule": "Meaningful in-world speech is 3D-attached to the speaking actor when present; controlled fallback only where authored.",
+    "mix_rule": "Voice has priority over ambient barks and ducks music according to the existing UShireAudioSubsystem contract.",
+    "subtitle_rule": "Every meaningful spoken line retains subtitle + speaker label.",
+    "lip_sync_rule": "Production facial rigs receive mouth/jaw timing after audio exists; voice existence alone is not facial-performance acceptance.",
+    "loading_rule": "Preserve soft/asynchronous ownership and bounded concurrency; do not add synchronous heavy audio loading."
+  },
+  "character_voice_identities": {
+    "Frodo": "young adult; gentle, thoughtful, intimate; burden/fear grows without melodrama; original voice, no actor imitation",
+    "Gandalf": "older adult; warm authority, dry humor, calm intelligence; grave urgency under threat; original voice, no actor imitation",
+    "Sam": "young adult; warm, grounded, loyal, practical courage, emotionally sincere; original voice, no actor imitation",
+    "Bilbo": "older adult; lively intelligence, warmth and wit with underlying weariness; original voice, no actor imitation",
+    "Merry": "young adult; quick, perceptive, playful energy with growing seriousness; original voice, no actor imitation",
+    "Pippin": "young adult; bright, impulsive humor; fear grows into courage; original voice, no actor imitation"
+  },
+  "p1c01_shire_first_bank": {
+    "priority": "FIRST",
+    "sequence_count": 8,
+    "line_count": 25,
+    "speaker_counts": {
+      "Frodo": 9,
+      "Gandalf": 5,
+      "Sam": 6,
+      "Bilbo": 1,
+      "Pippin": 2,
+      "Merry": 2
+    },
+    "sequences": [
+      {
+        "sequence_id": "Dlg_ShireGandalfRoad",
+        "lines": [
+          {
+            "speaker": "Frodo",
+            "text": "Bilbo has been restless for weeks. I thought the party might settle him.",
+            "cue_id": "VO_Frodo_ShireRoad_01",
+            "planned_duration_seconds": 4.4,
+            "voice_direction": "Young adult; gentle; thoughtful; increasing burden and fear without melodrama",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Frodo/VO_Frodo_ShireRoad_01.VO_Frodo_ShireRoad_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Frodo_ShireRoad_01.wav"
+          },
+          {
+            "speaker": "Gandalf",
+            "text": "A celebration can hide many things, but it cannot make a restless heart stay put.",
+            "cue_id": "VO_Gandalf_ShireRoad_01",
+            "planned_duration_seconds": 5.2,
+            "voice_direction": "Older; warm authority; dry humor; grave urgency under threat",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Gandalf/VO_Gandalf_ShireRoad_01.VO_Gandalf_ShireRoad_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Gandalf_ShireRoad_01.wav"
+          },
+          {
+            "speaker": "Frodo",
+            "text": "Then I suppose I should enjoy Hobbiton while it is still quiet.",
+            "cue_id": "VO_Frodo_ShireRoad_02",
+            "planned_duration_seconds": 4.3,
+            "voice_direction": "Young adult; gentle; thoughtful; increasing burden and fear without melodrama",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Frodo/VO_Frodo_ShireRoad_02.VO_Frodo_ShireRoad_02",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Frodo_ShireRoad_02.wav"
+          }
+        ]
+      },
+      {
+        "sequence_id": "Dlg_ShirePartyArrival",
+        "lines": [
+          {
+            "speaker": "Sam",
+            "text": "They have lanterns all the way to the far hedge. Half the Shire must be coming.",
+            "cue_id": "VO_Sam_Party_01",
+            "planned_duration_seconds": 4.8,
+            "voice_direction": "Warm; grounded; loyal; practical courage; emotional sincerity",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Sam/VO_Sam_Party_01.VO_Sam_Party_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Sam_Party_01.wav"
+          },
+          {
+            "speaker": "Frodo",
+            "text": "Bilbo never does anything by halves when he has an audience.",
+            "cue_id": "VO_Frodo_Party_01",
+            "planned_duration_seconds": 4.4,
+            "voice_direction": "Young adult; gentle; thoughtful; increasing burden and fear without melodrama",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Frodo/VO_Frodo_Party_01.VO_Frodo_Party_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Frodo_Party_01.wav"
+          },
+          {
+            "speaker": "Bilbo",
+            "text": "Then do not stand at the edge, my boy. A party is wasted on spectators.",
+            "cue_id": "VO_Bilbo_Party_01",
+            "planned_duration_seconds": 4.8,
+            "voice_direction": "Older; lively intelligence; warmth masking weariness",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Bilbo/VO_Bilbo_Party_01.VO_Bilbo_Party_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Bilbo_Party_01.wav"
+          }
+        ]
+      },
+      {
+        "sequence_id": "Dlg_ShireBilboAftermath",
+        "lines": [
+          {
+            "speaker": "Frodo",
+            "text": "He was there a moment ago. Everyone saw him, and then nothing.",
+            "cue_id": "VO_Frodo_AfterParty_01",
+            "planned_duration_seconds": 4.8,
+            "voice_direction": "Young adult; gentle; thoughtful; increasing burden and fear without melodrama",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Frodo/VO_Frodo_AfterParty_01.VO_Frodo_AfterParty_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Frodo_AfterParty_01.wav"
+          },
+          {
+            "speaker": "Gandalf",
+            "text": "Bilbo has chosen his own manner of leaving. What matters now is what he left behind.",
+            "cue_id": "VO_Gandalf_AfterParty_01",
+            "planned_duration_seconds": 5.5,
+            "voice_direction": "Older; warm authority; dry humor; grave urgency under threat",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Gandalf/VO_Gandalf_AfterParty_01.VO_Gandalf_AfterParty_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Gandalf_AfterParty_01.wav"
+          },
+          {
+            "speaker": "Frodo",
+            "text": "I will go back to Bag End.",
+            "cue_id": "VO_Frodo_AfterParty_02",
+            "planned_duration_seconds": 3.2,
+            "voice_direction": "Young adult; gentle; thoughtful; increasing burden and fear without melodrama",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Frodo/VO_Frodo_AfterParty_02.VO_Frodo_AfterParty_02",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Frodo_AfterParty_02.wav"
+          }
+        ]
+      },
+      {
+        "sequence_id": "Dlg_ShireRingWarning",
+        "lines": [
+          {
+            "speaker": "Gandalf",
+            "text": "The thing Bilbo left you is not an ordinary heirloom. I have feared that for longer than I wished to admit.",
+            "cue_id": "VO_Gandalf_RingWarn_01",
+            "planned_duration_seconds": 6.4,
+            "voice_direction": "Older; warm authority; dry humor; grave urgency under threat",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Gandalf/VO_Gandalf_RingWarn_01.VO_Gandalf_RingWarn_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Gandalf_RingWarn_01.wav"
+          },
+          {
+            "speaker": "Frodo",
+            "text": "He carried it for years. Why should it become dangerous now?",
+            "cue_id": "VO_Frodo_RingWarn_01",
+            "planned_duration_seconds": 4.5,
+            "voice_direction": "Young adult; gentle; thoughtful; increasing burden and fear without melodrama",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Frodo/VO_Frodo_RingWarn_01.VO_Frodo_RingWarn_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Frodo_RingWarn_01.wav"
+          },
+          {
+            "speaker": "Gandalf",
+            "text": "Because dangerous things are patient. Keep it hidden while I learn whose shadow is following it.",
+            "cue_id": "VO_Gandalf_RingWarn_02",
+            "planned_duration_seconds": 6.2,
+            "voice_direction": "Older; warm authority; dry humor; grave urgency under threat",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Gandalf/VO_Gandalf_RingWarn_02.VO_Gandalf_RingWarn_02",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Gandalf_RingWarn_02.wav"
+          },
+          {
+            "speaker": "Frodo",
+            "text": "And if that shadow reaches the Shire first?",
+            "cue_id": "VO_Frodo_RingWarn_02",
+            "planned_duration_seconds": 4.2,
+            "voice_direction": "Young adult; gentle; thoughtful; increasing burden and fear without melodrama",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Frodo/VO_Frodo_RingWarn_02.VO_Frodo_RingWarn_02",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Frodo_RingWarn_02.wav"
+          },
+          {
+            "speaker": "Gandalf",
+            "text": "Then leave quietly. Trust Sam, and do not give strangers a reason to remember your name.",
+            "cue_id": "VO_Gandalf_RingWarn_03",
+            "planned_duration_seconds": 5.8,
+            "voice_direction": "Older; warm authority; dry humor; grave urgency under threat",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Gandalf/VO_Gandalf_RingWarn_03.VO_Gandalf_RingWarn_03",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Gandalf_RingWarn_03.wav"
+          }
+        ]
+      },
+      {
+        "sequence_id": "Dlg_ShireLeavingHome",
+        "lines": [
+          {
+            "speaker": "Sam",
+            "text": "It feels strange to walk past the last gardens and not know when we will see them again.",
+            "cue_id": "VO_Sam_Leaving_01",
+            "planned_duration_seconds": 5.1,
+            "voice_direction": "Warm; grounded; loyal; practical courage; emotional sincerity",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Sam/VO_Sam_Leaving_01.VO_Sam_Leaving_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Sam_Leaving_01.wav"
+          },
+          {
+            "speaker": "Frodo",
+            "text": "We are only going as far as we must. I would rather keep the Shire out of whatever this becomes.",
+            "cue_id": "VO_Frodo_Leaving_01",
+            "planned_duration_seconds": 5.7,
+            "voice_direction": "Young adult; gentle; thoughtful; increasing burden and fear without melodrama",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Frodo/VO_Frodo_Leaving_01.VO_Frodo_Leaving_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Frodo_Leaving_01.wav"
+          },
+          {
+            "speaker": "Sam",
+            "text": "Then I will make sure you do not have to do that alone.",
+            "cue_id": "VO_Sam_Leaving_02",
+            "planned_duration_seconds": 4.3,
+            "voice_direction": "Warm; grounded; loyal; practical courage; emotional sincerity",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Sam/VO_Sam_Leaving_02.VO_Sam_Leaving_02",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Sam_Leaving_02.wav"
+          }
+        ]
+      },
+      {
+        "sequence_id": "Dlg_ShireBlackRider",
+        "lines": [
+          {
+            "speaker": "Pippin",
+            "text": "That rider has passed the same stretch twice. No traveler does that by accident.",
+            "cue_id": "VO_Pippin_Rider_01",
+            "planned_duration_seconds": 4.9,
+            "voice_direction": "Youthful; impulsive; bright humor; fear becomes courage",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Pippin/VO_Pippin_Rider_01.VO_Pippin_Rider_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Pippin_Rider_01.wav"
+          },
+          {
+            "speaker": "Merry",
+            "text": "Then we stop being where he expects us to be.",
+            "cue_id": "VO_Merry_Rider_01",
+            "planned_duration_seconds": 4,
+            "voice_direction": "Quick; perceptive; playful energy with growing seriousness",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Merry/VO_Merry_Rider_01.VO_Merry_Rider_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Merry_Rider_01.wav"
+          },
+          {
+            "speaker": "Sam",
+            "text": "Off the road. Now.",
+            "cue_id": "VO_Sam_Rider_01",
+            "planned_duration_seconds": 2.6,
+            "voice_direction": "Warm; grounded; loyal; practical courage; emotional sincerity",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Sam/VO_Sam_Rider_01.VO_Sam_Rider_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Sam_Rider_01.wav"
+          }
+        ]
+      },
+      {
+        "sequence_id": "Dlg_ShireRootHide",
+        "lines": [
+          {
+            "speaker": "Sam",
+            "text": "Do not move. Let it pass.",
+            "cue_id": "VO_Sam_RootHide_01",
+            "planned_duration_seconds": 3,
+            "voice_direction": "Warm; grounded; loyal; practical courage; emotional sincerity",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Sam/VO_Sam_RootHide_01.VO_Sam_RootHide_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Sam_RootHide_01.wav"
+          },
+          {
+            "speaker": "Frodo",
+            "text": "I can feel it searching.",
+            "cue_id": "VO_Frodo_RootHide_01",
+            "planned_duration_seconds": 3.3,
+            "voice_direction": "Young adult; gentle; thoughtful; increasing burden and fear without melodrama",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Frodo/VO_Frodo_RootHide_01.VO_Frodo_RootHide_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Frodo_RootHide_01.wav"
+          }
+        ]
+      },
+      {
+        "sequence_id": "Dlg_ShireFerry",
+        "lines": [
+          {
+            "speaker": "Merry",
+            "text": "Get the rope loose. We can argue about directions on the other bank.",
+            "cue_id": "VO_Merry_Ferry_01",
+            "planned_duration_seconds": 4.5,
+            "voice_direction": "Quick; perceptive; playful energy with growing seriousness",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Merry/VO_Merry_Ferry_01.VO_Merry_Ferry_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Merry_Ferry_01.wav"
+          },
+          {
+            "speaker": "Sam",
+            "text": "Frodo, get aboard. I am right behind you.",
+            "cue_id": "VO_Sam_Ferry_01",
+            "planned_duration_seconds": 3.8,
+            "voice_direction": "Warm; grounded; loyal; practical courage; emotional sincerity",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Sam/VO_Sam_Ferry_01.VO_Sam_Ferry_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Sam_Ferry_01.wav"
+          },
+          {
+            "speaker": "Pippin",
+            "text": "I was hoping the dangerous part ended before the river.",
+            "cue_id": "VO_Pippin_Ferry_01",
+            "planned_duration_seconds": 4,
+            "voice_direction": "Youthful; impulsive; bright humor; fear becomes courage",
+            "spatial_mode": "3D from speaking actor when present; otherwise controlled 2D fallback",
+            "asset_path": "/Game/Audio/Voice/Pippin/VO_Pippin_Ferry_01.VO_Pippin_Ferry_01",
+            "current_status": "ASSET_PENDING",
+            "master_filename": "VO_Pippin_Ferry_01.wav"
+          }
+        ]
+      }
+    ],
+    "production_steps": [
+      "Choose one stable original/authorized voice identity for each P1C01 speaker.",
+      "Generate or record every listed line as a clean WAV master using the exact cue ID filename.",
+      "Review pronunciation, emotional state, pacing, clipping, breaths, room noise and tail silence.",
+      "Import under the existing /Game/Audio/Voice/{Speaker}/{CueId} path contract.",
+      "Confirm speaker attachment, subtitle timing, cue duration, music ducking and bark suppression.",
+      "Add lip-sync/facial timing when production facial rigs exist.",
+      "Run real playback without -NoSound and record exact evidence.",
+      "Run human PIE listening review and target-laptop concurrency/memory profiling separately."
+    ],
+    "generation_state": "25_OF_25_GENERATED_EXTERNAL_MP3",
+    "import_state": "NOT_UE_IMPORTED",
+    "audio_bank_manifest": "Data/P1C01CompleteAudioBankV1.json on warehouse/generated-audio-v1"
+  },
+  "full_game_voice_families": [
+    "scripted story dialogue",
+    "companion contextual barks",
+    "ambient NPC conversations",
+    "greetings/farewells/acknowledgements",
+    "efforts: breath/exertion/pain/fear/recovery",
+    "combat warnings/shouts",
+    "work/social/festival/tavern/crowd speech",
+    "state variants: calm/suspicion/fear/grief/war/victory/recovery",
+    "named-NPC memory/relationship reactive lines"
+  ],
+  "next_action": "Do not regenerate the 103 scripted cues. Prepare durable WAV masters/provenance when storage permits; in parallel produce contextual/ambient/effort speech and the remaining P1C01 complete-audio families. UE import/playback waits for the runner and W00 gate.",
+  "generated_source_registry": {
+    "path": "Data/GeneratedAudioWarehouseV1.json",
+    "branch": "warehouse/generated-audio-v1",
+    "commit": "d63fb82ff0ff2204253d30105df7c909c45b8a39",
+    "registered_scripted_cues": 103,
+    "generated_external_mp3": 103,
+    "p1c01_scripted_cues": 25,
+    "p1c01_generated_external_mp3": 25
+  }
+}
