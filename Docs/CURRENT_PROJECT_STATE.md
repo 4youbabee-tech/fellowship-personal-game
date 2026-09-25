@@ -1,3 +1,14 @@
+## 2026-09-26 - Massive build accelerated with source-PDF indexing and material-intake tooling
+
+- **Parallel preparation authorized:** source/PDF, warehouse, materials, audio, character/animation and later-region preparation may proceed together; runtime-changing integration remains serialized.
+- **Source PDFs indexed:** `Data/ProjectSourcePdfRegistryV1.json` records 15 owner-supplied PDFs by page count, byte size, SHA256 and authority role. Large source PDFs are not added to Git history.
+- **Smart fence active:** `Data/FastProductionSmartFenceV1.json` downgrades administrative-only friction to warning/pending states while keeping technical/runtime/performance safety blocking.
+- **P1C01 material intake:** `Data/P1C01MaterialImportWaveV1.json` selects eight Poly Haven CC0 Shire/Bag End surface families at the existing 2K intake target, with ambientCG fallback.
+- **Import tooling added:** `Scripts/prepare_p1c01_material_intake.ps1` prepares deterministic BaseColor + MTL input from staged warehouse receipts; `Scripts/promote_p1c01_material_intake.ps1` can feed those materials through the existing production importer using a temporary source overlay that is always removed afterward.
+- **Material master boundary preserved:** extra PBR maps are staged only; the current master remains AlbedoTexture + Color + scalar Roughness/Metallic until a separately gated material-cost pass.
+- **Source architecture bug carried forward:** migrated source paths are synchronized to the actual Public/Private layout on this lane.
+- **Evidence boundary:** STATIC/PREPARATION. No UE4 material import success is claimed until a real self-hosted intake receipt and commandlet log exist.
+
 ## 2026-09-26 - Whole-game reuse, streaming and pooled-population architecture prepared
 
 - **Asset-family reuse:** `Data/WholeGameAssetFamilyCoverageV1.json` aggregates the 28 region packets into shared production families so repeated technical kits can be reused without erasing region-specific hero identity.
