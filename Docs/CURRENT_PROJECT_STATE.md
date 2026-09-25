@@ -1,3 +1,13 @@
+## 2026-09-25 - Develop consolidation / branch cleanup
+- Canonical development lane remains `develop`; stable release lane remains `main`.
+- W00 automated machine closure is green on `develop@9066d649...` via Pre-Unreal #821 and Unreal #656, inheriting full core UE4.27.2 proof from parent `fdbb6492...` / Unreal #655. Human P1C01 PIE grounding/warning-tail evidence is still pending and is not promoted here.
+- PR #70 is the active maintenance-only consolidation lane. Stale PR #62, #63 and #66 were closed as superseded; they must not be bulk-merged.
+- The local one-click launcher now executes from a temporary stable copy so a `git pull` cannot mutate the running batch file and corrupt branch detection.
+- Unreal validation now separates ordinary runtime/source/data changes from package/cook changes: core runtime changes run build/import/Automation/runtime/warning gates without packaging; Build.cs/Target.cs/Config/streaming/packaging-critical changes still force the full package path.
+- Planning/warehouse records missing from canonical develop were salvaged: `LivingWorldSensoryCompletenessPlanV1.json`, `VoiceProductionMasterPlanV1.json`, `operation_recovery.py` + tests, and `WarehouseGapAuditSource09V1.json`.
+- Generated-audio intake history is preserved under `archive/generated-audio-intake-v1` until durable WAV/UE intake exists. This archival pointer is not runtime/audio acceptance.
+- `Data/BranchCleanupPlan.json` + `.github/workflows/branch-cleanup.yml` will remove approved stale remote branches after PR #70 lands on develop while preserving develop/main and explicitly retained audit/archive refs.
+
 ## 2026-09-25 - C4996 / SetStaticMesh warning-debt guards added
 
 The remaining visible warning families are now encoded as hard regression guards. Canonical `develop` already uses `GetStaticMaterials()` in the production importer, so the old C4996 source pattern is absent. PG-159 now rejects any return to direct `UStaticMesh::StaticMaterials` access.
