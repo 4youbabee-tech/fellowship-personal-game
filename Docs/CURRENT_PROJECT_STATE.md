@@ -6,7 +6,8 @@
 - Player freedom may change local flavor, discovery, pacing, minor relationship/state and optional content, but may not contradict chronology or invalidate a locked film outcome.
 - Cinematic/set-piece control is bounded and must return cleanly to the player.
 - When control returns after a canon beat, NPC/world/prop/audio state must reflect the new story state.
-- F1-01/Bag End is the reference pattern: playable pre-party/Bag End/Shire life may surround the locked Bilbo/Ring transition, but the transition itself follows project film continuity rather than an invented contradictory handoff.
+- This doctrine is GLOBAL across the entire game from the opening through the final ending. F1-01/Bag End is only the first implementation benchmark; every later chapter/region must apply the same locked-beat + playable-safe-window pattern under its own canon constraints.
+- F1-01 example: playable pre-party/Bag End/Shire life may surround the locked Bilbo/Ring transition, but the transition itself follows project film continuity rather than an invented contradictory handoff.
 - Added dialogue in safe windows remains original project-authored text; no verbatim Tolkien/film dialogue.
 - Authority: `Data/ProjectGovernor.json` decision `DEC-038`.
 
