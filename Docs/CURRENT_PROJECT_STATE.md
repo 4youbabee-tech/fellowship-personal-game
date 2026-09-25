@@ -1,4 +1,5 @@
 ## 2026-09-25 - Develop consolidation / branch cleanup
+- Superseded Unreal runs on `maintenance/*` now cancel in progress, preventing an obsolete maintenance head from monopolizing the single UE4 runner after newer commits exist.
 - Canonical development lane remains `develop`; stable release lane remains `main`.
 - W00 automated machine closure is green on `develop@9066d649...` via Pre-Unreal #821 and Unreal #656, inheriting full core UE4.27.2 proof from parent `fdbb6492...` / Unreal #655. Human P1C01 PIE grounding/warning-tail evidence is still pending and is not promoted here.
 - PR #70 is the active maintenance-only consolidation lane. Stale PR #62, #63 and #66 were closed as superseded; they must not be bulk-merged.
