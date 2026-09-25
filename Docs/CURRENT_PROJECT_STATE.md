@@ -1,3 +1,10 @@
+## 2026-09-25 - PR #78 Unreal #756 cancelled before job allocation
+
+- Corrected C2 head `c368dd8a5804d4a009dea932d8460866f321b023` passed Pre-Unreal #921.
+- Unreal Build Validation #756 was **CANCELLED before any UE4 job was allocated**; GitHub returned no workflow jobs for the run and refuses failed-job rerun because there is no retryable job.
+- This cancellation is not compile evidence and is not treated as a code failure or success.
+- A fresh exact-head validation is required for the unchanged UE4.27 SimpleGrassWind material-function correction.
+
 ## 2026-09-25 - PR #78 Unreal #751 compile root cause corrected
 
 - Exact C2 head `96e6fc2da794776e7abc76e7df4981f252d97d97` passed Pre-Unreal #916 but Unreal Build Validation #751 failed at **Build ShireJourneyEditor**.
