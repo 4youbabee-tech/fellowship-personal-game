@@ -4185,7 +4185,7 @@
     "checkpoint_id": "CP-W01-P1C01-DROP-B",
     "source_head": "430d0a26f3b441f072740fc58285c0c0eb842d8c",
     "branch": "production/w01-p1c01-hobbiton-bagend-v1",
-    "pull_request": null,
+    "pull_request": 76,
     "verified": {
       "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
       "latest_automated_closure": "809e56a9e1dc4b453e02a0b04b6875a71df21933: Pre-Unreal #880 SUCCESS + Unreal #715 SUCCESS validation-policy inherit + Branch Cleanup #3 SUCCESS",
@@ -4204,10 +4204,10 @@
     ],
     "active_wave": "W01/P1C01 Mega Production Drop B: Hobbiton + Bag End architecture implemented; exact-head validation pending.",
     "next_actions": [
-      "1. Open bounded Drop B PR targeting develop.",
-      "2. Require Pre-Unreal + UE4.27.2 core green.",
-      "3. After green/merge, begin Drop C materials/vegetation.",
-      "4. Do not claim Bag End interior complete until production interior assets exist."
+      "1. Validate PR #76 exact head through Pre-Unreal and UE4.27.2 core lane.",
+      "2. If green, merge Drop B and begin Drop C materials/vegetation.",
+      "3. Keep Bag End interior status incomplete until approved production FBX interior assets exist.",
+      "4. Preserve the legacy discovery ID for save compatibility while player-visible canon copy stays corrected."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -4339,10 +4339,10 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
-    "current_short_branch": "production/w01-p1c01-world-foundation-v1",
+    "current_short_branch": "production/w01-p1c01-hobbiton-bagend-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 75,
-    "open_pr_policy": "PR #75 is the sole short-lived W01/P1C01 Drop A terrain/geography candidate targeting develop. It may contain source/data/docs/validator changes required by this production drop only.",
+    "current_open_pr": 76,
+    "open_pr_policy": "PR #76 is the sole short-lived W01/P1C01 Drop B architecture candidate targeting develop.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
       "date": "2026-09-25",
