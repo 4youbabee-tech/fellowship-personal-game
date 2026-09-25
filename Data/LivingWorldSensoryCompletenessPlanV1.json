@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "plan_id": "LIVING_WORLD_SENSORY_COMPLETENESS_V1",
+  "status": "OFFLINE_PRODUCTION_ACTIVE_RUNTIME_INTEGRATION_QUEUED_AFTER_W00",
+  "authority": "Data/ProjectGovernor.json",
+  "owner_intent": "The project must proactively remember the small details that make the world feel alive; the owner should not have to remember to request every sound, motion, reaction or environmental behavior.",
+  "source_basis": [
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX §3 Audio/Music/Voice/Ambience",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX §6 NPC AI/Ecosystem/Living World",
+    "Data/Part1SonicWorldPlan.json",
+    "Data/LivingWorldEventPlan.json",
+    "Data/WorldActivityMovementPlan.json",
+    "Data/LivingNPCIntelligencePlan.json",
+    "Data/VoiceCuePlan.csv"
+  ],
+  "truth_boundary": "Completeness and production contract. 103/103 registered scripted VO cues now have generated external MP3 sources, but WAV mastering, UE import/playback, lip-sync, PIE/device/mix acceptance and non-scripted living-world audio coverage remain separate evidence.",
+  "mandatory_layers": {
+    "voice_and_character_performance": [
+      "spoken scripted dialogue",
+      "companion/context barks",
+      "ambient NPC conversations",
+      "breathing/exertion/pain/fear/recovery efforts",
+      "facial acting, gaze, blinking, mouth/jaw/lip-sync",
+      "gesture, posture, body-weight and reaction timing",
+      "cloth/leather/gear movement tied to animation"
+    ],
+    "footsteps_and_physical_foley": [
+      "surface-driven footsteps: grass, dirt, gravel, mud, stone, wood, snow, shallow water, foliage where applicable",
+      "footwear and weight-class variation",
+      "doors, gates, hinges, latches, keys",
+      "weapon handling, quiver, armor, bags, belts",
+      "cutlery, crockery, bottles, books, paper, tools",
+      "carts, wheels, harness, ropes, chains, paddles"
+    ],
+    "society_and_npc_life": [
+      "work, meals, travel, sleep/offstage routine",
+      "conversation pairs/groups",
+      "farm, market, craft, inn and festival activity",
+      "alert, warn, flee, hide, assist, guard responses",
+      "aftermath repair, clean, tend wounded, mourn, celebrate, relocate",
+      "population density changes by story state",
+      "age/clothing/prop/idle/route variation instead of clone crowds"
+    ],
+    "wildlife_and_creatures": [
+      "birds, insects and small animals as lightweight biome-specific systems",
+      "horses/ponies/farm animals with movement, vocalization and panic response",
+      "larger fauna only where canon/biome/gameplay supports it",
+      "creature breathing, locomotion, vocals, impacts and threat distance cues",
+      "no generic fantasy-zoo population"
+    ],
+    "vegetation_weather_water": [
+      "trees, leaves, hedges and grass react to region-appropriate wind",
+      "foliage rustle and branch movement",
+      "rain, snow, storm and wind linked to soundscape/state",
+      "streams, rivers, waterfalls, splashes, paddles and wet-bank response",
+      "insects/distant fauna by biome/time where appropriate",
+      "intentional stillness/silence in dead or threat-heavy regions"
+    ],
+    "environmental_audio": [
+      "seamless ambience bed by location/state/time/weather/population",
+      "spatial spot ambience with randomized timing and anti-repetition",
+      "region-specific acoustic identity and reverb",
+      "distance/occlusion-aware localized emitters",
+      "adaptive exploration/tension/battle/aftermath music",
+      "voice priority and ducking for intelligibility"
+    ],
+    "world_props_and_activity": [
+      "fireplaces, braziers, furnaces and flame response",
+      "smithing/craft/farm/market work sounds and motions",
+      "timber creaks, stone/cavern/hall room tone",
+      "banners, ropes, signs, cloth, mechanisms and clutter motion where appropriate",
+      "interactive props produce both visible response and readable sound"
+    ],
+    "combat_and_threat": [
+      "swings, impacts, parries, shields, arrows",
+      "armor/gear movement",
+      "enemy warnings/vocals/efforts",
+      "creature threat audio",
+      "battle crowds, horns, siege and impact families when authored",
+      "gameplay readability takes priority over constant loudness"
+    ],
+    "world_state_and_memory": [
+      "story state changes population/activity/soundscape",
+      "weather and danger influence NPC behavior",
+      "named NPC dialogue respects memory, relationship and knowledge limits",
+      "committed visible-world identity owns NPC mood/context during async swaps",
+      "save/load restores persistent state without duplicate authority"
+    ],
+    "accessibility_and_presentation": [
+      "subtitles for meaningful speech",
+      "speaker labels",
+      "important non-speech subtitles where useful",
+      "separate voice/music/SFX volume controls",
+      "dynamic-range option where practical",
+      "cinematics preserve dialogue readability and return cleanly to gameplay"
+    ]
+  },
+  "performance_architecture": {
+    "target": "i7 6th gen, 8GB RAM, approximately 2GB VRAM, DX11, 720p Low-Medium",
+    "rules": [
+      "Believability comes from authored routines + relevance-aware systems, not maximum simulation.",
+      "Crowd NPCs use pooling; avoid high-frequency Spawn/Destroy churn.",
+      "Repeated world detail uses ISM/HISM and explicit culling where appropriate.",
+      "Heavy assets use soft references and asynchronous FStreamableManager loading.",
+      "Background NPC/wildlife fidelity scales by distance/relevance/visibility.",
+      "Bound concurrent voices, fauna, foley and spot ambience; measure before raising density.",
+      "Do not invent universal numeric budgets without target-device profiling."
+    ]
+  },
+  "p1c01_shire_vertical_slice": {
+    "status": "OFFLINE_ASSET_PRODUCTION_ACTIVE_RUNTIME_INTEGRATION_AFTER_W00",
+    "mandatory_focus": [
+      "voiced Frodo/Gandalf/Sam/Bilbo/Merry/Pippin dialogue",
+      "Hobbiton crowd/festival/farm/work/social texture",
+      "birds, hedge breeze, farm animals, carts and distant laughter",
+      "Bag End warm room tone, fireplace, wood, cutlery and household foley",
+      "grass/dirt/gravel/mud/wood/water footsteps where physically applicable",
+      "foliage/wind motion and water interaction",
+      "contextual barks without repetition spam",
+      "named-NPC memory/relationship/world-state coherence",
+      "natural gaze/gesture/lip-sync once production rigs exist"
+    ],
+    "current_evidence": [
+      "25/25 scripted P1C01 VO cues generated externally and registered.",
+      "No WAV master, UE import or real playback evidence yet.",
+      "Non-scripted audio/life layers remain to source/generate and register."
+    ]
+  },
+  "chapter_completion_rule": "No chapter may be treated as experientially complete while an applicable mandatory layer is silently omitted. Each layer must be explicitly READY, PARTIAL, BLOCKED or N_A with evidence.",
+  "execution_boundary": "Offline-safe generation, sourcing, license/provenance verification, manifests and production preparation proceed now on isolated branches. Runtime integration and acceptance remain W00/runner-gated. The owner is not responsible for enumerating micro-details; missing layers are surfaced by LivingWorldMasterCoverageMapV1.",
+  "scripted_voice_generation": {
+    "registry": "Data/GeneratedAudioWarehouseV1.json",
+    "branch": "warehouse/generated-audio-v1",
+    "commit": "d63fb82ff0ff2204253d30105df7c909c45b8a39",
+    "registered_cues": 103,
+    "generated_external_mp3": 103,
+    "p1c01_planned": 25,
+    "p1c01_generated_external_mp3": 25,
+    "ue_imported": 0,
+    "playback_evidence": 0,
+    "acceptance_status": "NOT_ACCEPTED"
+  },
+  "authoritative_coverage_map": "Data/LivingWorldMasterCoverageMapV1.json",
+  "p1c01_audio_bank_manifest": "Data/P1C01CompleteAudioBankV1.json on warehouse/generated-audio-v1",
+  "source_gapfill_registry": "Data/TrilogyAudioAssetCandidateQueue.json on warehouse/source09-gapfill-v1"
+}
