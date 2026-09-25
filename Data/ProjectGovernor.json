@@ -5602,6 +5602,15 @@
       "root_cause": "UE4.27 exposes SimpleGrassWind as an Engine material function asset, not UMaterialExpressionSimpleGrassWind.",
       "correction": "Use UMaterialExpressionMaterialFunctionCall with /Engine/Functions/Engine_MaterialFunctions01/WorldPositionOffset/SimpleGrassWind.SimpleGrassWind and bind the documented WindIntensity, WindWeight and WindSpeed inputs.",
       "prevention": "Before generating material nodes from C++, distinguish UE material functions from UMaterialExpression classes against the target UE4.27 API; guards must encode the target-engine contract rather than assumed class names."
+    },
+    {
+      "id": "KNOWN-C2-DISTANCECULLFADE-LINK",
+      "status": "ROOT_FIXED_PENDING_FRESH_EXACT_HEAD_PROOF",
+      "observed_head": "93c23a5b7c71ddfd25a21cef983b1a9fb6eef7eb",
+      "symptom": "Unreal #758 compiled C2 source but link failed on UMaterialExpressionDistanceCullFade::GetPrivateStaticClass.",
+      "root_cause": "The UE4.27 DistanceCullFade material-expression class is not link-usable from ShireJourneyEditorTools despite its header being visible.",
+      "correction": "Remove the DistanceCullFade expression dependency. Near/mid foliage uses direct parameterized SimpleGrassWind; M_ProductionFoliageFar carries the no-WPO distance-cost reduction for later LOD binding.",
+      "prevention": "PG-166 rejects MaterialExpressionDistanceCullFade/DistanceScaledWindWeight in C2; use exported material APIs or engine material functions only."
     }
   ],
   "w00_acceptance_fast_path": {
