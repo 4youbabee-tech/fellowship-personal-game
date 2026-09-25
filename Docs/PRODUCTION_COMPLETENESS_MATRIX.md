@@ -1,3 +1,12 @@
+## 2026-09-26 - Massive whole-game preparation batch
+
+- **28 region packets:** active preparation tracks created without runtime promotion beyond P1C01.
+- **9 production waves:** BPB-W1 through BPB-W9 remain active for surfaces, vegetation, characters/animation, architecture/interiors, VFX, audio, music, terrain/scanning and Arabic/UI.
+- **P1C01 concrete intake queue:** 28 registered candidates organized for staging/QC; blocked license items remain blocked.
+- **Production asset policy:** format/provenance/technical/performance contracts locked before READY_FOR_IMPORT.
+- **Runtime status:** unchanged; PR #80 C2 remains the sole runtime-changing lane.
+- **Acceptance status:** PREPARATION ONLY. No exact-head engine/PIE/device/visual/performance acceptance added by this batch.
+
 ## 2026-09-25 - Region production packets
 
 - **Whole-game packets:** CREATED for every registered region.
