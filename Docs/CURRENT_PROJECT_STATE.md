@@ -1,3 +1,10 @@
+## 2026-09-25 - PR #76 governance false-red corrected atomically
+
+- Pre-Unreal #890/#891/#892 did not reach an Unreal runtime failure. The remaining red was the Governor handoff invariant: `session_handoff.source_head` must equal `validation_snapshot.last_green.sha`.
+- Last-green proof is now recorded consistently as `b9a312ce2321f55a58bc5f24dd478b4839871006` with Pre-Unreal #888 SUCCESS + Unreal #723 SUCCESS.
+- Branch/PR surfaces already agree on `production/w01-p1c01-hobbiton-bagend-v1` / PR #76. This correction updates the baseline/evidence tuple in one atomic commit to avoid another chain of self-triggered governance runs.
+- Drop B architecture remains STATIC-VALIDATED until fresh exact-head Pre-Unreal + UE4.27.2 core green.
+
 ## 2026-09-25 - W01/P1C01 Mega Production Drop B implemented
 
 - Parent: `develop@430d0a26f3b441f072740fc58285c0c0eb842d8c` after PR #75 merge.

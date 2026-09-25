@@ -4183,7 +4183,7 @@
   ],
   "session_handoff": {
     "checkpoint_id": "CP-W01-P1C01-DROP-B",
-    "source_head": "430d0a26f3b441f072740fc58285c0c0eb842d8c",
+    "source_head": "b9a312ce2321f55a58bc5f24dd478b4839871006",
     "branch": "production/w01-p1c01-hobbiton-bagend-v1",
     "pull_request": 76,
     "verified": {
@@ -4202,12 +4202,12 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "W01/P1C01 Mega Production Drop B: Hobbiton + Bag End architecture implemented; exact-head validation pending.",
+    "active_wave": "W01/P1C01 Drop B architecture implemented. PR #76 Pre-Unreal reds were governance handoff-baseline drift only; runtime architecture code has not yet reached engine validation. Handoff now points to the actual last-green exact head b9a312ce with #888/#723 SUCCESS.",
     "next_actions": [
-      "1. Validate PR #76 exact head through Pre-Unreal and UE4.27.2 core lane.",
-      "2. If green, merge Drop B and begin Drop C materials/vegetation.",
-      "3. Keep Bag End interior status incomplete until approved production FBX interior assets exist.",
-      "4. Preserve the legacy discovery ID for save compatibility while player-visible canon copy stays corrected."
+      "1. Re-run PR #76 exact-head Pre-Unreal with corrected handoff baseline.",
+      "2. If Pre-Unreal is green, allow UE4.27.2 core validation to run on the same head.",
+      "3. If both are green, merge Drop B and begin Drop C materials/vegetation.",
+      "4. Treat future Governor branch/PR/baseline drift as a control-plane defect and update all handoff surfaces atomically."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -4218,29 +4218,29 @@
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
+        "sha": "b9a312ce2321f55a58bc5f24dd478b4839871006",
         "pre_unreal": {
-          "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
-          "run_id": 36131768688,
+          "sha": "b9a312ce2321f55a58bc5f24dd478b4839871006",
+          "run_id": 36140117592,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
-          "run_id": 36131768694,
+          "sha": "b9a312ce2321f55a58bc5f24dd478b4839871006",
+          "run_id": 36140117645,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
+        "sha": "c7c136b8ac0b849296de682049bd9b1a99512aa7",
         "pre_unreal": {
-          "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
-          "run_id": 36131768688,
-          "status": "SUCCESS"
+          "sha": "c7c136b8ac0b849296de682049bd9b1a99512aa7",
+          "run_id": 36143992150,
+          "status": "FAILURE"
         },
         "unreal": {
-          "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
-          "run_id": 36131768694,
-          "status": "SUCCESS"
+          "sha": "c7c136b8ac0b849296de682049bd9b1a99512aa7",
+          "run_id": 36143992212,
+          "status": "PENDING"
         }
       }
     }

@@ -1,3 +1,10 @@
+## 2026-09-25 - PR #76 handoff-baseline coherence correction
+
+- **Pre-Unreal #890/#891/#892:** FAILED in Governor handoff coherence, not in architecture runtime.
+- **Root cause:** `session_handoff.source_head` pointed at the merged Drop A commit while `validation_snapshot.last_green` still pointed at an older baseline.
+- **Correction:** handoff source/baseline now consistently use `b9a312ce...` with #888/#723 SUCCESS; latest observed PR #76 evidence is tracked separately.
+- **Evidence boundary:** Drop B remains STATIC-VALIDATED until the corrected exact head passes Pre-Unreal and UE4.27.2 core validation.
+
 ## 2026-09-25 - W01 P1C01 Drop B: Hobbiton + Bag End architecture
 
 - **Bag End exterior hierarchy:** IMPLEMENTED IN SOURCE — garden/property approach and landmark-supporting dressing added without moving story anchors.
