@@ -805,5 +805,6 @@
     "p1c01_ambient_barks_generated_external": 58,
     "total_registered_external_voice_sources": 161
   },
-  "asset_url_policy": "Runway asset_url values are temporary signed retrieval URLs and may expire. task_id is the durable retrieval handle in the connected workspace; refresh the URL via task lookup at intake time. Never treat an expired URL as a lost asset while task_id remains resolvable."
+  "asset_url_policy": "Runway asset_url values are temporary signed retrieval URLs and may expire. task_id is the durable retrieval handle in the connected workspace; refresh the URL via task lookup at intake time. Never treat an expired URL as a lost asset while task_id remains resolvable.",
+  "canonical_repo_note": "Signed external download URLs are intentionally excluded from canonical develop. Cue/task/generation metadata is retained; historical source URLs remain only on archive/generated-audio-intake-v1 until durable WAV intake."
 }
