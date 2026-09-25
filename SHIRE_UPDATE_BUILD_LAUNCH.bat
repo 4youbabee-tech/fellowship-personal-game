@@ -1,25 +1,29 @@
 @echo off
-if not defined SHIRE_LAUNCH_ROOT (
-  set "SHIRE_LAUNCH_ROOT=%~dp0"
-  set "SHIRE_TEMP_LAUNCHER=%TEMP%\ShireUpdateBuildLaunch_%RANDOM%_%RANDOM%.bat"
-  copy /Y "%~f0" "%SHIRE_TEMP_LAUNCHER%" >NUL
-  if errorlevel 1 (
-    echo ERROR: Could not create stable launcher copy.
-    pause
-    exit /b 9
-  )
-  call "%SHIRE_TEMP_LAUNCHER%"
-  set "SHIRE_LAUNCH_RC=%ERRORLEVEL%"
-  del /F /Q "%SHIRE_TEMP_LAUNCHER%" >NUL 2>NUL
-  exit /b %SHIRE_LAUNCH_RC%
-)
-
 setlocal EnableExtensions EnableDelayedExpansion
 title Shire Journey - Update Build Launch
 
-cd /d "%SHIRE_LAUNCH_ROOT%"
-set "ROOT=%SHIRE_LAUNCH_ROOT%"
+rem Run from a temporary immutable copy so git pull cannot rewrite the batch file
+rem that CMD is currently parsing. The project root is passed explicitly to the copy.
+if not defined SHIRE_UPDATE_BOOTSTRAPPED (
+  set "SHIRE_UPDATE_BOOTSTRAPPED=1"
+  set "SHIRE_BOOTSTRAP_ROOT=%~dp0"
+  set "SHIRE_BOOTSTRAP_FILE=%TEMP%\ShireJourney_UpdateBuildLaunch_!RANDOM!_!RANDOM!.bat"
+  copy /Y "%~f0" "!SHIRE_BOOTSTRAP_FILE!" >NUL
+  if errorlevel 1 (
+    echo ERROR: LOCAL_BOOTSTRAP_COPY_FAILED
+    pause
+    exit /b 9
+  )
+  call "!SHIRE_BOOTSTRAP_FILE!" "!SHIRE_BOOTSTRAP_ROOT!"
+  set "SHIRE_BOOTSTRAP_RC=!ERRORLEVEL!"
+  del /Q "!SHIRE_BOOTSTRAP_FILE!" >NUL 2>NUL
+  exit /b !SHIRE_BOOTSTRAP_RC!
+)
+
+set "ROOT=%~1"
+if not defined ROOT set "ROOT=%~dp0"
 if "%ROOT:~-1%"=="\" set "ROOT=%ROOT:~0,-1%"
+cd /d "%ROOT%"
 
 set "PROJECT=%ROOT%\ShireJourney.uproject"
 set "UE_ROOT=C:\Program Files\Epic Games\UE_4.27"
