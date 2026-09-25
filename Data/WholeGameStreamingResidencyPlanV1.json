@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "plan_id": "WHOLE_GAME_STREAMING_RESIDENCY_PLAN_V1",
+  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/WholeGameRegionProductionPacketsV1.json",
+    "Data/WholeGameAssetFamilyCoverageV1.json",
+    "DEC-038",
+    "DEC-039"
+  ],
+  "purpose": "Keep the massive world build inside the 8GB RAM / ~2GB VRAM target by making region working sets explicit and preventing global hard-reference residency.",
+  "hard_rules": [
+    "Heavy region assets are referenced with TSoftObjectPtr/TSoftClassPtr.",
+    "Heavy runtime acquisition uses FStreamableManager asynchronous loading.",
+    "Synchronous heavy LoadObject paths are forbidden.",
+    "Global systems may know asset IDs/soft paths but must not hard-reference every region kit.",
+    "Only the current route/region working set plus bounded transition overlap may remain resident.",
+    "Leaving a region releases no-longer-needed handles after the destination world-state commit is stable.",
+    "Shared family reuse reduces duplicate assets but does not make the entire shared family permanently resident."
+  ],
+  "residency_tiers": [
+    {
+      "tier": "GLOBAL_TINY",
+      "examples": [
+        "small UI/localization metadata",
+        "lightweight IDs/tables",
+        "small shared gameplay configuration"
+      ],
+      "rule": "May remain resident if measured cost is negligible and required across routes."
+    },
+    {
+      "tier": "REGION_ACTIVE",
+      "examples": [
+        "current terrain/materials",
+        "current architecture/interiors",
+        "current named/support characters",
+        "current ambience/foley",
+        "current fauna/NPC pools"
+      ],
+      "rule": "Primary runtime working set; loaded asynchronously and bounded by the active chapter/region."
+    },
+    {
+      "tier": "TRANSITION_OVERLAP",
+      "examples": [
+        "next-region critical traversal assets",
+        "handoff characters/props",
+        "required transition audio"
+      ],
+      "rule": "Prefetch only the minimum required destination subset before world commit; drop obsolete source-region handles after stable commit."
+    },
+    {
+      "tier": "WAREHOUSE_ONLY",
+      "examples": [
+        "later-region candidate assets",
+        "unused hero variants",
+        "non-promoted scans/high-poly sources"
+      ],
+      "rule": "Never runtime resident; warehouse/source state only."
+    }
+  ],
+  "family_loading_policy": {
+    "GLOBAL_SURFACE_LIBRARY": "Load only the material/textures referenced by the active region package, not the entire global library.",
+    "FOREST_BIOME": "Load only active biome species/materials/LODs and release route-incompatible biome assets.",
+    "WATER_RIVER_COAST": "Load region-specific water/shore support only where the active kit requires it.",
+    "FORTIFICATION": "Stream the active fortification kit and hero landmark dependencies; do not retain other fortress regions.",
+    "DARK_CAVE_RUIN": "Stream the active cave/ruin subset; keep fog/VFX/audio bounded to the current chapter state.",
+    "PASTORAL_SETTLEMENT": "Share technical support assets where safe, while keeping Shire/Bree hero silhouettes and identity separate.",
+    "VOLCANIC_DARKLAND": "Keep high-cost VFX/material variants region-bound and profile before promotion."
+  },
+  "transition_contract": [
+    "Request destination soft assets before control handoff only when the chapter router has authorized the transition.",
+    "Do not publish destination world state until required streaming completes or fail-closed rollback runs.",
+    "Player movement hold/release remains owned by the existing world-transition transaction.",
+    "LivingWorldDirector activates destination population only after the committed world context is valid.",
+    "ShireNPCContextSubsystem must resolve context from the committed world state, not from prefetched-but-uncommitted destination data."
+  ],
+  "instrumentation": [
+    "active streamable handles by region/family",
+    "resident heavy asset count",
+    "transition overlap duration",
+    "streaming failure/rollback identity",
+    "peak texture/VRAM observation on target device",
+    "hitch/frame-time observation during transition"
+  ],
+  "evidence_boundary": "Preparation only. No runtime streaming or memory acceptance claim."
+}
