@@ -1,5 +1,15 @@
 # WORLD DETAIL LEDGER
 
+## 2026-09-25 - W01 P1C01 Mega Production Drop B: Hobbiton + Bag End architecture
+
+- **Source basis:** Source 03 requires Shire/Hobbiton pastoral domestic scale, circular doors and gardens; Bag End must read as a dense lived-in Hobbit narrative hub with round geometry and deterministic state variants. Source 07 anchors F1-01 to Shire onboarding/social/birthday setup. Source 11 requires modular reuse, simple collision/visibility cost and measured target-hardware budgets.
+- **Canon correction:** Tolkien places The Green Dragon at Bywater. The compact prototype previously displayed it inside the Hobbiton composition. Drop B corrects only player-visible presentation while retaining the legacy `Discover_GreenDragon` internal ID for save compatibility.
+- **Implemented:** `SpawnHobbitonArchitecturePass()` adds a Bag End hero garden/property approach, four subordinate domestic garden clusters, a generic Hobbiton village common, Party Field canopy/produce dressing, and lived-in working-edge props. It reuses resident project meshes and adds no synchronous heavy load.
+- **Story boundary:** quest/chapter IDs and stable story anchors are unchanged. Architecture is presentation/world-space composition only.
+- **Interior boundary:** a dedicated production Bag End interior shell does not exist in the current asset bank; interior completion is explicitly deferred instead of being falsely claimed.
+- **Regression guard:** PG-164 requires the architecture pass/log/canon-corrected display copy and rejects a visible Green Dragon-at-Hobbiton regression while preserving the legacy save ID.
+- **Evidence boundary:** STATIC-VALIDATED until fresh exact-head Pre-Unreal + UE4.27.2 core validation; no PIE/device/visual acceptance claimed.
+
 ## 2026-09-25 - W01 P1C01 Mega Production Drop A: terrain/geography foundation
 
 - **Source basis checked before implementation:** Source 03 defines the Shire/Hobbiton as pastoral hills, lanes, farms and Hobbit-holes with warm domestic scale, readable landmark/vista navigation, sightline/terrain-aware streaming and collision/navmesh/backtracking QA. Source 07 keeps F1-01 in the Shire as an onboarding/social/birthday mission package with deterministic mission-state ownership. Source 09 requires modular reuse, provenance and per-asset validation. Source 10 is visual/modeling aid only. Source 11 remains the systems/performance/audio authority.
