@@ -4166,7 +4166,7 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "W01/P1C01 mega production active. Drop C1 authored material texture binding is implemented on the candidate branch. Prove exact head before C2 foliage wind/WPO.",
+    "rule": "W01/P1C01 mega production active. Drop C1 is merged and engine-core proven. Drop C2 dedicated lightweight foliage wind/WPO master is the sole runtime-changing lane in PR #78; prove exact head before C3 material assignment.",
     "machine_baseline": {
       "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
       "pre_unreal": "#885 SUCCESS",
@@ -4183,10 +4183,10 @@
     "5. Keep Arabic localization runtime implementation isolated from the active world-production PR."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W01-P1C01-DROP-C1",
-    "source_head": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
-    "branch": "production/w01-p1c01-materials-vegetation-v1",
-    "pull_request": 77,
+    "checkpoint_id": "CP-W01-P1C01-DROP-C2",
+    "source_head": "36bb37a102ae3d34e35b667ae3991bad814e1d7a",
+    "branch": "production/w01-p1c01-foliage-wind-v1",
+    "pull_request": 78,
     "verified": {
       "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
       "latest_automated_closure": "809e56a9e1dc4b453e02a0b04b6875a71df21933: Pre-Unreal #880 SUCCESS + Unreal #715 SUCCESS validation-policy inherit + Branch Cleanup #3 SUCCESS",
@@ -4203,12 +4203,13 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "W01/P1C01 Drop C1 material texture binding: Unreal #731 SUCCESS on corrected head 3b2281c17...; Pre-Unreal #896 failed only because the handoff snapshot used a non-contract status token. Snapshot normalized to FAILURE with an explanatory note; no runtime change in this correction.",
+    "active_wave": "W01/P1C01 Drop C2 foliage master source is implemented on PR #78. It adds parameterized SimpleGrassWind with DistanceCullFade attenuation, no Actor Tick and no density increase. Exact-head Pre-Unreal + UE4.27.2 production-import/core proof is pending.",
     "next_actions": [
-      "1. Require fresh exact-head Pre-Unreal after normalizing the handoff status contract.",
-      "2. Preserve Unreal #731 SUCCESS as engine/core evidence for the same corrected runtime head ancestry unless policy requires rerun.",
-      "3. Merge Drop C1 when required exact-head gates are green.",
-      "4. Promote C2 foliage/wind as the next and only runtime-changing lane; parallel preparation lanes continue independently."
+      "1. Run PR #78 exact-head Pre-Unreal.",
+      "2. If Pre-Unreal is green, run/confirm UE4.27.2 production-import/core validation on the same exact head.",
+      "3. Repair only the smallest failing layer if a reproducible failure appears; add a guard when recurrence is plausible.",
+      "4. Merge C2 only when required exact-head gates are green; then open C3 stable grass/leaves material assignment.",
+      "5. Preserve PIE/device/visual/performance acceptance for later human/target-device gates."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -4219,15 +4220,15 @@
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
+        "sha": "36bb37a102ae3d34e35b667ae3991bad814e1d7a",
         "pre_unreal": {
-          "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
-          "run_id": 36145910660,
+          "sha": "36bb37a102ae3d34e35b667ae3991bad814e1d7a",
+          "run_id": 36157950233,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
-          "run_id": 36145910505,
+          "sha": "36bb37a102ae3d34e35b667ae3991bad814e1d7a",
+          "run_id": 36157950224,
           "status": "SUCCESS"
         }
       },
@@ -5226,11 +5227,11 @@
     "owner_observation_role": "Use owner play time for final symptom/pacing/visual confirmation only after reproducible technical checks have run."
   },
   "integration_train": {
-    "branch": "production/w01-p1c01-materials-vegetation-v1",
-    "baseline": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
-    "current_wave": "W01_P1C01_DROP_C1_MATERIAL_TEXTURE_BINDING",
+    "branch": "production/w01-p1c01-foliage-wind-v1",
+    "baseline": "82fc4deaf2e2a99cfebd0d8d1b99a42b5d922ffe",
+    "current_wave": "W01_P1C01_DROP_C2_LIGHTWEIGHT_FOLIAGE_WIND",
     "merge_policy": "Merge only after exact-head Pre-Unreal + UE4.27.2 core/production-import green.",
-    "proof_boundary": "No PIE/device/visual/material acceptance until matching evidence exists."
+    "proof_boundary": "Source/static only until exact-head engine proof; human visual/device/performance acceptance remains separate."
   },
   "completion_wave_map": {
     "status": "ACTIVE_PLANNING_ESTIMATE",
