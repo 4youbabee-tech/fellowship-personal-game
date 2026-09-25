@@ -1,3 +1,13 @@
+## 2026-09-25 - PR #78 Unreal #758 link root cause corrected
+
+- Exact C2 head `93c23a5b7c71ddfd25a21cef983b1a9fb6eef7eb` passed Pre-Unreal #923 but Unreal #758 failed at link.
+- Exact linker evidence: unresolved external `UMaterialExpressionDistanceCullFade::GetPrivateStaticClass` from `ShireProductionImportCommandlet.cpp.obj`.
+- Root cause: `UMaterialExpressionDistanceCullFade` is not link-usable from this external editor module in UE4.27 despite the header being visible.
+- Correction: remove the DistanceCullFade node entirely. Near/mid foliage now uses parameterized SimpleGrassWind directly; distance complexity reduction is owned by the separate `M_ProductionFoliageFar` no-WPO material that C3/C4 will bind to distant LODs.
+- This reduces implementation fragility and avoids paying extra near/mid shader work solely for cull-edge fading.
+- PG-166 now explicitly rejects regression to `MaterialExpressionDistanceCullFade` / `DistanceScaledWindWeight`.
+- Evidence boundary: STATIC-VALIDATED pending fresh exact-head Pre-Unreal + UE4.27.2 compile/import/core proof.
+
 ## 2026-09-25 - PR #78 Unreal #756 cancelled before job allocation
 
 - Corrected C2 head `c368dd8a5804d4a009dea932d8460866f321b023` passed Pre-Unreal #921.
