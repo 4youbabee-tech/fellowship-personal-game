@@ -1,3 +1,10 @@
+## 2026-09-25 - Whole-game region build coverage registered
+
+- Every canonical playable region is now represented in `Data/WholeGameWorldBuildCoverageV1.json` with a complete cross-discipline build checklist.
+- The checklist is deliberately larger than visual art: it includes story-safe interaction windows, traversal, collision/navmesh, streaming/memory, NPC/fauna life, sensory audio, cinematics, localization and acceptance evidence.
+- Later-region runtime work remains blocked until the P1C01 Gate 6/7 benchmark; however their asset/source/design packets may advance continuously in parallel.
+- New regional details must continue to be logged here before runtime implementation.
+
 ## 2026-09-25 - Whole-game source diversity expansion from Master External Resource Bible
 
 - The new 225-source external-resource Bible is adopted as a world-production sourcing map, not a canon source.
