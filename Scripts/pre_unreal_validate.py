@@ -2520,6 +2520,26 @@ for symbol in ["SM_CommonMountainRidge", "SM_CommonCliffWall", "SM_CommonRiverBa
     if symbol not in fellowship_world_cpp:
         fail(f"PG-049 Fellowship terrain runtime reference missing: {symbol}")
 
+# PG-165: Drop C1 authored material texture binding must remain deterministic and editor-only.
+pg165_importer = read(resolve_source("ShireProductionImportCommandlet.cpp"))
+for pg165_symbol in [
+    "MaterialExpressionTextureSampleParameter2D",
+    'ParameterName = TEXT("AlbedoTexture")',
+    'Line.StartsWith(TEXT("map_Kd ")',
+    "PendingAlbedoBindings",
+    "SetTextureParameterValueEditorOnly",
+    'TEXT("ShireProductionImport albedo texture bindings:',
+]:
+    if pg165_symbol not in pg165_importer:
+        fail(f"PG-165 authored albedo binding invariant missing: {pg165_symbol}")
+
+pg165_plan = json.loads(read(ROOT / "Data" / "P1C01MaterialsVegetationPlanV1.json"))
+if pg165_plan.get("status") != "C1_ALBEDO_BINDING_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-165 Drop C1 material plan status changed")
+if "AlbedoTexture" not in json.dumps(pg165_plan):
+    fail("PG-165 Drop C1 lost AlbedoTexture contract")
+
+
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
 pg164_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
