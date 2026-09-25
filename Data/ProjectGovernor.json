@@ -4339,7 +4339,7 @@
       "cp56/fellowship-experience-megapass-v1",
       "work/automation-first-runtime-observation"
     ],
-    "cleanup_rule": "After PR #70 lands, Data/BranchCleanupPlan.json is authoritative for remote branch-ref cleanup. Preserve develop, main and archive/generated-audio-intake-v1 only; delete listed historical refs after selective salvage/supersession audit.",
+    "cleanup_rule": "After PR #70 lands, Data/BranchCleanupPlan.json deletes every approved historical/maintenance/archive ref. Preserve only develop as canonical development/programmer-handoff lane and main as stable release lane.",
     "current_short_branch": "maintenance/develop-consolidation-v1",
     "integration_baseline": "develop",
     "current_open_pr": 70,
@@ -4351,7 +4351,6 @@
       "active_branch": "maintenance/develop-consolidation-v1",
       "canonical_branch": "develop",
       "stable_release_branch": "main",
-      "archive_branch": "archive/generated-audio-intake-v1",
       "plan": "Data/BranchCleanupPlan.json",
       "audit": "Docs/BRANCH_CONSOLIDATION_AUDIT.md",
       "stale_prs_closed": [
@@ -4360,7 +4359,11 @@
         66
       ],
       "superseded_parallel_pr": 71,
-      "physical_cleanup": "Post-merge Branch Cleanup workflow deletes approved stale refs and verifies develop/main survive."
+      "physical_cleanup": "Post-merge Branch Cleanup workflow deletes approved stale refs and verifies develop/main survive.",
+      "final_survivors": [
+        "develop",
+        "main"
+      ]
     },
     "validation_cost_contract": {
       "governance_docs_maintenance": "inherit parent green proof; no engine build/package",
