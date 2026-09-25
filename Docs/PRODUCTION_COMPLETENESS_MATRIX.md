@@ -1,3 +1,10 @@
+## 2026-09-25 - W01 validator reconciliation after #881
+
+- **Pre-Unreal #881:** FAILED on stale PG-035/PG-036/PG-111 assumptions tied to builder-owned Shire ambient life and the old saturation-plan status.
+- **Runtime conclusion:** no UE4 runtime failure is inferred from #881; the failure occurred in project-structure validation before Governor/deep/engine stages.
+- **Validator correction:** guards now validate director-owned role/prop mappings, data-owned P1C01 fauna coverage, explicit single-owner budget authority, and absence of direct Shire builder ambient spawning.
+- **Fresh proof:** `03e886a6...` has Pre-Unreal #882 running and Unreal #717 pending. Status remains STATIC-VALIDATED until those finish.
+
 ## 2026-09-25 - W01 P1C01 drop 1: living-world ownership/budget convergence
 
 - **Ambient population ownership:** IMPLEMENTED in source — P1C01 builder duplicate `AShireAmbientNPC` spawning removed; `LivingWorldDirector` is the ambient crowd owner and uses the existing pool.
