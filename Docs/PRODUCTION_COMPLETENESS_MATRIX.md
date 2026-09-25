@@ -1,3 +1,10 @@
+## 2026-09-25 - Post-cleanup handoff state
+- **Branch hygiene:** PROVEN CLEAN. Branch Cleanup run #1 succeeded; live GitHub branch enumeration returned only `develop` and `main`.
+- **Programmer handoff:** canonical branch = `develop`; stable release = `main`. Historical feature/repair branches are no longer required for handoff.
+- **PR/governance metadata:** PR #72 is metadata-only reconciliation so the merged Governor/Execution Board no longer point at completed PR #70. It self-cleans after merge.
+- **Consolidated develop:** `3108b2dd6354b196d36406935057c25feab2fec2`; Pre-Unreal #865 SUCCESS. Do not infer a fresh UE compile/runtime result until the corresponding Unreal run is green.
+- **W00:** automated machine closure remains green from the prior exact evidence chain; the final human P1C01 grounding/mobility-warning tail remains unproven.
+
 ## 2026-09-25 - Final consolidation / CI-cost / launcher hardening
 - **Final branch survivor set:** `develop` + `main` only. The generated-audio archive ref is also safe-delete after registry consolidation; no branch-only WAV/UE master asset was found in its changed-file set.
 - **Canonical handoff target:** `develop`; stable release lane: `main`.
