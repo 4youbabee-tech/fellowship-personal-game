@@ -1,3 +1,11 @@
+## 2026-09-25 - PR #74 governance-transition red diagnosis
+
+- **Pre-Unreal #882/#883:** FAILED in Project Governor coherence, not UE4 runtime.
+- **Failure family:** partial W00 -> W01 control-plane transition; old PR #73/branch/W00 mode/blocking-gate state remained beside new W01 focus.
+- **Runtime impact:** no runtime conclusion can be drawn because validation stopped before engine proof.
+- **Correction:** reconcile Governor active gate, development mode, branch workflow, session handoff, integration train and MASTER_EXECUTION_BOARD together in one atomic commit.
+- **Evidence state:** W01 Drop 1 remains STATIC-VALIDATED; fresh exact-head Pre-Unreal + UE4.27.2 core validation required.
+
 ## 2026-09-25 - W01 validator reconciliation after #881
 
 - **Pre-Unreal #881:** FAILED on stale PG-035/PG-036/PG-111 assumptions tied to builder-owned Shire ambient life and the old saturation-plan status.

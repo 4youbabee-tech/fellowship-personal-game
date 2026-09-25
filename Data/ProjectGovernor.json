@@ -3718,67 +3718,37 @@
     }
   ],
   "active_gate": {
-    "id": "ARCHITECTURAL_STABILIZATION_GATE",
+    "id": "W01_P1C01_VERTICAL_SLICE_GATE",
     "status": "PARTIAL",
-    "blocks_major_feature_expansion": true,
+    "blocks_major_feature_expansion": false,
     "required_evidence": [
-      "fresh exact-head Pre-Unreal including deep + asset + governor audits",
-      "real UE4.27.2 C++ compile and deterministic production import",
-      "non-fail-fast startup + P1C01-P1C08 runtime sweep",
-      "state + continuous transition + isolated disk-save and persistence-edge roundtrip",
-      "warning-debt/material persistence gate",
-      "packaged runtime Data JSON staging/read validation",
-      "actual authored audio-bank presence/playback without -NoSound",
-      "isolated Public/Private runtime-source migration followed by exact-head UE4.27.2 recompile/runtime validation",
-      "target-device DX11 720p Low-Medium performance/memory/GC/tick profiling",
-      "chapter-specific human PIE/pacing/visual acceptance evidence"
+      "fresh exact-head Pre-Unreal for the active W01 candidate",
+      "UE4.27.2 core validation for C++/Data deltas",
+      "P1C01 human rendered review as ordered production stages land",
+      "target-device DX11 720p Low-Medium profiling before density or expensive presentation expansion",
+      "Gate 6/7 human visual, pacing and performance evidence before broad Part II/III runtime production"
     ],
-    "note": "Current canonical develop ed3587aa... is machine-green via Pre-Unreal #869 and Unreal #704, including UE4.27.2 build/import/Automation/startup/P1C01-P1C08/route-state/warning/package/data/startup/hardware. Historical real P1C01 grounding proof exists, but one final owner-side PIE confirmation on canonical post-cleanup develop remains before the W00 repair lane is closed. No DEVICE-TESTED, VISUALLY-ACCEPTED or PERFORMANCE-ACCEPTED status is inferred.",
+    "note": "W00 architectural stabilization closed on develop@809e56a9 after owner-side P1C01 grounding/warning-tail proof. W01/P1C01 is now the sole production vertical slice.",
     "enforcement": {
       "policy_file": "Data/Production100ReadinessGate.json",
       "evidence_file": "Data/PIEVerificationEvidence.json",
       "ci_guard_ids": [
-        "PG-056",
-        "PG-057",
-        "PG-100",
-        "PG-101",
-        "PG-102"
+        "PG-078",
+        "PG-111",
+        "PG-150",
+        "PG-159",
+        "PG-160"
       ],
-      "behavior": "Quarantine only the failing acceptance/merge path; repair exact-head failures while safe unrelated production continues. Machine evidence never promotes visual/device acceptance."
+      "behavior": "Validate the exact W01 candidate head; machine evidence never promotes visual/device/performance acceptance."
     },
-    "last_green_head": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
+    "last_green_head": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
     "evidence": {
-      "last_engine_proven_head": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
-      "pre_unreal": "#869 SUCCESS.",
-      "unreal_build": "#704 SUCCESS through build/import/Automation/runtime/warning/package/data/startup/hardware.",
-      "warehouse": "#232 SUCCESS; no-delta path stayed GitHub-hosted and self-hosted staging was skipped.",
-      "root_correction_boundary": "Public/Private migration and its known validator/persistent-runner correction families are machine-accepted on CP-W00-154. Do not reopen validator/Governor/root-code cleanup unless a new concrete regression appears."
+      "last_engine_proven_head": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
+      "pre_unreal": "#880 SUCCESS.",
+      "unreal_build": "#715 SUCCESS via safe validation-policy inheritance; nearest full machine proof #704.",
+      "root_correction_boundary": "W00 is closed; reopen only for a concrete new regression."
     },
-    "evidence_scope": "ed3587aa... is COMPILE-TESTED + HEADLESS/PACKAGED-RUNTIME-VALIDATED for the current automated W00 suite. Human PIE/device/visual/performance labels remain separate.",
-    "current_owner_observation": {
-      "sha": "4879a19999951354676341f032c358ac98679c44",
-      "pre_unreal": {
-        "run_number": 531,
-        "status": "SUCCESS"
-      },
-      "unreal": {
-        "run_number": 366,
-        "status": "SUCCESS",
-        "scope": [
-          "C++ build",
-          "production asset import",
-          "startup",
-          "P1C01-P1C08 chapter audit",
-          "route/story state roundtrip",
-          "warning-debt guard"
-        ]
-      },
-      "merge": {
-        "sha": "8d7247d229b5cd51e8aea5617e1e2030b38229bf",
-        "status": "MERGED_TO_DEVELOP"
-      },
-      "historical_only": true
-    }
+    "evidence_scope": "W00 close head has machine proof plus P1C01 startup-grounding/warning-tail PIE evidence; whole-chapter device/visual/performance acceptance remains separate."
   },
   "reference_only_files": [
     "Docs/CURRENT_PROJECT_STATE.md",
@@ -4150,17 +4120,16 @@
     }
   },
   "development_mode": {
-    "id": "W00_ARCHITECTURAL_STABILIZATION",
+    "id": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "status": "ACTIVE",
-    "entered_on": "2026-09-23",
-    "supersedes": "VISUAL_PRODUCTION_FIRST",
-    "reason": "Owner froze W01 and new production expansion until systemic architecture/evidence/governance stabilization is closed.",
+    "entered_on": "2026-09-25",
+    "supersedes": "W00_ARCHITECTURAL_STABILIZATION",
+    "reason": "W00 exit criteria were satisfied on canonical develop; production resumes only through the P1C01 Shire vertical slice.",
     "rules": [
-      "Fix root causes and shared contracts rather than chapter-specific patches.",
-      "Only B0 exact-head stability, B4 performance/QA and continuous-control work may execute while the freeze is active.",
-      "Do not broaden warehouse saturation, gameplay features, world regions, character production or living-world content during W00.",
-      "Machine/headless success never substitutes for PIE, target-device, pacing or visual acceptance.",
-      "Public/Private migration is an isolated architecture step and must not carry gameplay redesign."
+      "Keep P1C01 as the sole runtime production benchmark until Gate 6/7 evidence is earned.",
+      "Follow the ordered dependency chain; do not reopen historical W00 repair loops without a concrete regression.",
+      "Heavy assets remain soft/asynchronous; crowd-scale ambient actors use pooling; repeated world detail uses instancing/LOD/culling.",
+      "Machine/headless success never substitutes for PIE, target-device, pacing or visual acceptance."
     ],
     "proof_boundary": {
       "machine_evidence_cannot_promote_manual_acceptance": true,
@@ -4170,7 +4139,7 @@
         "VISUALLY-ACCEPTED",
         "PERFORMANCE-ACCEPTED"
       ],
-      "note": "Static, compile, import and headless runtime evidence remain machine evidence only. Human/device evidence is required for these labels."
+      "note": "Static/compile/headless evidence validates implementation only."
     }
   },
   "backend_completion": {
@@ -4215,7 +4184,7 @@
     "checkpoint_id": "CP-W01-001",
     "source_head": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
     "branch": "production/w01-p1c01-kickoff-v1",
-    "pull_request": null,
+    "pull_request": 74,
     "verified": {
       "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
       "latest_automated_closure": "809e56a9e1dc4b453e02a0b04b6875a71df21933: Pre-Unreal #880 SUCCESS + Unreal #715 SUCCESS validation-policy inherit + Branch Cleanup #3 SUCCESS",
@@ -4248,29 +4217,29 @@
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
+        "sha": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
         "pre_unreal": {
-          "sha": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
-          "run_id": 36074075688,
+          "sha": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
+          "run_id": 36122047603,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
-          "run_id": 36074075678,
+          "sha": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
+          "run_id": 36122047612,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
+        "sha": "ae79cf2db7e87481a03728e0ad3ca61f4d7c5c52",
         "pre_unreal": {
-          "sha": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
-          "run_id": 36114260452,
-          "status": "SUCCESS"
+          "sha": "ae79cf2db7e87481a03728e0ad3ca61f4d7c5c52",
+          "run_id": 36128503229,
+          "status": "FAILURE"
         },
         "unreal": {
-          "sha": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
-          "run_id": 36114260514,
-          "status": "SUCCESS"
+          "sha": "ae79cf2db7e87481a03728e0ad3ca61f4d7c5c52",
+          "run_id": 36128503140,
+          "status": "PENDING"
         }
       }
     }
@@ -4369,10 +4338,10 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
-    "current_short_branch": "maintenance/w00-lessons-lock-v1",
+    "current_short_branch": "production/w01-p1c01-kickoff-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 73,
-    "open_pr_policy": "PR #73 is the sole bounded W00 lessons-lock maintenance train targeting develop. It may change only governance/regression-memory/validation-policy surfaces needed to preserve learned invariants. No W01 gameplay implementation is mixed into it.",
+    "current_open_pr": 74,
+    "open_pr_policy": "PR #74 is the sole short-lived W01/P1C01 candidate targeting develop.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
       "date": "2026-09-25",
@@ -5254,11 +5223,11 @@
     "owner_observation_role": "Use owner play time for final symptom/pacing/visual confirmation only after reproducible technical checks have run."
   },
   "integration_train": {
-    "branch": "integration/comprehensive-foundation-v1",
-    "baseline": "fb7afb8e39a4186245063ddf2a46fc0df8ba6c56",
+    "branch": "production/w01-p1c01-kickoff-v1",
+    "baseline": "809e56a9e1dc4b453e02a0b04b6875a71df21933",
     "current_wave": "W01_P1C01_DROP1_AMBIENT_OWNERSHIP_BUDGET_AUTHORITY",
-    "merge_policy": "Keep PR #67 as the active W00 integration train; do not independently merge historical branches or open post-W00 feature/content work while the stabilization gate is active.",
-    "proof_boundary": "Exact parent 96398e7 passed Pre #781, Warehouse #197 and Unreal #616. The CP-W00-148 child head requires fresh exact-head proof."
+    "merge_policy": "PR #74 is the active W01 candidate targeting develop; historical W00 trains stay closed.",
+    "proof_boundary": "Fresh exact-head Pre-Unreal + UE4.27.2 core proof required before promotion."
   },
   "completion_wave_map": {
     "status": "ACTIVE_PLANNING_ESTIMATE",
@@ -5346,6 +5315,10 @@
       "W00_ARCHITECTURAL_STABILIZATION": {
         "supersedes": "VISUAL_PRODUCTION_FIRST",
         "class": "STABILIZATION"
+      },
+      "W01_P1C01_PRODUCTION_VERTICAL_SLICE": {
+        "supersedes": "W00_ARCHITECTURAL_STABILIZATION",
+        "class": "PRODUCTION"
       }
     },
     "required_manual_only_labels": [

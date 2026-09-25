@@ -1,3 +1,11 @@
+## 2026-09-25 - PR #74 repeated red isolated to incomplete W00->W01 governance transition
+
+- Pre-Unreal #882 and #883 did **not** report an Unreal/runtime regression. They failed in Project Governor coherence because some fields still described the old W00 control point while current_focus/execution_control had already moved to W01.
+- #883 errors were branch/PR handoff mismatch, development-mode mismatch, stale blocking W00 gate/freeze assumptions, MASTER_EXECUTION_BOARD still on PR #73, and a stale legacy handoff baseline.
+- Root cause: the W00 -> W01 control-plane transition was only partially updated across governance surfaces. This is metadata/governance drift, not evidence that the ambient-ownership C++ change failed.
+- Correction is being applied as one atomic multi-file commit so the branch produces one new validation head rather than another sequence of self-triggered runs.
+- Status remains **STATIC-VALIDATED / FRESH PRE-UNREAL + UE4.27.2 CORE PROOF PENDING**.
+
 ## 2026-09-25 - W01 validator follow-up after Pre-Unreal #881
 
 - Pre-Unreal #881 failed on the first W01 head because PG-035/PG-036/PG-111 still encoded the pre-W01 builder-owned Shire ambient implementation: they required direct Shire builder bird/activity assignments and the old WorldLifeSaturationPlan status.

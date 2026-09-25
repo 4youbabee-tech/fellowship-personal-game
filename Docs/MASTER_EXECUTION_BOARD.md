@@ -1,9 +1,9 @@
-## W00 lessons-lock control point — 2026-09-25
-- Canonical machine-green develop before this bounded maintenance change: `ed3587aa9d1f0025a5f10778a6be8048e2c778d1`.
-- Pre-Unreal #869: **SUCCESS**.
-- Unreal Build Validation #704: **SUCCESS** through build/import/Automation/runtime/warning/package/data/startup/hardware.
-- Active maintenance branch: `maintenance/w00-lessons-lock-v1`; purpose is regression-memory/validation-policy only, no W01 gameplay expansion.
-- Exit order: exact-head maintenance validation -> merge/self-clean -> Documents-clone PIE grounding/mobility-warning confirmation -> close W00 if clean -> open P1C01 production vertical slice.
+## W01 P1C01 control point — 2026-09-25
+- Previous lane `W00_ARCHITECTURAL_STABILIZATION`: **CLOSED** on `develop@809e56a9e1dc4b453e02a0b04b6875a71df21933`.
+- Active candidate: PR #74 on `production/w01-p1c01-kickoff-v1` targeting `develop`.
+- Active lane: **W01_P1C01_PRODUCTION_VERTICAL_SLICE**.
+- Current drop: ambient population ownership under `LivingWorldDirector` pooling + single micro-event budget authority.
+- Evidence boundary: STATIC-VALIDATED; fresh exact-head Pre-Unreal + UE4.27.2 core proof pending.
 
 # Master Execution Board
 
@@ -11,9 +11,10 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 ## Current control point
 
-- PR: #73 (bounded W00 lessons-lock maintenance; no W01 gameplay implementation)
-- Branch: `maintenance/w00-lessons-lock-v1`
-- Active lane: **W00_ARCHITECTURAL_STABILIZATION**
+- PR: #74 (bounded W01/P1C01 production candidate)
+- Branch: `production/w01-p1c01-kickoff-v1`
+- Active lane: **W01_P1C01_PRODUCTION_VERTICAL_SLICE**
+- Previous lane: **W00_ARCHITECTURAL_STABILIZATION — CLOSED**
 - Canonical integration/programmer-handoff branch: `develop`
 - Stable release branch: `main`
 - Repository branch cleanup: **COMPLETE**; remote branch query after cleanup returned only `develop` and `main`.
@@ -68,5 +69,5 @@ PG-078 compares the Governor against the master roadmap on every Pre-Unreal run.
 - Validate actual authored audio-bank presence/playback without `-NoSound`.
 - Perform isolated Public/Private runtime-source migration without gameplay redesign, then re-run exact-head Pre-Unreal and UE4.27.2 validation.
 - Run target-device DX11/720p Low-Medium profiling and chapter-specific human PIE/pacing/visual checks.
-- Only after those W00 exits may the Governor unfreeze B1/B2/B3 and open W01.
+- W00 is closed; keep broad Part II/III runtime production gated until P1C01 clears Gate 6/7 human visual/pacing/performance evidence.
 
