@@ -4165,7 +4165,7 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "W01/P1C01 mega production active. Drop B Hobbiton/Bag End architecture is implemented on the candidate branch and requires exact-head engine proof. W00 remains closed unless a concrete regression is reproduced.",
+    "rule": "W01/P1C01 mega production active. Drop C1 authored material texture binding is implemented on the candidate branch. Prove exact head before C2 foliage wind/WPO.",
     "machine_baseline": {
       "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
       "pre_unreal": "#885 SUCCESS",
@@ -4182,10 +4182,10 @@
     "5. Keep Arabic localization runtime implementation isolated from the active world-production PR."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W01-P1C01-DROP-B",
-    "source_head": "b9a312ce2321f55a58bc5f24dd478b4839871006",
-    "branch": "production/w01-p1c01-hobbiton-bagend-v1",
-    "pull_request": 76,
+    "checkpoint_id": "CP-W01-P1C01-DROP-C1",
+    "source_head": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
+    "branch": "production/w01-p1c01-materials-vegetation-v1",
+    "pull_request": null,
     "verified": {
       "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
       "latest_automated_closure": "809e56a9e1dc4b453e02a0b04b6875a71df21933: Pre-Unreal #880 SUCCESS + Unreal #715 SUCCESS validation-policy inherit + Branch Cleanup #3 SUCCESS",
@@ -4202,12 +4202,12 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "W01/P1C01 Drop B architecture implemented. PR #76 Pre-Unreal reds were governance handoff-baseline drift only; runtime architecture code has not yet reached engine validation. Handoff now points to the actual last-green exact head b9a312ce with #888/#723 SUCCESS.",
+    "active_wave": "W01/P1C01 Drop C1 materials: bind authored Shire MTL albedo textures into deterministic production material instances; exact-head engine proof pending.",
     "next_actions": [
-      "1. Re-run PR #76 exact-head Pre-Unreal with corrected handoff baseline.",
-      "2. If Pre-Unreal is green, allow UE4.27.2 core validation to run on the same head.",
-      "3. If both are green, merge Drop B and begin Drop C materials/vegetation.",
-      "4. Treat future Governor branch/PR/baseline drift as a control-plane defect and update all handoff surfaces atomically."
+      "1. Open bounded Drop C1 PR targeting develop.",
+      "2. Require Pre-Unreal + UE4.27.2 production import/core validation on exact head.",
+      "3. If green, implement C2 lightweight foliage master + parameterized wind WPO.",
+      "4. Do not increase foliage density before target-device profiling."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -4218,29 +4218,29 @@
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "b9a312ce2321f55a58bc5f24dd478b4839871006",
+        "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
         "pre_unreal": {
-          "sha": "b9a312ce2321f55a58bc5f24dd478b4839871006",
-          "run_id": 36140117592,
+          "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
+          "run_id": 36145910660,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "b9a312ce2321f55a58bc5f24dd478b4839871006",
-          "run_id": 36140117645,
+          "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
+          "run_id": 36145910505,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "c7c136b8ac0b849296de682049bd9b1a99512aa7",
+        "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
         "pre_unreal": {
-          "sha": "c7c136b8ac0b849296de682049bd9b1a99512aa7",
-          "run_id": 36143992150,
-          "status": "FAILURE"
+          "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
+          "run_id": 36145910660,
+          "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "c7c136b8ac0b849296de682049bd9b1a99512aa7",
-          "run_id": 36143992212,
-          "status": "PENDING"
+          "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
+          "run_id": 36145910505,
+          "status": "SUCCESS"
         }
       }
     }
@@ -5224,11 +5224,11 @@
     "owner_observation_role": "Use owner play time for final symptom/pacing/visual confirmation only after reproducible technical checks have run."
   },
   "integration_train": {
-    "branch": "production/w01-p1c01-hobbiton-bagend-v1",
-    "baseline": "430d0a26f3b441f072740fc58285c0c0eb842d8c",
-    "current_wave": "W01_P1C01_DROP_B_HOBBITON_BAGEND_ARCHITECTURE",
-    "merge_policy": "Merge only after exact-head Pre-Unreal + UE4.27.2 core green. W00 remains closed.",
-    "proof_boundary": "Source/static only until engine proof; human visual/device/performance acceptance remains separate."
+    "branch": "production/w01-p1c01-materials-vegetation-v1",
+    "baseline": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
+    "current_wave": "W01_P1C01_DROP_C1_MATERIAL_TEXTURE_BINDING",
+    "merge_policy": "Merge only after exact-head Pre-Unreal + UE4.27.2 core/production-import green.",
+    "proof_boundary": "No PIE/device/visual/material acceptance until matching evidence exists."
   },
   "completion_wave_map": {
     "status": "ACTIVE_PLANNING_ESTIMATE",
