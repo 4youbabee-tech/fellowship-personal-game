@@ -3737,7 +3737,8 @@
         "PG-111",
         "PG-150",
         "PG-159",
-        "PG-160"
+        "PG-160",
+        "PG-163"
       ],
       "behavior": "Validate the exact W01 candidate head; machine evidence never promotes visual/device/performance acceptance."
     },
