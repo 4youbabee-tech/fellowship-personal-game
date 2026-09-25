@@ -1,3 +1,16 @@
+## 2026-09-25 - Owner private-offline asset policy adopted
+
+- Owner policy is now recorded as `DEC-037` in `Data/ProjectGovernor.json`.
+- New authority file: `Data/PrivateOfflineAssetPolicyV1.json`.
+- Two explicit lanes now exist:
+  - `PRIVATE_OFFLINE_ONLY`: commercial-clearance uncertainty does not block the owner's local/offline experimental build by itself. Assets stay tagged, replaceable and non-distributable.
+  - `DISTRIBUTABLE_FRAMEWORK`: remains strict; only assets with clear redistribution/commercial entitlement may ship in the reusable/sellable Framework.
+- Provider-access rules are unchanged: no login/paywall/DRM/anti-bot bypass or prohibited scraping.
+- Private payload isolation root: `SourceAssets/PrivateOffline/`; payloads are ignored by Git and must not become hard dependencies of the distributable Framework.
+- Bulk link/file intake registry is ready at `Data/PrivateOfflineAssetIntakeQueueV1.json`.
+- GitHub repository visibility was checked through the connected repository metadata and is currently `private`.
+- This policy changes asset classification/export eligibility only; it does not promote assets to READY_FOR_IMPORT/INTEGRATED/ACCEPTED without technical/engine evidence.
+
 ## 2026-09-25 - Parallel Warehouse bulk-intake V2 active
 
 - Preparation branch: `warehouse/p1c01-bulk-intake-v2`, based on the current merged C1 baseline. This is **not** a second runtime-changing lane.
