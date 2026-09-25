@@ -1,3 +1,11 @@
+## 2026-09-26 - P1C01 source-to-production bridge and local material pipeline
+
+- **Source packet:** `Data/P1C01SourceExtractionV1.json` converts the supplied PDFs into a compact Shire/Hobbiton/Bag End implementation packet while preserving source priority and VISUAL-ONLY boundaries.
+- **Production bridge:** `Data/P1C01SourceToProductionBridgeV1.json` maps source-grounded needs directly to the active material/warehouse candidate lanes.
+- **One-command local path:** `Scripts/run_p1c01_material_pipeline.ps1` stages Poly Haven + ambientCG, audits warehouse receipts/hashes, prepares the P1C01 material intake, and can optionally call the real UE4 production importer with `-RunUnrealImport`.
+- **CI independence:** this local preparation/import entry point exists specifically so public-source/material work can continue when GitHub-hosted checks or the Actions queue are unavailable; it does not bypass technical validation.
+- **Evidence boundary:** tooling is authored but not claimed as UE4-import-tested in this session because no self-hosted UE4 commandlet log has run on this branch.
+
 ## 2026-09-26 - Massive build accelerated with source-PDF indexing and material-intake tooling
 
 - **Parallel preparation authorized:** source/PDF, warehouse, materials, audio, character/animation and later-region preparation may proceed together; runtime-changing integration remains serialized.
