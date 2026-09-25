@@ -25,3 +25,7 @@ SourceAssets/ExternalLicensed/Inbox/
 *.cache
 .DS_Store
 Thumbs.db
+
+# Owner private-offline experimental media. Keep payloads out of repository history.
+SourceAssets/PrivateOffline/
+!SourceAssets/PrivateOffline/README.md

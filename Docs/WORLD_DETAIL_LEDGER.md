@@ -1,3 +1,29 @@
+## 2026-09-25 - Whole-game source diversity expansion from Master External Resource Bible
+
+- The new 225-source external-resource Bible is adopted as a world-production sourcing map, not a canon source.
+- Whole-game world detail may now draw from broader generic/open/licensed material, vegetation, architecture, prop, character-base, animation, VFX, audio, terrain/scanning and authoring-tool lanes while story/location identity remains governed by project canon sources.
+- P1C01 remains the first fully assembled benchmark, but warehouse preparation now explicitly covers every region and biome through the nine `BigProductionBuildLaunchV1` waves.
+- LOTR/fan/franchise-specific search lanes remain reference/quarantine unless separately cleared; generic sources are preferred for production building blocks.
+- Real-world terrain/GIS/scanning sources inform authored fantasy terrain and material creation only; they do not redefine Middle-earth geography.
+- New external world-detail assets remain subject to scale/pivot/UV/collision/LOD/material/overdraw/memory review before READY_FOR_IMPORT or integration.
+
+## 2026-09-25 - Global world rule: playable-film safe windows
+
+- Every major chapter/world state must be designed as: **Locked Canon Beat -> Playable Safe Window -> Locked/Bounded Set-Piece -> Persistent World-State Change -> Player Control** where chronology permits.
+- Safe windows are where world detail becomes gameplay: interiors, props, NPC routines, fauna, ambient conversations, interaction objects, optional tasks, discovery, weather/audio/foley and local traversal.
+- These additions exist to make the player feel physically present inside the film continuity; they must never create a contradictory route, outcome, character presence or chronology.
+- Post-beat world state must visibly/sonically communicate what changed before normal exploration resumes.
+- This is a whole-game world rule covering every chapter and region from the opening through the final ending. P1C01 Bag End/Shire is only the first benchmark pattern; later chapters/regions must apply the same doctrine with chapter-specific canon constraints.
+- New safe-window content must still be recorded in this ledger before runtime implementation.
+
+## 2026-09-25 - P1C01 Warehouse visual/sensory stock expansion
+
+- New Shire-support stock is registered for later art-directed use: pastoral grass/soil/leaf-litter/path breakup, farm outbuilding silhouettes, cave/architecture support kits, multi-surface footsteps, hearth fire, wood/metal interactions and daytime bird ambience.
+- These are production-support resources, not new canon claims. Hero Hobbit-hole/Bag End silhouettes and named-character identity still require project-specific art direction and approval.
+- Source 11 performance rules remain binding: foliage/material overdraw, texture memory, HISM/LOD/cull cost and audio concurrency are measured before density expansion.
+- All external stock must retain provenance/license records and pass format/intake review before READY_FOR_IMPORT. Animated production assets remain FBX-only; production textures remain PNG/TGA.
+- Runtime world ownership, quest IDs, save keys, LivingWorld/NPC systems and active C2 foliage integration are untouched by this preparation lane.
+
 # WORLD DETAIL LEDGER
 
 ## 2026-09-25 - W01 P1C01 Drop C1: authored material texture binding

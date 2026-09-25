@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "batch_id": "WAREHOUSE_CC0_AUDIO_MUSIC_V1",
+  "batch_id": "WAREHOUSE_CC0_AUDIO_MUSIC_V3",
   "status": "AUTHORIZED_FOR_STAGING",
   "provider": "OPENGAMEART",
   "license": "CC0",
@@ -137,6 +137,72 @@
         "water",
         "general foley"
       ]
+    },
+    {
+      "id": "OGA_DIFFERENT_STEPS_SURFACES",
+      "category": "SFX_FOOTSTEPS_MULTI_SURFACE",
+      "source_page": "https://opengameart.org/content/different-steps-on-wood-stone-leaves-gravel-and-mud",
+      "download_url": "https://opengameart.org/sites/default/files/%5Bkdd%5DDifferentSteps_0.zip",
+      "filename": "DifferentSteps.zip",
+      "observed_page_license": "CC0",
+      "use": [
+        "P1C01 wood/stone/leaves/gravel/mud footsteps",
+        "surface-driven footstep bank intake"
+      ]
+    },
+    {
+      "id": "OGA_FIREPLACE_LOOP",
+      "category": "SFX_FIREPLACE",
+      "source_page": "https://opengameart.org/content/fireplace-sound-loop",
+      "download_url": "https://opengameart.org/sites/default/files/fire.wav",
+      "filename": "fire.wav",
+      "observed_page_license": "CC0",
+      "use": [
+        "Bag End hearth",
+        "warm interior fireplace emitter"
+      ]
+    },
+    {
+      "id": "OGA_100_CC0_WOOD_METAL_SFX",
+      "category": "SFX_WOOD_METAL",
+      "source_page": "https://opengameart.org/content/100-cc0-metal-and-wood-sfx",
+      "download_url": "https://opengameart.org/sites/default/files/100-CC0-wood-metal-SFX.zip",
+      "filename": "100-CC0-wood-metal-SFX.zip",
+      "observed_page_license": "CC0",
+      "use": [
+        "doors/keys/latches",
+        "wood creaks",
+        "tools/farm support",
+        "metal/wood interaction bank"
+      ]
+    },
+    {
+      "id": "OGA_AMBIENT_BIRD_SOUNDS",
+      "category": "AMBIENCE_BIRDS",
+      "source_page": "https://opengameart.org/content/ambient-bird-sounds",
+      "download_url": "https://opengameart.org/sites/default/files/birds-isaiah658_0.ogg",
+      "filename": "birds-isaiah658.ogg",
+      "observed_page_license": "CC0",
+      "source_format": "OGG",
+      "production_master_requirement": "Convert/audition to WAV master before UE import.",
+      "use": [
+        "P1C01 daytime Shire bird bed",
+        "spot-call source extraction candidate"
+      ]
+    },
+    {
+      "id": "OGA_TINYSIZED_FANTASY_SFX",
+      "category": "SFX_HOUSEHOLD_INTERACTION",
+      "source_page": "https://opengameart.org/content/fantasy-sound-effects-tinysized-sfx",
+      "download_url": "https://opengameart.org/sites/default/files/tinysized.zip",
+      "filename": "tinysized.zip",
+      "observed_page_license": "CC0",
+      "use": [
+        "Bag End books/paper/bottles/corks/pouches/keys/creaks",
+        "leather sheath and metal interaction support",
+        "water pour/drop support",
+        "general Shire household interaction bank"
+      ]
     }
   ],
   "intake_expectations": [
@@ -144,6 +210,7 @@
     "Downloads are direct OpenGameArt file endpoints discovered from the item pages.",
     "Each staged file receives SHA256, byte size, source page and source URL in a receipt.",
     "ZIP archives remain STAGED until extracted/scanned/classified; WAV files remain STAGED until audio intake checks pass.",
-    "These tracks are generic CC0 candidates and are not replacements for final authored cinematic score identity."
+    "These tracks are generic CC0 candidates and are not replacements for final authored cinematic score identity.",
+    "Non-WAV source files may be staged as intake sources, but must be converted/auditioned into durable WAV masters before UE import."
   ]
 }

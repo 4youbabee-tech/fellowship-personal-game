@@ -1,7 +1,7 @@
 {
   "schema_version": 2,
   "registry_id": "GLOBAL_WAREHOUSE_SOURCE_REGISTRY_V2",
-  "status": "ACTIVE_GLOBAL_PLUS_RESOURCE_BIBLE_09",
+  "status": "ACTIVE_GLOBAL_PLUS_MASTER_EXTERNAL_RESOURCE_BIBLE_V1",
   "authority": "Data/ProjectGovernor.json",
   "purpose": "Global multi-source warehouse intake registry with staged automation, auth boundaries, provenance and production-state controls.",
   "sources": [
@@ -428,14 +428,15 @@
     },
     {
       "id": "REPLICA_STUDIOS",
-      "license": "PER_ITEM_OR_SERVICE_TERMS",
-      "access": "VARIES",
-      "automation": "AUTH_REQUIRED",
+      "license": "DISABLED",
+      "access": "CLOSED",
+      "automation": "NONE",
       "categories": [
         "VOICE_TTS"
       ],
-      "priority": "MEDIUM",
-      "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+      "priority": "DISABLED",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25",
+      "notes": "Service shut down. Historical note only; do not route new work here. Use currently active authorized voice/TTS providers instead."
     },
     {
       "id": "ALTERED_STUDIO",
@@ -1173,6 +1174,524 @@
       ],
       "priority": "MEDIUM",
       "source_document": "09_EXTERNAL_HELPFUL_RESOURCES_BIBLE_PERSONAL_LOCAL"
+    },
+    {
+      "id": "SPEEDTREE",
+      "license": "PER_LICENSE",
+      "access": "MANUAL",
+      "automation": "MANUAL_REVIEW",
+      "categories": [
+        "VEGETATION",
+        "TREE_AUTHORING"
+      ],
+      "priority": "HIGH",
+      "notes": "Professional vegetation authoring/library; verify UE4.27-compatible export path, use low LODs/atlases.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "XFROG",
+      "license": "PER_PACK_LICENSE",
+      "access": "PUBLIC_SITE",
+      "automation": "MANUAL_REVIEW",
+      "categories": [
+        "VEGETATION",
+        "TREE_LIBRARY"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Botanical variety source; verify formats/game license and optimize.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "GLOBE_PLANTS",
+      "license": "PER_PACK_LICENSE",
+      "access": "MARKETPLACE",
+      "automation": "MANUAL_REVIEW",
+      "categories": [
+        "VEGETATION",
+        "PLANT_LIBRARY"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Prefer game-ready/low-poly variants; inspect material count and masked overdraw.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "MATERIAL_MAKER",
+      "license": "OPEN_SOURCE_TOOL",
+      "access": "PUBLIC_SITE",
+      "automation": "TOOL_ONLY",
+      "categories": [
+        "MATERIAL_AUTHORING"
+      ],
+      "priority": "HIGH",
+      "notes": "Open procedural material authoring; useful for original channel-packed PBR materials.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "MATERIALIZE",
+      "license": "FREE_TOOL",
+      "access": "PUBLIC_SITE",
+      "automation": "TOOL_ONLY",
+      "categories": [
+        "MATERIAL_AUTHORING"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Generate PBR maps from owned/open photographs; tooling, not content license replacement.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "ACTIONVFX",
+      "license": "PER_PRODUCT_ROYALTY_FREE",
+      "access": "PUBLIC_SITE",
+      "automation": "MANUAL_REVIEW",
+      "categories": [
+        "VFX",
+        "FIRE",
+        "SMOKE",
+        "EXPLOSIONS"
+      ],
+      "priority": "HIGH",
+      "notes": "Use sprites/flipbooks/preprocessed elements; optimize for UE4.27.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "EMBERGEN",
+      "license": "TOOL_LICENSE",
+      "access": "PUBLIC_SITE",
+      "automation": "TOOL_ONLY",
+      "categories": [
+        "VFX_AUTHORING",
+        "FIRE",
+        "SMOKE"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Bake optimized flipbooks; avoid heavy runtime volumetrics on ~2GB VRAM.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "JANGAFX_FREE_VFX",
+      "license": "PER_RESOURCE",
+      "access": "PUBLIC_SITE",
+      "automation": "MANUAL_REVIEW",
+      "categories": [
+        "VFX",
+        "FLIPBOOK"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Free VFX resources; verify each resource license.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "ACCURIG",
+      "license": "TOOL_LICENSE",
+      "access": "PUBLIC_SITE",
+      "automation": "MANUAL_TOOL",
+      "categories": [
+        "RIGGING",
+        "CHARACTER"
+      ],
+      "priority": "HIGH",
+      "notes": "Free humanoid auto-rigging option; validate UE4 skeleton mapping.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "MAKEHUMAN",
+      "license": "OPEN_SOURCE_TOOL_AND_GENERATED_ASSET_TERMS",
+      "access": "PUBLIC_SITE",
+      "automation": "MANUAL_TOOL",
+      "categories": [
+        "CHARACTER_BASE",
+        "NPC"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Useful for original NPC bases; cleanup skeleton/materials before UE.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "DEEPMOTION",
+      "license": "SERVICE_TERMS",
+      "access": "PUBLIC_SERVICE",
+      "automation": "MANUAL_TOOL",
+      "categories": [
+        "MOCAP",
+        "ANIMATION"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Video-to-mocap for original motion; output rights depend on plan.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "PLASK",
+      "license": "SERVICE_TERMS",
+      "access": "PUBLIC_SERVICE",
+      "automation": "MANUAL_TOOL",
+      "categories": [
+        "MOCAP",
+        "ANIMATION"
+      ],
+      "priority": "MEDIUM",
+      "notes": "AI mocap/editor; UE-friendly exports, plan limits apply.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "CASCADEUR",
+      "license": "TOOL_LICENSE",
+      "access": "PUBLIC_SITE",
+      "automation": "MANUAL_TOOL",
+      "categories": [
+        "ANIMATION_AUTHORING",
+        "ANIMATION_CLEANUP"
+      ],
+      "priority": "HIGH",
+      "notes": "Useful for cleanup and hand-authored motion.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "SCOTT_BUCKLEY",
+      "license": "PER_TRACK_LICENSE",
+      "access": "PUBLIC_SITE",
+      "automation": "MANUAL_REVIEW",
+      "categories": [
+        "MUSIC",
+        "CINEMATIC_SCORE"
+      ],
+      "priority": "HIGH",
+      "notes": "Strong cinematic/orchestral source; preserve exact track license/attribution.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "FREEPD",
+      "license": "PUBLIC_DOMAIN_CATALOG",
+      "access": "PUBLIC_SITE",
+      "automation": "MANUAL_REVIEW",
+      "categories": [
+        "MUSIC"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Low-risk temp music source; verify current public-domain statement on download date.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "TABLER_ICONS",
+      "license": "OPEN_SOURCE",
+      "access": "PUBLIC_SITE",
+      "automation": "DIRECT_MANUAL",
+      "categories": [
+        "UI",
+        "ICONS"
+      ],
+      "priority": "HIGH",
+      "notes": "Clean lightweight UI icon set.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "GOOGLE_FONTS",
+      "license": "OFL_OR_PER_FONT",
+      "access": "PUBLIC_SITE",
+      "automation": "DIRECT_MANUAL",
+      "categories": [
+        "FONTS",
+        "ARABIC_UI"
+      ],
+      "priority": "HIGH",
+      "notes": "Prefer OFL families such as Noto/Cairo/Tajawal; bundle locally where allowed.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "POEDIT",
+      "license": "TOOL_LICENSE",
+      "access": "PUBLIC_SITE",
+      "automation": "MANUAL_TOOL",
+      "categories": [
+        "LOCALIZATION_TOOL"
+      ],
+      "priority": "HIGH",
+      "notes": "Works with UE PO export/import for local Arabic workflow.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "USGS_EARTHEXPLORER",
+      "license": "PUBLIC_DOMAIN_OR_DATASET_TERMS",
+      "access": "PUBLIC_SITE",
+      "automation": "MANUAL_BULK",
+      "categories": [
+        "TERRAIN_REFERENCE",
+        "HEIGHTMAP"
+      ],
+      "priority": "HIGH",
+      "notes": "Generic elevation/terrain inspiration; not Middle-earth canon geography.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "OPENTOPOGRAPHY",
+      "license": "PER_DATASET",
+      "access": "API_OR_ACCOUNT",
+      "automation": "API_MANUAL",
+      "categories": [
+        "TERRAIN_REFERENCE",
+        "HEIGHTMAP"
+      ],
+      "priority": "HIGH",
+      "notes": "Excellent DEM/LiDAR source; retain dataset metadata/license.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "QGIS",
+      "license": "OPEN_SOURCE_TOOL",
+      "access": "PUBLIC_SITE",
+      "automation": "TOOL_ONLY",
+      "categories": [
+        "GIS",
+        "HEIGHTMAP_TOOL"
+      ],
+      "priority": "HIGH",
+      "notes": "Crop/reproject/process DEMs and produce authored heightmap inputs.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "GAEA",
+      "license": "PERSONAL_OR_COMMERCIAL_BY_EDITION",
+      "access": "PUBLIC_SITE",
+      "automation": "MANUAL_TOOL",
+      "categories": [
+        "TERRAIN_AUTHORING"
+      ],
+      "priority": "HIGH",
+      "notes": "Strong procedural terrain authoring; Community Edition private-use limits must be respected.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "WORLD_MACHINE",
+      "license": "PER_EDITION",
+      "access": "PUBLIC_SITE",
+      "automation": "MANUAL_TOOL",
+      "categories": [
+        "TERRAIN_AUTHORING"
+      ],
+      "priority": "MEDIUM",
+      "notes": "UE terrain pipeline; check edition resolution/export limits.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "REALITYSCAN",
+      "license": "PER_PRODUCT_TERMS",
+      "access": "PUBLIC_SITE",
+      "automation": "MANUAL_TOOL",
+      "categories": [
+        "PHOTOGRAMMETRY",
+        "SCANNING"
+      ],
+      "priority": "HIGH",
+      "notes": "Create original scans; decimate/retopo/bake/export FBX.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "MESHROOM",
+      "license": "OPEN_SOURCE_TOOL",
+      "access": "PUBLIC_SITE",
+      "automation": "TOOL_ONLY",
+      "categories": [
+        "PHOTOGRAMMETRY"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Offline photogrammetry for own photos; cleanup required.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "MESHLAB",
+      "license": "OPEN_SOURCE_TOOL",
+      "access": "PUBLIC_SITE",
+      "automation": "TOOL_ONLY",
+      "categories": [
+        "MESH_CLEANUP",
+        "DECIMATION"
+      ],
+      "priority": "HIGH",
+      "notes": "Repair/decimation before Blender/FBX export.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "CLOUDCOMPARE",
+      "license": "OPEN_SOURCE_TOOL",
+      "access": "PUBLIC_SITE",
+      "automation": "TOOL_ONLY",
+      "categories": [
+        "POINT_CLOUD",
+        "MESH_CLEANUP"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Scan cleanup/measurement/decimation tool.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "BLENDER",
+      "license": "OPEN_SOURCE_TOOL",
+      "access": "PUBLIC_SITE",
+      "automation": "TOOL_ONLY",
+      "categories": [
+        "DCC",
+        "MODELING",
+        "RIGGING",
+        "ANIMATION"
+      ],
+      "priority": "CRITICAL",
+      "notes": "Primary DCC; animated production exports as FBX for UE4.27.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "GIMP",
+      "license": "OPEN_SOURCE_TOOL",
+      "access": "PUBLIC_SITE",
+      "automation": "TOOL_ONLY",
+      "categories": [
+        "TEXTURE_EDITING",
+        "IMAGE"
+      ],
+      "priority": "HIGH",
+      "notes": "Use PNG/TGA outputs; no BMP production path.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "KRITA",
+      "license": "OPEN_SOURCE_TOOL",
+      "access": "PUBLIC_SITE",
+      "automation": "TOOL_ONLY",
+      "categories": [
+        "CONCEPT",
+        "TEXTURE_PAINTING",
+        "UI_ART"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Original 2D art and texture painting.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "AUDACITY",
+      "license": "OPEN_SOURCE_TOOL",
+      "access": "PUBLIC_SITE",
+      "automation": "TOOL_ONLY",
+      "categories": [
+        "AUDIO_EDITING"
+      ],
+      "priority": "HIGH",
+      "notes": "Prepare clean WAV masters and loops.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "REAPER",
+      "license": "TOOL_LICENSE",
+      "access": "PUBLIC_SITE",
+      "automation": "MANUAL_TOOL",
+      "categories": [
+        "AUDIO_EDITING",
+        "MIXING"
+      ],
+      "priority": "MEDIUM",
+      "notes": "DAW for dialogue/SFX bank preparation.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "UE427_AI_DOCS",
+      "license": "EPIC_DOCUMENTATION",
+      "access": "PUBLIC_DOCS",
+      "automation": "REFERENCE",
+      "categories": [
+        "AI",
+        "BEHAVIOR_TREE",
+        "PERCEPTION",
+        "NAVIGATION"
+      ],
+      "priority": "CRITICAL",
+      "notes": "Primary technical reference for UE4.27 AI; prefer native/local systems for low-spec target.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "UE427_LOCALIZATION_DOCS",
+      "license": "EPIC_DOCUMENTATION",
+      "access": "PUBLIC_DOCS",
+      "automation": "REFERENCE",
+      "categories": [
+        "LOCALIZATION",
+        "FTEXT",
+        "RTL"
+      ],
+      "priority": "CRITICAL",
+      "notes": "Primary technical reference for UE4.27 localization and FText/Localization Dashboard.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "LEVEL80_REFERENCE",
+      "license": "REFERENCE_ONLY",
+      "access": "PUBLIC_SITE",
+      "automation": "REFERENCE",
+      "categories": [
+        "ENVIRONMENT_ART",
+        "MATERIALS",
+        "LIGHTING",
+        "OPTIMIZATION"
+      ],
+      "priority": "MEDIUM",
+      "notes": "Production methodology reference only.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "UNREAL_MARKETPLACE_LEGACY",
+      "license": "DISABLED",
+      "access": "LEGACY_OR_RETIRED",
+      "automation": "REDIRECT_ONLY",
+      "categories": [
+        "LEGACY_SOURCE"
+      ],
+      "priority": "DISABLED",
+      "notes": "Do not use for new production. Redirect to FAB.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "TEXTURE_HAVEN_LEGACY",
+      "license": "DISABLED",
+      "access": "LEGACY_OR_RETIRED",
+      "automation": "REDIRECT_ONLY",
+      "categories": [
+        "LEGACY_SOURCE"
+      ],
+      "priority": "DISABLED",
+      "notes": "Do not use for new production. Redirect to POLY_HAVEN.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "CC0_TEXTURES_LEGACY",
+      "license": "DISABLED",
+      "access": "LEGACY_OR_RETIRED",
+      "automation": "REDIRECT_ONLY",
+      "categories": [
+        "LEGACY_SOURCE"
+      ],
+      "priority": "DISABLED",
+      "notes": "Do not use for new production. Redirect to AMBIENTCG.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "ARMORLAB_OLD_DOMAIN",
+      "license": "DISABLED",
+      "access": "LEGACY_OR_RETIRED",
+      "automation": "REDIRECT_ONLY",
+      "categories": [
+        "LEGACY_SOURCE"
+      ],
+      "priority": "DISABLED",
+      "notes": "Do not use for new production. Redirect to ARMORPAINT / MATERIAL_MAKER.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+    },
+    {
+      "id": "TERRAIN_PARTY",
+      "license": "DISABLED",
+      "access": "LEGACY_OR_RETIRED",
+      "automation": "REDIRECT_ONLY",
+      "categories": [
+        "LEGACY_SOURCE"
+      ],
+      "priority": "DISABLED",
+      "notes": "Do not use for new production. Redirect to USGS_EARTHEXPLORER / OPENTOPOGRAPHY / GAEA.",
+      "source_document": "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
     }
   ],
   "rules": [
@@ -1250,5 +1769,9 @@
     ]
   },
   "source_count": 102,
-  "source_bible_import": "Data/ResourceBibleSourceExpansionV1.json"
+  "source_bible_import": "Data/ResourceBibleSourceExpansionV1.json",
+  "source_documents": [
+    "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+  ],
+  "notes": " 2026-09-25: Master External Resource Bible adoption expanded high-value production/tooling lanes and corrected disabled/legacy sources."
 }

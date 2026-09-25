@@ -2,7 +2,7 @@
   "schema_version": 1,
   "policy_id": "WAREHOUSE_PROVIDER_ACCESS_POLICY_V1",
   "status": "ACTIVE",
-  "rule": "Asset license and website access policy are independent gates. Free/CC0 content does not authorize scraping, bypassing authentication, or bulk automation.",
+  "rule": "Asset-license classification and website access policy are independent gates. PRIVATE_OFFLINE_ONLY may relax commercial-clearance blocking for the owner's local experiment, but it never authorizes scraping, authentication/paywall/DRM bypass, or prohibited bulk automation.",
   "classes": {
     "PUBLIC_API_AUTO": {
       "meaning": "Provider documents a public API or stable public machine endpoint suitable for automated staging.",
@@ -63,6 +63,8 @@
     "No automated source where terms prohibit bots, scraping or bulk download.",
     "Rate-limit public resolvers and prefer provider APIs.",
     "Every staged file records source/provider/license/hash/state.",
-    "Quaternius unresolved packs remain candidates; do not fabricate direct download URLs."
-  ]
+    "Quaternius unresolved packs remain candidates; do not fabricate direct download URLs.",
+    "PRIVATE_OFFLINE_ONLY does not authorize provider-access bypass or redistribution."
+  ],
+  "private_offline_rule": "Unknown or non-commercially-cleared assets may be catalogued or locally integrated only when explicitly tagged PRIVATE_OFFLINE_ONLY and kept out of distributable/commercial exports. Access-method restrictions remain unchanged."
 }

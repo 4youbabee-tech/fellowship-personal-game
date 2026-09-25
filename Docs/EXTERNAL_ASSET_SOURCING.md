@@ -33,3 +33,14 @@ The visual-production plan benefits from Fab, Megascans, Sketchfab, commercial m
 An asset being downloadable or purchasable does **not** automatically grant rights to somebody else's franchise, trademark, costume design, actor likeness, movie prop, or game model. "Lord of the Rings" fan models, ripped movie/game assets, branded editorial models, exact actor likenesses, and copied film dialogue are blocked unless separate rights/clearance exists.
 
 The production target is an original project-owned interpretation informed by research, not a repository of ripped franchise assets.
+
+## Private offline vs distributable framework
+
+The owner has explicitly separated two asset lanes:
+
+- **PRIVATE_OFFLINE_ONLY:** for the owner's local, non-public interactive-film build. Commercial-clearance uncertainty does not by itself block local experimental intake. The asset must stay tagged as private-only, retain source/provenance information when known, remain replaceable, and stay outside every distributable/commercial Framework package.
+- **DISTRIBUTABLE_FRAMEWORK:** for any reusable product, public build, marketplace package, sample project or future commercial release. This lane remains strict: assets require clear redistribution/commercial entitlement plus provenance/attribution/receipt metadata as applicable.
+
+This split does **not** relax provider access rules. Do not bypass login, account entitlement, paywalls, DRM, anti-bot controls or prohibited scraping. A downloadable asset is not automatically redistributable, and PRIVATE_OFFLINE_ONLY is not a rights claim.
+
+The preferred local isolation root is `SourceAssets/PrivateOffline`. Framework code/data must not hard-require those payloads; private assets should remain swappable through data/soft-reference boundaries where runtime integration needs them.

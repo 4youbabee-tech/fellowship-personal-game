@@ -1,3 +1,51 @@
+## 2026-09-25 - Master External Resource Bible audited and adopted
+
+- Audited the uploaded 68-page `SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25`, containing 225 classified external sources/tools.
+- Adopted it globally as sourcing authority through Governor decision `DEC-039`; it does not override story/canon sources or `DEC-038`.
+- Created `Data/MasterExternalResourceBibleAdoptionV1.json` with high-value adoption groups, conditional sources, reference/quarantine sources, disabled/redirected legacy sources and eight structured source waves.
+- Expanded `Data/GlobalWarehouseSourceRegistryV2.json` from 102 to 142 registered sources/tools on the first adoption pass.
+- Corrected `REPLICA_STUDIOS` to DISABLED and added redirects for legacy Unreal Marketplace, Texture Haven, CC0 Textures, old ArmorLab and Terrain.party routes.
+- Added high-value missing lanes including SpeedTree, Xfrog, Globe Plants, Material Maker, Materialize, ActionVFX, EmberGen, AccuRIG, MakeHuman, DeepMotion, Plask, Cascadeur, Scott Buckley, FreePD, Tabler Icons, Google Fonts, Poedit, USGS EarthExplorer, OpenTopography, QGIS, Gaea, World Machine, RealityScan, Meshroom, MeshLab, CloudCompare, Blender, GIMP, Krita, Audacity, REAPER and native UE4.27 AI/localization references.
+- Created `Data/BigProductionBuildLaunchV1.json` with nine whole-game production waves: surfaces; biomes; characters/animation; architecture/interiors; VFX/weather; audio/foley; music; terrain/scanning; Arabic/UI.
+- Truth boundary: registered/adopted sources are not automatically downloaded, READY_FOR_IMPORT, integrated or accepted. Existing evidence-state ladder remains binding.
+
+## 2026-09-25 - DEC-038 playable-film doctrine adopted
+
+- The owner has formally defined Shire Journey as a **playable film-from-inside experience**, not a cutscene chain and not an unrelated open world.
+- Locked film-continuity beats/outcomes remain immutable.
+- Between locked beats, every chapter should expose bounded **interactive safe windows** for embodied third-person exploration, optional conversations, household/world interactions, NPC life, fauna, environmental storytelling and side activities where canon allows.
+- Player freedom may change local flavor, discovery, pacing, minor relationship/state and optional content, but may not contradict chronology or invalidate a locked film outcome.
+- Cinematic/set-piece control is bounded and must return cleanly to the player.
+- When control returns after a canon beat, NPC/world/prop/audio state must reflect the new story state.
+- This doctrine is GLOBAL across the entire game from the opening through the final ending. F1-01/Bag End is only the first implementation benchmark; every later chapter/region must apply the same locked-beat + playable-safe-window pattern under its own canon constraints.
+- F1-01 example: playable pre-party/Bag End/Shire life may surround the locked Bilbo/Ring transition, but the transition itself follows project film continuity rather than an invented contradictory handoff.
+- Added dialogue in safe windows remains original project-authored text; no verbatim Tolkien/film dialogue.
+- Authority: `Data/ProjectGovernor.json` decision `DEC-038`.
+
+## 2026-09-25 - Owner private-offline asset policy adopted
+
+- Owner policy is now recorded as `DEC-037` in `Data/ProjectGovernor.json`.
+- New authority file: `Data/PrivateOfflineAssetPolicyV1.json`.
+- Two explicit lanes now exist:
+  - `PRIVATE_OFFLINE_ONLY`: commercial-clearance uncertainty does not block the owner's local/offline experimental build by itself. Assets stay tagged, replaceable and non-distributable.
+  - `DISTRIBUTABLE_FRAMEWORK`: remains strict; only assets with clear redistribution/commercial entitlement may ship in the reusable/sellable Framework.
+- Provider-access rules are unchanged: no login/paywall/DRM/anti-bot bypass or prohibited scraping.
+- Private payload isolation root: `SourceAssets/PrivateOffline/`; payloads are ignored by Git and must not become hard dependencies of the distributable Framework.
+- Bulk link/file intake registry is ready at `Data/PrivateOfflineAssetIntakeQueueV1.json`.
+- GitHub repository visibility was checked through the connected repository metadata and is currently `private`.
+- This policy changes asset classification/export eligibility only; it does not promote assets to READY_FOR_IMPORT/INTEGRATED/ACCEPTED without technical/engine evidence.
+
+## 2026-09-25 - Parallel Warehouse bulk-intake V2 active
+
+- Preparation branch: `warehouse/p1c01-bulk-intake-v2`, based on the current merged C1 baseline. This is **not** a second runtime-changing lane.
+- Poly Haven batch advanced to V2 with additional source-page-verified CC0 Shire ground families: leafy grass, forest floor, damp soil, leaf litter, rustic pathway and organic ground detail. Intake remains 2K and skips displacement/high-poly payloads.
+- Kenney batch advanced to V2 with additional CC0 cave/architecture support stock. These packs remain support/background stock, not hero LOTR art.
+- Quaternius intake now requires an explicit per-pack observed license before automatic download. Packs without per-page license evidence are skipped instead of inheriting a blanket provider assumption.
+- Verified Quaternius Farm Buildings is added as Shire support architecture with FBX as the required final format.
+- OpenGameArt audio batch advanced to V2 with CC0 multi-surface footsteps, fireplace loop, 100 wood/metal SFX and bird ambience. Non-WAV intake sources must be converted/auditioned to WAV masters before UE import.
+- Warehouse states remain honest: CANDIDATE/AUTHORIZED_FOR_STAGING/STAGED only. No READY_FOR_IMPORT, UE integration, PIE/device/visual/audio acceptance is claimed without matching receipts and later gates.
+- Runtime PR #78 remains isolated; warehouse preparation continues in parallel so production does not idle during Unreal validation.
+
 ## 2026-09-25 - PR #77 handoff-status contract corrected
 
 - Unreal #731 completed **SUCCESS** on corrected Drop C1 head `3b2281c17b6111fd30f7614ca5d0df22a6dc572d`.

@@ -26,7 +26,17 @@ $receipt = [ordered]@{
 foreach ($pack in $manifest.source_pages) {
     $id = [string]$pack.id
     $page = [string]$pack.url
-    Write-Host "Resolving Quaternius pack $id"
+    $observedLicense = [string]$pack.observed_page_license
+    if ([string]::IsNullOrWhiteSpace($observedLicense)) {
+        $receipt.unresolved += [ordered]@{
+            asset_id = $id
+            source_page = $page
+            reason = "license_not_verified_per_pack"
+        }
+        Write-Warning "Skipping Quaternius pack $id because no per-page license is recorded."
+        continue
+    }
+    Write-Host "Resolving Quaternius pack $id license=$observedLicense"
 
     try {
         $response = Invoke-WarehousePage -Uri $page -Headers $headers
@@ -96,6 +106,7 @@ foreach ($pack in $manifest.source_pages) {
                 size = [int64]$file.Length
                 sha256 = $hash
                 state = "STAGED"
+                observed_page_license = $observedLicense
             }
         }
         catch {

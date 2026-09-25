@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "batch_id": "WAREHOUSE_KENNEY_CC0_V1",
+  "batch_id": "WAREHOUSE_KENNEY_CC0_V2",
   "status": "AUTHORIZED_FOR_STAGING",
   "provider": "KENNEY",
   "license": "CC0",
@@ -55,6 +55,22 @@
       "id": "BLOCKY_CHARACTERS",
       "url": "https://kenney.nl/assets/blocky-characters",
       "category": "NPC_SUPPORT"
+    },
+    {
+      "id": "MODULAR_CAVE_KIT",
+      "url": "https://kenney.nl/assets/modular-cave-kit",
+      "category": "CAVE_SUPPORT",
+      "use": [
+        "Moria/Paths/Cirith support prototyping only"
+      ]
+    },
+    {
+      "id": "MODULAR_BUILDINGS",
+      "url": "https://kenney.nl/assets/modular-buildings",
+      "category": "ARCHITECTURE_SUPPORT",
+      "use": [
+        "background settlement blockout/support stock only"
+      ]
     }
   ],
   "rules": [

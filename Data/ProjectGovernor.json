@@ -2496,7 +2496,10 @@
         "Data/ExternalAssetManifest.json",
         "Data/CharacterProductionMatrix.json",
         "Data/AudioAssetSourcingWaveV2.json",
-        "Docs/WORLD_DETAIL_LEDGER.md"
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Data/PrivateOfflineAssetPolicyV1.json",
+        "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25",
+        "Data/MasterExternalResourceBibleAdoptionV1.json"
       ],
       "implementation_refs": [
         "Data/TrilogyProductionAssetWarehouse.json establishes the first complete trilogy-wide catalogue from Sources 02/03/04/05/11 plus the supplied film trilogy screenplays.",
@@ -2507,15 +2510,19 @@
         "Data/ResourceBibleSourceExpansionV1.json operationalizes Source 09 into voice/TTS, music, SFX, visual/UI, 3D, architecture, material, animation/mocap, LOTR-reference and AI-tool source lanes.",
         "Data/WarehouseAmbientCGAcquisitionBatchV1.json + Scripts/stage_ambientcg_warehouse.ps1 add public-API CC0 material staging.",
         "Data/WarehouseKenneyAcquisitionBatchV1.json + Scripts/stage_kenney_warehouse.ps1 add official-page CC0 support/world-kit staging.",
+        "Warehouse bulk-intake V2 adds source-page-verified P1C01 Poly Haven ground/woodland stock, additional Kenney CC0 support kits, page-licensed Quaternius Farm Buildings FBX support, verified OpenGameArt CC0 footsteps/fire/wood-metal/birds, and a fail-closed per-pack Quaternius license gate.",
         "Data/TrilogyWorldFoundationPlanV1.json establishes parallel world-foundation preproduction for all major trilogy regions while keeping P1C01 as the first assembled benchmark.",
         "Verified official KayKit public GitHub lane now includes Skeletons 1.0 as CC0 fully-rigged/animated FBX/GLTF technical enemy-pipeline stock; this is QA/support inventory, not canonical LOTR enemy art.",
-        "Final pre-runner source-safe saturation adds verified official KayKit CC0 Restaurant Bits, Halloween Bits and City Builder Bits lanes with strict selective/manual-fit boundaries."
+        "Final pre-runner source-safe saturation adds verified official KayKit CC0 Restaurant Bits, Halloween Bits and City Builder Bits lanes with strict selective/manual-fit boundaries.",
+        "DEC-037 / Data/PrivateOfflineAssetPolicyV1.json separates fast private-offline intake from strict distributable-framework clearance; private-only assets stay tagged and excluded from commercial exports.",
+        "DEC-039 adopts the 225-source Master External Resource Bible as the whole-game production sourcing map and converts it into structured acquisition waves instead of random browsing."
       ],
       "missing_work": [
         "Bridge staged rigged-character archives into a real UE4.27 skeletal import/runtime path once the Engine Content ACL gate is restored; prove humans/enemies visibly in P1C01 before broader runtime expansion.",
         "Expand Data/TrilogyAssetCandidateQueue.json until every warehouse family has at least one concrete candidate/project-authored path, then acquire/import eligible batches under the LFS/import contract.",
         "Acquire/author the first accepted skeletal FBX character bundles beginning with Frodo, Gandalf and Sam.",
         "Fill P1C01 Shire world/material/prop/vegetation/fauna/audio banks to a visible vertical-slice standard.",
+        "Convert the V2 warehouse staging receipts into intake-QC selections: extract/scan archives, verify FBX/PNG/TGA/WAV eligibility, dedupe, and promote only evidence-backed files to READY_FOR_IMPORT.",
         "Build reusable location/culture kits for Part II and Part III in the warehouse without prematurely opening runtime chapter implementation.",
         "Add automated warehouse coverage/status reporting so future reviews state exact filled/pending counts by category.",
         "Run UE4.27 import/compile, PIE, visual/audio and target-device gates before any slot is promoted from READY/INTEGRATED to ACCEPTED.",
@@ -3456,6 +3463,87 @@
         "Unreal #704 SUCCESS on develop ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
         "Docs/PROJECT_GUARDIAN.md PG-161",
         "Scripts/classify_unreal_validation.ps1"
+      ]
+    },
+    {
+      "id": "DEC-037",
+      "title": "Separate private-offline asset intake from distributable framework clearance",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WAREHOUSE-001",
+        "REQ-ASSET-001",
+        "REQ-GOV-001"
+      ],
+      "resolution": "For the owner's private offline Shire Journey experience, uncertain or non-commercially-cleared art/audio may be classified and used only in an explicitly isolated PRIVATE_OFFLINE_ONLY lane without blocking local experimentation solely on commercial-license uncertainty. Such assets must remain tagged, replaceable and excluded from every distributable/commercial Framework package. The distributable Framework lane remains strict: only assets with clear redistribution/commercial entitlement may ship. Provider-access restrictions remain independent and binding: do not bypass authentication, paywalls, DRM, anti-bot controls or prohibited scraping.",
+      "rationale": "The owner wants maximum private-production speed while preserving a clean framework that may later be sold. Classification/isolation is safer than deleting provenance or globally disabling license/access guards.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Data/PrivateOfflineAssetPolicyV1.json",
+        "Data/WarehouseProviderAccessPolicyV1.json",
+        "Docs/EXTERNAL_ASSET_SOURCING.md"
+      ]
+    },
+    {
+      "id": "DEC-038",
+      "title": "Global playable-film doctrine for the entire game world and full story",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-003",
+        "REQ-CAMERA-001",
+        "REQ-GOV-001"
+      ],
+      "resolution": "This doctrine is GLOBAL across the entire Shire Journey game, from the opening of the story through the final ending, across every chapter, region, character arc, settlement, dungeon, battlefield, travel segment and world-state transition. Shire/P1C01 is only the first implementation benchmark, not the scope of the rule. The player must feel physically present inside the film-continuity world rather than watching a chain of cutscenes or playing an unrelated open world. Canon-defining story beats and locked outcomes remain immutable. Between those beats, every chapter and region must expose interactive safe windows for embodied third-person exploration, optional conversations, world/household interaction, side activities, NPC life, fauna, environmental storytelling and local choice whenever chronology permits. Control may enter bounded cinematic/set-piece moments when required, then return cleanly to the player. Optional actions may change flavor, local relationships, discovery, pacing or minor world state, but must not invalidate the film's causal spine or locked chapter outcome. World/NPC/prop/audio state must transition coherently before and after each canon beat so the player feels the consequences in the playable world.",
+      "example_contract": "F1-01/Bag End remains only the first benchmark example of the global rule. The same pattern must be applied chapter-by-chapter across the full game world: identify locked canon beats, surround them with playable safe windows, preserve chronology/outcomes, and return control into a world state that reflects what just happened.",
+      "acceptance_criteria": [
+        "The doctrine applies to every chapter and every major playable region from the beginning of the story through the final ending; Shire/P1C01 is not an exception or the sole target.",
+        "Every major chapter identifies its locked canon beats and the playable safe windows around them.",
+        "Every major region identifies the world-life, exploration, interaction and environmental systems needed to make the player feel present inside that part of the story.",
+        "No required chapter is implemented as cutscene-only when an interactive safe window can preserve canon.",
+        "No free-roam/side activity can alter an immutable film outcome or create a contradictory chronology.",
+        "After a canon beat, NPC/world/prop/audio state reflects the new story state when the player regains control.",
+        "Dialogue added inside safe windows is original project-authored text and does not copy Tolkien or film dialogue verbatim.",
+        "Cinematic control transitions are bounded and return to the embodied third-person player cleanly."
+      ],
+      "rationale": "The owner explicitly clarified that this is not a Shire/P1C01-specific design idea. It is a whole-game doctrine covering the complete world and full narrative: the player should inhabit and interact with the film continuity everywhere, while recognized story outcomes still unfold correctly.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "01_STORY_AND_TIMELINE_BIBLE",
+        "06_GAMEPLAY_AND_SIDE_ACTIVITIES_BIBLE",
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+        "Docs/WORLD_DETAIL_LEDGER.md"
+      ]
+    },
+    {
+      "id": "DEC-039",
+      "title": "Adopt the 225-source Master External Resource Bible as the global production sourcing map",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WAREHOUSE-001",
+        "REQ-ASSET-001",
+        "REQ-GOV-001"
+      ],
+      "resolution": "The 68-page SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25, containing 225 classified sources, is adopted as a global production-sourcing authority for the entire game. It does not override story/canon bibles. Its role is to diversify and prioritize sources for environment materials, vegetation, characters, rigging, animation, VFX, audio, music, UI/fonts, Arabic localization, terrain/GIS, scanning, AI-assisted creation and production tooling. Sourcing proceeds category-first using A then B then C priority, with provider-access restrictions preserved. The project converts the Bible into structured registry entries and category-specific acquisition waves rather than browsing randomly or copying all sources wholesale.",
+      "implementation_contract": [
+        "Data/MasterExternalResourceBibleAdoptionV1.json is the machine-readable adoption/triage layer.",
+        "Data/GlobalWarehouseSourceRegistryV2.json is expanded from the Bible with high-value sources and corrected disabled/legacy routes.",
+        "Production waves cover world surfaces, vegetation/biomes, character/animation, VFX, audio, music, terrain/scanning and Arabic/UI across the whole game.",
+        "REFERENCE_ONLY/QUARANTINE/DISABLED sources do not auto-promote into distributable production.",
+        "DEC-037 still governs PRIVATE_OFFLINE_ONLY vs DISTRIBUTABLE_FRAMEWORK asset isolation.",
+        "DEC-038 still governs whole-game playable-film canon-safe design; resources serve the story rather than altering it."
+      ],
+      "performance_contract": [
+        "1K/2K default runtime textures; 4K only for measured hero assets.",
+        "Animated production assets use FBX.",
+        "Production textures use PNG/TGA, preferably channel-packed.",
+        "Heavy runtime assets use soft references + FStreamableManager async loading.",
+        "Crowds use pooling; repeated world detail uses ISM/HISM + LOD/culling.",
+        "High-poly scans/vegetation require decimation/retopo/LOD/material-slot and overdraw review before integration."
+      ],
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25",
+        "Data/MasterExternalResourceBibleAdoptionV1.json",
+        "Data/GlobalWarehouseSourceRegistryV2.json"
       ]
     }
   ],
