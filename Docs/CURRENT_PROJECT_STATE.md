@@ -1,3 +1,11 @@
+## 2026-09-25 Repository consolidation / launcher repair
+- Canonical development lane remains `develop`; `main` remains release-only.
+- PR #71 (`maintenance/repository-consolidation-v1`) consolidates branch-only safe planning/audio/warehouse metadata and hardens local launchers against self-update during `git pull`.
+- Stale PRs #62, #63 and #66 were closed as superseded; they must not be wholesale-merged.
+- Generated-audio registries were consolidated without expiring signed delivery URLs; cue/task identity remains but no UE/audio acceptance is implied.
+- W00 is **not** newly claimed closed by this maintenance pass. Remaining human proof is P1C01 PIE grounding/traversal plus absence of project-owned SetStaticMesh mobility warnings.
+- Detailed branch disposition: `Docs/BRANCH_CONSOLIDATION_AUDIT.md`.
+
 ## 2026-09-25 - C4996 / SetStaticMesh warning-debt guards added
 
 The remaining visible warning families are now encoded as hard regression guards. Canonical `develop` already uses `GetStaticMaterials()` in the production importer, so the old C4996 source pattern is absent. PG-159 now rejects any return to direct `UStaticMesh::StaticMaterials` access.
