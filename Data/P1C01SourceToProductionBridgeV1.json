@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "bridge_id": "P1C01_SOURCE_TO_PRODUCTION_BRIDGE_V1",
+  "status": "ACTIVE_PREPARATION",
+  "purpose": "Map source-grounded Shire/Bag End needs to the active asset/material preparation lanes.",
+  "rows": [
+    {
+      "need": "pastoral grass/field ground",
+      "source_requirement": "Shire pastoral hills/gardens",
+      "asset_lane": "P1C01_MATERIAL_IMPORT_WAVE_V1",
+      "candidate_ids": [
+        "SH_GRASS_GROUND"
+      ],
+      "runtime_gate": "C1/C2 material path; no density increase"
+    },
+    {
+      "need": "farm/garden soil",
+      "source_requirement": "farms/gardens",
+      "asset_lane": "P1C01_MATERIAL_IMPORT_WAVE_V1",
+      "candidate_ids": [
+        "SH_DIRT_SOIL"
+      ],
+      "runtime_gate": "surface import only"
+    },
+    {
+      "need": "lanes/property approaches",
+      "source_requirement": "lanes + readable traversal",
+      "asset_lane": "P1C01_MATERIAL_IMPORT_WAVE_V1",
+      "candidate_ids": [
+        "SH_STONY_PATH"
+      ],
+      "runtime_gate": "surface import only"
+    },
+    {
+      "need": "warm Hobbit support walls",
+      "source_requirement": "warm domestic scale / round interiors",
+      "asset_lane": "P1C01_MATERIAL_IMPORT_WAVE_V1",
+      "candidate_ids": [
+        "SH_WARM_PLASTER"
+      ],
+      "runtime_gate": "surface import only"
+    },
+    {
+      "need": "garden/bridge stone",
+      "source_requirement": "pastoral architecture and path accents",
+      "asset_lane": "P1C01_MATERIAL_IMPORT_WAVE_V1",
+      "candidate_ids": [
+        "SH_MOSS_STONE"
+      ],
+      "runtime_gate": "surface import only"
+    },
+    {
+      "need": "Bag End wood",
+      "source_requirement": "dense lived-in Hobbit interior",
+      "asset_lane": "P1C01_MATERIAL_IMPORT_WAVE_V1",
+      "candidate_ids": [
+        "SH_WOOD_INTERIOR"
+      ],
+      "runtime_gate": "surface import only"
+    },
+    {
+      "need": "tree bark/woodland",
+      "source_requirement": "Shire vegetation/wooded edges",
+      "asset_lane": "P1C01_MATERIAL_IMPORT_WAVE_V1",
+      "candidate_ids": [
+        "SH_TREE_BARK",
+        "SH_FOREST_FLOOR"
+      ],
+      "runtime_gate": "C3/C4 foliage assignment remains separate"
+    },
+    {
+      "need": "NPC/farm fauna/foley/support props",
+      "source_requirement": "chapter-state NPC plan + lived-in world",
+      "asset_lane": "P1C01_WAREHOUSE_PROMOTION_QUEUE_V1",
+      "candidate_ids": [
+        "existing registered P1C01 queue"
+      ],
+      "runtime_gate": "prep/QC only until relevant E/F/G stage"
+    }
+  ],
+  "non_negotiable": [
+    "No visual-only source defines canon",
+    "No runtime density increase before target profiling",
+    "No heavy synchronous loading",
+    "Animated production assets FBX only",
+    "Private-offline assets cannot become distributable dependencies"
+  ],
+  "evidence_boundary": "Planning bridge only."
+}
