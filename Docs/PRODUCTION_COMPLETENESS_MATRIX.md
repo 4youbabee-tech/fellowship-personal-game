@@ -1,3 +1,14 @@
+## 2026-09-25 - C2 v2 clean-transplant status
+
+- **Baseline:** `develop@4980c3c8...` containing the merged Warehouse/Master Resource Bible production expansion.
+- **Runtime lane:** `production/w01-p1c01-foliage-wind-v2` only.
+- **Near/mid wind:** IMPLEMENTED IN SOURCE using UE4.27 `SimpleGrassWind` material function.
+- **Far wind cost:** IMPLEMENTED IN SOURCE through a separate no-WPO foliage master.
+- **Known bad paths blocked:** nonexistent `UMaterialExpressionSimpleGrassWind`; non-linkable `UMaterialExpressionDistanceCullFade`.
+- **Density:** UNCHANGED pending target-device profiling.
+- **Global production preparation:** ACTIVE in parallel; no second runtime-changing lane.
+- **Validation:** STATIC-VALIDATED only until fresh exact-head Pre-Unreal + UE4.27.2 validation succeeds.
+
 ## 2026-09-25 - Global external-resource production expansion
 
 - **Resource Bible review:** COMPLETE FIRST PASS — 68 pages / 225 classified sources audited as a production sourcing map.
