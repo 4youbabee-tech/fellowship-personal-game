@@ -1,3 +1,9 @@
+## 2026-09-25 - CI evidence boundary
+
+- **Pre-Unreal #959/#960:** ZERO-STEP / LOG-BLOB-MISSING infrastructure incidents; repository cause unproven.
+- **Last concrete PR #80 Pre-Unreal proof:** #954 SUCCESS on `dc70a48c5...` before documentation-only head advancement.
+- **Runtime merge gate:** still requires fresh exact-head Pre-Unreal + UE4.27.2 proof; zero-step failures neither satisfy nor invalidate the code gate.
+
 ## 2026-09-25 - C2 v2 validation retry state
 
 - **Pre-Unreal #954:** SUCCESS on prior exact candidate head `dc70a48c5...`.
