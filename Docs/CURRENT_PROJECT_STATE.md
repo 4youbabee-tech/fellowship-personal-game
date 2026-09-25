@@ -1,3 +1,10 @@
+## 2026-09-25 - C2 v2 exact-head validation retry requested by real status update
+
+- PR #80 head `dc70a48c5bda0904b64c2009a9088fd0d0bd7ec5` passed Pre-Unreal #954.
+- Unreal #789 was CANCELLED before any job/step evidence existed; it is neither a compile failure nor compile proof.
+- This status-only update intentionally advances the candidate head so GitHub can schedule a fresh exact-head Unreal validation attempt without fabricating an empty CI-only commit.
+- Runtime implementation remains unchanged from the C2 v2 source already under review.
+
 ## 2026-09-25 - Big world build campaign: C2 clean runtime lane active
 
 - Warehouse/Master Resource Bible expansion merged to `develop` as `4980c3c8b1f4660863940a58e052dcf8095772cf`.
