@@ -2768,6 +2768,26 @@
         "REQ-STABILITY-001",
         "REQ-PERF-003"
       ]
+    },
+    {
+      "id": "REQ-STABILITY-003",
+      "title": "Zero-step GitHub-hosted failure bypass without weakening validation",
+      "category": "EngineeringStability",
+      "priority": "CRITICAL",
+      "status": "IMPLEMENTED",
+      "origin": "Repeated GitHub-hosted Pre-Unreal and Branch Cleanup jobs failed before step execution with steps=null and BlobNotFound logs; owner requires uninterrupted production without recurring false-red Actions.",
+      "intent": "Remove scheduled/hosted CI dependencies that generate infrastructure reds, reserve the UE4 device lane for runtime deltas, and keep the exact same validation commands available on the supervised Windows build machine and through a one-command local static runner.",
+      "acceptance_criteria": [
+        "Pre-Unreal has no schedule and does not use GitHub-hosted runners.",
+        "Branch Cleanup does not use GitHub-hosted runners.",
+        "Preparation/docs-only changes do not enqueue Unreal Build Validation.",
+        "Local static validation can run the same project/governor/audit/unit-test chain without Actions.",
+        "Runtime/engine gates remain required for runtime-changing promotion."
+      ],
+      "dependencies": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-002"
+      ]
     }
   ],
   "hard_invariants": [
@@ -3623,6 +3643,17 @@
         "Scripts/promote_p1c01_material_intake.ps1 uses a temporary SourceAssets/Production overlay and invokes the existing UE4 importer only on explicit request."
       ],
       "evidence_boundary": "Preparation/tooling implementation only until a real local intake/import run emits its receipt/log. No COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE acceptance is implied.",
+      "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-043",
+      "title": "Route static/cleanup CI around recurrent hosted zero-step failures",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-003"
+      ],
+      "resolution": "Pre-Unreal and Branch Cleanup are event-driven on the supervised self-hosted Windows UE4 runner; periodic polling is removed. Unreal Build Validation ignores preparation/docs/CI-only deltas so the single device lane is reserved for runtime-relevant work. Scripts/run_local_static_validation.ps1 mirrors the static validation chain for direct local execution.",
+      "evidence_boundary": "Workflow/source configuration only until the supervised runner executes the new jobs. No compile/PIE/device/visual/performance claim.",
       "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],

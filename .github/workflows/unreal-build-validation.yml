@@ -4,9 +4,52 @@ on:
   push:
     branches:
       - develop
+    paths-ignore:
+      - '.github/workflows/**'
+      - 'Docs/**'
+      - '.gitignore'
+      - 'Data/ProjectGovernor.json'
+      - 'Data/ExternalAssetManifest.json'
+      - 'Data/*Warehouse*.json'
+      - 'Data/MasterExternalResourceBibleAdoptionV1.json'
+      - 'Data/PrivateOffline*.json'
+      - 'Data/BigProductionBuildLaunchV1.json'
+      - 'Data/WholeGame*.json'
+      - 'Data/P1C01C3FoliageMaterialIdentityPlanV1.json'
+      - 'Data/P1C01WorldBuildIntakePacketV1.json'
+      - 'Data/P1C01ECharacterPresentationPlanV1.json'
+      - 'Data/P1C01FLivingShirePlanV1.json'
+      - 'Data/P1C01GQuestCinematicAudioPolishPlanV1.json'
+      - 'Data/P1C01HTargetDeviceProfilingPlanV1.json'
+      - 'Data/P1C01Gate67AcceptanceChecklistV1.json'
+      - 'Data/ProjectSourcePdfRegistryV1.json'
+      - 'Data/WholeGameAssetFamilyCoverageV1.json'
+      - 'Data/WholeGamePooledPopulationPlanV1.json'
+      - 'Data/WholeGameProductionExecutionQueueV1.json'
+      - 'Data/WholeGameStreamingResidencyPlanV1.json'
+      - 'Scripts/prepare_p1c01_material_intake.ps1'
+      - 'Scripts/promote_p1c01_material_intake.ps1'
+      - 'Scripts/run_p1c01_material_pipeline.ps1'
+      - 'SourceAssets/PrivateOffline/**'
+      - 'Scripts/stage_*warehouse*.ps1'
   pull_request:
     branches:
       - develop
+    paths-ignore:
+      - '.github/workflows/**'
+      - 'Docs/**'
+      - '.gitignore'
+      - 'Data/ProjectGovernor.json'
+      - 'Data/ExternalAssetManifest.json'
+      - 'Data/*Warehouse*.json'
+      - 'Data/MasterExternalResourceBibleAdoptionV1.json'
+      - 'Data/PrivateOffline*.json'
+      - 'Data/BigProductionBuildLaunchV1.json'
+      - 'Data/WholeGame*.json'
+      - 'Data/P1C01C3FoliageMaterialIdentityPlanV1.json'
+      - 'Data/P1C01WorldBuildIntakePacketV1.json'
+      - 'SourceAssets/PrivateOffline/**'
+      - 'Scripts/stage_*warehouse*.ps1'
   workflow_dispatch:
 
 permissions:
@@ -16,7 +59,7 @@ permissions:
 concurrency:
   group: unreal-build-${{ github.repository }}-ue4-device
   # Full engine validation remains serialized; superseded acceptance-only PR runs are cancelled.
-  cancel-in-progress: ${{ startsWith(github.head_ref, 'acceptance/') }}
+  cancel-in-progress: ${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}
 
 jobs:
   unreal-build:

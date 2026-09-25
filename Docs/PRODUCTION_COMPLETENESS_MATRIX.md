@@ -1,3 +1,12 @@
+## 2026-09-26 - CI zero-step bypass
+
+- **REQ-STABILITY-003 / DEC-043:** IMPLEMENTED in workflow/source configuration.
+- **GitHub-hosted static/cleanup dependency:** REMOVED.
+- **Periodic Pre-Unreal polling:** REMOVED.
+- **UE4 queue isolation:** PREPARATION/DOCS/CI-only deltas excluded.
+- **Local validation entry point:** ADDED.
+- **Evidence:** STATIC-VALIDATED CONFIGURATION ONLY; supervised-runner execution pending.
+
 ## 2026-09-26 - Branch hygiene / immediate develop integration
 
 - **REQ-EXEC-002:** IMPLEMENTED.
