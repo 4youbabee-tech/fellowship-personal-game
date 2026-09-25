@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_HOBBITON_BAGEND_ARCHITECTURE_V1",
-  "status": "DROP_B_ACTIVE",
+  "status": "DROP_B_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
   "canonical_parent": "develop@430d0a26f3b441f072740fc58285c0c0eb842d8c",
   "source_contract": {
     "world_bible": [
@@ -49,5 +49,19 @@
     "Owner PIE confirms no grounding/collision regression.",
     "Human review confirms Bag End reads as dominant landmark and Hobbiton reads as warm domestic/circular/garden architecture.",
     "No canonical Green Dragon-at-Hobbiton label remains."
-  ]
+  ],
+  "implementation": {
+    "bag_end_exterior": "hero approach + garden/property framing using resident production meshes",
+    "hobbiton_domestic": "four domestic garden/property clusters reinforcing warm scale/circular-door identity",
+    "village_common": "generic Hobbiton social/common yard; no canonical Green Dragon claim",
+    "party_field": "canopy + produce stands reinforcing F1-01 birthday/social destination",
+    "eastward_working_edge": "wash line, plough and orchard ladder support lived-in transition",
+    "interior": "DEFERRED_UNTIL_PRODUCTION_INTERIOR_SHELL_EXISTS"
+  },
+  "compatibility": {
+    "legacy_discovery_id": "Discover_GreenDragon retained for existing save compatibility",
+    "visible_copy": "corrected to Hobbiton Village Common / Hobbiton village common",
+    "gameplay_ids_changed": false,
+    "quest_anchors_moved": false
+  }
 }
