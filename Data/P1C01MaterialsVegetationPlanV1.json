@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_MATERIALS_VEGETATION_V1",
-  "status": "PREPARED_WAITING_FOR_POST_MERGE_GREEN",
+  "status": "C1_ALBEDO_BINDING_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
   "canonical_parent": "develop@712a81cac150b7fdb338a4cf7554d4f27d4b5191",
   "source_contract": {
     "world_bible": [
@@ -96,5 +96,11 @@
     "Owner PIE visual review confirms natural material response and non-distracting wind.",
     "Target-device profiling confirms foliage/material cost before density expansion."
   ],
-  "evidence_boundary": "Planning/preparation only until runtime implementation starts after the current develop post-merge validation is green."
+  "evidence_boundary": "Planning/preparation only until runtime implementation starts after the current develop post-merge validation is green.",
+  "runtime_implementation": {
+    "importer_change": "MTL map_Kd is now captured and bound to deterministic AlbedoTexture material-instance parameters after texture import.",
+    "master_material_change": "M_ProductionSurface now multiplies AlbedoTexture by Color while retaining Roughness/Metallic parameters.",
+    "gameplay_impact": "none; editor production-import pipeline only",
+    "next": "C2 dedicated lightweight foliage master + parameterized wind WPO after C1 exact-head engine proof"
+  }
 }
