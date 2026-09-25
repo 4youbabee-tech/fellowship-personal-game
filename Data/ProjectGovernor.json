@@ -4165,11 +4165,10 @@
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
     "rule": "Finish W00 only after the final develop build/PIE proof also confirms no C4996 StaticMaterials warning and no project-owned SetStaticMesh mobility warning.",
     "machine_baseline": {
-      "sha": "efdb2e291505472247fae921945b083b3cc1ce2c",
-      "pre_unreal": "#816 SUCCESS",
-      "unreal": "#651 Attempt 2 SUCCESS",
-      "warehouse": "#232 SUCCESS",
-      "scope": "UE4.27.2 build/import, Automation, startup, P1C01-P1C08, route/story roundtrip, warning debt, package, 37 Runtime JSON, packaged startup and hardware snapshot."
+      "sha": "9066d6494248def59680820bbd6ca8e10038ea6e",
+      "pre_unreal": "#821 SUCCESS",
+      "unreal": "#656 SUCCESS acceptance-only; parent #655 provides full core UE proof",
+      "scope": "Automated W00 chain is green. Human P1C01 PIE grounding/warning-tail evidence remains separate and unclaimed."
     },
     "w01_freeze": "ACTIVE_UNTIL_W00_EXIT_CRITERIA"
   },
@@ -4179,10 +4178,10 @@
     "Then validate packaged Data JSON runtime execution, real audio, target-device profiling and human PIE/pacing/visual acceptance."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W00-156",
-    "source_head": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
-    "branch": "integration/comprehensive-foundation-v1",
-    "pull_request": 67,
+    "checkpoint_id": "CP-W00-157",
+    "source_head": "9066d6494248def59680820bbd6ca8e10038ea6e",
+    "branch": "maintenance/develop-consolidation-v1",
+    "pull_request": 70,
     "verified": {
       "last_full_machine_green": "ab7889d6: Pre #788 SUCCESS + Unreal #623 SUCCESS + Warehouse #204 SUCCESS",
       "cp154_static": "ab7889d6: Pre #788 SUCCESS including the full static/governor/asset/readiness/deep/unit-test chain",
@@ -4199,54 +4198,42 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "Single concrete PG-026 validator-drift repair after CP155.",
+    "active_wave": "Canonical develop consolidation and stale-branch cleanup after automated W00 closure.",
     "next_actions": [
-      "Prove Pre-Unreal green on CP156.",
-      "If CP156 is green, close machine repair and proceed to acceptance-only W00 work."
+      "Merge PR #70 after Pre-Unreal/static validation is green.",
+      "Pull canonical develop in the Documents clone.",
+      "Run one P1C01 PIE confirmation for ShireStartupGrounding PASS, no player fall, and no project-owned SetStaticMesh mobility warning.",
+      "Then close the remaining W00 human PIE tail and begin the P1C01 production-quality vertical slice."
     ],
     "unverified_acceptance": [
-      "CP-W00-155 exact-head final repair proof",
-      "packaged Data JSON runtime staging/read",
-      "actual authored audio playback without -NoSound",
-      "target-device profiling",
-      "PIE/pacing/visual/human acceptance"
+      "P1C01 human PIE grounding/traversal confirmation on canonical post-cleanup develop",
+      "target-device 720p Low-Medium performance profiling",
+      "P1C01 visual acceptance",
+      "real audio listening/mix acceptance"
     ],
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
+        "sha": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
         "pre_unreal": {
-          "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
-          "run_id": 35929433094,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
-          "run_id": 35929433086,
-          "status": "SUCCESS"
-        },
-        "warehouse": {
-          "sha": "ab7889d6b2dafc059220a0c0a3dc63decfe6b72e",
-          "run_id": 35929433089,
-          "status": "SUCCESS"
+          "run_number": 655,
+          "status": "SUCCESS",
+          "scope": "full build/import/Automation/startup/P1C01-P1C08/state/warning/package/runtime-data/startup chain"
         }
       },
       "latest_observed": {
-        "sha": "f524a83cd39510b956e4977571448d43100b628d",
+        "sha": "9066d6494248def59680820bbd6ca8e10038ea6e",
         "pre_unreal": {
-          "sha": "f524a83cd39510b956e4977571448d43100b628d",
-          "run_id": 35932131857,
-          "status": "FAILURE"
+          "run_number": 821,
+          "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "f524a83cd39510b956e4977571448d43100b628d",
-          "run_id": 35932131862,
-          "status": "SUCCESS"
-        },
-        "warehouse": {
-          "sha": "f524a83cd39510b956e4977571448d43100b628d",
-          "run_id": 35932131888,
-          "status": "SUCCESS"
+          "run_number": 656,
+          "status": "SUCCESS",
+          "scope": "acceptance-only package/runtime-data/packaged-startup/hardware; inherited parent core proof"
         }
       }
     }
@@ -4344,11 +4331,11 @@
       "cp56/fellowship-experience-megapass-v1",
       "work/automation-first-runtime-observation"
     ],
-    "cleanup_rule": "A historical branch may be deleted only after its meaningful content is confirmed present in develop or intentionally superseded. Diverged branches with unique commits remain preserved until audited.",
-    "current_short_branch": "integration/comprehensive-foundation-v1",
+    "cleanup_rule": "Delete historical branches only after confirming their meaningful content is already in develop or intentionally superseded. Never bulk-merge diverged stale branches. Unique planning/warehouse records must be salvaged or explicitly archived before deletion.",
+    "current_short_branch": "maintenance/develop-consolidation-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 67,
-    "open_pr_policy": "PR #67 is the active W00 integration train. Do not open or execute post-W00 feature/content branches until this gate is explicitly closed by the Governor.",
+    "current_open_pr": 70,
+    "open_pr_policy": "PR #70 is the active maintenance/consolidation lane targeting develop. It may only consolidate proven/superseded branch state and harden local workflow; do not revive stale feature branches or treat this maintenance PR as gameplay/visual acceptance.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop."
   },
   "side_branch_audit": {
@@ -5287,9 +5274,9 @@
     ]
   },
   "w00_final_closure": {
-    "status": "FINAL_WARNING_GUARDS_COMMITTED_PROOF_PENDING",
+    "status": "AUTOMATED_CLOSURE_GREEN_HUMAN_PIE_TAIL_PENDING",
     "branch": "develop",
-    "base_green_head": "31b6e1c9958b6121ec7a00c07e038fec4ab36408",
+    "base_green_head": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be",
     "plan": "Data/W00FinalClosurePlanV1.json",
     "automated_gates": [
       "real Windows BuildCookRun package",
@@ -5306,7 +5293,13 @@
       "real audio listening/mix after complete bank integration"
     ],
     "open_rule": "If automated closure gates are green, W01 may open; remaining human-only acceptance is tracked separately and may not be misrepresented as architectural repair.",
-    "governor_integration_baseline": "develop"
+    "governor_integration_baseline": "develop",
+    "automated_evidence": {
+      "develop_head": "9066d6494248def59680820bbd6ca8e10038ea6e",
+      "pre_unreal": "#821 SUCCESS",
+      "unreal": "#656 SUCCESS acceptance-only",
+      "inherited_core_parent": "fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be / Unreal #655 SUCCESS"
+    }
   },
   "active_acceptance_branch": "acceptance/w00-final-closure-v1",
   "known_failures": [
