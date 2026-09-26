@@ -1,3 +1,11 @@
+## 2026-09-26 - Targeted validation friction reduction and historical evidence reconciliation
+
+Owner requested immediate removal of unnecessary blockers without weakening game construction. Four explicit static-only Python audit/helper/test paths are excluded from automatic Unreal workflow triggers for both push and PR; Pre-Unreal still runs their checks. Mixed PRs and manual dispatch can still run Unreal. Runtime source, assets, configuration and package changes retain their existing gates. No error suppression or automatic acceptance was added.
+
+Governor REQ-SAVE-001, REQ-INTEGRATION-001 and REQ-STARTUP-001 now preserve their old missing-work lists as history and record successful machine stages from C2 head `2af6648209d8722247ca6f9a75b2b5082b6654d5`, run 36200615260. Their status remains PARTIAL. That run failed at rendered package startup (`CreateSwapChainResult`, `887A0022`, process identity NETWORK SERVICE); it does not prove current-head or human/device acceptance. Owner grounding evidence cited in active_gate still needs exact-SHA reconciliation before requirement promotion.
+
+Validation: targeted workflow filter checks only; no new engine/device proof. Existing run 36226722585 was left running. Current work remains W01/P1C01; remaining package-session/device and human acceptance work is not waived.
+
 ## 2026-09-26 - Recurring CI failure: Python launcher contract
 
 Exact head `1e7be3da32a9d4f8cd85297260e5abce2e9492f2`, run 36226440287, passed structure, Governor, strict asset quality and readiness checks, then failed deep audit because it searched for a literal `python Scripts/asset_quality_audit.py --strict`. The workflow now correctly uses the resolved `"%PYTHON_EXE%"` interpreter. The guard recognizes supported direct one-line run commands without accepting comments, echoed commands, missing strict mode or masked shell failures.

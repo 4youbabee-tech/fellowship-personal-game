@@ -34,6 +34,10 @@ on:
       - 'Scripts/runner_watchdog.ps1'
       - 'Scripts/classify_unreal_validation.ps1'
       - 'Scripts/pre_unreal_validate.py'
+      - 'Scripts/deep_project_audit.py'
+      - 'Scripts/test_deep_project_audit.py'
+      - 'Scripts/source_contracts.py'
+      - 'Scripts/test_source_contracts.py'
       - 'SourceAssets/PrivateOffline/**'
       - 'Scripts/stage_*warehouse*.ps1'
   pull_request:
@@ -56,6 +60,10 @@ on:
       - 'Scripts/runner_watchdog.ps1'
       - 'Scripts/install_runner_watchdog.ps1'
       - 'Scripts/pre_unreal_validate.py'
+      - 'Scripts/deep_project_audit.py'
+      - 'Scripts/test_deep_project_audit.py'
+      - 'Scripts/source_contracts.py'
+      - 'Scripts/test_source_contracts.py'
       - 'SourceAssets/PrivateOffline/**'
       - 'Scripts/stage_*warehouse*.ps1'
   workflow_dispatch:
