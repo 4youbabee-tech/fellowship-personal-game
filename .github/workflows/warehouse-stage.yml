@@ -83,6 +83,10 @@ jobs:
           if not exist "ShireJourney.uproject" exit /b 75
           echo WAREHOUSE_CHECKOUT_PASS sha=!CHECKED_SHA!
 
+      - name: Verify runner session health
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"
+
       - name: Stage Poly Haven CC0 batch
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_polyhaven_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAcquisitionBatchV1.json"
