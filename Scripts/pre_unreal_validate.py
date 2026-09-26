@@ -2652,6 +2652,33 @@ for pg170_cleanup_symbol in [
         fail(f"PG-170 branch cleanup lost empty/open-PR response hardening: {pg170_cleanup_symbol}")
 
 
+# PG-171: C4 foliage LOD/cull/overdraw evidence capture must remain fail-closed.
+pg171_plan = json.loads(read(ROOT / "Data" / "P1C01C4FoliageLodCullOverdrawPlanV1.json"))
+if pg171_plan.get("status") not in {
+    "PREPARED_NOT_RUNTIME_STARTED",
+    "C4_EVIDENCE_CAPTURE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "C4_ENGINE_EVIDENCE_CAPTURED_PENDING_BINDING_DECISION",
+    "C4_EXACT_HEAD_GREEN_MERGED_D_READY",
+}:
+    fail("PG-171 C4 plan has an invalid implementation status")
+if pg171_plan.get("status") != "PREPARED_NOT_RUNTIME_STARTED":
+    for pg171_symbol in [
+        "IsP1C01FoliageMeshAssetName",
+        "C4_FOLIAGE_EVIDENCE",
+        "RenderData->LODResources",
+        "FAR_LOD_ELIGIBLE_FOR_REVIEW",
+        "actual-far-lod-and-approved-foliage-identity",
+    ]:
+        if pg171_symbol not in pg166_importer:
+            fail(f"PG-171 C4 evidence invariant missing: {pg171_symbol}")
+    for pg171_forbidden in [
+        "SetParentEditorOnly(ProductionFoliageFarParent)",
+        "SetStaticMeshLOD",
+    ]:
+        if pg171_forbidden in pg166_importer:
+            fail(f"PG-171 C4 evidence-capture step performed premature far binding: {pg171_forbidden}")
+
+
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
 pg164_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
