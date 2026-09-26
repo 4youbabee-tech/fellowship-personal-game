@@ -61,28 +61,91 @@ $activeHeads = @(
         Where-Object { $_ }
 )
 
-foreach ($branch in $deleteBranches) {
-    if ($planProtectedBranches.Contains($branch)) {
-        throw "Refusing plan-protected branch: $branch"
+function Remove-RemoteBranch {
+    param(
+        [Parameter(Mandatory = $true)][string]$Branch,
+        [Parameter(Mandatory = $true)][string]$Reason
+    )
+
+    if ($planProtectedBranches.Contains($Branch)) {
+        throw "Refusing plan-protected branch: $Branch"
     }
-    if ($activeHeads -contains $branch) {
-        throw "Refusing to delete active PR head: $branch"
+    if ($activeHeads -contains $Branch) {
+        throw "Refusing to delete active PR head: $Branch"
     }
 
-    $remoteRef = "refs/heads/$branch"
+    $remoteRef = "refs/heads/$Branch"
     $existing = @(& git ls-remote --heads origin $remoteRef)
     if ($LASTEXITCODE -ne 0) {
-        throw "Unable to query remote branch: $branch"
+        throw "Unable to query remote branch: $Branch"
     }
     if ($existing.Count -eq 0) {
-        Write-Host "BRANCH_CLEANUP_ALREADY_ABSENT branch=$branch"
+        Write-Host "BRANCH_CLEANUP_ALREADY_ABSENT branch=$Branch reason=$Reason"
+        return $false
+    }
+
+    Write-Host "BRANCH_CLEANUP_DELETE branch=$Branch reason=$Reason"
+    & git push origin --delete $Branch
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to delete approved stale branch: $Branch"
+    }
+    return $true
+}
+
+$deletedExplicit = 0
+foreach ($branch in $deleteBranches) {
+    if (Remove-RemoteBranch -Branch $branch -Reason "explicit-plan") {
+        ++$deletedExplicit
+    }
+}
+
+# DEC-042 root fix: delete_after_merge is a supplement, not the only discovery source.
+$allRemoteLines = @(& git ls-remote --heads origin)
+if ($LASTEXITCODE -ne 0) {
+    throw "Unable to enumerate remote branches for automatic zero-ahead cleanup."
+}
+$remoteBranches = @(
+    foreach ($line in $allRemoteLines) {
+        if ($line -match 'refs/heads/(.+)$') {
+            [string]$Matches[1]
+        }
+    }
+) | Sort-Object -Unique
+
+$deletedAuto = 0
+$keptUnique = 0
+foreach ($branch in $remoteBranches) {
+    if ($planProtectedBranches.Contains($branch)) {
+        continue
+    }
+    if ($activeHeads -contains $branch) {
+        Write-Host "BRANCH_CLEANUP_KEEP_ACTIVE_PR branch=$branch"
+        continue
+    }
+    if ($deleteBranches -contains $branch) {
         continue
     }
 
-    Write-Host "BRANCH_CLEANUP_DELETE branch=$branch"
-    & git push origin --delete $branch
-    if ($LASTEXITCODE -ne 0) {
-        throw "Failed to delete approved stale branch: $branch"
+    $encodedBranch = [System.Uri]::EscapeDataString($branch)
+    $compareUri = "https://api.github.com/repos/$Repository/compare/develop...$encodedBranch"
+    try {
+        $comparison = Invoke-RestMethod -Method Get -Uri $compareUri -Headers $headers
+    }
+    catch {
+        throw "Unable to compare branch against develop: $branch :: $($_.Exception.Message)"
+    }
+
+    $ahead = [int]$comparison.ahead_by
+    $behind = [int]$comparison.behind_by
+    if ($ahead -eq 0) {
+        Write-Host "BRANCH_CLEANUP_AUTO_ZERO_AHEAD branch=$branch ahead=$ahead behind=$behind"
+        if (Remove-RemoteBranch -Branch $branch -Reason "auto-zero-ahead") {
+            ++$deletedAuto
+        }
+    }
+    else {
+        ++$keptUnique
+        Write-Host "BRANCH_CLEANUP_KEEP_UNIQUE branch=$branch ahead=$ahead behind=$behind"
     }
 }
 
@@ -104,4 +167,4 @@ foreach ($protected in @($planProtectedBranches | Where-Object { $_ -notin @("de
         throw "Plan-protected branch missing after cleanup: $protected"
     }
 }
-Write-Host ("BRANCH_CLEANUP_PASS deletedPlanCount=" + $deleteBranches.Count + " activePrHeads=" + $activeHeads.Count + " planProtected=" + $planProtectedBranches.Count + " canonical=develop stable=main")
+Write-Host ("BRANCH_CLEANUP_PASS deletedPlanCount=" + $deleteBranches.Count + " deletedExplicit=" + $deletedExplicit + " deletedAutoZeroAhead=" + $deletedAuto + " keptUnique=" + $keptUnique + " activePrHeads=" + $activeHeads.Count + " planProtected=" + $planProtectedBranches.Count + " canonical=develop stable=main")

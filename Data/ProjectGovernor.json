@@ -3666,11 +3666,13 @@
       "requirements": [
         "REQ-EXEC-002"
       ],
-      "resolution": "develop is the canonical live integration branch. Once a temporary branch is finished, its meaningful content must be merged into develop immediately and the branch ref removed. Zero-ahead stale refs may be deleted after confirming they are not active PR heads. Divergent branches with unique commits are preserved only until selective salvage is complete.",
+      "resolution": "develop is the canonical live integration branch. Once a temporary branch is finished, its meaningful content must be merged into develop immediately and the branch ref removed. Branch Cleanup must discover current remote refs every run and automatically remove every non-protected, non-active-PR branch with zero commits ahead of develop; a static historical allowlist is not sufficient. Divergent branches with unique commits remain protected until selective salvage or explicit supersession is completed.",
       "implementation_contract": [
-        "Data/BranchCleanupPlan.json lists safe stale refs for deletion and separately lists active work and pending-salvage branches.",
-        "Branch Cleanup runs when the cleanup plan lands on develop.",
-        "No completed branch is kept merely for historical convenience; Git history already preserves merged commits."
+        "Data/BranchCleanupPlan.json records explicit protected/salvage state and may list known refs for immediate deletion, but it is not the sole dead-branch discovery source.",
+        "Branch Cleanup runs from an exact-head develop checkout and enumerates live remote refs each run.",
+        "A non-protected branch may be auto-deleted only when it is not an active PR head and GitHub compare reports ahead_by == 0 versus develop.",
+        "Branches with ahead_by > 0 are retained and logged for selective salvage/supersession review.",
+        "No completed zero-ahead branch is kept merely for historical convenience; Git history already preserves merged commits."
       ],
       "evidence_boundary": "Branch/process governance only; no gameplay acceptance claim.",
       "authority": "USER_EXPLICIT_DIRECTION"
