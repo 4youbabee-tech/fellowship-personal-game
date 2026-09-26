@@ -61,8 +61,8 @@ jobs:
 
       - name: Remove isolated health checkout
         if: always()
-        shell: pwsh
+        shell: cmd
         run: |
-          if ($env:SHIRE_HEALTH_ROOT -and (Test-Path -LiteralPath $env:SHIRE_HEALTH_ROOT)) {
-            Remove-Item -LiteralPath $env:SHIRE_HEALTH_ROOT -Recurse -Force -ErrorAction SilentlyContinue
-          }
+          @echo off
+          if defined SHIRE_HEALTH_ROOT if exist "%SHIRE_HEALTH_ROOT%" rmdir /S /Q "%SHIRE_HEALTH_ROOT%"
+          exit /b 0
