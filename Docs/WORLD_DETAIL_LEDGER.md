@@ -1,3 +1,14 @@
+## 2026-09-26 - Mega-production source/asset preparation registered
+
+- The next runtime world-detail order remains C3 -> C4 -> D for P1C01.
+- A parallel preparation lane is now authorized for cleared Project Source assets covering characters/animation, architecture/interiors, audio/foley, VFX/sky/weather and later-region packets.
+- This preparation lane does not change quest/save/story state, LivingWorld ownership, foliage density or later-region runtime availability.
+- External assets remain separated by evidence state: SOURCE_REGISTERED -> CANDIDATE -> STAGED -> READY_FOR_IMPORT -> IMPORTED -> INTEGRATED -> ACCEPTED.
+- Animated production assets remain FBX-only. Production textures remain PNG/TGA, preferably channel packed.
+- Heavy runtime assets must remain soft-referenced and asynchronously loaded; ambient crowds remain pooled; repeated world detail remains HISM/ISM/LOD/cull controlled.
+- Gate 6/7 still blocks broad later-region runtime promotion. This entry authorizes preparation, not runtime acceptance.
+- No PIE/device/visual/performance acceptance is claimed by this registration.
+
 ## 2026-09-26 - C2 closure and C3 stable foliage identity gate
 
 - C2 lightweight foliage wind is merged on `develop@1d0580926299e4fac635bcb847343a49c444d4f1` after exact-head #1030/#837 and merged-develop #1031/#838 machine success.
