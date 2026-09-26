@@ -1,3 +1,10 @@
+## 2026-09-26 - Maintenance-only Unreal trigger closure
+
+- Added `Data/BranchCleanupPlan.json` and `Scripts/run_branch_cleanup.ps1` to both push and PR `paths-ignore` in Unreal Build Validation.
+- These branch-hygiene files are static/maintenance-only and must stay on Pre-Unreal; they must not consume the UE4 build device.
+- PG-167 now guards both exclusions so the heavy Unreal lane cannot be re-triggered by branch-cleanup maintenance.
+- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE; fresh Pre-Unreal proof pending**.
+
 ## 2026-09-26 - Final CI/branch-hygiene hardening before production resumes
 
 - Removed the last known marketplace checkout dependencies from the self-hosted maintenance lanes: Branch Cleanup and Runner Health now use bounded local exact-head Git acquisition with three attempts and a 20-second low-speed cutoff.

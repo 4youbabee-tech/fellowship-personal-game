@@ -4617,6 +4617,8 @@ for pg167_symbol in [
     "Data/WholeGame*.json",
     "Data/*Warehouse*.json",
     "Data/P1C01WorldBuildIntakePacketV1.json",
+    "Data/BranchCleanupPlan.json",
+    "Scripts/run_branch_cleanup.ps1",
     "${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}",
 ]:
     if pg167_symbol not in pg167_unreal:

@@ -43,6 +43,8 @@ on:
       - 'Scripts/runtime_smoke.py'
       - 'Scripts/test_asset_quality_audit.py'
       - 'Scripts/asset_quality_audit.py'
+      - 'Scripts/run_branch_cleanup.ps1'
+      - 'Data/BranchCleanupPlan.json'
       - 'SourceAssets/PrivateOffline/**'
       - 'Scripts/stage_*warehouse*.ps1'
   pull_request:
@@ -70,6 +72,8 @@ on:
       - 'Scripts/source_contracts.py'
       - 'Scripts/test_source_contracts.py'
       - 'Scripts/asset_quality_audit.py'
+      - 'Scripts/run_branch_cleanup.ps1'
+      - 'Data/BranchCleanupPlan.json'
       - 'Scripts/test_asset_quality_audit.py'
       - 'Scripts/runtime_smoke.py'
       - 'Scripts/test_runtime_smoke.py'
