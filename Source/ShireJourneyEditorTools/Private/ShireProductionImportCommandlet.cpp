@@ -525,6 +525,84 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         }
     }
 
+    // D: create a deterministic texture-free water master. Runtime residency is
+    // owned by the chapter bank; this editor-only creation path does not authorize
+    // planar reflections, scene captures, WPO, translucency or CPU water simulation.
+    const TCHAR* ProductionWaterPath =
+        TEXT("/Game/Production/Materials/M_ProductionWater.M_ProductionWater");
+    UMaterialInterface* ProductionWaterMaterial =
+        FindObject<UMaterialInterface>(nullptr, ProductionWaterPath);
+    if (!ProductionWaterMaterial)
+    {
+        const FString ProductionWaterObjectPath(ProductionWaterPath);
+        const FString ProductionWaterPackage =
+            FPackageName::ObjectPathToPackageName(ProductionWaterObjectPath);
+        if (FPackageName::DoesPackageExist(ProductionWaterPackage))
+        {
+            ProductionWaterMaterial =
+                LoadObject<UMaterialInterface>(nullptr, ProductionWaterPath);
+        }
+    }
+
+    if (!ProductionWaterMaterial)
+    {
+        UMaterialFactoryNew* WaterFactory = NewObject<UMaterialFactoryNew>();
+        UMaterial* WaterMaterial = Cast<UMaterial>(
+            AssetTools.Get().CreateAsset(
+                TEXT("M_ProductionWater"),
+                TEXT("/Game/Production/Materials"),
+                UMaterial::StaticClass(),
+                WaterFactory));
+
+        if (WaterMaterial)
+        {
+            UMaterialExpressionVectorParameter* WaterColorParameter =
+                NewObject<UMaterialExpressionVectorParameter>(WaterMaterial);
+            WaterColorParameter->ParameterName = TEXT("WaterColor");
+            WaterColorParameter->DefaultValue = FLinearColor(0.035f, 0.17f, 0.24f, 1.0f);
+            WaterMaterial->Expressions.Add(WaterColorParameter);
+            WaterMaterial->BaseColor.Expression = WaterColorParameter;
+
+            UMaterialExpressionScalarParameter* WaterRoughnessParameter =
+                NewObject<UMaterialExpressionScalarParameter>(WaterMaterial);
+            WaterRoughnessParameter->ParameterName = TEXT("Roughness");
+            WaterRoughnessParameter->DefaultValue = 0.22f;
+            WaterMaterial->Expressions.Add(WaterRoughnessParameter);
+            WaterMaterial->Roughness.Expression = WaterRoughnessParameter;
+
+            UMaterialExpressionScalarParameter* WaterMetallicParameter =
+                NewObject<UMaterialExpressionScalarParameter>(WaterMaterial);
+            WaterMetallicParameter->ParameterName = TEXT("Metallic");
+            WaterMetallicParameter->DefaultValue = 0.0f;
+            WaterMaterial->Expressions.Add(WaterMetallicParameter);
+            WaterMaterial->Metallic.Expression = WaterMetallicParameter;
+
+            UMaterialExpressionScalarParameter* WaterSpecularParameter =
+                NewObject<UMaterialExpressionScalarParameter>(WaterMaterial);
+            WaterSpecularParameter->ParameterName = TEXT("Specular");
+            WaterSpecularParameter->DefaultValue = 0.62f;
+            WaterMaterial->Expressions.Add(WaterSpecularParameter);
+            WaterMaterial->Specular.Expression = WaterSpecularParameter;
+
+            WaterMaterial->PostEditChange();
+            WaterMaterial->MarkPackageDirty();
+            ImportedMaterialPackages.AddUnique(WaterMaterial->GetOutermost());
+            ProductionWaterMaterial = WaterMaterial;
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("D_WATER_MATERIAL_EVIDENCE created M_ProductionWater opaque=yes textureSamples=0 wpo=no sceneCapture=no"));
+        }
+        else
+        {
+            ++Failed;
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("ShireProductionImport failed to create M_ProductionWater master material."));
+        }
+    }
+
     // Drop C2: create a dedicated foliage master without assigning it yet.
     // Grass/leaves will be re-parented in C3 by stable authored material identity.
     // SimpleGrassWind executes in the material vertex path, so there is no per-tree
