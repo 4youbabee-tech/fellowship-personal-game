@@ -4425,7 +4425,7 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "C2 lightweight foliage wind is merged and machine-green. Post-C2 root cleanup is the only active maintenance operation; C3 stable foliage material identity may start from verified develop while branch cleanup proceeds separately.",
+    "rule": "C4 foliage LOD/cull evidence is merged. The next runtime production drop is D fixed-state lighting/sky/fog/low-cost water. Mega Asset Promotion may proceed in parallel through registered warehouse/intake states without bypassing Gate 6/7 runtime scope control.",
     "machine_baseline": {
       "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
       "pre_unreal": "#1031 SUCCESS",
@@ -4435,15 +4435,15 @@
     "w01_freeze": "RELEASED_BY_W00_EXIT"
   },
   "immediate_next_large_actions": [
-    "1. Prove Drop B Hobbiton/Bag End exact head through Pre-Unreal and UE4.27.2 core validation.",
-    "2. If green, proceed to Drop C materials/vegetation with channel-packed PNG/TGA, HISM/LOD/culling and performance-scaled wind.",
-    "3. Source/author a production Bag End interior shell through approved FBX/provenance workflow before claiming interior completion.",
-    "4. Continue atmosphere, character presentation, living Shire, quest/audio polish and target-device profiling in order.",
-    "5. Keep Arabic localization runtime implementation isolated from the active world-production PR."
+    "1. D — fixed-state lighting / sky / fog / low-cost water for P1C01.",
+    "2. Mega Asset Promotion — move prepared Project Source / warehouse assets through intake, import and integration in bounded category batches.",
+    "3. Character presentation and skeletal/animation production coverage.",
+    "4. Living Shire motion/fauna plus quest/audio polish.",
+    "5. Target-device DX11 720p Low-Medium profiling before density or expensive presentation expansion."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W01-P1C01-POST-C2-ROOT-CLEANUP",
-    "source_head": "1d0580926299e4fac635bcb847343a49c444d4f1",
+    "checkpoint_id": "CP-W01-P1C01-C4-MERGED-D-NEXT",
+    "source_head": "2845071119d926defd6ba94c970f43729bc51674",
     "branch": "none",
     "pull_request": 0,
     "verified": {
@@ -4462,12 +4462,13 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "Post-C2 root cleanup and C3 launch preparation; PR93 runtime repair subsequently passed full CI and merged into develop.",
+    "active_wave": "C4 merged; D lighting/sky/fog/low-cost water next with Mega Asset Promotion in parallel.",
     "next_actions": [
-      "1. Merge the post-C2 cleanup/closure maintenance PR after exact-head Pre-Unreal is green.",
-      "2. Require Branch Cleanup success and verify only develop/main plus the two documented planning salvage branches remain.",
-      "3. Start C3 stable foliage material identity from cleaned develop as the sole runtime-changing PR.",
-      "4. Keep C4 and D preparation-only until their prerequisites are met."
+      "Start D fixed-state lighting / sky / fog / low-cost water from current verified develop after the required exact-head gate.",
+      "Run Mega Asset Promotion in parallel: advance registered warehouse items through staging and intake QC toward READY_FOR_IMPORT without treating warehouse presence as runtime integration.",
+      "Promote only validated assets into UE4.27 in bounded category batches; preserve provenance, FBX-only animated production, PNG/TGA textures, soft references/async heavy loading, pooling and HISM/ISM/LOD/culling.",
+      "Continue character presentation, living motion/fauna, quest/audio polish and target-device profiling after D according to the registered production train.",
+      "Keep broad later-region runtime expansion behind Gate 6/7 human visual, pacing and target-device evidence."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -4475,7 +4476,7 @@
       "P1C01 visual/pacing/NPC-believability acceptance",
       "real audio listening/mix acceptance after production bank/spatial layer integration"
     ],
-    "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
+    "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance. Warehouse/source coverage never substitutes for IMPORTED/INTEGRATED/ACCEPTED state.",
     "validation_snapshot": {
       "last_green": {
         "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
@@ -5483,9 +5484,9 @@
   },
   "integration_train": {
     "branch": "none",
-    "baseline": "1d0580926299e4fac635bcb847343a49c444d4f1",
-    "current_wave": "W01_P1C01_POST_C2_ROOT_CLEANUP",
-    "merge_policy": "C3 is the next production lane. Branch cleanup does not block it; runtime merges still require their exact-head technical checks.",
+    "baseline": "2845071119d926defd6ba94c970f43729bc51674",
+    "current_wave": "W01_P1C01_D_LIGHTING_PLUS_MEGA_ASSET_PROMOTION",
+    "merge_policy": "D is the next runtime-changing lane. Mega Asset Promotion may proceed in parallel as bounded source/intake/import batches; each runtime/content promotion requires its applicable exact-head validation.",
     "proof_boundary": "C2 exact candidate #1030/#837 and merged develop #1031/#838 are machine-green. No PIE/device/visual/performance acceptance is implied."
   },
   "completion_wave_map": {
@@ -5552,10 +5553,11 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Complete post-C2 root cleanup and verify the expected remote branch survivor set.",
-      "Start C3 stable foliage material identity from verified develop; branch cleanup is independent.",
-      "Then execute C4 LOD/cull/overdraw evidence work before any foliage density increase.",
-      "Proceed to D lighting/sky/fog/water only after C4 is exact-head machine-green; keep broad Part I story expansion frozen until Gate 6/7."
+      "Start D fixed-state lighting / sky / fog / low-cost water from current verified develop after the required exact-head gate.",
+      "Run Mega Asset Promotion in parallel: advance registered warehouse items through staging and intake QC toward READY_FOR_IMPORT without treating warehouse presence as runtime integration.",
+      "Promote only validated assets into UE4.27 in bounded category batches; preserve provenance, FBX-only animated production, PNG/TGA textures, soft references/async heavy loading, pooling and HISM/ISM/LOD/culling.",
+      "Continue character presentation, living motion/fauna, quest/audio polish and target-device profiling after D according to the registered production train.",
+      "Keep broad later-region runtime expansion behind Gate 6/7 human visual, pacing and target-device evidence."
     ]
   },
   "development_mode_contract": {
@@ -6020,5 +6022,21 @@
       "The 24-hour Project Manager report is informational and must never become a production gate."
     ],
     "regression_guard": "PG-150 now protects authority semantics rather than exact PR/branch mirroring."
+  },
+  "new_developer_entry": {
+    "status": "ACTIVE_SINGLE_ENTRY",
+    "entry_file": "README.md",
+    "onboarding_script": "Scripts/new_developer_onboarding.ps1",
+    "authority_guide": "Docs/PROJECT_GOVERNOR.md",
+    "machine_authority": "Data/ProjectGovernor.json",
+    "reading_order": [
+      "Docs/PROJECT_GOVERNOR.md",
+      "Data/ProjectGovernor.json",
+      "Docs/CURRENT_PROJECT_STATE.md",
+      "Docs/DEVELOPMENT_GATES.md",
+      "Docs/PROJECT_GUARDIAN.md"
+    ],
+    "rule": "A new human programmer or AI session enters through README/onboarding script, then follows ProjectGovernor. Chat history and stale PR text are never required to discover current direction.",
+    "live_state_rule": "GitHub owns current branch/PR/check status; do not duplicate volatile transport metadata as fail-closed governance."
   }
 }
