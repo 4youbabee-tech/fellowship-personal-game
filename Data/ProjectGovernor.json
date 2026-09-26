@@ -5495,16 +5495,16 @@
     "rule": "Track progress by wave exit criteria, not raw commit/file-upload count. Percentages are planning estimates and never substitute for validation evidence."
   },
   "daily_progress_reporting": {
-    "status": "ACTIVE",
-    "cadence": "EVERY_24_HOURS",
+    "status": "DISABLED_BY_OWNER",
+    "cadence": "ON_DEMAND",
     "baseline_percent": 40,
     "source_of_truth": "Data/CompletionWaveMapV1.json",
-    "report_rule": "Report whole-game planning completion percentage, 24-hour delta, wave movement, meaningful production drops, exact-head validation evidence, blockers, and warehouse/runtime visibility progress. Do not increase progress from commit count alone; only advance percentage when wave exit criteria materially move.",
+    "report_rule": "No scheduled 24-hour report. Report whole-game progress only on owner request or after a material production milestone.",
     "evidence_rule": "Never convert static/compile/warehouse evidence into PIE/device/visual acceptance without matching proof.",
     "audience": "OWNER",
     "automation_id": "6ab288ade9308191ae2410214f0b4d52",
-    "schedule": "Daily 17:05 Asia/Beirut, re-enabled 2026-09-26; first scheduled report 2026-09-27",
-    "baseline_note": "40 is a historical planning baseline, not a fresh measurement. CompletionWaveMap maps W00 exit to 42; reconcile exit evidence before publishing a refreshed percentage. Daily delta unavailable without comparable snapshots."
+    "schedule": "Disabled by owner on 2026-09-26.",
+    "baseline_note": "40 remains historical until a material wave exit justifies recalculation; no scheduled delta reporting."
   },
   "cross_system_audit_cycle": {
     "status": "ACTIVE_ENFORCED",
