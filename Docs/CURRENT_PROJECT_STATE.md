@@ -1,3 +1,12 @@
+## 2026-09-27 - Dead-branch cleanup made automatic and non-repetitive
+
+- The remaining self-cleanup gap is closed: Branch Cleanup now triggers after every merged PR and runs only for `merged == true`; manual dispatch remains available.
+- The old 66-entry historical `delete_after_merge` backlog is cleared. Cleanup no longer spends time rechecking already-absent branches on every run.
+- The cleanup script now enumerates remote refs once per run and reuses that set for explicit and zero-ahead deletion instead of issuing a separate `git ls-remote` query for each historical branch.
+- Zero-ahead auto-prune, active-PR protection, protected/salvage preservation and unique-commit retention remain fail-closed.
+- This closes the concrete speed/cleanup regression discovered after PR #105 left its merged branch ref alive until another cleanup run.
+- Evidence boundary: **SOURCE-IMPLEMENTED / FRESH PRE-UNREAL + POST-MERGE CLEANUP PROOF PENDING**. No runtime/PIE/device/visual/performance claim is created.
+
 ## 2026-09-27 - Post-D production resume gate
 
 - D is complete at the machine-validation level: `develop@1066cf022723fcdef9bfac66519f5b0f9c1e03a4` passed Pre-Unreal #1109 and Unreal Build #893.
