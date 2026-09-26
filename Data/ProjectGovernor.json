@@ -3716,6 +3716,35 @@
       "resolution": "Remove the GitHub-hosted delta/no-stage jobs and obsolete push branch from warehouse-stage.yml. Relevant develop/PR warehouse changes directly queue one supervised Windows staging job with its own concurrency group.",
       "evidence_boundary": "Workflow/source configuration only until the supervised runner executes a staging job.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-046",
+      "title": "Eliminate redundant Unreal validation work without weakening exact-head quality gates",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-003",
+        "REQ-EXEC-002",
+        "REQ-PROD-011"
+      ],
+      "resolution": "Administrative/non-runtime changes must not consume repeated full UE4.27 build/import/runtime/package cycles. Exact-head safety remains mandatory for runtime-relevant changes. Superseded runs from the same PR are cancelled, exact checkout preserves Git state for incremental UBT behavior, and a merged commit may inherit core proof only when its Git tree is exactly identical to a previously green parent tree.",
+      "implementation_contract": [
+        "README/onboarding/handoff/classifier-test administrative paths stay on Pre-Unreal and do not trigger Unreal Build Validation by themselves.",
+        "Exact checkout preserves .git, fetches and hard-resets to TARGET_SHA, verifies HEAD exactly, and removes authenticated remote credentials after classification.",
+        "Git fetch uses a bounded low-speed cutoff and three attempts; stalled transfer cannot hold the device indefinitely.",
+        "Concurrency cancels only superseded runs from the same PR branch; unrelated runtime PR/develop runs are not cancelled.",
+        "Tree-equivalent proof reuse requires exact Git tree SHA equality plus a successful required Unreal proof on the identical parent tree.",
+        "Config/Build.cs/Target.cs/streaming/package/cook/release/unknown changes remain fail-safe FULL.",
+        "Runtime/source/data deltas continue through asset/core/full validation according to impact.",
+        "Do not increase compile parallelism or add blind binary caches until the safer structural reductions are measured."
+      ],
+      "rationale": "Measured logs showed repeated 13-18 minute jobs for administrative changes, #888 spending ~11 minutes in checkout before cancellation, and repeated 238-252 second 76-action C++ rebuilds. The waste came from trigger/classifier/checkout architecture rather than insufficient quality checks.",
+      "evidence_boundary": "CI source architecture only until a fresh corrected run measures actual checkout/build/total durations. No gameplay, PIE, device, visual, pacing or performance acceptance is implied.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Docs/CI_LATENCY_REVIEW_2026-09-26.md",
+        "Unreal #884-#889 workflow/job logs",
+        "Git tree equality: develop@2845071119d926defd6ba94c970f43729bc51674 == C4 green candidate bc1e04062d8079fef73eae64f68c81772b4fc56c tree 3de99fa7951e889cf319e967a2225e962d9cc554"
+      ]
     }
   ],
   "open_conflicts": [],
@@ -3999,7 +4028,8 @@
         "PG-160",
         "PG-163",
         "PG-164",
-        "PG-165"
+        "PG-165",
+        "PG-175"
       ],
       "behavior": "Validate the exact W01 candidate head; machine evidence never promotes visual/device/performance acceptance."
     },
