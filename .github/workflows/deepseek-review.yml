@@ -1,12 +1,19 @@
 name: DeepSeek Code Review
+
 on:
-  pull_request_target:
-    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
 permissions:
   pull-requests: write
+
 jobs:
   review:
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 10
     steps:
       - uses: hustcer/deepseek-review@v1
         with:
