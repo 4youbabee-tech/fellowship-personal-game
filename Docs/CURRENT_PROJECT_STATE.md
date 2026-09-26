@@ -1,3 +1,17 @@
+## 2026-09-26 - Root administrative blocker removal / thread consolidation
+
+- Owner direction: stop recurring stale-Governor/old-PR/board mismatch failures at the root and reduce parallel administrative threads.
+- `Scripts/project_governor.py` no longer treats volatile PR numbers or candidate branch names as fail-closed Governor truth. GitHub is the live authority for PR/branch/open/mergeable/workflow transport state.
+- `Data/ProjectGovernor.json` remains authoritative for durable requirements, priorities, active lane/gate, decisions and evidence boundaries.
+- PG-150 now checks authority semantics instead of exact PR/branch mirroring across human-readable files.
+- New PG-170 regression guard rejects reintroduction of the old PR/branch mismatch failure strings and requires branch-cleanup empty/open-PR response hardening.
+- `Scripts/run_branch_cleanup.ps1` now safely handles API results that do not expose `head.ref` under PowerShell StrictMode.
+- Failure discipline is lane-scoped: a real runtime/integration failure blocks that affected lane, while unrelated safe source/PDF/warehouse/design preparation may continue.
+- W00 remains closed unless concrete regression evidence reopens it.
+- The 24-hour Project Manager report remains informational and never blocks production.
+- C3 foliage identity implementation remains the active runtime change on PR #98.
+- Evidence boundary: these governance/maintenance changes are source-level only until exact-head validation completes; no PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-26 - P1C01 C3 stable foliage identity implemented
 
 - Candidate branch `production/p1c01-c3-foliage-identity-v1` implements the prepared C3 contract in `ShireProductionImportCommandlet.cpp`.
