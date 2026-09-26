@@ -9,37 +9,29 @@ The source hierarchy is preserved:
 - the systems bible defines material/foliage review gates;
 - external sources provide candidate assets only after provenance/license review.
 
-## Verified current gap
+## Current production truth
 
-The repository already has Shire TGA textures and authored MTL entries such as Grass, Dirt, Bark, Leaves, Stone, Wood and DoorGreen. The production importer synthesizes material instances with Color/Roughness/Metallic, but its MTL parser currently does not bind `map_Kd` into the synthesized material instances.
+- **C1 merged and machine-proven:** deterministic production material instances bind authored MTL `map_Kd` albedo paths.
+- **C2 merged and machine-proven:** `M_ProductionFoliage` uses UE4.27 `SimpleGrassWind` through `UMaterialExpressionMaterialFunctionCall`; `M_ProductionFoliageFar` remains no-WPO.
+- C2 exact candidate passed Pre-Unreal #1030 + Unreal #837; merged `develop@1d0580926299e4fac635bcb847343a49c444d4f1` passed #1031 + #838.
+- **C3 next:** assign the near/mid foliage parent only for exact normalized identities `Grass`, `Leaves`, `LeafGreen`, `LeafGold`. Do not use broad filename/color/substring inference.
+- **C4 after C3:** review real mesh LOD/material-slot/cull evidence before any far-parent assignment or density change.
+- Shared weather/audio wind control remains a later bounded bridge after the visual material path is established.
 
-This means Drop C begins with the material pipeline itself, not with blind density growth.
+## Asset and architecture rules
 
-## Runtime sequence after post-merge green
-
-1. Add a texture parameter to the deterministic production surface master and bind authored MTL albedo paths.
-2. Create a lightweight foliage master for grass/leaves only.
-3. Add parameterized foliage WPO/wind while keeping repeated vegetation under HISM/ISM.
-4. Keep existing cull bands/LOD policy and measure masked overdraw/shadow cost before raising density.
-5. After the visual wind path is stable, bridge weather/wind state to both material response and adaptive ambience in a later bounded step.
-
-## Asset rules
-
-- Static world assets may remain OBJ where already established; animated production assets remain FBX-only.
-- Textures remain PNG/TGA; no BMP production textures.
+- Animated production assets are FBX-only.
+- Production textures are PNG/TGA; no BMP.
 - New PBR acquisitions should use channel-packed masks where useful.
-- Heavy runtime assets remain soft/asynchronous.
-- Provider lists are sourcing candidates, not blanket approval.
+- Heavy runtime assets remain soft/asynchronous; C3 is editor-import parent selection only.
+- Repeated vegetation remains HISM/ISM. No foliage Actor/component Tick and no density growth in C3.
+- Deterministic material instance object paths and existing AlbedoTexture/Color/Roughness/Metallic values remain unchanged.
+- `M_ProductionFoliageFar` is not bound during C3; far LOD binding belongs to C4.
 
 ## Visual target
 
-The Shire should read as:
-- soft pastoral grass/earth transition,
-- warm wood and domestic surfaces,
-- moss/stone restraint rather than glossy stone,
-- layered hedges/gardens/orchards,
-- subtle wind rather than synchronized mechanical swaying.
+The Shire should read as soft pastoral grass/earth transition, warm domestic surfaces, restrained moss/stone, layered hedges/gardens/orchards, and subtle non-mechanical wind.
 
 ## Evidence boundary
 
-This document prepares Drop C only. Runtime material/foliage changes do not start until the current post-merge world/architecture validation is green.
+C2 is **COMPILE-TESTED + exact-head automated import/QA/startup machine green**. C3 is **PREPARED_NOT_RUNTIME_STARTED** until post-C2 cleanup is complete. No PIE/device/visual/performance acceptance is inferred.

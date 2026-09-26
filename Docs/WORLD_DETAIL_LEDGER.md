@@ -1,3 +1,11 @@
+## 2026-09-26 - C2 closure and C3 stable foliage identity gate
+
+- C2 lightweight foliage wind is merged on `develop@1d0580926299e4fac635bcb847343a49c444d4f1` after exact-head #1030/#837 and merged-develop #1031/#838 machine success.
+- C3 is the next runtime world-detail step and is intentionally narrow: only exact normalized material identities `Grass`, `Leaves`, `LeafGreen`, `LeafGold` may move to `M_ProductionFoliage`.
+- C3 preserves deterministic material object paths, authored albedo/Color/Roughness/Metallic values, HISM/ISM population ownership, gameplay IDs, quest/save state, LivingWorld ownership and current foliage density.
+- Broad `Contains("Leaf")` / `Contains("Grass")` inference is forbidden. Far no-WPO parent assignment remains C4 work backed by actual mesh/LOD/material-slot/cull evidence.
+- No PIE/device/visual/performance acceptance is claimed from the machine closure.
+
 ## 2026-09-26 - P1C01 C4 and D world-presentation preparation
 
 - C4 preparation now records the evidence required for far foliage treatment: actual mesh object path, material identity, LOD section, cull band, screen-size transition and masked-overdraw observation before a far no-WPO parent can be chosen.
@@ -44,7 +52,7 @@
 - These are production-support resources, not new canon claims. Hero Hobbit-hole/Bag End silhouettes and named-character identity still require project-specific art direction and approval.
 - Source 11 performance rules remain binding: foliage/material overdraw, texture memory, HISM/LOD/cull cost and audio concurrency are measured before density expansion.
 - All external stock must retain provenance/license records and pass format/intake review before READY_FOR_IMPORT. Animated production assets remain FBX-only; production textures remain PNG/TGA.
-- Runtime world ownership, quest IDs, save keys, LivingWorld/NPC systems and active C2 foliage integration are untouched by this preparation lane.
+- Runtime world ownership, quest IDs, save keys, LivingWorld/NPC systems and merged C2 foliage integration are untouched by this preparation lane.
 
 # WORLD DETAIL LEDGER
 

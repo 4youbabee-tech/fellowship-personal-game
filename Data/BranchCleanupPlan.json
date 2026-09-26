@@ -4,7 +4,7 @@
   "authority": "Data/ProjectGovernor.json",
   "canonical_branch": "develop",
   "stable_release_branch": "main",
-  "status": "READY_FOR_ACTIVE_BRANCH_HYGIENE_CLEANUP",
+  "status": "READY_FOR_POST_C2_ROOT_CLEANUP",
   "truth_boundary": "This plan records branch hygiene only. It does not claim PIE/device/visual acceptance.",
   "preserve": [
     {
@@ -78,7 +78,16 @@
     "planning/whole-game-production-prep-v2",
     "integration/whole-game-prep-consolidation-v1",
     "ci/validator-sync-v5",
-    "ci/runner-validation-hardening-v1"
+    "ci/runner-validation-hardening-v1",
+    "ci/actions-zero-step-rootfix-v3",
+    "ci/runner-network-probe-v1",
+    "ci/validator-sync-v4",
+    "ci/warehouse-stage-rootfix-v1",
+    "production/w01-p1c01-foliage-wind-v1",
+    "production/w01-p1c01-foliage-wind-v2",
+    "production/w01-p1c01-foliage-wind-v3",
+    "warehouse/p1c01-material-stage-v4",
+    "maintenance/post-c2-cleanup-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -90,40 +99,51 @@
     "Cleanup runs only after this plan lands on develop."
   ],
   "final_audit": {
-    "status": "READY_FOR_POST_CONSOLIDATION_CLEANUP",
-    "rule": "After this consolidation lands, only the active runtime PR and unresolved unique-content salvage branches may remain outside develop.",
-    "current_active_runtime_pr": "production/w01-p1c01-foliage-wind-v3 / PR #87",
+    "status": "READY_FOR_POST_C2_ROOT_CLEANUP",
+    "rule": "After cleanup only develop/main and explicitly preserved future-planning salvage branches may remain.",
+    "current_active_runtime_pr": "none; PR #87 C2 is merged to develop@1d0580926299e4fac635bcb847343a49c444d4f1 and C3 has not started.",
     "completed_preparation_prs": [
       "PR #81 superseded by consolidation",
-      "PR #83 superseded by consolidation"
+      "PR #83 superseded by consolidation",
+      "PR #87 C2 merged after exact-head Pre-Unreal #1030 + Unreal #837"
     ],
-    "physical_cleanup": "Branch Cleanup uses bounded local exact-head develop checkout, runner-health verification, active-PR-head protection, and hard-fail deletion semantics after the plan lands on develop.",
-    "truth_boundary": "Branch/process hygiene only; no runtime acceptance implied."
+    "physical_cleanup": "Branch Cleanup uses bounded exact-head develop checkout, runner-health verification, live active-PR-head protection, plan-protected salvage/work/infrastructure protection, hard-fail deletion semantics, and post-delete ref verification.",
+    "truth_boundary": "Branch/process hygiene only; no PIE/device/visual/performance acceptance implied."
   },
-  "active_work_branches": [
-    "production/w01-p1c01-foliage-wind-v3"
-  ],
+  "active_work_branches": [],
   "preserve_pending_salvage": [
     {
-      "branch": "production/w01-p1c01-foliage-wind-v1",
-      "reason": "35 commits unique versus develop; do not delete until compared/salvaged against v2."
-    },
-    {
       "branch": "planning/w01-localization-prototype-v1",
-      "reason": "6 commits unique versus develop; preserve until useful content is selectively integrated."
+      "reason": "6 unique commits include localization plan/document content not present on develop; preserve for later selective integration."
     },
     {
       "branch": "planning/w01-p1c01-mega-prep-v1",
-      "reason": "2 commits unique versus develop; preserve until useful content is selectively integrated."
+      "reason": "2 unique commits include P1C01 intake/parallel-production/acceptance content not present on develop; preserve for later selective integration."
     }
   ],
   "completed_integration_branches": [
     "stability/source-architecture-manifest-sync-v1",
     "planning/whole-game-world-build-v1",
     "planning/whole-game-production-prep-v2",
-    "integration/whole-game-prep-consolidation-v1"
+    "integration/whole-game-prep-consolidation-v1",
+    "production/w01-p1c01-foliage-wind-v3"
   ],
-  "active_infrastructure_branches": [
-    "ci/runner-validation-hardening-v1 / PR #90 (delete immediately after merge)"
-  ]
+  "active_infrastructure_branches": [],
+  "root_cleanup_audit_2026_09_26": {
+    "merged_c2_develop": "1d0580926299e4fac635bcb847343a49c444d4f1",
+    "delete_decisions": [
+      "ci/runner-network-probe-v1 and production/w01-p1c01-foliage-wind-v3 are zero commits ahead of develop.",
+      "ci/actions-zero-step-rootfix-v3 is superseded by the hardened bounded local checkout now on develop.",
+      "ci/validator-sync-v4 and ci/warehouse-stage-rootfix-v1 are older CI/validator variants superseded by current develop guards.",
+      "production/w01-p1c01-foliage-wind-v1/v2 share the same proven importer blob now merged on develop; retained useful C2/C3 intent is recorded in current docs/plans.",
+      "warehouse/p1c01-material-stage-v4 has WarehouseAcquisitionBatchV1.json identical to develop and no newer production truth.",
+      "maintenance/post-c2-cleanup-v1 self-cleans only after this PR merges and is no longer an active PR head."
+    ],
+    "expected_survivors": [
+      "develop",
+      "main",
+      "planning/w01-localization-prototype-v1",
+      "planning/w01-p1c01-mega-prep-v1"
+    ]
+  }
 }

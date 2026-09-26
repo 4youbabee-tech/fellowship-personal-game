@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_MATERIALS_VEGETATION_V1",
-  "status": "C2_FOLIAGE_WIND_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
-  "canonical_parent": "develop@f4028a89f7d2c541cddcb987f43963be87e944e0",
+  "status": "C2_FOLIAGE_WIND_EXACT_HEAD_GREEN_MERGED_C3_READY",
+  "canonical_parent": "develop@1d0580926299e4fac635bcb847343a49c444d4f1",
   "source_contract": {
     "world_bible": [
       "Shire/Hobbiton visual grammar remains pastoral hills, lanes, farms, Hobbit-holes, warm domestic scale, circular doors and gardens.",
@@ -103,12 +103,21 @@
     "Owner PIE visual review confirms natural material response and non-distracting wind.",
     "Target-device profiling confirms foliage/material cost before density expansion."
   ],
-  "evidence_boundary": "Drop C2 source implementation rebased onto develop@f4028a89f7d2c541cddcb987f43963be87e944e0; exact-head PR #87 Pre-Unreal + UE4.27.2 Fast Asset Lane proof is required. PIE/device/visual/performance acceptance remains separate.",
+  "evidence_boundary": "C2 exact candidate and merged develop are machine-green. C3 is prepared but not runtime-started. PIE/device/visual/performance acceptance remains separate.",
   "runtime_implementation": {
     "importer_change": "C1 map_Kd -> AlbedoTexture binding remains intact. C2 deterministically creates M_ProductionFoliage and M_ProductionFoliageFar during production import.",
     "master_material_change": "Near/mid foliage master keeps AlbedoTexture * Color, Roughness and Metallic, and calls the UE4.27 SimpleGrassWind Engine material function from WPO. Far foliage master mirrors surface parameters but has no WPO.",
     "gameplay_impact": "none; editor production-import material generation only",
     "c2_assignment_boundary": "C2 creates the masters only. Stable foliage-material identity binding is C3; LOD/cull/overdraw profiling remains C4.",
-    "next": "C3 stable foliage material identity only after C2 exact-head Fast Asset Lane green and merge"
+    "next": "C3 stable foliage material identity is ready to start only after post-C2 root cleanup succeeds."
+  },
+  "c2_machine_evidence": {
+    "final_pr_head": "fd521dc308580fc44d0cdfdfed24273bacc37ff9",
+    "pre_unreal": "#1030 SUCCESS",
+    "unreal": "#837 SUCCESS",
+    "merge_commit": "1d0580926299e4fac635bcb847343a49c444d4f1",
+    "merged_pre_unreal": "#1031 SUCCESS",
+    "merged_unreal": "#838 SUCCESS",
+    "fast_asset_lane": "incremental Editor build + production import + Automation QA + startup smoke; chapter/state/Cook/Package/device steps skipped"
   }
 }

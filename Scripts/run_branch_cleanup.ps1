@@ -19,9 +19,28 @@ if (-not (Test-Path -LiteralPath $PlanPath -PathType Leaf)) {
 $plan = Get-Content -LiteralPath $PlanPath -Raw | ConvertFrom-Json
 $deleteBranches = @($plan.delete_after_merge | ForEach-Object { [string]$_ } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
 
+$planProtectedBranches = New-Object 'System.Collections.Generic.HashSet[string]' ([System.StringComparer]::OrdinalIgnoreCase)
 foreach ($protected in @("develop", "main")) {
+    [void]$planProtectedBranches.Add($protected)
+}
+foreach ($branch in @($plan.active_work_branches)) {
+    $name = [string]$branch
+    if (-not [string]::IsNullOrWhiteSpace($name)) { [void]$planProtectedBranches.Add($name.Trim()) }
+}
+foreach ($entry in @($plan.preserve_pending_salvage)) {
+    $name = [string]$entry.branch
+    if (-not [string]::IsNullOrWhiteSpace($name)) { [void]$planProtectedBranches.Add($name.Trim()) }
+}
+foreach ($entry in @($plan.active_infrastructure_branches)) {
+    $raw = [string]$entry
+    if (-not [string]::IsNullOrWhiteSpace($raw)) {
+        $name = ($raw -split '\s+/\s+', 2)[0].Trim()
+        if ($name) { [void]$planProtectedBranches.Add($name) }
+    }
+}
+foreach ($protected in $planProtectedBranches) {
     if ($deleteBranches -contains $protected) {
-        throw "Refusing to delete protected branch: $protected"
+        throw "Refusing plan-protected branch in delete_after_merge: $protected"
     }
 }
 
@@ -35,8 +54,8 @@ $openPulls = @(Invoke-RestMethod -Method Get -Uri $pullUri -Headers $headers)
 $activeHeads = @($openPulls | ForEach-Object { [string]$_.head.ref } | Where-Object { $_ })
 
 foreach ($branch in $deleteBranches) {
-    if ($branch -in @("develop", "main")) {
-        throw "Refusing protected branch: $branch"
+    if ($planProtectedBranches.Contains($branch)) {
+        throw "Refusing plan-protected branch: $branch"
     }
     if ($activeHeads -contains $branch) {
         throw "Refusing to delete active PR head: $branch"
@@ -70,4 +89,11 @@ if (@($canonicalRefs | Select-String "refs/heads/main").Count -lt 1) {
     throw "main missing after cleanup"
 }
 
-Write-Host ("BRANCH_CLEANUP_PASS deletedPlanCount=" + $deleteBranches.Count + " activePrHeads=" + $activeHeads.Count + " canonical=develop stable=main")
+foreach ($protected in @($planProtectedBranches | Where-Object { $_ -notin @("develop", "main") })) {
+    $protectedRef = "refs/heads/$protected"
+    $present = @(& git ls-remote --heads origin $protectedRef)
+    if ($LASTEXITCODE -ne 0 -or $present.Count -eq 0) {
+        throw "Plan-protected branch missing after cleanup: $protected"
+    }
+}
+Write-Host ("BRANCH_CLEANUP_PASS deletedPlanCount=" + $deleteBranches.Count + " activePrHeads=" + $activeHeads.Count + " planProtected=" + $planProtectedBranches.Count + " canonical=develop stable=main")

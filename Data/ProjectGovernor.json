@@ -1489,7 +1489,7 @@
       ],
       "implementation_refs": [
         "Whole-game completeness matrix now tracks all major gameplay and presentation systems.",
-        "PR #53 is the single active continuation path for CP56 mega integration.",
+        "Historical CP56/PR #53 integration path is complete; current production truth is governed by W01/P1C01 Gate 6/7 sequencing.",
         "Part I exploration envelopes and optional discovery contracts now cover all active routes/chapters.",
         "Source-grounded original dialogue bank expanded to 53 validated variants.",
         "Production asset import now operates on an ignored Saved/ working copy so one-click updates do not dirty tracked SourceAssets.",
@@ -1505,7 +1505,6 @@
         "The mega operation now includes film-locked Watcher/Balrog physical threat presentation plus a source-grounded runtime journey map."
       ],
       "missing_work": [
-        "Get final PR #53 head through full UE4.27 validation.",
         "Deepen named-character intelligence and regional dialogue across all Part I moods.",
         "Add engine-driven story/save regressions.",
         "Continue world/character/presentation production passes.",
@@ -1983,19 +1982,18 @@
         "World material persistence verified with zero missing runtime packages in Unreal #319.",
         "SHA-scoped governor handoff regression guard.",
         "Mega material/world wave treats synchronous LoadObject concentration as a scaling guardrail and prioritizes material-response enrichment/re-use before adding heavyweight loads.",
-        "Architectural stabilization gate now freezes feature expansion until root-cause hardening passes the same exact-head static/compile/import/runtime/state/warning chain."
+        "Architectural stabilization gate now freezes feature expansion until root-cause hardening passes the same exact-head static/compile/import/runtime/state/warning chain.",
+        "CP-W00-154 machine-accepted the 62-file Public/Private runtime-source migration; REQ-ORG-001 is VALIDATED and this audit no longer schedules that migration.",
+        "Current merged C2 baseline develop@1d0580926299e4fac635bcb847343a49c444d4f1 passed Pre-Unreal #1031 and Unreal #838; future audit work remains profiling/runtime-specific rather than a legacy V6 repair loop."
       ],
       "missing_work": [
-        "Complete current V6 engine validation after repeated runner cancellation; investigate trigger without treating interruption as a code defect.",
         "profile actor-iteration/social pairing on target device",
         "profile chapter-transition synchronous asset loads",
         "target-device frame-time/memory capture and rendered chapter acceptance",
         "Measure chapter-transition hitch/memory before later high-resolution asset-bank expansion.",
-        "Execute the already-defined FLAT_GUARDED -> PUBLIC_PRIVATE_BY_DOMAIN source-layout migration on a dedicated short branch after an appropriate production checkpoint.",
         "Add authored/trace-based ground-safe placement for living ambient actors and measure wall/terrain clipping in representative chapters.",
         "Replace repeated ambient SpawnActor/Destroy churn with bounded object pooling before crowd-density expansion.",
-        "Remove or asynchronously own direct heavy production LoadObject paths in ambient visual setup; do not substitute unresolved lookups without preloading the assets.",
-        "Keep the 62-file Public/Private physical source migration as the separate DEC-003 maintenance pass after the functional integration gate."
+        "Remove or asynchronously own direct heavy production LoadObject paths in ambient visual setup; do not substitute unresolved lookups without preloading the assets."
       ],
       "acceptance_criteria": [
         "critical exact-head gates are green before unrelated expansion",
@@ -4125,8 +4123,8 @@
       "order": 16,
       "id": "WORK-MAINT-001",
       "title": "Perform physical Source/ShireJourney Public/Private domain migration",
-      "status": "QUEUED",
-      "rationale": "Architecture migration remains a dedicated maintenance pass and is not mixed into CP55 gameplay/world expansion."
+      "status": "COMPLETED",
+      "rationale": "Public/Private runtime-source migration completed and was machine-accepted at CP-W00-154; reopen only on concrete regression evidence."
     },
     {
       "order": 17,
@@ -4193,7 +4191,7 @@
       "id": "WORK-DLG-001",
       "title": "Source-grounded living dialogue expansion",
       "status": "ACTIVE",
-      "rationale": "Use the supplied screenplay references to deepen original in-world conversation context while the PR #53 red-to-green loop continues.",
+      "rationale": "Deepen source-grounded original living dialogue within the current gated production sequence; no historical PR #53 repair loop is active.",
       "execution_bundle": "B3_LIVING_WORLD_AND_PRESENTATION"
     },
     {
@@ -4356,8 +4354,8 @@
       "order": 0,
       "id": "WORK-STABILITY-001",
       "title": "Architectural stabilization and root-cause hardening",
-      "status": "ACTIVE",
-      "rationale": "Owner explicitly ordered closure of all known stabilization defects before resuming feature construction. Source-safe persistence/transition/audio races are being fixed as a set; measured/device/human gates remain evidence-bound rather than guessed.",
+      "status": "COMPLETED",
+      "rationale": "W00 architectural stabilization is closed; W01 is released. Reopen only for a concrete regression, not historical repair debt.",
       "execution_bundle": "B0_EXACT_HEAD_STABILITY",
       "plan": "REQ-STABILITY-001"
     }
@@ -4427,12 +4425,12 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "C2 lightweight foliage wind is the sole active runtime change on PR #87; C3 remains blocked until C2 exact-head Fast Asset Lane evidence is green and C2 is merged.",
+    "rule": "C2 lightweight foliage wind is merged and machine-green. Post-C2 root cleanup is the only active maintenance operation; C3 stable foliage material identity may start only after cleanup succeeds.",
     "machine_baseline": {
-      "sha": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
-      "pre_unreal": "#885 SUCCESS",
-      "unreal": "#720 SUCCESS",
-      "scope": "Canonical merged W01 Drop 1 baseline is machine-green. Human/device/visual/performance acceptance remains separate."
+      "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
+      "pre_unreal": "#1031 SUCCESS",
+      "unreal": "#838 SUCCESS",
+      "scope": "Merged C2 develop baseline is machine-green through Pre-Unreal and Fast Asset Lane. Human PIE/device/visual/performance acceptance remains separate."
     },
     "w01_freeze": "RELEASED_BY_W00_EXIT"
   },
@@ -4444,10 +4442,10 @@
     "5. Keep Arabic localization runtime implementation isolated from the active world-production PR."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W01-P1C01-DROP-C2-V3-REBASED",
-    "source_head": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
-    "branch": "production/w01-p1c01-foliage-wind-v3",
-    "pull_request": 87,
+    "checkpoint_id": "CP-W01-P1C01-POST-C2-ROOT-CLEANUP",
+    "source_head": "1d0580926299e4fac635bcb847343a49c444d4f1",
+    "branch": "none",
+    "pull_request": 0,
     "verified": {
       "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
       "latest_automated_closure": "809e56a9e1dc4b453e02a0b04b6875a71df21933: Pre-Unreal #880 SUCCESS + Unreal #715 SUCCESS validation-policy inherit + Branch Cleanup #3 SUCCESS",
@@ -4464,12 +4462,12 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "C2 v3 rebased onto develop@f4028a89f7d2c541cddcb987f43963be87e944e0 after CI hardening; identical importer blob previously passed Pre-Unreal #924 + Unreal #759; fresh exact-head PR #87 proof required.",
+    "active_wave": "Post-C2 root cleanup and C3 launch preparation; no runtime-changing PR is active.",
     "next_actions": [
-      "1. Run PR #87 exact-head Pre-Unreal.",
-      "2. Run C2 through Fast Asset Lane: incremental Editor build, production import, Automation QA, startup smoke only.",
-      "3. Merge PR #87 immediately when exact-head C2 is green.",
-      "4. Start C3 stable foliage material identity only after C2 merge."
+      "1. Merge the post-C2 cleanup/closure maintenance PR after exact-head Pre-Unreal is green.",
+      "2. Require Branch Cleanup success and verify only develop/main plus the two documented planning salvage branches remain.",
+      "3. Start C3 stable foliage material identity from cleaned develop as the sole runtime-changing PR.",
+      "4. Keep C4 and D preparation-only until their prerequisites are met."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -4480,29 +4478,28 @@
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
+        "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
         "pre_unreal": {
-          "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
-          "run_id": 36145910660,
+          "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
+          "run_id": 36236911136,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "712a81cac150b7fdb338a4cf7554d4f27d4b5191",
-          "run_id": 36145910505,
+          "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
+          "run_id": 36236911127,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "725ca99151b5438fab7ce48209c04a4ce05c681d",
+        "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
         "pre_unreal": {
-          "sha": "725ca99151b5438fab7ce48209c04a4ce05c681d",
-          "run_id": 36149288137,
-          "status": "FAILURE",
-          "note": "Validator-only failure: PG-165 initially routed EditorTools source through runtime resolver; root fix committed in 3b2281c17b6111fd30f7614ca5d0df22a6dc572d."
+          "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
+          "run_id": 36236911136,
+          "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "725ca99151b5438fab7ce48209c04a4ce05c681d",
-          "run_id": 36149288111,
+          "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
+          "run_id": 36236911127,
           "status": "SUCCESS"
         }
       }
@@ -4602,29 +4599,25 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
-    "current_short_branch": "production/w01-p1c01-foliage-wind-v3",
+    "current_short_branch": "none",
     "integration_baseline": "develop",
-    "current_open_pr": 87,
-    "open_pr_policy": "PR #87 is the sole runtime-changing W01/P1C01 C2 candidate targeting develop.",
+    "current_open_pr": 0,
+    "open_pr_policy": "No runtime-changing PR is active between C2 and C3. Maintenance cleanup may proceed; the next runtime PR must be C3 after cleanup success.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
-      "date": "2026-09-25",
+      "date": "2026-09-26",
       "active_pr": 0,
       "active_branch": "develop",
       "canonical_branch": "develop",
       "stable_release_branch": "main",
       "plan": "Data/BranchCleanupPlan.json",
       "audit": "Docs/BRANCH_CONSOLIDATION_AUDIT.md",
-      "stale_prs_closed": [
-        62,
-        63,
-        66
-      ],
-      "superseded_parallel_pr": 71,
-      "physical_cleanup": "Branch Cleanup run #1 succeeded after PR #70 and a live branch query confirmed only develop/main remained. PR #72 is metadata-only and self-registers for post-merge deletion.",
-      "final_survivors": [
+      "physical_cleanup": "Post-C2 root cleanup is queued by the plan update and must fail closed on active or plan-protected branches.",
+      "expected_survivors": [
         "develop",
-        "main"
+        "main",
+        "planning/w01-localization-prototype-v1",
+        "planning/w01-p1c01-mega-prep-v1"
       ]
     },
     "validation_cost_contract": {
@@ -5487,11 +5480,11 @@
     "owner_observation_role": "Use owner play time for final symptom/pacing/visual confirmation only after reproducible technical checks have run."
   },
   "integration_train": {
-    "branch": "production/w01-p1c01-foliage-wind-v3",
-    "baseline": "f4028a89f7d2c541cddcb987f43963be87e944e0",
-    "current_wave": "W01_P1C01_DROP_C2_LIGHTWEIGHT_FOLIAGE_WIND",
-    "merge_policy": "Merge immediately into develop only after exact-head Pre-Unreal + Fast Asset Lane (incremental Editor build, production import, Automation QA, startup smoke) are green.",
-    "proof_boundary": "Identical importer blob previously passed #924/#759; rebased PR #87 exact-head proof remains mandatory. No PIE/device/visual/performance acceptance is implied."
+    "branch": "none",
+    "baseline": "1d0580926299e4fac635bcb847343a49c444d4f1",
+    "current_wave": "W01_P1C01_POST_C2_ROOT_CLEANUP",
+    "merge_policy": "No runtime-changing merge until post-C2 cleanup is green. Then C3 stable foliage material identity becomes the sole runtime-changing lane.",
+    "proof_boundary": "C2 exact candidate #1030/#837 and merged develop #1031/#838 are machine-green. No PIE/device/visual/performance acceptance is implied."
   },
   "completion_wave_map": {
     "status": "ACTIVE_PLANNING_ESTIMATE",
@@ -5554,10 +5547,10 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Validate PR #75 exact head through Pre-Unreal and UE4.27.2 core lane.",
-      "If green, execute Drop B Hobbiton/Bag End architecture.",
-      "Then proceed to materials/vegetation and atmosphere in the documented P1C01 order.",
-      "Do not increase crowd/detail density before target-device profiling."
+      "Complete post-C2 root cleanup and verify the expected remote branch survivor set.",
+      "Start C3 stable foliage material identity as the sole runtime-changing PR after cleanup success.",
+      "Then execute C4 LOD/cull/overdraw evidence work before any foliage density increase.",
+      "Proceed to D lighting/sky/fog/water only after C4 is exact-head machine-green; keep broad Part I story expansion frozen until Gate 6/7."
     ]
   },
   "development_mode_contract": {

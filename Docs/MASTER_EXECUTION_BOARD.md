@@ -1,12 +1,12 @@
-## W01 P1C01 Mega Production control point - Drop C2 v3 rebased
-- Canonical parent: `develop@f4028a89f7d2c541cddcb987f43963be87e944e0`.
-- Active candidate: PR #87 on `production/w01-p1c01-foliage-wind-v3`.
-- Current drop: **C2 - Lightweight Foliage Master + Wind WPO**.
-- Transplanted importer blob `66f12ff5926b96118f59fbc3cab893ebd01f6fff` matches the previously proven #924/#759 implementation; fresh rebased-head proof is still required.
-- Required lane: **Fast Asset Lane** = incremental Editor build -> production import -> Automation QA -> startup smoke; no Cook/Package or chapter/state audits.
-- Next: C3 stable foliage material identity only after C2 merge.
-- W00 remains CLOSED; reopen only for a concrete regression.
-- Evidence boundary: STATIC-VALIDATED rebase candidate until exact-head machine proof.
+## W01 P1C01 Mega Production control point - post-C2 cleanup
+- Canonical baseline: `develop@1d0580926299e4fac635bcb847343a49c444d4f1`.
+- PR: none
+- Branch: none
+- C2: merged and machine-green via #1030/#837; merged develop #1031/#838 also green.
+- Active operation: post-C2 root/branch cleanup only.
+- Next runtime drop: **C3 - Stable Foliage Material Identity**, blocked only until cleanup succeeds.
+- Required C3 lane after launch: Fast Asset Lane unless the classifier finds a broader impact.
+- Evidence boundary: C2 is COMPILE-TESTED/machine-green only; no PIE/device/visual/performance acceptance.
 
 # Master Execution Board
 
@@ -14,23 +14,15 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 ## Current control point
 
-- PR: #87 (W01/P1C01 C2 foliage wind candidate)
-- Branch: `production/w01-p1c01-foliage-wind-v3`
+- PR: none
+- Branch: none
 - Active lane: **W01_P1C01_PRODUCTION_VERTICAL_SLICE**
-- Active production drop: **C2_LIGHTWEIGHT_FOLIAGE_WIND**
-- Previous lane: **W00_ARCHITECTURAL_STABILIZATION — CLOSED**
+- Active production drop: **POST_C2_ROOT_CLEANUP**
+- Next runtime drop: **C3_STABLE_FOLIAGE_MATERIAL_IDENTITY**
+- Previous runtime drop: **C2_LIGHTWEIGHT_FOLIAGE_WIND — MERGED + MACHINE-GREEN**
 - Canonical integration/programmer-handoff branch: `develop`
 - Stable release branch: `main`
-- Repository branch cleanup: **COMPLETE**; remote branch query after cleanup returned only `develop` and `main`.
-- Full machine-green baseline: `fdbb6492b71d03fe0df70a9d6ac38b8e1ac0e0be`
-- Pre-Unreal baseline: **SUCCESS #820**
-- Unreal baseline: **SUCCESS #655**
-- Automated closure head before consolidation: `9066d6494248def59680820bbd6ca8e10038ea6e`
-- Pre-Unreal: **SUCCESS #821**
-- Unreal: **SUCCESS #656 acceptance-only**, inheriting parent core proof.
-- Consolidated develop head after PR #70: `3108b2dd6354b196d36406935057c25feab2fec2`; Pre-Unreal #865 **SUCCESS**.
-- Performance rule: Windows / DX11 / 720p Low-Medium / 30 FPS floor.
-- Acceptance boundary: human P1C01 grounding/warning-tail, target-device performance and visual/audio acceptance remain open.
+- C3 may start only after Branch Cleanup succeeds and remote survivors are re-audited.
 
 ## Execution order
 
@@ -45,7 +37,7 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 | Rank | Work ID | Bundle | Work |
 |---:|---|---|---|
-| 0 | WORK-MEGA-001 | B0_EXACT_HEAD_STABILITY | CP56 whole-game mega integration and green-head repair loop |
+| 0 | WORK-WORLD-003 | B2_CHARACTERS_AND_WORLD_PRODUCTION | P1C01 C3 stable foliage identity, followed by C4/D only through the documented gate order |
 | 1 | WORK-QA-001 | B0_EXACT_HEAD_STABILITY | Automation-first delivery and regression coverage |
 | 2 | WORK-EXEC-001 | CONTINUOUS_CONTROL | Master execution control and orphan-work prevention |
 | 10 | WORK-EXP-003 | B1_PART1_STORY_GAMEPLAY_COMPLETE | CP56 Fellowship film-experience mega-pass |
