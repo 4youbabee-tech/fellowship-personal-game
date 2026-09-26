@@ -2546,14 +2546,12 @@ for pg165_symbol in [
         fail(f"PG-165 authored albedo binding invariant missing: {pg165_symbol}")
 
 pg165_plan = json.loads(read(ROOT / "Data" / "P1C01MaterialsVegetationPlanV1.json"))
-if pg165_plan.get("status") not in {
-    "C1_ALBEDO_BINDING_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
-    "C2_FOLIAGE_WIND_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
-    "C2_FOLIAGE_WIND_EXACT_HEAD_GREEN_MERGED_C3_READY",
-}:
-    fail("PG-165 Drop C1/C2 material plan status changed")
+# PG-165 protects the durable C1 albedo contract. The overall production-plan
+# status is allowed to advance through C2/C3/C4/D without reopening C1.
 if "AlbedoTexture" not in json.dumps(pg165_plan):
     fail("PG-165 Drop C1 lost AlbedoTexture contract")
+if pg165_plan.get("material_contract", {}).get("master_surface") != "/Game/Production/Materials/M_ProductionSurface":
+    fail("PG-165 Drop C1 production master surface contract changed")
 
 
 # PG-166: Drop C2 lightweight foliage wind stays material-only and uses the UE4.27 material-function API.
@@ -2573,8 +2571,12 @@ for pg166_symbol in [
     if pg166_symbol not in pg166_importer:
         fail(f"PG-166 foliage wind invariant missing: {pg166_symbol}")
 pg166_plan = pg165_plan
-if pg166_plan.get("status") != "C2_FOLIAGE_WIND_EXACT_HEAD_GREEN_MERGED_C3_READY":
-    fail("PG-166 Drop C2 closure status changed")
+# PG-166 protects C2 closure evidence and wind/performance invariants, not the
+# mutable top-level phase label. Later production drops must be free to advance.
+pg166_c2_evidence = pg166_plan.get("c2_machine_evidence", {})
+for pg166_evidence_key in ["final_pr_head", "pre_unreal", "unreal", "merge_commit"]:
+    if not pg166_c2_evidence.get(pg166_evidence_key):
+        fail(f"PG-166 Drop C2 closure evidence missing: {pg166_evidence_key}")
 pg166_perf = pg166_plan.get("performance_contract", {}).get("c2_wind_strategy", {})
 if "no WorldPositionOffset" not in pg166_perf.get("far", ""):
     fail("PG-166 far foliage path lost the no-WPO complexity contract")
@@ -2654,12 +2656,8 @@ for pg170_cleanup_symbol in [
 
 # PG-171: C4 foliage LOD/cull/overdraw evidence capture must remain fail-closed.
 pg171_plan = json.loads(read(ROOT / "Data" / "P1C01C4FoliageLodCullOverdrawPlanV1.json"))
-if pg171_plan.get("status") not in {
-    "PREPARED_NOT_RUNTIME_STARTED",
-    "C4_EVIDENCE_CAPTURE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
-    "C4_ENGINE_EVIDENCE_CAPTURED_PENDING_BINDING_DECISION",
-    "C4_EXACT_HEAD_GREEN_MERGED_D_READY",
-}:
+pg171_status = str(pg171_plan.get("status") or "")
+if pg171_status != "PREPARED_NOT_RUNTIME_STARTED" and not pg171_status.startswith("C4_"):
     fail("PG-171 C4 plan has an invalid implementation status")
 if pg171_plan.get("status") != "PREPARED_NOT_RUNTIME_STARTED":
     for pg171_symbol in [
