@@ -21,6 +21,7 @@ function Test-ParentWholeWorkflowGreen([string]$ParentSha) {
     return $script:Case.Proof -and $ParentSha -eq 'candidate-parent'
 }
 function Test-ParentCoreUnrealGreen([string]$ParentSha) { return $true }
+function Test-TreeEquivalentCoreProof([string]$GitExe, [string]$ParentSha) { return [bool]$script:Case.TreeProof }
 function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = 'none') {
     $script:ActualMode = $Mode
 }
@@ -29,15 +30,17 @@ $marker = 'Set-Location $env:GITHUB_WORKSPACE'
 if (-not $source.Contains($marker)) { throw 'Classifier entry point missing' }
 $program = [scriptblock]::Create($source.Replace($marker, $mocks + [Environment]::NewLine + $marker).Replace('exit 0', 'return'))
 $cases = @(
-    @{Name='onboarding'; Paths=@('README.md','Scripts/new_developer_onboarding.ps1','Scripts/pre_unreal_validate.py'); Proof=$true; Mode='inherit'},
-    @{Name='handoff'; Paths=@('Scripts/governor_handoff.py','Scripts/test_governor_handoff.py'); Proof=$true; Mode='inherit'},
-    @{Name='no-proof'; Paths=@('README.md','Scripts/pre_unreal_validate.py'); Proof=$false; Mode='full'},
-    @{Name='mixed-story'; Paths=@('README.md','Scripts/pre_unreal_validate.py','Source/ShireJourney/ShireQuestSubsystem.cpp'); Proof=$true; Mode='core'},
-    @{Name='config'; Paths=@('README.md','Config/DefaultGame.ini'); Proof=$true; Mode='full'},
-    @{Name='streaming'; Paths=@('Data/ChapterAssetStreamingPlan.json'); Proof=$true; Mode='full'},
-    @{Name='unknown-script'; Paths=@('Scripts/new_unknown_tool.ps1'); Proof=$true; Mode='full'},
-    @{Name='runtime-data'; Paths=@('Data/QuestDefinitions.json'); Proof=$true; Mode='core'},
-    @{Name='editor-assets'; Paths=@('Source/ShireJourneyEditorTools/Import.cpp'); Proof=$true; Mode='asset'}
+    @{Name='onboarding'; Paths=@('README.md','Scripts/new_developer_onboarding.ps1','Scripts/pre_unreal_validate.py'); Proof=$true; Mode='inherit'; TreeProof=$false},
+    @{Name='handoff'; Paths=@('Scripts/governor_handoff.py','Scripts/test_governor_handoff.py'); Proof=$true; Mode='inherit'; TreeProof=$false},
+    @{Name='no-proof'; Paths=@('README.md','Scripts/pre_unreal_validate.py'); Proof=$false; Mode='full'; TreeProof=$false},
+    @{Name='mixed-story'; Paths=@('README.md','Scripts/pre_unreal_validate.py','Source/ShireJourney/ShireQuestSubsystem.cpp'); Proof=$true; Mode='core'; TreeProof=$false},
+    @{Name='config'; Paths=@('README.md','Config/DefaultGame.ini'); Proof=$true; Mode='full'; TreeProof=$false},
+    @{Name='streaming'; Paths=@('Data/ChapterAssetStreamingPlan.json'); Proof=$true; Mode='full'; TreeProof=$false},
+    @{Name='unknown-script'; Paths=@('Scripts/new_unknown_tool.ps1'); Proof=$true; Mode='full'; TreeProof=$false},
+    @{Name='runtime-data'; Paths=@('Data/QuestDefinitions.json'); Proof=$true; Mode='core'; TreeProof=$false},
+    @{Name='editor-assets'; Paths=@('Source/ShireJourneyEditorTools/Import.cpp'); Proof=$true; Mode='asset'; TreeProof=$false},
+    @{Name='workflow-policy-tree-proof'; Paths=@('.github/workflows/unreal-build-validation.yml'); Proof=$false; Mode='inherit'; TreeProof=$true},
+    @{Name='workflow-policy-no-proof'; Paths=@('.github/workflows/unreal-build-validation.yml'); Proof=$false; Mode='full'; TreeProof=$false}
 )
 $oldWorkspace = $env:GITHUB_WORKSPACE
 $oldBase = $env:BASE_SHA
