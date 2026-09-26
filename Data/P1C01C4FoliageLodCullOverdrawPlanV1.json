@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_C4_FOLIAGE_LOD_CULL_OVERDRAW_V1",
-  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "status": "C4_EVIDENCE_CAPTURE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/P1C01MaterialsVegetationPlanV1.json",
@@ -63,5 +63,16 @@
     "No foliage density increase.",
     "No PIE/device/visual/performance acceptance is inferred from compile/import proof."
   ],
-  "evidence_boundary": "Preparation only. Runtime implementation must not start until C3 is exact-head engine-green and merged."
+  "evidence_boundary": "C4 evidence capture is source-implemented. STATIC-VALIDATED candidate only until exact-head Pre-Unreal and UE4.27.2 production import succeed and produce concrete C4_FOLIAGE_EVIDENCE rows. No PIE/device/visual/performance acceptance claimed.",
+  "runtime_implementation": {
+    "source_file": "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",
+    "behavior": [
+      "Audit only exact P1C01 foliage mesh identities: SM_ShGrassClump, SM_ShHedge, SM_ShShrub, SM_ShTreeCanopy, SM_ShTreeTrunk.",
+      "Read UE4.27 static-mesh render LOD resources after import and emit one C4_FOLIAGE_EVIDENCE row per LOD section.",
+      "Record lodCount, lod index, section index, material index, material identity, current parent, proposed parent and decision.",
+      "Treat only lodIndex > 0 plus an approved foliage material identity as FAR_LOD_ELIGIBLE_FOR_REVIEW.",
+      "Do not reparent anything in this evidence-capture step. A later same-drop binding step may occur only if engine evidence proves a qualifying far LOD exists.",
+      "Preserve current cull bands, density, gameplay ownership, object paths and material parameter values."
+    ]
+  }
 }
