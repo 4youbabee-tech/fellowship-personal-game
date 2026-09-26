@@ -1,3 +1,14 @@
+## 2026-09-26 - Runner supervision + fast core validation hardening
+
+- **Runner ownership:** interactive-user watchdog remains authoritative; legacy `actions.runner.*` service must be **Stopped / Manual**.
+- **Watchdog self-heal:** AtLogOn plus five-minute repeating relaunch trigger; `MultipleInstances IgnoreNew` prevents duplicates.
+- **Orphan-listener recovery:** on supervisor restart, an existing `Runner.Listener` is recycled only when no `Runner.Worker` is active; the existing 150-second acknowledged-job/no-worker recovery remains.
+- **Validation speed:** CORE runtime/asset changes may inherit the nearest green core proof through an explicitly preparation-only first-parent bridge, avoiding unnecessary Cook/Package repetition.
+- **Fail-closed boundary:** any unsafe intervening file blocks inheritance and forces FULL validation.
+- **Device-lane isolation:** classifier/watchdog/static-validator maintenance paths are excluded from Unreal Build triggering; Pre-Unreal remains the static gate.
+- **Observed C2 evidence before hardening:** Unreal #821 on `2af6648209d8722247ca6f9a75b2b5082b6654d5` passed Editor build, production import, Automation QA, startup/chapter/state audits, warning guard, Cook and Runtime Data verification, then failed at packaged executable launch. The run is **not green**.
+- **Evidence state for this hardening change:** STATIC-VALIDATED SOURCE CHANGE / supervised-device reinstall and next-run proof pending. No PIE/DEVICE/VISUAL/PERFORMANCE acceptance is claimed.
+
 ## 2026-09-26 - Runner supervision and validation-time hardening
 
 - **Runner watchdog ownership:** HARDENED in source; legacy `actions.runner.*` remains Manual/Stopped by policy.
