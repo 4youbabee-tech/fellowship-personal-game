@@ -28,11 +28,13 @@ jobs:
     timeout-minutes: 5
     env:
       GH_TOKEN: ${{ github.token }}
+      TARGET_SHA: ${{ github.sha }}
     defaults:
       run:
         shell: cmd
+
     steps:
-      - name: Exact-head local checkout of develop
+      - name: Isolated exact-head administration checkout
         run: |
           @echo off
           setlocal EnableExtensions EnableDelayedExpansion
@@ -42,42 +44,32 @@ jobs:
           if not defined GITEXE if exist "C:\Program Files (x86)\Git\cmd\git.exe" set "GITEXE=C:\Program Files (x86)\Git\cmd\git.exe"
           if not defined GITEXE exit /b 70
 
-          cd /d "%GITHUB_WORKSPACE%\.."
-          if exist "%GITHUB_WORKSPACE%" rmdir /S /Q "%GITHUB_WORKSPACE%"
-          if exist "%GITHUB_WORKSPACE%" exit /b 71
-          mkdir "%GITHUB_WORKSPACE%"
-          cd /d "%GITHUB_WORKSPACE%"
+          set "CLEANUP_ROOT=%RUNNER_TEMP%\shire-branch-cleanup-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          if exist "!CLEANUP_ROOT!" rmdir /S /Q "!CLEANUP_ROOT!"
+          mkdir "!CLEANUP_ROOT!"
+          cd /d "!CLEANUP_ROOT!"
 
           "!GITEXE!" init
           if errorlevel 1 exit /b 72
           "!GITEXE!" remote add origin "https://x-access-token:%GH_TOKEN%@github.com/%GITHUB_REPOSITORY%.git"
           if errorlevel 1 exit /b 73
-
-          set ATTEMPT=0
-          :fetch
-          set /a ATTEMPT+=1
-          echo BRANCH_CLEANUP_EXACT_FETCH attempt=!ATTEMPT!/3 ref=develop
-          "!GITEXE!" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --prune --depth=2 origin develop
-          if not errorlevel 1 goto fetched
-          if !ATTEMPT! GEQ 3 exit /b 74
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 3"
-          goto fetch
-
-          :fetched
+          "!GITEXE!" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --depth=2 origin %TARGET_SHA%
+          if errorlevel 1 exit /b 74
           "!GITEXE!" checkout -f FETCH_HEAD
           if errorlevel 1 exit /b 75
           for /f "delims=" %%S in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%S"
-          for /f "tokens=1" %%S in ('"!GITEXE!" ls-remote origin refs/heads/develop') do set "REMOTE_SHA=%%S"
-          if not defined REMOTE_SHA exit /b 76
-          if /I not "!CHECKED_SHA!"=="!REMOTE_SHA!" (
-            echo ERROR: develop checkout mismatch expected=!REMOTE_SHA! actual=!CHECKED_SHA!
-            exit /b 77
-          )
+          if /I not "!CHECKED_SHA!"=="%TARGET_SHA%" exit /b 77
           if not exist "Data\BranchCleanupPlan.json" exit /b 78
-          echo BRANCH_CLEANUP_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA!
-
-      - name: Verify runner session health
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"
+          echo SHIRE_CLEANUP_ROOT=!CLEANUP_ROOT!>>"%GITHUB_ENV%"
+          echo BRANCH_CLEANUP_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA! isolated=true
 
       - name: Delete approved stale branches safely
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\run_branch_cleanup.ps1"
+        run: cd /d "%SHIRE_CLEANUP_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\run_branch_cleanup.ps1"
+
+      - name: Remove isolated administration checkout
+        if: always()
+        shell: pwsh
+        run: |
+          if ($env:SHIRE_CLEANUP_ROOT -and (Test-Path -LiteralPath $env:SHIRE_CLEANUP_ROOT)) {
+            Remove-Item -LiteralPath $env:SHIRE_CLEANUP_ROOT -Recurse -Force -ErrorAction SilentlyContinue
+          }

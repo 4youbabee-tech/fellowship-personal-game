@@ -44,7 +44,7 @@ jobs:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
     steps:
-      - name: Checkout exact warehouse head
+      - name: Checkout exact warehouse head into isolated temp source
         shell: cmd
         env:
           GH_TOKEN: ${{ github.token }}
@@ -57,7 +57,11 @@ jobs:
           if not defined GITEXE if exist "C:\Program Files (x86)\Git\cmd\git.exe" set "GITEXE=C:\Program Files (x86)\Git\cmd\git.exe"
           if not defined GITEXE exit /b 22
 
-          if exist ".git" rmdir /S /Q ".git"
+          set "WAREHOUSE_SRC=%RUNNER_TEMP%\shire-warehouse-src-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          if exist "!WAREHOUSE_SRC!" rmdir /S /Q "!WAREHOUSE_SRC!"
+          mkdir "!WAREHOUSE_SRC!"
+          cd /d "!WAREHOUSE_SRC!"
+
           "!GITEXE!" init
           if errorlevel 1 exit /b 70
           "!GITEXE!" remote add origin "https://x-access-token:!GH_TOKEN!@github.com/%GITHUB_REPOSITORY%.git"
@@ -66,11 +70,11 @@ jobs:
           set ATTEMPT=0
           :fetch
           set /a ATTEMPT+=1
-          echo Fetching exact warehouse head attempt !ATTEMPT! of 7...
-          "!GITEXE!" fetch --no-tags --prune --depth=2 origin !TARGET_SHA!
+          echo Fetching exact warehouse head attempt !ATTEMPT! of 3...
+          "!GITEXE!" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --prune --depth=2 origin !TARGET_SHA!
           if not errorlevel 1 goto fetched
-          if !ATTEMPT! GEQ 7 exit /b 72
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 5"
+          if !ATTEMPT! GEQ 3 exit /b 72
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 3"
           goto fetch
 
           :fetched
@@ -81,43 +85,44 @@ jobs:
           for /f "delims=" %%H in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%H"
           if /I not "!CHECKED_SHA!"=="!TARGET_SHA!" exit /b 74
           if not exist "ShireJourney.uproject" exit /b 75
-          echo WAREHOUSE_CHECKOUT_PASS sha=!CHECKED_SHA!
+          echo SHIRE_WAREHOUSE_SOURCE=!WAREHOUSE_SRC!>>"%GITHUB_ENV%"
+          echo WAREHOUSE_CHECKOUT_PASS sha=!CHECKED_SHA! isolated=true source=!WAREHOUSE_SRC!
 
       - name: Verify runner session health
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\verify_runner_session.ps1"
 
       - name: Stage Poly Haven CC0 batch
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_polyhaven_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAcquisitionBatchV1.json"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_polyhaven_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAcquisitionBatchV1.json"
 
       - name: Stage OpenGameArt CC0 audio batch
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_opengameart_audio.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAudioAcquisitionBatchV1.json"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_opengameart_audio.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAudioAcquisitionBatchV1.json"
 
       - name: Stage Quaternius support batch
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseQuaterniusAcquisitionBatchV1.json"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseQuaterniusAcquisitionBatchV1.json"
 
       - name: Stage ambientCG material batch
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAmbientCGAcquisitionBatchV1.json"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAmbientCGAcquisitionBatchV1.json"
 
       - name: Stage ambientCG trilogy-region batch
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAmbientCGTrilogyBatchV2.json"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAmbientCGTrilogyBatchV2.json"
 
       - name: Stage Kenney support packs
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_kenney_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseKenneyAcquisitionBatchV1.json"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_kenney_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseKenneyAcquisitionBatchV1.json"
 
       - name: Stage KayKit public GitHub support packs
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_kaykit_github_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseKayKitGitHubAcquisitionBatchV1.json"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_kaykit_github_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseKayKitGitHubAcquisitionBatchV1.json"
 
       - name: Audit persistent warehouse inventory
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\audit_warehouse_inventory.ps1"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\audit_warehouse_inventory.ps1"
 
       - name: Show persistent warehouse footprint
         shell: cmd
@@ -128,3 +133,11 @@ jobs:
           $files=Get-ChildItem -LiteralPath $root -Recurse -File;
           $bytes=($files | Measure-Object -Property Length -Sum).Sum;
           Write-Host ('WAREHOUSE_FOOTPRINT files=' + $files.Count + ' bytes=' + $bytes + ' root=' + $root)"
+
+      - name: Remove isolated warehouse source checkout
+        if: always()
+        shell: pwsh
+        run: |
+          if ($env:SHIRE_WAREHOUSE_SOURCE -and (Test-Path -LiteralPath $env:SHIRE_WAREHOUSE_SOURCE)) {
+            Remove-Item -LiteralPath $env:SHIRE_WAREHOUSE_SOURCE -Recurse -Force -ErrorAction SilentlyContinue
+          }

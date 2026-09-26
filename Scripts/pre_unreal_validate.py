@@ -2677,6 +2677,28 @@ if pg171_plan.get("status") != "PREPARED_NOT_RUNTIME_STARTED":
             fail(f"PG-171 C4 evidence-capture step performed premature far binding: {pg171_forbidden}")
 
 
+# PG-174: new developer / AI sessions must have one stable path to the Project Governor.
+pg174_readme = read(ROOT / "README.md")
+pg174_onboarding = read(ROOT / "Scripts" / "new_developer_onboarding.ps1")
+for pg174_required in [
+    "NEW DEVELOPER / NEW AI SESSION — START HERE",
+    "Docs/PROJECT_GOVERNOR.md",
+    "Data/ProjectGovernor.json",
+    "Scripts\\new_developer_onboarding.ps1",
+]:
+    if pg174_required not in pg174_readme:
+        fail(f"PG-174 README developer entry missing: {pg174_required}")
+for pg174_required in [
+    "Data\\ProjectGovernor.json",
+    "execution_control",
+    "active_gate",
+    "CURRENT_PROJECT_STATE.md",
+    "DEVELOPMENT_GATES.md",
+    "PROJECT_GUARDIAN.md",
+]:
+    if pg174_required not in pg174_onboarding:
+        fail(f"PG-174 onboarding script contract missing: {pg174_required}")
+
 
 # PG-172: P1C01 D lighting/sky/fog/water must remain fixed-state, resident-only and low-cost.
 pg172_plan = json.loads(read(ROOT / "Data" / "P1C01DLightingSkyFogWaterPlanV1.json"))
@@ -3051,20 +3073,31 @@ retry_contract_ok = (
     or ("for /L %%A in (1,1,7)" in unreal_ci and "Start-Sleep -Seconds 5" in unreal_ci)
     or ("$attempt -le 7" in unreal_ci and "Start-Sleep -Seconds 5" in unreal_ci)
     or ("if %%ATTEMPT%% GEQ 7 exit /b 72" in unreal_ci and "goto fetch" in unreal_ci)
+    or (
+        "if %%ATTEMPT%% GEQ 3 exit /b 72" in unreal_ci
+        and "http.lowSpeedLimit=1000" in unreal_ci
+        and "http.lowSpeedTime=20" in unreal_ci
+        and "goto fetch" in unreal_ci
+    )
 )
 if custom_checkout_ok and not retry_contract_ok:
-    fail("PG-026: custom exact-commit acquisition must use resilient retries")
+    fail("PG-026: custom exact-commit acquisition must use bounded resilient retries")
 if "uses: actions/upload-artifact@v4" in unreal_ci:
     fail("PG-026: failure logging must not depend on artifact upload while storage quota can mask the primary error")
-concurrency_group_ok = "group: unreal-build-${{ github.repository }}-ue4-device" in unreal_ci
+concurrency_group_ok = (
+    "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}" in unreal_ci
+    or "group: unreal-build-${{ github.repository }}-ue4-device" in unreal_ci
+)
 cancel_values = [
     value.strip()
     for value in re.findall(r"(?m)^\s*cancel-in-progress:\s*(.+?)\s*$", unreal_ci)
 ]
 allowed_cancel_values = {
     "false",
+    "${{ github.event_name == 'pull_request' }}",
     "${{ startsWith(github.head_ref, 'acceptance/') }}",
-    "${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}",
+    "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}",
+    "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
 }
 if (
     not concurrency_group_ok
@@ -3072,11 +3105,11 @@ if (
     or cancel_values[0] not in allowed_cancel_values
 ):
     fail(
-        "PG-026: shared Unreal device validation must remain serial; "
-        "only acceptance/* or the sole active production/* PR head may cancel superseded runs"
+        "PG-026: Unreal validation concurrency must preserve the single physical device while "
+        "cancelling only superseded work from the same PR branch"
     )
-if "cancel-in-progress: true" in unreal_ci:
-    fail("PG-026: unconditional shared Unreal cancellation is forbidden")
+if "group: unreal-build-${{ github.repository }}-ue4-device" in unreal_ci and "cancel-in-progress: true" in unreal_ci:
+    fail("PG-026: unconditional shared-device cancellation across unrelated branches is forbidden")
 
 packaging_config = read(ROOT / "Config" / "DefaultGame.ini")
 for required_cook_dir in (
@@ -4398,10 +4431,16 @@ if "ObjectPathToPackageName(ProductionSurfaceObjectPath)" not in pg133_importer:
 # PG-134: source geometry that can generate zero tangent/binormal basis is rejected before Unreal import.
 pg134_asset_audit = read(ROOT / "Scripts" / "asset_quality_audit.py")
 pg134_workflow = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
-if ('"%PYTHON_EXE%" Scripts/asset_quality_audit.py --strict' not in pg134_workflow
-        or "resolve_runtime_python.ps1" not in pg134_workflow
-        or "actions/setup-python@" in pg134_workflow):
-    fail("PG-134 Pre-Unreal must use the existing local Python and run asset_quality_audit.py in strict mode")
+if (
+    '"%PYTHON_EXE%" Scripts\\asset_quality_audit.py --strict' not in pg134_workflow
+    or "resolve_runtime_python.ps1" not in pg134_workflow
+    or "_ci\\pre-unreal" not in pg134_workflow
+    or "SHIRE_PRE_ROOT" not in pg134_workflow
+    or "PRE_UNREAL_EXACT_CHECKOUT_PASS" not in pg134_workflow
+    or "persistent=true" not in pg134_workflow
+    or 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg134_workflow
+):
+    fail("PG-134 Pre-Unreal must run strict asset audit from the isolated persistent static checkout without touching the Unreal workspace")
 for pg134_symbol in [
     "obj_with_degenerate_uv_triangles",
     "degenerate UV triangle",
@@ -4799,7 +4838,8 @@ if "runs-on: ubuntu-latest" in pg167_cleanup or "runs-on: windows-latest" in pg1
     fail("PG-167 Branch Cleanup must not depend on GitHub-hosted runners")
 for pg167_cleanup_symbol in [
     "BRANCH_CLEANUP_EXACT_CHECKOUT_PASS",
-    "verify_runner_session.ps1",
+    "SHIRE_CLEANUP_ROOT",
+    "isolated=true",
     "run_branch_cleanup.ps1",
     "pull-requests: read",
 ]:
@@ -4861,7 +4901,8 @@ for pg167_symbol in [
     "Data/P1C01WorldBuildIntakePacketV1.json",
     "Data/BranchCleanupPlan.json",
     "Scripts/run_branch_cleanup.ps1",
-    "${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}",
+    "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}",
+    "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
 ]:
     if pg167_symbol not in pg167_unreal:
         fail(f"PG-167 Unreal queue-isolation contract missing: {pg167_symbol}")
@@ -4892,6 +4933,53 @@ if errors:
     for message in errors:
         print(f"ERROR: {message}")
     sys.exit(1)
+
+
+# PG-175: Unreal CI latency architecture must preserve exact-head safety without
+# rebuilding superseded/admin-only commits or destroying incremental Git state.
+pg175_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+pg175_classifier = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
+pg175_latency = read(ROOT / "Docs" / "CI_LATENCY_REVIEW_2026-09-26.md")
+
+for pg175_required in [
+    "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
+    "http.lowSpeedLimit=1000",
+    "http.lowSpeedTime=20",
+    "Fetching exact PR head attempt %%ATTEMPT%% of 3",
+    "Scrub checkout credential from persistent Git metadata",
+]:
+    if pg175_required not in pg175_workflow:
+        fail(f"PG-175 Unreal workflow latency/safety invariant missing: {pg175_required}")
+
+for pg175_forbidden in [
+    'if exist ".git" rmdir /S /Q ".git"',
+    "attempt %%ATTEMPT%% of 7",
+]:
+    if pg175_forbidden in pg175_workflow:
+        fail(f"PG-175 obsolete destructive/retry behavior returned: {pg175_forbidden}")
+
+for pg175_ignored in [
+    "'README.md'",
+    "'Scripts/new_developer_onboarding.ps1'",
+    "'Scripts/governor_handoff.py'",
+    "'Scripts/test_governor_handoff.py'",
+    "'Scripts/test_unreal_classifier.ps1'",
+]:
+    if pg175_workflow.count(pg175_ignored) < 2:
+        fail(f"PG-175 administrative path is not excluded from both push and PR Unreal triggers: {pg175_ignored}")
+
+for pg175_tree_marker in [
+    "function Test-TreeEquivalentCoreProof",
+    "TREE_EQUIVALENT_CORE_PROOF_PASS",
+    'rev-parse "$ParentSha^{tree}"',
+    'rev-parse "$candidate^{tree}"',
+]:
+    if pg175_tree_marker not in pg175_classifier:
+        fail(f"PG-175 exact tree-equivalent proof guard missing: {pg175_tree_marker}")
+
+if "same Git tree" not in pg175_latency and "tree" not in pg175_latency.lower():
+    fail("PG-175 CI latency review must explain exact tree-equivalent proof reuse")
+
 
 print("PRE-UNREAL CORE VALIDATION PASSED")
 
@@ -7182,7 +7270,6 @@ if "workflow_dispatch:" not in pg145b_health_workflow or "verify_runner_session.
     fail("PG-145B manual runner health workflow is incomplete")
 
 for pg145b_path, pg145b_before in [
-    (ROOT / ".github" / "workflows" / "pre-unreal-validation.yml", "Resolve existing local Python"),
     (ROOT / ".github" / "workflows" / "unreal-build-validation.yml", "Classify current delta for Unreal validation"),
     (ROOT / ".github" / "workflows" / "warehouse-stage.yml", "Stage Poly Haven CC0 batch"),
 ]:
@@ -7213,6 +7300,56 @@ for pg145c_step in [
     pg145c_slice = pg145c_workflow[pg145c_pos:pg145c_pos + 420] if pg145c_pos >= 0 else ""
     if "SHIRE_ASSET_IMPORT_ONLY != 'true'" not in pg145c_slice:
         fail(f"PG-145C asset-import lane still repeats unrelated runtime audit: {pg145c_step}")
+
+# PG-176: lightweight/admin lanes must never destroy the Unreal build workspace.
+pg176_pre = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
+pg176_health = read(ROOT / ".github" / "workflows" / "runner-health.yml")
+pg176_cleanup = read(ROOT / ".github" / "workflows" / "branch-cleanup.yml")
+pg176_warehouse = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
+
+for pg176_symbol in [
+    "C:\\actions-runner\\_ci\\pre-unreal",
+    "SHIRE_PRE_ROOT",
+    "PRE_UNREAL_EXACT_CHECKOUT_PASS",
+    "isolated=true",
+    "persistent=true",
+]:
+    if pg176_symbol not in pg176_pre:
+        fail(f"PG-176 Pre-Unreal isolated checkout contract missing: {pg176_symbol}")
+if 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg176_pre:
+    fail("PG-176 Pre-Unreal may not delete the Unreal workspace")
+
+for pg176_symbol in [
+    "%RUNNER_TEMP%\\shire-branch-cleanup-",
+    "SHIRE_CLEANUP_ROOT",
+    "BRANCH_CLEANUP_EXACT_CHECKOUT_PASS",
+    "isolated=true",
+]:
+    if pg176_symbol not in pg176_cleanup:
+        fail(f"PG-176 branch-cleanup isolated checkout contract missing: {pg176_symbol}")
+if 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg176_cleanup:
+    fail("PG-176 branch cleanup may not delete the Unreal workspace")
+
+for pg176_symbol in [
+    "%RUNNER_TEMP%\\shire-runner-health-",
+    "SHIRE_HEALTH_ROOT",
+    "isolated=true",
+]:
+    if pg176_symbol not in pg176_health:
+        fail(f"PG-176 runner-health isolated checkout contract missing: {pg176_symbol}")
+if 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg176_health:
+    fail("PG-176 runner-health may not delete the Unreal workspace")
+
+for pg176_symbol in [
+    "%RUNNER_TEMP%\\shire-warehouse-src-",
+    "SHIRE_WAREHOUSE_SOURCE",
+    "WAREHOUSE_CHECKOUT_PASS",
+    "isolated=true",
+]:
+    if pg176_symbol not in pg176_warehouse:
+        fail(f"PG-176 warehouse isolated source checkout contract missing: {pg176_symbol}")
+if 'if exist ".git" rmdir /S /Q ".git"' in pg176_warehouse:
+    fail("PG-176 warehouse staging may not destroy the Unreal workspace Git metadata")
 
 # PG-146: route/chapter/episode/character identity is one fail-closed contract.
 pg146_quest_h = read(resolve_source("ShireQuestSubsystem.h"))

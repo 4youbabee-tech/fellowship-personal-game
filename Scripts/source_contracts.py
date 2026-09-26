@@ -62,10 +62,16 @@ def signal_precedes_member_mutation(
 
 
 def has_strict_asset_audit_command(workflow: str) -> bool:
-    """Recognize supported one-line audit invocations, not comments or echoed text.
+    """Recognize supported fail-closed one-line asset-audit invocations.
 
-    This checks command wiring only; workflow failure policy is a separate contract.
+    Pre-Unreal may execute from its isolated static checkout through an explicit
+    cmd.exe `cd /d` prefix. Full-line matching keeps comments, echo wrappers
+    and failure-masking suffixes such as `|| true` rejected.
     """
+    command_pattern = re.compile(
+        r'(?:(?:cd\s+/d\s+"%SHIRE_PRE_ROOT%"\s*&&\s*)?)'
+        r'(?:python(?:3)?|"%PYTHON_EXE%")\s+Scripts[\\/]asset_quality_audit\.py\s+--strict'
+    )
     for line in workflow.splitlines():
         match = re.fullmatch(r"\s*run:\s*(.*?)\s*", line)
         if not match:
@@ -73,13 +79,9 @@ def has_strict_asset_audit_command(workflow: str) -> bool:
         command = match.group(1)
         if len(command) >= 2 and command[0] == command[-1] and command[0] in "\"'":
             command = command[1:-1]
-        if re.fullmatch(
-            r'(?:python(?:3)?|"%PYTHON_EXE%")\s+Scripts/asset_quality_audit\.py\s+--strict',
-            command,
-        ):
+        if command_pattern.fullmatch(command):
             return True
     return False
-
 
 def has_nonufs_runtime_dependency(build_cs: str, relative_path: str) -> bool:
     """Return True only when a project-relative runtime file is staged loose as NonUFS."""
