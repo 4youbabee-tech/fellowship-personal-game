@@ -4189,8 +4189,10 @@ if "ObjectPathToPackageName(ProductionSurfaceObjectPath)" not in pg133_importer:
 # PG-134: source geometry that can generate zero tangent/binormal basis is rejected before Unreal import.
 pg134_asset_audit = read(ROOT / "Scripts" / "asset_quality_audit.py")
 pg134_workflow = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
-if "python Scripts/asset_quality_audit.py --strict" not in pg134_workflow:
-    fail("PG-134 Pre-Unreal workflow must run asset_quality_audit.py in strict mode")
+if ('"%PYTHON_EXE%" Scripts/asset_quality_audit.py --strict' not in pg134_workflow
+        or "resolve_runtime_python.ps1" not in pg134_workflow
+        or "actions/setup-python@" in pg134_workflow):
+    fail("PG-134 Pre-Unreal must use the existing local Python and run asset_quality_audit.py in strict mode")
 for pg134_symbol in [
     "obj_with_degenerate_uv_triangles",
     "degenerate UV triangle",
@@ -4565,6 +4567,8 @@ for pg167_symbol in [
         fail(f"PG-167 supervised static-lane contract missing: {pg167_symbol}")
 if "schedule:" in pg167_pre or "runs-on: ubuntu-latest" in pg167_pre or "runs-on: windows-latest" in pg167_pre:
     fail("PG-167 Pre-Unreal must be event-driven on the supervised Windows UE4 runner")
+if "actions/setup-python@" in pg167_pre or "resolve_runtime_python.ps1" not in pg167_pre or 'shell: cmd' not in pg167_pre:
+    fail("PG-167 Pre-Unreal must avoid repeated hosted Python setup and use the local interpreter through cmd")
 
 pg167_cleanup = read(ROOT / ".github" / "workflows" / "branch-cleanup.yml")
 for pg167_symbol in ["- self-hosted", "- Windows", "- X64", "- ue4-27"]:
