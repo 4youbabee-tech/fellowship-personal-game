@@ -3716,6 +3716,35 @@
       "resolution": "Remove the GitHub-hosted delta/no-stage jobs and obsolete push branch from warehouse-stage.yml. Relevant develop/PR warehouse changes directly queue one supervised Windows staging job with its own concurrency group.",
       "evidence_boundary": "Workflow/source configuration only until the supervised runner executes a staging job.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-045",
+      "title": "Launch P1C01 D with a bounded Mega Asset Promotion lane",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-002",
+        "REQ-PROD-011",
+        "REQ-WAREHOUSE-001"
+      ],
+      "resolution": "Start P1C01 D as the sole runtime-changing lane from the merged C4 baseline: fixed authored lighting/sky/fog plus low-cost Shire water. In parallel, activate the existing P1C01 warehouse promotion queue for staging and intake QC only. No warehouse candidate may jump to READY_FOR_IMPORT, IMPORTED, INTEGRATED or ACCEPTED without its required provenance, format and technical evidence.",
+      "implementation_contract": [
+        "D preserves fixed chapter-authored states; no free-running day/night cycle, per-frame sky/reflection recapture, planar-reflection default, per-frame CPU water simulation, quest/save topology change or LivingWorld ownership change.",
+        "The water presentation uses the existing project production material family and a resident-only soft chapter-bank path; runtime code does not synchronously load heavy production packages.",
+        "Mega Asset Promotion reuses Data/P1C01WarehousePromotionQueueV1.json and Data/ProductionAssetPromotionPolicyV1.json instead of creating a second inventory.",
+        "Animated final production assets remain FBX-only; OBJ is not accepted for animated final assets. Production textures are PNG/TGA; BMP cannot be promoted as final production texture evidence.",
+        "Promotion remains fail-closed: provider/source/license, staging receipt and SHA256 are required before READY_FOR_IMPORT, then class-specific QC before UE import/integration.",
+        "P1C01 remains the runtime benchmark; whole-game warehouse preparation may advance without authorizing Part II/III runtime expansion."
+      ],
+      "evidence_boundary": "User direction authorizes implementation and staging/QC work only. No new PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED claim is created by this decision.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "C4 candidate exact-head Pre-Unreal #1070 SUCCESS",
+        "C4 candidate exact-head Unreal Build #875 SUCCESS",
+        "C4 merged develop 2845071119d926defd6ba94c970f43729bc51674",
+        "Data/P1C01DLightingSkyFogWaterPlanV1.json",
+        "Data/ProductionAssetPromotionPolicyV1.json",
+        "Data/P1C01WarehousePromotionQueueV1.json"
+      ]
     }
   ],
   "open_conflicts": [],
@@ -4425,12 +4454,12 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "C2 lightweight foliage wind is merged and machine-green. Post-C2 root cleanup is the only active maintenance operation; C3 stable foliage material identity may start from verified develop while branch cleanup proceeds separately.",
+    "rule": "C4 is merged after exact-head candidate machine proof. D fixed-state lighting/sky/fog/low-cost water is the sole runtime-changing lane; Mega Asset Promotion proceeds only as parallel warehouse staging/intake QC until item-level promotion evidence exists.",
     "machine_baseline": {
-      "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
-      "pre_unreal": "#1031 SUCCESS",
-      "unreal": "#838 SUCCESS",
-      "scope": "Merged C2 develop baseline is machine-green through Pre-Unreal and Fast Asset Lane. Human PIE/device/visual/performance acceptance remains separate."
+      "sha": "bc1e04062d8079fef73eae64f68c81772b4fc56c",
+      "pre_unreal": "#1070 SUCCESS",
+      "unreal": "#875 SUCCESS",
+      "scope": "Exact C4 candidate head was machine-green before merge. develop@2845071119d926defd6ba94c970f43729bc51674 is the D branch baseline; fresh D exact-head validation is required. No human PIE/device/visual/performance acceptance is implied."
     },
     "w01_freeze": "RELEASED_BY_W00_EXIT"
   },
@@ -5482,11 +5511,11 @@
     "owner_observation_role": "Use owner play time for final symptom/pacing/visual confirmation only after reproducible technical checks have run."
   },
   "integration_train": {
-    "branch": "none",
-    "baseline": "1d0580926299e4fac635bcb847343a49c444d4f1",
-    "current_wave": "W01_P1C01_POST_C2_ROOT_CLEANUP",
-    "merge_policy": "C3 is the next production lane. Branch cleanup does not block it; runtime merges still require their exact-head technical checks.",
-    "proof_boundary": "C2 exact candidate #1030/#837 and merged develop #1031/#838 are machine-green. No PIE/device/visual/performance acceptance is implied."
+    "branch": "production/p1c01-d-lighting-water-mega-promotion-v1",
+    "baseline": "2845071119d926defd6ba94c970f43729bc51674",
+    "current_wave": "W01_P1C01_D_LIGHTING_SKY_FOG_WATER_PLUS_MEGA_PROMOTION",
+    "merge_policy": "D is the sole runtime-changing lane. Mega Asset Promotion may stage/audit in parallel but cannot cross READY_FOR_IMPORT or runtime integration gates without item-level evidence.",
+    "proof_boundary": "C4 candidate head bc1e04062d8079fef73eae64f68c81772b4fc56c passed Pre-Unreal #1070 and Unreal Build #875, then merged to develop@2845071119d926defd6ba94c970f43729bc51674. Fresh D exact-head proof is required; no visual/device/performance acceptance is implied."
   },
   "completion_wave_map": {
     "status": "ACTIVE_PLANNING_ESTIMATE",
@@ -5552,10 +5581,10 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Complete post-C2 root cleanup and verify the expected remote branch survivor set.",
-      "Start C3 stable foliage material identity from verified develop; branch cleanup is independent.",
-      "Then execute C4 LOD/cull/overdraw evidence work before any foliage density increase.",
-      "Proceed to D lighting/sky/fog/water only after C4 is exact-head machine-green; keep broad Part I story expansion frozen until Gate 6/7."
+      "Implement D fixed-state lighting/sky/fog ownership and low-cost water presentation from the merged C4 baseline.",
+      "Activate P1C01 Mega Asset Promotion through existing staging/intake-QC states only; retain item-level provenance and fail closed before READY_FOR_IMPORT.",
+      "Run exact-head Pre-Unreal plus the UE4.27.2 validation class required by the D runtime delta.",
+      "Keep foliage density and broad Part I/Part II/Part III runtime expansion frozen until target-device and Gate 6/7 evidence permits it."
     ]
   },
   "development_mode_contract": {
