@@ -3013,7 +3013,8 @@ allowed_cancel_values = {
     "false",
     "${{ github.event_name == 'pull_request' }}",
     "${{ startsWith(github.head_ref, 'acceptance/') }}",
-    "${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}",
+    "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}",
+    "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
 }
 if (
     not concurrency_group_ok
@@ -4350,11 +4351,13 @@ pg134_workflow = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.ym
 if (
     '"%PYTHON_EXE%" Scripts\\asset_quality_audit.py --strict' not in pg134_workflow
     or "resolve_runtime_python.ps1" not in pg134_workflow
-    or "C:\\\\actions-runner\\\\_ci\\\\pre-unreal" not in pg134_workflow
+    or "_ci\\pre-unreal" not in pg134_workflow
     or "SHIRE_PRE_ROOT" not in pg134_workflow
+    or "PRE_UNREAL_EXACT_CHECKOUT_PASS" not in pg134_workflow
+    or "persistent=true" not in pg134_workflow
     or 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg134_workflow
 ):
-    fail("PG-134 Pre-Unreal must run strict asset audit from an isolated temp checkout without touching the Unreal workspace")
+    fail("PG-134 Pre-Unreal must run strict asset audit from the isolated persistent static checkout without touching the Unreal workspace")
 for pg134_symbol in [
     "obj_with_degenerate_uv_triangles",
     "degenerate UV triangle",
@@ -4752,7 +4755,8 @@ if "runs-on: ubuntu-latest" in pg167_cleanup or "runs-on: windows-latest" in pg1
     fail("PG-167 Branch Cleanup must not depend on GitHub-hosted runners")
 for pg167_cleanup_symbol in [
     "BRANCH_CLEANUP_EXACT_CHECKOUT_PASS",
-    "verify_runner_session.ps1",
+    "SHIRE_CLEANUP_ROOT",
+    "isolated=true",
     "run_branch_cleanup.ps1",
     "pull-requests: read",
 ]:

@@ -1,3 +1,12 @@
+## 2026-09-27 - Validator contracts aligned to isolated CI architecture
+
+- Pre-Unreal #1103 proved the isolated persistent checkout path itself works and exact-head verification passes.
+- Its failure was VALIDATOR_POLICY only: PG-134/PG-167 still required pre-rearchitecture implementation details.
+- PG-134 now validates the stable invariant: strict asset audit runs from the isolated persistent static checkout and the Unreal workspace cannot be deleted.
+- PG-167 now requires Branch Cleanup isolation instead of the interactive UE4 runner-health probe, and recognizes branch-scoped same-PR Unreal cancellation.
+- No runtime/gameplay code, story, movement, save, streaming or package behavior changed.
+- Evidence boundary: **STATIC VALIDATOR REPAIR / FRESH PRE-UNREAL RUN PENDING**.
+
 ## 2026-09-26 - Persistent isolated Pre-Unreal checkout refinement
 
 - Isolation protected the Unreal workspace, but a fresh temporary Git repository still repeats repository transfer on every static validation.
