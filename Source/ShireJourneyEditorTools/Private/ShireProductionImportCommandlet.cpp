@@ -30,6 +30,15 @@
 
 namespace ShireProductionImport
 {
+    static bool IsApprovedFoliageMaterialIdentity(const FString& AuthoredMaterialName)
+    {
+        const FString NormalizedIdentity = AuthoredMaterialName.TrimStartAndEnd();
+        return NormalizedIdentity.Equals(TEXT("Grass"), ESearchCase::CaseSensitive) ||
+            NormalizedIdentity.Equals(TEXT("Leaves"), ESearchCase::CaseSensitive) ||
+            NormalizedIdentity.Equals(TEXT("LeafGreen"), ESearchCase::CaseSensitive) ||
+            NormalizedIdentity.Equals(TEXT("LeafGold"), ESearchCase::CaseSensitive);
+    }
+
     static bool HasObjTextureCoordinates(const FString& ObjSource)
     {
         return ObjSource.StartsWith(TEXT("vt ")) ||
@@ -788,6 +797,24 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     *DestinationPath,
                     *CurrentMaterialName);
 
+                const bool bApprovedFoliageIdentity =
+                    ShireProductionImport::IsApprovedFoliageMaterialIdentity(CurrentMaterialName);
+                UMaterialInterface* DesiredMaterialParent = ProductionMaterialParent;
+                if (bApprovedFoliageIdentity)
+                {
+                    if (!ProductionFoliageParent)
+                    {
+                        ++Failed;
+                        UE_LOG(
+                            LogTemp,
+                            Error,
+                            TEXT("ShireProductionImport: approved foliage material %s cannot bind because M_ProductionFoliage is unavailable."),
+                            *CurrentMaterialName);
+                        return;
+                    }
+                    DesiredMaterialParent = ProductionFoliageParent;
+                }
+
                 UMaterialInstanceConstant* Instance =
                     FindObject<UMaterialInstanceConstant>(nullptr, *ObjectPath);
 
@@ -800,7 +827,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 {
                     UMaterialInstanceConstantFactoryNew* Factory =
                         NewObject<UMaterialInstanceConstantFactoryNew>();
-                    Factory->InitialParent = ProductionMaterialParent;
+                    Factory->InitialParent = DesiredMaterialParent;
                     Instance = Cast<UMaterialInstanceConstant>(
                         AssetTools.Get().CreateAsset(
                             CurrentMaterialName,
@@ -811,7 +838,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
 
                 if (Instance)
                 {
-                    Instance->SetParentEditorOnly(ProductionMaterialParent);
+                    Instance->SetParentEditorOnly(DesiredMaterialParent);
                     Instance->SetVectorParameterValueEditorOnly(
                         FMaterialParameterInfo(TEXT("Color")),
                         CurrentBaseColor);
@@ -848,6 +875,14 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                             TextureObjectPath
                         });
                     }
+
+                    UE_LOG(
+                        LogTemp,
+                        Display,
+                        TEXT("ShireProductionImport material parent: identity=%s parent=%s foliage=%s"),
+                        *CurrentMaterialName,
+                        *DesiredMaterialParent->GetPathName(),
+                        bApprovedFoliageIdentity ? TEXT("yes") : TEXT("no"));
 
                     Instance->PostEditChange();
                     Instance->MarkPackageDirty();
