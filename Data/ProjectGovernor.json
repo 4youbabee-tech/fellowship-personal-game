@@ -4423,7 +4423,7 @@
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
   "current_focus": {
-    "production_lane": "W01_P1C01_MEGA_PRODUCTION_BUILD",
+    "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
     "rule": "Post-C2 cleanup is merged. C3 is the next runtime production step; source/PDF/warehouse/asset preparation may scale in parallel. Do not reopen closed W00 repair work without concrete regression evidence.",
     "machine_baseline": {
@@ -4442,10 +4442,10 @@
     "5. Keep Arabic localization runtime implementation isolated from the active world-production PR."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W01-P1C01-POST-C2-ROOT-CLEANUP",
-    "source_head": "1d0580926299e4fac635bcb847343a49c444d4f1",
-    "branch": "none",
-    "pull_request": 0,
+    "checkpoint_id": "CP-W01-P1C01-MEGA-PRODUCTION-RESUME",
+    "source_head": "9d3160fc2c0d7e72073f70cb01b727b679ea3f89",
+    "branch": "planning/mega-production-resume-v1",
+    "pull_request": 95,
     "verified": {
       "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
       "latest_automated_closure": "809e56a9e1dc4b453e02a0b04b6875a71df21933: Pre-Unreal #880 SUCCESS + Unreal #715 SUCCESS validation-policy inherit + Branch Cleanup #3 SUCCESS",
@@ -4599,9 +4599,9 @@
       "work/automation-first-runtime-observation"
     ],
     "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
-    "current_short_branch": "none",
+    "current_short_branch": "planning/mega-production-resume-v1",
     "integration_baseline": "develop",
-    "current_open_pr": 0,
+    "current_open_pr": 95,
     "open_pr_policy": "PR93 runtime repair passed full CI and merged after C2. Maintenance cleanup may proceed; the next production runtime PR is C3; branch cleanup is not a production gate.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
@@ -5497,16 +5497,23 @@
     "rule": "Track progress by wave exit criteria, not raw commit/file-upload count. Percentages are planning estimates and never substitute for validation evidence."
   },
   "daily_progress_reporting": {
-    "status": "DISABLED_BY_OWNER",
-    "cadence": "ON_DEMAND",
-    "baseline_percent": 40,
+    "status": "ACTIVE_MANAGER_REPORT",
+    "cadence": "EVERY_24_HOURS",
+    "current_planning_percent": 42,
+    "previous_planning_percent": 40,
     "source_of_truth": "Data/CompletionWaveMapV1.json",
-    "report_rule": "No scheduled 24-hour report. Report whole-game progress only on owner request or after a material production milestone.",
-    "evidence_rule": "Never convert static/compile/warehouse evidence into PIE/device/visual acceptance without matching proof.",
+    "report_rule": "The repository Project Manager posts one progress report every 24 hours to the dedicated GitHub manager issue. Report planning/production completion, 24-hour delta, current wave, meaningful merged/integrated movement, blockers, and next percentage unlock. Do not advance percentage from commit count alone.",
+    "evidence_rule": "Never convert static/compile/warehouse evidence into PIE/device/visual/performance acceptance without matching proof.",
     "audience": "OWNER",
-    "automation_id": "6ab288ade9308191ae2410214f0b4d52",
-    "schedule": "Disabled by owner on 2026-09-26.",
-    "baseline_note": "40 remains historical until a material wave exit justifies recalculation; no scheduled delta reporting."
+    "delivery": {
+      "channel": "GITHUB_ISSUE",
+      "issue_number": 96,
+      "workflow": ".github/workflows/daily-project-manager-report.yml",
+      "script": "Scripts/daily_project_manager_report.py",
+      "chatgpt_notification": false
+    },
+    "schedule": "Every 24 hours via GitHub Actions schedule.",
+    "baseline_note": "W00 is recorded closed and CompletionWaveMapV1 maps W00 exit from 40 to 42. W01 remains active; 48 is not claimed until W01 exit criteria are actually satisfied."
   },
   "cross_system_audit_cycle": {
     "status": "ACTIVE_ENFORCED",
@@ -5532,8 +5539,8 @@
     "stop_rule": "A newly discovered HIGH/CRITICAL cross-system gap is repaired or explicitly quarantined before the active wave may be promoted."
   },
   "execution_control": {
-    "mode": "ACTIVE_GATE_FIRST_FAST_PRODUCTION",
-    "active_lane": "W01_P1C01_MEGA_PRODUCTION_BUILD",
+    "mode": "ACTIVE_GATE_FIRST",
+    "active_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "allowed_bundles": [
       "B2_CHARACTERS_AND_WORLD_PRODUCTION",
       "B3_LIVING_WORLD_AND_PRESENTATION",
