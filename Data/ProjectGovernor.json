@@ -5717,7 +5717,7 @@
     },
     {
       "id": "KF-W00-RUNNER-BROKER-001",
-      "status": "UPSTREAM_BUG_MITIGATED_BACKGROUND_RUNNER_PROVEN_RECOVERY_TRIGGER_UNEXERCISED",
+      "status": "WATCHDOG_LIVENESS_GAP_ROOT_FIXED_STATIC_PROOF_PENDING_DEVICE_REINSTALL",
       "symptom": "Unreal #650 and Warehouse #231 were both assigned to UE4-27-Windows but failed after about ten minutes with zero workflow steps and no downloadable job log.",
       "evidence": [
         "Exact head a69147e4e34869bc43abfbce517ba8023b6027c8: Pre-Unreal #815 SUCCESS on GitHub-hosted Ubuntu.",
@@ -5727,11 +5727,14 @@
         "The runner immediately before this incident was already Actions Runner 2.337.0 and successfully executed full step lists in Unreal #649 and Warehouse #230.",
         "Warehouse #232 succeeded through the GitHub-hosted no-delta gate and did not consume the self-hosted UE4 stage.",
         "Unreal #651 Attempt 2 succeeded end-to-end after the legacy foreground run.cmd session was removed and the supervised user-context listener owned the runner.",
-        "GitHub actions/runner issue #4668 documents the same v2.337.0 failure shape: acknowledged job, no Runner.Worker/steps, then GitHub failure at about ten minutes; the upstream issue remains open."
+        "GitHub actions/runner issue #4668 documents the same v2.337.0 failure shape: acknowledged job, no Runner.Worker/steps, then GitHub failure at about ten minutes; the upstream issue remains open.",
+        "2026-09-26: Pre-Unreal #988, Unreal #821 and Warehouse #259 remained queued with runner_id=0/runner_name empty while Windows still had Runner.Listener.exe present; the watchdog Scheduled Task reported LastTaskResult=2147943467 (0x8007042B / process terminated unexpectedly).",
+        "2026-09-26: the installed watchdog log showed prior user-context boots/online listener PIDs but no surviving supervisor after the task failure, proving that process-presence alone was insufficient to guarantee a live broker session.",
+        "2026-09-26: after a healthy runner listener returned, Warehouse #259 was assigned to runner_id=21 UE4-27-Windows and executed real repository steps, confirming the queue blockage was runner supervision rather than C2 game code."
       ],
-      "root_cause": "The local failure boundary is proven to be the self-hosted runner listener/job-acquisition path before repository steps. Its exact local packet-level subcause was not captured, but the v2.337.0 zero-step ten-minute signature matches the open upstream actions/runner #4668 acquirejob hang family. Treat recurrence as runner infrastructure unless repository steps actually begin and fail.",
-      "permanent_policy": "Run the UE4 listener under the proven Windows user context, not NETWORK SERVICE; keep the legacy runner service disabled/manual; keep Warehouse delta detection on GitHub-hosted Ubuntu and request the self-hosted stage only for a real Warehouse input; serialize real Warehouse work with the UE4 device group; keep the external watchdog active so an acknowledged job with no Runner.Worker is recycled instead of consuming the full GitHub ten-minute failure window.",
-      "reopen_rule": "Reopen if a supervised runner still produces a zero-step ten-minute failure, if the watchdog restarts during an active Runner.Worker, or if Warehouse consumes the self-hosted runner on a no-delta synchronize update."
+      "root_cause": "The self-hosted broker has two distinct pre-step failure modes: the upstream v2.337.0 acknowledged-job/no-worker hang, and a local supervisor-liveness gap where the watchdog Scheduled Task can terminate while leaving an orphaned Runner.Listener process that is no longer receiving jobs. A mere Listener process is therefore not accepted as runner health.",
+      "permanent_policy": "Run the UE4 listener only under the proven interactive Windows user context; keep the legacy actions.runner.* service stopped/manual; install the watchdog with both AtLogOn and five-minute repeating self-heal triggers using MultipleInstances IgnoreNew; on watchdog boot, recycle an existing Listener only when no Runner.Worker is active so an orphaned stale listener cannot survive supervisor death; retain the 150-second acknowledged-job/no-worker recovery; keep real Warehouse work serialized on the UE4 device lane.",
+      "reopen_rule": "Reopen if the reinstalled watchdog task dies without being relaunched within five minutes, if boot recovery interrupts an active Runner.Worker, if a supervised listener remains unassigned with runner_id=0 after the self-heal window, or if a zero-step acquire hang survives the 150-second recovery."
     },
     {
       "id": "KF-W00-LOCAL-BRANCH-001",
