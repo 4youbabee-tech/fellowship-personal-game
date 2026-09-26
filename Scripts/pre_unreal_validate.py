@@ -6916,7 +6916,11 @@ for pg145b_symbol in [
     "Runner.Worker.exe",
     "actions.runner.*",
     "ShireJourney-GitHubRunner-Watchdog",
-    "Test-NetConnection github.com -Port 443",
+    "System.Net.Sockets.TcpClient",
+    "ConnectAsync(\"github.com\", 443)",
+    "RUNNER_HEALTH_NETWORK_ATTEMPT",
+    "$NetworkProbeAttempts = 3",
+    "$NetworkProbeTimeoutMilliseconds = 5000",
     "RUNNER_HEALTH_PASS",
 ]:
     if pg145b_symbol not in pg145b_probe:

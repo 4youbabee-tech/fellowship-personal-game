@@ -101,10 +101,41 @@ foreach ($worker in $workers) {
 }
 Write-Host ("RUNNER_HEALTH_PROCESS_PASS listenerPid=" + $listener.ProcessId + " workers=" + $workers.Count + " sessionId=" + $currentSession)
 
-if (-not (Test-NetConnection github.com -Port 443 -InformationLevel Quiet -WarningAction SilentlyContinue)) {
-    Fail "github-443-unreachable"
+$NetworkProbeAttempts = 3
+$NetworkProbeTimeoutMilliseconds = 5000
+$NetworkProbeRetryDelaySeconds = 2
+$networkAttemptsUsed = 0
+$networkReachable = $false
+
+for ($networkAttempt = 1; $networkAttempt -le $NetworkProbeAttempts; $networkAttempt++) {
+    $networkAttemptsUsed = $networkAttempt
+    $client = New-Object System.Net.Sockets.TcpClient
+    try {
+        $connectTask = $client.ConnectAsync("github.com", 443)
+        $completed = $connectTask.Wait($NetworkProbeTimeoutMilliseconds)
+        $networkReachable = $completed -and $client.Connected
+    }
+    catch {
+        $networkReachable = $false
+    }
+    finally {
+        $client.Close()
+        $client.Dispose()
+    }
+
+    Write-Host ("RUNNER_HEALTH_NETWORK_ATTEMPT attempt=" + $networkAttempt + "/" + $NetworkProbeAttempts + " endpoint=github.com:443 timeoutMs=" + $NetworkProbeTimeoutMilliseconds + " success=" + $networkReachable)
+    if ($networkReachable) {
+        break
+    }
+    if ($networkAttempt -lt $NetworkProbeAttempts) {
+        Start-Sleep -Seconds $NetworkProbeRetryDelaySeconds
+    }
 }
-Write-Host "RUNNER_HEALTH_NETWORK_PASS github443=true"
+
+if (-not $networkReachable) {
+    Fail ("github-443-unreachable attempts=" + $NetworkProbeAttempts + " timeoutMs=" + $NetworkProbeTimeoutMilliseconds)
+}
+Write-Host ("RUNNER_HEALTH_NETWORK_PASS github443=true attemptsUsed=" + $networkAttemptsUsed)
 
 $probeRoot = if ($env:RUNNER_TEMP) { $env:RUNNER_TEMP } else { $env:TEMP }
 $probe = Join-Path $probeRoot ("shire-runner-health-" + [Guid]::NewGuid().ToString("N") + ".tmp")
