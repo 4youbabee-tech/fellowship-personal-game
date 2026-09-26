@@ -26,10 +26,13 @@ class HandoffTests(unittest.TestCase):
         g['session_handoff']['validation_snapshot']['last_green']['unreal']['status'] = 'FAILURE'
         self.assertTrue(validate_handoff(g))
 
-    def test_historical_handoff_cannot_disagree_with_baseline(self):
+    def test_stale_legacy_copy_warns_without_blocking_valid_evidence(self):
         g = fixture()
         g['session_handoff']['source_head'] = 'c' * 40
-        self.assertTrue(validate_handoff(g))
+        self.assertEqual(validate_handoff(g), [])
+        summary = evidence_summary(g)
+        self.assertIn('WARNING: legacy source_head differs', summary)
+        self.assertIn('Last verified baseline: ' + 'a' * 40, summary)
 
     def test_checkpoint_rewrite_must_preserve_validation_snapshot(self):
         g = fixture()

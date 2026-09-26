@@ -6038,5 +6038,11 @@
     ],
     "rule": "A new human programmer or AI session enters through README/onboarding script, then follows ProjectGovernor. Chat history and stale PR text are never required to discover current direction.",
     "live_state_rule": "GitHub owns current branch/PR/check status; do not duplicate volatile transport metadata as fail-closed governance."
+  },
+  "handoff_metadata_policy": {
+    "evidence_authority": "session_handoff.validation_snapshot",
+    "legacy_source_head": "Informational compatibility copy only; mismatch warns and never certifies another commit.",
+    "blocking_checks": "Invalid or mixed-SHA evidence, failed last-green baselines, missing validation snapshots and missing experiential acceptance boundaries remain blocking.",
+    "production_priority": "Advance the cohesive playable story slice: quest continuity, living world, save/load integrity and measured target-device performance. Administrative metadata must not substitute for player-facing acceptance."
   }
 }

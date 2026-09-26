@@ -1,3 +1,7 @@
+## Administrative repetition root fix — 2026-09-26
+
+The validation snapshot is the sole handoff evidence authority. A stale legacy `source_head` is reported as a warning, not a production blocker. This supersedes the earlier requirement to keep duplicate fields synchronized by hand. Mixed-SHA evidence, unsuccessful green baselines, missing snapshots and missing human acceptance boundaries still fail validation. Regression tests cover both allowed metadata drift and rejected evidence corruption. Story continuity, living-world coherence, save/load integrity and target-device playability remain the production priorities. This change does not certify runtime or human acceptance.
+
 # Review checkpoint — 2026-09-26
 
 PR102 failed Governor validation because its historical `session_handoff.source_head` was moved to the current integration commit without matching validation evidence. Restore it to the recorded last-green SHA; keep the current integration baseline in `integration_train`. Future phase changes must preserve this distinction. No validation gate is disabled. Onboarding uses PG-174 because D lighting and Mega promotion already use PG-172/173 in PR101. C3/C4 are merged; D and bounded Mega promotion are in progress. Runtime, visual, device and performance acceptance remain separate and unproven by this administrative repair.
