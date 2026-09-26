@@ -4818,7 +4818,8 @@ for pg167_symbol in [
     "Data/P1C01WorldBuildIntakePacketV1.json",
     "Data/BranchCleanupPlan.json",
     "Scripts/run_branch_cleanup.ps1",
-    "${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}",
+    "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}",
+    "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
 ]:
     if pg167_symbol not in pg167_unreal:
         fail(f"PG-167 Unreal queue-isolation contract missing: {pg167_symbol}")

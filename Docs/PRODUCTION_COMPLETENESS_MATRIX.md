@@ -1,3 +1,12 @@
+## 2026-09-27 - PG-167 final queue-isolation guard repair
+
+- Live PR state showed the branch had already advanced to `95dcdad171eb36b1309dadf248f9b1f98f12a05c` with the first PG-134/PG-167 repair commit.
+- Pre-Unreal #1104 proved exact-head isolated persistent checkout and all classifier cases passed at that head.
+- #1104 then failed only in project-structure validation with the exact stale policy requirement: `PG-167 Unreal queue-isolation contract missing: ${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}`.
+- The remaining PG-167 queue-isolation guard now requires the adopted branch-scoped Unreal concurrency group plus `cancel-in-progress: ${{ github.event_name == 'pull_request' }}`, matching same-PR superseded-run cancellation.
+- This wave changes validator policy/docs only. It does not request C++/import/runtime/cook/package work and does not create PIE/device/visual/performance evidence.
+- Evidence boundary: **STATIC VALIDATOR PATCH / FRESH PRE-UNREAL EXACT-HEAD RERUN PENDING**.
+
 ## 2026-09-27 - Validator contracts aligned to isolated CI architecture
 
 - Pre-Unreal #1103 proved the isolated persistent checkout path itself works and exact-head verification passes.
