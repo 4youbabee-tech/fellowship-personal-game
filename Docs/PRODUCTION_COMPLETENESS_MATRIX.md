@@ -1,3 +1,9 @@
+## 2026-09-26 - Runner health owner normalization fix
+
+- Pre-Unreal #1017 proved the supervised job itself was running correctly on `UE4-27-Windows` as `IDEAPAD320\user` in session 1 with the legacy service stopped/manual, then the new health probe produced a false negative because Task Scheduler reported the same account as short-form `user`.
+- Runner health now compares the watchdog task owner by Windows SID rather than display-name string, so `user` and `IDEAPAD320\user` resolve to the same identity without weakening the ownership check.
+- Evidence boundary: source correction only until a fresh Pre-Unreal run reaches `RUNNER_HEALTH_PASS`.
+
 ## 2026-09-26 - Fast production validation lane + stale-worker recovery
 
 - Root cause of the recurring 15-20 minute waste was split into runner acquisition/session failures and an overly broad Unreal validation lane.
