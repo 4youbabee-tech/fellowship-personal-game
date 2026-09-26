@@ -4,6 +4,11 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '35 14 * * *'
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/daily-project-manager-report.yml'
 
 permissions:
   contents: read
@@ -12,7 +17,12 @@ permissions:
 jobs:
   report:
     name: Post Shire Journey manager report
-    runs-on: ubuntu-latest
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 5
     steps:
       - name: Checkout canonical develop
         uses: actions/checkout@v4
@@ -20,116 +30,104 @@ jobs:
           ref: develop
           fetch-depth: 200
 
-      - name: Generate manager report
-        shell: bash
+      - name: Generate project-manager report
+        shell: powershell
         run: |
-          if [ -f Scripts/daily_project_manager_report.py ]; then
-            python3 Scripts/daily_project_manager_report.py > daily_manager_report.md
-          else
-            python3 - <<'PY' > daily_manager_report.md
-          import json
-          import subprocess
-          from datetime import datetime, timezone, timedelta
-          from pathlib import Path
+          $ErrorActionPreference = 'Stop'
+          $gov = Get-Content 'Data/ProjectGovernor.json' -Raw | ConvertFrom-Json
+          $waves = Get-Content 'Data/CompletionWaveMapV1.json' -Raw | ConvertFrom-Json
 
-          root = Path(".")
-          gov = json.loads((root/"Data/ProjectGovernor.json").read_text(encoding="utf-8"))
-          waves = json.loads((root/"Data/CompletionWaveMapV1.json").read_text(encoding="utf-8"))
-          daily = gov.get("daily_progress_reporting", {})
-          current = daily.get("current_planning_percent")
-          if current is None:
-              baseline = int(waves.get("baseline", {}).get("planning_completion_percent", 40))
-              closed = str(gov.get("w00_final_closure", {}).get("status", "")).startswith("CLOSED")
-              current = 42 if closed else baseline
-          current = int(current)
-          previous = int(daily.get("previous_planning_percent", current))
+          $current = $null
+          if ($gov.daily_progress_reporting -and
+              $gov.daily_progress_reporting.PSObject.Properties['current_planning_percent']) {
+              $current = [int]$gov.daily_progress_reporting.current_planning_percent
+          }
+          if ($null -eq $current) {
+              $current = [int]$waves.baseline.planning_completion_percent
+              if ([string]$gov.w00_final_closure.status -like 'CLOSED*') {
+                  $current = 42
+              }
+          }
 
-          def gl(*args):
-              p = subprocess.run(["git", *args], capture_output=True, text=True, check=False)
-              return [x.strip() for x in p.stdout.splitlines() if x.strip()] if p.returncode == 0 else []
+          $previous = $current
+          if ($gov.daily_progress_reporting -and
+              $gov.daily_progress_reporting.PSObject.Properties['previous_planning_percent']) {
+              $previous = [int]$gov.daily_progress_reporting.previous_planning_percent
+          }
 
-          now = datetime.now(timezone.utc)
-          since = now - timedelta(hours=24)
-          merges = gl("log", f"--since={since.isoformat()}", "--merges", "--pretty=%h %s")[:8]
-          changes = gl("log", f"--since={since.isoformat()}", "--no-merges", "--pretty=%h %s")[:12]
-          head = (gl("rev-parse", "HEAD") or ["UNKNOWN"])[0]
-          focus = gov.get("current_focus", {})
-          gate = gov.get("active_gate", {})
-          handoff = gov.get("session_handoff", {})
+          $now = [DateTime]::UtcNow
+          $since = $now.AddHours(-24).ToString('o')
+          $head = (git rev-parse HEAD).Trim()
+          $merges = @(git log "--since=$since" --merges --pretty=format:"%h %s" | Select-Object -First 8)
+          $changes = @(git log "--since=$since" --no-merges --pretty=format:"%h %s" | Select-Object -First 12)
 
-          wave = None
-          for item in waves.get("waves", []):
-              if int(item.get("from_percent", -1)) <= current < int(item.get("to_percent", 101)):
-                  wave = item
+          $wave = $null
+          foreach ($item in $waves.waves) {
+              if ($current -ge [int]$item.from_percent -and $current -lt [int]$item.to_percent) {
+                  $wave = $item
                   break
+              }
+          }
 
-          print("# Shire Journey — Daily Project Manager Report")
-          print()
-          print(f"- Generated UTC: {now:%Y-%m-%d %H:%M}")
-          print(f"- Develop head observed: \`{head}\`")
-          print(f"- Planning / production completion: **{current}%**")
-          print(f"- 24h planning delta: **{current-previous:+d} percentage points**")
-          print(f"- Active lane: **{focus.get('production_lane','UNKNOWN')}**")
-          print(f"- Active gate: **{gate.get('id','UNKNOWN')}** — {gate.get('status','UNKNOWN')}")
-          if wave:
-              print(f"- Current wave: **{wave.get('id')} — {wave.get('name')}**")
-              print(f"- Wave range: {wave.get('from_percent')}% → {wave.get('to_percent')}%")
-          print()
-          print("## Meaningful movement in the last 24 hours")
-          if merges:
-              for x in merges:
-                  print(f"- Merge: {x}")
-          if changes:
-              for x in changes:
-                  print(f"- Change: {x}")
-          if not merges and not changes:
-              print("- No repository commits recorded in the last 24 hours.")
-          if wave:
-              exits = "; ".join(wave.get("exit", [])[:4])
-              print()
-              print("## Next percentage unlock")
-              print(f"- {wave.get('to_percent')}% after: {exits}")
-          print()
-          print("## Evidence boundary")
-          print("- This is a planning/production estimate, not a test-acceptance label.")
-          print("- Commit count alone never raises the percentage.")
-          print("- STATIC/COMPILE evidence does not imply PIE, DEVICE, VISUAL, PACING, or PERFORMANCE acceptance.")
-          pending = handoff.get("unverified_acceptance", [])
-          if pending:
-              print()
-              print("## Still awaiting human/device evidence")
-              for x in pending[:8]:
-                  print(f"- {x}")
-          PY
-          fi
+          $report = [System.Collections.Generic.List[string]]::new()
+          $report.Add('# Shire Journey — Daily Project Manager Report')
+          $report.Add('')
+          $report.Add("- Generated UTC: $($now.ToString('yyyy-MM-dd HH:mm'))")
+          $report.Add("- Develop head observed: `$head`")
+          $report.Add("- Planning / production completion: **$current%**")
+          $report.Add("- 24h planning delta: **$([string]::Format('{0:+0;-0;0}', $current - $previous)) percentage points**")
+          $report.Add("- Active lane: **$($gov.current_focus.production_lane)**")
+          $report.Add("- Active gate: **$($gov.active_gate.id)** — $($gov.active_gate.status)")
+          if ($null -ne $wave) {
+              $report.Add("- Current wave: **$($wave.id) — $($wave.name)**")
+              $report.Add("- Wave range: $($wave.from_percent)% -> $($wave.to_percent)%")
+          }
+
+          $report.Add('')
+          $report.Add('## Meaningful movement in the last 24 hours')
+          foreach ($line in $merges) { if ($line) { $report.Add("- Merge: $line") } }
+          foreach ($line in $changes) { if ($line) { $report.Add("- Change: $line") } }
+          if ($merges.Count -eq 0 -and $changes.Count -eq 0) {
+              $report.Add('- No repository commits recorded in the last 24 hours.')
+          }
+
+          if ($null -ne $wave) {
+              $report.Add('')
+              $report.Add('## Next percentage unlock')
+              $exitPreview = @($wave.exit | Select-Object -First 4) -join '; '
+              $report.Add("- $($wave.to_percent)% after: $exitPreview")
+          }
+
+          $report.Add('')
+          $report.Add('## Evidence boundary')
+          $report.Add('- This is a planning/production estimate, not a test-acceptance label.')
+          $report.Add('- Commit count alone never raises the percentage.')
+          $report.Add('- STATIC/COMPILE evidence does not imply PIE, DEVICE, VISUAL, PACING, or PERFORMANCE acceptance.')
+
+          if ($gov.session_handoff -and $gov.session_handoff.unverified_acceptance) {
+              $report.Add('')
+              $report.Add('## Still awaiting human/device evidence')
+              foreach ($item in @($gov.session_handoff.unverified_acceptance | Select-Object -First 8)) {
+                  $report.Add("- $item")
+              }
+          }
+
+          $report | Set-Content 'daily_manager_report.md' -Encoding UTF8
 
       - name: Post to Project Manager issue
+        shell: powershell
         env:
           GH_TOKEN: ${{ github.token }}
           ISSUE_NUMBER: '96'
           REPOSITORY: ${{ github.repository }}
-        shell: bash
         run: |
-          python3 - <<'PY'
-          import json
-          import os
-          import urllib.request
-          repo = os.environ["REPOSITORY"]
-          issue = os.environ["ISSUE_NUMBER"]
-          token = os.environ["GH_TOKEN"]
-          body = open("daily_manager_report.md", "r", encoding="utf-8").read()
-          req = urllib.request.Request(
-              f"https://api.github.com/repos/{repo}/issues/{issue}/comments",
-              data=json.dumps({"body": body}).encode("utf-8"),
-              headers={
-                  "Authorization": f"Bearer {token}",
-                  "Accept": "application/vnd.github+json",
-                  "X-GitHub-Api-Version": "2022-11-28",
-                  "Content-Type": "application/json",
-              },
-              method="POST",
-          )
-          with urllib.request.urlopen(req, timeout=30) as response:
-              if response.status not in (200, 201):
-                  raise SystemExit(f"GitHub issue comment failed: HTTP {response.status}")
-          PY
+          $ErrorActionPreference = 'Stop'
+          $body = Get-Content 'daily_manager_report.md' -Raw
+          $headers = @{
+              Authorization = "Bearer $env:GH_TOKEN"
+              Accept = 'application/vnd.github+json'
+              'X-GitHub-Api-Version' = '2022-11-28'
+          }
+          $payload = @{ body = $body } | ConvertTo-Json -Depth 3
+          $uri = "https://api.github.com/repos/$env:REPOSITORY/issues/$env:ISSUE_NUMBER/comments"
+          Invoke-RestMethod -Method Post -Uri $uri -Headers $headers -ContentType 'application/json' -Body $payload | Out-Null
