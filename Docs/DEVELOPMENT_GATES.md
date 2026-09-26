@@ -111,13 +111,13 @@ Until current Part I is stable:
 
 ## Gate 8 — Failure discipline
 When a gate fails:
-1. stop feature expansion,
+1. stop the affected runtime lane,
 2. isolate failure,
 3. fix failure,
 4. rerun that gate,
-5. continue only after it passes.
+5. resume that lane only after it passes.
 
-Do not stack new features on a known failing checkpoint.
+Independent source/PDF/warehouse preparation may continue when the failure does not affect it. Do not stack new runtime changes on a known failing runtime checkpoint.
 
 ## Gate 9 — Acceptance labels
 Every checkpoint should record which are proven:
@@ -137,3 +137,11 @@ When a bug exposes a repeatable invariant:
 4. update `Data/ProjectGuardRules.json` when the rule is machine-checkable.
 
 That is how this project "learns from mistakes".
+
+
+## Gate 11 — Production acceleration
+- No scheduled 24-hour report is required.
+- Closed W00 repairs remain historical unless a concrete regression reopens them.
+- Batch management/documentation updates by production wave.
+- Source indexing, provenance capture and non-runtime warehouse staging do not require an Unreal build.
+- Gate 6/7 still controls broad runtime expansion; whole-game source and asset preparation may proceed in parallel.
