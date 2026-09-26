@@ -52,7 +52,7 @@ if ($null -eq $task) {
 if ($task.Principal.UserId -ne $identity) {
     Fail ("watchdog-owner actual=" + $task.Principal.UserId + " expected=" + $identity)
 }
-if ($task.State -notin @("Running","Ready")) {
+if ($task.State -ne "Running") {
     Fail ("watchdog-state state=" + $task.State)
 }
 Write-Host ("RUNNER_HEALTH_WATCHDOG_PASS task=" + $TaskName + " state=" + $task.State + " owner=" + $task.Principal.UserId)
