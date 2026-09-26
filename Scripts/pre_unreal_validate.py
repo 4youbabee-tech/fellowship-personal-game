@@ -2632,6 +2632,26 @@ if pg169_plan.get("status") != "PREPARED_NOT_RUNTIME_STARTED":
             fail(f"PG-169 C3 forbidden broad/far binding found: {pg169_forbidden}")
 
 
+# PG-170: volatile GitHub transport metadata must never become a production blocker.
+project_governor_validator = read(ROOT / "Scripts" / "project_governor.py")
+for pg170_forbidden in [
+    "Governor branch workflow and session handoff disagree on current branch",
+    "Governor branch workflow and session handoff disagree on current PR",
+    "MASTER_EXECUTION_BOARD must expose no active PR",
+    "MASTER_EXECUTION_BOARD current PR disagrees with handoff",
+]:
+    if pg170_forbidden in project_governor_validator:
+        fail(f"PG-170 volatile GitHub transport metadata became a Governor build gate again: {pg170_forbidden}")
+
+branch_cleanup_script = read(ROOT / "Scripts" / "run_branch_cleanup.ps1")
+for pg170_cleanup_symbol in [
+    "$_.PSObject.Properties['head']",
+    "$_.head.PSObject.Properties['ref']",
+]:
+    if pg170_cleanup_symbol not in branch_cleanup_script:
+        fail(f"PG-170 branch cleanup lost empty/open-PR response hardening: {pg170_cleanup_symbol}")
+
+
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
 pg164_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
