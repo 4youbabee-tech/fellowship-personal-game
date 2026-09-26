@@ -351,3 +351,12 @@ Purpose: retain visual, material, life, ambience and world-detail ideas discover
 - Runtime chapter implementation for later parts remains gated. The new work is preproduction/warehouse/shared-foundation preparation, not permission to bypass Gate 6/7.
 - Shared-kit principle: build culture/material/biome families once and reuse across related locations instead of authoring every city from zero. Examples include Gondor pale-stone/citadel kit, Rohan timber-hall/stable kit, Mordor black-metal/ash/fortification kit, Elven stone/wood/foliage kit, Dwarven monumental-stone kit and Shire/Bree rural timber/plaster kit.
 - Performance remains bounded for the target laptop: repeated world detail must prefer ISM/HISM + culling/LOD, high-cost hero architecture stays selective, and world stock may be large on disk without being resident in memory at once.
+
+## 2026-09-26 - P1C01 D + bounded Mega Asset Promotion launch
+
+- Owner direction: continue immediately from merged C4 into **D — fixed-state lighting / sky / fog / low-cost water** while starting the large asset-promotion effort in parallel.
+- Runtime ownership stays narrow: D may change presentation only. Quest/save/story topology, traversal anchors, LivingWorld ownership, NPC pooling and C2/C3/C4 foliage density/material identity remain unchanged.
+- D water scope is limited to the established Shire water bodies already represented in P1C01 (The Water by the Mill and the Brandywine/Bucklebury Ferry composition). Default presentation is an opaque, low-cost production material path with no planar reflection, no scene-capture dependency and no per-frame CPU simulation.
+- Mega Asset Promotion reuses `Data/P1C01WarehousePromotionQueueV1.json` and `Data/ProductionAssetPromotionPolicyV1.json`; this is not a second inventory. Work may advance through staging/intake QC, but no item is promoted to `READY_FOR_IMPORT` without provider/source/license, local staging receipt, SHA256 and class-specific QC.
+- Final animated production assets remain FBX-only. Final production textures remain PNG/TGA; BMP cannot be accepted as final promotion evidence. Heavy runtime assets stay soft-referenced/asynchronously owned; crowds remain pooled and repeated detail remains ISM/HISM + LOD/culling.
+- Evidence boundary: **EXECUTION AUTHORIZED / NOT YET VALIDATED**. C4 candidate exact head passed Pre-Unreal #1070 and Unreal Build #875 before merge. D needs its own exact-head machine proof plus later rendered/device evidence; no PIE/device/visual/performance acceptance is claimed here.

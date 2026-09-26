@@ -96,8 +96,12 @@ foreach ($bankProperty in $streamingPlan.banks.PSObject.Properties) {
     }
 }
 $expectedStreamingPackages = @($expectedStreamingPackages | Sort-Object -Unique)
-if ($expectedStreamingPackages.Count -ne 238) {
-    throw ("W00_STREAMING_PLAN_COUNT_MISMATCH expected=238 actual=" + $expectedStreamingPackages.Count)
+$recordedStreamingPackageCount = [int]$streamingPlan.audit.total_unique_production_packages
+if ($recordedStreamingPackageCount -le 0) {
+    throw "W00_STREAMING_PLAN_COUNT_MISSING"
+}
+if ($expectedStreamingPackages.Count -ne $recordedStreamingPackageCount) {
+    throw ("W00_STREAMING_PLAN_COUNT_MISMATCH expected=" + $recordedStreamingPackageCount + " actual=" + $expectedStreamingPackages.Count)
 }
 $missingGeneratedAssets = @()
 foreach ($packagePath in $expectedStreamingPackages) {
