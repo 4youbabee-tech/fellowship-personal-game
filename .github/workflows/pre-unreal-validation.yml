@@ -39,6 +39,9 @@ jobs:
       - name: Validate project governor
         run: '"%PYTHON_EXE%" Scripts/project_governor.py'
 
+      - name: Test asset audit memory and failure handling
+        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_asset_quality_audit.py" -v'
+
       - name: Audit production asset source quality
         run: '"%PYTHON_EXE%" Scripts/asset_quality_audit.py --strict'
 
@@ -75,3 +78,4 @@ jobs:
 
       - name: Test live governor evidence selection
         run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_live_governor_status.py" -v'
+

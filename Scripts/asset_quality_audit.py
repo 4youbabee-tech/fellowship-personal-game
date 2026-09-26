@@ -137,46 +137,45 @@ def main() -> int:
         degenerate_uv_triangles = 0
         opposed_normal_corners = 0
 
+        face_tokens: list[list[str]] = []
         try:
-            lines = obj.read_text(encoding="utf-8", errors="replace").splitlines()
-        except Exception as exc:
+            with obj.open(encoding="utf-8", errors="replace") as source:
+                for line in source:
+                    stripped = line.strip()
+                    if stripped.startswith("v "):
+                        parts = stripped.split()
+                        if len(parts) >= 4:
+                            try:
+                                vertices.append((float(parts[1]), float(parts[2]), float(parts[3])))
+                            except ValueError:
+                                errors.append(f"{obj.relative_to(ROOT)} contains malformed vertex data")
+                    elif stripped.startswith("vn "):
+                        normal_count += 1
+                        parts = stripped.split()
+                        if len(parts) >= 4:
+                            try:
+                                normals.append((float(parts[1]), float(parts[2]), float(parts[3])))
+                            except ValueError:
+                                errors.append(f"{obj.relative_to(ROOT)} contains malformed normal data")
+                    elif stripped.startswith("vt "):
+                        uv_count += 1
+                        parts = stripped.split()
+                        if len(parts) >= 3:
+                            try:
+                                uvs.append((float(parts[1]), float(parts[2])))
+                            except ValueError:
+                                errors.append(f"{obj.relative_to(ROOT)} contains malformed UV data")
+                    elif stripped.startswith("s ") and stripped.lower() not in {"s off", "s 0"}:
+                        smoothing_seen = True
+                    elif stripped.startswith("mtllib "):
+                        material_libraries.extend(stripped[7:].strip().split())
+                    elif stripped.startswith("usemtl "):
+                        used_materials.add(stripped[7:].strip())
+                    elif stripped.startswith("f "):
+                        face_tokens.append(stripped.split()[1:])
+        except OSError as exc:
             errors.append(f"{obj.relative_to(ROOT)} unreadable: {exc}")
             continue
-
-        face_tokens: list[list[str]] = []
-        for line in lines:
-            stripped = line.strip()
-            if stripped.startswith("v "):
-                parts = stripped.split()
-                if len(parts) >= 4:
-                    try:
-                        vertices.append((float(parts[1]), float(parts[2]), float(parts[3])))
-                    except ValueError:
-                        errors.append(f"{obj.relative_to(ROOT)} contains malformed vertex data")
-            elif stripped.startswith("vn "):
-                normal_count += 1
-                parts = stripped.split()
-                if len(parts) >= 4:
-                    try:
-                        normals.append((float(parts[1]), float(parts[2]), float(parts[3])))
-                    except ValueError:
-                        errors.append(f"{obj.relative_to(ROOT)} contains malformed normal data")
-            elif stripped.startswith("vt "):
-                uv_count += 1
-                parts = stripped.split()
-                if len(parts) >= 3:
-                    try:
-                        uvs.append((float(parts[1]), float(parts[2])))
-                    except ValueError:
-                        errors.append(f"{obj.relative_to(ROOT)} contains malformed UV data")
-            elif stripped.startswith("s ") and stripped.lower() not in {"s off", "s 0"}:
-                smoothing_seen = True
-            elif stripped.startswith("mtllib "):
-                material_libraries.extend(stripped[7:].strip().split())
-            elif stripped.startswith("usemtl "):
-                used_materials.add(stripped[7:].strip())
-            elif stripped.startswith("f "):
-                face_tokens.append(stripped.split()[1:])
 
         if normal_count == 0:
             stats["obj_without_normals"] += 1
@@ -309,7 +308,10 @@ def main() -> int:
         relative_parts = texture.relative_to(PRODUCTION).parts
         bucket = "/".join(relative_parts[:2]) if len(relative_parts) >= 2 else relative_parts[0]
         try:
-            data = texture.read_bytes()
+            # Dimensions live in the first 24 bytes; never buffer a large texture.
+            with texture.open("rb") as source:
+                data = source.read(24)
+                source_bytes = os.fstat(source.fileno()).st_size
         except Exception as exc:
             errors.append(f"{texture.relative_to(ROOT)} unreadable: {exc}")
             continue
@@ -332,8 +334,8 @@ def main() -> int:
         if width <= 0 or height <= 0:
             errors.append(f"{texture.relative_to(ROOT)} has invalid dimensions")
             continue
-        stats["texture_source_bytes"] += len(data)
-        production_bucket_bytes[bucket] += len(data)
+        stats["texture_source_bytes"] += source_bytes
+        production_bucket_bytes[bucket] += source_bytes
         dimension_counts[(width, height)] += 1
         if width > 1024 or height > 1024:
             warnings.append(
@@ -405,3 +407,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
