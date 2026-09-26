@@ -74,3 +74,29 @@ When work resumes:
 
 ## Evidence boundary
 This handoff preserves conversation and workflow state. It is not PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED or PERFORMANCE-ACCEPTED evidence.
+
+## CI acceleration follow-up — Unreal repeated-build root cause
+
+Measured evidence after the original handoff:
+- #888 consumed roughly 11 minutes in exact-head checkout before cancellation and produced no useful engine proof.
+- #884/#885/#886/#887 repeatedly ran the Unreal editor build path; each reported `Creating makefile for ShireJourneyEditor (no existing makefile)`, built 76 actions with one process, and spent roughly 238-252 seconds in C++ build alone.
+- #889 was an administrative/CI PR but entered FULL because the merged develop SHA lacked a direct green workflow even though its Git tree was exactly identical to the already-green C4 candidate tree.
+- #889 then passed build/import/runtime core steps and failed later in package preflight on a DbgHelp destination write permission issue. Packaging infrastructure failure must not force replay of already-proven core work.
+
+Root fixes implemented on PR102:
+1. Unreal workflow ignores README/onboarding/handoff/classifier-test administrative-only changes. Pre-Unreal remains mandatory.
+2. Same-PR superseded Unreal runs cancel automatically; branch-scoped concurrency prevents one administrative PR from cancelling an unrelated runtime PR or develop.
+3. Exact checkout preserves `.git`, uses three low-speed-bounded fetch attempts, exact SHA checkout/reset verification, and scrubs the authenticated remote URL after classification.
+4. Classifier can reuse a proven merge parent only when the Git tree SHA is exactly identical; no approximate/content-name heuristic is accepted.
+5. Unreal workflow/classifier/pre-unreal orchestration changes are policy-only when no runtime delta exists, so CI maintenance does not rebuild/import/package the game.
+6. FULL remains fail-safe for Config/Build.cs/Target.cs/chapter-streaming/package/cook/release/unknown-impact changes.
+7. No blind compile parallelism increase or binary cache was introduced yet. First measure structural gains.
+
+External guidance checked:
+- GitHub Actions officially supports concurrency groups and cancel-in-progress for obsolete runs.
+- Epic UE4.27 Build Configuration documents UBT Makefiles as the fast iterative build path and Git working-set detection as part of incremental build behavior.
+
+Current tail from the old system:
+- Unreal #891 is still running on an older PR102 SHA and is occupying the single Windows runner.
+- Latest PR102 head at the time of this update launches only Pre-Unreal; no new Unreal workflow was triggered for the administrative-only head.
+- No measured speedup claim is made until the new architecture executes on a fresh relevant run.
