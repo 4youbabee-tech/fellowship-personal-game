@@ -136,8 +136,8 @@ jobs:
 
       - name: Remove isolated warehouse source checkout
         if: always()
-        shell: pwsh
+        shell: cmd
         run: |
-          if ($env:SHIRE_WAREHOUSE_SOURCE -and (Test-Path -LiteralPath $env:SHIRE_WAREHOUSE_SOURCE)) {
-            Remove-Item -LiteralPath $env:SHIRE_WAREHOUSE_SOURCE -Recurse -Force -ErrorAction SilentlyContinue
-          }
+          @echo off
+          if defined SHIRE_WAREHOUSE_SOURCE if exist "%SHIRE_WAREHOUSE_SOURCE%" rmdir /S /Q "%SHIRE_WAREHOUSE_SOURCE%"
+          exit /b 0
