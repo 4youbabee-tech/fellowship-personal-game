@@ -6174,5 +6174,24 @@
     ],
     "architecture_result": "No new cross-system ownership cycle or concrete build-blocking architecture defect found in this quick static reassessment. Continue W01/P1C01 production; reopen root repair only on concrete regression evidence.",
     "evidence_boundary": "STATIC-VALIDATED review only. No PIE/device/visual/performance acceptance."
+  },
+  "legacy_branch_consolidation_2026_09_27": {
+    "status": "RESOLVED_PENDING_POST_MERGE_CLEANUP",
+    "authority": "DEC-042 permanent branch closeout invariant",
+    "principle": "Unique commits do not automatically deserve bulk merge. Preserve meaningful current truth; explicitly supersede stale/duplicated management/CI snapshots; then delete the obsolete branch so develop remains the only live development trunk.",
+    "dispositions": {
+      "ops/actions-budget-isolation-v1": "SUPERSEDED: only old daily-report/deepseek workflow experiments; merging would reintroduce redundant CI/workflow load already replaced by the current validation architecture.",
+      "ops/daily-project-manager-report-v1": "SUPERSEDED: duplicate/older daily-report and review workflow experiments; not needed by the current single-Governor/lean-CI model.",
+      "ops/onboarding-handoff-v2": "SUPERSEDED: current develop already contains the canonical single-entry onboarding path and later Governor/CI rules; branch-local handoff state is stale transport metadata.",
+      "planning/mega-production-resume-v1": "INTEGRATED/SUPERSEDED: Data/MegaProductionBuildV2.json is already byte-identical on develop; remaining old Governor/report/cleanup edits are superseded.",
+      "planning/w01-localization-prototype-v1": "SUPERSEDED AS EXECUTION BRANCH: localization intent remains durable backlog/preparation memory under the Governor, but its old branch-local Governor/state snapshot is not current and must not remain a parallel trunk.",
+      "planning/w01-p1c01-mega-prep-v1": "SUPERSEDED AS EXECUTION BRANCH: current Governor already owns the active P1C01 order, Mega Asset Promotion, character/living-world/audio sequence and Gate 6/7 acceptance boundary; old C1/C2-era lane snapshots must not override current production truth.",
+      "warehouse/p1c01-mega-promotion-audit-v1": "SUPERSEDED: its audit explicitly recorded staged_proven=0/intake_qc_proven=0, while later Warehouse #264 succeeded with persistent inventory evidence; older audit-script delta is not promoted over the proven current warehouse path."
+    },
+    "expected_live_branches_after_cleanup": [
+      "develop",
+      "main"
+    ],
+    "production_effect": "NONE. This is repository hygiene only and must not delay the active W01/P1C01 production lane after exact-head static validation."
   }
 }
