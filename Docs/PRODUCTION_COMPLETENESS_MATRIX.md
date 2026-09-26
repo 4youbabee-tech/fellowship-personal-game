@@ -7,6 +7,7 @@
 - **Fail-closed boundary:** any unsafe intervening file blocks inheritance and forces FULL validation.
 - **Device-lane isolation:** classifier/watchdog/static-validator maintenance paths are excluded from Unreal Build triggering; Pre-Unreal remains the static gate.
 - **Pre-Unreal startup cost:** `actions/setup-python` removed from the supervised lane; the workflow resolves the existing local Python interpreter through `resolve_runtime_python.ps1` and runs commands under `cmd`, avoiding repeated downloads and Windows execution-policy setup failures.
+- **Warehouse PR repetition:** REMOVED; real staging is triggered only after merge/push to `develop` (or manual dispatch), not on every PR synchronization.
 - **Observed C2 evidence before hardening:** Unreal #821 on `2af6648209d8722247ca6f9a75b2b5082b6654d5` passed Editor build, production import, Automation QA, startup/chapter/state audits, warning guard, Cook and Runtime Data verification, then failed at packaged executable launch. The run is **not green**.
 - **Evidence state for this hardening change:** STATIC-VALIDATED SOURCE CHANGE / supervised-device reinstall and next-run proof pending. No PIE/DEVICE/VISUAL/PERFORMANCE acceptance is claimed.
 
