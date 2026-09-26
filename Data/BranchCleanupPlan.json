@@ -42,7 +42,7 @@
   ],
   "final_audit": {
     "status": "AUTOMATIC_POST_MERGE_ZERO_AHEAD_PRUNE",
-    "rule": "After cleanup, develop/main plus branches with proven unique commits or explicit protection may remain; zero-ahead non-PR refs must self-delete automatically.",
+    "rule": "After every merged PR, the completed branch must disappear automatically unless it is still an active PR head or GitHub proves unique unsalvaged commits. develop remains current; historical branch-name snapshots are not cleanup inputs.",
     "current_active_runtime_pr": "Volatile PR state is read live from GitHub and is not stored as cleanup truth.",
     "completed_preparation_prs": [
       "PR #81 superseded by consolidation",
@@ -50,7 +50,17 @@
       "PR #87 C2 merged after exact-head Pre-Unreal #1030 + Unreal #837"
     ],
     "physical_cleanup": "Branch Cleanup runs automatically after every merged PR, uses one remote-ref enumeration per run, protects live PR/protected/salvage branches, deletes explicit refs when present, auto-deletes zero-ahead refs by GitHub compare, preserves unique commits, and verifies canonical/protected refs.",
-    "truth_boundary": "Branch/process hygiene only; no PIE/device/visual/performance acceptance implied."
+    "truth_boundary": "Branch/process hygiene only; no PIE/device/visual/performance acceptance implied.",
+    "expected_survivors": [
+      "develop",
+      "main",
+      "ops/actions-budget-isolation-v1",
+      "ops/daily-project-manager-report-v1",
+      "planning/mega-production-resume-v1",
+      "planning/w01-localization-prototype-v1",
+      "planning/w01-p1c01-mega-prep-v1",
+      "warehouse/p1c01-mega-promotion-audit-v1"
+    ]
   },
   "active_work_branches": [],
   "preserve_pending_salvage": [
