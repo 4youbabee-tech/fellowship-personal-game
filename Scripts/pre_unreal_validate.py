@@ -2711,8 +2711,8 @@ if pg172_status != "PREPARED_NOT_RUNTIME_STARTED":
     if pg172_water_path not in pg172_p1c01_assets:
         fail("PG-172 P1C01 async bank lost M_ProductionWater")
 
-    if pg172_builder.count("RecaptureSky()") != 1:
-        fail("PG-172 skylight recapture must remain startup-only in P1C01 D")
+    if pg172_builder.count("RecaptureSky()") != 2:
+        fail("PG-172 skylight recapture must remain limited to startup plus authored story-event refresh in P1C01 D")
     if "PrimaryActorTick.bCanEverTick = false" not in pg172_builder:
         fail("PG-172 P1C01 world builder unexpectedly gained Actor Tick")
 
