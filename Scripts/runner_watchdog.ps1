@@ -74,6 +74,24 @@ function Start-RunnerListener {
     Write-WatchLog ("SHIRE_RUNNER_WATCHDOG_ONLINE pid=" + $started[0].Id)
 }
 
+function Recover-OrphanedListenerOnSupervisorBoot {
+    $workers = @(Get-Process -Name "Runner.Worker" -ErrorAction SilentlyContinue)
+    if ($workers.Count -gt 0) {
+        Write-WatchLog ("SHIRE_RUNNER_WATCHDOG_BOOT_RECOVERY_SKIP reason=worker-active")
+        return
+    }
+
+    $listeners = @(Get-Process -Name "Runner.Listener" -ErrorAction SilentlyContinue)
+    if ($listeners.Count -eq 0) { return }
+
+    Write-WatchLog ("SHIRE_RUNNER_WATCHDOG_BOOT_RECOVERY reason=orphaned-listener count=" + $listeners.Count)
+    foreach ($listener in $listeners) {
+        Stop-Process -Id $listener.Id -Force -ErrorAction SilentlyContinue
+    }
+    Start-Sleep -Seconds $RestartCooldownSeconds
+    Start-RunnerListener
+}
+
 function Recover-StalledAcquire {
     param([DateTime]$AckUtc, [string]$RunnerLog)
     $workers = @(Get-Process -Name "Runner.Worker" -ErrorAction SilentlyContinue)
@@ -95,6 +113,7 @@ try {
     if (-not $hasMutex) { throw "Another ShireJourney runner watchdog instance is already active." }
     $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
     Write-WatchLog ("SHIRE_RUNNER_WATCHDOG_BOOT identity=" + $identity + " root=" + $RunnerRoot + " acquireHangSeconds=" + $AcquireHangSeconds)
+    Recover-OrphanedListenerOnSupervisorBoot
 
     while ($true) {
         try {
