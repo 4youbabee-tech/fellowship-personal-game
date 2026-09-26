@@ -51,7 +51,15 @@ $headers = @{
 }
 $pullUri = "https://api.github.com/repos/$Repository/pulls?state=open&per_page=100"
 $openPulls = @(Invoke-RestMethod -Method Get -Uri $pullUri -Headers $headers)
-$activeHeads = @($openPulls | ForEach-Object { [string]$_.head.ref } | Where-Object { $_ })
+$activeHeads = @(
+    $openPulls |
+        ForEach-Object {
+            if ($null -ne $_ -and $_.PSObject.Properties['head'] -and $null -ne $_.head -and $_.head.PSObject.Properties['ref']) {
+                [string]$_.head.ref
+            }
+        } |
+        Where-Object { $_ }
+)
 
 foreach ($branch in $deleteBranches) {
     if ($planProtectedBranches.Contains($branch)) {
