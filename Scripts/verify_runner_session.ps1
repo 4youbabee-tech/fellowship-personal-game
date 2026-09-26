@@ -11,8 +11,19 @@ function Fail([string]$Message) {
     exit 91
 }
 
+function Resolve-AccountSid([string]$Account) {
+    try {
+        $nt = New-Object System.Security.Principal.NTAccount($Account)
+        return $nt.Translate([System.Security.Principal.SecurityIdentifier]).Value
+    }
+    catch {
+        return ""
+    }
+}
+
 $identityObject = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $identity = $identityObject.Name
+$identitySid = $identityObject.User.Value
 $current = [System.Diagnostics.Process]::GetCurrentProcess()
 $currentSession = $current.SessionId
 
@@ -49,8 +60,9 @@ $task = Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue
 if ($null -eq $task) {
     Fail ("watchdog-task-missing task=" + $TaskName)
 }
-if ($task.Principal.UserId -ne $identity) {
-    Fail ("watchdog-owner actual=" + $task.Principal.UserId + " expected=" + $identity)
+$taskOwnerSid = Resolve-AccountSid $task.Principal.UserId
+if (-not $taskOwnerSid -or $taskOwnerSid -ne $identitySid) {
+    Fail ("watchdog-owner actual=" + $task.Principal.UserId + " actualSid=" + $taskOwnerSid + " expected=" + $identity + " expectedSid=" + $identitySid)
 }
 if ($task.State -ne "Running") {
     Fail ("watchdog-state state=" + $task.State)
