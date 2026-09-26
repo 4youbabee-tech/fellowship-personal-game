@@ -5,6 +5,7 @@
 - Pre-Unreal, Unreal Build and Warehouse Stage now run this probe before expensive work. A dedicated manual `Runner Health Check` workflow provides a one-click, sub-minute runner-only diagnostic path.
 - This creates a clean fault boundary: if `RUNNER_HEALTH_PASS` occurs and a later Unreal/package step fails, the failure is no longer attributed to runner identity/session ownership without new evidence.
 - Fixed the independent Pre-Unreal #1001 failure by normalizing CRLF/CR newlines in decoded Unreal logs; the failure was `READY\r\n != READY\n`, not a runner fault.
+- Expanded Unreal path isolation so runner-health, runtime-smoke harness, and asset-audit maintenance remain on the fast Pre-Unreal lane and do not trigger a full UE4 build by themselves.
 - Existing #823 evidence remains historical failure: the job ran as `NT AUTHORITY\NETWORK SERVICE` and packaged startup failed at D3D11 swap-chain creation `887A0022`. The newly installed watchdog/device state must produce a fresh runner-health pass before that cause is considered closed.
 - Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE + OWNER DEVICE INSTALL OBSERVED; FRESH GITHUB RUNNER_HEALTH_PASS PENDING**. No PIE/device/performance acceptance is claimed yet.
 
