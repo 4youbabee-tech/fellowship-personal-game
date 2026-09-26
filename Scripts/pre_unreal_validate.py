@@ -4569,6 +4569,18 @@ if "schedule:" in pg167_pre or "runs-on: ubuntu-latest" in pg167_pre or "runs-on
     fail("PG-167 Pre-Unreal must be event-driven on the supervised Windows UE4 runner")
 if "actions/setup-python@" in pg167_pre or "resolve_runtime_python.ps1" not in pg167_pre or 'shell: cmd' not in pg167_pre:
     fail("PG-167 Pre-Unreal must avoid repeated hosted Python setup and use the local interpreter through cmd")
+if "uses: actions/checkout@" in pg167_pre:
+    fail("PG-167 Pre-Unreal must not depend on marketplace checkout on the supervised runner")
+for pg167_checkout_symbol in [
+    "PRE_UNREAL_EXACT_FETCH",
+    "PRE_UNREAL_EXACT_CHECKOUT_PASS",
+    "http.lowSpeedTime=20",
+    "fetch --no-tags --prune --depth=2 origin %TARGET_SHA%",
+    "reset --hard %TARGET_SHA%",
+    "Checkout SHA mismatch",
+]:
+    if pg167_checkout_symbol not in pg167_pre:
+        fail(f"PG-167 bounded exact-head Pre-Unreal checkout missing: {pg167_checkout_symbol}")
 
 pg167_cleanup = read(ROOT / ".github" / "workflows" / "branch-cleanup.yml")
 for pg167_symbol in ["- self-hosted", "- Windows", "- X64", "- ue4-27"]:
