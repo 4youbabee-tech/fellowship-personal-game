@@ -1,3 +1,7 @@
+# Review checkpoint — 2026-09-26
+
+PR102 failed Governor validation because its historical `session_handoff.source_head` was moved to the current integration commit without matching validation evidence. Restore it to the recorded last-green SHA; keep the current integration baseline in `integration_train`. Future phase changes must preserve this distinction. No validation gate is disabled. Onboarding uses PG-174 because D lighting and Mega promotion already use PG-172/173 in PR101. C3/C4 are merged; D and bounded Mega promotion are in progress. Runtime, visual, device and performance acceptance remain separate and unproven by this administrative repair.
+
 ## 2026-09-26 - Single new-developer / AI-session entry path
 
 - `README.md` is now the single repository entry point for a new human programmer, a new AI session, or a developer returning after a long break.
@@ -5,7 +9,7 @@
 - Added `Scripts/new_developer_onboarding.ps1`. It reads current Governor + Git state and prints authority, branch/HEAD, active lane/gate, benchmark, next actions, target hardware, required reading and evidence boundary.
 - The onboarding script is read-only project guidance; it is not a second manager and does not copy live PR numbers into governance.
 - ProjectGovernor handoff/next-actions were reconciled from old C3/C4 wording to the current train: **D lighting/sky/fog/low-cost water next + Mega Asset Promotion in parallel**.
-- PG-172 now guards the README entry path and onboarding-script contract so later maintenance cannot silently remove the manager entrance.
+- PG-174 now guards the README entry path and onboarding-script contract so later maintenance cannot silently remove the manager entrance.
 - Evidence boundary: onboarding/governance change only. It does not create new PIE/device/visual/performance acceptance.
 
 ## 2026-09-26 - Historical foliage guards decoupled from mutable phase labels
