@@ -8,6 +8,11 @@ on:
       - '.github/workflows/**'
       - 'Docs/**'
       - '.gitignore'
+      - 'README.md'
+      - 'Scripts/new_developer_onboarding.ps1'
+      - 'Scripts/governor_handoff.py'
+      - 'Scripts/test_governor_handoff.py'
+      - 'Scripts/test_unreal_classifier.ps1'
       - 'Data/ProjectGovernor.json'
       - 'Data/ExternalAssetManifest.json'
       - 'Data/*Warehouse*.json'
@@ -54,6 +59,11 @@ on:
       - '.github/workflows/**'
       - 'Docs/**'
       - '.gitignore'
+      - 'README.md'
+      - 'Scripts/new_developer_onboarding.ps1'
+      - 'Scripts/governor_handoff.py'
+      - 'Scripts/test_governor_handoff.py'
+      - 'Scripts/test_unreal_classifier.ps1'
       - 'Data/ProjectGovernor.json'
       - 'Data/ExternalAssetManifest.json'
       - 'Data/*Warehouse*.json'
@@ -88,8 +98,9 @@ permissions:
 
 concurrency:
   group: unreal-build-${{ github.repository }}-ue4-device
-  # Full engine validation remains serialized; superseded acceptance-only PR runs are cancelled.
-  cancel-in-progress: ${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}
+  # Exact-head proof only matters for the newest PR SHA. Cancel superseded PR runs
+  # before they waste the single UE4 device; develop pushes remain serialized.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   unreal-build:
@@ -138,19 +149,24 @@ jobs:
           >"!STABLE_CHECKOUT!" echo @echo off
           >>"!STABLE_CHECKOUT!" echo setlocal EnableExtensions
           >>"!STABLE_CHECKOUT!" echo cd /d "%%GITHUB_WORKSPACE%%"
-          >>"!STABLE_CHECKOUT!" echo if exist ".git" rmdir /S /Q ".git"
-          >>"!STABLE_CHECKOUT!" echo if exist ".git" exit /b 76
-          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" init
+          rem Preserve Git metadata on the self-hosted runner so checkout only rewrites
+          rem files that actually changed. This is required for UBT incremental timestamps.
+          >>"!STABLE_CHECKOUT!" echo if exist ".git\index.lock" del /F /Q ".git\index.lock"
+          >>"!STABLE_CHECKOUT!" echo if exist ".git\shallow.lock" del /F /Q ".git\shallow.lock"
+          >>"!STABLE_CHECKOUT!" echo if not exist ".git" "!GITEXE!" init
           >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 70
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" rev-parse --is-inside-work-tree ^>nul 2^>nul
+          >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 76
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" remote remove origin ^>nul 2^>nul
           >>"!STABLE_CHECKOUT!" echo "!GITEXE!" remote add origin "https://x-access-token:%%GH_TOKEN%%@github.com/%%GITHUB_REPOSITORY%%.git"
           >>"!STABLE_CHECKOUT!" echo if errorlevel 1 exit /b 71
           >>"!STABLE_CHECKOUT!" echo set ATTEMPT=0
           >>"!STABLE_CHECKOUT!" echo :fetch
           >>"!STABLE_CHECKOUT!" echo set /a ATTEMPT+=1
-          >>"!STABLE_CHECKOUT!" echo echo Fetching exact PR head attempt %%ATTEMPT%% of 7...
+          >>"!STABLE_CHECKOUT!" echo echo Fetching exact PR head attempt %%ATTEMPT%% of 3...
           >>"!STABLE_CHECKOUT!" echo "!GITEXE!" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --prune --depth=2 origin %%TARGET_SHA%%
           >>"!STABLE_CHECKOUT!" echo if not errorlevel 1 goto fetched
-          >>"!STABLE_CHECKOUT!" echo if %%ATTEMPT%% GEQ 7 exit /b 72
+          >>"!STABLE_CHECKOUT!" echo if %%ATTEMPT%% GEQ 3 exit /b 72
           >>"!STABLE_CHECKOUT!" echo powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 5"
           >>"!STABLE_CHECKOUT!" echo goto fetch
           >>"!STABLE_CHECKOUT!" echo :fetched
@@ -187,6 +203,18 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\classify_unreal_validation.ps1"'
+
+      - name: Scrub checkout credential from persistent Git metadata
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE if exist "%RUNNER_TEMP%\mingit-2.55.0.5\cmd\git.exe" set "GITEXE=%RUNNER_TEMP%\mingit-2.55.0.5\cmd\git.exe"
+          if defined GITEXE "!GITEXE!" remote set-url origin "https://github.com/%GITHUB_REPOSITORY%.git" >nul 2>nul
+          exit /b 0
 
       - name: Governance/docs-only Unreal fast path
         if: env.SHIRE_UNREAL_MODE == 'inherit'
