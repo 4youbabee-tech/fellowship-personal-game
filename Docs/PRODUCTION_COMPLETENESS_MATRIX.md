@@ -1,3 +1,13 @@
+## 2026-09-26 - Final CI/branch-hygiene hardening before production resumes
+
+- Removed the last known marketplace checkout dependencies from the self-hosted maintenance lanes: Branch Cleanup and Runner Health now use bounded local exact-head Git acquisition with three attempts and a 20-second low-speed cutoff.
+- Branch Cleanup no longer uses the implicit `shell: powershell`; it calls an explicit `-NoProfile -ExecutionPolicy Bypass` script after runner-health verification.
+- Added `Scripts/run_branch_cleanup.ps1`: cleanup now refuses protected refs, refuses any active PR head discovered from the GitHub API, treats already-absent approved refs as clean, hard-fails real deletion errors, and verifies `develop` plus `main` remain.
+- BranchCleanupPlan is synchronized to the current runtime lane: PR #87 / `production/w01-p1c01-foliage-wind-v3`. Identical stale `ci/validator-sync-v5` and PR #90's infrastructure branch are approved for deletion after integration.
+- PG-167 now guards these maintenance workflows against reintroducing marketplace checkout/raw PowerShell failure modes.
+- Pre-Unreal #1023 already passed exact-head checkout, runner health, Governor and all static audits on `c408c4c85d8bde3afbd805545401667442b6af34` in under one minute; this new maintenance hardening still requires its own fresh static pass before merge.
+- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE + prior exact-head Pre-Unreal success; fresh exact-head proof for this final hardening pending**. No PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-26 - PG-145B false-negative correction
 
 - Pre-Unreal #1020 proved runner session health and local Python resolution passed, then failed only because the static validator incorrectly searched `verify_runner_session.ps1` for three watchdog-only symbols: `WorkerIdleHangSeconds`, `Listening for Jobs`, and `stale-worker`.

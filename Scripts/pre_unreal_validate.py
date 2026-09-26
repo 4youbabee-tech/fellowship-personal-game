@@ -4588,6 +4588,27 @@ for pg167_symbol in ["- self-hosted", "- Windows", "- X64", "- ue4-27"]:
         fail(f"PG-167 branch-cleanup runner contract missing: {pg167_symbol}")
 if "runs-on: ubuntu-latest" in pg167_cleanup or "runs-on: windows-latest" in pg167_cleanup:
     fail("PG-167 Branch Cleanup must not depend on GitHub-hosted runners")
+for pg167_cleanup_symbol in [
+    "BRANCH_CLEANUP_EXACT_CHECKOUT_PASS",
+    "verify_runner_session.ps1",
+    "run_branch_cleanup.ps1",
+    "pull-requests: read",
+]:
+    if pg167_cleanup_symbol not in pg167_cleanup:
+        fail(f"PG-167 hardened branch-cleanup contract missing: {pg167_cleanup_symbol}")
+if "uses: actions/checkout@" in pg167_cleanup or "shell: powershell" in pg167_cleanup:
+    fail("PG-167 Branch Cleanup must use bounded local checkout and explicit PowerShell Bypass")
+
+pg167_runner_health = read(ROOT / ".github" / "workflows" / "runner-health.yml")
+for pg167_health_symbol in [
+    "RUNNER_HEALTH_EXACT_CHECKOUT_PASS",
+    "verify_runner_session.ps1",
+    "http.lowSpeedTime=20",
+]:
+    if pg167_health_symbol not in pg167_runner_health:
+        fail(f"PG-167 hardened runner-health workflow missing: {pg167_health_symbol}")
+if "uses: actions/checkout@" in pg167_runner_health:
+    fail("PG-167 Runner Health must not depend on marketplace checkout")
 
 pg167_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 for pg167_symbol in [
