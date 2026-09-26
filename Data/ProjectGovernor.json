@@ -4423,9 +4423,9 @@
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
   "current_focus": {
-    "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+    "production_lane": "W01_P1C01_MEGA_PRODUCTION_BUILD",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "C2 lightweight foliage wind is merged and machine-green. Post-C2 root cleanup is the only active maintenance operation; C3 stable foliage material identity may start from verified develop while branch cleanup proceeds separately.",
+    "rule": "Post-C2 cleanup is merged. C3 is the next runtime production step; source/PDF/warehouse/asset preparation may scale in parallel. Do not reopen closed W00 repair work without concrete regression evidence.",
     "machine_baseline": {
       "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
       "pre_unreal": "#1031 SUCCESS",
@@ -4621,10 +4621,12 @@
       ]
     },
     "validation_cost_contract": {
-      "governance_docs_maintenance": "inherit parent green proof; no engine build/package",
-      "ordinary_cpp_runtime_data_sourceassets": "core UE lane: source integrity + editor build/import + Automation/startup/chapter/state/warning checks; no package/cook",
-      "packaging_critical": "full lane for Config, Build.cs, Target.cs, chapter streaming, Package/Cook/Release deltas",
-      "acceptance_verifier": "acceptance lane may package/resume only when contract requires it"
+      "governance_docs_maintenance": "Static/Pre-Unreal only when no runtime, asset, config or packaging path changes.",
+      "source_pdf_warehouse_preparation": "No Unreal build merely for indexing, provenance, download receipts or non-runtime staging.",
+      "asset_import_material_authoring": "Fast asset lane: Editor build/import/Automation/startup smoke; no Cook/Package unless packaging-critical paths changed.",
+      "ordinary_cpp_runtime_data": "Core UE lane with compile/import/Automation/runtime/state/warning checks.",
+      "packaging_critical": "Full lane only for Config, Build.cs, Target.cs, streaming/package/cook/release deltas.",
+      "human_acceptance": "PIE/device/visual/pacing evidence remains explicit and cannot be inferred."
     }
   },
   "side_branch_audit": {
@@ -5530,8 +5532,8 @@
     "stop_rule": "A newly discovered HIGH/CRITICAL cross-system gap is repaired or explicitly quarantined before the active wave may be promoted."
   },
   "execution_control": {
-    "mode": "ACTIVE_GATE_FIRST",
-    "active_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+    "mode": "ACTIVE_GATE_FIRST_FAST_PRODUCTION",
+    "active_lane": "W01_P1C01_MEGA_PRODUCTION_BUILD",
     "allowed_bundles": [
       "B2_CHARACTERS_AND_WORLD_PRODUCTION",
       "B3_LIVING_WORLD_AND_PRESENTATION",
@@ -5541,8 +5543,8 @@
     "frozen_bundles": [
       "B1_PART1_STORY_GAMEPLAY_COMPLETE"
     ],
-    "freeze_reason": "W00 architectural stabilization is closed. W01 is limited to the existing P1C01 production vertical slice; broad Part I story/gameplay expansion remains frozen until the Shire clears Gate 6/7.",
-    "backlog_semantics": "ACTIVE backlog outside allowed_bundles remains recorded memory, not permission to execute it while the active gate blocks expansion.",
+    "freeze_reason": "W00 is closed. P1C01 runtime remains the benchmark while source/PDF/warehouse/asset preparation for later waves may proceed in parallel.",
+    "backlog_semantics": "Backlog is durable memory, not a serial paperwork queue. Only dependencies that affect runtime safety, canon, save integrity or target-device performance block the affected implementation lane.",
     "completed_parent_proof": {
       "sha": "efdb2e291505472247fae921945b083b3cc1ce2c",
       "pre_unreal_run": 816,
@@ -5550,10 +5552,11 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Complete post-C2 root cleanup and verify the expected remote branch survivor set.",
-      "Start C3 stable foliage material identity from verified develop; branch cleanup is independent.",
-      "Then execute C4 LOD/cull/overdraw evidence work before any foliage density increase.",
-      "Proceed to D lighting/sky/fog/water only after C4 is exact-head machine-green; keep broad Part I story expansion frozen until Gate 6/7."
+      "Start C3 stable foliage material identity as the next runtime-changing production step.",
+      "Run C4 LOD/cull/overdraw evidence and target-device foliage profiling before density increases.",
+      "Proceed into D lighting/sky/fog/water after C4 technical proof.",
+      "In parallel expand cleared Project Source intake for characters, animation, architecture/interiors, audio, VFX and later-region preparation.",
+      "Batch governance/documentation updates by production wave and avoid administrative-only blockers for safe preparation work."
     ]
   },
   "development_mode_contract": {
@@ -6004,5 +6007,18 @@
     "parallel_preparation": "Source extraction and warehouse QC for other regions can proceed while P1C01 runtime is validated. Do not import the whole catalogue indiscriminately or count PDFs as runtime assets.",
     "reporting": "Daily task repaired: was disabled and pinned to obsolete PR67; now follows develop and live PRs.",
     "proof_boundary": "No new asset download/import or gameplay acceptance performed by this review."
+  },
+  "production_acceleration_2026_09_26": {
+    "status": "ACTIVE",
+    "owner_direction": "Reduce administrative friction, close obsolete repair notes, and prepare a very large production build using Project Source.",
+    "plan_file": "Data/MegaProductionBuildV2.json",
+    "rules": [
+      "Closed repair work stays closed unless concrete regression evidence reopens it.",
+      "A failed technical gate blocks the affected runtime lane, not independent safe source or warehouse preparation.",
+      "Batch management updates by production wave instead of creating one administrative checkpoint per small change.",
+      "Gate 6/7 still protects broad runtime expansion but does not block whole-game source, asset and design preparation.",
+      "Heavy assets use soft references and asynchronous loading.",
+      "Ambient crowds remain pooled and repeated detail remains HISM/ISM/LOD/cull aware."
+    ]
   }
 }
