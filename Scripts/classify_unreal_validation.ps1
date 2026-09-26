@@ -73,6 +73,7 @@ function Test-SafeGovernanceDelta([string]$GitExe, [string]$BaseSha, [string]$He
             $n -eq "Scripts/project_governor.py" -or
             $n -eq "Scripts/asset_quality_audit.py" -or
             $n -eq ".github/workflows/pre-unreal-validation.yml" -or
+            $n -eq ".github/workflows/unreal-build-validation.yml" -or
             $n -eq "SHIRE_UPDATE_BUILD_LAUNCH.bat" -or
             $n -eq "SHIRE_PIE_VERIFY.bat"
         )
@@ -452,7 +453,6 @@ $safeExact = @(
 )
 
 $acceptanceExact = @(
-    ".github/workflows/unreal-build-validation.yml",
     "Scripts/classify_unreal_validation.ps1",
     "Scripts/pre_unreal_validate.py",
     "Scripts/ci_package_w00.ps1",
@@ -481,7 +481,11 @@ foreach($p in $changed){
     ){
         continue
     }
-    if($n -eq "Scripts/classify_unreal_validation.ps1" -or $n -eq "Scripts/pre_unreal_validate.py"){
+    if(
+        $n -eq "Scripts/classify_unreal_validation.ps1" -or
+        $n -eq "Scripts/pre_unreal_validate.py" -or
+        $n -eq ".github/workflows/unreal-build-validation.yml"
+    ){
         $policyOnlyTouched += $n
         continue
     }
@@ -527,6 +531,10 @@ if($policyOnlyTouched.Count -gt 0 -and $acceptanceTouched.Count -eq 0 -and $core
     if(Test-ParentWholeWorkflowGreen $parentSha){
         $policyOnlyTouched | ForEach-Object { Write-Host "VALIDATION_POLICY_ONLY_FILE $_" }
         Set-Mode "inherit" "validation-policy-only-inherits-green-parent-no-engine-repeat" $parentSha
+        exit 0
+    }
+    if(Test-TreeEquivalentCoreProof $git $parentSha){
+        Set-Mode "inherit" "validation-policy-only-inherits-tree-equivalent-green-merge-parent" $parentSha
         exit 0
     }
     $candidateParent = (& $git rev-parse "$($env:TARGET_SHA)^").Trim()
