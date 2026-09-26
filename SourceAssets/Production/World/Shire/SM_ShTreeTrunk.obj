@@ -1,5 +1,6 @@
 # Original low-poly production mesh for Fellowship Personal Game
 # Unreal units: centimeters, Z-up
+mtllib ShireMaterials.mtl
 o SM_ShTreeTrunk
 v 16.0000 0.0000 0.0000
 v 14.7821 6.1229 0.0000
@@ -33,6 +34,7 @@ v -0.0000 -10.0000 210.0000
 v 3.8268 -9.2388 210.0000
 v 7.0711 -7.0711 210.0000
 v 9.2388 -3.8268 210.0000
+usemtl Bark
 f 1 2 18 17
 f 2 3 19 18
 f 3 4 20 19
