@@ -140,7 +140,7 @@ That is how this project "learns from mistakes".
 
 
 ## Gate 11 — Production acceleration
-- No scheduled 24-hour report is required.
+- The repository Project Manager may publish a 24-hour owner progress report; that report is informational and is not a validation or production gate.
 - Closed W00 repairs remain historical unless a concrete regression reopens them.
 - Batch management/documentation updates by production wave.
 - Source indexing, provenance capture and non-runtime warehouse staging do not require an Unreal build.
