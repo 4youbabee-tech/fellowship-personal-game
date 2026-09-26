@@ -3743,7 +3743,9 @@
         "C4 merged develop 2845071119d926defd6ba94c970f43729bc51674",
         "Data/P1C01DLightingSkyFogWaterPlanV1.json",
         "Data/ProductionAssetPromotionPolicyV1.json",
-        "Data/P1C01WarehousePromotionQueueV1.json"
+        "Data/P1C01WarehousePromotionQueueV1.json",
+        "Scripts/pre_unreal_validate.py PG-172",
+        "Scripts/pre_unreal_validate.py PG-173"
       ]
     }
   ],
@@ -4028,7 +4030,9 @@
         "PG-160",
         "PG-163",
         "PG-164",
-        "PG-165"
+        "PG-165",
+        "PG-172",
+        "PG-173"
       ],
       "behavior": "Validate the exact W01 candidate head; machine evidence never promotes visual/device/performance acceptance."
     },
