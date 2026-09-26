@@ -43,6 +43,16 @@ elseif ($Governor.immediate_next_large_actions) {
 $Target = $Governor.target_hardware
 if (-not $Target) { $Target = $Governor.target_profile }
 
+$CurrentFocus = $null
+if ($Governor.current_focus -and $Governor.current_focus.rule) {
+    $CurrentFocus = [string]$Governor.current_focus.rule
+}
+
+$ResumeStatus = $null
+if ($Governor.production_resume_checkpoint_2026_09_27 -and $Governor.production_resume_checkpoint_2026_09_27.status) {
+    $ResumeStatus = [string]$Governor.production_resume_checkpoint_2026_09_27.status
+}
+
 $Summary = [ordered]@{
     project = 'Shire Journey / Fellowship Personal Game'
     engine = [string]$Governor.engine
@@ -57,6 +67,8 @@ $Summary = [ordered]@{
     active_gate = [string]$Governor.active_gate.id
     active_gate_status = [string]$Governor.active_gate.status
     visible_benchmark = [string]$Governor.current_focus.visible_benchmark
+    current_status = $ResumeStatus
+    current_focus = $CurrentFocus
     next_actions = $NextActions
     target_hardware = $Target
     evidence_boundary = [string]$Governor.active_gate.evidence_scope
@@ -91,6 +103,15 @@ Write-Host ''
 Write-Host "Active lane:          $($Summary.active_lane)"
 Write-Host "Active gate:          $($Summary.active_gate) [$($Summary.active_gate_status)]"
 Write-Host "Visible benchmark:    $($Summary.visible_benchmark)"
+Write-Host "Current status:       $($Summary.current_status)"
+Write-Host ''
+Write-Host 'CURRENT FOCUS'
+if ([string]::IsNullOrWhiteSpace($Summary.current_focus)) {
+    Write-Host '  - No current_focus rule registered. Read the Governor before editing.'
+}
+else {
+    Write-Host "  $($Summary.current_focus)"
+}
 Write-Host ''
 Write-Host 'NEXT ALLOWED ACTIONS'
 if ($NextActions.Count -eq 0) {
