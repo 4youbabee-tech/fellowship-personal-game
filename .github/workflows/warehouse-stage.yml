@@ -137,10 +137,11 @@ jobs:
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\audit_warehouse_inventory.ps1"
 
       - name: Show persistent warehouse footprint
-        shell: powershell
-        run: |
-          $root='C:\actions-runner\_warehouse\ShireJourney'
-          if (!(Test-Path -LiteralPath $root -PathType Container)) { throw "Persistent warehouse root missing: $root" }
-          $files=Get-ChildItem -LiteralPath $root -Recurse -File
-          $bytes=($files | Measure-Object -Property Length -Sum).Sum
-          Write-Host ("WAREHOUSE_FOOTPRINT files=" + $files.Count + " bytes=" + $bytes + " root=" + $root)
+        shell: cmd
+        run: >-
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command
+          "$root='C:\actions-runner\_warehouse\ShireJourney';
+          if (!(Test-Path -LiteralPath $root -PathType Container)) { throw 'Persistent warehouse root missing: ' + $root };
+          $files=Get-ChildItem -LiteralPath $root -Recurse -File;
+          $bytes=($files | Measure-Object -Property Length -Sum).Sum;
+          Write-Host ('WAREHOUSE_FOOTPRINT files=' + $files.Count + ' bytes=' + $bytes + ' root=' + $root)"
