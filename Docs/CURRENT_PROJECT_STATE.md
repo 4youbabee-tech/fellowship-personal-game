@@ -1,3 +1,11 @@
+## 2026-09-26 - Persistent work-session handoff
+
+- Owner requested that the current conversation state be preserved with the project so a later session can continue without rediscovering the same CI/production issues.
+- Canonical continuation note: `Docs/WORK_SESSION_HANDOFF_2026-09-26.md`.
+- It records the measured PR102 CI latency, unnecessary FULL Unreal classification root cause, the #888 stalled-checkout cause/cancellation, #1083 success, #889 pending corrected measurement, and the GAME vs VALIDATOR vs CI/INFRA vs ADMIN failure-classification rule.
+- It also records the architectural policy: remove duplicate truth and magic constants, derive mutable counts from authoritative manifests, keep runtime safety strict, and prevent trivial administration from repeatedly blocking D + Mega Asset Promotion.
+- Evidence boundary: documentation/handoff only; no new runtime, PIE, device, visual, pacing or performance acceptance is created.
+
 ## Administrative repetition root fix — 2026-09-26
 
 The validation snapshot is the sole handoff evidence authority. A stale legacy `source_head` is reported as a warning, not a production blocker. This supersedes the earlier requirement to keep duplicate fields synchronized by hand. Mixed-SHA evidence, unsuccessful green baselines, missing snapshots and missing human acceptance boundaries still fail validation. Regression tests cover both allowed metadata drift and rejected evidence corruption. Story continuity, living-world coherence, save/load integrity and target-device playability remain the production priorities. This change does not certify runtime or human acceptance.
