@@ -1,3 +1,12 @@
+## 2026-09-26 - Runner network health false-negative hardening
+
+- Pre-Unreal #1026 on `develop@8131166025fcceed7102e9a33844bd5e6f864cae` completed exact-head Git checkout and passed runner identity/service/watchdog/process ownership checks before one `github.com:443` probe returned false.
+- The runner network gate is now bounded and retrying: three TCP attempts to `github.com:443`, five seconds maximum per attempt, with a two-second delay between failed attempts.
+- The gate remains fail-closed: `RUNNER_HEALTH_FAIL github-443-unreachable` is emitted only after all three bounded attempts fail. Each attempt reports `RUNNER_HEALTH_NETWORK_ATTEMPT` and a success reports `RUNNER_HEALTH_NETWORK_PASS`.
+- PG-145B now guards the bounded TCP/retry markers rather than requiring the previous single `Test-NetConnection` call.
+- `Scripts/verify_runner_session.ps1` and `Scripts/pre_unreal_validate.py` remain excluded from the Unreal Build push/PR device lane, so this maintenance fix must not trigger FULL Unreal validation.
+- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE; fresh exact-head Pre-Unreal proof pending**. No PIE, device, visual or performance acceptance is claimed.
+
 ## 2026-09-26 - Maintenance-only Unreal trigger closure
 
 - Added `Data/BranchCleanupPlan.json` and `Scripts/run_branch_cleanup.ps1` to both push and PR `paths-ignore` in Unreal Build Validation.
