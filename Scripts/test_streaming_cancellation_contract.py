@@ -21,6 +21,13 @@ class StreamingCancellationContract(unittest.TestCase):
         cls.player = runtime_source("ShirePlayerCharacter.cpp").read_text()
         cls.player_header = runtime_source("ShirePlayerCharacter.h").read_text()
 
+    def test_rig_callback_reacquires_entry_and_preserves_replacement_handle(self):
+        body = self.stream.split('::HandleCharacterRigLoadComplete(FName CharacterId)', 1)[1].split('::AreBankAssetsResolved(', 1)[0]
+        before, after = body.split('OnCharacterRigReady.Broadcast(CharacterId);', 1)
+        self.assertIn('const TSharedPtr<FStreamableHandle> CompletedHandle', before)
+        self.assertLess(after.index('Rig = CharacterRigRequests.Find(CharacterId)'), after.index('Rig->Handle'))
+        self.assertIn('Rig && Rig->Handle == CompletedHandle', after)
+
     def test_cancel_invalidates_before_handle_and_preserves_resident(self):
         body = self.stream.split('::CancelPendingRequest()', 1)[1].split('::Deinitialize()', 1)[0]
         self.assertLess(body.index('++RequestSerial'), body.index('CancelHandle()'))
