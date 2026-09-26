@@ -128,7 +128,7 @@
     }
   ],
   "administrative_reduction": [
-    "No scheduled 24-hour progress report.",
+    "Keep one repository-native Project Manager report every 24 hours for owner visibility; it is informational and never a production gate.",
     "Do not reopen historical W00 repair notes without a concrete regression.",
     "Batch documentation/governance changes by production wave.",
     "Do not require Unreal builds for source indexing, provenance or non-runtime warehouse staging.",
