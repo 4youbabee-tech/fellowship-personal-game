@@ -1,3 +1,12 @@
+## 2026-09-26 - Post-merge integration and callback integrity review
+
+- Reviewed develop `1d0580926299e4fac635bcb847343a49c444d4f1`: PR90 and PR87 are merged. Earlier C2 pending/rebase sections below are historical, not the current merge state.
+- Pre-Unreal run 36236911136 and Unreal run 36236911127 succeeded. Unreal ran Editor build/import/Automation/headless startup; chapter/state/package/rendered/device steps were skipped. This does not close rendered-package acceptance.
+- STREAM-RIG-REENTRANCY-001: character rig completion held a TMap entry pointer across OnCharacterRigReady.Broadcast. A listener adding requests can invalidate that pointer. The fix pins the completed handle locally, reacquires the entry after callbacks, and only clears the same completed handle, preserving any replacement.
+- Nine local source-contract tests pass, including cancellation, rollback life state, save-transform deferral and callback ownership. These are structural checks, not runtime simulation. Exact-head UE build and a listener-mutation runtime test remain required.
+- No world topology, story, save schema, density or numeric performance budget changes. Continue the existing C3 production order; this focused runtime safety patch does not justify reopening every closed architectural task.
+- Epic UE4.27 TMap reference: https://dev.epicgames.com/documentation/unreal-engine/tmap?application_version=4.27
+
 ## 2026-09-26 - C2 Governor handoff coherence correction
 
 - Pre-Unreal #1029 on `981996e62d3c595783bb80a43aee2352aeb65541` passed exact-head checkout, runner health, and PRE-UNREAL CORE VALIDATION, then failed `project_governor.py` with: `Legacy verified handoff must refer to the same last-green baseline`.

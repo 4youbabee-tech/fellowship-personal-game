@@ -5950,5 +5950,20 @@
     ],
     "proof": "Three local regression tests pass including 64 MiB sparse texture bounded-read check; CI and UE/device acceptance pending.",
     "resume": "Validate this PR head; resolve rendered startup in supervised interactive session; continue P1C01 representative batches using existing intake queue. Do not recreate a parallel intake or budget system."
+  },
+  "callback_integrity_review_2026_09_26": {
+    "reviewed_sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
+    "finding_id": "STREAM-RIG-REENTRANCY-001",
+    "status": "SOURCE_FIX_PENDING_UNREAL",
+    "cause": "HandleCharacterRigLoadComplete dereferenced a TMap element pointer after broadcasting a delegate that can mutate the map.",
+    "repair": "Keep a shared copy of the completed handle alive across broadcast; reacquire map entry and reset only if it still owns that same handle.",
+    "evidence": "9 local source-contract tests pass; not runtime reproduction or UE compilation.",
+    "current_baseline": {
+      "pre_unreal": 36236911136,
+      "unreal": 36236911127,
+      "result": "success",
+      "scope": "Editor build/import/Automation/headless startup; chapter/state/package/rendered/device steps skipped."
+    },
+    "handoff": "PR90 and PR87 are merged. Existing C2 pending prose is historical. Continue C3 under existing production policy; validate this separate runtime repair with current exact-head CI. Rendered package/device acceptance is not inferred from the fast lane."
   }
 }
