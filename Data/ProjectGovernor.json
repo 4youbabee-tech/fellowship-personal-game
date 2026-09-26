@@ -4520,21 +4520,25 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "C4 is merged after exact-head candidate machine proof. D fixed-state lighting/sky/fog/low-cost water is the sole runtime-changing lane; Mega Asset Promotion proceeds only as parallel warehouse staging/intake QC until item-level promotion evidence exists.",
+    "rule": "D lighting/sky/fog/low-cost water is merged and machine-green. Resume substantive P1C01 production from develop: bounded Mega Asset Promotion/import-integration first, then character presentation/skeletal-animation coverage and living-Shire/audio polish. Do not reopen CI/root repair without concrete regression evidence.",
     "machine_baseline": {
-      "sha": "bc1e04062d8079fef73eae64f68c81772b4fc56c",
-      "pre_unreal": "#1070 SUCCESS",
-      "unreal": "#875 SUCCESS",
-      "scope": "Exact C4 candidate head was machine-green before merge. develop@2845071119d926defd6ba94c970f43729bc51674 is the D branch baseline; fresh D exact-head validation is required. No human PIE/device/visual/performance acceptance is implied."
+      "runtime_sha": "1066cf022723fcdef9bfac66519f5b0f9c1e03a4",
+      "pre_unreal": "#1109 SUCCESS",
+      "unreal": "#893 SUCCESS",
+      "current_develop": "017c3bc26ecfa1dadc75f10398ead01b5fe0ca22",
+      "current_static": "#1113 SUCCESS",
+      "cleanup": "#11 SUCCESS",
+      "warehouse": "#264 SUCCESS",
+      "scope": "D runtime/content merge has fresh UE4.27.2 build/import/runtime/package proof. Subsequent develop changes are administrative CI/cleanup/governance only and do not create new gameplay acceptance."
     },
     "w01_freeze": "RELEASED_BY_W00_EXIT"
   },
   "immediate_next_large_actions": [
-    "1. D — fixed-state lighting / sky / fog / low-cost water for P1C01.",
-    "2. Mega Asset Promotion — move prepared Project Source / warehouse assets through intake, import and integration in bounded category batches.",
-    "3. Character presentation and skeletal/animation production coverage.",
-    "4. Living Shire motion/fauna plus quest/audio polish.",
-    "5. Target-device DX11 720p Low-Medium profiling before density or expensive presentation expansion."
+    "1. Mega Asset Promotion — move evidence-backed P1C01 warehouse/project-source assets through bounded intake, import and integration.",
+    "2. Character presentation and skeletal/animation production coverage.",
+    "3. Living Shire motion/fauna plus quest/audio polish.",
+    "4. Target-device DX11 720p Low-Medium profiling before density or expensive presentation expansion.",
+    "5. Gate 6/7 human visual, pacing and performance evidence before broad Part II/III runtime production."
   ],
   "session_handoff": {
     "checkpoint_id": "CP-W01-P1C01-C4-MERGED-D-NEXT",
@@ -5578,11 +5582,11 @@
     "owner_observation_role": "Use owner play time for final symptom/pacing/visual confirmation only after reproducible technical checks have run."
   },
   "integration_train": {
-    "branch": "production/p1c01-d-lighting-water-mega-promotion-v1",
-    "baseline": "2845071119d926defd6ba94c970f43729bc51674",
-    "current_wave": "W01_P1C01_D_LIGHTING_SKY_FOG_WATER_PLUS_MEGA_PROMOTION",
-    "merge_policy": "D is the sole runtime-changing lane. Mega Asset Promotion may stage/audit in parallel but cannot cross READY_FOR_IMPORT or runtime integration gates without item-level evidence.",
-    "proof_boundary": "C4 candidate head bc1e04062d8079fef73eae64f68c81772b4fc56c passed Pre-Unreal #1070 and Unreal Build #875, then merged to develop@2845071119d926defd6ba94c970f43729bc51674. Fresh D exact-head proof is required; no visual/device/performance acceptance is implied."
+    "branch": "develop",
+    "baseline": "017c3bc26ecfa1dadc75f10398ead01b5fe0ca22",
+    "current_wave": "W01_P1C01_POST_D_MEGA_PROMOTION_AND_CHARACTER_PRESENTATION",
+    "merge_policy": "Substantive runtime work resumes from canonical develop in bounded engineering waves. Mega Asset Promotion may advance only through evidence-backed item states; character/living-world/runtime changes remain serialized behind exact-head validation.",
+    "proof_boundary": "D runtime head 1066cf022723fcdef9bfac66519f5b0f9c1e03a4 passed Pre-Unreal #1109 and Unreal Build #893. develop@017c3bc26ecfa1dadc75f10398ead01b5fe0ca22 adds administrative cleanup/governance only and passed Pre-Unreal #1113 + Branch Cleanup #11; no PIE/device/visual/performance acceptance is implied."
   },
   "completion_wave_map": {
     "status": "ACTIVE_PLANNING_ESTIMATE",
@@ -5648,10 +5652,10 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Implement D fixed-state lighting/sky/fog ownership and low-cost water presentation from the merged C4 baseline.",
-      "Activate P1C01 Mega Asset Promotion through existing staging/intake-QC states only; retain item-level provenance and fail closed before READY_FOR_IMPORT.",
-      "Run exact-head Pre-Unreal plus the UE4.27.2 validation class required by the D runtime delta.",
-      "Keep foliage density and broad Part I/Part II/Part III runtime expansion frozen until target-device and Gate 6/7 evidence permits it."
+      "Advance P1C01 Mega Asset Promotion from staging/intake QC into evidence-backed READY_FOR_IMPORT/import/integration in bounded category batches; do not promote metadata-only candidates.",
+      "Begin the next substantive P1C01 character presentation / skeletal-animation production wave after the bounded asset batch is selected.",
+      "Continue Living Shire motion/fauna plus quest/audio polish without reopening unrelated CI/root repair.",
+      "Run target-device DX11 720p Low-Medium profiling before any density or expensive presentation expansion; Gate 6/7 remains required before broad Part II/III runtime production."
     ]
   },
   "development_mode_contract": {
@@ -6146,5 +6150,20 @@
     "batching": "Publish related changes in one atomic commit after local review; avoid per-file pushes that create superseded jobs.",
     "measurement": "Docs/CI_LATENCY_REVIEW_2026-09-26.md",
     "acceptance": "Measure next exact-head run before claiming latency improvement. Human playability and target-device performance remain separate."
+  },
+  "production_resume_checkpoint_2026_09_27": {
+    "status": "READY_FOR_SUBSTANTIVE_BUILD",
+    "canonical_head": "017c3bc26ecfa1dadc75f10398ead01b5fe0ca22",
+    "completed": [
+      "D lighting/sky/fog/low-cost water merged",
+      "Pre-Unreal #1109 SUCCESS on D merge head",
+      "Unreal Build #893 SUCCESS on D merge head",
+      "Warehouse #264 SUCCESS after cleanup-shell repair",
+      "Branch Cleanup #11 SUCCESS with 8 dead refs removed",
+      "Pre-Unreal #1113 SUCCESS on current develop"
+    ],
+    "tracked_build_artifact_audit": "No tracked Binaries/Intermediate/Saved/DerivedDataCache/.vs/StagedBuilds or *.pdb/*.obj(build artifact)/*.log/*.tmp/*.cache artifacts were found in the current repository tree. SourceAssets/Production files are source inputs, not generated build outputs; do not delete them merely to reduce build time.",
+    "policy": "Resume game/content production immediately. Administrative work must not preempt the production lane unless a concrete CI_INFRA/VALIDATOR_POLICY regression blocks it.",
+    "evidence_boundary": "Machine/CI readiness only; no new PIE/device/visual/performance acceptance."
   }
 }
