@@ -124,11 +124,13 @@ Development phases are registered in `development_mode_contract` inside the Gove
 
 ## Current rule
 
-The active lane is **W00_ARCHITECTURAL_STABILIZATION** under `ARCHITECTURAL_STABILIZATION_GATE`.
+The active lane is **W01_P1C01_MEGA_PRODUCTION_BUILD** under the P1C01 vertical-slice gate.
 
-Exact parent `96398e7cc48277324113c7879a8d28e3b659757e` passed Pre-Unreal #781, Warehouse #197 and Unreal #616. That proves static/compile/import/headless-runtime behavior for the exercised suite, including CP-W00-147 fault semantics. It does **not** prove rendered PIE, target-device performance, audio playback, pacing or visual acceptance.
+W00 architectural stabilization is closed. Historical W00 repair text is reference history only and must not reopen the repair lane without concrete regression evidence.
 
-B1/B2/B3 stay frozen. W00 next closes packaged Data JSON execution, real audio playback, isolated Public/Private migration, target-device profiling and chapter-specific human acceptance before W01 may open.
+Production now prioritizes C3 stable foliage identity, then C4 LOD/cull/overdraw proof, then D lighting/sky/fog/water. In parallel, Project Source/PDF/warehouse preparation may scale across characters, animation, architecture/interiors, audio, VFX and later-region packets.
+
+Administrative work is intentionally minimized: no scheduled 24-hour progress reporting; source indexing/provenance/non-runtime warehouse staging does not require Unreal builds; management updates should be batched by production wave. Technical runtime/save/canon/performance gates remain fail-closed for the affected lane.
 
 ## Important limitation
 
