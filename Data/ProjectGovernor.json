@@ -4003,12 +4003,12 @@
       ],
       "behavior": "Validate the exact W01 candidate head; machine evidence never promotes visual/device/performance acceptance."
     },
-    "last_green_head": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
+    "last_green_head": "1c93ac08e1ccc9dc8038cec64855e1ce7c1ec231",
     "evidence": {
-      "last_engine_proven_head": "ec3208919910b58bd6a87ce59c17e31312bd7bab",
-      "pre_unreal": "#885 SUCCESS.",
-      "unreal_build": "#720 SUCCESS through the W01 post-merge core validation lane.",
-      "root_correction_boundary": "W00 is closed; current work is P1C01 production. Reopen architectural repair only for a concrete new regression."
+      "last_engine_proven_head": "1c93ac08e1ccc9dc8038cec64855e1ce7c1ec231",
+      "pre_unreal": "#1044 SUCCESS.",
+      "unreal_build": "#849 SUCCESS.",
+      "root_correction_boundary": "W00 is closed; current work is P1C01 production. Branch Cleanup #7 is an administrative script defect under repair and is not a runtime regression."
     },
     "evidence_scope": "W00 close head has machine proof plus P1C01 startup-grounding/warning-tail PIE evidence; whole-chapter device/visual/performance acceptance remains separate."
   },
@@ -4427,10 +4427,10 @@
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
     "rule": "Post-C2 cleanup is merged. C3 is the next runtime production step; source/PDF/warehouse/asset preparation may scale in parallel. Do not reopen closed W00 repair work without concrete regression evidence.",
     "machine_baseline": {
-      "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
-      "pre_unreal": "#1031 SUCCESS",
-      "unreal": "#838 SUCCESS",
-      "scope": "Merged C2 develop baseline is machine-green through Pre-Unreal and Fast Asset Lane. Human PIE/device/visual/performance acceptance remains separate."
+      "sha": "1c93ac08e1ccc9dc8038cec64855e1ce7c1ec231",
+      "pre_unreal": "#1044 SUCCESS",
+      "unreal": "#849 SUCCESS",
+      "scope": "Post-PR92 merged develop baseline is machine-green through Pre-Unreal and Unreal Build Validation. Branch Cleanup #7 failed separately in maintenance script handling and does not convert machine evidence into human acceptance."
     },
     "w01_freeze": "RELEASED_BY_W00_EXIT"
   },
@@ -4443,11 +4443,11 @@
   ],
   "session_handoff": {
     "checkpoint_id": "CP-W01-P1C01-MEGA-PRODUCTION-RESUME",
-    "source_head": "9d3160fc2c0d7e72073f70cb01b727b679ea3f89",
+    "source_head": "1c93ac08e1ccc9dc8038cec64855e1ce7c1ec231",
     "branch": "planning/mega-production-resume-v1",
     "pull_request": 95,
     "verified": {
-      "last_full_machine_green": "ed3587aa9d1f0025a5f10778a6be8048e2c778d1: Pre-Unreal #869 SUCCESS + Unreal #704 SUCCESS full chain",
+      "last_full_machine_green": "1c93ac08e1ccc9dc8038cec64855e1ce7c1ec231: Pre-Unreal #1044 SUCCESS + Unreal #849 SUCCESS",
       "latest_automated_closure": "809e56a9e1dc4b453e02a0b04b6875a71df21933: Pre-Unreal #880 SUCCESS + Unreal #715 SUCCESS validation-policy inherit + Branch Cleanup #3 SUCCESS",
       "owner_pie": "develop@809e56a9: P1C01 ShireStartupGrounding PASS stableSeconds=2.0 ground=yes drop=1.8 drift=0.0; player remained grounded; owner reported zero same-session Mobility is Static / SetStaticMesh search matches",
       "proof_boundary": "P1C01 startup-grounding/warning-tail PIE evidence only; no device/visual/performance acceptance."
@@ -4478,28 +4478,28 @@
     "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
     "validation_snapshot": {
       "last_green": {
-        "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
+        "sha": "1c93ac08e1ccc9dc8038cec64855e1ce7c1ec231",
         "pre_unreal": {
-          "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
-          "run_id": 36236911136,
+          "sha": "1c93ac08e1ccc9dc8038cec64855e1ce7c1ec231",
+          "run_id": 36248213561,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
-          "run_id": 36236911127,
+          "sha": "1c93ac08e1ccc9dc8038cec64855e1ce7c1ec231",
+          "run_id": 36248213566,
           "status": "SUCCESS"
         }
       },
       "latest_observed": {
-        "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
+        "sha": "1c93ac08e1ccc9dc8038cec64855e1ce7c1ec231",
         "pre_unreal": {
-          "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
-          "run_id": 36236911136,
+          "sha": "1c93ac08e1ccc9dc8038cec64855e1ce7c1ec231",
+          "run_id": 36248213561,
           "status": "SUCCESS"
         },
         "unreal": {
-          "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
-          "run_id": 36236911127,
+          "sha": "1c93ac08e1ccc9dc8038cec64855e1ce7c1ec231",
+          "run_id": 36248213566,
           "status": "SUCCESS"
         }
       }
