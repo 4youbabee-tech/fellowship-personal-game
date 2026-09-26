@@ -102,6 +102,7 @@
         "/Game/Production/World/Shire/SM_ShWashLine.SM_ShWashLine",
         "/Game/Production/World/Shire/SM_ShWell.SM_ShWell",
         "/Game/Production/Materials/M_ProductionSurface.M_ProductionSurface",
+        "/Game/Production/Materials/M_ProductionWater.M_ProductionWater",
         "/Game/Production/Characters/Hobbit/SM_Hobbit_Torso.SM_Hobbit_Torso",
         "/Game/Production/Characters/Hobbit/SM_Hobbit_Head.SM_Hobbit_Head",
         "/Game/Production/Characters/Hobbit/SM_Hobbit_Hair.SM_Hobbit_Hair",
@@ -541,7 +542,7 @@
       "ShireNPC": 4
     },
     "chapter_bank_asset_counts": {
-      "P1C01": 71,
+      "P1C01": 84,
       "P1C02": 34,
       "P1C03": 37,
       "P1C04": 43,
