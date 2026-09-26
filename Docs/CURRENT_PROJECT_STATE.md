@@ -1,3 +1,14 @@
+## 2026-09-26 - Runner supervision + fast core validation hardening
+
+- Root runner recurrence isolated: the scheduled watchdog can terminate while leaving a stale `Runner.Listener.exe`; GitHub then leaves jobs queued with `runner_id=0` even though a listener process still exists.
+- Permanent runner policy remains interactive-user watchdog ownership, not the legacy Windows service. The installer now keeps `actions.runner.*` stopped/manual, adds a five-minute repeating self-heal trigger in addition to AtLogOn, and the watchdog recycles an orphaned listener on supervisor restart only when no `Runner.Worker` is active.
+- The existing 150-second acknowledged-job-without-worker recovery remains in place.
+- Validation classifier now supports transitive CORE proof inheritance across first-parent preparation-only commits. A runtime/asset delta can therefore run build/import/runtime audits without repeating Cook/Package when an earlier green core ancestor exists and every intervening commit is explicitly preparation-safe.
+- Unsafe intervening files fail closed and force FULL validation.
+- Static validation now guards both the watchdog self-heal contract and the transitive core-proof contract.
+- Live evidence before this change: Unreal #821 on exact C2 head `2af6648209d8722247ca6f9a75b2b5082b6654d5` completed Editor build, production import, Automation QA, startup smoke, chapter audit, route/state audit, warning guard, Cook and Runtime Data verification successfully; it then failed only at packaged executable launch. This demonstrates the waste the CORE path is intended to remove, but does not make #821 green.
+- Evidence boundary for this hardening branch: **STATIC-VALIDATED SOURCE CHANGE / DEVICE WATCHDOG REINSTALL PENDING**. No PIE-TESTED, DEVICE-TESTED or performance claim.
+
 ## 2026-09-26 - P1C01 Poly Haven material staging wave V4 queued
 
 - Warehouse manifest now lists a verified source-page record for every currently authorized Poly Haven material slug, including the Shire grass, woodland, soil, leaf-litter and rustic-path additions.
