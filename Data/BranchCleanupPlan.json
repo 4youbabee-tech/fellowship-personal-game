@@ -120,7 +120,7 @@
     "dispositions": {
       "ops/actions-budget-isolation-v1": "SUPERSEDED: only old daily-report/deepseek workflow experiments; merging would reintroduce redundant CI/workflow load already replaced by the current validation architecture.",
       "ops/daily-project-manager-report-v1": "SUPERSEDED: duplicate/older daily-report and review workflow experiments; not needed by the current single-Governor/lean-CI model.",
-      "ops/onboarding-handoff-v2": "SUPERSEDED: current develop already contains the canonical single-entry onboarding path and later Governor/CI rules; branch-local handoff state is stale transport metadata.",
+      "ops/onboarding-handoff-v2": "INTEGRATED/SUPERSEDED: its drift-proof onboarding improvements have now landed on current develop; no unique execution root remains necessary.",
       "planning/mega-production-resume-v1": "INTEGRATED/SUPERSEDED: Data/MegaProductionBuildV2.json is already byte-identical on develop; remaining old Governor/report/cleanup edits are superseded.",
       "planning/w01-localization-prototype-v1": "SUPERSEDED AS EXECUTION BRANCH: localization intent remains durable backlog/preparation memory under the Governor, but its old branch-local Governor/state snapshot is not current and must not remain a parallel trunk.",
       "planning/w01-p1c01-mega-prep-v1": "SUPERSEDED AS EXECUTION BRANCH: current Governor already owns the active P1C01 order, Mega Asset Promotion, character/living-world/audio sequence and Gate 6/7 acceptance boundary; old C1/C2-era lane snapshots must not override current production truth.",
