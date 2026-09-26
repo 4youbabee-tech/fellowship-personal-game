@@ -2677,6 +2677,90 @@ if pg171_plan.get("status") != "PREPARED_NOT_RUNTIME_STARTED":
             fail(f"PG-171 C4 evidence-capture step performed premature far binding: {pg171_forbidden}")
 
 
+
+# PG-172: P1C01 D lighting/sky/fog/water must remain fixed-state, resident-only and low-cost.
+pg172_plan = json.loads(read(ROOT / "Data" / "P1C01DLightingSkyFogWaterPlanV1.json"))
+pg172_status = str(pg172_plan.get("status") or "")
+if pg172_status not in {
+    "PREPARED_NOT_RUNTIME_STARTED",
+    "D_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "D_EXACT_HEAD_GREEN_MERGED_PRESENTATION_REVIEW_PENDING",
+}:
+    fail("PG-172 D plan has an invalid implementation status")
+
+pg172_builder = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+pg172_header = read(resolve_source("ShirePrototypeWorldBuilder.h"))
+pg172_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+pg172_streaming = json.loads(read(ROOT / "Data" / "ChapterAssetStreamingPlan.json"))
+
+if pg172_status != "PREPARED_NOT_RUNTIME_STARTED":
+    for pg172_symbol in [
+        "ResolveResidentMaterial",
+        "ProductionWaterMaterial",
+        "SpawnWaterSurface",
+        "P1C01LowCostWaterSurface",
+        "D_WATER_EVIDENCE",
+        "M_ProductionWater",
+        "D_WATER_MATERIAL_EVIDENCE",
+    ]:
+        if pg172_symbol not in (pg172_builder + pg172_header + pg172_importer):
+            fail(f"PG-172 D runtime/import invariant missing: {pg172_symbol}")
+
+    pg172_p1c01_assets = pg172_streaming.get("banks", {}).get("P1C01", {}).get("assets", [])
+    pg172_water_path = "/Game/Production/Materials/M_ProductionWater.M_ProductionWater"
+    if pg172_water_path not in pg172_p1c01_assets:
+        fail("PG-172 P1C01 async bank lost M_ProductionWater")
+
+    if pg172_builder.count("RecaptureSky()") != 1:
+        fail("PG-172 skylight recapture must remain startup-only in P1C01 D")
+    if "PrimaryActorTick.bCanEverTick = false" not in pg172_builder:
+        fail("PG-172 P1C01 world builder unexpectedly gained Actor Tick")
+
+    for pg172_forbidden in [
+        "LoadSynchronous",
+        "TryLoad(",
+        "APlanarReflection",
+        "USceneCaptureComponent",
+    ]:
+        if pg172_forbidden in pg172_builder:
+            fail(f"PG-172 forbidden P1C01 D runtime path found: {pg172_forbidden}")
+
+# PG-173: Mega Asset Promotion may scale staging/QC, never evidence-free promotion.
+pg173_policy = json.loads(read(ROOT / "Data" / "ProductionAssetPromotionPolicyV1.json"))
+pg173_queue = json.loads(read(ROOT / "Data" / "P1C01WarehousePromotionQueueV1.json"))
+pg173_execution = pg173_queue.get("execution", {})
+if pg173_execution:
+    if pg173_execution.get("state") != "MEGA_PROMOTION_LAUNCHED":
+        fail("PG-173 mega promotion execution state changed unexpectedly")
+    if pg173_execution.get("promotion_ceiling_without_new_receipts") != "INTAKE_QC":
+        fail("PG-173 mega promotion ceiling must remain INTAKE_QC without new receipts")
+
+pg173_states = pg173_policy.get("states", [])
+for pg173_required_state in [
+    "AUTHORIZED_FOR_STAGING",
+    "STAGED",
+    "INTAKE_QC",
+    "READY_FOR_IMPORT",
+    "IMPORTED",
+    "INTEGRATED",
+    "ACCEPTED",
+]:
+    if pg173_required_state not in pg173_states:
+        fail(f"PG-173 promotion state missing from policy: {pg173_required_state}")
+
+for pg173_group_name, pg173_items in pg173_queue.get("groups", {}).items():
+    for pg173_item in pg173_items:
+        pg173_state = str(pg173_item.get("state") or "")
+        if pg173_state in {"READY_FOR_IMPORT", "IMPORTED", "INTEGRATED", "ACCEPTED"}:
+            pg173_evidence = pg173_item.get("promotion_evidence", {})
+            for pg173_field in ["provider_or_source", "license_or_entitlement", "local_staging_receipt", "sha256", "class_qc"]:
+                if not pg173_evidence.get(pg173_field):
+                    fail(
+                        f"PG-173 {pg173_group_name}/{pg173_item.get('id')} reached "
+                        f"{pg173_state} without {pg173_field}"
+                    )
+
+
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
 pg164_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
