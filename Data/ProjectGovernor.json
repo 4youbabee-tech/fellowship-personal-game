@@ -3745,6 +3745,35 @@
         "Unreal #884-#889 workflow/job logs",
         "Git tree equality: develop@2845071119d926defd6ba94c970f43729bc51674 == C4 green candidate bc1e04062d8079fef73eae64f68c81772b4fc56c tree 3de99fa7951e889cf319e967a2225e962d9cc554"
       ]
+    },
+    {
+      "id": "DEC-047",
+      "title": "Re-architect validation lanes around one persistent Unreal workspace",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-003",
+        "REQ-EXEC-002",
+        "REQ-PROD-011"
+      ],
+      "resolution": "The dedicated UE4 runner keeps one persistent Unreal workspace for incremental C++/asset/runtime validation. Every static, administration, health and warehouse source checkout is isolated under RUNNER_TEMP and may not delete or replace GITHUB_WORKSPACE. Administrative changes are removed from the Unreal trigger where safe, superseded same-PR work is cancelled, and exact-tree proof reuse avoids rebuilding byte-identical merge content.",
+      "implementation_contract": [
+        "Pre-Unreal remains self-hosted for zero additional hosted-runner dependency/cost, but uses an exact isolated RUNNER_TEMP checkout and never touches Unreal build intermediates, binaries or root Git metadata.",
+        "Runner Health uses an isolated RUNNER_TEMP source checkout and never deletes the Unreal workspace.",
+        "Branch Cleanup uses an isolated RUNNER_TEMP source checkout and never deletes the Unreal workspace.",
+        "Warehouse Stage uses an isolated RUNNER_TEMP source checkout while persistent downloaded payloads remain under C:\\actions-runner\\_warehouse\\ShireJourney.",
+        "Only Unreal Build Validation owns the persistent project workspace used by UBT incremental detection.",
+        "Every coherent engineering wave should be committed atomically when tooling permits; avoid multiple sequential commits that create superseded CI runs.",
+        "Failure triage must classify GAME_RUNTIME, VALIDATOR_POLICY, CI_INFRA or ADMIN_GOVERNANCE before runtime code is changed.",
+        "No blind cache restore, compile parallelism increase or gate removal is authorized until structural waste reductions are measured."
+      ],
+      "rationale": "Recent logs showed that lightweight workflows repeatedly deleted the same self-hosted GITHUB_WORKSPACE, destroying Git/UBT continuity and forcing 76-action editor rebuilds. Recent failure history also showed a large cancellation/governance/infra share rather than repeated gameplay regressions.",
+      "evidence_boundary": "Architecture/source review only. Fresh exact-head measurements are required before claiming CI speed improvement. No PIE/device/visual/pacing/performance acceptance is implied.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Unreal #884-#891 and Pre-Unreal #1056-#1101 workflow history",
+        "Docs/CI_ARCHITECTURE_REASSESSMENT_2026-09-26.md",
+        "Epic UBT adaptive Git working-set guidance and GitHub Actions concurrency guidance"
+      ]
     }
   ],
   "open_conflicts": [],
@@ -4029,7 +4058,8 @@
         "PG-163",
         "PG-164",
         "PG-165",
-        "PG-175"
+        "PG-175",
+        "PG-176"
       ],
       "behavior": "Validate the exact W01 candidate head; machine evidence never promotes visual/device/performance acceptance."
     },

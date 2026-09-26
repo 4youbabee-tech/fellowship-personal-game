@@ -18,92 +18,120 @@ concurrency:
 
 jobs:
   validate:
-    # Static/policy validation must never consume or mutate the dedicated UE4 device.
-    runs-on: windows-latest
+    # Static/policy work uses the existing runner but never the persistent Unreal workspace.
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
     timeout-minutes: 8
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      GH_TOKEN: ${{ github.token }}
     defaults:
       run:
         shell: cmd
 
     steps:
-      - name: Checkout exact validation head
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 2
-          persist-credentials: false
-
-      - name: Verify exact validation head
-        shell: pwsh
+      - name: Exact-head isolated static checkout
         run: |
-          $actual = (git rev-parse HEAD).Trim()
-          if ($actual -ne $env:TARGET_SHA) {
-            throw "PRE_UNREAL_HEAD_MISMATCH expected=$($env:TARGET_SHA) actual=$actual"
-          }
-          if (-not (Test-Path -LiteralPath "ShireJourney.uproject" -PathType Leaf)) {
-            throw "PRE_UNREAL_PROJECT_MISSING"
-          }
-          Write-Host "PRE_UNREAL_EXACT_CHECKOUT_PASS sha=$actual runner=$env:RUNNER_NAME"
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE if exist "C:\Program Files (x86)\Git\cmd\git.exe" set "GITEXE=C:\Program Files (x86)\Git\cmd\git.exe"
+          if not defined GITEXE exit /b 70
 
-      - name: Set up deterministic Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: '3.11'
-          check-latest: false
+          set "PRE_ROOT=%RUNNER_TEMP%\shire-pre-unreal-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          if exist "!PRE_ROOT!" rmdir /S /Q "!PRE_ROOT!"
+          mkdir "!PRE_ROOT!"
+          cd /d "!PRE_ROOT!"
 
-      - name: Bind Python executable
-        shell: pwsh
-        run: |
-          $python = (Get-Command python -ErrorAction Stop).Source
-          "PYTHON_EXE=$python" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-          Write-Host "PRE_UNREAL_PYTHON_PASS path=$python"
+          "!GITEXE!" init
+          if errorlevel 1 exit /b 72
+          "!GITEXE!" remote add origin "https://x-access-token:%GH_TOKEN%@github.com/%GITHUB_REPOSITORY%.git"
+          if errorlevel 1 exit /b 73
+
+          set ATTEMPT=0
+          :fetch
+          set /a ATTEMPT+=1
+          echo PRE_UNREAL_EXACT_FETCH attempt=!ATTEMPT!/3 sha=%TARGET_SHA%
+          "!GITEXE!" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --prune --depth=2 origin %TARGET_SHA%
+          if not errorlevel 1 goto fetched
+          if !ATTEMPT! GEQ 3 exit /b 74
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 3"
+          goto fetch
+
+          :fetched
+          "!GITEXE!" checkout -f FETCH_HEAD
+          if errorlevel 1 exit /b 75
+          "!GITEXE!" reset --hard %TARGET_SHA%
+          if errorlevel 1 exit /b 76
+          for /f "delims=" %%S in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%S"
+          if /I not "!CHECKED_SHA!"=="%TARGET_SHA%" (
+            echo ERROR: Checkout SHA mismatch expected=%TARGET_SHA% actual=!CHECKED_SHA!
+            exit /b 77
+          )
+          if not exist "ShireJourney.uproject" exit /b 78
+          echo SHIRE_PRE_ROOT=!PRE_ROOT!>>"%GITHUB_ENV%"
+          echo PRE_UNREAL_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA! isolated=true
+
+      - name: Resolve existing local Python
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_PRE_ROOT%\Scripts\resolve_runtime_python.ps1"
 
       - name: Test Unreal validation lane selection
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\test_unreal_classifier.ps1"
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_unreal_classifier.ps1"
 
       - name: Validate project structure
-        run: '"%PYTHON_EXE%" Scripts/pre_unreal_validate.py'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\pre_unreal_validate.py
 
       - name: Validate project governor
-        run: '"%PYTHON_EXE%" Scripts/project_governor.py'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\project_governor.py
 
       - name: Test asset audit memory and failure handling
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_asset_quality_audit.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_asset_quality_audit.py" -v
 
       - name: Audit production asset source quality
-        run: '"%PYTHON_EXE%" Scripts/asset_quality_audit.py --strict'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\asset_quality_audit.py --strict
 
       - name: Audit production readiness contracts
-        run: '"%PYTHON_EXE%" Scripts/production_readiness_audit.py'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\production_readiness_audit.py
 
       - name: Run deep project audit
-        run: '"%PYTHON_EXE%" Scripts/deep_project_audit.py'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\deep_project_audit.py
 
       - name: Test runtime observation failure handling
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_runtime_smoke.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_runtime_smoke.py" -v
 
       - name: Test runtime audit contract registry
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_runtime_audit_contracts.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_runtime_audit_contracts.py" -v
 
       - name: Test structural source contracts
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_source_contracts.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_source_contracts.py" -v
 
       - name: Test Governor semantic contracts
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governance_contracts.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governance_contracts.py" -v
 
       - name: Test warning-debt guard semantics
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_warning_debt_guard.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_warning_debt_guard.py" -v
 
       - name: Test deep project audit semantics
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_deep_project_audit.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_deep_project_audit.py" -v
 
       - name: Test governor evidence scope
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governor_handoff.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governor_handoff.py" -v
 
       - name: Guard streaming cancellation source contracts
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_streaming_cancellation_contract.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_streaming_cancellation_contract.py" -v
 
       - name: Test live governor evidence selection
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_live_governor_status.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_live_governor_status.py" -v
+
+      - name: Remove isolated static checkout
+        if: always()
+        shell: pwsh
+        run: |
+          if ($env:SHIRE_PRE_ROOT -and (Test-Path -LiteralPath $env:SHIRE_PRE_ROOT)) {
+            Remove-Item -LiteralPath $env:SHIRE_PRE_ROOT -Recurse -Force -ErrorAction SilentlyContinue
+          }

@@ -4348,14 +4348,13 @@ if "ObjectPathToPackageName(ProductionSurfaceObjectPath)" not in pg133_importer:
 pg134_asset_audit = read(ROOT / "Scripts" / "asset_quality_audit.py")
 pg134_workflow = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
 if (
-    '"%PYTHON_EXE%" Scripts/asset_quality_audit.py --strict' not in pg134_workflow
-    or "runs-on: windows-latest" not in pg134_workflow
-    or "actions/setup-python@v7" not in pg134_workflow
-    or "python-version: '3.11'" not in pg134_workflow
-    or "resolve_runtime_python.ps1" in pg134_workflow
-    or "- self-hosted" in pg134_workflow
+    '"%PYTHON_EXE%" Scripts\\asset_quality_audit.py --strict' not in pg134_workflow
+    or "resolve_runtime_python.ps1" not in pg134_workflow
+    or "%RUNNER_TEMP%\\shire-pre-unreal-" not in pg134_workflow
+    or "SHIRE_PRE_ROOT" not in pg134_workflow
+    or 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg134_workflow
 ):
-    fail("PG-134 Pre-Unreal must run strict asset audit on isolated hosted Windows with deterministic Python 3.11")
+    fail("PG-134 Pre-Unreal must run strict asset audit from an isolated temp checkout without touching the Unreal workspace")
 for pg134_symbol in [
     "obj_with_degenerate_uv_triangles",
     "degenerate UV triangle",
@@ -7220,15 +7219,25 @@ pg176_health = read(ROOT / ".github" / "workflows" / "runner-health.yml")
 pg176_cleanup = read(ROOT / ".github" / "workflows" / "branch-cleanup.yml")
 pg176_warehouse = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
 
-if "runs-on: windows-latest" not in pg176_pre or "- self-hosted" in pg176_pre:
-    fail("PG-176 Pre-Unreal static lane must remain off the dedicated UE4 runner")
-if "verify_runner_session.ps1" in pg176_pre:
-    fail("PG-176 hosted Pre-Unreal lane must not depend on interactive UE4-runner health")
+for pg176_symbol in [
+    "%RUNNER_TEMP%\\shire-pre-unreal-",
+    "SHIRE_PRE_ROOT",
+    "PRE_UNREAL_EXACT_CHECKOUT_PASS",
+    "isolated=true",
+]:
+    if pg176_symbol not in pg176_pre:
+        fail(f"PG-176 Pre-Unreal isolated checkout contract missing: {pg176_symbol}")
 if 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg176_pre:
     fail("PG-176 Pre-Unreal may not delete the Unreal workspace")
 
-if "runs-on: windows-latest" not in pg176_cleanup or "- self-hosted" in pg176_cleanup:
-    fail("PG-176 branch cleanup must remain off the dedicated UE4 runner")
+for pg176_symbol in [
+    "%RUNNER_TEMP%\\shire-branch-cleanup-",
+    "SHIRE_CLEANUP_ROOT",
+    "BRANCH_CLEANUP_EXACT_CHECKOUT_PASS",
+    "isolated=true",
+]:
+    if pg176_symbol not in pg176_cleanup:
+        fail(f"PG-176 branch-cleanup isolated checkout contract missing: {pg176_symbol}")
 if 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg176_cleanup:
     fail("PG-176 branch cleanup may not delete the Unreal workspace")
 
