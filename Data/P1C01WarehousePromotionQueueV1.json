@@ -349,5 +349,19 @@
     "INTEGRATED",
     "ACCEPTED"
   ],
-  "evidence_boundary": "Warehouse/source preparation only. STAGED or INTAKE_QC is not imported, integrated, PIE-tested, device-tested, visually accepted or performance accepted."
+  "evidence_boundary": "Mega promotion execution is launched for staging/intake QC only. No listed candidate state is promoted by this metadata change; no import, integration, PIE, device, visual or performance acceptance is implied.",
+  "execution": {
+    "state": "MEGA_PROMOTION_LAUNCHED",
+    "launch_date": "2026-09-26",
+    "runtime_lane": "W01_P1C01_D_LIGHTING_SKY_FOG_WATER",
+    "promotion_ceiling_without_new_receipts": "INTAKE_QC",
+    "rule": "This launch authorizes provider staging and intake QC at scale but does not mutate any listed candidate to STAGED, INTAKE_QC, READY_FOR_IMPORT, IMPORTED, INTEGRATED or ACCEPTED without item-level evidence.",
+    "required_before_ready_for_import": [
+      "provider/source/license or entitlement",
+      "local staging receipt",
+      "SHA256",
+      "archive extraction/scan when applicable",
+      "class-specific scale/pivot/UV/normals/material/collision/LOD or skeleton/deformation/audio-master QC"
+    ]
+  }
 }
