@@ -130,7 +130,7 @@ W00 architectural stabilization is closed. Historical W00 repair text is referen
 
 Production now prioritizes C3 stable foliage identity, then C4 LOD/cull/overdraw proof, then D lighting/sky/fog/water. In parallel, Project Source/PDF/warehouse preparation may scale across characters, animation, architecture/interiors, audio, VFX and later-region packets.
 
-Administrative work is intentionally minimized: no scheduled 24-hour progress reporting; source indexing/provenance/non-runtime warehouse staging does not require Unreal builds; management updates should be batched by production wave. Technical runtime/save/canon/performance gates remain fail-closed for the affected lane.
+Administrative work is intentionally minimized. The Project Manager still publishes a repository-native 24-hour progress report for the owner, but that report is informational and never blocks production. Source indexing/provenance/non-runtime warehouse staging does not require Unreal builds; management updates should be batched by production wave. Technical runtime/save/canon/performance gates remain fail-closed for the affected lane.
 
 ## Important limitation
 
