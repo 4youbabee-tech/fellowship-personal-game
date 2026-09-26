@@ -2785,8 +2785,7 @@
         "Runtime/engine gates remain required for runtime-changing promotion."
       ],
       "dependencies": [
-        "REQ-STABILITY-001",
-        "REQ-STABILITY-002"
+        "REQ-STABILITY-001"
       ]
     },
     {
@@ -2796,13 +2795,14 @@
       "priority": "HIGH",
       "status": "IMPLEMENTED",
       "origin": "Owner requires uninterrupted world/material production and elimination of recurring hosted Action failures.",
-      "intent": "Make warehouse staging event-driven from develop/active PR changes, run it only on the supervised Windows build machine, and avoid consuming the Unreal validation concurrency group.",
+      "intent": "Make warehouse staging event-driven only after relevant changes land on develop (or explicit manual dispatch), run it on the supervised Windows build machine, and avoid repeated PR-synchronize staging or Unreal-device contention.",
       "acceptance_criteria": [
-        "Warehouse push trigger targets develop.",
+        "Warehouse push trigger targets develop and relevant warehouse paths.",
+        "Warehouse pull_request staging trigger is absent; maintenance PR synchronizations do not re-run provider acquisition.",
         "No ubuntu-latest/windows-latest warehouse jobs remain.",
         "Warehouse staging has a dedicated concurrency group.",
         "Exact-head checkout remains bounded/retried.",
-        "Provider staging and inventory audit remain unchanged."
+        "Provider staging, receipt reuse and inventory audit remain unchanged."
       ],
       "dependencies": [
         "REQ-STABILITY-003",
