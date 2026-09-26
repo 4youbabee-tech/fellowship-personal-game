@@ -3,11 +3,28 @@ import unittest
 from source_contracts import (
     first_member_assignment_position,
     has_nonufs_runtime_dependency,
+    has_strict_asset_audit_command,
     signal_precedes_member_mutation,
 )
 
 
 class SourceContractTests(unittest.TestCase):
+    def test_asset_audit_supported_python_launchers(self):
+        for command in ('python Scripts/asset_quality_audit.py --strict',
+                        'python3 Scripts/asset_quality_audit.py --strict',
+                        '\'"%PYTHON_EXE%" Scripts/asset_quality_audit.py --strict\''):
+            with self.subTest(command=command):
+                self.assertTrue(has_strict_asset_audit_command('        run: ' + command))
+
+    def test_asset_audit_rejects_missing_or_inactive_strict_command(self):
+        for line in ('run: python Scripts/asset_quality_audit.py',
+                     '# run: python Scripts/asset_quality_audit.py --strict',
+                     'run: echo python Scripts/asset_quality_audit.py --strict',
+                     'run: python Scripts/asset_quality_audit.py # --strict',
+                     'run: python Scripts/asset_quality_audit.py --strict || true'):
+            with self.subTest(line=line):
+                self.assertFalse(has_strict_asset_audit_command(line))
+
     def test_transition_signal_accepts_alias_rhs(self):
         source = """
         void StartChapter()

@@ -22,27 +22,6 @@ on:
       - 'Scripts/warehouse_network.ps1'
       - 'Data/WarehouseProviderAccessPolicyV1.json'
       - '.github/workflows/warehouse-stage.yml'
-  pull_request:
-    branches:
-      - develop
-    paths:
-      - 'Data/WarehouseAcquisitionBatchV1.json'
-      - 'Scripts/stage_polyhaven_warehouse.ps1'
-      - 'Data/WarehouseAudioAcquisitionBatchV1.json'
-      - 'Scripts/stage_opengameart_audio.ps1'
-      - 'Data/WarehouseQuaterniusAcquisitionBatchV1.json'
-      - 'Scripts/stage_quaternius_warehouse.ps1'
-      - 'Data/WarehouseAmbientCGAcquisitionBatchV1.json'
-      - 'Scripts/stage_ambientcg_warehouse.ps1'
-      - 'Data/WarehouseKenneyAcquisitionBatchV1.json'
-      - 'Scripts/stage_kenney_warehouse.ps1'
-      - 'Data/WarehouseKayKitGitHubAcquisitionBatchV1.json'
-      - 'Scripts/stage_kaykit_github_warehouse.ps1'
-      - 'Data/WarehouseAmbientCGTrilogyBatchV2.json'
-      - 'Scripts/audit_warehouse_inventory.ps1'
-      - 'Scripts/warehouse_network.ps1'
-      - 'Data/WarehouseProviderAccessPolicyV1.json'
-      - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
 
 permissions:
@@ -104,6 +83,10 @@ jobs:
           if not exist "ShireJourney.uproject" exit /b 75
           echo WAREHOUSE_CHECKOUT_PASS sha=!CHECKED_SHA!
 
+      - name: Verify runner session health
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"
+
       - name: Stage Poly Haven CC0 batch
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\stage_polyhaven_warehouse.ps1" -ManifestPath "%GITHUB_WORKSPACE%\Data\WarehouseAcquisitionBatchV1.json"
@@ -137,10 +120,11 @@ jobs:
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\audit_warehouse_inventory.ps1"
 
       - name: Show persistent warehouse footprint
-        shell: powershell
-        run: |
-          $root='C:\actions-runner\_warehouse\ShireJourney'
-          if (!(Test-Path -LiteralPath $root -PathType Container)) { throw "Persistent warehouse root missing: $root" }
-          $files=Get-ChildItem -LiteralPath $root -Recurse -File
-          $bytes=($files | Measure-Object -Property Length -Sum).Sum
-          Write-Host ("WAREHOUSE_FOOTPRINT files=" + $files.Count + " bytes=" + $bytes + " root=" + $root)
+        shell: cmd
+        run: >-
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command
+          "$root='C:\actions-runner\_warehouse\ShireJourney';
+          if (!(Test-Path -LiteralPath $root -PathType Container)) { throw 'Persistent warehouse root missing: ' + $root };
+          $files=Get-ChildItem -LiteralPath $root -Recurse -File;
+          $bytes=($files | Measure-Object -Property Length -Sum).Sum;
+          Write-Host ('WAREHOUSE_FOOTPRINT files=' + $files.Count + ' bytes=' + $bytes + ' root=' + $root)"

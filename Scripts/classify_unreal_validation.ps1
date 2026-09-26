@@ -2,18 +2,20 @@ $ErrorActionPreference = "Stop"
 
 function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = "none") {
     $full = if ($Mode -eq "full") { "true" } else { "false" }
-    $core = if ($Mode -eq "core") { "true" } else { "false" }
+    $core = if ($Mode -eq "core" -or $Mode -eq "asset") { "true" } else { "false" }
+    $asset = if ($Mode -eq "asset") { "true" } else { "false" }
     $acceptance = if ($Mode -eq "acceptance") { "true" } else { "false" }
 
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_MODE=$Mode"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_FULL_UNREAL_REQUIRED=$full"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_CORE_UNREAL_REQUIRED=$core"
+    Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ASSET_IMPORT_ONLY=$asset"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_ONLY=$acceptance"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_RESUME_STAGE=$ResumeStage"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_DECISION_REASON=$Reason"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_PARENT_SHA=$ParentSha"
 
-    Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode full=$full core=$core acceptance=$acceptance resume=$ResumeStage parent=$ParentSha reason=$Reason"
+    Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode full=$full core=$core asset=$asset acceptance=$acceptance resume=$ResumeStage parent=$ParentSha reason=$Reason"
 }
 
 function Get-GitExe {
@@ -219,6 +221,72 @@ function Test-ParentCoreUnrealGreen([string]$ParentSha) {
     return $false
 }
 
+function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [string]$ParentSha) {
+    $delta = @(& $GitExe diff --name-only $BaseSha $ParentSha)
+    if ($LASTEXITCODE -ne 0) { return $false }
+    if ($delta.Count -eq 0) { return $true }
+
+    $safeExact = @(
+        "Data/ProjectGovernor.json",
+        "Data/DeepProjectAudit.json",
+        "Data/BranchCleanupPlan.json",
+        "Data/ProjectSourcePdfRegistryV1.json",
+        "Data/P1C01SourceExtractionV1.json",
+        "Data/P1C01SourceToProductionBridgeV1.json",
+        "Data/P1C01MaterialImportWaveV1.json",
+        "Data/P1C01WorldBuildIntakePacketV1.json",
+        "Data/P1C01C3FoliageMaterialIdentityPlanV1.json",
+        "Data/P1C01C4FoliageLodCullOverdrawPlanV1.json",
+        "Data/P1C01DLightingSkyFogWaterPlanV1.json",
+        "Data/P1C01ECharacterPresentationPlanV1.json",
+        "Data/P1C01FLivingShirePlanV1.json",
+        "Data/P1C01GQuestCinematicAudioPolishPlanV1.json",
+        "Data/P1C01HTargetDeviceProfilingPlanV1.json",
+        "Data/P1C01Gate67AcceptanceChecklistV1.json",
+        ".github/workflows/pre-unreal-validation.yml",
+        ".github/workflows/branch-cleanup.yml",
+        ".github/workflows/warehouse-stage.yml",
+        "Scripts/run_local_static_validation.ps1",
+        "Scripts/prepare_p1c01_material_intake.ps1",
+        "Scripts/promote_p1c01_material_intake.ps1",
+        "Scripts/run_p1c01_material_pipeline.ps1"
+    )
+
+    foreach ($path in $delta) {
+        $n = $path -replace "\\","/"
+        $safe = (
+            $n.StartsWith("Docs/") -or
+            ($safeExact -contains $n) -or
+            $n -like "Data/WholeGame*.json" -or
+            $n -like "Data/*Warehouse*.json" -or
+            $n -like "Scripts/stage_*warehouse*.ps1"
+        )
+        if (-not $safe) {
+            Write-Host "TRANSITIVE_CORE_PROOF_BLOCKED file=$n base=$BaseSha parent=$ParentSha"
+            return $false
+        }
+    }
+
+    return $true
+}
+
+function Test-NearestSafeCoreAncestorGreen([string]$GitExe, [string]$ParentSha) {
+    if (-not $env:GH_TOKEN) { return $false }
+
+    $ancestors = @(& $GitExe rev-list --first-parent --max-count=40 $ParentSha)
+    if ($LASTEXITCODE -ne 0 -or $ancestors.Count -eq 0) { return $false }
+
+    foreach ($candidate in $ancestors) {
+        if (-not (Test-ParentCoreUnrealGreen $candidate)) { continue }
+        if (-not (Test-CoreProofSafeInterveningDelta $GitExe $candidate $ParentSha)) { continue }
+
+        Write-Host "TRANSITIVE_CORE_PROOF_PASS ancestor=$candidate parent=$ParentSha"
+        return $true
+    }
+
+    return $false
+}
+
 function Test-ParentAcceptanceDataGreen([string]$ParentSha) {
     if (-not $env:GH_TOKEN) { return $false }
 
@@ -396,12 +464,31 @@ if($policyOnlyTouched.Count -gt 0 -and $acceptanceTouched.Count -eq 0 -and $core
 }
 
 if($coreImpact.Count -gt 0){
+    $assetOnlyAllowed = @(
+        "Data/P1C01MaterialsVegetationPlanV1.json"
+    )
+    $assetOnlyDelta = @($coreImpact | Where-Object {
+        (-not $_.StartsWith("Source/ShireJourneyEditorTools/")) -and
+        ($assetOnlyAllowed -notcontains $_)
+    }).Count -eq 0
+
+    if($assetOnlyDelta){
+        $coreImpact | ForEach-Object { Write-Host "ASSET_IMPORT_ONLY_FILE $_" }
+        Set-Mode "asset" "editor-tool-or-p1c01-material-delta-build-import-startup-only" $parentSha
+        exit 0
+    }
+
     if(Test-ParentCoreUnrealGreen $parentSha){
         $coreImpact | ForEach-Object { Write-Host "CORE_UNREAL_FILE $_" }
         Set-Mode "core" "runtime-or-asset-delta-inherits-parent-core-proof-no-package" $parentSha
         exit 0
     }
-    Set-Mode "full" "core-delta-parent-proof-missing-fail-safe" $parentSha
+    if(Test-NearestSafeCoreAncestorGreen $git $parentSha){
+        $coreImpact | ForEach-Object { Write-Host "CORE_UNREAL_FILE $_" }
+        Set-Mode "core" "runtime-or-asset-delta-inherits-nearest-safe-core-ancestor-no-package" $parentSha
+        exit 0
+    }
+    Set-Mode "full" "core-delta-no-safe-core-proof-fail-safe" $parentSha
     exit 0
 }
 

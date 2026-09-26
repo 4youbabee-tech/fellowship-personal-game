@@ -30,6 +30,21 @@ on:
       - 'Scripts/prepare_p1c01_material_intake.ps1'
       - 'Scripts/promote_p1c01_material_intake.ps1'
       - 'Scripts/run_p1c01_material_pipeline.ps1'
+      - 'Scripts/install_runner_watchdog.ps1'
+      - 'Scripts/runner_watchdog.ps1'
+      - 'Scripts/classify_unreal_validation.ps1'
+      - 'Scripts/pre_unreal_validate.py'
+      - 'Scripts/deep_project_audit.py'
+      - 'Scripts/test_deep_project_audit.py'
+      - 'Scripts/source_contracts.py'
+      - 'Scripts/test_source_contracts.py'
+      - 'Scripts/verify_runner_session.ps1'
+      - 'Scripts/test_runtime_smoke.py'
+      - 'Scripts/runtime_smoke.py'
+      - 'Scripts/test_asset_quality_audit.py'
+      - 'Scripts/asset_quality_audit.py'
+      - 'Scripts/run_branch_cleanup.ps1'
+      - 'Data/BranchCleanupPlan.json'
       - 'SourceAssets/PrivateOffline/**'
       - 'Scripts/stage_*warehouse*.ps1'
   pull_request:
@@ -48,6 +63,21 @@ on:
       - 'Data/WholeGame*.json'
       - 'Data/P1C01C3FoliageMaterialIdentityPlanV1.json'
       - 'Data/P1C01WorldBuildIntakePacketV1.json'
+      - 'Scripts/classify_unreal_validation.ps1'
+      - 'Scripts/runner_watchdog.ps1'
+      - 'Scripts/install_runner_watchdog.ps1'
+      - 'Scripts/pre_unreal_validate.py'
+      - 'Scripts/deep_project_audit.py'
+      - 'Scripts/test_deep_project_audit.py'
+      - 'Scripts/source_contracts.py'
+      - 'Scripts/test_source_contracts.py'
+      - 'Scripts/asset_quality_audit.py'
+      - 'Scripts/run_branch_cleanup.ps1'
+      - 'Data/BranchCleanupPlan.json'
+      - 'Scripts/test_asset_quality_audit.py'
+      - 'Scripts/runtime_smoke.py'
+      - 'Scripts/test_runtime_smoke.py'
+      - 'Scripts/verify_runner_session.ps1'
       - 'SourceAssets/PrivateOffline/**'
       - 'Scripts/stage_*warehouse*.ps1'
   workflow_dispatch:
@@ -148,6 +178,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: '"%GITHUB_WORKSPACE%\..\fellowship_exact_checkout.cmd"'
 
+      - name: Verify runner session health
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"'
+
       - name: Classify current delta for Unreal validation
         shell: cmd
         env:
@@ -190,7 +224,7 @@ jobs:
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\prepare_msvc_environment.ps1"'
 
       - name: Reset project build intermediates
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\reset_project_build_intermediates.ps1"'
 
@@ -225,17 +259,17 @@ jobs:
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_startup.cmd"'
 
       - name: Headless chapter-by-chapter runtime audit
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_chapters.cmd"'
 
       - name: Headless route/story state roundtrip audit
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_state.cmd"'
 
       - name: Summarize and guard runtime warning debt
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_warning_debt.cmd"'
 

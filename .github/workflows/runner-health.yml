@@ -1,0 +1,71 @@
+name: Runner Health Check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: runner-health-${{ github.repository }}
+  cancel-in-progress: true
+
+jobs:
+  health:
+    name: Verify UE4 runner health
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 3
+    env:
+      TARGET_SHA: ${{ github.sha }}
+      GH_TOKEN: ${{ github.token }}
+    defaults:
+      run:
+        shell: cmd
+    steps:
+      - name: Exact-head local checkout
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE if exist "C:\Program Files (x86)\Git\cmd\git.exe" set "GITEXE=C:\Program Files (x86)\Git\cmd\git.exe"
+          if not defined GITEXE exit /b 70
+
+          cd /d "%GITHUB_WORKSPACE%\.."
+          if exist "%GITHUB_WORKSPACE%" rmdir /S /Q "%GITHUB_WORKSPACE%"
+          if exist "%GITHUB_WORKSPACE%" exit /b 71
+          mkdir "%GITHUB_WORKSPACE%"
+          cd /d "%GITHUB_WORKSPACE%"
+
+          "!GITEXE!" init
+          if errorlevel 1 exit /b 72
+          "!GITEXE!" remote add origin "https://x-access-token:%GH_TOKEN%@github.com/%GITHUB_REPOSITORY%.git"
+          if errorlevel 1 exit /b 73
+
+          set ATTEMPT=0
+          :fetch
+          set /a ATTEMPT+=1
+          echo RUNNER_HEALTH_EXACT_FETCH attempt=!ATTEMPT!/3 sha=%TARGET_SHA%
+          "!GITEXE!" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --prune --depth=2 origin %TARGET_SHA%
+          if not errorlevel 1 goto fetched
+          if !ATTEMPT! GEQ 3 exit /b 74
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 3"
+          goto fetch
+
+          :fetched
+          "!GITEXE!" checkout -f FETCH_HEAD
+          if errorlevel 1 exit /b 75
+          "!GITEXE!" reset --hard %TARGET_SHA%
+          if errorlevel 1 exit /b 76
+          for /f "delims=" %%S in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%S"
+          if /I not "!CHECKED_SHA!"=="%TARGET_SHA%" exit /b 77
+          if not exist "Scripts\verify_runner_session.ps1" exit /b 78
+          echo RUNNER_HEALTH_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA!
+
+      - name: Verify runner session health
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"

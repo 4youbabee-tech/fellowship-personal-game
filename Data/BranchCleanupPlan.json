@@ -76,7 +76,9 @@
     "stability/source-architecture-manifest-sync-v1",
     "planning/whole-game-world-build-v1",
     "planning/whole-game-production-prep-v2",
-    "integration/whole-game-prep-consolidation-v1"
+    "integration/whole-game-prep-consolidation-v1",
+    "ci/validator-sync-v5",
+    "ci/runner-validation-hardening-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
@@ -90,16 +92,16 @@
   "final_audit": {
     "status": "READY_FOR_POST_CONSOLIDATION_CLEANUP",
     "rule": "After this consolidation lands, only the active runtime PR and unresolved unique-content salvage branches may remain outside develop.",
-    "current_active_runtime_pr": "production/w01-p1c01-foliage-wind-v2 / PR #80",
+    "current_active_runtime_pr": "production/w01-p1c01-foliage-wind-v3 / PR #87",
     "completed_preparation_prs": [
       "PR #81 superseded by consolidation",
       "PR #83 superseded by consolidation"
     ],
-    "physical_cleanup": "Branch Cleanup workflow deletes delete_after_merge refs when GitHub Actions executes; zero-step infrastructure failures may delay physical deletion but do not change the approved deletion set.",
+    "physical_cleanup": "Branch Cleanup uses bounded local exact-head develop checkout, runner-health verification, active-PR-head protection, and hard-fail deletion semantics after the plan lands on develop.",
     "truth_boundary": "Branch/process hygiene only; no runtime acceptance implied."
   },
   "active_work_branches": [
-    "production/w01-p1c01-foliage-wind-v2"
+    "production/w01-p1c01-foliage-wind-v3"
   ],
   "preserve_pending_salvage": [
     {
@@ -120,5 +122,8 @@
     "planning/whole-game-world-build-v1",
     "planning/whole-game-production-prep-v2",
     "integration/whole-game-prep-consolidation-v1"
+  ],
+  "active_infrastructure_branches": [
+    "ci/runner-validation-hardening-v1 / PR #90 (delete immediately after merge)"
   ]
 }

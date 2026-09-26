@@ -23,7 +23,7 @@ def read_log(path):
         return ""
     raw = path.read_bytes()
     encoding = "utf-16" if raw.startswith((b"\xff\xfe", b"\xfe\xff")) else "utf-8-sig"
-    return raw.decode(encoding, errors="replace")
+    return raw.decode(encoding, errors="replace").replace("\r\n", "\n").replace("\r", "\n")
 
 
 def missing_markers(text, markers):

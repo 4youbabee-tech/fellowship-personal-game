@@ -4189,8 +4189,10 @@ if "ObjectPathToPackageName(ProductionSurfaceObjectPath)" not in pg133_importer:
 # PG-134: source geometry that can generate zero tangent/binormal basis is rejected before Unreal import.
 pg134_asset_audit = read(ROOT / "Scripts" / "asset_quality_audit.py")
 pg134_workflow = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
-if "python Scripts/asset_quality_audit.py --strict" not in pg134_workflow:
-    fail("PG-134 Pre-Unreal workflow must run asset_quality_audit.py in strict mode")
+if ('"%PYTHON_EXE%" Scripts/asset_quality_audit.py --strict' not in pg134_workflow
+        or "resolve_runtime_python.ps1" not in pg134_workflow
+        or "actions/setup-python@" in pg134_workflow):
+    fail("PG-134 Pre-Unreal must use the existing local Python and run asset_quality_audit.py in strict mode")
 for pg134_symbol in [
     "obj_with_degenerate_uv_triangles",
     "degenerate UV triangle",
@@ -4565,6 +4567,20 @@ for pg167_symbol in [
         fail(f"PG-167 supervised static-lane contract missing: {pg167_symbol}")
 if "schedule:" in pg167_pre or "runs-on: ubuntu-latest" in pg167_pre or "runs-on: windows-latest" in pg167_pre:
     fail("PG-167 Pre-Unreal must be event-driven on the supervised Windows UE4 runner")
+if "actions/setup-python@" in pg167_pre or "resolve_runtime_python.ps1" not in pg167_pre or 'shell: cmd' not in pg167_pre:
+    fail("PG-167 Pre-Unreal must avoid repeated hosted Python setup and use the local interpreter through cmd")
+if "uses: actions/checkout@" in pg167_pre:
+    fail("PG-167 Pre-Unreal must not depend on marketplace checkout on the supervised runner")
+for pg167_checkout_symbol in [
+    "PRE_UNREAL_EXACT_FETCH",
+    "PRE_UNREAL_EXACT_CHECKOUT_PASS",
+    "http.lowSpeedTime=20",
+    "fetch --no-tags --prune --depth=2 origin %TARGET_SHA%",
+    "reset --hard %TARGET_SHA%",
+    "Checkout SHA mismatch",
+]:
+    if pg167_checkout_symbol not in pg167_pre:
+        fail(f"PG-167 bounded exact-head Pre-Unreal checkout missing: {pg167_checkout_symbol}")
 
 pg167_cleanup = read(ROOT / ".github" / "workflows" / "branch-cleanup.yml")
 for pg167_symbol in ["- self-hosted", "- Windows", "- X64", "- ue4-27"]:
@@ -4572,6 +4588,27 @@ for pg167_symbol in ["- self-hosted", "- Windows", "- X64", "- ue4-27"]:
         fail(f"PG-167 branch-cleanup runner contract missing: {pg167_symbol}")
 if "runs-on: ubuntu-latest" in pg167_cleanup or "runs-on: windows-latest" in pg167_cleanup:
     fail("PG-167 Branch Cleanup must not depend on GitHub-hosted runners")
+for pg167_cleanup_symbol in [
+    "BRANCH_CLEANUP_EXACT_CHECKOUT_PASS",
+    "verify_runner_session.ps1",
+    "run_branch_cleanup.ps1",
+    "pull-requests: read",
+]:
+    if pg167_cleanup_symbol not in pg167_cleanup:
+        fail(f"PG-167 hardened branch-cleanup contract missing: {pg167_cleanup_symbol}")
+if "uses: actions/checkout@" in pg167_cleanup or "shell: powershell" in pg167_cleanup:
+    fail("PG-167 Branch Cleanup must use bounded local checkout and explicit PowerShell Bypass")
+
+pg167_runner_health = read(ROOT / ".github" / "workflows" / "runner-health.yml")
+for pg167_health_symbol in [
+    "RUNNER_HEALTH_EXACT_CHECKOUT_PASS",
+    "verify_runner_session.ps1",
+    "http.lowSpeedTime=20",
+]:
+    if pg167_health_symbol not in pg167_runner_health:
+        fail(f"PG-167 hardened runner-health workflow missing: {pg167_health_symbol}")
+if "uses: actions/checkout@" in pg167_runner_health:
+    fail("PG-167 Runner Health must not depend on marketplace checkout")
 
 pg167_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 for pg167_symbol in [
@@ -4580,6 +4617,8 @@ for pg167_symbol in [
     "Data/WholeGame*.json",
     "Data/*Warehouse*.json",
     "Data/P1C01WorldBuildIntakePacketV1.json",
+    "Data/BranchCleanupPlan.json",
+    "Scripts/run_branch_cleanup.ps1",
     "${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}",
 ]:
     if pg167_symbol not in pg167_unreal:
@@ -6290,10 +6329,8 @@ pg116_arch_paths = [
     for row in pg116_arch.get("files", [])
     if isinstance(row, dict)
 ]
-for pg116_path in [
-    "Source/ShireJourney/StoryPresentationDirector.h",
-    "Source/ShireJourney/StoryPresentationDirector.cpp",
-]:
+for pg116_resolved in [pg116_director_h, pg116_director_cpp]:
+    pg116_path = str(pg116_resolved.relative_to(ROOT)).replace("\\", "/")
     if pg116_arch_paths.count(pg116_path) != 1:
         fail(f"PG-116 source architecture registration must be exactly once: {pg116_path}")
 
@@ -6475,10 +6512,11 @@ pg118_arch_paths = [
     for row in pg118_arch.get("files", [])
     if isinstance(row, dict)
 ]
-for pg118_path in [
-    "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.h",
-    "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.cpp",
+for pg118_resolved in [
+    resolve_source("ShireChapterAssetStreamingSubsystem.h"),
+    resolve_source("ShireChapterAssetStreamingSubsystem.cpp"),
 ]:
+    pg118_path = str(pg118_resolved.relative_to(ROOT)).replace("\\", "/")
     if pg118_arch_paths.count(pg118_path) != 1:
         fail(f"PG-118 source architecture registration must be exactly once: {pg118_path}")
 
@@ -6736,8 +6774,8 @@ if "LoadObject<USoundBase>" in pg128_audio:
     fail("PG-128 synchronous production audio loading is forbidden")
 
 
-# PG-144: warehouse staging is bounded, resumable and filtered on a GitHub-hosted delta gate
-# before any self-hosted runner capacity is consumed.
+# PG-144: warehouse staging is bounded/resumable and runs only on the supervised
+# Windows runner under a dedicated warehouse concurrency group.
 pg144_helper = read(ROOT / "Scripts" / "warehouse_network.ps1")
 pg144_workflow = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
 pg144_scripts = [
@@ -6768,49 +6806,45 @@ for pg144_path in pg144_scripts:
     if re.search(r"\bInvoke-(?:WebRequest|RestMethod)\b", pg144_text):
         fail(f"PG-144 provider script bypasses bounded network helper: {pg144_path.name}")
 for pg144_symbol in [
-    "Detect warehouse delta on GitHub-hosted runner",
-    "Detect warehouse delta before touching the self-hosted runner",
-    "EVENT_BEFORE: ${{ github.event.before }}",
-    "if: needs.delta.outputs.run_stage == 'true'",
-    "WAREHOUSE_HOSTED_DELTA_SKIP",
-    "group: unreal-build-${{ github.repository }}-ue4-device",
+    "- develop",
+    "- self-hosted",
+    "- Windows",
+    "- X64",
+    "- ue4-27",
+    "group: warehouse-stage-${{ github.repository }}",
+    "cancel-in-progress: true",
     "warehouse_network.ps1",
     "WAREHOUSE_CHECKOUT_PASS",
 ]:
     if pg144_symbol not in pg144_workflow:
-        fail(f"PG-144 warehouse runner-isolation guard missing: {pg144_symbol}")
-if pg144_workflow.count("runs-on: ubuntu-latest") < 2:
-    fail("PG-144 warehouse delta/skip path must stay on GitHub-hosted capacity")
+        fail(f"PG-144 warehouse supervised-runner guard missing: {pg144_symbol}")
+if "runs-on: ubuntu-latest" in pg144_workflow or "runs-on: windows-latest" in pg144_workflow:
+    fail("PG-144 warehouse staging must not depend on GitHub-hosted capacity")
 if pg144_workflow.count("- self-hosted") != 1:
-    fail("PG-144 exactly one warehouse job may request the self-hosted runner")
-if "id: warehouse_delta" in pg144_workflow:
-    fail("PG-144 self-hosted warehouse delta detector was reintroduced")
+    fail("PG-144 exactly one warehouse job must own the supervised runner")
+if "integration/comprehensive-foundation-v1" in pg144_workflow:
+    fail("PG-144 warehouse workflow still targets an obsolete integration branch")
 
 # PG-145: self-hosted Windows warehouse execution and runner supervision are explicit.
 pg145_workflow = pg144_workflow
 if "shell: powershell\n" in pg145_workflow:
     fail("PG-145 raw powershell shell can be blocked by the runner execution policy")
-if pg145_workflow.count("powershell.exe -NoProfile -ExecutionPolicy Bypass") < 8:
-    fail("PG-145 heavy warehouse scripts must execute through explicit Bypass wrappers")
+if pg145_workflow.count("powershell.exe -NoProfile -ExecutionPolicy Bypass") < 9:
+    fail("PG-145 warehouse PowerShell work must execute through explicit Bypass wrappers")
 for pg145_checkout_symbol in [
-    "Checkout exact warehouse head with bounded retries",
+    "Checkout exact warehouse head",
     "Fetching exact warehouse head attempt",
-    "fetch --no-tags --prune --depth=20",
+    "fetch --no-tags --prune --depth=2",
     "WAREHOUSE_CHECKOUT_PASS",
 ]:
     if pg145_checkout_symbol not in pg145_workflow:
         fail(f"PG-145 resilient warehouse checkout missing: {pg145_checkout_symbol}")
-pg145_delta_start = pg145_workflow.find("  delta:")
-pg145_stage_start = pg145_workflow.find("  stage:")
-if pg145_delta_start < 0 or pg145_stage_start < 0 or pg145_stage_start <= pg145_delta_start:
-    fail("PG-145 warehouse hosted-delta/stage job layout is invalid")
-else:
-    pg145_hosted = pg145_workflow[pg145_delta_start:pg145_stage_start]
-    pg145_stage = pg145_workflow[pg145_stage_start:]
-    if pg145_hosted.count("uses: actions/checkout@v4") != 1:
-        fail("PG-145 hosted warehouse delta gate must use exactly one actions/checkout@v4")
-    if "uses: actions/checkout@" in pg145_stage:
-        fail("PG-145 self-hosted warehouse stage must not depend on marketplace checkout download")
+if "  delta:" in pg145_workflow or "needs.delta" in pg145_workflow:
+    fail("PG-145 obsolete hosted warehouse delta job was reintroduced")
+if "  stage:" not in pg145_workflow:
+    fail("PG-145 supervised warehouse stage job missing")
+if "uses: actions/checkout@" in pg145_workflow:
+    fail("PG-145 self-hosted warehouse stage must not depend on marketplace checkout download")
 
 pg145_watchdog = read(ROOT / "Scripts" / "runner_watchdog.ps1")
 pg145_watchdog_installer = read(ROOT / "Scripts" / "install_runner_watchdog.ps1")
@@ -6820,6 +6854,8 @@ for pg145_symbol in [
     "Runner.Worker",
     "AcquireHangSeconds",
     "SHIRE_RUNNER_WATCHDOG_RECOVERY",
+    "Recover-OrphanedListenerOnSupervisorBoot",
+    "SHIRE_RUNNER_WATCHDOG_BOOT_RECOVERY",
 ]:
     if pg145_symbol not in pg145_watchdog:
         fail(f"PG-145 runner watchdog contract missing: {pg145_symbol}")
@@ -6829,13 +6865,108 @@ if not pg145_timeout or not (110 <= int(pg145_timeout.group(1)) <= 180):
 for pg145_install_symbol in [
     "ShireJourney-GitHubRunner-Watchdog",
     "New-ScheduledTaskTrigger -AtLogOn",
+    "RepetitionInterval (New-TimeSpan -Minutes 5)",
+    "$taskTriggers",
+    "MultipleInstances IgnoreNew",
     "-LogonType Interactive",
+    "Set-Service -Name $service.Name -StartupType Manual",
     "actions.runner.*",
     "NETWORK SERVICE",
 ]:
     if pg145_install_symbol not in pg145_watchdog_installer:
         fail(f"PG-145 runner watchdog installer contract missing: {pg145_install_symbol}")
 
+pg145_classifier = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
+for pg145_classifier_symbol in [
+    "Test-NearestSafeCoreAncestorGreen",
+    "Test-CoreProofSafeInterveningDelta",
+    "TRANSITIVE_CORE_PROOF_PASS",
+    "runtime-or-asset-delta-inherits-nearest-safe-core-ancestor-no-package",
+    "TRANSITIVE_CORE_PROOF_BLOCKED",
+    'Set-Mode "asset"',
+    "SHIRE_ASSET_IMPORT_ONLY",
+    "editor-tool-or-p1c01-material-delta-build-import-startup-only",
+]:
+    if pg145_classifier_symbol not in pg145_classifier:
+        fail(f"PG-145 transitive core-proof optimization missing: {pg145_classifier_symbol}")
+
+pg145_unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+for pg145_maintenance_path in [
+    "Scripts/classify_unreal_validation.ps1",
+    "Scripts/runner_watchdog.ps1",
+    "Scripts/install_runner_watchdog.ps1",
+    "Scripts/pre_unreal_validate.py",
+    "Scripts/asset_quality_audit.py",
+    "Scripts/test_asset_quality_audit.py",
+    "Scripts/runtime_smoke.py",
+    "Scripts/test_runtime_smoke.py",
+    "Scripts/verify_runner_session.ps1",
+]:
+    if pg145_unreal_workflow.count(pg145_maintenance_path) < 2:
+        fail(f"PG-145 maintenance path must stay off Unreal device lane in push and PR filters: {pg145_maintenance_path}")
+
+
+# PG-145B: every self-hosted lane must fail fast when the runner falls back to a service
+# identity or loses its interactive desktop/watchdog ownership.
+pg145b_probe = read(ROOT / "Scripts" / "verify_runner_session.ps1")
+for pg145b_symbol in [
+    "NETWORK SERVICE",
+    "SessionId",
+    "Runner.Listener.exe",
+    "Runner.Worker.exe",
+    "actions.runner.*",
+    "ShireJourney-GitHubRunner-Watchdog",
+    "Test-NetConnection github.com -Port 443",
+    "RUNNER_HEALTH_PASS",
+]:
+    if pg145b_symbol not in pg145b_probe:
+        fail(f"PG-145B runner health probe missing: {pg145b_symbol}")
+
+pg145b_watchdog = read(ROOT / "Scripts" / "runner_watchdog.ps1")
+for pg145b_watchdog_symbol in [
+    "WorkerIdleHangSeconds",
+    "Listening for Jobs",
+    "stale-worker",
+]:
+    if pg145b_watchdog_symbol not in pg145b_watchdog:
+        fail(f"PG-145B runner watchdog recovery contract missing: {pg145b_watchdog_symbol}")
+
+pg145b_health_workflow = read(ROOT / ".github" / "workflows" / "runner-health.yml")
+if "workflow_dispatch:" not in pg145b_health_workflow or "verify_runner_session.ps1" not in pg145b_health_workflow:
+    fail("PG-145B manual runner health workflow is incomplete")
+
+for pg145b_path, pg145b_before in [
+    (ROOT / ".github" / "workflows" / "pre-unreal-validation.yml", "Resolve existing local Python"),
+    (ROOT / ".github" / "workflows" / "unreal-build-validation.yml", "Classify current delta for Unreal validation"),
+    (ROOT / ".github" / "workflows" / "warehouse-stage.yml", "Stage Poly Haven CC0 batch"),
+]:
+    pg145b_text = read(pg145b_path)
+    probe_pos = pg145b_text.find("verify_runner_session.ps1")
+    work_pos = pg145b_text.find(pg145b_before)
+    if probe_pos < 0 or work_pos < 0 or probe_pos > work_pos:
+        fail(f"PG-145B runner health gate must precede heavy work: {pg145b_path.name}")
+
+# PG-145C: editor-tool/material-authoring deltas use the narrow exact-head engine lane:
+# build + import + automation + startup, without unrelated chapter/state/package repetition.
+pg145c_workflow = pg145_unreal_workflow
+for pg145c_symbol in [
+    "SHIRE_ASSET_IMPORT_ONLY",
+    "ASSET_IMPORT_ONLY_FILE",
+    "editor-tool-or-p1c01-material-delta-build-import-startup-only",
+]:
+    if pg145c_symbol not in (pg145_classifier + pg145c_workflow):
+        fail(f"PG-145C fast asset-import lane missing: {pg145c_symbol}")
+if "if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'\n        shell: cmd\n        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"%GITHUB_WORKSPACE%\\\\Scripts\\\\reset_project_build_intermediates.ps1\"'" not in pg145c_workflow:
+    fail("PG-145C incremental CORE/ASSET lanes must not delete project intermediates before every build")
+for pg145c_step in [
+    "Headless chapter-by-chapter runtime audit",
+    "Headless route/story state roundtrip audit",
+    "Summarize and guard runtime warning debt",
+]:
+    pg145c_pos = pg145c_workflow.find("- name: " + pg145c_step)
+    pg145c_slice = pg145c_workflow[pg145c_pos:pg145c_pos + 420] if pg145c_pos >= 0 else ""
+    if "SHIRE_ASSET_IMPORT_ONLY != 'true'" not in pg145c_slice:
+        fail(f"PG-145C asset-import lane still repeats unrelated runtime audit: {pg145c_step}")
 
 # PG-146: route/chapter/episode/character identity is one fail-closed contract.
 pg146_quest_h = read(resolve_source("ShireQuestSubsystem.h"))

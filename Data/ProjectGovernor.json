@@ -386,13 +386,10 @@
         "Rollback snapshot capture/restore now includes player-life state in addition to quest/world/player-transform state."
       ],
       "missing_work": [
-        "Exact-head UE4.27 compile/runtime proof for full failed-swap rollback transaction, including player-life restoration and movement release.",
-        "Exact-head UE4.27 compile/runtime regression proof for commit-synchronized checkpoint capture and cross-chapter save restore.",
-        "F9 round-trip verification on current integrated build",
-        "F8 Gandalf-Isengard-Frodo round-trip verification",
-        "PIE verification of automatic checkpoint placement/respawn across representative chapters",
-        "device verification that checkpoint writes/restores do not create noticeable hitching",
-        "Add exact-head engine regression coverage for checkpoint capture during delayed async transition, cross-chapter save restore, and failed-swap rollback."
+        "Preserve current-head checkpoint/save/rollback regressions for any affected runtime changes; historical machine evidence is recorded separately.",
+        "Human F9 save/load and F8 route roundtrip on current integrated build.",
+        "PIE checkpoint placement/respawn across representative chapters.",
+        "Target-device measurement of save/restore hitching."
       ],
       "acceptance_criteria": [
         "F9 restores expected transform/story state",
@@ -404,7 +401,21 @@
       ],
       "dependencies": [],
       "checkpoint": "CURRENT_HARD_GATE",
-      "notes": "Persistence serialization exists, but cross-system synchronization with asynchronous world commit is incomplete on the current integration train. Do not promote save/load continuity until the commit-barrier defects are repaired and engine-tested."
+      "notes": "Persistence serialization exists, but cross-system synchronization with asynchronous world commit is incomplete on the current integration train. Do not promote save/load continuity until the commit-barrier defects are repaired and engine-tested.",
+      "historical_machine_evidence_2026_09_26": {
+        "sha": "2af6648209d8722247ca6f9a75b2b5082b6654d5",
+        "run": "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/36200615260",
+        "scope": "Historical successful Editor compile, import, Automation, startup, P1C01-P1C08, state, transitions, faults, pending-transition and persistence-edge machine audits. Entire run FAILED at packaged D3D11 startup; not evidence for untested newer heads or human/device acceptance."
+      },
+      "previous_missing_work_2026_09_26": [
+        "Exact-head UE4.27 compile/runtime proof for full failed-swap rollback transaction, including player-life restoration and movement release.",
+        "Exact-head UE4.27 compile/runtime regression proof for commit-synchronized checkpoint capture and cross-chapter save restore.",
+        "F9 round-trip verification on current integrated build",
+        "F8 Gandalf-Isengard-Frodo round-trip verification",
+        "PIE verification of automatic checkpoint placement/respawn across representative chapters",
+        "device verification that checkpoint writes/restores do not create noticeable hitching",
+        "Add exact-head engine regression coverage for checkpoint capture during delayed async transition, cross-chapter save restore, and failed-swap rollback."
+      ]
     },
     {
       "id": "REQ-PERF-001",
@@ -2299,9 +2310,9 @@
         "P1C01 startup receives a hidden Engine BasicShapes collision pad at the authored road height so first placement does not depend on imported OBJ collision generation."
       ],
       "missing_work": [
-        "Pass Pre-Unreal on the exact fix head.",
-        "Pass real UE4.27.2 build/import/startup/chapter audits after the separate local Engine Content access blocker is repaired.",
-        "Owner re-run P1C01 in PIE and confirm the player no longer drops below the world on initial launch."
+        "Keep startup-grounding regression required for affected current-head changes; historical machine success is recorded separately.",
+        "Reconcile the owner P1C01 grounding evidence cited by active_gate with the exact tested SHA before promoting requirement status.",
+        "Packaged rendered startup remains separately blocked by D3D11 swap-chain failure in run 36200615260."
       ],
       "acceptance_criteria": [
         "Normal P1C01 launch never teleports the pawn into an unloaded chapter world.",
@@ -2316,7 +2327,17 @@
         "REQ-QA-001"
       ],
       "checkpoint": "STARTUP_GROUNDING_REGRESSION",
-      "notes": "Current change is a fix candidate only until exact-head Unreal and defect-specific PIE evidence exist."
+      "notes": "Current change is a fix candidate only until exact-head Unreal and defect-specific PIE evidence exist.",
+      "historical_machine_evidence_2026_09_26": {
+        "sha": "2af6648209d8722247ca6f9a75b2b5082b6654d5",
+        "run": "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/36200615260",
+        "scope": "Historical successful Editor compile, import, Automation, startup, P1C01-P1C08, state, transitions, faults, pending-transition and persistence-edge machine audits. Entire run FAILED at packaged D3D11 startup; not evidence for untested newer heads or human/device acceptance."
+      },
+      "previous_missing_work_2026_09_26": [
+        "Pass Pre-Unreal on the exact fix head.",
+        "Pass real UE4.27.2 build/import/startup/chapter audits after the separate local Engine Content access blocker is repaired.",
+        "Owner re-run P1C01 in PIE and confirm the player no longer drops below the world on initial launch."
+      ]
     },
     {
       "id": "REQ-QA-002",
@@ -2454,17 +2475,10 @@
         "Character rig requests preflight package existence before async load, preserving modular fallback without missing-package engine errors."
       ],
       "missing_work": [
-        "Exact-head UE4.27 compile/runtime proof for full failed-swap rollback transaction, including player-life restoration and movement release.",
-        "Add/merge continuous transition audit and exact-head regression guards for the integrated two-phase commit path.",
-        "Complete remaining V10 data/source reconciliation on the comprehensive branch.",
-        "Run Pre-Unreal on exact comprehensive head and repair any static integration regressions.",
-        "Repair local UE4 Engine Content access, then pass exact-head C++ build/import/Automation/startup/P1C01-P1C08/state/transition gates.",
-        "Re-run the original P1C01 fall-through symptom in PIE before closing startup defect.",
-        "Only after the integrated foundation is green, merge/rebase the integration train into develop and retire superseded overlapping PR branches.",
-        "Register and schedule ground-safe ambient placement, ambient object pooling and asynchronous living-world visual asset ownership before further density expansion.",
-        "Compile the committed-context/rig-residency/load-burn-down source fixes on UE4.27.2 exact head after runner ACL repair.",
-        "Run a forced slow chapter transition and prove no destination NPC mood/dialogue leaks before world commit.",
-        "Measure multi-chapter skeletal/animation residency and GC behavior on the target laptop."
+        "Preserve affected current-head transition/fault/persistence regression coverage; do not reopen historical integration solely because old missing-work wording remains.",
+        "Reconcile remaining V10 and ambient placement/pooling work against current source before adding density.",
+        "Target-device multi-chapter asset residency, GC and hitch measurements.",
+        "Human traversal/pacing/visual acceptance remains open beyond recorded P1C01 grounding evidence."
       ],
       "acceptance_criteria": [
         "No destination living-world state is applied before its geometry is committed.",
@@ -2483,7 +2497,25 @@
         "REQ-PERF-003"
       ],
       "checkpoint": "COMPREHENSIVE_FOUNDATION_V1",
-      "notes": "This is the active integration train. It does not bypass Gate 6/7; it consolidates already-approved work so the project can resume coherent production."
+      "notes": "This is the active integration train. It does not bypass Gate 6/7; it consolidates already-approved work so the project can resume coherent production.",
+      "historical_machine_evidence_2026_09_26": {
+        "sha": "2af6648209d8722247ca6f9a75b2b5082b6654d5",
+        "run": "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/36200615260",
+        "scope": "Historical successful Editor compile, import, Automation, startup, P1C01-P1C08, state, transitions, faults, pending-transition and persistence-edge machine audits. Entire run FAILED at packaged D3D11 startup; not evidence for untested newer heads or human/device acceptance."
+      },
+      "previous_missing_work_2026_09_26": [
+        "Exact-head UE4.27 compile/runtime proof for full failed-swap rollback transaction, including player-life restoration and movement release.",
+        "Add/merge continuous transition audit and exact-head regression guards for the integrated two-phase commit path.",
+        "Complete remaining V10 data/source reconciliation on the comprehensive branch.",
+        "Run Pre-Unreal on exact comprehensive head and repair any static integration regressions.",
+        "Repair local UE4 Engine Content access, then pass exact-head C++ build/import/Automation/startup/P1C01-P1C08/state/transition gates.",
+        "Re-run the original P1C01 fall-through symptom in PIE before closing startup defect.",
+        "Only after the integrated foundation is green, merge/rebase the integration train into develop and retire superseded overlapping PR branches.",
+        "Register and schedule ground-safe ambient placement, ambient object pooling and asynchronous living-world visual asset ownership before further density expansion.",
+        "Compile the committed-context/rig-residency/load-burn-down source fixes on UE4.27.2 exact head after runner ACL repair.",
+        "Run a forced slow chapter transition and prove no destination NPC mood/dialogue leaks before world commit.",
+        "Measure multi-chapter skeletal/animation residency and GC behavior on the target laptop."
+      ]
     },
     {
       "id": "REQ-WAREHOUSE-001",
@@ -2785,8 +2817,7 @@
         "Runtime/engine gates remain required for runtime-changing promotion."
       ],
       "dependencies": [
-        "REQ-STABILITY-001",
-        "REQ-STABILITY-002"
+        "REQ-STABILITY-001"
       ]
     },
     {
@@ -2796,13 +2827,14 @@
       "priority": "HIGH",
       "status": "IMPLEMENTED",
       "origin": "Owner requires uninterrupted world/material production and elimination of recurring hosted Action failures.",
-      "intent": "Make warehouse staging event-driven from develop/active PR changes, run it only on the supervised Windows build machine, and avoid consuming the Unreal validation concurrency group.",
+      "intent": "Make warehouse staging event-driven only after relevant changes land on develop (or explicit manual dispatch), run it on the supervised Windows build machine, and avoid repeated PR-synchronize staging or Unreal-device contention.",
       "acceptance_criteria": [
-        "Warehouse push trigger targets develop.",
+        "Warehouse push trigger targets develop and relevant warehouse paths.",
+        "Warehouse pull_request staging trigger is absent; maintenance PR synchronizations do not re-run provider acquisition.",
         "No ubuntu-latest/windows-latest warehouse jobs remain.",
         "Warehouse staging has a dedicated concurrency group.",
         "Exact-head checkout remains bounded/retried.",
-        "Provider staging and inventory audit remain unchanged."
+        "Provider staging, receipt reuse and inventory audit remain unchanged."
       ],
       "dependencies": [
         "REQ-STABILITY-003",
@@ -5717,7 +5749,7 @@
     },
     {
       "id": "KF-W00-RUNNER-BROKER-001",
-      "status": "UPSTREAM_BUG_MITIGATED_BACKGROUND_RUNNER_PROVEN_RECOVERY_TRIGGER_UNEXERCISED",
+      "status": "WATCHDOG_LIVENESS_GAP_ROOT_FIXED_STATIC_PROOF_PENDING_DEVICE_REINSTALL",
       "symptom": "Unreal #650 and Warehouse #231 were both assigned to UE4-27-Windows but failed after about ten minutes with zero workflow steps and no downloadable job log.",
       "evidence": [
         "Exact head a69147e4e34869bc43abfbce517ba8023b6027c8: Pre-Unreal #815 SUCCESS on GitHub-hosted Ubuntu.",
@@ -5727,11 +5759,14 @@
         "The runner immediately before this incident was already Actions Runner 2.337.0 and successfully executed full step lists in Unreal #649 and Warehouse #230.",
         "Warehouse #232 succeeded through the GitHub-hosted no-delta gate and did not consume the self-hosted UE4 stage.",
         "Unreal #651 Attempt 2 succeeded end-to-end after the legacy foreground run.cmd session was removed and the supervised user-context listener owned the runner.",
-        "GitHub actions/runner issue #4668 documents the same v2.337.0 failure shape: acknowledged job, no Runner.Worker/steps, then GitHub failure at about ten minutes; the upstream issue remains open."
+        "GitHub actions/runner issue #4668 documents the same v2.337.0 failure shape: acknowledged job, no Runner.Worker/steps, then GitHub failure at about ten minutes; the upstream issue remains open.",
+        "2026-09-26: Pre-Unreal #988, Unreal #821 and Warehouse #259 remained queued with runner_id=0/runner_name empty while Windows still had Runner.Listener.exe present; the watchdog Scheduled Task reported LastTaskResult=2147943467 (0x8007042B / process terminated unexpectedly).",
+        "2026-09-26: the installed watchdog log showed prior user-context boots/online listener PIDs but no surviving supervisor after the task failure, proving that process-presence alone was insufficient to guarantee a live broker session.",
+        "2026-09-26: after a healthy runner listener returned, Warehouse #259 was assigned to runner_id=21 UE4-27-Windows and executed real repository steps, confirming the queue blockage was runner supervision rather than C2 game code."
       ],
-      "root_cause": "The local failure boundary is proven to be the self-hosted runner listener/job-acquisition path before repository steps. Its exact local packet-level subcause was not captured, but the v2.337.0 zero-step ten-minute signature matches the open upstream actions/runner #4668 acquirejob hang family. Treat recurrence as runner infrastructure unless repository steps actually begin and fail.",
-      "permanent_policy": "Run the UE4 listener under the proven Windows user context, not NETWORK SERVICE; keep the legacy runner service disabled/manual; keep Warehouse delta detection on GitHub-hosted Ubuntu and request the self-hosted stage only for a real Warehouse input; serialize real Warehouse work with the UE4 device group; keep the external watchdog active so an acknowledged job with no Runner.Worker is recycled instead of consuming the full GitHub ten-minute failure window.",
-      "reopen_rule": "Reopen if a supervised runner still produces a zero-step ten-minute failure, if the watchdog restarts during an active Runner.Worker, or if Warehouse consumes the self-hosted runner on a no-delta synchronize update."
+      "root_cause": "The self-hosted broker has two distinct pre-step failure modes: the upstream v2.337.0 acknowledged-job/no-worker hang, and a local supervisor-liveness gap where the watchdog Scheduled Task can terminate while leaving an orphaned Runner.Listener process that is no longer receiving jobs. A mere Listener process is therefore not accepted as runner health.",
+      "permanent_policy": "Run the UE4 listener only under the proven interactive Windows user context; keep the legacy actions.runner.* service stopped/manual; install the watchdog with both AtLogOn and five-minute repeating self-heal triggers using MultipleInstances IgnoreNew; on watchdog boot, recycle an existing Listener only when no Runner.Worker is active so an orphaned stale listener cannot survive supervisor death; retain the 150-second acknowledged-job/no-worker recovery; keep real Warehouse work serialized on the UE4 device lane.",
+      "reopen_rule": "Reopen if the reinstalled watchdog task dies without being relaunched within five minutes, if boot recovery interrupts an active Runner.Worker, if a supervised listener remains unassigned with runner_id=0 after the self-heal window, or if a zero-step acquire hang survives the 150-second recovery."
     },
     {
       "id": "KF-W00-LOCAL-BRANCH-001",
@@ -5832,5 +5867,68 @@
     "superseded_run_policy": "On acceptance/* branches, newer commits cancel older in-progress runs sharing the UE4 device concurrency group. Non-acceptance branches remain serialized.",
     "current_boundary": "Canonical develop has final branch/workspace hardening plus PG-159/PG-160 warning-debt guards. Fresh exact-head compile and P1C01 PIE warning log are the remaining proof.",
     "runner_policy": "Keep the supervised user-context self-hosted runner; keep NETWORK SERVICE/manual legacy service out of execution; Warehouse no-delta work remains GitHub-hosted; real Warehouse work shares UE4 device serialization. If the upstream zero-step acquire hang recurs, watchdog recovery handles the listener rather than reopening game-code repair."
+  },
+  "ci_recurrence_review_2026_09_26": {
+    "owner_request": "Investigate recurring Actions interruptions, correct confirmed causes and persist handoff.",
+    "reviewed_sha": "1e7be3da32a9d4f8cd85297260e5abce2e9492f2",
+    "findings": [
+      {
+        "id": "CI-REC-001",
+        "status": "IMPLEMENTED_PENDING_CI",
+        "cause": "Deep audit required literal python launcher although workflow successfully executes strict asset audit using resolved PYTHON_EXE.",
+        "fix": "Recognize supported direct run commands; reject comments, echo, missing strict and masked exit. 11 source-contract tests pass locally.",
+        "evidence": "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/36226440287"
+      },
+      {
+        "id": "CI-REC-002",
+        "status": "REPAIR_ALREADY_PRESENT_PENDING_INTEGRATION",
+        "cause": "Python setup.ps1 blocked by PowerShell execution policy on foliage branch.",
+        "evidence": "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/36200615265",
+        "next": "Preserve existing local-Python resolver on PR90; reconcile foliage branch after integration."
+      },
+      {
+        "id": "CI-REC-003",
+        "status": "OPEN",
+        "cause": "Run 36200615260 exited 3 at packaged startup: CreateSwapChainResult failed, D3D11 error 887A0022; recorded process identity NT AUTHORITY\\NETWORK SERVICE.",
+        "next": "Inspect supervised interactive-session execution before another rendered package attempt; do not bypass rendering acceptance with NullRHI."
+      }
+    ],
+    "resume": "Finish exact-head Pre-Unreal on PR90, inspect packaged-launch failure, then reconcile pending foliage PR87. Historical September 21 gameplay findings must be rechecked against current code, not reapplied blindly.",
+    "proof_boundary": "11 local source-contract tests only; full CI pending; no new Unreal/PIE/device proof."
+  },
+  "validation_friction_policy_2026_09_26": {
+    "owner_request": "Reduce restrictions that needlessly stop development without weakening game correctness.",
+    "implemented": [
+      "Exclude exactly four Python static-audit/helper/test files from automatic Unreal push/PR triggers; Pre-Unreal continues to execute the audit and source-contract tests."
+    ],
+    "preserved": [
+      "Runtime C++, assets, config and packaging changes retain existing engine validation routing.",
+      "No failing check is converted to success; no continue-on-error introduced.",
+      "Manual Unreal workflow dispatch remains available; release/package and device acceptance remain required.",
+      "Historical machine evidence is not current-head certification."
+    ],
+    "limitations": [
+      "Mixed PRs still consider their entire changed-file set and can trigger Unreal.",
+      "Self-hosted static checks can still queue behind an active Unreal job.",
+      "Do not cancel an active build or relax runtime gates to clear a queue."
+    ]
+  },
+  "large_content_readiness_review_2026_09_26": {
+    "reviewed_sha": "7a31d40902bddb27ef752dbf48e11540ce0f95a8",
+    "status": "READY_FOR_STAGED_INTAKE_NOT_MASS_RUNTIME_PROMOTION",
+    "report": "Docs/LARGE_CONTENT_READINESS_REVIEW_2026_09_26.md",
+    "implemented": [
+      "Read only 24 texture-header bytes while preserving full source-size reporting.",
+      "Iterate OBJ text without keeping an additional complete text/line copy.",
+      "Add three automated asset-audit regression tests to Pre-Unreal."
+    ],
+    "remaining": [
+      "Target-device scene and transition-overlap memory/frame-time measurements.",
+      "Rendered package startup failure CI-REC-003 remains open.",
+      "Existing C2 -> C3 -> C4 -> lighting -> presentation/living-world progression and per-item intake QC.",
+      "Large OBJ topology still occupies memory; this patch removes duplicate raw text, not all topology storage."
+    ],
+    "proof": "Three local regression tests pass including 64 MiB sparse texture bounded-read check; CI and UE/device acceptance pending.",
+    "resume": "Validate this PR head; resolve rendered startup in supervised interactive session; continue P1C01 representative batches using existing intake queue. Do not recreate a parallel intake or budget system."
   }
 }

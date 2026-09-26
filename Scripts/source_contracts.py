@@ -61,6 +61,26 @@ def signal_precedes_member_mutation(
     return signal_position >= 0 and mutation_position >= 0 and signal_position < mutation_position
 
 
+def has_strict_asset_audit_command(workflow: str) -> bool:
+    """Recognize supported one-line audit invocations, not comments or echoed text.
+
+    This checks command wiring only; workflow failure policy is a separate contract.
+    """
+    for line in workflow.splitlines():
+        match = re.fullmatch(r"\s*run:\s*(.*?)\s*", line)
+        if not match:
+            continue
+        command = match.group(1)
+        if len(command) >= 2 and command[0] == command[-1] and command[0] in "\"'":
+            command = command[1:-1]
+        if re.fullmatch(
+            r'(?:python(?:3)?|"%PYTHON_EXE%")\s+Scripts/asset_quality_audit\.py\s+--strict',
+            command,
+        ):
+            return True
+    return False
+
+
 def has_nonufs_runtime_dependency(build_cs: str, relative_path: str) -> bool:
     """Return True only when a project-relative runtime file is staged loose as NonUFS."""
     normalized = relative_path.replace("\\", "/").lstrip("/")
