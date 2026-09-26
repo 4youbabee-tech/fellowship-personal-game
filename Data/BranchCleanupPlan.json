@@ -1,10 +1,10 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "plan_id": "DEVELOP_BRANCH_CONSOLIDATION_2026_09_25",
   "authority": "Data/ProjectGovernor.json",
   "canonical_branch": "develop",
   "stable_release_branch": "main",
-  "status": "READY_FOR_POST_C2_ROOT_CLEANUP",
+  "status": "AUTO_ZERO_AHEAD_PRUNE_ACTIVE_PENDING_VALIDATION",
   "truth_boundary": "This plan records branch hygiene only. It does not claim PIE/device/visual acceptance.",
   "preserve": [
     {
@@ -87,27 +87,36 @@
     "production/w01-p1c01-foliage-wind-v2",
     "production/w01-p1c01-foliage-wind-v3",
     "warehouse/p1c01-material-stage-v4",
-    "maintenance/post-c2-cleanup-v1"
+    "maintenance/post-c2-cleanup-v1",
+    "ci/fix-pwsh-cleanup-shells-v1",
+    "fix/character-rig-callback-ownership",
+    "ops/new-developer-entry-v1",
+    "production/p1c01-c3-foliage-identity-v1",
+    "production/p1c01-c4-foliage-evidence-v1",
+    "production/p1c01-c4-foliage-lod-cull-v1",
+    "production/p1c01-d-lighting-water-mega-promotion-v1",
+    "maintenance/root-auto-prune-v1"
   ],
   "safety_rules": [
     "Never delete develop or main.",
     "Never delete an active PR head.",
     "Delete a branch immediately after its meaningful content is merged into develop.",
-    "Branches with zero commits ahead of develop may be removed as stale refs after confirming they are not active PR heads.",
-    "Never bulk-merge a divergent historical branch into develop; selectively salvage useful unique content first.",
-    "Branches with unresolved unique commits remain preserved_pending_salvage until reviewed.",
-    "Cleanup runs only after this plan lands on develop."
+    "Every cleanup run automatically enumerates live remote refs and deletes non-protected branches only when GitHub reports zero commits ahead of develop.",
+    "delete_after_merge is an explicit deletion supplement, not the sole source of dead-branch discovery.",
+    "Never bulk-merge or auto-delete a divergent branch with unique commits; selectively salvage or explicitly supersede it first.",
+    "Branches with unresolved unique commits remain protected until reviewed.",
+    "Cleanup runs only from an exact-head develop checkout."
   ],
   "final_audit": {
-    "status": "READY_FOR_POST_C2_ROOT_CLEANUP",
-    "rule": "After cleanup only develop/main and explicitly preserved future-planning salvage branches may remain.",
-    "current_active_runtime_pr": "none; PR #87 C2 is merged to develop@1d0580926299e4fac635bcb847343a49c444d4f1 and C3 has not started.",
+    "status": "AUTO_ZERO_AHEAD_PRUNE_ACTIVE_PENDING_VALIDATION",
+    "rule": "After cleanup, develop/main plus branches with proven unique commits or explicit protection may remain; zero-ahead non-PR refs must self-delete automatically.",
+    "current_active_runtime_pr": "Volatile PR state is read live from GitHub and is not stored as cleanup truth.",
     "completed_preparation_prs": [
       "PR #81 superseded by consolidation",
       "PR #83 superseded by consolidation",
       "PR #87 C2 merged after exact-head Pre-Unreal #1030 + Unreal #837"
     ],
-    "physical_cleanup": "Branch Cleanup uses bounded exact-head develop checkout, runner-health verification, live active-PR-head protection, plan-protected salvage/work/infrastructure protection, hard-fail deletion semantics, and post-delete ref verification.",
+    "physical_cleanup": "Branch Cleanup uses bounded exact-head develop checkout, live active-PR protection, plan-protected salvage/work/infrastructure protection, explicit deletion plus automatic GitHub compare-based zero-ahead discovery, hard-fail deletion semantics, and post-delete canonical/protected ref verification.",
     "truth_boundary": "Branch/process hygiene only; no PIE/device/visual/performance acceptance implied."
   },
   "active_work_branches": [],
@@ -119,6 +128,22 @@
     {
       "branch": "planning/w01-p1c01-mega-prep-v1",
       "reason": "2 unique commits include P1C01 intake/parallel-production/acceptance content not present on develop; preserve for later selective integration."
+    },
+    {
+      "branch": "ops/actions-budget-isolation-v1",
+      "reason": "Live 2026-09-27 audit: 7 commits ahead of develop; preserve until selective salvage/supersession review."
+    },
+    {
+      "branch": "ops/daily-project-manager-report-v1",
+      "reason": "Live 2026-09-27 audit: 4 commits ahead of develop; preserve until selective salvage/supersession review."
+    },
+    {
+      "branch": "planning/mega-production-resume-v1",
+      "reason": "Live 2026-09-27 audit: 19 commits ahead of develop; preserve until selective salvage/supersession review."
+    },
+    {
+      "branch": "warehouse/p1c01-mega-promotion-audit-v1",
+      "reason": "Live 2026-09-27 audit: 4 commits ahead of develop; preserve until selective salvage/supersession review."
     }
   ],
   "completed_integration_branches": [
@@ -145,5 +170,26 @@
       "planning/w01-localization-prototype-v1",
       "planning/w01-p1c01-mega-prep-v1"
     ]
+  },
+  "auto_prune_upgrade_2026_09_27": {
+    "root_cause": "The earlier implementation obeyed DEC-042 only through a static delete_after_merge allowlist. Branches created after that list could remain after merge.",
+    "live_zero_ahead_verified": [
+      "ci/fix-pwsh-cleanup-shells-v1",
+      "fix/character-rig-callback-ownership",
+      "ops/new-developer-entry-v1",
+      "production/p1c01-c3-foliage-identity-v1",
+      "production/p1c01-c4-foliage-evidence-v1",
+      "production/p1c01-c4-foliage-lod-cull-v1",
+      "production/p1c01-d-lighting-water-mega-promotion-v1"
+    ],
+    "live_unique_preserved": [
+      "ops/actions-budget-isolation-v1 (ahead=7)",
+      "ops/daily-project-manager-report-v1 (ahead=4)",
+      "planning/mega-production-resume-v1 (ahead=19)",
+      "planning/w01-localization-prototype-v1 (ahead=6)",
+      "planning/w01-p1c01-mega-prep-v1 (ahead=2)",
+      "warehouse/p1c01-mega-promotion-audit-v1 (ahead=4)"
+    ],
+    "self_cleanup": "maintenance/root-auto-prune-v1 is explicitly queued for deletion after merge."
   }
 }

@@ -4855,6 +4855,9 @@ for pg167_cleanup_guard in [
     "active_infrastructure_branches",
     "Refusing plan-protected branch in delete_after_merge",
     "Plan-protected branch missing after cleanup",
+    "BRANCH_CLEANUP_AUTO_ZERO_AHEAD",
+    "BRANCH_CLEANUP_KEEP_UNIQUE",
+    "compare/develop...",
 ]:
     if pg167_cleanup_guard not in pg167_cleanup_script:
         fail(f"PG-167 plan-protected branch cleanup guard missing: {pg167_cleanup_guard}")
