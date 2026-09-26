@@ -1,3 +1,11 @@
+## 2026-09-26 - Persistent work-session handoff
+
+- Owner requested that the current conversation state be preserved with the project so a later session can continue without rediscovering the same CI/production issues.
+- Canonical continuation note: `Docs/WORK_SESSION_HANDOFF_2026-09-26.md`.
+- It records the measured PR102 CI latency, unnecessary FULL Unreal classification root cause, the #888 stalled-checkout cause/cancellation, #1083 success, #889 pending corrected measurement, and the GAME vs VALIDATOR vs CI/INFRA vs ADMIN failure-classification rule.
+- It also records the architectural policy: remove duplicate truth and magic constants, derive mutable counts from authoritative manifests, keep runtime safety strict, and prevent trivial administration from repeatedly blocking D + Mega Asset Promotion.
+- Evidence boundary: documentation/handoff only; no new runtime, PIE, device, visual, pacing or performance acceptance is created.
+
 ## 2026-09-26 - Single new-developer / AI-session entry path
 
 - `README.md` is now the single repository entry point for a new human programmer, a new AI session, or a developer returning after a long break.
