@@ -250,6 +250,18 @@ function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [
         "Scripts/prepare_p1c01_material_intake.ps1",
         "Scripts/promote_p1c01_material_intake.ps1",
         "Scripts/run_p1c01_material_pipeline.ps1"
+        "Scripts/install_runner_watchdog.ps1",
+        "Scripts/runner_watchdog.ps1",
+        "Scripts/deep_project_audit.py",
+        "Scripts/test_deep_project_audit.py",
+        "Scripts/source_contracts.py",
+        "Scripts/test_source_contracts.py",
+        "Scripts/verify_runner_session.ps1",
+        "Scripts/test_runtime_smoke.py",
+        "Scripts/runtime_smoke.py",
+        "Scripts/test_asset_quality_audit.py",
+        "Scripts/asset_quality_audit.py",
+        "Scripts/run_branch_cleanup.ps1"
     )
 
     foreach ($path in $delta) {
@@ -378,7 +390,22 @@ $safeExact = @(
     "Data/WarehouseGapAuditSource09V1.json",
     "Scripts/operation_recovery.py",
     "Scripts/test_operation_recovery.py",
+    "Scripts/run_branch_cleanup.ps1",
     ".github/workflows/branch-cleanup.yml"
+        "Scripts/prepare_p1c01_material_intake.ps1",
+        "Scripts/promote_p1c01_material_intake.ps1",
+        "Scripts/run_p1c01_material_pipeline.ps1",
+        "Scripts/install_runner_watchdog.ps1",
+        "Scripts/runner_watchdog.ps1",
+        "Scripts/deep_project_audit.py",
+        "Scripts/test_deep_project_audit.py",
+        "Scripts/source_contracts.py",
+        "Scripts/test_source_contracts.py",
+        "Scripts/verify_runner_session.ps1",
+        "Scripts/test_runtime_smoke.py",
+        "Scripts/runtime_smoke.py",
+        "Scripts/test_asset_quality_audit.py",
+        "Scripts/asset_quality_audit.py"
 )
 
 $acceptanceExact = @(

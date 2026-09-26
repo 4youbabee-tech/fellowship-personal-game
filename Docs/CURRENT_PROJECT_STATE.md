@@ -1,11 +1,22 @@
-## 2026-09-26 - Post-merge integration and callback integrity review
+## 2026-09-26 - Production resume checkpoint
 
-- Reviewed develop `1d0580926299e4fac635bcb847343a49c444d4f1`: PR90 and PR87 are merged. Earlier C2 pending/rebase sections below are historical, not the current merge state.
-- Pre-Unreal run 36236911136 and Unreal run 36236911127 succeeded. Unreal ran Editor build/import/Automation/headless startup; chapter/state/package/rendered/device steps were skipped. This does not close rendered-package acceptance.
-- STREAM-RIG-REENTRANCY-001: character rig completion held a TMap entry pointer across OnCharacterRigReady.Broadcast. A listener adding requests can invalidate that pointer. The fix pins the completed handle locally, reacquires the entry after callbacks, and only clears the same completed handle, preserving any replacement.
-- Nine local source-contract tests pass, including cancellation, rollback life state, save-transform deferral and callback ownership. These are structural checks, not runtime simulation. Exact-head UE build and a listener-mutation runtime test remain required.
-- No world topology, story, save schema, density or numeric performance budget changes. Continue the existing C3 production order; this focused runtime safety patch does not justify reopening every closed architectural task.
-- Epic UE4.27 TMap reference: https://dev.epicgames.com/documentation/unreal-engine/tmap?application_version=4.27
+PR90, PR87/C2 and PR93 callback repair are merged. Candidate e2dd022 passed the full machine chain including rendered package startup. Post-merge verification is ongoing. C3 preparation and implementation can proceed independently of branch cleanup. Human pacing/visual/performance acceptance remains pending. Governor production_resume_checkpoint_2026_09_26 records completed and remaining work. Older cleanup prerequisites below are superseded by this checkpoint and the Governor maintenance policy.
+
+## 2026-09-26 - Post-C2 root cleanup and C3 launch gate
+- Governor stale-control reconciliation: historical PR #53/V6 repair wording and the already-completed Public/Private migration were removed from active/missing work; W00 stabilization and source migration are recorded closed, while real profiling/pooling/async-load audit debt remains open.
+- Classifier root fix: `Scripts/run_branch_cleanup.ps1` is now governance-safe when Unreal is otherwise awakened; cleanup-script maintenance may no longer force FULL/Cook/Package by falling through as an unclassified file.
+- Classifier contract unified: all 15 exact maintenance scripts excluded by the Unreal workflow are now safe in both main classification and transitive-core proof; co-changes can no longer promote them to FULL by omission.
+- PG-078 roadmap snapshot reconciled directly from current Governor after closing historical W00 stability work; the guard remains fail-closed against future active-work drift.
+
+
+
+
+
+- C2 final PR head `fd521dc308580fc44d0cdfdfed24273bacc37ff9` passed Pre-Unreal #1030 and Unreal Build #837.
+- C2 merged as `1d0580926299e4fac635bcb847343a49c444d4f1`; merged develop then passed Pre-Unreal #1031 and Unreal Build #838.
+- Evidence status: **COMPILE-TESTED + exact-head automated import/QA/startup machine green**. No PIE/device/visual/performance acceptance is claimed.
+- Root cleanup removes audited superseded CI/C2/warehouse refs and protects the two future-planning salvage branches that still contain content absent from develop.
+- C3 is prepared but runtime-not-started; it may begin only after Branch Cleanup succeeds and the survivor set is rechecked.
 
 ## 2026-09-26 - C2 Governor handoff coherence correction
 

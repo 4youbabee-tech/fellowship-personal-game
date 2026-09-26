@@ -2549,6 +2549,7 @@ pg165_plan = json.loads(read(ROOT / "Data" / "P1C01MaterialsVegetationPlanV1.jso
 if pg165_plan.get("status") not in {
     "C1_ALBEDO_BINDING_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
     "C2_FOLIAGE_WIND_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "C2_FOLIAGE_WIND_EXACT_HEAD_GREEN_MERGED_C3_READY",
 }:
     fail("PG-165 Drop C1/C2 material plan status changed")
 if "AlbedoTexture" not in json.dumps(pg165_plan):
@@ -2572,8 +2573,8 @@ for pg166_symbol in [
     if pg166_symbol not in pg166_importer:
         fail(f"PG-166 foliage wind invariant missing: {pg166_symbol}")
 pg166_plan = pg165_plan
-if pg166_plan.get("status") != "C2_FOLIAGE_WIND_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
-    fail("PG-166 Drop C2 plan status changed")
+if pg166_plan.get("status") != "C2_FOLIAGE_WIND_EXACT_HEAD_GREEN_MERGED_C3_READY":
+    fail("PG-166 Drop C2 closure status changed")
 pg166_perf = pg166_plan.get("performance_contract", {}).get("c2_wind_strategy", {})
 if "no WorldPositionOffset" not in pg166_perf.get("far", ""):
     fail("PG-166 far foliage path lost the no-WPO complexity contract")
@@ -2581,6 +2582,29 @@ if pg166_perf.get("density") != "unchanged until target-device profiling":
     fail("PG-166 foliage density profiling gate changed")
 if "MaterialExpressionDistanceCullFade" in pg166_importer or "DistanceScaledWindWeight" in pg166_importer:
     fail("PG-166 C2 must not regress to the non-exported DistanceCullFade dependency")
+
+
+# PG-169: C3 stable foliage material identity must be narrow, deterministic and C4-safe before runtime implementation.
+pg169_plan = json.loads(read(ROOT / "Data" / "P1C01C3FoliageMaterialIdentityPlanV1.json"))
+if pg169_plan.get("status") != "PREPARED_NOT_RUNTIME_STARTED":
+    fail("PG-169 C3 plan must remain PREPARED_NOT_RUNTIME_STARTED before the C3 implementation PR")
+if pg169_plan.get("target_material_names") != ["Grass", "Leaves", "LeafGreen", "LeafGold"]:
+    fail("PG-169 C3 approved foliage identity set changed")
+pg169_parent = pg169_plan.get("parent_assignment_contract", {})
+if pg169_parent.get("near_mid_parent") != "/Game/Production/Materials/M_ProductionFoliage":
+    fail("PG-169 C3 near/mid foliage parent changed")
+if pg169_parent.get("non_foliage_parent") != "/Game/Production/Materials/M_ProductionSurface":
+    fail("PG-169 C3 non-foliage parent changed")
+if pg169_parent.get("far_parent") != "/Game/Production/Materials/M_ProductionFoliageFar":
+    fail("PG-169 C3 far parent contract changed")
+if "exact normalized material identity" not in pg169_parent.get("identity_rule", ""):
+    fail("PG-169 C3 lost exact material-identity classification")
+if "C4" not in pg169_parent.get("c3_scope", "") or "near/mid" not in pg169_parent.get("c3_scope", ""):
+    fail("PG-169 C3/C4 foliage parent boundary changed")
+pg169_guards = json.dumps(pg169_plan.get("guards", []))
+for pg169_guard in ["contains('Leaf')", "contains('Grass')", "M_ProductionFoliageFar"]:
+    if pg169_guard not in pg169_guards:
+        fail(f"PG-169 C3 guard missing: {pg169_guard}")
 
 
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
@@ -4629,6 +4653,39 @@ for pg167_cleanup_symbol in [
         fail(f"PG-167 hardened branch-cleanup contract missing: {pg167_cleanup_symbol}")
 if "uses: actions/checkout@" in pg167_cleanup or "shell: powershell" in pg167_cleanup:
     fail("PG-167 Branch Cleanup must use bounded local checkout and explicit PowerShell Bypass")
+
+pg167_cleanup_script = read(ROOT / "Scripts" / "run_branch_cleanup.ps1")
+for pg167_cleanup_guard in [
+    "preserve_pending_salvage",
+    "active_work_branches",
+    "active_infrastructure_branches",
+    "Refusing plan-protected branch in delete_after_merge",
+    "Plan-protected branch missing after cleanup",
+]:
+    if pg167_cleanup_guard not in pg167_cleanup_script:
+        fail(f"PG-167 plan-protected branch cleanup guard missing: {pg167_cleanup_guard}")
+
+pg167_classifier = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
+pg167_maintenance_safe = [
+    "Scripts/prepare_p1c01_material_intake.ps1",
+    "Scripts/promote_p1c01_material_intake.ps1",
+    "Scripts/run_p1c01_material_pipeline.ps1",
+    "Scripts/install_runner_watchdog.ps1",
+    "Scripts/runner_watchdog.ps1",
+    "Scripts/deep_project_audit.py",
+    "Scripts/test_deep_project_audit.py",
+    "Scripts/source_contracts.py",
+    "Scripts/test_source_contracts.py",
+    "Scripts/verify_runner_session.ps1",
+    "Scripts/test_runtime_smoke.py",
+    "Scripts/runtime_smoke.py",
+    "Scripts/test_asset_quality_audit.py",
+    "Scripts/asset_quality_audit.py",
+    "Scripts/run_branch_cleanup.ps1",
+]
+for pg167_safe_path in pg167_maintenance_safe:
+    if pg167_classifier.count(f'"{pg167_safe_path}"') < 2:
+        fail(f"PG-167 maintenance path must remain safe in both classifier proof sets: {pg167_safe_path}")
 
 pg167_runner_health = read(ROOT / ".github" / "workflows" / "runner-health.yml")
 for pg167_health_symbol in [
