@@ -1,3 +1,14 @@
+## 2026-09-26 - P1C01 C4 machine closure / D next
+
+- C4 candidate machine evidence: Pre-Unreal #1064 SUCCESS + Unreal Build #869 SUCCESS on `e881b32da6ae9713ccc096e8f213056aeef6af76`.
+- UE4.27 production import completed with `376 files, 0 failures`; warning debt returned to `defaultMat references = 0`.
+- Concrete C4 foliage evidence: all five audited P1C01 foliage meshes expose `lodCount=1` only. Grass/Hedge/Shrub/TreeCanopy remain near/mid on `M_ProductionFoliage`; TreeTrunk remains on `M_ProductionSurface` with authored `Bark`.
+- Because no `lodIndex > 0` exists, C4 closes with **NO far-parent binding**. `M_ProductionFoliageFar` remains available but unused until a real far LOD asset/section exists.
+- Existing HISM/ISM cull bands and foliage density remain unchanged.
+- C4 does not establish target-device overdraw/FPS acceptance; that remains a later profiling gate.
+- Next production drop after merge: **D — fixed-state lighting / sky / fog / low-cost water**.
+- Evidence state: machine-green / COMPILE-TESTED and import-observed. No new PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, PACING-ACCEPTED, or PERFORMANCE-ACCEPTED claim.
+
 ## 2026-09-26 - C4 source-material debt repair
 
 - C4 engine evidence exposed a real existing source-asset defect rather than a C4 runtime regression: `SM_ShTreeCanopy.obj` and `SM_ShTreeTrunk.obj` had no authored `mtllib/usemtl` declarations, so UE4.27 imported their only material slot as `defaultMat` / WorldGridMaterial.
