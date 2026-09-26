@@ -42,11 +42,26 @@ It does not create a second manager and it does not copy live PR numbers into go
 
 If a supporting document disagrees with it on priorities, active gate, requirement status, conflicts, or acceptance state, reconcile the supporting document to the Governor. GitHub remains the live authority for volatile transport state such as current PR number, branch open/closed state, mergeability, and workflow status.
 
-## Current production rule
+## WHERE ARE WE NOW? — 60-second handoff
 
-The Shire / P1C01 vertical slice remains the active quality benchmark. C4 foliage LOD/cull evidence is closed at the candidate level with exact-head machine proof; the next production drop is **D — fixed-state lighting / sky / fog / low-cost water**, while **Mega Asset Promotion** may continue in parallel through the registered warehouse/intake pipeline.
+Do **not** decide current work from a milestone sentence copied into this README. Milestones move; the Governor is live project authority.
 
-Do not promote static/compile/import evidence into PIE/device/visual/performance acceptance without matching proof.
+From the repository root, run:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\Scripts\new_developer_onboarding.ps1
+```
+
+That command prints the current production status directly from `Data/ProjectGovernor.json`: active lane, active gate, visible benchmark, current focus and **NEXT ALLOWED ACTIONS**, together with the checked-out Git branch/HEAD.
+
+Then read [Docs/CURRENT_PROJECT_STATE.md](Docs/CURRENT_PROJECT_STATE.md) for the latest evidence-backed handoff.
+
+**Decision rule:**
+- `Data/ProjectGovernor.json` owns durable direction, priorities, active lane/gate and proof boundaries.
+- `Docs/CURRENT_PROJECT_STATE.md` explains the latest evidence-backed operational handoff.
+- Git/GitHub owns volatile branch, HEAD, PR and workflow/check state.
+- If any of those disagree, **stop and reconcile to the Governor before editing**. Never guess from chat history or stale milestone prose.
+- STATIC/COMPILE/import evidence never implies PIE/DEVICE/VISUAL/PERFORMANCE acceptance.
 
 ## Active quality target
 
