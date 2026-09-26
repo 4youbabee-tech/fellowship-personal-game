@@ -9,7 +9,7 @@
 - PR: none
 - Branch: none
 - C2: merged and machine-green via #1030/#837; merged develop #1031/#838 also green.
-- Active operation: post-C2 root/branch cleanup only.
+- Active operation: close PR #95 management/cleanup repair, then launch C3 immediately.
 - Next runtime drop: **C3 - Stable Foliage Material Identity**, ready to start from verified develop while cleanup proceeds independently.
 - Required C3 lane after launch: Fast Asset Lane unless the classifier finds a broader impact.
 - Evidence boundary: C2 is COMPILE-TESTED/machine-green only; no PIE/device/visual/performance acceptance.
@@ -20,10 +20,10 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 ## Current control point
 
-- PR: none
-- Branch: none
+- PR: #95
+- Branch: `planning/mega-production-resume-v1`
 - Active lane: **W01_P1C01_PRODUCTION_VERTICAL_SLICE**
-- Active production drop: **POST_C2_ROOT_CLEANUP**
+- Active production drop: **MEGA_PRODUCTION_RESUME / C3 LAUNCH**
 - Next runtime drop: **C3_STABLE_FOLIAGE_MATERIAL_IDENTITY**
 - Previous runtime drop: **C2_LIGHTWEIGHT_FOLIAGE_WIND — MERGED + MACHINE-GREEN**
 - Canonical integration/programmer-handoff branch: `develop`
