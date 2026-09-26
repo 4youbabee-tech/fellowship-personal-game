@@ -164,6 +164,10 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: '"%GITHUB_WORKSPACE%\..\fellowship_exact_checkout.cmd"'
 
+      - name: Verify runner session health
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"'
+
       - name: Classify current delta for Unreal validation
         shell: cmd
         env:
