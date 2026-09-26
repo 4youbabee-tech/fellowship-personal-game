@@ -2677,6 +2677,29 @@ if pg171_plan.get("status") != "PREPARED_NOT_RUNTIME_STARTED":
             fail(f"PG-171 C4 evidence-capture step performed premature far binding: {pg171_forbidden}")
 
 
+# PG-172: new developer / AI sessions must have one stable path to the Project Governor.
+pg172_readme = read(ROOT / "README.md")
+pg172_onboarding = read(ROOT / "Scripts" / "new_developer_onboarding.ps1")
+for pg172_required in [
+    "NEW DEVELOPER / NEW AI SESSION — START HERE",
+    "Docs/PROJECT_GOVERNOR.md",
+    "Data/ProjectGovernor.json",
+    "Scripts\\new_developer_onboarding.ps1",
+]:
+    if pg172_required not in pg172_readme:
+        fail(f"PG-172 README developer entry missing: {pg172_required}")
+for pg172_required in [
+    "Data\\ProjectGovernor.json",
+    "execution_control",
+    "active_gate",
+    "CURRENT_PROJECT_STATE.md",
+    "DEVELOPMENT_GATES.md",
+    "PROJECT_GUARDIAN.md",
+]:
+    if pg172_required not in pg172_onboarding:
+        fail(f"PG-172 onboarding script contract missing: {pg172_required}")
+
+
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
 pg164_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
