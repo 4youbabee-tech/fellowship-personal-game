@@ -5956,5 +5956,36 @@
       "unreal": 36244082732,
       "scope": "Full machine chain including cook/package/rendered startup succeeded; not human visual or performance acceptance."
     }
+  },
+  "callback_integrity_review_2026_09_26": {
+    "reviewed_sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
+    "finding_id": "STREAM-RIG-REENTRANCY-001",
+    "status": "MERGED_FULL_MACHINE_CHAIN_PASSED",
+    "cause": "HandleCharacterRigLoadComplete dereferenced a TMap element pointer after broadcasting a delegate that can mutate the map.",
+    "repair": "Keep a shared copy of the completed handle alive across broadcast; reacquire map entry and reset only if it still owns that same handle.",
+    "evidence": "9 local source-contract tests pass; not runtime reproduction or UE compilation.",
+    "current_baseline": {
+      "pre_unreal": 36236911136,
+      "unreal": 36236911127,
+      "result": "success",
+      "scope": "Editor build/import/Automation/headless startup; chapter/state/package/rendered/device steps skipped."
+    },
+    "handoff": "PR90 and PR87 are merged. Existing C2 pending prose is historical. Continue C3 under existing production policy; validate this separate runtime repair with current exact-head CI. Rendered package/device acceptance is not inferred from the fast lane."
+  },
+  "production_resume_checkpoint_2026_09_26": {
+    "baseline": "1f0443d159b60e4ac9156b5b94dfa7c22daafb1d",
+    "completed": [
+      "PR90 infrastructure merged",
+      "PR87 C2 foliage wind merged",
+      "PR93 callback repair merged after full machine chain including rendered packaged startup"
+    ],
+    "pending": [
+      "PR92 maintenance reconciliation and exact-head Pre-Unreal",
+      "C3 stable foliage identity",
+      "C4 LOD/cull/overdraw and subsequent P1C01 stages",
+      "Human pacing/visual and measured target-device performance"
+    ],
+    "policy": "C3 preparation and implementation may proceed from integrated develop independently of branch cleanup. Preserve exact-head runtime checks.",
+    "evidence_boundary": "e2dd022 candidate full machine success; post-merge rerun ongoing; no human acceptance claim."
   }
 }

@@ -433,8 +433,12 @@ void UShireChapterAssetStreamingSubsystem::HandleCharacterRigLoadComplete(FName 
     // Broadcast while the handle still pins the assets. Player/NPC components take
     // their own UObject references during the callback. Releasing afterward lets
     // inactive rigs become GC-eligible instead of accumulating for GameInstance life.
+    const TSharedPtr<FStreamableHandle> CompletedHandle = Rig ? Rig->Handle : nullptr;
     OnCharacterRigReady.Broadcast(CharacterId);
-    if (Rig)
+    // Listeners may add requests (reallocating the TMap), clear it during teardown,
+    // or replace this entry. Never dereference a pre-broadcast map pointer here.
+    Rig = CharacterRigRequests.Find(CharacterId);
+    if (Rig && Rig->Handle == CompletedHandle)
     {
         Rig->Handle.Reset();
     }

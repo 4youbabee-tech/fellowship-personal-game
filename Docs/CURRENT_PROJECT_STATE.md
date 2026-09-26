@@ -1,3 +1,7 @@
+## 2026-09-26 - Production resume checkpoint
+
+PR90, PR87/C2 and PR93 callback repair are merged. Candidate e2dd022 passed the full machine chain including rendered package startup. Post-merge verification is ongoing. C3 preparation and implementation can proceed independently of branch cleanup. Human pacing/visual/performance acceptance remains pending. Governor production_resume_checkpoint_2026_09_26 records completed and remaining work. Older cleanup prerequisites below are superseded by this checkpoint and the Governor maintenance policy.
+
 ## 2026-09-26 - Post-C2 root cleanup and C3 launch gate
 - Governor stale-control reconciliation: historical PR #53/V6 repair wording and the already-completed Public/Private migration were removed from active/missing work; W00 stabilization and source migration are recorded closed, while real profiling/pooling/async-load audit debt remains open.
 - Classifier root fix: `Scripts/run_branch_cleanup.ps1` is now governance-safe when Unreal is otherwise awakened; cleanup-script maintenance may no longer force FULL/Cook/Package by falling through as an unclassified file.
