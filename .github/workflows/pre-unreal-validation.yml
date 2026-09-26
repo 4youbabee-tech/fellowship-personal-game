@@ -21,56 +21,57 @@ jobs:
       - X64
       - ue4-27
     timeout-minutes: 5
+    defaults:
+      run:
+        shell: cmd
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+      - name: Resolve existing local Python
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\resolve_runtime_python.ps1"
 
       - name: Validate project structure
-        run: python Scripts/pre_unreal_validate.py
+        run: '"%PYTHON_EXE%" Scripts/pre_unreal_validate.py'
 
       - name: Validate project governor
-        run: python Scripts/project_governor.py
+        run: '"%PYTHON_EXE%" Scripts/project_governor.py'
 
       - name: Audit production asset source quality
-        run: python Scripts/asset_quality_audit.py --strict
+        run: '"%PYTHON_EXE%" Scripts/asset_quality_audit.py --strict'
 
       - name: Audit production readiness contracts
-        run: python Scripts/production_readiness_audit.py
+        run: '"%PYTHON_EXE%" Scripts/production_readiness_audit.py'
 
       - name: Run deep project audit
-        run: python Scripts/deep_project_audit.py
+        run: '"%PYTHON_EXE%" Scripts/deep_project_audit.py'
 
       - name: Test runtime observation failure handling
-        run: python -m unittest discover -s Scripts -p 'test_runtime_smoke.py' -v
+        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_runtime_smoke.py" -v'
 
       - name: Test runtime audit contract registry
-        run: python -m unittest discover -s Scripts -p 'test_runtime_audit_contracts.py' -v
+        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_runtime_audit_contracts.py" -v'
 
       - name: Test structural source contracts
-        run: python -m unittest discover -s Scripts -p 'test_source_contracts.py' -v
+        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_source_contracts.py" -v'
 
       - name: Test Governor semantic contracts
-        run: python -m unittest discover -s Scripts -p 'test_governance_contracts.py' -v
+        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governance_contracts.py" -v'
 
       - name: Test warning-debt guard semantics
-        run: python -m unittest discover -s Scripts -p 'test_warning_debt_guard.py' -v
+        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_warning_debt_guard.py" -v'
 
       - name: Test deep project audit semantics
-        run: python -m unittest discover -s Scripts -p 'test_deep_project_audit.py' -v
+        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_deep_project_audit.py" -v'
 
       - name: Test governor evidence scope
-        run: python -m unittest discover -s Scripts -p 'test_governor_handoff.py' -v
+        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governor_handoff.py" -v'
 
       - name: Guard streaming cancellation source contracts
-        run: python -m unittest discover -s Scripts -p 'test_streaming_cancellation_contract.py' -v
+        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_streaming_cancellation_contract.py" -v'
 
 
       - name: Test live governor evidence selection
-        run: python -m unittest discover -s Scripts -p 'test_live_governor_status.py' -v
+        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_live_governor_status.py" -v'
