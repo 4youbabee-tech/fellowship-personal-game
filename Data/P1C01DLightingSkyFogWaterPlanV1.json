@@ -96,6 +96,6 @@
       "NPC pooling",
       "C2/C3/C4 foliage density/material identity/cull ownership"
     ],
-    "evidence_state": "STATIC_IMPLEMENTED_PENDING_PRE_UNREAL_AND_UE4_27_2_PROOF"
+    "evidence_state": "SOURCE_IMPLEMENTED_PENDING_PRE_UNREAL_AND_UE4_27_2_PROOF"
   }
 }
