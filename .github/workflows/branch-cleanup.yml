@@ -1,13 +1,9 @@
 name: Branch Cleanup
 
 on:
-  push:
-    branches:
-      - develop
-    paths:
-      - Data/BranchCleanupPlan.json
-      - Scripts/run_branch_cleanup.ps1
-      - .github/workflows/branch-cleanup.yml
+  pull_request:
+    types:
+      - closed
   workflow_dispatch:
 
 permissions:
@@ -20,6 +16,7 @@ concurrency:
 
 jobs:
   cleanup:
+    if: ${{ github.event_name != 'pull_request' || github.event.pull_request.merged == true }}
     runs-on:
       - self-hosted
       - Windows
@@ -28,7 +25,7 @@ jobs:
     timeout-minutes: 5
     env:
       GH_TOKEN: ${{ github.token }}
-      TARGET_SHA: ${{ github.sha }}
+      TARGET_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.merge_commit_sha || github.sha }}
     defaults:
       run:
         shell: cmd

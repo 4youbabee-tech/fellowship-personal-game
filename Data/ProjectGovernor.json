@@ -38,7 +38,8 @@
     "Local tracked launch controllers must never update themselves in place. Any helper that performs git pull while running must execute from an immutable temporary copy and preserve the explicit develop lane.",
     "The programmer handoff must remain branch-simple: develop is canonical development/integration, main is stable/release, and temporary implementation branches self-clean after merge once meaningful content is integrated.",
     "Temporary branches must merge meaningful completed work into develop immediately, then delete the branch ref; only active work or unresolved unique-content salvage may remain outside develop.",
-    "Parallel source/PDF/warehouse/asset-preparation lanes may advance without repeating engine gates for administrative-only changes; promotion into runtime remains serialized and technical safety/performance/runtime-data gates stay fail-closed."
+    "Parallel source/PDF/warehouse/asset-preparation lanes may advance without repeating engine gates for administrative-only changes; promotion into runtime remains serialized and technical safety/performance/runtime-data gates stay fail-closed.",
+    "Permanent branch closeout invariant: every completed temporary branch is exact-head validated, merged into develop immediately, and its remote ref is deleted after merge so develop never lags completed work. Only an active PR head or a branch with verified unique unsalvaged commits may remain temporarily."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -3666,13 +3667,14 @@
       "requirements": [
         "REQ-EXEC-002"
       ],
-      "resolution": "develop is the canonical live integration branch. Once a temporary branch is finished, its meaningful content must be merged into develop immediately and the branch ref removed. Branch Cleanup must discover current remote refs every run and automatically remove every non-protected, non-active-PR branch with zero commits ahead of develop; a static historical allowlist is not sufficient. Divergent branches with unique commits remain protected until selective salvage or explicit supersession is completed.",
+      "resolution": "develop is the canonical and continuously current integration branch. Every completed temporary branch must be exact-head validated, merged into develop immediately, then have its remote ref deleted automatically. develop must never be left behind completed work. The only temporary exceptions are an active PR head or a branch with verified unique unsalvaged commits; those branches remain protected only until selective salvage or explicit supersession is complete.",
       "implementation_contract": [
-        "Data/BranchCleanupPlan.json records explicit protected/salvage state and may list known refs for immediate deletion, but it is not the sole dead-branch discovery source.",
-        "Branch Cleanup runs from an exact-head develop checkout and enumerates live remote refs each run.",
-        "A non-protected branch may be auto-deleted only when it is not an active PR head and GitHub compare reports ahead_by == 0 versus develop.",
-        "Branches with ahead_by > 0 are retained and logged for selective salvage/supersession review.",
-        "No completed zero-ahead branch is kept merely for historical convenience; Git history already preserves merged commits."
+        "Use one short-lived single-purpose branch/PR for a coherent engineering wave; batch related multi-file changes before publishing to avoid superseded runs.",
+        "After exact-head required validation succeeds, merge the completed branch into develop immediately; do not accumulate completed branches waiting for later consolidation.",
+        "Branch Cleanup runs automatically after every merged PR, targets the merge commit, and deletes the merged branch ref when it has no unique commits and is no longer an active PR head.",
+        "Branch Cleanup enumerates live remote refs once per run and auto-deletes every non-protected, non-active-PR zero-ahead branch; historical absent-ref lists are not recurring work.",
+        "Branches with ahead_by > 0 are retained only for selective salvage/supersession and must not become alternate trunks.",
+        "GitHub is the live authority for PR/branch/workflow transport state; the Governor stores durable policy, execution order and evidence boundaries only."
       ],
       "evidence_boundary": "Branch/process governance only; no gameplay acceptance claim.",
       "authority": "USER_EXPLICIT_DIRECTION"
@@ -4620,7 +4622,8 @@
       "The active stabilization freeze overrides the generic unrelated-production allowance: when active_gate blocks major expansion and execution_control freezes a bundle, that bundle must not execute.",
       "Infrastructure waiting may be used for tests, evidence collection, documentation reconciliation and repairs only when they belong to an allowed execution bundle.",
       "Do not broaden warehouse, world, character, gameplay or living-world production merely because a runner is idle while W00 is active.",
-      "Only the Governor may change the active lane or unfreeze B1/B2/B3 after the recorded exit criteria are satisfied."
+      "Only the Governor may change the active lane or unfreeze B1/B2/B3 after the recorded exit criteria are satisfied.",
+      "Governor/management work must remain an overseer, not a serial bottleneck: no duplicated authority files, no stale transport metadata as gates, no administrative wave may delay an independent allowed production wave unless it proves a concrete safety/build/canon/save/performance dependency."
     ]
   },
   "accepted_owner_development_ideas": [
@@ -4691,34 +4694,18 @@
   "branch_workflow": {
     "integration_branch": "develop",
     "stable_release_branch": "main",
-    "rule": "Use a short-lived single-purpose candidate branch/PR targeting develop. Prove the exact candidate head, then merge to develop; direct develop commits are not the normal production workflow.",
+    "rule": "Use one short-lived single-purpose candidate branch/PR targeting develop. Prove the exact candidate head, merge it into develop immediately, then delete the remote branch ref; develop remains the continuously current integration/programmer-handoff lane.",
     "no_long_lived_feature_rule": "Do not let a temporary repair/feature branch become the de-facto project trunk.",
-    "historical_checkpoint_branches": [
-      "cp55/activity-movement-expansion-v1",
-      "cp56/fellowship-experience-megapass-v1",
-      "work/automation-first-runtime-observation"
-    ],
-    "cleanup_rule": "Remote branch cleanup is complete. Preserve only `develop` as the canonical development/programmer-handoff lane and `main` as the stable release lane; every future temporary branch must self-clean after merge once its meaningful content is integrated.",
-    "current_short_branch": "none",
+    "historical_checkpoint_branches": [],
+    "cleanup_rule": "Permanent invariant: completed temporary branches self-delete after merge. Keep only develop/main plus temporary active-PR or verified unique-unsalvaged branches; never retain merged zero-ahead refs for convenience.",
+    "current_short_branch": "GitHub live state",
     "integration_baseline": "develop",
-    "current_open_pr": 0,
+    "current_open_pr": "GitHub live state",
     "open_pr_policy": "Runtime PRs remain short-lived and exact-head validated. Live PR/branch state comes from GitHub; copied transport metadata may not block production.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
-      "date": "2026-09-26",
-      "active_pr": 0,
-      "active_branch": "develop",
-      "canonical_branch": "develop",
-      "stable_release_branch": "main",
-      "plan": "Data/BranchCleanupPlan.json",
-      "audit": "Docs/BRANCH_CONSOLIDATION_AUDIT.md",
-      "physical_cleanup": "Post-C2 root cleanup is queued by the plan update and must fail closed on active or plan-protected branches.",
-      "expected_survivors": [
-        "develop",
-        "main",
-        "planning/w01-localization-prototype-v1",
-        "planning/w01-p1c01-mega-prep-v1"
-      ]
+      "status": "HISTORICAL_ONLY",
+      "note": "Live branch/PR state comes from GitHub. Durable cleanup rules are DEC-042 + Data/BranchCleanupPlan.json; stale branch-name snapshots are not execution inputs."
     },
     "validation_cost_contract": {
       "governance_docs_maintenance": "inherit parent green proof; no engine build/package",
@@ -6165,5 +6152,27 @@
     "tracked_build_artifact_audit": "No tracked Binaries/Intermediate/Saved/DerivedDataCache/.vs/StagedBuilds or *.pdb/*.obj(build artifact)/*.log/*.tmp/*.cache artifacts were found in the current repository tree. SourceAssets/Production files are source inputs, not generated build outputs; do not delete them merely to reduce build time.",
     "policy": "Resume game/content production immediately. Administrative work must not preempt the production lane unless a concrete CI_INFRA/VALIDATOR_POLICY regression blocks it.",
     "evidence_boundary": "Machine/CI readiness only; no new PIE/device/visual/performance acceptance."
+  },
+  "interconnected_systems_reassessment_2026_09_27": {
+    "status": "STATIC_REVIEW_COMPLETE",
+    "scope": [
+      "ChapterWorldRouter transaction/grounding/rollback",
+      "ShireChapterAssetStreamingSubsystem async residency",
+      "ShireNPCContextSubsystem committed-world context",
+      "LivingWorldDirector population/event ownership",
+      "ShirePlayerCharacter save/checkpoint continuity",
+      "repository/CI cleanup and generated-file burden"
+    ],
+    "findings": [
+      "ChapterWorldRouter remains the world-commit authority: pending world state is held until streamed assets commit and grounding stability passes; rollback preserves the prior committed snapshot.",
+      "ShireNPCContextSubsystem receives context only from the committed router revision; LivingWorldDirector also gates synchronization on IsWorldCommitted/WorldRevision, preventing destination NPC/weather state from racing ahead of visible geometry.",
+      "Chapter asset residency uses FStreamableManager/FSoftObjectPath with pending/resident handles and cancellation; no new synchronous heavy-asset load is introduced by the reviewed transaction path.",
+      "LivingWorldDirector uses bounded 0.35s ticking and an AmbientNPCPool for crowd-scale ambient NPC reuse. Non-NPC micro-event actors remain bounded event objects, not crowd population.",
+      "Checkpoint snapshots use asynchronous disk save with committed-world/revision guards so stale callbacks cannot apply old-world effects after a transition; restore placement is ground-resolved.",
+      "Current repository tree contains no tracked generated Binaries/Intermediate/Saved/DerivedDataCache/.vs/StagedBuilds/PDB/log/tmp/cache build debris. SourceAssets are production source inputs and are not deleted as build garbage.",
+      "Animated final production promotion remains FBX-only; legacy/static OBJ source inputs are not evidence for final animated assets."
+    ],
+    "architecture_result": "No new cross-system ownership cycle or concrete build-blocking architecture defect found in this quick static reassessment. Continue W01/P1C01 production; reopen root repair only on concrete regression evidence.",
+    "evidence_boundary": "STATIC-VALIDATED review only. No PIE/device/visual/performance acceptance."
   }
 }

@@ -4834,6 +4834,17 @@ pg167_cleanup = read(ROOT / ".github" / "workflows" / "branch-cleanup.yml")
 for pg167_symbol in ["- self-hosted", "- Windows", "- X64", "- ue4-27"]:
     if pg167_symbol not in pg167_cleanup:
         fail(f"PG-167 branch-cleanup runner contract missing: {pg167_symbol}")
+for pg167_post_merge_symbol in [
+    "pull_request:",
+    "- closed",
+    "github.event.pull_request.merged == true",
+    "github.event.pull_request.merge_commit_sha",
+    "group: branch-cleanup-${{ github.repository }}",
+]:
+    if pg167_post_merge_symbol not in pg167_cleanup:
+        fail(f"PG-167 permanent post-merge cleanup contract missing: {pg167_post_merge_symbol}")
+if "\n  push:\n" in pg167_cleanup:
+    fail("PG-167 Branch Cleanup must not run on ordinary develop pushes; merged-PR closeout owns automatic cleanup")
 if "runs-on: ubuntu-latest" in pg167_cleanup or "runs-on: windows-latest" in pg167_cleanup:
     fail("PG-167 Branch Cleanup must not depend on GitHub-hosted runners")
 for pg167_cleanup_symbol in [
