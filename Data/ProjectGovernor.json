@@ -4602,7 +4602,7 @@
     "current_short_branch": "none",
     "integration_baseline": "develop",
     "current_open_pr": 0,
-    "open_pr_policy": "PR93 runtime repair passed full CI and merged after C2. Maintenance cleanup may proceed; the next production runtime PR is C3; branch cleanup is not a production gate.",
+    "open_pr_policy": "Runtime PRs remain short-lived and exact-head validated. Live PR/branch state comes from GitHub; copied transport metadata may not block production.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
       "date": "2026-09-26",
@@ -4625,7 +4625,9 @@
       "ordinary_cpp_runtime_data_sourceassets": "core UE lane: source integrity + editor build/import + Automation/startup/chapter/state/warning checks; no package/cook",
       "packaging_critical": "full lane for Config, Build.cs, Target.cs, chapter streaming, Package/Cook/Release deltas",
       "acceptance_verifier": "acceptance lane may package/resume only when contract requires it"
-    }
+    },
+    "live_transport_state_source": "GitHub live repository state",
+    "volatile_metadata_policy": "current PR/branch values are informational only and are not Governor validation authority"
   },
   "side_branch_audit": {
     "date": "2026-09-21",
@@ -5542,7 +5544,7 @@
       "B1_PART1_STORY_GAMEPLAY_COMPLETE"
     ],
     "freeze_reason": "W00 architectural stabilization is closed. W01 is limited to the existing P1C01 production vertical slice; broad Part I story/gameplay expansion remains frozen until the Shire clears Gate 6/7.",
-    "backlog_semantics": "ACTIVE backlog outside allowed_bundles remains recorded memory, not permission to execute it while the active gate blocks expansion.",
+    "backlog_semantics": "Backlog is durable memory, not a serial paperwork queue. Only dependencies affecting runtime safety, canon, save integrity or target-device performance block the affected implementation lane.",
     "completed_parent_proof": {
       "sha": "efdb2e291505472247fae921945b083b3cc1ce2c",
       "pre_unreal_run": 816,
@@ -6004,5 +6006,19 @@
     "parallel_preparation": "Source extraction and warehouse QC for other regions can proceed while P1C01 runtime is validated. Do not import the whole catalogue indiscriminately or count PDFs as runtime assets.",
     "reporting": "Daily task repaired: was disabled and pinned to obsolete PR67; now follows develop and live PRs.",
     "proof_boundary": "No new asset download/import or gameplay acceptance performed by this review."
+  },
+  "operational_simplification_2026_09_26": {
+    "status": "ACTIVE",
+    "owner_direction": "Remove recurring root administrative blockers and reduce duplicated project-management threads while keeping real technical, canon, save and performance protections.",
+    "durable_authority": "Data/ProjectGovernor.json owns requirements, priorities, decisions, active gate/lane and evidence boundaries.",
+    "live_transport_authority": "GitHub owns current PR number, candidate branch, open/closed/mergeable state and workflow status.",
+    "rules": [
+      "Volatile PR numbers and candidate branch names must not be copied across multiple files as fail-closed validation conditions.",
+      "A stale human-readable board may be corrected, but it must not make Pre-Unreal fail solely because live GitHub transport metadata changed.",
+      "A technical failure blocks only the affected runtime/integration lane; independent safe source/PDF/warehouse/design preparation continues when assumptions remain valid.",
+      "Closed W00 repair work stays historical unless concrete regression evidence reopens it.",
+      "The 24-hour Project Manager report is informational and must never become a production gate."
+    ],
+    "regression_guard": "PG-150 now protects authority semantics rather than exact PR/branch mirroring."
   }
 }

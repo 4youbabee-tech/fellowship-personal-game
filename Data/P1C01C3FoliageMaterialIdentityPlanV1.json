@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_C3_FOLIAGE_MATERIAL_IDENTITY_V1",
-  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "status": "C3_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/P1C01MaterialsVegetationPlanV1.json",
@@ -54,5 +54,16 @@
     "No foliage density increase.",
     "PIE visual wind acceptance remains later manual evidence, not implied by import success."
   ],
-  "evidence_boundary": "Preparation only. No runtime/integration/visual acceptance claim."
+  "evidence_boundary": "Source implementation complete on candidate branch. STATIC-VALIDATED only until exact-head Pre-Unreal and UE4.27.2 asset/editor validation succeed. No PIE/device/visual/performance acceptance claimed.",
+  "implementation": {
+    "branch": "production/p1c01-c3-foliage-identity-v1",
+    "source_file": "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",
+    "contract": [
+      "Trim authored material name and match only exact case-sensitive identities Grass, Leaves, LeafGreen, LeafGold.",
+      "Approved identities use M_ProductionFoliage as the material-instance parent.",
+      "All other identities remain on M_ProductionSurface.",
+      "M_ProductionFoliageFar remains unassigned in C3.",
+      "Material instance object paths, albedo bindings, Color/Roughness/Metallic values and foliage density are preserved."
+    ]
+  }
 }

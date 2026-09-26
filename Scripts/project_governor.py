@@ -278,11 +278,10 @@ if "short-lived" not in str(branch_workflow.get("rule") or ""):
     fail("Governor branch workflow must require short-lived candidate branches")
 
 handoff = governor.get("session_handoff", {})
-if branch_workflow.get("current_short_branch") != handoff.get("branch"):
-    fail("Governor branch workflow and session handoff disagree on current branch")
-if branch_workflow.get("current_open_pr") != handoff.get("pull_request"):
-    fail("Governor branch workflow and session handoff disagree on current PR")
-
+# Volatile GitHub state (current PR number / candidate branch name) is intentionally
+# not a Governor validity condition. GitHub is the live authority for those values.
+# The Governor owns durable direction, gates and evidence, not rapidly-changing
+# transport metadata that can drift between commits without affecting the game.
 execution_control = governor.get("execution_control", {})
 if execution_control.get("mode") != "ACTIVE_GATE_FIRST":
     fail("Governor execution control must remain ACTIVE_GATE_FIRST")
@@ -322,20 +321,12 @@ for stale_direct_rule in ("- work on `develop`", "- push to `develop`"):
         fail("PG-150 stale direct-develop instruction: " + stale_direct_rule)
 if "short-lived" not in development_gates_text or "targeting `develop`" not in development_gates_text:
     fail("PG-150 DEVELOPMENT_GATES must describe short-lived PR branches targeting develop")
-current_handoff_pr = handoff.get("pull_request")
-current_handoff_branch = str(handoff.get("branch") or "")
-if current_handoff_pr in (0, None):
-    if current_handoff_branch != "none":
-        fail("PG-150 no-active-PR handoff must use branch=none")
-    if "- PR: none" not in execution_board_text:
-        fail("PG-150 MASTER_EXECUTION_BOARD must expose no active PR")
-else:
-    if not isinstance(current_handoff_pr, int) or current_handoff_pr <= 0:
-        fail("PG-150 active handoff requires a positive PR number")
-    if f"- PR: #{current_handoff_pr}" not in execution_board_text:
-        fail("PG-150 MASTER_EXECUTION_BOARD current PR disagrees with handoff")
-if "W00_ARCHITECTURAL_STABILIZATION" not in execution_board_text:
-    fail("PG-150 MASTER_EXECUTION_BOARD must expose W00")
+# PG-150 protects authority semantics, not volatile GitHub transport metadata.
+# PR numbers, candidate branch names and closed historical lane labels are live
+# operational facts and must never fail Pre-Unreal merely because a human-readable
+# board has not copied them yet.
+if "Data/ProjectGovernor.json" not in execution_board_text or "sole project-management authority" not in execution_board_text:
+    fail("PG-150 MASTER_EXECUTION_BOARD must defer project authority to ProjectGovernor")
 if "### PG-150" not in guardian_text:
     fail("PG-150 regression memory missing")
 

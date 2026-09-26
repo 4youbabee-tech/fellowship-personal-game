@@ -1,0 +1,138 @@
+{
+  "schema_version": 2,
+  "plan_id": "MEGA_PRODUCTION_BUILD_V2",
+  "status": "ACTIVE_PREPARATION",
+  "authority": "Data/ProjectGovernor.json",
+  "engine": "Unreal Engine 4.27.2",
+  "target_profile": {
+    "cpu": "i7 6th gen class",
+    "ram_gb": 8,
+    "vram_gb_approx": 2,
+    "renderer": "DX11",
+    "resolution": "720p",
+    "quality": "Low-Medium",
+    "fps_floor_target": 30
+  },
+  "objective": "Accelerate Shire Journey from W01/P1C01 production into a large coordinated build while minimizing administrative friction and preserving technical, canon, save and performance safety.",
+  "source_basis": [
+    "Project Source PDFs and repository source library",
+    "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION",
+    "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX"
+  ],
+  "non_negotiable_pipeline": [
+    "Animated character and creature production assets: FBX only.",
+    "Production textures: PNG/TGA; prefer channel packing; no uncompressed BMP.",
+    "Heavy production assets: soft references plus asynchronous loading through FStreamableManager; no synchronous heavy LoadObject paths.",
+    "Ambient NPC crowd growth uses bounded object pooling; do not use dense Spawn/Destroy churn.",
+    "Repeated world detail uses HISM/ISM, LOD and cull bands before density expansion."
+  ],
+  "execution_model": {
+    "runtime_serial_lane": "P1C01 C3 -> C4 -> D -> character presentation -> living motion/fauna -> quest/audio polish -> target-device profiling",
+    "parallel_preparation_lanes": [
+      "licensed/cleared asset intake and provenance",
+      "materials and vegetation warehouse",
+      "characters/rigs/animation preparation",
+      "architecture/interiors/props preparation",
+      "audio/music/foley preparation",
+      "VFX/sky/weather preparation",
+      "later-region source/design packets"
+    ],
+    "scope_boundary": "Later-region runtime implementation remains gated by P1C01 Gate 6/7. Preparation is allowed in parallel."
+  },
+  "waves": [
+    {
+      "id": "MB2-C3",
+      "name": "Stable foliage material identity",
+      "state": "NEXT_RUNTIME",
+      "deliverables": [
+        "Exact normalized foliage material identity binding",
+        "Preserve deterministic material object paths",
+        "No density increase"
+      ],
+      "validation": "Fast asset lane + exact-head technical proof"
+    },
+    {
+      "id": "MB2-C4",
+      "name": "Foliage LOD/cull/overdraw proof",
+      "state": "QUEUED_AFTER_C3",
+      "deliverables": [
+        "Mesh/material-slot evidence",
+        "LOD transition evidence",
+        "Cull bands",
+        "Masked-overdraw observation",
+        "Target-device foliage cost capture"
+      ],
+      "validation": "Core/target-device evidence before density growth"
+    },
+    {
+      "id": "MB2-D",
+      "name": "Shire atmosphere production",
+      "state": "QUEUED_AFTER_C4",
+      "deliverables": [
+        "Fixed-state lighting",
+        "Sky fill",
+        "Bounded fog",
+        "Low-cost water presentation"
+      ],
+      "validation": "Exact-head technical proof + rendered review; no expensive real-time recapture path"
+    },
+    {
+      "id": "MB2-CHAR",
+      "name": "Natural character production bridge",
+      "state": "PARALLEL_PREP",
+      "deliverables": [
+        "Production skeletal FBX intake",
+        "Retarget-ready animation set",
+        "Character material/LOD budgets",
+        "Named-character presentation queue"
+      ],
+      "validation": "Asset QA then runtime integration in short-lived PRs"
+    },
+    {
+      "id": "MB2-AUDIO",
+      "name": "Spatial audio and foley production",
+      "state": "PARALLEL_PREP",
+      "deliverables": [
+        "Surface footstep bank",
+        "Shire ambience layers",
+        "Hearth/wood/metal interactions",
+        "Bounded concurrency/attenuation plan"
+      ],
+      "validation": "Async asset routing + listening/device acceptance when integrated"
+    },
+    {
+      "id": "MB2-ARCH",
+      "name": "Architecture/interiors/props expansion",
+      "state": "PARALLEL_PREP",
+      "deliverables": [
+        "Bag End interior production candidates",
+        "Hobbiton domestic modules",
+        "Farm/outbuilding props",
+        "Reusable low-cost interior kit"
+      ],
+      "validation": "Scale/collision/LOD/material/memory review before READY_FOR_IMPORT"
+    },
+    {
+      "id": "MB2-WHOLE",
+      "name": "Whole-game source preparation",
+      "state": "PARALLEL_PREP_ONLY",
+      "deliverables": [
+        "Region packets",
+        "Asset candidate queues",
+        "Chapter-safe-window requirements",
+        "Canon/source mapping"
+      ],
+      "validation": "No later-region runtime promotion before Gate 6/7"
+    }
+  ],
+  "administrative_reduction": [
+    "Keep one repository-native Project Manager report every 24 hours for owner visibility; it is informational and never a production gate.",
+    "Do not reopen historical W00 repair notes without a concrete regression.",
+    "Batch documentation/governance changes by production wave.",
+    "Do not require Unreal builds for source indexing, provenance or non-runtime warehouse staging.",
+    "A failed runtime gate blocks only the affected implementation lane; independent safe preparation continues."
+  ],
+  "acceptance_boundary": "STATIC/COMPILE/machine evidence never implies PIE/device/visual/pacing acceptance."
+}

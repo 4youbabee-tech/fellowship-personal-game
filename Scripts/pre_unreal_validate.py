@@ -2586,8 +2586,12 @@ if "MaterialExpressionDistanceCullFade" in pg166_importer or "DistanceScaledWind
 
 # PG-169: C3 stable foliage material identity must be narrow, deterministic and C4-safe before runtime implementation.
 pg169_plan = json.loads(read(ROOT / "Data" / "P1C01C3FoliageMaterialIdentityPlanV1.json"))
-if pg169_plan.get("status") != "PREPARED_NOT_RUNTIME_STARTED":
-    fail("PG-169 C3 plan must remain PREPARED_NOT_RUNTIME_STARTED before the C3 implementation PR")
+if pg169_plan.get("status") not in {
+    "PREPARED_NOT_RUNTIME_STARTED",
+    "C3_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "C3_EXACT_HEAD_GREEN_MERGED_C4_READY",
+}:
+    fail("PG-169 C3 plan has an invalid implementation status")
 if pg169_plan.get("target_material_names") != ["Grass", "Leaves", "LeafGreen", "LeafGold"]:
     fail("PG-169 C3 approved foliage identity set changed")
 pg169_parent = pg169_plan.get("parent_assignment_contract", {})
@@ -2605,6 +2609,47 @@ pg169_guards = json.dumps(pg169_plan.get("guards", []))
 for pg169_guard in ["contains('Leaf')", "contains('Grass')", "M_ProductionFoliageFar"]:
     if pg169_guard not in pg169_guards:
         fail(f"PG-169 C3 guard missing: {pg169_guard}")
+
+if pg169_plan.get("status") != "PREPARED_NOT_RUNTIME_STARTED":
+    for pg169_symbol in [
+        "IsApprovedFoliageMaterialIdentity",
+        'TEXT("Grass")',
+        'TEXT("Leaves")',
+        'TEXT("LeafGreen")',
+        'TEXT("LeafGold")',
+        "DesiredMaterialParent = ProductionMaterialParent",
+        "DesiredMaterialParent = ProductionFoliageParent",
+        "Instance->SetParentEditorOnly(DesiredMaterialParent)",
+    ]:
+        if pg169_symbol not in pg166_importer:
+            fail(f"PG-169 C3 implementation invariant missing: {pg169_symbol}")
+    for pg169_forbidden in [
+        'Contains(TEXT("Leaf")',
+        'Contains(TEXT("Grass")',
+        "SetParentEditorOnly(ProductionFoliageFarParent)",
+    ]:
+        if pg169_forbidden in pg166_importer:
+            fail(f"PG-169 C3 forbidden broad/far binding found: {pg169_forbidden}")
+
+
+# PG-170: volatile GitHub transport metadata must never become a production blocker.
+project_governor_validator = read(ROOT / "Scripts" / "project_governor.py")
+for pg170_forbidden in [
+    "Governor branch workflow and session handoff disagree on current branch",
+    "Governor branch workflow and session handoff disagree on current PR",
+    "MASTER_EXECUTION_BOARD must expose no active PR",
+    "MASTER_EXECUTION_BOARD current PR disagrees with handoff",
+]:
+    if pg170_forbidden in project_governor_validator:
+        fail(f"PG-170 volatile GitHub transport metadata became a Governor build gate again: {pg170_forbidden}")
+
+branch_cleanup_script = read(ROOT / "Scripts" / "run_branch_cleanup.ps1")
+for pg170_cleanup_symbol in [
+    "$_.PSObject.Properties['head']",
+    "$_.head.PSObject.Properties['ref']",
+]:
+    if pg170_cleanup_symbol not in branch_cleanup_script:
+        fail(f"PG-170 branch cleanup lost empty/open-PR response hardening: {pg170_cleanup_symbol}")
 
 
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
