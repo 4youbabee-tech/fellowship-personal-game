@@ -227,6 +227,33 @@ function Test-ParentCoreUnrealGreen([string]$ParentSha) {
     return $false
 }
 
+function Test-TreeEquivalentCoreProof([string]$GitExe, [string]$ParentSha) {
+    # A merge commit may have a new SHA even when its checked-out content is byte-for-byte
+    # identical to an already-proven candidate parent. Reuse proof only when Git tree IDs
+    # are exactly equal; commit-message/metadata similarity is never enough.
+    & $GitExe fetch --no-tags --depth=2 origin $ParentSha
+    if ($LASTEXITCODE -ne 0) { return $false }
+
+    $parentTree = (& $GitExe rev-parse "$ParentSha^{tree}").Trim()
+    if ($LASTEXITCODE -ne 0 -or -not $parentTree) { return $false }
+
+    $line = (& $GitExe rev-list --parents -n 1 $ParentSha).Trim()
+    if ($LASTEXITCODE -ne 0 -or -not $line) { return $false }
+    $parts = @($line -split '\s+')
+    if ($parts.Count -lt 2) { return $false }
+
+    foreach ($candidate in @($parts | Select-Object -Skip 1)) {
+        $candidateTree = (& $GitExe rev-parse "$candidate^{tree}").Trim()
+        if ($LASTEXITCODE -ne 0 -or -not $candidateTree) { continue }
+        if ($candidateTree -ne $parentTree) { continue }
+        if (-not (Test-ParentCoreUnrealGreen $candidate)) { continue }
+
+        Write-Host "TREE_EQUIVALENT_CORE_PROOF_PASS merge=$ParentSha provenParent=$candidate tree=$parentTree"
+        return $true
+    }
+    return $false
+}
+
 function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [string]$ParentSha) {
     $delta = @(& $GitExe diff --name-only $BaseSha $ParentSha)
     if ($LASTEXITCODE -ne 0) { return $false }
@@ -260,7 +287,7 @@ function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [
         "Scripts/run_local_static_validation.ps1",
         "Scripts/prepare_p1c01_material_intake.ps1",
         "Scripts/promote_p1c01_material_intake.ps1",
-        "Scripts/run_p1c01_material_pipeline.ps1"
+        "Scripts/run_p1c01_material_pipeline.ps1",
         "Scripts/install_runner_watchdog.ps1",
         "Scripts/runner_watchdog.ps1",
         "Scripts/deep_project_audit.py",
@@ -407,8 +434,8 @@ $safeExact = @(
     "Scripts/operation_recovery.py",
     "Scripts/test_operation_recovery.py",
     "Scripts/run_branch_cleanup.ps1",
-    ".github/workflows/branch-cleanup.yml"
-        "Scripts/prepare_p1c01_material_intake.ps1",
+    ".github/workflows/branch-cleanup.yml",
+    "Scripts/prepare_p1c01_material_intake.ps1",
         "Scripts/promote_p1c01_material_intake.ps1",
         "Scripts/run_p1c01_material_pipeline.ps1",
         "Scripts/install_runner_watchdog.ps1",
@@ -531,6 +558,11 @@ if($coreImpact.Count -gt 0){
         Set-Mode "core" "runtime-or-asset-delta-inherits-parent-core-proof-no-package" $parentSha
         exit 0
     }
+    if(Test-TreeEquivalentCoreProof $git $parentSha){
+        $coreImpact | ForEach-Object { Write-Host "CORE_UNREAL_FILE $_" }
+        Set-Mode "core" "runtime-or-asset-delta-inherits-tree-equivalent-green-merge-parent-no-package" $parentSha
+        exit 0
+    }
     if(Test-NearestSafeCoreAncestorGreen $git $parentSha){
         $coreImpact | ForEach-Object { Write-Host "CORE_UNREAL_FILE $_" }
         Set-Mode "core" "runtime-or-asset-delta-inherits-nearest-safe-core-ancestor-no-package" $parentSha
@@ -541,7 +573,11 @@ if($coreImpact.Count -gt 0){
 }
 
 if($acceptanceTouched.Count -gt 0){
-    if(Test-ParentCoreUnrealGreen $parentSha){
+    $acceptanceCoreProof = (Test-ParentCoreUnrealGreen $parentSha)
+    if(-not $acceptanceCoreProof){
+        $acceptanceCoreProof = Test-TreeEquivalentCoreProof $git $parentSha
+    }
+    if($acceptanceCoreProof){
         $acceptanceTouched | ForEach-Object { Write-Host "ACCEPTANCE_ONLY_FILE $_" }
 
         $startupResumeExact = @(
@@ -569,6 +605,11 @@ if($acceptanceTouched.Count -gt 0){
 
 if(Test-ParentWholeWorkflowGreen $parentSha){
     Set-Mode "inherit" "governance-docs-only-inherits-green-parent" $parentSha
+    exit 0
+}
+
+if(Test-TreeEquivalentCoreProof $git $parentSha){
+    Set-Mode "inherit" "governance-docs-only-inherits-tree-equivalent-green-merge-parent" $parentSha
     exit 0
 }
 
