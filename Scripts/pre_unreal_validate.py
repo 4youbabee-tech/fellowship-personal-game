@@ -6895,12 +6895,18 @@ for pg145b_symbol in [
     "ShireJourney-GitHubRunner-Watchdog",
     "Test-NetConnection github.com -Port 443",
     "RUNNER_HEALTH_PASS",
+]:
+    if pg145b_symbol not in pg145b_probe:
+        fail(f"PG-145B runner health probe missing: {pg145b_symbol}")
+
+pg145b_watchdog = read(ROOT / "Scripts" / "runner_watchdog.ps1")
+for pg145b_watchdog_symbol in [
     "WorkerIdleHangSeconds",
     "Listening for Jobs",
     "stale-worker",
 ]:
-    if pg145b_symbol not in pg145b_probe:
-        fail(f"PG-145B runner health probe missing: {pg145b_symbol}")
+    if pg145b_watchdog_symbol not in pg145b_watchdog:
+        fail(f"PG-145B runner watchdog recovery contract missing: {pg145b_watchdog_symbol}")
 
 pg145b_health_workflow = read(ROOT / ".github" / "workflows" / "runner-health.yml")
 if "workflow_dispatch:" not in pg145b_health_workflow or "verify_runner_session.ps1" not in pg145b_health_workflow:
