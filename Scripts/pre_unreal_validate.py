@@ -4350,7 +4350,7 @@ pg134_workflow = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.ym
 if (
     '"%PYTHON_EXE%" Scripts\\asset_quality_audit.py --strict' not in pg134_workflow
     or "resolve_runtime_python.ps1" not in pg134_workflow
-    or "%RUNNER_TEMP%\\shire-pre-unreal-" not in pg134_workflow
+    or "C:\\\\actions-runner\\\\_ci\\\\pre-unreal" not in pg134_workflow
     or "SHIRE_PRE_ROOT" not in pg134_workflow
     or 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg134_workflow
 ):
@@ -7220,10 +7220,11 @@ pg176_cleanup = read(ROOT / ".github" / "workflows" / "branch-cleanup.yml")
 pg176_warehouse = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
 
 for pg176_symbol in [
-    "%RUNNER_TEMP%\\shire-pre-unreal-",
+    "C:\\actions-runner\\_ci\\pre-unreal",
     "SHIRE_PRE_ROOT",
     "PRE_UNREAL_EXACT_CHECKOUT_PASS",
     "isolated=true",
+    "persistent=true",
 ]:
     if pg176_symbol not in pg176_pre:
         fail(f"PG-176 Pre-Unreal isolated checkout contract missing: {pg176_symbol}")

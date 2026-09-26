@@ -43,13 +43,16 @@ jobs:
           if not defined GITEXE if exist "C:\Program Files (x86)\Git\cmd\git.exe" set "GITEXE=C:\Program Files (x86)\Git\cmd\git.exe"
           if not defined GITEXE exit /b 70
 
-          set "PRE_ROOT=%RUNNER_TEMP%\shire-pre-unreal-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
-          if exist "!PRE_ROOT!" rmdir /S /Q "!PRE_ROOT!"
-          mkdir "!PRE_ROOT!"
+          set "PRE_ROOT=C:\actions-runner\_ci\pre-unreal"
+          if not exist "C:\actions-runner\_ci" mkdir "C:\actions-runner\_ci"
+          if not exist "!PRE_ROOT!" mkdir "!PRE_ROOT!"
           cd /d "!PRE_ROOT!"
 
-          "!GITEXE!" init
+          if exist ".git\index.lock" del /F /Q ".git\index.lock"
+          if exist ".git\shallow.lock" del /F /Q ".git\shallow.lock"
+          if not exist ".git" "!GITEXE!" init
           if errorlevel 1 exit /b 72
+          "!GITEXE!" remote remove origin >nul 2>nul
           "!GITEXE!" remote add origin "https://x-access-token:%GH_TOKEN%@github.com/%GITHUB_REPOSITORY%.git"
           if errorlevel 1 exit /b 73
 
@@ -75,7 +78,8 @@ jobs:
           )
           if not exist "ShireJourney.uproject" exit /b 78
           echo SHIRE_PRE_ROOT=!PRE_ROOT!>>"%GITHUB_ENV%"
-          echo PRE_UNREAL_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA! isolated=true
+          "!GITEXE!" remote set-url origin "https://github.com/%GITHUB_REPOSITORY%.git"
+          echo PRE_UNREAL_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA! isolated=true persistent=true
 
       - name: Resolve existing local Python
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_PRE_ROOT%\Scripts\resolve_runtime_python.ps1"
@@ -128,10 +132,16 @@ jobs:
       - name: Test live governor evidence selection
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_live_governor_status.py" -v
 
-      - name: Remove isolated static checkout
+      - name: Scrub static checkout authentication
         if: always()
-        shell: pwsh
+        shell: cmd
         run: |
-          if ($env:SHIRE_PRE_ROOT -and (Test-Path -LiteralPath $env:SHIRE_PRE_ROOT)) {
-            Remove-Item -LiteralPath $env:SHIRE_PRE_ROOT -Recurse -Force -ErrorAction SilentlyContinue
-          }
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if defined GITEXE if exist "C:\actions-runner\_ci\pre-unreal\.git" (
+            cd /d "C:\actions-runner\_ci\pre-unreal"
+            "!GITEXE!" remote set-url origin "https://github.com/%GITHUB_REPOSITORY%.git" >nul 2>nul
+          )
+          exit /b 0

@@ -1,3 +1,12 @@
+## 2026-09-26 - Persistent isolated Pre-Unreal checkout refinement
+
+- Isolation protected the Unreal workspace, but a fresh temporary Git repository still repeats repository transfer on every static validation.
+- Pre-Unreal now keeps a dedicated source checkout at `C:\actions-runner\_ci\pre-unreal`, physically separate from the Unreal build workspace.
+- Every run still fetches the exact target SHA, hard-resets to it, verifies HEAD equality and reruns all static/governance/source-quality checks.
+- Only the static Git object database persists so unchanged objects can be reused; Unreal `Intermediate`, `Binaries` and engine acceptance evidence are not shared through this lane.
+- Authenticated remote URL is scrubbed after exact checkout and again in the always-run cleanup step.
+- Evidence boundary: **SOURCE IMPLEMENTED / FRESH TIMING MEASUREMENT PENDING**.
+
 ## 2026-09-26 - CI architecture reassessment and lane isolation
 
 - Comprehensive review concluded that the project quality direction is correct, but CI ownership was causing self-inflicted rebuilds and misleading red runs.
