@@ -47,6 +47,13 @@ namespace
             ? Cast<UStaticMesh>(FSoftObjectPath(AssetPath).ResolveObject())
             : nullptr;
     }
+
+    UMaterialInterface* ResolveResidentMaterial(const TCHAR* AssetPath)
+    {
+        return AssetPath
+            ? Cast<UMaterialInterface>(FSoftObjectPath(AssetPath).ResolveObject())
+            : nullptr;
+    }
 }
 
 AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
@@ -210,6 +217,8 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionCommonFernClumpMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFernClump.SM_CommonFernClump"));
     ProductionCommonReedClusterMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonReedCluster.SM_CommonReedCluster"));
     ProductionCommonFootbridgeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFootbridge.SM_CommonFootbridge"));
+    ProductionWaterMaterial = ResolveResidentMaterial(
+        TEXT("/Game/Production/Materials/M_ProductionWater.M_ProductionWater"));
 
     if (GeographyHillInstances && ProductionCommonTerracedHillMesh)
     {
@@ -305,6 +314,44 @@ AStaticMeshActor* AShirePrototypeWorldBuilder::SpawnShape(
     }
 
     return Actor;
+}
+
+void AShirePrototypeWorldBuilder::SpawnWaterSurface(
+    const FVector& Location,
+    const FVector& Scale,
+    const FRotator& Rotation)
+{
+    // D keeps water deliberately cheap on the 2 GB-class VRAM target: one opaque
+    // production material, no planar/scene-capture reflection, no CPU simulation,
+    // no collision ownership change. The chapter streaming subsystem owns residency.
+    AStaticMeshActor* WaterActor = SpawnShape(
+        CubeMesh,
+        Location,
+        Scale,
+        FLinearColor(0.045f, 0.20f, 0.30f),
+        Rotation,
+        false);
+
+    if (!WaterActor)
+    {
+        return;
+    }
+
+    if (UStaticMeshComponent* WaterMesh = WaterActor->GetStaticMeshComponent())
+    {
+        WaterMesh->SetCastShadow(false);
+        if (ProductionWaterMaterial)
+        {
+            WaterMesh->SetMaterial(0, ProductionWaterMaterial);
+        }
+    }
+
+    WaterActor->Tags.AddUnique(TEXT("P1C01LowCostWaterSurface"));
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("D_WATER_EVIDENCE materialResident=%s collision=none planarReflection=no sceneCapture=no cpuSimulation=no"),
+        ProductionWaterMaterial ? TEXT("yes") : TEXT("no"));
 }
 
 void AShirePrototypeWorldBuilder::SpawnLabel(const FString& Text, const FVector& Location, const FLinearColor& Color)
@@ -986,7 +1033,7 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
         SpawnShape(CubeMesh, FVector(-1050,185,62), FVector(2.0f,0.09f,0.34f), FLinearColor(0.30f,0.30f,0.28f), FRotator::ZeroRotator,false);
         SpawnShape(CubeMesh, FVector(-1050,-5,62), FVector(2.0f,0.09f,0.34f), FLinearColor(0.30f,0.30f,0.28f), FRotator::ZeroRotator,false);
     }
-    SpawnShape(CubeMesh, FVector(-1060,310,-4), FVector(8.0f,1.0f,0.06f), FLinearColor(0.055f,0.26f,0.38f), FRotator(0,88,0),false);
+    SpawnWaterSurface(FVector(-1060,310,-4), FVector(8.0f,1.0f,0.06f), FRotator(0,88,0));
     if (!ProductionMillHouseMesh)
     {
         SpawnShape(CubeMesh, FVector(-1250,330,88), FVector(1.45f,1.05f,0.88f), FLinearColor(0.52f,0.39f,0.23f));
@@ -1140,8 +1187,10 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     }
 
     // Brandywine and Bucklebury Ferry. River runs north/south; the story crosses east.
-    SpawnShape(CubeMesh,FVector(ShireLayout::FerryX,-500,-10),FVector(14.0f,60.0f,0.18f),
-        FLinearColor(0.06f,0.24f,0.42f),FRotator::ZeroRotator,false);
+    SpawnWaterSurface(
+        FVector(ShireLayout::FerryX,-500,-10),
+        FVector(14.0f,60.0f,0.18f),
+        FRotator::ZeroRotator);
     const float NearX=ShireLayout::FerryX-700.0f;
     const float FarX=ShireLayout::FerryX+700.0f;
     SpawnShape(CubeMesh,FVector(NearX,-500,12),FVector(2.0f,2.0f,0.12f),FLinearColor(0.34f,0.20f,0.09f));
