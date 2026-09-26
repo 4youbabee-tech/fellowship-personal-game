@@ -6858,6 +6858,11 @@ for pg145_maintenance_path in [
     "Scripts/runner_watchdog.ps1",
     "Scripts/install_runner_watchdog.ps1",
     "Scripts/pre_unreal_validate.py",
+    "Scripts/asset_quality_audit.py",
+    "Scripts/test_asset_quality_audit.py",
+    "Scripts/runtime_smoke.py",
+    "Scripts/test_runtime_smoke.py",
+    "Scripts/verify_runner_session.ps1",
 ]:
     if pg145_unreal_workflow.count(pg145_maintenance_path) < 2:
         fail(f"PG-145 maintenance path must stay off Unreal device lane in push and PR filters: {pg145_maintenance_path}")
