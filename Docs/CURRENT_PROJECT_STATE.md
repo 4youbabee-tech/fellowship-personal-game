@@ -7,6 +7,7 @@
 - Unsafe intervening files fail closed and force FULL validation.
 - Static validation now guards both the watchdog self-heal contract and the transitive core-proof contract.
 - Pre-Unreal no longer downloads/installs Python with `actions/setup-python`; it resolves the already installed local interpreter and runs under `cmd`, removing the repeated setup overhead and the execution-policy failure seen on #988 under the wrong service identity.
+- Warehouse staging no longer runs on pull-request synchronize events; source/manifest changes stage once after integration to `develop`, while Pre-Unreal statically guards the warehouse workflow. This removes repeated provider/audit passes from maintenance commits.
 - Live evidence before this change: Unreal #821 on exact C2 head `2af6648209d8722247ca6f9a75b2b5082b6654d5` completed Editor build, production import, Automation QA, startup smoke, chapter audit, route/state audit, warning guard, Cook and Runtime Data verification successfully; it then failed only at packaged executable launch. This demonstrates the waste the CORE path is intended to remove, but does not make #821 green.
 - Evidence boundary for this hardening branch: **STATIC-VALIDATED SOURCE CHANGE / DEVICE WATCHDOG REINSTALL PENDING**. No PIE-TESTED, DEVICE-TESTED or performance claim.
 
