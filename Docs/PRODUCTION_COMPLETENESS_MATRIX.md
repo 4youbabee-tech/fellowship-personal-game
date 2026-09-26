@@ -1,3 +1,13 @@
+## 2026-09-26 - Single new-developer / AI-session entry path
+
+- `README.md` is now the single repository entry point for a new human programmer, a new AI session, or a developer returning after a long break.
+- The canonical reading path is: `README` → `PROJECT_GOVERNOR` → `ProjectGovernor.json` → `CURRENT_PROJECT_STATE` → `DEVELOPMENT_GATES` → `PROJECT_GUARDIAN`.
+- Added `Scripts/new_developer_onboarding.ps1`. It reads current Governor + Git state and prints authority, branch/HEAD, active lane/gate, benchmark, next actions, target hardware, required reading and evidence boundary.
+- The onboarding script is read-only project guidance; it is not a second manager and does not copy live PR numbers into governance.
+- ProjectGovernor handoff/next-actions were reconciled from old C3/C4 wording to the current train: **D lighting/sky/fog/low-cost water next + Mega Asset Promotion in parallel**.
+- PG-172 now guards the README entry path and onboarding-script contract so later maintenance cannot silently remove the manager entrance.
+- Evidence boundary: onboarding/governance change only. It does not create new PIE/device/visual/performance acceptance.
+
 ## 2026-09-26 - Historical foliage guards decoupled from mutable phase labels
 
 - Final C4 closure exposed a validator design defect: PG-165/166 still required the overall materials/vegetation plan to retain a C1/C2-era top-level status, so legitimate progress to C4 was rejected even though C1/C2 invariants remained intact.
