@@ -1,3 +1,13 @@
+## 2026-09-26 - Mega-production resume / administrative reduction
+
+- Owner direction: close obsolete repair/admin notes, remove the scheduled 24-hour reporting burden, and resume large-scale production using Project Source.
+- PR #92 post-C2 cleanup is merged. Exact-head PR evidence was Pre-Unreal #1043 SUCCESS + Unreal #848 SUCCESS. Post-merge develop #1044/#849 are separate evidence and must be read independently.
+- W00 remains closed. Historical W00 repair notes are reference-only unless a concrete regression with build/log/chapter evidence reopens them.
+- Active production becomes W01/P1C01 mega-build: C3 stable foliage identity -> C4 LOD/cull/overdraw proof -> D lighting/sky/fog/water, with characters/animation/architecture/audio/VFX/source intake preparing in parallel.
+- Administrative friction is reduced: no scheduled 24-hour report; source/PDF/provenance/non-runtime warehouse work does not require Unreal builds; management updates are batched by production wave.
+- Runtime/save/canon/performance evidence remains binding. No new PIE/device/visual/performance acceptance is claimed by this planning change.
+- Execution contract: `Data/MegaProductionBuildV2.json`.
+
 ## 2026-09-26 - Post-C2 root cleanup and C3 launch gate
 - Governor stale-control reconciliation: historical PR #53/V6 repair wording and the already-completed Public/Private migration were removed from active/missing work; W00 stabilization and source migration are recorded closed, while real profiling/pooling/async-load audit debt remains open.
 - Classifier root fix: `Scripts/run_branch_cleanup.ps1` is now governance-safe when Unreal is otherwise awakened; cleanup-script maintenance may no longer force FULL/Cook/Package by falling through as an unclassified file.
