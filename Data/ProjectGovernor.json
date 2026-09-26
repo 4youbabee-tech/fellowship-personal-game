@@ -4518,7 +4518,7 @@
     "proof_boundary": "IMPLEMENTED means source/runtime integration exists. VALIDATED still requires successful Pre-Unreal, real UE4.27.2 build/import, and later PIE/device end-to-end acceptance."
   },
   "current_focus": {
-    "production_lane": "W01_P1C01_POST_D_PRODUCTION_BUILD",
+    "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
     "rule": "D lighting/sky/fog/low-cost water is merged and machine-green. Resume substantive P1C01 production from develop: bounded Mega Asset Promotion/import-integration first, then character presentation/skeletal-animation coverage and living-Shire/audio polish. Do not reopen CI/root repair without concrete regression evidence.",
     "machine_baseline": {
