@@ -1,3 +1,11 @@
+## 2026-09-27 - Legacy planning roots consolidated
+
+- Reviewed remaining unique branches before deletion rather than bulk-merging stale snapshots into current production.
+- Current production truth stays with ProjectGovernor and the merged P1C01 sequence: Mega Asset Promotion -> character presentation/skeletal-animation -> Living Shire motion/fauna -> quest/audio polish -> target-device profiling -> Gate 6/7.
+- Older localization and parallel-preparation branches are retained as intent/history through current Governor/backlog memory, not as active execution roots.
+- Old CI/report and warehouse-audit variants are explicitly superseded where later proven infrastructure/evidence exists.
+- No new world detail or canon change is authorized by this cleanup entry.
+
 ## 2026-09-26 - P1C01 C4 machine closure / D next
 
 - C4 candidate machine evidence: Pre-Unreal #1064 SUCCESS + Unreal Build #869 SUCCESS on `e881b32da6ae9713ccc096e8f213056aeef6af76`.

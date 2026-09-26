@@ -29,7 +29,15 @@
     "Docs/BRANCH_CONSOLIDATION_AUDIT.md",
     "SHIRE_PIE_VERIFY.bat"
   ],
-  "delete_after_merge": [],
+  "delete_after_merge": [
+    "ops/actions-budget-isolation-v1",
+    "ops/daily-project-manager-report-v1",
+    "ops/onboarding-handoff-v2",
+    "planning/mega-production-resume-v1",
+    "planning/w01-localization-prototype-v1",
+    "planning/w01-p1c01-mega-prep-v1",
+    "warehouse/p1c01-mega-promotion-audit-v1"
+  ],
   "safety_rules": [
     "Never delete develop or main.",
     "Never delete an active PR head.",
@@ -41,8 +49,8 @@
     "Cleanup runs only from an exact-head develop checkout."
   ],
   "final_audit": {
-    "status": "AUTOMATIC_POST_MERGE_ZERO_AHEAD_PRUNE",
-    "rule": "After every merged PR, the completed branch must disappear automatically unless it is still an active PR head or GitHub proves unique unsalvaged commits. develop remains current; historical branch-name snapshots are not cleanup inputs.",
+    "status": "LEGACY_UNIQUE_ROOTS_RESOLVED_PENDING_POST_MERGE_DELETE",
+    "rule": "After this consolidation merge, all reviewed legacy unique branches are explicitly deleted because their meaningful content is either already integrated or deliberately superseded by current Governor/CI/warehouse truth. Normal future cleanup returns to automatic post-merge zero-ahead pruning.",
     "current_active_runtime_pr": "Volatile PR state is read live from GitHub and is not stored as cleanup truth.",
     "completed_preparation_prs": [
       "PR #81 superseded by consolidation",
@@ -53,42 +61,11 @@
     "truth_boundary": "Branch/process hygiene only; no PIE/device/visual/performance acceptance implied.",
     "expected_survivors": [
       "develop",
-      "main",
-      "ops/actions-budget-isolation-v1",
-      "ops/daily-project-manager-report-v1",
-      "planning/mega-production-resume-v1",
-      "planning/w01-localization-prototype-v1",
-      "planning/w01-p1c01-mega-prep-v1",
-      "warehouse/p1c01-mega-promotion-audit-v1"
+      "main"
     ]
   },
   "active_work_branches": [],
-  "preserve_pending_salvage": [
-    {
-      "branch": "planning/w01-localization-prototype-v1",
-      "reason": "6 unique commits include localization plan/document content not present on develop; preserve for later selective integration."
-    },
-    {
-      "branch": "planning/w01-p1c01-mega-prep-v1",
-      "reason": "2 unique commits include P1C01 intake/parallel-production/acceptance content not present on develop; preserve for later selective integration."
-    },
-    {
-      "branch": "ops/actions-budget-isolation-v1",
-      "reason": "Live 2026-09-27 audit: 7 commits ahead of develop; preserve until selective salvage/supersession review."
-    },
-    {
-      "branch": "ops/daily-project-manager-report-v1",
-      "reason": "Live 2026-09-27 audit: 4 commits ahead of develop; preserve until selective salvage/supersession review."
-    },
-    {
-      "branch": "planning/mega-production-resume-v1",
-      "reason": "Live 2026-09-27 audit: 19 commits ahead of develop; preserve until selective salvage/supersession review."
-    },
-    {
-      "branch": "warehouse/p1c01-mega-promotion-audit-v1",
-      "reason": "Live 2026-09-27 audit: 4 commits ahead of develop; preserve until selective salvage/supersession review."
-    }
-  ],
+  "preserve_pending_salvage": [],
   "completed_integration_branches": [
     "stability/source-architecture-manifest-sync-v1",
     "planning/whole-game-world-build-v1",
@@ -136,5 +113,23 @@
     "self_cleanup": "maintenance/root-auto-prune-v1 is explicitly queued for deletion after merge.",
     "post_merge_trigger": "Branch Cleanup is triggered by pull_request closed and executes only when merged == true; workflow_dispatch remains available for manual audit.",
     "repeat_work_eliminated": "Historical absent refs were removed from delete_after_merge; the script enumerates remote refs once instead of issuing ls-remote once per old branch."
+  },
+  "legacy_unique_root_resolution_2026_09_27": {
+    "live_reviewed_count": 7,
+    "action": "DELETE_AFTER_THIS_CONSOLIDATION_MERGE",
+    "dispositions": {
+      "ops/actions-budget-isolation-v1": "SUPERSEDED: only old daily-report/deepseek workflow experiments; merging would reintroduce redundant CI/workflow load already replaced by the current validation architecture.",
+      "ops/daily-project-manager-report-v1": "SUPERSEDED: duplicate/older daily-report and review workflow experiments; not needed by the current single-Governor/lean-CI model.",
+      "ops/onboarding-handoff-v2": "INTEGRATED/SUPERSEDED: its drift-proof onboarding improvements have now landed on current develop; no unique execution root remains necessary.",
+      "planning/mega-production-resume-v1": "INTEGRATED/SUPERSEDED: Data/MegaProductionBuildV2.json is already byte-identical on develop; remaining old Governor/report/cleanup edits are superseded.",
+      "planning/w01-localization-prototype-v1": "SUPERSEDED AS EXECUTION BRANCH: localization intent remains durable backlog/preparation memory under the Governor, but its old branch-local Governor/state snapshot is not current and must not remain a parallel trunk.",
+      "planning/w01-p1c01-mega-prep-v1": "SUPERSEDED AS EXECUTION BRANCH: current Governor already owns the active P1C01 order, Mega Asset Promotion, character/living-world/audio sequence and Gate 6/7 acceptance boundary; old C1/C2-era lane snapshots must not override current production truth.",
+      "warehouse/p1c01-mega-promotion-audit-v1": "SUPERSEDED: its audit explicitly recorded staged_proven=0/intake_qc_proven=0, while later Warehouse #264 succeeded with persistent inventory evidence; older audit-script delta is not promoted over the proven current warehouse path."
+    },
+    "safety": "No branch is deleted merely because it is old. Each reviewed branch received an explicit integrated-or-superseded disposition before entering delete_after_merge.",
+    "target_survivors": [
+      "develop",
+      "main"
+    ]
   }
 }
