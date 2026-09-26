@@ -1,12 +1,12 @@
-## W01 P1C01 Mega Production control point - Drop C1
-- Canonical parent: `develop@712a81cac150b7fdb338a4cf7554d4f27d4b5191`.
-- Parent proof: Pre-Unreal #894 SUCCESS; Unreal #729 SUCCESS.
-- Active candidate: PR #77 on `production/w01-p1c01-materials-vegetation-v1` targeting `develop`.
-- Active lane: **W01_P1C01_PRODUCTION_VERTICAL_SLICE**.
-- Current drop: **C1 - Authored Material Texture Binding**.
-- Next dependency after exact-head green: **C2 - Lightweight Foliage Master + Wind WPO**.
+## W01 P1C01 Mega Production control point - Drop C2 v3 rebased
+- Canonical parent: `develop@f4028a89f7d2c541cddcb987f43963be87e944e0`.
+- Active candidate: PR #87 on `production/w01-p1c01-foliage-wind-v3`.
+- Current drop: **C2 - Lightweight Foliage Master + Wind WPO**.
+- Transplanted importer blob `66f12ff5926b96118f59fbc3cab893ebd01f6fff` matches the previously proven #924/#759 implementation; fresh rebased-head proof is still required.
+- Required lane: **Fast Asset Lane** = incremental Editor build -> production import -> Automation QA -> startup smoke; no Cook/Package or chapter/state audits.
+- Next: C3 stable foliage material identity only after C2 merge.
 - W00 remains CLOSED; reopen only for a concrete regression.
-- Evidence boundary: STATIC-VALIDATED until PR #77 exact-head machine proof.
+- Evidence boundary: STATIC-VALIDATED rebase candidate until exact-head machine proof.
 
 # Master Execution Board
 
@@ -14,10 +14,10 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 
 ## Current control point
 
-- PR: #77 (W01/P1C01 material texture binding candidate)
-- Branch: `production/w01-p1c01-materials-vegetation-v1`
+- PR: #87 (W01/P1C01 C2 foliage wind candidate)
+- Branch: `production/w01-p1c01-foliage-wind-v3`
 - Active lane: **W01_P1C01_PRODUCTION_VERTICAL_SLICE**
-- Active production drop: **C1_MATERIAL_TEXTURE_BINDING**
+- Active production drop: **C2_LIGHTWEIGHT_FOLIAGE_WIND**
 - Previous lane: **W00_ARCHITECTURAL_STABILIZATION — CLOSED**
 - Canonical integration/programmer-handoff branch: `develop`
 - Stable release branch: `main`

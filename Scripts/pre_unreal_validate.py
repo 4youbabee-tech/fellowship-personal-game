@@ -2546,10 +2546,41 @@ for pg165_symbol in [
         fail(f"PG-165 authored albedo binding invariant missing: {pg165_symbol}")
 
 pg165_plan = json.loads(read(ROOT / "Data" / "P1C01MaterialsVegetationPlanV1.json"))
-if pg165_plan.get("status") != "C1_ALBEDO_BINDING_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
-    fail("PG-165 Drop C1 material plan status changed")
+if pg165_plan.get("status") not in {
+    "C1_ALBEDO_BINDING_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "C2_FOLIAGE_WIND_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+}:
+    fail("PG-165 Drop C1/C2 material plan status changed")
 if "AlbedoTexture" not in json.dumps(pg165_plan):
     fail("PG-165 Drop C1 lost AlbedoTexture contract")
+
+
+# PG-166: Drop C2 lightweight foliage wind stays material-only and uses the UE4.27 material-function API.
+pg166_importer = pg165_importer
+for pg166_symbol in [
+    "MaterialExpressionMaterialFunctionCall",
+    'TEXT("M_ProductionFoliage")',
+    'TEXT("M_ProductionFoliageFar")',
+    'ParameterName = TEXT("WindIntensity")',
+    'ParameterName = TEXT("WindSpeed")',
+    'ParameterName = TEXT("WindWeight")',
+    "/Engine/Functions/Engine_MaterialFunctions01/WorldPositionOffset/SimpleGrassWind.SimpleGrassWind",
+    "WorldPositionOffset.Expression = SimpleWind",
+    'TEXT("ShireProductionImport failed to bind UE4.27 SimpleGrassWind material function.")',
+    'TEXT("ShireProductionImport created M_ProductionFoliageFar no-WPO master.")',
+]:
+    if pg166_symbol not in pg166_importer:
+        fail(f"PG-166 foliage wind invariant missing: {pg166_symbol}")
+pg166_plan = pg165_plan
+if pg166_plan.get("status") != "C2_FOLIAGE_WIND_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-166 Drop C2 plan status changed")
+pg166_perf = pg166_plan.get("performance_contract", {}).get("c2_wind_strategy", {})
+if "no WorldPositionOffset" not in pg166_perf.get("far", ""):
+    fail("PG-166 far foliage path lost the no-WPO complexity contract")
+if pg166_perf.get("density") != "unchanged until target-device profiling":
+    fail("PG-166 foliage density profiling gate changed")
+if "MaterialExpressionDistanceCullFade" in pg166_importer or "DistanceScaledWindWeight" in pg166_importer:
+    fail("PG-166 C2 must not regress to the non-exported DistanceCullFade dependency")
 
 
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
