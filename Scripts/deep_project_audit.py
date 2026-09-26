@@ -3,7 +3,7 @@ from __future__ import annotations
 import json,re,sys
 from pathlib import Path
 from runtime_audit_contracts import MODE_EXTRA_ARGS, mode_has_evidence
-from source_contracts import signal_precedes_member_mutation
+from source_contracts import signal_precedes_member_mutation, has_strict_asset_audit_command
 ROOT=Path(__file__).resolve().parents[1]
 SRC=ROOT/"Source"/"ShireJourney"
 errors=[]
@@ -254,7 +254,7 @@ if "ObjectPathToPackageName(ProductionSurfaceObjectPath)" not in importer:
  errors.append("explicit FString package-name preflight missing from production importer")
 
 pre_unreal_workflow=read(ROOT/".github"/"workflows"/"pre-unreal-validation.yml")
-if "python Scripts/asset_quality_audit.py --strict" not in pre_unreal_workflow:
+if not has_strict_asset_audit_command(pre_unreal_workflow):
  errors.append("Pre-Unreal workflow does not fail closed on structural asset-quality defects")
 
 asset_quality=read(ROOT/"Scripts"/"asset_quality_audit.py")

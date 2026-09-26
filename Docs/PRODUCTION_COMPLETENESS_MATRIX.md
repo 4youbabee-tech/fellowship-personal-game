@@ -1,3 +1,9 @@
+## 2026-09-26 - Recurring CI failure: Python launcher contract
+
+Exact head `1e7be3da32a9d4f8cd85297260e5abce2e9492f2`, run 36226440287, passed structure, Governor, strict asset quality and readiness checks, then failed deep audit because it searched for a literal `python Scripts/asset_quality_audit.py --strict`. The workflow now correctly uses the resolved `"%PYTHON_EXE%"` interpreter. The guard recognizes supported direct one-line run commands without accepting comments, echoed commands, missing strict mode or masked shell failures.
+
+Validation: 11 local source-contract unit tests passed, including accepted launchers and negative command cases. Full exact-head Pre-Unreal remains pending. This changes static validation only; no runtime or performance acceptance. Governor handoff: `ci_recurrence_review_2026_09_26`. Packaged executable launch remains a separate open investigation.
+
 ## 2026-09-26 - Runner supervision + fast core validation hardening
 
 - **Runner ownership:** interactive-user watchdog remains authoritative; legacy `actions.runner.*` service must be **Stopped / Manual**.
@@ -1015,3 +1021,4 @@ Whenever a chapter, route, enemy, biome, mechanic or major story beat changes:
 - update the relevant story/audio plan,
 - add Guardian validation where machine-checkable,
 - do not mark ACCEPTED without real UE4.27/PIE evidence.
+

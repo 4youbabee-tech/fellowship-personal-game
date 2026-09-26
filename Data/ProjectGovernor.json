@@ -5835,5 +5835,33 @@
     "superseded_run_policy": "On acceptance/* branches, newer commits cancel older in-progress runs sharing the UE4 device concurrency group. Non-acceptance branches remain serialized.",
     "current_boundary": "Canonical develop has final branch/workspace hardening plus PG-159/PG-160 warning-debt guards. Fresh exact-head compile and P1C01 PIE warning log are the remaining proof.",
     "runner_policy": "Keep the supervised user-context self-hosted runner; keep NETWORK SERVICE/manual legacy service out of execution; Warehouse no-delta work remains GitHub-hosted; real Warehouse work shares UE4 device serialization. If the upstream zero-step acquire hang recurs, watchdog recovery handles the listener rather than reopening game-code repair."
+  },
+  "ci_recurrence_review_2026_09_26": {
+    "owner_request": "Investigate recurring Actions interruptions, correct confirmed causes and persist handoff.",
+    "reviewed_sha": "1e7be3da32a9d4f8cd85297260e5abce2e9492f2",
+    "findings": [
+      {
+        "id": "CI-REC-001",
+        "status": "IMPLEMENTED_PENDING_CI",
+        "cause": "Deep audit required literal python launcher although workflow successfully executes strict asset audit using resolved PYTHON_EXE.",
+        "fix": "Recognize supported direct run commands; reject comments, echo, missing strict and masked exit. 11 source-contract tests pass locally.",
+        "evidence": "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/36226440287"
+      },
+      {
+        "id": "CI-REC-002",
+        "status": "REPAIR_ALREADY_PRESENT_PENDING_INTEGRATION",
+        "cause": "Python setup.ps1 blocked by PowerShell execution policy on foliage branch.",
+        "evidence": "https://github.com/4youbabee-tech/fellowship-personal-game/actions/runs/36200615265",
+        "next": "Preserve existing local-Python resolver on PR90; reconcile foliage branch after integration."
+      },
+      {
+        "id": "CI-REC-003",
+        "status": "OPEN",
+        "cause": "Packaged executable launch failure remains separately recorded in current state; not diagnosed or closed by this static validator repair.",
+        "next": "Inspect latest Unreal packaged-launch log before any runtime repair."
+      }
+    ],
+    "resume": "Finish exact-head Pre-Unreal on PR90, inspect packaged-launch failure, then reconcile pending foliage PR87. Historical September 21 gameplay findings must be rechecked against current code, not reapplied blindly.",
+    "proof_boundary": "11 local source-contract tests only; full CI pending; no new Unreal/PIE/device proof."
   }
 }
