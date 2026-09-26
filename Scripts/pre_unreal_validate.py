@@ -6863,6 +6863,37 @@ for pg145_maintenance_path in [
         fail(f"PG-145 maintenance path must stay off Unreal device lane in push and PR filters: {pg145_maintenance_path}")
 
 
+# PG-145B: every self-hosted lane must fail fast when the runner falls back to a service
+# identity or loses its interactive desktop/watchdog ownership.
+pg145b_probe = read(ROOT / "Scripts" / "verify_runner_session.ps1")
+for pg145b_symbol in [
+    "NETWORK SERVICE",
+    "SessionId",
+    "Runner.Listener.exe",
+    "Runner.Worker.exe",
+    "actions.runner.*",
+    "ShireJourney-GitHubRunner-Watchdog",
+    "Test-NetConnection github.com -Port 443",
+    "RUNNER_HEALTH_PASS",
+]:
+    if pg145b_symbol not in pg145b_probe:
+        fail(f"PG-145B runner health probe missing: {pg145b_symbol}")
+
+pg145b_health_workflow = read(ROOT / ".github" / "workflows" / "runner-health.yml")
+if "workflow_dispatch:" not in pg145b_health_workflow or "verify_runner_session.ps1" not in pg145b_health_workflow:
+    fail("PG-145B manual runner health workflow is incomplete")
+
+for pg145b_path, pg145b_before in [
+    (ROOT / ".github" / "workflows" / "pre-unreal-validation.yml", "Resolve existing local Python"),
+    (ROOT / ".github" / "workflows" / "unreal-build-validation.yml", "Classify current delta for Unreal validation"),
+    (ROOT / ".github" / "workflows" / "warehouse-stage.yml", "Stage Poly Haven CC0 batch"),
+]:
+    pg145b_text = read(pg145b_path)
+    probe_pos = pg145b_text.find("verify_runner_session.ps1")
+    work_pos = pg145b_text.find(pg145b_before)
+    if probe_pos < 0 or work_pos < 0 or probe_pos > work_pos:
+        fail(f"PG-145B runner health gate must precede heavy work: {pg145b_path.name}")
+
 # PG-146: route/chapter/episode/character identity is one fail-closed contract.
 pg146_quest_h = read(resolve_source("ShireQuestSubsystem.h"))
 pg146_quest = read(resolve_source("ShireQuestSubsystem.cpp"))
