@@ -22,3 +22,7 @@ That log explicitly reports FULL_UNREAL_FILE README.md and FULL_UNREAL_FILE Scri
 
 ## Boundaries and remaining work
 No engine, story, movement, save/load or experiential acceptance checks were globally disabled. Queue time on the single Windows runner remains possible. This change targets needless full builds, not a guaranteed wall-clock SLA. PowerShell tests must pass on Windows CI; no local PowerShell runtime is available in this session. Record actual post-change durations before claiming a measured speedup. Broad concurrency/scheduling changes are deferred until this measured root cause is resolved.
+
+## Checkout stall observed after previous review
+
+Unreal #888 on the latest onboarding head was still in exact-head checkout more than six minutes after starting, although Pre-Unreal #1083 had passed. The generated Unreal Git fetch used seven retries without an HTTP low-speed bound. Add Git's 1000 bytes/s for 20 seconds low-speed cutoff to each retry, preserving seven attempts, depth two and exact SHA verification. This bounds stalled transfer attempts; it does not bypass Git authentication, provenance or engine checks. Verify the next run's checkout duration before claiming an improvement. A stalled already-running workflow uses its older script and is unaffected.

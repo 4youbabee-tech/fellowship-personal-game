@@ -148,7 +148,7 @@ jobs:
           >>"!STABLE_CHECKOUT!" echo :fetch
           >>"!STABLE_CHECKOUT!" echo set /a ATTEMPT+=1
           >>"!STABLE_CHECKOUT!" echo echo Fetching exact PR head attempt %%ATTEMPT%% of 7...
-          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" fetch --no-tags --prune --depth=2 origin %%TARGET_SHA%%
+          >>"!STABLE_CHECKOUT!" echo "!GITEXE!" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --prune --depth=2 origin %%TARGET_SHA%%
           >>"!STABLE_CHECKOUT!" echo if not errorlevel 1 goto fetched
           >>"!STABLE_CHECKOUT!" echo if %%ATTEMPT%% GEQ 7 exit /b 72
           >>"!STABLE_CHECKOUT!" echo powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 5"
