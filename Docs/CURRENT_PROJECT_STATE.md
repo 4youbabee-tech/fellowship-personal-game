@@ -1,3 +1,16 @@
+## 2026-09-26 - Repository-native 24-hour Project Manager report
+
+- Owner clarified that the 24-hour report belongs to the in-repository Project Manager, not to a ChatGPT reminder.
+- Dedicated manager issue: #96 `Project Manager - Daily Shire Journey Progress`.
+- Added `Scripts/daily_project_manager_report.py` to generate a conservative planning/production report from `Data/ProjectGovernor.json` + `Data/CompletionWaveMapV1.json` plus the last 24 hours of repository movement.
+- Added `.github/workflows/daily-project-manager-report.yml`; the scheduled controller is designed to live on the default branch and always checks out current `develop` before generating the report.
+- W00 closure advances the planning baseline from the historical 40% to **42%** per `CompletionWaveMapV1`. W01 remains active; 48% is not claimed until W01 exit criteria are actually satisfied.
+- Report contents: planning percentage, 24-hour percentage delta, current wave/lane/gate, meaningful recent repository movement, next percentage unlock, and explicit unaccepted human/device evidence.
+- The report is informational and never blocks production. Commit count alone cannot increase completion.
+- Post-PR92 merged baseline `develop@1c93ac08e1ccc9dc8038cec64855e1ce7c1ec231`: Pre-Unreal #1044 SUCCESS + Unreal #849 SUCCESS.
+- Branch Cleanup #7 failed only in `Scripts/run_branch_cleanup.ps1` open-PR response handling under StrictMode; PR #95 contains the null/property-safe repair.
+- Evidence boundary: manager reporting and cleanup maintenance do not imply PIE/device/visual/pacing/performance acceptance.
+
 ## 2026-09-26 - Mega-production resume / administrative reduction
 
 - Owner direction: close obsolete repair/admin notes, remove the scheduled 24-hour reporting burden, and resume large-scale production using Project Source.
