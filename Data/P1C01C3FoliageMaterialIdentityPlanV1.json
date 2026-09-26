@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_C3_FOLIAGE_MATERIAL_IDENTITY_V1",
-  "status": "C3_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+  "status": "C3_EXACT_HEAD_GREEN_MERGED_C4_READY",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/P1C01MaterialsVegetationPlanV1.json",
@@ -54,7 +54,7 @@
     "No foliage density increase.",
     "PIE visual wind acceptance remains later manual evidence, not implied by import success."
   ],
-  "evidence_boundary": "Source implementation complete on candidate branch. STATIC-VALIDATED only until exact-head Pre-Unreal and UE4.27.2 asset/editor validation succeed. No PIE/device/visual/performance acceptance claimed.",
+  "evidence_boundary": "C3 is machine-green and merged. This proves static/compile/import/headless exercised behavior only; no PIE/device/visual/performance acceptance is implied.",
   "implementation": {
     "branch": "production/p1c01-c3-foliage-identity-v1",
     "source_file": "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",
@@ -65,5 +65,13 @@
       "M_ProductionFoliageFar remains unassigned in C3.",
       "Material instance object paths, albedo bindings, Color/Roughness/Metallic values and foliage density are preserved."
     ]
+  },
+  "machine_evidence": {
+    "candidate_head": "7545ab76bd5b9a113bf6d28c0f881f3990f03146",
+    "pre_unreal": "#1060 SUCCESS",
+    "unreal": "#865 SUCCESS",
+    "merge_commit": "c415780979f1056f714e984d8c485d53985997fc",
+    "merged_develop_pre_unreal": "#1061 SUCCESS",
+    "merged_develop_unreal": "#866 SUCCESS"
   }
 }
