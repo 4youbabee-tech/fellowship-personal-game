@@ -97,9 +97,9 @@ permissions:
   actions: read
 
 concurrency:
-  group: unreal-build-${{ github.repository }}-ue4-device
-  # Exact-head proof only matters for the newest PR SHA. Cancel superseded PR runs
-  # before they waste the single UE4 device; develop pushes remain serialized.
+  # Cancel only superseded runs from the same PR branch. Different PRs/develop stay
+  # distinct here and are still physically serialized by the single self-hosted runner.
+  group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
