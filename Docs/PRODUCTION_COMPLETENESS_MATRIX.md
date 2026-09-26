@@ -1,3 +1,16 @@
+## 2026-09-26 - Runner supervision and validation-time hardening
+
+- **Runner watchdog ownership:** HARDENED in source; legacy `actions.runner.*` remains Manual/Stopped by policy.
+- **Supervisor self-heal:** AtLogOn + repeating 5-minute trigger, `MultipleInstances IgnoreNew`.
+- **Orphan listener recovery:** ADDED; only when no `Runner.Worker` is active.
+- **Existing broker hang recovery:** RETAINED at 150 seconds for acknowledged-job/no-worker.
+- **CORE validation inheritance:** nearest safe first-parent core ancestor supported.
+- **Preparation-only gap handling:** allowed only for explicit Docs/WholeGame/Warehouse/source-extraction/P1C01-plan/tooling paths.
+- **Unsafe gap:** fail-closed to FULL validation.
+- **UE4 device queue:** validator/watchdog-policy-only deltas excluded from the Unreal device lane; Pre-Unreal remains the static gate.
+- **Live C2 evidence before hardening:** #821 core build/import/runtime sequence + Cook + Runtime Data verification succeeded; packaged executable launch failed, so overall #821 = FAILURE.
+- **Evidence state:** STATIC-VALIDATED SOURCE CHANGE / DEVICE WATCHDOG REINSTALL PENDING.
+
 ## 2026-09-26 - P1C01 warehouse material staging V4
 
 - **Poly Haven manifest:** V4 / all authorized slugs have source-page records.
