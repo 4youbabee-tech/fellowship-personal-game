@@ -56,6 +56,18 @@ Start-Sleep -Seconds 5
 $listenerNow = @(Get-Process -Name "Runner.Listener" -ErrorAction SilentlyContinue)
 if ($listenerNow.Count -eq 0) { throw "Watchdog task installed, but Runner.Listener is not online. Check $RunnerRoot\_diag\ShireRunnerWatchdog.log." }
 
-Write-Host ("SHIRE_RUNNER_WATCHDOG_INSTALLED task=" + $TaskName + " identity=" + $identity + " listenerPid=" + $listenerNow[0].Id)
+$serviceViolations = @()
+foreach ($service in @(Get-Service -Name "actions.runner.*" -ErrorAction SilentlyContinue)) {
+    $serviceNow = Get-CimInstance Win32_Service -Filter ("Name='" + $service.Name.Replace("'","''") + "'")
+    if ($service.Status -ne "Stopped" -or $serviceNow.StartMode -ne "Manual") {
+        $serviceViolations += ($service.Name + ":status=" + $service.Status + ":startMode=" + $serviceNow.StartMode)
+    }
+}
+if ($serviceViolations.Count -gt 0) { throw ("Legacy runner service ownership violation: " + ($serviceViolations -join ",")) }
+
+$taskNow = Get-ScheduledTask -TaskName $TaskName
+if ($taskNow.State -notin @("Running","Ready")) { throw ("Watchdog scheduled task is not healthy: " + $taskNow.State) }
+
+Write-Host ("SHIRE_RUNNER_WATCHDOG_INSTALLED task=" + $TaskName + " identity=" + $identity + " listenerPid=" + $listenerNow[0].Id + " taskState=" + $taskNow.State + " serviceOwnership=manual-stopped")
 Write-Host ("Watchdog copy: " + $installedWatchdog)
 Write-Host ("Watchdog log: " + (Join-Path $RunnerRoot "_diag\ShireRunnerWatchdog.log"))
