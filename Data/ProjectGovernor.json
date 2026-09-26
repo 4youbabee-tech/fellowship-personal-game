@@ -6044,5 +6044,13 @@
     "legacy_source_head": "Informational compatibility copy only; mismatch warns and never certifies another commit.",
     "blocking_checks": "Invalid or mixed-SHA evidence, failed last-green baselines, missing validation snapshots and missing experiential acceptance boundaries remain blocking.",
     "production_priority": "Advance the cohesive playable story slice: quest continuity, living world, save/load integrity and measured target-device performance. Administrative metadata must not substitute for player-facing acceptance."
+  },
+  "validation_latency_policy": {
+    "priority": "Story, movement, system integration and save/load correctness remain mandatory.",
+    "non_runtime": "README, onboarding and Governor evidence helpers use the explicit non-runtime allowlist. Reuse engine proof only across a checked safe delta to a successful ancestor.",
+    "unknown_paths": "Default to full validation; never blanket-exempt Scripts or Data.",
+    "batching": "Publish related changes in one atomic commit after local review; avoid per-file pushes that create superseded jobs.",
+    "measurement": "Docs/CI_LATENCY_REVIEW_2026-09-26.md",
+    "acceptance": "Measure next exact-head run before claiming latency improvement. Human playability and target-device performance remain separate."
   }
 }

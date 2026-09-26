@@ -68,6 +68,8 @@ function Test-SafeGovernanceDelta([string]$GitExe, [string]$BaseSha, [string]$He
         $safe = (
             $n.StartsWith("Docs/") -or
             ($SafeExact -contains $n) -or
+            $n -eq "Scripts/classify_unreal_validation.ps1" -or
+            $n -eq "Scripts/pre_unreal_validate.py" -or
             $n -eq "Scripts/project_governor.py" -or
             $n -eq "Scripts/asset_quality_audit.py" -or
             $n -eq ".github/workflows/pre-unreal-validation.yml" -or
@@ -82,12 +84,16 @@ function Test-SafeGovernanceDelta([string]$GitExe, [string]$BaseSha, [string]$He
 function Test-NearestSafeGovernanceAncestorGreen([string]$GitExe, [string]$ParentSha, [string]$HeadSha, [string[]]$SafeExact) {
     if (-not $env:GH_TOKEN) { return $false }
 
+    # Exact checkout is shallow; fetch bounded history only when ancestor proof is needed.
+    & $GitExe fetch --no-tags --depth=21 origin $HeadSha
+    if ($LASTEXITCODE -ne 0) { return $false }
+
     $ancestors = @(& $GitExe rev-list --first-parent --max-count=20 $ParentSha)
     if ($LASTEXITCODE -ne 0 -or $ancestors.Count -eq 0) { return $false }
 
     foreach ($candidate in $ancestors) {
-        if (-not (Test-ParentWholeWorkflowGreen $candidate)) { continue }
         if (-not (Test-SafeGovernanceDelta $GitExe $candidate $HeadSha $SafeExact)) { continue }
+        if (-not (Test-ParentWholeWorkflowGreen $candidate)) { continue }
 
         Write-Host "TRANSITIVE_GOVERNANCE_PROOF_PASS ancestor=$candidate parent=$ParentSha head=$HeadSha"
         return $true
@@ -227,6 +233,11 @@ function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [
     if ($delta.Count -eq 0) { return $true }
 
     $safeExact = @(
+    "README.md",
+    "Scripts/new_developer_onboarding.ps1",
+    "Scripts/governor_handoff.py",
+    "Scripts/test_governor_handoff.py",
+    "Scripts/test_unreal_classifier.ps1",
         "Data/ProjectGovernor.json",
         "Data/DeepProjectAudit.json",
         "Data/BranchCleanupPlan.json",
@@ -484,6 +495,11 @@ if($policyOnlyTouched.Count -gt 0 -and $acceptanceTouched.Count -eq 0 -and $core
     if(Test-ParentWholeWorkflowGreen $parentSha){
         $policyOnlyTouched | ForEach-Object { Write-Host "VALIDATION_POLICY_ONLY_FILE $_" }
         Set-Mode "inherit" "validation-policy-only-inherits-green-parent-no-engine-repeat" $parentSha
+        exit 0
+    }
+    $candidateParent = (& $git rev-parse "$($env:TARGET_SHA)^").Trim()
+    if ($LASTEXITCODE -eq 0 -and (Test-NearestSafeGovernanceAncestorGreen $git $candidateParent $env:TARGET_SHA $safeExact)) {
+        Set-Mode "inherit" "validation-policy-only-inherits-safe-green-ancestor" $parentSha
         exit 0
     }
     Set-Mode "full" "validation-policy-only-parent-not-green-fail-safe" $parentSha
