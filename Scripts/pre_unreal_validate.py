@@ -4860,6 +4860,2596 @@ if "uses: actions/checkout@" in pg167_cleanup or "shell: powershell" in pg167_cl
     fail("PG-167 Branch Cleanup must use bounded local checkout and explicit PowerShell Bypass")
 
 pg167_cleanup_script = read(ROOT / "Scripts" / "run_branch_cleanup.ps1")
+if pg167_cleanup_script.count("function Remove-RemoteBranch {") != 1:
+    fail("PG-167 Branch Cleanup PowerShell structure corrupted: Remove-RemoteBranch must be defined exactly once")
+if pg167_cleanup_script.count("if ($line -match 'refs/heads/(.+)for pg167_cleanup_guard in [
+    "preserve_pending_salvage",
+    "active_work_branches",
+    "active_infrastructure_branches",
+    "Refusing plan-protected branch in delete_after_merge",
+    "Plan-protected branch missing after cleanup",
+    "BRANCH_CLEANUP_AUTO_ZERO_AHEAD",
+    "BRANCH_CLEANUP_KEEP_UNIQUE",
+    "compare/develop...",
+]:
+    if pg167_cleanup_guard not in pg167_cleanup_script:
+        fail(f"PG-167 plan-protected branch cleanup guard missing: {pg167_cleanup_guard}")
+
+pg167_classifier = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
+pg167_maintenance_safe = [
+    "Scripts/prepare_p1c01_material_intake.ps1",
+    "Scripts/promote_p1c01_material_intake.ps1",
+    "Scripts/run_p1c01_material_pipeline.ps1",
+    "Scripts/install_runner_watchdog.ps1",
+    "Scripts/runner_watchdog.ps1",
+    "Scripts/deep_project_audit.py",
+    "Scripts/test_deep_project_audit.py",
+    "Scripts/source_contracts.py",
+    "Scripts/test_source_contracts.py",
+    "Scripts/verify_runner_session.ps1",
+    "Scripts/test_runtime_smoke.py",
+    "Scripts/runtime_smoke.py",
+    "Scripts/test_asset_quality_audit.py",
+    "Scripts/asset_quality_audit.py",
+    "Scripts/run_branch_cleanup.ps1",
+]
+for pg167_safe_path in pg167_maintenance_safe:
+    if pg167_classifier.count(f'"{pg167_safe_path}"') < 2:
+        fail(f"PG-167 maintenance path must remain safe in both classifier proof sets: {pg167_safe_path}")
+
+pg167_runner_health = read(ROOT / ".github" / "workflows" / "runner-health.yml")
+for pg167_health_symbol in [
+    "RUNNER_HEALTH_EXACT_CHECKOUT_PASS",
+    "verify_runner_session.ps1",
+    "http.lowSpeedTime=20",
+]:
+    if pg167_health_symbol not in pg167_runner_health:
+        fail(f"PG-167 hardened runner-health workflow missing: {pg167_health_symbol}")
+if "uses: actions/checkout@" in pg167_runner_health:
+    fail("PG-167 Runner Health must not depend on marketplace checkout")
+
+pg167_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+for pg167_symbol in [
+    "paths-ignore:",
+    ".github/workflows/**",
+    "Data/WholeGame*.json",
+    "Data/*Warehouse*.json",
+    "Data/P1C01WorldBuildIntakePacketV1.json",
+    "Data/BranchCleanupPlan.json",
+    "Scripts/run_branch_cleanup.ps1",
+    "group: unreal-build-${{ github.repository }}-${{ github.event_name == 'pull_request' && github.head_ref || 'develop' }}",
+    "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
+]:
+    if pg167_symbol not in pg167_unreal:
+        fail(f"PG-167 Unreal queue-isolation contract missing: {pg167_symbol}")
+
+
+# PG-168: Warehouse staging must not depend on GitHub-hosted workers or obsolete branches.
+pg168 = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
+for pg168_symbol in [
+    "branches:",
+    "- develop",
+    "- self-hosted",
+    "- Windows",
+    "- X64",
+    "- ue4-27",
+    "group: warehouse-stage-${{ github.repository }}",
+    "cancel-in-progress: true",
+]:
+    if pg168_symbol not in pg168:
+        fail(f"PG-168 warehouse execution contract missing: {pg168_symbol}")
+if "runs-on: ubuntu-latest" in pg168 or "runs-on: windows-latest" in pg168:
+    fail("PG-168 warehouse staging must not depend on GitHub-hosted runners")
+if "integration/comprehensive-foundation-v1" in pg168:
+    fail("PG-168 warehouse push trigger still points at an obsolete integration branch")
+
+
+if errors:
+    print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
+    for message in errors:
+        print(f"ERROR: {message}")
+    sys.exit(1)
+
+
+# PG-175: Unreal CI latency architecture must preserve exact-head safety without
+# rebuilding superseded/admin-only commits or destroying incremental Git state.
+pg175_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+pg175_classifier = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
+pg175_latency = read(ROOT / "Docs" / "CI_LATENCY_REVIEW_2026-09-26.md")
+
+for pg175_required in [
+    "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
+    "http.lowSpeedLimit=1000",
+    "http.lowSpeedTime=20",
+    "Fetching exact PR head attempt %%ATTEMPT%% of 3",
+    "Scrub checkout credential from persistent Git metadata",
+]:
+    if pg175_required not in pg175_workflow:
+        fail(f"PG-175 Unreal workflow latency/safety invariant missing: {pg175_required}")
+
+for pg175_forbidden in [
+    'if exist ".git" rmdir /S /Q ".git"',
+    "attempt %%ATTEMPT%% of 7",
+]:
+    if pg175_forbidden in pg175_workflow:
+        fail(f"PG-175 obsolete destructive/retry behavior returned: {pg175_forbidden}")
+
+for pg175_ignored in [
+    "'README.md'",
+    "'Scripts/new_developer_onboarding.ps1'",
+    "'Scripts/governor_handoff.py'",
+    "'Scripts/test_governor_handoff.py'",
+    "'Scripts/test_unreal_classifier.ps1'",
+]:
+    if pg175_workflow.count(pg175_ignored) < 2:
+        fail(f"PG-175 administrative path is not excluded from both push and PR Unreal triggers: {pg175_ignored}")
+
+for pg175_tree_marker in [
+    "function Test-TreeEquivalentCoreProof",
+    "TREE_EQUIVALENT_CORE_PROOF_PASS",
+    'rev-parse "$ParentSha^{tree}"',
+    'rev-parse "$candidate^{tree}"',
+]:
+    if pg175_tree_marker not in pg175_classifier:
+        fail(f"PG-175 exact tree-equivalent proof guard missing: {pg175_tree_marker}")
+
+if "same Git tree" not in pg175_latency and "tree" not in pg175_latency.lower():
+    fail("PG-175 CI latency review must explain exact tree-equivalent proof reuse")
+
+
+print("PRE-UNREAL CORE VALIDATION PASSED")
+
+# PG-050: mass world dressing must remain deterministic, source-controlled and story-safe.
+world_dressing_plan_path = ROOT / "Data" / "WorldDressingPlan.json"
+if not world_dressing_plan_path.exists():
+    fail("PG-050 world dressing plan missing")
+else:
+    try:
+        world_dressing_plan = json.loads(read(world_dressing_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-050 invalid WorldDressingPlan.json: {exc}")
+        world_dressing_plan = {}
+
+common_dressing_assets = [
+    "SM_CommonPineTree.obj",
+    "SM_CommonBroadleafTree.obj",
+    "SM_CommonGoldenTree.obj",
+    "SM_CommonFallenLog.obj",
+    "SM_CommonDryStoneWall.obj",
+    "SM_CommonPathMarker.obj",
+    "SM_CommonVillageFence.obj",
+    "SM_CommonWoodPile.obj",
+    "SM_CommonFernClump.obj",
+    "SM_CommonReedCluster.obj",
+    "SM_CommonRuinSlab.obj",
+    "SM_CommonFootbridge.obj",
+]
+common_dressing_root = ROOT / "SourceAssets" / "Production" / "World" / "Common"
+for asset_name in common_dressing_assets:
+    if not (common_dressing_root / asset_name).exists():
+        fail(f"PG-050 common world dressing asset missing: {asset_name}")
+
+world_builder_h = read(resolve_source("FellowshipChapterWorldBuilder.h"))
+world_builder_cpp = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
+for symbol in [
+    "CommonPineTreeMesh",
+    "CommonBroadleafTreeMesh",
+    "CommonGoldenTreeMesh",
+    "CommonFallenLogMesh",
+    "CommonDryStoneWallMesh",
+    "CommonPathMarkerMesh",
+    "CommonFernClumpMesh",
+    "CommonReedClusterMesh",
+    "CommonRuinSlabMesh",
+    "CommonFootbridgeMesh",
+    "SpawnScatter",
+]:
+    if symbol not in (world_builder_h + world_builder_cpp):
+        fail(f"PG-050 world dressing runtime symbol missing: {symbol}")
+
+for chapter_id in ["P1C03", "P1C04", "P1C05", "P1C06", "P1C07", "P1C08"]:
+    if f'ChapterId == TEXT("{chapter_id}")' not in world_builder_cpp:
+        fail(f"PG-050 chapter dressing branch missing: {chapter_id}")
+
+if world_dressing_plan:
+    profiles = world_dressing_plan.get("chapter_profiles", [])
+    profile_ids = {str(p.get("chapter") or "") for p in profiles if isinstance(p, dict)}
+    for chapter_id in ["P1C01","P1C02","P1C03","P1C04","P1C05","P1C06","P1C07","P1C08"]:
+        if chapter_id not in profile_ids:
+            fail(f"PG-050 world dressing plan missing chapter profile: {chapter_id}")
+
+# PG-051: character motion + regional atmosphere must stay rig-ready, bounded and topology-safe.
+character_motion_plan_path = ROOT / "Data" / "CharacterMotionPlan.json"
+chapter_atmosphere_plan_path = ROOT / "Data" / "ChapterAtmospherePlan.json"
+for guarded_path, guard_name in [
+    (character_motion_plan_path, "CharacterMotionPlan.json"),
+    (chapter_atmosphere_plan_path, "ChapterAtmospherePlan.json"),
+]:
+    if not guarded_path.exists():
+        fail(f"PG-051 production plan missing: {guard_name}")
+    else:
+        try:
+            json.loads(read(guarded_path))
+        except json.JSONDecodeError as exc:
+            fail(f"PG-051 invalid {guard_name}: {exc}")
+
+npc_motion_h = read(resolve_source("ShireNPC.h"))
+npc_motion_cpp = read(resolve_source("ShireNPC.cpp"))
+character_stream_h = read(resolve_source("ShireChapterAssetStreamingSubsystem.h"))
+character_stream_cpp = read(resolve_source("ShireChapterAssetStreamingSubsystem.cpp"))
+for symbol in [
+    "TryApplyProductionRig",
+    "bUsingSkeletalProductionRig",
+    "MotionCadenceScale",
+    "MotionStrideScale",
+    "MotionIdleScale",
+    "DialogueGesture",
+]:
+    if symbol not in (npc_motion_h + npc_motion_cpp):
+        fail(f"PG-051 character motion invariant missing: {symbol}")
+for symbol in [
+    "RequestCharacterRig",
+    "ResolveCharacterRig",
+    "ABP_%s_Locomotion",
+    "FStreamableManager",
+]:
+    if symbol not in (character_stream_h + character_stream_cpp):
+        fail(f"PG-051 async character rig invariant missing: {symbol}")
+
+chapter_world_h = read(resolve_source("FellowshipChapterWorldBuilder.h"))
+chapter_world_cpp = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
+for symbol in [
+    "ConfigureChapterAtmosphere",
+    "ADirectionalLight",
+    "ASkyLight",
+    "AExponentialHeightFog",
+    "RuntimeAtmosphereManaged",
+    "SetFogDensity",
+    "RecaptureSky",
+]:
+    if symbol not in (chapter_world_h + chapter_world_cpp):
+        fail(f"PG-051 atmosphere invariant missing: {symbol}")
+
+for chapter_id in ["P1C03", "P1C04", "P1C05", "P1C06", "P1C07", "P1C08"]:
+    if chapter_world_cpp.count(f'ChapterId == TEXT("{chapter_id}")') < 1:
+        fail(f"PG-051 atmosphere/world chapter branch missing: {chapter_id}")
+
+# PG-052: resource saturation must keep all current project-owned families integrated and startup data packaged.
+resource_integration_path = ROOT / "Data" / "ResourceIntegrationPlan.json"
+resource_integration = {}
+if not resource_integration_path.exists():
+    fail("PG-052 ResourceIntegrationPlan.json missing")
+else:
+    try:
+        resource_integration = json.loads(read(resource_integration_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-052 invalid ResourceIntegrationPlan.json: {exc}")
+
+shire_h_cp52 = read(resolve_source("ShirePrototypeWorldBuilder.h"))
+shire_cpp_cp52 = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+bree_h_cp52 = read(resolve_source("BreePrototypeWorldBuilder.h"))
+bree_cpp_cp52 = read(resolve_source("BreePrototypeWorldBuilder.cpp"))
+fellowship_cpp_cp52 = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
+build_cs_cp52 = read(resolve_source("ShireJourney.Build.cs"))
+game_mode_cpp_cp52 = read(resolve_source("ShireGameMode.cpp"))
+router_cpp_cp52 = read(resolve_source("ChapterWorldRouter.cpp"))
+quest_cpp_cp52 = read(resolve_source("ShireQuestSubsystem.cpp"))
+unreal_workflow_cp52 = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+for symbol in [
+    "ProductionCommonBroadleafTreeMesh",
+    "ProductionCommonFallenLogMesh",
+    "ProductionCommonVillageFenceMesh",
+    "ProductionCommonWoodPileMesh",
+    "ProductionCommonFernClumpMesh",
+    "ProductionCommonReedClusterMesh",
+    "ProductionCommonFootbridgeMesh",
+]:
+    if symbol not in (shire_h_cp52 + shire_cpp_cp52):
+        fail(f"PG-052 Shire shared-resource integration missing: {symbol}")
+
+for symbol in [
+    "CommonBroadleafTreeMesh",
+    "CommonDryStoneWallMesh",
+    "CommonVillageFenceMesh",
+    "CommonWoodPileMesh",
+    "CommonFernClumpMesh",
+]:
+    if symbol not in (bree_h_cp52 + bree_cpp_cp52):
+        fail(f"PG-052 Bree shared-resource integration missing: {symbol}")
+
+for symbol in [
+    "CommonWoodPileMesh",
+    "CommonPathMarkerMesh",
+    "CommonDryStoneWallMesh",
+    "CommonFallenLogMesh",
+]:
+    if symbol not in fellowship_cpp_cp52:
+        fail(f"PG-052 Fellowship shared-resource saturation missing: {symbol}")
+
+for runtime_data in [
+    "LivingWorldEventPlan.json",
+    "CharacterMotionPlan.json",
+    "ChapterAtmospherePlan.json",
+    "WorldDressingPlan.json",
+    "ResourceIntegrationPlan.json",
+]:
+    if runtime_data not in build_cs_cp52:
+        fail(f"PG-052 runtime data is not packaged: {runtime_data}")
+
+for startup_symbol in [
+    "SpawnActor<AChapterWorldRouter>",
+    "SpawnActor<ALivingWorldDirector>",
+    'CurrentChapterId = TEXT("P1C01")',
+    'StartQuest(TEXT("ShireArrival"), 0)',
+    EVIDENCE_SOURCE_ANCHORS.get("startup.ready", ("", ""))[1],
+    EVIDENCE_SOURCE_ANCHORS.get("startup.route_p1c01", ("", ""))[1],
+]:
+    if startup_symbol not in (game_mode_cpp_cp52 + router_cpp_cp52 + quest_cpp_cp52):
+        fail(f"PG-052 playable startup invariant missing: {startup_symbol}")
+
+for workflow_symbol in [
+    "pull_request:",
+    "Headless playable startup smoke",
+    "ci_runtime_startup.cmd",
+    "ci_runtime_chapters.cmd",
+    "ci_runtime_state.cmd",
+]:
+    if workflow_symbol not in unreal_workflow_cp52:
+        fail(f"PG-052 Unreal boot validation workflow missing: {workflow_symbol}")
+
+runtime_wrapper_cp52 = "\n".join(
+    read(ROOT / "Scripts" / script_name)
+    for script_name in ["ci_runtime_startup.cmd", "ci_runtime_chapters.cmd", "ci_runtime_state.cmd"]
+)
+for runtime_symbol in ["Scripts\\runtime_smoke.py", "--mode startup", "--mode chapters", "--mode state"]:
+    if runtime_symbol not in runtime_wrapper_cp52:
+        fail(f"PG-052 stable runtime observer wrapper missing: {runtime_symbol}")
+
+# The extracted observer now owns the log name and readiness contract.
+runtime_observer_path = ROOT / "Scripts" / "runtime_smoke.py"
+if not runtime_observer_path.exists():
+    fail("PG-052 runtime observer missing")
+else:
+    runtime_observer = runtime_observer_path.read_text(encoding="utf-8")
+    if "from runtime_audit_contracts import" not in runtime_observer:
+        fail("PG-052 runtime observer must consume the central audit registry")
+    if "FAILURE.search(final_text)" not in runtime_observer:
+        fail("PG-052 runtime observer lost final fatal/assert/ensure scan")
+    for startup_evidence in ["startup.ready", "startup.route_p1c01"]:
+        if not mode_has_evidence("startup", startup_evidence):
+            fail(f"PG-052 central startup evidence missing: {startup_evidence}")
+
+if resource_integration:
+    external_policy = resource_integration.get("external_resource_policy", {})
+    if external_policy.get("current_approved_asset_count") != 0:
+        fail("PG-052 external approved count must match current empty ExternalAssetManifest assets list")
+
+# PG-053: Part I must maintain continuous low-cost regional life, not only isolated micro-events.
+world_life_plan_path = ROOT / "Data" / "WorldLifeSaturationPlan.json"
+world_life_plan = {}
+if not world_life_plan_path.exists():
+    fail("PG-053 WorldLifeSaturationPlan.json missing")
+else:
+    try:
+        world_life_plan = json.loads(read(world_life_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-053 invalid WorldLifeSaturationPlan.json: {exc}")
+
+living_world_h = read(resolve_source("LivingWorldDirector.h"))
+living_world_cpp = read(resolve_source("LivingWorldDirector.cpp"))
+ambient_cpp = read(resolve_source("ShireAmbientNPC.cpp"))
+
+for symbol in [
+    "BaselinePopulation",
+    "BaselineTargetByChapter",
+    "BaselineRolesByChapter",
+    "LoadLifeSaturationContract",
+    "MaintainBaselinePopulation",
+    "CleanupBaselinePopulation",
+    "ChooseBaselineRole",
+    "ChooseBaselineProp",
+    "ChoosePopulationOrigin",
+    "LivingWorldBaseline",
+]:
+    if symbol not in (living_world_h + living_world_cpp):
+        fail(f"PG-053 continuous-life runtime symbol missing: {symbol}")
+
+for symbol in [
+    "UpdateSocialLife",
+    "UpdateScheduleContext",
+    "UpdateAwareness",
+    "ResolveAmbientConversationLine",
+]:
+    if symbol not in ambient_cpp:
+        fail(f"PG-053 ambient social-life behavior missing: {symbol}")
+
+if "WorldLifeSaturationPlan.json" not in build_cs_cp52:
+    fail("PG-053 world-life saturation plan is not packaged")
+
+if world_life_plan:
+    targets = world_life_plan.get("baseline_population_targets", {})
+    roles = world_life_plan.get("population_roles", {})
+    for chapter_id in ["P1C01","P1C02","P1C03","P1C04","P1C05","P1C06","P1C07","P1C08"]:
+        if chapter_id not in targets:
+            fail(f"PG-053 baseline population target missing: {chapter_id}")
+        if chapter_id not in roles:
+            fail(f"PG-053 population role mix missing: {chapter_id}")
+    if int(targets.get("P1C01", 0)) < 12:
+        fail("PG-053 Shire baseline population is below the dense-world floor")
+    if int(targets.get("P1C02", 0)) < 10:
+        fail("PG-053 Bree baseline population is below the dense-world floor")
+    if int(targets.get("P1C06", -1)) != 0:
+        fail("PG-053 Moria must remain civilian-empty")
+
+world_resource_flood_path = ROOT / "Data" / "WorldResourceFloodPlan.json"
+if not world_resource_flood_path.exists():
+    fail("PG-053 WorldResourceFloodPlan.json missing")
+else:
+    try:
+        world_resource_flood = json.loads(read(world_resource_flood_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-053 invalid WorldResourceFloodPlan.json: {exc}")
+        world_resource_flood = {}
+
+resource_flood_assets = [
+    "SM_CommonBarrel.obj",
+    "SM_CommonCargoCrate.obj",
+    "SM_CommonSackBale.obj",
+    "SM_CommonLongBench.obj",
+    "SM_CommonHayBale.obj",
+    "SM_CommonCampTent.obj",
+    "SM_CommonStoneArch.obj",
+    "SM_CommonBrokenColumn.obj",
+    "SM_CommonBrazier.obj",
+    "SM_CommonRopePost.obj",
+    "SM_CommonMarketCanopy.obj",
+    "SM_CommonRiverBoat.obj",
+    "SM_CommonCairn.obj",
+    "SM_CommonTreeStump.obj",
+    "SM_CommonMushroomCluster.obj",
+]
+for asset_name in resource_flood_assets:
+    if not (common_dressing_root / asset_name).exists():
+        fail(f"PG-053 resource flood asset missing: {asset_name}")
+
+for runtime_symbol in [
+    "SM_CommonBarrel",
+    "SM_CommonCargoCrate",
+    "SM_CommonCampTent",
+    "SM_CommonStoneArch",
+    "SM_CommonRiverBoat",
+    "SM_CommonMushroomCluster",
+]:
+    if runtime_symbol not in (shire_cpp_cp52 + bree_cpp_cp52 + fellowship_cpp_cp52):
+        fail(f"PG-053 resource flood runtime reference missing: {runtime_symbol}")
+
+if "WorldResourceFloodPlan.json" not in build_cs_cp52:
+    fail("PG-053 world resource flood plan is not packaged")
+
+# PG-054 mega resource bank: large source-controlled inventory must exist before activity/movement builds on it.
+cp54_plan_path = ROOT / "Data" / "WorldResourceBankCP54.json"
+if not cp54_plan_path.exists():
+    fail("PG-054 WorldResourceBankCP54.json missing")
+else:
+    try:
+        cp54_plan = json.loads(read(cp54_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-054 invalid WorldResourceBankCP54.json: {exc}")
+
+cp54_regions = ["Common","Shire","Bree","Weathertop","Road","Rivendell","Moria","Lothlorien","Anduin"]
+cp54_asset_files = []
+for region in cp54_regions:
+    region_root = ROOT / "SourceAssets" / "Production" / "World" / region
+    if not region_root.exists():
+        fail(f"PG-054 production region missing: {region}")
+        continue
+    cp54_asset_files.extend(region_root.glob("*.obj"))
+if len(cp54_asset_files) < 75:
+    fail(f"PG-054 mega resource bank below 75 OBJ floor: {len(cp54_asset_files)}")
+
+cp54_texture_root = ROOT / "SourceAssets" / "Production" / "Textures"
+cp54_textures = (
+    list(cp54_texture_root.glob("*.png")) +
+    list(cp54_texture_root.glob("*.tga"))
+) if cp54_texture_root.exists() else []
+if len(cp54_textures) < 17:
+    fail(f"PG-054 production texture bank below 17 PNG/TGA floor: {len(cp54_textures)}")
+
+for runtime_symbol in ["SM_ShFarmPlough","SM_BreeStreetAwning","SM_WeathertopRuinWall","SM_RoadTravelTent","SM_RivColumn","SM_MoriaMineCart","SM_LorienTreePlatform","SM_AnduinDockPier"]:
+    if runtime_symbol not in (shire_cpp_cp52 + bree_cpp_cp52 + fellowship_cpp_cp52):
+        fail(f"PG-054 runtime resource integration missing: {runtime_symbol}")
+if "WorldResourceBankCP54.json" not in build_cs_cp52:
+    fail("PG-054 mega resource bank plan is not packaged")
+
+# PG-055: post-verification activity/movement expansion must stay bounded, source-controlled and story-safe.
+cp55_plan_path = ROOT / "Data" / "WorldActivityMovementPlan.json"
+cp55_plan = {}
+if not cp55_plan_path.exists():
+    fail("PG-055 WorldActivityMovementPlan.json missing")
+else:
+    try:
+        cp55_plan = json.loads(read(cp55_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-055 invalid WorldActivityMovementPlan.json: {exc}")
+
+cp55_required_assets = [
+    ROOT / "SourceAssets" / "Production" / "World" / "Common" / "SM_CommonBird.obj",
+    ROOT / "SourceAssets" / "Production" / "World" / "Common" / "SM_CommonRabbit.obj",
+    ROOT / "SourceAssets" / "Production" / "World" / "Common" / "SM_CommonButterfly.obj",
+]
+for asset_path in cp55_required_assets:
+    if not asset_path.exists():
+        fail(f"PG-055 required fauna asset missing: {asset_path.relative_to(ROOT).as_posix()}")
+
+cp55_ambient_cpp = read(resolve_source("ShireAmbientNPC.cpp"))
+cp55_director_cpp = read(resolve_source("LivingWorldDirector.cpp"))
+for role in ['TEXT("Bird")', 'TEXT("Rabbit")', 'TEXT("Butterfly")']:
+    if role not in cp55_ambient_cpp:
+        fail(f"PG-055 ambient movement role missing: {role}")
+    if role not in cp55_director_cpp:
+        fail(f"PG-055 LivingWorldDirector fauna spawn missing: {role}")
+
+for asset_name in ["SM_CommonBird", "SM_CommonRabbit", "SM_CommonButterfly"]:
+    if asset_name not in cp55_ambient_cpp:
+        fail(f"PG-055 production fauna mesh preference missing: {asset_name}")
+
+cp55_event_plan_path = ROOT / "Data" / "LivingWorldEventPlan.json"
+if cp55_event_plan_path.exists():
+    try:
+        cp55_event_plan = json.loads(read(cp55_event_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-055 invalid LivingWorldEventPlan.json: {exc}")
+        cp55_event_plan = {}
+    cp55_templates = {
+        str(item.get("id") or "")
+        for item in cp55_event_plan.get("event_templates", [])
+        if isinstance(item, dict)
+    }
+    for template_id in ["EVT_FAUNA_BIRDS", "EVT_FAUNA_SMALL_ANIMAL", "EVT_FAUNA_BUTTERFLIES"]:
+        if template_id not in cp55_templates:
+            fail(f"PG-055 fauna event template missing: {template_id}")
+else:
+    fail("PG-055 LivingWorldEventPlan.json missing")
+
+# PG-058: CP56 film-spine experiential enrichment must remain canon-safe, optional and runtime-wired.
+cp56_plan_path = ROOT / "Data" / "FellowshipExperienceMegaPassCP56.json"
+cp56_plan = {}
+if not cp56_plan_path.exists():
+    fail("PG-058 FellowshipExperienceMegaPassCP56.json missing")
+else:
+    try:
+        cp56_plan = json.loads(read(cp56_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-058 invalid FellowshipExperienceMegaPassCP56.json: {exc}")
+
+if cp56_plan:
+    if cp56_plan.get("status") not in {"IMPLEMENTATION_IN_PROGRESS", "IMPLEMENTED_PENDING_VALIDATION", "VALIDATED"}:
+        fail("PG-058 CP56 plan has invalid status")
+    if len(cp56_plan.get("chapters", [])) != 8:
+        fail("PG-058 CP56 must retain exactly eight Part I chapter entries")
+    canon_policy = cp56_plan.get("canon_policy", {})
+    if canon_policy.get("primary_reference") != "Peter Jackson film continuity":
+        fail("PG-058 CP56 film-continuity spine changed")
+    if "do not reproduce screenplay dialogue" not in str(canon_policy.get("dialogue_policy", "")).lower():
+        fail("PG-058 CP56 dialogue policy must reject screenplay reproduction")
+
+cp56_film_plan_path = ROOT / "Data" / "FilmExperiencePlan.json"
+if not cp56_film_plan_path.exists():
+    fail("PG-058 FilmExperiencePlan.json missing")
+else:
+    try:
+        cp56_film_plan = json.loads(read(cp56_film_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-058 invalid FilmExperiencePlan.json: {exc}")
+        cp56_film_plan = {}
+    cp56_anchor_ids = {
+        str(anchor.get("id") or "")
+        for chapter in cp56_film_plan.get("chapters", [])
+        if isinstance(chapter, dict)
+        for anchor in chapter.get("anchors", [])
+        if isinstance(anchor, dict)
+    }
+    for anchor_id in ["P1C01_SHIRE_LIFE", "P1C01_PARTY", "P1C05_COMPANIONSHIP"]:
+        if anchor_id not in cp56_anchor_ids:
+            fail(f"PG-058 film-experience anchor missing: {anchor_id}")
+
+cp56_shire_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+cp56_ambient_cpp = read(resolve_source("ShireAmbientNPC.cpp"))
+cp56_bree_cpp = read(resolve_source("BreePrototypeWorldBuilder.cpp"))
+cp56_fellowship_cpp = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
+for runtime_symbol in [
+    "Side_GreenDragonRevelry",
+    "Side_PartyMischief",
+    "Side_SharedShireMemory",
+    'TEXT("PlayRunner")',
+    "Side_BreeCommonRoomLife",
+    "RoadCompanionship",
+    "FellowshipCompanionship",
+    "MoriaDeadCityDiscovery",
+    "LorienSharedGrief",
+    "AnduinCampTension",
+]:
+    if runtime_symbol not in (cp56_shire_cpp + cp56_ambient_cpp + cp56_bree_cpp + cp56_fellowship_cpp):
+        fail(f"PG-058 CP56 runtime enrichment missing: {runtime_symbol}")
+
+if "FellowshipExperienceMegaPassCP56.json" not in build_cs_cp52:
+    fail("PG-058 CP56 experience plan is not packaged")
+if "WorldActivityMovementPlan.json" not in build_cs_cp52:
+    fail("PG-058 CP55 activity plan lost from runtime packaging")
+
+# PG-059: living-NPC intelligence must remain bounded, packaged and story-safe.
+living_npc_plan_path = ROOT / "Data" / "LivingNPCIntelligencePlan.json"
+living_npc_plan = {}
+if not living_npc_plan_path.exists():
+    fail("PG-059 LivingNPCIntelligencePlan.json missing")
+else:
+    try:
+        living_npc_plan = json.loads(read(living_npc_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-059 invalid LivingNPCIntelligencePlan.json: {exc}")
+
+if living_npc_plan:
+    offline_policy = living_npc_plan.get("offline_runtime_policy", {})
+    if offline_policy.get("mode") != "OFFLINE_ONLY":
+        fail("PG-059 living-NPC runtime policy must remain OFFLINE_ONLY")
+    if offline_policy.get("network_required") is not False:
+        fail("PG-059 living-NPC runtime must not require network access")
+    if offline_policy.get("remote_llm_allowed") is not False:
+        fail("PG-059 remote/cloud LLM runtime must remain disabled")
+    if offline_policy.get("cloud_api_dependency_allowed") is not False:
+        fail("PG-059 cloud API gameplay dependency must remain disabled")
+    if living_npc_plan.get("character_knowledge_policy", {}).get("default") != "DENY_UNLISTED":
+        fail("PG-059 character knowledge default must remain DENY_UNLISTED")
+
+ambient_header_pg59 = read(resolve_source("ShireAmbientNPC.h"))
+ambient_cpp_pg59 = read(resolve_source("ShireAmbientNPC.cpp"))
+for symbol in ["Hunger01", "Fatigue01", "SocialNeed01", "Fear01", "RuntimeEmotion", "RuntimeGoal", "UpdateNeedsAndEmotion"]:
+    if symbol not in (ambient_header_pg59 + ambient_cpp_pg59):
+        fail(f"PG-059 living-NPC runtime symbol missing: {symbol}")
+
+social_model_pg59 = {}
+try:
+    social_model_pg59 = json.loads(read(ROOT / "Data" / "NPCSocialModel.json"))
+except json.JSONDecodeError as exc:
+    fail(f"PG-059 invalid NPCSocialModel.json: {exc}")
+
+profiles_pg59 = {
+    str(item.get("id") or ""): item
+    for item in social_model_pg59.get("profiles", [])
+    if isinstance(item, dict)
+}
+for profile_id in ["NPC_GANDALF", "NPC_SAM", "NPC_ARAGORN", "NPC_BILBO"]:
+    profile = profiles_pg59.get(profile_id)
+    if not profile:
+        fail(f"PG-059 required core living-NPC profile missing: {profile_id}")
+        continue
+    if not profile.get("biography_facts"):
+        fail(f"PG-059 biography facts missing for core profile: {profile_id}")
+    if not profile.get("knowledge_limits"):
+        fail(f"PG-059 knowledge limits missing for core profile: {profile_id}")
+    if not profile.get("attitude_tags"):
+        fail(f"PG-059 attitude tags missing for core profile: {profile_id}")
+
+npc_context_header_pg59 = read(resolve_source("ShireNPCContextSubsystem.h"))
+npc_context_cpp_pg59 = read(resolve_source("ShireNPCContextSubsystem.cpp"))
+for symbol in ["BiographyFacts", "KnowledgeLimits", "AttitudeTags", "GetProfileContextSummary"]:
+    if symbol not in (npc_context_header_pg59 + npc_context_cpp_pg59):
+        fail(f"PG-059 named profile runtime context missing: {symbol}")
+
+if "LivingNPCIntelligencePlan.json" not in build_cs_cp52:
+    fail("PG-059 living-NPC intelligence plan is not packaged")
+
+# PG-060: whole-game mega integration must remain explicit and coherent.
+mega_plan_path = ROOT / "Data" / "CP56MegaIntegrationPlan.json"
+completeness_path = ROOT / "Data" / "GameCompletenessMatrix.json"
+for path, label in [
+    (mega_plan_path, "CP56MegaIntegrationPlan.json"),
+    (completeness_path, "GameCompletenessMatrix.json"),
+]:
+    if not path.exists():
+        fail(f"PG-060 {label} missing")
+    else:
+        try:
+            json.loads(read(path))
+        except json.JSONDecodeError as exc:
+            fail(f"PG-060 invalid {label}: {exc}")
+
+if completeness_path.exists():
+    try:
+        completeness_pg60 = json.loads(read(completeness_path))
+    except json.JSONDecodeError:
+        completeness_pg60 = {}
+    required_systems_pg60 = {
+        "PLAYER_MOVEMENT", "CAMERA", "INTERACTION", "COMBAT", "COMPANIONS",
+        "NAMED_CHARACTER_INTELLIGENCE", "AMBIENT_NPC_INTELLIGENCE", "DIALOGUE",
+        "OFFLINE_AI", "WORLD_LIFE", "WORLD_GEOGRAPHY", "ATMOSPHERE",
+        "EXPLORATION", "STORY", "SAVE_LOAD", "AUDIO", "CHARACTER_MOTION",
+        "UI_HUD", "PERFORMANCE", "QA_AUTOMATION", "CINEMATIC_PRESENTATION",
+        "ASSET_PRODUCTION", "HANDOFF_GOVERNANCE",
+    }
+    actual_systems_pg60 = {
+        str(item.get("id") or "")
+        for item in completeness_pg60.get("systems", [])
+        if isinstance(item, dict)
+    }
+    missing_systems_pg60 = sorted(required_systems_pg60 - actual_systems_pg60)
+    if missing_systems_pg60:
+        fail("PG-060 completeness matrix missing systems: " + ", ".join(missing_systems_pg60))
+
+npc_h_pg60 = read(resolve_source("ShireNPC.h"))
+npc_cpp_pg60 = read(resolve_source("ShireNPC.cpp"))
+ctx_h_pg60 = read(resolve_source("ShireNPCContextSubsystem.h"))
+ctx_cpp_pg60 = read(resolve_source("ShireNPCContextSubsystem.cpp"))
+
+for symbol in ["CachedWorldPressure", "CachedWorldMood", "CachedEmotionalState", "RefreshLivingContext"]:
+    if symbol not in (npc_h_pg60 + npc_cpp_pg60):
+        fail(f"PG-060 companion living-context symbol missing: {symbol}")
+
+for symbol in ["GetProfileEmotionalState", "WorldMood", "EmotionalState"]:
+    if symbol not in (ctx_h_pg60 + ctx_cpp_pg60):
+        fail(f"PG-060 named-character context symbol missing: {symbol}")
+
+for mood in [
+    "PEACEFUL_HOME", "SUSPICIOUS_TOWN", "PURSUED_WILDERNESS", "SAFE_REFUGE",
+    "FELLOWSHIP_UNDER_PRESSURE", "DEAD_CITY_DREAD", "GRIEF_AND_REFUGE",
+    "FELLOWSHIP_FRACTURE", "WAR_CORRUPTION",
+]:
+    if mood not in ctx_cpp_pg60:
+        fail(f"PG-060 regional dialogue/context missing mood: {mood}")
+
+if '? TEXT("Mug") : NAME_None' in read(resolve_source("ShirePrototypeWorldBuilder.cpp")):
+    fail("PG-060 Shire crowd prop ternary regressed to UE4-incompatible mixed FName/string types")
+if '? TEXT("Mug") : NAME_None' in read(resolve_source("BreePrototypeWorldBuilder.cpp")):
+    fail("PG-060 Bree crowd prop ternary regressed to UE4-incompatible mixed FName/string types")
+
+
+# PG-081: contextual side activities are fail-closed runtime contracts.
+pg81_side_path = ROOT / "Data" / "ContextualSideActivityPlan.json"
+pg81_journey_path = ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"
+pg81_allowed_types = {
+    "TRAVERSAL_CHALLENGE", "OBSERVATION_CHALLENGE", "TRACKING_CHALLENGE",
+    "PATTERN_MATCH", "CAMP_PREPARATION", "SOCIAL_MEMORY", "STEALTH_LITE",
+    "TIMING_CHALLENGE", "ROUTE_READING",
+}
+try:
+    pg81_side = json.loads(read(pg81_side_path))
+    pg81_journey = json.loads(read(pg81_journey_path))
+except json.JSONDecodeError as exc:
+    fail(f"PG-081 invalid side/discovery JSON: {exc}")
+    pg81_side, pg81_journey = {}, {}
+
+pg81_discoveries = {
+    str(item.get("discovery_id") or ""): item
+    for item in pg81_journey.get("discovery_rewards", [])
+    if isinstance(item, dict)
+}
+pg81_activity_ids, pg81_reward_ids = set(), set()
+pg81_count = 0
+for pg81_chapter in pg81_side.get("chapters", []):
+    if not isinstance(pg81_chapter, dict):
+        fail("PG-081 non-object chapter entry")
+        continue
+    pg81_route = str(pg81_chapter.get("route") or "")
+    pg81_chapter_id = str(pg81_chapter.get("chapter") or "")
+    if not pg81_route or not pg81_chapter_id:
+        fail("PG-081 side-activity chapter missing route/chapter")
+        continue
+    for pg81_activity in pg81_chapter.get("activities", []):
+        if not isinstance(pg81_activity, dict):
+            fail(f"PG-081 non-object activity in {pg81_route}/{pg81_chapter_id}")
+            continue
+        pg81_count += 1
+        pg81_id = str(pg81_activity.get("id") or "")
+        pg81_type = str(pg81_activity.get("type") or "")
+        pg81_reward = str(pg81_activity.get("discovery_reward_id") or "")
+        pg81_after = str(pg81_activity.get("available_after") or "")
+        pg81_before = str(pg81_activity.get("ends_before") or "")
+        if not all([pg81_id, pg81_reward, pg81_after, pg81_before]):
+            fail(f"PG-081 incomplete side-activity contract in {pg81_route}/{pg81_chapter_id}")
+        if pg81_type not in pg81_allowed_types:
+            fail(f"PG-081 unsupported activity type {pg81_type}: {pg81_id}")
+        if pg81_id in pg81_activity_ids:
+            fail(f"PG-081 duplicate side-activity id: {pg81_id}")
+        if pg81_reward in pg81_reward_ids:
+            fail(f"PG-081 duplicate side-activity reward id: {pg81_reward}")
+        pg81_activity_ids.add(pg81_id)
+        pg81_reward_ids.add(pg81_reward)
+        if pg81_activity.get("may_advance_required_anchor") is not False:
+            fail(f"PG-081 side activity may advance required anchor: {pg81_id}")
+        if pg81_activity.get("may_change_canon_outcome") is not False:
+            fail(f"PG-081 side activity may change canon outcome: {pg81_id}")
+        if pg81_activity.get("future_knowledge_allowed") is not False:
+            fail(f"PG-081 future knowledge allowed in side activity: {pg81_id}")
+        pg81_discovery = pg81_discoveries.get(pg81_reward)
+        if not pg81_discovery:
+            fail(f"PG-081 reward missing from JourneyDiscoveryRewardPlan: {pg81_reward}")
+        else:
+            if str(pg81_discovery.get("route") or "") != pg81_route:
+                fail(f"PG-081 reward route mismatch: {pg81_id}")
+            if str(pg81_discovery.get("chapter") or "") != pg81_chapter_id:
+                fail(f"PG-081 reward chapter mismatch: {pg81_id}")
+
+if pg81_count < 19:
+    fail(f"PG-081 contextual side-activity coverage regressed below 19: {pg81_count}")
+
+pg81_qh = read(resolve_source("ShireQuestSubsystem.h"))
+pg81_qc = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg81_tc = read(resolve_source("ShireTraversalChallenge.cpp"))
+for pg81_symbol in [
+    "AvailableAfterStoryBeat", "EndsBeforeStoryBeat", "SideActivityDefinitionsById",
+    "HasSideActivityForDiscovery", "IsSideActivityAvailable",
+    "IsSideActivityDiscoveryAvailable", "GetSideActivityIdForDiscovery",
+    "IsSideActivityDefinitionAvailable",
+]:
+    if pg81_symbol not in (pg81_qh + pg81_qc):
+        fail(f"PG-081 side-activity runtime window symbol missing: {pg81_symbol}")
+if "IsSideActivityDiscoveryAvailable(DiscoveryId)" not in pg81_tc:
+    fail("PG-081 traversal challenge bypasses central side-activity window guard")
+
+
+# PG-082: QUIET_STEP must have at least one authored physical STEALTH_LITE source.
+try:
+    pg82_side = json.loads(read(ROOT / "Data" / "ContextualSideActivityPlan.json"))
+    pg82_journey = json.loads(read(ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"))
+except json.JSONDecodeError as exc:
+    fail(f"PG-082 invalid side/discovery JSON: {exc}")
+    pg82_side, pg82_journey = {}, {}
+
+pg82_stealth = [
+    activity
+    for chapter in pg82_side.get("chapters", [])
+    if isinstance(chapter, dict)
+    for activity in chapter.get("activities", [])
+    if isinstance(activity, dict) and activity.get("type") == "STEALTH_LITE"
+]
+if not pg82_stealth:
+    fail("PG-082 no authored STEALTH_LITE side activity exists")
+
+pg82_rewards = {
+    str(item.get("discovery_id") or "")
+    for item in pg82_journey.get("discovery_rewards", [])
+    if isinstance(item, dict)
+}
+for pg82_activity in pg82_stealth:
+    pg82_reward = str(pg82_activity.get("discovery_reward_id") or "")
+    if not pg82_reward or pg82_reward not in pg82_rewards:
+        fail(f"PG-082 stealth reward missing from JourneyDiscoveryRewardPlan: {pg82_reward}")
+
+pg82_shire = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+pg82_traversal = read(resolve_source("ShireTraversalChallenge.cpp"))
+pg82_player_h = read(resolve_source("ShirePlayerCharacter.h"))
+for pg82_symbol in [
+    "SHIRE_QUIET_FEET",
+    'TEXT("STEALTH_LITE")',
+    "IsCrouchingForStealth",
+    "CompleteSideActivityDiscovery",
+]:
+    if pg82_symbol not in (pg82_shire + pg82_traversal + pg82_player_h):
+        fail(f"PG-082 stealth runtime symbol missing: {pg82_symbol}")
+
+
+# PG-083: PATTERN_MATCH side play must have a real interactable environmental puzzle runtime.
+pg83_h = read(resolve_source("ShireEnvironmentalPuzzle.h"))
+pg83_cpp = read(resolve_source("ShireEnvironmentalPuzzle.cpp"))
+pg83_builder = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
+for pg83_symbol in [
+    "IShireInteractable",
+    "ConfigurePuzzle",
+    "Interact_Implementation",
+    "CompleteSideActivityDiscovery",
+    "EnvironmentalPuzzle: PASS",
+]:
+    if pg83_symbol not in (pg83_h + pg83_cpp):
+        fail(f"PG-083 environmental puzzle runtime symbol missing: {pg83_symbol}")
+for pg83_marker in [
+    "AShireEnvironmentalPuzzle* RivendellMapTable",
+    'TEXT("RIVENDELL_LIBRARY")',
+    "AShireEnvironmentalPuzzle* MoriaReliefStudy",
+    'TEXT("MORIA_DWARVEN_RELIEF")',
+]:
+    if pg83_marker not in pg83_builder:
+        fail(f"PG-083 environmental puzzle placement missing: {pg83_marker}")
+
+
+# PG-084: living-world player responses must remain bounded, ephemeral and story-neutral.
+pg84_plan = json.loads(read(ROOT / "Data" / "LivingWorldEventPlan.json"))
+pg84_policy = pg84_plan.get("player_interaction_policy", {})
+pg84_expected_types = {"WORK_ACTIVITY", "TRAVELER_PASSING", "MARKET_ACTIVITY", "SOCIAL_MOMENT"}
+if set(pg84_policy.get("enabled_event_types", [])) != pg84_expected_types:
+    fail("PG-084 living-world interactive event types changed without contract update")
+if pg84_policy.get("persistent_reward") != "NONE" or pg84_policy.get("story_effect") != "NONE":
+    fail("PG-084 living-world interactions may not grant persistent rewards or story effects")
+if pg84_policy.get("may_advance_required_anchor") is not False:
+    fail("PG-084 living-world interactions may not advance required anchors")
+if pg84_policy.get("may_change_canon_outcome") is not False:
+    fail("PG-084 living-world interactions may not change canon outcomes")
+
+pg84_h = read(resolve_source("ShireWorldEventInteraction.h"))
+pg84_cpp = read(resolve_source("ShireWorldEventInteraction.cpp"))
+pg84_director_h = read(resolve_source("LivingWorldDirector.h"))
+pg84_director_cpp = read(resolve_source("LivingWorldDirector.cpp"))
+for pg84_symbol in [
+    "IShireInteractable",
+    "ConfigureInteraction",
+    "Interact_Implementation",
+    "WorldEventInteraction: PASS",
+    "storyEffect=NONE",
+]:
+    if pg84_symbol not in (pg84_h + pg84_cpp):
+        fail(f"PG-084 living-world interaction runtime symbol missing: {pg84_symbol}")
+for pg84_symbol in [
+    "SpawnPlayerInteraction",
+    "IsStoryDangerActive()",
+    "OutEvent.Actors.Add(Interaction)",
+]:
+    if pg84_symbol not in (pg84_director_h + pg84_director_cpp):
+        fail(f"PG-084 living-world director interaction wiring missing: {pg84_symbol}")
+
+
+# PG-085: dedicated Chronicle browsing must remain source-grounded and explicit.
+pg85_rewards = json.loads(read(ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"))
+pg85_envelope = json.loads(read(ROOT / "Data" / "ExplorationEnvelopePlan.json"))
+pg85_labels = {
+    str(item.get("id") or ""): str(item.get("label") or "")
+    for chapter in pg85_envelope.get("chapters", [])
+    if isinstance(chapter, dict)
+    for item in chapter.get("optional_discoveries", [])
+    if isinstance(item, dict)
+}
+for pg85_reward in pg85_rewards.get("discovery_rewards", []):
+    if not isinstance(pg85_reward, dict):
+        continue
+    pg85_id = str(pg85_reward.get("discovery_id") or "")
+    pg85_display = str(pg85_reward.get("display_label") or "")
+    if not pg85_display:
+        fail(f"PG-085 Journey Discovery missing display_label: {pg85_id}")
+    if pg85_labels.get(pg85_id) != pg85_display:
+        fail(f"PG-085 Chronicle display label drifted from exploration source: {pg85_id}")
+
+pg85_qh = read(resolve_source("ShireQuestSubsystem.h"))
+pg85_qc = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg85_ph = read(resolve_source("ShirePlayerCharacter.h"))
+pg85_pc = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg85_hud = read(resolve_source("ShireHUD.cpp"))
+pg85_input = read(ROOT / "Config" / "DefaultInput.ini")
+for pg85_symbol in [
+    "GetChronicleEntryDisplayLabel",
+    "GetChronicleEntryContextLabel",
+    "GetKnownMapRegionDisplayLabel",
+]:
+    if pg85_symbol not in (pg85_qh + pg85_qc):
+        fail(f"PG-085 Chronicle presentation API missing: {pg85_symbol}")
+for pg85_symbol in ["ChronicleBrowseIndex", "ChroniclePrevious", "ChronicleNext"]:
+    if pg85_symbol not in (pg85_ph + pg85_pc):
+        fail(f"PG-085 Chronicle browse state/input missing: {pg85_symbol}")
+for pg85_mapping in ['ActionName="ChroniclePrevious"', 'ActionName="ChronicleNext"']:
+    if pg85_mapping not in pg85_input:
+        fail(f"PG-085 Chronicle input mapping missing: {pg85_mapping}")
+for pg85_marker in ["ENTRY %d / %d", "KNOWN MAP REGIONS", "C Close"]:
+    if pg85_marker not in pg85_hud:
+        fail(f"PG-085 dedicated Chronicle HUD marker missing: {pg85_marker}")
+
+
+# PG-086: mega production remains source-grounded and truthfully gated.
+pg86_names = ["Part1ProductionAtlas.json", "Production100ReadinessGate.json", "Part1MegaProductionPlan.json"]
+pg86_docs = []
+for pg86_name in pg86_names:
+    pg86_path = ROOT / "Data" / pg86_name
+    if not pg86_path.exists():
+        fail(f"PG-086 missing mega-production contract: {pg86_name}")
+        pg86_docs.append({})
+        continue
+    try:
+        pg86_docs.append(json.loads(read(pg86_path)))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-086 invalid {pg86_name}: {exc}")
+        pg86_docs.append({})
+pg86_atlas, pg86_gate, pg86_mega = (pg86_docs + [{}, {}, {}])[:3]
+pg86_required = {("FrodoMain", f"P1C0{i}") for i in range(1, 9)} | {("GandalfParallel", "P1C01")}
+pg86_actual = {(str(row.get("route") or ""), str(row.get("chapter") or "")) for row in pg86_atlas.get("chapters", []) if isinstance(row, dict)}
+if pg86_actual != pg86_required:
+    fail("PG-086 Part1ProductionAtlas chapter/route coverage mismatch")
+if pg86_gate.get("production_100") is not False:
+    fail("PG-086 production_100 may not be promoted before final acceptance")
+if pg86_mega.get("status") != "ACTIVE":
+    fail("PG-086 Part1MegaProductionPlan must remain ACTIVE")
+pg86_sources = json.loads(read(ROOT / "Data" / "OwnerSourceReferenceIndex.json"))
+pg86_ids = {str(row.get("id") or "") for row in pg86_sources.get("sources", []) if isinstance(row, dict)}
+for pg86_id in ["SRC_FILM_FOTR_SCREENPLAY","SRC_OWNER_MASTER_PACK","SRC_OWNER_PROJECT_SOURCE_PACK","SRC_OWNER_BATTLES_WEAPONS_ARMIES_BIBLE","SRC_OWNER_SIDE_ACTIVITIES_BIBLE"]:
+    if pg86_id not in pg86_ids:
+        fail(f"PG-086 owner source index missing {pg86_id}")
+pg86_chars = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
+pg86_world = json.loads(read(ROOT / "Data" / "CinematicWorldProductionMatrix.json"))
+if pg86_chars.get("source_atlas") != "Data/Part1ProductionAtlas.json":
+    fail("PG-086 character matrix not linked to Part1ProductionAtlas")
+if pg86_world.get("source_atlas") != "Data/Part1ProductionAtlas.json":
+    fail("PG-086 world matrix not linked to Part1ProductionAtlas")
+if not (ROOT / "Scripts" / "production_readiness_audit.py").exists():
+    fail("PG-086 production readiness audit missing")
+
+
+# PG-087: every accepted Part I ensemble playable viewpoint must have a non-Frodo visual path.
+pg87_plan = json.loads(read(ROOT / "Data" / "EnsembleFilmMissionPlan.json"))
+pg87_required_playables = {"Gandalf", "Arwen", "Boromir", "Legolas", "Gimli", "Aragorn"}
+for pg87_item in pg87_plan.get("part1", []):
+    if not isinstance(pg87_item, dict):
+        continue
+    pg87_character = str(pg87_item.get("character") or "")
+    if pg87_character and pg87_item.get("type") in {"FILM_CORE_PLAYABLE", "CHARACTER_SPECIALTY", "FILM_INTERSTITIAL"}:
+        pg87_required_playables.add(pg87_character)
+pg87_cpp = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg87_h = read(resolve_source("ShirePlayerCharacter.h"))
+for pg87_character in sorted(pg87_required_playables | {"Frodo", "Sam", "Merry", "Pippin"}):
+    if f'TEXT("{pg87_character}")' not in pg87_cpp:
+        fail(f"PG-087 playable visual mapping missing: {pg87_character}")
+for pg87_symbol in ["SupportedPlayableIds", "PrototypeMotionProfile", "SM_ProductionSword", "SM_ProductionBow", "SM_ProductionAxe"]:
+    if pg87_symbol not in (pg87_cpp + pg87_h):
+        fail(f"PG-087 ensemble production visual symbol missing: {pg87_symbol}")
+if "unsupported playable id=%s; using Frodo fallback" not in pg87_cpp:
+    fail("PG-087 unsupported playable visual fallback is not explicit")
+
+
+# PG-088: source-grounded Part I geography must be packaged and visible at runtime.
+pg88_build = read(resolve_source("ShireJourney.Build.cs"))
+pg88_qh = read(resolve_source("ShireQuestSubsystem.h"))
+pg88_qc = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg88_hud = read(resolve_source("ShireHUD.cpp"))
+if "Part1ProductionAtlas.json" not in pg88_build:
+    fail("PG-088 Part1ProductionAtlas is not packaged")
+for pg88_symbol in [
+    "FShireChapterProductionDefinition",
+    "LoadPart1ProductionAtlas",
+    "GetCurrentChapterDisplayName",
+    "GetCurrentPrimaryRegionName",
+    "GetCurrentMacroRegionName",
+    "GetCurrentLandmarkSummary",
+    "ProductionAtlas: ready=yes chapters=%d",
+]:
+    if pg88_symbol not in (pg88_qh + pg88_qc):
+        fail(f"PG-088 runtime geography symbol missing: {pg88_symbol}")
+if "GetCurrentPrimaryRegionName()" not in pg88_hud:
+    fail("PG-088 HUD is not using source-grounded current region naming")
+
+
+# PG-089: playable production characters must support async final-rig handoff with modular fallback.
+pg89_h = read(resolve_source("ShirePlayerCharacter.h"))
+pg89_cpp = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg89_stream_h = read(resolve_source("ShireChapterAssetStreamingSubsystem.h"))
+pg89_stream_cpp = read(resolve_source("ShireChapterAssetStreamingSubsystem.cpp"))
+for pg89_symbol in [
+    "TryApplyProductionRig",
+    "bUsingSkeletalProductionRig",
+    "HandleProductionRigReady",
+    "OnCharacterRigReady",
+]:
+    if pg89_symbol not in (pg89_h + pg89_cpp + pg89_stream_h + pg89_stream_cpp):
+        fail(f"PG-089 playable skeletal production handoff missing: {pg89_symbol}")
+for pg89_symbol in [
+    "RequestCharacterRig",
+    "ResolveCharacterRig",
+    "SK_%s",
+    "ABP_%s_Locomotion",
+    "RequestAsyncLoad",
+]:
+    if pg89_symbol not in (pg89_stream_h + pg89_stream_cpp):
+        fail(f"PG-089 async rig streaming contract missing: {pg89_symbol}")
+if "if (bUsingSkeletalProductionRig)" not in pg89_cpp:
+    fail("PG-089 modular animation does not yield to production skeletal rig")
+if "LoadObject<USkeletalMesh>" in pg89_cpp or "LoadClass<UAnimInstance>" in pg89_cpp:
+    fail("PG-089 playable rig handoff regressed to synchronous heavy loading")
+
+
+# PG-090: missing Isengard/Lurtz/Watcher/Balrog roots must remain present and non-final.
+for pg90_rel in [
+    "SourceAssets/Production/World/Isengard/SM_Isengard_OrthancCore.obj",
+    "SourceAssets/Production/World/Isengard/SM_Isengard_OrthancSpire.obj",
+    "SourceAssets/Production/Enemies/Lurtz/SM_Lurtz_Torso.obj",
+    "SourceAssets/Production/Enemies/Watcher/SM_Watcher_Core.obj",
+    "SourceAssets/Production/Enemies/Balrog/SM_Balrog_Torso.obj",
+]:
+    if not (ROOT / pg90_rel).exists():
+        fail(f"PG-090 production foundation missing: {pg90_rel}")
+pg90_isengard = read(resolve_source("IsengardPrototypeWorldBuilder.cpp"))
+for pg90_symbol in ["SM_Isengard_OrthancCore","SM_Isengard_OrthancSpire","SM_Isengard_IndustrialPitRim","SM_Isengard_FurnaceStack","SM_Isengard_FelledTrunk"]:
+    if pg90_symbol not in pg90_isengard:
+        fail(f"PG-090 Isengard runtime production wiring missing: {pg90_symbol}")
+pg90_chars = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
+pg90_threats = {str(row.get("id") or ""): row for row in pg90_chars.get("threats", []) if isinstance(row, dict)}
+for pg90_id in ["LURTZ","WATCHER","BALROG"]:
+    pg90_row = pg90_threats.get(pg90_id)
+    if not pg90_row or not pg90_row.get("asset_root"):
+        fail(f"PG-090 threat foundation root missing: {pg90_id}")
+    if "PENDING" not in str(pg90_row.get("status") or ""):
+        fail(f"PG-090 threat foundation lost explicit pending-final status: {pg90_id}")
+
+
+# PG-091: Watcher and Balrog are film-locked pressure actors, never killable reward targets.
+pg91_h = read(resolve_source("FellowshipMythicThreat.h"))
+pg91_cpp = read(resolve_source("FellowshipMythicThreat.cpp"))
+pg91_builder = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
+for pg91_symbol in [
+    "EFellowshipMythicThreatType",
+    "Watcher",
+    "Balrog",
+    "ActivationStoryBeat",
+    "DeactivationStoryBeat",
+    "storyEffect=NONE",
+    "gameplayCollision=off killable=no",
+]:
+    if pg91_symbol not in (pg91_h + pg91_cpp):
+        fail(f"PG-091 mythic threat contract missing: {pg91_symbol}")
+for pg91_symbol in [
+    'TEXT("WatcherAttack")',
+    'TEXT("MoriaEntry")',
+    'TEXT("BalrogApproach")',
+    'TEXT("MoriaEscape")',
+    "EFellowshipMythicThreatType::Watcher",
+    "EFellowshipMythicThreatType::Balrog",
+]:
+    if pg91_symbol not in pg91_builder:
+        fail(f"PG-091 film-locked mythic threat wiring missing: {pg91_symbol}")
+for pg91_forbidden in ["TakeDamage(", "ApplyDamage(", "JourneyInsight", "AwardProgressionXP", "TriggerStoryBeat("]:
+    if pg91_forbidden in pg91_cpp:
+        fail(f"PG-091 mythic threat may not mutate combat/reward/story state: {pg91_forbidden}")
+
+
+# PG-092: source-grounded world map is packaged, spoiler-bounded and reachable from UI.
+pg92_path = ROOT / "Data" / "Part1WorldMap.json"
+if not pg92_path.exists():
+    fail("PG-092 Part1WorldMap missing")
+    pg92_map = {}
+else:
+    try:
+        pg92_map = json.loads(read(pg92_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-092 invalid Part1WorldMap: {exc}")
+        pg92_map = {}
+
+pg92_nodes = {
+    str(node.get("id") or ""): node
+    for node in pg92_map.get("nodes", [])
+    if isinstance(node, dict)
+}
+if len(pg92_nodes) < 16:
+    fail(f"PG-092 world map node coverage regressed: {len(pg92_nodes)}")
+for pg92_id, pg92_node in pg92_nodes.items():
+    if not pg92_node.get("route") or not pg92_node.get("chapter") or not pg92_node.get("display_name"):
+        fail(f"PG-092 incomplete world map node: {pg92_id}")
+    try:
+        pg92_x = float(pg92_node.get("x"))
+        pg92_y = float(pg92_node.get("y"))
+    except (TypeError, ValueError):
+        fail(f"PG-092 invalid map coordinates: {pg92_id}")
+        continue
+    if not (0.0 <= pg92_x <= 1.0 and 0.0 <= pg92_y <= 1.0):
+        fail(f"PG-092 map node outside normalized bounds: {pg92_id}")
+for pg92_edge in pg92_map.get("edges", []):
+    if not isinstance(pg92_edge, list) or len(pg92_edge) != 2:
+        fail("PG-092 invalid world map edge shape")
+        continue
+    if str(pg92_edge[0]) not in pg92_nodes or str(pg92_edge[1]) not in pg92_nodes:
+        fail(f"PG-092 world map edge references unknown node: {pg92_edge}")
+
+pg92_build = read(resolve_source("ShireJourney.Build.cs"))
+pg92_qh = read(resolve_source("ShireQuestSubsystem.h"))
+pg92_qc = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg92_ph = read(resolve_source("ShirePlayerCharacter.h"))
+pg92_pc = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg92_hud = read(resolve_source("ShireHUD.cpp"))
+pg92_input = read(ROOT / "Config" / "DefaultInput.ini")
+for pg92_symbol in ["Part1WorldMap.json","LoadPart1WorldMap","IsWorldMapNodeVisible","GetCurrentWorldMapNodeId"]:
+    if pg92_symbol not in (pg92_build + pg92_qh + pg92_qc):
+        fail(f"PG-092 runtime world-map symbol missing: {pg92_symbol}")
+if 'ActionName="ToggleWorldMap"' not in pg92_input or 'BindAction(TEXT("ToggleWorldMap")' not in pg92_pc:
+    fail("PG-092 M-key world-map control missing")
+for pg92_marker in ["JOURNEY MAP","Undiscovered future chapters stay hidden","GetWorldMapEdges"]:
+    if pg92_marker not in (pg92_hud + pg92_qh):
+        fail(f"PG-092 world-map UI marker missing: {pg92_marker}")
+if "return HasKnownMapRegion(MakeKnownMapRegionId" not in pg92_qc:
+    fail("PG-092 future world-map visibility is not bounded by Map Knowledge")
+
+
+# PG-093: Part I visual-production wave must stay source-grounded, packaged and film-safe.
+pg93_visual_path = ROOT / "Data" / "Part1VisualProductionPass.json"
+if not pg93_visual_path.exists():
+    fail("PG-093 Part1VisualProductionPass missing")
+    pg93_visual = {}
+else:
+    try:
+        pg93_visual = json.loads(read(pg93_visual_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-093 invalid Part1VisualProductionPass: {exc}")
+        pg93_visual = {}
+if pg93_visual.get("status") != "ACTIVE_IMPLEMENTATION_PENDING_ENGINE_PROOF":
+    fail("PG-093 visual production status must remain pending engine proof")
+if len(pg93_visual.get("chapters", [])) != 8:
+    fail("PG-093 visual production pass must cover P1C01-P1C08")
+pg93_build = read(resolve_source("ShireJourney.Build.cs"))
+if "Part1VisualProductionPass.json" not in pg93_build:
+    fail("PG-093 visual production pass is not packaged")
+pg93_enemy_h = read(resolve_source("FellowshipEnemyPrototype.h"))
+pg93_enemy_cpp = read(resolve_source("FellowshipEnemyPrototype.cpp"))
+pg93_builder = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
+for pg93_symbol in ["Lurtz", "FilmLockedOutcome", 'ProductionFolder = TEXT("Lurtz")', 'TEXT("Blade")', "player-controlled branch"]:
+    if pg93_symbol not in (pg93_enemy_h + pg93_enemy_cpp):
+        fail(f"PG-093 film-locked Lurtz contract missing: {pg93_symbol}")
+if "EFellowshipEnemyType::Lurtz" not in pg93_builder:
+    fail("PG-093 Lurtz is not wired into Amon Hen runtime")
+for pg93_asset in [
+    "SM_MoriaBrokenStair", "SM_MoriaChainAnchor", "SM_MoriaTallBrazier", "SM_MoriaMineCart",
+    "SM_AnduinBoatRack", "SM_AnduinCargoPile", "SM_AnduinRiverMarker", "SM_AnduinDockPier",
+]:
+    if pg93_asset not in pg93_builder:
+        fail(f"PG-093 visual production asset not runtime-wired: {pg93_asset}")
+
+# PG-094: performance budgets are measurement-first; no invented hard scene ceilings.
+pg94_budget_path = ROOT / "Data" / "AssetPerformanceBudget.json"
+if not pg94_budget_path.exists():
+    fail("PG-094 AssetPerformanceBudget missing")
+    pg94_budget = {}
+else:
+    try:
+        pg94_budget = json.loads(read(pg94_budget_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-094 invalid AssetPerformanceBudget: {exc}")
+        pg94_budget = {}
+if pg94_budget.get("status") != "MEASUREMENT_BASELINE_REQUIRED":
+    fail("PG-094 performance budget must remain measurement-baseline gated")
+if pg94_budget.get("policy", {}).get("hard_scene_budgets_enabled") is not False:
+    fail("PG-094 hard scene budgets may not be invented before device measurement")
+if "AssetPerformanceBudget.json" not in pg93_build:
+    fail("PG-094 asset performance budget is not packaged")
+pg94_audit = read(ROOT / "Scripts" / "asset_quality_audit.py")
+for pg94_symbol in ["obj_triangle_equivalents", "Production source buckets", "Largest OBJ by triangle equivalents"]:
+    if pg94_symbol not in pg94_audit:
+        fail(f"PG-094 asset audit measurement missing: {pg94_symbol}")
+
+# PG-095: selected hero/threat camera moments use bounded player-camera framing only.
+pg95_player_h = read(resolve_source("ShirePlayerCharacter.h"))
+pg95_player_cpp = read(resolve_source("ShirePlayerCharacter.cpp"))
+for pg95_symbol in [
+    "HandleStoryCameraCue",
+    "UpdateStoryCameraCue",
+    "OnCameraCueRequested.AddDynamic",
+    "Cam_PonyExteriorReveal",
+    "Cam_WeathertopReveal",
+    "Cam_LorienEntry",
+    "Cam_ArgonathReveal",
+    "Cam_BalrogApproach",
+    "Cam_UrukAttack",
+]:
+    if pg95_symbol not in (pg95_player_h + pg95_player_cpp):
+        fail(f"PG-095 bounded camera framing marker missing: {pg95_symbol}")
+if "SetViewTarget" in pg95_player_cpp or "SceneCapture" in pg95_player_cpp:
+    fail("PG-095 bounded camera pass must not introduce heavy alternate camera/capture systems")
+pg95_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg95_visual.get("camera_execution", {}).get("status") != "RUNTIME_FRAMING_IMPLEMENTED_PENDING_ENGINE_PROOF":
+    fail("PG-095 camera execution evidence boundary changed")
+
+# PG-096: Isengard atmosphere stays bounded, production-driven and non-final.
+pg96_isengard = read(resolve_source("IsengardPrototypeWorldBuilder.cpp"))
+for pg96_symbol in [
+    "ShowPrototypeWorldLabels = false",
+    "ADirectionalLight",
+    "AExponentialHeightFog",
+    "ForgeGlowLocations",
+    "SM_Isengard_ParapetSlab",
+]:
+    if pg96_symbol not in pg96_isengard:
+        fail(f"PG-096 Isengard presentation symbol missing: {pg96_symbol}")
+if pg96_isengard.count("FVector(50.0f, 810.0f, 120.0f)") != 1:
+    fail("PG-096 Isengard furnace-light contract changed unexpectedly")
+pg96_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg96_visual.get("parallel_route", {}).get("acceptance") != "IMPLEMENTED_PENDING_UE4_BUILD_RENDER_AND_DEVICE_PROOF":
+    fail("PG-096 Isengard visual acceptance boundary changed")
+
+# PG-097: named skeletal NPC handoff uses bounded animation-cost safeguards.
+pg97_motion = json.loads(read(ROOT / "Data" / "CharacterMotionPlan.json"))
+pg97_npc = read(resolve_source("ShireNPC.cpp"))
+if pg97_motion.get("runtime_performance_handoff", {}).get("status") != "IMPLEMENTED_PENDING_ENGINE_PROOF":
+    fail("PG-097 named NPC performance handoff status changed")
+for pg97_symbol in [
+    "bEnableUpdateRateOptimizations = true",
+    "OnlyTickPoseWhenRendered",
+    "PlayerDistance > 4200.0f",
+    "PlayerDistance > 2200.0f",
+]:
+    if pg97_symbol not in pg97_npc:
+        fail(f"PG-097 named NPC performance safeguard missing: {pg97_symbol}")
+if "DistancePawn && !bFollowingPlayer && DialogueActingRemaining <= 0.0f" not in pg97_npc:
+    fail("PG-097 follow/dialogue responsiveness guard missing")
+
+# PG-098: Isengard production meshes retain an authored material palette.
+pg98_isengard_root = ROOT / "SourceAssets" / "Production" / "World" / "Isengard"
+pg98_mtl = pg98_isengard_root / "RegionalMaterials.mtl"
+if not pg98_mtl.exists():
+    fail("PG-098 Isengard RegionalMaterials.mtl missing")
+else:
+    pg98_mtl_text = read(pg98_mtl)
+    for pg98_material in ["OrthancBlackStone","OrthancEdgeStone","IndustrialIron","FurnaceIron","ScorchedWood"]:
+        if f"newmtl {pg98_material}" not in pg98_mtl_text:
+            fail(f"PG-098 Isengard authored material missing: {pg98_material}")
+for pg98_obj in [
+    "SM_Isengard_OrthancCore.obj","SM_Isengard_OrthancSpire.obj",
+    "SM_Isengard_IndustrialPitRim.obj","SM_Isengard_FurnaceStack.obj",
+    "SM_Isengard_FelledTrunk.obj","SM_Isengard_ParapetSlab.obj",
+]:
+    pg98_text = read(pg98_isengard_root / pg98_obj)
+    if "mtllib RegionalMaterials.mtl" not in pg98_text or "usemtl " not in pg98_text:
+        fail(f"PG-098 Isengard OBJ lacks authored material binding: {pg98_obj}")
+pg98_builder = read(resolve_source("IsengardPrototypeWorldBuilder.cpp"))
+if "bFallbackPrimitive" not in pg98_builder:
+    fail("PG-098 Isengard runtime no longer preserves production mesh materials")
+pg98_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg98_visual.get("parallel_route", {}).get("authored_material_palette", {}).get("status") != "SOURCE_AUTHORED_PENDING_ENGINE_IMPORT_PROOF":
+    fail("PG-098 Isengard authored-material proof boundary changed")
+
+# PG-099: Lurtz/Watcher/Balrog authored materials survive production handoff.
+pg99_specs = {
+    "Lurtz": ["LurtzSkin","LurtzArmor","LurtzDarkIron"],
+    "Watcher": ["WatcherCore","WatcherTentacle"],
+    "Balrog": ["BalrogCharcoal","BalrogEmber","BalrogHorn","BalrogWing"],
+}
+for pg99_folder, pg99_materials in pg99_specs.items():
+    pg99_root = ROOT / "SourceAssets" / "Production" / "Enemies" / pg99_folder
+    pg99_mtl = pg99_root / "RegionalMaterials.mtl"
+    if not pg99_mtl.exists():
+        fail(f"PG-099 threat material library missing: {pg99_folder}")
+        continue
+    pg99_text = read(pg99_mtl)
+    for pg99_material in pg99_materials:
+        if f"newmtl {pg99_material}" not in pg99_text:
+            fail(f"PG-099 threat authored material missing: {pg99_folder}/{pg99_material}")
+    for pg99_obj in pg99_root.glob("*.obj"):
+        pg99_obj_text = read(pg99_obj)
+        if "mtllib RegionalMaterials.mtl" not in pg99_obj_text or "usemtl " not in pg99_obj_text:
+            fail(f"PG-099 threat OBJ lacks authored material binding: {pg99_obj.relative_to(ROOT)}")
+pg99_enemy = read(resolve_source("FellowshipEnemyPrototype.cpp"))
+pg99_mythic = read(resolve_source("FellowshipMythicThreat.cpp"))
+if "if (!bProductionVisual)" not in pg99_enemy:
+    fail("PG-099 production enemy materials are being overwritten by fallback tint")
+if "BasicMaterial && !bProductionFoundation" not in pg99_mythic:
+    fail("PG-099 production mythic materials are being overwritten by fallback tint")
+pg99_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg99_visual.get("threat_material_palettes", {}).get("status") != "SOURCE_AUTHORED_PENDING_ENGINE_IMPORT_PROOF":
+    fail("PG-099 authored threat material proof boundary changed")
+
+# PG-100: unattended production import must persist authored material packages.
+pg100_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+pg100_build = read(ROOT / "Source" / "ShireJourneyEditorTools" / "ShireJourneyEditorTools.Build.cs")
+for pg100_symbol in [
+    "AuthoredMaterialDestinationPaths",
+    "RecoveredMaterialBindings",
+    "FAssetRegistryModule",
+    "GetAssetsByPath",
+    "ImportedMaterialPackages.AddUnique",
+    "SaveMaterialPackagesDeterministically",
+    "UPackage::SavePackage",
+    "material registry recovery",
+]:
+    if pg100_symbol not in pg100_importer:
+        fail(f"PG-100 material persistence safeguard missing: {pg100_symbol}")
+if '"AssetRegistry"' not in pg100_build:
+    fail("PG-100 ShireJourneyEditorTools must depend on AssetRegistry")
+
+# PG-101: authored MTL palettes must be materialized before OBJ import.
+pg101_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+for pg101_symbol in [
+    "MaterialLibraryFiles",
+    "UMaterialInstanceConstantFactoryNew",
+    "synthesized authored materials",
+    "SetVectorParameterValueEditorOnly",
+    "ImportOptions->bImportMaterials = false",
+    "StaticMaterial.MaterialInterface = AuthoredMaterial",
+]:
+    if pg101_symbol not in pg101_importer:
+        fail(f"PG-101 deterministic material synthesis missing: {pg101_symbol}")
+
+# PG-102: player-experience safety and deep-audit contracts.
+pg102_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg102_presentation = read(resolve_source("ShireStoryPresentationSubsystem.cpp"))
+for pg102_symbol in ["#if !UE_BUILD_SHIPPING","AsyncSaveGameToSlot","bCheckpointSaveInFlight","QueuedCheckpointSaveId"]:
+    if pg102_symbol not in pg102_player:
+        fail(f"PG-102 player-experience safeguard missing: {pg102_symbol}")
+if "FMath::Clamp(ActiveCue.SuggestedDuration, 1.0f, 3.5f)" not in pg102_presentation:
+    fail("PG-102 cinematic input lock must remain bounded to 3.5 seconds")
+for pg102_path in [ROOT/"Data"/"DeepProjectAudit.json",ROOT/"Docs"/"DEEP_PROJECT_AUDIT.md",ROOT/"Scripts"/"deep_project_audit.py"]:
+    if not pg102_path.exists():
+        fail(f"PG-102 deep audit artifact missing: {pg102_path.relative_to(ROOT)}")
+
+# PG-103: synthesized production materials must be physically persisted, not merely dirty in memory.
+pg103_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+for pg103_symbol in [
+    "SaveMaterialPackagesDeterministically",
+    "UPackage::SavePackage",
+    "FPackageName::LongPackageNameToFilename",
+    "GetAssetPackageExtension",
+    "material persistence verification",
+    "FileExists",
+]:
+    if pg103_symbol not in pg103_importer:
+        fail(f"PG-103 deterministic material persistence safeguard missing: {pg103_symbol}")
+
+# PG-104: material existence probes and warning debt must distinguish import-time probes from runtime failures.
+pg104_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+pg104_reset = read(ROOT / "Scripts" / "reset_project_build_intermediates.ps1")
+pg104_warning = read(ROOT / "Scripts" / "warning_debt_guard.py")
+for pg104_symbol in [
+    "FindObject<UMaterialInstanceConstant>",
+    "FPackageName::DoesPackageExist(PackageName)",
+    "FindObject<UMaterialInterface>",
+]:
+    if pg104_symbol not in pg104_importer:
+        fail(f"PG-104 quiet material existence probe missing: {pg104_symbol}")
+if 'Filter "CI-*.log"' not in pg104_reset:
+    fail("PG-104 exact-head validation must clear stale CI logs before generating new evidence")
+for pg104_symbol in [
+    'RUNTIME_LOG_PREFIXES',
+    'scope="runtime"',
+    'collect_text(files, "runtime")',
+]:
+    if pg104_symbol not in pg104_warning:
+        fail(f"PG-104 warning-debt evidence scoping missing: {pg104_symbol}")
+
+# PG-105: untextured OBJ meshes use a tangent generator that does not require UVs.
+pg105_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+for pg105_symbol in [
+    "bHasTextureCoordinates",
+    "FBXNIM_ComputeNormals",
+    "EFBXNormalGenerationMethod::BuiltIn",
+    "builtin-no-uv",
+]:
+    if pg105_symbol not in pg105_importer:
+        fail(f"PG-105 untextured OBJ tangent safeguard missing: {pg105_symbol}")
+
+# PG-106: the owner's eight production bibles are traceable references, never shipping dependencies.
+pg106_index = json.loads(read(ROOT / "Data" / "OwnerSourceReferenceIndex.json"))
+pg106_sources = {str(row.get("id") or ""): row for row in pg106_index.get("sources", []) if isinstance(row, dict)}
+for pg106_id in [
+    "SRC_OWNER_STORY_TIMELINE_BIBLE_V1",
+    "SRC_OWNER_CHARACTERS_RELATIONSHIPS_BIBLE_V1",
+    "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+    "SRC_OWNER_PEOPLES_LORE_ARTIFACTS_CULTURES_BIBLE_V1",
+    "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+    "SRC_OWNER_GAMEPLAY_SIDE_ACTIVITIES_BIBLE_V1",
+    "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+    "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
+]:
+    pg106_row = pg106_sources.get(pg106_id)
+    if not pg106_row:
+        fail(f"PG-106 owner source bible missing from reference index: {pg106_id}")
+        continue
+    if pg106_row.get("runtime_ship") is not False:
+        fail(f"PG-106 raw owner source bible may not become a runtime dependency: {pg106_id}")
+    if not pg106_row.get("sha256"):
+        fail(f"PG-106 owner source bible provenance hash missing: {pg106_id}")
+
+pg106_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+pg106_wave = pg106_visual.get("current_wave", {})
+if not str(pg106_wave.get("id") or ""):
+    fail("PG-106 current production wave id missing")
+if not str(pg106_wave.get("status") or ""):
+    fail("PG-106 current production wave status missing")
+pg106_alignment = pg106_visual.get("bible_alignment", {})
+if pg106_alignment.get("status") != "IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
+    fail("PG-106 Bible alignment provenance contract changed")
+pg106_alignment_sources = set(pg106_alignment.get("sources", []))
+for pg106_required_source in [
+    "SRC_OWNER_WORLD_LOCATIONS_MAP_BIBLE_V1",
+    "SRC_OWNER_BATTLES_WEAPONS_ARMIES_CREATURES_BIBLE_V1",
+    "SRC_OWNER_MISSION_CHAPTER_IMPLEMENTATION_MATRIX_V1",
+    "SRC_OWNER_VISUAL_REFERENCE_BIBLE_V1",
+]:
+    if pg106_required_source not in pg106_alignment_sources:
+        fail(f"PG-106 Bible alignment source missing: {pg106_required_source}")
+
+# PG-107/108: screenplay-first story authority plus complete 01-09 source hierarchy.
+pg107_index = json.loads(read(ROOT / "Data" / "OwnerSourceReferenceIndex.json"))
+pg107_sources = {
+    str(row.get("id") or ""): row
+    for row in pg107_index.get("sources", [])
+    if isinstance(row, dict)
+}
+for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY", "SRC_FILM_ROTK_SCREENPLAY"]:
+    pg107_row = pg107_sources.get(pg107_id)
+    if not pg107_row:
+        fail(f"PG-107 primary screenplay source missing: {pg107_id}")
+        continue
+    if pg107_row.get("kind") != "PRIMARY_SCREENPLAY_STORY_AUTHORITY":
+        fail(f"PG-107 screenplay not primary story authority: {pg107_id}")
+    if pg107_row.get("runtime_ship") is not False:
+        fail(f"PG-107 raw screenplay may not ship at runtime: {pg107_id}")
+    if not pg107_row.get("sha256"):
+        fail(f"PG-107 screenplay provenance hash missing: {pg107_id}")
+
+pg107_authority = pg107_index.get("story_authority", {})
+pg107_primary = {
+    str(row.get("source_id") or "")
+    for row in pg107_authority.get("primary_screenplays", [])
+    if isinstance(row, dict)
+}
+for pg107_id in ["SRC_FILM_FOTR_SCREENPLAY", "SRC_FILM_TTT_SCREENPLAY", "SRC_FILM_ROTK_SCREENPLAY"]:
+    if pg107_id not in pg107_primary:
+        fail(f"PG-107 screenplay absent from primary authority list: {pg107_id}")
+pg107_rule = str(pg107_authority.get("rule") or "")
+pg107_rule_lower = pg107_rule.lower()
+if "film" not in pg107_rule_lower or "screenplay" not in pg107_rule_lower or "primary" not in pg107_rule_lower:
+    fail("PG-107 film/screenplay primary story-authority rule missing")
+if "silently replace film" not in pg107_rule_lower:
+    fail("PG-107 Tolkien-vs-film precedence boundary missing")
+
+pg108_summary = pg107_index.get("source_set_summary", {})
+if pg108_summary.get("core_pdf_count") != 15:
+    fail("PG-108 core PDF source count must remain 15")
+if pg108_summary.get("supplied_screenplays") != 3:
+    fail("PG-108 screenplay count must remain 3")
+if pg108_summary.get("numbered_production_bibles") != 11:
+    fail("PG-108 numbered production source count must remain 11")
+pg108_helper = pg107_sources.get("SRC_OWNER_EXTERNAL_HELPFUL_RESOURCES_BIBLE_V1")
+if not pg108_helper:
+    fail("PG-108 external helpful resources Bible 09 missing")
+else:
+    if pg108_helper.get("authority") != "HELPER_ONLY_NOT_CANON_NOT_STORY":
+        fail("PG-108 Bible 09 must remain helper-only")
+    if pg108_helper.get("runtime_ship") is not False:
+        fail("PG-108 raw Bible 09 may not ship at runtime")
+if "Bible 09 external-resource discovery" not in " ".join(pg107_authority.get("precedence", [])):
+    fail("PG-108 Bible 09 authority boundary missing")
+
+for pg108_id in [
+    "SRC_OWNER_3D_VISUAL_ASSET_ATLAS_V1",
+    "SRC_OWNER_MASTER_PRODUCTION_SYSTEMS_SOURCE_INDEX_V1",
+    "SRC_TOLKIEN_LOTR_2010",
+]:
+    if pg108_id not in pg107_sources:
+        fail(f"PG-108 expanded project source missing: {pg108_id}")
+if "SRC_TOLKIEN_LOTR_2010" not in {
+    str(row.get("source_id") or "")
+    for row in pg107_authority.get("primary_deep_lore_sources", [])
+    if isinstance(row, dict)
+}:
+    fail("PG-108 Tolkien full volume missing from deep-lore authority list")
+if pg107_authority.get("master_production_systems_source") != "SRC_OWNER_MASTER_PRODUCTION_SYSTEMS_SOURCE_INDEX_V1":
+    fail("PG-108 Source 11 master production systems authority missing")
+
+# PG-112: mega material/world saturation wave must be large, source-controlled,
+# film-safe and explicit about its evidence boundary.
+pg112_plan_path = ROOT / "Data" / "MegaMaterialWorldWaveV1.json"
+if not pg112_plan_path.exists():
+    fail("PG-112 MegaMaterialWorldWaveV1.json missing")
+    pg112_plan = {}
+else:
+    try:
+        pg112_plan = json.loads(read(pg112_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-112 invalid MegaMaterialWorldWaveV1.json: {exc}")
+        pg112_plan = {}
+if pg112_plan.get("wave_id") != "MEGA_MATERIAL_WORLD_WAVE_V1":
+    fail("PG-112 mega-wave identity changed")
+if pg112_plan.get("status") != "ACTIVE_IMPLEMENTATION_PENDING_EXACT_HEAD_PROOF":
+    fail("PG-112 mega-wave status must remain pending exact-head proof")
+if "MegaMaterialWorldWaveV1.json" not in pg93_build:
+    fail("PG-112 mega-wave plan is not packaged")
+
+pg112_moria_assets = [
+    "SM_MoriaWallPanel", "SM_MoriaFloorSlab", "SM_MoriaArch", "SM_MoriaCeilingRib",
+    "SM_MoriaBridgePier", "SM_MoriaTombDais", "SM_MoriaReliefPanel", "SM_MoriaMineRail",
+    "SM_MoriaOreCrate", "SM_MoriaCollapsedBeam", "SM_MoriaTorchNiche",
+    "SM_MoriaChasmButtress", "SM_MoriaSideDoor", "SM_MoriaDebrisCluster",
+]
+pg112_moria_root = ROOT / "SourceAssets" / "Production" / "World" / "Moria"
+for pg112_asset in pg112_moria_assets:
+    pg112_path = pg112_moria_root / f"{pg112_asset}.obj"
+    if not pg112_path.exists():
+        fail(f"PG-112 Moria mega-wave asset missing: {pg112_asset}")
+    if pg112_asset not in pg93_builder:
+        fail(f"PG-112 Moria mega-wave asset not runtime-wired: {pg112_asset}")
+
+pg112_mtl_paths = [
+    ROOT / "SourceAssets" / "Production" / "World" / "Anduin" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Anduin" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Bree" / "BreeMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Bree" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Common" / "CommonLandscapeMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Common" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Lothlorien" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Lothlorien" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Moria" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Moria" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Rivendell" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Rivendell" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Road" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Road" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Shire" / "ShireMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Shire" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Weathertop" / "RegionalMaterials.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Weathertop" / "WorldPack.mtl",
+    ROOT / "SourceAssets" / "Production" / "World" / "Isengard" / "RegionalMaterials.mtl",
+]
+for pg112_mtl in pg112_mtl_paths:
+    if not pg112_mtl.exists():
+        fail(f"PG-112 material palette missing: {pg112_mtl.relative_to(ROOT).as_posix()}")
+        continue
+    pg112_text = read(pg112_mtl)
+    if "newmtl " not in pg112_text or "Kd " not in pg112_text:
+        fail(f"PG-112 invalid material palette: {pg112_mtl.relative_to(ROOT).as_posix()}")
+    if "Pr " not in pg112_text or "Pm " not in pg112_text:
+        fail(f"PG-112 material response missing Pr/Pm: {pg112_mtl.relative_to(ROOT).as_posix()}")
+
+for pg112_story_symbol in [
+    'ConfigureThreat(\n            EFellowshipMythicThreatType::Watcher',
+    'EFellowshipEnemyType::CaveTroll',
+    'ConfigureThreat(\n            EFellowshipMythicThreatType::Balrog',
+    'TEXT("The Fellowship escapes the mountain, but Gandalf is gone.")',
+]:
+    if pg112_story_symbol not in pg93_builder:
+        fail(f"PG-112 Moria film-locked outcome marker missing: {pg112_story_symbol}")
+
+pg112_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg112_visual.get("mega_material_world_wave", {}).get("status") != "SOURCE_IMPLEMENTATION_ACTIVE_PENDING_EXACT_HEAD_PROOF":
+    fail("PG-112 visual mega-wave historical evidence boundary changed")
+
+# PG-114: dense decorative richness must use performance-aware instancing rather than actor spam.
+pg114_cluster_h = read(resolve_source("WorldDetailCluster.h"))
+pg114_cluster_cpp = read(resolve_source("WorldDetailCluster.cpp"))
+for pg114_symbol in [
+    "UHierarchicalInstancedStaticMeshComponent",
+    "AddInstanceWorldSpace",
+    "SetCullDistances",
+    "bCastDynamicShadow = false",
+    "bCastStaticShadow = false",
+]:
+    if pg114_symbol not in (pg114_cluster_h + pg114_cluster_cpp):
+        fail(f"PG-114 detail-cluster performance contract missing: {pg114_symbol}")
+
+for pg114_symbol in [
+    "SpawnInstancedScatter",
+    "WorldDetailCluster",
+    "MoriaDebrisClusterMesh",
+    "CommonFernClumpMesh",
+    "CommonReedClusterMesh",
+    "CommonRuinSlabMesh",
+]:
+    if pg114_symbol not in pg93_builder:
+        fail(f"PG-114 instanced detail runtime wiring missing: {pg114_symbol}")
+
+pg114_dressing = json.loads(read(ROOT / "Data" / "WorldDressingPlan.json"))
+if pg114_dressing.get("status") not in {
+    "V10_INSTANCED_DETAIL_AND_ENVIRONMENTAL_LIFE_PENDING_ENGINE_PROOF",
+    "V11_REALM_SPECIFIC_DETAIL_PENDING_ENGINE_PROOF",
+}:
+    fail("PG-114 world-dressing proof boundary changed")
+pg114_budget = json.loads(read(ROOT / "Data" / "AssetPerformanceBudget.json"))
+if pg114_budget.get("runtime_detail_policy", {}).get("instanced_micro_detail", {}).get("status") != "IMPLEMENTED_PENDING_MEASUREMENT":
+    fail("PG-114 instanced-detail performance evidence boundary missing")
+
+# PG-115: realm-specific V2 must remain source-grounded, runtime-wired and canon-safe.
+pg115_plan_path = ROOT / "Data" / "RealmDetailSaturationV2.json"
+if not pg115_plan_path.exists():
+    fail("PG-115 RealmDetailSaturationV2.json missing")
+    pg115_plan = {}
+else:
+    try:
+        pg115_plan = json.loads(read(pg115_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-115 invalid RealmDetailSaturationV2.json: {exc}")
+        pg115_plan = {}
+
+if pg115_plan.get("wave_id") != "REALM_DETAIL_SATURATION_V2":
+    fail("PG-115 realm-detail wave identity changed")
+if pg115_plan.get("status") not in {
+    "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+    "EXACT_HEAD_ENGINE_PROOF_GREEN_PR57",
+}:
+    fail("PG-115 realm-detail proof boundary changed")
+if "RealmDetailSaturationV2.json" not in pg93_build:
+    fail("PG-115 realm-detail plan is not packaged")
+
+pg115_assets = {
+    "Rivendell": ["SM_RivLibraryArcade","SM_RivSmithyRack","SM_RivCouncilSeat","SM_RivWaterChannel"],
+    "Lothlorien": ["SM_LorienGiftTable","SM_LorienBoatSupplyRack","SM_LorienCanopyRail","SM_LorienRopeLampLine"],
+    "Anduin": ["SM_AmonHenBrokenSeat","SM_AmonHenLookoutStone","SM_AnduinSupplyBundle","SM_AnduinOarRack"],
+    "Isengard": ["SM_IsengardHoistFrame","SM_IsengardSlagCart","SM_IsengardTrenchGrate","SM_IsengardWaterGate"],
+}
+pg115_isengard = read(resolve_source("IsengardPrototypeWorldBuilder.cpp"))
+for pg115_region, pg115_names in pg115_assets.items():
+    pg115_root = ROOT / "SourceAssets" / "Production" / "World" / pg115_region
+    for pg115_name in pg115_names:
+        pg115_asset_path = pg115_root / f"{pg115_name}.obj"
+        if not pg115_asset_path.exists():
+            fail(f"PG-115 realm-detail asset missing: {pg115_region}/{pg115_name}")
+        pg115_runtime = pg115_isengard if pg115_region == "Isengard" else pg93_builder
+        if pg115_name not in pg115_runtime:
+            fail(f"PG-115 realm-detail asset not runtime-wired: {pg115_region}/{pg115_name}")
+
+pg115_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg115_visual.get("realm_detail_saturation_v2", {}).get("added_project_owned_obj_assets") != 16:
+    fail("PG-115 visual plan must retain 16 new project-owned OBJ assets")
+if pg115_visual.get("realm_detail_saturation_v2", {}).get("status") not in {
+    "PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "EXACT_HEAD_ENGINE_PROOF_GREEN_PR57",
+}:
+    fail("PG-115 realm-detail visual evidence boundary changed")
+
+pg115_bank = json.loads(read(ROOT / "Data" / "WorldResourceBankCP54.json"))
+if pg115_bank.get("source_asset_count", 0) < 105:
+    fail("PG-115 world resource bank did not register V2 source assets")
+
+pg115_inventory = json.loads(read(ROOT / "Data" / "ProjectOwnedProductionAssetInventory.json"))
+if pg115_inventory.get("totals", {}).get("obj_files", 0) < 334:
+    fail("PG-115 project-owned OBJ inventory did not register V2 assets")
+
+# Film outcomes are immutable while environmental detail grows.
+for pg115_story_symbol in [
+    'TEXT("Boromir turns back toward Merry and Pippin and fights to protect them.")',
+    'TEXT("Merry and Pippin are taken while Aragorn turns to Boromir.")',
+    'TEXT("Frodo chooses the eastern shore. Sam refuses to let him go alone.")',
+    "EFellowshipEnemyType::Lurtz",
+]:
+    if pg115_story_symbol not in pg93_builder:
+        fail(f"PG-115 Amon Hen locked-outcome marker missing: {pg115_story_symbol}")
+
+# PG-116: cinematic/character/sonic V3 must remain bounded, source-controlled and runtime-wired.
+pg116_cinematic_path = ROOT / "Data" / "CinematicPerformancePlanV3.json"
+pg116_sonic_path = ROOT / "Data" / "Part1SonicWorldPlan.json"
+for pg116_path, pg116_id, pg116_statuses in [
+    (pg116_cinematic_path, "PART1_CINEMATIC_CHARACTER_PERFORMANCE_V3",
+     {"RUNTIME_CAMERA_AND_PROCEDURAL_PERFORMANCE_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF",
+      "EXACT_HEAD_ENGINE_PROOF_GREEN_PR58"}),
+    (pg116_sonic_path, "PART1_SONIC_WORLD_V1",
+     {"RUNTIME_ROUTING_AND_TRANSITIONS_IMPLEMENTED_ASSET_AUTHORING_PENDING"}),
+]:
+    if not pg116_path.exists():
+        fail(f"PG-116 production plan missing: {pg116_path.name}")
+        continue
+    try:
+        pg116_data = json.loads(read(pg116_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-116 invalid {pg116_path.name}: {exc}")
+        continue
+    if pg116_data.get("plan_id") != pg116_id:
+        fail(f"PG-116 plan identity changed: {pg116_path.name}")
+    if pg116_data.get("status") not in pg116_statuses:
+        fail(f"PG-116 plan evidence boundary changed: {pg116_path.name}")
+    if pg116_path.name not in pg93_build:
+        fail(f"PG-116 runtime production plan is not packaged: {pg116_path.name}")
+
+pg116_director_h = resolve_source("StoryPresentationDirector.h")
+pg116_director_cpp = resolve_source("StoryPresentationDirector.cpp")
+if not pg116_director_h.exists() or not pg116_director_cpp.exists():
+    fail("PG-116 StoryPresentationDirector runtime files missing")
+    pg116_director = ""
+else:
+    pg116_director = read(pg116_director_h) + "\n" + read(pg116_director_cpp)
+
+for pg116_symbol in [
+    "OnStoryPresentationRequested",
+    "RuntimePresentationGenerated",
+    "SetViewTargetWithBlend",
+    "LineTraceSingleByChannel",
+    "FMath::Clamp(Profile.HoldSeconds, 0.65f, 2.60f)",
+    "CurrentViewTarget != PlayerPawn && CurrentViewTarget != RuntimeCamera",
+    "HandleChapterChanged",
+]:
+    if pg116_symbol not in pg116_director:
+        fail(f"PG-116 bounded cinematic camera contract missing: {pg116_symbol}")
+
+pg116_game_mode = read(resolve_source("ShireGameMode.cpp"))
+for pg116_symbol in [
+    '#include "StoryPresentationDirector.h"',
+    "SpawnActor<AStoryPresentationDirector>",
+]:
+    if pg116_symbol not in pg116_game_mode:
+        fail(f"PG-116 presentation director bootstrap missing: {pg116_symbol}")
+
+pg116_npc = read(resolve_source("ShireNPC.cpp"))
+pg116_npc_h = read(resolve_source("ShireNPC.h"))
+for pg116_symbol in [
+    "PerformanceGestureScale",
+    "PerformanceGazeScale",
+    "PerformanceWeightScale",
+    "PerformanceComposure",
+    'Name.Equals(TEXT("Boromir"), ESearchCase::IgnoreCase)',
+    'Name.Equals(TEXT("Gandalf"), ESearchCase::IgnoreCase)',
+    'Name.Equals(TEXT("Legolas"), ESearchCase::IgnoreCase)',
+    "WeightShift",
+]:
+    if pg116_symbol not in (pg116_npc + pg116_npc_h):
+        fail(f"PG-116 named-character fallback performance contract missing: {pg116_symbol}")
+
+pg116_audio = read(resolve_source("ShireAudioSubsystem.cpp"))
+for pg116_symbol in [
+    "FadeOut(0.45f, 0.0f)",
+    "FadeIn(0.55f, 1.0f)",
+    "FadeOut(0.85f, 0.0f)",
+    "FadeIn(0.95f, TargetVolume)",
+    "bVoiceActive ? 0.36f : 1.0f",
+]:
+    if pg116_symbol not in pg116_audio:
+        fail(f"PG-116 sonic transition contract missing: {pg116_symbol}")
+
+pg116_arch = json.loads(read(ROOT / "Data" / "SourceArchitecturePlan.json"))
+pg116_arch_paths = [
+    str(row.get("current_path") or "")
+    for row in pg116_arch.get("files", [])
+    if isinstance(row, dict)
+]
+for pg116_resolved in [pg116_director_h, pg116_director_cpp]:
+    pg116_path = str(pg116_resolved.relative_to(ROOT)).replace("\\", "/")
+    if pg116_arch_paths.count(pg116_path) != 1:
+        fail(f"PG-116 source architecture registration must be exactly once: {pg116_path}")
+
+pg116_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+if pg116_visual.get("cinematic_character_sonic_v3", {}).get("status") not in {
+    "PENDING_EXACT_HEAD_ENGINE_PROOF",
+    "EXACT_HEAD_ENGINE_PROOF_GREEN_PR58",
+}:
+    fail("PG-116 V3 visual evidence boundary changed")
+
+# Existing safety gate remains authoritative while runtime camera grammar grows.
+if "FMath::Clamp(ActiveCue.SuggestedDuration, 1.0f, 3.5f)" not in pg102_presentation:
+    fail("PG-116 existing 3.5 second cinematic lock safety guard missing")
+
+# PG-117: dedicated Fellowship equipment V4 must remain project-owned, imported and runtime-preferred.
+pg117_plan_path = ROOT / "Data" / "HeroCharacterEquipmentSilhouetteV4.json"
+if not pg117_plan_path.exists():
+    fail("PG-117 HeroCharacterEquipmentSilhouetteV4.json missing")
+    pg117_plan = {}
+else:
+    try:
+        pg117_plan = json.loads(read(pg117_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-117 invalid HeroCharacterEquipmentSilhouetteV4.json: {exc}")
+        pg117_plan = {}
+
+if pg117_plan.get("plan_id") != "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4":
+    fail("PG-117 hero-equipment wave identity changed")
+if pg117_plan.get("status") != "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_PROOF":
+    fail("PG-117 hero-equipment proof boundary changed")
+if "HeroCharacterEquipmentSilhouetteV4.json" not in pg93_build:
+    fail("PG-117 hero-equipment plan is not packaged")
+
+pg117_assets = {
+    "Sam": ["SM_Sam_Sword","SM_Sam_Pack"],
+    "Merry": ["SM_Merry_Cloak","SM_Merry_Sword"],
+    "Pippin": ["SM_Pippin_Cloak","SM_Pippin_Sword"],
+    "Aragorn": ["SM_Aragorn_Cloak","SM_Aragorn_Sword","SM_Aragorn_Bow"],
+    "Boromir": ["SM_Boromir_Cloak","SM_Boromir_Sword","SM_Boromir_Shield"],
+    "Legolas": ["SM_Legolas_Cloak","SM_Legolas_Bow","SM_Legolas_WhiteKnife"],
+    "Gimli": ["SM_Gimli_Axe","SM_Gimli_Beard","SM_Gimli_Helmet"],
+}
+pg117_asset_count = 0
+for pg117_character, pg117_names in pg117_assets.items():
+    pg117_root = ROOT / "SourceAssets" / "Production" / "Characters" / pg117_character
+    for pg117_name in pg117_names:
+        pg117_asset_count += 1
+        pg117_path = pg117_root / f"{pg117_name}.obj"
+        if not pg117_path.exists():
+            fail(f"PG-117 dedicated character asset missing: {pg117_character}/{pg117_name}")
+        if pg117_name not in pg116_npc:
+            fail(f"PG-117 dedicated character asset not runtime-wired: {pg117_character}/{pg117_name}")
+if pg117_asset_count != 18:
+    fail("PG-117 dedicated equipment asset contract must remain exactly 18 assets")
+
+for pg117_symbol in [
+    "TryDedicatedThenFallback",
+    "SM_Sam_Pack",
+    "SM_Merry_Cloak",
+    "SM_Pippin_Cloak",
+    "SM_Aragorn_Sword",
+    "SM_Boromir_Shield",
+    "SM_Legolas_WhiteKnife",
+    "SM_Gimli_Helmet",
+]:
+    if pg117_symbol not in pg116_npc:
+        fail(f"PG-117 dedicated-first runtime identity contract missing: {pg117_symbol}")
+
+pg117_matrix = json.loads(read(ROOT / "Data" / "CharacterProductionMatrix.json"))
+pg117_wave = pg117_matrix.get("current_character_wave", {})
+if pg117_wave.get("id") != "HERO_CHARACTER_EQUIPMENT_SILHOUETTE_V4":
+    fail("PG-117 character production matrix current wave changed")
+if pg117_wave.get("added_project_owned_obj_assets") != 18:
+    fail("PG-117 character production matrix must retain 18 V4 OBJ assets")
+
+pg117_visual = json.loads(read(ROOT / "Data" / "Part1VisualProductionPass.json"))
+# Hero-equipment V4 is a preserved historical production wave, not the global current wave.
+# Later world/life waves may legitimately become current without invalidating V4 evidence.
+if pg117_visual.get("hero_character_equipment_v4", {}).get("added_project_owned_obj_assets") != 18:
+    fail("PG-117 Part I visual plan must retain 18 V4 OBJ assets")
+
+pg117_inventory = json.loads(read(ROOT / "Data" / "ProjectOwnedProductionAssetInventory.json"))
+if pg117_inventory.get("totals", {}).get("obj_files", 0) < 352:
+    fail("PG-117 project-owned OBJ inventory did not register V4 assets")
+
+# Final skeletal rig handoff must continue to win over modular fallback when valid.
+pg117_npc_h = read(resolve_source("ShireNPC.h"))
+for pg117_symbol in [
+    "bUsingSkeletalProductionRig",
+    "TryApplyProductionRig",
+]:
+    if pg117_symbol not in (pg116_npc + pg117_npc_h):
+        fail(f"PG-117 final-rig handoff contract missing: {pg117_symbol}")
+
+# PG-118: chapter streaming V5 must preload asynchronously without exposing a broken narrative seam.
+pg118_plan_path = ROOT / "Data" / "ChapterAssetStreamingPlan.json"
+if not pg118_plan_path.exists():
+    fail("PG-118 ChapterAssetStreamingPlan.json missing")
+    pg118_plan = {}
+else:
+    try:
+        pg118_plan = json.loads(read(pg118_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-118 invalid ChapterAssetStreamingPlan.json: {exc}")
+        pg118_plan = {}
+
+if pg118_plan.get("plan_id") != "CHAPTER_ASSET_STREAMING_V1":
+    fail("PG-118 chapter streaming plan identity changed")
+if "ChapterAssetStreamingPlan.json" not in pg93_build:
+    fail("PG-118 chapter streaming plan is not packaged")
+
+pg118_banks = pg118_plan.get("banks", {})
+for pg118_bank in [
+    "P1C01","P1C02","P1C03","P1C04","P1C05","P1C06","P1C07","P1C08","GANDALF_ISENGARD"
+]:
+    pg118_row = pg118_banks.get(pg118_bank, {})
+    if not isinstance(pg118_row, dict) or not pg118_row.get("assets"):
+        fail(f"PG-118 chapter streaming bank missing/empty: {pg118_bank}")
+
+pg118_stream_h = read(resolve_source("ShireChapterAssetStreamingSubsystem.h"))
+pg118_stream_cpp = read(resolve_source("ShireChapterAssetStreamingSubsystem.cpp"))
+pg118_router = read(resolve_source("ChapterWorldRouter.cpp"))
+pg118_router_h = read(resolve_source("ChapterWorldRouter.h"))
+pg118_fellowship_h = read(resolve_source("FellowshipChapterWorldBuilder.h"))
+pg118_fellowship_cpp = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
+
+for pg118_symbol in [
+    "FStreamableManager",
+    "RequestAsyncLoad",
+    "FSoftObjectPath",
+    "ResidentHandle",
+    "PendingHandle",
+    "OnChapterAssetsReady",
+]:
+    if pg118_symbol not in (pg118_stream_h + pg118_stream_cpp):
+        fail(f"PG-118 async streaming contract missing: {pg118_symbol}")
+
+for pg118_forbidden in [
+    "WaitUntilComplete",
+    "FlushAsyncLoading",
+    "while (!PendingHandle",
+]:
+    if pg118_forbidden in pg118_stream_cpp:
+        fail(f"PG-118 Game-Thread wait pattern forbidden: {pg118_forbidden}")
+
+for pg118_symbol in [
+    "router-wait",
+    "HandleChapterAssetsReady",
+    "CommitChapterWorld",
+    "RequestChapterAssets",
+    "ClearPrototypeBuilders();",
+]:
+    if pg118_symbol not in (pg118_router + pg118_router_h):
+        fail(f"PG-118 seam-safe router contract missing: {pg118_symbol}")
+
+pg118_wait_index = pg118_router.find("RequestChapterAssets")
+pg118_clear_index = pg118_router.find("ClearPrototypeBuilders();", pg118_router.find("void AChapterWorldRouter::CommitChapterWorld"))
+if pg118_wait_index < 0 or pg118_clear_index < 0:
+    fail("PG-118 router preload/commit ordering cannot be verified")
+elif pg118_wait_index > pg118_clear_index:
+    fail("PG-118 router clears world before requesting async chapter bank")
+
+for pg118_symbol in [
+    "EnsureProductionMeshes(FName ChapterId)",
+    'if (ChapterId == TEXT("P1C03"))',
+    'else if (ChapterId == TEXT("P1C04"))',
+    'else if (ChapterId == TEXT("P1C05"))',
+    'else if (ChapterId == TEXT("P1C06"))',
+    'else if (ChapterId == TEXT("P1C07"))',
+    'else if (ChapterId == TEXT("P1C08"))',
+    "EnsureProductionMeshes(ChapterId);",
+]:
+    if pg118_symbol not in (pg118_fellowship_h + pg118_fellowship_cpp):
+        fail(f"PG-118 chapter-aware Fellowship bank contract missing: {pg118_symbol}")
+
+pg118_arch = json.loads(read(ROOT / "Data" / "SourceArchitecturePlan.json"))
+pg118_arch_paths = [
+    str(row.get("current_path") or "")
+    for row in pg118_arch.get("files", [])
+    if isinstance(row, dict)
+]
+for pg118_resolved in [
+    resolve_source("ShireChapterAssetStreamingSubsystem.h"),
+    resolve_source("ShireChapterAssetStreamingSubsystem.cpp"),
+]:
+    pg118_path = str(pg118_resolved.relative_to(ROOT)).replace("\\", "/")
+    if pg118_arch_paths.count(pg118_path) != 1:
+        fail(f"PG-118 source architecture registration must be exactly once: {pg118_path}")
+
+pg118_budget = json.loads(read(ROOT / "Data" / "AssetPerformanceBudget.json"))
+if pg118_budget.get("chapter_asset_streaming_v5", {}).get("status") != "SOURCE_RUNTIME_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF_AND_MEASUREMENT":
+    fail("PG-118 streaming performance evidence boundary changed")
+
+# PG-121: startup grounding must wait for committed world geometry.
+pg121_game_mode = read(resolve_source("ShireGameMode.cpp"))
+pg121_router = read(resolve_source("ChapterWorldRouter.cpp"))
+pg121_router_h = read(resolve_source("ChapterWorldRouter.h"))
+pg121_runtime_smoke = read(ROOT / "Scripts" / "runtime_smoke.py")
+if "RUNTIME_SWEEP_SUMMARY" not in pg121_runtime_smoke:
+    fail("PG-121 chapter runtime audit must aggregate all chapter failures in one sweep")
+
+if "RestartPlayerAtTransform(PC" in pg121_game_mode or    'SetActorLocationAndRotation(FVector(-2410.0f, -120.0f, 130.0f)' in pg121_game_mode:
+    fail("PG-121 GameMode may not teleport the pawn into chapter coordinates before async world commit")
+
+for pg121_symbol in [
+    "SetPlayerWorldHold(true);",
+    "ResolveGroundedSpawnLocation",
+    "LineTraceSingleByChannel",
+    "ShireStartupGrounding: PASS",
+    "ShireStartupGrounding: FAIL",
+]:
+    if pg121_symbol not in (pg121_router + pg121_router_h):
+        fail(f"PG-121 world-ready grounding contract missing: {pg121_symbol}")
+
+if not mode_has_evidence("startup", "startup.ground_p1c01"):
+    fail("PG-121 startup grounding evidence missing")
+if not mode_has_evidence("state", "state.ground_p1c03"):
+    fail("PG-121 state grounding evidence missing")
+if not chapter_has_evidence("grounding"):
+    fail("PG-121 chapter sweep grounding evidence missing")
+
+pg121_shire_builder = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
+pg121_fellowship_builder = read(resolve_source("FellowshipChapterWorldBuilder.cpp"))
+if "RuntimeCollisionFoundation" not in pg121_shire_builder:
+    fail("PG-121 broad Shire fallback collision foundation missing")
+for pg121_symbol in [
+    "GroundProbeOffsets",
+    "OverlapBlockingTestByChannel",
+    "FCollisionShape::MakeCapsule",
+    "GroundHit.ImpactNormal.Z < 0.55f",
+    "adjusted-to-nearby-ground",
+]:
+    if pg121_symbol not in pg121_router:
+        fail(f"PG-121 seam-tolerant grounding invariant missing: {pg121_symbol}")
+if "RuntimeSpawnFoundation" in (pg121_shire_builder + pg121_fellowship_builder):
+    fail("PG-121 chapter-specific spawn support pads are forbidden; fix grounding at router/world contract level")
+
+
+# PG-122: automated QA immune-system foundation must stay wired into exact-head UE validation.
+pg122_plan_path = ROOT / "Data" / "AutomatedQAPlan.json"
+if not pg122_plan_path.exists():
+    fail("PG-122 AutomatedQAPlan.json missing")
+else:
+    try:
+        pg122_plan = json.loads(read(pg122_plan_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-122 invalid AutomatedQAPlan.json: {exc}")
+        pg122_plan = {}
+    if pg122_plan.get("plan_id") != "AUTOMATED_QA_IMMUNE_SYSTEM_V1":
+        fail("PG-122 automated QA plan identity changed")
+
+pg122_test_cpp = ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "Tests" / "ShireQAAutomationTests.cpp"
+if not pg122_test_cpp.exists():
+    fail("PG-122 ShireQAAutomationTests.cpp missing")
+    pg122_tests = ""
+else:
+    pg122_tests = read(pg122_test_cpp)
+
+for pg122_symbol in [
+    "IMPLEMENT_SIMPLE_AUTOMATION_TEST",
+    "ShireJourney.QA.Save.DefaultState",
+    "ShireJourney.QA.Assets.StreamingBankPackages",
+    "FPackageName::DoesPackageExist",
+]:
+    if pg122_symbol not in pg122_tests:
+        fail(f"PG-122 Automation Framework contract missing: {pg122_symbol}")
+
+pg122_runner = read(ROOT / "Scripts" / "ci_run_project_automation.cmd")
+pg122_parser = read(ROOT / "Scripts" / "parse_automation_report.py")
+pg122_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+for pg122_symbol in [
+    "Automation RunTests ShireJourney.QA",
+    "ReportOutputPath",
+    "parse_automation_report.py",
+]:
+    if pg122_symbol not in pg122_runner:
+        fail(f"PG-122 automation runner contract missing: {pg122_symbol}")
+if "Run ShireJourney Automation Framework QA" not in pg122_workflow:
+    fail("PG-122 Unreal workflow does not execute project automation QA")
+if "AUTOMATION_SUITE_PASS" not in pg122_parser:
+    fail("PG-122 automation report fail-closed parser missing")
+
+pg122_router = read(resolve_source("ChapterWorldRouter.cpp"))
+for pg122_symbol in [
+    "ShireStartupGrounding: PLACED",
+    "VerifyPlayerGroundingStability",
+    "stableSeconds=2.0",
+    "Movement->IsFalling()",
+]:
+    if pg122_symbol not in pg122_router:
+        fail(f"PG-122 delayed grounding stability proof missing: {pg122_symbol}")
+
+
+# PG-123: comprehensive transactional world-commit contract.
+pg123_router_h = read(resolve_source("ChapterWorldRouter.h"))
+pg123_router = read(resolve_source("ChapterWorldRouter.cpp"))
+pg123_stream_h = read(resolve_source("ShireChapterAssetStreamingSubsystem.h"))
+pg123_stream = read(resolve_source("ShireChapterAssetStreamingSubsystem.cpp"))
+pg123_life_h = read(resolve_source("LivingWorldDirector.h"))
+pg123_life = read(resolve_source("LivingWorldDirector.cpp"))
+
+for pg123_symbol in [
+    "CommitPendingRequest",
+    "awaiting-world-commit",
+    "ResidentHandle = PendingHandle",
+]:
+    if pg123_symbol not in (pg123_stream_h + pg123_stream):
+        fail(f"PG-123 two-phase asset commit contract missing: {pg123_symbol}")
+
+for pg123_symbol in [
+    "IsWorldCommitted",
+    "WorldRevision",
+    "RollbackFailedWorldSwap",
+    "ShireWorldCommit: PASS",
+    "OnWorldCommitted.Broadcast",
+]:
+    if pg123_symbol not in (pg123_router_h + pg123_router):
+        fail(f"PG-123 transactional world commit contract missing: {pg123_symbol}")
+
+for pg123_symbol in [
+    "SynchronizeCommittedWorld",
+    "GetAppliedWorldRevision",
+    "LivingWorldCommitSync",
+    "LivingWorldManaged",
+]:
+    if pg123_symbol not in (pg123_life_h + pg123_life):
+        fail(f"PG-123 committed living-world synchronization missing: {pg123_symbol}")
+
+if "ActiveChapterId = NewChapterId;\n    ResetForCurrentChapter();" in pg123_life:
+    fail("PG-123 LivingWorldDirector may not reset directly from requested quest chapter before world commit")
+
+# PG-124: continuous transition audit must remain wired with startup grounding.
+pg124_game_mode = read(resolve_source("ShireGameMode.cpp"))
+pg124_runtime = read(ROOT / "Scripts" / "runtime_smoke.py")
+pg124_runtime_tests = read(ROOT / "Scripts" / "test_runtime_smoke.py")
+pg124_state_cmd = read(ROOT / "Scripts" / "ci_runtime_state.cmd")
+
+for pg124_symbol in [
+    "AuditTransitions",
+    "GetAppliedWorldRevision",
+    "GetWorldRevision",
+]:
+    if pg124_symbol not in pg124_game_mode:
+        fail(f"PG-124 continuous transition GameMode audit missing: {pg124_symbol}")
+
+if "-AuditTransitions" not in MODE_EXTRA_ARGS.get("transitions", ()):
+    fail("PG-124 central runtime contract lost transition execution")
+for pg124_evidence in ["transition.barrier", "transition.sequence"]:
+    if not mode_has_evidence("transitions", pg124_evidence):
+        fail(f"PG-124 central runtime contract lost transition evidence: {pg124_evidence}")
+
+if "--mode transitions" not in pg124_state_cmd:
+    fail("PG-124 state CI does not execute continuous transition audit")
+
+if "test_separate_chapter_success_does_not_prove_continuous_transitions" not in pg124_runtime_tests:
+    fail("PG-124 unit regression for continuous transition evidence missing")
+
+# PG-127: generated/edited C++ source must not contain escaped newline artifacts.
+for escaped_newline in ("\\\\n", "\\r\\n"):
+    if escaped_newline in production_import_cpp:
+        fail("PG-127 production importer contains literal escaped newline text in C++ source")
+
+# PG-128: W00 commit-bound residency, movement and audio invariants.
+pg128_player_h = read(resolve_source("ShirePlayerCharacter.h"))
+pg128_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg128_game_mode = read(resolve_source("ShireGameMode.cpp"))
+pg128_router = read(resolve_source("ChapterWorldRouter.cpp"))
+pg128_stream_h = read(resolve_source("ShireChapterAssetStreamingSubsystem.h"))
+pg128_stream = read(resolve_source("ShireChapterAssetStreamingSubsystem.cpp"))
+pg128_audio_h = read(resolve_source("ShireAudioSubsystem.h"))
+pg128_audio = read(resolve_source("ShireAudioSubsystem.cpp"))
+
+for pg128_symbol in [
+    "OnChapterAssetsCommitted",
+    "HandleChapterAssetsCommitted",
+]:
+    if pg128_symbol not in (pg128_player_h + pg128_player + pg128_stream_h + pg128_stream):
+        fail(f"PG-128 committed-residency surface contract missing: {pg128_symbol}")
+
+if "OnChapterAssetsCommitted.Broadcast(ChapterId, RouteId);" not in pg128_stream:
+    fail("PG-128 chapter bank does not publish post-residency commit")
+
+if "reason=world-commit-timeout" not in pg128_game_mode or "IsWorldCommitted(" not in pg128_game_mode:
+    fail("PG-128 state/save audit must wait for committed world")
+
+surface_fail = pg128_player.find("CharacterSurfaceAudit: FAIL")
+surface_disk = pg128_player.find("UGameInstance* GI = GetGameInstance();", surface_fail)
+if surface_fail < 0 or surface_disk < 0:
+    fail("PG-128 character surface/disk audit structure missing")
+elif "return false;" in pg128_player[surface_fail:surface_disk]:
+    fail("PG-128 surface audit may not mask the independent disk-save roundtrip")
+
+move_start = pg128_router.find("bool AChapterWorldRouter::MovePlayerToChapterStart")
+move_end = pg128_router.find("void AChapterWorldRouter::VerifyPlayerGroundingStability", move_start)
+if move_start < 0 or move_end < 0:
+    fail("PG-128 cannot inspect chapter-start movement hold")
+elif "SetPlayerWorldHold(false);" in pg128_router[move_start:move_end]:
+    fail("PG-128 movement may not unlock before world/context commit")
+
+commit_start = pg128_router.find("void AChapterWorldRouter::CommitChapterWorld")
+if commit_start < 0:
+    fail("PG-128 normal world commit function missing")
+else:
+    commit_body = pg128_router[commit_start:]
+    if "grounding-barrier-pending" not in commit_body:
+        fail("PG-128 normal world commit must enter the grounding barrier before publication")
+    if "SetPlayerWorldHold(false);" in commit_body:
+        fail("PG-128 normal world commit setup may not release movement before grounding finalization")
+
+finalize_start = pg128_router.find("void AChapterWorldRouter::VerifyPlayerGroundingStability")
+finalize_end = pg128_router.find("void AChapterWorldRouter::LoadChapterWorld", finalize_start)
+finalize_body = (
+    pg128_router[finalize_start:finalize_end]
+    if finalize_start >= 0 and finalize_end >= 0
+    else ""
+)
+finalize_broadcast = finalize_body.find("OnWorldCommitted.Broadcast(WorldRevision);")
+finalize_release = finalize_body.find("SetPlayerWorldHold(false);", finalize_broadcast)
+if finalize_broadcast < 0 or finalize_release < 0 or finalize_release < finalize_broadcast:
+    fail("PG-128 grounding finalization must broadcast world commit before movement release")
+
+rollback_start = pg128_router.find("bool AChapterWorldRouter::RestoreCommittedWorldFromSnapshot")
+rollback_end = pg128_router.find("void AChapterWorldRouter::RollbackFailedWorldSwap", rollback_start)
+rollback_body = pg128_router[rollback_start:rollback_end] if rollback_start >= 0 and rollback_end >= 0 else ""
+rollback_broadcast = rollback_body.find("OnWorldCommitted.Broadcast(WorldRevision);")
+rollback_release = rollback_body.find("SetPlayerWorldHold(false);", rollback_broadcast)
+if rollback_broadcast < 0 or rollback_release < 0 or rollback_release < rollback_broadcast:
+    fail("PG-128 rollback commit must broadcast restored context before movement release")
+
+for pg128_symbol in [
+    "FStreamableManager",
+    "RequestAsyncLoad",
+    "PendingAudioLoads",
+    "TWeakObjectPtr<USoundBase>",
+    "HandleAsyncAudioReady",
+    "CancelPendingAudioCategory",
+]:
+    if pg128_symbol not in (pg128_audio_h + pg128_audio):
+        fail(f"PG-128 bounded async audio ownership missing: {pg128_symbol}")
+if "LoadObject<USoundBase>" in pg128_audio:
+    fail("PG-128 synchronous production audio loading is forbidden")
+
+
+# PG-144: warehouse staging is bounded/resumable and runs only on the supervised
+# Windows runner under a dedicated warehouse concurrency group.
+pg144_helper = read(ROOT / "Scripts" / "warehouse_network.ps1")
+pg144_workflow = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
+pg144_scripts = [
+    ROOT / "Scripts" / "stage_polyhaven_warehouse.ps1",
+    ROOT / "Scripts" / "stage_opengameart_audio.ps1",
+    ROOT / "Scripts" / "stage_quaternius_warehouse.ps1",
+    ROOT / "Scripts" / "stage_ambientcg_warehouse.ps1",
+    ROOT / "Scripts" / "stage_kenney_warehouse.ps1",
+    ROOT / "Scripts" / "stage_kaykit_github_warehouse.ps1",
+]
+for pg144_symbol in [
+    "Invoke-WarehouseRestJson",
+    "Invoke-WarehousePage",
+    "Invoke-WarehouseDownload",
+    "Test-WarehouseReceiptReusable",
+    "-TimeoutSec",
+    ".partial",
+    "WAREHOUSE_NET",
+]:
+    if pg144_symbol not in pg144_helper:
+        fail(f"PG-144 warehouse network helper missing: {pg144_symbol}")
+for pg144_path in pg144_scripts:
+    pg144_text = read(pg144_path)
+    if "warehouse_network.ps1" not in pg144_text:
+        fail(f"PG-144 provider script does not import bounded network helper: {pg144_path.name}")
+    if "Test-WarehouseReceiptReusable" not in pg144_text:
+        fail(f"PG-144 provider script lacks persistent receipt reuse: {pg144_path.name}")
+    if re.search(r"\bInvoke-(?:WebRequest|RestMethod)\b", pg144_text):
+        fail(f"PG-144 provider script bypasses bounded network helper: {pg144_path.name}")
+for pg144_symbol in [
+    "- develop",
+    "- self-hosted",
+    "- Windows",
+    "- X64",
+    "- ue4-27",
+    "group: warehouse-stage-${{ github.repository }}",
+    "cancel-in-progress: true",
+    "warehouse_network.ps1",
+    "WAREHOUSE_CHECKOUT_PASS",
+]:
+    if pg144_symbol not in pg144_workflow:
+        fail(f"PG-144 warehouse supervised-runner guard missing: {pg144_symbol}")
+if "runs-on: ubuntu-latest" in pg144_workflow or "runs-on: windows-latest" in pg144_workflow:
+    fail("PG-144 warehouse staging must not depend on GitHub-hosted capacity")
+if pg144_workflow.count("- self-hosted") != 1:
+    fail("PG-144 exactly one warehouse job must own the supervised runner")
+if "integration/comprehensive-foundation-v1" in pg144_workflow:
+    fail("PG-144 warehouse workflow still targets an obsolete integration branch")
+
+# PG-145: self-hosted Windows warehouse execution and runner supervision are explicit.
+pg145_workflow = pg144_workflow
+if "shell: powershell\n" in pg145_workflow:
+    fail("PG-145 raw powershell shell can be blocked by the runner execution policy")
+if pg145_workflow.count("powershell.exe -NoProfile -ExecutionPolicy Bypass") < 9:
+    fail("PG-145 warehouse PowerShell work must execute through explicit Bypass wrappers")
+for pg145_checkout_symbol in [
+    "Checkout exact warehouse head",
+    "Fetching exact warehouse head attempt",
+    "fetch --no-tags --prune --depth=2",
+    "WAREHOUSE_CHECKOUT_PASS",
+]:
+    if pg145_checkout_symbol not in pg145_workflow:
+        fail(f"PG-145 resilient warehouse checkout missing: {pg145_checkout_symbol}")
+if "  delta:" in pg145_workflow or "needs.delta" in pg145_workflow:
+    fail("PG-145 obsolete hosted warehouse delta job was reintroduced")
+if "  stage:" not in pg145_workflow:
+    fail("PG-145 supervised warehouse stage job missing")
+if "uses: actions/checkout@" in pg145_workflow:
+    fail("PG-145 self-hosted warehouse stage must not depend on marketplace checkout download")
+
+pg145_watchdog = read(ROOT / "Scripts" / "runner_watchdog.ps1")
+pg145_watchdog_installer = read(ROOT / "Scripts" / "install_runner_watchdog.ps1")
+for pg145_symbol in [
+    "Acknowledging runner request",
+    "Runner.Listener",
+    "Runner.Worker",
+    "AcquireHangSeconds",
+    "SHIRE_RUNNER_WATCHDOG_RECOVERY",
+    "Recover-OrphanedListenerOnSupervisorBoot",
+    "SHIRE_RUNNER_WATCHDOG_BOOT_RECOVERY",
+]:
+    if pg145_symbol not in pg145_watchdog:
+        fail(f"PG-145 runner watchdog contract missing: {pg145_symbol}")
+pg145_timeout = re.search(r"\[int\]\$AcquireHangSeconds\s*=\s*(\d+)", pg145_watchdog)
+if not pg145_timeout or not (110 <= int(pg145_timeout.group(1)) <= 180):
+    fail("PG-145 runner acquire watchdog must recover within 110-180 seconds")
+for pg145_install_symbol in [
+    "ShireJourney-GitHubRunner-Watchdog",
+    "New-ScheduledTaskTrigger -AtLogOn",
+    "RepetitionInterval (New-TimeSpan -Minutes 5)",
+    "$taskTriggers",
+    "MultipleInstances IgnoreNew",
+    "-LogonType Interactive",
+    "Set-Service -Name $service.Name -StartupType Manual",
+    "actions.runner.*",
+    "NETWORK SERVICE",
+]:
+    if pg145_install_symbol not in pg145_watchdog_installer:
+        fail(f"PG-145 runner watchdog installer contract missing: {pg145_install_symbol}")
+
+pg145_classifier = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
+for pg145_classifier_symbol in [
+    "Test-NearestSafeCoreAncestorGreen",
+    "Test-CoreProofSafeInterveningDelta",
+    "TRANSITIVE_CORE_PROOF_PASS",
+    "runtime-or-asset-delta-inherits-nearest-safe-core-ancestor-no-package",
+    "TRANSITIVE_CORE_PROOF_BLOCKED",
+    'Set-Mode "asset"',
+    "SHIRE_ASSET_IMPORT_ONLY",
+    "editor-tool-or-p1c01-material-delta-build-import-startup-only",
+]:
+    if pg145_classifier_symbol not in pg145_classifier:
+        fail(f"PG-145 transitive core-proof optimization missing: {pg145_classifier_symbol}")
+
+pg145_unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+for pg145_maintenance_path in [
+    "Scripts/classify_unreal_validation.ps1",
+    "Scripts/runner_watchdog.ps1",
+    "Scripts/install_runner_watchdog.ps1",
+    "Scripts/pre_unreal_validate.py",
+    "Scripts/asset_quality_audit.py",
+    "Scripts/test_asset_quality_audit.py",
+    "Scripts/runtime_smoke.py",
+    "Scripts/test_runtime_smoke.py",
+    "Scripts/verify_runner_session.ps1",
+]:
+    if pg145_unreal_workflow.count(pg145_maintenance_path) < 2:
+        fail(f"PG-145 maintenance path must stay off Unreal device lane in push and PR filters: {pg145_maintenance_path}")
+
+
+# PG-145B: every self-hosted lane must fail fast when the runner falls back to a service
+# identity or loses its interactive desktop/watchdog ownership.
+pg145b_probe = read(ROOT / "Scripts" / "verify_runner_session.ps1")
+for pg145b_symbol in [
+    "NETWORK SERVICE",
+    "SessionId",
+    "Runner.Listener.exe",
+    "Runner.Worker.exe",
+    "actions.runner.*",
+    "ShireJourney-GitHubRunner-Watchdog",
+    "System.Net.Sockets.TcpClient",
+    "ConnectAsync(\"github.com\", 443)",
+    "RUNNER_HEALTH_NETWORK_ATTEMPT",
+    "$NetworkProbeAttempts = 3",
+    "$NetworkProbeTimeoutMilliseconds = 5000",
+    "RUNNER_HEALTH_PASS",
+]:
+    if pg145b_symbol not in pg145b_probe:
+        fail(f"PG-145B runner health probe missing: {pg145b_symbol}")
+
+pg145b_watchdog = read(ROOT / "Scripts" / "runner_watchdog.ps1")
+for pg145b_watchdog_symbol in [
+    "WorkerIdleHangSeconds",
+    "Listening for Jobs",
+    "stale-worker",
+]:
+    if pg145b_watchdog_symbol not in pg145b_watchdog:
+        fail(f"PG-145B runner watchdog recovery contract missing: {pg145b_watchdog_symbol}")
+
+pg145b_health_workflow = read(ROOT / ".github" / "workflows" / "runner-health.yml")
+if "workflow_dispatch:" not in pg145b_health_workflow or "verify_runner_session.ps1" not in pg145b_health_workflow:
+    fail("PG-145B manual runner health workflow is incomplete")
+
+for pg145b_path, pg145b_before in [
+    (ROOT / ".github" / "workflows" / "unreal-build-validation.yml", "Classify current delta for Unreal validation"),
+    (ROOT / ".github" / "workflows" / "warehouse-stage.yml", "Stage Poly Haven CC0 batch"),
+]:
+    pg145b_text = read(pg145b_path)
+    probe_pos = pg145b_text.find("verify_runner_session.ps1")
+    work_pos = pg145b_text.find(pg145b_before)
+    if probe_pos < 0 or work_pos < 0 or probe_pos > work_pos:
+        fail(f"PG-145B runner health gate must precede heavy work: {pg145b_path.name}")
+
+# PG-145C: editor-tool/material-authoring deltas use the narrow exact-head engine lane:
+# build + import + automation + startup, without unrelated chapter/state/package repetition.
+pg145c_workflow = pg145_unreal_workflow
+for pg145c_symbol in [
+    "SHIRE_ASSET_IMPORT_ONLY",
+    "ASSET_IMPORT_ONLY_FILE",
+    "editor-tool-or-p1c01-material-delta-build-import-startup-only",
+]:
+    if pg145c_symbol not in (pg145_classifier + pg145c_workflow):
+        fail(f"PG-145C fast asset-import lane missing: {pg145c_symbol}")
+if "if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'\n        shell: cmd\n        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"%GITHUB_WORKSPACE%\\\\Scripts\\\\reset_project_build_intermediates.ps1\"'" not in pg145c_workflow:
+    fail("PG-145C incremental CORE/ASSET lanes must not delete project intermediates before every build")
+for pg145c_step in [
+    "Headless chapter-by-chapter runtime audit",
+    "Headless route/story state roundtrip audit",
+    "Summarize and guard runtime warning debt",
+]:
+    pg145c_pos = pg145c_workflow.find("- name: " + pg145c_step)
+    pg145c_slice = pg145c_workflow[pg145c_pos:pg145c_pos + 420] if pg145c_pos >= 0 else ""
+    if "SHIRE_ASSET_IMPORT_ONLY != 'true'" not in pg145c_slice:
+        fail(f"PG-145C asset-import lane still repeats unrelated runtime audit: {pg145c_step}")
+
+# PG-176: lightweight/admin lanes must never destroy the Unreal build workspace.
+pg176_pre = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
+pg176_health = read(ROOT / ".github" / "workflows" / "runner-health.yml")
+pg176_cleanup = read(ROOT / ".github" / "workflows" / "branch-cleanup.yml")
+pg176_warehouse = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
+
+for pg176_symbol in [
+    "C:\\actions-runner\\_ci\\pre-unreal",
+    "SHIRE_PRE_ROOT",
+    "PRE_UNREAL_EXACT_CHECKOUT_PASS",
+    "isolated=true",
+    "persistent=true",
+]:
+    if pg176_symbol not in pg176_pre:
+        fail(f"PG-176 Pre-Unreal isolated checkout contract missing: {pg176_symbol}")
+if 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg176_pre:
+    fail("PG-176 Pre-Unreal may not delete the Unreal workspace")
+
+for pg176_symbol in [
+    "%RUNNER_TEMP%\\shire-branch-cleanup-",
+    "SHIRE_CLEANUP_ROOT",
+    "BRANCH_CLEANUP_EXACT_CHECKOUT_PASS",
+    "isolated=true",
+]:
+    if pg176_symbol not in pg176_cleanup:
+        fail(f"PG-176 branch-cleanup isolated checkout contract missing: {pg176_symbol}")
+if 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg176_cleanup:
+    fail("PG-176 branch cleanup may not delete the Unreal workspace")
+
+for pg176_symbol in [
+    "%RUNNER_TEMP%\\shire-runner-health-",
+    "SHIRE_HEALTH_ROOT",
+    "isolated=true",
+]:
+    if pg176_symbol not in pg176_health:
+        fail(f"PG-176 runner-health isolated checkout contract missing: {pg176_symbol}")
+if 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg176_health:
+    fail("PG-176 runner-health may not delete the Unreal workspace")
+
+for pg176_symbol in [
+    "%RUNNER_TEMP%\\shire-warehouse-src-",
+    "SHIRE_WAREHOUSE_SOURCE",
+    "WAREHOUSE_CHECKOUT_PASS",
+    "isolated=true",
+]:
+    if pg176_symbol not in pg176_warehouse:
+        fail(f"PG-176 warehouse isolated source checkout contract missing: {pg176_symbol}")
+if 'if exist ".git" rmdir /S /Q ".git"' in pg176_warehouse:
+    fail("PG-176 warehouse staging may not destroy the Unreal workspace Git metadata")
+
+# PG-146: route/chapter/episode/character identity is one fail-closed contract.
+pg146_quest_h = read(resolve_source("ShireQuestSubsystem.h"))
+pg146_quest = read(resolve_source("ShireQuestSubsystem.cpp"))
+pg146_player_h = read(resolve_source("ShirePlayerCharacter.h"))
+pg146_player = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg146_game_mode = read(resolve_source("ShireGameMode.cpp"))
+for pg146_symbol in [
+    "NormalizeExperienceIdentity",
+    "CanonicalizeRestoredExperienceIdentity",
+    "SanitizeRouteProgressMap",
+    "ShireExperienceIdentity: rejected source=StartExperience",
+    "ShireExperienceIdentity: rejected source=StartChapter",
+]:
+    if pg146_symbol not in (pg146_quest_h + pg146_quest):
+        fail(f"PG-146 experience identity contract missing: {pg146_symbol}")
+if "CanonicalizeRestoredExperienceIdentity(" not in pg146_player:
+    fail("PG-146 save restore does not canonicalize identity before transaction publication")
+for pg146_evidence in ["state.identity_guard", "edge.identity_restore"]:
+    if not mode_has_evidence("state" if pg146_evidence.startswith("state.") else "edges", pg146_evidence):
+        fail(f"PG-146 runtime identity evidence missing: {pg146_evidence}")
+if "TEXT(\"P1G01\"), TEXT(\"IsengardCounsel\"), 1" in pg146_game_mode and    "direct-invalid-rejected=yes" not in pg146_game_mode:
+    fail("PG-146 P1G01 chapter shorthand may appear only inside the explicit rejection audit")
+
+# PG-147: every runtime JSON literal must be declared as a staged RuntimeDependency.
+pg147_build = read(resolve_source("ShireJourney.Build.cs"))
+pg147_runtime_json = set()
+for pg147_path in SOURCE.rglob("*.cpp"):
+    for pg147_name in re.findall(r'Data/([A-Za-z0-9_.-]+\.json)', read(pg147_path)):
+        pg147_runtime_json.add(pg147_name)
+for pg147_name in sorted(pg147_runtime_json):
+    pg147_relative = f"Data/{pg147_name}"
+    if not has_nonufs_runtime_dependency(pg147_build, pg147_relative):
+        fail(
+            f"PG-147 runtime JSON is not staged as project-relative NonUFS data: {pg147_name}"
+        )
+
+# PG-148: a real queued AsyncSaveGame race must cross a committed world revision inertly.
+for pg148_symbol in [
+    "RunQueuedCheckpointRevisionRaceAuditSetup",
+    "FinalizeCheckpointSaveComplete",
+    "CIAuditQueuedCheckpointOriginRevision",
+    "AsyncSaveGameToSlot",
+    "callback-deferred",
+]:
+    if pg148_symbol not in (pg146_player_h + pg146_player):
+        fail(f"PG-148 queued checkpoint race contract missing: {pg148_symbol}")
+if not mode_has_evidence("edges", "edge.queued_checkpoint_race"):
+    fail("PG-148 queued checkpoint race runtime evidence missing")
+if "RunMalformedExperienceRestoreAuditSetup" not in pg146_player:
+    fail("PG-148 persistence-edge sequence must exercise malformed restore before async race")
+
+
+# PG-149: transition-order validation checks protected member mutations, not exact RHS spelling.
+pg149_self = read(ROOT / "Scripts" / "pre_unreal_validate.py")
+pg149_tests = read(ROOT / "Scripts" / "test_source_contracts.py")
+pg149_workflow = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
+if "from source_contracts import signal_precedes_member_mutation" not in pg149_self:
+    fail("PG-149 Pre-Unreal must consume the structural transition-order helper")
+if re.search(r'\.find\(["\']Current(?:Chapter|Route|Episode)Id\s*=', pg149_self):
+    fail("PG-149 transition-order guards may not hard-code an assignment RHS")
+for pg149_symbol in [
+    "test_transition_signal_accepts_alias_rhs",
+    "test_transition_signal_rejects_mutation_first",
+    "test_comments_and_strings_do_not_fake_mutation",
+    "test_nested_route_progress_write_is_not_authoritative_mutation",
+    "test_explicit_this_member_still_counts_as_authoritative_mutation",
+]:
+    if pg149_symbol not in pg149_tests:
+        fail(f"PG-149 source-contract regression test missing: {pg149_symbol}")
+if "test_source_contracts.py" not in pg149_workflow:
+    fail("PG-149 Pre-Unreal workflow must execute source-contract regression tests")
+
+if errors:
+    print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
+    for message in errors:
+        print(f"ERROR: {message}")
+    sys.exit(1)
+
+print("PRE-UNREAL VALIDATION PASSED")
+) {") != 1:
+    fail("PG-167 Branch Cleanup remote-ref parser contract missing or duplicated")
+if "refs/heads/(.+)function Remove-RemoteBranch" in pg167_cleanup_script:
+    fail("PG-167 Branch Cleanup PowerShell parser corruption signature detected")
 for pg167_cleanup_guard in [
     "preserve_pending_salvage",
     "active_work_branches",
