@@ -77,6 +77,7 @@ private:
     UPROPERTY() UStaticMesh* ProductionCommonReedClusterMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionCommonFootbridgeMesh = nullptr;
     UPROPERTY() UMaterialInterface* BasicMaterial;
+    UPROPERTY() UMaterialInterface* ProductionWaterMaterial = nullptr;
 
     UPROPERTY() USceneComponent* RuntimeRoot;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GrassInstances;
@@ -98,6 +99,8 @@ private:
 
     AStaticMeshActor* SpawnShape(UStaticMesh* Mesh, const FVector& Location, const FVector& Scale,
         const FLinearColor& Color, const FRotator& Rotation = FRotator::ZeroRotator, bool bCollision = true);
+    void SpawnWaterSurface(const FVector& Location, const FVector& Scale,
+        const FRotator& Rotation = FRotator::ZeroRotator);
     void SpawnLabel(const FString& Text, const FVector& Location, const FLinearColor& Color = FLinearColor::White);
     void SpawnTree(const FVector& Location, float Scale = 1.0f);
     void SpawnHobbitHole(const FVector& Location, float Scale = 1.0f);
