@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_D_LIGHTING_SKY_FOG_WATER_V1",
-  "status": "PREPARED_NOT_RUNTIME_STARTED",
+  "status": "D_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
   "authority": [
     "Data/ProjectGovernor.json",
     "DEC-038",
@@ -73,5 +73,29 @@
     "Target-device DX11 720p Low-Medium profiling is recorded before performance acceptance.",
     "Manual visual and performance evidence remain distinct from machine validation."
   ],
-  "evidence_boundary": "Preparation only. D runtime implementation must not begin until C4 is exact-head engine-green and merged."
+  "evidence_boundary": "D source/runtime implementation candidate only. Exact-head Pre-Unreal and UE4.27.2 proof are still required; rendered PIE, target-device, visual and performance acceptance remain unclaimed.",
+  "implementation": {
+    "runtime_owner": "AShirePrototypeWorldBuilder presentation only; chapter asset residency remains UShireChapterAssetStreamingSubsystem-owned.",
+    "water_material": "/Game/Production/Materials/M_ProductionWater.M_ProductionWater",
+    "water_surfaces": [
+      "The Water beside the Mill",
+      "Brandywine at Bucklebury Ferry"
+    ],
+    "loading_contract": "P1C01 bank requests the water material through FStreamableManager; builder only ResolveObject()s the committed resident package and retains a lightweight fallback if absent.",
+    "runtime_cost_contract": [
+      "Opaque texture-free DefaultLit water master.",
+      "No planar reflection or scene-capture dependency.",
+      "No WPO and no per-frame CPU water simulation.",
+      "Water surfaces cast no shadows and own no collision.",
+      "Existing fixed authored quest atmosphere remains event-driven; PrimaryActorTick stays disabled and skylight recapture remains startup-only."
+    ],
+    "gameplay_ownership_unchanged": [
+      "quest/save/story",
+      "traversal anchors",
+      "LivingWorldDirector ambient ownership",
+      "NPC pooling",
+      "C2/C3/C4 foliage density/material identity/cull ownership"
+    ],
+    "evidence_state": "STATIC_IMPLEMENTED_PENDING_PRE_UNREAL_AND_UE4_27_2_PROOF"
+  }
 }
