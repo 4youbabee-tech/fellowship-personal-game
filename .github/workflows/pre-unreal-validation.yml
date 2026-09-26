@@ -9,75 +9,56 @@ on:
       - main
       - develop
 
+permissions:
+  contents: read
+
 concurrency:
   group: pre-unreal-${{ github.repository }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   validate:
-    runs-on:
-      - self-hosted
-      - Windows
-      - X64
-      - ue4-27
-    timeout-minutes: 5
+    # Static/policy validation must never consume or mutate the dedicated UE4 device.
+    runs-on: windows-latest
+    timeout-minutes: 8
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     defaults:
       run:
         shell: cmd
+
     steps:
-      - name: Exact-head local checkout
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Checkout exact validation head
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 2
+          persist-credentials: false
+
+      - name: Verify exact validation head
+        shell: pwsh
         run: |
-          @echo off
-          setlocal EnableExtensions EnableDelayedExpansion
-          set "GITEXE="
-          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
-          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
-          if not defined GITEXE if exist "C:\Program Files (x86)\Git\cmd\git.exe" set "GITEXE=C:\Program Files (x86)\Git\cmd\git.exe"
-          if not defined GITEXE exit /b 70
+          $actual = (git rev-parse HEAD).Trim()
+          if ($actual -ne $env:TARGET_SHA) {
+            throw "PRE_UNREAL_HEAD_MISMATCH expected=$($env:TARGET_SHA) actual=$actual"
+          }
+          if (-not (Test-Path -LiteralPath "ShireJourney.uproject" -PathType Leaf)) {
+            throw "PRE_UNREAL_PROJECT_MISSING"
+          }
+          Write-Host "PRE_UNREAL_EXACT_CHECKOUT_PASS sha=$actual runner=$env:RUNNER_NAME"
 
-          cd /d "%GITHUB_WORKSPACE%\.."
-          if exist "%GITHUB_WORKSPACE%" rmdir /S /Q "%GITHUB_WORKSPACE%"
-          if exist "%GITHUB_WORKSPACE%" exit /b 71
-          mkdir "%GITHUB_WORKSPACE%"
-          cd /d "%GITHUB_WORKSPACE%"
+      - name: Set up deterministic Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+          check-latest: false
 
-          "!GITEXE!" init
-          if errorlevel 1 exit /b 72
-          "!GITEXE!" remote add origin "https://x-access-token:%GH_TOKEN%@github.com/%GITHUB_REPOSITORY%.git"
-          if errorlevel 1 exit /b 73
-
-          set ATTEMPT=0
-          :fetch
-          set /a ATTEMPT+=1
-          echo PRE_UNREAL_EXACT_FETCH attempt=!ATTEMPT!/3 sha=%TARGET_SHA%
-          "!GITEXE!" -c http.lowSpeedLimit=1000 -c http.lowSpeedTime=20 fetch --no-tags --prune --depth=2 origin %TARGET_SHA%
-          if not errorlevel 1 goto fetched
-          if !ATTEMPT! GEQ 3 exit /b 74
-          powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Start-Sleep -Seconds 3"
-          goto fetch
-
-          :fetched
-          "!GITEXE!" checkout -f FETCH_HEAD
-          if errorlevel 1 exit /b 75
-          "!GITEXE!" reset --hard %TARGET_SHA%
-          if errorlevel 1 exit /b 76
-          for /f "delims=" %%S in ('"!GITEXE!" rev-parse HEAD') do set "CHECKED_SHA=%%S"
-          if /I not "!CHECKED_SHA!"=="%TARGET_SHA%" (
-            echo ERROR: Checkout SHA mismatch expected=%TARGET_SHA% actual=!CHECKED_SHA!
-            exit /b 77
-          )
-          if not exist "ShireJourney.uproject" exit /b 78
-          echo PRE_UNREAL_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA!
-
-      - name: Verify runner session health
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"
-
-      - name: Resolve existing local Python
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\resolve_runtime_python.ps1"
+      - name: Bind Python executable
+        shell: pwsh
+        run: |
+          $python = (Get-Command python -ErrorAction Stop).Source
+          "PYTHON_EXE=$python" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          Write-Host "PRE_UNREAL_PYTHON_PASS path=$python"
 
       - name: Test Unreal validation lane selection
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\test_unreal_classifier.ps1"
@@ -124,7 +105,5 @@ jobs:
       - name: Guard streaming cancellation source contracts
         run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_streaming_cancellation_contract.py" -v'
 
-
       - name: Test live governor evidence selection
         run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_live_governor_status.py" -v'
-
