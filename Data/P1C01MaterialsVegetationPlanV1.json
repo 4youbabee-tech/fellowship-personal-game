@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_MATERIALS_VEGETATION_V1",
-  "status": "C2_FOLIAGE_WIND_EXACT_HEAD_GREEN_MERGED_C3_READY",
-  "canonical_parent": "develop@1d0580926299e4fac635bcb847343a49c444d4f1",
+  "status": "C4_MACHINE_GREEN_D_READY",
+  "canonical_parent": "develop@c415780979f1056f714e984d8c485d53985997fc",
   "source_contract": {
     "world_bible": [
       "Shire/Hobbiton visual grammar remains pastoral hills, lanes, farms, Hobbit-holes, warm domestic scale, circular doors and gardens.",
@@ -37,9 +37,11 @@
     ]
   },
   "verified_pipeline_gap": [
-    "C1 authored map_Kd albedo binding is merged and exact-head proven by Pre-Unreal #897 SUCCESS + Unreal Build Validation #732 SUCCESS.",
-    "C2 creates a dedicated lightweight foliage wind master plus a stripped no-WPO far master; material-parent/LOD assignment remains C3/C4.",
-    "No runtime actor Tick, foliage density increase, gameplay loading change or LivingWorld ownership change is introduced by C2."
+    "C1 authored map_Kd albedo binding is merged and machine-proven.",
+    "C2 lightweight foliage wind masters are merged and machine-green.",
+    "C3 exact stable foliage identity binding is merged and machine-green.",
+    "C4 UE4.27 evidence found one LOD only on all five audited P1C01 foliage meshes; no far-parent binding is permitted until real far LOD assets exist.",
+    "C4 repaired tree canopy/trunk authored material identity so warning-debt defaultMat references returned to zero."
   ],
   "drop_c_order": [
     "C1 bind authored albedo texture paths from MTL into deterministic production material instances",
@@ -103,13 +105,13 @@
     "Owner PIE visual review confirms natural material response and non-distracting wind.",
     "Target-device profiling confirms foliage/material cost before density expansion."
   ],
-  "evidence_boundary": "C2 exact candidate and merged develop are machine-green. C3 is prepared but not runtime-started. PIE/device/visual/performance acceptance remains separate.",
+  "evidence_boundary": "C1-C4 machine path is closed through exact-head Pre-Unreal/UE4.27 evidence. PIE/device/visual/performance acceptance remains separate.",
   "runtime_implementation": {
     "importer_change": "C1 map_Kd -> AlbedoTexture binding remains intact. C2 deterministically creates M_ProductionFoliage and M_ProductionFoliageFar during production import.",
     "master_material_change": "Near/mid foliage master keeps AlbedoTexture * Color, Roughness and Metallic, and calls the UE4.27 SimpleGrassWind Engine material function from WPO. Far foliage master mirrors surface parameters but has no WPO.",
     "gameplay_impact": "none; editor production-import material generation only",
     "c2_assignment_boundary": "C2 creates the masters only. Stable foliage-material identity binding is C3; LOD/cull/overdraw profiling remains C4.",
-    "next": "C3 stable foliage material identity is ready to start only after post-C2 root cleanup succeeds."
+    "next": "D lighting/sky/fog/low-cost-water production pass after C4 merge; target-device foliage profiling remains required before any density increase."
   },
   "c2_machine_evidence": {
     "final_pr_head": "fd521dc308580fc44d0cdfdfed24273bacc37ff9",

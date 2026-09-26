@@ -9,6 +9,7 @@
 #include "Factories/MaterialInstanceConstantFactoryNew.h"
 #include "Factories/MaterialFactoryNew.h"
 #include "Engine/StaticMesh.h"
+#include "StaticMeshResources.h"
 #include "Engine/Texture2D.h"
 #include "HAL/FileManager.h"
 #include "HAL/PlatformFilemanager.h"
@@ -37,6 +38,15 @@ namespace ShireProductionImport
             NormalizedIdentity.Equals(TEXT("Leaves"), ESearchCase::CaseSensitive) ||
             NormalizedIdentity.Equals(TEXT("LeafGreen"), ESearchCase::CaseSensitive) ||
             NormalizedIdentity.Equals(TEXT("LeafGold"), ESearchCase::CaseSensitive);
+    }
+
+    static bool IsP1C01FoliageMeshAssetName(const FString& AssetName)
+    {
+        return AssetName.Equals(TEXT("SM_ShGrassClump"), ESearchCase::CaseSensitive) ||
+            AssetName.Equals(TEXT("SM_ShHedge"), ESearchCase::CaseSensitive) ||
+            AssetName.Equals(TEXT("SM_ShShrub"), ESearchCase::CaseSensitive) ||
+            AssetName.Equals(TEXT("SM_ShTreeCanopy"), ESearchCase::CaseSensitive) ||
+            AssetName.Equals(TEXT("SM_ShTreeTrunk"), ESearchCase::CaseSensitive);
     }
 
     static bool HasObjTextureCoordinates(const FString& ObjSource)
@@ -1220,6 +1230,116 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     ++MarkedMaterialPackages;
                 }
             }
+            if (ShireProductionImport::IsP1C01FoliageMeshAssetName(AssetName))
+            {
+                const FStaticMeshRenderData* RenderData = ImportedMesh->GetRenderData();
+                if (!RenderData || RenderData->LODResources.Num() == 0)
+                {
+                    ++Failed;
+                    UE_LOG(
+                        LogTemp,
+                        Error,
+                        TEXT("C4_FOLIAGE_EVIDENCE_FAILED mesh=%s reason=no-render-lod-data"),
+                        *ExpectedObjectPath);
+                }
+                else
+                {
+                    const int32 LodCount = RenderData->LODResources.Num();
+                    for (int32 LodIndex = 0; LodIndex < LodCount; ++LodIndex)
+                    {
+                        const FStaticMeshLODResources& LodResources =
+                            RenderData->LODResources[LodIndex];
+
+                        if (LodResources.Sections.Num() == 0)
+                        {
+                            UE_LOG(
+                                LogTemp,
+                                Display,
+                                TEXT("C4_FOLIAGE_EVIDENCE mesh=%s lodCount=%d lod=%d section=-1 materialIndex=-1 materialIdentity=NONE parent=NONE proposedParent=NONE decision=NO_SECTION reason=empty-lod-section-list"),
+                                *ExpectedObjectPath,
+                                LodCount,
+                                LodIndex);
+                            continue;
+                        }
+
+                        for (int32 SectionIndex = 0;
+                             SectionIndex < LodResources.Sections.Num();
+                             ++SectionIndex)
+                        {
+                            const FStaticMeshSection& Section =
+                                LodResources.Sections[SectionIndex];
+                            const int32 MaterialIndex = Section.MaterialIndex;
+
+                            FString MaterialIdentity = TEXT("NONE");
+                            FString CurrentParentPath = TEXT("NONE");
+                            bool bApprovedFoliageMaterial = false;
+
+                            if (StaticMaterials.IsValidIndex(MaterialIndex))
+                            {
+                                const FStaticMaterial& SectionMaterial =
+                                    StaticMaterials[MaterialIndex];
+                                MaterialIdentity =
+                                    SectionMaterial.MaterialSlotName.IsNone()
+                                        ? TEXT("NONE")
+                                        : SectionMaterial.MaterialSlotName.ToString();
+
+                                bApprovedFoliageMaterial =
+                                    ShireProductionImport::IsApprovedFoliageMaterialIdentity(
+                                        MaterialIdentity);
+
+                                if (const UMaterialInstanceConstant* MaterialInstance =
+                                    Cast<UMaterialInstanceConstant>(
+                                        SectionMaterial.MaterialInterface))
+                                {
+                                    if (MaterialInstance->Parent)
+                                    {
+                                        CurrentParentPath =
+                                            MaterialInstance->Parent->GetPathName();
+                                    }
+                                }
+                                else if (SectionMaterial.MaterialInterface)
+                                {
+                                    CurrentParentPath =
+                                        SectionMaterial.MaterialInterface->GetPathName();
+                                }
+                            }
+
+                            const bool bVerifiedFarLod =
+                                LodIndex > 0 && bApprovedFoliageMaterial;
+                            const TCHAR* Decision =
+                                bVerifiedFarLod
+                                    ? TEXT("FAR_LOD_ELIGIBLE_FOR_REVIEW")
+                                    : (LodIndex == 0
+                                        ? TEXT("KEEP_NEAR_MID")
+                                        : TEXT("NO_FOLIAGE_PARENT_CHANGE"));
+                            const TCHAR* ProposedParent =
+                                bVerifiedFarLod
+                                    ? ProductionFoliageFarPath
+                                    : TEXT("NONE");
+
+                            UE_LOG(
+                                LogTemp,
+                                Display,
+                                TEXT("C4_FOLIAGE_EVIDENCE mesh=%s lodCount=%d lod=%d section=%d materialIndex=%d materialIdentity=%s parent=%s proposedParent=%s decision=%s reason=%s"),
+                                *ExpectedObjectPath,
+                                LodCount,
+                                LodIndex,
+                                SectionIndex,
+                                MaterialIndex,
+                                *MaterialIdentity,
+                                *CurrentParentPath,
+                                ProposedParent,
+                                Decision,
+                                bVerifiedFarLod
+                                    ? TEXT("actual-far-lod-and-approved-foliage-identity")
+                                    : (LodIndex == 0
+                                        ? TEXT("base-lod-preserved")
+                                        : TEXT("far-lod-is-not-approved-foliage-material")));
+                        }
+                    }
+                }
+            }
+
             ImportedMesh->MarkPackageDirty();
         }
 
