@@ -384,6 +384,11 @@ if ($LASTEXITCODE -ne 0 -or $changed.Count -eq 0) {
 }
 
 $safeExact = @(
+    "README.md",
+    "Scripts/new_developer_onboarding.ps1",
+    "Scripts/governor_handoff.py",
+    "Scripts/test_governor_handoff.py",
+    "Scripts/test_unreal_classifier.ps1",
     "Data/ProjectGovernor.json",
     "Data/DeepProjectAudit.json",
     "Data/MasterExecutionRoadmap.json",
