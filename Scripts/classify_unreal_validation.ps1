@@ -2,18 +2,20 @@ $ErrorActionPreference = "Stop"
 
 function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = "none") {
     $full = if ($Mode -eq "full") { "true" } else { "false" }
-    $core = if ($Mode -eq "core") { "true" } else { "false" }
+    $core = if ($Mode -eq "core" -or $Mode -eq "asset") { "true" } else { "false" }
+    $asset = if ($Mode -eq "asset") { "true" } else { "false" }
     $acceptance = if ($Mode -eq "acceptance") { "true" } else { "false" }
 
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_MODE=$Mode"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_FULL_UNREAL_REQUIRED=$full"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_CORE_UNREAL_REQUIRED=$core"
+    Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ASSET_IMPORT_ONLY=$asset"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_ONLY=$acceptance"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_RESUME_STAGE=$ResumeStage"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_DECISION_REASON=$Reason"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_PARENT_SHA=$ParentSha"
 
-    Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode full=$full core=$core acceptance=$acceptance resume=$ResumeStage parent=$ParentSha reason=$Reason"
+    Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode full=$full core=$core asset=$asset acceptance=$acceptance resume=$ResumeStage parent=$ParentSha reason=$Reason"
 }
 
 function Get-GitExe {
@@ -462,6 +464,20 @@ if($policyOnlyTouched.Count -gt 0 -and $acceptanceTouched.Count -eq 0 -and $core
 }
 
 if($coreImpact.Count -gt 0){
+    $assetOnlyAllowed = @(
+        "Data/P1C01MaterialsVegetationPlanV1.json"
+    )
+    $assetOnlyDelta = @($coreImpact | Where-Object {
+        (-not $_.StartsWith("Source/ShireJourneyEditorTools/")) -and
+        ($assetOnlyAllowed -notcontains $_)
+    }).Count -eq 0
+
+    if($assetOnlyDelta){
+        $coreImpact | ForEach-Object { Write-Host "ASSET_IMPORT_ONLY_FILE $_" }
+        Set-Mode "asset" "editor-tool-or-p1c01-material-delta-build-import-startup-only" $parentSha
+        exit 0
+    }
+
     if(Test-ParentCoreUnrealGreen $parentSha){
         $coreImpact | ForEach-Object { Write-Host "CORE_UNREAL_FILE $_" }
         Set-Mode "core" "runtime-or-asset-delta-inherits-parent-core-proof-no-package" $parentSha

@@ -1,3 +1,14 @@
+## 2026-09-26 - Fast production validation lane + stale-worker recovery
+
+- Root cause of the recurring 15-20 minute waste was split into runner acquisition/session failures and an overly broad Unreal validation lane.
+- Runner watchdog now verifies broker readiness with an actual `Listening for Jobs` log marker, not merely the existence of `Runner.Listener.exe`.
+- A stale `Runner.Worker` can no longer block the supervisor forever: after 300 seconds, it is recycled only when it has no descendant processes and its Worker diagnostic log has also been idle for the same window. Active build/cook/editor child processes remain protected.
+- Added a narrow `asset` Unreal mode for editor-tool/P1C01 material-authoring deltas. It still performs exact-head Editor build, production import, Automation QA and startup smoke, but skips unrelated chapter/state/warning-debt audits and never Cook/Packages.
+- CORE and ASSET runs no longer delete `Intermediate/Build/Win64` and `Binaries/Win64` before every build. UBT incremental dependency checking is used; the existing compiler-pressure retry still performs a clean project-intermediate reset if the build actually needs it. FULL validation remains clean-reset.
+- Runtime C++, Config, Build/Target, streaming/package/cook changes remain on CORE/FULL fail-closed paths. No gameplay/streaming/performance safety gate was waived.
+- The independent #1001 CRLF test defect is fixed by newline normalization and is not treated as a runner failure.
+- Evidence boundary: **STATIC-VALIDATED SOURCE CHANGE / fresh supervised exact-head run pending**. No PIE, device, visual or performance acceptance is claimed from this optimization.
+
 ## 2026-09-26 - Runner health certification and false-failure separation
 
 - Added `Scripts/verify_runner_session.ps1` as a fail-fast machine/session probe for the supervised UE4 runner.

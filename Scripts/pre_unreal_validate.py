@@ -6848,6 +6848,9 @@ for pg145_classifier_symbol in [
     "TRANSITIVE_CORE_PROOF_PASS",
     "runtime-or-asset-delta-inherits-nearest-safe-core-ancestor-no-package",
     "TRANSITIVE_CORE_PROOF_BLOCKED",
+    'Set-Mode "asset"',
+    "SHIRE_ASSET_IMPORT_ONLY",
+    "editor-tool-or-p1c01-material-delta-build-import-startup-only",
 ]:
     if pg145_classifier_symbol not in pg145_classifier:
         fail(f"PG-145 transitive core-proof optimization missing: {pg145_classifier_symbol}")
@@ -6880,6 +6883,9 @@ for pg145b_symbol in [
     "ShireJourney-GitHubRunner-Watchdog",
     "Test-NetConnection github.com -Port 443",
     "RUNNER_HEALTH_PASS",
+    "WorkerIdleHangSeconds",
+    "Listening for Jobs",
+    "stale-worker",
 ]:
     if pg145b_symbol not in pg145b_probe:
         fail(f"PG-145B runner health probe missing: {pg145b_symbol}")
@@ -6898,6 +6904,28 @@ for pg145b_path, pg145b_before in [
     work_pos = pg145b_text.find(pg145b_before)
     if probe_pos < 0 or work_pos < 0 or probe_pos > work_pos:
         fail(f"PG-145B runner health gate must precede heavy work: {pg145b_path.name}")
+
+# PG-145C: editor-tool/material-authoring deltas use the narrow exact-head engine lane:
+# build + import + automation + startup, without unrelated chapter/state/package repetition.
+pg145c_workflow = pg145_unreal_workflow
+for pg145c_symbol in [
+    "SHIRE_ASSET_IMPORT_ONLY",
+    "ASSET_IMPORT_ONLY_FILE",
+    "editor-tool-or-p1c01-material-delta-build-import-startup-only",
+]:
+    if pg145c_symbol not in (pg145_classifier + pg145c_workflow):
+        fail(f"PG-145C fast asset-import lane missing: {pg145c_symbol}")
+if "if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'\n        shell: cmd\n        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"%GITHUB_WORKSPACE%\\\\Scripts\\\\reset_project_build_intermediates.ps1\"'" not in pg145c_workflow:
+    fail("PG-145C incremental CORE/ASSET lanes must not delete project intermediates before every build")
+for pg145c_step in [
+    "Headless chapter-by-chapter runtime audit",
+    "Headless route/story state roundtrip audit",
+    "Summarize and guard runtime warning debt",
+]:
+    pg145c_pos = pg145c_workflow.find("- name: " + pg145c_step)
+    pg145c_slice = pg145c_workflow[pg145c_pos:pg145c_pos + 420] if pg145c_pos >= 0 else ""
+    if "SHIRE_ASSET_IMPORT_ONLY != 'true'" not in pg145c_slice:
+        fail(f"PG-145C asset-import lane still repeats unrelated runtime audit: {pg145c_step}")
 
 # PG-146: route/chapter/episode/character identity is one fail-closed contract.
 pg146_quest_h = read(resolve_source("ShireQuestSubsystem.h"))

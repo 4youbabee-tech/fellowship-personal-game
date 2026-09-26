@@ -220,7 +220,7 @@ jobs:
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\prepare_msvc_environment.ps1"'
 
       - name: Reset project build intermediates
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\reset_project_build_intermediates.ps1"'
 
@@ -255,17 +255,17 @@ jobs:
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_startup.cmd"'
 
       - name: Headless chapter-by-chapter runtime audit
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_chapters.cmd"'
 
       - name: Headless route/story state roundtrip audit
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_runtime_state.cmd"'
 
       - name: Summarize and guard runtime warning debt
-        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || (env.SHIRE_CORE_UNREAL_REQUIRED == 'true' && env.SHIRE_ASSET_IMPORT_ONLY != 'true'))
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_warning_debt.cmd"'
 
