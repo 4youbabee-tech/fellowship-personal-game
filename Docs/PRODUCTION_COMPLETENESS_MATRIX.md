@@ -1,3 +1,16 @@
+## 2026-09-26 - Unreal CI root acceleration implemented
+
+- Measured logs confirmed three independent sources of wasted time: #888 spent about 11 minutes in exact checkout before cancellation; administrative PR heads repeatedly entered FULL Unreal; and repeated editor builds recreated the UBT makefile and compiled 76 actions at roughly 238-252 seconds each.
+- Unreal PR concurrency is now branch-scoped. A newer SHA cancels only an older run from the same PR branch; it cannot cancel D/develop or another runtime PR.
+- Unreal Build Validation no longer triggers for README/onboarding/handoff/classifier-test administrative-only changes. Pre-Unreal still validates those files.
+- Exact checkout no longer deletes the repository .git metadata. It reuses the self-hosted workspace, fetches with a 1000 B/s for 20 s low-speed cutoff, limits attempts to three, hard-resets/checks out the exact TARGET_SHA, verifies HEAD equality, then scrubs the authenticated remote URL.
+- The validation classifier now supports exact Git-tree proof reuse. A merge SHA may inherit core proof only when its tree SHA exactly equals a parent tree SHA that has the required green Unreal proof. This addresses the real C4 case where merged develop and the proven C4 candidate have the same tree object but different commit SHAs.
+- Unreal workflow/classifier/pre-unreal orchestration changes are treated as validation-policy-only when no runtime delta exists. They exercise exact checkout/classification/Pre-Unreal but do not rebuild/import/package simply to validate CI policy.
+- Packaging scripts themselves remain acceptance-impacting. Config, Build.cs, Target.cs, chapter-streaming, cook/package/release and unknown-impact paths remain fail-safe FULL.
+- Compile parallelism remains MaxParallelActions=1 for now; no blind binary cache or RAM-risk increase is introduced. First measure gains from removing redundant work.
+- PG-175 guards the bounded fetch, preserved Git checkout, administrative trigger exclusions, same-PR cancellation and exact tree-equivalent proof markers.
+- Evidence boundary: **CI ARCHITECTURE IMPLEMENTED / FRESH MEASUREMENT PENDING**. No runtime, PIE, device, visual, pacing or performance acceptance is created by this optimization.
+
 ## 2026-09-26 - Persistent work-session handoff
 
 - Owner requested that the current conversation state be preserved with the project so a later session can continue without rediscovering the same CI/production issues.
