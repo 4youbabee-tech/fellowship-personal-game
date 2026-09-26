@@ -1,3 +1,12 @@
+## 2026-09-26 - Historical foliage guards decoupled from mutable phase labels
+
+- Final C4 closure exposed a validator design defect: PG-165/166 still required the overall materials/vegetation plan to retain a C1/C2-era top-level status, so legitimate progress to C4 was rejected even though C1/C2 invariants remained intact.
+- PG-165 now validates the durable C1 albedo/master-surface contract instead of freezing the plan at an old phase label.
+- PG-166 now validates recorded C2 machine evidence plus wind/performance invariants instead of requiring the top-level plan status to remain `C2_FOLIAGE_WIND_EXACT_HEAD_GREEN_MERGED_C3_READY`.
+- PG-171 accepts the prepared state or any explicit `C4_...` state while still enforcing all C4 source/evidence invariants and forbidding premature far-parent binding.
+- This prevents future D/later phase progression from reopening old C1/C2 validation failures solely because the project advanced.
+- Evidence boundary: validator repair only; fresh exact-head Pre-Unreal is required after this change. Unreal #873 already succeeded on the immediately preceding closure head.
+
 ## 2026-09-26 - P1C01 C4 machine closure / D next
 
 - C4 candidate machine evidence: Pre-Unreal #1064 SUCCESS + Unreal Build #869 SUCCESS on `e881b32da6ae9713ccc096e8f213056aeef6af76`.
