@@ -5501,7 +5501,10 @@
     "source_of_truth": "Data/CompletionWaveMapV1.json",
     "report_rule": "Report whole-game planning completion percentage, 24-hour delta, wave movement, meaningful production drops, exact-head validation evidence, blockers, and warehouse/runtime visibility progress. Do not increase progress from commit count alone; only advance percentage when wave exit criteria materially move.",
     "evidence_rule": "Never convert static/compile/warehouse evidence into PIE/device/visual acceptance without matching proof.",
-    "audience": "OWNER"
+    "audience": "OWNER",
+    "automation_id": "6ab288ade9308191ae2410214f0b4d52",
+    "schedule": "Daily 17:05 Asia/Beirut, re-enabled 2026-09-26; first scheduled report 2026-09-27",
+    "baseline_note": "40 is a historical planning baseline, not a fresh measurement. CompletionWaveMap maps W00 exit to 42; reconcile exit evidence before publishing a refreshed percentage. Daily delta unavailable without comparable snapshots."
   },
   "cross_system_audit_cycle": {
     "status": "ACTIVE_ENFORCED",
@@ -5987,5 +5990,19 @@
     ],
     "policy": "C3 preparation and implementation may proceed from integrated develop independently of branch cleanup. Preserve exact-head runtime checks.",
     "evidence_boundary": "e2dd022 candidate full machine success; post-merge rerun ongoing; no human acceptance claim."
+  },
+  "production_acceleration_review_2026_09_26": {
+    "owner_goal": "Accelerate substantive game/content production, not recurring administrative repair.",
+    "intake_snapshot": {
+      "source": "Data/P1C01WarehousePromotionQueueV1.json",
+      "total": 28,
+      "authorized_for_staging": 27,
+      "blocked_license_capture": 1,
+      "counts_not_import_receipts": true
+    },
+    "next_delivery": "C3 stable foliage material identity, then representative Shire material/vegetation/interior/audio batches through existing staging and import pipeline.",
+    "parallel_preparation": "Source extraction and warehouse QC for other regions can proceed while P1C01 runtime is validated. Do not import the whole catalogue indiscriminately or count PDFs as runtime assets.",
+    "reporting": "Daily task repaired: was disabled and pinned to obsolete PR67; now follows develop and live PRs.",
+    "proof_boundary": "No new asset download/import or gameplay acceptance performed by this review."
   }
 }
