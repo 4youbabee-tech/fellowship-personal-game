@@ -38,6 +38,11 @@ on:
       - 'Scripts/test_deep_project_audit.py'
       - 'Scripts/source_contracts.py'
       - 'Scripts/test_source_contracts.py'
+      - 'Scripts/verify_runner_session.ps1'
+      - 'Scripts/test_runtime_smoke.py'
+      - 'Scripts/runtime_smoke.py'
+      - 'Scripts/test_asset_quality_audit.py'
+      - 'Scripts/asset_quality_audit.py'
       - 'SourceAssets/PrivateOffline/**'
       - 'Scripts/stage_*warehouse*.ps1'
   pull_request:
