@@ -1,10 +1,16 @@
+## 2026-09-26 - Verified repair and maintenance unblock
+
+- PR93 merged as `1f0443d159b60e4ac9156b5b94dfa7c22daafb1d` after full machine validation, including rendered packaged startup.
+- Branch cleanup is not a C3 implementation prerequisite. Keep exact-head technical checks and human/device acceptance.
+- Earlier baseline and PR-none snapshots below describe the post-C2 checkpoint, not live GitHub state.
+
 ## W01 P1C01 Mega Production control point - post-C2 cleanup
 - Canonical baseline: `develop@1d0580926299e4fac635bcb847343a49c444d4f1`.
 - PR: none
 - Branch: none
 - C2: merged and machine-green via #1030/#837; merged develop #1031/#838 also green.
 - Active operation: post-C2 root/branch cleanup only.
-- Next runtime drop: **C3 - Stable Foliage Material Identity**, blocked only until cleanup succeeds.
+- Next runtime drop: **C3 - Stable Foliage Material Identity**, ready to start from verified develop while cleanup proceeds independently.
 - Required C3 lane after launch: Fast Asset Lane unless the classifier finds a broader impact.
 - Evidence boundary: C2 is COMPILE-TESTED/machine-green only; no PIE/device/visual/performance acceptance.
 
@@ -22,7 +28,7 @@ This file is a human-readable execution board. **Data/ProjectGovernor.json remai
 - Previous runtime drop: **C2_LIGHTWEIGHT_FOLIAGE_WIND — MERGED + MACHINE-GREEN**
 - Canonical integration/programmer-handoff branch: `develop`
 - Stable release branch: `main`
-- C3 may start only after Branch Cleanup succeeds and remote survivors are re-audited.
+- C3 may start from verified develop. Branch Cleanup and survivor review proceed independently; exact-head runtime validation remains required.
 
 ## Execution order
 
@@ -65,5 +71,5 @@ PG-078 compares the Governor against the master roadmap on every Pre-Unreal run.
 - Validate actual authored audio-bank presence/playback without `-NoSound`.
 - Perform isolated Public/Private runtime-source migration without gameplay redesign, then re-run exact-head Pre-Unreal and UE4.27.2 validation.
 - Run target-device DX11/720p Low-Medium profiling and chapter-specific human PIE/pacing/visual checks.
-- W00 is closed; keep broad Part II/III runtime production gated until P1C01 clears Gate 6/7 human visual/pacing/performance evidence.
+- W00_ARCHITECTURAL_STABILIZATION is closed; keep broad Part II/III runtime production gated until P1C01 clears Gate 6/7 human visual/pacing/performance evidence.
 

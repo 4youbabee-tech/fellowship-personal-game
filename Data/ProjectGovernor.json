@@ -4425,7 +4425,7 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "C2 lightweight foliage wind is merged and machine-green. Post-C2 root cleanup is the only active maintenance operation; C3 stable foliage material identity may start only after cleanup succeeds.",
+    "rule": "C2 lightweight foliage wind is merged and machine-green. Post-C2 root cleanup is the only active maintenance operation; C3 stable foliage material identity may start from verified develop while branch cleanup proceeds separately.",
     "machine_baseline": {
       "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
       "pre_unreal": "#1031 SUCCESS",
@@ -4462,7 +4462,7 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "Post-C2 root cleanup and C3 launch preparation; no runtime-changing PR is active.",
+    "active_wave": "Post-C2 root cleanup and C3 launch preparation; PR93 runtime repair subsequently passed full CI and merged into develop.",
     "next_actions": [
       "1. Merge the post-C2 cleanup/closure maintenance PR after exact-head Pre-Unreal is green.",
       "2. Require Branch Cleanup success and verify only develop/main plus the two documented planning salvage branches remain.",
@@ -4602,7 +4602,7 @@
     "current_short_branch": "none",
     "integration_baseline": "develop",
     "current_open_pr": 0,
-    "open_pr_policy": "No runtime-changing PR is active between C2 and C3. Maintenance cleanup may proceed; the next runtime PR must be C3 after cleanup success.",
+    "open_pr_policy": "PR93 runtime repair passed full CI and merged after C2. Maintenance cleanup may proceed; the next production runtime PR is C3; branch cleanup is not a production gate.",
     "default_branch_scheduler_note": "Scheduled workflows are owned by default branch main; Develop 20-Min Validation on main explicitly checks out develop. Production work still integrates through develop.",
     "cleanup_snapshot": {
       "date": "2026-09-26",
@@ -5483,7 +5483,7 @@
     "branch": "none",
     "baseline": "1d0580926299e4fac635bcb847343a49c444d4f1",
     "current_wave": "W01_P1C01_POST_C2_ROOT_CLEANUP",
-    "merge_policy": "No runtime-changing merge until post-C2 cleanup is green. Then C3 stable foliage material identity becomes the sole runtime-changing lane.",
+    "merge_policy": "C3 is the next production lane. Branch cleanup does not block it; runtime merges still require their exact-head technical checks.",
     "proof_boundary": "C2 exact candidate #1030/#837 and merged develop #1031/#838 are machine-green. No PIE/device/visual/performance acceptance is implied."
   },
   "completion_wave_map": {
@@ -5548,7 +5548,7 @@
     },
     "next_actions": [
       "Complete post-C2 root cleanup and verify the expected remote branch survivor set.",
-      "Start C3 stable foliage material identity as the sole runtime-changing PR after cleanup success.",
+      "Start C3 stable foliage material identity from verified develop; branch cleanup is independent.",
       "Then execute C4 LOD/cull/overdraw evidence work before any foliage density increase.",
       "Proceed to D lighting/sky/fog/water only after C4 is exact-head machine-green; keep broad Part I story expansion frozen until Gate 6/7."
     ]
@@ -5943,5 +5943,18 @@
     ],
     "proof": "Three local regression tests pass including 64 MiB sparse texture bounded-read check; CI and UE/device acceptance pending.",
     "resume": "Validate this PR head; resolve rendered startup in supervised interactive session; continue P1C01 representative batches using existing intake queue. Do not recreate a parallel intake or budget system."
+  },
+  "maintenance_friction_resolution_2026_09_26": {
+    "failure": "Run 36239879239 rejected missing literal W00_ARCHITECTURAL_STABILIZATION despite board saying W00 is closed.",
+    "correction": "Restore explicit historical identifier; no runtime gate removed.",
+    "policy": "Branch deletion/cleanup is maintenance, not a prerequisite for C3 implementation. Exact-head runtime validation and asset/device acceptance remain unchanged.",
+    "verified_runtime_repair": {
+      "pr": 93,
+      "head": "e2dd0225497196833a28c9df571606706dc98db3",
+      "merge": "1f0443d159b60e4ac9156b5b94dfa7c22daafb1d",
+      "pre_unreal": 36244082702,
+      "unreal": 36244082732,
+      "scope": "Full machine chain including cook/package/rendered startup succeeded; not human visual or performance acceptance."
+    }
   }
 }
