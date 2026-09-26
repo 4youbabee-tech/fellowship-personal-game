@@ -4832,6 +4832,53 @@ if errors:
         print(f"ERROR: {message}")
     sys.exit(1)
 
+
+# PG-175: Unreal CI latency architecture must preserve exact-head safety without
+# rebuilding superseded/admin-only commits or destroying incremental Git state.
+pg175_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+pg175_classifier = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
+pg175_latency = read(ROOT / "Docs" / "CI_LATENCY_REVIEW_2026-09-26.md")
+
+for pg175_required in [
+    "cancel-in-progress: ${{ github.event_name == 'pull_request' }}",
+    "http.lowSpeedLimit=1000",
+    "http.lowSpeedTime=20",
+    "Fetching exact PR head attempt %%ATTEMPT%% of 3",
+    "Scrub checkout credential from persistent Git metadata",
+]:
+    if pg175_required not in pg175_workflow:
+        fail(f"PG-175 Unreal workflow latency/safety invariant missing: {pg175_required}")
+
+for pg175_forbidden in [
+    'if exist ".git" rmdir /S /Q ".git"',
+    "attempt %%ATTEMPT%% of 7",
+]:
+    if pg175_forbidden in pg175_workflow:
+        fail(f"PG-175 obsolete destructive/retry behavior returned: {pg175_forbidden}")
+
+for pg175_ignored in [
+    "'README.md'",
+    "'Scripts/new_developer_onboarding.ps1'",
+    "'Scripts/governor_handoff.py'",
+    "'Scripts/test_governor_handoff.py'",
+    "'Scripts/test_unreal_classifier.ps1'",
+]:
+    if pg175_workflow.count(pg175_ignored) < 2:
+        fail(f"PG-175 administrative path is not excluded from both push and PR Unreal triggers: {pg175_ignored}")
+
+for pg175_tree_marker in [
+    "function Test-TreeEquivalentCoreProof",
+    "TREE_EQUIVALENT_CORE_PROOF_PASS",
+    'rev-parse "$ParentSha^{tree}"',
+    'rev-parse "$candidate^{tree}"',
+]:
+    if pg175_tree_marker not in pg175_classifier:
+        fail(f"PG-175 exact tree-equivalent proof guard missing: {pg175_tree_marker}")
+
+if "same Git tree" not in pg175_latency and "tree" not in pg175_latency.lower():
+    fail("PG-175 CI latency review must explain exact tree-equivalent proof reuse")
+
+
 print("PRE-UNREAL CORE VALIDATION PASSED")
 
 # PG-050: mass world dressing must remain deterministic, source-controlled and story-safe.
