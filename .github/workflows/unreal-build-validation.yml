@@ -69,6 +69,11 @@ on:
       - 'Scripts/test_deep_project_audit.py'
       - 'Scripts/source_contracts.py'
       - 'Scripts/test_source_contracts.py'
+      - 'Scripts/asset_quality_audit.py'
+      - 'Scripts/test_asset_quality_audit.py'
+      - 'Scripts/runtime_smoke.py'
+      - 'Scripts/test_runtime_smoke.py'
+      - 'Scripts/verify_runner_session.ps1'
       - 'SourceAssets/PrivateOffline/**'
       - 'Scripts/stage_*warehouse*.ps1'
   workflow_dispatch:
