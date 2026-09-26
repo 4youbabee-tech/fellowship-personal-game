@@ -6294,10 +6294,8 @@ pg116_arch_paths = [
     for row in pg116_arch.get("files", [])
     if isinstance(row, dict)
 ]
-for pg116_path in [
-    "Source/ShireJourney/StoryPresentationDirector.h",
-    "Source/ShireJourney/StoryPresentationDirector.cpp",
-]:
+for pg116_resolved in [pg116_director_h, pg116_director_cpp]:
+    pg116_path = str(pg116_resolved.relative_to(ROOT)).replace("\\", "/")
     if pg116_arch_paths.count(pg116_path) != 1:
         fail(f"PG-116 source architecture registration must be exactly once: {pg116_path}")
 
@@ -6479,10 +6477,11 @@ pg118_arch_paths = [
     for row in pg118_arch.get("files", [])
     if isinstance(row, dict)
 ]
-for pg118_path in [
-    "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.h",
-    "Source/ShireJourney/ShireChapterAssetStreamingSubsystem.cpp",
+for pg118_resolved in [
+    resolve_source("ShireChapterAssetStreamingSubsystem.h"),
+    resolve_source("ShireChapterAssetStreamingSubsystem.cpp"),
 ]:
+    pg118_path = str(pg118_resolved.relative_to(ROOT)).replace("\\", "/")
     if pg118_arch_paths.count(pg118_path) != 1:
         fail(f"PG-118 source architecture registration must be exactly once: {pg118_path}")
 
@@ -6740,8 +6739,8 @@ if "LoadObject<USoundBase>" in pg128_audio:
     fail("PG-128 synchronous production audio loading is forbidden")
 
 
-# PG-144: warehouse staging is bounded, resumable and filtered on a GitHub-hosted delta gate
-# before any self-hosted runner capacity is consumed.
+# PG-144: warehouse staging is bounded/resumable and runs only on the supervised
+# Windows runner under a dedicated warehouse concurrency group.
 pg144_helper = read(ROOT / "Scripts" / "warehouse_network.ps1")
 pg144_workflow = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
 pg144_scripts = [
@@ -6772,49 +6771,45 @@ for pg144_path in pg144_scripts:
     if re.search(r"\bInvoke-(?:WebRequest|RestMethod)\b", pg144_text):
         fail(f"PG-144 provider script bypasses bounded network helper: {pg144_path.name}")
 for pg144_symbol in [
-    "Detect warehouse delta on GitHub-hosted runner",
-    "Detect warehouse delta before touching the self-hosted runner",
-    "EVENT_BEFORE: ${{ github.event.before }}",
-    "if: needs.delta.outputs.run_stage == 'true'",
-    "WAREHOUSE_HOSTED_DELTA_SKIP",
-    "group: unreal-build-${{ github.repository }}-ue4-device",
+    "- develop",
+    "- self-hosted",
+    "- Windows",
+    "- X64",
+    "- ue4-27",
+    "group: warehouse-stage-${{ github.repository }}",
+    "cancel-in-progress: true",
     "warehouse_network.ps1",
     "WAREHOUSE_CHECKOUT_PASS",
 ]:
     if pg144_symbol not in pg144_workflow:
-        fail(f"PG-144 warehouse runner-isolation guard missing: {pg144_symbol}")
-if pg144_workflow.count("runs-on: ubuntu-latest") < 2:
-    fail("PG-144 warehouse delta/skip path must stay on GitHub-hosted capacity")
+        fail(f"PG-144 warehouse supervised-runner guard missing: {pg144_symbol}")
+if "runs-on: ubuntu-latest" in pg144_workflow or "runs-on: windows-latest" in pg144_workflow:
+    fail("PG-144 warehouse staging must not depend on GitHub-hosted capacity")
 if pg144_workflow.count("- self-hosted") != 1:
-    fail("PG-144 exactly one warehouse job may request the self-hosted runner")
-if "id: warehouse_delta" in pg144_workflow:
-    fail("PG-144 self-hosted warehouse delta detector was reintroduced")
+    fail("PG-144 exactly one warehouse job must own the supervised runner")
+if "integration/comprehensive-foundation-v1" in pg144_workflow:
+    fail("PG-144 warehouse workflow still targets an obsolete integration branch")
 
 # PG-145: self-hosted Windows warehouse execution and runner supervision are explicit.
 pg145_workflow = pg144_workflow
 if "shell: powershell\n" in pg145_workflow:
     fail("PG-145 raw powershell shell can be blocked by the runner execution policy")
-if pg145_workflow.count("powershell.exe -NoProfile -ExecutionPolicy Bypass") < 8:
-    fail("PG-145 heavy warehouse scripts must execute through explicit Bypass wrappers")
+if pg145_workflow.count("powershell.exe -NoProfile -ExecutionPolicy Bypass") < 9:
+    fail("PG-145 warehouse PowerShell work must execute through explicit Bypass wrappers")
 for pg145_checkout_symbol in [
-    "Checkout exact warehouse head with bounded retries",
+    "Checkout exact warehouse head",
     "Fetching exact warehouse head attempt",
-    "fetch --no-tags --prune --depth=20",
+    "fetch --no-tags --prune --depth=2",
     "WAREHOUSE_CHECKOUT_PASS",
 ]:
     if pg145_checkout_symbol not in pg145_workflow:
         fail(f"PG-145 resilient warehouse checkout missing: {pg145_checkout_symbol}")
-pg145_delta_start = pg145_workflow.find("  delta:")
-pg145_stage_start = pg145_workflow.find("  stage:")
-if pg145_delta_start < 0 or pg145_stage_start < 0 or pg145_stage_start <= pg145_delta_start:
-    fail("PG-145 warehouse hosted-delta/stage job layout is invalid")
-else:
-    pg145_hosted = pg145_workflow[pg145_delta_start:pg145_stage_start]
-    pg145_stage = pg145_workflow[pg145_stage_start:]
-    if pg145_hosted.count("uses: actions/checkout@v4") != 1:
-        fail("PG-145 hosted warehouse delta gate must use exactly one actions/checkout@v4")
-    if "uses: actions/checkout@" in pg145_stage:
-        fail("PG-145 self-hosted warehouse stage must not depend on marketplace checkout download")
+if "  delta:" in pg145_workflow or "needs.delta" in pg145_workflow:
+    fail("PG-145 obsolete hosted warehouse delta job was reintroduced")
+if "  stage:" not in pg145_workflow:
+    fail("PG-145 supervised warehouse stage job missing")
+if "uses: actions/checkout@" in pg145_workflow:
+    fail("PG-145 self-hosted warehouse stage must not depend on marketplace checkout download")
 
 pg145_watchdog = read(ROOT / "Scripts" / "runner_watchdog.ps1")
 pg145_watchdog_installer = read(ROOT / "Scripts" / "install_runner_watchdog.ps1")
