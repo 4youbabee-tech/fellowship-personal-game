@@ -12,7 +12,8 @@ class SourceContractTests(unittest.TestCase):
     def test_asset_audit_supported_python_launchers(self):
         for command in ('python Scripts/asset_quality_audit.py --strict',
                         'python3 Scripts/asset_quality_audit.py --strict',
-                        '\'"%PYTHON_EXE%" Scripts/asset_quality_audit.py --strict\''):
+                        '\'"%PYTHON_EXE%" Scripts/asset_quality_audit.py --strict\'',
+                        'cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\\asset_quality_audit.py --strict'):
             with self.subTest(command=command):
                 self.assertTrue(has_strict_asset_audit_command('        run: ' + command))
 
@@ -21,7 +22,8 @@ class SourceContractTests(unittest.TestCase):
                      '# run: python Scripts/asset_quality_audit.py --strict',
                      'run: echo python Scripts/asset_quality_audit.py --strict',
                      'run: python Scripts/asset_quality_audit.py # --strict',
-                     'run: python Scripts/asset_quality_audit.py --strict || true'):
+                     'run: python Scripts/asset_quality_audit.py --strict || true',
+                     'run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\\asset_quality_audit.py --strict || true'):
             with self.subTest(line=line):
                 self.assertFalse(has_strict_asset_audit_command(line))
 

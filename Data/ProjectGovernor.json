@@ -3716,6 +3716,64 @@
       "resolution": "Remove the GitHub-hosted delta/no-stage jobs and obsolete push branch from warehouse-stage.yml. Relevant develop/PR warehouse changes directly queue one supervised Windows staging job with its own concurrency group.",
       "evidence_boundary": "Workflow/source configuration only until the supervised runner executes a staging job.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-046",
+      "title": "Eliminate redundant Unreal validation work without weakening exact-head quality gates",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-003",
+        "REQ-EXEC-002",
+        "REQ-PROD-011"
+      ],
+      "resolution": "Administrative/non-runtime changes must not consume repeated full UE4.27 build/import/runtime/package cycles. Exact-head safety remains mandatory for runtime-relevant changes. Superseded runs from the same PR are cancelled, exact checkout preserves Git state for incremental UBT behavior, and a merged commit may inherit core proof only when its Git tree is exactly identical to a previously green parent tree.",
+      "implementation_contract": [
+        "README/onboarding/handoff/classifier-test administrative paths stay on Pre-Unreal and do not trigger Unreal Build Validation by themselves.",
+        "Exact checkout preserves .git, fetches and hard-resets to TARGET_SHA, verifies HEAD exactly, and removes authenticated remote credentials after classification.",
+        "Git fetch uses a bounded low-speed cutoff and three attempts; stalled transfer cannot hold the device indefinitely.",
+        "Concurrency cancels only superseded runs from the same PR branch; unrelated runtime PR/develop runs are not cancelled.",
+        "Tree-equivalent proof reuse requires exact Git tree SHA equality plus a successful required Unreal proof on the identical parent tree.",
+        "Config/Build.cs/Target.cs/streaming/package/cook/release/unknown changes remain fail-safe FULL.",
+        "Runtime/source/data deltas continue through asset/core/full validation according to impact.",
+        "Do not increase compile parallelism or add blind binary caches until the safer structural reductions are measured."
+      ],
+      "rationale": "Measured logs showed repeated 13-18 minute jobs for administrative changes, #888 spending ~11 minutes in checkout before cancellation, and repeated 238-252 second 76-action C++ rebuilds. The waste came from trigger/classifier/checkout architecture rather than insufficient quality checks.",
+      "evidence_boundary": "CI source architecture only until a fresh corrected run measures actual checkout/build/total durations. No gameplay, PIE, device, visual, pacing or performance acceptance is implied.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Docs/CI_LATENCY_REVIEW_2026-09-26.md",
+        "Unreal #884-#889 workflow/job logs",
+        "Git tree equality: develop@2845071119d926defd6ba94c970f43729bc51674 == C4 green candidate bc1e04062d8079fef73eae64f68c81772b4fc56c tree 3de99fa7951e889cf319e967a2225e962d9cc554"
+      ]
+    },
+    {
+      "id": "DEC-047",
+      "title": "Re-architect validation lanes around one persistent Unreal workspace",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-003",
+        "REQ-EXEC-002",
+        "REQ-PROD-011"
+      ],
+      "resolution": "The dedicated UE4 runner keeps one persistent Unreal workspace for incremental C++/asset/runtime validation. Every static, administration, health and warehouse source checkout is isolated under RUNNER_TEMP and may not delete or replace GITHUB_WORKSPACE. Administrative changes are removed from the Unreal trigger where safe, superseded same-PR work is cancelled, and exact-tree proof reuse avoids rebuilding byte-identical merge content.",
+      "implementation_contract": [
+        "Pre-Unreal remains self-hosted for zero additional hosted-runner dependency/cost, but uses an exact isolated RUNNER_TEMP checkout and never touches Unreal build intermediates, binaries or root Git metadata.",
+        "Runner Health uses an isolated RUNNER_TEMP source checkout and never deletes the Unreal workspace.",
+        "Branch Cleanup uses an isolated RUNNER_TEMP source checkout and never deletes the Unreal workspace.",
+        "Warehouse Stage uses an isolated RUNNER_TEMP source checkout while persistent downloaded payloads remain under C:\\actions-runner\\_warehouse\\ShireJourney.",
+        "Only Unreal Build Validation owns the persistent project workspace used by UBT incremental detection.",
+        "Every coherent engineering wave should be committed atomically when tooling permits; avoid multiple sequential commits that create superseded CI runs.",
+        "Failure triage must classify GAME_RUNTIME, VALIDATOR_POLICY, CI_INFRA or ADMIN_GOVERNANCE before runtime code is changed.",
+        "No blind cache restore, compile parallelism increase or gate removal is authorized until structural waste reductions are measured."
+      ],
+      "rationale": "Recent logs showed that lightweight workflows repeatedly deleted the same self-hosted GITHUB_WORKSPACE, destroying Git/UBT continuity and forcing 76-action editor rebuilds. Recent failure history also showed a large cancellation/governance/infra share rather than repeated gameplay regressions.",
+      "evidence_boundary": "Architecture/source review only. Fresh exact-head measurements are required before claiming CI speed improvement. No PIE/device/visual/pacing/performance acceptance is implied.",
+      "authority": "USER_EXPLICIT_DIRECTION",
+      "evidence": [
+        "Unreal #884-#891 and Pre-Unreal #1056-#1101 workflow history",
+        "Docs/CI_ARCHITECTURE_REASSESSMENT_2026-09-26.md",
+        "Epic UBT adaptive Git working-set guidance and GitHub Actions concurrency guidance"
+      ]
     }
   ],
   "open_conflicts": [],
@@ -3999,7 +4057,9 @@
         "PG-160",
         "PG-163",
         "PG-164",
-        "PG-165"
+        "PG-165",
+        "PG-175",
+        "PG-176"
       ],
       "behavior": "Validate the exact W01 candidate head; machine evidence never promotes visual/device/performance acceptance."
     },
@@ -4425,7 +4485,7 @@
   "current_focus": {
     "production_lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
     "visible_benchmark": "P1C01_SHIRE_NATURAL_CHARACTER_WORLD_AUDIO_VERTICAL_SLICE",
-    "rule": "C2 lightweight foliage wind is merged and machine-green. Post-C2 root cleanup is the only active maintenance operation; C3 stable foliage material identity may start from verified develop while branch cleanup proceeds separately.",
+    "rule": "C4 foliage LOD/cull evidence is merged. The next runtime production drop is D fixed-state lighting/sky/fog/low-cost water. Mega Asset Promotion may proceed in parallel through registered warehouse/intake states without bypassing Gate 6/7 runtime scope control.",
     "machine_baseline": {
       "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
       "pre_unreal": "#1031 SUCCESS",
@@ -4435,14 +4495,14 @@
     "w01_freeze": "RELEASED_BY_W00_EXIT"
   },
   "immediate_next_large_actions": [
-    "1. Prove Drop B Hobbiton/Bag End exact head through Pre-Unreal and UE4.27.2 core validation.",
-    "2. If green, proceed to Drop C materials/vegetation with channel-packed PNG/TGA, HISM/LOD/culling and performance-scaled wind.",
-    "3. Source/author a production Bag End interior shell through approved FBX/provenance workflow before claiming interior completion.",
-    "4. Continue atmosphere, character presentation, living Shire, quest/audio polish and target-device profiling in order.",
-    "5. Keep Arabic localization runtime implementation isolated from the active world-production PR."
+    "1. D — fixed-state lighting / sky / fog / low-cost water for P1C01.",
+    "2. Mega Asset Promotion — move prepared Project Source / warehouse assets through intake, import and integration in bounded category batches.",
+    "3. Character presentation and skeletal/animation production coverage.",
+    "4. Living Shire motion/fauna plus quest/audio polish.",
+    "5. Target-device DX11 720p Low-Medium profiling before density or expensive presentation expansion."
   ],
   "session_handoff": {
-    "checkpoint_id": "CP-W01-P1C01-POST-C2-ROOT-CLEANUP",
+    "checkpoint_id": "CP-W01-P1C01-C4-MERGED-D-NEXT",
     "source_head": "1d0580926299e4fac635bcb847343a49c444d4f1",
     "branch": "none",
     "pull_request": 0,
@@ -4462,12 +4522,13 @@
       "warning-debt guard",
       "Warehouse no-delta gate"
     ],
-    "active_wave": "Post-C2 root cleanup and C3 launch preparation; PR93 runtime repair subsequently passed full CI and merged into develop.",
+    "active_wave": "C4 merged; D lighting/sky/fog/low-cost water next with Mega Asset Promotion in parallel.",
     "next_actions": [
-      "1. Merge the post-C2 cleanup/closure maintenance PR after exact-head Pre-Unreal is green.",
-      "2. Require Branch Cleanup success and verify only develop/main plus the two documented planning salvage branches remain.",
-      "3. Start C3 stable foliage material identity from cleaned develop as the sole runtime-changing PR.",
-      "4. Keep C4 and D preparation-only until their prerequisites are met."
+      "Start D fixed-state lighting / sky / fog / low-cost water from current verified develop after the required exact-head gate.",
+      "Run Mega Asset Promotion in parallel: advance registered warehouse items through staging and intake QC toward READY_FOR_IMPORT without treating warehouse presence as runtime integration.",
+      "Promote only validated assets into UE4.27 in bounded category batches; preserve provenance, FBX-only animated production, PNG/TGA textures, soft references/async heavy loading, pooling and HISM/ISM/LOD/culling.",
+      "Continue character presentation, living motion/fauna, quest/audio polish and target-device profiling after D according to the registered production train.",
+      "Keep broad later-region runtime expansion behind Gate 6/7 human visual, pacing and target-device evidence."
     ],
     "unverified_acceptance": [
       "P1C01 full traversal/quest/save-load human PIE acceptance",
@@ -4475,7 +4536,7 @@
       "P1C01 visual/pacing/NPC-believability acceptance",
       "real audio listening/mix acceptance after production bank/spatial layer integration"
     ],
-    "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance.",
+    "scope_rule": "Machine/headless evidence never substitutes for PIE/device/visual/human acceptance. Warehouse/source coverage never substitutes for IMPORTED/INTEGRATED/ACCEPTED state.",
     "validation_snapshot": {
       "last_green": {
         "sha": "1d0580926299e4fac635bcb847343a49c444d4f1",
@@ -5483,9 +5544,9 @@
   },
   "integration_train": {
     "branch": "none",
-    "baseline": "1d0580926299e4fac635bcb847343a49c444d4f1",
-    "current_wave": "W01_P1C01_POST_C2_ROOT_CLEANUP",
-    "merge_policy": "C3 is the next production lane. Branch cleanup does not block it; runtime merges still require their exact-head technical checks.",
+    "baseline": "2845071119d926defd6ba94c970f43729bc51674",
+    "current_wave": "W01_P1C01_D_LIGHTING_PLUS_MEGA_ASSET_PROMOTION",
+    "merge_policy": "D is the next runtime-changing lane. Mega Asset Promotion may proceed in parallel as bounded source/intake/import batches; each runtime/content promotion requires its applicable exact-head validation.",
     "proof_boundary": "C2 exact candidate #1030/#837 and merged develop #1031/#838 are machine-green. No PIE/device/visual/performance acceptance is implied."
   },
   "completion_wave_map": {
@@ -5552,10 +5613,11 @@
       "warehouse_run": 232
     },
     "next_actions": [
-      "Complete post-C2 root cleanup and verify the expected remote branch survivor set.",
-      "Start C3 stable foliage material identity from verified develop; branch cleanup is independent.",
-      "Then execute C4 LOD/cull/overdraw evidence work before any foliage density increase.",
-      "Proceed to D lighting/sky/fog/water only after C4 is exact-head machine-green; keep broad Part I story expansion frozen until Gate 6/7."
+      "Start D fixed-state lighting / sky / fog / low-cost water from current verified develop after the required exact-head gate.",
+      "Run Mega Asset Promotion in parallel: advance registered warehouse items through staging and intake QC toward READY_FOR_IMPORT without treating warehouse presence as runtime integration.",
+      "Promote only validated assets into UE4.27 in bounded category batches; preserve provenance, FBX-only animated production, PNG/TGA textures, soft references/async heavy loading, pooling and HISM/ISM/LOD/culling.",
+      "Continue character presentation, living motion/fauna, quest/audio polish and target-device profiling after D according to the registered production train.",
+      "Keep broad later-region runtime expansion behind Gate 6/7 human visual, pacing and target-device evidence."
     ]
   },
   "development_mode_contract": {
@@ -6020,5 +6082,35 @@
       "The 24-hour Project Manager report is informational and must never become a production gate."
     ],
     "regression_guard": "PG-150 now protects authority semantics rather than exact PR/branch mirroring."
+  },
+  "new_developer_entry": {
+    "status": "ACTIVE_SINGLE_ENTRY",
+    "entry_file": "README.md",
+    "onboarding_script": "Scripts/new_developer_onboarding.ps1",
+    "authority_guide": "Docs/PROJECT_GOVERNOR.md",
+    "machine_authority": "Data/ProjectGovernor.json",
+    "reading_order": [
+      "Docs/PROJECT_GOVERNOR.md",
+      "Data/ProjectGovernor.json",
+      "Docs/CURRENT_PROJECT_STATE.md",
+      "Docs/DEVELOPMENT_GATES.md",
+      "Docs/PROJECT_GUARDIAN.md"
+    ],
+    "rule": "A new human programmer or AI session enters through README/onboarding script, then follows ProjectGovernor. Chat history and stale PR text are never required to discover current direction.",
+    "live_state_rule": "GitHub owns current branch/PR/check status; do not duplicate volatile transport metadata as fail-closed governance."
+  },
+  "handoff_metadata_policy": {
+    "evidence_authority": "session_handoff.validation_snapshot",
+    "legacy_source_head": "Informational compatibility copy only; mismatch warns and never certifies another commit.",
+    "blocking_checks": "Invalid or mixed-SHA evidence, failed last-green baselines, missing validation snapshots and missing experiential acceptance boundaries remain blocking.",
+    "production_priority": "Advance the cohesive playable story slice: quest continuity, living world, save/load integrity and measured target-device performance. Administrative metadata must not substitute for player-facing acceptance."
+  },
+  "validation_latency_policy": {
+    "priority": "Story, movement, system integration and save/load correctness remain mandatory.",
+    "non_runtime": "README, onboarding and Governor evidence helpers use the explicit non-runtime allowlist. Reuse engine proof only across a checked safe delta to a successful ancestor.",
+    "unknown_paths": "Default to full validation; never blanket-exempt Scripts or Data.",
+    "batching": "Publish related changes in one atomic commit after local review; avoid per-file pushes that create superseded jobs.",
+    "measurement": "Docs/CI_LATENCY_REVIEW_2026-09-26.md",
+    "acceptance": "Measure next exact-head run before claiming latency improvement. Human playability and target-device performance remain separate."
   }
 }

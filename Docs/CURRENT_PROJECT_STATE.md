@@ -1,3 +1,91 @@
+## 2026-09-27 - Deep-audit command recognizer aligned to isolated Pre-Unreal
+
+- Pre-Unreal #1105 reached the new head `2bcec3528619f07bd8917385d818d7a9be384d4c` through the persistent isolated checkout; exact-head checkout, classifier tests, project-structure validation, Project Governor, strict asset audit and production-readiness audit all passed.
+- #1105 then failed only in `deep_project_audit.py` with `Pre-Unreal workflow does not fail closed on structural asset-quality defects`.
+- The strict audit command was actually executed successfully in the same run as `cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\\asset_quality_audit.py --strict`; the shared recognizer still accepted only the pre-isolation slash-only command shape.
+- `source_contracts.has_strict_asset_audit_command` now recognizes the isolated cmd working-directory prefix and either slash direction while retaining full-line rejection of comments, echo wrappers and failure-masking suffixes. Regression tests cover the exact Windows isolated command and the `|| true` rejection.
+- This is VALIDATOR_POLICY only. No gameplay/runtime/import/cook/package code changed, and no Unreal build is requested for this repair.
+- Evidence boundary: **STATIC VALIDATOR REPAIR / FRESH PRE-UNREAL EXACT-HEAD RERUN PENDING**.
+
+## 2026-09-27 - PG-167 final queue-isolation guard repair
+
+- Live PR state showed the branch had already advanced to `95dcdad171eb36b1309dadf248f9b1f98f12a05c` with the first PG-134/PG-167 repair commit.
+- Pre-Unreal #1104 proved exact-head isolated persistent checkout and all classifier cases passed at that head.
+- #1104 then failed only in project-structure validation with the exact stale policy requirement: `PG-167 Unreal queue-isolation contract missing: ${{ startsWith(github.head_ref, 'acceptance/') || startsWith(github.head_ref, 'production/') }}`.
+- The remaining PG-167 queue-isolation guard now requires the adopted branch-scoped Unreal concurrency group plus `cancel-in-progress: ${{ github.event_name == 'pull_request' }}`, matching same-PR superseded-run cancellation.
+- This wave changes validator policy/docs only. It does not request C++/import/runtime/cook/package work and does not create PIE/device/visual/performance evidence.
+- Evidence boundary: **STATIC VALIDATOR PATCH / FRESH PRE-UNREAL EXACT-HEAD RERUN PENDING**.
+
+## 2026-09-27 - Validator contracts aligned to isolated CI architecture
+
+- Pre-Unreal #1103 proved the isolated persistent checkout path itself works and exact-head verification passes.
+- Its failure was VALIDATOR_POLICY only: PG-134/PG-167 still required pre-rearchitecture implementation details.
+- PG-134 now validates the stable invariant: strict asset audit runs from the isolated persistent static checkout and the Unreal workspace cannot be deleted.
+- PG-167 now requires Branch Cleanup isolation instead of the interactive UE4 runner-health probe, and recognizes branch-scoped same-PR Unreal cancellation.
+- No runtime/gameplay code, story, movement, save, streaming or package behavior changed.
+- Evidence boundary: **STATIC VALIDATOR REPAIR / FRESH PRE-UNREAL RUN PENDING**.
+
+## 2026-09-26 - Persistent isolated Pre-Unreal checkout refinement
+
+- Isolation protected the Unreal workspace, but a fresh temporary Git repository still repeats repository transfer on every static validation.
+- Pre-Unreal now keeps a dedicated source checkout at `C:\actions-runner\_ci\pre-unreal`, physically separate from the Unreal build workspace.
+- Every run still fetches the exact target SHA, hard-resets to it, verifies HEAD equality and reruns all static/governance/source-quality checks.
+- Only the static Git object database persists so unchanged objects can be reused; Unreal `Intermediate`, `Binaries` and engine acceptance evidence are not shared through this lane.
+- Authenticated remote URL is scrubbed after exact checkout and again in the always-run cleanup step.
+- Evidence boundary: **SOURCE IMPLEMENTED / FRESH TIMING MEASUREMENT PENDING**.
+
+## 2026-09-26 - CI architecture reassessment and lane isolation
+
+- Comprehensive review concluded that the project quality direction is correct, but CI ownership was causing self-inflicted rebuilds and misleading red runs.
+- Recent reviewed window: 31 Unreal runs = 11 success / 17 cancelled / 3 failure; 31 Pre-Unreal runs = 11 success / 16 cancelled / 4 failure.
+- Major root cause: Pre-Unreal, Runner Health and Branch Cleanup could delete the same self-hosted GITHUB_WORKSPACE used by Unreal; Warehouse could delete its root .git. This destroyed Git/UBT incremental continuity.
+- Architecture is now redefined so Unreal Build Validation exclusively owns the persistent project workspace. Pre-Unreal, Runner Health, Branch Cleanup and Warehouse source checkouts use isolated RUNNER_TEMP directories.
+- Pre-Unreal remains self-hosted to avoid hosted-runner billing/capacity dependency; hosted Windows was tested and failed before step execution, so it is not part of the production architecture.
+- Failure triage is standardized as GAME_RUNTIME / VALIDATOR_POLICY / CI_INFRA / ADMIN_GOVERNANCE before runtime code is changed.
+- Coherent waves should use one atomic multi-file commit when possible to reduce superseded workflow churn.
+- Full runtime/story/save/streaming/package gates remain intact for relevant deltas; no quality gate was removed.
+- Canonical review: `Docs/CI_ARCHITECTURE_REASSESSMENT_2026-09-26.md`.
+- Evidence boundary: **SOURCE/ARCHITECTURE REASSESSED; FRESH TIMING MEASUREMENT PENDING**. No PIE/device/visual/performance acceptance is implied.
+
+## 2026-09-26 - Unreal CI root acceleration implemented
+
+- Measured logs confirmed three independent sources of wasted time: #888 spent about 11 minutes in exact checkout before cancellation; administrative PR heads repeatedly entered FULL Unreal; and repeated editor builds recreated the UBT makefile and compiled 76 actions at roughly 238-252 seconds each.
+- Unreal PR concurrency is now branch-scoped. A newer SHA cancels only an older run from the same PR branch; it cannot cancel D/develop or another runtime PR.
+- Unreal Build Validation no longer triggers for README/onboarding/handoff/classifier-test administrative-only changes. Pre-Unreal still validates those files.
+- Exact checkout no longer deletes the repository .git metadata. It reuses the self-hosted workspace, fetches with a 1000 B/s for 20 s low-speed cutoff, limits attempts to three, hard-resets/checks out the exact TARGET_SHA, verifies HEAD equality, then scrubs the authenticated remote URL.
+- The validation classifier now supports exact Git-tree proof reuse. A merge SHA may inherit core proof only when its tree SHA exactly equals a parent tree SHA that has the required green Unreal proof. This addresses the real C4 case where merged develop and the proven C4 candidate have the same tree object but different commit SHAs.
+- Unreal workflow/classifier/pre-unreal orchestration changes are treated as validation-policy-only when no runtime delta exists. They exercise exact checkout/classification/Pre-Unreal but do not rebuild/import/package simply to validate CI policy.
+- Packaging scripts themselves remain acceptance-impacting. Config, Build.cs, Target.cs, chapter-streaming, cook/package/release and unknown-impact paths remain fail-safe FULL.
+- Compile parallelism remains MaxParallelActions=1 for now; no blind binary cache or RAM-risk increase is introduced. First measure gains from removing redundant work.
+- PG-175 guards the bounded fetch, preserved Git checkout, administrative trigger exclusions, same-PR cancellation and exact tree-equivalent proof markers.
+- Evidence boundary: **CI ARCHITECTURE IMPLEMENTED / FRESH MEASUREMENT PENDING**. No runtime, PIE, device, visual, pacing or performance acceptance is created by this optimization.
+
+## 2026-09-26 - Persistent work-session handoff
+
+- Owner requested that the current conversation state be preserved with the project so a later session can continue without rediscovering the same CI/production issues.
+- Canonical continuation note: `Docs/WORK_SESSION_HANDOFF_2026-09-26.md`.
+- It records the measured PR102 CI latency, unnecessary FULL Unreal classification root cause, the #888 stalled-checkout cause/cancellation, #1083 success, #889 pending corrected measurement, and the GAME vs VALIDATOR vs CI/INFRA vs ADMIN failure-classification rule.
+- It also records the architectural policy: remove duplicate truth and magic constants, derive mutable counts from authoritative manifests, keep runtime safety strict, and prevent trivial administration from repeatedly blocking D + Mega Asset Promotion.
+- Evidence boundary: documentation/handoff only; no new runtime, PIE, device, visual, pacing or performance acceptance is created.
+
+## Administrative repetition root fix — 2026-09-26
+
+The validation snapshot is the sole handoff evidence authority. A stale legacy `source_head` is reported as a warning, not a production blocker. This supersedes the earlier requirement to keep duplicate fields synchronized by hand. Mixed-SHA evidence, unsuccessful green baselines, missing snapshots and missing human acceptance boundaries still fail validation. Regression tests cover both allowed metadata drift and rejected evidence corruption. Story continuity, living-world coherence, save/load integrity and target-device playability remain the production priorities. This change does not certify runtime or human acceptance.
+
+# Review checkpoint — 2026-09-26
+
+PR102 failed Governor validation because its historical `session_handoff.source_head` was moved to the current integration commit without matching validation evidence. Restore it to the recorded last-green SHA; keep the current integration baseline in `integration_train`. Future phase changes must preserve this distinction. No validation gate is disabled. Onboarding uses PG-174 because D lighting and Mega promotion already use PG-172/173 in PR101. C3/C4 are merged; D and bounded Mega promotion are in progress. Runtime, visual, device and performance acceptance remain separate and unproven by this administrative repair.
+
+## 2026-09-26 - Single new-developer / AI-session entry path
+
+- `README.md` is now the single repository entry point for a new human programmer, a new AI session, or a developer returning after a long break.
+- The canonical reading path is: `README` → `PROJECT_GOVERNOR` → `ProjectGovernor.json` → `CURRENT_PROJECT_STATE` → `DEVELOPMENT_GATES` → `PROJECT_GUARDIAN`.
+- Added `Scripts/new_developer_onboarding.ps1`. It reads current Governor + Git state and prints authority, branch/HEAD, active lane/gate, benchmark, next actions, target hardware, required reading and evidence boundary.
+- The onboarding script is read-only project guidance; it is not a second manager and does not copy live PR numbers into governance.
+- ProjectGovernor handoff/next-actions were reconciled from old C3/C4 wording to the current train: **D lighting/sky/fog/low-cost water next + Mega Asset Promotion in parallel**.
+- PG-174 now guards the README entry path and onboarding-script contract so later maintenance cannot silently remove the manager entrance.
+- Evidence boundary: onboarding/governance change only. It does not create new PIE/device/visual/performance acceptance.
+
 ## 2026-09-26 - Historical foliage guards decoupled from mutable phase labels
 
 - Final C4 closure exposed a validator design defect: PG-165/166 still required the overall materials/vegetation plan to retain a C1/C2-era top-level status, so legitimate progress to C4 was rejected even though C1/C2 invariants remained intact.

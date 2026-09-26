@@ -8,6 +8,16 @@
 > Other documents and plans may describe implementation details, story, world design or engineering,
 > but they do not independently override the Governor.
 
+## New developer / new AI session entry
+
+The repository has one onboarding path:
+
+`README.md` → `Docs/PROJECT_GOVERNOR.md` → `Data/ProjectGovernor.json` → `Docs/CURRENT_PROJECT_STATE.md` → `Docs/DEVELOPMENT_GATES.md` → `Docs/PROJECT_GUARDIAN.md`.
+
+A new worker may run `Scripts/new_developer_onboarding.ps1` from the repository root to print the current Governor lane, gate, benchmark, next actions, Git branch/HEAD and proof boundary.
+
+This script is a reader, not a second manager. It derives durable direction from ProjectGovernor and live transport state from Git/GitHub.
+
 ## Why one authority
 
 This project is large, chat history can disappear, and different human/automated programmers may work on it.
@@ -128,7 +138,7 @@ The active lane is **W01_P1C01_PRODUCTION_VERTICAL_SLICE** under the P1C01 verti
 
 W00 architectural stabilization is closed. Historical W00 repair text is reference history only and must not reopen the repair lane without concrete regression evidence.
 
-Production order is C3 stable foliage identity, then C4 LOD/cull/overdraw proof, then D lighting/sky/fog/water. Project Source/PDF/warehouse preparation may advance in parallel across characters, animation, architecture/interiors, audio, VFX and later-region packets.
+C3 and C4 are closed in the current production train. The next runtime drop is D fixed-state lighting/sky/fog/low-cost water. Mega Asset Promotion may advance in parallel across characters, animation, architecture/interiors, audio, VFX and later-region packets through the registered warehouse/intake pipeline.
 
 Administrative state must not become a production bottleneck. Live PR numbers and candidate branch names come from GitHub, not copied governance fields. The repository-native 24-hour Project Manager report is informational only. Technical runtime/save/canon/performance gates remain fail-closed for the affected lane.
 

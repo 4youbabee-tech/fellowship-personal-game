@@ -9,27 +9,31 @@ on:
       - main
       - develop
 
+permissions:
+  contents: read
+
 concurrency:
   group: pre-unreal-${{ github.repository }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   validate:
+    # Static/policy work uses the existing runner but never the persistent Unreal workspace.
     runs-on:
       - self-hosted
       - Windows
       - X64
       - ue4-27
-    timeout-minutes: 5
+    timeout-minutes: 8
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      GH_TOKEN: ${{ github.token }}
     defaults:
       run:
         shell: cmd
+
     steps:
-      - name: Exact-head local checkout
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Exact-head isolated static checkout
         run: |
           @echo off
           setlocal EnableExtensions EnableDelayedExpansion
@@ -39,14 +43,16 @@ jobs:
           if not defined GITEXE if exist "C:\Program Files (x86)\Git\cmd\git.exe" set "GITEXE=C:\Program Files (x86)\Git\cmd\git.exe"
           if not defined GITEXE exit /b 70
 
-          cd /d "%GITHUB_WORKSPACE%\.."
-          if exist "%GITHUB_WORKSPACE%" rmdir /S /Q "%GITHUB_WORKSPACE%"
-          if exist "%GITHUB_WORKSPACE%" exit /b 71
-          mkdir "%GITHUB_WORKSPACE%"
-          cd /d "%GITHUB_WORKSPACE%"
+          set "PRE_ROOT=C:\actions-runner\_ci\pre-unreal"
+          if not exist "C:\actions-runner\_ci" mkdir "C:\actions-runner\_ci"
+          if not exist "!PRE_ROOT!" mkdir "!PRE_ROOT!"
+          cd /d "!PRE_ROOT!"
 
-          "!GITEXE!" init
+          if exist ".git\index.lock" del /F /Q ".git\index.lock"
+          if exist ".git\shallow.lock" del /F /Q ".git\shallow.lock"
+          if not exist ".git" "!GITEXE!" init
           if errorlevel 1 exit /b 72
+          "!GITEXE!" remote remove origin >nul 2>nul
           "!GITEXE!" remote add origin "https://x-access-token:%GH_TOKEN%@github.com/%GITHUB_REPOSITORY%.git"
           if errorlevel 1 exit /b 73
 
@@ -71,57 +77,71 @@ jobs:
             exit /b 77
           )
           if not exist "ShireJourney.uproject" exit /b 78
-          echo PRE_UNREAL_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA!
-
-      - name: Verify runner session health
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\verify_runner_session.ps1"
+          echo SHIRE_PRE_ROOT=!PRE_ROOT!>>"%GITHUB_ENV%"
+          "!GITEXE!" remote set-url origin "https://github.com/%GITHUB_REPOSITORY%.git"
+          echo PRE_UNREAL_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA! isolated=true persistent=true
 
       - name: Resolve existing local Python
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\resolve_runtime_python.ps1"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_PRE_ROOT%\Scripts\resolve_runtime_python.ps1"
+
+      - name: Test Unreal validation lane selection
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_unreal_classifier.ps1"
 
       - name: Validate project structure
-        run: '"%PYTHON_EXE%" Scripts/pre_unreal_validate.py'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\pre_unreal_validate.py
 
       - name: Validate project governor
-        run: '"%PYTHON_EXE%" Scripts/project_governor.py'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\project_governor.py
 
       - name: Test asset audit memory and failure handling
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_asset_quality_audit.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_asset_quality_audit.py" -v
 
       - name: Audit production asset source quality
-        run: '"%PYTHON_EXE%" Scripts/asset_quality_audit.py --strict'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\asset_quality_audit.py --strict
 
       - name: Audit production readiness contracts
-        run: '"%PYTHON_EXE%" Scripts/production_readiness_audit.py'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\production_readiness_audit.py
 
       - name: Run deep project audit
-        run: '"%PYTHON_EXE%" Scripts/deep_project_audit.py'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\deep_project_audit.py
 
       - name: Test runtime observation failure handling
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_runtime_smoke.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_runtime_smoke.py" -v
 
       - name: Test runtime audit contract registry
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_runtime_audit_contracts.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_runtime_audit_contracts.py" -v
 
       - name: Test structural source contracts
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_source_contracts.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_source_contracts.py" -v
 
       - name: Test Governor semantic contracts
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governance_contracts.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governance_contracts.py" -v
 
       - name: Test warning-debt guard semantics
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_warning_debt_guard.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_warning_debt_guard.py" -v
 
       - name: Test deep project audit semantics
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_deep_project_audit.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_deep_project_audit.py" -v
 
       - name: Test governor evidence scope
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governor_handoff.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_governor_handoff.py" -v
 
       - name: Guard streaming cancellation source contracts
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_streaming_cancellation_contract.py" -v'
-
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_streaming_cancellation_contract.py" -v
 
       - name: Test live governor evidence selection
-        run: '"%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_live_governor_status.py" -v'
+        run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_live_governor_status.py" -v
 
+      - name: Scrub static checkout authentication
+        if: always()
+        shell: cmd
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if defined GITEXE if exist "C:\actions-runner\_ci\pre-unreal\.git" (
+            cd /d "C:\actions-runner\_ci\pre-unreal"
+            "!GITEXE!" remote set-url origin "https://github.com/%GITHUB_REPOSITORY%.git" >nul 2>nul
+          )
+          exit /b 0

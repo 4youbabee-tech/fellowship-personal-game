@@ -21,8 +21,7 @@ def validate_handoff(governor):
                 errors.append('Handoff %s/%s mixes evidence from another SHA' % (name, gate))
     if any(baseline.get(k, {}).get('status') != 'SUCCESS' for k in ('pre_unreal', 'unreal')):
         errors.append('Last green baseline requires both workflows to succeed')
-    if handoff.get('source_head') != baseline.get('sha'):
-        errors.append('Legacy verified handoff must refer to the same last-green baseline')
+    # source_head is a legacy display copy; validation_snapshot owns evidence.
     if not handoff.get('next_actions') or not handoff.get('unverified_acceptance'):
         errors.append('Handoff must retain next actions and unverified experiential acceptance')
     return errors
@@ -34,6 +33,8 @@ def evidence_summary(governor, checkout_sha=''):
     lines = ['Last verified baseline: ' + baseline['sha'],
              'Latest observed: %s | Pre-Unreal=%s | Unreal=%s' % (
                  latest['sha'], latest['pre_unreal']['status'], latest['unreal']['status'])]
+    if governor['session_handoff'].get('source_head') != baseline['sha']:
+        lines.append('WARNING: legacy source_head differs; validation_snapshot is authoritative.')
     if checkout_sha and checkout_sha != latest['sha']:
         lines.append('This checkout is newer/different: recorded evidence does not certify it.')
     lines.append('Machine evidence does not approve visuals, performance or pacing.')

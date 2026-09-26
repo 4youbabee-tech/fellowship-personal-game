@@ -68,9 +68,12 @@ function Test-SafeGovernanceDelta([string]$GitExe, [string]$BaseSha, [string]$He
         $safe = (
             $n.StartsWith("Docs/") -or
             ($SafeExact -contains $n) -or
+            $n -eq "Scripts/classify_unreal_validation.ps1" -or
+            $n -eq "Scripts/pre_unreal_validate.py" -or
             $n -eq "Scripts/project_governor.py" -or
             $n -eq "Scripts/asset_quality_audit.py" -or
             $n -eq ".github/workflows/pre-unreal-validation.yml" -or
+            $n -eq ".github/workflows/unreal-build-validation.yml" -or
             $n -eq "SHIRE_UPDATE_BUILD_LAUNCH.bat" -or
             $n -eq "SHIRE_PIE_VERIFY.bat"
         )
@@ -82,12 +85,16 @@ function Test-SafeGovernanceDelta([string]$GitExe, [string]$BaseSha, [string]$He
 function Test-NearestSafeGovernanceAncestorGreen([string]$GitExe, [string]$ParentSha, [string]$HeadSha, [string[]]$SafeExact) {
     if (-not $env:GH_TOKEN) { return $false }
 
+    # Exact checkout is shallow; fetch bounded history only when ancestor proof is needed.
+    & $GitExe fetch --no-tags --depth=21 origin $HeadSha
+    if ($LASTEXITCODE -ne 0) { return $false }
+
     $ancestors = @(& $GitExe rev-list --first-parent --max-count=20 $ParentSha)
     if ($LASTEXITCODE -ne 0 -or $ancestors.Count -eq 0) { return $false }
 
     foreach ($candidate in $ancestors) {
-        if (-not (Test-ParentWholeWorkflowGreen $candidate)) { continue }
         if (-not (Test-SafeGovernanceDelta $GitExe $candidate $HeadSha $SafeExact)) { continue }
+        if (-not (Test-ParentWholeWorkflowGreen $candidate)) { continue }
 
         Write-Host "TRANSITIVE_GOVERNANCE_PROOF_PASS ancestor=$candidate parent=$ParentSha head=$HeadSha"
         return $true
@@ -221,12 +228,44 @@ function Test-ParentCoreUnrealGreen([string]$ParentSha) {
     return $false
 }
 
+function Test-TreeEquivalentCoreProof([string]$GitExe, [string]$ParentSha) {
+    # A merge commit may have a new SHA even when its checked-out content is byte-for-byte
+    # identical to an already-proven candidate parent. Reuse proof only when Git tree IDs
+    # are exactly equal; commit-message/metadata similarity is never enough.
+    & $GitExe fetch --no-tags --depth=2 origin $ParentSha
+    if ($LASTEXITCODE -ne 0) { return $false }
+
+    $parentTree = (& $GitExe rev-parse "$ParentSha^{tree}").Trim()
+    if ($LASTEXITCODE -ne 0 -or -not $parentTree) { return $false }
+
+    $line = (& $GitExe rev-list --parents -n 1 $ParentSha).Trim()
+    if ($LASTEXITCODE -ne 0 -or -not $line) { return $false }
+    $parts = @($line -split '\s+')
+    if ($parts.Count -lt 2) { return $false }
+
+    foreach ($candidate in @($parts | Select-Object -Skip 1)) {
+        $candidateTree = (& $GitExe rev-parse "$candidate^{tree}").Trim()
+        if ($LASTEXITCODE -ne 0 -or -not $candidateTree) { continue }
+        if ($candidateTree -ne $parentTree) { continue }
+        if (-not (Test-ParentCoreUnrealGreen $candidate)) { continue }
+
+        Write-Host "TREE_EQUIVALENT_CORE_PROOF_PASS merge=$ParentSha provenParent=$candidate tree=$parentTree"
+        return $true
+    }
+    return $false
+}
+
 function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [string]$ParentSha) {
     $delta = @(& $GitExe diff --name-only $BaseSha $ParentSha)
     if ($LASTEXITCODE -ne 0) { return $false }
     if ($delta.Count -eq 0) { return $true }
 
     $safeExact = @(
+    "README.md",
+    "Scripts/new_developer_onboarding.ps1",
+    "Scripts/governor_handoff.py",
+    "Scripts/test_governor_handoff.py",
+    "Scripts/test_unreal_classifier.ps1",
         "Data/ProjectGovernor.json",
         "Data/DeepProjectAudit.json",
         "Data/BranchCleanupPlan.json",
@@ -249,7 +288,7 @@ function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [
         "Scripts/run_local_static_validation.ps1",
         "Scripts/prepare_p1c01_material_intake.ps1",
         "Scripts/promote_p1c01_material_intake.ps1",
-        "Scripts/run_p1c01_material_pipeline.ps1"
+        "Scripts/run_p1c01_material_pipeline.ps1",
         "Scripts/install_runner_watchdog.ps1",
         "Scripts/runner_watchdog.ps1",
         "Scripts/deep_project_audit.py",
@@ -373,6 +412,11 @@ if ($LASTEXITCODE -ne 0 -or $changed.Count -eq 0) {
 }
 
 $safeExact = @(
+    "README.md",
+    "Scripts/new_developer_onboarding.ps1",
+    "Scripts/governor_handoff.py",
+    "Scripts/test_governor_handoff.py",
+    "Scripts/test_unreal_classifier.ps1",
     "Data/ProjectGovernor.json",
     "Data/DeepProjectAudit.json",
     "Data/MasterExecutionRoadmap.json",
@@ -391,8 +435,8 @@ $safeExact = @(
     "Scripts/operation_recovery.py",
     "Scripts/test_operation_recovery.py",
     "Scripts/run_branch_cleanup.ps1",
-    ".github/workflows/branch-cleanup.yml"
-        "Scripts/prepare_p1c01_material_intake.ps1",
+    ".github/workflows/branch-cleanup.yml",
+    "Scripts/prepare_p1c01_material_intake.ps1",
         "Scripts/promote_p1c01_material_intake.ps1",
         "Scripts/run_p1c01_material_pipeline.ps1",
         "Scripts/install_runner_watchdog.ps1",
@@ -409,7 +453,6 @@ $safeExact = @(
 )
 
 $acceptanceExact = @(
-    ".github/workflows/unreal-build-validation.yml",
     "Scripts/classify_unreal_validation.ps1",
     "Scripts/pre_unreal_validate.py",
     "Scripts/ci_package_w00.ps1",
@@ -438,7 +481,11 @@ foreach($p in $changed){
     ){
         continue
     }
-    if($n -eq "Scripts/classify_unreal_validation.ps1" -or $n -eq "Scripts/pre_unreal_validate.py"){
+    if(
+        $n -eq "Scripts/classify_unreal_validation.ps1" -or
+        $n -eq "Scripts/pre_unreal_validate.py" -or
+        $n -eq ".github/workflows/unreal-build-validation.yml"
+    ){
         $policyOnlyTouched += $n
         continue
     }
@@ -486,6 +533,15 @@ if($policyOnlyTouched.Count -gt 0 -and $acceptanceTouched.Count -eq 0 -and $core
         Set-Mode "inherit" "validation-policy-only-inherits-green-parent-no-engine-repeat" $parentSha
         exit 0
     }
+    if(Test-TreeEquivalentCoreProof $git $parentSha){
+        Set-Mode "inherit" "validation-policy-only-inherits-tree-equivalent-green-merge-parent" $parentSha
+        exit 0
+    }
+    $candidateParent = (& $git rev-parse "$($env:TARGET_SHA)^").Trim()
+    if ($LASTEXITCODE -eq 0 -and (Test-NearestSafeGovernanceAncestorGreen $git $candidateParent $env:TARGET_SHA $safeExact)) {
+        Set-Mode "inherit" "validation-policy-only-inherits-safe-green-ancestor" $parentSha
+        exit 0
+    }
     Set-Mode "full" "validation-policy-only-parent-not-green-fail-safe" $parentSha
     exit 0
 }
@@ -510,6 +566,11 @@ if($coreImpact.Count -gt 0){
         Set-Mode "core" "runtime-or-asset-delta-inherits-parent-core-proof-no-package" $parentSha
         exit 0
     }
+    if(Test-TreeEquivalentCoreProof $git $parentSha){
+        $coreImpact | ForEach-Object { Write-Host "CORE_UNREAL_FILE $_" }
+        Set-Mode "core" "runtime-or-asset-delta-inherits-tree-equivalent-green-merge-parent-no-package" $parentSha
+        exit 0
+    }
     if(Test-NearestSafeCoreAncestorGreen $git $parentSha){
         $coreImpact | ForEach-Object { Write-Host "CORE_UNREAL_FILE $_" }
         Set-Mode "core" "runtime-or-asset-delta-inherits-nearest-safe-core-ancestor-no-package" $parentSha
@@ -520,7 +581,11 @@ if($coreImpact.Count -gt 0){
 }
 
 if($acceptanceTouched.Count -gt 0){
-    if(Test-ParentCoreUnrealGreen $parentSha){
+    $acceptanceCoreProof = (Test-ParentCoreUnrealGreen $parentSha)
+    if(-not $acceptanceCoreProof){
+        $acceptanceCoreProof = Test-TreeEquivalentCoreProof $git $parentSha
+    }
+    if($acceptanceCoreProof){
         $acceptanceTouched | ForEach-Object { Write-Host "ACCEPTANCE_ONLY_FILE $_" }
 
         $startupResumeExact = @(
@@ -548,6 +613,11 @@ if($acceptanceTouched.Count -gt 0){
 
 if(Test-ParentWholeWorkflowGreen $parentSha){
     Set-Mode "inherit" "governance-docs-only-inherits-green-parent" $parentSha
+    exit 0
+}
+
+if(Test-TreeEquivalentCoreProof $git $parentSha){
+    Set-Mode "inherit" "governance-docs-only-inherits-tree-equivalent-green-merge-parent" $parentSha
     exit 0
 }
 
