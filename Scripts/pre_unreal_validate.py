@@ -6820,6 +6820,8 @@ for pg145_symbol in [
     "Runner.Worker",
     "AcquireHangSeconds",
     "SHIRE_RUNNER_WATCHDOG_RECOVERY",
+    "Recover-OrphanedListenerOnSupervisorBoot",
+    "SHIRE_RUNNER_WATCHDOG_BOOT_RECOVERY",
 ]:
     if pg145_symbol not in pg145_watchdog:
         fail(f"PG-145 runner watchdog contract missing: {pg145_symbol}")
@@ -6829,12 +6831,27 @@ if not pg145_timeout or not (110 <= int(pg145_timeout.group(1)) <= 180):
 for pg145_install_symbol in [
     "ShireJourney-GitHubRunner-Watchdog",
     "New-ScheduledTaskTrigger -AtLogOn",
+    "RepetitionInterval (New-TimeSpan -Minutes 5)",
+    "$taskTriggers",
+    "MultipleInstances IgnoreNew",
     "-LogonType Interactive",
+    "Set-Service -Name $service.Name -StartupType Manual",
     "actions.runner.*",
     "NETWORK SERVICE",
 ]:
     if pg145_install_symbol not in pg145_watchdog_installer:
         fail(f"PG-145 runner watchdog installer contract missing: {pg145_install_symbol}")
+
+pg145_classifier = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
+for pg145_classifier_symbol in [
+    "Test-NearestSafeCoreAncestorGreen",
+    "Test-CoreProofSafeInterveningDelta",
+    "TRANSITIVE_CORE_PROOF_PASS",
+    "runtime-or-asset-delta-inherits-nearest-safe-core-ancestor-no-package",
+    "TRANSITIVE_CORE_PROOF_BLOCKED",
+]:
+    if pg145_classifier_symbol not in pg145_classifier:
+        fail(f"PG-145 transitive core-proof optimization missing: {pg145_classifier_symbol}")
 
 
 # PG-146: route/chapter/episode/character identity is one fail-closed contract.
