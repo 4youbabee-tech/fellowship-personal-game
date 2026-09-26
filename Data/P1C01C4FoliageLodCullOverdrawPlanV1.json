@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "plan_id": "P1C01_C4_FOLIAGE_LOD_CULL_OVERDRAW_V1",
-  "status": "C4_EVIDENCE_CAPTURE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+  "status": "C4_EXACT_HEAD_GREEN_READY_TO_MERGE_D_NEXT",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/P1C01MaterialsVegetationPlanV1.json",
@@ -63,7 +63,7 @@
     "No foliage density increase.",
     "No PIE/device/visual/performance acceptance is inferred from compile/import proof."
   ],
-  "evidence_boundary": "C4 evidence capture is source-implemented. STATIC-VALIDATED candidate only until exact-head Pre-Unreal and UE4.27.2 production import succeed and produce concrete C4_FOLIAGE_EVIDENCE rows. No PIE/device/visual/performance acceptance claimed.",
+  "evidence_boundary": "C4 is machine-green on the recorded candidate head with concrete UE4.27.2 import evidence. No far material was bound because no real far LOD exists. No PIE/device/visual/performance acceptance is claimed; target-device profiling remains later.",
   "runtime_implementation": {
     "source_file": "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",
     "behavior": [
@@ -74,5 +74,56 @@
       "Do not reparent anything in this evidence-capture step. A later same-drop binding step may occur only if engine evidence proves a qualifying far LOD exists.",
       "Preserve current cull bands, density, gameplay ownership, object paths and material parameter values."
     ]
+  },
+  "engine_evidence": {
+    "candidate_head": "e881b32da6ae9713ccc096e8f213056aeef6af76",
+    "pre_unreal": "#1064 SUCCESS",
+    "unreal": "#869 SUCCESS",
+    "production_import": "376 files, 0 failures",
+    "warning_debt_default_mat": "0 (ceiling 0)",
+    "foliage_rows": [
+      {
+        "mesh": "SM_ShGrassClump",
+        "lod_count": 1,
+        "lod": 0,
+        "material_identity": "Grass",
+        "parent": "M_ProductionFoliage",
+        "decision": "KEEP_NEAR_MID"
+      },
+      {
+        "mesh": "SM_ShHedge",
+        "lod_count": 1,
+        "lod": 0,
+        "material_identity": "Leaves",
+        "parent": "M_ProductionFoliage",
+        "decision": "KEEP_NEAR_MID"
+      },
+      {
+        "mesh": "SM_ShShrub",
+        "lod_count": 1,
+        "lod": 0,
+        "material_identity": "Leaves",
+        "parent": "M_ProductionFoliage",
+        "decision": "KEEP_NEAR_MID"
+      },
+      {
+        "mesh": "SM_ShTreeCanopy",
+        "lod_count": 1,
+        "lod": 0,
+        "material_identity": "Leaves",
+        "parent": "M_ProductionFoliage",
+        "decision": "KEEP_NEAR_MID"
+      },
+      {
+        "mesh": "SM_ShTreeTrunk",
+        "lod_count": 1,
+        "lod": 0,
+        "material_identity": "Bark",
+        "parent": "M_ProductionSurface",
+        "decision": "KEEP_NEAR_MID"
+      }
+    ],
+    "far_binding_decision": "NO_BINDING",
+    "reason": "All audited P1C01 foliage meshes expose lodCount=1 only. No actual lodIndex > 0 exists, so the C4 contract forbids M_ProductionFoliageFar promotion."
   }
 }
