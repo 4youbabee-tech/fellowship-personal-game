@@ -42,11 +42,13 @@ foreach ($listener in $listeners) { Stop-Process -Id $listener.Id -Force -ErrorA
 Start-Sleep -Seconds 2
 
 $taskAction = New-ScheduledTaskAction -Execute "powershell.exe" -Argument ('-NoProfile -ExecutionPolicy Bypass -File "' + $installedWatchdog + '" -RunnerRoot "' + $RunnerRoot + '"')
-$taskTrigger = New-ScheduledTaskTrigger -AtLogOn -User $identity
+$logonTrigger = New-ScheduledTaskTrigger -AtLogOn -User $identity
+$recoveryTrigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 5) -RepetitionDuration (New-TimeSpan -Days 3650)
+$taskTriggers = @($logonTrigger, $recoveryTrigger)
 $taskPrincipal = New-ScheduledTaskPrincipal -UserId $identity -LogonType Interactive -RunLevel Highest
 $taskSettings = New-ScheduledTaskSettingsSet -StartWhenAvailable -RestartCount 999 -RestartInterval (New-TimeSpan -Minutes 1) -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Days 3650)
 
-Register-ScheduledTask -TaskName $TaskName -Action $taskAction -Trigger $taskTrigger -Principal $taskPrincipal -Settings $taskSettings -Description "Keeps the Shire Journey GitHub Actions runner alive and restarts Runner.Listener if a broker request is acknowledged but no Runner.Worker starts." -Force | Out-Null
+Register-ScheduledTask -TaskName $TaskName -Action $taskAction -Trigger $taskTriggers -Principal $taskPrincipal -Settings $taskSettings -Description "Keeps the Shire Journey GitHub Actions runner alive; retries supervisor launch every five minutes and recycles only orphaned/stalled listeners when no Runner.Worker is active." -Force | Out-Null
 
 Start-ScheduledTask -TaskName $TaskName
 Start-Sleep -Seconds 5
