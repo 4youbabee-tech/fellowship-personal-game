@@ -6853,6 +6853,16 @@ for pg145_classifier_symbol in [
     if pg145_classifier_symbol not in pg145_classifier:
         fail(f"PG-145 transitive core-proof optimization missing: {pg145_classifier_symbol}")
 
+pg145_unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+for pg145_maintenance_path in [
+    "Scripts/classify_unreal_validation.ps1",
+    "Scripts/runner_watchdog.ps1",
+    "Scripts/install_runner_watchdog.ps1",
+    "Scripts/pre_unreal_validate.py",
+]:
+    if pg145_unreal_workflow.count(pg145_maintenance_path) < 2:
+        fail(f"PG-145 maintenance path must stay off Unreal device lane in push and PR filters: {pg145_maintenance_path}")
+
 
 # PG-146: route/chapter/episode/character identity is one fail-closed contract.
 pg146_quest_h = read(resolve_source("ShireQuestSubsystem.h"))
