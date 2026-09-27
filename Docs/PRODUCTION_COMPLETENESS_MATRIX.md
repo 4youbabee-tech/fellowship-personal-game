@@ -1,3 +1,11 @@
+## 2026-09-27 - Production import quarantine ACL recovery
+
+- Unreal Build Validation #990 on `af8ff7e` compiled C++ successfully, then failed before import with Windows `Access is denied` while moving ignored generated `Content/Production` into rollback storage.
+- The run log did not distinguish an ACL denial from an open handle.
+- The launcher now resolves the runner account, grants Modify only on that generated subtree, then quarantines it before UE import. Failure remains fail-fast and prints ACL diagnostics for the source and parent directories.
+- Static PG-184 protects the repair scope and ordering. The next exact-head UE4.27.2 run must prove successful quarantine and import.
+- Maturity: **repair source implemented; runtime import proof pending**. No PIE, device, visual, or performance acceptance is claimed.
+
 ## 2026-09-27 - Character rig async recovery hardening
 
 - Existing soft/async skeletal-rig infrastructure confirmed and retained.

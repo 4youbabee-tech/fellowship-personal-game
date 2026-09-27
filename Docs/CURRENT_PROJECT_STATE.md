@@ -1,3 +1,11 @@
+## 2026-09-27 - Generated production import quarantine access repair
+
+- Exact-head Unreal Build Validation #990 (`af8ff7e`) passed runner health and UE4.27.2 C++ build (78 actions), then failed before the import commandlet: Windows returned `Access is denied` while moving ignored generated `Content/Production` into run-unique rollback storage.
+- Run #990 did not reach UE asset import. Its log did not distinguish an ACL denial from a live file handle.
+- The importer now resolves the runner identity and grants Modify recursively only on the generated `Content/Production` subtree before quarantine. If ACL repair or the move fails, it prints the source and parent ACLs and exits immediately; authored `SourceAssets/Production` is untouched.
+- Static PG-184 checks the scoped permission repair precedes quarantine and preserves the existing rollback behavior.
+- Status: **SOURCE-IMPLEMENTED / exact-head Pre-Unreal and UE4.27 import recheck pending**. Successful quarantine/import is not yet claimed.
+
 ## 2026-09-27 - Runtime train character-rig async recovery hardened
 
 - Existing `UShireChapterAssetStreamingSubsystem` already owns the production skeletal-rig path with `FSoftObjectPath`, `FStreamableManager`, standardized `/Game/Production/Characters/Rigs/<Character>/` object paths, player/NPC callbacks and modular fallback.

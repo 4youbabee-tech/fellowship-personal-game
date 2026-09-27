@@ -603,15 +603,20 @@ if "FindFilesRecursive(MeshFiles, *SourceRoot" in production_import_hygiene:
 # PG-184: generated UE packages are transactionally isolated before repeat imports.
 ci_import_launcher = read(ROOT / "Scripts" / "ci_import_production_assets.cmd")
 pg184_import_markers = (
+    "for /f \\"delims=\\" %%I in ('whoami') do set \\"RUNNER_IDENTITY=%%I\\"",
     'set "PRODUCTION_DIR=',
     'set "BACKUP_DIR=',
+    'icacls "%PRODUCTION_DIR%" /grant "%RUNNER_IDENTITY%:(OI)(CI)M" /T /C',
     'move "%PRODUCTION_DIR%" "%BACKUP_DIR%"',
+    'icacls "%PRODUCTION_DIR%"',
     'goto :restore_previous',
     'move "%BACKUP_DIR%" "%PRODUCTION_DIR%"',
 )
 for marker in pg184_import_markers:
     if marker not in ci_import_launcher:
-        fail(f"PG-184: production import rollback contract missing: {marker}")
+        fail(f"PG-184: production import/rollback contract missing: {marker}")
+if ci_import_launcher.index('icacls "%PRODUCTION_DIR%" /grant "%RUNNER_IDENTITY%:(OI)(CI)M" /T /C') > ci_import_launcher.index('move "%PRODUCTION_DIR%" "%BACKUP_DIR%"'):
+    fail("PG-184: generated-tree Modify repair must precede quarantine")
 if ci_import_launcher.index('move "%PRODUCTION_DIR%" "%BACKUP_DIR%"') > ci_import_launcher.index('-run=ShireProductionImport'):
     fail("PG-184: stale generated packages must be quarantined before Unreal import")
 

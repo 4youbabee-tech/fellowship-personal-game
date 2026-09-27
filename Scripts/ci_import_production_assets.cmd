@@ -8,6 +8,7 @@ set "PRODUCTION_DIR=%GITHUB_WORKSPACE%\Content\Production"
 set "BACKUP_DIR=%GITHUB_WORKSPACE%\Saved\CI-Production-Backup-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%-%RANDOM%"
 set "FAILED_DIR=%GITHUB_WORKSPACE%\Saved\CI-Production-Failed-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%-%RANDOM%"
 set "HAD_OUTPUT=0"
+for /f "delims=" %%I in ('whoami') do set "RUNNER_IDENTITY=%%I"
 if not exist "%EDITORCMD%" exit /b 50
 if not exist "%PROJECT%" exit /b 50
 if not exist "%LOGDIR%" mkdir "%LOGDIR%"
@@ -21,10 +22,23 @@ if exist "%FAILED_DIR%" (
 )
 if exist "%PRODUCTION_DIR%" (
   rem Content/Production is ignored generated output rebuilt from SourceAssets/Production.
-  rem Move the old tree aside so UE4 never has to delete/overwrite stale .uasset packages.
-  move "%PRODUCTION_DIR%" "%BACKUP_DIR%" >nul
+  rem Repair Modify only on that generated tree so the runner can quarantine it for UE4 import.
+  if not defined RUNNER_IDENTITY (
+    echo ERROR: could not resolve runner identity before generated-content quarantine.
+    exit /b 55
+  )
+  echo Generated-content quarantine identity: %RUNNER_IDENTITY%
+  icacls "%PRODUCTION_DIR%" /grant "%RUNNER_IDENTITY%:(OI)(CI)M" /T /C
   if errorlevel 1 (
-    echo ERROR: could not quarantine generated Content/Production before import. Failing fast; check open handles or runner permissions. Previous files remain in place.
+    echo ERROR: could not grant Modify to the runner on generated Content/Production. ACL follows.
+    icacls "%PRODUCTION_DIR%"
+    exit /b 56
+  )
+  move "%PRODUCTION_DIR%" "%BACKUP_DIR%"
+  if errorlevel 1 (
+    echo ERROR: could not quarantine generated Content/Production before import. Runner identity: %RUNNER_IDENTITY%. Source ACL follows; previous files remain in place.
+    icacls "%PRODUCTION_DIR%"
+    icacls "%GITHUB_WORKSPACE%\Content"
     exit /b 54
   )
   set "HAD_OUTPUT=1"
