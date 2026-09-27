@@ -20,7 +20,8 @@ function Test-Git {
 function Test-ParentWholeWorkflowGreen([string]$ParentSha) {
     return $script:Case.Proof -and $ParentSha -eq 'candidate-parent'
 }
-function Test-ParentCoreUnrealGreen([string]$ParentSha) { return $true }
+function Test-ParentCoreUnrealGreen([string]$ParentSha) { return [bool]$script:Case.CoreProof }
+function Test-NearestSafeCoreAncestorGreen([string]$GitExe, [string]$ParentSha) { return $false }
 function Test-TreeEquivalentCoreProof([string]$GitExe, [string]$ParentSha) { return [bool]$script:Case.TreeProof }
 function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = 'none') {
     $script:ActualMode = $Mode
@@ -37,7 +38,9 @@ $cases = @(
     @{Name='config'; Paths=@('README.md','Config/DefaultGame.ini'); Proof=$true; Mode='full'; TreeProof=$false},
     @{Name='streaming'; Paths=@('Data/ChapterAssetStreamingPlan.json'); Proof=$true; Mode='full'; TreeProof=$false},
     @{Name='unknown-script'; Paths=@('Scripts/new_unknown_tool.ps1'); Proof=$true; Mode='full'; TreeProof=$false},
-    @{Name='runtime-data'; Paths=@('Data/QuestDefinitions.json'); Proof=$true; Mode='core'; TreeProof=$false},
+    @{Name='runtime-data'; Paths=@('Data/QuestDefinitions.json'); Proof=$true; CoreProof=$true; Mode='core'; TreeProof=$false},
+    @{Name='runtime-no-proof'; Paths=@('Source/ShireJourney/Runtime.cpp'); Proof=$false; CoreProof=$false; Mode='core'; TreeProof=$false},
+    @{Name='core-runner-scripts-no-proof'; Paths=@('Source/ShireJourney/Runtime.cpp','Scripts/ci_wait_for_unreal_editor.cmd','Scripts/reset_project_build_intermediates.ps1','Scripts/ci_import_production_assets.cmd'); Proof=$false; CoreProof=$false; Mode='core'; TreeProof=$false},
     @{Name='editor-assets'; Paths=@('Source/ShireJourneyEditorTools/Import.cpp'); Proof=$true; Mode='asset'; TreeProof=$false},
     @{Name='workflow-policy-tree-proof'; Paths=@('.github/workflows/unreal-build-validation.yml'); Proof=$false; Mode='inherit'; TreeProof=$true},
     @{Name='workflow-policy-no-proof'; Paths=@('.github/workflows/unreal-build-validation.yml'); Proof=$false; Mode='full'; TreeProof=$false}

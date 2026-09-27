@@ -3584,13 +3584,14 @@
         "REQ-GOV-001",
         "REQ-MEM-001"
       ],
-      "resolution": "Use three validation cost classes: safe governance/docs/offline metadata inherits valid nearby green proof without UE execution; ordinary runtime/C++/Data/SourceAssets uses core build/import/Automation/runtime/warning validation without cook/package; Config/Build.cs/Target.cs/streaming/package/cook/release changes use the full package lane. If the immediate parent was cancelled, governance-only ancestry may search backward for the nearest green first-parent proof only when every intervening path is explicitly safe. Validation-policy-only classifier/Pre-Unreal edits may inherit a green parent without engine repetition.",
+      "resolution": "Use three validation cost classes: safe governance/docs/offline metadata inherits valid nearby green proof without UE execution; ordinary runtime/C++/Data/SourceAssets uses core build/import/Automation/runtime/warning validation without cook/package; Config/Build.cs/Target.cs/streaming/package/cook/release changes use the full package lane. If the immediate parent was cancelled, governance-only ancestry may search backward for the nearest green first-parent proof only when every intervening path is explicitly safe. Validation-policy-only classifier/Pre-Unreal edits may inherit a green parent without engine repetition. When no safe green core proof exists, execute a fresh exact-head core run; missing reusable proof blocks inheritance but does not add cook/package to an ordinary runtime delta. Explicit helpers used by core validation (editor-close, build-intermediate reset, and production-import launch) are core-impacting and run in that gate; package/cook/release helpers remain full, and unknown paths remain fail-closed full. Production import first quarantines the ignored generated Content/Production tree; keep a run-unique rollback copy until the UE4.27 import reports zero failures, then remove it, restoring the previous tree on import failure.",
       "rationale": "Two days of W00 stabilization showed that repeating already-proven build/cook/package work wastes time and increases runner exposure without increasing confidence when only metadata changed. Evidence reuse must remain fail-closed and path-bounded so speed never weakens correctness.",
       "authority": "USER_EXPLICIT_DIRECTION",
       "evidence": [
         "Unreal #704 SUCCESS on develop ed3587aa9d1f0025a5f10778a6be8048e2c778d1",
         "Docs/PROJECT_GUARDIAN.md PG-161",
-        "Scripts/classify_unreal_validation.ps1"
+        "Scripts/classify_unreal_validation.ps1",
+        "Unreal Build Validation #989 on de4a24c26eda412ae4d87cbd95b41121c0ca0d06 compiled C++; import failed while replacing generated Production packages; repair is isolated in PR #125."
       ]
     },
     {

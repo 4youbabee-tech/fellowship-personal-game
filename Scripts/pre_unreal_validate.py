@@ -600,6 +600,22 @@ if "FindFilesRecursive(TextureFiles, *SourceRoot" in production_import_hygiene:
 if "FindFilesRecursive(MeshFiles, *SourceRoot" in production_import_hygiene:
     fail("PG-061: production importer must not import/normalize meshes directly from tracked SourceAssets")
 
+# PG-184: generated UE packages are transactionally isolated before repeat imports.
+ci_import_launcher = read(ROOT / "Scripts" / "ci_import_production_assets.cmd")
+pg184_import_markers = (
+    'set "PRODUCTION_DIR=',
+    'set "BACKUP_DIR=',
+    'move "%PRODUCTION_DIR%" "%BACKUP_DIR%"',
+    'goto :restore_previous',
+    'move "%BACKUP_DIR%" "%PRODUCTION_DIR%"',
+)
+for marker in pg184_import_markers:
+    if marker not in ci_import_launcher:
+        fail(f"PG-184: production import rollback contract missing: {marker}")
+if ci_import_launcher.index('move "%PRODUCTION_DIR%" "%BACKUP_DIR%"') > ci_import_launcher.index('-run=ShireProductionImport'):
+    fail("PG-184: stale generated packages must be quarantined before Unreal import")
+
+
 
 # PG-062: Journey Discovery rewards must cover declared exploration without enabling canon/story farming.
 discovery_reward_path = ROOT / "Data" / "JourneyDiscoveryRewardPlan.json"

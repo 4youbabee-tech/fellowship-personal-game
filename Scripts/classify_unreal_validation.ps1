@@ -463,6 +463,12 @@ $acceptanceExact = @(
     "Scripts/verify_runtime_source_workspace.ps1"
 )
 
+$coreRunnerExact = @(
+    "Scripts/ci_wait_for_unreal_editor.cmd",
+    "Scripts/reset_project_build_intermediates.ps1",
+    "Scripts/ci_import_production_assets.cmd"
+)
+
 $fullImpact = @()
 $coreImpact = @()
 $policyOnlyTouched = @()
@@ -491,6 +497,12 @@ foreach($p in $changed){
     }
     if($acceptanceExact -contains $n){
         $acceptanceTouched += $n
+        continue
+    }
+
+    if($coreRunnerExact -contains $n){
+        # These helpers run inside the core gate; exercise them there without adding cook/package cost.
+        $coreImpact += $n
         continue
     }
 
@@ -576,7 +588,7 @@ if($coreImpact.Count -gt 0){
         Set-Mode "core" "runtime-or-asset-delta-inherits-nearest-safe-core-ancestor-no-package" $parentSha
         exit 0
     }
-    Set-Mode "full" "core-delta-no-safe-core-proof-fail-safe" $parentSha
+    Set-Mode "core" "runtime-or-asset-delta-no-reusable-core-proof-run-core-no-package" $parentSha
     exit 0
 }
 
