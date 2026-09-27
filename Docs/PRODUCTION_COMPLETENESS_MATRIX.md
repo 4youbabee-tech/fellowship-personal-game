@@ -1,3 +1,15 @@
+## 2026-09-28 - CI/Warehouse root-repair release gate
+
+- Repair exact-head static validation: **STATIC-VALIDATED** by Pre-Unreal #1285 on `0bd0e6952161f1c3fa5bb603d25813400c330f24`.
+- Develop post-merge static validation: **STATIC-VALIDATED** by Pre-Unreal #1286 on `26ff8f8838b4c9680c793fea5d942a314ad29be4`.
+- Self-hosted runner health: **RUN-PROVEN** by Warehouse #272 with interactive user/watchdog topology.
+- Warehouse exact-source/selective classifier: **RUN-PROVEN** by #272, `mode=selective`, `phases=WH_RUN_AUDIT`.
+- Warehouse inventory audit: **RUN-PROVEN** by #272, 13,377 payload files / 5,426,414,977 bytes.
+- Redundant provider trains on control-plane merge: **NOT RUN** by design; all provider staging/saturation/prep/provider-resolution steps skipped.
+- Unreal routing for Warehouse/control-plane-only merge: **CORRECTLY NOT TRIGGERED**.
+- Production infrastructure freeze: **RELEASED**; existing W01 P1C01 production may resume under its existing gates.
+- UE4 compile/PIE/device/visual/performance maturity: **UNCHANGED** by this release.
+
 ## 2026-09-28 - Warehouse control-plane proof routing hardening
 
 - Warehouse classifier post-merge trigger coverage: **SOURCE-FIXED**.

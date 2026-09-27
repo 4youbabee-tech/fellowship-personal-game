@@ -1,3 +1,14 @@
+## 2026-09-28 - CI/Warehouse root repair released; production resumes
+
+- Exact repair head `0bd0e6952161f1c3fa5bb603d25813400c330f24` passed hosted Pre-Unreal #1285.
+- Develop merge head `26ff8f8838b4c9680c793fea5d942a314ad29be4` passed hosted Pre-Unreal #1286.
+- Self-hosted Warehouse #272 passed on the same develop head. Concrete runner proof: `RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=1 listenerPid=6192 workerCount=1`.
+- Warehouse #272 classified the merged control-plane delta as `mode=selective ... phases=WH_RUN_AUDIT`; all provider staging/saturation/preparation/resolution trains were skipped.
+- Persistent inventory audit passed: `payloadFiles=13377 bytes=5426414977 receipts=14 receiptRecords=667 duplicateGroups=215`; final persistent footprint was `files=13392 bytes=5427039102`.
+- The run emitted `WAREHOUSE_SELECTIVE_EXECUTION_PASS`. No Unreal Build Validation run was triggered by this Warehouse/control-plane-only merge, proving the intended routing separation.
+- The Governor production freeze is therefore **RELEASED**. Resume the existing `W01_P1C01_PRODUCTION_VERTICAL_SLICE` only; this does not open a new chapter or waive Gate 6/7.
+- Evidence boundary: **STATIC-VALIDATED + SELF-HOSTED WAREHOUSE ROUTING PROVEN**. No new COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, or performance claim is created by this infrastructure repair.
+
 ## 2026-09-28 - Warehouse control-plane proof routing hardened
 
 - PR #129 merged the #271 exact-source classifier correction at `61dd71845da4db3689c8a53f7d898ba5e81abb40`; hosted Pre-Unreal #1283 passed on its exact repair head.

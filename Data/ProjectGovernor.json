@@ -5876,22 +5876,24 @@
     ],
     "runner_infrastructure_guard": "HARD: service-mode runner ownership is eliminated, not merely discouraged. actions.runner.* must be absent or Stopped+Disabled pending deletion. UE4-27-Windows runs only via the interactive-user watchdog; NETWORK SERVICE/LOCAL SERVICE/SYSTEM are forbidden.",
     "production_freeze": {
-      "status": "ACTIVE",
-      "reason": "Owner requested production work stop until repeated runner/warehouse/CI waste is fixed at the root.",
+      "status": "RELEASED",
+      "reason": "CI/Warehouse root-repair release condition is satisfied; resume the existing W01 P1C01 production lane under normal gates.",
       "allowed_work": [
-        "CI classifier and workflow hardening",
-        "warehouse fail-fast/reuse/cache/integrity repair",
-        "runner governance hardening",
-        "developer onboarding/governor hardening",
-        "static validation of the repair branch"
+        "resume W01_P1C01_PRODUCTION_VERTICAL_SLICE under current gate order",
+        "bounded warehouse acquisition/import only when required by the active production queue",
+        "normal exact-head static and Unreal validation selected by changed scope"
       ],
-      "forbidden_until_release": [
-        "new gameplay feature train",
-        "new chapter",
-        "new warehouse saturation rerun without changed inputs",
-        "repeated full Unreal validation caused only by policy/docs churn"
-      ],
-      "release_condition": "Repair branch must pass exact-head GitHub-hosted Pre-Unreal validation, then one deliberately selected self-hosted validation proving runner/warehouse/Unreal routing without repeated redundant work."
+      "forbidden_until_release": [],
+      "release_condition": "Repair branch must pass exact-head GitHub-hosted Pre-Unreal validation, then one deliberately selected self-hosted validation proving runner/warehouse/Unreal routing without repeated redundant work.",
+      "release_evidence": {
+        "repair_static": "Pre-Unreal #1285 SUCCESS on 0bd0e6952161f1c3fa5bb603d25813400c330f24",
+        "develop_static": "Pre-Unreal #1286 SUCCESS on 26ff8f8838b4c9680c793fea5d942a314ad29be4",
+        "self_hosted_proof": "Warehouse #272 SUCCESS on 26ff8f8838b4c9680c793fea5d942a314ad29be4",
+        "runner_health": "RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=1 listenerPid=6192 workerCount=1",
+        "warehouse_routing": "WAREHOUSE_CLASSIFY mode=selective providers= phases=WH_RUN_AUDIT",
+        "warehouse_execution": "WAREHOUSE_SELECTIVE_EXECUTION_PASS",
+        "unreal_routing": "No Unreal Build Validation run was triggered for the Warehouse/control-plane-only develop merge."
+      }
     }
   },
   "development_mode_contract": {
