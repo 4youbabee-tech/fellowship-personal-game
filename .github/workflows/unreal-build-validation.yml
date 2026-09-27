@@ -246,6 +246,11 @@ jobs:
         shell: cmd
         run: '"%GITHUB_WORKSPACE%\\Scripts\\ci_wait_for_unreal_editor.cmd"'
 
+      - name: Preflight generated production quarantine
+        if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
+        shell: cmd
+        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\ci_probe_production_quarantine.ps1"'
+
       - name: Prepare and probe local MSVC environment
         if: (env.SHIRE_FULL_UNREAL_REQUIRED == 'true' || env.SHIRE_CORE_UNREAL_REQUIRED == 'true')
         shell: cmd

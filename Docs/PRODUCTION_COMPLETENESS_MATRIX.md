@@ -1,3 +1,10 @@
+## 2026-09-27 - Generated production quarantine root diagnosis
+
+- Unreal #993, #994 and #998 compiled C++; each failed before production asset import with `Access is denied` on the generated `Content/Production` directory move. #994 showed that the same-drive `%RUNNER_TEMP%` destination did not resolve it.
+- The #998 Restart Manager diagnostic failed at `Add-Type` and did not check process locks. It is corrected to scan files only and to report API/compiler errors.
+- A Windows preflight before C++ compilation now tests a fresh Content-to-runner-temp directory move, then reversibly renames generated Production. This is a diagnosis candidate; exact-head results are pending.
+- Current evidence: **#998 COMPILE-TESTED; import failed; preflight and process diagnosis pending**. Automation, runtime audits, packaging, PIE, device, visual and performance acceptance are not claimed.
+
 ## 2026-09-27 - Generated production import quarantine recheck
 
 - Unreal #993 compiled C++ then failed before asset import: 650 generated files received ACL changes with zero errors, but the directory move returned `Access is denied`.

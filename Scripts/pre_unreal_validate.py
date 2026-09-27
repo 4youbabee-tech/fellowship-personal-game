@@ -624,6 +624,20 @@ if ci_import_launcher.index('icacls "%PRODUCTION_DIR%" /grant "%RUNNER_IDENTITY%
     fail("PG-184: generated-tree Modify repair must precede quarantine")
 if ci_import_launcher.index('move "%PRODUCTION_DIR%" "%BACKUP_DIR%"') > ci_import_launcher.index('-run=ShireProductionImport'):
     fail("PG-184: stale generated packages must be quarantined before Unreal import")
+ci_probe_launcher = read(ROOT / "Scripts" / "ci_probe_production_quarantine.ps1")
+ci_lock_scan = read(ROOT / "Scripts" / "ci_report_production_locks.ps1")
+unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+for marker in ("PRODUCTION_PREFLIGHT_MOVE_PASS", "PRODUCTION_PREFLIGHT_RENAME_PASS", "PRODUCTION_PREFLIGHT_RENAME_FAIL", "ci_report_production_locks.ps1"):
+    if marker not in ci_probe_launcher:
+        fail(f"PG-184: production quarantine preflight missing {marker}")
+if "Preflight generated production quarantine" not in unreal_workflow or unreal_workflow.index("Preflight generated production quarantine") > unreal_workflow.index("Build ShireJourneyEditor"):
+    fail("PG-184: quarantine preflight must run before C++ build")
+for marker in ("public struct FileTime", "Add-Type -TypeDefinition", "-ErrorAction Stop", "Get-ChildItem -LiteralPath $resolvedRoot.Path -File", "PRODUCTION_LOCK_SCAN_RESULT incomplete"):
+    if marker not in ci_lock_scan:
+        fail(f"PG-184: lock scanner missing {marker}")
+if "$resources = @($resolvedRoot.Path) + $files" in ci_lock_scan:
+    fail("PG-184: Restart Manager cannot register directories")
+
 
 
 

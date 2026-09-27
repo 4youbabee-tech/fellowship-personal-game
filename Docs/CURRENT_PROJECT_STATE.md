@@ -1,3 +1,11 @@
+## 2026-09-27 - Generated production quarantine root diagnosis
+
+- Unreal #993, #994 and #998 compiled UE4.27.2 C++; each failed before import with `Access is denied` moving ignored generated `Content/Production`. #994 proved that relocating the destination to `%RUNNER_TEMP%` on the same drive does not resolve the failure.
+- #998's Restart Manager helper failed to compile its PowerShell `Add-Type` declaration; its reported absence of locking processes is invalid evidence. Microsoft documents that Restart Manager takes file paths and reports an error when a directory path is registered, which the old helper also attempted.
+- The diagnostic now registers files only, uses an explicit FILETIME layout, and fails visibly if compilation or API calls fail. A pre-build probe checks a fresh directory move between the Content parent and runner temp, then a reversible rename of the generated Production tree; on failure it reports the Windows HRESULT and file-lock scan. This isolates destination permission from generated-tree deletion/locking before the expensive C++ build.
+- Exact-head Pre-Unreal and Windows preflight are pending. UE asset import, Automation QA, runtime audits, packaging and packaged startup remain unproven. Authored `SourceAssets/Production` is untouched.
+- Status: **#998 COMPILE-TESTED; quarantine/import failed. Root diagnosis candidate pending exact-head validation**. No PIE, device, visual or performance acceptance is claimed.
+
 ## 2026-09-27 - Generated production import quarantine recheck
 
 - Exact-head Unreal Build Validation #993 on `5412efc` passed UE4.27.2 C++ compilation, then failed before asset import: `icacls` processed 650 generated files with 0 failures, but moving `Content/Production` returned `Access is denied` (exit 54).

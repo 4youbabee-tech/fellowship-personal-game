@@ -3,31 +3,46 @@ param(
     [string]$Root
 )
 
-$ErrorActionPreference = 'Continue'
+$ErrorActionPreference = 'Stop'
 $resolvedRoot = Resolve-Path -LiteralPath $Root -ErrorAction SilentlyContinue
 if (-not $resolvedRoot) {
     Write-Output "PRODUCTION_LOCK_SCAN_SKIP reason=root-not-found root=$Root"
     exit 0
 }
 
-$files = @(
-    Get-ChildItem -LiteralPath $resolvedRoot.Path -File -Recurse -Force -ErrorAction SilentlyContinue |
-        ForEach-Object { $_.FullName }
-)
-$resources = @($resolvedRoot.Path) + $files
+try {
+    $resources = @(
+        Get-ChildItem -LiteralPath $resolvedRoot.Path -File -Recurse -Force -ErrorAction Stop |
+            ForEach-Object { $_.FullName }
+    )
+} catch {
+    Write-Output "PRODUCTION_LOCK_SCAN_ERROR api=EnumerateFiles detail=$($_.Exception.Message)"
+    exit 81
+}
+if ($resources.Count -eq 0) {
+    Write-Output "PRODUCTION_LOCK_SCAN_SKIP reason=no-files root=$Root"
+    exit 0
+}
 
-Add-Type -TypeDefinition @'
+try {
+    Add-Type -TypeDefinition @'
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
 
 namespace ShireProductionLocks
 {
     [StructLayout(LayoutKind.Sequential)]
+    public struct FileTime
+    {
+        public uint LowDateTime;
+        public uint HighDateTime;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public struct UniqueProcess
     {
         public int ProcessId;
-        public FILETIME ProcessStartTime;
+        public FileTime ProcessStartTime;
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -75,9 +90,14 @@ namespace ShireProductionLocks
         public static extern int RmEndSession(uint sessionHandle);
     }
 }
-'@ -ErrorAction SilentlyContinue | Out-Null
+'@ -ErrorAction Stop | Out-Null
+} catch {
+    Write-Output "PRODUCTION_LOCK_SCAN_ERROR api=Add-Type detail=$($_.Exception.ToString())"
+    exit 80
+}
 
 $reported = @{}
+$scanErrors = $false
 $batchSize = 100
 for ($offset = 0; $offset -lt $resources.Count; $offset += $batchSize) {
     $end = [Math]::Min($offset + $batchSize - 1, $resources.Count - 1)
@@ -89,6 +109,7 @@ for ($offset = 0; $offset -lt $resources.Count; $offset += $batchSize) {
         0,
         $sessionKey)
     if ($code -ne 0) {
+        $scanErrors = $true
         Write-Output "PRODUCTION_LOCK_SCAN_ERROR api=RmStartSession code=$code"
         continue
     }
@@ -103,6 +124,7 @@ for ($offset = 0; $offset -lt $resources.Count; $offset += $batchSize) {
             [uint32]0,
             $null)
         if ($code -ne 0) {
+            $scanErrors = $true
             Write-Output "PRODUCTION_LOCK_SCAN_ERROR api=RmRegisterResources code=$code batch=$offset"
             continue
         }
@@ -138,15 +160,23 @@ for ($offset = 0; $offset -lt $resources.Count; $offset += $batchSize) {
         } elseif ($code -eq 0 -and $count -eq 0) {
             Write-Output "PRODUCTION_LOCK_SCAN_BATCH_CLEAR offset=$offset count=$($batch.Length)"
         } elseif ($code -ne 0) {
+            $scanErrors = $true
             Write-Output "PRODUCTION_LOCK_SCAN_ERROR api=RmGetList code=$code batch=$offset"
         }
     } catch {
+        $scanErrors = $true
         Write-Output "PRODUCTION_LOCK_SCAN_ERROR exception=$($_.Exception.Message)"
     } finally {
         [void][ShireProductionLocks.RestartManager]::RmEndSession($sessionHandle)
     }
 }
 
+if ($scanErrors) {
+    Write-Output "PRODUCTION_LOCK_SCAN_RESULT incomplete resources=$($resources.Count)"
+    exit 82
+}
 if ($reported.Count -eq 0) {
-    Write-Output "PRODUCTION_LOCK_SCAN_RESULT no-locking-process-reported resources=$($resources.Count)"
+    Write-Output "PRODUCTION_LOCK_SCAN_RESULT no-file-locks-reported resources=$($resources.Count)"
+} else {
+    Write-Output "PRODUCTION_LOCK_SCAN_RESULT processes=$($reported.Count) resources=$($resources.Count)"
 }
