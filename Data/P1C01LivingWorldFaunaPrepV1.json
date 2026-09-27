@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "batch_id": "P1C01_LIVING_WORLD_FAUNA_PREP_V1",
+  "status": "PROJECT_OWNED_FALLBACK_ACTIVE_EXTERNAL_LICENSE_BLOCKED",
+  "authority": [
+    "Data/LivingWorldEventPlan.json",
+    "Data/P1C01WarehousePromotionQueueV1.json",
+    "Data/ProductionAssetPromotionPolicyV1.json"
+  ],
+  "project_owned_fallback": [
+    {
+      "id": "SM_CommonBird",
+      "path": "SourceAssets/Production/World/Common/SM_CommonBird.obj",
+      "role": "BIRD",
+      "state": "STATIC_PROJECT_OWNED_RUNTIME_FALLBACK"
+    },
+    {
+      "id": "SM_CommonRabbit",
+      "path": "SourceAssets/Production/World/Common/SM_CommonRabbit.obj",
+      "role": "RABBIT",
+      "state": "STATIC_PROJECT_OWNED_RUNTIME_FALLBACK"
+    },
+    {
+      "id": "SM_CommonButterfly",
+      "path": "SourceAssets/Production/World/Common/SM_CommonButterfly.obj",
+      "role": "BUTTERFLY",
+      "state": "STATIC_PROJECT_OWNED_RUNTIME_FALLBACK"
+    }
+  ],
+  "external_candidates": [
+    {
+      "provider": "QUATERNIUS",
+      "id": "QTN_FARM_ANIMALS",
+      "state": "BLOCKED_LICENSE_CAPTURE",
+      "required_final_format": "FBX",
+      "roles": [
+        "sheep",
+        "cattle",
+        "pig",
+        "horse/pony"
+      ]
+    },
+    {
+      "provider": "QUATERNIUS",
+      "id": "QTN_ULTIMATE_ANIMATED_ANIMALS",
+      "state": "BLOCKED_LICENSE_CAPTURE",
+      "required_final_format": "FBX",
+      "roles": [
+        "regional fauna support"
+      ]
+    }
+  ],
+  "living_world_caps": {
+    "max_active_micro_events_near_player": 3,
+    "max_active_fauna_groups_near_player": 2,
+    "fauna_cull_distance_cm": 4200,
+    "offscreen_simulation": "STATE_ONLY",
+    "density_change": "NONE"
+  },
+  "animated_qc": [
+    "real skeleton",
+    "skin weights",
+    "retarget/animation compatibility",
+    "deformation review",
+    "FBX final exchange"
+  ],
+  "runtime_rule": "Use bounded pooled/transient fauna; never turn farm/wildlife groups into persistent crowd actors.",
+  "evidence_boundary": "Preparation only. Existing project-owned OBJ fauna are static/procedural fallback, not final animated production assets."
+}
