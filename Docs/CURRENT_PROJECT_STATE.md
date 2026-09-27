@@ -1,3 +1,14 @@
+## 2026-09-27 - Permanent runner service-mode elimination
+
+- Root cause class confirmed by live evidence: the legacy `actions.runner.*` Windows service can be started under `NT AUTHORITY\NETWORK SERVICE` while the interactive watchdog also exists, creating competing runner ownership and repeated pre-build failures.
+- The permanent design now removes service mode instead of merely leaving it stopped/manual.
+- New `Scripts/runner_service_guard.ps1` stops, disables and deletes any `actions.runner.*` registration and terminates runner Listener/Worker processes owned by NETWORK SERVICE/LOCAL SERVICE/SYSTEM.
+- `install_runner_watchdog.ps1` installs both watchdog and guard, purges service mode first, then starts the interactive-user watchdog.
+- `runner_watchdog.ps1` invokes the guard at boot and during every supervision loop, so a resurrected service is automatically removed.
+- `verify_runner_session.ps1` now accepts only an absent service or a stopped+disabled pending-deletion entry.
+- PG-183 statically guards the permanent service-elimination contract.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head static validation pending / physical machine repair pending one-time elevated install**. No compile/PIE/device/visual/performance claim.
+
 ## 2026-09-27 - Runner ownership directive promoted to top-level governance
 
 - The runner rule previously existed in scripts/guards and buried runner-history fields, but was not prominent enough in the Governor/onboarding path for a zero-context Work session.
