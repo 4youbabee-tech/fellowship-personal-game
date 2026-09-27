@@ -2978,7 +2978,7 @@
     },
     {
       "id": "INV-RUNNER-OWNERSHIP",
-      "description": "The UE4.27 self-hosted GitHub runner must execute only under the proven interactive Windows user through the ShireJourney-GitHubRunner-Watchdog Scheduled Task. Legacy actions.runner.* Windows services must remain Stopped with StartupType Manual and must never be enabled, started, reconfigured, or used under NETWORK SERVICE, LOCAL SERVICE, or SYSTEM. A worker/AI session may inspect health but must not change runner ownership/topology unless the owner explicitly authorizes a runner-infrastructure repair.",
+      "description": "The UE4.27 self-hosted GitHub runner must execute only under the proven interactive Windows user through the ShireJourney-GitHubRunner-Watchdog Scheduled Task. Legacy actions.runner.* Windows services are permanently disallowed: the preferred state is absent; any residual service must be Stopped+Disabled until deletion completes. NETWORK SERVICE, LOCAL SERVICE, and SYSTEM runner ownership are forbidden. The watchdog continuously self-heals service resurrection by invoking runner_service_guard.ps1.",
       "auto_override": false
     }
   ],
@@ -3929,14 +3929,14 @@
         "REQ-STABILITY-004",
         "REQ-MEM-001"
       ],
-      "resolution": "The runner is not a Windows-service lane. Keep actions.runner.* stopped/manual and run UE4-27-Windows only under the proven interactive Windows user through ShireJourney-GitHubRunner-Watchdog. NETWORK SERVICE, LOCAL SERVICE and SYSTEM execution are forbidden. New human/AI sessions must treat this as a hard infrastructure invariant, not a troubleshooting preference.",
+      "resolution": "Eliminate Windows-service runner ownership rather than merely leaving it stopped/manual. The preferred persistent state is no actions.runner.* service at all. runner_service_guard.ps1 stops, disables and deletes any service-mode registration and kills forbidden service-owned runner processes; the interactive-user watchdog invokes that guard automatically if service mode reappears. UE4-27-Windows remains interactive-user watchdog only.",
       "implementation_contract": [
-        "Never enable/start/reinstall actions.runner.* as an automatic or active service.",
-        "Never configure the runner to run as NETWORK SERVICE, LOCAL SERVICE or SYSTEM.",
-        "The watchdog Scheduled Task uses LogonType Interactive under the proven Windows user and is the only approved supervisor.",
-        "verify_runner_session.ps1 must fail before heavy work if service ownership, identity, session, listener/worker ownership or watchdog state is wrong.",
-        "install_runner_watchdog.ps1 is the approved topology installer/repair source and explicitly forces legacy services to stopped/manual.",
-        "A Work/AI session may inspect and diagnose runner health, but may not change runner ownership/topology without explicit owner authorization."
+        "Preferred permanent state: no actions.runner.* service registration exists; if Windows keeps a pending-deletion entry temporarily it must be Stopped + Disabled.",
+        "runner_service_guard.ps1 stops/disables/deletes service-mode registration and terminates NETWORK SERVICE/LOCAL SERVICE/SYSTEM Runner.Listener/Runner.Worker processes.",
+        "install_runner_watchdog.ps1 installs both watchdog and service guard under the proven interactive Windows user.",
+        "runner_watchdog.ps1 checks every supervision loop and self-heals any service resurrection.",
+        "verify_runner_session.ps1 accepts only absent or stopped-disabled residual service state and fails on any service-owned job identity.",
+        "A Work/AI session may inspect health but may not reconfigure runner ownership/topology without explicit owner authorization."
       ],
       "evidence": [
         "Scripts/install_runner_watchdog.ps1",
@@ -6435,8 +6435,8 @@
     "watchdog_task": "ShireJourney-GitHubRunner-Watchdog",
     "legacy_service_pattern": "actions.runner.*",
     "legacy_service_required_state": {
-      "status": "Stopped",
-      "startup_type": "Manual"
+      "preferred": "Absent from Service Control Manager",
+      "transitional_only": "Stopped + Disabled while deletion is pending"
     },
     "forbidden_identities": [
       "NT AUTHORITY\\NETWORK SERVICE",
@@ -6446,18 +6446,24 @@
     "required_identity_rule": "Runner.Listener and Runner.Worker must belong to the same proven interactive Windows user/session as the job, with a live Explorer desktop session.",
     "prohibited_actions_without_owner_authorization": [
       "Do not run config.cmd with --runasservice or reinstall the runner as a Windows service.",
-      "Do not Start-Service, Set-Service Automatic, sc start, sc config auto, or otherwise enable actions.runner.*.",
+      "Do not Start-Service, enable, or recreate actions.runner.*.",
       "Do not switch the runner account to NETWORK SERVICE, LOCAL SERVICE, SYSTEM, or any non-interactive service identity.",
       "Do not replace the watchdog Scheduled Task with service-mode execution.",
       "Do not kill/restart Runner.Listener while Runner.Worker is active except through the repository watchdog's bounded recovery contract."
     ],
     "approved_recovery_path": [
-      "Read Scripts/install_runner_watchdog.ps1 and Scripts/verify_runner_session.ps1.",
-      "Keep legacy actions.runner.* service stopped/manual.",
-      "Use the interactive-user ShireJourney-GitHubRunner-Watchdog Scheduled Task.",
-      "Run the repository runner-health verification before heavy Unreal/Warehouse work.",
-      "If the topology is wrong, fail closed and report the exact identity/service/task state; do not improvise a service-mode fix."
+      "Run Scripts/runner_service_guard.ps1 elevated once to stop/disable/delete any actions.runner.* service and terminate forbidden service-owned runner processes.",
+      "Run Scripts/install_runner_watchdog.ps1 elevated to install the interactive-user watchdog and its service guard copy.",
+      "The watchdog invokes the service guard automatically if service mode or forbidden ownership ever reappears.",
+      "Run Scripts/verify_runner_session.ps1 / Runner Health before heavy Unreal or Warehouse work.",
+      "If topology still differs, fail closed and report exact identity/service/task state; never improvise service mode."
     ],
-    "rationale": "NETWORK SERVICE previously caused UE4 Engine/content/rendering and runner ownership failures. The repository already enforces interactive-user ownership in PG-145/PG-145B; this top-level contract makes the rule impossible for a new programmer/AI session to miss."
+    "rationale": "NETWORK SERVICE previously caused UE4 Engine/content/rendering and runner ownership failures. The repository already enforces interactive-user ownership in PG-145/PG-145B; this top-level contract makes the rule impossible for a new programmer/AI session to miss.",
+    "permanent_self_heal": {
+      "guard_script": "Scripts/runner_service_guard.ps1",
+      "watchdog_behavior": "Detect any actions.runner.* service or service-owned Runner.Listener/Runner.Worker and purge it before continuing.",
+      "poll_seconds": 15,
+      "static_guard": "PG-183"
+    }
   }
 }
