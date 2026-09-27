@@ -1,3 +1,13 @@
+## 2026-09-27 - Permanent runner ownership hardening
+
+- Legacy service elimination guard: **SOURCE-IMPLEMENTED**.
+- Watchdog continuous anti-service self-heal: **SOURCE-IMPLEMENTED**.
+- Installer purge-before-watchdog behavior: **SOURCE-IMPLEMENTED**.
+- Health verifier absent-or-stopped-disabled service contract: **SOURCE-IMPLEMENTED**.
+- Static PG-183 regression guard: **SOURCE-IMPLEMENTED**.
+- Physical Windows runner repaired with new installer: **PENDING OWNER-SIDE ELEVATED APPLICATION**.
+- Current maturity: **SOURCE-IMPLEMENTED / exact-head static validation pending**.
+
 ## 2026-09-27 - Runner ownership governance visibility
 
 - Interactive-user watchdog ownership hard invariant: **SOURCE-IMPLEMENTED**.
