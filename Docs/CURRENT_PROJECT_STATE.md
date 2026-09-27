@@ -1,3 +1,12 @@
+## 2026-09-27 - Zero-context developer entry hardening
+
+- The repository default branch is `main`, while `develop` remains the canonical integration/programmer-handoff branch.
+- Develop onboarding now explicitly warns that `main` is a stable/release landing surface and that current execution truth must be read from `develop`.
+- `Docs/PROJECT_GOVERNOR.md` no longer hard-codes the historical D stage as the next runtime drop; current execution order comes from ProjectGovernor `current_focus` + `execution_control.next_actions` plus live GitHub state.
+- `Scripts/new_developer_onboarding.ps1` now emits a branch warning whenever the local checkout is not the canonical development branch.
+- A separate default-branch README redirect is required on `main` so a zero-context GitHub visitor reaches the develop Governor path immediately.
+- Evidence boundary: **SOURCE-IMPLEMENTED / static validation pending**. No runtime/PIE/device/visual/performance acceptance is implied.
+
 ## 2026-09-27 - Warehouse provider-resolution train V3 prepared
 
 - V3 is stacked behind the critical-gap V2 branch and resolves provider/access blockers rather than adding another uncontrolled source list.
