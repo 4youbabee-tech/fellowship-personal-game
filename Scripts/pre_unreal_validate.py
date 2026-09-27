@@ -2782,6 +2782,39 @@ for pg173_group_name, pg173_items in pg173_queue.get("groups", {}).items():
                         f"{pg173_state} without {pg173_field}"
                     )
 
+# PG-184: warehouse validation must be fail-fast, non-destructive and non-repeating on PR sync.
+pg184_workflow = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
+pg184_prep = read(ROOT / "Scripts" / "run_warehouse_critical_gap_preparation.ps1")
+pg184_network = read(ROOT / "Scripts" / "warehouse_network.ps1")
+pg184_ambient = read(ROOT / "Scripts" / "stage_ambientcg_warehouse.ps1")
+pg184_kaykit = read(ROOT / "Scripts" / "stage_kaykit_github_warehouse.ps1")
+
+if "pull_request:" in pg184_workflow:
+    fail("PG-184 Warehouse Stage must not run on pull-request synchronize; stage only after develop promotion or manual dispatch")
+for pg184_symbol in [
+    "Test-WarehouseZipReadable",
+    "WAREHOUSE_ZIP_INVALID",
+]:
+    if pg184_symbol not in pg184_network:
+        fail(f"PG-184 warehouse ZIP structural reuse guard missing: {pg184_symbol}")
+for pg184_symbol in [
+    "ZipFile]::OpenRead",
+    "duplicateReceiptRows",
+    "WAREHOUSE_CRITICAL_GAP_BLOCKED_DETAIL",
+    "archiveMode=metadata-only",
+]:
+    if pg184_symbol not in pg184_prep:
+        fail(f"PG-184 warehouse metadata-only fail-fast prep missing: {pg184_symbol}")
+if "Expand-Archive" in pg184_prep:
+    fail("PG-184 critical-gap QC must not repeatedly extract every ZIP")
+for pg184_stage, pg184_name in [
+    (pg184_ambient, "ambientCG"),
+    (pg184_kaykit, "KayKit"),
+]:
+    for pg184_symbol in ["Test-WarehouseZipReadable", "removing corrupt archive"]:
+        if pg184_symbol not in pg184_stage:
+            fail(f"PG-184 {pg184_name} staging corrupt-archive self-repair missing: {pg184_symbol}")
+
 # PG-176: the monitored P1C01 material train must stay complete, bounded and
 # evidence-gated. This is preparation validation only; it never promotes an item.
 pg176_wave_path = ROOT / "Data" / "P1C01MaterialImportWaveV1.json"
