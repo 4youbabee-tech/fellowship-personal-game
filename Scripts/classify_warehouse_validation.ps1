@@ -88,7 +88,12 @@ foreach($raw in $changed) {
     Write-Host "WAREHOUSE_CHANGED $p"
 
     switch -Wildcard ($p) {
-        ".github/workflows/warehouse-stage.yml" { $unknown=$true; continue }
+        ".github/workflows/warehouse-stage.yml" {
+            # Control-plane changes need a cheap persistent-inventory proof, not
+            # a full provider redownload/saturation train.
+            $flags.WH_RUN_AUDIT=$true
+            continue
+        }
         "Scripts/warehouse_network.ps1" { $unknown=$true; continue }
 
         "Data/WarehouseAcquisitionBatchV1.json" { $flags.WH_STAGE_POLYHAVEN=$true; $providerTouched=$true; continue }
@@ -148,7 +153,13 @@ foreach($raw in $changed) {
         "Data/WarehouseProviderResolutionTrainV3.json" { $flags.WH_RUN_PROVIDER_RESOLUTION=$true; continue }
         "Scripts/run_warehouse_provider_resolution.ps1" { $flags.WH_RUN_PROVIDER_RESOLUTION=$true; continue }
         "Scripts/classify_warehouse_validation.ps1" { continue }
-        default { $unknown=$true }
+        default {
+            # The push may contain Docs/static-validator/unrelated production
+            # files alongside a warehouse-triggering path. Those files are not
+            # Warehouse scope and must not escalate a selective run to full.
+            Write-Host "WAREHOUSE_CHANGED_IGNORED $p"
+            continue
+        }
     }
 }
 

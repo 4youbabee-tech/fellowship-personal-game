@@ -27,6 +27,7 @@ on:
       - 'Scripts/run_warehouse_critical_gap_preparation.ps1'
       - 'Data/WarehouseProviderResolutionTrainV3.json'
       - 'Scripts/run_warehouse_provider_resolution.ps1'
+      - 'Scripts/classify_warehouse_validation.ps1'
       - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
 

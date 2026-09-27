@@ -1,3 +1,13 @@
+## 2026-09-28 - Warehouse control-plane proof routing hardened
+
+- PR #129 merged the #271 exact-source classifier correction at `61dd71845da4db3689c8a53f7d898ba5e81abb40`; hosted Pre-Unreal #1283 passed on its exact repair head.
+- A second routing defect was identified before wasting another full Warehouse run: `Scripts/classify_warehouse_validation.ps1` itself was absent from Warehouse Stage push paths, so its post-merge fix could not automatically prove the repaired self-hosted path.
+- Warehouse Stage now triggers on classifier changes. Workflow-only control-plane deltas select bounded persistent-inventory audit instead of all provider trains.
+- The classifier now ignores unrelated Docs/static-validator/runtime files that happen to share a commit with a warehouse-triggering path; such files no longer escalate selective execution to `mode=all`.
+- PG-184 now locks the exact-source classifier markers, classifier-trigger path, and bounded workflow-control-plane audit rule.
+- No gameplay/runtime content changed.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING / POST-MERGE WAREHOUSE PROOF PENDING**.
+
 ## 2026-09-28 - Warehouse #271 exact-source classifier repair
 
 - Post-merge Warehouse #271 ran on self-hosted runner `UE4-27-Windows` at develop merge head `542a6feef7e2985e40ed86f7242dd0a005be1395`.

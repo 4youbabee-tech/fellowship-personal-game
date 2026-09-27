@@ -1,3 +1,12 @@
+## 2026-09-28 - Warehouse control-plane proof routing hardening
+
+- Warehouse classifier post-merge trigger coverage: **SOURCE-FIXED**.
+- Workflow-control-plane delta routes to bounded `WH_RUN_AUDIT` instead of all acquisition/provider trains: **SOURCE-FIXED**.
+- Unrelated co-commit files no longer force Warehouse full mode: **SOURCE-FIXED**.
+- PG-184 regression coverage for exact-source + trigger + bounded control-plane proof: **SOURCE-FIXED**.
+- Hosted exact-head static proof and resulting post-merge self-hosted Warehouse proof: **PENDING**.
+- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
+
 ## 2026-09-28 - Warehouse #271 exact-source classifier repair
 
 - Self-hosted runner identity/topology/network/workspace health: **RUN-PROVEN** by Warehouse #271 on `542a6feef7e2985e40ed86f7242dd0a005be1395`.
