@@ -95,6 +95,22 @@
       "migration_status": "MIGRATED"
     },
     {
+      "current_path": "Source/ShireJourney/Public/Characters/ShireFootstepComponent.h",
+      "target_path": "Source/ShireJourney/Public/Characters/ShireFootstepComponent.h",
+      "domain": "Characters",
+      "kind": "Header",
+      "role": "Surface-aware low-cost player footstep contract",
+      "migration_status": "MIGRATED"
+    },
+    {
+      "current_path": "Source/ShireJourney/Private/Characters/ShireFootstepComponent.cpp",
+      "target_path": "Source/ShireJourney/Private/Characters/ShireFootstepComponent.cpp",
+      "domain": "Characters",
+      "kind": "Source",
+      "role": "Stride-bound surface sampling and spatial footstep routing",
+      "migration_status": "MIGRATED"
+    },
+    {
       "current_path": "Source/ShireJourney/Public/Characters/ShireNPC.h",
       "target_path": "Source/ShireJourney/Public/Characters/ShireNPC.h",
       "domain": "Characters",

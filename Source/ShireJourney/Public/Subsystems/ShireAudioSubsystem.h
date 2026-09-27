@@ -7,6 +7,7 @@
 #include "ShireAudioSubsystem.generated.h"
 
 class UAudioComponent;
+class USoundAttenuation;
 class USoundBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnShireAudioCueChanged, FName, PreviousCue, FName, NewCue);
@@ -46,6 +47,15 @@ public:
     UFUNCTION(BlueprintCallable, Category="Audio")
     void PlaySfxCue(FName CueId);
 
+    // Localized one-shots share a bounded attenuation object so callers do not
+    // allocate per step or require every authored wave to duplicate settings.
+    UFUNCTION(BlueprintCallable, Category="Audio")
+    void PlaySfxCueAtLocation(
+        FName CueId,
+        FVector WorldLocation,
+        float VolumeMultiplier = 1.0f,
+        float PitchMultiplier = 1.0f);
+
     UFUNCTION(BlueprintCallable, Category="Audio")
     void PlayVoiceCue(FName CueId);
 
@@ -74,12 +84,23 @@ private:
     UPROPERTY(Transient)
     UAudioComponent* ActiveMusicComponent = nullptr;
 
+    UPROPERTY(Transient)
+    USoundAttenuation* SpatialSfxAttenuation = nullptr;
+
     // Weak caches do not pin every sound for the GameInstance lifetime. The active
     // audio component owns a playing sound; streamable handles own only in-flight loads.
     TMap<FName, TWeakObjectPtr<USoundBase>> VoiceCache;
     TMap<FName, TWeakObjectPtr<USoundBase>> AmbienceCache;
     TMap<FName, TWeakObjectPtr<USoundBase>> MusicCache;
     TMap<FName, TWeakObjectPtr<USoundBase>> SfxCache;
+
+    struct FPendingSpatialSfx
+    {
+        FVector Location = FVector::ZeroVector;
+        float VolumeMultiplier = 1.0f;
+        float PitchMultiplier = 1.0f;
+    };
+    TMap<FName, FPendingSpatialSfx> PendingSpatialSfx;
 
     FStreamableManager StreamableManager;
     TMap<FName, TSharedPtr<FStreamableHandle>> PendingAudioLoads;

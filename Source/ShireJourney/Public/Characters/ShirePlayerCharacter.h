@@ -7,6 +7,7 @@
 class USpringArmComponent;
 class UCameraComponent;
 class UStaticMeshComponent;
+class UShireFootstepComponent;
 class UShireSaveGame;
 
 UCLASS()
@@ -137,6 +138,9 @@ protected:
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera")
     UCameraComponent* FollowCamera;
+
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Audio")
+    UShireFootstepComponent* FootstepComponent;
 
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Prototype")
     UStaticMeshComponent* PrototypeTorso;

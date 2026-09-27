@@ -5,6 +5,7 @@
 #include "ShireChapterAssetStreamingSubsystem.h"
 #include "ShireSaveGame.h"
 #include "ShireHUD.h"
+#include "ShireFootstepComponent.h"
 #include "ShireStoryPresentationSubsystem.h"
 #include "FellowshipEnemyPrototype.h"
 #include "Animation/AnimInstance.h"
@@ -79,6 +80,8 @@ AShirePlayerCharacter::AShirePlayerCharacter()
     FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
     FollowCamera->bUsePawnControlRotation = false;
     FollowCamera->SetFieldOfView(78.0f);
+
+    FootstepComponent = CreateDefaultSubobject<UShireFootstepComponent>(TEXT("FootstepComponent"));
 
     PrototypeTorso = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("PrototypeTorso"));
     PrototypeTorso->SetupAttachment(GetCapsuleComponent());
