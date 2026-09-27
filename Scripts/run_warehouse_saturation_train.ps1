@@ -24,6 +24,13 @@ if (-not (Test-Path -LiteralPath $ManifestPath -PathType Leaf)) {
 $manifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
 New-Item -ItemType Directory -Path $OutputRoot -Force | Out-Null
 
+function Get-SizeSum {
+  param([object[]]$Items)
+  [int64]$total = 0
+  foreach ($item in $Items) { $total += [int64]$item.size }
+  return $total
+}
+
 function Get-OptionalPropertyValue {
   param(
     [object]$Object,
@@ -180,7 +187,7 @@ foreach ($car in @($manifest.cars | Sort-Object order)) {
     receipt_matches = $matches.Count
     verified_receipt_files = $verified.Count
     unverified_receipt_files = $unverified.Count
-    verified_bytes = [int64](($verified | Measure-Object -Property size -Sum).Sum)
+    verified_bytes = (Get-SizeSum -Items $verified)
     state = $state
   }
 }
@@ -190,7 +197,7 @@ $providerSummary = @($records | Group-Object provider | ForEach-Object {
     provider = $_.Name
     receipt_records = $_.Count
     verified_records = @($_.Group | Where-Object { $_.hash_ok }).Count
-    bytes = [int64](($_.Group | Measure-Object -Property size -Sum).Sum)
+    bytes = (Get-SizeSum -Items @($_.Group))
   }
 })
 

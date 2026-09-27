@@ -1,3 +1,9 @@
+## 2026-09-27 - P1C01 source/warehouse reassessment and report fix
+
+- Source-grounded gap audit: `Docs/P1C01_SOURCE_WAREHOUSE_REASSESSMENT_2026_09_27.md`. Warehouse #264 proved 247 payload files / 3.85 GB with 13 receipts; Quaternius was 0 files, 17 unresolved. These are staged source receipts, not ready/imported assets.
+- Warehouse #265–#267 failed at the saturation report's empty-list `.Sum` under StrictMode. The aggregator now handles zero verified files without aborting downstream preparation. Windows rerun pending under the supervised user runner.
+- P1C01 priority: bounded materials/architecture support, final skeletal FBX and animation, bounded fauna, WAV audio QC. Existing project-owned OBJ/TGA are foundation/proxy evidence only. No asset import, gameplay, PIE, device or visual acceptance is claimed.
+
 ## 2026-09-27 - #999 orphan process root cause
 
 - Unreal #999 proved a fresh directory moves from Content to `%RUNNER_TEMP%`, while generated `Content/Production` cannot be renamed. Restart Manager identified orphan `UE4Editor` PID 11336 holding generated files. The editor-close guard incorrectly exempted the PID from its final check after `taskkill` said it had exited.
