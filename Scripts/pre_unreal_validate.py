@@ -2788,12 +2788,16 @@ pg184_prep = read(ROOT / "Scripts" / "run_warehouse_critical_gap_preparation.ps1
 pg184_network = read(ROOT / "Scripts" / "warehouse_network.ps1")
 pg184_ambient = read(ROOT / "Scripts" / "stage_ambientcg_warehouse.ps1")
 pg184_kaykit = read(ROOT / "Scripts" / "stage_kaykit_github_warehouse.ps1")
+pg184_manifest = read(ROOT / "Data" / "WarehouseCriticalGapPreparationTrainV2.json")
 
 if "pull_request:" in pg184_workflow:
     fail("PG-184 Warehouse Stage must not run on pull-request synchronize; stage only after develop promotion or manual dispatch")
+if "metadata-only" not in pg184_manifest.lower() and "inspected read-only" not in pg184_manifest.lower():
+    fail("PG-184 critical-gap manifest must preserve metadata-only archive contract")
 for pg184_symbol in [
     "Test-WarehouseZipReadable",
     "WAREHOUSE_ZIP_INVALID",
+    "WAREHOUSE_REUSE_PURGE_CORRUPT_ZIP",
 ]:
     if pg184_symbol not in pg184_network:
         fail(f"PG-184 warehouse ZIP structural reuse guard missing: {pg184_symbol}")
