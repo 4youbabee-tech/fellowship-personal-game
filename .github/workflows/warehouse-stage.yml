@@ -23,6 +23,8 @@ on:
       - 'Data/WarehouseProviderAccessPolicyV1.json'
       - 'Data/WarehouseSaturationTrainV1.json'
       - 'Scripts/run_warehouse_saturation_train.ps1'
+      - 'Data/WarehouseCriticalGapPreparationTrainV2.json'
+      - 'Scripts/run_warehouse_critical_gap_preparation.ps1'
       - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
 
@@ -129,6 +131,10 @@ jobs:
       - name: Build 20-car warehouse saturation coverage report
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_saturation_train.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseSaturationTrainV1.json"
+
+      - name: Prepare critical warehouse gaps into intake QC
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_critical_gap_preparation.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseCriticalGapPreparationTrainV2.json"
 
       - name: Show persistent warehouse footprint
         shell: cmd
