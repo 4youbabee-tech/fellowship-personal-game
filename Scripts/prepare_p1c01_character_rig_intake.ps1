@@ -104,6 +104,7 @@ if(Test-Path -LiteralPath $projectOwnedRoot){ $fallbackCount=@(Get-ChildItem -Li
 $report=[ordered]@{
   schema_version=1; batch_id=[string]$manifest.batch_id; generated_at_utc=[DateTime]::UtcNow.ToString("o");
   project_owned_fallback_file_count=$fallbackCount;
+  prepared_count=$prepared.Count; pending_count=$pending.Count; blocked_count=$blocked.Count;
   prepared=$prepared; pending=$pending; blocked=$blocked;
   rule="No final animated-character promotion without FBX + provenance + skeleton/skin/retarget/deformation QC."
 }
