@@ -2855,6 +2855,59 @@ else:
             fail(f"PG-176 material intake preparation guard missing: {pg176_marker}")
 
 
+# PG-179: long warehouse saturation train remains ordered, evidence-gated and non-chaotic.
+pg179_path = ROOT / "Data" / "WarehouseSaturationTrainV1.json"
+if not pg179_path.exists():
+    fail("PG-179 warehouse saturation train manifest missing")
+else:
+    try:
+        pg179 = json.loads(read(pg179_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-179 invalid warehouse saturation train manifest: {exc}")
+        pg179 = {}
+
+    pg179_cars = pg179.get("cars", [])
+    if len(pg179_cars) != 20:
+        fail(f"PG-179 expected exactly 20 ordered warehouse cars, found {len(pg179_cars)}")
+
+    pg179_orders = [int(car.get("order", -1)) for car in pg179_cars]
+    if pg179_orders != list(range(1, 21)):
+        fail("PG-179 warehouse car order must remain exactly 1..20")
+
+    pg179_ids = [str(car.get("id") or "").strip() for car in pg179_cars]
+    if len(set(pg179_ids)) != len(pg179_ids) or any(not value for value in pg179_ids):
+        fail("PG-179 warehouse car IDs must be unique and non-empty")
+
+    pg179_allowed_ceilings = {"CANDIDATE", "INTAKE_QC", "STATIC_VALIDATED"}
+    for car in pg179_cars:
+        if str(car.get("ceiling") or "") not in pg179_allowed_ceilings:
+            fail(f"PG-179 preparation car has unsafe promotion ceiling: {car.get('id')}")
+        if not car.get("providers") or len(car.get("providers", [])) > 4:
+            fail(f"PG-179 car must keep a bounded source set (1-4 providers): {car.get('id')}")
+
+    for required_rule in [
+        "Do not mirror entire providers indiscriminately.",
+        "Animated final production assets must be FBX.",
+        "Production textures must be PNG/TGA; use channel packing where appropriate; BMP is forbidden.",
+        "Audio production masters must be WAV before UE import.",
+        "Heavy runtime assets remain soft referenced and asynchronously loaded with FStreamableManager.",
+    ]:
+        if required_rule not in pg179.get("global_rules", []):
+            fail(f"PG-179 warehouse saturation safety rule missing: {required_rule}")
+
+pg179_script = read(ROOT / "Scripts" / "run_warehouse_saturation_train.ps1")
+for marker in [
+    "WAREHOUSE_SATURATION_STAGE_START",
+    "Get-FileHash -LiteralPath $path -Algorithm SHA256",
+    "STAGED_RECEIPT_VERIFIED",
+    "PUBLIC_LANE_PENDING_STAGE",
+    "MANUAL_OR_AUTH_SOURCE_PENDING",
+    "No car becomes READY_FOR_IMPORT from this report.",
+]:
+    if marker not in pg179_script:
+        fail(f"PG-179 warehouse saturation orchestrator guard missing: {marker}")
+
+
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
 pg164_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
