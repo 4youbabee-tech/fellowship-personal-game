@@ -1,3 +1,9 @@
+## 2026-09-27 - Consolidate stale-base prep branches into warehouse train
+
+To keep the long production queue orderly, the substantive preparation work from PR #119 and PR #120 is folded into the 20-car warehouse saturation train based on current `develop`. This avoids re-running duplicated stale-base CI while preserving the prepared architecture, character, audio and fauna intake lanes.
+
+Status: **CONSOLIDATED / OLD PREP PRS SUPERSEDED**.
+
 ## 2026-09-27 - 20-car warehouse saturation train
 
 Owner requested aggressive but orderly warehouse saturation and a much longer production sequence.
