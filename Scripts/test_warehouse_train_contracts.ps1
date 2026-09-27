@@ -42,6 +42,7 @@ try {
         provider = "TEST_PROVIDER"
         files = @(
             [ordered]@{ asset_id = "GOOD_ARCHIVE"; file = $goodArchive; sha256 = $goodHash; source_page = "https://example.test/good" },
+            [ordered]@{ asset_id = "BAD_ARCHIVE"; file = $badArchive; sha256 = $badHash; source_page = "https://example.test/bad" },
             [ordered]@{ asset_id = "BAD_ARCHIVE"; file = $badArchive; sha256 = $badHash; source_page = "https://example.test/bad" }
         )
     }
@@ -72,10 +73,14 @@ try {
     if ([int]$report.inventory_file_count -lt 1) {
         throw "Valid archive was not inventoried after the corrupt archive was isolated."
     }
-    if ([int]$report.blocked.Count -lt 1 -or [int]$report.manual_queue_count -lt 1) {
-        throw "Corrupt archive was not recorded in the blocked/manual queue."
+    if ([int]$report.blocked.Count -lt 2 -or [int]$report.manual_queue_count -ne 1) {
+        throw "Corrupt archive rows were not isolated and deduplicated in the manual queue."
     }
-    Write-Host "WAREHOUSE_TRAIN_CONTRACT_TEST_PASS valid_archive_continued=true corrupt_archive_manual_queue=true query_extension=true"
+    $manualItem = @($report.manual_queue)[0]
+    if ([int]$manualItem.seen_count -ne 2) {
+        throw "Deduplicated manual queue item must preserve its source-record count."
+    }
+    Write-Host "WAREHOUSE_TRAIN_CONTRACT_TEST_PASS valid_archive_continued=true corrupt_archive_manual_queue=true duplicate_records_preserved=true query_extension=true"
 }
 finally {
     if (Test-Path -LiteralPath $testRoot -PathType Container) {

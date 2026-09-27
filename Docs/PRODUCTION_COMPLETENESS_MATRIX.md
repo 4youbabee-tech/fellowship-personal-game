@@ -1540,7 +1540,7 @@ Whenever a chapter, route, enemy, biome, mechanic or major story beat changes:
 | Raw staged warehouse | Run #36349636709: 13,377 payload files / 5,426,414,977 bytes / 14 receipts / 667 receipt records / 215 duplicate hash groups | Inventory only; record counts include reuse and are not unique QC-passed assets. |
 | Coverage | Saturation report: 11 staged cars, 2 public-pending, 6 manual-pending | Coverage summary only; no promotion. |
 | Quaternius | 0 files, 17 unresolved; 13 packs have recorded page license while 4 lack item-level license capture | Continue permitted direct public download discovery; licensed packs remain un-staged until receipt/hash. |
-| Critical preparation | 667 receipt rows verified; 23,774 classified/extracted entries; 3 archive-extraction blocks; 0 invalid receipt JSON | Failed because per-item blocks stopped the train. Code now routes blocked/pending/receipt-review items to manual queue; exact-head Windows proof pending. |
+| Critical preparation | 667 receipt rows verified; 23,774 classified/extracted entries; 3 archive-extraction records across 2 distinct archives; 0 invalid receipt JSON | Failed because per-item blocks stopped the train. Code now routes blocked/pending/receipt-review items to manual queue; exact-head Windows proof pending. |
 | P1C01 materials and world support | Poly Haven/ambientCG, Kenney, KayKit, and OpenGameArt receipt stock exists | Continue source/format/technical QC. No materials or packs are marked READY_FOR_IMPORT by receipt presence alone. |
 | Runtime acceptance | Unreal #1022 passed build, import, automation, startup, headless route/story checks, package and executable startup at its recorded head | Visual, target-device, performance, and human acceptance remain unclaimed. |
 

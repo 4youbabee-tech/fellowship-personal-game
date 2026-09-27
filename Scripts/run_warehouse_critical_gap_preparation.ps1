@@ -242,6 +242,20 @@ foreach($entry in $badReceipts){
   $manualQueue += [ordered]@{queue="RECEIPT_REVIEW";receipt=$entry.receipt;reason=$entry.reason;detail=$entry.detail}
 }
 
+$manualQueueIndex=@{}
+$deduplicatedManualQueue=@()
+foreach($entry in $manualQueue){
+  $keyParts=@($entry.queue,$entry.provider,$entry.asset_id,$entry.path,$entry.reason,$entry.receipt)
+  $key=(($keyParts|ForEach-Object{if($null -eq $_){""}else{[string]$_}}) -join "|")
+  if($manualQueueIndex.ContainsKey($key)){
+    $manualQueueIndex[$key].seen_count=[int]$manualQueueIndex[$key].seen_count+1
+    continue
+  }
+  $entry.seen_count=1
+  $manualQueueIndex[$key]=$entry
+  $deduplicatedManualQueue += $entry
+}
+$manualQueue=$deduplicatedManualQueue
 $report.outcome=if($manualQueue.Count -gt 0){"PASS_WITH_MANUAL_QUEUE"}else{"PASS"}
 $report.manual_queue_count=$manualQueue.Count
 $report.manual_queue=$manualQueue
