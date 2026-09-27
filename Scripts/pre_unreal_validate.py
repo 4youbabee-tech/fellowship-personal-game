@@ -603,7 +603,7 @@ if "FindFilesRecursive(MeshFiles, *SourceRoot" in production_import_hygiene:
 # PG-184: generated UE packages are transactionally isolated before repeat imports.
 ci_import_launcher = read(ROOT / "Scripts" / "ci_import_production_assets.cmd")
 pg184_import_markers = (
-    "for /f \\"delims=\\" %%I in ('whoami') do set \\"RUNNER_IDENTITY=%%I\\"",
+    'RUNNER_IDENTITY=%%I',
     'set "PRODUCTION_DIR=',
     'set "BACKUP_DIR=',
     'icacls "%PRODUCTION_DIR%" /grant "%RUNNER_IDENTITY%:(OI)(CI)M" /T /C',
