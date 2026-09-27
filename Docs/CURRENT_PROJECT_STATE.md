@@ -1,3 +1,13 @@
+## 2026-09-27 - Warehouse provider-resolution train V3 prepared
+
+- V3 is stacked behind the critical-gap V2 branch and resolves provider/access blockers rather than adding another uncontrolled source list.
+- `WarehouseProviderResolutionTrainV3.json` defines 20 bounded resolution cars with at most three preferred and three fallback providers per technical slot.
+- `run_warehouse_provider_resolution.ps1` reads the live provider registry and existing warehouse receipts, classifies each provider as auto-capable, manual-only, auth-required, review-required or reference-only, and selects an already-staged/auto-capable provider when available.
+- It never converts login/OAuth/purchase/marketplace/reference lanes into automatic downloads and never promotes READY_FOR_IMPORT.
+- Warehouse Stage is extended so provider-resolution reporting runs after V1 saturation and V2 critical-gap preparation.
+- Current Quaternius V4 license capture opens staging attempts for 13 high-value packs, while store/interactive-only download resolution remains fail-closed.
+- Evidence boundary: **PROVIDER-RESOLUTION PREPARATION / exact-head validation pending**.
+
 ## 2026-09-27 - Critical Quaternius license blockers reduced
 
 - Official Quaternius pack pages were rechecked for the highest-value unresolved character/animation/fauna/creature/architecture/nature/prop candidates.
