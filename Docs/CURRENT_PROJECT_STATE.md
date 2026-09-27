@@ -1,3 +1,14 @@
+## 2026-09-27 - Runner root-cause architecture fix: remove service mode entirely
+
+- Root cause confirmed from owner-side Windows state plus Unreal #1000: two runner ownership paths coexisted. The legacy `actions.runner.*` service was **Running** and owned `Runner.Listener.exe` as `NT AUTHORITY\NETWORK SERVICE` while the watchdog task was also Running.
+- This is now treated as an architecture defect, not a daily repair task.
+- New permanent design: `actions.runner.*` is deleted by `Scripts/runner_service_guard.ps1`; if Windows temporarily retains a pending-deletion entry it must be **Stopped + Disabled**.
+- `install_runner_watchdog.ps1` installs the service guard beside the watchdog, removes service ownership, then starts the interactive-user watchdog.
+- `runner_watchdog.ps1` invokes the service guard at boot and every supervision loop, so a recreated service-mode runner is automatically stopped/deleted again.
+- `verify_runner_session.ps1` accepts only service absent or stopped-disabled plus the interactive-user listener/worker topology.
+- PG-145B now statically guards the permanent service-exclusion contract.
+- Physical machine repair still requires one elevated owner-side installer run; until that succeeds, current state is **ROOT-FIX SOURCE-IMPLEMENTED / DEVICE REPAIR PENDING**. No compile/PIE/device/visual/performance acceptance is implied.
+
 ## 2026-09-27 - Permanent runner service-mode elimination
 
 - Root cause class confirmed by live evidence: the legacy `actions.runner.*` Windows service can be started under `NT AUTHORITY\NETWORK SERVICE` while the interactive watchdog also exists, creating competing runner ownership and repeated pre-build failures.
