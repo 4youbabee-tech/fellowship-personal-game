@@ -47,7 +47,8 @@ jobs:
       - ue4-27
     timeout-minutes: 60
     env:
-      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      TARGET_SHA: ${{ github.sha }}
+      BASE_SHA: ${{ github.event.before }}
 
     steps:
       - name: Checkout exact warehouse head into isolated temp source
@@ -98,49 +99,70 @@ jobs:
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\verify_runner_session.ps1"
 
+      - name: Classify warehouse delta
+        shell: cmd
+        env:
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\classify_warehouse_validation.ps1"
+
       - name: Stage Poly Haven CC0 batch
+        if: env.WH_STAGE_POLYHAVEN == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_polyhaven_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAcquisitionBatchV1.json"
 
       - name: Stage OpenGameArt CC0 audio batch
+        if: env.WH_STAGE_OGA == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_opengameart_audio.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAudioAcquisitionBatchV1.json"
 
       - name: Stage Quaternius support batch
+        if: env.WH_STAGE_QUATERNIUS == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseQuaterniusAcquisitionBatchV1.json"
 
       - name: Stage ambientCG material batch
+        if: env.WH_STAGE_AMBIENTCG == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAmbientCGAcquisitionBatchV1.json"
 
       - name: Stage ambientCG trilogy-region batch
+        if: env.WH_STAGE_AMBIENTCG_TRILOGY == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAmbientCGTrilogyBatchV2.json"
 
       - name: Stage Kenney support packs
+        if: env.WH_STAGE_KENNEY == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_kenney_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseKenneyAcquisitionBatchV1.json"
 
       - name: Stage KayKit public GitHub support packs
+        if: env.WH_STAGE_KAYKIT == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_kaykit_github_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseKayKitGitHubAcquisitionBatchV1.json"
 
       - name: Audit persistent warehouse inventory
+        if: env.WH_RUN_AUDIT == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\audit_warehouse_inventory.ps1"
 
       - name: Build 20-car warehouse saturation coverage report
+        if: env.WH_RUN_SATURATION == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_saturation_train.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseSaturationTrainV1.json"
 
       - name: Prepare critical warehouse gaps into intake QC
+        if: env.WH_RUN_PREP == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_critical_gap_preparation.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseCriticalGapPreparationTrainV2.json"
 
       - name: Resolve provider access and safe fallback lanes
+        if: env.WH_RUN_PROVIDER_RESOLUTION == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_provider_resolution.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseProviderResolutionTrainV3.json"
+
+      - name: Summarize selective warehouse execution
+        shell: cmd
+        run: 'echo WAREHOUSE_SELECTIVE_EXECUTION_PASS head=%TARGET_SHA% base=%BASE_SHA%'
 
       - name: Show persistent warehouse footprint
         shell: cmd
