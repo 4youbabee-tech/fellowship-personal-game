@@ -1,3 +1,11 @@
+## 2026-09-27 - Expanded P1C01 16-surface material intake train
+
+- Authorized material intake scope: 16/16 Poly Haven surface candidates from the P1C01 warehouse queue.
+- Preparation contract: PNG/TGA base color + scalar Roughness/Metallic/Specular + SHA256 receipt; BMP remains forbidden.
+- Pre-Unreal now fails closed on missing queue authority, duplicates, out-of-range scalars, incomplete low-spec bindings or missing intake guards.
+- Runtime-cost boundary remains unchanged: one albedo texture sample per prepared material, no density increase, no new synchronous heavy runtime loading.
+- Validation status: **SOURCE-IMPLEMENTED / exact-head UE4.27 build-import pending** because Unreal #915 is blocked before build by runner-health watchdog state, not by a compiler/import result.
+
 ## 2026-09-27 - P1C01 Shire material surface-set production batch
 
 - Project-owned Shire material bank is now explicitly defined in `Data/P1C01ShireMaterialSurfaceSetV1.json`.
