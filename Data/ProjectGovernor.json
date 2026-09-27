@@ -838,6 +838,7 @@
         "Source/ShireJourney/BreePrototypeWorldBuilder.cpp",
         "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
         "Source/ShireJourney/ShireNPC.cpp",
+        "Source/ShireJourney/Private/Characters/ShireNPC.cpp",
         "Source/ShireJourney/ShireAmbientNPC.cpp"
       ],
       "implementation_refs": [
@@ -849,7 +850,8 @@
         "Data/CharacterPopulationPlan.json records chapter cast coverage and visual tiers",
         "Major named proxies now carry modular identity pieces such as cloaks, weapons, shields, quivers, beards and headpieces so the cast is visually distinguishable before final rigged assets.",
         "CP46 adds dedicated production meshes for Black Riders, Orcs, Uruk-hai and Cave Troll while preserving existing combat/quest gating",
-        "CharacterProductionMatrix now records existing project-owned dedicated identity foundations separately from final rigged/accepted characters."
+        "CharacterProductionMatrix now records existing project-owned dedicated identity foundations separately from final rigged/accepted characters.",
+        "Companion formation following uses collision-aware catch-up, obstacle sliding and actual displacement for fallback locomotion so blocked characters do not embed in scenery or animate against a wall."
       ],
       "missing_work": [
         "Dedicated production meshes/rigged characters for Sam, Merry, Pippin, Aragorn, Boromir, Legolas, Gimli and other non-Frodo/Gandalf major characters",
