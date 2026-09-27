@@ -91,27 +91,36 @@ foreach($item in @($manifest.immediate_open_source_items)) {
   $dest=Join-Path $destDir ("TX_"+[string]$item.id+"_BaseColor"+[IO.Path]::GetExtension($base).ToLowerInvariant())
   Copy-Item -LiteralPath $base -Destination $dest -Force
   $mtl=Join-Path $destDir (([string]$item.material_name)+".mtl")
+  $specular = 0.10
+  if ($null -ne $item.specular) { $specular = [double]$item.specular }
+  $ks = [Math]::Max(0.005, [Math]::Min(0.1625, $specular / 4.0))
+  $ksText = $ks.ToString("0.0000", [Globalization.CultureInfo]::InvariantCulture)
+
   @(
     "# Generated P1C01 external material intake.",
     "newmtl "+[string]$item.material_name,
     "Kd 1.0 1.0 1.0",
-    "Pr "+[string]$item.roughness,
-    "Pm "+[string]$item.metallic,
+    "Pr "+([double]$item.roughness).ToString("0.0000", [Globalization.CultureInfo]::InvariantCulture),
+    "Pm "+([double]$item.metallic).ToString("0.0000", [Globalization.CultureInfo]::InvariantCulture),
+    "Ks $ksText $ksText $ksText",
     "map_Kd "+[IO.Path]::GetFileName($dest),
     ""
   ) | Set-Content -LiteralPath $mtl -Encoding ASCII
   $prepared += [ordered]@{
     id=[string]$item.id; provider=[string]$item.provider; asset_slug=[string]$item.asset_slug;
     material_name=[string]$item.material_name; basecolor_file=$dest;
+    roughness=[double]$item.roughness; metallic=[double]$item.metallic; specular=$specular;
     basecolor_sha256=(Get-FileHash -LiteralPath $dest -Algorithm SHA256).Hash.ToLowerInvariant();
     mtl_file=$mtl; mtl_sha256=(Get-FileHash -LiteralPath $mtl -Algorithm SHA256).Hash.ToLowerInvariant();
     state="INTAKE_QC_PREPARED"
   }
 }
 $report=[ordered]@{
-  schema_version=1; wave_id=[string]$manifest.wave_id; generated_at_utc=[DateTime]::UtcNow.ToString("o");
+  schema_version=2; wave_id=[string]$manifest.wave_id; generated_at_utc=[DateTime]::UtcNow.ToString("o");
+  requested_count=@($manifest.immediate_open_source_items).Count;
+  prepared_count=$prepared.Count; pending_count=$pending.Count; blocked_count=$blocked.Count;
   prepared=$prepared; pending_source=$pending; blocked_technical=$blocked;
-  rule="Missing warehouse candidates are pending, not a failure. Dangerous/corrupt/BMP payloads remain blocking."
+  rule="Missing warehouse candidates are pending, not a failure. Dangerous/corrupt/BMP payloads remain blocking. Prepared materials carry bounded scalar Roughness/Metallic/Specular plus one PNG/TGA base-color candidate."
 }
 $receiptPath=Join-Path $OutputRoot "p1c01_material_intake_receipt.json"
 $report | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $receiptPath -Encoding UTF8
