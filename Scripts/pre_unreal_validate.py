@@ -2835,9 +2835,16 @@ for pg184_symbol in [
     "WH_STAGE_AMBIENTCG",
     "WH_STAGE_KAYKIT",
     "WH_RUN_PREP",
+    "SHIRE_WAREHOUSE_SOURCE",
+    "WAREHOUSE_CLASSIFY_SOURCE",
+    "WAREHOUSE_CHANGED_IGNORED",
 ]:
     if pg184_symbol not in pg184_classifier:
         fail(f"PG-184 warehouse delta classifier missing: {pg184_symbol}")
+if "- 'Scripts/classify_warehouse_validation.ps1'" not in pg184_workflow:
+    fail("PG-184 classifier changes must trigger one post-merge Warehouse control-plane proof")
+if '".github/workflows/warehouse-stage.yml" {' not in pg184_classifier or "$flags.WH_RUN_AUDIT=$true" not in pg184_classifier:
+    fail("PG-184 warehouse workflow-only changes must select bounded audit proof instead of full staging")
 
 # PG-185: keep strict exact-head Unreal proof while preserving incremental build products.
 pg185_unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
