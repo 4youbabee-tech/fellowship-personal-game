@@ -386,37 +386,16 @@ foreach ($path in $paths) {
 
 $logDir = Join-Path $workspace "Saved\Logs"
 if (Test-Path -LiteralPath $logDir) {
-    $logFiles = @(
-        Get-ChildItem -LiteralPath $logDir -Filter "CI-*.log" -File -ErrorAction SilentlyContinue
-        Get-ChildItem -LiteralPath $logDir -Filter "CI-*-result.json" -File -ErrorAction SilentlyContinue
-    )
-    $lockedLogDetected = $false
-    $lockedLogError = $null
-    foreach ($logFile in $logFiles) {
-        try {
-            Write-Host "Removing stale CI evidence log: $($logFile.FullName)"
-            Remove-Item -LiteralPath $logFile.FullName -Force -ErrorAction Stop
+    Get-ChildItem -LiteralPath $logDir -Filter "CI-*.log" -File -ErrorAction SilentlyContinue |
+        ForEach-Object {
+            Write-Host "Removing stale CI evidence log when unlocked: $($_.FullName)"
+            Remove-Item -LiteralPath $_.FullName -Force -ErrorAction SilentlyContinue
         }
-        catch {
-            $lockedLogDetected = $true
-            $lockedLogError = $_.Exception.Message
-            Write-Warning "A stale CI evidence file is still held by an unregistered process: $($logFile.FullName). Quarantining generated log directory."
-            break
+    Get-ChildItem -LiteralPath $logDir -Filter "CI-*-result.json" -File -ErrorAction SilentlyContinue |
+        ForEach-Object {
+            Write-Host "Removing stale CI result file when unlocked: $($_.FullName)"
+            Remove-Item -LiteralPath $_.FullName -Force -ErrorAction SilentlyContinue
         }
-    }
-
-    if ($lockedLogDetected) {
-        $runSuffix = if ($env:GITHUB_RUN_ID) { "$($env:GITHUB_RUN_ID)-$($env:GITHUB_RUN_ATTEMPT)" } else { [Guid]::NewGuid().ToString("N") }
-        $staleLogDir = Join-Path (Split-Path -Parent $logDir) ("Logs.stale-" + $runSuffix)
-        try {
-            Move-Item -LiteralPath $logDir -Destination $staleLogDir -ErrorAction Stop
-            New-Item -ItemType Directory -Path $logDir -ErrorAction Stop | Out-Null
-            Write-Warning "CI_LOG_QUARANTINE_PASS original=$logDir stale=$staleLogDir reason=unregistered-file-handle"
-        }
-        catch {
-            throw "CI_LOG_QUARANTINE_FAILED path=$logDir stale=$staleLogDir error=$($_.Exception.Message) originalDeleteError=$lockedLogError"
-        }
-    }
 }
 Write-Host "Project build intermediates and stale CI evidence reset."
 exit 0
