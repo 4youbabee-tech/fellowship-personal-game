@@ -2853,6 +2853,46 @@
         "REQ-STABILITY-003",
         "REQ-WAREHOUSE-001"
       ]
+    },
+    {
+      "id": "REQ-GITHUB-001",
+      "title": "Use GitHub Pro capabilities without weakening project governance or low-spec production discipline",
+      "category": "DeveloperPlatform",
+      "priority": "HIGH",
+      "status": "PARTIAL",
+      "origin": "Owner upgraded the personal GitHub account and explicitly requested that every materially useful GitHub Pro benefit be identified, used where appropriate, and recorded in the Project Governor.",
+      "intent": "Exploit GitHub Pro for stronger private-repository controls, additional hosted CI reserve, development tooling and support while keeping the UE4.27 Windows build lane self-hosted, avoiding duplicate authorities, and preventing paid-feature usage from creating cost or workflow regressions.",
+      "implementation_refs": [
+        "Personal GitHub account 4youbabee-tech owns the private fellowship-personal-game repository.",
+        "Owner-provided billing evidence shows a USD 4 charge from GITHUB, INC.; USD 4/month matches GitHub's published GitHub Pro monthly price. The connected GitHub tool does not expose the Billing 'Current plan' field, so the plan label itself remains UI-confirmation pending.",
+        "GitHub Pro published allowance: 3,000 GitHub-hosted Actions minutes/month for private repositories; self-hosted runner execution remains free and does not consume that allowance.",
+        "GitHub Pro published allowance: 180 Codespaces core-hours/month and 20 GB-month Codespaces storage for personal accounts.",
+        "GitHub Pro published allowance: 2 GB GitHub Packages storage and 10 GB/month Packages data transfer; current GitHub Actions artifact storage allowance is 1 GB.",
+        "GitHub Pro enables advanced private-repository controls including protected branches, required/multiple pull-request reviewers, code owners, auto-linked references, private-repository Pages/Wikis availability, and repository insights graphs.",
+        "GitHub Pro includes GitHub Support via email.",
+        "GitHub Pro does not include Copilot Pro and does not increase the published Git LFS 10 GB storage / 10 GB bandwidth allowance versus personal Free."
+      ],
+      "missing_work": [
+        "Owner/UI confirmation of Settings > Billing and licensing > Current plan = GitHub Pro, because the connected GitHub API surface available to this project does not expose the current-plan field.",
+        "Enable protected-branch rules for develop and main after the current runtime train is safely integrated: block force-push/deletion and require appropriate CI status checks without requiring a second human reviewer while the project has a single maintainer.",
+        "Set billing budgets/alerts so optional hosted Actions, Codespaces and Packages cannot create accidental overage.",
+        "Add CODEOWNERS enforcement only when a second trusted maintainer/reviewer exists; do not create a self-review deadlock.",
+        "Use Codespaces only for lightweight repository work (JSON/docs/Python/static review), not UE4.27 Windows compilation or warehouse payload work.",
+        "Use Packages only for small versioned developer tooling/build metadata when it clearly replaces ad-hoc distribution; do not upload the multi-GB asset warehouse into the 2 GB Packages allowance."
+      ],
+      "acceptance_criteria": [
+        "develop and main receive non-destructive branch protection appropriate to the single-maintainer workflow.",
+        "UE4.27 C++ build/import/runtime/package validation remains on the supervised self-hosted Windows runner unless a separately proven better lane exists.",
+        "GitHub-hosted Actions quota is treated as a reserve for isolated lightweight jobs, not as justification to move expensive Unreal work off the proven runner.",
+        "Codespaces/Packages usage is opt-in, budgeted and limited to workloads that materially benefit the project.",
+        "Pages/Wiki do not become a second project authority; ProjectGovernor remains the sole management authority and private/copyright-sensitive project material is not published accidentally.",
+        "No Pro feature may weaken exact-head validation, asset provenance, async loading, pooling, low-spec performance gates or canon controls."
+      ],
+      "dependencies": [
+        "REQ-MEM-001",
+        "REQ-EXEC-002",
+        "REQ-STABILITY-003"
+      ]
     }
   ],
   "hard_invariants": [
@@ -3823,6 +3863,29 @@
         "Docs/CI_ARCHITECTURE_REASSESSMENT_2026-09-26.md",
         "Epic UBT adaptive Git working-set guidance and GitHub Actions concurrency guidance"
       ]
+    },
+    {
+      "id": "DEC-048",
+      "title": "Use GitHub Pro as a private-repository safety and tooling multiplier without re-architecting the proven Unreal lane",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-GITHUB-001",
+        "REQ-STABILITY-003",
+        "REQ-EXEC-002"
+      ],
+      "resolution": "Adopt GitHub Pro benefits selectively where they materially improve Shire Journey: prioritize private branch protection/status-check enforcement and repository insights; keep full UE4.27 validation on the free self-hosted Windows runner; reserve the 3,000 hosted Actions minutes for lightweight isolated automation if hosted reliability is proven; use Codespaces only for non-engine repository work; use Packages only for small tooling; keep Pages/Wiki non-authoritative and unpublished for private project material unless the owner explicitly changes that policy.",
+      "implementation_contract": [
+        "Do not move Unreal Build Validation to GitHub-hosted runners merely to consume the Pro minute allowance.",
+        "When branch protection is configured, develop/main must block force-push and deletion and should require the appropriate exact-head CI checks. Human review is not mandatory while there is only one maintainer.",
+        "Do not require CODEOWNER approval from the PR author; enable reviewer enforcement only after a second trusted maintainer exists.",
+        "Keep hosted Actions/Codespaces/Packages behind budgets and alerts; no silent paid overage.",
+        "Repository Insights may be used for CI/commit/contributor trend review without changing production authority.",
+        "GitHub Pages and Wiki must not duplicate ProjectGovernor/CURRENT_PROJECT_STATE or expose private/copyright-sensitive game material.",
+        "GitHub Pro is separate from GitHub Copilot Pro; no Copilot entitlement is assumed from this subscription."
+      ],
+      "rationale": "The project is a private personal repository with heavy UE4.27 Windows validation and a supervised self-hosted runner. Pro's strongest immediate value is private-repository governance and additional optional hosted/tooling capacity, not replacing the engine/device lane. The policy therefore uses the new capabilities without reintroducing CI cost, merge deadlocks or a second source of truth.",
+      "evidence_boundary": "USER BILLING EVIDENCE + OFFICIAL GITHUB PLAN DOCUMENTATION + CONNECTED-ACCOUNT/REPOSITORY FACTS. The connected tool confirms the personal account/repository but cannot read the Billing current-plan label; therefore the Pro label itself is not claimed as API-verified until the Billing UI is observed.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
@@ -6221,5 +6284,55 @@
     ],
     "verification": "Automated compile and headless checks remain useful but cannot establish human gameplay quality. Seek real PIE and device evidence through available project workflows or developer/operator reports; do not assign a playtest obligation to the owner.",
     "evidence_boundary": "The supplied prose simulation is a proposal, not an actual observed playthrough. LivingWorldDirector already ticks every 0.35 seconds; this patch reduces maintenance frequency and duplicate NPC player lookup only."
+  },
+  "github_pro_capability_policy_2026_09_27": {
+    "account_type": "PERSONAL",
+    "account_login": "4youbabee-tech",
+    "repository": "4youbabee-tech/fellowship-personal-game",
+    "repository_visibility": "private",
+    "subscription_evidence_status": "USD_4_GITHUB_INC_CHARGE_MATCHES_PUBLISHED_PRO_MONTHLY_PRICE__BILLING_CURRENT_PLAN_UI_NOT_EXPOSED_TO_CONNECTED_TOOL",
+    "published_pro_capabilities": {
+      "github_actions_private_minutes_per_month": 3000,
+      "github_actions_artifact_storage_gb": 1,
+      "codespaces_core_hours_per_month": 180,
+      "codespaces_storage_gb_month": 20,
+      "packages_storage_gb": 2,
+      "packages_data_transfer_gb_per_month": 10,
+      "private_repo_advanced_tools": [
+        "protected branches",
+        "required pull request reviewers",
+        "multiple pull request reviewers",
+        "code owners",
+        "auto-linked references",
+        "GitHub Pages availability",
+        "Wikis",
+        "repository insights graphs"
+      ],
+      "support": "GitHub Support via email",
+      "not_included_or_not_upgraded": [
+        "GitHub Copilot Pro is a separate product",
+        "Git LFS published allowance remains 10 GB storage and 10 GB bandwidth for personal Pro"
+      ]
+    },
+    "shire_journey_usage_policy": {
+      "immediate_priority": [
+        "protect develop/main against destructive pushes/deletion and require suitable CI checks when repository settings access is available",
+        "use repository insights for engineering/CI trend inspection",
+        "retain self-hosted Windows UE4.27 validation because self-hosted Actions do not consume hosted-minute allowance"
+      ],
+      "conditional_use": [
+        "use hosted Actions reserve only for lightweight isolated jobs after reliability is proven",
+        "use Codespaces for docs/data/Python/static repository work only",
+        "use Packages for small versioned tooling or metadata only",
+        "enable CODEOWNERS review enforcement only after a second trusted reviewer exists"
+      ],
+      "intentionally_not_default": [
+        "do not publish private project material through GitHub Pages",
+        "do not use Wiki as a competing project authority",
+        "do not move the multi-GB asset warehouse into GitHub Packages",
+        "do not assume Copilot Pro"
+      ],
+      "cost_control": "Budgets and 90/100 percent usage alerts should be configured before any paid-overage-capable optional service is relied upon."
+    }
   }
 }
