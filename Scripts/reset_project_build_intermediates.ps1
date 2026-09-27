@@ -219,30 +219,7 @@ foreach ($path in $paths) {
                 $candidateOwner = if ($ownerResult.ReturnValue -eq 0) { $ownerResult.Domain + '\' + $ownerResult.User } else { '' }
                 $parent = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $candidate.ParentProcessId) -ErrorAction SilentlyContinue
                 $commandLine = [string]$candidate.CommandLine
-                $engineMatch = $candidate.ExecutablePath -match '(?i)\\UE_4\.27\\Engine\\Binaries\\Win64\\UE4Editor-Cmd\.exe
-    }
-
-    if (Test-Path -LiteralPath $fullPath) {
-        throw "Stale project build product still exists after one cleanup attempt: $fullPath"
-    }
-}
-
-$logDir = Join-Path $workspace "Saved\Logs"
-if (Test-Path -LiteralPath $logDir) {
-    Get-ChildItem -LiteralPath $logDir -Filter "CI-*.log" -File -ErrorAction SilentlyContinue |
-        ForEach-Object {
-            Write-Host "Removing stale CI evidence log: $($_.FullName)"
-            Remove-Item -LiteralPath $_.FullName -Force
-        }
-    Get-ChildItem -LiteralPath $logDir -Filter "CI-*-result.json" -File -ErrorAction SilentlyContinue |
-        ForEach-Object {
-            Write-Host "Removing stale CI result file: $($_.FullName)"
-            Remove-Item -LiteralPath $_.FullName -Force
-        }
-}
-Write-Host "Project build intermediates and stale CI evidence reset."
-exit 0
-
+                $engineMatch = $candidate.ExecutablePath -match '(?i)\\UE_4\.27\\Engine\\Binaries\\Win64\\UE4Editor-Cmd\.exe$'
                 $projectMatch = $commandLine.IndexOf($projectPath, [StringComparison]::OrdinalIgnoreCase) -ge 0
                 $ciFlags = ($commandLine -match '(?i)(?:^|\s)-AuditPendingTransition(?:\s|$)') -and ($commandLine -match '(?i)(?:^|\s)-ShireCIAssetReadyDelay=2\.0(?:\s|$)')
                 $orphanCiCommandlet = ($candidate.ProcessId -eq $owner.ProcessId) -and ($observedStartFileTime -eq $owner.ProcessStartFileTime) -and ($candidateOwner -ieq $identity) -and $engineMatch -and $projectMatch -and $ciFlags -and (-not $parent) -and ($observedStartFileTime -lt $cleanupStartFileTime)
