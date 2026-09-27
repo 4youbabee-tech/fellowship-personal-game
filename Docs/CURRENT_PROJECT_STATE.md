@@ -1,3 +1,9 @@
+## 2026-09-27 - Orphan commandlet lock identified in Unreal #999
+
+- Exact-head Unreal #999 on `d34deac` passed the fresh Content-to-runner-temp move probe. The generated Production rename failed before C++ compilation. The corrected Windows Restart Manager scan identified `UE4Editor` PID 11336 holding generated files among 605 scanned. The editor-close step had just said that same PID had exited after `taskkill` reported no running instance.
+- Root cause of the current quarantine failure: the close guard excluded a PID from its final process check after `taskkill` said it was absent, even though the process and its open files persisted. The guard now waits up to 30 seconds and checks all `UE4Editor` and `UE4Editor-Cmd` processes with no PID exception; a remaining process fails the gate before C++ compilation. The fresh move probe also ruled out the destination volume/parent as the cause for #999.
+- Exact-head revalidation is pending. Asset import, Automation QA, runtime audits, packaging and packaged startup remain unproven. No PIE, device, visual or performance acceptance is claimed.
+
 ## 2026-09-27 - Generated production quarantine root diagnosis
 
 - Unreal #993, #994 and #998 compiled UE4.27.2 C++; each failed before import with `Access is denied` moving ignored generated `Content/Production`. #994 proved that relocating the destination to `%RUNNER_TEMP%` on the same drive does not resolve the failure.

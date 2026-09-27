@@ -1,3 +1,8 @@
+## 2026-09-27 - #999 orphan process root cause
+
+- Unreal #999 proved a fresh directory moves from Content to `%RUNNER_TEMP%`, while generated `Content/Production` cannot be renamed. Restart Manager identified orphan `UE4Editor` PID 11336 holding generated files. The editor-close guard incorrectly exempted the PID from its final check after `taskkill` said it had exited.
+- The guard now checks every editor process for up to 30 seconds, without that exemption, and fails before build if the process persists. Exact-head verification is pending; import, Automation, runtime, packaging and packaged startup remain unproven. No PIE, device, visual or performance acceptance is claimed.
+
 ## 2026-09-27 - Generated production quarantine root diagnosis
 
 - Unreal #993, #994 and #998 compiled C++; each failed before production asset import with `Access is denied` on the generated `Content/Production` directory move. #994 showed that the same-drive `%RUNNER_TEMP%` destination did not resolve it.
