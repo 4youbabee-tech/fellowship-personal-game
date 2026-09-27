@@ -1,3 +1,15 @@
+## 2026-09-28 - CI root repair V2: split proof lanes and preserve build state
+
+- Production remains frozen while infrastructure is repaired.
+- Pre-Unreal static/policy validation is moved to GitHub-hosted `windows-latest`; it no longer consumes or queues behind the UE4 self-hosted runner.
+- Warehouse Stage remains self-hosted for access to the persistent warehouse, but no longer runs on pull-request synchronize.
+- New `Scripts/classify_warehouse_validation.ps1` selects only provider/phases affected by the landed `develop` delta; unknown/manual cases fail safe to the full warehouse path.
+- Warehouse-only scripts/data are excluded from Unreal Build Validation triggers.
+- Unreal validation keeps exact-head/fail-safe semantics but preserves `Intermediate/Build/Win64` and `Binaries/Win64` by default.
+- Clean intermediate reset is now requested only for `.Build.cs`, `.Target.cs`, or `ShireJourney.uproject` changes; compiler-pressure failures still get one bounded clean retry inside `ci_build_unreal.cmd`.
+- PG-184/PG-185 statically prevent regression to PR-synchronize warehouse runs, repeated ZIP extraction, self-hosted Pre-Unreal, or unconditional Unreal intermediate wipes.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. Runtime/gameplay acceptance is unchanged.
+
 ## 2026-09-28 - Production freeze for CI/warehouse root repair
 
 - Owner explicitly stopped active production work after repeated Warehouse #269/#270 failures consumed ~12-13 minutes each.
