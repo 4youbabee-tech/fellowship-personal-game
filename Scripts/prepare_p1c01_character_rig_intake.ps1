@@ -1,0 +1,75 @@
+param(
+  [string]$ManifestPath = "Data/P1C01CharacterRigAnimationPrepV1.json",
+  [string]$WarehouseRoot = "C:\actions-runner\_warehouse\ShireJourney",
+  [string]$OutputRoot = ""
+)
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "Stop"
+$ProjectRoot = Split-Path $PSScriptRoot -Parent
+if ([string]::IsNullOrWhiteSpace($OutputRoot)) { $OutputRoot = Join-Path $ProjectRoot "Saved\CharacterIntake\P1C01" }
+if (-not (Test-Path -LiteralPath $ManifestPath)) {
+  $candidate = Join-Path $ProjectRoot $ManifestPath
+  if (Test-Path -LiteralPath $candidate) { $ManifestPath = $candidate }
+}
+if (-not (Test-Path -LiteralPath $ManifestPath)) { throw "Character intake manifest missing: $ManifestPath" }
+$manifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
+New-Item -ItemType Directory -Path $OutputRoot -Force | Out-Null
+
+$dangerous=@(".exe",".msi",".cmd",".bat",".ps1",".vbs",".js",".scr",".com")
+$receipts=@()
+if (Test-Path -LiteralPath $WarehouseRoot) {
+  foreach($rf in @(Get-ChildItem -LiteralPath $WarehouseRoot -Recurse -File -Filter "receipt_*.json")) {
+    try { $r=Get-Content -LiteralPath $rf.FullName -Raw | ConvertFrom-Json } catch { continue }
+    foreach($row in @($r.files)) {
+      $receipts += [pscustomobject]@{
+        provider=[string]$r.provider; asset_id=[string]$row.asset_id; asset_slug=[string]$row.asset_slug;
+        file=[string]$row.file; sha256=([string]$row.sha256).ToLowerInvariant(); receipt=$rf.FullName
+      }
+    }
+  }
+}
+
+$prepared=@(); $pending=@(); $blocked=@()
+foreach($item in @($manifest.external_candidates)) {
+  if ([string]$item.state -ne "AUTHORIZED_FOR_STAGING") {
+    $pending += [ordered]@{provider=[string]$item.provider;id=[string]$item.id;reason="license_capture_required_before_staging"}
+    continue
+  }
+  $rows=@($receipts | Where-Object { $_.provider -eq [string]$item.provider -and ($_.asset_id -eq [string]$item.id -or $_.asset_slug -eq [string]$item.id) })
+  if($rows.Count -eq 0){ $pending += [ordered]@{provider=[string]$item.provider;id=[string]$item.id;reason="warehouse_source_not_staged_yet"}; continue }
+
+  $fbx=0; $pngtga=0; $obj=0
+  foreach($row in $rows){
+    if(-not (Test-Path -LiteralPath $row.file -PathType Leaf)){ $blocked += [ordered]@{id=[string]$item.id;file=$row.file;reason="receipt_file_missing"}; continue }
+    $actual=(Get-FileHash -LiteralPath $row.file -Algorithm SHA256).Hash.ToLowerInvariant()
+    if([string]::IsNullOrWhiteSpace($row.sha256) -or $actual -ne $row.sha256){ $blocked += [ordered]@{id=[string]$item.id;file=$row.file;reason="receipt_sha256_mismatch"}; continue }
+    $ext=[IO.Path]::GetExtension($row.file).ToLowerInvariant()
+    if($dangerous -contains $ext){ $blocked += [ordered]@{id=[string]$item.id;file=$row.file;reason="dangerous_payload_extension"}; continue }
+    if($ext -eq ".bmp"){ $blocked += [ordered]@{id=[string]$item.id;file=$row.file;reason="forbidden_bmp"}; continue }
+    if($ext -eq ".fbx"){ $fbx++ }
+    elseif($ext -in @(".png",".tga")){ $pngtga++ }
+    elseif($ext -eq ".obj"){ $obj++ }
+  }
+  $prepared += [ordered]@{
+    provider=[string]$item.provider; id=[string]$item.id;
+    fbx_count=$fbx; texture_png_tga_count=$pngtga; obj_support_count=$obj;
+    state=if($fbx -gt 0){"INTAKE_QC_PREPARED"}else{"STAGED_NEEDS_FBX"};
+    ready_for_import=$false;
+    qc_pending=@("skeleton","skin weights","retarget","deformation","animation coverage","materials","LOD/cull","equipment sockets")
+  }
+}
+
+$projectOwnedRoot=Join-Path $ProjectRoot "SourceAssets\Production\Characters"
+$fallbackCount=0
+if(Test-Path -LiteralPath $projectOwnedRoot){ $fallbackCount=@(Get-ChildItem -LiteralPath $projectOwnedRoot -Recurse -File).Count }
+
+$report=[ordered]@{
+  schema_version=1; batch_id=[string]$manifest.batch_id; generated_at_utc=[DateTime]::UtcNow.ToString("o");
+  project_owned_fallback_file_count=$fallbackCount;
+  prepared=$prepared; pending=$pending; blocked=$blocked;
+  rule="No final animated-character promotion without FBX + provenance + skeleton/skin/retarget/deformation QC."
+}
+$receipt=Join-Path $OutputRoot "p1c01_character_rig_intake_receipt.json"
+$report | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $receipt -Encoding UTF8
+if($blocked.Count -gt 0){ Write-Host ("P1C01_CHARACTER_INTAKE_BLOCKED prepared="+$prepared.Count+" pending="+$pending.Count+" blocked="+$blocked.Count); exit 2 }
+Write-Host ("P1C01_CHARACTER_INTAKE_PASS prepared="+$prepared.Count+" pending="+$pending.Count+" blocked=0 receipt="+$receipt)
