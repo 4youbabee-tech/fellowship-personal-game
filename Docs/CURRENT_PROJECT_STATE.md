@@ -1,3 +1,13 @@
+## 2026-09-27 - Runtime train character-rig async recovery hardened
+
+- Existing `UShireChapterAssetStreamingSubsystem` already owns the production skeletal-rig path with `FSoftObjectPath`, `FStreamableManager`, standardized `/Game/Production/Characters/Rigs/<Character>/` object paths, player/NPC callbacks and modular fallback.
+- A real maturity edge case was repaired: a rig missing on the first availability check was previously cached as unavailable for the entire GameInstance.
+- Missing rig packages now re-check at a bounded **2 second minimum interval** only when requested; no Tick/polling loop was added.
+- If the skeletal mesh + AnimBP packages appear after import, the subsystem logs `availability-recovered` and continues through the existing asynchronous load path without requiring a game restart.
+- Large NPC groups cannot hammer the filesystem every request because the retry timestamp is stored per character rig request.
+- This does **not** claim that a legal Frodo/Gandalf/Sam skeletal FBX bundle exists yet; it hardens the runtime infrastructure that will consume the first accepted bundle.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**.
+
 ## 2026-09-27 - P1C01 Runtime Completion Train V1 source implementation
 
 - New runtime branch: `production/p1c01-runtime-completion-train-v1`.
