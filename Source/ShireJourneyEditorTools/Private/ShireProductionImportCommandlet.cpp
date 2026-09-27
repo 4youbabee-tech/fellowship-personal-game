@@ -1298,13 +1298,14 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 }
 
                 UPackage* Package = Material ? Material->GetOutermost() : nullptr;
-                if (Package && Package != GetTransientPackage())
+                if (Package &&
+                    Package != GetTransientPackage() &&
+                    Package->GetName().StartsWith(TEXT("/Game/Production/")))
                 {
+                    // Never dirty Engine/Plugin packages referenced as fallback materials.
+                    // The one-click importer owns only project production content.
                     Package->MarkPackageDirty();
-                    if (Package->GetName().StartsWith(TEXT("/Game/Production/")))
-                    {
-                        ImportedMaterialPackages.AddUnique(Package);
-                    }
+                    ImportedMaterialPackages.AddUnique(Package);
                     ++MarkedMaterialPackages;
                 }
             }
@@ -1536,7 +1537,9 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                 if (UMaterialInterface* Material = Cast<UMaterialInterface>(AssetData.GetAsset()))
                 {
                     UPackage* Package = Material->GetOutermost();
-                    if (Package && Package != GetTransientPackage())
+                    if (Package &&
+                        Package != GetTransientPackage() &&
+                        Package->GetName().StartsWith(TEXT("/Game/Production/")))
                     {
                         Package->MarkPackageDirty();
                         ImportedMaterialPackages.AddUnique(Package);
