@@ -3379,6 +3379,21 @@ editor_wait_contract_ok = (
 )
 if editor_probe_marker not in unreal_ci and not editor_wait_contract_ok:
     fail("PG-015: Unreal self-hosted validation must either prove the editor is closed or wait safely for it without terminating the user's editor")
+
+# PG-184: project build cleanup must identify live DLL owners immediately and
+# repair only generated-output ACLs when Restart Manager proves no file lock.
+build_cleanup = read(ROOT / "Scripts" / "reset_project_build_intermediates.ps1")
+for marker in [
+    "RmRegisterResources",
+    "RmGetList",
+    "BUILD_FILE_LOCKED",
+    "BUILD_CLEANUP_ACL_REPAIR_FAILED",
+    "icacls.exe",
+]:
+    if marker not in build_cleanup:
+        fail(f"PG-184: fail-fast build cleanup diagnostic is missing {marker}")
+if "Start-Sleep" in build_cleanup or "Stop-Process" in build_cleanup or "taskkill.exe" in build_cleanup:
+    fail("PG-184: build cleanup must not wait blindly or terminate a process to release a file")
 checkout_action_ok = (
     "uses: actions/checkout@v4" in unreal_ci
     and (
