@@ -1,3 +1,11 @@
+## 2026-09-27 - Repeated MSVC stale-temp validation blocker contained
+
+- Unreal Build #896 failed on both attempt 1 and attempt 2 before asset import with `fatal error C1083: Cannot open compiler intermediate file`.
+- The MSVC probe proved the current temp root was writable (`shire-msvc-36281890705-2`), while the compiler failure referenced an older removed temp root (`shire-msvc-36280675863-1`). This isolates the failure to stale project build intermediates/action metadata rather than the production-import source change.
+- `Scripts/ci_build_unreal.cmd` now treats this exact C1083/compiler-intermediate signature as recoverable compiler-environment pressure: it clears only project Win64 intermediates/binaries and retries the build once, using the already-current TEMP/TMP environment.
+- Scope remains narrow and blocker-driven; this does not reopen general CI optimization work.
+- Evidence boundary: **CI_INFRA FIX CANDIDATE / fresh exact-head Unreal validation pending**.
+
 ## 2026-09-27 - P1C01 one-click production import Engine-package dirty repair
 
 - Owner device run of `SHIRE_UPDATE_BUILD_LAUNCH.bat` reached the production-import phase and failed while UE4.27 attempted to save `/Engine/EngineMaterials/WorldGridMaterial`.
