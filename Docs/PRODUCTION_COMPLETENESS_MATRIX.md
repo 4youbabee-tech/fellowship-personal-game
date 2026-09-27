@@ -1,3 +1,11 @@
+## 2026-09-27 - Runner single-path proof
+
+- Legacy service path absent: **MACHINE-PROVEN** on owner Windows state and Unreal #1021.
+- Watchdog interactive ownership: **MACHINE-PROVEN** (`IDEAPAD320\user`, session 1, PID 6192).
+- Broker listening / worker ownership / GitHub:443: **MACHINE-PROVEN** by Unreal #1021 runner-health lines.
+- Permanent service guard + continuous watchdog enforcement: **SOURCE-IMPLEMENTED**, exact-head Pre-Unreal rerun pending after PG-183 false-red correction.
+- Game/runtime maturity: **UNCHANGED**. #1021 skipped C++ build/import/PIE/package on governance fast path.
+
 ## 2026-09-27 - Runner single-path ownership hardening
 
 - Legacy Windows service execution path removed by service guard: **SOURCE-IMPLEMENTED**.
