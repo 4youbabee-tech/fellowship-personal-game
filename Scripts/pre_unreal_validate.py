@@ -2783,6 +2783,64 @@ for pg173_group_name, pg173_items in pg173_queue.get("groups", {}).items():
                     )
 
 
+# PG-178: multi-car P1C01 preparation train must remain fail-closed.
+for pg178_rel in [
+    "Data/P1C01CharacterRigAnimationPrepV1.json",
+    "Data/P1C01AudioFoleyAmbiencePrepV1.json",
+    "Data/P1C01LivingWorldFaunaPrepV1.json",
+    "Scripts/prepare_p1c01_character_rig_intake.ps1",
+    "Scripts/prepare_p1c01_audio_intake.ps1",
+    "Scripts/prepare_p1c01_fauna_intake.ps1",
+]:
+    if not (ROOT / pg178_rel).exists():
+        fail(f"PG-178 prep-train artifact missing: {pg178_rel}")
+
+pg178_char = json.loads(read(ROOT / "Data" / "P1C01CharacterRigAnimationPrepV1.json"))
+if pg178_char.get("required_bundle", {}).get("skeletal_mesh") != "FBX":
+    fail("PG-178 character final skeletal mesh must remain FBX")
+if "OBJ_AS_FINAL_ANIMATED_CHARACTER" not in pg178_char.get("forbidden", []):
+    fail("PG-178 animated OBJ prohibition missing")
+for item in pg178_char.get("external_candidates", []):
+    if item.get("state") not in {"BLOCKED_LICENSE_CAPTURE", "AUTHORIZED_FOR_STAGING"}:
+        fail(f"PG-178 invalid character candidate state: {item.get('id')}")
+    if item.get("required_final_format") != "FBX":
+        fail(f"PG-178 character candidate final format drift: {item.get('id')}")
+
+pg178_audio = json.loads(read(ROOT / "Data" / "P1C01AudioFoleyAmbiencePrepV1.json"))
+if len(pg178_audio.get("items", [])) != 5:
+    fail("PG-178 P1C01 audio prep must contain exactly the five authorized Shire audio candidates")
+for item in pg178_audio.get("items", []):
+    if item.get("license") != "CC0" or item.get("state") != "AUTHORIZED_FOR_STAGING":
+        fail(f"PG-178 audio candidate lost CC0/authorized state: {item.get('id')}")
+    if item.get("master_requirement") != "WAV":
+        fail(f"PG-178 audio production master must be WAV: {item.get('id')}")
+
+pg178_fauna = json.loads(read(ROOT / "Data" / "P1C01LivingWorldFaunaPrepV1.json"))
+caps = pg178_fauna.get("living_world_caps", {})
+if caps.get("max_active_fauna_groups_near_player") != 2 or caps.get("fauna_cull_distance_cm") != 4200:
+    fail("PG-178 fauna runtime caps drifted from LivingWorldEventPlan")
+for item in pg178_fauna.get("external_candidates", []):
+    if item.get("state") != "BLOCKED_LICENSE_CAPTURE":
+        fail(f"PG-178 fauna candidate promoted without license capture: {item.get('id')}")
+    if item.get("required_final_format") != "FBX":
+        fail(f"PG-178 fauna final animated format must be FBX: {item.get('id')}")
+
+pg178_scripts = (
+    read(ROOT / "Scripts" / "prepare_p1c01_character_rig_intake.ps1") +
+    read(ROOT / "Scripts" / "prepare_p1c01_audio_intake.ps1") +
+    read(ROOT / "Scripts" / "prepare_p1c01_fauna_intake.ps1")
+)
+for marker in [
+    "receipt_sha256_mismatch",
+    "forbidden_bmp",
+    "ready_for_import=$false",
+    "STAGED_NEEDS_WAV_MASTER",
+    "license_capture_required_before_staging",
+]:
+    if marker not in pg178_scripts:
+        fail(f"PG-178 prep-train guard missing: {marker}")
+
+
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
 pg164_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
