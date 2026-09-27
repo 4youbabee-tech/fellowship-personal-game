@@ -1,3 +1,11 @@
+## 2026-09-28 - Hosted Pre-Unreal classifier false-red repaired
+
+- Hosted Pre-Unreal #1269 proved the new GitHub-hosted Windows lane itself works: exact-head checkout and Python 3.12 resolution both succeeded.
+- The run failed only inside `test_unreal_classifier.ps1` because `$requiresCleanCompile` was referenced before initialization in the classifier path used by the test harness.
+- The classifier now initializes `$requiresCleanCompile` directly after delta resolution, before any mode decision.
+- This is a static classifier defect; it does not change runtime/gameplay state.
+- Current maturity: **SOURCE-IMPLEMENTED / NEW EXACT-HEAD STATIC RUN PENDING**.
+
 ## 2026-09-28 - CI root repair V3: zero-waste trigger routing
 
 - Unreal Build Validation now treats `Data/MasterExecutionRoadmap.json` as governance-only, preventing roadmap-only PR sync from consuming the UE4 runner.
