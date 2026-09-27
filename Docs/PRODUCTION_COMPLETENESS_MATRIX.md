@@ -1,3 +1,13 @@
+## 2026-09-27 - Runner single-path ownership hardening
+
+- Legacy Windows service execution path removed by service guard: **SOURCE-IMPLEMENTED**.
+- Service state target: **ABSENT**, with **Stopped + Disabled** accepted only as transient pending-deletion state.
+- Continuous watchdog re-enforcement against recreated service mode: **SOURCE-IMPLEMENTED**.
+- Forbidden service identities (NETWORK SERVICE / LOCAL SERVICE / SYSTEM): **SOURCE-IMPLEMENTED**.
+- Exact-head static guard PG-145B updated: **SOURCE-IMPLEMENTED / CI PENDING**.
+- Physical Windows runner repair: **PENDING OWNER-SIDE ELEVATED INSTALLER RUN**.
+- Current proof: **ROOT-FIX SOURCE-IMPLEMENTED** only; no new COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE acceptance.
+
 ## 2026-09-27 - Permanent runner ownership hardening
 
 - Legacy service elimination guard: **SOURCE-IMPLEMENTED**.
