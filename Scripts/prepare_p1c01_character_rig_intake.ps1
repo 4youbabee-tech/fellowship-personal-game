@@ -38,7 +38,7 @@ foreach($item in @($manifest.external_candidates)) {
   $rows=@($receipts | Where-Object { $_.provider -eq [string]$item.provider -and ($_.asset_id -eq [string]$item.id -or $_.asset_slug -eq [string]$item.id) })
   if($rows.Count -eq 0){ $pending += [ordered]@{provider=[string]$item.provider;id=[string]$item.id;reason="warehouse_source_not_staged_yet"}; continue }
 
-  $fbx=0; $pngtga=0; $obj=0
+  $fbx=0; $pngtga=0; $obj=0; $verifiedArchives=0
   foreach($row in $rows){
     if(-not (Test-Path -LiteralPath $row.file -PathType Leaf)){ $blocked += [ordered]@{id=[string]$item.id;file=$row.file;reason="receipt_file_missing"}; continue }
     $actual=(Get-FileHash -LiteralPath $row.file -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -46,13 +46,51 @@ foreach($item in @($manifest.external_candidates)) {
     $ext=[IO.Path]::GetExtension($row.file).ToLowerInvariant()
     if($dangerous -contains $ext){ $blocked += [ordered]@{id=[string]$item.id;file=$row.file;reason="dangerous_payload_extension"}; continue }
     if($ext -eq ".bmp"){ $blocked += [ordered]@{id=[string]$item.id;file=$row.file;reason="forbidden_bmp"}; continue }
-    if($ext -eq ".fbx"){ $fbx++ }
+    if($ext -eq ".zip"){
+      $verifiedArchives++
+      $destination=Join-Path $OutputRoot ("Expanded_"+([string]$item.id -replace '[^A-Za-z0-9_.-]','_')+"_"+$actual.Substring(0,12))
+      try {
+        Add-Type -AssemblyName System.IO.Compression
+        $archive=[IO.Compression.ZipFile]::OpenRead($row.file)
+        try {
+          $totalBytes=[int64]0; $entryCount=0
+          foreach($entry in $archive.Entries){
+            $entryCount++
+            $entryName=$entry.FullName.Replace('\\','/')
+            $parts=@($entryName.Split('/') | Where-Object { $_ -ne '' })
+            if($entryCount -gt 20000 -or $entry.Length -gt 536870912 -or $totalBytes + $entry.Length -gt 2147483648){
+              throw "archive_budget_exceeded"
+            }
+            if($entryName.StartsWith('/') -or $entryName -match '^[A-Za-z]:' -or @($parts | Where-Object { $_ -eq '..' }).Count -gt 0){
+              throw "archive_path_unsafe"
+            }
+            $totalBytes += $entry.Length
+            $inside=[IO.Path]::GetExtension($entryName).ToLowerInvariant()
+            if($dangerous -contains $inside -or $inside -eq ".bmp"){ throw "archive_forbidden_extension" }
+          }
+        } finally { $archive.Dispose() }
+        if(Test-Path -LiteralPath $destination){ Remove-Item -LiteralPath $destination -Recurse -Force }
+        New-Item -ItemType Directory -Path $destination -Force | Out-Null
+        Expand-Archive -LiteralPath $row.file -DestinationPath $destination -Force
+        foreach($extracted in @(Get-ChildItem -LiteralPath $destination -Recurse -File)){
+          $inside=$extracted.Extension.ToLowerInvariant()
+          if($inside -eq ".fbx"){ $fbx++ }
+          elseif($inside -in @(".png",".tga")){ $pngtga++ }
+          elseif($inside -eq ".obj"){ $obj++ }
+        }
+      } catch {
+        $blocked += [ordered]@{id=[string]$item.id;file=$row.file;reason="archive_scan_or_extract_failed";detail=$_.Exception.Message}
+        if(Test-Path -LiteralPath $destination){ Remove-Item -LiteralPath $destination -Recurse -Force }
+      }
+    }
+    elseif($ext -in @(".7z",".rar")){ $pending += [ordered]@{id=[string]$item.id;file=$row.file;reason="archive_requires_approved_extractor"} }
+    elseif($ext -eq ".fbx"){ $fbx++ }
     elseif($ext -in @(".png",".tga")){ $pngtga++ }
     elseif($ext -eq ".obj"){ $obj++ }
   }
   $prepared += [ordered]@{
     provider=[string]$item.provider; id=[string]$item.id;
-    fbx_count=$fbx; texture_png_tga_count=$pngtga; obj_support_count=$obj;
+    verified_archive_count=$verifiedArchives; fbx_count=$fbx; texture_png_tga_count=$pngtga; obj_support_count=$obj;
     state=if($fbx -gt 0){"INTAKE_QC_PREPARED"}else{"STAGED_NEEDS_FBX"};
     ready_for_import=$false;
     qc_pending=@("skeleton","skin weights","retarget","deformation","animation coverage","materials","LOD/cull","equipment sockets")

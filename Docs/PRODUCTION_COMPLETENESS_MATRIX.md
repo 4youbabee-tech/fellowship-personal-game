@@ -1545,3 +1545,12 @@ Whenever a chapter, route, enemy, biome, mechanic or major story beat changes:
 | Runtime acceptance | Unreal #1022 passed build, import, automation, startup, headless route/story checks, package and executable startup at its recorded head | Visual, target-device, performance, and human acceptance remain unclaimed. |
 
 The warehouse change is isolated to staging/intake automation. It does not promote assets, change P1C01 story scope, alter runtime code, or claim asset acceptance. The static gate now includes a Windows test asserting that a corrupt archive enters the manual queue while a separate valid archive still appears in the report; the result awaits the next exact-head run.
+
+
+### P1C01 character archive intake, 2026-09-28
+
+| Area | State | Next evidence |
+| --- | --- | --- |
+| Four Quaternius CC0 character/animation packs | Official pack license captured; staging attempted by Warehouse Stage | Public downloadable payload and hashed warehouse receipts |
+| Character ZIP intake | Windows workflow invokes bounded archive safety scan and counts extracted FBX/PNG/TGA | Exact-head Windows run and per-pack receipt |
+| Character appearance | Existing static modular proxies only | Skeletal import, retarget/deformation checks, in-game visual observation |

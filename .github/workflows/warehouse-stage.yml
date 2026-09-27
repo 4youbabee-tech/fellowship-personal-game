@@ -42,6 +42,7 @@ on:
       - 'Scripts/test_warehouse_train_contracts.ps1'
       - 'Scripts/warehouse_network.ps1'
       - 'Scripts/stage_quaternius_warehouse.ps1'
+      - 'Scripts/prepare_p1c01_character_rig_intake.ps1'
   workflow_dispatch:
 
 permissions:
@@ -139,6 +140,10 @@ jobs:
       - name: Stage KayKit public GitHub support packs
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_kaykit_github_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseKayKitGitHubAcquisitionBatchV1.json"
+
+      - name: Prepare P1C01 character FBX intake candidates
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\\Scripts\\prepare_p1c01_character_rig_intake.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\\Data\\P1C01CharacterRigAnimationPrepV1.json" -OutputRoot "C:\\actions-runner\\_warehouse\\ShireJourney\\_p1c01_character_intake"
 
       - name: Audit persistent warehouse inventory
         shell: cmd
