@@ -27,3 +27,12 @@ Authority: `Data/ProjectGovernor.json`. Scope: W01/P1C01 Shire, Hobbiton and Bag
 3. Only after the core Unreal lane recovers: import and bind the selected material/prop/audio batch; run the necessary UE build, Automation and runtime checks, then human rendered and target-device checks for claims they alone can establish.
 
 No downloaded payload or new production-ready state is asserted by this document.
+
+
+## 2026-09-28 follow-up from exact-head warehouse run
+
+Run #36349636709 reached the existing per-asset screening stage. It audited 13,377 raw payload files (5,426,414,977 bytes), 14 receipts, 667 receipt records and 215 duplicate hash groups. Its 20-car coverage report recorded 11 staged, 2 public-pending and 6 manual-pending. These figures do not establish unique usable assets or UE readiness.
+
+The later preparation stage verified the receipt rows and inventoried 23,774 extracted/classified entries, but returned nonzero for three blocked archive extractions: ambientCG Plaster007 was represented twice and its ZIP lacked a valid central directory; the KayKit Medieval Hexagon archive lacked the expected `addons` folder. It reported no invalid receipt JSON. The train previously treated any such item-level issue as a global stop, so provider resolution was skipped.
+
+The recovery changes preserve each source file and record failed/pending/receipt-review records in a manual queue while allowing other verified items to remain in the inventory and the train to continue. Quaternius link classification now uses the URL path extension, which retains public archive links with query parameters. These changes do not bypass licensing, create new authorization, or promote anything beyond intake reporting. Their next-run behavior is pending exact-head Windows validation.

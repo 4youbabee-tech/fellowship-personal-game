@@ -74,6 +74,12 @@ function Invoke-WarehouseDownload {
     }
 }
 
+function Get-WarehouseUriPathExtension {
+    param([Parameter(Mandatory=$true)][Uri]$Uri)
+    if ($Uri.Scheme -notin @("http", "https")) { return "" }
+    return [IO.Path]::GetExtension($Uri.AbsolutePath).ToLowerInvariant()
+}
+
 function Test-WarehouseReceiptReusable {
     param(
         [Parameter(Mandatory=$true)][string]$ReceiptPath,

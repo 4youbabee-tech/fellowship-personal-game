@@ -33,6 +33,10 @@ on:
       - develop
     paths:
       - '.github/workflows/warehouse-stage.yml'
+      - 'Scripts/run_warehouse_critical_gap_preparation.ps1'
+      - 'Scripts/test_warehouse_train_contracts.ps1'
+      - 'Scripts/warehouse_network.ps1'
+      - 'Scripts/stage_quaternius_warehouse.ps1'
   workflow_dispatch:
 
 permissions:

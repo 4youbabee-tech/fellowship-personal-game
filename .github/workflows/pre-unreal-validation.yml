@@ -129,6 +129,9 @@ jobs:
       - name: Guard streaming cancellation source contracts
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_streaming_cancellation_contract.py" -v
 
+      - name: Test warehouse per-asset isolation and URL classification
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_warehouse_train_contracts.ps1"
+
       - name: Test live governor evidence selection
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" -m unittest discover -s Scripts -p "test_live_governor_status.py" -v
 

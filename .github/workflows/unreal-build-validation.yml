@@ -51,6 +51,9 @@ on:
       - 'Scripts/run_branch_cleanup.ps1'
       - 'Data/BranchCleanupPlan.json'
       - 'SourceAssets/PrivateOffline/**'
+      - 'Scripts/run_warehouse_critical_gap_preparation.ps1'
+      - 'Scripts/test_warehouse_train_contracts.ps1'
+      - 'Scripts/warehouse_network.ps1'
       - 'Scripts/stage_*warehouse*.ps1'
   pull_request:
     branches:
@@ -89,6 +92,9 @@ on:
       - 'Scripts/test_runtime_smoke.py'
       - 'Scripts/verify_runner_session.ps1'
       - 'SourceAssets/PrivateOffline/**'
+      - 'Scripts/run_warehouse_critical_gap_preparation.ps1'
+      - 'Scripts/test_warehouse_train_contracts.ps1'
+      - 'Scripts/warehouse_network.ps1'
       - 'Scripts/stage_*warehouse*.ps1'
   workflow_dispatch:
 
