@@ -1,3 +1,22 @@
+## 2026-09-27 - P1C01 Architecture / Interiors / Props megabatch
+
+Registered before implementation under existing `REQ-WORLD-002`, `REQ-WAREHOUSE-001`, `REQ-ASSET-001`, `REQ-PROD-007` and `REQ-MEGA-001`.
+
+Scope:
+- Build one evidence-gated intake/QC lane for Shire/Hobbiton/Bag End architecture, interior furniture, food/household support and farm/market props.
+- Include the six already-authorized external support packs only:
+  - Quaternius: `QTN_FARM_BUILDINGS`, `QTN_FURNITURE_PACK`, `QTN_MEDIEVAL_VILLAGE_CC0`.
+  - Kenney: `NATURE_KIT`, `FURNITURE_KIT`, `FOOD_KIT`.
+- Cross-map the existing project-owned Shire production meshes as the immediate runtime fallback bank; do not delete or demote them.
+- Fail closed on source/license/receipt/SHA256. Archives remain staged until extracted/scanned.
+- Static-mesh intake must report scale/pivot/UV/normals/material/collision/triangle/LOD readiness before `READY_FOR_IMPORT`.
+- External final production mesh exchange target is FBX; animated content remains FBX-only.
+- Production textures are PNG/TGA only; BMP and executable payloads are blocking.
+- Runtime integration is intentionally serialized after the active #118 material batch. Repeated dressing must use ISM/HISM; unique hero architecture remains bounded.
+- No story anchor, quest ID, chapter ID or canonical location placement is changed by this preparation batch.
+
+Status: **REGISTERED / PREPARATION STARTED**. No import, PIE, device, visual or performance acceptance is implied.
+
 ## 2026-09-27 - P1C01 player-experience convergence defect batch
 
 Registered before implementation from source review on `develop@c79168cf385ba02f4b542940de3b089e700f1f18`.
