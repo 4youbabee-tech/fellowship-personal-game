@@ -4,6 +4,7 @@ param(
     [int]$AcquireHangSeconds = 150,
     [int]$WorkerIdleHangSeconds = 300,
     [int]$RestartCooldownSeconds = 20,
+    [string]$ServiceGuardPath = "",
     [switch]$Once
 )
 
@@ -38,6 +39,17 @@ function Write-WatchLog {
     }
     catch { Write-Host ("WATCHDOG_LOG_WRITE_FAILED " + $_.Exception.Message) }
 }
+
+function Invoke-ServiceOwnershipGuard {
+    if (-not (Test-Path -LiteralPath $ServiceGuardPath -PathType Leaf)) {
+        throw "Runner service guard missing: $ServiceGuardPath"
+    }
+    & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $ServiceGuardPath -RunnerRoot $RunnerRoot
+    if ($LASTEXITCODE -ne 0) {
+        throw "Runner service guard failed with exit code $LASTEXITCODE."
+    }
+}
+
 
 function Invoke-RunnerServiceGuard {
     $needsGuard = @(Get-Service -Name "actions.runner.*" -ErrorAction SilentlyContinue).Count -gt 0
@@ -438,10 +450,12 @@ try {
     if (-not $hasMutex) { throw "Another ShireJourney runner watchdog instance is already active." }
     $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
     Write-WatchLog ("SHIRE_RUNNER_WATCHDOG_BOOT identity=" + $identity + " root=" + $RunnerRoot + " acquireHangSeconds=" + $AcquireHangSeconds + " workerIdleHangSeconds=" + $WorkerIdleHangSeconds)
+    Invoke-ServiceOwnershipGuard
     Recover-OrphanedListenerOnSupervisorBoot
 
     while ($true) {
         try {
+            Invoke-ServiceOwnershipGuard
             $listener = @(Get-Process -Name "Runner.Listener" -ErrorAction SilentlyContinue)
             if ($listener.Count -eq 0) {
                 Start-RunnerListener
