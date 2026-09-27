@@ -1,3 +1,12 @@
+## 2026-09-27 - P1C01 material train expanded to the full authorized Poly Haven surface set
+
+- The active #118 material batch now covers all **16** Poly Haven Shire/Bag End surface candidates already authorized by `P1C01WarehousePromotionQueueV1.json`, rather than the earlier 8-item subset.
+- `Data/P1C01MaterialImportWaveV1.json` now carries bounded authored Roughness/Metallic/Specular scalars for every item and keeps every external candidate at `AUTHORIZED_FOR_STAGING` until receipt-backed intake exists.
+- `Scripts/prepare_p1c01_material_intake.ps1` now emits one PNG/TGA base-color candidate plus scalar `Pr/Pm/Ks`, SHA256 hashes for prepared base color and generated MTL, and richer prepared/pending/blocked counts.
+- `Scripts/pre_unreal_validate.py` now guards the 16-item completeness, queue authority, duplicate IDs/slugs, scalar bounds, low-spec material parameter contract, SHA256 preparation and BMP prohibition.
+- This expansion still adds no runtime texture sample beyond the existing albedo slot, does not increase foliage/detail density, and does not promote an external asset without source/license/receipt/SHA256 evidence.
+- The current Unreal validation blocker remains runner infrastructure: run #915 has repeatedly failed at `Verify runner session health` with `RUNNER_HEALTH_FAIL watchdog-state state=Ready` before UE4 build/import starts. The material implementation itself therefore remains **SOURCE-IMPLEMENTED / exact-head engine proof pending**.
+
 ## 2026-09-27 - P1C01 Shire material surface-set train started
 
 - Active production batch: `P1C01_SHIRE_MATERIAL_SURFACE_SET_V1` on branch `production/p1c01-shire-material-surface-set-v1`.
