@@ -3400,8 +3400,16 @@ for marker in [
 ]:
     if marker not in build_cleanup:
         fail(f"PG-184: fail-fast build cleanup diagnostic is missing {marker}")
-if "Start-Sleep" in build_cleanup:
-    fail("PG-184: build cleanup must not wait blindly for a file lock")
+bounded_owner_exit_retry = (
+    "$attempt -le 4" in build_cleanup
+    and "$owners.Count -gt 0" in build_cleanup
+    and "Start-Sleep -Milliseconds $delayMs" in build_cleanup
+    and "[int](250 * [Math]::Pow(2, $attempt - 1))" in build_cleanup
+)
+if "Start-Sleep" in build_cleanup and not bounded_owner_exit_retry:
+    fail("PG-184: build cleanup may retry only a bounded transient after verified owners exit")
+if "Start-Sleep" not in build_cleanup and "BUILD_CLEANUP_RETRY_FAILED" not in build_cleanup:
+    fail("PG-184: build cleanup must report the concrete failure without blind waits")
 if "Stop-Process -Id $orphan.ProcessId" not in build_cleanup or "candidateOwner -ieq $identity" not in build_cleanup:
     fail("PG-184: process recovery must be constrained to an owner-verified Shire CI orphan")
 checkout_action_ok = (
