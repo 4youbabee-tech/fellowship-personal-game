@@ -2863,7 +2863,7 @@ for pg185_symbol in [
         fail(f"PG-185 warehouse-only changes must not trigger Unreal validation: {pg185_symbol}")
 if "runs-on: windows-latest" not in pg185_pre:
     fail("PG-185 static Pre-Unreal validation must stay off the UE4 self-hosted runner")
-if "self-hosted" in pg185_pre:
+if "- self-hosted" in pg185_pre:
     fail("PG-185 Pre-Unreal must not consume the supervised UE4 runner")
 
 # PG-176: the monitored P1C01 material train must stay complete, bounded and
@@ -4800,13 +4800,13 @@ pg134_workflow = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.ym
 if (
     '"%PYTHON_EXE%" Scripts\\asset_quality_audit.py --strict' not in pg134_workflow
     or "resolve_runtime_python.ps1" not in pg134_workflow
-    or "_ci\\pre-unreal" not in pg134_workflow
+    or "%RUNNER_TEMP%\\shire-pre-unreal" not in pg134_workflow
     or "SHIRE_PRE_ROOT" not in pg134_workflow
     or "PRE_UNREAL_EXACT_CHECKOUT_PASS" not in pg134_workflow
-    or "persistent=true" not in pg134_workflow
+    or "hosted=true" not in pg134_workflow
     or 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg134_workflow
 ):
-    fail("PG-134 Pre-Unreal must run strict asset audit from the isolated persistent static checkout without touching the Unreal workspace")
+    fail("PG-134 Pre-Unreal must run strict asset audit from an isolated exact-head static checkout without touching the Unreal workspace")
 for pg134_symbol in [
     "obj_with_degenerate_uv_triangles",
     "degenerate UV triangle",
@@ -5168,23 +5168,20 @@ for pg142_evidence_id, pg142_marker in EVIDENCE_MARKERS.items():
         if pg142_marker in pg142_consumer:
             fail(f"PG-142 duplicated runtime evidence text in {pg142_name}: {pg142_evidence_id}")
 
-# PG-167: CI capacity must stay event-driven and off the recurrent hosted zero-step path.
+# PG-167: CI capacity stays event-driven; lightweight static proof is hosted and heavy UE4 proof stays self-hosted.
 pg167_pre = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
 for pg167_symbol in [
-    "- self-hosted",
-    "- Windows",
-    "- X64",
-    "- ue4-27",
+    "runs-on: windows-latest",
     "cancel-in-progress: true",
 ]:
     if pg167_symbol not in pg167_pre:
-        fail(f"PG-167 supervised static-lane contract missing: {pg167_symbol}")
-if "schedule:" in pg167_pre or "runs-on: ubuntu-latest" in pg167_pre or "runs-on: windows-latest" in pg167_pre:
-    fail("PG-167 Pre-Unreal must be event-driven on the supervised Windows UE4 runner")
+        fail(f"PG-167 hosted static-lane contract missing: {pg167_symbol}")
+if "schedule:" in pg167_pre or "- self-hosted" in pg167_pre or "runs-on: ubuntu-latest" in pg167_pre:
+    fail("PG-167 Pre-Unreal must be event-driven on hosted Windows and must not occupy the supervised UE4 runner")
 if "actions/setup-python@" in pg167_pre or "resolve_runtime_python.ps1" not in pg167_pre or 'shell: cmd' not in pg167_pre:
-    fail("PG-167 Pre-Unreal must avoid repeated hosted Python setup and use the local interpreter through cmd")
+    fail("PG-167 Pre-Unreal must use an already-provisioned Python interpreter through cmd without setup churn")
 if "uses: actions/checkout@" in pg167_pre:
-    fail("PG-167 Pre-Unreal must not depend on marketplace checkout on the supervised runner")
+    fail("PG-167 Pre-Unreal must keep the bounded exact-head checkout contract")
 for pg167_checkout_symbol in [
     "PRE_UNREAL_EXACT_FETCH",
     "PRE_UNREAL_EXACT_CHECKOUT_PASS",
