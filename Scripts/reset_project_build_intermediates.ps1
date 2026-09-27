@@ -108,11 +108,9 @@ function Get-FileLockOwners {
 
         $owners = @()
         foreach ($app in $apps) {
-            [long]$startLow = $app.Process.ProcessStartTime.dwLowDateTime
-            [long]$startHigh = $app.Process.ProcessStartTime.dwHighDateTime
-            if ($startLow -lt 0) { $startLow += 4294967296 }
-            if ($startHigh -lt 0) { $startHigh += 4294967296 }
-            [long]$startFileTime = ($startHigh -shl 32) -bor $startLow
+            $lowBits = [BitConverter]::ToUInt32([BitConverter]::GetBytes([int]$app.Process.ProcessStartTime.dwLowDateTime), 0)
+            $highBits = [BitConverter]::ToUInt32([BitConverter]::GetBytes([int]$app.Process.ProcessStartTime.dwHighDateTime), 0)
+            [long]$startFileTime = ([long]$highBits * 4294967296L) + [long]$lowBits
             $owners += [pscustomobject]@{
                 ProcessId = [int]$app.Process.dwProcessId
                 ProcessStartFileTime = $startFileTime
@@ -148,6 +146,7 @@ function Get-AccessDiagnostic {
 $workspace = [IO.Path]::GetFullPath($env:GITHUB_WORKSPACE).TrimEnd('\')
 $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $cleanupStartFileTime = (Get-Date).ToUniversalTime().ToFileTimeUtc()
+$projectPath = Join-Path $workspace "ShireJourney.uproject"
 $paths = @(
     (Join-Path $workspace "Intermediate\Build\Win64"),
     (Join-Path $workspace "Binaries\Win64")
@@ -189,12 +188,11 @@ foreach ($path in $paths) {
             throw "BUILD_CLEANUP_DIAGNOSTIC path=$blockedFile identity=$identity lockQuery=unavailable detail=$($_.Exception.Message) $aclDiagnostic"
         }
 
-        $liveOwners = @()
-        $staleOwners = @()
+        $verifiedOrphans = @()
+        $unknownLiveOwners = @()
         foreach ($owner in $owners) {
             $process = Get-Process -Id $owner.ProcessId -ErrorAction SilentlyContinue
             if (-not $process) {
-                $staleOwners += $owner
                 continue
             }
 
@@ -202,30 +200,21 @@ foreach ($path in $paths) {
                 [long]$observedStartFileTime = $process.StartTime.ToUniversalTime().ToFileTimeUtc()
             }
             catch {
-                $liveOwners += $owner
+                $unknownLiveOwners += $owner
                 continue
             }
 
             if ($observedStartFileTime -ne $owner.ProcessStartFileTime) {
-                $staleOwners += $owner
+                continue
             }
-            else {
-                $liveOwners += $owner
-            }
-        }
 
-        $verifiedOrphans = @()
-        $unknownLiveOwners = @()
-        foreach ($owner in $liveOwners) {
             $candidate = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $owner.ProcessId) -ErrorAction SilentlyContinue
-            $process = Get-Process -Id $owner.ProcessId -ErrorAction SilentlyContinue
-            if (-not $candidate -or -not $process) {
-                $staleOwners += $owner
+            if (-not $candidate) {
+                $unknownLiveOwners += $owner
                 continue
             }
 
             try {
-                [long]$candidateStartFileTime = $process.StartTime.ToUniversalTime().ToFileTimeUtc()
                 $ownerResult = Invoke-CimMethod -InputObject $candidate -MethodName GetOwner -ErrorAction Stop
                 $candidateOwner = if ($ownerResult.ReturnValue -eq 0) { $ownerResult.Domain + '\' + $ownerResult.User } else { '' }
                 $parent = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $candidate.ParentProcessId) -ErrorAction SilentlyContinue
@@ -254,11 +243,11 @@ if (Test-Path -LiteralPath $logDir) {
 Write-Host "Project build intermediates and stale CI evidence reset."
 exit 0
 
-                $projectMatch = $commandLine.IndexOf((Join-Path $workspace 'ShireJourney.uproject'), [StringComparison]::OrdinalIgnoreCase) -ge 0
+                $projectMatch = $commandLine.IndexOf($projectPath, [StringComparison]::OrdinalIgnoreCase) -ge 0
                 $ciFlags = ($commandLine -match '(?i)(?:^|\s)-AuditPendingTransition(?:\s|$)') -and ($commandLine -match '(?i)(?:^|\s)-ShireCIAssetReadyDelay=2\.0(?:\s|$)')
-                $orphanCiCommandlet = ($candidate.ProcessId -eq $owner.ProcessId) -and ($candidateStartFileTime -eq $owner.ProcessStartFileTime) -and ($candidateOwner -ieq $identity) -and $engineMatch -and $projectMatch -and $ciFlags -and (-not $parent) -and ($candidateStartFileTime -lt $cleanupStartFileTime)
+                $orphanCiCommandlet = ($candidate.ProcessId -eq $owner.ProcessId) -and ($observedStartFileTime -eq $owner.ProcessStartFileTime) -and ($candidateOwner -ieq $identity) -and $engineMatch -and $projectMatch -and $ciFlags -and (-not $parent) -and ($observedStartFileTime -lt $cleanupStartFileTime)
                 if ($orphanCiCommandlet) {
-                    $verifiedOrphans += [pscustomobject]@{ ProcessId = $owner.ProcessId; StartFileTime = $candidateStartFileTime; CommandLine = $commandLine }
+                    $verifiedOrphans += [pscustomobject]@{ ProcessId = $owner.ProcessId; StartFileTime = $observedStartFileTime; AppName = $owner.AppName }
                 }
                 else {
                     $unknownLiveOwners += $owner
@@ -275,37 +264,50 @@ exit 0
         }
 
         foreach ($orphan in $verifiedOrphans) {
-            Write-Warning "Releasing verified orphan Shire CI commandlet PID=$($orphan.ProcessId) after exact engine/project/owner/command-line/start-time checks."
-            Stop-Process -Id $orphan.ProcessId -Force -ErrorAction SilentlyContinue
-            $stillRunning = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $orphan.ProcessId) -ErrorAction SilentlyContinue
-            if ($stillRunning) {
-                $current = Get-Process -Id $orphan.ProcessId -ErrorAction SilentlyContinue
-                $sameProcess = $false
-                if ($current) {
-                    try {
-                        $sameProcess = ($current.StartTime.ToUniversalTime().ToFileTimeUtc() -eq $orphan.StartFileTime)
-                    }
-                    catch {
-                        $sameProcess = $false
-                    }
+            $current = Get-Process -Id $orphan.ProcessId -ErrorAction SilentlyContinue
+            $sameProcess = $false
+            if ($current) {
+                try {
+                    $sameProcess = ($current.StartTime.ToUniversalTime().ToFileTimeUtc() -eq $orphan.StartFileTime)
                 }
-                if ($sameProcess) {
-                    $taskkillOutput = & (Join-Path $env:SystemRoot "System32\taskkill.exe") /PID $orphan.ProcessId /F 2>&1
-                    $taskkillExit = $LASTEXITCODE
-                    Write-Host "Verified orphan taskkill exit=$taskkillExit output=$(($taskkillOutput -join ' '))"
+                catch {
+                    $sameProcess = $false
                 }
             }
 
-            $stillRunning = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $orphan.ProcessId) -ErrorAction SilentlyContinue
-            if ($stillRunning) {
-                throw "BUILD_ORPHAN_RELEASE_FAILED PID=$($orphan.ProcessId); exact process remains after one verified termination attempt."
+            if ($sameProcess) {
+                Write-Warning "Releasing verified orphan Shire CI commandlet PID=$($orphan.ProcessId) after exact engine/project/owner/command-line/start-time checks."
+                Stop-Process -Id $orphan.ProcessId -Force -ErrorAction SilentlyContinue
+                $stillRunning = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $orphan.ProcessId) -ErrorAction SilentlyContinue
+                if ($stillRunning) {
+                    $current = Get-Process -Id $orphan.ProcessId -ErrorAction SilentlyContinue
+                    $sameProcess = $false
+                    if ($current) {
+                        try {
+                            $sameProcess = ($current.StartTime.ToUniversalTime().ToFileTimeUtc() -eq $orphan.StartFileTime)
+                        }
+                        catch {
+                            $sameProcess = $false
+                        }
+                    }
+                    if ($sameProcess) {
+                        $taskkillOutput = & (Join-Path $env:SystemRoot "System32\taskkill.exe") /PID $orphan.ProcessId /F 2>&1
+                        $taskkillExit = $LASTEXITCODE
+                        Write-Host "Verified orphan taskkill exit=$taskkillExit output=$(($taskkillOutput -join ' '))"
+                    }
+                }
+
+                $stillRunning = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $orphan.ProcessId) -ErrorAction SilentlyContinue
+                if ($stillRunning) {
+                    throw "BUILD_ORPHAN_RELEASE_FAILED PID=$($orphan.ProcessId); exact process remains after one verified termination attempt."
+                }
             }
         }
 
         $retriedAfterOwnerExit = $false
-        if ($staleOwners.Count -gt 0 -or $verifiedOrphans.Count -gt 0) {
-            $endedDetails = @($staleOwners + $verifiedOrphans | ForEach-Object { "$($_.AppName)$($_.ProcessId)" }) -join ", "
-            Write-Warning "Restart Manager owner records are stale or were safely released for $($blockedFile): [$endedDetails]. Retrying cleanup once immediately."
+        if ($owners.Count -gt 0) {
+            $endedDetails = ($owners | ForEach-Object { "$($_.AppName)(PID=$($_.ProcessId))" }) -join ", "
+            Write-Warning "Restart Manager owners are no longer live or were safely released for $($blockedFile): [$endedDetails]. Retrying cleanup once immediately."
             try {
                 Remove-Item -LiteralPath $fullPath -Recurse -Force -ErrorAction Stop
                 $retriedAfterOwnerExit = $true

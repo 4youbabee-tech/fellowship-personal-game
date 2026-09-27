@@ -3392,6 +3392,7 @@ for marker in [
     "Get-Process -Id $owner.ProcessId",
     "orphanCiCommandlet",
     "BUILD_ORPHAN_RELEASE_FAILED",
+    "candidateOwner -ieq $identity",
     "taskkill.exe",
     "icacls.exe",
 ]:
