@@ -73,7 +73,7 @@ $Summary = [ordered]@{
     next_actions = $NextActions
     target_hardware = $Target
     evidence_boundary = [string]$Governor.active_gate.evidence_scope
-    runner_ownership_rule = if ($Governor.runner_execution_contract) { "UE4 runner = interactive-user watchdog only; actions.runner.* must stay Stopped/Manual; NETWORK SERVICE/LOCAL SERVICE/SYSTEM forbidden; do not change topology without owner authorization." } else { $null }
+    runner_ownership_rule = if ($Governor.runner_execution_contract) { "UE4 runner = interactive-user watchdog only; actions.runner.* should be absent or Stopped+Disabled pending deletion; NETWORK SERVICE/LOCAL SERVICE/SYSTEM forbidden; watchdog continuously removes recreated service mode; do not change topology without owner authorization." } else { $null }
     required_reading = @(
         'Docs/PROJECT_GOVERNOR.md',
         'Data/ProjectGovernor.json',
