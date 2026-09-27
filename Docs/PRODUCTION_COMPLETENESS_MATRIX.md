@@ -1,3 +1,10 @@
+## 2026-09-27 - Character rig async recovery hardening
+
+- Existing soft/async skeletal-rig infrastructure confirmed and retained.
+- Missing-package availability now retries on demand at a bounded 2 second interval instead of becoming permanently false for the GameInstance.
+- Modular proxy fallback remains authoritative until both skeletal mesh and locomotion AnimBP packages exist and async resolution succeeds.
+- Status: **SOURCE-IMPLEMENTED / exact-head Pre-Unreal + UE4.27 validation pending**; no rig asset or visual acceptance claim.
+
 ## 2026-09-27 - P1C01 Runtime Completion Train V1
 
 - Runtime car 1: weak player-pawn cache in LivingWorldDirector — **SOURCE-IMPLEMENTED**.
