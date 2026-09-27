@@ -24,6 +24,18 @@ New-Item -ItemType Directory -Path $OutputRoot -Force | Out-Null
 $ExpandedRoot = Join-Path $OutputRoot "expanded"
 New-Item -ItemType Directory -Path $ExpandedRoot -Force | Out-Null
 
+function Get-OptionalPropertyValue {
+  param(
+    [object]$Object,
+    [string]$Name,
+    [object]$Default = $null
+  )
+  if ($null -eq $Object) { return $Default }
+  $prop = $Object.PSObject.Properties[$Name]
+  if ($null -eq $prop) { return $Default }
+  return $prop.Value
+}
+
 $dangerous = @(".exe",".msi",".cmd",".bat",".ps1",".vbs",".js",".scr",".com")
 $audioExt = @(".wav",".ogg",".mp3",".flac")
 $textureExt = @(".png",".tga",".jpg",".jpeg",".bmp",".exr",".hdr")
@@ -40,25 +52,32 @@ if (Test-Path -LiteralPath $WarehouseRoot -PathType Container) {
       continue
     }
 
-    foreach ($row in @($receipt.files)) {
-      $path = [string]$row.file
-      $declared = ([string]$row.sha256).ToLowerInvariant()
+    $receiptProvider=[string](Get-OptionalPropertyValue -Object $receipt -Name "provider" -Default "")
+    $receiptBatchId=[string](Get-OptionalPropertyValue -Object $receipt -Name "batch_id" -Default "")
+    $receiptItems=@(Get-OptionalPropertyValue -Object $receipt -Name "files" -Default @())
+
+    foreach ($row in $receiptItems) {
+      $path = [string](Get-OptionalPropertyValue -Object $row -Name "file" -Default "")
+      $declared = ([string](Get-OptionalPropertyValue -Object $row -Name "sha256" -Default "")).ToLowerInvariant()
       if ([string]::IsNullOrWhiteSpace($path)) {
-        $path = [string]$row.archive
-        $declared = ([string]$row.archive_sha256).ToLowerInvariant()
+        $path = [string](Get-OptionalPropertyValue -Object $row -Name "archive" -Default "")
+        $declared = ([string](Get-OptionalPropertyValue -Object $row -Name "archive_sha256" -Default "")).ToLowerInvariant()
       }
       if ([string]::IsNullOrWhiteSpace($path)) { continue }
 
+      $rowState=[string](Get-OptionalPropertyValue -Object $row -Name "state" -Default "STAGED")
+      if([string]::IsNullOrWhiteSpace($rowState)){$rowState="STAGED"}
+
       $receiptRows += [pscustomobject]@{
-        provider=[string]$receipt.provider
-        batch_id=[string]$receipt.batch_id
-        asset_id=[string]$row.asset_id
-        asset_slug=[string]$row.asset_slug
-        category=[string]$row.category
+        provider=$receiptProvider
+        batch_id=$receiptBatchId
+        asset_id=[string](Get-OptionalPropertyValue -Object $row -Name "asset_id" -Default "")
+        asset_slug=[string](Get-OptionalPropertyValue -Object $row -Name "asset_slug" -Default "")
+        category=[string](Get-OptionalPropertyValue -Object $row -Name "category" -Default "")
         path=$path
         declared_sha256=$declared
-        source_page=[string]$row.source_page
-        state=if([string]::IsNullOrWhiteSpace([string]$row.state)){"STAGED"}else{[string]$row.state}
+        source_page=[string](Get-OptionalPropertyValue -Object $row -Name "source_page" -Default "")
+        state=$rowState
         receipt_file=$receiptFile.FullName
       }
     }
