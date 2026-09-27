@@ -1,3 +1,11 @@
+## 2026-09-27 - Developer handoff entry integrity
+
+- Develop-side canonical onboarding path: **SOURCE-IMPLEMENTED**.
+- Off-develop branch warning in one-command onboarding: **SOURCE-IMPLEMENTED**.
+- Stale copied next-drop prose removed from Governor guide: **SOURCE-IMPLEMENTED**.
+- GitHub default-branch `main` landing redirect: **PENDING SEPARATE MAIN-BRANCH DOC CHANGE**.
+- Current maturity: **SOURCE-IMPLEMENTED / static validation pending**. No gameplay or acceptance status changes.
+
 ## 2026-09-27 - Provider-resolution train V3
 
 - 20 source-resolution cars cover characters, animation, fauna, creatures, architecture, vegetation, PBR, audio/music/voice, VFX, UI, terrain, enemies, battle support, regional kits and manual marketplace review.
