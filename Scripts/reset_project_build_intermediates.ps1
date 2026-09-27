@@ -353,7 +353,7 @@ foreach ($path in $paths) {
             }
 
             if ($null -ne $cleanupError) {
-                $isWin64Output = $fullPath.EndsWith("\\Binaries\\Win64", [StringComparison]::OrdinalIgnoreCase)
+                $isWin64Output = $fullPath.EndsWith("\Binaries\Win64", [StringComparison]::OrdinalIgnoreCase)
                 if (-not $isWin64Output) {
                     $afterGrantAcl = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
                     throw "BUILD_CLEANUP_RETRY_FAILED path=$fullPath blockedFile=$blockedFile identity=$identity attempts=$attempt error=$cleanupError $afterGrantAcl"
