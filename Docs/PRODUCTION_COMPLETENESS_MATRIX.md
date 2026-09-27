@@ -1,3 +1,9 @@
+## 2026-09-27 - Quaternius critical-source license capture
+
+- 13 high-value Quaternius lanes now have explicit official-page CC0 capture in the acquisition manifest.
+- Access/download resolution is still a separate gate; no interactive/store bypass is authorized.
+- Current maturity: **AUTHORIZED_FOR_STAGING where public download can be resolved; receipt/QC pending**.
+
 ## 2026-09-27 - Warehouse parser hardening after V1 staging evidence
 
 - Verified warehouse footprint from #265 before report failure: 247 payload files, 3.85 GB, 13 receipts and 667 receipt records; inventory audit PASS.
