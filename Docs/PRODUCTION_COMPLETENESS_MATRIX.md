@@ -1,3 +1,14 @@
+## 2026-09-27 - P1C01 Runtime Completion Train V1
+
+- Runtime car 1: weak player-pawn cache in LivingWorldDirector — **SOURCE-IMPLEMENTED**.
+- Runtime car 2: bounded world-event interaction pool — **SOURCE-IMPLEMENTED**.
+- Runtime car 3: bounded ambient-motion actor pool with Tick disabled while pooled — **SOURCE-IMPLEMENTED**.
+- Runtime car 4: per-cue SFX burst guard — **SOURCE-IMPLEMENTED**.
+- Runtime car 5: Pre-Unreal runtime regression guards — **SOURCE-IMPLEMENTED**.
+- Cars 6-20 (skeletal characters -> animations -> fauna -> audio -> save/quest -> saturation -> profiling -> Gate 6/7) are **QUEUED**, not implementation claims.
+- Runtime density/caps remain unchanged; no new synchronous heavy asset loading.
+- Current maturity: **SOURCE-IMPLEMENTED / exact-head Pre-Unreal + UE4.27 build/runtime validation pending**.
+
 ## 2026-09-27 - Quaternius critical-source license capture
 
 - 13 high-value Quaternius lanes now have explicit official-page CC0 capture in the acquisition manifest.
