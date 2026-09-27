@@ -1,3 +1,10 @@
+## 2026-09-27 - P1C01 player-experience convergence batch
+
+- Story dialogue continuity, mouse-look frame independence, quick-load rejection feedback, event-driven quest-trigger re-evaluation and bounded subtitle wrapping are implemented on the active fix branch.
+- The trigger repair preserves `PrimaryActorTick.bCanEverTick = false`; no per-frame quest-trigger polling was introduced.
+- P1C01 maturity remains unchanged until exact-head UE4.27 validation. This batch is **SOURCE-IMPLEMENTED / validation pending**, not PIE/device/visual accepted.
+- Map/Chronicle interaction policy is intentionally excluded from this defect batch and remains a later UX decision.
+
 ## 2026-09-27 - Import-fix validation infrastructure note
 
 - Unreal Build #896 did not reach production import on either attempt because stale MSVC intermediate metadata referenced a removed prior-run temp directory.
