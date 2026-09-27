@@ -1,0 +1,647 @@
+{
+  "schema_version": 1,
+  "train_id": "WAREHOUSE_SATURATION_TRAIN_V1_20_CARS",
+  "status": "PREPARATION_ACTIVE",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/TrilogyProductionAssetWarehouse.json",
+    "Data/GlobalWarehouseSourceRegistryV2.json",
+    "Data/ProductionAssetPromotionPolicyV1.json",
+    "Data/WholeGameAssetFamilyCoverageV1.json"
+  ],
+  "source_basis": [
+    "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25",
+    "11_MASTER_PRODUCTION_SYSTEMS_AND_SOURCE_INDEX",
+    "10_3D_VISUAL_ASSET_ATLAS_PRODUCTION"
+  ],
+  "objective": "Saturate missing warehouse families without blind mirroring. Each car prepares the best-fit 1-3 source lanes, preserves provenance and stops at the evidence ceiling appropriate to the available source/access state.",
+  "global_rules": [
+    "Do not mirror entire providers indiscriminately.",
+    "Prefer the best-fit 1-3 candidates per warehouse slot before duplication.",
+    "Public/source-compatible lanes may be staged automatically only when access policy allows it.",
+    "Authentication, account, purchase, marketplace and manual-license lanes remain preparation/manual-review only until explicit access exists.",
+    "Every staged file requires provider, source page, license/entitlement, local receipt, SHA256, size and intended slot.",
+    "Animated final production assets must be FBX.",
+    "Production textures must be PNG/TGA; use channel packing where appropriate; BMP is forbidden.",
+    "Audio production masters must be WAV before UE import.",
+    "Heavy runtime assets remain soft referenced and asynchronously loaded with FStreamableManager.",
+    "Repeated world detail uses ISM/HISM; crowd/common transient actors use pooling.",
+    "No warehouse-preparation car opens a new runtime chapter or changes story anchors."
+  ],
+  "promotion_states": [
+    "SOURCE_REGISTERED",
+    "CANDIDATE",
+    "AUTHORIZED_FOR_STAGING",
+    "STAGED",
+    "INTAKE_QC",
+    "READY_FOR_IMPORT",
+    "IMPORTED",
+    "INTEGRATED",
+    "ACCEPTED"
+  ],
+  "cars": [
+    {
+      "order": 1,
+      "id": "CAR01_GLOBAL_PBR_SURFACES",
+      "priority": "CRITICAL",
+      "families": [
+        "GLOBAL_SURFACE_LIBRARY"
+      ],
+      "gaps": [
+        "final materials/textures",
+        "2K-ready PBR diversity across 28 regions"
+      ],
+      "providers": [
+        "POLY_HAVEN",
+        "AMBIENTCG",
+        "CGBOOKCASE"
+      ],
+      "access_mode": "PUBLIC_CLEAR_LICENSE",
+      "target": [
+        "ground",
+        "stone",
+        "wood",
+        "plaster",
+        "metal",
+        "cloth",
+        "leather",
+        "bark",
+        "foliage",
+        "snow",
+        "ash",
+        "mud",
+        "wet stone"
+      ],
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 2,
+      "id": "CAR02_SHIRE_BREE_ROHAN_ARCHITECTURE",
+      "priority": "CRITICAL",
+      "families": [
+        "PASTORAL_SETTLEMENT"
+      ],
+      "gaps": [
+        "realistic rural/medieval support architecture",
+        "farm/outbuilding/stable stock"
+      ],
+      "providers": [
+        "QUATERNIUS",
+        "KENNEY",
+        "KAYKIT"
+      ],
+      "access_mode": "PUBLIC_CC0_SUPPORT",
+      "target": [
+        "farm buildings",
+        "outbuildings",
+        "village support",
+        "fences",
+        "gates",
+        "market",
+        "stables"
+      ],
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 3,
+      "id": "CAR03_HERO_CHARACTER_BASES",
+      "priority": "CRITICAL",
+      "families": [
+        "A_CHARACTERS"
+      ],
+      "gaps": [
+        "Frodo/Gandalf/Sam real skeletal production bases",
+        "remaining core cast base bodies"
+      ],
+      "providers": [
+        "MIXAMO",
+        "ACCURIG",
+        "MAKEHUMAN"
+      ],
+      "access_mode": "MIXED_MANUAL_TOOLING",
+      "target": [
+        "hobbit base",
+        "tall wizard base",
+        "standard humanoid base",
+        "dwarf base"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 4,
+      "id": "CAR04_HUMANOID_ANIMATION_LIBRARY",
+      "priority": "CRITICAL",
+      "families": [
+        "F_ANIMATION"
+      ],
+      "gaps": [
+        "locomotion",
+        "social",
+        "interaction",
+        "combat",
+        "mounted"
+      ],
+      "providers": [
+        "MIXAMO",
+        "ROKOKO",
+        "ACTORCORE"
+      ],
+      "access_mode": "AUTH_MANUAL",
+      "target": [
+        "idle",
+        "walk",
+        "run",
+        "sprint",
+        "crouch",
+        "jump",
+        "turn",
+        "sit",
+        "carry",
+        "doors",
+        "talk",
+        "hit",
+        "death",
+        "bow",
+        "sword",
+        "staff",
+        "mounted"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 5,
+      "id": "CAR05_SHIRE_AUDIO_FOLEY_AMBIENCE",
+      "priority": "CRITICAL",
+      "families": [
+        "C_AUDIO"
+      ],
+      "gaps": [
+        "P1C01 dense ambience",
+        "footsteps",
+        "household",
+        "farm",
+        "river",
+        "hearth"
+      ],
+      "providers": [
+        "OPENGAMEART",
+        "SONNISS_GDC",
+        "FREESOUND"
+      ],
+      "access_mode": "PUBLIC_PLUS_API_MANUAL",
+      "target": [
+        "birds",
+        "wind",
+        "river",
+        "wood/stone/leaves/gravel/mud footsteps",
+        "fireplace",
+        "doors",
+        "latches",
+        "wood creaks",
+        "farm",
+        "water"
+      ],
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 6,
+      "id": "CAR06_FINAL_MUSIC_IDENTITY",
+      "priority": "HIGH",
+      "families": [
+        "C_AUDIO"
+      ],
+      "gaps": [
+        "authored/authorized score identity",
+        "state stems"
+      ],
+      "providers": [
+        "SCOTT_BUCKLEY",
+        "INCOMPETECH",
+        "FREEPD"
+      ],
+      "access_mode": "PER_TRACK_LICENSE_REVIEW",
+      "target": [
+        "pastoral",
+        "travel",
+        "tension",
+        "combat",
+        "recovery",
+        "social interior",
+        "cinematic light"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 7,
+      "id": "CAR07_VOICE_PIPELINE_AND_PLACEHOLDERS",
+      "priority": "HIGH",
+      "families": [
+        "C_AUDIO"
+      ],
+      "gaps": [
+        "authorized/original voice placeholders",
+        "Arabic/English pipeline"
+      ],
+      "providers": [
+        "AZURE_TTS",
+        "GOOGLE_CLOUD_TTS",
+        "AMAZON_POLLY"
+      ],
+      "access_mode": "SERVICE_TERMS_MANUAL",
+      "target": [
+        "temporary non-actor-clone voice pipeline",
+        "pronunciation testing",
+        "localized cue workflow"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 8,
+      "id": "CAR08_FOREST_VEGETATION",
+      "priority": "CRITICAL",
+      "families": [
+        "FOREST_BIOME",
+        "PASTORAL_SETTLEMENT"
+      ],
+      "gaps": [
+        "trees",
+        "shrubs",
+        "reeds",
+        "orchard",
+        "ground vegetation"
+      ],
+      "providers": [
+        "SPEEDTREE",
+        "FAB_QUixel_MEGASCANS",
+        "POLY_HAVEN"
+      ],
+      "access_mode": "MIXED_MANUAL_ACCOUNT_PUBLIC",
+      "target": [
+        "broadleaf",
+        "pine",
+        "hedges",
+        "shrubs",
+        "fern",
+        "reeds",
+        "orchard support",
+        "fallen logs"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 9,
+      "id": "CAR09_WATER_RIVER_COAST_KITS",
+      "priority": "HIGH",
+      "families": [
+        "WATER_RIVER_COAST"
+      ],
+      "gaps": [
+        "riverbanks",
+        "wet stone",
+        "boats",
+        "docks",
+        "spray/reference stock"
+      ],
+      "providers": [
+        "POLY_HAVEN",
+        "AMBIENTCG",
+        "QUATERNIUS"
+      ],
+      "access_mode": "PUBLIC_CLEAR_LICENSE",
+      "target": [
+        "river materials",
+        "riverbank meshes",
+        "boats",
+        "docks",
+        "wet-edge props",
+        "coast support"
+      ],
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 10,
+      "id": "CAR10_DARK_CAVE_RUIN_KITS",
+      "priority": "HIGH",
+      "families": [
+        "DARK_CAVE_RUIN"
+      ],
+      "gaps": [
+        "Moria/ruin reusable kit depth",
+        "cave support",
+        "broken masonry"
+      ],
+      "providers": [
+        "QUATERNIUS",
+        "KENNEY",
+        "KAYKIT"
+      ],
+      "access_mode": "PUBLIC_CC0_SUPPORT",
+      "target": [
+        "pillars",
+        "arches",
+        "stairs",
+        "bridges",
+        "rubble",
+        "doors",
+        "mine props",
+        "cave support"
+      ],
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 11,
+      "id": "CAR11_FORTIFICATION_KITS",
+      "priority": "HIGH",
+      "families": [
+        "FORTIFICATION"
+      ],
+      "gaps": [
+        "Helm's Deep/Gondor/Mordor reusable fortification stock"
+      ],
+      "providers": [
+        "QUATERNIUS",
+        "KENNEY",
+        "FAB_QUixel_MEGASCANS"
+      ],
+      "access_mode": "MIXED_PUBLIC_ACCOUNT",
+      "target": [
+        "walls",
+        "gates",
+        "towers",
+        "parapets",
+        "siege-ready modular support"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 12,
+      "id": "CAR12_ENEMIES_ORC_URUK_NAZGUL",
+      "priority": "HIGH",
+      "families": [
+        "E_ENEMIES_CREATURES"
+      ],
+      "gaps": [
+        "real rigs for Orc/Uruk/Nazgul families",
+        "named enemy production characters"
+      ],
+      "providers": [
+        "QUATERNIUS",
+        "CGTRADER",
+        "TURBOSQUID"
+      ],
+      "access_mode": "MIXED_PUBLIC_MARKETPLACE",
+      "target": [
+        "orc",
+        "uruk-hai",
+        "nazgul support",
+        "enemy equipment variants"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 13,
+      "id": "CAR13_HERO_CREATURE_RIGS",
+      "priority": "HIGH",
+      "families": [
+        "E_ENEMIES_CREATURES"
+      ],
+      "gaps": [
+        "troll",
+        "warg",
+        "spider",
+        "fell beast",
+        "mumakil",
+        "eagle",
+        "Ent",
+        "Balrog rig bases"
+      ],
+      "providers": [
+        "QUATERNIUS",
+        "CGTRADER",
+        "TURBOSQUID"
+      ],
+      "access_mode": "MIXED_PUBLIC_MARKETPLACE",
+      "target": [
+        "Cave Troll",
+        "Warg",
+        "Shelob-like spider base",
+        "Fell Beast base",
+        "Mumakil base",
+        "Great Eagle",
+        "Ent",
+        "Balrog pipeline base"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 14,
+      "id": "CAR14_BATTLE_ARMY_SETS",
+      "priority": "HIGH",
+      "families": [
+        "G_BATTLE_SETS"
+      ],
+      "gaps": [
+        "army readability",
+        "formation props",
+        "siege clutter",
+        "background battle support"
+      ],
+      "providers": [
+        "QUATERNIUS",
+        "KENNEY",
+        "KAYKIT"
+      ],
+      "access_mode": "PUBLIC_CC0_SUPPORT",
+      "target": [
+        "shields",
+        "banners",
+        "pikes",
+        "crossbows",
+        "ladders",
+        "rams",
+        "battle debris",
+        "formation markers"
+      ],
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 15,
+      "id": "CAR15_VFX_WEATHER_BATTLE",
+      "priority": "HIGH",
+      "families": [
+        "CINEMATIC_VFX_UI"
+      ],
+      "gaps": [
+        "rain",
+        "snow",
+        "mist",
+        "embers",
+        "fire",
+        "ash",
+        "dust",
+        "spray",
+        "webs"
+      ],
+      "providers": [
+        "ACTIONVFX",
+        "JANGAFX_FREE_VFX",
+        "EMBERGEN"
+      ],
+      "access_mode": "MIXED_PRODUCT_TOOL",
+      "target": [
+        "flipbooks",
+        "baked fire/smoke",
+        "weather support",
+        "siege debris support"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 16,
+      "id": "CAR16_UI_ICONS_FONTS_LOCALIZATION",
+      "priority": "HIGH",
+      "families": [
+        "CINEMATIC_VFX_UI"
+      ],
+      "gaps": [
+        "coherent UI icon bank",
+        "Arabic-safe font stack",
+        "map/dialogue/subtitle support"
+      ],
+      "providers": [
+        "KENNEY",
+        "GAME_ICONS_NET",
+        "TABLER_ICONS",
+        "GOOGLE_FONTS"
+      ],
+      "access_mode": "PUBLIC_LICENSE_REVIEW",
+      "target": [
+        "interaction icons",
+        "map icons",
+        "objective icons",
+        "subtitles",
+        "Arabic UI fonts"
+      ],
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 17,
+      "id": "CAR17_TERRAIN_HEIGHTMAP_AUTHORING",
+      "priority": "HIGH",
+      "families": [
+        "GLOBAL_SURFACE_LIBRARY",
+        "SNOW_ALPINE",
+        "MARSH_WETLAND"
+      ],
+      "gaps": [
+        "terrain reference",
+        "heightmaps",
+        "regional landform authoring"
+      ],
+      "providers": [
+        "USGS_EARTHEXPLORER",
+        "OPENTOPOGRAPHY",
+        "QGIS",
+        "GAEA"
+      ],
+      "access_mode": "DATASET_TOOL_MANUAL",
+      "target": [
+        "mountain",
+        "river valley",
+        "marsh",
+        "rolling pastoral",
+        "fortress approach"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 18,
+      "id": "CAR18_REGION_KITS_F2_F3",
+      "priority": "HIGH",
+      "families": [
+        "D_TRILOGY_WORLD_KITS"
+      ],
+      "gaps": [
+        "Rohan",
+        "Gondor",
+        "Mordor",
+        "Fangorn",
+        "Ithilien reusable culture kits"
+      ],
+      "providers": [
+        "QUATERNIUS",
+        "KENNEY",
+        "FAB_QUixel_MEGASCANS"
+      ],
+      "access_mode": "MIXED_PUBLIC_ACCOUNT",
+      "target": [
+        "Rohan hall/stable",
+        "Gondor pale stone",
+        "Mordor industrial",
+        "forest/ranger",
+        "settlement support"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 19,
+      "id": "CAR19_CAMP_BOAT_MARKET_HOUSEHOLD_PROPS",
+      "priority": "MEDIUM",
+      "families": [
+        "ARCHITECTURE_PROPS"
+      ],
+      "gaps": [
+        "camp",
+        "cookware",
+        "bedroll",
+        "boat/paddle",
+        "books/maps",
+        "food/tableware",
+        "market/farm clutter"
+      ],
+      "providers": [
+        "KENNEY",
+        "QUATERNIUS",
+        "KAYKIT"
+      ],
+      "access_mode": "PUBLIC_CC0_SUPPORT",
+      "target": [
+        "camp props",
+        "boat support",
+        "household props",
+        "market clutter",
+        "books",
+        "food",
+        "tableware"
+      ],
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 20,
+      "id": "CAR20_WAREHOUSE_COVERAGE_AND_DEDUPE",
+      "priority": "CRITICAL",
+      "families": [
+        "WAREHOUSE_INFRA"
+      ],
+      "gaps": [
+        "exact filled/pending counts",
+        "duplicate source detection",
+        "slot coverage reporting"
+      ],
+      "providers": [
+        "PROJECT_OWNED"
+      ],
+      "access_mode": "LOCAL_ONLY",
+      "target": [
+        "category coverage report",
+        "provider overlap",
+        "duplicate hashes",
+        "state counts",
+        "ready/imported/integrated/accepted counts"
+      ],
+      "ceiling": "STATIC_VALIDATED"
+    }
+  ],
+  "merge_order_rule": "Cars may be prepared in parallel, but runtime/import promotion is serialized behind current exact-head validation and the active P1C01 gate. Preparation does not imply import.",
+  "evidence_boundary": "This train expands warehouse preparation and intake-QC capacity only. No car is considered READY/IMPORTED/INTEGRATED/ACCEPTED without its required evidence."
+}
