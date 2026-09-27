@@ -1,3 +1,13 @@
+## 2026-09-28 - P1C01 mega warehouse promotion preparation started
+
+- Production is continuing while PR #133 exact-head Unreal #1033 remains queued; the PR #133 head is intentionally left unchanged.
+- The fastest asset path is now to exploit the already-staged warehouse before adding more sources. The latest proven warehouse audit reported 13,377 payload files / 5,426,414,977 bytes.
+- New `WarehouseP1C01MegaPromotionTrainV1` prioritizes Shire surfaces, architecture/props, ambience/foley, fauna and character/animation support from already-authorized/staged providers.
+- New `run_warehouse_p1c01_mega_promotion.ps1` verifies receipt hashes, copies/extracts only selected bounded assets, rejects dangerous/BMP payloads, requires FBX for animated classes, and converts blockers into a manual queue instead of stopping the whole train.
+- Original warehouse payloads are never modified. The promotion ceiling remains `INTAKE_QC`; no item is called READY_FOR_IMPORT automatically.
+- No C++/runtime source changed in this preparation branch.
+- Current maturity: **SOURCE-IMPLEMENTED / HOSTED STATIC VALIDATION PENDING / WAREHOUSE EXECUTION PENDING**.
+
 ## 2026-09-28 - PG-167 administrative runner guard aligned
 
 - Pre-Unreal #1289 proved the new hosted Python fast path works, emitting `PYTHON_FAST_PATH_PASS` with Python 3.12.10.
