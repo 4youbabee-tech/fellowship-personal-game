@@ -1,3 +1,9 @@
+## 2026-09-27 - Import-fix validation infrastructure note
+
+- Unreal Build #896 did not reach production import on either attempt because stale MSVC intermediate metadata referenced a removed prior-run temp directory.
+- CI build recovery now includes the observed C1083/compiler-intermediate signature and performs one bounded project-intermediate reset/retry.
+- No P1C01 gameplay/visual/PIE/device maturity changes. Fresh exact-head compile/import proof remains pending.
+
 ## 2026-09-27 - P1C01 production-import blocker status
 
 - Local one-click import produced concrete failure evidence on `WorldGridMaterial.uasset` because the importer dirtied a non-project Engine package.
