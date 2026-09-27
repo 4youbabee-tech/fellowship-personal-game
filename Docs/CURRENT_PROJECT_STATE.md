@@ -1,3 +1,11 @@
+## 2026-09-27 - Runner watchdog state-contract blocker repaired on active material branch
+
+- Unreal #915 and #920 both stopped before compilation at `Verify runner session health` with `RUNNER_HEALTH_FAIL watchdog-state state=Ready`.
+- Root cause is a validator-policy mismatch: `install_runner_watchdog.ps1` explicitly accepts both `Running` and `Ready` as healthy scheduled-task states, while `verify_runner_session.ps1` accepted only `Running`.
+- The verifier now accepts the same `Running|Ready` contract and continues into the stricter live process checks for exactly one interactive-user `Runner.Listener`, active `Runner.Worker`, session ownership, network, workspace and resources.
+- `Ready` is logged explicitly as `RUNNER_HEALTH_WATCHDOG_READY`; it is not relabeled as engine proof.
+- Evidence boundary: **CI validator-policy fix implemented / fresh exact-head rerun required**. No compile/import/PIE/device/visual claim is created by this repair.
+
 ## 2026-09-27 - P1C01 material train expanded to the full authorized Poly Haven surface set
 
 - The active #118 material batch now covers all **16** Poly Haven Shire/Bag End surface candidates already authorized by `P1C01WarehousePromotionQueueV1.json`, rather than the earlier 8-item subset.
