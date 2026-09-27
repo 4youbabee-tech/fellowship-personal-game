@@ -1,3 +1,8 @@
+## 2026-09-27 - Warehouse run #268 intake preparation boundary
+
+- Warehouse #268 on `cdc841c` passed the inventory audit (247 payload files, 3,851,680,492 bytes, 14 receipts, 667 receipt records, 215 duplicate hash groups) and the 20-car saturation report (11 staged cars, 2 public-pending, 6 manual-pending). It then failed after extraction in critical-gap preparation on PowerShell `Argument types do not match` at `foreach($f in @($scanFiles))`; provider resolution did not run.
+- Corrected iteration over the generic list and empty-category byte aggregation. The actual outcome is pending the next exact-head warehouse run. No new asset is called `READY_FOR_IMPORT`, `IMPORTED`, integrated, visual-accepted or performance-accepted from this warehouse report.
+
 ## 2026-09-27 - Exact-head UE recovery and bounded warehouse rerun
 
 - `6ca804397300aea713d7329964f63c67a9d4a612`: Pre-Unreal #1257 SUCCESS; Unreal #1022 SUCCESS on the supervised interactive-user runner. It passed C++ build, UE4.27.2 production import, Automation Framework, headless startup/chapter/story-state/warning audits, Windows cook-stage-archive, packaged Data verification and packaged executable launch observation. This establishes machine validation on this head, not human PIE/visual/pacing or target-device performance acceptance.

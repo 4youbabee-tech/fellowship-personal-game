@@ -24,6 +24,13 @@ New-Item -ItemType Directory -Path $OutputRoot -Force | Out-Null
 $ExpandedRoot = Join-Path $OutputRoot "expanded"
 New-Item -ItemType Directory -Path $ExpandedRoot -Force | Out-Null
 
+function Get-SizeSum {
+  param([object[]]$Items)
+  [int64]$total=0
+  foreach($item in $Items){$total += [int64]$item.size}
+  return $total
+}
+
 function Get-OptionalPropertyValue {
   param(
     [object]$Object,
@@ -139,7 +146,7 @@ foreach($row in $verified){
 }
 
 $inventory=@()
-foreach($f in @($scanFiles)){
+foreach($f in $scanFiles){
   $ext=$f.extension
   if($dangerous -contains $ext){
     $blocked += [ordered]@{provider=$f.provider;asset_id=$f.asset_id;path=$f.path;reason="dangerous_extracted_extension"}
@@ -180,10 +187,10 @@ foreach($f in @($scanFiles)){
 }
 
 $roleSummary=@($inventory | Group-Object role | Sort-Object Name | ForEach-Object{
-  [ordered]@{role=$_.Name;files=$_.Count;bytes=[int64](($_.Group|Measure-Object -Property size -Sum).Sum)}
+  [ordered]@{role=$_.Name;files=$_.Count;bytes=(Get-SizeSum -Items @($_.Group))}
 })
 $providerSummary=@($inventory | Group-Object provider | Sort-Object Name | ForEach-Object{
-  [ordered]@{provider=$_.Name;files=$_.Count;bytes=[int64](($_.Group|Measure-Object -Property size -Sum).Sum)}
+  [ordered]@{provider=$_.Name;files=$_.Count;bytes=(Get-SizeSum -Items @($_.Group))}
 })
 
 $cars=@()
@@ -207,7 +214,7 @@ foreach($car in @($manifest.cars|Sort-Object order)){
   $matches=@($inventory|Where-Object{$matchRoles -contains $_.role})
   $cars += [ordered]@{
     order=[int]$car.order;id=[string]$car.id;scope=[string]$car.scope;goal=[string]$car.goal;
-    matched_files=$matches.Count;matched_bytes=[int64](($matches|Measure-Object -Property size -Sum).Sum);
+    matched_files=$matches.Count;matched_bytes=(Get-SizeSum -Items $matches);
     state=if($matches.Count -gt 0){"INTAKE_QC_DATA_PRESENT"}else{"PENDING_SOURCE_OR_CLASSIFICATION"};
     ceiling="INTAKE_QC"
   }
