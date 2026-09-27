@@ -1,3 +1,11 @@
+## 2026-09-28 - Zero-waste trigger routing
+
+- MasterExecutionRoadmap governance-only Unreal exclusion: **SOURCE-IMPLEMENTED**.
+- Receipt-integrity fail-fast before archive scan: **SOURCE-IMPLEMENTED**.
+- PG-184 preflight regression guard: **SOURCE-IMPLEMENTED**.
+- Repair-PR expected heavy-run count: **0 Warehouse / 0 Unreal**, hosted Pre-Unreal only.
+- Exact-head proof: **PENDING**.
+
 ## 2026-09-28 - CI split-lane root repair
 
 - Hosted Pre-Unreal static/policy lane: **SOURCE-IMPLEMENTED**.
