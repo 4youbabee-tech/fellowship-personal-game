@@ -1,3 +1,27 @@
+## 2026-09-27 - Runtime train character-rig async recovery hardened
+
+- Existing `UShireChapterAssetStreamingSubsystem` already owns the production skeletal-rig path with `FSoftObjectPath`, `FStreamableManager`, standardized `/Game/Production/Characters/Rigs/<Character>/` object paths, player/NPC callbacks and modular fallback.
+- A real maturity edge case was repaired: a rig missing on the first availability check was previously cached as unavailable for the entire GameInstance.
+- Missing rig packages now re-check at a bounded **2 second minimum interval** only when requested; no Tick/polling loop was added.
+- If the skeletal mesh + AnimBP packages appear after import, the subsystem logs `availability-recovered` and continues through the existing asynchronous load path without requiring a game restart.
+- Large NPC groups cannot hammer the filesystem every request because the retry timestamp is stored per character rig request.
+- This does **not** claim that a legal Frodo/Gandalf/Sam skeletal FBX bundle exists yet; it hardens the runtime infrastructure that will consume the first accepted bundle.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**.
+
+## 2026-09-27 - P1C01 Runtime Completion Train V1 source implementation
+
+- New runtime branch: `production/p1c01-runtime-completion-train-v1`.
+- First five runtime-completion cars are source-implemented:
+  1. `LivingWorldDirector` now caches the player pawn through a weak pointer and only reacquires through one direct `GetPlayerPawn` lookup; cache is invalidated on chapter/experience transitions.
+  2. `AShireWorldEventInteraction` receives explicit activate/deactivate pool lifecycle and is reused by the director through a bounded pool.
+  3. `AWorldAmbientMotionActor` receives explicit pool lifecycle, disables Tick/collision/visibility while pooled, clears glow state on reuse, and is reused through a bounded pool.
+  4. Existing ambient-NPC pooling remains intact; micro-event cleanup now dispatches NPC/interactions/motion actors to their respective pools instead of destroying all ephemeral actors.
+  5. `UShireAudioSubsystem` adds a small per-cue repeat guard (0.06s) to suppress burst duplicate SFX without adding Tick or changing async asset ownership.
+- No crowd density, fauna cap, quest/chapter ID, story anchor, or synchronous heavy asset load was introduced.
+- `Data/P1C01RuntimeCompletionTrainV1.json` defines the full 20-car serialized path through skeletal rigs, locomotion, core cast, fauna, audio, save/quest resilience, visual saturation, profiling and Gate 6/7. Cars 6-20 remain explicitly queued behind evidence gates.
+- `pre_unreal_validate.py` adds PG-183 source invariants for the 20-car train, single direct player lookup, pooling lifecycle and SFX guard.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**. No COMPILE-TESTED, PIE/device/visual/performance acceptance is claimed yet.
+
 ## 2026-09-27 - Warehouse provider-resolution train V3 prepared
 
 - V3 is stacked behind the critical-gap V2 branch and resolves provider/access blockers rather than adding another uncontrolled source list.
