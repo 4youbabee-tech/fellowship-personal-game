@@ -1,3 +1,30 @@
+## 2026-09-27 - P1C01 Runtime Completion Train V1
+
+Registered before implementation under existing `REQ-AUDIT-001`, `REQ-PERF-001`, `REQ-WORLD-001`, `REQ-PROD-009`, `REQ-SAVE-001` and current lane `W01_P1C01_PRODUCTION_VERTICAL_SLICE`.
+
+This is a serialized runtime-production train, not a new chapter.
+
+Initial cars implemented in this batch:
+1. Cache the player pawn inside `LivingWorldDirector` and only reacquire when the weak pointer becomes invalid; remove repeated `GetPlayerPawn` lookups from maintenance/event paths.
+2. Add bounded pooling for `AShireWorldEventInteraction` so recurring micro-events do not churn Spawn/Destroy.
+3. Add bounded pooling for `AWorldAmbientMotionActor` with explicit activate/deactivate semantics and Tick disabled while pooled.
+4. Preserve existing ambient-NPC pooling and current fauna/event density caps.
+5. Add a small per-cue SFX repeat guard in `ShireAudioSubsystem` to stop burst duplication while preserving ordinary footstep/interaction cadence.
+6. Keep all heavy audio resolution asynchronous through the existing `FStreamableManager`; no synchronous heavy-load path is introduced.
+
+Performance/safety boundaries:
+- No new per-frame system is added.
+- No crowd Spawn/Destroy expansion.
+- No density increase.
+- No quest/chapter/story-anchor changes.
+- Pool caps remain bounded and excess actors may still be destroyed when a pool is full.
+- Existing interaction safety checks (route/chapter/danger/world-commit) remain authoritative.
+
+Later cars in this same train remain gated in this order:
+character skeletal runtime replacement -> locomotion/retarget integration -> living fauna presentation -> audio bank integration -> quest/save resilience -> target-device profiling -> Gate 6/7.
+
+Status: **REGISTERED / IMPLEMENTATION STARTED**. No PIE/device/visual/performance acceptance is implied.
+
 ## 2026-09-27 - Warehouse provider-resolution train V3
 
 Registered before implementation as the fourth warehouse preparation layer, stacked behind V2.
