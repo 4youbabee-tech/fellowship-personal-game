@@ -2160,7 +2160,11 @@
         "Data/Part1SonicWorldPlan.json",
         "Source/ShireJourney/StoryPresentationDirector.cpp",
         "Source/ShireJourney/ShireNPC.cpp",
-        "Source/ShireJourney/ShireAudioSubsystem.cpp"
+        "Source/ShireJourney/ShireAudioSubsystem.cpp",
+        "Source/ShireJourney/Public/Characters/ShireFootstepComponent.h",
+        "Source/ShireJourney/Private/Characters/ShireFootstepComponent.cpp",
+        "Source/ShireJourney/Public/Subsystems/ShireAudioSubsystem.h",
+        "Source/ShireJourney/Private/Subsystems/ShireAudioSubsystem.cpp"
       ],
       "implementation_refs": [
         "Source 02: character narrative identity must remain distinct from shared animation technology; posture/gait/performance must reflect character.",
@@ -2168,7 +2172,8 @@
         "Source 08: hero vistas, cinematic anchors and correct chapter/state reference govern presentation.",
         "Source 11: source lock -> blocking -> camera -> performance -> gameplay seam -> QA; preserve geography before spectacle; audio sells the physical world first.",
         "Data/AudioAssetSourcingWaveV2.json defines the cinematic offline audio warehouse, source registry, spatial/concurrency/mix contract and approval boundaries.",
-        "ExternalAssetManifest now stores the owner-supplied ElevenLabs/BOOM/PSE/film-score/film-dialogue/EA-audio discovery directive with item-level approval boundaries."
+        "ExternalAssetManifest now stores the owner-supplied ElevenLabs/BOOM/PSE/film-score/film-dialogue/EA-audio discovery directive with item-level approval boundaries.",
+        "P1C01 footstep runtime now samples travel at a 20 Hz component cadence, traces only at stride boundaries, classifies the contacted surface, and routes approved SFX through reusable bounded 3D attenuation; missing authored cues remain silent instead of loading placeholders."
       ],
       "missing_work": [
         "Author final Level Sequences and shot blocking after stable rigs exist.",
@@ -2196,7 +2201,7 @@
         "REQ-SOURCE-001"
       ],
       "checkpoint": "CINEMATIC_CHARACTER_SONIC_V3",
-      "notes": "Sonic direction is now production-sourcing ready, but final voice/music/SFX recordings remain pending. Existing runtime routing does not imply final audio acceptance."
+      "notes": "The surface-aware spatial footstep runtime path is implemented for P1C01, but sonic acceptance remains partial until approved authored cue assets are imported and exact-head Unreal plus later target-device listening/performance gates pass."
     },
     {
       "id": "REQ-PROD-010",

@@ -12,6 +12,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Kismet/GameplayStatics.h"
 #include "Misc/PackageName.h"
+#include "Sound/SoundAttenuation.h"
 #include "Sound/SoundBase.h"
 #include "UObject/SoftObjectPath.h"
 
@@ -38,6 +39,19 @@ void UShireAudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     ActiveMusicCue = NAME_None;
     PendingVoiceCue = NAME_None;
     PendingAudioLoads.Empty();
+    PendingSpatialSfx.Empty();
+
+    SpatialSfxAttenuation = NewObject<USoundAttenuation>(this);
+    if (SpatialSfxAttenuation)
+    {
+        FSoundAttenuationSettings& Settings = SpatialSfxAttenuation->Attenuation;
+        Settings.bAttenuate = true;
+        Settings.bSpatialize = true;
+        Settings.DistanceAlgorithm = EAttenuationDistanceModel::NaturalSound;
+        Settings.AttenuationShape = EAttenuationShape::Sphere;
+        Settings.AttenuationShapeExtents = FVector(110.0f, 0.0f, 0.0f);
+        Settings.FalloffDistance = 850.0f;
+    }
 
     if (UGameInstance* GI = GetGameInstance())
     {
@@ -80,7 +94,9 @@ void UShireAudioSubsystem::Deinitialize()
         }
     }
     PendingAudioLoads.Empty();
+    PendingSpatialSfx.Empty();
     PendingVoiceCue = NAME_None;
+    SpatialSfxAttenuation = nullptr;
 
     if (ActiveVoiceComponent)
     {
@@ -214,6 +230,10 @@ void UShireAudioSubsystem::HandleAsyncAudioReady(
     USoundBase* Sound = Cast<USoundBase>(AssetPath.ResolveObject());
     if (!Sound)
     {
+        if (Category == ShireAudioAssetPaths::SfxCategory)
+        {
+            PendingSpatialSfx.Remove(CueId);
+        }
         PendingAudioLoads.Remove(LoadKey);
         UE_LOG(
             LogTemp,
@@ -254,8 +274,26 @@ void UShireAudioSubsystem::HandleAsyncAudioReady(
     else if (Category == ShireAudioAssetPaths::SfxCategory)
     {
         SfxCache.Add(CueId, Sound);
-        UGameplayStatics::SpawnSound2D(
-            this, Sound, 1.0f, 1.0f, 0.0f, nullptr, false, true);
+        if (FPendingSpatialSfx* Pending = PendingSpatialSfx.Find(CueId))
+        {
+            UGameplayStatics::SpawnSoundAtLocation(
+                this,
+                Sound,
+                Pending->Location,
+                FRotator::ZeroRotator,
+                Pending->VolumeMultiplier,
+                Pending->PitchMultiplier,
+                0.0f,
+                SpatialSfxAttenuation,
+                nullptr,
+                true);
+            PendingSpatialSfx.Remove(CueId);
+        }
+        else
+        {
+            UGameplayStatics::SpawnSound2D(
+                this, Sound, 1.0f, 1.0f, 0.0f, nullptr, false, true);
+        }
     }
     else if (Category == ShireAudioAssetPaths::VoiceCategory)
     {
@@ -373,6 +411,55 @@ void UShireAudioSubsystem::PlaySfxCue(FName CueId)
             ShireAudioAssetPaths::SfxCategory))
     {
         UGameplayStatics::SpawnSound2D(this, Sound, 1.0f, 1.0f, 0.0f, nullptr, false, true);
+    }
+}
+
+void UShireAudioSubsystem::PlaySfxCueAtLocation(
+    FName CueId,
+    FVector WorldLocation,
+    float VolumeMultiplier,
+    float PitchMultiplier)
+{
+    if (CueId == NAME_None || !GetWorld())
+    {
+        return;
+    }
+
+    OnSfxRequested.Broadcast(CueId);
+
+    const FString Cue = CueId.ToString();
+    const FString PackagePath = FString::Printf(TEXT("%s%s"), ShireAudioAssetPaths::SFX, *Cue);
+    if (!FPackageName::DoesPackageExist(PackagePath))
+    {
+        // The runtime route is allowed to precede the approved audio bank. Missing
+        // authored cues remain silent and never trigger synchronous loads or warnings.
+        PendingSpatialSfx.Remove(CueId);
+        return;
+    }
+
+    FPendingSpatialSfx& Pending = PendingSpatialSfx.FindOrAdd(CueId);
+    Pending.Location = WorldLocation;
+    Pending.VolumeMultiplier = FMath::Clamp(VolumeMultiplier, 0.0f, 2.0f);
+    Pending.PitchMultiplier = FMath::Clamp(PitchMultiplier, 0.5f, 2.0f);
+
+    if (USoundBase* Sound = ResolveCategorizedAsset(
+            CueId,
+            ShireAudioAssetPaths::SFX,
+            SfxCache,
+            ShireAudioAssetPaths::SfxCategory))
+    {
+        UGameplayStatics::SpawnSoundAtLocation(
+            this,
+            Sound,
+            Pending.Location,
+            FRotator::ZeroRotator,
+            Pending.VolumeMultiplier,
+            Pending.PitchMultiplier,
+            0.0f,
+            SpatialSfxAttenuation,
+            nullptr,
+            true);
+        PendingSpatialSfx.Remove(CueId);
     }
 }
 
