@@ -1,3 +1,11 @@
+## 2026-09-27 - Warehouse train consolidation replaces stale-base prep PRs
+
+- The architecture/interiors/props preparation from former PR #119 and the character/audio/fauna preparation from former PR #120 are now consolidated onto `warehouse/p1c01-trilogy-saturation-train-v1`, which is based on post-#118 `develop`.
+- Consolidated artifacts include the architecture six-pack intake/QC lane plus character rig/animation, five-item Shire audio, and living-world fauna preparation scripts/manifests.
+- `pre_unreal_validate.py` now guards these consolidated lanes together with the 20-car warehouse saturation train.
+- This removes duplicated stale-base validation work while preserving all substantive preparation.
+- Evidence boundary remains **PREPARATION / STATIC CONTRACT**, pending exact-head validation of the consolidated branch.
+
 ## 2026-09-27 - Trilogy warehouse saturation train V1 prepared
 
 - Material PR #118 reached exact-head Pre-Unreal #1155 SUCCESS and Unreal #922 SUCCESS and was merged to `develop` at `fc7c67123248d70e9f568ee83f7110210e556cd7`.
