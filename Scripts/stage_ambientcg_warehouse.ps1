@@ -34,7 +34,14 @@ foreach($lane in $manifest.search_lanes){
     $name=($id + "_" + [string]$manifest.target_attribute + ".zip")
     $dest=Join-Path $destDir $name
     try {
-      if(-not (Test-Path $dest)){ Invoke-WarehouseDownload -Uri ([string]$match.downloadLink) -Headers $headers -OutFile $dest | Out-Null }
+      if((Test-Path -LiteralPath $dest -PathType Leaf) -and -not (Test-WarehouseZipReadable -Path $dest)){
+        Write-Warning ("AMBIENTCG_WAREHOUSE_REPAIR removing corrupt archive asset_id=" + $id + " path=" + $dest)
+        Remove-Item -LiteralPath $dest -Force -ErrorAction SilentlyContinue
+      }
+      if(-not (Test-Path -LiteralPath $dest -PathType Leaf)){
+        Invoke-WarehouseDownload -Uri ([string]$match.downloadLink) -Headers $headers -OutFile $dest | Out-Null
+      }
+      if(-not (Test-WarehouseZipReadable -Path $dest)){ throw "downloaded ZIP failed structural validation: $dest" }
       $file=Get-Item $dest
       if(($receipt.total_bytes + [int64]$file.Length) -gt [int64]$manifest.max_download_bytes){ Remove-Item $dest -Force; $receipt.skipped += [ordered]@{ asset_id=$id; reason="batch_byte_cap" }; continue }
       $hash=(Get-FileHash $dest -Algorithm SHA256).Hash.ToLowerInvariant()
