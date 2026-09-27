@@ -1,3 +1,12 @@
+## 2026-09-28 - Static-lane guard migration
+
+- Unreal classifier incremental/reset tests: **RUN-PROVEN** by hosted Pre-Unreal #1277.
+- Legacy PG-134 hosted-checkout migration: **SOURCE-IMPLEMENTED**.
+- Legacy PG-167 hosted static-lane migration: **SOURCE-IMPLEMENTED**.
+- PG-185 runner-token precision fix: **SOURCE-IMPLEMENTED**.
+- New exact-head static result: **PENDING**.
+- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
+
 ## 2026-09-28 - Warehouse cache self-repair hardening
 
 - Corrupt cached ZIP purge during receipt reuse: **SOURCE-IMPLEMENTED**.
