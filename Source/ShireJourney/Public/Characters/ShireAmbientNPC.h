@@ -157,6 +157,8 @@ private:
     float VisualHairBaseZ = 109.0f;
     FName AppliedVisualRole = NAME_None;
     TWeakObjectPtr<APawn> ObservedPlayer;
+    TWeakObjectPtr<APawn> CachedPlayerPawn;
+    APawn* GetPlayerPawnCached();
     TWeakObjectPtr<AShireAmbientNPC> SocialPartner;
     TWeakObjectPtr<AShireAmbientNPC> LastSocialPartner;
     FRandomStream Random;

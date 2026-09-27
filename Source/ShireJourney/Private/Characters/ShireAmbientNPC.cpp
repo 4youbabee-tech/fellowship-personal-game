@@ -630,6 +630,7 @@ void AShireAmbientNPC::ConfigureLivingWorldRoutine(
     bObservingPlayer = false;
     bSocializing = false;
     ObservedPlayer.Reset();
+    CachedPlayerPawn.Reset();
     SocialPartner.Reset();
     LastSocialPartner.Reset();
     WaitRemaining = Random.FRandRange(0.0f, 1.5f);
@@ -700,6 +701,17 @@ void AShireAmbientNPC::DeactivateForLivingWorldPool()
     SetActorTickEnabled(false);
     SetActorHiddenInGame(true);
     SetActorEnableCollision(false);
+}
+
+APawn* AShireAmbientNPC::GetPlayerPawnCached()
+{
+    APawn* CurrentPlayer = CachedPlayerPawn.Get();
+    if (!CurrentPlayer || !CurrentPlayer->IsPlayerControlled())
+    {
+        CurrentPlayer = UGameplayStatics::GetPlayerPawn(this, 0);
+        CachedPlayerPawn = CurrentPlayer;
+    }
+    return CurrentPlayer;
 }
 
 void AShireAmbientNPC::BeginPlay()
@@ -978,7 +990,7 @@ void AShireAmbientNPC::UpdateAwareness(float DeltaSeconds)
 
     SenseAccumulator = 0.45f + Random.FRandRange(0.0f, 0.20f);
 
-    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+    APawn* PlayerPawn = GetPlayerPawnCached();
     if (!PlayerPawn)
     {
         return;
@@ -1174,7 +1186,7 @@ void AShireAmbientNPC::UpdateSocialCaption(float DeltaSeconds)
         return;
     }
 
-    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+    APawn* PlayerPawn = GetPlayerPawnCached();
     if (!PlayerPawn)
     {
         SocialCaption->SetVisibility(false);
@@ -1258,7 +1270,7 @@ void AShireAmbientNPC::UpdateSocialLife(float DeltaSeconds)
 
     SocialCheckRemaining = Random.FRandRange(4.0f, 8.0f);
 
-    APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0);
+    APawn* PlayerPawn = GetPlayerPawnCached();
     if (!PlayerPawn ||
         FVector::DistSquared2D(PlayerPawn->GetActorLocation(), GetActorLocation()) > FMath::Square(1800.0f))
     {
@@ -1356,8 +1368,8 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
 
     UpdateSocialCaption(DeltaSeconds);
 
-    const AShirePlayerCharacter* ShirePlayer =
-        Cast<AShirePlayerCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+    APawn* PlayerPawn = GetPlayerPawnCached();
+    const AShirePlayerCharacter* ShirePlayer = Cast<AShirePlayerCharacter>(PlayerPawn);
     const bool bCommittedGameplay =
         !ShirePlayer || ShirePlayer->IsGameplayWorldCommitted();
     if (bCommittedGameplay)
@@ -1371,7 +1383,7 @@ void AShireAmbientNPC::Tick(float DeltaSeconds)
         ApplyVisualStyle();
     }
 
-    if (APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(this, 0))
+    if (PlayerPawn)
     {
         const float Distance = FVector::Dist2D(PlayerPawn->GetActorLocation(), GetActorLocation());
         PrimaryActorTick.TickInterval = Distance > DormantTickDistance ? 0.75f :
