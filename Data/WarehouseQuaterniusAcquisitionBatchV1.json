@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "batch_id": "WAREHOUSE_QUATERNIUS_SUPPORT_V3",
-  "status": "AUTHORIZED_FOR_STAGING",
+  "batch_id": "WAREHOUSE_QUATERNIUS_SUPPORT_V4",
+  "status": "AUTHORIZED_FOR_STAGING_EXPANDED_LICENSE_CAPTURE",
   "provider": "QUATERNIUS",
   "license": "PER_PACK_PAGE_LICENSE_CAPTURE_REQUIRED",
   "purpose": "Bulk-stage CC0 character, animation, fauna, creature-pipeline, architecture and prop packs for supporting production use and rig/world pipeline coverage.",
@@ -11,19 +11,25 @@
       "id": "QTN_UNIVERSAL_BASE_CHARACTERS",
       "url": "https://quaternius.com/packs/universalbasecharacters.html",
       "category": "CHARACTER_BASE",
-      "required_final_format": "FBX"
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "id": "QTN_FANTASY_OUTFITS",
       "url": "https://quaternius.com/packs/modularcharacteroutfitsfantasy.html",
       "category": "CHARACTER_OUTFITS",
-      "required_final_format": "FBX"
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "id": "QTN_RPG_CHARACTERS",
       "url": "https://quaternius.com/packs/rpgcharacters.html",
       "category": "NPC_CHARACTER_BASE",
-      "required_final_format": "FBX"
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "id": "QTN_ULTIMATE_MODULAR_WOMEN",
@@ -35,61 +41,81 @@
       "id": "QTN_UNIVERSAL_ANIMATION_LIBRARY",
       "url": "https://quaternius.com/packs/universalanimationlibrary.html",
       "category": "ANIMATION",
-      "required_final_format": "FBX"
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "id": "QTN_ULTIMATE_MONSTERS",
       "url": "https://quaternius.com/packs/ultimatemonsters.html",
       "category": "CREATURE_PIPELINE",
-      "required_final_format": "FBX"
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "id": "QTN_MEDIEVAL_VILLAGE_MEGAKIT",
       "url": "https://quaternius.com/packs/medievalvillagemegakit.html",
       "category": "ARCHITECTURE",
-      "required_final_format": "FBX"
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "id": "QTN_ULTIMATE_BUILDINGS",
       "url": "https://quaternius.com/packs/ultimatetexturedbuildings.html",
       "category": "ARCHITECTURE",
-      "required_final_format": "FBX"
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "id": "QTN_MODULAR_RUINS",
       "url": "https://quaternius.com/packs/ultimatemodularruins.html",
       "category": "RUINS",
-      "required_final_format": "FBX"
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "id": "QTN_MODULAR_DUNGEON",
       "url": "https://quaternius.com/packs/medievaldungeon.html",
       "category": "DUNGEON_ARCHITECTURE",
-      "required_final_format": "FBX"
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "id": "QTN_ULTIMATE_NATURE",
       "url": "https://quaternius.com/packs/ultimatenature.html",
       "category": "NATURE",
-      "required_final_format": "FBX"
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "id": "QTN_ULTIMATE_ANIMATED_ANIMALS",
       "url": "https://quaternius.com/packs/ultimateanimatedanimals.html",
       "category": "FAUNA",
-      "required_final_format": "FBX"
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "id": "QTN_FARM_ANIMALS",
       "url": "https://quaternius.com/packs/farmanimal.html",
       "category": "SHIRE_FAUNA",
-      "required_final_format": "FBX"
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "id": "QTN_FANTASY_PROPS_MEGAKIT",
       "url": "https://quaternius.com/packs/fantasypropsmegakit.html",
       "category": "PROPS",
-      "required_final_format": "FBX"
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "id": "QTN_FARM_BUILDINGS",
@@ -133,6 +159,8 @@
     "Animated production-character output accepted by the project remains FBX only even if the source pack also contains OBJ/glTF/Blend.",
     "Creature/monster packs are pipeline/support stock only; canonical hero creatures still require species-specific art, real rigs, deformation review and visual acceptance.",
     "If a pack resolves only to an interactive store page, record it as unresolved/manual-source rather than inventing a direct URL.",
-    "Downloaded archives stay STAGED until extracted/scanned and FBX/PNG/TGA intake checks pass."
-  ]
+    "Downloaded archives stay STAGED until extracted/scanned and FBX/PNG/TGA intake checks pass.",
+    "Observed CC0 capture authorizes staging attempts only; public-download discovery and receipt/SHA256 evidence are still required before STAGED."
+  ],
+  "notes": "V4 records explicit official-page CC0 capture for 13 previously unresolved high-value character/animation/fauna/creature/architecture/nature/prop packs. Public-download discovery remains separate; interactive/store-only routes are still unresolved rather than bypassed."
 }

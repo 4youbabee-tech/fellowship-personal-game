@@ -1,3 +1,20 @@
+## 2026-09-27 - Critical warehouse gap preparation train V2
+
+Registered after V1 warehouse saturation merged green.
+
+Purpose:
+- Convert staged warehouse payloads into evidence-rich INTAKE_QC candidates instead of leaving archives and mixed-format source stock unclassified.
+- Focus directly on the largest remaining gaps: skeletal characters, animation, creatures/fauna, architecture, vegetation, materials, audio, VFX, UI/localization and terrain.
+- Preserve original staged payloads. Preparation happens under a separate persistent prepared root.
+- Verify receipt SHA256 before extraction/classification.
+- ZIP extraction is allowed; RAR/7Z remain pending without an approved extractor.
+- Executable/script payloads and BMP textures are blocking.
+- Animated production assets remain FBX-only; audio requires WAV masters; PNG/TGA remain the production texture formats.
+- The train stops at INTAKE_QC and cannot promote READY_FOR_IMPORT automatically.
+- Runtime integration remains serialized behind project gates.
+
+Status: **REGISTERED / IMPLEMENTATION STARTED**.
+
 ## 2026-09-27 - Consolidate stale-base prep branches into warehouse train
 
 To keep the long production queue orderly, the substantive preparation work from PR #119 and PR #120 is folded into the 20-car warehouse saturation train based on current `develop`. This avoids re-running duplicated stale-base CI while preserving the prepared architecture, character, audio and fauna intake lanes.

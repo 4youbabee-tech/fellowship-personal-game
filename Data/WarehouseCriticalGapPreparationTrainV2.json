@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "train_id": "WAREHOUSE_CRITICAL_GAP_PREPARATION_TRAIN_V2_20_CARS",
+  "status": "PREPARATION_IMPLEMENTATION_ACTIVE",
+  "base_train": "WAREHOUSE_SATURATION_TRAIN_V1_20_CARS",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/TrilogyProductionAssetWarehouse.json",
+    "Data/GlobalWarehouseSourceRegistryV2.json",
+    "Data/ProductionAssetPromotionPolicyV1.json",
+    "Data/WholeGameAssetFamilyCoverageV1.json",
+    "Data/WarehouseSaturationTrainV1.json"
+  ],
+  "objective": "Turn staged warehouse payloads into evidence-rich intake-QC candidates instead of leaving archives and mixed-format source stock unclassified.",
+  "warehouse_root": "C:\\actions-runner\\_warehouse\\ShireJourney",
+  "prepared_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\_prepared_v2",
+  "global_ceiling": "INTAKE_QC",
+  "global_rules": [
+    "Never overwrite or delete original staged source payloads during preparation.",
+    "Verify staged source receipt SHA256 before extracting or classifying.",
+    "ZIP may be extracted into the prepared root; RAR/7Z remain pending unless an approved extractor exists.",
+    "Block executable/script payloads and BMP textures from production intake.",
+    "Animated character/creature/fauna final production assets require FBX.",
+    "Production textures accepted by the project are PNG/TGA; channel-packing debt remains explicit until actually authored.",
+    "Audio production masters require WAV before UE import.",
+    "No processing car may promote an item to READY_FOR_IMPORT without class-specific QC.",
+    "Hero identity/canon acceptance is separate from technical format readiness.",
+    "Repeated static detail remains an ISM/HISM candidate; crowds/fauna remain pooling candidates."
+  ],
+  "cars": [
+    {
+      "order": 1,
+      "id": "V2_01_RECEIPT_INTEGRITY_AND_DEDUPE",
+      "scope": "ALL",
+      "goal": "Verify receipts/hashes and detect duplicate payloads.",
+      "ready_signal": "verified_receipt_hash",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 2,
+      "id": "V2_02_ARCHIVE_EXTRACTION_SECURITY",
+      "scope": "ALL_ARCHIVES",
+      "goal": "Extract ZIP copies, inventory RAR/7Z debt, block dangerous files/BMP.",
+      "ready_signal": "archive_scanned",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 3,
+      "id": "V2_03_STATIC_MESH_FBX_INVENTORY",
+      "scope": "STATIC_3D",
+      "goal": "Inventory FBX static-mesh candidates and separate OBJ/glTF conversion debt.",
+      "ready_signal": "fbx_static_candidate",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 4,
+      "id": "V2_04_HERO_CHARACTER_RIG_INVENTORY",
+      "scope": "CHARACTER",
+      "goal": "Find skeletal FBX candidates for Frodo/Gandalf/Sam/shared rig families without claiming identity fit.",
+      "ready_signal": "skeletal_fbx_candidate",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 5,
+      "id": "V2_05_HUMANOID_ANIMATION_INVENTORY",
+      "scope": "ANIMATION",
+      "goal": "Inventory FBX animation libraries by locomotion/social/combat/mounted naming.",
+      "ready_signal": "animation_fbx_candidate",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 6,
+      "id": "V2_06_CREATURE_FAUNA_RIG_INVENTORY",
+      "scope": "CREATURE_FAUNA",
+      "goal": "Inventory animated animal/creature FBX candidates and retain skeleton/deformation debt.",
+      "ready_signal": "creature_fbx_candidate",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 7,
+      "id": "V2_07_ARCHITECTURE_WORLD_KIT_INVENTORY",
+      "scope": "ARCHITECTURE",
+      "goal": "Inventory settlement/fortification/dungeon/ruin FBX packs by region-support role.",
+      "ready_signal": "architecture_fbx_candidate",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 8,
+      "id": "V2_08_INTERIORS_PROPS_FOOD_INVENTORY",
+      "scope": "PROPS_INTERIOR",
+      "goal": "Inventory furniture/food/market/farm/camp/household candidates.",
+      "ready_signal": "prop_candidate",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 9,
+      "id": "V2_09_VEGETATION_NATURE_INVENTORY",
+      "scope": "VEGETATION",
+      "goal": "Inventory tree/shrub/grass/reed/rock nature stock and explicit LOD/cull debt.",
+      "ready_signal": "nature_candidate",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 10,
+      "id": "V2_10_PBR_MATERIAL_SET_INVENTORY",
+      "scope": "MATERIAL",
+      "goal": "Group albedo/normal/roughness/metallic/AO/height files into source material sets.",
+      "ready_signal": "pbr_set_candidate",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 11,
+      "id": "V2_11_TEXTURE_FORMAT_BUDGET_DEBT",
+      "scope": "TEXTURE",
+      "goal": "Report PNG/TGA-ready textures, non-production formats, oversized source files and channel-pack debt.",
+      "ready_signal": "texture_format_ready",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 12,
+      "id": "V2_12_AUDIO_WAV_MASTER_INVENTORY",
+      "scope": "AUDIO",
+      "goal": "Separate WAV masters from OGG/MP3/FLAC/ZIP source conversion debt.",
+      "ready_signal": "wav_master_candidate",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 13,
+      "id": "V2_13_AMBIENCE_FOLEY_CLASSIFICATION",
+      "scope": "AUDIO",
+      "goal": "Classify footsteps/ambience/foley/fire/water/fauna/impact candidates by filename/category.",
+      "ready_signal": "audio_role_classified",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 14,
+      "id": "V2_14_MUSIC_VOICE_SEPARATION",
+      "scope": "AUDIO",
+      "goal": "Keep music, voice/TTS and SFX lanes separated and prevent reference-only promotion.",
+      "ready_signal": "audio_lane_separated",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 15,
+      "id": "V2_15_VFX_WEATHER_SUPPORT_INVENTORY",
+      "scope": "VFX",
+      "goal": "Inventory flipbook/image-sequence/video/source VFX stock with conversion debt explicit.",
+      "ready_signal": "vfx_candidate",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 16,
+      "id": "V2_16_UI_ICONS_FONTS_LOCALIZATION",
+      "scope": "UI",
+      "goal": "Inventory PNG/SVG/icons/fonts and Arabic-localization support files.",
+      "ready_signal": "ui_support_candidate",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 17,
+      "id": "V2_17_TERRAIN_HEIGHTMAP_INVENTORY",
+      "scope": "TERRAIN",
+      "goal": "Inventory heightmap/GIS/terrain-source candidates without runtime integration.",
+      "ready_signal": "terrain_candidate",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 18,
+      "id": "V2_18_REGION_KIT_MAPPING_28",
+      "scope": "WORLD_REGIONS",
+      "goal": "Map prepared candidates to the 28 warehouse region slots without duplicating shared families.",
+      "ready_signal": "region_support_mapped",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 19,
+      "id": "V2_19_LOW_SPEC_PERFORMANCE_METADATA",
+      "scope": "ALL",
+      "goal": "Record byte-size/count/format/instance-policy metadata before engine profiling.",
+      "ready_signal": "budget_metadata_present",
+      "ceiling": "INTAKE_QC"
+    },
+    {
+      "order": 20,
+      "id": "V2_20_PROMOTION_READINESS_REPORT",
+      "scope": "ALL",
+      "goal": "Emit explicit prepared/pending/blocked counts and class-QC debt; never auto-promote.",
+      "ready_signal": "readiness_report_emitted",
+      "ceiling": "INTAKE_QC"
+    }
+  ],
+  "evidence_boundary": "Technical warehouse preparation only. No hero identity, skeletal deformation, visual, PIE, device or performance acceptance is created by this train."
+}

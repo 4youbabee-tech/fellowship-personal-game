@@ -1,3 +1,30 @@
+## 2026-09-27 - Critical Quaternius license blockers reduced
+
+- Official Quaternius pack pages were rechecked for the highest-value unresolved character/animation/fauna/creature/architecture/nature/prop candidates.
+- `WarehouseQuaterniusAcquisitionBatchV1.json` advances to V4 and records explicit official-page `CC0` capture for 13 previously license-unresolved packs, including universal character bases, fantasy outfits, RPG characters, universal animations, monsters, medieval village megakit, buildings, modular ruins/dungeon, nature, animated animals, farm animals and fantasy props.
+- This changes only staging authorization. Public-download discovery remains mandatory; interactive/store-only routes stay unresolved and are never bypassed.
+- Receipt/SHA256 and extracted intake QC remain required before any `STAGED` or later promotion evidence is accepted.
+- Evidence boundary: **LICENSE-CAPTURE / SOURCE-PREPARATION** only; no pack is claimed downloaded/imported/integrated/accepted from this change.
+
+## 2026-09-27 - Warehouse receipt parser blocker repaired after first real V1 staging run
+
+- Warehouse Stage #265 completed all provider staging steps successfully and the persistent inventory audit passed with **247 payload files / 3,851,680,492 bytes / 13 receipts / 667 receipt records / 215 duplicate-hash groups**.
+- The run failed only in the V1 saturation report because heterogeneous receipt schemas omit optional fields such as `file`, `archive`, `sha256`, `asset_slug` or `state` on some rows while `Set-StrictMode -Version Latest` treated direct property access as fatal.
+- `run_warehouse_saturation_train.ps1` now uses explicit optional-property access for receipt/header/item fields and safely handles file-vs-archive receipt shapes.
+- `run_warehouse_critical_gap_preparation.ps1` received the same hardening before first execution so V2 does not repeat the same schema failure.
+- The fix does not relax evidence requirements: actual files still require SHA256 verification before they count as verified/prepared.
+- Evidence boundary: **warehouse staging/audit evidence is real; V1/V2 reporting fix requires fresh exact-head validation**. No READY_FOR_IMPORT, PIE, device, visual or performance acceptance is inferred.
+
+## 2026-09-27 - Critical warehouse gap preparation train V2
+
+- Warehouse saturation PR #121 completed exact-head Pre-Unreal #1159 SUCCESS and Unreal #926 SUCCESS and merged at `70e7a3c0a03a7dbebbe6c70d822bab7a06c59e87`.
+- Warehouse Stage #265 was queued from that merge to pull/audit the public provider-compatible warehouse lanes.
+- New V2 branch `warehouse/critical-gap-preparation-train-v2` adds a second 20-car train focused on the largest remaining production gaps rather than source discovery.
+- `run_warehouse_critical_gap_preparation.ps1` verifies receipt SHA256, expands ZIP copies into a separate prepared root, blocks executable/BMP payloads, inventories FBX character/animation/creature/static-mesh candidates, separates mesh conversion debt, groups production texture/audio/UI/terrain source classes, and emits per-car prepared/pending/blocked counts.
+- Warehouse Stage now invokes the V2 processor after normal staging, inventory audit and V1 saturation reporting.
+- V2 cannot promote any file to `READY_FOR_IMPORT`; skeleton/skin/deformation, visual/canon, PIE/device/performance and class-specific QC remain required.
+- Evidence boundary: **SOURCE/PREPARATION IMPLEMENTED / exact-head validation pending**.
+
 ## 2026-09-27 - Warehouse train consolidation replaces stale-base prep PRs
 
 - The architecture/interiors/props preparation from former PR #119 and the character/audio/fauna preparation from former PR #120 are now consolidated onto `warehouse/p1c01-trilogy-saturation-train-v1`, which is based on post-#118 `develop`.

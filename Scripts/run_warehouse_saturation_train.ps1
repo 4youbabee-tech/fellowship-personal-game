@@ -24,6 +24,18 @@ if (-not (Test-Path -LiteralPath $ManifestPath -PathType Leaf)) {
 $manifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
 New-Item -ItemType Directory -Path $OutputRoot -Force | Out-Null
 
+function Get-OptionalPropertyValue {
+  param(
+    [object]$Object,
+    [string]$Name,
+    [object]$Default = $null
+  )
+  if ($null -eq $Object) { return $Default }
+  $prop = $Object.PSObject.Properties[$Name]
+  if ($null -eq $prop) { return $Default }
+  return $prop.Value
+}
+
 if ($StagePublicLanes) {
   $stageJobs = @(
     @{ script="stage_polyhaven_warehouse.ps1"; manifest="Data/WarehouseAcquisitionBatchV1.json"; label="Poly Haven" },
@@ -74,12 +86,16 @@ foreach ($receiptFile in $receiptFiles) {
     continue
   }
 
-  foreach ($item in @($receipt.files)) {
-    $path = [string]$item.file
-    $declaredHash = ([string]$item.sha256).ToLowerInvariant()
+  $receiptProvider = [string](Get-OptionalPropertyValue -Object $receipt -Name "provider" -Default "")
+  $receiptBatchId = [string](Get-OptionalPropertyValue -Object $receipt -Name "batch_id" -Default "")
+  $receiptItems = @(Get-OptionalPropertyValue -Object $receipt -Name "files" -Default @())
+
+  foreach ($item in $receiptItems) {
+    $path = [string](Get-OptionalPropertyValue -Object $item -Name "file" -Default "")
+    $declaredHash = ([string](Get-OptionalPropertyValue -Object $item -Name "sha256" -Default "")).ToLowerInvariant()
     if ([string]::IsNullOrWhiteSpace($path)) {
-      $path = [string]$item.archive
-      $declaredHash = ([string]$item.archive_sha256).ToLowerInvariant()
+      $path = [string](Get-OptionalPropertyValue -Object $item -Name "archive" -Default "")
+      $declaredHash = ([string](Get-OptionalPropertyValue -Object $item -Name "archive_sha256" -Default "")).ToLowerInvariant()
     }
 
     $exists = -not [string]::IsNullOrWhiteSpace($path) -and (Test-Path -LiteralPath $path -PathType Leaf)
@@ -93,12 +109,19 @@ foreach ($receiptFile in $receiptFiles) {
       $actualHash = (Get-FileHash -LiteralPath $path -Algorithm SHA256).Hash.ToLowerInvariant()
     }
 
+    $assetId = [string](Get-OptionalPropertyValue -Object $item -Name "asset_id" -Default "")
+    $assetSlug = [string](Get-OptionalPropertyValue -Object $item -Name "asset_slug" -Default "")
+    $category = [string](Get-OptionalPropertyValue -Object $item -Name "category" -Default "")
+    $sourcePage = [string](Get-OptionalPropertyValue -Object $item -Name "source_page" -Default "")
+    $itemState = [string](Get-OptionalPropertyValue -Object $item -Name "state" -Default "STAGED")
+    if ([string]::IsNullOrWhiteSpace($itemState)) { $itemState = "STAGED" }
+
     $records += [pscustomobject]@{
-      provider = [string]$receipt.provider
-      batch_id = [string]$receipt.batch_id
-      asset_id = [string]$item.asset_id
-      asset_slug = [string]$item.asset_slug
-      category = [string]$item.category
+      provider = $receiptProvider
+      batch_id = $receiptBatchId
+      asset_id = $assetId
+      asset_slug = $assetSlug
+      category = $category
       path = $path
       exists = $exists
       size = $size
@@ -106,8 +129,8 @@ foreach ($receiptFile in $receiptFiles) {
       declared_sha256 = $declaredHash
       actual_sha256 = $actualHash
       hash_ok = ($exists -and -not [string]::IsNullOrWhiteSpace($declaredHash) -and $declaredHash -eq $actualHash)
-      source_page = [string]$item.source_page
-      state = if ([string]::IsNullOrWhiteSpace([string]$item.state)) { "STAGED" } else { [string]$item.state }
+      source_page = $sourcePage
+      state = $itemState
     }
   }
 }
