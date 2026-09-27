@@ -40,6 +40,7 @@ void UShireAudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
     PendingVoiceCue = NAME_None;
     PendingAudioLoads.Empty();
     PendingSpatialSfx.Empty();
+    LastSfxPlaybackTimeSeconds.Empty();
 
     SpatialSfxAttenuation = NewObject<USoundAttenuation>(this);
     if (SpatialSfxAttenuation)
@@ -95,6 +96,7 @@ void UShireAudioSubsystem::Deinitialize()
     }
     PendingAudioLoads.Empty();
     PendingSpatialSfx.Empty();
+    LastSfxPlaybackTimeSeconds.Empty();
     PendingVoiceCue = NAME_None;
     SpatialSfxAttenuation = nullptr;
 
@@ -316,6 +318,32 @@ void UShireAudioSubsystem::ApplyMusicDuck(bool bDuck)
     }
 }
 
+bool UShireAudioSubsystem::CanPlaySfxNow(FName CueId)
+{
+    if (CueId == NAME_None)
+    {
+        return false;
+    }
+
+    const UWorld* World = GetWorld();
+    if (!World)
+    {
+        return false;
+    }
+
+    const double Now = static_cast<double>(World->GetTimeSeconds());
+    if (const double* LastTime = LastSfxPlaybackTimeSeconds.Find(CueId))
+    {
+        if ((Now - *LastTime) < static_cast<double>(MinSfxRepeatIntervalSeconds))
+        {
+            return false;
+        }
+    }
+
+    LastSfxPlaybackTimeSeconds.Add(CueId, Now);
+    return true;
+}
+
 void UShireAudioSubsystem::SetAmbienceCue(FName CueId)
 {
     if (CueId == ActiveAmbienceCue)
@@ -397,7 +425,7 @@ void UShireAudioSubsystem::SetMusicCue(FName CueId)
 
 void UShireAudioSubsystem::PlaySfxCue(FName CueId)
 {
-    if (CueId == NAME_None)
+    if (!CanPlaySfxNow(CueId))
     {
         return;
     }
@@ -420,7 +448,7 @@ void UShireAudioSubsystem::PlaySfxCueAtLocation(
     float VolumeMultiplier,
     float PitchMultiplier)
 {
-    if (CueId == NAME_None || !GetWorld())
+    if (!GetWorld() || !CanPlaySfxNow(CueId))
     {
         return;
     }
