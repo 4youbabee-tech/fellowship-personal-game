@@ -330,6 +330,7 @@ bool ALivingWorldDirector::LoadLifeSaturationContract()
 
 void ALivingWorldDirector::HandleChapterChanged(FName PreviousChapterId, FName NewChapterId)
 {
+    CachedPlayerPawn.Reset();
     SynchronizeCommittedWorld();
 }
 
@@ -338,6 +339,7 @@ void ALivingWorldDirector::HandleExperienceChanged(
     FName EpisodeId,
     FName PlayableCharacterId)
 {
+    CachedPlayerPawn.Reset();
     SynchronizeCommittedWorld();
 }
 
