@@ -1,3 +1,13 @@
+## 2026-09-27 - Three-car P1C01 preparation train staged behind active material/architecture lanes
+
+- Added character-rig/animation, Shire audio/foley/ambience and living-world fauna preparation manifests plus receipt/QC scripts.
+- Character prep preserves project-owned modular fallbacks and keeps unlicensed external character/animation packs blocked; final animated exchange remains FBX-only with skeleton/skin/retarget/deformation QC.
+- Audio prep covers exactly the five already-authorized P1C01 OpenGameArt CC0 candidates and requires WAV production masters before UE import.
+- Fauna prep preserves the existing project-owned bird/rabbit/butterfly fallback bank and LivingWorldEventPlan caps while keeping Quaternius animal packs blocked until explicit license capture.
+- Pre-Unreal guards all three prep cars against format, license, cap and evidence drift.
+- These lanes are preparation-only and do not overlap runtime integration while #118/#119 are still active.
+- Evidence boundary: **STATIC/PREPARATION IMPLEMENTED; exact-head validation pending**. No compile/import/PIE/device/visual/audio acceptance is claimed.
+
 ## 2026-09-27 - P1C01 player-experience convergence implementation
 
 Source-verified defects from the P1C01 interaction path are implemented as one bounded gameplay batch:
