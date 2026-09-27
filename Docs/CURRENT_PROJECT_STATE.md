@@ -1,10 +1,10 @@
 ## 2026-09-27 - Generated production import quarantine recheck
 
-- Exact-head Unreal Build Validation #993 on `5412efc` passed runner health and UE4.27.2 C++ compilation, then failed before asset import. The log shows `icacls` processed **650 files with 0 failures**, but the subsequent move of generated `Content/Production` still returned `Access is denied` (exit 54).
-- The failure did not establish whether source/destination ACLs, volume behavior, or an open handle caused the move denial. The UE import commandlet, Automation QA, startup/runtime audits, and packaging did not run.
-- Candidate repair moves rollback and failed-import storage under `%RUNNER_TEMP%`, verifies source and destination drive letters match before moving, and prints the runner-temp ACL if quarantine fails. This makes the intended same-volume rename explicit and adds destination diagnostics; success remains unproven until exact-head UE4.27 import completes.
-- Authored `SourceAssets/Production` remains untouched. No PIE, device, visual, or performance acceptance is claimed.
-- Status: **#993 COMPILE-TESTED; import blocked. Candidate repair pending Pre-Unreal and exact-head Unreal rerun**.
+- Exact-head Unreal Build Validation #993 on `5412efc` passed UE4.27.2 C++ compilation, then failed before asset import: `icacls` processed 650 generated files with 0 failures, but moving `Content/Production` returned `Access is denied` (exit 54).
+- Candidate commit `33802aa` moved rollback storage to `%RUNNER_TEMP%` and verified matching drive letters. Unreal #994 again compiled C++, then the move failed with `Access is denied`. The source ACL, its parent ACL, and `RUNNER_TEMP` ACL were printed; each shows Modify or Full Control for the runner identity or its Authenticated Users group.
+- The error therefore remains unresolved by the same-volume destination change. The logs do not identify a locking process, and ACL output does not show a missing Modify grant. The next diagnostic uses Windows Restart Manager to report processes holding files in generated `Content/Production` if quarantine fails.
+- UE import, Automation QA, startup/runtime audits, packaging, and packaged startup did not run. Authored `SourceAssets/Production` remains untouched.
+- Status: **#994 COMPILE-TESTED; quarantine/import failed. Process-lock diagnosis pending exact-head Pre-Unreal and Unreal rerun**. No PIE, device, visual, or performance acceptance is claimed.
 
 ## 2026-09-27 - Runtime train character-rig async recovery hardened
 

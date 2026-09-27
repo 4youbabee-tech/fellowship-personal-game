@@ -613,6 +613,7 @@ pg184_import_markers = (
     'move "%PRODUCTION_DIR%" "%BACKUP_DIR%"',
     'icacls "%PRODUCTION_DIR%"',
     'icacls "%RUNNER_TEMP%"',
+    'ci_report_production_locks.ps1" -Root "%PRODUCTION_DIR%',
     'goto :restore_previous',
     'move "%BACKUP_DIR%" "%PRODUCTION_DIR%"',
 )

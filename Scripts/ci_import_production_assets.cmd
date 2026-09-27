@@ -54,6 +54,8 @@ if exist "%PRODUCTION_DIR%" (
     icacls "%PRODUCTION_DIR%"
     icacls "%GITHUB_WORKSPACE%\Content"
     icacls "%RUNNER_TEMP%"
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\Scripts\ci_report_production_locks.ps1" -Root "%PRODUCTION_DIR%"
+    if errorlevel 1 echo WARNING: production lock diagnostics did not complete.
     exit /b 54
   )
   set "HAD_OUTPUT=1"
