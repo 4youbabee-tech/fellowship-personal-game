@@ -1,3 +1,11 @@
+## 2026-09-27 - Critical Quaternius license blockers reduced
+
+- Official Quaternius pack pages were rechecked for the highest-value unresolved character/animation/fauna/creature/architecture/nature/prop candidates.
+- `WarehouseQuaterniusAcquisitionBatchV1.json` advances to V4 and records explicit official-page `CC0` capture for 13 previously license-unresolved packs, including universal character bases, fantasy outfits, RPG characters, universal animations, monsters, medieval village megakit, buildings, modular ruins/dungeon, nature, animated animals, farm animals and fantasy props.
+- This changes only staging authorization. Public-download discovery remains mandatory; interactive/store-only routes stay unresolved and are never bypassed.
+- Receipt/SHA256 and extracted intake QC remain required before any `STAGED` or later promotion evidence is accepted.
+- Evidence boundary: **LICENSE-CAPTURE / SOURCE-PREPARATION** only; no pack is claimed downloaded/imported/integrated/accepted from this change.
+
 ## 2026-09-27 - Warehouse receipt parser blocker repaired after first real V1 staging run
 
 - Warehouse Stage #265 completed all provider staging steps successfully and the persistent inventory audit passed with **247 payload files / 3,851,680,492 bytes / 13 receipts / 667 receipt records / 215 duplicate-hash groups**.
