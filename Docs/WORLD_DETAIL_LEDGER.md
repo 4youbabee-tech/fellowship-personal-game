@@ -1,3 +1,23 @@
+## 2026-09-27 - P1C01 Acceptance Closure Train V1
+
+Registered before implementation as the next serialized train behind `production/p1c01-runtime-completion-train-v1`.
+
+Purpose:
+- Strengthen Unreal Automation coverage so current runtime-production contracts fail in-engine before owner PIE/device review.
+- Reuse the existing `ShireJourney.QA` suite rather than create a second test harness.
+- Cover the runtime-completion train manifest, LivingWorld caps/pooling-facing data, character-rig intake rules and P1C01 audio-master rules.
+- Preserve the distinction between machine validation and human/device acceptance: automation can close source/engine regressions but cannot claim visual, pacing or target-device acceptance.
+- No gameplay chapter, quest ID, story anchor, density target or runtime asset path changes are authorized by this acceptance train.
+
+Initial acceptance cars:
+1. UE Automation validates the 20-car runtime completion manifest and serialized gate statuses.
+2. UE Automation validates current LivingWorld event/fauna caps from the authoritative data contract.
+3. UE Automation validates P1C01 character-rig FBX/PNG-TGA intake constraints.
+4. UE Automation validates the five authorized Shire audio candidates and WAV-master requirement.
+5. Keep existing save-default and chapter-streaming package tests intact.
+
+Status: **REGISTERED / IMPLEMENTATION STARTED**.
+
 ## 2026-09-27 - P1C01 Runtime Completion Train V1
 
 Registered before implementation under existing `REQ-AUDIT-001`, `REQ-PERF-001`, `REQ-WORLD-001`, `REQ-PROD-009`, `REQ-SAVE-001` and current lane `W01_P1C01_PRODUCTION_VERTICAL_SLICE`.
