@@ -1615,7 +1615,10 @@ void AShireNPC::Tick(float DeltaSeconds)
             {
                 FVector SafeTarget = Target;
                 SafeTarget.Z = PlayerPawn->GetActorLocation().Z;
-                SetActorLocation(SafeTarget, false, nullptr, ETeleportType::TeleportPhysics);
+
+                // Use AActor's encroachment-aware teleport instead of forcing the
+                // capsule into scenery when a companion has fallen far behind.
+                TeleportTo(SafeTarget, GetActorRotation(), false, false);
             }
             else if (Distance > EffectiveAcceptance)
             {
@@ -1624,12 +1627,28 @@ void AShireNPC::Tick(float DeltaSeconds)
                     FollowSpeed * PressureSpeed * (Distance > CatchUpDistance ? 2.0f : 1.0f);
                 const float MaxStep = EffectiveSpeed * DeltaSeconds;
                 const FVector Step = ToTarget.GetSafeNormal() * FMath::Min(MaxStep, Distance - EffectiveAcceptance);
-                AddActorWorldOffset(Step, true);
-                bPrototypeMoving = !Step.IsNearlyZero();
+                const FVector MoveStart = GetActorLocation();
+
+                FHitResult ForwardHit;
+                AddActorWorldOffset(Step, true, &ForwardHit);
+                if (ForwardHit.IsValidBlockingHit() && ForwardHit.Time < 1.0f)
+                {
+                    FVector SlideStep = FVector::VectorPlaneProject(
+                        Step * (1.0f - ForwardHit.Time), ForwardHit.Normal);
+                    SlideStep.Z = 0.0f;
+                    if (!SlideStep.IsNearlyZero())
+                    {
+                        AddActorWorldOffset(SlideStep, true);
+                    }
+                }
+
+                FVector ActualStep = GetActorLocation() - MoveStart;
+                ActualStep.Z = 0.0f;
+                bPrototypeMoving = !ActualStep.IsNearlyZero(0.5f);
 
                 if (bPrototypeMoving)
                 {
-                    const FRotator DesiredRotation = Step.Rotation();
+                    const FRotator DesiredRotation = ActualStep.Rotation();
                     SetActorRotation(FMath::RInterpTo(GetActorRotation(), DesiredRotation, DeltaSeconds, 7.0f));
                 }
             }
