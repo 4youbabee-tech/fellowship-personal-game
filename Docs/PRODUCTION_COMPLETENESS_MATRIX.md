@@ -1,3 +1,10 @@
+## 2026-09-27 - P1C01 Acceptance Closure Train V1
+
+- Unreal Automation coverage added for runtime-train serialization, LivingWorld budgets, character-rig intake format rules and P1C01 audio-master rules.
+- The new tests stay under the existing `ShireJourney.QA` suite so normal Unreal Build Validation will execute them once this branch becomes the active PR.
+- Current maturity: **SOURCE-IMPLEMENTED / compile-and-automation validation pending**.
+- No Gate 6/7 closure, PIE/device/visual/pacing/performance acceptance is inferred.
+
 ## 2026-09-27 - Character rig async recovery hardening
 
 - Existing soft/async skeletal-rig infrastructure confirmed and retained.
