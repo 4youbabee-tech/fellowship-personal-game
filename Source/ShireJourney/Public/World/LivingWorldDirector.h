@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "LivingWorldDirector.generated.h"
 
+class APawn;
 class AShireAmbientNPC;
 class AChapterWorldRouter;
 class AShireWorldEventInteraction;
@@ -53,6 +54,9 @@ private:
     TArray<FActiveMicroEvent> ActiveEvents;
     TArray<TWeakObjectPtr<AShireAmbientNPC>> BaselinePopulation;
     TArray<TWeakObjectPtr<AShireAmbientNPC>> AmbientNPCPool;
+    TArray<TWeakObjectPtr<AShireWorldEventInteraction>> InteractionPool;
+    TArray<TWeakObjectPtr<AWorldAmbientMotionActor>> AmbientMotionPool;
+    mutable TWeakObjectPtr<APawn> CachedPlayerPawn;
     TMap<FName, int32> BaselineTargetByChapter;
     TMap<FName, TArray<FName>> BaselineRolesByChapter;
     TMap<FName, FChapterPopulationProfile> PopulationProfilesByChapter;
@@ -71,6 +75,8 @@ private:
     float DangerPopulationFraction = 0.50f;
     int32 MaxActiveMicroEvents = 3;
     int32 MaxAmbientNPCPoolSize = 24;
+    int32 MaxInteractionPoolSize = 12;
+    int32 MaxAmbientMotionPoolSize = 16;
 
     UFUNCTION()
     void HandleChapterChanged(FName PreviousChapterId, FName NewChapterId);
@@ -86,6 +92,13 @@ private:
     void CleanupBaselinePopulation();
     void ReleaseAmbientNPCToPool(AShireAmbientNPC* NPC);
     AShireAmbientNPC* AcquireAmbientNPC(const FVector& Location);
+    void ReleaseInteractionToPool(AShireWorldEventInteraction* Interaction);
+    AShireWorldEventInteraction* AcquireInteraction(const FVector& Location);
+    void ReleaseAmbientMotionToPool(AWorldAmbientMotionActor* Actor);
+    AWorldAmbientMotionActor* AcquireAmbientMotionActor(
+        const FVector& Location,
+        const FRotator& Rotation);
+    APawn* ResolvePlayerPawn() const;
     void MaintainBaselinePopulation();
     void TryStartMicroEvent();
     bool SpawnEvent(FName EventType, FActiveMicroEvent& OutEvent);
