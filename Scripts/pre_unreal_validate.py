@@ -2802,6 +2802,7 @@ for pg184_symbol in [
     "duplicateReceiptRows",
     "WAREHOUSE_CRITICAL_GAP_BLOCKED_DETAIL",
     "archiveMode=metadata-only",
+    "WAREHOUSE_CRITICAL_GAP_PREFLIGHT_BLOCKED",
 ]:
     if pg184_symbol not in pg184_prep:
         fail(f"PG-184 warehouse metadata-only fail-fast prep missing: {pg184_symbol}")
