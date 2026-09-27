@@ -1,3 +1,17 @@
+## 2026-09-27 - 20-car warehouse saturation train
+
+Owner requested aggressive but orderly warehouse saturation and a much longer production sequence.
+
+Registered scope:
+- One preparation train with **20 coherent warehouse cars**, not 20 competing runtime branches.
+- Cars cover global PBR surfaces, pastoral architecture, hero character bases, humanoid animation, Shire audio, music, voice pipeline, vegetation, water/coast, caves/ruins, fortifications, enemies, hero creatures, battle sets, VFX, UI/localization, terrain, Part II/III region kits, general props and warehouse coverage/dedupe.
+- Source selection follows the Master External Resource Bible / GlobalWarehouseSourceRegistry rule: best-fit 1-3 source lanes per slot; no blind provider mirroring.
+- Public/source-compatible staging may run through existing provider scripts. Authentication/account/purchase/manual-license sources remain candidate/manual lanes.
+- Every staged payload remains evidence-gated by source/license/receipt/SHA256; no preparation report can promote to READY_FOR_IMPORT.
+- Runtime/import promotion stays serialized behind exact-head gates even while preparation runs in parallel.
+
+Status: **REGISTERED / PREPARATION IMPLEMENTED / VALIDATION PENDING**.
+
 ## 2026-09-27 - P1C01 material train scope expansion
 
 Owner requested a larger monitored production train. The active material batch is expanded coherently rather than opening many tiny branches:
