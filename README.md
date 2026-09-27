@@ -1,3 +1,20 @@
+# NEW DEVELOPER / NEW AI SESSION — START HERE
+
+> **Do not use this `main` branch to infer current development state.**  
+> `main` is the stable/release and GitHub default landing branch. Active development, the live Project Governor, current handoff, and current CI state live on **`develop`**.
+>
+> Before editing:
+> 1. Switch GitHub/local checkout to `develop`.
+> 2. Read `README.md` on `develop`.
+> 3. Follow `Docs/PROJECT_GOVERNOR.md` → `Data/ProjectGovernor.json` → `Docs/CURRENT_PROJECT_STATE.md`.
+> 4. Inspect live `develop` HEAD and GitHub Actions.
+> 5. If local, run `Scripts/new_developer_onboarding.ps1`.
+>
+> **Project-management authority:** `Data/ProjectGovernor.json` on `develop`.  
+> Do not reconstruct direction from old chats, old PR text, or this release-branch README.
+
+---
+
 # Shire Journey — UE4.27 Personal Game Project
 
 A low-spec-targeted personal 3D game project that treats Peter Jackson's *The Fellowship of the Ring* as the primary continuity reference for **Part I**.
