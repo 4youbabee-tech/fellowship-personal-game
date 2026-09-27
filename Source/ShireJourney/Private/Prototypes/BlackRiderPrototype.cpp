@@ -169,15 +169,6 @@ void ABlackRiderPrototype::Tick(float DeltaSeconds)
 
 void ABlackRiderPrototype::HandleActiveQuestChanged(FName QuestId)
 {
-    if (AShirePlayerCharacter* Player =
-            Cast<AShirePlayerCharacter>(UGameplayStatics::GetPlayerPawn(this, 0)))
-    {
-        if (!Player->IsGameplayWorldCommitted())
-        {
-            return;
-        }
-    }
-
     bDetectionQuestActive = QuestId == TEXT("KeepOffRoad");
     bInvestigating = false;
     InvestigationRemaining = 0.0f;
@@ -256,7 +247,8 @@ void ABlackRiderPrototype::CheckPlayerDetection()
 
     APlayerController* PC = GetWorld()->GetFirstPlayerController();
     ACharacter* Player = PC ? Cast<ACharacter>(PC->GetPawn()) : nullptr;
-    if (!Player)
+    const AShirePlayerCharacter* ShirePlayer = Cast<AShirePlayerCharacter>(Player);
+    if (!ShirePlayer || !ShirePlayer->IsGameplayWorldCommitted())
     {
         ResetDetectionConfidence();
         return;
@@ -304,11 +296,8 @@ void ABlackRiderPrototype::CheckPlayerDetection()
     const float Now = GetWorld()->GetTimeSeconds();
     if (Now >= NextAlertTime)
     {
-        if (QuestSubsystem->GetQuestStage(TEXT("KeepOffRoad")) == 0)
-        {
-            QuestSubsystem->SetQuestStage(TEXT("KeepOffRoad"), 1);
-        }
-
+        // Detection is a warning, not a story milestone. The RootHide trigger
+        // alone advances stage 0 -> 1 so the player cannot skip the hiding beat.
         if (AShireHUD* HUD = PC ? Cast<AShireHUD>(PC->GetHUD()) : nullptr)
         {
             HUD->ShowAlert(FText::FromString(TEXT("The Rider has noticed movement. Stay low and break line of sight.")), 3.0f);
