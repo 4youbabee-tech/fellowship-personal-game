@@ -1,3 +1,12 @@
+## 2026-09-27 - Runner ownership governance visibility
+
+- Interactive-user watchdog ownership hard invariant: **SOURCE-IMPLEMENTED**.
+- Legacy `actions.runner.*` service Stopped/Manual rule: **SOURCE-IMPLEMENTED**.
+- Forbidden NETWORK SERVICE/LOCAL SERVICE/SYSTEM identities: **SOURCE-IMPLEMENTED**.
+- README / Governor guide / onboarding visibility: **SOURCE-IMPLEMENTED**.
+- Live physical runner state: **NOT RE-VERIFIED BY THIS GOVERNANCE CHANGE**.
+- Current maturity: **SOURCE-IMPLEMENTED / exact-head static validation pending**.
+
 ## 2026-09-27 - Developer handoff entry integrity
 
 - Develop-side canonical onboarding path: **SOURCE-IMPLEMENTED**.
