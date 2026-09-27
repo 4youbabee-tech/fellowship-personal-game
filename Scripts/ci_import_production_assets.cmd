@@ -5,13 +5,21 @@ set "EDITORCMD=C:\Program Files\Epic Games\UE_4.27\Engine\Binaries\Win64\UE4Edit
 set "LOGDIR=%GITHUB_WORKSPACE%\Saved\Logs"
 set "IMPORTLOG=%LOGDIR%\CI-ProductionAssetImport.log"
 set "PRODUCTION_DIR=%GITHUB_WORKSPACE%\Content\Production"
-set "BACKUP_DIR=%GITHUB_WORKSPACE%\Saved\CI-Production-Backup-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%-%RANDOM%"
-set "FAILED_DIR=%GITHUB_WORKSPACE%\Saved\CI-Production-Failed-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%-%RANDOM%"
+set "BACKUP_DIR=%RUNNER_TEMP%\CI-Production-Backup-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%-%RANDOM%"
+set "FAILED_DIR=%RUNNER_TEMP%\CI-Production-Failed-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%-%RANDOM%"
 set "HAD_OUTPUT=0"
 for /f "delims=" %%I in ('whoami') do set "RUNNER_IDENTITY=%%I"
 if not exist "%EDITORCMD%" exit /b 50
 if not exist "%PROJECT%" exit /b 50
 if not exist "%LOGDIR%" mkdir "%LOGDIR%"
+if not defined RUNNER_TEMP (
+  echo ERROR: RUNNER_TEMP is unavailable; cannot place generated-content rollback on the runner volume.
+  exit /b 50
+)
+if not exist "%RUNNER_TEMP%" (
+  echo ERROR: runner temp directory does not exist: "%RUNNER_TEMP%"
+  exit /b 50
+)
 if exist "%BACKUP_DIR%" (
   echo ERROR: unique generated-content backup path already exists: "%BACKUP_DIR%"
   exit /b 52
@@ -34,11 +42,18 @@ if exist "%PRODUCTION_DIR%" (
     icacls "%PRODUCTION_DIR%"
     exit /b 56
   )
+  for %%I in ("%PRODUCTION_DIR%") do set "PRODUCTION_DRIVE=%%~dI"
+  for %%I in ("%BACKUP_DIR%") do set "BACKUP_DRIVE=%%~dI"
+  if /I not "%PRODUCTION_DRIVE%"=="%BACKUP_DRIVE%" (
+    echo ERROR: generated-content quarantine must remain on one volume. source=%PRODUCTION_DRIVE% destination=%BACKUP_DRIVE%
+    exit /b 57
+  )
   move "%PRODUCTION_DIR%" "%BACKUP_DIR%"
   if errorlevel 1 (
-    echo ERROR: could not quarantine generated Content/Production before import. Runner identity: %RUNNER_IDENTITY%. Source ACL follows; previous files remain in place.
+    echo ERROR: could not quarantine generated Content/Production before import. Runner identity: %RUNNER_IDENTITY%. Source and destination ACLs follow; previous files remain in place.
     icacls "%PRODUCTION_DIR%"
     icacls "%GITHUB_WORKSPACE%\Content"
+    icacls "%RUNNER_TEMP%"
     exit /b 54
   )
   set "HAD_OUTPUT=1"

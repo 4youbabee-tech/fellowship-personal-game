@@ -1,10 +1,10 @@
-## 2026-09-27 - Generated production import quarantine access repair
+## 2026-09-27 - Generated production import quarantine recheck
 
-- Exact-head Unreal Build Validation #990 (`af8ff7e`) passed runner health and UE4.27.2 C++ build (78 actions), then failed before the import commandlet: Windows returned `Access is denied` while moving ignored generated `Content/Production` into run-unique rollback storage.
-- Run #990 did not reach UE asset import. Its log did not distinguish an ACL denial from a live file handle.
-- The importer now resolves the runner identity and grants Modify recursively only on the generated `Content/Production` subtree before quarantine. If ACL repair or the move fails, it prints the source and parent ACLs and exits immediately; authored `SourceAssets/Production` is untouched.
-- Static PG-184 checks the scoped permission repair precedes quarantine and preserves the existing rollback behavior.
-- Status: **SOURCE-IMPLEMENTED / exact-head Pre-Unreal and UE4.27 import recheck pending**. Successful quarantine/import is not yet claimed.
+- Exact-head Unreal Build Validation #993 on `5412efc` passed runner health and UE4.27.2 C++ compilation, then failed before asset import. The log shows `icacls` processed **650 files with 0 failures**, but the subsequent move of generated `Content/Production` still returned `Access is denied` (exit 54).
+- The failure did not establish whether source/destination ACLs, volume behavior, or an open handle caused the move denial. The UE import commandlet, Automation QA, startup/runtime audits, and packaging did not run.
+- Candidate repair moves rollback and failed-import storage under `%RUNNER_TEMP%`, verifies source and destination drive letters match before moving, and prints the runner-temp ACL if quarantine fails. This makes the intended same-volume rename explicit and adds destination diagnostics; success remains unproven until exact-head UE4.27 import completes.
+- Authored `SourceAssets/Production` remains untouched. No PIE, device, visual, or performance acceptance is claimed.
+- Status: **#993 COMPILE-TESTED; import blocked. Candidate repair pending Pre-Unreal and exact-head Unreal rerun**.
 
 ## 2026-09-27 - Runtime train character-rig async recovery hardened
 

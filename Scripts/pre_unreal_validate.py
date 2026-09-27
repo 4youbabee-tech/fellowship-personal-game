@@ -605,10 +605,14 @@ ci_import_launcher = read(ROOT / "Scripts" / "ci_import_production_assets.cmd")
 pg184_import_markers = (
     'RUNNER_IDENTITY=%%I',
     'set "PRODUCTION_DIR=',
-    'set "BACKUP_DIR=',
+    'set "BACKUP_DIR=%RUNNER_TEMP%\\',
+    'set "FAILED_DIR=%RUNNER_TEMP%\\',
+    'if not defined RUNNER_TEMP',
+    'if /I not "%PRODUCTION_DRIVE%"=="%BACKUP_DRIVE%"',
     'icacls "%PRODUCTION_DIR%" /grant "%RUNNER_IDENTITY%:(OI)(CI)M" /T /C',
     'move "%PRODUCTION_DIR%" "%BACKUP_DIR%"',
     'icacls "%PRODUCTION_DIR%"',
+    'icacls "%RUNNER_TEMP%"',
     'goto :restore_previous',
     'move "%BACKUP_DIR%" "%PRODUCTION_DIR%"',
 )
