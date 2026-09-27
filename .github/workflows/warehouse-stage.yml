@@ -25,6 +25,8 @@ on:
       - 'Scripts/run_warehouse_saturation_train.ps1'
       - 'Data/WarehouseCriticalGapPreparationTrainV2.json'
       - 'Scripts/run_warehouse_critical_gap_preparation.ps1'
+      - 'Data/WarehouseProviderResolutionTrainV3.json'
+      - 'Scripts/run_warehouse_provider_resolution.ps1'
       - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
 
@@ -135,6 +137,10 @@ jobs:
       - name: Prepare critical warehouse gaps into intake QC
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_critical_gap_preparation.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseCriticalGapPreparationTrainV2.json"
+
+      - name: Resolve provider access and safe fallback lanes
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_provider_resolution.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseProviderResolutionTrainV3.json"
 
       - name: Show persistent warehouse footprint
         shell: cmd
