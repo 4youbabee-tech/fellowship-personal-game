@@ -3972,9 +3972,11 @@
         "Scripts/install_runner_watchdog.ps1",
         "Scripts/runner_watchdog.ps1",
         "Scripts/verify_runner_session.ps1",
-        "Scripts/pre_unreal_validate.py PG-145B"
+        "Scripts/pre_unreal_validate.py PG-145B",
+        "Owner-side machine proof: legacy service absent, watchdog Running/Interactive, Listener PID 6192 owned by IDEAPAD320\\user.",
+        "Unreal #1021 exact head b22a5da34ba71ba583c8b5b2a026085a2e11feda: RUNNER_HEALTH_SERVICE_PASS legacyService=absent and RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=1 listenerPid=6192 workerCount=1."
       ],
-      "evidence_boundary": "ROOT-CAUSE INFRASTRUCTURE FIX SOURCE-IMPLEMENTED. Physical device topology and post-install stability still require an owner-side elevated installer run plus live runner-health/CI proof.",
+      "evidence_boundary": "ROOT-CAUSE RUNNER TOPOLOGY MACHINE-PROVEN on Unreal #1021 exact head. This is infrastructure proof only; the governance fast path skipped C++ build/import/PIE/package and creates no gameplay/device/visual/performance acceptance.",
       "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
@@ -6495,6 +6497,29 @@
       "watchdog_behavior": "Detect any actions.runner.* service or service-owned Runner.Listener/Runner.Worker and purge it before continuing.",
       "poll_seconds": 15,
       "static_guard": "PG-183"
+    },
+    "machine_proof_2026_09_27": {
+      "status": "RUNNER_TOPOLOGY_MACHINE_PROVEN",
+      "owner_side_observation": [
+        "Legacy actions.runner.* Windows service was deleted successfully and no longer appeared in Get-Service output.",
+        "Scheduled task ShireJourney-GitHubRunner-Watchdog reported State=Running, UserId=user, LogonType=Interactive.",
+        "Runner.Listener.exe PID 6192 was owned by IDEAPAD320\\user.",
+        "Watchdog log reported SHIRE_RUNNER_WATCHDOG_BOOT identity=IDEAPAD320\\user and SHIRE_RUNNER_WATCHDOG_ONLINE pid=6192 brokerListening=true."
+      ],
+      "github_exact_head_evidence": {
+        "pr": 126,
+        "sha": "b22a5da34ba71ba583c8b5b2a026085a2e11feda",
+        "unreal_run": 1021,
+        "health_lines": [
+          "RUNNER_HEALTH_IDENTITY_PASS identity=IDEAPAD320\\user sessionId=1 runnerName=UE4-27-Windows",
+          "RUNNER_HEALTH_SERVICE_PASS legacyService=absent",
+          "RUNNER_HEALTH_WATCHDOG_PASS task=ShireJourney-GitHubRunner-Watchdog state=Running owner=user",
+          "RUNNER_HEALTH_PROCESS_PASS listenerPid=6192 workers=1 sessionId=1",
+          "RUNNER_HEALTH_NETWORK_PASS github443=true attemptsUsed=1",
+          "RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=1 listenerPid=6192 workerCount=1"
+        ]
+      },
+      "proof_boundary": "This proves runner ownership/topology and health on the machine for this exact run. Unreal #1021 took the governance/docs-only fast path, so it does not prove C++ compile, PIE, packaged runtime, target-device gameplay, visual or performance acceptance."
     }
   }
 }
