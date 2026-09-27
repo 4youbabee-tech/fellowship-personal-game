@@ -7741,8 +7741,16 @@ for pg145c_symbol in [
 ]:
     if pg145c_symbol not in (pg145_classifier + pg145c_workflow):
         fail(f"PG-145C fast asset-import lane missing: {pg145c_symbol}")
-if "if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'\n        shell: cmd\n        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"%GITHUB_WORKSPACE%\\\\Scripts\\\\reset_project_build_intermediates.ps1\"'" not in pg145c_workflow:
-    fail("PG-145C incremental CORE/ASSET lanes must not delete project intermediates before every build")
+pg145c_reset_pos = pg145c_workflow.find("- name: Reset project build intermediates")
+pg145c_reset_slice = pg145c_workflow[pg145c_reset_pos:pg145c_reset_pos + 420] if pg145c_reset_pos >= 0 else ""
+if pg145c_reset_pos < 0 or "if: env.SHIRE_RESET_INTERMEDIATES == 'true'" not in pg145c_reset_slice:
+    fail("PG-145C project intermediate reset must be gated only by the classifier clean-compile flag")
+for pg145c_symbol in [
+    "SHIRE_RESET_INTERMEDIATES=",
+    "CLEAN_COMPILE_REQUIRED reason=build-rules-or-project-descriptor",
+]:
+    if pg145c_symbol not in pg145_classifier:
+        fail(f"PG-145C clean-compile classifier contract missing: {pg145c_symbol}")
 for pg145c_step in [
     "Headless chapter-by-chapter runtime audit",
     "Headless route/story state roundtrip audit",
@@ -7760,14 +7768,21 @@ pg176_cleanup = read(ROOT / ".github" / "workflows" / "branch-cleanup.yml")
 pg176_warehouse = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
 
 for pg176_symbol in [
-    "C:\\actions-runner\\_ci\\pre-unreal",
+    "runs-on: windows-latest",
+    "%RUNNER_TEMP%\\shire-pre-unreal",
     "SHIRE_PRE_ROOT",
     "PRE_UNREAL_EXACT_CHECKOUT_PASS",
     "isolated=true",
-    "persistent=true",
+    "hosted=true",
 ]:
     if pg176_symbol not in pg176_pre:
-        fail(f"PG-176 Pre-Unreal isolated checkout contract missing: {pg176_symbol}")
+        fail(f"PG-176 Pre-Unreal hosted isolated checkout contract missing: {pg176_symbol}")
+for pg176_legacy_symbol in [
+    "C:\\actions-runner\\_ci\\pre-unreal",
+    "persistent=true",
+]:
+    if pg176_legacy_symbol in pg176_pre:
+        fail(f"PG-176 Pre-Unreal must not restore legacy persistent self-hosted checkout semantics: {pg176_legacy_symbol}")
 if 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg176_pre:
     fail("PG-176 Pre-Unreal may not delete the Unreal workspace")
 

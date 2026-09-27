@@ -1,3 +1,12 @@
+## 2026-09-28 - Pre-Unreal #1280 stale guard root correction
+
+- Exact-head `a8714aa3a1fb8ff0fb7be970d4bcfedb49139035` on hosted Pre-Unreal #1280 proved the isolated checkout, Python resolution, and Unreal classifier tests all succeeded.
+- Project structure validation reached `PRE-UNREAL CORE VALIDATION PASSED`, then failed on exactly three stale policy assertions in `pre_unreal_validate.py`: the old unconditional FULL-lane intermediate-reset expectation plus the old persistent self-hosted Pre-Unreal path/marker assumptions.
+- PG-145C now validates the actual `SHIRE_RESET_INTERMEDIATES` classifier gate; normal CORE/ASSET work preserves intermediates, while `.Build.cs`, `.Target.cs`, or `ShireJourney.uproject` changes remain the clean-compile trigger.
+- PG-176 now validates the GitHub-hosted isolated `%RUNNER_TEMP%\\shire-pre-unreal` checkout with `hosted=true` and rejects the legacy persistent self-hosted checkout tokens.
+- No runtime/gameplay source changed.
+- Current maturity: **SOURCE-IMPLEMENTED / NEW EXACT-HEAD STATIC VALIDATION PENDING**.
+
 ## 2026-09-28 - Legacy CI guard migration completed
 
 - Hosted Pre-Unreal #1277 proved the classifier fix: all Unreal lane-selection tests passed, including the new build-rule reset case.

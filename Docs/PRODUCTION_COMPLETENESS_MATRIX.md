@@ -1,3 +1,12 @@
+## 2026-09-28 - Pre-Unreal #1280 stale guard correction
+
+- Hosted exact-head checkout, Python resolution, and Unreal classifier tests: **RUN-PROVEN** by #1280 on `a8714aa3a1fb8ff0fb7be970d4bcfedb49139035`.
+- Core structural pass marker `PRE-UNREAL CORE VALIDATION PASSED`: **RUN-PROVEN** by #1280.
+- PG-145C conditional intermediate-reset policy assertion: **SOURCE-FIXED**.
+- PG-176 hosted ephemeral static-checkout policy assertion: **SOURCE-FIXED**.
+- New exact-head static result after the validator correction: **PENDING**.
+- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
+
 ## 2026-09-28 - Static-lane guard migration
 
 - Unreal classifier incremental/reset tests: **RUN-PROVEN** by hosted Pre-Unreal #1277.
