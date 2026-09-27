@@ -1,3 +1,12 @@
+## 2026-09-28 - Lightweight administration / static-lane optimization
+
+- Material-change-only Governor requirement-ID rule: **SOURCE-IMPLEMENTED**.
+- Branch Cleanup off UE4 runner onto hosted Windows: **SOURCE-IMPLEMENTED**.
+- Pre-Unreal PATH-Python fast path with robust fallback retained: **SOURCE-IMPLEMENTED**.
+- Full static/governance/asset/deep-audit coverage: **UNCHANGED**.
+- Runtime/compile/PIE/device/visual/performance acceptance rules: **UNCHANGED**.
+- Exact-head static timing/proof after optimization: **PENDING**.
+
 ## 2026-09-28 - CI/Warehouse root-repair release gate
 
 - Repair exact-head static validation: **STATIC-VALIDATED** by Pre-Unreal #1285 on `0bd0e6952161f1c3fa5bb603d25813400c330f24`.

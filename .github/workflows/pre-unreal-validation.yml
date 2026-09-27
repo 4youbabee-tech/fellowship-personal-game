@@ -79,7 +79,24 @@ jobs:
           echo PRE_UNREAL_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA! isolated=true hosted=true
 
       - name: Resolve existing local Python
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_PRE_ROOT%\Scripts\resolve_runtime_python.ps1"
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "PYTHON_FAST="
+          for /f "delims=" %%P in ('where python.exe 2^>nul') do (
+            echo %%P | findstr /I /C:"\Microsoft\WindowsApps\" >nul
+            if errorlevel 1 if not defined PYTHON_FAST set "PYTHON_FAST=%%P"
+          )
+          if defined PYTHON_FAST (
+            "!PYTHON_FAST!" -c "import sys; sys.exit(0 if sys.version_info >= (3,7) else 1)"
+            if not errorlevel 1 (
+              echo PYTHON_EXE=!PYTHON_FAST!>>"%GITHUB_ENV%"
+              "!PYTHON_FAST!" --version
+              echo PYTHON_FAST_PATH_PASS exe=!PYTHON_FAST!
+              exit /b 0
+            )
+          )
+          powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_PRE_ROOT%\Scripts\resolve_runtime_python.ps1"
 
       - name: Test Unreal validation lane selection
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_unreal_classifier.ps1"

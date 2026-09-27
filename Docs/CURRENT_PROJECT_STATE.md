@@ -1,3 +1,12 @@
+## 2026-09-28 - Administrative overhead trimmed without weakening gates
+
+- Requirement-ID bureaucracy is narrowed: only material product/story/architecture/acceptance/priority/external-dependency changes create new Governor requirements; status questions, clarifications, evidence refreshes and routine CI bookkeeping do not.
+- Branch Cleanup is moved from the supervised UE4 self-hosted runner to GitHub-hosted `windows-latest`; it keeps exact-head isolated checkout and active-PR/protected-branch safety.
+- Pre-Unreal keeps the complete static/governance/asset/deep-audit suite, but now resolves the already-provisioned hosted Python through a fast PATH probe first and falls back to the existing robust resolver only when needed.
+- PG-167/PG-176 guard the fast-path/fallback contract and forbid administrative branch cleanup from consuming the UE4 runner.
+- No C++ runtime, gameplay, story, asset acceptance, Gate 6/7, or evidence-promotion rule is weakened.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**.
+
 ## 2026-09-28 - CI/Warehouse root repair released; production resumes
 
 - Exact repair head `0bd0e6952161f1c3fa5bb603d25813400c330f24` passed hosted Pre-Unreal #1285.

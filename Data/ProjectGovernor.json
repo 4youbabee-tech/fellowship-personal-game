@@ -23,7 +23,7 @@
   "operating_rules": [
     "Global project-management changes go through the single Governor and a validation branch/PR; workers must not create competing authority files.",
     "One governor, one decision authority. No secondary file may independently redefine requirement status, priority, conflict resolution, active gate, or region acceptance.",
-    "Every meaningful user request receives a stable requirement ID here before or with implementation.",
+    "Only requests that materially change product scope, story/canon, architecture, acceptance gates, production priority, or external dependency require a stable requirement ID; status questions, clarifications, evidence refreshes, routine CI bookkeeping and implementation notes do not create new requirements.",
     "New requests never silently delete older requests; contradictions become explicit conflicts/decisions here.",
     "The film story spine, build/save/story integrity, target-device performance and required traversal cannot be silently traded away.",
     "Before changing or adding any FILM_CORE beat, verify the exact scene order, participating characters and outcome against the supplied film/script source; do not rely on memory when the source can be checked.",

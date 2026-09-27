@@ -5187,6 +5187,8 @@ if "schedule:" in pg167_pre or "- self-hosted" in pg167_pre or "runs-on: ubuntu-
     fail("PG-167 Pre-Unreal must be event-driven on hosted Windows and must not occupy the supervised UE4 runner")
 if "actions/setup-python@" in pg167_pre or "resolve_runtime_python.ps1" not in pg167_pre or 'shell: cmd' not in pg167_pre:
     fail("PG-167 Pre-Unreal must use an already-provisioned Python interpreter through cmd without setup churn")
+if "PYTHON_FAST_PATH_PASS" not in pg167_pre:
+    fail("PG-167 Pre-Unreal must try the hosted PATH Python fast path before the robust fallback resolver")
 if "uses: actions/checkout@" in pg167_pre:
     fail("PG-167 Pre-Unreal must keep the bounded exact-head checkout contract")
 for pg167_checkout_symbol in [
@@ -7794,13 +7796,17 @@ if 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg176_pre:
     fail("PG-176 Pre-Unreal may not delete the Unreal workspace")
 
 for pg176_symbol in [
+    "runs-on: windows-latest",
     "%RUNNER_TEMP%\\shire-branch-cleanup-",
     "SHIRE_CLEANUP_ROOT",
     "BRANCH_CLEANUP_EXACT_CHECKOUT_PASS",
     "isolated=true",
+    "hosted=true",
 ]:
     if pg176_symbol not in pg176_cleanup:
-        fail(f"PG-176 branch-cleanup isolated checkout contract missing: {pg176_symbol}")
+        fail(f"PG-176 branch-cleanup hosted isolated checkout contract missing: {pg176_symbol}")
+if "- self-hosted" in pg176_cleanup:
+    fail("PG-176 branch cleanup is administrative and must not occupy the supervised UE4 runner")
 if 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg176_cleanup:
     fail("PG-176 branch cleanup may not delete the Unreal workspace")
 
