@@ -11,14 +11,14 @@
     "Data/WholeGameAssetFamilyCoverageV1.json",
     "Data/WarehouseSaturationTrainV1.json"
   ],
-  "objective": "Turn staged warehouse payloads into evidence-rich intake-QC candidates instead of leaving archives and mixed-format source stock unclassified.",
+  "objective": "Turn staged warehouse payloads into evidence-rich intake-QC candidates using fail-fast receipt integrity and read-only archive metadata, without repeatedly extracting unchanged source archives.",
   "warehouse_root": "C:\\actions-runner\\_warehouse\\ShireJourney",
   "prepared_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\_prepared_v2",
   "global_ceiling": "INTAKE_QC",
   "global_rules": [
     "Never overwrite or delete original staged source payloads during preparation.",
     "Verify staged source receipt SHA256 before extracting or classifying.",
-    "ZIP may be extracted into the prepared root; RAR/7Z remain pending unless an approved extractor exists.",
+    "ZIP is inspected read-only during critical-gap preparation; physical extraction is deferred to explicit class-specific conversion/import work. RAR/7Z remain pending unless an approved extractor exists.",
     "Block executable/script payloads and BMP textures from production intake.",
     "Animated character/creature/fauna final production assets require FBX.",
     "Production textures accepted by the project are PNG/TGA; channel-packing debt remains explicit until actually authored.",
@@ -189,5 +189,5 @@
       "ceiling": "INTAKE_QC"
     }
   ],
-  "evidence_boundary": "Technical warehouse preparation only. No hero identity, skeletal deformation, visual, PIE, device or performance acceptance is created by this train."
+  "evidence_boundary": "Technical warehouse preparation only. ZIP inspection is metadata-only and does not promote/extract source payloads. No hero identity, skeletal deformation, visual, PIE, device or performance acceptance is created by this train."
 }
