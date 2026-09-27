@@ -1,3 +1,9 @@
+## 2026-09-27 - Consolidated prep lanes into warehouse saturation train
+
+- Architecture/interiors/props, character rig/animation, Shire audio and fauna preparation are carried forward on the new post-#118 warehouse train.
+- Old stale-base preparation PRs are superseded; their substantive manifests/scripts are preserved.
+- No runtime maturity promotion is inferred from consolidation.
+
 ## 2026-09-27 - 20-car warehouse saturation train
 
 - Warehouse preparation sequence expanded to 20 ordered cars spanning materials, architecture, characters, animation, audio/music/voice, vegetation, water, ruins, fortifications, enemies/creatures, battle assets, VFX, UI/localization, terrain, F2/F3 kits, props and coverage/dedupe.
