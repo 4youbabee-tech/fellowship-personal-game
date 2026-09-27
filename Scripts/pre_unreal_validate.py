@@ -3393,6 +3393,8 @@ for marker in [
     "orphanCiCommandlet",
     "BUILD_ORPHAN_RELEASE_FAILED",
     "candidateOwner -ieq $identity",
+    "HasExited",
+    '$ErrorActionPreference = "Continue"',
     "taskkill.exe",
     "icacls.exe",
 ]:

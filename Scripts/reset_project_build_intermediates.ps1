@@ -245,38 +245,56 @@ foreach ($path in $paths) {
             $sameProcess = $false
             if ($current) {
                 try {
-                    $sameProcess = ($current.StartTime.ToUniversalTime().ToFileTimeUtc() -eq $orphan.StartFileTime)
+                    $current.Refresh()
+                    $sameProcess = (-not $current.HasExited) -and ($current.StartTime.ToUniversalTime().ToFileTimeUtc() -eq $orphan.StartFileTime)
                 }
                 catch {
-                    $sameProcess = $false
+                    $sameProcess = $true
                 }
             }
 
             if ($sameProcess) {
                 Write-Warning "Releasing verified orphan Shire CI commandlet PID=$($orphan.ProcessId) after exact engine/project/owner/command-line/start-time checks."
                 Stop-Process -Id $orphan.ProcessId -Force -ErrorAction SilentlyContinue
-                $stillRunning = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $orphan.ProcessId) -ErrorAction SilentlyContinue
-                if ($stillRunning) {
+                $current = Get-Process -Id $orphan.ProcessId -ErrorAction SilentlyContinue
+                $sameProcess = $false
+                if ($current) {
+                    try {
+                        $current.Refresh()
+                        $sameProcess = (-not $current.HasExited) -and ($current.StartTime.ToUniversalTime().ToFileTimeUtc() -eq $orphan.StartFileTime)
+                    }
+                    catch {
+                        $sameProcess = $true
+                    }
+                }
+
+                if ($sameProcess) {
+                    $previousErrorActionPreference = $ErrorActionPreference
+                    try {
+                        $ErrorActionPreference = "Continue"
+                        $taskkillOutput = & (Join-Path $env:SystemRoot "System32\taskkill.exe") /PID $orphan.ProcessId /F 2>&1
+                        $taskkillExit = $LASTEXITCODE
+                    }
+                    finally {
+                        $ErrorActionPreference = $previousErrorActionPreference
+                    }
+
                     $current = Get-Process -Id $orphan.ProcessId -ErrorAction SilentlyContinue
                     $sameProcess = $false
                     if ($current) {
                         try {
-                            $sameProcess = ($current.StartTime.ToUniversalTime().ToFileTimeUtc() -eq $orphan.StartFileTime)
+                            $current.Refresh()
+                            $sameProcess = (-not $current.HasExited) -and ($current.StartTime.ToUniversalTime().ToFileTimeUtc() -eq $orphan.StartFileTime)
                         }
                         catch {
-                            $sameProcess = $false
+                            $sameProcess = $true
                         }
                     }
-                    if ($sameProcess) {
-                        $taskkillOutput = & (Join-Path $env:SystemRoot "System32\taskkill.exe") /PID $orphan.ProcessId /F 2>&1
-                        $taskkillExit = $LASTEXITCODE
-                        Write-Host "Verified orphan taskkill exit=$taskkillExit output=$(($taskkillOutput -join ' '))"
-                    }
-                }
 
-                $stillRunning = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $orphan.ProcessId) -ErrorAction SilentlyContinue
-                if ($stillRunning) {
-                    throw "BUILD_ORPHAN_RELEASE_FAILED PID=$($orphan.ProcessId); exact process remains after one verified termination attempt."
+                    if ($sameProcess) {
+                        $taskkillDetail = ($taskkillOutput | ForEach-Object { [string]$_ }) -join ' '
+                        throw "BUILD_ORPHAN_RELEASE_FAILED PID=$($orphan.ProcessId) taskkillExit=$taskkillExit detail=$taskkillDetail; exact process remains live."
+                    }
                 }
             }
         }
