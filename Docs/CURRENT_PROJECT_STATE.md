@@ -1,3 +1,14 @@
+## 2026-09-27 - Runner ownership directive promoted to top-level governance
+
+- The runner rule previously existed in scripts/guards and buried runner-history fields, but was not prominent enough in the Governor/onboarding path for a zero-context Work session.
+- New hard invariant: UE4-27-Windows runs only under the proven interactive Windows user through `ShireJourney-GitHubRunner-Watchdog`.
+- Legacy `actions.runner.*` Windows service must remain **Stopped / Manual** and must never be enabled or started as a fallback.
+- `NETWORK SERVICE`, `LOCAL SERVICE`, and `SYSTEM` are forbidden runner identities.
+- Worker/AI sessions may inspect health but may not change runner ownership/topology without explicit owner authorization.
+- README, PROJECT_GOVERNOR guide and one-command onboarding now surface this rule before production work.
+- Existing source guards remain authoritative: `install_runner_watchdog.ps1`, `verify_runner_session.ps1`, PG-145 and PG-145B.
+- Evidence boundary: **GOVERNANCE/HANDOFF SOURCE-IMPLEMENTED / exact-head static validation pending**. This does not prove the current physical Windows service/task state.
+
 ## 2026-09-27 - Zero-context developer entry hardening
 
 - The repository default branch is `main`, while `develop` remains the canonical integration/programmer-handoff branch.
