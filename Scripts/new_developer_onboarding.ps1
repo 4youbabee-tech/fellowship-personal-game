@@ -61,6 +61,7 @@ $Summary = [ordered]@{
     canonical_development_branch = [string]$Governor.branch_workflow.integration_branch
     stable_release_branch = [string]$Governor.branch_workflow.stable_release_branch
     current_git_branch = $CurrentBranch
+    branch_warning = if ($CurrentBranch -and $Governor.branch_workflow.integration_branch -and ($CurrentBranch -ne [string]$Governor.branch_workflow.integration_branch)) { "You are not on the canonical development branch. Switch to $($Governor.branch_workflow.integration_branch) before inferring current state or editing." } else { $null }
     current_git_head = $CurrentHead
     develop_head = $DevelopHead
     active_lane = [string]$Governor.execution_control.active_lane
@@ -99,6 +100,9 @@ Write-Host "Stable branch:        $($Summary.stable_release_branch)"
 Write-Host "Current Git branch:   $($Summary.current_git_branch)"
 Write-Host "Current HEAD:         $($Summary.current_git_head)"
 Write-Host "Develop HEAD:         $($Summary.develop_head)"
+if (-not [string]::IsNullOrWhiteSpace($Summary.branch_warning)) {
+    Write-Host "BRANCH WARNING:       $($Summary.branch_warning)"
+}
 Write-Host ''
 Write-Host "Active lane:          $($Summary.active_lane)"
 Write-Host "Active gate:          $($Summary.active_gate) [$($Summary.active_gate_status)]"
