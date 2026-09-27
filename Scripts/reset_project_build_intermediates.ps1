@@ -384,6 +384,30 @@ foreach ($path in $paths) {
     }
 }
 
+# Generated Content/Production is ignored by Git and is recreated from SourceAssets.
+# Normalize inherited runner ACLs and clear read-only flags so UE4 can atomically replace packages.
+$generatedAssetRoot = Join-Path $workspace "Content\Production"
+if (Test-Path -LiteralPath $generatedAssetRoot) {
+    $previousErrorActionPreference = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = "Continue"
+        $icacls = Join-Path $env:SystemRoot "System32\icacls.exe"
+        $attrib = Join-Path $env:SystemRoot "System32\attrib.exe"
+        $aclOutput = & $icacls $generatedAssetRoot /grant ($identity + ":(OI)(CI)M") /T /C 2>&1
+        $aclExit = $LASTEXITCODE
+        $attributeOutput = & $attrib -R (Join-Path $generatedAssetRoot "*") /S /D 2>&1
+        $attributeExit = $LASTEXITCODE
+    }
+    finally {
+        $ErrorActionPreference = $previousErrorActionPreference
+    }
+    if ($aclExit -ne 0) {
+        throw "GENERATED_ASSET_ACL_REPAIR_FAILED path=$generatedAssetRoot identity=$identity exit=$aclExit output=$(($aclOutput -join ' '))"
+    }
+    if ($attributeExit -ne 0) {
+        throw "GENERATED_ASSET_ATTRIBUTE_REPAIR_FAILED path=$generatedAssetRoot exit=$attributeExit output=$(($attributeOutput -join ' '))"
+    }
+}
 $logDir = Join-Path $workspace "Saved\Logs"
 if (Test-Path -LiteralPath $logDir) {
     Get-ChildItem -LiteralPath $logDir -Filter "CI-*.log" -File -ErrorAction SilentlyContinue |
