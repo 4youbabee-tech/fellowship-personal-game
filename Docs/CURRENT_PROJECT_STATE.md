@@ -1,3 +1,10 @@
+## 2026-09-28 - Warehouse corrupt-cache purge hardened
+
+- Receipt reuse now purges structurally corrupt cached ZIPs immediately instead of only returning non-reusable.
+- Critical-gap manifest now explicitly defines ZIP handling as read-only metadata inspection; physical extraction is deferred to explicit class-specific conversion/import work.
+- PG-184 now guards both the corrupt-cache purge marker and the metadata-only manifest contract.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**.
+
 ## 2026-09-28 - Hosted Pre-Unreal classifier false-red repaired
 
 - Hosted Pre-Unreal #1269 proved the new GitHub-hosted Windows lane itself works: exact-head checkout and Python 3.12 resolution both succeeded.
