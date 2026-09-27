@@ -1,3 +1,12 @@
+## 2026-09-27 - P1C01 Architecture / Interiors / Props megabatch
+
+- External support scope prepared: 6 authorized CC0 packs (3 Quaternius + 3 Kenney).
+- Existing Shire fallback bank mapped: 29 project-owned architecture/prop roles.
+- Intake tooling now verifies receipt SHA256, scans ZIP payloads, blocks executables/BMP, inventories FBX/OBJ/PNG/TGA, records QC debt and never auto-promotes to `READY_FOR_IMPORT`.
+- Performance architecture remains constrained to async heavy loading, ISM/HISM for repeated detail and bounded unique hero architecture.
+- Runtime integration remains gated behind successful closure of active material PR #118.
+- Current maturity: **PREPARATION-IMPLEMENTED / STATIC VALIDATION PENDING**; no PIE/device/visual/performance acceptance.
+
 ## 2026-09-27 - P1C01 player-experience convergence batch
 
 - Story dialogue continuity, mouse-look frame independence, quick-load rejection feedback, event-driven quest-trigger re-evaluation and bounded subtitle wrapping are implemented on the active fix branch.
