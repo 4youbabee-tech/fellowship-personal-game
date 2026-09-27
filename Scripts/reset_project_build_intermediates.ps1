@@ -147,6 +147,7 @@ function Get-AccessDiagnostic {
 
 $workspace = [IO.Path]::GetFullPath($env:GITHUB_WORKSPACE).TrimEnd('\')
 $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$cleanupStartFileTime = (Get-Date).ToUniversalTime().ToFileTimeUtc()
 $paths = @(
     (Join-Path $workspace "Intermediate\Build\Win64"),
     (Join-Path $workspace "Binaries\Win64")
@@ -213,27 +214,110 @@ foreach ($path in $paths) {
             }
         }
 
-        if ($liveOwners.Count -gt 0) {
-            $ownerDetails = ($liveOwners | ForEach-Object { "$($_.AppName)(PID=$($_.ProcessId),StartFileTime=$($_.ProcessStartFileTime),Service=$($_.Service))" }) -join ", "
+        $verifiedOrphans = @()
+        $unknownLiveOwners = @()
+        foreach ($owner in $liveOwners) {
+            $candidate = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $owner.ProcessId) -ErrorAction SilentlyContinue
+            $process = Get-Process -Id $owner.ProcessId -ErrorAction SilentlyContinue
+            if (-not $candidate -or -not $process) {
+                $staleOwners += $owner
+                continue
+            }
+
+            try {
+                [long]$candidateStartFileTime = $process.StartTime.ToUniversalTime().ToFileTimeUtc()
+                $ownerResult = Invoke-CimMethod -InputObject $candidate -MethodName GetOwner -ErrorAction Stop
+                $candidateOwner = if ($ownerResult.ReturnValue -eq 0) { $ownerResult.Domain + '\' + $ownerResult.User } else { '' }
+                $parent = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $candidate.ParentProcessId) -ErrorAction SilentlyContinue
+                $commandLine = [string]$candidate.CommandLine
+                $engineMatch = $candidate.ExecutablePath -match '(?i)\\UE_4\.27\\Engine\\Binaries\\Win64\\UE4Editor-Cmd\.exe
+    }
+
+    if (Test-Path -LiteralPath $fullPath) {
+        throw "Stale project build product still exists after one cleanup attempt: $fullPath"
+    }
+}
+
+$logDir = Join-Path $workspace "Saved\Logs"
+if (Test-Path -LiteralPath $logDir) {
+    Get-ChildItem -LiteralPath $logDir -Filter "CI-*.log" -File -ErrorAction SilentlyContinue |
+        ForEach-Object {
+            Write-Host "Removing stale CI evidence log: $($_.FullName)"
+            Remove-Item -LiteralPath $_.FullName -Force
+        }
+    Get-ChildItem -LiteralPath $logDir -Filter "CI-*-result.json" -File -ErrorAction SilentlyContinue |
+        ForEach-Object {
+            Write-Host "Removing stale CI result file: $($_.FullName)"
+            Remove-Item -LiteralPath $_.FullName -Force
+        }
+}
+Write-Host "Project build intermediates and stale CI evidence reset."
+exit 0
+
+                $projectMatch = $commandLine.IndexOf((Join-Path $workspace 'ShireJourney.uproject'), [StringComparison]::OrdinalIgnoreCase) -ge 0
+                $ciFlags = ($commandLine -match '(?i)(?:^|\s)-AuditPendingTransition(?:\s|$)') -and ($commandLine -match '(?i)(?:^|\s)-ShireCIAssetReadyDelay=2\.0(?:\s|$)')
+                $orphanCiCommandlet = ($candidate.ProcessId -eq $owner.ProcessId) -and ($candidateStartFileTime -eq $owner.ProcessStartFileTime) -and ($candidateOwner -ieq $identity) -and $engineMatch -and $projectMatch -and $ciFlags -and (-not $parent) -and ($candidateStartFileTime -lt $cleanupStartFileTime)
+                if ($orphanCiCommandlet) {
+                    $verifiedOrphans += [pscustomobject]@{ ProcessId = $owner.ProcessId; StartFileTime = $candidateStartFileTime; CommandLine = $commandLine }
+                }
+                else {
+                    $unknownLiveOwners += $owner
+                }
+            }
+            catch {
+                $unknownLiveOwners += $owner
+            }
+        }
+
+        if ($unknownLiveOwners.Count -gt 0) {
+            $ownerDetails = ($unknownLiveOwners | ForEach-Object { "$($_.AppName)(PID=$($_.ProcessId),StartFileTime=$($_.ProcessStartFileTime),Service=$($_.Service))" }) -join ", "
             throw "BUILD_FILE_LOCKED path=$blockedFile owners=[$ownerDetails]; failing immediately without terminating any process."
         }
 
-        $retriedAfterStaleOwner = $false
-        if ($staleOwners.Count -gt 0) {
-            $staleDetails = ($staleOwners | ForEach-Object { "$($_.AppName)(PID=$($_.ProcessId),StartFileTime=$($_.ProcessStartFileTime))" }) -join ", "
-            Write-Warning "Restart Manager returned exited or PID-reused owners for ${blockedFile}: [$staleDetails]. Retrying cleanup once immediately; no process will be terminated."
+        foreach ($orphan in $verifiedOrphans) {
+            Write-Warning "Releasing verified orphan Shire CI commandlet PID=$($orphan.ProcessId) after exact engine/project/owner/command-line/start-time checks."
+            Stop-Process -Id $orphan.ProcessId -Force -ErrorAction SilentlyContinue
+            $stillRunning = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $orphan.ProcessId) -ErrorAction SilentlyContinue
+            if ($stillRunning) {
+                $current = Get-Process -Id $orphan.ProcessId -ErrorAction SilentlyContinue
+                $sameProcess = $false
+                if ($current) {
+                    try {
+                        $sameProcess = ($current.StartTime.ToUniversalTime().ToFileTimeUtc() -eq $orphan.StartFileTime)
+                    }
+                    catch {
+                        $sameProcess = $false
+                    }
+                }
+                if ($sameProcess) {
+                    $taskkillOutput = & (Join-Path $env:SystemRoot "System32\taskkill.exe") /PID $orphan.ProcessId /F 2>&1
+                    $taskkillExit = $LASTEXITCODE
+                    Write-Host "Verified orphan taskkill exit=$taskkillExit output=$(($taskkillOutput -join ' '))"
+                }
+            }
+
+            $stillRunning = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $orphan.ProcessId) -ErrorAction SilentlyContinue
+            if ($stillRunning) {
+                throw "BUILD_ORPHAN_RELEASE_FAILED PID=$($orphan.ProcessId); exact process remains after one verified termination attempt."
+            }
+        }
+
+        $retriedAfterOwnerExit = $false
+        if ($staleOwners.Count -gt 0 -or $verifiedOrphans.Count -gt 0) {
+            $endedDetails = @($staleOwners + $verifiedOrphans | ForEach-Object { "$($_.AppName)$($_.ProcessId)" }) -join ", "
+            Write-Warning "Restart Manager owner records are stale or were safely released for $($blockedFile): [$endedDetails]. Retrying cleanup once immediately."
             try {
                 Remove-Item -LiteralPath $fullPath -Recurse -Force -ErrorAction Stop
-                $retriedAfterStaleOwner = $true
+                $retriedAfterOwnerExit = $true
             }
             catch {
                 $deleteError = $_.Exception.Message
             }
         }
 
-        if (-not $retriedAfterStaleOwner) {
+        if (-not $retriedAfterOwnerExit) {
             $aclDiagnostic = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
-            Write-Warning "No live Restart Manager owner holds $blockedFile. Granting Modify only on generated build output $fullPath to runner identity $identity. $aclDiagnostic"
+            Write-Warning "No live Restart Manager owner holds $($blockedFile). Granting Modify only on generated build output $fullPath to runner identity $identity. $aclDiagnostic"
             $grant = & (Join-Path $env:SystemRoot "System32\icacls.exe") $fullPath /grant ($identity + ":(OI)(CI)M") /T /C 2>&1
             $grantExit = $LASTEXITCODE
             if ($grantExit -ne 0) {

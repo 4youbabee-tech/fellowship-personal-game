@@ -3390,13 +3390,17 @@ for marker in [
     "BUILD_CLEANUP_ACL_REPAIR_FAILED",
     "ProcessStartFileTime",
     "Get-Process -Id $owner.ProcessId",
-    "PID-reused owners",
+    "orphanCiCommandlet",
+    "BUILD_ORPHAN_RELEASE_FAILED",
+    "taskkill.exe",
     "icacls.exe",
 ]:
     if marker not in build_cleanup:
         fail(f"PG-184: fail-fast build cleanup diagnostic is missing {marker}")
-if "Start-Sleep" in build_cleanup or "Stop-Process" in build_cleanup or "taskkill.exe" in build_cleanup:
-    fail("PG-184: build cleanup must not wait blindly or terminate a process to release a file")
+if "Start-Sleep" in build_cleanup:
+    fail("PG-184: build cleanup must not wait blindly for a file lock")
+if "Stop-Process -Id $orphan.ProcessId" not in build_cleanup or "candidateOwner -ieq $identity" not in build_cleanup:
+    fail("PG-184: process recovery must be constrained to an owner-verified Shire CI orphan")
 checkout_action_ok = (
     "uses: actions/checkout@v4" in unreal_ci
     and (
