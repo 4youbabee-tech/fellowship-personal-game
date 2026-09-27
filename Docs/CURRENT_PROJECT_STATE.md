@@ -1,3 +1,13 @@
+## 2026-09-27 - Critical warehouse gap preparation train V2
+
+- Warehouse saturation PR #121 completed exact-head Pre-Unreal #1159 SUCCESS and Unreal #926 SUCCESS and merged at `70e7a3c0a03a7dbebbe6c70d822bab7a06c59e87`.
+- Warehouse Stage #265 was queued from that merge to pull/audit the public provider-compatible warehouse lanes.
+- New V2 branch `warehouse/critical-gap-preparation-train-v2` adds a second 20-car train focused on the largest remaining production gaps rather than source discovery.
+- `run_warehouse_critical_gap_preparation.ps1` verifies receipt SHA256, expands ZIP copies into a separate prepared root, blocks executable/BMP payloads, inventories FBX character/animation/creature/static-mesh candidates, separates mesh conversion debt, groups production texture/audio/UI/terrain source classes, and emits per-car prepared/pending/blocked counts.
+- Warehouse Stage now invokes the V2 processor after normal staging, inventory audit and V1 saturation reporting.
+- V2 cannot promote any file to `READY_FOR_IMPORT`; skeleton/skin/deformation, visual/canon, PIE/device/performance and class-specific QC remain required.
+- Evidence boundary: **SOURCE/PREPARATION IMPLEMENTED / exact-head validation pending**.
+
 ## 2026-09-27 - Warehouse train consolidation replaces stale-base prep PRs
 
 - The architecture/interiors/props preparation from former PR #119 and the character/audio/fauna preparation from former PR #120 are now consolidated onto `warehouse/p1c01-trilogy-saturation-train-v1`, which is based on post-#118 `develop`.
