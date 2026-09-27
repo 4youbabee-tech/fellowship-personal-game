@@ -1,3 +1,12 @@
+## 2026-09-27 - P1C01 Shire material surface-set train started
+
+- Active production batch: `P1C01_SHIRE_MATERIAL_SURFACE_SET_V1` on branch `production/p1c01-shire-material-surface-set-v1`.
+- Added `Data/P1C01ShireMaterialSurfaceSetV1.json` covering the existing project-owned Shire TGA palette (Bark, Dirt, DoorGreen, Grass, Leaves, Stone, Wood) and eight authored material identities.
+- `ShireProductionImportCommandlet` now carries a bounded `Specular` scalar on production surface and foliage masters and derives authored instance specular response from MTL `Ks` values. No extra texture samples, no foliage density increase and no new runtime heavy-load path were introduced.
+- Existing roughness/metallic values, foliage near/far split and TGA albedo bindings are preserved.
+- Train sequence after this batch: evidence-backed Poly Haven surface intake -> Shire support architecture/interiors -> living-world visual integration/polish. External items remain fail-closed without source/license/receipt/SHA256.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**. No PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-27 - P1C01 player-experience convergence implementation
 
 Source-verified defects from the P1C01 interaction path are implemented as one bounded gameplay batch:
