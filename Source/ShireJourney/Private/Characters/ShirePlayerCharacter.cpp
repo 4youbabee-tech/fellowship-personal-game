@@ -1215,17 +1215,17 @@ void AShirePlayerCharacter::MoveRight(float Value)
 
 void AShirePlayerCharacter::TurnAtRate(float Value)
 {
-    if (!bCinematicInputLocked && GetWorld())
+    if (!bCinematicInputLocked)
     {
-        AddControllerYawInput(Value * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+        AddControllerYawInput(Value * MouseLookSensitivity);
     }
 }
 
 void AShirePlayerCharacter::LookUpAtRate(float Value)
 {
-    if (!bCinematicInputLocked && GetWorld())
+    if (!bCinematicInputLocked)
     {
-        AddControllerPitchInput(Value * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+        AddControllerPitchInput(Value * MouseLookSensitivity);
     }
 }
 
@@ -2748,9 +2748,22 @@ void AShirePlayerCharacter::QuickLoad()
             ShireSaveConstants::SlotName,
             ShireSaveConstants::UserIndex));
 
-    RestoreSaveSnapshot(
+    const bool bRestored = RestoreSaveSnapshot(
         Save,
         FText::FromString(TEXT("Journey restored.")));
+
+    if (!bRestored)
+    {
+        if (APlayerController* PC = Cast<APlayerController>(Controller))
+        {
+            if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
+            {
+                HUD->ShowAlert(
+                    FText::FromString(TEXT("This save could not be restored.")),
+                    2.2f);
+            }
+        }
+    }
 }
 
 
