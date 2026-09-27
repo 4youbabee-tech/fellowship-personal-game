@@ -29,6 +29,7 @@ void ALivingWorldDirector::BeginPlay()
     Super::BeginPlay();
 
     Random.Initialize(7919);
+    CachedPlayerPawn = ResolvePlayerPawn();
     LoadEventContract();
     LoadLifeSaturationContract();
 
@@ -98,6 +99,25 @@ void ALivingWorldDirector::EndPlay(const EEndPlayReason::Type EndPlayReason)
         }
     }
     AmbientNPCPool.Empty();
+
+    for (TWeakObjectPtr<AShireWorldEventInteraction>& InteractionPtr : InteractionPool)
+    {
+        if (AShireWorldEventInteraction* Interaction = InteractionPtr.Get())
+        {
+            Interaction->Destroy();
+        }
+    }
+    InteractionPool.Empty();
+
+    for (TWeakObjectPtr<AWorldAmbientMotionActor>& MotionPtr : AmbientMotionPool)
+    {
+        if (AWorldAmbientMotionActor* MotionActor = MotionPtr.Get())
+        {
+            MotionActor->Destroy();
+        }
+    }
+    AmbientMotionPool.Empty();
+    CachedPlayerPawn.Reset();
 
     Super::EndPlay(EndPlayReason);
 }
@@ -384,6 +404,14 @@ void ALivingWorldDirector::ResetForCurrentChapter()
                 {
                     ReleaseAmbientNPCToPool(AmbientNPC);
                 }
+                else if (AShireWorldEventInteraction* Interaction = Cast<AShireWorldEventInteraction>(Actor))
+                {
+                    ReleaseInteractionToPool(Interaction);
+                }
+                else if (AWorldAmbientMotionActor* MotionActor = Cast<AWorldAmbientMotionActor>(Actor))
+                {
+                    ReleaseAmbientMotionToPool(MotionActor);
+                }
                 else
                 {
                     Actor->Destroy();
@@ -473,6 +501,23 @@ void ALivingWorldDirector::ApplyChapterWeatherContext()
         *Weather.ToString());
 }
 
+APawn* ALivingWorldDirector::ResolvePlayerPawn() const
+{
+    if (APawn* Cached = CachedPlayerPawn.Get())
+    {
+        return Cached;
+    }
+
+    if (!GetWorld())
+    {
+        return nullptr;
+    }
+
+    APawn* Player = UGameplayStatics::GetPlayerPawn(this, 0);
+    CachedPlayerPawn = Player;
+    return Player;
+}
+
 bool ALivingWorldDirector::IsStoryDangerActive() const
 {
     if (!QuestSubsystem)
@@ -494,7 +539,7 @@ void ALivingWorldDirector::CleanupExpiredEvents()
     }
 
     const float Now = GetWorld()->GetTimeSeconds();
-    APawn* Player = UGameplayStatics::GetPlayerPawn(this, 0);
+    APawn* Player = ResolvePlayerPawn();
 
     for (int32 Index = ActiveEvents.Num() - 1; Index >= 0; --Index)
     {
@@ -527,6 +572,14 @@ void ALivingWorldDirector::CleanupExpiredEvents()
                 if (AShireAmbientNPC* AmbientNPC = Cast<AShireAmbientNPC>(Actor))
                 {
                     ReleaseAmbientNPCToPool(AmbientNPC);
+                }
+                else if (AShireWorldEventInteraction* Interaction = Cast<AShireWorldEventInteraction>(Actor))
+                {
+                    ReleaseInteractionToPool(Interaction);
+                }
+                else if (AWorldAmbientMotionActor* MotionActor = Cast<AWorldAmbientMotionActor>(Actor))
+                {
+                    ReleaseAmbientMotionToPool(MotionActor);
                 }
                 else
                 {
@@ -661,7 +714,7 @@ FName ALivingWorldDirector::ChooseBaselineProp(FName RoleName) const
 
 FVector ALivingWorldDirector::ChoosePopulationOrigin()
 {
-    APawn* Player = UGameplayStatics::GetPlayerPawn(this, 0);
+    APawn* Player = ResolvePlayerPawn();
     if (!Player)
     {
         return FVector::ZeroVector;
@@ -734,9 +787,96 @@ void ALivingWorldDirector::ReleaseAmbientNPCToPool(AShireAmbientNPC* NPC)
     AmbientNPCPool.AddUnique(NPC);
 }
 
+AShireWorldEventInteraction* ALivingWorldDirector::AcquireInteraction(const FVector& Location)
+{
+    while (InteractionPool.Num() > 0)
+    {
+        TWeakObjectPtr<AShireWorldEventInteraction> CandidatePtr = InteractionPool.Pop(false);
+        if (AShireWorldEventInteraction* Candidate = CandidatePtr.Get())
+        {
+            Candidate->ActivateFromLivingWorldPool(Location);
+            return Candidate;
+        }
+    }
+
+    if (!GetWorld())
+    {
+        return nullptr;
+    }
+
+    FActorSpawnParameters Params;
+    Params.SpawnCollisionHandlingOverride =
+        ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+    return GetWorld()->SpawnActor<AShireWorldEventInteraction>(
+        Location,
+        FRotator::ZeroRotator,
+        Params);
+}
+
+void ALivingWorldDirector::ReleaseInteractionToPool(AShireWorldEventInteraction* Interaction)
+{
+    if (!Interaction || Interaction->IsPendingKillPending())
+    {
+        return;
+    }
+
+    if (InteractionPool.Num() >= MaxInteractionPoolSize)
+    {
+        Interaction->Destroy();
+        return;
+    }
+
+    Interaction->DeactivateForLivingWorldPool();
+    InteractionPool.AddUnique(Interaction);
+}
+
+AWorldAmbientMotionActor* ALivingWorldDirector::AcquireAmbientMotionActor(
+    const FVector& Location,
+    const FRotator& Rotation)
+{
+    while (AmbientMotionPool.Num() > 0)
+    {
+        TWeakObjectPtr<AWorldAmbientMotionActor> CandidatePtr = AmbientMotionPool.Pop(false);
+        if (AWorldAmbientMotionActor* Candidate = CandidatePtr.Get())
+        {
+            Candidate->ActivateFromLivingWorldPool(Location, Rotation);
+            return Candidate;
+        }
+    }
+
+    if (!GetWorld())
+    {
+        return nullptr;
+    }
+
+    FActorSpawnParameters Params;
+    Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+    return GetWorld()->SpawnActor<AWorldAmbientMotionActor>(
+        Location,
+        Rotation,
+        Params);
+}
+
+void ALivingWorldDirector::ReleaseAmbientMotionToPool(AWorldAmbientMotionActor* Actor)
+{
+    if (!Actor || Actor->IsPendingKillPending())
+    {
+        return;
+    }
+
+    if (AmbientMotionPool.Num() >= MaxAmbientMotionPoolSize)
+    {
+        Actor->Destroy();
+        return;
+    }
+
+    Actor->DeactivateForLivingWorldPool();
+    AmbientMotionPool.AddUnique(Actor);
+}
+
 void ALivingWorldDirector::CleanupBaselinePopulation()
 {
-    APawn* Player = UGameplayStatics::GetPlayerPawn(this, 0);
+    APawn* Player = ResolvePlayerPawn();
     for (int32 Index = BaselinePopulation.Num() - 1; Index >= 0; --Index)
     {
         AShireAmbientNPC* NPC = BaselinePopulation[Index].Get();
@@ -797,7 +937,7 @@ void ALivingWorldDirector::MaintainBaselinePopulation()
         return;
     }
 
-    APawn* Player = UGameplayStatics::GetPlayerPawn(this, 0);
+    APawn* Player = ResolvePlayerPawn();
     const FVector TravelForward =
         Player ? Player->GetActorForwardVector().GetSafeNormal2D() : FVector::ForwardVector;
     const FVector TravelRight =
@@ -894,7 +1034,7 @@ void ALivingWorldDirector::MaintainBaselinePopulation()
 
 FVector ALivingWorldDirector::ChooseEventOrigin(float MinRadius, float MaxRadius)
 {
-    APawn* Player = UGameplayStatics::GetPlayerPawn(this, 0);
+    APawn* Player = ResolvePlayerPawn();
     if (!Player)
     {
         return FVector::ZeroVector;
@@ -920,7 +1060,7 @@ bool ALivingWorldDirector::ResolveGroundedAmbientPoint(
     const FVector TraceStart = Candidate + FVector(0.0f, 0.0f, 900.0f);
     const FVector TraceEnd = Candidate - FVector(0.0f, 0.0f, 2200.0f);
     FCollisionQueryParams QueryParams(FName(TEXT("LivingWorldGroundProbe")), false, this);
-    if (APawn* Player = UGameplayStatics::GetPlayerPawn(this, 0))
+    if (APawn* Player = ResolvePlayerPawn())
     {
         QueryParams.AddIgnoredActor(Player);
     }
@@ -1019,10 +1159,7 @@ AWorldAmbientMotionActor* ALivingWorldDirector::SpawnAmbientMotionActor(
         return nullptr;
     }
 
-    FActorSpawnParameters Params;
-    Params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-    AWorldAmbientMotionActor* Actor = GetWorld()->SpawnActor<AWorldAmbientMotionActor>(
-        Location, Rotation, Params);
+    AWorldAmbientMotionActor* Actor = AcquireAmbientMotionActor(Location, Rotation);
     if (!Actor)
     {
         return nullptr;
@@ -1086,14 +1223,8 @@ AShireWorldEventInteraction* ALivingWorldDirector::SpawnPlayerInteraction(
         return nullptr;
     }
 
-    FActorSpawnParameters Params;
-    Params.SpawnCollisionHandlingOverride =
-        ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
     AShireWorldEventInteraction* Interaction =
-        GetWorld()->SpawnActor<AShireWorldEventInteraction>(
-            Origin + FVector(70.0f, -70.0f, 0.0f),
-            FRotator::ZeroRotator,
-            Params);
+        AcquireInteraction(Origin + FVector(70.0f, -70.0f, 0.0f));
     if (!Interaction)
     {
         return nullptr;
