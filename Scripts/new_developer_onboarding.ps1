@@ -73,6 +73,7 @@ $Summary = [ordered]@{
     next_actions = $NextActions
     target_hardware = $Target
     evidence_boundary = [string]$Governor.active_gate.evidence_scope
+    runner_ownership_rule = if ($Governor.runner_execution_contract) { "UE4 runner = interactive-user watchdog only; actions.runner.* must stay Stopped/Manual; NETWORK SERVICE/LOCAL SERVICE/SYSTEM forbidden; do not change topology without owner authorization." } else { $null }
     required_reading = @(
         'Docs/PROJECT_GOVERNOR.md',
         'Data/ProjectGovernor.json',
@@ -134,11 +135,17 @@ foreach ($Doc in $Summary.required_reading) {
     Write-Host "  $Mark $Doc"
 }
 Write-Host ''
+Write-Host 'RUNNER OWNERSHIP'
+if (-not [string]::IsNullOrWhiteSpace($Summary.runner_ownership_rule)) {
+    Write-Host "  $($Summary.runner_ownership_rule)"
+}
+Write-Host ''
 Write-Host 'PROOF BOUNDARY'
 Write-Host "  $($Summary.evidence_boundary)"
 Write-Host ''
 Write-Host 'RULES'
 Write-Host '  - Do not work directly on main.'
+Write-Host '  - Never enable/start actions.runner.*; use the interactive-user watchdog runner only.'
 Write-Host '  - Do not reconstruct direction from old PRs or chat history.'
 Write-Host '  - GitHub owns live PR/branch/workflow transport state.'
 Write-Host '  - ProjectGovernor owns durable requirements, priorities, gates and evidence.'
