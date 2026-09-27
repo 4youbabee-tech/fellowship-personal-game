@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "train_id": "P1C01_RUNTIME_COMPLETION_TRAIN_V1_20_CARS",
+  "lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "ACTIVE_SERIALIZED_RUNTIME_PRODUCTION",
+  "target": "Windows DX11 / 720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / ~2GB VRAM",
+  "rules": [
+    "Cars may be prepared in parallel but runtime promotion is serialized by exact-head engine evidence.",
+    "No new chapter is opened by this train.",
+    "No heavy synchronous LoadObject path may be introduced.",
+    "Animated final character/fauna assets require FBX.",
+    "Production textures require PNG/TGA.",
+    "Repeated decorative detail uses ISM/HISM; ambient crowds use pooling.",
+    "CURRENT_PROJECT_STATE and PRODUCTION_COMPLETENESS_MATRIX are synchronized with every real code change.",
+    "No PIE/device/visual/performance claim without direct evidence."
+  ],
+  "cars": [
+    {
+      "order": 1,
+      "id": "RT01_PLAYER_REFERENCE_CACHE",
+      "status": "SOURCE_IMPLEMENTED",
+      "goal": "Cache player pawn in LivingWorldDirector and reacquire only on weak-pointer invalidation."
+    },
+    {
+      "order": 2,
+      "id": "RT02_INTERACTION_POOL",
+      "status": "SOURCE_IMPLEMENTED",
+      "goal": "Pool recurring ShireWorldEventInteraction actors."
+    },
+    {
+      "order": 3,
+      "id": "RT03_AMBIENT_MOTION_POOL",
+      "status": "SOURCE_IMPLEMENTED",
+      "goal": "Pool WorldAmbientMotionActor instances and disable Tick while pooled."
+    },
+    {
+      "order": 4,
+      "id": "RT04_SFX_REPEAT_GUARD",
+      "status": "SOURCE_IMPLEMENTED",
+      "goal": "Suppress burst duplicate SFX without adding Tick."
+    },
+    {
+      "order": 5,
+      "id": "RT05_RUNTIME_REGRESSION_GUARDS",
+      "status": "SOURCE_IMPLEMENTED",
+      "goal": "Pre-Unreal guards for player-cache/pooling/audio invariants."
+    },
+    {
+      "order": 6,
+      "id": "RT06_CHARACTER_SKELETAL_ASYNC_RUNTIME",
+      "status": "QUEUED_BEHIND_ENGINE_GATE",
+      "goal": "Wire first legal skeletal FBX bundle through soft/async runtime ownership."
+    },
+    {
+      "order": 7,
+      "id": "RT07_FRODO_LOCOMOTION_RETARGET",
+      "status": "QUEUED_BEHIND_RT06",
+      "goal": "Walk/run/sprint/crouch/jump/attack retarget integration for first accepted Frodo rig."
+    },
+    {
+      "order": 8,
+      "id": "RT08_GANDALF_SAM_CHARACTER_PASS",
+      "status": "QUEUED_BEHIND_RT07",
+      "goal": "Extend accepted rig path to Gandalf and Sam without proxy duplication."
+    },
+    {
+      "order": 9,
+      "id": "RT09_CORE_CAST_REPLACEMENT_WAVE",
+      "status": "QUEUED_BEHIND_RT08",
+      "goal": "Merry/Pippin/Aragorn/Boromir/Legolas/Gimli runtime replacement wave."
+    },
+    {
+      "order": 10,
+      "id": "RT10_FAUNA_ANIMATED_POOL_WAVE",
+      "status": "QUEUED_BEHIND_ASSET_QC",
+      "goal": "Replace static/procedural fauna presentation with accepted pooled FBX fauna while preserving caps."
+    },
+    {
+      "order": 11,
+      "id": "RT11_SHIRE_AUDIO_BANK_IMPORT",
+      "status": "QUEUED_BEHIND_AUDIO_QC",
+      "goal": "Import approved ambience/footstep/hearth/foley WAV masters under established cue roots."
+    },
+    {
+      "order": 12,
+      "id": "RT12_SPATIAL_AUDIO_MIX_PASS",
+      "status": "QUEUED_BEHIND_RT11",
+      "goal": "Chapter-specific attenuation/concurrency and mix contract."
+    },
+    {
+      "order": 13,
+      "id": "RT13_CHARACTER_VOICE_PLACEHOLDER_PIPELINE",
+      "status": "QUEUED_BEHIND_RIGHTS_QC",
+      "goal": "Authorized/original placeholder voice only; no film dialogue reuse."
+    },
+    {
+      "order": 14,
+      "id": "RT14_QUEST_SAVE_RESILIENCE_WAVE",
+      "status": "QUEUED_BEHIND_ENGINE_GATE",
+      "goal": "Engine-driven save/load/route/checkpoint regressions on current integrated runtime."
+    },
+    {
+      "order": 15,
+      "id": "RT15_STORY_PRESENTATION_COMPLETENESS",
+      "status": "QUEUED_BEHIND_STABLE_RIG_AUDIO",
+      "goal": "Fill P1C01 camera/dialogue/audio presentation gaps without moving story anchors."
+    },
+    {
+      "order": 16,
+      "id": "RT16_SHIRE_VISUAL_SATURATION_PASS",
+      "status": "QUEUED_BEHIND_WAREHOUSE_QC",
+      "goal": "Integrate approved architecture/interior/material/vegetation support within current density budget."
+    },
+    {
+      "order": 17,
+      "id": "RT17_COLLISION_TRAVERSAL_AUDIT",
+      "status": "QUEUED_BEHIND_RT16",
+      "goal": "Ground-safe placement, collision, route readability and no-blocker traversal audit."
+    },
+    {
+      "order": 18,
+      "id": "RT18_TARGET_DEVICE_PROFILE",
+      "status": "QUEUED_BEHIND_RUNTIME_GREEN",
+      "goal": "Measure FPS/hitch/memory/VRAM on target profile before density escalation."
+    },
+    {
+      "order": 19,
+      "id": "RT19_PIE_VISUAL_PACING_ACCEPTANCE",
+      "status": "QUEUED_BEHIND_RT18",
+      "goal": "Human P1C01 visual/motion/audio/pacing review on exact integrated build."
+    },
+    {
+      "order": 20,
+      "id": "RT20_GATE_6_7_CLOSURE",
+      "status": "QUEUED_BEHIND_RT18_RT19",
+      "goal": "Close P1C01 Gate 6/7 only from actual machine/device/human evidence."
+    }
+  ],
+  "evidence_boundary": "Cars 1-5 are source-implemented only until exact-head validation. Cars 6-20 are queued and are not implementation claims."
+}
