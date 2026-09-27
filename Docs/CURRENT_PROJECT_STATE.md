@@ -1,3 +1,15 @@
+## 2026-09-27 - P1C01 Acceptance Closure Train V1 source implementation
+
+- New stacked preparation branch: `production/p1c01-acceptance-closure-train-v1`, based on the runtime-completion branch and intentionally not opened as a PR yet to avoid adding more work to the single self-hosted runner queue.
+- Existing `ShireJourney.QA` Unreal Automation suite is extended rather than duplicated.
+- Added four engine-side contract tests:
+  - `ShireJourney.QA.Runtime.CompletionTrainContract` verifies the 20-car runtime train order and implemented-vs-gated statuses.
+  - `ShireJourney.QA.Runtime.LivingWorldBudgetContract` verifies the authoritative micro-event/fauna caps and cull distances.
+  - `ShireJourney.QA.Assets.CharacterRigIntakeContract` verifies FBX-only skeletal output, PNG/TGA texture formats and animated-OBJ/BMP prohibitions.
+  - `ShireJourney.QA.Audio.P1C01MasterContract` verifies exactly five authorized P1C01 audio candidates, CC0 state and WAV-master requirement.
+- Existing save-default and streaming-bank package automation tests remain unchanged.
+- Evidence boundary: **SOURCE-IMPLEMENTED only**. These tests have not yet compiled or run on UE4.27.2 at this branch head, and they cannot substitute for human PIE/device/visual/pacing/performance acceptance.
+
 ## 2026-09-27 - Runtime train character-rig async recovery hardened
 
 - Existing `UShireChapterAssetStreamingSubsystem` already owns the production skeletal-rig path with `FSoftObjectPath`, `FStreamableManager`, standardized `/Game/Production/Characters/Rigs/<Character>/` object paths, player/NPC callbacks and modular fallback.
