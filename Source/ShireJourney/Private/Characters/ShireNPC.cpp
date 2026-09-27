@@ -1719,6 +1719,7 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
     }
 
     bool bUsedBoundedDialogue = false;
+    bool bAuthoredDialogueSequenceCompleted = false;
     const FName CanonicalProfileId = ResolveCanonicalProfileId();
     UShireNPCContextSubsystem* Context =
         GI ? GI->GetSubsystem<UShireNPCContextSubsystem>() : nullptr;
@@ -1789,7 +1790,9 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
         const TArray<FText>* ActiveDialogue = ResolveDialogueLines(QuestSubsystem);
         if (ActiveDialogue && ActiveDialogue->Num() > 0)
         {
-            const FText& Line = (*ActiveDialogue)[CurrentDialogueIndex % ActiveDialogue->Num()];
+            const int32 DialogueIndex = CurrentDialogueIndex % ActiveDialogue->Num();
+            const FText& Line = (*ActiveDialogue)[DialogueIndex];
+            bAuthoredDialogueSequenceCompleted = DialogueIndex == ActiveDialogue->Num() - 1;
             if (APlayerController* PC = GetWorld() ? GetWorld()->GetFirstPlayerController() : nullptr)
             {
                 if (AShireHUD* HUD = Cast<AShireHUD>(PC->GetHUD()))
@@ -1833,7 +1836,8 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
         }
     }
 
-    if (QuestSubsystem && NextQuestId != NAME_None)
+    if (QuestSubsystem && NextQuestId != NAME_None &&
+        (!bCompleteDialogueBeforeNextQuest || bAuthoredDialogueSequenceCompleted))
     {
         QuestSubsystem->StartQuest(NextQuestId, NextQuestStage);
     }

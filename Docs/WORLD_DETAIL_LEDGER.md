@@ -1,3 +1,16 @@
+## 2026-09-27 - P1C01 player-experience convergence defect batch
+
+Registered before implementation from source review on `develop@c79168cf385ba02f4b542940de3b089e700f1f18`.
+
+- Bilbo authored dialogue must complete before the `ShireArrival -> LongExpectedParty` hand-off.
+- Mouse look must be frame-rate independent for raw `MouseX/MouseY` input.
+- Quick-load rejection must surface a player-facing failure message while retaining detailed developer logs.
+- Quest triggers must re-evaluate eligibility event-driven while the player remains overlapping; no per-frame trigger Tick is allowed.
+- Dialogue subtitles require bounded wrapping for the 720p target HUD.
+- Map/Chronicle pause/damage policy remains a later explicit UX decision and is not silently changed in this defect batch.
+
+Status: **REGISTERED / IMPLEMENTATION STARTED**. This entry does not promote PIE/device/visual acceptance.
+
 ## 2026-09-27 - Legacy planning roots consolidated
 
 - Reviewed remaining unique branches before deletion rather than bulk-merging stale snapshots into current production.

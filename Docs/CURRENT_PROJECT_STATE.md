@@ -1,3 +1,16 @@
+## 2026-09-27 - P1C01 player-experience convergence implementation
+
+Source-verified defects from the P1C01 interaction path are implemented as one bounded gameplay batch:
+
+- Bilbo's `ShireArrival -> LongExpectedParty` transition now waits for completion of his authored multi-line dialogue sequence through an explicit NPC opt-in flag; existing NPC hand-offs remain unchanged by default.
+- Raw `MouseX/MouseY` camera input no longer multiplies by frame DeltaSeconds; a direct `MouseLookSensitivity` scalar controls the mouse path.
+- Quick-load now gives the player a visible rejection message when `RestoreSaveSnapshot` returns false, while detailed rejection reasons remain in logs.
+- `AShireQuestTrigger` remains non-ticking and now tracks the overlapping player weakly, re-evaluating eligibility only on quest-stage, active-quest, story-beat and restored-state events. This closes the enter-too-early / remain-inside progression gap without a per-frame cost.
+- Dialogue subtitle rendering now uses bounded word wrapping in a taller 720p-safe dialogue box.
+- Map/Chronicle movement/damage behavior remains deliberately unchanged pending the explicit UX policy decision already registered in `WORLD_DETAIL_LEDGER.md`.
+
+Evidence boundary: **SOURCE-IMPLEMENTED / STATIC-REVIEWED**. Exact-head UE4.27 compile/runtime validation is required before any COMPILE-TESTED or PIE claim.
+
 ## 2026-09-27 - Repeated MSVC stale-temp validation blocker contained
 
 - Unreal Build #896 failed on both attempt 1 and attempt 2 before asset import with `fatal error C1083: Cannot open compiler intermediate file`.

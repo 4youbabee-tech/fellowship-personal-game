@@ -1543,6 +1543,7 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
         Bilbo->QuestStageAfterInteraction=3;
         Bilbo->NextQuestId=TEXT("LongExpectedParty");
         Bilbo->NextQuestStage=1;
+        Bilbo->bCompleteDialogueBeforeNextQuest=true;
     }
 
     AShireQuestTrigger* BagEndReturn=GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(-2140,-430,90),FRotator::ZeroRotator);

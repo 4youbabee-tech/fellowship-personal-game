@@ -80,6 +80,11 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
     int32 NextQuestStage = 0;
 
+    // Some story hand-offs must wait until every authored line in the current
+    // dialogue sequence has been shown. Disabled by default to preserve existing NPC behavior.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Quest")
+    bool bCompleteDialogueBeforeNextQuest = false;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
     bool bFollowPlayerAfterInteraction = false;
 

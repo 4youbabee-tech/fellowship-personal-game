@@ -234,6 +234,10 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
     float BaseLookUpRate = 45.0f;
 
+    // Raw MouseX/MouseY input is already frame-relative; do not multiply it by DeltaSeconds.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Camera")
+    float MouseLookSensitivity = 1.0f;
+
 private:
     bool bCinematicInputLocked = false;
     bool bWorldTransitionHeld = true;
