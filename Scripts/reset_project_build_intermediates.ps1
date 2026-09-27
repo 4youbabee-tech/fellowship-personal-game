@@ -114,7 +114,7 @@ function Get-FileLockOwners {
                 Service = [string]$app.strServiceShortName
             }
         }
-        return ,$owners
+        return $owners
     }
     finally {
         [void][ShireRestartManager]::RmEndSession($session)
