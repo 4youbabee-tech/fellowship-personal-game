@@ -18,6 +18,10 @@ There is **one project manager and one entry path**. Do not reconstruct project 
 6. Inspect the live `develop` HEAD and current GitHub checks before editing.
 7. Work on a short-lived candidate branch targeting `develop`; never use `main` as the normal development branch.
 
+## CRITICAL RUNNER OWNERSHIP RULE
+
+Before touching GitHub Actions runner configuration: **do not enable or start the legacy `actions.runner.*` Windows service.** The UE4 runner must stay in supervised **interactive-user watchdog mode** through `ShireJourney-GitHubRunner-Watchdog`. `NETWORK SERVICE`, `LOCAL SERVICE`, and `SYSTEM` are forbidden identities for the UE4 runner. If runner topology looks wrong, fail closed and inspect `Scripts/install_runner_watchdog.ps1` + `Scripts/verify_runner_session.ps1`; do not improvise a service-mode repair.
+
 ## One-command onboarding
 
 On Windows/PowerShell from the repository root:
