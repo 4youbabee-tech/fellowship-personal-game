@@ -2860,20 +2860,22 @@
       "category": "DeveloperPlatform",
       "priority": "HIGH",
       "status": "PARTIAL",
-      "origin": "Owner upgraded the personal GitHub account and explicitly requested that every materially useful GitHub Pro benefit be identified, used where appropriate, and recorded in the Project Governor.",
+      "origin": "Owner directly confirmed the active personal GitHub Pro plan in GitHub Billing UI and requested that all materially useful Pro capabilities be exploited for Shire Journey.",
       "intent": "Exploit GitHub Pro for stronger private-repository controls, additional hosted CI reserve, development tooling and support while keeping the UE4.27 Windows build lane self-hosted, avoiding duplicate authorities, and preventing paid-feature usage from creating cost or workflow regressions.",
       "implementation_refs": [
         "Personal GitHub account 4youbabee-tech owns the private fellowship-personal-game repository.",
-        "Owner-provided billing evidence shows a USD 4 charge from GITHUB, INC.; USD 4/month matches GitHub's published GitHub Pro monthly price. The connected GitHub tool does not expose the Billing 'Current plan' field, so the plan label itself remains UI-confirmation pending.",
         "GitHub Pro published allowance: 3,000 GitHub-hosted Actions minutes/month for private repositories; self-hosted runner execution remains free and does not consume that allowance.",
         "GitHub Pro published allowance: 180 Codespaces core-hours/month and 20 GB-month Codespaces storage for personal accounts.",
         "GitHub Pro published allowance: 2 GB GitHub Packages storage and 10 GB/month Packages data transfer; current GitHub Actions artifact storage allowance is 1 GB.",
         "GitHub Pro enables advanced private-repository controls including protected branches, required/multiple pull-request reviewers, code owners, auto-linked references, private-repository Pages/Wikis availability, and repository insights graphs.",
         "GitHub Pro includes GitHub Support via email.",
-        "GitHub Pro does not include Copilot Pro and does not increase the published Git LFS 10 GB storage / 10 GB bandwidth allowance versus personal Free."
+        "GitHub Pro does not include Copilot Pro and does not increase the published Git LFS 10 GB storage / 10 GB bandwidth allowance versus personal Free.",
+        "Owner-supplied GitHub Billing UI visibly confirms: Current GitHub base plan = GitHub Pro, $4 per month, payment history status = Success, and receipt description = GitHub Pro - month. No payment-card, email, or transaction identifiers are stored in project governance.",
+        "GitHub Pro official plan documentation confirms private-repository advanced tools including protected branches, required/multiple pull-request reviewers, Code Owners, GitHub Pages, Wikis, auto-linked references, and repository insights.",
+        "GitHub Pro official ruleset documentation confirms branch/tag rulesets are available for private repositories; push rulesets for private/internal repositories require GitHub Team and are not assumed here.",
+        "Private-repository code scanning/secret scanning advanced-security features are not included with personal GitHub Pro alone; no Code Security/Secret Protection entitlement is assumed."
       ],
       "missing_work": [
-        "Owner/UI confirmation of Settings > Billing and licensing > Current plan = GitHub Pro, because the connected GitHub API surface available to this project does not expose the current-plan field.",
         "Enable protected-branch rules for develop and main after the current runtime train is safely integrated: block force-push/deletion and require appropriate CI status checks without requiring a second human reviewer while the project has a single maintainer.",
         "Set billing budgets/alerts so optional hosted Actions, Codespaces and Packages cannot create accidental overage.",
         "Add CODEOWNERS enforcement only when a second trusted maintainer/reviewer exists; do not create a self-review deadlock.",
@@ -3881,10 +3883,12 @@
         "Keep hosted Actions/Codespaces/Packages behind budgets and alerts; no silent paid overage.",
         "Repository Insights may be used for CI/commit/contributor trend review without changing production authority.",
         "GitHub Pages and Wiki must not duplicate ProjectGovernor/CURRENT_PROJECT_STATE or expose private/copyright-sensitive game material.",
-        "GitHub Pro is separate from GitHub Copilot Pro; no Copilot entitlement is assumed from this subscription."
+        "GitHub Pro is separate from GitHub Copilot Pro; no Copilot entitlement is assumed from this subscription.",
+        "Do not assume GitHub Code Security, private secret scanning, or private dependency review from personal Pro; those require separate eligible security licensing/plans.",
+        "Prefer a branch/tag ruleset or protected-branch policy for develop/main once repository-settings mutation is available; do not enable private push-ruleset assumptions that require Team."
       ],
       "rationale": "The project is a private personal repository with heavy UE4.27 Windows validation and a supervised self-hosted runner. Pro's strongest immediate value is private-repository governance and additional optional hosted/tooling capacity, not replacing the engine/device lane. The policy therefore uses the new capabilities without reintroducing CI cost, merge deadlocks or a second source of truth.",
-      "evidence_boundary": "USER BILLING EVIDENCE + OFFICIAL GITHUB PLAN DOCUMENTATION + CONNECTED-ACCOUNT/REPOSITORY FACTS. The connected tool confirms the personal account/repository but cannot read the Billing current-plan label; therefore the Pro label itself is not claimed as API-verified until the Billing UI is observed.",
+      "evidence_boundary": "OWNER UI-CONFIRMED GITHUB PRO + OFFICIAL GITHUB PLAN/RULESET DOCUMENTATION + CONNECTED-ACCOUNT/REPOSITORY FACTS. Subscription status is now directly confirmed by the owner's GitHub Billing UI. No payment identifiers are stored. No runtime/PIE/device/visual/performance claim is created.",
       "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
@@ -6290,7 +6294,7 @@
     "account_login": "4youbabee-tech",
     "repository": "4youbabee-tech/fellowship-personal-game",
     "repository_visibility": "private",
-    "subscription_evidence_status": "USD_4_GITHUB_INC_CHARGE_MATCHES_PUBLISHED_PRO_MONTHLY_PRICE__BILLING_CURRENT_PLAN_UI_NOT_EXPOSED_TO_CONNECTED_TOOL",
+    "subscription_evidence_status": "OWNER_GITHUB_BILLING_UI_CONFIRMED_GITHUB_PRO_ACTIVE_2026_09_27",
     "published_pro_capabilities": {
       "github_actions_private_minutes_per_month": 3000,
       "github_actions_artifact_storage_gb": 1,
@@ -6306,12 +6310,16 @@
         "auto-linked references",
         "GitHub Pages availability",
         "Wikis",
-        "repository insights graphs"
+        "repository insights graphs",
+        "repository branch/tag rulesets"
       ],
       "support": "GitHub Support via email",
       "not_included_or_not_upgraded": [
         "GitHub Copilot Pro is a separate product",
-        "Git LFS published allowance remains 10 GB storage and 10 GB bandwidth for personal Pro"
+        "Git LFS published allowance remains 10 GB storage and 10 GB bandwidth for personal Pro",
+        "Private-repository GitHub Code Security/code scanning is not included with personal Pro alone",
+        "Private-repository Secret Protection/secret scanning is not included with personal Pro alone",
+        "Private push rulesets are not assumed; GitHub documents them for Team on private/internal repositories"
       ]
     },
     "shire_journey_usage_policy": {
@@ -6333,6 +6341,17 @@
         "do not assume Copilot Pro"
       ],
       "cost_control": "Budgets and 90/100 percent usage alerts should be configured before any paid-overage-capable optional service is relied upon."
+    },
+    "subscription_confirmation": {
+      "status": "CONFIRMED",
+      "source": "Owner-supplied GitHub Billing UI screenshots",
+      "confirmed_facts": [
+        "Current GitHub base plan is GitHub Pro",
+        "Monthly price shown is $4",
+        "Payment history shows Success",
+        "Receipt description shows GitHub Pro - month"
+      ],
+      "privacy_note": "Payment-card digits, email address, transaction IDs and other payment identifiers are intentionally not copied into repository governance."
     }
   }
 }
