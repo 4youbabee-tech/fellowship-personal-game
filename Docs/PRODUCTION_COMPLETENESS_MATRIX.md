@@ -1,3 +1,21 @@
+## 2026-09-27 - Character rig async recovery hardening
+
+- Existing soft/async skeletal-rig infrastructure confirmed and retained.
+- Missing-package availability now retries on demand at a bounded 2 second interval instead of becoming permanently false for the GameInstance.
+- Modular proxy fallback remains authoritative until both skeletal mesh and locomotion AnimBP packages exist and async resolution succeeds.
+- Status: **SOURCE-IMPLEMENTED / exact-head Pre-Unreal + UE4.27 validation pending**; no rig asset or visual acceptance claim.
+
+## 2026-09-27 - P1C01 Runtime Completion Train V1
+
+- Runtime car 1: weak player-pawn cache in LivingWorldDirector — **SOURCE-IMPLEMENTED**.
+- Runtime car 2: bounded world-event interaction pool — **SOURCE-IMPLEMENTED**.
+- Runtime car 3: bounded ambient-motion actor pool with Tick disabled while pooled — **SOURCE-IMPLEMENTED**.
+- Runtime car 4: per-cue SFX burst guard — **SOURCE-IMPLEMENTED**.
+- Runtime car 5: Pre-Unreal runtime regression guards — **SOURCE-IMPLEMENTED**.
+- Cars 6-20 (skeletal characters -> animations -> fauna -> audio -> save/quest -> saturation -> profiling -> Gate 6/7) are **QUEUED**, not implementation claims.
+- Runtime density/caps remain unchanged; no new synchronous heavy asset loading.
+- Current maturity: **SOURCE-IMPLEMENTED / exact-head Pre-Unreal + UE4.27 build/runtime validation pending**.
+
 ## 2026-09-27 - Provider-resolution train V3
 
 - 20 source-resolution cars cover characters, animation, fauna, creatures, architecture, vegetation, PBR, audio/music/voice, VFX, UI, terrain, enemies, battle support, regional kits and manual marketplace review.
