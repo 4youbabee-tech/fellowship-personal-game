@@ -19,6 +19,51 @@ void AShireHUD::DrawHUD()
     UFont* SmallFont = GEngine ? GEngine->GetSmallFont() : nullptr;
     UFont* MediumFont = GEngine ? GEngine->GetMediumFont() : SmallFont;
 
+    const auto DrawWrappedText = [this](
+        const FString& Text,
+        const FLinearColor& Color,
+        float X,
+        float Y,
+        float MaxWidth,
+        UFont* Font,
+        float Scale,
+        int32 MaxLines)
+    {
+        TArray<FString> Words;
+        Text.ParseIntoArrayWS(Words);
+        FString Line;
+        int32 LinesDrawn = 0;
+        const float LineHeight = 18.0f * Scale;
+
+        for (const FString& Word : Words)
+        {
+            const FString Candidate = Line.IsEmpty() ? Word : Line + TEXT(" ") + Word;
+            float TextW = 0.0f;
+            float TextH = 0.0f;
+            GetTextSize(Candidate, TextW, TextH, Font, Scale);
+
+            if (!Line.IsEmpty() && TextW > MaxWidth)
+            {
+                DrawText(Line, Color, X, Y + LinesDrawn * LineHeight, Font, Scale, false);
+                ++LinesDrawn;
+                if (LinesDrawn >= MaxLines)
+                {
+                    return;
+                }
+                Line = Word;
+            }
+            else
+            {
+                Line = Candidate;
+            }
+        }
+
+        if (!Line.IsEmpty() && LinesDrawn < MaxLines)
+        {
+            DrawText(Line, Color, X, Y + LinesDrawn * LineHeight, Font, Scale, false);
+        }
+    };
+
     const float QuestCardW = FMath::Min(520.0f, W - 44.0f);
     DrawRect(FLinearColor(0.015f, 0.020f, 0.015f, 0.76f), 22.0f, 20.0f, QuestCardW, 106.0f);
     DrawRect(FLinearColor(0.76f, 0.57f, 0.22f, 0.92f), 22.0f, 20.0f, 4.0f, 106.0f);
@@ -310,10 +355,11 @@ void AShireHUD::DrawHUD()
         {
             const float BoxW = FMath::Min(760.0f, W - 60.0f);
             const float BoxX = (W - BoxW) * 0.5f;
-            const float BoxY = H - 155.0f;
-            DrawRect(FLinearColor(0.01f, 0.01f, 0.01f, 0.86f), BoxX, BoxY, BoxW, 95.0f);
+            const float BoxY = H - 188.0f;
+            DrawRect(FLinearColor(0.01f, 0.01f, 0.01f, 0.86f), BoxX, BoxY, BoxW, 126.0f);
             DrawText(Current.Speaker.ToString(), FLinearColor(0.96f, 0.82f, 0.45f), BoxX + 18.0f, BoxY + 14.0f, MediumFont, 1.0f, false);
-            DrawText(Current.Subtitle.ToString(), FLinearColor::White, BoxX + 18.0f, BoxY + 46.0f, SmallFont, 1.0f, false);
+            DrawWrappedText(Current.Subtitle.ToString(), FLinearColor::White,
+                BoxX + 18.0f, BoxY + 46.0f, BoxW - 36.0f, SmallFont, 1.0f, 4);
             bDrewQueuedSubtitle = true;
         }
     }
@@ -322,10 +368,11 @@ void AShireHUD::DrawHUD()
     {
         const float BoxW = FMath::Min(760.0f, W - 60.0f);
         const float BoxX = (W - BoxW) * 0.5f;
-        const float BoxY = H - 155.0f;
-        DrawRect(FLinearColor(0.01f, 0.01f, 0.01f, 0.82f), BoxX, BoxY, BoxW, 95.0f);
+        const float BoxY = H - 188.0f;
+        DrawRect(FLinearColor(0.01f, 0.01f, 0.01f, 0.82f), BoxX, BoxY, BoxW, 126.0f);
         DrawText(DialogueSpeaker.ToString(), FLinearColor(0.96f, 0.82f, 0.45f), BoxX + 18.0f, BoxY + 14.0f, MediumFont, 1.0f, false);
-        DrawText(DialogueLine.ToString(), FLinearColor::White, BoxX + 18.0f, BoxY + 46.0f, SmallFont, 1.0f, false);
+        DrawWrappedText(DialogueLine.ToString(), FLinearColor::White,
+            BoxX + 18.0f, BoxY + 46.0f, BoxW - 36.0f, SmallFont, 1.0f, 4);
     }
 
     if (Now < AlertUntilTime && !AlertMessage.IsEmpty())
