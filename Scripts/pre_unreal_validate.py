@@ -3065,6 +3065,70 @@ for marker in [
         fail(f"PG-182 provider-resolution processor guard missing: {marker}")
 
 
+# PG-183: P1C01 runtime-completion train source invariants.
+pg183_path = ROOT / "Data" / "P1C01RuntimeCompletionTrainV1.json"
+if not pg183_path.exists():
+    fail("PG-183 P1C01 runtime completion train manifest missing")
+else:
+    try:
+        pg183 = json.loads(read(pg183_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-183 invalid runtime completion train manifest: {exc}")
+        pg183 = {}
+
+    pg183_cars = pg183.get("cars", [])
+    if len(pg183_cars) != 20:
+        fail(f"PG-183 expected 20 runtime completion cars, found {len(pg183_cars)}")
+    if [int(car.get("order", -1)) for car in pg183_cars] != list(range(1, 21)):
+        fail("PG-183 runtime completion car order must remain exactly 1..20")
+    for car in pg183_cars[:5]:
+        if car.get("status") != "SOURCE_IMPLEMENTED":
+            fail(f"PG-183 implemented runtime car lost SOURCE_IMPLEMENTED state: {car.get('id')}")
+    for car in pg183_cars[5:]:
+        if not str(car.get("status") or "").startswith("QUEUED_BEHIND"):
+            fail(f"PG-183 future runtime car must remain queued behind a gate: {car.get('id')}")
+
+pg183_living = read(ROOT / "Source" / "ShireJourney" / "Private" / "World" / "LivingWorldDirector.cpp")
+if pg183_living.count("UGameplayStatics::GetPlayerPawn(this, 0)") != 1:
+    fail("PG-183 LivingWorldDirector must contain exactly one direct GetPlayerPawn lookup inside ResolvePlayerPawn")
+for marker in [
+    "ResolvePlayerPawn() const",
+    "AcquireInteraction(",
+    "ReleaseInteractionToPool(",
+    "AcquireAmbientMotionActor(",
+    "ReleaseAmbientMotionToPool(",
+]:
+    if marker not in pg183_living:
+        fail(f"PG-183 LivingWorldDirector runtime invariant missing: {marker}")
+
+pg183_motion = read(ROOT / "Source" / "ShireJourney" / "Private" / "World" / "WorldAmbientMotionActor.cpp")
+for marker in ["ActivateFromLivingWorldPool", "DeactivateForLivingWorldPool", "SetActorTickEnabled(false)"]:
+    if marker not in pg183_motion:
+        fail(f"PG-183 ambient-motion pool lifecycle missing: {marker}")
+
+pg183_interaction = read(ROOT / "Source" / "ShireJourney" / "Private" / "World" / "ShireWorldEventInteraction.cpp")
+for marker in ["ActivateFromLivingWorldPool", "DeactivateForLivingWorldPool"]:
+    if marker not in pg183_interaction:
+        fail(f"PG-183 interaction pool lifecycle missing: {marker}")
+
+pg183_audio = read(ROOT / "Source" / "ShireJourney" / "Private" / "Subsystems" / "ShireAudioSubsystem.cpp")
+for marker in ["CanPlaySfxNow", "LastSfxPlaybackTimeSeconds", "MinSfxRepeatIntervalSeconds"]:
+    if marker not in pg183_audio and marker not in read(ROOT / "Source" / "ShireJourney" / "Public" / "Subsystems" / "ShireAudioSubsystem.h"):
+        fail(f"PG-183 SFX burst guard missing: {marker}")
+
+pg183_streaming = read(ROOT / "Source" / "ShireJourney" / "Private" / "Subsystems" / "ShireChapterAssetStreamingSubsystem.cpp")
+pg183_streaming_h = read(ROOT / "Source" / "ShireJourney" / "Public" / "Subsystems" / "ShireChapterAssetStreamingSubsystem.h")
+for marker in [
+    "LastAvailabilityCheckSeconds",
+    "FPlatformTime::Seconds()",
+    ">= 2.0",
+    "availability-recovered",
+    "RequestAsyncLoad",
+]:
+    if marker not in pg183_streaming and marker not in pg183_streaming_h:
+        fail(f"PG-183 bounded character-rig retry invariant missing: {marker}")
+
+
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
 pg164_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
