@@ -5,6 +5,8 @@
 #include "ShireQuestTrigger.generated.h"
 
 class UBoxComponent;
+class UShireQuestSubsystem;
+class AShirePlayerCharacter;
 
 UCLASS()
 class SHIREJOURNEY_API AShireQuestTrigger : public AActor
@@ -16,11 +18,28 @@ public:
 
 protected:
     virtual void BeginPlay() override;
+    virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
     UFUNCTION()
     void OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
         UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
         const FHitResult& SweepResult);
+
+    UFUNCTION()
+    void OnTriggerEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+        UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
+    UFUNCTION()
+    void HandleQuestStageChanged(FName ChangedQuestId, int32 NewStage);
+
+    UFUNCTION()
+    void HandleActiveQuestChanged(FName NewQuestId);
+
+    UFUNCTION()
+    void HandleStoryBeatTriggered(FName TriggeredStoryBeatId);
+
+    UFUNCTION()
+    void HandleQuestStateRestored();
 
 public:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Quest")
@@ -80,4 +99,9 @@ public:
 
 private:
     bool bHasTriggered = false;
+    bool bActivationInProgress = false;
+    TWeakObjectPtr<AShirePlayerCharacter> OverlappingPlayer;
+
+    void TryActivateForPlayer(AShirePlayerCharacter* Player);
+    void ReevaluateOverlappingPlayer();
 };
