@@ -1,0 +1,166 @@
+{
+  "schema_version": 1,
+  "set_id": "P1C01_SHIRE_MATERIAL_SURFACE_SET_V1",
+  "status": "SOURCE_IMPLEMENTED_VALIDATION_PENDING",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/ProductionAssetPromotionPolicyV1.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "scope": [
+    "SHIRE_HOBBITON",
+    "BAG_END"
+  ],
+  "source_class": "PROJECT_OWNED_REPOSITORY_ASSETS",
+  "runtime_budget": {
+    "target": "Windows DX11 720p Low-Medium 30 FPS floor / ~2 GB VRAM",
+    "extra_texture_samples_added_by_this_batch": 0,
+    "new_runtime_heavy_asset_loads": 0,
+    "foliage_density_change": "NONE",
+    "material_response": [
+      "AlbedoTexture",
+      "Color",
+      "Roughness",
+      "Metallic",
+      "Specular"
+    ],
+    "foliage_near_far_split_preserved": true
+  },
+  "textures": [
+    {
+      "id": "TX_ShBark",
+      "path": "SourceAssets/Production/World/Shire/TX_ShBark.tga",
+      "repo_blob_sha": "45188a6004be794c4aaac163a8d99263d19f0b13",
+      "size_bytes": 49170,
+      "format": "TGA",
+      "role": "BARK_ALBEDO"
+    },
+    {
+      "id": "TX_ShDirt",
+      "path": "SourceAssets/Production/World/Shire/TX_ShDirt.tga",
+      "repo_blob_sha": "4b042e045ec78bbdc285f3a5d382add54fe565cc",
+      "size_bytes": 49170,
+      "format": "TGA",
+      "role": "DIRT_EARTH_ALBEDO"
+    },
+    {
+      "id": "TX_ShDoorGreen",
+      "path": "SourceAssets/Production/World/Shire/TX_ShDoorGreen.tga",
+      "repo_blob_sha": "4c0c50edad30f63d621489c63d8bc4c680768a65",
+      "size_bytes": 49170,
+      "format": "TGA",
+      "role": "PAINTED_DOOR_ALBEDO"
+    },
+    {
+      "id": "TX_ShGrass",
+      "path": "SourceAssets/Production/World/Shire/TX_ShGrass.tga",
+      "repo_blob_sha": "5b3c844c501746c6f59e28dc7384e7f1acf7d059",
+      "size_bytes": 49170,
+      "format": "TGA",
+      "role": "GRASS_ALBEDO"
+    },
+    {
+      "id": "TX_ShLeaves",
+      "path": "SourceAssets/Production/World/Shire/TX_ShLeaves.tga",
+      "repo_blob_sha": "c8c392afdb4c375a76bf4f49c0978325c0755c6a",
+      "size_bytes": 49170,
+      "format": "TGA",
+      "role": "LEAF_ALBEDO"
+    },
+    {
+      "id": "TX_ShStone",
+      "path": "SourceAssets/Production/World/Shire/TX_ShStone.tga",
+      "repo_blob_sha": "7405d4aa59ca6eebed72cdf910798fd244d3108f",
+      "size_bytes": 49170,
+      "format": "TGA",
+      "role": "STONE_ALBEDO"
+    },
+    {
+      "id": "TX_ShWood",
+      "path": "SourceAssets/Production/World/Shire/TX_ShWood.tga",
+      "repo_blob_sha": "68cc07d1d66d5ed7060a59f14191c83b7dd5fde9",
+      "size_bytes": 49170,
+      "format": "TGA",
+      "role": "WOOD_ALBEDO"
+    }
+  ],
+  "authored_materials": [
+    {
+      "identity": "Grass",
+      "albedo": "TX_ShGrass",
+      "roughness": 0.9,
+      "metallic": 0,
+      "specular_source": "MTL Ks",
+      "parent": "M_ProductionFoliage"
+    },
+    {
+      "identity": "Dirt",
+      "albedo": "TX_ShDirt",
+      "roughness": 0.8,
+      "metallic": 0.02,
+      "specular_source": "MTL Ks",
+      "parent": "M_ProductionSurface"
+    },
+    {
+      "identity": "Earth",
+      "albedo": "TX_ShDirt",
+      "roughness": 0.8,
+      "metallic": 0.02,
+      "specular_source": "MTL Ks",
+      "parent": "M_ProductionSurface"
+    },
+    {
+      "identity": "Bark",
+      "albedo": "TX_ShBark",
+      "roughness": 0.74,
+      "metallic": 0,
+      "specular_source": "MTL Ks",
+      "parent": "M_ProductionSurface"
+    },
+    {
+      "identity": "Leaves",
+      "albedo": "TX_ShLeaves",
+      "roughness": 0.7,
+      "metallic": 0.02,
+      "specular_source": "MTL Ks",
+      "parent": "M_ProductionFoliage"
+    },
+    {
+      "identity": "Stone",
+      "albedo": "TX_ShStone",
+      "roughness": 0.8,
+      "metallic": 0.02,
+      "specular_source": "MTL Ks",
+      "parent": "M_ProductionSurface"
+    },
+    {
+      "identity": "Wood",
+      "albedo": "TX_ShWood",
+      "roughness": 0.74,
+      "metallic": 0,
+      "specular_source": "MTL Ks",
+      "parent": "M_ProductionSurface"
+    },
+    {
+      "identity": "DoorGreen",
+      "albedo": "TX_ShDoorGreen",
+      "roughness": 0.7,
+      "metallic": 0.02,
+      "specular_source": "MTL Ks",
+      "parent": "M_ProductionSurface"
+    }
+  ],
+  "implementation": {
+    "mtl_library": "SourceAssets/Production/World/Shire/ShireMaterials.mtl",
+    "importer": "Source/ShireJourneyEditorTools/Private/ShireProductionImportCommandlet.cpp",
+    "specular_mapping": "Average authored Ks RGB, multiply by 4.0, clamp to [0.02, 0.65].",
+    "evidence_log_prefix": "ShireProductionImport material response:"
+  },
+  "validation_required": [
+    "Pre-Unreal exact-head success",
+    "UE4.27.2 C++ build success",
+    "Production import success",
+    "Material binding log shows requested authored identities without missing albedo bindings"
+  ],
+  "evidence_boundary": "Repository/source implementation only until exact-head UE4.27 validation completes. No PIE, device, visual, pacing or performance acceptance is implied."
+}
