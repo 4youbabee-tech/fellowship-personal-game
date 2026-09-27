@@ -1,3 +1,16 @@
+## 2026-09-27 - Import-fix validation infrastructure note
+
+- Unreal Build #896 did not reach production import on either attempt because stale MSVC intermediate metadata referenced a removed prior-run temp directory.
+- CI build recovery now includes the observed C1083/compiler-intermediate signature and performs one bounded project-intermediate reset/retry.
+- No P1C01 gameplay/visual/PIE/device maturity changes. Fresh exact-head compile/import proof remains pending.
+
+## 2026-09-27 - P1C01 production-import blocker status
+
+- Local one-click import produced concrete failure evidence on `WorldGridMaterial.uasset` because the importer dirtied a non-project Engine package.
+- The importer is now source-repaired to mutate/save material packages only when their package path begins with `/Game/Production/`.
+- P1C01 production maturity is unchanged by this repair. No PIE/device/visual/performance acceptance is promoted.
+- Validation state for this fix: **SOURCE-IMPLEMENTED / exact-head build+import pending**.
+
 ## 2026-09-27 - Legacy unique-root consolidation before final branch cleanup
 
 - Live GitHub audit confirmed the branches still shown in the repository are real refs, not merely historical Actions filters. They were not deleted earlier because each had `ahead_by > 0` and the cleanup correctly refused to destroy unique commits without disposition.

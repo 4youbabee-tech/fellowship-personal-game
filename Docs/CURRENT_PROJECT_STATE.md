@@ -1,3 +1,19 @@
+## 2026-09-27 - Repeated MSVC stale-temp validation blocker contained
+
+- Unreal Build #896 failed on both attempt 1 and attempt 2 before asset import with `fatal error C1083: Cannot open compiler intermediate file`.
+- The MSVC probe proved the current temp root was writable (`shire-msvc-36281890705-2`), while the compiler failure referenced an older removed temp root (`shire-msvc-36280675863-1`). This isolates the failure to stale project build intermediates/action metadata rather than the production-import source change.
+- `Scripts/ci_build_unreal.cmd` now treats this exact C1083/compiler-intermediate signature as recoverable compiler-environment pressure: it clears only project Win64 intermediates/binaries and retries the build once, using the already-current TEMP/TMP environment.
+- Scope remains narrow and blocker-driven; this does not reopen general CI optimization work.
+- Evidence boundary: **CI_INFRA FIX CANDIDATE / fresh exact-head Unreal validation pending**.
+
+## 2026-09-27 - P1C01 one-click production import Engine-package dirty repair
+
+- Owner device run of `SHIRE_UPDATE_BUILD_LAUNCH.bat` reached the production-import phase and failed while UE4.27 attempted to save `/Engine/EngineMaterials/WorldGridMaterial`.
+- Root cause was source-confirmed in `ShireProductionImportCommandlet.cpp`: a referenced material package was marked dirty before the importer checked whether it belonged to `/Game/Production/`.
+- Repair candidate now gates both mesh-material and registry-recovery dirty marking to project-owned `/Game/Production/` packages only. Engine/plugin fallback materials are no longer marked dirty by the importer.
+- Scope is intentionally narrow: no gameplay, quest, save, world-layout or asset-content redesign.
+- Evidence boundary: **DEVICE-OBSERVED FAILURE + SOURCE-IMPLEMENTED FIX CANDIDATE**. Fresh exact-head Pre-Unreal/UE4.27 build+import proof is still required before calling the repair COMPILE/IMPORT tested.
+
 ## 2026-09-27 - Legacy unique-root consolidation before final branch cleanup
 
 - Live GitHub audit confirmed the branches still shown in the repository are real refs, not merely historical Actions filters. They were not deleted earlier because each had `ahead_by > 0` and the cleanup correctly refused to destroy unique commits without disposition.
