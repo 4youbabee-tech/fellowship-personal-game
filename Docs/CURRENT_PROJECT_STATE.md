@@ -1,3 +1,11 @@
+## 2026-09-27 - P1C01 one-click production import Engine-package dirty repair
+
+- Owner device run of `SHIRE_UPDATE_BUILD_LAUNCH.bat` reached the production-import phase and failed while UE4.27 attempted to save `/Engine/EngineMaterials/WorldGridMaterial`.
+- Root cause was source-confirmed in `ShireProductionImportCommandlet.cpp`: a referenced material package was marked dirty before the importer checked whether it belonged to `/Game/Production/`.
+- Repair candidate now gates both mesh-material and registry-recovery dirty marking to project-owned `/Game/Production/` packages only. Engine/plugin fallback materials are no longer marked dirty by the importer.
+- Scope is intentionally narrow: no gameplay, quest, save, world-layout or asset-content redesign.
+- Evidence boundary: **DEVICE-OBSERVED FAILURE + SOURCE-IMPLEMENTED FIX CANDIDATE**. Fresh exact-head Pre-Unreal/UE4.27 build+import proof is still required before calling the repair COMPILE/IMPORT tested.
+
 ## 2026-09-27 - Legacy unique-root consolidation before final branch cleanup
 
 - Live GitHub audit confirmed the branches still shown in the repository are real refs, not merely historical Actions filters. They were not deleted earlier because each had `ahead_by > 0` and the cleanup correctly refused to destroy unique commits without disposition.
