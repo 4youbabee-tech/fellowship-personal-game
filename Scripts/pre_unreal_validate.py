@@ -3017,6 +3017,54 @@ for marker in [
         fail(f"PG-181 critical-gap processor guard missing: {marker}")
 
 
+# PG-182: provider-resolution V3 must remain bounded and must never bypass provider access policy.
+pg182_path = ROOT / "Data" / "WarehouseProviderResolutionTrainV3.json"
+if not pg182_path.exists():
+    fail("PG-182 provider-resolution train manifest missing")
+else:
+    try:
+        pg182 = json.loads(read(pg182_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-182 invalid provider-resolution train manifest: {exc}")
+        pg182 = {}
+
+    pg182_cars = pg182.get("cars", [])
+    if len(pg182_cars) != 20:
+        fail(f"PG-182 expected 20 provider-resolution cars, found {len(pg182_cars)}")
+    if [int(car.get("order", -1)) for car in pg182_cars] != list(range(1, 21)):
+        fail("PG-182 provider-resolution car order must remain 1..20")
+    for car in pg182_cars:
+        if len(car.get("preferred", [])) > 3:
+            fail(f"PG-182 preferred provider fan-out exceeds 3: {car.get('id')}")
+        if len(car.get("fallback", [])) > 3:
+            fail(f"PG-182 fallback provider fan-out exceeds 3: {car.get('id')}")
+        if car.get("ceiling") not in {"CANDIDATE", "AUTHORIZED_FOR_STAGING", "STATIC_VALIDATED"}:
+            fail(f"PG-182 unsafe provider-resolution ceiling: {car.get('id')}")
+
+    for rule in [
+        "Never convert AUTH, REVIEW, PURCHASE, MARKETPLACE or REFERENCE lanes into automatic download lanes.",
+        "Animated final production stock requires FBX.",
+        "Production textures require PNG/TGA.",
+        "Audio production masters require WAV.",
+        "Provider resolution cannot promote READY_FOR_IMPORT.",
+    ]:
+        if rule not in pg182.get("rules", []):
+            fail(f"PG-182 provider-resolution safety rule missing: {rule}")
+
+pg182_script = read(ROOT / "Scripts" / "run_warehouse_provider_resolution.ps1")
+for marker in [
+    "AUTH_REQUIRED",
+    "REVIEW_REQUIRED",
+    "MANUAL_ONLY",
+    "REFERENCE_ONLY",
+    "AUTO_PROVIDER_AVAILABLE",
+    "STAGED_PROVIDER_AVAILABLE",
+    "Provider resolution never promotes READY_FOR_IMPORT.",
+]:
+    if marker not in pg182_script:
+        fail(f"PG-182 provider-resolution processor guard missing: {marker}")
+
+
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
 pg164_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
