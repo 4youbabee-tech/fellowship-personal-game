@@ -1,3 +1,12 @@
+## 2026-09-27 - Warehouse receipt parser blocker repaired after first real V1 staging run
+
+- Warehouse Stage #265 completed all provider staging steps successfully and the persistent inventory audit passed with **247 payload files / 3,851,680,492 bytes / 13 receipts / 667 receipt records / 215 duplicate-hash groups**.
+- The run failed only in the V1 saturation report because heterogeneous receipt schemas omit optional fields such as `file`, `archive`, `sha256`, `asset_slug` or `state` on some rows while `Set-StrictMode -Version Latest` treated direct property access as fatal.
+- `run_warehouse_saturation_train.ps1` now uses explicit optional-property access for receipt/header/item fields and safely handles file-vs-archive receipt shapes.
+- `run_warehouse_critical_gap_preparation.ps1` received the same hardening before first execution so V2 does not repeat the same schema failure.
+- The fix does not relax evidence requirements: actual files still require SHA256 verification before they count as verified/prepared.
+- Evidence boundary: **warehouse staging/audit evidence is real; V1/V2 reporting fix requires fresh exact-head validation**. No READY_FOR_IMPORT, PIE, device, visual or performance acceptance is inferred.
+
 ## 2026-09-27 - Critical warehouse gap preparation train V2
 
 - Warehouse saturation PR #121 completed exact-head Pre-Unreal #1159 SUCCESS and Unreal #926 SUCCESS and merged at `70e7a3c0a03a7dbebbe6c70d822bab7a06c59e87`.
