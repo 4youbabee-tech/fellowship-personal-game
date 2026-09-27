@@ -40,7 +40,7 @@ $listeners = @(Get-Process -Name "Runner.Listener" -ErrorAction SilentlyContinue
 foreach ($listener in $listeners) { Stop-Process -Id $listener.Id -Force -ErrorAction SilentlyContinue }
 Start-Sleep -Seconds 2
 
-$taskAction = New-ScheduledTaskAction -Execute "powershell.exe" -Argument ('-NoProfile -ExecutionPolicy Bypass -File "' + $installedWatchdog + '" -RunnerRoot "' + $RunnerRoot + '"')
+$taskAction = New-ScheduledTaskAction -Execute "powershell.exe" -Argument ('-NoProfile -ExecutionPolicy Bypass -File "' + $installedWatchdog + '" -RunnerRoot "' + $RunnerRoot + '" -ServiceGuardPath "' + $installedServiceGuard + '"')
 $logonTrigger = New-ScheduledTaskTrigger -AtLogOn -User $identity
 $recoveryTrigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 5) -RepetitionDuration (New-TimeSpan -Days 3650)
 $taskTriggers = @($logonTrigger, $recoveryTrigger)
