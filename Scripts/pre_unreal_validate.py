@@ -3068,6 +3068,18 @@ for marker in ["CanPlaySfxNow", "LastSfxPlaybackTimeSeconds", "MinSfxRepeatInter
     if marker not in pg183_audio and marker not in read(ROOT / "Source" / "ShireJourney" / "Public" / "Subsystems" / "ShireAudioSubsystem.h"):
         fail(f"PG-183 SFX burst guard missing: {marker}")
 
+pg183_streaming = read(ROOT / "Source" / "ShireJourney" / "Private" / "Subsystems" / "ShireChapterAssetStreamingSubsystem.cpp")
+pg183_streaming_h = read(ROOT / "Source" / "ShireJourney" / "Public" / "Subsystems" / "ShireChapterAssetStreamingSubsystem.h")
+for marker in [
+    "LastAvailabilityCheckSeconds",
+    "FPlatformTime::Seconds()",
+    ">= 2.0",
+    "availability-recovered",
+    "RequestAsyncLoad",
+]:
+    if marker not in pg183_streaming and marker not in pg183_streaming_h:
+        fail(f"PG-183 bounded character-rig retry invariant missing: {marker}")
+
 
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
