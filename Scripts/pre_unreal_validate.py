@@ -2783,6 +2783,71 @@ for pg173_group_name, pg173_items in pg173_queue.get("groups", {}).items():
                     )
 
 
+# PG-177: P1C01 architecture/interior/prop megabatch preparation must remain
+# evidence-gated and support-only until the serialized runtime integration gate opens.
+pg177_manifest_path = ROOT / "Data" / "P1C01ArchitectureInteriorPropMegabatchV1.json"
+if not pg177_manifest_path.exists():
+    fail("PG-177 architecture/interior/prop megabatch manifest missing")
+else:
+    try:
+        pg177_manifest = json.loads(read(pg177_manifest_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-177 invalid architecture/interior/prop megabatch manifest: {exc}")
+        pg177_manifest = {}
+
+    pg177_items = pg177_manifest.get("external_items", [])
+    if len(pg177_items) != 6:
+        fail(f"PG-177 expected 6 authorized external support packs, found {len(pg177_items)}")
+
+    pg177_expected = {
+        ("QUATERNIUS", "QTN_FARM_BUILDINGS"),
+        ("QUATERNIUS", "QTN_FURNITURE_PACK"),
+        ("QUATERNIUS", "QTN_MEDIEVAL_VILLAGE_CC0"),
+        ("KENNEY", "NATURE_KIT"),
+        ("KENNEY", "FURNITURE_KIT"),
+        ("KENNEY", "FOOD_KIT"),
+    }
+    pg177_actual = set()
+    for pg177_item in pg177_items:
+        pg177_provider = str(pg177_item.get("provider") or "").strip()
+        pg177_id = str(pg177_item.get("id") or "").strip()
+        pg177_actual.add((pg177_provider, pg177_id))
+        if pg177_item.get("state") != "AUTHORIZED_FOR_STAGING":
+            fail(f"PG-177 {pg177_provider}/{pg177_id} advanced beyond authorized staging without receipt-backed QC")
+        if pg177_item.get("license") != "CC0":
+            fail(f"PG-177 {pg177_provider}/{pg177_id} lost explicit CC0 capture")
+        if pg177_item.get("final_exchange") != "FBX":
+            fail(f"PG-177 {pg177_provider}/{pg177_id} must target FBX final exchange")
+
+    if pg177_actual != pg177_expected:
+        fail("PG-177 external architecture/interior support pack set drifted from authorized six-pack scope")
+
+    pg177_fallback = pg177_manifest.get("project_owned_fallback_bank", [])
+    if len(pg177_fallback) < 24:
+        fail(f"PG-177 project-owned Shire fallback bank unexpectedly small: {len(pg177_fallback)}")
+
+    pg177_runtime = pg177_manifest.get("runtime_contract", {})
+    if pg177_runtime.get("heavy_loading") != "FStreamableManager async only":
+        fail("PG-177 heavy architecture/interior runtime loading contract must remain async")
+    if pg177_runtime.get("repeated_detail") != "ISM/HISM":
+        fail("PG-177 repeated architecture/interior detail must remain ISM/HISM")
+    if pg177_runtime.get("story_anchor_rule") != "NO_QUEST_OR_CHAPTER_ANCHOR_MOVES":
+        fail("PG-177 architecture megabatch must not move quest/chapter anchors")
+
+    pg177_script = read(ROOT / "Scripts" / "prepare_p1c01_architecture_intake.ps1")
+    for pg177_marker in [
+        "Get-FileHash -LiteralPath $row.file -Algorithm SHA256",
+        "receipt_sha256_mismatch",
+        "forbidden_bmp",
+        "dangerous_extracted_extension",
+        'ready_for_import=$false',
+        "class_qc_pending",
+        "STAGED_NEEDS_FBX_PREPARATION",
+    ]:
+        if pg177_marker not in pg177_script:
+            fail(f"PG-177 architecture intake preparation guard missing: {pg177_marker}")
+
+
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
 pg164_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
