@@ -409,6 +409,7 @@ void ALivingWorldDirector::ResetForCurrentChapter()
     {
         const float Now = GetWorld()->GetTimeSeconds();
         NextEventTime = Now + 3.0f + Random.FRandRange(0.0f, 2.0f);
+        NextMaintenanceTime = Now;
         NextPopulationSpawnTime = Now + FMath::Min(0.5f, PopulationSpawnInterval);
     }
 
@@ -1540,10 +1541,15 @@ void ALivingWorldDirector::Tick(float DeltaSeconds)
         return;
     }
 
-    CleanupExpiredEvents();
-    MaintainBaselinePopulation();
-
     const float Now = GetWorld()->GetTimeSeconds();
+    if (Now >= NextMaintenanceTime)
+    {
+        CleanupExpiredEvents();
+        MaintainBaselinePopulation();
+        NextMaintenanceTime = Now + 0.75f;
+    }
+
+
     if (Now < NextEventTime)
     {
         return;

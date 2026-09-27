@@ -60,6 +60,7 @@ private:
     FName ActiveChapterId = NAME_None;
     FName LastEventType = NAME_None;
     float NextEventTime = 0.0f;
+    float NextMaintenanceTime = 0.0f;
     float NextPopulationSpawnTime = 0.0f;
     float MinSecondsBetweenEventStarts = 12.0f;
     float EventCullDistance = 5000.0f;

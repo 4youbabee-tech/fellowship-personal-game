@@ -6193,5 +6193,19 @@
       "main"
     ],
     "production_effect": "NONE. This is repository hygiene only and must not delay the active W01/P1C01 production lane after exact-head static validation."
+  },
+  "gameplay_delivery_focus_2026_09_27": {
+    "status": "ACCEPTED",
+    "owner_direction": "Continue all necessary work on the game and its supporting systems; take only verified useful programmer suggestions. No two-week freeze. Do not require the owner to playtest the game.",
+    "delivery_priority": "Advance P1C01 gameplay and story coherence while correcting measured runtime, save and performance issues; continue CI and governance maintenance when demonstrably necessary, without repeated administrative churn.",
+    "work_order": [
+      "Fix verified bugs and avoid speculative rewrites.",
+      "Split ShirePlayerCharacter at a safe cohesive boundary after exact-source inspection and compile verification.",
+      "Keep bounded living-world maintenance and NPC weak player caching with respawn and world transition checks.",
+      "Inventory NPC JSON consumers and consolidate contracts incrementally without breaking loaders.",
+      "Evaluate footsteps, ring feedback, NPC reactions and foliage effects against actual asset availability and low-spec performance."
+    ],
+    "verification": "Automated compile and headless checks remain useful but cannot establish human gameplay quality. Seek real PIE and device evidence through available project workflows or developer/operator reports; do not assign a playtest obligation to the owner.",
+    "evidence_boundary": "The supplied prose simulation is a proposal, not an actual observed playthrough. LivingWorldDirector already ticks every 0.35 seconds; this patch reduces maintenance frequency and duplicate NPC player lookup only."
   }
 }
