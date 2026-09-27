@@ -1,3 +1,13 @@
+## 2026-09-27 - Trilogy warehouse saturation train V1 prepared
+
+- Material PR #118 reached exact-head Pre-Unreal #1155 SUCCESS and Unreal #922 SUCCESS and was merged to `develop` at `fc7c67123248d70e9f568ee83f7110210e556cd7`.
+- New warehouse branch `warehouse/p1c01-trilogy-saturation-train-v1` defines a **20-car** preparation sequence covering the largest remaining warehouse families across P1C01 and reusable trilogy stock.
+- `Data/WarehouseSaturationTrainV1.json` bounds each car to a small provider set and an explicit preparation ceiling. Authentication/account/purchase/manual-license lanes never auto-stage.
+- `Scripts/run_warehouse_saturation_train.ps1` can optionally invoke the existing public/provider-compatible staging lanes (Poly Haven, ambientCG, Quaternius, Kenney, KayKit, OpenGameArt), run the persistent inventory audit, and produce per-car receipt/hash/byte/state coverage.
+- `.github/workflows/warehouse-stage.yml` now triggers on the saturation manifest/orchestrator and emits the 20-car coverage report after normal staging/audit.
+- Pre-Unreal guards exact car count/order, unique IDs, bounded provider fan-out, safe preparation ceilings, FBX/PNG-TGA/WAV/runtime-loading rules and receipt-SHA256 evidence reporting.
+- Evidence boundary: **SOURCE/PREPARATION IMPLEMENTED / exact-head validation pending**. No newly planned car is READY_FOR_IMPORT, IMPORTED, INTEGRATED, PIE/device/visual/performance accepted from this change.
+
 ## 2026-09-27 - Runner watchdog state-contract blocker repaired on active material branch
 
 - Unreal #915 and #920 both stopped before compilation at `Verify runner session health` with `RUNNER_HEALTH_FAIL watchdog-state state=Ready`.
