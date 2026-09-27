@@ -5203,9 +5203,10 @@ for pg167_checkout_symbol in [
         fail(f"PG-167 bounded exact-head Pre-Unreal checkout missing: {pg167_checkout_symbol}")
 
 pg167_cleanup = read(ROOT / ".github" / "workflows" / "branch-cleanup.yml")
-for pg167_symbol in ["- self-hosted", "- Windows", "- X64", "- ue4-27"]:
-    if pg167_symbol not in pg167_cleanup:
-        fail(f"PG-167 branch-cleanup runner contract missing: {pg167_symbol}")
+if "runs-on: windows-latest" not in pg167_cleanup:
+    fail("PG-167 Branch Cleanup must run on GitHub-hosted Windows so administration never occupies the supervised UE4 runner")
+if "- self-hosted" in pg167_cleanup or "- ue4-27" in pg167_cleanup:
+    fail("PG-167 Branch Cleanup must not consume the supervised UE4 runner")
 for pg167_post_merge_symbol in [
     "pull_request:",
     "- closed",
@@ -5217,8 +5218,6 @@ for pg167_post_merge_symbol in [
         fail(f"PG-167 permanent post-merge cleanup contract missing: {pg167_post_merge_symbol}")
 if "\n  push:\n" in pg167_cleanup:
     fail("PG-167 Branch Cleanup must not run on ordinary develop pushes; merged-PR closeout owns automatic cleanup")
-if "runs-on: ubuntu-latest" in pg167_cleanup or "runs-on: windows-latest" in pg167_cleanup:
-    fail("PG-167 Branch Cleanup must not depend on GitHub-hosted runners")
 for pg167_cleanup_symbol in [
     "BRANCH_CLEANUP_EXACT_CHECKOUT_PASS",
     "SHIRE_CLEANUP_ROOT",

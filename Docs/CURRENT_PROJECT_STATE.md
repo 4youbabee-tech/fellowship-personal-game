@@ -1,3 +1,11 @@
+## 2026-09-28 - PG-167 administrative runner guard aligned
+
+- Pre-Unreal #1289 proved the new hosted Python fast path works, emitting `PYTHON_FAST_PATH_PASS` with Python 3.12.10.
+- The only failure was stale PG-167 policy text that still required Branch Cleanup to run on the UE4 self-hosted runner, conflicting with the newly intended hosted-admin architecture.
+- PG-167 now requires `runs-on: windows-latest` for Branch Cleanup and explicitly forbids `self-hosted/ue4-27` there, while preserving merged-PR-only execution, exact-head isolated checkout and branch-safety checks.
+- This is a validator/policy-alignment repair only; no runtime/gameplay/acceptance gate is weakened.
+- Current maturity: **SOURCE-IMPLEMENTED / NEW EXACT-HEAD STATIC VALIDATION PENDING**.
+
 ## 2026-09-28 - Administrative overhead trimmed without weakening gates
 
 - Requirement-ID bureaucracy is narrowed: only material product/story/architecture/acceptance/priority/external-dependency changes create new Governor requirements; status questions, clarifications, evidence refreshes and routine CI bookkeeping do not.
