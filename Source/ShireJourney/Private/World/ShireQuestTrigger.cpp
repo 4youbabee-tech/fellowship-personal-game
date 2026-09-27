@@ -270,9 +270,9 @@ void AShireQuestTrigger::TryActivateForPlayer(AShirePlayerCharacter* Player)
         return;
     }
 
-    bActivationInProgress = false;
     if (NextQuestId != NAME_None)
     {
         Quests->StartQuest(NextQuestId, NextQuestStage);
     }
+    bActivationInProgress = false;
 }
