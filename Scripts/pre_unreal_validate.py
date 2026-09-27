@@ -2782,6 +2782,78 @@ for pg173_group_name, pg173_items in pg173_queue.get("groups", {}).items():
                         f"{pg173_state} without {pg173_field}"
                     )
 
+# PG-176: the monitored P1C01 material train must stay complete, bounded and
+# evidence-gated. This is preparation validation only; it never promotes an item.
+pg176_wave_path = ROOT / "Data" / "P1C01MaterialImportWaveV1.json"
+if not pg176_wave_path.exists():
+    fail("PG-176 P1C01 material import wave is missing")
+else:
+    try:
+        pg176_wave = json.loads(read(pg176_wave_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-176 invalid P1C01 material import wave: {exc}")
+        pg176_wave = {}
+
+    pg176_items = pg176_wave.get("immediate_open_source_items", [])
+    if len(pg176_items) != 16:
+        fail(f"PG-176 expected 16 authorized Poly Haven surface items, found {len(pg176_items)}")
+
+    pg176_ids = set()
+    pg176_slugs = set()
+    for pg176_item in pg176_items:
+        pg176_id = str(pg176_item.get("id") or "").strip()
+        pg176_provider = str(pg176_item.get("provider") or "").strip()
+        pg176_slug = str(pg176_item.get("asset_slug") or "").strip()
+        pg176_material = str(pg176_item.get("material_name") or "").strip()
+        pg176_state = str(pg176_item.get("state") or "").strip()
+        pg176_roughness = pg176_item.get("roughness")
+        pg176_metallic = pg176_item.get("metallic")
+        pg176_specular = pg176_item.get("specular")
+
+        if not pg176_id or not pg176_slug or not pg176_material:
+            fail("PG-176 material wave item missing id/asset_slug/material_name")
+            continue
+        if pg176_id in pg176_ids:
+            fail(f"PG-176 duplicate material-wave id: {pg176_id}")
+        pg176_ids.add(pg176_id)
+        if pg176_slug in pg176_slugs:
+            fail(f"PG-176 duplicate material-wave asset slug: {pg176_slug}")
+        pg176_slugs.add(pg176_slug)
+        if pg176_provider != "POLY_HAVEN":
+            fail(f"PG-176 unsupported immediate provider for {pg176_id}: {pg176_provider}")
+        if pg176_state != "AUTHORIZED_FOR_STAGING":
+            fail(f"PG-176 {pg176_id} must remain AUTHORIZED_FOR_STAGING before receipt-backed intake")
+        if not isinstance(pg176_roughness, (int, float)) or not 0.0 <= float(pg176_roughness) <= 1.0:
+            fail(f"PG-176 {pg176_id} roughness out of bounds")
+        if not isinstance(pg176_metallic, (int, float)) or not 0.0 <= float(pg176_metallic) <= 1.0:
+            fail(f"PG-176 {pg176_id} metallic out of bounds")
+        if not isinstance(pg176_specular, (int, float)) or not 0.02 <= float(pg176_specular) <= 0.65:
+            fail(f"PG-176 {pg176_id} specular out of bounds")
+
+    pg176_authorized_slugs = {
+        str(item.get("id") or "").strip()
+        for item in pg173_queue.get("groups", {}).get("surfaces_and_ground", [])
+        if str(item.get("state") or "") == "AUTHORIZED_FOR_STAGING"
+    }
+    pg176_missing_authority = sorted(pg176_slugs - pg176_authorized_slugs)
+    if pg176_missing_authority:
+        fail("PG-176 material-wave slugs missing AUTHORIZED_FOR_STAGING queue authority: " + ", ".join(pg176_missing_authority))
+
+    pg176_bind_now = set(pg176_wave.get("current_master_limit", {}).get("bind_now", []))
+    for pg176_parameter in ["AlbedoTexture", "Color", "Roughness scalar", "Metallic scalar", "Specular scalar"]:
+        if pg176_parameter not in pg176_bind_now:
+            fail(f"PG-176 low-spec material master contract missing {pg176_parameter}")
+
+    pg176_prepare = read(ROOT / "Scripts" / "prepare_p1c01_material_intake.ps1")
+    for pg176_marker in [
+        "Get-FileHash -LiteralPath $dest -Algorithm SHA256",
+        '"Ks $ksText $ksText $ksText"',
+        'state="INTAKE_QC_PREPARED"',
+        "forbidden_bmp",
+    ]:
+        if pg176_marker not in pg176_prepare:
+            fail(f"PG-176 material intake preparation guard missing: {pg176_marker}")
+
 
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
