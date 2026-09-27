@@ -1,3 +1,20 @@
+## 2026-09-28 - PG-167 administrative runner guard aligned
+
+- Pre-Unreal #1289 proved the new hosted Python fast path works, emitting `PYTHON_FAST_PATH_PASS` with Python 3.12.10.
+- The only failure was stale PG-167 policy text that still required Branch Cleanup to run on the UE4 self-hosted runner, conflicting with the newly intended hosted-admin architecture.
+- PG-167 now requires `runs-on: windows-latest` for Branch Cleanup and explicitly forbids `self-hosted/ue4-27` there, while preserving merged-PR-only execution, exact-head isolated checkout and branch-safety checks.
+- This is a validator/policy-alignment repair only; no runtime/gameplay/acceptance gate is weakened.
+- Current maturity: **SOURCE-IMPLEMENTED / NEW EXACT-HEAD STATIC VALIDATION PENDING**.
+
+## 2026-09-28 - Administrative overhead trimmed without weakening gates
+
+- Requirement-ID bureaucracy is narrowed: only material product/story/architecture/acceptance/priority/external-dependency changes create new Governor requirements; status questions, clarifications, evidence refreshes and routine CI bookkeeping do not.
+- Branch Cleanup is moved from the supervised UE4 self-hosted runner to GitHub-hosted `windows-latest`; it keeps exact-head isolated checkout and active-PR/protected-branch safety.
+- Pre-Unreal keeps the complete static/governance/asset/deep-audit suite, but now resolves the already-provisioned hosted Python through a fast PATH probe first and falls back to the existing robust resolver only when needed.
+- PG-167/PG-176 guard the fast-path/fallback contract and forbid administrative branch cleanup from consuming the UE4 runner.
+- No C++ runtime, gameplay, story, asset acceptance, Gate 6/7, or evidence-promotion rule is weakened.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**.
+
 ## 2026-09-28 - CI/Warehouse root repair released; production resumes
 
 - Exact repair head `0bd0e6952161f1c3fa5bb603d25813400c330f24` passed hosted Pre-Unreal #1285.

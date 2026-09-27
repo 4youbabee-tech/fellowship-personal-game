@@ -17,11 +17,8 @@ concurrency:
 jobs:
   cleanup:
     if: ${{ github.event_name != 'pull_request' || github.event.pull_request.merged == true }}
-    runs-on:
-      - self-hosted
-      - Windows
-      - X64
-      - ue4-27
+    # Pure GitHub administration must not occupy the supervised UE4 machine.
+    runs-on: windows-latest
     timeout-minutes: 5
     env:
       GH_TOKEN: ${{ github.token }}
@@ -58,7 +55,7 @@ jobs:
           if /I not "!CHECKED_SHA!"=="%TARGET_SHA%" exit /b 77
           if not exist "Data\BranchCleanupPlan.json" exit /b 78
           echo SHIRE_CLEANUP_ROOT=!CLEANUP_ROOT!>>"%GITHUB_ENV%"
-          echo BRANCH_CLEANUP_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA! isolated=true
+          echo BRANCH_CLEANUP_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA! isolated=true hosted=true
 
       - name: Delete approved stale branches safely
         run: cd /d "%SHIRE_CLEANUP_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\run_branch_cleanup.ps1"
