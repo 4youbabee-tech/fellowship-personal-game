@@ -1,3 +1,17 @@
+## 2026-09-28 - CI split-lane root repair
+
+- Hosted Pre-Unreal static/policy lane: **SOURCE-IMPLEMENTED**.
+- Warehouse pull-request churn removal: **SOURCE-IMPLEMENTED**.
+- Selective warehouse provider/phase classifier: **SOURCE-IMPLEMENTED**.
+- Metadata-only ZIP intake + corrupt-cache self-repair: **SOURCE-IMPLEMENTED**.
+- Warehouse-only Unreal trigger exclusion: **SOURCE-IMPLEMENTED**.
+- Conditional Unreal intermediate reset: **SOURCE-IMPLEMENTED**.
+- Bounded compiler-failure clean retry retained: **SOURCE-IMPLEMENTED**.
+- PG-184/PG-185 regression guards: **SOURCE-IMPLEMENTED**.
+- Exact-head hosted static validation: **PENDING**.
+- Selected machine validation before production unfreeze: **PENDING**.
+- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
+
 ## 2026-09-28 - CI/Warehouse root-repair freeze
 
 - Production train execution: **PAUSED BY OWNER**.
