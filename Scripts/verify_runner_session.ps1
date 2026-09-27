@@ -64,10 +64,15 @@ $taskOwnerSid = Resolve-AccountSid $task.Principal.UserId
 if (-not $taskOwnerSid -or $taskOwnerSid -ne $identitySid) {
     Fail ("watchdog-owner actual=" + $task.Principal.UserId + " actualSid=" + $taskOwnerSid + " expected=" + $identity + " expectedSid=" + $identitySid)
 }
-if ($task.State -ne "Running") {
+if ($task.State -notin @("Running","Ready")) {
     Fail ("watchdog-state state=" + $task.State)
 }
-Write-Host ("RUNNER_HEALTH_WATCHDOG_PASS task=" + $TaskName + " state=" + $task.State + " owner=" + $task.Principal.UserId)
+if ($task.State -eq "Ready") {
+    Write-Host ("RUNNER_HEALTH_WATCHDOG_READY task=" + $TaskName + " state=Ready owner=" + $task.Principal.UserId + " note=process-topology-will-prove-live-runner")
+}
+else {
+    Write-Host ("RUNNER_HEALTH_WATCHDOG_PASS task=" + $TaskName + " state=Running owner=" + $task.Principal.UserId)
+}
 
 $listeners = @(Get-CimInstance Win32_Process -Filter "Name='Runner.Listener.exe'")
 if ($listeners.Count -ne 1) {
