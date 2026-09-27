@@ -1,3 +1,8 @@
+## 2026-09-27 - Exact-head UE recovery and bounded warehouse rerun
+
+- `6ca804397300aea713d7329964f63c67a9d4a612`: Pre-Unreal #1257 SUCCESS; Unreal #1022 SUCCESS on the supervised interactive-user runner. It passed C++ build, UE4.27.2 production import, Automation Framework, headless startup/chapter/story-state/warning audits, Windows cook-stage-archive, packaged Data verification and packaged executable launch observation. This establishes machine validation on this head, not human PIE/visual/pacing or target-device performance acceptance.
+- The warehouse saturation aggregation fix on this head remains unverified by a warehouse run. Temporarily allow the warehouse workflow's own PR-file change to enqueue its existing receipt-audit/staging/preparation sequence on this same PR head; remove the temporary trigger after the result is captured. Do not claim new staged assets until fresh receipts confirm them.
+
 ## 2026-09-27 - P1C01 source/warehouse reassessment and report fix
 
 - Source-grounded gap audit: `Docs/P1C01_SOURCE_WAREHOUSE_REASSESSMENT_2026_09_27.md`. Warehouse #264 proved 247 payload files / 3.85 GB with 13 receipts; Quaternius was 0 files, 17 unresolved. These are staged source receipts, not ready/imported assets.

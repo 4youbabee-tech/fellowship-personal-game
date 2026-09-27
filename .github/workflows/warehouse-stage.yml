@@ -28,6 +28,11 @@ on:
       - 'Data/WarehouseProviderResolutionTrainV3.json'
       - 'Scripts/run_warehouse_provider_resolution.ps1'
       - '.github/workflows/warehouse-stage.yml'
+  pull_request:
+    branches:
+      - develop
+    paths:
+      - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
 
 permissions:
