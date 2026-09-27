@@ -236,6 +236,8 @@ $report|ConvertTo-Json -Depth 12|Set-Content -LiteralPath $outPath -Encoding UTF
 
 if($badReceipts.Count -gt 0 -or $blocked.Count -gt 0){
   Write-Host ("WAREHOUSE_CRITICAL_GAP_PREP_BLOCKED verified="+$verified.Count+" inventory="+$inventory.Count+" blocked="+$blocked.Count+" badReceipts="+$badReceipts.Count+" report="+$outPath)
+  foreach($entry in $blocked){Write-Host ("WAREHOUSE_CRITICAL_GAP_BLOCKED_DETAIL "+($entry|ConvertTo-Json -Compress -Depth 6))}
+  foreach($entry in $badReceipts){Write-Host ("WAREHOUSE_CRITICAL_GAP_BAD_RECEIPT_DETAIL "+($entry|ConvertTo-Json -Compress -Depth 6))}
   exit 2
 }
 Write-Host ("WAREHOUSE_CRITICAL_GAP_PREP_PASS verified="+$verified.Count+" inventory="+$inventory.Count+" pending="+$pending.Count+" report="+$outPath)

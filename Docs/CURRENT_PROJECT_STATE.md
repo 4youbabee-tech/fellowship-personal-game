@@ -1,3 +1,8 @@
+## 2026-09-27 - Warehouse #269 preparation inventory with blocked items
+
+- Warehouse #269 on `6ad3fbf` passed the 20-car report, then prepared an extracted inventory of 23,774 files from 667 verified receipts. It stopped with 3 blocked items and 0 bad receipts; the existing script did not include their reasons in the CI log. The total payload footprint increased to 13,376 files / 5,426,398,139 bytes because extracted preparation copies now coexist with original staged payloads; this is not 13,376 unique purchased or accepted assets.
+- The next run prints each blocked reason/path from the existing report before failing closed. Pending a clean triage, do not promote those three items or claim provider resolution/READY_FOR_IMPORT.
+
 ## 2026-09-27 - Warehouse run #268 intake preparation boundary
 
 - Warehouse #268 on `cdc841c` passed the inventory audit (247 payload files, 3,851,680,492 bytes, 14 receipts, 667 receipt records, 215 duplicate hash groups) and the 20-car saturation report (11 staged cars, 2 public-pending, 6 manual-pending). It then failed after extraction in critical-gap preparation on PowerShell `Argument types do not match` at `foreach($f in @($scanFiles))`; provider resolution did not run.
