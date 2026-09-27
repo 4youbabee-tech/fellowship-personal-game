@@ -1,3 +1,10 @@
+## 2026-09-27 - Critical warehouse gap train V2
+
+- 20 additional preparation cars now target conversion of staged warehouse stock into classified INTAKE_QC candidates.
+- Major gap lanes covered: hero character FBX candidates, humanoid animation, creatures/fauna, architecture/world kits, interiors/props, vegetation, PBR material sets, texture-format debt, WAV masters, ambience/foley, music/voice separation, VFX, UI/fonts/localization, terrain and 28-region mapping.
+- Security/evidence gates: receipt SHA256, ZIP-only approved extraction path, executable/BMP blocking, FBX animated-format rule, PNG/TGA production-texture rule, WAV-master rule.
+- Current maturity: **PREPARATION-IMPLEMENTED / exact-head validation pending**; no READY_FOR_IMPORT or runtime maturity promotion.
+
 ## 2026-09-27 - Consolidated prep lanes into warehouse saturation train
 
 - Architecture/interiors/props, character rig/animation, Shire audio and fauna preparation are carried forward on the new post-#118 warehouse train.
