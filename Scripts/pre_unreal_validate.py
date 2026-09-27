@@ -7495,7 +7495,8 @@ for pg145_install_symbol in [
     "$taskTriggers",
     "MultipleInstances IgnoreNew",
     "-LogonType Interactive",
-    "Set-Service -Name $service.Name -StartupType Manual",
+    "runner_service_guard.ps1",
+    "serviceOwnership=absent-or-disabled-stopped",
     "actions.runner.*",
     "NETWORK SERVICE",
 ]:
@@ -7520,6 +7521,7 @@ pg145_unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-vali
 for pg145_maintenance_path in [
     "Scripts/classify_unreal_validation.ps1",
     "Scripts/runner_watchdog.ps1",
+    "Scripts/runner_service_guard.ps1",
     "Scripts/install_runner_watchdog.ps1",
     "Scripts/pre_unreal_validate.py",
     "Scripts/asset_quality_audit.py",
@@ -7574,6 +7576,41 @@ for pg145b_path, pg145b_before in [
     work_pos = pg145b_text.find(pg145b_before)
     if probe_pos < 0 or work_pos < 0 or probe_pos > work_pos:
         fail(f"PG-145B runner health gate must precede heavy work: {pg145b_path.name}")
+
+# PG-183: service mode must be impossible to silently resurrect.
+pg183_guard = read(ROOT / "Scripts" / "runner_service_guard.ps1")
+for pg183_symbol in [
+    'Get-Service -Name "actions.runner.*"',
+    "StartupType Disabled",
+    "sc.exe delete",
+    "NETWORK SERVICE",
+    "LOCAL SERVICE",
+    "SYSTEM",
+    "RUNNER_SERVICE_GUARD_PASS",
+]:
+    if pg183_symbol not in pg183_guard:
+        fail(f"PG-183 permanent runner service guard missing: {pg183_symbol}")
+for pg183_symbol in [
+    "runner_service_guard.ps1",
+    "Invoke-RunnerServiceGuard",
+    "SHIRE_RUNNER_WATCHDOG_SERVICE_GUARD_TRIGGER",
+]:
+    if pg183_symbol not in pg145_watchdog:
+        fail(f"PG-183 watchdog self-heal contract missing: {pg183_symbol}")
+for pg183_symbol in [
+    "runner_service_guard.ps1",
+    "serviceOwnership=absent-or-disabled-stopped",
+]:
+    if pg183_symbol not in pg145_watchdog_installer:
+        fail(f"PG-183 installer purge contract missing: {pg183_symbol}")
+for pg183_symbol in [
+    'StartMode -ne "Disabled"',
+    "legacyService=absent",
+    "stopped-disabled",
+]:
+    if pg183_symbol not in pg145b_probe:
+        fail(f"PG-183 runner verification contract missing: {pg183_symbol}")
+
 
 # PG-145C: editor-tool/material-authoring deltas use the narrow exact-head engine lane:
 # build + import + automation + startup, without unrelated chapter/state/package repetition.
