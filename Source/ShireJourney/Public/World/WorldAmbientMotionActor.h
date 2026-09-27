@@ -41,6 +41,11 @@ public:
         float InIntensity,
         float InRadius);
 
+    void ActivateFromLivingWorldPool(
+        const FVector& InLocation,
+        const FRotator& InRotation);
+    void DeactivateForLivingWorldPool();
+
 private:
     UPROPERTY()
     USceneComponent* Root = nullptr;
