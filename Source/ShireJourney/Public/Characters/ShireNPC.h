@@ -88,6 +88,11 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
     bool bFollowPlayerAfterInteraction = false;
 
+    // Optional per-companion persisted marker. This prevents a shared quest stage
+    // from restoring companions the player did not actually recruit.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
+    FName FollowActivationStoryBeat = NAME_None;
+
     // -1 means choose a stable slot automatically from the companion name.
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Companion")
     int32 CompanionSlotIndex = -1;

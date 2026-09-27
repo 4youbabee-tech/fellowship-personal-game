@@ -6,6 +6,7 @@
 #include "ShireQuestTrigger.h"
 #include "ShireTraversalChallenge.h"
 
+#include "Components/BoxComponent.h"
 #include "Components/DirectionalLightComponent.h"
 #include "Components/ExponentialHeightFogComponent.h"
 #include "Components/HierarchicalInstancedStaticMeshComponent.h"
@@ -1621,8 +1622,10 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
         Merry->DialogueLines={FText::FromString(TEXT("This is a fine mess. Whatever you are doing, we had better move before someone finds us."))};
         Merry->QuestId=TEXT("Shortcut");
         Merry->RequiredQuestStage=1;
-        Merry->QuestStageAfterInteraction=2;
+        Merry->QuestStageAfterInteraction=1;
+        Merry->SideStoryBeatAfterInteraction=TEXT("P1C01_MerryJoined");
         Merry->bFollowPlayerAfterInteraction=true;
+        Merry->FollowActivationStoryBeat=TEXT("P1C01_MerryJoined");
     }
 
     AShireNPC* Pippin=GetWorld()->SpawnActor<AShireNPC>(FVector(8260,-760,65),FRotator(0,170,0));
@@ -1632,8 +1635,24 @@ void AShirePrototypeWorldBuilder::SpawnStoryActors()
         Pippin->DialogueLines={FText::FromString(TEXT("If we are running, I would very much like to know what we are running from."))};
         Pippin->QuestId=TEXT("Shortcut");
         Pippin->RequiredQuestStage=1;
-        Pippin->QuestStageAfterInteraction=2;
+        Pippin->QuestStageAfterInteraction=1;
+        Pippin->SideStoryBeatAfterInteraction=TEXT("P1C01_PippinJoined");
         Pippin->bFollowPlayerAfterInteraction=true;
+        Pippin->FollowActivationStoryBeat=TEXT("P1C01_PippinJoined");
+    }
+
+    AShireQuestTrigger* CropCompanionsReady=GetWorld()->SpawnActor<AShireQuestTrigger>(
+        FVector(8180,-690,90),FRotator::ZeroRotator);
+    if(CropCompanionsReady)
+    {
+        CropCompanionsReady->TriggerBox->SetBoxExtent(FVector(520,520,180));
+        CropCompanionsReady->QuestId=TEXT("Shortcut");
+        CropCompanionsReady->RequiredStage=1;
+        CropCompanionsReady->StageAfterTrigger=2;
+        CropCompanionsReady->RequiredSideStoryBeat=TEXT("P1C01_MerryJoined");
+        CropCompanionsReady->AdditionalRequiredSideStoryBeat=TEXT("P1C01_PippinJoined");
+        CropCompanionsReady->ObjectiveMessage=
+            FText::FromString(TEXT("Merry and Pippin fall in beside you. Move together toward the wooded road."));
     }
 
     AShireQuestTrigger* WoodedRoad=GetWorld()->SpawnActor<AShireQuestTrigger>(FVector(12000,920,90),FRotator::ZeroRotator);

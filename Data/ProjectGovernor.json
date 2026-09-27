@@ -1282,14 +1282,20 @@
         "Data/FellowshipExperienceMegaPassCP56.json",
         "Docs/STORY_CANON_BIBLE.md",
         "Source/ShireJourney/ShirePrototypeWorldBuilder.cpp",
-        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp"
+        "Source/ShireJourney/FellowshipChapterWorldBuilder.cpp",
+        "Source/ShireJourney/Private/World/ShirePrototypeWorldBuilder.cpp",
+        "Source/ShireJourney/Public/World/ShireQuestTrigger.h",
+        "Source/ShireJourney/Private/World/ShireQuestTrigger.cpp",
+        "Source/ShireJourney/Public/Characters/ShireNPC.h",
+        "Source/ShireJourney/Private/Characters/ShireNPC.cpp"
       ],
       "implementation_refs": [
         "P1C01 gains pre-adventure Shire friendship/revelry/play beats around Green Dragon/party spaces",
         "PartyGuest and PlayRunner ambient roles create bounded visible social play using the existing cheap ambient simulation",
         "P1C03/P1C05/P1C06/P1C07/P1C08 gain optional companionship/discovery beats between mandatory story anchors",
         "FilmExperiencePlan gains an explicit Shire-life anchor and Fellowship companionship anchor",
-        "Original game writing preserves scene intent without reproducing screenplay dialogue"
+        "Original game writing preserves scene intent without reproducing screenplay dialogue",
+        "P1C01 crop-field recruitment now persists independent Merry/Pippin join markers and advances Shortcut only after both interactions; follower restoration uses each marker while preserving legacy shared-stage saves."
       ],
       "missing_work": [
         "Deepen P1C02 Bree social escalation and common-room life",
