@@ -1,3 +1,13 @@
+## 2026-09-27 - Permanent runner topology machine proof
+
+- Owner-side Windows evidence now shows the legacy `actions.runner.*` service absent after successful deletion.
+- `ShireJourney-GitHubRunner-Watchdog` is Running as UserId `user` with `LogonType=Interactive`.
+- `Runner.Listener.exe` PID **6192** is owned by `IDEAPAD320\user`; watchdog log reports `SHIRE_RUNNER_WATCHDOG_ONLINE pid=6192 brokerListening=true`.
+- GitHub Unreal Build **#1021** on exact head `b22a5da34ba71ba583c8b5b2a026085a2e11feda` passed runner health with `legacyService=absent`, interactive identity/session, listener+worker ownership, GitHub:443 and workspace checks.
+- This closes the **runner ownership/topology** root cause for that exact machine state.
+- Unreal #1021 used the governance/docs-only fast path, so C++ build/import/PIE/package/gameplay/device/visual/performance acceptance was **not** produced.
+- Pre-Unreal #1256 was a validator false-red only: PG-183 searched for the literal `legacyService=absent` even though the verifier emits that value dynamically. The guard is corrected to validate the dynamic contract without weakening it.
+
 ## 2026-09-27 - Runner root-cause architecture fix: remove service mode entirely
 
 - Root cause confirmed from owner-side Windows state plus Unreal #1000: two runner ownership paths coexisted. The legacy `actions.runner.*` service was **Running** and owned `Runner.Listener.exe` as `NT AUTHORITY\NETWORK SERVICE` while the watchdog task was also Running.
