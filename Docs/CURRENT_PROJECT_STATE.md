@@ -2716,3 +2716,8 @@ Current proxy characters do not satisfy final character quality; final rigs/anim
 
 
 
+
+
+## 2026-09-28 P1C01 salvage from current develop
+
+PR #125 was inspected as a source of unique production work only. This branch preserves develop's current CI workflows, selective warehouse classifier, metadata-only archive preparation, and ProjectGovernor unchanged. Runtime source adds bounded interaction/motion pooling, weak cached player lookup, SFX repeat guard, and bounded asynchronous rig availability retries. Four officially CC0-captured Quaternius character/animation candidates now enter license-gated staging and hashed ZIP intake; neither staging nor rig import is assumed. Warehouse source preparation isolates bad archives into a deduplicated manual queue while inventory continues. CI exact-head and UE4 engine results are pending; no new assets are claimed imported or visually accepted.

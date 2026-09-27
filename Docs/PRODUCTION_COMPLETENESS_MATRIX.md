@@ -1632,3 +1632,14 @@ Whenever a chapter, route, enemy, biome, mechanic or major story beat changes:
 - add Guardian validation where machine-checkable,
 - do not mark ACCEPTED without real UE4.27/PIE evidence.
 
+
+
+### 2026-09-28 P1C01 develop-based salvage
+
+| Scope | Source state | Required next evidence |
+| --- | --- | --- |
+| Living World player cache and pooled interaction/motion actors | Candidate C++ transferred from PR #125 onto current develop | Exact-head UE4.27 compile, startup and focused runtime checks |
+| SFX cooldown and bounded rig discovery retries | Candidate C++ transferred; no accepted skeletal asset yet | Exact-head UE4.27 and character/voice playback evidence |
+| Quaternius four candidate packs | Official CC0 license capture; staging attempts authorized | Real public payload, receipt/hash, safe FBX archive intake, rig/retarget QC |
+| Warehouse per-asset isolation | Current develop metadata-only archive mode preserved; manual queue added | Windows test and develop Warehouse run after merge |
+| P1C01 visual maturity | Existing baseline proxies remain | PIE rendered review and target-device profile; no new acceptance claim |

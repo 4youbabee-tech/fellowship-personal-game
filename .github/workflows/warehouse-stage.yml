@@ -11,6 +11,8 @@ on:
       - 'Scripts/stage_opengameart_audio.ps1'
       - 'Data/WarehouseQuaterniusAcquisitionBatchV1.json'
       - 'Scripts/stage_quaternius_warehouse.ps1'
+      - 'Data/P1C01CharacterRigAnimationPrepV1.json'
+      - 'Scripts/prepare_p1c01_character_rig_intake.ps1'
       - 'Data/WarehouseAmbientCGAcquisitionBatchV1.json'
       - 'Scripts/stage_ambientcg_warehouse.ps1'
       - 'Data/WarehouseKenneyAcquisitionBatchV1.json'
@@ -140,6 +142,11 @@ jobs:
         if: env.WH_STAGE_KAYKIT == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_kaykit_github_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseKayKitGitHubAcquisitionBatchV1.json"
+
+      - name: Prepare P1C01 character archive intake
+        if: env.WH_RUN_CHARACTER_INTAKE == 'true'
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\\Scripts\\prepare_p1c01_character_rig_intake.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\\Data\\P1C01CharacterRigAnimationPrepV1.json" -OutputRoot "C:\\actions-runner\\_warehouse\\ShireJourney\\_p1c01_character_intake"
 
       - name: Audit persistent warehouse inventory
         if: env.WH_RUN_AUDIT == 'true'

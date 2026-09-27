@@ -67,7 +67,8 @@ foreach ($pack in $manifest.source_pages) {
         catch { continue }
         $u = $uri.AbsoluteUri
         $lower = $u.ToLowerInvariant()
-        if ($lower.EndsWith(".zip") -or $lower.EndsWith(".7z") -or $lower.EndsWith(".rar") -or $lower.EndsWith(".fbx")) {
+        $pathExtension = if ($uri.Scheme -in @('http', 'https')) { [IO.Path]::GetExtension($uri.AbsolutePath).ToLowerInvariant() } else { '' }
+        if ($pathExtension -in @(".zip", ".7z", ".rar", ".fbx")) {
             $resolved.Add($u)
         }
     }
