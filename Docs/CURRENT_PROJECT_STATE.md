@@ -1,3 +1,25 @@
+## 2026-09-28 - Production freeze for CI/warehouse root repair
+
+- Owner explicitly stopped active production work after repeated Warehouse #269/#270 failures consumed ~12-13 minutes each.
+- PRs #125, #126 and #127 were closed unmerged to stop new synchronize-triggered churn; their branches remain preserved so no source work is lost.
+- One already-running Unreal job from the closed production PR may finish because the available GitHub connector does not expose workflow cancellation; no new rerun is being started.
+- Root causes identified:
+  - PR-synchronize Warehouse execution had been reintroduced on the production branch.
+  - critical-gap QC physically re-extracted every ZIP on every run.
+  - receipt reuse checked presence/size but not ZIP structural readability.
+  - corrupt cached AmbientCG ZIPs could remain reusable forever.
+  - KayKit GitHub ZIP extraction hit Windows path/symlink semantics even though intake QC only needed metadata.
+  - duplicate receipt rows caused the same corrupt AmbientCG payload to be reported twice.
+- Repair branch `repair/ci-warehouse-root-fix-v1` now:
+  - keeps Warehouse off pull-request synchronize,
+  - validates ZIP structure before receipt reuse,
+  - removes/redownloads corrupt provider ZIPs,
+  - inventories ZIP entries read-only via `ZipFile::OpenRead` instead of `Expand-Archive`,
+  - deduplicates receipt records,
+  - prints exact blockers,
+  - guards the architecture with PG-184.
+- Current maturity: **SOURCE-IMPLEMENTED / STATIC VALIDATION NOT YET RUN**. No gameplay or acceptance promotion.
+
 ## 2026-09-27 - Permanent runner topology machine proof
 
 - Owner-side Windows evidence now shows the legacy `actions.runner.*` service absent after successful deletion.
