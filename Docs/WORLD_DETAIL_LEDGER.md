@@ -1,3 +1,30 @@
+## 2026-09-27 - P1C01 mega preparation train: characters + audio + fauna
+
+Registered before implementation as three serialized preparation cars behind the active material (#118) and architecture/interiors (#119) lanes.
+
+### Car C - Character rig + animation intake
+- Priority: Frodo, Gandalf, Sam, then the remaining core cast by existing CharacterVisualProductionWaveV7 order.
+- Animated final production assets: FBX only. PNG/TGA textures only. Existing OBJ character pieces remain static/prototype fallback and are never promoted as final animated evidence.
+- External character/animation packs without explicit license capture remain BLOCKED_LICENSE_CAPTURE; do not infer provider-wide permission.
+- Intake must prove skeleton, skin weights, deformation, retarget compatibility, animation clips and provenance before READY_FOR_IMPORT.
+- Runtime integration remains soft-reference + FStreamableManager owned by the existing character asset subsystem.
+
+### Car D - Shire audio / foley / ambience intake
+- Scope is limited to the five already-authorized OpenGameArt CC0 P1C01 audio candidates.
+- WAV is the production-master requirement. OGG/other source audio may stage only as source material and must become a verified WAV master before UE import.
+- Intake must retain source page, CC0 evidence, receipt and SHA256.
+- No film/game extracted reference audio is promoted as production content.
+
+### Car E - Living-world fauna intake
+- Preserve the project-owned bird/rabbit/butterfly fallback bank and existing LivingWorldEventPlan caps.
+- Quaternius farm/animated animal packs stay blocked until explicit per-pack license capture exists.
+- Animated animal final exchange is FBX only with skeleton/skin/deformation review.
+- Fauna never increases the current max-active group caps before target-device profiling.
+
+All three cars are preparation/intake-only until the preceding runtime lane is green and merged. No new chapter/story anchor is opened.
+
+Status: **REGISTERED / PREPARATION STARTED**.
+
 ## 2026-09-27 - P1C01 player-experience convergence defect batch
 
 Registered before implementation from source review on `develop@c79168cf385ba02f4b542940de3b089e700f1f18`.
