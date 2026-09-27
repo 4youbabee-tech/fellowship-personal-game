@@ -1,3 +1,15 @@
+## 2026-09-28 - CI/Warehouse root-repair freeze
+
+- Production train execution: **PAUSED BY OWNER**.
+- Repeated Warehouse PR-synchronize execution: **REMOVED IN REPAIR SOURCE**.
+- ZIP structural validation before receipt reuse: **SOURCE-IMPLEMENTED**.
+- Corrupt AmbientCG/KayKit cached ZIP self-repair: **SOURCE-IMPLEMENTED**.
+- Critical-gap metadata-only ZIP inventory (no repeated extraction): **SOURCE-IMPLEMENTED**.
+- Duplicate receipt suppression + exact blocker details: **SOURCE-IMPLEMENTED**.
+- PG-184 regression guard: **SOURCE-IMPLEMENTED**.
+- Exact-head static/machine validation: **PENDING**.
+- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
+
 ## 2026-09-27 - Runner single-path proof
 
 - Legacy service path absent: **MACHINE-PROVEN** on owner Windows state and Unreal #1021.
