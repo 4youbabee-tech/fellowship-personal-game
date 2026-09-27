@@ -2975,6 +2975,11 @@
       "id": "INV-BRANCH-HANDOFF",
       "description": "develop is the sole canonical development/programmer-handoff branch and main is stable/release. Temporary branches are short-lived and removed after merge; stale diverged branches are never bulk-merged as a substitute for selective salvage.",
       "auto_override": false
+    },
+    {
+      "id": "INV-RUNNER-OWNERSHIP",
+      "description": "The UE4.27 self-hosted GitHub runner must execute only under the proven interactive Windows user through the ShireJourney-GitHubRunner-Watchdog Scheduled Task. Legacy actions.runner.* Windows services must remain Stopped with StartupType Manual and must never be enabled, started, reconfigured, or used under NETWORK SERVICE, LOCAL SERVICE, or SYSTEM. A worker/AI session may inspect health but must not change runner ownership/topology unless the owner explicitly authorizes a runner-infrastructure repair.",
+      "auto_override": false
     }
   ],
   "conflict_status_values": [
@@ -3913,6 +3918,33 @@
         "GitHub remains authority for volatile PR/branch/check state; ProjectGovernor remains authority for durable direction and proof boundaries."
       ],
       "evidence_boundary": "ADMIN_GOVERNANCE / HANDOFF ONLY. This does not change runtime, content, PIE, device, visual, pacing or performance acceptance.",
+      "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-050",
+      "title": "Lock the UE4 self-hosted runner to interactive-user watchdog ownership",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004",
+        "REQ-MEM-001"
+      ],
+      "resolution": "The runner is not a Windows-service lane. Keep actions.runner.* stopped/manual and run UE4-27-Windows only under the proven interactive Windows user through ShireJourney-GitHubRunner-Watchdog. NETWORK SERVICE, LOCAL SERVICE and SYSTEM execution are forbidden. New human/AI sessions must treat this as a hard infrastructure invariant, not a troubleshooting preference.",
+      "implementation_contract": [
+        "Never enable/start/reinstall actions.runner.* as an automatic or active service.",
+        "Never configure the runner to run as NETWORK SERVICE, LOCAL SERVICE or SYSTEM.",
+        "The watchdog Scheduled Task uses LogonType Interactive under the proven Windows user and is the only approved supervisor.",
+        "verify_runner_session.ps1 must fail before heavy work if service ownership, identity, session, listener/worker ownership or watchdog state is wrong.",
+        "install_runner_watchdog.ps1 is the approved topology installer/repair source and explicitly forces legacy services to stopped/manual.",
+        "A Work/AI session may inspect and diagnose runner health, but may not change runner ownership/topology without explicit owner authorization."
+      ],
+      "evidence": [
+        "Scripts/install_runner_watchdog.ps1",
+        "Scripts/verify_runner_session.ps1",
+        "Scripts/pre_unreal_validate.py PG-145/PG-145B",
+        "KNOWN/KF runner-broker history in ProjectGovernor and PROJECT_GUARDIAN"
+      ],
+      "evidence_boundary": "INFRASTRUCTURE OWNERSHIP POLICY + EXISTING STATIC GUARDS. This decision does not itself prove the current physical Windows service/task state; live runner health must be checked on the machine.",
       "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
@@ -5749,7 +5781,8 @@
       "Begin the next substantive P1C01 character presentation / skeletal-animation production wave after the bounded asset batch is selected.",
       "Continue Living Shire motion/fauna plus quest/audio polish without reopening unrelated CI/root repair.",
       "Run target-device DX11 720p Low-Medium profiling before any density or expensive presentation expansion; Gate 6/7 remains required before broad Part II/III runtime production."
-    ]
+    ],
+    "runner_infrastructure_guard": "HARD: do not enable/restart/reconfigure actions.runner.* Windows service. UE4-27-Windows must remain under the interactive-user watchdog Scheduled Task; fail closed on NETWORK SERVICE/LOCAL SERVICE/SYSTEM."
   },
   "development_mode_contract": {
     "schema_version": 1,
@@ -6242,7 +6275,8 @@
       "Inspect live develop HEAD, PRs and GitHub Actions",
       "Run Scripts/new_developer_onboarding.ps1 when working locally"
     ],
-    "stale_copy_rule": "No README or guide may hard-code a copied 'next drop' as execution authority. Current execution order must be read from ProjectGovernor.current_focus + execution_control."
+    "stale_copy_rule": "No README or guide may hard-code a copied 'next drop' as execution authority. Current execution order must be read from ProjectGovernor.current_focus + execution_control.",
+    "runner_critical_rule": "Before touching GitHub Actions runner configuration: the UE4 runner is interactive-user watchdog mode only. actions.runner.* must stay Stopped/Manual. NETWORK SERVICE/LOCAL SERVICE/SYSTEM are forbidden. Do not reconfigure runner ownership without explicit owner authorization."
   },
   "handoff_metadata_policy": {
     "evidence_authority": "session_handoff.validation_snapshot",
@@ -6392,5 +6426,38 @@
       ],
       "privacy_note": "Payment-card digits, email address, transaction IDs and other payment identifiers are intentionally not copied into repository governance."
     }
+  },
+  "runner_execution_contract": {
+    "status": "ACTIVE_HARD_INVARIANT",
+    "authority": "Data/ProjectGovernor.json",
+    "runner_name": "UE4-27-Windows",
+    "required_mode": "SUPERVISED_INTERACTIVE_USER_WATCHDOG",
+    "watchdog_task": "ShireJourney-GitHubRunner-Watchdog",
+    "legacy_service_pattern": "actions.runner.*",
+    "legacy_service_required_state": {
+      "status": "Stopped",
+      "startup_type": "Manual"
+    },
+    "forbidden_identities": [
+      "NT AUTHORITY\\NETWORK SERVICE",
+      "NT AUTHORITY\\LOCAL SERVICE",
+      "NT AUTHORITY\\SYSTEM"
+    ],
+    "required_identity_rule": "Runner.Listener and Runner.Worker must belong to the same proven interactive Windows user/session as the job, with a live Explorer desktop session.",
+    "prohibited_actions_without_owner_authorization": [
+      "Do not run config.cmd with --runasservice or reinstall the runner as a Windows service.",
+      "Do not Start-Service, Set-Service Automatic, sc start, sc config auto, or otherwise enable actions.runner.*.",
+      "Do not switch the runner account to NETWORK SERVICE, LOCAL SERVICE, SYSTEM, or any non-interactive service identity.",
+      "Do not replace the watchdog Scheduled Task with service-mode execution.",
+      "Do not kill/restart Runner.Listener while Runner.Worker is active except through the repository watchdog's bounded recovery contract."
+    ],
+    "approved_recovery_path": [
+      "Read Scripts/install_runner_watchdog.ps1 and Scripts/verify_runner_session.ps1.",
+      "Keep legacy actions.runner.* service stopped/manual.",
+      "Use the interactive-user ShireJourney-GitHubRunner-Watchdog Scheduled Task.",
+      "Run the repository runner-health verification before heavy Unreal/Warehouse work.",
+      "If the topology is wrong, fail closed and report the exact identity/service/task state; do not improvise a service-mode fix."
+    ],
+    "rationale": "NETWORK SERVICE previously caused UE4 Engine/content/rendering and runner ownership failures. The repository already enforces interactive-user ownership in PG-145/PG-145B; this top-level contract makes the rule impossible for a new programmer/AI session to miss."
   }
 }
