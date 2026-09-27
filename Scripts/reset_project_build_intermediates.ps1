@@ -315,19 +315,45 @@ foreach ($path in $paths) {
         if (-not $retriedAfterOwnerExit) {
             $aclDiagnostic = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
             Write-Warning "No live Restart Manager owner holds $($blockedFile). Granting Modify only on generated build output $fullPath to runner identity $identity. $aclDiagnostic"
-            $grant = & (Join-Path $env:SystemRoot "System32\icacls.exe") $fullPath /grant ($identity + ":(OI)(CI)M") /T /C 2>&1
+            $grant = & (Join-Path $env:SystemRoot "System32\\icacls.exe") $fullPath /grant ($identity + ":(OI)(CI)M") /T /C 2>&1
             $grantExit = $LASTEXITCODE
             if ($grantExit -ne 0) {
                 $afterGrantAcl = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
                 throw "BUILD_CLEANUP_ACL_REPAIR_FAILED path=$fullPath identity=$identity icaclsExit=$grantExit output=$(($grant -join ' ')) $afterGrantAcl"
             }
 
-            try {
-                Remove-Item -LiteralPath $fullPath -Recurse -Force -ErrorAction Stop
-            }
-            catch {
+            # Build outputs may retain a short-lived kernel file handle after the exact
+            # orphan owner has exited. Repair the generated DLL ACL too, then retry only
+            # this bounded transient window instead of failing on the first stale handle.
+            $fileGrant = & (Join-Path $env:SystemRoot "System32\\icacls.exe") $blockedFile /grant ("${identity}:(F)") /C 2>&1
+            $fileGrantExit = $LASTEXITCODE
+            if ($fileGrantExit -ne 0) {
                 $afterGrantAcl = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
-                throw "BUILD_CLEANUP_RETRY_FAILED path=$fullPath blockedFile=$blockedFile identity=$identity error=$($_.Exception.Message) $afterGrantAcl"
+                throw "BUILD_CLEANUP_FILE_ACL_REPAIR_FAILED path=$blockedFile identity=$identity icaclsExit=$fileGrantExit output=$(($fileGrant -join ' ')) $afterGrantAcl"
+            }
+
+            $cleanupError = $null
+            for ($attempt = 1; $attempt -le 4; $attempt++) {
+                try {
+                    Remove-Item -LiteralPath $fullPath -Recurse -Force -ErrorAction Stop
+                    $cleanupError = $null
+                    break
+                }
+                catch {
+                    $cleanupError = $_.Exception.Message
+                    if (($attempt -lt 4) -and ($owners.Count -gt 0) -and ($cleanupError -match '(?i)access.*denied|being used by another process')) {
+                        $delayMs = [int](250 * [Math]::Pow(2, $attempt - 1))
+                        Write-Warning "Generated build cleanup is still settling after a verified owner exit; retry $($attempt + 1)/4 in ${delayMs}ms."
+                        Start-Sleep -Milliseconds $delayMs
+                        continue
+                    }
+                    break
+                }
+            }
+
+            if ($null -ne $cleanupError) {
+                $afterGrantAcl = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
+                throw "BUILD_CLEANUP_RETRY_FAILED path=$fullPath blockedFile=$blockedFile identity=$identity attempts=$attempt error=$cleanupError $afterGrantAcl"
             }
         }
     }
