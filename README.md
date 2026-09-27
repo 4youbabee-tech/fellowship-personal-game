@@ -4,6 +4,8 @@ A low-spec-targeted personal 3D game project using Peter Jackson's *The Lord of 
 
 # NEW DEVELOPER / NEW AI SESSION — START HERE
 
+> **GitHub default branch note:** `main` is the stable/release landing branch. Active development truth lives on `develop`. If GitHub opened this repository on `main`, switch to `develop` before inferring current project state or editing code.
+
 There is **one project manager and one entry path**. Do not reconstruct project direction from chat history, old pull requests, or scattered planning notes.
 
 **Canonical entry path:**
