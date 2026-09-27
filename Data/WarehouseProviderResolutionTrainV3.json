@@ -1,0 +1,334 @@
+{
+  "schema_version": 1,
+  "train_id": "WAREHOUSE_PROVIDER_RESOLUTION_TRAIN_V3_20_CARS",
+  "status": "PREPARATION_IMPLEMENTATION_ACTIVE",
+  "base_train": "WAREHOUSE_CRITICAL_GAP_PREPARATION_TRAIN_V2_20_CARS",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/GlobalWarehouseSourceRegistryV2.json",
+    "Data/WarehouseProviderAccessPolicyV1.json",
+    "Data/TrilogyAssetCandidateQueue.json",
+    "Data/ProductionAssetPromotionPolicyV1.json"
+  ],
+  "objective": "Resolve provider-access blockers and select safe alternates for critical production gaps without bypassing authentication, paywalls, store flows or provider restrictions.",
+  "cars": [
+    {
+      "order": 1,
+      "id": "V3_01_QUATERNIUS_CRITICAL_RESOLUTION",
+      "slot": "QUATERNIUS_HIGH_VALUE",
+      "preferred": [
+        "QUATERNIUS"
+      ],
+      "fallback": [
+        "KAYKIT",
+        "GOBKIT"
+      ],
+      "ceiling": "AUTHORIZED_FOR_STAGING"
+    },
+    {
+      "order": 2,
+      "id": "V3_02_HERO_CHARACTER_BASE_ALTERNATES",
+      "slot": "RIGGED_CHARACTER",
+      "preferred": [
+        "MIXAMO",
+        "ACCURIG",
+        "MAKEHUMAN"
+      ],
+      "fallback": [
+        "POLYGONALMIND_CC0",
+        "GOBKIT",
+        "KAYKIT"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 3,
+      "id": "V3_03_HUMANOID_ANIMATION_ALTERNATES",
+      "slot": "HUMANOID_ANIMATION",
+      "preferred": [
+        "MIXAMO",
+        "ACTORCORE",
+        "ROKOKO"
+      ],
+      "fallback": [
+        "KAYKIT",
+        "QUATERNIUS"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 4,
+      "id": "V3_04_FAUNA_ALTERNATES",
+      "slot": "FAUNA",
+      "preferred": [
+        "QUATERNIUS",
+        "FREESOUND"
+      ],
+      "fallback": [
+        "KENNEY",
+        "KAYKIT"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 5,
+      "id": "V3_05_HERO_CREATURE_ALTERNATES",
+      "slot": "CREATURE",
+      "preferred": [
+        "CGTRADER",
+        "TURBOSQUID",
+        "QUATERNIUS"
+      ],
+      "fallback": [
+        "KAYKIT"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 6,
+      "id": "V3_06_ARCHITECTURE_ALTERNATES",
+      "slot": "ARCHITECTURE",
+      "preferred": [
+        "QUATERNIUS",
+        "KENNEY",
+        "KAYKIT"
+      ],
+      "fallback": [
+        "FAB_QUixel_MEGASCANS",
+        "CGTRADER"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 7,
+      "id": "V3_07_VEGETATION_ALTERNATES",
+      "slot": "VEGETATION",
+      "preferred": [
+        "FAB_QUixel_MEGASCANS",
+        "SPEEDTREE",
+        "POLY_HAVEN"
+      ],
+      "fallback": [
+        "KENNEY",
+        "QUATERNIUS"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 8,
+      "id": "V3_08_PBR_ALTERNATES",
+      "slot": "PBR_TEXTURE",
+      "preferred": [
+        "POLY_HAVEN",
+        "AMBIENTCG",
+        "CGBOOKCASE"
+      ],
+      "fallback": [
+        "TEXTURECAN",
+        "3DTEXTURES_ME"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 9,
+      "id": "V3_09_AUDIO_FOLEY_ALTERNATES",
+      "slot": "SFX",
+      "preferred": [
+        "SONNISS_GDC",
+        "OPENGAMEART",
+        "FREESOUND"
+      ],
+      "fallback": [
+        "99SOUNDS",
+        "ZAPSPLAT"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 10,
+      "id": "V3_10_MUSIC_IDENTITY_ALTERNATES",
+      "slot": "MUSIC",
+      "preferred": [
+        "SCOTT_BUCKLEY",
+        "INCOMPETECH",
+        "FREEPD"
+      ],
+      "fallback": [
+        "MUSOPEN",
+        "FREE_MUSIC_ARCHIVE"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 11,
+      "id": "V3_11_VOICE_PIPELINE_ALTERNATES",
+      "slot": "VOICE_TTS",
+      "preferred": [
+        "AZURE_TTS",
+        "GOOGLE_CLOUD_TTS",
+        "AMAZON_POLLY"
+      ],
+      "fallback": [
+        "MURF_AI",
+        "PLAYHT"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 12,
+      "id": "V3_12_VFX_ALTERNATES",
+      "slot": "VFX",
+      "preferred": [
+        "ACTIONVFX",
+        "JANGAFX_FREE_VFX"
+      ],
+      "fallback": [
+        "EMBERGEN"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 13,
+      "id": "V3_13_UI_ICON_FONT_ALTERNATES",
+      "slot": "UI",
+      "preferred": [
+        "KENNEY",
+        "TABLER_ICONS",
+        "GOOGLE_FONTS"
+      ],
+      "fallback": [
+        "GAME_ICONS_NET",
+        "OPENGAMEART"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 14,
+      "id": "V3_14_TERRAIN_DATA_ALTERNATES",
+      "slot": "TERRAIN_REFERENCE",
+      "preferred": [
+        "USGS_EARTHEXPLORER",
+        "OPENTOPOGRAPHY"
+      ],
+      "fallback": [
+        "QGIS",
+        "GAEA"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 15,
+      "id": "V3_15_ENEMY_RIG_ALTERNATES",
+      "slot": "RIGGED_CHARACTER",
+      "preferred": [
+        "QUATERNIUS",
+        "CGTRADER",
+        "TURBOSQUID"
+      ],
+      "fallback": [
+        "KAYKIT"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 16,
+      "id": "V3_16_BATTLE_SUPPORT_ALTERNATES",
+      "slot": "WORLD_KIT",
+      "preferred": [
+        "QUATERNIUS",
+        "KENNEY",
+        "KAYKIT"
+      ],
+      "fallback": [
+        "FAB_QUixel_MEGASCANS"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 17,
+      "id": "V3_17_REGION_KIT_ALTERNATES",
+      "slot": "ENVIRONMENT",
+      "preferred": [
+        "FAB_QUixel_MEGASCANS",
+        "QUATERNIUS",
+        "KENNEY"
+      ],
+      "fallback": [
+        "KAYKIT",
+        "BLENDERKIT"
+      ],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 18,
+      "id": "V3_18_MARKETPLACE_MANUAL_REVIEW",
+      "slot": "MARKETPLACE",
+      "preferred": [
+        "CGTRADER",
+        "TURBOSQUID",
+        "ARTSTATION_MARKETPLACE"
+      ],
+      "fallback": [],
+      "ceiling": "CANDIDATE"
+    },
+    {
+      "order": 19,
+      "id": "V3_19_PROVIDER_OVERLAP_DEDUPE",
+      "slot": "ALL",
+      "preferred": [
+        "PROJECT_OWNED"
+      ],
+      "fallback": [],
+      "ceiling": "STATIC_VALIDATED"
+    },
+    {
+      "order": 20,
+      "id": "V3_20_UNRESOLVED_BLOCKER_REPORT",
+      "slot": "ALL",
+      "preferred": [
+        "PROJECT_OWNED"
+      ],
+      "fallback": [],
+      "ceiling": "STATIC_VALIDATED"
+    }
+  ],
+  "access_classes": {
+    "AUTO": [
+      "AUTO_STAGE",
+      "AUTO_RESOLVE_STAGE",
+      "AUTO_STAGE_WHEN_DIRECT_FILE_AND_LICENSE_KNOWN"
+    ],
+    "MANUAL": [
+      "MANUAL_ITEM_DOWNLOAD",
+      "MANUAL_ONLY_NO_AUTOMATION",
+      "DISCOVERY_AND_MANUAL_DOWNLOAD_UNLESS_DOCUMENTED_API",
+      "DISCOVER_REVIEW_LICENSE",
+      "DISCOVER_REVIEW"
+    ],
+    "AUTH": [
+      "AUTH_REQUIRED",
+      "AUTH_REQUIRED_MANUAL_ACQUISITION",
+      "AUTH_REQUIRED_FOR_ORIGINALS"
+    ],
+    "REVIEW": [
+      "REVIEW_REQUIRED",
+      "PER_ITEM_REVIEW",
+      "PER_PACK_REVIEW",
+      "MARKETPLACE_REVIEW"
+    ],
+    "REFERENCE": [
+      "REFERENCE_ONLY",
+      "REFERENCE_OR_REVIEW_ONLY",
+      "NONE"
+    ]
+  },
+  "rules": [
+    "Never convert AUTH, REVIEW, PURCHASE, MARKETPLACE or REFERENCE lanes into automatic download lanes.",
+    "An alternate provider may fill a technical warehouse slot but never silently replace hero identity/canon acceptance.",
+    "Animated final production stock requires FBX.",
+    "Production textures require PNG/TGA.",
+    "Audio production masters require WAV.",
+    "Provider resolution cannot promote READY_FOR_IMPORT."
+  ],
+  "evidence_boundary": "Provider-resolution and alternate-source planning only; acquisition/integration/acceptance remain separately evidenced."
+}

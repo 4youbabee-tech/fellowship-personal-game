@@ -1,3 +1,40 @@
+## 2026-09-27 - Warehouse provider-resolution train V3
+
+Registered before implementation as the fourth warehouse preparation layer, stacked behind V2.
+
+Purpose:
+- Resolve access/source blockers revealed by real warehouse staging instead of repeatedly reporting the same gaps.
+- Use current provider registry/access policy to distinguish PUBLIC_DIRECT, PUBLIC_PAGE_NO_DIRECT_ARCHIVE, AUTH_REQUIRED, ACCOUNT_MARKETPLACE, PURCHASE, MANUAL_TOOL and REFERENCE_ONLY lanes.
+- Preserve all original source/license restrictions; never automate an interactive/login/purchase lane.
+- Prefer a legal, technically suitable alternate provider when a primary source cannot be staged automatically.
+- Keep hero identity/canon acceptance separate from generic technical stock.
+- Animated final production candidates remain FBX-only; production textures PNG/TGA; audio production masters WAV.
+- Provider-resolution output is planning/staging guidance only and cannot promote READY_FOR_IMPORT.
+
+V3 car families:
+1. Quaternius critical access resolution.
+2. Character-base alternates.
+3. Humanoid-animation alternates.
+4. Fauna/creature alternates.
+5. Architecture/world-kit alternates.
+6. Vegetation/nature alternates.
+7. PBR-material alternates.
+8. Audio/foley alternates.
+9. Music identity sources.
+10. Voice pipeline sources.
+11. VFX/weather sources.
+12. UI/icon/font sources.
+13. Terrain/heightmap sources.
+14. Enemy/monster sources.
+15. Hero-creature sources.
+16. Battle/siege sources.
+17. Region-kit source coverage.
+18. Marketplace/manual review queue.
+19. Provider-overlap/dedupe.
+20. Unresolved blocker report.
+
+Status: **REGISTERED / IMPLEMENTATION STARTED**.
+
 ## 2026-09-27 - Critical warehouse gap preparation train V2
 
 Registered after V1 warehouse saturation merged green.

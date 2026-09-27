@@ -1,3 +1,9 @@
+## 2026-09-27 - Provider-resolution train V3
+
+- 20 source-resolution cars cover characters, animation, fauna, creatures, architecture, vegetation, PBR, audio/music/voice, VFX, UI, terrain, enemies, battle support, regional kits and manual marketplace review.
+- Resolver chooses only staged or access-policy-compatible automatic providers; auth/review/manual/reference sources remain explicit human lanes.
+- Current maturity: **PREPARATION-IMPLEMENTED / exact-head validation pending**. No source-resolution result is READY_FOR_IMPORT.
+
 ## 2026-09-27 - Quaternius critical-source license capture
 
 - 13 high-value Quaternius lanes now have explicit official-page CC0 capture in the acquisition manifest.
