@@ -183,6 +183,7 @@ private:
     bool bUsingSkeletalProductionRig = false;
     float PrototypeWalkPhase = 0.0f;
     float PrototypeIdlePhase = 0.0f;
+    float PrototypeMovementCadenceScale = 1.0f;
     float MotionCadenceScale = 1.0f;
     float MotionStrideScale = 1.0f;
     float MotionIdleScale = 1.0f;

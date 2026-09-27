@@ -1022,7 +1022,8 @@ void AShireNPC::UpdatePrototypeAnimation(float DeltaSeconds)
     float WeightShift = 0.0f;
     if (bPrototypeMoving)
     {
-        PrototypeWalkPhase += DeltaSeconds * 8.0f * MotionCadenceScale;
+        PrototypeWalkPhase += DeltaSeconds * 8.0f * MotionCadenceScale *
+            PrototypeMovementCadenceScale;
         Swing = FMath::Sin(PrototypeWalkPhase) * 25.0f * MotionStrideScale;
         Bob = FMath::Abs(FMath::Sin(PrototypeWalkPhase * 2.0f)) * 1.2f * MotionStrideScale;
     }
@@ -1565,6 +1566,8 @@ void AShireNPC::Tick(float DeltaSeconds)
 
     RefreshLivingContext(DeltaSeconds);
     bPrototypeMoving = false;
+    PrototypeMovementCadenceScale = FMath::FInterpTo(
+        PrototypeMovementCadenceScale, 1.0f, DeltaSeconds, 6.0f);
 
     // Preserve full-rate follow/dialogue responsiveness while throttling only
     // stationary named NPCs that are far from the player.
@@ -1648,6 +1651,13 @@ void AShireNPC::Tick(float DeltaSeconds)
 
                 if (bPrototypeMoving)
                 {
+                    const float ActualSpeed = ActualStep.Size() /
+                        FMath::Max(DeltaSeconds, KINDA_SMALL_NUMBER);
+                    const float TargetCadenceScale = FMath::Clamp(
+                        ActualSpeed / FMath::Max(FollowSpeed, 1.0f), 0.55f, 1.65f);
+                    PrototypeMovementCadenceScale = FMath::FInterpTo(
+                        PrototypeMovementCadenceScale, TargetCadenceScale, DeltaSeconds, 8.0f);
+
                     const FRotator DesiredRotation = ActualStep.Rotation();
                     SetActorRotation(FMath::RInterpTo(GetActorRotation(), DesiredRotation, DeltaSeconds, 7.0f));
                 }

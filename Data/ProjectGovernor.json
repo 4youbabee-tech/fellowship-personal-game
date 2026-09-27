@@ -851,7 +851,8 @@
         "Major named proxies now carry modular identity pieces such as cloaks, weapons, shields, quivers, beards and headpieces so the cast is visually distinguishable before final rigged assets.",
         "CP46 adds dedicated production meshes for Black Riders, Orcs, Uruk-hai and Cave Troll while preserving existing combat/quest gating",
         "CharacterProductionMatrix now records existing project-owned dedicated identity foundations separately from final rigged/accepted characters.",
-        "Companion formation following uses collision-aware catch-up, obstacle sliding and actual displacement for fallback locomotion so blocked characters do not embed in scenery or animate against a wall."
+        "Companion formation following uses collision-aware catch-up, obstacle sliding and actual displacement for fallback locomotion so blocked characters do not embed in scenery or animate against a wall.",
+        "Fallback companion gait cadence follows measured displacement speed, preserving named motion profiles while avoiding a fast foot cycle during slow collision slides."
       ],
       "missing_work": [
         "Dedicated production meshes/rigged characters for Sam, Merry, Pippin, Aragorn, Boromir, Legolas, Gimli and other non-Frodo/Gandalf major characters",
