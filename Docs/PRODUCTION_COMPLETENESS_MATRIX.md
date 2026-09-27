@@ -1,3 +1,11 @@
+## 2026-09-27 - P1C01 Shire material surface-set production batch
+
+- Project-owned Shire material bank is now explicitly defined in `Data/P1C01ShireMaterialSurfaceSetV1.json`.
+- Import-time material response expands from Albedo/Color/Roughness/Metallic to include bounded Specular sourced from authored MTL `Ks`.
+- Runtime cost boundary for this batch: zero new texture samples, zero new heavy runtime asset loads, zero foliage-density increase.
+- Current maturity: **SOURCE-IMPLEMENTED / Pre-Unreal + UE4.27 build/import validation pending**.
+- Human visual quality, target-device FPS/VRAM and PIE acceptance remain open.
+
 ## 2026-09-27 - P1C01 player-experience convergence batch
 
 - Story dialogue continuity, mouse-look frame independence, quick-load rejection feedback, event-driven quest-trigger re-evaluation and bounded subtitle wrapping are implemented on the active fix branch.
