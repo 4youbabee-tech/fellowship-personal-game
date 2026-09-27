@@ -1,3 +1,10 @@
+## 2026-09-28 - Hosted classifier repair
+
+- Hosted Windows Pre-Unreal lane boot/checkout/Python resolution: **RUN-PROVEN** by #1269.
+- Clean-compile flag initialization defect: **SOURCE-FIXED** after #1269.
+- New exact-head Pre-Unreal result: **PENDING**.
+- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
+
 ## 2026-09-28 - Zero-waste trigger routing
 
 - MasterExecutionRoadmap governance-only Unreal exclusion: **SOURCE-IMPLEMENTED**.
