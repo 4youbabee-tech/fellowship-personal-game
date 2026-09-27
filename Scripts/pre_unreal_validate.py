@@ -2815,6 +2815,52 @@ for pg184_stage, pg184_name in [
         if pg184_symbol not in pg184_stage:
             fail(f"PG-184 {pg184_name} staging corrupt-archive self-repair missing: {pg184_symbol}")
 
+for pg184_symbol in [
+    "Classify warehouse delta",
+    "classify_warehouse_validation.ps1",
+    "env.WH_RUN_PREP == 'true'",
+    "env.WH_STAGE_AMBIENTCG == 'true'",
+]:
+    if pg184_symbol not in pg184_workflow:
+        fail(f"PG-184 selective warehouse workflow contract missing: {pg184_symbol}")
+
+pg184_classifier = read(ROOT / "Scripts" / "classify_warehouse_validation.ps1")
+for pg184_symbol in [
+    "WAREHOUSE_CLASSIFY mode=selective",
+    "WH_STAGE_AMBIENTCG",
+    "WH_STAGE_KAYKIT",
+    "WH_RUN_PREP",
+]:
+    if pg184_symbol not in pg184_classifier:
+        fail(f"PG-184 warehouse delta classifier missing: {pg184_symbol}")
+
+# PG-185: keep strict exact-head Unreal proof while preserving incremental build products.
+pg185_unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+pg185_classifier = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
+pg185_pre = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
+
+if "if: env.SHIRE_RESET_INTERMEDIATES == 'true'" not in pg185_unreal_workflow:
+    fail("PG-185 Unreal workflow must not wipe intermediates for every full validation")
+for pg185_symbol in [
+    "SHIRE_RESET_INTERMEDIATES",
+    "CLEAN_COMPILE_REQUIRED",
+    '.EndsWith(".Build.cs")',
+    '.EndsWith(".Target.cs")',
+]:
+    if pg185_symbol not in pg185_classifier:
+        fail(f"PG-185 incremental compile classifier contract missing: {pg185_symbol}")
+for pg185_symbol in [
+    "Scripts/run_warehouse_*.ps1",
+    "Scripts/warehouse_network.ps1",
+    "Scripts/classify_warehouse_validation.ps1",
+]:
+    if pg185_symbol not in pg185_unreal_workflow:
+        fail(f"PG-185 warehouse-only changes must not trigger Unreal validation: {pg185_symbol}")
+if "runs-on: windows-latest" not in pg185_pre:
+    fail("PG-185 static Pre-Unreal validation must stay off the UE4 self-hosted runner")
+if "self-hosted" in pg185_pre:
+    fail("PG-185 Pre-Unreal must not consume the supervised UE4 runner")
+
 # PG-176: the monitored P1C01 material train must stay complete, bounded and
 # evidence-gated. This is preparation validation only; it never promotes an item.
 pg176_wave_path = ROOT / "Data" / "P1C01MaterialImportWaveV1.json"
