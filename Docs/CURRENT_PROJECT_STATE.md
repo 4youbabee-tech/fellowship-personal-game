@@ -1,3 +1,129 @@
+## 2026-09-28 - Pre-Unreal #1280 stale guard root correction
+
+- Exact-head `a8714aa3a1fb8ff0fb7be970d4bcfedb49139035` on hosted Pre-Unreal #1280 proved the isolated checkout, Python resolution, and Unreal classifier tests all succeeded.
+- Project structure validation reached `PRE-UNREAL CORE VALIDATION PASSED`, then failed on exactly three stale policy assertions in `pre_unreal_validate.py`: the old unconditional FULL-lane intermediate-reset expectation plus the old persistent self-hosted Pre-Unreal path/marker assumptions.
+- PG-145C now validates the actual `SHIRE_RESET_INTERMEDIATES` classifier gate; normal CORE/ASSET work preserves intermediates, while `.Build.cs`, `.Target.cs`, or `ShireJourney.uproject` changes remain the clean-compile trigger.
+- PG-176 now validates the GitHub-hosted isolated `%RUNNER_TEMP%\\shire-pre-unreal` checkout with `hosted=true` and rejects the legacy persistent self-hosted checkout tokens.
+- No runtime/gameplay source changed.
+- Current maturity: **SOURCE-IMPLEMENTED / NEW EXACT-HEAD STATIC VALIDATION PENDING**.
+
+## 2026-09-28 - Legacy CI guard migration completed
+
+- Hosted Pre-Unreal #1277 proved the classifier fix: all Unreal lane-selection tests passed, including the new build-rule reset case.
+- The remaining failure was entirely legacy policy drift inside `pre_unreal_validate.py`: PG-134/PG-167 still required the old self-hosted static lane, while PG-185 required the new hosted lane.
+- PG-134 and PG-167 are now migrated to the hosted exact-head static checkout contract; PG-185 now rejects the actual `- self-hosted` runner declaration instead of matching explanatory comments.
+- No runtime/gameplay behavior changed.
+- Current maturity: **SOURCE-IMPLEMENTED / NEW EXACT-HEAD STATIC RUN PENDING**.
+
+## 2026-09-28 - Warehouse corrupt-cache purge hardened
+
+- Receipt reuse now purges structurally corrupt cached ZIPs immediately instead of only returning non-reusable.
+- Critical-gap manifest now explicitly defines ZIP handling as read-only metadata inspection; physical extraction is deferred to explicit class-specific conversion/import work.
+- PG-184 now guards both the corrupt-cache purge marker and the metadata-only manifest contract.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**.
+
+## 2026-09-28 - Hosted Pre-Unreal classifier false-red repaired
+
+- Hosted Pre-Unreal #1269 proved the new GitHub-hosted Windows lane itself works: exact-head checkout and Python 3.12 resolution both succeeded.
+- The run failed only inside `test_unreal_classifier.ps1` because `$requiresCleanCompile` was referenced before initialization in the classifier path used by the test harness.
+- The classifier now initializes `$requiresCleanCompile` directly after delta resolution, before any mode decision.
+- This is a static classifier defect; it does not change runtime/gameplay state.
+- Current maturity: **SOURCE-IMPLEMENTED / NEW EXACT-HEAD STATIC RUN PENDING**.
+
+## 2026-09-28 - CI root repair V3: zero-waste trigger routing
+
+- Unreal Build Validation now treats `Data/MasterExecutionRoadmap.json` as governance-only, preventing roadmap-only PR sync from consuming the UE4 runner.
+- Warehouse critical-gap preparation now exits at receipt-integrity preflight before any archive inventory when missing/hash/bad-receipt blockers already exist.
+- PG-184 now locks the preflight marker so future changes cannot silently reintroduce delayed failure.
+- PR #128 is intentionally configured so repair commits should trigger only hosted Pre-Unreal validation; no Warehouse PR run and no Unreal run are expected from repair-only deltas.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**.
+
+## 2026-09-28 - CI root repair V2: split proof lanes and preserve build state
+
+- Production remains frozen while infrastructure is repaired.
+- Pre-Unreal static/policy validation is moved to GitHub-hosted `windows-latest`; it no longer consumes or queues behind the UE4 self-hosted runner.
+- Warehouse Stage remains self-hosted for access to the persistent warehouse, but no longer runs on pull-request synchronize.
+- New `Scripts/classify_warehouse_validation.ps1` selects only provider/phases affected by the landed `develop` delta; unknown/manual cases fail safe to the full warehouse path.
+- Warehouse-only scripts/data are excluded from Unreal Build Validation triggers.
+- Unreal validation keeps exact-head/fail-safe semantics but preserves `Intermediate/Build/Win64` and `Binaries/Win64` by default.
+- Clean intermediate reset is now requested only for `.Build.cs`, `.Target.cs`, or `ShireJourney.uproject` changes; compiler-pressure failures still get one bounded clean retry inside `ci_build_unreal.cmd`.
+- PG-184/PG-185 statically prevent regression to PR-synchronize warehouse runs, repeated ZIP extraction, self-hosted Pre-Unreal, or unconditional Unreal intermediate wipes.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**. Runtime/gameplay acceptance is unchanged.
+
+## 2026-09-28 - Production freeze for CI/warehouse root repair
+
+- Owner explicitly stopped active production work after repeated Warehouse #269/#270 failures consumed ~12-13 minutes each.
+- PRs #125, #126 and #127 were closed unmerged to stop new synchronize-triggered churn; their branches remain preserved so no source work is lost.
+- One already-running Unreal job from the closed production PR may finish because the available GitHub connector does not expose workflow cancellation; no new rerun is being started.
+- Root causes identified:
+  - PR-synchronize Warehouse execution had been reintroduced on the production branch.
+  - critical-gap QC physically re-extracted every ZIP on every run.
+  - receipt reuse checked presence/size but not ZIP structural readability.
+  - corrupt cached AmbientCG ZIPs could remain reusable forever.
+  - KayKit GitHub ZIP extraction hit Windows path/symlink semantics even though intake QC only needed metadata.
+  - duplicate receipt rows caused the same corrupt AmbientCG payload to be reported twice.
+- Repair branch `repair/ci-warehouse-root-fix-v1` now:
+  - keeps Warehouse off pull-request synchronize,
+  - validates ZIP structure before receipt reuse,
+  - removes/redownloads corrupt provider ZIPs,
+  - inventories ZIP entries read-only via `ZipFile::OpenRead` instead of `Expand-Archive`,
+  - deduplicates receipt records,
+  - prints exact blockers,
+  - guards the architecture with PG-184.
+- Current maturity: **SOURCE-IMPLEMENTED / STATIC VALIDATION NOT YET RUN**. No gameplay or acceptance promotion.
+
+## 2026-09-27 - Permanent runner topology machine proof
+
+- Owner-side Windows evidence now shows the legacy `actions.runner.*` service absent after successful deletion.
+- `ShireJourney-GitHubRunner-Watchdog` is Running as UserId `user` with `LogonType=Interactive`.
+- `Runner.Listener.exe` PID **6192** is owned by `IDEAPAD320\user`; watchdog log reports `SHIRE_RUNNER_WATCHDOG_ONLINE pid=6192 brokerListening=true`.
+- GitHub Unreal Build **#1021** on exact head `b22a5da34ba71ba583c8b5b2a026085a2e11feda` passed runner health with `legacyService=absent`, interactive identity/session, listener+worker ownership, GitHub:443 and workspace checks.
+- This closes the **runner ownership/topology** root cause for that exact machine state.
+- Unreal #1021 used the governance/docs-only fast path, so C++ build/import/PIE/package/gameplay/device/visual/performance acceptance was **not** produced.
+- Pre-Unreal #1256 was a validator false-red only: PG-183 searched for the literal `legacyService=absent` even though the verifier emits that value dynamically. The guard is corrected to validate the dynamic contract without weakening it.
+
+## 2026-09-27 - Runner root-cause architecture fix: remove service mode entirely
+
+- Root cause confirmed from owner-side Windows state plus Unreal #1000: two runner ownership paths coexisted. The legacy `actions.runner.*` service was **Running** and owned `Runner.Listener.exe` as `NT AUTHORITY\NETWORK SERVICE` while the watchdog task was also Running.
+- This is now treated as an architecture defect, not a daily repair task.
+- New permanent design: `actions.runner.*` is deleted by `Scripts/runner_service_guard.ps1`; if Windows temporarily retains a pending-deletion entry it must be **Stopped + Disabled**.
+- `install_runner_watchdog.ps1` installs the service guard beside the watchdog, removes service ownership, then starts the interactive-user watchdog.
+- `runner_watchdog.ps1` invokes the service guard at boot and every supervision loop, so a recreated service-mode runner is automatically stopped/deleted again.
+- `verify_runner_session.ps1` accepts only service absent or stopped-disabled plus the interactive-user listener/worker topology.
+- PG-145B now statically guards the permanent service-exclusion contract.
+- Physical machine repair still requires one elevated owner-side installer run; until that succeeds, current state is **ROOT-FIX SOURCE-IMPLEMENTED / DEVICE REPAIR PENDING**. No compile/PIE/device/visual/performance acceptance is implied.
+
+## 2026-09-27 - Permanent runner service-mode elimination
+
+- Root cause class confirmed by live evidence: the legacy `actions.runner.*` Windows service can be started under `NT AUTHORITY\NETWORK SERVICE` while the interactive watchdog also exists, creating competing runner ownership and repeated pre-build failures.
+- The permanent design now removes service mode instead of merely leaving it stopped/manual.
+- New `Scripts/runner_service_guard.ps1` stops, disables and deletes any `actions.runner.*` registration and terminates runner Listener/Worker processes owned by NETWORK SERVICE/LOCAL SERVICE/SYSTEM.
+- `install_runner_watchdog.ps1` installs both watchdog and guard, purges service mode first, then starts the interactive-user watchdog.
+- `runner_watchdog.ps1` invokes the guard at boot and during every supervision loop, so a resurrected service is automatically removed.
+- `verify_runner_session.ps1` now accepts only an absent service or a stopped+disabled pending-deletion entry.
+- PG-183 statically guards the permanent service-elimination contract.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head static validation pending / physical machine repair pending one-time elevated install**. No compile/PIE/device/visual/performance claim.
+
+## 2026-09-27 - Runner ownership directive promoted to top-level governance
+
+- The runner rule previously existed in scripts/guards and buried runner-history fields, but was not prominent enough in the Governor/onboarding path for a zero-context Work session.
+- New hard invariant: UE4-27-Windows runs only under the proven interactive Windows user through `ShireJourney-GitHubRunner-Watchdog`.
+- Legacy `actions.runner.*` Windows service must remain **Stopped / Manual** and must never be enabled or started as a fallback.
+- `NETWORK SERVICE`, `LOCAL SERVICE`, and `SYSTEM` are forbidden runner identities.
+- Worker/AI sessions may inspect health but may not change runner ownership/topology without explicit owner authorization.
+- README, PROJECT_GOVERNOR guide and one-command onboarding now surface this rule before production work.
+- Existing source guards remain authoritative: `install_runner_watchdog.ps1`, `verify_runner_session.ps1`, PG-145 and PG-145B.
+- Evidence boundary: **GOVERNANCE/HANDOFF SOURCE-IMPLEMENTED / exact-head static validation pending**. This does not prove the current physical Windows service/task state.
+
+## 2026-09-27 - Zero-context developer entry hardening
+
+- The repository default branch is `main`, while `develop` remains the canonical integration/programmer-handoff branch.
+- Develop onboarding now explicitly warns that `main` is a stable/release landing surface and that current execution truth must be read from `develop`.
+- `Docs/PROJECT_GOVERNOR.md` no longer hard-codes the historical D stage as the next runtime drop; current execution order comes from ProjectGovernor `current_focus` + `execution_control.next_actions` plus live GitHub state.
+- `Scripts/new_developer_onboarding.ps1` now emits a branch warning whenever the local checkout is not the canonical development branch.
+- A separate default-branch README redirect is required on `main` so a zero-context GitHub visitor reaches the develop Governor path immediately.
+- Evidence boundary: **SOURCE-IMPLEMENTED / static validation pending**. No runtime/PIE/device/visual/performance acceptance is implied.
+
 ## 2026-09-27 - Warehouse provider-resolution train V3 prepared
 
 - V3 is stacked behind the critical-gap V2 branch and resolves provider/access blockers rather than adding another uncontrolled source list.

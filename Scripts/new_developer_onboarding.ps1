@@ -61,6 +61,7 @@ $Summary = [ordered]@{
     canonical_development_branch = [string]$Governor.branch_workflow.integration_branch
     stable_release_branch = [string]$Governor.branch_workflow.stable_release_branch
     current_git_branch = $CurrentBranch
+    branch_warning = if ($CurrentBranch -and $Governor.branch_workflow.integration_branch -and ($CurrentBranch -ne [string]$Governor.branch_workflow.integration_branch)) { "You are not on the canonical development branch. Switch to $($Governor.branch_workflow.integration_branch) before inferring current state or editing." } else { $null }
     current_git_head = $CurrentHead
     develop_head = $DevelopHead
     active_lane = [string]$Governor.execution_control.active_lane
@@ -72,6 +73,7 @@ $Summary = [ordered]@{
     next_actions = $NextActions
     target_hardware = $Target
     evidence_boundary = [string]$Governor.active_gate.evidence_scope
+    runner_ownership_rule = if ($Governor.runner_execution_contract) { "UE4 runner = interactive-user watchdog only; actions.runner.* should be absent or Stopped+Disabled pending deletion; NETWORK SERVICE/LOCAL SERVICE/SYSTEM forbidden; watchdog continuously removes recreated service mode; do not change topology without owner authorization." } else { $null }
     required_reading = @(
         'Docs/PROJECT_GOVERNOR.md',
         'Data/ProjectGovernor.json',
@@ -99,6 +101,9 @@ Write-Host "Stable branch:        $($Summary.stable_release_branch)"
 Write-Host "Current Git branch:   $($Summary.current_git_branch)"
 Write-Host "Current HEAD:         $($Summary.current_git_head)"
 Write-Host "Develop HEAD:         $($Summary.develop_head)"
+if (-not [string]::IsNullOrWhiteSpace($Summary.branch_warning)) {
+    Write-Host "BRANCH WARNING:       $($Summary.branch_warning)"
+}
 Write-Host ''
 Write-Host "Active lane:          $($Summary.active_lane)"
 Write-Host "Active gate:          $($Summary.active_gate) [$($Summary.active_gate_status)]"
@@ -130,11 +135,17 @@ foreach ($Doc in $Summary.required_reading) {
     Write-Host "  $Mark $Doc"
 }
 Write-Host ''
+Write-Host 'RUNNER OWNERSHIP'
+if (-not [string]::IsNullOrWhiteSpace($Summary.runner_ownership_rule)) {
+    Write-Host "  $($Summary.runner_ownership_rule)"
+}
+Write-Host ''
 Write-Host 'PROOF BOUNDARY'
 Write-Host "  $($Summary.evidence_boundary)"
 Write-Host ''
 Write-Host 'RULES'
 Write-Host '  - Do not work directly on main.'
+Write-Host '  - Never enable/start actions.runner.*; use the interactive-user watchdog runner only.'
 Write-Host '  - Do not reconstruct direction from old PRs or chat history.'
 Write-Host '  - GitHub owns live PR/branch/workflow transport state.'
 Write-Host '  - ProjectGovernor owns durable requirements, priorities, gates and evidence.'

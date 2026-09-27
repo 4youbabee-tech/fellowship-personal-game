@@ -1,3 +1,114 @@
+## 2026-09-28 - Pre-Unreal #1280 stale guard correction
+
+- Hosted exact-head checkout, Python resolution, and Unreal classifier tests: **RUN-PROVEN** by #1280 on `a8714aa3a1fb8ff0fb7be970d4bcfedb49139035`.
+- Core structural pass marker `PRE-UNREAL CORE VALIDATION PASSED`: **RUN-PROVEN** by #1280.
+- PG-145C conditional intermediate-reset policy assertion: **SOURCE-FIXED**.
+- PG-176 hosted ephemeral static-checkout policy assertion: **SOURCE-FIXED**.
+- New exact-head static result after the validator correction: **PENDING**.
+- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
+
+## 2026-09-28 - Static-lane guard migration
+
+- Unreal classifier incremental/reset tests: **RUN-PROVEN** by hosted Pre-Unreal #1277.
+- Legacy PG-134 hosted-checkout migration: **SOURCE-IMPLEMENTED**.
+- Legacy PG-167 hosted static-lane migration: **SOURCE-IMPLEMENTED**.
+- PG-185 runner-token precision fix: **SOURCE-IMPLEMENTED**.
+- New exact-head static result: **PENDING**.
+- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
+
+## 2026-09-28 - Warehouse cache self-repair hardening
+
+- Corrupt cached ZIP purge during receipt reuse: **SOURCE-IMPLEMENTED**.
+- Metadata-only archive contract in warehouse manifest: **SOURCE-IMPLEMENTED**.
+- PG-184 regression coverage for purge + metadata-only contract: **SOURCE-IMPLEMENTED**.
+- Exact-head static proof: **PENDING**.
+
+## 2026-09-28 - Hosted classifier repair
+
+- Hosted Windows Pre-Unreal lane boot/checkout/Python resolution: **RUN-PROVEN** by #1269.
+- Clean-compile flag initialization defect: **SOURCE-FIXED** after #1269.
+- New exact-head Pre-Unreal result: **PENDING**.
+- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
+
+## 2026-09-28 - Zero-waste trigger routing
+
+- MasterExecutionRoadmap governance-only Unreal exclusion: **SOURCE-IMPLEMENTED**.
+- Receipt-integrity fail-fast before archive scan: **SOURCE-IMPLEMENTED**.
+- PG-184 preflight regression guard: **SOURCE-IMPLEMENTED**.
+- Repair-PR expected heavy-run count: **0 Warehouse / 0 Unreal**, hosted Pre-Unreal only.
+- Exact-head proof: **PENDING**.
+
+## 2026-09-28 - CI split-lane root repair
+
+- Hosted Pre-Unreal static/policy lane: **SOURCE-IMPLEMENTED**.
+- Warehouse pull-request churn removal: **SOURCE-IMPLEMENTED**.
+- Selective warehouse provider/phase classifier: **SOURCE-IMPLEMENTED**.
+- Metadata-only ZIP intake + corrupt-cache self-repair: **SOURCE-IMPLEMENTED**.
+- Warehouse-only Unreal trigger exclusion: **SOURCE-IMPLEMENTED**.
+- Conditional Unreal intermediate reset: **SOURCE-IMPLEMENTED**.
+- Bounded compiler-failure clean retry retained: **SOURCE-IMPLEMENTED**.
+- PG-184/PG-185 regression guards: **SOURCE-IMPLEMENTED**.
+- Exact-head hosted static validation: **PENDING**.
+- Selected machine validation before production unfreeze: **PENDING**.
+- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
+
+## 2026-09-28 - CI/Warehouse root-repair freeze
+
+- Production train execution: **PAUSED BY OWNER**.
+- Repeated Warehouse PR-synchronize execution: **REMOVED IN REPAIR SOURCE**.
+- ZIP structural validation before receipt reuse: **SOURCE-IMPLEMENTED**.
+- Corrupt AmbientCG/KayKit cached ZIP self-repair: **SOURCE-IMPLEMENTED**.
+- Critical-gap metadata-only ZIP inventory (no repeated extraction): **SOURCE-IMPLEMENTED**.
+- Duplicate receipt suppression + exact blocker details: **SOURCE-IMPLEMENTED**.
+- PG-184 regression guard: **SOURCE-IMPLEMENTED**.
+- Exact-head static/machine validation: **PENDING**.
+- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
+
+## 2026-09-27 - Runner single-path proof
+
+- Legacy service path absent: **MACHINE-PROVEN** on owner Windows state and Unreal #1021.
+- Watchdog interactive ownership: **MACHINE-PROVEN** (`IDEAPAD320\user`, session 1, PID 6192).
+- Broker listening / worker ownership / GitHub:443: **MACHINE-PROVEN** by Unreal #1021 runner-health lines.
+- Permanent service guard + continuous watchdog enforcement: **SOURCE-IMPLEMENTED**, exact-head Pre-Unreal rerun pending after PG-183 false-red correction.
+- Game/runtime maturity: **UNCHANGED**. #1021 skipped C++ build/import/PIE/package on governance fast path.
+
+## 2026-09-27 - Runner single-path ownership hardening
+
+- Legacy Windows service execution path removed by service guard: **SOURCE-IMPLEMENTED**.
+- Service state target: **ABSENT**, with **Stopped + Disabled** accepted only as transient pending-deletion state.
+- Continuous watchdog re-enforcement against recreated service mode: **SOURCE-IMPLEMENTED**.
+- Forbidden service identities (NETWORK SERVICE / LOCAL SERVICE / SYSTEM): **SOURCE-IMPLEMENTED**.
+- Exact-head static guard PG-145B updated: **SOURCE-IMPLEMENTED / CI PENDING**.
+- Physical Windows runner repair: **PENDING OWNER-SIDE ELEVATED INSTALLER RUN**.
+- Current proof: **ROOT-FIX SOURCE-IMPLEMENTED** only; no new COMPILE/PIE/DEVICE/VISUAL/PERFORMANCE acceptance.
+
+## 2026-09-27 - Permanent runner ownership hardening
+
+- Legacy service elimination guard: **SOURCE-IMPLEMENTED**.
+- Watchdog continuous anti-service self-heal: **SOURCE-IMPLEMENTED**.
+- Installer purge-before-watchdog behavior: **SOURCE-IMPLEMENTED**.
+- Health verifier absent-or-stopped-disabled service contract: **SOURCE-IMPLEMENTED**.
+- Static PG-183 regression guard: **SOURCE-IMPLEMENTED**.
+- Physical Windows runner repaired with new installer: **PENDING OWNER-SIDE ELEVATED APPLICATION**.
+- Current maturity: **SOURCE-IMPLEMENTED / exact-head static validation pending**.
+
+## 2026-09-27 - Runner ownership governance visibility
+
+- Interactive-user watchdog ownership hard invariant: **SOURCE-IMPLEMENTED**.
+- Legacy `actions.runner.*` service Stopped/Manual rule: **SOURCE-IMPLEMENTED**.
+- Forbidden NETWORK SERVICE/LOCAL SERVICE/SYSTEM identities: **SOURCE-IMPLEMENTED**.
+- README / Governor guide / onboarding visibility: **SOURCE-IMPLEMENTED**.
+- Live physical runner state: **NOT RE-VERIFIED BY THIS GOVERNANCE CHANGE**.
+- Current maturity: **SOURCE-IMPLEMENTED / exact-head static validation pending**.
+
+## 2026-09-27 - Developer handoff entry integrity
+
+- Develop-side canonical onboarding path: **SOURCE-IMPLEMENTED**.
+- Off-develop branch warning in one-command onboarding: **SOURCE-IMPLEMENTED**.
+- Stale copied next-drop prose removed from Governor guide: **SOURCE-IMPLEMENTED**.
+- GitHub default-branch `main` landing redirect: **PENDING SEPARATE MAIN-BRANCH DOC CHANGE**.
+- Current maturity: **SOURCE-IMPLEMENTED / static validation pending**. No gameplay or acceptance status changes.
+
 ## 2026-09-27 - Provider-resolution train V3
 
 - 20 source-resolution cars cover characters, animation, fauna, creatures, architecture, vegetation, PBR, audio/music/voice, VFX, UI, terrain, enemies, battle support, regional kits and manual marketplace review.

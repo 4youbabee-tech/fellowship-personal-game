@@ -36,8 +36,15 @@ foreach ($pack in $manifest.packs) {
     $licensePath = Join-Path $destDir ($id + "_LICENSE.txt")
 
     try {
+        if ((Test-Path -LiteralPath $archivePath -PathType Leaf) -and -not (Test-WarehouseZipReadable -Path $archivePath)) {
+            Write-Warning ("KAYKIT_WAREHOUSE_REPAIR removing corrupt archive asset_id=" + $id + " path=" + $archivePath)
+            Remove-Item -LiteralPath $archivePath -Force -ErrorAction SilentlyContinue
+        }
         if (-not (Test-Path -LiteralPath $archivePath -PathType Leaf)) {
             Invoke-WarehouseDownload -Uri ([string]$pack.archive_url) -Headers $headers -OutFile $archivePath | Out-Null
+        }
+        if (-not (Test-WarehouseZipReadable -Path $archivePath)) {
+            throw "downloaded ZIP failed structural validation: $archivePath"
         }
 
         $archiveFile = Get-Item -LiteralPath $archivePath

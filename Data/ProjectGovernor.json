@@ -78,7 +78,8 @@
         "Scripts/project_governor.py validates the authority in CI",
         "Source/ShireJourney/README.md and CURRENT_PROJECT_STATE provide lost-chat/developer handoff entry points",
         "Project Guardian and checkpoint history preserve regression and milestone memory",
-        "request_capture_contract + external_review_findings preserve accepted owner direction and verified external advice as durable repository memory."
+        "request_capture_contract + external_review_findings preserve accepted owner direction and verified external advice as durable repository memory.",
+        "Default GitHub landing on main must visibly redirect a zero-context programmer to the develop onboarding path and the single ProjectGovernor authority."
       ],
       "missing_work": [
         "Operational: every future meaningful user request must continue to be recorded in the Governor",
@@ -88,7 +89,8 @@
         "New programmer can identify all open high-priority requirements without reading chat",
         "Each implemented requirement links to code/data/checkpoint evidence",
         "Unfinished user requests remain visible",
-        "CI rejects missing core memory artifacts"
+        "CI rejects missing core memory artifacts",
+        "A new programmer landing on the repository default branch can discover develop, the Governor and the current handoff without chat history or tribal knowledge."
       ],
       "dependencies": [],
       "checkpoint": "CP30B",
@@ -111,7 +113,8 @@
         "CP-W00-152 physically migrates all 62 runtime .h/.cpp entries to Public/<Domain> and Private/<Domain> according to Data/SourceArchitecturePlan.json.",
         "ShireJourney.Build.cs removes the whole-module root export and exposes only explicit Public domain directories, preserving dependent editor QA includes without private/root leakage.",
         "Pre-Unreal PG-154 rejects flat root runtime files, CURRENT_FLAT entries and reintroduction of PublicIncludePaths.Add(ModuleDirectory).",
-        "CP-W00-154 exact head ab7889d6b2dafc059220a0c0a3dc63decfe6b72e passed Pre-Unreal #788, Unreal Build #623 and Warehouse #204; the Public/Private runtime-source migration is machine-accepted."
+        "CP-W00-154 exact head ab7889d6b2dafc059220a0c0a3dc63decfe6b72e passed Pre-Unreal #788, Unreal Build #623 and Warehouse #204; the Public/Private runtime-source migration is machine-accepted.",
+        "README + new_developer_onboarding form the single repository entry path; main is release/default landing only and must route development work to develop."
       ],
       "missing_work": [],
       "acceptance_criteria": [
@@ -2853,6 +2856,48 @@
         "REQ-STABILITY-003",
         "REQ-WAREHOUSE-001"
       ]
+    },
+    {
+      "id": "REQ-GITHUB-001",
+      "title": "Use GitHub Pro capabilities without weakening project governance or low-spec production discipline",
+      "category": "DeveloperPlatform",
+      "priority": "HIGH",
+      "status": "PARTIAL",
+      "origin": "Owner directly confirmed the active personal GitHub Pro plan in GitHub Billing UI and requested that all materially useful Pro capabilities be exploited for Shire Journey.",
+      "intent": "Exploit GitHub Pro for stronger private-repository controls, additional hosted CI reserve, development tooling and support while keeping the UE4.27 Windows build lane self-hosted, avoiding duplicate authorities, and preventing paid-feature usage from creating cost or workflow regressions.",
+      "implementation_refs": [
+        "Personal GitHub account 4youbabee-tech owns the private fellowship-personal-game repository.",
+        "GitHub Pro published allowance: 3,000 GitHub-hosted Actions minutes/month for private repositories; self-hosted runner execution remains free and does not consume that allowance.",
+        "GitHub Pro published allowance: 180 Codespaces core-hours/month and 20 GB-month Codespaces storage for personal accounts.",
+        "GitHub Pro published allowance: 2 GB GitHub Packages storage and 10 GB/month Packages data transfer; current GitHub Actions artifact storage allowance is 1 GB.",
+        "GitHub Pro enables advanced private-repository controls including protected branches, required/multiple pull-request reviewers, code owners, auto-linked references, private-repository Pages/Wikis availability, and repository insights graphs.",
+        "GitHub Pro includes GitHub Support via email.",
+        "GitHub Pro does not include Copilot Pro and does not increase the published Git LFS 10 GB storage / 10 GB bandwidth allowance versus personal Free.",
+        "Owner-supplied GitHub Billing UI visibly confirms: Current GitHub base plan = GitHub Pro, $4 per month, payment history status = Success, and receipt description = GitHub Pro - month. No payment-card, email, or transaction identifiers are stored in project governance.",
+        "GitHub Pro official plan documentation confirms private-repository advanced tools including protected branches, required/multiple pull-request reviewers, Code Owners, GitHub Pages, Wikis, auto-linked references, and repository insights.",
+        "GitHub Pro official ruleset documentation confirms branch/tag rulesets are available for private repositories; push rulesets for private/internal repositories require GitHub Team and are not assumed here.",
+        "Private-repository code scanning/secret scanning advanced-security features are not included with personal GitHub Pro alone; no Code Security/Secret Protection entitlement is assumed."
+      ],
+      "missing_work": [
+        "Enable protected-branch rules for develop and main after the current runtime train is safely integrated: block force-push/deletion and require appropriate CI status checks without requiring a second human reviewer while the project has a single maintainer.",
+        "Set billing budgets/alerts so optional hosted Actions, Codespaces and Packages cannot create accidental overage.",
+        "Add CODEOWNERS enforcement only when a second trusted maintainer/reviewer exists; do not create a self-review deadlock.",
+        "Use Codespaces only for lightweight repository work (JSON/docs/Python/static review), not UE4.27 Windows compilation or warehouse payload work.",
+        "Use Packages only for small versioned developer tooling/build metadata when it clearly replaces ad-hoc distribution; do not upload the multi-GB asset warehouse into the 2 GB Packages allowance."
+      ],
+      "acceptance_criteria": [
+        "develop and main receive non-destructive branch protection appropriate to the single-maintainer workflow.",
+        "UE4.27 C++ build/import/runtime/package validation remains on the supervised self-hosted Windows runner unless a separately proven better lane exists.",
+        "GitHub-hosted Actions quota is treated as a reserve for isolated lightweight jobs, not as justification to move expensive Unreal work off the proven runner.",
+        "Codespaces/Packages usage is opt-in, budgeted and limited to workloads that materially benefit the project.",
+        "Pages/Wiki do not become a second project authority; ProjectGovernor remains the sole management authority and private/copyright-sensitive project material is not published accidentally.",
+        "No Pro feature may weaken exact-head validation, asset provenance, async loading, pooling, low-spec performance gates or canon controls."
+      ],
+      "dependencies": [
+        "REQ-MEM-001",
+        "REQ-EXEC-002",
+        "REQ-STABILITY-003"
+      ]
     }
   ],
   "hard_invariants": [
@@ -2929,6 +2974,11 @@
     {
       "id": "INV-BRANCH-HANDOFF",
       "description": "develop is the sole canonical development/programmer-handoff branch and main is stable/release. Temporary branches are short-lived and removed after merge; stale diverged branches are never bulk-merged as a substitute for selective salvage.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-RUNNER-OWNERSHIP",
+      "description": "The UE4.27 self-hosted GitHub runner must execute only under the proven interactive Windows user through the ShireJourney-GitHubRunner-Watchdog Scheduled Task. Legacy actions.runner.* Windows service registration is not an alternate execution path: it must be absent, or at minimum Stopped+Disabled while pending deletion. NETWORK SERVICE, LOCAL SERVICE and SYSTEM are forbidden. The watchdog continuously removes service-mode ownership and a worker/AI session may not change runner topology without explicit owner authorization.",
       "auto_override": false
     }
   ],
@@ -3823,6 +3873,171 @@
         "Docs/CI_ARCHITECTURE_REASSESSMENT_2026-09-26.md",
         "Epic UBT adaptive Git working-set guidance and GitHub Actions concurrency guidance"
       ]
+    },
+    {
+      "id": "DEC-048",
+      "title": "Use GitHub Pro as a private-repository safety and tooling multiplier without re-architecting the proven Unreal lane",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-GITHUB-001",
+        "REQ-STABILITY-003",
+        "REQ-EXEC-002"
+      ],
+      "resolution": "Adopt GitHub Pro benefits selectively where they materially improve Shire Journey: prioritize private branch protection/status-check enforcement and repository insights; keep full UE4.27 validation on the free self-hosted Windows runner; reserve the 3,000 hosted Actions minutes for lightweight isolated automation if hosted reliability is proven; use Codespaces only for non-engine repository work; use Packages only for small tooling; keep Pages/Wiki non-authoritative and unpublished for private project material unless the owner explicitly changes that policy.",
+      "implementation_contract": [
+        "Do not move Unreal Build Validation to GitHub-hosted runners merely to consume the Pro minute allowance.",
+        "When branch protection is configured, develop/main must block force-push and deletion and should require the appropriate exact-head CI checks. Human review is not mandatory while there is only one maintainer.",
+        "Do not require CODEOWNER approval from the PR author; enable reviewer enforcement only after a second trusted maintainer exists.",
+        "Keep hosted Actions/Codespaces/Packages behind budgets and alerts; no silent paid overage.",
+        "Repository Insights may be used for CI/commit/contributor trend review without changing production authority.",
+        "GitHub Pages and Wiki must not duplicate ProjectGovernor/CURRENT_PROJECT_STATE or expose private/copyright-sensitive game material.",
+        "GitHub Pro is separate from GitHub Copilot Pro; no Copilot entitlement is assumed from this subscription.",
+        "Do not assume GitHub Code Security, private secret scanning, or private dependency review from personal Pro; those require separate eligible security licensing/plans.",
+        "Prefer a branch/tag ruleset or protected-branch policy for develop/main once repository-settings mutation is available; do not enable private push-ruleset assumptions that require Team."
+      ],
+      "rationale": "The project is a private personal repository with heavy UE4.27 Windows validation and a supervised self-hosted runner. Pro's strongest immediate value is private-repository governance and additional optional hosted/tooling capacity, not replacing the engine/device lane. The policy therefore uses the new capabilities without reintroducing CI cost, merge deadlocks or a second source of truth.",
+      "evidence_boundary": "OWNER UI-CONFIRMED GITHUB PRO + OFFICIAL GITHUB PLAN/RULESET DOCUMENTATION + CONNECTED-ACCOUNT/REPOSITORY FACTS. Subscription status is now directly confirmed by the owner's GitHub Billing UI. No payment identifiers are stored. No runtime/PIE/device/visual/performance claim is created.",
+      "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-049",
+      "title": "Make the GitHub default-branch landing a zero-context redirect to the live develop Governor path",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-MEM-001",
+        "REQ-ORG-001",
+        "REQ-EXEC-002"
+      ],
+      "resolution": "Keep main as stable/release and default-branch landing because repository scheduling/release behavior already depends on it, but make its README an explicit developer redirect to develop. On develop, README, PROJECT_GOVERNOR and the onboarding script must all identify Data/ProjectGovernor.json as the sole authority and must derive current work from live Governor fields rather than copied milestone prose.",
+      "implementation_contract": [
+        "A person opening the repository on GitHub with no prior context must see, above the fold on main, that active development lives on develop.",
+        "The main landing README must point to the develop README/Governor/current-state path and tell a local clone to switch to develop before editing.",
+        "Develop README remains the canonical detailed entry page and the onboarding script remains a reader, never a second manager.",
+        "Docs/PROJECT_GOVERNOR.md must not hard-code a stale next production drop; current execution order comes from ProjectGovernor.execution_control and current_focus.",
+        "The onboarding script must warn when the checked-out branch is not the canonical development branch.",
+        "GitHub remains authority for volatile PR/branch/check state; ProjectGovernor remains authority for durable direction and proof boundaries."
+      ],
+      "evidence_boundary": "ADMIN_GOVERNANCE / HANDOFF ONLY. This does not change runtime, content, PIE, device, visual, pacing or performance acceptance.",
+      "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-050",
+      "title": "Lock the UE4 self-hosted runner to interactive-user watchdog ownership",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004",
+        "REQ-MEM-001"
+      ],
+      "resolution": "The runner is not a Windows-service lane. Service-mode ownership is eliminated: actions.runner.* should be absent, or only Stopped+Disabled while pending deletion. UE4-27-Windows runs only under the proven interactive Windows user through ShireJourney-GitHubRunner-Watchdog. NETWORK SERVICE, LOCAL SERVICE and SYSTEM execution are forbidden.",
+      "implementation_contract": [
+        "Never enable/start/reinstall actions.runner.* as an active Windows service.",
+        "install_runner_watchdog.ps1 must disable, stop and delete the legacy service registration before starting the watchdog.",
+        "runner_service_guard.ps1 must kill forbidden service-owned Runner.Listener/Runner.Worker processes and remove any recreated actions.runner.* service.",
+        "The watchdog Scheduled Task uses LogonType Interactive under the proven Windows user and continuously invokes the service guard.",
+        "verify_runner_session.ps1 must fail before heavy work unless the service is absent or Stopped+Disabled and the listener/worker belong to the interactive session.",
+        "A Work/AI session may inspect runner health but may not change runner ownership/topology without explicit owner authorization."
+      ],
+      "evidence": [
+        "Scripts/install_runner_watchdog.ps1",
+        "Scripts/verify_runner_session.ps1",
+        "Scripts/pre_unreal_validate.py PG-145/PG-145B",
+        "KNOWN/KF runner-broker history in ProjectGovernor and PROJECT_GUARDIAN",
+        "Scripts/runner_service_guard.ps1"
+      ],
+      "evidence_boundary": "INFRASTRUCTURE OWNERSHIP POLICY + EXISTING STATIC GUARDS. This decision does not itself prove the current physical Windows service/task state; live runner health must be checked on the machine.",
+      "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-051",
+      "title": "Remove the second runner execution path instead of repeatedly repairing it",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004",
+        "REQ-MEM-001"
+      ],
+      "resolution": "Root-cause fix: the legacy Windows service registration is removed rather than kept Manual. The interactive watchdog owns the only supported runner path and continuously deletes any recreated service-mode path. This converts runner ownership from a procedural reminder into a self-enforcing machine invariant.",
+      "implementation_contract": [
+        "One-time installer disables/stops/deletes actions.runner.* and installs the service guard beside the watchdog.",
+        "The watchdog runs the service guard at boot and on every supervision loop.",
+        "Service-owned Listener/Worker processes under NETWORK SERVICE/LOCAL SERVICE/SYSTEM are terminated.",
+        "Health validation accepts only service absent or stopped-disabled transitional state plus one interactive-user listener/worker topology.",
+        "Pre-Unreal PG-145B statically guards the service guard, installer, watchdog and verifier contracts."
+      ],
+      "evidence": [
+        "Owner screenshot: actions.runner.* Running/Manual and Runner.Listener owner NT AUTHORITY\\NETWORK SERVICE while watchdog was also Running.",
+        "Unreal #1000 exact-head job failed at Verify runner session health with RUNNER_HEALTH_FAIL service-identity identity=NT AUTHORITY\\NETWORK SERVICE.",
+        "Scripts/runner_service_guard.ps1",
+        "Scripts/install_runner_watchdog.ps1",
+        "Scripts/runner_watchdog.ps1",
+        "Scripts/verify_runner_session.ps1",
+        "Scripts/pre_unreal_validate.py PG-145B",
+        "Owner-side machine proof: legacy service absent, watchdog Running/Interactive, Listener PID 6192 owned by IDEAPAD320\\user.",
+        "Unreal #1021 exact head b22a5da34ba71ba583c8b5b2a026085a2e11feda: RUNNER_HEALTH_SERVICE_PASS legacyService=absent and RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=1 listenerPid=6192 workerCount=1."
+      ],
+      "evidence_boundary": "ROOT-CAUSE RUNNER TOPOLOGY MACHINE-PROVEN on Unreal #1021 exact head. This is infrastructure proof only; the governance fast path skipped C++ build/import/PIE/package and creates no gameplay/device/visual/performance acceptance.",
+      "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-052",
+      "title": "Freeze production trains until CI and warehouse repetition defects are removed",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004",
+        "REQ-MEM-001"
+      ],
+      "resolution": "Stop active production PR churn and repair CI/warehouse architecture before resuming P1C01 production. Repeated warehouse PR runs and full archive extraction are treated as infrastructure defects, not as acceptable validation cost.",
+      "implementation_contract": [
+        "No new production/runtime PR is opened while the repair branch is being hardened.",
+        "Warehouse Stage must not run on pull_request synchronize; it runs only after warehouse-impacting changes land on develop or by explicit manual dispatch.",
+        "Critical-gap intake QC inventories ZIP metadata without extracting every archive on every run.",
+        "Receipt reuse rejects structurally corrupt ZIPs; provider staging removes and redownloads corrupt cached archives before writing/reusing receipts.",
+        "Duplicate receipt rows are deduplicated before hashing/classification.",
+        "Blocked warehouse items print exact provider/asset/path/reason immediately.",
+        "Existing closed production branches remain preserved for later salvage; no completed runtime work is discarded."
+      ],
+      "evidence": [
+        "Warehouse Stage #269/#270 repeated ~12-13 minute failures on PR #125.",
+        "Warehouse #270 blockers: duplicate AmbientCG Plaster007 corrupt ZIP central directory and KayKit extraction path failure.",
+        "Scripts/warehouse_network.ps1",
+        "Scripts/run_warehouse_critical_gap_preparation.ps1",
+        "Scripts/stage_ambientcg_warehouse.ps1",
+        "Scripts/stage_kaykit_github_warehouse.ps1",
+        "Scripts/pre_unreal_validate.py PG-184"
+      ],
+      "evidence_boundary": "INFRASTRUCTURE/CI ROOT-REPAIR SOURCE CHANGES ONLY. No new compile/PIE/device/visual/performance acceptance is created.",
+      "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-053",
+      "title": "Split CI by proof type and preserve expensive build state unless invalidated",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004",
+        "REQ-GITHUB-001"
+      ],
+      "resolution": "Use three distinct validation lanes: GitHub-hosted Pre-Unreal for static/policy proof, self-hosted Unreal only for engine/runtime deltas, and self-hosted Warehouse only after warehouse-impacting changes land on develop or explicit manual dispatch. Preserve Unreal intermediates by default and clean them only for build-rule/project-descriptor changes or bounded compile-recovery retry.",
+      "implementation_contract": [
+        "Pre-Unreal runs on windows-latest and never consumes the supervised UE4 self-hosted runner.",
+        "Warehouse Stage has no pull_request trigger and classifies landed develop deltas so only affected providers/phases run.",
+        "Warehouse-only scripts/data are excluded from Unreal Build Validation triggers.",
+        "Unreal exact-head classification still fails safe to deeper proof when ancestry or delta classification is uncertain.",
+        "Reset project build intermediates only when SHIRE_RESET_INTERMEDIATES=true for Build.cs, Target.cs or project-descriptor invalidation; ordinary source/runtime changes keep UBT incremental state.",
+        "ci_build_unreal.cmd retains its one-time compiler-pressure recovery that clears intermediates only after a matching real compiler failure."
+      ],
+      "evidence": [
+        ".github/workflows/pre-unreal-validation.yml",
+        ".github/workflows/unreal-build-validation.yml",
+        ".github/workflows/warehouse-stage.yml",
+        "Scripts/classify_unreal_validation.ps1",
+        "Scripts/classify_warehouse_validation.ps1",
+        "Scripts/pre_unreal_validate.py PG-184/PG-185"
+      ],
+      "evidence_boundary": "CI ARCHITECTURE SOURCE-IMPLEMENTED. Exact-head hosted static validation and a selected machine validation are still required before lifting the production freeze.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
@@ -4728,7 +4943,8 @@
       "acceptance_verifier": "acceptance lane may package/resume only when contract requires it"
     },
     "live_transport_state_source": "GitHub live repository state",
-    "volatile_metadata_policy": "current PR/branch values are informational only and are not Governor validation authority"
+    "volatile_metadata_policy": "current PR/branch values are informational only and are not Governor validation authority",
+    "default_branch_landing_rule": "GitHub default branch main is a stable/release landing surface, not the development truth. Its README must route all development onboarding to develop."
   },
   "side_branch_audit": {
     "date": "2026-09-21",
@@ -5657,7 +5873,26 @@
       "Begin the next substantive P1C01 character presentation / skeletal-animation production wave after the bounded asset batch is selected.",
       "Continue Living Shire motion/fauna plus quest/audio polish without reopening unrelated CI/root repair.",
       "Run target-device DX11 720p Low-Medium profiling before any density or expensive presentation expansion; Gate 6/7 remains required before broad Part II/III runtime production."
-    ]
+    ],
+    "runner_infrastructure_guard": "HARD: service-mode runner ownership is eliminated, not merely discouraged. actions.runner.* must be absent or Stopped+Disabled pending deletion. UE4-27-Windows runs only via the interactive-user watchdog; NETWORK SERVICE/LOCAL SERVICE/SYSTEM are forbidden.",
+    "production_freeze": {
+      "status": "ACTIVE",
+      "reason": "Owner requested production work stop until repeated runner/warehouse/CI waste is fixed at the root.",
+      "allowed_work": [
+        "CI classifier and workflow hardening",
+        "warehouse fail-fast/reuse/cache/integrity repair",
+        "runner governance hardening",
+        "developer onboarding/governor hardening",
+        "static validation of the repair branch"
+      ],
+      "forbidden_until_release": [
+        "new gameplay feature train",
+        "new chapter",
+        "new warehouse saturation rerun without changed inputs",
+        "repeated full Unreal validation caused only by policy/docs churn"
+      ],
+      "release_condition": "Repair branch must pass exact-head GitHub-hosted Pre-Unreal validation, then one deliberately selected self-hosted validation proving runner/warehouse/Unreal routing without repeated redundant work."
+    }
   },
   "development_mode_contract": {
     "schema_version": 1,
@@ -6136,7 +6371,22 @@
       "Docs/PROJECT_GUARDIAN.md"
     ],
     "rule": "A new human programmer or AI session enters through README/onboarding script, then follows ProjectGovernor. Chat history and stale PR text are never required to discover current direction.",
-    "live_state_rule": "GitHub owns current branch/PR/check status; do not duplicate volatile transport metadata as fail-closed governance."
+    "live_state_rule": "GitHub owns current branch/PR/check status; do not duplicate volatile transport metadata as fail-closed governance.",
+    "github_default_branch": "main",
+    "canonical_development_branch": "develop",
+    "default_branch_contract": "main is the stable/release and GitHub default landing only. Its README must immediately redirect new programmers/AI sessions to develop before they infer current project state or edit code.",
+    "zero_context_path": [
+      "Open repository default landing (main README)",
+      "Switch to develop",
+      "Read develop README.md",
+      "Read Docs/PROJECT_GOVERNOR.md",
+      "Read Data/ProjectGovernor.json",
+      "Read Docs/CURRENT_PROJECT_STATE.md",
+      "Inspect live develop HEAD, PRs and GitHub Actions",
+      "Run Scripts/new_developer_onboarding.ps1 when working locally"
+    ],
+    "stale_copy_rule": "No README or guide may hard-code a copied 'next drop' as execution authority. Current execution order must be read from ProjectGovernor.current_focus + execution_control.",
+    "runner_critical_rule": "Runner service mode is forbidden. actions.runner.* should not exist; if Windows still exposes a pending-deletion service it must be Stopped+Disabled. The only supported runner is the interactive-user ShireJourney-GitHubRunner-Watchdog, which continuously removes any recreated service mode. Do not alter runner topology without explicit owner authorization."
   },
   "handoff_metadata_policy": {
     "evidence_authority": "session_handoff.validation_snapshot",
@@ -6221,5 +6471,134 @@
     ],
     "verification": "Automated compile and headless checks remain useful but cannot establish human gameplay quality. Seek real PIE and device evidence through available project workflows or developer/operator reports; do not assign a playtest obligation to the owner.",
     "evidence_boundary": "The supplied prose simulation is a proposal, not an actual observed playthrough. LivingWorldDirector already ticks every 0.35 seconds; this patch reduces maintenance frequency and duplicate NPC player lookup only."
+  },
+  "github_pro_capability_policy_2026_09_27": {
+    "account_type": "PERSONAL",
+    "account_login": "4youbabee-tech",
+    "repository": "4youbabee-tech/fellowship-personal-game",
+    "repository_visibility": "private",
+    "subscription_evidence_status": "OWNER_GITHUB_BILLING_UI_CONFIRMED_GITHUB_PRO_ACTIVE_2026_09_27",
+    "published_pro_capabilities": {
+      "github_actions_private_minutes_per_month": 3000,
+      "github_actions_artifact_storage_gb": 1,
+      "codespaces_core_hours_per_month": 180,
+      "codespaces_storage_gb_month": 20,
+      "packages_storage_gb": 2,
+      "packages_data_transfer_gb_per_month": 10,
+      "private_repo_advanced_tools": [
+        "protected branches",
+        "required pull request reviewers",
+        "multiple pull request reviewers",
+        "code owners",
+        "auto-linked references",
+        "GitHub Pages availability",
+        "Wikis",
+        "repository insights graphs",
+        "repository branch/tag rulesets"
+      ],
+      "support": "GitHub Support via email",
+      "not_included_or_not_upgraded": [
+        "GitHub Copilot Pro is a separate product",
+        "Git LFS published allowance remains 10 GB storage and 10 GB bandwidth for personal Pro",
+        "Private-repository GitHub Code Security/code scanning is not included with personal Pro alone",
+        "Private-repository Secret Protection/secret scanning is not included with personal Pro alone",
+        "Private push rulesets are not assumed; GitHub documents them for Team on private/internal repositories"
+      ]
+    },
+    "shire_journey_usage_policy": {
+      "immediate_priority": [
+        "protect develop/main against destructive pushes/deletion and require suitable CI checks when repository settings access is available",
+        "use repository insights for engineering/CI trend inspection",
+        "retain self-hosted Windows UE4.27 validation because self-hosted Actions do not consume hosted-minute allowance",
+        "run lightweight Pre-Unreal static/policy validation on GitHub-hosted Windows so the self-hosted UE4 runner remains free for engine/runtime work"
+      ],
+      "conditional_use": [
+        "use hosted Actions reserve only for lightweight isolated jobs after reliability is proven",
+        "use Codespaces for docs/data/Python/static repository work only",
+        "use Packages for small versioned tooling or metadata only",
+        "enable CODEOWNERS review enforcement only after a second trusted reviewer exists"
+      ],
+      "intentionally_not_default": [
+        "do not publish private project material through GitHub Pages",
+        "do not use Wiki as a competing project authority",
+        "do not move the multi-GB asset warehouse into GitHub Packages",
+        "do not assume Copilot Pro"
+      ],
+      "cost_control": "Budgets and 90/100 percent usage alerts should be configured before any paid-overage-capable optional service is relied upon."
+    },
+    "subscription_confirmation": {
+      "status": "CONFIRMED",
+      "source": "Owner-supplied GitHub Billing UI screenshots",
+      "confirmed_facts": [
+        "Current GitHub base plan is GitHub Pro",
+        "Monthly price shown is $4",
+        "Payment history shows Success",
+        "Receipt description shows GitHub Pro - month"
+      ],
+      "privacy_note": "Payment-card digits, email address, transaction IDs and other payment identifiers are intentionally not copied into repository governance."
+    }
+  },
+  "runner_execution_contract": {
+    "status": "ACTIVE_HARD_INVARIANT",
+    "authority": "Data/ProjectGovernor.json",
+    "runner_name": "UE4-27-Windows",
+    "required_mode": "SUPERVISED_INTERACTIVE_USER_WATCHDOG",
+    "watchdog_task": "ShireJourney-GitHubRunner-Watchdog",
+    "legacy_service_pattern": "actions.runner.*",
+    "legacy_service_required_state": {
+      "preferred": "Absent (service registration deleted)",
+      "tolerated_transitional_state": "Stopped + Disabled only while Windows still holds a pending deletion handle"
+    },
+    "forbidden_identities": [
+      "NT AUTHORITY\\NETWORK SERVICE",
+      "NT AUTHORITY\\LOCAL SERVICE",
+      "NT AUTHORITY\\SYSTEM"
+    ],
+    "required_identity_rule": "Runner.Listener and Runner.Worker must belong to the same proven interactive Windows user/session as the job, with a live Explorer desktop session.",
+    "prohibited_actions_without_owner_authorization": [
+      "Do not run config.cmd with --runasservice or reinstall the runner as a Windows service.",
+      "Do not Start-Service, enable, or recreate actions.runner.*.",
+      "Do not switch the runner account to NETWORK SERVICE, LOCAL SERVICE, SYSTEM, or any non-interactive service identity.",
+      "Do not replace the watchdog Scheduled Task with service-mode execution.",
+      "Do not kill/restart Runner.Listener while Runner.Worker is active except through the repository watchdog's bounded recovery contract."
+    ],
+    "approved_recovery_path": [
+      "Read Scripts/install_runner_watchdog.ps1, Scripts/runner_service_guard.ps1 and Scripts/verify_runner_session.ps1.",
+      "Run install_runner_watchdog.ps1 once from an elevated interactive-user PowerShell; it disables/stops and deletes actions.runner.* service registration, kills forbidden service-owned runner processes, installs the permanent guard, and starts the interactive watchdog.",
+      "Use the interactive-user ShireJourney-GitHubRunner-Watchdog Scheduled Task as the only runner supervisor.",
+      "The watchdog invokes runner_service_guard.ps1 continuously so any recreated service-mode runner is stopped/deleted before it can own the UE4 lane.",
+      "Run repository runner-health verification before heavy Unreal/Warehouse work.",
+      "If topology is wrong, fail closed and report exact identity/service/task state; never improvise service mode."
+    ],
+    "rationale": "The recurring failure was architectural, not a one-off: keeping a registered Manual Windows service left a second runnable ownership path that another Work/admin action could start. NETWORK SERVICE then owned Runner.Listener and broke UE4 validation. The permanent design removes that second execution path and continuously polices its return.",
+    "permanent_self_heal": {
+      "guard_script": "Scripts/runner_service_guard.ps1",
+      "watchdog_behavior": "Detect any actions.runner.* service or service-owned Runner.Listener/Runner.Worker and purge it before continuing.",
+      "poll_seconds": 15,
+      "static_guard": "PG-183"
+    },
+    "machine_proof_2026_09_27": {
+      "status": "RUNNER_TOPOLOGY_MACHINE_PROVEN",
+      "owner_side_observation": [
+        "Legacy actions.runner.* Windows service was deleted successfully and no longer appeared in Get-Service output.",
+        "Scheduled task ShireJourney-GitHubRunner-Watchdog reported State=Running, UserId=user, LogonType=Interactive.",
+        "Runner.Listener.exe PID 6192 was owned by IDEAPAD320\\user.",
+        "Watchdog log reported SHIRE_RUNNER_WATCHDOG_BOOT identity=IDEAPAD320\\user and SHIRE_RUNNER_WATCHDOG_ONLINE pid=6192 brokerListening=true."
+      ],
+      "github_exact_head_evidence": {
+        "pr": 126,
+        "sha": "b22a5da34ba71ba583c8b5b2a026085a2e11feda",
+        "unreal_run": 1021,
+        "health_lines": [
+          "RUNNER_HEALTH_IDENTITY_PASS identity=IDEAPAD320\\user sessionId=1 runnerName=UE4-27-Windows",
+          "RUNNER_HEALTH_SERVICE_PASS legacyService=absent",
+          "RUNNER_HEALTH_WATCHDOG_PASS task=ShireJourney-GitHubRunner-Watchdog state=Running owner=user",
+          "RUNNER_HEALTH_PROCESS_PASS listenerPid=6192 workers=1 sessionId=1",
+          "RUNNER_HEALTH_NETWORK_PASS github443=true attemptsUsed=1",
+          "RUNNER_HEALTH_PASS identity=IDEAPAD320\\user sessionId=1 listenerPid=6192 workerCount=1"
+        ]
+      },
+      "proof_boundary": "This proves runner ownership/topology and health on the machine for this exact run. Unreal #1021 took the governance/docs-only fast path, so it does not prove C++ compile, PIE, packaged runtime, target-device gameplay, visual or performance acceptance."
+    }
   }
 }

@@ -22,8 +22,9 @@ function Test-ParentWholeWorkflowGreen([string]$ParentSha) {
 }
 function Test-ParentCoreUnrealGreen([string]$ParentSha) { return $true }
 function Test-TreeEquivalentCoreProof([string]$GitExe, [string]$ParentSha) { return [bool]$script:Case.TreeProof }
-function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = 'none') {
+function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = 'none', [bool]$ResetIntermediates = $false) {
     $script:ActualMode = $Mode
+    $script:ActualReset = $ResetIntermediates
 }
 '@
 $marker = 'Set-Location $env:GITHUB_WORKSPACE'
@@ -34,7 +35,8 @@ $cases = @(
     @{Name='handoff'; Paths=@('Scripts/governor_handoff.py','Scripts/test_governor_handoff.py'); Proof=$true; Mode='inherit'; TreeProof=$false},
     @{Name='no-proof'; Paths=@('README.md','Scripts/pre_unreal_validate.py'); Proof=$false; Mode='full'; TreeProof=$false},
     @{Name='mixed-story'; Paths=@('README.md','Scripts/pre_unreal_validate.py','Source/ShireJourney/ShireQuestSubsystem.cpp'); Proof=$true; Mode='core'; TreeProof=$false},
-    @{Name='config'; Paths=@('README.md','Config/DefaultGame.ini'); Proof=$true; Mode='full'; TreeProof=$false},
+    @{Name='config'; Paths=@('README.md','Config/DefaultGame.ini'); Proof=$true; Mode='full'; Reset=$false; TreeProof=$false},
+    @{Name='build-rules'; Paths=@('Source/ShireJourney.Target.cs'); Proof=$true; Mode='full'; Reset=$true; TreeProof=$false},
     @{Name='streaming'; Paths=@('Data/ChapterAssetStreamingPlan.json'); Proof=$true; Mode='full'; TreeProof=$false},
     @{Name='unknown-script'; Paths=@('Scripts/new_unknown_tool.ps1'); Proof=$true; Mode='full'; TreeProof=$false},
     @{Name='runtime-data'; Paths=@('Data/QuestDefinitions.json'); Proof=$true; Mode='core'; TreeProof=$false},
@@ -55,11 +57,16 @@ try {
     foreach ($caseItem in $cases) {
         $script:Case = $caseItem
         $script:ActualMode = ''
+        $script:ActualReset = $false
         & $program
         if ($script:ActualMode -ne $caseItem.Mode) {
             throw "$($caseItem.Name): expected $($caseItem.Mode), got $script:ActualMode"
         }
-        Write-Host "CLASSIFIER_TEST_PASS $($caseItem.Name) mode=$script:ActualMode"
+        $expectedReset = if ($caseItem.ContainsKey('Reset')) { [bool]$caseItem.Reset } else { $false }
+        if ($script:ActualReset -ne $expectedReset) {
+            throw "$($caseItem.Name): expected reset=$expectedReset, got reset=$script:ActualReset"
+        }
+        Write-Host "CLASSIFIER_TEST_PASS $($caseItem.Name) mode=$script:ActualMode reset=$script:ActualReset"
     }
 } finally {
     $env:GITHUB_WORKSPACE = $oldWorkspace

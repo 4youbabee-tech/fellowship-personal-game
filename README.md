@@ -4,6 +4,8 @@ A low-spec-targeted personal 3D game project using Peter Jackson's *The Lord of 
 
 # NEW DEVELOPER / NEW AI SESSION — START HERE
 
+> **GitHub default branch note:** `main` is the stable/release landing branch. Active development truth lives on `develop`. If GitHub opened this repository on `main`, switch to `develop` before inferring current project state or editing code.
+
 There is **one project manager and one entry path**. Do not reconstruct project direction from chat history, old pull requests, or scattered planning notes.
 
 **Canonical entry path:**
@@ -15,6 +17,10 @@ There is **one project manager and one entry path**. Do not reconstruct project 
 5. **Regression memory:** read [Docs/PROJECT_GUARDIAN.md](Docs/PROJECT_GUARDIAN.md).
 6. Inspect the live `develop` HEAD and current GitHub checks before editing.
 7. Work on a short-lived candidate branch targeting `develop`; never use `main` as the normal development branch.
+
+## CRITICAL RUNNER OWNERSHIP RULE
+
+Before touching GitHub Actions runner configuration: **service mode is permanently excluded.** `actions.runner.*` should be absent; if Windows still exposes a pending-deletion entry it must be **Stopped + Disabled**. The only supported UE4 runner path is the supervised **interactive-user watchdog** through `ShireJourney-GitHubRunner-Watchdog`. `NETWORK SERVICE`, `LOCAL SERVICE`, and `SYSTEM` are forbidden. The watchdog continuously runs `Scripts/runner_service_guard.ps1` so a recreated service is stopped/deleted again. If topology looks wrong, fail closed and use the repository installer/verifier; do not improvise a service-mode repair.
 
 ## One-command onboarding
 

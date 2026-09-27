@@ -12,6 +12,8 @@
 
 The repository has one onboarding path:
 
+If GitHub opened the repository on `main`, treat it only as the stable/release landing surface and switch to `develop` before reading current execution state or editing code.
+
 `README.md` → `Docs/PROJECT_GOVERNOR.md` → `Data/ProjectGovernor.json` → `Docs/CURRENT_PROJECT_STATE.md` → `Docs/DEVELOPMENT_GATES.md` → `Docs/PROJECT_GUARDIAN.md`.
 
 A new worker may run `Scripts/new_developer_onboarding.ps1` from the repository root to print the current Governor lane, gate, benchmark, next actions, Git branch/HEAD and proof boundary.
@@ -112,6 +114,10 @@ Each worker:
 
 The Governor is the project lead / traffic controller.
 
+## Runner ownership hard invariant
+
+The UE4.27 self-hosted runner is **not** a Windows-service lane. The legacy `actions.runner.*` service path is eliminated: it should be absent, or only **Stopped + Disabled** while Windows completes pending deletion. Execution is owned solely by the proven interactive Windows user through the `ShireJourney-GitHubRunner-Watchdog` Scheduled Task. `NETWORK SERVICE`, `LOCAL SERVICE`, and `SYSTEM` are forbidden. The watchdog continuously enforces this through `runner_service_guard.ps1`. A human/AI worker may inspect runner health, but must not change runner ownership/topology without explicit owner authorization.
+
 ## Active-gate execution control
 
 The Governor does not treat every `ACTIVE` backlog item as permission to execute it.
@@ -138,7 +144,7 @@ The active lane is **W01_P1C01_PRODUCTION_VERTICAL_SLICE** under the P1C01 verti
 
 W00 architectural stabilization is closed. Historical W00 repair text is reference history only and must not reopen the repair lane without concrete regression evidence.
 
-C3 and C4 are closed in the current production train. The next runtime drop is D fixed-state lighting/sky/fog/low-cost water. Mega Asset Promotion may advance in parallel across characters, animation, architecture/interiors, audio, VFX and later-region packets through the registered warehouse/intake pipeline.
+C3/C4 and the D fixed-state lighting/sky/fog/low-cost-water stage are historical production milestones, not execution authority. The current runtime order must be read from `Data/ProjectGovernor.json` (`current_focus` + `execution_control.next_actions`) and checked against live GitHub exact-head/CI state. Do not infer the next drop from copied milestone prose in this guide.
 
 Administrative state must not become a production bottleneck. Live PR numbers and candidate branch names come from GitHub, not copied governance fields. The repository-native 24-hour Project Manager report is informational only. Technical runtime/save/canon/performance gates remain fail-closed for the affected lane.
 

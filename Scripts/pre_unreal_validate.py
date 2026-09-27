@@ -2782,6 +2782,90 @@ for pg173_group_name, pg173_items in pg173_queue.get("groups", {}).items():
                         f"{pg173_state} without {pg173_field}"
                     )
 
+# PG-184: warehouse validation must be fail-fast, non-destructive and non-repeating on PR sync.
+pg184_workflow = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
+pg184_prep = read(ROOT / "Scripts" / "run_warehouse_critical_gap_preparation.ps1")
+pg184_network = read(ROOT / "Scripts" / "warehouse_network.ps1")
+pg184_ambient = read(ROOT / "Scripts" / "stage_ambientcg_warehouse.ps1")
+pg184_kaykit = read(ROOT / "Scripts" / "stage_kaykit_github_warehouse.ps1")
+pg184_manifest = read(ROOT / "Data" / "WarehouseCriticalGapPreparationTrainV2.json")
+
+if "pull_request:" in pg184_workflow:
+    fail("PG-184 Warehouse Stage must not run on pull-request synchronize; stage only after develop promotion or manual dispatch")
+if "metadata-only" not in pg184_manifest.lower() and "inspected read-only" not in pg184_manifest.lower():
+    fail("PG-184 critical-gap manifest must preserve metadata-only archive contract")
+for pg184_symbol in [
+    "Test-WarehouseZipReadable",
+    "WAREHOUSE_ZIP_INVALID",
+    "WAREHOUSE_REUSE_PURGE_CORRUPT_ZIP",
+]:
+    if pg184_symbol not in pg184_network:
+        fail(f"PG-184 warehouse ZIP structural reuse guard missing: {pg184_symbol}")
+for pg184_symbol in [
+    "ZipFile]::OpenRead",
+    "duplicateReceiptRows",
+    "WAREHOUSE_CRITICAL_GAP_BLOCKED_DETAIL",
+    "archiveMode=metadata-only",
+    "WAREHOUSE_CRITICAL_GAP_PREFLIGHT_BLOCKED",
+]:
+    if pg184_symbol not in pg184_prep:
+        fail(f"PG-184 warehouse metadata-only fail-fast prep missing: {pg184_symbol}")
+if "Expand-Archive" in pg184_prep:
+    fail("PG-184 critical-gap QC must not repeatedly extract every ZIP")
+for pg184_stage, pg184_name in [
+    (pg184_ambient, "ambientCG"),
+    (pg184_kaykit, "KayKit"),
+]:
+    for pg184_symbol in ["Test-WarehouseZipReadable", "removing corrupt archive"]:
+        if pg184_symbol not in pg184_stage:
+            fail(f"PG-184 {pg184_name} staging corrupt-archive self-repair missing: {pg184_symbol}")
+
+for pg184_symbol in [
+    "Classify warehouse delta",
+    "classify_warehouse_validation.ps1",
+    "env.WH_RUN_PREP == 'true'",
+    "env.WH_STAGE_AMBIENTCG == 'true'",
+]:
+    if pg184_symbol not in pg184_workflow:
+        fail(f"PG-184 selective warehouse workflow contract missing: {pg184_symbol}")
+
+pg184_classifier = read(ROOT / "Scripts" / "classify_warehouse_validation.ps1")
+for pg184_symbol in [
+    "WAREHOUSE_CLASSIFY mode=selective",
+    "WH_STAGE_AMBIENTCG",
+    "WH_STAGE_KAYKIT",
+    "WH_RUN_PREP",
+]:
+    if pg184_symbol not in pg184_classifier:
+        fail(f"PG-184 warehouse delta classifier missing: {pg184_symbol}")
+
+# PG-185: keep strict exact-head Unreal proof while preserving incremental build products.
+pg185_unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+pg185_classifier = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
+pg185_pre = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
+
+if "if: env.SHIRE_RESET_INTERMEDIATES == 'true'" not in pg185_unreal_workflow:
+    fail("PG-185 Unreal workflow must not wipe intermediates for every full validation")
+for pg185_symbol in [
+    "SHIRE_RESET_INTERMEDIATES",
+    "CLEAN_COMPILE_REQUIRED",
+    '.EndsWith(".Build.cs")',
+    '.EndsWith(".Target.cs")',
+]:
+    if pg185_symbol not in pg185_classifier:
+        fail(f"PG-185 incremental compile classifier contract missing: {pg185_symbol}")
+for pg185_symbol in [
+    "Scripts/run_warehouse_*.ps1",
+    "Scripts/warehouse_network.ps1",
+    "Scripts/classify_warehouse_validation.ps1",
+]:
+    if pg185_symbol not in pg185_unreal_workflow:
+        fail(f"PG-185 warehouse-only changes must not trigger Unreal validation: {pg185_symbol}")
+if "runs-on: windows-latest" not in pg185_pre:
+    fail("PG-185 static Pre-Unreal validation must stay off the UE4 self-hosted runner")
+if "- self-hosted" in pg185_pre:
+    fail("PG-185 Pre-Unreal must not consume the supervised UE4 runner")
+
 # PG-176: the monitored P1C01 material train must stay complete, bounded and
 # evidence-gated. This is preparation validation only; it never promotes an item.
 pg176_wave_path = ROOT / "Data" / "P1C01MaterialImportWaveV1.json"
@@ -4716,13 +4800,13 @@ pg134_workflow = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.ym
 if (
     '"%PYTHON_EXE%" Scripts\\asset_quality_audit.py --strict' not in pg134_workflow
     or "resolve_runtime_python.ps1" not in pg134_workflow
-    or "_ci\\pre-unreal" not in pg134_workflow
+    or "%RUNNER_TEMP%\\shire-pre-unreal" not in pg134_workflow
     or "SHIRE_PRE_ROOT" not in pg134_workflow
     or "PRE_UNREAL_EXACT_CHECKOUT_PASS" not in pg134_workflow
-    or "persistent=true" not in pg134_workflow
+    or "hosted=true" not in pg134_workflow
     or 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg134_workflow
 ):
-    fail("PG-134 Pre-Unreal must run strict asset audit from the isolated persistent static checkout without touching the Unreal workspace")
+    fail("PG-134 Pre-Unreal must run strict asset audit from an isolated exact-head static checkout without touching the Unreal workspace")
 for pg134_symbol in [
     "obj_with_degenerate_uv_triangles",
     "degenerate UV triangle",
@@ -5084,23 +5168,20 @@ for pg142_evidence_id, pg142_marker in EVIDENCE_MARKERS.items():
         if pg142_marker in pg142_consumer:
             fail(f"PG-142 duplicated runtime evidence text in {pg142_name}: {pg142_evidence_id}")
 
-# PG-167: CI capacity must stay event-driven and off the recurrent hosted zero-step path.
+# PG-167: CI capacity stays event-driven; lightweight static proof is hosted and heavy UE4 proof stays self-hosted.
 pg167_pre = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
 for pg167_symbol in [
-    "- self-hosted",
-    "- Windows",
-    "- X64",
-    "- ue4-27",
+    "runs-on: windows-latest",
     "cancel-in-progress: true",
 ]:
     if pg167_symbol not in pg167_pre:
-        fail(f"PG-167 supervised static-lane contract missing: {pg167_symbol}")
-if "schedule:" in pg167_pre or "runs-on: ubuntu-latest" in pg167_pre or "runs-on: windows-latest" in pg167_pre:
-    fail("PG-167 Pre-Unreal must be event-driven on the supervised Windows UE4 runner")
+        fail(f"PG-167 hosted static-lane contract missing: {pg167_symbol}")
+if "schedule:" in pg167_pre or "- self-hosted" in pg167_pre or "runs-on: ubuntu-latest" in pg167_pre:
+    fail("PG-167 Pre-Unreal must be event-driven on hosted Windows and must not occupy the supervised UE4 runner")
 if "actions/setup-python@" in pg167_pre or "resolve_runtime_python.ps1" not in pg167_pre or 'shell: cmd' not in pg167_pre:
-    fail("PG-167 Pre-Unreal must avoid repeated hosted Python setup and use the local interpreter through cmd")
+    fail("PG-167 Pre-Unreal must use an already-provisioned Python interpreter through cmd without setup churn")
 if "uses: actions/checkout@" in pg167_pre:
-    fail("PG-167 Pre-Unreal must not depend on marketplace checkout on the supervised runner")
+    fail("PG-167 Pre-Unreal must keep the bounded exact-head checkout contract")
 for pg167_checkout_symbol in [
     "PRE_UNREAL_EXACT_FETCH",
     "PRE_UNREAL_EXACT_CHECKOUT_PASS",
@@ -7495,7 +7576,8 @@ for pg145_install_symbol in [
     "$taskTriggers",
     "MultipleInstances IgnoreNew",
     "-LogonType Interactive",
-    "Set-Service -Name $service.Name -StartupType Manual",
+    "runner_service_guard.ps1",
+    "serviceOwnership=absent-or-disabled-stopped",
     "actions.runner.*",
     "NETWORK SERVICE",
 ]:
@@ -7520,6 +7602,7 @@ pg145_unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-vali
 for pg145_maintenance_path in [
     "Scripts/classify_unreal_validation.ps1",
     "Scripts/runner_watchdog.ps1",
+    "Scripts/runner_service_guard.ps1",
     "Scripts/install_runner_watchdog.ps1",
     "Scripts/pre_unreal_validate.py",
     "Scripts/asset_quality_audit.py",
@@ -7561,6 +7644,43 @@ for pg145b_watchdog_symbol in [
     if pg145b_watchdog_symbol not in pg145b_watchdog:
         fail(f"PG-145B runner watchdog recovery contract missing: {pg145b_watchdog_symbol}")
 
+pg145b_service_guard = read(ROOT / "Scripts" / "runner_service_guard.ps1")
+for pg145b_service_guard_symbol in [
+    "actions.runner.*",
+    "StartupType Disabled",
+    "sc.exe delete",
+    "NETWORK SERVICE",
+    "LOCAL SERVICE",
+    "SYSTEM",
+    "RUNNER_SERVICE_GUARD_PASS",
+]:
+    if pg145b_service_guard_symbol not in pg145b_service_guard:
+        fail(f"PG-145B permanent runner service guard missing: {pg145b_service_guard_symbol}")
+
+pg145b_installer = read(ROOT / "Scripts" / "install_runner_watchdog.ps1")
+for pg145b_installer_symbol in [
+    "runner_service_guard.ps1",
+    "installedServiceGuard",
+    "serviceOwnership=absent-or-disabled-stopped",
+]:
+    if pg145b_installer_symbol not in pg145b_installer:
+        fail(f"PG-145B watchdog installer must permanently exclude service mode: {pg145b_installer_symbol}")
+
+for pg145b_watchdog_service_symbol in [
+    "ServiceGuardPath",
+    "Invoke-ServiceOwnershipGuard",
+]:
+    if pg145b_watchdog_service_symbol not in pg145b_watchdog:
+        fail(f"PG-145B watchdog must continuously enforce service exclusion: {pg145b_watchdog_service_symbol}")
+
+for pg145b_probe_service_symbol in [
+    "legacyService=",
+    "stopped-disabled",
+]:
+    if pg145b_probe_service_symbol not in pg145b_probe:
+        fail(f"PG-145B runner health must require service absent/disabled: {pg145b_probe_service_symbol}")
+
+
 pg145b_health_workflow = read(ROOT / ".github" / "workflows" / "runner-health.yml")
 if "workflow_dispatch:" not in pg145b_health_workflow or "verify_runner_session.ps1" not in pg145b_health_workflow:
     fail("PG-145B manual runner health workflow is incomplete")
@@ -7575,6 +7695,42 @@ for pg145b_path, pg145b_before in [
     if probe_pos < 0 or work_pos < 0 or probe_pos > work_pos:
         fail(f"PG-145B runner health gate must precede heavy work: {pg145b_path.name}")
 
+# PG-183: service mode must be impossible to silently resurrect.
+pg183_guard = read(ROOT / "Scripts" / "runner_service_guard.ps1")
+for pg183_symbol in [
+    'Get-Service -Name "actions.runner.*"',
+    "StartupType Disabled",
+    "sc.exe delete",
+    "NETWORK SERVICE",
+    "LOCAL SERVICE",
+    "SYSTEM",
+    "RUNNER_SERVICE_GUARD_PASS",
+]:
+    if pg183_symbol not in pg183_guard:
+        fail(f"PG-183 permanent runner service guard missing: {pg183_symbol}")
+for pg183_symbol in [
+    "runner_service_guard.ps1",
+    "Invoke-RunnerServiceGuard",
+    "SHIRE_RUNNER_WATCHDOG_SERVICE_GUARD_TRIGGER",
+]:
+    if pg183_symbol not in pg145_watchdog:
+        fail(f"PG-183 watchdog self-heal contract missing: {pg183_symbol}")
+for pg183_symbol in [
+    "runner_service_guard.ps1",
+    "serviceOwnership=absent-or-disabled-stopped",
+]:
+    if pg183_symbol not in pg145_watchdog_installer:
+        fail(f"PG-183 installer purge contract missing: {pg183_symbol}")
+for pg183_symbol in [
+    'StartMode -ne "Disabled"',
+    "legacyService=",
+    '"absent"',
+    '"stopped-disabled"',
+]:
+    if pg183_symbol not in pg145b_probe:
+        fail(f"PG-183 runner verification contract missing: {pg183_symbol}")
+
+
 # PG-145C: editor-tool/material-authoring deltas use the narrow exact-head engine lane:
 # build + import + automation + startup, without unrelated chapter/state/package repetition.
 pg145c_workflow = pg145_unreal_workflow
@@ -7585,8 +7741,16 @@ for pg145c_symbol in [
 ]:
     if pg145c_symbol not in (pg145_classifier + pg145c_workflow):
         fail(f"PG-145C fast asset-import lane missing: {pg145c_symbol}")
-if "if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'\n        shell: cmd\n        run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"%GITHUB_WORKSPACE%\\\\Scripts\\\\reset_project_build_intermediates.ps1\"'" not in pg145c_workflow:
-    fail("PG-145C incremental CORE/ASSET lanes must not delete project intermediates before every build")
+pg145c_reset_pos = pg145c_workflow.find("- name: Reset project build intermediates")
+pg145c_reset_slice = pg145c_workflow[pg145c_reset_pos:pg145c_reset_pos + 420] if pg145c_reset_pos >= 0 else ""
+if pg145c_reset_pos < 0 or "if: env.SHIRE_RESET_INTERMEDIATES == 'true'" not in pg145c_reset_slice:
+    fail("PG-145C project intermediate reset must be gated only by the classifier clean-compile flag")
+for pg145c_symbol in [
+    "SHIRE_RESET_INTERMEDIATES=",
+    "CLEAN_COMPILE_REQUIRED reason=build-rules-or-project-descriptor",
+]:
+    if pg145c_symbol not in pg145_classifier:
+        fail(f"PG-145C clean-compile classifier contract missing: {pg145c_symbol}")
 for pg145c_step in [
     "Headless chapter-by-chapter runtime audit",
     "Headless route/story state roundtrip audit",
@@ -7604,14 +7768,21 @@ pg176_cleanup = read(ROOT / ".github" / "workflows" / "branch-cleanup.yml")
 pg176_warehouse = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
 
 for pg176_symbol in [
-    "C:\\actions-runner\\_ci\\pre-unreal",
+    "runs-on: windows-latest",
+    "%RUNNER_TEMP%\\shire-pre-unreal",
     "SHIRE_PRE_ROOT",
     "PRE_UNREAL_EXACT_CHECKOUT_PASS",
     "isolated=true",
-    "persistent=true",
+    "hosted=true",
 ]:
     if pg176_symbol not in pg176_pre:
-        fail(f"PG-176 Pre-Unreal isolated checkout contract missing: {pg176_symbol}")
+        fail(f"PG-176 Pre-Unreal hosted isolated checkout contract missing: {pg176_symbol}")
+for pg176_legacy_symbol in [
+    "C:\\actions-runner\\_ci\\pre-unreal",
+    "persistent=true",
+]:
+    if pg176_legacy_symbol in pg176_pre:
+        fail(f"PG-176 Pre-Unreal must not restore legacy persistent self-hosted checkout semantics: {pg176_legacy_symbol}")
 if 'rmdir /S /Q "%GITHUB_WORKSPACE%"' in pg176_pre:
     fail("PG-176 Pre-Unreal may not delete the Unreal workspace")
 

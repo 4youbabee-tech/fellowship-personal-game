@@ -14,6 +14,7 @@ on:
       - 'Scripts/test_governor_handoff.py'
       - 'Scripts/test_unreal_classifier.ps1'
       - 'Data/ProjectGovernor.json'
+      - 'Data/MasterExecutionRoadmap.json'
       - 'Data/ExternalAssetManifest.json'
       - 'Data/*Warehouse*.json'
       - 'Data/MasterExternalResourceBibleAdoptionV1.json'
@@ -37,6 +38,7 @@ on:
       - 'Scripts/run_p1c01_material_pipeline.ps1'
       - 'Scripts/install_runner_watchdog.ps1'
       - 'Scripts/runner_watchdog.ps1'
+      - 'Scripts/runner_service_guard.ps1'
       - 'Scripts/classify_unreal_validation.ps1'
       - 'Scripts/pre_unreal_validate.py'
       - 'Scripts/deep_project_audit.py'
@@ -52,6 +54,10 @@ on:
       - 'Data/BranchCleanupPlan.json'
       - 'SourceAssets/PrivateOffline/**'
       - 'Scripts/stage_*warehouse*.ps1'
+      - 'Scripts/run_warehouse_*.ps1'
+      - 'Scripts/audit_warehouse_inventory.ps1'
+      - 'Scripts/warehouse_network.ps1'
+      - 'Scripts/classify_warehouse_validation.ps1'
   pull_request:
     branches:
       - develop
@@ -65,6 +71,7 @@ on:
       - 'Scripts/test_governor_handoff.py'
       - 'Scripts/test_unreal_classifier.ps1'
       - 'Data/ProjectGovernor.json'
+      - 'Data/MasterExecutionRoadmap.json'
       - 'Data/ExternalAssetManifest.json'
       - 'Data/*Warehouse*.json'
       - 'Data/MasterExternalResourceBibleAdoptionV1.json'
@@ -75,6 +82,7 @@ on:
       - 'Data/P1C01WorldBuildIntakePacketV1.json'
       - 'Scripts/classify_unreal_validation.ps1'
       - 'Scripts/runner_watchdog.ps1'
+      - 'Scripts/runner_service_guard.ps1'
       - 'Scripts/install_runner_watchdog.ps1'
       - 'Scripts/pre_unreal_validate.py'
       - 'Scripts/deep_project_audit.py'
@@ -90,6 +98,10 @@ on:
       - 'Scripts/verify_runner_session.ps1'
       - 'SourceAssets/PrivateOffline/**'
       - 'Scripts/stage_*warehouse*.ps1'
+      - 'Scripts/run_warehouse_*.ps1'
+      - 'Scripts/audit_warehouse_inventory.ps1'
+      - 'Scripts/warehouse_network.ps1'
+      - 'Scripts/classify_warehouse_validation.ps1'
   workflow_dispatch:
 
 permissions:
@@ -252,7 +264,7 @@ jobs:
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\prepare_msvc_environment.ps1"'
 
       - name: Reset project build intermediates
-        if: env.SHIRE_FULL_UNREAL_REQUIRED == 'true'
+        if: env.SHIRE_RESET_INTERMEDIATES == 'true'
         shell: cmd
         run: 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%GITHUB_WORKSPACE%\\Scripts\\reset_project_build_intermediates.ps1"'
 

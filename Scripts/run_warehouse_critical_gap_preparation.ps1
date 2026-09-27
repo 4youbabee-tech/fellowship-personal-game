@@ -21,8 +21,16 @@ if (-not (Test-Path -LiteralPath $ManifestPath -PathType Leaf)) {
 
 $manifest = Get-Content -LiteralPath $ManifestPath -Raw | ConvertFrom-Json
 New-Item -ItemType Directory -Path $OutputRoot -Force | Out-Null
-$ExpandedRoot = Join-Path $OutputRoot "expanded"
-New-Item -ItemType Directory -Path $ExpandedRoot -Force | Out-Null
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+function Get-SizeSum {
+  param([object[]]$Items)
+  [int64]$total=0
+  foreach($item in @($Items)){
+    if($null -ne $item -and $null -ne $item.size){ $total += [int64]$item.size }
+  }
+  return $total
+}
 
 function Get-OptionalPropertyValue {
   param(
@@ -43,6 +51,8 @@ $meshExt = @(".fbx",".obj",".gltf",".glb",".blend")
 $archiveExt = @(".zip",".7z",".rar")
 
 $receiptRows = @()
+$receiptSeen = @{}
+$duplicateReceiptRows = 0
 $badReceipts = @()
 if (Test-Path -LiteralPath $WarehouseRoot -PathType Container) {
   foreach ($receiptFile in @(Get-ChildItem -LiteralPath $WarehouseRoot -Recurse -File -Filter "receipt_*.json")) {
@@ -64,6 +74,13 @@ if (Test-Path -LiteralPath $WarehouseRoot -PathType Container) {
         $declared = ([string](Get-OptionalPropertyValue -Object $row -Name "archive_sha256" -Default "")).ToLowerInvariant()
       }
       if ([string]::IsNullOrWhiteSpace($path)) { continue }
+
+      $receiptKey = ($path.ToLowerInvariant() + "|" + $declared)
+      if($receiptSeen.ContainsKey($receiptKey)){
+        $duplicateReceiptRows++
+        continue
+      }
+      $receiptSeen[$receiptKey]=$true
 
       $rowState=[string](Get-OptionalPropertyValue -Object $row -Name "state" -Default "STAGED")
       if([string]::IsNullOrWhiteSpace($rowState)){$rowState="STAGED"}
@@ -103,6 +120,14 @@ foreach($row in $receiptRows){
   }
 }
 
+# Fail before archive enumeration when receipt integrity is already broken.
+if($badReceipts.Count -gt 0 -or $blocked.Count -gt 0){
+  Write-Host ("WAREHOUSE_CRITICAL_GAP_PREFLIGHT_BLOCKED verified="+$verified.Count+" blocked="+$blocked.Count+" badReceipts="+$badReceipts.Count+" duplicatesSkipped="+$duplicateReceiptRows)
+  foreach($entry in $blocked){Write-Host ("WAREHOUSE_CRITICAL_GAP_BLOCKED_DETAIL "+($entry|ConvertTo-Json -Compress -Depth 6))}
+  foreach($entry in $badReceipts){Write-Host ("WAREHOUSE_CRITICAL_GAP_BAD_RECEIPT_DETAIL "+($entry|ConvertTo-Json -Compress -Depth 6))}
+  exit 2
+}
+
 $scanFiles = New-Object 'System.Collections.Generic.List[object]'
 foreach($row in $verified){
   $ext=$row.extension
@@ -111,20 +136,22 @@ foreach($row in $verified){
     continue
   }
   if($ext -eq ".zip"){
-    $safeId=if(-not [string]::IsNullOrWhiteSpace($row.asset_id)){$row.asset_id}else{[IO.Path]::GetFileNameWithoutExtension($row.path)}
-    $dest=Join-Path $ExpandedRoot (($row.provider+"_"+$safeId) -replace '[^A-Za-z0-9_.-]','_')
-    if(Test-Path -LiteralPath $dest){Remove-Item -LiteralPath $dest -Recurse -Force}
-    New-Item -ItemType Directory -Path $dest -Force | Out-Null
+    $archive=$null
     try{
-      Expand-Archive -LiteralPath $row.path -DestinationPath $dest -Force
-      foreach($x in @(Get-ChildItem -LiteralPath $dest -Recurse -File)){
+      $archive=[System.IO.Compression.ZipFile]::OpenRead($row.path)
+      foreach($entry in @($archive.Entries)){
+        if([string]::IsNullOrWhiteSpace([string]$entry.Name)){ continue }
+        $entryPath=[string]$entry.FullName
+        $entryExt=[IO.Path]::GetExtension($entryPath).ToLowerInvariant()
         $scanFiles.Add([pscustomobject]@{
           provider=$row.provider;asset_id=$row.asset_id;category=$row.category;source_page=$row.source_page;
-          source_archive=$row.path;path=$x.FullName;extension=$x.Extension.ToLowerInvariant();size=[int64]$x.Length
+          source_archive=$row.path;path=($row.path+"::"+$entryPath);extension=$entryExt;size=[int64]$entry.Length
         })
       }
     }catch{
-      $blocked += [ordered]@{provider=$row.provider;asset_id=$row.asset_id;path=$row.path;reason="archive_extract_failed";detail=$_.Exception.Message}
+      $blocked += [ordered]@{provider=$row.provider;asset_id=$row.asset_id;path=$row.path;reason="archive_structure_invalid";detail=$_.Exception.Message}
+    }finally{
+      if($null -ne $archive){$archive.Dispose()}
     }
   }
   elseif($ext -in @(".7z",".rar")){
@@ -180,10 +207,10 @@ foreach($f in @($scanFiles)){
 }
 
 $roleSummary=@($inventory | Group-Object role | Sort-Object Name | ForEach-Object{
-  [ordered]@{role=$_.Name;files=$_.Count;bytes=[int64](($_.Group|Measure-Object -Property size -Sum).Sum)}
+  [ordered]@{role=$_.Name;files=$_.Count;bytes=(Get-SizeSum -Items @($_.Group))}
 })
 $providerSummary=@($inventory | Group-Object provider | Sort-Object Name | ForEach-Object{
-  [ordered]@{provider=$_.Name;files=$_.Count;bytes=[int64](($_.Group|Measure-Object -Property size -Sum).Sum)}
+  [ordered]@{provider=$_.Name;files=$_.Count;bytes=(Get-SizeSum -Items @($_.Group))}
 })
 
 $cars=@()
@@ -207,7 +234,7 @@ foreach($car in @($manifest.cars|Sort-Object order)){
   $matches=@($inventory|Where-Object{$matchRoles -contains $_.role})
   $cars += [ordered]@{
     order=[int]$car.order;id=[string]$car.id;scope=[string]$car.scope;goal=[string]$car.goal;
-    matched_files=$matches.Count;matched_bytes=[int64](($matches|Measure-Object -Property size -Sum).Sum);
+    matched_files=$matches.Count;matched_bytes=(Get-SizeSum -Items $matches);
     state=if($matches.Count -gt 0){"INTAKE_QC_DATA_PRESENT"}else{"PENDING_SOURCE_OR_CLASSIFICATION"};
     ceiling="INTAKE_QC"
   }
@@ -215,7 +242,7 @@ foreach($car in @($manifest.cars|Sort-Object order)){
 
 $report=[ordered]@{
   schema_version=1;train_id=[string]$manifest.train_id;generated_at_utc=[DateTime]::UtcNow.ToString("o");
-  receipt_records=$receiptRows.Count;verified_receipts=$verified.Count;bad_receipts=$badReceipts;
+  receipt_records=$receiptRows.Count;duplicate_receipt_records_skipped=$duplicateReceiptRows;verified_receipts=$verified.Count;bad_receipts=$badReceipts;
   blocked=$blocked;pending=$pending;inventory_file_count=$inventory.Count;
   provider_summary=$providerSummary;role_summary=$roleSummary;cars=$cars;
   rules=@(
@@ -228,7 +255,9 @@ $outPath=Join-Path $OutputRoot "warehouse_critical_gap_preparation_latest.json"
 $report|ConvertTo-Json -Depth 12|Set-Content -LiteralPath $outPath -Encoding UTF8
 
 if($badReceipts.Count -gt 0 -or $blocked.Count -gt 0){
-  Write-Host ("WAREHOUSE_CRITICAL_GAP_PREP_BLOCKED verified="+$verified.Count+" inventory="+$inventory.Count+" blocked="+$blocked.Count+" badReceipts="+$badReceipts.Count+" report="+$outPath)
+  Write-Host ("WAREHOUSE_CRITICAL_GAP_PREP_BLOCKED verified="+$verified.Count+" inventory="+$inventory.Count+" blocked="+$blocked.Count+" badReceipts="+$badReceipts.Count+" duplicatesSkipped="+$duplicateReceiptRows+" report="+$outPath)
+  foreach($entry in $blocked){Write-Host ("WAREHOUSE_CRITICAL_GAP_BLOCKED_DETAIL "+($entry|ConvertTo-Json -Compress -Depth 6))}
+  foreach($entry in $badReceipts){Write-Host ("WAREHOUSE_CRITICAL_GAP_BAD_RECEIPT_DETAIL "+($entry|ConvertTo-Json -Compress -Depth 6))}
   exit 2
 }
-Write-Host ("WAREHOUSE_CRITICAL_GAP_PREP_PASS verified="+$verified.Count+" inventory="+$inventory.Count+" pending="+$pending.Count+" report="+$outPath)
+Write-Host ("WAREHOUSE_CRITICAL_GAP_PREP_PASS verified="+$verified.Count+" inventory="+$inventory.Count+" pending="+$pending.Count+" duplicatesSkipped="+$duplicateReceiptRows+" archiveMode=metadata-only report="+$outPath)

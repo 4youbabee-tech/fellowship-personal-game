@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = "none") {
+function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$ResumeStage = "none", [bool]$ResetIntermediates = $false) {
     $full = if ($Mode -eq "full") { "true" } else { "false" }
     $core = if ($Mode -eq "core" -or $Mode -eq "asset") { "true" } else { "false" }
     $asset = if ($Mode -eq "asset") { "true" } else { "false" }
@@ -14,8 +14,9 @@ function Set-Mode([string]$Mode, [string]$Reason, [string]$ParentSha, [string]$R
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_ACCEPTANCE_RESUME_STAGE=$ResumeStage"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_DECISION_REASON=$Reason"
     Add-Content -LiteralPath $env:GITHUB_ENV -Value "SHIRE_UNREAL_PARENT_SHA=$ParentSha"
+    Add-Content -LiteralPath $env:GITHUB_ENV -Value ("SHIRE_RESET_INTERMEDIATES=" + ($(if($ResetIntermediates){"true"}else{"false"})))
 
-    Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode full=$full core=$core asset=$asset acceptance=$acceptance resume=$ResumeStage parent=$ParentSha reason=$Reason"
+    Write-Host "UNREAL_VALIDATION_DECISION mode=$Mode full=$full core=$core asset=$asset acceptance=$acceptance resume=$ResumeStage resetIntermediates=$ResetIntermediates parent=$ParentSha reason=$Reason"
 }
 
 function Get-GitExe {
@@ -291,6 +292,7 @@ function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [
         "Scripts/run_p1c01_material_pipeline.ps1",
         "Scripts/install_runner_watchdog.ps1",
         "Scripts/runner_watchdog.ps1",
+        "Scripts/runner_service_guard.ps1",
         "Scripts/deep_project_audit.py",
         "Scripts/test_deep_project_audit.py",
         "Scripts/source_contracts.py",
@@ -411,6 +413,16 @@ if ($LASTEXITCODE -ne 0 -or $changed.Count -eq 0) {
     exit 0
 }
 
+$requiresCleanCompile = @($changed | Where-Object {
+    $changedPath = ($_ -replace "\\","/")
+    $changedPath.EndsWith(".Build.cs") -or
+    $changedPath.EndsWith(".Target.cs") -or
+    $changedPath -eq "ShireJourney.uproject"
+}).Count -gt 0
+if($requiresCleanCompile){
+    Write-Host "CLEAN_COMPILE_REQUIRED reason=build-rules-or-project-descriptor"
+}
+
 $safeExact = @(
     "README.md",
     "Scripts/new_developer_onboarding.ps1",
@@ -441,6 +453,7 @@ $safeExact = @(
         "Scripts/run_p1c01_material_pipeline.ps1",
         "Scripts/install_runner_watchdog.ps1",
         "Scripts/runner_watchdog.ps1",
+        "Scripts/runner_service_guard.ps1",
         "Scripts/deep_project_audit.py",
         "Scripts/test_deep_project_audit.py",
         "Scripts/source_contracts.py",
@@ -523,7 +536,7 @@ foreach($p in $changed){
 
 if($fullImpact.Count -gt 0){
     $fullImpact | ForEach-Object { Write-Host "FULL_UNREAL_FILE $_" }
-    Set-Mode "full" "engine-runtime-config-or-unclassified-delta" $parentSha
+    Set-Mode "full" "engine-runtime-config-or-unclassified-delta" $parentSha "none" $requiresCleanCompile
     exit 0
 }
 
@@ -576,7 +589,7 @@ if($coreImpact.Count -gt 0){
         Set-Mode "core" "runtime-or-asset-delta-inherits-nearest-safe-core-ancestor-no-package" $parentSha
         exit 0
     }
-    Set-Mode "full" "core-delta-no-safe-core-proof-fail-safe" $parentSha
+    Set-Mode "full" "core-delta-no-safe-core-proof-fail-safe" $parentSha "none" $requiresCleanCompile
     exit 0
 }
 

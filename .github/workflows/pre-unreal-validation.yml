@@ -18,12 +18,9 @@ concurrency:
 
 jobs:
   validate:
-    # Static/policy work uses the existing runner but never the persistent Unreal workspace.
-    runs-on:
-      - self-hosted
-      - Windows
-      - X64
-      - ue4-27
+    # Static/policy work is isolated on a GitHub-hosted Windows runner.
+    # This keeps the UE4 self-hosted machine reserved for engine/runtime jobs.
+    runs-on: windows-latest
     timeout-minutes: 8
     env:
       TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -43,9 +40,9 @@ jobs:
           if not defined GITEXE if exist "C:\Program Files (x86)\Git\cmd\git.exe" set "GITEXE=C:\Program Files (x86)\Git\cmd\git.exe"
           if not defined GITEXE exit /b 70
 
-          set "PRE_ROOT=C:\actions-runner\_ci\pre-unreal"
-          if not exist "C:\actions-runner\_ci" mkdir "C:\actions-runner\_ci"
-          if not exist "!PRE_ROOT!" mkdir "!PRE_ROOT!"
+          set "PRE_ROOT=%RUNNER_TEMP%\shire-pre-unreal"
+          if exist "!PRE_ROOT!" rmdir /S /Q "!PRE_ROOT!"
+          mkdir "!PRE_ROOT!"
           cd /d "!PRE_ROOT!"
 
           if exist ".git\index.lock" del /F /Q ".git\index.lock"
@@ -79,7 +76,7 @@ jobs:
           if not exist "ShireJourney.uproject" exit /b 78
           echo SHIRE_PRE_ROOT=!PRE_ROOT!>>"%GITHUB_ENV%"
           "!GITEXE!" remote set-url origin "https://github.com/%GITHUB_REPOSITORY%.git"
-          echo PRE_UNREAL_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA! isolated=true persistent=true
+          echo PRE_UNREAL_EXACT_CHECKOUT_PASS sha=!CHECKED_SHA! isolated=true hosted=true
 
       - name: Resolve existing local Python
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_PRE_ROOT%\Scripts\resolve_runtime_python.ps1"
@@ -140,8 +137,8 @@ jobs:
           setlocal EnableExtensions EnableDelayedExpansion
           set "GITEXE="
           for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
-          if defined GITEXE if exist "C:\actions-runner\_ci\pre-unreal\.git" (
-            cd /d "C:\actions-runner\_ci\pre-unreal"
+          if defined GITEXE if defined SHIRE_PRE_ROOT if exist "%SHIRE_PRE_ROOT%\.git" (
+            cd /d "%SHIRE_PRE_ROOT%"
             "!GITEXE!" remote set-url origin "https://github.com/%GITHUB_REPOSITORY%.git" >nul 2>nul
           )
           exit /b 0
