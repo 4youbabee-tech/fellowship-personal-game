@@ -118,6 +118,8 @@ function Test-WarehouseReceiptReusable {
                 if ([int64](Get-Item -LiteralPath $path).Length -ne [int64]$record.size) { return $false }
             }
             if ([IO.Path]::GetExtension($path).ToLowerInvariant() -eq ".zip" -and -not (Test-WarehouseZipReadable -Path $path)) {
+                Write-Warning "WAREHOUSE_REUSE_PURGE_CORRUPT_ZIP path=$path"
+                Remove-Item -LiteralPath $path -Force -ErrorAction SilentlyContinue
                 return $false
             }
             continue
@@ -133,6 +135,8 @@ function Test-WarehouseReceiptReusable {
                 if (-not (Test-Path -LiteralPath $license -PathType Leaf)) { return $false }
             }
             if ([IO.Path]::GetExtension($archive).ToLowerInvariant() -eq ".zip" -and -not (Test-WarehouseZipReadable -Path $archive)) {
+                Write-Warning "WAREHOUSE_REUSE_PURGE_CORRUPT_ZIP path=$archive"
+                Remove-Item -LiteralPath $archive -Force -ErrorAction SilentlyContinue
                 return $false
             }
             continue
