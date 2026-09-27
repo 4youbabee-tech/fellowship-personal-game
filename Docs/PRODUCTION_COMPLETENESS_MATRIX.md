@@ -1,3 +1,10 @@
+## 2026-09-27 - P1C01 queued prep train: characters + audio + fauna
+
+- Character rig/animation prep: FBX-only animated contract; unlicensed external packs blocked; project-owned proxy fallbacks retained.
+- Audio prep: 5 authorized CC0 Shire candidates; WAV-master gate enforced.
+- Fauna prep: 3 project-owned fallback meshes mapped; 2 external animal packs blocked pending license; current max 2 fauna groups / 4200 cm cull cap preserved.
+- All three are **PREPARATION-IMPLEMENTED / validation pending**, not runtime integrated or accepted.
+
 ## 2026-09-27 - P1C01 player-experience convergence batch
 
 - Story dialogue continuity, mouse-look frame independence, quick-load rejection feedback, event-driven quest-trigger re-evaluation and bounded subtitle wrapping are implemented on the active fix branch.
