@@ -44,17 +44,18 @@ if ($explorers.Count -eq 0) {
 Write-Host ("RUNNER_HEALTH_IDENTITY_PASS identity=" + $identity + " sessionId=" + $currentSession + " runnerName=" + $env:RUNNER_NAME)
 
 $serviceProblems = @()
-foreach ($service in @(Get-Service "actions.runner.*" -ErrorAction SilentlyContinue)) {
+$legacyServices = @(Get-Service "actions.runner.*" -ErrorAction SilentlyContinue)
+foreach ($service in $legacyServices) {
     $escaped = $service.Name.Replace("'","''")
     $cim = Get-CimInstance Win32_Service -Filter ("Name='" + $escaped + "'")
-    if ($service.Status -ne "Stopped" -or $cim.StartMode -ne "Manual") {
+    if ($service.Status -ne "Stopped" -or $cim.StartMode -ne "Disabled") {
         $serviceProblems += ($service.Name + ":status=" + $service.Status + ":startMode=" + $cim.StartMode)
     }
 }
 if ($serviceProblems.Count -gt 0) {
     Fail ("legacy-service-ownership " + ($serviceProblems -join ","))
 }
-Write-Host "RUNNER_HEALTH_SERVICE_PASS legacyService=stopped-manual"
+Write-Host ("RUNNER_HEALTH_SERVICE_PASS legacyService=" + ($(if ($legacyServices.Count -eq 0) { "absent" } else { "stopped-disabled" })))
 
 $task = Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue
 if ($null -eq $task) {
