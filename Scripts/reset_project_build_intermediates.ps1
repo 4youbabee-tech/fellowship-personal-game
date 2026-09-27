@@ -163,6 +163,7 @@ foreach ($path in $paths) {
     }
 
     Write-Host "Removing stale project build product: $fullPath"
+    $quarantinedOutput = $false
     try {
         Remove-Item -LiteralPath $fullPath -Recurse -Force -ErrorAction Stop
     }
@@ -352,13 +353,33 @@ foreach ($path in $paths) {
             }
 
             if ($null -ne $cleanupError) {
-                $afterGrantAcl = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
-                throw "BUILD_CLEANUP_RETRY_FAILED path=$fullPath blockedFile=$blockedFile identity=$identity attempts=$attempt error=$cleanupError $afterGrantAcl"
+                $isWin64Output = $fullPath.EndsWith("\\Binaries\\Win64", [StringComparison]::OrdinalIgnoreCase)
+                if (-not $isWin64Output) {
+                    $afterGrantAcl = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
+                    throw "BUILD_CLEANUP_RETRY_FAILED path=$fullPath blockedFile=$blockedFile identity=$identity attempts=$attempt error=$cleanupError $afterGrantAcl"
+                }
+
+                # A non-Restart-Manager handle can outlive the verified CI owner and
+                # deny deletion despite FullControl. Win64 contains generated products
+                # only, so atomically detach that directory and let UBT recreate it.
+                $runSuffix = if ($env:GITHUB_RUN_ID) { "$($env:GITHUB_RUN_ID)-$($env:GITHUB_RUN_ATTEMPT)" } else { [Guid]::NewGuid().ToString("N") }
+                $quarantineLeaf = "Win64.stale-$runSuffix"
+                $quarantinePath = Join-Path (Split-Path -Parent $fullPath) $quarantineLeaf
+                try {
+                    Move-Item -LiteralPath $fullPath -Destination $quarantinePath -ErrorAction Stop
+                    New-Item -ItemType Directory -Path $fullPath -ErrorAction Stop | Out-Null
+                    Write-Warning "BUILD_OUTPUT_QUARANTINE_PASS original=$fullPath stale=$quarantinePath reason=unregistered-file-handle"
+                    $quarantinedOutput = $true
+                }
+                catch {
+                    $afterGrantAcl = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
+                    throw "BUILD_OUTPUT_QUARANTINE_FAILED path=$fullPath stale=$quarantinePath identity=$identity error=$($_.Exception.Message) originalDeleteError=$cleanupError $afterGrantAcl"
+                }
             }
         }
     }
 
-    if (Test-Path -LiteralPath $fullPath) {
+    if ((Test-Path -LiteralPath $fullPath) -and (-not $quarantinedOutput)) {
         throw "Stale project build product still exists after one cleanup attempt: $fullPath"
     }
 }
