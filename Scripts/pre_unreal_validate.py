@@ -7642,8 +7642,9 @@ for pg183_symbol in [
         fail(f"PG-183 installer purge contract missing: {pg183_symbol}")
 for pg183_symbol in [
     'StartMode -ne "Disabled"',
-    "legacyService=absent",
-    "stopped-disabled",
+    "legacyService=",
+    '"absent"',
+    '"stopped-disabled"',
 ]:
     if pg183_symbol not in pg145b_probe:
         fail(f"PG-183 runner verification contract missing: {pg183_symbol}")
