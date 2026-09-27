@@ -2969,6 +2969,54 @@ for marker in [
         fail(f"PG-180 consolidated prep guard missing: {marker}")
 
 
+# PG-181: critical-gap preparation train V2 must remain 20-car, evidence-gated and non-promoting.
+pg181_path = ROOT / "Data" / "WarehouseCriticalGapPreparationTrainV2.json"
+if not pg181_path.exists():
+    fail("PG-181 critical-gap preparation manifest missing")
+else:
+    try:
+        pg181 = json.loads(read(pg181_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-181 invalid critical-gap preparation manifest: {exc}")
+        pg181 = {}
+
+    pg181_cars = pg181.get("cars", [])
+    if len(pg181_cars) != 20:
+        fail(f"PG-181 expected 20 critical-gap preparation cars, found {len(pg181_cars)}")
+    pg181_orders = [int(car.get("order", -1)) for car in pg181_cars]
+    if pg181_orders != list(range(1, 21)):
+        fail("PG-181 critical-gap car order must remain exactly 1..20")
+    for car in pg181_cars:
+        if car.get("ceiling") != "INTAKE_QC":
+            fail(f"PG-181 preparation ceiling drifted beyond INTAKE_QC: {car.get('id')}")
+
+    for required_rule in [
+        "Verify staged source receipt SHA256 before extracting or classifying.",
+        "Block executable/script payloads and BMP textures from production intake.",
+        "Animated character/creature/fauna final production assets require FBX.",
+        "Production textures accepted by the project are PNG/TGA; channel-packing debt remains explicit until actually authored.",
+        "Audio production masters require WAV before UE import.",
+        "No processing car may promote an item to READY_FOR_IMPORT without class-specific QC.",
+    ]:
+        if required_rule not in pg181.get("global_rules", []):
+            fail(f"PG-181 critical-gap safety rule missing: {required_rule}")
+
+pg181_script = read(ROOT / "Scripts" / "run_warehouse_critical_gap_preparation.ps1")
+for marker in [
+    "Get-FileHash -LiteralPath $row.path -Algorithm SHA256",
+    "receipt_sha256_mismatch",
+    "forbidden_bmp",
+    "archive_requires_approved_extractor",
+    "FBX_CHARACTER_CANDIDATE",
+    "FBX_ANIMATION_CANDIDATE",
+    "FBX_CREATURE_FAUNA_CANDIDATE",
+    "AUDIO_WAV_MASTER_CANDIDATE",
+    "No file is promoted to READY_FOR_IMPORT by this report.",
+]:
+    if marker not in pg181_script:
+        fail(f"PG-181 critical-gap processor guard missing: {marker}")
+
+
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
 pg164_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
