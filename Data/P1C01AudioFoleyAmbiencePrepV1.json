@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "batch_id": "P1C01_AUDIO_FOLEY_AMBIENCE_PREP_V1",
+  "status": "PREPARED_FOR_RECEIPT_GATED_INTAKE",
+  "authority": [
+    "Data/AudioAssetSourcingWaveV2.json",
+    "Data/WarehouseAudioAcquisitionBatchV1.json",
+    "Data/P1C01WarehousePromotionQueueV1.json"
+  ],
+  "items": [
+    {
+      "id": "OGA_DIFFERENT_STEPS_SURFACES",
+      "provider": "OPENGAMEART",
+      "license": "CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "master_requirement": "WAV",
+      "role": "FOOTSTEPS_MULTI_SURFACE"
+    },
+    {
+      "id": "OGA_FIREPLACE_LOOP",
+      "provider": "OPENGAMEART",
+      "license": "CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "master_requirement": "WAV",
+      "role": "BAG_END_HEARTH"
+    },
+    {
+      "id": "OGA_100_CC0_WOOD_METAL_SFX",
+      "provider": "OPENGAMEART",
+      "license": "CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "master_requirement": "WAV",
+      "role": "WOOD_METAL_INTERACTIONS"
+    },
+    {
+      "id": "OGA_AMBIENT_BIRD_SOUNDS",
+      "provider": "OPENGAMEART",
+      "license": "CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "master_requirement": "WAV",
+      "source_format": "OGG",
+      "role": "SHIRE_DAY_BIRDS"
+    },
+    {
+      "id": "OGA_TINYSIZED_FANTASY_SFX",
+      "provider": "OPENGAMEART",
+      "license": "CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "master_requirement": "WAV",
+      "role": "HOUSEHOLD_FOLEY"
+    }
+  ],
+  "runtime_contract": {
+    "owner": "UShireAudioSubsystem",
+    "localized_emitters": "3D attenuation/concurrency",
+    "score": "2D",
+    "story_priority": "story-critical cues preempt ambient cues",
+    "target": "720p Low-Medium / low source-count and resident-memory budget"
+  },
+  "forbidden": [
+    "REFERENCE_ONLY_FILM_AUDIO_PROMOTION",
+    "REFERENCE_ONLY_GAME_AUDIO_PROMOTION",
+    "NON_WAV_PRODUCTION_MASTER"
+  ],
+  "evidence_boundary": "Preparation only. Listening, mix, device-memory and performance acceptance remain open."
+}

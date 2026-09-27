@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "batch_id": "P1C01_CHARACTER_RIG_ANIMATION_PREP_V1",
+  "status": "PREPARED_FAIL_CLOSED",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/CharacterVisualProductionWaveV7.json",
+    "Data/CharacterProductionMatrix.json",
+    "Data/ProductionAssetPromotionPolicyV1.json"
+  ],
+  "runtime_gate": "AFTER_MATERIAL_AND_ARCHITECTURE_RUNTIME_LANES_CLOSE",
+  "priority_characters": [
+    {
+      "id": "FRODO",
+      "rig_family": "HOBBIT_HUMANOID",
+      "priority": 1
+    },
+    {
+      "id": "GANDALF",
+      "rig_family": "TALL_HUMANOID",
+      "priority": 1
+    },
+    {
+      "id": "SAM",
+      "rig_family": "HOBBIT_HUMANOID",
+      "priority": 2
+    },
+    {
+      "id": "ARAGORN",
+      "rig_family": "STANDARD_HUMANOID",
+      "priority": 2
+    },
+    {
+      "id": "GIMLI",
+      "rig_family": "DWARF_HUMANOID",
+      "priority": 2
+    },
+    {
+      "id": "LEGOLAS",
+      "rig_family": "STANDARD_HUMANOID",
+      "priority": 2
+    },
+    {
+      "id": "MERRY",
+      "rig_family": "HOBBIT_HUMANOID",
+      "priority": 2
+    },
+    {
+      "id": "PIPPIN",
+      "rig_family": "HOBBIT_HUMANOID",
+      "priority": 2
+    },
+    {
+      "id": "BOROMIR",
+      "rig_family": "STANDARD_HUMANOID",
+      "priority": 2
+    }
+  ],
+  "project_owned_fallback": {
+    "root": "SourceAssets/Production/Characters",
+    "state": "STATIC_MODULAR_FALLBACK_ONLY",
+    "rule": "Existing OBJ character pieces are not final animated-character evidence."
+  },
+  "external_candidates": [
+    {
+      "provider": "QUATERNIUS",
+      "id": "QTN_UNIVERSAL_BASE_CHARACTERS",
+      "state": "BLOCKED_LICENSE_CAPTURE",
+      "required_final_format": "FBX"
+    },
+    {
+      "provider": "QUATERNIUS",
+      "id": "QTN_RPG_CHARACTERS",
+      "state": "BLOCKED_LICENSE_CAPTURE",
+      "required_final_format": "FBX"
+    },
+    {
+      "provider": "QUATERNIUS",
+      "id": "QTN_FANTASY_OUTFITS",
+      "state": "BLOCKED_LICENSE_CAPTURE",
+      "required_final_format": "FBX"
+    },
+    {
+      "provider": "QUATERNIUS",
+      "id": "QTN_UNIVERSAL_ANIMATION_LIBRARY",
+      "state": "BLOCKED_LICENSE_CAPTURE",
+      "required_final_format": "FBX"
+    }
+  ],
+  "required_bundle": {
+    "skeletal_mesh": "FBX",
+    "textures": [
+      "PNG",
+      "TGA"
+    ],
+    "animations": "FBX clips on same or retarget-compatible skeleton",
+    "qc": [
+      "real skeleton",
+      "skin weights",
+      "retarget result",
+      "deformation review",
+      "animation coverage",
+      "material slots",
+      "LOD/cull plan",
+      "socket/equipment compatibility"
+    ]
+  },
+  "runtime_contract": {
+    "heavy_refs": "TSoftObjectPtr/TSoftClassPtr",
+    "loading": "FStreamableManager async",
+    "destination": "/Game/Production/Characters/Rigs/<Character>/",
+    "fallback": "Existing modular proxy remains until rig bundle is asynchronously ready."
+  },
+  "forbidden": [
+    "OBJ_AS_FINAL_ANIMATED_CHARACTER",
+    "BMP_TEXTURE",
+    "UNLICENSED_EXTERNAL_PROMOTION",
+    "FAKE_RIG_EVIDENCE"
+  ],
+  "evidence_boundary": "Preparation only. No character is called rigged, imported, visually accepted or device-accepted from this manifest."
+}

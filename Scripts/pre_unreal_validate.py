@@ -2855,6 +2855,120 @@ else:
             fail(f"PG-176 material intake preparation guard missing: {pg176_marker}")
 
 
+# PG-179: long warehouse saturation train remains ordered, evidence-gated and non-chaotic.
+pg179_path = ROOT / "Data" / "WarehouseSaturationTrainV1.json"
+if not pg179_path.exists():
+    fail("PG-179 warehouse saturation train manifest missing")
+else:
+    try:
+        pg179 = json.loads(read(pg179_path))
+    except json.JSONDecodeError as exc:
+        fail(f"PG-179 invalid warehouse saturation train manifest: {exc}")
+        pg179 = {}
+
+    pg179_cars = pg179.get("cars", [])
+    if len(pg179_cars) != 20:
+        fail(f"PG-179 expected exactly 20 ordered warehouse cars, found {len(pg179_cars)}")
+
+    pg179_orders = [int(car.get("order", -1)) for car in pg179_cars]
+    if pg179_orders != list(range(1, 21)):
+        fail("PG-179 warehouse car order must remain exactly 1..20")
+
+    pg179_ids = [str(car.get("id") or "").strip() for car in pg179_cars]
+    if len(set(pg179_ids)) != len(pg179_ids) or any(not value for value in pg179_ids):
+        fail("PG-179 warehouse car IDs must be unique and non-empty")
+
+    pg179_allowed_ceilings = {"CANDIDATE", "INTAKE_QC", "STATIC_VALIDATED"}
+    for car in pg179_cars:
+        if str(car.get("ceiling") or "") not in pg179_allowed_ceilings:
+            fail(f"PG-179 preparation car has unsafe promotion ceiling: {car.get('id')}")
+        if not car.get("providers") or len(car.get("providers", [])) > 4:
+            fail(f"PG-179 car must keep a bounded source set (1-4 providers): {car.get('id')}")
+
+    for required_rule in [
+        "Do not mirror entire providers indiscriminately.",
+        "Animated final production assets must be FBX.",
+        "Production textures must be PNG/TGA; use channel packing where appropriate; BMP is forbidden.",
+        "Audio production masters must be WAV before UE import.",
+        "Heavy runtime assets remain soft referenced and asynchronously loaded with FStreamableManager.",
+    ]:
+        if required_rule not in pg179.get("global_rules", []):
+            fail(f"PG-179 warehouse saturation safety rule missing: {required_rule}")
+
+pg179_script = read(ROOT / "Scripts" / "run_warehouse_saturation_train.ps1")
+for marker in [
+    "WAREHOUSE_SATURATION_STAGE_START",
+    "Get-FileHash -LiteralPath $path -Algorithm SHA256",
+    "STAGED_RECEIPT_VERIFIED",
+    "PUBLIC_LANE_PENDING_STAGE",
+    "MANUAL_OR_AUTH_SOURCE_PENDING",
+    "No car becomes READY_FOR_IMPORT from this report.",
+]:
+    if marker not in pg179_script:
+        fail(f"PG-179 warehouse saturation orchestrator guard missing: {marker}")
+
+
+# PG-180: consolidated P1C01 prep cars from superseded #119/#120 remain present and fail-closed.
+for pg180_rel in [
+    "Data/P1C01ArchitectureInteriorPropMegabatchV1.json",
+    "Scripts/prepare_p1c01_architecture_intake.ps1",
+    "Data/P1C01CharacterRigAnimationPrepV1.json",
+    "Scripts/prepare_p1c01_character_rig_intake.ps1",
+    "Data/P1C01AudioFoleyAmbiencePrepV1.json",
+    "Scripts/prepare_p1c01_audio_intake.ps1",
+    "Data/P1C01LivingWorldFaunaPrepV1.json",
+    "Scripts/prepare_p1c01_fauna_intake.ps1",
+]:
+    if not (ROOT / pg180_rel).exists():
+        fail(f"PG-180 consolidated prep artifact missing: {pg180_rel}")
+
+pg180_arch = json.loads(read(ROOT / "Data" / "P1C01ArchitectureInteriorPropMegabatchV1.json"))
+if len(pg180_arch.get("external_items", [])) != 6:
+    fail("PG-180 architecture/interior prep must retain the authorized six-pack scope")
+for item in pg180_arch.get("external_items", []):
+    if item.get("state") != "AUTHORIZED_FOR_STAGING" or item.get("license") != "CC0":
+        fail(f"PG-180 architecture support item lost authorized CC0 state: {item.get('id')}")
+    if item.get("final_exchange") != "FBX":
+        fail(f"PG-180 architecture support final exchange must remain FBX: {item.get('id')}")
+
+pg180_char = json.loads(read(ROOT / "Data" / "P1C01CharacterRigAnimationPrepV1.json"))
+if pg180_char.get("required_bundle", {}).get("skeletal_mesh") != "FBX":
+    fail("PG-180 character rig prep lost FBX-only skeletal requirement")
+if "OBJ_AS_FINAL_ANIMATED_CHARACTER" not in pg180_char.get("forbidden", []):
+    fail("PG-180 character prep lost animated OBJ prohibition")
+
+pg180_audio = json.loads(read(ROOT / "Data" / "P1C01AudioFoleyAmbiencePrepV1.json"))
+if len(pg180_audio.get("items", [])) != 5:
+    fail("PG-180 audio prep must retain exactly five authorized P1C01 items")
+for item in pg180_audio.get("items", []):
+    if item.get("license") != "CC0" or item.get("master_requirement") != "WAV":
+        fail(f"PG-180 audio prep lost CC0/WAV contract: {item.get('id')}")
+
+pg180_fauna = json.loads(read(ROOT / "Data" / "P1C01LivingWorldFaunaPrepV1.json"))
+pg180_caps = pg180_fauna.get("living_world_caps", {})
+if pg180_caps.get("max_active_fauna_groups_near_player") != 2 or pg180_caps.get("fauna_cull_distance_cm") != 4200:
+    fail("PG-180 fauna prep drifted from current LivingWorld caps")
+for item in pg180_fauna.get("external_candidates", []):
+    if item.get("state") != "BLOCKED_LICENSE_CAPTURE":
+        fail(f"PG-180 fauna candidate advanced without explicit license capture: {item.get('id')}")
+
+pg180_scripts = "\n".join([
+    read(ROOT / "Scripts" / "prepare_p1c01_architecture_intake.ps1"),
+    read(ROOT / "Scripts" / "prepare_p1c01_character_rig_intake.ps1"),
+    read(ROOT / "Scripts" / "prepare_p1c01_audio_intake.ps1"),
+    read(ROOT / "Scripts" / "prepare_p1c01_fauna_intake.ps1"),
+])
+for marker in [
+    "receipt_sha256_mismatch",
+    "forbidden_bmp",
+    "ready_for_import=$false",
+    "STAGED_NEEDS_WAV_MASTER",
+    "license_capture_required_before_staging",
+]:
+    if marker not in pg180_scripts:
+        fail(f"PG-180 consolidated prep guard missing: {marker}")
+
+
 # PG-164: Hobbiton and Bag End architecture must preserve canon/presentation boundaries.
 pg164_h = read(resolve_source("ShirePrototypeWorldBuilder.h"))
 pg164_cpp = read(resolve_source("ShirePrototypeWorldBuilder.cpp"))
