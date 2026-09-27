@@ -1,3 +1,10 @@
+## 2026-09-27 - CI runner-health contract alignment
+
+- Repeated #118 Unreal failures were pre-build CI policy failures, not material compiler/import failures.
+- Watchdog installer and verifier now share the same accepted scheduled-task states: `Running` or `Ready`.
+- All live listener/worker ownership/session/network/workspace checks remain mandatory after the state check.
+- Status: **CI_INFRA / VALIDATOR_POLICY FIX CANDIDATE; exact-head validation pending**.
+
 ## 2026-09-27 - Expanded P1C01 16-surface material intake train
 
 - Authorized material intake scope: 16/16 Poly Haven surface candidates from the P1C01 warehouse queue.
