@@ -114,6 +114,10 @@ Each worker:
 
 The Governor is the project lead / traffic controller.
 
+## Runner ownership hard invariant
+
+The UE4.27 self-hosted runner is **not** a Windows-service lane. `actions.runner.*` must remain **Stopped / Manual**. Execution is owned by the proven interactive Windows user through the `ShireJourney-GitHubRunner-Watchdog` Scheduled Task. `NETWORK SERVICE`, `LOCAL SERVICE`, and `SYSTEM` are forbidden. A human/AI worker may inspect runner health, but must not change runner ownership/topology without explicit owner authorization. If the invariant is violated, stop and repair through the repository watchdog installer/health-verifier contract rather than enabling the service.
+
 ## Active-gate execution control
 
 The Governor does not treat every `ACTIVE` backlog item as permission to execute it.
