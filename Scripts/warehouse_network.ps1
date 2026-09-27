@@ -74,6 +74,27 @@ function Invoke-WarehouseDownload {
     }
 }
 
+function Test-WarehouseZipReadable {
+    param(
+        [Parameter(Mandatory=$true)][string]$Path
+    )
+    if (-not (Test-Path -LiteralPath $Path -PathType Leaf)) { return $false }
+    $archive = $null
+    try {
+        Add-Type -AssemblyName System.IO.Compression.FileSystem
+        $archive = [System.IO.Compression.ZipFile]::OpenRead($Path)
+        [void]$archive.Entries.Count
+        return $true
+    }
+    catch {
+        Write-Warning "WAREHOUSE_ZIP_INVALID path=$Path detail=$($_.Exception.Message)"
+        return $false
+    }
+    finally {
+        if ($null -ne $archive) { $archive.Dispose() }
+    }
+}
+
 function Test-WarehouseReceiptReusable {
     param(
         [Parameter(Mandatory=$true)][string]$ReceiptPath,
@@ -96,6 +117,9 @@ function Test-WarehouseReceiptReusable {
             if ($record.PSObject.Properties.Name -contains "size") {
                 if ([int64](Get-Item -LiteralPath $path).Length -ne [int64]$record.size) { return $false }
             }
+            if ([IO.Path]::GetExtension($path).ToLowerInvariant() -eq ".zip" -and -not (Test-WarehouseZipReadable -Path $path)) {
+                return $false
+            }
             continue
         }
         if ($record.PSObject.Properties.Name -contains "archive") {
@@ -107,6 +131,9 @@ function Test-WarehouseReceiptReusable {
             if ($record.PSObject.Properties.Name -contains "license_snapshot") {
                 $license = [string]$record.license_snapshot
                 if (-not (Test-Path -LiteralPath $license -PathType Leaf)) { return $false }
+            }
+            if ([IO.Path]::GetExtension($archive).ToLowerInvariant() -eq ".zip" -and -not (Test-WarehouseZipReadable -Path $archive)) {
+                return $false
             }
             continue
         }
