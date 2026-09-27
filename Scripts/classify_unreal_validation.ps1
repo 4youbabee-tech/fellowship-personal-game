@@ -413,6 +413,16 @@ if ($LASTEXITCODE -ne 0 -or $changed.Count -eq 0) {
     exit 0
 }
 
+$requiresCleanCompile = @($changed | Where-Object {
+    $changedPath = ($_ -replace "\\","/")
+    $changedPath.EndsWith(".Build.cs") -or
+    $changedPath.EndsWith(".Target.cs") -or
+    $changedPath -eq "ShireJourney.uproject"
+}).Count -gt 0
+if($requiresCleanCompile){
+    Write-Host "CLEAN_COMPILE_REQUIRED reason=build-rules-or-project-descriptor"
+}
+
 $safeExact = @(
     "README.md",
     "Scripts/new_developer_onboarding.ps1",
