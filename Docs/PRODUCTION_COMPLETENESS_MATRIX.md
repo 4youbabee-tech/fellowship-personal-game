@@ -1,3 +1,10 @@
+## 2026-09-28 - Warehouse cache self-repair hardening
+
+- Corrupt cached ZIP purge during receipt reuse: **SOURCE-IMPLEMENTED**.
+- Metadata-only archive contract in warehouse manifest: **SOURCE-IMPLEMENTED**.
+- PG-184 regression coverage for purge + metadata-only contract: **SOURCE-IMPLEMENTED**.
+- Exact-head static proof: **PENDING**.
+
 ## 2026-09-28 - Hosted classifier repair
 
 - Hosted Windows Pre-Unreal lane boot/checkout/Python resolution: **RUN-PROVEN** by #1269.
