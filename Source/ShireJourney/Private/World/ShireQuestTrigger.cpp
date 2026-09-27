@@ -70,6 +70,35 @@ void AShireQuestTrigger::BeginPlay()
 {
     Super::BeginPlay();
     TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &AShireQuestTrigger::OnTriggerBeginOverlap);
+    TriggerBox->OnComponentEndOverlap.AddDynamic(this, &AShireQuestTrigger::OnTriggerEndOverlap);
+
+    if (UGameInstance* GI = GetGameInstance())
+    {
+        if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
+        {
+            Quests->OnQuestStageChanged.AddDynamic(this, &AShireQuestTrigger::HandleQuestStageChanged);
+            Quests->OnActiveQuestChanged.AddDynamic(this, &AShireQuestTrigger::HandleActiveQuestChanged);
+            Quests->OnStoryBeatTriggered.AddDynamic(this, &AShireQuestTrigger::HandleStoryBeatTriggered);
+            Quests->OnQuestStateRestored.AddDynamic(this, &AShireQuestTrigger::HandleQuestStateRestored);
+        }
+    }
+}
+
+void AShireQuestTrigger::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+    if (UGameInstance* GI = GetGameInstance())
+    {
+        if (UShireQuestSubsystem* Quests = GI->GetSubsystem<UShireQuestSubsystem>())
+        {
+            Quests->OnQuestStageChanged.RemoveDynamic(this, &AShireQuestTrigger::HandleQuestStageChanged);
+            Quests->OnActiveQuestChanged.RemoveDynamic(this, &AShireQuestTrigger::HandleActiveQuestChanged);
+            Quests->OnStoryBeatTriggered.RemoveDynamic(this, &AShireQuestTrigger::HandleStoryBeatTriggered);
+            Quests->OnQuestStateRestored.RemoveDynamic(this, &AShireQuestTrigger::HandleQuestStateRestored);
+        }
+    }
+
+    OverlappingPlayer.Reset();
+    Super::EndPlay(EndPlayReason);
 }
 
 void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -77,8 +106,56 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
     const FHitResult& SweepResult)
 {
     AShirePlayerCharacter* Player = Cast<AShirePlayerCharacter>(OtherActor);
+    if (!Player)
+    {
+        return;
+    }
+
+    OverlappingPlayer = Player;
+    TryActivateForPlayer(Player);
+}
+
+void AShireQuestTrigger::OnTriggerEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+    if (OverlappingPlayer.Get() == OtherActor)
+    {
+        OverlappingPlayer.Reset();
+    }
+}
+
+void AShireQuestTrigger::HandleQuestStageChanged(FName ChangedQuestId, int32 NewStage)
+{
+    ReevaluateOverlappingPlayer();
+}
+
+void AShireQuestTrigger::HandleActiveQuestChanged(FName NewQuestId)
+{
+    ReevaluateOverlappingPlayer();
+}
+
+void AShireQuestTrigger::HandleStoryBeatTriggered(FName TriggeredStoryBeatId)
+{
+    ReevaluateOverlappingPlayer();
+}
+
+void AShireQuestTrigger::HandleQuestStateRestored()
+{
+    ReevaluateOverlappingPlayer();
+}
+
+void AShireQuestTrigger::ReevaluateOverlappingPlayer()
+{
+    if (AShirePlayerCharacter* Player = OverlappingPlayer.Get())
+    {
+        TryActivateForPlayer(Player);
+    }
+}
+
+void AShireQuestTrigger::TryActivateForPlayer(AShirePlayerCharacter* Player)
+{
     if (!Player || !Player->IsGameplayWorldCommitted() ||
-        (bTriggerOnce && bHasTriggered))
+        bActivationInProgress || (bTriggerOnce && bHasTriggered))
     {
         return;
     }
@@ -115,9 +192,9 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
         return;
     }
 
-    // Lock this trigger before broadcasting any quest/chapter delegates. A chapter
-    // transition can destroy the generated trigger immediately through the world router,
-    // so no trigger-owned state is intentionally mutated after the hand-off begins.
+    // Lock before broadcasting quest/story delegates. Those delegates can synchronously
+    // re-evaluate overlapping triggers, so the in-progress guard prevents re-entry.
+    bActivationInProgress = true;
     if (bTriggerOnce)
     {
         bHasTriggered = true;
@@ -188,10 +265,12 @@ void AShireQuestTrigger::OnTriggerBeginOverlap(UPrimitiveComponent* OverlappedCo
         const FName ChapterId = NextChapterId;
         const FName ChapterQuestId = NextChapterQuestId;
         const int32 ChapterQuestStage = NextChapterQuestStage;
+        bActivationInProgress = false;
         Quests->StartChapter(ChapterId, ChapterQuestId, ChapterQuestStage);
         return;
     }
 
+    bActivationInProgress = false;
     if (NextQuestId != NAME_None)
     {
         Quests->StartQuest(NextQuestId, NextQuestStage);
