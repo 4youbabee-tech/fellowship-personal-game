@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "batch_id": "P1C01_ARCHITECTURE_INTERIORS_PROPS_MEGABATCH_V1",
+  "status": "PREPARED_FOR_EVIDENCE_GATED_STAGING_AND_INTAKE_QC",
+  "scope": [
+    "SHIRE_HOBBITON",
+    "BAG_END"
+  ],
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/P1C01WorldBuildIntakePacketV1.json",
+    "Data/P1C01WarehousePromotionQueueV1.json",
+    "Data/WarehouseQuaterniusAcquisitionBatchV1.json",
+    "Data/WarehouseKenneyAcquisitionBatchV1.json",
+    "Data/ProductionAssetPromotionPolicyV1.json"
+  ],
+  "runtime_integration_gate": "SERIALIZE_AFTER_PR_118_MATERIAL_BATCH_MERGES_GREEN",
+  "target_profile": "Windows DX11 / 720p Low-Medium / 30 FPS floor / i7 Gen6 / 8GB RAM / approx 2GB VRAM",
+  "external_items": [
+    {
+      "id": "QTN_FARM_BUILDINGS",
+      "provider": "QUATERNIUS",
+      "category": "SHIRE_SUPPORT_ARCHITECTURE",
+      "source_page": "https://quaternius.com/packs/farmbuildings.html",
+      "license": "CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "final_exchange": "FBX",
+      "target_roles": [
+        "background barns",
+        "farm outbuildings",
+        "working-edge silhouettes"
+      ],
+      "hero_restriction": "SUPPORT_ONLY_NOT_BAG_END_HERO_SHELL"
+    },
+    {
+      "id": "QTN_FURNITURE_PACK",
+      "provider": "QUATERNIUS",
+      "category": "SHIRE_INTERIOR_SUPPORT",
+      "source_page": "https://quaternius.com/packs/furniture.html",
+      "license": "CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "final_exchange": "FBX",
+      "target_roles": [
+        "tables",
+        "chairs",
+        "shelves",
+        "domestic support furniture",
+        "Bree support furniture"
+      ],
+      "hero_restriction": "SUPPORT_ONLY"
+    },
+    {
+      "id": "QTN_MEDIEVAL_VILLAGE_CC0",
+      "provider": "QUATERNIUS",
+      "category": "SHIRE_BREE_SUPPORT_ARCHITECTURE",
+      "source_page": "https://quaternius.com/packs/medievalvillage.html",
+      "license": "CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "final_exchange": "FBX",
+      "target_roles": [
+        "non-hero village dressing",
+        "outbuildings",
+        "market/farm support props"
+      ],
+      "hero_restriction": "NO_CANONICAL_HOBBITON_HERO_REPLACEMENT"
+    },
+    {
+      "id": "NATURE_KIT",
+      "provider": "KENNEY",
+      "category": "NATURE_SUPPORT",
+      "source_page": "https://kenney.nl/assets/nature-kit",
+      "license": "CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "final_exchange": "FBX",
+      "target_roles": [
+        "background nature props",
+        "garden support",
+        "farm edge support"
+      ],
+      "hero_restriction": "SUPPORT_ONLY"
+    },
+    {
+      "id": "FURNITURE_KIT",
+      "provider": "KENNEY",
+      "category": "INTERIOR_PROPS",
+      "source_page": "https://kenney.nl/assets/furniture-kit",
+      "license": "CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "final_exchange": "FBX",
+      "target_roles": [
+        "Bag End background furniture",
+        "Hobbit home support",
+        "Bree support"
+      ],
+      "hero_restriction": "SUPPORT_ONLY"
+    },
+    {
+      "id": "FOOD_KIT",
+      "provider": "KENNEY",
+      "category": "FOOD_PROPS",
+      "source_page": "https://kenney.nl/assets/food-kit",
+      "license": "CC0",
+      "state": "AUTHORIZED_FOR_STAGING",
+      "final_exchange": "FBX",
+      "target_roles": [
+        "pantry support",
+        "party tables",
+        "market produce",
+        "kitchen dressing"
+      ],
+      "hero_restriction": "SUPPORT_ONLY"
+    }
+  ],
+  "project_owned_fallback_bank": [
+    {
+      "id": "SM_ShCottageHouse",
+      "role": "DOMESTIC_SUPPORT_ARCHITECTURE",
+      "repeat_policy": "BOUNDED_UNIQUE"
+    },
+    {
+      "id": "SM_ShMillHouse",
+      "role": "MILL_LANDMARK_SUPPORT",
+      "repeat_policy": "UNIQUE"
+    },
+    {
+      "id": "SM_ShStoneBridge",
+      "role": "BRIDGE_SUPPORT",
+      "repeat_policy": "UNIQUE"
+    },
+    {
+      "id": "SM_ShWell",
+      "role": "VILLAGE_PROP",
+      "repeat_policy": "BOUNDED_UNIQUE"
+    },
+    {
+      "id": "SM_ShMarketStall",
+      "role": "MARKET_DRESSING",
+      "repeat_policy": "ISM_HISM_CANDIDATE"
+    },
+    {
+      "id": "SM_ShStoneWall",
+      "role": "BOUNDARY_DRESSING",
+      "repeat_policy": "ISM_HISM_CANDIDATE"
+    },
+    {
+      "id": "SM_ShFarmGate",
+      "role": "FARM_BOUNDARY",
+      "repeat_policy": "BOUNDED_REPEAT"
+    },
+    {
+      "id": "SM_ShHaystack",
+      "role": "FARM_DRESSING",
+      "repeat_policy": "ISM_HISM_CANDIDATE"
+    },
+    {
+      "id": "SM_ShFlowerBox",
+      "role": "DOMESTIC_GARDEN_DETAIL",
+      "repeat_policy": "ISM_HISM_CANDIDATE"
+    },
+    {
+      "id": "SM_ShLampPost",
+      "role": "VILLAGE_LIGHT_PROP",
+      "repeat_policy": "BOUNDED_REPEAT"
+    },
+    {
+      "id": "SM_ShPicnicTable",
+      "role": "PARTY_FIELD_SUPPORT",
+      "repeat_policy": "BOUNDED_REPEAT"
+    },
+    {
+      "id": "SM_ShCartLoaded",
+      "role": "MARKET_FARM_PROP",
+      "repeat_policy": "BOUNDED_REPEAT"
+    },
+    {
+      "id": "SM_ShFenceSegment",
+      "role": "BOUNDARY_REPEAT",
+      "repeat_policy": "HISM"
+    },
+    {
+      "id": "SM_ShHedge",
+      "role": "VEGETATION_BOUNDARY",
+      "repeat_policy": "HISM"
+    },
+    {
+      "id": "SM_ShShrub",
+      "role": "GARDEN_VEGETATION",
+      "repeat_policy": "HISM"
+    },
+    {
+      "id": "SM_ShGrassClump",
+      "role": "GROUND_DETAIL",
+      "repeat_policy": "HISM"
+    },
+    {
+      "id": "SM_ShPathStone",
+      "role": "PATH_DETAIL",
+      "repeat_policy": "HISM"
+    },
+    {
+      "id": "SM_ShGardenArch",
+      "role": "GARDEN_PROP",
+      "repeat_policy": "BOUNDED_REPEAT"
+    },
+    {
+      "id": "SM_ShMailbox",
+      "role": "DOMESTIC_PROP",
+      "repeat_policy": "BOUNDED_REPEAT"
+    },
+    {
+      "id": "SM_ShProduceStand",
+      "role": "MARKET_PARTY_PROP",
+      "repeat_policy": "BOUNDED_REPEAT"
+    },
+    {
+      "id": "SM_ShPumpWell",
+      "role": "FARM_VILLAGE_PROP",
+      "repeat_policy": "BOUNDED_UNIQUE"
+    },
+    {
+      "id": "SM_ShWashLine",
+      "role": "DOMESTIC_LIFE_PROP",
+      "repeat_policy": "BOUNDED_REPEAT"
+    },
+    {
+      "id": "SM_ShFarmPlough",
+      "role": "FARM_WORK_PROP",
+      "repeat_policy": "BOUNDED_REPEAT"
+    },
+    {
+      "id": "SM_ShOrchardLadder",
+      "role": "ORCHARD_WORK_PROP",
+      "repeat_policy": "BOUNDED_REPEAT"
+    },
+    {
+      "id": "SM_ShPicnicCanopy",
+      "role": "PARTY_FIELD_PROP",
+      "repeat_policy": "BOUNDED_REPEAT"
+    },
+    {
+      "id": "SM_ShBarrel",
+      "role": "GENERAL_PROP",
+      "repeat_policy": "ISM_HISM_CANDIDATE"
+    },
+    {
+      "id": "SM_ShCrate",
+      "role": "GENERAL_PROP",
+      "repeat_policy": "ISM_HISM_CANDIDATE"
+    },
+    {
+      "id": "SM_ShBench",
+      "role": "VILLAGE_PROP",
+      "repeat_policy": "BOUNDED_REPEAT"
+    },
+    {
+      "id": "SM_ShLantern",
+      "role": "INTERIOR_EXTERIOR_PROP",
+      "repeat_policy": "ISM_HISM_CANDIDATE"
+    }
+  ],
+  "intake_contract": {
+    "required_provenance": [
+      "provider",
+      "source_page",
+      "license",
+      "local_receipt",
+      "source_sha256"
+    ],
+    "archive_state": "STAGED_ONLY_UNTIL_EXTRACTED_AND_SCANNED",
+    "accepted_texture_formats": [
+      "PNG",
+      "TGA"
+    ],
+    "forbidden_texture_formats": [
+      "BMP"
+    ],
+    "external_final_mesh_exchange": [
+      "FBX"
+    ],
+    "animated_final_mesh_exchange": [
+      "FBX"
+    ],
+    "dangerous_extensions": [
+      "EXE",
+      "MSI",
+      "CMD",
+      "BAT",
+      "PS1",
+      "VBS",
+      "JS",
+      "SCR",
+      "COM"
+    ],
+    "static_mesh_qc": [
+      "scale",
+      "pivot",
+      "UVs",
+      "normals/tangents",
+      "material slots",
+      "collision",
+      "triangle count",
+      "LOD/cull plan"
+    ],
+    "ready_for_import_rule": "No item reaches READY_FOR_IMPORT from this preparation manifest alone. Receipt + SHA256 + extracted payload + class-specific QC are required."
+  },
+  "runtime_contract": {
+    "heavy_refs": "TSoftObjectPtr/TSoftClassPtr",
+    "heavy_loading": "FStreamableManager async only",
+    "repeated_detail": "ISM/HISM",
+    "crowds": "Object Pooling",
+    "density_rule": "NO_DENSITY_ESCALATION_BEFORE_TARGET_DEVICE_PROFILING",
+    "story_anchor_rule": "NO_QUEST_OR_CHAPTER_ANCHOR_MOVES"
+  },
+  "evidence_boundary": "Preparation/intake-QC megabatch only. No external pack is claimed STAGED, READY_FOR_IMPORT, IMPORTED, INTEGRATED or ACCEPTED without item-level evidence."
+}
