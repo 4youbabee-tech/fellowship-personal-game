@@ -1,3 +1,11 @@
+## 2026-09-28 - Legacy CI guard migration completed
+
+- Hosted Pre-Unreal #1277 proved the classifier fix: all Unreal lane-selection tests passed, including the new build-rule reset case.
+- The remaining failure was entirely legacy policy drift inside `pre_unreal_validate.py`: PG-134/PG-167 still required the old self-hosted static lane, while PG-185 required the new hosted lane.
+- PG-134 and PG-167 are now migrated to the hosted exact-head static checkout contract; PG-185 now rejects the actual `- self-hosted` runner declaration instead of matching explanatory comments.
+- No runtime/gameplay behavior changed.
+- Current maturity: **SOURCE-IMPLEMENTED / NEW EXACT-HEAD STATIC RUN PENDING**.
+
 ## 2026-09-28 - Warehouse corrupt-cache purge hardened
 
 - Receipt reuse now purges structurally corrupt cached ZIPs immediately instead of only returning non-reusable.
