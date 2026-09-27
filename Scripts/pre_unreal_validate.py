@@ -7563,6 +7563,43 @@ for pg145b_watchdog_symbol in [
     if pg145b_watchdog_symbol not in pg145b_watchdog:
         fail(f"PG-145B runner watchdog recovery contract missing: {pg145b_watchdog_symbol}")
 
+pg145b_service_guard = read(ROOT / "Scripts" / "runner_service_guard.ps1")
+for pg145b_service_guard_symbol in [
+    "actions.runner.*",
+    "StartupType Disabled",
+    "sc.exe delete",
+    "NETWORK SERVICE",
+    "LOCAL SERVICE",
+    "SYSTEM",
+    "RUNNER_SERVICE_GUARD_PASS",
+]:
+    if pg145b_service_guard_symbol not in pg145b_service_guard:
+        fail(f"PG-145B permanent runner service guard missing: {pg145b_service_guard_symbol}")
+
+pg145b_installer = read(ROOT / "Scripts" / "install_runner_watchdog.ps1")
+for pg145b_installer_symbol in [
+    "runner_service_guard.ps1",
+    "installedServiceGuard",
+    "serviceOwnership=absent-or-disabled-stopped",
+]:
+    if pg145b_installer_symbol not in pg145b_installer:
+        fail(f"PG-145B watchdog installer must permanently exclude service mode: {pg145b_installer_symbol}")
+
+for pg145b_watchdog_service_symbol in [
+    "ServiceGuardPath",
+    "Invoke-ServiceOwnershipGuard",
+]:
+    if pg145b_watchdog_service_symbol not in pg145b_watchdog:
+        fail(f"PG-145B watchdog must continuously enforce service exclusion: {pg145b_watchdog_service_symbol}")
+
+for pg145b_probe_service_symbol in [
+    "legacyService=",
+    "stopped-disabled",
+]:
+    if pg145b_probe_service_symbol not in pg145b_probe:
+        fail(f"PG-145B runner health must require service absent/disabled: {pg145b_probe_service_symbol}")
+
+
 pg145b_health_workflow = read(ROOT / ".github" / "workflows" / "runner-health.yml")
 if "workflow_dispatch:" not in pg145b_health_workflow or "verify_runner_session.ps1" not in pg145b_health_workflow:
     fail("PG-145B manual runner health workflow is incomplete")
