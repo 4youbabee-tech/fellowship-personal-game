@@ -1,3 +1,11 @@
+## 2026-09-28 - CI root repair V3: zero-waste trigger routing
+
+- Unreal Build Validation now treats `Data/MasterExecutionRoadmap.json` as governance-only, preventing roadmap-only PR sync from consuming the UE4 runner.
+- Warehouse critical-gap preparation now exits at receipt-integrity preflight before any archive inventory when missing/hash/bad-receipt blockers already exist.
+- PG-184 now locks the preflight marker so future changes cannot silently reintroduce delayed failure.
+- PR #128 is intentionally configured so repair commits should trigger only hosted Pre-Unreal validation; no Warehouse PR run and no Unreal run are expected from repair-only deltas.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING**.
+
 ## 2026-09-28 - CI root repair V2: split proof lanes and preserve build state
 
 - Production remains frozen while infrastructure is repaired.
