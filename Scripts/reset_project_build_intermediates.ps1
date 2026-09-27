@@ -108,8 +108,14 @@ function Get-FileLockOwners {
 
         $owners = @()
         foreach ($app in $apps) {
+            [long]$startLow = $app.Process.ProcessStartTime.dwLowDateTime
+            [long]$startHigh = $app.Process.ProcessStartTime.dwHighDateTime
+            if ($startLow -lt 0) { $startLow += 4294967296 }
+            if ($startHigh -lt 0) { $startHigh += 4294967296 }
+            [long]$startFileTime = ($startHigh -shl 32) -bor $startLow
             $owners += [pscustomobject]@{
                 ProcessId = [int]$app.Process.dwProcessId
+                ProcessStartFileTime = $startFileTime
                 AppName = [string]$app.strAppName
                 Service = [string]$app.strServiceShortName
             }
@@ -182,26 +188,66 @@ foreach ($path in $paths) {
             throw "BUILD_CLEANUP_DIAGNOSTIC path=$blockedFile identity=$identity lockQuery=unavailable detail=$($_.Exception.Message) $aclDiagnostic"
         }
 
-        if ($owners.Count -gt 0) {
-            $ownerDetails = ($owners | ForEach-Object { "$($_.AppName)(PID=$($_.ProcessId),Service=$($_.Service))" }) -join ", "
+        $liveOwners = @()
+        $staleOwners = @()
+        foreach ($owner in $owners) {
+            $process = Get-Process -Id $owner.ProcessId -ErrorAction SilentlyContinue
+            if (-not $process) {
+                $staleOwners += $owner
+                continue
+            }
+
+            try {
+                [long]$observedStartFileTime = $process.StartTime.ToUniversalTime().ToFileTimeUtc()
+            }
+            catch {
+                $liveOwners += $owner
+                continue
+            }
+
+            if ($observedStartFileTime -ne $owner.ProcessStartFileTime) {
+                $staleOwners += $owner
+            }
+            else {
+                $liveOwners += $owner
+            }
+        }
+
+        if ($liveOwners.Count -gt 0) {
+            $ownerDetails = ($liveOwners | ForEach-Object { "$($_.AppName)(PID=$($_.ProcessId),StartFileTime=$($_.ProcessStartFileTime),Service=$($_.Service))" }) -join ", "
             throw "BUILD_FILE_LOCKED path=$blockedFile owners=[$ownerDetails]; failing immediately without terminating any process."
         }
 
-        $aclDiagnostic = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
-        Write-Warning "No live Restart Manager owner holds $blockedFile. Granting Modify only on generated build output $fullPath to runner identity $identity. $aclDiagnostic"
-        $grant = & (Join-Path $env:SystemRoot "System32\icacls.exe") $fullPath /grant ($identity + ":(OI)(CI)M") /T /C 2>&1
-        $grantExit = $LASTEXITCODE
-        if ($grantExit -ne 0) {
-            $afterGrantAcl = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
-            throw "BUILD_CLEANUP_ACL_REPAIR_FAILED path=$fullPath identity=$identity icaclsExit=$grantExit output=$(($grant -join ' ')) $afterGrantAcl"
+        $retriedAfterStaleOwner = $false
+        if ($staleOwners.Count -gt 0) {
+            $staleDetails = ($staleOwners | ForEach-Object { "$($_.AppName)(PID=$($_.ProcessId),StartFileTime=$($_.ProcessStartFileTime))" }) -join ", "
+            Write-Warning "Restart Manager returned exited or PID-reused owners for $blockedFile: [$staleDetails]. Retrying cleanup once immediately; no process will be terminated."
+            try {
+                Remove-Item -LiteralPath $fullPath -Recurse -Force -ErrorAction Stop
+                $retriedAfterStaleOwner = $true
+            }
+            catch {
+                $deleteError = $_.Exception.Message
+            }
         }
 
-        try {
-            Remove-Item -LiteralPath $fullPath -Recurse -Force -ErrorAction Stop
-        }
-        catch {
-            $afterGrantAcl = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
-            throw "BUILD_CLEANUP_RETRY_FAILED path=$fullPath blockedFile=$blockedFile identity=$identity error=$($_.Exception.Message) $afterGrantAcl"
+        if (-not $retriedAfterStaleOwner) {
+            $aclDiagnostic = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
+            Write-Warning "No live Restart Manager owner holds $blockedFile. Granting Modify only on generated build output $fullPath to runner identity $identity. $aclDiagnostic"
+            $grant = & (Join-Path $env:SystemRoot "System32\icacls.exe") $fullPath /grant ($identity + ":(OI)(CI)M") /T /C 2>&1
+            $grantExit = $LASTEXITCODE
+            if ($grantExit -ne 0) {
+                $afterGrantAcl = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
+                throw "BUILD_CLEANUP_ACL_REPAIR_FAILED path=$fullPath identity=$identity icaclsExit=$grantExit output=$(($grant -join ' ')) $afterGrantAcl"
+            }
+
+            try {
+                Remove-Item -LiteralPath $fullPath -Recurse -Force -ErrorAction Stop
+            }
+            catch {
+                $afterGrantAcl = Get-AccessDiagnostic -TargetPath $blockedFile -Identity $identity
+                throw "BUILD_CLEANUP_RETRY_FAILED path=$fullPath blockedFile=$blockedFile identity=$identity error=$($_.Exception.Message) $afterGrantAcl"
+            }
         }
     }
 

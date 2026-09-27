@@ -3388,6 +3388,9 @@ for marker in [
     "RmGetList",
     "BUILD_FILE_LOCKED",
     "BUILD_CLEANUP_ACL_REPAIR_FAILED",
+    "ProcessStartFileTime",
+    "Get-Process -Id $owner.ProcessId",
+    "PID-reused owners",
     "icacls.exe",
 ]:
     if marker not in build_cleanup:
