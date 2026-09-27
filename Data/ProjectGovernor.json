@@ -3978,6 +3978,37 @@
       ],
       "evidence_boundary": "ROOT-CAUSE RUNNER TOPOLOGY MACHINE-PROVEN on Unreal #1021 exact head. This is infrastructure proof only; the governance fast path skipped C++ build/import/PIE/package and creates no gameplay/device/visual/performance acceptance.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-052",
+      "title": "Freeze production trains until CI and warehouse repetition defects are removed",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004",
+        "REQ-MEM-001"
+      ],
+      "resolution": "Stop active production PR churn and repair CI/warehouse architecture before resuming P1C01 production. Repeated warehouse PR runs and full archive extraction are treated as infrastructure defects, not as acceptable validation cost.",
+      "implementation_contract": [
+        "No new production/runtime PR is opened while the repair branch is being hardened.",
+        "Warehouse Stage must not run on pull_request synchronize; it runs only after warehouse-impacting changes land on develop or by explicit manual dispatch.",
+        "Critical-gap intake QC inventories ZIP metadata without extracting every archive on every run.",
+        "Receipt reuse rejects structurally corrupt ZIPs; provider staging removes and redownloads corrupt cached archives before writing/reusing receipts.",
+        "Duplicate receipt rows are deduplicated before hashing/classification.",
+        "Blocked warehouse items print exact provider/asset/path/reason immediately.",
+        "Existing closed production branches remain preserved for later salvage; no completed runtime work is discarded."
+      ],
+      "evidence": [
+        "Warehouse Stage #269/#270 repeated ~12-13 minute failures on PR #125.",
+        "Warehouse #270 blockers: duplicate AmbientCG Plaster007 corrupt ZIP central directory and KayKit extraction path failure.",
+        "Scripts/warehouse_network.ps1",
+        "Scripts/run_warehouse_critical_gap_preparation.ps1",
+        "Scripts/stage_ambientcg_warehouse.ps1",
+        "Scripts/stage_kaykit_github_warehouse.ps1",
+        "Scripts/pre_unreal_validate.py PG-184"
+      ],
+      "evidence_boundary": "INFRASTRUCTURE/CI ROOT-REPAIR SOURCE CHANGES ONLY. No new compile/PIE/device/visual/performance acceptance is created.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
@@ -5814,7 +5845,25 @@
       "Continue Living Shire motion/fauna plus quest/audio polish without reopening unrelated CI/root repair.",
       "Run target-device DX11 720p Low-Medium profiling before any density or expensive presentation expansion; Gate 6/7 remains required before broad Part II/III runtime production."
     ],
-    "runner_infrastructure_guard": "HARD: service-mode runner ownership is eliminated, not merely discouraged. actions.runner.* must be absent or Stopped+Disabled pending deletion. UE4-27-Windows runs only via the interactive-user watchdog; NETWORK SERVICE/LOCAL SERVICE/SYSTEM are forbidden."
+    "runner_infrastructure_guard": "HARD: service-mode runner ownership is eliminated, not merely discouraged. actions.runner.* must be absent or Stopped+Disabled pending deletion. UE4-27-Windows runs only via the interactive-user watchdog; NETWORK SERVICE/LOCAL SERVICE/SYSTEM are forbidden.",
+    "production_freeze": {
+      "status": "ACTIVE",
+      "reason": "Owner requested production work stop until repeated runner/warehouse/CI waste is fixed at the root.",
+      "allowed_work": [
+        "CI classifier and workflow hardening",
+        "warehouse fail-fast/reuse/cache/integrity repair",
+        "runner governance hardening",
+        "developer onboarding/governor hardening",
+        "static validation of the repair branch"
+      ],
+      "forbidden_until_release": [
+        "new gameplay feature train",
+        "new chapter",
+        "new warehouse saturation rerun without changed inputs",
+        "repeated full Unreal validation caused only by policy/docs churn"
+      ],
+      "release_condition": "Repair branch passes exact-head static validation and one intentionally selected machine validation proving the repaired path without repeated redundant work."
+    }
   },
   "development_mode_contract": {
     "schema_version": 1,
