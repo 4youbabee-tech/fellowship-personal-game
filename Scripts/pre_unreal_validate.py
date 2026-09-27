@@ -3363,19 +3363,19 @@ editor_probe_marker = "echo Unreal Editor is closed.\n          exit /b 0"
 editor_wait_script_path = ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd"
 editor_wait_script = read(editor_wait_script_path) if editor_wait_script_path.exists() else ""
 editor_wait_contract_ok = (
-    (
-        "Get-Process -Name UE4Editor" in unreal_ci
-        and "AddMinutes(20)" in unreal_ci
-        and "Start-Sleep -Seconds 10" in unreal_ci
-        and "exit 40" in unreal_ci
-    )
-    or (
-        "ci_wait_for_unreal_editor.cmd" in unreal_ci
-        and "Get-Process -Name UE4Editor" in editor_wait_script
-        and "AddMinutes(20)" in editor_wait_script
-        and "Start-Sleep -Seconds 10" in editor_wait_script
-        and "exit 40" in editor_wait_script
-    )
+    "ci_wait_for_unreal_editor.cmd" in unreal_ci
+    and "Get-Process -Name UE4Editor,UE4Editor-Cmd" in editor_wait_script
+    and "Failing immediately" in editor_wait_script
+    and "Stop-Process -Id $editor.Id -Force" in editor_wait_script
+    and "exit 40" in editor_wait_script
+    and "$projectMatch" in editor_wait_script
+    and "$ciFlags" in editor_wait_script
+    and "$engineMatch" in editor_wait_script
+    and "$owner -ieq $currentOwner" in editor_wait_script
+    and "$created -lt $observedBefore" in editor_wait_script
+    and "-not $parent" in editor_wait_script
+    and "AddMinutes(20)" not in editor_wait_script
+    and "Start-Sleep -Seconds 10" not in editor_wait_script
 )
 if editor_probe_marker not in unreal_ci and not editor_wait_contract_ok:
     fail("PG-015: Unreal self-hosted validation must either prove the editor is closed or wait safely for it without terminating the user's editor")
