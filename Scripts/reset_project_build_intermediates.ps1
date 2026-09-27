@@ -221,7 +221,7 @@ foreach ($path in $paths) {
         $retriedAfterStaleOwner = $false
         if ($staleOwners.Count -gt 0) {
             $staleDetails = ($staleOwners | ForEach-Object { "$($_.AppName)(PID=$($_.ProcessId),StartFileTime=$($_.ProcessStartFileTime))" }) -join ", "
-            Write-Warning "Restart Manager returned exited or PID-reused owners for $blockedFile: [$staleDetails]. Retrying cleanup once immediately; no process will be terminated."
+            Write-Warning "Restart Manager returned exited or PID-reused owners for ${blockedFile}: [$staleDetails]. Retrying cleanup once immediately; no process will be terminated."
             try {
                 Remove-Item -LiteralPath $fullPath -Recurse -Force -ErrorAction Stop
                 $retriedAfterStaleOwner = $true
