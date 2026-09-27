@@ -1,3 +1,34 @@
+## 2026-09-27 - P1C01 material train scope expansion
+
+Owner requested a larger monitored production train. The active material batch is expanded coherently rather than opening many tiny branches:
+
+- Poly Haven staging/intake scope increases from 8 to all 16 already-authorized Shire/Bag End surface candidates.
+- External promotion remains fail-closed: no candidate may advance beyond `AUTHORIZED_FOR_STAGING` without real warehouse source/license/receipt/SHA256 and prepared-file QC.
+- The preparation script now carries bounded specular response through generated MTL `Ks` while keeping the one-albedo low-spec runtime contract.
+- Pre-Unreal enforces the expanded material-wave contract.
+- No new chapter, no foliage-density increase and no visual/device acceptance claim are introduced by this expansion.
+
+Status: **IMPLEMENTATION EXPANDED / ENGINE VALIDATION BLOCKED BY RUNNER HEALTH**.
+
+## 2026-09-27 - P1C01 Shire material surface-set production train
+
+Registered before implementation under existing `REQ-WORLD-002`, `REQ-PROD-007`, `REQ-ASSET-001` and `REQ-WAREHOUSE-001`.
+
+Scope for this batch:
+- Promote the project-owned Shire TGA palette into a documented surface set rather than leaving it as an implicit MTL collection.
+- Extend the production surface/foliage masters with a bounded specular response driven from authored MTL `Ks` data.
+- Keep the current low-spec contract: no extra texture samples, no 4K content, no runtime synchronous heavy loads, and no foliage density increase.
+- Preserve existing roughness/metallic authoring and foliage near/far parent split.
+- Produce exact-head UE4.27 build/import evidence before merge; no PIE/device/visual acceptance is implied.
+
+Train order after this batch:
+1. Shire project-owned material surface set.
+2. Evidence-backed external surface intake (Poly Haven) only with source/license/receipt/SHA256.
+3. Shire support architecture/interior prop intake.
+4. Living-world visual integration/polish under the existing P1C01 lane.
+
+Status: **REGISTERED / IMPLEMENTATION STARTED**.
+
 ## 2026-09-27 - P1C01 player-experience convergence defect batch
 
 Registered before implementation from source review on `develop@c79168cf385ba02f4b542940de3b089e700f1f18`.

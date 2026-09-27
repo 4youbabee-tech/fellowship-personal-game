@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "wave_id": "P1C01_MATERIAL_IMPORT_WAVE_V1",
-  "status": "READY_FOR_LOCAL_WAREHOUSE_INTAKE",
-  "purpose": "Prepare an open-source Shire/Bag End material wave against the existing UE4 production importer without expanding the runtime material master before C3/C4 gates.",
+  "status": "READY_FOR_LOCAL_WAREHOUSE_INTAKE_EXPANDED",
+  "purpose": "Prepare the complete authorized Poly Haven Shire/Bag End surface wave against the existing UE4 production importer, using receipt/SHA256-gated local staging and bounded scalar material response.",
   "target_profile": "i7 Gen6 / 8GB RAM / approx 2GB VRAM / DX11 / 720p Low-Medium / 30 FPS floor",
   "source_grounding": [
     "SRC03_WORLD pages 6-7: Shire/Hobbiton pastoral hills, lanes, farms, Hobbit-holes, warm domestic scale, circular doors and gardens; Bag End dense lived-in props and round geometry.",
@@ -52,7 +52,9 @@
         "Hobbiton lawns",
         "Party Field support",
         "pastoral path edges"
-      ]
+      ],
+      "specular": 0.1,
+      "state": "AUTHORIZED_FOR_STAGING"
     },
     {
       "id": "SH_DIRT_SOIL",
@@ -64,7 +66,9 @@
       "use": [
         "farm soil",
         "bare Shire ground"
-      ]
+      ],
+      "specular": 0.08,
+      "state": "AUTHORIZED_FOR_STAGING"
     },
     {
       "id": "SH_STONY_PATH",
@@ -76,7 +80,9 @@
       "use": [
         "Shire lanes",
         "property approaches"
-      ]
+      ],
+      "specular": 0.12,
+      "state": "AUTHORIZED_FOR_STAGING"
     },
     {
       "id": "SH_WARM_PLASTER",
@@ -88,7 +94,9 @@
       "use": [
         "Hobbit-hole support walls",
         "Bag End support surfaces"
-      ]
+      ],
+      "specular": 0.1,
+      "state": "AUTHORIZED_FOR_STAGING"
     },
     {
       "id": "SH_MOSS_STONE",
@@ -101,7 +109,9 @@
         "garden edging",
         "bridges",
         "Shire stone accents"
-      ]
+      ],
+      "specular": 0.12,
+      "state": "AUTHORIZED_FOR_STAGING"
     },
     {
       "id": "SH_WOOD_INTERIOR",
@@ -114,7 +124,9 @@
         "Bag End floors",
         "furniture support",
         "warm domestic interiors"
-      ]
+      ],
+      "specular": 0.16,
+      "state": "AUTHORIZED_FOR_STAGING"
     },
     {
       "id": "SH_TREE_BARK",
@@ -126,7 +138,9 @@
       "use": [
         "tree trunks",
         "woodland support"
-      ]
+      ],
+      "specular": 0.08,
+      "state": "AUTHORIZED_FOR_STAGING"
     },
     {
       "id": "SH_FOREST_FLOOR",
@@ -139,7 +153,129 @@
         "wooded road",
         "hedgerow undergrowth",
         "forest transition"
-      ]
+      ],
+      "specular": 0.08,
+      "state": "AUTHORIZED_FOR_STAGING"
+    },
+    {
+      "id": "SH_WOOD_INTERIOR_ALT",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "wooden_floor_02",
+      "material_name": "MI_Sh_WoodInteriorAlt_PH",
+      "roughness": 0.7,
+      "metallic": 0,
+      "specular": 0.16,
+      "use": [
+        "Bag End alternate floors",
+        "furniture material variation",
+        "Bree support interiors"
+      ],
+      "state": "AUTHORIZED_FOR_STAGING"
+    },
+    {
+      "id": "SH_GRASS_PATH",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "grass_path_2",
+      "material_name": "MI_Sh_GrassPath_PH",
+      "roughness": 0.88,
+      "metallic": 0,
+      "specular": 0.08,
+      "use": [
+        "Shire footpaths",
+        "pastoral transitions",
+        "Party Field path edges"
+      ],
+      "state": "AUTHORIZED_FOR_STAGING"
+    },
+    {
+      "id": "SH_DAMP_SOIL",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "park_dirt",
+      "material_name": "MI_Sh_DampSoil_PH",
+      "roughness": 0.86,
+      "metallic": 0,
+      "specular": 0.08,
+      "use": [
+        "garden soil",
+        "damp lane variation",
+        "riverbank support"
+      ],
+      "state": "AUTHORIZED_FOR_STAGING"
+    },
+    {
+      "id": "SH_LEAF_LITTER",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "leaves_forest_ground",
+      "material_name": "MI_Sh_LeafLitter_PH",
+      "roughness": 0.9,
+      "metallic": 0,
+      "specular": 0.07,
+      "use": [
+        "wooded-road leaf litter",
+        "hedge-edge breakup",
+        "autumn support"
+      ],
+      "state": "AUTHORIZED_FOR_STAGING"
+    },
+    {
+      "id": "SH_RUSTIC_PATH",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "wood_stone_pathway",
+      "material_name": "MI_Sh_RusticPath_PH",
+      "roughness": 0.82,
+      "metallic": 0,
+      "specular": 0.12,
+      "use": [
+        "rustic path accents",
+        "farm approaches",
+        "Bree support stock"
+      ],
+      "state": "AUTHORIZED_FOR_STAGING"
+    },
+    {
+      "id": "SH_WOOD_CHIPS",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "wood_chips",
+      "material_name": "MI_Sh_WoodChips_PH",
+      "roughness": 0.88,
+      "metallic": 0,
+      "specular": 0.07,
+      "use": [
+        "garden mulch",
+        "orchard tree bases",
+        "farmyard detail"
+      ],
+      "state": "AUTHORIZED_FOR_STAGING"
+    },
+    {
+      "id": "SH_FOREST_GROUND_ALT",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "forrest_ground_01",
+      "material_name": "MI_Sh_ForestGroundAlt_PH",
+      "roughness": 0.89,
+      "metallic": 0,
+      "specular": 0.08,
+      "use": [
+        "Shire woodland floor",
+        "hedge/forest transition",
+        "Amon Hen support stock"
+      ],
+      "state": "AUTHORIZED_FOR_STAGING"
+    },
+    {
+      "id": "SH_MOSSY_LEAVES",
+      "provider": "POLY_HAVEN",
+      "asset_slug": "forest_leaves_02",
+      "material_name": "MI_Sh_MossyLeaves_PH",
+      "roughness": 0.9,
+      "metallic": 0,
+      "specular": 0.08,
+      "use": [
+        "shaded Shire woodland",
+        "mossy leaf-litter breakup",
+        "Rivendell/Ithilien support stock"
+      ],
+      "state": "AUTHORIZED_FOR_STAGING"
     }
   ],
   "fallback_search_lane": {
@@ -158,7 +294,8 @@
       "AlbedoTexture",
       "Color",
       "Roughness scalar",
-      "Metallic scalar"
+      "Metallic scalar",
+      "Specular scalar"
     ],
     "stage_for_later": [
       "Normal",
@@ -167,9 +304,9 @@
       "Metallic texture",
       "Height/Displacement"
     ],
-    "rule": "Do not expand the material master in this preparation wave."
+    "rule": "Use one albedo texture plus authored scalar Roughness/Metallic/Specular in this low-spec wave. Do not add extra runtime texture samples before measured target-device approval."
   },
   "foliage_boundary": "Do not auto-reparent imported enhancement materials into foliage masters; C3 stable identities remain Grass/Leaves/LeafGreen/LeafGold and C4 owns far/no-WPO binding.",
   "density_rule": "No foliage/detail density increase.",
-  "evidence_boundary": "Preparation only until a real local intake/import receipt exists."
+  "evidence_boundary": "Expanded 16-item authorized staging/intake plan only. No item advances beyond AUTHORIZED_FOR_STAGING until warehouse source/license/receipt/SHA256 and prepared-file QC exist."
 }

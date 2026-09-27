@@ -512,6 +512,13 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             SurfaceMaterial->Expressions.Add(MetallicParameter);
             SurfaceMaterial->Metallic.Expression = MetallicParameter;
 
+            UMaterialExpressionScalarParameter* SpecularParameter =
+                NewObject<UMaterialExpressionScalarParameter>(SurfaceMaterial);
+            SpecularParameter->ParameterName = TEXT("Specular");
+            SpecularParameter->DefaultValue = 0.32f;
+            SurfaceMaterial->Expressions.Add(SpecularParameter);
+            SurfaceMaterial->Specular.Expression = SpecularParameter;
+
             SurfaceMaterial->PostEditChange();
             SurfaceMaterial->MarkPackageDirty();
             ImportedMaterialPackages.AddUnique(SurfaceMaterial->GetOutermost());
@@ -673,6 +680,13 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             FoliageMaterial->Expressions.Add(FoliageMetallicParameter);
             FoliageMaterial->Metallic.Expression = FoliageMetallicParameter;
 
+            UMaterialExpressionScalarParameter* FoliageSpecularParameter =
+                NewObject<UMaterialExpressionScalarParameter>(FoliageMaterial);
+            FoliageSpecularParameter->ParameterName = TEXT("Specular");
+            FoliageSpecularParameter->DefaultValue = 0.20f;
+            FoliageMaterial->Expressions.Add(FoliageSpecularParameter);
+            FoliageMaterial->Specular.Expression = FoliageSpecularParameter;
+
             UMaterialExpressionScalarParameter* WindIntensityParameter =
                 NewObject<UMaterialExpressionScalarParameter>(FoliageMaterial);
             WindIntensityParameter->ParameterName = TEXT("WindIntensity");
@@ -819,6 +833,13 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             FoliageFarMaterial->Expressions.Add(FoliageFarMetallicParameter);
             FoliageFarMaterial->Metallic.Expression = FoliageFarMetallicParameter;
 
+            UMaterialExpressionScalarParameter* FoliageFarSpecularParameter =
+                NewObject<UMaterialExpressionScalarParameter>(FoliageFarMaterial);
+            FoliageFarSpecularParameter->ParameterName = TEXT("Specular");
+            FoliageFarSpecularParameter->DefaultValue = 0.20f;
+            FoliageFarMaterial->Expressions.Add(FoliageFarSpecularParameter);
+            FoliageFarMaterial->Specular.Expression = FoliageFarSpecularParameter;
+
             FoliageFarMaterial->PostEditChange();
             FoliageFarMaterial->MarkPackageDirty();
             ImportedMaterialPackages.AddUnique(FoliageFarMaterial->GetOutermost());
@@ -866,6 +887,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             FLinearColor CurrentBaseColor(0.35f, 0.35f, 0.35f, 1.0f);
             float CurrentRoughness = 0.68f;
             float CurrentMetallic = 0.0f;
+            float CurrentSpecular = 0.32f;
 
             auto FlushMaterial = [&]()
             {
@@ -936,6 +958,9 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     Instance->SetScalarParameterValueEditorOnly(
                         FMaterialParameterInfo(TEXT("Metallic")),
                         FMath::Clamp(CurrentMetallic, 0.0f, 1.0f));
+                    Instance->SetScalarParameterValueEditorOnly(
+                        FMaterialParameterInfo(TEXT("Specular")),
+                        FMath::Clamp(CurrentSpecular, 0.0f, 1.0f));
 
                     if (!CurrentAlbedoMap.IsEmpty())
                     {
@@ -967,10 +992,14 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     UE_LOG(
                         LogTemp,
                         Display,
-                        TEXT("ShireProductionImport material parent: identity=%s parent=%s foliage=%s"),
+                        TEXT("ShireProductionImport material response: identity=%s parent=%s foliage=%s roughness=%.3f metallic=%.3f specular=%.3f albedo=%s"),
                         *CurrentMaterialName,
                         *DesiredMaterialParent->GetPathName(),
-                        bApprovedFoliageIdentity ? TEXT("yes") : TEXT("no"));
+                        bApprovedFoliageIdentity ? TEXT("yes") : TEXT("no"),
+                        CurrentRoughness,
+                        CurrentMetallic,
+                        CurrentSpecular,
+                        CurrentAlbedoMap.IsEmpty() ? TEXT("none") : *CurrentAlbedoMap);
 
                     Instance->PostEditChange();
                     Instance->MarkPackageDirty();
@@ -1000,6 +1029,7 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     CurrentBaseColor = FLinearColor(0.35f, 0.35f, 0.35f, 1.0f);
                     CurrentRoughness = 0.68f;
                     CurrentMetallic = 0.0f;
+                    CurrentSpecular = 0.32f;
                 }
                 else if (Line.StartsWith(TEXT("Kd "), ESearchCase::IgnoreCase) &&
                     !CurrentMaterialName.IsEmpty())
@@ -1033,6 +1063,19 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
                     if (Parts.Num() >= 2)
                     {
                         CurrentMetallic = FCString::Atof(*Parts[1]);
+                    }
+                }
+                else if (Line.StartsWith(TEXT("Ks "), ESearchCase::IgnoreCase) &&
+                    !CurrentMaterialName.IsEmpty())
+                {
+                    TArray<FString> Parts;
+                    Line.ParseIntoArrayWS(Parts);
+                    if (Parts.Num() >= 4)
+                    {
+                        const float KsR = FCString::Atof(*Parts[1]);
+                        const float KsG = FCString::Atof(*Parts[2]);
+                        const float KsB = FCString::Atof(*Parts[3]);
+                        CurrentSpecular = FMath::Clamp((KsR + KsG + KsB) / 3.0f * 4.0f, 0.02f, 0.65f);
                     }
                 }
                 else if (Line.StartsWith(TEXT("map_Kd "), ESearchCase::IgnoreCase) &&

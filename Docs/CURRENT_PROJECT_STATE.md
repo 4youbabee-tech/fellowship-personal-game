@@ -1,3 +1,29 @@
+## 2026-09-27 - Runner watchdog state-contract blocker repaired on active material branch
+
+- Unreal #915 and #920 both stopped before compilation at `Verify runner session health` with `RUNNER_HEALTH_FAIL watchdog-state state=Ready`.
+- Root cause is a validator-policy mismatch: `install_runner_watchdog.ps1` explicitly accepts both `Running` and `Ready` as healthy scheduled-task states, while `verify_runner_session.ps1` accepted only `Running`.
+- The verifier now accepts the same `Running|Ready` contract and continues into the stricter live process checks for exactly one interactive-user `Runner.Listener`, active `Runner.Worker`, session ownership, network, workspace and resources.
+- `Ready` is logged explicitly as `RUNNER_HEALTH_WATCHDOG_READY`; it is not relabeled as engine proof.
+- Evidence boundary: **CI validator-policy fix implemented / fresh exact-head rerun required**. No compile/import/PIE/device/visual claim is created by this repair.
+
+## 2026-09-27 - P1C01 material train expanded to the full authorized Poly Haven surface set
+
+- The active #118 material batch now covers all **16** Poly Haven Shire/Bag End surface candidates already authorized by `P1C01WarehousePromotionQueueV1.json`, rather than the earlier 8-item subset.
+- `Data/P1C01MaterialImportWaveV1.json` now carries bounded authored Roughness/Metallic/Specular scalars for every item and keeps every external candidate at `AUTHORIZED_FOR_STAGING` until receipt-backed intake exists.
+- `Scripts/prepare_p1c01_material_intake.ps1` now emits one PNG/TGA base-color candidate plus scalar `Pr/Pm/Ks`, SHA256 hashes for prepared base color and generated MTL, and richer prepared/pending/blocked counts.
+- `Scripts/pre_unreal_validate.py` now guards the 16-item completeness, queue authority, duplicate IDs/slugs, scalar bounds, low-spec material parameter contract, SHA256 preparation and BMP prohibition.
+- This expansion still adds no runtime texture sample beyond the existing albedo slot, does not increase foliage/detail density, and does not promote an external asset without source/license/receipt/SHA256 evidence.
+- The current Unreal validation blocker remains runner infrastructure: run #915 has repeatedly failed at `Verify runner session health` with `RUNNER_HEALTH_FAIL watchdog-state state=Ready` before UE4 build/import starts. The material implementation itself therefore remains **SOURCE-IMPLEMENTED / exact-head engine proof pending**.
+
+## 2026-09-27 - P1C01 Shire material surface-set train started
+
+- Active production batch: `P1C01_SHIRE_MATERIAL_SURFACE_SET_V1` on branch `production/p1c01-shire-material-surface-set-v1`.
+- Added `Data/P1C01ShireMaterialSurfaceSetV1.json` covering the existing project-owned Shire TGA palette (Bark, Dirt, DoorGreen, Grass, Leaves, Stone, Wood) and eight authored material identities.
+- `ShireProductionImportCommandlet` now carries a bounded `Specular` scalar on production surface and foliage masters and derives authored instance specular response from MTL `Ks` values. No extra texture samples, no foliage density increase and no new runtime heavy-load path were introduced.
+- Existing roughness/metallic values, foliage near/far split and TGA albedo bindings are preserved.
+- Train sequence after this batch: evidence-backed Poly Haven surface intake -> Shire support architecture/interiors -> living-world visual integration/polish. External items remain fail-closed without source/license/receipt/SHA256.
+- Evidence boundary: **SOURCE-IMPLEMENTED / exact-head validation pending**. No PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-27 - P1C01 player-experience convergence implementation
 
 Source-verified defects from the P1C01 interaction path are implemented as one bounded gameplay batch:

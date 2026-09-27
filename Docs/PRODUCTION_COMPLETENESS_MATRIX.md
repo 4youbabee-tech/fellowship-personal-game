@@ -1,3 +1,26 @@
+## 2026-09-27 - CI runner-health contract alignment
+
+- Repeated #118 Unreal failures were pre-build CI policy failures, not material compiler/import failures.
+- Watchdog installer and verifier now share the same accepted scheduled-task states: `Running` or `Ready`.
+- All live listener/worker ownership/session/network/workspace checks remain mandatory after the state check.
+- Status: **CI_INFRA / VALIDATOR_POLICY FIX CANDIDATE; exact-head validation pending**.
+
+## 2026-09-27 - Expanded P1C01 16-surface material intake train
+
+- Authorized material intake scope: 16/16 Poly Haven surface candidates from the P1C01 warehouse queue.
+- Preparation contract: PNG/TGA base color + scalar Roughness/Metallic/Specular + SHA256 receipt; BMP remains forbidden.
+- Pre-Unreal now fails closed on missing queue authority, duplicates, out-of-range scalars, incomplete low-spec bindings or missing intake guards.
+- Runtime-cost boundary remains unchanged: one albedo texture sample per prepared material, no density increase, no new synchronous heavy runtime loading.
+- Validation status: **SOURCE-IMPLEMENTED / exact-head UE4.27 build-import pending** because Unreal #915 is blocked before build by runner-health watchdog state, not by a compiler/import result.
+
+## 2026-09-27 - P1C01 Shire material surface-set production batch
+
+- Project-owned Shire material bank is now explicitly defined in `Data/P1C01ShireMaterialSurfaceSetV1.json`.
+- Import-time material response expands from Albedo/Color/Roughness/Metallic to include bounded Specular sourced from authored MTL `Ks`.
+- Runtime cost boundary for this batch: zero new texture samples, zero new heavy runtime asset loads, zero foliage-density increase.
+- Current maturity: **SOURCE-IMPLEMENTED / Pre-Unreal + UE4.27 build/import validation pending**.
+- Human visual quality, target-device FPS/VRAM and PIE acceptance remain open.
+
 ## 2026-09-27 - P1C01 player-experience convergence batch
 
 - Story dialogue continuity, mouse-look frame independence, quick-load rejection feedback, event-driven quest-trigger re-evaluation and bounded subtitle wrapping are implemented on the active fix branch.
