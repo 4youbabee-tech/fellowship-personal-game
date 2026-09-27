@@ -4009,6 +4009,35 @@
       ],
       "evidence_boundary": "INFRASTRUCTURE/CI ROOT-REPAIR SOURCE CHANGES ONLY. No new compile/PIE/device/visual/performance acceptance is created.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-053",
+      "title": "Split CI by proof type and preserve expensive build state unless invalidated",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004",
+        "REQ-GITHUB-001"
+      ],
+      "resolution": "Use three distinct validation lanes: GitHub-hosted Pre-Unreal for static/policy proof, self-hosted Unreal only for engine/runtime deltas, and self-hosted Warehouse only after warehouse-impacting changes land on develop or explicit manual dispatch. Preserve Unreal intermediates by default and clean them only for build-rule/project-descriptor changes or bounded compile-recovery retry.",
+      "implementation_contract": [
+        "Pre-Unreal runs on windows-latest and never consumes the supervised UE4 self-hosted runner.",
+        "Warehouse Stage has no pull_request trigger and classifies landed develop deltas so only affected providers/phases run.",
+        "Warehouse-only scripts/data are excluded from Unreal Build Validation triggers.",
+        "Unreal exact-head classification still fails safe to deeper proof when ancestry or delta classification is uncertain.",
+        "Reset project build intermediates only when SHIRE_RESET_INTERMEDIATES=true for Build.cs, Target.cs or project-descriptor invalidation; ordinary source/runtime changes keep UBT incremental state.",
+        "ci_build_unreal.cmd retains its one-time compiler-pressure recovery that clears intermediates only after a matching real compiler failure."
+      ],
+      "evidence": [
+        ".github/workflows/pre-unreal-validation.yml",
+        ".github/workflows/unreal-build-validation.yml",
+        ".github/workflows/warehouse-stage.yml",
+        "Scripts/classify_unreal_validation.ps1",
+        "Scripts/classify_warehouse_validation.ps1",
+        "Scripts/pre_unreal_validate.py PG-184/PG-185"
+      ],
+      "evidence_boundary": "CI ARCHITECTURE SOURCE-IMPLEMENTED. Exact-head hosted static validation and a selected machine validation are still required before lifting the production freeze.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
@@ -5862,7 +5891,7 @@
         "new warehouse saturation rerun without changed inputs",
         "repeated full Unreal validation caused only by policy/docs churn"
       ],
-      "release_condition": "Repair branch passes exact-head static validation and one intentionally selected machine validation proving the repaired path without repeated redundant work."
+      "release_condition": "Repair branch must pass exact-head GitHub-hosted Pre-Unreal validation, then one deliberately selected self-hosted validation proving runner/warehouse/Unreal routing without repeated redundant work."
     }
   },
   "development_mode_contract": {
@@ -6480,7 +6509,8 @@
       "immediate_priority": [
         "protect develop/main against destructive pushes/deletion and require suitable CI checks when repository settings access is available",
         "use repository insights for engineering/CI trend inspection",
-        "retain self-hosted Windows UE4.27 validation because self-hosted Actions do not consume hosted-minute allowance"
+        "retain self-hosted Windows UE4.27 validation because self-hosted Actions do not consume hosted-minute allowance",
+        "run lightweight Pre-Unreal static/policy validation on GitHub-hosted Windows so the self-hosted UE4 runner remains free for engine/runtime work"
       ],
       "conditional_use": [
         "use hosted Actions reserve only for lightweight isolated jobs after reliability is proven",
