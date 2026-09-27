@@ -1,3 +1,16 @@
+## 2026-09-27 - P1C01 Architecture / Interiors / Props megabatch preparation started in parallel
+
+- New preparation branch: `production/p1c01-architecture-interiors-props-megabatch-v1`, intentionally based on current `develop` while runtime integration remains serialized behind active material PR #118.
+- Added `Data/P1C01ArchitectureInteriorPropMegabatchV1.json` with six evidence-authorized external support packs:
+  - Quaternius: farm buildings, furniture, medieval village CC0.
+  - Kenney: nature, furniture, food.
+- The megabatch also cross-maps a 29-item project-owned Shire fallback bank for cottages, mill/bridge/well, market/farm props, fences/hedges, garden/party details and general support props.
+- Added `Scripts/prepare_p1c01_architecture_intake.ps1`. It scans warehouse receipts, verifies staged source SHA256 against the real file, expands ZIP payloads, blocks executable/BMP content, inventories FBX/OBJ/PNG/TGA payloads, and records class-QC debt without promoting anything to `READY_FOR_IMPORT`.
+- External final exchange target is FBX. OBJ is support-only for static inspection/conversion and is never accepted for animated final production.
+- `Scripts/pre_unreal_validate.py` now guards the exact six-pack authority set, explicit CC0 capture, FBX exchange target, project-owned fallback-bank floor, async loading / ISM-HISM runtime contract, story-anchor immutability, SHA256 verification and technical blockers.
+- Runtime integration is **not** started on this branch yet; it waits for #118 exact-head engine proof + merge to avoid overlapping runtime acceptance lanes.
+- Evidence boundary: **PREPARATION / STATIC CONTRACT ONLY**. No external pack is claimed staged/imported/integrated/accepted; no PIE/device/visual/performance evidence is implied.
+
 ## 2026-09-27 - P1C01 player-experience convergence implementation
 
 Source-verified defects from the P1C01 interaction path are implemented as one bounded gameplay batch:
