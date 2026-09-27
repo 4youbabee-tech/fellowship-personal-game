@@ -1295,6 +1295,18 @@ void AShireNPC::RestoreCompanionFollowState()
         return;
     }
 
+    if (FollowActivationStoryBeat != NAME_None)
+    {
+        const bool bHasIndividualRecruitment =
+            QuestSubsystem->HasStoryBeatTriggered(FollowActivationStoryBeat);
+        const bool bLegacySharedStageReached =
+            QuestId != NAME_None
+            && QuestStageAfterInteraction >= 0
+            && QuestSubsystem->GetQuestStage(QuestId) > QuestStageAfterInteraction;
+        bFollowingPlayer = bHasIndividualRecruitment || bLegacySharedStageReached;
+        return;
+    }
+
     if (QuestId == NAME_None || QuestStageAfterInteraction < 0)
     {
         bFollowingPlayer = true;
@@ -1848,4 +1860,3 @@ void AShireNPC::Interact_Implementation(AActor* Interactor)
         bCompanionFollowStateResolved = true;
     }
 }
-

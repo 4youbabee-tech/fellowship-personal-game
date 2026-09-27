@@ -180,6 +180,12 @@ void AShireQuestTrigger::TryActivateForPlayer(AShirePlayerCharacter* Player)
         return;
     }
 
+    if (AdditionalRequiredSideStoryBeat != NAME_None &&
+        !Quests->HasStoryBeatTriggered(AdditionalRequiredSideStoryBeat))
+    {
+        return;
+    }
+
     if (BlockedAfterStoryBeat != NAME_None && Quests->HasStoryBeatTriggered(BlockedAfterStoryBeat))
     {
         return;

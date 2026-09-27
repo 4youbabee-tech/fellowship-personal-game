@@ -77,6 +77,11 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="SideStory")
     FName RequiredSideStoryBeat = NAME_None;
 
+    // A second persisted condition supports small group gates without inventing
+    // another quest-state authority or polling every frame.
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="SideStory")
+    FName AdditionalRequiredSideStoryBeat = NAME_None;
+
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="SideStory")
     FName SideStoryBeatAfterTrigger = NAME_None;
 
