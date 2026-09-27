@@ -1,6 +1,7 @@
 """Bounded UE startup observation; this does not certify gameplay or visuals."""
 import argparse
 import json
+import os
 from pathlib import Path
 import re
 import subprocess
@@ -124,9 +125,12 @@ def main():
     log_dir = args.project.resolve().parent / "Saved" / "Logs"
     chapters = chapters_for_mode(args.mode)
     results = []
+    run_id = os.environ.get("GITHUB_RUN_ID")
+    run_attempt = os.environ.get("GITHUB_RUN_ATTEMPT", "1")
+    ci_suffix = f"-{run_id}-{run_attempt}" if run_id else ""
     for chapter in chapters:
         name = log_name_for(chapter, args.mode)
-        log = log_dir / (name + ".log")
+        log = log_dir / (name + ci_suffix + ".log")
         command = [str(args.editor.resolve()), str(args.project.resolve()),
                    "/Engine/Maps/Templates/Template_Default", "-game", "-nullrhi",
                    "-unattended", "-nop4", "-nosplash", "-NoSound",
@@ -147,7 +151,7 @@ def main():
             # broken chapter entry point so grounding/streaming defects are fixed as
             # a set instead of being discovered serially across many CI reruns.
     log_dir.mkdir(parents=True, exist_ok=True)
-    (log_dir / f"CI-{args.mode}-result.json").write_text(
+    (log_dir / f"CI-{args.mode}-result{ci_suffix}.json").write_text(
         json.dumps(results, indent=2) + "\n", encoding="utf-8")
     failed = [r["chapter"] for r in results if not r.get("passed")]
     print(json.dumps({
