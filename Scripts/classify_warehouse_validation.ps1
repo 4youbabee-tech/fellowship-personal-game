@@ -33,6 +33,17 @@ if(-not $git) {
     exit 0
 }
 
+# Warehouse validation executes from an isolated exact-head checkout. Never depend
+# on the self-hosted runner's persistent GITHUB_WORKSPACE current directory.
+$warehouseRoot = ([string]$env:SHIRE_WAREHOUSE_SOURCE).Trim()
+if([string]::IsNullOrWhiteSpace($warehouseRoot) -or -not (Test-Path -LiteralPath (Join-Path $warehouseRoot ".git"))) {
+    Write-Host "WAREHOUSE_CLASSIFY_FAIL_SAFE reason=isolated-source-missing root=$warehouseRoot"
+    Enable-All
+    exit 0
+}
+Set-Location -LiteralPath $warehouseRoot
+Write-Host "WAREHOUSE_CLASSIFY_SOURCE root=$warehouseRoot"
+
 $baseSha = ([string]$env:BASE_SHA).Trim()
 $headSha = ([string]$env:TARGET_SHA).Trim()
 if([string]::IsNullOrWhiteSpace($headSha)) {
@@ -45,6 +56,9 @@ if([string]::IsNullOrWhiteSpace($baseSha) -or $baseSha -match '^0+$') {
 
 $changed = @(& $git diff --name-only $baseSha $headSha 2>$null)
 if($LASTEXITCODE -ne 0) {
+    # The exact-head checkout can be shallow. Fetch both explicit commits into
+    # this isolated repository, then retry exactly once.
+    & $git fetch --no-tags --depth=2 origin $headSha 2>$null
     & $git fetch --no-tags --depth=2 origin $baseSha 2>$null
     $changed = @(& $git diff --name-only $baseSha $headSha 2>$null)
 }

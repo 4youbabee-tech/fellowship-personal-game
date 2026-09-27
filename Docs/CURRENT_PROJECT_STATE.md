@@ -1,3 +1,12 @@
+## 2026-09-28 - Warehouse #271 exact-source classifier repair
+
+- Post-merge Warehouse #271 ran on self-hosted runner `UE4-27-Windows` at develop merge head `542a6feef7e2985e40ed86f7242dd0a005be1395`.
+- Runner topology/health passed with interactive identity `IDEAPAD320\\user`, `legacyService=absent`, watchdog task present, one listener/worker, GitHub:443 connectivity, and workspace/resource checks.
+- The run failed before any provider/archive work because `classify_warehouse_validation.ps1` executed Git commands from the persistent runner workspace instead of the isolated `SHIRE_WAREHOUSE_SOURCE` checkout. Git therefore reported `fatal: bad object 542a6feef7e2985e40ed86f7242dd0a005be1395`.
+- Root correction: the classifier now fail-closes onto the isolated warehouse checkout, changes directory to that repository before diffing, and on a shallow-history miss fetches both exact head and base commits once before retrying.
+- No provider download, archive expansion, Unreal build, or gameplay source was executed by the failed run.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING / POST-MERGE WAREHOUSE PROOF PENDING**.
+
 ## 2026-09-28 - Pre-Unreal #1280 stale guard root correction
 
 - Exact-head `a8714aa3a1fb8ff0fb7be970d4bcfedb49139035` on hosted Pre-Unreal #1280 proved the isolated checkout, Python resolution, and Unreal classifier tests all succeeded.

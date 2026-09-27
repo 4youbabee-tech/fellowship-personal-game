@@ -1,3 +1,13 @@
+## 2026-09-28 - Warehouse #271 exact-source classifier repair
+
+- Self-hosted runner identity/topology/network/workspace health: **RUN-PROVEN** by Warehouse #271 on `542a6feef7e2985e40ed86f7242dd0a005be1395`.
+- Warehouse isolated exact-head checkout: **RUN-PROVEN** by `WAREHOUSE_CHECKOUT_PASS` on #271.
+- Warehouse classifier working-directory defect: **ROOT-CAUSE IDENTIFIED** from `fatal: bad object 542a6feef7e2985e40ed86f7242dd0a005be1395`.
+- Classifier binding to `SHIRE_WAREHOUSE_SOURCE` + bounded exact head/base fetch retry: **SOURCE-FIXED**.
+- Provider/archive execution on #271: **NOT RUN**; all provider/phase steps were skipped after classifier failure.
+- New exact-head static proof and post-merge warehouse proof: **PENDING**.
+- Runtime/PIE/device/visual/performance maturity: **UNCHANGED**.
+
 ## 2026-09-28 - Pre-Unreal #1280 stale guard correction
 
 - Hosted exact-head checkout, Python resolution, and Unreal classifier tests: **RUN-PROVEN** by #1280 on `a8714aa3a1fb8ff0fb7be970d4bcfedb49139035`.
