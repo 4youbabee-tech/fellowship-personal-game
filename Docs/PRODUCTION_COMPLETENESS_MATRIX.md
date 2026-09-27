@@ -1,3 +1,10 @@
+## 2026-09-27 - Warehouse parser hardening after V1 staging evidence
+
+- Verified warehouse footprint from #265 before report failure: 247 payload files, 3.85 GB, 13 receipts and 667 receipt records; inventory audit PASS.
+- V1 failure class: report-parser StrictMode incompatibility with heterogeneous receipt schemas, not provider staging or hash-audit failure.
+- V1/V2 receipt parsing now uses optional-property-safe access while preserving SHA256 verification and promotion ceilings.
+- Current status: **SOURCE-IMPLEMENTED / fresh exact-head validation pending**.
+
 ## 2026-09-27 - Critical warehouse gap train V2
 
 - 20 additional preparation cars now target conversion of staged warehouse stock into classified INTAKE_QC candidates.
