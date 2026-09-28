@@ -1,0 +1,165 @@
+{
+  "schema_version": 1,
+  "mapping_id": "P1C01_GRAPHICS_SETTINGS_PRESET_MAPPING_V1",
+  "lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "RUNNERLESS_PREPARATION_ONLY",
+  "purpose": "Define deterministic preset-to-UE4-quality-group mapping and Custom-state semantics without implementing runtime code before ProjectGovernor and WORLD_DETAIL_LEDGER authority registration.",
+  "authority_boundary": {
+    "authoritative": false,
+    "runtime_implementation_allowed": false,
+    "source_contracts": [
+      "Data/P1C01GraphicsSettingsPreparationV1.json",
+      "Data/P1C01GraphicsSettingsUXContractV1.json",
+      "Data/P1C01GraphicsSettingsAuthorityRegistrationQueueV1.json"
+    ],
+    "rule": "If this mapping conflicts with ProjectGovernor or WORLD_DETAIL_LEDGER after authority registration, authority wins and this mapping must be revised before implementation."
+  },
+  "engine_model": {
+    "settings_owner": "UGameUserSettings",
+    "planned_project_class": "UShireGameUserSettings",
+    "quality_group_range": {
+      "minimum": 0,
+      "maximum": 3,
+      "labels": {
+        "0": "Low",
+        "1": "Medium",
+        "2": "High",
+        "3": "Epic"
+      }
+    },
+    "quality_groups": [
+      "view_distance",
+      "anti_aliasing",
+      "shadows",
+      "post_process",
+      "textures",
+      "effects",
+      "foliage"
+    ],
+    "display_controls_not_part_of_named_quality_match": [
+      "display_mode",
+      "resolution",
+      "vsync",
+      "frame_rate_limit"
+    ],
+    "resolution_scale_rule": "Resolution scale participates in named-preset matching because the Performance and Balanced floor contract requires native 1280x720 at 100% scale."
+  },
+  "named_presets": {
+    "Performance": {
+      "view_distance": 0,
+      "anti_aliasing": 1,
+      "shadows": 0,
+      "post_process": 0,
+      "textures": 1,
+      "effects": 0,
+      "foliage": 0,
+      "resolution_scale_percent": 100,
+      "intent": "Native-720p safety-floor candidate for target-device validation; not performance-accepted."
+    },
+    "Balanced": {
+      "view_distance": 1,
+      "anti_aliasing": 2,
+      "shadows": 1,
+      "post_process": 1,
+      "textures": 1,
+      "effects": 1,
+      "foliage": 1,
+      "resolution_scale_percent": 100,
+      "intent": "Visually strong default candidate; not performance-accepted."
+    },
+    "High": {
+      "view_distance": 2,
+      "anti_aliasing": 2,
+      "shadows": 2,
+      "post_process": 2,
+      "textures": 2,
+      "effects": 2,
+      "foliage": 2,
+      "resolution_scale_percent": 100,
+      "intent": "Higher-quality candidate for stronger hardware."
+    },
+    "Cinematic": {
+      "view_distance": 3,
+      "anti_aliasing": 3,
+      "shadows": 2,
+      "post_process": 3,
+      "textures": 3,
+      "effects": 2,
+      "foliage": 2,
+      "resolution_scale_percent": 100,
+      "intent": "Presentation-first candidate that still obeys visual economy instead of blindly maximizing expensive groups."
+    }
+  },
+  "preset_selection_semantics": {
+    "select_named_preset": [
+      "Set only mapped quality groups and the preset resolution scale.",
+      "Do not silently change display mode, output resolution, VSync, or frame-rate limit.",
+      "Mark settings dirty until Apply.",
+      "Do not persist until Apply succeeds."
+    ],
+    "custom_detection": [
+      "Compare current working quality-group values plus resolution scale against every named preset.",
+      "If exactly one named preset matches, display that preset name.",
+      "If none match, display Custom.",
+      "Display-only controls do not by themselves change a named quality preset to Custom."
+    ],
+    "manual_quality_change": "Changing any mapped quality group or resolution scale re-evaluates the named-preset match immediately.",
+    "restore_defaults": "Restore the project default candidate working values, including Balanced quality mapping and safe display defaults, but do not persist until Apply.",
+    "revert": "Restore the last applied working values without changing persisted settings."
+  },
+  "apply_and_safety_order": {
+    "quality_only_change": [
+      "Validate and clamp working values.",
+      "Apply quality settings through the UGameUserSettings path.",
+      "Save only after the apply path succeeds."
+    ],
+    "display_mode_or_resolution_change": [
+      "Validate requested mode and resolution.",
+      "Apply the candidate display change without discarding the last confirmed display state.",
+      "Require explicit confirmation.",
+      "On timeout or rejection, restore the last confirmed display state.",
+      "Persist only the confirmed state."
+    ],
+    "invalid_persisted_value": "Clamp unsupported quality values and replace unsupported display values with safe project defaults before exposing the settings UI."
+  },
+  "visual_economy_constraints": {
+    "protect_first": [
+      "silhouette_and_composition",
+      "hero_material_readability",
+      "lighting_and_atmosphere",
+      "near_field_detail"
+    ],
+    "recover_cost_first": [
+      "duplicate_actors",
+      "far_shadows",
+      "overdraw_and_translucency",
+      "redundant_lights",
+      "uninstanced_repetition",
+      "unnecessary_tick",
+      "invisible_or_far_detail"
+    ],
+    "repeated_detail": "HISM_OR_ISM_PLUS_LOD_AND_CULLING",
+    "crowds": "OBJECT_POOLING",
+    "heavy_assets": "SOFT_REFERENCES_PLUS_FSTREAMABLEMANAGER_ASYNC",
+    "texture_budget": "Do not encode a fixed streaming-pool increase without measured target-device VRAM evidence."
+  },
+  "static_validation_backlog": [
+    "Every named preset maps every declared quality group exactly once.",
+    "Every mapped quality value is an integer in the inclusive range 0..3.",
+    "Performance and Balanced both remain at 100% resolution scale.",
+    "Selecting a named preset cannot silently alter display mode, output resolution, VSync, or frame-rate limit.",
+    "Cinematic does not blindly maximize shadows, effects, or foliage.",
+    "A quality-group edit that no longer matches a named preset resolves to Custom.",
+    "No fixed texture streaming-pool increase is introduced without target-device evidence."
+  ],
+  "evidence_ceiling": {
+    "source_prepared": true,
+    "compile_tested": false,
+    "pie_tested": false,
+    "device_tested": false,
+    "visually_accepted": false,
+    "performance_improvement_claimed": false,
+    "performance_accepted": false,
+    "integrated": false
+  }
+}
