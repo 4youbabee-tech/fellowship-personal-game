@@ -93,6 +93,8 @@ private:
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographyHillInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographySlopeInstances;
     UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GeographyRiverBankInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* GardenPlanterInstances;
+    UPROPERTY() UHierarchicalInstancedStaticMeshComponent* CultivatedRowInstances;
     UPROPERTY() ADirectionalLight* RuntimeSun = nullptr;
     UPROPERTY() ASkyLight* RuntimeSky = nullptr;
     UPROPERTY() APostProcessVolume* RuntimePostProcess = nullptr;
