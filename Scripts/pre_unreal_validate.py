@@ -2942,6 +2942,17 @@ for pg184_hobbit_shell_symbol in [
 if "old Cube/Sphere/Cylinder door/window/chimney proxy kit" not in pg184_shire_world:
     fail("PG-184 production Hobbit shell must document suppression of primitive overlay kit")
 
+for pg184_world_proxy_symbol in [
+    "ProductionCommonDockSegmentMesh",
+    "SM_CommonDockSegment",
+    "ProductionCommonRopePostMesh",
+    "SM_CommonRopePost",
+    "ProductionCommonFallenLogMesh",
+    "canon-appropriate authored ferry mesh exists",
+]:
+    if pg184_world_proxy_symbol not in pg184_shire_world:
+        fail(f"PG-184 Shire production-first world proxy cleanup missing: {pg184_world_proxy_symbol}")
+
 # PG-185: keep strict exact-head Unreal proof while preserving incremental build products.
 pg185_unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 pg185_classifier = read(ROOT / "Scripts" / "classify_unreal_validation.ps1")
