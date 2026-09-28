@@ -1,3 +1,10 @@
+## 2026-09-28 - UE4.27-safe Blueprint display-mode contract
+
+- The graphics settings API now exposes project-owned `EShireDisplayMode` (Fullscreen / Borderless / Windowed) instead of exposing `EWindowMode::Type` directly through a Blueprint-callable UFUNCTION.
+- The implementation translates the project enum to UE4 window modes internally before applying/saving settings.
+- This reduces a UE4.27 UHT/Blueprint reflection risk before the exact-head engine gate.
+- Current maturity: **STATIC SOURCE RISK REDUCED / COMPILE PROOF PENDING**.
+
 ## 2026-09-28 - Graphics overlay display controls and modal input isolation
 
 - The in-game F10 Graphics/Video overlay now exposes 13 rows including **Display Mode** and **Resolution** in addition to preset/scalability/VSync/frame-limit controls.
