@@ -1,3 +1,15 @@
+## 2026-09-28 - P1C01 Mega Chapter Pack production batching
+
+Registered before execution under W01_P1C01_PRODUCTION_VERTICAL_SLICE.
+
+Purpose:
+- Treat the Shire/Hobbiton + Bag End benchmark as one large production package at the preparation layer while preserving bounded internal cars and evidence.
+- Reduce workflow/PR churn by batching source preparation, promotion and export coherently.
+- Keep runtime integration separate and exact-head gated; this pack does not authorize later chapter runtime expansion.
+- Prefer already-staged warehouse stock and quarantine isolated corrupt/missing/licensing blockers rather than stopping unrelated cars.
+
+Status: **REGISTERED / SOURCE IMPLEMENTATION ACTIVE / RUNNER EXECUTION PENDING**.
+
 ## 2026-09-27 - Warehouse provider-resolution train V3
 
 Registered before implementation as the fourth warehouse preparation layer, stacked behind V2.

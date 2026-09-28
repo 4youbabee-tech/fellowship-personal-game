@@ -9,7 +9,7 @@ function Enable-All {
     foreach($name in @(
         "WH_STAGE_POLYHAVEN","WH_STAGE_OGA","WH_STAGE_QUATERNIUS","WH_STAGE_AMBIENTCG",
         "WH_STAGE_AMBIENTCG_TRILOGY","WH_STAGE_KENNEY","WH_STAGE_KAYKIT",
-        "WH_RUN_AUDIT","WH_RUN_SATURATION","WH_RUN_PREP","WH_RUN_PROVIDER_RESOLUTION","WH_RUN_P1C01_PROMOTION","WH_RUN_CHARACTER_INTAKE","WH_RUN_P1C01_MATERIAL_EXPORT"
+        "WH_RUN_AUDIT","WH_RUN_SATURATION","WH_RUN_PREP","WH_RUN_PROVIDER_RESOLUTION","WH_RUN_P1C01_PROMOTION","WH_RUN_CHARACTER_INTAKE","WH_RUN_P1C01_MATERIAL_EXPORT","WH_RUN_P1C01_CHAPTER_PACK"
     )) {
         Write-Flag $name $true
     }
@@ -82,6 +82,7 @@ $flags = [ordered]@{
     WH_RUN_P1C01_PROMOTION=$false
     WH_RUN_CHARACTER_INTAKE=$false
     WH_RUN_P1C01_MATERIAL_EXPORT=$false
+    WH_RUN_P1C01_CHAPTER_PACK=$false
 }
 
 $providerTouched=$false
@@ -180,6 +181,14 @@ foreach($raw in $changed) {
         "Scripts/export_p1c01_material_source_branch.ps1" {
             $flags.WH_RUN_AUDIT=$true
             $flags.WH_RUN_P1C01_MATERIAL_EXPORT=$true
+            continue
+        }
+        "Data/P1C01MegaChapterPackV1.json" {
+            $flags.WH_RUN_P1C01_CHAPTER_PACK=$true
+            continue
+        }
+        "Scripts/run_p1c01_mega_chapter_pack.ps1" {
+            $flags.WH_RUN_P1C01_CHAPTER_PACK=$true
             continue
         }
         "Scripts/classify_warehouse_validation.ps1" { continue }

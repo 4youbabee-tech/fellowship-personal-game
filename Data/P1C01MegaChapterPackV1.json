@@ -1,0 +1,85 @@
+{
+  "schema_version": 1,
+  "pack_id": "P1C01_MEGA_CHAPTER_PACK_V1",
+  "status": "RUNNER_EXECUTION_READY",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/WarehouseP1C01MegaPromotionTrainV1.json",
+    "Data/P1C01WarehousePromotionQueueV1.json",
+    "Data/P1C01MaterialImportWaveV1.json",
+    "Data/P1C01CharacterRigAnimationPrepV1.json"
+  ],
+  "scope": [
+    "SHIRE_HOBBITON",
+    "BAG_END"
+  ],
+  "objective": "Collapse P1C01 warehouse preparation into one chapter-scale execution with bounded internal cars, item-level quarantine and one final report.",
+  "operating_model": {
+    "strategy": "ONE_CHAPTER_PACK_MANY_BOUNDED_CARS",
+    "single_workflow_rule": "One warehouse workflow run may execute all enabled cars in-order. Cars report independently; non-fatal asset blockers are quarantined/manual-queued and later cars continue.",
+    "no_duplicate_rule": "The chapter-pack trigger must not simultaneously schedule the legacy overlapping P1C01 promotion/material-export/character-intake phases.",
+    "source_first_rule": "Reuse staged warehouse bytes before any new acquisition.",
+    "runtime_boundary": "This pack prepares/promotes sources only. UE runtime integration remains a separate exact-head lane."
+  },
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "resolution": "1280x720 reference",
+    "fps_floor": 30,
+    "ram_gb": 8,
+    "vram_gb_class": 2
+  },
+  "inventory_context": {
+    "last_run_payload_files": 13389,
+    "last_run_bytes": 5590510073,
+    "last_run_receipts": 14,
+    "last_run_receipt_records": 667,
+    "last_run_duplicate_groups": 215,
+    "evidence_run": "Warehouse Stage #276"
+  },
+  "cars": [
+    {
+      "order": 1,
+      "id": "INVENTORY_AUDIT",
+      "enabled": true,
+      "criticality": "INFRASTRUCTURE",
+      "command": "Scripts/audit_warehouse_inventory.ps1",
+      "purpose": "Confirm persistent stock/receipts before promotion."
+    },
+    {
+      "order": 2,
+      "id": "MEGA_PROMOTION",
+      "enabled": true,
+      "criticality": "CONTINUE_WITH_MANUAL_QUEUE",
+      "command": "Scripts/run_warehouse_p1c01_mega_promotion.ps1",
+      "manifest": "Data/WarehouseP1C01MegaPromotionTrainV1.json",
+      "capacity": {
+        "surfaces": 20,
+        "architecture_props": 18,
+        "audio_ambience_foley": 10,
+        "fauna": 6,
+        "character_animation_support": 8,
+        "total_selector_ceiling": 62
+      }
+    },
+    {
+      "order": 3,
+      "id": "MATERIAL_SOURCE_EXPORT",
+      "enabled": true,
+      "criticality": "CONTINUE_ON_ASSET_BLOCKER",
+      "command": "Scripts/export_p1c01_material_source_branch.ps1",
+      "manifest": "Data/P1C01MaterialImportWaveV1.json",
+      "generated_branch": "generated/p1c01-material-source-v1",
+      "minimum_prepared_materials": 8
+    },
+    {
+      "order": 4,
+      "id": "CHARACTER_INTAKE",
+      "enabled": true,
+      "criticality": "CONTINUE_ON_ASSET_BLOCKER",
+      "command": "Scripts/prepare_p1c01_character_rig_intake.ps1",
+      "manifest": "Data/P1C01CharacterRigAnimationPrepV1.json"
+    }
+  ],
+  "evidence_boundary": "A successful chapter-pack run proves only the individual car outputs it actually emits. It does not imply UE import, integration, PIE, device, visual or performance acceptance."
+}

@@ -4038,6 +4038,40 @@
       ],
       "evidence_boundary": "CI ARCHITECTURE SOURCE-IMPLEMENTED. Exact-head hosted static validation and a selected machine validation are still required before lifting the production freeze.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-054",
+      "title": "Adopt chapter-scale production packs and minimize workflow churn",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WAREHOUSE-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004",
+        "REQ-PERF-003"
+      ],
+      "resolution": "Move P1C01 preparation from many tiny pushes/workflows toward chapter-scale packs: one large manifest and one warehouse workflow run may execute multiple bounded internal cars. Keep per-car quarantine, receipts and rollback boundaries while reducing PR/workflow frequency. Runtime/config/package-impacting changes retain exact-head Unreal gates; tooling-only changes use the cheapest proof lane that still covers their risk.",
+      "implementation_contract": [
+        "P1C01MegaChapterPackV1 is the first chapter-scale pack and orchestrates inventory audit, mega promotion, material source export and character intake.",
+        "A chapter pack is large at the planning/staging layer but internally bounded; one blocked asset/car is quarantined and later independent cars continue.",
+        "Do not schedule legacy overlapping P1C01 audit/promotion/export/character steps in parallel with the chapter-pack step.",
+        "Prepare branches without opening PRs until a coherent batch is ready; prefer one PR/merge per coherent pack rather than repeated micro-PR churn.",
+        "Warehouse raw payloads remain local/persistent; Git receives selected production sources and receipts, not the entire raw warehouse.",
+        "Animated final production assets remain FBX-only; textures remain PNG/TGA; heavy runtime assets retain soft/async ownership; repeated detail retains ISM/HISM+LOD/culling.",
+        "No batch-size increase may bypass provenance, SHA256, format/QC, runtime, PIE, device, visual or performance evidence boundaries.",
+        "Binary/LFS policy changes are kept out of chapter-pack control-plane PRs when they would unnecessarily wake the Unreal lane; apply them in the first binary promotion wave that actually needs them."
+      ],
+      "rationale": "The repository has accumulated thousands of workflow runs while the persistent warehouse already contains thousands of files and multi-gigabyte stock. Larger coherent packs reduce orchestration overhead without requiring unsafe monolithic runtime integration.",
+      "evidence": [
+        "PR #137 exact-head Pre-Unreal #1301 SUCCESS and Unreal Build #1038 SUCCESS",
+        "PR #138 Pre-Unreal #1303 SUCCESS and no Unreal Build trigger for tooling-only delta",
+        "Warehouse #276 inventory: payloadFiles=13389 bytes=5590510073 receipts=14 receiptRecords=667 duplicateGroups=215",
+        "Data/WarehouseP1C01MegaPromotionTrainV1.json",
+        "Data/P1C01MegaChapterPackV1.json",
+        "Scripts/run_p1c01_mega_chapter_pack.ps1"
+      ],
+      "evidence_boundary": "Execution architecture/source authorization only. Individual pack cars promote only to the states their receipts/logs actually prove. No automatic UE import, integration, PIE, device, visual or performance acceptance.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],

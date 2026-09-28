@@ -1,3 +1,15 @@
+## 2026-09-28 - P1C01 Mega Chapter Pack / workflow consolidation
+
+- Governor chapter-pack policy (DEC-054): **SOURCE-REGISTERED / OWNER-AUTHORIZED**.
+- One pack / four bounded internal cars: **SOURCE-IMPLEMENTED**.
+- Selector ceiling: **62 candidates** across materials / architecture-props / audio / fauna / character-animation support.
+- Legacy overlapping P1C01 Warehouse steps during pack execution: **SUPPRESSED IN SOURCE**.
+- Per-car quarantine + continue semantics: **SOURCE-IMPLEMENTED**.
+- Infrastructure fail-closed semantics: **SOURCE-IMPLEMENTED**.
+- TGA Git LFS migration: **DEFERRED TO FIRST BINARY PROMOTION WAVE** to avoid an unnecessary Unreal trigger here.
+- Exact-head Pre-Unreal / Warehouse execution result: **PENDING**.
+- UE import/integration/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - Unreal runner cost reduction for P1C01 material tooling
 
 - PR-triggered Unreal for P1C01 prepare/promote/run/export tooling-only changes: **PATH-FILTERED OUT IN SOURCE**.
