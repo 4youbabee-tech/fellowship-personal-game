@@ -119,7 +119,8 @@ function Select-BaseColor([string[]]$Files) {
     $ranked += [pscustomobject]@{file=$f;score=$score;name=$n}
   }
   $selected=$ranked | Sort-Object score,name | Select-Object -First 1
-  return if($null -eq $selected){ $null }else{ [string]$selected.file }
+  if($null -eq $selected){ return $null }
+  return [string]$selected.file
 }
 
 $prepared=@()

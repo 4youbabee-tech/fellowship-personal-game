@@ -5456,6 +5456,18 @@ for pg189_export_symbol in [
     if pg189_export_symbol not in pg189_export:
         fail(f"PG-189 generated receipt selected-file evidence missing: {pg189_export_symbol}")
 
+
+# PG-190: Windows PowerShell 5.1 compatibility for the material intake helper.
+pg190_intake = read(ROOT / "Scripts" / "prepare_p1c01_material_intake.ps1")
+if "return if(" in pg190_intake:
+    fail("PG-190 PowerShell 5.1 cannot use 'return if(...)' expression syntax")
+for pg190_symbol in [
+    "if($null -eq $selected){ return $null }",
+    "return [string]$selected.file",
+]:
+    if pg190_symbol not in pg190_intake:
+        fail(f"PG-190 PowerShell-compatible base-color selector return missing: {pg190_symbol}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

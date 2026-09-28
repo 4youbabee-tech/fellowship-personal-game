@@ -1,3 +1,13 @@
+## 2026-09-28 - Warehouse #280 material-QC execution repair
+
+- Pre-Unreal #1313: **SUCCESS**.
+- Warehouse Stage #280: **FAILED BEFORE MATERIAL QC EXECUTION** at `prepare_p1c01_material_intake.ps1:122`.
+- Exact error: **Windows PowerShell 5.1 `CommandNotFoundException` for `return if(...)`**.
+- Selector control-flow repair: **SOURCE-FIXED**.
+- PG-190 compatibility guard: **SOURCE-IMPLEMENTED**.
+- Material provenance/albedo QC regeneration: **NOT YET RE-RUN**.
+- UE4.27 import/runtime binding/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - Warehouse #279 generated-material evidence and albedo-provenance hold
 
 - Pre-Unreal #1311: **SUCCESS**.
