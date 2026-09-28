@@ -1,3 +1,16 @@
+## 2026-09-28 - P1C01 maximum-throughput Chapter Closure Mega Pack V2
+
+- DEC-058 maximum-throughput chapter source pack: **SOURCE-IMPLEMENTED**.
+- Single Warehouse closure-pack trigger: **SOURCE-IMPLEMENTED**.
+- Provider/source capacity: **37 Poly Haven + 17 ambientCG lanes + 17 Quaternius + 12 Kenney + 8 KayKit + 17 OpenGameArt**.
+- Promotion selector ceiling: **187**.
+- Material closure wave: **26 requested materials**.
+- Material generated-branch budget: **48 MiB/source / 640 MiB/batch / minimum 18 exported**.
+- Storage guard: **6 GiB free-space reserve / no source deletion for space**.
+- Provider/asset/source blocker behavior: **QUARANTINE_AND_CONTINUE**.
+- Infrastructure/inventory/storage corruption: **HARD_FAILURE**.
+- UE4.27 import/runtime binding/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - Warehouse #281 generated-branch publish root cause
 
 - Pre-Unreal #1315: **SUCCESS**.
