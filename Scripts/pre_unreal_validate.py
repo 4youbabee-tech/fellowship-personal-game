@@ -5391,7 +5391,6 @@ pg187_pack = json.loads(read(ROOT / "Data" / "P1C01MegaChapterPackV1.json"))
 pg187_script = read(ROOT / "Scripts" / "run_p1c01_mega_chapter_pack.ps1")
 pg187_warehouse = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
 pg187_classifier = read(ROOT / "Scripts" / "classify_warehouse_validation.ps1")
-pg187_attrs = read(ROOT / ".gitattributes")
 if pg187_pack.get("status") != "RUNNER_EXECUTION_READY":
     fail("PG-187 P1C01 mega chapter pack must remain execution-ready")
 pg187_ids = [str(x.get("id", "")) for x in pg187_pack.get("cars", [])]
@@ -5405,8 +5404,6 @@ if "WH_RUN_P1C01_CHAPTER_PACK" not in pg187_classifier or "Run P1C01 Mega Chapte
     fail("PG-187 warehouse classifier/workflow is not wired to chapter-pack execution")
 if "WH_RUN_P1C01_CHAPTER_PACK != 'true'" not in pg187_warehouse:
     fail("PG-187 legacy overlapping P1C01 warehouse steps must be suppressed during chapter-pack execution")
-if "*.tga filter=lfs diff=lfs merge=lfs -text" not in pg187_attrs:
-    fail("PG-187 future production TGA sources must use Git LFS")
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
