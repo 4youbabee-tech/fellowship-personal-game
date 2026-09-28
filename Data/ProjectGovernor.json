@@ -4183,9 +4183,7 @@
         "Runtime import remains a later bounded lane; no chapter pack may force UE to synchronously load the raw Warehouse.",
         "Animated final candidates remain FBX; production textures PNG/TGA; heavy runtime assets soft+async; crowds/fauna pooled; repeated world detail ISM/HISM+LOD+culling.",
         "Legacy overlapping P1C01 staging/promotion/export/intake workflow steps are suppressed while Closure Pack V2 runs.",
-        "Part II/III runtime remains closed; only reusable source stock may be prepared outside P1C01.",
-        "Warehouse Stage allows 180 minutes for the chapter closure pack; ordinary selective runs still finish early.",
-        "Warehouse Stage does not cancel an in-progress run when a newer push arrives; newer work queues behind the active large pack."
+        "Part II/III runtime remains closed; only reusable source stock may be prepared outside P1C01."
       ],
       "rationale": "The owner explicitly authorized maximum practical batch size to accelerate Shire construction. Current Warehouse already holds multi-GB stock and the V1 chapter pack proved car-level quarantine. The safe acceleration path is larger source acquisition/preparation, not one unbounded UE import or a monolithic hard-reference content dump.",
       "evidence": [
@@ -4248,6 +4246,59 @@
       ],
       "evidence_boundary": "SOURCE RESTORATION. Exact-head Pre-Unreal must pass before this source is STATIC-VALIDATED; no runner/device/gameplay acceptance is implied.",
       "authority": "PROJECT_GOVERNOR_ROOT_CAUSE_REPAIR"
+    },
+    {
+      "id": "DEC-061",
+      "title": "Isolate long P1C01 closure execution from the normal Warehouse train",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WAREHOUSE-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004"
+      ],
+      "resolution": "Keep the normal Warehouse workflow on its proven short/cancellable contract and move the 180-minute non-cancelling P1C01 closure train into a dedicated workflow with its own concurrency group and fast preflight.",
+      "implementation_contract": [
+        "warehouse-stage.yml retains timeout-minutes: 60 and cancel-in-progress: true.",
+        "p1c01-chapter-closure.yml owns Closure Pack V2 with timeout-minutes: 180 and cancel-in-progress: false.",
+        "The dedicated closure workflow uses an isolated exact-head checkout.",
+        "Fast closure preflight parses required PowerShell scripts, validates child manifests and checks the disk reserve before any provider/acquisition car starts.",
+        "The long closure workflow and normal selective Warehouse workflow have separate concurrency groups.",
+        "No closure source-control file should wake Unreal Build unless it directly changes runtime/import CI behavior."
+      ],
+      "rationale": "Pre-Unreal #1325 correctly rejected the earlier attempt to mutate the proven PG-168 normal Warehouse cancellation contract. The conflict was architectural, not a reason to weaken the old guard. Separation preserves fast ordinary CI while allowing the large chapter pack to finish without cancellation.",
+      "evidence": [
+        "Pre-Unreal #1325: PG-168 warehouse execution contract missing cancel-in-progress: true",
+        ".github/workflows/p1c01-chapter-closure.yml",
+        "Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1"
+      ],
+      "evidence_boundary": "SOURCE/CI ARCHITECTURE. Exact-head Pre-Unreal and post-merge dedicated closure workflow evidence are still required."
+    },
+    {
+      "id": "DEC-062",
+      "title": "Preflight and bounded-retry UE production asset saves",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004"
+      ],
+      "resolution": "Before UE production import, perform a cheap destination-health check that rejects active editor processes, verifies Content/Production write/delete ability, clears read-only only on untracked generated uassets, and exclusive-opens existing uassets. If the importer still exits on a file delete/save error, run the same preflight once and retry the importer exactly once.",
+      "implementation_contract": [
+        "Never delete tracked production assets as part of recovery.",
+        "Never clear read-only on tracked Content/Production assets; fail with explicit evidence instead.",
+        "Retry only for importer file-save/delete failures and at most once.",
+        "Non-save/delete importer failures fail immediately.",
+        "A successful import still requires the commandlet's explicit 0 failures marker."
+      ],
+      "rationale": "Unreal Build #1047 compiled ShireJourneyEditor successfully and imported 376 source files with the commandlet reporting 0 import failures, but the workflow still failed because UE could not delete/save Content/Production/Textures/T_Cloth_Green.uasset. The log does not prove whether the cause was read-only state or an exclusive file lock, so the durable fix is to measure both conditions before import and retry only the proven save/delete failure class.",
+      "evidence": [
+        "Unreal Build #1047: Build ShireJourneyEditor SUCCESS",
+        "Unreal Build #1047: ShireProductionImport: 376 files, 0 failures",
+        "Unreal Build #1047: Error deleting/saving Content/Production/Textures/T_Cloth_Green.uasset",
+        "Scripts/preflight_production_asset_import.ps1",
+        "Scripts/ci_import_production_assets.cmd"
+      ],
+      "evidence_boundary": "SOURCE-IMPLEMENTED. Exact-head Unreal rerun is required before COMPILE/IMPORT success can be claimed."
     }
   ],
   "open_conflicts": [],
