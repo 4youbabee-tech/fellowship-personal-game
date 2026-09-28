@@ -1,3 +1,13 @@
+## 2026-09-28 - P1C01 runnerless visible material binding bridge
+
+- The current Shire world already owns authored production meshes, but several high-visibility assets are still procedural/project-owned geometry and retain the original flat Shire material bank until richer evidence-backed surfaces are imported.
+- A runnerless editor-import bridge now prepares optional visual upgrades for selected existing meshes without moving story/quest anchors or increasing density.
+- Conditional bindings: `SH_GRASS_GROUND` -> Shire ground block, `SH_STONY_PATH` -> road block, `SH_WARM_PLASTER` -> Hobbit facade/cottage Earth slots, `SH_MOSS_STONE` -> path stone/bridge/stone wall, and `SH_TREE_BARK` -> tree trunk Bark slot.
+- The bridge applies only when the exact imported material instance exists. Missing enhancement materials emit `P1C01_VISIBLE_MATERIAL_PENDING` and preserve the authored fallback; they are not reported as imported/integrated.
+- Slot mismatch is fail-closed because it indicates authored mesh/material identity drift.
+- No foliage instance density, quest location, world ownership, runtime synchronous loading, or extra runtime PBR sample contract changed.
+- Current maturity: **SOURCE-IMPLEMENTED / STATIC VALIDATION NOT YET RUN / UE IMPORT-BINDING PENDING / VISUAL ACCEPTANCE NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 large material source promotion train
 
 - A concrete source-promotion bridge now converts the existing receipt-verified warehouse stock into a bounded Git branch instead of leaving material candidates only in the runner warehouse.
