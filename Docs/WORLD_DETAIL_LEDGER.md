@@ -1,3 +1,18 @@
+## 2026-09-28 - Professional graphics/video settings and Beautiful default
+
+Registered before implementation from the owner's explicit direction.
+
+Purpose:
+- Ship a player-facing VIDEO & GRAPHICS settings surface rather than hard-coding one visual level.
+- Make `Beautiful` the project default: preserve the strongest visible qualities first while bounding shadow/foliage cost for the target laptop.
+- Provide Performance, Balanced, Beautiful, High, Ultra and Custom behavior so stronger hardware or owner preference can raise image quality without changing game code.
+- Expose resolution, display mode, resolution scale, FPS limit, VSync, texture, shadow, view-distance, foliage, anti-aliasing, post-process and effects controls.
+- Persist applied settings through Unreal `UGameUserSettings`; un-applied menu edits must be discardable.
+- Keep 1280x720 / DX11 / 30 FPS floor as the target acceptance profile. Higher presets are optional capability, never evidence that the target device can sustain them.
+- Default visual quality must remain intentionally attractive; performance savings should preferentially come from expensive low-perception features instead of flattening all quality dimensions.
+
+Status: **REGISTERED / RUNNERLESS IMPLEMENTATION STARTED / ENGINE UI PROOF PENDING**.
+
 ## 2026-09-28 - Permanent visual-economy / maximum-beauty doctrine
 
 Registered before implementation from the owner's explicit direction.
