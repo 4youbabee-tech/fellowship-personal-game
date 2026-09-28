@@ -29,7 +29,10 @@
       "order": 1,
       "id": "P1C01_SURFACES",
       "max_items": 20,
-      "providers": ["POLY_HAVEN", "AMBIENTCG"],
+      "providers": [
+        "POLY_HAVEN",
+        "AMBIENTCG"
+      ],
       "asset_ids": [
         "wood_floor",
         "wooden_floor_02",
@@ -52,15 +55,43 @@
         "forrest_ground_01",
         "forest_leaves_02"
       ],
-      "category_keywords": ["WOOD", "PLASTER", "GROUND", "STONE", "BARK", "ROHAN_PASTORAL"],
-      "required_formats": ["PNG", "TGA"],
-      "use": ["Shire paths", "hobbit-hole surfaces", "farm/bridge/cart wood", "stone edges", "soil/grass", "bark/foliage support"]
+      "category_keywords": [
+        "WOOD",
+        "PLASTER",
+        "GROUND",
+        "STONE",
+        "BARK",
+        "ROHAN_PASTORAL"
+      ],
+      "required_formats": [
+        "PNG",
+        "TGA"
+      ],
+      "use": [
+        "Shire paths",
+        "hobbit-hole surfaces",
+        "farm/bridge/cart wood",
+        "stone edges",
+        "soil/grass",
+        "bark/foliage support"
+      ],
+      "ready_review_checks": [
+        "provider/source/license/receipt/SHA256 provenance",
+        "PNG/TGA production texture contract",
+        "1K/2K default runtime sizing or measured 4K exception",
+        "base-color/normal/mask channel semantics",
+        "tiling/seam/art-direction review"
+      ]
     },
     {
       "order": 2,
       "id": "P1C01_ARCHITECTURE_PROPS",
       "max_items": 18,
-      "providers": ["KENNEY", "KAYKIT", "QUATERNIUS"],
+      "providers": [
+        "KENNEY",
+        "KAYKIT",
+        "QUATERNIUS"
+      ],
       "asset_ids": [
         "FANTASY_TOWN_KIT",
         "NATURE_KIT",
@@ -76,15 +107,48 @@
         "QTN_MEDIEVAL_VILLAGE_CC0",
         "QTN_ULTIMATE_NATURE"
       ],
-      "category_keywords": ["WORLD_KIT", "ARCHITECTURE", "PROPS", "FURNITURE", "FOOD", "NATURE", "FARM"],
-      "required_formats": ["FBX", "OBJ", "PNG", "TGA"],
-      "use": ["background Shire buildings", "farm support", "furniture", "food/market clutter", "nature dressing"]
+      "category_keywords": [
+        "WORLD_KIT",
+        "ARCHITECTURE",
+        "PROPS",
+        "FURNITURE",
+        "FOOD",
+        "NATURE",
+        "FARM"
+      ],
+      "required_formats": [
+        "FBX",
+        "OBJ",
+        "PNG",
+        "TGA"
+      ],
+      "use": [
+        "background Shire buildings",
+        "farm support",
+        "furniture",
+        "food/market clutter",
+        "nature dressing"
+      ],
+      "ready_review_checks": [
+        "provider/source/license/receipt/SHA256 provenance",
+        "scale",
+        "pivot",
+        "UVs",
+        "normals/tangents",
+        "material slots",
+        "collision",
+        "triangle count",
+        "LOD/cull plan",
+        "support-only/canon placement review"
+      ]
     },
     {
       "order": 3,
       "id": "P1C01_AUDIO_AMBIENCE_FOLEY",
       "max_items": 10,
-      "providers": ["OPENGAMEART"],
+      "providers": [
+        "OPENGAMEART"
+      ],
       "asset_ids": [
         "OGA_DIFFERENT_STEPS_SURFACES",
         "OGA_FIREPLACE_LOOP",
@@ -94,37 +158,114 @@
         "OGA_HARVEST_SEASON",
         "OGA_EXPLORATION"
       ],
-      "category_keywords": ["AUDIO", "SFX", "AMBIENCE", "FOLEY", "MUSIC"],
-      "required_formats": ["WAV"],
-      "use": ["footsteps", "hearth/fire", "wood/metal props", "birds", "pastoral ambience", "authorized music candidates"]
+      "category_keywords": [
+        "AUDIO",
+        "SFX",
+        "AMBIENCE",
+        "FOLEY",
+        "MUSIC"
+      ],
+      "required_formats": [
+        "WAV"
+      ],
+      "use": [
+        "footsteps",
+        "hearth/fire",
+        "wood/metal props",
+        "birds",
+        "pastoral ambience",
+        "authorized music candidates"
+      ],
+      "ready_review_checks": [
+        "provider/source/license/receipt/SHA256 provenance",
+        "WAV production master",
+        "audition",
+        "trim/fade",
+        "loop seam where applicable",
+        "loudness",
+        "attenuation/concurrency plan",
+        "memory/decompression review"
+      ]
     },
     {
       "order": 4,
       "id": "P1C01_FAUNA",
       "max_items": 6,
-      "providers": ["QUATERNIUS"],
-      "asset_ids": ["QTN_FARM_ANIMALS", "QTN_ULTIMATE_ANIMATED_ANIMALS"],
-      "category_keywords": ["FAUNA", "ANIMAL", "FARM"],
-      "required_formats": ["FBX"],
-      "use": ["farm animals", "small-world-life support"],
-      "runtime_note": "Later runtime use remains pooled/bounded and region-appropriate."
+      "providers": [
+        "QUATERNIUS"
+      ],
+      "asset_ids": [
+        "QTN_FARM_ANIMALS",
+        "QTN_ULTIMATE_ANIMATED_ANIMALS"
+      ],
+      "category_keywords": [
+        "FAUNA",
+        "ANIMAL",
+        "FARM"
+      ],
+      "required_formats": [
+        "FBX"
+      ],
+      "use": [
+        "farm animals",
+        "small-world-life support"
+      ],
+      "runtime_note": "Later runtime use remains pooled/bounded and region-appropriate.",
+      "ready_review_checks": [
+        "provider/source/license/receipt/SHA256 provenance",
+        "FBX final exchange",
+        "skeleton",
+        "skin weights",
+        "retarget result",
+        "deformation review",
+        "animation coverage",
+        "LOD/cull plan",
+        "pooling/cap fit",
+        "region/canon review"
+      ]
     },
     {
       "order": 5,
       "id": "P1C01_CHARACTER_ANIMATION_SUPPORT",
       "max_items": 8,
-      "providers": ["QUATERNIUS"],
+      "providers": [
+        "QUATERNIUS"
+      ],
       "asset_ids": [
         "QTN_UNIVERSAL_BASE_CHARACTERS",
         "QTN_RPG_CHARACTERS",
         "QTN_FANTASY_OUTFITS",
         "QTN_UNIVERSAL_ANIMATION_LIBRARY"
       ],
-      "category_keywords": ["CHARACTER", "ANIMATION"],
-      "required_formats": ["FBX"],
-      "use": ["generic rig pipeline", "background Hobbit/NPC support", "animation coverage"],
-      "runtime_gate": "AFTER_MATERIAL_AND_ARCHITECTURE_RUNTIME_LANES_CLOSE"
+      "category_keywords": [
+        "CHARACTER",
+        "ANIMATION"
+      ],
+      "required_formats": [
+        "FBX"
+      ],
+      "use": [
+        "generic rig pipeline",
+        "background Hobbit/NPC support",
+        "animation coverage"
+      ],
+      "runtime_gate": "AFTER_MATERIAL_AND_ARCHITECTURE_RUNTIME_LANES_CLOSE",
+      "ready_review_checks": [
+        "provider/source/license/receipt/SHA256 provenance",
+        "FBX final exchange",
+        "skeleton",
+        "skin weights",
+        "retarget result",
+        "deformation review",
+        "animation coverage",
+        "material slots",
+        "equipment sockets",
+        "LOD/cull plan",
+        "generic-support/canon identity review"
+      ]
     }
   ],
-  "evidence_boundary": "This train creates bounded INTAKE_QC preparation only. It does not assert UE import, runtime integration, PIE, device, visual or performance acceptance."
+  "evidence_boundary": "This train creates bounded INTAKE_QC preparation only. It does not assert UE import, runtime integration, PIE, device, visual or performance acceptance.",
+  "ready_for_import_review_mode": "MANUAL_ONLY_AFTER_INTAKE_QC",
+  "ready_review_output": "p1c01_ready_for_import_review_queue.json"
 }
