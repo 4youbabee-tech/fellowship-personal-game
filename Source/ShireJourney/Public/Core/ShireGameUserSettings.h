@@ -14,6 +14,14 @@ enum class EShireGraphicsPreset : uint8
     Custom UMETA(DisplayName="Custom")
 };
 
+UENUM(BlueprintType)
+enum class EShireDisplayMode : uint8
+{
+    Fullscreen UMETA(DisplayName="Fullscreen"),
+    Borderless UMETA(DisplayName="Borderless"),
+    Windowed UMETA(DisplayName="Windowed")
+};
+
 UCLASS(Config=GameUserSettings)
 class SHIREJOURNEY_API UShireGameUserSettings : public UGameUserSettings
 {
@@ -46,7 +54,7 @@ public:
 
     UFUNCTION(BlueprintCallable, Category="Settings|Graphics")
     void ApplyDisplayModeAndResolution(
-        EWindowMode::Type WindowMode,
+        EShireDisplayMode DisplayMode,
         FIntPoint Resolution,
         bool bApplyImmediately = true);
 
