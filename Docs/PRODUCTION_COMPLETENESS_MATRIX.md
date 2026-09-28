@@ -7,6 +7,7 @@
 - In-game Canvas Graphics/Video surface + keyboard navigation: **SOURCE-IMPLEMENTED**.
 - Final UMG/art skin and resolution confirmation UX: **PENDING UI POLISH**.
 - Four-tier texture/shadow/foliage/view-distance scalability config: **SOURCE-IMPLEMENTED**.
+- Graphics settings plan/index governance: **SYNCHRONIZED**.
 - Target-laptop performance of each preset: **NOT MEASURED**.
 - PIE/device/visual/performance acceptance: **NOT CLAIMED**.
 
