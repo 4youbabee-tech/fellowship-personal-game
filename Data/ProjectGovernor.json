@@ -4038,6 +4038,33 @@
       ],
       "evidence_boundary": "CI ARCHITECTURE SOURCE-IMPLEMENTED. Exact-head hosted static validation and a selected machine validation are still required before lifting the production freeze.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-054",
+      "title": "Maximize visual quality per measured cost and ship scalable professional graphics settings",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-002",
+        "REQ-PERF-001",
+        "REQ-PERF-003"
+      ],
+      "resolution": "Treat beauty and performance as one optimization problem. Ship a visually strong Recommended preset by default, with Performance, High, Ultra and Custom user-controlled tiers. Preserve native render scale and strong texture/AA/post quality in Recommended, recovering cost first from shadows, effects, foliage, duplicate detail and other low-value expensive work.",
+      "implementation_contract": [
+        "Use UShireGameUserSettings as the persistent GameUserSettings authority.",
+        "Recommended is the default first-run preset; Custom is never silently overwritten.",
+        "Expose view distance, anti-aliasing, shadows, post processing, textures, effects, foliage, resolution scale, VSync, frame cap and inherited resolution/window controls.",
+        "High and Ultra are optional headroom presets and carry no target-laptop performance claim until measured.",
+        "Developer/community techniques are candidate accelerators only; UE4.27 documentation and target-device profiling decide adoption.",
+        "Do not solve performance by blanket visual degradation before removing duplicate actors, far shadows, overdraw, redundant lighting, uninstanced repeats, unnecessary Tick and invisible/far detail."
+      ],
+      "evidence": [
+        "Data/GraphicsSettingsPlanV1.json",
+        "Source/ShireJourney/Public/Core/ShireGameUserSettings.h",
+        "Source/ShireJourney/Private/Core/ShireGameUserSettings.cpp",
+        "Config/DefaultScalability.ini"
+      ],
+      "evidence_boundary": "SOURCE/CONFIG IMPLEMENTATION ONLY. Exact-head UE4.27 compile, runtime persistence, target-device performance and human visual acceptance remain pending.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
