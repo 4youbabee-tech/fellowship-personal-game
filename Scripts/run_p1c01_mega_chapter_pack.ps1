@@ -116,12 +116,17 @@ foreach($car in @($manifest.cars | Sort-Object order)){
         $childManifest = [string]$car.manifest
         if(-not [IO.Path]::IsPathRooted($childManifest)){ $childManifest = Join-Path $ProjectRoot $childManifest }
         $outputRoot = Join-Path $WarehouseRoot "_p1c01_character_intake"
-        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot "prepare_p1c01_character_rig_intake.ps1") -ManifestPath $childManifest -OutputRoot $outputRoot
+        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $PSScriptRoot "prepare_p1c01_character_rig_intake.ps1") -ManifestPath $childManifest -WarehouseRoot $WarehouseRoot -OutputRoot $outputRoot
       }
     }
     default {
       Add-CarResult ([string]$car.id) "SKIPPED_UNKNOWN_CAR" 0 "unknown car id"
     }
+  }
+
+  if($hardFailure){
+    Write-Host ("P1C01_CHAPTER_PACK_ABORT_AFTER_INFRA_FAILURE car=" + [string]$car.id)
+    break
   }
 }
 
