@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "queue_id": "P1C01_RUNNERLESS_SOURCE_BACKLOG_V1",
+  "lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "ACTIVE_SOURCE_PREPARATION",
+  "purpose": "Keep P1C01 production advancing while UE4/Warehouse execution is unavailable by preparing bounded, provenance-preserving source batches that can later be consumed without changing chapter scope.",
+  "evidence_boundary": "This queue is source/preparation state only. It does not claim STAGED, READY_FOR_IMPORT, IMPORTED, INTEGRATED, COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or performance evidence.",
+  "global_rules": [
+    "Prefer already-staged warehouse stock when machine execution is reachable.",
+    "Do not create redundant self-hosted jobs when the matching UE4 runner is unavailable.",
+    "Keep generated/source promotion separate from Unreal proof heads.",
+    "Animated production assets remain FBX-only.",
+    "Production textures remain PNG/TGA, including channel-packed textures where used.",
+    "Heavy runtime assets remain soft-referenced and asynchronously loaded through FStreamableManager.",
+    "Ambient crowds remain pooled and bounded.",
+    "Provider/license/provenance blockers move to manual queue or quarantine while independent lanes continue."
+  ],
+  "batches": [
+    {
+      "order": 1,
+      "id": "RL01_MATERIAL_SOURCE_BRANCH",
+      "source_manifest": "Data/P1C01MaterialImportWaveV1.json",
+      "preparation_script": "Scripts/prepare_p1c01_material_intake.ps1",
+      "export_script": "Scripts/export_p1c01_material_source_branch.ps1",
+      "generated_branch": "generated/p1c01-material-source-v1",
+      "max_state_without_machine_proof": "SOURCE_READY_FOR_UE_IMPORT",
+      "next_machine_gate": "Exact-head UE4 import/build proof on generated source branch."
+    },
+    {
+      "order": 2,
+      "id": "RL02_ARCHITECTURE_PROP_INTAKE",
+      "source_manifest": "Data/P1C01ArchitectureInteriorPropMegabatchV1.json",
+      "preparation_script": "Scripts/prepare_p1c01_architecture_intake.ps1",
+      "max_state_without_machine_proof": "INTAKE_QC_PREPARED",
+      "focus": [
+        "background Shire buildings",
+        "farm support",
+        "furniture",
+        "food and market clutter",
+        "nature dressing"
+      ],
+      "next_machine_gate": "Receipt-hash verification, bounded extraction, class QC, then explicit READY_FOR_IMPORT promotion."
+    },
+    {
+      "order": 3,
+      "id": "RL03_AUDIO_AMBIENCE_FOLEY_INTAKE",
+      "source_manifest": "Data/P1C01AudioFoleyAmbiencePrepV1.json",
+      "preparation_script": "Scripts/prepare_p1c01_audio_intake.ps1",
+      "max_state_without_machine_proof": "INTAKE_QC_PREPARED",
+      "focus": [
+        "footsteps",
+        "hearth and fire",
+        "wood and metal interactions",
+        "bird ambience",
+        "pastoral ambience"
+      ],
+      "required_master_format": "WAV",
+      "next_machine_gate": "Audition, trim/fade, loop/loudness/concurrency QC, then UE import."
+    },
+    {
+      "order": 4,
+      "id": "RL04_FAUNA_PREPARATION",
+      "source_manifest": "Data/P1C01LivingWorldFaunaPrepV1.json",
+      "preparation_script": "Scripts/prepare_p1c01_fauna_intake.ps1",
+      "max_state_without_machine_proof": "CANDIDATE",
+      "required_animated_format": "FBX",
+      "runtime_rule": "Preserve existing fauna caps and pooling; do not raise density during intake.",
+      "next_machine_gate": "Explicit license capture plus skeleton/skin/deformation/animation QC."
+    },
+    {
+      "order": 5,
+      "id": "RL05_CHARACTER_RIG_ANIMATION_INTAKE",
+      "source_manifest": "Data/P1C01CharacterRigAnimationPrepV1.json",
+      "preparation_script": "Scripts/prepare_p1c01_character_rig_intake.ps1",
+      "max_state_without_machine_proof": "INTAKE_QC_PREPARED",
+      "required_animated_format": "FBX",
+      "next_machine_gate": "Skeleton/skin/retarget/deformation QC followed by exact-head Unreal proof."
+    }
+  ],
+  "resume_policy": {
+    "when_self_hosted_runner_returns": [
+      "Consume already-prepared batches in order with bounded Warehouse/Unreal execution.",
+      "Do not merge source-preparation proof as engine proof.",
+      "Freeze any exact head awaiting Unreal/Warehouse evidence and continue independent source preparation on a separate branch."
+    ],
+    "when_provider_blocked": "Manual-queue or quarantine the affected item and continue other independent batches."
+  }
+}
