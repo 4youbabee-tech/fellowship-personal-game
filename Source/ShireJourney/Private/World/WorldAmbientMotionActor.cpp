@@ -45,6 +45,8 @@ void AWorldAmbientMotionActor::Configure(
     const FVector& InScale,
     bool bInCollision)
 {
+    SetActorHiddenInGame(false);
+    SetActorTickEnabled(true);
     MotionMode = InMode;
     MotionAmplitude = FMath::Clamp(InAmplitude, 0.0f, 120.0f);
     MotionSpeed = FMath::Clamp(InSpeed, 0.05f, 6.0f);
@@ -55,6 +57,13 @@ void AWorldAmbientMotionActor::Configure(
         Mesh->SetStaticMesh(InMesh);
         Mesh->SetCollisionEnabled(
             bInCollision ? ECollisionEnabled::QueryAndPhysics : ECollisionEnabled::NoCollision);
+        Mesh->SetVisibility(true, true);
+    }
+
+    if (Glow)
+    {
+        Glow->SetVisibility(false);
+        Glow->SetIntensity(0.0f);
     }
 
     BaseLocation = GetActorLocation();
@@ -103,5 +112,40 @@ void AWorldAmbientMotionActor::Tick(float DeltaSeconds)
     default:
         SetActorRotation(BaseRotation + FRotator(Sine * MotionAmplitude * 0.22f, 0.0f, Cosine * MotionAmplitude));
         break;
+    }
+}
+
+
+void AWorldAmbientMotionActor::ActivateFromLivingWorldPool(
+    const FVector& InLocation,
+    const FRotator& InRotation)
+{
+    SetActorLocationAndRotation(InLocation, InRotation, false, nullptr, ETeleportType::TeleportPhysics);
+    SetActorHiddenInGame(false);
+    SetActorTickEnabled(true);
+    if (Mesh)
+    {
+        Mesh->SetVisibility(true, true);
+    }
+    BaseLocation = InLocation;
+    BaseRotation = InRotation;
+    Phase = FMath::Fmod(
+        FMath::Abs(InLocation.X * 0.013f + InLocation.Y * 0.017f),
+        2.0f * PI);
+}
+
+void AWorldAmbientMotionActor::DeactivateForLivingWorldPool()
+{
+    SetActorTickEnabled(false);
+    SetActorHiddenInGame(true);
+    if (Mesh)
+    {
+        Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        Mesh->SetVisibility(false, true);
+    }
+    if (Glow)
+    {
+        Glow->SetVisibility(false);
+        Glow->SetIntensity(0.0f);
     }
 }

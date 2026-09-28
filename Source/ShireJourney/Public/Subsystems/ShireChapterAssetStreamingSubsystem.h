@@ -67,6 +67,7 @@ private:
         TSharedPtr<FStreamableHandle> Handle;
         bool bAvailabilityChecked = false;
         bool bPackagesPresent = false;
+        double LastAvailabilityCheckSeconds = -1.0;
     };
 
     bool LoadStreamingPlan();

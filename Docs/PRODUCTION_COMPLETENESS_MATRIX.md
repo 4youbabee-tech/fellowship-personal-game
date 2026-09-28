@@ -1,3 +1,13 @@
+## 2026-09-28 - P1C01 runtime/character intake salvage v2
+
+- PR #133 original-head UE4.27.2 build/import evidence: **COMPILE/IMPORT RUN SUCCESS on `970a52f7...` via Unreal #1033**.
+- Rebased current-develop runtime source: **SOURCE-IMPLEMENTED / NEW EXACT-HEAD PROOF PENDING**.
+- Living World interaction + ambient-motion pooling and cached player lookup: **SOURCE-IMPLEMENTED**.
+- Audio SFX repeat guard and bounded rig-availability retry: **SOURCE-IMPLEMENTED**.
+- Quaternius four-pack character/animation intake and FBX/provenance gate: **SOURCE-IMPLEMENTED**.
+- Warehouse manual-queue continuation for isolated bad assets: **SOURCE-IMPLEMENTED**.
+- READY_FOR_IMPORT character rigs, PIE, device, visual and target-performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 selective Warehouse promotion routing
 
 - P1C01 promotion workflow trigger paths: **SOURCE-IMPLEMENTED**.

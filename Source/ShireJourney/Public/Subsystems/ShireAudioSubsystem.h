@@ -101,6 +101,8 @@ private:
         float PitchMultiplier = 1.0f;
     };
     TMap<FName, FPendingSpatialSfx> PendingSpatialSfx;
+    TMap<FName, double> LastSfxPlaybackTimeSeconds;
+    float MinSfxRepeatIntervalSeconds = 0.06f;
 
     FStreamableManager StreamableManager;
     TMap<FName, TSharedPtr<FStreamableHandle>> PendingAudioLoads;
@@ -120,6 +122,7 @@ private:
         FSoftObjectPath AssetPath,
         FName LoadKey);
     void CancelPendingAudioCategory(FName Category);
+    bool CanPlaySfxNow(FName CueId);
     void StartVoicePlayback(FName CueId, USoundBase* Sound);
     void ApplyMusicDuck(bool bDuck);
     AActor* ResolveVoiceSpeakerActor(FName CueId) const;

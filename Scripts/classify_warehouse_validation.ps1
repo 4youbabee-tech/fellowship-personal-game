@@ -9,7 +9,7 @@ function Enable-All {
     foreach($name in @(
         "WH_STAGE_POLYHAVEN","WH_STAGE_OGA","WH_STAGE_QUATERNIUS","WH_STAGE_AMBIENTCG",
         "WH_STAGE_AMBIENTCG_TRILOGY","WH_STAGE_KENNEY","WH_STAGE_KAYKIT",
-        "WH_RUN_AUDIT","WH_RUN_SATURATION","WH_RUN_PREP","WH_RUN_PROVIDER_RESOLUTION","WH_RUN_P1C01_PROMOTION"
+        "WH_RUN_AUDIT","WH_RUN_SATURATION","WH_RUN_PREP","WH_RUN_PROVIDER_RESOLUTION","WH_RUN_P1C01_PROMOTION","WH_RUN_CHARACTER_INTAKE"
     )) {
         Write-Flag $name $true
     }
@@ -80,6 +80,7 @@ $flags = [ordered]@{
     WH_RUN_PREP=$false
     WH_RUN_PROVIDER_RESOLUTION=$false
     WH_RUN_P1C01_PROMOTION=$false
+    WH_RUN_CHARACTER_INTAKE=$false
 }
 
 $providerTouched=$false
@@ -104,7 +105,9 @@ foreach($raw in $changed) {
         "Scripts/stage_opengameart_audio.ps1" { $flags.WH_STAGE_OGA=$true; $providerTouched=$true; continue }
 
         "Data/WarehouseQuaterniusAcquisitionBatchV1.json" { $flags.WH_STAGE_QUATERNIUS=$true; $providerTouched=$true; continue }
-        "Scripts/stage_quaternius_warehouse.ps1" { $flags.WH_STAGE_QUATERNIUS=$true; $providerTouched=$true; continue }
+        "Scripts/stage_quaternius_warehouse.ps1" { $flags.WH_STAGE_QUATERNIUS=$true; $flags.WH_RUN_CHARACTER_INTAKE=$true; $providerTouched=$true; continue }
+        "Data/P1C01CharacterRigAnimationPrepV1.json" { $flags.WH_RUN_CHARACTER_INTAKE=$true; continue }
+        "Scripts/prepare_p1c01_character_rig_intake.ps1" { $flags.WH_RUN_CHARACTER_INTAKE=$true; continue }
 
         "Data/WarehouseAmbientCGAcquisitionBatchV1.json" { $flags.WH_STAGE_AMBIENTCG=$true; $providerTouched=$true; continue }
         "Data/WarehouseAmbientCGTrilogyBatchV2.json" { $flags.WH_STAGE_AMBIENTCG_TRILOGY=$true; $providerTouched=$true; continue }
@@ -185,6 +188,7 @@ if($providerTouched) {
     $flags.WH_RUN_PREP=$true
     $flags.WH_RUN_PROVIDER_RESOLUTION=$true
     $flags.WH_RUN_P1C01_PROMOTION=$true
+    $flags.WH_RUN_CHARACTER_INTAKE=$true
 }
 
 foreach($entry in $flags.GetEnumerator()) {

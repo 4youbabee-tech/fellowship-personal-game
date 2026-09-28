@@ -49,7 +49,33 @@ void AShireWorldEventInteraction::ConfigureInteraction(
     ResponseText = InResponseText;
     bSuppressDuringDanger = bInSuppressDuringDanger;
     bConsumed = false;
+    SetActorHiddenInGame(false);
+    InteractionMarker->SetVisibility(true, true);
     InteractionMarker->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
+
+void AShireWorldEventInteraction::ActivateFromLivingWorldPool(const FVector& InLocation)
+{
+    SetActorLocation(InLocation, false, nullptr, ETeleportType::TeleportPhysics);
+    SetActorHiddenInGame(false);
+    bConsumed = false;
+    if (InteractionMarker)
+    {
+        InteractionMarker->SetVisibility(true, true);
+        InteractionMarker->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+    }
+}
+
+void AShireWorldEventInteraction::DeactivateForLivingWorldPool()
+{
+    bConsumed = true;
+    SetActorHiddenInGame(true);
+    if (InteractionMarker)
+    {
+        InteractionMarker->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        InteractionMarker->SetVisibility(false, true);
+    }
 }
 
 bool AShireWorldEventInteraction::IsInteractionAllowed() const
