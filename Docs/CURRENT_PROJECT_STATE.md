@@ -1,3 +1,13 @@
+## 2026-09-28 - P1C01 Chapter Closure Mega Pack V2 launched
+
+- DEC-058 encodes maximum P1C01 source throughput while keeping raw Warehouse, Git/LFS promotion and UE import as separate bounded layers.
+- One closure pack covers 37 Poly Haven assets, 17 ambientCG search lanes, 17 Quaternius packs, 12 Kenney packs, 8 KayKit packs and 17 OpenGameArt assets.
+- Internal promotion selector ceiling is 187 candidates across surfaces, architecture/props, nature, audio, fauna and character/animation support.
+- Material closure wave expands from 16 to 26 explicit Shire/Bag End materials. Generated-source promotion remains bounded at 48 MiB/source and 640 MiB/batch with minimum 18 exported items.
+- Closure Pack V2 enforces a 6 GiB free-disk reserve, never deletes original Warehouse payloads for space, and quarantines provider/asset/source failures while allowing independent cars to continue.
+- Overlapping legacy P1C01 Warehouse steps are suppressed while V2 owns the run. Unreal Build ignores the new control-plane manifests/scripts; actual binary/content integration remains a later bounded engine lane.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING / V2 WAREHOUSE EXECUTION PENDING / UE IMPORT NOT CLAIMED**.
+
 ## 2026-09-28 - Warehouse #281 root-cause publish-race repair
 
 - Pre-Unreal #1315: **SUCCESS** on develop `a8f78c897c838a82a12ed61ddfb899a4c1ded03a`.
