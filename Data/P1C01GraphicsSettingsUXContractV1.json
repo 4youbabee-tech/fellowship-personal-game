@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "contract_id": "P1C01_GRAPHICS_SETTINGS_UX_CONTRACT_V1",
+  "lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "RUNNERLESS_PREPARATION_ONLY",
+  "purpose": "Define the player-facing Graphics/Video settings behavior before runtime implementation, without bypassing ProjectGovernor or WORLD_DETAIL_LEDGER authority registration.",
+  "authority_state": {
+    "project_governor_registration": "BLOCKED_BY_PLATFORM_WRITE_GUARD",
+    "world_detail_ledger_registration": "BLOCKED_BY_PLATFORM_WRITE_GUARD",
+    "runtime_implementation_allowed": false,
+    "rule": "This contract is preparatory only. Do not implement runtime settings until the authority files contain the approved graphics/settings doctrine."
+  },
+  "target_floor": {
+    "platform": "Windows",
+    "renderer": "DX11",
+    "cpu_class": "Intel i7 Gen6 class",
+    "ram_gb": 8,
+    "vram_class_gb": 2,
+    "resolution": "1280x720",
+    "quality": "Low-Medium",
+    "fps_floor_target": 30,
+    "performance_acceptance": "PENDING_EXACT_TARGET_DEVICE_EVIDENCE"
+  },
+  "preset_model": {
+    "default_candidate": "Balanced",
+    "presets": [
+      "Performance",
+      "Balanced",
+      "High",
+      "Cinematic",
+      "Custom"
+    ],
+    "floor_validation_presets": [
+      "Performance",
+      "Balanced"
+    ],
+    "native_720p_floor_rule": "Performance and Balanced stay at 1280x720 with 100% resolution scale for target-floor validation unless the owner explicitly changes the target.",
+    "custom_transition_rule": "Changing any individual quality group from a named preset changes the displayed preset to Custom without silently altering unrelated groups."
+  },
+  "screen_layout": {
+    "sections": [
+      {
+        "id": "Display",
+        "controls": [
+          "display_mode",
+          "resolution",
+          "resolution_scale",
+          "vsync",
+          "frame_rate_limit"
+        ]
+      },
+      {
+        "id": "Quality",
+        "controls": [
+          "preset",
+          "view_distance",
+          "anti_aliasing",
+          "shadows",
+          "post_process",
+          "textures",
+          "effects",
+          "foliage"
+        ]
+      }
+    ],
+    "actions": [
+      "Apply",
+      "Revert",
+      "Restore Defaults"
+    ],
+    "dirty_state_rule": "Apply is enabled only when working values differ from the last applied values.",
+    "revert_rule": "Revert restores the last applied values, not factory defaults.",
+    "restore_defaults_rule": "Restore Defaults selects the project default candidate values but does not persist them until Apply."
+  },
+  "display_behavior": {
+    "supported_modes": [
+      "Fullscreen",
+      "WindowedFullscreen",
+      "Windowed"
+    ],
+    "resolution_change_confirmation": {
+      "required": true,
+      "countdown_seconds_candidate": 15,
+      "timeout_behavior": "Revert to last confirmed display mode and resolution.",
+      "evidence_status": "DESIGN_CANDIDATE_NOT_RUNTIME_TESTED"
+    },
+    "resolution_scale": {
+      "ui_unit": "percent",
+      "named_preset_floor_percent": 100,
+      "custom_control_allowed": true,
+      "warning": "Values below 100% are a Custom user choice and must not be used to claim the native-720p target floor."
+    },
+    "frame_rate_limit": {
+      "options_candidate": [
+        30,
+        45,
+        60,
+        90,
+        120,
+        0
+      ],
+      "zero_semantics": "Unlimited",
+      "target_floor_measurement": 30
+    }
+  },
+  "quality_behavior": {
+    "group_scale": {
+      "minimum": 0,
+      "maximum": 3,
+      "labels": [
+        "Low",
+        "Medium",
+        "High",
+        "Epic"
+      ]
+    },
+    "named_preset_mapping_source": "Data/P1C01GraphicsSettingsPreparationV1.json",
+    "apply_rule": "Apply only the groups represented by the selected preset or Custom working state; do not invent hidden expensive quality overrides.",
+    "cinematic_rule": "Cinematic is a presentation preset for stronger hardware, not permission to blindly maximize every shadow, foliage or effects group.",
+    "texture_rule": "Texture quality must be evaluated against streaming-pool and resident-memory evidence, not source-file size alone."
+  },
+  "visual_economy": {
+    "goal": "Maximize visible beauty per measured CPU/GPU/VRAM cost.",
+    "spend_first_on": [
+      "silhouette_and_composition",
+      "hero_material_readability",
+      "lighting_and_atmosphere",
+      "near_field_detail"
+    ],
+    "recover_cost_first_from": [
+      "duplicate_actors",
+      "far_shadows",
+      "overdraw_and_translucency",
+      "redundant_lights",
+      "uninstanced_repetition",
+      "unnecessary_tick",
+      "invisible_or_far_detail"
+    ],
+    "repeated_detail_rule": "HISM_OR_ISM_PLUS_LOD_AND_CULLING",
+    "crowd_rule": "OBJECT_POOLING",
+    "heavy_asset_rule": "SOFT_REFERENCES_PLUS_FSTREAMABLEMANAGER_ASYNC",
+    "hero_quality_rule": "Reduce hero quality only after measured recovery from the cheaper waste categories is insufficient."
+  },
+  "persistence_contract": {
+    "authority": "UGameUserSettings",
+    "planned_project_class": "UShireGameUserSettings",
+    "single_store": true,
+    "save_action": "UGameUserSettings.SaveSettings",
+    "apply_action": "UGameUserSettings.ApplySettings",
+    "second_settings_store_forbidden": true,
+    "startup_rule": "Load and validate persisted settings through the UGameUserSettings path before exposing them as the current UI state.",
+    "invalid_value_rule": "Clamp or replace unsupported persisted values with safe project defaults rather than applying undefined values."
+  },
+  "accessibility_and_clarity": {
+    "show_effective_resolution": true,
+    "show_resolution_scale_percent": true,
+    "show_restart_requirement_per_control": true,
+    "no_false_performance_labels": true,
+    "tooltips_required_for": [
+      "resolution_scale",
+      "shadows",
+      "post_process",
+      "textures",
+      "foliage",
+      "frame_rate_limit"
+    ],
+    "tooltip_rule": "Explain likely cost category without promising an FPS gain."
+  },
+  "validation_backlog": {
+    "static": [
+      "preset names and quality-group mappings are deterministic",
+      "manual quality-group change transitions UI to Custom",
+      "Apply/Revert/Restore Defaults semantics do not overwrite each other",
+      "native-720p floor presets remain 100% resolution scale",
+      "no second persistence store is introduced"
+    ],
+    "ue4_exact_head_when_runner_returns": [
+      "compile UShireGameUserSettings",
+      "apply and persist every named preset",
+      "restart roundtrip for Custom values",
+      "display-mode/resolution confirmation and timeout revert",
+      "invalid persisted value fallback",
+      "quality-group mapping inspection"
+    ],
+    "target_device": [
+      "Performance native 720p profile",
+      "Balanced native 720p profile",
+      "frame/game/draw/GPU timing",
+      "draw calls and primitives",
+      "streaming pool and resident texture memory",
+      "transition hitch observation",
+      "shadow contribution",
+      "translucency and overdraw",
+      "movable light overlap",
+      "active Tick count"
+    ]
+  },
+  "evidence_ceiling": {
+    "source_prepared": true,
+    "compile_tested": false,
+    "pie_tested": false,
+    "device_tested": false,
+    "visually_accepted": false,
+    "performance_improvement_claimed": false,
+    "performance_accepted": false,
+    "integrated": false
+  }
+}
