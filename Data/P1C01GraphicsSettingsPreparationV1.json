@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_GRAPHICS_VIDEO_SETTINGS_PREPARATION_V1",
+  "lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "RUNNERLESS_PREPARATION_ONLY",
+  "governor_authority": {
+    "requirements": ["REQ-WORLD-002", "REQ-PERF-001"],
+    "active_gate": "W01_P1C01_VERTICAL_SLICE_GATE",
+    "note": "A dedicated graphics-settings requirement/decision was prepared in this automation run but repository-authority writes were blocked by platform safety. Do not treat this file as a second project-management authority."
+  },
+  "visual_economy_doctrine": {
+    "goal": "Maximize visible beauty per measured CPU/GPU/VRAM cost.",
+    "spend_first_on": [
+      "silhouette_and_composition",
+      "hero_material_readability",
+      "lighting_and_atmosphere",
+      "near_field_detail"
+    ],
+    "recover_cost_first_from": [
+      "duplicate_actors",
+      "far_shadows",
+      "overdraw_and_translucency",
+      "redundant_lights",
+      "uninstanced_repetition",
+      "unnecessary_tick",
+      "invisible_or_far_detail"
+    ],
+    "repeated_detail_rule": "HISM_OR_ISM_PLUS_LOD_AND_CULLING",
+    "crowd_rule": "OBJECT_POOLING",
+    "heavy_asset_rule": "SOFT_REFERENCES_PLUS_FSTREAMABLEMANAGER_ASYNC"
+  },
+  "target_floor": {
+    "platform": "Windows_DX11",
+    "resolution": "1280x720",
+    "quality_floor": "Low-Medium",
+    "fps_floor": 30,
+    "memory_class": "8GB_RAM",
+    "vram_class": "~2GB",
+    "cpu_class": "Intel_i7_Gen6_class",
+    "acceptance": "PENDING_EXACT_TARGET_DEVICE_EVIDENCE"
+  },
+  "presets": [
+    {
+      "id": "Performance",
+      "purpose": "Fallback when the target floor is under pressure.",
+      "quality": {
+        "view_distance": 0,
+        "anti_aliasing": 1,
+        "shadows": 0,
+        "post_process": 0,
+        "textures": 1,
+        "effects": 0,
+        "foliage": 0,
+        "resolution_scale_percent": 85
+      }
+    },
+    {
+      "id": "Balanced",
+      "purpose": "Visually strong default target candidate; not performance-accepted until measured.",
+      "quality": {
+        "view_distance": 1,
+        "anti_aliasing": 2,
+        "shadows": 1,
+        "post_process": 1,
+        "textures": 1,
+        "effects": 1,
+        "foliage": 1,
+        "resolution_scale_percent": 100
+      }
+    },
+    {
+      "id": "High",
+      "purpose": "Higher-quality preset for stronger hardware.",
+      "quality": {
+        "view_distance": 2,
+        "anti_aliasing": 2,
+        "shadows": 2,
+        "post_process": 2,
+        "textures": 2,
+        "effects": 2,
+        "foliage": 2,
+        "resolution_scale_percent": 100
+      }
+    },
+    {
+      "id": "Cinematic",
+      "purpose": "Maximum authored presentation while still respecting the visual-economy doctrine.",
+      "quality": {
+        "view_distance": 3,
+        "anti_aliasing": 3,
+        "shadows": 2,
+        "post_process": 3,
+        "textures": 3,
+        "effects": 2,
+        "foliage": 2,
+        "resolution_scale_percent": 100
+      },
+      "note": "Shadows/foliage are intentionally not blindly maxed; Custom may override them."
+    },
+    {
+      "id": "Custom",
+      "purpose": "Player-controlled persistent settings.",
+      "controls": [
+        "resolution",
+        "display_mode",
+        "resolution_scale",
+        "vsync",
+        "frame_rate_limit",
+        "view_distance",
+        "anti_aliasing",
+        "shadows",
+        "post_process",
+        "textures",
+        "effects",
+        "foliage"
+      ]
+    }
+  ],
+  "implementation_contract": {
+    "settings_authority": "UGameUserSettings",
+    "planned_class": "UShireGameUserSettings",
+    "planned_public_path": "Source/ShireJourney/Public/UI/ShireGameUserSettings.h",
+    "planned_private_path": "Source/ShireJourney/Private/UI/ShireGameUserSettings.cpp",
+    "persistence": "UGameUserSettings.SaveSettings",
+    "apply_path": "UGameUserSettings.ApplySettings",
+    "no_second_store": true,
+    "no_runtime_chapter_expansion": true
+  },
+  "proof_boundary": {
+    "source_prepared": true,
+    "compile_tested": false,
+    "pie_tested": false,
+    "device_tested": false,
+    "performance_accepted": false,
+    "visually_accepted": false
+  }
+}
