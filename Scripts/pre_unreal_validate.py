@@ -8115,6 +8115,24 @@ for ignored in ["Data/P1C01MaterialImportWaveV2.json","Data/P1C01ChapterClosureM
     if ignored not in pg192_unreal:
         fail(f"PG-192 tooling-only V2 path missing from Unreal paths-ignore: {ignored}")
 
+
+# PG-193: Pre-Unreal must parse every PowerShell script.
+pg193_parser = read(ROOT / "Scripts" / "test_powershell_syntax.ps1")
+pg193_pre = read(ROOT / ".github" / "workflows" / "pre-unreal-validation.yml")
+pg193_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+for symbol in [
+    "System.Management.Automation.Language.Parser",
+    "POWERSHELL_SYNTAX_FAIL",
+    "POWERSHELL_SYNTAX_PASS",
+    'Get-ChildItem -LiteralPath $Root -Recurse -File -Filter "*.ps1"',
+]:
+    if symbol not in pg193_parser:
+        fail(f"PG-193 PowerShell parser gate marker missing: {symbol}")
+if "Parse all PowerShell scripts" not in pg193_pre or "Scripts\\\\test_powershell_syntax.ps1" not in pg193_pre:
+    fail("PG-193 Pre-Unreal PowerShell parser step missing")
+if "Scripts/test_powershell_syntax.ps1" not in pg193_unreal:
+    fail("PG-193 PowerShell parser guard must remain tooling-only in Unreal paths-ignore")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
