@@ -14,6 +14,33 @@ foreach($name in @("UE4Editor","UE4Editor-Cmd")){
     $running += @(Get-Process -Name $name -ErrorAction SilentlyContinue)
 }
 if($running.Count -gt 0){
+    foreach($process in $running){
+        $cim = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $process.Id) -ErrorAction SilentlyContinue
+        $owner = "unknown"
+        $commandLine = ""
+        $parentPid = 0
+        $sessionId = $process.SessionId
+        if($cim){
+            $commandLine = [string]$cim.CommandLine
+            $parentPid = [int]$cim.ParentProcessId
+            $sessionId = [int]$cim.SessionId
+            try {
+                $ownerResult = Invoke-CimMethod -InputObject $cim -MethodName GetOwner -ErrorAction Stop
+                if($ownerResult -and -not [string]::IsNullOrWhiteSpace([string]$ownerResult.User)){
+                    $owner = if([string]::IsNullOrWhiteSpace([string]$ownerResult.Domain)){
+                        [string]$ownerResult.User
+                    } else {
+                        ([string]$ownerResult.Domain) + "\" + ([string]$ownerResult.User)
+                    }
+                }
+            } catch {}
+        }
+        $ageSeconds = [math]::Max(0, [int]((Get-Date) - $process.StartTime).TotalSeconds)
+        Write-Host ("PRODUCTION_IMPORT_PREFLIGHT_PROCESS name=" + $process.ProcessName +
+            " pid=" + $process.Id + " ppid=" + $parentPid + " sessionId=" + $sessionId +
+            " owner=" + $owner + " ageSeconds=" + $ageSeconds +
+            " commandLine=" + $commandLine)
+    }
     $pids=($running | ForEach-Object { $_.Id }) -join ","
     throw "PRODUCTION_IMPORT_PREFLIGHT_EDITOR_RUNNING pids=$pids"
 }
