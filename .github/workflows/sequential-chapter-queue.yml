@@ -6,9 +6,9 @@ on:
       - develop
     paths:
       - 'Data/P1C01Gate67AcceptanceChecklistV1.json'
-      - 'Data/P1C02ShadowPastChapterPackV1.json'
+      - 'Data/Part1SequentialRuntimeChapterTrainV1.json'
       - 'Scripts/run_sequential_chapter_queue.ps1'
-      - 'Scripts/run_p1c02_shadow_past_prep.ps1'
+      - 'Scripts/run_part1_runtime_chapter_prep.ps1'
   workflow_dispatch:
 
 concurrency:
@@ -68,7 +68,7 @@ jobs:
       - name: Prepare P1C02 source train
         if: env.P1C02_QUEUE_RELEASE == 'true'
         shell: cmd
-        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_QUEUE_SOURCE%\Scripts\run_p1c02_shadow_past_prep.ps1"
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_QUEUE_SOURCE%\Scripts\run_part1_runtime_chapter_prep.ps1" -ChapterId P1C02
 
       - name: Remove isolated queue checkout
         if: always()
