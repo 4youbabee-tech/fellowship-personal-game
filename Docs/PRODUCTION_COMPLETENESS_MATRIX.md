@@ -1,3 +1,12 @@
+## 2026-09-28 - P1C01 Party Field authored-canopy preference
+
+- Authored `SM_ShPicnicCanopy` member/resolution path: **SOURCE-IMPLEMENTED**.
+- Unconditional Party Field Cube canopy: **REMOVED FROM PRODUCTION-PRESENT PATH**.
+- Cube canopy: **FALLBACK-ONLY** when the authored canopy is unavailable.
+- Runtime density / story anchor / quest coordinates: **UNCHANGED**.
+- Exact-head static/compile/render proof: **PENDING**.
+- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 production-shell visual cleanup
 
 - Additional visible bindings for turf mound / flower-box soil / well stone / furniture wood: **SOURCE-IMPLEMENTED**.
