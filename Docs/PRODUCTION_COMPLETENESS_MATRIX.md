@@ -2,7 +2,7 @@
 
 - Party Field duplicate production-lamp + legacy-lantern stacking: **REMOVED IN SOURCE DESIGN**.
 - Legacy lantern/primitive light silhouettes: **FALLBACK-ONLY**.
-- Generic river boat beside Bucklebury Ferry: **REMOVED** to preserve location identity.
+- Generic river boat beside Bucklebury Ferry plus its unused lookup: **REMOVED** to preserve location identity and avoid warning debt.
 - Canon-appropriate authored ferry mesh: **STILL AN ASSET GAP**.
 - Route/quest/NPC/density semantics: **UNCHANGED**.
 - Exact-head static/UE4.27/render proof: **PENDING**.
