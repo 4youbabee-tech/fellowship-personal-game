@@ -2898,6 +2898,55 @@
         "REQ-EXEC-002",
         "REQ-STABILITY-003"
       ]
+    },
+    {
+      "id": "REQ-GFX-001",
+      "title": "Professional scalable Graphics/Video Settings under the P1C01 visual-economy doctrine",
+      "category": "GraphicsUX",
+      "priority": "CRITICAL",
+      "status": "PLANNED",
+      "origin": "Owner explicit direction on 2026-09-28 for a permanent visual-economy doctrine and a professional Graphics/Video Settings system",
+      "intent": "Provide a visually strong default graphics preset plus scalable higher-quality presets and Custom controls while preserving the Windows DX11 1280x720 Low-Medium 30 FPS floor on the target i7 Gen6/8GB/~2GB VRAM laptop. Spend visual budget first where it is most visible and recover measured cost from low-value work before degrading hero presentation.",
+      "evidence": [
+        "Data/ProjectGovernor.json",
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Data/P1C01GraphicsSettingsPreparationV1.json",
+        "Data/P1C01GraphicsSettingsPresetMappingV1.json",
+        "Data/P1C01GraphicsSettingsUXContractV1.json",
+        "Data/P1C01GraphicsSettingsValidationBacklogV1.json"
+      ],
+      "implementation_refs": [
+        "Use UGameUserSettings as the persistent runtime authority; do not create a second settings store.",
+        "Preset families are Performance, Balanced, High, Cinematic and Custom; Balanced is the visually strong default candidate until target-device evidence says otherwise.",
+        "Performance and Balanced floor validation remain native 1280x720 at 100% resolution scale; lower internal scale may be exposed only as an explicit user Custom choice and may not weaken the acceptance floor.",
+        "Custom controls cover resolution/display mode, resolution scale, VSync, frame cap, view distance, anti-aliasing, shadows, post process, textures, effects and foliage.",
+        "Display mode/resolution changes use confirm-or-revert safety; individual quality edits transition to Custom deterministically.",
+        "Repeated decorative detail uses ISM/HISM with LOD/culling; heavy assets retain soft references plus FStreamableManager async loading; crowds retain object pooling.",
+        "Texture/VRAM changes, shadow quality and expensive lighting effects are evidence-driven on the target device rather than raised globally by preset ambition."
+      ],
+      "missing_work": [
+        "Land the registered source contracts on current develop ancestry.",
+        "Implement the Public/Private C++ UGameUserSettings-backed runtime layer and settings UI integration after authority registration.",
+        "Add exact-head static guards for preset mapping, persistence and no-secondary-store rules.",
+        "Run UE4.27 compile/runtime persistence tests, restart-roundtrip tests and target-device profile measurements.",
+        "Perform chapter-specific human visual acceptance for the default preset and verify higher presets scale quality without redefining the low-spec floor."
+      ],
+      "acceptance_criteria": [
+        "Default presentation is visually strong and readable without silently lowering the native 1280x720 Low-Medium 30 FPS target floor.",
+        "Performance, Balanced, High and Cinematic map deterministically to documented quality groups; Custom reflects manual deviations.",
+        "Apply/Revert/Restore Defaults and risky display-mode confirmation survive restart through UGameUserSettings.",
+        "Measured cost recovery first targets duplicate actors, far shadows, overdraw/translucency, redundant lights, uninstanced repetition, unnecessary Tick and invisible/far detail before reducing silhouette/composition, hero materials, lighting/atmosphere or near-field detail.",
+        "No preset is called performance-accepted without exact target-device CPU/GPU/VRAM/frame-time evidence.",
+        "No setting implementation regresses async heavy-asset ownership, HISM/ISM+LOD+culling, pooled crowds, Public/Private layout, canon/source discipline or chapter gate ordering."
+      ],
+      "dependencies": [
+        "REQ-PERF-001",
+        "REQ-PERF-003",
+        "REQ-QA-002",
+        "REQ-WORLD-002"
+      ],
+      "checkpoint": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+      "notes": "Authority registration and preparation may proceed runnerlessly. Runtime implementation remains exact-head Unreal gated; Gate 6/7 human visual and performance acceptance remain separate."
     }
   ],
   "hard_invariants": [
@@ -2979,6 +3028,11 @@
     {
       "id": "INV-RUNNER-OWNERSHIP",
       "description": "The UE4.27 self-hosted GitHub runner must execute only under the proven interactive Windows user through the ShireJourney-GitHubRunner-Watchdog Scheduled Task. Legacy actions.runner.* Windows service registration is not an alternate execution path: it must be absent, or at minimum Stopped+Disabled while pending deletion. NETWORK SERVICE, LOCAL SERVICE and SYSTEM are forbidden. The watchdog continuously removes service-mode ownership and a worker/AI session may not change runner topology without explicit owner authorization.",
+      "auto_override": false
+    },
+    {
+      "id": "INV-VISUAL-ECONOMY",
+      "description": "Permanent visual-economy doctrine: maximize visible beauty per measured CPU/GPU/VRAM cost. Protect silhouette/composition, hero-material readability, lighting/atmosphere and near-field detail first; recover cost first from duplicate actors, far shadows, overdraw/translucency, redundant lights, uninstanced repetition, unnecessary Tick and invisible/far detail. No optimization may claim an improvement without exact measured evidence.",
       "auto_override": false
     }
   ],
@@ -4071,6 +4125,37 @@
         "Scripts/run_p1c01_mega_chapter_pack.ps1"
       ],
       "evidence_boundary": "Execution architecture/source authorization only. Individual pack cars promote only to the states their receipts/logs actually prove. No automatic UE import, integration, PIE, device, visual or performance acceptance.",
+      "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-055",
+      "title": "Adopt a professional P1C01 Graphics/Video Settings system and permanent visual-economy ordering",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-GFX-001",
+        "REQ-PERF-001",
+        "REQ-PERF-003",
+        "REQ-WORLD-002"
+      ],
+      "resolution": "Implement one UGameUserSettings-backed Graphics/Video Settings system for P1C01 with Performance, Balanced, High, Cinematic and Custom profiles. Treat Balanced as the visually strong default candidate while keeping native 1280x720 / 30 FPS Low-Medium target-device acceptance as the non-negotiable floor. Preserve visible hero quality first and remove measured low-value CPU/GPU/VRAM cost in the permanent visual-economy order before degrading the scene's strongest presentation features.",
+      "implementation_contract": [
+        "Register settings/visual-economy work in WORLD_DETAIL_LEDGER before runtime implementation.",
+        "Performance and Balanced floor-validation profiles remain 1280x720 at 100% resolution scale; do not pass the floor by silently rendering below 720p.",
+        "Named quality presets do not silently rewrite display resolution, display mode, VSync or user-selected frame cap; risky display changes use confirm/revert semantics.",
+        "Custom derives from quality-group/resolution-scale deviations and persists through UGameUserSettings; there is no parallel settings database.",
+        "Higher-quality presets may spend additional cost on view distance, shadows, post process, textures, effects and foliage only within measured memory/frame-time evidence.",
+        "Cost recovery order is duplicates, far shadows, overdraw/translucency, redundant lights, uninstanced repetition, unnecessary Tick, then invisible/far detail before hero composition/material/lighting/near-field detail.",
+        "Repeated decoration retains ISM/HISM+LOD+culling, heavy assets retain soft references + FStreamableManager async ownership, and crowds retain object pooling.",
+        "No COMPILE-TESTED, PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED or performance-improvement claim is made without exact evidence."
+      ],
+      "rationale": "The owner explicitly prioritized visible beauty per measured cost and requested professional scalable video settings without sacrificing the established low-spec laptop floor. A single deterministic settings authority plus a fixed cost-recovery order prevents quality drift and random optimization.",
+      "evidence": [
+        "Owner direction dated 2026-09-28",
+        "Data/VisualPerformanceOptimizationPlan.json",
+        "Data/ProjectGovernor.json",
+        "Docs/WORLD_DETAIL_LEDGER.md"
+      ],
+      "evidence_boundary": "Governance/architecture authorization only. Runtime implementation, exact-head UE4.27 proof, target-device profiling and human visual acceptance remain pending.",
       "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
