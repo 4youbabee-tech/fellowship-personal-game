@@ -2934,9 +2934,11 @@ for pg184_hobbit_shell_symbol in [
     "if (bProductionHobbitShell)",
     "if (ProductionShrubMesh)",
     "Fallback-only round frame + inset painted door.",
+    "ProductionPicnicCanopyMesh",
+    "Traversal-era canopy proxy remains only when the authored canopy is absent.",
 ]:
     if pg184_hobbit_shell_symbol not in pg184_shire_world:
-        fail(f"PG-184 production Hobbit shell fallback separation missing: {pg184_hobbit_shell_symbol}")
+        fail(f"PG-184 production Hobbit shell/fallback separation missing: {pg184_hobbit_shell_symbol}")
 if "old Cube/Sphere/Cylinder door/window/chimney proxy kit" not in pg184_shire_world:
     fail("PG-184 production Hobbit shell must document suppression of primitive overlay kit")
 
