@@ -1554,6 +1554,170 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
         BoundAlbedoTextures,
         MissingAlbedoTextures);
 
+    // P1C01 visible-material bridge: after evidence-backed external surfaces are
+    // genuinely present, bind them onto selected high-visibility Shire meshes.
+    // Missing optional enhancement materials are not failures and never fabricate
+    // an imported/integrated state; the authored project material remains in place.
+    struct FP1C01VisibleMaterialBinding
+    {
+        const TCHAR* MeshObjectPath;
+        const TCHAR* SlotIdentity;
+        const TCHAR* EnhancementMaterialObjectPath;
+        const TCHAR* SurfaceId;
+    };
+
+    const FP1C01VisibleMaterialBinding P1C01VisibleBindings[] = {
+        {
+            TEXT("/Game/Production/World/Shire/SM_ShGroundBlock.SM_ShGroundBlock"),
+            TEXT("Grass"),
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_GRASS_GROUND/MI_Sh_GrassGround_PH.MI_Sh_GrassGround_PH"),
+            TEXT("SH_GRASS_GROUND")
+        },
+        {
+            TEXT("/Game/Production/World/Shire/SM_ShRoadBlock.SM_ShRoadBlock"),
+            TEXT("Dirt"),
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_STONY_PATH/MI_Sh_StonyPath_PH.MI_Sh_StonyPath_PH"),
+            TEXT("SH_STONY_PATH")
+        },
+        {
+            TEXT("/Game/Production/World/Shire/SM_ShHobbitFacade.SM_ShHobbitFacade"),
+            TEXT("Earth"),
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_WARM_PLASTER/MI_Sh_WarmPlaster_PH.MI_Sh_WarmPlaster_PH"),
+            TEXT("SH_WARM_PLASTER")
+        },
+        {
+            TEXT("/Game/Production/World/Shire/SM_ShCottageHouse.SM_ShCottageHouse"),
+            TEXT("Earth"),
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_WARM_PLASTER/MI_Sh_WarmPlaster_PH.MI_Sh_WarmPlaster_PH"),
+            TEXT("SH_WARM_PLASTER")
+        },
+        {
+            TEXT("/Game/Production/World/Shire/SM_ShPathStone.SM_ShPathStone"),
+            TEXT("Stone"),
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_MOSS_STONE/MI_Sh_MossStone_PH.MI_Sh_MossStone_PH"),
+            TEXT("SH_MOSS_STONE")
+        },
+        {
+            TEXT("/Game/Production/World/Shire/SM_ShStoneBridge.SM_ShStoneBridge"),
+            TEXT("Stone"),
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_MOSS_STONE/MI_Sh_MossStone_PH.MI_Sh_MossStone_PH"),
+            TEXT("SH_MOSS_STONE")
+        },
+        {
+            TEXT("/Game/Production/World/Shire/SM_ShStoneWall.SM_ShStoneWall"),
+            TEXT("Stone"),
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_MOSS_STONE/MI_Sh_MossStone_PH.MI_Sh_MossStone_PH"),
+            TEXT("SH_MOSS_STONE")
+        },
+        {
+            TEXT("/Game/Production/World/Shire/SM_ShTreeTrunk.SM_ShTreeTrunk"),
+            TEXT("Bark"),
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_TREE_BARK/MI_Sh_TreeBark_PH.MI_Sh_TreeBark_PH"),
+            TEXT("SH_TREE_BARK")
+        }
+    };
+
+    int32 P1C01VisibleBindingsApplied = 0;
+    int32 P1C01VisibleBindingsPending = 0;
+    for (const FP1C01VisibleMaterialBinding& Binding : P1C01VisibleBindings)
+    {
+        UMaterialInterface* EnhancementMaterial =
+            FindObject<UMaterialInterface>(nullptr, Binding.EnhancementMaterialObjectPath);
+        if (!EnhancementMaterial)
+        {
+            const FString EnhancementPackage =
+                FPackageName::ObjectPathToPackageName(Binding.EnhancementMaterialObjectPath);
+            if (FPackageName::DoesPackageExist(EnhancementPackage))
+            {
+                EnhancementMaterial =
+                    LoadObject<UMaterialInterface>(nullptr, Binding.EnhancementMaterialObjectPath);
+            }
+        }
+
+        if (!EnhancementMaterial)
+        {
+            ++P1C01VisibleBindingsPending;
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("P1C01_VISIBLE_MATERIAL_PENDING surface=%s mesh=%s slot=%s"),
+                Binding.SurfaceId,
+                Binding.MeshObjectPath,
+                Binding.SlotIdentity);
+            continue;
+        }
+
+        UStaticMesh* TargetMesh =
+            FindObject<UStaticMesh>(nullptr, Binding.MeshObjectPath);
+        if (!TargetMesh)
+        {
+            const FString MeshPackage =
+                FPackageName::ObjectPathToPackageName(Binding.MeshObjectPath);
+            if (FPackageName::DoesPackageExist(MeshPackage))
+            {
+                TargetMesh = LoadObject<UStaticMesh>(nullptr, Binding.MeshObjectPath);
+            }
+        }
+
+        if (!TargetMesh)
+        {
+            ++P1C01VisibleBindingsPending;
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("P1C01_VISIBLE_MATERIAL_PENDING surface=%s mesh=%s slot=%s reason=mesh-unavailable"),
+                Binding.SurfaceId,
+                Binding.MeshObjectPath,
+                Binding.SlotIdentity);
+            continue;
+        }
+
+        bool bSlotBound = false;
+        TArray<FStaticMaterial>& TargetMaterials = TargetMesh->GetStaticMaterials();
+        for (FStaticMaterial& StaticMaterial : TargetMaterials)
+        {
+            if (StaticMaterial.MaterialSlotName.ToString().Equals(
+                    Binding.SlotIdentity,
+                    ESearchCase::CaseSensitive))
+            {
+                StaticMaterial.MaterialInterface = EnhancementMaterial;
+                bSlotBound = true;
+            }
+        }
+
+        if (!bSlotBound)
+        {
+            ++Failed;
+            UE_LOG(
+                LogTemp,
+                Error,
+                TEXT("P1C01_VISIBLE_MATERIAL_BINDING_FAILED surface=%s mesh=%s missing-slot=%s"),
+                Binding.SurfaceId,
+                Binding.MeshObjectPath,
+                Binding.SlotIdentity);
+            continue;
+        }
+
+        TargetMesh->MarkPackageDirty();
+        ++P1C01VisibleBindingsApplied;
+        UE_LOG(
+            LogTemp,
+            Display,
+            TEXT("P1C01_VISIBLE_MATERIAL_BOUND surface=%s mesh=%s slot=%s material=%s"),
+            Binding.SurfaceId,
+            Binding.MeshObjectPath,
+            Binding.SlotIdentity,
+            Binding.EnhancementMaterialObjectPath);
+    }
+
+    UE_LOG(
+        LogTemp,
+        Display,
+        TEXT("P1C01_VISIBLE_MATERIAL_BINDING_SUMMARY applied=%d pending=%d total=%d"),
+        P1C01VisibleBindingsApplied,
+        P1C01VisibleBindingsPending,
+        UE_ARRAY_COUNT(P1C01VisibleBindings));
+
     // Sweep authored-material destination folders through AssetRegistry as a second
     // recovery path. Some UE4.27 OBJ factories register the material asset but do not
     // return it through the import task or static-mesh material pointer during the same
