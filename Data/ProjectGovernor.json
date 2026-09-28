@@ -4299,6 +4299,37 @@
         "Scripts/ci_import_production_assets.cmd"
       ],
       "evidence_boundary": "SOURCE-IMPLEMENTED. Exact-head Unreal rerun is required before COMPILE/IMPORT success can be claimed."
+    },
+    {
+      "id": "DEC-063",
+      "title": "Rebuild watchdog service guard on clean source and keep closure preflight off Unreal",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004",
+        "REQ-PROD-011"
+      ],
+      "resolution": "Use the clean watchdog body as the base, then reapply only the required continuous service-ownership guard hooks. Keep closure-only preflight scripts in Unreal paths-ignore and fix the PG-193 workflow-path assertion to match the actual workflow text.",
+      "implementation_contract": [
+        "runner_watchdog.ps1 contains ServiceGuardPath, Invoke-ServiceOwnershipGuard, Invoke-RunnerServiceGuard and SHIRE_RUNNER_WATCHDOG_SERVICE_GUARD_TRIGGER on a single non-duplicated script body.",
+        "The service guard runs once at watchdog boot and once per watchdog loop before listener recovery logic.",
+        "p1c01 closure preflight tooling remains excluded from Unreal Build push and pull_request filters.",
+        "PG-193 checks for the actual test_powershell_syntax.ps1 workflow reference rather than a doubly escaped literal.",
+        "Exact-head Pre-Unreal must pass before this repair is considered STATIC-VALIDATED."
+      ],
+      "rationale": "Pre-Unreal #1332 showed seven static failures after the earlier watchdog restoration. Five were expected because the clean historical watchdog lacked later service-guard hooks; one was a missing Unreal paths-ignore entry for the new closure preflight; one was a validator string-escaping bug. The correct repair is to reconstruct the required service guard on top of the clean source instead of restoring the previously corrupted later file.",
+      "evidence": [
+        "Pre-Unreal #1332: POWERSHELL_SYNTAX_PASS files=47 errors=0",
+        "Pre-Unreal #1332: PG-145B/PG-183 watchdog service-guard contract failures",
+        "Pre-Unreal #1332: PG-192 missing closure preflight Unreal paths-ignore",
+        "Pre-Unreal #1332: PG-193 parser-step string mismatch",
+        "Scripts/runner_watchdog.ps1",
+        ".github/workflows/unreal-build-validation.yml",
+        "Scripts/pre_unreal_validate.py"
+      ],
+      "evidence_boundary": "SOURCE-FIXED only until exact-head Pre-Unreal rerun succeeds.",
+      "authority": "PROJECT_GOVERNOR_ROOT_CAUSE_REPAIR"
     }
   ],
   "open_conflicts": [],
