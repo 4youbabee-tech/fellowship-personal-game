@@ -49,7 +49,7 @@ permissions:
 
 concurrency:
   group: warehouse-stage-${{ github.repository }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   stage:
@@ -59,7 +59,7 @@ jobs:
       - Windows
       - X64
       - ue4-27
-    timeout-minutes: 60
+    timeout-minutes: 180
     env:
       TARGET_SHA: ${{ github.sha }}
       BASE_SHA: ${{ github.event.before }}
