@@ -9,7 +9,7 @@ function Enable-All {
     foreach($name in @(
         "WH_STAGE_POLYHAVEN","WH_STAGE_OGA","WH_STAGE_QUATERNIUS","WH_STAGE_AMBIENTCG",
         "WH_STAGE_AMBIENTCG_TRILOGY","WH_STAGE_KENNEY","WH_STAGE_KAYKIT",
-        "WH_RUN_AUDIT","WH_RUN_SATURATION","WH_RUN_PREP","WH_RUN_PROVIDER_RESOLUTION","WH_RUN_P1C01_PROMOTION","WH_RUN_CHARACTER_INTAKE","WH_RUN_P1C01_MATERIAL_EXPORT","WH_RUN_P1C01_CHAPTER_PACK"
+        "WH_RUN_AUDIT","WH_RUN_SATURATION","WH_RUN_PREP","WH_RUN_PROVIDER_RESOLUTION","WH_RUN_P1C01_PROMOTION","WH_RUN_CHARACTER_INTAKE","WH_RUN_P1C01_MATERIAL_EXPORT","WH_RUN_P1C01_CHAPTER_PACK","WH_RUN_P1C01_CLOSURE_PACK"
     )) {
         Write-Flag $name $true
     }
@@ -83,6 +83,7 @@ $flags = [ordered]@{
     WH_RUN_CHARACTER_INTAKE=$false
     WH_RUN_P1C01_MATERIAL_EXPORT=$false
     WH_RUN_P1C01_CHAPTER_PACK=$false
+    WH_RUN_P1C01_CLOSURE_PACK=$false
 }
 
 $providerTouched=$false
@@ -191,6 +192,10 @@ foreach($raw in $changed) {
             $flags.WH_RUN_P1C01_CHAPTER_PACK=$true
             continue
         }
+        "Data/P1C01MaterialImportWaveV2.json" { $flags.WH_RUN_P1C01_CLOSURE_PACK=$true; continue }
+        "Data/WarehouseP1C01ClosurePromotionTrainV2.json" { $flags.WH_RUN_P1C01_CLOSURE_PACK=$true; continue }
+        "Data/P1C01ChapterClosureMegaPackV2.json" { $flags.WH_RUN_P1C01_CLOSURE_PACK=$true; continue }
+        "Scripts/run_p1c01_chapter_closure_pack_v2.ps1" { $flags.WH_RUN_P1C01_CLOSURE_PACK=$true; continue }
         "Scripts/classify_warehouse_validation.ps1" { continue }
         default {
             # The push may contain Docs/static-validator/unrelated production
