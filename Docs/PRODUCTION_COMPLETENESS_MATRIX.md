@@ -1,3 +1,15 @@
+## 2026-09-28 - Warehouse #281 generated-branch publish root cause
+
+- Pre-Unreal #1315: **SUCCESS**.
+- Material intake under DEC-056: **RUN-PROVEN** at `prepared=8 pending=8 manual=0`.
+- Local generated source commit: **CREATED** at `2474500` before publish.
+- Remote generated branch publish: **FAILED** with `stale info`; no UE import claim.
+- Root cause: **implicit --force-with-lease depended on stale/unfetched remote-tracking state** in the isolated Warehouse checkout.
+- DEC-057 explicit remote-SHA lease: **SOURCE-IMPLEMENTED**.
+- PG-191 regression guard: **SOURCE-IMPLEMENTED**.
+- Post-fix Warehouse publish: **PENDING RE-RUN**.
+- UE4.27 import/runtime binding/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - Warehouse #280 material-QC execution repair
 
 - Pre-Unreal #1313: **SUCCESS**.

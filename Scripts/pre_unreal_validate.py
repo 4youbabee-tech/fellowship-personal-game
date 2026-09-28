@@ -8057,6 +8057,22 @@ for pg149_symbol in [
 if "test_source_contracts.py" not in pg149_workflow:
     fail("PG-149 Pre-Unreal workflow must execute source-contract regression tests")
 
+
+# PG-191: Generated source publication must lease the authoritative remote SHA.
+pg191_export = read(ROOT / "Scripts" / "export_p1c01_material_source_branch.ps1")
+for pg191_symbol in [
+    "ls-remote --heads origin $remoteRef",
+    "--force-with-lease=",
+    "P1C01_MATERIAL_SOURCE_PUBLISH_LEASE",
+    "P1C01_MATERIAL_SOURCE_PUBLISH_CREATE",
+    "generated material branch push failed after explicit remote-SHA lease",
+    "-c credential.helper=",
+]:
+    if pg191_symbol not in pg191_export:
+        fail(f"PG-191 explicit generated-branch publish contract missing: {pg191_symbol}")
+if "push --force-with-lease origin" in pg191_export:
+    fail("PG-191 implicit force-with-lease returned; generated branches must lease the exact remote SHA")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
