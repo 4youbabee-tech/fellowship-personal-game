@@ -124,6 +124,18 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     GeographyRiverBankInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     GeographyRiverBankInstances->SetCastShadow(false);
 
+    GardenPlanterInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("GardenPlanterInstances"));
+    GardenPlanterInstances->SetupAttachment(RuntimeRoot);
+    GardenPlanterInstances->SetMobility(EComponentMobility::Movable);
+    GardenPlanterInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    GardenPlanterInstances->SetCastShadow(false);
+
+    CultivatedRowInstances = CreateDefaultSubobject<UHierarchicalInstancedStaticMeshComponent>(TEXT("CultivatedRowInstances"));
+    CultivatedRowInstances->SetupAttachment(RuntimeRoot);
+    CultivatedRowInstances->SetMobility(EComponentMobility::Movable);
+    CultivatedRowInstances->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    CultivatedRowInstances->SetCastShadow(false);
+
     // Explicit cull bands keep the first production world pass bounded on the
     // i7/8 GB/~2 GB VRAM target. These are starting budgets, not acceptance proof.
     GrassInstances->SetCullDistances(1200, 5200);
@@ -136,6 +148,8 @@ AShirePrototypeWorldBuilder::AShirePrototypeWorldBuilder()
     GeographyHillInstances->SetCullDistances(16000, 32000);
     GeographySlopeInstances->SetCullDistances(12000, 28000);
     GeographyRiverBankInstances->SetCullDistances(9000, 26000);
+    GardenPlanterInstances->SetCullDistances(700, 4200);
+    CultivatedRowInstances->SetCullDistances(2200, 9000);
 
     static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeAsset(TEXT("/Engine/BasicShapes/Cube.Cube"));
     static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereAsset(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
@@ -221,6 +235,16 @@ void AShirePrototypeWorldBuilder::BeginPlay()
     ProductionCommonFootbridgeMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonFootbridge.SM_CommonFootbridge"));
     ProductionCommonDockSegmentMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonDockSegment.SM_CommonDockSegment"));
     ProductionCommonRopePostMesh = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopePost.SM_CommonRopePost"));
+
+    if (GardenPlanterInstances && ProductionFlowerBoxMesh)
+    {
+        GardenPlanterInstances->SetStaticMesh(ProductionFlowerBoxMesh);
+    }
+    if (CultivatedRowInstances && ProductionRoadBlockMesh)
+    {
+        CultivatedRowInstances->SetStaticMesh(ProductionRoadBlockMesh);
+    }
+
     ProductionWaterMaterial = ResolveResidentMaterial(
         TEXT("/Game/Production/Materials/M_ProductionWater.M_ProductionWater"));
 
@@ -526,6 +550,24 @@ void AShirePrototypeWorldBuilder::SpawnGardenPatch(const FVector& Center, float 
 {
     const FLinearColor Soil(0.23f, 0.13f, 0.065f);
     const FLinearColor Leaf(0.18f, 0.42f, 0.12f);
+
+    if (GardenPlanterInstances && ProductionFlowerBoxMesh &&
+        GardenPlanterInstances->GetStaticMesh() == ProductionFlowerBoxMesh)
+    {
+        // Three authored planters replace the old 30-proxy Cube/Sphere garden cluster.
+        // Keep this bounded and instanced so domestic gardens read as production detail
+        // without multiplying actors or increasing the foliage density budget.
+        for (int32 Index = -1; Index <= 1; ++Index)
+        {
+            const FVector PlanterLocation =
+                Center + FVector(Index * 95.0f * Scale, 0.0f, 0.0f);
+            GardenPlanterInstances->AddInstance(FTransform(
+                FRotator(0.0f, Index * 7.0f, 0.0f),
+                PlanterLocation,
+                FVector(0.72f * Scale)));
+        }
+        return;
+    }
 
     for (int32 Row = -2; Row <= 2; ++Row)
     {
@@ -1171,8 +1213,19 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     for(int32 Row=0; Row<12; ++Row)
     {
         const float Y=-1320.0f+Row*135.0f;
-        SpawnShape(CubeMesh,FVector(ShireLayout::FieldsX,Y,8),FVector(12.0f,0.10f,0.06f),
-            FLinearColor(0.30f,0.22f,0.075f),FRotator::ZeroRotator,false);
+        if (CultivatedRowInstances && ProductionRoadBlockMesh &&
+            CultivatedRowInstances->GetStaticMesh() == ProductionRoadBlockMesh)
+        {
+            CultivatedRowInstances->AddInstance(FTransform(
+                FRotator::ZeroRotator,
+                FVector(ShireLayout::FieldsX,Y,8),
+                FVector(12.0f,0.10f,0.06f)));
+        }
+        else
+        {
+            SpawnShape(CubeMesh,FVector(ShireLayout::FieldsX,Y,8),FVector(12.0f,0.10f,0.06f),
+                FLinearColor(0.30f,0.22f,0.075f),FRotator::ZeroRotator,false);
+        }
     }
     if (ProductionBarrelMesh)
     {
