@@ -1,3 +1,12 @@
+## 2026-09-28 - PR #145 root-cause hardening after Pre-Unreal #1318
+
+- Pre-Unreal #1318 **FAILED** at the new repository-wide PowerShell parser gate. This is expected fail-closed behavior: the new guard found real syntax corruption before merge.
+- It found two source defects: a duplicated tail in `export_p1c01_material_source_branch.ps1`, plus an older duplicated/corrupted `runner_watchdog.ps1`.
+- The exporter duplicate tail is removed. The watchdog is restored from exact historical commit `1066cf022723fcdef9bfac66519f5b0f9c1e03a4`, the newest inspected clean watchdog revision retaining later stale-worker protection.
+- DEC-060 records the watchdog restoration provenance; DEC-059 parser coverage remains active.
+- Maximum-throughput execution is hardened further: Warehouse Stage timeout is now 180 minutes and `cancel-in-progress=false`, so a large closure pack is allowed to finish while newer pushes queue instead of killing the active train.
+- Current PR #145 maturity after these fixes: **SOURCE-REPAIRED / EXACT-HEAD PRE-UNREAL RE-RUN PENDING / WAREHOUSE V2 EXECUTION PENDING / UE IMPORT NOT CLAIMED**.
+
 ## 2026-09-28 - Warehouse #282 parser failure converted into a permanent prevention gate
 
 - Develop `0adc090f1caa92425322ac15d44b08b031f2ece0` passed Pre-Unreal #1317, but Warehouse #282 failed before material execution because `Scripts/export_p1c01_material_source_branch.ps1` contained an unterminated PowerShell expression/string around the explicit remote-SHA lease block.
