@@ -36,6 +36,10 @@ on:
       - 'Scripts/export_p1c01_material_source_branch.ps1'
       - 'Data/P1C01MegaChapterPackV1.json'
       - 'Scripts/run_p1c01_mega_chapter_pack.ps1'
+      - 'Data/P1C01MaterialImportWaveV2.json'
+      - 'Data/WarehouseP1C01ClosurePromotionTrainV2.json'
+      - 'Data/P1C01ChapterClosureMegaPackV2.json'
+      - 'Scripts/run_p1c01_chapter_closure_pack_v2.ps1'
       - 'Scripts/classify_warehouse_validation.ps1'
       - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
@@ -116,22 +120,22 @@ jobs:
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\classify_warehouse_validation.ps1"
 
       - name: Stage Poly Haven CC0 batch
-        if: env.WH_STAGE_POLYHAVEN == 'true'
+        if: env.WH_STAGE_POLYHAVEN == 'true' && env.WH_RUN_P1C01_CLOSURE_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_polyhaven_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAcquisitionBatchV1.json"
 
       - name: Stage OpenGameArt CC0 audio batch
-        if: env.WH_STAGE_OGA == 'true'
+        if: env.WH_STAGE_OGA == 'true' && env.WH_RUN_P1C01_CLOSURE_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_opengameart_audio.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAudioAcquisitionBatchV1.json"
 
       - name: Stage Quaternius support batch
-        if: env.WH_STAGE_QUATERNIUS == 'true'
+        if: env.WH_STAGE_QUATERNIUS == 'true' && env.WH_RUN_P1C01_CLOSURE_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_quaternius_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseQuaterniusAcquisitionBatchV1.json"
 
       - name: Stage ambientCG material batch
-        if: env.WH_STAGE_AMBIENTCG == 'true'
+        if: env.WH_STAGE_AMBIENTCG == 'true' && env.WH_RUN_P1C01_CLOSURE_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAmbientCGAcquisitionBatchV1.json"
 
@@ -141,54 +145,59 @@ jobs:
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_ambientcg_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseAmbientCGTrilogyBatchV2.json"
 
       - name: Stage Kenney support packs
-        if: env.WH_STAGE_KENNEY == 'true'
+        if: env.WH_STAGE_KENNEY == 'true' && env.WH_RUN_P1C01_CLOSURE_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_kenney_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseKenneyAcquisitionBatchV1.json"
 
       - name: Stage KayKit public GitHub support packs
-        if: env.WH_STAGE_KAYKIT == 'true'
+        if: env.WH_STAGE_KAYKIT == 'true' && env.WH_RUN_P1C01_CLOSURE_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_kaykit_github_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseKayKitGitHubAcquisitionBatchV1.json"
 
       - name: Prepare P1C01 character archive intake
-        if: env.WH_RUN_CHARACTER_INTAKE == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true'
+        if: env.WH_RUN_CHARACTER_INTAKE == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true' && env.WH_RUN_P1C01_CLOSURE_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\prepare_p1c01_character_rig_intake.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01CharacterRigAnimationPrepV1.json" -OutputRoot "C:\actions-runner\_warehouse\ShireJourney\_p1c01_character_intake"
 
       - name: Audit persistent warehouse inventory
-        if: env.WH_RUN_AUDIT == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true'
+        if: env.WH_RUN_AUDIT == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true' && env.WH_RUN_P1C01_CLOSURE_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\audit_warehouse_inventory.ps1"
 
       - name: Build 20-car warehouse saturation coverage report
-        if: env.WH_RUN_SATURATION == 'true'
+        if: env.WH_RUN_SATURATION == 'true' && env.WH_RUN_P1C01_CLOSURE_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_saturation_train.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseSaturationTrainV1.json"
 
       - name: Prepare critical warehouse gaps into intake QC
-        if: env.WH_RUN_PREP == 'true'
+        if: env.WH_RUN_PREP == 'true' && env.WH_RUN_P1C01_CLOSURE_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_critical_gap_preparation.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseCriticalGapPreparationTrainV2.json"
 
       - name: Resolve provider access and safe fallback lanes
-        if: env.WH_RUN_PROVIDER_RESOLUTION == 'true'
+        if: env.WH_RUN_PROVIDER_RESOLUTION == 'true' && env.WH_RUN_P1C01_CLOSURE_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_provider_resolution.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseProviderResolutionTrainV3.json"
 
       - name: Prepare P1C01 mega promotion batch from staged warehouse
-        if: env.WH_RUN_P1C01_PROMOTION == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true'
+        if: env.WH_RUN_P1C01_PROMOTION == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true' && env.WH_RUN_P1C01_CLOSURE_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_p1c01_mega_promotion.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseP1C01MegaPromotionTrainV1.json"
 
       - name: Promote large P1C01 material source batch to generated branch
-        if: env.WH_RUN_P1C01_MATERIAL_EXPORT == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true'
+        if: env.WH_RUN_P1C01_MATERIAL_EXPORT == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true' && env.WH_RUN_P1C01_CLOSURE_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\export_p1c01_material_source_branch.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01MaterialImportWaveV1.json" -GeneratedBranch "generated/p1c01-material-source-v1"
 
       - name: Run P1C01 Mega Chapter Pack
-        if: env.WH_RUN_P1C01_CHAPTER_PACK == 'true'
+        if: env.WH_RUN_P1C01_CHAPTER_PACK == 'true' && env.WH_RUN_P1C01_CLOSURE_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_p1c01_mega_chapter_pack.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01MegaChapterPackV1.json"
+
+      - name: Run P1C01 Chapter Closure Mega Pack V2
+        if: env.WH_RUN_P1C01_CLOSURE_PACK == 'true'
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_p1c01_chapter_closure_pack_v2.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01ChapterClosureMegaPackV2.json"
 
       - name: Summarize selective warehouse execution
         shell: cmd
