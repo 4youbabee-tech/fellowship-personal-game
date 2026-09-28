@@ -4,6 +4,8 @@
 - **Recommended** is the first-run image-first default through `DefaultGameUserSettings.ini`: 100% resolution scale, View Distance 2, AA 2, Shadows 1, Post 2, Textures 2, Effects 1, Foliage 1. After initialization, player-owned Custom values persist and are not silently overwritten.
 - High/Ultra expose additional headroom for stronger hardware; Custom preserves player-owned per-category values.
 - User-facing control APIs cover VSync, frame-rate cap, resolution scale and each core scalability category; inherited UGameUserSettings retains display mode/resolution handling.
+- A functional runnerless Canvas settings surface is now wired for immediate later testing: **F10** opens Graphics/Video, Up/Down selects, Left/Right changes. Individual changes promote the preset to Custom and persist through UGameUserSettings.
+- While the graphics panel is open, movement/look/jump/sprint/interact/attack are source-gated so quality adjustment does not mutate gameplay accidentally.
 - DefaultScalability now defines complete 0-3 ladders for texture memory/filtering, shadow distance/cascades, foliage density and view distance.
 - This is source/config implementation only. No claim is made that Recommended/High/Ultra have met target-device FPS, VRAM or human visual acceptance.
 - Current maturity: **SOURCE-IMPLEMENTED / RUNNERLESS / EXACT-HEAD STATIC+UE PROOF PENDING**.
