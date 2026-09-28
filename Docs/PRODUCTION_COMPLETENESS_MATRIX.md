@@ -1,3 +1,13 @@
+## 2026-09-28 - P1C01 Wooded Road / Ferry proxy reduction
+
+- Wooded Road authored fallen-log preference: **SOURCE-IMPLEMENTED**.
+- Ferry-bank authored dock-segment preference: **SOURCE-IMPLEMENTED**.
+- Ferry rope-post authored prop preference: **SOURCE-IMPLEMENTED**.
+- Canon-appropriate ferry raft mesh: **ASSET GAP / PROXY RETAINED**, no generic-boat substitution.
+- Density and story crossing coordinates: **UNCHANGED**.
+- Exact-head static/UE/visual evidence: **PENDING**.
+- PIE/device/performance/visual acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 Party Field authored-canopy preference
 
 - Authored `SM_ShPicnicCanopy` member/resolution path: **SOURCE-IMPLEMENTED**.
