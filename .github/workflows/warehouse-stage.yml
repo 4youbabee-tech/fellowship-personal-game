@@ -27,6 +27,8 @@ on:
       - 'Scripts/run_warehouse_critical_gap_preparation.ps1'
       - 'Data/WarehouseProviderResolutionTrainV3.json'
       - 'Scripts/run_warehouse_provider_resolution.ps1'
+      - 'Data/WarehouseP1C01MegaPromotionTrainV1.json'
+      - 'Scripts/run_warehouse_p1c01_mega_promotion.ps1'
       - 'Scripts/classify_warehouse_validation.ps1'
       - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
@@ -160,6 +162,11 @@ jobs:
         if: env.WH_RUN_PROVIDER_RESOLUTION == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_provider_resolution.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseProviderResolutionTrainV3.json"
+
+      - name: Prepare P1C01 mega promotion batch from staged warehouse
+        if: env.WH_RUN_P1C01_PROMOTION == 'true'
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_p1c01_mega_promotion.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseP1C01MegaPromotionTrainV1.json"
 
       - name: Summarize selective warehouse execution
         shell: cmd

@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "train_id": "WAREHOUSE_P1C01_MEGA_PROMOTION_PREP_V1",
+  "status": "PREPARATION_IMPLEMENTATION_ACTIVE",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/ProductionAssetPromotionPolicyV1.json",
+    "Data/TrilogyProductionAssetWarehouse.json",
+    "Data/GlobalWarehouseSourceRegistryV2.json",
+    "SHIRE_JOURNEY_MASTER_EXTERNAL_RESOURCE_BIBLE_V1_2026-09-25"
+  ],
+  "objective": "Exploit already-staged warehouse stock first and build bounded P1C01 Shire intake-QC batches for materials, architecture/props, audio, fauna and character/animation support before downloading more stock.",
+  "warehouse_root": "C:\\actions-runner\\_warehouse\\ShireJourney",
+  "output_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\_p1c01_mega_promotion_v1",
+  "promotion_ceiling": "INTAKE_QC",
+  "global_rules": [
+    "Reuse existing staged payloads before new acquisition.",
+    "Verify receipt SHA256 before copying or extracting any payload.",
+    "Never modify or delete original staged payloads.",
+    "ZIP extraction is bounded to selected assets only and rejects unsafe paths, dangerous extensions and BMP.",
+    "Animated character, animation and fauna production candidates require FBX.",
+    "Production textures are PNG/TGA; 1K/2K runtime target remains the default and 4K requires measured approval.",
+    "Audio production masters prefer WAV; compressed audio remains explicit conversion debt.",
+    "No candidate becomes READY_FOR_IMPORT without class-specific QC.",
+    "No runtime density increase or acceptance is implied by warehouse preparation."
+  ],
+  "classes": [
+    {
+      "order": 1,
+      "id": "P1C01_SURFACES",
+      "max_items": 20,
+      "providers": ["POLY_HAVEN", "AMBIENTCG"],
+      "asset_ids": [
+        "wood_floor",
+        "wooden_floor_02",
+        "dirt",
+        "stony_dirt_path",
+        "grass_path_2",
+        "plastered_wall",
+        "plastered_wall_02",
+        "painted_plaster_wall",
+        "worn_plaster_wall",
+        "cobblestone_01",
+        "mossy_rock",
+        "bark_brown_01",
+        "brown_leather",
+        "leafy_grass",
+        "forest_floor",
+        "park_dirt",
+        "wood_stone_pathway",
+        "wood_chips",
+        "forrest_ground_01",
+        "forest_leaves_02"
+      ],
+      "category_keywords": ["WOOD", "PLASTER", "GROUND", "STONE", "BARK", "ROHAN_PASTORAL"],
+      "required_formats": ["PNG", "TGA"],
+      "use": ["Shire paths", "hobbit-hole surfaces", "farm/bridge/cart wood", "stone edges", "soil/grass", "bark/foliage support"]
+    },
+    {
+      "order": 2,
+      "id": "P1C01_ARCHITECTURE_PROPS",
+      "max_items": 18,
+      "providers": ["KENNEY", "KAYKIT", "QUATERNIUS"],
+      "asset_ids": [
+        "FANTASY_TOWN_KIT",
+        "NATURE_KIT",
+        "FURNITURE_KIT",
+        "FOOD_KIT",
+        "BUILDING_KIT",
+        "KAYKIT_MEDIEVAL_HEXAGON_1_0",
+        "KAYKIT_FURNITURE_BITS_1_0",
+        "KAYKIT_RESTAURANT_BITS_1_0",
+        "QTN_FANTASY_PROPS_MEGAKIT",
+        "QTN_FARM_BUILDINGS",
+        "QTN_FURNITURE_PACK",
+        "QTN_MEDIEVAL_VILLAGE_CC0",
+        "QTN_ULTIMATE_NATURE"
+      ],
+      "category_keywords": ["WORLD_KIT", "ARCHITECTURE", "PROPS", "FURNITURE", "FOOD", "NATURE", "FARM"],
+      "required_formats": ["FBX", "OBJ", "PNG", "TGA"],
+      "use": ["background Shire buildings", "farm support", "furniture", "food/market clutter", "nature dressing"]
+    },
+    {
+      "order": 3,
+      "id": "P1C01_AUDIO_AMBIENCE_FOLEY",
+      "max_items": 10,
+      "providers": ["OPENGAMEART"],
+      "asset_ids": [
+        "OGA_DIFFERENT_STEPS_SURFACES",
+        "OGA_FIREPLACE_LOOP",
+        "OGA_100_CC0_WOOD_METAL_SFX",
+        "OGA_AMBIENT_BIRD_SOUNDS",
+        "OGA_OWLISH_SFX_PACK",
+        "OGA_HARVEST_SEASON",
+        "OGA_EXPLORATION"
+      ],
+      "category_keywords": ["AUDIO", "SFX", "AMBIENCE", "FOLEY", "MUSIC"],
+      "required_formats": ["WAV"],
+      "use": ["footsteps", "hearth/fire", "wood/metal props", "birds", "pastoral ambience", "authorized music candidates"]
+    },
+    {
+      "order": 4,
+      "id": "P1C01_FAUNA",
+      "max_items": 6,
+      "providers": ["QUATERNIUS"],
+      "asset_ids": ["QTN_FARM_ANIMALS", "QTN_ULTIMATE_ANIMATED_ANIMALS"],
+      "category_keywords": ["FAUNA", "ANIMAL", "FARM"],
+      "required_formats": ["FBX"],
+      "use": ["farm animals", "small-world-life support"],
+      "runtime_note": "Later runtime use remains pooled/bounded and region-appropriate."
+    },
+    {
+      "order": 5,
+      "id": "P1C01_CHARACTER_ANIMATION_SUPPORT",
+      "max_items": 8,
+      "providers": ["QUATERNIUS"],
+      "asset_ids": [
+        "QTN_UNIVERSAL_BASE_CHARACTERS",
+        "QTN_RPG_CHARACTERS",
+        "QTN_FANTASY_OUTFITS",
+        "QTN_UNIVERSAL_ANIMATION_LIBRARY"
+      ],
+      "category_keywords": ["CHARACTER", "ANIMATION"],
+      "required_formats": ["FBX"],
+      "use": ["generic rig pipeline", "background Hobbit/NPC support", "animation coverage"],
+      "runtime_gate": "AFTER_MATERIAL_AND_ARCHITECTURE_RUNTIME_LANES_CLOSE"
+    }
+  ],
+  "evidence_boundary": "This train creates bounded INTAKE_QC preparation only. It does not assert UE import, runtime integration, PIE, device, visual or performance acceptance."
+}

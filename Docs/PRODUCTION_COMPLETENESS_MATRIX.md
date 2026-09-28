@@ -1,3 +1,25 @@
+## 2026-09-28 - P1C01 selective Warehouse promotion routing
+
+- P1C01 promotion workflow trigger paths: **SOURCE-IMPLEMENTED**.
+- Selective classifier flag `WH_RUN_P1C01_PROMOTION`: **SOURCE-IMPLEMENTED**.
+- Bounded inventory audit + P1C01 promotion phase only for this delta: **SOURCE-IMPLEMENTED**.
+- PG-184 regression coverage for the new promotion phase: **SOURCE-IMPLEMENTED**.
+- Exact-head hosted static validation: **PENDING**.
+- Persistent warehouse execution/counts: **PENDING**.
+- READY_FOR_IMPORT/UE import/integration/PIE/device/visual/performance: **UNCHANGED / NOT CLAIMED**.
+
+## 2026-09-28 - P1C01 mega warehouse promotion prep
+
+- Existing staged warehouse-first strategy: **SOURCE-IMPLEMENTED**.
+- Bounded P1C01 selection classes (surfaces, architecture/props, audio, fauna, character/animation support): **SOURCE-IMPLEMENTED**.
+- Receipt SHA256 verification + non-destructive selected extraction: **SOURCE-IMPLEMENTED**.
+- Dangerous/BMP rejection and FBX animated-class rule: **SOURCE-IMPLEMENTED**.
+- Blocker isolation/manual queue instead of whole-train stop: **SOURCE-IMPLEMENTED**.
+- READY_FOR_IMPORT/UE import/runtime integration: **NOT CLAIMED**.
+- Hosted exact-head static validation: **PENDING**.
+- Warehouse execution on persistent stock: **PENDING**.
+- UE4 compile/PIE/device/visual/performance maturity: **UNCHANGED**.
+
 ## 2026-09-28 - PG-167 hosted administrative cleanup guard
 
 - Hosted Python fast path: **RUN-PROVEN** by Pre-Unreal #1289 (`PYTHON_FAST_PATH_PASS`, Python 3.12.10).
