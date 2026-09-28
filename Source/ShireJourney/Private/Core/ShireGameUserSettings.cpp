@@ -95,6 +95,19 @@ void UShireGameUserSettings::ApplyDisplayPreferences(
     PersistAndOptionallyApply(bApplyImmediately);
 }
 
+void UShireGameUserSettings::ApplyDisplayModeAndResolution(
+    EWindowMode::Type WindowMode,
+    FIntPoint Resolution,
+    bool bApplyImmediately)
+{
+    const int32 Width = FMath::Clamp(Resolution.X, 960, 3840);
+    const int32 Height = FMath::Clamp(Resolution.Y, 540, 2160);
+
+    SetFullscreenMode(WindowMode);
+    SetScreenResolution(FIntPoint(Width, Height));
+    PersistAndOptionallyApply(bApplyImmediately);
+}
+
 FText UShireGameUserSettings::GetShireGraphicsPresetLabel() const
 {
     return GetGraphicsPresetLabel(ShireGraphicsPreset);
