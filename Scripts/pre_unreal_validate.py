@@ -8111,6 +8111,10 @@ if "Run P1C01 Chapter Closure Mega Pack V2" not in pg192_warehouse:
     fail("PG-192 Warehouse closure-pack execution step missing")
 if "env.WH_RUN_P1C01_CLOSURE_PACK != 'true'" not in pg192_warehouse:
     fail("PG-192 overlapping legacy Warehouse steps are not suppressed")
+if "timeout-minutes: 180" not in pg192_warehouse:
+    fail("PG-192 closure-capable Warehouse workflow must allow 180 minutes")
+if "cancel-in-progress: false" not in pg192_warehouse:
+    fail("PG-192 active large Warehouse packs must not be cancelled by newer pushes")
 for ignored in ["Data/P1C01MaterialImportWaveV2.json","Data/P1C01ChapterClosureMegaPackV2.json","Scripts/run_p1c01_chapter_closure_pack_v2.ps1"]:
     if ignored not in pg192_unreal:
         fail(f"PG-192 tooling-only V2 path missing from Unreal paths-ignore: {ignored}")
