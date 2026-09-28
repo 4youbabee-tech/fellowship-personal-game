@@ -1,3 +1,11 @@
+## 2026-09-28 - P1C01 low-cost cinematic color grading
+
+- The existing unbound post-process volume now carries a restrained color-saturation/contrast grade instead of adding new dynamic lights, textures or geometry.
+- Default Shire daylight gets a slight warm/green lift; LongExpectedParty gets warmer; RingSecret and KeepOffRoad shift cooler/desaturated; FerryEscape stays cool but less severe.
+- Grade changes remain event-driven through `ApplyStoryAtmosphere()`; no per-frame Tick, volumetric fog, film grain or chromatic-aberration cost was added.
+- These are **source candidates only** until exact-head UE4 rendered review confirms the look on the target display.
+- Current maturity: **SOURCE-IMPLEMENTED / RUNNERLESS / VISUAL ACCEPTANCE PENDING**.
+
 ## 2026-09-28 - First-run target display baseline
 
 - First-run/reset **Recommended** now explicitly starts at **1280x720 Fullscreen**, 100% render scale and a 60 FPS cap target rather than inheriting an arbitrary desktop resolution.
