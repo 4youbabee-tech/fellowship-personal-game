@@ -364,6 +364,7 @@ void AShireHUD::DrawHUD()
             float MaxScale = 100.0f;
             Settings->GetResolutionScaleInformationEx(
                 ScaleNormalized, ScaleValue, MinScale, MaxScale);
+            (void)ScaleNormalized;
 
             const FIntPoint Resolution = Settings->GetScreenResolution();
             FString WindowMode = TEXT("Windowed");
@@ -412,7 +413,7 @@ void AShireHUD::DrawHUD()
             };
             const FString Values[] = {
                 Settings->GetShireGraphicsPresetLabel().ToString(),
-                FString::Printf(TEXT("%.0f%%"), ScaleValue),
+                FString::Printf(TEXT("%.0f%% (%.0f-%.0f)"), ScaleValue, MinScale, MaxScale),
                 QualityLabel(Settings->GetViewDistanceQuality()),
                 QualityLabel(Settings->GetAntiAliasingQuality()),
                 QualityLabel(Settings->GetShadowQuality()),
