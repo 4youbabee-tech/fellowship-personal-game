@@ -1,3 +1,14 @@
+## 2026-09-28 - P1C01 Mega Chapter Pack V1 launched as the new batching model
+
+- ProjectGovernor DEC-054 now makes chapter-scale batching and workflow minimization a durable production rule.
+- `P1C01MegaChapterPackV1` groups four bounded cars into one Warehouse execution: inventory audit, mega promotion, material source export, and character intake.
+- The existing mega-promotion selector ceiling is 62 items across surfaces (20), architecture/props (18), audio/foley (10), fauna (6), and character/animation support (8). Actual promotion still depends on staged receipt-backed stock.
+- Warehouse #276 remains the latest concrete stock evidence: 13,389 payload files / 5,590,510,073 bytes / 14 receipts / 667 receipt records / 215 duplicate groups; prior mega promotion prepared 36 with 34 INTAKE_QC and two manual blockers.
+- Chapter-pack execution suppresses overlapping legacy P1C01 audit/promotion/export/character steps, so one coherent pack does not pay the same work twice.
+- Asset/source blockers quarantine their car and later independent cars continue; infrastructure failure remains fail-closed.
+- New/changed TGA production sources are now routed through Git LFS alongside uasset/umap/fbx/wav/png/exr.
+- Current maturity: **SOURCE-IMPLEMENTED / STATIC PROOF PENDING / RUNNER EXECUTION PENDING**.
+
 ## 2026-09-28 - P1C01 material-tooling Unreal CI fast path
 
 - PR #137 exact head `bf7e08c8...` passed Pre-Unreal #1301 and full Unreal Build #1038, including editor build, production import, Automation Framework QA, startup smoke, chapter/route audits, Windows cook/package, packaged-data verification and packaged executable launch.
