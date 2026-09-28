@@ -1,3 +1,16 @@
+## 2026-09-28 - P1C01 domestic-garden and East-Fields proxy consolidation
+
+Registered before implementation inside the existing W01/P1C01 visible-world cleanup lane.
+
+Purpose:
+- Replace domestic Hobbiton garden Cube/Sphere proxy clusters with a small bounded set of authored Shire flower-box assets when those meshes are resident.
+- Keep the larger East Fields cultivated plot readable, but move its repeated row geometry from per-row AStaticMeshActor spawning to one HISM-owned row set.
+- Prefer the authored Shire road/dirt production mesh for cultivated rows because its stable material identity is Dirt; retain an Engine cube only as a missing-asset fallback.
+- Do not increase garden/field density, story coordinates, quest anchors, NPC ownership or runtime Tick.
+- Keep cull bands explicit for the low-spec target and preserve authored production materials when available.
+
+Status: **REGISTERED / RUNNERLESS IMPLEMENTATION STARTED**.
+
 ## 2026-09-28 - P1C01 visible material-to-world binding bridge
 
 Registered before implementation under the active `W01_P1C01_PRODUCTION_VERTICAL_SLICE`.
