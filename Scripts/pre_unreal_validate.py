@@ -5488,6 +5488,7 @@ if pg186_plan.get("presets", {}).get("Recommended", {}).get("resolution_scale_pe
 
 for pg186_display_symbol in [
     "ApplyDisplayModeAndResolution",
+    "EShireDisplayMode",
     "FIntPoint(1280, 720)",
     "FIntPoint(1600, 900)",
     "FIntPoint(1920, 1080)",
@@ -5496,6 +5497,8 @@ for pg186_display_symbol in [
 ]:
     if pg186_display_symbol not in (pg186_h + pg186_cpp + pg184_shire_world + read(resolve_source("ShirePlayerCharacter.cpp"))):
         fail(f"PG-186 display/resolution or visual-cleanup contract missing: {pg186_display_symbol}")
+if "EWindowMode::Type WindowMode" in pg186_h:
+    fail("PG-186 Blueprint-facing graphics API must not expose UE namespace enum EWindowMode::Type directly")
 pg186_hud = read(resolve_source("ShireHUD.cpp"))
 for pg186_hud_symbol in [
     'TEXT("Display Mode")',
