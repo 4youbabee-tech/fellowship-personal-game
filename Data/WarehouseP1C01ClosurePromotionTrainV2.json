@@ -1,0 +1,265 @@
+{
+  "schema_version": 2,
+  "train_id": "WAREHOUSE_P1C01_CHAPTER_CLOSURE_PROMOTION_V2",
+  "status": "RUNNER_EXECUTION_READY",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "Data/ProductionAssetPromotionPolicyV1.json",
+    "Data/TrilogyProductionAssetWarehouse.json",
+    "Data/GlobalWarehouseSourceRegistryV2.json",
+    "Data/P1C01ChapterClosureMegaPackV2.json"
+  ],
+  "objective": "Prepare the largest practical P1C01 Shire closure batch from staged public/licensed warehouse stock while keeping class-level QC, provenance, quarantine and low-spec runtime boundaries explicit.",
+  "warehouse_root": "C:\\actions-runner\\_warehouse\\ShireJourney",
+  "output_root": "C:\\actions-runner\\_warehouse\\ShireJourney\\_p1c01_chapter_closure_promotion_v2",
+  "promotion_ceiling": "INTAKE_QC",
+  "global_rules": [
+    "Reuse existing staged payloads before new acquisition.",
+    "Verify receipt SHA256 before copying or extracting any payload.",
+    "Never modify or delete original staged payloads.",
+    "ZIP extraction is bounded and rejects unsafe paths, dangerous extensions and BMP.",
+    "All animated character/animation/fauna production candidates require FBX.",
+    "Production textures are PNG/TGA; runtime target remains 1K/2K unless measured hero evidence permits 4K.",
+    "Audio production masters require WAV before UE import.",
+    "Heavy runtime assets remain soft referenced and asynchronously streamed after promotion.",
+    "Crowd/fauna runtime use remains pooled; repeated static detail remains ISM/HISM + LOD/culling.",
+    "No item becomes READY_FOR_IMPORT, INTEGRATED or ACCEPTED from warehouse preparation alone."
+  ],
+  "classes": [
+    {
+      "order": 1,
+      "id": "P1C01_SURFACES_LARGE",
+      "max_items": 40,
+      "providers": [
+        "POLY_HAVEN",
+        "AMBIENTCG"
+      ],
+      "asset_ids": [
+        "wood_floor",
+        "wooden_floor_02",
+        "dirt",
+        "stony_dirt_path",
+        "grass_path_2",
+        "plastered_wall",
+        "plastered_wall_02",
+        "painted_plaster_wall",
+        "worn_plaster_wall",
+        "cobblestone_01",
+        "cobblestone_floor_001",
+        "mossy_rock",
+        "rock_01",
+        "gravel_stones",
+        "gravel_ground_01",
+        "bark_brown_01",
+        "pine_bark",
+        "brown_leather",
+        "stone_tiles",
+        "leafy_grass",
+        "forest_floor",
+        "park_dirt",
+        "leaves_forest_ground",
+        "wood_stone_pathway",
+        "wood_chips",
+        "forrest_ground_01",
+        "forest_leaves_02"
+      ],
+      "category_keywords": [
+        "WOOD",
+        "PLASTER",
+        "GROUND",
+        "STONE",
+        "BARK",
+        "GRASS",
+        "LEATHER"
+      ],
+      "required_formats": [
+        "PNG",
+        "TGA"
+      ],
+      "use": [
+        "terrain",
+        "paths",
+        "hobbit-hole surfaces",
+        "Bag End/interiors",
+        "garden/farm/woodland support"
+      ]
+    },
+    {
+      "order": 2,
+      "id": "P1C01_ARCHITECTURE_PROPS_LARGE",
+      "max_items": 60,
+      "providers": [
+        "QUATERNIUS",
+        "KENNEY",
+        "KAYKIT"
+      ],
+      "asset_ids": [
+        "QTN_MEDIEVAL_VILLAGE_MEGAKIT",
+        "QTN_ULTIMATE_BUILDINGS",
+        "QTN_FARM_BUILDINGS",
+        "QTN_FANTASY_PROPS_MEGAKIT",
+        "QTN_FURNITURE_PACK",
+        "QTN_MEDIEVAL_VILLAGE_CC0",
+        "FANTASY_TOWN_KIT",
+        "BUILDING_KIT",
+        "MODULAR_BUILDINGS",
+        "FURNITURE_KIT",
+        "FOOD_KIT",
+        "KAYKIT_MEDIEVAL_HEXAGON_1_0",
+        "KAYKIT_FURNITURE_BITS_1_0",
+        "KAYKIT_RESTAURANT_BITS_1_0",
+        "KAYKIT_CITY_BUILDER_BITS_1_0"
+      ],
+      "category_keywords": [
+        "ARCHITECTURE",
+        "WORLD_KIT",
+        "PROPS",
+        "FURNITURE",
+        "FOOD",
+        "FARM",
+        "INTERIOR"
+      ],
+      "required_formats": [
+        "FBX",
+        "PNG",
+        "TGA"
+      ],
+      "use": [
+        "background buildings",
+        "farm structures",
+        "furniture",
+        "market/party clutter",
+        "food",
+        "bridges/fences/carts support"
+      ]
+    },
+    {
+      "order": 3,
+      "id": "P1C01_VEGETATION_NATURE_LARGE",
+      "max_items": 30,
+      "providers": [
+        "QUATERNIUS",
+        "KENNEY"
+      ],
+      "asset_ids": [
+        "QTN_ULTIMATE_NATURE",
+        "NATURE_KIT"
+      ],
+      "category_keywords": [
+        "NATURE",
+        "VEGETATION",
+        "TREE",
+        "ROCK",
+        "GRASS"
+      ],
+      "required_formats": [
+        "FBX",
+        "PNG",
+        "TGA"
+      ],
+      "use": [
+        "trees",
+        "shrubs",
+        "rocks",
+        "pastoral/woodland dressing"
+      ],
+      "runtime_note": "Repeated detail uses HISM/ISM and authored cull/LOD bands."
+    },
+    {
+      "order": 4,
+      "id": "P1C01_AUDIO_LARGE",
+      "max_items": 25,
+      "providers": [
+        "OPENGAMEART"
+      ],
+      "asset_ids": [
+        "OGA_EXPLORATION",
+        "OGA_HARVEST_SEASON",
+        "OGA_OWLISH_SFX_PACK",
+        "OGA_DIFFERENT_STEPS_SURFACES",
+        "OGA_FIREPLACE_LOOP",
+        "OGA_100_CC0_WOOD_METAL_SFX",
+        "OGA_AMBIENT_BIRD_SOUNDS",
+        "OGA_TINYSIZED_FANTASY_SFX"
+      ],
+      "category_keywords": [
+        "AUDIO",
+        "SFX",
+        "AMBIENCE",
+        "FOLEY",
+        "MUSIC"
+      ],
+      "required_formats": [
+        "WAV"
+      ],
+      "use": [
+        "footsteps",
+        "birds",
+        "hearth",
+        "wood/metal",
+        "household",
+        "pastoral ambience",
+        "authorized music candidates"
+      ]
+    },
+    {
+      "order": 5,
+      "id": "P1C01_FAUNA_LARGE",
+      "max_items": 12,
+      "providers": [
+        "QUATERNIUS"
+      ],
+      "asset_ids": [
+        "QTN_FARM_ANIMALS",
+        "QTN_ULTIMATE_ANIMATED_ANIMALS"
+      ],
+      "category_keywords": [
+        "FAUNA",
+        "ANIMAL",
+        "FARM"
+      ],
+      "required_formats": [
+        "FBX"
+      ],
+      "use": [
+        "farm animals",
+        "ambient world life"
+      ],
+      "runtime_note": "Pool transient/common fauna; distance/activity-budget updates only."
+    },
+    {
+      "order": 6,
+      "id": "P1C01_CHARACTER_ANIMATION_LARGE",
+      "max_items": 20,
+      "providers": [
+        "QUATERNIUS",
+        "KENNEY",
+        "KAYKIT"
+      ],
+      "asset_ids": [
+        "QTN_UNIVERSAL_BASE_CHARACTERS",
+        "QTN_FANTASY_OUTFITS",
+        "QTN_RPG_CHARACTERS",
+        "QTN_ULTIMATE_MODULAR_WOMEN",
+        "QTN_UNIVERSAL_ANIMATION_LIBRARY",
+        "BLOCKY_CHARACTERS",
+        "KAYKIT_ADVENTURERS_1_0"
+      ],
+      "category_keywords": [
+        "CHARACTER",
+        "ANIMATION",
+        "NPC"
+      ],
+      "required_formats": [
+        "FBX"
+      ],
+      "use": [
+        "background Hobbit/NPC rig coverage",
+        "locomotion/idles/social gesture support"
+      ],
+      "runtime_gate": "CHARACTER_PRESENTATION_E_AFTER_ENVIRONMENT_IMPORT_GREEN"
+    }
+  ],
+  "selector_ceiling_total": 187,
+  "evidence_boundary": "Large chapter preparation only. Source count/bytes do not imply UE import, runtime integration, visual quality, PIE, device or performance acceptance."
+}
