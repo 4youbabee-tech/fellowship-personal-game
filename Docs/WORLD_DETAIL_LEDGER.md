@@ -1,3 +1,25 @@
+## 2026-09-28 - Sequential two-chapter production queue: P1C01 -> P1C02
+
+Registered before implementation under the active Part I production lane.
+
+Purpose:
+- Keep the current maximum-throughput P1C01 Shire/Hobbiton/Bag End closure pack as the active runtime chapter.
+- Prepare the next canonical chapter, F1-02 Shadow of the Past, as a queued source/production packet without opening its runtime lane early.
+- Reuse Bag End/Shire assets where valid instead of downloading or importing duplicate stock.
+- Allow P1C02 source/warehouse preparation to exist in advance, but keep runtime integration blocked until P1C01 satisfies the real Gate 6/7 acceptance contract and the F1-01 canonical postcondition is validated.
+- Once the gate record becomes accepted, the sequential queue may start P1C02 automatically without requiring another owner "continue" prompt.
+- Every queued chapter keeps a cheap preflight before any heavy source/import wave.
+
+Canon boundary for P1C02:
+- Owner location: Bag End / Shire.
+- Playable roster: Frodo, Gandalf, Sam.
+- Critical path: Gandalf confirms the Ring danger and Sauron connection.
+- Optional window: investigation tutorial, packing, stealth departure.
+- Locked postcondition: Frodo leaves the Shire.
+- Runtime work remains blocked until the previous chapter is accepted.
+
+Status: **REGISTERED / IMPLEMENTATION QUEUED / P1C02 RUNTIME CLOSED UNTIL P1C01 GATE 6/7**.
+
 ## 2026-09-28 - P1C01 Mega Chapter Pack production batching
 
 Registered before execution under W01_P1C01_PRODUCTION_VERTICAL_SLICE.
