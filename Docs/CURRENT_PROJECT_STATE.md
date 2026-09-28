@@ -1,3 +1,12 @@
+## 2026-09-28 - Warehouse #280 PowerShell compatibility repair
+
+- Pre-Unreal #1313 passed on develop `1aa387353cb2e5d00ea934318e2eade3aa1a9094`.
+- Warehouse Stage #280 reached the selective P1C01 material-export lane and failed before material selection because Windows PowerShell 5.1 interpreted `return if(...)` as an invalid command at `prepare_p1c01_material_intake.ps1:122`.
+- The selector now uses PowerShell-compatible explicit control flow: null returns through an `if` block, otherwise the selected file path is returned on the following statement.
+- PG-190 now rejects the incompatible `return if(` form so this syntax regression cannot silently return.
+- No UE import, runtime C++, PIE, device, visual, or performance status changes from this repair.
+- Current maturity: **SOURCE-FIXED / PRE-UNREAL EXACT-HEAD PROOF PENDING / WAREHOUSE RE-RUN PENDING**.
+
 ## 2026-09-28 - Warehouse #279 passed; generated material branch held for exact albedo provenance repair
 
 - Develop exact head `c1c3beeaa382086a320448bb95ce952f929fe6a6` passed Pre-Unreal #1311 and Warehouse Stage #279.
