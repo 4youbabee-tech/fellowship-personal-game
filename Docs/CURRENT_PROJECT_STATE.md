@@ -1,3 +1,10 @@
+## 2026-09-28 - First-run target display baseline
+
+- First-run/reset **Recommended** now explicitly starts at **1280x720 Fullscreen**, 100% render scale and a 60 FPS cap target rather than inheriting an arbitrary desktop resolution.
+- This keeps the reference target deterministic on the i7 Gen6 / 8 GB / ~2 GB VRAM laptop while still allowing 900p/1080p and High/Ultra/Custom choices from the in-game menu.
+- This is a source default, not evidence that 60 FPS is achieved. The project acceptance floor remains 30 FPS at the target profile until measured.
+- Current maturity: **SOURCE-DEFINED / DEVICE MEASUREMENT PENDING**.
+
 ## 2026-09-28 - UE4.27-safe Blueprint display-mode contract
 
 - The graphics settings API now exposes project-owned `EShireDisplayMode` (Fullscreen / Borderless / Windowed) instead of exposing `EWindowMode::Type` directly through a Blueprint-callable UFUNCTION.
