@@ -86,5 +86,12 @@
     "modal_behavior": "gameplay input isolated while open",
     "presentation": "full-screen dim + centered Graphics/Video panel",
     "evidence_boundary": "No claim of packaged/runtime/visual acceptance until UE4.27 exact-head execution."
+  },
+  "first_run_display": {
+    "mode": "Fullscreen",
+    "resolution": "1280x720",
+    "render_scale_percent": 100,
+    "frame_rate_limit": 60,
+    "note": "Deterministic target baseline only; not measured FPS evidence."
   }
 }
