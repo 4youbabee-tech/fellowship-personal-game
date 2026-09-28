@@ -2899,6 +2899,23 @@ for pg184_workflow_symbol in [
 if "WH_RUN_P1C01_MATERIAL_EXPORT" not in pg184_classifier:
     fail("PG-184 warehouse classifier must expose the P1C01 material export phase")
 
+pg184_importer = read(ROOT / "Source" / "ShireJourneyEditorTools" / "Private" / "ShireProductionImportCommandlet.cpp")
+for pg184_visible_material_symbol in [
+    "P1C01VisibleMaterialBinding",
+    "P1C01_VISIBLE_MATERIAL_PENDING",
+    "P1C01_VISIBLE_MATERIAL_BOUND",
+    "P1C01_VISIBLE_MATERIAL_BINDING_SUMMARY",
+    "SH_GRASS_GROUND",
+    "SH_STONY_PATH",
+    "SH_WARM_PLASTER",
+    "SH_MOSS_STONE",
+    "SH_TREE_BARK",
+]:
+    if pg184_visible_material_symbol not in pg184_importer:
+        fail(f"PG-184 P1C01 visible material bridge missing: {pg184_visible_material_symbol}")
+if "P1C01_VISIBLE_MATERIAL_PENDING" not in pg184_importer or "DoesPackageExist" not in pg184_importer:
+    fail("PG-184 P1C01 visible material bridge must remain optional/evidence-gated instead of fabricating availability")
+
 if "- 'Scripts/classify_warehouse_validation.ps1'" not in pg184_workflow:
     fail("PG-184 classifier changes must trigger one post-merge Warehouse control-plane proof")
 if '".github/workflows/warehouse-stage.yml" {' not in pg184_classifier or "$flags.WH_RUN_AUDIT=$true" not in pg184_classifier:
