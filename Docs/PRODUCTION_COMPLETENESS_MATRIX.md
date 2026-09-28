@@ -1,3 +1,14 @@
+## 2026-09-28 - Warehouse #279 generated-material evidence and albedo-provenance hold
+
+- Pre-Unreal #1311: **SUCCESS**.
+- Warehouse Stage #279: **SUCCESS**.
+- Material intake: **RUN-PROVEN** at `prepared=8 pending=8 manual=0`.
+- Generated material branch: **RUN-PROVEN** at `537d9e72...`, 8 materials / 137,974,221 source bytes.
+- Old 16 MiB blocker: **CLEARED BY RUN EVIDENCE** under DEC-055 bounded 32/256 MiB policy.
+- Exact selected-file provenance: **QC DEFECT IDENTIFIED IN SOURCE**; first matching receipt row can differ from the file selected by `Select-BaseColor`.
+- Generated branch UE import: **HELD** until post-DEC-056 Warehouse regeneration proves explicit albedo semantics and exact selected-file provenance.
+- UE4.27 import/runtime binding/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - PR #141 static guard follow-up
 
 - Pre-Unreal #1309: **FAILED STATIC VALIDATION** on stale PG-184 text requirement `128 MB bounded limit`.

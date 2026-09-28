@@ -132,6 +132,8 @@ try{
       asset_slug=[string]$item.asset_slug
       source_page=[string]$item.source_page
       source_url=[string]$item.source_url
+      selected_source_filename=[string]$item.selected_source_filename
+      selected_source_kind=[string]$item.selected_source_kind
       material_name=[string]$item.material_name
       roughness=[double]$item.roughness
       metallic=[double]$item.metallic

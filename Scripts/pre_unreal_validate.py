@@ -5429,6 +5429,33 @@ for pg188_symbol in [
 if "*.tga filter=lfs" in read(ROOT / ".gitattributes") and "tga_lfs_not_configured" not in pg188_exporter:
     fail("PG-188 TGA promotion guard disappeared after LFS policy changed")
 
+
+# PG-189: Visible-color material intake must be semantic and preserve exact selected-file provenance.
+pg189_intake = read(ROOT / "Scripts" / "prepare_p1c01_material_intake.ps1")
+pg189_export = read(ROOT / "Scripts" / "export_p1c01_material_source_branch.ps1")
+for pg189_symbol in [
+    "Test-ExplicitBaseColorName",
+    "no_explicit_albedo_png_tga_candidate",
+    "selected_basecolor_provenance_missing",
+    "provenanceByFile",
+    "selected_source_filename",
+    'selected_source_kind="EXPLICIT_ALBEDO"',
+]:
+    if pg189_symbol not in pg189_intake:
+        fail(f"PG-189 explicit albedo/provenance contract missing: {pg189_symbol}")
+for pg189_forbidden in [
+    "$score=100",
+    "preview|thumb|render|normal|rough|ao|metal|height|disp",
+]:
+    if pg189_forbidden in pg189_intake:
+        fail(f"PG-189 obsolete permissive base-color ranking returned: {pg189_forbidden}")
+for pg189_export_symbol in [
+    "selected_source_filename=[string]$item.selected_source_filename",
+    "selected_source_kind=[string]$item.selected_source_kind",
+]:
+    if pg189_export_symbol not in pg189_export:
+        fail(f"PG-189 generated receipt selected-file evidence missing: {pg189_export_symbol}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
