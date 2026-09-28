@@ -2,7 +2,7 @@
 
 - Persistent custom `UGameUserSettings` subclass: **SOURCE-IMPLEMENTED**.
 - Performance / Recommended / High / Ultra / Custom presets: **SOURCE-IMPLEMENTED**.
-- Recommended 100% render scale + strong texture/AA/post baseline: **SOURCE-DEFINED**.
+- Recommended 100% render scale + strong texture/AA/post baseline + explicit first-run config: **SOURCE-DEFINED**.
 - Per-category custom quality + VSync/frame-limit controls: **SOURCE-IMPLEMENTED**.
 - Four-tier texture/shadow/foliage/view-distance scalability config: **SOURCE-IMPLEMENTED**.
 - Target-laptop performance of each preset: **NOT MEASURED**.
