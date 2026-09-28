@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_GRAPHICS_SETTINGS_AUTHORITY_REGISTRATION_QUEUE_V1",
+  "lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "PENDING_AUTHORITY_FILE_WRITE",
+  "authority": false,
+  "purpose": "Preserve the exact pending ProjectGovernor and WORLD_DETAIL_LEDGER registration needed before runtime graphics-settings implementation. This file does not override either authority target.",
+  "blocked_targets": [
+    "Data/ProjectGovernor.json",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "required_registration": {
+    "governor_requirement_id": "REQ-GFX-001",
+    "title": "Professional scalable Graphics/Video settings under the low-spec floor",
+    "visual_economy_doctrine": {
+      "spend_first_on": [
+        "silhouette_and_composition",
+        "hero_material_readability",
+        "lighting_and_atmosphere",
+        "near_field_detail"
+      ],
+      "recover_cost_first_from": [
+        "duplicate_actors",
+        "far_shadows",
+        "overdraw_and_translucency",
+        "redundant_lights",
+        "uninstanced_repetition",
+        "unnecessary_tick",
+        "invisible_or_far_detail"
+      ]
+    },
+    "presets": [
+      "Performance",
+      "Balanced",
+      "High",
+      "Cinematic",
+      "Custom"
+    ],
+    "default_candidate": "Balanced",
+    "native_720p_floor_presets": [
+      "Performance",
+      "Balanced"
+    ],
+    "custom_controls": [
+      "resolution",
+      "display_mode",
+      "resolution_scale",
+      "vsync",
+      "frame_rate_limit",
+      "view_distance",
+      "anti_aliasing",
+      "shadows",
+      "post_process",
+      "textures",
+      "effects",
+      "foliage"
+    ],
+    "target_floor": {
+      "platform": "Windows",
+      "renderer": "DX11",
+      "resolution": "1280x720",
+      "quality": "Low-Medium",
+      "fps_floor": 30,
+      "ram_gb": 8,
+      "vram_class_gb": 2,
+      "cpu_class": "Intel i7 Gen6 class"
+    }
+  },
+  "runtime_implementation_allowed": false,
+  "unblock_rule": "Apply the pending registration to ProjectGovernor and WORLD_DETAIL_LEDGER first; only then implement UShireGameUserSettings.",
+  "evidence_ceiling": {
+    "compile_tested": false,
+    "pie_tested": false,
+    "device_tested": false,
+    "visually_accepted": false,
+    "performance_accepted": false,
+    "integrated": false
+  }
+}
