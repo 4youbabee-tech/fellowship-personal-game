@@ -19,10 +19,12 @@ $required = [string]$next.queue_contract.required_gate_status
 $current = [string]$gate.status
 
 if($current -ne $required){
+  if(-not [string]::IsNullOrWhiteSpace($env:GITHUB_ENV)){ Add-Content -LiteralPath $env:GITHUB_ENV -Value "P1C02_QUEUE_RELEASE=false" }
   Write-Host ("SEQUENTIAL_CHAPTER_QUEUE_WAIT predecessor=P1C01 currentGate=" + $current + " required=" + $required + " next=P1C02")
   exit 0
 }
 
+if(-not [string]::IsNullOrWhiteSpace($env:GITHUB_ENV)){ Add-Content -LiteralPath $env:GITHUB_ENV -Value "P1C02_QUEUE_RELEASE=true" }
 Write-Host ("SEQUENTIAL_CHAPTER_QUEUE_RELEASE predecessor=P1C01 gate=" + $current + " next=P1C02")
 Write-Host "SEQUENTIAL_CHAPTER_QUEUE_PASS next=P1C02 source-prep-authorized runtime-gate-open"
 exit 0
