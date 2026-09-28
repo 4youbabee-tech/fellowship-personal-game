@@ -1,3 +1,15 @@
+## 2026-09-28 - P1C01 visible material-to-world binding bridge
+
+- Existing Shire high-visibility mesh targets identified: **SOURCE-REVIEWED**.
+- Optional imported-surface binding table for ground/path/plaster/stone/bark: **SOURCE-IMPLEMENTED**.
+- Missing external enhancement material behavior: **PRESERVE FALLBACK / PENDING**, never auto-promoted.
+- Authored material-slot identity mismatch: **FAIL-CLOSED**.
+- Foliage/detail density: **UNCHANGED**.
+- Quest/story/world anchors: **UNCHANGED**.
+- Exact-head hosted static proof: **NOT YET RUN**.
+- UE4.27 import/binding proof: **PENDING RUNNER RETURN**.
+- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 large material source promotion
 
 - Heterogeneous receipt + SHA256-gated material intake: **SOURCE-IMPLEMENTED**.
