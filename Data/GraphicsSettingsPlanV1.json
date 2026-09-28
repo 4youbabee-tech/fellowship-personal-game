@@ -64,7 +64,9 @@
     }
   },
   "user_controls": [
-    "display mode/resolution through UGameUserSettings",
+    "graphics preset: Performance / Recommended / High / Ultra / Custom",
+    "display mode: Fullscreen / Borderless / Windowed",
+    "resolution: 1280x720 / 1600x900 / 1920x1080",
     "VSync",
     "frame-rate limit",
     "resolution scale",
@@ -76,5 +78,13 @@
     "effects",
     "foliage"
   ],
-  "evidence_boundary": "Source defaults only. Recommended/High/Ultra names describe intended relative quality, not measured performance or visual acceptance. Target-device and human review remain required."
+  "evidence_boundary": "Source defaults only. Recommended/High/Ultra names describe intended relative quality, not measured performance or visual acceptance. Target-device and human review remain required.",
+  "ui_surface": {
+    "status": "SOURCE_IMPLEMENTED_PENDING_ENGINE_PROOF",
+    "open_key": "F10",
+    "navigation": "Up/Down select; Left/Right change; F10 close",
+    "modal_behavior": "gameplay input isolated while open",
+    "presentation": "full-screen dim + centered Graphics/Video panel",
+    "evidence_boundary": "No claim of packaged/runtime/visual acceptance until UE4.27 exact-head execution."
+  }
 }
