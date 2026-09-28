@@ -5457,6 +5457,7 @@ pg186_h = read(resolve_source("ShireGameUserSettings.h"))
 pg186_cpp = read(resolve_source("ShireGameUserSettings.cpp"))
 pg186_engine = read(ROOT / "Config" / "DefaultEngine.ini")
 pg186_scalability = read(ROOT / "Config" / "DefaultScalability.ini")
+pg186_user_defaults = read(ROOT / "Config" / "DefaultGameUserSettings.ini")
 pg186_plan = json.loads(read(ROOT / "Data" / "GraphicsSettingsPlanV1.json"))
 for pg186_symbol in [
     "EShireGraphicsPreset", "Performance", "Recommended", "High", "Ultra", "Custom",
@@ -5470,6 +5471,13 @@ if "GameUserSettingsClassName=/Script/ShireJourney.ShireGameUserSettings" not in
 for pg186_scalability_symbol in ["[TextureQuality@3]","[ShadowQuality@3]","[FoliageQuality@3]","[ViewDistanceQuality@3]"]:
     if pg186_scalability_symbol not in pg186_scalability:
         fail(f"PG-186 four-tier scalability ladder missing: {pg186_scalability_symbol}")
+for pg186_default_symbol in [
+    "[/Script/ShireJourney.ShireGameUserSettings]",
+    "ShireGraphicsPreset=Recommended",
+    "bShirePresetInitialized=False",
+]:
+    if pg186_default_symbol not in pg186_user_defaults:
+        fail(f"PG-186 first-run user-settings default missing: {pg186_default_symbol}")
 if pg186_plan.get("status") != "SOURCE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
     fail("PG-186 graphics settings evidence boundary changed")
 if pg186_plan.get("presets", {}).get("Recommended", {}).get("resolution_scale_percent") != 100:
