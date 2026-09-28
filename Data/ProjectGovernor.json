@@ -4391,6 +4391,88 @@
         "Data/P1C01FLivingShirePlanV1.json"
       ],
       "evidence_boundary": "ARCHITECTURE DIRECTION / SOURCE AUDIT ONLY. No new runtime, PIE, device, visual or performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-066",
+      "title": "Unreal validation waits on editor and commandlet ownership before production import",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004"
+      ],
+      "resolution": "Replace the editor-only wait assumption with a shared UE4 process wait/diagnostic contract that observes both UE4Editor and UE4Editor-Cmd. Never kill an interactive editor by name. Recover only a bounded stale CI-owned commandlet when workspace ownership, unattended commandlet signature, age and orphan-parent evidence all agree.",
+      "implementation_contract": [
+        "Observe both UE4Editor and UE4Editor-Cmd before build/import-sensitive steps.",
+        "Emit PID, parent PID, session, owner, age and command line for blocking Unreal processes.",
+        "Never terminate UE4Editor by process name or merely because validation wants the machine.",
+        "A UE4Editor-Cmd may be force-stopped only when it is an old workspace-owned unattended ShireJourney CI commandlet with a recognized CI signature and no live parent.",
+        "Production-import preflight remains fail-closed if any Unreal process survives the wait/recovery contract.",
+        "Add a static regression guard so an editor-only wait cannot silently return."
+      ],
+      "rationale": "Unreal Build #1068 compiled successfully, the wait step reported the editor closed, then production-import preflight immediately found PID 14144. Source inspection showed the wait step checked only UE4Editor while preflight checked UE4Editor and UE4Editor-Cmd. The mismatch explains the false-clear path without assuming PID ownership.",
+      "evidence": [
+        "Unreal Build #1068: Build ShireJourneyEditor SUCCESS",
+        "Unreal Build #1068: PRODUCTION_IMPORT_PREFLIGHT_EDITOR_RUNNING pids=14144",
+        "Scripts/wait_for_unreal_processes.ps1",
+        "Scripts/ci_wait_for_unreal_editor.cmd",
+        "Scripts/preflight_production_asset_import.ps1",
+        "Scripts/pre_unreal_validate.py PG-195"
+      ],
+      "evidence_boundary": "SOURCE-IMPLEMENTED. Fresh exact-head Pre-Unreal and Unreal validation are required before claiming the repair validated."
+    },
+    {
+      "id": "DEC-067",
+      "title": "Prepare all Part I runtime chapters now while preserving canonical mission IDs and serialized runtime gates",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-VISION-001",
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Prepare shared-stock source indexes for downstream P1C02-P1C08 immediately, but preserve one runtime-changing chapter lane at a time. Treat F1-01..F1-08 from the supplied mission matrix as canonical story package IDs and P1C01..P1C08 as legacy runtime implementation boundaries until an explicit save/quest-safe migration is accepted.",
+      "implementation_contract": [
+        "P1C01 remains the active runtime benchmark until real Gate 6/7 acceptance.",
+        "P1C02-P1C08 source/warehouse candidate indexing may run now from shared stock without duplicate per-chapter copies.",
+        "Only the immediate runtime successor opens after its predecessor Gate 6/7 status is ACCEPTED.",
+        "Current reconciliation is P1C01 -> F1-01/F1-02/F1-03; P1C02+P1C03 -> F1-04; P1C04 -> F1-05; P1C05+P1C06 -> F1-06; P1C07 -> F1-07; P1C08 -> F1-08.",
+        "Do not rename or renumber existing runtime chapter IDs in place until save, quest, checkpoint and story-state migration is explicitly implemented and validated.",
+        "Preparation never becomes a READY_FOR_IMPORT or acceptance claim by metadata alone."
+      ],
+      "rationale": "The owner requested that all chapters be prepared at maximum throughput and then enter runtime one after another. The supplied mission matrix and current FilmExperiencePlan reveal a non-one-to-one ID split, so a recorded reconciliation is required before automation can safely scale.",
+      "evidence": [
+        "07_MISSION_AND_CHAPTER_IMPLEMENTATION_MATRIX — Part I F1-01..F1-08",
+        "Data/FilmExperiencePlan.json",
+        "Data/Part1SequentialRuntimeChapterTrainV1.json",
+        "Scripts/run_part1_runtime_chapter_prep.ps1",
+        ".github/workflows/part1-chapter-preparation.yml",
+        ".github/workflows/sequential-chapter-queue.yml"
+      ],
+      "evidence_boundary": "SOURCE/PREPARATION ARCHITECTURE. No downstream runtime, PIE, device, visual or performance acceptance is claimed."
+    },
+    {
+      "id": "DEC-068",
+      "title": "Standing owner authorization for safe routine production execution",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-GOV-001",
+        "REQ-STABILITY-001"
+      ],
+      "resolution": "Routine reversible project work may continue without repeated owner 'continue/allow' prompts: inspection, safe fixes, branches, commits, PR updates, documentation, CI reruns, source/warehouse preparation and gate-compliant merges. Stop for owner input only at genuine human/external authority boundaries.",
+      "implementation_contract": [
+        "Do not request repeated confirmation for safe reversible routine work already inside approved project scope.",
+        "Still require owner action for login/OAuth, purchase/entitlement, unresolved licensing/canon conflicts, destructive no-rollback actions, or human Gate 6/7 evidence that cannot be manufactured by CI.",
+        "Platform-generated permission dialogs cannot be suppressed by repository policy; minimize operations that trigger them but never bypass platform authorization.",
+        "All runtime chapter advancement remains subject to existing quality gates regardless of standing execution authorization."
+      ],
+      "rationale": "The owner explicitly asked for continuous overnight progress without having to repeatedly authorize each routine step.",
+      "evidence": [
+        "Owner direction 2026-09-29",
+        "Docs/WORLD_DETAIL_LEDGER.md",
+        "Docs/DEVELOPMENT_GATES.md"
+      ],
+      "evidence_boundary": "Operational authorization only; it does not waive CI, canon, licensing, device, visual or human acceptance gates."
     }
   ],
   "open_conflicts": [],
