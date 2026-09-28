@@ -1,3 +1,14 @@
+## 2026-09-29 - #1082 direct-PID/CIM recovery refinement
+
+- Pre-Unreal #1360 on prior exact head `98dcb4d...`: **SUCCESS**.
+- Unreal #1082: **FAILED AT STALE CI COMMANDLET RECOVERY** after `taskkill /T /F` could not terminate PID 14144.
+- Direct PID taskkill fallback: **SOURCE-IMPLEMENTED**.
+- CIM `Win32_Process.Terminate` fallback + return-value evidence: **SOURCE-IMPLEMENTED**.
+- Fresh exact-head Pre-Unreal: **PENDING**.
+- Fresh exact-head Unreal Build/import: **PENDING**.
+- P1C01 Chapter Closure Mega Pack: **NOT YET RELEASED; EXACT-HEAD UNREAL GATE STILL REQUIRED**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - #1358/#1080 stale commandlet recovery refinement
 
 - Pre-Unreal #1358: **FAILED ONLY AT LEGACY PG-015 WAITER SHAPE CHECK**.
