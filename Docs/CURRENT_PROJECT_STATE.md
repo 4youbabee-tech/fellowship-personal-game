@@ -1,3 +1,13 @@
+## 2026-09-28 - Professional graphics/video settings authority
+
+- Added `UShireGameUserSettings` as the project GameUserSettings class with persistent **Performance / Recommended / High / Ultra / Custom** presets.
+- **Recommended** is the first-run image-first default: 100% resolution scale, View Distance 2, AA 2, Shadows 1, Post 2, Textures 2, Effects 1, Foliage 1. It intentionally preserves image clarity and recovers cost from expensive categories first.
+- High/Ultra expose additional headroom for stronger hardware; Custom preserves player-owned per-category values.
+- User-facing control APIs cover VSync, frame-rate cap, resolution scale and each core scalability category; inherited UGameUserSettings retains display mode/resolution handling.
+- DefaultScalability now defines complete 0-3 ladders for texture memory/filtering, shadow distance/cascades, foliage density and view distance.
+- This is source/config implementation only. No claim is made that Recommended/High/Ultra have met target-device FPS, VRAM or human visual acceptance.
+- Current maturity: **SOURCE-IMPLEMENTED / RUNNERLESS / EXACT-HEAD STATIC+UE PROOF PENDING**.
+
 ## 2026-09-28 - P1C01 Party Field light de-duplication and Ferry identity cleanup
 
 - Party Field's older lantern pass now skips itself whenever the authored `SM_ShLampPost` path is resident, preventing two light silhouettes from being stacked around the same destination.
