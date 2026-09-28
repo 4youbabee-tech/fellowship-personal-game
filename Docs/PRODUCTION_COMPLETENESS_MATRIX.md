@@ -1,3 +1,14 @@
+## 2026-09-29 - Two-chapter queue + systemic living-world architecture registration
+
+- P1C01 -> P1C02 sequential queue governance (`DEC-064`): **SOURCE-IMPLEMENTED**.
+- P1C02 source/warehouse preparation before P1C01 acceptance: **AUTHORIZED WHEN QUEUED**.
+- P1C02 runtime integration before P1C01 Gate 6/7 acceptance: **BLOCKED BY CONTRACT**.
+- Core production direction / systemic environmental reactivity (`DEC-065`): **ARCHITECTURE REGISTERED**.
+- Existing LivingWorld/NPC context/memory/relationship/pooling systems: **REUSED; NO PARALLEL BRAIN AUTHORIZED**.
+- Generic bounded environmental reaction contract (trees/foliage, water, doors/tools/props, fauna/NPC observers): **PLANNED / RUNTIME NOT STARTED**.
+- Exact-head Pre-Unreal/Unreal evidence after these documentation/governance commits: **PENDING**.
+- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - Pre-Unreal #1332 root-fix matrix
 
 - PowerShell parser gate: **PASS on #1332 — 47 files / 0 parser errors**.
