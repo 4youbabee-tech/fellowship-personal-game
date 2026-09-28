@@ -294,5 +294,11 @@
       ]
     }
   ],
-  "evidence_boundary": "Preparation/indexing contract only. P1C01 remains the active runtime chapter until real Gate 6/7 acceptance."
+  "evidence_boundary": "Preparation/indexing contract only. P1C01 remains the active runtime chapter until real Gate 6/7 acceptance.",
+  "runtime_release_contract": {
+    "required_predecessor_gate_status": "ACCEPTED",
+    "current_gate_file": "Data/P1C01Gate67AcceptanceChecklistV1.json",
+    "current_successor": "P1C02",
+    "release_rule": "Only the immediate successor runtime chapter may open after the current predecessor Gate 6/7 is ACCEPTED. Downstream source preparation may already exist."
+  }
 }
