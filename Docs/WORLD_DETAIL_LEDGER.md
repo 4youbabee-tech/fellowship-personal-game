@@ -1,3 +1,30 @@
+## 2026-09-29 - Part I full sequential runtime train and canonical-ID reconciliation
+
+Registered for the owner's continuous overnight production direction.
+
+Purpose:
+- Keep P1C01 as the active runtime benchmark while preparing shared warehouse/source indexes for P1C02-P1C08 immediately.
+- Runtime remains serialized: only the immediate successor may open after the predecessor Gate 6/7 is genuinely ACCEPTED.
+- Canonical mission IDs from the supplied Mission & Chapter Implementation Matrix remain F1-01 through F1-08.
+- Existing runtime chapter IDs P1C01-P1C08 are legacy implementation boundaries and do not map one-to-one to canonical mission packages.
+- Current reconciliation: P1C01 spans F1-01/F1-02/F1-03; P1C02 and P1C03 split F1-04; P1C04 maps to F1-05; P1C05 and P1C06 split F1-06; P1C07 maps to F1-07; P1C08 maps to F1-08.
+- Do not rename runtime IDs in place until a dedicated save/quest/state migration is source-checked and validated.
+- Shared warehouse stock is indexed rather than copied per chapter to avoid disk duplication.
+- Preparation status never implies READY_FOR_IMPORT, UE import, runtime integration, PIE/device/visual/performance acceptance.
+
+Status: **REGISTERED / SOURCE PREPARATION AUTOMATION IMPLEMENTED / RUNTIME SERIALIZED**.
+
+## 2026-09-29 - Unreal process ownership root repair after #1068
+
+- Unreal Build #1068 exact-head editor compile succeeded, then production-import preflight failed on PID 14144.
+- The preceding wait step had reported the editor closed because it checked only UE4Editor, while the import preflight checked both UE4Editor and UE4Editor-Cmd.
+- The wait contract now observes both process families and emits owner/session/start-time/command-line/parent-PID diagnostics.
+- Interactive UE4Editor processes are never killed by name.
+- Bounded recovery is allowed only for an old, workspace-owned, unattended UE4Editor-Cmd with a recognized CI commandlet signature and no live parent process.
+- Production-import preflight also emits process ownership evidence if a process still blocks import.
+
+Status: **SOURCE-IMPLEMENTED / EXACT-HEAD VALIDATION PENDING**.
+
 ## 2026-09-29 - Core production direction + systemic environmental reactivity contract
 
 Registered before any new runtime implementation.
