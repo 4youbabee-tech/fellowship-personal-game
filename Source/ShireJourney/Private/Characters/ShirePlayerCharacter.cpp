@@ -5,6 +5,7 @@
 #include "ShireChapterAssetStreamingSubsystem.h"
 #include "ShireSaveGame.h"
 #include "ShireHUD.h"
+#include "ShireGameUserSettings.h"
 #include "ShireFootstepComponent.h"
 #include "ShireStoryPresentationSubsystem.h"
 #include "FellowshipEnemyPrototype.h"
@@ -1016,6 +1017,11 @@ void AShirePlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
     PlayerInputComponent->BindAction(TEXT("ChroniclePrevious"), IE_Pressed, this, &AShirePlayerCharacter::ChroniclePrevious);
     PlayerInputComponent->BindAction(TEXT("ChronicleNext"), IE_Pressed, this, &AShirePlayerCharacter::ChronicleNext);
     PlayerInputComponent->BindAction(TEXT("ToggleWorldMap"), IE_Pressed, this, &AShirePlayerCharacter::ToggleWorldMap);
+    PlayerInputComponent->BindAction(TEXT("ToggleGraphicsSettings"), IE_Pressed, this, &AShirePlayerCharacter::ToggleGraphicsSettings);
+    PlayerInputComponent->BindAction(TEXT("GraphicsSettingsPrevious"), IE_Pressed, this, &AShirePlayerCharacter::GraphicsSettingsPrevious);
+    PlayerInputComponent->BindAction(TEXT("GraphicsSettingsNext"), IE_Pressed, this, &AShirePlayerCharacter::GraphicsSettingsNext);
+    PlayerInputComponent->BindAction(TEXT("GraphicsSettingsDecrease"), IE_Pressed, this, &AShirePlayerCharacter::GraphicsSettingsDecrease);
+    PlayerInputComponent->BindAction(TEXT("GraphicsSettingsIncrease"), IE_Pressed, this, &AShirePlayerCharacter::GraphicsSettingsIncrease);
     PlayerInputComponent->BindAction(TEXT("PrimaryAttack"), IE_Pressed, this, &AShirePlayerCharacter::PrimaryAttack);
     PlayerInputComponent->BindAction(TEXT("QuickSave"), IE_Pressed, this, &AShirePlayerCharacter::QuickSave);
     PlayerInputComponent->BindAction(TEXT("QuickLoad"), IE_Pressed, this, &AShirePlayerCharacter::QuickLoad);
@@ -1198,7 +1204,7 @@ void AShirePlayerCharacter::HandleCinematicStateChanged(bool bLocked)
 
 void AShirePlayerCharacter::MoveForward(float Value)
 {
-    if (!bCinematicInputLocked && !bWorldTransitionHeld && Controller && !FMath::IsNearlyZero(Value))
+    if (!bCinematicInputLocked && !bGraphicsSettingsOpen && !bWorldTransitionHeld && Controller && !FMath::IsNearlyZero(Value))
     {
         const FRotator Rotation = Controller->GetControlRotation();
         const FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
@@ -1208,7 +1214,7 @@ void AShirePlayerCharacter::MoveForward(float Value)
 
 void AShirePlayerCharacter::MoveRight(float Value)
 {
-    if (!bCinematicInputLocked && !bWorldTransitionHeld && Controller && !FMath::IsNearlyZero(Value))
+    if (!bCinematicInputLocked && !bGraphicsSettingsOpen && !bWorldTransitionHeld && Controller && !FMath::IsNearlyZero(Value))
     {
         const FRotator Rotation = Controller->GetControlRotation();
         const FRotator YawRotation(0.0f, Rotation.Yaw, 0.0f);
@@ -1218,7 +1224,7 @@ void AShirePlayerCharacter::MoveRight(float Value)
 
 void AShirePlayerCharacter::TurnAtRate(float Value)
 {
-    if (!bCinematicInputLocked)
+    if (!bCinematicInputLocked && !bGraphicsSettingsOpen)
     {
         AddControllerYawInput(Value * MouseLookSensitivity);
     }
@@ -1226,7 +1232,7 @@ void AShirePlayerCharacter::TurnAtRate(float Value)
 
 void AShirePlayerCharacter::LookUpAtRate(float Value)
 {
-    if (!bCinematicInputLocked)
+    if (!bCinematicInputLocked && !bGraphicsSettingsOpen)
     {
         AddControllerPitchInput(Value * MouseLookSensitivity);
     }
@@ -1234,7 +1240,7 @@ void AShirePlayerCharacter::LookUpAtRate(float Value)
 
 void AShirePlayerCharacter::StartJump()
 {
-    if (!bCinematicInputLocked && !bWorldTransitionHeld)
+    if (!bCinematicInputLocked && !bGraphicsSettingsOpen && !bWorldTransitionHeld)
     {
         Jump();
     }
@@ -1247,7 +1253,7 @@ void AShirePlayerCharacter::StopJump()
 
 void AShirePlayerCharacter::StartSprint()
 {
-    if (!bCinematicInputLocked && !bWorldTransitionHeld)
+    if (!bCinematicInputLocked && !bGraphicsSettingsOpen && !bWorldTransitionHeld)
     {
         bSprintRequested = true;
         if (!bStaminaExhausted && CurrentStamina > 5.0f)
@@ -1401,7 +1407,7 @@ void AShirePlayerCharacter::UseSupply()
 
 void AShirePlayerCharacter::ToggleChronicle()
 {
-    if (bCinematicInputLocked)
+    if (bCinematicInputLocked || bGraphicsSettingsOpen)
     {
         return;
     }
@@ -1443,7 +1449,7 @@ void AShirePlayerCharacter::ChronicleNext()
 
 void AShirePlayerCharacter::ToggleWorldMap()
 {
-    if (bCinematicInputLocked)
+    if (bCinematicInputLocked || bGraphicsSettingsOpen)
     {
         return;
     }
@@ -1452,6 +1458,196 @@ void AShirePlayerCharacter::ToggleWorldMap()
     if (bWorldMapOpen)
     {
         bChronicleOpen = false;
+    }
+}
+
+void AShirePlayerCharacter::ToggleGraphicsSettings()
+{
+    if (bCinematicInputLocked)
+    {
+        return;
+    }
+
+    bGraphicsSettingsOpen = !bGraphicsSettingsOpen;
+    if (bGraphicsSettingsOpen)
+    {
+        bChronicleOpen = false;
+        bWorldMapOpen = false;
+        StopSprint();
+    }
+}
+
+void AShirePlayerCharacter::GraphicsSettingsPrevious()
+{
+    if (!bGraphicsSettingsOpen)
+    {
+        return;
+    }
+    constexpr int32 RowCount = 11;
+    GraphicsSettingsSelectionIndex =
+        (GraphicsSettingsSelectionIndex - 1 + RowCount) % RowCount;
+}
+
+void AShirePlayerCharacter::GraphicsSettingsNext()
+{
+    if (!bGraphicsSettingsOpen)
+    {
+        return;
+    }
+    constexpr int32 RowCount = 11;
+    GraphicsSettingsSelectionIndex =
+        (GraphicsSettingsSelectionIndex + 1) % RowCount;
+}
+
+void AShirePlayerCharacter::GraphicsSettingsDecrease()
+{
+    AdjustGraphicsSetting(-1);
+}
+
+void AShirePlayerCharacter::GraphicsSettingsIncrease()
+{
+    AdjustGraphicsSetting(1);
+}
+
+void AShirePlayerCharacter::AdjustGraphicsSetting(int32 Delta)
+{
+    if (!bGraphicsSettingsOpen || Delta == 0)
+    {
+        return;
+    }
+
+    UShireGameUserSettings* Settings = UShireGameUserSettings::GetShireGameUserSettings();
+    if (!Settings)
+    {
+        return;
+    }
+
+    float ScaleNormalized = 1.0f;
+    float ScaleValue = 100.0f;
+    float MinScale = 70.0f;
+    float MaxScale = 100.0f;
+    Settings->GetResolutionScaleInformationEx(
+        ScaleNormalized, ScaleValue, MinScale, MaxScale);
+
+    auto ApplyCustom = [&](int32 ViewDistance, int32 AntiAliasing, int32 Shadows,
+        int32 PostProcessing, int32 Textures, int32 Effects, int32 Foliage,
+        float ResolutionScale)
+    {
+        Settings->ApplyCustomGraphicsQuality(
+            ViewDistance, AntiAliasing, Shadows, PostProcessing,
+            Textures, Effects, Foliage, ResolutionScale, true);
+    };
+
+    switch (GraphicsSettingsSelectionIndex)
+    {
+    case 0:
+    {
+        int32 PresetIndex = static_cast<int32>(Settings->GetShireGraphicsPreset());
+        if (Settings->GetShireGraphicsPreset() == EShireGraphicsPreset::Custom)
+        {
+            PresetIndex = static_cast<int32>(EShireGraphicsPreset::Recommended);
+        }
+        PresetIndex = FMath::Clamp(PresetIndex + Delta, 0, 3);
+        Settings->ApplyGraphicsPreset(
+            static_cast<EShireGraphicsPreset>(PresetIndex), true);
+        break;
+    }
+    case 1:
+        ApplyCustom(
+            Settings->GetViewDistanceQuality(),
+            Settings->GetAntiAliasingQuality(),
+            Settings->GetShadowQuality(),
+            Settings->GetPostProcessingQuality(),
+            Settings->GetTextureQuality(),
+            Settings->GetVisualEffectQuality(),
+            Settings->GetFoliageQuality(),
+            FMath::Clamp(ScaleValue + 5.0f * Delta, 70.0f, 100.0f));
+        break;
+    case 2:
+        ApplyCustom(
+            FMath::Clamp(Settings->GetViewDistanceQuality() + Delta, 0, 3),
+            Settings->GetAntiAliasingQuality(), Settings->GetShadowQuality(),
+            Settings->GetPostProcessingQuality(), Settings->GetTextureQuality(),
+            Settings->GetVisualEffectQuality(), Settings->GetFoliageQuality(), ScaleValue);
+        break;
+    case 3:
+        ApplyCustom(
+            Settings->GetViewDistanceQuality(),
+            FMath::Clamp(Settings->GetAntiAliasingQuality() + Delta, 0, 3),
+            Settings->GetShadowQuality(), Settings->GetPostProcessingQuality(),
+            Settings->GetTextureQuality(), Settings->GetVisualEffectQuality(),
+            Settings->GetFoliageQuality(), ScaleValue);
+        break;
+    case 4:
+        ApplyCustom(
+            Settings->GetViewDistanceQuality(), Settings->GetAntiAliasingQuality(),
+            FMath::Clamp(Settings->GetShadowQuality() + Delta, 0, 3),
+            Settings->GetPostProcessingQuality(), Settings->GetTextureQuality(),
+            Settings->GetVisualEffectQuality(), Settings->GetFoliageQuality(), ScaleValue);
+        break;
+    case 5:
+        ApplyCustom(
+            Settings->GetViewDistanceQuality(), Settings->GetAntiAliasingQuality(),
+            Settings->GetShadowQuality(),
+            FMath::Clamp(Settings->GetPostProcessingQuality() + Delta, 0, 3),
+            Settings->GetTextureQuality(), Settings->GetVisualEffectQuality(),
+            Settings->GetFoliageQuality(), ScaleValue);
+        break;
+    case 6:
+        ApplyCustom(
+            Settings->GetViewDistanceQuality(), Settings->GetAntiAliasingQuality(),
+            Settings->GetShadowQuality(), Settings->GetPostProcessingQuality(),
+            FMath::Clamp(Settings->GetTextureQuality() + Delta, 0, 3),
+            Settings->GetVisualEffectQuality(), Settings->GetFoliageQuality(), ScaleValue);
+        break;
+    case 7:
+        ApplyCustom(
+            Settings->GetViewDistanceQuality(), Settings->GetAntiAliasingQuality(),
+            Settings->GetShadowQuality(), Settings->GetPostProcessingQuality(),
+            Settings->GetTextureQuality(),
+            FMath::Clamp(Settings->GetVisualEffectQuality() + Delta, 0, 3),
+            Settings->GetFoliageQuality(), ScaleValue);
+        break;
+    case 8:
+        ApplyCustom(
+            Settings->GetViewDistanceQuality(), Settings->GetAntiAliasingQuality(),
+            Settings->GetShadowQuality(), Settings->GetPostProcessingQuality(),
+            Settings->GetTextureQuality(), Settings->GetVisualEffectQuality(),
+            FMath::Clamp(Settings->GetFoliageQuality() + Delta, 0, 3), ScaleValue);
+        break;
+    case 9:
+        Settings->ApplyDisplayPreferences(
+            !Settings->IsVSyncEnabled(),
+            Settings->GetFrameRateLimit(),
+            true);
+        break;
+    case 10:
+    {
+        static const float Limits[] = { 30.0f, 60.0f, 90.0f, 120.0f, 0.0f };
+        const float CurrentLimit = Settings->GetFrameRateLimit();
+        int32 ClosestIndex = 0;
+        float ClosestDistance = TNumericLimits<float>::Max();
+        for (int32 Index = 0; Index < UE_ARRAY_COUNT(Limits); ++Index)
+        {
+            const float Distance =
+                FMath::Abs(CurrentLimit - Limits[Index]);
+            if (Distance < ClosestDistance)
+            {
+                ClosestDistance = Distance;
+                ClosestIndex = Index;
+            }
+        }
+        const int32 NextIndex =
+            (ClosestIndex + Delta + UE_ARRAY_COUNT(Limits)) %
+            UE_ARRAY_COUNT(Limits);
+        Settings->ApplyDisplayPreferences(
+            Settings->IsVSyncEnabled(),
+            Limits[NextIndex],
+            true);
+        break;
+    }
+    default:
+        break;
     }
 }
 
@@ -1550,7 +1746,7 @@ float AShirePlayerCharacter::TakeDamage(
 
 void AShirePlayerCharacter::PrimaryAttack()
 {
-    if (bCinematicInputLocked || AttackCooldownRemaining > 0.0f || !IsCombatAvailable() || !GetWorld())
+    if (bCinematicInputLocked || bGraphicsSettingsOpen || AttackCooldownRemaining > 0.0f || !IsCombatAvailable() || !GetWorld())
     {
         return;
     }
@@ -1582,7 +1778,7 @@ void AShirePlayerCharacter::PrimaryAttack()
 
 void AShirePlayerCharacter::Interact()
 {
-    if (bCinematicInputLocked || bWorldTransitionHeld || !IsCurrentWorldCommitted() ||
+    if (bCinematicInputLocked || bGraphicsSettingsOpen || bWorldTransitionHeld || !IsCurrentWorldCommitted() ||
         !FollowCamera || !GetWorld())
     {
         return;
