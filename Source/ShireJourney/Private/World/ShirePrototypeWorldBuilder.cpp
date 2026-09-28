@@ -863,6 +863,14 @@ void AShirePrototypeWorldBuilder::ConfigureMorningAtmosphere()
         PostProcess->Settings.BloomIntensity = 0.16f;
         PostProcess->Settings.bOverride_VignetteIntensity = true;
         PostProcess->Settings.VignetteIntensity = 0.17f;
+
+        // Low-cost image shaping: reuse the existing post-process volume instead of
+        // adding more lights or geometry. Values stay intentionally restrained until
+        // exact-head rendered review on the target laptop.
+        PostProcess->Settings.bOverride_ColorSaturation = true;
+        PostProcess->Settings.ColorSaturation = FVector4(1.04f, 1.03f, 0.98f, 1.0f);
+        PostProcess->Settings.bOverride_ColorContrast = true;
+        PostProcess->Settings.ColorContrast = FVector4(1.04f, 1.04f, 1.03f, 1.0f);
     }
 }
 
@@ -907,6 +915,8 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
     float ExposureBias = -0.12f;
     float Bloom = 0.16f;
     float Vignette = 0.17f;
+    FVector4 Saturation(1.04f, 1.03f, 0.98f, 1.0f);
+    FVector4 Contrast(1.04f, 1.04f, 1.03f, 1.0f);
 
     if (QuestId == TEXT("LongExpectedParty"))
     {
@@ -917,6 +927,8 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
         ExposureBias = -0.10f;
         Bloom = 0.34f;
         Vignette = 0.14f;
+        Saturation = FVector4(1.08f, 1.04f, 0.94f, 1.0f);
+        Contrast = FVector4(1.05f, 1.04f, 1.02f, 1.0f);
     }
     else if (QuestId == TEXT("RingSecret"))
     {
@@ -927,6 +939,8 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
         ExposureBias = -0.18f;
         Bloom = 0.18f;
         Vignette = 0.22f;
+        Saturation = FVector4(0.94f, 0.98f, 1.05f, 1.0f);
+        Contrast = FVector4(1.05f, 1.05f, 1.08f, 1.0f);
     }
     else if (QuestId == TEXT("LeavingHome") || QuestId == TEXT("Shortcut"))
     {
@@ -937,6 +951,8 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
         ExposureBias = -0.08f;
         Bloom = 0.18f;
         Vignette = 0.18f;
+        Saturation = FVector4(0.99f, 1.00f, 1.01f, 1.0f);
+        Contrast = FVector4(1.03f, 1.03f, 1.04f, 1.0f);
     }
     else if (QuestId == TEXT("KeepOffRoad"))
     {
@@ -947,6 +963,8 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
         ExposureBias = -0.28f;
         Bloom = 0.12f;
         Vignette = 0.30f;
+        Saturation = FVector4(0.86f, 0.92f, 1.04f, 1.0f);
+        Contrast = FVector4(1.08f, 1.08f, 1.11f, 1.0f);
     }
     else if (QuestId == TEXT("FerryEscape"))
     {
@@ -957,6 +975,8 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
         ExposureBias = -0.16f;
         Bloom = 0.14f;
         Vignette = 0.24f;
+        Saturation = FVector4(0.91f, 0.96f, 1.05f, 1.0f);
+        Contrast = FVector4(1.06f, 1.06f, 1.08f, 1.0f);
     }
 
     SunComponent->SetMobility(EComponentMobility::Movable);
@@ -974,6 +994,10 @@ void AShirePrototypeWorldBuilder::ApplyStoryAtmosphere()
     RuntimePostProcess->Settings.BloomIntensity = Bloom;
     RuntimePostProcess->Settings.bOverride_VignetteIntensity = true;
     RuntimePostProcess->Settings.VignetteIntensity = Vignette;
+    RuntimePostProcess->Settings.bOverride_ColorSaturation = true;
+    RuntimePostProcess->Settings.ColorSaturation = Saturation;
+    RuntimePostProcess->Settings.bOverride_ColorContrast = true;
+    RuntimePostProcess->Settings.ColorContrast = Contrast;
 }
 
 void AShirePrototypeWorldBuilder::SpawnVillage()
