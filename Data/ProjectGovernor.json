@@ -4162,6 +4162,39 @@
       ],
       "evidence_boundary": "CONTROL-PLANE ROOT-CAUSE FIX. Exact-head Pre-Unreal and post-merge Warehouse rerun are required before publish is run-proven.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-058",
+      "title": "Run P1C01 closure as one maximum-throughput chapter source pack",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-WAREHOUSE-001",
+        "REQ-PERF-003",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004"
+      ],
+      "resolution": "Move P1C01 source acquisition/preparation to one large closure pack that stages all currently authorized public/open provider stock needed for Shire world, materials, props, nature, audio, fauna and character/animation support, then prepares/promotes it through bounded internal cars. Maximize raw Warehouse throughput, but keep Git/LFS source promotion and UE import bounded separately.",
+      "implementation_contract": [
+        "One P1C01 Chapter Closure Mega Pack V2 may stage Poly Haven, ambientCG, Quaternius, Kenney, KayKit and authorized OpenGameArt stock in one Warehouse workflow.",
+        "Provider/asset/source blockers quarantine only their car; infrastructure/storage/inventory corruption remains hard-fail.",
+        "Persistent Warehouse may grow by multiple GB; minimum free-disk reserve is enforced and original staged payloads are never deleted to make room.",
+        "Large material source promotion is capped at 640 MiB with 48 MiB per source and at least 18 receipt-verified materials; raw Warehouse size is not copied wholesale into Git.",
+        "Runtime import remains a later bounded lane; no chapter pack may force UE to synchronously load the raw Warehouse.",
+        "Animated final candidates remain FBX; production textures PNG/TGA; heavy runtime assets soft+async; crowds/fauna pooled; repeated world detail ISM/HISM+LOD+culling.",
+        "Legacy overlapping P1C01 staging/promotion/export/intake workflow steps are suppressed while Closure Pack V2 runs.",
+        "Part II/III runtime remains closed; only reusable source stock may be prepared outside P1C01."
+      ],
+      "rationale": "The owner explicitly authorized maximum practical batch size to accelerate Shire construction. Current Warehouse already holds multi-GB stock and the V1 chapter pack proved car-level quarantine. The safe acceleration path is larger source acquisition/preparation, not one unbounded UE import or a monolithic hard-reference content dump.",
+      "evidence": [
+        "Warehouse #278: V1 chapter-pack quarantine architecture passed 3 cars / 1 quarantined / 0 hard.",
+        "Warehouse #279: V1 chapter pack passed 4 / 0 / 0 and generated 8 material sources.",
+        "Warehouse #281: material intake passed prepared=8 pending=8 manual=0 before publish-control failure.",
+        "Data/P1C01ChapterClosureMegaPackV2.json",
+        "Scripts/run_p1c01_chapter_closure_pack_v2.ps1"
+      ],
+      "evidence_boundary": "SOURCE/CONTROL-PLANE DECISION. Exact-head static validation and a post-merge Warehouse V2 run are required before the large closure pack is RUN-PROVEN. UE import/PIE/device/visual/performance remain separate.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
