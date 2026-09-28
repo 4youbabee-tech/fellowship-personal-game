@@ -1,3 +1,12 @@
+## 2026-09-28 - P1C01 visual-economy color-grade pass
+
+- Existing post-process volume reused for saturation/contrast shaping: **SOURCE-IMPLEMENTED**.
+- Additional dynamic lights / geometry / texture samples: **NONE ADDED**.
+- Quest-state grade variants: **SOURCE-IMPLEMENTED**.
+- Tick cost: **UNCHANGED / EVENT-DRIVEN**.
+- Exact-head rendered/visual review: **PENDING**.
+- DEVICE/PERFORMANCE/VISUAL acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - Recommended first-run display baseline
 
 - First-run/reset display mode: **1280x720 Fullscreen / SOURCE-DEFINED**.
