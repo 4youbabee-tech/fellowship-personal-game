@@ -2,6 +2,7 @@
 #include "ShireDialogueSubsystem.h"
 #include "ShireQuestSubsystem.h"
 #include "ShirePlayerCharacter.h"
+#include "ShireGameUserSettings.h"
 #include "Engine/Canvas.h"
 #include "Engine/Engine.h"
 #include "Engine/GameInstance.h"
@@ -339,10 +340,134 @@ void AShireHUD::DrawHUD()
             MapX + 18.0f, MapY + MapH - 23.0f, SmallFont, 0.65f, false);
     }
 
+    if (Player && Player->IsGraphicsSettingsOpen())
+    {
+        UShireGameUserSettings* Settings =
+            UShireGameUserSettings::GetShireGameUserSettings();
+        if (Settings)
+        {
+            const auto QualityLabel = [](int32 Quality) -> FString
+            {
+                switch (FMath::Clamp(Quality, 0, 3))
+                {
+                case 0: return TEXT("Low");
+                case 1: return TEXT("Medium");
+                case 2: return TEXT("High");
+                case 3: return TEXT("Epic");
+                default: return TEXT("Custom");
+                }
+            };
+
+            float ScaleNormalized = 1.0f;
+            float ScaleValue = 100.0f;
+            float MinScale = 70.0f;
+            float MaxScale = 100.0f;
+            Settings->GetResolutionScaleInformationEx(
+                ScaleNormalized, ScaleValue, MinScale, MaxScale);
+
+            const FIntPoint Resolution = Settings->GetScreenResolution();
+            FString WindowMode = TEXT("Windowed");
+            if (Settings->GetFullscreenMode() == EWindowMode::Fullscreen)
+            {
+                WindowMode = TEXT("Fullscreen");
+            }
+            else if (Settings->GetFullscreenMode() == EWindowMode::WindowedFullscreen)
+            {
+                WindowMode = TEXT("Borderless");
+            }
+
+            const float PanelW = FMath::Min(650.0f, W - 70.0f);
+            const float PanelH = FMath::Min(610.0f, H - 80.0f);
+            const float PanelX = (W - PanelW) * 0.5f;
+            const float PanelY = (H - PanelH) * 0.5f;
+
+            DrawRect(FLinearColor(0.005f, 0.009f, 0.006f, 0.96f), PanelX, PanelY, PanelW, PanelH);
+            DrawRect(FLinearColor(0.76f, 0.57f, 0.22f, 0.98f), PanelX, PanelY, 5.0f, PanelH);
+            DrawText(TEXT("GRAPHICS / VIDEO"),
+                FLinearColor(0.96f, 0.87f, 0.64f),
+                PanelX + 24.0f, PanelY + 20.0f, MediumFont, 1.05f, false);
+            DrawText(
+                FString::Printf(TEXT("%dx%d  |  %s  |  DX11"),
+                    Resolution.X, Resolution.Y, *WindowMode),
+                FLinearColor(0.68f, 0.74f, 0.66f),
+                PanelX + 24.0f, PanelY + 51.0f, SmallFont, 0.76f, false);
+
+            const FString FrameLimit =
+                Settings->GetFrameRateLimit() <= 0.5f
+                    ? TEXT("Unlimited")
+                    : FString::Printf(TEXT("%.0f FPS"), Settings->GetFrameRateLimit());
+
+            const FString Labels[] = {
+                TEXT("Overall Quality"),
+                TEXT("Render Scale"),
+                TEXT("View Distance"),
+                TEXT("Anti-Aliasing"),
+                TEXT("Shadows"),
+                TEXT("Post Processing"),
+                TEXT("Textures"),
+                TEXT("Effects"),
+                TEXT("Foliage"),
+                TEXT("VSync"),
+                TEXT("Frame Limit")
+            };
+            const FString Values[] = {
+                Settings->GetShireGraphicsPresetLabel().ToString(),
+                FString::Printf(TEXT("%.0f%%"), ScaleValue),
+                QualityLabel(Settings->GetViewDistanceQuality()),
+                QualityLabel(Settings->GetAntiAliasingQuality()),
+                QualityLabel(Settings->GetShadowQuality()),
+                QualityLabel(Settings->GetPostProcessingQuality()),
+                QualityLabel(Settings->GetTextureQuality()),
+                QualityLabel(Settings->GetVisualEffectQuality()),
+                QualityLabel(Settings->GetFoliageQuality()),
+                Settings->IsVSyncEnabled() ? TEXT("On") : TEXT("Off"),
+                FrameLimit
+            };
+
+            float RowY = PanelY + 92.0f;
+            for (int32 Index = 0; Index < UE_ARRAY_COUNT(Labels); ++Index)
+            {
+                const bool bSelected =
+                    Index == Player->GetGraphicsSettingsSelectionIndex();
+                if (bSelected)
+                {
+                    DrawRect(
+                        FLinearColor(0.20f, 0.18f, 0.10f, 0.88f),
+                        PanelX + 18.0f, RowY - 5.0f, PanelW - 36.0f, 34.0f);
+                }
+
+                DrawText(
+                    Labels[Index],
+                    bSelected
+                        ? FLinearColor(0.98f, 0.90f, 0.66f)
+                        : FLinearColor(0.78f, 0.82f, 0.74f),
+                    PanelX + 32.0f, RowY, SmallFont, 0.84f, false);
+                DrawText(
+                    Values[Index],
+                    bSelected
+                        ? FLinearColor::White
+                        : FLinearColor(0.78f, 0.80f, 0.76f),
+                    PanelX + PanelW - 190.0f, RowY, SmallFont, 0.84f, false);
+                RowY += 37.0f;
+            }
+
+            DrawText(
+                TEXT("Recommended = image-first default  |  High/Ultra = stronger-hardware headroom"),
+                FLinearColor(0.66f, 0.70f, 0.63f),
+                PanelX + 24.0f, PanelY + PanelH - 58.0f, SmallFont, 0.66f, false);
+            DrawText(
+                TEXT("F10 Close   Up/Down Select   Left/Right Change"),
+                FLinearColor(0.86f, 0.78f, 0.56f),
+                PanelX + 24.0f, PanelY + PanelH - 31.0f, SmallFont, 0.72f, false);
+        }
+    }
+
     DrawText(
-        bCombat
-            ? TEXT("WASD Move  |  LMB Attack  |  Shift Sprint  |  E Interact  |  R Supply  |  C Chronicle  |  M Map  |  [ ] Browse  |  F5/F9 Save/Load")
-            : TEXT("WASD Move  |  Shift Sprint  |  E Interact  |  R Supply  |  C Chronicle  |  M Map  |  [ ] Browse  |  F5/F9 Save/Load  |  F6-F8 Debug"),
+        Player && Player->IsGraphicsSettingsOpen()
+            ? TEXT("GRAPHICS / VIDEO  |  F10 Close  |  Arrow keys adjust")
+            : (bCombat
+                ? TEXT("WASD Move  |  LMB Attack  |  Shift Sprint  |  E Interact  |  R Supply  |  C Chronicle  |  M Map  |  F10 Graphics  |  F5/F9 Save/Load")
+                : TEXT("WASD Move  |  Shift Sprint  |  E Interact  |  R Supply  |  C Chronicle  |  M Map  |  F10 Graphics  |  F5/F9 Save/Load  |  F6-F8 Debug")),
         FLinearColor(0.78f, 0.80f, 0.76f, 0.46f), 24.0f, H - 28.0f, SmallFont, 0.72f, false);
 
     const float Now = GetWorld()->GetTimeSeconds();
