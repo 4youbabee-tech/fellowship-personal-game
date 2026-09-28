@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_PROFESSIONAL_GRAPHICS_SETTINGS_V1",
+  "status": "SOURCE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF",
+  "authority": [
+    "Data/ProjectGovernor.json",
+    "REQ-PERF-003",
+    "REQ-WORLD-002",
+    "Docs/WORLD_DETAIL_LEDGER.md"
+  ],
+  "target_profile": {
+    "engine": "UE4.27.2",
+    "renderer": "DX11",
+    "reference_resolution": "1280x720",
+    "cpu": "Intel i7 6th generation class",
+    "ram_gb": 8,
+    "vram_gb_class": 2,
+    "fps_floor": 30
+  },
+  "doctrine": "Maximize visible beauty per measured CPU/GPU/VRAM cost. Default should look strong; savings come first from expensive low-value features, not blanket image degradation.",
+  "presets": {
+    "Performance": {
+      "view_distance": 1,
+      "anti_aliasing": 1,
+      "shadows": 0,
+      "post_processing": 1,
+      "textures": 1,
+      "effects": 1,
+      "foliage": 0,
+      "resolution_scale_percent": 85
+    },
+    "Recommended": {
+      "view_distance": 2,
+      "anti_aliasing": 2,
+      "shadows": 1,
+      "post_processing": 2,
+      "textures": 2,
+      "effects": 1,
+      "foliage": 1,
+      "resolution_scale_percent": 100
+    },
+    "High": {
+      "view_distance": 2,
+      "anti_aliasing": 3,
+      "shadows": 2,
+      "post_processing": 2,
+      "textures": 3,
+      "effects": 2,
+      "foliage": 2,
+      "resolution_scale_percent": 100
+    },
+    "Ultra": {
+      "view_distance": 3,
+      "anti_aliasing": 3,
+      "shadows": 3,
+      "post_processing": 3,
+      "textures": 3,
+      "effects": 3,
+      "foliage": 3,
+      "resolution_scale_percent": 100
+    },
+    "Custom": {
+      "rule": "player-owned per-category values; never silently overwritten"
+    }
+  },
+  "user_controls": [
+    "display mode/resolution through UGameUserSettings",
+    "VSync",
+    "frame-rate limit",
+    "resolution scale",
+    "view distance",
+    "anti-aliasing",
+    "shadows",
+    "post processing",
+    "textures",
+    "effects",
+    "foliage"
+  ],
+  "evidence_boundary": "Source defaults only. Recommended/High/Ultra names describe intended relative quality, not measured performance or visual acceptance. Target-device and human review remain required."
+}
