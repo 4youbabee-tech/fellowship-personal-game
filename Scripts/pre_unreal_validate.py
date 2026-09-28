@@ -5486,6 +5486,25 @@ if pg186_plan.get("status") != "SOURCE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PRO
 if pg186_plan.get("presets", {}).get("Recommended", {}).get("resolution_scale_percent") != 100:
     fail("PG-186 Recommended preset must preserve 100 percent render scale in source design")
 
+for pg186_display_symbol in [
+    "ApplyDisplayModeAndResolution",
+    "FIntPoint(1280, 720)",
+    "FIntPoint(1600, 900)",
+    "FIntPoint(1920, 1080)",
+    "constexpr int32 RowCount = 13",
+    "Do not place a generic river boat beside the Bucklebury Ferry crossing.",
+]:
+    if pg186_display_symbol not in (pg186_h + pg186_cpp + pg184_shire_world + read(resolve_source("ShirePlayerCharacter.cpp"))):
+        fail(f"PG-186 display/resolution or visual-cleanup contract missing: {pg186_display_symbol}")
+pg186_hud = read(resolve_source("ShireHUD.cpp"))
+for pg186_hud_symbol in [
+    'TEXT("Display Mode")',
+    'TEXT("Resolution")',
+    "0.72f), 0.0f, 0.0f, W, H",
+]:
+    if pg186_hud_symbol not in pg186_hud:
+        fail(f"PG-186 graphics overlay polish missing: {pg186_hud_symbol}")
+
 pg186_player_h = read(resolve_source("ShirePlayerCharacter.h"))
 pg186_player_cpp = read(resolve_source("ShirePlayerCharacter.cpp"))
 pg186_hud = read(resolve_source("ShireHUD.cpp"))
