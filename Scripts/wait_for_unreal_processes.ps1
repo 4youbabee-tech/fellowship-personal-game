@@ -74,13 +74,16 @@ function Test-StaleOwnedCommandlet($snapshot) {
         $cmd.IndexOf("-nullrhi", [StringComparison]::OrdinalIgnoreCase) -ge 0
 
     $ageMinutes = ((Get-Date) - $snapshot.StartTime).TotalMinutes
+    $currentIdentity = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+    $sameOwner = -not [string]::IsNullOrWhiteSpace([string]$snapshot.Owner) -and
+        ([string]$snapshot.Owner).Equals($currentIdentity, [StringComparison]::OrdinalIgnoreCase)
     $parentAlive = $false
     if($snapshot.ParentProcessId -gt 0){
         $parentAlive = $null -ne (Get-Process -Id $snapshot.ParentProcessId -ErrorAction SilentlyContinue)
     }
 
     return $workspaceOwned -and $projectOwned -and $unattended -and $knownCiCommandlet -and
-        (-not $parentAlive) -and $ageMinutes -ge $StaleCommandletMinutes
+        $sameOwner -and (-not $parentAlive) -and $ageMinutes -ge $StaleCommandletMinutes
 }
 
 $deadline = (Get-Date).AddMinutes($TimeoutMinutes)
@@ -96,8 +99,14 @@ while($true){
         Write-UnrealProcessDiagnostic $snapshot "UNREAL_PROCESS_DIAGNOSTIC"
         if(Test-StaleOwnedCommandlet $snapshot){
             Write-Host ("UNREAL_STALE_CI_COMMANDLET_RECOVERY_BEGIN pid=" + $snapshot.Id)
-            Stop-Process -Id $snapshot.Id -Force -ErrorAction Stop
-            Start-Sleep -Milliseconds 750
+            Stop-Process -Id $snapshot.Id -Force -ErrorAction SilentlyContinue
+            Start-Sleep -Seconds 2
+            if(Get-Process -Id $snapshot.Id -ErrorAction SilentlyContinue){
+                Write-Host ("UNREAL_STALE_CI_COMMANDLET_TASKKILL_FALLBACK pid=" + $snapshot.Id)
+                $taskkill = Start-Process -FilePath "taskkill.exe" -ArgumentList @("/PID",[string]$snapshot.Id,"/T","/F") -NoNewWindow -Wait -PassThru
+                Write-Host ("UNREAL_STALE_CI_COMMANDLET_TASKKILL_RESULT pid=" + $snapshot.Id + " exit=" + $taskkill.ExitCode)
+                Start-Sleep -Seconds 2
+            }
             if(Get-Process -Id $snapshot.Id -ErrorAction SilentlyContinue){
                 throw ("UNREAL_STALE_CI_COMMANDLET_RECOVERY_FAIL pid=" + $snapshot.Id)
             }
