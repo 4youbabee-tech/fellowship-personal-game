@@ -8073,6 +8073,48 @@ for pg191_symbol in [
 if "push --force-with-lease origin" in pg191_export:
     fail("PG-191 implicit force-with-lease returned; generated branches must lease the exact remote SHA")
 
+
+# PG-192: P1C01 Chapter Closure Mega Pack V2 maximum-throughput contract.
+pg192_pack = json.loads(read(ROOT / "Data" / "P1C01ChapterClosureMegaPackV2.json"))
+pg192_promo = json.loads(read(ROOT / "Data" / "WarehouseP1C01ClosurePromotionTrainV2.json"))
+pg192_mat = json.loads(read(ROOT / "Data" / "P1C01MaterialImportWaveV2.json"))
+pg192_runner = read(ROOT / "Scripts" / "run_p1c01_chapter_closure_pack_v2.ps1")
+pg192_classifier = read(ROOT / "Scripts" / "classify_warehouse_validation.ps1")
+pg192_warehouse = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
+pg192_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
+
+if pg192_pack.get("status") != "RUNNER_EXECUTION_READY":
+    fail("PG-192 closure pack must remain RUNNER_EXECUTION_READY")
+if int(pg192_pack.get("source_capacity", {}).get("promotion_selector_ceiling", 0)) < 150:
+    fail("PG-192 closure promotion ceiling unexpectedly reduced below chapter-scale throughput")
+if int(pg192_pack.get("storage_policy", {}).get("minimum_free_disk_reserve_bytes", 0)) < 4294967296:
+    fail("PG-192 closure pack must retain at least a 4 GiB free-space reserve")
+pg192_cars = {x.get("id"): x for x in pg192_pack.get("cars", [])}
+for required in ["PREFLIGHT_STORAGE","STAGE_POLYHAVEN","STAGE_AMBIENTCG","STAGE_QUATERNIUS","STAGE_KENNEY","STAGE_KAYKIT","STAGE_AUDIO","INVENTORY_AUDIT","CRITICAL_GAP_PREP","MEGA_PROMOTION","MATERIAL_SOURCE_EXPORT","CHARACTER_INTAKE","FINAL_INVENTORY_AUDIT"]:
+    if required not in pg192_cars:
+        fail(f"PG-192 closure pack car missing: {required}")
+pg192_budget = pg192_cars.get("MATERIAL_SOURCE_EXPORT", {}).get("export_budget", {})
+if int(pg192_budget.get("max_batch_source_bytes", 0)) != 671088640:
+    fail("PG-192 material source promotion must remain bounded at 640 MiB")
+if int(pg192_budget.get("minimum_exported_materials", 0)) < 18:
+    fail("PG-192 large material wave minimum unexpectedly reduced")
+if len(pg192_mat.get("immediate_open_source_items", [])) < 24:
+    fail("PG-192 material closure wave must remain chapter-scale")
+if int(pg192_promo.get("selector_ceiling_total", 0)) < 150:
+    fail("PG-192 promotion selector ceiling unexpectedly reduced")
+for symbol in ["P1C01_CHAPTER_CLOSURE_PACK_V2_PASS","QUARANTINED_CONTINUE","P1C01_CLOSURE_PACK_STORAGE_PASS"]:
+    if symbol not in pg192_runner:
+        fail(f"PG-192 closure runner marker missing: {symbol}")
+if "WH_RUN_P1C01_CLOSURE_PACK" not in pg192_classifier:
+    fail("PG-192 Warehouse classifier closure-pack flag missing")
+if "Run P1C01 Chapter Closure Mega Pack V2" not in pg192_warehouse:
+    fail("PG-192 Warehouse closure-pack execution step missing")
+if "env.WH_RUN_P1C01_CLOSURE_PACK != 'true'" not in pg192_warehouse:
+    fail("PG-192 overlapping legacy Warehouse steps are not suppressed")
+for ignored in ["Data/P1C01MaterialImportWaveV2.json","Data/P1C01ChapterClosureMegaPackV2.json","Scripts/run_p1c01_chapter_closure_pack_v2.ps1"]:
+    if ignored not in pg192_unreal:
+        fail(f"PG-192 tooling-only V2 path missing from Unreal paths-ignore: {ignored}")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:
