@@ -4,7 +4,10 @@
   "lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
   "status": "RUNNERLESS_PREPARATION_ONLY",
   "governor_authority": {
-    "requirements": ["REQ-WORLD-002", "REQ-PERF-001"],
+    "requirements": [
+      "REQ-WORLD-002",
+      "REQ-PERF-001"
+    ],
     "active_gate": "W01_P1C01_VERTICAL_SLICE_GATE",
     "note": "A dedicated graphics-settings requirement/decision was prepared in this automation run but repository-authority writes were blocked by platform safety. Do not treat this file as a second project-management authority."
   },
@@ -42,7 +45,7 @@
   "presets": [
     {
       "id": "Performance",
-      "purpose": "Fallback when the target floor is under pressure.",
+      "purpose": "Native-720p safety-floor preset for the target laptop; performance acceptance still requires exact device evidence.",
       "quality": {
         "view_distance": 0,
         "anti_aliasing": 1,
@@ -51,7 +54,7 @@
         "textures": 1,
         "effects": 0,
         "foliage": 0,
-        "resolution_scale_percent": 85
+        "resolution_scale_percent": 100
       }
     },
     {
