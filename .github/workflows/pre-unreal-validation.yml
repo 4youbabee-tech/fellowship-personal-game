@@ -101,6 +101,9 @@ jobs:
       - name: Test Unreal validation lane selection
         run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_unreal_classifier.ps1"
 
+      - name: Parse all PowerShell scripts
+        run: cd /d "%SHIRE_PRE_ROOT%" && powershell.exe -NoProfile -ExecutionPolicy Bypass -File "Scripts\test_powershell_syntax.ps1"
+
       - name: Validate project structure
         run: cd /d "%SHIRE_PRE_ROOT%" && "%PYTHON_EXE%" Scripts\pre_unreal_validate.py
 
