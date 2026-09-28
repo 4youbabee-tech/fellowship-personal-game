@@ -102,10 +102,20 @@ while($true){
             Stop-Process -Id $snapshot.Id -Force -ErrorAction SilentlyContinue
             Start-Sleep -Seconds 2
             if(Get-Process -Id $snapshot.Id -ErrorAction SilentlyContinue){
-                Write-Host ("UNREAL_STALE_CI_COMMANDLET_TASKKILL_FALLBACK pid=" + $snapshot.Id)
-                $taskkill = Start-Process -FilePath "taskkill.exe" -ArgumentList @("/PID",[string]$snapshot.Id,"/T","/F") -NoNewWindow -Wait -PassThru
-                Write-Host ("UNREAL_STALE_CI_COMMANDLET_TASKKILL_RESULT pid=" + $snapshot.Id + " exit=" + $taskkill.ExitCode)
+                Write-Host ("UNREAL_STALE_CI_COMMANDLET_TASKKILL_DIRECT pid=" + $snapshot.Id)
+                $taskkill = Start-Process -FilePath "taskkill.exe" -ArgumentList @("/PID",[string]$snapshot.Id,"/F") -NoNewWindow -Wait -PassThru
+                Write-Host ("UNREAL_STALE_CI_COMMANDLET_TASKKILL_DIRECT_RESULT pid=" + $snapshot.Id + " exit=" + $taskkill.ExitCode)
                 Start-Sleep -Seconds 2
+            }
+            if(Get-Process -Id $snapshot.Id -ErrorAction SilentlyContinue){
+                $cimTarget = Get-CimInstance Win32_Process -Filter ("ProcessId = " + $snapshot.Id) -ErrorAction SilentlyContinue
+                if($cimTarget){
+                    Write-Host ("UNREAL_STALE_CI_COMMANDLET_CIM_TERMINATE pid=" + $snapshot.Id)
+                    $terminateResult = Invoke-CimMethod -InputObject $cimTarget -MethodName Terminate -Arguments @{Reason=1} -ErrorAction SilentlyContinue
+                    $returnValue = if($terminateResult){ [int]$terminateResult.ReturnValue } else { -1 }
+                    Write-Host ("UNREAL_STALE_CI_COMMANDLET_CIM_RESULT pid=" + $snapshot.Id + " returnValue=" + $returnValue)
+                    Start-Sleep -Seconds 2
+                }
             }
             if(Get-Process -Id $snapshot.Id -ErrorAction SilentlyContinue){
                 throw ("UNREAL_STALE_CI_COMMANDLET_RECOVERY_FAIL pid=" + $snapshot.Id)
