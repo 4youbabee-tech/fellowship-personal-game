@@ -96,12 +96,27 @@ void UShireGameUserSettings::ApplyDisplayPreferences(
 }
 
 void UShireGameUserSettings::ApplyDisplayModeAndResolution(
-    EWindowMode::Type WindowMode,
+    EShireDisplayMode DisplayMode,
     FIntPoint Resolution,
     bool bApplyImmediately)
 {
     const int32 Width = FMath::Clamp(Resolution.X, 960, 3840);
     const int32 Height = FMath::Clamp(Resolution.Y, 540, 2160);
+
+    EWindowMode::Type WindowMode = EWindowMode::Windowed;
+    switch (DisplayMode)
+    {
+    case EShireDisplayMode::Fullscreen:
+        WindowMode = EWindowMode::Fullscreen;
+        break;
+    case EShireDisplayMode::Borderless:
+        WindowMode = EWindowMode::WindowedFullscreen;
+        break;
+    case EShireDisplayMode::Windowed:
+    default:
+        WindowMode = EWindowMode::Windowed;
+        break;
+    }
 
     SetFullscreenMode(WindowMode);
     SetScreenResolution(FIntPoint(Width, Height));
