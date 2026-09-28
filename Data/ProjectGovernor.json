@@ -164,14 +164,16 @@
       "missing_work": [
         "production-quality terrain/material/art replacement beyond current procedural detail",
         "batch integration PIE/device/performance/visual review",
-        "additional fauna variety beyond the CP55 bird/rabbit/butterfly set remains optional future polish"
+        "additional fauna variety beyond the CP55 bird/rabbit/butterfly set remains optional future polish",
+        "Bounded systemic environmental reaction contract for meaningful physical interactions (trees/foliage, water, doors/tools/props, fauna and NPC observers) using event-driven responders rather than per-object full simulation."
       ],
       "acceptance_criteria": [
         "Ordinary traversal repeatedly reveals believable activity or environmental storytelling",
         "Activity responds to region/story state",
         "Target laptop performance remains acceptable",
         "Each chapter records living-world acceptance separately",
-        "Sparse/danger regions must still feel authored through environment/wildlife/threat motion without inventing unsupported civilian populations."
+        "Sparse/danger regions must still feel authored through environment/wildlife/threat motion without inventing unsupported civilian populations.",
+        "Meaningful supported player/environment contacts produce bounded visible/audible responses without violating story authority or the target-laptop performance budget."
       ],
       "dependencies": [
         "REQ-WORLD-002",
@@ -4330,6 +4332,65 @@
       ],
       "evidence_boundary": "SOURCE-FIXED only until exact-head Pre-Unreal rerun succeeds.",
       "authority": "PROJECT_GOVERNOR_ROOT_CAUSE_REPAIR"
+    },
+    {
+      "id": "DEC-064",
+      "title": "Sequential two-chapter production queue keeps P1C01 active and P1C02 gated behind Gate 6/7",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-VISION-001",
+        "REQ-WORLD-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Keep P1C01 Shire/Hobbiton/Bag End as the sole active runtime closure chapter. P1C02 Shadow of the Past may have source/warehouse preparation queued in advance, but its runtime integration stays closed until the official P1C01 Gate 6/7 acceptance record is ACCEPTED. Once that gate is accepted, the sequential queue may automatically begin P1C02 source preparation without another owner continue prompt.",
+      "implementation_contract": [
+        "P1C01 remains the active runtime chapter until its real chapter acceptance gate closes.",
+        "P1C02 source/warehouse preparation may exist early; P1C02 runtime integration may not.",
+        "Reuse valid Shire/Bag End stock before acquiring duplicate P1C02 assets.",
+        "Every queued heavy wave starts with a cheap preflight.",
+        "SEQUENTIAL_CHAPTER_QUEUE_WAIT is an expected green waiting state while P1C01 Gate 6/7 is not ACCEPTED.",
+        "No queue state may reinterpret source preparation as chapter completion or runtime acceptance."
+      ],
+      "rationale": "The owner requested a long-running two-chapter production train that continues without hourly confirmation while preserving strict scope discipline. The queue therefore pipelines preparation without allowing the next runtime chapter to bypass the Shire quality gate.",
+      "evidence": [
+        "Docs/WORLD_DETAIL_LEDGER.md — Sequential two-chapter production queue: P1C01 -> P1C02",
+        "Data/P1C02ShadowPastChapterPackV1.json",
+        "Scripts/run_sequential_chapter_queue.ps1",
+        "Scripts/run_p1c02_shadow_past_prep.ps1",
+        ".github/workflows/sequential-chapter-queue.yml"
+      ],
+      "evidence_boundary": "SOURCE/QUEUE CONTRACT. This records gating and automation intent; it is not P1C01 or P1C02 PIE/device/visual/performance acceptance."
+    },
+    {
+      "id": "DEC-065",
+      "title": "Extend existing living-world architecture with bounded systemic environmental reactions",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-001",
+        "REQ-WORLD-002",
+        "REQ-NPC-001",
+        "REQ-PERF-001"
+      ],
+      "resolution": "Adopt AAA Visual Quality + Systemic Reactivity + Intelligent NPCs + Living World + Strict Optimization as the durable production direction. Preserve the existing LivingWorldDirector/NPCContext/Quest/WorldRouter ownership split and add future environmental reaction capability as a small bounded event/responder contract rather than a second world-intelligence brain.",
+      "implementation_contract": [
+        "Do not create a competing WorldIntelligenceSystem or second NPC brain.",
+        "LivingWorldDirector owns coarse population/event budgets, pooling, activation and chapter-aware world activity; it does not own every object's local reaction.",
+        "ShireNPCContextSubsystem owns bounded NPC context projection; ShireQuestSubsystem remains quest/story/memory truth.",
+        "World/story systems may publish bounded events such as Hit, Interact, PlayerNear, WeatherChanged, DangerChanged and StoryStateChanged; supported responders own local visual/audio reaction.",
+        "No full-rate Tick or full physics simulation for every tree, plant, prop or ambient actor.",
+        "Prefer WPO/material response, pooled transient FX/audio, delegates/timers and distance/activity budgets.",
+        "Runtime implementation is deferred until the active P1C01 closure train reaches the appropriate integration step and remains subject to Gate 6/7 and target-device performance evidence."
+      ],
+      "rationale": "The external programmer direction largely matches systems already present in the repository. The real uncovered gap is broad environmental reactivity. Recording it as an extension of current ownership avoids duplicate authority and preserves the low-spec performance contract.",
+      "evidence": [
+        "Docs/WORLD_DETAIL_LEDGER.md — Core production direction + systemic environmental reactivity contract",
+        "Source/ShireJourney/Private/World/LivingWorldDirector.cpp",
+        "Source/ShireJourney/Private/Subsystems/ShireNPCContextSubsystem.cpp",
+        "Data/LivingNPCIntelligenceRoadmap.json",
+        "Data/LivingWorldMasterCoverageMapV1.json",
+        "Data/P1C01FLivingShirePlanV1.json"
+      ],
+      "evidence_boundary": "ARCHITECTURE DIRECTION / SOURCE AUDIT ONLY. No new runtime, PIE, device, visual or performance acceptance is claimed."
     }
   ],
   "open_conflicts": [],
