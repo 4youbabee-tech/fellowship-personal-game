@@ -4183,7 +4183,9 @@
         "Runtime import remains a later bounded lane; no chapter pack may force UE to synchronously load the raw Warehouse.",
         "Animated final candidates remain FBX; production textures PNG/TGA; heavy runtime assets soft+async; crowds/fauna pooled; repeated world detail ISM/HISM+LOD+culling.",
         "Legacy overlapping P1C01 staging/promotion/export/intake workflow steps are suppressed while Closure Pack V2 runs.",
-        "Part II/III runtime remains closed; only reusable source stock may be prepared outside P1C01."
+        "Part II/III runtime remains closed; only reusable source stock may be prepared outside P1C01.",
+        "Warehouse Stage allows 180 minutes for the chapter closure pack; ordinary selective runs still finish early.",
+        "Warehouse Stage does not cancel an in-progress run when a newer push arrives; newer work queues behind the active large pack."
       ],
       "rationale": "The owner explicitly authorized maximum practical batch size to accelerate Shire construction. Current Warehouse already holds multi-GB stock and the V1 chapter pack proved car-level quarantine. The safe acceleration path is larger source acquisition/preparation, not one unbounded UE import or a monolithic hard-reference content dump.",
       "evidence": [
@@ -4222,6 +4224,30 @@
       ],
       "evidence_boundary": "SOURCE/CI PREVENTION. The new parser gate requires exact-head Pre-Unreal proof. It does not imply Warehouse, UE, PIE, device or visual acceptance.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-060",
+      "title": "Restore corrupted runner watchdog from last known-good exact source",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004"
+      ],
+      "resolution": "The new repository-wide PowerShell parser exposed a pre-existing duplicated/corrupted runner_watchdog.ps1. Restore that file from exact historical commit 1066cf022723fcdef9bfac66519f5b0f9c1e03a4, the newest checked revision in this investigation that parsed cleanly and retained the later stale-worker protections, instead of hand-reconstructing the damaged duplicated blocks.",
+      "implementation_contract": [
+        "Restore Scripts/runner_watchdog.ps1 byte-for-byte from commit 1066cf022723fcdef9bfac66519f5b0f9c1e03a4.",
+        "Keep the repository-wide parser gate active so any future PowerShell corruption blocks merge.",
+        "Do not infer current runtime/watchdog acceptance from historical source restoration; exact-head static validation is required."
+      ],
+      "rationale": "Pre-Unreal #1318 reported parser errors in runner_watchdog.ps1 unrelated to the new closure pack. Live source inspection showed duplicated function bodies and a broken service-owner regex. Historical checks found 1066cf022723fcdef9bfac66519f5b0f9c1e03a4 as a clean later watchdog revision (single broker-state function, no duplicated corrupted tail).",
+      "evidence": [
+        "Pre-Unreal #1318: POWERSHELL_SYNTAX_FAIL in Scripts/runner_watchdog.ps1",
+        "Historical source 1066cf022723fcdef9bfac66519f5b0f9c1e03a4 parses structurally and is 10,847 bytes versus corrupted 21,955-byte duplicated source",
+        "Scripts/test_powershell_syntax.ps1"
+      ],
+      "evidence_boundary": "SOURCE RESTORATION. Exact-head Pre-Unreal must pass before this source is STATIC-VALIDATED; no runner/device/gameplay acceptance is implied.",
+      "authority": "PROJECT_GOVERNOR_ROOT_CAUSE_REPAIR"
     }
   ],
   "open_conflicts": [],
