@@ -1,3 +1,13 @@
+## 2026-09-28 - P1C01 garden/farm HISM consolidation
+
+- Domestic garden authored flower-box HISM path: **SOURCE-IMPLEMENTED**.
+- Legacy 30-proxy Cube/Sphere garden cluster: **FALLBACK-ONLY**.
+- East Fields 12 cultivated rows: **PLACEMENT COUNT UNCHANGED / HISM-OWNED WHEN PRODUCTION ROAD MESH IS RESIDENT**.
+- Garden/farm cull bands: **SOURCE-DEFINED**, not device-proven.
+- Per-actor repeated-detail cost: **REDUCED IN SOURCE DESIGN**.
+- Exact-head Pre-Unreal/UE4.27 evidence: **PENDING**.
+- PIE/device/performance/visual acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 Wooded Road / Ferry proxy reduction
 
 - Wooded Road authored fallen-log preference: **SOURCE-IMPLEMENTED**.
