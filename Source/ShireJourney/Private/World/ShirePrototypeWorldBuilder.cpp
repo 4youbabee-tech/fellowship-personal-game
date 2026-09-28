@@ -417,14 +417,28 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
     const FLinearColor WarmGlass(0.92f, 0.67f, 0.28f);
     const FLinearColor Stone(0.42f, 0.40f, 0.34f);
 
-    // Imported production mound/facade replace the toy-like primitive silhouette when
-    // available. Runtime accents below remain cheap and readable on the target laptop.
-    if (ProductionTurfMoundMesh && ProductionHobbitFacadeMesh)
+    // Once the authored production mound + facade are resident, do not layer the
+    // old Cube/Sphere/Cylinder door/window/chimney proxy kit over them. That proxy
+    // was useful for traversal-era readability but makes the production shell read
+    // like a toy blockout. Keep the primitive kit strictly as a missing-asset fallback.
+    const bool bProductionHobbitShell =
+        ProductionTurfMoundMesh && ProductionHobbitFacadeMesh;
+
+    if (bProductionHobbitShell)
     {
         SpawnShape(ProductionTurfMoundMesh, Location + FVector(0.0f, 0.0f, 30.0f * Scale),
             FVector(2.45f, 2.10f, 2.10f) * Scale, Turf, FRotator::ZeroRotator, true);
         SpawnShape(ProductionHobbitFacadeMesh, Location + FVector(-88.0f * Scale, 0.0f, 0.0f),
             FVector(1.0f) * Scale, Earth, FRotator::ZeroRotator, true);
+
+        // Retain only authored vegetation accents around the entry when available.
+        if (ProductionShrubMesh)
+        {
+            SpawnShape(ProductionShrubMesh, Location + FVector(-105.0f, -92.0f, 0.0f) * Scale,
+                FVector(0.72f) * Scale, FLinearColor::White, FRotator(0.0f, 18.0f, 0.0f), false);
+            SpawnShape(ProductionShrubMesh, Location + FVector(-105.0f, 92.0f, 0.0f) * Scale,
+                FVector(0.68f) * Scale, FLinearColor::White, FRotator(0.0f, -22.0f, 0.0f), false);
+        }
     }
     else
     {
@@ -432,37 +446,35 @@ void AShirePrototypeWorldBuilder::SpawnHobbitHole(const FVector& Location, float
             FVector(1.72f, 1.12f, 0.78f) * Scale, Turf, FRotator::ZeroRotator, true);
         SpawnShape(CubeMesh, Location + FVector(-72.0f * Scale, 0.0f, 54.0f * Scale),
             FVector(0.10f, 0.82f, 0.58f) * Scale, Earth, FRotator::ZeroRotator, true);
+
+        // Fallback-only round frame + inset painted door.
+        SpawnShape(CylinderMesh, Location + FVector(-83.0f * Scale, 0.0f, 55.0f * Scale),
+            FVector(0.51f, 0.51f, 0.075f) * Scale, Timber, FRotator(0.0f, 90.0f, 0.0f), false);
+        SpawnShape(CylinderMesh, Location + FVector(-88.0f * Scale, 0.0f, 55.0f * Scale),
+            FVector(0.43f, 0.43f, 0.050f) * Scale, DoorGreen, FRotator(0.0f, 90.0f, 0.0f), false);
+        SpawnShape(SphereMesh, Location + FVector(-94.0f * Scale, 21.0f * Scale, 56.0f * Scale),
+            FVector(0.045f) * Scale, FLinearColor(0.74f, 0.55f, 0.18f), FRotator::ZeroRotator, false);
+
+        for (float Side : { -1.0f, 1.0f })
+        {
+            const FVector Window = Location + FVector(-88.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
+            SpawnShape(CylinderMesh, Window, FVector(0.22f, 0.22f, 0.035f) * Scale,
+                Timber, FRotator(0.0f, 90.0f, 0.0f), false);
+            SpawnShape(CylinderMesh, Window + FVector(-4.0f * Scale, 0.0f, 0.0f),
+                FVector(0.17f, 0.17f, 0.025f) * Scale, WarmGlass, FRotator(0.0f, 90.0f, 0.0f), false);
+            SpawnShape(CubeMesh, Window + FVector(-2.0f * Scale, 0.0f, -27.0f * Scale),
+                FVector(0.10f, 0.30f, 0.045f) * Scale, Stone, FRotator::ZeroRotator, false);
+        }
+
+        SpawnShape(CubeMesh, Location + FVector(35.0f, -45.0f, 170.0f) * Scale,
+            FVector(0.18f, 0.18f, 0.48f) * Scale, Stone, FRotator::ZeroRotator, false);
+        SpawnShape(CubeMesh, Location + FVector(-122.0f, 0.0f, 8.0f) * Scale,
+            FVector(0.42f, 0.70f, 0.10f) * Scale, Stone, FRotator::ZeroRotator, true);
+        SpawnShape(SphereMesh, Location + FVector(-105.0f, -92.0f, 24.0f) * Scale,
+            FVector(0.32f, 0.26f, 0.22f) * Scale, FLinearColor(0.10f, 0.32f, 0.08f), FRotator::ZeroRotator, false);
+        SpawnShape(SphereMesh, Location + FVector(-105.0f, 92.0f, 24.0f) * Scale,
+            FVector(0.32f, 0.26f, 0.22f) * Scale, FLinearColor(0.12f, 0.36f, 0.09f), FRotator::ZeroRotator, false);
     }
-
-    // Round frame + inset painted door.
-    SpawnShape(CylinderMesh, Location + FVector(-83.0f * Scale, 0.0f, 55.0f * Scale),
-        FVector(0.51f, 0.51f, 0.075f) * Scale, Timber, FRotator(0.0f, 90.0f, 0.0f), false);
-    SpawnShape(CylinderMesh, Location + FVector(-88.0f * Scale, 0.0f, 55.0f * Scale),
-        FVector(0.43f, 0.43f, 0.050f) * Scale, DoorGreen, FRotator(0.0f, 90.0f, 0.0f), false);
-    SpawnShape(SphereMesh, Location + FVector(-94.0f * Scale, 21.0f * Scale, 56.0f * Scale),
-        FVector(0.045f) * Scale, FLinearColor(0.74f, 0.55f, 0.18f), FRotator::ZeroRotator, false);
-
-    // Two warm circular windows and shallow stone sills.
-    for (float Side : { -1.0f, 1.0f })
-    {
-        const FVector Window = Location + FVector(-88.0f * Scale, Side * 58.0f * Scale, 68.0f * Scale);
-        SpawnShape(CylinderMesh, Window, FVector(0.22f, 0.22f, 0.035f) * Scale,
-            Timber, FRotator(0.0f, 90.0f, 0.0f), false);
-        SpawnShape(CylinderMesh, Window + FVector(-4.0f * Scale, 0.0f, 0.0f),
-            FVector(0.17f, 0.17f, 0.025f) * Scale, WarmGlass, FRotator(0.0f, 90.0f, 0.0f), false);
-        SpawnShape(CubeMesh, Window + FVector(-2.0f * Scale, 0.0f, -27.0f * Scale),
-            FVector(0.10f, 0.30f, 0.045f) * Scale, Stone, FRotator::ZeroRotator, false);
-    }
-
-    // Chimney, doorstep and planted entry soften the generated silhouette.
-    SpawnShape(CubeMesh, Location + FVector(35.0f, -45.0f, 170.0f) * Scale,
-        FVector(0.18f, 0.18f, 0.48f) * Scale, Stone, FRotator::ZeroRotator, false);
-    SpawnShape(CubeMesh, Location + FVector(-122.0f, 0.0f, 8.0f) * Scale,
-        FVector(0.42f, 0.70f, 0.10f) * Scale, Stone, FRotator::ZeroRotator, true);
-    SpawnShape(SphereMesh, Location + FVector(-105.0f, -92.0f, 24.0f) * Scale,
-        FVector(0.32f, 0.26f, 0.22f) * Scale, FLinearColor(0.10f, 0.32f, 0.08f), FRotator::ZeroRotator, false);
-    SpawnShape(SphereMesh, Location + FVector(-105.0f, 92.0f, 24.0f) * Scale,
-        FVector(0.32f, 0.26f, 0.22f) * Scale, FLinearColor(0.12f, 0.36f, 0.09f), FRotator::ZeroRotator, false);
 }
 
 
