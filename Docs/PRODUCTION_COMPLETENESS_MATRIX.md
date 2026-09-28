@@ -1,3 +1,15 @@
+## 2026-09-28 - Warehouse #276 material-export unblock
+
+- Warehouse #276 exact develop head `f24480b3...`: **SELF-HOSTED EXECUTION REACHED FINAL MATERIAL EXPORT STEP**.
+- Inventory audit: **RUN-PROVEN** at 13,389 payload files / 5,590,510,073 bytes / 14 receipts / 667 receipt records / 215 duplicate groups.
+- P1C01 mega promotion: **RUN-PROVEN WITH MANUAL QUEUE** at `prepared=36 intakeQC=34 pending=3 manual=2 badReceipts=0`.
+- P1C01 material intake: **RUN-PROVEN** at `prepared=8 pending=8 manual=0`.
+- Root cause of final failure: **IDENTIFIED** as absolute `ManifestPath` being re-joined with `ProjectRoot` before `Get-Content`.
+- Rooted/relative manifest resolution repair: **SOURCE-FIXED**.
+- PG-184 regression guard for rooted-path handling: **SOURCE-IMPLEMENTED**.
+- Generated `generated/p1c01-material-source-v1` population after this repair: **PENDING WAREHOUSE RE-RUN**.
+- UE4.27 import/integration and PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 large material source promotion
 
 - Heterogeneous receipt + SHA256-gated material intake: **SOURCE-IMPLEMENTED**.
