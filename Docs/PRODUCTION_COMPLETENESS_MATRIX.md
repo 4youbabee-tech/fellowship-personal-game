@@ -1,3 +1,14 @@
+## 2026-09-28 - PR #145 parser-gate findings and long-pack execution hardening
+
+- Pre-Unreal #1318: **FAILED AT POWERSHELL PARSER GATE**; merge correctly blocked.
+- `export_p1c01_material_source_branch.ps1` duplicated-tail corruption: **SOURCE-REPAIRED**.
+- `runner_watchdog.ps1` latent duplicated/corrupted source: **RESTORED FROM 1066cf022723fcdef9bfac66519f5b0f9c1e03a4** under DEC-060.
+- Repository-wide PowerShell parser prevention (DEC-059): **ACTIVE IN SOURCE / EXACT-HEAD GREEN RE-RUN PENDING**.
+- Warehouse large-pack timeout: **SOURCE-SET TO 180 MINUTES**.
+- Warehouse cancellation policy: **SOURCE-SET TO QUEUE NEW WORK, DO NOT CANCEL ACTIVE PACK**.
+- P1C01 Closure Pack V2 Warehouse execution: **PENDING**.
+- UE4.27 import/runtime binding/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - Warehouse #282 parser root-cause prevention
 
 - Pre-Unreal #1317: **SUCCESS**, but missing repository-wide PowerShell parse coverage.
