@@ -290,7 +290,8 @@ function Test-CoreProofSafeInterveningDelta([string]$GitExe, [string]$BaseSha, [
         "Scripts/prepare_p1c01_material_intake.ps1",
         "Scripts/promote_p1c01_material_intake.ps1",
         "Scripts/run_p1c01_material_pipeline.ps1",
-        "Scripts/install_runner_watchdog.ps1",
+        "Scripts/export_p1c01_material_source_branch.ps1",
+        "Scripts/install_runner_watchdog.ps1"
         "Scripts/runner_watchdog.ps1",
         "Scripts/runner_service_guard.ps1",
         "Scripts/deep_project_audit.py",
@@ -451,6 +452,7 @@ $safeExact = @(
     "Scripts/prepare_p1c01_material_intake.ps1",
         "Scripts/promote_p1c01_material_intake.ps1",
         "Scripts/run_p1c01_material_pipeline.ps1",
+        "Scripts/export_p1c01_material_source_branch.ps1",
         "Scripts/install_runner_watchdog.ps1",
         "Scripts/runner_watchdog.ps1",
         "Scripts/runner_service_guard.ps1",
