@@ -8234,7 +8234,8 @@ for symbol in [
     "ParentProcessId",
     "CommandLine",
     "sameOwner",
-    "UNREAL_STALE_CI_COMMANDLET_TASKKILL_FALLBACK",
+    "UNREAL_STALE_CI_COMMANDLET_TASKKILL_DIRECT",
+    "UNREAL_STALE_CI_COMMANDLET_CIM_TERMINATE",
 ]:
     if symbol not in pg195_wait:
         fail(f"PG-195 Unreal process wait/diagnostic marker missing: {symbol}")
