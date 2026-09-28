@@ -5478,6 +5478,9 @@ for pg186_default_symbol in [
 ]:
     if pg186_default_symbol not in pg186_user_defaults:
         fail(f"PG-186 first-run user-settings default missing: {pg186_default_symbol}")
+pg186_data_index = read(ROOT / "Docs" / "DATA_PLAN_INDEX.md")
+if "GraphicsSettingsPlanV1.json" not in pg186_data_index:
+    fail("PG-186 graphics plan is not registered in DATA_PLAN_INDEX")
 if pg186_plan.get("status") != "SOURCE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PROOF":
     fail("PG-186 graphics settings evidence boundary changed")
 if pg186_plan.get("presets", {}).get("Recommended", {}).get("resolution_scale_percent") != 100:
