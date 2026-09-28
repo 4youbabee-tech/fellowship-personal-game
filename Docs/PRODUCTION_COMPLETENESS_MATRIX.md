@@ -1,3 +1,15 @@
+## 2026-09-29 - #1358/#1080 stale commandlet recovery refinement
+
+- Pre-Unreal #1358: **FAILED ONLY AT LEGACY PG-015 WAITER SHAPE CHECK**.
+- Unreal #1080 blocker PID 14144: **CI COMMANDLET IDENTITY CAPTURED** (`UE4Editor-Cmd` / ShireJourney QA / same interactive owner / orphaned parent / >20 min old).
+- Bounded stale-commandlet process-tree recovery: **SOURCE-IMPLEMENTED**.
+- Interactive editor kill-by-name: **FORBIDDEN / NOT INTRODUCED**.
+- PG-015 + PG-195 static regression coverage: **SOURCE-UPDATED**.
+- Fresh exact-head Pre-Unreal: **PENDING**.
+- Fresh exact-head Unreal Build/import: **PENDING**.
+- P1C01 Chapter Closure Mega Pack execution: **BLOCKED UNTIL REQUIRED EXACT-HEAD GATES TURN GREEN**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - Continuous Part I preparation train / Unreal #1068 process ownership repair
 
 - Unreal Build #1068 Editor compile: **COMPILE STEP SUCCESS** on prior exact head `c76e521e...`.
