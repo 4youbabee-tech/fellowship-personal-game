@@ -6,7 +6,7 @@
 - Legacy overlapping P1C01 Warehouse steps during pack execution: **SUPPRESSED IN SOURCE**.
 - Per-car quarantine + continue semantics: **SOURCE-IMPLEMENTED**.
 - Infrastructure fail-closed semantics: **SOURCE-IMPLEMENTED**.
-- TGA Git LFS rule for future changed/new texture sources: **SOURCE-IMPLEMENTED**.
+- TGA Git LFS migration: **DEFERRED TO FIRST BINARY PROMOTION WAVE** to avoid an unnecessary Unreal trigger here.
 - Exact-head Pre-Unreal / Warehouse execution result: **PENDING**.
 - UE import/integration/PIE/device/visual/performance acceptance: **NOT CLAIMED**.
 
