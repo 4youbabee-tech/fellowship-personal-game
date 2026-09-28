@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_GRAPHICS_SETTINGS_VALIDATION_BACKLOG_V1",
+  "lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "RUNNERLESS_PREPARED",
+  "authority_registration_status": "PENDING",
+  "purpose": "Prepare exact evidence collection for the professional Graphics/Video Settings system and permanent visual-economy doctrine without requiring Unreal or local warehouse bytes.",
+  "target_floor": {
+    "platform": "Windows",
+    "renderer": "DX11",
+    "cpu_class": "Intel i7 Gen6 class",
+    "ram_gb": 8,
+    "vram_class_gb": 2,
+    "resolution": "1280x720",
+    "resolution_scale_percent": 100,
+    "quality_class": "Low-Medium",
+    "fps_floor_target": 30,
+    "acceptance": "PENDING_TARGET_DEVICE_EVIDENCE"
+  },
+  "preset_contract": {
+    "default_candidate": "Balanced",
+    "native_720p_floor_presets": [
+      "Performance",
+      "Balanced"
+    ],
+    "higher_quality_presets": [
+      "High",
+      "Cinematic"
+    ],
+    "custom_controls": [
+      "resolution",
+      "display_mode",
+      "resolution_scale",
+      "vsync",
+      "frame_rate_limit",
+      "view_distance",
+      "anti_aliasing",
+      "shadows",
+      "post_process",
+      "textures",
+      "effects",
+      "foliage"
+    ],
+    "rule": "Preset names describe intent only; no preset is performance-accepted until exact target-device evidence exists."
+  },
+  "visual_economy": {
+    "spend_first_on": [
+      "silhouette_and_composition",
+      "hero_material_readability",
+      "lighting_and_atmosphere",
+      "near_field_detail"
+    ],
+    "recover_cost_first_from": [
+      "duplicate_actors",
+      "far_shadows",
+      "overdraw_and_translucency",
+      "redundant_lights",
+      "uninstanced_repetition",
+      "unnecessary_tick",
+      "invisible_or_far_detail"
+    ],
+    "repeated_detail": "HISM_OR_ISM_PLUS_LOD_AND_CULLING",
+    "crowds": "OBJECT_POOLING",
+    "heavy_assets": "SOFT_REFERENCES_PLUS_FSTREAMABLEMANAGER_ASYNC",
+    "density_rule": "NO_UNMEASURED_DENSITY_EXPANSION"
+  },
+  "runner_return_batch": {
+    "id": "P1C01_GRAPHICS_SETTINGS_PROFILE_A",
+    "exact_head_required": true,
+    "execute_only_when_matching_self_hosted_ue4_runner_can_start": true,
+    "pass_order": [
+      "Performance",
+      "Balanced",
+      "High",
+      "Cinematic"
+    ],
+    "target_floor_acceptance_presets": [
+      "Performance",
+      "Balanced"
+    ],
+    "measurements": [
+      "stat unit frame/game/draw/GPU timings",
+      "draw-call and primitive count",
+      "streaming pool and resident texture memory",
+      "transition hitch observation",
+      "representative production mesh LOD audit",
+      "representative master/material-instance shader cost",
+      "shadow cost including far-shadow contribution",
+      "translucency and overdraw hotspots",
+      "movable light count and overlap",
+      "active Tick count for world/NPC/detail actors"
+    ],
+    "failure_recovery_order": [
+      "remove_duplicate_actors",
+      "reduce_or_disable_far_shadows",
+      "reduce_overdraw_and_translucency",
+      "remove_redundant_lights",
+      "replace_repetition_with_HISM_or_ISM",
+      "remove_or_throttle_unnecessary_Tick",
+      "cull_invisible_or_far_detail",
+      "only_then_reduce_hero_quality_if_measured_cost_still_requires_it"
+    ]
+  },
+  "evidence_ceiling": {
+    "compile_tested": false,
+    "pie_tested": false,
+    "device_tested": false,
+    "visually_accepted": false,
+    "performance_accepted": false,
+    "staged": false,
+    "imported": false,
+    "integrated": false
+  },
+  "next_source_step": "Register the graphics/settings doctrine in ProjectGovernor and WORLD_DETAIL_LEDGER before runtime UShireGameUserSettings implementation."
+}
