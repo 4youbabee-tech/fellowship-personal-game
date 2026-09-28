@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "plan_id": "P1C01_GRAPHICS_VIDEO_SETTINGS_PREPARATION_V1",
+  "lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "RUNNERLESS_PREPARATION_ONLY",
+  "authority": {
+    "project_governor": "REQ-GFX-001 / INV-VISUAL-ECONOMY / DEC-055 registered on this branch",
+    "world_detail_ledger": "registration attempt blocked by platform write guard",
+    "runtime_implementation_allowed": false
+  },
+  "target_floor": {
+    "platform": "Windows",
+    "renderer": "DX11",
+    "resolution": "1280x720",
+    "resolution_scale_percent": 100,
+    "quality": "Low-Medium",
+    "fps_floor_target": 30,
+    "ram_gb": 8,
+    "vram_class_gb": 2,
+    "cpu_class": "Intel i7 Gen6 class",
+    "acceptance": "PENDING_EXACT_TARGET_DEVICE_EVIDENCE"
+  },
+  "presets": {
+    "default_candidate": "Balanced",
+    "Performance": {
+      "view_distance": 0,
+      "anti_aliasing": 1,
+      "shadows": 0,
+      "post_process": 0,
+      "textures": 1,
+      "effects": 0,
+      "foliage": 0,
+      "resolution_scale_percent": 100
+    },
+    "Balanced": {
+      "view_distance": 1,
+      "anti_aliasing": 2,
+      "shadows": 1,
+      "post_process": 1,
+      "textures": 1,
+      "effects": 1,
+      "foliage": 1,
+      "resolution_scale_percent": 100
+    },
+    "High": {
+      "view_distance": 2,
+      "anti_aliasing": 2,
+      "shadows": 2,
+      "post_process": 2,
+      "textures": 2,
+      "effects": 2,
+      "foliage": 2,
+      "resolution_scale_percent": 100
+    },
+    "Cinematic": {
+      "view_distance": 3,
+      "anti_aliasing": 3,
+      "shadows": 3,
+      "post_process": 3,
+      "textures": 3,
+      "effects": 3,
+      "foliage": 3,
+      "resolution_scale_percent": 100
+    },
+    "Custom": "derived from manual quality/resolution-scale deviation"
+  },
+  "custom_controls": [
+    "display_mode",
+    "resolution",
+    "resolution_scale",
+    "vsync",
+    "frame_rate_limit",
+    "view_distance",
+    "anti_aliasing",
+    "shadows",
+    "post_process",
+    "textures",
+    "effects",
+    "foliage"
+  ],
+  "visual_economy": {
+    "protect_first": [
+      "silhouette_and_composition",
+      "hero_material_readability",
+      "lighting_and_atmosphere",
+      "near_field_detail"
+    ],
+    "recover_cost_first_from": [
+      "duplicate_actors",
+      "far_shadows",
+      "overdraw_and_translucency",
+      "redundant_lights",
+      "uninstanced_repetition",
+      "unnecessary_tick",
+      "invisible_or_far_detail"
+    ],
+    "repeated_detail": "ISM/HISM + LOD + culling",
+    "heavy_assets": "soft references + FStreamableManager async",
+    "crowds": "object pooling"
+  },
+  "proof_boundary": "Preparation only. No compile, PIE, device, visual or performance acceptance is claimed."
+}
