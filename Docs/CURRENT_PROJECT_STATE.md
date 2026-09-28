@@ -1,3 +1,12 @@
+## 2026-09-28 - P1C01 Party Field light de-duplication and Ferry identity cleanup
+
+- Party Field's older lantern pass now skips itself whenever the authored `SM_ShLampPost` path is resident, preventing two light silhouettes from being stacked around the same destination.
+- The older `SM_ShLantern` / Cylinder+Sphere light path remains fallback-only when authored lamp posts are unavailable.
+- The generic `SM_CommonRiverBoat` placement beside Bucklebury Ferry was removed from the Shire scenic pass because it could visually masquerade as the story ferry.
+- The actual ferry traversal platform remains the existing bounded proxy until a canon-appropriate authored ferry mesh exists.
+- No route/story coordinates, quest anchors or population density changed.
+- Current maturity: **SOURCE-IMPLEMENTED / RUNNERLESS / STATIC+UE+VISUAL PROOF PENDING**.
+
 ## 2026-09-28 - P1C01 instanced domestic gardens and cultivated rows
 
 - Hobbiton garden patches now prefer three authored `SM_ShFlowerBox` instances through one `GardenPlanterInstances` HISM instead of the old per-patch Cube/Sphere proxy cluster. The legacy proxy garden remains only when the authored mesh is unavailable.
