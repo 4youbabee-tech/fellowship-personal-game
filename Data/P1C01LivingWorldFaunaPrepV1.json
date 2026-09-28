@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "batch_id": "P1C01_LIVING_WORLD_FAUNA_PREP_V1",
-  "status": "PROJECT_OWNED_FALLBACK_ACTIVE_EXTERNAL_LICENSE_BLOCKED",
+  "status": "PROJECT_OWNED_FALLBACK_ACTIVE_EXTERNAL_STAGING_AUTHORIZED",
   "authority": [
     "Data/LivingWorldEventPlan.json",
     "Data/P1C01WarehousePromotionQueueV1.json",
@@ -31,23 +31,31 @@
     {
       "provider": "QUATERNIUS",
       "id": "QTN_FARM_ANIMALS",
-      "state": "BLOCKED_LICENSE_CAPTURE",
+      "state": "AUTHORIZED_FOR_STAGING",
       "required_final_format": "FBX",
       "roles": [
         "sheep",
         "cattle",
         "pig",
         "horse/pony"
-      ]
+      ],
+      "source_page": "https://quaternius.com/packs/farmanimal.html",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-28",
+      "source_format_evidence": "FBX_LISTED_ON_OFFICIAL_PACK_PAGE"
     },
     {
       "provider": "QUATERNIUS",
       "id": "QTN_ULTIMATE_ANIMATED_ANIMALS",
-      "state": "BLOCKED_LICENSE_CAPTURE",
+      "state": "AUTHORIZED_FOR_STAGING",
       "required_final_format": "FBX",
       "roles": [
         "regional fauna support"
-      ]
+      ],
+      "source_page": "https://quaternius.com/packs/ultimateanimatedanimals.html",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-28",
+      "source_format_evidence": "FBX_LISTED_ON_OFFICIAL_PACK_PAGE"
     }
   ],
   "living_world_caps": {
@@ -65,5 +73,12 @@
     "FBX final exchange"
   ],
   "runtime_rule": "Use bounded pooled/transient fauna; never turn farm/wildlife groups into persistent crowd actors.",
-  "evidence_boundary": "Preparation only. Existing project-owned OBJ fauna are static/procedural fallback, not final animated production assets."
+  "evidence_boundary": "Preparation only. Existing project-owned OBJ fauna are static/procedural fallback, not final animated production assets.",
+  "next_gate": [
+    "discover/reuse public staged payload from existing Quaternius warehouse lane",
+    "retain receipt and SHA256 evidence",
+    "extract/scan only selected fauna payload",
+    "require FBX skeleton/skin/animation/deformation QC before READY_FOR_IMPORT",
+    "preserve existing fauna pooling and density caps"
+  ]
 }
