@@ -8079,7 +8079,8 @@ pg192_pack = json.loads(read(ROOT / "Data" / "P1C01ChapterClosureMegaPackV2.json
 pg192_promo = json.loads(read(ROOT / "Data" / "WarehouseP1C01ClosurePromotionTrainV2.json"))
 pg192_mat = json.loads(read(ROOT / "Data" / "P1C01MaterialImportWaveV2.json"))
 pg192_runner = read(ROOT / "Scripts" / "run_p1c01_chapter_closure_pack_v2.ps1")
-pg192_classifier = read(ROOT / "Scripts" / "classify_warehouse_validation.ps1")
+pg192_preflight = read(ROOT / "Scripts" / "preflight_p1c01_chapter_closure_pack_v2.ps1")
+pg192_closure_workflow = read(ROOT / ".github" / "workflows" / "p1c01-chapter-closure.yml")
 pg192_warehouse = read(ROOT / ".github" / "workflows" / "warehouse-stage.yml")
 pg192_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 
@@ -8105,17 +8106,31 @@ if int(pg192_promo.get("selector_ceiling_total", 0)) < 150:
 for symbol in ["P1C01_CHAPTER_CLOSURE_PACK_V2_PASS","QUARANTINED_CONTINUE","P1C01_CLOSURE_PACK_STORAGE_PASS"]:
     if symbol not in pg192_runner:
         fail(f"PG-192 closure runner marker missing: {symbol}")
-if "WH_RUN_P1C01_CLOSURE_PACK" not in pg192_classifier:
-    fail("PG-192 Warehouse classifier closure-pack flag missing")
-if "Run P1C01 Chapter Closure Mega Pack V2" not in pg192_warehouse:
-    fail("PG-192 Warehouse closure-pack execution step missing")
-if "env.WH_RUN_P1C01_CLOSURE_PACK != 'true'" not in pg192_warehouse:
-    fail("PG-192 overlapping legacy Warehouse steps are not suppressed")
-if "timeout-minutes: 180" not in pg192_warehouse:
-    fail("PG-192 closure-capable Warehouse workflow must allow 180 minutes")
-if "cancel-in-progress: false" not in pg192_warehouse:
-    fail("PG-192 active large Warehouse packs must not be cancelled by newer pushes")
-for ignored in ["Data/P1C01MaterialImportWaveV2.json","Data/P1C01ChapterClosureMegaPackV2.json","Scripts/run_p1c01_chapter_closure_pack_v2.ps1"]:
+for symbol in ["P1C01_CLOSURE_PREFLIGHT_PASS","CLOSURE_PREFLIGHT_DISK_RESERVE_FAIL","System.Management.Automation.Language.Parser"]:
+    if symbol not in pg192_preflight:
+        fail(f"PG-192 closure preflight marker missing: {symbol}")
+for symbol in [
+    "name: P1C01 Chapter Closure Pack",
+    "cancel-in-progress: false",
+    "timeout-minutes: 180",
+    "Fast closure preflight",
+    "Run P1C01 Chapter Closure Mega Pack V2",
+]:
+    if symbol not in pg192_closure_workflow:
+        fail(f"PG-192 dedicated closure workflow contract missing: {symbol}")
+for symbol in [
+    "group: warehouse-stage-${{ github.repository }}",
+    "cancel-in-progress: true",
+    "timeout-minutes: 60",
+]:
+    if symbol not in pg192_warehouse:
+        fail(f"PG-192 normal Warehouse workflow must remain short/cancellable: {symbol}")
+for ignored in [
+    "Data/P1C01MaterialImportWaveV2.json",
+    "Data/P1C01ChapterClosureMegaPackV2.json",
+    "Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1",
+    "Scripts/run_p1c01_chapter_closure_pack_v2.ps1",
+]:
     if ignored not in pg192_unreal:
         fail(f"PG-192 tooling-only V2 path missing from Unreal paths-ignore: {ignored}")
 
