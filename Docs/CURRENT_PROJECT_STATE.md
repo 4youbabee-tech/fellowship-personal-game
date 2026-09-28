@@ -1,3 +1,11 @@
+## 2026-09-28 - P1C01 Wooded Road and Ferry production-prop cleanup
+
+- The Wooded Road obstacle now prefers the existing authored `SM_CommonFallenLog`; the old cylinder+sphere log remains only as a missing-asset fallback.
+- Bucklebury Ferry banks now prefer existing authored `SM_CommonDockSegment` geometry and `SM_CommonRopePost` props instead of always showing Cube/Cylinder proxies.
+- The ferry platform itself intentionally remains a bounded traversal proxy because the repository does not yet contain a canon-appropriate authored ferry mesh. A generic river boat is not being mislabeled as the Bucklebury Ferry.
+- This pass replaces proxy geometry with already-owned production assets; it does not increase density or move the route/story crossing.
+- Current maturity: **SOURCE-IMPLEMENTED / RUNNERLESS / ENGINE+VISUAL PROOF PENDING**.
+
 ## 2026-09-28 - P1C01 Party Field production-canopy cleanup
 
 - Party Field no longer places the old Cube canopy unconditionally. The builder now resolves `SM_ShPicnicCanopy` once as a resident production mesh and uses the Cube canopy only when that authored asset is unavailable.
