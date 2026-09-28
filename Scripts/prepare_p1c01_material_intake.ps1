@@ -82,18 +82,44 @@ if (Test-Path -LiteralPath $WarehouseRoot -PathType Container) {
   }
 }
 
+function Test-ExplicitBaseColorName([string]$FilePath) {
+  $name=[IO.Path]::GetFileNameWithoutExtension($FilePath).ToLowerInvariant()
+
+  # Never let support maps silently become visible color. This is deliberately
+  # fail-closed for the low-spec P1C01 wave: ambiguous names stay pending.
+  if($name -match '(^|[_-])(normal|nor|nrm|rough|roughness|ao|ambientocclusion|occlusion|metal|metallic|height|disp|displacement|arm|orm)([_-]|$)'){
+    return $false
+  }
+  if($name -match 'preview|thumbnail|thumb|render'){
+    return $false
+  }
+
+  return (
+    $name -match 'basecolor|base_color|albedo|diffuse' -or
+    $name -match '(^|[_-])diff([_-]|$)' -or
+    $name -match '(^|[_-])colou?r([_-]|$)'
+  )
+}
+
 function Select-BaseColor([string[]]$Files) {
   $ranked=@()
   foreach($f in $Files) {
     $e=[IO.Path]::GetExtension($f).ToLowerInvariant()
     if($e -notin @(".png",".tga")){ continue }
+    if(-not (Test-ExplicitBaseColorName -FilePath $f)){ continue }
+
     $n=[IO.Path]::GetFileName($f).ToLowerInvariant()
-    $score=100
-    if($n -match 'basecolor|base_color|albedo|diffuse|diff|color'){ $score=0 }
-    elseif($n -match 'preview|thumb|render|normal|rough|ao|metal|height|disp'){ $score=200 }
+    $score=30
+    if($n -match 'basecolor|base_color'){ $score=0 }
+    elseif($n -match 'albedo'){ $score=5 }
+    elseif($n -match 'diffuse'){ $score=10 }
+    elseif($n -match '(^|[_-])diff([_-]|$)'){ $score=15 }
+    elseif($n -match '(^|[_-])colou?r([_-]|$)'){ $score=20 }
+
     $ranked += [pscustomobject]@{file=$f;score=$score;name=$n}
   }
-  return ($ranked | Sort-Object score,name | Select-Object -First 1).file
+  $selected=$ranked | Sort-Object score,name | Select-Object -First 1
+  return if($null -eq $selected){ $null }else{ [string]$selected.file }
 }
 
 $prepared=@()
@@ -110,7 +136,7 @@ foreach($item in @($manifest.immediate_open_source_items)) {
   }
 
   $files=New-Object 'System.Collections.Generic.List[string]'
-  $provenance=$null
+  $provenanceByFile=@{}
   foreach($row in $matches) {
     $p=[string]$row.file
     if([string]::IsNullOrWhiteSpace($p) -or -not (Test-Path -LiteralPath $p -PathType Leaf)){
@@ -122,8 +148,6 @@ foreach($item in @($manifest.immediate_open_source_items)) {
       $manualQueue += [ordered]@{id=[string]$item.id;asset_slug=[string]$item.asset_slug;file=$p;reason="receipt_sha256_mismatch";expected=[string]$row.sha256;actual=$actual}
       continue
     }
-    if($null -eq $provenance){ $provenance=$row }
-
     $ext=[IO.Path]::GetExtension($p).ToLowerInvariant()
     if(Test-DangerousExtension $ext) {
       $manualQueue += [ordered]@{id=[string]$item.id;file=$p;reason="dangerous_payload_extension"}; continue
@@ -131,7 +155,11 @@ foreach($item in @($manifest.immediate_open_source_items)) {
     if($ext -eq ".bmp") {
       $manualQueue += [ordered]@{id=[string]$item.id;file=$p;reason="forbidden_bmp"}; continue
     }
-    if($ext -in @(".png",".tga")) { $files.Add($p); continue }
+    if($ext -in @(".png",".tga")) {
+      $files.Add($p)
+      $provenanceByFile[[IO.Path]::GetFullPath($p)]=$row
+      continue
+    }
     if($ext -eq ".zip") {
       $dir=Join-Path $expandedRoot (([string]$item.id)+"_"+$actual.Substring(0,12))
       if(Test-Path -LiteralPath $dir){ Remove-Item -LiteralPath $dir -Recurse -Force }
@@ -144,7 +172,10 @@ foreach($item in @($manifest.immediate_open_source_items)) {
           if($xe -eq ".bmp" -or (Test-DangerousExtension $xe)){
             $manualQueue += [ordered]@{id=[string]$item.id;file=$x.FullName;reason="forbidden_archive_payload"}
           }
-          elseif($xe -in @(".png",".tga")){ $files.Add($x.FullName) }
+          elseif($xe -in @(".png",".tga")){
+            $files.Add($x.FullName)
+            $provenanceByFile[[IO.Path]::GetFullPath($x.FullName)]=$row
+          }
         }
       } catch {
         $manualQueue += [ordered]@{id=[string]$item.id;file=$p;reason="archive_scan_or_extract_failed";detail=$_.Exception.Message}
@@ -155,7 +186,25 @@ foreach($item in @($manifest.immediate_open_source_items)) {
   $unique=@($files | Select-Object -Unique)
   $base=Select-BaseColor -Files $unique
   if([string]::IsNullOrWhiteSpace($base)) {
-    $pending += [ordered]@{id=[string]$item.id;asset_slug=[string]$item.asset_slug;reason="no_png_tga_basecolor_candidate"}
+    $pending += [ordered]@{
+      id=[string]$item.id
+      asset_slug=[string]$item.asset_slug
+      reason="no_explicit_albedo_png_tga_candidate"
+      candidate_count=$unique.Count
+    }
+    continue
+  }
+
+  $baseKey=[IO.Path]::GetFullPath($base)
+  $baseProvenance=$null
+  if($provenanceByFile.ContainsKey($baseKey)){ $baseProvenance=$provenanceByFile[$baseKey] }
+  if($null -eq $baseProvenance){
+    $manualQueue += [ordered]@{
+      id=[string]$item.id
+      asset_slug=[string]$item.asset_slug
+      file=$base
+      reason="selected_basecolor_provenance_missing"
+    }
     continue
   }
 
@@ -184,10 +233,12 @@ foreach($item in @($manifest.immediate_open_source_items)) {
   $prepared += [ordered]@{
     id=[string]$item.id
     provider=[string]$item.provider
-    license=if($null -ne $provenance){[string]$provenance.license}else{""}
+    license=[string]$baseProvenance.license
     asset_slug=[string]$item.asset_slug
-    source_page=if($null -ne $provenance){[string]$provenance.source_page}else{""}
-    source_url=if($null -ne $provenance){[string]$provenance.source_url}else{""}
+    source_page=[string]$baseProvenance.source_page
+    source_url=[string]$baseProvenance.source_url
+    selected_source_filename=[IO.Path]::GetFileName($base)
+    selected_source_kind="EXPLICIT_ALBEDO"
     material_name=[string]$item.material_name
     basecolor_file=$dest
     roughness=[double]$item.roughness
@@ -211,7 +262,7 @@ $report=[ordered]@{
   prepared=$prepared
   pending_source=$pending
   manual_queue=$manualQueue
-  rule="Only receipt-hash-verified PNG/TGA base-color material candidates are prepared. Blocked items are isolated; prepared items may continue independently."
+  rule="Only receipt-hash-verified PNG/TGA files with explicit base-color/albedo/diffuse/color semantics are prepared. Normal/AO/roughness/metal/height/support maps and ambiguous names are rejected from visible color intake; selected-file provenance is retained."
 }
 $receiptPath=Join-Path $OutputRoot "p1c01_material_intake_receipt.json"
 $report | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath $receiptPath -Encoding UTF8

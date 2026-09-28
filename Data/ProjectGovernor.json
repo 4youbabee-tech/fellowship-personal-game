@@ -4103,6 +4103,35 @@
       ],
       "evidence_boundary": "SOURCE/CONTROL-PLANE DECISION. Exact-head Pre-Unreal and post-merge Warehouse execution are required before the revised export path is machine-proven.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-056",
+      "title": "Require explicit albedo semantics and selected-file provenance before P1C01 material import",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004",
+        "REQ-PERF-003"
+      ],
+      "resolution": "Hold the generated P1C01 material source branch from UE import until material intake deterministically rejects support maps and ambiguous texture names from the visible base-color slot, and records provenance from the exact selected file rather than the first matching warehouse receipt row.",
+      "implementation_contract": [
+        "Accepted visible color candidates must be PNG/TGA with explicit basecolor, albedo, diffuse/diff or color naming semantics.",
+        "Normal, AO/occlusion, roughness, metallic, height/displacement, ARM/ORM, preview and ambiguous texture names cannot become AlbedoTexture through fallback ranking.",
+        "Provenance is mapped per concrete candidate file; the generated receipt records selected_source_filename and selected_source_kind for the exact chosen visible-color source.",
+        "Items without an explicit albedo candidate remain pending or manual-queued; they do not block independent prepared materials.",
+        "The existing 32 MiB/source, 256 MiB/batch and minimum-six DEC-055 bounds remain unchanged.",
+        "Do not open the generated material branch for UE import until a post-merge Warehouse run regenerates the receipt under this rule."
+      ],
+      "rationale": "Warehouse #279 successfully generated eight materials, but source review found that the intake code captured provenance from the first matching receipt row before final texture selection. The generated receipt therefore cannot prove that its source_url belongs to the exact selected base-color file; two wood entries show AO URLs. This is an evidence-quality blocker even if the selected bytes may be correct.",
+      "evidence": [
+        "Warehouse Stage #279: P1C01_MATERIAL_SOURCE_BRANCH_PASS materials=8 bytes=137974221",
+        "generated/p1c01-material-source-v1 receipt sha 537d9e724e064dac8af52f1a8d6e3bc6f5111858",
+        "Scripts/prepare_p1c01_material_intake.ps1 pre-fix provenance assignment precedes Select-BaseColor",
+        "P1C01MaterialSourceReceipt.json wood_floor and wooden_floor_02 entries expose AO source URLs"
+      ],
+      "evidence_boundary": "SOURCE/QC DECISION. It does not assert that the already-generated PNG bytes are AO; it asserts that existing provenance cannot prove the exact selected source. Post-merge Warehouse regeneration is required before UE import.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],

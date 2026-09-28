@@ -1,3 +1,13 @@
+## 2026-09-28 - Warehouse #279 passed; generated material branch held for exact albedo provenance repair
+
+- Develop exact head `c1c3beeaa382086a320448bb95ce952f929fe6a6` passed Pre-Unreal #1311 and Warehouse Stage #279.
+- Warehouse #279 material lane succeeded: intake `prepared=8 pending=8 manual=0`; generated branch `generated/p1c01-material-source-v1` at `537d9e724e064dac8af52f1a8d6e3bc6f5111858` with 8 materials / 137,974,221 source bytes.
+- Mega Chapter Pack architecture is now machine-proven at the previous #279 input state: the revised material exporter no longer quarantines the car on the old 16 MiB source cap.
+- Before UE import, source review found an evidence-quality flaw in material intake: provenance was captured from the first matching warehouse row before the final base-color file was selected. Therefore the generated receipt cannot prove that `source_url` belongs to the exact selected PNG/TGA; two wood entries currently expose AO URLs.
+- DEC-056 holds this generated branch from UE import until intake requires explicit basecolor/albedo/diffuse/color semantics, rejects support-map/ambiguous names, and binds provenance to the exact selected file.
+- This is a QC hold, not a claim that the generated texture bytes are visually wrong. No UE import has been started from the held branch.
+- Current maturity: **WAREHOUSE SOURCE EXPORT RUN-PROVEN / UE IMPORT HELD FOR SOURCE-QC REGENERATION / PIE-DEVICE-VISUAL NOT CLAIMED**.
+
 ## 2026-09-28 - PR #141 Pre-Unreal #1309 stale guard repair
 
 - Exact-head Pre-Unreal #1309 reached project-structure validation and failed on one stale PG-184 literal that still required the retired text `128 MB bounded limit`.
