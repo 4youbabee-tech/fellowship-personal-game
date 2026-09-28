@@ -5499,6 +5499,13 @@ for pg186_display_symbol in [
         fail(f"PG-186 display/resolution or visual-cleanup contract missing: {pg186_display_symbol}")
 if "EWindowMode::Type WindowMode" in pg186_h:
     fail("PG-186 Blueprint-facing graphics API must not expose UE namespace enum EWindowMode::Type directly")
+for pg186_first_run_symbol in [
+    "SetFullscreenMode(EWindowMode::Fullscreen)",
+    "SetScreenResolution(FIntPoint(1280, 720))",
+    "SetFrameRateLimit(60.0f)",
+]:
+    if pg186_first_run_symbol not in pg186_cpp:
+        fail(f"PG-186 deterministic first-run display baseline missing: {pg186_first_run_symbol}")
 pg186_hud = read(resolve_source("ShireHUD.cpp"))
 for pg186_hud_symbol in [
     'TEXT("Display Mode")',
