@@ -1,3 +1,17 @@
+## 2026-09-29 - P1C01 visual-economy graphics/video settings doctrine
+
+Registered before implementation under W01_P1C01_PRODUCTION_VERTICAL_SLICE.
+
+Purpose:
+- Make visible beauty per measured CPU/GPU/VRAM cost a permanent production rule for the active Shire/Bag End vertical slice.
+- Preserve silhouette, composition, hero materials, lighting, atmosphere and near-field detail before spending budget on invisible or distant fidelity.
+- Recover cost first from duplicate actors, far shadows, overdraw/translucency, redundant lights, uninstanced repetition, unnecessary Tick and invisible/far detail.
+- Add a professional graphics/video settings architecture with a visually strong low-spec-safe default, scalable higher-quality presets and a Custom path.
+- Keep the target floor at DX11 1280x720 Low-Medium / 30 FPS on the existing low-spec target laptop; higher presets are opt-in and do not redefine the floor.
+- This source increment changes no later chapter runtime scope and claims no device/performance/visual acceptance until exact evidence exists.
+
+Status: **REGISTERED / P1C01 SOURCE IMPLEMENTATION AUTHORIZED / ENGINE-DEVICE-VISUAL PROOF PENDING**.
+
 ## 2026-09-28 - P1C01 Mega Chapter Pack production batching
 
 Registered before execution under W01_P1C01_PRODUCTION_VERTICAL_SLICE.
