@@ -1,3 +1,15 @@
+## 2026-09-28 - CI red-run root-cause closure
+
+- Pre-Unreal #1325 PowerShell parser gate: **PASS — files=45, errors=0**.
+- Pre-Unreal #1325 PG-168 failure: **ROOT CAUSE IDENTIFIED** — long-pack cancellation policy was incorrectly applied to the normal Warehouse workflow.
+- Normal Warehouse workflow: **RESTORED TO 60 MIN / cancel-in-progress=true**.
+- Dedicated P1C01 closure workflow: **SOURCE-IMPLEMENTED — 180 MIN / cancel-in-progress=false / isolated concurrency**.
+- Closure fast preflight: **SOURCE-IMPLEMENTED**.
+- Unreal Build #1047 editor compile: **COMPILE-TESTED SUCCESS for that exact run/head**.
+- Unreal Build #1047 production commandlet: **376 files processed / 0 commandlet import failures**, but workflow **FAILED** on `T_Cloth_Green.uasset` delete/save error.
+- UE production import destination preflight + bounded single retry: **SOURCE-IMPLEMENTED / EXACT-HEAD RE-RUN PENDING**.
+- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - PR #145 parser-gate findings and long-pack execution hardening
 
 - Pre-Unreal #1318: **FAILED AT POWERSHELL PARSER GATE**; merge correctly blocked.
