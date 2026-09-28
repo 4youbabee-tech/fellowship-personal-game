@@ -2789,6 +2789,8 @@ pg184_network = read(ROOT / "Scripts" / "warehouse_network.ps1")
 pg184_ambient = read(ROOT / "Scripts" / "stage_ambientcg_warehouse.ps1")
 pg184_kaykit = read(ROOT / "Scripts" / "stage_kaykit_github_warehouse.ps1")
 pg184_manifest = read(ROOT / "Data" / "WarehouseCriticalGapPreparationTrainV2.json")
+pg184_p1c01 = read(ROOT / "Scripts" / "run_warehouse_p1c01_mega_promotion.ps1")
+pg184_p1c01_manifest = read(ROOT / "Data" / "WarehouseP1C01MegaPromotionTrainV1.json")
 
 if "pull_request:" in pg184_workflow:
     fail("PG-184 Warehouse Stage must not run on pull-request synchronize; stage only after develop promotion or manual dispatch")
@@ -2825,6 +2827,8 @@ for pg184_symbol in [
     "classify_warehouse_validation.ps1",
     "env.WH_RUN_PREP == 'true'",
     "env.WH_STAGE_AMBIENTCG == 'true'",
+    "env.WH_RUN_P1C01_PROMOTION == 'true'",
+    "run_warehouse_p1c01_mega_promotion.ps1",
 ]:
     if pg184_symbol not in pg184_workflow:
         fail(f"PG-184 selective warehouse workflow contract missing: {pg184_symbol}")
@@ -2838,9 +2842,33 @@ for pg184_symbol in [
     "SHIRE_WAREHOUSE_SOURCE",
     "WAREHOUSE_CLASSIFY_SOURCE",
     "WAREHOUSE_CHANGED_IGNORED",
+    "WH_RUN_P1C01_PROMOTION",
+    "WarehouseP1C01MegaPromotionTrainV1.json",
+    "run_warehouse_p1c01_mega_promotion.ps1",
 ]:
     if pg184_symbol not in pg184_classifier:
         fail(f"PG-184 warehouse delta classifier missing: {pg184_symbol}")
+for pg184_p1c01_symbol in [
+    "Get-FileHash",
+    "receipt_sha256_mismatch",
+    "selected_archive_materialization_failed",
+    "INTAKE_QC_PREPARED",
+    "ready_for_import=$false",
+    "P1C01_MEGA_PROMOTION_PASS_WITH_MANUAL_QUEUE",
+]:
+    if pg184_p1c01_symbol not in pg184_p1c01:
+        fail(f"PG-184 P1C01 bounded warehouse promotion contract missing: {pg184_p1c01_symbol}")
+for pg184_p1c01_manifest_symbol in [
+    '"promotion_ceiling": "INTAKE_QC"',
+    '"P1C01_SURFACES"',
+    '"P1C01_ARCHITECTURE_PROPS"',
+    '"P1C01_AUDIO_AMBIENCE_FOLEY"',
+    '"P1C01_FAUNA"',
+    '"P1C01_CHARACTER_ANIMATION_SUPPORT"',
+]:
+    if pg184_p1c01_manifest_symbol not in pg184_p1c01_manifest:
+        fail(f"PG-184 P1C01 mega promotion manifest contract missing: {pg184_p1c01_manifest_symbol}")
+
 if "- 'Scripts/classify_warehouse_validation.ps1'" not in pg184_workflow:
     fail("PG-184 classifier changes must trigger one post-merge Warehouse control-plane proof")
 if '".github/workflows/warehouse-stage.yml" {' not in pg184_classifier or "$flags.WH_RUN_AUDIT=$true" not in pg184_classifier:

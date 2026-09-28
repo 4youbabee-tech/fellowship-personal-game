@@ -1,3 +1,12 @@
+## 2026-09-28 - P1C01 mega promotion train wired into selective Warehouse execution
+
+- The new P1C01 staged-stock promotion train is now part of the post-merge Warehouse path without reopening full provider staging.
+- Warehouse classifier introduces `WH_RUN_P1C01_PROMOTION`; only the new manifest/script select this phase (plus the bounded inventory audit).
+- Warehouse workflow executes the new phase only when selected. Existing control-plane, provider, saturation, critical-gap and provider-resolution routing remains unchanged.
+- PG-184 now guards receipt-hash verification, bounded selected extraction, manual-queue continuation, INTAKE_QC ceiling and the five P1C01 priority classes.
+- No C++/runtime source changed; PR #133 remains untouched while Unreal #1033 is queued.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING / POST-MERGE WAREHOUSE EXECUTION PENDING**.
+
 ## 2026-09-28 - P1C01 mega warehouse promotion preparation started
 
 - Production is continuing while PR #133 exact-head Unreal #1033 remains queued; the PR #133 head is intentionally left unchanged.

@@ -1,3 +1,13 @@
+## 2026-09-28 - P1C01 selective Warehouse promotion routing
+
+- P1C01 promotion workflow trigger paths: **SOURCE-IMPLEMENTED**.
+- Selective classifier flag `WH_RUN_P1C01_PROMOTION`: **SOURCE-IMPLEMENTED**.
+- Bounded inventory audit + P1C01 promotion phase only for this delta: **SOURCE-IMPLEMENTED**.
+- PG-184 regression coverage for the new promotion phase: **SOURCE-IMPLEMENTED**.
+- Exact-head hosted static validation: **PENDING**.
+- Persistent warehouse execution/counts: **PENDING**.
+- READY_FOR_IMPORT/UE import/integration/PIE/device/visual/performance: **UNCHANGED / NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 mega warehouse promotion prep
 
 - Existing staged warehouse-first strategy: **SOURCE-IMPLEMENTED**.

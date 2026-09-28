@@ -9,7 +9,7 @@ function Enable-All {
     foreach($name in @(
         "WH_STAGE_POLYHAVEN","WH_STAGE_OGA","WH_STAGE_QUATERNIUS","WH_STAGE_AMBIENTCG",
         "WH_STAGE_AMBIENTCG_TRILOGY","WH_STAGE_KENNEY","WH_STAGE_KAYKIT",
-        "WH_RUN_AUDIT","WH_RUN_SATURATION","WH_RUN_PREP","WH_RUN_PROVIDER_RESOLUTION"
+        "WH_RUN_AUDIT","WH_RUN_SATURATION","WH_RUN_PREP","WH_RUN_PROVIDER_RESOLUTION","WH_RUN_P1C01_PROMOTION"
     )) {
         Write-Flag $name $true
     }
@@ -79,6 +79,7 @@ $flags = [ordered]@{
     WH_RUN_SATURATION=$false
     WH_RUN_PREP=$false
     WH_RUN_PROVIDER_RESOLUTION=$false
+    WH_RUN_P1C01_PROMOTION=$false
 }
 
 $providerTouched=$false
@@ -152,6 +153,16 @@ foreach($raw in $changed) {
         "Data/WarehouseProviderAccessPolicyV1.json" { $flags.WH_RUN_PROVIDER_RESOLUTION=$true; continue }
         "Data/WarehouseProviderResolutionTrainV3.json" { $flags.WH_RUN_PROVIDER_RESOLUTION=$true; continue }
         "Scripts/run_warehouse_provider_resolution.ps1" { $flags.WH_RUN_PROVIDER_RESOLUTION=$true; continue }
+        "Data/WarehouseP1C01MegaPromotionTrainV1.json" {
+            $flags.WH_RUN_AUDIT=$true
+            $flags.WH_RUN_P1C01_PROMOTION=$true
+            continue
+        }
+        "Scripts/run_warehouse_p1c01_mega_promotion.ps1" {
+            $flags.WH_RUN_AUDIT=$true
+            $flags.WH_RUN_P1C01_PROMOTION=$true
+            continue
+        }
         "Scripts/classify_warehouse_validation.ps1" { continue }
         default {
             # The push may contain Docs/static-validator/unrelated production
@@ -173,6 +184,7 @@ if($providerTouched) {
     $flags.WH_RUN_SATURATION=$true
     $flags.WH_RUN_PREP=$true
     $flags.WH_RUN_PROVIDER_RESOLUTION=$true
+    $flags.WH_RUN_P1C01_PROMOTION=$true
 }
 
 foreach($entry in $flags.GetEnumerator()) {
