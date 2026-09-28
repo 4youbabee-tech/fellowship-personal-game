@@ -1,3 +1,20 @@
+## 2026-09-28 - Permanent visual-economy / maximum-beauty doctrine
+
+Registered before implementation from the owner's explicit direction.
+
+Purpose:
+- Treat visual quality and performance as one optimization problem, not opposing goals.
+- Target the highest convincing visual quality the real target laptop can sustain, instead of choosing a deliberately ugly "low" look.
+- Spend frame time/VRAM where the player notices it most: silhouette, composition, hero landmarks, near-field materials, lighting, atmosphere and character readability.
+- Recover cost from low-value work first: duplicate actors, invisible/off-screen detail, distant shadows, excessive material elements/lookups, alpha overdraw, redundant dynamic lights, unnecessary Tick, uninstanced repeats and excessive far detail.
+- Prefer perception-efficient techniques: HISM/ISM, LOD/culling, texture streaming/mips, selective hero detail, foreground/midground/background composition, cheap non-volumetric atmosphere and restrained color grading.
+- Treat external developer/community experience as a candidate accelerator, not authority. Epic UE4.27 documentation plus project profiling evidence determine what is adopted; target-device profiling is the final performance judge.
+- Never reduce story readability, collision safety, save continuity, canon, NPC identity ownership or critical gameplay merely to meet a rendering target.
+- Never increase foliage/detail density just to hide weak composition before profiling.
+- No universal technique is automatically "fast": every expensive feature is retained only when its visible value justifies measured cost on the target profile.
+
+Status: **OWNER-ACCEPTED PERMANENT PRODUCTION DOCTRINE / RUNNERLESS IMPLEMENTATION STARTED / DEVICE MEASUREMENT PENDING**.
+
 ## 2026-09-28 - P1C01 Party Field light de-duplication and Ferry identity cleanup
 
 Registered before implementation inside the active W01/P1C01 visible-world cleanup lane.
