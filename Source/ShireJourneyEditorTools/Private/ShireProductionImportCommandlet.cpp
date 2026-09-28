@@ -1614,6 +1614,42 @@ int32 UShireProductionImportCommandlet::Main(const FString& Params)
             TEXT("Bark"),
             TEXT("/Game/Production/Imported/P1C01Materials/SH_TREE_BARK/MI_Sh_TreeBark_PH.MI_Sh_TreeBark_PH"),
             TEXT("SH_TREE_BARK")
+        },
+        {
+            TEXT("/Game/Production/World/Shire/SM_ShTurfMound.SM_ShTurfMound"),
+            TEXT("Grass"),
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_GRASS_GROUND/MI_Sh_GrassGround_PH.MI_Sh_GrassGround_PH"),
+            TEXT("SH_GRASS_GROUND")
+        },
+        {
+            TEXT("/Game/Production/World/Shire/SM_ShFlowerBox.SM_ShFlowerBox"),
+            TEXT("Earth"),
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_DIRT_SOIL/MI_Sh_DirtSoil_PH.MI_Sh_DirtSoil_PH"),
+            TEXT("SH_DIRT_SOIL")
+        },
+        {
+            TEXT("/Game/Production/World/Shire/SM_ShWell.SM_ShWell"),
+            TEXT("Stone"),
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_MOSS_STONE/MI_Sh_MossStone_PH.MI_Sh_MossStone_PH"),
+            TEXT("SH_MOSS_STONE")
+        },
+        {
+            TEXT("/Game/Production/World/Shire/SM_ShBench.SM_ShBench"),
+            TEXT("Wood"),
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_WOOD_INTERIOR/MI_Sh_WoodInterior_PH.MI_Sh_WoodInterior_PH"),
+            TEXT("SH_WOOD_INTERIOR")
+        },
+        {
+            TEXT("/Game/Production/World/Shire/SM_ShPicnicTable.SM_ShPicnicTable"),
+            TEXT("Wood"),
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_WOOD_INTERIOR/MI_Sh_WoodInterior_PH.MI_Sh_WoodInterior_PH"),
+            TEXT("SH_WOOD_INTERIOR")
+        },
+        {
+            TEXT("/Game/Production/World/Shire/SM_ShMarketStall.SM_ShMarketStall"),
+            TEXT("Wood"),
+            TEXT("/Game/Production/Imported/P1C01Materials/SH_WOOD_INTERIOR/MI_Sh_WoodInterior_PH.MI_Sh_WoodInterior_PH"),
+            TEXT("SH_WOOD_INTERIOR")
         }
     };
 
