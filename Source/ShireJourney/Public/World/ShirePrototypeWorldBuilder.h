@@ -62,6 +62,7 @@ private:
     UPROPERTY() UStaticMesh* ProductionFlowerBoxMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionLampPostMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionPicnicTableMesh = nullptr;
+    UPROPERTY() UStaticMesh* ProductionPicnicCanopyMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionLoadedCartMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionCommonTerracedHillMesh = nullptr;
     UPROPERTY() UStaticMesh* ProductionCommonVillageSlopeMesh = nullptr;
