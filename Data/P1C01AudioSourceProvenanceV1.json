@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "batch_id": "P1C01_AUDIO_SOURCE_PROVENANCE_V1",
+  "scope": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "SOURCE_PROVENANCE_CAPTURED_RECEIPT_PENDING",
+  "authority": [
+    "Data/P1C01AudioFoleyAmbiencePrepV1.json",
+    "Data/WarehouseAudioAcquisitionBatchV1.json",
+    "Data/ProductionAssetPromotionPolicyV1.json"
+  ],
+  "sources": [
+    {
+      "id": "OGA_DIFFERENT_STEPS_SURFACES",
+      "provider": "OPENGAMEART",
+      "source_page": "https://opengameart.org/content/different-steps-on-wood-stone-leaves-gravel-and-mud",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_SOURCE_PAGE_VERIFIED_2026-09-28",
+      "target_role": "FOOTSTEPS_MULTI_SURFACE",
+      "production_master_requirement": "WAV",
+      "state_ceiling": "AUTHORIZED_FOR_STAGING"
+    },
+    {
+      "id": "OGA_FIREPLACE_LOOP",
+      "provider": "OPENGAMEART",
+      "source_page": "https://opengameart.org/content/fireplace-sound-loop",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_SOURCE_PAGE_VERIFIED_2026-09-28",
+      "target_role": "BAG_END_HEARTH",
+      "production_master_requirement": "WAV",
+      "state_ceiling": "AUTHORIZED_FOR_STAGING"
+    },
+    {
+      "id": "OGA_100_CC0_WOOD_METAL_SFX",
+      "provider": "OPENGAMEART",
+      "source_page": "https://opengameart.org/content/100-cc0-metal-and-wood-sfx",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_SOURCE_PAGE_VERIFIED_2026-09-28",
+      "target_role": "WOOD_METAL_INTERACTIONS",
+      "production_master_requirement": "WAV",
+      "state_ceiling": "AUTHORIZED_FOR_STAGING"
+    },
+    {
+      "id": "OGA_AMBIENT_BIRD_SOUNDS",
+      "provider": "OPENGAMEART",
+      "source_page": "https://opengameart.org/content/ambient-bird-sounds",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_SOURCE_PAGE_VERIFIED_2026-09-28",
+      "observed_source_format": "OGG",
+      "target_role": "SHIRE_DAY_BIRDS",
+      "production_master_requirement": "WAV",
+      "state_ceiling": "AUTHORIZED_FOR_STAGING"
+    },
+    {
+      "id": "OGA_TINYSIZED_FANTASY_SFX",
+      "provider": "OPENGAMEART",
+      "source_page": "https://opengameart.org/content/fantasy-sound-effects-tinysized-sfx",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_SOURCE_PAGE_VERIFIED_2026-09-28",
+      "target_role": "HOUSEHOLD_FOLEY",
+      "production_master_requirement": "WAV",
+      "state_ceiling": "AUTHORIZED_FOR_STAGING"
+    }
+  ],
+  "receipt_gate": {
+    "required_before_staged": [
+      "local_receipt",
+      "source_sha256",
+      "downloaded_payload_path"
+    ],
+    "required_before_ready_for_import": [
+      "decode_parse_success",
+      "channel_and_sample_rate_inventory",
+      "silence_clipping_spot_check",
+      "role_mapping",
+      "WAV_production_master"
+    ],
+    "blocked_policy": "manual-queue or quarantine blocked/corrupt provider payloads and continue independent lanes"
+  },
+  "evidence_boundary": "Source-page and license capture only. No candidate is STAGED, READY_FOR_IMPORT, IMPORTED, INTEGRATED, LISTENING_ACCEPTED, DEVICE_TESTED, VISUALLY_ACCEPTED or performance-accepted without exact receipt and QC evidence."
+}
