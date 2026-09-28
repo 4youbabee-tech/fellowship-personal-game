@@ -13,6 +13,8 @@ on:
       - 'Scripts/governor_handoff.py'
       - 'Scripts/test_governor_handoff.py'
       - 'Scripts/test_unreal_classifier.ps1'
+      - 'Scripts/test_powershell_syntax.ps1'
+      - 'Scripts/test_powershell_syntax.ps1'
       - 'Data/ProjectGovernor.json'
       - 'Data/MasterExecutionRoadmap.json'
       - 'Data/ExternalAssetManifest.json'
