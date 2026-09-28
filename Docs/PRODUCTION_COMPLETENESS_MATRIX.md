@@ -1,3 +1,13 @@
+## 2026-09-28 - Graphics/Video modal interaction polish
+
+- Display Mode row (Fullscreen / Borderless / Windowed): **SOURCE-IMPLEMENTED**.
+- Resolution row (1280x720 / 1600x900 / 1920x1080): **SOURCE-IMPLEMENTED**.
+- Full-screen modal dim layer: **SOURCE-IMPLEMENTED**.
+- Gameplay input isolation while settings are open: **SOURCE-IMPLEMENTED**.
+- Settings persistence remains owned by `UShireGameUserSettings`: **SOURCE-IMPLEMENTED**.
+- Engine runtime persistence / mode switching / packaged behavior: **NOT YET PROVEN**.
+- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - Graphics/video scalability surface
 
 - Persistent custom `UGameUserSettings` subclass: **SOURCE-IMPLEMENTED**.
