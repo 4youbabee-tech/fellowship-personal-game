@@ -1,3 +1,11 @@
+## 2026-09-28 - Recommended first-run display baseline
+
+- First-run/reset display mode: **1280x720 Fullscreen / SOURCE-DEFINED**.
+- Render scale: **100% SOURCE-DEFINED**.
+- Frame cap: **60 FPS CONFIGURED TARGET**, not measured FPS.
+- 900p/1080p user headroom: **SOURCE-IMPLEMENTED**.
+- Device/performance/visual acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - Graphics settings UE4 reflection safety
 
 - Blueprint-facing display-mode enum: **PROJECT UENUM IMPLEMENTED**.
