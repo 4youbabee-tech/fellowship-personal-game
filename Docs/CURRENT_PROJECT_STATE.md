@@ -1,3 +1,10 @@
+## 2026-09-28 - P1C01 Party Field production-canopy cleanup
+
+- Party Field no longer places the old Cube canopy unconditionally. The builder now resolves `SM_ShPicnicCanopy` once as a resident production mesh and uses the Cube canopy only when that authored asset is unavailable.
+- The architecture pass reuses the same resolved production canopy pointer instead of performing a separate duplicate lookup.
+- This is a replacement/cleanup pass, not a density increase; story/quest anchors and Party Field coordinates remain unchanged.
+- Current maturity: **SOURCE-IMPLEMENTED / RUNNERLESS / COMPILE+RENDER PROOF PENDING / VISUAL ACCEPTANCE NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 production-shell visual cleanup and material coverage expansion
 
 - The runnerless Shire visual branch now extends evidence-gated material binding beyond the first terrain/stone/bark targets.
