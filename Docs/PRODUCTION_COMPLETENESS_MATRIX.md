@@ -1,3 +1,14 @@
+## 2026-09-28 - Pre-Unreal #1332 root-fix matrix
+
+- PowerShell parser gate: **PASS on #1332 — 47 files / 0 parser errors**.
+- Watchdog service-guard contract: **SOURCE-REBUILT ON CLEAN SINGLE-BODY SCRIPT**.
+- Closure preflight Unreal exclusion: **SOURCE-FIXED**.
+- PG-193 workflow reference assertion: **SOURCE-FIXED**.
+- Unreal Build #1054: **SUCCESS on previous exact head 61d629c4...**.
+- Current exact-head static validation after commits `609c7eb...`, `c8271d8...`, `5f016df...`: **PENDING**.
+- P1C01 Closure Pack V2 Warehouse execution: **PENDING MERGE + DEDICATED WORKFLOW RUN**.
+- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - CI red-run root-cause closure
 
 - Pre-Unreal #1325 PowerShell parser gate: **PASS — files=45, errors=0**.
