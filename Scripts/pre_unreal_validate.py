@@ -2886,9 +2886,14 @@ for pg184_export_symbol in [
     "128 MB bounded limit",
     "SOURCE_READY_FOR_UE_IMPORT",
     "P1C01_MATERIAL_SOURCE_BRANCH_PASS",
+    "[IO.Path]::IsPathRooted($ManifestPath)",
+    "$ResolvedManifestPath",
+    "Get-Content -LiteralPath $ResolvedManifestPath",
 ]:
     if pg184_export_symbol not in pg184_material_export:
         fail(f"PG-184 P1C01 material source export guard missing: {pg184_export_symbol}")
+if "Get-Content -LiteralPath (Join-Path $ProjectRoot $ManifestPath)" in pg184_material_export:
+    fail("PG-184 P1C01 material exporter must not re-join an already rooted manifest path")
 for pg184_workflow_symbol in [
     "contents: write",
     "WH_RUN_P1C01_MATERIAL_EXPORT",

@@ -42,7 +42,13 @@ try{
   if(Test-Path -LiteralPath $overlay){ Remove-Item -LiteralPath $overlay -Recurse -Force }
   New-Item -ItemType Directory -Path $overlay -Force | Out-Null
 
-  $manifest=Get-Content -LiteralPath (Join-Path $ProjectRoot $ManifestPath) -Raw | ConvertFrom-Json
+  $ResolvedManifestPath =
+  if([IO.Path]::IsPathRooted($ManifestPath)){
+    $ManifestPath
+  } else {
+    Join-Path $ProjectRoot $ManifestPath
+  }
+$manifest=Get-Content -LiteralPath $ResolvedManifestPath -Raw | ConvertFrom-Json
   $outRows=@()
   $totalBytes=[int64]0
   foreach($item in $prepared){

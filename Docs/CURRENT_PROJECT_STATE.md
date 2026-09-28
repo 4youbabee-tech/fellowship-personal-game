@@ -1,3 +1,13 @@
+## 2026-09-28 - Warehouse #276 rooted manifest exporter repair
+
+- Develop exact head `f24480b379fa544c6d1ad01e7a6247d69aac0c93` reached Warehouse Stage #276 on the supervised `IDEAPAD320` runner. Runner health passed with `listenerPid=524` and `workerCount=1`.
+- Upstream warehouse work completed before the final exporter failure: inventory `payloadFiles=13389 bytes=5590510073 receipts=14 receiptRecords=667 duplicateGroups=215`; P1C01 character intake `prepared=0 pending=4 blocked=0`; mega promotion `prepared=36 intakeQC=34 pending=3 manual=2 badReceipts=0`.
+- The two mega-promotion blockers remain isolated in manual queue: ambientCG `Plaster007` has a structurally corrupt ZIP, and KayKit `KAYKIT_MEDIEVAL_HEXAGON_1_0` failed selected extraction. Neither is allowed to stop the rest of the train.
+- P1C01 material intake itself passed with `prepared=8 pending=8 manual=0`. The run then failed only because `export_p1c01_material_source_branch.ps1` re-joined an already absolute `ManifestPath` with `ProjectRoot`, producing an invalid duplicated Windows path.
+- The exporter now keeps rooted manifest paths unchanged and joins only relative paths. PG-184 static validation now guards `IsPathRooted`, `ResolvedManifestPath`, the resolved-path `Get-Content` call, and rejects the old re-join expression.
+- No gameplay/runtime C++ changed in this repair.
+- Current maturity: **SOURCE-FIXED / EXACT-HEAD STATIC VALIDATION PENDING / GENERATED MATERIAL BRANCH PENDING / UE IMPORT PENDING**.
+
 ## 2026-09-28 - P1C01 large material source promotion train
 
 - A concrete source-promotion bridge now converts the existing receipt-verified warehouse stock into a bounded Git branch instead of leaving material candidates only in the runner warehouse.
