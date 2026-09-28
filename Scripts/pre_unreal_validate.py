@@ -5483,6 +5483,22 @@ if pg186_plan.get("status") != "SOURCE_IMPLEMENTED_PENDING_EXACT_HEAD_ENGINE_PRO
 if pg186_plan.get("presets", {}).get("Recommended", {}).get("resolution_scale_percent") != 100:
     fail("PG-186 Recommended preset must preserve 100 percent render scale in source design")
 
+pg186_player_h = read(resolve_source("ShirePlayerCharacter.h"))
+pg186_player_cpp = read(resolve_source("ShirePlayerCharacter.cpp"))
+pg186_hud = read(resolve_source("ShireHUD.cpp"))
+pg186_input = read(ROOT / "Config" / "DefaultInput.ini")
+for pg186_ui_symbol in [
+    "IsGraphicsSettingsOpen",
+    "ToggleGraphicsSettings",
+    "AdjustGraphicsSetting",
+    "GRAPHICS / VIDEO",
+    "Recommended = image-first default",
+    'ActionName="ToggleGraphicsSettings"',
+    'ActionName="GraphicsSettingsIncrease"',
+]:
+    if pg186_ui_symbol not in (pg186_player_h + pg186_player_cpp + pg186_hud + pg186_input):
+        fail(f"PG-186 runtime graphics settings surface missing: {pg186_ui_symbol}")
+
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
