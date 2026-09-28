@@ -1,3 +1,20 @@
+## 2026-09-28 - Professional graphics/video settings surface
+
+Registered before implementation from the owner's explicit request.
+
+Purpose:
+- Add a real UE4 GameUserSettings-derived graphics system instead of relying only on fixed DefaultScalability.ini values.
+- Ship a visually strong **Recommended** default tuned around the project target, plus **Performance**, **High**, **Ultra** and **Custom**.
+- Keep resolution/display/VSync/frame-limit controls separate from content/story systems.
+- Preserve user choice persistently across launches.
+- Use per-category controls for view distance, anti-aliasing, shadows, post processing, textures, effects, foliage and resolution scale.
+- Recommended must preserve image quality first (100% resolution, strong textures/AA/post) and recover cost from shadow/foliage/effects budgets before flattening the whole image.
+- High/Ultra are optional headroom presets for stronger hardware and carry no target-laptop performance claim until measured.
+- Custom must never be silently overwritten by preset auto-selection.
+- The initial source/UI bridge may be Canvas/Blueprint-callable; final art skin can be upgraded without replacing the settings authority.
+
+Status: **REGISTERED / RUNNERLESS IMPLEMENTATION STARTED / ENGINE PROOF PENDING**.
+
 ## 2026-09-28 - Professional graphics/video settings and Beautiful default
 
 Registered before implementation from the owner's explicit direction.
