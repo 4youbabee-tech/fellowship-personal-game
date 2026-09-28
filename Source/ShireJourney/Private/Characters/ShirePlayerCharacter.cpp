@@ -1555,20 +1555,22 @@ void AShirePlayerCharacter::AdjustGraphicsSetting(int32 Delta)
     }
     case 1:
     {
-        static const EWindowMode::Type Modes[] = {
-            EWindowMode::Fullscreen,
-            EWindowMode::WindowedFullscreen,
-            EWindowMode::Windowed
+        static const EShireDisplayMode Modes[] = {
+            EShireDisplayMode::Fullscreen,
+            EShireDisplayMode::Borderless,
+            EShireDisplayMode::Windowed
         };
-        int32 CurrentIndex = 0;
-        for (int32 Index = 0; Index < UE_ARRAY_COUNT(Modes); ++Index)
+        int32 CurrentIndex = 2;
+        const EWindowMode::Type CurrentMode = Settings->GetFullscreenMode();
+        if (CurrentMode == EWindowMode::Fullscreen)
         {
-            if (Modes[Index] == Settings->GetFullscreenMode())
-            {
-                CurrentIndex = Index;
-                break;
-            }
+            CurrentIndex = 0;
         }
+        else if (CurrentMode == EWindowMode::WindowedFullscreen)
+        {
+            CurrentIndex = 1;
+        }
+
         const int32 NextIndex =
             (CurrentIndex + Delta + UE_ARRAY_COUNT(Modes)) % UE_ARRAY_COUNT(Modes);
         Settings->ApplyDisplayModeAndResolution(
@@ -1601,8 +1603,17 @@ void AShirePlayerCharacter::AdjustGraphicsSetting(int32 Delta)
         const int32 NextIndex =
             (ClosestIndex + Delta + UE_ARRAY_COUNT(Resolutions)) %
             UE_ARRAY_COUNT(Resolutions);
+        EShireDisplayMode DisplayMode = EShireDisplayMode::Windowed;
+        if (Settings->GetFullscreenMode() == EWindowMode::Fullscreen)
+        {
+            DisplayMode = EShireDisplayMode::Fullscreen;
+        }
+        else if (Settings->GetFullscreenMode() == EWindowMode::WindowedFullscreen)
+        {
+            DisplayMode = EShireDisplayMode::Borderless;
+        }
         Settings->ApplyDisplayModeAndResolution(
-            Settings->GetFullscreenMode(),
+            DisplayMode,
             Resolutions[NextIndex],
             true);
         break;
