@@ -1,3 +1,15 @@
+## 2026-09-28 - P1C01 production-shell visual cleanup
+
+- Additional visible bindings for turf mound / flower-box soil / well stone / furniture wood: **SOURCE-IMPLEMENTED**.
+- First-wave material identities now represented in visible bindings: grass, dirt/soil, stony path, warm plaster, moss stone, wood, bark: **SOURCE-IMPLEMENTED**.
+- Forest-floor material: **INTENTIONALLY UNBOUND** until a dedicated compatible ground mesh/slot exists.
+- Production Hobbit-hole authored shell vs primitive overlay separation: **SOURCE-IMPLEMENTED**.
+- Legacy Cube/Sphere/Cylinder Hobbit door-window-chimney kit: **FALLBACK-ONLY IN SOURCE**.
+- Foliage/detail density: **UNCHANGED**.
+- Quest/story coordinates and chapter ownership: **UNCHANGED**.
+- Hosted static / UE4.27 compile-import proof for this branch: **PENDING**.
+- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 visible material-to-world binding bridge
 
 - Existing Shire high-visibility mesh targets identified: **SOURCE-REVIEWED**.
