@@ -1,3 +1,13 @@
+## 2026-09-28 - Pre-Unreal #1332 seven-failure root fix
+
+- Pre-Unreal #1332 passed the repository-wide PowerShell parser gate: `POWERSHELL_SYNTAX_PASS files=47 errors=0`.
+- It then failed seven static contracts. Five were watchdog service-guard symbols removed by the earlier clean-source restoration; one was the new closure preflight missing from Unreal `paths-ignore`; one was PG-193 checking a doubly escaped workflow path literal.
+- The watchdog is now rebuilt from the clean single-body source with continuous service exclusion restored: `ServiceGuardPath`, `Invoke-ServiceOwnershipGuard`, `Invoke-RunnerServiceGuard`, and `SHIRE_RUNNER_WATCHDOG_SERVICE_GUARD_TRIGGER`. The guard executes at boot and every watchdog loop.
+- `Scripts/preflight_p1c01_chapter_closure_pack_v2.ps1` is now excluded from Unreal Build in both push and PR filters.
+- PG-193 now checks the real `test_powershell_syntax.ps1` workflow reference.
+- Unreal Build #1054 on the previous exact head completed **SUCCESS** after the new production-import preflight/retry changes; this does not validate the newer static fixes above.
+- Current maturity: **SOURCE-FIXED / EXACT-HEAD PRE-UNREAL RE-RUN PENDING / PR #145 NOT MERGED**.
+
 ## 2026-09-28 - Red CI failures root-caused and architecture split
 
 - Pre-Unreal #1325 reached the new PowerShell parser gate successfully (`POWERSHELL_SYNTAX_PASS files=45 errors=0`) and then failed on PG-168 because the normal Warehouse workflow had been changed from its proven `cancel-in-progress: true` contract.
