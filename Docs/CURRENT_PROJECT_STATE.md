@@ -1,3 +1,13 @@
+## 2026-09-28 - P1C01 runtime salvage rebased onto current develop
+
+- PR #133 exact head `970a52f73ed5242d371ae7061011093765af42f6` completed Unreal Build #1033 successfully, including `Build ShireJourneyEditor` and `Import production assets in UE4.27.2`.
+- PR #133 could not be merged after develop advanced through the staged-stock promotion train, so its unique runtime/character-intake delta is being reapplied semantically on current develop instead of merging stale CI files.
+- Runtime delta retained: bounded interaction and ambient-motion pooling, cached player lookup, SFX repeat guard, and bounded asynchronous character-rig availability retry.
+- Character intake delta retained: four officially captured CC0 Quaternius candidates, hashed archive intake, FBX-only animated promotion, and manual-queue isolation for bad warehouse payloads.
+- Current develop Warehouse selective routing and P1C01 mega-promotion train remain authoritative; only additive character-intake routing is added.
+- Fresh exact-head static and Unreal proof for this rebased branch are pending. The #1033 success is evidence for the original PR #133 head only.
+- No PIE/device/visual/performance acceptance is claimed.
+
 ## 2026-09-28 - P1C01 mega promotion train wired into selective Warehouse execution
 
 - The new P1C01 staged-stock promotion train is now part of the post-merge Warehouse path without reopening full provider staging.
