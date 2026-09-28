@@ -1,3 +1,18 @@
+## 2026-09-28 - P1C01 visible material-to-world binding bridge
+
+Registered before implementation under the active `W01_P1C01_PRODUCTION_VERTICAL_SLICE`.
+
+Purpose:
+- Close the visible gap between receipt-verified P1C01 surface materials and the meshes the player actually sees in Hobbiton/Bag End.
+- Keep current stable Shire material-slot identities and story/quest anchors intact while allowing evidence-backed imported materials to replace flat procedural surface response on selected production meshes.
+- Apply bindings only when the external material instance really exists after production import; absence remains pending rather than fabricating an imported/integrated state.
+- First binding targets are high-visibility, bounded surfaces that do not require foliage-density growth: Hobbit-hole/cottage plaster, Shire stone accents and tree bark.
+- Do not increase foliage/detail density, add extra runtime texture samples, add synchronous runtime loading, move quest anchors, or alter chapter/story ownership.
+- Preserve C3/C4 foliage parent rules; no blanket material reparenting and no far-LOD claim without evidence.
+- This runnerless source wave prepares integration only. UE4 import/compile/rendered acceptance waits for the exact-head engine gate after the laptop runner returns.
+
+Status: **REGISTERED / IMPLEMENTATION STARTED / RUNNERLESS SOURCE LANE**.
+
 ## 2026-09-27 - Warehouse provider-resolution train V3
 
 Registered before implementation as the fourth warehouse preparation layer, stacked behind V2.
