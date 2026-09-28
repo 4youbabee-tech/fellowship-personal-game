@@ -4,9 +4,10 @@
 - Performance / Recommended / High / Ultra / Custom presets: **SOURCE-IMPLEMENTED**.
 - Recommended 100% render scale + strong texture/AA/post baseline + explicit first-run config: **SOURCE-DEFINED**.
 - Per-category custom quality + VSync/frame-limit controls: **SOURCE-IMPLEMENTED**.
+- In-game Canvas Graphics/Video surface + keyboard navigation: **SOURCE-IMPLEMENTED**.
+- Final UMG/art skin and resolution confirmation UX: **PENDING UI POLISH**.
 - Four-tier texture/shadow/foliage/view-distance scalability config: **SOURCE-IMPLEMENTED**.
 - Target-laptop performance of each preset: **NOT MEASURED**.
-- Final settings-menu art/interaction skin: **PENDING UI POLISH**, authority/API ready.
 - PIE/device/visual/performance acceptance: **NOT CLAIMED**.
 
 ## 2026-09-28 - P1C01 visible de-duplication / Ferry identity cleanup
