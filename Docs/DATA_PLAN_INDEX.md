@@ -36,6 +36,7 @@ Purpose: stop overlapping JSON plans from becoming competing sources of truth. E
 | `FilmExperiencePlan.json` | High-level film anchor coverage and intended player treatment; not acceptance evidence. |
 | `FellowshipExperienceMegaPassCP56.json` | CP56 experiential enrichment over the fixed Part I film spine. |
 | `ChapterAtmospherePlan.json` | Visual atmosphere identity only; it does not own cinematics, story or performance acceptance. |
+| `GraphicsSettingsPlanV1.json` | Graphics/video preset policy, persistent user-choice contract and relative quality tiers; it does not own device/performance or visual acceptance evidence. |
 
 ## Production coordination files
 
