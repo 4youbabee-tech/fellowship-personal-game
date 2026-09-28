@@ -5506,6 +5506,16 @@ for pg186_first_run_symbol in [
 ]:
     if pg186_first_run_symbol not in pg186_cpp:
         fail(f"PG-186 deterministic first-run display baseline missing: {pg186_first_run_symbol}")
+
+for pg186_grade_symbol in [
+    "bOverride_ColorSaturation",
+    "ColorSaturation = Saturation",
+    "bOverride_ColorContrast",
+    "ColorContrast = Contrast",
+    "Saturation = FVector4(0.86f, 0.92f, 1.04f, 1.0f)",
+]:
+    if pg186_grade_symbol not in pg184_shire_world:
+        fail(f"PG-186 low-cost Shire cinematic grade missing: {pg186_grade_symbol}")
 pg186_hud = read(resolve_source("ShireHUD.cpp"))
 for pg186_hud_symbol in [
     'TEXT("Display Mode")',
