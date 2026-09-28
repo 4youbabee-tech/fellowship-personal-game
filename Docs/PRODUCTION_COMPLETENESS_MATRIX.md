@@ -1,3 +1,14 @@
+## 2026-09-28 - Graphics/video scalability surface
+
+- Persistent custom `UGameUserSettings` subclass: **SOURCE-IMPLEMENTED**.
+- Performance / Recommended / High / Ultra / Custom presets: **SOURCE-IMPLEMENTED**.
+- Recommended 100% render scale + strong texture/AA/post baseline: **SOURCE-DEFINED**.
+- Per-category custom quality + VSync/frame-limit controls: **SOURCE-IMPLEMENTED**.
+- Four-tier texture/shadow/foliage/view-distance scalability config: **SOURCE-IMPLEMENTED**.
+- Target-laptop performance of each preset: **NOT MEASURED**.
+- Final settings-menu art/interaction skin: **PENDING UI POLISH**, authority/API ready.
+- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 visible de-duplication / Ferry identity cleanup
 
 - Party Field duplicate production-lamp + legacy-lantern stacking: **REMOVED IN SOURCE DESIGN**.
