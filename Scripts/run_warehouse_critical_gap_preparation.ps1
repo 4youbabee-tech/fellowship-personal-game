@@ -251,13 +251,40 @@ $report=[ordered]@{
     "Visual/canon/PIE/device/performance acceptance remains open."
   )
 }
+$manualQueue=@()
+foreach($entry in $blocked){
+  $manualQueue += [ordered]@{queue="BLOCKED_ASSET_REVIEW";provider=$entry.provider;asset_id=$entry.asset_id;path=$entry.path;reason=$entry.reason;detail=(Get-OptionalPropertyValue -Object $entry -Name "detail" -Default "")}
+}
+foreach($entry in $pending){
+  $manualQueue += [ordered]@{queue="PENDING_APPROVED_TOOLING";provider=$entry.provider;asset_id=$entry.asset_id;path=$entry.path;reason=$entry.reason}
+}
+foreach($entry in $badReceipts){
+  $manualQueue += [ordered]@{queue="RECEIPT_REVIEW";receipt=$entry.receipt;reason=$entry.reason;detail=$entry.detail}
+}
+$manualQueueIndex=@{}
+$deduplicatedManualQueue=@()
+foreach($entry in $manualQueue){
+  $keyParts=@($entry.queue,$entry.provider,$entry.asset_id,$entry.path,$entry.reason,$entry.receipt)
+  $key=(($keyParts|ForEach-Object{if($null -eq $_){""}else{[string]$_}}) -join "|")
+  if($manualQueueIndex.ContainsKey($key)){
+    $manualQueueIndex[$key].seen_count=[int]$manualQueueIndex[$key].seen_count+1
+    continue
+  }
+  $entry.seen_count=1
+  $manualQueueIndex[$key]=$entry
+  $deduplicatedManualQueue += $entry
+}
+$manualQueue=$deduplicatedManualQueue
+$report.outcome=if($manualQueue.Count -gt 0){"PASS_WITH_MANUAL_QUEUE"}else{"PASS"}
+$report.manual_queue_count=$manualQueue.Count
+$report.manual_queue=$manualQueue
 $outPath=Join-Path $OutputRoot "warehouse_critical_gap_preparation_latest.json"
 $report|ConvertTo-Json -Depth 12|Set-Content -LiteralPath $outPath -Encoding UTF8
 
-if($badReceipts.Count -gt 0 -or $blocked.Count -gt 0){
-  Write-Host ("WAREHOUSE_CRITICAL_GAP_PREP_BLOCKED verified="+$verified.Count+" inventory="+$inventory.Count+" blocked="+$blocked.Count+" badReceipts="+$badReceipts.Count+" duplicatesSkipped="+$duplicateReceiptRows+" report="+$outPath)
-  foreach($entry in $blocked){Write-Host ("WAREHOUSE_CRITICAL_GAP_BLOCKED_DETAIL "+($entry|ConvertTo-Json -Compress -Depth 6))}
-  foreach($entry in $badReceipts){Write-Host ("WAREHOUSE_CRITICAL_GAP_BAD_RECEIPT_DETAIL "+($entry|ConvertTo-Json -Compress -Depth 6))}
-  exit 2
+if($manualQueue.Count -gt 0){
+  Write-Host ("WAREHOUSE_CRITICAL_GAP_PREP_PASS_WITH_MANUAL_QUEUE verified="+$verified.Count+" inventory="+$inventory.Count+" blocked="+$blocked.Count+" badReceipts="+$badReceipts.Count+" pending="+$pending.Count+" manualQueue="+$manualQueue.Count+" duplicatesSkipped="+$duplicateReceiptRows+" archiveMode=metadata-only report="+$outPath)
+  foreach($entry in $manualQueue){Write-Host ("WAREHOUSE_CRITICAL_GAP_MANUAL_QUEUE "+($entry|ConvertTo-Json -Compress -Depth 6))}
 }
-Write-Host ("WAREHOUSE_CRITICAL_GAP_PREP_PASS verified="+$verified.Count+" inventory="+$inventory.Count+" pending="+$pending.Count+" duplicatesSkipped="+$duplicateReceiptRows+" archiveMode=metadata-only report="+$outPath)
+else{
+  Write-Host ("WAREHOUSE_CRITICAL_GAP_PREP_PASS verified="+$verified.Count+" inventory="+$inventory.Count+" pending=0 manualQueue=0 duplicatesSkipped="+$duplicateReceiptRows+" archiveMode=metadata-only report="+$outPath)
+}

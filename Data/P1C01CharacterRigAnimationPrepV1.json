@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "batch_id": "P1C01_CHARACTER_RIG_ANIMATION_PREP_V1",
-  "status": "PREPARED_FAIL_CLOSED",
+  "status": "AUTHORIZED_FOR_STAGING_INTAKE_QC_PENDING",
   "authority": [
     "Data/ProjectGovernor.json",
     "Data/CharacterVisualProductionWaveV7.json",
@@ -65,26 +65,34 @@
     {
       "provider": "QUATERNIUS",
       "id": "QTN_UNIVERSAL_BASE_CHARACTERS",
-      "state": "BLOCKED_LICENSE_CAPTURE",
-      "required_final_format": "FBX"
+      "state": "AUTHORIZED_FOR_STAGING",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "provider": "QUATERNIUS",
       "id": "QTN_RPG_CHARACTERS",
-      "state": "BLOCKED_LICENSE_CAPTURE",
-      "required_final_format": "FBX"
+      "state": "AUTHORIZED_FOR_STAGING",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "provider": "QUATERNIUS",
       "id": "QTN_FANTASY_OUTFITS",
-      "state": "BLOCKED_LICENSE_CAPTURE",
-      "required_final_format": "FBX"
+      "state": "AUTHORIZED_FOR_STAGING",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     },
     {
       "provider": "QUATERNIUS",
       "id": "QTN_UNIVERSAL_ANIMATION_LIBRARY",
-      "state": "BLOCKED_LICENSE_CAPTURE",
-      "required_final_format": "FBX"
+      "state": "AUTHORIZED_FOR_STAGING",
+      "required_final_format": "FBX",
+      "observed_page_license": "CC0",
+      "license_capture": "OFFICIAL_PACK_PAGE_VERIFIED_2026-09-27"
     }
   ],
   "required_bundle": {

@@ -26,6 +26,9 @@ public:
 
     virtual void Interact_Implementation(AActor* Interactor) override;
 
+    void ActivateFromLivingWorldPool(const FVector& InLocation);
+    void DeactivateForLivingWorldPool();
+
 private:
     UPROPERTY()
     USceneComponent* Root;

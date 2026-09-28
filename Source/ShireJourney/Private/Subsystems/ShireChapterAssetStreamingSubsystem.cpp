@@ -5,6 +5,7 @@
 #include "Engine/SkeletalMesh.h"
 #include "Engine/World.h"
 #include "HAL/FileManager.h"
+#include "HAL/PlatformTime.h"
 #include "Misc/CommandLine.h"
 #include "Misc/FileHelper.h"
 #include "Misc/Paths.h"
@@ -350,11 +351,19 @@ void UShireChapterAssetStreamingSubsystem::RequestCharacterRig(FName CharacterId
     }
 
     // Missing production rigs are an expected maturity state, not an async-loading
-    // error. Preflight package existence once per GameInstance so RequestAsyncLoad
-    // is never asked to load paths that do not exist yet. Modular fallback remains
-    // authoritative until both packages are imported.
-    if (!Rig.bAvailabilityChecked)
+    // error. Package existence checks are bounded: missing rigs retry at most once
+    // every two seconds, so an editor/import session can recover without restart
+    // while large NPC groups cannot hammer the filesystem every request.
+    const double NowSeconds = FPlatformTime::Seconds();
+    const bool bShouldCheckAvailability =
+        !Rig.bAvailabilityChecked ||
+        (!Rig.bPackagesPresent &&
+         (Rig.LastAvailabilityCheckSeconds < 0.0 ||
+          (NowSeconds - Rig.LastAvailabilityCheckSeconds) >= 2.0));
+
+    if (bShouldCheckAvailability)
     {
+        const bool bWasPresent = Rig.bPackagesPresent;
         const FString MeshPackage =
             FPackageName::ObjectPathToPackageName(Rig.SkeletalMeshPath.ToString());
         const FString AnimPackage =
@@ -363,13 +372,22 @@ void UShireChapterAssetStreamingSubsystem::RequestCharacterRig(FName CharacterId
             FPackageName::DoesPackageExist(MeshPackage) &&
             FPackageName::DoesPackageExist(AnimPackage);
         Rig.bAvailabilityChecked = true;
+        Rig.LastAvailabilityCheckSeconds = NowSeconds;
 
         if (!Rig.bPackagesPresent)
         {
             UE_LOG(
                 LogTemp,
                 Display,
-                TEXT("CharacterRigStreaming: unavailable id=%s reason=packages-missing fallback=modular"),
+                TEXT("CharacterRigStreaming: unavailable id=%s reason=packages-missing fallback=modular retry=bounded"),
+                *CharacterId.ToString());
+        }
+        else if (!bWasPresent)
+        {
+            UE_LOG(
+                LogTemp,
+                Display,
+                TEXT("CharacterRigStreaming: availability-recovered id=%s async-request=ready"),
                 *CharacterId.ToString());
         }
     }
