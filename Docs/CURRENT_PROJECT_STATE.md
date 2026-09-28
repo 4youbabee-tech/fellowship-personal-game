@@ -1,3 +1,11 @@
+## 2026-09-28 - P1C01 instanced domestic gardens and cultivated rows
+
+- Hobbiton garden patches now prefer three authored `SM_ShFlowerBox` instances through one `GardenPlanterInstances` HISM instead of the old per-patch Cube/Sphere proxy cluster. The legacy proxy garden remains only when the authored mesh is unavailable.
+- East Fields keeps the same 12 cultivated-row placements, but repeated row geometry now uses one `CultivatedRowInstances` HISM with the authored `SM_ShRoadBlock` Dirt material identity when resident.
+- Explicit cull bands were added: garden planters 700-4200 cm, cultivated rows 2200-9000 cm. These are source budgets only and are not target-device performance proof.
+- Actor/detail density did not increase; this is consolidation/replacement of existing visible detail.
+- Current maturity: **SOURCE-IMPLEMENTED / RUNNERLESS / STATIC+UE PROOF PENDING / DEVICE+VISUAL ACCEPTANCE NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 Wooded Road and Ferry production-prop cleanup
 
 - The Wooded Road obstacle now prefers the existing authored `SM_CommonFallenLog`; the old cylinder+sphere log remains only as a missing-asset fallback.
