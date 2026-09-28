@@ -6,7 +6,7 @@
 - Warehouse #276 remains the latest concrete stock evidence: 13,389 payload files / 5,590,510,073 bytes / 14 receipts / 667 receipt records / 215 duplicate groups; prior mega promotion prepared 36 with 34 INTAKE_QC and two manual blockers.
 - Chapter-pack execution suppresses overlapping legacy P1C01 audit/promotion/export/character steps, so one coherent pack does not pay the same work twice.
 - Asset/source blockers quarantine their car and later independent cars continue; infrastructure failure remains fail-closed.
-- New/changed TGA production sources are now routed through Git LFS alongside uasset/umap/fbx/wav/png/exr.
+- TGA LFS policy is intentionally deferred to the first binary promotion wave that needs it, so this control-plane pack does not wake Unreal unnecessarily.
 - Current maturity: **SOURCE-IMPLEMENTED / STATIC PROOF PENDING / RUNNER EXECUTION PENDING**.
 
 ## 2026-09-28 - P1C01 material-tooling Unreal CI fast path
