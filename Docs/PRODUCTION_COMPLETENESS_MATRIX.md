@@ -1,3 +1,10 @@
+## 2026-09-28 - PR #141 static guard follow-up
+
+- Pre-Unreal #1309: **FAILED STATIC VALIDATION** on stale PG-184 text requirement `128 MB bounded limit`.
+- Exporter/runtime evidence: **NOT REACHED / NOT IMPLIED BY THIS FAILURE**.
+- Stale PG-184 literal: **SOURCE-FIXED** to validate `MaxBatchSourceBytes` while PG-188 owns the exact 32/256 MiB budget contract.
+- Next evidence: **EXACT-HEAD PRE-UNREAL RE-RUN PENDING**.
+
 ## 2026-09-28 - Warehouse #278 Mega Chapter Pack evidence / larger bounded material source batch
 
 - PR #140 merge head `14d34d28...`: **PRE-UNREAL #1308 SUCCESS / WAREHOUSE #278 SUCCESS**.

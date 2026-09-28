@@ -2883,7 +2883,7 @@ for pg184_material_symbol in [
 for pg184_export_symbol in [
     "generated/p1c01-material-source-v1",
     "SourceAssets\\Production\\Imported\\P1C01Materials",
-    "128 MB bounded limit",
+    "MaxBatchSourceBytes",
     "SOURCE_READY_FOR_UE_IMPORT",
     "P1C01_MATERIAL_SOURCE_BRANCH_PASS",
     "[IO.Path]::IsPathRooted($ManifestPath)",

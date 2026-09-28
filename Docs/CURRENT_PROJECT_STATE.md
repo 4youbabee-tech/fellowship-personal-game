@@ -1,3 +1,10 @@
+## 2026-09-28 - PR #141 Pre-Unreal #1309 stale guard repair
+
+- Exact-head Pre-Unreal #1309 reached project-structure validation and failed on one stale PG-184 literal that still required the retired text `128 MB bounded limit`.
+- The failure was in static validation policy, not in the revised exporter execution path.
+- PG-184 now checks for the bounded batch-control symbol `MaxBatchSourceBytes`; PG-188 remains the exact authority for the new 32 MiB/source + 256 MiB/batch + minimum-six contract.
+- Current maturity: **SOURCE-FIXED / EXACT-HEAD STATIC RE-RUN PENDING / NO UE OR VISUAL ACCEPTANCE CLAIM**.
+
 ## 2026-09-28 - Warehouse #278 proved Mega Chapter Pack; material export large-batch repair in progress
 
 - Develop exact head `14d34d2813544caf192d4edeca7a2cf11de7799f` merged PR #140 and passed Pre-Unreal #1308 plus Warehouse Stage #278.
