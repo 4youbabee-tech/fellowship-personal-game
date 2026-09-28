@@ -1,3 +1,13 @@
+## 2026-09-29 - Governor sync: sequential two-chapter queue + systemic reactivity direction
+
+- `DEC-064` now records the sequential production queue: **P1C01 remains the sole active runtime closure chapter; P1C02 Shadow of the Past may prepare source/warehouse work in advance but runtime integration stays closed until the official P1C01 Gate 6/7 acceptance record is ACCEPTED.**
+- Expected waiting state before that gate: `SEQUENTIAL_CHAPTER_QUEUE_WAIT`; waiting is not a workflow failure and does not imply P1C02 runtime progress.
+- `DEC-065` now records the durable production direction: **AAA Visual Quality + Systemic Reactivity + Intelligent NPCs + Living World + Strict Optimization**.
+- The new systemic-reactivity direction extends existing ownership (`ALivingWorldDirector`, `UShireNPCContextSubsystem`, `UShireQuestSubsystem` and world-router committed context). It explicitly rejects a second parallel world/NPC brain.
+- The identified future gap is a bounded environmental reaction contract for supported trees/foliage, water, doors/tools/props, fauna and NPC observers. Runtime implementation remains deferred behind the active P1C01 closure/integration sequence and target-device gates.
+- Documentation/governance status: **SOURCE-IMPLEMENTED / NOT ENGINE-VALIDATED BY THIS DOC CHANGE**.
+- No PIE, device, visual, pacing or performance acceptance is created by these records.
+
 ## 2026-09-28 - Pre-Unreal #1332 seven-failure root fix
 
 - Pre-Unreal #1332 passed the repository-wide PowerShell parser gate: `POWERSHELL_SYNTAX_PASS files=47 errors=0`.
