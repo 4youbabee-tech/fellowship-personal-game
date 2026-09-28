@@ -1,3 +1,19 @@
+## 2026-09-29 - Core production direction + systemic environmental reactivity contract
+
+Registered before any new runtime implementation.
+
+Purpose:
+- Keep the project formula explicit: **AAA Visual Quality + Systemic Reactivity + Intelligent NPCs + Living World + Strict Optimization**.
+- Extend the existing `ALivingWorldDirector`, `UShireNPCContextSubsystem`, `UShireQuestSubsystem`, chapter router and interaction contracts; do **not** create a second parallel world brain or NPC brain.
+- Add the missing long-term capability as a **bounded systemic environmental reaction contract** so meaningful player/world events can produce appropriate visible/audible responses across supported trees/foliage, water, doors/tools/props, fauna and NPC observers.
+- Candidate event families include `Hit`, `Interact`, `PlayerNear`, `WeatherChanged`, `DangerChanged` and `StoryStateChanged`; the authoritative world/story systems publish context while each responder owns its local reaction.
+- `ALivingWorldDirector` remains responsible for coarse population budgets, activation/culling, pooling and chapter-aware micro-events; it must not become a per-object God Object.
+- `UShireNPCContextSubsystem` remains responsible for bounded NPC context projection; `UShireQuestSubsystem` remains story/quest/memory truth.
+- Low-spec rule: no full physics or full-rate Actor Tick for every tree/plant/prop. Prefer material/WPO responses, pooled transient FX/audio, bounded timers/delegates and distance/activity budgets.
+- This direction is **not** permission to bypass P1C01 closure. Runtime implementation waits behind the active #145 repair/merge, Closure Pack execution and Shire integration/character/living-world work, and must still satisfy Gate 6/7 and target-device evidence.
+
+Status: **REGISTERED / ARCHITECTURE DIRECTION ACCEPTED / RUNTIME IMPLEMENTATION DEFERRED**.
+
 ## 2026-09-28 - Sequential two-chapter production queue: P1C01 -> P1C02
 
 Registered before implementation under the active Part I production lane.
