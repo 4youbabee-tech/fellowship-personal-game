@@ -228,30 +228,3 @@ try{
 finally{
   & $git -C $ProjectRoot worktree remove --force $worktree 2>$null
 }
-){
-      throw "generated material remote-head SHA invalid: $remoteGeneratedSha"
-    }
-  }
-
-  if([string]::IsNullOrWhiteSpace($remoteGeneratedSha)){
-    Write-Host ("P1C01_MATERIAL_SOURCE_PUBLISH_CREATE branch="+$GeneratedBranch+" local="+$generatedSha)
-    & $git -c credential.helper= -C $worktree push origin ("HEAD:"+$remoteRef)
-  } else {
-    $leaseArg="--force-with-lease="+$remoteRef+":"+$remoteGeneratedSha
-    Write-Host ("P1C01_MATERIAL_SOURCE_PUBLISH_LEASE branch="+$GeneratedBranch+" remote="+$remoteGeneratedSha+" local="+$generatedSha)
-    & $git -c credential.helper= -C $worktree push $leaseArg origin ("HEAD:"+$remoteRef)
-  }
-  if($LASTEXITCODE -ne 0){
-    throw "generated material branch push failed after explicit remote-SHA lease"
-  }
-
-  if($quarantined.Count -gt 0){
-    foreach($entry in $quarantined){ Write-Host ("P1C01_MATERIAL_SOURCE_QUARANTINE "+($entry|ConvertTo-Json -Compress -Depth 6)) }
-    Write-Host ("P1C01_MATERIAL_SOURCE_BRANCH_PASS_WITH_QUARANTINE branch="+$GeneratedBranch+" sha="+$generatedSha+" materials="+$outRows.Count+" quarantined="+$quarantined.Count+" bytes="+$totalBytes)
-  } else {
-    Write-Host ("P1C01_MATERIAL_SOURCE_BRANCH_PASS branch="+$GeneratedBranch+" sha="+$generatedSha+" materials="+$outRows.Count+" bytes="+$totalBytes)
-  }
-}
-finally{
-  & $git -C $ProjectRoot worktree remove --force $worktree 2>$null
-}
