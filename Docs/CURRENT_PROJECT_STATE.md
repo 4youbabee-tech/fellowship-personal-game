@@ -1,3 +1,12 @@
+## 2026-09-28 - Red CI failures root-caused and architecture split
+
+- Pre-Unreal #1325 reached the new PowerShell parser gate successfully (`POWERSHELL_SYNTAX_PASS files=45 errors=0`) and then failed on PG-168 because the normal Warehouse workflow had been changed from its proven `cancel-in-progress: true` contract.
+- Root fix: the normal Warehouse workflow is restored to **60 minutes + cancellable**, while the large P1C01 Closure Pack moves to a dedicated `p1c01-chapter-closure.yml` workflow with its own concurrency group, **180-minute timeout**, and **cancel-in-progress: false**.
+- A cheap `preflight_p1c01_chapter_closure_pack_v2.ps1` now validates required scripts, parses the closure PowerShell set, validates child JSON manifests, and checks the disk reserve before any heavy acquisition car starts.
+- Unreal Build #1047 compiled `ShireJourneyEditor` successfully. Production import then reported `376 files, 0 failures`, but UE emitted a file-system save failure for `Content/Production/Textures/T_Cloth_Green.uasset` and the workflow correctly stopped.
+- The log does **not** prove whether that file was read-only or exclusively locked. DEC-062 therefore adds a measured preflight: no active editor process, write/delete probe, tracked-vs-untracked protection, read-only repair only for untracked generated uassets, and exclusive write-open checks. A save/delete-class importer failure gets exactly one bounded retry after re-preflight; all other importer failures fail immediately.
+- Current maturity: **SOURCE-REPAIRED / ROOT-CAUSE GUARDS IMPLEMENTED / EXACT-HEAD PRE-UNREAL + UNREAL RE-RUN PENDING / NO PIE OR DEVICE CLAIM**.
+
 ## 2026-09-28 - PR #145 root-cause hardening after Pre-Unreal #1318
 
 - Pre-Unreal #1318 **FAILED** at the new repository-wide PowerShell parser gate. This is expected fail-closed behavior: the new guard found real syntax corruption before merge.
