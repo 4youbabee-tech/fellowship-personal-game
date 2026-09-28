@@ -1,0 +1,36 @@
+{
+  "exclude": [
+    "SourceAssets/**",
+    "**/*.uasset",
+    "**/*.umap",
+    "**/*.fbx",
+    "**/*.png",
+    "**/*.tga",
+    "**/*.jpg",
+    "**/*.jpeg",
+    "**/*.wav",
+    "**/*.mp3"
+  ],
+  "rules": [
+    {
+      "path": "Source/**/*.{h,hpp,cpp,cc,cxx,cs}",
+      "rule": "Shire Journey is an Unreal Engine 4.27.2 C++ project. Review only; do not treat your findings as authorization to modify code. Check UE4.27.2 compatibility, ownership/lifetime/null safety, game-thread assumptions, delegate/timer safety, save/load and traversal regressions, and avoid hidden coupling between systems. Preserve Public for headers and Private for implementation. For heavy assets, flag synchronous loading and prefer asynchronous loading with FStreamableManager. Flag hard asset/class references where TSoftObjectPtr or TSoftClassPtr is appropriate. For NPC crowds, flag repeated Spawn/Destroy patterns where object pooling is required. Consider the target profile: Windows DX11, 720p Low-Medium, 8 GB RAM, about 2 GB VRAM, 30 FPS floor. When relevant, inspect interactions between ShireNPCContextSubsystem and LivingWorldDirector for bottlenecks or coupling. Never claim PIE-TESTED, DEVICE-TESTED, VISUALLY-ACCEPTED, or verified from static review alone.",
+      "merge_system_rule": true
+    },
+    {
+      "path": ".github/workflows/**/*.{yml,yaml}",
+      "rule": "Review GitHub Actions conservatively. develop is the canonical integration branch and main is stable/release. Never recommend destructive use of the persistent Unreal GITHUB_WORKSPACE by non-Unreal jobs. The UE4.27 self-hosted runner workspace must remain owned by Unreal validation; lightweight jobs should use isolated hosted or temporary workspaces. Flag any permission wider than required, any path that can push/merge/modify repository contents, unsafe pull_request_target execution of PR code, or CI changes that could erase Unreal incremental state.",
+      "merge_system_rule": true
+    },
+    {
+      "path": "Config/**/*",
+      "rule": "Review Unreal Engine 4.27.2 configuration changes for runtime, renderer, packaging, save, input, streaming, DX11 and low-spec performance regressions. Do not infer runtime acceptance from configuration alone.",
+      "merge_system_rule": true
+    },
+    {
+      "path": "Scripts/**/*.{py,ps1,bat}",
+      "rule": "Review project automation as validation infrastructure. Flag destructive workspace behavior, branch ambiguity, false proof labels, synchronous heavy-asset assumptions, unsafe file deletion, and any script that could mutate develop without an explicit validated branch/PR flow.",
+      "merge_system_rule": true
+    }
+  ]
+}
