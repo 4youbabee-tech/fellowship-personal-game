@@ -1187,6 +1187,12 @@ void AShirePrototypeWorldBuilder::SpawnVillage()
     };
     for(const FVector& Post:LanternPosts)
     {
+        // SpawnProductionVillageDetailLayer owns authored lamp posts when resident.
+        // This older pass is now fallback-only to avoid stacking two light silhouettes.
+        if (ProductionLampPostMesh)
+        {
+            continue;
+        }
         if (ProductionLanternMesh)
         {
             SpawnShape(ProductionLanternMesh, Post, FVector(0.88f), FLinearColor::White, FRotator::ZeroRotator, false);
@@ -2609,7 +2615,8 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     {
         SpawnProd(CommonRopePost, P, FVector(0.74f), FRotator::ZeroRotator, false);
     }
-    SpawnProd(CommonRiverBoat, FVector(23080,-300,-10), FVector(0.62f), FRotator(0.0f,7.0f,0.0f), false);
+    // Do not place a generic river boat beside the Bucklebury Ferry crossing.
+    // It reads as the story ferry even though its silhouette/identity is not canonical.
 
     const FVector WoodlandFloor[] = {
         FVector(11850,-930,0), FVector(12400,-1020,0), FVector(12950,-880,0),
