@@ -7,6 +7,7 @@
 - A functional runnerless Canvas settings surface is now wired for immediate later testing: **F10** opens Graphics/Video, Up/Down selects, Left/Right changes. Individual changes promote the preset to Custom and persist through UGameUserSettings.
 - While the graphics panel is open, movement/look/jump/sprint/interact/attack are source-gated so quality adjustment does not mutate gameplay accidentally.
 - DefaultScalability now defines complete 0-3 ladders for texture memory/filtering, shadow distance/cascades, foliage density and view distance.
+- `GraphicsSettingsPlanV1.json` is registered in `DATA_PLAN_INDEX.md`; graphics policy remains separate from device/performance acceptance evidence.
 - This is source/config implementation only. No claim is made that Recommended/High/Ultra have met target-device FPS, VRAM or human visual acceptance.
 - Current maturity: **SOURCE-IMPLEMENTED / RUNNERLESS / EXACT-HEAD STATIC+UE PROOF PENDING**.
 
