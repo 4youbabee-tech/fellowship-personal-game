@@ -1,3 +1,12 @@
+## 2026-09-28 - P1C01 production-shell visual cleanup and material coverage expansion
+
+- The runnerless Shire visual branch now extends evidence-gated material binding beyond the first terrain/stone/bark targets.
+- Added conditional surface coverage: `SH_GRASS_GROUND` also upgrades Hobbit turf mounds; `SH_DIRT_SOIL` targets flower-box soil; `SH_MOSS_STONE` also targets the Shire well; and `SH_WOOD_INTERIOR` targets benches, picnic tables and market stalls where the authored slot is exactly `Wood`.
+- `SH_FOREST_FLOOR` remains deliberately unbound because the current P1C01 world has no dedicated forest-floor production mesh/slot suitable for it; it must not be forced onto unrelated foliage or terrain.
+- Hobbit-hole production shells no longer receive the legacy Cube/Sphere/Cylinder door-window-chimney overlay when the authored turf mound + facade are resident. The primitive kit is now fallback-only; production shrubs provide the optional planted entry accent.
+- No story/quest anchor moved, no foliage/detail density increased, and no runtime synchronous heavy loading was added.
+- Current maturity: **SOURCE-IMPLEMENTED / RUNNERLESS / EXACT-HEAD STATIC+UE PROOF PENDING / VISUAL ACCEPTANCE NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 runnerless visible material binding bridge
 
 - The current Shire world already owns authored production meshes, but several high-visibility assets are still procedural/project-owned geometry and retain the original flat Shire material bank until richer evidence-backed surfaces are imported.
