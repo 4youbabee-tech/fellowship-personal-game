@@ -5,6 +5,16 @@ param(
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+
+function Get-OptionalPropertyValue {
+  param([object]$Object,[string]$Name,[object]$Default=$null)
+  if($null -eq $Object){ return $Default }
+  $p=$Object.PSObject.Properties[$Name]
+  if($null -eq $p){ return $Default }
+  return $p.Value
+}
+
+Add-Type -AssemblyName System.IO.Compression.FileSystem
 $ProjectRoot = Split-Path $PSScriptRoot -Parent
 if ([string]::IsNullOrWhiteSpace($OutputRoot)) { $OutputRoot = Join-Path $ProjectRoot "Saved\CharacterIntake\P1C01" }
 if (-not (Test-Path -LiteralPath $ManifestPath)) {
@@ -20,10 +30,21 @@ $receipts=@()
 if (Test-Path -LiteralPath $WarehouseRoot) {
   foreach($rf in @(Get-ChildItem -LiteralPath $WarehouseRoot -Recurse -File -Filter "receipt_*.json")) {
     try { $r=Get-Content -LiteralPath $rf.FullName -Raw | ConvertFrom-Json } catch { continue }
-    foreach($row in @($r.files)) {
+    foreach($row in @(Get-OptionalPropertyValue $r "files" @())) {
+      $payloadPath=[string](Get-OptionalPropertyValue $row "file" "")
+      $payloadHash=([string](Get-OptionalPropertyValue $row "sha256" "")).ToLowerInvariant()
+      if([string]::IsNullOrWhiteSpace($payloadPath)){
+        $payloadPath=[string](Get-OptionalPropertyValue $row "archive" "")
+        $payloadHash=([string](Get-OptionalPropertyValue $row "archive_sha256" "")).ToLowerInvariant()
+      }
+      if([string]::IsNullOrWhiteSpace($payloadPath)){ continue }
       $receipts += [pscustomobject]@{
-        provider=[string]$r.provider; asset_id=[string]$row.asset_id; asset_slug=[string]$row.asset_slug;
-        file=[string]$row.file; sha256=([string]$row.sha256).ToLowerInvariant(); receipt=$rf.FullName
+        provider=[string](Get-OptionalPropertyValue $r "provider" "")
+        asset_id=[string](Get-OptionalPropertyValue $row "asset_id" "")
+        asset_slug=[string](Get-OptionalPropertyValue $row "asset_slug" "")
+        file=$payloadPath
+        sha256=$payloadHash
+        receipt=$rf.FullName
       }
     }
   }
@@ -50,8 +71,7 @@ foreach($item in @($manifest.external_candidates)) {
       $verifiedArchives++
       $destination=Join-Path $OutputRoot ("Expanded_"+([string]$item.id -replace '[^A-Za-z0-9_.-]','_')+"_"+$actual.Substring(0,12))
       try {
-        Add-Type -AssemblyName System.IO.Compression
-        $archive=[IO.Compression.ZipFile]::OpenRead($row.file)
+                $archive=[IO.Compression.ZipFile]::OpenRead($row.file)
         try {
           $totalBytes=[int64]0; $entryCount=0
           foreach($entry in $archive.Entries){

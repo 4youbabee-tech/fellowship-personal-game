@@ -2855,6 +2855,7 @@ for pg184_p1c01_symbol in [
     "INTAKE_QC_PREPARED",
     "ready_for_import=$false",
     "P1C01_MEGA_PROMOTION_PASS_WITH_MANUAL_QUEUE",
+    "System.IO.Compression.FileSystem",
 ]:
     if pg184_p1c01_symbol not in pg184_p1c01:
         fail(f"PG-184 P1C01 bounded warehouse promotion contract missing: {pg184_p1c01_symbol}")
@@ -3070,6 +3071,16 @@ if pg180_caps.get("max_active_fauna_groups_near_player") != 2 or pg180_caps.get(
 for item in pg180_fauna.get("external_candidates", []):
     if item.get("state") != "BLOCKED_LICENSE_CAPTURE":
         fail(f"PG-180 fauna candidate advanced without explicit license capture: {item.get('id')}")
+
+pg180_character_intake = read(ROOT / "Scripts" / "prepare_p1c01_character_rig_intake.ps1")
+for marker in [
+    "Get-OptionalPropertyValue",
+    '"archive"',
+    '"archive_sha256"',
+    "System.IO.Compression.FileSystem",
+]:
+    if marker not in pg180_character_intake:
+        fail(f"PG-180 character intake heterogeneous-receipt/ZIP runtime guard missing: {marker}")
 
 pg180_scripts = "\n".join([
     read(ROOT / "Scripts" / "prepare_p1c01_architecture_intake.ps1"),

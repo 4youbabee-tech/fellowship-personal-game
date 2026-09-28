@@ -1,3 +1,12 @@
+## 2026-09-28 - P1C01 immediate large intake unfreeze repair
+
+- Warehouse #275 failed only in P1C01 character intake after the Quaternius staging lane completed. Exact failure: PowerShell StrictMode raised `PropertyNotFoundStrict` while reading heterogeneous receipt rows that do not all expose `file/sha256/asset_slug` fields.
+- Character intake now reads both direct-file receipts (`file/sha256`) and archive receipts (`archive/archive_sha256`) through optional-property access, so one provider schema cannot stop the whole train.
+- The staged-stock mega promotion path also had 28 selected archives isolated in #274 because Windows PowerShell had not loaded `System.IO.Compression.FileSystem`; both P1C01 extraction paths now load that assembly explicitly before using `ZipFile`.
+- This repair intentionally targets the existing 5.4 GB staged warehouse first. On merge, selective Warehouse routing will rerun bounded inventory + P1C01 mega promotion + character intake, without restaging unrelated providers or running full saturation.
+- No gameplay/runtime C++ changed in this repair. Existing runtime develop validation remains independent.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING / PERSISTENT WAREHOUSE EXECUTION PENDING**.
+
 ## 2026-09-28 - P1C01 runtime salvage rebased onto current develop
 
 - PR #133 exact head `970a52f73ed5242d371ae7061011093765af42f6` completed Unreal Build #1033 successfully, including `Build ShireJourneyEditor` and `Import production assets in UE4.27.2`.

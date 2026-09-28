@@ -1,3 +1,13 @@
+## 2026-09-28 - P1C01 immediate large intake unfreeze
+
+- Warehouse #275 character-intake root cause (`PropertyNotFoundStrict` on heterogeneous receipt schema): **ROOT-CAUSE IDENTIFIED / SOURCE-FIXED**.
+- Character intake support for `file/sha256` and `archive/archive_sha256`: **SOURCE-IMPLEMENTED**.
+- Windows PowerShell `System.IO.Compression.FileSystem` load for P1C01 selected ZIP extraction: **SOURCE-IMPLEMENTED**.
+- Previously isolated P1C01 mega-promotion archives in #274: **28 candidates eligible for bounded retry after merge**.
+- Exact-head hosted static validation: **PENDING**.
+- Persistent Warehouse materialization/intake counts after repair: **PENDING**.
+- UE runtime/PIE/device/visual/performance acceptance: **UNCHANGED / NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 runtime/character intake salvage v2
 
 - PR #133 original-head UE4.27.2 build/import evidence: **COMPILE/IMPORT RUN SUCCESS on `970a52f7...` via Unreal #1033**.
