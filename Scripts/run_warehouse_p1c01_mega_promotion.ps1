@@ -39,7 +39,7 @@ function Test-SelectorMatch {
 
 function Get-SafeArchiveEntries {
   param([string]$ArchivePath)
-  Add-Type -AssemblyName System.IO.Compression
+  Add-Type -AssemblyName System.IO.Compression.FileSystem
   $archive=[IO.Compression.ZipFile]::OpenRead($ArchivePath)
   try {
     $entries=@()
@@ -70,7 +70,7 @@ function Get-SafeArchiveEntries {
 
 function Copy-SelectedArchive {
   param([string]$ArchivePath,[string]$Destination,[string[]]$AllowedExtensions)
-  Add-Type -AssemblyName System.IO.Compression
+  Add-Type -AssemblyName System.IO.Compression.FileSystem
   if(Test-Path -LiteralPath $Destination){ Remove-Item -LiteralPath $Destination -Recurse -Force }
   New-Item -ItemType Directory -Path $Destination -Force | Out-Null
   $archive=[IO.Compression.ZipFile]::OpenRead($ArchivePath)
