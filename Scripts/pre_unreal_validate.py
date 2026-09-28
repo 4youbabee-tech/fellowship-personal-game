@@ -5405,6 +5405,30 @@ if "WH_RUN_P1C01_CHAPTER_PACK" not in pg187_classifier or "Run P1C01 Mega Chapte
 if "WH_RUN_P1C01_CHAPTER_PACK != 'true'" not in pg187_warehouse:
     fail("PG-187 legacy overlapping P1C01 warehouse steps must be suppressed during chapter-pack execution")
 
+
+# PG-188: Material source promotion must scale by bounded batch budgets and item quarantine.
+pg188_exporter = read(ROOT / "Scripts" / "export_p1c01_material_source_branch.ps1")
+pg188_pack = json.loads(read(ROOT / "Data" / "P1C01MegaChapterPackV1.json"))
+pg188_material_car = next((x for x in pg188_pack.get("cars", []) if x.get("id") == "MATERIAL_SOURCE_EXPORT"), {})
+pg188_budget = pg188_material_car.get("export_budget", {})
+if int(pg188_budget.get("max_single_source_bytes", 0)) != 33554432:
+    fail("PG-188 material export single-source budget must remain 32 MiB")
+if int(pg188_budget.get("max_batch_source_bytes", 0)) != 268435456:
+    fail("PG-188 material export batch budget must remain 256 MiB")
+if int(pg188_budget.get("minimum_exported_materials", 0)) != 6:
+    fail("PG-188 material export minimum must remain six receipt-verified materials")
+for pg188_symbol in [
+    "P1C01_MATERIAL_SOURCE_BRANCH_PASS_WITH_QUARANTINE",
+    "single_source_budget_exceeded",
+    "batch_source_budget_exceeded",
+    "tga_lfs_not_configured",
+    "MinimumExportedMaterials",
+]:
+    if pg188_symbol not in pg188_exporter:
+        fail(f"PG-188 bounded material export contract missing: {pg188_symbol}")
+if "*.tga filter=lfs" in read(ROOT / ".gitattributes") and "tga_lfs_not_configured" not in pg188_exporter:
+    fail("PG-188 TGA promotion guard disappeared after LFS policy changed")
+
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
     for message in errors:

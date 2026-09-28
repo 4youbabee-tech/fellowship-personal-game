@@ -1,3 +1,15 @@
+## 2026-09-28 - Warehouse #278 proved Mega Chapter Pack; material export large-batch repair in progress
+
+- Develop exact head `14d34d2813544caf192d4edeca7a2cf11de7799f` merged PR #140 and passed Pre-Unreal #1308 plus Warehouse Stage #278.
+- Warehouse #278 executed P1C01 Mega Chapter Pack as one bounded step: `passed=3 quarantined=1 hard=0`.
+- Inventory proof moved to `payloadFiles=18676 bytes=6622954088 receipts=14 receiptRecords=667 duplicateGroups=215`.
+- Mega promotion remained `prepared=36 intakeQC=34 pending=3 manual=2 badReceipts=0`; ambientCG Plaster007 and KayKit Medieval Hexagon remain isolated manual blockers.
+- Material intake passed at `prepared=8 pending=8 manual=0`, but MATERIAL_SOURCE_EXPORT quarantined because `SH_DIRT_SOIL/TX_SH_DIRT_SOIL_BaseColor.png` exceeded the old 16 MiB per-source cap before the generated branch could be pushed.
+- DEC-055 now authorizes a larger but still bounded material promotion lane: 32 MiB per source, 256 MiB per generated batch, minimum six exported materials, and item-level quarantine instead of aborting the whole material car.
+- TGA is still not promoted until an explicit `*.tga` Git LFS rule exists; PNG remains LFS-tracked.
+- Runtime material cost is unchanged: one base-color sample plus scalar Roughness/Metallic/Specular. No extra runtime texture samples are authorized by this source-batch increase.
+- Current maturity of this repair: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC PROOF PENDING / POST-MERGE WAREHOUSE RE-RUN PENDING / UE IMPORT PENDING**.
+
 ## 2026-09-28 - P1C01 Mega Chapter Pack V1 launched as the new batching model
 
 - ProjectGovernor DEC-054 now makes chapter-scale batching and workflow minimization a durable production rule.

@@ -1,10 +1,17 @@
 param(
   [string]$ManifestPath = "Data/P1C01MaterialImportWaveV1.json",
   [string]$WarehouseRoot = "C:\actions-runner\_warehouse\ShireJourney",
-  [string]$GeneratedBranch = "generated/p1c01-material-source-v1"
+  [string]$GeneratedBranch = "generated/p1c01-material-source-v1",
+  [int64]$MaxSingleSourceBytes = 33554432,
+  [int64]$MaxBatchSourceBytes = 268435456,
+  [int]$MinimumExportedMaterials = 6
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+
+if($MaxSingleSourceBytes -le 0){ throw "MaxSingleSourceBytes must be > 0" }
+if($MaxBatchSourceBytes -lt $MaxSingleSourceBytes){ throw "MaxBatchSourceBytes must be >= MaxSingleSourceBytes" }
+if($MinimumExportedMaterials -lt 1){ throw "MinimumExportedMaterials must be >= 1" }
 
 $ProjectRoot=Split-Path $PSScriptRoot -Parent
 $IntakeRoot=Join-Path $ProjectRoot "Saved\P1C01MaterialSourceExport"
@@ -18,7 +25,9 @@ $receiptPath=Join-Path $IntakeRoot "p1c01_material_intake_receipt.json"
 if(-not (Test-Path -LiteralPath $receiptPath -PathType Leaf)){ throw "P1C01 material receipt missing" }
 $receipt=Get-Content -LiteralPath $receiptPath -Raw | ConvertFrom-Json
 $prepared=@($receipt.prepared)
-if($prepared.Count -lt 8){ throw "P1C01 material source export requires at least 8 prepared materials; got $($prepared.Count)" }
+if($prepared.Count -lt $MinimumExportedMaterials){
+  throw "P1C01 material source export requires at least $MinimumExportedMaterials prepared materials; got $($prepared.Count)"
+}
 
 $git=(Get-Command git.exe -ErrorAction SilentlyContinue).Source
 if(-not $git){
@@ -48,20 +57,74 @@ try{
   } else {
     Join-Path $ProjectRoot $ManifestPath
   }
-$manifest=Get-Content -LiteralPath $ResolvedManifestPath -Raw | ConvertFrom-Json
+  $manifest=Get-Content -LiteralPath $ResolvedManifestPath -Raw | ConvertFrom-Json
+
+  $attributesPath=Join-Path $worktree ".gitattributes"
+  $attributesText=if(Test-Path -LiteralPath $attributesPath){ Get-Content -LiteralPath $attributesPath -Raw }else{ "" }
+  $tgaLfsReady=($attributesText -match '(?m)^\*\.tga\s+filter=lfs\b')
+
   $outRows=@()
+  $quarantined=@()
   $totalBytes=[int64]0
+
   foreach($item in $prepared){
-    $destDir=Join-Path $overlay ([string]$item.id)
-    New-Item -ItemType Directory -Path $destDir -Force | Out-Null
-    foreach($src in @([string]$item.basecolor_file,[string]$item.mtl_file)){
+    $sources=@([string]$item.basecolor_file,[string]$item.mtl_file)
+    $sourceItems=@()
+    $itemBytes=[int64]0
+    $itemBlocked=$false
+
+    foreach($src in $sources){
       if(-not (Test-Path -LiteralPath $src -PathType Leaf)){ throw "Prepared material file missing: $src" }
       $f=Get-Item -LiteralPath $src
-      if($f.Length -gt 16777216){ throw "Single material source exceeds 16 MB bounded limit: $src" }
-      Copy-Item -LiteralPath $src -Destination (Join-Path $destDir $f.Name) -Force
-      $totalBytes += [int64]$f.Length
+      $ext=$f.Extension.ToLowerInvariant()
+
+      if($ext -eq ".tga" -and -not $tgaLfsReady){
+        $quarantined += [ordered]@{
+          id=[string]$item.id
+          reason="tga_lfs_not_configured"
+          file=$src
+          bytes=[int64]$f.Length
+        }
+        $itemBlocked=$true
+        break
+      }
+
+      if($f.Length -gt $MaxSingleSourceBytes){
+        $quarantined += [ordered]@{
+          id=[string]$item.id
+          reason="single_source_budget_exceeded"
+          file=$src
+          bytes=[int64]$f.Length
+          max_bytes=$MaxSingleSourceBytes
+        }
+        $itemBlocked=$true
+        break
+      }
+
+      $sourceItems += $f
+      $itemBytes += [int64]$f.Length
     }
-    if($totalBytes -gt 134217728){ throw "P1C01 material source batch exceeds 128 MB bounded limit" }
+
+    if($itemBlocked){ continue }
+
+    if(($totalBytes + $itemBytes) -gt $MaxBatchSourceBytes){
+      $quarantined += [ordered]@{
+        id=[string]$item.id
+        reason="batch_source_budget_exceeded"
+        item_bytes=$itemBytes
+        current_batch_bytes=$totalBytes
+        max_batch_bytes=$MaxBatchSourceBytes
+      }
+      continue
+    }
+
+    $destDir=Join-Path $overlay ([string]$item.id)
+    New-Item -ItemType Directory -Path $destDir -Force | Out-Null
+    foreach($f in $sourceItems){
+      Copy-Item -LiteralPath $f.FullName -Destination (Join-Path $destDir $f.Name) -Force
+    }
+    $totalBytes += $itemBytes
+
     $outRows += [ordered]@{
       id=[string]$item.id
       provider=[string]$item.provider
@@ -75,18 +138,30 @@ $manifest=Get-Content -LiteralPath $ResolvedManifestPath -Raw | ConvertFrom-Json
       specular=[double]$item.specular
       basecolor_sha256=[string]$item.basecolor_sha256
       mtl_sha256=[string]$item.mtl_sha256
+      source_bytes=$itemBytes
       state="SOURCE_READY_FOR_UE_IMPORT"
     }
   }
 
+  if($outRows.Count -lt $MinimumExportedMaterials){
+    throw "P1C01 material export fell below minimum after item quarantine: exported=$($outRows.Count) minimum=$MinimumExportedMaterials quarantined=$($quarantined.Count)"
+  }
+
   $sourceReceipt=[ordered]@{
-    schema_version=1
+    schema_version=2
     wave_id=[string]$manifest.wave_id
     generated_from_develop_sha=$targetSha
     generated_at_utc=[DateTime]::UtcNow.ToString("o")
     material_count=$outRows.Count
+    quarantined_count=$quarantined.Count
     total_source_bytes=$totalBytes
+    budget=[ordered]@{
+      max_single_source_bytes=$MaxSingleSourceBytes
+      max_batch_source_bytes=$MaxBatchSourceBytes
+      minimum_exported_materials=$MinimumExportedMaterials
+    }
     items=$outRows
+    quarantined=$quarantined
     runtime_rule="One PNG/TGA base color plus scalar Roughness/Metallic/Specular; no extra PBR samples in this low-spec wave."
     acceptance_boundary="Source promotion only. UE import, runtime binding, PIE, device, visual and performance acceptance require separate evidence."
   }
@@ -97,15 +172,26 @@ $manifest=Get-Content -LiteralPath $ResolvedManifestPath -Raw | ConvertFrom-Json
   & $git -C $worktree add -- "SourceAssets/Production/Imported/P1C01Materials"
   & $git -C $worktree diff --cached --quiet
   if($LASTEXITCODE -eq 0){
-    Write-Host ("P1C01_MATERIAL_SOURCE_BRANCH_NO_CHANGE branch="+$GeneratedBranch+" materials="+$outRows.Count)
+    if($quarantined.Count -gt 0){
+      Write-Host ("P1C01_MATERIAL_SOURCE_BRANCH_NO_CHANGE_WITH_QUARANTINE branch="+$GeneratedBranch+" materials="+$outRows.Count+" quarantined="+$quarantined.Count+" bytes="+$totalBytes)
+    } else {
+      Write-Host ("P1C01_MATERIAL_SOURCE_BRANCH_NO_CHANGE branch="+$GeneratedBranch+" materials="+$outRows.Count+" bytes="+$totalBytes)
+    }
     exit 0
   }
+
   & $git -C $worktree commit -m ("P1C01: promote "+$outRows.Count+" receipt-verified Shire material sources")
   if($LASTEXITCODE -ne 0){ throw "generated material commit failed" }
   $generatedSha=(& $git -C $worktree rev-parse HEAD).Trim()
   & $git -C $worktree push --force-with-lease origin ("HEAD:refs/heads/"+$GeneratedBranch)
   if($LASTEXITCODE -ne 0){ throw "generated material branch push failed" }
-  Write-Host ("P1C01_MATERIAL_SOURCE_BRANCH_PASS branch="+$GeneratedBranch+" sha="+$generatedSha+" materials="+$outRows.Count+" bytes="+$totalBytes)
+
+  if($quarantined.Count -gt 0){
+    foreach($entry in $quarantined){ Write-Host ("P1C01_MATERIAL_SOURCE_QUARANTINE "+($entry|ConvertTo-Json -Compress -Depth 6)) }
+    Write-Host ("P1C01_MATERIAL_SOURCE_BRANCH_PASS_WITH_QUARANTINE branch="+$GeneratedBranch+" sha="+$generatedSha+" materials="+$outRows.Count+" quarantined="+$quarantined.Count+" bytes="+$totalBytes)
+  } else {
+    Write-Host ("P1C01_MATERIAL_SOURCE_BRANCH_PASS branch="+$GeneratedBranch+" sha="+$generatedSha+" materials="+$outRows.Count+" bytes="+$totalBytes)
+  }
 }
 finally{
   & $git -C $ProjectRoot worktree remove --force $worktree 2>$null

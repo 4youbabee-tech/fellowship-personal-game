@@ -35,7 +35,16 @@
     "last_run_receipts": 14,
     "last_run_receipt_records": 667,
     "last_run_duplicate_groups": 215,
-    "evidence_run": "Warehouse Stage #276"
+    "evidence_run": "Warehouse Stage #276",
+    "latest_run": {
+      "evidence_run": "Warehouse Stage #278",
+      "develop_sha": "14d34d2813544caf192d4edeca7a2cf11de7799f",
+      "payload_files": 18676,
+      "bytes": 6622954088,
+      "receipts": 14,
+      "receipt_records": 667,
+      "duplicate_groups": 215
+    }
   },
   "cars": [
     {
@@ -70,7 +79,13 @@
       "command": "Scripts/export_p1c01_material_source_branch.ps1",
       "manifest": "Data/P1C01MaterialImportWaveV1.json",
       "generated_branch": "generated/p1c01-material-source-v1",
-      "minimum_prepared_materials": 8
+      "minimum_prepared_materials": 8,
+      "export_budget": {
+        "max_single_source_bytes": 33554432,
+        "max_batch_source_bytes": 268435456,
+        "minimum_exported_materials": 6,
+        "oversize_behavior": "ITEM_QUARANTINE_CONTINUE"
+      }
     },
     {
       "order": 4,
