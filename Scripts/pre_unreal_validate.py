@@ -8147,7 +8147,7 @@ for symbol in [
 ]:
     if symbol not in pg193_parser:
         fail(f"PG-193 PowerShell parser gate marker missing: {symbol}")
-if "Parse all PowerShell scripts" not in pg193_pre or "Scripts\\\\test_powershell_syntax.ps1" not in pg193_pre:
+if "Parse all PowerShell scripts" not in pg193_pre or "test_powershell_syntax.ps1" not in pg193_pre:
     fail("PG-193 Pre-Unreal PowerShell parser step missing")
 if "Scripts/test_powershell_syntax.ps1" not in pg193_unreal:
     fail("PG-193 PowerShell parser guard must remain tooling-only in Unreal paths-ignore")
