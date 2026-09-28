@@ -1,3 +1,13 @@
+## 2026-09-28 - Warehouse #281 root-cause publish-race repair
+
+- Pre-Unreal #1315: **SUCCESS** on develop `a8f78c897c838a82a12ed61ddfb899a4c1ded03a`.
+- Warehouse #281 reached the revised albedo/provenance lane and reported `P1C01_MATERIAL_INTAKE_PASS prepared=8 pending=8 manual=0`.
+- It then created local generated commit `2474500` with 17 material-source files, but publish failed with Git `stale info` on `generated/p1c01-material-source-v1`.
+- Root cause: bare `--force-with-lease` depends on a local remote-tracking ref, while isolated Warehouse checkouts intentionally do not fetch the generated branch. The source/QC result itself had already passed.
+- DEC-057 changes generated-branch publication to query the authoritative remote head with `ls-remote` and use an explicit `refs/heads/<branch>:<remote-sha>` lease. New branches use a normal create push. Ephemeral workflow auth no longer asks WinCred to persist credentials.
+- PG-191 statically rejects regression to implicit lease publishing.
+- Current maturity: **ROOT-CAUSE SOURCE-FIXED / EXACT-HEAD VALIDATION PENDING / GENERATED BRANCH REPUBLISH PENDING / UE IMPORT NOT STARTED**.
+
 ## 2026-09-28 - Warehouse #280 PowerShell compatibility repair
 
 - Pre-Unreal #1313 passed on develop `1aa387353cb2e5d00ea934318e2eade3aa1a9094`.

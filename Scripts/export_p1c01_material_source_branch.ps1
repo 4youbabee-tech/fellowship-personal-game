@@ -185,8 +185,50 @@ try{
   & $git -C $worktree commit -m ("P1C01: promote "+$outRows.Count+" receipt-verified Shire material sources")
   if($LASTEXITCODE -ne 0){ throw "generated material commit failed" }
   $generatedSha=(& $git -C $worktree rev-parse HEAD).Trim()
-  & $git -C $worktree push --force-with-lease origin ("HEAD:refs/heads/"+$GeneratedBranch)
-  if($LASTEXITCODE -ne 0){ throw "generated material branch push failed" }
+
+  # Root-cause guard: a plain --force-with-lease relies on the caller's local
+  # remote-tracking ref. Warehouse exact-head checkouts intentionally do not fetch
+  # generated branches, so that ref can be stale even when the remote is healthy.
+  # Read the authoritative remote head and lease against that exact SHA instead.
+  $remoteRef="refs/heads/"+$GeneratedBranch
+  $remoteLine=(& $git -c credential.helper= -C $worktree ls-remote --heads origin $remoteRef | Select-Object -First 1)
+  if($LASTEXITCODE -ne 0){ throw "generated material remote-head lookup failed" }
+
+  $remoteGeneratedSha=""
+  if(-not [string]::IsNullOrWhiteSpace([string]$remoteLine)){
+    $parts=@(([string]$remoteLine) -split "\s+")
+    if($parts.Count -lt 2 -or $parts[1] -ne $remoteRef){
+      throw "generated material remote-head parse failed: $remoteLine"
+    }
+    $remoteGeneratedSha=([string]$parts[0]).Trim()
+    if($remoteGeneratedSha -notmatch '^[0-9a-fA-F]{40}
+
+  if($quarantined.Count -gt 0){
+    foreach($entry in $quarantined){ Write-Host ("P1C01_MATERIAL_SOURCE_QUARANTINE "+($entry|ConvertTo-Json -Compress -Depth 6)) }
+    Write-Host ("P1C01_MATERIAL_SOURCE_BRANCH_PASS_WITH_QUARANTINE branch="+$GeneratedBranch+" sha="+$generatedSha+" materials="+$outRows.Count+" quarantined="+$quarantined.Count+" bytes="+$totalBytes)
+  } else {
+    Write-Host ("P1C01_MATERIAL_SOURCE_BRANCH_PASS branch="+$GeneratedBranch+" sha="+$generatedSha+" materials="+$outRows.Count+" bytes="+$totalBytes)
+  }
+}
+finally{
+  & $git -C $ProjectRoot worktree remove --force $worktree 2>$null
+}
+){
+      throw "generated material remote-head SHA invalid: $remoteGeneratedSha"
+    }
+  }
+
+  if([string]::IsNullOrWhiteSpace($remoteGeneratedSha)){
+    Write-Host ("P1C01_MATERIAL_SOURCE_PUBLISH_CREATE branch="+$GeneratedBranch+" local="+$generatedSha)
+    & $git -c credential.helper= -C $worktree push origin ("HEAD:"+$remoteRef)
+  } else {
+    $leaseArg="--force-with-lease="+$remoteRef+":"+$remoteGeneratedSha
+    Write-Host ("P1C01_MATERIAL_SOURCE_PUBLISH_LEASE branch="+$GeneratedBranch+" remote="+$remoteGeneratedSha+" local="+$generatedSha)
+    & $git -c credential.helper= -C $worktree push $leaseArg origin ("HEAD:"+$remoteRef)
+  }
+  if($LASTEXITCODE -ne 0){
+    throw "generated material branch push failed after explicit remote-SHA lease"
+  }
 
   if($quarantined.Count -gt 0){
     foreach($entry in $quarantined){ Write-Host ("P1C01_MATERIAL_SOURCE_QUARANTINE "+($entry|ConvertTo-Json -Compress -Depth 6)) }

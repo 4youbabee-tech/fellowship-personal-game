@@ -4132,6 +4132,36 @@
       ],
       "evidence_boundary": "SOURCE/QC DECISION. It does not assert that the already-generated PNG bytes are AO; it asserts that existing provenance cannot prove the exact selected source. Post-merge Warehouse regeneration is required before UE import.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-057",
+      "title": "Generated source branches publish with explicit remote-SHA leases",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-PROD-011",
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004"
+      ],
+      "resolution": "Generated warehouse source branches must not rely on an implicit force-with-lease remote-tracking ref. Before publishing, the producer reads the authoritative remote branch SHA with ls-remote and pushes with an explicit ref:SHA lease. New branches use a normal create push.",
+      "implementation_contract": [
+        "Never use bare `git push --force-with-lease origin` for generated warehouse branches.",
+        "Resolve refs/heads/<generated-branch> directly from origin before publish.",
+        "If the remote branch exists, use `--force-with-lease=refs/heads/<branch>:<exact-remote-sha>`.",
+        "If the remote branch does not exist, create it without force.",
+        "Disable credential-helper persistence for ls-remote/push because workflow authentication is ephemeral and must not write to WinCred.",
+        "A real concurrent remote update after the lease lookup remains a hard publish failure; do not overwrite an unknown newer result.",
+        "Static validation must reject regression to implicit lease behavior."
+      ],
+      "rationale": "Warehouse #281 completed intake and created a valid local material-source commit, then Git rejected publish as `stale info` because bare --force-with-lease used stale/missing local remote-tracking state. The failure was control-plane state, not source QC. Explicit remote-SHA leasing removes that hidden dependency while preserving race protection.",
+      "evidence": [
+        "Pre-Unreal #1315 SUCCESS on develop a8f78c897c838a82a12ed61ddfb899a4c1ded03a",
+        "Warehouse #281: P1C01_MATERIAL_INTAKE_PASS prepared=8 pending=8 manual=0",
+        "Warehouse #281 local generated commit 2474500 created 17 files before publish",
+        "Warehouse #281 Git error: HEAD -> generated/p1c01-material-source-v1 (stale info)"
+      ],
+      "evidence_boundary": "CONTROL-PLANE ROOT-CAUSE FIX. Exact-head Pre-Unreal and post-merge Warehouse rerun are required before publish is run-proven.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
