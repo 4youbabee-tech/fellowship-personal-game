@@ -1,3 +1,18 @@
+## 2026-09-29 - Continuous Part I train + Unreal #1068 root repair
+
+- Owner granted standing authorization for safe routine reversible production work without repeated "continue" prompts; real login/purchase/licensing/canon/destructive/human-acceptance boundaries still require owner action.
+- Unreal Build #1068 compiled `ShireJourneyEditor` successfully, then failed before import on `PRODUCTION_IMPORT_PREFLIGHT_EDITOR_RUNNING pids=14144`.
+- Root cause in the CI contract: `ci_wait_for_unreal_editor.cmd` observed only `UE4Editor` while production-import preflight observed `UE4Editor` and `UE4Editor-Cmd`. A false-clear path therefore existed for commandlets.
+- New `Scripts/wait_for_unreal_processes.ps1` observes both process families and emits PID/PPID/session/owner/age/command-line evidence. It never kills an interactive editor by name; bounded stale-commandlet recovery requires workspace ownership, unattended recognized CI commandlet, age threshold and no live parent.
+- `preflight_production_asset_import.ps1` now emits the same ownership diagnostics when a blocker survives.
+- `PG-195` statically guards this process-ownership contract.
+- Part I downstream preparation is now represented by `Data/Part1SequentialRuntimeChapterTrainV1.json` and `Scripts/run_part1_runtime_chapter_prep.ps1`.
+- Canonical source mission IDs remain F1-01..F1-08; existing runtime P1C01..P1C08 IDs remain legacy implementation boundaries. Current reconciliation: P1C01 spans F1-01/F1-02/F1-03; P1C02+P1C03 split F1-04; P1C04 maps F1-05; P1C05+P1C06 split F1-06; P1C07 maps F1-07; P1C08 maps F1-08.
+- `.github/workflows/part1-chapter-preparation.yml` prepares shared-stock candidate indexes for P1C02-P1C08 without duplicating warehouse payloads.
+- Runtime remains serialized. P1C01 is still active; P1C02 may open only after P1C01 Gate 6/7 becomes genuinely ACCEPTED.
+- Governor decisions `DEC-066`, `DEC-067` and `DEC-068` record these rules.
+- Evidence boundary: **SOURCE-IMPLEMENTED / fresh exact-head Pre-Unreal + Unreal validation pending**. No new PIE/device/visual/pacing/performance acceptance is claimed.
+
 ## 2026-09-29 - Governor sync: sequential two-chapter queue + systemic reactivity direction
 
 - `DEC-064` now records the sequential production queue: **P1C01 remains the sole active runtime closure chapter; P1C02 Shadow of the Past may prepare source/warehouse work in advance but runtime integration stays closed until the official P1C01 Gate 6/7 acceptance record is ACCEPTED.**
