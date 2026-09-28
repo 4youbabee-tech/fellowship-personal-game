@@ -34,6 +34,8 @@ on:
       - 'Data/P1C01MaterialImportWaveV1.json'
       - 'Scripts/prepare_p1c01_material_intake.ps1'
       - 'Scripts/export_p1c01_material_source_branch.ps1'
+      - 'Data/P1C01MegaChapterPackV1.json'
+      - 'Scripts/run_p1c01_mega_chapter_pack.ps1'
       - 'Scripts/classify_warehouse_validation.ps1'
       - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
@@ -149,12 +151,12 @@ jobs:
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\stage_kaykit_github_warehouse.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseKayKitGitHubAcquisitionBatchV1.json"
 
       - name: Prepare P1C01 character archive intake
-        if: env.WH_RUN_CHARACTER_INTAKE == 'true'
+        if: env.WH_RUN_CHARACTER_INTAKE == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\prepare_p1c01_character_rig_intake.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01CharacterRigAnimationPrepV1.json" -OutputRoot "C:\actions-runner\_warehouse\ShireJourney\_p1c01_character_intake"
 
       - name: Audit persistent warehouse inventory
-        if: env.WH_RUN_AUDIT == 'true'
+        if: env.WH_RUN_AUDIT == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\audit_warehouse_inventory.ps1"
 
@@ -174,14 +176,19 @@ jobs:
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_provider_resolution.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseProviderResolutionTrainV3.json"
 
       - name: Prepare P1C01 mega promotion batch from staged warehouse
-        if: env.WH_RUN_P1C01_PROMOTION == 'true'
+        if: env.WH_RUN_P1C01_PROMOTION == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_p1c01_mega_promotion.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseP1C01MegaPromotionTrainV1.json"
 
       - name: Promote large P1C01 material source batch to generated branch
-        if: env.WH_RUN_P1C01_MATERIAL_EXPORT == 'true'
+        if: env.WH_RUN_P1C01_MATERIAL_EXPORT == 'true' && env.WH_RUN_P1C01_CHAPTER_PACK != 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\export_p1c01_material_source_branch.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01MaterialImportWaveV1.json" -GeneratedBranch "generated/p1c01-material-source-v1"
+
+      - name: Run P1C01 Mega Chapter Pack
+        if: env.WH_RUN_P1C01_CHAPTER_PACK == 'true'
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_p1c01_mega_chapter_pack.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01MegaChapterPackV1.json"
 
       - name: Summarize selective warehouse execution
         shell: cmd
