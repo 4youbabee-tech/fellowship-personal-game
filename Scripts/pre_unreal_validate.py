@@ -2910,6 +2910,13 @@ for pg184_visible_material_symbol in [
     "SH_WARM_PLASTER",
     "SH_MOSS_STONE",
     "SH_TREE_BARK",
+    "SH_DIRT_SOIL",
+    "SH_WOOD_INTERIOR",
+    "SM_ShTurfMound",
+    "SM_ShFlowerBox",
+    "SM_ShBench",
+    "SM_ShPicnicTable",
+    "SM_ShMarketStall",
 ]:
     if pg184_visible_material_symbol not in pg184_importer:
         fail(f"PG-184 P1C01 visible material bridge missing: {pg184_visible_material_symbol}")
@@ -2920,6 +2927,18 @@ if "- 'Scripts/classify_warehouse_validation.ps1'" not in pg184_workflow:
     fail("PG-184 classifier changes must trigger one post-merge Warehouse control-plane proof")
 if '".github/workflows/warehouse-stage.yml" {' not in pg184_classifier or "$flags.WH_RUN_AUDIT=$true" not in pg184_classifier:
     fail("PG-184 warehouse workflow-only changes must select bounded audit proof instead of full staging")
+
+pg184_shire_world = read(ROOT / "Source" / "ShireJourney" / "Private" / "World" / "ShirePrototypeWorldBuilder.cpp")
+for pg184_hobbit_shell_symbol in [
+    "const bool bProductionHobbitShell",
+    "if (bProductionHobbitShell)",
+    "if (ProductionShrubMesh)",
+    "Fallback-only round frame + inset painted door.",
+]:
+    if pg184_hobbit_shell_symbol not in pg184_shire_world:
+        fail(f"PG-184 production Hobbit shell fallback separation missing: {pg184_hobbit_shell_symbol}")
+if "old Cube/Sphere/Cylinder door/window/chimney proxy kit" not in pg184_shire_world:
+    fail("PG-184 production Hobbit shell must document suppression of primitive overlay kit")
 
 # PG-185: keep strict exact-head Unreal proof while preserving incremental build products.
 pg185_unreal_workflow = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
