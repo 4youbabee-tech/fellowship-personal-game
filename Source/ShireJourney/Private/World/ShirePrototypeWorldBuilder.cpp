@@ -2578,7 +2578,6 @@ void AShirePrototypeWorldBuilder::SpawnScenicDetailPass()
     UStaticMesh* CommonHayBale = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonHayBale.SM_CommonHayBale"));
     UStaticMesh* CommonRopePost = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRopePost.SM_CommonRopePost"));
     UStaticMesh* CommonMarketCanopy = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMarketCanopy.SM_CommonMarketCanopy"));
-    UStaticMesh* CommonRiverBoat = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonRiverBoat.SM_CommonRiverBoat"));
     UStaticMesh* CommonTreeStump = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonTreeStump.SM_CommonTreeStump"));
     UStaticMesh* CommonMushrooms = ResolveResidentStaticMesh(TEXT("/Game/Production/World/Common/SM_CommonMushroomCluster.SM_CommonMushroomCluster"));
 
