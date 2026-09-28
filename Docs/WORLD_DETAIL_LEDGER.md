@@ -1,3 +1,16 @@
+## 2026-09-28 - P1C01 low-cost cinematic color-grade pass
+
+Registered before implementation under the permanent maximum-beauty / visual-economy doctrine.
+
+Purpose:
+- Improve the Shire's perceived warmth, depth and story-state readability using the existing unbound post-process volume instead of adding geometry, lights or texture samples.
+- Keep the grade subtle: small saturation/contrast changes only, with story-state variants for party warmth, Ring-secret coolness, leaving-home neutrality, Black Rider threat and ferry escape.
+- Do not add chromatic aberration, film grain, volumetric fog or extra dynamic lights.
+- Preserve the existing exposure/bloom/vignette story atmosphere and keep the grade event-driven through quest changes rather than Tick.
+- Treat the values as source candidates pending the same exact-head UE4 and human visual review as the rest of P1C01.
+
+Status: **REGISTERED / RUNNERLESS IMPLEMENTATION STARTED / VISUAL ACCEPTANCE PENDING**.
+
 ## 2026-09-28 - Graphics menu display-mode/resolution and input isolation polish
 
 Registered before implementation inside the already-approved professional graphics/video settings lane.
