@@ -2942,6 +2942,16 @@ for pg184_hobbit_shell_symbol in [
 if "old Cube/Sphere/Cylinder door/window/chimney proxy kit" not in pg184_shire_world:
     fail("PG-184 production Hobbit shell must document suppression of primitive overlay kit")
 
+for pg184_dedup_symbol in [
+    "if (ProductionLampPostMesh)",
+    "This older pass is now fallback-only to avoid stacking two light silhouettes.",
+    "Do not place a generic river boat beside the Bucklebury Ferry crossing.",
+]:
+    if pg184_dedup_symbol not in pg184_shire_world:
+        fail(f"PG-184 P1C01 visible de-duplication/canon cleanup missing: {pg184_dedup_symbol}")
+if "SpawnProd(CommonRiverBoat, FVector(23080,-300,-10)" in pg184_shire_world:
+    fail("PG-184 generic common river boat must not masquerade beside the Bucklebury Ferry crossing")
+
 for pg184_instanced_garden_symbol in [
     "GardenPlanterInstances",
     "CultivatedRowInstances",
