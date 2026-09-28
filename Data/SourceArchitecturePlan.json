@@ -549,6 +549,22 @@
       "kind": "Source",
       "role": "Data-driven soft-path bank loading and seam-safe resident-handle implementation",
       "migration_status": "MIGRATED"
+    },
+    {
+      "current_path": "Source/ShireJourney/Public/Core/ShireGameUserSettings.h",
+      "target_path": "Source/ShireJourney/Public/Core/ShireGameUserSettings.h",
+      "domain": "Core",
+      "kind": "Header",
+      "role": "Persistent graphics/video settings and preset contract",
+      "migration_status": "MIGRATED"
+    },
+    {
+      "current_path": "Source/ShireJourney/Private/Core/ShireGameUserSettings.cpp",
+      "target_path": "Source/ShireJourney/Private/Core/ShireGameUserSettings.cpp",
+      "domain": "Core",
+      "kind": "Source",
+      "role": "Graphics preset application persistence and custom-quality implementation",
+      "migration_status": "MIGRATED"
     }
   ],
   "programmer_review_2026_09_21": {
