@@ -44,6 +44,12 @@ public:
     UFUNCTION(BlueprintCallable, Category="Settings|Graphics")
     void ApplyDisplayPreferences(bool bEnableVSync, float FrameRateLimit, bool bApplyImmediately = true);
 
+    UFUNCTION(BlueprintCallable, Category="Settings|Graphics")
+    void ApplyDisplayModeAndResolution(
+        EWindowMode::Type WindowMode,
+        FIntPoint Resolution,
+        bool bApplyImmediately = true);
+
     UFUNCTION(BlueprintPure, Category="Settings|Graphics")
     EShireGraphicsPreset GetShireGraphicsPreset() const { return ShireGraphicsPreset; }
 
