@@ -342,6 +342,10 @@ void AShireHUD::DrawHUD()
 
     if (Player && Player->IsGraphicsSettingsOpen())
     {
+        // Full-screen dim keeps the world visible enough for context while making
+        // the settings surface read as a deliberate modal layer.
+        DrawRect(FLinearColor(0.0f, 0.0f, 0.0f, 0.72f), 0.0f, 0.0f, W, H);
+
         UShireGameUserSettings* Settings =
             UShireGameUserSettings::GetShireGameUserSettings();
         if (Settings)
@@ -378,7 +382,7 @@ void AShireHUD::DrawHUD()
             }
 
             const float PanelW = FMath::Min(650.0f, W - 70.0f);
-            const float PanelH = FMath::Min(610.0f, H - 80.0f);
+            const float PanelH = FMath::Min(690.0f, H - 50.0f);
             const float PanelX = (W - PanelW) * 0.5f;
             const float PanelY = (H - PanelH) * 0.5f;
 
@@ -400,6 +404,8 @@ void AShireHUD::DrawHUD()
 
             const FString Labels[] = {
                 TEXT("Overall Quality"),
+                TEXT("Display Mode"),
+                TEXT("Resolution"),
                 TEXT("Render Scale"),
                 TEXT("View Distance"),
                 TEXT("Anti-Aliasing"),
@@ -413,6 +419,8 @@ void AShireHUD::DrawHUD()
             };
             const FString Values[] = {
                 Settings->GetShireGraphicsPresetLabel().ToString(),
+                WindowMode,
+                FString::Printf(TEXT("%dx%d"), Resolution.X, Resolution.Y),
                 FString::Printf(TEXT("%.0f%% (%.0f-%.0f)"), ScaleValue, MinScale, MaxScale),
                 QualityLabel(Settings->GetViewDistanceQuality()),
                 QualityLabel(Settings->GetAntiAliasingQuality()),
@@ -449,7 +457,7 @@ void AShireHUD::DrawHUD()
                         ? FLinearColor::White
                         : FLinearColor(0.78f, 0.80f, 0.76f),
                     PanelX + PanelW - 190.0f, RowY, SmallFont, 0.84f, false);
-                RowY += 37.0f;
+                RowY += 34.0f;
             }
 
             DrawText(
