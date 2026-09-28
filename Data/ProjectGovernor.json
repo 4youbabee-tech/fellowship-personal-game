@@ -39,7 +39,8 @@
     "The programmer handoff must remain branch-simple: develop is canonical development/integration, main is stable/release, and temporary implementation branches self-clean after merge once meaningful content is integrated.",
     "Temporary branches must merge meaningful completed work into develop immediately, then delete the branch ref; only active work or unresolved unique-content salvage may remain outside develop.",
     "Parallel source/PDF/warehouse/asset-preparation lanes may advance without repeating engine gates for administrative-only changes; promotion into runtime remains serialized and technical safety/performance/runtime-data gates stay fail-closed.",
-    "Permanent branch closeout invariant: every completed temporary branch is exact-head validated, merged into develop immediately, and its remote ref is deleted after merge so develop never lags completed work. Only an active PR head or a branch with verified unique unsalvaged commits may remain temporarily."
+    "Permanent branch closeout invariant: every completed temporary branch is exact-head validated, merged into develop immediately, and its remote ref is deleted after merge so develop never lags completed work. Only an active PR head or a branch with verified unique unsalvaged commits may remain temporarily.",
+    "Permanent visual-economy doctrine: maximize visible beauty per measured CPU/GPU/VRAM cost; protect silhouette, composition, hero materials, lighting, atmosphere and near-field detail, and recover budget first from duplicate actors, far shadows, overdraw/translucency, redundant lights, uninstanced repetition, unnecessary Tick and invisible/far detail."
   ],
   "requirement_status_values": [
     "REQUESTED",
@@ -2898,6 +2899,49 @@
         "REQ-EXEC-002",
         "REQ-STABILITY-003"
       ]
+    },
+    {
+      "id": "REQ-PERF-004",
+      "title": "Scalable graphics and video controls preserve visual economy and target floor",
+      "category": "Performance",
+      "priority": "CRITICAL",
+      "status": "PARTIAL",
+      "origin": "Owner standing direction for professional graphics/video settings and permanent visual-economy policy",
+      "intent": "Provide a visually strong default preset, scalable higher-quality presets and Custom controls while preserving the DX11 1280x720 Low-Medium 30 FPS target floor on the established low-spec laptop profile.",
+      "evidence": [
+        "Source/ShireJourney/Public/Settings/ShireGameUserSettings.h",
+        "Source/ShireJourney/Private/Settings/ShireGameUserSettings.cpp",
+        "Config/DefaultScalability.ini",
+        "Config/DefaultEngine.ini",
+        "Docs/P1C01_VISUAL_ECONOMY_SETTINGS.md",
+        "Scripts/test_graphics_settings_contract.py"
+      ],
+      "implementation_refs": [
+        "UShireGameUserSettings owns Performance, Cinematic Balanced, High, Ultra and Custom scalability selection.",
+        "Cinematic Balanced is the default source profile and preserves 100 percent render scale while bounding expensive shadow, foliage, post-process and effects tiers.",
+        "Display controls expose resolution, fullscreen mode, VSync and frame-rate limit through a Blueprint-callable backend.",
+        "DefaultScalability keeps texture-pool authority in TextureQuality and scales far shadows, foliage and expensive effects before sacrificing hero composition."
+      ],
+      "missing_work": [
+        "Exact-head UE4.27.2 compile/runtime proof for the new settings class.",
+        "Polished in-game UMG Graphics/Video screen bound to the backend.",
+        "Target-laptop frame-time, hitch, VRAM and streaming-pool measurements for the default and lower presets.",
+        "Human visual acceptance of Cinematic Balanced against P1C01 Shire/Bag End benchmark shots."
+      ],
+      "acceptance_criteria": [
+        "Fresh installs start from a visually strong 1280x720-safe default rather than the highest available quality.",
+        "Performance, High and Ultra presets plus Custom controls are selectable without direct console-variable scripting in UI.",
+        "Lower presets preferentially reduce far shadows, overdraw/translucency, redundant effects and repetition cost before hero readability.",
+        "The established 720p Low-Medium 30 FPS floor is supported by target-device evidence before performance acceptance is claimed.",
+        "Higher presets remain opt-in and never redefine the low-spec acceptance floor."
+      ],
+      "dependencies": [
+        "REQ-PERF-001",
+        "REQ-PERF-003",
+        "REQ-WORLD-002"
+      ],
+      "checkpoint": "W01_P1C01_VERTICAL_SLICE_GATE",
+      "notes": "Source architecture is implemented in this increment; engine/device/visual acceptance remains pending exact evidence."
     }
   ],
   "hard_invariants": [
@@ -4161,6 +4205,37 @@
         "Warehouse #281 Git error: HEAD -> generated/p1c01-material-source-v1 (stale info)"
       ],
       "evidence_boundary": "CONTROL-PLANE ROOT-CAUSE FIX. Exact-head Pre-Unreal and post-merge Warehouse rerun are required before publish is run-proven.",
+      "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-069",
+      "title": "Make visual economy and scalable graphics/video settings permanent P1C01 production policy",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-WORLD-002",
+        "REQ-PERF-001",
+        "REQ-PERF-003",
+        "REQ-PERF-004"
+      ],
+      "resolution": "P1C01 production permanently optimizes visible beauty per measured CPU/GPU/VRAM cost and exposes one UGameUserSettings-backed graphics/video authority. Cinematic Balanced is the visually strong low-spec-safe default; higher presets are optional quality headroom and Custom exposes independent scalability controls.",
+      "implementation_contract": [
+        "Protect the DX11 1280x720 Low-Medium 30 FPS target floor on the established low-spec laptop profile.",
+        "Prefer silhouette, composition, hero materials, lighting, atmosphere, landmark framing and near-field detail when spending visual budget.",
+        "Recover cost first from duplicate actors, far shadows, overdraw/translucency, redundant lights, uninstanced repetition, unnecessary Tick and invisible/far detail.",
+        "Keep texture streaming pool ownership in TextureQuality scalability instead of hard-setting it in DefaultEngine.",
+        "Expose Performance, Cinematic Balanced, High, Ultra and Custom through one Blueprint-callable UGameUserSettings backend.",
+        "Register new visible world-detail ideas in Docs/WORLD_DETAIL_LEDGER.md before implementation.",
+        "Never call a preset device-safe, performance-improving or visually accepted without exact engine/device/human evidence."
+      ],
+      "rationale": "The project needs professional user-controlled scalability without sacrificing the cinematic Shire/Bag End presentation or silently moving the target floor upward as production art improves.",
+      "evidence": [
+        "Docs/WORLD_DETAIL_LEDGER.md registration dated 2026-09-29",
+        "Docs/P1C01_VISUAL_ECONOMY_SETTINGS.md",
+        "Config/DefaultScalability.ini",
+        "Source/ShireJourney/Public/Settings/ShireGameUserSettings.h",
+        "Source/ShireJourney/Private/Settings/ShireGameUserSettings.cpp"
+      ],
+      "evidence_boundary": "SOURCE POLICY AND SETTINGS BACKEND ONLY. Exact-head UE4.27.2, target-device metrics and human visual review remain required.",
       "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],

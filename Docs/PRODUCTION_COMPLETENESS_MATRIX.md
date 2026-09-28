@@ -1,3 +1,17 @@
+## 2026-09-29 - P1C01 visual-economy Graphics/Video settings
+
+- WORLD_DETAIL_LEDGER registration before implementation: **DONE**.
+- Governor REQ-PERF-004 + DEC-069: **SOURCE-REGISTERED / OWNER-AUTHORIZED**.
+- UShireGameUserSettings preset/custom/display backend: **SOURCE-IMPLEMENTED**.
+- Cinematic Balanced default profile: **SOURCE-IMPLEMENTED**.
+- Performance / High / Ultra / Custom paths: **SOURCE-IMPLEMENTED**.
+- Complete 0-3 scalability tiers with TextureQuality streaming-pool authority: **SOURCE-IMPLEMENTED**.
+- Exact-head Pre-Unreal: **PENDING**.
+- UE4.27 compile/runtime settings application: **PENDING**.
+- Polished UMG Graphics/Video screen: **PENDING**.
+- Target-laptop FPS/frame-time/hitch/VRAM/streaming evidence: **PENDING**.
+- PIE/device/human visual/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - Warehouse #281 generated-branch publish root cause
 
 - Pre-Unreal #1315: **SUCCESS**.

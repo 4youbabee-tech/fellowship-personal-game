@@ -1,3 +1,13 @@
+## 2026-09-29 - P1C01 visual-economy graphics/video settings backend
+
+- WORLD_DETAIL_LEDGER registration preceded implementation and makes visual beauty per measured CPU/GPU/VRAM cost the permanent P1C01 rule.
+- REQ-PERF-004 and DEC-069 preserve the DX11 1280x720 Low-Medium / 30 FPS target floor while adding scalable Graphics/Video controls.
+- UShireGameUserSettings owns Performance, Cinematic Balanced, High, Ultra and Custom source profiles plus resolution, window mode, VSync and frame-cap controls.
+- Cinematic Balanced is the source default at 100 percent render scale with bounded medium view/shadow/post/effects/foliage and texture budgets; higher presets are opt-in and do not redefine the low-spec floor.
+- DefaultScalability defines complete 0-3 tiers while preserving TextureQuality ownership of the streaming pool.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC PROOF PENDING / UE4.27 COMPILE-RUNTIME PROOF PENDING / TARGET-DEVICE METRICS PENDING / HUMAN VISUAL ACCEPTANCE PENDING**.
+- No FPS, VRAM, hitch, visual-improvement, PIE, device or performance acceptance claim is made by this source increment.
+
 ## 2026-09-28 - Warehouse #281 root-cause publish-race repair
 
 - Pre-Unreal #1315: **SUCCESS** on develop `a8f78c897c838a82a12ed61ddfb899a4c1ded03a`.

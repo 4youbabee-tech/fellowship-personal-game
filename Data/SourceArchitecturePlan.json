@@ -14,7 +14,8 @@
     "Subsystems",
     "UI",
     "SaveGame",
-    "Prototypes"
+    "Prototypes",
+    "Settings"
   ],
   "migration_status_values": [
     "CURRENT_FLAT",
@@ -548,6 +549,22 @@
       "domain": "Subsystems",
       "kind": "Source",
       "role": "Data-driven soft-path bank loading and seam-safe resident-handle implementation",
+      "migration_status": "MIGRATED"
+    },
+    {
+      "current_path": "Source/ShireJourney/Public/Settings/ShireGameUserSettings.h",
+      "target_path": "Source/ShireJourney/Public/Settings/ShireGameUserSettings.h",
+      "domain": "Settings",
+      "kind": "Header",
+      "role": "Blueprint-callable graphics and display settings contract",
+      "migration_status": "MIGRATED"
+    },
+    {
+      "current_path": "Source/ShireJourney/Private/Settings/ShireGameUserSettings.cpp",
+      "target_path": "Source/ShireJourney/Private/Settings/ShireGameUserSettings.cpp",
+      "domain": "Settings",
+      "kind": "Source",
+      "role": "Visual-economy preset, custom scalability and display settings implementation",
       "migration_status": "MIGRATED"
     }
   ],

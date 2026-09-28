@@ -17,6 +17,7 @@ public class ShireJourney : ModuleRules
             Path.Combine(ModuleDirectory, "Public", "World"),
             Path.Combine(ModuleDirectory, "Public", "Subsystems"),
             Path.Combine(ModuleDirectory, "Public", "UI"),
+            Path.Combine(ModuleDirectory, "Public", "Settings"),
             Path.Combine(ModuleDirectory, "Public", "SaveGame"),
             Path.Combine(ModuleDirectory, "Public", "Prototypes")
         });
