@@ -2855,6 +2855,7 @@ for pg184_p1c01_symbol in [
     "INTAKE_QC_PREPARED",
     "ready_for_import=$false",
     "P1C01_MEGA_PROMOTION_PASS_WITH_MANUAL_QUEUE",
+    "System.IO.Compression.FileSystem",
 ]:
     if pg184_p1c01_symbol not in pg184_p1c01:
         fail(f"PG-184 P1C01 bounded warehouse promotion contract missing: {pg184_p1c01_symbol}")
@@ -2868,6 +2869,35 @@ for pg184_p1c01_manifest_symbol in [
 ]:
     if pg184_p1c01_manifest_symbol not in pg184_p1c01_manifest:
         fail(f"PG-184 P1C01 mega promotion manifest contract missing: {pg184_p1c01_manifest_symbol}")
+
+pg184_material_intake = read(ROOT / "Scripts" / "prepare_p1c01_material_intake.ps1")
+pg184_material_export = read(ROOT / "Scripts" / "export_p1c01_material_source_branch.ps1")
+for pg184_material_symbol in [
+    "Get-OptionalPropertyValue",
+    "receipt_sha256_mismatch",
+    "System.IO.Compression.FileSystem",
+    "P1C01_MATERIAL_INTAKE_PASS_WITH_MANUAL_QUEUE",
+]:
+    if pg184_material_symbol not in pg184_material_intake:
+        fail(f"PG-184 P1C01 material intake guard missing: {pg184_material_symbol}")
+for pg184_export_symbol in [
+    "generated/p1c01-material-source-v1",
+    "SourceAssets\\Production\\Imported\\P1C01Materials",
+    "128 MB bounded limit",
+    "SOURCE_READY_FOR_UE_IMPORT",
+    "P1C01_MATERIAL_SOURCE_BRANCH_PASS",
+]:
+    if pg184_export_symbol not in pg184_material_export:
+        fail(f"PG-184 P1C01 material source export guard missing: {pg184_export_symbol}")
+for pg184_workflow_symbol in [
+    "contents: write",
+    "WH_RUN_P1C01_MATERIAL_EXPORT",
+    "export_p1c01_material_source_branch.ps1",
+]:
+    if pg184_workflow_symbol not in pg184_workflow:
+        fail(f"PG-184 P1C01 material export workflow contract missing: {pg184_workflow_symbol}")
+if "WH_RUN_P1C01_MATERIAL_EXPORT" not in pg184_classifier:
+    fail("PG-184 warehouse classifier must expose the P1C01 material export phase")
 
 if "- 'Scripts/classify_warehouse_validation.ps1'" not in pg184_workflow:
     fail("PG-184 classifier changes must trigger one post-merge Warehouse control-plane proof")
@@ -3070,6 +3100,16 @@ if pg180_caps.get("max_active_fauna_groups_near_player") != 2 or pg180_caps.get(
 for item in pg180_fauna.get("external_candidates", []):
     if item.get("state") != "BLOCKED_LICENSE_CAPTURE":
         fail(f"PG-180 fauna candidate advanced without explicit license capture: {item.get('id')}")
+
+pg180_character_intake = read(ROOT / "Scripts" / "prepare_p1c01_character_rig_intake.ps1")
+for marker in [
+    "Get-OptionalPropertyValue",
+    '"archive"',
+    '"archive_sha256"',
+    "System.IO.Compression.FileSystem",
+]:
+    if marker not in pg180_character_intake:
+        fail(f"PG-180 character intake heterogeneous-receipt/ZIP runtime guard missing: {marker}")
 
 pg180_scripts = "\n".join([
     read(ROOT / "Scripts" / "prepare_p1c01_architecture_intake.ps1"),

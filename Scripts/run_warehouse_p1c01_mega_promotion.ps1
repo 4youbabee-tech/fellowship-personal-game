@@ -6,6 +6,7 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 function Get-OptionalPropertyValue {
   param([object]$Object,[string]$Name,[object]$Default=$null)
@@ -39,8 +40,7 @@ function Test-SelectorMatch {
 
 function Get-SafeArchiveEntries {
   param([string]$ArchivePath)
-  Add-Type -AssemblyName System.IO.Compression
-  $archive=[IO.Compression.ZipFile]::OpenRead($ArchivePath)
+    $archive=[IO.Compression.ZipFile]::OpenRead($ArchivePath)
   try {
     $entries=@()
     $total=[int64]0
@@ -70,8 +70,7 @@ function Get-SafeArchiveEntries {
 
 function Copy-SelectedArchive {
   param([string]$ArchivePath,[string]$Destination,[string[]]$AllowedExtensions)
-  Add-Type -AssemblyName System.IO.Compression
-  if(Test-Path -LiteralPath $Destination){ Remove-Item -LiteralPath $Destination -Recurse -Force }
+    if(Test-Path -LiteralPath $Destination){ Remove-Item -LiteralPath $Destination -Recurse -Force }
   New-Item -ItemType Directory -Path $Destination -Force | Out-Null
   $archive=[IO.Compression.ZipFile]::OpenRead($ArchivePath)
   $written=0

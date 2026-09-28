@@ -1,3 +1,25 @@
+## 2026-09-28 - P1C01 large material source promotion
+
+- Heterogeneous receipt + SHA256-gated material intake: **SOURCE-IMPLEMENTED**.
+- Bounded safe ZIP scan/extraction for selected material items: **SOURCE-IMPLEMENTED**.
+- Partial-good continuation with manual queue: **SOURCE-IMPLEMENTED**.
+- Generated source branch with 16 MB/file and 128 MB/batch caps: **SOURCE-IMPLEMENTED**.
+- Tracked source destination `SourceAssets/Production/Imported/P1C01Materials`: **SOURCE-IMPLEMENTED**.
+- Selective Warehouse phase `WH_RUN_P1C01_MATERIAL_EXPORT`: **SOURCE-IMPLEMENTED**.
+- Generated material branch population from persistent warehouse: **PENDING MACHINE EXECUTION**.
+- UE4.27 material import from generated branch: **PENDING EXACT-HEAD UNREAL RUN**.
+- PIE/device/visual/performance acceptance: **NOT CLAIMED**.
+
+## 2026-09-28 - P1C01 immediate large intake unfreeze
+
+- Warehouse #275 character-intake root cause (`PropertyNotFoundStrict` on heterogeneous receipt schema): **ROOT-CAUSE IDENTIFIED / SOURCE-FIXED**.
+- Character intake support for `file/sha256` and `archive/archive_sha256`: **SOURCE-IMPLEMENTED**.
+- Windows PowerShell `System.IO.Compression.FileSystem` load for P1C01 selected ZIP extraction: **SOURCE-IMPLEMENTED**.
+- Previously isolated P1C01 mega-promotion archives in #274: **28 candidates eligible for bounded retry after merge**.
+- Exact-head hosted static validation: **PENDING**.
+- Persistent Warehouse materialization/intake counts after repair: **PENDING**.
+- UE runtime/PIE/device/visual/performance acceptance: **UNCHANGED / NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 runtime/character intake salvage v2
 
 - PR #133 original-head UE4.27.2 build/import evidence: **COMPILE/IMPORT RUN SUCCESS on `970a52f7...` via Unreal #1033**.
