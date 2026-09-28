@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "contract_id": "P1C01_GRAPHICS_SETTINGS_UX_CONTRACT_V1",
+  "lane": "W01_P1C01_PRODUCTION_VERTICAL_SLICE",
+  "status": "RUNNERLESS_PREPARATION_ONLY",
+  "purpose": "Define player-facing Graphics/Video behavior before runtime implementation.",
+  "authority_state": {
+    "project_governor_registration": "REQ-GFX-001 / INV-VISUAL-ECONOMY / DEC-055 registered on this branch",
+    "world_detail_ledger_registration": "BLOCKED_BY_PLATFORM_WRITE_GUARD",
+    "runtime_implementation_allowed": false
+  },
+  "target_floor": {
+    "platform": "Windows",
+    "renderer": "DX11",
+    "cpu_class": "Intel i7 Gen6 class",
+    "ram_gb": 8,
+    "vram_class_gb": 2,
+    "resolution": "1280x720",
+    "resolution_scale_percent": 100,
+    "quality": "Low-Medium",
+    "fps_floor_target": 30,
+    "performance_acceptance": "PENDING_EXACT_TARGET_DEVICE_EVIDENCE"
+  },
+  "preset_model": {
+    "default_candidate": "Balanced",
+    "presets": [
+      "Performance",
+      "Balanced",
+      "High",
+      "Cinematic",
+      "Custom"
+    ],
+    "native_720p_floor_presets": [
+      "Performance",
+      "Balanced"
+    ],
+    "custom_transition_rule": "Changing an individual quality group away from a named preset displays Custom without silently changing unrelated groups."
+  },
+  "screen_layout": {
+    "Display": [
+      "display_mode",
+      "resolution",
+      "resolution_scale",
+      "vsync",
+      "frame_rate_limit"
+    ],
+    "Quality": [
+      "preset",
+      "view_distance",
+      "anti_aliasing",
+      "shadows",
+      "post_process",
+      "textures",
+      "effects",
+      "foliage"
+    ],
+    "actions": [
+      "Apply",
+      "Revert",
+      "Restore Defaults"
+    ]
+  },
+  "display_behavior": {
+    "risky_change_rule": "Resolution and display-mode changes require explicit confirmation and automatically revert on timeout or rejection.",
+    "named_preset_rule": "Named quality presets do not silently change resolution, display mode, VSync or user-selected frame cap."
+  },
+  "persistence_contract": {
+    "owner": "UGameUserSettings",
+    "no_secondary_store": true,
+    "apply_rule": "Apply writes intended settings through UGameUserSettings.",
+    "revert_rule": "Revert restores the last applied values.",
+    "restore_defaults_rule": "Restore Defaults selects the project default candidate and project-safe display defaults before Apply.",
+    "restart_roundtrip_required": true
+  },
+  "visual_economy": {
+    "protect_first": [
+      "silhouette_and_composition",
+      "hero_material_readability",
+      "lighting_and_atmosphere",
+      "near_field_detail"
+    ],
+    "recover_cost_first_from": [
+      "duplicate_actors",
+      "far_shadows",
+      "overdraw_and_translucency",
+      "redundant_lights",
+      "uninstanced_repetition",
+      "unnecessary_tick",
+      "invisible_or_far_detail"
+    ]
+  },
+  "evidence_ceiling": "UX/source contract only. No compile, PIE, device, visual or performance acceptance."
+}
