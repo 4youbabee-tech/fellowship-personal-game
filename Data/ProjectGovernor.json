@@ -4057,9 +4057,9 @@
         "Do not schedule legacy overlapping P1C01 audit/promotion/export/character steps in parallel with the chapter-pack step.",
         "Prepare branches without opening PRs until a coherent batch is ready; prefer one PR/merge per coherent pack rather than repeated micro-PR churn.",
         "Warehouse raw payloads remain local/persistent; Git receives selected production sources and receipts, not the entire raw warehouse.",
-        "Use Git LFS for binary production formats including uasset, umap, fbx, wav, png, exr and new/changed tga files.",
         "Animated final production assets remain FBX-only; textures remain PNG/TGA; heavy runtime assets retain soft/async ownership; repeated detail retains ISM/HISM+LOD/culling.",
-        "No batch-size increase may bypass provenance, SHA256, format/QC, runtime, PIE, device, visual or performance evidence boundaries."
+        "No batch-size increase may bypass provenance, SHA256, format/QC, runtime, PIE, device, visual or performance evidence boundaries.",
+        "Binary/LFS policy changes are kept out of chapter-pack control-plane PRs when they would unnecessarily wake the Unreal lane; apply them in the first binary promotion wave that actually needs them."
       ],
       "rationale": "The repository has accumulated thousands of workflow runs while the persistent warehouse already contains thousands of files and multi-gigabyte stock. Larger coherent packs reduce orchestration overhead without requiring unsafe monolithic runtime integration.",
       "evidence": [
