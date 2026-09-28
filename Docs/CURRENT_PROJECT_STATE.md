@@ -1,3 +1,12 @@
+## 2026-09-28 - P1C01 material-tooling Unreal CI fast path
+
+- PR #137 exact head `bf7e08c8...` passed Pre-Unreal #1301 and full Unreal Build #1038, including editor build, production import, Automation Framework QA, startup smoke, chapter/route audits, Windows cook/package, packaged-data verification and packaged executable launch.
+- That evidence showed the rooted-manifest exporter repair was safe, but also exposed avoidable runner cost: source-only P1C01 material tooling changes were still waking the full Unreal pipeline.
+- Unreal Build Validation now ignores source-only changes to `prepare_p1c01_material_intake.ps1`, `promote_p1c01_material_intake.ps1`, `run_p1c01_material_pipeline.ps1` and `export_p1c01_material_source_branch.ps1` on pull requests; push already ignored the first three and now also ignores the exporter.
+- The classifier safe-tooling lists now include the exporter as well, so manual dispatch or safe mixed tooling/docs deltas can inherit a proven parent instead of falling through to full cook/package.
+- Runtime C++, SourceAssets, Config, Build.cs, Target.cs, streaming, cook/package and unclassified deltas retain their existing full/core/asset gates.
+- Current maturity: **CI POLICY SOURCE-IMPLEMENTED / PRE-UNREAL PROOF PENDING / NO RUNTIME ACCEPTANCE CLAIM**.
+
 ## 2026-09-28 - Warehouse #276 rooted manifest exporter repair
 
 - Develop exact head `f24480b379fa544c6d1ad01e7a6247d69aac0c93` reached Warehouse Stage #276 on the supervised `IDEAPAD320` runner. Runner health passed with `listenerPid=524` and `workerCount=1`.

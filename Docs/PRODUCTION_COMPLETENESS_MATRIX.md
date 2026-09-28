@@ -1,3 +1,12 @@
+## 2026-09-28 - Unreal runner cost reduction for P1C01 material tooling
+
+- PR-triggered Unreal for P1C01 prepare/promote/run/export tooling-only changes: **PATH-FILTERED OUT IN SOURCE**.
+- Push-triggered Unreal for exporter-only changes: **PATH-FILTERED OUT IN SOURCE**.
+- Manual/mixed-safe classifier treatment for exporter tooling: **SAFE-INHERIT SOURCE RULE ADDED**.
+- Existing classifier regression coverage for material-tooling fast path: **SOURCE-UPDATED**.
+- Runtime/config/package-impacting validation behavior: **UNCHANGED**.
+- Exact CI policy proof on this branch: **PRE-UNREAL PENDING**.
+
 ## 2026-09-28 - Warehouse #276 material-export unblock
 
 - Warehouse #276 exact develop head `f24480b3...`: **SELF-HOSTED EXECUTION REACHED FINAL MATERIAL EXPORT STEP**.
