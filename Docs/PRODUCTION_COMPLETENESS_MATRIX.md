@@ -1,3 +1,16 @@
+## 2026-09-29 - Continuous Part I preparation train / Unreal #1068 process ownership repair
+
+- Unreal Build #1068 Editor compile: **COMPILE STEP SUCCESS** on prior exact head `c76e521e...`.
+- Unreal Build #1068 production import: **BLOCKED BEFORE IMPORT** by `PRODUCTION_IMPORT_PREFLIGHT_EDITOR_RUNNING pids=14144`.
+- Editor/commandlet wait mismatch root repair (`DEC-066` / `PG-195`): **SOURCE-IMPLEMENTED**.
+- Fresh exact-head Pre-Unreal validation after repair: **PENDING**.
+- Fresh exact-head Unreal Build/import validation after repair: **PENDING**.
+- Part I canonical/runtime ID reconciliation (`DEC-067`): **REGISTERED**.
+- P1C02-P1C08 shared warehouse candidate indexing: **SOURCE-IMPLEMENTED / POST-MERGE EXECUTION PENDING**.
+- Downstream runtime integration: **SERIALIZED / BLOCKED UNTIL PREDECESSOR GATE ACCEPTED**.
+- Standing routine execution authorization (`DEC-068`): **RECORDED; DOES NOT WAIVE QUALITY GATES**.
+- PIE/device/visual/pacing/performance acceptance: **NOT CLAIMED**.
+
 ## 2026-09-29 - Two-chapter queue + systemic living-world architecture registration
 
 - P1C01 -> P1C02 sequential queue governance (`DEC-064`): **SOURCE-IMPLEMENTED**.
