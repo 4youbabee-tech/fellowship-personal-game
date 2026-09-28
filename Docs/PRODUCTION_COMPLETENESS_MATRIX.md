@@ -1,3 +1,14 @@
+## 2026-09-28 - Warehouse #282 parser root-cause prevention
+
+- Pre-Unreal #1317: **SUCCESS**, but missing repository-wide PowerShell parse coverage.
+- Warehouse #282: **FAILED BEFORE MATERIAL EXECUTION** with a PowerShell `ParserError` in `export_p1c01_material_source_branch.ps1`.
+- Exporter publish block: **SOURCE-REPAIRED** on the active closure-pack branch.
+- DEC-059 repository-wide PowerShell parser gate: **SOURCE-IMPLEMENTED**.
+- `Scripts/test_powershell_syntax.ps1`: **SOURCE-IMPLEMENTED**.
+- Hosted Pre-Unreal parser step: **SOURCE-IMPLEMENTED / EXACT-HEAD RUN PENDING**.
+- Warehouse/material publish after repair: **PENDING RE-RUN**.
+- UE/PIE/device/visual/performance status: **UNCHANGED / NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 maximum-throughput Chapter Closure Mega Pack V2
 
 - DEC-058 maximum-throughput chapter source pack: **SOURCE-IMPLEMENTED**.
