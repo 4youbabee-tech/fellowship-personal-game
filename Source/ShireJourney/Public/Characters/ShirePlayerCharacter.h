@@ -61,6 +61,12 @@ public:
     UFUNCTION(BlueprintPure, Category="MapKnowledge")
     bool IsWorldMapOpen() const { return bWorldMapOpen; }
 
+    UFUNCTION(BlueprintPure, Category="Settings|Graphics")
+    bool IsGraphicsSettingsOpen() const { return bGraphicsSettingsOpen; }
+
+    UFUNCTION(BlueprintPure, Category="Settings|Graphics")
+    int32 GetGraphicsSettingsSelectionIndex() const { return GraphicsSettingsSelectionIndex; }
+
     UFUNCTION(BlueprintPure, Category="Movement")
     bool IsCrouchingForStealth() const { return bIsCrouched; }
 
@@ -111,6 +117,12 @@ protected:
     void ChroniclePrevious();
     void ChronicleNext();
     void ToggleWorldMap();
+    void ToggleGraphicsSettings();
+    void GraphicsSettingsPrevious();
+    void GraphicsSettingsNext();
+    void GraphicsSettingsDecrease();
+    void GraphicsSettingsIncrease();
+    void AdjustGraphicsSetting(int32 Delta);
     void QuickSave();
     void QuickLoad();
     void DebugPreviousChapter();
@@ -265,6 +277,8 @@ private:
     bool bChronicleOpen = false;
     int32 ChronicleBrowseIndex = 0;
     bool bWorldMapOpen = false;
+    bool bGraphicsSettingsOpen = false;
+    int32 GraphicsSettingsSelectionIndex = 0;
     float PrototypeIdlePhase = 0.0f;
     FName PendingChapterCheckpointId = NAME_None;
     bool bPendingSaveRestoreTransform = false;
