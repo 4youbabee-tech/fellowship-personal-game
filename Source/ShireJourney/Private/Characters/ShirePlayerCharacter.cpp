@@ -1528,6 +1528,7 @@ void AShirePlayerCharacter::AdjustGraphicsSetting(int32 Delta)
     float MaxScale = 100.0f;
     Settings->GetResolutionScaleInformationEx(
         ScaleNormalized, ScaleValue, MinScale, MaxScale);
+    (void)ScaleNormalized;
 
     auto ApplyCustom = [&](int32 ViewDistance, int32 AntiAliasing, int32 Shadows,
         int32 PostProcessing, int32 Textures, int32 Effects, int32 Foliage,
@@ -1561,7 +1562,7 @@ void AShirePlayerCharacter::AdjustGraphicsSetting(int32 Delta)
             Settings->GetTextureQuality(),
             Settings->GetVisualEffectQuality(),
             Settings->GetFoliageQuality(),
-            FMath::Clamp(ScaleValue + 5.0f * Delta, 70.0f, 100.0f));
+            FMath::Clamp(ScaleValue + 5.0f * Delta, FMath::Max(70.0f, MinScale), FMath::Min(100.0f, MaxScale)));
         break;
     case 2:
         ApplyCustom(
@@ -1654,7 +1655,7 @@ void AShirePlayerCharacter::AdjustGraphicsSetting(int32 Delta)
 
 void AShirePlayerCharacter::StartCrouch()
 {
-    if (!bCinematicInputLocked && IsGameplayWorldCommitted())
+    if (!bCinematicInputLocked && !bGraphicsSettingsOpen && IsGameplayWorldCommitted())
     {
         Crouch();
     }
