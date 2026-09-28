@@ -8153,48 +8153,103 @@ if "Scripts/test_powershell_syntax.ps1" not in pg193_unreal:
     fail("PG-193 PowerShell parser guard must remain tooling-only in Unreal paths-ignore")
 
 
-# PG-194: Sequential P1C01 -> P1C02 queue must remain gate-driven.
-pg194_next = json.loads(read(ROOT / "Data" / "P1C02ShadowPastChapterPackV1.json"))
+# PG-194: Sequential Part I queue must remain predecessor-gated while downstream prep stays source-only.
+pg194_legacy = json.loads(read(ROOT / "Data" / "P1C02ShadowPastChapterPackV1.json"))
+pg194_train = json.loads(read(ROOT / "Data" / "Part1SequentialRuntimeChapterTrainV1.json"))
 pg194_queue = read(ROOT / "Scripts" / "run_sequential_chapter_queue.ps1")
-pg194_prep = read(ROOT / "Scripts" / "run_p1c02_shadow_past_prep.ps1")
+pg194_prep = read(ROOT / "Scripts" / "run_part1_runtime_chapter_prep.ps1")
 pg194_workflow = read(ROOT / ".github" / "workflows" / "sequential-chapter-queue.yml")
+pg194_prep_workflow = read(ROOT / ".github" / "workflows" / "part1-chapter-preparation.yml")
 pg194_unreal = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 
-if pg194_next.get("status") != "QUEUED_BEHIND_P1C01_GATE67":
-    fail("PG-194 P1C02 must remain queued behind P1C01 Gate 6/7")
-if pg194_next.get("queue_contract", {}).get("required_gate_status") != "ACCEPTED":
-    fail("PG-194 P1C02 release must require ACCEPTED predecessor gate")
-if pg194_next.get("queue_contract", {}).get("runtime_before_gate") != "FORBIDDEN":
-    fail("PG-194 P1C02 runtime must remain forbidden before P1C01 acceptance")
+if pg194_legacy.get("status") != "QUEUED_BEHIND_P1C01_GATE67":
+    fail("PG-194 legacy Shadow-of-the-Past source packet status changed unexpectedly")
+if pg194_train.get("status") != "PREPARATION_OPEN_RUNTIME_SERIALIZED":
+    fail("PG-194 Part I train must keep prep open and runtime serialized")
+release = pg194_train.get("runtime_release_contract", {})
+if release.get("required_predecessor_gate_status") != "ACCEPTED":
+    fail("PG-194 runtime successor release must require ACCEPTED predecessor gate")
+if release.get("current_successor") != "P1C02":
+    fail("PG-194 first runtime successor must remain P1C02")
+mappings = pg194_train.get("id_reconciliation", {}).get("mappings", [])
+runtime_ids = [x.get("runtime_chapter") for x in mappings]
+if runtime_ids != ["P1C01","P1C02","P1C03","P1C04","P1C05","P1C06","P1C07","P1C08"]:
+    fail("PG-194 Part I runtime mapping order drifted")
+if mappings and mappings[0].get("canonical_missions") != ["F1-01","F1-02","F1-03"]:
+    fail("PG-194 P1C01 canonical coverage reconciliation missing")
 for symbol in [
     "SEQUENTIAL_CHAPTER_QUEUE_WAIT",
     "SEQUENTIAL_CHAPTER_QUEUE_RELEASE",
     "P1C02_QUEUE_RELEASE=true",
+    "Part1SequentialRuntimeChapterTrainV1.json",
 ]:
     if symbol not in pg194_queue:
         fail(f"PG-194 queue controller marker missing: {symbol}")
 for symbol in [
-    "P1C02_SHADOW_PAST_PREP_BEGIN",
-    "P1C02_PREP_CAR_QUARANTINED",
-    "P1C02_SHADOW_PAST_PREP_PASS",
+    "PART1_CHAPTER_PREP_BEGIN",
+    "PART1_CHAPTER_PREP_PASS",
+    "PART1_CHAPTER_PREP_COMPLETE",
+    "SOURCE_CANDIDATE_INDEX_PREPARED",
 ]:
     if symbol not in pg194_prep:
-        fail(f"PG-194 P1C02 prep marker missing: {symbol}")
+        fail(f"PG-194 Part I prep marker missing: {symbol}")
 for symbol in [
     "name: Sequential Chapter Queue",
     "cancel-in-progress: false",
     "Fast queue preflight",
     "Prepare P1C02 source train",
+    "run_part1_runtime_chapter_prep.ps1",
 ]:
     if symbol not in pg194_workflow:
         fail(f"PG-194 sequential queue workflow marker missing: {symbol}")
+for symbol in [
+    "name: Part I Chapter Preparation Train",
+    "cancel-in-progress: false",
+    "Prepare P1C02-P1C08 shared-stock indexes",
+]:
+    if symbol not in pg194_prep_workflow:
+        fail(f"PG-194 Part I preparation workflow marker missing: {symbol}")
 for ignored in [
-    "Data/P1C02ShadowPastChapterPackV1.json",
+    "Data/Part1SequentialRuntimeChapterTrainV1.json",
+    "Scripts/run_part1_runtime_chapter_prep.ps1",
     "Scripts/run_sequential_chapter_queue.ps1",
-    "Scripts/run_p1c02_shadow_past_prep.ps1",
 ]:
     if pg194_unreal.count(ignored) < 2:
         fail(f"PG-194 queued chapter prep must stay off Unreal push+PR filters: {ignored}")
+
+
+# PG-195: Unreal import must not trust an editor-only wait while a commandlet remains alive.
+pg195_wait = read(ROOT / "Scripts" / "wait_for_unreal_processes.ps1")
+pg195_wait_cmd = read(ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd")
+pg195_preflight = read(ROOT / "Scripts" / "preflight_production_asset_import.ps1")
+for symbol in [
+    '@("UE4Editor","UE4Editor-Cmd")',
+    "UNREAL_PROCESS_DIAGNOSTIC",
+    "UNREAL_STALE_CI_COMMANDLET_RECOVERED",
+    "policy=never-kill-interactive-editor",
+    "ParentProcessId",
+    "CommandLine",
+]:
+    if symbol not in pg195_wait:
+        fail(f"PG-195 Unreal process wait/diagnostic marker missing: {symbol}")
+for forbidden in [
+    'Stop-Process -Name UE4Editor',
+    'Stop-Process -Name "UE4Editor"',
+]:
+    if forbidden in pg195_wait:
+        fail("PG-195 interactive UE4Editor must never be killed by name")
+if "wait_for_unreal_processes.ps1" not in pg195_wait_cmd:
+    fail("PG-195 legacy wait wrapper must delegate to the shared Unreal process waiter")
+for symbol in [
+    "PRODUCTION_IMPORT_PREFLIGHT_PROCESS",
+    "owner=",
+    "ppid=",
+    "sessionId=",
+    "commandLine=",
+]:
+    if symbol not in pg195_preflight:
+        fail(f"PG-195 production-import process diagnostics missing: {symbol}")
+
 
 if errors:
     print(f"PRE-UNREAL VALIDATION FAILED: {len(errors)} error(s)")
