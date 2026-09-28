@@ -1,3 +1,10 @@
+## 2026-09-28 - Graphics settings UE4 reflection safety
+
+- Blueprint-facing display-mode enum: **PROJECT UENUM IMPLEMENTED**.
+- Direct Blueprint exposure of `EWindowMode::Type`: **REMOVED IN SOURCE**.
+- Internal translation to UE window modes: **SOURCE-IMPLEMENTED**.
+- UHT/compile proof: **PENDING EXACT-HEAD UE4.27**.
+
 ## 2026-09-28 - Graphics/Video modal interaction polish
 
 - Display Mode row (Fullscreen / Borderless / Windowed): **SOURCE-IMPLEMENTED**.
