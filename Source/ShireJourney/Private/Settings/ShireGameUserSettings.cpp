@@ -52,7 +52,7 @@ FShireScalabilitySettings UShireGameUserSettings::GetCurrentScalabilitySettings(
     Result.TextureQuality = GetTextureQuality();
     Result.EffectsQuality = GetVisualEffectQuality();
     Result.FoliageQuality = GetFoliageQuality();
-    Result.ResolutionScalePercent = FMath::Clamp(ScalabilityQuality.ResolutionQuality, 50.0f, 100.0f);
+    float CurrentScaleNormalized = 1.0f;\n    float CurrentScaleValue = 100.0f;\n    float MinScaleValue = 50.0f;\n    float MaxScaleValue = 100.0f;\n    GetResolutionScaleInformationEx(CurrentScaleNormalized, CurrentScaleValue, MinScaleValue, MaxScaleValue);\n    Result.ResolutionScalePercent = FMath::Clamp(CurrentScaleValue, MinScaleValue, MaxScaleValue);
     return Result;
 }
 
