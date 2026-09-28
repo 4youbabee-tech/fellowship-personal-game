@@ -4195,6 +4195,33 @@
       ],
       "evidence_boundary": "SOURCE/CONTROL-PLANE DECISION. Exact-head static validation and a post-merge Warehouse V2 run are required before the large closure pack is RUN-PROVEN. UE import/PIE/device/visual/performance remain separate.",
       "authority": "USER_EXPLICIT_DIRECTION"
+    },
+    {
+      "id": "DEC-059",
+      "title": "Parse every repository PowerShell script before merge",
+      "status": "ACCEPTED",
+      "requirements": [
+        "REQ-STABILITY-001",
+        "REQ-STABILITY-003",
+        "REQ-STABILITY-004"
+      ],
+      "resolution": "Add a hosted Pre-Unreal parser gate that parses every Scripts/**/*.ps1 file with the Windows PowerShell parser before project validation. Parser errors are merge blockers and must be fixed at source.",
+      "implementation_contract": [
+        "Pre-Unreal runs Scripts/test_powershell_syntax.ps1 on every exact head.",
+        "The parser gate recursively covers repository PowerShell scripts under Scripts.",
+        "Any parser error reports file, line, column, message and offending text, then exits non-zero.",
+        "PowerShell parser-gate changes remain tooling-only and do not wake Unreal Build.",
+        "A syntax failure is never classified as an asset/provider blocker; it is control-plane/source failure and must be repaired before merge."
+      ],
+      "rationale": "Warehouse #282 failed before material execution because the generated-branch exporter contained an unterminated PowerShell string/if block. Pre-Unreal #1317 had passed because repository validation checked semantic markers but never invoked the PowerShell parser on all scripts. The durable fix is a parser gate, not another one-off string repair.",
+      "evidence": [
+        "Pre-Unreal #1317 SUCCESS on develop 0adc090f1caa92425322ac15d44b08b031f2ece0",
+        "Warehouse #282 ParserError in Scripts/export_p1c01_material_source_branch.ps1 line 204",
+        "Scripts/test_powershell_syntax.ps1",
+        ".github/workflows/pre-unreal-validation.yml"
+      ],
+      "evidence_boundary": "SOURCE/CI PREVENTION. The new parser gate requires exact-head Pre-Unreal proof. It does not imply Warehouse, UE, PIE, device or visual acceptance.",
+      "authority": "USER_EXPLICIT_DIRECTION"
     }
   ],
   "open_conflicts": [],
