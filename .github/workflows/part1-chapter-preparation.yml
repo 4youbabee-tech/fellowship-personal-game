@@ -1,0 +1,73 @@
+name: Part I Chapter Preparation Train
+
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'Data/Part1SequentialRuntimeChapterTrainV1.json'
+      - 'Scripts/run_part1_runtime_chapter_prep.ps1'
+      - '.github/workflows/part1-chapter-preparation.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: part1-chapter-preparation-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    name: Prepare shared-stock indexes for P1C02-P1C08
+    runs-on:
+      - self-hosted
+      - Windows
+      - X64
+      - ue4-27
+    timeout-minutes: 180
+    env:
+      TARGET_SHA: ${{ github.sha }}
+
+    steps:
+      - name: Checkout exact preparation head
+        shell: cmd
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          @echo off
+          setlocal EnableExtensions EnableDelayedExpansion
+          set "GITEXE="
+          for /f "delims=" %%G in ('where git.exe 2^>nul') do if not defined GITEXE set "GITEXE=%%G"
+          if not defined GITEXE if exist "C:\Program Files\Git\cmd\git.exe" set "GITEXE=C:\Program Files\Git\cmd\git.exe"
+          if not defined GITEXE exit /b 22
+          set "PREP_SRC=%RUNNER_TEMP%\shire-part1-prep-%GITHUB_RUN_ID%-%GITHUB_RUN_ATTEMPT%"
+          if exist "!PREP_SRC!" rmdir /S /Q "!PREP_SRC!"
+          mkdir "!PREP_SRC!"
+          cd /d "!PREP_SRC!"
+          "!GITEXE!" init
+          if errorlevel 1 exit /b 70
+          "!GITEXE!" -c credential.helper= remote add origin "https://x-access-token:!GH_TOKEN!@github.com/%GITHUB_REPOSITORY%.git"
+          if errorlevel 1 exit /b 71
+          "!GITEXE!" -c credential.helper= fetch --no-tags --depth=2 origin !TARGET_SHA!
+          if errorlevel 1 exit /b 72
+          "!GITEXE!" checkout -f FETCH_HEAD
+          if errorlevel 1 exit /b 73
+          echo SHIRE_PART1_PREP_SOURCE=!PREP_SRC!>>"%GITHUB_ENV%"
+
+      - name: Verify runner session health
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_PART1_PREP_SOURCE%\Scripts\verify_runner_session.ps1"
+
+      - name: Fast preparation preflight
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_PART1_PREP_SOURCE%\Scripts\test_powershell_syntax.ps1"
+
+      - name: Prepare P1C02-P1C08 shared-stock indexes
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_PART1_PREP_SOURCE%\Scripts\run_part1_runtime_chapter_prep.ps1"
+
+      - name: Remove isolated preparation checkout
+        if: always()
+        shell: cmd
+        run: |
+          @echo off
+          if defined SHIRE_PART1_PREP_SOURCE if exist "%SHIRE_PART1_PREP_SOURCE%" rmdir /S /Q "%SHIRE_PART1_PREP_SOURCE%"
+          exit /b 0
