@@ -1,3 +1,12 @@
+## 2026-09-28 - Graphics overlay display controls and modal input isolation
+
+- The in-game F10 Graphics/Video overlay now exposes 13 rows including **Display Mode** and **Resolution** in addition to preset/scalability/VSync/frame-limit controls.
+- Display modes cycle through Fullscreen, Borderless and Windowed via the persistent `UShireGameUserSettings` authority.
+- Resolution choices currently expose 1280x720 (target reference), 1600x900 and 1920x1080 as bounded headroom options; the selected value persists through GameUserSettings.
+- Opening the graphics overlay now uses a full-screen dim layer so it reads as a modal settings surface rather than debug text over gameplay.
+- Gameplay-affecting inputs are blocked while the overlay is open, including movement/look/jump/sprint/crouch/interact/attack/supply/quick-save/quick-load and debug route/chapter actions. Settings navigation and close input remain available.
+- Current maturity: **SOURCE-IMPLEMENTED / RUNNERLESS / EXACT-HEAD STATIC+UE PROOF PENDING / VISUAL ACCEPTANCE NOT CLAIMED**.
+
 ## 2026-09-28 - Professional graphics/video settings authority
 
 - Added `UShireGameUserSettings` as the project GameUserSettings class with persistent **Performance / Recommended / High / Ultra / Custom** presets.
