@@ -31,12 +31,15 @@ on:
       - 'Scripts/run_warehouse_provider_resolution.ps1'
       - 'Data/WarehouseP1C01MegaPromotionTrainV1.json'
       - 'Scripts/run_warehouse_p1c01_mega_promotion.ps1'
+      - 'Data/P1C01MaterialImportWaveV1.json'
+      - 'Scripts/prepare_p1c01_material_intake.ps1'
+      - 'Scripts/export_p1c01_material_source_branch.ps1'
       - 'Scripts/classify_warehouse_validation.ps1'
       - '.github/workflows/warehouse-stage.yml'
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: warehouse-stage-${{ github.repository }}
@@ -174,6 +177,11 @@ jobs:
         if: env.WH_RUN_P1C01_PROMOTION == 'true'
         shell: cmd
         run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\run_warehouse_p1c01_mega_promotion.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\WarehouseP1C01MegaPromotionTrainV1.json"
+
+      - name: Promote large P1C01 material source batch to generated branch
+        if: env.WH_RUN_P1C01_MATERIAL_EXPORT == 'true'
+        shell: cmd
+        run: powershell.exe -NoProfile -ExecutionPolicy Bypass -File "%SHIRE_WAREHOUSE_SOURCE%\Scripts\export_p1c01_material_source_branch.ps1" -ManifestPath "%SHIRE_WAREHOUSE_SOURCE%\Data\P1C01MaterialImportWaveV1.json" -GeneratedBranch "generated/p1c01-material-source-v1"
 
       - name: Summarize selective warehouse execution
         shell: cmd

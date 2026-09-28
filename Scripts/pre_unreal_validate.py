@@ -2870,6 +2870,35 @@ for pg184_p1c01_manifest_symbol in [
     if pg184_p1c01_manifest_symbol not in pg184_p1c01_manifest:
         fail(f"PG-184 P1C01 mega promotion manifest contract missing: {pg184_p1c01_manifest_symbol}")
 
+pg184_material_intake = read(ROOT / "Scripts" / "prepare_p1c01_material_intake.ps1")
+pg184_material_export = read(ROOT / "Scripts" / "export_p1c01_material_source_branch.ps1")
+for pg184_material_symbol in [
+    "Get-OptionalPropertyValue",
+    "receipt_sha256_mismatch",
+    "System.IO.Compression.FileSystem",
+    "P1C01_MATERIAL_INTAKE_PASS_WITH_MANUAL_QUEUE",
+]:
+    if pg184_material_symbol not in pg184_material_intake:
+        fail(f"PG-184 P1C01 material intake guard missing: {pg184_material_symbol}")
+for pg184_export_symbol in [
+    "generated/p1c01-material-source-v1",
+    "SourceAssets\\Production\\Imported\\P1C01Materials",
+    "128 MB bounded limit",
+    "SOURCE_READY_FOR_UE_IMPORT",
+    "P1C01_MATERIAL_SOURCE_BRANCH_PASS",
+]:
+    if pg184_export_symbol not in pg184_material_export:
+        fail(f"PG-184 P1C01 material source export guard missing: {pg184_export_symbol}")
+for pg184_workflow_symbol in [
+    "contents: write",
+    "WH_RUN_P1C01_MATERIAL_EXPORT",
+    "export_p1c01_material_source_branch.ps1",
+]:
+    if pg184_workflow_symbol not in pg184_workflow:
+        fail(f"PG-184 P1C01 material export workflow contract missing: {pg184_workflow_symbol}")
+if "WH_RUN_P1C01_MATERIAL_EXPORT" not in pg184_classifier:
+    fail("PG-184 warehouse classifier must expose the P1C01 material export phase")
+
 if "- 'Scripts/classify_warehouse_validation.ps1'" not in pg184_workflow:
     fail("PG-184 classifier changes must trigger one post-merge Warehouse control-plane proof")
 if '".github/workflows/warehouse-stage.yml" {' not in pg184_classifier or "$flags.WH_RUN_AUDIT=$true" not in pg184_classifier:

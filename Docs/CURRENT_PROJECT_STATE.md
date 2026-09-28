@@ -1,3 +1,13 @@
+## 2026-09-28 - P1C01 large material source promotion train
+
+- A concrete source-promotion bridge now converts the existing receipt-verified warehouse stock into a bounded Git branch instead of leaving material candidates only in the runner warehouse.
+- `prepare_p1c01_material_intake.ps1` now supports heterogeneous direct-file/archive receipt schemas, verifies SHA256 before use, performs bounded ZIP safety checks, isolates blocked items into a manual queue, and allows good prepared materials to continue.
+- `export_p1c01_material_source_branch.ps1` requires at least 8 prepared materials, caps each source file at 16 MB and the whole batch at 128 MB, and promotes only PNG/TGA base color plus scalar-material MTL files into `SourceAssets/Production/Imported/P1C01Materials`.
+- The Warehouse workflow owns a narrowly scoped generated branch `generated/p1c01-material-source-v1`; it does not merge that branch automatically. The next PR from that branch must pass normal exact-head Unreal validation so the existing UE4.27 production importer proves actual import.
+- Selective routing adds `WH_RUN_P1C01_MATERIAL_EXPORT`; provider refreshes can feed the material export, while unrelated Warehouse control-plane changes do not.
+- No gameplay/runtime C++ changed in this train.
+- Current maturity: **SOURCE-IMPLEMENTED / EXACT-HEAD STATIC VALIDATION PENDING / GENERATED MATERIAL BRANCH PENDING / UE IMPORT PENDING**.
+
 ## 2026-09-28 - P1C01 immediate large intake unfreeze repair
 
 - Warehouse #275 failed only in P1C01 character intake after the Quaternius staging lane completed. Exact failure: PowerShell StrictMode raised `PropertyNotFoundStrict` while reading heterogeneous receipt rows that do not all expose `file/sha256/asset_slug` fields.
