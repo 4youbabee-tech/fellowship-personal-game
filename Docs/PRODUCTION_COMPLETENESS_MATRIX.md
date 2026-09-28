@@ -1,3 +1,13 @@
+## 2026-09-28 - P1C01 visible de-duplication / Ferry identity cleanup
+
+- Party Field duplicate production-lamp + legacy-lantern stacking: **REMOVED IN SOURCE DESIGN**.
+- Legacy lantern/primitive light silhouettes: **FALLBACK-ONLY**.
+- Generic river boat beside Bucklebury Ferry: **REMOVED** to preserve location identity.
+- Canon-appropriate authored ferry mesh: **STILL AN ASSET GAP**.
+- Route/quest/NPC/density semantics: **UNCHANGED**.
+- Exact-head static/UE4.27/render proof: **PENDING**.
+- PIE/device/performance/visual acceptance: **NOT CLAIMED**.
+
 ## 2026-09-28 - P1C01 garden/farm HISM consolidation
 
 - Domestic garden authored flower-box HISM path: **SOURCE-IMPLEMENTED**.
