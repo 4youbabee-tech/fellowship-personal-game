@@ -1,7 +1,7 @@
 ## 2026-09-28 - Professional graphics/video settings authority
 
 - Added `UShireGameUserSettings` as the project GameUserSettings class with persistent **Performance / Recommended / High / Ultra / Custom** presets.
-- **Recommended** is the first-run image-first default: 100% resolution scale, View Distance 2, AA 2, Shadows 1, Post 2, Textures 2, Effects 1, Foliage 1. It intentionally preserves image clarity and recovers cost from expensive categories first.
+- **Recommended** is the first-run image-first default through `DefaultGameUserSettings.ini`: 100% resolution scale, View Distance 2, AA 2, Shadows 1, Post 2, Textures 2, Effects 1, Foliage 1. After initialization, player-owned Custom values persist and are not silently overwritten.
 - High/Ultra expose additional headroom for stronger hardware; Custom preserves player-owned per-category values.
 - User-facing control APIs cover VSync, frame-rate cap, resolution scale and each core scalability category; inherited UGameUserSettings retains display mode/resolution handling.
 - DefaultScalability now defines complete 0-3 ladders for texture memory/filtering, shadow distance/cascades, foliage density and view distance.
