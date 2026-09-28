@@ -3462,6 +3462,8 @@ unreal_ci = read(ROOT / ".github" / "workflows" / "unreal-build-validation.yml")
 editor_probe_marker = "echo Unreal Editor is closed.\n          exit /b 0"
 editor_wait_script_path = ROOT / "Scripts" / "ci_wait_for_unreal_editor.cmd"
 editor_wait_script = read(editor_wait_script_path) if editor_wait_script_path.exists() else ""
+shared_waiter_path = ROOT / "Scripts" / "wait_for_unreal_processes.ps1"
+shared_waiter = read(shared_waiter_path) if shared_waiter_path.exists() else ""
 editor_wait_contract_ok = (
     (
         "Get-Process -Name UE4Editor" in unreal_ci
@@ -3471,10 +3473,12 @@ editor_wait_contract_ok = (
     )
     or (
         "ci_wait_for_unreal_editor.cmd" in unreal_ci
-        and "Get-Process -Name UE4Editor" in editor_wait_script
-        and "AddMinutes(20)" in editor_wait_script
-        and "Start-Sleep -Seconds 10" in editor_wait_script
-        and "exit 40" in editor_wait_script
+        and "wait_for_unreal_processes.ps1" in editor_wait_script
+        and '@("UE4Editor","UE4Editor-Cmd")' in shared_waiter
+        and "UNREAL_PROCESS_WAIT_TIMEOUT" in shared_waiter
+        and "policy=never-kill-interactive-editor" in shared_waiter
+        and "Test-StaleOwnedCommandlet" in shared_waiter
+        and "sameOwner" in shared_waiter
     )
 )
 if editor_probe_marker not in unreal_ci and not editor_wait_contract_ok:
@@ -8229,6 +8233,8 @@ for symbol in [
     "policy=never-kill-interactive-editor",
     "ParentProcessId",
     "CommandLine",
+    "sameOwner",
+    "UNREAL_STALE_CI_COMMANDLET_TASKKILL_FALLBACK",
 ]:
     if symbol not in pg195_wait:
         fail(f"PG-195 Unreal process wait/diagnostic marker missing: {symbol}")
