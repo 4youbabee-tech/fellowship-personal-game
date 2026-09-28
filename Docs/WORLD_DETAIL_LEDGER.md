@@ -1,3 +1,17 @@
+## 2026-09-28 - Graphics menu display-mode/resolution and input isolation polish
+
+Registered before implementation inside the already-approved professional graphics/video settings lane.
+
+Purpose:
+- Extend the in-game Graphics/Video overlay beyond scalability categories with real Display Mode and Resolution rows.
+- Keep the reference 1280x720 target available while allowing 1600x900 and 1920x1080 headroom choices for stronger hardware.
+- Allow Fullscreen, Borderless and Windowed modes through the existing persistent UGameUserSettings authority.
+- Dim the entire gameplay view behind the settings panel so the menu reads as a deliberate professional overlay rather than debug text on top of gameplay.
+- While the menu is open, suppress movement/look/combat/interact/supply/save debug-affecting gameplay input; only settings navigation and close controls remain active.
+- Keep all changes reversible/persistent through GameUserSettings and do not claim runtime or device acceptance until engine proof exists.
+
+Status: **REGISTERED / RUNNERLESS IMPLEMENTATION STARTED / ENGINE PROOF PENDING**.
+
 ## 2026-09-28 - Professional graphics/video settings surface
 
 Registered before implementation from the owner's explicit request.
