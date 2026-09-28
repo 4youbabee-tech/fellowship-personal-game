@@ -1,3 +1,13 @@
+## 2026-09-29 - #1358/#1080 follow-up: proven stale CI commandlet + bounded tree recovery
+
+- Pre-Unreal #1358 failed only at legacy `PG-015` because that validator still expected the historical editor-only wait implementation.
+- Unreal Build #1080 produced concrete blocker identity for PID 14144: `UE4Editor-Cmd.exe`, owner `IDEAPAD320\user`, session 2, age ~4699 seconds, command line running the repository's unattended `Automation RunTests ShireJourney.QA;Quit` against the active ShireJourney workspace.
+- The parent PID reported by the process snapshot was no longer alive, satisfying the stale/orphan branch of the bounded recovery contract.
+- Initial `Stop-Process -Force` did not remove PID 14144 within the original 750 ms window; the source repair now waits longer and uses `taskkill /PID <pid> /T /F` only as a fallback after the same workspace/project/unattended/recognized-commandlet/same-owner/orphan/age proof succeeds.
+- Interactive `UE4Editor` is still never terminated by name.
+- `PG-015` now recognizes the shared editor+commandlet waiter and `PG-195` requires same-owner proof plus the bounded taskkill fallback marker.
+- Evidence boundary: **SOURCE-IMPLEMENTED / fresh exact-head validation pending**. This is not PIE/device/visual/performance acceptance.
+
 ## 2026-09-29 - Continuous Part I train + Unreal #1068 root repair
 
 - Owner granted standing authorization for safe routine reversible production work without repeated "continue" prompts; real login/purchase/licensing/canon/destructive/human-acceptance boundaries still require owner action.
