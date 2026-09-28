@@ -20,6 +20,8 @@ void UShireGameUserSettings::SetToDefaults()
     // Recommended is deliberately image-first: native render scale, strong textures,
     // AA and post processing, while shadows/effects/foliage carry the first savings.
     ApplyPresetScalability(ShireGraphicsPreset);
+    SetFullscreenMode(EWindowMode::Fullscreen);
+    SetScreenResolution(FIntPoint(1280, 720));
     SetVSyncEnabled(false);
     SetFrameRateLimit(60.0f);
 }
@@ -33,6 +35,8 @@ void UShireGameUserSettings::LoadSettings(bool bForceReload)
         ShireGraphicsPreset = EShireGraphicsPreset::Recommended;
         bShirePresetInitialized = true;
         ApplyPresetScalability(ShireGraphicsPreset);
+        SetFullscreenMode(EWindowMode::Fullscreen);
+        SetScreenResolution(FIntPoint(1280, 720));
         SaveSettings();
     }
 }
